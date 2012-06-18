@@ -20,6 +20,7 @@ package org.wso2.carbon.identity.entitlement.dto;
 
 import java.util.Arrays;
 import java.util.HashSet;
+import java.util.List;
 import java.util.Set;
 
 /**
@@ -35,7 +36,12 @@ public class AttributeValueTreeNodeDTO {
     /**
      * Attribute type of this node
      */
-    private String attributeType;
+    private String categoryId;
+
+    /**
+     * Attribute type of this node
+     */
+    private String categoryUri;
 
     /**
      * data type of the attribute
@@ -46,6 +52,7 @@ public class AttributeValueTreeNodeDTO {
      * supported attribute ids for this module 
      */
     private String[] supportedAttributeIds = new String[]{};
+
 
     /**
      * whether node is defined by child node name or by full path name with parent node names
@@ -65,6 +72,16 @@ public class AttributeValueTreeNodeDTO {
      */
     private AttributeValueTreeNodeDTO[] childNodes = new AttributeValueTreeNodeDTO[]{};
 
+    /**
+     *
+     */
+    private String defaultAttributeDataType;
+
+    /**
+     * 
+     */
+    private String defaultAttributeId;
+
     public AttributeValueTreeNodeDTO(String name) {
         this.name = name;
     }
@@ -73,12 +90,20 @@ public class AttributeValueTreeNodeDTO {
         return name;
     }
 
-    public String getAttributeType() {
-        return attributeType;
+    public String getCategoryId() {
+        return categoryId;
     }
 
-    public void setAttributeType(String attributeType) {
-        this.attributeType = attributeType;
+    public void setCategoryId(String categoryId) {
+        this.categoryId = categoryId;
+    }
+
+    public String getCategoryUri() {
+        return categoryUri;
+    }
+
+    public void setCategoryUri(String categoryUri) {
+        this.categoryUri = categoryUri;
     }
 
     public AttributeValueTreeNodeDTO[] getChildNodes() {
@@ -146,4 +171,23 @@ public class AttributeValueTreeNodeDTO {
         attributeIds.add(supportedAttributeId);
         this.supportedAttributeIds = attributeIds.toArray(new String[attributeIds.size()]);
     }
+
+    public String getDefaultAttributeDataType() {
+        return defaultAttributeDataType;
+    }
+
+    public void setDefaultAttributeDataType(String defaultAttributeDataType) {
+        this.defaultAttributeDataType = defaultAttributeDataType;
+    }
+
+    public String getDefaultAttributeId() {
+        return defaultAttributeId;
+    }
+
+    public void setDefaultAttributeId(String defaultAttributeId) {
+        this.defaultAttributeId = defaultAttributeId;
+    }
+
+
+    
 }

@@ -55,6 +55,26 @@ public class EntitlementConstants {
 
 	public static final String ENVIRONMENT_ELEMENT = "Environment";
 
+	public static final String SUBJECT_CATEGORY_ID = "Subject";
+
+	public static final String ACTION_CATEGORY_ID = "Action";
+
+	public static final String RESOURCE_CATEGORY_ID = "Resource";
+
+	public static final String ENVIRONMENT_CATEGORY_ID = "Environment";
+
+    public static final String RESOURCE_CATEGORY_URI = "urn:oasis:names:tc:xacml:3.0:" +
+            "attribute-category:resource";
+
+    public static final String SUBJECT_CATEGORY_URI = "urn:oasis:names:tc:xacml:1.0:" +
+            "subject-category:access-subject";
+
+    public static final String ACTION_CATEGORY_URI = "urn:oasis:names:tc:xacml:3.0:" +
+            "attribute-category:action";
+
+    public static final String ENVIRONMENT_CATEGORY_URI = "urn:oasis:names:tc:xacml:3.0:" +
+            "attribute-category:environment";    
+
 	public static final String TARGET_ELEMENT = "Target";
 
 	public static final String RULE_ELEMENT = "Rule";
@@ -143,7 +163,7 @@ public class EntitlementConstants {
 
     public static final String STRING_DATA_TYPE = "http://www.w3.org/2001/XMLSchema#string";
 
-    public static final String RESOURCE_ID = "urn:oasis:names:tc:xacml:1.0:resource:resource-id";
+    public static final String RESOURCE_ID_DEFAULT = "urn:oasis:names:tc:xacml:1.0:resource:resource-id";
 
     public static final String ACTION_ID_DEFAULT = "urn:oasis:names:tc:xacml:1.0:action:action-id";
 

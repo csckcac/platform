@@ -18,7 +18,6 @@
 
 package org.wso2.carbon.identity.entitlement.pip;
 
-import java.net.URI;
 import java.util.HashSet;
 import java.util.Properties;
 import java.util.Set;
@@ -70,7 +69,7 @@ public class DefaultAttributeFinder extends AbstractPIPAttributeFinder {
 	 * String, java.lang.String, java.lang.String)
 	 */
 	public Set<String> getAttributeValues(String subjectId, String resourceId, String actionId,
-                                          String environmentId, String attributeId, URI issuer) throws Exception {
+                                          String environmentId, String attributeId, String issuer) throws Exception {
 		Set<String> values = new HashSet<String>();
 		// http://wso2.org/claims/role is a predefined claim URI for user roles.
         subjectId = MultitenantUtils.getTenantAwareUsername(subjectId);

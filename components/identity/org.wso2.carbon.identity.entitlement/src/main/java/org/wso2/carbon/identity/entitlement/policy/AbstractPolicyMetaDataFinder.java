@@ -18,6 +18,10 @@
 
 package org.wso2.carbon.identity.entitlement.policy;
 
+import org.wso2.carbon.identity.entitlement.EntitlementConstants;
+
+import java.util.HashMap;
+import java.util.Map;
 import java.util.Set;
 
 /**
@@ -28,26 +32,6 @@ public abstract class AbstractPolicyMetaDataFinder implements PolicyMetaDataFind
     @Override
     public Set<String> getSupportedAttributeIds(String attributeType) throws Exception {
         return null;
-    }
-
-    @Override
-    public boolean isEnvironmentAttributeSupported() {
-        return true;
-    }
-
-    @Override
-    public boolean isActionAttributeSupported() {
-        return true;
-    }
-
-    @Override
-    public boolean isResourceAttributeSupported() {
-        return true;
-    }
-
-    @Override
-    public boolean isSubjectAttributeSupported() {
-        return true;
     }
 
     @Override
@@ -65,19 +49,34 @@ public abstract class AbstractPolicyMetaDataFinder implements PolicyMetaDataFind
         return null;
     }
 
-    protected final String getResourceAttributeTypeId(){
-        return "Resource";
+    @Override
+    public Map<String, String> getSupportedCategories() {
+        Map<String, String> newMap = new HashMap<String, String>();
+        newMap.put(EntitlementConstants.RESOURCE_CATEGORY_ID, EntitlementConstants.RESOURCE_CATEGORY_URI);
+        newMap.put(EntitlementConstants.SUBJECT_CATEGORY_ID, EntitlementConstants.SUBJECT_CATEGORY_URI);
+        newMap.put(EntitlementConstants.ACTION_CATEGORY_ID, EntitlementConstants.ACTION_CATEGORY_URI);
+        newMap.put(EntitlementConstants.ENVIRONMENT_CATEGORY_ID, EntitlementConstants.ENVIRONMENT_CATEGORY_URI);
+        return newMap;
     }
 
-    protected final String getActionAttributeTypeId(){
-        return "Action";
+    
+    @Override
+    public String getDefaultAttributeId(String category) {
+        if(EntitlementConstants.RESOURCE_CATEGORY_ID.equals(category)){
+            return EntitlementConstants.RESOURCE_ID_DEFAULT;
+        } else if(EntitlementConstants.ACTION_CATEGORY_ID.equals(category)){
+            return EntitlementConstants.ACTION_ID_DEFAULT;
+        } else if(EntitlementConstants.SUBJECT_CATEGORY_ID.equals(category)){
+            return EntitlementConstants.SUBJECT_ID_DEFAULT;
+        } else if(EntitlementConstants.ENVIRONMENT_CATEGORY_ID.equals(category)){
+            return EntitlementConstants.ENVIRONMENT_ID_DEFAULT;
+        }
+
+        return null;
     }
 
-    protected final String getSubjectAttributeTypeId(){
-        return "Subject";
-    }
-
-    protected final String getEnvironmentAttributeTypeId(){
-        return "Environment";
+    @Override
+    public String getDefaultAttributeDataType(String category) {
+        return EntitlementConstants.STRING_DATA_TYPE;
     }
 }

@@ -18,7 +18,7 @@
 
 package org.wso2.carbon.identity.entitlement.pip;
 
-import org.wso2.balana.EvaluationCtx;
+import org.wso2.balana.ctx.EvaluationCtx;
 
 import java.util.Properties;
 import java.util.Set;

@@ -20,6 +20,7 @@ package org.wso2.carbon.identity.entitlement.policy;
 
 import org.wso2.carbon.CarbonConstants;
 import org.wso2.carbon.context.CarbonContext;
+import org.wso2.carbon.identity.entitlement.EntitlementConstants;
 import org.wso2.carbon.identity.entitlement.dto.AttributeValueTreeNodeDTO;
 import org.wso2.carbon.identity.entitlement.internal.EntitlementServiceComponent;
 import org.wso2.carbon.registry.api.Resource;
@@ -28,9 +29,7 @@ import org.wso2.carbon.registry.core.Registry;
 import org.wso2.carbon.registry.core.exceptions.RegistryException;
 import org.wso2.carbon.user.api.UserStoreManager;
 
-import java.util.HashSet;
-import java.util.Properties;
-import java.util.Set;
+import java.util.*;
 
 /**
  * this is default implementation of the policy meta data finder module which finds the resource in the
@@ -38,12 +37,12 @@ import java.util.Set;
  */
 public class CarbonPolicyMetaDataFinder extends AbstractPolicyMetaDataFinder {
 
-    private String MODULE_NAME =  "Carbon Attribute Finder Module";
+    public static final String MODULE_NAME =  "Carbon Attribute Finder Module";
 
     private Registry registry;
 
     private String[] defaultActions = new String[]{"read", "write", "delete", "edit"};
-
+    
     @Override
     public void init(Properties properties) throws Exception {
 
@@ -55,22 +54,22 @@ public class CarbonPolicyMetaDataFinder extends AbstractPolicyMetaDataFinder {
     }
 
     @Override
-    public AttributeValueTreeNodeDTO getAttributeValueData(String attributeType) throws Exception {
+    public AttributeValueTreeNodeDTO getAttributeValueData(String categoryId) throws Exception {
 
         registry = EntitlementServiceComponent.getRegistryService().getSystemRegistry(CarbonContext.
                 getCurrentContext().getTenantId());        
-        if(getResourceAttributeTypeId().equals(attributeType)){
+        if(EntitlementConstants.RESOURCE_CATEGORY_ID.equals(categoryId)){
             AttributeValueTreeNodeDTO  nodeDTO = new AttributeValueTreeNodeDTO("/");
             getChildResources(nodeDTO, "_system");
             return nodeDTO;
-        } else if(getActionAttributeTypeId().equals(attributeType)){
+        } else if(EntitlementConstants.ACTION_CATEGORY_ID.equals(categoryId)){
             AttributeValueTreeNodeDTO nodeDTO = new AttributeValueTreeNodeDTO("");
             for (String action : defaultActions){
                 AttributeValueTreeNodeDTO childNode = new AttributeValueTreeNodeDTO(action);
                 nodeDTO.addChildNode(childNode);
             }
             return nodeDTO;
-        } else if(getSubjectAttributeTypeId().equals(attributeType)){
+        } else if(EntitlementConstants.SUBJECT_CATEGORY_ID.equals(categoryId)){
             AttributeValueTreeNodeDTO nodeDTO = new AttributeValueTreeNodeDTO("");
             int tenantId =  CarbonContext.getCurrentContext().getTenantId();
             UserStoreManager userStoreManager = EntitlementServiceComponent.getRealmservice().
@@ -88,26 +87,6 @@ public class CarbonPolicyMetaDataFinder extends AbstractPolicyMetaDataFinder {
         return null;
     }
 
-    @Override
-    public boolean isSubjectAttributeSupported() {
-        return true;
-    }
-
-    @Override
-    public boolean isResourceAttributeSupported() {
-        return true; 
-    }
-
-    @Override
-    public boolean isActionAttributeSupported() {
-        return true;
-    }
-
-    @Override
-    public boolean isEnvironmentAttributeSupported() {
-        return false;
-    }
-
     /**
      * This helps to find resources un a recursive manner
      * @param node attribute value node
@@ -115,12 +94,13 @@ public class CarbonPolicyMetaDataFinder extends AbstractPolicyMetaDataFinder {
      * @return child resource set
      * @throws org.wso2.carbon.registry.core.exceptions.RegistryException throws
      */
-    private AttributeValueTreeNodeDTO getChildResources(AttributeValueTreeNodeDTO node, String parentResource)
-            throws RegistryException {
+    private AttributeValueTreeNodeDTO getChildResources(AttributeValueTreeNodeDTO node,
+                                                String parentResource)  throws RegistryException {
 
         if(registry.resourceExists(parentResource)){
             String[] resourcePath = parentResource.split("/");
-            AttributeValueTreeNodeDTO childNode = new AttributeValueTreeNodeDTO(resourcePath[resourcePath.length-1]);
+            AttributeValueTreeNodeDTO childNode =
+                                new AttributeValueTreeNodeDTO(resourcePath[resourcePath.length-1]);
             node.addChildNode(childNode);
             Resource root = registry.get(parentResource);
             if(root instanceof Collection){
@@ -142,11 +122,40 @@ public class CarbonPolicyMetaDataFinder extends AbstractPolicyMetaDataFinder {
     }
 
     @Override
-    public Set<String> getSupportedAttributeIds(String attributeType) throws Exception {
+    public Set<String> getSupportedAttributeIds(String category)  throws Exception {
         Set<String> values = new HashSet<String>();        
-        if(getSubjectAttributeTypeId().equals(attributeType)){
+        if(EntitlementConstants.SUBJECT_CATEGORY_ID.equals(category)){
             values.add("http://wso2.org/claims/role");
         }
         return values;
+    }
+
+    @Override
+    public Map<String, String> getSupportedRuleFunctions() {
+        Map<String, String> newMap = new HashMap<String, String>();
+        newMap.put("=" , "EQUAL");
+        newMap.put("regex" , "Regex-match");
+        newMap.put("<" , "greater-than");
+        newMap.put(">" , "less-than");
+        return newMap;
+    }
+
+    @Override
+    public Map<String, String> getSupportedTargetFunctions() {
+        Map<String, String> newMap = new HashMap<String, String>();
+        newMap.put("=" , "EQUAL");
+        newMap.put("regex" , "Regex-match");
+        return newMap;
+    }
+
+    @Override
+    public Set<String> getSupportedPreFunctions() {
+        Set<String> values = new HashSet<String>();
+        values.add("is");
+        values.add("is not");
+        values.add("are");
+        values.add("are not");
+        return values;
+
     }
 }

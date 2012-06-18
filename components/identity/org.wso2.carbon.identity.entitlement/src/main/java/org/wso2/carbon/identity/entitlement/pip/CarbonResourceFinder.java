@@ -18,7 +18,7 @@
 
 package org.wso2.carbon.identity.entitlement.pip;
 
-import org.wso2.balana.EvaluationCtx;
+import org.wso2.balana.ctx.EvaluationCtx;
 import org.wso2.balana.attr.AttributeValue;
 import org.wso2.balana.finder.ResourceFinderModule;
 import org.wso2.balana.finder.ResourceFinderResult;

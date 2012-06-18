@@ -18,7 +18,8 @@
 
 package org.wso2.carbon.identity.entitlement.pip;
 
-import org.wso2.balana.EvaluationCtx;
+import org.wso2.balana.XACMLConstants;
+import org.wso2.balana.ctx.EvaluationCtx;
 import org.wso2.balana.attr.AttributeValue;
 import org.wso2.balana.attr.BagAttribute;
 import org.wso2.balana.attr.StringAttribute;
@@ -79,8 +80,9 @@ public abstract class AbstractPIPResourceFinder implements PIPResourceFinder{
             if(child != null){
                 if(EntitlementConstants.ENVIRONMENT_ELEMENT.equals(child.getNodeName())){
                     if(child.getChildNodes() != null && child.getChildNodes().getLength() > 0){
-                        environment = context.getEnvironmentAttribute(new URI(StringAttribute.identifier), new URI(
-                            EntitlementConstants.ENVIRONMENT_ID_DEFAULT), null);
+                        environment = context.getAttribute(new URI(StringAttribute.identifier),
+                                    new URI(EntitlementConstants.ENVIRONMENT_ID_DEFAULT), null, 
+                                                        new URI(XACMLConstants.ENT_CATEGORY));
                         if (environment != null && environment.getAttributeValue() != null &&
                                                                 environment.getAttributeValue().isBag()) {
                             BagAttribute attr = (BagAttribute) environment.getAttributeValue();

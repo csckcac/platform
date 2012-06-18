@@ -19,6 +19,7 @@ package org.wso2.carbon.identity.entitlement.policy;
 
 import org.wso2.carbon.identity.entitlement.dto.AttributeValueTreeNodeDTO;
 
+import java.util.Map;
 import java.util.Properties;
 import java.util.Set;
 
@@ -45,27 +46,27 @@ public interface PolicyMetaDataFinderModule {
 
     /**
      * finds attribute values for given attribute type
-     * @param attributeType  subject, action, resource or environment
+     * @param category
      * @return Set of attribute values as String Set
      * @throws Exception throws if fails
      */
-    public AttributeValueTreeNodeDTO getAttributeValueData(String attributeType) throws Exception;
+    public AttributeValueTreeNodeDTO getAttributeValueData(String category) throws Exception;
 
     /**
      * gets support attribute ids from this module
-     * @param attributeType subject, action, resource or environment
+     * @param category
      * @return  support attribute ids as String Set
      * @throws Exception throws, if fails
      */
-    public Set<String> getSupportedAttributeIds(String attributeType) throws Exception;
+    public Set<String> getSupportedAttributeIds(String category) throws Exception;
 
     /**
      * gets data types of the attribute values
-     * @param attributeType subject, action, resource or environment
+     * @param category
      * @return support data types as String Set
      * @throws Exception throws, if fails
      */
-    public Set<String> getAttributeDataTypes(String attributeType) throws Exception;
+    public Set<String> getAttributeDataTypes(String category) throws Exception;
 
     /**
      * defines whether node (AttributeValueTreeNodeDTO) is defined by child node name
@@ -80,27 +81,20 @@ public interface PolicyMetaDataFinderModule {
      */
     public boolean isHierarchicalTree();
 
-    /**
-     * this module supports for finding subject attribute values
-     * @return true or false
-     */
-    public boolean isSubjectAttributeSupported();
 
-    /**
-     * this module support for finding resource attribute values
-     * @return true or false
-     */
-    public boolean isResourceAttributeSupported();
+    public Map<String, String> getSupportedCategories();
 
-    /**
-     * this module support for finding action attribute values
-     * @return true or false
-     */
-    public boolean isActionAttributeSupported();
+    public Map<String, String> getSupportedRuleFunctions();
 
-    /**
-     * this module support for finding environment attribute values
-     * @return true or false
-     */
-    public boolean isEnvironmentAttributeSupported();
+    public Map<String, String> getSupportedTargetFunctions();
+
+    public String getDefaultAttributeId(String category);
+
+    public String getDefaultAttributeDataType(String category);
+
+    public Set<String> getSupportedPreFunctions();
+
+
+
+
 }

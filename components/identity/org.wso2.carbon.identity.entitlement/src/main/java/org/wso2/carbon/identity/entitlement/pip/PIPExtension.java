@@ -18,7 +18,7 @@
 
 package org.wso2.carbon.identity.entitlement.pip;
 
-import org.wso2.balana.xacml2.ctx.RequestCtx;
+import org.wso2.balana.ctx.AbstractRequestCtx;
 
 import java.util.Properties;
 
@@ -45,6 +45,6 @@ public interface PIPExtension {
      * @param request
      *            Incoming XACML request.
      */
-    public void update(RequestCtx request);
+    public void update(AbstractRequestCtx request);
 
 }

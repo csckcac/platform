@@ -29,6 +29,8 @@ import java.util.Properties;
 import java.util.Set;
 import java.util.concurrent.ConcurrentHashMap;
 
+import org.wso2.balana.ctx.RequestCtxFactory;
+import org.wso2.balana.ctx.AbstractRequestCtx;
 import org.wso2.balana.finder.ResourceFinder;
 import org.wso2.balana.finder.ResourceFinderModule;
 import net.sf.jsr107cache.Cache;
@@ -169,7 +171,7 @@ public class EntitlementEngine {
 			pdpDecisionCachingInterval = -1;
 		}
         
-        pdpConfig = new PDPConfig(attributeFinder, policyFinder, resourceFinder);
+        pdpConfig = new PDPConfig(attributeFinder, policyFinder, resourceFinder, true);
 		// Finally, initialize
 		pdp = new PDP(pdpConfig);
 	}
@@ -243,11 +245,13 @@ public class EntitlementEngine {
 
         Element xacmlRequestElement;
         ResponseCtx responseCtx;
-        RequestCtx requestCtx;
+        //RequestCtx requestCtx;
+        AbstractRequestCtx requestCtx;
         PolicyRequestBuilder policyRequestBuilder = new PolicyRequestBuilder();
         PolicyResponseBuilder policyResponseBuilder = new PolicyResponseBuilder();
         xacmlRequestElement = policyRequestBuilder.getXacmlRequest(xacmlRequest);
-        requestCtx = RequestCtx.getInstance(xacmlRequestElement);
+        //requestCtx = RequestCtx.getInstance(xacmlRequestElement);
+        requestCtx = RequestCtxFactory.getFactory().getRequestCtx(xacmlRequestElement);
 
         Map<PIPExtension, Properties> extensions = EntitlementServiceComponent.getEntitlementConfig()
                 .getExtensions();

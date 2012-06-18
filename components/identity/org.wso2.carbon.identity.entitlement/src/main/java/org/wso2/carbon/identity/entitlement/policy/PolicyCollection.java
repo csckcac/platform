@@ -17,17 +17,10 @@
  */
 package org.wso2.carbon.identity.entitlement.policy;
 
-import org.wso2.balana.AbstractPolicy;
-import org.wso2.balana.EvaluationCtx;
-import org.wso2.balana.MatchResult;
-import org.wso2.balana.Policy;
-import org.wso2.balana.PolicyMetaData;
-import org.wso2.balana.PolicyReference;
-import org.wso2.balana.PolicySet;
+import org.wso2.balana.*;
+import org.wso2.balana.ctx.EvaluationCtx;
 import org.wso2.balana.xacml2.Target;
-import org.wso2.balana.TargetMatch;
 import org.wso2.balana.xacml2.TargetSection;
-import org.wso2.balana.VersionConstraints;
 
 import org.wso2.balana.combine.PolicyCombiningAlgorithm;
 
@@ -62,7 +55,7 @@ public class PolicyCollection {
     private URI parentId;
 
     // default target that matches anything, used in wrapping policies
-    private static final Target target;
+    private static final AbstractTarget target;
 
     private int maxInMemoryPolicies;
 
@@ -74,10 +67,10 @@ public class PolicyCollection {
      */
     static {
         target = new Target(new TargetSection(null, TargetMatch.SUBJECT,
-                PolicyMetaData.XACML_VERSION_2_0), new TargetSection(null, TargetMatch.RESOURCE,
-                PolicyMetaData.XACML_VERSION_2_0), new TargetSection(null, TargetMatch.ACTION,
-                PolicyMetaData.XACML_VERSION_2_0), new TargetSection(null, TargetMatch.ENVIRONMENT,
-                PolicyMetaData.XACML_VERSION_2_0));
+                XACMLConstants.XACML_VERSION_2_0), new TargetSection(null, TargetMatch.RESOURCE,
+                XACMLConstants.XACML_VERSION_2_0), new TargetSection(null, TargetMatch.ACTION,
+                XACMLConstants.XACML_VERSION_2_0), new TargetSection(null, TargetMatch.ENVIRONMENT,
+                XACMLConstants.XACML_VERSION_2_0));
     };
 
     /**

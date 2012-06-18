@@ -18,12 +18,10 @@
 
 package org.wso2.carbon.identity.entitlement.policy;
 
-import org.wso2.balana.BasicEvaluationCtx;
-import org.wso2.balana.EvaluationCtx;
-import org.wso2.balana.PDPConfig;
-import org.wso2.balana.ParsingException;
+import org.wso2.balana.*;
+import org.wso2.balana.ctx.EvaluationCtx;
+import org.wso2.balana.ctx.EvaluationCtxFactory;
 import org.wso2.balana.xacml2.ctx.RequestCtx;
-import org.wso2.balana.finder.PolicyFinderResult;
 import org.apache.axiom.om.OMElement;
 import org.apache.axiom.om.util.AXIOMUtil;
 import org.apache.commons.logging.Log;
@@ -144,7 +142,7 @@ public class PolicySearch {
                         AttributeValueDTO resourceAttribute = new AttributeValueDTO();
                         resourceAttribute.setAttribute(resourceName);
                         resourceAttribute.setAttributeDataType(EntitlementConstants.STRING_DATA_TYPE);
-                        resourceAttribute.setAttributeId(EntitlementConstants.RESOURCE_ID);
+                        resourceAttribute.setAttributeId(EntitlementConstants.RESOURCE_ID_DEFAULT);
                         resourceAttribute.setAttributeType(EntitlementConstants.RESOURCE_ELEMENT);
                         resources.add(resourceAttribute);
                         hierarchicalResource = true;
@@ -172,7 +170,7 @@ public class PolicySearch {
                             actions.add(attributeValueDTO);
                         } else if (EntitlementConstants.RESOURCE_ELEMENT.equals(attributeValueDTO
                                                 .getAttributeType()) && !hierarchicalResource){
-                            attributeValueDTO.setAttributeId(EntitlementConstants.RESOURCE_ID);                             
+                            attributeValueDTO.setAttributeId(EntitlementConstants.RESOURCE_ID_DEFAULT);
                             resources.add(attributeValueDTO);
                         } 
 //                        else if(EntitlementConstants.UNKNOWN.equals(attributeValueDTO.getAttributeType())){
@@ -302,7 +300,7 @@ public class PolicySearch {
         requestAttributes.add(subject);
 
         AttributeValueDTO resource = new AttributeValueDTO();
-        resource.setAttributeId(EntitlementConstants.RESOURCE_ID);
+        resource.setAttributeId(EntitlementConstants.RESOURCE_ID_DEFAULT);
         resource.setAttributeType(EntitlementConstants.RESOURCE_ELEMENT);
         resource.setAttributeDataType(EntitlementConstants.STRING_DATA_TYPE);
         if(resourceName != null && resourceName.trim().length() > 0){
@@ -373,8 +371,8 @@ public class PolicySearch {
             if(doc != null){
                 try {
                     RequestCtx requestCtx = RequestCtx.getInstance(doc.getDocumentElement());
-                    PDPConfig config = entitlementEngine.getPdpConfig();
-                    EvaluationCtx ctx = new BasicEvaluationCtx(requestCtx, config.getAttributeFinder());
+                    EvaluationCtx ctx = EvaluationCtxFactory.getFactory().
+                            getEvaluationCtx(requestCtx, entitlementEngine.getPdpConfig());
                     result = policyFinder.getMatchingPolicies(ctx);
                 } catch (ParsingException e) {
                     throw new IdentityException("Error while creating XACML Request context", e);

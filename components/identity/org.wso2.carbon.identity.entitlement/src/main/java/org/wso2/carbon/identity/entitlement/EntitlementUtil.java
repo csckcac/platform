@@ -42,7 +42,7 @@ import org.apache.commons.logging.Log;
 import org.apache.commons.logging.LogFactory;
 
 import org.wso2.balana.attr.AttributeValue;
-import org.wso2.balana.ctx.Attribute;
+import org.wso2.balana.Attribute;
 import org.wso2.balana.xacml2.ctx.RequestCtx;
 import org.wso2.balana.ctx.Subject;
 import org.w3c.dom.Document;
@@ -107,7 +107,7 @@ public class EntitlementUtil {
 			}
 
 			if (resource != null) {
-				resources.add(getAttribute(EntitlementConstants.RESOURCE_ID,
+				resources.add(getAttribute(EntitlementConstants.RESOURCE_ID_DEFAULT,
                                            EntitlementConstants.STRING_DATA_TYPE, resource));
 			}
 			if (action != null) {
@@ -119,7 +119,7 @@ public class EntitlementUtil {
                                             EntitlementConstants.STRING_DATA_TYPE, environment));
 			}
 
-			return new RequestCtx(subjects, resources, actions, environments);
+			return new org.wso2.balana.xacml2.ctx.RequestCtx(subjects, resources, actions, environments);
 
 		} catch (Exception e) {
 			log.error("Error occurred while building XACML request", e);

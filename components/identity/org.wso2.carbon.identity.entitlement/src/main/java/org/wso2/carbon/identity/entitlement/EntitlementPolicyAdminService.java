@@ -23,11 +23,7 @@ import org.wso2.carbon.context.CarbonContext;
 import org.wso2.carbon.core.AbstractAdmin;
 import org.wso2.carbon.identity.base.IdentityException;
 import org.wso2.carbon.identity.core.IdentityRegistryResources;
-import org.wso2.carbon.identity.entitlement.dto.AttributeValueTreeNodeDTO;
-import org.wso2.carbon.identity.entitlement.dto.AttributeValueDTO;
-import org.wso2.carbon.identity.entitlement.dto.EntitledResultSetDTO;
-import org.wso2.carbon.identity.entitlement.dto.PolicyDTO;
-import org.wso2.carbon.identity.entitlement.dto.PaginatedPolicySetDTO;
+import org.wso2.carbon.identity.entitlement.dto.*;
 import org.wso2.carbon.identity.entitlement.internal.EntitlementServiceComponent;
 import org.wso2.carbon.identity.entitlement.pdp.EntitlementEngine;
 import org.wso2.carbon.identity.entitlement.pip.AbstractPIPAttributeFinder;
@@ -350,18 +346,17 @@ public class EntitlementPolicyAdminService extends AbstractAdmin {
 
     /**
      * get attribute values to XACML editor UI from meta data finder modules
-     * @param attributeType attribute type
-     * @return Array of attribute value trees as AttributeValueTreeNodeDTO object
+     * @return Array of attribute value trees as PolicyAttributeDTO object
      * @throws IdentityException throws, if fails
      */
-    public AttributeValueTreeNodeDTO[] getPolicyAttributeValues(String attributeType)
+    public PolicyAttributeDTO[] getPolicyAttributeValues()
             throws IdentityException {
-        Set<AttributeValueTreeNodeDTO> attributeValueSet = null;
+        Set<PolicyAttributeDTO> policyAttributeDTOSet = null;
 		PolicyMetaDataFinder metaDataFinder = EntitlementEngine.getInstance(getGovernanceUserRegistry(),
 				CarbonContext.getCurrentContext().getTenantId()).getMetaDataFinder();
-        attributeValueSet = metaDataFinder.getAttributeValues(attributeType);
-        if(attributeValueSet != null){
-            return attributeValueSet.toArray(new AttributeValueTreeNodeDTO[attributeValueSet.size()]);
+        policyAttributeDTOSet = metaDataFinder.getPolicyAttributeValues();
+        if(policyAttributeDTOSet != null){
+            return policyAttributeDTOSet.toArray(new PolicyAttributeDTO[policyAttributeDTOSet.size()]);
         }
 
         return null;

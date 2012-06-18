@@ -22,6 +22,7 @@ import org.apache.commons.logging.Log;
 import org.apache.commons.logging.LogFactory;
 import org.wso2.carbon.identity.entitlement.EntitlementConstants;
 import org.wso2.carbon.identity.entitlement.dto.AttributeValueTreeNodeDTO;
+import org.wso2.carbon.identity.entitlement.dto.PolicyAttributeDTO;
 import org.wso2.carbon.identity.entitlement.internal.EntitlementServiceComponent;
 
 import java.util.ArrayList;
@@ -66,97 +67,102 @@ public class PolicyMetaDataFinder {
 
     /**
      * finds attribute values for given attribute type
-     * @param attributeType  subject, action, resource or environment
      * @return Set of attribute values as String Set
      */
-    public Set<AttributeValueTreeNodeDTO> getAttributeValues(String attributeType){
+    public Set<PolicyAttributeDTO> getPolicyAttributeValues(){
 
-        Set<AttributeValueTreeNodeDTO> policyMetaDataSet = new HashSet<AttributeValueTreeNodeDTO>();
+        Set<PolicyAttributeDTO> policyAttributeDTOs = new HashSet<PolicyAttributeDTO>();
         Set<String> dataTypes;
         Set<String> attributeIds;
 
         for(PolicyMetaDataFinderModule module : metaDataFinderModules){
 
-            if(EntitlementConstants.RESOURCE_ELEMENT.equals(attributeType)){
-                if(!module.isResourceAttributeSupported()){
-                    String message = "Resource Attribute Values are not supported by  module "
-                                     + module.getModuleName();
-                    if(log.isDebugEnabled()){
-                        log.debug(message);
-                    }
-                    continue;
-                }
-            } else if(EntitlementConstants.ACTION_ELEMENT.equals(attributeType)){
-                if(!module.isActionAttributeSupported()){
-                    String message = "Action Attribute Values are not supported by  module "
-                                     + module.getModuleName();
-                    if(log.isDebugEnabled()){
-                        log.debug(message);
-                    }
-                    continue;
-                }
-            } else if(EntitlementConstants.SUBJECT_ELEMENT.equals(attributeType)){
-                if(!module.isSubjectAttributeSupported()){
-                    String message = "Subject Attribute Values are not supported by  module "
-                                     + module.getModuleName();
-                    if(log.isDebugEnabled()){
-                        log.debug(message);
-                    }
-                    continue;
-                }
-            } else if(EntitlementConstants.ENVIRONMENT_ELEMENT.equals(attributeType)){
-                if(!module.isEnvironmentAttributeSupported()){
-                    String message = "Environment Attribute Values are not supported by module "
-                                     + module.getModuleName();
-                    if(log.isDebugEnabled()){
-                        log.debug(message);
-                    }
-                    continue;
-                }
-            } else {
-                String message = "Unknown Attribute Value Type is tried to retrieve from module :"
-                                 + module.getModuleName();
-                if(log.isDebugEnabled()){
-                    log.debug(message);
-                }
-                break;
-            }
+            PolicyAttributeDTO policyAttributeDTO = new PolicyAttributeDTO();
 
-            AttributeValueTreeNodeDTO node = null;
-            try {
-                node = module.getAttributeValueData(attributeType);
-            } catch (Exception e) {
-                String message = "Error occurs while finding attribute value using module " + module;
-                log.error(message, e);
-            }
-            if(node != null){
-                node.setFullPathSupported(module.isFullPathSupported());
-                node.setHierarchicalTree(module.isHierarchicalTree());
-                node.setModuleName(module.getModuleName());
+            Map<String, String> categoryMap = module.getSupportedCategories();
+
+            Set<String> categories = categoryMap.keySet();
+
+            for(String category : categories){
+
+                AttributeValueTreeNodeDTO node = null;
                 try {
-                    if((dataTypes = module.getAttributeDataTypes(attributeType)) != null){
-                        node.setAttributeDataTypes(dataTypes.toArray(new String[dataTypes.size()]));    
-                    }
+                    node = module.getAttributeValueData(category);
                 } catch (Exception e) {
-                    String message = "Error occurs while finding attribute data types using module "
-                                     + module.getModuleName();
+                    String message = "Error occurs while finding policy attribute value using module " + module;
                     log.error(message, e);
                 }
 
-                try {
-                    if((attributeIds = module.getSupportedAttributeIds(attributeType)) != null){
-                        node.setSupportedAttributeIds(attributeIds.toArray(new String[attributeIds.size()]));
+                if(node != null){
+                    node.setFullPathSupported(module.isFullPathSupported());
+                    node.setHierarchicalTree(module.isHierarchicalTree());
+                    node.setModuleName(module.getModuleName());
+                    node.setCategoryId(category);
+                    node.setCategoryUri(categoryMap.get(category));
+                    node.setDefaultAttributeDataType(module.getDefaultAttributeDataType(category));
+                    node.setDefaultAttributeId(module.getDefaultAttributeId(category));
+                    try {
+                        if((dataTypes = module.getAttributeDataTypes(category)) != null){
+                            node.setAttributeDataTypes(dataTypes.toArray(new String[dataTypes.size()]));
+                        }
+                    } catch (Exception e) {
+                        String message = "Error occurs while finding policy attribute data types using module "
+                                         + module.getModuleName();
+                        log.error(message, e);
                     }
-                } catch (Exception e) {
-                    String message = "Error occurs while finding attribute Ids using module "
-                                     + module.getModuleName();
-                    log.error(message, e);
-                }
 
-                policyMetaDataSet.add(node);
+                    try {
+                        if((attributeIds = module.getSupportedAttributeIds(category)) != null){
+                            node.setSupportedAttributeIds(attributeIds.
+                                                        toArray(new String[attributeIds.size()]));
+                        }
+                    } catch (Exception e) {
+                        String message = "Error occurs while finding policy attribute Ids using module "
+                                         + module.getModuleName();
+                        log.error(message, e);
+                    }
+
+                    policyAttributeDTO.addNodeDTO(node);
+                }
             }
+
+            ArrayList<String> categoryList = new ArrayList<String>();
+            for(Map.Entry<String, String> entry : categoryMap.entrySet()){
+                categoryList.add(entry.getKey());
+                categoryList.add(entry.getValue());
+            }
+            policyAttributeDTO.addSupportedCategories(categoryList);
+
+            Map<String, String> targetFunctionMap = module.getSupportedTargetFunctions();
+            if(targetFunctionMap != null){
+                ArrayList<String> targetFunctionList = new ArrayList<String>();
+                for(Map.Entry<String, String> entry : targetFunctionMap.entrySet()){
+                    targetFunctionList.add(entry.getKey());
+                    targetFunctionList.add(entry.getValue());
+                }
+                policyAttributeDTO.addSupportedTargetFunctions(targetFunctionList);
+            }
+
+            Map<String, String> ruleFunctionMap = module.getSupportedRuleFunctions();
+
+            if(ruleFunctionMap != null){
+                ArrayList<String> ruleFunctionList = new ArrayList<String>();
+                for(Map.Entry<String, String> entry : ruleFunctionMap.entrySet()){
+                    ruleFunctionList.add(entry.getKey());
+                    ruleFunctionList.add(entry.getValue());
+                }
+                policyAttributeDTO.addSupportedRuleFunctions(ruleFunctionList);
+            }
+
+            Set<String> preFunctions = module.getSupportedPreFunctions();
+            if(preFunctions != null){
+                policyAttributeDTO.setSupportedPreFunctions(preFunctions.
+                                                        toArray(new String[preFunctions.size()]));                
+            }
+            policyAttributeDTOs.add(policyAttributeDTO);
         }
-        return policyMetaDataSet;
+        
+        return policyAttributeDTOs;
     }
 
 }

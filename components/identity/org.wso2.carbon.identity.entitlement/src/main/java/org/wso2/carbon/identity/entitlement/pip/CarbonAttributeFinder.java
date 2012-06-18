@@ -21,7 +21,6 @@ package org.wso2.carbon.identity.entitlement.pip;
 import java.io.StringWriter;
 import java.net.URI;
 import java.net.URISyntaxException;
-import java.text.DateFormat;
 import java.text.ParseException;
 import java.util.ArrayList;
 import java.util.Arrays;
@@ -38,15 +37,15 @@ import net.sf.jsr107cache.Cache;
 import org.apache.commons.logging.Log;
 import org.apache.commons.logging.LogFactory;
 import org.w3c.dom.Node;
+import org.wso2.balana.xacml2.attr.AttributeDesignator;
 import org.wso2.carbon.caching.core.identity.IdentityCacheEntry;
 import org.wso2.carbon.caching.core.identity.IdentityCacheKey;
 import org.wso2.carbon.identity.entitlement.EntitlementConstants;
 import org.wso2.carbon.identity.entitlement.EntitlementUtil;
 import org.wso2.carbon.identity.entitlement.internal.EntitlementServiceComponent;
 
-import org.wso2.balana.EvaluationCtx;
+import org.wso2.balana.ctx.EvaluationCtx;
 import org.wso2.balana.ParsingException;
-import org.wso2.balana.attr.AttributeDesignator;
 import org.wso2.balana.attr.AttributeValue;
 import org.wso2.balana.attr.BagAttribute;
 import org.wso2.balana.cond.EvaluationResult;
@@ -134,8 +133,8 @@ public class CarbonAttributeFinder extends AttributeFinderModule {
 	 * @see org.wso2.balana.finder.AttributeFinderModule#findAttribute(java.net.URI, java.net.URI,
 	 * java.net.URI, java.net.URI, org.wso2.balana.EvaluationCtx, int)
 	 */
-	public EvaluationResult findAttribute(URI attributeType, URI attributeId, URI issuer,
-			URI subjectCategory, EvaluationCtx context, int designatorType) {
+	public EvaluationResult findAttribute(URI attributeType, URI attributeId, String issuer,
+			URI category, EvaluationCtx context) {
 
 		List<AttributeValue> attrBag = new ArrayList<AttributeValue>();
 		// Get the list of attribute finders who are registered with this particular attribute.
@@ -176,15 +175,11 @@ public class CarbonAttributeFinder extends AttributeFinderModule {
 
 				if (isAttributeCachingEnabled && !pipAttributeFinder.overrideDefaultCache()) {
 
-                    String key = attributeType.toString() + attributeId.toString() +
-                                 domToString(context.getRequestRoot()) + designatorType;
-
-                    if(subjectCategory != null){
-                        key = key + subjectCategory.toString();
-                    }
+                    String key = attributeType.toString() + attributeId.toString() + category.toString() +
+                                 domToString(context.getRequestRoot());
 
                     if(issuer != null){
-                        key = key + issuer.toString();
+                        key += issuer;
                     }
 
 					if (key != null) {
@@ -205,8 +200,8 @@ public class CarbonAttributeFinder extends AttributeFinderModule {
 					if (log.isDebugEnabled()) {
 						log.debug("Carbon Attribute Cache Miss");
 					}
-					attrs = pipAttributeFinder.getAttributeValues(attributeId.toString(), issuer,
-                                                          context, subjectCategory, designatorType);
+					attrs = pipAttributeFinder.getAttributeValues(attributeType, attributeId, category,
+                                                                    issuer, context);
 					if (isAttributeCachingEnabled && cacheKey != null
 							&& !pipAttributeFinder.overrideDefaultCache()) {
 						IdentityCacheEntry cacheEntry = new IdentityCacheEntry(attrs.toArray(new String[attrs.size()]));

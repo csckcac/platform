@@ -28,11 +28,11 @@ import java.util.Set;
 import java.util.TreeSet;
 
 import org.wso2.balana.*;
-import org.wso2.balana.xacml2.Target;
 import net.sf.jsr107cache.Cache;
 import org.apache.commons.logging.Log;
 import org.apache.commons.logging.LogFactory;
 
+import org.wso2.balana.ctx.EvaluationCtx;
 import org.wso2.carbon.caching.core.identity.IdentityCacheEntry;
 import org.wso2.carbon.caching.core.identity.IdentityCacheKey;
 import org.wso2.carbon.identity.base.IdentityException;

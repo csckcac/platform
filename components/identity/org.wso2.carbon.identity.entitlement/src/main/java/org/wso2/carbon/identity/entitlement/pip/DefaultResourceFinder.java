@@ -18,7 +18,7 @@
 
 package org.wso2.carbon.identity.entitlement.pip;
 
-import org.wso2.balana.EvaluationCtx;
+import org.wso2.balana.ctx.EvaluationCtx;
 import org.wso2.carbon.context.CarbonContext;
 import org.wso2.carbon.identity.entitlement.internal.EntitlementServiceComponent;
 import org.wso2.carbon.identity.entitlement.pip.PIPResourceFinder;

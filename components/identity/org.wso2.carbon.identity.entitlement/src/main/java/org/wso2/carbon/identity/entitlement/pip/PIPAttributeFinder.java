@@ -18,7 +18,7 @@
 
 package org.wso2.carbon.identity.entitlement.pip;
 
-import org.wso2.balana.EvaluationCtx;
+import org.wso2.balana.ctx.EvaluationCtx;
 
 import java.net.URI;
 import java.util.Properties;
@@ -51,14 +51,13 @@ public interface PIPAttributeFinder {
      * @param attributeId The unique id of the required attribute.
      * @param issuer The attribute issuer.
      * @param context  EvaluationCtx which encapsulates the XACML request.
-     * @param subjectCategory Category of the subject
-     * @param designatorType  whether Resource, Action, Subject ot Environment
+     * @param category Category of the subject
      * @return Returns a <code>Set</code> of <code>String</code>s that represent the attribute
 	 *         values.
      * @throws Exception throws, if fails
      */
-	public Set<String> getAttributeValues(String attributeId, URI issuer, EvaluationCtx context,
-                                          URI subjectCategory, int designatorType) throws Exception;
+	public Set<String> getAttributeValues(URI attributeType, URI attributeId, URI category,
+                                          String issuer, EvaluationCtx context) throws Exception;
 
 	/**
 	 * Returns a <code>Set</code> of <code>String</code>s that represent the attributeIds handled by

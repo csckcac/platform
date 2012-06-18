@@ -5,13 +5,13 @@ import org.apache.axiom.om.impl.builder.StAXOMBuilder;
 import org.apache.commons.logging.Log;
 import org.apache.commons.logging.LogFactory;
 import org.mozilla.javascript.Context;
+import org.mozilla.javascript.ScriptableObject;
 import org.wso2.carbon.scriptengine.engine.JavaScriptHostObject;
 import org.wso2.carbon.scriptengine.engine.JavaScriptMethod;
 import org.wso2.carbon.scriptengine.engine.JavaScriptModule;
 import org.wso2.carbon.scriptengine.engine.JavaScriptScript;
 import org.wso2.carbon.scriptengine.engine.RhinoEngine;
 import org.wso2.carbon.scriptengine.exceptions.ScriptException;
-import sun.org.mozilla.javascript.internal.ScriptableObject;
 
 import javax.xml.namespace.QName;
 import javax.xml.stream.XMLStreamException;

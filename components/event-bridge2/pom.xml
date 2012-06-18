@@ -53,6 +53,6 @@
     </dependencyManagement>
 
     <properties>
-        <wso2carbon.version.agent>${wso2carbon.version}</wso2carbon.version.agent>
+        <wso2carbon.version.eventbridge>${wso2carbon.version}</wso2carbon.version.eventbridge>
     </properties>
 </project>

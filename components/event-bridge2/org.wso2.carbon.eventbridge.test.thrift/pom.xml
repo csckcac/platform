@@ -29,31 +29,31 @@
         <dependency>
             <groupId>org.wso2.carbon</groupId>
             <artifactId>org.wso2.carbon.eventbridge.commons</artifactId>
-            <version>${wso2carbon.version.agent}</version>
+            <version>${wso2carbon.version.eventbridge}</version>
             <scope>test</scope>
         </dependency>
         <dependency>
             <groupId>org.wso2.carbon</groupId>
             <artifactId>org.wso2.carbon.eventbridge.commons.thrift</artifactId>
-            <version>${wso2carbon.version.agent}</version>
+            <version>${wso2carbon.version.eventbridge}</version>
             <scope>test</scope>
         </dependency>
         <dependency>
             <groupId>org.wso2.carbon</groupId>
             <artifactId>org.wso2.carbon.eventbridge.core</artifactId>
-            <version>${wso2carbon.version.agent}</version>
+            <version>${wso2carbon.version.eventbridge}</version>
             <scope>test</scope>
         </dependency>
         <dependency>
             <groupId>org.wso2.carbon</groupId>
             <artifactId>org.wso2.carbon.eventbridge.agent.thrift</artifactId>
-            <version>${wso2carbon.version.agent}</version>
+            <version>${wso2carbon.version.eventbridge}</version>
             <scope>test</scope>
         </dependency>
         <dependency>
             <groupId>org.wso2.carbon</groupId>
             <artifactId>org.wso2.carbon.eventbridge.receiver.thrift</artifactId>
-            <version>${wso2carbon.version.agent}</version>
+            <version>${wso2carbon.version.eventbridge}</version>
             <scope>test</scope>
         </dependency>
     </dependencies>

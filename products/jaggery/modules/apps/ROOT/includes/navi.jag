@@ -61,6 +61,9 @@
     <li id="include">
         <a href="<%=context%>/apidocs/include.jag">include()</a>
     </li>
+    <li id="includeonce">
+        <a href="<%=context%>/apidocs/includeonce.jag">include_once()</a>
+    </li>
 </ul>
 
 <h6>Feed</h6>

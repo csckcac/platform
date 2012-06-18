@@ -222,6 +222,8 @@ public class RegistryPersistenceManager {
                     properties.put(property.getKey(), valueList);
                 }
                 updateAllProperties(properties, MediationDataPublisherConstants.MEDIATION_STATISTICS_PROPERTIES_REG_PATH);
+            }else {
+                updateAllProperties(null, MediationDataPublisherConstants.MEDIATION_STATISTICS_PROPERTIES_REG_PATH);
             }
 
         } catch (Exception e) {

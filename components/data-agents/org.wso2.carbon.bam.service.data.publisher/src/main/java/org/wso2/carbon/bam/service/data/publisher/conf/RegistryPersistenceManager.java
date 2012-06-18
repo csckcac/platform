@@ -230,6 +230,8 @@ public class RegistryPersistenceManager {
                 properties.put(property.getKey(), valueList);
             }
             updateAllProperties(properties, CommonConstants.SERVICE_PROPERTIES_REG_PATH);
+        }else {
+            updateAllProperties(null, CommonConstants.SERVICE_PROPERTIES_REG_PATH);
         }
 
     }

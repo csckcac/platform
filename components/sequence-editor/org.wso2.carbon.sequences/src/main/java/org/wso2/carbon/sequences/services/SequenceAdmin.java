@@ -71,7 +71,7 @@ public class SequenceAdmin extends AbstractServiceBusAdmin {
     private static final Log log = LogFactory.getLog(SequenceAdmin.class);
 
     //TODO: Move WSO2_SEQUENCE_MEDIA_TYPE to registry
-    public static final String WSO2_SEQUENCE_MEDIA_TYPE ="application/vnd+wso2.sequence";
+    public static final String WSO2_SEQUENCE_MEDIA_TYPE ="application/vnd.wso2.sequence";
 
     public SequenceInfo[] getSequences(int pageNumber,int sequencePerPage)
             throws SequenceEditorException {

@@ -109,6 +109,7 @@
         session.removeAttribute("editingSequence");
         session.removeAttribute("editingSequenceAction");
         session.removeAttribute("mediator.position");
+        session.removeAttribute("registrySequenceName");
     }
 
 

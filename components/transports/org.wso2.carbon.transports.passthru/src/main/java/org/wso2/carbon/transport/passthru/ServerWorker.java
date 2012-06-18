@@ -24,6 +24,8 @@ import java.util.TreeMap;
 
 import org.apache.axiom.om.OMAbstractFactory;
 import org.apache.axiom.om.util.UUIDGenerator;
+import org.apache.axiom.soap.SOAP11Constants;
+import org.apache.axiom.soap.SOAP12Constants;
 import org.apache.axiom.soap.SOAPEnvelope;
 import org.apache.axiom.soap.SOAPFactory;
 import org.apache.axiom.soap.impl.llom.soap11.SOAP11Factory;
@@ -51,6 +53,7 @@ import org.wso2.carbon.transport.passthru.config.SourceConfiguration;
  * This is a worker thread for executing an incoming request in to the transport.
  */
 public class ServerWorker implements Runnable {
+    
     private static final Log log = LogFactory.getLog(ServerWorker.class);
     /** the incoming message to be processed */
     private org.apache.axis2.context.MessageContext msgContext = null;
@@ -81,7 +84,7 @@ public class ServerWorker implements Runnable {
         if (log.isDebugEnabled()) {
             log.debug("Starting a new Server Worker instance");
         }
-        String method = request.getRequest().getRequestLine().getMethod();
+
         ConfigurationContext cfgCtx = sourceConfiguration.getConfigurationContext();        
         msgContext.setProperty(Constants.Configuration.HTTP_METHOD, request.getMethod());
 
@@ -140,7 +143,7 @@ public class ServerWorker implements Runnable {
     }
 
     private void processNonEntityEnclosingMethod() {
-        String soapAction = request.getHeaders().get(SOAP_ACTION_HEADER);
+        String soapAction = request.getHeader(SOAP_ACTION_HEADER);
         if ((soapAction != null) && soapAction.startsWith("\"") && soapAction.endsWith("\"")) {
             soapAction = soapAction.substring(1, soapAction.length() - 1);
         }
@@ -163,7 +166,7 @@ public class ServerWorker implements Runnable {
 
     private void processEntityEnclosingRequest() {
         try {
-            String contentTypeHeader = request.getHeaders().get(HTTP.CONTENT_TYPE);
+            String contentTypeHeader = request.getHeader(HTTP.CONTENT_TYPE);
             contentTypeHeader = contentTypeHeader != null ? contentTypeHeader : inferContentType();
 
             String charSetEncoding = BuilderUtil.getCharSetEncoding(contentTypeHeader);
@@ -182,7 +185,7 @@ public class ServerWorker implements Runnable {
             msgContext.setProperty(HTTPConstants.HTTP_METHOD, request.getMethod());
             msgContext.setServerSide(true);
 
-            if (HTTPTransportUtils.isRESTRequest(contentTypeHeader)) {
+            if (HTTPTransportUtils.isRESTRequest(contentTypeHeader) || isRest(contentType)) {
 
                 msgContext.setProperty(PassThroughConstants.REST_REQUEST_CONTENT_TYPE, contentType);
                 msgContext.setDoingREST(true);
@@ -200,7 +203,7 @@ public class ServerWorker implements Runnable {
 
                 msgContext.setEnvelope(envelope);
             } else {
-                String soapAction = request.getHeaders().get(SOAP_ACTION_HEADER);
+                String soapAction = request.getHeader(SOAP_ACTION_HEADER);
 
                 int soapVersion = HTTPTransportUtils.
                         initializeMessageContext(msgContext, soapAction,
@@ -230,6 +233,12 @@ public class ServerWorker implements Runnable {
         }
     }
 
+    private boolean isRest(String contentType) {
+        return contentType != null &&
+                contentType.indexOf(SOAP11Constants.SOAP_11_CONTENT_TYPE) == -1 &&
+                contentType.indexOf(SOAP12Constants.SOAP_12_CONTENT_TYPE) == -1;
+    }
+
 
     /**
      * Create an Axis2 message context for the given http request. The request may be in the
@@ -257,7 +266,9 @@ public class ServerWorker implements Runnable {
                                                         trpInDesc.getName());
 
         msgContext.setTransportIn(trpInDesc);
-        msgContext.setIncomingTransportName(trpInDesc.getName());
+        String protocol = (trpInDesc.getReceiver() instanceof PassThroughHttpListener ?
+                "http" : "https");
+        msgContext.setIncomingTransportName(protocol);
 
         msgContext.setTransportOut(trpOutDesc);
         msgContext.setProperty("TRANSPORT_OUT_DESCRIPTION", trpOutDesc);
@@ -275,7 +286,7 @@ public class ServerWorker implements Runnable {
             }
         });
 
-        Set<Map.Entry<String, String>> entries = request.getHeaders().entrySet();
+        Set<Map.Entry<String, String>> entries = request.getAllHeaders().entrySet();
         for (Map.Entry<String, String> entry : entries) {
             headers.put(entry.getKey(), entry.getValue());
         }

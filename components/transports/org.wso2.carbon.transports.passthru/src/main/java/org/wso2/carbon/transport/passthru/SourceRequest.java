@@ -33,13 +33,11 @@ public class SourceRequest {
     // private Log log = LogFactory.getLog(SourceRequest.class);
 
     private Pipe pipe = null;
-    /** HTTP Headers */
-    private Map<String, String> headers = new HashMap<String, String>();
     /** HTTP URL */
     private String url;
     /** HTTP Method */
     private String method;
-    /** Weather reqyest has a body */
+    /** Whether the request has a body */
     private boolean entityEnclosing;
     /** The http request */
     private HttpRequest request = null;
@@ -66,13 +64,6 @@ public class SourceRequest {
         if (!version.lessEquals(HttpVersion.HTTP_1_1)) {
             // Downgrade protocol version if greater than HTTP/1.1
             this.version = HttpVersion.HTTP_1_1;
-        }
-
-        Header[] headers = request.getAllHeaders();
-        if (headers != null) {
-            for (Header header : headers) {
-                this.headers.put(header.getName(), header.getValue());
-            }
         }
     }
 
@@ -133,8 +124,20 @@ public class SourceRequest {
         }
     }
 
-    public Map<String, String> getHeaders() {
+    public Map<String, String> getAllHeaders() {
+        Map<String,String> headers = new HashMap<String, String>();
+        for (Header header : request.getAllHeaders()) {
+            headers.put(header.getName(), header.getValue());
+        }
         return headers;
+    }
+    
+    public String getHeader(String name) {
+        Header header = request.getFirstHeader(name);
+        if (header != null) {
+            return header.getValue();
+        }
+        return null;
     }
 
     public String getUri() {

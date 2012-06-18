@@ -490,6 +490,13 @@ public class ClusterManager {
 
         //If Clustering is disabled
         if(!config.isClusteringEnabled()) {
+
+            List<String> nodeList = messageStore.storedNodeDetails();
+
+            for(String node : nodeList) {
+                messageStore.deleteNodeData(node);
+            }
+
             queueNodeMap.put(new Integer(nodeId),new String[]{});
             messageStore.addNodeDetails(""+ nodeId,config.getBindIpAddress());
             return;
@@ -534,6 +541,28 @@ public class ClusterManager {
                                             log.info("Initializing Cluster Manager , " +
                                                     "Selected Node id : " + nodeId);
                                             messageStore.addNodeDetails(""+ nodeId,config.getBindIpAddress());
+
+
+                                           List<String> zkNodes = zkAgent.getZooKeeper().getChildren(
+                                                    CoordinationConstants.QUEUE_WORKER_COORDINATION_PARENT,false);
+
+                                           List<String> zkNodeIds = new ArrayList<String>();
+
+                                           for(String zNode : zkNodes) {
+                                               zkNodeIds.add(""+getNoideIdFromZkNode(zNode));
+                                           }
+
+                                           List<String> storedNodes = messageStore.storedNodeDetails();
+
+                                           for (String storedNode : storedNodes) {
+
+                                               if (!zkNodeIds.contains(storedNode)) {
+                                                   messageStore.deleteNodeData(storedNode);
+                                               }
+
+                                           }
+
+
                                             String data = ""+ nodeId + ":";
                                             zkAgent.getZooKeeper().setData(CoordinationConstants.
                                                             QUEUE_WORKER_COORDINATION_PARENT +
@@ -560,6 +589,7 @@ public class ClusterManager {
             // Once this method called above defined watcher will be fired
             zkAgent.getZooKeeper().create(path, new byte[0],
                     ZooDefs.Ids.OPEN_ACL_UNSAFE, CreateMode.EPHEMERAL_SEQUENTIAL);
+
 
 
         } catch (Exception e) {
@@ -790,7 +820,7 @@ public class ClusterManager {
                 try {
                     int deletedNodeId = getNoideIdFromZkNode(deletedNode);
                     ClusterResourceHolder.getInstance().getCassandraMessageStore().
-                            deleteNodeData(""+deletedNodeId);
+                            deleteNodeData("" + deletedNodeId);
                 } catch (Exception e) {
                     log.error("Error while removing node details");
                 }

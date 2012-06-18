@@ -1742,7 +1742,11 @@ public void addMessageBatchToUserQueues(CassandraQueueMessage[] messages) throws
         }
     }
 
-
+    /**
+     * Add Node details to cassandra
+     * @param nodeId node id
+     * @param data  node data
+     */
     public void addNodeDetails(String nodeId, String data) {
         try {
             CassandraDataAccessHelper.addMappingToRaw(NODE_DETAIL_COLUMN_FAMILY,NODE_DETAIL_ROW,nodeId,data,keyspace);
@@ -1751,6 +1755,11 @@ public void addMessageBatchToUserQueues(CassandraQueueMessage[] messages) throws
         }
     }
 
+    /**
+     * Get Node data from a given node
+     * @param nodeId  node id assigned by the cluster manager
+     * @return Node data
+     */
     public String getNodeData(String nodeId) {
         try {
             ColumnSlice<String,String> values= CassandraDataAccessHelper.getStringTypeColumnsInARow(NODE_DETAIL_ROW,NODE_DETAIL_COLUMN_FAMILY,
@@ -1762,6 +1771,29 @@ public void addMessageBatchToUserQueues(CassandraQueueMessage[] messages) throws
             String columnName = ((HColumn<String, String>) column).getName();
             String value = ((HColumn<String, String>) column).getValue();
             return value;
+
+        } catch (CassandraDataAccessException e) {
+            throw new RuntimeException("Error accessing Node details to cassandra database");
+        }
+    }
+
+    /**
+     *  Returns list of all Node ids stored as Cluster nodes in the cassandra database
+     * @return
+     */
+    public List<String> storedNodeDetails() {
+        try {
+            ColumnSlice<String,String> values= CassandraDataAccessHelper.getStringTypeColumnsInARow(NODE_DETAIL_ROW,NODE_DETAIL_COLUMN_FAMILY,
+                    keyspace,Integer.MAX_VALUE);
+
+
+            List<HColumn<String,String>> columns = values.getColumns();
+            List<String> nodes = new ArrayList<String>();
+            for(HColumn<String,String> column : columns) {
+                nodes.add(column.getName());
+            }
+
+            return nodes;
 
         } catch (CassandraDataAccessException e) {
             throw new RuntimeException("Error accessing Node details to cassandra database");

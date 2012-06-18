@@ -28,6 +28,7 @@ import org.apache.commons.logging.LogFactory;
 import org.w3c.dom.Node;
 import org.wso2.carbon.caching.core.identity.IdentityCacheEntry;
 import org.wso2.carbon.caching.core.identity.IdentityCacheKey;
+import org.wso2.carbon.identity.base.IdentityException;
 import org.wso2.carbon.identity.entitlement.EntitlementConstants;
 import org.wso2.carbon.identity.entitlement.EntitlementUtil;
 import org.wso2.carbon.identity.entitlement.internal.EntitlementServiceComponent;
@@ -135,8 +136,12 @@ public class CarbonResourceFinder extends ResourceFinderModule{
                         resources.add(EntitlementUtil.getAttributeValue(resourceName, dataType));
                     }
                 }
-            } catch (Exception e) {
+            } catch (IdentityException e) {
                 log.error("Error while finding descendant resources", e);
+            } catch (TransformerException e) {
+                log.error("Error while finding descendant resources", e);
+            } catch (Exception e) {
+               log.error("Error while finding descendant resources", e);
             }
         }
 
@@ -203,8 +208,12 @@ public class CarbonResourceFinder extends ResourceFinderModule{
                         resources.add(EntitlementUtil.getAttributeValue(resourceName, dataType));
                     }
                 }
+            } catch (IdentityException e) {
+                log.error("Error while finding child resources", e);
+            } catch (TransformerException e) {
+                log.error("Error while finding child resources", e);
             } catch (Exception e) {
-                log.error("Error while finding child resources");
+                log.error("Error while finding child resources", e);
             }
         }
 

@@ -17,17 +17,19 @@
 
 package org.wso2.carbon.identity.entitlement.dto;
 
+import java.util.Arrays;
+
 public class PaginatedPolicySetDTO {
 
     private PolicyDTO[] policySet;
     private int numberOfPages;
 
     public PolicyDTO[] getPolicySet() {
-        return policySet;
+        return Arrays.copyOf(policySet, policySet.length);
     }
 
     public void setPolicySet(PolicyDTO[] policySet) {
-        this.policySet = policySet;
+        this.policySet = Arrays.copyOf(policySet, policySet.length);
     }
 
     public int getNumberOfPages() {

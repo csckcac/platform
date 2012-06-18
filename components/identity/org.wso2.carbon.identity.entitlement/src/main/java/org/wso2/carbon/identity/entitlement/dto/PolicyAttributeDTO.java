@@ -54,7 +54,7 @@ public class PolicyAttributeDTO {
 
 
     public AttributeValueTreeNodeDTO[] getNodeDTOs() {
-        return nodeDTOs;
+        return Arrays.copyOf(nodeDTOs, nodeDTOs.length);
     }
 
     public void addNodeDTO(AttributeValueTreeNodeDTO node){
@@ -65,7 +65,7 @@ public class PolicyAttributeDTO {
     }
 
     public String[] getSupportedRuleFunctions() {
-        return supportedRuleFunctions;
+        return Arrays.copyOf(supportedRuleFunctions, supportedRuleFunctions.length);
     }
     
     public void addSupportedRuleFunctions(List<String> ruleFunctions) {
@@ -73,7 +73,7 @@ public class PolicyAttributeDTO {
     }
 
     public String[] getSupportedTargetFunctions() {
-        return supportedTargetFunctions;
+        return Arrays.copyOf(supportedTargetFunctions, supportedTargetFunctions.length);
     }
     
     public void addSupportedTargetFunctions(List<String> targetFunctions) {
@@ -81,7 +81,7 @@ public class PolicyAttributeDTO {
     }
 
     public String[] getSupportedCategories() {
-        return supportedCategories;
+        return Arrays.copyOf(supportedCategories, supportedCategories.length);
     }
 
     public void addSupportedCategories(List<String>  supportedCategories) {
@@ -89,10 +89,10 @@ public class PolicyAttributeDTO {
     }
 
     public String[] getSupportedPreFunctions() {
-        return supportedPreFunctions;
+        return Arrays.copyOf(supportedPreFunctions, supportedPreFunctions.length);
     }
 
     public void setSupportedPreFunctions(String[] supportedPreFunctions) {
-        this.supportedPreFunctions = supportedPreFunctions;
+        this.supportedPreFunctions = Arrays.copyOf(supportedPreFunctions, supportedPreFunctions.length);
     }
 }

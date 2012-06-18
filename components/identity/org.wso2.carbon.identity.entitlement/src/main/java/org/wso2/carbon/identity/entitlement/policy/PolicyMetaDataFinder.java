@@ -81,11 +81,12 @@ public class PolicyMetaDataFinder {
 
             Map<String, String> categoryMap = module.getSupportedCategories();
 
-            Set<String> categories = categoryMap.keySet();
+            Set<Map.Entry<String, String>> categories = categoryMap.entrySet();
 
-            for(String category : categories){
+            for(Map.Entry<String, String> categoryEntry : categories){
 
                 AttributeValueTreeNodeDTO node = null;
+                String category = categoryEntry.getKey();
                 try {
                     node = module.getAttributeValueData(category);
                 } catch (Exception e) {
@@ -98,7 +99,7 @@ public class PolicyMetaDataFinder {
                     node.setHierarchicalTree(module.isHierarchicalTree());
                     node.setModuleName(module.getModuleName());
                     node.setCategoryId(category);
-                    node.setCategoryUri(categoryMap.get(category));
+                    node.setCategoryUri(categoryEntry.getValue());
                     node.setDefaultAttributeDataType(module.getDefaultAttributeDataType(category));
                     node.setDefaultAttributeId(module.getDefaultAttributeId(category));
                     try {

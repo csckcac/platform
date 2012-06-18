@@ -19,13 +19,7 @@ package org.wso2.carbon.identity.entitlement.policy.finder;
 
 import java.io.File;
 import java.net.URI;
-import java.util.ArrayList;
-import java.util.Arrays;
-import java.util.LinkedHashMap;
-import java.util.List;
-import java.util.Properties;
-import java.util.Set;
-import java.util.TreeSet;
+import java.util.*;
 
 import org.wso2.balana.*;
 import net.sf.jsr107cache.Cache;
@@ -361,9 +355,9 @@ public class RegistryBasedPolicyFinder extends PolicyFinderModule {
         } else {
             LinkedHashMap<String, TreeSet<AbstractPolicy>> policies = this.policies.getPolicies();
             if(policies != null && policies.size() > 0){
-                Set<String> keySet = policies.keySet();
-                for(String key : keySet){
-                    AbstractPolicy policy = policies.get(key).first();
+                Set<Map.Entry<String, TreeSet<AbstractPolicy>>> entrySet = policies.entrySet();
+                for(Map.Entry<String, TreeSet<AbstractPolicy>> entry : entrySet){
+                    AbstractPolicy policy = entry.getValue().first();
                     PolicyTarget policyTarget = new PolicyTarget();
                     policyTarget.setPolicyId(policy.getId().toString());
                     policyTarget.setTarget(policy.getTarget());

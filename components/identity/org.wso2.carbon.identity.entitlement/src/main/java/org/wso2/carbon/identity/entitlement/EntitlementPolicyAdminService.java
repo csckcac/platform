@@ -623,12 +623,12 @@ public class EntitlementPolicyAdminService extends AbstractAdmin {
 		Map<PIPAttributeFinder, Properties> designators = EntitlementServiceComponent.getEntitlementConfig()
 				.getDesignators();
         if(designators != null && !designators.isEmpty()){
-            Set<PIPAttributeFinder> pipAttributeFinders = designators.keySet();
-            for (PIPAttributeFinder pipAttributeFinder : pipAttributeFinders) {
+            Set<Map.Entry<PIPAttributeFinder, Properties>> pipAttributeFinders = designators.entrySet();
+            for (Map.Entry<PIPAttributeFinder, Properties> pipAttributeFinder : pipAttributeFinders) {
                 if (pipAttributeFinder.getClass().getCanonicalName().equals(attributeFinder)) {
                     try {
-                        pipAttributeFinder.init(designators.get(pipAttributeFinder));
-                        pipAttributeFinder.clearCache();
+                        pipAttributeFinder.getKey().init(pipAttributeFinder.getValue());
+                        pipAttributeFinder.getKey().clearCache();
                         CarbonAttributeFinder carbonAttributeFinder = EntitlementEngine.
                                 getInstance(getGovernanceUserRegistry(), CarbonContext.getCurrentContext().
                                         getTenantId()).getCarbonAttributeFinder();

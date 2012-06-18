@@ -18,6 +18,7 @@
 
 package org.wso2.carbon.identity.entitlement.dto;
 
+import java.util.Arrays;
 /**
  * Encapsulates the entitle result set for given search result
  */
@@ -30,11 +31,11 @@ public class EntitledResultSetDTO {
     private String messageType;
 
     public EntitledAttributesDTO[] getEntitledAttributesDTOs() {
-        return entitledAttributesDTOs;
+        return  Arrays.copyOf(entitledAttributesDTOs, entitledAttributesDTOs.length);
     }
 
     public void setEntitledAttributesDTOs(EntitledAttributesDTO[] entitledAttributesDTOs) {
-        this.entitledAttributesDTOs = entitledAttributesDTOs;
+        this.entitledAttributesDTOs = Arrays.copyOf(entitledAttributesDTOs, entitledAttributesDTOs.length);
     }
 
     public String getMessage() {

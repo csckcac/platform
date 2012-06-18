@@ -17,8 +17,7 @@
 */
 package org.wso2.carbon.identity.entitlement.dto;
 
-import java.util.ArrayList;
-import java.util.List;
+import java.util.Arrays;
 
 /**
  * This class encapsulate the XACML policy related the data
@@ -49,7 +48,7 @@ public class PolicyDTO {
 
     private String[] policySetIdReferences = new String[0];
 
-    private String[] PolicyIdReferences = new String[0];
+    private String[] policyIdReferences = new String[0];
 
     public String getPolicyId() {
         return policyId;
@@ -92,19 +91,20 @@ public class PolicyDTO {
     }
 
     public String[] getBasicPolicyEditorMetaData() {
-        return basicPolicyEditorMetaData;
+        return Arrays.copyOf(basicPolicyEditorMetaData, basicPolicyEditorMetaData.length);
     }
 
     public void setBasicPolicyEditorMetaData(String[] basicPolicyEditorMetaData) {
-        this.basicPolicyEditorMetaData = basicPolicyEditorMetaData;
+        this.basicPolicyEditorMetaData = Arrays.copyOf(basicPolicyEditorMetaData,
+                                                                basicPolicyEditorMetaData.length);
     }
 
     public AttributeValueDTO[] getPolicyMetaData() {
-        return policyMetaData;
+        return Arrays.copyOf(policyMetaData, policyMetaData.length);
     }
 
     public void setPolicyMetaData(AttributeValueDTO[] policyMetaData) {
-        this.policyMetaData = policyMetaData;
+        this.policyMetaData = Arrays.copyOf(policyMetaData, policyMetaData.length);
     }
 
     public boolean isPolicyEditable() {
@@ -140,18 +140,18 @@ public class PolicyDTO {
     }
 
     public String[] getPolicySetIdReferences() {
-        return policySetIdReferences;
+        return Arrays.copyOf(policySetIdReferences, policySetIdReferences.length);
     }
 
     public void setPolicySetIdReferences(String[] policySetIdReferences) {
-        this.policySetIdReferences = policySetIdReferences;
+        this.policySetIdReferences = Arrays.copyOf(policySetIdReferences, policySetIdReferences.length);
     }
 
     public String[] getPolicyIdReferences() {
-        return PolicyIdReferences;
+        return Arrays.copyOf(policyIdReferences, policyIdReferences.length);
     }
 
     public void setPolicyIdReferences(String[] policyIdReferences) {
-        PolicyIdReferences = policyIdReferences;
+        this.policyIdReferences = Arrays.copyOf(policyIdReferences, policyIdReferences.length);
     }
 }

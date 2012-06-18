@@ -295,9 +295,9 @@ public class CarbonAttributeFinder extends AttributeFinderModule {
 		Map<PIPAttributeFinder, Properties> designators = EntitlementServiceComponent.getEntitlementConfig()
 				.getDesignators();
         if(designators != null  && !designators.isEmpty()){
-            Set<PIPAttributeFinder> attributeFinders = designators.keySet();
-            for (PIPAttributeFinder attributeFinder : attributeFinders) {                
-                attributeFinder.init(designators.get(attributeFinder));
+            Set<Map.Entry<PIPAttributeFinder, Properties>> attributeFinders = designators.entrySet();
+            for (Map.Entry<PIPAttributeFinder, Properties> attributeFinder : attributeFinders) {
+                attributeFinder.getKey().init(attributeFinder.getValue());
             }
             init();
         }

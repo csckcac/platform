@@ -20,7 +20,6 @@ package org.wso2.carbon.identity.entitlement.dto;
 
 import java.util.Arrays;
 import java.util.HashSet;
-import java.util.List;
 import java.util.Set;
 
 /**
@@ -107,7 +106,7 @@ public class AttributeValueTreeNodeDTO {
     }
 
     public AttributeValueTreeNodeDTO[] getChildNodes() {
-        return childNodes;
+        return  Arrays.copyOf(childNodes, childNodes.length);
     }
 
     public boolean isFullPathSupported() {
@@ -135,15 +134,15 @@ public class AttributeValueTreeNodeDTO {
     }
 
     public String[] getAttributeDataTypes() {
-        return attributeDataTypes;
+        return  Arrays.copyOf(attributeDataTypes, attributeDataTypes.length);
     }
 
     public void setAttributeDataTypes(String[] attributeDataTypes) {
-        this.attributeDataTypes = attributeDataTypes;
+        this.attributeDataTypes = Arrays.copyOf(attributeDataTypes, attributeDataTypes.length);
     }
 
     public void setSupportedAttributeIds(String[] supportedAttributeIds) {
-        this.supportedAttributeIds = supportedAttributeIds;
+        this.supportedAttributeIds = Arrays.copyOf(supportedAttributeIds, supportedAttributeIds.length);
     }
 
     public void addAttributeDataType(String attributeDataType) {
@@ -153,7 +152,7 @@ public class AttributeValueTreeNodeDTO {
     }
 
     public void setChildNodes(AttributeValueTreeNodeDTO[] childNodes) {
-        this.childNodes = childNodes;
+        this.childNodes = Arrays.copyOf(childNodes, childNodes.length);
     }
 
     public void addChildNode(AttributeValueTreeNodeDTO node){
@@ -163,7 +162,7 @@ public class AttributeValueTreeNodeDTO {
     }
 
     public String[] getSupportedAttributeIds() {
-        return supportedAttributeIds;
+        return  Arrays.copyOf(supportedAttributeIds, supportedAttributeIds.length);
     }
 
     public void addSupportedAttributeId(String supportedAttributeId) {

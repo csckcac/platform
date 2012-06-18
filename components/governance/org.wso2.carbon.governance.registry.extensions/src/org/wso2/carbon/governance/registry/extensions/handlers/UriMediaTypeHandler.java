@@ -21,10 +21,11 @@ import org.apache.axiom.om.impl.builder.StAXOMBuilder;
 import org.apache.axiom.om.xpath.AXIOMXPath;
 import org.apache.commons.logging.Log;
 import org.jaxen.SimpleNamespaceContext;
+import org.wso2.carbon.governance.api.exception.GovernanceException;
 import org.wso2.carbon.governance.registry.extensions.handlers.utils.HandlerConstants;
+import org.wso2.carbon.registry.api.RegistryException;
 import org.wso2.carbon.registry.core.Registry;
 import org.wso2.carbon.registry.core.Resource;
-import org.wso2.carbon.registry.core.exceptions.RegistryException;
 import org.wso2.carbon.registry.core.jdbc.handlers.Handler;
 import org.wso2.carbon.registry.core.jdbc.handlers.RequestContext;
 
@@ -33,27 +34,26 @@ import java.util.Iterator;
 import java.util.List;
 
 public class UriMediaTypeHandler extends Handler {
-     private static final Log log = org.apache.commons.logging.LogFactory.getLog(UriMediaTypeHandler.class);
+    private static final Log log = org.apache.commons.logging.LogFactory.getLog(UriMediaTypeHandler.class);
 
     @Override
-    public void put(RequestContext requestContext) throws RegistryException {
+    public void put(RequestContext requestContext) throws GovernanceException {
         Registry registry = requestContext.getRegistry();
         Resource resource = requestContext.getResource();
         String resourceId = resource.getId();
         String fileUri = null;
         String type = null;
 
-        byte[] content;
-        if(resource.getContent() instanceof String){
-            content =  ((String)resource.getContent()).getBytes();
-        } else {
-            content = (byte[])resource.getContent();
-        }
-        ByteArrayInputStream in = new ByteArrayInputStream(content);
-        OMElement docElement;
         try {
+            byte[] content;
+            if(resource.getContent() instanceof String){
+                content =  ((String)resource.getContent()).getBytes();
+            } else {
+                content = (byte[])resource.getContent();
+            }
+            ByteArrayInputStream in = new ByteArrayInputStream(content);
             StAXOMBuilder builder = new StAXOMBuilder(in);
-            docElement = builder.getDocumentElement();
+            OMElement docElement = builder.getDocumentElement();
             SimpleNamespaceContext simpleNamespaceContext = new SimpleNamespaceContext();
             simpleNamespaceContext.addNamespace("pre",docElement.getNamespace().getNamespaceURI());
             AXIOMXPath expression = new AXIOMXPath("//pre:overview");
@@ -75,18 +75,23 @@ public class UriMediaTypeHandler extends Handler {
         } catch (Exception e) {
             String msg = "Failed to parse content of URI ";
             log.error(msg, e);
-            throw new RegistryException(msg, e);
+            throw new GovernanceException(msg, e);
         }
-
-        if(type.equals(HandlerConstants.WSDL)){
-            WsdlUriHandler wsdlUriHandler = new WsdlUriHandler();
-            wsdlUriHandler.importResource(requestContext, fileUri);
-        } else if(type.equals(HandlerConstants.XSD)){
-            SchemaUriHandler schemaUriHandler = new SchemaUriHandler();
-            schemaUriHandler.importResource(requestContext, fileUri);
-        } else if(type.equals(HandlerConstants.POLICY)){
-            PolicyUriHandler policyUriHandler = new PolicyUriHandler();
-            policyUriHandler.importResource(requestContext, fileUri);
+        try {
+            if(HandlerConstants.WSDL.equals(type)){
+                WsdlUriHandler wsdlUriHandler = new WsdlUriHandler();
+                wsdlUriHandler.importResource(requestContext, fileUri);
+            } else if(HandlerConstants.XSD.equals(type)){
+                SchemaUriHandler schemaUriHandler = new SchemaUriHandler();
+                schemaUriHandler.importResource(requestContext, fileUri);
+            } else if(HandlerConstants.POLICY.equals(type)){
+                PolicyUriHandler policyUriHandler = new PolicyUriHandler();
+                policyUriHandler.importResource(requestContext, fileUri);
+            }
+        } catch (RegistryException e) {
+            String msg = "Failed to add " + type + " URI";
+            log.error(msg, e);
+            throw new GovernanceException(msg, e);
         }
 
     }

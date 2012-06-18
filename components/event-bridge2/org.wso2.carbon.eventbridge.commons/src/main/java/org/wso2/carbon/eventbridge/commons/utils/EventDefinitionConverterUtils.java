@@ -21,11 +21,13 @@ package org.wso2.carbon.eventbridge.commons.utils;
 
 import com.google.gson.Gson;
 import org.json.JSONArray;
+import org.json.JSONException;
 import org.wso2.carbon.eventbridge.commons.Attribute;
 import org.wso2.carbon.eventbridge.commons.AttributeType;
 import org.wso2.carbon.eventbridge.commons.EventStreamDefinition;
 import org.wso2.carbon.eventbridge.commons.exception.MalformedStreamDefinitionException;
 
+import java.util.ArrayList;
 import java.util.List;
 
 /**
@@ -82,6 +84,7 @@ public final class EventDefinitionConverterUtils {
                 eventStreamDefinition = new EventStreamDefinition(name, version, streamId);
             }
 
+            eventStreamDefinition.setTags(tempEventStreamDefinition.getTags());
             eventStreamDefinition.setMetaData(tempEventStreamDefinition.getMetaData());
             eventStreamDefinition.setCorrelationData(tempEventStreamDefinition.getCorrelationData());
             eventStreamDefinition.setPayloadData(tempEventStreamDefinition.getPayloadData());
@@ -103,6 +106,21 @@ public final class EventDefinitionConverterUtils {
         }
 
         return jsonDefnArray.toString();
+    }
+
+    public static List<EventStreamDefinition> convertMultipleEventDefns(String jsonArrayOfEventDefns)
+            throws MalformedStreamDefinitionException {
+        try {
+            JSONArray jsonArray = new JSONArray(jsonArrayOfEventDefns);
+            List<EventStreamDefinition> eventStreamDefinitions = new ArrayList<EventStreamDefinition>();
+            for (int i = 0; i < jsonArray.length(); i++) {
+                eventStreamDefinitions.add(convertFromJson(jsonArray.getString(i)));
+            }
+            return eventStreamDefinitions;
+        } catch (JSONException e) {
+            throw new MalformedStreamDefinitionException(" Malformed stream definition " + jsonArrayOfEventDefns, e);
+        }
+
     }
 
     public static String convertToJson(EventStreamDefinition existingDefinition) {

@@ -43,7 +43,8 @@ public class EventStreamDefinition {
         this.name = name;
         String versionPattern = "^\\d+\\.\\d+\\.\\d+$";
         if (!version.matches(versionPattern)) {
-            throw new MalformedStreamDefinitionException("version " + version + " does not adhere to the format x.x.x ");
+            throw new MalformedStreamDefinitionException(
+                    EBCommonsConstants.VERSION + " " + version + " does not adhere to the format x.x.x ");
         }
         this.version = version;
         this.streamId = streamId;
@@ -54,7 +55,8 @@ public class EventStreamDefinition {
         this.name = name;
         String versionPattern = "^\\d+\\.\\d+\\.\\d+$";
         if (!version.matches(versionPattern)) {
-            throw new MalformedStreamDefinitionException("version " + version + " does not adhere to the format x.x.x ");
+            throw new MalformedStreamDefinitionException(
+                    EBCommonsConstants.VERSION + " " + version + " does not adhere to the format x.x.x ");
         }
         this.version = version;
         generateSteamId();
@@ -215,15 +217,15 @@ public class EventStreamDefinition {
     @Override
     public String toString() {
         return "EventStreamDefinition{" +
-               "streamId='" + streamId + '\'' +
-               ", name='" + name + '\'' +
-               ", version='" + version + '\'' +
-               ", nickName='" + nickName + '\'' +
-               ", description='" + description + '\'' +
-               ", tags=" + tags +
-               ", metaData=" + metaData +
-               ", correlationData=" + correlationData +
-               ", payloadData=" + payloadData +
+                EBCommonsConstants.STREAM_ID + "='" + streamId + '\'' +
+                ", " + EBCommonsConstants.NAME + "='" + name + '\'' +
+                ", " + EBCommonsConstants.VERSION + "='" + version + '\'' +
+                ", " + EBCommonsConstants.NICK_NAME + "='" + nickName + '\'' +
+                ", " + EBCommonsConstants.DESCRIPTION + "='" + description + '\'' +
+                ", " + EBCommonsConstants.TAGS + "=" + tags +
+                ", " + EBCommonsConstants.META_DATA + "=" + metaData +
+                ", " + EBCommonsConstants.CORRELATION_DATA + "=" + correlationData +
+                ", " + EBCommonsConstants.PAYLOAD_DATA + "=" + payloadData +
                '}';
     }
 }

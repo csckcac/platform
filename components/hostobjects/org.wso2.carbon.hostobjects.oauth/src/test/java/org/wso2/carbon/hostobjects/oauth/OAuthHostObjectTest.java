@@ -29,7 +29,7 @@ public class OAuthHostObjectTest {
     private static final Log log = LogFactory.getLog(OAuthHostObject.class);
 
     public void testOAuthProvider() {
-        //These are some test keys taken from scribe OAuth library
+/*        //These are some test keys taken from scribe OAuth library
         NativeObject o = new NativeObject();
         o.put("oauth_version", o, "1");
         o.put("authorization_url", o, "https://api.twitter.com/oauth/authorize");
@@ -48,6 +48,6 @@ public class OAuthHostObjectTest {
             log.info("Twitter Authorization URL Created : " + authUrl);
         } catch (ScriptException e) {
             log.error(e);
-        }
+        }*/
     }
 }

@@ -264,7 +264,7 @@ public class FaultMediator extends AbstractMediator {
         }
 
 
-        if (faultNode != null) {
+        if (faultNode != null && soapVersion != SOAP11) {
             OMElement node = fac.createOMElement("node", synNS, fault);
             node.setText(faultNode.toString());
         }

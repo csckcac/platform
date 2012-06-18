@@ -163,7 +163,7 @@ public class FaultMediatorFactory extends AbstractMediatorFactory  {
         processAuditStatus(faultMediator,elem);
 
         OMElement node = elem.getFirstChildWithName(NODE_Q);
-        if (node != null && node.getText() != null) {
+        if (node != null && node.getText() != null && !SOAP11.equals(version.getAttributeValue())) {
             try {
                 faultMediator.setFaultNode(new URI(node.getText()));
             } catch (URISyntaxException e) {

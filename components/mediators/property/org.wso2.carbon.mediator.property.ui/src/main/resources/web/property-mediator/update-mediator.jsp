@@ -72,6 +72,7 @@
                         propertyMediator.setGroup(Integer.parseInt(group));
                     }
                 }
+                propertyMediator.setType(type);
             } else {
                 propertyMediator.setType(type);
             }

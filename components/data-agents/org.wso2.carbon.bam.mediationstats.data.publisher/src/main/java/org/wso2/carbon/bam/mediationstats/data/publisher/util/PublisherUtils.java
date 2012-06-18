@@ -19,6 +19,7 @@ package org.wso2.carbon.bam.mediationstats.data.publisher.util;
 import org.apache.axis2.context.ConfigurationContext;
 import org.apache.axis2.engine.AxisConfiguration;
 import org.apache.synapse.aspects.statistics.ErrorLog;
+import org.wso2.carbon.bam.mediationstats.data.publisher.conf.EventPublisherConfig;
 import org.wso2.carbon.bam.mediationstats.data.publisher.services.BAMMediationStatsPublisherAdmin;
 import org.wso2.carbon.core.multitenancy.SuperTenantCarbonContext;
 import org.wso2.carbon.mediation.initializer.services.SynapseEnvironmentService;
@@ -41,6 +42,18 @@ public class PublisherUtils {
     private static String serverName;
 
     private static final String TRANSPORT = "https"; // TODO: it is not ideal to assume https is always available
+
+
+    private static Map<String,EventPublisherConfig> eventPublisherConfigMap =
+            new HashMap<String, EventPublisherConfig>();
+
+    public static EventPublisherConfig getEventPublisherConfig(String key) {
+        return eventPublisherConfigMap.get(key);
+    }
+
+    public static Map<String,EventPublisherConfig> getEventPublisherConfigMap(){
+        return eventPublisherConfigMap;
+    }
 
     public static void setConfigurationContext(ConfigurationContext axisConfigContext) {
         axisConfigurationContext = axisConfigContext;

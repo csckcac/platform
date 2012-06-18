@@ -18,25 +18,29 @@ package org.wso2.carbon.bam.mediationstats.data.publisher.publish;
 
 import org.apache.commons.logging.Log;
 import org.apache.commons.logging.LogFactory;
-import org.wso2.carbon.agent.Agent;
 import org.wso2.carbon.agent.DataPublisher;
 import org.wso2.carbon.agent.commons.AttributeType;
 import org.wso2.carbon.agent.commons.EventStreamDefinition;
 import org.wso2.carbon.agent.commons.exception.AuthenticationException;
+import org.wso2.carbon.agent.commons.exception.DifferentStreamDefinitionAlreadyDefinedException;
 import org.wso2.carbon.agent.commons.exception.MalformedStreamDefinitionException;
+import org.wso2.carbon.agent.commons.exception.NoStreamDefinitionExistException;
+import org.wso2.carbon.agent.commons.exception.StreamDefinitionException;
+import org.wso2.carbon.agent.conf.AgentConfiguration;
 import org.wso2.carbon.agent.exception.AgentException;
 import org.wso2.carbon.agent.exception.TransportException;
 import org.wso2.carbon.bam.data.publisher.util.BAMDataPublisherConstants;
+import org.wso2.carbon.bam.mediationstats.data.publisher.conf.EventPublisherConfig;
 import org.wso2.carbon.bam.mediationstats.data.publisher.conf.MediationStatConfig;
 import org.wso2.carbon.bam.mediationstats.data.publisher.conf.Property;
 import org.wso2.carbon.bam.mediationstats.data.publisher.data.MediationData;
 import org.wso2.carbon.bam.mediationstats.data.publisher.util.MediationDataPublisherConstants;
+import org.wso2.carbon.bam.mediationstats.data.publisher.util.PublisherUtils;
 import org.wso2.carbon.bam.mediationstats.data.publisher.util.TenantMediationStatConfigData;
 import org.wso2.carbon.mediation.statistics.StatisticsRecord;
 
 import java.net.MalformedURLException;
 import java.util.ArrayList;
-import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
@@ -45,158 +49,130 @@ public class Publisher {
 
 
     private static Log log = LogFactory.getLog(Publisher.class);
-
-    //private static boolean isSocketTransportUsed = true;
+    private static boolean isStreamDefinitionAlreadyExist = false;
 
     public static void process(MediationData mediationData, int tenantID) {
-        Map<String, String> correlationData = new HashMap<String, String>();
-        List<String> metaDataKeySet = new ArrayList<String>();
-        List<String> metaDataValueSet = new ArrayList<String>();
-//        Map<String, String> metaData = new HashMap<String, String>();
-        //Map<String, ByteBuffer> eventData = new HashMap<String, ByteBuffer>();
+        List<String> metaDataKeyList = new ArrayList<String>();
+        List<String> metaDataValueList = new ArrayList<String>();
 
-        List<String> eventData = new ArrayList<String>();
+        List<Object> eventData = new ArrayList<Object>();
 
         Map<Integer, MediationStatConfig> mediationStatConfigMap = TenantMediationStatConfigData.
                 getTenantSpecificEventingConfigData();
         MediationStatConfig mediationStatConfig = mediationStatConfigMap.get(tenantID);
 
         addEventData(eventData, mediationData);
-        addMetaData(metaDataKeySet,metaDataValueSet, mediationData, mediationStatConfig);
-        addCorrelationData(correlationData, mediationData);
+        addMetaData(metaDataKeyList, metaDataValueList, mediationStatConfig);
 
-        //Event event = new Event();
-        //event.setCorrelation(correlationData);
-        //event.setMeta(metaData);
-        //event.setEvent(eventData);
-        //publish(event, tenantID);
-
-        publishToAgent(eventData, metaDataKeySet, metaDataValueSet, mediationStatConfig);
+        publishToAgent(eventData, metaDataKeyList, metaDataValueList, mediationStatConfig);
     }
 
-    private static void addCorrelationData(Map<String, String> correlationData,
-                                           MediationData mediationData) {
-    }
 
-    private static void addMetaData(List<String> metaDataKeySet,List<String> metaDataValueSet, MediationData mediationData,
+    private static void addMetaData(List<String> metaDataKeyList, List<String> metaDataValueList,
                                     MediationStatConfig mediationStatConfig) {
         Property[] properties = mediationStatConfig.getProperties();
         if (properties != null) {
             for (int i = 0; i < properties.length; i++) {
                 Property property = properties[i];
                 if (property.getKey() != null && property.getKey().isEmpty()) {
-                    //putDataIntoMap(metaData, property.getKey(), property.getValue());
-                    metaDataKeySet.add(property.getKey());
-                    metaDataValueSet.add(property.getValue());
+                    metaDataKeyList.add(property.getKey());
+                    metaDataValueList.add(property.getValue());
                 }
             }
         }
     }
 
 
-    private static void addEventData(List<String> eventData,
+    private static void addEventData(List<Object> eventData,
                                      MediationData mediationData) {
         eventData.add(mediationData.getDirection());
-        eventData.add(mediationData.getTimestamp().toString());
+        eventData.add(mediationData.getTimestamp().getTime());
         eventData.add(mediationData.getResourceId());
         eventData.add(mediationData.getStatsType());
         StatisticsRecord record = mediationData.getStatisticsRecord();
-        eventData.add(Long.toString(record.getMaxTime()));
-        eventData.add(Double.toString(record.getAvgTime()));
-        eventData.add(Long.toString(record.getMinTime()));
-        eventData.add(Integer.toString(record.getFaultCount()));
-        eventData.add(Integer.toString(record.getTotalCount()));
-        Map<String, Object> errorMap = mediationData.getErrorMap();
+        eventData.add(record.getMaxTime());
+        eventData.add(record.getAvgTime());
+        eventData.add(record.getMinTime());
+        eventData.add(record.getFaultCount());
+        eventData.add(record.getTotalCount());
+
+        //TODO : Send these values to BAM side.
+/*        Map<String, Object> errorMap = mediationData.getErrorMap();
         if (errorMap != null) {
             for (Map.Entry<String, Object> errorEntry : errorMap.entrySet()) {
                 Object entryValue = errorEntry.getValue();
                 if (entryValue instanceof Integer) {
-                    eventData.add(((Integer)entryValue).toString());
+                    eventData.add(((Integer) entryValue).toString());
                 } else if (entryValue instanceof String) {
                     eventData.add(((String) entryValue));
                 }
             }
-        }
+        }*/
     }
 
-    /*private static void putDataIntoMap(Map<String, String> data, String key, String value) {
-        if (value != null) {
-            data.put(key, value);
-        }
-    }*/
 
     private static DataPublisher dataPublisher = null;
     private static String streamId = null;
 
-    private static void publishToAgent(List<String> eventData, List<String> metaDataKeySet,List<String> metaDataValueSet, MediationStatConfig mediationStatConfig) {
+    private static void publishToAgent(List<Object> eventData,
+                                       List<String> metaDataKeyList,
+                                       List<String> metaDataValueList,
+                                       MediationStatConfig mediationStatConfig) {
 
         try {
             String serverUrl = mediationStatConfig.getUrl();
             String userName = mediationStatConfig.getUserName();
             String passWord = mediationStatConfig.getPassword();
-            Object[] metaData = metaDataKeySet.toArray();
+            Object[] metaData = metaDataKeyList.toArray();
 
+            String key = serverUrl + "_" + userName
+                         + "_" + passWord;
+            EventPublisherConfig eventPublisherConfig = PublisherUtils.getEventPublisherConfig(key);
 
+            EventStreamDefinition streamDef = getEventStreamDefinition(mediationStatConfig, metaData);
+            try {
+                if (eventPublisherConfig == null) {
+                    eventPublisherConfig = new EventPublisherConfig();
+                    AgentConfiguration agentConfiguration = new AgentConfiguration();
+                    dataPublisher = new DataPublisher(serverUrl,
+                                                                    userName,
+                                                                    passWord);
+                    eventPublisherConfig.setAgentConfiguration(agentConfiguration);
+                    eventPublisherConfig.setDataPublisher(dataPublisher);
 
-            if (dataPublisher == null) {
-                dataPublisher = new DataPublisher(serverUrl, userName, passWord);
-                Agent agent = new Agent();
-
-
-
-                dataPublisher.setAgent(agent);
-                EventStreamDefinition eventStreamDefinition = new EventStreamDefinition(
-                        mediationStatConfig.getStreamName(),mediationStatConfig.getVersion());
-                eventStreamDefinition.setDescription(mediationStatConfig.getDescription());
-                for(int i = 0; i < metaData.length; i++){
-                    eventStreamDefinition.addMetaData(metaData[i].toString(), AttributeType.STRING);
+                    try {
+                        streamId = dataPublisher.findEventStream(mediationStatConfig.getStreamName(),
+                                                                 mediationStatConfig.getVersion());
+                    } catch (NoStreamDefinitionExistException e) {
+                        streamId = dataPublisher.defineEventStream(streamDef);
+                    } catch (StreamDefinitionException e) {
+                        e.printStackTrace();
+                    }
+                    Map<EventStreamDefinition, String> defMap = eventPublisherConfig.getEventStreamDefinitionMap();
+                    defMap.put(streamDef, streamId);
+                    PublisherUtils.getEventPublisherConfigMap().put(key, eventPublisherConfig);
                 }
-                eventStreamDefinition.addPayloadData(MediationDataPublisherConstants.DIRECTION,
-                        AttributeType.STRING);
-                eventStreamDefinition.addPayloadData(BAMDataPublisherConstants.TIMESTAMP,
-                        AttributeType.STRING);
-                eventStreamDefinition.addPayloadData(MediationDataPublisherConstants.RESOURCE_ID,
-                        AttributeType.STRING);
-                eventStreamDefinition.addPayloadData(MediationDataPublisherConstants.STATS_TYPE,
-                        AttributeType.STRING);
-                eventStreamDefinition.addPayloadData(MediationDataPublisherConstants.MAX_PROCESS_TIME,
-                        AttributeType.STRING);
-                eventStreamDefinition.addPayloadData(MediationDataPublisherConstants.AVG_PROCESS_TIME,
-                        AttributeType.STRING);
-                eventStreamDefinition.addPayloadData(MediationDataPublisherConstants.MIN_PROCESS_TIME,
-                        AttributeType.STRING);
-                eventStreamDefinition.addPayloadData(MediationDataPublisherConstants.FAULT_COUNT,
-                        AttributeType.STRING);
-                eventStreamDefinition.addPayloadData(MediationDataPublisherConstants.COUNT,
-                        AttributeType.STRING);
-                /*streamId = dataPublisher.defineEventStream("{" +
-                        "  'name':'org.wso2.esb.MediatorStatistics'," +
-                        "  'version':'1.3.0'," +
-                        "  'nickName': 'Stock_Quote_Information'," +
-                        "  'description': 'Some Desc'," +
-                        "  'metaData':[" +
-                        "          {'name':'test','type':'STRING'}," +
-                        "          {'name':'testTwo','type':'STRING'}" +
-                        "  ]," +
-                        "  'payloadData':[" +
-                        "          {'name':'" + MediationDataPublisherConstants.DIRECTION + "','type':'STRING'}," +
-                        "          {'name':'" + BAMDataPublisherConstants.TIMESTAMP + "','type':'STRING'}," +
-                        "          {'name':'" + MediationDataPublisherConstants.RESOURCE_ID + "','type':'STRING'}," +
-                        "          {'name':'" + MediationDataPublisherConstants.STATS_TYPE + "','type':'STRING'}," +
-                        "          {'name':'" + MediationDataPublisherConstants.MAX_PROCESS_TIME + "','type':'STRING'}," +
-                        "          {'name':'" + MediationDataPublisherConstants.AVG_PROCESS_TIME + "','type':'STRING'}," +
-                        "          {'name':'" + MediationDataPublisherConstants.MIN_PROCESS_TIME + "','type':'STRING'}," +
-                        "          {'name':'" + MediationDataPublisherConstants.FAULT_COUNT + "','type':'STRING'}," +
-                        "          {'name':'" + MediationDataPublisherConstants.COUNT + "','type':'STRING'}" +
-                        "  ]" +
-                        "}");*/
+                Map<EventStreamDefinition, String> eventStreamDefinitionMap =
+                        eventPublisherConfig.getEventStreamDefinitionMap();
+
+                if (eventStreamDefinitionMap.containsKey(streamDef)) {
+                    isStreamDefinitionAlreadyExist = true;
+                    streamId = eventStreamDefinitionMap.get(streamDef);
+                }
+
+                dataPublisher = eventPublisherConfig.getDataPublisher();
+                if (!isStreamDefinitionAlreadyExist) {
+                    streamId = dataPublisher.defineEventStream(streamDef);
+                    eventPublisherConfig.getEventStreamDefinitionMap().put(streamDef, streamId);
+                }
+                dataPublisher.publish(streamId, metaDataValueList.toArray(), null,
+                                      eventData.toArray());
+
+            } catch (StreamDefinitionException e1) {
+                e1.printStackTrace();
+            } catch (DifferentStreamDefinitionAlreadyDefinedException e1) {
+                e1.printStackTrace();
             }
-
-
-            dataPublisher.publish(streamId, metaDataValueSet.toArray(), null,
-                    eventData.toArray());
-            log.info("metadata information" + metaDataKeySet);
-
 
         } catch (MalformedURLException e) {
             log.error("Unable to publish event to BAM", e);
@@ -210,6 +186,37 @@ public class Publisher {
             log.error("Unable to publish event to BAM", e);
         }
 
+    }
+
+    private static EventStreamDefinition getEventStreamDefinition(
+            MediationStatConfig mediationStatConfig,
+            Object[] metaData)
+            throws MalformedStreamDefinitionException {
+        EventStreamDefinition eventStreamDefinition = new EventStreamDefinition(
+                mediationStatConfig.getStreamName(), mediationStatConfig.getVersion());
+        eventStreamDefinition.setDescription(mediationStatConfig.getDescription());
+        for (int i = 0; i < metaData.length; i++) {
+            eventStreamDefinition.addMetaData(metaData[i].toString(), AttributeType.STRING);
+        }
+        eventStreamDefinition.addPayloadData(MediationDataPublisherConstants.DIRECTION,
+                                             AttributeType.STRING);
+        eventStreamDefinition.addPayloadData(BAMDataPublisherConstants.TIMESTAMP,
+                                             AttributeType.LONG);
+        eventStreamDefinition.addPayloadData(MediationDataPublisherConstants.RESOURCE_ID,
+                                             AttributeType.STRING);
+        eventStreamDefinition.addPayloadData(MediationDataPublisherConstants.STATS_TYPE,
+                                             AttributeType.STRING);
+        eventStreamDefinition.addPayloadData(MediationDataPublisherConstants.MAX_PROCESS_TIME,
+                                             AttributeType.LONG);
+        eventStreamDefinition.addPayloadData(MediationDataPublisherConstants.AVG_PROCESS_TIME,
+                                             AttributeType.DOUBLE);
+        eventStreamDefinition.addPayloadData(MediationDataPublisherConstants.MIN_PROCESS_TIME,
+                                             AttributeType.LONG);
+        eventStreamDefinition.addPayloadData(MediationDataPublisherConstants.FAULT_COUNT,
+                                             AttributeType.INT);
+        eventStreamDefinition.addPayloadData(MediationDataPublisherConstants.COUNT,
+                                             AttributeType.INT);
+        return eventStreamDefinition;
     }
 
 }

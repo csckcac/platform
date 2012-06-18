@@ -82,6 +82,8 @@ public class ThriftEventReceiverDS {
             log.error("Can not create and start Agent Server ", e);
         } catch (RuntimeException e) {
             log.error("Error in starting Agent Server ", e);
+        } catch (Throwable e) {
+            log.error("Error in starting Agent Server ", e);
         }
     }
 

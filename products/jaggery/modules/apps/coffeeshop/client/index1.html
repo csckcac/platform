@@ -1,0 +1,369 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="utf-8">
+    <title>Coffee House</title>
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta name="description" content="">
+    <meta name="author" content="">
+
+    <!-- Le styles -->
+    <link href="client/css/bootstrap.css" rel="stylesheet">
+    <style>
+        body {
+            padding-top: 60px; /* 60px to make the container go all the way to the bottom of the topbar */
+        }
+    </style>
+    <link href="client/css/bootstrap-responsive.css" rel="stylesheet">
+    <link href="client/css/styles.css" rel="stylesheet">
+
+    <!-- Le HTML5 shim, for IE6-8 support of HTML5 elements -->
+    <!--[if lt IE 9]>
+      <script src="http://html5shim.googlecode.com/svn/trunk/html5.js"></script>
+    <![endif]-->
+
+    <!-- Le fav and touch icons -->
+
+</head>
+
+<body>
+
+
+<div class="container">
+
+    <div class="row">
+        <div class="span12">
+            <span class="logo"><img src="client/img/logo.jpg" alt=""/> Coffee House</span>
+            <p class="pull-right help-block notice">A REST Sample written in Jaggery</p>
+        </div>
+    </div>
+
+    <hr>
+
+    <div class="row">
+
+        <div class="span12">
+            <span class="operations-main"><button class="btn btn-success"  data-toggle="modal" href="#addOrder">New Order</button></span>
+        </div>
+        <div class="modal hide fade" id="addOrder">
+  <div class="modal-header">
+    <button type="button" class="close" data-dismiss="modal">�</button>
+    <h3>Add New Order</h3>
+  </div>
+  <div class="modal-body">
+    <p>
+        <form action="" id="addNewOrderForm" name="addNewOrderForm">
+      <label>Type of Beverage</label>
+      <select id="beverage-type">
+          <option>Espresso</option>
+          <option>Percolator</option>
+          <option>Colombian Coffee</option>
+          <option>Hawaiian Kona</option>
+      </select>
+        </form>
+    </p>
+  </div>
+  <div class="modal-footer">
+    <a href="#" class="btn" data-dismiss="modal">Cancel</a>
+    <a href="#" class="btn btn-primary" onclick="addNewOrder();">Add Order</a>
+  </div>
+</div>
+    </div>
+
+    <div class="row">
+        <div class="span12">
+
+            <div id="order-window">
+
+                <div class="order-entry">
+                    <div class="order-number">011101</div>
+                    <div class="order-content">Frappachino
+                        <span class="help-block"><a href="#" onclick="showAddition(1110);" >Add addition</a></span>
+
+                    </div>
+
+                    <div class="order-actions" id="1">
+                        <a class="btn btn-success completed" style="display:none;">Completed</a>
+                        <ul class="order-status">
+                            <li class="dropdown">
+                                <a class="dropdown-toggle btn btn-warning" data-toggle="dropdown" rel="tooltip" title="Order Status" href="#menu1">
+                                    In Progress
+                                    <b class="caret"></b>
+                                </a>
+                                <ul class="dropdown-menu">
+                                    <li><a href="#" class="mark-paid" onclick="markComplete(1)">Mark as Complete</a></li>
+                                    <li><a href="#">Delete Order</a></li>
+                                </ul>
+                            </li>
+                        </ul>
+
+                        <a class="btn btn-success paid" style="display:none;">Paid</a>
+                        <ul class="payment-action">
+                            <li class="dropdown">
+                                <a class="dropdown-toggle btn btn-danger" data-toggle="dropdown" href="#menu1">
+                                    Not Paid
+                                    <b class="caret"></b>
+                                </a>
+                                <ul class="dropdown-menu">
+                                    <li><a href="#" class="mark-paid" onclick="markPaid(1)">Mark as Paid</a></li>
+                                    <li><a href="#">Delete Order</a></li>
+                                </ul>
+                            </li>
+                        </ul>
+
+                    </div>
+
+                    <div class="amount">
+                        $4.99
+                    </div>
+                </div>
+
+
+                <div class="order-entry">
+                    <div class="order-number">011101</div>
+                    <div class="order-content">Frappachino
+                        <span class="help-block">with peppermint</span>
+
+                    </div>
+
+                    <div class="order-actions" id="2">
+                        <a class="btn btn-success completed" style="display:none;">Completed</a>
+                        <ul class="order-status">
+                            <li class="dropdown">
+                                <a class="dropdown-toggle btn btn-warning" data-toggle="dropdown" rel="tooltip" title="Order Status" href="#menu1">
+                                    In Progress
+                                    <b class="caret"></b>
+                                </a>
+                                <ul class="dropdown-menu">
+                                    <li><a href="#" class="mark-paid" onclick="markComplete(2)">Mark as Complete</a></li>
+                                    <li><a href="#">Delete Order</a></li>
+                                </ul>
+                            </li>
+                        </ul>
+
+                        <a class="btn btn-success paid" style="display:none;">Paid</a>
+                        <ul class="payment-action">
+                            <li class="dropdown">
+                                <a class="dropdown-toggle btn btn-danger" data-toggle="dropdown" href="#menu1">
+                                    Not Paid
+                                    <b class="caret"></b>
+                                </a>
+                                <ul class="dropdown-menu">
+                                    <li><a href="#" class="mark-paid" onclick="markPaid(2)">Mark as Paid</a></li>
+                                    <li><a href="#">Delete Order</a></li>
+                                </ul>
+                            </li>
+                        </ul>
+
+                    </div>
+
+                    <div class="amount">
+                        $4.99
+                    </div>
+                </div>
+
+                <div class="order-entry">
+                    <div class="order-number">011101</div>
+                    <div class="order-content">Frappachino
+                        <span class="help-block">with peppermint</span>
+
+                    </div>
+
+                    <div class="order-actions" id="3">
+                        <a class="btn btn-success completed" style="display:none;">Completed</a>
+                        <ul class="order-status">
+                            <li class="dropdown">
+                                <a class="dropdown-toggle btn btn-warning" data-toggle="dropdown" rel="tooltip" title="Order Status" href="#menu1">
+                                    In Progress
+                                    <b class="caret"></b>
+                                </a>
+                                <ul class="dropdown-menu">
+                                    <li><a href="#" class="mark-paid" onclick="markComplete(3)">Mark as Complete</a></li>
+                                    <li><a href="#">Delete Order</a></li>
+                                </ul>
+                            </li>
+                        </ul>
+
+                        <a class="btn btn-success paid" style="display:none;">Paid</a>
+                        <ul class="payment-action">
+                            <li class="dropdown">
+                                <a class="dropdown-toggle btn btn-danger" data-toggle="dropdown" href="#menu1">
+                                    Not Paid
+                                    <b class="caret"></b>
+                                </a>
+                                <ul class="dropdown-menu">
+                                    <li><a href="#" class="mark-paid" onclick="markPaid(3)">Mark as Paid</a></li>
+                                    <li><a href="#">Delete Order</a></li>
+                                </ul>
+                            </li>
+                        </ul>
+
+                    </div>
+
+                    <div class="amount">
+                        $4.99
+                    </div>
+                </div>
+
+                <div class="order-entry">
+                    <div class="order-number">011101</div>
+                    <div class="order-content">Frappachino
+                        <span class="help-block">with peppermint</span>
+
+                    </div>
+
+                    <div class="order-actions" id="4">
+                        <a class="btn btn-success completed" style="display:none;">Completed</a>
+                        <ul class="order-status">
+                            <li class="dropdown">
+                                <a class="dropdown-toggle btn btn-warning" data-toggle="dropdown" rel="tooltip" title="Order Status" href="#menu1">
+                                    In Progress
+                                    <b class="caret"></b>
+                                </a>
+                                <ul class="dropdown-menu">
+                                    <li><a href="#" class="mark-paid" onclick="markComplete(4)">Mark as Complete</a></li>
+                                    <li><a href="#">Delete Order</a></li>
+                                </ul>
+                            </li>
+                        </ul>
+
+                        <a class="btn btn-success paid" style="display:none;">Paid</a>
+                        <ul class="payment-action">
+                            <li class="dropdown">
+                                <a class="dropdown-toggle btn btn-danger" data-toggle="dropdown" href="#menu1">
+                                    Not Paid
+                                    <b class="caret"></b>
+                                </a>
+                                <ul class="dropdown-menu">
+                                    <li><a href="#" class="mark-paid" onclick="markPaid(4)">Mark as Paid</a></li>
+                                    <li><a href="#">Delete Order</a></li>
+                                </ul>
+                            </li>
+                        </ul>
+
+                    </div>
+
+                    <div class="amount">
+                        $4.99
+                    </div>
+                </div>
+
+            </div>
+
+        </div>
+
+
+    </div>
+
+
+</div>
+<!-- /container -->
+
+<div class="container-collapse container">
+<div class="row">
+
+    <div class="span12">
+
+        <div class="header-max">
+            <span class="label label-success">Message Trace</span><span class="help-inline">Click to toggle</span>
+            <span class="pull-right minimize-button" style="padding:0px 10px;"><i class="icon-chevron-down"></i></span>
+        </div>
+          <div class="message-trace">
+            <div class="request-text">
+
+                <h4>Request</h4>
+
+                <textarea rows="" cols=""></textarea>
+            </div>
+            <div class="response-text">
+
+                <h4>Response</h4>
+
+                <textarea rows="" cols=""></textarea>
+            </div>
+           </div>
+
+    </div>
+
+</div>
+</div>
+
+<div class="modal hide fade" id="addition">
+  <div class="modal-header">
+    <button type="button" class="close" data-dismiss="modal">�</button>
+    <h3>Additional</h3>
+  </div>
+  <div class="modal-body">
+    <p>
+        order number : <span id="modal-order-no"></span>
+        <form action="" id="addition-form" >
+      <input id="orderAdditionId" name="orderAdditionId" type="hidden">
+      <label>Select an addition for this order</label> <select class="additional-toppings">
+          <option>Peppermint</option>
+          <option>Whipped Cream</option>
+          <option>Chocolate</option>
+      </select>
+        </form>
+    </p>
+  </div>
+  <div class="modal-footer">
+    <a href="#" class="btn" data-dismiss="modal">Cancel</a>
+    <a href="#" class="btn btn-primary" onclick="addAddition();">Save changes</a>
+  </div>
+</div>
+
+<!-- Le javascript
+================================================== -->
+<!-- Placed at the end of the document so the pages load faster -->
+<script src="client/js/jquery.min.js"></script>
+<script src="client/js/bootstrap.js"></script>
+<script src="client/js/util.js"></script>
+<script src="client/js/coffeeshopclient.js"></script>
+
+<script type="text/javascript">
+    $('.message-trace').hide();
+    $('.orderstatus').tooltip();
+   
+
+    function markPaid(id){
+           $("#"+id).children(".paid").show();
+             $("#"+id).children(".payment-action").hide();
+        
+    }
+
+    function markComplete(id) {
+        
+        $("#"+id).children(".completed").show();
+        $("#"+id).children(".order-status").hide();
+    }
+
+    $('.minimize-button').click( function (){
+       $('.message-trace').toggle('slow');
+
+    });
+
+    function showAddition(orderID) {
+        document.getElementById("modal-order-no").innerHTML = orderID;
+        $("input#orderAdditionId").val(orderID);
+        $('#addition').modal('toggle') ;
+    }
+
+    function addAddition() {
+        //do something
+        var orderID = $("input#orderAdditionId").val();
+        //alert("order "+orderID+" has been saved");
+        $('#addition').modal('toggle');
+    }
+
+    function addNewOrder () {
+    	console.log("Click  on addNewOrder");
+        var bevType = $("#beverage-type").val();
+        CoffeeShopClient.addOrder(bevType);
+        $('#addOrder').modal('toggle');
+        
+    }
+
+</script>
+
+</body>
+</html>

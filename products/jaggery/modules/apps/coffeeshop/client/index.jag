@@ -6,6 +6,116 @@
 		<meta name="viewport" content="width=device-width, initial-scale=1.0">
 		<meta name="description" content="">
 		<meta name="author" content="">
+		<%
+include("../api/databaseConn.jag");
+include("../api/init.jag")
+
+%>
+		<script src="client/js/mustache.js"></script>
+		<script src="client/js/jquery.min.js"></script>
+		<script src="client/js/bootstrap.js"></script>
+		<script src="client/js/util.js"></script>
+		<script src="client/js/coffeeshopclient.js"></script>
+		<script type="text/javascript">
+						$('.message-trace').hide();
+			$('.orderstatus').tooltip();
+
+			function markPaid(id) {
+			console.log("Call markPaid" +id);
+			CoffeeShopClient.payOrder(id);
+			$("#" + id).children(".paid").show();
+			$("#" + id).children(".payment-action").hide();
+
+			}
+
+			function markComplete(id) {
+			console.log("Call markComplete" +id);
+			CoffeeShopClient.updateStatus(id,'Complete');
+			$("#" + id).children(".completed").show();
+			$("#" + id).children(".order-status").hide();
+			}
+
+			$('.minimize-button').click(function() {
+			$('.message-trace').toggle('slow');
+
+			});
+			function showAddition(orderID) {
+			document.getElementById("modal-order-no").innerHTML = orderID;
+			$("input#orderAdditionId").val(orderID);
+			$('#addition').modal('toggle');
+			}
+
+			function addAddition() {
+			//do something
+			var orderID = $("input#orderAdditionId").val();
+			var additional = $("#additional-toppings").val();
+			
+			//alert("order "+orderID+" has been saved");
+			CoffeeShopClient.addAddittion(orderID,additional);
+			console.log(orderID+"Click  on addAddition "+additional);
+			$('#addition').modal('toggle');
+			}
+
+			function loadOrders() {
+			var template = '{{#orders}}<div class="order-entry"> '
+			+'<div class="order-{{ORDER_ID}}">{{ORDER_ID}}</div>'
+			+'<div class="order-content">'
+			+'{{DRINK}} <span class="help-block"><a href="#" onclick="showAddition({{ORDER_ID}});" >Add addition</a></span>'
+			+'</div> <div class="order-actions" id="1"> '
+			+'<a class="btn btn-success completed" style="display:none;">Completed</a>'
+			+'<ul class="order-status">'
+			+'<li class="dropdown">'
+			+'<a class="dropdown-toggle btn btn-warning" data-toggle="dropdown" rel="tooltip" title="Order Status" href="#menu1"> {{STATUS}} <b class="caret"></b> </a>'
+			+'<ul class="dropdown-menu">'
+			+'<li>'
+			+'<a href="#" class="mark-paid" onclick="markComplete({{ORDER_ID}})">Mark as Complete</a>'
+			+'</li>'
+			+'<li>'
+			+'<a href="#">Delete Order</a>'
+			+'</li>'
+			+'</ul>'
+			+'</li>'
+			+'</ul>'
+			+'<a class="btn btn-success paid" style="display:none;">Paid</a>'
+			+'<ul class="payment-action">'			
+			<%="+'<li class=\"dropdown\">'"%>
+			+'<a class="dropdown-toggle btn btn-danger" data-toggle="dropdown" href="#menu1">Not Paid <b class="caret"></b> </a>'
+			+'<ul class="dropdown-menu">'
+			+'<li>'
+			+'<a href="#" class="mark-paid" onclick="markPaid({{ORDER_ID}})">Mark as Paid</a>'
+			+'</li>'
+			+'<li>'
+			+'<a href="#">Delete Order</a>'
+			+'</li>'
+			+'</ul>'
+			+'</li>'
+			+'</ul>'
+			+'</div>'
+			+'<div class="amount">'
+			+'{{COST}}'
+			+'</div></div></div>'
+			+'{{/orders}}';
+
+			<%
+			var orderJson = get("http://localhost:9763/coffeeshop/orders/", null ,"json");
+			%>
+			var data = <%=orderJson.data%>
+			
+			var html = Mustache.to_html(template, data);
+			console.log("Call template onload ");
+			$("#order-window").append(html);
+
+			}
+
+			function addNewOrder() {
+			console.log("Click  on addNewOrder");
+			var bevType = $("#beverage-type").val();
+			console.log("Click  on addNewOrder "+bevType);
+			CoffeeShopClient.addOrder(bevType);
+			$('#addOrder').modal('toggle');
+
+			}</script>
+			
 		<!-- Le styles -->
 		<link href="client/css/bootstrap.css" rel="stylesheet">
 		<style>
@@ -15,13 +125,14 @@
 		</style>
 		<link href="client/css/bootstrap-responsive.css" rel="stylesheet">
 		<link href="client/css/styles.css" rel="stylesheet">
-		<script src="http://github.com/janl/mustache.js/raw/master/mustache.js"></script>
+		
 		<!-- Le HTML5 shim, for IE6-8 support of HTML5 elements -->
 		<!--[if lt IE 9]>
 		<script src="http://html5shim.googlecode.com/svn/trunk/html5.js"></script>
 		<![endif]-->
 		<!-- Le fav and touch icons -->
 	</head>
+	
 	<body onload="loadOrders()">
 		<div class="container">
 			<div class="row">
@@ -271,7 +382,7 @@
 					<form action="" id="addition-form" >
 						<input id="orderAdditionId" name="orderAdditionId" type="hidden">
 						<label>Select an addition for this order</label>
-						<select class="additional-toppings">
+						<select id="additional-toppings" class="additional-toppings">
 							<option>Peppermint</option>
 							<option>Whipped Cream</option>
 							<option>Chocolate</option>
@@ -287,99 +398,6 @@
 		<!-- Le javascript
 		================================================== -->
 		<!-- Placed at the end of the document so the pages load faster -->
-		<script src="client/js/jquery.min.js"></script>
-		<script src="client/js/bootstrap.js"></script>
-		<script src="client/js/util.js"></script>
-		<script src="client/js/coffeeshopclient.js"></script>
-		<script type="text/javascript">
-						$('.message-trace').hide();
-			$('.orderstatus').tooltip();
 
-			function markPaid(id) {
-			$("#" + id).children(".paid").show();
-			$("#" + id).children(".payment-action").hide();
-
-			}
-
-			function markComplete(id) {
-
-			$("#" + id).children(".completed").show();
-			$("#" + id).children(".order-status").hide();
-			}
-
-			$('.minimize-button').click(function() {
-			$('.message-trace').toggle('slow');
-
-			});
-			function showAddition(orderID) {
-			document.getElementById("modal-order-no").innerHTML = orderID;
-			$("input#orderAdditionId").val(orderID);
-			$('#addition').modal('toggle');
-			}
-
-			function addAddition() {
-			//do something
-			var orderID = $("input#orderAdditionId").val();
-			//alert("order "+orderID+" has been saved");
-			$('#addition').modal('toggle');
-			}
-
-			function loadOrders() {
-			var template = '<div class="order-entry"> {{#orders}}'
-			+'<div class="order-number">{{ORDER_ID}}</div>'
-			+'<div class="order-content">'
-			+'{{DRINK}} <span class="help-block"><a href="#" onclick="showAddition(1110);" >Add addition</a></span>'
-			+'</div> <div class="order-actions" id="1"> '
-			+'<a class="btn btn-success completed" style="display:none;">Completed</a>'
-			+'<ul class="order-status">'
-			+'<li class="dropdown">'
-			+'<a class="dropdown-toggle btn btn-warning" data-toggle="dropdown" rel="tooltip" title="Order Status" href="#menu1"> In Progress <b class="caret"></b> </a>'
-			+'<ul class="dropdown-menu">'
-			+'<li>'
-			+'<a href="#" class="mark-paid" onclick="markComplete(1)">Mark as Complete</a>'
-			+'</li>'
-			+'<li>'
-			+'<a href="#">Delete Order</a>'
-			+'</li>'
-			+'</ul>'
-			+'</li>'
-			+'</ul>'
-			+'<a class="btn btn-success paid" style="display:none;">Paid</a>'
-			+'<ul class="payment-action">'
-			+'<li class="dropdown">'
-			+'<a class="dropdown-toggle btn btn-danger" data-toggle="dropdown" href="#menu1"> Not Paid <b class="caret"></b> </a>'
-			+'<ul class="dropdown-menu">'
-			+'<li>'
-			+'<a href="#" class="mark-paid" onclick="markPaid(1)">Mark as Paid</a>'
-			+'</li>'
-			+'<li>'
-			+'<a href="#">Delete Order</a>'
-			+'</li>'
-			+'</ul>'
-			+'</li>'
-			+'</ul>'
-			+'</div>'
-			+'<div class="amount">'
-			+'{{COST}}'
-			+'</div>'
-			+'{{/orders}}</div></div>';
-
-			<%
-			var orderJson = get("http://10.100.3.25:9763/coffeeshop/orders/", null ,"json");
-			%>
-			var data = <%=orderJson.data%>
-			var html = Mustache.to_html(template, data);
-			console.log("Call template onload ");
-			$("#order-window").append(html);
-
-			}
-
-			function addNewOrder() {
-			console.log("Click  on addNewOrder");
-			var bevType = $("#beverage-type").val();
-			CoffeeShopClient.addOrder(bevType);
-			$('#addOrder').modal('toggle');
-
-			}</script>
 	</body>
 </html>

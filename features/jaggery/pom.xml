@@ -260,11 +260,6 @@
             </dependency>
             <dependency>
                 <groupId>org.wso2.carbon</groupId>
-                <artifactId>org.wso2.carbon.hostobjects.scripts</artifactId>
-                <version>${hostobjects.version}</version>
-            </dependency>
-            <dependency>
-                <groupId>org.wso2.carbon</groupId>
                 <artifactId>org.wso2.carbon.hostobjects.uri</artifactId>
                 <version>${hostobjects.version}</version>
             </dependency>

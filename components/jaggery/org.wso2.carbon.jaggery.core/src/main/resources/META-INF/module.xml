@@ -1,6 +1,6 @@
-<module name="core" expose="true" xmlns="http://wso2.org/projects/jaggery/module.xml">
+<module name="core" expose="true" xmlns="http://wso2.org/projects/jaggery/modules.xml">
     <!-- Hostobjects -->
-    <hostObject>
+    <hostObject readOnly="true">
         <className>org.wso2.carbon.hostobjects.xhr.XMLHttpRequestHostObject</className>
         <name>XMLHttpRequest</name>
     </hostObject>
@@ -33,17 +33,13 @@
         <name>File</name>
     </hostObject>
     <hostObject>
-        <className>org.wso2.carbon.hostobjects.extra.TwitterConnectHostObject</className>
-        <name>TwitterConnect</name>
-    </hostObject>
-    <hostObject>
         <className>org.wso2.carbon.hostobjects.feed.EntryHostObject</className>
         <name>Entry</name>
     </hostObject>
     <hostObject>
         <className>org.wso2.carbon.hostobjects.feed.FeedHostObject</className>
         <name>Feed</name>
-    </hostObject> 
+    </hostObject>
 
     <hostObject>
         <className>org.wso2.carbon.hostobjects.web.RequestHostObject</className>
@@ -71,6 +67,14 @@
     </hostObject>
 
     <!-- methods -->
+    <method readOnly="true">
+        <className>org.wso2.carbon.jaggery.core.manager.WebAppManager</className>
+        <name>require</name>
+    </method>
+    <method readOnly="true">
+        <className>org.wso2.carbon.jaggery.core.manager.WebAppManager</className>
+        <name>print</name>
+    </method>
     <method>
         <className>org.wso2.carbon.jaggery.core.manager.WebAppManager</className>
         <name>include</name>
@@ -79,6 +83,10 @@
         <className>org.wso2.carbon.jaggery.core.manager.WebAppManager</className>
         <name>include_once</name>
     </method>
+    <!--method>
+        <className>org.wso2.carbon.scriptengine.engine.CarbonTopLevel</className>
+        <name>log</name>
+    </method-->
     <method>
         <className>org.wso2.carbon.scriptengine.engine.CarbonTopLevel</className>
         <name>parse</name>

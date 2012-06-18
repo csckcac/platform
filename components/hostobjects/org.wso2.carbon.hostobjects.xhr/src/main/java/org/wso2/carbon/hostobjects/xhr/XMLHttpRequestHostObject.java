@@ -14,6 +14,8 @@ import org.wso2.carbon.scriptengine.util.HostObjectUtil;
 import javax.xml.stream.XMLStreamException;
 import java.io.ByteArrayInputStream;
 import java.io.IOException;
+import java.io.UnsupportedEncodingException;
+import java.net.URLEncoder;
 import java.util.ArrayList;
 import java.util.List;
 
@@ -90,14 +92,8 @@ public class XMLHttpRequestHostObject extends ScriptableObject {
      * @return
      * @throws ScriptException
      */
-    public static short jsFunction_readyState(Context cx, Scriptable thisObj, Object[] args, Function funObj) throws ScriptException {
-        String functionName = "readyState";
-        int argsCount = args.length;
-        XMLHttpRequestHostObject xhr = (XMLHttpRequestHostObject) thisObj;
-        if (argsCount != 0) {
-            HostObjectUtil.invalidNumberOfArgs(hostObjectName, functionName, argsCount, false);
-        }
-        return xhr.readyState;
+    public short jsGet_readyState() throws ScriptException {
+        return this.readyState;
     }
 
     /**
@@ -129,14 +125,8 @@ public class XMLHttpRequestHostObject extends ScriptableObject {
      * @return
      * @throws ScriptException
      */
-    public static int jsFunction_getStatusCode(Context cx, Scriptable thisObj, Object[] args, Function funObj) throws ScriptException {
-        String functionName = "getStatusCode";
-        int argsCount = args.length;
-        XMLHttpRequestHostObject xhr = (XMLHttpRequestHostObject) thisObj;
-        if (argsCount != 0) {
-            HostObjectUtil.invalidNumberOfArgs(hostObjectName, functionName, argsCount, false);
-        }
-        return xhr.statusLine.getStatusCode();
+    public int jsGet_status() throws ScriptException {
+        return this.statusLine.getStatusCode();
     }
 
     /**
@@ -145,14 +135,8 @@ public class XMLHttpRequestHostObject extends ScriptableObject {
      * @return
      * @throws ScriptException
      */
-    public static String jsFunction_getStatusText(Context cx, Scriptable thisObj, Object[] args, Function funObj) throws ScriptException {
-        String functionName = "getStatusText";
-        int argsCount = args.length;
-        XMLHttpRequestHostObject xhr = (XMLHttpRequestHostObject) thisObj;
-        if (argsCount != 0) {
-            HostObjectUtil.invalidNumberOfArgs(hostObjectName, functionName, argsCount, false);
-        }
-        return xhr.statusLine.getReasonPhrase();
+    public String jsGet_statusText() throws ScriptException {
+        return this.statusLine.getReasonPhrase();
     }
 
     /**
@@ -161,15 +145,9 @@ public class XMLHttpRequestHostObject extends ScriptableObject {
      * @return
      * @throws ScriptException
      */
-    public static String jsFunction_getResponseText(Context cx, Scriptable thisObj, Object[] args, Function funObj) throws ScriptException {
-        String functionName = "getResponseText";
-        int argsCount = args.length;
-        XMLHttpRequestHostObject xhr = (XMLHttpRequestHostObject) thisObj;
-        if (argsCount != 0) {
-            HostObjectUtil.invalidNumberOfArgs(hostObjectName, functionName, argsCount, false);
-        }
-        if (xhr.readyState == LOADING || xhr.readyState == DONE) {
-            return xhr.responseText;
+    public String jsGet_responseText() throws ScriptException {
+        if (this.readyState == LOADING || this.readyState == DONE) {
+            return this.responseText;
         } else {
             return "";
         }
@@ -181,30 +159,25 @@ public class XMLHttpRequestHostObject extends ScriptableObject {
      * @return
      * @throws ScriptException
      */
-    public static Scriptable jsFunction_getResponseXML(Context cx, Scriptable thisObj, Object[] args, Function funObj) throws ScriptException {
-        String functionName = "getResponseXML";
-        int argsCount = args.length;
-        XMLHttpRequestHostObject xhr = (XMLHttpRequestHostObject) thisObj;
-        if (argsCount != 0) {
-            HostObjectUtil.invalidNumberOfArgs(hostObjectName, functionName, argsCount, false);
-        }
-        if (!(xhr.readyState == LOADING || xhr.readyState == DONE)) {
+    public Scriptable jsGet_responseXML() throws ScriptException {
+
+        if (!(this.readyState == LOADING || this.readyState == DONE)) {
             return null;
         }
-        if (xhr.responseType != null && !(xhr.responseType.equals("text/xml") ||
-                xhr.responseType.equals("application/xml") ||
-                xhr.responseType.endsWith("+xml"))) {
+        if (this.responseType != null && !(this.responseType.equals("text/xml") ||
+                this.responseType.equals("application/xml") ||
+                this.responseType.endsWith("+xml"))) {
             return null;
         }
         try {
-            if (xhr.responseXML != null) {
-                return xhr.responseXML;
+            if (this.responseXML != null) {
+                return this.responseXML;
             }
-            xhr.responseXML = xhr.context.newObject(
-                    xhr, "XML", new Object[]{AXIOMUtil.stringToOM(xhr.responseText)});
-            return xhr.responseXML;
+            this.responseXML = this.context.newObject(
+                    this, "XML", new Object[]{AXIOMUtil.stringToOM(this.responseText)});
+            return this.responseXML;
         } catch (XMLStreamException e) {
-            throw new ScriptException("Error while converting response of " + xhr.url + " to a XML", e);
+            throw new ScriptException("Error while converting response of " + this.url + " to a XML", e);
         }
     }
 

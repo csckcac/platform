@@ -18,25 +18,27 @@ public class JaggeryServlet extends HttpServlet {
     private static final Log log = LogFactory.getLog(JaggeryServlet.class);
     public static final String JAGGERY_MODULES_DIR = "modules";
 
-    private WebAppManager manager = null;
+    private static WebAppManager manager = null;
 
-    public void init(ServletConfig config) throws ServletException {
-        super.init(config);
+    static {
         try {
-            //init scope with global scripts
+
             String jaggeryDir = System.getProperty("jaggery.home");
             if (jaggeryDir == null) {
                 jaggeryDir = System.getProperty("carbon.home");
             }
 
-            if(jaggeryDir != null) {
-                jaggeryDir += File.separator + JAGGERY_MODULES_DIR;
+            if(jaggeryDir == null) {
+                log.error("Unable to find jaggery.home or carbon.home system properties");
             }
-            manager = new WebAppManager(jaggeryDir);
+            manager = new WebAppManager(jaggeryDir + File.separator + JAGGERY_MODULES_DIR);
         } catch (ScriptException e) {
             log.error(e.getMessage(), e);
-            throw new ServletException(e);
         }
+    }
+
+    public void init(ServletConfig config) throws ServletException {
+        super.init(config);
     }
 
     protected void doGet(HttpServletRequest request, HttpServletResponse response)

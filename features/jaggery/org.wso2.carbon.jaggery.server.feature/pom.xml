@@ -96,11 +96,6 @@
         </dependency>
         <dependency>
             <groupId>org.wso2.carbon</groupId>
-            <artifactId>org.wso2.carbon.hostobjects.scripts</artifactId>
-
-        </dependency>
-        <dependency>
-            <groupId>org.wso2.carbon</groupId>
             <artifactId>org.wso2.carbon.hostobjects.uri</artifactId>
 
         </dependency>
@@ -401,7 +396,6 @@
                                 <bundleDef>org.wso2.carbon:org.wso2.carbon.hostobjects.db</bundleDef>
                                 <bundleDef>org.wso2.carbon:org.wso2.carbon.hostobjects.email</bundleDef>
                                 <bundleDef>org.wso2.carbon:org.wso2.carbon.hostobjects.xslt</bundleDef>
-                                <bundleDef>org.wso2.carbon:org.wso2.carbon.hostobjects.scripts</bundleDef>
                                 <bundleDef>org.wso2.carbon:org.wso2.carbon.hostobjects.uri</bundleDef>
 				<bundleDef>org.wso2.carbon:org.wso2.carbon.hostobjects.log</bundleDef>
  <bundleDef>org.wso2.carbon:org.wso2.carbon.hostobjects.oauth</bundleDef>
@@ -442,6 +436,27 @@
 
 
                         </configuration>
+                    </execution>
+                </executions>
+            </plugin>
+			<plugin>
+                <groupId>org.apache.maven.plugins</groupId>
+                <artifactId>maven-antrun-plugin</artifactId>
+                <version>1.1</version>
+                <executions>
+                    <execution>
+                        <id>clean_target</id>
+                        <phase>install</phase>
+                        <configuration>
+                            <tasks>
+                                <delete dir="src/main/resources"/>
+                                <delete dir="src/main"/>
+                                <delete dir="src"/>
+                            </tasks>
+                        </configuration>
+                        <goals>
+                            <goal>run</goal>
+                        </goals>
                     </execution>
                 </executions>
             </plugin>

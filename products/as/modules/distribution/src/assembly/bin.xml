@@ -42,6 +42,14 @@
                 <exclude>**/axis2/axis2.xml</exclude>
             </excludes>
         </fileSet>
+		<!--  copying modules xml -->
+        <fileSet>
+            <directory>src/resources/modules</directory>
+            <outputDirectory>${pom.artifactId}-${pom.version}/modules/</outputDirectory>
+	    	<includes>
+                <include>*/**</include>
+            </includes>
+        </fileSet>
         <fileSet>
             <directory>target/wso2carbon-core-${carbon.platform.version}</directory>
             <outputDirectory>${pom.artifactId}-${pom.version}</outputDirectory>

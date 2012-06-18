@@ -34,9 +34,8 @@ public class WebAppManager extends CommonManager {
     private static final Log log = LogFactory.getLog(WebAppManager.class);
     public static final String CORE_MODULE_NAME = "core";
 
-    public WebAppManager(String jaggeryDir) throws ScriptException {
-        super(jaggeryDir);
-        init();
+    public WebAppManager(String modulesDir) throws ScriptException {
+        super(modulesDir);
     }
 
     public static void include(Context cx, Scriptable thisObj, Object[] args, Function funObj)
@@ -83,6 +82,21 @@ public class WebAppManager extends CommonManager {
             return;
         }
         executeScript(jaggeryContext, jaggeryContext.getScope(), fileURL, false, false, true);
+    }
+
+    /**
+     * JaggeryMethod responsible of writing to the output stream
+     */
+    public static void print(Context cx, Scriptable thisObj, Object[] args, Function funObj)
+            throws ScriptException {
+        JaggeryContext jaggeryContext = getJaggeryContext();
+
+        //If the script itself havent set the content type we set the default content type to be text/html
+        if (((WebAppContext) jaggeryContext).getServletResponse().getContentType() == null) {
+            ((WebAppContext) CommonManager.getJaggeryContext()).getServletResponse()
+                    .setContentType(DEFAULT_CONTENT_TYPE);
+        }
+        CommonManager.print(cx, thisObj, args, funObj);
     }
 
     private static ScriptableObject executeScript(JaggeryContext jaggeryContext, ScriptableObject scope,
@@ -178,15 +192,6 @@ public class WebAppManager extends CommonManager {
             log.error(msg);
             throw new ScriptException(msg);
         }
-    }
-
-    private void init() throws ScriptException {
-        //define require() global method
-        JavaScriptMethod jsMethod = new JavaScriptMethod("require");
-        jsMethod.setMethodName("require");
-        jsMethod.setClazz(WebAppManager.class);
-        jsMethod.setAttribute(ScriptableObject.READONLY);
-        getEngine().defineMethod(jsMethod);
     }
 
     protected void initContext(JaggeryContext context) throws ScriptException {

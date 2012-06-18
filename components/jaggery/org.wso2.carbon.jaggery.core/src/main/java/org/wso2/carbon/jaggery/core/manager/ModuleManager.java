@@ -5,13 +5,13 @@ import org.apache.axiom.om.impl.builder.StAXOMBuilder;
 import org.apache.commons.logging.Log;
 import org.apache.commons.logging.LogFactory;
 import org.mozilla.javascript.Context;
-import org.mozilla.javascript.ScriptableObject;
 import org.wso2.carbon.scriptengine.engine.JavaScriptHostObject;
 import org.wso2.carbon.scriptengine.engine.JavaScriptMethod;
 import org.wso2.carbon.scriptengine.engine.JavaScriptModule;
 import org.wso2.carbon.scriptengine.engine.JavaScriptScript;
 import org.wso2.carbon.scriptengine.engine.RhinoEngine;
 import org.wso2.carbon.scriptengine.exceptions.ScriptException;
+import sun.org.mozilla.javascript.internal.ScriptableObject;
 
 import javax.xml.namespace.QName;
 import javax.xml.stream.XMLStreamException;
@@ -31,44 +31,53 @@ public class ModuleManager {
 
     private static final String NAMESPACE = "namespace";
 
-	private static final String EXPOSE = "expose";
+    private static final String EXPOSE = "expose";
 
-	private static final String MODULE = "module";
+    private static final String MODULE = "module";
 
-	private static final String NAME = "name";
+    private static final String NAME = "name";
 
-	private static final Log log = LogFactory.getLog(ModuleManager.class);
+    private static final String READ_ONLY = "readOnly";
 
-    public static final String MODULE_NAMESPACE = "http://wso2.org/projects/jaggery/modules.xml";
+    private static final Log log = LogFactory.getLog(ModuleManager.class);
 
-    private static final String MODULES_FILE = "modules.xml";
+    public static final String MODULES_NAMESPACE = "http://wso2.org/projects/jaggery/modules.xml";
+
+    public static final String MODULE_NAMESPACE = "http://wso2.org/projects/jaggery/module.xml";
+
+    private static final String MODULE_FILE = "module.xml";
 
     private final Map<String, JavaScriptModule> modules = new HashMap<String, JavaScriptModule>();
 
-    private RhinoEngine engine = null;
-    private String jaggeryDir = null;
+    private String modulesDir = null;
 
-    public ModuleManager(RhinoEngine engine, String jaggeryDir) throws ScriptException {
-        this.engine = engine;
-        this.jaggeryDir = jaggeryDir;
+    public ModuleManager(String modulesDir) throws ScriptException {
+        this.modulesDir = modulesDir;
         init();
     }
 
     private void init() throws ScriptException {
-        //load framework modules
+        //load framework modules, we use jaggery.home to check whether it is a pure jaggery server
+        // and loads even core modules from modules directory. Else, from the modules.xml
         InputStream xmlStream = ModuleManager.class.
-                getClassLoader().getResourceAsStream("META-INF/" + MODULES_FILE);
-        initModules(xmlStream, false);
+                getClassLoader().getResourceAsStream("META-INF/" + MODULE_FILE);
+        initModule(xmlStream, false);
 
         //load user-defined modules
-        File file = new File(jaggeryDir + File.separator + MODULES_FILE);
-        if (file.exists()) {
-            try {
-                xmlStream = new FileInputStream(file);
-                initModules(xmlStream, true);
-            } catch (FileNotFoundException e) {
-                log.error(e.getMessage(), e);
-                throw new ScriptException(e);
+        File modulesDir = new File(this.modulesDir);
+        File[] modules = modulesDir.listFiles();
+        if (modules != null) {
+            for (File module : modules) {
+                if (module.isDirectory()) {
+                    File moduleConfig = new File(module, MODULE_FILE);
+                    if (moduleConfig.exists()) {
+                        try {
+                            initModule(new FileInputStream(moduleConfig), true);
+                        } catch (FileNotFoundException e) {
+                            log.error(e.getMessage(), e);
+                        }
+                    }
+                }
             }
         }
     }
@@ -77,31 +86,34 @@ public class ModuleManager {
         return this.modules;
     }
 
-    private void initModules(InputStream modulesXML, boolean custom) throws ScriptException {
+    private void initModule(InputStream modulesXML, boolean isCustom) throws ScriptException {
         try {
             Context cx = RhinoEngine.enterContext();
-            ScriptableObject runtime = engine.getRuntimeScope();
             StAXOMBuilder builder = new StAXOMBuilder(modulesXML);
             OMElement document = builder.getDocumentElement();
-            Iterator itr = document.getChildrenWithName(new QName(MODULE_NAMESPACE, MODULE));
-            while (itr.hasNext()) {
-                OMElement moduleOM = (OMElement) itr.next();
-                String moduleName = moduleOM.getAttributeValue(new QName(null, NAME));
-                String namespace = moduleOM.getAttributeValue(new QName(null, NAMESPACE));
-                boolean expose = "true".equalsIgnoreCase(moduleOM.getAttributeValue(new QName(null, EXPOSE)));
+            //TODO :check null
+            if (MODULE_NAMESPACE.equals(document.getNamespace().getNamespaceURI())) {
+                String moduleName = document.getAttributeValue(new QName(null, NAME));
+
+                if (modules.get(moduleName) != null) {
+                    log.info("A module with the name : " + moduleName + " already exists and it will be overwritten.");
+                }
+
+                String namespace = document.getAttributeValue(new QName(null, NAMESPACE));
+                boolean expose = "true".equalsIgnoreCase(document.getAttributeValue(new QName(null, EXPOSE)));
 
                 JavaScriptModule module = new JavaScriptModule(moduleName);
                 module.setNamespace(namespace);
                 module.setExpose(expose);
 
-                initHostObjects(moduleOM, module);
-                initMethods(moduleOM, module);
-                initScripts(moduleOM, cx, module, custom);
+                initHostObjects(document, module);
+                initMethods(document, module);
+                initScripts(document, cx, module, isCustom);
 
                 modules.put(moduleName, module);
             }
         } catch (XMLStreamException e) {
-            String msg = "Error while reading the modules.xml";
+            String msg = "Error while reading the module.xml";
             log.error(msg, e);
             throw new ScriptException(msg, e);
         } finally {
@@ -109,9 +121,11 @@ public class ModuleManager {
         }
     }
 
-    private void initScripts(OMElement moduleOM, Context cx, JavaScriptModule module, boolean custom) throws ScriptException {
+    private void initScripts(OMElement moduleOM, Context cx, JavaScriptModule module, boolean isCustom)
+            throws ScriptException {
         String name = null;
         String path = null;
+        JavaScriptScript script;
         Iterator itr = moduleOM.getChildrenWithName(new QName(MODULE_NAMESPACE, "script"));
         while (itr.hasNext()) {
             try {
@@ -121,34 +135,27 @@ public class ModuleManager {
                         new QName(MODULE_NAMESPACE, NAME)).getText();
                 path = scriptOM.getFirstChildWithName(
                         new QName(MODULE_NAMESPACE, "path")).getText();
-                JavaScriptScript jaggeryScript = new JavaScriptScript(name);
+                script = new JavaScriptScript(name);
 
                 Reader reader;
-                if (custom) {
-                    reader = new FileReader(jaggeryDir + filterPath(path));
+                if (isCustom) {
+                    reader = new FileReader(modulesDir + File.separator + module.getName() +
+                            File.separator + filterPath(path));
                 } else {
-                    try {
-                        Class c = Class.forName("org.wso2.carbon.hostobjects.scripts.ScriptInitializer");
-                        ClassLoader loader = c.getClassLoader();
-                        reader = new InputStreamReader(loader.getResourceAsStream(path));
-                    } catch (ClassNotFoundException e) {
-                        String msg = "Jaggery core scripts initializer cannot be found";
-                        log.error(msg, e);
-                        throw new ScriptException(e);
-                    }
+                    reader = new InputStreamReader(ModuleManager.class.getResourceAsStream(path));
                 }
-                jaggeryScript.setScript(cx.compileReader(reader, name, 1, null));
-                module.addScript(jaggeryScript);
+                script.setScript(cx.compileReader(reader, name, 1, null));
+                module.addScript(script);
             } catch (FileNotFoundException e) {
                 String msg = "Error executing script. Script cannot be found, name : " + name + ", path : " + path;
                 log.error(msg, e);
-                if(!custom) {
+                if (!isCustom) {
                     throw new ScriptException(msg, e);
                 }
             } catch (IOException e) {
                 String msg = "Error executing script. Script cannot be found, name : " + name + ", path : " + path;
                 log.error(msg, e);
-                if(!custom) {
+                if (!isCustom) {
                     throw new ScriptException(msg, e);
                 }
             }
@@ -158,6 +165,8 @@ public class ModuleManager {
     private void initMethods(OMElement moduleOM, JavaScriptModule module) throws ScriptException {
         String name = null;
         String className = null;
+        String readOnly;
+        JavaScriptMethod method;
         Iterator itr = moduleOM.getChildrenWithName(new QName(MODULE_NAMESPACE, "method"));
         while (itr.hasNext()) {
             try {
@@ -167,9 +176,11 @@ public class ModuleManager {
                         new QName(MODULE_NAMESPACE, NAME)).getText();
                 className = methodOM.getFirstChildWithName(
                         new QName(MODULE_NAMESPACE, "className")).getText();
-                JavaScriptMethod method = new JavaScriptMethod(name);
+                readOnly = methodOM.getAttribute(new QName(MODULE_NAMESPACE, READ_ONLY)).getAttributeValue();
+                method = new JavaScriptMethod(name);
                 method.setClazz(Class.forName(className));
                 method.setMethodName(name);
+                method.setAttribute("true".equals(readOnly) ? ScriptableObject.READONLY : ScriptableObject.PERMANENT);
                 module.addMethod(method);
             } catch (ClassNotFoundException e) {
                 String msg = "Error registering method. Class cannot be found, name : " +
@@ -182,14 +193,20 @@ public class ModuleManager {
     private void initHostObjects(OMElement moduleOM, JavaScriptModule jaggeryModule) throws ScriptException {
         Iterator itr = moduleOM.getChildrenWithName(new QName(MODULE_NAMESPACE, "hostObject"));
         String msg = "Error while adding HostObject : ";
+        String name;
+        String className;
+        String readOnly;
+        JavaScriptHostObject hostObject;
         while (itr.hasNext()) {
             //process hostobject
             OMElement hostObjectOM = (OMElement) itr.next();
-            String name = hostObjectOM.getFirstChildWithName(
+            name = hostObjectOM.getFirstChildWithName(
                     new QName(MODULE_NAMESPACE, NAME)).getText();
-            String className = hostObjectOM.getFirstChildWithName(
+            className = hostObjectOM.getFirstChildWithName(
                     new QName(MODULE_NAMESPACE, "className")).getText();
-            JavaScriptHostObject hostObject = new JavaScriptHostObject(name);
+            readOnly = hostObjectOM.getAttribute(new QName(MODULE_NAMESPACE, READ_ONLY)).getAttributeValue();
+            hostObject = new JavaScriptHostObject(name);
+            hostObject.setAttribute("true".equals(readOnly) ? ScriptableObject.READONLY : ScriptableObject.PERMANENT);
             try {
                 hostObject.setClazz(Class.forName(className));
                 jaggeryModule.addHostObject(hostObject);
@@ -203,7 +220,7 @@ public class ModuleManager {
     private String filterPath(String path) {
         String pathToReturn = path.replace('\\', File.separatorChar).replace('/', File.separatorChar);
         if (!pathToReturn.startsWith(File.separator)) {
-        	pathToReturn = File.separator + pathToReturn;
+            pathToReturn = File.separator + pathToReturn;
         }
         return pathToReturn;
     }

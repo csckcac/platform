@@ -40,10 +40,10 @@ public class CommonManager {
 
     private RhinoEngine engine = null;
     private ModuleManager moduleManager = null;
-    private String scriptsDir = null;
+    private String modulesDir = null;
 
-    public CommonManager(String jaggeryDir) throws ScriptException {
-        this.scriptsDir = jaggeryDir;
+    public CommonManager(String modulesDir) throws ScriptException {
+        this.modulesDir = modulesDir;
         init();
     }
 
@@ -64,7 +64,7 @@ public class CommonManager {
             log.error(msg);
             throw new ScriptException(msg);
         }
-        this.moduleManager = new ModuleManager(this.engine, scriptsDir);
+        this.moduleManager = new ModuleManager(modulesDir);
         exposeDefaultModules(this.engine, this.moduleManager.getModules());
     }
 
@@ -275,13 +275,7 @@ public class CommonManager {
     public static void print(Context cx, Scriptable thisObj, Object[] args, Function funObj)
             throws ScriptException {
         String functionName = "print";
-        JaggeryContext jaggeryContext = CommonManager.getJaggeryContext();
-
-        //If the script itself havent set the content type we set the default content type to be text/html
-        if (((WebAppContext) jaggeryContext).getServletResponse().getContentType() == null) {
-            ((WebAppContext) CommonManager.getJaggeryContext()).getServletResponse()
-                    .setContentType(DEFAULT_CONTENT_TYPE);
-        }
+        JaggeryContext jaggeryContext = getJaggeryContext();
 
         int argsCount = args.length;
         if (argsCount != 1) {

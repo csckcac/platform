@@ -43,7 +43,7 @@
         bean = client.getRetentionProperties(request);
         readOnly = (bean == null) ? false : bean.getReadOnly();
         // Fixing REGISTRY-789  - disallowing setting retention properties for versioned resources
-        if(path.matches(".*;version:\\d$")) {
+        if(path.matches(".*;version:\\d+$")) {
            readOnly = true;
         }
     } catch (Exception e) {
@@ -56,6 +56,7 @@
         return;
     }
 %>
+<% if(!readOnly) {%>
 <script type="text/javascript">
     function initDatePickers() {
         jQuery("#fromDate").datepicker();
@@ -103,7 +104,7 @@
                                     <input type="text" name="fromDate"
                                            value="<%= (bean != null) ? bean.getFromDate() : "" %>"
                                            style="width:140px;" id="fromDate"
-                                           <%=readOnly ? "disabled=\"true\"" : ""%>/>
+                                           />
                                 </td>
                             </tr>
                             <tr>
@@ -113,7 +114,7 @@
                                     <input type="text" name="toDate"
                                            value="<%= (bean != null) ? bean.getToDate() : "" %>"
                                            style="width:140px;" id="toDate"
-                                           <%=readOnly ? "disabled=\"true\"" : ""%>/>
+                                           />
                                 </td>
                             </tr>
                         </table>
@@ -121,12 +122,12 @@
                                 &nbsp;&nbsp;
                         <input type="checkbox" name="write" value="true" id="writeBoxId"
                                <%=(bean != null && bean.getWriteLocked()) ? "checked=\"true\"" : ""%>
-                               <%=readOnly ? "disabled=\"true\"" : ""%>/>
+                               />
                                 <fmt:message key="write"/><br/>
                                 &nbsp;&nbsp;
                         <input type="checkbox" name="delete" value="true" id="readBoxId"
                                <%=(bean != null && bean.getDeleteLocked()) ? "checked=\"true\"" : ""%>
-                               <%=readOnly ? "disabled=\"true\"" : ""%>/>
+                               />
                                 <fmt:message key="delete"/>
                     </td>
                 </tr>
@@ -146,3 +147,4 @@
         </form>
     </div>
 </fmt:bundle>
+<% }%>.

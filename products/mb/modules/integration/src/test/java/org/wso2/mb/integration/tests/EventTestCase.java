@@ -16,11 +16,19 @@
 package org.wso2.mb.integration.tests;
 
 import junit.framework.Assert;
+import org.apache.axiom.om.OMAbstractFactory;
+import org.apache.axiom.om.OMElement;
+import org.apache.axiom.om.OMFactory;
+import org.apache.axiom.om.OMNamespace;
+import org.apache.axis2.AxisFault;
 import org.apache.commons.logging.Log;
 import org.apache.commons.logging.LogFactory;
 import org.testng.annotations.AfterClass;
 import org.testng.annotations.BeforeClass;
 import org.testng.annotations.Test;
+import org.wso2.carbon.event.client.broker.BrokerClient;
+import org.wso2.carbon.event.client.broker.BrokerClientException;
+import org.wso2.carbon.event.client.stub.generated.authentication.AuthenticationExceptionException;
 import org.wso2.carbon.event.stub.internal.TopicManagerAdminServiceStub;
 import org.wso2.carbon.integration.core.AuthenticateStub;
 import org.wso2.carbon.integration.framework.ClientConnectionUtil;
@@ -34,6 +42,7 @@ public class EventTestCase {
     private LoginLogoutUtil util = new LoginLogoutUtil();
     private TopicManagerAdminServiceStub topicManagerAdminServiceStub;
     private static final Log log = LogFactory.getLog(EventTestCase.class);
+    private BrokerClient brokerClient;
 
     @BeforeClass(groups = {"wso2.mb"})
     public void login() throws Exception {
@@ -48,12 +57,47 @@ public class EventTestCase {
         topicManagerAdminServiceStub = new TopicManagerAdminServiceStub("https://localhost:9443/services/TopicManagerAdminService");
         AuthenticateStub authenticateStub = new AuthenticateStub();
         authenticateStub.authenticateAdminStub(topicManagerAdminServiceStub, loggedInSessionCookie);
+        createBrokerClient();
     }
 
     @Test(groups = {"wso2.mb"})
     public void createTopicTest() throws Exception {
-        topicManagerAdminServiceStub.addTopic("/root/topic/myTopic");
+        String testTopic = "/root/topic/myTopic";
+        topicManagerAdminServiceStub.addTopic(testTopic);
+        log.info("Adding Topic" + testTopic);
+
     }
+    @Test(groups = {"wso2.mb"})
+    public void subscribeToTopicTest() throws BrokerClientException {
+        String testTopic = "/root/topic/myTopic";
+        String eventSinkURL =  "http://localhost:9763/services/EventSinkService/getOMElement";
+        brokerClient.subscribe(testTopic,eventSinkURL);
+        log.info("Subscribing to Topic" + testTopic);
+    }
+
+    @Test(groups = {"wso2.mb"})
+    public void publishingToTopicTest() throws AxisFault {
+        String testTopic = "/root/topic/myTopic";
+        brokerClient.publish(testTopic,getOMElementToSend());
+        log.info("Publishing message to Topic" + testTopic);
+    }
+
+    private void createBrokerClient() throws AxisFault, AuthenticationExceptionException {
+          //create the broker client
+        this.brokerClient = new BrokerClient("https://localhost:9443/services/EventBrokerService", "admin", "admin");
+    }
+
+    private OMElement getOMElementToSend() {
+        OMFactory omFactory = OMAbstractFactory.getOMFactory();
+        OMNamespace omNamespace = omFactory.createOMNamespace("http://ws.sample.org", "ns1");
+        OMElement receiveElement = omFactory.createOMElement("receive", omNamespace);
+        OMElement messageElement = omFactory.createOMElement("message", omNamespace);
+        messageElement.setText("Test publish message");
+        receiveElement.addChild(messageElement);
+        return receiveElement;
+
+    }
+
 
     @AfterClass(groups = {"wso2.mb"})
     public void logout() throws Exception {

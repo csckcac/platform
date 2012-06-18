@@ -250,5 +250,10 @@
             <outputDirectory>wso2mb-${pom.version}/repository/resources/security/</outputDirectory>
             <fileMode>644</fileMode>
         </file>
+
+	 <file>
+             <source>../../modules/samples/product/services/EventSinkService/EventSinkService.aar</source>
+	     <outputDirectory>wso2mb-${pom.version}/repository/deployment/server/axis2services/</outputDirectory>
+        </file>
     </files>
 </assembly>

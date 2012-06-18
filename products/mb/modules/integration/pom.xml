@@ -105,6 +105,17 @@
             <version>${carbon.version}</version>
             <type>aar</type>
         </dependency>
+        <dependency>
+            <groupId>org.wso2.andes.wso2</groupId>
+            <artifactId>andes-client</artifactId>
+            <version>${orbit.version.andes-client}</version>
+            <exclusions>
+                <exclusion>
+                    <groupId>log4j</groupId>
+                    <artifactId>log4j</artifactId>
+                </exclusion>
+            </exclusions>
+        </dependency>
     </dependencies>
 
     <licenses>
@@ -139,6 +150,9 @@
                         <include>**/*TestServerManager.java</include>
                         <include>**/*TestCase.java</include>
                     </includes>
+                    <suiteXmlFiles>
+                        <suiteXmlFile>src/test/conf/mb-jms-tests.xml</suiteXmlFile>
+                    </suiteXmlFiles>
                     <systemProperties>
                         <maven.test.haltafterfailure>false</maven.test.haltafterfailure>
                         <carbon.zip>

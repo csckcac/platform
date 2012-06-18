@@ -113,6 +113,11 @@
                 <artifactId>org.wso2.carbon.event.client</artifactId>
                 <version>${carbon.platform.version}</version>
             </dependency>
+            <dependency>
+                <groupId>org.wso2.andes.wso2</groupId>
+                <artifactId>andes-client</artifactId>
+                <version>${orbit.version.andes-client}</version>
+            </dependency>
         </dependencies>
     </dependencyManagement>
 

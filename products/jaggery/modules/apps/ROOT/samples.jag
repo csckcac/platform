@@ -96,6 +96,20 @@ include('/includes/topnavi.jag');
               </p>
               <a href="/" target="_blank" class="btn primary">View Demo</a> <a href="https://github.com/wso2/jaggeryjs/tree/master/apps/ROOT" target="_blank" class="btn info">View Source</a>
           </li>
+		  
+		  <li>
+              <img src="images/coffee_shop_sample.jpg" alt="" class="sample_thumb" />
+
+              <h3>Coffee Shop REST sample</h3>
+
+              <p>
+                  The coffee shop sample will explain RESTful application features with Jaggery. it is a nice client end 
+				  user interface where user can make order for coffee. There are main seven REST calls happen in 
+				  this application with PUT, POST, GET and DELETE. This sample contains database connection, 
+				  URL mapping and web request in jaggery 
+              </p>
+              <a href="/coffeeshop/" target="_blank" class="btn primary">View Demo</a> <a href="https://github.com/wso2/jaggeryjs/tree/master/apps/coffeeShop" target="_blank" class="btn info">View Source</a>
+          </li>
 
 
       </ul>    

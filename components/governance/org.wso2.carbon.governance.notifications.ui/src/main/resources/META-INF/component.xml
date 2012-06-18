@@ -29,7 +29,11 @@
             <style-class>manage</style-class>
             <icon>../notifications/images/notifications.gif</icon>
             <!-- currently we don't have a proper permission in server side eventing, so i'm putting this ui, requires at least resource permission -->
-            <require-permission>/permission/admin/manage/resources/notifications</require-permission>
+            <all>
+                <require-permission>/permission/admin/manage/resources/browse</require-permission>
+                <require-permission>/permission/admin/manage/resources/notifications</require-permission>
+                <require-permission>/permission/admin/manage/resources/community-features</require-permission>
+            </all>
         </menu>
     </menus>
 </component>

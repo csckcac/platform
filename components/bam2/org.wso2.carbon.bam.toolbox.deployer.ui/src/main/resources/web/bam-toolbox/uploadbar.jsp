@@ -27,95 +27,155 @@
     <script src="../editarea/edit_area_full.js" type="text/javascript"></script>
     <script type="text/javascript" src="../ajax/js/prototype.js"></script>
 
- <%
-     String success = request.getParameter("success");
-     String message = "";
-     if(null != success && success.equalsIgnoreCase("false")){
-         message = request.getParameter("message");
-     }
- %>
-<script type="text/javascript">
-    function deployToolBox(){
-        var toolbox = document.getElementById('toolbox').value;
-        if('' == toolbox ){
-              CARBON.showErrorDialog('No ToolBox has been selected!');
-        }   else if(toolbox.indexOf('.bar') == -1){
-             CARBON.showErrorDialog('The ToolBox should be \'bar\' artifact');
-        }else{
-             document.getElementById('uploadBar').submit();
+    <carbon:breadcrumb label="available.bam.tools"
+                       resourceBundle="org.wso2.carbon.bam.toolbox.deployer.ui.i18n.Resources"
+                       topPage="false" request="<%=request%>"/>
+
+
+    <%
+        String success = request.getParameter("success");
+        String message = "";
+        if (null != success && success.equalsIgnoreCase("false")) {
+            message = request.getParameter("message");
+        }
+    %>
+    <script type="text/javascript">
+        enableCustomToolBox();
+
+        function deployToolBox() {
+            var opt = document.getElementsByName('typeToolbox');
+            var selected = '';
+            for (var i = 0, length = opt.length; i < length; i++) {
+                if (opt[i].checked) {
+                    selected = opt[i].value;
+                }
+            }
+            if (selected == '0') {
+                var toolbox = document.getElementById('toolbox').value;
+                if ('' == toolbox) {
+                    CARBON.showErrorDialog('No ToolBox has been selected!');
+                } else if (toolbox.indexOf('.bar') == -1) {
+                    CARBON.showErrorDialog('The ToolBox should be \'bar\' artifact');
+                } else {
+                    document.getElementById('uploadBar').submit();
+                }
+            } else if (selected == '1') {
+                alert('message tracing selected..');
+            }
+
         }
 
-    }
+        function cancelDeploy() {
+            location.href = "../bam-toolbox/list.bar";
+        }
 
-    function cancelDeploy(){
-        location.href = "../bam-toolbox/list.bar";
-    }
-</script>
+        function enableCustomToolBox() {
+            var opt = document.getElementsByName('typeToolbox');
+            var selected = '';
+            for (var i = 0, length = opt.length; i < length; i++) {
+                if (opt[i].checked) {
+                    selected = opt[i].value;
+                }
+            }
+            if (selected == '0' || selected == '') {
+                document.getElementById('toolbox').disabled = false;
+            }
+            else {
+                document.getElementById('toolbox').disabled = true;
+            }
+        }
+    </script>
 
-  <%--<script type="text/javascript">--%>
-        <%--jQuery(document).ready(function() {--%>
-            <%--var message = '<%=message%>';--%>
-            <%--if(message != ''){--%>
-                <%--CARBON.showErrorDialog(message);--%>
-            <%--}--%>
-          <%--});--%>
-    <%--</script>--%>
+    <div id="middle">
+        <h2>Add Tool Box</h2>
 
-<div id="middle">
-    <h2>Add Tool Box</h2>
+        <div id="workArea">
+            <form id="uploadBar" name="uploadBar" enctype="multipart/form-data"
+                  action="../../fileupload/bamToolboxDeploy" method="POST">
 
-    <div id="workArea">
-
-        <form id="uploadBar" name="uploadBar" enctype="multipart/form-data" action="../../fileupload/bamToolboxDeploy" method="POST">
-            <table class="styledLeft">
-                <thead>
-                <tr>
-                    <th><span style="float: left; position: relative; margin-top: 2px;">
-                            <fmt:message key="upload.bar"/></span>
-                    </th>
-                </tr>
-                </thead>
-                <tbody>
-
-
-                <tr>
-                    <td>
-                        <table class="normal-nopadding">
-                            <tbody>
-
-                            <tr>
-                                <td width="180px"><fmt:message key="bar.artifact"/> <span
-                                        class="required">*</span></td>
-                                <td><input type="file" name="toolbox"
-                                           id="toolbox" size="100px"/>
-                                </td>
-                            </tr>
-
-                            </tbody>
-                        </table>
-                    </td>
-                </tr>
-
-                <table class="normal-nopadding">
+                <table class="styledLeft">
+                    <thead>
+                    <tr>
+                        <th colspan="4">
+                            <fmt:message key="inbuilt.toolbox"/>
+                        </th>
+                    </tr>
+                    </thead>
                     <tbody>
 
                     <tr>
-                        <td class="buttonRow" colspan="2">
-                            <input type="button" value="<fmt:message key="deploy"/>"
-                                   class="button" name="deploy"
-                                   onclick="javascript:deployToolBox();"/>
-                            <input type="button" value="<fmt:message key="cancel"/>"
-                                   name="cancel" class="button"
-                                   onclick="javascript:cancelDeploy();"/>
+                        <td width="10px">
+                            1.
+                        </td>
+                        <td width="10px">
+                            <input type="radio" name="typeToolbox" value="1" checked="true"
+                                   onclick="enableCustomToolBox();"/>
+                        </td>
+                        <td>
+                            Message Tracing
+                        </td>
+                        <td>
+                            This toolbox deploys all the artifacts required to trace the messages in ESB
+                        </td>
+                    </tr>
+
+                    <tr>
+                        <td colspan="4"></td>
+                    </tr>
+                    </tbody>
+                </table>
+
+
+                <table class="styledLeft">
+                    <thead>
+                    <tr>
+                        <th colspan="4">
+                            <fmt:message key="custom.toolbox"/>
+                        </th>
+                    </tr>
+                    </thead>
+                    <tbody>
+
+
+                    <tr>
+                        <td width="10px">
+                        </td>
+                        <td width="10px">
+                            <input type="radio" name="typeToolbox" value="0" onclick="enableCustomToolBox();"/>
+                        </td>
+                        <td>
+                            <nobr><fmt:message key="bar.artifact"/> <span
+                                    class="required">*</span>&nbsp;&nbsp;&nbsp;
+                                <input type="file" name="toolbox"
+                                       id="toolbox" size="80px" disabled="true"/>
+                            </nobr>
+                        </td>
+                    </tr>
+
+                    <tr>
+                        <td colspan="4">
+                            <table class="normal-nopadding">
+                                <tbody>
+
+                                <tr>
+                                    <td class="buttonRow" colspan="2">
+                                        <input type="button" value="<fmt:message key="deploy"/>"
+                                               class="button" name="deploy"
+                                               onclick="javascript:deployToolBox();"/>
+                                        <input type="button" value="<fmt:message key="cancel"/>"
+                                               name="cancel" class="button"
+                                               onclick="javascript:cancelDeploy();"/>
+                                    </td>
+                                </tr>
+                                </tbody>
+                            </table>
                         </td>
                     </tr>
                     </tbody>
                 </table>
-                </tbody>
-            </table>
-        </form>
+            </form>
+        </div>
     </div>
-</div>
 
 
 </fmt:bundle>

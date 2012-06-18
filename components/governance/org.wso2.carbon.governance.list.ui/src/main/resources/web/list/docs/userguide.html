@@ -30,6 +30,14 @@ With metadata management we are allowing users to manage the imported metadata a
 the Governance Registry since all the information are stored as resource information inside the Governance Registry. 
 In the Metadata list part users can list imported resources, WSDLs, Schemas and Policies.
 </p>
+
+<ul>
+    <li><a href="#listService">List Service</a></li>
+    <li><a href="#serviceFiltering">Service Filtering</a></li>
+    <li><a href="#listOtherMetadata">List other metadata</a></li>
+</ul>
+
+<a name="listService"></a>
 <h2>List Service</h2>
 <p>
 When user click list services user will be display the services imported through add service UI and add WSDL UI. Service
@@ -53,11 +61,19 @@ As you can see some of the information has been extracted using WSDL and now use
 service UI and save it. Please note that WSDL URL field has been replaced with the resource path of the imported WSDL so that by
 clicking on that link user can go to imported WSDL registry resource. 
 </p>
+
+<a name="serviceFiltering"></a>
 <h2>Service Filtering</h2>
 <p>
 In the service Listing page users can see a link called "Filter the Service list", once you click it you can give service parameters through
-the same UI where you used to add services and search for given parameters and filter the service list.
+the same UI where you used to add services and search for given parameters and filter the service list. The speciality of Advanced Search Filter
+is that the users are able to use regular expressions and define a search criteria in order to search for many results. In the Figure 3 it shows
+how a search is defined by its endpoint and the endpoint is given as a regular expression.
 </p>
+<p><img src="images/image3.png" width="750px"/></p>
+<p>Figure 3: Service Filtering with Regular Expressions</p>
+
+<a name="listOtherMetadata"></a>
 <h2>List other metadata</h2>
 <p>
 Listing other metadata like Policies, Schemas and WSDLs are similar to listing services instead it contains a link to view the
@@ -65,8 +81,8 @@ dependencies between resources. As example there is a dependency between a WSDL 
 will be having dependencies with some schema resources. Those dependencies can be viewed if user click view dependencies. And user
 can traverse to those dependencies by clicking on dependencies links.
 </p>
-<p><img src="images/image3.png" width="750px"/></p>
-<p>Figure 3: Service Dependency</p>
+<p><img src="images/image4.png" width="750px"/></p>
+<p>Figure 4: Service Dependency</p>
 
 
 </body>

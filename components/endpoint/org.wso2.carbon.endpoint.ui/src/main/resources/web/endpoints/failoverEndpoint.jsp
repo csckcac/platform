@@ -307,23 +307,25 @@
                         <td>
                             <table class="normal">
                                 <td><fmt:message key="save.in"/></td>
-                                <td><fmt:message key="gov.registry"/> <input type="radio"
-                                                                             name="registry"
-                                                                             id="gov_reg"
-                                                                             value="gov:"
-                                                                             checked="checked"
-                                                                             onclick="document.getElementById('reg').innerHTML='gov:';"/>
-                                    &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
-                                    <fmt:message key="config.registry"/> <input type="radio"
+                                <td><fmt:message key="config.registry"/> <input type="radio"
                                                                                 name="registry"
                                                                                 id="config_reg"
                                                                                 value="conf:"
+                                                                                checked="checked"
                                                                                 onclick="document.getElementById('reg').innerHTML='conf:';"/>
+                                    &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
+                                    <fmt:message key="gov.registry"/> <input type="radio"
+                                                                             name="registry"
+                                                                             id="gov_reg"
+                                                                             value="gov:"
+                                                                             onclick="document.getElementById('reg').innerHTML='gov:';"/>
+
+
                                 </td>
                                 </tr>
                                 <tr>
                                     <td><fmt:message key="registry.key"/></td>
-                                    <td><span id="reg">gov:</span><input type="text" size="75"
+                                    <td><span id="reg">conf:</span><input type="text" size="75"
                                                                          id="synRegKey"/>
                                     </td>
                                 </tr>

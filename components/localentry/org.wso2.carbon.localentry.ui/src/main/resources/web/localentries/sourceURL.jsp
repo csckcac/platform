@@ -116,8 +116,8 @@
                         <td style="width:100px"><fmt:message key="url"/>
                             <span class="required">*</span>
                         </td>
-                        <td>index
-                            <%if ((entry != null) && entry.getValue() != null) {%>
+                        <td>
+                           <%if ((entry != null) && entry.getValue() != null) {%>
                             <input type="text" name="Value" value="<%=entry.getValue()%>"
                                    class="longInput"/>
                             <%} else {%>

@@ -26,7 +26,7 @@
 <script type="text/javascript" src="../ajax/js/prototype.js"></script>
 <script type="text/javascript">
     window.onload = function() {
-        customCron();
+        customCronEnable();
     };
 </script>
 
@@ -36,10 +36,18 @@
         scriptName = "";
     }
     String scriptContent = request.getParameter("scriptContent");
+    if (null != scriptContent && !"".equals(scriptContent)) {
+        scriptContent = scriptContent.replaceAll("\"", "\\\\\"");
+        scriptContent = scriptContent.replaceAll("'", "\\\\\'");
+        String[] allQueries = scriptContent.split("\n");
+        scriptContent = "";
+        for (String aQuery : allQueries) {
+            scriptContent += aQuery.trim() + " ";
+        }
+    }
     String mode = request.getParameter("mode");
     String cron = request.getParameter("cron");
 %>
-
 <script type="text/javascript">
     var cronExpSelected = '';
 
@@ -72,8 +80,20 @@
                             if (message.indexOf("Success") != -1) {
                                 cronExpSelected = array[2];
                                 CARBON.showInfoDialog(array[0], function() {
+                                    <%--document.getElementById('cron').value = cronExpSelected;--%>
+                                    <%--document.getElementById('scriptName').value = '<%=scriptName%>';--%>
+                                    <%--document.getElementById('mode').value = '<%=mode%>';--%>
+                                    <%--document.getElementById('scriptContent').value = '<%=scriptContent%>';--%>
+                                    <%--document.getElementById('cronForm').action = "../hive-explorer/hiveexplorer.jsp";--%>
+                                    <%--document.getElementById('cronForm').submit();--%>
                                     location.href = '../hive-explorer/hiveexplorer.jsp?cron=' + cronExpSelected + '&scriptName=' + '<%=scriptName%>' + '&mode=' + '<%=mode%>' + '&scriptContent=' + '<%=scriptContent%>';
                                 }, function() {
+                                    <%--document.getElementById('cron').value = cronExpSelected;--%>
+                                    <%--document.getElementById('scriptName').value = '<%=scriptName%>';--%>
+                                    <%--document.getElementById('mode').value = '<%=mode%>';--%>
+                                    <%--document.getElementById('scriptContent').value = '<%=scriptContent%>';--%>
+                                    <%--document.getElementById('cronForm').action = "../hive-explorer/hiveexplorer.jsp";--%>
+                                    <%--document.getElementById('cronForm').submit();--%>
                                     location.href = '../hive-explorer/hiveexplorer.jsp?cron=' + cronExpSelected + '&scriptName=' + '<%=scriptName%>' + '&mode=' + '<%=mode%>' + '&scriptContent=' + '<%=scriptContent%>';
                                 });
 
@@ -100,8 +120,20 @@
                                 var array = message.split('#');
                                 cronExpSelected = array[2];
                                 CARBON.showInfoDialog(array[0], function() {
+                                    <%--document.getElementById('cron').value = cronExpSelected;--%>
+                                    <%--document.getElementById('scriptName').value = '<%=scriptName%>';--%>
+                                    <%--document.getElementById('mode').value = '<%=mode%>';--%>
+                                    <%--document.getElementById('scriptContent').value = '<%=scriptContent%>';--%>
+                                    <%--document.getElementById('cronForm').action = "../hive-explorer/hiveexplorer.jsp";--%>
+                                    <%--document.getElementById('cronForm').submit();--%>
                                     location.href = '../hive-explorer/hiveexplorer.jsp?cron=' + cronExpSelected + '&scriptName=' + '<%=scriptName%>' + '&mode=' + '<%=mode%>' + '&scriptContent=' + '<%=scriptContent%>';
                                 }, function() {
+                                    <%--document.getElementById('cron').value = cronExpSelected;--%>
+                                    <%--document.getElementById('scriptName').value = '<%=scriptName%>';--%>
+                                    <%--document.getElementById('mode').value = '<%=mode%>';--%>
+                                    <%--document.getElementById('scriptContent').value = '<%=scriptContent%>';--%>
+                                    <%--document.getElementById('cronForm').action = "../hive-explorer/hiveexplorer.jsp";--%>
+                                    <%--document.getElementById('cronForm').submit();--%>
                                     location.href = '../hive-explorer/hiveexplorer.jsp?cron=' + cronExpSelected + '&scriptName=' + '<%=scriptName%>' + '&mode=' + '<%=mode%>' + '&scriptContent=' + '<%=scriptContent%>';
                                 });
 
@@ -128,7 +160,7 @@
         location.href = "../hive-explorer/listscripts.jsp";
     }
 
-    function customCron() {
+    function customCronEnable() {
         disableCustomCron(false);
         disableUI(true);
         disableIntervalSelection(true);
@@ -227,7 +259,7 @@
 
 <div id="workArea">
 
-<form id="cron" name="cron" action="" method="POST">
+<form id="cronForm" name="cronForm" action="" method="POST">
 <table class="styledLeft">
 <tbody>
 
@@ -239,7 +271,7 @@
                 <td>
                     <div class="sectionSeperator togglebleTitle">
                         <input TYPE=RADIO NAME="cronExpSelect" id="cronExpSelect" VALUE="cronExpSelect"
-                               checked="true" onclick="customCron();" class="selectedOption"><label>Schedule
+                               checked="true" onclick="customCronEnable();" class="selectedOption"><label>Schedule
                         By Cron Expression: </label></div>
                     <br>
                 </td>
@@ -502,6 +534,10 @@
         <input class="button" type="button" value="Cancel" onclick="cancelCron()"/>
     </td>
 </tr>
+<input type="hidden" name="scriptContent" id="scriptContent"/>
+<inut type="hidden" name="cron" id="cron"/>
+<input type="hidden" name="scriptName" id="scriptName"/>
+<input type="hidden" name="mode" id="mode"/>
 </tbody>
 </table>
 

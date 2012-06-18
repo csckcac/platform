@@ -163,8 +163,9 @@
     }
 
     function scheduleTask() {
-        var allQueries = editAreaLoader.getValue("allcommands")
-        document.getElementById('commandForm').action = "../hive-explorer/scheduletask.jsp?mode=" + '<%=mode%>&scriptContent=' + allQueries + '&cron=' + '<%=cron%>';
+        var allQueries = editAreaLoader.getValue("allcommands");
+        document.getElementById('scriptContent').value = allQueries;
+        document.getElementById('commandForm').action = "../hive-explorer/scheduletask.jsp?mode=" + '<%=mode%>'+'&cron=' + '<%=cron%>';
         document.getElementById('commandForm').submit();
     }
 
@@ -421,6 +422,7 @@
                     </td>
                 </tr>
                 </tbody>
+                <input type="hidden" name="scriptContent" id="scriptContent"/>
             </table>
             </td>
             </tr>

@@ -56,7 +56,6 @@ public class HiveScriptPersistenceManager {
     public String retrieveScript(String scriptName) throws HiveScriptStoreException {
         UserRegistry registry;
         int tenantId = CarbonContext.getCurrentContext().getTenantId();
-        if(tenantId <0) tenantId = 0;
         Resource resource;
         InputStream scriptStream = null;
         String script;

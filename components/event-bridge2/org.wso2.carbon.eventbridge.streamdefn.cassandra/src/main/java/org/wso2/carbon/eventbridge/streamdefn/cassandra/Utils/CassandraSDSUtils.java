@@ -27,6 +27,9 @@ import java.util.UUID;
  */
 public class CassandraSDSUtils {
     public static String convertStreamNameToCFName(String streamName) {
+        if (streamName == null) {
+            return null;
+        }
         int keySpaceLength = CassandraConnector.BAM_EVENT_DATA_KEYSPACE.length();
         if ((streamName.length() + keySpaceLength) > 48) {
             throw new RuntimeException("The stream name you provided is too long. This has caused the" +

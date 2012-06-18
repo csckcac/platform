@@ -31,7 +31,7 @@ import org.wso2.carbon.registry.core.service.RegistryService;
 import org.wso2.carbon.user.core.service.RealmService;
 
 /**
- * @scr.component name="org.wso2.carbon.bam.eventreceiver.component" immediate="true"
+ * @scr.component name="cassandra.streamdefn.comp" immediate="true"
  * @scr.reference name="user.realmservice.default" interface="org.wso2.carbon.user.core.service.RealmService"
  * cardinality="1..1" policy="dynamic" bind="setRealmService"  unbind="unsetRealmService"
  * @scr.reference name="org.wso2.carbon.identity.authentication.internal.AuthenticationServiceComponent"

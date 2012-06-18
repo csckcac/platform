@@ -34,6 +34,9 @@ public class EventBridgeUtils {
     }
 
     public static String getStreamNameFromStreamKey(String streamKey) {
+        if (streamKey == null) {
+            return null;
+        }
         return streamKey.split("::")[0];
     }
 

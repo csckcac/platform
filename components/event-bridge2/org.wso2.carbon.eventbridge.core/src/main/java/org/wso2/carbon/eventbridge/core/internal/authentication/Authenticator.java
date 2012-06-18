@@ -21,9 +21,11 @@ package org.wso2.carbon.eventbridge.core.internal.authentication;
 
 import org.apache.commons.logging.Log;
 import org.apache.commons.logging.LogFactory;
+import org.wso2.carbon.eventbridge.commons.Credentials;
 import org.wso2.carbon.eventbridge.commons.exception.AuthenticationException;
 import org.wso2.carbon.eventbridge.core.conf.EventBridgeConfiguration;
 import org.wso2.carbon.eventbridge.core.internal.authentication.session.AgentSession;
+import org.wso2.carbon.eventbridge.core.internal.authentication.session.SessionBean;
 import org.wso2.carbon.eventbridge.core.internal.authentication.session.SessionCache;
 
 import java.util.UUID;
@@ -62,14 +64,12 @@ public final class Authenticator {
             logAndAuthenticationException("Authentication request was missing the required password");
         }
 
+
         boolean isSuccessful = authenticationHandler.authenticate(userName, password);
         if (isSuccessful) {
             String sessionId = UUID.randomUUID().toString();
-            AgentSession agentSession = sessionCache.getSession(sessionId);
 
-
-            agentSession.setCredentials(userName, password);
-            agentSession.setCreatedAt(System.currentTimeMillis());
+            sessionCache.getSession(new SessionBean(sessionId, new Credentials(userName, password)));
 
             return sessionId;
         }
@@ -89,6 +89,6 @@ public final class Authenticator {
     }
 
     public AgentSession getSession(String sessionId) {
-        return sessionCache.getSession(sessionId);
+        return sessionCache.getSession(new SessionBean(sessionId));
     }
 }

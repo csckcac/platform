@@ -67,8 +67,8 @@ public class EventBridgeDS {
                 String definitionStoreName = eventBridgeConfiguration.getStreamDefinitionStoreName();
                 AbstractStreamDefinitionStore streamDefinitionStore = null;
                 try {
-
-                    streamDefinitionStore = (AbstractStreamDefinitionStore) Class.forName(definitionStoreName).newInstance();
+                    streamDefinitionStore = (AbstractStreamDefinitionStore) EventBridgeDS.class.getClassLoader().loadClass(definitionStoreName).newInstance();
+//                    streamDefinitionStore = (AbstractStreamDefinitionStore) Class.forName(definitionStoreName).newInstance();
                 } catch (Exception e) {
                     log.warn("The stream definition store :" + definitionStoreName + " is cannot be created hence using org.wso2.carbon.agent.server.definitionstore.InMemoryStreamDefinitionStore", e);
                     //by default if used InMemoryStreamDefinitionStore

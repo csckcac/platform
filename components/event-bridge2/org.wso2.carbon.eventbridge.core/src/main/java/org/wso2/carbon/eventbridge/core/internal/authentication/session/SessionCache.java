@@ -21,7 +21,6 @@ package org.wso2.carbon.eventbridge.core.internal.authentication.session;
 import com.google.common.base.Function;
 import com.google.common.collect.MapMaker;
 
-import javax.annotation.Nullable;
 import java.util.concurrent.ConcurrentMap;
 import java.util.concurrent.TimeUnit;
 
@@ -30,7 +29,7 @@ import java.util.concurrent.TimeUnit;
  */
 public class SessionCache {
 
-    private ConcurrentMap<String, AgentSession> sessionCache;
+    private ConcurrentMap<SessionBean, AgentSession> sessionCache;
 
     public SessionCache(int expirationTimeInMinutes) {
         sessionCache = new MapMaker()
@@ -38,15 +37,15 @@ public class SessionCache {
                 .makeComputingMap(new SessionFunction());
     }
 
-    static class SessionFunction implements Function<String, AgentSession> {
+    static class SessionFunction implements Function<SessionBean, AgentSession> {
         @Override
-        public AgentSession apply(@Nullable String sessionId) {
-            return new AgentSession(sessionId);
+        public AgentSession apply( SessionBean sessionBean) {
+            return new AgentSession(sessionBean.getSessionId(), sessionBean.getCredentials());
         }
     }
 
-    public AgentSession getSession(String sessionId) {
-        return sessionCache.get(sessionId);
+    public AgentSession getSession(SessionBean sessionBean) {
+        return sessionCache.get(sessionBean);
     }
 
     public void removeSession(String sessionId) {

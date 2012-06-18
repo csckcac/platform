@@ -5,16 +5,15 @@ import me.prettyprint.hector.api.factory.HFactory;
 import org.junit.Test;
 import org.wso2.carbon.eventbridge.commons.Event;
 import org.wso2.carbon.eventbridge.commons.EventStreamDefinition;
+import org.wso2.carbon.eventbridge.commons.exception.MalformedStreamDefinitionException;
 import org.wso2.carbon.eventbridge.commons.utils.EventConverterUtils;
 import org.wso2.carbon.eventbridge.core.Utils.EventBridgeUtils;
 import org.wso2.carbon.eventbridge.core.exception.EventProcessingException;
+import org.wso2.carbon.eventbridge.core.exception.StreamDefinitionStoreException;
 import org.wso2.carbon.eventbridge.streamdefn.cassandra.Utils.CassandraSDSUtils;
 import org.wso2.carbon.eventbridge.streamdefn.cassandra.datastore.CassandraConnector;
 
-import java.util.ArrayList;
-import java.util.HashMap;
-import java.util.List;
-import java.util.Map;
+import java.util.*;
 
 import static junit.framework.Assert.*;
 
@@ -274,6 +273,32 @@ public class CassandraDefnStoreTest extends BaseCassandraSDSTest {
 
             }
         }
+
+    }
+
+    @Test
+    public void getAllStreamDefns() throws StreamDefinitionStoreException {
+        Collection<EventStreamDefinition> allStreamDefinitionFromStore =
+                cassandraConnector.getAllStreamDefinitionFromStore(getCluster());
+        assertNotNull(allStreamDefinitionFromStore);
+    }
+
+    @Test
+    public void nullcheck() throws MalformedStreamDefinitionException {
+        String nullKey = "abc";
+        EventStreamDefinition nullEventStreamDefinition = new EventStreamDefinition("abc", "1.0.0");
+        String streamIdFromStore = cassandraConnector.getStreamIdFromStore(getCluster(), nullKey);
+        assertNull(streamIdFromStore);
+        String streamIdFromStore1 = cassandraConnector.getStreamIdFromStore(getCluster(), nullEventStreamDefinition);
+        assertNull(streamIdFromStore1);
+
+        String streamKeyFromStreamId = cassandraConnector.getStreamKeyFromStreamId(getCluster(), nullKey);
+        assertNull(streamKeyFromStreamId);
+
+        String streamKeyFromStreamId1 =
+                cassandraConnector.getStreamKeyFromStreamId(getCluster(), nullEventStreamDefinition);
+        assertNull(streamKeyFromStreamId1);
+
 
     }
 

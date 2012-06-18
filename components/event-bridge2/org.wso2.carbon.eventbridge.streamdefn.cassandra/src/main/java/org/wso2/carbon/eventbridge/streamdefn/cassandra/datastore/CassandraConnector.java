@@ -54,6 +54,7 @@ import java.util.ArrayList;
 import java.util.Collection;
 import java.util.List;
 import java.util.UUID;
+import java.util.concurrent.ExecutionException;
 import java.util.concurrent.TimeUnit;
 //import org.wso2.carbon.agent.server.StreamDefnConverterUtils;
 
@@ -162,9 +163,9 @@ public class CassandraConnector {
         List<ColumnFamilyDefinition> cfDef = keyspaceDef.getCfDefs();
         for (ColumnFamilyDefinition cfdef : cfDef) {
             if (cfdef.getName().equals(columnFamilyName)) {
-
-                logger.warn("Column Family" + columnFamilyName + " already exists.");
-
+                if (logger.isTraceEnabled()) {
+                    logger.trace("Column Family " + columnFamilyName + " already exists.");
+                }
                 return;
             }
         }
@@ -454,11 +455,15 @@ public class CassandraConnector {
 
 
     public String getStreamKeyFromStreamId(Cluster cluster, EventStreamDefinition streamDefinition) {
-        return StreamKeyCache.getStreamKeyFromStreamId(cluster, streamDefinition.getStreamId());
+        return getStreamKeyFromStreamId(cluster, streamDefinition.getStreamId());
     }
 
     public String getStreamKeyFromStreamId(Cluster cluster, String streamId) {
-        return StreamKeyCache.getStreamKeyFromStreamId(cluster, streamId);
+        try {
+            return StreamKeyCache.getStreamKeyFromStreamId(cluster, streamId);
+        } catch (ExecutionException e) {
+            return null;
+        }
     }
 
     private static class StreamKeyCache {
@@ -486,7 +491,10 @@ public class CassandraConnector {
                                                 .setKey(streamIdClusterBean.getStreamId())
                                                 .setName(STREAM_ID_KEY);
                                 HColumn<String, String> queryResult = columnQuery.execute().get();
-                                return queryResult.getValue();
+                                if (queryResult != null) {
+                                    return queryResult.getValue();
+                                }
+                                throw new Exception("No value found");
                             }
                         }
                         );
@@ -494,9 +502,9 @@ public class CassandraConnector {
 
         }
 
-        public static String getStreamKeyFromStreamId(Cluster cluster, String streamId) {
+        public static String getStreamKeyFromStreamId(Cluster cluster, String streamId) throws ExecutionException {
             init();
-            return streamKeyCache.getUnchecked(new StreamIdClusterBean(cluster, streamId));
+            return streamKeyCache.get(new StreamIdClusterBean(cluster, streamId));
         }
 
         private static class StreamIdClusterBean {
@@ -638,7 +646,7 @@ public class CassandraConnector {
      */
     public String getStreamIdFromStore(Cluster cluster, EventStreamDefinition streamDefinition) {
         String streamIdKey = EventBridgeUtils.constructStreamKey(streamDefinition.getName(), streamDefinition.getVersion());
-        return StreamIdCache.getStreamIdFromStreamKey(cluster, streamIdKey);
+        return getStreamIdFromStore(cluster, streamIdKey);
     }
 
     /**
@@ -649,7 +657,11 @@ public class CassandraConnector {
      * @return Returns stored stream Ids
      */
     public String getStreamIdFromStore(Cluster cluster, String streamIdKey) {
-        return StreamIdCache.getStreamIdFromStreamKey(cluster, streamIdKey);
+        try {
+            return StreamIdCache.getStreamIdFromStreamKey(cluster, streamIdKey);
+        } catch (ExecutionException e) {
+            return null;
+        }
     }
 
     private static class StreamIdCache {
@@ -657,7 +669,7 @@ public class CassandraConnector {
         private static LoadingCache<StreamKeyClusterBean, String> streamIdCache = null;
 
         private static void init() {
-            synchronized (StreamKeyCache.class) {
+            synchronized (StreamIdCache.class) {
                 if (streamIdCache != null) {
                     return;
                 }
@@ -679,7 +691,7 @@ public class CassandraConnector {
                                 if (hColumn != null) {
                                     return hColumn.getValue();
                                 }
-                                return null;
+                                throw new Exception("No value found");
                             }
                         }
                         );
@@ -687,9 +699,9 @@ public class CassandraConnector {
 
         }
 
-        public static String getStreamIdFromStreamKey(Cluster cluster, String streamKey) {
+        public static String getStreamIdFromStreamKey(Cluster cluster, String streamKey) throws ExecutionException {
             init();
-            return streamIdCache.getUnchecked(new StreamKeyClusterBean(cluster, streamKey));
+            return streamIdCache.get(new StreamKeyClusterBean(cluster, streamKey));
         }
 
         private static class StreamKeyClusterBean {
@@ -781,6 +793,7 @@ public class CassandraConnector {
                 HFactory.createRangeSlicesQuery(keyspace, stringSerializer, stringSerializer, stringSerializer);
         query.setColumnFamily(BAM_META_STREAM_ID_CF);
         query.setKeys("", "");
+        query.setRange("", "", false, 10000);
         QueryResult<OrderedRows<String, String, String>> result = query.execute();
         for (Row<String, String, String> row : result.get()) {
             if (row == null) {

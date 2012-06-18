@@ -25,11 +25,24 @@ import org.wso2.carbon.eventbridge.commons.Credentials;
  */
 public class AgentSession {
     private String sessionId;
-    private Credentials credentials=new Credentials("","");
+    private Credentials credentials;
     private long createdAt;
 
-    public AgentSession(String sessionId) {
+//    public AgentSession(String sessionId) {
+//        this.sessionId = sessionId;
+//    }
+
+
+    public AgentSession(String sessionId, Credentials credentials) {
         this.sessionId = sessionId;
+        this.credentials = credentials;
+        this.createdAt = System.currentTimeMillis();
+    }
+
+    public AgentSession(String sessionId, Credentials credentials, long createdAt) {
+        this.sessionId = sessionId;
+        this.credentials = credentials;
+        this.createdAt = createdAt;
     }
 
     public String getSessionId() {
@@ -73,4 +86,5 @@ public class AgentSession {
     public Credentials getCredentials() {
         return credentials;
     }
+
 }

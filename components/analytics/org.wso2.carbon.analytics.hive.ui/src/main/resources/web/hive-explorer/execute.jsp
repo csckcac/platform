@@ -43,14 +43,16 @@
             String cookie = (String) session.getAttribute(ServerConstants.ADMIN_SERVICE_COOKIE);
             HiveScriptStoreClient client = new HiveScriptStoreClient(cookie, serverURL, configContext);
             scriptContent = client.getScript(scriptName);
-            scriptContent = scriptContent.trim();
-            String[] allQueries = scriptContent.split("\n");
-            scriptContent = "";
-            for (String aQuery:allQueries){
-                System.out.println(aQuery);
-               scriptContent +=aQuery.trim();
+            if (null != scriptContent && !"".equals(scriptContent)) {
+                scriptContent = scriptContent.trim();
+                scriptContent = scriptContent.replaceAll("\"", "\\\\\"");
+                scriptContent = scriptContent.replaceAll("'", "\\\\\'");
+                String[] allQueries = scriptContent.split("\n");
+                scriptContent = "";
+                for (String aQuery : allQueries) {
+                    scriptContent += aQuery.trim() + " ";
+                }
             }
-            System.out.println(scriptContent);
         } catch (Exception e) {
             String errorString = e.getMessage();
             CarbonUIMessage.sendCarbonUIMessage(e.getMessage(), CarbonUIMessage.ERROR, request, e);
@@ -66,7 +68,7 @@
         jQuery(document).ready(function() {
             var allQueries = '<%=scriptContent%>';
             executeQuery(allQueries);
-          });
+        });
     </script>
 
 
@@ -130,34 +132,35 @@
 
     <div id="middle">
 
-    <h2>Script Editor<%=" - " + scriptName%></h2>
+        <h2>Script Editor<%=" - " + scriptName%>
+        </h2>
 
-    <div id="workArea">
+        <div id="workArea">
 
-        <form id="commandForm" name="commandForm" action="" method="POST">
-            <table class="styledLeft noBorders">
-                <tbody>
-                <tr>
-                    <td class="middle-header">
-                        <fmt:message key="script.results"/>
-                    </td>
-                </tr>
-                <tr>
-                    <td>
+            <form id="commandForm" name="commandForm" action="" method="POST">
+                <table class="styledLeft noBorders">
+                    <tbody>
+                    <tr>
+                        <td class="middle-header">
+                            <fmt:message key="script.results"/>
+                        </td>
+                    </tr>
+                    <tr>
+                        <td>
 
-                    </td>
-                </tr>
-                <tr>
-                    <td>
-                        <div id="hiveResult" class="scrollable" style="width:99%">
-                                <%--the results goes here...--%>
-                        </div>
-                    </td>
-                </tr>
-                </tbody>
-            </table>
-        </form>
+                        </td>
+                    </tr>
+                    <tr>
+                        <td>
+                            <div id="hiveResult" class="scrollable" style="width:99%">
+                                    <%--the results goes here...--%>
+                            </div>
+                        </td>
+                    </tr>
+                    </tbody>
+                </table>
+            </form>
+        </div>
     </div>
-</div>
 
 </fmt:bundle>

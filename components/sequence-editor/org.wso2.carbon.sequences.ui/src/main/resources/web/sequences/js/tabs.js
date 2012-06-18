@@ -74,6 +74,19 @@ function executeShowSource() {
             var ele = document.getElementById("mediatorSource");
             if (ele != null && ele != undefined) {
                 ele.innerHTML = responseText;
+                  //debugger;
+                //document.getElementById('mediatorSrcTD').style.display = "";
+                //document.getElementById('mediatorSrc').style.display = "";
+                editAreaLoader.delete_instance("mediatorSrc");
+                YAHOO.util.Event.onAvailable("mediatorSrc",
+	            	function() {
+	            		editAreaLoader.init({
+			            id : "mediatorSrc"		// textarea id
+			            ,syntax: "xml"			// syntax to be uses for highgliting
+			            ,start_highlight: true		// to display with highlight mode on start-up
+			        });
+	            	}
+    );
             }
         }
     });

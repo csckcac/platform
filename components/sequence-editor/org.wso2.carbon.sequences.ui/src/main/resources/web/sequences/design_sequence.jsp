@@ -695,12 +695,12 @@
                 <tr><td><table class="styledLeft" cellspacing="0">
     <tr id="mediator-designview-header" style="display:none;">
         <td class="middle-header" >
-            <span style="float:left; position:relative; margin-top:2px;"><fmt:message key="mediator.design.view.text"/></span><a href="#" onclick="showSource()" class="icon-link" style="background-image:url(images/source-view.gif);"><fmt:message key="sequence.switchto.source.text"/></a>
+            <span style="float:left; position:relative; margin-top:2px;"><fmt:message key="mediator.design.view.text"/></span><a onclick="showSource()" class="icon-link" style="background-image:url(images/source-view.gif);"><fmt:message key="sequence.switchto.source.text"/></a>
         </td>
     </tr>
     <tr id="mediator-sourceview-header" style="display:none;">
         <td class="middle-header">
-            <span style="float:left; position:relative; margin-top:2px;"><fmt:message key="mediator.source.view.text"/></span><a href="#" onclick="showDesign()" class="icon-link" style="background-image:url(images/design-view.gif);"><fmt:message key="sequence.switchto.design.text"/></a>
+            <span style="float:left; position:relative; margin-top:2px;"><fmt:message key="mediator.source.view.text"/></span><a onclick="showDesign()" class="icon-link" style="background-image:url(images/design-view.gif);"><fmt:message key="sequence.switchto.design.text"/></a>
         </td>
     </tr>
     <tr id="mediator-edit-tab" style="display:none;">

@@ -32,7 +32,7 @@
     <!--
        Product Version
     -->
-    <Version>1.0.0-ALPHA</Version>
+    <Version>0.9.0-ALPHA</Version>
 
     <!--
        Host name or IP address of the machine hosting this server

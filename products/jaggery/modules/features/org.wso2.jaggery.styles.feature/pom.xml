@@ -22,7 +22,7 @@
     <parent>
         <groupId>org.wso2.carbon</groupId>
         <artifactId>jaggery-server-features</artifactId>
-        <version>1.0.0-ALPHA</version>
+        <version>0.9.0-ALPHA</version>
     </parent>
 
     <modelVersion>4.0.0</modelVersion>
@@ -35,7 +35,7 @@
         <dependency>
             <groupId>org.wso2.carbon</groupId>
             <artifactId>org.wso2.jaggery.styles</artifactId>
-            <version>1.0.0-ALPHA</version>
+            <version>0.9.0-ALPHA</version>
         </dependency>
     </dependencies>
 

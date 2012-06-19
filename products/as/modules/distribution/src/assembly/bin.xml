@@ -248,14 +248,14 @@
         </fileSet>
 
         <!-- copy executables in samples with execute permissions -->
-        <!--fileSet>
+        <fileSet>
             <directory>../samples/product</directory>
-            <outputDirectory>${pom.artifactId}-${project.version}/samples</outputDirectory>
+            <outputDirectory>${pom.artifactId}-${pom.version}/samples</outputDirectory>
             <includes>
                 <include>**/**.sh</include>
             </includes>
             <fileMode>755</fileMode>
-        </fileSet-->
+        </fileSet>
 
         <!--copying qpid config files -->
         <fileSet>

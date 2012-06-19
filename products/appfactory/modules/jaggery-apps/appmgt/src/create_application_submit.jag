@@ -8,8 +8,7 @@
      var userName = session.get("LOGGED_IN_USER");
 
 %>
-<div id="middle">
-    <div id="workArea">
+
         <%
             include('mgt/application_manager.jag');
             include('mgt/registry_access_manager.jag');

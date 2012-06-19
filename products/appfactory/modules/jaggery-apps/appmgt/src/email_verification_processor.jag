@@ -1,47 +1,12 @@
-<!DOCTYPE html>
-<html lang="en">
-<head>
-    <meta charset="utf-8">
-    <title>WSO2 Application Management Tool</title>
-</head>
-<body>
- <%
 
+ <%
+  // include the header here
+ include("includes/header.jag");
  include('mgt/application_manager.jag');
 
- %>
-
-<link href="css/global.css" rel="stylesheet">
-<link href="css/formStyles.css" rel="stylesheet">
-
-<table id="main-table" border="0" cellspacing="0">
-     <%
-        // include the header here
-        include("includes/header.jag");
-    %>
-    <tr>
-            <%
-            // include the left navigation menu as the 1st column in the row
-            include("includes/menu.jag");
-        %>
-
-        <td id="middle-content">
-            <table id="content-table" border="0" cellspacing="0">
-                <!--tr>
-                    <td id="page-header-links"></td> => USER FOR BREADCRUMB
-                </tr-->
-                <tr>
-                    <td id="body">
-                        <img src="../admin/images/1px.gif" width="735px" height="1px"/>
-                        <!-- dummy implementation of the closure of the table structure used to define
-                the UI structured in a table. The table and other html element such as the
-                body element is terminated appropriately in the template_footer.jag file-->
-
-<div id="middle">
 
 
-    <div id="workArea">
-       <%
+
        var confirm = request.getParameter("confirmation");
        //var confirmationObject=getConfirmationObject(confirm);
        var confirmationObject=getUserConfirmationObject(confirm);
@@ -70,9 +35,8 @@
        <%
        }
         %>
-    </div>
-</div>
+
 
 <%
-    include('includes/template_footer.jag');
+    include('includes/footer.jag');
 %>

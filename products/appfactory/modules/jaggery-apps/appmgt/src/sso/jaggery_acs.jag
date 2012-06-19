@@ -42,7 +42,7 @@
                         // if the saml response is log out request from IDP, we log out from web app.
                         ssoRelyingParty.invalidateSessionBySessionId(sessionId);
                         session.put("LOGGED_IN_USER","NONE");
-                        response.sendRedirect("../logout.jag");
+                        response.sendRedirect("../");
                         return;
                     }
 

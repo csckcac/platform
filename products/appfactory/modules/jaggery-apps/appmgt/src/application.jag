@@ -2,30 +2,7 @@
     include('includes/template_header.jag');
     include('constants.jag');
 %>
-<script>
-    $(document).ready(function() {
-        var defaultTabId = "overview";//Set this to the default tab that needed to be selected
-        var tabId = "pageTabs";
-        $('#' + tabId + ' a').each(function() {
-            if ($(this).attr('name') == defaultTabId) {
-                $('#' + $(this).attr('name')).show('fold');
-                $(this).addClass('selected');
-            } else {
-                $('#' + $(this).attr('name')).hide();
-                $(this).removeClass('selected');
-            }
 
-        });
-        $('#' + tabId + ' a').click(function() {
-            $('#' + tabId + ' a').removeClass('selected');
-            $('#' + tabId + ' a').each(function() {
-                $('#' + $(this).attr('name')).hide();
-            });
-            $(this).addClass('selected');
-            $('#' + $(this).attr('name')).show('fold');
-        });
-    });
-</script>
 <%
     var log = new Log();
     var applicationName = request.getParameter("applicationName");
@@ -57,8 +34,9 @@
         log.debug("user is an Owner " + adminPrivilege);
         
         %>
-        <div id="middle">
-            <div id="workArea">
+ <div class="container-fluid">
+                <div class="row-fluid">
+                    <div class="span12">
                 <%
                     if (applicationName != null && applicationKey != null) {
                 %>
@@ -69,27 +47,31 @@
                         var applicationSVN = getRepositoryPath(applicationKey);
                 %>
                     <!-- Including the tabbed navigation -->
-                    <div id="pageTabs" class="page-tabs">
-                        <a name="overview" class="tab">Overview</a><!-- Basicaly create a div with id="overview" and add content -->
+                     <div class="tabbable"> <!-- Only required for left/right tabs -->
+                      <ul class="nav nav-tabs">
+
+                         <li class="active"><a href="#tab1" data-toggle="tab">Overview</a></li>
                         <%
                             if(adminPrivilege) {
                         %>
-                        <a name="admin" class="tab selected">Admin</a>
+                         <li><a href="#tab2" data-toggle="tab">Admin</a></li>
                         <%
                             }
                         %>
                         <%
                             if(devOpsPrivilege) {
                         %>
-                        <a name="devOp" class="tab selected">Operations</a>
+                        <li><a href="#tab3" data-toggle="tab">DevOps</a></li>
                         <%
                             }
                         %>
+                        </ul>
                     </div>
                     <div style="clear:both"></div>
         
                     <!-- information common to all application users -->
-                    <div class="content-box" id="overview">
+                <div class="tab-content">
+                    <div class="tab-pane active" id="tab1">
                         <h3>Application overview</h3>
         
                         <div>
@@ -108,7 +90,7 @@
                     <%
                         if(adminPrivilege) {
                     %>
-                    <div class="content-box" id="admin">
+                     <div class="tab-pane" id="tab2">
                        <%
                             include('user_list.jag');
                         %>
@@ -129,7 +111,7 @@
                     <%
                         if (devOpsPrivilege) {
                     %>
-                    <div class="content-box" id="devOp">
+                    <div class="tab-pane" id="tab3">
                         <h3>devOps operations</h3>
                         <table class="styledLeft">
                             <%
@@ -149,6 +131,7 @@
 
                         </table>
                     </div>
+                    </div>
                     <%
                         }
                     %>
@@ -161,6 +144,7 @@
         <%
     }
             %>
+            </div>
     </div>
 </div>
 <%

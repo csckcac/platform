@@ -5,13 +5,12 @@
     var applicationKey = request.getParameter("applicationKey");
     var userName = request.getParameter("userName");
 %>
-<div id="middle">
+
 
     <h3>Update Role</h3>
     <h2><%= applicationName%>
     </h2>
 
-    <div id="workArea">
 
         <form id='sampleform' method='post'
               action="update_role_submit.jag?applicationName=<%=applicationName%>&applicationKey=<%=applicationKey%>&userName=<%=userName%>">
@@ -25,8 +24,7 @@
                    onclick="location.href='application.jag?applicationName=<%=applicationName%>&applicationKey=<%=applicationKey%>'"
                    value="Cancel"/>
         </form>
-    </div>
-</div>
+
 
 <%
     include('includes/template_footer.jag');

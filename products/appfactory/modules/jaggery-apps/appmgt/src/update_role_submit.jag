@@ -5,8 +5,7 @@
     var applicationName = request.getParameter("applicationName");
 %>
 
-<div id="middle">
-    <div id="workArea">
+
         <%
             print("applicationKey:" + request.getParameter("applicationKey") + "</br>");
             print("userName:" + request.getParameter("userName") + "</br></br>");
@@ -15,8 +14,7 @@
             print("devops:" + request.getParameter("devops") + "</br>");
 
         %>
-    </div>
-</div>
+
 <%
     include('includes/template_footer.jag');
 %>

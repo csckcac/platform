@@ -6,8 +6,7 @@
     var newUserRole = request.getParameter("role");
     var requestersUsername = request.getParameter("userName");
 %>
-<div id="middle">
-    <div id="workArea">
+
 
         <%
             print("developer:" + request.getParameter("developer") + "</br>");
@@ -28,8 +27,7 @@
                 print(e);
             }
                 %>
-        </div>
-    </div>
+
     <%
         include('includes/template_footer.jag');
     %>

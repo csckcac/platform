@@ -10,7 +10,7 @@
     function setRoles(field)
     {
         var roles='';
-        alert("SSS");
+
         for (i=0;i<field.length;i++) {
             if (field[i].checked==true)	{
                 if(i==field.length-1) {
@@ -47,12 +47,12 @@
                     <td class="formRow">
                         <input type='radio' name='role' value='developer' checked='true'/>developer<br />
                         <input type='radio' name='role' value='QA'/>QA<br />
-                        <input type='radio' name='role' value='devOp'/>devOp
+                        <input type='radio' name='role' value='devOps'/>devOps
 
                         <!--
                         <input type="checkbox" name="role" value="developer" checked>Developer</br>
                         <input type="checkbox" name="role" value="qa" checked>QA</br>
-                        <input type="checkbox" name="role" value="devOps" checked>DevOp</br>
+                        <input type="checkbox" name="role" value="devOps" checked>DevOps</br>
                         <input type="hidden" name="newUsersRoles" value="">  -->
                     </td>
                 </tr>
@@ -60,7 +60,7 @@
             <table class="styledLeft">
                 <tr>
                     <td class="buttonRow">
-                        <input type='submit' name='Submit' onclick="setRoles(document.inviteUserForm.role)" value='Invite' class='button'/>
+                        <!-- input type='submit' name='Submit' onclick="setRoles(document.inviteUserForm.role)" value='Invite' class='button'/> -->
                         <input type="button" onclick="location.href='application.jag?applicationName=<%=applicationName%>&applicationKey=<%=applicationKey%>'" value='Cancel' class='button'/>
                     </td>
                 </tr>

@@ -3,28 +3,25 @@
     // userName variable is taken from template_header.jag
      var userName = session.get("LOGGED_IN_USER");
 %>
-<div id="middle">
-    <h2>Add New Application</h2>
 
-    <div id="workArea">
         <form method='post' action='create_application_submit.jag?userName=<%=userName%>'>
-            <table class="styledLeft" id="applicationInputTbl">
+            <table class="table table-bordered table-striped"  id="applicationInputTbl">
                 <thead>
                 <tr>
                     <th colspan="2">Please enter the following information.</th>
                 </tr>
                 </thead>
                 <tr>
-                    <td class="formRow">Application Name:</td>
+                    <td >Application Name:</td>
                     <td class="formRow"><input type='text' name='applicationName' size='50'/></td>
                 </tr>
                 <tr>
-                                    <td class="formRow">Application Key:</td>
-                                    <td class="formRow"><input type='text' name='applicationKey' size='50'/></td>
+                                    <td>Application Key:</td>
+                                    <td><input type='text' name='applicationKey' size='50'/></td>
                 </tr>
                 <tr>
-                                    <td class="formRow">Application Description:</td>
-                                    <td class="formRow"><input type='text' name='applicationDescription' size='50'/></td>
+                                    <td>Application Description:</td>
+                                    <td><input type='text' name='applicationDescription' size='50'/></td>
                  </tr>
             </table>
             <table class="styledLeft">
@@ -36,8 +33,8 @@
                 </tr>
             </table>
         </form>
-    </div>
-</div>
+
+
 <script type="text/javascript">
     alternateTableRows('applicationInputTbl', 'tableEvenRow', 'tableOddRow');
 </script>

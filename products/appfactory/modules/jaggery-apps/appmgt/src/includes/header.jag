@@ -1,45 +1,103 @@
 <%
     var userName = session.get("LOGGED_IN_USER");
 %>
-<tr>
-    <td id="header" colspan="2">
-        <div id="header-div">
-            <div class="right-logo">Application Management Console</div>
-            <div class="left-logo">
-                <a href="#" class="header-home"><img src="images/1px.gif"
-                                                     width="300px" height="32px"/></a>
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="utf-8">
+    <title>WSO2 - Application Factory</title>
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta name="description" content="">
+    <meta name="author" content="">
+
+    <!-- Le styles -->
+    <link href="lib/bootstrap/css/bootstrap.css" rel="stylesheet">
+    <style type="text/css">
+        body {
+            padding-top: 60px;
+            padding-bottom: 40px;
+        }
+    </style>
+    <link href="lib/bootstrap/css/bootstrap-responsive.css" rel="stylesheet">
+    <link href="css/localstyles.css" rel="stylesheet">
+
+    <!-- Le HTML5 shim, for IE6-8 support of HTML5 elements -->
+    <!--[if lt IE 9]>
+    <script src="lib/html5/html5.js"></script>
+    <![endif]-->
+
+    <!-- Le fav and touch icons -->
+    <!-- <link rel="shortcut icon" href="../assets/ico/favicon.ico">
+  <link rel="apple-touch-icon-precomposed" sizes="144x144" href="../assets/ico/apple-touch-icon-144-precomposed.png">
+  <link rel="apple-touch-icon-precomposed" sizes="114x114" href="../assets/ico/apple-touch-icon-114-precomposed.png">
+  <link rel="apple-touch-icon-precomposed" sizes="72x72" href="../assets/ico/apple-touch-icon-72-precomposed.png">
+  <link rel="apple-touch-icon-precomposed" href="../assets/ico/apple-touch-icon-57-precomposed.png">-->
+
+</head>
+
+<body>
+
+<div class="navbar navbar-fixed-top">
+    <div class="navbar-inner">
+        <div class="container">
+
+            <a class="brand" href="#"></a>
+             <%
+             if(userName!=null) {
+             %>
+            <div>
+                <ul class="nav">
+                    <li class="active"><a href="index.jag">Apps</a></li>
+                    <li><a href="create_application.jag">Add New App</a></li>
+                </ul>
             </div>
-            <div class="middle-ad">
-            </div>
-            <div class="header-links">
-                <div class="right-links">
-                    <ul>
-                        <%
-                            if(userName != null) {
-                        %>
-                        <li class="middle">
-                            <!-- value for userName will be initialized in template_header.jag
-                                 and used here. -->
-                            <strong>Signed-in as:&nbsp;</strong><%= userName%>
+            <!--/.nav-collapse -->
+
+            <ul class="nav actions login-sign-up pull-right">
+                <li class="dropdown">
+                    <a class="link-to-user dropdown-toggle" data-toggle="dropdown"><%=userName%> <b class="caret"></b></a>
+                    <ul class="dropdown-menu" id="userInfoMenu">
+                        <li class="userInfoSection">
+                            Logged in as <h4><%=userName%></h4>
                         </li>
-                        <li class="middle">|</li>
-                        <li class="right">
-                            <a href="sso/jaggery_sso_logout.jag">Sign-out</a>
-                        </li>
-                        <%
-                            }
-                        %>
-                        <li class="middle">|</li>
-                        <li class="middle">
-                            <a target="_blank" href="#">Docs</a>
-                        </li>
-                        <li class="middle">|</li>
-                        <li class="left">
-                            <a target="_blank" href="#">About</a>
+                        <li>
+                            <button id="logout-link" class="btn btn-danger" onClick="window.location.href='sso/jaggery_sso_logout.jag'">Logout</button>
                         </li>
                     </ul>
-                </div>
-            </div>
+                </li>
+            </ul>
+            <%
+            } else{
+               <ul class="nav actions login-sign-up pull-right">
+
+                             <li class="active"><a href="#">Sign in</a></li>
+               </ul>
+
+            %>
+            <%
+             }
+            %>
         </div>
-    </td>
-</tr>
+    </div>
+</div>
+
+<div class="container">
+    <!-- row of columns -->
+    <div class="row">
+        <div class="span12">
+            <ul class="breadcrumb">
+                <li>
+                    <a href="#">Home</a> <span class="divider">/</span>
+                </li>
+                <li>
+                    <a href="#">Applications</a> <span class="divider">/</span>
+                </li>
+                <li class="active">Application Foo</li>
+            </ul>
+        </div>
+    </div>
+    <div class="row">
+        <div class="span12 title-back"><h1>The WSO2 - Application Factory</h1></div>
+    </div>
+     <div class="row">
+             <div class="span12 page-content">

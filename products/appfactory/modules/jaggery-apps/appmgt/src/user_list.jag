@@ -2,14 +2,14 @@
     var applicationName = request.getParameter("applicationName");
     var applicationKey = request.getParameter("applicationKey");
 %>
-<div id="middle">
+
     <h3>User List</h3>
 
-    <div id="workArea">
+
 
         <table id="table1">
             <tr class="data" id="row5">
-            <<tr>
+            <tr>
             <td><strong>User Names</strong></td>
             </tr>
             <%
@@ -24,5 +24,3 @@
                 }
             %>
         </table>
-    </div>
-</div>

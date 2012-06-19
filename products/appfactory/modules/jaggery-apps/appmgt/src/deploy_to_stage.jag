@@ -1,6 +1,8 @@
 <%
+        include('includes/template_header.jag');
         include('process/web_service_util.jag');
         include('config_reader.jag');
+
 
         var applicationName = request.getParameter("applicationName");
         var applicationSvnLocation = request.getParameter("applicationSvnLocation");
@@ -12,6 +14,6 @@
 	    }catch(e){
 	        print(e.message);
 	    }
-
+        include('includes/template_footer.jag');
 
 %>

@@ -1,16 +1,14 @@
 package org.wso2.carbon.jaggery.core;
 
+import org.wso2.carbon.hostobjects.jaggeryparser.JaggeryParser;
 import org.wso2.carbon.scriptengine.exceptions.ScriptException;
 
-import java.io.IOException;
-import java.io.InputStream;
-import java.io.Reader;
-import java.io.StringReader;
+import java.io.*;
 
 public class ScriptReader extends Reader {
 
     protected InputStream sourceIn = null;
-    protected StringReader sourceReader = null;
+    protected Reader sourceReader = null;
     private boolean isBuilt = false;
 
     public ScriptReader(InputStream sourceIn) {
@@ -33,7 +31,7 @@ public class ScriptReader extends Reader {
 
     protected void build() throws IOException {
         try {
-            sourceReader = new StringReader(ScriptParser.parse(sourceIn));
+            sourceReader = new BufferedReader(new InputStreamReader(JaggeryParser.parse(sourceIn)));
         } catch (ScriptException e) {
             throw new IOException(e);
         }

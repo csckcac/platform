@@ -65,6 +65,10 @@
         <className>org.wso2.carbon.hostobjects.uri.URIMatcherHostObject</className>
         <name>URIMatcher</name>
     </hostObject>
+    <hostObject>
+        <className>org.wso2.carbon.hostobjects.jaggeryparser.JaggeryParserHostObject</className>
+        <name>JaggeryParser</name>
+    </hostObject>
 
     <!-- methods -->
     <method readOnly="true">

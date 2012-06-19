@@ -196,7 +196,11 @@
         <dependency>
             <groupId>org.wso2.carbon</groupId>
             <artifactId>org.wso2.carbon.hostobjects.email</artifactId>
+        </dependency>
 
+        <dependency>
+            <groupId>org.wso2.carbon</groupId>
+            <artifactId>org.wso2.carbon.hostobjects.jaggeryparser</artifactId>
         </dependency>
 
         <dependency>
@@ -397,6 +401,7 @@
                                 <bundleDef>org.wso2.carbon:org.wso2.carbon.hostobjects.email</bundleDef>
                                 <bundleDef>org.wso2.carbon:org.wso2.carbon.hostobjects.xslt</bundleDef>
                                 <bundleDef>org.wso2.carbon:org.wso2.carbon.hostobjects.uri</bundleDef>
+                                <bundleDef>org.wso2.carbon:org.wso2.carbon.hostobjects.jaggeryparser</bundleDef>
 				<bundleDef>org.wso2.carbon:org.wso2.carbon.hostobjects.log</bundleDef>
  <bundleDef>org.wso2.carbon:org.wso2.carbon.hostobjects.oauth</bundleDef>
                            

@@ -265,6 +265,11 @@
             </dependency>
             <dependency>
                 <groupId>org.wso2.carbon</groupId>
+                <artifactId>org.wso2.carbon.hostobjects.jaggeryparser</artifactId>
+                <version>${hostobjects.version}</version>
+            </dependency>
+            <dependency>
+                <groupId>org.wso2.carbon</groupId>
                 <artifactId>org.wso2.carbon.scriptengine</artifactId>
                 <version>${wso2carbon.version.jaggery}</version>
             </dependency>

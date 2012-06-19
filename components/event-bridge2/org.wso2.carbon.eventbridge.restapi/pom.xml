@@ -11,7 +11,7 @@
     <modelVersion>4.0.0</modelVersion>
     <groupId>org.wso2.carbon</groupId>
     <artifactId>org.wso2.carbon.eventbridge.restapi</artifactId>
-    <name>WSO2 Event Bridge Rest API - REST interface for events</name>
+    <name>WSO2 Carbon - Event Bridge - REST API</name>
     <packaging>bundle</packaging>
 
 
@@ -74,10 +74,10 @@
             <version>${cxf.wso2.version.eventbridge}</version>
         </dependency>
         <dependency>
-	<groupId>org.apache.servicemix.specs</groupId>
-	<artifactId>org.apache.servicemix.specs.jsr311-api-1.1.1</artifactId>
-	<version>1.9.0</version>
-</dependency>
+            <groupId>org.apache.servicemix.specs</groupId>
+            <artifactId>org.apache.servicemix.specs.jsr311-api-1.1.1</artifactId>
+            <version>1.9.0</version>
+        </dependency>
 
         <!-- Test dependencies -->
 
@@ -88,38 +88,38 @@
             <scope>test</scope>
         </dependency>
         <!--<dependency>-->
-            <!--<groupId>org.apache.cxf</groupId>-->
-            <!--<artifactId>cxf-rt-transports-http</artifactId>-->
-            <!--<version>${cxf.test.version}</version>-->
-            <!--<scope>test</scope>-->
+        <!--<groupId>org.apache.cxf</groupId>-->
+        <!--<artifactId>cxf-rt-transports-http</artifactId>-->
+        <!--<version>${cxf.test.version}</version>-->
+        <!--<scope>test</scope>-->
 
         <!--</dependency>-->
         <!-- This dependency is needed if you're using the Jetty container -->
         <!--<dependency>-->
-            <!--<groupId>org.apache.cxf</groupId>-->
-            <!--<artifactId>cxf-rt-transports-http-jetty</artifactId>-->
-            <!--<version>${cxf.test.version}</version>-->
-            <!--<scope>test</scope>-->
+        <!--<groupId>org.apache.cxf</groupId>-->
+        <!--<artifactId>cxf-rt-transports-http-jetty</artifactId>-->
+        <!--<version>${cxf.test.version}</version>-->
+        <!--<scope>test</scope>-->
 
         <!--</dependency>-->
         <!--<dependency>-->
-            <!--<groupId>org.apache.cxf</groupId>-->
-            <!--<artifactId>cxf-rt-frontend-jaxrs</artifactId>-->
-            <!--<version>${cxf.test.version}</version>-->
-            <!--<scope>test</scope>-->
+        <!--<groupId>org.apache.cxf</groupId>-->
+        <!--<artifactId>cxf-rt-frontend-jaxrs</artifactId>-->
+        <!--<version>${cxf.test.version}</version>-->
+        <!--<scope>test</scope>-->
 
         <!--</dependency>-->
         <!--<dependency>-->
-            <!--<groupId>commons-httpclient</groupId>-->
-            <!--<artifactId>commons-httpclient</artifactId>-->
-            <!--<version>${httpclient.test.version}</version>-->
-            <!--<scope>test</scope>-->
+        <!--<groupId>commons-httpclient</groupId>-->
+        <!--<artifactId>commons-httpclient</artifactId>-->
+        <!--<version>${httpclient.test.version}</version>-->
+        <!--<scope>test</scope>-->
 
         <!--</dependency>-->
         <!--<dependency>-->
-            <!--<groupId>javax.ws.rs</groupId>-->
-            <!--<artifactId>jsr311-api</artifactId>-->
-            <!--<version>${jaxrs.test.version}</version>-->
+        <!--<groupId>javax.ws.rs</groupId>-->
+        <!--<artifactId>jsr311-api</artifactId>-->
+        <!--<version>${jaxrs.test.version}</version>-->
 
         <!--</dependency>-->
 

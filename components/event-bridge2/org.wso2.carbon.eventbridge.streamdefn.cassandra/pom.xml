@@ -40,11 +40,11 @@
             <version>${wso2carbon.version.agent}</version>
         </dependency>
 
-        <dependency>
-            <groupId>com.google.guava.wso2</groupId>
-            <artifactId>guava</artifactId>
-            <version>${google.guava.wso2.version}</version>
-        </dependency>
+        <!--<dependency>-->
+            <!--<groupId>com.google.guava.wso2</groupId>-->
+            <!--<artifactId>guava</artifactId>-->
+            <!--<version>${google.guava.wso2.version}</version>-->
+        <!--</dependency>-->
 
         <dependency>
             <groupId>org.wso2.carbon</groupId>
@@ -66,26 +66,26 @@
             <artifactId>org.wso2.carbon.identity.authentication</artifactId>
             <version>${wso2carbon.version}</version>
         </dependency>
-        <dependency>
-            <groupId>com.google.code.gson</groupId>
-            <artifactId>gson</artifactId>
-            <version>${gson.version}</version>
-        </dependency>
-        <dependency>
-            <groupId>org.slf4j</groupId>
-            <artifactId>slf4j-simple</artifactId>
-            <version>1.6.4</version>
-        </dependency>
-        <dependency>
-            <groupId>org.hectorclient</groupId>
-            <artifactId>hector-core</artifactId>
-            <version>1.1-0</version>
-        </dependency>
-        <dependency>
-            <groupId>com.google.guava.wso2</groupId>
-            <artifactId>guava</artifactId>
-            <version>${google.guava.wso2.version}</version>
-        </dependency>
+        <!--<dependency>-->
+            <!--<groupId>com.google.code.gson</groupId>-->
+            <!--<artifactId>gson</artifactId>-->
+            <!--<version>${gson.version}</version>-->
+        <!--</dependency>-->
+        <!--<dependency>-->
+            <!--<groupId>org.slf4j</groupId>-->
+            <!--<artifactId>slf4j-simple</artifactId>-->
+            <!--<version>1.6.4</version>-->
+        <!--</dependency>-->
+        <!--<dependency>-->
+            <!--<groupId>org.hectorclient</groupId>-->
+            <!--<artifactId>hector-core</artifactId>-->
+            <!--<version>1.1-0</version>-->
+        <!--</dependency>-->
+        <!--<dependency>-->
+            <!--<groupId>com.google.guava.wso2</groupId>-->
+            <!--<artifactId>guava</artifactId>-->
+            <!--<version>${google.guava.wso2.version}</version>-->
+        <!--</dependency>-->
 
         <!-- test dependencies for unit tests -->
 

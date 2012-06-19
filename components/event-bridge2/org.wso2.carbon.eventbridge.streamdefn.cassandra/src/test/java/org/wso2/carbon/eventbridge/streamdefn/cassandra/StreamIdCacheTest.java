@@ -27,7 +27,9 @@ public class StreamIdCacheTest extends BaseCassandraSDSTest {
     public void checkBasicCacheOperations() {
 
         String actualStreamId1 = streamDefinition1.getStreamId();
+        System.out.println("Actual Stream Id 1 : " + actualStreamId1);
         String actualStreamId2 = streamDefinition2.getStreamId();
+        System.out.println("Actual Stream Id 2 : " + actualStreamId2);
 
         cassandraConnector.saveStreamIdToStore(getCluster(), streamDefinition1);
         cassandraConnector.saveStreamIdToStore(getCluster(), streamDefinition2);

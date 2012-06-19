@@ -47,6 +47,7 @@ import org.wso2.carbon.eventbridge.core.Utils.EventBridgeUtils;
 import org.wso2.carbon.eventbridge.core.exception.EventProcessingException;
 import org.wso2.carbon.eventbridge.core.exception.StreamDefinitionStoreException;
 import org.wso2.carbon.eventbridge.streamdefn.cassandra.Utils.CassandraSDSUtils;
+import org.wso2.carbon.eventbridge.streamdefn.cassandra.exception.NullValueException;
 
 import java.io.IOException;
 import java.nio.ByteBuffer;
@@ -496,7 +497,7 @@ public class CassandraConnector {
                                 if (queryResult != null) {
                                     return queryResult.getValue();
                                 }
-                                throw new Exception("No value found");
+                                throw new NullValueException("No value found");
                             }
                         }
                         );
@@ -693,7 +694,7 @@ public class CassandraConnector {
                                 if (hColumn != null) {
                                     return hColumn.getValue();
                                 }
-                                throw new Exception("No value found");
+                                throw new NullValueException("No value found");
                             }
                         }
                         );
@@ -806,7 +807,12 @@ public class CassandraConnector {
             }
             String streamId = row.getColumnSlice().getColumnByName(STREAM_ID).getValue();
 
-            eventStreamDefinitions.add(getStreamDefinitionFromStore(cluster, streamId));
+            EventStreamDefinition streamDefinitionFromStore = getStreamDefinitionFromStore(cluster, streamId);
+
+            // Stream defn is null if there if there is a valid stream id but no corresponding stream defn
+            if (streamDefinitionFromStore != null) {
+                eventStreamDefinitions.add(streamDefinitionFromStore);
+            }
         }
         return eventStreamDefinitions;
     }

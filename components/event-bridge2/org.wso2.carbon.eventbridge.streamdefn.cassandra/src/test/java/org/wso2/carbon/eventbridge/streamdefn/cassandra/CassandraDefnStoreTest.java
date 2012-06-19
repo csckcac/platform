@@ -284,6 +284,19 @@ public class CassandraDefnStoreTest extends BaseCassandraSDSTest {
     }
 
     @Test
+    public void checkForNullDefnsWhenRetrievingAllStreamDefns() throws StreamDefinitionStoreException {
+        Collection<EventStreamDefinition> expectedAllStreamDefinitionFromStore =
+                cassandraConnector.getAllStreamDefinitionFromStore(getCluster());
+        cassandraConnector.saveStreamIdToStore(cluster, "abc:123", "abcc");
+
+        Collection<EventStreamDefinition> actualAllStreamDefinitionFromStore =
+                cassandraConnector.getAllStreamDefinitionFromStore(getCluster());
+
+        assertEquals(expectedAllStreamDefinitionFromStore.size(), actualAllStreamDefinitionFromStore.size());
+
+    }
+
+    @Test
     public void nullcheck() throws MalformedStreamDefinitionException {
         String nullKey = "abc";
         EventStreamDefinition nullEventStreamDefinition = new EventStreamDefinition("abc", "1.0.0");

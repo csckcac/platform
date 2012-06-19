@@ -17,7 +17,7 @@
 package org.wso2.carbon.governance.registry.extensions.handlers;
 
 import org.apache.axiom.om.OMElement;
-import org.apache.axiom.om.impl.builder.StAXOMBuilder;
+import org.apache.axiom.om.util.AXIOMUtil;
 import org.apache.axiom.om.xpath.AXIOMXPath;
 import org.apache.commons.logging.Log;
 import org.jaxen.SimpleNamespaceContext;
@@ -29,7 +29,6 @@ import org.wso2.carbon.registry.core.Resource;
 import org.wso2.carbon.registry.core.jdbc.handlers.Handler;
 import org.wso2.carbon.registry.core.jdbc.handlers.RequestContext;
 
-import java.io.ByteArrayInputStream;
 import java.util.Iterator;
 import java.util.List;
 
@@ -40,20 +39,34 @@ public class UriMediaTypeHandler extends Handler {
     public void put(RequestContext requestContext) throws GovernanceException {
         Registry registry = requestContext.getRegistry();
         Resource resource = requestContext.getResource();
+        String resourcePath = requestContext.getResourcePath().getPath();
         String resourceId = resource.getId();
         String fileUri = null;
         String type = null;
 
         try {
-            byte[] content;
+            String newContent;
             if(resource.getContent() instanceof String){
-                content =  ((String)resource.getContent()).getBytes();
+                newContent = (String) resource.getContent();
             } else {
-                content = (byte[])resource.getContent();
+                newContent = new String((byte[])resource.getContent());
             }
-            ByteArrayInputStream in = new ByteArrayInputStream(content);
-            StAXOMBuilder builder = new StAXOMBuilder(in);
-            OMElement docElement = builder.getDocumentElement();
+
+            if(registry.resourceExists(resourcePath)){
+                Resource oldResource = registry.get(resourcePath);
+                String oldContent;
+                if(oldResource.getContent() instanceof String){
+                    oldContent = (String) oldResource.getContent();
+                } else {
+                    oldContent = new String((byte[])oldResource.getContent());
+                }
+
+                if (oldContent.equals(newContent)) {
+                    return;
+                }
+            }
+
+            OMElement docElement = AXIOMUtil.stringToOM(newContent);
             SimpleNamespaceContext simpleNamespaceContext = new SimpleNamespaceContext();
             simpleNamespaceContext.addNamespace("pre",docElement.getNamespace().getNamespaceURI());
             AXIOMXPath expression = new AXIOMXPath("//pre:overview");

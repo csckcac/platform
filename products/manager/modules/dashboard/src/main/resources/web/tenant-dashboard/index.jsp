@@ -198,7 +198,6 @@
         %>
         <script type="text/javascript">
             managerUrl = '<%=link%>';
-            alert(managerUrl);
         </script>
         <%
                 }

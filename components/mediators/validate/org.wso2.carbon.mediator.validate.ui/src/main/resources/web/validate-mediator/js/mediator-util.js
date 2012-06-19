@@ -116,6 +116,13 @@ function deletefeature(i) {
 }
 
 function deleteKey(i) {
+    var cannotDelMsg = validate18n["mediator.validate.cannot.delete.last"];
+    var keyCount = document.getElementById("keyTable").rows.length;
+    if (keyCount == 1) {
+        CARBON.showWarningDialog(cannotDelMsg);
+        return false;
+    }
+
     CARBON.showConfirmationDialog(validate18n["mediator.validate.delete.confirm"],function(){
     var propRow = document.getElementById("keyRaw" + i);
     if (propRow != undefined && propRow != null) {

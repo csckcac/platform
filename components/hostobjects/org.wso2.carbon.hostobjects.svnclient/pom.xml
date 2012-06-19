@@ -64,14 +64,10 @@
             <artifactId>org.wso2.carbon.scriptengine</artifactId>
         </dependency>
         <dependency>
-            <groupId>org.tmatesoft.svnkit</groupId>
-            <artifactId>svnkit-javahl</artifactId>
-            <version>${wso2carbon.version.svnkit}</version>
-        </dependency>
-        <dependency>
-            <groupId>org.tmatesoft.svnkit</groupId>
-            <artifactId>svnkit</artifactId>
-            <version>${wso2carbon.version.svnkit}</version>
+            <groupId>org.tigris</groupId>
+            <artifactId>svn-client-adapter</artifactId>
+            <version>1.6.18.wso2v1</version>
+
         </dependency>
         <dependency>
             <groupId>commons-logging</groupId>

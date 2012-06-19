@@ -21,17 +21,30 @@ import org.apache.axis2.client.Options;
 import org.apache.axis2.client.ServiceClient;
 import org.apache.commons.logging.Log;
 import org.apache.commons.logging.LogFactory;
+import org.testng.Assert;
 import org.testng.annotations.BeforeGroups;
 import org.testng.annotations.Test;
+import org.wso2.bps.integration.tests.util.BPSMgtUtils;
 import org.wso2.bps.integration.tests.util.BPSTestUtils;
 import org.wso2.bps.integration.tests.util.FrameworkSettings;
 import org.wso2.bps.integration.tests.util.HumanTaskTestConstants;
+import org.wso2.carbon.bpel.stub.mgt.InstanceManagementException;
+import org.wso2.carbon.bpel.stub.mgt.InstanceManagementServiceStub;
+import org.wso2.carbon.humantask.stub.ui.task.client.api.*;
+import org.wso2.carbon.humantask.stub.ui.task.client.api.types.TSimpleQueryCategory;
+import org.wso2.carbon.humantask.stub.ui.task.client.api.types.TSimpleQueryInput;
+import org.wso2.carbon.humantask.stub.ui.task.client.api.types.TTaskSimpleQueryResultRow;
+import org.wso2.carbon.humantask.stub.ui.task.client.api.types.TTaskSimpleQueryResultSet;
+import org.wso2.carbon.integration.framework.ClientConnectionUtil;
 import org.wso2.carbon.integration.framework.LoginLogoutUtil;
 import org.wso2.carbon.user.mgt.stub.UserAdminStub;
 import org.wso2.carbon.user.mgt.stub.types.carbon.FlaggedName;
+import org.wso2.carbon.utils.CarbonUtils;
 
 import javax.xml.stream.XMLStreamException;
+import java.rmi.RemoteException;
 import java.util.ArrayList;
+import java.util.Collections;
 import java.util.List;
 
 import static org.testng.Assert.assertTrue;
@@ -49,11 +62,12 @@ public class TaskCreationTestCase {
     private static String SERVICE_URL_PREFIX;
 
     final String USER_MANAGEMENT_SERVICE_URL = "https://" + FrameworkSettings.HOST_NAME +
-                                               ":" + FrameworkSettings.HTTPS_PORT +
-                                               "/services/UserAdmin";
+            ":" + FrameworkSettings.HTTPS_PORT +
+            "/services/UserAdmin";
 
     private UserAdminStub userAdminStub = null;
-
+    private HumanTaskClientAPIAdminStub taskOperationsStub = null;
+    private InstanceManagementServiceStub instanceManagementServiceStub = null;
 
     @BeforeGroups(groups = {"wso2.bps"}, description = " Copying sample HumanTask packages")
     protected void init() throws Exception {
@@ -61,12 +75,14 @@ public class TaskCreationTestCase {
         log.info("Initializing Basic Activities Test...");
 
         SERVICE_URL_PREFIX = "https://" + FrameworkSettings.HOST_NAME + ":" +
-                             FrameworkSettings.HTTPS_PORT + "/services/";
+                FrameworkSettings.HTTPS_PORT + "/services/";
 
 
         initUserAdminStub();
         addRoles();
         addUsers();
+        initTaskOperationServiceStub();
+        initInstanceManagementServiceStub();
     }
 
     private void initUserAdminStub() throws Exception {
@@ -78,52 +94,54 @@ public class TaskCreationTestCase {
         Options serviceClientOptions = serviceClient.getOptions();
         serviceClientOptions.setManageSession(true);
         serviceClientOptions.setProperty(org.apache.axis2.transport.http.HTTPConstants.COOKIE_STRING,
-                                         loggedInSessionCookie);
+                loggedInSessionCookie);
     }
 
 
     private void addRoles() throws Exception {
-        userAdminStub.addRole(HumanTaskTestConstants.REGIONAL_CLERKS_ROLE, null, new String[]{"/permission/admin/login",
-        "/permission/admin/manage/humantask/viewtasks"});
-        userAdminStub.addRole(HumanTaskTestConstants.REGIONAL_MANAGER_ROLE, null, new String[]{"/permission/admin/login",
-        "/permission/admin/manage/humantask/viewtasks"});
+        userAdminStub.addRole(HumanTaskTestConstants.REGIONAL_CLERKS_ROLE, null,
+                new String[]{"/permission/admin/login",
+                        "/permission/admin/manage/humantask/viewtasks"});
+        userAdminStub.addRole(HumanTaskTestConstants.REGIONAL_MANAGER_ROLE, null,
+                new String[]{"/permission/admin/login",
+                        "/permission/admin/manage/humantask/viewtasks"});
     }
 
 
     private void addUsers()
             throws Exception {
         userAdminStub.addUser(HumanTaskTestConstants.CLERK1_USER, HumanTaskTestConstants.CLERK1_PASSWORD,
-                              new String[]{HumanTaskTestConstants.REGIONAL_CLERKS_ROLE}, null, null);
+                new String[]{HumanTaskTestConstants.REGIONAL_CLERKS_ROLE}, null, null);
         userAdminStub.addUser(HumanTaskTestConstants.CLERK2_USER, HumanTaskTestConstants.CLERK2_PASSWORD,
-                              new String[]{HumanTaskTestConstants.REGIONAL_CLERKS_ROLE}, null, null);
+                new String[]{HumanTaskTestConstants.REGIONAL_CLERKS_ROLE}, null, null);
 
         userAdminStub.addUser(HumanTaskTestConstants.MANAGER_USER, HumanTaskTestConstants.MANAGER_PASSWORD,
-                              new String[]{HumanTaskTestConstants.REGIONAL_MANAGER_ROLE}, null, null);
+                new String[]{HumanTaskTestConstants.REGIONAL_MANAGER_ROLE}, null, null);
 
         FlaggedName[] clerkUsers = userAdminStub.getUsersOfRole(HumanTaskTestConstants.REGIONAL_CLERKS_ROLE,
-                                                                "clerk*");
+                "clerk*");
         assertTrue(clerkUsers.length == 2, "There should be exactly 2 clerks users in the system!");
 
         FlaggedName[] managerUsers = userAdminStub.getUsersOfRole(HumanTaskTestConstants.REGIONAL_MANAGER_ROLE,
-                                                                  "manager*");
+                "manager*");
         assertTrue(managerUsers.length == 1,
-                   "The manager was not added to the regional manager's role properly");
+                "The manager was not added to the regional manager's role properly");
     }
 
     @Test(groups = {"wso2.bps"}, description = "Claims approval test case")
     public void createFirstTask() throws XMLStreamException, AxisFault, InterruptedException {
         String soapBody =
                 "<p:ClaimApprovalData xmlns:p=\"http://www.example.com/claims/schema\">\n" +
-                "      <p:cust>\n" +
-                "         <p:id>235235</p:id>\n" +
-                "         <p:firstname>sanjaya</p:firstname>\n" +
-                "         <p:lastname>vithanagama</p:lastname>\n" +
-                "      </p:cust>\n" +
-                "      <p:amount>2500</p:amount>\n" +
-                "      <p:region>LK</p:region>\n" +
-                "      <p:prio>7</p:prio>\n" +
-                "      <p:activateAt>2012-12-09T01:01:01</p:activateAt>\n" +
-                "</p:ClaimApprovalData>";
+                        "      <p:cust>\n" +
+                        "         <p:id>235235</p:id>\n" +
+                        "         <p:firstname>sanjaya</p:firstname>\n" +
+                        "         <p:lastname>vithanagama</p:lastname>\n" +
+                        "      </p:cust>\n" +
+                        "      <p:amount>2500</p:amount>\n" +
+                        "      <p:region>LK</p:region>\n" +
+                        "      <p:prio>7</p:prio>\n" +
+                        "      <p:activateAt>2012-12-09T01:01:01</p:activateAt>\n" +
+                        "</p:ClaimApprovalData>";
 
         String operation = "approve";
         String serviceName = "ClaimService";
@@ -131,24 +149,24 @@ public class TaskCreationTestCase {
         expectedOutput.add("taskid>1<");
         log.info("Calling Service: " + SERVICE_URL_PREFIX + serviceName);
         BPSTestUtils.sendRequest(SERVICE_URL_PREFIX + serviceName, operation, soapBody, 1,
-                                 expectedOutput, BPSTestUtils.TWO_WAY);
+                expectedOutput, BPSTestUtils.TWO_WAY);
 
     }
 
-        @Test(groups = {"wso2.bps"}, description = "Claims approval test case")
+    @Test(groups = {"wso2.bps"}, description = "Claims approval test case")
     public void createSecondTask() throws XMLStreamException, AxisFault, InterruptedException {
         String soapBody =
                 "<p:ClaimApprovalData xmlns:p=\"http://www.example.com/claims/schema\">\n" +
-                "      <p:cust>\n" +
-                "         <p:id>452422</p:id>\n" +
-                "         <p:firstname>John</p:firstname>\n" +
-                "         <p:lastname>Doe</p:lastname>\n" +
-                "      </p:cust>\n" +
-                "      <p:amount>50000</p:amount>\n" +
-                "      <p:region>US</p:region>\n" +
-                "      <p:prio>1</p:prio>\n" +
-                "      <p:activateAt>2012-12-09T01:01:01</p:activateAt>\n" +
-                "</p:ClaimApprovalData>";
+                        "      <p:cust>\n" +
+                        "         <p:id>452422</p:id>\n" +
+                        "         <p:firstname>John</p:firstname>\n" +
+                        "         <p:lastname>Doe</p:lastname>\n" +
+                        "      </p:cust>\n" +
+                        "      <p:amount>50000</p:amount>\n" +
+                        "      <p:region>US</p:region>\n" +
+                        "      <p:prio>1</p:prio>\n" +
+                        "      <p:activateAt>2012-12-09T01:01:01</p:activateAt>\n" +
+                        "</p:ClaimApprovalData>";
 
         String operation = "approve";
         String serviceName = "ClaimService";
@@ -156,9 +174,109 @@ public class TaskCreationTestCase {
         expectedOutput.add("taskid>2<");
         log.info("Calling Service: " + SERVICE_URL_PREFIX + serviceName);
         BPSTestUtils.sendRequest(SERVICE_URL_PREFIX + serviceName, operation, soapBody, 1,
-                                 expectedOutput, BPSTestUtils.TWO_WAY);
+                expectedOutput, BPSTestUtils.TWO_WAY);
 
     }
 
+    @Test(groups = {"wso2.bps"}, description = "Claims approval B4P test case")
+    public void createTaskB4P() throws XMLStreamException, RemoteException, InterruptedException,
+            IllegalArgumentFault, IllegalStateFault, IllegalOperationFault, IllegalAccessFault, InstanceManagementException {
+        String soapBody =
+                "<cla:ClaimApprovalProcessInput xmlns:cla=\"http://www.wso2.org/humantask/claimsapprovalprocessservice.wsdl\">\n" +
+                        "         <cla:custID>C001</cla:custID>\n" +
+                        "         <cla:custFName>Waruna</cla:custFName>\n" +
+                        "         <cla:custLName>Ranasinghe</cla:custLName>\n" +
+                        "         <cla:amount>10000</cla:amount>\n" +
+                        "         <cla:region>Gampaha</cla:region>\n" +
+                        "         <cla:priority>2</cla:priority>\n" +
+                        "      </cla:ClaimApprovalProcessInput>";
 
+        String operation = "claimsApprovalProcessOperation";
+        String serviceName = "ClaimsApprovalProcessService";
+        List<String> expectedOutput = Collections.emptyList();
+//        expectedOutput.add("taskid>2<");
+        log.info("Calling Service: " + SERVICE_URL_PREFIX + serviceName);
+        BPSTestUtils.sendRequest(SERVICE_URL_PREFIX + serviceName, operation, soapBody, 1,
+                expectedOutput, BPSTestUtils.ONE_WAY);
+        Thread.sleep(5000);
+        BPSMgtUtils.listInstances(instanceManagementServiceStub, 1,
+                "{http://www.wso2.org/humantask/claimsapprovalprocess.bpel}ClaimsApprovalProcess");
+
+        TSimpleQueryInput queryInput = new TSimpleQueryInput();
+        queryInput.setPageNumber(0);
+        queryInput.setSimpleQueryCategory(TSimpleQueryCategory.ALL_TASKS);
+
+//        Thread.sleep(5000);
+
+        TTaskSimpleQueryResultSet taskResults = taskOperationsStub.simpleQuery(queryInput);
+
+        TTaskSimpleQueryResultRow[] rows = taskResults.getRow();
+        TTaskSimpleQueryResultRow b4pTask = null;
+
+        Assert.assertNotNull(rows, "No tasks found. Task creation has failed. ");
+
+        // looking for the latest task
+        for (TTaskSimpleQueryResultRow row : rows) {
+            if (b4pTask == null) {
+                b4pTask = row;
+            } else {
+                if (Long.parseLong(b4pTask.getId().toString()) < Long.parseLong(row.getId().toString())) {
+                    b4pTask = row;
+                }
+            }
+        }
+
+        Assert.assertNotNull(b4pTask, "Task creation has failed");
+
+//        String claimApprovalRequest = (String) taskOperationsStub.getInput(b4pTask.getId(),
+//                new NCName("ClaimApprovalRequest"));
+        String claimApprovalRequest = (String) taskOperationsStub.getInput(b4pTask.getId(), null);
+
+        Assert.assertNotNull(claimApprovalRequest, "The input of the Task:" +
+                b4pTask.getId() + " is null.");
+
+        Assert.assertFalse(!claimApprovalRequest.contains("C001"),
+                "Unexpected input found for the Task");
+
+        taskOperationsStub.complete(b4pTask.getId(), "<sch:ClaimApprovalResponse xmlns:sch=\"http://www.example.com/claims/schema\">\n" +
+                "         <sch:approved>true</sch:approved>\n" +
+                "      </sch:ClaimApprovalResponse>");
+
+        Thread.sleep(5000);
+        List<String> instances = BPSMgtUtils.listInstances(instanceManagementServiceStub, 1,
+                "{http://www.wso2.org/humantask/claimsapprovalprocess.bpel}ClaimsApprovalProcess");
+
+        BPSMgtUtils.getInstanceInfo(instanceManagementServiceStub, "COMPLETED", "b4pOutput",
+                ">true<", instances);
+    }
+
+
+    private void initTaskOperationServiceStub() throws Exception {
+        String TASK_OPERATIONS_SERVICE_URL = "https://" + FrameworkSettings.HOST_NAME +
+                ":" + FrameworkSettings.HTTPS_PORT +
+                "/services/HumanTaskClientAPIAdmin";
+        taskOperationsStub = new HumanTaskClientAPIAdminStub(TASK_OPERATIONS_SERVICE_URL);
+
+        ServiceClient serviceClient = taskOperationsStub._getServiceClient();
+        CarbonUtils.setBasicAccessSecurityHeaders(HumanTaskTestConstants.CLERK1_USER,
+                HumanTaskTestConstants.CLERK1_PASSWORD, serviceClient);
+        Options serviceClientOptions = serviceClient.getOptions();
+        serviceClientOptions.setManageSession(true);
+    }
+
+    private void initInstanceManagementServiceStub() throws Exception {
+        final String INSTANCE_MANAGEMENT_SERVICE_URL = "https://" + FrameworkSettings.HOST_NAME +
+                ":" + FrameworkSettings.HTTPS_PORT +
+                "/services/InstanceManagementService";
+        ClientConnectionUtil.waitForPort(FrameworkSettings.HTTPS_PORT);
+        String loggedInSessionCookie = util.login();
+
+        instanceManagementServiceStub = new InstanceManagementServiceStub(INSTANCE_MANAGEMENT_SERVICE_URL);
+        ServiceClient instanceManagementServiceClient = instanceManagementServiceStub._getServiceClient();
+        Options instanceManagementServiceClientOptions = instanceManagementServiceClient.getOptions();
+        instanceManagementServiceClientOptions.setManageSession(true);
+        instanceManagementServiceClientOptions.setProperty(org.apache.axis2.transport.http.HTTPConstants.COOKIE_STRING,
+                loggedInSessionCookie);
+
+    }
 }

@@ -78,7 +78,8 @@ public class InstanceCleanupTestCase {
         Thread.sleep(3 * 1000);
 
         //assert instance count based on cron expression
-        BPSMgtUtils.listInstances(instanceManagementServiceStub, 0);
+        BPSMgtUtils.listInstances(instanceManagementServiceStub, 0,
+                "{http://ode/bpel/unit-test}HelloWorld2");
     }
 
     private void helloWorld() throws XMLStreamException, AxisFault, InterruptedException {

@@ -43,9 +43,17 @@ public class BPSMgtUtils {
 
     private static final Log log = LogFactory.getLog(BPSMgtUtils.class);
 
+    private static List<String> listInstances(
+            InstanceManagementServiceStub instanceManagementServiceStub,
+            int expectedInstanceCount) throws InstanceManagementException, RemoteException {
+        return listInstances(instanceManagementServiceStub, expectedInstanceCount, null);
+    }
+
+
     public static List<String> listInstances(
             InstanceManagementServiceStub instanceManagementServiceStub,
-            int expectedInstanceCount)
+            int expectedInstanceCount,
+            String processId)
             throws InstanceManagementException, RemoteException {
         List<String> instanceIds = new ArrayList<String>();
         if (instanceManagementServiceStub == null) {
@@ -53,29 +61,35 @@ public class BPSMgtUtils {
         }
 
 
+        String filter;
+        if (processId == null) {
+            filter = " ";
+        } else {
+            filter = "pid=" + processId;
+        }
         PaginatedInstanceList paginatedInstanceList = instanceManagementServiceStub.
-                getPaginatedInstanceList("pid={http://ode/bpel/unit-test}HelloWorld2",
-                                         "-started",
-                                         300,
-                                         0);
+                getPaginatedInstanceList(filter,
+                        "-started",
+                        300,
+                        0);
         boolean instanceFound = false;
         if (paginatedInstanceList.isInstanceSpecified() &&
-            paginatedInstanceList.getInstance().length == expectedInstanceCount) {
+                paginatedInstanceList.getInstance().length == expectedInstanceCount) {
             instanceFound = true;
             for (LimitedInstanceInfoType instance : paginatedInstanceList.getInstance()) {
                 instanceIds.add(instance.getIid());
                 log.info("ProcessId: " + instance.getPid() +
-                         "\nInstanceId: " + instance.getIid() +
-                         "\nStarted: " + instance.getDateStarted().getTime() +
-                         "\nState: " + instance.getStatus() +
-                         "\nLast-Active: " + instance.getDateLastActive().getTime() + "\n");
+                        "\nInstanceId: " + instance.getIid() +
+                        "\nStarted: " + instance.getDateStarted().getTime() +
+                        "\nState: " + instance.getStatus() +
+                        "\nLast-Active: " + instance.getDateLastActive().getTime() + "\n");
             }
         } else if (!paginatedInstanceList.isInstanceSpecified() && expectedInstanceCount == 0) {
             log.info("No instances found as expected");
             instanceFound = true;
         }
         assertFalse(!instanceFound, "Expected instance count " + expectedInstanceCount +
-                                    " is not there in the server");
+                " is not there in the server");
 
 
         return instanceIds;
@@ -93,7 +107,7 @@ public class BPSMgtUtils {
         int instanceCount = instanceManagementServiceStub.
                 deleteInstances(" ", true);
         assertFalse(instanceCount != count, "Instance deletion failed!, deleted instance count is " + instanceCount +
-                                            " where it should be 1");
+                " where it should be 1");
 
         listInstances(instanceManagementServiceStub, 0);
 
@@ -115,9 +129,9 @@ public class BPSMgtUtils {
                         getInstanceInfo(Long.parseLong(iid));
                 if (status != null) {
                     log.info("Validating instance status, expected: " + status +
-                             " actual: " + instanceInfo.getStatus());
+                            " actual: " + instanceInfo.getStatus());
                     assertFalse(!instanceInfo.getStatus().getValue().equals(status.toUpperCase()), "Status of instance " + iid + " is not equal to " + status +
-                                                                                                   " but " + instanceInfo.getStatus().getValue());
+                            " but " + instanceInfo.getStatus().getValue());
                 }
                 if (variableName == null) {
                     variableFound = true;
@@ -140,14 +154,14 @@ public class BPSMgtUtils {
                                         variableFound = true;
                                     } else {
                                         fail("Incorrect Test Result: " + varValue +
-                                             " Expected" + expectedVarValue + "in the result");
+                                                " Expected" + expectedVarValue + "in the result");
                                     }
                                 }
                             } else {
                                 variableFound = true;
                             }
                             log.info("Variable name: " + varName + "\nVariable Value: " +
-                                     varValue);
+                                    varValue);
                         }
                     }
                 }
@@ -171,7 +185,7 @@ public class BPSMgtUtils {
                 try {
                     instanceManagementServiceStub.suspendInstance(Long.parseLong(instanceId));
                     getInstanceInfo(instanceManagementServiceStub, "SUSPENDED", null, null,
-                                    instanceIds);
+                            instanceIds);
                 } catch (Exception e) {
                     e.printStackTrace();
                     fail(e.getMessage());
@@ -181,7 +195,7 @@ public class BPSMgtUtils {
                 try {
                     instanceManagementServiceStub.resumeInstance(Long.parseLong(instanceId));
                     getInstanceInfo(instanceManagementServiceStub, "ACTIVE", null, null,
-                                    instanceIds);
+                            instanceIds);
                 } catch (Exception e) {
                     e.printStackTrace();
                     fail(e.getMessage());
@@ -191,7 +205,7 @@ public class BPSMgtUtils {
                 try {
                     instanceManagementServiceStub.terminateInstance(Long.parseLong(instanceId));
                     getInstanceInfo(instanceManagementServiceStub, "TERMINATED", null, null,
-                                    instanceIds);
+                            instanceIds);
                 } catch (Exception e) {
                     e.printStackTrace();
                     fail(e.getMessage());

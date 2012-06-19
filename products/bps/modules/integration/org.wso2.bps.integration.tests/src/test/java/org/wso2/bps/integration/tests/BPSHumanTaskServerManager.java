@@ -30,8 +30,8 @@ import java.io.IOException;
 /**
  *
  */
-public class BPSHumanTaskServerManager  extends TestServerManager {
-        private static final Log log = LogFactory.getLog(BPSHumanTaskServerManager.class);
+public class BPSHumanTaskServerManager extends TestServerManager {
+    private static final Log log = LogFactory.getLog(BPSHumanTaskServerManager.class);
 
     @Override
     @BeforeSuite
@@ -53,16 +53,27 @@ public class BPSHumanTaskServerManager  extends TestServerManager {
     @Override
     protected void copyArtifacts(String carbonHome) throws IOException {
 
-        File[] samples = FileManipulator.getMatchingFiles(BPSTestUtils.getHumanTaskSampleLocation(carbonHome), null, "zip");
+        File[] samples = FileManipulator.getMatchingFiles(BPSTestUtils.
+                getHumanTaskSampleLocation(carbonHome), null, "zip");
         File humanTaskRepo = new File(carbonHome + File.separator + "repository" + File.separator +
-                                 "deployment" + File.separator +
-                                 "server" + File.separator + "humantasks" + File.separator);
+                "deployment" + File.separator +
+                "server" + File.separator + "humantasks" + File.separator);
         for (File sample : samples) {
-
             FileManipulator.copyFileToDir(sample, humanTaskRepo);
-            log.info("Copying: " + sample.getAbsolutePath() + " to " + humanTaskRepo.getAbsolutePath());
+            log.info("Copying: " + sample.getAbsolutePath() + " to " +
+                    humanTaskRepo.getAbsolutePath());
 
         }
 
+        samples = FileManipulator.getMatchingFiles(BPSTestUtils.getBpelSampleLocation(carbonHome),
+                "ClaimsApprovalProcess", "zip");
+        File bpelRepo = new File(carbonHome + File.separator + "repository" + File.separator +
+                "deployment" + File.separator +
+                "server" + File.separator + "bpel" + File.separator);
+        for (File sample : samples) {
+            FileManipulator.copyFileToDir(sample, bpelRepo);
+            log.info("Copying: " + sample.getAbsolutePath() + " to " + bpelRepo.getAbsolutePath());
+
+        }
     }
 }

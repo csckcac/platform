@@ -20,6 +20,8 @@ import org.apache.axiom.om.OMAbstractFactory;
 import org.apache.axiom.om.OMElement;
 import org.apache.axiom.om.OMFactory;
 import org.apache.axiom.soap.SOAPEnvelope;
+import org.apache.axiom.soap.SOAPFactory;
+import org.apache.axiom.soap.SOAPFault;
 import org.apache.axis2.AxisFault;
 import org.apache.axis2.context.MessageContext;
 import org.apache.axis2.description.AxisOperation;
@@ -32,7 +34,7 @@ import org.apache.commons.logging.LogFactory;
 import org.wso2.carbon.bpel.common.WSDLAwareSOAPProcessor;
 import org.wso2.carbon.humantask.core.HumanTaskConstants;
 import org.wso2.carbon.humantask.core.engine.HumanTaskEngine;
-import org.wso2.carbon.humantask.core.engine.HumanTaskException;
+import org.wso2.carbon.humantask.core.integration.utils.SOAPUtils;
 import org.wso2.carbon.utils.multitenancy.CarbonContextHolder;
 
 /**
@@ -41,8 +43,11 @@ import org.wso2.carbon.utils.multitenancy.CarbonContextHolder;
 public class AxisHumanTaskMessageReceiver extends AbstractMessageReceiver {
 
     private static Log log = LogFactory.getLog(AxisHumanTaskMessageReceiver.class);
+    private static Log messageTraceLog = LogFactory.getLog(HumanTaskConstants.MESSAGE_TRACE);
 
-    /** The human task engine */
+    /**
+     * The human task engine
+     */
     private HumanTaskEngine humanTaskEngine;
 
     @Override
@@ -51,54 +56,71 @@ public class AxisHumanTaskMessageReceiver extends AbstractMessageReceiver {
         CarbonContextHolder.getThreadLocalCarbonContextHolder().setTenantId(CarbonContextHolder.
                 getCurrentCarbonContextHolder().getTenantId());
 
-        if (log.isDebugEnabled()) {
-            if (messageContext != null) {
-                log.debug("Message received: " + messageContext.getEnvelope());
-            } else {
-                log.debug("Message Context is not available.");
+        if (messageTraceLog.isDebugEnabled()) {
+            messageTraceLog.debug("Message received: " +
+                    messageContext.getAxisService().getName() + "." +
+                    messageContext.getAxisOperation().getName());
+            if (messageTraceLog.isTraceEnabled()) {
+                messageTraceLog.trace("Request message: " +
+                        messageContext.getEnvelope());
             }
-        }
-
-        if (messageContext == null) {
-            // TODO Handle exception
-            log.error("Message context is null");
-            return;
         }
 
         WSDLAwareSOAPProcessor soapProcessor = new WSDLAwareSOAPProcessor(messageContext);
         String taskId;
-        try {
-            taskId = humanTaskEngine.invoke(soapProcessor.parseRequest());
-        } catch (HumanTaskException e) {
-            //TODO handle exception
-            log.error("Task creation failed.", e);
-            return;
-        } catch (Exception e) {
-            //TODO handle exception
-            log.error("Task creation failed.", e);
-            return;
-        }
+        if (hasResponse(messageContext.getAxisOperation())) {
+            //Task
+            MessageContext outMessageContext = MessageContextBuilder.createOutMessageContext(messageContext);
+            outMessageContext.getOperationContext().addMessageContext(outMessageContext);
+            SOAPEnvelope envelope = getSOAPFactory(messageContext).getDefaultEnvelope();
 
-        if (taskId != null) {
-            if (hasResponse(messageContext.getAxisOperation())) {
-                //Task Creation
-                MessageContext outMessageContext = MessageContextBuilder.createOutMessageContext(messageContext);
-                outMessageContext.getOperationContext().addMessageContext(outMessageContext);
+            try {
+                taskId = humanTaskEngine.invoke(soapProcessor.parseRequest());
 
-                SOAPEnvelope envelope = getSOAPFactory(messageContext).getDefaultEnvelope();
-                envelope.getBody().addChild(getFeedbackPayLoad(taskId));
-                outMessageContext.setEnvelope(envelope);
-                AxisEngine.send(outMessageContext);
-            } else {
-                if (log.isDebugEnabled()) {
-                    log.debug("[HT] Notification request received.");
+                if (taskId != null) {
+                    if (log.isDebugEnabled()) {
+                        log.debug("Task: " + taskId + "successfully created");
+                    }
+                    envelope.getBody().addChild(getFeedbackPayLoad(taskId));
+                } else {
+                    String reason = "Error occurred while initiating human task. The task ID is not found";
+                    handleFault(soapProcessor.getSoapFactory(), envelope, reason);
                 }
-                //Notification
+            } catch (Exception e) {
+                handleFault(soapProcessor.getSoapFactory(), envelope, e.getMessage());
+                log.error("Task creation failed.", e);
             }
+            outMessageContext.setEnvelope(envelope);
+            if (messageTraceLog.isDebugEnabled()) {
+                messageTraceLog.debug("Replied TaskID: " +
+                        messageContext.getAxisService().getName() + "." +
+                        messageContext.getAxisOperation().getName());
+                if (messageTraceLog.isTraceEnabled()) {
+                    messageTraceLog.trace("Replied TaskID message: " +
+                            outMessageContext.getEnvelope());
+                }
+            }
+            AxisEngine.send(outMessageContext);
         } else {
-            //TODO
-            throw new UnsupportedOperationException("This operation is not currently supported in this version of WSO2 BPS.");
+            //Notification
+            if (log.isDebugEnabled()) {
+                log.debug("Notification request received.");
+            }
+            try {
+                taskId = humanTaskEngine.invoke(soapProcessor.parseRequest());
+
+                if (log.isDebugEnabled()) {
+                    log.debug("Notification: " + taskId + "successfully created");
+                }
+            } catch (Exception e) {
+                log.error("Notification creation failed.", e);
+            }
         }
+    }
+
+    private void handleFault(SOAPFactory soapFactory, SOAPEnvelope envelope, String reason) {
+        SOAPFault fault = SOAPUtils.createSOAPFault(soapFactory, reason);
+        envelope.getBody().addFault(fault);
     }
 
     /**

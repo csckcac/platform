@@ -47,9 +47,10 @@ public class BPSTestUtils {
     public final static boolean TWO_WAY = true;
     public final static boolean ONE_WAY = false;
 
-    public static final String BPEL_SAMPLE_LOCATION = System.getProperty("bps.sample.location");
     public static final String HUMANTASK_SAMPLE_LOCATION = System.getProperty("bps.humantask.sample.location");
     public static final String BPEL_TEST_RESOURCE_LOCATION = System.getProperty("bps.test.resource.location");
+
+
 
     /**
      * Send a request which can be configured with given payload and headerMap.
@@ -213,10 +214,7 @@ public class BPSTestUtils {
             if (wsdlIS != null) {
 
                 String wsdlContent = convertStreamToString(wsdlIS);
-                if (wsdlContent.indexOf("definitions") > 0) {
-                    return true;
-                }
-                return false;
+                return wsdlContent.indexOf("definitions") > 0;
             }
             return false;
 
@@ -301,16 +299,14 @@ public class BPSTestUtils {
      * @return
      */
     public static String getBpelSampleLocation(String carbonHome){
-        String bpsSampleLoc = carbonHome + File.separator + "repository" + File.separator + "samples" +
-                File.separator  + "bpel" + File.separator;
 
-        return bpsSampleLoc;
+        return carbonHome + File.separator + "repository" + File.separator + "samples" +
+                File.separator  + "bpel" + File.separator;
     }
 
     public static String getHumanTaskSampleLocation(String carbonHome){
-        String bpsSampleLoc = carbonHome + File.separator + "repository" + File.separator + "samples" +
+        return carbonHome + File.separator + "repository" + File.separator + "samples" +
                 File.separator  + "humantask" + File.separator;
-        return bpsSampleLoc;
     }
 
 }

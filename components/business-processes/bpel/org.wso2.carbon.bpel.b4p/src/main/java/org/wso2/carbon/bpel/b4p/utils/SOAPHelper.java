@@ -33,6 +33,7 @@ import org.apache.ode.utils.DOMUtils;
 import org.apache.ode.utils.stl.CollectionsX;
 import org.w3c.dom.Element;
 import org.wso2.carbon.bpel.b4p.extension.BPEL4PeopleConstants;
+import org.wso2.carbon.businessprocesses.common.Constants;
 
 import javax.wsdl.*;
 import javax.wsdl.extensions.ElementExtensible;
@@ -46,7 +47,6 @@ import java.util.ArrayList;
 import java.util.Collection;
 import java.util.Iterator;
 import java.util.List;
-import org.wso2.carbon.businessprocesses.common.Constants;
 
 /**
  * TODO: Analyze the implementation copied from ODE source.
@@ -202,22 +202,22 @@ public class SOAPHelper {
         if (srcParts.hasNext()) {
             OMElement srcPart = srcParts.next();
             if (!srcPart.getQName().equals(new QName(null, "part"))) {
-                throw new FaultException(new QName(BPEL4PeopleConstants.B4P_NAMESPACE,
-                        "Unexpected element in SOAP body: " + srcPart));
+                throw new FaultException(BPEL4PeopleConstants.B4P_FAULT,
+                        "Unexpected element in SOAP body: " + srcPart.toString());
             }
             OMElement hifb = srcPart.getFirstChildWithName(
                     new QName(BPEL4PeopleConstants.B4P_NAMESPACE,
                             BPEL4PeopleConstants.B4P_CORRELATION_HEADER));
             if (hifb == null) {
-                throw new FaultException(new QName(BPEL4PeopleConstants.B4P_NAMESPACE,
-                        "Unexpected element in SOAP body: " + srcPart));
+                throw new FaultException(BPEL4PeopleConstants.B4P_FAULT,
+                        "Unexpected element in SOAP body: " + srcPart.toString());
             }
             OMElement taskIDele = hifb.getFirstChildWithName(
                     new QName(BPEL4PeopleConstants.B4P_NAMESPACE,
                             BPEL4PeopleConstants.B4P_CORRELATION_HEADER_ATTRIBUTE));
             if (taskIDele == null) {
-                throw new FaultException(new QName(BPEL4PeopleConstants.B4P_NAMESPACE,
-                        "Unexpected element in SOAP body: " + srcPart));
+                throw new FaultException(BPEL4PeopleConstants.B4P_FAULT,
+                        "Unexpected element in SOAP body: " + srcPart.toString());
             }
             return taskIDele.getText();
 //            Document doc = DOMUtils.newDocument();
@@ -225,8 +225,8 @@ public class SOAPHelper {
 //            destPart.appendChild(doc.importNode(OMUtils.toDOM(srcPart), true));
 //            message.setPart("part", destPart);
         }
-        throw new FaultException(new QName(BPEL4PeopleConstants.B4P_NAMESPACE,
-                "TaskID not found in the feedback message"));
+        throw new FaultException(BPEL4PeopleConstants.B4P_FAULT,
+                "TaskID not found in the feedback message");
     }
 
     public static SOAPBody getSOAPBody(ElementExtensible ee) {

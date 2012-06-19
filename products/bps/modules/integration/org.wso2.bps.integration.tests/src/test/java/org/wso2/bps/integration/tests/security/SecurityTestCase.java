@@ -191,6 +191,7 @@ public class SecurityTestCase {
     }
 
     private void executeBPELSecurityScenario(int scenarioNum) throws Exception {
+        String processId = "{http://ode/bpel/unit-test}HelloWorld2";
         log.info("Scenarios Num: " + scenarioNum);
         ApplySecurity applySecurity = new ApplySecurity();
         applySecurity.setServiceName(serviceName);
@@ -204,7 +205,7 @@ public class SecurityTestCase {
         disableSecurityOnService.setServiceName(serviceName);
         securityAdminServiceStub.disableSecurityOnService(disableSecurityOnService);
 
-        List<String> iids = BPSMgtUtils.listInstances(instanceManagementServiceStub, 1);
+        List<String> iids = BPSMgtUtils.listInstances(instanceManagementServiceStub, 1, processId);
         instanceIds.addAll(iids);
         BPSMgtUtils.getInstanceInfo(instanceManagementServiceStub, "COMPLETED", "tmpVar", ">Hello<", instanceIds);
         BPSMgtUtils.deleteInstances(instanceManagementServiceStub, 1);

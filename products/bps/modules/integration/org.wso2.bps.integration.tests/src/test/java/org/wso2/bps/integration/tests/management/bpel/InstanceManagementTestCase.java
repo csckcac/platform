@@ -84,8 +84,8 @@ public class InstanceManagementTestCase {
 
     @Test(groups = {"wso2.bps", "d"}, dependsOnGroups = "c", description = "Instance management test")
     public void instanceManagementTestService() throws Exception {
-
-        List<String> iids = BPSMgtUtils.listInstances(instanceManagementServiceStub, 0);
+        String processId = "{http://ode/bpel/unit-test}HelloWorld2";
+        List<String> iids = BPSMgtUtils.listInstances(instanceManagementServiceStub, 0, processId);
         instanceIds.addAll(iids);
         List<String> expectedOutput = new ArrayList<String>();
         expectedOutput.add(">Hello World<");
@@ -97,7 +97,7 @@ public class InstanceManagementTestCase {
                                  1,
                                  expectedOutput,
                                  true);
-        iids = BPSMgtUtils.listInstances(instanceManagementServiceStub, 1);
+        iids = BPSMgtUtils.listInstances(instanceManagementServiceStub, 1, processId);
         instanceIds.addAll(iids);
         BPSMgtUtils.getInstanceInfo(instanceManagementServiceStub, "COMPLETED", "tmpVar", ">Hello<", instanceIds);
         BPSMgtUtils.deleteInstances(instanceManagementServiceStub, 1);
@@ -110,7 +110,7 @@ public class InstanceManagementTestCase {
                                  5,
                                  expectedOutput,
                                  true);
-        iids = BPSMgtUtils.listInstances(instanceManagementServiceStub, 5);
+        iids = BPSMgtUtils.listInstances(instanceManagementServiceStub, 5, processId);
         instanceIds.addAll(iids);
         BPSMgtUtils.deleteInstances(instanceManagementServiceStub, 5);
         instanceIds.clear();
@@ -123,7 +123,7 @@ public class InstanceManagementTestCase {
                                  1,
                                  new ArrayList<String>(),
                                  false);
-        iids = BPSMgtUtils.listInstances(instanceManagementServiceStub, 1);
+        iids = BPSMgtUtils.listInstances(instanceManagementServiceStub, 1, processId);
         instanceIds.addAll(iids);
         BPSMgtUtils.getInstanceInfo(instanceManagementServiceStub, "ACTIVE", null, null, instanceIds);
         expectedOutput.clear();
@@ -151,7 +151,7 @@ public class InstanceManagementTestCase {
                                  1,
                                  new ArrayList<String>(),
                                  false);
-        iids = BPSMgtUtils.listInstances(instanceManagementServiceStub, 1);
+        iids = BPSMgtUtils.listInstances(instanceManagementServiceStub, 1, processId);
         instanceIds.addAll(iids);
         BPSMgtUtils.getInstanceInfo(instanceManagementServiceStub, "ACTIVE", null, null, instanceIds);
 
@@ -177,7 +177,7 @@ public class InstanceManagementTestCase {
                                  1,
                                  new ArrayList<String>(),
                                  false);
-        iids = BPSMgtUtils.listInstances(instanceManagementServiceStub, 1);
+        iids = BPSMgtUtils.listInstances(instanceManagementServiceStub, 1, processId);
         instanceIds.addAll(iids);
         BPSMgtUtils.getInstanceInfo(instanceManagementServiceStub, "ACTIVE", null, null, instanceIds);
 
@@ -213,7 +213,7 @@ public class InstanceManagementTestCase {
                                  1,
                                  new ArrayList<String>(),
                                  false);
-        iids = BPSMgtUtils.listInstances(instanceManagementServiceStub, 1);
+        iids = BPSMgtUtils.listInstances(instanceManagementServiceStub, 1, processId);
         instanceIds.addAll(iids);
         BPSMgtUtils.getInstanceInfo(instanceManagementServiceStub, "ACTIVE", null, null, instanceIds);
 
@@ -241,7 +241,7 @@ public class InstanceManagementTestCase {
                                  1,
                                  new ArrayList<String>(),
                                  false);
-        iids = BPSMgtUtils.listInstances(instanceManagementServiceStub, 1);
+        iids = BPSMgtUtils.listInstances(instanceManagementServiceStub, 1, processId);
         instanceIds.addAll(iids);
         BPSMgtUtils.getInstanceInfo(instanceManagementServiceStub, "ACTIVE", null, null, instanceIds);
 

@@ -114,8 +114,6 @@ public class AttachmentServiceComponent {
         }
 
         initAttachmentServer(this.attachmentServerHolder);
-
-        log.info("org.wso2.carbon.attachment.mgt.server.internal.AttachmentServiceComponent.activate");
     }
 
     /**

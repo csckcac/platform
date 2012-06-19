@@ -16,6 +16,8 @@
 
 package org.wso2.carbon.bpel.b4p.extension;
 
+import javax.xml.namespace.QName;
+
 /**
  * Holds the constants for BPEL4People component
  */
@@ -44,4 +46,8 @@ public final class BPEL4PeopleConstants {
     public static final String ATTACHMENT_PROPAGATION_ACTIVITY = "attachmentPropagation";
     public static final String ATTACHMENT_PROPAGATION_ACTIVITY_FROM_PROCESS = "fromProcess";
     public static final String ATTACHMENT_PROPAGATION_ACTIVITY_TO_PROCESS = "toProcess";
+
+    public static final String NON_RECOVERABLE_ERROR = "nonRecoverableError";
+    public static final QName B4P_FAULT = new QName(BPEL4PeopleConstants.B4P_NAMESPACE,
+            BPEL4PeopleConstants.NON_RECOVERABLE_ERROR);
 }

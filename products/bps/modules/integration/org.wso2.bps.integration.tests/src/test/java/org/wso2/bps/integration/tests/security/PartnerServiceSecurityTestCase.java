@@ -283,12 +283,14 @@ public class PartnerServiceSecurityTestCase {
 
     private void executeSecurityScenario(int scenario) throws InstanceManagementException,
             RemoteException, InterruptedException, XMLStreamException {
+        String processId = "{http://SecurePartnerBPEL.bpel}SecurePartnerBPEL";
+
         String scenarioResponse = securityScenarios.get(scenario);
 
         log.info("Security Scenario :" + scenario + ": ");
         log.info("Security Scenario Name :" + scenarioResponse);
 
-        List<String> iids = BPSMgtUtils.listInstances(instanceManagementServiceStub, 0);
+        List<String> iids = BPSMgtUtils.listInstances(instanceManagementServiceStub, 0, processId);
         instanceIds.addAll(iids);
         List<String> expectedOutput = new ArrayList<String>();
         expectedOutput.add(scenarioResponse);
@@ -302,7 +304,7 @@ public class PartnerServiceSecurityTestCase {
                 expectedOutput,
                 true);
 
-        List<String> iidsAll = BPSMgtUtils.listInstances(instanceManagementServiceStub, 1);
+        List<String> iidsAll = BPSMgtUtils.listInstances(instanceManagementServiceStub, 1, processId);
         instanceIds.addAll(iidsAll);
 
         BPSMgtUtils.getInstanceInfo(instanceManagementServiceStub,

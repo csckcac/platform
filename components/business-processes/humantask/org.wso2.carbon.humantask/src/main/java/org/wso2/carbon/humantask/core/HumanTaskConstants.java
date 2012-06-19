@@ -79,4 +79,10 @@ public final class HumanTaskConstants {
 
     /** The default content type of the presentation desc. */
     public static final String PRESENTATION_DESC_CONTENT_TYPE = "text/plain";
+
+    /** The log name to enable message tracing for humantask component */
+    public static final String MESSAGE_TRACE = "org.wso2.carbon.humantask.messagetrace";
+
+    public static final String SOAP_ENV_NS = "http://schemas.xmlsoap.org/soap/envelope/";
+
 }

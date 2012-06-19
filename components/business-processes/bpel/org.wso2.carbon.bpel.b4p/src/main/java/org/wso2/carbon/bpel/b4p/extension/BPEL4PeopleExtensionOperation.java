@@ -38,39 +38,41 @@ public class BPEL4PeopleExtensionOperation extends AbstractLongRunningExtensionO
     private String outputVarName;
 
     private PeopleActivity peopleActivity;
+
     /**
      * Initial stuff and calling an external service which causes to send back a response in an indefinite time.
      * Correlation values should be set within this method.
      *
      * @param extensionContext ExtensionContext
-     * @param cid     cid
-     * @param element ExtensionActivity
+     * @param cid              cid
+     * @param element          ExtensionActivity
      */
     @Override
-    public void runAsync(ExtensionContext extensionContext, String cid, Element element) {
+    public void runAsync(ExtensionContext extensionContext, String cid, Element element)
+            throws FaultException {
         this.extensionContext = extensionContext;
         this.cid = cid;
 
-        try {
-            peopleActivity = new PeopleActivity(extensionContext, element);
-            String taskID = peopleActivity.invoke(extensionContext);
-            extensionContext.setCorrelationValues(new String[]{taskID});
-            extensionContext.setCorrelatorId(peopleActivity.inferCorrelatorId(extensionContext));
-            outputVarName = peopleActivity.getOutputVarName();
-        } catch (FaultException e) {
-            String errMsg = "peopleActivity failed.";
-            log.error(errMsg, e);
-            extensionContext.completeWithFault(cid, e);
-            return;
-        }
+        peopleActivity = new PeopleActivity(extensionContext, element);
+        String taskID = peopleActivity.invoke(extensionContext);
+        extensionContext.setCorrelationValues(new String[]{taskID});
+        extensionContext.setCorrelatorId(peopleActivity.inferCorrelatorId(extensionContext));
+        outputVarName = peopleActivity.getOutputVarName();
+//        } catch (FaultException e) {
+//            String errMsg = "peopleActivity failed.";
+//            log.error(errMsg, e);
+//            extensionContext.completeWithFault(cid, e);
+//
+//        }
     }
 
     /**
      * Called when the response for the above service is received
+     *
      * @param mexId MessageExchange id
      */
     @Override
-    public void onRequestReceived(String mexId) {
+    public void onRequestReceived(String mexId) throws FaultException {
         log.info("Response received");
         //((ExtensionContextImpl)extensionContext).setBpelRuntimeContext(context);
         Element notificationMessageEle = extensionContext.getInternalInstance().getMyRequest(mexId);
@@ -78,13 +80,13 @@ public class BPEL4PeopleExtensionOperation extends AbstractLongRunningExtensionO
                 outputVarName);
         log.info("RESPONSE: " + DOMUtils.domToString(notificationMessageEle));
         log.info("PART: " + DOMUtils.domToString(part));
-        try {
-            extensionContext.writeVariable(outputVarName, notificationMessageEle);
-        } catch (FaultException e) {
-            log.error("Error occurred while writing variable.", e);
-            extensionContext.completeWithFault(cid, e);
-            return;
-        }
+//        try {
+        extensionContext.writeVariable(outputVarName, notificationMessageEle);
+//        } catch (FaultException e) {
+//            log.error("Error occurred while writing variable.", e);
+//            extensionContext.completeWithFault(cid, e);
+//            return;
+//        }
         extensionContext.complete(cid);
     }
 }

@@ -90,7 +90,8 @@ public class InstanceCleanupTestCase {
     public void instanceCleanupTestService() throws Exception {
 
 
-        BPSMgtUtils.listInstances(instanceManagementServiceStub, 0);
+        BPSMgtUtils.listInstances(instanceManagementServiceStub, 0,
+                "{http://ode/bpel/unit-test}HelloWorld2");
         List<String> expectedOutput = new ArrayList<String>();
         expectedOutput.add(">Hello World<");
 
@@ -102,7 +103,8 @@ public class InstanceCleanupTestCase {
                                  expectedOutput,
                                  true);
 
-        List<String> iids = BPSMgtUtils.listInstances(instanceManagementServiceStub, 1);
+        List<String> iids = BPSMgtUtils.listInstances(instanceManagementServiceStub, 1,
+                "{http://ode/bpel/unit-test}HelloWorld2");
         BPSMgtUtils.getInstanceInfo(instanceManagementServiceStub, "COMPLETED", null, null, iids);
         BPSMgtUtils.deleteInstances(instanceManagementServiceStub, 1);
     }

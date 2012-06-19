@@ -368,4 +368,8 @@ public class WSDLAwareSOAPProcessor {
             return (ExtensibilityElement) bindings.iterator().next();
         }
     }
+
+    public SOAPFactory getSoapFactory() {
+        return soapFactory;
+    }
 }

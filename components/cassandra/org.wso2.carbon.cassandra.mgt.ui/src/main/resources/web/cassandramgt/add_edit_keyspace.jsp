@@ -106,6 +106,7 @@
                                     <td align="left">
                                         <% if (isEditMode) {%>
                                         <input id="ks_editor_name" name="ks_editor_name" class="longInput"
+
                                                value="<%=keyspaceInformation.getName().trim()%>"
                                                readonly="readonly"/>
                                         <%} else { %>

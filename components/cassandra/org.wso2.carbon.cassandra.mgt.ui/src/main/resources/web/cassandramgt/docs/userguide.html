@@ -21,10 +21,10 @@
     <meta http-equiv="content-type" content="text/html; charset=iso-8859-1"/>
     <title>Cassandra - User Guide</title>
     <link href="../../admin/css/documentation.css" rel="stylesheet" type="text/css" media="all"/>
+    <link href="../css/image.css" rel="stylesheet" type="text/css" media="all"/>
 </head>
 <body>
 <h1>Cassandra - User Guide</h1>
-
 <p> WSO2 Carbon Cassandra feature provides Apache Cassandra based highly scalable second-generation
     distributed database. Cassandra supports Column Family based data model. </p>
 
@@ -48,16 +48,36 @@
 <pre>
     Home-> Manage-> Cassandra Keyspaces-> Add
 </pre>
+
+<img src="../images/addKeyspace.png" alt="Add a keyspace" width="787"
+     height="380"  class="center"/>
+
 <h4>List Keyspaces</h4>
 <pre>
     Home-> Manage-> Cassandra Keyspaces-> List
 </pre>
+<img src="../images/listKeyspaces.png" alt="List keyspaces" width="787"
+     height="380"  class="center"/>
 <h4>Edit Keyspaces</h4>
 
+<img src="../images/editKeyspaces.png" alt="List keyspaces" width="1200"
+     height="380"  class="center"/>
 <p>User can alter Keyspace name, replication factor and replica replacement strategy.</p>
+
+<h4>Share Keyspaces</h4>
+
+
+<img src="../images/shareKeyspace.png" alt="Share keyspace" width="1200"
+     height="380"  class="center"/>
+
+<p>User can share keyspace with specific roles which are existing in the system.</p>
+
 <h4>Delete Keyspace</h4>
 
-<p>user can delete Keyspace after the confirmation.</p>
+<img src="../images/deleteKeyspace.png" alt="Delete keyspaces" width="787"
+     height="380"  class="center"/>
+
+<p>User can delete Keyspace after the confirmation.</p>
 
 <h2>Manage Column Family</h2>
 
@@ -65,38 +85,65 @@
 <pre>
     Home-> Manage-> Cassandra Keyspaces-> List-> Keyspace
 </pre>
+
+<img src="../images/columnFamily.png" alt="List keyspaces" width="1200"
+     height="380"  class="center"/>
+
 <p>In the Column Family summery page user can list all the Column Families related to the Keyspace.
    Cassandra
    endpoint URL listed in summery page. User has to give Cassandra endpoint URL (IP:PORT) and the
  username and password in the connection string.</p>
+
 <h4>Add Column Family</h4>
 
 <p>User can add more columns to the keyspace by clicking Add a New Column Family link.</p>
-<h4>Edit Column Family</h4>
+<img src="../images/addColumnFamily.png" alt="Add column family" width="787"
+     height="380"  class="center"/>
 
+<h4>Edit Column Family</h4>
+<img src="../images/editColumnFamily.png" alt="Edit column family" width="787"
+     height="380"  class="center"/>
 <p>Column Family Edit allows user to modify Name, Replication Factor and Replica Placement Strategy
     of a Column Family.</p>
+
+<h4>Share column family</h4>
+
+<img src="../images/shareColumnFamily.png" alt="Share column family" width="787"
+     height="380"  class="center"/>
+
+<p>User can share column families with specific roles which are existing in the system as describe in keyspaces sharing.This is more atomic than sharing keyspace .</p>
+
 <h4>Delete Column Family</h4>
 
 <p>User can delete Column Family after the confirmation.</p>
+<img src="../images/deleteColumnFamily.png" alt="Delete column family" width="787"
+     height="380"  class="center"/>
 
 <h2>Manage Column</h2>
 
 <p>User can list Column Family summery and manage Column in Column Family page.</p>
-<h4>List Column</h4>
+<h3>List Column</h3>
 <pre>
     Home-> Manage-> Cassandra Keyspaces-> List-> Keyspace-> Column Family
 </pre>
+<img src="../images/column.png" alt="Column family details" width="1200"
+     height="380"  class="center"/>
 <h4>Add Column</h4>
 
 <p>Add new Column option allows user to add a Column to Column Family and set a Index Column and the
    validation class. In Cassandra Index Column use to create a second index.</p>
+<img src="../images/addColumn.png" alt="Add column" width="787"
+     height="380"  class="center"/>
 <h4>Edit Column</h4>
 
 <p>Edit Column allows user to modify Name, Index Name and Validation Class.</p>
+<img src="../images/editColumn.png" alt="Edit column" width="787"
+     height="380"  class="center"/>
 <h4>Delete Column</h4>
 
 <p>User can delete a Column after the confirmation.</p>
+<img src="../images/deleteColumn.png" alt="Delete column" width="787"
+     height="380"  class="center"/>
 </body>
 </html>
 

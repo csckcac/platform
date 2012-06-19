@@ -29,4 +29,9 @@ public class HandlerConstants {
     public static final String XSD_LOCATION = "/uris/XSD/";
     public static final String POLICY_LOCATION = "/uris/Policy/";
 
+    ////////////////////////////////////////////////////////
+    // WADL mediatype handler constants
+    ////////////////////////////////////////////////////////
+    public static final String ENDPOINT_DEFAULT_LOCATION = "/trunk/endpoints/";
+
 }

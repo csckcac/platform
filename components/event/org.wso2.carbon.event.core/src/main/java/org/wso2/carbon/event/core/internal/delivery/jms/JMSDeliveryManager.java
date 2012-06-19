@@ -109,7 +109,7 @@ public abstract class JMSDeliveryManager implements DeliveryManager {
                     topicConnection.createTopicSession(false, Session.AUTO_ACKNOWLEDGE);
 
             String topicName = "";
-            if (subscription.getTenantDomain() != null) {
+            if (subscription.getTenantDomain() != null && subscription.getTenantDomain()!= MultitenantConstants.SUPER_TENANT_DOMAIN_NAME) {
                 if (!subscription.getTopicName().startsWith("/")) {
                     topicName = getTopicName(subscription.getTenantDomain() + "/" + subscription.getTopicName());
                 } else {

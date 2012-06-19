@@ -37,7 +37,7 @@
         throw new RuntimeException("Unable to edit the mediator");
     }
     MessageStoreMediator storeMediator = (MessageStoreMediator) mediator;
-    String msName = request.getParameter("messageStoreName");
+    String msName = request.getParameter("MessageStore");
     if(nullChecker(msName)) {
         storeMediator.setMessageStoreName(msName);
     }

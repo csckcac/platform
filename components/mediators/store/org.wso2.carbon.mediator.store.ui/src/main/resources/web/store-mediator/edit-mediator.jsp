@@ -14,10 +14,14 @@
   ~  limitations under the License.
   --%>
 <%@ page language="java" contentType="text/html; charset=ISO-8859-1" pageEncoding="ISO-8859-1" %>
-
+<%@ page import="org.apache.axis2.context.ConfigurationContext" %>
+<%@ page import="org.wso2.carbon.CarbonConstants" %>
+<%@ page import="org.wso2.carbon.ui.CarbonUIUtil" %>
+<%@ page import="org.wso2.carbon.utils.ServerConstants" %>
 <%@ page import="org.wso2.carbon.mediator.store.MessageStoreMediator" %>
 <%@ page import="org.wso2.carbon.mediator.service.ui.Mediator" %>
 <%@ page import="org.wso2.carbon.sequences.ui.util.SequenceEditorHelper" %>
+<%@ page import="org.wso2.carbon.mediator.store.MessageStoreAdminServiceClient " %>
 
 <%@ taglib uri="http://java.sun.com/jsp/jstl/fmt" prefix="fmt" %>
 <%@ taglib uri="http://wso2.org/projects/carbon/taglibs/carbontags.jar" prefix="carbon" %>
@@ -40,6 +44,13 @@
         onStoreSequence = storeMediator.getSequence();
     }
 
+    String url = CarbonUIUtil.getServerURL(this.getServletConfig().getServletContext(),
+            session);
+    ConfigurationContext configContext =
+            (ConfigurationContext) config.getServletContext().getAttribute(CarbonConstants.CONFIGURATION_CONTEXT);
+    String cookie = (String) session.getAttribute(ServerConstants.ADMIN_SERVICE_COOKIE);
+    org.wso2.carbon.mediator.store.MessageStoreAdminServiceClient  client = new org.wso2.carbon.mediator.store.MessageStoreAdminServiceClient (cookie, url, configContext);
+    String messageStores [] = client.getMessageStoreNames(); /*Calling Message Store Admin service and get the available stores */
 %>
 
 <fmt:bundle basename="org.wso2.carbon.mediator.store.ui.i18n.Resources">
@@ -62,10 +73,31 @@
                     <td><fmt:message key="mediator.store.messageStore"/> <span class="required">*</span>
                     </td>
                     <td>
-                        <input class="longInput" type="text" value="<%=messageStoreName%>"
-                               name="messageStoreName" id="messageStoreName"/>
+                        <select name="MessageStore">
+                            <% if(messageStores != null && messageStores.length >0 )
+                            {
+                                for (String msn : messageStores) {
+                                if (msn.equals(messageStoreName)) {
+                            %>
+                                <option selected="selected"
+                                        value="<%=messageStoreName%>"><%=messageStoreName%>
+                                </option>
+                            <%
+                                } else {
+                            %>
+                                <option
+                                        value="<%=msn%>" ><%=msn%>
+                                </option>
+                            <%
+                                }
+                            %>
+                            <%}
+                            }%>
+                        </select>
                     </td>
                 </tr>
+
+
 
                  <tr>
                     <td><fmt:message key="mediator.store.onStoreSequence"/>

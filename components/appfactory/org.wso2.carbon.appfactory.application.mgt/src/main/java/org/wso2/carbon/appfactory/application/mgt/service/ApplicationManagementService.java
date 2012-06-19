@@ -56,7 +56,22 @@ public class ApplicationManagementService extends AbstractAdmin {
             throw new ApplicationManagementException(msg, e);
         }
 
+    }                               
+
+    public boolean updateRolesOfUserForApplication (String applicationId, String userName, String[] rolesToDelete, String[] newRoles)
+            throws ApplicationManagementException {
+        TenantManager tenantManager = Util.getRealmService().getTenantManager();
+        try {
+            UserRealm realm = Util.getRealmService().getTenantUserRealm(tenantManager.getTenantId(applicationId));
+            realm.getUserStoreManager().updateRoleListOfUser(userName, rolesToDelete, newRoles);
+            return true;
+        } catch (UserStoreException e) {
+            String msg = "Error while updating roles for user: " + userName + " of application " + applicationId;
+            log.error(msg, e);
+            throw new ApplicationManagementException(msg, e);
+        }
     }
+
     
     public String[] getUsersOfApplication(String applicationId ) throws ApplicationManagementException {
         TenantManager tenantManager = Util.getRealmService().getTenantManager();
@@ -66,7 +81,7 @@ public class ApplicationManagementService extends AbstractAdmin {
             String[] roles = realm.getUserStoreManager().getRoleNames();
             if (roles.length >0) {
                 for(String roleName : roles) {
-                    if (!roleName.equals("everyone")) {
+                    if (!Util.getRealmService().getBootstrapRealmConfiguration().getEveryOneRoleName().equals(roleName)) {
                         String[] usersOfRole = realm.getUserStoreManager().getUserListOfRole(roleName);
                         if (usersOfRole != null && usersOfRole.length > 0) {
                             for(String user : usersOfRole) {

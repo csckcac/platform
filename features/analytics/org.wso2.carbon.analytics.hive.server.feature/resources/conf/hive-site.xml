@@ -1255,7 +1255,7 @@
 
   <property>
     <name>hadoop.embedded.local.mode.debug</name>
-    <value>true</value>
+    <value>false</value>
   </property>
 
   <property>

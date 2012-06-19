@@ -96,6 +96,14 @@ public class MSTaskAdmin extends AbstractAdmin {
         return true;
     }
 
+    public void deleteAllTasks() throws AxisFault {
+    	String allTaks[] = this.getAllTaskNames();
+    	
+    	for (String taskName : allTaks) {
+			deleteTask(taskName);
+		}
+    }
+    
     public void deleteTask(String taskName) throws AxisFault {
         try {
             TaskManager tm = SystemHostObjectServiceComponent.getTaskService().getTaskManager(

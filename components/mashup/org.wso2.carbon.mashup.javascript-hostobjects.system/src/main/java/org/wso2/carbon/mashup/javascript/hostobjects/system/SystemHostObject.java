@@ -312,7 +312,6 @@ public class SystemHostObject extends ScriptableObject {
      * @throws CarbonException Thrown in case any exceptions occur
      */
 
-    // todo need to revisit functin scheduling using a common task component
     public static String jsFunction_setInterval(Context cx, Scriptable thisObj, Object[] arguments,
                                                 Function funObj) throws CarbonException, AxisFault, IOException {
 

@@ -16,10 +16,12 @@
 
 package org.wso2.carbon.mashup.javascript.hostobjects.system.internal;
 
+import org.apache.axis2.AxisFault;
 import org.apache.axis2.context.ConfigurationContext;
 import org.apache.commons.logging.Log;
 import org.apache.commons.logging.LogFactory;
 import org.osgi.service.component.ComponentContext;
+import org.wso2.carbon.mashup.javascript.hostobjects.system.MSTaskAdmin;
 import org.wso2.carbon.mashup.javascript.hostobjects.system.MSTaskConstants;
 import org.wso2.carbon.ntask.core.service.TaskService;
 import org.wso2.carbon.registry.core.service.RegistryService;
@@ -55,6 +57,13 @@ public class SystemHostObjectServiceComponent {
 
     protected void activate(ComponentContext context) {
 
+        MSTaskAdmin taskAdmin = new MSTaskAdmin();
+        try {
+			taskAdmin.deleteAllTasks();
+		} catch (AxisFault e) {
+			log.error("Unable to delete job : " + e.getFaultAction());
+		}
+        
         try {
             /* register the data service task type */
             getTaskService().registerTaskType(MSTaskConstants.MS_TASK_TYPE);

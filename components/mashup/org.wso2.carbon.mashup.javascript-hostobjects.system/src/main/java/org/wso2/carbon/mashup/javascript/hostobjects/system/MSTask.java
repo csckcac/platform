@@ -52,7 +52,6 @@ public class MSTask extends AbstractTask {
         // Inject the incoming MessageContext to the Rhino Context. Some
         // host objects need access to the MessageContext. Eg: FileSystem,
         // WSRequest
-		
         try {
 
         	String serviceNameProperty = getProperties().get(MSTaskConstants.AXIS_SERVICE);

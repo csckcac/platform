@@ -4,16 +4,12 @@
 <%@ page import="org.apache.commons.logging.Log" %>
 <%@ page import="org.apache.commons.logging.LogFactory" %>
 <%@ page import="org.wso2.carbon.CarbonConstants" %>
-<%@ page import="org.wso2.carbon.humantask.stub.ui.task.client.api.types.TComment" %>
-<%@ page import="org.wso2.carbon.humantask.stub.ui.task.client.api.types.TTaskAbstract" %>
-<%@ page import="org.wso2.carbon.humantask.stub.ui.task.client.api.types.TTaskAuthorisationParams" %>
 <%@ page import="org.wso2.carbon.humantask.ui.clients.HumanTaskClientAPIServiceClient" %>
 <%@ page import="org.wso2.carbon.humantask.ui.util.HumanTaskUIUtil" %>
 <%@ page import="org.wso2.carbon.ui.CarbonUIMessage" %>
 <%@ page import="org.wso2.carbon.ui.CarbonUIUtil" %>
 <%@ page import="org.wso2.carbon.utils.ServerConstants" %>
-<%@ page import="org.wso2.carbon.humantask.stub.ui.task.client.api.types.TTaskEvents" %>
-<%@ page import="org.wso2.carbon.humantask.stub.ui.task.client.api.types.TUser" %>
+<%@ page import="org.wso2.carbon.humantask.stub.ui.task.client.api.types.*" %>
 
 <%@ taglib prefix="fmt" uri="http://java.sun.com/jsp/jstl/fmt" %>
 <%@ taglib uri="http://wso2.org/projects/carbon/taglibs/carbontags.jar" prefix="carbon" %>
@@ -67,6 +63,9 @@
         } else if ("assignableUsers".equals(loadParam)) {
             TUser[] assignableUsers = taskOperationsClient.getTaskAssignableUsers(new URI(taskId));
             taskDetailsJSONString = HumanTaskUIUtil.loadUserJSONString(assignableUsers);
+        } else if ("taskAttachments".equals(loadParam)) {
+            TAttachmentInfo[] attachmentInfos = taskOperationsClient.getAttachmentInfos(new URI(taskId));
+            taskDetailsJSONString = HumanTaskUIUtil.loadTaskAttachmentsJSONString(attachmentInfos);
         }
 
     } catch (Exception e) {

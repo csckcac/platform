@@ -158,6 +158,15 @@ HUMANTASK.loadEvents = function(taskId, taskClient) {
               });
 };
 
+HUMANTASK.loadAttachments = function(taskId, taskClient) {
+    jQuery('#attachmentsTab').empty();
+    var page = 'task-loading-ajaxprocessor.jsp?taskClient=' + taskClient + '&taskId=' + taskId + '&loadParam=taskAttachments';
+    $.getJSON(page,
+              function(attachmentsJson) {
+                  HUMANTASK.populateAttachments(attachmentsJson);
+              });
+};
+
 HUMANTASK.populateComments = function (commentJSONMap) {
 
     $.each(commentJSONMap, function(commentId, commentJSON) {
@@ -170,9 +179,32 @@ HUMANTASK.populateEvents = function (eventJSONMap) {
 
     $.each(eventJSONMap, function(eventId, eventJSON) {
         var eventDiv = HUMANTASK.createEventDiv(eventJSON);
-         jQuery('#eventsTab').append(eventDiv);
+        jQuery('#eventsTab').append(eventDiv);
     });
 };
+
+HUMANTASK.populateAttachments = function (attachmentsJSONMap) {
+    var attachmentTable = jQuery('<table class="styledLeft" id="taskAttachmentInfo"><thead>' +
+                        '<tr>' +
+                            '<th class="tvTableHeader">Name</th>' +
+                            '<th class="tvTableHeader">ContentType</th>' +
+                            '<th class="tvTableHeader">Link</th>' +
+                        '</tr>' +
+                        '</thead>' +
+                        '<tbody id="taskAttachmentInfoBody"></tbody></table>');
+
+
+    $.each(attachmentsJSONMap, function(attachmentId, attachmentJSON){
+        var t_row = HUMANTASK.createAttachmentTableRow(attachmentJSON);
+        jQuery('#taskAttachmentInfoBody',attachmentTable).append(t_row);
+    });
+
+    jQuery('#attachmentsTab').append(attachmentTable)
+
+
+    /*attachmentTable +=  '</tbody>' +
+                       '</table>'; */
+}
 
 HUMANTASK.createCommentDiv = function(commentJSON) {
     var commentDiv = '<div class="commentBox">';
@@ -181,6 +213,16 @@ HUMANTASK.createCommentDiv = function(commentJSON) {
     commentDiv += '</div>';
 
     return commentDiv;
+};
+
+HUMANTASK.createAttachmentTableRow = function(attachmentJSON) {
+    var attachmentsTableRow = '<tr>';
+    attachmentsTableRow += '<td>' + attachmentJSON.attachmentName + '</td>';
+    attachmentsTableRow += '<td>' + attachmentJSON.attachmentContentType + '</td>';
+    attachmentsTableRow += '<td><a href=\"' + attachmentJSON.attachmentLink + '\">' + attachmentJSON.attachmentLink + '</a></td>';
+    attachmentsTableRow += '</tr>';
+
+    return attachmentsTableRow
 };
 
 HUMANTASK.createEventDiv = function(eventJSON) {
@@ -423,6 +465,9 @@ HUMANTASK.handleTabSelection = function (tabType) {
         $('#eventsTab').hide();
         $('#eventTabLink').removeClass('selected');
 
+        $('#attachmentsTab').hide();
+        $('#attachmentsTabLink').removeClass('selected');
+
         $('#commentsTab').show();
         $('#commentTabLink').addClass('selected');
         HUMANTASK.loadComments(HUMANTASK.taskId, HUMANTASK.taskClient);
@@ -430,9 +475,22 @@ HUMANTASK.handleTabSelection = function (tabType) {
         $('#commentsTab').hide();
         $('#commentTabLink').removeClass('selected');
 
+        $('#attachmentsTab').hide();
+        $('#attachmentsTabLink').removeClass('selected');
+
         $('#eventsTab').show();
         $('#eventTabLink').addClass('selected');
         HUMANTASK.loadEvents(HUMANTASK.taskId, HUMANTASK.taskClient);
+    } else if (tabType == 'attachmentsTab') {
+        $('#commentsTab').hide();
+        $('#commentTabLink').removeClass('selected');
+
+        $('#eventsTab').hide();
+        $('#eventTabLink').removeClass('selected');
+
+        $('#attachmentsTab').show();
+        $('#attachmentsTabLink').addClass('selected');
+        HUMANTASK.loadAttachments(HUMANTASK.taskId, HUMANTASK.taskClient);
     }
 };
 

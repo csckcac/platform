@@ -26,11 +26,11 @@
     boolean isNotification = task.getTaskType().equals("NOTIFICATION");
     String taskId =  (String) request.getAttribute("taskId");
     TTaskAuthorisationParams authParams = (TTaskAuthorisationParams) request.getAttribute("TaskAuthorisationParams");
-    String client = (String) request.getAttribute("taskClient");
+    String taskClient = (String) request.getAttribute("taskClient");
     String requestJSPContextPath = "/humantaskui/" + task.getTenantId() + "/" + task.getPackageName() + "/" + task.getName().getLocalPart() + "-input.jsp";
     String outputJspContextPath = "/humantaskui/" + task.getTenantId() + "/" + task.getPackageName() + "/" + task.getName().getLocalPart() + "-output.jsp";
     String responseJspContextPath = "/humantaskui/" + task.getTenantId() + "/" + task.getPackageName() + "/" + task.getName().getLocalPart() + "-response.jsp";
-    String taskListLink = HumanTaskUIUtil.getTaskListURL(client);
+    String taskListLink = HumanTaskUIUtil.getTaskListURL(taskClient);
     taskListLink = "/carbon" + taskListLink;
 %>
 <fmt:bundle basename="org.wso2.carbon.humantask.ui.i18n.Resources">
@@ -44,7 +44,7 @@
 
     jQuery(document).ready(function() {
         //forceScrolling();
-        HUMANTASK.ready('<%=taskId%>', '<%=client%>', <%=isNotification%>);
+        HUMANTASK.ready('<%=taskId%>', '<%=taskClient%>', <%=isNotification%>);
     });
 
     forceScrolling = function() {
@@ -170,6 +170,7 @@
                 <%--<li><a onclick="selectTab({me:this,tabContainer:'tabsDown',tabContentContainer:'tabContentDown'})" class="selected" rel="commentsTab">Comments</a></li>--%>
                 <li><a id="commentTabLink" onclick="HUMANTASK.handleTabSelection('commentsTab')" class="selected" rel="commentsTab">Comments</a></li>
                 <li><a id="eventTabLink" onclick="HUMANTASK.handleTabSelection('eventsTab')" rel="eventsTab">History</a></li>
+                <li><a id="attachmentsTabLink" onclick="HUMANTASK.handleTabSelection('attachmentsTab')" rel="attachmentsTab"><fmt:message key="humantask.taskview.attachments"/></a></li>
             </ul>
         </div>
         <div class="tabContent" id="tabContentDown">
@@ -178,6 +179,9 @@
             </div>
             <div id="eventsTab" tabindex="101"  class="tabContentData" style="display:none;">
                 <%-- The task events are populated and appended at this div --%>
+            </div>
+            <div id="attachmentsTab" tabindex="102"  class="tabContentData" style="display:none;">
+                <%-- The task attachments are populated and appended at this div --%>
             </div>
         </div>
 

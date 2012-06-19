@@ -20,14 +20,7 @@ import org.apache.commons.logging.Log;
 import org.apache.commons.logging.LogFactory;
 import org.json.simple.JSONObject;
 import org.wso2.carbon.humantask.stub.mgt.types.TaskInfoType;
-import org.wso2.carbon.humantask.stub.ui.task.client.api.types.TComment;
-import org.wso2.carbon.humantask.stub.ui.task.client.api.types.TPresentationName;
-import org.wso2.carbon.humantask.stub.ui.task.client.api.types.TPresentationSubject;
-import org.wso2.carbon.humantask.stub.ui.task.client.api.types.TTaskAbstract;
-import org.wso2.carbon.humantask.stub.ui.task.client.api.types.TTaskAuthorisationParams;
-import org.wso2.carbon.humantask.stub.ui.task.client.api.types.TTaskEvent;
-import org.wso2.carbon.humantask.stub.ui.task.client.api.types.TTaskEvents;
-import org.wso2.carbon.humantask.stub.ui.task.client.api.types.TUser;
+import org.wso2.carbon.humantask.stub.ui.task.client.api.types.*;
 import org.wso2.carbon.humantask.ui.constants.HumanTaskUIConstants;
 import org.wso2.carbon.utils.xml.XMLPrettyPrinter;
 
@@ -228,6 +221,28 @@ public final class HumanTaskUIUtil {
         }
 
         return JSONObject.toJSONString(commentsMap);
+    }
+
+    /**
+     * Builds a JSON representation of task attachments.
+     *
+     * @param attachmentInfos The task attachment array
+     * @return The json string for the given task attachment array
+     */
+    public static String loadTaskAttachmentsJSONString(TAttachmentInfo[] attachmentInfos) {
+        LinkedHashMap<String, JSONObject> taskAttachmentsMap = new LinkedHashMap<String, JSONObject>();
+        if (attachmentInfos != null && attachmentInfos.length > 0) {
+            for (TAttachmentInfo attachment : attachmentInfos) {
+                JSONObject attachmentJSON = new JSONObject();
+                attachmentJSON.put("attachmentName", attachment.getName());
+                attachmentJSON.put("attachmentContentType", attachment.getContentType());
+                attachmentJSON.put("attachmentLink", attachment.getIdentifier().toString());
+
+                taskAttachmentsMap.put(attachment.getIdentifier().toString(), attachmentJSON);
+            }
+        }
+
+        return JSONObject.toJSONString(taskAttachmentsMap);
     }
 
     /**

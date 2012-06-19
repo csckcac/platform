@@ -18,7 +18,6 @@
         import="org.wso2.carbon.humantask.stub.ui.task.client.api.types.TTaskAuthorisationParams" %>
 <%@ page import="org.wso2.carbon.humantask.stub.ui.task.client.api.types.TStatus" %>
 <%@ page import="org.wso2.carbon.humantask.ui.util.HumanTaskUIUtil" %>
-<%@ page import="org.wso2.carbon.humantask.stub.ui.task.client.api.types.TAttachmentInfo" %>
 <!--
 ~ Copyright (c) WSO2 Inc. (http://www.wso2.org) All Rights Reserved.
 ~
@@ -61,8 +60,6 @@
 
         TTaskAbstract task = null;
 
-        TAttachmentInfo[] attachmentArray = null;
-
         try {
             taskAPIClient = new HumanTaskClientAPIServiceClient(cookie, backendServerURL, configContext);
             URI taskIdURI = new URI(taskId);
@@ -80,8 +77,6 @@
             request.setAttribute("taskInput", input);
             request.setAttribute("taskId", taskId);
 
-            attachmentArray = taskAPIClient.getAttachmentInfos(taskIdURI);
-
         } catch (Exception e) {
             response.setStatus(HttpStatus.SC_INTERNAL_SERVER_ERROR);
             CarbonUIMessage uiMsg = new CarbonUIMessage(CarbonUIMessage.ERROR, e.getMessage(), e);
@@ -93,12 +88,6 @@
         }
 
     %>
-
-<script type="text/javascript">
-    function uploadAttachment() {
-        document.attachmentUpload.submit();
-    }
-</script>
 
 <fmt:bundle basename="org.wso2.carbon.humantask.ui.i18n.Resources">
 <carbon:breadcrumb
@@ -116,79 +105,6 @@
 
             <div id="workArea">
                 <jsp:include page="task_view_temp.jsp"/>
-
-                <div id="attachmentInfoTable">
-                    <table class="styledLeft" id="taskAttachmentTable">
-                        <thead>
-                            <tr>
-                                <th class="tvTableHeader">Attachments</th>
-                            </tr>
-                        </thead>
-                        <tbody>
-                        <td width="10px">&nbsp;</td>
-                        <%
-                            if (attachmentArray != null) {
-                        %>
-                        <tr>
-                            <td>
-                                <table class="styledLeft" id="taskAttachmentInfo">
-                                    <thead>
-                                    <tr>
-                                        <th class="tvTableHeader">Name</th>
-                                        <th class="tvTableHeader">ContentType</th>
-                                        <th class="tvTableHeader">Link</th>
-                                    </tr>
-                                    </thead>
-                                    <tbody>
-                                    <%
-                                        for (TAttachmentInfo info : attachmentArray) {
-                                            String attachmentURL = info.getIdentifier().toString();
-                                    %>
-                                    <tr>
-                                        <td><%=info.getName()%>
-                                        </td>
-                                        <td><%=info.getContentType()%>
-                                        </td>
-                                        <td><a href="<%=attachmentURL%>"><%=attachmentURL%>
-                                        </a></td>
-                                    </tr>
-                                    <%
-                                        }
-                                    %>
-                                    </tbody>
-                                </table>
-                            </td>
-                        </tr>
-                        <%
-                            }
-                        %>
-                        <tr>
-                            <td>
-                                <div id="attachmnetUploadTable">
-                                    <form id="attachment_upload_form" method="post" name="attachmentUpload"
-                                          action="../../fileupload/attachment-mgt"
-                                          enctype="multipart/form-data" target="_self">
-                                        <input type="hidden" id="uRedirect" name="redirect"
-                                               value="humantask/basic_task_view.jsp?taskClient=<%=taskClient%>&taskId=<%=taskId%>"/>
-                                        <input type="hidden" id="taskId" name="taskId" value="<%=taskId%>"/>
-                                        <table>
-                                            <tbody>
-                                            <tr>
-                                                <td>File</td>
-                                                <td><input class="button" type="file" name="fileToUpload"/></td>
-                                                <td><input name="attachmentUploadButton" class="button" type="button"
-                                                           value="upload" onclick="uploadAttachment();"/></td>
-                                            </tr>
-                                            </tbody>
-                                        </table>
-                                    </form>
-                                </div>
-                            </td>
-                        </tr>
-                        </tbody>
-                    </table>
-                </div>
-
             </div>
         </div>
     </div>

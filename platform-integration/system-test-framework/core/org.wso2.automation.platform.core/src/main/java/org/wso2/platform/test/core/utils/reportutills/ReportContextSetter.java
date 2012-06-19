@@ -22,6 +22,7 @@ import org.testng.IResultMap;
 import org.testng.ISuite;
 import org.testng.ITestContext;
 import org.testng.ITestNGMethod;
+import org.testng.xml.XmlSuite;
 import org.testng.xml.XmlTest;
 
 import java.util.Collection;
@@ -78,6 +79,202 @@ public class ReportContextSetter {
 
             public ISuite getSuite() {
                 return reportsuite;  //To change body of implemented methods use File | Settings | File Templates.
+            }
+
+            public ITestNGMethod[] getAllTestMethods() {
+                return new ITestNGMethod[0];  //To change body of implemented methods use File | Settings | File Templates.
+            }
+
+            public String getHost() {
+                return null;  //To change body of implemented methods use File | Settings | File Templates.
+            }
+
+            public Collection<ITestNGMethod> getExcludedMethods() {
+                return null;  //To change body of implemented methods use File | Settings | File Templates.
+            }
+
+            public IResultMap getPassedConfigurations() {
+                return null;  //To change body of implemented methods use File | Settings | File Templates.
+            }
+
+            public IResultMap getSkippedConfigurations() {
+                return null;  //To change body of implemented methods use File | Settings | File Templates.
+            }
+
+            public IResultMap getFailedConfigurations() {
+                return null;  //To change body of implemented methods use File | Settings | File Templates.
+            }
+
+            public XmlTest getCurrentXmlTest() {
+                return null;  //To change body of implemented methods use File | Settings | File Templates.
+            }
+
+            public Object getAttribute(String name) {
+                return null;  //To change body of implemented methods use File | Settings | File Templates.
+            }
+
+            public void setAttribute(String name, Object value) {
+                //To change body of implemented methods use File | Settings | File Templates.
+            }
+
+            public Set<String> getAttributeNames() {
+                return null;  //To change body of implemented methods use File | Settings | File Templates.
+            }
+
+            public Object removeAttribute(String name) {
+                return null;  //To change body of implemented methods use File | Settings | File Templates.
+            }
+        };
+
+        return context;
+    }
+
+
+    public ITestContext setContext(IResultMap result, ISuite suite) {
+
+        final IResultMap resultMap = result;
+        final ISuite reportsuite = suite;
+        final ITestContext context = new ITestContext() {
+            public String getName() {
+                return reportsuite.getName();  //To change body of implemented methods use File | Settings | File Templates.
+            }
+
+            public Date getStartDate() {
+                return null;  //To change body of implemented methods use File | Settings | File Templates.
+            }
+
+            public Date getEndDate() {
+
+                return null;  //To change body of implemented methods use File | Settings | File Templates.
+            }
+
+            public IResultMap getPassedTests() {
+                return null;  //To change body of implemented methods use File | Settings | File Templates.
+            }
+
+            public IResultMap getSkippedTests() {
+                return null;  //To change body of implemented methods use File | Settings | File Templates.
+            }
+
+            public IResultMap getFailedButWithinSuccessPercentageTests() {
+                return null;  //To change body of implemented methods use File | Settings | File Templates.
+            }
+
+            public IResultMap getFailedTests() {
+                return resultMap;  //To change body of implemented methods use File | Settings | File Templates.
+            }
+
+            public String[] getIncludedGroups() {
+                return null;  //To change body of implemented methods use File | Settings | File Templates.
+            }
+
+            public String[] getExcludedGroups() {
+                return null;  //To change body of implemented methods use File | Settings | File Templates.
+            }
+
+            public String getOutputDirectory() {
+                return null;  //To change body of implemented methods use File | Settings | File Templates.
+            }
+
+            public ISuite getSuite() {
+                return reportsuite;  //To change body of implemented methods use File | Settings | File Templates.
+            }
+
+            public ITestNGMethod[] getAllTestMethods() {
+                return new ITestNGMethod[0];  //To change body of implemented methods use File | Settings | File Templates.
+            }
+
+            public String getHost() {
+                return null;  //To change body of implemented methods use File | Settings | File Templates.
+            }
+
+            public Collection<ITestNGMethod> getExcludedMethods() {
+                return null;  //To change body of implemented methods use File | Settings | File Templates.
+            }
+
+            public IResultMap getPassedConfigurations() {
+                return null;  //To change body of implemented methods use File | Settings | File Templates.
+            }
+
+            public IResultMap getSkippedConfigurations() {
+                return null;  //To change body of implemented methods use File | Settings | File Templates.
+            }
+
+            public IResultMap getFailedConfigurations() {
+                return null;  //To change body of implemented methods use File | Settings | File Templates.
+            }
+
+            public XmlTest getCurrentXmlTest() {
+                return null;  //To change body of implemented methods use File | Settings | File Templates.
+            }
+
+            public Object getAttribute(String name) {
+                return null;  //To change body of implemented methods use File | Settings | File Templates.
+            }
+
+            public void setAttribute(String name, Object value) {
+                //To change body of implemented methods use File | Settings | File Templates.
+            }
+
+            public Set<String> getAttributeNames() {
+                return null;  //To change body of implemented methods use File | Settings | File Templates.
+            }
+
+            public Object removeAttribute(String name) {
+                return null;  //To change body of implemented methods use File | Settings | File Templates.
+            }
+        };
+
+        return context;
+    }
+    public ITestContext setContext(IResultMap result,XmlSuite suite) {
+
+        final IResultMap resultMap = result;
+        final XmlSuite reportsuite = suite;
+        final ITestContext context = new ITestContext() {
+            public String getName() {
+                return reportsuite.getName();  //To change body of implemented methods use File | Settings | File Templates.
+            }
+
+            public Date getStartDate() {
+                return null;  //To change body of implemented methods use File | Settings | File Templates.
+            }
+
+            public Date getEndDate() {
+
+                return null;  //To change body of implemented methods use File | Settings | File Templates.
+            }
+
+            public IResultMap getPassedTests() {
+                return null;  //To change body of implemented methods use File | Settings | File Templates.
+            }
+
+            public IResultMap getSkippedTests() {
+                return null;  //To change body of implemented methods use File | Settings | File Templates.
+            }
+
+            public IResultMap getFailedButWithinSuccessPercentageTests() {
+                return null;  //To change body of implemented methods use File | Settings | File Templates.
+            }
+
+            public IResultMap getFailedTests() {
+                return resultMap;  //To change body of implemented methods use File | Settings | File Templates.
+            }
+
+            public String[] getIncludedGroups() {
+                return null;  //To change body of implemented methods use File | Settings | File Templates.
+            }
+
+            public String[] getExcludedGroups() {
+                return null;  //To change body of implemented methods use File | Settings | File Templates.
+            }
+
+            public String getOutputDirectory() {
+                return null;  //To change body of implemented methods use File | Settings | File Templates.
+            }
+
+            public ISuite getSuite() {
+                return null;  //To change body of implemented methods use File | Settings | File Templates.
             }
 
             public ITestNGMethod[] getAllTestMethods() {

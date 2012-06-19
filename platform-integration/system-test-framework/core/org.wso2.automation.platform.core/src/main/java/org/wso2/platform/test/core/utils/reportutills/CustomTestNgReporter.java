@@ -50,7 +50,7 @@ public class CustomTestNgReporter implements IReporter {
     private final XMLReporterConfig config = new XMLReporterConfig();
     private XMLStringBuffer rootBuffer;
     ITestContext testRootContext = null;
-    ISuite testRootSuite=null;
+    ISuite testRootSuite = null;
     Exception exception = null;
 
     public CustomTestNgReporter(ITestContext context, Exception e) {
@@ -142,7 +142,7 @@ public class CustomTestNgReporter implements IReporter {
         results.put("Test", iSuiteResult);
         final Map<String, ISuiteResult> resultsFinal = results;
         ReportSuiteSetter suiteSetter = new ReportSuiteSetter();
-        ISuite newSuite = suiteSetter.suiteSetter(suite, resultsFinal);
+        ISuite newSuite =suite;
         for (ITestNGMethod method : suite.getAllMethods()) {
             resultMap.addResult(results2.setResults(newSuite, method, 2, exception), method);
         }
@@ -151,7 +151,6 @@ public class CustomTestNgReporter implements IReporter {
         final ISuite reportsuite = newSuite;
 
         ReportContextSetter contextSetter = new ReportContextSetter();
-
         testRootContext = contextSetter.setContext(testContext2, resultMap, newSuite);
         ISuiteResult iSuiteResult2 = new ISuiteResult() {
             public String getPropertyFileName() {
@@ -162,14 +161,22 @@ public class CustomTestNgReporter implements IReporter {
                 return testRootContext;
             }
         };
-
         final Map<String, ISuiteResult> reportResults1 = new HashMap<String, ISuiteResult>();
 
         reportResults1.put("Test", iSuiteResult2);
+
+
         XMLSuiteResultWriter suiteResultWriter = new XMLSuiteResultWriter(config);
-        for (Map.Entry<String, ISuiteResult> result : reportResults1.entrySet()) {
-            suiteResultWriter.writeSuiteResult(xmlBuffer, result.getValue());
+        if (testContext2 != null) {
+            for (Map.Entry<String, ISuiteResult> result : reportResults1.entrySet()) {
+                suiteResultWriter.writeSuiteResult(xmlBuffer, result.getValue());
+            }
+        } else {
+            for (Map.Entry<String, ISuiteResult> result : newSuite.getResults().entrySet()) {
+                suiteResultWriter.writeSuiteResult(xmlBuffer, result.getValue());
+            }
         }
+
 
         xmlBuffer.pop();
     }

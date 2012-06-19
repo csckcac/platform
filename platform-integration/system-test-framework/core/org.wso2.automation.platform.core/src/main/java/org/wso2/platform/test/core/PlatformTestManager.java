@@ -15,7 +15,7 @@ import java.util.List;
 public class PlatformTestManager implements ITestListener {
 
     private static ArtifactManager artifactManager;
-  // IRuntime runtime;
+    // IRuntime runtime;
     String className;
     List<String> classList = new ArrayList<String>();
     private static final Log log = LogFactory.getLog(PlatformTestManager.class);
@@ -30,6 +30,7 @@ public class PlatformTestManager implements ITestListener {
      * @see org.testng.ITestResult#STARTED
      */
     public void onTestStart(ITestResult result) {
+
         log.info("Running the test method " + result.getMethod().getMethodName());
     }
 

@@ -33,11 +33,10 @@ public class PlatformSuiteManager implements ISuiteListener {
             boolean startosEnabled =
                     environmentBuilder.getFrameworkSettings().getEnvironmentSettings().is_runningOnStratos();
             List<String> defaultProductList = environmentBuilder.getFrameworkSettings().getEnvironmentVariables().getProductList();
-
             if (startosEnabled) {
                 //stratos user populate on manager. there for product lis set to null
 
-                new UserPopulator().populateUsers(null);
+             //   new UserPopulator().populateUsers(null);
             } else {
              /*   if (environmentBuilder.getFrameworkSettings().getCoverageSettings().getCoverageEnable()) {
                     for (Object carbonHomePath : environmentBuilder.getFrameworkSettings().getCoverageSettings().getCarbonHome().values()) {
@@ -55,11 +54,12 @@ public class PlatformSuiteManager implements ISuiteListener {
                         log.info("Starting all servers");
                         ServerGroupManager.startServers(productList);
                     }
-                    new UserPopulator().populateUsers(productList);
+                 //   new UserPopulator().populateUsers(productList);
                 } else {
-                    new UserPopulator().populateUsers(defaultProductList);
+                  //  new UserPopulator().populateUsers(defaultProductList);
                 }
             }
+
         } catch (Exception e) {  /*cannot throw the exception */
             log.error(e);
             CustomTestngReportSetter reportSetter = new CustomTestngReportSetter();
@@ -73,6 +73,7 @@ public class PlatformSuiteManager implements ISuiteListener {
      */
     public void onFinish(ISuite suite) {
         try {
+
           /*  if (serverList.size() != 0) {
                 for (ServerManager server : serverList) {
                     server.shutdown();
@@ -91,10 +92,11 @@ public class PlatformSuiteManager implements ISuiteListener {
             if (suite.getParameter("server.list") != null) {
 
             }
+
         } catch (Exception e) { /*cannot throw the exception */
             log.error(e);
             CustomTestngReportSetter reportSetter = new CustomTestngReportSetter();
-            reportSetter.createReport(suite, e);
+          reportSetter.createReport(suite, e);
 
             Assert.fail("Fail to stop servers " + e.getMessage());
         }

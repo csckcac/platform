@@ -84,7 +84,7 @@ public class ReportSuiteSetter {
             }
 
             public void run() {
-                //To change body of implemented methods use File | Settings | File Templates.
+                suite.run();
             }
 
             public String getHost() {
@@ -106,7 +106,7 @@ public class ReportSuiteSetter {
             }
 
             public void addListener(ITestNGListener listener) {
-                //To change body of implemented methods use File | Settings | File Templates.
+
             }
 
             public List<ITestNGMethod> getAllMethods() {
@@ -118,7 +118,7 @@ public class ReportSuiteSetter {
             }
 
             public void setAttribute(String name, Object value) {
-                //To change body of implemented methods use File | Settings | File Templates.
+
             }
 
             public Set<String> getAttributeNames() {
@@ -129,103 +129,6 @@ public class ReportSuiteSetter {
                 return suite.removeAttribute(name);  //To change body of implemented methods use File | Settings | File Templates.
             }
         };
-        return suite;
-    }
-
-    public ISuite suiteSetter(ISuite reportSuite) {
-        final ISuite suite = reportSuite;
-
-        ISuite newSuite = new ISuite() {
-            public String getName() {
-                return suite.getName();  //To change body of implemented methods use File | Settings | File Templates.
-            }
-
-            public Map<String, ISuiteResult> getResults() {
-                return null;  //To change body of implemented methods use File | Settings | File Templates.
-            }
-
-            public IObjectFactory getObjectFactory() {
-                return suite.getObjectFactory();  //To change body of implemented methods use File | Settings | File Templates.
-            }
-
-            public IObjectFactory2 getObjectFactory2() {
-                return suite.getObjectFactory2();  //To change body of implemented methods use File | Settings | File Templates.
-            }
-
-            public String getOutputDirectory() {
-                return suite.getOutputDirectory();  //To change body of implemented methods use File | Settings | File Templates.
-            }
-
-            public String getParallel() {
-                return suite.getParallel();  //To change body of implemented methods use File | Settings | File Templates.
-            }
-
-            public String getParameter(String parameterName) {
-                return suite.getParameter(parameterName);  //To change body of implemented methods use File | Settings | File Templates.
-            }
-
-            public Map<String, Collection<ITestNGMethod>> getMethodsByGroups() {
-                return suite.getMethodsByGroups();  //To change body of implemented methods use File | Settings | File Templates.
-            }
-
-            public Collection<ITestNGMethod> getInvokedMethods() {
-                return suite.getInvokedMethods();  //To change body of implemented methods use File | Settings | File Templates.
-            }
-
-            public List<IInvokedMethod> getAllInvokedMethods() {
-                return suite.getAllInvokedMethods();  //To change body of implemented methods use File | Settings | File Templates.
-            }
-
-            public Collection<ITestNGMethod> getExcludedMethods() {
-                return suite.getExcludedMethods();  //To change body of implemented methods use File | Settings | File Templates.
-            }
-
-            public void run() {
-                //To change body of implemented methods use File | Settings | File Templates.
-            }
-
-            public String getHost() {
-                return suite.getHost();  //To change body of implemented methods use File | Settings | File Templates.
-            }
-
-            public SuiteRunState getSuiteState() {
-                SuiteRunState state = new SuiteRunState();
-                state.failed();
-                return state;  //To change body of implemented methods use File | Settings | File Templates.
-            }
-
-            public IAnnotationFinder getAnnotationFinder(String type) {
-                return suite.getAnnotationFinder(type);  //To change body of implemented methods use File | Settings | File Templates.
-            }
-
-            public XmlSuite getXmlSuite() {
-                return suite.getXmlSuite();  //To change body of implemented methods use File | Settings | File Templates.
-            }
-
-            public void addListener(ITestNGListener listener) {
-                //To change body of implemented methods use File | Settings | File Templates.
-            }
-
-            public List<ITestNGMethod> getAllMethods() {
-                return suite.getAllMethods();  //To change body of implemented methods use File | Settings | File Templates.
-            }
-
-            public Object getAttribute(String name) {
-                return suite.getAttribute(name);  //To change body of implemented methods use File | Settings | File Templates.
-            }
-
-            public void setAttribute(String name, Object value) {
-                //To change body of implemented methods use File | Settings | File Templates.
-            }
-
-            public Set<String> getAttributeNames() {
-                return suite.getAttributeNames();  //To change body of implemented methods use File | Settings | File Templates.
-            }
-
-            public Object removeAttribute(String name) {
-                return suite.removeAttribute(name);  //To change body of implemented methods use File | Settings | File Templates.
-            }
-        };
-        return suite;
+        return newSuite;
     }
 }

@@ -62,24 +62,9 @@
             <groupId>org.wso2.carbon</groupId>
             <artifactId>org.wso2.carbon.mediation.initializer</artifactId>
         </dependency>
-         <dependency>
-            <groupId>com.google.code.gson</groupId>
-            <artifactId>gson</artifactId>
-            <version>2.1</version>
-        </dependency>
         <dependency>
             <groupId>org.apache.axis2.wso2</groupId>
             <artifactId>axis2</artifactId>
-        </dependency>
-        <!--dependency>
-            <groupId>org.wso2.carbon</groupId>
-            <artifactId>org.wso2.carbon.bam2.service</artifactId>
-            <version>${wso2carbon.version.bam-data-publishers}</version>
-        </dependency-->
-        <dependency>
-            <groupId>libthrift.wso2</groupId>
-            <artifactId>libthrift</artifactId>
-            <version>0.5.wso2v1</version>
         </dependency>
         <dependency>
             <groupId>org.wso2.carbon</groupId>
@@ -96,8 +81,6 @@
             <artifactId>org.wso2.carbon.agent.commons.thrift</artifactId>
             <version>${wso2carbon.version}</version>
         </dependency>
-
-
         <dependency>
             <groupId>org.wso2.carbon</groupId>
             <artifactId>org.wso2.carbon.bam.data.publisher.util</artifactId>

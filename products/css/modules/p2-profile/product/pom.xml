@@ -102,6 +102,15 @@
                                  <featureArtifactDef>
                                      org.wso2.carbon:org.wso2.carbon.styles.feature:${carbon.platform.version}
                                  </featureArtifactDef>
+				<featureArtifactDef>
+                                     org.wso2.carbon:org.wso2.carbon.cassandra.explorer.feature:${carbon.platform.version}
+                                 </featureArtifactDef>
+				<featureArtifactDef>
+                                     org.wso2.carbon:org.wso2.carbon.cassandra.explorer.server.feature:${carbon.platform.version}
+                                 </featureArtifactDef>
+				<featureArtifactDef>
+                                     org.wso2.carbon:org.wso2.carbon.cassandra.explorer.ui.feature:${carbon.platform.version}
+                                 </featureArtifactDef>
                             </featureArtifacts>
                         </configuration>
                     </execution>
@@ -140,6 +149,18 @@
 
                                 <feature>
                                     <id>org.wso2.carbon.styles.feature.group</id>
+                                    <version>${carbon.platform.version}</version>
+                                </feature>
+				<feature>
+                                    <id>org.wso2.carbon.cassandra.explorer.feature.group</id>
+                                    <version>${carbon.platform.version}</version>
+                                </feature>
+				<feature>
+                                    <id>org.wso2.carbon.cassandra.explorer.server.feature.group</id>
+                                    <version>${carbon.platform.version}</version>
+                                </feature>
+				<feature>
+                                    <id>org.wso2.carbon.cassandra.explorer.ui.feature.group</id>
                                     <version>${carbon.platform.version}</version>
                                 </feature>
 

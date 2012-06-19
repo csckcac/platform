@@ -41,7 +41,7 @@
                 <exclude>**/release-notes.html</exclude>
                 <exclude>**/carbon.xml</exclude>
                 <exclude>**/axis2/axis2.xml</exclude>
-                <exclude>**/wrapper.conf</exclude>
+                <!--exclude>**/wrapper.conf</exclude-->
                 <exclude>**/ciphertool.bat</exclude>
             </excludes>
         </fileSet>
@@ -49,7 +49,7 @@
             <directory>target/wso2carbon-core-${carbon.platform.version}</directory>
             <outputDirectory>wso2css-${pom.version}</outputDirectory>
             <excludes>
-                <exclude>**/daemon.sh</exclude>
+                <!--exclude>**/daemon.sh</exclude-->
                 <exclude>**/wso2server.bat</exclude>
                 <exclude>**/ciphertool.sh</exclude>
             </excludes>
@@ -128,16 +128,16 @@
             <filtered>true</filtered>
             <fileMode>644</fileMode>
         </file>
-        <file>
+ <!--       <file>
             <source>target/wso2carbon-core-${carbon.platform.version}/repository/conf/wrapper.conf</source>
             <outputDirectory>wso2css-${pom.version}/repository/conf/</outputDirectory>
             <filtered>true</filtered>
             <fileMode>644</fileMode>
-        </file>
+        </file> 
         <file>
             <source>target/wso2carbon-core-${carbon.platform.version}/bin/daemon.sh</source>
             <outputDirectory>wso2css-${pom.version}/bin/</outputDirectory>
             <filtered>true</filtered>
-        </file>
+        </file> -->
     </files>
 </assembly>

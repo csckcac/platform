@@ -130,7 +130,7 @@
                         if (devOpsPrivilege) {
                     %>
                     <div class="content-box" id="devOp">
-                        <h3>devOp operations</h3>
+                        <h3>devOps operations</h3>
                         <table class="styledLeft">
                             <%
                             var stages = getProperties('ApplicationDeployment.DeploymentStage');

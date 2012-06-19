@@ -18,6 +18,14 @@
                     <td class="formRow">Application Name:</td>
                     <td class="formRow"><input type='text' name='applicationName' size='50'/></td>
                 </tr>
+                <tr>
+                                    <td class="formRow">Application Key:</td>
+                                    <td class="formRow"><input type='text' name='applicationKey' size='50'/></td>
+                </tr>
+                <tr>
+                                    <td class="formRow">Application Description:</td>
+                                    <td class="formRow"><input type='text' name='applicationDescription' size='50'/></td>
+                 </tr>
             </table>
             <table class="styledLeft">
                 <tr>

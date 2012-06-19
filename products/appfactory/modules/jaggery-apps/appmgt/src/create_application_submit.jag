@@ -14,14 +14,14 @@
             include('mgt/application_manager.jag');
             include('mgt/registry_access_manager.jag');
             try {
-                    if(isApplicationKeyAlreadyTaken(applicationName)=="true"){
-                          print("Application id:"+applicationName+" is already taken, please try another applicaiton name");
+                    if(isApplicationKeyAlreadyTaken(applicationKey)=="true"){
+                          print("Application id:"+applicationKey+" is already taken, please try another application key");
                     }else{
                        //var repositoryPath=createApplication(applicationName,userName);
-                        var repositoryPath = createNewApplication(applicationName,userName);
+                        var repositoryPath = createNewApplication(applicationKey,userName);
                        if(repositoryPath!=undefined){
                             repositoryPath=repositoryPath.toString();
-                            addApplicationToApp(applicationName, applicationName, applicationName, repositoryPath);
+                            addApplicationToApp(applicationKey, applicationName, applicationDescription, repositoryPath);
                             print('Application is created with svn repository path:<br><a href="'+repositoryPath+'">'+repositoryPath+'</a>');
                        }
                     }

@@ -1,6 +1,8 @@
 <%
     include('../process/web_service_util.jag');
     include('../constants.jag');
+    include('registry_access_manager.jag');
+     include('../config_reader.jag');
 
     //function createNewApplication(applicationKey, applicationName, applicationDescription, userName) {
     function createNewApplication(applicationName, userName) {
@@ -138,7 +140,7 @@
             var isDevOps = false;
             for(var i =0; i < roleArray.length(); ++i) {
                 if(roleArray[i] == ROLE_DEVOPS) {
-                	isDevOp = true;
+                	isDevOps = true;
                     break;
                 }
             }
@@ -206,5 +208,16 @@
         var result =  invokeDeployToStage(applicationSvnLocation,applicationName,stageName);
         var resultNS=new Namespace("http://wso2.org/carbon/appfactory/applicaiton/deployment");
         return deployedArtifact=result.resultNS::["result"].text();
+    }
+    function getAppShortInfo(applicationKey,userName){
+       var application=getAppInfo(applicationKey);
+           var url = application.repoLink;
+           var repository = require("svnClient");
+           var svnClient = new repository.SVNClient(url,getProperty(SCM_ADMIN_USER_NAME),getProperty(SCM_ADMIN_PASSWORD));
+           application.lastRevisionNo=svnClient.getRepositoryInfo()[2];
+           application.roles= getUserRolesForApplication(applicationKey, userName);
+
+          return application;
+
     }
 %>

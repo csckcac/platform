@@ -136,4 +136,17 @@
             return getResource(path).getProperty(APPLICATION_REPO_LINK);
         }
     }
+   function getAppInfo(applicationKey){
+           path = APPLICATIONS + applicationKey;
+           if(resourceExists(path)) {
+               var resource= getResource(path);
+               var application={};
+                     application.key= resource.getProperty(APPLICATION_KEY);
+                      application.name= resource.getProperty(APPLICATION_NAME);
+                      application.description= resource.getProperty(APPLICATION_DESC);
+                      application.repoLink= resource.getProperty(APPLICATION_REPO_LINK);
+                      return application;
+           }
+       }
+
 %>

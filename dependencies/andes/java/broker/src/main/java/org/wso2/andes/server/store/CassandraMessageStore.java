@@ -41,14 +41,15 @@ import org.wso2.andes.server.ClusterResourceHolder;
 import org.wso2.andes.server.cassandra.*;
 import org.wso2.andes.server.cluster.ClusterManagementInformationMBean;
 import org.wso2.andes.server.cluster.ClusterManager;
-import org.wso2.andes.server.cluster.coordination.*;
+import org.wso2.andes.server.cluster.coordination.MessageIdGenerator;
+import org.wso2.andes.server.cluster.coordination.SubscriptionCoordinationManager;
+import org.wso2.andes.server.cluster.coordination.SubscriptionCoordinationManagerImpl;
+import org.wso2.andes.server.cluster.coordination.TimeStampBasedMessageIdGenerator;
 import org.wso2.andes.server.configuration.ClusterConfiguration;
 import org.wso2.andes.server.exchange.Exchange;
 import org.wso2.andes.server.information.management.QueueManagementInformationMBean;
 import org.wso2.andes.server.logging.LogSubject;
 import org.wso2.andes.server.message.AMQMessage;
-import org.wso2.andes.server.message.MessageMetaData;
-import org.wso2.andes.server.message.MessageMetaData_0_10;
 import org.wso2.andes.server.message.MessageTransferMessage;
 import org.wso2.andes.server.protocol.AMQProtocolSession;
 import org.wso2.andes.server.queue.*;
@@ -1337,7 +1338,7 @@ public void addMessageBatchToUserQueues(CassandraQueueMessage[] messages) throws
             SliceQuery sliceQuery = HFactory.createSliceQuery(keyspace,stringSerializer, ls, bs);
             sliceQuery.setColumnFamily(QMD_COLUMN_FAMILY);
             sliceQuery.setKey(QMD_ROW_NAME);
-            sliceQuery.setRange(Long.parseLong("0"), Long.parseLong("999999"), false, 10000);
+            sliceQuery.setRange(Long.parseLong("0"), Long.MAX_VALUE, false, 10000);
 
             QueryResult<ColumnSlice<Long, byte[]>> result = sliceQuery.execute();
 

@@ -22,28 +22,82 @@ import org.wso2.andes.server.store.CassandraMessageStore;
 
 
 /**
- * Generate a Message id based on the time message added , node local message id and node id
- * To make it unique across cluster
+ * Generate Message ids based on the TimeStamp.
  *
- * message id = time_stamp + local_message_id + node_id;
+ * Here to preserve the long range we use a time stamp that is created by getting difference between
+ * System.currentTimeMillis() and a configured reference time. Reference time can be configured.
  *
- * Here + denotes the string append operation and time stamp is taken from time in milliseconds from a configured
- * reference time.
+ * Message Id will created by appending time stamp , two digit node id and two digit sequence number
+ *
+ * <time stamp> + <node id> + <seq number>
+ *
+ * sequence number is used in a scenario when two or more messages comes with same timestamp
+ * (within the same millisecond). So to allow message rages higher than 1000 msg/s we use this sequence number
+ * where it will be incremented in case of message comes in same millisecond within the same node. With this approach
+ * We can go up to 100,000 msg/s
  */
 public class TimeStampBasedMessageIdGenerator implements MessageIdGenerator{
 
 
 
+    private volatile long lastCurrentTime;
+
+    private volatile long lastMessageId;
+
     @Override
     public long getNextId() {
-        long ts = System.currentTimeMillis();
+        long ts = ClusterResourceHolder.getInstance().getReferenceTime().getCurrentTime();
         CassandraMessageStore ms = ClusterResourceHolder.getInstance().getCassandraMessageStore();
-        StringBuffer midStr = new StringBuffer();
 
-        ts = ClusterResourceHolder.getInstance().getReferenceTime().getTime(ts);
+        if(lastCurrentTime == ts) {
+            synchronized (this) {
+                if(lastCurrentTime == ts) {
+                    lastMessageId = ms.currentMessageId().incrementAndGet();
+                    return lastMessageId;
+                } else {
+                    String id = "" + ts +
+                            getTwoDigitNodeId(ClusterResourceHolder.getInstance().getClusterManager().getNodeId())
+                            + "00";
+                    long mid = Long.parseLong(id);
+                    lastMessageId = mid;
+                    ms.currentMessageId().set(lastMessageId);
+                    lastCurrentTime = ts;
+                    return lastMessageId;
+                }
+            }
+        } else {
+            String id = "" + ts +
+                    getTwoDigitNodeId(ClusterResourceHolder.getInstance().getClusterManager().getNodeId())
+                    + "00";
+            long mid = Long.parseLong(id);
+            synchronized (this) {
+                lastCurrentTime = ts;
+                lastMessageId = mid;
+                ms.currentMessageId().set(lastMessageId);
+                return lastMessageId;
+            }
 
-        midStr.append(ts).append(ms.currentMessageId().incrementAndGet()).
-                append(ClusterResourceHolder.getInstance().getClusterManager().getNodeId());
-        return Long.parseLong(midStr.toString());
+
+        }
+
+
+    }
+
+
+    private static String getTwoDigitNodeId(int nodeId) {
+        switch (nodeId/10) {
+            case 0: { return "0"+nodeId; }
+            case 1:
+            case 2:
+            case 3:
+            case 4:
+            case 5:
+            case 6:
+            case 7:
+            case 8:
+            case 9: { return ""+nodeId; }
+            default : throw new RuntimeException("Node id range exceeded - supported range 0-99");
+
+        }
     }
 }

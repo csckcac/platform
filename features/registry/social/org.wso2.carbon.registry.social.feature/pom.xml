@@ -49,7 +49,7 @@
         <dependency>
             <groupId>com.google.guava.wso2</groupId>
             <artifactId>guava</artifactId>
-		<version>11.0.1.wso2v1</version>
+		        <version>${google.guava.wso2.version}</version>
         </dependency>
 
     </dependencies>

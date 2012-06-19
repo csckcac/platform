@@ -94,6 +94,13 @@
     <li><a href="https://wso2.org/jira/secure/IssueNavigator.jspa?requestId=10525">
         Base framework issues</a></li>
 </ul>
+    
+    <h2>Release 1.0.0 RC1</h2>
+    <p>This release contains a number of bug fixes</p>
+    <p>Change Log</p>
+    <ol>
+        <li>CARBON-12590 - Fixed the validation problem in wsdl2java form.</li>
+    </ol>
 
     <h2>Release 1.0.0-beta</h2>
     <p>This release contains a number of bug fixes.</p>

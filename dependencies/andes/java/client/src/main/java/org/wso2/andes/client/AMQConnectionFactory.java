@@ -49,6 +49,7 @@ public class AMQConnectionFactory implements ConnectionFactory, QueueConnectionF
     private SSLConfiguration _sslConfig;
 
     private ThreadLocal<Boolean> removeVersion91 = new ThreadLocal<Boolean>();
+    private ThreadLocal<Boolean> removeBURL = new ThreadLocal<Boolean>();
 
     public AMQConnectionFactory()
     {
@@ -278,6 +279,22 @@ public class AMQConnectionFactory implements ConnectionFactory, QueueConnectionF
         } else {
             System.getProperties().remove(ClientProperties.AMQP_VERSION);
         }
+        if(removeBURL == null) {
+            removeBURL = new ThreadLocal<Boolean>();
+            removeBURL.set(new Boolean(false));
+        } else {
+
+            if (removeBURL.get() == null) {
+                removeBURL.set(new Boolean(false));
+            }
+
+        }
+        if(!removeBURL.get()) {
+            System.setProperty("qpid.dest_syntax" , "BURL");
+        } else {
+            System.getProperties().remove("qpid.dest_syntax");
+        }
+
         try
         {
             if (_connectionDetails != null)
@@ -327,6 +344,22 @@ public class AMQConnectionFactory implements ConnectionFactory, QueueConnectionF
         } else {
             System.getProperties().remove(ClientProperties.AMQP_VERSION);
         }
+
+        if (removeBURL == null) {
+            removeBURL = new ThreadLocal<Boolean>();
+            removeBURL.set(new Boolean(false));
+        } else {
+            try {
+                removeBURL.get();
+            } catch (NullPointerException e) {
+                removeBURL.set(new Boolean(false));
+            }
+        }
+        if (!removeBURL.get()) {
+            System.setProperty("qpid.dest_syntax", "BURL");
+        } else {
+            System.getProperties().remove("qpid.dest_syntax");
+        }
         try
         {
             if (_connectionDetails != null)
@@ -358,25 +391,33 @@ public class AMQConnectionFactory implements ConnectionFactory, QueueConnectionF
         }
     }
 
-    public QueueConnection createQueueConnection() throws JMSException
-    {
+    public QueueConnection createQueueConnection() throws JMSException {
+        if (removeBURL == null) {
+            removeBURL = new ThreadLocal<Boolean>();
+            removeBURL.set(new Boolean(true));
+        } else {
+            removeBURL.set(new Boolean(true));
+        }
         return (QueueConnection) createConnection();
     }
 
-    public QueueConnection createQueueConnection(String username, String password) throws JMSException
-    {
+    public QueueConnection createQueueConnection(String username, String password) throws JMSException {
+        if (removeBURL == null) {
+            removeBURL = new ThreadLocal<Boolean>();
+            removeBURL.set(new Boolean(true));
+        } else {
+            removeBURL.set(new Boolean(true));
+        }
         return (QueueConnection) createConnection(username, password);
     }
 
     public TopicConnection createTopicConnection() throws JMSException
     {
-        System.setProperty("qpid.dest_syntax" , "BURL");
         return (TopicConnection) createConnection();
     }
 
     public TopicConnection createTopicConnection(String username, String password) throws JMSException
     {
-        System.setProperty("qpid.dest_syntax" , "BURL");
         return (TopicConnection) createConnection(username, password);
     }
 

@@ -53,9 +53,7 @@
                                 <java classname="org.apache.axis2.wsdl.WSDL2Java" fork="true">
                                     <arg line="-uri src/main/resources/BAMMediatorConfigAdmin.wsdl
                                     -u -uw -o target/generated-code -p
-                                    org.wso2.carbon.mediator.bam.config.stub -ns2p
-                                    http://services.config.bam.mediator.carbon.wso2.org=org.wso2.carbon.mediator.bam.config.stub.types,
-                                    http://org.apache.axis2/xsd=org.wso2.carbon.mediator.bam.config.stub.apache.axis2.types"/>
+                                    org.wso2.carbon.mediator.bam.config.stub -ns2p http://org.apache.axis2/xsd=org.wso2.carbon.mediator.bam.config.stub.axis2.types"/>
                                     <classpath refid="wsdl2java.classpath"/>
                                 </java>
                            </tasks>

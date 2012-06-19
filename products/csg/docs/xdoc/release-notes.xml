@@ -114,6 +114,7 @@
         <li>CARBON-12439 - Fixed the info message when configuring RM.</li>
         <li>CARBON-12451 - Fixed BPS error when un publishing services.</li>
         <li>CARBON-12713 - Added rampart module as a client module into CSG.</li>
+        <li>CARBON-12368 - Dynamically enabled transport should be persisted.</li>
     </ol>
 
     <h2>Release 1.0.0-alpha</h2>

@@ -83,7 +83,7 @@ public class CassandraSDSUtils {
 
 
     public static String getColumnName(DataType dataType, Attribute attribute) {
-        return dataType.name() + "." + attribute.getName();
+        return dataType.name() + ":" + attribute.getName();
     }
 
     public static String createRowKey(long timestamp, UUID uuid) {

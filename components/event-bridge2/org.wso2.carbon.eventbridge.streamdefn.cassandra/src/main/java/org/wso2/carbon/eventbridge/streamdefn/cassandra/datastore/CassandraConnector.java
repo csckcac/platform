@@ -207,7 +207,7 @@ public class CassandraConnector {
 
     private Mutator<String> prepareBatchMutate(Attribute attribute, Object[] data, DataType dataType, int eventDataIndex
             , String rowKey, String streamColumnFamily, Mutator<String> mutator) {
-        String columnName = dataType.name() + "." + attribute.getName();
+        String columnName = CassandraSDSUtils.getColumnName(dataType,attribute);
         if (attribute.getType().equals(AttributeType.STRING)) {
             String metaVal = (String) data[eventDataIndex];
             if (metaVal != null && !metaVal.isEmpty()) {

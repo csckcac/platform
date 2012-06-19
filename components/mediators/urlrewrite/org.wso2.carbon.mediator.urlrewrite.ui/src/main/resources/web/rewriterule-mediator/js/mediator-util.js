@@ -219,48 +219,35 @@ function settype(type, i) {
 	
 	
 	if ( 'set' == type ||  'append' == type || 'prepend' == type) {	
-
 		valueTD.innerHTML="<input type='text' name='mediator.urlrewrite.valuetxt" + i + "' id='mediator.urlrewrite.valuetxt" + i + "'" +
 		" class='esb-edit small_textbox' />";
-//		nsEditorButtonTD.innerHTML="<a href='#nsEditorLink' id='nsEditorButtonTD" + i + "' class='nseditor-icon-link' style='padding-left:40px' onclick=\"showNameSpaceEditor(" + i + ")\"></a>";
 
-		regexTD.innerHTML = "";	
-		
-		resetValueDisplayStyle(type, "");
-	//	resetnsEditorButtonDisplayStyle(type, "");		        
+		regexTD.innerHTML = "";			
+		resetValueDisplayStyle(type, "");	        
 		resetRegexDisplayStyle(type, "none");
-
-
 	}
 
 	if('replace' == type){
 
-	valueTD.innerHTML="<input type='text' name='mediator.urlrewrite.valuetxt" + i + "' id='mediator.urlrewrite.valuetxt" + i + "'" +
+		valueTD.innerHTML="<input type='text' name='mediator.urlrewrite.valuetxt" + i + "' id='mediator.urlrewrite.valuetxt" + i + "'" +
 		" class='esb-edit small_textbox' />";
-//
-//		nsEditorButtonTD.innerHTML="<a href='#nsEditorLink' id='nsEditorButtonTD" + i + "' class='nseditor-icon-link' style='padding-left:40px' onclick=\"showNameSpaceEditor(" + i + ")\"></a>";
 		regexTD.innerHTML = "<input type='text' name='mediator.urlrewrite.regex" + i + "' id='mediator.urlrewrite.regex" + i + "'" +
 		" class='esb-edit small_textbox' />";
 
-
 		resetValueDisplayStyle(type, "");
-	//	resetnsEditorButtonDisplayStyle(type, "");
 		resetRegexDisplayStyle(type, "");
-
 	}
+	
 	if('remove' == type) {
 
 		valueTD.innerHTML= "";	
-//		nsEditorButtonTD.innerHTML= "";	
 		regexTD.innerHTML= "";	
 
-
 		resetValueDisplayStyle(type, "none");
-	//	resetnsEditorButtonDisplayStyle(type, "none");
-		resetRegexDisplayStyle(type, "none");		
+		resetRegexDisplayStyle(type, "none");	
+		resetOptionDisplayStyle(type, "none");	
 
 	}
-
 }
 
 /**
@@ -270,7 +257,6 @@ function settype(type, i) {
  * @return
  */
 function resetnsEditorButtonDisplayStyle(type, displayStyle) {
-	//	document.getElementById('ns-edior-th').style.display = displayStyle;
 	var nsCount = document.getElementById("actionCount");
 	var i = nsCount.value;
 	var currentCount = parseInt(i);
@@ -295,7 +281,6 @@ function resetnsEditorButtonDisplayStyle(type, displayStyle) {
 * @return
 */
 function resetValueDisplayStyle(type, displayStyle) {
-	//document.getElementById('value-th').style.display = displayStyle;
 	var nsCount = document.getElementById("actionCount");
 	var i = nsCount.value;
 
@@ -321,8 +306,7 @@ function resetValueDisplayStyle(type, displayStyle) {
 * @param displayStyle
 * @return
 */
-function resetRegexDisplayStyle(type, displayStyle) {
-	//document.getElementById('regex-th').style.display = displayStyle;
+function resetRegexDisplayStyle(type, displayStyle) {	
 	var nsCount = document.getElementById("actionCount");
 	var i = nsCount.value;
 
@@ -345,6 +329,28 @@ function resetRegexDisplayStyle(type, displayStyle) {
 	}
 }
 
+function resetOptionDisplayStyle(type, displayStyle) {	
+	var nsCount = document.getElementById("actionCount");
+	var i = nsCount.value;
+
+	var currentCount = parseInt(i);
+	var j = currentCount-1;
+
+	if (currentCount >= 1) {
+
+		for (var k = 0; k < currentCount; k++) {
+			var optionTD = document.getElementById('optionTypeSelection' + k);   
+			var actionType = getSelectedValue('action_select' + k);
+			if(type == actionType) {
+				if (optionTD != undefined && optionTD != null) {			
+					optionTD.style.display = displayStyle;
+				}
+			}
+
+		}
+
+	}
+}
 
 function isContainRaw(tbody) {
 	if (tbody.childNodes == null || tbody.childNodes.length == 0) {
@@ -367,8 +373,6 @@ function isContainRaw(tbody) {
 function createActionDeleteLink(i) {
 
 	var deletehref = document.createElement('a');
-
-
 	deletehref.setAttribute("href", "#");
 	deletehref.className = 'delete-icon-link';
 	deletehref.appendChild(document.createTextNode(urlrewritejsi18n["delete"]));
@@ -414,7 +418,6 @@ function isValidVaribles(actionemptymsg, fragmentemptymsg) {
 
     var nsCount = document.getElementById("actionCount");
     var i = nsCount.value;
-
     var currentCount = parseInt(i);
 
     if (currentCount >= 1) {

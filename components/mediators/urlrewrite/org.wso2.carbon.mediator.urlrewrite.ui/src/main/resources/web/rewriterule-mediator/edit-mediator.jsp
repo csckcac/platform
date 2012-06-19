@@ -111,13 +111,12 @@
 							int i = 0;
 								for (URLRewriteActions urlRewriteAction : actions) {
 									String value = null;
-									boolean isLiteral=false;
+									boolean isLiteral=false;									
 									AXIOMXPath expr = null;
 										value=urlRewriteAction.getValue();
 						                expr = urlRewriteAction.getXpath();
 						                if (expr != null) {
-						                    nameSpacesRegistrar.registerNameSpaces(expr, "mediator.urlrewrite.valuetxt" + i, session);
-						                 
+						                    nameSpacesRegistrar.registerNameSpaces(expr, "mediator.urlrewrite.valuetxt" + i, session);						                 
 						                }
 						         isLiteral = value != null && !"".equals(value);
 								
@@ -127,7 +126,7 @@
 
 
 							<td><select id="action_select<%=i%>"
-								name="action_select<%=i%>" style="width: 150px;" >
+								name="action_select<%=i%>" onchange="onActionTypeSelectionChange('action_select<%=i%>','<%=i%>')" style="width: 150px; " >
 								<option value="set"
 									<%=urlRewriteAction.getAction() != null &&
 					          urlRewriteAction.getAction().equals("set") ? "selected=\"selected\""
@@ -242,8 +241,8 @@
 								<option value="literal"><fmt:message
 									key="mediator.urlrewrite.value" /></option>
 								<%
-									} else {
-								%>
+									} else {									
+								%>								
 								<option value="literal"><fmt:message
 									key="mediator.urlrewrite.value" /></option>
 								<option value="expression"><fmt:message
@@ -259,18 +258,17 @@
 							%> <input
 								id="mediator.urlrewrite.valuetxt<%=i%>" name="mediator.urlrewrite.valuetxt<%=i%>" type="text"
 								value="<%=value%>" class="esb-edit" /> <%
- 								} else if (expr != null) {
+ 								}else if (expr != null) {
  							%>
 							<input id="mediator.urlrewrite.valuetxt<%=i%>" name="mediator.urlrewrite.valuetxt<%=i%>"
 								type="text" value="<%=expr.toString()%>"
 								class="esb-edit" /> <%
  							} else {
- 							%> <input id="mediator.urlrewrite.valuetxt<%=i%>"
-								name="mediator.urlrewrite.valuetxt<%=i%>" type="text" class="esb-edit" /> <%
- 								}
-							 %>
-							</td>
-							
+ 							%>	<input	id="mediator.urlrewrite.valuetxt<%=i%>" name="mediator.urlrewrite.valuetxt<%=i%>" type="text"
+ 								 class="esb-edit" />	
+ 							<%} %>
+ 							
+							</td>						
 							<% 
 							if(isLiteral){
 							%>								

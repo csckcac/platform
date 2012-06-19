@@ -322,6 +322,11 @@
         	<version>${carbon.version}</version>
         	<type>aar</type>
         </dependency>
+        <dependency>
+            <groupId>org.wso2.automation</groupId>
+            <artifactId>org.wso2.automation.test.api</artifactId>
+            <version>${carbon.version}</version>
+        </dependency>
     </dependencies>
 
 

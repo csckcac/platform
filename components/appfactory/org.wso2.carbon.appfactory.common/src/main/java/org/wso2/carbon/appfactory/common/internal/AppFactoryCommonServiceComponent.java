@@ -37,12 +37,12 @@ public class AppFactoryCommonServiceComponent {
         try {
             configuration = AppFactoryUtil.loadAppFactoryConfiguration();
             bundleContext.registerService(AppFactoryConfiguration.class.getName(), configuration, null);
-        } catch (Exception e) {
+            if (log.isDebugEnabled()) {
+                log.debug("Appfactory common bundle is activated");
+            }
+        } catch (Throwable e) {
             log.error("Error in creating appfactory configuration", e);
-        }
-        if (log.isDebugEnabled()) {
-            log.debug("Appfactory common bundle is activated");
-        }
+        }  
     }
 
     protected void deactivate(ComponentContext context) {

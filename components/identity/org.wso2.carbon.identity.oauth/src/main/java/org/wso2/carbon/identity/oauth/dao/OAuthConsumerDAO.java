@@ -57,8 +57,7 @@ public class OAuthConsumerDAO {
                 consumerSecret = resultSet.getString(1);
             }
             else {
-                log.error("Invalid Consumer Key : " + consumerKey);
-                throw new IdentityException("Invalid Consumer Key. No such key is issued");
+                log.debug("Invalid Consumer Key : " + consumerKey);
             }
         } catch (IdentityException e) {
             String errorMsg = "Error when getting an Identity Persistence Store instance.";

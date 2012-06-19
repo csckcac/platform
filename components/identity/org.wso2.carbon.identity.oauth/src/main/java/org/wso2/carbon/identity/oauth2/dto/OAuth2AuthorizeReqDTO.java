@@ -52,11 +52,11 @@ public class OAuth2AuthorizeReqDTO {
     }
 
     public String[] getScopes() {
-        return scopes;
+        return scopes.clone();
     }
 
     public void setScopes(String[] scopes) {
-        this.scopes = scopes;
+        this.scopes = scopes.clone();
     }
 
     public String getResponseType() {

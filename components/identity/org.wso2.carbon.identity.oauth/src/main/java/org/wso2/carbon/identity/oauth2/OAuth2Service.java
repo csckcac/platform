@@ -231,7 +231,7 @@ public class OAuth2Service extends AbstractAdmin {
 
         } catch (Exception e) {
             log.error("Error when issuing the access token. ", e);
-            tokenRespDTO.setError(false);
+            tokenRespDTO.setError(true);
             tokenRespDTO.setErrorCode(OAuth2ErrorCodes.SERVER_ERROR);
             tokenRespDTO.setErrorMsg("Error when issuing the access token");
             return tokenRespDTO;

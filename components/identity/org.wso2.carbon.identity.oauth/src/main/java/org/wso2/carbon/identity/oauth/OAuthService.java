@@ -22,6 +22,8 @@ import com.google.gdata.client.authn.oauth.OAuthHmacSha1Signer;
 import com.google.gdata.client.authn.oauth.OAuthUtil;
 import org.apache.axis2.context.MessageContext;
 import org.apache.axis2.context.ServiceContext;
+import org.apache.commons.logging.Log;
+import org.apache.commons.logging.LogFactory;
 import org.wso2.carbon.identity.base.IdentityException;
 import org.wso2.carbon.identity.core.model.OAuthAppDO;
 import org.wso2.carbon.identity.core.util.IdentityTenantUtil;
@@ -37,6 +39,8 @@ import java.util.List;
 
 public class OAuthService {
 
+    private static Log log = LogFactory.getLog(OAuthService.class);
+
 	private static final String OAUTH_LATEST_TIMESTAMP = "OAUTH_LATEST_TIMESTAMP";
 	private static final String OAUTH_NONCE_STORE = "OAUTH_NONCE_STORE";
 
@@ -50,8 +54,15 @@ public class OAuthService {
 	 */
 	public boolean isOAuthConsumerValid(OAuthConsumerDTO oauthConsumer) throws Exception {
 
-		return validateOauthSignature(oauthConsumer,
-				getOAuthSecretKey(oauthConsumer.getOauthConsumerKey()));
+        String oAuthSecretKey = getOAuthSecretKey(oauthConsumer.getOauthConsumerKey());
+
+        if(oAuthSecretKey == null){
+            log.debug("Invalid Consumer Key.");
+            throw new IdentityException("Invalid Consumer Key");
+        }
+
+        return validateOauthSignature(oauthConsumer,
+                oAuthSecretKey);
 	}
 
 	/**
@@ -100,6 +111,11 @@ public class OAuthService {
 
 		OAuthConsumerDAO dao = new OAuthConsumerDAO();
 		secretkey = dao.getOAuthConsumerSecret(params.getOauthConsumerKey());
+
+        if(secretkey == null) {
+            log.debug("Invalid Credentials.");
+            throw new IdentityException("Invalid Credentials.");
+        }
 
 		isValidSignature = validateOauthSignature(params, secretkey, null);
 
@@ -182,6 +198,12 @@ public class OAuthService {
 
 		OAuthConsumerDAO dao = new OAuthConsumerDAO();
 		secretKey = dao.getOAuthConsumerSecret(params.getOauthConsumerKey());
+
+        if(secretKey == null) {
+            log.debug("Invalid Credentials.");
+            throw new IdentityException("Invalid Credentials.");
+        }
+
         String tokenSecret = dao.getOAuthTokenSecret(params.getOauthToken(), false);
 
 		isValidSignature = validateOauthSignature(params, secretKey, tokenSecret);
@@ -275,6 +297,12 @@ public class OAuthService {
 
 		OAuthConsumerDAO dao = new OAuthConsumerDAO();
 		secretKey = dao.getOAuthConsumerSecret(params.getOauthConsumerKey());
+
+        if(secretKey == null) {
+            log.debug("Invalid Credentials.");
+            throw new IdentityException("Invalid Credentials.");
+        }
+
         String tokenSecret = dao.getOAuthTokenSecret(params.getOauthToken(), true);
         
 		isAuthenticated = validateOauthSignature(params, secretKey, tokenSecret);

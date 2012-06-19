@@ -23,6 +23,7 @@ public class OAuth2AccessTokenReqDTO {
     private String clientSecret;
     private String grantType;
     private String authorizationCode;
+    private String callbackURI;
 
     public String getClientId() {
         return clientId;
@@ -54,5 +55,13 @@ public class OAuth2AccessTokenReqDTO {
 
     public void setAuthorizationCode(String authorizationCode) {
         this.authorizationCode = authorizationCode;
+    }
+
+    public String getCallbackURI() {
+        return callbackURI;
+    }
+
+    public void setCallbackURI(String callbackURI) {
+        this.callbackURI = callbackURI;
     }
 }

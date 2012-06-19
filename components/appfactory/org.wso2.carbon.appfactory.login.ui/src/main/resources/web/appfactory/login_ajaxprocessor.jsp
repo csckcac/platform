@@ -26,34 +26,60 @@
            prefix="carbon" %>
 
 
-<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
-<html xmlns="http://www.w3.org/1999/xhtml">
+<!DOCTYPE html>
+<html lang="en">
 <head>
-    <meta http-equiv="content-type" content="text/html;charset=utf-8"/>
-    <title>WSO2 Stratos Identity</title>
+    <meta charset="utf-8">
+    <title>WSO2 - Application Factory</title>
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta name="description" content="">
+    <meta name="author" content="">
 
+    <!-- Le styles -->
+        <link href="../carbon/appfactory/lib/bootstrap/css/bootstrap.css" rel="stylesheet">
+    <style type="text/css">
+        body {
+            padding-top: 60px;
+            padding-bottom: 40px;
+        }
+    </style>
+    <link href="../carbon/appfactory/lib/bootstrap/css/bootstrap-responsive.css" rel="stylesheet">
+    <link href="../carbon/appfactory/css/localstyles.css" rel="stylesheet">
 
-    <link href="../carbon/dialog/css/jqueryui/jqueryui-themeroller.css" rel="stylesheet" type="text/css"
-          <%--media="all"/>--%>
-    <link href="../carbon/dialog/css/dialog.css" rel="stylesheet" type="text/css" media="all"/>
-    <link rel="icon" href="../carbon/admin/images/favicon.ico" type="image/x-icon"/>
-    <link rel="shortcut icon" href="../carbon/admin/images/favicon.ico" type="image/x-icon"/>
+    <!-- Le HTML5 shim, for IE6-8 support of HTML5 elements -->
+    <!--[if lt IE 9]>
+    <script src="../carbon/appfactory/lib/html5/html5.js"></script>
+    <![endif]-->
 
-    <script type="text/javascript" src="../carbon/admin/js/jquery.js"></script>
-    <script type="text/javascript" src="../carbon/admin/js/jquery.form.js"></script>
-    <script type="text/javascript" src="../carbon/dialog/js/jqueryui/jquery-ui.min.js"></script>
-
-    <script type="text/javascript" src="../carbon/admin/js/main.js"></script>
-    <script type="text/javascript" src="../carbon/admin/js/WSRequest.js"></script>
-    <script type="text/javascript" src="../carbon/admin/js/cookies.js"></script>
-    <script src="../carbon/yui/build/yahoo-dom-event/yahoo-dom-event.js" type="text/javascript"></script>
-    <script src="../carbon/admin/js/widgets.js" type="text/javascript"></script>
+    <!-- Le fav and touch icons -->
+    <!-- <link rel="shortcut icon" href="../assets/ico/favicon.ico">
+  <link rel="apple-touch-icon-precomposed" sizes="144x144" href="../assets/ico/apple-touch-icon-144-precomposed.png">
+  <link rel="apple-touch-icon-precomposed" sizes="114x114" href="../assets/ico/apple-touch-icon-114-precomposed.png">
+  <link rel="apple-touch-icon-precomposed" sizes="72x72" href="../assets/ico/apple-touch-icon-72-precomposed.png">
+  <link rel="apple-touch-icon-precomposed" href="../assets/ico/apple-touch-icon-57-precomposed.png">-->
 
 </head>
+
 <body>
-<jsp:include page="../carbon/admin/jsp/browser_checker.jsp" />
-<div id="dcontainer"></div>
-<script type="text/javascript" src="../carbon/dialog/js/dialog.js"></script>
+<div class="navbar navbar-fixed-top">
+    <div class="navbar-inner">
+        <div class="container">
+
+            <a class="brand" href="#"></a>
+
+            <!--/.nav-collapse -->
+
+            <ul class="nav actions login-sign-up pull-right">
+                <li>
+                    <button id="logout-link" class="btn btn-danger" onClick="window.location.href='../appmgt/sign_up.jag'">Sign Up</button>
+                </li>
+            </ul>
+
+        </div>
+    </div>
+</div>
+
+
 <fmt:bundle basename="org.wso2.stratos.identity.saml2.sso.mgt.ui.i18n.Resources">
     <%
         String errorMessage = "login.fail.message";
@@ -91,163 +117,123 @@
             document.getElementById('registrationForm').submit();
         }
     </script>
-    <style>
-        .page-main{
-            padding-top:70px;
-            width:900px;
-            left:50%;
-            margin-left:-450px;
-            position: absolute;
-        }
-        .registerClass{
-            color: #5fccb1;
-            font-size:16px;
-            font-weight:bold;
-            display:block;
-            margin:20px 0;
-            text-align: center;
-        }
-        .sign-in-box{
-            margin-left:240px;
-            margin-top:10px;
-            width:400px;
-            -moz-border-radius: 5px;
-            border-radius: 5px;
-            border:solid 1px #b5dff7;
-            background-color:#ebf7fd;
 
-        }
-        h2{
-            color:#555;
-            font-size:14px;
-            text-align: center;
-        }
-        div#footer {
-            margin-top: 30px;
-            height: 50px;
-            border-top: solid 1px #009FC2;
-            padding-top: 7px;
-            text-align: center;
-        }
-        div#footer a {
-            text-decoration: none;
-            color: #00447C;
-        }
+<div class="container">
+    <!-- row of columns -->
+    <div class="row">
+        <div class="span12">
+            <ul class="breadcrumb">
+                <li>
+                    <a href="#">&nbsp;</a>
+                </li>
+            </ul>
+        </div>
+    </div>
+    <div class="row">
+        <div class="span12 title-back"><h1>WSO2 - Application Factory</h1></div>
+    </div>
+    <div class="row">
+        <div class="span12 page-content">
+            <div class="container-fluid">
+                <div class="row-fluid">
+                    <div class="span12">
 
-    </style>
-	<div class="page-main">
+                        <form class="form-horizontal well" action="../samlsso" method="post"   id="loginForm">
+                            <fieldset>
+                                <div class="control-group">
+                                    <label class="control-label" for="username"><fmt:message key='username'/></label>
 
+                                    <div class="controls">
+                                        <input type="text" class="required input-xlarge" id="username" name="username">
 
-        <h2>
-            The WSO2 AppFactory
-        </h2>
+                                        <p class="help-block">Enter your username or email address.</p>
+                                    </div>
+                                </div>
+                                <input type="hidden" name="<%= SAMLSSOProviderConstants.ASSRTN_CONSUMER_URL %>"
+                                       value="<%= request.getAttribute(SAMLSSOProviderConstants.ASSRTN_CONSUMER_URL) %>"/>
+                                <input type="hidden" name="<%= SAMLSSOProviderConstants.ISSUER %>"
+                                       value="<%= request.getAttribute(SAMLSSOProviderConstants.ISSUER) %>"/>
+                                <input type="hidden" name="<%= SAMLSSOProviderConstants.REQ_ID %>"
+                                       value="<%= request.getAttribute(SAMLSSOProviderConstants.REQ_ID) %>"/>
+                                <input type="hidden" name="<%= SAMLSSOProviderConstants.SUBJECT %>"
+                                       value="<%= request.getAttribute(SAMLSSOProviderConstants.SUBJECT) %>"/>
+                                <input type="hidden" name="<%= SAMLSSOProviderConstants.RP_SESSION_ID %>"
+                                       value="<%= request.getAttribute(SAMLSSOProviderConstants.RP_SESSION_ID) %>"/>
+                                <input type="hidden" name="<%= SAMLSSOProviderConstants.ASSERTION_STR %>"
+                                       value="<%= request.getAttribute(SAMLSSOProviderConstants.ASSERTION_STR) %>"/>
+                                <input type="hidden" name="<%= SAMLSSOProviderConstants.RELAY_STATE %>"
+                                       value="<%= request.getAttribute(SAMLSSOProviderConstants.RELAY_STATE) %>"/>
+                                <div class="control-group">
+                                    <label class="control-label" for="password"><fmt:message key='password'/></label>
 
-                        <form action="../appmgt/sign_up.jag" id="registrationForm">
+                                    <div class="controls">
+                                        <input type="password" class="required input-xlarge" id="password" name=password>
 
-                            <div align="center">
-                                <button type="button" onclick="doRegister()">Get Started Now for FREE! </button>
-                            </div>
+                                        <p class="help-block"><a>Forgot your password?</a></p>
+                                    </div>
+                                </div>
+
+                                <div class="form-actions">
+                                    <button type="submit" class="btn btn-primary">Sing-in</button>
+                                    <button class="btn">Cancel</button>
+                                </div>
+                            </fieldset>
                         </form>
-        <h2><fmt:message key="sign.in"/></h2>
-					<table>
-						<tr>
-						<td>
 
 
-                                             <div class="sign-in-box">
-			                                    <table style="width:100%">
-			    `                                   <tr>
-			                                            <td>
-			                                                <h3 style="text-align: center">Login Using Username & Password</h3>
-			
-			                                                <form action="../samlsso" method="post" id="loginForm">
 
-			                                                    <table style="text-align: center">
-			                                                    <tr>
-										                            <td><label for="txtUserName"><fmt:message key='username'/></label></td>
-										                            <td><input type="text" id='username' name="username" size='30'/></td>
-                                                                    <input type="hidden" name="<%= SAMLSSOProviderConstants.ASSRTN_CONSUMER_URL %>"
-										                                   value="<%= request.getAttribute(SAMLSSOProviderConstants.ASSRTN_CONSUMER_URL) %>"/>
-                                                                    <input type="hidden" name="<%= SAMLSSOProviderConstants.ISSUER %>"
-                                                                           value="<%= request.getAttribute(SAMLSSOProviderConstants.ISSUER) %>"/>
-                                                                    <input type="hidden" name="<%= SAMLSSOProviderConstants.REQ_ID %>"
-                                                                           value="<%= request.getAttribute(SAMLSSOProviderConstants.REQ_ID) %>"/>
-                                                                    <input type="hidden" name="<%= SAMLSSOProviderConstants.SUBJECT %>"
-                                                                           value="<%= request.getAttribute(SAMLSSOProviderConstants.SUBJECT) %>"/>
-                                                                    <input type="hidden" name="<%= SAMLSSOProviderConstants.RP_SESSION_ID %>"
-                                                                           value="<%= request.getAttribute(SAMLSSOProviderConstants.RP_SESSION_ID) %>"/>
-                                                                    <input type="hidden" name="<%= SAMLSSOProviderConstants.ASSERTION_STR %>"
-                                                                           value="<%= request.getAttribute(SAMLSSOProviderConstants.ASSERTION_STR) %>"/>
-                                                                    <input type="hidden" name="<%= SAMLSSOProviderConstants.RELAY_STATE %>"
-                                                                           value="<%= request.getAttribute(SAMLSSOProviderConstants.RELAY_STATE) %>"/>
-										                        </tr>
+                    </div>
+                </div>
+            </div>
 
 
-			                                                    <tr>
-										                            <td><label for="txtPassword"><fmt:message key='password'/></label></td>
-										                            <td><input type="password" id='password' name="password" size='30'/>
-										                            </td>
-										                        </tr>
-			                                                    <tr>
-										                            <td></td>
-										                            <td><input type="submit" value="<fmt:message key='login'/>"/></td>
-										                        </tr>
-			                                                       
+        </div>
+    </div>
 
-			                                                    </table>
-                                                    
+    <hr>
 
-                                                    			</form>
-                                            			</td>
-<%--                                        			<td class="google-app-td">
-			                                            <h3>Or login using Google Apps Account</h3>
-			
-			                                            <img alt="Google App Account" style="cursor:pointer"
-			                                                 src="../carbon/tenant-login/images/google-apps-login.gif"
-			                                                 onclick="showHidePanel()"/>
-			
-			                                            <div id="loginBoxGoogle">
-			                                                <div class="help_txt"> Enter Google App domain</div>
-			                                                <form action="../carbon/relyingparty/openid.jsp" name="googleAppLogin"
-			                                                      method="POST">
-			                                                    <table class="styledLeft noBorders">
-			                                                        <tbody>
-			                                                        <tr>
-			                                                            <td><input type="text" name="gAppDomainOpenId" id="gAppDomainOpenId"
-			                                                                       tabindex="3" alt="example.com"  value="" /></td>
-			                                                            <td><input type="button" class="button" value="GO" style="background-image:none"
-			                                                                       onclick="document.googleAppLogin.submit()"/></td>
-			                                                        </tr>
-			                                                        </tbody>
-			                                                    </table>
-			                                                </form>
-			                                            </div>
-			                                            <script type="text/javascript">
-			                                                function showHidePanel() {
-			                                                    jQuery('#loginBoxGoogle').slideToggle("fast");
-			                                                }
-			                                                jQuery(document).ready(function() {
-			                                                    jQuery('#loginBoxGoogle').hide();
-			                                                    if(document.getElementById('username')!= null){
-			                                                    	document.getElementById('username').focus();
-			                                                    }
-			                                                });
-									enableDefaultText("gAppDomainOpenId");
-			                                            </script>
-                                        			</td>--%>
-                                    				</tr>
-                                    			</table>
-                                			</div>
-						</td>
-						</tr>
-					</table>
-					<div class="clear"></div>
-				<div id="footer">
+    <footer>
+        <p>&copy; Company 2012</p>
+    </footer>
 
-					&copy;wso2.com copyright 2010-2012 WSO2, Inc. &nbsp;
+</div>
+<!-- /container -->
 
-				</div>
-			</div>
+<!--Elements to display popups-->
+<div class="modal fade" id="messageModal"></div>
+<div id="confirmation-data" style="display:none;">
+    <div class="modal-header">
+        <button class="close" data-dismiss="modal">×</button>
+        <h3 class="modal-title">Modal header</h3>
+    </div>
+    <div class="modal-body">
+        <p>One fine body…</p>
+    </div>
+    <div class="modal-footer">
+        <a href="#" class="btn btn-primary">Save changes</a>
+        <a href="#" class="btn btn-other" data-dismiss="modal">Close</a>
+    </div>
+</div>
+
+<!-- Le javascript
+================================================== -->
+<!-- Placed at the end of the document so the pages load faster -->
+<script src="../carbon/appfactory/lib/jquery/jquery-1.7.2.min.js"></script>
+<script src="../carbon/appfactory/lib/bootstrap/js/bootstrap-transition.js"></script>
+<script src="../carbon/appfactory/lib/bootstrap/js/bootstrap-alert.js"></script>
+<script src="../carbon/appfactory/lib/bootstrap/js/bootstrap-modal.js"></script>
+<script src="../carbon/appfactory/lib/bootstrap/js/bootstrap-dropdown.js"></script>
+<script src="../carbon/appfactory/lib/bootstrap/js/bootstrap-scrollspy.js"></script>
+<script src="../carbon/appfactory/lib/bootstrap/js/bootstrap-tab.js"></script>
+<script src="../carbon/appfactory/lib/bootstrap/js/bootstrap-tooltip.js"></script>
+<script src="../carbon/appfactory/lib/bootstrap/js/bootstrap-popover.js"></script>
+<script src="../carbon/appfactory/lib/bootstrap/js/bootstrap-button.js"></script>
+<script src="../carbon/appfactory/lib/bootstrap/js/bootstrap-collapse.js"></script>
+<script src="../carbon/appfactory/lib/bootstrap/js/bootstrap-carousel.js"></script>
+<script src="../carbon/appfactory/lib/bootstrap/js/bootstrap-typeahead.js"></script>
+<script src="../carbon/appfactory/lib/jquery.validate.min.js"></script>
+<script src="../carbon/appfactory/js/messages.js"></script>
+<script src="../carbon/appfactory/js/login.js"></script>
 </fmt:bundle>
 </body>
 </html>

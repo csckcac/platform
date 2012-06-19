@@ -16,6 +16,7 @@
 
 package org.wso2.carbon.mediators.router.impl;
 
+import org.apache.axis2.AxisFault;
 import org.apache.commons.logging.Log;
 import org.apache.commons.logging.LogFactory;
 import org.apache.synapse.MessageContext;
@@ -24,6 +25,7 @@ import org.apache.synapse.SynapseLog;
 import org.apache.synapse.endpoints.Endpoint;
 import org.apache.synapse.mediators.base.SequenceMediator;
 import org.apache.synapse.mediators.eip.Target;
+import org.apache.synapse.util.MessageHelper;
 import org.apache.synapse.util.xpath.SynapseXPath;
 import org.jaxen.JaxenException;
 
@@ -212,7 +214,7 @@ public class Route {
      * @see Route#isMatching(org.apache.synapse.MessageContext, SynapseLog)
      */
     public int doRoute(MessageContext synCtx, SynapseLog synLog) {
-
+        System.out.println("Patch applied.. ");
         // first check whether this Route matches the specified conditions
         if (isMatching(synCtx, synLog)) {
 
@@ -221,36 +223,10 @@ public class Route {
 
                 boolean mediationResult = true;
 
-                if (target.getSoapAction() != null) {
-                    synCtx.setSoapAction(target.getSoapAction());
-                }
+                    target.setAsynchronous(false);
+                    target.mediate(synCtx);
+                return breakRouter ? ROUTED_WITH_BREAK_STATE : ROUTED_WITH_CONTINUE_STATE;
 
-                if (target.getSequence() != null) {
-                    mediationResult = target.getSequence().mediate(synCtx);
-                    sendToEndpoint(synCtx);
-
-                } else if (target.getSequenceRef() != null) {
-                    SequenceMediator refSequence
-                        = (SequenceMediator) synCtx.getSequence(target.getSequenceRef());
-                    if (refSequence != null) {
-                        mediationResult = refSequence.mediate(synCtx);
-                    }
-                    sendToEndpoint(synCtx);
-
-                } else {
-                    sendToEndpoint(synCtx);
-                }
-
-                if (!mediationResult) {
-
-                    return ROUTED_AND_DROPPED_STATE;
-
-                } else {
-
-                    // returns the state as break route or continue route depending on the
-                    // breakRouter attribute
-                    return breakRouter ? ROUTED_WITH_BREAK_STATE : ROUTED_WITH_CONTINUE_STATE;
-                }
             } else {
 
                 handleException("Couldn't find the route target for the message", synCtx);

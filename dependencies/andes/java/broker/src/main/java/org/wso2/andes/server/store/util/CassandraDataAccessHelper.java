@@ -129,7 +129,7 @@ public class CassandraDataAccessHelper {
             cfNames.add(columnFamilyDefinition.getName());
         }
         if (!cfNames.contains(name)) {
-            cluster.addColumnFamily(cfDef);
+            cluster.addColumnFamily(cfDef,true);
         }
 
 
@@ -146,7 +146,7 @@ public class CassandraDataAccessHelper {
         KeyspaceDefinition def = cluster.describeKeyspace(keySpace);
         if (def == null) {
             //Adding keySpace to the cluster
-            cluster.addKeyspace(definition);
+            cluster.addKeyspace(definition,true);
         }
 
         keyspace = HFactory.createKeyspace(keySpace, cluster);

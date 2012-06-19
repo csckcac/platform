@@ -83,6 +83,13 @@
                             <publishArtifacts>true</publishArtifacts>
                             <publishArtifactRepository>true</publishArtifactRepository>
                             <featureArtifacts>
+
+
+				<!-- Cassandra explorer -->
+                                <featureArtifactDef>
+                                    org.wso2.carbon:org.wso2.carbon.cassandra.explorer.feature:${cassandra.explorer.version}
+                                </featureArtifactDef>
+				
                                 <!-- Jaggery Features -->
 
                                 <featureArtifactDef>
@@ -270,6 +277,12 @@
                             </destination>
                             <deleteOldProfileFiles>true</deleteOldProfileFiles>
                             <features>				
+
+				<!-- Cassandra Explorer -->
+                                <feature>
+                                    <id>org.wso2.carbon.cassandra.explorer.feature.group</id>
+                                    <version>${cassandra.explorer.version}</version>
+                                </feature>
 
                                 <!-- Gadget Gen -->
 
@@ -530,6 +543,7 @@
 
     <properties>
         <jaggery.feature.version>1.0.0-SNAPSHOT</jaggery.feature.version>
+	<cassandra.explorer.version>4.0.0-SNAPSHOT</cassandra.explorer.version>
     </properties>
 
 </project> 

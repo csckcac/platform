@@ -3,7 +3,7 @@
         xsi:schemaLocation="http://www.w3schools.com uep_schema.xsd"
         xmlns:wsa="http://www.w3.org/2005/08/addressing"
         xmlns:wsdl11="http://schemas.xmlsoap.org/wsdl/">
-    <wsa:Address>https://localhost:9443/services/DeployApplicationToDev.DeployApplicationToDevhttpDeployApplicationToDevBindingEndpoint/</wsa:Address>
+    <wsa:Address>https://localhost:9443/services/ApplicationDeploymentService/</wsa:Address>
     <wsa:Metadata>
           <id>SInvokeEPR</id>
           <transport type="http">

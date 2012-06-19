@@ -127,6 +127,7 @@ public final class DBConstants {
         public static final String FLOAT = "FLOAT";
         public static final String DOUBLE = "DOUBLE";
         public static final String BINARY = "BINARY";
+        public static final String BLOB = "BLOB";
         public static final String VARBINARY = "VARBINARY";
         public static final String LONG_VARBINARY = "LONG VARBINARY";
         public static final String IMAGE = "IMAGE";

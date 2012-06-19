@@ -235,6 +235,12 @@
         <% } else { %>
         <option value="BINARY">BINARY</option>
         <% }
+            if (sqlType.equals("BLOB")) { %>
+        %>
+        <option value="BLOB" selected="selected">BLOB</option>
+        <% } else { %>
+        <option value="BLOB">BLOB</option>
+         <% }
             if (sqlType.equals("STRUCT")) { %>
         <option value="STRUCT" selected="selected">STRUCT</option>
         <% } else { %>

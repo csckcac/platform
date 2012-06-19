@@ -1427,6 +1427,8 @@ public class SQLQuery extends Query implements BatchRequestParticipant {
             setTimeValue(queryType, paramName, value, paramType, stmt, index);
         } else if (DBConstants.DataTypes.BINARY.equals(sqlType)) {
             setBinaryValue(queryType, paramName, value, paramType, stmt, index);
+        } else if (DBConstants.DataTypes.BLOB.equals(sqlType)) {
+        	setBlobValue(queryType, paramName, value, paramType, stmt, index);
         } else if (DBConstants.DataTypes.ORACLE_REF_CURSOR.equals(sqlType)) {
             setOracleRefCusor(stmt, index);
         } else if (DBConstants.DataTypes.STRUCT.equals(sqlType)) {
@@ -1531,6 +1533,35 @@ public class SQLQuery extends Query implements BatchRequestParticipant {
                     java.sql.Types.BINARY);
         }
     }
+    
+    private void setBlobValue(int queryType, String paramName,
+    						  String value, String paramType, PreparedStatement sqlQuery, int i)
+            throws SQLException, DataServiceFault {
+    	if ("IN".equals(paramType)) {
+    		if (value == null) {
+    			sqlQuery.setNull(i + 1, java.sql.Types.BLOB);
+    		} else {
+    			byte[] data = this.getBytesFromBase64String(value);
+    			sqlQuery.setBlob(i + 1, new ByteArrayInputStream(data), data.length);
+    		}
+    	} else if ("INOUT".equals(paramType)) {
+    			if (value == null) {
+    				((CallableStatement) sqlQuery).setNull(i + 1,
+    						java.sql.Types.BLOB);
+    			} else {
+    				byte[] data = this.getBytesFromBase64String(value);
+    				((CallableStatement) sqlQuery).setBlob(i + 1,
+    						new ByteArrayInputStream(data), data.length);
+    			}
+    			((CallableStatement) sqlQuery).registerOutParameter(i + 1,
+    					java.sql.Types.BLOB);
+    	} else {
+    		((CallableStatement) sqlQuery).registerOutParameter(i + 1,
+    				java.sql.Types.BLOB);
+    	}
+    }
+    
+    
 
     private void setOracleRefCusor(PreparedStatement sqlQuery, int i)
             throws SQLException, DataServiceFault {
@@ -2015,7 +2046,11 @@ public class SQLQuery extends Query implements BatchRequestParticipant {
                 elementValue = cs.getTimestamp(ordinal);
                 return new ParamValue(elementValue == null ? null :
                         this.convertToTimestampString((Timestamp) elementValue));
-            } else if (type.equals(DBConstants.DataTypes.STRUCT)) {
+            } else if (type.equals(DBConstants.DataTypes.BLOB)) {
+                elementValue = cs.getBlob(ordinal);
+                return new ParamValue(elementValue == null ? null :
+                	this.getBase64StringFromInputStream(((Blob)elementValue).getBinaryStream()));
+            }else if (type.equals(DBConstants.DataTypes.STRUCT)) {
                 elementValue = cs.getObject(ordinal);
                 return new ParamValue(elementValue == null ? null : (Struct) elementValue);
             } else if (type.equals(DBConstants.DataTypes.ARRAY)) {
@@ -2206,5 +2241,5 @@ public class SQLQuery extends Query implements BatchRequestParticipant {
             return columnRemarks;
         }
     }
-
-}
+    
+  }

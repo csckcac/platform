@@ -190,8 +190,8 @@
                         <include>**/*TestSuite.java</include>
                     </includes>
                     <excludes>
-                        <exclude>**/MySQLTestSuite.java</exclude>
-                        <exclude>**/OracleTestSuite.java</exclude>
+                        <!--<exclude>**/MySQLTestSuite.java</exclude>
+                        <exclude>**/OracleTestSuite.java</exclude>-->
                     </excludes>
                 </configuration>
             </plugin>

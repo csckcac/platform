@@ -108,7 +108,7 @@ public class ArtifactDeployerUtil {
     private static final String TASKS_DIR = "tasks";
 
     public void carFileUploder(String sessionCookie, String hostName, URL url,
-                               Artifact artifact) {
+                               Artifact artifact) throws RemoteException {
         DataHandler dh = new DataHandler(url);
         AdminServiceCarbonAppUploader adminServiceCarbonAppUploader =
                 new AdminServiceCarbonAppUploader(hostName);

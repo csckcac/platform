@@ -33,19 +33,16 @@ public class AdminServiceCarbonAppUploader {
     private static final Log log = LogFactory.getLog(AdminServiceCarbonAppUploader.class);
     private CarbonAppUploaderStub carbonAppUploaderStub;
 
-    public AdminServiceCarbonAppUploader(String backendUrl) {
+    public AdminServiceCarbonAppUploader(String backendUrl) throws AxisFault {
         String serviceName = "CarbonAppUploader";
         String endPoint = backendUrl + serviceName;
-        try {
-            carbonAppUploaderStub = new CarbonAppUploaderStub(endPoint);
-        } catch (AxisFault axisFault) {
-            log.error("Axis2Fault thrown while initializing CarbonAppUploaderStub  :" + axisFault.getMessage());
-            Assert.fail("Axis2Fault thrown while initializing CarbonAppUploaderStub  :" + axisFault.getMessage());
-        }
+        carbonAppUploaderStub = new CarbonAppUploaderStub(endPoint);
+
     }
 
 
-    public void uploadCarbonAppArtifact(String sessionCookie, String fileName, DataHandler dh) {
+    public void uploadCarbonAppArtifact(String sessionCookie, String fileName, DataHandler dh)
+            throws RemoteException {
         UploadedFileItem[] carbonAppArray = new UploadedFileItem[1];
         UploadedFileItem carbonApp = new UploadedFileItem();
 
@@ -55,11 +52,7 @@ public class AdminServiceCarbonAppUploader {
         carbonApp.setFileType("jar");
 
         carbonAppArray[0] = carbonApp;
-        try {
-            carbonAppUploaderStub.uploadApp(carbonAppArray);
-        } catch (RemoteException e) {
-            log.error("Remote Exception thrown while uploding car artifact :" + e);
-            Assert.fail("Remote Exception thrown while uploding car artifact :" + e);
-        }
+        carbonAppUploaderStub.uploadApp(carbonAppArray);
+
     }
 }

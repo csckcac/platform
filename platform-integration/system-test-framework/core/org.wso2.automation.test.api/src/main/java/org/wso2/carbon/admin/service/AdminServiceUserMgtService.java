@@ -200,10 +200,10 @@ public class AdminServiceUserMgtService {
         try {
             roles = userAdminStub.getAllRolesNames();
         } catch (RemoteException e) {
-            log.error("Unable to get role names list");
+            log.error("Unable to get role names list", e);
             Assert.fail("Unable to get role names list");
         } catch (GetAllRolesNamesUserAdminExceptionException e) {
-            log.error("Unable to get role names list");
+            log.error("Unable to get role names list", e);
             Assert.fail("Unable to get role names list");
         }
 

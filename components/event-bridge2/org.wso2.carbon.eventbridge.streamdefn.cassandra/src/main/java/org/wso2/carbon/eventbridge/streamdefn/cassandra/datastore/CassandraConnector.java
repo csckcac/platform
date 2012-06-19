@@ -216,6 +216,7 @@ public class CassandraConnector {
         } else if (attribute.getType().equals(AttributeType.INT)) {
             Integer metaVal = ((data[eventDataIndex]) instanceof Double) ? ((Double) data[eventDataIndex]).intValue()
                     : (Integer) data[eventDataIndex];
+//            Integer metaVal = (Integer) data[eventDataIndex];
             if (metaVal != null) {
                 mutator.addInsertion(rowKey, streamColumnFamily,
                         HFactory.createColumn(columnName, metaVal, stringSerializer, integerSerializer));

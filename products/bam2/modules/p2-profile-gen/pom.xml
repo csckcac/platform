@@ -1,7 +1,7 @@
 <project xmlns="http://maven.apache.org/POM/4.0.0"
          xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
          xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/maven-v4_0_0.xsd">
-    
+
     <parent>
     	<groupId>org.wso2.bam</groupId>
     	<artifactId>wso2bam-parent</artifactId>
@@ -22,7 +22,7 @@
         </license>
     </licenses>
 
-    
+
     <organization>
         <name>WSO2 Inc</name>
         <url>http://wso2.com</url>
@@ -89,7 +89,7 @@
                                 <featureArtifactDef>
                                     org.wso2.carbon:org.wso2.carbon.cassandra.explorer.feature:${cassandra.explorer.version}
                                 </featureArtifactDef>
-				
+
                                 <!-- Jaggery Features -->
 
                                 <featureArtifactDef>
@@ -173,13 +173,35 @@
                                 <!--<featureArtifactDef>-->
                                     <!--org.wso2.carbon:org.wso2.carbon.bam2.analyzer.ui.feature:${carbon.version}-->
                                 <!--</featureArtifactDef>-->
-                                <featureArtifactDef>
-                                    org.wso2.carbon:org.wso2.carbon.bam2.receiver.server.feature:${carbon.version}
-                                </featureArtifactDef>
+                                <!--<featureArtifactDef>-->
+                                    <!--org.wso2.carbon:org.wso2.carbon.bam2.receiver.server.feature:${carbon.version}-->
+                                <!--</featureArtifactDef>-->
                                 <featureArtifactDef>
                                     org.wso2.carbon:org.wso2.carbon.bam2.presentation.server.feature:${carbon.version}
                                 </featureArtifactDef>
                                 <!-- end BAM features -->
+
+                                <!-- Event Bridge Features -->
+
+                                <featureArtifactDef>
+                                    org.wso2.carbon:org.wso2.carbon.eventbridge.commons.server.feature:${carbon.version}
+                                </featureArtifactDef>
+                                <featureArtifactDef>
+                                    org.wso2.carbon:org.wso2.carbon.eventbridge.receiver.thrift.server.feature:${carbon.version}
+                                </featureArtifactDef>
+                                <featureArtifactDef>
+                                    org.wso2.carbon:org.wso2.carbon.eventbridge.receiver.restapi.server.feature:${carbon.version}
+                                </featureArtifactDef>
+                                <featureArtifactDef>
+                                    org.wso2.carbon:org.wso2.carbon.eventbridge.thrift.commons.server.feature:${carbon.version}
+                                </featureArtifactDef>
+                                <featureArtifactDef>
+                                    org.wso2.carbon:org.wso2.carbon.eventbridge.core.server.feature:${carbon.version}
+                                </featureArtifactDef>
+                                <featureArtifactDef>
+                                    org.wso2.carbon:org.wso2.carbon.eventbridge.streamdefn.cassandra.server.feature:${carbon.version}
+                                </featureArtifactDef>
+
 
 			        <!-- Analytics features -->
 				<featureArtifactDef>
@@ -250,7 +272,7 @@
                                 <featureArtifactDef>org.wso2.carbon:org.wso2.carbon.gadgetgenwizard.feature:${carbon.version}
                                 </featureArtifactDef>
 
-				
+
 				<!-- stratos features -->
 				<featureArtifactDef>org.wso2.carbon:org.wso2.carbon.stratos.common.feature:${stratos.version}</featureArtifactDef>
 				<featureArtifactDef>org.wso2.carbon:org.wso2.carbon.captcha.mgt.server.feature:${carbon.version}</featureArtifactDef>
@@ -276,7 +298,7 @@
                             <destination>${basedir}/target/wso2carbon-core-${carbon.version}/repository/components
                             </destination>
                             <deleteOldProfileFiles>true</deleteOldProfileFiles>
-                            <features>				
+                            <features>
 
 				<!-- Cassandra Explorer -->
                                 <feature>
@@ -395,12 +417,33 @@
                                     <!--<id>org.wso2.carbon.bam2.analyzer.feature.group</id>-->
                                     <!--<version>${carbon.version}</version>-->
                                 <!--</feature>-->
+
+                                <!--<feature>-->
+                                    <!--<id>org.wso2.carbon.bam2.receiver.server.feature.group</id>-->
+                                    <!--<version>${carbon.version}</version>-->
+                                <!--</feature>-->
                                 <feature>
-                                    <id>org.wso2.carbon.bam2.receiver.server.feature.group</id>
+                                    <id>org.wso2.carbon.eventbridge.commons.server.feature.group</id>
                                     <version>${carbon.version}</version>
                                 </feature>
                                 <feature>
-                                    <id>org.wso2.carbon.bam2.presentation.server.feature.group</id>
+                                    <id>org.wso2.carbon.eventbridge.receiver.thrift.server.feature.group</id>
+                                    <version>${carbon.version}</version>
+                                </feature>
+                                <feature>
+                                    <id>org.wso2.carbon.eventbridge.receiver.restapi.server.feature.group</id>
+                                    <version>${carbon.version}</version>
+                                </feature>
+                                <feature>
+                                    <id>org.wso2.carbon.eventbridge.thrift.commons.server.feature.group</id>
+                                    <version>${carbon.version}</version>
+                                </feature>
+                                <feature>
+                                    <id>org.wso2.carbon.eventbridge.core.server.feature.group</id>
+                                    <version>${carbon.version}</version>
+                                </feature>
+                                <feature>
+                                    <id>org.wso2.carbon.eventbridge.streamdefn.cassandra.server.feature.group</id>
                                     <version>${carbon.version}</version>
                                 </feature>
                                 <!-- end BAM features -->
@@ -546,4 +589,4 @@
 	<cassandra.explorer.version>4.0.0-SNAPSHOT</cassandra.explorer.version>
     </properties>
 
-</project> 
+</project>

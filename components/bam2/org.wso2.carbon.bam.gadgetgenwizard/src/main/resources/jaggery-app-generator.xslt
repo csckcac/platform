@@ -32,7 +32,7 @@
         <xsl:text disable-output-escaping="yes">&#60;</xsl:text><xsl:text>&#37;</xsl:text>
         var config = {};
 
-        var db = new Database("<xsl:value-of select="gg:jdbcurl" />", "<xsl:value-of select="gg:driver"/>",
+        var db = new Database("<xsl:value-of select="gg:jdbcurl" />",
         "<xsl:value-of select="gg:username"/>", "<xsl:value-of select="gg:password"/>", config);
     	var result = db.query("<xsl:value-of select="gg:sql"/>");
 
@@ -53,8 +53,8 @@
         </xsl:template>
 
     <xsl:template name="BarChart">
-        var colx = "<xsl:value-of select="gg:bar-xcolumn" />".toUpperCase();
-    	var coly = "<xsl:value-of select="gg:bar-ycolumn" />".toUpperCase();
+        var colx = "<xsl:value-of select="gg:bar-xcolumn" />";
+    	var coly = "<xsl:value-of select="gg:bar-ycolumn" />";
 
     	function convertDBResult(result, colx, coly) {
 			var array = [];

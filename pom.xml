@@ -21,6 +21,7 @@
                 <module>dependencies</module>
                 <module>service-stubs</module>
                 <module>components</module>
+                <module>platform-integration/system-test-framework/core</module>
 		<module>features</module>
 		<module>samples/shopping-cart</module>
 		<module>samples/shopping-cart-global</module>

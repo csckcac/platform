@@ -22,6 +22,9 @@
 <%@ page import="org.wso2.carbon.registry.properties.stub.beans.xsd.RetentionBean" %>
 <%@ page import="org.wso2.carbon.registry.properties.ui.clients.PropertiesServiceClient" %>
 <%@ page import="org.wso2.carbon.ui.CarbonUIMessage" %>
+<%@ page import="org.wso2.carbon.registry.resource.ui.clients.ResourceServiceClient" %>
+<%@ page import="org.wso2.carbon.utils.ServerConstants" %>
+
 
 <jsp:include page="../registry_common/registry_common-i18n-ajaxprocessor.jsp"/>
 <script type="text/javascript" src="../registry_common/js/registry_validation.js"></script>
@@ -36,7 +39,10 @@
 
 <%
     String path = request.getParameter("path");
+    String cookie = (String) session.getAttribute(ServerConstants.ADMIN_SERVICE_COOKIE);
     PropertiesServiceClient client = new PropertiesServiceClient(config, session);
+    ResourceServiceClient res_client = new ResourceServiceClient(cookie, config, session);
+    boolean writeAllowed = res_client.getResourceData(new String[]{path})[0].getPutAllowed();
     RetentionBean bean;
     boolean readOnly;
     try {
@@ -134,10 +140,10 @@
 
                 <tr>
                     <td class="buttonRow">
-                        <input type="button" id="#_0" value="<fmt:message key="lock"/>"
+                        <input type="button" <%=writeAllowed ? "":"disabled=\"disabled\"" %> id="#_0" value="<fmt:message key="lock"/>"
                                class="button" onclick="setRetentionProperties()"
                                <%=readOnly ? "style=\"display:none\"" : ""%>/>
-                        <input type="button" id="#_1" value="<fmt:message key="reset"/>"
+                        <input type="button" <%=writeAllowed ? "" : "disabled=\"disabled\""  %> id="#_1" value="<fmt:message key="reset"/>"
                                class="button" onclick="resetRetentionProperties()"
                                <%=readOnly ? "style=\"display:none\"" : ""%>/>
                     </td>

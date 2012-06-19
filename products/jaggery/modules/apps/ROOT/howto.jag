@@ -149,6 +149,7 @@ include('/includes/topnavi.jag');
 	
 	            <br/> <br/>
 	            Management console can be accessed by <code><a href="https://localhost:9443/admin" target="_blank">https://localhost:9443/admin</a></code>
+				 - Username : "admin" , Password : "admin"
 	        </p>
 
 

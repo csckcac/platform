@@ -38,13 +38,13 @@
     }
     BamMediator bamMediator = (BamMediator) mediator;
 
-    String configuration = "";
+    String serverProfilePath = "";
     String streamName = "";
     String streamVersion = "";
 
 
     if(bamMediator.getServerProfilePath() != null){
-        configuration = bamMediator.getServerProfilePath();
+        serverProfilePath = bamMediator.getServerProfilePath();
     }
 
     if(bamMediator.getStreamName() != null){
@@ -55,35 +55,6 @@
         streamVersion = bamMediator.getStreamVersion();
     }
 
-    /*String inputType = bamMediator.getInputType();
-    String outputType = bamMediator.getOutputType();
-
-    String inputExpr = "";
-    if (bamMediator.getInputExpression() != null) {
-        inputExpr = bamMediator.getInputExpression().toString();
-    }
-
-    String outputExpr = "";
-    if (bamMediator.getOutputExpression() != null) {
-        outputExpr = bamMediator.getOutputExpression().toString();
-    }
-
-    String outputProperty = "";
-    if (bamMediator.getOutputProperty() != null) {
-        outputProperty = bamMediator.getOutputProperty();
-    }
-
-    String outputAction = "";
-    if (bamMediator.getOutputAction() != null) {
-        outputAction = bamMediator.getOutputAction();
-    }
-
-    boolean isExpression = bamMediator.getOutputProperty() == null;
-
-    NameSpacesRegistrar nameSpacesRegistrar = NameSpacesRegistrar.getInstance();
-    nameSpacesRegistrar.registerNameSpaces(bamMediator.getInputExpression(), "inputExpr", session);
-
-    nameSpacesRegistrar.registerNameSpaces(bamMediator.getOutputExpression(), "outputExpr", session);*/
 %>
 
 <fmt:bundle basename="org.wso2.carbon.mediator.bam.ui.i18n.Resources">
@@ -92,66 +63,48 @@
 		request="<%=request%>" i18nObjectName="propertyMediatorJsi18n"/>
     <div>
         <script type="text/javascript" src="../bam-mediator/js/mediator-util.js"></script>
-        <%--<script id="source" type="text/javascript">
-            function showHideDiv(divId) {
-                var theDiv = document.getElementById(divId);
-                if (theDiv.style.display == "none") {
-                    theDiv.style.display = "";
-                } else {
-                    theDiv.style.display = "none";
-                }
+        <script type="text/javascript">
+            function loadStreamNames(serverProfilePath, streamName) {
+                jQuery.ajax({
+                                type:"GET",
+                                url:"../bam-mediator/dropdown_ajaxprocessor.jsp",
+                                data:{action:"getStreamNames", serverProfilePath:serverProfilePath},
+                                success:function(data){
+                                    document.getElementById("streamNameList").innerHTML = "";
+                                    jQuery("#streamNameList").append("<option>- Select Stream Name -</option>");
+                                    jQuery("#streamNameList").append(data);
+                                    if(streamName != null && streamName != ""){
+                                        document.getElementById("streamNameList").value = streamName;
+                                    }
+                                    document.getElementById('streamNameList').disabled = "";
+                                }
+                            })
             }
 
-            var rowNum = 1;
-
-            function addColumn() {
-                rowNum++;
-                /*var n =  + parseInt(trId.charAt(trId.length-1))+1;
-                 jQuery("#"+trId+" td div.addIcon").remove();*/
-                //alert(n);
-                var sId = "propertyTable_" + rowNum;
-                //alert(sId);
-                var tableContent = "<tr id=\"" + sId + "\">" +
-                                   "<td>\n" +
-                                   "                        <fmt:message key='property.name'/>\n" +
-                                   "                        <input type=\"text\" name=\"<%=PROPERTY_KEYS%>\" value=\"\">\n" +
-                                   "                    </td>\n" +
-                                   "                    <td>\n" +
-                                   "                        <fmt:message key='property.value'/>\n" +
-                                   "                        <input type=\"text\" name=\"<%=PROPERTY_VALUES%>\" value=\"\">\n" +
-                                   "                    </td>" +
-                                   "<td>\n" +
-                                   "                        <a onClick='javaScript:removeColumn(\"" + sId + "\")'" +
-                                   "style='background-image: url(../bampubsvcstat/images/delete.gif);'class='icon-link addIcon'>Remove Property</a>\n" +
-                                   "                    </td>" +
-                                   "</tr>";
-
-                jQuery("#propertyTable").append(tableContent);
-                updatePropertyTableData();
+            function loadStreamVersions(serverProfilePath, streamName, streamVersion) {
+                jQuery.ajax({
+                                type:"GET",
+                                url:"../bam-mediator/dropdown_ajaxprocessor.jsp",
+                                data:{action:"getStreamVersions", serverProfilePath:serverProfilePath, streamName:streamName},
+                                success:function(data){
+                                    document.getElementById("streamVersionList").innerHTML = "";
+                                    jQuery("#streamVersionList").append("<option>- Select Stream Version -</option>");
+                                    jQuery("#streamVersionList").append(data);
+                                    if(streamVersion != null && streamVersion != "" && document.getElementById("streamVersionList").value != null){
+                                        document.getElementById("streamVersionList").value = streamVersion;
+                                    }
+                                    document.getElementById('streamVersionList').disabled = "";
+                                }
+                            })
             }
 
-            function removeColumn(id) {
-                jQuery("#" + id).remove();
-                updatePropertyTableData();
+            function selectStreamVersionList(){
+                loadStreamVersions(document.getElementById('serverProfile').value, document.getElementById('streamNameList').value);
+                document.getElementById('streamVersionList').disabled = "";
             }
 
-            function updatePropertyTableData(){
-                var tableData = "", inputs, numOfInputs;
-                inputs = document.getElementById("propertyTable").getElementsByTagName("input");
-                numOfInputs = inputs.length;
-                for(var i=0; i<numOfInputs; i=i+2){
-                    if(inputs[i].value != "" && inputs[i+1].value != ""){
-                        tableData = tableData + inputs[i].value + ":" + inputs[i+1].value + ";";
-                    }
-                    /*tableData = tableData + jQuery("#propertyName")[i].value + ":"
-                                        + jQuery("#propertyValue")[i].value + ";" ;*/
-                    /*tableData[i]["name"] = jQuery("#propertyName")[i].value;
-                    tableData[i]["value"] = jQuery("#propertyValue")[i].value;*/
-                }
-                document.getElementById("hfPropertyTableData").value = tableData;
-                alert("hf table : " + document.getElementById("hfPropertyTableData").value);
-            }
-        </script>--%>
+        </script>
+
 
         <table class="normal" width="100%">
             <tbody>
@@ -177,7 +130,7 @@
                 </td>
                 <td>
                     <input class="longInput" type="text"
-                           value="<%=configuration%>"
+                           value="<%=serverProfilePath%>"
                            id="serverProfile" name="serverProfile" readonly="true"/>
                 </td>
                 <td>
@@ -185,6 +138,7 @@
                        class="registry-picker-icon-link"
                        onclick="showRegistryBrowser('serverProfile','/_system/config')"><fmt:message key="conf.registry.browser"/>
                     </a>
+                    <input type="button" value="Load" onclick="loadStreamNames(document.getElementById('serverProfile').value, '')"/>
                 </td>
                 <%--<td>
                     <a href="#registryBrowserLink"
@@ -203,11 +157,32 @@
             </tr>
             <tr>
                 <td><fmt:message key="stream.name"/></td>
-                <td><input type="text" name="streamName" id="streamName" value="<%=streamName%>"/></td>
+                <td>
+                    <%--<input type="text" name="streamName" id="streamName" value="<%=streamName%>"/>--%>
+
+                    <select name="streamNameList" id="streamNameList" disabled="disabled" onchange="selectStreamVersionList()">
+                        <option>- Select Stream Name -</option>
+                    </select>
+                    <script type="text/javascript">
+                        loadStreamNames("<%=serverProfilePath%>", "<%=streamName%>");
+                    </script>
+
+
+                </td>
             </tr>
             <tr>
                 <td><fmt:message key="stream.version"/></td>
-                <td><input type="text" name="streamVersion" id="streamVersion" value="<%=streamVersion%>"/></td>
+                <td>
+                    <%--<input type="text" name="streamVersion" id="streamVersion" value="<%=streamVersion%>"/>--%>
+
+                    <select name="streamVersionList" id="streamVersionList" disabled="disabled">
+                        <option>- Select Stream Version -</option>
+                    </select>
+                    <script type="text/javascript">
+                        loadStreamVersions("<%=serverProfilePath%>", "<%=streamName%>", "<%=streamVersion%>");
+                    </script>
+
+                </td>
             </tr>
 
         </table>

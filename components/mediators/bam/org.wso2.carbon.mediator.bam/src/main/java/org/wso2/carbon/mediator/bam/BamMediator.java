@@ -57,6 +57,8 @@ public class BamMediator extends AbstractMediator {
     private String serverProfile = "";
     private String streamName = "";
     private String streamVersion = "";
+    private String streamNickName = "";
+    private String streamDescription = "";
     private String serverIp = "";
     private String serverPort = "";
     private String userName = "";
@@ -159,8 +161,8 @@ public class BamMediator extends AbstractMediator {
             streamId = dataPublisher.defineEventStream("{" +
                                                        "  'name':'" + this.streamName + "'," +
                                                        "  'version':'"+ this.streamVersion + "'," +
-                                                       "  'nickName': 'Log'," +
-                                                       "  'description': 'log to bam'," +
+                                                       "  'nickName': '" + this.streamNickName + "'," +
+                                                       "  'description': '" + this.streamDescription + "'," +
                                                        "  'metaData':[" +
                                                        "          {'name':'ProductName','type':'STRING'}" +
                                                        "  ]," +
@@ -256,6 +258,22 @@ public class BamMediator extends AbstractMediator {
 
     public String getStreamVersion(){
         return this.streamVersion;
+    }
+
+    public String getStreamNickName() {
+        return streamNickName;
+    }
+
+    public void setStreamNickName(String streamNickName) {
+        this.streamNickName = streamNickName;
+    }
+
+    public String getStreamDescription() {
+        return streamDescription;
+    }
+
+    public void setStreamDescription(String streamDescription) {
+        this.streamDescription = streamDescription;
     }
 
     public void setServerPort(String newValue) {

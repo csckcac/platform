@@ -37,38 +37,8 @@ public class BamMediatorFactory extends AbstractMediatorFactory {
     public static final QName BAM_Q = new QName(
             SynapseConstants.SYNAPSE_NAMESPACE, "bam");
 
-    //public static final QName CONFIG_KEY = new QName("config-key");
-
     public Mediator createSpecificMediator(OMElement omElement, Properties properties) {
         BamMediator bam = new BamMediator();
-
-        /*OMElement serverProfileElement = omElement.getFirstChildWithName(
-                new QName(SynapseConstants.SYNAPSE_NAMESPACE, "serverProfile"));
-
-        if(serverProfileElement != null){
-            OMAttribute serverProfileAttr = serverProfileElement.getAttribute(new QName("path"));
-            if(serverProfileAttr != null){
-                bam.setServerProfile(serverProfileAttr.getAttributeValue());
-            }
-        }
-
-        OMElement propertiesElement = omElement.getFirstChildWithName(
-                new QName(SynapseConstants.SYNAPSE_NAMESPACE, "properties"));
-
-        if(propertiesElement != null){
-            Iterator itr = propertiesElement.getChildrenWithName(new QName("property"));
-            List<Property> propertyList = new ArrayList<Property>();
-            Property property;
-            while (itr.hasNext()){
-                OMElement propertyElement = (OMElement)itr.next();
-                property = new Property();
-                property.setKey(propertyElement.getAttributeValue(new QName("name")));
-                property.setValue(propertyElement.getAttributeValue(new QName("value")));
-                propertyList.add(property);
-            }
-            bam.setProperties(propertyList);
-        }*/
-
 
         BamServerConfigBuilder bamServerConfigBuilder = new BamServerConfigBuilder();
         String resourceString;
@@ -83,11 +53,6 @@ public class BamMediatorFactory extends AbstractMediatorFactory {
         }
 
         String realServerProfilePath = this.getRealBamServerProfilePath(serverProfilePath);
-
-
-        /*RegistryAccess registryAccess = new RegistryAccess();
-        if(registryAccess.resourceAlreadyExists(realServerProfilePath)){
-            resourceString = registryAccess.getResourceString(realServerProfilePath);*/
         RegistryManager registryManager = new RegistryManager();
         if(registryManager.resourceAlreadyExists(realServerProfilePath)){
             resourceString = registryManager.getResourceString(realServerProfilePath);
@@ -95,16 +60,12 @@ public class BamMediatorFactory extends AbstractMediatorFactory {
                 OMElement resourceElement = new StAXOMBuilder(new ByteArrayInputStream(resourceString.getBytes())).getDocumentElement();
                 boolean bamServerConfigCreated = bamServerConfigBuilder.createBamServerConfig(resourceElement);
                 if(bamServerConfigCreated){
-                    this.updateBamMediator(bamServerConfigBuilder, bam);
+                    this.updateBamMediator(bamServerConfigBuilder, bam, streamName, streamVersion);
                 }
-
             } catch (XMLStreamException e) {
                 e.printStackTrace();  //To change body of catch statement use File | Settings | File Templates.
             }
-
         }
-
-
         return bam;
     }
 
@@ -168,11 +129,13 @@ public class BamMediatorFactory extends AbstractMediatorFactory {
             }
             return null;
         }
-            return null;
+        return null;
     }
 
-    private void updateBamMediator(BamServerConfigBuilder bamServerConfigBuilder, BamMediator bamMediator){
+    private void updateBamMediator(BamServerConfigBuilder bamServerConfigBuilder, BamMediator bamMediator, String streamName, String streamVersion){
         BamServerConfig bamServerConfig=  bamServerConfigBuilder.getBamServerConfig();
+        bamMediator.setStreamNickName(bamServerConfig.getAUniqueStreamConfiguration(streamName, streamVersion).getNickname());
+        bamMediator.setStreamDescription(bamServerConfig.getAUniqueStreamConfiguration(streamName, streamVersion).getDescription());
         bamMediator.setUserName(bamServerConfig.getUsername());
         bamMediator.setPassword(bamServerConfig.getPassword());
         bamMediator.setServerIP(bamServerConfig.getIp());

@@ -47,10 +47,10 @@ public class BamServerProfileUtils {
         }
     }
 
-    public void addResource(String ip, String port, String userName, String password,
+    public void addResource(String ip, String port, String userName, String password, String streamConfigurationListString,
                             String bamServerProfileLocation){
 
-        List<StreamConfiguration> scs = new ArrayList<StreamConfiguration>();
+        /*List<StreamConfiguration> scs = new ArrayList<StreamConfiguration>();
         StreamConfiguration sc1 = new StreamConfiguration();
         sc1.setName("org.wso2.carbon.mediator.bam.BamMediator100");
         sc1.setVersion("1.0.1");
@@ -106,14 +106,14 @@ public class BamServerProfileUtils {
         sc3.getProperties().add(p31);
         sc3.getProperties().add(p32);
         sc3.getProperties().add(p33);
-        scs.add(sc3);
+        scs.add(sc3);*/
 
 
 
 
-
+        List<StreamConfiguration> streamConfigurations = this.getStreamConfigurationListFromString(streamConfigurationListString);
         BamServerConfigXml mediatorConfigurationXml = new BamServerConfigXml();
-        OMElement storeXml = mediatorConfigurationXml.buildServerProfile(ip, port, userName, password, scs);
+        OMElement storeXml = mediatorConfigurationXml.buildServerProfile(ip, port, userName, password, streamConfigurations);
         String stringStoreXml = storeXml.toString();
 
         try {
@@ -122,6 +122,40 @@ public class BamServerProfileUtils {
             e.printStackTrace();  //To change body of catch statement use File | Settings | File Templates.
         }
 
+    }
+
+    private List<StreamConfiguration> getStreamConfigurationListFromString(String streamConfigurationListString){
+        List<StreamConfiguration> streamConfigurations = new ArrayList<StreamConfiguration>();
+        StreamConfiguration currentStreamConfiguration;
+        Property currentProperty;
+        String propertiesString;
+        String[] properties;
+
+        String [] streams = streamConfigurationListString.split("~");
+        if(streams != null){
+            for (String stream : streams) {
+                if(this.isNotNullOrEmpty(stream)){
+                    currentStreamConfiguration = new StreamConfiguration();
+                    currentStreamConfiguration.setName(stream.split("\\^")[0]);
+                    currentStreamConfiguration.setVersion(stream.split("\\^")[1]);
+                    currentStreamConfiguration.setNickname(stream.split("\\^")[2]);
+                    currentStreamConfiguration.setDescription(stream.split("\\^")[3]);
+                    propertiesString = stream.split("\\^")[4];
+                    properties = propertiesString.split(";");
+                    for (String property : properties) {
+                        if(this.isNotNullOrEmpty(property)){
+                            currentProperty = new Property();
+                            currentProperty.setKey(property.split(":")[0]);
+                            currentProperty.setValue(property.split(":")[1]);
+                            currentStreamConfiguration.getProperties().add(currentProperty);
+                        }
+                    }
+                    streamConfigurations.add(currentStreamConfiguration);
+                }
+            }
+            return streamConfigurations;
+        }
+        return new ArrayList<StreamConfiguration>();
     }
 
     public BamServerConfig getResource(String bamServerProfileLocation){
@@ -148,6 +182,19 @@ public class BamServerProfileUtils {
             e.printStackTrace();  //To change body of catch statement use File | Settings | File Templates.
         }
         return true;
+    }
+
+    public String getPropertiesString(StreamConfiguration streamConfiguration){
+        String returnString = "";
+        if(streamConfiguration != null){
+            List<Property> properties = streamConfiguration.getProperties();
+            for (Property property : properties) {
+                returnString = returnString + property.getKey() + ":" + property.getValue() + ";";
+            }
+            return returnString;
+        } else {
+            return "";
+        }
     }
 
     public boolean isNotNullOrEmpty(String string){

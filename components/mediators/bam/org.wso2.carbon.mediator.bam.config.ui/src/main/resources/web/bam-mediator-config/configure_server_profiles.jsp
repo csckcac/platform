@@ -7,9 +7,7 @@
 <%@ page import="org.wso2.carbon.CarbonConstants" %>
 <%@ page import="org.wso2.carbon.mediator.bam.config.BamServerConfig" %>
 <%@ page import="org.wso2.carbon.mediator.bam.config.stream.StreamConfiguration" %>
-<%@ page import="org.wso2.carbon.bam.mediationstats.data.publisher.stub.conf.Property" %>
 <%@ page import="java.util.List" %>
-<%@ page import="java.util.ArrayList" %>
 <%@ page contentType="text/html;charset=UTF-8" language="java" %>
 
 <fmt:bundle basename="org.wso2.carbon.mediator.bam.config.ui.i18n.Resources">
@@ -29,16 +27,18 @@
 %>
 
 <%
-    String userName = "admin";
-    String password = "admin";
-    String ip = "localhost";
-    String port = "7611";
+    String userName = "";
+    String password = "";
+    String ip = "";
+    String port = "";
     String serverProfileLocation = "";
-    String isLoading = "";
+    String action = "";
+    String overwrite = "false";
     String streamTable = "";
 
+
     BamServerConfig bamServerConfig = new BamServerConfig();
-    List<StreamConfiguration> streamConfigurations = null;
+    List<StreamConfiguration> streamConfigurations;
 
     String backendServerURL = CarbonUIUtil.getServerURL(config.getServletContext(), session);
     String cookie = (String) session.getAttribute(ServerConstants.ADMIN_SERVICE_COOKIE);
@@ -47,7 +47,7 @@
 
     BamServerProfileUtils bamServerProfileUtils =
             new BamServerProfileUtils(cookie, backendServerURL, configContext, request.getLocale());
-    
+
     String tmpUserName = request.getParameter("txtUsername");
     if(tmpUserName != null && !tmpUserName.equals("")){
         userName = tmpUserName;
@@ -73,12 +73,51 @@
     if(tmpStreamTable != null && !tmpStreamTable.equals("")){
         streamTable = tmpStreamTable;
     }
+    
+    String tmpOverwrite = request.getParameter("overwrite");
+    if(tmpOverwrite != null && !tmpOverwrite.equals("")){
+        overwrite = tmpOverwrite;
+    }
 
 
     String tmpServerProfileLocation = request.getParameter("txtServerProfileLocation");
-    String tmpIsLoading = request.getParameter("hfIsLoading");
-    if(bamServerProfileUtils.isNotNullOrEmpty(tmpIsLoading) && tmpIsLoading.equals("true")){  // loading an existing configuration
-        isLoading = tmpIsLoading;
+    if(bamServerProfileUtils.isNotNullOrEmpty(tmpServerProfileLocation)){
+        serverProfileLocation = tmpServerProfileLocation;
+    }
+
+    String tmpAction = request.getParameter("hfAction");
+    if(bamServerProfileUtils.isNotNullOrEmpty(tmpAction)){
+        action = tmpAction;
+    }
+
+
+    if("save".equals(action) && !"true".equals(overwrite) && bamServerProfileUtils.resourceAlreadyExists(serverProfileLocation)){
+        %>
+
+            <script>
+                CARBON.showConfirmationDialog("Are you sure you want to overwrite the existing Server Profile Configuration?", saveOverwrite, reloadPage, true);
+
+                var commonParameterString = "txtUsername=" + "<%=request.getParameter("txtUsername")%>" + "&"
+                                              + "txtPassword=" + "<%=request.getParameter("txtPassword")%>" + "&"
+                                              + "txtIp=" + "<%=request.getParameter("txtIp")%>" + "&"
+                                              + "txtPort=" + "<%=request.getParameter("txtPort")%>" + "&"
+                                              + "hfStreamTableData=" + "<%=request.getParameter("hfStreamTableData")%>" + "&"
+                                              + "txtServerProfileLocation=" + "<%=request.getParameter("txtServerProfileLocation")%>";
+
+                function saveOverwrite(){
+                    window.location.href = "configure_server_profiles.jsp?" + commonParameterString + "&hfAction=save&overwrite=true";
+                }
+
+                function reloadPage(){
+                    window.location.href = "configure_server_profiles.jsp?" + commonParameterString + "&hfAction=load";
+                }
+            </script>
+
+        <%
+    }
+
+
+    else if("load".equals(action)){  // loading an existing configuration
         if(bamServerProfileUtils.isNotNullOrEmpty(tmpServerProfileLocation)){
             serverProfileLocation = tmpServerProfileLocation;
             if(bamServerProfileUtils.resourceAlreadyExists(serverProfileLocation)){
@@ -109,32 +148,37 @@
             <%
         }
     }
-    else{ // inserting a new configuration
-        if(bamServerProfileUtils.isNotNullOrEmpty(tmpServerProfileLocation)){
-            serverProfileLocation = tmpServerProfileLocation;
-
+    else if("save".equals(action) && !"".equals(serverProfileLocation)){ // Saving a configuration
+        if("true".equals(overwrite)){
+            bamServerProfileUtils.addResource(ip, port, userName, password, streamTable, serverProfileLocation);
+        }
+        else if (!"true".equals(overwrite)){
             if(!bamServerProfileUtils.resourceAlreadyExists(serverProfileLocation)){
-                bamServerProfileUtils.addResource(ip, port, userName, password, serverProfileLocation);
+                bamServerProfileUtils.addResource(ip, port, userName, password, streamTable, serverProfileLocation);
             }
             else {
                 %>
 
-                <script type="text/javascript">
-                    alert("Resource already exists!");
-                </script>
+                    <script type="text/javascript">
+                        alert("Resource already exists!");
+                    </script>
 
                 <%
             }
         }
+        %>
+
+            <script type="text/javascript">
+                reloadPage();
+            </script>
+
+        <%
     }
-
-    
-
-
-
 
 
 %>
+
+
 
 <%--<script type="text/javascript" src="'<%=CarbonUtils.getCarbonHome()%>' + 'sequences/js/registry-browser.js'"/>
 <script type="text/javascript" src="'<%=CarbonUtils.getCarbonHome()%>' + 'resources/js/resource_util.js'"/>
@@ -153,13 +197,9 @@
     var streamRowNum = 1;
     var propertyRowNum = 1;
 
-    function addPropertyColumn() {
+    function addPropertyRow() {
         propertyRowNum++;
-        /*var n =  + parseInt(trId.charAt(trId.length-1))+1;
-         jQuery("#"+trId+" td div.addIcon").remove();*/
-        //alert(n);
         var sId = "propertyTable_" + propertyRowNum;
-        //alert(sId);
         var tableContent = "<tr id=\"" + sId + "\">" +
                            "<td>\n" +
                            "                        <input type=\"text\" name=\"<%=PROPERTY_KEYS%>\" value=\"\">\n" +
@@ -177,13 +217,9 @@
         updatePropertyTableData();
     }
 
-    function addStreamColumn() {
+    function addStreamRow() {
         streamRowNum++;
-        /*var n =  + parseInt(trId.charAt(trId.length-1))+1;
-         jQuery("#"+trId+" td div.addIcon").remove();*/
-        //alert(n);
         var sId = "streamsTable_" + streamRowNum;
-        //alert(sId);
         var tableContent = "<tr id=\"" + sId + "\">" +
                            "<td>\n" +
                            "<input type=\"text\" name=\"<%=STREAM_NAMES%>\" value=\"\">\n" +
@@ -226,47 +262,86 @@
             if(inputs[i].value != "" && inputs[i+1].value != ""){
                 tableData = tableData + inputs[i].value + ":" + inputs[i+1].value + ";";
             }
-            /*tableData = tableData + jQuery("#propertyName")[i].value + ":"
-             + jQuery("#propertyValue")[i].value + ";" ;*/
-            /*tableData[i]["name"] = jQuery("#propertyName")[i].value;
-             tableData[i]["value"] = jQuery("#propertyValue")[i].value;*/
         }
         document.getElementById("hfPropertyTableData").value = tableData;
-        var streamRowNumber = document.getElementById("hfStreamTableRowNumber").value;
-        document.getElementById("hfStreamsTable_" + streamRowNumber).value = tableData;
-        alert("hf table : " + document.getElementById("hfStreamsTable_" + streamRowNumber).value);
+        //alert("hfPropertyTableData : " + document.getElementById("hfPropertyTableData").value);
     }
 
     function savePropertyTableData(){
+        updatePropertyTableData();
         var streamRowNumber = document.getElementById("hfStreamTableRowNumber").value;
         document.getElementById("hfStreamsTable_" + streamRowNumber).value = document.getElementById("hfPropertyTableData").value;
-        alert("Properties table : " + document.getElementById("hfStreamsTable_" + streamRowNumber).value);
+        //alert("hfStreamsTable_ : " + document.getElementById("hfStreamsTable_" + streamRowNumber).value);
         document.getElementById("propertiesTr").style.display = "none";
     }
 
     function editStreamData(rowNumber){
-        alert("rowID : " + rowNumber);
+        //alert("rowID : " + rowNumber);
         document.getElementById("propertiesTr").style.display = "";
         document.getElementById("hfStreamTableRowNumber").value = rowNumber;
-        //var properties = document.getElementById("propertyTable").getElementsByTagName("input");
-        // TODO remaining
+        loadPropertyDataTable();
+    }
+
+    function loadPropertyDataTable(){
+        emptyPropertyTable();
+        var rowNumber =  document.getElementById("hfStreamTableRowNumber").value;
+        var propertyDataString = document.getElementById("streamsTable_" + rowNumber).getElementsByTagName("input")[4].value;
+        var propertyDataArray = propertyDataString.split(";");
+        var numOfProperties = 0;
+        for(var i=0; i<propertyDataArray.length; i++){
+            if(propertyDataArray[i] != ""){
+                addPropertyRow();
+                numOfProperties++;
+            }
+        }
+        for(var i=0; i<numOfProperties; i=i+1){
+            if(propertyDataArray[i].split(":").length == 2){
+                jQuery("#propertyTable").find("tr").find("input")[2*i].value = propertyDataArray[i].split(":")[0];
+                jQuery("#propertyTable").find("tr").find("input")[2*i+1].value = propertyDataArray[i].split(":")[1];
+            }
+        }
+        updatePropertyTableData();
+    }
+
+    function emptyPropertyTable(){
+        document.getElementById("hfPropertyTableData").value = "";
+        jQuery("#propertyTable").find("tr").find("input")[0].value = "";
+        jQuery("#propertyTable").find("tr").find("input")[1].value = "";
+        var tableRowNumber = jQuery("#propertyTable").find("tr").length;
+        if(tableRowNumber > 2){
+            for(var i=2; i<tableRowNumber; i++){
+                var currentRowId = jQuery("#propertyTable").find("tr")[2].id;
+                jQuery("#" + currentRowId).remove();
+            }
+        }
+    }
+
+    function cancelPropertyTableData(){
+        emptyPropertyTable();
+        document.getElementById("propertiesTr").style.display = "none";
     }
 
     function updateStreamTableData(){
         var tableData = "", inputs, numOfInputs;
         inputs = document.getElementById("streamTable").getElementsByTagName("input");
         numOfInputs = inputs.length;
-        for(var i=0; i<numOfInputs; i=i+2){
+        for(var i=0; i<numOfInputs; i=i+5){
             if(inputs[i].value != "" && inputs[i+1].value != ""){
-                tableData = tableData + inputs[i].value + ":" + inputs[i+1].value + ";";
+                if(i != 0){
+                    tableData = tableData + "~";
+                }
+                tableData = tableData + inputs[i].value + "^"
+                                    + inputs[i+1].value + "^" + inputs[i+2].value + "^"
+                                    + inputs[i+3].value + "^" + inputs[i+4].value;
             }
-            /*tableData = tableData + jQuery("#propertyName")[i].value + ":"
-             + jQuery("#propertyValue")[i].value + ";" ;*/
-            /*tableData[i]["name"] = jQuery("#propertyName")[i].value;
-             tableData[i]["value"] = jQuery("#propertyValue")[i].value;*/
         }
         document.getElementById("hfStreamTableData").value = tableData;
-        alert("hf table : " + document.getElementById("hfStreamTableData").value);
+        //alert("hfStreamTableData : " + document.getElementById("hfStreamTableData").value);
+    }
+
+    function submitPage(){
+        updateStreamTableData();
+        document.getElementById('hfAction').value='save';
     }
 </script>
 
@@ -286,9 +361,9 @@
                     Registry
                 </td>
                 <td>
-                    <input type="text" name="txtServerProfileLocation" id="txtServerProfileLocation" value=""/>
-                    <input type="submit" value="Load Profile" onclick="document.getElementById('hfIsLoading').value='true';"/>
-                    <input type="hidden" name="hfIsLoading" id="hfIsLoading" value="false"/>
+                    <input type="text" name="txtServerProfileLocation" id="txtServerProfileLocation" value="<%=serverProfileLocation%>"/>
+                    <input type="submit" value="Load Profile" onclick="document.getElementById('hfAction').value='load';"/>
+                    <input type="hidden" name="hfAction" id="hfAction" value=""/>
                 </td>
             </tr>
             <tr>
@@ -368,11 +443,11 @@
                                     <input id="streamDescription" type="text" name="<%=STREAM_DESCRIPTION%>" value="<%=streamConfiguration.getDescription()%>"/>
                                 </td>
                                 <% if (i == 1) { %>
-                                <td><span><a onClick='javaScript:addStreamColumn()' style='background-image:
+                                <td><span><a onClick='javaScript:addStreamRow()' style='background-image:
                                         url(images/add.gif);'class='icon-link addIcon'>Add Stream</a></span>
                                     <span><a onClick='javaScript:editStreamData("<%=i%>")' style='background-image:
                                         url(images/add.gif);'class='icon-link addIcon'>Edit Stream</a></span>
-                                    <input type="hidden" id="hfStreamsTable_<%=i%>" value=""/>
+                                    <input type="hidden" id="hfStreamsTable_<%=i%>" value="<%=bamServerProfileUtils.getPropertiesString(streamConfiguration)%>"/>
                                 </td>
                                 <% } else {  %>
                                 <td>
@@ -380,7 +455,7 @@
                                         url(images/delete.gif);'class='icon-link addIcon'>Remove Stream</a></span>
                                     <span><a onClick='javaScript:editStreamData("<%=i%>")' style='background-image:
                                         url(images/add.gif);'class='icon-link addIcon'>Edit Stream</a></span>
-                                    <input type="hidden" id="hfStreamsTable_<%=i%>" value=""/>
+                                    <input type="hidden" id="hfStreamsTable_<%=i%>" value="<%=bamServerProfileUtils.getPropertiesString(streamConfiguration)%>"/>
                                 </td>
                                 <% } %>
 
@@ -406,7 +481,7 @@
                                 </td>
 
                                 <td>
-                                    <span><a onClick='javaScript:addStreamColumn()' style='background-image: url(images/add.gif);'class='icon-link addIcon'>Add Stream</a></span>
+                                    <span><a onClick='javaScript:addStreamRow()' style='background-image: url(images/add.gif);'class='icon-link addIcon'>Add Stream</a></span>
                                     <span><a onClick='javaScript:editStreamData("1")' style='background-image: url(images/add.gif);'class='icon-link addIcon'>Edit Stream</a></span>
                                     <input type="hidden" id="hfStreamsTable_1" value=""/>
                                 </td>
@@ -439,7 +514,7 @@
                             </tr>
                         </thead>
                         <tbody>
-                            <tr>
+                            <tr id="propertyTable_1">
                                 <td>
                                     <input type="text" name="<%=PROPERTY_KEYS%>" value=""/>
                                 </td>
@@ -448,12 +523,13 @@
                                 </td>
 
                                 <td>
-                                    <a onClick='javaScript:addPropertyColumn()' style='background-image: url(images/add.gif);'class='icon-link addIcon'>Add Property</a>
+                                    <a onClick='javaScript:addPropertyRow()' style='background-image: url(images/add.gif);'class='icon-link addIcon'>Add Property</a>
                                 </td>
                             </tr>
                         </tbody>
                     </table>
                     <input type="button" value="Update" onclick="savePropertyTableData()"/>
+                    <input type="button" value="Cancel" onclick="cancelPropertyTableData()"/>
                 </td>
             </tr>
 
@@ -462,7 +538,7 @@
 
             <tr>
                 <td>
-                    <input type="submit" value="Save"/>
+                    <input type="submit" value="Save" onclick="submitPage()"/>
                 </td>
             </tr>
         </table>
@@ -472,4 +548,3 @@
 
 
 </fmt:bundle>
-

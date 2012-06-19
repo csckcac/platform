@@ -34,8 +34,10 @@
     BamMediator bamMediator = (BamMediator) mediator;
 
     bamMediator.setServerProfilePath(request.getParameter("serverProfile"));
-    bamMediator.setStreamName(request.getParameter("streamName"));
-    bamMediator.setStreamVersion(request.getParameter("streamVersion"));
+    /*bamMediator.setStreamName(request.getParameter("streamName"));
+    bamMediator.setStreamVersion(request.getParameter("streamVersion"));*/
+    bamMediator.setStreamName(request.getParameter("streamNameList"));
+    bamMediator.setStreamVersion(request.getParameter("streamVersionList"));
 
 %>
 

@@ -34,12 +34,12 @@ public class BamServerConfigBuilder {
 
     private BamServerConfig bamServerConfig = new BamServerConfig();
 
-    public boolean createBamServerConfig(OMElement bamServerConfig){
-        boolean credentialsOk = this.processCredentialElement(bamServerConfig);
-        boolean connectionOk = this.processConnectionElement(bamServerConfig);
-        /*boolean streamsOk = this.processStreamsElement(bamServerConfig);
-        return credentialsOk && connectionOk && streamsOk;*/
-        return credentialsOk && connectionOk;
+    public boolean createBamServerConfig(OMElement bamServerConfigElement){
+        boolean credentialsOk = this.processCredentialElement(bamServerConfigElement);
+        boolean connectionOk = this.processConnectionElement(bamServerConfigElement);
+        boolean streamsOk = this.processStreamsElement(bamServerConfigElement);
+        return credentialsOk && connectionOk && streamsOk;
+        /*return credentialsOk && connectionOk;*/
     }
 
 
@@ -129,8 +129,8 @@ public class BamServerConfigBuilder {
         return true;
     }
 
-    private boolean processStreamsElement(OMElement bamServerConfig){
-        OMElement streamsElement = bamServerConfig.getFirstChildWithName(
+    private boolean processStreamsElement(OMElement bamServerConfigElement){
+        OMElement streamsElement = bamServerConfigElement.getFirstChildWithName(
                 new QName(SynapseConstants.SYNAPSE_NAMESPACE, "streams"));
         if(streamsElement != null){
             return this.processStreamElements(streamsElement);
@@ -148,7 +148,7 @@ public class BamServerConfigBuilder {
             streamElement = (OMElement)itr.next();
             streamConfiguration = new StreamConfiguration();
             if (streamElement != null && this.processStreamElement(streamElement, streamConfiguration)){
-
+                this.bamServerConfig.getStreamConfigurations().add(streamConfiguration);
             }
             else {
                 return false;
@@ -168,15 +168,14 @@ public class BamServerConfigBuilder {
             streamConfiguration.setNickname(nickNameAttr.getAttributeValue());
             streamConfiguration.setDescription(descriptionAttr.getAttributeValue());
 
-            boolean payloadElementOk = this.processPayloadElement(streamElement, streamConfiguration);
+            /*boolean payloadElementOk = this.processPayloadElement(streamElement, streamConfiguration);
 
             boolean propertiesElementOk = this.processPropertiesElement(streamElement, streamConfiguration);
         
-            return (payloadElementOk & propertiesElementOk);
+            return (payloadElementOk & propertiesElementOk);*/
+            return this.processPropertiesElement(streamElement, streamConfiguration);
         }
-        else {
-            return false;
-        }
+        return false; // Incomplete attributes are not accepted
     }
 
     private boolean processPayloadElement(OMElement streamElement, StreamConfiguration streamConfiguration){
@@ -222,7 +221,7 @@ public class BamServerConfigBuilder {
         if(propertiesElement != null){
             return this.processPropertyElements(propertiesElement, streamConfiguration);
         }
-        return false;
+        return true; // Properties are not mandatory
     }
     
     private boolean processPropertyElements(OMElement propertiesElement, StreamConfiguration streamConfiguration){
@@ -230,27 +229,25 @@ public class BamServerConfigBuilder {
         Iterator itr = propertiesElement.getChildrenWithName(new QName("property"));
         while (itr.hasNext()){
             propertyElement = (OMElement)itr.next();
-            if (propertyElement != null && this.processPropertyElement(propertyElement, streamConfiguration)){
-
-            }
-            else {
+            if (!(propertyElement != null && this.processPropertyElement(propertyElement, streamConfiguration))){
                 return false;
             }
         }
-        return true;
+        return true; // Empty Property elements are accepted
     }
 
     private boolean processPropertyElement(OMElement propertyElement, StreamConfiguration streamConfiguration){
         OMAttribute nameAttr = propertyElement.getAttribute(new QName("name"));
         OMAttribute valueAttr = propertyElement.getAttribute(new QName("value"));
-        if(nameAttr != null && valueAttr != null && !nameAttr.getAttributeValue().equals("") && !valueAttr.getAttributeValue().equals("")){
+        if(nameAttr != null && valueAttr != null && !nameAttr.getAttributeValue().equals("") &&
+           !valueAttr.getAttributeValue().equals("")){
             Property property = new Property();
             property.setKey(nameAttr.getAttributeValue());
             property.setValue(valueAttr.getAttributeValue());
             streamConfiguration.getProperties().add(property);
             return true;
         }
-        return false;
+        return false; // Empty Property elements and incomplete Property parameters are not accepted
     }
 
     public String getServerProfilePathFromXml(OMElement omElement){

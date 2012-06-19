@@ -59,9 +59,6 @@ public class URLRulesMediator extends AbstractMediator {
 	        return condition;
 	}
 
-	public void setCondition(String condition) {
-		this.condition = condition;
-	}
 
 	public Evaluator getEvaluator() {
 		return evaluator;
@@ -71,6 +68,10 @@ public class URLRulesMediator extends AbstractMediator {
 		this.evaluator = evaluator;
 	}
 
+	public void setEvaluator() {
+		this.evaluator = null;
+	}
+	
 	public void setEvaluator(OMElement evaluatorElem) throws EvaluatorException {
 		evaluator =
 		            EvaluatorFactoryFinder.getInstance()

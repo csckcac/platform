@@ -1,4 +1,5 @@
 
+<%@page import="org.apache.synapse.commons.evaluators.config.EvaluatorFactory"%>
 <%@ page language="java" contentType="text/html; charset=ISO-8859-1"
 	pageEncoding="ISO-8859-1"%>
 <%--
@@ -43,18 +44,19 @@
 	if (request.getParameter("mediator.urlrewrite.condition") != null &&
 	    !request.getParameter("mediator.urlrewrite.condition").trim().equals("")) {
 		  try {
-			  condition = request.getParameter("mediator.urlrewrite.condition");
+			    condition = request.getParameter("mediator.urlrewrite.condition");
 	            OMElement evaluatorElem = org.apache.axiom.om.util.AXIOMUtil.stringToOM(condition);
 	            urlRulesMediator.setEvaluator(EvaluatorFactoryFinder.getInstance().getEvaluator(evaluatorElem));
+	        
 	        } catch (XMLStreamException xse) {
 	            throw new RuntimeException("Cannot Evaluate : Non xml content");
 
 	        } catch (EvaluatorException ee) {
 	            throw new RuntimeException("Cannot Evaluate : Evaluator Exception");
 	        }
-	//	condition = request.getParameter("mediator.urlrewrite.condition");
-	//	urlRulesMediator.setCondition(condition.trim());
-	}
+		} else {
+			urlRulesMediator.setEvaluator();
+		}
 
 	// set rules
 	String actionCountParameter = request.getParameter("actionCount");

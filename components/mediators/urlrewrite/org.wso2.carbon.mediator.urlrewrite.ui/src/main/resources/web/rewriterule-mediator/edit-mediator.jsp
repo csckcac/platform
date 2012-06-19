@@ -50,8 +50,8 @@
 			// rule list			
 			String actionTableStyle = actions.isEmpty() ? "display:none;" : "";	
 			
-			 String condition = "";
-			if (urlRulesMediator.getEvaluator() != null) {
+			String condition = "";
+			if ((urlRulesMediator.getEvaluator() != null)) {
 		        condition = urlRulesMediator.getCondition();
 		        XMLPrettyPrinter xmlPrettyPrinter = new XMLPrettyPrinter(new ByteArrayInputStream(condition.getBytes()));
 		        condition= xmlPrettyPrinter.xmlFormat();
@@ -77,8 +77,7 @@
 				<td style="padding-right: 5px;">
 				<textarea cols="60" rows="10" id="mediator.urlrewrite.condition"
 					name="mediator.urlrewrite.condition" >
-					<%=urlRulesMediator.getEvaluator() != null ? condition
-				                                                 : ""%>
+					<%=condition%>
 					</textarea>
 					 </td>
 			</tr>

@@ -153,6 +153,7 @@
 		<module>url-mapper</module>
 		<module>load-balancer</module>
         <module>cassandra-explorer</module>
+        <module>event-bridge</module>
             </modules>
 	    <build>
 	        <plugins>

@@ -13,7 +13,7 @@ Standalone Mode
 3. To start CSS one can use either wso2server.sh or daemon.sh in all Unix
    systems & wso2server.bat file on Windows operating systems.
 
-4. Either of the following commands can be used to start ESB
+4. Either of the following commands can be used to start CSS
       i)  ./wso2server.sh {console|start|stop|restart|status|dump|version}
      ii)  ./daemon.sh {console|start|stop|restart|status|dump}
     iii)  wso2server.bat {start|stop|version}
@@ -21,14 +21,14 @@ Standalone Mode
         Usage: wso2server.sh [command] [options] [system-properties]
 
             command:
-                --run		    Run the ESB server
-                --start		    Start ESB as a Unix daemon in the background
-                --console	    Start ESB as a Unix daemon in the foreground
-                --stop		    Stop the ESB Unix daemon
-                --status	    Get the status of the ESB Unix daemon
-                --dump		    Print a thread dump of the ESB Unix daemon
-                --restart	    Restart the ESB Unix daemon
-                --version	    What version of the ESB server are you running
+                --run		    Run the CSS server
+                --start		    Start CSS as a Unix daemon in the background
+                --console	    Start CSS as a Unix daemon in the foreground
+                --stop		    Stop the CSS Unix daemon
+                --status	    Get the status of the CSS Unix daemon
+                --dump		    Print a thread dump of the CSS Unix daemon
+                --restart	    Restart the CSS Unix daemon
+                --version	    What version of the CSS server are you running
 		--n 		    Start Multiple Instances of the same server after you 
 				    have successfully installed the Multiple-instances features
 				    from a feature repo.
@@ -84,7 +84,7 @@ System Requirements
      management console to run.
 5. To compile and run the sample clients, an Ant version is required. Ant 1.7.0
    version is recommended
-6. To build WSO2 ESB from the Source distribution, it is necessary that you have
+6. To build WSO2 CSS from the Source distribution, it is necessary that you have
    JDK 1.5.x version and Maven 2.1.0 or later
 
 For more details see

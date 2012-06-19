@@ -46,6 +46,7 @@ import java.util.concurrent.ConcurrentHashMap;
  */
 public class EventDispatcher {
 
+    public static final String HACK_DOMAIN_CONSTANT = "-1234";
     private List<AgentCallback> subscribers = new ArrayList<AgentCallback>();
     private AbstractStreamDefinitionStore streamDefinitionStore;
     private Map<String, EventStreamTypeHolder> eventStreamTypeCache = new ConcurrentHashMap<String, EventStreamTypeHolder>();
@@ -90,15 +91,18 @@ public class EventDispatcher {
         EventStreamTypeHolder eventStreamTypeHolder;
         // this will occur only outside of carbon (ex: Siddhi)
         if (domainName == null) {
-            domainName = "-1234";
+            domainName = HACK_DOMAIN_CONSTANT;
         }
-        if (eventStreamTypeCache.containsKey(domainName)) {
-            eventStreamTypeHolder = eventStreamTypeCache.get(domainName);
-        } else {
-            eventStreamTypeHolder = new EventStreamTypeHolder(domainName);
-            eventStreamTypeCache.put(domainName, eventStreamTypeHolder);
-        }
+
+//        if (eventStreamTypeCache.containsKey(domainName)) {
+//            eventStreamTypeHolder = eventStreamTypeCache.get(domainName);
+//        } else {
+//            eventStreamTypeHolder = new EventStreamTypeHolder(domainName);
+//            eventStreamTypeCache.put(domainName, eventStreamTypeHolder);
+//        }
+        eventStreamTypeHolder = new EventStreamTypeHolder(domainName);
         updateEventStreamTypeHolder(eventStreamTypeHolder, eventStreamDefinition);
+        eventStreamTypeCache.put(domainName, eventStreamTypeHolder);
     }
 
 
@@ -114,7 +118,11 @@ public class EventDispatcher {
 
     private EventStreamTypeHolder getStreamDefinitionHolder(Credentials credentials)
             throws StreamDefinitionNotFoundException {
-        EventStreamTypeHolder eventStreamTypeHolder = eventStreamTypeCache.get(credentials.getDomainName());
+        // this will occur only outside of carbon (ex: Siddhi)
+
+        String domainName = (credentials.getDomainName() == null) ? HACK_DOMAIN_CONSTANT : credentials.getDomainName();
+
+        EventStreamTypeHolder eventStreamTypeHolder = eventStreamTypeCache.get(domainName);
         if (eventStreamTypeHolder != null) {
             return eventStreamTypeHolder;
         } else {

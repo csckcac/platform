@@ -12,7 +12,7 @@
     <groupId>org.wso2.carbon</groupId>
     <artifactId>org.wso2.carbon.eventbridge.streamdefn.cassandra</artifactId>
     <packaging>bundle</packaging>
-    <name>WSO2 Carbon - BAM Agent Event Reciever</name>
+    <name>WSO2 Carbon - Event Bridge - Cassandra Stream Defn Store</name>
     <description>Agent Event Receiver</description>
     <url>http://wso2.org</url>
 

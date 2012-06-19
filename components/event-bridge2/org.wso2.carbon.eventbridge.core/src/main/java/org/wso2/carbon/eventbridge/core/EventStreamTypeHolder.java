@@ -19,17 +19,21 @@ package org.wso2.carbon.eventbridge.core;
 
 import org.wso2.carbon.eventbridge.commons.AttributeType;
 
+import java.util.Collections;
+import java.util.HashMap;
 import java.util.Map;
-import java.util.concurrent.ConcurrentHashMap;
 
 /**
  * Event stream data type holder
  */
 public class EventStreamTypeHolder {
     private String domainName;
-    private Map<String, AttributeType[]> metaDataTypeMap = new ConcurrentHashMap<String, AttributeType[]>();
-    private Map<String, AttributeType[]> correlationDataTypeMap = new ConcurrentHashMap<String, AttributeType[]>();
-    private Map<String, AttributeType[]> payloadDataTypeMap = new ConcurrentHashMap<String, AttributeType[]>();
+    private Map<String, AttributeType[]> metaDataTypeMap =
+            Collections.synchronizedMap(new HashMap<String, AttributeType[]>());
+    private Map<String, AttributeType[]> correlationDataTypeMap =
+            Collections.synchronizedMap(new HashMap<String, AttributeType[]>());
+    private Map<String, AttributeType[]> payloadDataTypeMap =
+            Collections.synchronizedMap(new HashMap<String, AttributeType[]>());
 
 //    public EventStreamTypeHolder(String username) {
 //        String[] userNameParts = username.split("@");

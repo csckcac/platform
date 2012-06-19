@@ -29,7 +29,6 @@ import org.wso2.andes.url.URLSyntaxException;
 import javax.jms.*;
 import javax.naming.*;
 import javax.naming.spi.ObjectFactory;
-import java.awt.print.Book;
 import java.net.InetAddress;
 import java.net.UnknownHostException;
 import java.util.Hashtable;
@@ -371,25 +370,13 @@ public class AMQConnectionFactory implements ConnectionFactory, QueueConnectionF
 
     public TopicConnection createTopicConnection() throws JMSException
     {
-
-        if(removeVersion91 == null) {
-            removeVersion91 = new ThreadLocal<Boolean>();
-            removeVersion91.set(new Boolean(true));
-        } else {
-            removeVersion91.set(new Boolean(true));
-        }
-
+        System.setProperty("qpid.dest_syntax" , "BURL");
         return (TopicConnection) createConnection();
     }
 
     public TopicConnection createTopicConnection(String username, String password) throws JMSException
     {
-        if(removeVersion91 == null) {
-            removeVersion91 = new ThreadLocal<Boolean>();
-            removeVersion91.set(new Boolean(true));
-        } else {
-            removeVersion91.set(new Boolean(true));
-        }
+        System.setProperty("qpid.dest_syntax" , "BURL");
         return (TopicConnection) createConnection(username, password);
     }
 

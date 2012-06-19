@@ -48,11 +48,13 @@ public class IdentityUtil {
 	private static Document importerDoc = null;
 	private static final String HMAC_SHA1_ALGORITHM = "HmacSHA1";
 
-	/**
-	 * 
-	 * @param key
-	 * @return
-	 */
+    /**
+     * Read configuration elements from the identity.xml
+     * @param key Element Name as specified from the parent elements in the XML structure.
+     *            To read the element value of b in {@code<a><b>text</b></a>}, the property
+     *            name should be passed as "a.b"
+     * @return Element text value, "text" for the above element.
+     */
 	public static String getProperty(String key) {
 		Object value = configuration.get(key);
 		if (value instanceof ArrayList) {
@@ -82,7 +84,7 @@ public class IdentityUtil {
 			int rawValue = (hashId[i] + 128) % 32;
 			returnChars[i] = ppidDisplayCharMap[rawValue];
 		}
-		StringBuffer sb = new StringBuffer();
+		StringBuilder sb = new StringBuilder();
 		sb.append(returnChars, 0, 3);
 		sb.append("-");
 		sb.append(returnChars, 3, 4);
@@ -135,7 +137,7 @@ public class IdentityUtil {
 			SecureRandom prng = SecureRandom.getInstance("SHA1PRNG");
 
 			// random number
-			String randomNum = new Integer(prng.nextInt()).toString();
+			String randomNum = Integer.toString(prng.nextInt());
 			MessageDigest sha = MessageDigest.getInstance("SHA-1");
 			byte[] digest = sha.digest(randomNum.getBytes());
 

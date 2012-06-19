@@ -63,6 +63,18 @@ public class BPELFunctionalityTestCase {
                                  1, expectedOutput, BPSTestUtils.TWO_WAY);
     }
 
+    @Test(groups = {"wso2.bps"}, description = "Dynamic Partner Links and Dynamic Addressing in BPEL")
+    public void dynamicPartner() throws XMLStreamException, AxisFault, InterruptedException {
+        String payload = "<ns2:dummy xmlns:ns2=\"http://ode/bpel/responder.wsdl\">fire!</ns2:dummy>";
+        String operation = "execute";
+        String serviceName = "DynMainService";
+        List<String> expectedOutput = new ArrayList<String>();
+        expectedOutput.add(">OK<");
+
+        BPSTestUtils.sendRequest(SERVICE_URL_PREFIX + serviceName, operation, payload,
+                                 1, expectedOutput, BPSTestUtils.TWO_WAY);
+    }
+
     @Test(groups = {"wso2.bps"}, description = "ifElse BPEL functionality test case")
     public void ifElse() throws XMLStreamException, AxisFault, InterruptedException {
         // test <if>

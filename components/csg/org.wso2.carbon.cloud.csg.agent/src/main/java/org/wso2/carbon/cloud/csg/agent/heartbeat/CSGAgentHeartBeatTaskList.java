@@ -38,7 +38,7 @@ public class CSGAgentHeartBeatTaskList {
         scheduledHeartBeatTasksList.remove(task);    
     }
     
-    public static boolean isScheduledHeartBeatTaskAvilable(String task){
+    public static boolean isScheduledHeartBeatTaskAvailable(String task){
         return scheduledHeartBeatTasksList.contains(task);
     }
 }

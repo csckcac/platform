@@ -13,7 +13,7 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-package org.wso2.carbon.cloud.csg.agent;
+package org.wso2.carbon.cloud.csg.agent.transport;
 
 import org.apache.axis2.AxisFault;
 import org.wso2.carbon.cloud.csg.common.CSGUtils;
@@ -27,7 +27,7 @@ import java.util.concurrent.LinkedBlockingQueue;
 /**
  * Represent the transport level exchange buffers for workers ( csg polling transport)
  */
-public class CSGAgentBuffers {
+public class CSGPollingTransportBuffers {
 
     /**
      * The request message buffer which holds the request messages

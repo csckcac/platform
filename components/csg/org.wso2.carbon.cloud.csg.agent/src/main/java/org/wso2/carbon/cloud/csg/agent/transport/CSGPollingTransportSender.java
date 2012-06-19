@@ -16,20 +16,18 @@
 package org.wso2.carbon.cloud.csg.agent.transport;
 
 import org.apache.axis2.AxisFault;
-import org.apache.axis2.Constants;
 import org.apache.axis2.context.ConfigurationContext;
 import org.apache.axis2.context.MessageContext;
 import org.apache.axis2.description.TransportOutDescription;
 import org.apache.axis2.description.WSDL2Constants;
 import org.apache.axis2.transport.OutTransportInfo;
 import org.apache.axis2.transport.base.AbstractTransportSender;
-import org.wso2.carbon.cloud.csg.agent.CSGAgentBuffers;
+import org.wso2.carbon.cloud.csg.agent.transport.CSGPollingTransportBuffers;
 import org.wso2.carbon.cloud.csg.common.CSGConstant;
 import org.wso2.carbon.cloud.csg.common.thrift.gen.Message;
 
 import javax.xml.stream.XMLStreamException;
 import java.io.ByteArrayOutputStream;
-import java.util.Map;
 
 /**
  * CSG Polling transport sender implementation
@@ -75,7 +73,7 @@ public class CSGPollingTransportSender extends AbstractTransportSender {
         }
         thriftMsg.setMessage(out.toByteArray());
 
-        CSGAgentBuffers buf = (CSGAgentBuffers)
+        CSGPollingTransportBuffers buf = (CSGPollingTransportBuffers)
                 msgCtx.getConfigurationContext().getProperty(CSGConstant.CSG_POLLING_TRANSPORT_BUF_KEY);
 
         buf.addResponseMessage(thriftMsg);

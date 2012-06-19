@@ -208,7 +208,7 @@ public class CSGPollingTransportTaskManager {
         this.messageProcessingBlockSize = messageProcessingBlockSize;
     }
 
-    public synchronized void start(CSGAgentBuffers buffers) {
+    public synchronized void start(CSGPollingTransportBuffers buffers) {
         // start the worker task for message dispatching from transport queue to actual
         // processing pool
         for (int i = 0; i < noOfDispatchingTask; i++) {
@@ -254,12 +254,12 @@ public class CSGPollingTransportTaskManager {
 
         private int requestBlockSize;
 
-        private CSGAgentBuffers buffers;
+        private CSGPollingTransportBuffers buffers;
 
         private MessageExchangeTask(CSGThriftClient client,
                                     int requestBlockSize,
                                     int responseBlockSize,
-                                    CSGAgentBuffers buffers) {
+                                    CSGPollingTransportBuffers buffers) {
             this.client = client;
             this.requestBlockSize = requestBlockSize;
             this.responseBlockSize = responseBlockSize;
@@ -276,7 +276,7 @@ public class CSGPollingTransportTaskManager {
             workerState = STATE.STARTED;
             //if this service failed earlier make sure we start from fresh
             String taskKey = hostName + ":" + port;
-            if (CSGAgentHeartBeatTaskList.isScheduledHeartBeatTaskAvilable(taskKey)) {
+            if (CSGAgentHeartBeatTaskList.isScheduledHeartBeatTaskAvailable(taskKey)) {
                 CSGAgentHeartBeatTaskList.removeScheduledHeartBeatTask(taskKey);
             }
 
@@ -334,7 +334,7 @@ public class CSGPollingTransportTaskManager {
         private void scheduleHeartBeatTaskIfRequired(String host, int port) {
             // scheduled a heat beat task for this host, if not already done
             String heartBeatTaskKey = host + ":" + port;
-            if (!CSGAgentHeartBeatTaskList.isScheduledHeartBeatTaskAvilable(heartBeatTaskKey)) {
+            if (!CSGAgentHeartBeatTaskList.isScheduledHeartBeatTaskAvailable(heartBeatTaskKey)) {
                 CSGAgentHeartBeatTaskList.addScheduledHeartBeatTask(heartBeatTaskKey);
                 workerPool.execute(new CSGAgentHeartBeatTask(
                         subject,
@@ -351,9 +351,9 @@ public class CSGPollingTransportTaskManager {
      * processing logic
      */
     private final class MessageDispatchTask implements Runnable {
-        private CSGAgentBuffers buffers;
+        private CSGPollingTransportBuffers buffers;
 
-        private MessageDispatchTask(CSGAgentBuffers buffers) {
+        private MessageDispatchTask(CSGPollingTransportBuffers buffers) {
             this.buffers = buffers;
         }
 
@@ -373,9 +373,9 @@ public class CSGPollingTransportTaskManager {
     private final class MessageProcessingTask implements Runnable {
         private Message message;
         private boolean isSOAP11;
-        private CSGAgentBuffers buffers;
+        private CSGPollingTransportBuffers buffers;
 
-        private MessageProcessingTask(Message message, CSGAgentBuffers buffers) {
+        private MessageProcessingTask(Message message, CSGPollingTransportBuffers buffers) {
             this.message = message;
             this.buffers = buffers;
         }
@@ -450,7 +450,7 @@ public class CSGPollingTransportTaskManager {
         }
 
         private void handleFaultMessage(Message originalMsg,
-                                        CSGAgentBuffers buffers,
+                                        CSGPollingTransportBuffers buffers,
                                         AxisFault axisFault) throws Exception {
             Message thriftMsg = new Message();
             thriftMsg.setMessageId(originalMsg.getMessageId());

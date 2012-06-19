@@ -25,8 +25,6 @@ import org.wso2.carbon.cloud.csg.agent.observer.CSGAgentSubjectImpl;
 import org.wso2.carbon.cloud.csg.common.CSGConstant;
 import org.wso2.carbon.cloud.csg.common.CSGUtils;
 
-import java.util.*;
-
 /**
  * CSG Polling Transport receiver implementation
  */
@@ -48,7 +46,7 @@ public class CSGPollingTransportReceiver
     protected void doInit() throws AxisFault {
         // create the transport buffers
         getConfigurationContext().setProperty(CSGConstant.CSG_POLLING_TRANSPORT_BUF_KEY,
-                new CSGAgentBuffers());
+                new CSGPollingTransportBuffers());
         subject = new CSGAgentSubjectImpl();
 
         csgWorkerPool = WorkerPoolFactory.getWorkerPool(
@@ -75,7 +73,7 @@ public class CSGPollingTransportReceiver
         CSGPollingTransportTaskManager tm = csgThriftEndpoint.getTaskManager();
         // create transport buffer per deployed task so that there is no need to
         // maintain multiple queues for request messages for each task
-        CSGAgentBuffers buffers = (CSGAgentBuffers)
+        CSGPollingTransportBuffers buffers = (CSGPollingTransportBuffers)
                 getConfigurationContext().getProperty(CSGConstant.CSG_POLLING_TRANSPORT_BUF_KEY);
 
         tm.start(buffers);

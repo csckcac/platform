@@ -26,7 +26,7 @@ import org.wso2.carbon.mediator.bam.config.BamServerConfig;
 import org.wso2.carbon.mediator.bam.config.BamServerConfigBuilder;
 import org.wso2.carbon.mediator.bam.config.BamServerConfigXml;
 import org.wso2.carbon.mediator.bam.config.stream.StreamConfiguration;
-import org.wso2.carbon.bam.mediationstats.data.publisher.stub.conf.Property;
+import org.wso2.carbon.mediator.bam.config.stream.Property;
 
 import javax.xml.stream.XMLStreamException;
 import java.io.ByteArrayInputStream;

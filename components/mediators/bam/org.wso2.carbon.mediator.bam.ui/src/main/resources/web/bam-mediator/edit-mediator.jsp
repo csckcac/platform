@@ -20,13 +20,8 @@
 <%@ page import="org.wso2.carbon.mediator.service.ui.Mediator" %>
 <%@ page import="org.wso2.carbon.sequences.ui.util.SequenceEditorHelper" %>
 <%@ page import="org.wso2.carbon.sequences.ui.util.ns.NameSpacesRegistrar" %>
-<%@ page import="java.util.List" %>
 <%@ taglib uri="http://java.sun.com/jsp/jstl/fmt" prefix="fmt" %>
 <%@ taglib uri="http://wso2.org/projects/carbon/taglibs/carbontags.jar" prefix="carbon" %>
-
-<%@ page import="org.wso2.carbon.bam.mediationstats.data.publisher.stub.conf.Property" %>
-<%@ page import="java.util.ArrayList" %>
-
 
 <%
     Mediator mediator = SequenceEditorHelper.getEditingMediator(request, session);

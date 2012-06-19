@@ -21,10 +21,6 @@
 <%@ page import="org.wso2.carbon.sequences.ui.util.SequenceEditorHelper" %>
 <%@ page import="org.wso2.carbon.sequences.ui.util.ns.XPathFactory" %>
 
-<%@ page import="org.wso2.carbon.bam.mediationstats.data.publisher.stub.conf.Property" %>
-<%@ page import="java.util.List" %>
-<%@ page import="java.util.ArrayList" %>
-
 <%
     Mediator mediator = SequenceEditorHelper.getEditingMediator(request, session);
     if (!(mediator instanceof BamMediator)) {
@@ -34,8 +30,6 @@
     BamMediator bamMediator = (BamMediator) mediator;
 
     bamMediator.setServerProfilePath(request.getParameter("serverProfile"));
-    /*bamMediator.setStreamName(request.getParameter("streamName"));
-    bamMediator.setStreamVersion(request.getParameter("streamVersion"));*/
     bamMediator.setStreamName(request.getParameter("streamNameList"));
     bamMediator.setStreamVersion(request.getParameter("streamVersionList"));
 

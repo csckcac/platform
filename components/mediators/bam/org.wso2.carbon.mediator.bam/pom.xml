@@ -45,6 +45,7 @@
                         <Bundle-Description>${project.description}</Bundle-Description>
                         <Bundle-SymbolicName>${project.artifactId}</Bundle-SymbolicName>
                         <Export-Package>
+                            !org.wso2.carbon.mediator.bam.config.*,
                             org.wso2.carbon.mediator.bam.*,
                         </Export-Package>
                         <Import-Package>
@@ -52,7 +53,6 @@
                             javax.xml.namespace; version=0.0.0,
                             org.apache.commons.logging.*;version="1.0.4",
                             org.osgi.framework,
-                            org.wso2.carbon.bam.mediationstats.data.publisher.stub.*;version="${carbon.platform.package.import.version.range}",
                             org.wso2.carbon.mediator.bam.config,
                             *;resolution:=optional,
                         </Import-Package>
@@ -129,7 +129,6 @@
     </dependencies>
 
     <properties>
-        <wso2carbon.version.bam-data-publishers>${wso2carbon.version}</wso2carbon.version.bam-data-publishers>
         <wso2carbon.version.bam-mediator-config>${wso2carbon.version}</wso2carbon.version.bam-mediator-config>
     </properties>
 </project>

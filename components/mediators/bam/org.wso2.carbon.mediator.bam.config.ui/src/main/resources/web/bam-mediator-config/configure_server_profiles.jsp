@@ -90,32 +90,200 @@
         action = tmpAction;
     }
 
+    %>
+
+        <%--<script type="text/javascript" src="'<%=CarbonUtils.getCarbonHome()%>' + 'sequences/js/registry-browser.js'"/>
+        <script type="text/javascript" src="'<%=CarbonUtils.getCarbonHome()%>' + 'resources/js/resource_util.js'"/>
+        <script type="text/javascript" src="'<%=CarbonUtils.getCarbonHome()%>' + 'yui/build/connection/connection-min.js'"/>--%>
+
+        <script id="source" type="text/javascript">
+            var commonParameterString = "txtUsername=" + "<%=request.getParameter("txtUsername")%>" + "&"
+                                                + "txtPassword=" + "<%=request.getParameter("txtPassword")%>" + "&"
+                                                + "txtIp=" + "<%=request.getParameter("txtIp")%>" + "&"
+                                                + "txtPort=" + "<%=request.getParameter("txtPort")%>" + "&"
+                                                + "hfStreamTableData=" + "<%=request.getParameter("hfStreamTableData")%>" + "&"
+                                                + "txtServerProfileLocation=" + "<%=request.getParameter("txtServerProfileLocation")%>";
+
+            function saveOverwrite(){
+                window.location.href = "configure_server_profiles.jsp?" + commonParameterString + "&hfAction=save&overwrite=true";
+            }
+
+            function reloadPage(){
+                window.location.href = "configure_server_profiles.jsp?" + commonParameterString + "&hfAction=load";
+            }
+
+            function showHideDiv(divId) {
+                var theDiv = document.getElementById(divId);
+                if (theDiv.style.display == "none") {
+                    theDiv.style.display = "";
+                } else {
+                    theDiv.style.display = "none";
+                }
+            }
+
+            var streamRowNum = 1;
+            var propertyRowNum = 1;
+
+            function addPropertyRow() {
+                propertyRowNum++;
+                var sId = "propertyTable_" + propertyRowNum;
+                var tableContent = "<tr id=\"" + sId + "\">" +
+                                   "<td>\n" +
+                                   "                        <input type=\"text\" name=\"<%=PROPERTY_KEYS%>\" value=\"\">\n" +
+                                   "                    </td>\n" +
+                                   "                    <td>\n" +
+                                   "                        <input type=\"text\" name=\"<%=PROPERTY_VALUES%>\" value=\"\">\n" +
+                                   "                    </td>" +
+                                   "<td>\n" +
+                                   "                        <a onClick='javaScript:removePropertyColumn(\"" + sId + "\")'" +
+                                   "style='background-image: url(images/delete.gif);'class='icon-link addIcon'>Remove Property</a>\n" +
+                                   "                    </td>" +
+                                   "</tr>";
+
+                jQuery("#propertyTable").append(tableContent);
+                updatePropertyTableData();
+            }
+
+            function addStreamRow() {
+                streamRowNum++;
+                var sId = "streamsTable_" + streamRowNum;
+                var tableContent = "<tr id=\"" + sId + "\">" +
+                                   "<td>\n" +
+                                   "<input type=\"text\" name=\"<%=STREAM_NAMES%>\" value=\"\">\n" +
+                                   "</td>\n" +
+                                   "<td>\n" +
+                                   "<input type=\"text\" name=\"<%=STREAM_VERSIONS%>\" value=\"\">\n" +
+                                   "</td>" +
+                                   "<td>\n" +
+                                   "<input type=\"text\" name=\"<%=STREAM_NICKNAME%>\" value=\"\">\n" +
+                                   "</td>\n" +
+                                   "<td>\n" +
+                                   "<input type=\"text\" name=\"<%=STREAM_DESCRIPTION%>\" value=\"\">\n" +
+                                   "</td>" +
+                                   "<td>\n" +
+                                   "<span><a onClick='javaScript:removeStreamColumn(\"" + sId + "\")'" +
+                                   "style='background-image: url(images/delete.gif);'class='icon-link addIcon'>Remove Stream</a></span>\n" +
+                                   "<span><a onClick='javaScript:editStreamData(\"" + streamRowNum + "\")''" +
+                                   "style='background-image: url(images/delete.gif);'class='icon-link addIcon'>Edit Stream</a></span>\n" +
+                                   "</td>" +
+                                   "</tr>";
+
+                jQuery("#streamTable").append(tableContent);
+                updateStreamTableData();
+            }
+
+            function removeStreamColumn(id) {
+                jQuery("#" + id).remove();
+            }
+
+            function removePropertyColumn(id) {
+                jQuery("#" + id).remove();
+                updatePropertyTableData();
+            }
+
+            function updatePropertyTableData(){
+                var tableData = "", inputs, numOfInputs;
+                inputs = document.getElementById("propertyTable").getElementsByTagName("input");
+                numOfInputs = inputs.length;
+                for(var i=0; i<numOfInputs; i=i+2){
+                    if(inputs[i].value != "" && inputs[i+1].value != ""){
+                        tableData = tableData + inputs[i].value + ":" + inputs[i+1].value + ";";
+                    }
+                }
+                document.getElementById("hfPropertyTableData").value = tableData;
+                //alert("hfPropertyTableData : " + document.getElementById("hfPropertyTableData").value);
+            }
+
+            function savePropertyTableData(){
+                updatePropertyTableData();
+                var streamRowNumber = document.getElementById("hfStreamTableRowNumber").value;
+                document.getElementById("hfStreamsTable_" + streamRowNumber).value = document.getElementById("hfPropertyTableData").value;
+                //alert("hfStreamsTable_ : " + document.getElementById("hfStreamsTable_" + streamRowNumber).value);
+                document.getElementById("propertiesTr").style.display = "none";
+            }
+
+            function editStreamData(rowNumber){
+                //alert("rowID : " + rowNumber);
+                document.getElementById("propertiesTr").style.display = "";
+                document.getElementById("hfStreamTableRowNumber").value = rowNumber;
+                loadPropertyDataTable();
+            }
+
+            function loadPropertyDataTable(){
+                emptyPropertyTable();
+                var rowNumber =  document.getElementById("hfStreamTableRowNumber").value;
+                var propertyDataString = document.getElementById("streamsTable_" + rowNumber).getElementsByTagName("input")[4].value;
+                var propertyDataArray = propertyDataString.split(";");
+                var numOfProperties = 0;
+                for(var i=0; i<propertyDataArray.length; i++){
+                    if(propertyDataArray[i] != ""){
+                        addPropertyRow();
+                        numOfProperties++;
+                    }
+                }
+                for(var i=0; i<numOfProperties; i=i+1){
+                    if(propertyDataArray[i].split(":").length == 2){
+                        jQuery("#propertyTable").find("tr").find("input")[2*i].value = propertyDataArray[i].split(":")[0];
+                        jQuery("#propertyTable").find("tr").find("input")[2*i+1].value = propertyDataArray[i].split(":")[1];
+                    }
+                }
+                updatePropertyTableData();
+            }
+
+            function emptyPropertyTable(){
+                document.getElementById("hfPropertyTableData").value = "";
+                jQuery("#propertyTable").find("tr").find("input")[0].value = "";
+                jQuery("#propertyTable").find("tr").find("input")[1].value = "";
+                var tableRowNumber = jQuery("#propertyTable").find("tr").length;
+                if(tableRowNumber > 2){
+                    for(var i=2; i<tableRowNumber; i++){
+                        var currentRowId = jQuery("#propertyTable").find("tr")[2].id;
+                        jQuery("#" + currentRowId).remove();
+                    }
+                }
+            }
+
+            function cancelPropertyTableData(){
+                emptyPropertyTable();
+                document.getElementById("propertiesTr").style.display = "none";
+            }
+
+            function updateStreamTableData(){
+                var tableData = "", inputs, numOfInputs;
+                inputs = document.getElementById("streamTable").getElementsByTagName("input");
+                numOfInputs = inputs.length;
+                for(var i=0; i<numOfInputs; i=i+5){
+                    if(inputs[i].value != "" && inputs[i+1].value != ""){
+                        if(i != 0){
+                            tableData = tableData + "~";
+                        }
+                        tableData = tableData + inputs[i].value + "^"
+                                            + inputs[i+1].value + "^" + inputs[i+2].value + "^"
+                                            + inputs[i+3].value + "^" + inputs[i+4].value;
+                    }
+                }
+                document.getElementById("hfStreamTableData").value = tableData;
+                //alert("hfStreamTableData : " + document.getElementById("hfStreamTableData").value);
+            }
+
+            function submitPage(){
+                updateStreamTableData();
+                document.getElementById('hfAction').value='save';
+            }
+        </script>
+
+
+    <%
 
     if("save".equals(action) && !"true".equals(overwrite) && bamServerProfileUtils.resourceAlreadyExists(serverProfileLocation)){
         %>
 
             <script>
                 CARBON.showConfirmationDialog("Are you sure you want to overwrite the existing Server Profile Configuration?", saveOverwrite, reloadPage, true);
-
-                var commonParameterString = "txtUsername=" + "<%=request.getParameter("txtUsername")%>" + "&"
-                                              + "txtPassword=" + "<%=request.getParameter("txtPassword")%>" + "&"
-                                              + "txtIp=" + "<%=request.getParameter("txtIp")%>" + "&"
-                                              + "txtPort=" + "<%=request.getParameter("txtPort")%>" + "&"
-                                              + "hfStreamTableData=" + "<%=request.getParameter("hfStreamTableData")%>" + "&"
-                                              + "txtServerProfileLocation=" + "<%=request.getParameter("txtServerProfileLocation")%>";
-
-                function saveOverwrite(){
-                    window.location.href = "configure_server_profiles.jsp?" + commonParameterString + "&hfAction=save&overwrite=true";
-                }
-
-                function reloadPage(){
-                    window.location.href = "configure_server_profiles.jsp?" + commonParameterString + "&hfAction=load";
-                }
             </script>
 
         <%
     }
-
 
     else if("load".equals(action)){  // loading an existing configuration
         if(bamServerProfileUtils.isNotNullOrEmpty(tmpServerProfileLocation)){
@@ -148,6 +316,7 @@
             <%
         }
     }
+
     else if("save".equals(action) && !"".equals(serverProfileLocation)){ // Saving a configuration
         if("true".equals(overwrite)){
             bamServerProfileUtils.addResource(ip, port, userName, password, streamTable, serverProfileLocation);
@@ -177,175 +346,6 @@
 
 
 %>
-
-
-
-<%--<script type="text/javascript" src="'<%=CarbonUtils.getCarbonHome()%>' + 'sequences/js/registry-browser.js'"/>
-<script type="text/javascript" src="'<%=CarbonUtils.getCarbonHome()%>' + 'resources/js/resource_util.js'"/>
-<script type="text/javascript" src="'<%=CarbonUtils.getCarbonHome()%>' + 'yui/build/connection/connection-min.js'"/>--%>
-
-<script id="source" type="text/javascript">
-    function showHideDiv(divId) {
-        var theDiv = document.getElementById(divId);
-        if (theDiv.style.display == "none") {
-            theDiv.style.display = "";
-        } else {
-            theDiv.style.display = "none";
-        }
-    }
-
-    var streamRowNum = 1;
-    var propertyRowNum = 1;
-
-    function addPropertyRow() {
-        propertyRowNum++;
-        var sId = "propertyTable_" + propertyRowNum;
-        var tableContent = "<tr id=\"" + sId + "\">" +
-                           "<td>\n" +
-                           "                        <input type=\"text\" name=\"<%=PROPERTY_KEYS%>\" value=\"\">\n" +
-                           "                    </td>\n" +
-                           "                    <td>\n" +
-                           "                        <input type=\"text\" name=\"<%=PROPERTY_VALUES%>\" value=\"\">\n" +
-                           "                    </td>" +
-                           "<td>\n" +
-                           "                        <a onClick='javaScript:removePropertyColumn(\"" + sId + "\")'" +
-                           "style='background-image: url(images/delete.gif);'class='icon-link addIcon'>Remove Property</a>\n" +
-                           "                    </td>" +
-                           "</tr>";
-
-        jQuery("#propertyTable").append(tableContent);
-        updatePropertyTableData();
-    }
-
-    function addStreamRow() {
-        streamRowNum++;
-        var sId = "streamsTable_" + streamRowNum;
-        var tableContent = "<tr id=\"" + sId + "\">" +
-                           "<td>\n" +
-                           "<input type=\"text\" name=\"<%=STREAM_NAMES%>\" value=\"\">\n" +
-                           "</td>\n" +
-                           "<td>\n" +
-                           "<input type=\"text\" name=\"<%=STREAM_VERSIONS%>\" value=\"\">\n" +
-                           "</td>" +
-                           "<td>\n" +
-                           "<input type=\"text\" name=\"<%=STREAM_NICKNAME%>\" value=\"\">\n" +
-                           "</td>\n" +
-                           "<td>\n" +
-                           "<input type=\"text\" name=\"<%=STREAM_DESCRIPTION%>\" value=\"\">\n" +
-                           "</td>" +
-                           "<td>\n" +
-                           "<span><a onClick='javaScript:removeStreamColumn(\"" + sId + "\")'" +
-                           "style='background-image: url(images/delete.gif);'class='icon-link addIcon'>Remove Stream</a></span>\n" +
-                           "<span><a onClick='javaScript:editStreamData(\"" + streamRowNum + "\")''" +
-                           "style='background-image: url(images/delete.gif);'class='icon-link addIcon'>Edit Stream</a></span>\n" +
-                           "</td>" +
-                           "</tr>";
-
-        jQuery("#streamTable").append(tableContent);
-        updateStreamTableData();
-    }
-
-    function removeStreamColumn(id) {
-        jQuery("#" + id).remove();
-    }
-
-    function removePropertyColumn(id) {
-        jQuery("#" + id).remove();
-        updatePropertyTableData();
-    }
-
-    function updatePropertyTableData(){
-        var tableData = "", inputs, numOfInputs;
-        inputs = document.getElementById("propertyTable").getElementsByTagName("input");
-        numOfInputs = inputs.length;
-        for(var i=0; i<numOfInputs; i=i+2){
-            if(inputs[i].value != "" && inputs[i+1].value != ""){
-                tableData = tableData + inputs[i].value + ":" + inputs[i+1].value + ";";
-            }
-        }
-        document.getElementById("hfPropertyTableData").value = tableData;
-        //alert("hfPropertyTableData : " + document.getElementById("hfPropertyTableData").value);
-    }
-
-    function savePropertyTableData(){
-        updatePropertyTableData();
-        var streamRowNumber = document.getElementById("hfStreamTableRowNumber").value;
-        document.getElementById("hfStreamsTable_" + streamRowNumber).value = document.getElementById("hfPropertyTableData").value;
-        //alert("hfStreamsTable_ : " + document.getElementById("hfStreamsTable_" + streamRowNumber).value);
-        document.getElementById("propertiesTr").style.display = "none";
-    }
-
-    function editStreamData(rowNumber){
-        //alert("rowID : " + rowNumber);
-        document.getElementById("propertiesTr").style.display = "";
-        document.getElementById("hfStreamTableRowNumber").value = rowNumber;
-        loadPropertyDataTable();
-    }
-
-    function loadPropertyDataTable(){
-        emptyPropertyTable();
-        var rowNumber =  document.getElementById("hfStreamTableRowNumber").value;
-        var propertyDataString = document.getElementById("streamsTable_" + rowNumber).getElementsByTagName("input")[4].value;
-        var propertyDataArray = propertyDataString.split(";");
-        var numOfProperties = 0;
-        for(var i=0; i<propertyDataArray.length; i++){
-            if(propertyDataArray[i] != ""){
-                addPropertyRow();
-                numOfProperties++;
-            }
-        }
-        for(var i=0; i<numOfProperties; i=i+1){
-            if(propertyDataArray[i].split(":").length == 2){
-                jQuery("#propertyTable").find("tr").find("input")[2*i].value = propertyDataArray[i].split(":")[0];
-                jQuery("#propertyTable").find("tr").find("input")[2*i+1].value = propertyDataArray[i].split(":")[1];
-            }
-        }
-        updatePropertyTableData();
-    }
-
-    function emptyPropertyTable(){
-        document.getElementById("hfPropertyTableData").value = "";
-        jQuery("#propertyTable").find("tr").find("input")[0].value = "";
-        jQuery("#propertyTable").find("tr").find("input")[1].value = "";
-        var tableRowNumber = jQuery("#propertyTable").find("tr").length;
-        if(tableRowNumber > 2){
-            for(var i=2; i<tableRowNumber; i++){
-                var currentRowId = jQuery("#propertyTable").find("tr")[2].id;
-                jQuery("#" + currentRowId).remove();
-            }
-        }
-    }
-
-    function cancelPropertyTableData(){
-        emptyPropertyTable();
-        document.getElementById("propertiesTr").style.display = "none";
-    }
-
-    function updateStreamTableData(){
-        var tableData = "", inputs, numOfInputs;
-        inputs = document.getElementById("streamTable").getElementsByTagName("input");
-        numOfInputs = inputs.length;
-        for(var i=0; i<numOfInputs; i=i+5){
-            if(inputs[i].value != "" && inputs[i+1].value != ""){
-                if(i != 0){
-                    tableData = tableData + "~";
-                }
-                tableData = tableData + inputs[i].value + "^"
-                                    + inputs[i+1].value + "^" + inputs[i+2].value + "^"
-                                    + inputs[i+3].value + "^" + inputs[i+4].value;
-            }
-        }
-        document.getElementById("hfStreamTableData").value = tableData;
-        //alert("hfStreamTableData : " + document.getElementById("hfStreamTableData").value);
-    }
-
-    function submitPage(){
-        updateStreamTableData();
-        document.getElementById('hfAction').value='save';
-    }
-</script>
-
-
 
 
 <div id="middle">

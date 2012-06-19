@@ -31,7 +31,6 @@
 
     <build>
         <plugins>
-            
             <plugin>
                 <groupId>org.apache.felix</groupId>
                 <artifactId>maven-bundle-plugin</artifactId>
@@ -41,7 +40,6 @@
                     <instructions>
                         <Bundle-SymbolicName>${project.artifactId}</Bundle-SymbolicName>
                         <Bundle-Name>${project.artifactId}</Bundle-Name>
-                        <!--<Bundle-Activator>org.wso2.carbon.mediator.bam.ui.BamMediatorConfigActivator</Bundle-Activator>-->
                         <Carbon-Component>UIBundle</Carbon-Component>
                         <Export-Package>
                             org.wso2.carbon.mediator.bam.config.ui.*,
@@ -52,7 +50,6 @@
                             !javax.xml.namespace,
                             javax.xml.namespace; version=0.0.0,
                             org.apache.axiom.om; version=0.0.0,
-                            org.wso2.carbon.bam.mediationstats.data.publisher.stub.*;version="${carbon.platform.package.import.version.range}",
                             org.wso2.carbon.mediator.bam.config.stub.*;version="${carbon.platform.package.import.version.range}",
                             *;resolution:=optional
                         </Import-Package>
@@ -83,11 +80,6 @@
         </dependency>
         <dependency>
             <groupId>org.wso2.carbon</groupId>
-            <artifactId>org.wso2.carbon.bam.mediationstats.data.publisher.stub</artifactId>
-            <version>${wso2carbon.version.bam-data-publishers}</version>
-        </dependency>
-        <dependency>
-            <groupId>org.wso2.carbon</groupId>
             <artifactId>org.wso2.carbon.ui</artifactId>
         </dependency>
         <dependency>
@@ -107,7 +99,6 @@
     </dependencies>
 
     <properties>
-        <wso2carbon.version.bam-data-publishers>${wso2carbon.version}</wso2carbon.version.bam-data-publishers>
         <wso2carbon.version.bam-mediator-config-stub>${wso2carbon.version}</wso2carbon.version.bam-mediator-config-stub>
         <wso2carbon.version.bam-mediator-config>${wso2carbon.version}</wso2carbon.version.bam-mediator-config>
     </properties>

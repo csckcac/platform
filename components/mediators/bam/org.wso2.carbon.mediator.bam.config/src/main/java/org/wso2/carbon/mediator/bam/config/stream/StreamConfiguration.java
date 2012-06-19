@@ -18,8 +18,6 @@
 
 package org.wso2.carbon.mediator.bam.config.stream;
 
-import org.wso2.carbon.bam.mediationstats.data.publisher.stub.conf.Property;
-
 import java.util.ArrayList;
 import java.util.List;
 

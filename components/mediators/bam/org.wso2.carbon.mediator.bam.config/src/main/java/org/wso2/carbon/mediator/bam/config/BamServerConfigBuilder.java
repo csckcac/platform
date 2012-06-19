@@ -21,7 +21,7 @@ package org.wso2.carbon.mediator.bam.config;
 import org.apache.axiom.om.OMAttribute;
 import org.apache.axiom.om.OMElement;
 import org.apache.synapse.SynapseConstants;
-import org.wso2.carbon.bam.mediationstats.data.publisher.stub.conf.Property;
+import org.wso2.carbon.mediator.bam.config.stream.Property;
 import org.wso2.carbon.mediator.bam.config.stream.StreamConfiguration;
 import org.wso2.carbon.mediator.bam.config.stream.StreamEntry;
 

@@ -20,7 +20,6 @@ package org.wso2.carbon.mediator.bam.xml;
 import org.apache.synapse.config.xml.AbstractMediatorSerializer;
 import org.apache.synapse.Mediator;
 import org.apache.axiom.om.OMElement;
-import org.wso2.carbon.bam.mediationstats.data.publisher.stub.conf.Property;
 import org.wso2.carbon.mediator.bam.BamMediator;
 
 import java.util.List;

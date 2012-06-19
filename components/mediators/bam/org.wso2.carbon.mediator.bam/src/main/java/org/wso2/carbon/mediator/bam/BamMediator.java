@@ -34,7 +34,7 @@ import org.wso2.carbon.agent.exception.AgentException;
 import org.wso2.carbon.agent.exception.TransportException;
 import org.wso2.carbon.core.multitenancy.SuperTenantCarbonContext;
 import java.net.MalformedURLException;
-import org.wso2.carbon.bam.mediationstats.data.publisher.stub.conf.Property;
+import org.wso2.carbon.mediator.bam.config.stream.Property;
 
 /**
  * Transforms the current message payload using the given BAM configuration.
@@ -112,8 +112,6 @@ public class BamMediator extends AbstractMediator {
             e.printStackTrace();  //To change body of catch statement use File | Settings | File Templates.
         } catch (StreamDefinitionException e) {
             e.printStackTrace();  //To change body of catch statement use File | Settings | File Templates.
-        } catch (WrongEventTypeException e) {
-            e.printStackTrace();  //To change body of catch statement use File | Settings | File Templates.
         } catch (DifferentStreamDefinitionAlreadyDefinedException e) {
             e.printStackTrace();  //To change body of catch statement use File | Settings | File Templates.
         } catch (MalformedURLException e) {
@@ -137,7 +135,7 @@ public class BamMediator extends AbstractMediator {
 
     private void logMessage(int tenantId, MessageContext messageContext)
             throws AgentException, MalformedStreamDefinitionException, StreamDefinitionException,
-                   WrongEventTypeException, DifferentStreamDefinitionAlreadyDefinedException,
+                   DifferentStreamDefinitionAlreadyDefinedException,
                    MalformedURLException, AuthenticationException, TransportException {
 
         if (streamId == null) {

@@ -34,12 +34,12 @@
             <artifactId>org.eclipse.osgi</artifactId>
         </dependency>
 
-
         <dependency>
             <groupId>org.wso2.carbon</groupId>
-            <artifactId>org.wso2.carbon.agent.commons.thrift</artifactId>
+            <artifactId>org.wso2.carbon.eventbridge.commons</artifactId>
             <version>${wso2carbon.version.agent}</version>
         </dependency>
+
         <dependency>
             <groupId>com.google.guava.wso2</groupId>
             <artifactId>guava</artifactId>
@@ -69,7 +69,7 @@
         <dependency>
             <groupId>com.google.code.gson</groupId>
             <artifactId>gson</artifactId>
-            <version>${}</version>
+            <version>${gson.version}</version>
         </dependency>
         <dependency>
             <groupId>org.slf4j</groupId>

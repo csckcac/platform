@@ -71,8 +71,13 @@
         <dependency>
             <groupId>org.apache.cxf.wso2</groupId>
             <artifactId>cxf-bundle</artifactId>
-            <version>${cxf.wso2.version.agent}</version>
+            <version>${cxf.wso2.version.eventbridge}</version>
         </dependency>
+        <dependency>
+	<groupId>org.apache.servicemix.specs</groupId>
+	<artifactId>org.apache.servicemix.specs.jsr311-api-1.1.1</artifactId>
+	<version>1.9.0</version>
+</dependency>
 
         <!-- Test dependencies -->
 
@@ -151,6 +156,7 @@
                             *;resolution:=optional
                         </Import-Package>
                         <DynamicImport-Package>*</DynamicImport-Package>
+                        <Embed-Dependency>org.apache.servicemix.specs.jsr311-api-1.1.1;scope=runtime</Embed-Dependency>
                     </instructions>
                 </configuration>
             </plugin>
@@ -159,7 +165,7 @@
     </build>
 
     <properties>
-        <cxf.wso2.version.agent>${cxf.orbit.version}</cxf.wso2.version.agent>
+        <cxf.wso2.version.eventbridge>${cxf.orbit.version}</cxf.wso2.version.eventbridge>
         <!--<cxf.test.version>2.6.0</cxf.test.version>-->
         <!--<httpclient.test.version>3.1</httpclient.test.version>-->
         <!--<jaxrs.test.version>1.1.1</jaxrs.test.version>-->

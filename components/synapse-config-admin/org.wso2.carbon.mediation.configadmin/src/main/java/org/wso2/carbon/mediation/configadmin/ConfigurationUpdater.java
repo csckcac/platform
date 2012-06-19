@@ -140,8 +140,16 @@ public class ConfigurationUpdater {
 
         // We must get references to following task objects at this point
         // Once the SynapseConfiguration is destroyed they become unreachable
-        taskRepository = currentEnvironment.getTaskManager().getTaskDescriptionRepository();
-        taskScheduler = currentEnvironment.getTaskManager().getTaskScheduler();
+        if (currentEnvironment.getTaskManager().isInitialized()) {
+            taskRepository = currentEnvironment.getTaskManager().getTaskDescriptionRepository();
+            taskScheduler = currentEnvironment.getTaskManager().getTaskScheduler();
+            TaskDescriptionRepository repository = currentEnvironment.getTaskManager()
+                    .getTaskDescriptionRepository();
+            if (repository != null) {
+                repository.clear();
+            }
+            currentEnvironment.getTaskManager().cleanup();
+        }
 
         log.trace("Stopping and undeploying proxy services");
         for (ProxyService proxyService : currentConfig.getProxyServices()) {
@@ -161,12 +169,6 @@ public class ConfigurationUpdater {
         for (Startup startup : currentConfig.getStartups()) {
             startup.destroy();
         }
-        TaskDescriptionRepository repository = currentEnvironment.getTaskManager()
-                .getTaskDescriptionRepository();
-        if (repository != null) {
-            repository.clear();
-        }
-        currentEnvironment.getTaskManager().cleanup();
 
         for (SynapseEventSource eventSource : currentConfig.getEventSources()) {
             safeRemoveService(eventSource.getName());

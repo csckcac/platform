@@ -1486,7 +1486,20 @@ public void addMessageBatchToUserQueues(CassandraQueueMessage[] messages) throws
     private void performCommonConfiguration(Configuration configuration) throws Exception {
         String userName = (String) configuration.getProperty(USERNAME_KEY);
         String password = (String) configuration.getProperty(PASSWORD_KEY);
-        String connectionString = (String) configuration.getProperty(CONNECTION_STRING);
+
+        Object connections = configuration.getProperty(CONNECTION_STRING);
+        String connectionString = "";
+        if(connections instanceof ArrayList) {
+            ArrayList<String> cons = (ArrayList<String>)connections;
+
+            for(String c : cons) {
+                connectionString += c + ",";
+            }
+
+            connectionString = connectionString.substring(0,connectionString.length()-1);
+        } else if(connectionString instanceof String) {
+            connectionString = (String) connections;
+        }
         String clusterName = (String) configuration.getProperty(CLUSTER_KEY);
         String idGeneratorImpl = (String) configuration.getProperty(ID_GENENRATOR);
 

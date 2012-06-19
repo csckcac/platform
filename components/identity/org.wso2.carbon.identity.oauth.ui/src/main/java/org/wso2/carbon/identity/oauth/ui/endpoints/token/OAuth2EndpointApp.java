@@ -16,20 +16,19 @@
 *under the License.
 */
 
-package org.wso2.carbon.identity.oauth.ui;
+package org.wso2.carbon.identity.oauth.ui.endpoints.token;
 
-import org.apache.cxf.jaxrs.JAXRSServerFactoryBean;
-import org.apache.cxf.jaxrs.servlet.CXFNonSpringJaxrsServlet;
-import org.apache.cxf.jaxrs.utils.ResourceUtils;
+import org.wso2.carbon.identity.oauth.ui.endpoints.token.OAuth2TokenEndpoint;
 
-import javax.servlet.ServletConfig;
-import javax.servlet.ServletException;
+import javax.ws.rs.core.Application;
+import java.util.HashSet;
+import java.util.Set;
 
-public class OAuth2TokenEndpointServlet extends CXFNonSpringJaxrsServlet {
+public class OAuth2EndpointApp extends Application {
     @Override
-    protected void createServerFromApplication(String cName, ServletConfig servletConfig) throws ServletException {
-        OAuth2EndpointApp app = new OAuth2EndpointApp();
-        JAXRSServerFactoryBean bean = ResourceUtils.createApplication(app, true);
-        bean.create();
+    public Set<Class<?>> getClasses() {
+        Set<Class<?>> s = new HashSet<Class<?>>();
+        s.add(OAuth2TokenEndpoint.class);
+        return s;
     }
 }

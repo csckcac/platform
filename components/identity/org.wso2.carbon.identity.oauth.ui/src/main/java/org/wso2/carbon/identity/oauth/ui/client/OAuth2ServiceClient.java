@@ -21,9 +21,7 @@ package org.wso2.carbon.identity.oauth.ui.client;
 import org.apache.axis2.AxisFault;
 import org.apache.axis2.context.ConfigurationContext;
 import org.wso2.carbon.identity.oauth2.stub.OAuth2ServiceStub;
-import org.wso2.carbon.identity.oauth2.stub.dto.OAuth2AuthorizeReqDTO;
-import org.wso2.carbon.identity.oauth2.stub.dto.OAuth2AuthorizeRespDTO;
-import org.wso2.carbon.identity.oauth2.stub.dto.OAuth2ClientValidationResponseDTO;
+import org.wso2.carbon.identity.oauth2.stub.dto.*;
 
 import java.rmi.RemoteException;
 
@@ -37,13 +35,19 @@ public class OAuth2ServiceClient {
         stub = new OAuth2ServiceStub(configCtx, serviceURL);
     }
 
-    public OAuth2AuthorizeRespDTO authorize(OAuth2AuthorizeReqDTO authorizeReqDTO) throws RemoteException {
+    public OAuth2AuthorizeRespDTO authorize(OAuth2AuthorizeReqDTO authorizeReqDTO)
+            throws RemoteException {
         return stub.authorize(authorizeReqDTO);
     }
     
     public OAuth2ClientValidationResponseDTO validateClient(String clientId, String callbackURI)
             throws RemoteException {
         return stub.validateClientInfo(clientId, callbackURI);
+    }
+
+    public OAuth2AccessTokenRespDTO issueAccessToken(OAuth2AccessTokenReqDTO tokenReqDTO)
+            throws RemoteException {
+        return stub.issueAccessToken(tokenReqDTO);
     }
 
 }

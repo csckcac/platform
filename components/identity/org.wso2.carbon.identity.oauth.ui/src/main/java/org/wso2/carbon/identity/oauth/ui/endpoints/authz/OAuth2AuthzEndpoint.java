@@ -16,7 +16,7 @@
 *under the License.
 */
 
-package org.wso2.carbon.identity.oauth.ui.endpoints;
+package org.wso2.carbon.identity.oauth.ui.endpoints.authz;
 
 import org.apache.amber.oauth2.as.request.OAuthAuthzRequest;
 import org.apache.amber.oauth2.as.response.OAuthASResponse;
@@ -67,7 +67,7 @@ public class OAuth2AuthzEndpoint extends HttpServlet {
         try {
             // if the user has denied the authorization.
             if("true".equals(req.getParameter("denied"))) {
-                String redirectURL = handleAuthzDenial(req, resp);
+                String redirectURL = handleAuthzDenial(req);
                 resp.sendRedirect(redirectURL);
                 return;
             }
@@ -79,10 +79,9 @@ public class OAuth2AuthzEndpoint extends HttpServlet {
                 return;
             }
             // requests coming for authorization.
-            if (req.getRequestURI().endsWith(OAuthConstants.AUTHORIZE_TOKEN_URL)) {
+            if (req.getRequestURI().endsWith("authorize")) {
                 String redirectURL = handleOAuthAuthorizationRequest(req);
                 resp.sendRedirect(redirectURL);
-                return;
             }
 
             // requests coming for
@@ -92,9 +91,9 @@ public class OAuth2AuthzEndpoint extends HttpServlet {
                 session.setAttribute(OAuthConstants.OAUTH_ERROR_CODE, OAuth2ErrorCodes.INVALID_OAUTH_URL);
                 session.setAttribute(OAuthConstants.OAUTH_ERROR_MESSAGE, "Invalid OAuth request URL.");
                 String errorPageURL = CarbonUIUtil.getAdminConsoleURL(req) + "oauth/oauth-error.jsp";
-                errorPageURL = errorPageURL.replace("/oauth2/carbon/oauth/", "/carbon/oauth/");
+                //https://localhost:9443/oauth2/authorize/carbon/oauth/oauth-error.jsp
+                errorPageURL = errorPageURL.replace("/oauth2/authorize", "");
                 resp.sendRedirect(errorPageURL);
-                return;
             }
         } catch (OAuthSystemException e) {
             log.error("Error when processing the authorization request.", e);
@@ -102,9 +101,8 @@ public class OAuth2AuthzEndpoint extends HttpServlet {
             session.setAttribute(OAuthConstants.OAUTH_ERROR_CODE, OAuth2ErrorCodes.SERVER_ERROR);
             session.setAttribute(OAuthConstants.OAUTH_ERROR_MESSAGE, "Error when processing the authorization request.");
             String errorPageURL = CarbonUIUtil.getAdminConsoleURL(req) + "oauth/oauth-error.jsp";
-            errorPageURL = errorPageURL.replace("/oauth2/carbon/oauth/", "/carbon/oauth/");
+            errorPageURL = errorPageURL.replace("/oauth2/authorize", "");
             resp.sendRedirect(errorPageURL);
-            return;
         }
     }
 
@@ -127,7 +125,7 @@ public class OAuth2AuthzEndpoint extends HttpServlet {
                 session.setAttribute(OAuthConstants.OAUTH_ERROR_MESSAGE,
                         "Invalid Request. Client Id is not present in the request");
                 String errorPageURL = CarbonUIUtil.getAdminConsoleURL(req) + "oauth/oauth-error.jsp";
-                errorPageURL = errorPageURL.replace("/oauth2/carbon/oauth/", "/carbon/oauth/");
+                errorPageURL = errorPageURL.replace("/oauth2/authorize", "");
                 return errorPageURL;
             }
             // Client is not valid. Do not send this error back to client, send to an error page instead.
@@ -138,7 +136,7 @@ public class OAuth2AuthzEndpoint extends HttpServlet {
                 session.setAttribute(OAuthConstants.OAUTH_ERROR_MESSAGE,
                         clientValidationResponseDTO.getErrorMsg());
                 String errorPageURL = CarbonUIUtil.getAdminConsoleURL(req) + "oauth/oauth-error.jsp";
-                errorPageURL = errorPageURL.replace("/oauth2/carbon/oauth/", "/carbon/oauth/");
+                errorPageURL = errorPageURL.replace("/oauth2/authorize", "");
                 return errorPageURL;
             }
 
@@ -155,7 +153,7 @@ public class OAuth2AuthzEndpoint extends HttpServlet {
             HttpSession session = req.getSession();
             session.setAttribute(OAuthConstants.OAUTH2_PARAMS, params);
             String loginPage = CarbonUIUtil.getAdminConsoleURL(req) + "oauth/oauth2-login.jsp";
-            loginPage = loginPage.replace("/oauth2/carbon/oauth/", "/carbon/oauth/");
+            loginPage = loginPage.replace("/oauth2/authorize", "");
             return loginPage;
 
         } catch (OAuthProblemException e) {
@@ -254,7 +252,7 @@ public class OAuth2AuthzEndpoint extends HttpServlet {
         }
     }
 
-    private String handleAuthzDenial(HttpServletRequest req, HttpServletResponse resp) throws OAuthSystemException {
+    private String handleAuthzDenial(HttpServletRequest req) throws OAuthSystemException {
         OAuth2Parameters oauth2Params = (OAuth2Parameters) req.getSession().getAttribute(
                 OAuthConstants.OAUTH2_PARAMS);
         OAuthProblemException oauthException = OAuthProblemException.error(

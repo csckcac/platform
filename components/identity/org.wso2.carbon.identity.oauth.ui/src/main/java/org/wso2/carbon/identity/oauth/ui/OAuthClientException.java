@@ -18,17 +18,14 @@
 
 package org.wso2.carbon.identity.oauth.ui;
 
-import org.wso2.carbon.identity.oauth.ui.endpoints.OAuth2TokenEndpoint;
+import org.wso2.carbon.identity.base.IdentityException;
 
-import javax.ws.rs.core.Application;
-import java.util.HashSet;
-import java.util.Set;
+public class OAuthClientException extends IdentityException {
+    public OAuthClientException(String message) {
+        super(message);
+    }
 
-public class OAuth2EndpointApp extends Application {
-    @Override
-    public Set<Class<?>> getClasses() {
-        Set<Class<?>> s = new HashSet<Class<?>>();
-        s.add(OAuth2TokenEndpoint.class);
-        return s;
+    public OAuthClientException(String message, Throwable e) {
+        super(message, e);
     }
 }

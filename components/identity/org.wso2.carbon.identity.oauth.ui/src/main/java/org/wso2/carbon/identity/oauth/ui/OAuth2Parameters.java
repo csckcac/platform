@@ -18,13 +18,14 @@
 
 package org.wso2.carbon.identity.oauth.ui;
 
+import java.io.Serializable;
 import java.util.Set;
 
 /**
  * A Bean class which is used to store the OAuth parameters available in a OAuth request in the http
  * Session.
  */
-public class OAuth2Parameters {
+public class OAuth2Parameters implements Serializable {
 
     private String applicationName;
     private String redirectURI;

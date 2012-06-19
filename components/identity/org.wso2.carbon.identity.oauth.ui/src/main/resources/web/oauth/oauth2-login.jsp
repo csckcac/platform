@@ -163,7 +163,7 @@
 
                             </table>
 
-                            <form method="post" name="oauthsign" action="../../oauth2">
+                            <form method="post" name="oauthsign" action="../../oauth2/authorize">
                                 <%
                                     if (cssLocation != null) {
                                 %>

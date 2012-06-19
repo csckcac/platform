@@ -27,8 +27,8 @@ import javax.naming.InitialContext;
 import javax.naming.NamingException;
 import java.util.Properties;
 
-public class JMSTestCase {
-    private static final Log log = LogFactory.getLog(JMSTestCase.class);
+public class JMSQueuesTestCase {
+    private static final Log log = LogFactory.getLog(JMSQueuesTestCase.class);
 
 
     @Test(groups = {"wso2.mb"})

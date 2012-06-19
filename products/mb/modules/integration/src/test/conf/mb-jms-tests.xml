@@ -29,7 +29,9 @@
     <test name="management" preserve-order="true">
         <classes>
             <class name="org.wso2.mb.integration.tests.EventTestCase"/>
-            <class name="org.wso2.mb.integration.tests.JMSTestCase"/>
+            <class name="org.wso2.mb.integration.tests.JMSQueuesTestCase"/>
+            <class name="org.wso2.mb.integration.tests.JMSTopics0_91TestCase"/>
+            <class name="org.wso2.mb.integration.tests.JMSTopics0_10TestCase"/>
         </classes>
     </test>
 </suite>

@@ -37,7 +37,7 @@ public class AppFactoryCommonServiceComponent {
         try {
             configuration = AppFactoryUtil.loadAppFactoryConfiguration();
             bundleContext.registerService(AppFactoryConfiguration.class.getName(), configuration, null);
-        } catch (AppFactoryException e) {
+        } catch (Exception e) {
             log.error("Error in creating appfactory configuration", e);
         }
         if (log.isDebugEnabled()) {

@@ -11,7 +11,7 @@
     </parent>
 
     <groupId>org.wso2.carbon</groupId>
-    <artifactId>org.wso2.carbon.eventbridge.common.feature</artifactId>
+    <artifactId>org.wso2.carbon.eventbridge.commons.feature</artifactId>
     <packaging>pom</packaging>
     <name>WSO2 Carbon - Event Bridge - Commons Aggregate Feature</name>
     <url>http://wso2.org</url>

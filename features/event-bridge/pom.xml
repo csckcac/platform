@@ -36,6 +36,7 @@
         <module>agents</module>
         <module>receivers</module>
         <module>streamdefinitions</module>
+        <module>org.wso2.carbon.eventbridge.serverside.feature</module>
     </modules>
 
     <dependencyManagement>

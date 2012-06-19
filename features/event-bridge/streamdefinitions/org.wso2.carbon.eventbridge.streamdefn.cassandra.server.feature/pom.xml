@@ -55,6 +55,7 @@
                             <importFeatures>
                                 <importFeatureDef>org.wso2.carbon.core.server:${wso2carbon.version}</importFeatureDef>
                                 <importFeatureDef>org.wso2.carbon.cassandra.dataaccess:${wso2carbon.version}</importFeatureDef>
+                                <importFeatureDef>org.wso2.carbon.eventbridge.core.server:${wso2carbon.version.eventbridge}</importFeatureDef>
                             </importFeatures>
                         </configuration>
                     </execution>

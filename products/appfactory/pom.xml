@@ -273,8 +273,6 @@
         <eclipse.version>3.2.0</eclipse.version>
         <servlet-api.version>2.4</servlet-api.version>
         <spring.version>2.5.1.wso2v1</spring.version>
-        <h2.engine.version>${version.h2.engine}</h2.engine.version>
-	<wso2.h2.orbit.version>${h2.engine.version}.wso2v1</wso2.h2.orbit.version>
     </properties>
 
     <mailingLists>

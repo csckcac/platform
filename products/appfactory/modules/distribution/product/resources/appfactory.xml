@@ -1,29 +1,15 @@
+<?xml version="1.0" encoding="ISO-8859-1"?>
 <AppFactory xmlns="http://www.wso2.org/appfactory/">
-
-    <!--Admin user in the app factory. This user is added to each and every application as the administrator-->
-    <AdminUserName>admin</AdminUserName>
-    <AdminPassword>admin</AdminPassword>
-
-    <!--Application Management configurations-->
+<AdminUserName>admin</AdminUserName><AdminPassword>admin</AdminPassword>
     <ApplicationMgt>
-         <DefaultApplicationUserRole name="appFactoryUsers">
-            <Permission>/permission/admin/login</Permission>
-        </DefaultApplicationUserRole>
+         <DefaultApplicationUserRole name="appFactoryUsers"><Permission>/permission/admin/login</Permission></DefaultApplicationUserRole>
     </ApplicationMgt>
 
     <DefaultRoles>
-        <Role name="developer">
-            <Permission>/permission/admin/login</Permission>
-        </Role>
-        <Role name="devOps">
-            <Permission>/permission/admin/login</Permission>
-        </Role>
-        <Role name="qa">
-            <Permission>/permission/admin/login</Permission>
-        </Role>
-        <Role name="appOwner">
-            <Permission>/permission/admin/login</Permission>
-        </Role>
+        <Role name="developer"><Permission>/permission/admin/login</Permission></Role>
+        <Role name="devOps"><Permission>/permission/admin/login</Permission></Role>
+        <Role name="qa"><Permission>/permission/admin/login</Permission></Role>
+        <Role name="appOwner"><Permission>/permission/admin/login</Permission></Role>
     </DefaultRoles>
 
     <!--SSO relying party configuration.-->
@@ -32,32 +18,17 @@
         <IdentityProviderURL>https://localhost:9443/samlsso</IdentityProviderURL>
         <KeyStorePassword>wso2carbon</KeyStorePassword>
         <IdentityKeyAlias>wso2carbon</IdentityKeyAlias>
-        <KeyStoreName>
-			${carbon.home}/repository/resources/security/wso2carbon.jks
-        </KeyStoreName>
+        <KeyStoreName>${carbon.home}/repository/resources/security/wso2carbon.jks</KeyStoreName>
     </SSORelyingParty>
 
     <!-- Web service end points including BPEL services-->
     <WebServiceEndPoints>
-        <GetRolesOfUserForApplication>
-             https://localhost:9443/services/ApplicationManagementService
-        </GetRolesOfUserForApplication>
-
+        <GetRolesOfUserForApplication>https://localhost:9443/services/ApplicationManagementService</GetRolesOfUserForApplication>
         <CreateRepo>http://localhost:9763/services/IDTMESVNService/createRepository</CreateRepo>
-
-        <GetUsersOfApplication>https://localhost:9443/services/ApplicationManagementService/getUsersOfApplication
-        </GetUsersOfApplication>
-
-        <GetUsersInfoOfApplication>
-            https://localhost:9443/services/ApplicationManagementService/getUserInfo
-        </GetUsersInfoOfApplication>
-
-        <EmailVerificationService>https://localhost:9443/services/EmailVerificationService
-        </EmailVerificationService>
-
-        <AddUserToApplication>http://localhost:9763/services/AddUserToApplication/process
-        </AddUserToApplication>
-
+        <GetUsersOfApplication>https://localhost:9443/services/ApplicationManagementService/getUsersOfApplication</GetUsersOfApplication>
+        <GetUsersInfoOfApplication>https://localhost:9443/services/ApplicationManagementService/getUserInfo</GetUsersInfoOfApplication>
+        <EmailVerificationService>https://localhost:9443/services/EmailVerificationService</EmailVerificationService>
+        <AddUserToApplication>http://localhost:9763/services/AddUserToApplication/process</AddUserToApplication>
         <AddUsertoApp>https://localhost:9443/services/ApplicationManagementService/AddUserToApplication</AddUsertoApp>
         <CreateApplication>http://localhost:9763/services/CreateApplication</CreateApplication>
         <CreateUser>http://localhost:9763/services/UserCreationProcess</CreateUser>
@@ -80,18 +51,12 @@
     <ApplicationDeployment>
         <DeploymentStage name="Development">
             <ProcesEndPoint>https://localhost:9443/services/DeployApplicationToDev</ProcesEndPoint>
-            <DeploymentServerURL>
-                https://localhost:9443/services/
-            </DeploymentServerURL>
+            <DeploymentServerURL>https://localhost:9443/services/</DeploymentServerURL>
         </DeploymentStage>
         <DeploymentStage name="QA">
             <ProcesEndPoint>https://localhost:9443/services/DeployApplicationToQA</ProcesEndPoint>
-            <DeploymentServerURL>
-                https://localhost:9445/services/
-            </DeploymentServerURL>
-            <DeploymentServerURL>
-                https://localhost:9447/services/
-            </DeploymentServerURL>
+            <DeploymentServerURL>https://localhost:9445/services/</DeploymentServerURL>
+            <DeploymentServerURL>https://localhost:9447/services/</DeploymentServerURL>
         </DeploymentStage>
     </ApplicationDeployment>
 </AppFactory>

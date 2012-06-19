@@ -825,7 +825,7 @@
                                     </tr>
                                     <tr>
                                         <td><fmt:message key="sequence.save.as.key"/></td>
-                                        <td><span id="reg">gov:</span><input type="text" size="75" id="synRegKey"/></td>
+                                        <td><span id="reg">conf:</span><input type="text" size="75" id="synRegKey"/></td>
                                     </tr>
                                 </table>
                             </td>

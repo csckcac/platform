@@ -35,6 +35,16 @@ public class VersionsBean {
 
     private String isDeleteLocked;
 
+    private boolean isDeletePermissionAllowed;
+
+    public boolean isDeletePermissionAllowed() {
+        return isDeletePermissionAllowed;
+    }
+
+    public void setDeletePermissionAllowed(boolean deletePermissionAllowed) {
+        isDeletePermissionAllowed = deletePermissionAllowed;
+    }
+
     public String getWriteLocked() {
         return isWriteLocked;
     }

@@ -112,7 +112,10 @@ public class GetVersionsUtil {
                 AuthorizationManager authorizer = userRegistry.getUserRealm().getAuthorizationManager();
                 boolean putAllowed = authorizer.
                         isUserAuthorized(userName, resourcePath.getPath(), ActionConstants.PUT);
+                boolean deleteAllowed =
+                        authorizer.isUserAuthorized(userName,resourcePath.getPath(),ActionConstants.DELETE);
                 versionsBean.setPutAllowed(putAllowed);
+                versionsBean.setDeletePermissionAllowed(deleteAllowed);
 
             } catch (UserStoreException e) {
 

@@ -6,6 +6,7 @@
             <xs:complexType name="VersionsBean">
                 <xs:sequence>
                     <xs:element minOccurs="0" name="deleteLocked" nillable="true" type="xs:string" />
+                    <xs:element minOccurs="0" name="deletePermissionAllowed" type="xs:boolean"/>
                     <xs:element minOccurs="0" name="loggedIn" type="xs:boolean" />
                     <xs:element minOccurs="0" name="permalink" nillable="true" type="xs:string" />
                     <xs:element minOccurs="0" name="putAllowed" type="xs:boolean" />

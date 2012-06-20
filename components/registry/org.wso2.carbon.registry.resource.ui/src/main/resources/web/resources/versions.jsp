@@ -194,12 +194,17 @@ function submitDelete(path, snapshotId, screenWidth){
                         <% if (versionBean.getLoggedIn() && versionBean.getPutAllowed() && !Boolean.parseBoolean(versionBean.getWriteLocked())) { %>
                         <a href="./restore_version_ajaxprocessor.jsp?versionPath=<%=vpath%>&path=<%=path%>"
                            class="restore-icon-link registryWriteOperation"><fmt:message key="restore"/></a>
-                        <a class="delete-icon-link" onclick="submitDelete('<%=path%>','<%=versionPath.getVersionNumber()%>','<%=strScreenWidth%>')"><fmt:message key="delete.version"/></a>
                         <% }else {%>
                             <a onclick="retentionError()" class="restore-icon-link registryWriteOperation"><fmt:message key="restore"/></a>
                         <%
-                            }                        
+                            }
+                            if(versionBean.getLoggedIn() && versionBean.getDeletePermissionAllowed() && !Boolean.parseBoolean(versionBean.getDeleteLocked())){
                         %>
+                        <a class="delete-icon-link" onclick="submitDelete('<%=path%>','<%=versionPath.getVersionNumber()%>','<%=strScreenWidth%>')"><fmt:message key="delete.version"/></a>
+                        <%
+                            }
+                        %>
+
                     </td>
                 </tr>
 

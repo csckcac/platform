@@ -15,10 +15,10 @@
                           <xs:element name="item" maxOccurs="unbounded" minOccurs="0">
                             <xs:complexType mixed="true">
                               <xs:sequence>
-                                <xs:element name="permissions" minOccurs="0">
+                                <xs:element name="permissions" minOccurs="0" >
                                   <xs:complexType>
                                     <xs:sequence>
-                                      <xs:element name="permission">
+                                      <xs:element name="permission" maxOccurs="unbounded" minOccurs="0">
                                         <xs:complexType>
                                           <xs:simpleContent>
                                             <xs:extension base="xs:string">
@@ -33,10 +33,10 @@
                                 <xs:element name="validations" minOccurs="0">
                                   <xs:complexType>
                                     <xs:sequence>
-                                      <xs:element name="validation">
+                                      <xs:element name="validation" minOccurs="0" maxOccurs="unbounded">
                                         <xs:complexType>
                                           <xs:sequence>
-                                            <xs:element name="parameter">
+                                            <xs:element name="parameter" maxOccurs="unbounded" minOccurs="0">
                                               <xs:complexType>
                                                 <xs:simpleContent>
                                                   <xs:extension base="xs:string">
@@ -77,7 +77,7 @@
                               <xs:attribute type="xs:string" name="class" use="optional"/>
                             </xs:complexType>
                           </xs:element>
-                          <xs:element name="ui" minOccurs="0">
+                          <xs:element name="ui" minOccurs="0" maxOccurs="unbounded">
                             <xs:complexType>
                               <xs:simpleContent>
                                 <xs:extension base="xs:string">
@@ -87,7 +87,7 @@
                               </xs:simpleContent>
                             </xs:complexType>
                           </xs:element>
-                          <xs:element name="permission" minOccurs="0">
+                          <xs:element name="permission" minOccurs="0" maxOccurs="unbounded">
                             <xs:complexType>
                               <xs:simpleContent>
                                 <xs:extension base="xs:string">
@@ -97,10 +97,10 @@
                               </xs:simpleContent>
                             </xs:complexType>
                           </xs:element>
-                          <xs:element name="validation" minOccurs="0">
+                          <xs:element name="validation" minOccurs="0" maxOccurs="unbounded">
                             <xs:complexType>
                               <xs:sequence>
-                                <xs:element name="parameter">
+                                <xs:element name="parameter" maxOccurs="unbounded" minOccurs="0">
                                   <xs:complexType>
                                     <xs:simpleContent>
                                       <xs:extension base="xs:string">
@@ -115,7 +115,7 @@
                               <xs:attribute type="xs:string" name="class" use="required"/>
                             </xs:complexType>
                           </xs:element>
-                          <xs:element name="js" minOccurs="0">
+                          <xs:element name="js" minOccurs="0" maxOccurs="unbounded">
                             <xs:complexType>
                               <xs:sequence>
                                 <xs:element name="console" minOccurs="0">

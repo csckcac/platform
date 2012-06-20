@@ -4,6 +4,8 @@ import com.google.common.cache.CacheBuilder;
 import com.google.common.cache.CacheLoader;
 import com.google.common.cache.LoadingCache;
 import me.prettyprint.hector.api.Cluster;
+import org.apache.commons.logging.Log;
+import org.apache.commons.logging.LogFactory;
 import org.wso2.carbon.cassandra.dataaccess.ClusterInformation;
 import org.wso2.carbon.eventbridge.commons.Credentials;
 import org.wso2.carbon.eventbridge.streamdefn.cassandra.internal.util.Utils;
@@ -28,6 +30,8 @@ import java.util.concurrent.TimeUnit;
 public class ClusterFactory {
 
     private static LoadingCache<Credentials, Cluster> clusterLoadingCache;
+
+    private static Log log = LogFactory.getLog(ClusterFactory.class);
 
     private ClusterFactory() {
 
@@ -56,6 +60,7 @@ public class ClusterFactory {
     }
 
     public static void initCassandraKeySpaces(Cluster cluster) {
+        log.info("Initializing cluster");
         CassandraConnector connector = Utils.getCassandraConnector();
         connector.createKeySpaceIfNotExisting(cluster, CassandraConnector.BAM_META_KEYSPACE);
 

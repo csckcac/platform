@@ -158,22 +158,50 @@ public class CassandraConnector {
 //    }
 
     public void createColumnFamily(Cluster cluster, String keyspaceName, String columnFamilyName) {
-        Keyspace keyspace = HFactory.createKeyspace(keyspaceName, cluster);
-        KeyspaceDefinition keyspaceDef =
-                cluster.describeKeyspace(keyspace.getKeyspaceName());
-        List<ColumnFamilyDefinition> cfDef = keyspaceDef.getCfDefs();
-        for (ColumnFamilyDefinition cfdef : cfDef) {
-            if (cfdef.getName().equals(columnFamilyName)) {
-                if (logger.isTraceEnabled()) {
-                    logger.trace("Column Family " + columnFamilyName + " already exists.");
+        synchronized (CassandraConnector.class) {
+            Keyspace keyspace = HFactory.createKeyspace(keyspaceName, cluster);
+            KeyspaceDefinition keyspaceDef =
+                    cluster.describeKeyspace(keyspace.getKeyspaceName());
+            List<ColumnFamilyDefinition> cfDef = keyspaceDef.getCfDefs();
+            for (ColumnFamilyDefinition cfdef : cfDef) {
+                if (cfdef.getName().equals(columnFamilyName)) {
+                    if (logger.isTraceEnabled()) {
+                        logger.trace("Column Family " + columnFamilyName + " already exists.");
+                    }
+                    return;
                 }
-                return;
             }
+            ColumnFamilyDefinition columnFamilyDefinition = HFactory.
+                    createColumnFamilyDefinition(keyspaceName, columnFamilyName);
+            cluster.addColumnFamily(columnFamilyDefinition, true);
+
+
+            // give some time to propogate changes
+            keyspaceDef =
+                    cluster.describeKeyspace(keyspace.getKeyspaceName());
+            int retryCount = 0;
+            while (retryCount < 100 ) {
+                try {
+                    Thread.sleep(100);
+                } catch (InterruptedException e) {
+                    // ignore
+                }
+
+                for (ColumnFamilyDefinition cfdef :  keyspaceDef.getCfDefs()) {
+                    if (cfdef.getName().equals(columnFamilyName)) {
+                        if (logger.isTraceEnabled()) {
+                            logger.trace("Column Family " + columnFamilyName + " already exists.");
+                        }
+                        return;
+                    }
+                }
+                retryCount++;
+            }
+            throw new RuntimeException("The column family " + columnFamilyName + " was  not created");
         }
-        ColumnFamilyDefinition columnFamilyDefinition = HFactory.
-                createColumnFamilyDefinition(keyspaceName, columnFamilyName);
-        cluster.addColumnFamily(columnFamilyDefinition);
     }
+
+
 
 
     public boolean createKeySpaceIfNotExisting(Cluster cluster, String keySpaceName) {
@@ -758,30 +786,108 @@ public class CassandraConnector {
      * @param cluster  Tenant cluster
      * @param streamId Stream Id
      * @return Returns event stream definition stored in BAM meta data keyspace
-     * @throws StreamDefinitionException Thrown if the stream definitions are malformed
+     * @throws StreamDefinitionStoreException Thrown if the stream definitions are malformed
      */
 
     public EventStreamDefinition getStreamDefinitionFromStore(Cluster cluster, String streamId)
             throws StreamDefinitionStoreException {
-
-        Keyspace keyspace = HFactory.createKeyspace(BAM_META_KEYSPACE, cluster);
-        ColumnQuery<String, String, String> columnQuery =
-                HFactory.createStringColumnQuery(keyspace);
-        columnQuery.setColumnFamily(BAM_META_STREAM_DEF_CF).setKey(streamId).setName(STREAM_DEF);
-        QueryResult<HColumn<String, String>> result = columnQuery.execute();
-        HColumn<String, String> hColumn = result.get();
         try {
-            if (hColumn != null) {
-                return EventDefinitionConverterUtils.convertFromJson(hColumn.getValue());
-            }
-        } catch (MalformedStreamDefinitionException e) {
-            throw new StreamDefinitionStoreException("Retrieved definition from Cassandra store is malformed. Retrieved "
-                    +
-                    "value : " + hColumn.getValue());
+            return StreamDefnCache.getStreamDefinition(cluster, streamId);
+        } catch (ExecutionException e) {
+            return null;
         }
-        return null;
-
     }
+
+    private static class StreamDefnCache {
+
+        private static LoadingCache<StreamIdClusterBean, EventStreamDefinition> streamDefnCache = null;
+
+        private static void init() {
+            synchronized (StreamDefnCache.class) {
+                if (streamDefnCache != null) {
+                    return;
+                }
+                streamDefnCache = CacheBuilder.newBuilder()
+                        .maximumSize(1000)
+                        .expireAfterAccess(30, TimeUnit.MINUTES)
+                        .build(new CacheLoader<StreamIdClusterBean, EventStreamDefinition>() {
+                            @Override
+                            public EventStreamDefinition load(StreamIdClusterBean streamIdClusterBean)
+                                    throws Exception {
+                                Keyspace keyspace =
+                                        HFactory.createKeyspace(BAM_META_KEYSPACE, streamIdClusterBean.getCluster());
+                                ColumnQuery<String, String, String> columnQuery =
+                                        HFactory.createStringColumnQuery(keyspace);
+                                columnQuery.setColumnFamily(BAM_META_STREAM_DEF_CF)
+                                        .setKey(streamIdClusterBean.getStreamId()).setName(STREAM_DEF);
+                                QueryResult<HColumn<String, String>> result = columnQuery.execute();
+                                HColumn<String, String> hColumn = result.get();
+                                try {
+                                    if (hColumn != null) {
+                                        return EventDefinitionConverterUtils.convertFromJson(hColumn.getValue());
+                                    }
+                                } catch (MalformedStreamDefinitionException e) {
+                                    throw new StreamDefinitionStoreException(
+                                            "Retrieved definition from Cassandra store is malformed. Retrieved "
+                                                    +
+                                                    "value : " + hColumn.getValue());
+                                }
+                                throw new NullValueException("No value found");
+                            }
+                        }
+                        );
+            }
+
+        }
+
+        public static EventStreamDefinition getStreamDefinition(Cluster cluster, String streamId) throws ExecutionException {
+            init();
+            return streamDefnCache.get(new StreamIdClusterBean(cluster, streamId));
+        }
+
+        private static class StreamIdClusterBean {
+            private Cluster cluster;
+            private String streamId;
+
+            private StreamIdClusterBean(Cluster cluster, String streamId) {
+                this.cluster = cluster;
+                this.streamId = streamId;
+            }
+
+            public Cluster getCluster() {
+                return cluster;
+            }
+
+            public String getStreamId() {
+                return streamId;
+            }
+
+            @Override
+            public boolean equals(Object o) {
+                if (this == o) return true;
+                if (o == null || getClass() != o.getClass()) return false;
+
+                StreamIdClusterBean that = (StreamIdClusterBean) o;
+
+                if (!cluster.equals(that.cluster)) return false;
+                if (!streamId.equals(that.streamId)) return false;
+
+                return true;
+            }
+
+            @Override
+            public int hashCode() {
+                int result = cluster.hashCode();
+                result = 31 * result + streamId.hashCode();
+                return result;
+            }
+
+        }
+    }
+
+
+
+
 
     /**
      * Retrun all stream definitions stored under one domain

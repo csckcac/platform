@@ -124,6 +124,34 @@
                     </xs:sequence>
                 </xs:complexType>
             </xs:element>
+            <xs:element name="getOutputColumnNames">
+                <xs:complexType>
+                    <xs:sequence>
+                        <xs:element minOccurs="0" name="sql" nillable="true" type="xs:string"/>
+                    </xs:sequence>
+                </xs:complexType>
+            </xs:element>
+            <xs:element name="getOutputColumnNamesResponse">
+                <xs:complexType>
+                    <xs:sequence>
+                        <xs:element maxOccurs="unbounded" minOccurs="0" name="return" nillable="true" type="xs:string"/>
+                    </xs:sequence>
+                </xs:complexType>
+            </xs:element>
+            <xs:element name="getInputMappingNames">
+                <xs:complexType>
+                    <xs:sequence>
+                        <xs:element minOccurs="0" name="sql" nillable="true" type="xs:string"/>
+                    </xs:sequence>
+                </xs:complexType>
+            </xs:element>
+            <xs:element name="getInputMappingNamesResponse">
+                <xs:complexType>
+                    <xs:sequence>
+                        <xs:element maxOccurs="unbounded" minOccurs="0" name="return" nillable="true" type="xs:string"/>
+                    </xs:sequence>
+                </xs:complexType>
+            </xs:element>
             <xs:element name="getDataServiceContentAsString">
                 <xs:complexType>
                     <xs:sequence>
@@ -177,20 +205,6 @@
                     </xs:sequence>
                 </xs:complexType>
             </xs:element>
-            <xs:element name="getColumnNames">
-                <xs:complexType>
-                    <xs:sequence>
-                        <xs:element minOccurs="0" name="query" nillable="true" type="xs:string"/>
-                    </xs:sequence>
-                </xs:complexType>
-            </xs:element>
-            <xs:element name="getColumnNamesResponse">
-                <xs:complexType>
-                    <xs:sequence>
-                        <xs:element maxOccurs="unbounded" minOccurs="0" name="return" nillable="true" type="xs:string"/>
-                    </xs:sequence>
-                </xs:complexType>
-            </xs:element>
             <xs:element name="getCarbonDataSourceNames">
                 <xs:complexType>
                     <xs:sequence/>
@@ -234,17 +248,17 @@
     <wsdl:message name="DataServiceAdminException">
         <wsdl:part name="parameters" element="ns:DataServiceAdminException"/>
     </wsdl:message>
-    <wsdl:message name="getColumnNamesRequest">
-        <wsdl:part name="parameters" element="ns:getColumnNames"/>
-    </wsdl:message>
-    <wsdl:message name="getColumnNamesResponse">
-        <wsdl:part name="parameters" element="ns:getColumnNamesResponse"/>
-    </wsdl:message>
     <wsdl:message name="getAvailableDSRequest">
         <wsdl:part name="parameters" element="ns:getAvailableDS"/>
     </wsdl:message>
     <wsdl:message name="getAvailableDSResponse">
         <wsdl:part name="parameters" element="ns:getAvailableDSResponse"/>
+    </wsdl:message>
+    <wsdl:message name="getOutputColumnNamesRequest">
+        <wsdl:part name="parameters" element="ns:getOutputColumnNames"/>
+    </wsdl:message>
+    <wsdl:message name="getOutputColumnNamesResponse">
+        <wsdl:part name="parameters" element="ns:getOutputColumnNamesResponse"/>
     </wsdl:message>
     <wsdl:message name="getTableListRequest">
         <wsdl:part name="parameters" element="ns:getTableList"/>
@@ -272,6 +286,12 @@
     </wsdl:message>
     <wsdl:message name="getPaginatedTableInfoResponse">
         <wsdl:part name="parameters" element="ns:getPaginatedTableInfoResponse"/>
+    </wsdl:message>
+    <wsdl:message name="getInputMappingNamesRequest">
+        <wsdl:part name="parameters" element="ns:getInputMappingNames"/>
+    </wsdl:message>
+    <wsdl:message name="getInputMappingNamesResponse">
+        <wsdl:part name="parameters" element="ns:getInputMappingNamesResponse"/>
     </wsdl:message>
     <wsdl:message name="getDataServiceContentAsStringRequest">
         <wsdl:part name="parameters" element="ns:getDataServiceContentAsString"/>
@@ -309,14 +329,14 @@
             <wsdl:output message="ns:getdbSchemaListResponse" wsaw:Action="urn:getdbSchemaListResponse"/>
             <wsdl:fault message="ns:DataServiceAdminException" name="DataServiceAdminException" wsaw:Action="urn:getdbSchemaListDataServiceAdminException"/>
         </wsdl:operation>
-        <wsdl:operation name="getColumnNames">
-            <wsdl:input message="ns:getColumnNamesRequest" wsaw:Action="urn:getColumnNames"/>
-            <wsdl:output message="ns:getColumnNamesResponse" wsaw:Action="urn:getColumnNamesResponse"/>
-            <wsdl:fault message="ns:DataServiceAdminException" name="DataServiceAdminException" wsaw:Action="urn:getColumnNamesDataServiceAdminException"/>
-        </wsdl:operation>
         <wsdl:operation name="getAvailableDS">
             <wsdl:input message="ns:getAvailableDSRequest" wsaw:Action="urn:getAvailableDS"/>
             <wsdl:output message="ns:getAvailableDSResponse" wsaw:Action="urn:getAvailableDSResponse"/>
+        </wsdl:operation>
+        <wsdl:operation name="getOutputColumnNames">
+            <wsdl:input message="ns:getOutputColumnNamesRequest" wsaw:Action="urn:getOutputColumnNames"/>
+            <wsdl:output message="ns:getOutputColumnNamesResponse" wsaw:Action="urn:getOutputColumnNamesResponse"/>
+            <wsdl:fault message="ns:DataServiceAdminException" name="DataServiceAdminException" wsaw:Action="urn:getOutputColumnNamesDataServiceAdminException"/>
         </wsdl:operation>
         <wsdl:operation name="getTableList">
             <wsdl:input message="ns:getTableListRequest" wsaw:Action="urn:getTableList"/>
@@ -337,6 +357,11 @@
             <wsdl:input message="ns:getPaginatedTableInfoRequest" wsaw:Action="urn:getPaginatedTableInfo"/>
             <wsdl:output message="ns:getPaginatedTableInfoResponse" wsaw:Action="urn:getPaginatedTableInfoResponse"/>
             <wsdl:fault message="ns:DataServiceAdminException" name="DataServiceAdminException" wsaw:Action="urn:getPaginatedTableInfoDataServiceAdminException"/>
+        </wsdl:operation>
+        <wsdl:operation name="getInputMappingNames">
+            <wsdl:input message="ns:getInputMappingNamesRequest" wsaw:Action="urn:getInputMappingNames"/>
+            <wsdl:output message="ns:getInputMappingNamesResponse" wsaw:Action="urn:getInputMappingNamesResponse"/>
+            <wsdl:fault message="ns:DataServiceAdminException" name="DataServiceAdminException" wsaw:Action="urn:getInputMappingNamesDataServiceAdminException"/>
         </wsdl:operation>
         <wsdl:operation name="getDataServiceContentAsString">
             <wsdl:input message="ns:getDataServiceContentAsStringRequest" wsaw:Action="urn:getDataServiceContentAsString"/>
@@ -374,8 +399,17 @@
                 <soap:fault use="literal" name="DataServiceAdminException"/>
             </wsdl:fault>
         </wsdl:operation>
-        <wsdl:operation name="getColumnNames">
-            <soap:operation soapAction="urn:getColumnNames" style="document"/>
+        <wsdl:operation name="getAvailableDS">
+            <soap:operation soapAction="urn:getAvailableDS" style="document"/>
+            <wsdl:input>
+                <soap:body use="literal"/>
+            </wsdl:input>
+            <wsdl:output>
+                <soap:body use="literal"/>
+            </wsdl:output>
+        </wsdl:operation>
+        <wsdl:operation name="getOutputColumnNames">
+            <soap:operation soapAction="urn:getOutputColumnNames" style="document"/>
             <wsdl:input>
                 <soap:body use="literal"/>
             </wsdl:input>
@@ -385,15 +419,6 @@
             <wsdl:fault name="DataServiceAdminException">
                 <soap:fault use="literal" name="DataServiceAdminException"/>
             </wsdl:fault>
-        </wsdl:operation>
-        <wsdl:operation name="getAvailableDS">
-            <soap:operation soapAction="urn:getAvailableDS" style="document"/>
-            <wsdl:input>
-                <soap:body use="literal"/>
-            </wsdl:input>
-            <wsdl:output>
-                <soap:body use="literal"/>
-            </wsdl:output>
         </wsdl:operation>
         <wsdl:operation name="getTableList">
             <soap:operation soapAction="urn:getTableList" style="document"/>
@@ -430,6 +455,18 @@
         </wsdl:operation>
         <wsdl:operation name="getPaginatedTableInfo">
             <soap:operation soapAction="urn:getPaginatedTableInfo" style="document"/>
+            <wsdl:input>
+                <soap:body use="literal"/>
+            </wsdl:input>
+            <wsdl:output>
+                <soap:body use="literal"/>
+            </wsdl:output>
+            <wsdl:fault name="DataServiceAdminException">
+                <soap:fault use="literal" name="DataServiceAdminException"/>
+            </wsdl:fault>
+        </wsdl:operation>
+        <wsdl:operation name="getInputMappingNames">
+            <soap:operation soapAction="urn:getInputMappingNames" style="document"/>
             <wsdl:input>
                 <soap:body use="literal"/>
             </wsdl:input>
@@ -503,8 +540,17 @@
                 <soap12:fault use="literal" name="DataServiceAdminException"/>
             </wsdl:fault>
         </wsdl:operation>
-        <wsdl:operation name="getColumnNames">
-            <soap12:operation soapAction="urn:getColumnNames" style="document"/>
+        <wsdl:operation name="getAvailableDS">
+            <soap12:operation soapAction="urn:getAvailableDS" style="document"/>
+            <wsdl:input>
+                <soap12:body use="literal"/>
+            </wsdl:input>
+            <wsdl:output>
+                <soap12:body use="literal"/>
+            </wsdl:output>
+        </wsdl:operation>
+        <wsdl:operation name="getOutputColumnNames">
+            <soap12:operation soapAction="urn:getOutputColumnNames" style="document"/>
             <wsdl:input>
                 <soap12:body use="literal"/>
             </wsdl:input>
@@ -514,15 +560,6 @@
             <wsdl:fault name="DataServiceAdminException">
                 <soap12:fault use="literal" name="DataServiceAdminException"/>
             </wsdl:fault>
-        </wsdl:operation>
-        <wsdl:operation name="getAvailableDS">
-            <soap12:operation soapAction="urn:getAvailableDS" style="document"/>
-            <wsdl:input>
-                <soap12:body use="literal"/>
-            </wsdl:input>
-            <wsdl:output>
-                <soap12:body use="literal"/>
-            </wsdl:output>
         </wsdl:operation>
         <wsdl:operation name="getTableList">
             <soap12:operation soapAction="urn:getTableList" style="document"/>
@@ -559,6 +596,18 @@
         </wsdl:operation>
         <wsdl:operation name="getPaginatedTableInfo">
             <soap12:operation soapAction="urn:getPaginatedTableInfo" style="document"/>
+            <wsdl:input>
+                <soap12:body use="literal"/>
+            </wsdl:input>
+            <wsdl:output>
+                <soap12:body use="literal"/>
+            </wsdl:output>
+            <wsdl:fault name="DataServiceAdminException">
+                <soap12:fault use="literal" name="DataServiceAdminException"/>
+            </wsdl:fault>
+        </wsdl:operation>
+        <wsdl:operation name="getInputMappingNames">
+            <soap12:operation soapAction="urn:getInputMappingNames" style="document"/>
             <wsdl:input>
                 <soap12:body use="literal"/>
             </wsdl:input>
@@ -629,8 +678,8 @@
                 <mime:content type="text/xml" part="parameters"/>
             </wsdl:output>
         </wsdl:operation>
-        <wsdl:operation name="getColumnNames">
-            <http:operation location="getColumnNames"/>
+        <wsdl:operation name="getAvailableDS">
+            <http:operation location="getAvailableDS"/>
             <wsdl:input>
                 <mime:content type="text/xml" part="parameters"/>
             </wsdl:input>
@@ -638,8 +687,8 @@
                 <mime:content type="text/xml" part="parameters"/>
             </wsdl:output>
         </wsdl:operation>
-        <wsdl:operation name="getAvailableDS">
-            <http:operation location="getAvailableDS"/>
+        <wsdl:operation name="getOutputColumnNames">
+            <http:operation location="getOutputColumnNames"/>
             <wsdl:input>
                 <mime:content type="text/xml" part="parameters"/>
             </wsdl:input>
@@ -682,6 +731,15 @@
         </wsdl:operation>
         <wsdl:operation name="getPaginatedTableInfo">
             <http:operation location="getPaginatedTableInfo"/>
+            <wsdl:input>
+                <mime:content type="text/xml" part="parameters"/>
+            </wsdl:input>
+            <wsdl:output>
+                <mime:content type="text/xml" part="parameters"/>
+            </wsdl:output>
+        </wsdl:operation>
+        <wsdl:operation name="getInputMappingNames">
+            <http:operation location="getInputMappingNames"/>
             <wsdl:input>
                 <mime:content type="text/xml" part="parameters"/>
             </wsdl:input>

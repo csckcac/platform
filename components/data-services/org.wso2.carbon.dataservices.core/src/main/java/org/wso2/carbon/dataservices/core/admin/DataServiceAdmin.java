@@ -77,7 +77,7 @@ public class DataServiceAdmin extends AbstractAdmin {
 
 	/**
 	 * Returns data service content as a String.
-	 * 
+	 *
 	 * @param serviceId
 	 *            The data service name
 	 * @return The data service configuration data
@@ -159,13 +159,13 @@ public class DataServiceAdmin extends AbstractAdmin {
 	}
 
 	/**
-	 * Saves the data service in service repository. 
+	 * Saves the data service in service repository.
 	 * @param serviceName The name of the data service to be saved
 	 * @param serviceHierarchy The hierarchical path of the service
 	 * @param serviceContents The content of the service
 	 * @throws AxisFault
 	 */
-	public void saveDataService(String serviceName, String serviceHierarchy, 
+	public void saveDataService(String serviceName, String serviceHierarchy,
 			String serviceContents) throws AxisFault {
 		String dataServiceFilePath;
 		ConfigurationContext configCtx = this.getConfigContext();
@@ -173,7 +173,7 @@ public class DataServiceAdmin extends AbstractAdmin {
 		AxisService axisService = axisConfig.getServiceForActivation(serviceName);
 		AxisServiceGroup axisServiceGroup;
 		boolean hotUpdateOrFaulty = false;
-		
+
 		if (serviceHierarchy == null) {
 			serviceHierarchy = "";
 		}
@@ -252,7 +252,7 @@ public class DataServiceAdmin extends AbstractAdmin {
 	 * This will test a connection to a given database. If connection can be
 	 * made this method will return the status as String, if not, faliour String
 	 * will be return.
-	 * 
+	 *
 	 * @param driverClass
 	 *            Driver class
 	 * @param jdbcURL
@@ -347,7 +347,7 @@ public class DataServiceAdmin extends AbstractAdmin {
 	 * This will test the connection(retrieve CallFeed) of a Google spreadsheet
 	 * document. If connection can be made this method will return the status as
 	 * String, if not, failure String will be return.
-	 * 
+	 *
 	 * @param user
 	 *            - user name
 	 * @param password
@@ -390,7 +390,7 @@ public class DataServiceAdmin extends AbstractAdmin {
     		OMElement passwordProviderEl = fac.createOMElement("passwordProvider", null);
     		passwordProviderEl.setText(passwordProvider);
     		passwordManagerEl.addChild(protectedTokensEl);
-    		passwordManagerEl.addChild(passwordProviderEl);		
+    		passwordManagerEl.addChild(passwordProviderEl);
             dataEl.addChild(passwordManagerEl);
             SecretResolver secretResolver = SecretResolverFactory.create(dataEl, false);
             if (secretResolver.isInitialized() && secretResolver.isTokenProtected(password)) {
@@ -448,7 +448,7 @@ public class DataServiceAdmin extends AbstractAdmin {
 
 	/**
 	 * Return data services
-	 * 
+	 *
 	 * @return names of the data services
 	 * @throws AxisFault
 	 *             AxisFault
@@ -474,34 +474,26 @@ public class DataServiceAdmin extends AbstractAdmin {
 		return list.toArray(new String[list.size()]);
 	}
 
-	public String[] getColumnNames(String sql) throws Exception {
+	public String[] getOutputColumnNames(String sql) throws Exception {
 		try {
-			Queue<String> tokens = SQLParserUtil.getTokens(sql);
-			if (tokens.size() > 0) {
-				List<String> columns = SQLParserUtil.extractOutputColumns(tokens);
-				return columns.toArray(new String[columns.size()]);
-			} else {
-				return new String[0];
-			}
+            List<String> columns = SQLParserUtil.extractOutputColumns(sql);
+            return columns.toArray(new String[columns.size()]);
 		} catch (Exception e) {
-			throw new Exception("Error generating the response for the query " + sql + ".", e);
+			throw new AxisFault("Error occurred while generating response for the query " + sql +
+                    ".", e);
 		}
     }
 
     public String[] getInputMappingNames(String sql) throws Exception {
 		try {
-			Queue<String> tokens = SQLParserUtil.getTokens(sql);
-			if (tokens.size() > 0) {
-				List<String> columns = SQLParserUtil.extractOutputColumns(tokens);
-				return columns.toArray(new String[columns.size()]);
-			} else {
-				return new String[0];
-			}
+			List<String> inputMappings = SQLParserUtil.extractInputMappingNames(sql);
+            return inputMappings.toArray(new String[inputMappings.size()]);
 		} catch (Exception e) {
-			throw new Exception("Error generating the response for the query " + sql + ".", e);
+			throw new AxisFault("Error occurred while generating input mappings for the query " +
+                    sql + ".", e);
 		}
     }
-	
+
 	public String[] getdbSchemaList(String datasourceId) throws Exception {
 		return DSGenerator.getSchemas(datasourceId);
 	}
@@ -534,10 +526,10 @@ public class DataServiceAdmin extends AbstractAdmin {
         return paginatedTableInfo;
     }
 
-    
 
-	/** 
-	 * Return the generated services name list 
+
+	/**
+	 * Return the generated services name list
 	 */
 	public String[] getDSServiceList(String dataSourceId, String dbName, String[] schemas,
 			String[] tableNames, boolean singleService,String serviceNamespace) throws AxisFault  {
@@ -552,8 +544,8 @@ public class DataServiceAdmin extends AbstractAdmin {
 		return serviceNames.toArray(new String[serviceNames.size()]);
 	}
 
-	/** 
-	 * Return the generated service name 
+	/**
+	 * Return the generated service name
 	 */
 	public String getDSService(String dataSourceId, String dbName, String[] schemas,
 			String[] tableNames, boolean singleService,String serviceName,String serviceNamespace) throws AxisFault {

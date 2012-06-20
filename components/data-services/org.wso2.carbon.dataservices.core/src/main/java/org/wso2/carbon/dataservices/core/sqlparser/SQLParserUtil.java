@@ -23,10 +23,7 @@ import org.wso2.carbon.dataservices.core.sqlparser.analysers.AnalyzerFactory;
 import org.wso2.carbon.dataservices.core.sqlparser.analysers.KeyWordAnalyzer;
 import org.wso2.carbon.dataservices.core.sqlparser.mappers.SelectMapper;
 
-import java.util.ArrayList;
-import java.util.LinkedList;
-import java.util.List;
-import java.util.Queue;
+import java.util.*;
 
 public class SQLParserUtil {
 
@@ -164,8 +161,8 @@ public class SQLParserUtil {
      * This particular method transform a particular SQL string to a set of tokens and returns
      * a queue which contains the tokens(String objects) produced by the logic of the method.
      *
-     * @param sql   Input SQL string
-     * @return      A Queue of String objects.
+     * @param sql Input SQL string
+     * @return A Queue of String objects.
      */
     public static Queue<String> getTokens(String sql) {
 
@@ -202,25 +199,25 @@ public class SQLParserUtil {
     /**
      * This method returns the list of queried columns of a particular input sql string.
      *
-     * @param tokens Lexical tokens obtained after parsing the SQL query
-     * @return List if columns expected as the output
+     * @param sql               Input SQL string
+     * @return                  List if columns expected as the output
      * @throws DataServiceFault If any error occurs while parsing the SQL query
      */
-    public static List<String> extractOutputColumns(Queue<String> tokens) throws DataServiceFault {
-
+    public static List<String> extractOutputColumns(String sql) throws DataServiceFault {
         KeyWordAnalyzer analyser;
         Queue<String> syntaxQueue = null;
-        Queue<String> tempQueue = new LinkedList<String>();
+        Queue<String> tmpQueue = new LinkedList<String>();
+        Queue<String> tokens = SQLParserUtil.getTokens(sql);
 
         if (!tokens.isEmpty() && tokens.peek().toUpperCase().equals(LexicalConstants.SELECT)) {
             tokens.poll();
             while (!tokens.isEmpty() &&
                     !tokens.peek().toUpperCase().equals(LexicalConstants.FROM)) {
-                tempQueue.add(tokens.poll());
+                tmpQueue.add(tokens.poll());
             }
-            analyser = AnalyzerFactory.createAnalyzer(LexicalConstants.SELECT, tempQueue);
+            analyser = AnalyzerFactory.createAnalyzer(LexicalConstants.SELECT, tmpQueue);
             syntaxQueue = analyser.getSyntaxQueue();
-            tempQueue.clear();
+            tmpQueue.clear();
         }
         tokens.clear();
         return (new SelectMapper(syntaxQueue).getColumns());
@@ -229,27 +226,32 @@ public class SQLParserUtil {
     /**
      * Extracts out the Input mappings names specified in the query
      *
-     * @param tokens Lexical tokens obtained after parsing the SQL query
-     * @return List of input mappings specified in the query
-     * @throws DataServiceFault If any error occurs while parsing the query
+     * @param sql   Input SQL string
+     * @return      List of input mappings specified in the query
      */
-    public static List<String> extractInputMappings(Queue<String> tokens) throws DataServiceFault {
-        KeyWordAnalyzer analyser;
-        Queue<String> syntaxQueue = null;
-        Queue<String> tempQueue = new LinkedList<String>();
-
-        if (!tokens.isEmpty() && tokens.peek().toUpperCase().equals(LexicalConstants.WHERE)) {
-            tokens.poll();
-            while (!tokens.isEmpty()) {
-                tempQueue.add(tokens.poll());
+    public static List<String> extractInputMappingNames(String sql) {
+        StringBuilder paramName = null;
+        int paramCount = 0;
+        List<String> inputMappings = new ArrayList<String>();
+        Queue<String> tokens = SQLParserUtil.getTokens(sql);
+        for (String token : tokens) {
+            if (token != null && token.startsWith(LexicalConstants.COLON)) {
+                paramName = new StringBuilder();
+                paramName.append(token.substring(1, token.length()));
+                continue;
             }
-            analyser = AnalyzerFactory.createAnalyzer(LexicalConstants.WHERE, tempQueue);
-            syntaxQueue = analyser.getSyntaxQueue();
-            tempQueue.clear();
+            if (LexicalConstants.QUESTION_MARK.equals(token)) {
+                paramName = new StringBuilder();
+                paramName.append("param").append(paramCount);
+                inputMappings.add(paramCount, paramName.toString());
+            }
+            if (paramName != null && (SQLParserUtil.getKeyWords().contains(token) ||
+                    LexicalConstants.COMMA.equals(token))) {
+                inputMappings.add(paramCount, paramName.toString());
+            }
+            paramCount++;
         }
-        tokens.clear();
-        //return (new SelectMapper(selectQueue).getColumns());
-        return new ArrayList<String>();
+        return inputMappings;
     }
 
 }

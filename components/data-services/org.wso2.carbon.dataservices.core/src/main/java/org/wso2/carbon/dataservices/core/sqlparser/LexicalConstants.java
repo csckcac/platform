@@ -112,5 +112,6 @@ public class LexicalConstants {
     public static final String START_OF_RBRACKET = "START_OF_RBRACKET";
     public static final String ASCOLUMN = "ASCOLUMN";
     public static final String COLUMNS="COLUMNS";
-    
+
+    public static final String QUESTION_MARK = "?";
 }

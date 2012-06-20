@@ -154,9 +154,14 @@
 	    <version>${libthrift.orbit.version}</version>
         </dependency>
         <dependency>
-            <groupId>slf4j.wso2</groupId>
-            <artifactId>slf4j</artifactId>
-	    <version>${slf4j.orbit.version}</version>
+            <groupId>org.slf4j</groupId>
+            <artifactId>slf4j-api</artifactId>
+	    <version>${slf4j.version}</version>
+        </dependency>
+        <dependency>
+            <groupId>org.slf4j</groupId>
+            <artifactId>slf4j-log4j12</artifactId>
+            <version>${slf4j.version}</version>
         </dependency>
     </dependencies>
 
@@ -182,7 +187,7 @@
 	<json.orbit.version>2.0.0.wso2v1</json.orbit.version>
 	<libfb303.orbit.version>0.7.0.wso2v1</libfb303.orbit.version>
 	<libthrift.orbit.version>0.7.wso2v1</libthrift.orbit.version>
-	<slf4j.orbit.version>1.5.10.wso2v1</slf4j.orbit.version>
+	<slf4j.version>1.6.1</slf4j.version>
     </properties>
 
     <build>
@@ -261,7 +266,8 @@
                                 <importBundleDef>org.json.wso2:json</importBundleDef>
 				<importBundleDef>org.apache.thrift.wso2:libfb303</importBundleDef>
 				<importBundleDef>libthrift.wso2:libthrift</importBundleDef>
-                                <importBundleDef>slf4j.wso2:slf4j</importBundleDef>
+                                <importBundleDef>org.slf4j:slf4j-log4j12</importBundleDef>
+                                <importBundleDef>org.slf4j:slf4j-api</importBundleDef>
                             </importBundles>
                         </configuration>
                     </execution>

@@ -75,7 +75,7 @@
             </includes>
         </fileSet>
         <fileSet>
-            <directory>../apps/</directory>
+            <directory>../../apps/</directory>
             <outputDirectory>jaggery-${carbon.product.version}/apps/
             </outputDirectory>
             <includes>

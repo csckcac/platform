@@ -27,7 +27,7 @@
     </parent>
 
     <modelVersion>4.0.0</modelVersion>
-    <artifactId>org.wso2.jaggery.styles</artifactId>
+    <artifactId>org.jaggeryjs.admin.styles</artifactId>
     <packaging>bundle</packaging>
     <name>Jaggery Server - UI styles</name>
     <url>http://wso2.org</url>
@@ -53,7 +53,7 @@
                         <Bundle-SymbolicName>${project.artifactId}</Bundle-SymbolicName>
                         <Bundle-Name>${project.artifactId}</Bundle-Name>
                         <Private-Package>org.wso2.jaggery.styles.internal</Private-Package>
-                        <Bundle-Activator>org.wso2.jaggery.styles.internal.Activator</Bundle-Activator>
+                        <Bundle-Activator>main.org.jaggeryjs.admin.styles.internal.Activator</Bundle-Activator>
                         <Import-Package>
                             org.osgi.framework,
                             org.osgi.service.http,

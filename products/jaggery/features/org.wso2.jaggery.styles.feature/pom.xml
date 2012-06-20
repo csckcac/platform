@@ -34,7 +34,7 @@
     <dependencies>
         <dependency>
             <groupId>org.jaggeryjs</groupId>
-            <artifactId>org.wso2.jaggery.styles</artifactId>
+            <artifactId>org.jaggeryjs.admin.styles</artifactId>
             <version>0.9.0-ALPHA</version>
         </dependency>
     </dependencies>
@@ -61,7 +61,7 @@
                                 </properties>
                             </adviceFile>
                             <bundles>
-                                <bundleDef>org.jaggeryjs:org.wso2.jaggery.styles</bundleDef>
+                                <bundleDef>org.jaggeryjs:org.jaggeryjs.admin.styles</bundleDef>
                             </bundles>
                             <importFeatures>
                                 <importFeatureDef>org.wso2.carbon.core.ui:${carbon.platform.version}</importFeatureDef>

@@ -33,7 +33,7 @@
     <url>http://jaggeryjs.org</url>
 
     <modules>
-        <module>styles</module>
+        <module>org.jaggeryjs.admin.styles</module>
     </modules>
 
 

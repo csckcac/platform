@@ -14,7 +14,7 @@
  * limitations under the License.
  */
 
-package org.wso2.jaggery.styles.internal;
+package main.org.jaggeryjs.admin.styles.internal;
 
 import org.eclipse.equinox.http.helper.ContextPathServletAdaptor;
 import org.eclipse.equinox.jsp.jasper.JspServlet;

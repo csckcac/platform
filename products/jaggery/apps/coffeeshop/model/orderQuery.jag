@@ -55,7 +55,6 @@ function updateStatus(orderid, status) {
 }
 
 function addAddition(orderid, addition) {
-	log.info("This is an INFO level log addAddition " + orderid + addition);
 	//adding addition
 	//db processing
 	var order = db.query("SELECT STATUS, COST FROM COFFEE_ORDER WHERE ORDER_ID ='" + orderid + "'");

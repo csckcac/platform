@@ -1,7 +1,7 @@
 CoffeeShopClient = new function() {
 
 this.addOrder = function(orderName) {
-CoffeShopAppUtil.makeRequest("POST","/coffeeshop/orders/order.jag?", "order="+orderName,
+CoffeShopAppUtil.makeRequest("POST","/coffeeshop/orders/", "order="+orderName,
 function(html) {
 $("#response-textarea").val(JSON.stringify(html));
 CoffeeShopClient.viewOrders();
@@ -25,7 +25,7 @@ this.viewOrders = function() {
 		CoffeeShopClient.initViewOrders();
 	}else{
 CoffeShopAppUtil.makeJsonRequest("GET","/coffeeshop/orders/", null ,function(html) {
-console.log(html);
+//console.log(html);
 CoffeeShop.loadOrders(html);
 });
 }
@@ -35,6 +35,7 @@ CoffeShopAppUtil.makeRequest("GET","/coffeeshop/orders/", null ,function(html) {
 console.log(html);
 CoffeeShop.loadOrders(html);
 	$("#response-textarea").val(JSON.stringify(html));
+	//console.log(html.Infor);	
 });
 }
 
@@ -42,7 +43,10 @@ this.addAddittion = function(orderid, addition) {
 var content = '{"addition":'+addition+'}';
 CoffeShopAppUtil.makeRequest("PUT","/coffeeshop/orders/"+orderid, content , function(html) {
 $("#response-textarea").val(JSON.stringify(html)); 
-CoffeeShopClient.viewOrders();	
+CoffeeShopClient.viewOrders();
+if(html.Infor != null){
+alert(html.Infor);
+}
 });
 
 }

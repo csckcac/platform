@@ -23,17 +23,17 @@
 <html xmlns="http://www.w3.org/1999/xhtml" xml:lang="en" lang="en">
   <head>
       <meta content="text/html; charset=iso-8859-1" http-equiv="content-type"/>
-      <title>WSO2 CSG v1.0.0-beta release</title>
+      <title>WSO2 CSG v1.0.0 release</title>
   </head>
   <body>
   <div id="header">
 </div>
 
 <div id="main-content">
-<h1>The WSO2 Cloud Services Gateway (CSG) 1.0.0-beta release</h1>
+<h1>The WSO2 Cloud Services Gateway (CSG) 1.0.0 release</h1>
 
 <p>
-    The WSO2 CSG team is pleased to announce the release of version 1.0.0-beta of
+    The WSO2 team is pleased to announce the release of version 1.0.0 of
     the Cloud Services Gateway(CSG).
 </p>
 
@@ -46,7 +46,7 @@
 </p>
 
 <p>
-    WSO2 CSG 1.0.0-beta is developed on top of the revolutionary
+    WSO2 CSG 1.0.0 is developed on top of the revolutionary
     <a href="http://wso2.org/projects/carbon">WSO2 Carbon platform</a>,
     an OSGi based framework that provides seamless modularity to your SOA via
     componentization.</p>
@@ -79,7 +79,7 @@
 
 <h2>Known Issues</h2>
 <p>
-    All the open issues pertaining to WSO2 CSG 1.0.0-beta are reported at following
+    All the open issues pertaining to WSO2 CSG 1.0.0 are reported at following
     locations:
 </p>
 
@@ -95,7 +95,7 @@
         Base framework issues</a></li>
 </ul>
     
-    <h2>Release 1.0.0 RC1</h2>
+    <h2>Release 1.0.0</h2>
     <p>This release contains a number of bug fixes</p>
     <p>Change Log</p>
     <ol>
@@ -216,7 +216,6 @@
     visit <a href="http://wso2.com/support">http://wso2.com/support</a>.
 </p>
 
-<p><i>-- The WSO2 CSG Team --</i> </p>
 </div>
   </body>
 </html>

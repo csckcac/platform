@@ -25,13 +25,13 @@
     <parent>
         <groupId>org.wso2.csg</groupId>
     	<artifactId>csg-styles-parent</artifactId>
-        <version>1.0.0-beta</version>
+        <version>1.0.0</version>
         <relativePath>../pom.xml</relativePath>
     </parent>
 
     <modelVersion>4.0.0</modelVersion>
     <artifactId>org.wso2.stratos.csg.styles</artifactId>
-    <version>1.0.0-beta</version>
+    <version>1.0.0</version>
     <packaging>bundle</packaging>
     <name>WSO2 Stratos CSG - Styles</name>
     <url>http://wso2.org</url>

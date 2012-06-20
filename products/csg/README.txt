@@ -1,5 +1,5 @@
 ================================================================================
-                        WSO2 Cloud Services Gateway 1.0.0-beta
+                        WSO2 Cloud Services Gateway 1.0.0
 ================================================================================
 
 Welcome to the WSO2 CSG 1.0.0 release
@@ -50,10 +50,10 @@ For more details see
 Installation & Running
 ==================================
 
-1. Extract the wso2csg-1.0.0-beta.zip and go to the extracted directory
+1. Extract the wso2csg-1.0.0.zip and go to the extracted directory
 2. Run the wso2server.sh{bat} inside the bin folder.
 
-WSO2 CSG 1.0.0-beta distribution directory structure
+WSO2 CSG 1.0.0 distribution directory structure
 ======================================================
 
 	CARBON_HOME
@@ -111,7 +111,7 @@ WSO2 CSG 1.0.0-beta distribution directory structure
       This document will contain information on installing WSO2 CSG
 
 	- release-notes.html
-	  Release information for WSO2 CSG 1.0.0-beta
+	  Release information for WSO2 CSG 1.0.0
 
 Support
 =======
@@ -124,7 +124,7 @@ For additional support information please refer to http://wso2.com/support/
 
 For more information on WSO2 CSG, visit the WSO2 Oxygen Tank (http://wso2.org)
 
-Known issues of WSO2 CSG 1.0.0-beta
+Known issues of WSO2 CSG 1.0.0
 ====================================
 
  * https://wso2.org/jira/secure/IssueNavigator.jspa?mode=hide&requestId=10664

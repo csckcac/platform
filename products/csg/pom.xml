@@ -32,7 +32,7 @@
     <groupId>org.wso2.csg</groupId>
     <artifactId>csg-parent</artifactId>
     <packaging>pom</packaging>
-    <version>1.0.0-beta</version>
+    <version>1.0.0</version>
     <name>WSO2 CSG - Aggregator Module</name>
     <url>http://wso2.com/cloud/connectors/services-gateway/</url>
     <description>WSO2 Cloud Services Gateway</description>
@@ -195,7 +195,7 @@
         <carbon.version>4.0.0-SNAPSHOT</carbon.version>
         <synapse.version>2.1.0-wso2v6</synapse.version>
         <axis2.transport.version>1.1.0-wso2v6</axis2.transport.version>
-        <csg.version>1.0.0-beta</csg.version>
+        <csg.version>1.0.0</csg.version>
         <passthru.transport.version>1.0.0-SNAPSHOT</passthru.transport.version>
         <axis2.wso2.version>1.6.1.wso2v1</axis2.wso2.version>
 	    <axiom.wso2.version>1.2.11.wso2v1</axiom.wso2.version>

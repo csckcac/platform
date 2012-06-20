@@ -195,7 +195,11 @@ public class AddServicesService extends RegistryAbstractAdmin implements IManage
                 }
             });
 
-            if (result_services.length > 0) {
+            if (registry.resourceExists(currentPath)) {
+                String msg = "A resource with the given name and namespace exists";
+                log.warn(msg);
+                return msg;
+            } else if (result_services.length > 0) {
                 String msg = "A resource with the given name and namespace exists";
                 log.warn(msg);
                 return msg;

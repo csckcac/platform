@@ -255,11 +255,6 @@ public class Configuration implements Iterable<Map.Entry<String,String>>,
    */
   @SuppressWarnings("unchecked")
   public Configuration(Configuration other) {
-    if (LOG.isDebugEnabled()) {
-      LOG.debug(StringUtils.stringifyException
-                (new IOException("config(config)")));
-    }
-   
    this.resources = (ArrayList)other.resources.clone();
    synchronized(other) {
      if (other.properties != null) {

@@ -19,6 +19,7 @@
 package org.wso2.carbon.identity.oauth.ui.endpoints.token;
 
 import org.apache.amber.oauth2.as.request.OAuthTokenRequest;
+import org.apache.amber.oauth2.common.message.types.GrantType;
 import org.apache.axis2.context.ConfigurationContext;
 import org.apache.commons.logging.Log;
 import org.apache.commons.logging.LogFactory;
@@ -52,9 +53,15 @@ public class OAuth2TokenClient {
                                                                     throws OAuthClientException {
         OAuth2AccessTokenReqDTO tokenReqDTO = new OAuth2AccessTokenReqDTO();
         tokenReqDTO.setGrantType(oauthRequest.getGrantType());
-        tokenReqDTO.setAuthorizationCode(oauthRequest.getCode());
         tokenReqDTO.setClientId(oauthRequest.getClientId());
         tokenReqDTO.setClientSecret(oauthRequest.getClientSecret());
+        // Check the grant type and set the corresponding parameters
+        if(GrantType.AUTHORIZATION_CODE.toString().equals(oauthRequest.getGrantType())){
+            tokenReqDTO.setAuthorizationCode(oauthRequest.getCode());
+        } else if(GrantType.PASSWORD.toString().equals(oauthRequest.getGrantType())){
+            tokenReqDTO.setResourceOwnerUsername(oauthRequest.getUsername());
+            tokenReqDTO.setResourceOwnerPassword(oauthRequest.getPassword());
+        }
 
         try {
             OAuth2ServiceClient oauth2ServiceClient = new OAuth2ServiceClient(backendServerURL,

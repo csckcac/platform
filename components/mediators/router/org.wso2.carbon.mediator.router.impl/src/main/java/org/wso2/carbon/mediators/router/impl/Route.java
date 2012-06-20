@@ -214,7 +214,6 @@ public class Route {
      * @see Route#isMatching(org.apache.synapse.MessageContext, SynapseLog)
      */
     public int doRoute(MessageContext synCtx, SynapseLog synLog) {
-        System.out.println("Patch applied.. ");
         // first check whether this Route matches the specified conditions
         if (isMatching(synCtx, synLog)) {
 

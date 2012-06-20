@@ -26,21 +26,11 @@ import org.apache.axis2.engine.AxisObserver;
 import org.osgi.framework.BundleContext;
 import org.osgi.service.component.ComponentContext;
 import org.wso2.carbon.CarbonConstants;
-import org.wso2.carbon.context.RegistryType;
-import org.wso2.carbon.core.multitenancy.SuperTenantCarbonContext;
 import org.wso2.carbon.core.util.SystemFilter;
-import org.wso2.carbon.registry.api.Registry;
-import org.wso2.carbon.registry.api.RegistryException;
-import org.wso2.carbon.registry.api.Resource;
 import org.wso2.carbon.statistics.internal.ResponseTimeProcessor;
-import org.wso2.carbon.statistics.persistance.StatisticsPersistenceUtils;
-import org.wso2.carbon.statistics.services.SystemStatisticsUtil;
-import org.wso2.carbon.statistics.services.util.OperationStatistics;
 import org.wso2.carbon.utils.ConfigurationContextService;
 import org.wso2.carbon.utils.PreAxisConfigurationPopulationObserver;
-import org.wso2.carbon.utils.multitenancy.MultitenantUtils;
 
-import javax.swing.plaf.multi.MultiRootPaneUI;
 import java.util.ArrayList;
 import java.util.Iterator;
 import java.util.Properties;
@@ -90,16 +80,28 @@ public class SystemStatisticsDeploymentInterceptor implements AxisObserver {
             axisService.isClientSide()) {
             return;
         }
-
         if (axisEvent.getEventType() == AxisEvent.SERVICE_DEPLOY) {
-            //TODO attach stats if exists
-            Parameter parameter = axisService.getParameter(CarbonConstants
-                                                                 .KEEP_SERVICE_HISTORY_PARAM);
-            StatisticsPersistenceUtils.attachStatisticsForService(axisService);
-
             for (Iterator iter = axisService.getOperations(); iter.hasNext();) {
                 AxisOperation op = (AxisOperation) iter.next();
-                StatisticsPersistenceUtils.attachStatisticsForOperation(op);
+
+                // IN operation counter
+                Parameter inOpCounter = new Parameter();
+                inOpCounter.setName(StatisticsConstants.IN_OPERATION_COUNTER);
+                inOpCounter.setValue(new AtomicInteger(0));
+                try {
+                    op.addParameter(inOpCounter);
+                } catch (AxisFault ignored) { // will not occur
+                }
+
+                // OUT operation counter
+                Parameter outOpCounter = new Parameter();
+                outOpCounter.setName(StatisticsConstants.OUT_OPERATION_COUNTER);
+                outOpCounter.setValue(new AtomicInteger(0));
+                try {
+                    op.addParameter(outOpCounter);
+                } catch (AxisFault ignored) { // will not occur
+                }
+
                 // Operation response time processor
                 Parameter responseTimeProcessor = new Parameter();
                 responseTimeProcessor.setName(StatisticsConstants.OPERATION_RESPONSE_TIME_PROCESSOR);
@@ -119,15 +121,6 @@ public class SystemStatisticsDeploymentInterceptor implements AxisObserver {
             } catch (AxisFault axisFault) { // will not occur
             }
         }
-        else if(axisEvent.getEventType() == AxisEvent.SERVICE_REMOVE) {
-            Parameter keepStatHistory = axisService.getParameter(CarbonConstants
-                                                                  .KEEP_SERVICE_HISTORY_PARAM);
-            if(keepStatHistory == null || keepStatHistory.getValue() == null ||
-                Boolean.FALSE.equals(keepStatHistory.getValue())){
-                //TODO remove persisted stats for service
-                StatisticsPersistenceUtils.removePersistedStats(axisService);
-            }
-        }
     }
 
     public void serviceGroupUpdate(AxisEvent axisEvent, AxisServiceGroup axisServiceGroup) {
@@ -135,10 +128,7 @@ public class SystemStatisticsDeploymentInterceptor implements AxisObserver {
     }
 
     public void moduleUpdate(AxisEvent axisEvent, AxisModule axisModule) {
-        if(StatisticsConstants.STATISTISTICS_MODULE_NAME.equals(axisModule.getName()) &&
-           AxisEvent.MODULE_DEPLOY == axisEvent.getEventType()) {
-            StatisticsPersistenceUtils.retrieveSystemStatistics(axisModule.getParent());
-        }
+        // Nothing to implement
     }
 
     public void addParameter(Parameter parameter) throws AxisFault {

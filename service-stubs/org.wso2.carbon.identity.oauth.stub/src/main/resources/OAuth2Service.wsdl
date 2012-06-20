@@ -65,6 +65,8 @@
                     <xs:element minOccurs="0" name="clientId" nillable="true" type="xs:string" />
                     <xs:element minOccurs="0" name="clientSecret" nillable="true" type="xs:string" />
                     <xs:element minOccurs="0" name="grantType" nillable="true" type="xs:string" />
+                    <xs:element minOccurs="0" name="resourceOwnerPassword" nillable="true" type="xs:string" />
+                    <xs:element minOccurs="0" name="resourceOwnerUsername" nillable="true" type="xs:string" />
                 </xs:sequence>
             </xs:complexType>
             <xs:complexType name="OAuth2AccessTokenRespDTO">

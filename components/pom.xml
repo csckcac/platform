@@ -1564,7 +1564,7 @@
         <version.solr>1.4.1.wso2v1</version.solr>
         <shindig.version>1.1.0.wso2v6</shindig.version>
         <batik.version>1.7.0.wso2v1</batik.version>
-        <google.guava.wso2.version>11.0.1.wso2v1</google.guava.wso2.version>
+        <google.guava.wso2.version>12.0.0.wso2v1</google.guava.wso2.version>
 	<orbit.version.json>2.0.0.wso2v1</orbit.version.json>
 	<orbit.version.json-simple>1.1.wso2v1</orbit.version.json-simple>
 	<orbit.version.woden>1.0.0.M8-wso2v1</orbit.version.woden>

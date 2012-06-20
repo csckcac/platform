@@ -18,10 +18,12 @@
                 <artifactId>maven-surefire-plugin</artifactId>
                 <inherited>false</inherited>
                 <configuration>
-                     <!--<argLine>-Xmx1024m -XX:PermSize=256m -XX:MaxPermSize=512m -Xdebug -Xnoagent -Djava.compiler=NONE -Xrunjdwp:transport=dt_socket,server=y,suspend=y,address=5006</argLine>-->
+                    <!--<argLine>-Xmx1024m -XX:PermSize=256m -XX:MaxPermSize=512m -Xdebug -Xnoagent -Djava.compiler=NONE -Xrunjdwp:transport=dt_socket,server=y,suspend=y,address=5006</argLine>-->
                     <argLine>-Xmx1024m -XX:PermSize=256m -XX:MaxPermSize=512m</argLine>
 
                     <excludes>
+                        <exclude>**/*MetaDataVolumeTestClient.java</exclude>
+                        <exclude>**/*MetaDataConcurrentTestClient.java</exclude>
                         <!--<exclude>**/*BackwardAssociationHandlerTestCase.java</exclude>-->
                         <!--<exclude>**/*ServiceEditTestCase.java</exclude>-->
                         <!--<exclude>**/*SchemaTestCase.java</exclude>-->
@@ -34,8 +36,8 @@
 
                     <systemProperties>
                         <!--<property>-->
-                            <!--<name>debug.mode</name>-->
-                            <!--<value>true</value>-->
+                        <!--<name>debug.mode</name>-->
+                        <!--<value>true</value>-->
                         <!--</property>-->
                         <property>
                             <name>maven.test.haltafterfailure</name>
@@ -43,7 +45,8 @@
                         </property>
                         <property>
                             <name>carbon.zip</name>
-                            <value>${basedir}/../../../distribution/target/wso2greg-${project.version}.zip
+                            <value>
+                                ${basedir}/../../../distribution/target/wso2greg-${project.version}.zip
                             </value>
                         </property>
                         <property>
@@ -52,7 +55,8 @@
                         </property>
                         <sec.verifier.dir>${basedir}/target/security-verifier/</sec.verifier.dir>
                         <emma.home>${basedir}/target/emma</emma.home>
-                        <instr.file>${basedir}/src/test/java/resources/instrumentation.txt</instr.file>
+                        <instr.file>${basedir}/src/test/java/resources/instrumentation.txt
+                        </instr.file>
                         <filters.file>${basedir}/src/test/java/resources/filters.txt</filters.file>
                         <emma.output>${basedir}/target/emma</emma.output>
                     </systemProperties>
@@ -63,7 +67,7 @@
                 <artifactId>maven-dependency-plugin</artifactId>
                 <executions>
                     <execution>
-			<id>copy-emma-dependencies</id>	
+                        <id>copy-emma-dependencies</id>
                         <phase>compile</phase>
                         <goals>
                             <goal>copy-dependencies</goal>
@@ -71,11 +75,12 @@
                         <configuration>
                             <outputDirectory>${project.build.directory}/emma</outputDirectory>
                             <includeTypes>jar</includeTypes>
-                            <includeArtifactIds>emma,org.wso2.carbon.integration.framework</includeArtifactIds>
+                            <includeArtifactIds>emma,org.wso2.carbon.integration.framework
+                            </includeArtifactIds>
                         </configuration>
                     </execution>
                     <execution>
-                    	<id>copy-secVerifier</id>
+                        <id>copy-secVerifier</id>
                         <phase>compile</phase>
                         <goals>
                             <goal>copy-dependencies</goal>
@@ -317,10 +322,10 @@
             <version>${emma.version}</version>
         </dependency>
         <dependency>
-        	<groupId>org.wso2.carbon</groupId>
-        	<artifactId>SecVerifier</artifactId>
-        	<version>${carbon.version}</version>
-        	<type>aar</type>
+            <groupId>org.wso2.carbon</groupId>
+            <artifactId>SecVerifier</artifactId>
+            <version>${carbon.version}</version>
+            <type>aar</type>
         </dependency>
         <dependency>
             <groupId>org.wso2.automation</groupId>

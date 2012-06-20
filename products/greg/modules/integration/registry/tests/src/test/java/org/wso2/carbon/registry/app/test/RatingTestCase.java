@@ -56,6 +56,10 @@ public class RatingTestCase {
         //System.out.println("Start rating:" + rating);
         assertEquals(rating, (float) 5.0, (float) 0.01,
                 "Rating of the resource /d16/d17/r1 should be 5.");
+
+        int ratingVal = registry.getRating("/d16/d17/r1", "admin");
+
+        assertEquals(ratingVal, 5, "Rating of the resource /d16/d17/r1 should be 5.");
     }
 
     @Test(groups = {"wso2.greg"})
@@ -69,7 +73,11 @@ public class RatingTestCase {
 
         //System.out.println("Start rating:" + rating);
         assertEquals(rating, (float) 4.0, (float) 0.01,
-                "Rating of the resource /d16/d18 should be 5.");
+                "Rating of the resource /d16/d18 should be 4.");
+
+        int ratingVal = registry.getRating("/d16/d18", "admin");
+
+        assertEquals(ratingVal, 4, "Rating of the resource /d16/d18 should be 4.");
     }
 
     @Test(groups = {"wso2.greg"})
@@ -116,13 +124,12 @@ public class RatingTestCase {
         Resource ratings = registry.get("/c1/r5;ratings");
         String[] ratingPaths = (String[]) ratings.getContent();
 
-        Resource c1 = registry.get(ratingPaths[0]);
+        assertEquals(ratingPaths.length, 0, "No ratings should be returned.");
 
-        InputStream stream = c1.getContentStream();
+        ratings = registry.get("/c1/r5;ratings:admin");
+        ratingPaths = (String[]) ratings.getContent();
 
-        StringWriter writer = new StringWriter();
-        IOUtils.copy(stream, writer);
-        String ratingString = writer.toString();
-        assertEquals(ratingString, "3", "Ratings are not retrieved properly as resources.");
+        assertEquals(ratingPaths.length, 1, "1 rating should be returned.");
+
     }
 }

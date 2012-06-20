@@ -41,9 +41,6 @@ public class BPELPackageManagementServiceSkeleton extends AbstractAdmin
     private static Log log = LogFactory.getLog(BPELPackageManagementServiceSkeleton.class);
 
     public ProcessesInPackage listProcessesInPackage(String packageName) throws PackageManagementException {
-        CarbonContextHolder.getThreadLocalCarbonContextHolder().setTenantId(CarbonContextHolder.
-                getCurrentCarbonContextHolder().getTenantId());
-
         TenantProcessStoreImpl tenantProcessStore = getTenantProcessStore();
         ProcessesInPackage processInPackage = new ProcessesInPackage();
         processInPackage.setPackageName(packageName);
@@ -63,9 +60,6 @@ public class BPELPackageManagementServiceSkeleton extends AbstractAdmin
     }
 
     public UndeployStatus_type0 undeployBPELPackage(String packageName) {
-        CarbonContextHolder.getThreadLocalCarbonContextHolder().setTenantId(CarbonContextHolder.
-                getCurrentCarbonContextHolder().getTenantId());
-        
         if(log.isDebugEnabled()) {
             log.debug("Starting undeployment of BPEL package " + packageName);
         }
@@ -82,9 +76,6 @@ public class BPELPackageManagementServiceSkeleton extends AbstractAdmin
 
     public DeployedPackagesPaginated listDeployedPackagesPaginated(int page) throws org.wso2.carbon.
             bpel.skeleton.ode.integration.mgt.services.PackageManagementException {
-        CarbonContextHolder.getThreadLocalCarbonContextHolder().setTenantId(CarbonContextHolder.
-                getCurrentCarbonContextHolder().getTenantId());
-
         int tPage = page;
         List<BPELPackageInfo> packages;
         DeployedPackagesPaginated paginatedPackages = new DeployedPackagesPaginated();

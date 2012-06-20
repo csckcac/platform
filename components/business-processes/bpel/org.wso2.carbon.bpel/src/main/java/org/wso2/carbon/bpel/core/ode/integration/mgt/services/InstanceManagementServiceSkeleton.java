@@ -97,9 +97,6 @@ public class InstanceManagementServiceSkeleton extends AbstractAdmin
     }
 
     public InstanceSummaryE getInstanceSummary() throws InstanceManagementException {
-        CarbonContextHolder.getThreadLocalCarbonContextHolder().setTenantId(CarbonContextHolder.
-                getCurrentCarbonContextHolder().getTenantId());
-
         InstanceSummaryE instanceSummary = new InstanceSummaryE();
 
         Integer tenantId = MultitenantUtils.getTenantId(getConfigContext());
@@ -190,9 +187,6 @@ public class InstanceManagementServiceSkeleton extends AbstractAdmin
     public PaginatedInstanceList getPaginatedInstanceList(String filter, final String order,
                                                           final int limit, final int page)
             throws InstanceManagementException {
-        CarbonContextHolder.getThreadLocalCarbonContextHolder().setTenantId(CarbonContextHolder.
-                getCurrentCarbonContextHolder().getTenantId());
-
         String tFilter = filter;
 
         final PaginatedInstanceList instanceList = new PaginatedInstanceList();
@@ -260,9 +254,6 @@ public class InstanceManagementServiceSkeleton extends AbstractAdmin
      */
     public LimitedInstanceInfoType[] getLongRunningInstances(int limit)
             throws InstanceManagementException {
-        CarbonContextHolder.getThreadLocalCarbonContextHolder().setTenantId(CarbonContextHolder.
-                getCurrentCarbonContextHolder().getTenantId());
-
         final List<LimitedInstanceInfoType> longRunningInstances = new ArrayList<LimitedInstanceInfoType>();
         Integer tenantId = MultitenantUtils.getTenantId(getConfigContext());
         TenantProcessStoreImpl tenantProcessStore = (TenantProcessStoreImpl) bpelServer.
@@ -313,8 +304,6 @@ public class InstanceManagementServiceSkeleton extends AbstractAdmin
      * @return Instance information
      */
     public InstanceInfoType getInstanceInfo(long iid) throws InstanceManagementException {
-        CarbonContextHolder.getThreadLocalCarbonContextHolder().setTenantId(CarbonContextHolder.
-                getCurrentCarbonContextHolder().getTenantId());
         try {
             isOperationIsValidForTheCurrentTenant(iid);
         } catch (IllegalAccessException ex) {
@@ -337,9 +326,6 @@ public class InstanceManagementServiceSkeleton extends AbstractAdmin
      */
     public InstanceInfoWithEventsType getInstanceInfoWithEvents(long iid)
             throws InstanceManagementException {
-        CarbonContextHolder.getThreadLocalCarbonContextHolder().setTenantId(CarbonContextHolder.
-                getCurrentCarbonContextHolder().getTenantId());
-
         try {
             isOperationIsValidForTheCurrentTenant(iid);
         } catch (IllegalAccessException ex) {
@@ -356,9 +342,6 @@ public class InstanceManagementServiceSkeleton extends AbstractAdmin
      */
     public ActivityLifeCycleEventsType getActivityLifeCycleFilter(long iid)
             throws InstanceManagementException {
-        CarbonContextHolder.getThreadLocalCarbonContextHolder().setTenantId(CarbonContextHolder.
-                getCurrentCarbonContextHolder().getTenantId());
-
         try {
             isOperationIsValidForTheCurrentTenant(iid);
         } catch (IllegalAccessException ex) {
@@ -376,9 +359,6 @@ public class InstanceManagementServiceSkeleton extends AbstractAdmin
      */
     public void recoverActivity(final long iid, final long aid, final Action_type1 action)
             throws InstanceManagementException {
-        CarbonContextHolder.getThreadLocalCarbonContextHolder().setTenantId(CarbonContextHolder.
-                getCurrentCarbonContextHolder().getTenantId());
-
         try {
             dbexec(new BpelDatabase.Callable<QName>() {
                 public QName run(BpelDAOConnection conn) throws Exception {
@@ -552,9 +532,6 @@ public class InstanceManagementServiceSkeleton extends AbstractAdmin
      *                                     unavailability of Debugger support
      */
     public void resumeInstance(long iid) throws InstanceManagementException {
-        CarbonContextHolder.getThreadLocalCarbonContextHolder().setTenantId(CarbonContextHolder.
-                getCurrentCarbonContextHolder().getTenantId());
-
         try {
             isOperationIsValidForTheCurrentTenant(iid);
         } catch (IllegalAccessException ex) {
@@ -582,9 +559,6 @@ public class InstanceManagementServiceSkeleton extends AbstractAdmin
      *                                     unavailability of Debugger support
      */
     public void suspendInstance(long iid) throws InstanceManagementException {
-        CarbonContextHolder.getThreadLocalCarbonContextHolder().setTenantId(CarbonContextHolder.
-                getCurrentCarbonContextHolder().getTenantId());
-
         try {
             isOperationIsValidForTheCurrentTenant(iid);
         } catch (IllegalAccessException ex) {
@@ -609,9 +583,6 @@ public class InstanceManagementServiceSkeleton extends AbstractAdmin
      */
 
     public void terminateInstance(long iid) throws InstanceManagementException {
-        CarbonContextHolder.getThreadLocalCarbonContextHolder().setTenantId(CarbonContextHolder.
-                getCurrentCarbonContextHolder().getTenantId());
-
         try {
             isOperationIsValidForTheCurrentTenant(iid);
         } catch (IllegalAccessException ex) {
@@ -636,9 +607,6 @@ public class InstanceManagementServiceSkeleton extends AbstractAdmin
      */
     public int deleteInstances(String filter, final boolean deleteMessageExchanges)
             throws InstanceManagementException {
-        CarbonContextHolder.getThreadLocalCarbonContextHolder().setTenantId(CarbonContextHolder.
-                getCurrentCarbonContextHolder().getTenantId());
-
         String tFilter = filter;
         Integer tenantId = MultitenantUtils.getTenantId(getConfigContext());
         TenantProcessStoreImpl tenantProcessStore = (TenantProcessStoreImpl) bpelServer.

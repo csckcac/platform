@@ -81,9 +81,6 @@ public class ProcessManagementServiceSkeleton extends AbstractAdmin
                                                             String processListOrderByKey,
                                                             int page)
             throws ProcessManagementException {
-        CarbonContextHolder.getThreadLocalCarbonContextHolder().setTenantId(CarbonContextHolder.
-                getCurrentCarbonContextHolder().getTenantId());
-
         int tPage = page;
 
         PaginatedProcessInfoList processList = new PaginatedProcessInfoList();
@@ -118,9 +115,6 @@ public class ProcessManagementServiceSkeleton extends AbstractAdmin
 
     public java.lang.String[] getAllProcesses(String getAllProcesses)
             throws ProcessManagementException {
-        CarbonContextHolder.getThreadLocalCarbonContextHolder().setTenantId(CarbonContextHolder.
-                getCurrentCarbonContextHolder().getTenantId());
-
         TenantProcessStoreImpl tenantProcessStore = getTenantProcessStore();
         Set<QName> processIds = tenantProcessStore.getProcessConfigMap().keySet();
         List<String> pids = new ArrayList<String>();
@@ -378,9 +372,6 @@ public class ProcessManagementServiceSkeleton extends AbstractAdmin
     }
 
     public void retireProcess(QName pid) throws ProcessManagementException {
-        CarbonContextHolder.getThreadLocalCarbonContextHolder().setTenantId(CarbonContextHolder.
-                getCurrentCarbonContextHolder().getTenantId());
-
         TenantProcessStoreImpl tenantProcessStore = getTenantProcessStore();
         try {
             tenantProcessStore.setState(pid, ProcessState.RETIRED);
@@ -393,9 +384,6 @@ public class ProcessManagementServiceSkeleton extends AbstractAdmin
 
 
     public void activateProcess(QName pid) throws ProcessManagementException {
-        CarbonContextHolder.getThreadLocalCarbonContextHolder().setTenantId(CarbonContextHolder.
-                getCurrentCarbonContextHolder().getTenantId());
-
         TenantProcessStoreImpl tenantProcessStore = getTenantProcessStore();
         try {
             tenantProcessStore.setState(pid, ProcessState.ACTIVE);
@@ -407,9 +395,6 @@ public class ProcessManagementServiceSkeleton extends AbstractAdmin
     }
 
     public ProcessInfoType getProcessInfo(QName pid) throws ProcessManagementException {
-        CarbonContextHolder.getThreadLocalCarbonContextHolder().setTenantId(CarbonContextHolder.
-                getCurrentCarbonContextHolder().getTenantId());
-
         ProcessInfoType processInfoType = new ProcessInfoType();
         TenantProcessStoreImpl tenantProcessStore = getTenantProcessStore();
         ProcessConf processConf = tenantProcessStore.getProcessConfiguration(pid);

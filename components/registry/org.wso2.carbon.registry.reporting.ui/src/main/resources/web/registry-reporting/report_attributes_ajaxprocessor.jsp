@@ -32,12 +32,15 @@
         if (reportClass == null || reportClass.length() == 0) {
             return;
         }
-        attributes.addAll(Arrays.asList(client.getAttributeNames(reportClass)));
-        String reportName = request.getParameter("reportName");
-        if (reportName != null && reportName.length() > 0) {
-            // mandatory attributes show up only when you have already created a report. For the first time, everything is optional.
-            mandatoryAttributes.addAll(Arrays.asList(client.getMandatoryAttributeNames(reportClass)));
-            attributeValues = CommonUtil.attributeArrayToMap(client.getSavedReport(reportName).getAttributes());
+        String[] attributeNames = client.getAttributeNames(reportClass);
+        if (attributeNames != null) {
+            attributes.addAll(Arrays.asList(attributeNames));
+            String reportName = request.getParameter("reportName");
+            if (reportName != null && reportName.length() > 0) {
+                // mandatory attributes show up only when you have already created a report. For the first time, everything is optional.
+                mandatoryAttributes.addAll(Arrays.asList(client.getMandatoryAttributeNames(reportClass)));
+                attributeValues = CommonUtil.attributeArrayToMap(client.getSavedReport(reportName).getAttributes());
+            }
         }
     } catch (Exception e){
         response.setStatus(500);

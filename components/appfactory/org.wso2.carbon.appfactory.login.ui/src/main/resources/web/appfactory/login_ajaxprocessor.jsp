@@ -174,8 +174,8 @@
                                 </div>
 
                                 <div class="form-actions">
-                                    <button type="submit" class="btn btn-primary">Sing-in</button>
-                                    <button class="btn">Cancel</button>
+                                    <button type="btn btn-primary" class="btn btn-primary">Sing-in</button>
+                                    <button class="btn btn-primary">Cancel</button>
                                 </div>
                             </fieldset>
                         </form>
@@ -193,7 +193,7 @@
     <hr>
 
     <footer>
-        <p>&copy; Company 2012</p>
+        <p>&copy; WSO2 2012</p>
     </footer>
 
 </div>

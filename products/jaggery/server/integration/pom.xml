@@ -90,7 +90,7 @@
                     <systemProperties>
                         <maven.test.haltafterfailure>false</maven.test.haltafterfailure>
                         <carbon.zip>
-                            ${basedir}/../../modules/distribution/target/jaggery-${jaggery.version}.zip
+                            ${basedir}/../../server/distribution/target/jaggery-${jaggery.version}.zip
                         </carbon.zip>
                         <https.port>9443</https.port>
                         <http.port>9763</http.port>

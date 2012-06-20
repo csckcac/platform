@@ -54,7 +54,7 @@
         <module>features</module>
         <module>server/p2-profile-gen</module>
         <module>server/distribution</module>
-<!--		<module>server/integration</module>-->
+		<module>server/integration</module>
     </modules>
 
     <dependencyManagement>
@@ -124,6 +124,7 @@
         <jaggery.version>0.9.0-ALPHA</jaggery.version>
         <jaggery.components.version>1.0.0.SNAPSHOT</jaggery.components.version>
         <carbon.p2.plugin.version>1.5-SNAPSHOT</carbon.p2.plugin.version>
+        <emma.version>2.1.5320</emma.version>
     </properties>
 
 

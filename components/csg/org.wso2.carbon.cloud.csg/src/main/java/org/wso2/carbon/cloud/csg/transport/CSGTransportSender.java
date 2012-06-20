@@ -193,6 +193,8 @@ public class CSGTransportSender extends AbstractTransportSender {
 
             Message thriftMsg = new Message();
             thriftMsg.setIsDoingREST(msgContext.isDoingREST());
+            thriftMsg.setIsDoingMTOM(msgContext.isDoingMTOM());
+            thriftMsg.setIsDoingSwA(msgContext.isDoingSwA());
             thriftMsg.setHttpMethod((String) msgContext.getProperty(
                     Constants.Configuration.HTTP_METHOD));
             thriftMsg.setMessageId(requestMsgIdMsgId);

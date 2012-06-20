@@ -21,6 +21,8 @@ struct Message {
     7: string requestURI;
     8: bool isDoingREST;
     9: string httpMethod;
+    10: bool isDoingMTOM;
+    11: bool isDoingSwA;
 }
 
 /*

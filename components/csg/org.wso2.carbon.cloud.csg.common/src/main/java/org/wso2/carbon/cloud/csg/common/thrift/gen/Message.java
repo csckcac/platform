@@ -39,6 +39,8 @@ public class Message implements org.apache.thrift.TBase<Message, Message._Fields
   private static final org.apache.thrift.protocol.TField REQUEST_URI_FIELD_DESC = new org.apache.thrift.protocol.TField("requestURI", org.apache.thrift.protocol.TType.STRING, (short)7);
   private static final org.apache.thrift.protocol.TField IS_DOING_REST_FIELD_DESC = new org.apache.thrift.protocol.TField("isDoingREST", org.apache.thrift.protocol.TType.BOOL, (short)8);
   private static final org.apache.thrift.protocol.TField HTTP_METHOD_FIELD_DESC = new org.apache.thrift.protocol.TField("httpMethod", org.apache.thrift.protocol.TType.STRING, (short)9);
+  private static final org.apache.thrift.protocol.TField IS_DOING_MTOM_FIELD_DESC = new org.apache.thrift.protocol.TField("isDoingMTOM", org.apache.thrift.protocol.TType.BOOL, (short)10);
+  private static final org.apache.thrift.protocol.TField IS_DOING_SW_A_FIELD_DESC = new org.apache.thrift.protocol.TField("isDoingSwA", org.apache.thrift.protocol.TType.BOOL, (short)11);
 
   private static final Map<Class<? extends IScheme>, SchemeFactory> schemes = new HashMap<Class<? extends IScheme>, SchemeFactory>();
   static {
@@ -55,6 +57,8 @@ public class Message implements org.apache.thrift.TBase<Message, Message._Fields
   public String requestURI; // required
   public boolean isDoingREST; // required
   public String httpMethod; // required
+  public boolean isDoingMTOM; // required
+  public boolean isDoingSwA; // required
 
   /** The set of fields this struct contains, along with convenience methods for finding and manipulating them. */
   public enum _Fields implements org.apache.thrift.TFieldIdEnum {
@@ -66,7 +70,9 @@ public class Message implements org.apache.thrift.TBase<Message, Message._Fields
     TRANSPORT_HEADERS((short)6, "transportHeaders"),
     REQUEST_URI((short)7, "requestURI"),
     IS_DOING_REST((short)8, "isDoingREST"),
-    HTTP_METHOD((short)9, "httpMethod");
+    HTTP_METHOD((short)9, "httpMethod"),
+    IS_DOING_MTOM((short)10, "isDoingMTOM"),
+    IS_DOING_SW_A((short)11, "isDoingSwA");
 
     private static final Map<String, _Fields> byName = new HashMap<String, _Fields>();
 
@@ -99,6 +105,10 @@ public class Message implements org.apache.thrift.TBase<Message, Message._Fields
           return IS_DOING_REST;
         case 9: // HTTP_METHOD
           return HTTP_METHOD;
+        case 10: // IS_DOING_MTOM
+          return IS_DOING_MTOM;
+        case 11: // IS_DOING_SW_A
+          return IS_DOING_SW_A;
         default:
           return null;
       }
@@ -141,7 +151,9 @@ public class Message implements org.apache.thrift.TBase<Message, Message._Fields
   // isset id assignments
   private static final int __EPOCH_ISSET_ID = 0;
   private static final int __ISDOINGREST_ISSET_ID = 1;
-  private BitSet __isset_bit_vector = new BitSet(2);
+  private static final int __ISDOINGMTOM_ISSET_ID = 2;
+  private static final int __ISDOINGSWA_ISSET_ID = 3;
+  private BitSet __isset_bit_vector = new BitSet(4);
   public static final Map<_Fields, org.apache.thrift.meta_data.FieldMetaData> metaDataMap;
   static {
     Map<_Fields, org.apache.thrift.meta_data.FieldMetaData> tmpMap = new EnumMap<_Fields, org.apache.thrift.meta_data.FieldMetaData>(_Fields.class);
@@ -165,6 +177,10 @@ public class Message implements org.apache.thrift.TBase<Message, Message._Fields
         new org.apache.thrift.meta_data.FieldValueMetaData(org.apache.thrift.protocol.TType.BOOL)));
     tmpMap.put(_Fields.HTTP_METHOD, new org.apache.thrift.meta_data.FieldMetaData("httpMethod", org.apache.thrift.TFieldRequirementType.DEFAULT, 
         new org.apache.thrift.meta_data.FieldValueMetaData(org.apache.thrift.protocol.TType.STRING)));
+    tmpMap.put(_Fields.IS_DOING_MTOM, new org.apache.thrift.meta_data.FieldMetaData("isDoingMTOM", org.apache.thrift.TFieldRequirementType.DEFAULT, 
+        new org.apache.thrift.meta_data.FieldValueMetaData(org.apache.thrift.protocol.TType.BOOL)));
+    tmpMap.put(_Fields.IS_DOING_SW_A, new org.apache.thrift.meta_data.FieldMetaData("isDoingSwA", org.apache.thrift.TFieldRequirementType.DEFAULT, 
+        new org.apache.thrift.meta_data.FieldValueMetaData(org.apache.thrift.protocol.TType.BOOL)));
     metaDataMap = Collections.unmodifiableMap(tmpMap);
     org.apache.thrift.meta_data.FieldMetaData.addStructMetaDataMap(Message.class, metaDataMap);
   }
@@ -181,7 +197,9 @@ public class Message implements org.apache.thrift.TBase<Message, Message._Fields
     Map<String,String> transportHeaders,
     String requestURI,
     boolean isDoingREST,
-    String httpMethod)
+    String httpMethod,
+    boolean isDoingMTOM,
+    boolean isDoingSwA)
   {
     this();
     this.messageId = messageId;
@@ -195,6 +213,10 @@ public class Message implements org.apache.thrift.TBase<Message, Message._Fields
     this.isDoingREST = isDoingREST;
     setIsDoingRESTIsSet(true);
     this.httpMethod = httpMethod;
+    this.isDoingMTOM = isDoingMTOM;
+    setIsDoingMTOMIsSet(true);
+    this.isDoingSwA = isDoingSwA;
+    setIsDoingSwAIsSet(true);
   }
 
   /**
@@ -239,6 +261,8 @@ public class Message implements org.apache.thrift.TBase<Message, Message._Fields
     if (other.isSetHttpMethod()) {
       this.httpMethod = other.httpMethod;
     }
+    this.isDoingMTOM = other.isDoingMTOM;
+    this.isDoingSwA = other.isDoingSwA;
   }
 
   public Message deepCopy() {
@@ -258,6 +282,10 @@ public class Message implements org.apache.thrift.TBase<Message, Message._Fields
     setIsDoingRESTIsSet(false);
     this.isDoingREST = false;
     this.httpMethod = null;
+    setIsDoingMTOMIsSet(false);
+    this.isDoingMTOM = false;
+    setIsDoingSwAIsSet(false);
+    this.isDoingSwA = false;
   }
 
   public String getMessageId() {
@@ -495,6 +523,52 @@ public class Message implements org.apache.thrift.TBase<Message, Message._Fields
     }
   }
 
+  public boolean isIsDoingMTOM() {
+    return this.isDoingMTOM;
+  }
+
+  public Message setIsDoingMTOM(boolean isDoingMTOM) {
+    this.isDoingMTOM = isDoingMTOM;
+    setIsDoingMTOMIsSet(true);
+    return this;
+  }
+
+  public void unsetIsDoingMTOM() {
+    __isset_bit_vector.clear(__ISDOINGMTOM_ISSET_ID);
+  }
+
+  /** Returns true if field isDoingMTOM is set (has been assigned a value) and false otherwise */
+  public boolean isSetIsDoingMTOM() {
+    return __isset_bit_vector.get(__ISDOINGMTOM_ISSET_ID);
+  }
+
+  public void setIsDoingMTOMIsSet(boolean value) {
+    __isset_bit_vector.set(__ISDOINGMTOM_ISSET_ID, value);
+  }
+
+  public boolean isIsDoingSwA() {
+    return this.isDoingSwA;
+  }
+
+  public Message setIsDoingSwA(boolean isDoingSwA) {
+    this.isDoingSwA = isDoingSwA;
+    setIsDoingSwAIsSet(true);
+    return this;
+  }
+
+  public void unsetIsDoingSwA() {
+    __isset_bit_vector.clear(__ISDOINGSWA_ISSET_ID);
+  }
+
+  /** Returns true if field isDoingSwA is set (has been assigned a value) and false otherwise */
+  public boolean isSetIsDoingSwA() {
+    return __isset_bit_vector.get(__ISDOINGSWA_ISSET_ID);
+  }
+
+  public void setIsDoingSwAIsSet(boolean value) {
+    __isset_bit_vector.set(__ISDOINGSWA_ISSET_ID, value);
+  }
+
   public void setFieldValue(_Fields field, Object value) {
     switch (field) {
     case MESSAGE_ID:
@@ -569,6 +643,22 @@ public class Message implements org.apache.thrift.TBase<Message, Message._Fields
       }
       break;
 
+    case IS_DOING_MTOM:
+      if (value == null) {
+        unsetIsDoingMTOM();
+      } else {
+        setIsDoingMTOM((Boolean)value);
+      }
+      break;
+
+    case IS_DOING_SW_A:
+      if (value == null) {
+        unsetIsDoingSwA();
+      } else {
+        setIsDoingSwA((Boolean)value);
+      }
+      break;
+
     }
   }
 
@@ -601,6 +691,12 @@ public class Message implements org.apache.thrift.TBase<Message, Message._Fields
     case HTTP_METHOD:
       return getHttpMethod();
 
+    case IS_DOING_MTOM:
+      return Boolean.valueOf(isIsDoingMTOM());
+
+    case IS_DOING_SW_A:
+      return Boolean.valueOf(isIsDoingSwA());
+
     }
     throw new IllegalStateException();
   }
@@ -630,6 +726,10 @@ public class Message implements org.apache.thrift.TBase<Message, Message._Fields
       return isSetIsDoingREST();
     case HTTP_METHOD:
       return isSetHttpMethod();
+    case IS_DOING_MTOM:
+      return isSetIsDoingMTOM();
+    case IS_DOING_SW_A:
+      return isSetIsDoingSwA();
     }
     throw new IllegalStateException();
   }
@@ -725,6 +825,24 @@ public class Message implements org.apache.thrift.TBase<Message, Message._Fields
       if (!(this_present_httpMethod && that_present_httpMethod))
         return false;
       if (!this.httpMethod.equals(that.httpMethod))
+        return false;
+    }
+
+    boolean this_present_isDoingMTOM = true;
+    boolean that_present_isDoingMTOM = true;
+    if (this_present_isDoingMTOM || that_present_isDoingMTOM) {
+      if (!(this_present_isDoingMTOM && that_present_isDoingMTOM))
+        return false;
+      if (this.isDoingMTOM != that.isDoingMTOM)
+        return false;
+    }
+
+    boolean this_present_isDoingSwA = true;
+    boolean that_present_isDoingSwA = true;
+    if (this_present_isDoingSwA || that_present_isDoingSwA) {
+      if (!(this_present_isDoingSwA && that_present_isDoingSwA))
+        return false;
+      if (this.isDoingSwA != that.isDoingSwA)
         return false;
     }
 
@@ -834,6 +952,26 @@ public class Message implements org.apache.thrift.TBase<Message, Message._Fields
         return lastComparison;
       }
     }
+    lastComparison = Boolean.valueOf(isSetIsDoingMTOM()).compareTo(typedOther.isSetIsDoingMTOM());
+    if (lastComparison != 0) {
+      return lastComparison;
+    }
+    if (isSetIsDoingMTOM()) {
+      lastComparison = org.apache.thrift.TBaseHelper.compareTo(this.isDoingMTOM, typedOther.isDoingMTOM);
+      if (lastComparison != 0) {
+        return lastComparison;
+      }
+    }
+    lastComparison = Boolean.valueOf(isSetIsDoingSwA()).compareTo(typedOther.isSetIsDoingSwA());
+    if (lastComparison != 0) {
+      return lastComparison;
+    }
+    if (isSetIsDoingSwA()) {
+      lastComparison = org.apache.thrift.TBaseHelper.compareTo(this.isDoingSwA, typedOther.isDoingSwA);
+      if (lastComparison != 0) {
+        return lastComparison;
+      }
+    }
     return 0;
   }
 
@@ -916,6 +1054,14 @@ public class Message implements org.apache.thrift.TBase<Message, Message._Fields
     } else {
       sb.append(this.httpMethod);
     }
+    first = false;
+    if (!first) sb.append(", ");
+    sb.append("isDoingMTOM:");
+    sb.append(this.isDoingMTOM);
+    first = false;
+    if (!first) sb.append(", ");
+    sb.append("isDoingSwA:");
+    sb.append(this.isDoingSwA);
     first = false;
     sb.append(")");
     return sb.toString();
@@ -1045,6 +1191,22 @@ public class Message implements org.apache.thrift.TBase<Message, Message._Fields
               org.apache.thrift.protocol.TProtocolUtil.skip(iprot, schemeField.type);
             }
             break;
+          case 10: // IS_DOING_MTOM
+            if (schemeField.type == org.apache.thrift.protocol.TType.BOOL) {
+              struct.isDoingMTOM = iprot.readBool();
+              struct.setIsDoingMTOMIsSet(true);
+            } else { 
+              org.apache.thrift.protocol.TProtocolUtil.skip(iprot, schemeField.type);
+            }
+            break;
+          case 11: // IS_DOING_SW_A
+            if (schemeField.type == org.apache.thrift.protocol.TType.BOOL) {
+              struct.isDoingSwA = iprot.readBool();
+              struct.setIsDoingSwAIsSet(true);
+            } else { 
+              org.apache.thrift.protocol.TProtocolUtil.skip(iprot, schemeField.type);
+            }
+            break;
           default:
             org.apache.thrift.protocol.TProtocolUtil.skip(iprot, schemeField.type);
         }
@@ -1109,6 +1271,12 @@ public class Message implements org.apache.thrift.TBase<Message, Message._Fields
         oprot.writeString(struct.httpMethod);
         oprot.writeFieldEnd();
       }
+      oprot.writeFieldBegin(IS_DOING_MTOM_FIELD_DESC);
+      oprot.writeBool(struct.isDoingMTOM);
+      oprot.writeFieldEnd();
+      oprot.writeFieldBegin(IS_DOING_SW_A_FIELD_DESC);
+      oprot.writeBool(struct.isDoingSwA);
+      oprot.writeFieldEnd();
       oprot.writeFieldStop();
       oprot.writeStructEnd();
     }
@@ -1154,7 +1322,13 @@ public class Message implements org.apache.thrift.TBase<Message, Message._Fields
       if (struct.isSetHttpMethod()) {
         optionals.set(8);
       }
-      oprot.writeBitSet(optionals, 9);
+      if (struct.isSetIsDoingMTOM()) {
+        optionals.set(9);
+      }
+      if (struct.isSetIsDoingSwA()) {
+        optionals.set(10);
+      }
+      oprot.writeBitSet(optionals, 11);
       if (struct.isSetMessageId()) {
         oprot.writeString(struct.messageId);
       }
@@ -1189,12 +1363,18 @@ public class Message implements org.apache.thrift.TBase<Message, Message._Fields
       if (struct.isSetHttpMethod()) {
         oprot.writeString(struct.httpMethod);
       }
+      if (struct.isSetIsDoingMTOM()) {
+        oprot.writeBool(struct.isDoingMTOM);
+      }
+      if (struct.isSetIsDoingSwA()) {
+        oprot.writeBool(struct.isDoingSwA);
+      }
     }
 
     @Override
     public void read(org.apache.thrift.protocol.TProtocol prot, Message struct) throws org.apache.thrift.TException {
       TTupleProtocol iprot = (TTupleProtocol) prot;
-      BitSet incoming = iprot.readBitSet(9);
+      BitSet incoming = iprot.readBitSet(11);
       if (incoming.get(0)) {
         struct.messageId = iprot.readString();
         struct.setMessageIdIsSet(true);
@@ -1241,6 +1421,14 @@ public class Message implements org.apache.thrift.TBase<Message, Message._Fields
       if (incoming.get(8)) {
         struct.httpMethod = iprot.readString();
         struct.setHttpMethodIsSet(true);
+      }
+      if (incoming.get(9)) {
+        struct.isDoingMTOM = iprot.readBool();
+        struct.setIsDoingMTOMIsSet(true);
+      }
+      if (incoming.get(10)) {
+        struct.isDoingSwA = iprot.readBool();
+        struct.setIsDoingSwAIsSet(true);
       }
     }
   }

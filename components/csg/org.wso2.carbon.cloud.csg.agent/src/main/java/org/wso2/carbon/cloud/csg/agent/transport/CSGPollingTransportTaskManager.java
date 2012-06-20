@@ -429,6 +429,8 @@ public class CSGPollingTransportTaskManager {
 
                         msgContext.setProperty(Constants.Configuration.CONTENT_TYPE, contentType);
                         msgContext.setProperty(MessageContext.TRANSPORT_HEADERS, trpHeaders);
+                        msgContext.setDoingMTOM(message.isIsDoingMTOM());
+                        msgContext.setDoingSwA(message.isIsDoingSwA());
 
                         InputStream gzipInputStream =
                                 HTTPTransportUtils.handleGZip(msgContext, inputStream);

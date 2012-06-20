@@ -98,7 +98,15 @@ public class CSGAgentAdminService extends AbstractAdmin {
 
             org.wso2.carbon.cloud.csg.stub.types.common.CSGThriftServerBean bean =
                     csgAdminClient.getThriftServerConnectionBean();
-            String hostName = bean.getHostName();
+
+            // thrift server either bind to loop back address(most of the time "localhost") or it can bound to
+            // ip or host name but not both so below is used
+            String hostName = csgServer.getHost();
+            if ("localhost".equals(hostName) || "127.0.0.1".equals(hostName)) {
+                hostName = bean.getHostName(); //
+            } else {
+                bean.setHostName(hostName);
+            }
             int port = bean.getPort();
             int timeOut = bean.getTimeOut();
 

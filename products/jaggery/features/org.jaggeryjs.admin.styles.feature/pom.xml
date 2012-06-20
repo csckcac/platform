@@ -26,7 +26,7 @@
     </parent>
 
     <modelVersion>4.0.0</modelVersion>
-    <artifactId>org.wso2.jaggery.styles.feature</artifactId>
+    <artifactId>org.jaggeryjs.admin.styles.feature</artifactId>
     <packaging>pom</packaging>
     <name>WSO2 Jaggery Server - Style Features</name>
     <url>http://wso2.org</url>

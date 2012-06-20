@@ -26,9 +26,9 @@
     </parent>
 
     <modelVersion>4.0.0</modelVersion>
-    <artifactId>org.wso2.carbon.registry.samples.extensions.process</artifactId>
+    <artifactId>org.wso2.carbon.registry.samples.extensions.testplan</artifactId>
     <packaging>bundle</packaging>
-    <name>WSO2 Carbon - Registry - Process Sample</name>
+    <name>WSO2 Carbon - Registry - Test Plan Sample</name>
 
     <build>
         <sourceDirectory>src</sourceDirectory>
@@ -54,7 +54,6 @@
                         </Private-Package>
                         <Import-Package>
                             org.wso2.carbon.registry.core.*,
-                            org.wso2.carbon.registry.handler.*,
                             org.wso2.carbon.governance.api.*,
                             org.wso2.carbon.reporting.*,
                             !javax.xml.namespace,
@@ -111,28 +110,7 @@
 
         <dependency>
             <groupId>org.wso2.carbon</groupId>
-            <artifactId>org.wso2.carbon.registry.handler</artifactId>
-	        <version>${parent.version}</version>
-        </dependency>
-
-        <dependency>
-            <groupId>org.wso2.carbon</groupId>
             <artifactId>org.wso2.carbon.governance.api</artifactId>
-        </dependency>
-
-        <dependency>
-            <groupId>jaxen</groupId>
-            <artifactId>jaxen</artifactId>
-        </dependency>
-
-        <dependency>
-            <groupId>org.apache.ws.commons.axiom</groupId>
-            <artifactId>axiom-api</artifactId>
-        </dependency>
-
-        <dependency>
-            <groupId>org.apache.ws.commons.axiom</groupId>
-            <artifactId>axiom-impl</artifactId>
         </dependency>
 
     </dependencies>

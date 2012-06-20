@@ -115,5 +115,13 @@ public class CommandHandler {
     public static String getPassword() {
         return inputs.get("-pw");
     }
+
+    public static String getJRTemplateLocation(){
+        return inputs.get("-l")+"/reporting-templates";
+    }
+
+    public static String getModelName(){
+        return inputs.get("-l").split("/")[1];
+    }
 }
 

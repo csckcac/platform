@@ -11,7 +11,7 @@ Commands to Populate Governance Models
 --------------------------------------
 People Governance Model - 'ant run-people'
 Process Governance Model - 'ant run-process'
-Test Plan Governance Model - 'ant run-test-plan'
+Test Plan Governance Model - 'ant run-testplan'
 Application Governance Model - 'ant run-application'
 Project Governance Model - 'ant run-project'
 WADL Governance Model - 'ant run-wadl'

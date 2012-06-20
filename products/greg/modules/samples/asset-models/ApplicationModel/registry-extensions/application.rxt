@@ -6,7 +6,7 @@
             <column name="Name">
                 <data type="path" value="overview_name" href="/applications/@{name}"/>
             </column>
-            <column name="Version" required="true">
+            <column name="Version">
                 <data type="path" value="overview_version" href="@{storagePath}"/>
             </column>
         </list>

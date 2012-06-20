@@ -9,6 +9,8 @@ import org.wso2.carbon.registry.extensions.ui.clients.ResourceServiceClient;
 import org.wso2.carbon.registry.resource.services.utils.InputStreamBasedDataSource;
 import org.wso2.carbon.registry.samples.populator.utils.CommandHandler;
 import org.wso2.carbon.registry.samples.populator.utils.PopulatorHandlerManagerServiceClient;
+import org.wso2.carbon.registry.samples.populator.utils.PopulatorUtil;
+import org.wso2.carbon.registry.samples.populator.utils.ReportGeneratorServiceClient;
 import org.wso2.carbon.registry.ws.client.registry.WSRegistryServiceClient;
 
 import javax.activation.DataHandler;
@@ -46,14 +48,15 @@ public class Main {
                 }
             };
 
+            org.wso2.carbon.registry.resource.ui.clients.ResourceServiceClient resourceServiceClient
+                            = new org.wso2.carbon.registry.resource.ui.clients.ResourceServiceClient(cookie, CommandHandler.getServiceURL(),configContext);
+
             File extensionFolder = new File(CommandHandler.getRxtFileLocation());
             File[] extensions = extensionFolder.listFiles();
             if(extensions != null){
                 for(File extension : extensions){
                     String extensionName = getResourceName(extension.getAbsolutePath());
                     if(extensionName.endsWith(".rxt")){
-                        org.wso2.carbon.registry.resource.ui.clients.ResourceServiceClient resourceServiceClient
-                            = new org.wso2.carbon.registry.resource.ui.clients.ResourceServiceClient(cookie, CommandHandler.getServiceURL(),configContext);
                         DataSource dataSource = new InputStreamBasedDataSource(new FileInputStream(new File(extension.getAbsolutePath())));
                         DataHandler dataHandler = new DataHandler(dataSource);
                         resourceServiceClient.addResource("/_system/governance/repository/components/org.wso2.carbon.governance/types/"+extensionName,
@@ -62,20 +65,16 @@ public class Main {
                 }
             }
 
-            String handlerJarLocation = CommandHandler.getHandlerJarLocation();
-            if(handlerJarLocation != null){
-                File folder = new File(handlerJarLocation);
-                File[] filesList = folder.listFiles();
-                if(filesList != null){
-                    for(File file : filesList){
-                        String name = file.getName();
-                        if(file.isFile() && name.endsWith(".jar")){
-                            String fileName = getResourceName(file.getAbsolutePath());
-                            ResourceServiceClient extensionResourceServiceClient = new ResourceServiceClient(cookie, CommandHandler.getServiceURL(),configContext);
-                            DataSource dataSource =new InputStreamBasedDataSource(new FileInputStream(new File(file.getAbsolutePath())));
-                            DataHandler dataHandler = new DataHandler(dataSource);
-                            extensionResourceServiceClient.addExtension(fileName, dataHandler);
-                        }
+            File templateFolder = new File(CommandHandler.getJRTemplateLocation());
+            File[] templates = templateFolder.listFiles();
+            if(extensions != null){
+                for(File template : templates){
+                    String templateName = getResourceName(template.getAbsolutePath());
+                    if(templateName.endsWith(".jrxml")){
+                        DataSource dataSource = new InputStreamBasedDataSource(new FileInputStream(new File(template.getAbsolutePath())));
+                        DataHandler dataHandler = new DataHandler(dataSource);
+                        resourceServiceClient.addResource("/_system/governance/repository/components/org.wso2.carbon.governance/templates/" + templateName,
+                                "application/xml", null, dataHandler, null);
                     }
                 }
             }
@@ -90,6 +89,26 @@ public class Main {
                 handlerManagementServiceClient.newHandler(handler.toString());
             }
 
+            ReportGeneratorServiceClient reportGeneratorServiceClient = new ReportGeneratorServiceClient(cookie, CommandHandler.getServiceURL(), configContext);
+            reportGeneratorServiceClient.saveReport(PopulatorUtil.getReportConfigurationBean(CommandHandler.getModelName()));
+
+            String extensionJarLocation = CommandHandler.getHandlerJarLocation();
+            if(extensionJarLocation != null){
+                ResourceServiceClient extensionResourceServiceClient = new ResourceServiceClient(cookie, CommandHandler.getServiceURL(),configContext);
+                File folder = new File(extensionJarLocation);
+                File[] filesList = folder.listFiles();
+                if(filesList != null){
+                    for(File file : filesList){
+                        String name = file.getName();
+                        if(file.isFile() && name.endsWith(".jar")){
+                            String fileName = getResourceName(file.getAbsolutePath());
+                            DataSource dataSource =new InputStreamBasedDataSource(new FileInputStream(new File(file.getAbsolutePath())));
+                            DataHandler dataHandler = new DataHandler(dataSource);
+                            extensionResourceServiceClient.addExtension(fileName, dataHandler);
+                        }
+                    }
+                }
+            }
         } catch (Exception e){
             System.out.println("An error occurred.");
             e.printStackTrace();
@@ -99,7 +118,8 @@ public class Main {
     }
 
     public static String getResourceName(String fileLocation){
-        String[] s =  fileLocation.replace("\\", "/").split("/");
+        String[] s =  fileLocation.split("/");
         return s[s.length-1];
     }
 }
+

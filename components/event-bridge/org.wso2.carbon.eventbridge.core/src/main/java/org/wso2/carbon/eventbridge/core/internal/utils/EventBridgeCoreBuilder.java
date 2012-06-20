@@ -50,7 +50,7 @@ public final class EventBridgeCoreBuilder {
     public static OMElement loadConfigXML() throws EventBridgeConfigurationException {
 
         String carbonHome = System.getProperty(ServerConstants.CARBON_CONFIG_DIR_PATH);
-        String path = carbonHome + File.separator + EventBridgeConstants.EVENT_BRIDGE_CONFIG_XML;
+        String path = carbonHome + File.separator + EventBridgeConstants.EVENT_BRIDGE_DIR + File.separator + EventBridgeConstants.EVENT_BRIDGE_CONFIG_XML;
 
         // if the agent server config file not exists then simply return null.
         File eventBridgeConfigFile = new File(path);

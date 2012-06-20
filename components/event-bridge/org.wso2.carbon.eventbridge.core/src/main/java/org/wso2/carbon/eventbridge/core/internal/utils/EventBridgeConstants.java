@@ -24,6 +24,8 @@ package org.wso2.carbon.eventbridge.core.internal.utils;
  */
 public final class EventBridgeConstants {
 
+    public static final String EVENT_BRIDGE_DIR = "event-bridge";
+
     private EventBridgeConstants(){ }
 
     public static final int NO_OF_WORKER_THREADS = 10;

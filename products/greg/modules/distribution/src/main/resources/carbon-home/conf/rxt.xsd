@@ -62,7 +62,13 @@
               </xs:restriction>
           </xs:simpleType>
       </xs:attribute>
-      <xs:attribute name="type" type="xs:string" use="required"/>              
+      <xs:attribute name="type" use="required">
+          <xs:simpleType>
+              <xs:restriction base="xs:string">
+                  <xs:pattern value="(application/vnd\..*\+xml)"/>
+              </xs:restriction>
+          </xs:simpleType>
+      </xs:attribute>             
       <xs:attribute name="singularLabel" type="xs:string" use="required"/>
       <xs:attribute name="pluralLabel" type="xs:string" use="required"/>
       <xs:attribute name="hasNamespace" type="xs:boolean" use="required"/>

@@ -116,13 +116,12 @@ function deletefeature(i) {
 }
 
 function deleteKey(i) {
-    var cannotDelMsg = validate18n["mediator.validate.cannot.delete.last"];
-    var keyCount = document.getElementById("keyTable").rows.length;
-    if (keyCount == 1) {
-        CARBON.showWarningDialog(cannotDelMsg);
+    var n = document.getElementById("nKeys");
+    var keycount = parseInt(n.value);
+    if (keycount < 2) {
+        CARBON.showWarningDialog(validate18n["mediator.validate.schema.key.none"]);
         return false;
     }
-
     CARBON.showConfirmationDialog(validate18n["mediator.validate.delete.confirm"],function(){
     var propRow = document.getElementById("keyRaw" + i);
     if (propRow != undefined && propRow != null) {
@@ -133,6 +132,9 @@ function deleteKey(i) {
                 var propertyTable = document.getElementById("keytable");
                 propertyTable.style.display = "none";
             }
+            var nKeys = document.getElementById("nKeys");
+            var n = parseInt(nKeys.value) - 1;
+            nKeys.value = n;
         }
     }
     });
@@ -264,6 +266,7 @@ function addNewKey(keyEmptyMsg) {
    }
 
     var keyCount = document.getElementById("keyCount");
+    var nKeys = document.getElementById("nKeys");
     var i = keyCount.value;
 
     var currentCount = parseInt(i);
@@ -308,6 +311,7 @@ function addNewKey(keyEmptyMsg) {
     keyRaw.appendChild(deleteTD);
 
     keyTableBody.appendChild(keyRaw);
+    nKeys.value = parseInt(nKeys.value) + 1;
     return true;
 }
 

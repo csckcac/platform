@@ -95,6 +95,9 @@ public class ValidateMediator extends AbstractListMediator {
 		}
 		
         OMElement onFail = fac.createOMElement("on-fail", synNS, validate);
+        if (getList().isEmpty()) {
+            throw new MediatorException("No 'Fault' mediator found within the on-fail section of the 'Validate' mediator.");
+        }
         serializeChildren(onFail, getList());
 
         if (parent != null) {

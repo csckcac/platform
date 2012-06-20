@@ -56,7 +56,7 @@
     List<MediatorProperty> featureList = validateMediator.getFeatures();
     String featureTableStyle = featureList.isEmpty() ? "display:none;" : "";
 	Map<String, String> resources = validateMediator.getResources();
-
+    int nKeys = 1;
 %>
 
 <fmt:bundle basename="org.wso2.carbon.mediator.validate.ui.i18n.Resources">
@@ -249,7 +249,8 @@
                                 </td>
 
 
-                                <td><a href="#" class="delete-icon-link"
+                                <td>
+                                    <a href="#" class="delete-icon-link"
                                        onclick="deleteKey('<%=i%>');return false;"><fmt:message
                                         key="mediator.validator.delete"/></a></td>
                             </tr>
@@ -260,6 +261,7 @@
                             %>
                             
                             <input type="hidden" name="keyCount" id="keyCount" value="<%=i%>"/>
+                            <input type="hidden" name="nKeys" id="nKeys" value="<%=nKeys%>"/>
                             </tbody>
                             </thead>
                         </table>

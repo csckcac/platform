@@ -1530,7 +1530,7 @@
         <servlet-api.version>2.4</servlet-api.version>
         <commons-fileupload.version>1.1.1</commons-fileupload.version>
         <commons-httpclient.version>3.0.1</commons-httpclient.version>
-        <commons-httpclient.wso2.version>3.1.0.wso2v1</commons-httpclient.wso2.version>
+        <commons-httpclient.wso2.version>${orbit.version.commons.httpclient}</commons-httpclient.wso2.version>
         <validateutility.version>0.95</validateutility.version>
         <derby.version>10.4.2.0</derby.version>
         <axis2-transports.version>1.1.0-wso2v4</axis2-transports.version>

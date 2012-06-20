@@ -24,9 +24,6 @@
                                 </permissions>
                             </item>
                             <item name="Design UML Diagrams" forEvent="Promote,Demote">
-                                <permissions>
-                                    <permission/>
-                                </permissions>
                             </item>
                             <item name="High Level Design Completed" forEvent="Promote,Demote">
                                 <permissions>
@@ -220,7 +217,8 @@
                                 </console>
                             </js>
                         </data>
-                        <data name="transitionPermission">clickCommencementCheckListclickCommencementCheckList
+                        <data name="transitionPermission">
+                            <!--clickCommencementCheckListclickCommencementCheckList -->
                             <permission forEvent="Promote" roles="managerrole"/>
                             <permission forEvent="Demote" roles="managerrole"/>
                             <permission forEvent="Abort" roles="devrole"/>

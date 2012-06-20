@@ -68,4 +68,26 @@ class TestUtils {
         return null;
     }
 
+    static WSRegistryServiceClient getWSRegistry() {
+        try {
+            String url = "https://" + FrameworkSettings.HOST_NAME + ":" + FrameworkSettings.HTTPS_PORT
+                         + "/services/";
+            return new WSRegistryServiceClient(url, FrameworkSettings.USER_NAME,
+                                        FrameworkSettings.PASSWORD,
+                                        ConfigurationContextFactory.createConfigurationContextFromFileSystem(
+                                                FrameworkSettings.CARBON_HOME +
+                                                File.separator + "repository" + File.separator +
+                                                "deployment" +
+                                                File.separator + "client",
+                                                ServerConfiguration.getInstance()
+                                                        .getFirstProperty(
+                                                                "Axis2Config.clientAxis2XmlLocation")));
+        } catch (RegistryException e) {
+            Assert.fail("Unable to create registry instance: " + e.getMessage());
+        } catch (AxisFault e) {
+            Assert.fail("Unable to create registry instance: " + e.getMessage());
+        }
+        return null;
+    }
+
 }

@@ -42,8 +42,14 @@ public class ServiceAgentUtil {
         return eventPublisherConfigMap.get(key);
     }
 
-    public static Map<String,EventPublisherConfig> getEventPublisherConfigMap(){
-         return eventPublisherConfigMap;
+    public static Map<String, EventPublisherConfig> getEventPublisherConfigMap() {
+        return eventPublisherConfigMap;
+    }
+
+    public static void removeExistingEventPublisherConfigValue(String key) {
+        if (eventPublisherConfigMap != null) {
+            eventPublisherConfigMap.put(key, null);
+        }
     }
 
     public static Event makeEventList(PublishData publishData,

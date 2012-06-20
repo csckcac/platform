@@ -17,6 +17,7 @@ package org.wso2.carbon.bam.service.data.publisher.conf;
 
 
 import org.wso2.carbon.bam.data.publisher.util.BAMDataPublisherConstants;
+import org.wso2.carbon.bam.service.data.publisher.publish.ServiceAgentUtil;
 import org.wso2.carbon.bam.service.data.publisher.util.ActivityPublisherConstants;
 import org.wso2.carbon.bam.service.data.publisher.util.CommonConstants;
 import org.wso2.carbon.bam.service.data.publisher.util.ServiceStatisticsPublisherConstants;
@@ -233,6 +234,9 @@ public class RegistryPersistenceManager {
         }else {
             updateAllProperties(null, CommonConstants.SERVICE_PROPERTIES_REG_PATH);
         }
+        ServiceAgentUtil.removeExistingEventPublisherConfigValue(eventingConfigData.getUrl() + "_"
+                                                                 + eventingConfigData.getUserName() + "_"
+                                                                 + eventingConfigData.getPassword());
 
     }
 

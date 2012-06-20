@@ -45,7 +45,7 @@ import java.util.*;
 public class ReportingAdminService extends RegistryAbstractAdmin implements
         IReportingAdminService<ReportConfigurationBean> {
 
-    public static final String REPORTING_CONFIG_PATH = RegistryConstants.CONFIG_REGISTRY_BASE_PATH +
+    public static final String REPORTING_CONFIG_PATH =
             "/repository/components/org.wso2.carbon.registry.reporting/configurations/";
 
     public byte[] getReportBytes(ReportConfigurationBean configuration)
@@ -84,7 +84,7 @@ public class ReportingAdminService extends RegistryAbstractAdmin implements
 
     public void saveReport(ReportConfigurationBean configuration)
             throws RegistryException, CryptoException {
-        Registry registry = getRootRegistry();
+        Registry registry = getConfigSystemRegistry();
         Resource resource = registry.newResource();
         resource.setMediaType("application/vnd.wso2.registry-report");
         if (configuration.getCronExpression() != null) {
@@ -140,7 +140,7 @@ public class ReportingAdminService extends RegistryAbstractAdmin implements
 
     public ReportConfigurationBean[] getSavedReports()
             throws RegistryException, CryptoException, TaskException {
-        Registry registry = getRootRegistry();
+        Registry registry = getConfigSystemRegistry();
         List<ReportConfigurationBean> output = new LinkedList<ReportConfigurationBean>();
         if (registry.resourceExists(REPORTING_CONFIG_PATH)) {
             Collection collection = (Collection) registry.get(REPORTING_CONFIG_PATH);
@@ -161,24 +161,26 @@ public class ReportingAdminService extends RegistryAbstractAdmin implements
 
     public void deleteSavedReport(String name)
             throws RegistryException {
-        getRootRegistry().delete(REPORTING_CONFIG_PATH + RegistryConstants.PATH_SEPARATOR + name);
+        getConfigSystemRegistry().delete(REPORTING_CONFIG_PATH +
+                RegistryConstants.PATH_SEPARATOR + name);
     }
 
     public void copySavedReport(String name, String newName)
             throws RegistryException {
-        getRootRegistry().copy(REPORTING_CONFIG_PATH + RegistryConstants.PATH_SEPARATOR + name,
-                REPORTING_CONFIG_PATH + RegistryConstants.PATH_SEPARATOR + newName);
+        getConfigSystemRegistry().copy(REPORTING_CONFIG_PATH + RegistryConstants.PATH_SEPARATOR +
+                name, REPORTING_CONFIG_PATH + RegistryConstants.PATH_SEPARATOR + newName);
     }
 
     private ReportConfigurationBean getConfigurationBean(String path)
             throws RegistryException, CryptoException, TaskException {
-        UserRegistry registry = (UserRegistry) getRootRegistry();
+        Registry registry = getConfigSystemRegistry();
         Resource resource = registry.get(path);
         ReportConfigurationBean bean = new ReportConfigurationBean();
         String name = RegistryUtils.getResourceName(path);
         bean.setName(name);
         bean.setCronExpression(resource.getProperty("cronExpression"));
-        TaskManager taskManager = ReportingServiceComponent.getTaskManager(registry.getTenantId());
+        TaskManager taskManager = ReportingServiceComponent.getTaskManager(
+                ((UserRegistry) getRootRegistry()).getTenantId());
         bean.setScheduled(taskManager.isTaskScheduled(name));
         bean.setReportClass(resource.getProperty("class"));
         bean.setResourcePath(resource.getProperty("resourcePath"));

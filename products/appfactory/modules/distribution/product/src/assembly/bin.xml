@@ -147,6 +147,11 @@
                 <include>**/**.xml</include>
             </includes>
         </fileSet>
+       <fileSet>
+                        <directory>resources/modules</directory>
+            <outputDirectory>wso2appfactory-${pom.version}/modules</outputDirectory>
+        </fileSet>
+
 
         <!-- Coping BPEL artifacts related endpoint reference files -->
         <fileSet>

@@ -44,7 +44,7 @@
                 </h2>
                 <%
                         include('mgt/registry_access_manager.jag');
-                        var applicationSVN = getRepositoryPath(applicationKey);
+                        var appInfo = getAppInfo(applicationKey);
                 %>
                     <!-- Including the tabbed navigation -->
                      <div class="tabbable"> <!-- Only required for left/right tabs -->
@@ -77,9 +77,12 @@
                         <div>
                             <table>
                                 <tr>
-                                    <td>SVN location:</td>
-                                    <td><%= applicationSVN%>
-                                    </td>
+                                    <td>Description:</td>
+                                    <td><%=appInfo.description%></td>
+                                </tr>
+                                <tr>
+                                    <td>SVN URL:</td>
+                                    <td><%=appInfo.repoLink%></td>
                                 </tr>
                             </table>
                         </div>
@@ -121,7 +124,7 @@
                             %>
                                <tr>
                                 <td class="buttonRow">
-                                    <input type="button" onclick="location.href='deploy_to_stage.jag?applicationName=<%=applicationName%>&applicationSvnLocation=<%=applicationSVN%>&stageName=<%=stage%>'" value='Deploy to <%=stage%>' class='button'/>
+                                    <input type="button" onclick="location.href='deploy_to_stage.jag?applicationName=<%=applicationName%>&applicationSvnLocation=<%=appInfo.repoLink%>&stageName=<%=stage%>'" value='Deploy to <%=stage%>' class='button'/>
                                 </td>
                             </tr>
                             <%

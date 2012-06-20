@@ -9,20 +9,9 @@
 
 
         <%
-            print("developer:" + request.getParameter("developer") + "</br>");
-            print("manager:" + request.getParameter("manager") + "</br>");
-            print("devops:" + request.getParameter("devops") + "</br>");
-            print("applicationKey:" + request.getParameter("applicationKey") + "</br>");
-            print("applicationName:" + request.getParameter("applicationName") + "</br>");
-            print("newUsername:" + request.getParameter("newUsername") + "</br>");
-            print("role:" + newUserRole + "</br>");
-            print("requestersuserName:" + request.getParameter("userName") + "</br>");
-
             include('mgt/application_manager.jag');
             try {
                 print(inviteUserToApplication(applicationKey, requestersUsername, newUsername, newUserRole));
-                include('mgt/registry_access_manager.jag');
-                addApplicationToUser(newUsername ,applicationKey);
             } catch (e) {
                 print(e);
             }

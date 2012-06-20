@@ -16,7 +16,8 @@ include('includes/template_header.jag');
                             <tr>
                                 <th>Application Name</th>
                                 <th>Role</th>
-                                <th>Revision</th>
+                                <th>SVN URL</th>
+                                <th>Revision number</th>
                             </tr>
                             </thead>
                             <tbody>
@@ -47,6 +48,8 @@ include('includes/template_header.jag');
                                 </td>
                                 <td>
                                     <span class="label label-info"><%=app.repoLink%></span>
+                                </td>
+                                <td>
                                     <span class="label label-info">r<%=app.lastRevisionNo%></span>
                                 </td>
                             </tr>

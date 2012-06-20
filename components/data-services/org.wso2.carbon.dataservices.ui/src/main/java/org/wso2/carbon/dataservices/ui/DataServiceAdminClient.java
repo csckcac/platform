@@ -108,7 +108,7 @@ public class DataServiceAdminClient {
     }
 
 	public String[] getColumnNames(String query) throws Exception {
-		return stub.getColumnNames(query);
+		return stub.getOutputColumnNames(query);
 	}
 
     public PaginatedTableInfo getPaginatedTableInfo(int pageNumber,

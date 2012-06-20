@@ -1,5 +1,5 @@
 <xs:schema attributeFormDefault="unqualified" elementFormDefault="qualified" targetNamespace="http://www.w3.org/2005/07/scxml" xmlns:xs="http://www.w3.org/2001/XMLSchema">
-<xs:import schemaLocation="local.xsd"/>  
+<xs:import schemaLocation="local.xsd"/>
 <xs:element name="scxml">
     <xs:complexType>
       <xs:sequence>
@@ -22,7 +22,7 @@
                                         <xs:complexType>
                                           <xs:simpleContent>
                                             <xs:extension base="xs:string">
-                                              <xs:attribute type="xs:string" name="roles"/>
+                                              <xs:attribute type="xs:string" name="roles" use="required"/>
                                             </xs:extension>
                                           </xs:simpleContent>
                                         </xs:complexType>
@@ -85,6 +85,69 @@
                                   <xs:attribute type="xs:string" name="href" use="optional"/>
                                 </xs:extension>
                               </xs:simpleContent>
+                            </xs:complexType>
+                          </xs:element>
+                          <xs:element name="permission" minOccurs="0">
+                            <xs:complexType>
+                              <xs:simpleContent>
+                                <xs:extension base="xs:string">
+                                  <xs:attribute type="xs:string" name="roles" use="required"/>
+                                  <xs:attribute type="xs:string" name="forEvent" use="required"/>
+                                </xs:extension>
+                              </xs:simpleContent>
+                            </xs:complexType>
+                          </xs:element>
+                          <xs:element name="validation" minOccurs="0">
+                            <xs:complexType>
+                              <xs:sequence>
+                                <xs:element name="parameter">
+                                  <xs:complexType>
+                                    <xs:simpleContent>
+                                      <xs:extension base="xs:string">
+                                        <xs:attribute type="xs:string" name="name" use="required" />
+                                        <xs:attribute type="xs:string" name="value" use="required" />
+                                      </xs:extension>
+                                    </xs:simpleContent>
+                                  </xs:complexType>
+                                </xs:element>
+                              </xs:sequence>
+                              <xs:attribute type="xs:string" name="forEvent" use="required"/>
+                              <xs:attribute type="xs:string" name="class" use="required"/>
+                            </xs:complexType>
+                          </xs:element>
+                          <xs:element name="js" minOccurs="0">
+                            <xs:complexType>
+                              <xs:sequence>
+                                <xs:element name="console" minOccurs="0">
+                                  <xs:complexType>
+                                    <xs:sequence>
+                                      <xs:element name="script">
+                                        <xs:complexType>
+                                          <xs:simpleContent>
+                                            <xs:extension base="xs:string">
+                                              <xs:attribute type="xs:string" name="type" use="required" />
+                                            </xs:extension>
+                                          </xs:simpleContent>
+                                        </xs:complexType>
+                                      </xs:element>
+                                    </xs:sequence>
+                                    <xs:attribute type="xs:string" name="function" use="required"/>
+                                  </xs:complexType>
+                                </xs:element>
+                                <xs:element name="server" minOccurs="0">
+                                  <xs:complexType>
+                                    <xs:sequence>
+                                      <xs:element name="script">
+                                        <xs:complexType>
+                                          <xs:attribute type="xs:string" name="type"/>
+                                        </xs:complexType>
+                                      </xs:element>
+                                    </xs:sequence>
+                                    <xs:attribute type="xs:string" name="function" use="required"/>
+                                  </xs:complexType>
+                                </xs:element>
+                              </xs:sequence>
+                              <xs:attribute type="xs:string" name="forEvent" use="required"/>
                             </xs:complexType>
                           </xs:element>
                         </xs:sequence>

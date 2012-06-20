@@ -23,6 +23,7 @@ import org.apache.commons.logging.LogFactory;
 import org.osgi.framework.BundleContext;
 import org.osgi.framework.ServiceRegistration;
 import org.osgi.service.component.ComponentContext;
+import org.wso2.carbon.attachment.mgt.configuration.AttachmentMgtConfigurationConstants;
 import org.wso2.carbon.attachment.mgt.server.AttachmentServer;
 import org.wso2.carbon.attachment.mgt.server.AttachmentServerService;
 import org.wso2.carbon.attachment.mgt.server.AttachmentServerServiceImpl;
@@ -125,6 +126,7 @@ public class AttachmentServiceComponent {
 
             Dictionary redirectorParams = new Hashtable(1);
             redirectorParams.put("url-pattern", "/attachment-mgt/download");
+            //redirectorParams.put("url-pattern", "/t/carbon.super" + AttachmentMgtConfigurationConstants.ATTACHMENT_DOWNLOAD_SERVELET_URL_PATTERN);
 
             ServiceRegistration reg= bundleContext.registerService(Servlet.class.getName(), attachmentDownloadServlet,
                                                               redirectorParams);

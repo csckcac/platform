@@ -55,8 +55,6 @@ public class AttachmentDownloadServlet extends HttpServlet {
         String url = request.getRequestURI();
         String attachmentUniqueID = url.substring(url.lastIndexOf("/") + 1);
 
-
-
         InputStream contentStream = null;
         ServletOutputStream servletOutputStream = null;
         try {

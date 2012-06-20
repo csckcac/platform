@@ -22,8 +22,10 @@ import org.apache.axis2.context.ConfigurationContextFactory;
 import org.apache.commons.logging.Log;
 import org.apache.commons.logging.LogFactory;
 import org.wso2.carbon.CarbonConstants;
+import org.wso2.carbon.attachment.mgt.configuration.AttachmentMgtConfigurationConstants;
 import org.wso2.carbon.attachment.mgt.core.exceptions.AttachmentMgtException;
 import org.wso2.carbon.base.ServerConfiguration;
+import org.wso2.carbon.core.AbstractAdmin;
 import org.wso2.carbon.core.multitenancy.SuperTenantCarbonContext;
 import org.wso2.carbon.utils.CarbonUtils;
 import org.wso2.carbon.utils.NetworkUtils;
@@ -41,7 +43,7 @@ import java.security.SecureRandom;
 /**
  * Logic relevant to URL generation. This URL will be used by outsiders to access the attachment.
  */
-public class URLGeneratorUtil {
+public class URLGeneratorUtil extends AbstractAdmin {
     /**
      * Logger class
      */
@@ -55,39 +57,6 @@ public class URLGeneratorUtil {
      * @return string value of URL
      */
     public static String generateURL() throws AttachmentMgtException {
-
-        /*log.warn("URL generation is not still implemented...");
-
-        String scheme = CarbonConstants.HTTPS_TRANSPORT;
-        String host;
-        try {
-            host = NetworkUtils.getLocalHostname();
-        } catch (SocketException e) {
-            log.error(e.getMessage(), e);
-            throw new AttachmentMgtException(e.getLocalizedMessage(), e);
-        }
-
-        log.warn("Port is hardcoded.");
-        int port = 9443;
-
-        String webContext = ServerConfiguration.getInstance().getFirstProperty("WebContextRoot");
-        if (webContext == null || webContext.equals("/")) {
-            webContext = "";
-        }
-
-        String tenantDomain = SuperTenantCarbonContext.getCurrentContext().getTenantDomain(true);
-
-        String url = null;
-        try {
-            String link = scheme + "://" + host + ":" + port + webContext + ((tenantDomain != null) ? "/" +
-                                                                                                      MultitenantConstants.TENANT_AWARE_URL_PREFIX + "/" + tenantDomain : "") +
-                          "/registry/resource" + "dummyPath";
-            url = new URL(link).toString();
-        } catch (MalformedURLException e) {
-            log.error(e.getMessage(), e);
-        }
-        */
-
         return generateUniqueID();
     }
 
@@ -121,17 +90,9 @@ public class URLGeneratorUtil {
 
         log.warn("Port is hardcoded.");
         int port = 9443;
-        /*try {
-            ConfigurationContext myConfigContext =
-                    ConfigurationContextFactory.createConfigurationContextFromFileSystem(null,
-                                                                 System.getProperty(ServerConstants.CARBON_CONFIG_DIR_PATH)
-                                                                 + File.separator + "axis2" + File.separator + "axis2.xml");
-            port = CarbonUtils.getTransportProxyPort(myConfigContext, scheme);
-            if (port == -1) {
-                port = CarbonUtils.getTransportPort(myConfigContext, scheme);
-            }
-        } catch (AxisFault axisFault) {
-            log.error(axisFault.getLocalizedMessage(), axisFault);
+        /*int port = CarbonUtils.getTransportProxyPort(getConfigContext(), scheme);
+        if (port == -1) {
+            port = CarbonUtils.getTransportPort(getConfigContext(), scheme);
         }*/
 
         String webContext = ServerConfiguration.getInstance().getFirstProperty("WebContextRoot");
@@ -148,9 +109,11 @@ public class URLGeneratorUtil {
 
         String url = null;
         try {
-            String link = scheme + "://" + host + ":" + port + webContext + ((tenantDomain != null) ? "/" +
-                                              MultitenantConstants.TENANT_AWARE_URL_PREFIX + "/" + tenantDomain : "") +
-                          "/attachment-mgt/download" + "/" + uniqueID.toString();
+            String link = scheme + "://" + host + ":" + port + webContext + ((tenantDomain != null &&
+                                                                              !MultitenantConstants.SUPER_TENANT_DOMAIN_NAME.equals(tenantDomain)) ?
+                                                                             "/" + MultitenantConstants.TENANT_AWARE_URL_PREFIX + "/" + tenantDomain : "") +
+                          AttachmentMgtConfigurationConstants.ATTACHMENT_DOWNLOAD_SERVELET_URL_PATTERN + "/" + uniqueID.toString();
+
             return new URL(link);
         } catch (MalformedURLException e) {
             log.error(e.getMessage(), e);

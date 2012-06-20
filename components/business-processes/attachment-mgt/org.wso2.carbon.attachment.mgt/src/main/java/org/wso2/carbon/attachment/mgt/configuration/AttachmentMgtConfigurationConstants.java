@@ -34,4 +34,6 @@ public class AttachmentMgtConfigurationConstants {
     public static final String DAO_PERSISTENCE_CONFIG_SHOW_SQL = "dao.PersistenceConfig.ShowSql";
 
     public static final String CARBON_CONFIG_PORT_OFFSET_NODE = "Ports.Offset";
+
+    public static final String ATTACHMENT_DOWNLOAD_SERVELET_URL_PATTERN = "/attachment-mgt/download";
 }

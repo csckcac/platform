@@ -66,6 +66,8 @@
                 <include>*.sql</include>
             </includes>
 	  </fileSet>-->
+
+
 	<fileSet>
             <directory>src/main/resources/carbon-home/resources/dashboard</directory>
             <outputDirectory>${pom.artifactId}-${pom.version}/repository/resources/dashboard</outputDirectory>
@@ -232,15 +234,23 @@
             <filtered>true</filtered>
             <fileMode>644</fileMode>
         </file>
-        <file>
-            <source>../p2-profile-gen/target/wso2carbon-core-${carbon.version}/repository/conf/bam.xml</source>
-            <outputDirectory>${pom.artifactId}-${pom.version}/repository/conf/</outputDirectory>
-            <filtered>true</filtered>
-            <fileMode>644</fileMode>
-        </file>
+        <!--<file>-->
+            <!--<source>../p2-profile-gen/target/wso2carbon-core-${carbon.version}/repository/conf/bam.xml</source>-->
+            <!--<outputDirectory>${pom.artifactId}-${pom.version}/repository/conf/</outputDirectory>-->
+            <!--<filtered>true</filtered>-->
+            <!--<fileMode>644</fileMode>-->
+        <!--</file>-->
         <file>
             <source>../p2-profile-gen/target/wso2carbon-core-${carbon.version}/repository/conf/advanced/hive-site.xml</source>
             <outputDirectory>${pom.artifactId}-${pom.version}/repository/conf/advanced</outputDirectory>
+            <filtered>true</filtered>
+            <fileMode>644</fileMode>
+        </file>
+
+        <!-- event bridge config file -->
+        <file>
+            <source>../p2-profile-gen/target/wso2carbon-core-${carbon.version}/repository/conf/event-bridge/event-bridge-config.xml</source>
+            <outputDirectory>${pom.artifactId}-${pom.version}/repository/conf/event-bridge</outputDirectory>
             <filtered>true</filtered>
             <fileMode>644</fileMode>
         </file>

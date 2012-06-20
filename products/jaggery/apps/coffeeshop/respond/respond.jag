@@ -1,3 +1,0 @@
-<%
-response.contentType = 'application/json';
-%>

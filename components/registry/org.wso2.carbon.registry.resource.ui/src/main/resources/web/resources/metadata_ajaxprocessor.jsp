@@ -349,8 +349,8 @@
                     key="description"/>:
             </td>
             <td valign="top" colspan="2">
-                <% if (metadata.getPutAllowed()) { %>
                 <div id="descView" style="display:block;"><% if (metadata.getDescription() != null) { %><%=metadata.getDescription()%><% } %></div>
+                <% if (metadata.getPutAllowed()) { %>
                 <div id="editButton" class="registryWriteOperation" style="display:inline;">
                     <% if (!metadata.getVersionView() && !Boolean.parseBoolean(metadata.getWriteLocked())) {
                     %>

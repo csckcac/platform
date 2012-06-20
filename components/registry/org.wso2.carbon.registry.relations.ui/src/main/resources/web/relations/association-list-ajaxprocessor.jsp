@@ -156,8 +156,8 @@
                         }
                         // The dependencies portlet has more space compared to the associations
                         // portlet. Therefore, we allow up to 24, instead of 14.
-                        if (destPathSmall.length() >= 24) {
-                            destPathSmall = destPathSmall.substring(0, 20) + "..";
+                        if (destPathSmall.length() >= 32) {
+                            destPathSmall = destPathSmall.substring(0, 32) + "..";
                         }
                     %>
                     <a <%if (destPath.startsWith("http://") || destPath.startsWith("https://")) {%>target="_blank"<%}%> href="<%=destLink%>" title="<%=destPath%>"><%=destPathSmall%>
@@ -276,7 +276,8 @@
                     <%=association.getAssociationType()%>
                 </td>
                 <td>
-                    <% String destPath = association.getDestinationPath();
+                    <%  int typeLen = association.getAssociationType().length();
+                        String destPath = association.getDestinationPath();
                         String destLink = destPath;
                         String destPathSmall;
                         if (!destPath.startsWith("http://") && !destPath.startsWith("https://")) {

@@ -32,9 +32,13 @@ public class TomcatUtil {
         = new HashMap<String, TomcatGenericWebappsDeployer>();
 
 
-
+    /**
+     *  check unpack wars property
+     * @return true if webapp unpacking enabled.
+     */
     public static boolean checkUnpackWars() {
-        return Boolean.parseBoolean(System.getProperty("carbon.unpack.wars", "false"));
+        CarbonTomcatService carbonTomcatService = DataHolder.getCarbonTomcatService();
+        return carbonTomcatService.isUnpackWARs();
     }
 
 

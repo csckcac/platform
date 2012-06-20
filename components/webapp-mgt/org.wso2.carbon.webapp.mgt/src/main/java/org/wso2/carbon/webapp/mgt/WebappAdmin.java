@@ -697,7 +697,6 @@ public class WebappAdmin extends AbstractAdmin {
      * @return true if enabled.
      */
     public boolean isUnpackWARs(){
-        CarbonTomcatService carbonTomcatService = DataHolder.getCarbonTomcatService();
-        return carbonTomcatService.isUnpackWARs();
+        return TomcatUtil.checkUnpackWars();
     }
 }

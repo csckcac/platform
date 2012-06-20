@@ -72,7 +72,6 @@ import org.mozilla.javascript.ScriptableObject;
 import org.wso2.carbon.CarbonException;
 import org.wso2.carbon.core.multitenancy.SuperTenantCarbonContext;
 import org.wso2.carbon.mashup.javascript.hostobjects.system.MSTaskAdmin;
-import org.wso2.carbon.mashup.javascript.hostobjects.system.multitenancy.SystemHostObjectInitializer;
 import org.wso2.carbon.mashup.javascript.messagereceiver.JavaScriptEngine;
 import org.wso2.carbon.mashup.javascript.messagereceiver.JavaScriptEngineUtils;
 import org.wso2.carbon.mashup.javascript.messagereceiver.JavaScriptReceiver;
@@ -138,12 +137,6 @@ public class JSDeployer extends AbstractDeployer {
     public void init(ConfigurationContext configCtx) {
         this.configCtx = configCtx;
         this.axisConfig = this.configCtx.getAxisConfiguration();
-
-        //there was a NPE thrown when using scheduled task in system hostobject at feedcache sevice deployment to avoid that adding the init to
-        //js deployer. this is a dirty hack. we need to solve this properly at osgi level
-        //@nuwan
-        SystemHostObjectInitializer systemHostObjectInitializer = new SystemHostObjectInitializer();
-        systemHostObjectInitializer.createdConfigurationContext(configCtx);
     }
 
     /**

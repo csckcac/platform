@@ -101,11 +101,6 @@
                 <version>${saxon.wso2.version.data-services}</version>
             </dependency>
             <dependency>
-                <groupId>commons-httpclient.wso2</groupId>
-                <artifactId>commons-httpclient</artifactId>
-                <version>${commons-httpclient.wso2.version.data-services}</version>
-            </dependency>
-            <dependency>
                 <groupId>bsh.wso2</groupId>
                 <artifactId>bsh</artifactId>
                 <version>${bsh.wso2.version.data-services}</version>

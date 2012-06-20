@@ -100,11 +100,6 @@
                 <version>${saxon.wso2.version.data-services}</version>
             </dependency>
             <dependency>
-                <groupId>commons-httpclient.wso2</groupId>
-                <artifactId>commons-httpclient</artifactId>
-                <version>${commons-httpclient.wso2.version.data-services}</version>
-            </dependency>
-            <dependency>
                 <groupId>bsh.wso2</groupId>
                 <artifactId>bsh</artifactId>
                 <version>${bsh.wso2.version.data-services}</version>
@@ -137,8 +132,6 @@
         <web-harvest.wso2.version.data-services>2.0.0.wso2v1
         </web-harvest.wso2.version.data-services>
         <saxon.wso2.version.data-services>8.9.0.wso2v1</saxon.wso2.version.data-services>
-        <commons-httpclient.wso2.version.data-services>3.1.0.wso2v1
-        </commons-httpclient.wso2.version.data-services>
         <bsh.wso2.version.data-services>1.3.0.wso2v1</bsh.wso2.version.data-services>
         <htmlcleaner.version.data-services>2.1.0.wso2v1</htmlcleaner.version.data-services>
         <commons-dbcp.wso2.version.data-services>1.4.0.wso2v1</commons-dbcp.wso2.version.data-services>

@@ -18,17 +18,25 @@
  */
 package org.wso2.carbon.registry.governance.api.test;
 
+import org.testng.annotations.BeforeClass;
+import javax.xml.namespace.QName;
 import java.util.Collections;
 
-public class APITestCase extends RXTTestBase {
+public class PersonTestCase extends RXTTestBase {
 
-    public APITestCase() {
-        fileName = "api.metadata.xml";
-        key = "api";
-        path1 = "/apimgt/applicationdata/provider/WSO2/RenameArtifact/1.0.0/api";
-        path2 = "/apimgt/applicationdata/provider/WSO2/NewRenameArtifact/1.0.0/api";
-        values.put("overview_provider", "WSO2");
-        values.put("overview_version", "1.0.0");
-        search = Collections.singletonMap("overview_businessOwnerEmail", "alice@smith.com");
+    public PersonTestCase() {
+        fileName = "person.metadata.xml";
+        key = "person";
+        path1 = "/people/RenameArtifact";
+        path2 = "/people/NewRenameArtifact";
+        values.put("overview_name", "John Smith");
+        search = Collections.singletonMap("overview_website", "http://john.smith.com");
+        nameReplacement = new QName("123-abc-4567-defghi-replaced");
+    }
+
+    @BeforeClass(groups = {"wso2.greg"})
+    public void initTest() {
+        super.initTest();
+        loadRXTsForAssetModelSamples("PeopleModel");
     }
 }

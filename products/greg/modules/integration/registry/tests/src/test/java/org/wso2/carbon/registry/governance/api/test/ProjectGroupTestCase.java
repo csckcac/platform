@@ -18,17 +18,27 @@
  */
 package org.wso2.carbon.registry.governance.api.test;
 
+import org.testng.annotations.BeforeClass;
+
+import javax.xml.namespace.QName;
 import java.util.Collections;
 
-public class APITestCase extends RXTTestBase {
+public class ProjectGroupTestCase extends RXTTestBase {
 
-    public APITestCase() {
-        fileName = "api.metadata.xml";
-        key = "api";
-        path1 = "/apimgt/applicationdata/provider/WSO2/RenameArtifact/1.0.0/api";
-        path2 = "/apimgt/applicationdata/provider/WSO2/NewRenameArtifact/1.0.0/api";
-        values.put("overview_provider", "WSO2");
-        values.put("overview_version", "1.0.0");
-        search = Collections.singletonMap("overview_businessOwnerEmail", "alice@smith.com");
+    public ProjectGroupTestCase() {
+        fileName = "project-group.metadata.xml";
+        key = "groups";
+        path1 = "/project-groups/RenameArtifact";
+        path2 = "/project-groups/NewRenameArtifact";
+        values.put("overview_groupOwner", "/people/123-abc-4567-defghi");
+        search = Collections.singletonMap("overview_groupOwner", "/people/123-abc-4567-defghi");
+        nameReplacement = new QName("ACME Development Group New");
     }
+
+    @BeforeClass(groups = {"wso2.greg"})
+    public void initTest() {
+        super.initTest();
+        loadRXTsForAssetModelSamples("PeopleModel");
+    }
+
 }

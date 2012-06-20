@@ -20,6 +20,7 @@ package org.wso2.carbon.registry.governance.api.test;
 
 import org.apache.axiom.om.OMElement;
 import org.apache.axiom.om.util.AXIOMUtil;
+import org.apache.commons.io.filefilter.SuffixFileFilter;
 import org.testng.Assert;
 import org.testng.annotations.BeforeClass;
 import org.testng.annotations.Test;
@@ -27,26 +28,35 @@ import org.wso2.carbon.governance.api.exception.GovernanceException;
 import org.wso2.carbon.governance.api.generic.GenericArtifactFilter;
 import org.wso2.carbon.governance.api.generic.GenericArtifactManager;
 import org.wso2.carbon.governance.api.generic.dataobjects.GenericArtifact;
+import org.wso2.carbon.governance.api.util.GovernanceConstants;
 import org.wso2.carbon.governance.api.util.GovernanceUtils;
 import org.wso2.carbon.integration.framework.utils.FrameworkSettings;
 import org.wso2.carbon.registry.core.Registry;
+import org.wso2.carbon.registry.core.Resource;
 import org.wso2.carbon.registry.core.exceptions.RegistryException;
 import org.wso2.carbon.registry.core.session.UserRegistry;
 
 import javax.xml.namespace.QName;
 import javax.xml.stream.XMLStreamException;
 import java.io.File;
+import java.io.FileFilter;
 import java.io.FileInputStream;
+import java.io.IOException;
+import java.util.Collections;
+import java.util.HashMap;
+import java.util.Map;
 
 public class RXTTestBase {
 
-    private Registry registry;
-    private String configPath;
-
+    protected String configPath;
+    protected Registry registry;
     protected String fileName = null;
     protected String key = null;
     protected String path1 = null;
     protected String path2 = null;
+    protected QName nameReplacement = null;
+    protected Map<String, String> values = new HashMap<String, String>();
+    protected Map<String, String> search = Collections.emptyMap();
 
     @BeforeClass(groups = {"wso2.greg"})
     public void initTest() {
@@ -69,8 +79,7 @@ public class RXTTestBase {
 
         GenericArtifact artifact = manager.newGovernanceArtifact(new QName("MyArtifact"));
         artifact.addAttribute("testAttribute", "somevalue");
-        artifact.addAttribute("overview_provider", "WSO2");
-        artifact.addAttribute("overview_version", "1.0.0");
+        addMandatoryAttributes(artifact);
         manager.addGenericArtifact(artifact);
 
         String artifactId = artifact.getId();
@@ -117,7 +126,9 @@ public class RXTTestBase {
         GovernanceUtils.loadGovernanceArtifacts((UserRegistry)registry);
         GenericArtifactManager manager = new GenericArtifactManager(registry, key);
         GenericArtifact artifact = manager.newGovernanceArtifact(contentElement);
-
+        if (nameReplacement != null) {
+            artifact.setQName(nameReplacement);
+        }
         artifact.addAttribute("custom-attribute", "custom-value");
         manager.addGenericArtifact(artifact);
 
@@ -127,25 +138,24 @@ public class RXTTestBase {
         GenericArtifact newArtifact = manager.getGenericArtifact(artifactId);
 
         Assert.assertEquals(newArtifact.getAttribute("custom-attribute"), "custom-value");
-        Assert.assertEquals(newArtifact.getAttribute("overview_businessOwnerEmail"),
-                "alice@smith.com");
+        if (!search.isEmpty()) {
+            Map.Entry<String, String> e = search.entrySet().iterator().next();
+            Assert.assertEquals(newArtifact.getAttribute(e.getKey()), e.getValue());
+        }
         Assert.assertEquals(newArtifact.getQName(), artifact.getQName());
 
         GenericArtifact artifact2 = manager.newGovernanceArtifact(new QName("NewArtifact"));
-        artifact2.addAttribute("overview_provider", "WSO2");
-        artifact2.addAttribute("overview_version", "1.0.0");
+        addMandatoryAttributes(artifact);
         artifact2.addAttribute("custom-attribute", "custom-value2");
         manager.addGenericArtifact(artifact2);
 
         GenericArtifact artifact3 = manager.newGovernanceArtifact(new QName("NewArtifact2"));
-        artifact3.addAttribute("overview_provider", "WSO2");
-        artifact3.addAttribute("overview_version", "1.0.0");
+        addMandatoryAttributes(artifact);
         artifact3.addAttribute("custom-attribute", "not-custom-value");
         manager.addGenericArtifact(artifact3);
 
         GenericArtifact artifact4 = manager.newGovernanceArtifact(new QName("NewArtifact3"));
-        artifact4.addAttribute("overview_provider", "WSO2");
-        artifact4.addAttribute("overview_version", "1.0.0");
+        addMandatoryAttributes(artifact);
         artifact4.addAttribute("not-custom-attribute", "custom-value3");
         manager.addGenericArtifact(artifact4);
 
@@ -192,8 +202,7 @@ public class RXTTestBase {
 
         GenericArtifact artifact = manager.newGovernanceArtifact(new QName("MyArtifactName"));
         artifact.addAttribute("testAttribute", "somevalue");
-        artifact.addAttribute("overview_provider", "WSO2");
-        artifact.addAttribute("overview_version", "1.0.0");
+        addMandatoryAttributes(artifact);
         manager.addGenericArtifact(artifact);
 
         artifact.setQName(new QName("RenameArtifact"));
@@ -215,6 +224,9 @@ public class RXTTestBase {
         OMElement contentElement = GovernanceUtils.buildOMElement(fileContents);
 
         GenericArtifact newArtifact = manager.newGovernanceArtifact(contentElement);
+        if (nameReplacement != null) {
+            newArtifact.setQName(nameReplacement);
+        }
         manager.addGenericArtifact(newArtifact);
 
         newArtifact.setQName(new QName("NewRenameArtifact"));
@@ -235,8 +247,7 @@ public class RXTTestBase {
 
         GenericArtifact artifact = manager.newGovernanceArtifact(new QName("MyArtifactName"));
         artifact.addAttribute("testAttribute", "somevalue");
-        artifact.addAttribute("overview_provider", "WSO2");
-        artifact.addAttribute("overview_version", "1.0.0");
+        addMandatoryAttributes(artifact);
         manager.addGenericArtifact(artifact);
 
         GenericArtifact newArtifact = manager.getGenericArtifact(artifact.getId());
@@ -248,8 +259,7 @@ public class RXTTestBase {
 
 
         artifact = manager.newGovernanceArtifact(new QName("MyArtifactName"));
-        artifact.addAttribute("overview_provider", "WSO2");
-        artifact.addAttribute("overview_version", "1.0.0");
+        addMandatoryAttributes(artifact);
         manager.addGenericArtifact(artifact);
 
         newArtifact = manager.getGenericArtifact(artifact.getId());
@@ -258,6 +268,72 @@ public class RXTTestBase {
         registry.delete(newArtifact.getPath());
         newArtifact = manager.getGenericArtifact(artifact.getId());
         Assert.assertNull(newArtifact);
+    }
+
+    private void addMandatoryAttributes(GenericArtifact artifact)
+            throws GovernanceException{
+        for (Map.Entry<String, String> e : values.entrySet()) {
+            artifact.addAttribute(e.getKey(), e.getValue());
+        }
+    }
+
+    protected void loadRXTsForAssetModelSamples(String type) {
+        try {
+            String path = FrameworkSettings.getFrameworkPath() + File.separator + ".." +
+                    File.separator + ".." + File.separator + ".." + File.separator + ".." +
+                    File.separator + ".." + File.separator + ".." + File.separator + "samples" +
+                    File.separator + "asset-models" + File.separator + type + File.separator +
+                    "registry-extensions";
+            File parentFile = new File(path);
+            File[] children = parentFile.listFiles((FileFilter) new SuffixFileFilter("rxt"));
+            for (File file : children) {
+                Resource resource = registry.newResource();
+                resource.setMediaType(
+                        GovernanceConstants.GOVERNANCE_ARTIFACT_CONFIGURATION_MEDIA_TYPE);
+                String resourcePath = GovernanceConstants.RXT_CONFIGS_PATH + file.getName();
+                byte[] fileContents;
+                FileInputStream fileInputStream = null;
+                try {
+                    fileInputStream = new FileInputStream(file);
+                    fileContents = new byte[(int) file.length()];
+                    fileInputStream.read(fileContents);
+                } finally {
+                    if (fileInputStream != null) {
+                        fileInputStream.close();
+                    }
+                }
+                resource.setContent(fileContents);
+                registry.put(resourcePath, resource);
+                OMElement element = AXIOMUtil.stringToOM(
+                        new String((byte[]) registry.get(resourcePath).getContent()));
+                String shortName = element.getAttributeValue(new QName("shortName"));
+                file = new File(configPath.replace(fileName,
+                        file.getName().replace("rxt", "metadata.xml")));
+                fileInputStream = null;
+                try {
+                    fileInputStream = new FileInputStream(file);
+                    fileContents = new byte[(int) file.length()];
+                    fileInputStream.read(fileContents);
+                } finally {
+                    if (fileInputStream != null) {
+                        fileInputStream.close();
+                    }
+                }
+
+                OMElement contentElement = GovernanceUtils.buildOMElement(fileContents);
+
+                GovernanceUtils.loadGovernanceArtifacts((UserRegistry)registry);
+                GenericArtifactManager manager = new GenericArtifactManager(registry, shortName);
+                GenericArtifact artifact = manager.newGovernanceArtifact(contentElement);
+                manager.addGenericArtifact(artifact);
+            }
+        } catch (RegistryException e) {
+            Assert.fail("Unable to populate RXT configuration");
+        } catch (XMLStreamException e) {
+            Assert.fail("Unable to parse RXT configuration");
+        } catch (IOException e) {
+            Assert.fail("Unable to read asset payload");
+        }
     }
 
 }

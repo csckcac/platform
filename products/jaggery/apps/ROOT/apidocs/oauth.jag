@@ -178,7 +178,7 @@ var linkedin = new oauth.OAuthProvider(provider);</pre>
 
     </div>
     <%
-    include('/includes/footerfunc.jag');
+    include('/includes/footer.jag');
     %>
 
 </div>

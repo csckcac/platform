@@ -1,9 +1,9 @@
-<% include("../includes/header.jag");%>
+
 <%
     include("../sso/jaggery_sso.jag");
     include("../service_util.jag");
     var sessionId = request.getHeader("Cookie").split(";")[0].split("=")[1];
     session.put("LOGGED_IN_USER",ssoRelyingParty.getLoggedInUser(sessionId));
     var userName = session.get("LOGGED_IN_USER");
-
+     include("../includes/header.jag");
 %>

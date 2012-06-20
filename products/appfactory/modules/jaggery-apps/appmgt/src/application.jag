@@ -75,7 +75,7 @@
                         <h3>Application overview</h3>
         
                         <div>
-                            <table>
+                            <table class='table table-bordered table-striped'>
                                 <tr>
                                     <td>Description:</td>
                                     <td><%=appInfo.description%></td>
@@ -97,10 +97,10 @@
                        <%
                             include('user_list.jag');
                         %>
-                        <table class="styledLeft">
+                        <table class="table table-bordered table-striped">
                             <tr>
                                 <td class="buttonRow">
-                                    <input type="button" onclick="location.href='invite_user.jag?applicationName=<%=applicationName%>&applicationKey=<%=applicationKey%>'" value='Invite User' class='button'/>
+                                    <input type="button" onclick="location.href='invite_user.jag?applicationName=<%=applicationName%>&applicationKey=<%=applicationKey%>'" value='Invite User' class='btn btn-primary'/>
                                 </td>
                             </tr>
                         </table>

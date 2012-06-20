@@ -20,8 +20,8 @@
  <h2>SignUp for Application Management Tool</h2>
 
 
-        <form method='post' name="inputData">
-            <table class="styledLeft" id="applicationInputTbl">
+        <form method='post' name="inputData" class='well'>
+            <table class="table table-bordered table-striped" id="applicationInputTbl">
                 <thead>
                 <tr>
                     <th colspan="2">Please enter the following information.</th>
@@ -55,8 +55,8 @@
             <table class="styledLeft">
                 <tr>
                     <td class="buttonRow">
-                        <input type='submit' onclick="validate()"value='Submit' class='button'/>
-                        <input type="button" onclick="location.href='index.jag?'" value='Cancel' class='button'/>
+                        <input type='submit' onclick="validate()"value='Submit' class='btn btn-primary'/>
+                        <input type="button" onclick="location.href='index.jag?'" value='Cancel' class='btn btn-primary'/>
                     </td>
                 </tr>
             </table>

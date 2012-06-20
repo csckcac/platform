@@ -83,7 +83,7 @@
 
 <div class="container">
     <!-- row of columns -->
-    <div class="row">
+    <!-- <div class="row">
         <div class="span12">
             <ul class="breadcrumb">
                 <li>
@@ -95,7 +95,7 @@
                 <li class="active">Application Foo</li>
             </ul>
         </div>
-    </div>
+    </div> -->
     <div class="row">
         <div class="span12 title-back"><h1>The WSO2 - Application Factory</h1></div>
     </div>

@@ -26,14 +26,14 @@
     }
 </script>
 
-<div id="middle">
+
     <h2>Invite User to Application <%= applicationName%>
     </h2>
 
     <div id="workArea">
         <!--form id='inviteUserData' name='inviteUserForm' action="" method="post"-->
-        <form id='sampleform' method='post' action="invite_user_submit.jag?applicationName=<%=applicationName%>&applicationKey=<%=applicationKey%>&userName=<%=userName%>">
-        <table class="styledLeft" id="table1">
+        <form id='sampleform' method='post' action="invite_user_submit.jag?applicationName=<%=applicationName%>&applicationKey=<%=applicationKey%>&userName=<%=userName%>"class='well'>
+        <table class="table table-bordered table-striped" id="table1">
                 <thead>
                 <tr>
                     <th colspan="2">Please enter the following information.</th>
@@ -58,18 +58,17 @@
                     </td>
                 </tr>
             </table>
-            <table class="styledLeft">
+            <table class="table table-bordered table-striped">
                 <tr>
                     <td class="buttonRow">
                         <!-- input type='submit' name='Submit' onclick="setRoles(document.inviteUserForm.role)" value='Invite' class='button'/> -->
-                        <input type='submit' name='Submit' value='Invite' class='button'/>
-                        <input type="button" onclick="location.href='application.jag?applicationName=<%=applicationName%>&applicationKey=<%=applicationKey%>'" value='Cancel' class='button'/>
+                        <input type='submit' name='Submit' value='Invite' class='btn btn-primary'/>
+                        <input type="button" onclick="location.href='application.jag?applicationName=<%=applicationName%>&applicationKey=<%=applicationKey%>'" value='Cancel' class='btn btn-primary'/>
                     </td>
                 </tr>
             </table>
         </form>
-    </div>
-</div>
+
 <%
     include('includes/template_footer.jag');
 %>

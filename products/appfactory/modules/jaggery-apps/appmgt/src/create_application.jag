@@ -4,7 +4,7 @@
      var userName = session.get("LOGGED_IN_USER");
 %>
 
-        <form method='post' action='create_application_submit.jag?userName=<%=userName%>'>
+        <form method='post' action='create_application_submit.jag?userName=<%=userName%>' class='well'>
             <table class="table table-bordered table-striped"  id="applicationInputTbl">
                 <thead>
                 <tr>
@@ -27,8 +27,8 @@
             <table class="styledLeft">
                 <tr>
                     <td class="buttonRow">
-                        <input type='submit' name='Submit' value='Submit' class='button'/>
-                        <input type="button" onclick="location.href='index.jag?'" value='Cancel' class='button'/>
+                        <input type='submit' name='Submit' value='Submit' class='btn btn-primary'/>
+                        <input type="button" onclick="location.href='index.jag?'" value='Cancel' class='btn btn-primary'/>
                     </td>
                 </tr>
             </table>

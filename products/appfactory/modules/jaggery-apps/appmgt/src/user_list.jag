@@ -7,7 +7,7 @@
 
 
 
-        <table id="table1">
+        <table id="table1" class='table table-bordered table-striped'>
             <tr class="data" id="row5">
             <tr>
             <td><strong>User Names</strong></td>

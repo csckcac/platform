@@ -1,6 +1,6 @@
 <%
 include('constants.jag');
-var appFactoryConfigReaderModule = require("appFactoryConfigReaderModule");
+var appFactoryConfigReaderModule = require("appFactory");
 var appFactoryConfigReader = new appFactoryConfigReaderModule.AppFactoryConfigurationReader();
 
  function getProperty(expression){

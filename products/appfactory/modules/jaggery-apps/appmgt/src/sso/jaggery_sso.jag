@@ -2,7 +2,7 @@
 //Include this file in all the jaggery pages when you need to provide the single sign on into the jaggery application.
 // Update the ssoRelyingParty properties, identityProviderURL, issuerId  ,keyStorePassword   ,identityAlias ,keyStoreName properly.
 include('../config_reader.jag');
-var security =require("ssoRelyingParty");
+var security =require("sso");
 var log = new Log();
 var ssoRelyingParty = new security.SSORelyingParty(getProperty(SSO_NAME));
 var sessionId = request.getHeader("Cookie").split(";")[0].split("=")[1];

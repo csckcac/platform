@@ -56,7 +56,7 @@ include('includes/template_header.jag');
                                         <%
                                             }
                                         }catch(e){
-                                         print(e.message);
+                                         print(e.toString());
                                         }
                                     %>
 

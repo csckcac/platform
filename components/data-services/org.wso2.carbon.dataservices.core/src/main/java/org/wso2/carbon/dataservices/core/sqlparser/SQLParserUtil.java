@@ -30,12 +30,181 @@ import java.util.Queue;
 
 public class SQLParserUtil {
 
-     /**
+    public static List<String> keyWords = new ArrayList<String>();
+    public static List<String> operators = new ArrayList<String>();
+    public static List<String> delimiters = new ArrayList<String>();
+    public static List<String> specialFunctions = new ArrayList<String>();
+    public static List<String> stringFunctions = new ArrayList<String>();
+    public static List<String> aggregateFunctions = new ArrayList<String>();
+
+    static {
+        keyWords.add(LexicalConstants.COUNT);
+        keyWords.add(LexicalConstants.SELECT);
+        keyWords.add(LexicalConstants.FROM);
+        keyWords.add(LexicalConstants.WHERE);
+        keyWords.add(LexicalConstants.MAX);
+        keyWords.add(LexicalConstants.INSERT);
+        keyWords.add(LexicalConstants.INTO);
+        keyWords.add(LexicalConstants.VALUES);
+        keyWords.add(LexicalConstants.GROUP_BY);
+        keyWords.add(LexicalConstants.ORDER_BY);
+        keyWords.add(LexicalConstants.DISTINCT);
+        keyWords.add(LexicalConstants.UPDATE);
+        keyWords.add(LexicalConstants.SET);
+        keyWords.add(LexicalConstants.IN);
+        keyWords.add(LexicalConstants.AND);
+        keyWords.add(LexicalConstants.DELAYED);
+        keyWords.add(LexicalConstants.LOW_PRIORITY);
+        keyWords.add(LexicalConstants.HIGH_PRIORITY);
+        keyWords.add(LexicalConstants.ON);
+        keyWords.add(LexicalConstants.DUPLICATE);
+        keyWords.add(LexicalConstants.KEY);
+        keyWords.add(LexicalConstants.LAST_INSERT_ID);
+        keyWords.add(LexicalConstants.ALL);
+        keyWords.add(LexicalConstants.DISTINCTROW);
+        keyWords.add(LexicalConstants.STRAIGHT_JOIN);
+        keyWords.add(LexicalConstants.SQL_SMALL_RESULT);
+        keyWords.add(LexicalConstants.SQL_BIG_RESULT);
+        keyWords.add(LexicalConstants.SQL_BUFFER_RESULT);
+        keyWords.add(LexicalConstants.SQL_CACHE);
+        keyWords.add(LexicalConstants.SQL_NO_CACHE);
+        keyWords.add(LexicalConstants.SQL_CALC_FOUND_ROWS);
+        keyWords.add(LexicalConstants.ASC);
+        keyWords.add(LexicalConstants.DESC);
+        keyWords.add(LexicalConstants.OFFSET);
+        keyWords.add(LexicalConstants.LIMIT);
+        keyWords.add(LexicalConstants.WITH);
+        keyWords.add(LexicalConstants.ROLLUP);
+        keyWords.add(LexicalConstants.PROCEDURE);
+        keyWords.add(LexicalConstants.OUTFILE);
+        keyWords.add(LexicalConstants.DUMPFILE);
+        keyWords.add(LexicalConstants.LOCK);
+        keyWords.add(LexicalConstants.SHARE);
+        keyWords.add(LexicalConstants.MODE);
+        keyWords.add(LexicalConstants.CONCAT);
+        keyWords.add(LexicalConstants.AS);
+        keyWords.add(LexicalConstants.AVG);
+        keyWords.add(LexicalConstants.MIN);
+        keyWords.add(LexicalConstants.IS);
+        keyWords.add(LexicalConstants.NULL);
+        keyWords.add(LexicalConstants.LIKE);
+        keyWords.add(LexicalConstants.OR);
+        keyWords.add(LexicalConstants.JOIN);
+        keyWords.add(LexicalConstants.INNER);
+        keyWords.add(LexicalConstants.SUM);
+
+        operators.add(LexicalConstants.EQUAL);
+        operators.add(LexicalConstants.MINUS);
+        operators.add(LexicalConstants.PLUS);
+        operators.add(LexicalConstants.FORWARD_SLASH);
+        operators.add(LexicalConstants.ASTERISK);
+        operators.add(LexicalConstants.GREATER_THAN);
+        operators.add(LexicalConstants.DIVISION);
+
+        delimiters.add(LexicalConstants.COMMA);
+        delimiters.add(LexicalConstants.LESS_THAN);
+        delimiters.add(LexicalConstants.SINGLE_QUOTATION);
+        delimiters.add(LexicalConstants.SEMI_COLON);
+        delimiters.add(LexicalConstants.COLON);
+        delimiters.add(LexicalConstants.DOT);
+        delimiters.add(LexicalConstants.LEFT_BRACE);
+        delimiters.add(LexicalConstants.LEFT_BRACKET);
+        delimiters.add(LexicalConstants.RIGHT_BRACE);
+        delimiters.add(LexicalConstants.RIGHT_BRACKET);
+        delimiters.add(LexicalConstants.HYPHEN);
+        delimiters.add(LexicalConstants.WHITE_SPACE);
+
+        aggregateFunctions.add(LexicalConstants.AVG);
+        aggregateFunctions.add(LexicalConstants.MAX);
+        aggregateFunctions.add(LexicalConstants.MIN);
+        aggregateFunctions.add(LexicalConstants.COUNT);
+        aggregateFunctions.add(LexicalConstants.SUM);
+
+        stringFunctions.add(LexicalConstants.TRIM);
+        stringFunctions.add(LexicalConstants.RTRIM);
+        stringFunctions.add(LexicalConstants.LTRIM);
+        stringFunctions.add(LexicalConstants.SUBSTR);
+        stringFunctions.add(LexicalConstants.CONCAT);
+
+        specialFunctions.add(LexicalConstants.OR);
+        specialFunctions.add(LexicalConstants.AND);
+        specialFunctions.add(LexicalConstants.IS);
+        specialFunctions.add(LexicalConstants.LIKE);
+        specialFunctions.add(LexicalConstants.NOT);
+        specialFunctions.add(LexicalConstants.NULL);
+        specialFunctions.add(LexicalConstants.IN);
+
+    }
+
+    public static List<String> getKeyWords() {
+        return keyWords;
+    }
+
+    public static List<String> getOperators() {
+        return operators;
+    }
+
+    public static List<String> getDelimiters() {
+        return delimiters;
+    }
+
+    public static List<String> getSpecialFunctions() {
+        return specialFunctions;
+    }
+
+    public static boolean isAggregateFunction(String token) {
+        return aggregateFunctions.contains(token);
+    }
+
+    public static boolean isStringFunction(String token) {
+        return stringFunctions.contains(token);
+    }
+
+    /**
+     * This particular method transform a particular SQL string to a set of tokens and returns
+     * a queue which contains the tokens(String objects) produced by the logic of the method.
+     *
+     * @param sql   Input SQL string
+     * @return      A Queue of String objects.
+     */
+    public static Queue<String> getTokens(String sql) {
+
+        char[] inputCharacters;
+        StringBuilder token = new StringBuilder();
+        Queue<String> tokenQueue = new LinkedList<String>();
+
+        inputCharacters = new char[sql.length()];
+        sql.getChars(0, sql.length(), inputCharacters, 0);
+
+        for (char c : inputCharacters) {
+
+            if (!delimiters.contains(Character.valueOf(c).toString()) &&
+                    !operators.contains(Character.valueOf(c).toString())) {
+                token.append(c);
+            } else {
+                if (token.length() > 0) {
+                    tokenQueue.add(token.toString());
+                }
+                if (!Character.valueOf(c).toString().equals(" ")) {
+                    tokenQueue.add(new StringBuilder().append(c).toString());
+                }
+                token = new StringBuilder();
+            }
+        }
+
+        //This condition is checked in order to avoid enqueing null tokens into the token queue.
+        if (token.length() > 0) {
+            tokenQueue.add(token.toString());
+        }
+        return tokenQueue;
+    }
+
+    /**
      * This method returns the list of queried columns of a particular input sql string.
      *
-     * @param tokens                Lexical tokens obtained after parsing the SQL query
-     * @return                      List if columns expected as the output
-     * @throws DataServiceFault     If any error occurs while parsing the SQL query
+     * @param tokens Lexical tokens obtained after parsing the SQL query
+     * @return List if columns expected as the output
+     * @throws DataServiceFault If any error occurs while parsing the SQL query
      */
     public static List<String> extractOutputColumns(Queue<String> tokens) throws DataServiceFault {
 
@@ -57,11 +226,11 @@ public class SQLParserUtil {
         return (new SelectMapper(syntaxQueue).getColumns());
     }
 
-/**
+    /**
      * Extracts out the Input mappings names specified in the query
      *
-     * @param tokens            Lexical tokens obtained after parsing the SQL query
-     * @return                  List of input mappings specified in the query
+     * @param tokens Lexical tokens obtained after parsing the SQL query
+     * @return List of input mappings specified in the query
      * @throws DataServiceFault If any error occurs while parsing the query
      */
     public static List<String> extractInputMappings(Queue<String> tokens) throws DataServiceFault {

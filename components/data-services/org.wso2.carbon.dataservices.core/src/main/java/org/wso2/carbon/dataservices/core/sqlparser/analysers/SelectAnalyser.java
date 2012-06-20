@@ -19,6 +19,7 @@
 package org.wso2.carbon.dataservices.core.sqlparser.analysers;
 
 import org.wso2.carbon.dataservices.core.sqlparser.LexicalConstants;
+import org.wso2.carbon.dataservices.core.sqlparser.SQLParserUtil;
 
 import java.util.Queue;
 
@@ -37,9 +38,9 @@ public class SelectAnalyser extends KeyWordAnalyzer {
      */
     public void analyseStatement() {
         StringBuilder sb;
-        if (LexicalConstants.isAggregateFunction(tempQueue.peek()) ||
-                LexicalConstants.isStringFunction(tempQueue.peek())) {
-            if (LexicalConstants.isAggregateFunction(tempQueue.peek())) {
+        if (SQLParserUtil.isAggregateFunction(tempQueue.peek()) ||
+                SQLParserUtil.isStringFunction(tempQueue.peek())) {
+            if (SQLParserUtil.isAggregateFunction(tempQueue.peek())) {
 
                 String aggFunction = tempQueue.poll();
 
@@ -101,9 +102,9 @@ public class SelectAnalyser extends KeyWordAnalyzer {
         } else if (tempQueue.peek().equalsIgnoreCase(LexicalConstants.AS)) {
             syntaxQueue.clear();
             tempQueue.poll();
-            if (!LexicalConstants.getDelimiters().contains(tempQueue.peek()) ||
-                    !LexicalConstants.getKeyWords().contains(tempQueue.peek()) ||
-                    !LexicalConstants.getOperators().contains(tempQueue.peek())) {
+            if (!SQLParserUtil.getDelimiters().contains(tempQueue.peek()) ||
+                    !SQLParserUtil.getKeyWords().contains(tempQueue.peek()) ||
+                    !SQLParserUtil.getOperators().contains(tempQueue.peek())) {
                 sb = new StringBuilder();
                 while (!tempQueue.isEmpty() && !tempQueue.peek().equals(LexicalConstants.COMMA)) {
                     sb.append(tempQueue.poll());
@@ -124,9 +125,9 @@ public class SelectAnalyser extends KeyWordAnalyzer {
                     syntaxQueue.add(strRef);
                     tempQueue.poll();
 
-                    if (!LexicalConstants.getDelimiters().contains(tempQueue.peek()) &&
-                            !LexicalConstants.getKeyWords().contains(tempQueue.peek()) &&
-                            !LexicalConstants.getOperators().contains(tempQueue.peek())) {
+                    if (!SQLParserUtil.getDelimiters().contains(tempQueue.peek()) &&
+                            !SQLParserUtil.getKeyWords().contains(tempQueue.peek()) &&
+                            !SQLParserUtil.getOperators().contains(tempQueue.peek())) {
 
                         String columnRef = tempQueue.poll();
                         syntaxQueue.add(LexicalConstants.COLUMN);

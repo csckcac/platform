@@ -48,7 +48,6 @@ import org.wso2.carbon.dataservices.core.engine.DataServiceSerializer;
 import org.wso2.carbon.dataservices.core.script.DSGenerator;
 import org.wso2.carbon.dataservices.core.script.PaginatedTableInfo;
 import org.wso2.carbon.dataservices.core.sqlparser.SQLParserUtil;
-import org.wso2.carbon.dataservices.core.sqlparser.analysers.LexicalAnalyser;
 import org.wso2.carbon.registry.core.Registry;
 import org.wso2.carbon.registry.core.Resource;
 import org.wso2.carbon.registry.core.jdbc.utils.Transaction;
@@ -475,9 +474,9 @@ public class DataServiceAdmin extends AbstractAdmin {
 		return list.toArray(new String[list.size()]);
 	}
 
-	public static String[] getColumnNames(String query) throws Exception {
+	public String[] getColumnNames(String sql) throws Exception {
 		try {
-			Queue<String> tokens = new LexicalAnalyser(query).getTokens();
+			Queue<String> tokens = SQLParserUtil.getTokens(sql);
 			if (tokens.size() > 0) {
 				List<String> columns = SQLParserUtil.extractOutputColumns(tokens);
 				return columns.toArray(new String[columns.size()]);
@@ -485,10 +484,23 @@ public class DataServiceAdmin extends AbstractAdmin {
 				return new String[0];
 			}
 		} catch (Exception e) {
-			throw new Exception("Error generating the response for the query " + query + ".", e);
+			throw new Exception("Error generating the response for the query " + sql + ".", e);
 		}
-	}
+    }
 
+    public String[] getInputMappingNames(String sql) throws Exception {
+		try {
+			Queue<String> tokens = SQLParserUtil.getTokens(sql);
+			if (tokens.size() > 0) {
+				List<String> columns = SQLParserUtil.extractOutputColumns(tokens);
+				return columns.toArray(new String[columns.size()]);
+			} else {
+				return new String[0];
+			}
+		} catch (Exception e) {
+			throw new Exception("Error generating the response for the query " + sql + ".", e);
+		}
+    }
 	
 	public String[] getdbSchemaList(String datasourceId) throws Exception {
 		return DSGenerator.getSchemas(datasourceId);

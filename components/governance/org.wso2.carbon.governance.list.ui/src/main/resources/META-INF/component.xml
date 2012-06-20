@@ -23,7 +23,7 @@
             <i18n-key>governance.list.service.menu</i18n-key>
             <i18n-bundle>org.wso2.carbon.governance.list.ui.i18n.Resources</i18n-bundle>
             <parent-menu>list_sub_menu</parent-menu>
-            <link>../list/service.jsp</link>
+            <link>../listService/service.jsp</link>
             <region>region3</region>
             <order>1</order>
             <style-class>manage</style-class>
@@ -35,7 +35,7 @@
             <i18n-key>governance.list.policy.menu</i18n-key>
             <i18n-bundle>org.wso2.carbon.governance.list.ui.i18n.Resources</i18n-bundle>
             <parent-menu>list_sub_menu</parent-menu>
-            <link>../list/policy.jsp</link>
+            <link>../listPolicy/policy.jsp</link>
             <region>region3</region>
             <order>20</order>
             <style-class>manage</style-class>
@@ -47,7 +47,7 @@
             <i18n-key>governance.list.wsdl.menu</i18n-key>
             <i18n-bundle>org.wso2.carbon.governance.list.ui.i18n.Resources</i18n-bundle>
             <parent-menu>list_sub_menu</parent-menu>
-            <link>../list/wsdl.jsp</link>
+            <link>../listWSDL/wsdl.jsp</link>
             <region>region3</region>
             <order>10</order>
             <style-class>manage</style-class>
@@ -59,7 +59,7 @@
             <i18n-key>governance.list.schema.menu</i18n-key>
             <i18n-bundle>org.wso2.carbon.governance.list.ui.i18n.Resources</i18n-bundle>
             <parent-menu>list_sub_menu</parent-menu>
-            <link>../list/schema.jsp</link>
+            <link>../listSchema/schema.jsp</link>
             <region>region3</region>
             <order>15</order>
             <style-class>manage</style-class>

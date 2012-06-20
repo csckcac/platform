@@ -31,5 +31,5 @@ OMElement head = uigen.getUIConfiguration(client.getServiceConfiguration(),reque
 OMElement filledService = uigen.getDataFromUI(head,request);
 session.setAttribute("criteria", filledService.toString());
 
-response.sendRedirect("../list/service.jsp?filter=filter&region=region3&item=governance_list_services_menu");
+response.sendRedirect("../listService/service.jsp?filter=filter&region=region3&item=governance_list_services_menu");
 %>

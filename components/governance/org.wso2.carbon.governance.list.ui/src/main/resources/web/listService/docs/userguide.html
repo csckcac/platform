@@ -34,24 +34,23 @@ In the Metadata list part users can list imported resources, WSDLs, Schemas and 
 <ul>
     <li><a href="#listService">List Service</a></li>
     <li><a href="#serviceFiltering">Service Filtering</a></li>
-    <li><a href="#listOtherMetadata">List other metadata</a></li>
 </ul>
 
 <a name="listService"></a>
 <h2>List Service</h2>
 <p>
 When user click list services user will be display the services imported through add service UI and add WSDL UI. Service
-listing page displays the service names namespace and delete link to click to delete the added resource.Important thing
-here is even though you have imported through WSDL user can click on resource and go the add service UI which automatically
-filled some of the information extracted using the WSDL. 
+listing page displays the service name, version, namespace, life cycle status and delete link to click to delete the added
+resource. Important thing here is even though you have imported through WSDL user can click on resource and go the add service
+UI which automatically filled some of the information extracted using the WSDL.
 </p>
-<p><img src="images/image1.png" width="750px"/></p>
+<p><img src="images/listService.png" width="750px"/></p>
 <p>Figure 1: Service List</p>
 <p>
-In the previous figure you can see two services one imported using add-Service and other imported using Add-WSDL. User can click
-the service imported using WSDL and go to edit Service UI like following figure.
+In the previous figure you can see out of the uploaded services one is imported using Add-WSDL and others are imported using
+add-Service. User can click the service imported using WSDL and go to edit Service UI like following figure.
 </p>
-<p><img src="images/image2.png" width="750px"/></p>
+<p><img src="images/servicebyWSDL.png" width="750px"/></p>
 <p>Figure 2: Service Content</p>
 
 
@@ -66,24 +65,8 @@ clicking on that link user can go to imported WSDL registry resource.
 <h2>Service Filtering</h2>
 <p>
 In the service Listing page users can see a link called "Filter the Service list", once you click it you can give service parameters through
-the same UI where you used to add services and search for given parameters and filter the service list. The speciality of Advanced Search Filter
-is that the users are able to use regular expressions and define a search criteria in order to search for many results. In the Figure 3 it shows
-how a search is defined by its endpoint and the endpoint is given as a regular expression.
+the same UI where you used to add services and search for given parameters and filter the service list.
 </p>
-<p><img src="images/image3.png" width="750px"/></p>
-<p>Figure 3: Service Filtering with Regular Expressions</p>
-
-<a name="listOtherMetadata"></a>
-<h2>List other metadata</h2>
-<p>
-Listing other metadata like Policies, Schemas and WSDLs are similar to listing services instead it contains a link to view the
-dependencies between resources. As example there is a dependency between a WSDL resource and it's service resource and WSDL resource
-will be having dependencies with some schema resources. Those dependencies can be viewed if user click view dependencies. And user
-can traverse to those dependencies by clicking on dependencies links.
-</p>
-<p><img src="images/image4.png" width="750px"/></p>
-<p>Figure 4: Service Dependency</p>
-
 
 </body>
 </html>

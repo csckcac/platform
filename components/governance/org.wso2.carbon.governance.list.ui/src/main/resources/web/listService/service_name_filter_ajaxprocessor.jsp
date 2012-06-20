@@ -18,5 +18,5 @@
 <%
 
     session.setAttribute("criteria", "<serviceMetaData xmlns=\"http://www.wso2.org/governance/metadata\"><overview><name>" + request.getParameter("Service_Name")+"</name></overview><serviceLifecycle /><contacts /><interface /><security /><endpoints /><docLinks /><operation xmlns=\"\">Add</operation><currentName xmlns=\"\"></currentName><currentNamespace xmlns=\"\"></currentNamespace></serviceMetaData>");
-    response.sendRedirect("../list/service.jsp?filter=filter&region=region3&item=governance_list_services_menu");
+    response.sendRedirect("../listService/service.jsp?filter=filter&region=region3&item=governance_list_services_menu");
 %>

@@ -37,7 +37,7 @@
 <script type="text/javascript" src="../relations/js/relations.js"></script>
 <script type="text/javascript" src="../registry_common/js/registry_common.js"></script>
 <jsp:include page="../list/list-i18n-ajaxprocessor.jsp"/>
-<script type="text/javascript" src="js/list.js"></script>
+<script type="text/javascript" src="../list/js/list.js"></script>
 <%
 
     WSDLBean bean;

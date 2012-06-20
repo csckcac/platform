@@ -41,7 +41,7 @@
             resourceBundle="org.wso2.carbon.governance.list.ui.i18n.Resources"
             topPage="true"
             request="<%=request%>" />
-<script type="text/javascript" src="js/list.js"></script>
+<script type="text/javascript" src="../list/js/list.js"></script>
 <%
     String criteria = null;
     boolean filter = request.getParameter("filter") != null;
@@ -57,7 +57,7 @@
 %>
 <script type="text/javascript">
       CARBON.showErrorDialog("<%=e.getMessage()%>",function(){
-          location.href="../list/service.jsp?region=region3&item=governance_list_services_menu";
+          location.href="../listService/service.jsp?region=region3&item=governance_list_services_menu";
           return;
       });
 
@@ -114,7 +114,7 @@
         		   </td>
         		   <td style="vertical-align:middle;padding-left:10px;padding-right:5px;">|</td>
                            <td>
-            			<a href="../list/service_filter.jsp" class="icon-link" style="background-image:url(../search/images/search-top.png);"><fmt:message key="filter.service.message"/></a>
+            			<a href="../listService/service_filter.jsp" class="icon-link" style="background-image:url(../search/images/search-top.png);"><fmt:message key="filter.service.message"/></a>
         		  </td>
                          </tr>
                        </tbody>
@@ -206,7 +206,7 @@
                 <td>
                     <%if (bean.getCanDelete()[i])  { %>
                         <a title="<fmt:message key='delete'/>"
-                           onclick="deleteService('<%=completePath%>','/','../list/service.jsp?region=region3&item=governance_list_services_menu')"
+                           onclick="deleteService('<%=completePath%>','/','../listService/service.jsp?region=region3&item=governance_list_services_menu')"
                            class="icon-link registryWriteOperation" style="background-image:url(../admin/images/delete.gif);cursor:pointer">
                             <fmt:message key="delete"/></a>
                     <%} else { %>

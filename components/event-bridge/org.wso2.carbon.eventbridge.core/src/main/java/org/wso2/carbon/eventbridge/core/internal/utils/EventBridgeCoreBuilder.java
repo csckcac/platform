@@ -52,12 +52,6 @@ public final class EventBridgeCoreBuilder {
         String carbonHome = System.getProperty(ServerConstants.CARBON_CONFIG_DIR_PATH);
         String path = carbonHome + File.separator + EventBridgeConstants.EVENT_BRIDGE_DIR + File.separator + EventBridgeConstants.EVENT_BRIDGE_CONFIG_XML;
 
-        // if the agent server config file not exists then simply return null.
-        File eventBridgeConfigFile = new File(path);
-        if (!eventBridgeConfigFile.exists()) {
-            return null;
-        }
-
         BufferedInputStream inputStream = null;
         try {
             inputStream = new BufferedInputStream(new FileInputStream(new File(path)));
@@ -161,7 +155,7 @@ public final class EventBridgeCoreBuilder {
         if (bridgeConfig != null) {
             if (!bridgeConfig.getQName().equals(
                     new QName(EventBridgeConstants.EVENT_BRIDGE_NAMESPACE, EventBridgeConstants.EVENT_BRIDGE_ROOT_ELEMENT))) {
-                throw new EventBridgeConfigurationException("Invalid root element in agent server config");
+                throw new EventBridgeConfigurationException("Invalid root element in event bridge server config");
             }
             EventBridgeCoreBuilder.populateEventStreamDefinitions(bridgeConfig, eventStreamDefinitions);
             EventBridgeCoreBuilder.populateStreamDefinitionStore(bridgeConfig, eventBridgeConfiguration);

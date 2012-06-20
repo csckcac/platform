@@ -71,7 +71,7 @@ public class EventDispatcher {
         EventStreamDefinition existingEventStreamDefinition;
         try {
             existingEventStreamDefinition = streamDefinitionStore.getStreamDefinition(agentSession.getCredentials(), eventStreamDefinition.getName(), eventStreamDefinition.getVersion());
-            if (!existingEventStreamDefinition.equals(eventStreamDefinition)) {
+            if (existingEventStreamDefinition.equals(eventStreamDefinition)) {
                 throw new DifferentStreamDefinitionAlreadyDefinedException("Similar event stream for " + eventStreamDefinition + " with the same name and version already exist: " + streamDefinitionStore.getStreamDefinition(agentSession.getCredentials(), eventStreamDefinition.getName(), eventStreamDefinition.getVersion()));
             }
             eventStreamDefinition = existingEventStreamDefinition;

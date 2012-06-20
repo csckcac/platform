@@ -29,6 +29,7 @@ import org.wso2.carbon.eventbridge.core.definitionstore.AbstractStreamDefinition
 import org.wso2.carbon.eventbridge.core.definitionstore.InMemoryStreamDefinitionStore;
 import org.wso2.carbon.eventbridge.core.exception.EventBridgeConfigurationException;
 import org.wso2.carbon.eventbridge.core.internal.authentication.CarbonAuthenticationHandler;
+import org.wso2.carbon.eventbridge.core.internal.utils.EventBridgeConstants;
 import org.wso2.carbon.eventbridge.core.internal.utils.EventBridgeCoreBuilder;
 import org.wso2.carbon.identity.authentication.AuthenticationService;
 
@@ -60,7 +61,11 @@ public class EventBridgeDS {
         try {
             EventBridgeConfiguration eventBridgeConfiguration = new EventBridgeConfiguration();
             List<String[]> eventStreamDefinitions = new ArrayList<String[]>();
-            initialConfig = EventBridgeCoreBuilder.loadConfigXML();
+            try {
+                initialConfig = EventBridgeCoreBuilder.loadConfigXML();
+            } catch (EventBridgeConfigurationException e) {
+                log.error("The event bridge config was not found. Falling back to defaults.");
+            }
             EventBridgeCoreBuilder.populateConfigurations(eventBridgeConfiguration, eventStreamDefinitions, initialConfig);
 
             if (eventBridge == null) {
@@ -68,6 +73,10 @@ public class EventBridgeDS {
                 AbstractStreamDefinitionStore streamDefinitionStore = null;
                 try {
                     streamDefinitionStore = (AbstractStreamDefinitionStore) EventBridgeDS.class.getClassLoader().loadClass(definitionStoreName).newInstance();
+
+                    if (definitionStoreName.equals(EventBridgeConstants.DEFAULT_DEFINITION_STORE)) {
+                        log.warn("The default stream defintion store is loaded : " + definitionStoreName + ". Please configure a proper definition store.");
+                    }
 //                    streamDefinitionStore = (AbstractStreamDefinitionStore) Class.forName(definitionStoreName).newInstance();
                 } catch (Exception e) {
                     log.warn("The stream definition store :" + definitionStoreName + " is cannot be created hence using org.wso2.carbon.agent.server.definitionstore.InMemoryStreamDefinitionStore", e);

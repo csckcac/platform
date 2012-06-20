@@ -213,7 +213,7 @@
         <wsdl.validator.version>1.2.0-SNAPSHOT.wso2v1</wsdl.validator.version>
         <zookeeper.wso2.version>3.3.5.wso2v1</zookeeper.wso2.version>
         <quartz2.wso2.version>2.1.1.wso2v1</quartz2.wso2.version>
-        <google.guava.wso2.version>11.0.1.wso2v1</google.guava.wso2.version>
+        <google.guava.wso2.version>12.0.0.wso2v1</google.guava.wso2.version>
         <orbit.version.json>2.0.0.wso2v1</orbit.version.json>
         <cxf.wso2.version>2.5.2.wso2v1</cxf.wso2.version>
         <libthrift.wso2.version>0.7.wso2v1</libthrift.wso2.version>

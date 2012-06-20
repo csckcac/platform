@@ -47,8 +47,8 @@ import org.wso2.carbon.dataservices.core.engine.DataService;
 import org.wso2.carbon.dataservices.core.engine.DataServiceSerializer;
 import org.wso2.carbon.dataservices.core.script.DSGenerator;
 import org.wso2.carbon.dataservices.core.script.PaginatedTableInfo;
+import org.wso2.carbon.dataservices.core.sqlparser.SQLParserUtil;
 import org.wso2.carbon.dataservices.core.sqlparser.analysers.LexicalAnalyser;
-import org.wso2.carbon.dataservices.core.sqlparser.analysers.SyntaxAnalyser;
 import org.wso2.carbon.registry.core.Registry;
 import org.wso2.carbon.registry.core.Resource;
 import org.wso2.carbon.registry.core.jdbc.utils.Transaction;
@@ -477,10 +477,9 @@ public class DataServiceAdmin extends AbstractAdmin {
 
 	public static String[] getColumnNames(String query) throws Exception {
 		try {
-			Queue<String> tokenQueue = new LexicalAnalyser(query).getTokens();
-			if (tokenQueue.size() > 0) {
-				SyntaxAnalyser sa = new SyntaxAnalyser(tokenQueue);
-				List<String> columns = sa.processSelectStatement();
+			Queue<String> tokens = new LexicalAnalyser(query).getTokens();
+			if (tokens.size() > 0) {
+				List<String> columns = SQLParserUtil.extractOutputColumns(tokens);
 				return columns.toArray(new String[columns.size()]);
 			} else {
 				return new String[0];

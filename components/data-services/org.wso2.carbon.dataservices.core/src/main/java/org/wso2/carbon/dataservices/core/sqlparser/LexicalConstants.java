@@ -16,7 +16,7 @@
  *  under the License.
  *
  */
-package org.wso2.carbon.dataservices.core.sqlparser.constants;
+package org.wso2.carbon.dataservices.core.sqlparser;
 
 import java.util.ArrayList;
 import java.util.List;

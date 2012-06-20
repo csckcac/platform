@@ -18,8 +18,8 @@
  */
 package org.wso2.carbon.dataservices.core.sqlparser.mappers;
 
-import org.wso2.carbon.dataservices.core.sqlparser.constants.LexicalConstants;
-import org.wso2.carbon.dataservices.core.sqlparser.util.DataManipulator;
+import org.wso2.carbon.dataservices.core.sqlparser.DataManipulator;
+import org.wso2.carbon.dataservices.core.sqlparser.LexicalConstants;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -122,9 +122,7 @@ public class SelectMapper {
     private void processStringFunction(String processedToken) {
         List<String> columnData;
         String concatOperator;
-
         processedTokens.poll();
-
         if (processedTokens.peek().equals(LexicalConstants.CONCAT)) {
             processedTokens.poll();
             do {
@@ -134,9 +132,12 @@ public class SelectMapper {
                     if (processedTokens.peek().equals(LexicalConstants.OPVALUE)) {
                         processedTokens.poll();
                         concatOperator = processedTokens.poll();
-                        concatData = dataManipulator.concatDataFunction(columnData, concatOperator, concatData);
+                        concatData =
+                                dataManipulator.concatDataFunction(columnData, concatOperator,
+                                        concatData);
                     } else {
-                        concatData = dataManipulator.concatDataFunction(columnData, null, concatData);
+                        concatData = dataManipulator.concatDataFunction(columnData, null,
+                                concatData);
                     }
                 }
             } while ((!processedTokens.peek().equals(LexicalConstants.START_OF_RBRACKET)));

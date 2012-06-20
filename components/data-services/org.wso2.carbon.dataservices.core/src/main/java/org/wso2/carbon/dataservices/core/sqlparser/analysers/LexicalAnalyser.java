@@ -19,7 +19,7 @@
 package org.wso2.carbon.dataservices.core.sqlparser.analysers;
 
 
-import org.wso2.carbon.dataservices.core.sqlparser.constants.LexicalConstants;
+import org.wso2.carbon.dataservices.core.sqlparser.LexicalConstants;
 
 import java.util.LinkedList;
 import java.util.List;

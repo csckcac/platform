@@ -18,19 +18,16 @@
  */
 package org.wso2.carbon.dataservices.core.sqlparser.analysers;
 
-import org.wso2.carbon.dataservices.core.sqlparser.constants.LexicalConstants;
+import org.wso2.carbon.dataservices.core.sqlparser.LexicalConstants;
 
-import java.util.LinkedList;
 import java.util.Queue;
 
-public class SelectKeywordAnalyser {
+public class SelectAnalyser extends KeyWordAnalyzer {
 
     private Queue<String> tempQueue;
-    private Queue<String> syntaxQueue = new LinkedList<String>();
 
-    public SelectKeywordAnalyser(Queue<String> tempQueue) {
+    public SelectAnalyser(Queue<String> tempQueue) {
         this.tempQueue = tempQueue;
-        analyseStatement();
     }
 
     /**
@@ -39,9 +36,7 @@ public class SelectKeywordAnalyser {
      * tokens in the input token queue recursively.
      */
     public void analyseStatement() {
-
         StringBuilder sb;
-
         if (LexicalConstants.isAggregateFunction(tempQueue.peek()) ||
                 LexicalConstants.isStringFunction(tempQueue.peek())) {
             if (LexicalConstants.isAggregateFunction(tempQueue.peek())) {
@@ -181,12 +176,4 @@ public class SelectKeywordAnalyser {
         }
     }
 
-    /**
-     * This method returns a queue of strings which contains the syntax embedded tokens
-     *
-     * @return a queue of Strings
-     */
-    public Queue<String> getSyntaxQueue() {
-        return syntaxQueue;
-    }
 }

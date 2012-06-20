@@ -92,7 +92,6 @@ public class TokenMgtDAO {
     }
 
     public String[] validateAuthorizationCode(String consumerKey, String authorizationKey) throws IdentityOAuth2Exception {
-        String callbackURI = null;
         String authorizedUser = null;
         String scope =  null;
         Connection connection = null;
@@ -107,9 +106,8 @@ public class TokenMgtDAO {
             resultSet = prepStmt.executeQuery();
 
             if (resultSet.next()) {
-                callbackURI = resultSet.getString(1);
-                authorizedUser = resultSet.getString(2);
-                scope = resultSet.getString(3);
+                authorizedUser = resultSet.getString(1);
+                scope = resultSet.getString(2);
             }
 
         } catch (IdentityException e) {
@@ -124,7 +122,7 @@ public class TokenMgtDAO {
             IdentityDatabaseUtil.closeAllConnections(connection, null, prepStmt);
         }
 
-        return new String[]{callbackURI, authorizedUser, scope};
+        return new String[]{authorizedUser, scope};
     }
 
     public void cleanUpAuthzCode(String authzCode) throws IdentityOAuth2Exception {

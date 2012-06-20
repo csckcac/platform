@@ -22,8 +22,11 @@ public class OAuth2AccessTokenReqDTO {
     private String clientId;
     private String clientSecret;
     private String grantType;
+    private String scope;
     private String authorizationCode;
     private String callbackURI;
+    private String resourceOwnerUsername;
+    private String resourceOwnerPassword;
 
     public String getClientId() {
         return clientId;
@@ -63,5 +66,29 @@ public class OAuth2AccessTokenReqDTO {
 
     public void setCallbackURI(String callbackURI) {
         this.callbackURI = callbackURI;
+    }
+
+    public String getResourceOwnerUsername() {
+        return resourceOwnerUsername;
+    }
+
+    public void setResourceOwnerUsername(String resourceOwnerUsername) {
+        this.resourceOwnerUsername = resourceOwnerUsername;
+    }
+
+    public String getResourceOwnerPassword() {
+        return resourceOwnerPassword;
+    }
+
+    public void setResourceOwnerPassword(String resourceOwnerPassword) {
+        this.resourceOwnerPassword = resourceOwnerPassword;
+    }
+
+    public String getScope() {
+        return scope;
+    }
+
+    public void setScope(String scope) {
+        this.scope = scope;
     }
 }

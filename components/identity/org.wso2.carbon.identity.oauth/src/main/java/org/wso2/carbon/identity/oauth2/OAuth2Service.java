@@ -22,6 +22,7 @@ import com.google.gdata.client.authn.oauth.OAuthException;
 import org.apache.amber.oauth2.as.issuer.MD5Generator;
 import org.apache.amber.oauth2.as.issuer.OAuthIssuerImpl;
 import org.apache.amber.oauth2.common.error.OAuthError;
+import org.apache.amber.oauth2.common.message.types.GrantType;
 import org.apache.amber.oauth2.common.message.types.ResponseType;
 import org.apache.commons.logging.Log;
 import org.apache.commons.logging.LogFactory;
@@ -226,7 +227,7 @@ public class OAuth2Service extends AbstractAdmin {
                 return tokenRespDTO;
             }
 
-            AccessTokenIssuer tokenIssuer = new AccessTokenIssuer();
+            AccessTokenIssuer tokenIssuer = new AccessTokenIssuer(getAuthzGrantHandler(tokenReqDTO));
             return tokenIssuer.issue(tokenReqDTO);
 
         } catch (Exception e) {
@@ -236,6 +237,15 @@ public class OAuth2Service extends AbstractAdmin {
             tokenRespDTO.setErrorMsg("Error when issuing the access token");
             return tokenRespDTO;
         }
+    }
+
+    private AuthorizationGrantHandler getAuthzGrantHandler(OAuth2AccessTokenReqDTO reqDTO){
+        if(GrantType.AUTHORIZATION_CODE.toString().equals(reqDTO.getGrantType())){
+            return new AuthorizationCodeValidator(reqDTO);
+        } else if (GrantType.PASSWORD.toString().equals(reqDTO.getGrantType())){
+            return new PasswordGrantHandler(reqDTO);
+        }
+        return null;
     }
 
     private void handleErrorRequest(OAuth2AuthorizeRespDTO respDTO, String errorCode,

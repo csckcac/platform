@@ -256,6 +256,11 @@ public class CassandraConnector {
         EventStreamDefinition eventStreamDef;
         eventStreamDef = getStreamDefinitionFromStore(cluster, eventData.getStreamId());
         String streamColumnFamily = getCFNameFromStreamId(cluster, eventData.getStreamId());
+        if ((eventStreamDef == null) || (streamColumnFamily == null)) {
+            String errorMsg = "Event stream definition or column family cannot be null";
+            logger.error(errorMsg);
+            throw new StreamDefinitionStoreException(errorMsg);
+        }
 
 
         Keyspace keyspace = HFactory.createKeyspace(BAM_EVENT_DATA_KEYSPACE, cluster);

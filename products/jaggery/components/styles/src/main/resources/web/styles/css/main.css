@@ -20,7 +20,7 @@ div#header-div {
 }
 
 div#header-div div.left-logo {
-	background-image: url( ../images/app-server-header-logo.gif );
+	background-image: url(../images/app-server-header-logo.gif);
 	width: 200px;
 	margin:10px 20px 8px !important;
 }

@@ -12,7 +12,7 @@
  *  Unless required by applicable law or agreed to in writing,
  *  software distributed under the License is distributed on an
  *   * "AS IS" BASIS, WITHOUT WARRANTIES OR CONDITIONS OF ANY
- *  KIND, either express or implied.  See the License for the
+ *  KIND, either express or implied.  See // TreeMap used to keep given scripts order if needed the License for the
  *  specific language governing permissions and limitations
  *  under the License.
  */
@@ -33,6 +33,7 @@ import java.util.Iterator;
 import java.util.Map;
 import java.util.Properties;
 import java.util.TreeMap;
+import java.util.*;
 
 /**
  * Creates an instance of a Script mediator for inline or external script mediation for BSF
@@ -112,7 +113,7 @@ public class ScriptMediatorFactory extends AbstractMediatorFactory {
         // from void ScriptMediator.prepareExternalScript(MessageContext synCtx)
 
         // TreeMap used to keep given scripts order if needed
-        Map<Value, Object> includeKeysMap = new TreeMap<Value, Object>();
+        Map<Value, Object> includeKeysMap = new LinkedHashMap<Value, Object>();
         Iterator itr = elem.getChildrenWithName(INCLUDE_Q);
         while (itr.hasNext()) {
             OMElement includeElem = (OMElement) itr.next();
@@ -121,7 +122,7 @@ public class ScriptMediatorFactory extends AbstractMediatorFactory {
             // ValueFactory for creating dynamic or static Value
             ValueFactory keyFac = new ValueFactory();
             // create dynamic or static key based on OMElement
-            Value generatedKey = keyFac.createValue(XMLConfigConstants.KEY, elem);
+            Value generatedKey = keyFac.createValue(XMLConfigConstants.KEY, includeElem);
 
             if (key == null) {
                 throw new SynapseException("Cannot use 'include' element without 'key'" +

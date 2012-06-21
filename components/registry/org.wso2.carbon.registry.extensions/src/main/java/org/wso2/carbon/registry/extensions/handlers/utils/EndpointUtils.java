@@ -695,8 +695,12 @@ public class EndpointUtils {
      */
     public static String deriveEndpointFromUrl(String url) {
         final String ENDPOINT_RESOURCE_PREFIX = "ep-";
-        String name = url.split("/")[url.split("/").length - 1].replace(".","-").replace("=", "-").
-                replace("@", "-").replace("#", "-").replace("~", "-");
+        String tempURL = url;
+        if (tempURL.startsWith("jms:/")) {
+            tempURL = tempURL.split("[?]")[0];
+        }
+        String name = tempURL.split("/")[tempURL.split("/").length - 1].replace(".","-").
+                replace("=", "-").replace("@", "-").replace("#", "-").replace("~", "-");
         String[] temp = url.split("[?]")[0].split("/");
         StringBuffer sb = new StringBuffer();
         for(int i=0; i<temp.length-1; i++){

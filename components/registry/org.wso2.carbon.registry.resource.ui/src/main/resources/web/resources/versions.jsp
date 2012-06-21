@@ -194,7 +194,7 @@ function submitDelete(path, snapshotId, screenWidth){
                         <% if (versionBean.getLoggedIn() && versionBean.getPutAllowed() && !Boolean.parseBoolean(versionBean.getWriteLocked())) { %>
                         <a href="./restore_version_ajaxprocessor.jsp?versionPath=<%=vpath%>&path=<%=path%>"
                            class="restore-icon-link registryWriteOperation"><fmt:message key="restore"/></a>
-                        <% }else {%>
+                        <% }else if(versionBean.getPutAllowed()){%>
                             <a onclick="retentionError()" class="restore-icon-link registryWriteOperation"><fmt:message key="restore"/></a>
                         <%
                             }

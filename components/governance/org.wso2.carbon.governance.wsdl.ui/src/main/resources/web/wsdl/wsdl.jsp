@@ -46,7 +46,7 @@
     };
 
     function handleSuccess(o) {
-        window.location = "../list/wsdl.jsp?region=region3&item=governance_list_wsdl_menu";
+        window.location = "../listWSDL/wsdl.jsp?region=region3&item=governance_list_wsdl_menu";
     }
 
     function handleFailure(o) {
@@ -253,7 +253,7 @@
                                                  <input type="hidden" id="uPath" name="path" value="/"/>
                                                  <input type="hidden" id="uMediaType" name="mediaType"/>
                                                  <input type="hidden" id="uDescription" name="description" value=""/>
-                                                 <input type="hidden" id="uRedirect" name="redirect" value="list/wsdl.jsp?region=region3&item=governance_list_wsdl_menu"/>
+                                                 <input type="hidden" id="uRedirect" name="redirect" value="listWSDL/wsdl.jsp?region=region3&item=governance_list_wsdl_menu"/>
                                                  <input type="hidden" id="uErrorRedirect" name="errorRedirect" value="wsdl/wsdl.jsp?errorUpload=errorUpload"/>
 
                                                  <table class="normal">

@@ -1,0 +1,65 @@
+<!--
+ ~ Copyright (c) 2005-2011, WSO2 Inc. (http://www.wso2.org) All Rights Reserved.
+ ~
+ ~ WSO2 Inc. licenses this file to you under the Apache License,
+ ~ Version 2.0 (the "License"); you may not use this file except
+ ~ in compliance with the License.
+ ~ You may obtain a copy of the License at
+ ~
+ ~    http://www.apache.org/licenses/LICENSE-2.0
+ ~
+ ~ Unless required by applicable law or agreed to in writing,
+ ~ software distributed under the License is distributed on an
+ ~ "AS IS" BASIS, WITHOUT WARRANTIES OR CONDITIONS OF ANY
+ ~ KIND, either express or implied.  See the License for the
+ ~ specific language governing permissions and limitations
+ ~ under the License.
+ -->
+<!DOCTYPE HTML PUBLIC "-//W3C//DTD HTML 4.01 Transitional//EN" "http://www.w3.org/TR/html4/strict.dtd">
+<html>
+<head>
+  <title>Governance Registry Governance Artifacts - User Guide</title>
+  <link href="../../admin/css/documentation.css" rel="stylesheet" type="text/css" media="all" />
+</head>
+
+<body>
+<h1>Governance Artifacts</h1>
+<p>
+    WSO2 Governance Registry stores governance metadata and information on governance related
+    entities.
+    Registry resources storing these information and/or metadata are known as Governance Artifacts.
+    Examples for Governance Artifacts include Services, WSDLs, Schemas, Processes and People.
+</p>
+<ul>
+    <li><a href="#wsdl">Adding WSDLs</a></li>
+</ul>
+
+<a name="wsdl"></a>
+<h2>Adding WSDLs </h2>
+<p>
+If a WSDL URL is available and you need to import service information of the Service of that WSDL,
+    you can use the <b>Metadata->Add->WSDL</b> link.  Once the URL is provided to the UI, a name is
+automatically suggested for the resource in GReg. When given WSDL is imported, a Service artifact will
+be automatically created for that WSDL. Details such as service name, service namespaces and
+service endpoints will be extracted from the WSDL and stored in the newly created Service.
+User can later edit this automatically created Service using the Service UI. For example, user can
+edit that service and enter the rest of the information which was not added through WSDL import
+operation, such as Authentication Platform, Authentication Mechanism etc.</p>
+
+<p><img src="images/addWsdlFile.png" width="492px"/></p>
+<p>Figure 1: Upload WSDL from a file </p>
+
+<p><img src="images/addWsdlUri.png" width="492px"/></p>
+<p>Figure 2: Import WSDL from URL </p>
+
+<h3>Validation</h3>
+<p>WSO2 Governance Registry performs WS-I, WSDL validations on the wsdl provided once importing is done.
+    The result is displayed under &#34;properties&#34; section of the imported WSDL resource.
+    WSDL validation can optionally be disabled from the registry.xml.  Also, WSDL validation requires
+    a connection to the internet for the very first time, and will not work on systems with no Internet connectivity.</p>
+
+<p><img src="images/validation.png" width="492px"/></p>
+<p>Figure 3: WSDL validation</p>
+</body>
+
+</html>

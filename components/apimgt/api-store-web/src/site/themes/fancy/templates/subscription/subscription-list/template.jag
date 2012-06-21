@@ -1,7 +1,7 @@
 <% jagg.template("subscription/subscription-list", function(inputs, outputs, jagg) { %>
 <div class="subscription-listing" style="margin-top:22px;">
     <%
-    var i, j, app, api, apis, key, lenI, clazz, lenJ, path, apps = outputs.applications, lenI = apps.length;
+    var i, j, app, api, apis, key, lenI, clazz, lenJ, path, apps = outputs.applications; if(apps!=null){lenI = apps.length;}
     for(i = 0; i < lenI; i++) {
         app = apps[i];
         var str_i = String(i).replace('.','_');

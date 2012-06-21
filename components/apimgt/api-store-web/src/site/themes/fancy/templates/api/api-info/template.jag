@@ -27,8 +27,8 @@
                     </td>
                     <td>
                         <div class="star-ratings">
-                            <% if(user) { %><%=stars.getDynamicStars(api.rating)%>
-                            <% } else { %><%=stars.getStaticStars(site.context, api.rating,jagg.getUserTheme())%><% } %>
+                             <% if(user) { %><%=stars.getDynamicStars(api.userRate)%>
++                            <% } else { %><%=stars.getStaticStars(site.context, api.userRate,jagg.getUserTheme())%><% } %>
                         </div>
                     </td>
 

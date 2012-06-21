@@ -70,7 +70,7 @@ public class GovernanceListUIServiceComponent {
         UIAuthenticationExtender authenticationExtender = new UIAuthenticationExtender() {
             public void onSuccessAdminLogin(HttpServletRequest request, String s, String s1,
                                             String s2) {
-                if(CarbonUIUtil.isUserAuthorized(request,"/permission/ws-api")){
+                if(CarbonUIUtil.isUserAuthorized(request,"/permission/admin/manage/resources/ws-api")){
                     HttpSession session = request.getSession();
                     String cookie =
                             (String) session.getAttribute(ServerConstants.ADMIN_SERVICE_COOKIE);

@@ -15,7 +15,8 @@
 *specific language governing permissions and limitations
 *under the License.
 */
-package org.wso2.carbon.registry.lifecycle;
+
+package org.wso2.carbon.registry.lifecycle.test;
 
 import org.testng.Assert;
 import org.testng.annotations.AfterClass;
@@ -32,13 +33,14 @@ import org.wso2.carbon.registry.core.Association;
 import org.wso2.carbon.registry.core.Registry;
 import org.wso2.carbon.registry.core.Resource;
 import org.wso2.carbon.registry.core.exceptions.RegistryException;
-import org.wso2.carbon.registry.lifecycle.utils.Utils;
+import org.wso2.carbon.registry.lifecycle.test.utils.Utils;
 import org.wso2.carbon.registry.search.metadata.utils.GregTestUtils;
 import org.wso2.carbon.registry.ws.client.registry.WSRegistryServiceClient;
 
 import java.rmi.RemoteException;
 
-public class DefaultServiceLifeCycleWithDependencyTestCase {
+public class GRegPromoteLifeCycleWithResourceTestCase {
+
     private String sessionCookie;
 
     private WSRegistryServiceClient registry;
@@ -48,15 +50,14 @@ public class DefaultServiceLifeCycleWithDependencyTestCase {
     private final String serviceDependencyName = "UTPolicyDependency.xml";
     private final String aspectName = "ServiceLifeCycle";
     private final String ACTION_PROMOTE = "Promote";
-    private final String ACTION_DEMOTE = "Demote";
     private final String ASS_TYPE_DEPENDS = "depends";
+    //    private final String ACTION_DEMOTE = "Demote";
     private String servicePathDev;
     private String servicePathTest;
     private String servicePathProd;
 
     private String policyPathDev;
     private String policyPathTest;
-    private String policyPathProd;
 
     @BeforeClass
     public void init() throws Exception {
@@ -142,15 +143,15 @@ public class DefaultServiceLifeCycleWithDependencyTestCase {
         Thread.sleep(1000);
         ArrayOfString[] parameters = new ArrayOfString[2];
         parameters[0] = new ArrayOfString();
-        parameters[0].setArray(new String[]{servicePathTest, "2.0.0"});
+        parameters[0].setArray(new String[]{servicePathTest, "1.0.0"});
 
         parameters[1] = new ArrayOfString();
-        parameters[1].setArray(new String[]{policyPathTest, "1.5.0"});
+        parameters[1].setArray(new String[]{policyPathTest, "1.0.0"});
         lifeCycleAdminService.invokeAspectWithParams(sessionCookie, servicePathTest, aspectName,
                                                      ACTION_PROMOTE, null, parameters);
 
-        servicePathProd = "/_system/governance/branches/production/services/sns/2.0.0/" + serviceName;
-        policyPathProd = "/_system/governance/branches/production/policies/1.5.0/" + serviceDependencyName;
+        servicePathProd = "/_system/governance/branches/production/services/sns/1.0.0/" + serviceName;
+        String policyPathProd = "/_system/governance/branches/production/policies/1.0.0/" + serviceDependencyName;
         Thread.sleep(500);
         LifecycleBean lifeCycle = lifeCycleAdminService.getLifecycleBean(sessionCookie, servicePathProd);
 
@@ -170,43 +171,6 @@ public class DefaultServiceLifeCycleWithDependencyTestCase {
 
         Assert.assertEquals(registry.get(servicePathTest).getPath(), servicePathTest, "Preserve original failed for service");
         Assert.assertEquals(registry.get(policyPathTest).getPath(), policyPathTest, "Preserve original failed for dependency");
-
-    }
-
-    @Test(priority = 2, dependsOnMethods = {"promoteServiceToProduction"}, description = "Promote Service")
-    public void demoteServiceToTesting()
-            throws CustomLifecyclesChecklistAdminServiceExceptionException, RemoteException,
-                   InterruptedException, RegistryException {
-        Thread.sleep(1000);
-        ArrayOfString[] parameters = new ArrayOfString[2];
-        parameters[0] = new ArrayOfString();
-        parameters[0].setArray(new String[]{servicePathProd, "1.0.0"});
-
-        parameters[1] = new ArrayOfString();
-        parameters[1].setArray(new String[]{policyPathProd, "1.0.0"});
-
-        lifeCycleAdminService.invokeAspectWithParams(sessionCookie, servicePathDev, aspectName,
-                                                     ACTION_DEMOTE, null, parameters);
-        servicePathTest = "/_system/governance/branches/testing/services/sns/1.0.0/" + serviceName;
-        policyPathTest = "/_system/governance/branches/testing/policies/1.0.0/" + serviceDependencyName;
-        Thread.sleep(500);
-        LifecycleBean lifeCycle = lifeCycleAdminService.getLifecycleBean(sessionCookie, servicePathTest);
-        Resource service = registry.get(servicePathTest);
-        Assert.assertNotNull(service, "Service Not found on registry path " + servicePathTest);
-        Assert.assertTrue(service.getPath().contains("branches/testing"), "Service not in branches/testing. " + servicePathTest);
-
-        Assert.assertEquals(Utils.getLifeCycleState(lifeCycle), "Testing", "LifeCycle State Mismatched");
-
-        Association[] dependency = registry.getAssociations(servicePathTest, ASS_TYPE_DEPENDS);
-        Assert.assertNotNull(dependency, "Dependency Not Found.");
-        Assert.assertTrue(dependency.length > 0, "Dependency list empty");
-        Assert.assertEquals(dependency[0].getDestinationPath(), policyPathTest, "Dependency Name mismatched");
-
-        Assert.assertTrue((lifeCycleAdminService.getAllDependencies(sessionCookie, servicePathTest).length == 2),
-                          "Dependency Count mismatched");
-
-        Assert.assertEquals(registry.get(servicePathDev).getPath(), servicePathDev, "Preserve original failed for service");
-        Assert.assertEquals(registry.get(policyPathDev).getPath(), policyPathDev, "Preserve original failed for dependency");
 
     }
 

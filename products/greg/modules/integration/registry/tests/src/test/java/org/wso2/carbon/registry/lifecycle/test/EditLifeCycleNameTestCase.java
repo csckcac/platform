@@ -15,7 +15,7 @@
 *specific language governing permissions and limitations
 *under the License.
 */
-package org.wso2.carbon.registry.lifecycle;
+package org.wso2.carbon.registry.lifecycle.test;
 
 import org.testng.Assert;
 import org.testng.annotations.BeforeClass;
@@ -26,7 +26,7 @@ import org.wso2.carbon.governance.lcm.stub.LifeCycleManagementServiceExceptionEx
 import org.wso2.carbon.integration.framework.ClientConnectionUtil;
 import org.wso2.carbon.integration.framework.LoginLogoutUtil;
 import org.wso2.carbon.integration.framework.utils.FrameworkSettings;
-import org.wso2.carbon.registry.lifecycle.utils.Utils;
+import org.wso2.carbon.registry.lifecycle.test.utils.Utils;
 import org.wso2.carbon.registry.search.metadata.bean.SearchParameterBean;
 import org.wso2.carbon.registry.search.metadata.utils.GregTestUtils;
 import org.wso2.carbon.registry.search.stub.SearchAdminServiceRegistryExceptionException;

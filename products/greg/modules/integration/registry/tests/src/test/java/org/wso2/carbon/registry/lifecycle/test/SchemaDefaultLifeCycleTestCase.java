@@ -15,7 +15,7 @@
 *specific language governing permissions and limitations
 *under the License.
 */
-package org.wso2.carbon.registry.lifecycle;
+package org.wso2.carbon.registry.lifecycle.test;
 
 import org.testng.Assert;
 import org.testng.annotations.AfterClass;
@@ -30,18 +30,17 @@ import org.wso2.carbon.integration.framework.LoginLogoutUtil;
 import org.wso2.carbon.integration.framework.utils.FrameworkSettings;
 import org.wso2.carbon.registry.activities.stub.RegistryExceptionException;
 import org.wso2.carbon.registry.activities.stub.beans.xsd.ActivityBean;
-import org.wso2.carbon.registry.core.Association;
 import org.wso2.carbon.registry.core.Registry;
 import org.wso2.carbon.registry.core.Resource;
 import org.wso2.carbon.registry.core.exceptions.RegistryException;
-import org.wso2.carbon.registry.lifecycle.utils.Utils;
+import org.wso2.carbon.registry.lifecycle.test.utils.Utils;
 import org.wso2.carbon.registry.search.metadata.utils.GregTestUtils;
 import org.wso2.carbon.registry.ws.client.registry.WSRegistryServiceClient;
 
 import java.rmi.RemoteException;
 import java.util.Calendar;
 
-public class WSDLDefaultServiceLifeCycleTestCase {
+public class SchemaDefaultLifeCycleTestCase {
     private String sessionCookie;
 
     private WSRegistryServiceClient registry;
@@ -51,9 +50,8 @@ public class WSDLDefaultServiceLifeCycleTestCase {
 
     private final String ASPECT_NAME = "ServiceLifeCycle";
     private final String ACTION_PROMOTE = "Promote";
-
     //    private final String ACTION_DEMOTE = "Demote";
-    private String wsdlPathDev;
+    private String schemaPathDev;
 
 
     @BeforeClass
@@ -67,31 +65,30 @@ public class WSDLDefaultServiceLifeCycleTestCase {
         registry = GregTestUtils.getRegistry();
         Registry governance = GregTestUtils.getGovernanceRegistry(registry);
 
-        wsdlPathDev = "/_system/governance" + Utils.addWSDL("echoWsdlLifeCycleTest.wsdl", governance);
+        String schemaName = "LifeCycleTest.xsd";
+        schemaPathDev = "/_system/governance" + Utils.addSchema(schemaName, governance);
         Thread.sleep(1000);
 
     }
 
-    @Test(priority = 1, description = "Add lifecycle to a WSDL")
+    @Test(priority = 1, description = "Add lifecycle to a Schema")
     public void addLifecycle()
             throws RegistryException, CustomLifecyclesChecklistAdminServiceExceptionException,
                    RemoteException, InterruptedException, RegistryExceptionException {
-        lifeCycleAdminService.addAspect(sessionCookie, wsdlPathDev, ASPECT_NAME);
+        lifeCycleAdminService.addAspect(sessionCookie, schemaPathDev, ASPECT_NAME);
         Thread.sleep(500);
-        LifecycleBean lifeCycle = lifeCycleAdminService.getLifecycleBean(sessionCookie, wsdlPathDev);
-        Resource service = registry.get(wsdlPathDev);
-        Assert.assertNotNull(service, "Service Not found on registry path " + wsdlPathDev);
-        Assert.assertEquals(service.getPath(), wsdlPathDev, "Service path changed after adding life cycle. " + wsdlPathDev);
+        LifecycleBean lifeCycle = lifeCycleAdminService.getLifecycleBean(sessionCookie, schemaPathDev);
+        Resource service = registry.get(schemaPathDev);
+        Assert.assertNotNull(service, "Service Not found on registry path " + schemaPathDev);
+        Assert.assertEquals(service.getPath(), schemaPathDev, "Service path changed after adding life cycle. " + schemaPathDev);
 
         Assert.assertEquals(Utils.getLifeCycleState(lifeCycle), "Development", "LifeCycle State Mismatched");
-
-        verifyDependency(wsdlPathDev);
 
 
         //Activity search
         Thread.sleep(1000 * 10);
         ActivityBean activityObj = activitySearch.getActivities(sessionCookie, userName
-                , wsdlPathDev, Utils.formatDate(Calendar.getInstance().getTime())
+                , schemaPathDev, Utils.formatDate(Calendar.getInstance().getTime())
                 , "", ActivitySearchAdminService.FILTER_ASSOCIATE_ASPECT, 1);
         Assert.assertNotNull(activityObj, "Activity object null for Associate Aspect");
         Assert.assertNotNull(activityObj.getActivity(), "Activity list object null for Associate Aspect");
@@ -102,6 +99,7 @@ public class WSDLDefaultServiceLifeCycleTestCase {
                           "associated the aspect ServiceLifeCycle not contain in last activity. " + activity);
         Assert.assertTrue(activity.contains("0m ago"), "current time not found on activity. " + activity);
 
+
     }
 
     @Test(priority = 2, dependsOnMethods = {"addLifecycle"}, description = "Promote to Testing")
@@ -109,19 +107,22 @@ public class WSDLDefaultServiceLifeCycleTestCase {
             throws CustomLifecyclesChecklistAdminServiceExceptionException, RemoteException,
                    InterruptedException, RegistryException, RegistryExceptionException {
 
-        lifeCycleAdminService.invokeAspect(sessionCookie, wsdlPathDev, ASPECT_NAME,
+        lifeCycleAdminService.invokeAspect(sessionCookie, schemaPathDev, ASPECT_NAME,
                                            ACTION_PROMOTE, null);
         Thread.sleep(2000);
 
-        verifyPromotedServiceToTest(wsdlPathDev);
-        verifyDependency(wsdlPathDev);
-        Assert.assertEquals(registry.get(wsdlPathDev).getPath(), wsdlPathDev,
+        LifecycleBean lifeCycle = lifeCycleAdminService.getLifecycleBean(sessionCookie, schemaPathDev);
+        Resource service = registry.get(schemaPathDev);
+        Assert.assertNotNull(service, "Service Not found on registry path " + schemaPathDev);
+
+        Assert.assertEquals(Utils.getLifeCycleState(lifeCycle), "Testing", "LifeCycle State Mismatched");
+        Assert.assertEquals(registry.get(schemaPathDev).getPath(), schemaPathDev,
                             "Resource not exist on trunk. Preserve original not working fine");
 
         //activity search for trunk
         Thread.sleep(1000 * 10);
         ActivityBean activityObjTrunk = activitySearch.getActivities(sessionCookie, userName
-                , wsdlPathDev, Utils.formatDate(Calendar.getInstance().getTime())
+                , schemaPathDev, Utils.formatDate(Calendar.getInstance().getTime())
                 , "", ActivitySearchAdminService.FILTER_RESOURCE_UPDATE, 1);
         Assert.assertNotNull(activityObjTrunk, "Activity object null in trunk");
         Assert.assertNotNull(activityObjTrunk.getActivity(), "Activity list object null");
@@ -139,19 +140,20 @@ public class WSDLDefaultServiceLifeCycleTestCase {
             throws CustomLifecyclesChecklistAdminServiceExceptionException, RemoteException,
                    InterruptedException, RegistryException, RegistryExceptionException {
 
-        lifeCycleAdminService.invokeAspect(sessionCookie, wsdlPathDev, ASPECT_NAME,
+        lifeCycleAdminService.invokeAspect(sessionCookie, schemaPathDev, ASPECT_NAME,
                                            ACTION_PROMOTE, null);
         Thread.sleep(2000);
 
-        verifyPromotedServiceToProduction(wsdlPathDev);
-        verifyDependency(wsdlPathDev);
-        Assert.assertEquals(registry.get(wsdlPathDev).getPath(), wsdlPathDev,
+        Resource service = registry.get(schemaPathDev);
+        Assert.assertNotNull(service, "Service Not found on registry path " + schemaPathDev);
+
+        Assert.assertEquals(registry.get(schemaPathDev).getPath(), schemaPathDev,
                             "Resource not exist on trunk. Preserve original not working fine");
 
         //activity search for trunk
         Thread.sleep(1000 * 10);
         ActivityBean activityObjTrunk = activitySearch.getActivities(sessionCookie, userName
-                , wsdlPathDev, Utils.formatDate(Calendar.getInstance().getTime())
+                , schemaPathDev, Utils.formatDate(Calendar.getInstance().getTime())
                 , "", ActivitySearchAdminService.FILTER_RESOURCE_UPDATE, 1);
         Assert.assertNotNull(activityObjTrunk, "Activity object null in trunk");
         Assert.assertNotNull(activityObjTrunk.getActivity(), "Activity list object null");
@@ -166,52 +168,13 @@ public class WSDLDefaultServiceLifeCycleTestCase {
 
     @AfterClass
     public void cleanUp() throws RegistryException {
-        if (wsdlPathDev != null) {
-            registry.delete(wsdlPathDev);
+        if (schemaPathDev != null) {
+            registry.delete(schemaPathDev);
         }
         registry = null;
         activitySearch = null;
         lifeCycleAdminService = null;
     }
 
-    private void verifyPromotedServiceToTest(String servicePath)
-            throws InterruptedException, CustomLifecyclesChecklistAdminServiceExceptionException,
-                   RemoteException, RegistryException {
-        Thread.sleep(500);
-        LifecycleBean lifeCycle = lifeCycleAdminService.getLifecycleBean(sessionCookie, servicePath);
-        Resource service = registry.get(servicePath);
-        Assert.assertNotNull(service, "Service Not found on registry path " + servicePath);
 
-        Assert.assertEquals(Utils.getLifeCycleState(lifeCycle), "Testing", "LifeCycle State Mismatched");
-
-
-    }
-
-    private void verifyPromotedServiceToProduction(String servicePath)
-            throws InterruptedException, CustomLifecyclesChecklistAdminServiceExceptionException,
-                   RemoteException, RegistryException {
-        Thread.sleep(500);
-        LifecycleBean lifeCycle = lifeCycleAdminService.getLifecycleBean(sessionCookie, servicePath);
-        Resource service = registry.get(servicePath);
-        Assert.assertNotNull(service, "Service Not found on registry path " + servicePath);
-
-        Assert.assertEquals(Utils.getLifeCycleState(lifeCycle), "Production", "LifeCycle State Mismatched");
-
-
-    }
-
-    private void verifyDependency(String servicePath) throws RegistryException {
-        String ASS_TYPE_DEPENDS = "depends";
-        Association[] dependencyList = registry.getAssociations(servicePath, ASS_TYPE_DEPENDS);
-        Assert.assertNotNull(dependencyList, "Dependency Not Found.");
-        Assert.assertTrue(dependencyList.length > 0, "Dependency list empty");
-
-        int dependencyCount = 0;
-        for (Association dependency : dependencyList) {
-            if (dependency.getSourcePath().equalsIgnoreCase(servicePath)) {
-                dependencyCount++;
-            }
-        }
-        Assert.assertEquals(dependencyCount, 6, "some dependency missing");
-    }
 }

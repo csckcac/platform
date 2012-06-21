@@ -15,7 +15,7 @@
 *specific language governing permissions and limitations
 *under the License.
 */
-package org.wso2.carbon.registry.lifecycle.utils;
+package org.wso2.carbon.registry.lifecycle.test.utils;
 
 import org.testng.Assert;
 import org.wso2.carbon.admin.service.LifeCycleManagerAdminService;

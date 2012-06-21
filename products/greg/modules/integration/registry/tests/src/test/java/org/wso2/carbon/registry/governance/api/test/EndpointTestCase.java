@@ -96,6 +96,20 @@ public class EndpointTestCase {
         // now we are trying to remove the endpoint
         EndpointManager endpointManager = new EndpointManager(registry);
 
+        Endpoint endpoint =
+                endpointManager.newEndpoint("https://localhost:9443/axis2/services/BizServiceX");
+        endpointManager.addEndpoint(endpoint);
+        wsdl.attachEndpoint(endpoint);
+        wsdlManager.updateWsdl(wsdl);
+        wsdl = wsdlManager.getWsdl(wsdl.getId());
+        endpoints = wsdl.getAttachedEndpoints();
+        Assert.assertEquals(endpoints.length, 2);
+        wsdl.detachEndpoint(endpoint.getId());
+        wsdlManager.updateWsdl(wsdl);
+        wsdl = wsdlManager.getWsdl(wsdl.getId());
+        endpoints = wsdl.getAttachedEndpoints();
+        Assert.assertEquals(endpoints.length, 1);
+
         try {
             endpointManager.removeEndpoint(endpoints[0].getId());
             Assert.assertTrue(false);

@@ -34,7 +34,7 @@ import org.wso2.carbon.registry.core.Registry;
 import org.wso2.carbon.registry.core.Resource;
 import org.wso2.carbon.registry.core.exceptions.RegistryException;
 import org.wso2.carbon.registry.lifecycle.test.utils.Utils;
-import org.wso2.carbon.registry.search.metadata.utils.GregTestUtils;
+import org.wso2.carbon.registry.search.metadata.test.utils.GregTestUtils;
 import org.wso2.carbon.registry.ws.client.registry.WSRegistryServiceClient;
 
 import java.rmi.RemoteException;

@@ -15,11 +15,10 @@
 *specific language governing permissions and limitations
 *under the License.
 */
-package org.wso2.carbon.registry.search.metadata;
+package org.wso2.carbon.registry.search.metadata.test;
 
 import org.testng.Assert;
 import org.testng.annotations.BeforeClass;
-import org.testng.annotations.DataProvider;
 import org.testng.annotations.Test;
 import org.wso2.carbon.admin.service.RegistrySearchAdminService;
 import org.wso2.carbon.integration.framework.ClientConnectionUtil;
@@ -27,8 +26,9 @@ import org.wso2.carbon.integration.framework.LoginLogoutUtil;
 import org.wso2.carbon.integration.framework.utils.FrameworkSettings;
 import org.wso2.carbon.registry.core.Resource;
 import org.wso2.carbon.registry.core.exceptions.RegistryException;
-import org.wso2.carbon.registry.search.metadata.bean.SearchParameterBean;
-import org.wso2.carbon.registry.search.metadata.utils.GregTestUtils;
+import org.wso2.carbon.registry.search.metadata.test.bean.SearchParameterBean;
+import org.wso2.carbon.registry.search.metadata.test.utils.GregTestUtils;
+import org.wso2.carbon.registry.search.metadata.test.utils.Parameters;
 import org.wso2.carbon.registry.search.stub.SearchAdminServiceRegistryExceptionException;
 import org.wso2.carbon.registry.search.stub.beans.xsd.AdvancedSearchResultsBean;
 import org.wso2.carbon.registry.search.stub.beans.xsd.ArrayOfString;
@@ -39,9 +39,10 @@ import org.wso2.carbon.registry.ws.client.registry.WSRegistryServiceClient;
 import java.rmi.RemoteException;
 
 /*
-Search Registry metadata by mediaType
+Search Registry metadata by keyword(content)
  */
-public class RegistrySearchByMediaTypeTestCase {
+public class RegistrySearchByKeywordTestCase {
+
     private String sessionCookie;
 
     private RegistrySearchAdminService searchAdminService;
@@ -57,56 +58,62 @@ public class RegistrySearchByMediaTypeTestCase {
 
     }
 
-    @Test(priority = 1, groups = {"wso2.greg"}, description = "Metadata search by available MediaType")
-    public void searchResourceByMediaType()
+    @Test(priority = 1, groups = {"wso2.greg"}, description = "Metadata search by available keyword")
+    public void searchResourceByAvailableKeyword()
             throws SearchAdminServiceRegistryExceptionException, RemoteException,
                    RegistryException {
         CustomSearchParameterBean searchQuery = new CustomSearchParameterBean();
         SearchParameterBean paramBean = new SearchParameterBean();
-        paramBean.setMediaType("application/vnd.wso2-service+xml");
+        paramBean.setContent("org");
         ArrayOfString[] paramList = paramBean.getParameterList();
 
         searchQuery.setParameterValues(paramList);
         AdvancedSearchResultsBean result = searchAdminService.getAdvancedSearchResults(sessionCookie, searchQuery);
         Assert.assertNotNull(result.getResourceDataList(), "No Record Found");
-        Assert.assertTrue((result.getResourceDataList().length > 0), "No Record Found. set valid MediaType");
+        Assert.assertTrue((result.getResourceDataList().length > 0), "No Record Found. set valid keyword");
         for (ResourceData resource : result.getResourceDataList()) {
-            Assert.assertEquals(registry.get(resource.getResourcePath()).getMediaType(), "application/vnd.wso2-service+xml",
-                                "search keyword not contain on MediaType :" + resource.getResourcePath());
-        }
+            Resource data = registry.get(resource.getResourcePath());
+            String content = new String((byte[]) data.getContent());
 
+            Assert.assertTrue(content.contains("org"),
+                              "search keyword not contain on Resource Name :" + resource.getName());
 
-    }
-
-    @Test(priority = 3, groups = {"wso2.greg"}, description = "Metadata search by MediaType pattern matching")
-    public void searchResourceByMediaTypePattern()
-            throws SearchAdminServiceRegistryExceptionException, RemoteException,
-                   RegistryException {
-        CustomSearchParameterBean searchQuery = new CustomSearchParameterBean();
-        SearchParameterBean paramBean = new SearchParameterBean();
-        paramBean.setMediaType("%vnd%service%");
-        ArrayOfString[] paramList = paramBean.getParameterList();
-
-        searchQuery.setParameterValues(paramList);
-        AdvancedSearchResultsBean result = searchAdminService.getAdvancedSearchResults(sessionCookie, searchQuery);
-        Assert.assertNotNull(result.getResourceDataList(), "No Record Found");
-        Assert.assertTrue((result.getResourceDataList().length > 0), "No Record Found. set valid MediaType pattern");
-        for (ResourceData resource : result.getResourceDataList()) {
-            Resource rs = registry.get(resource.getResourcePath());
-            Assert.assertTrue((rs.getMediaType().contains("vnd") && rs.getMediaType().contains("service")),
-                              "search word pattern not contain on MediaType :" + resource.getResourcePath());
         }
 
 
     }
 
 
-    @Test(priority = 4, groups = {"wso2.greg"}, description = "Metadata search by unavailable MediaType")
-    public void searchResourceByUnAvailableMediaType()
+    @Test(priority = 3, groups = {"wso2.greg"}, description = "Metadata search by available keywords")
+    public void searchResourceByAvailableContents()
+            throws SearchAdminServiceRegistryExceptionException, RemoteException,
+                   RegistryException {
+        CustomSearchParameterBean searchQuery = new CustomSearchParameterBean();
+        SearchParameterBean paramBean = new SearchParameterBean();
+        paramBean.setContent("com org");
+        ArrayOfString[] paramList = paramBean.getParameterList();
+
+        searchQuery.setParameterValues(paramList);
+        AdvancedSearchResultsBean result = searchAdminService.getAdvancedSearchResults(sessionCookie, searchQuery);
+        Assert.assertNotNull(result.getResourceDataList(), "No Record Found");
+        Assert.assertTrue((result.getResourceDataList().length > 0), "No Record Found. set valid keywords");
+        for (ResourceData resource : result.getResourceDataList()) {
+            Resource data = registry.get(resource.getResourcePath());
+            String content = new String((byte[]) data.getContent());
+
+            Assert.assertTrue((content.contains("org") || content.contains("com")),
+                              "search keyword not contain on Resource Name :" + resource.getResourcePath());
+
+        }
+
+    }
+
+    @Test(priority = 4, groups = {"wso2.greg"}, description = "Metadata search by unavailable keyword")
+    public void searchResourceByUnAvailableContent()
             throws SearchAdminServiceRegistryExceptionException, RemoteException {
         CustomSearchParameterBean searchQuery = new CustomSearchParameterBean();
         SearchParameterBean paramBean = new SearchParameterBean();
-        paramBean.setMediaType("xyz1234");
+        paramBean.setContent("com,org");
         ArrayOfString[] paramList = paramBean.getParameterList();
 
         searchQuery.setParameterValues(paramList);
@@ -116,14 +123,15 @@ public class RegistrySearchByMediaTypeTestCase {
 
     }
 
-    @Test(priority = 5, dataProvider = "invalidCharacter", groups = {"wso2.greg"},
-          description = "Metadata search by MediaType with invalid characters")
-    public void searchResourceByMediaTypeWithInvalidCharacter(String invalidInput)
+    @Test(priority = 5, dataProvider = "invalidCharacter", dataProviderClass = Parameters.class,
+          groups = {"wso2.greg"},
+          description = "Metadata search by keywords with invalid characters")
+    public void searchResourceByContentWithInvalidCharacter(String invalidInput)
             throws SearchAdminServiceRegistryExceptionException, RemoteException {
         CustomSearchParameterBean searchQuery = new CustomSearchParameterBean();
         SearchParameterBean paramBean = new SearchParameterBean();
 
-        paramBean.setMediaType(invalidInput);
+        paramBean.setContent(invalidInput);
         ArrayOfString[] paramList = paramBean.getParameterList();
         searchQuery.setParameterValues(paramList);
         AdvancedSearchResultsBean result = searchAdminService.getAdvancedSearchResults(sessionCookie, searchQuery);
@@ -132,30 +140,4 @@ public class RegistrySearchByMediaTypeTestCase {
 
     }
 
-    @DataProvider(name = "invalidCharacter")
-    public Object[][] invalidCharacter() {
-        return new Object[][]{
-                {"<"},
-                {">"},
-                {"#"},
-                {"   "},
-                {""},
-                {"@"},
-                {"|"},
-                {"^"},
-                {"\\"},
-                {","},
-                {"\""},
-                {"~"},
-                {"!"},
-                {"*"},
-                {"{"},
-                {"}"},
-                {"["},
-                {"]"},
-                {"("},
-                {")"}
-        };
-
-    }
 }

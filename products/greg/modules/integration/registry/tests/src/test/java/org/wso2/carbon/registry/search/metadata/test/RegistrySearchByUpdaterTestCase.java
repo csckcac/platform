@@ -15,7 +15,7 @@
 *specific language governing permissions and limitations
 *under the License.
 */
-package org.wso2.carbon.registry.search.metadata;
+package org.wso2.carbon.registry.search.metadata.test;
 
 import org.testng.Assert;
 import org.testng.annotations.BeforeClass;
@@ -25,24 +25,29 @@ import org.wso2.carbon.admin.service.RegistrySearchAdminService;
 import org.wso2.carbon.integration.framework.ClientConnectionUtil;
 import org.wso2.carbon.integration.framework.LoginLogoutUtil;
 import org.wso2.carbon.integration.framework.utils.FrameworkSettings;
-import org.wso2.carbon.registry.search.metadata.bean.SearchParameterBean;
-import org.wso2.carbon.registry.search.metadata.utils.GregTestUtils;
+import org.wso2.carbon.registry.core.Resource;
+import org.wso2.carbon.registry.core.exceptions.RegistryException;
+import org.wso2.carbon.registry.search.metadata.test.bean.SearchParameterBean;
+import org.wso2.carbon.registry.search.metadata.test.utils.GregTestUtils;
 import org.wso2.carbon.registry.search.stub.SearchAdminServiceRegistryExceptionException;
 import org.wso2.carbon.registry.search.stub.beans.xsd.AdvancedSearchResultsBean;
 import org.wso2.carbon.registry.search.stub.beans.xsd.ArrayOfString;
 import org.wso2.carbon.registry.search.stub.beans.xsd.CustomSearchParameterBean;
 import org.wso2.carbon.registry.search.stub.common.xsd.ResourceData;
+import org.wso2.carbon.registry.ws.client.registry.WSRegistryServiceClient;
 
 import java.rmi.RemoteException;
 
 /*
-Search Registry metadata by Resource Name
- */
-public class RegistrySearchByResourceNameTestCase {
+Search Registry metadata by last updater Name
+*/
+public class RegistrySearchByUpdaterTestCase {
 
     private String sessionCookie;
+    private String userName;
 
     private RegistrySearchAdminService searchAdminService;
+    private WSRegistryServiceClient registry;
 
     @BeforeClass
     public void init() throws Exception {
@@ -50,75 +55,89 @@ public class RegistrySearchByResourceNameTestCase {
         ClientConnectionUtil.waitForPort(Integer.parseInt(FrameworkSettings.HTTP_PORT));
         sessionCookie = new LoginLogoutUtil().login();
         searchAdminService = new RegistrySearchAdminService(SERVER_URL);
+        registry = GregTestUtils.getRegistry();
+        userName = FrameworkSettings.USER_NAME;
 
     }
 
-    @Test(priority = 1, groups = {"wso2.greg"}, description = "Metadata search by available Resource Name")
-    public void searchResourceByAvailableName()
-            throws SearchAdminServiceRegistryExceptionException, RemoteException {
+    @Test(priority = 1, groups = {"wso2.greg"}, description = "Metadata search by available Updater Name")
+    public void searchResourceByUpdater()
+            throws SearchAdminServiceRegistryExceptionException, RemoteException,
+                   RegistryException {
         CustomSearchParameterBean searchQuery = new CustomSearchParameterBean();
         SearchParameterBean paramBean = new SearchParameterBean();
-        paramBean.setResourceName("org");
+        paramBean.setUpdater(userName);
         ArrayOfString[] paramList = paramBean.getParameterList();
 
         searchQuery.setParameterValues(paramList);
         AdvancedSearchResultsBean result = searchAdminService.getAdvancedSearchResults(sessionCookie, searchQuery);
         Assert.assertNotNull(result.getResourceDataList(), "No Record Found");
-        Assert.assertTrue((result.getResourceDataList().length > 0), "No Record Found. set valid resource name");
+        Assert.assertTrue((result.getResourceDataList().length > 0), "No Record Found. set valid updater name");
         for (ResourceData resource : result.getResourceDataList()) {
-            Assert.assertTrue(resource.getName().contains("org"),
-                              "search keyword not contain on Resource Name :" + resource.getResourcePath());
+            Assert.assertTrue(registry.get(resource.getResourcePath()).getLastUpdaterUserName().contains(userName),
+                              "search word not contain on Updater Name :" + resource.getResourcePath());
         }
 
 
     }
 
-    @Test(priority = 2, groups = {"wso2.greg"}, description = "Metadata search by Resource Name pattern matching")
-    public void searchResourceByNamePattern()
-            throws SearchAdminServiceRegistryExceptionException, RemoteException {
+    @Test(priority = 2, groups = {"wso2.greg"}, description = "Metadata search by available Updater Name not")
+    public void searchResourceByUpdaterNot()
+            throws SearchAdminServiceRegistryExceptionException, RemoteException,
+                   RegistryException {
         CustomSearchParameterBean searchQuery = new CustomSearchParameterBean();
         SearchParameterBean paramBean = new SearchParameterBean();
-        paramBean.setResourceName("org%mgt");
+        paramBean.setUpdater(userName);
         ArrayOfString[] paramList = paramBean.getParameterList();
 
         searchQuery.setParameterValues(paramList);
+
+        // to set updatedRangeNegate
+        ArrayOfString updaterNameNegate = new ArrayOfString();
+        updaterNameNegate.setArray(new String[]{"updaterNameNegate", "on"});
+
+        searchQuery.addParameterValues(updaterNameNegate);
+
         AdvancedSearchResultsBean result = searchAdminService.getAdvancedSearchResults(sessionCookie, searchQuery);
         Assert.assertNotNull(result.getResourceDataList(), "No Record Found");
-        Assert.assertTrue((result.getResourceDataList().length > 0), "No Record Found. set valid resource name pattern");
+        Assert.assertTrue((result.getResourceDataList().length > 0), "No Record Found. set valid Updater name");
         for (ResourceData resource : result.getResourceDataList()) {
-            Assert.assertTrue((resource.getName().contains("org") && resource.getName().contains("mgt")),
-                              "search keyword not contain on Resource Name :" + resource.getName());
+            Assert.assertFalse(registry.get(resource.getResourcePath()).getLastUpdaterUserName().contains(userName),
+                               "searched updater name not contain on actual Updater Name :" + resource.getResourcePath());
         }
 
 
     }
 
-    /*@Test(priority = 3, groups = {"wso2.greg"}, description = "Metadata search by available Resource Names")
-    public void searchResourceByAvailableNames()
-            throws SearchAdminServiceRegistryExceptionException, RemoteException {
+    @Test(priority = 3, groups = {"wso2.greg"}, description = "Metadata search by Updater Name pattern matching")
+    public void searchResourceByUpdaterNamePattern()
+            throws SearchAdminServiceRegistryExceptionException, RemoteException,
+                   RegistryException {
         CustomSearchParameterBean searchQuery = new CustomSearchParameterBean();
         SearchParameterBean paramBean = new SearchParameterBean();
-        paramBean.setResourceName("org,com");
+        paramBean.setUpdater("wso2%user");
         ArrayOfString[] paramList = paramBean.getParameterList();
 
         searchQuery.setParameterValues(paramList);
         AdvancedSearchResultsBean result = searchAdminService.getAdvancedSearchResults(sessionCookie, searchQuery);
         Assert.assertNotNull(result.getResourceDataList(), "No Record Found");
-        Assert.assertTrue((result.getResourceDataList().length > 0), "No Record Found. set valid resource names");
-        for (ResourceData resource : result.getResourceDataList()) {
-            Assert.assertTrue(resource.getName().contains("org") || resource.getName().contains("com"),
-                              "search keyword not contain on Resource Name :" + resource.getName());
+        Assert.assertTrue((result.getResourceDataList().length > 0), "No Record Found. set valid Updater name pattern");
+        for (ResourceData resourceData : result.getResourceDataList()) {
+            Resource resource = registry.get(resourceData.getResourcePath());
+            Assert.assertTrue((resource.getLastUpdaterUserName().contains("wso2")
+                               && resource.getLastUpdaterUserName().contains("user")),
+                              "search word pattern not contain on Updater Name :" + resourceData.getResourcePath());
         }
 
+    }
 
-    }*/
 
-    @Test(priority = 4, groups = {"wso2.greg"}, description = "Metadata search by unavailable Resource Name")
-    public void searchResourceByUnAvailableName()
+    @Test(priority = 4, groups = {"wso2.greg"}, description = "Metadata search by unavailable Updater Name")
+    public void searchResourceByUnAvailableUpdaterName()
             throws SearchAdminServiceRegistryExceptionException, RemoteException {
         CustomSearchParameterBean searchQuery = new CustomSearchParameterBean();
         SearchParameterBean paramBean = new SearchParameterBean();
-        paramBean.setResourceName("xyz123");
+        paramBean.setUpdater("xyz1234");
         ArrayOfString[] paramList = paramBean.getParameterList();
 
         searchQuery.setParameterValues(paramList);
@@ -129,17 +148,17 @@ public class RegistrySearchByResourceNameTestCase {
     }
 
     @Test(priority = 5, dataProvider = "invalidCharacter", groups = {"wso2.greg"},
-          description = "Metadata search by Resource Name with invalid characters")
-    public void searchResourceByNameWithInvalidCharacter(String invalidInput)
+          description = "Metadata search by Updater Name with invalid characters")
+    public void searchResourceByUpdaterNameWithInvalidCharacter(String invalidInput)
             throws SearchAdminServiceRegistryExceptionException, RemoteException {
         CustomSearchParameterBean searchQuery = new CustomSearchParameterBean();
         SearchParameterBean paramBean = new SearchParameterBean();
 
-        paramBean.setResourceName(invalidInput);
+        paramBean.setUpdater(invalidInput);
         ArrayOfString[] paramList = paramBean.getParameterList();
         searchQuery.setParameterValues(paramList);
         AdvancedSearchResultsBean result = searchAdminService.getAdvancedSearchResults(sessionCookie, searchQuery);
-        Assert.assertNull(result.getResourceDataList(), "Result Object found");
+        Assert.assertNull(result.getResourceDataList(), "Result Object found.");
 
 
     }
@@ -166,11 +185,11 @@ public class RegistrySearchByResourceNameTestCase {
                 {"}"},
                 {"["},
                 {"]"},
+                {"-"},
                 {"("},
                 {")"}
         };
 
 
     }
-
 }

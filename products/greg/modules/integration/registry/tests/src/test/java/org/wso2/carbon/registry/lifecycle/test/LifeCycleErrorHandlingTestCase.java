@@ -28,7 +28,7 @@ import org.wso2.carbon.integration.framework.ClientConnectionUtil;
 import org.wso2.carbon.integration.framework.LoginLogoutUtil;
 import org.wso2.carbon.integration.framework.utils.FrameworkSettings;
 import org.wso2.carbon.registry.lifecycle.test.utils.Utils;
-import org.wso2.carbon.registry.search.metadata.utils.GregTestUtils;
+import org.wso2.carbon.registry.search.metadata.test.utils.GregTestUtils;
 
 import java.io.File;
 import java.rmi.RemoteException;

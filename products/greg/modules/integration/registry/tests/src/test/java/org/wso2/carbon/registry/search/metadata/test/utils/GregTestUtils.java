@@ -15,7 +15,7 @@
 *specific language governing permissions and limitations
 *under the License.
 */
-package org.wso2.carbon.registry.search.metadata.utils;
+package org.wso2.carbon.registry.search.metadata.test.utils;
 
 import org.apache.axis2.AxisFault;
 import org.apache.axis2.context.ConfigurationContextFactory;

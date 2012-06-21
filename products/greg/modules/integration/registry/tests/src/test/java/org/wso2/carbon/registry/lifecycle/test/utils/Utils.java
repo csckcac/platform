@@ -32,7 +32,7 @@ import org.wso2.carbon.governance.custom.lifecycles.checklist.stub.util.xsd.Prop
 import org.wso2.carbon.governance.lcm.stub.LifeCycleManagementServiceExceptionException;
 import org.wso2.carbon.registry.core.Registry;
 import org.wso2.carbon.registry.core.exceptions.RegistryException;
-import org.wso2.carbon.registry.search.metadata.utils.GregTestUtils;
+import org.wso2.carbon.registry.search.metadata.test.utils.GregTestUtils;
 
 import javax.xml.namespace.QName;
 import java.io.File;

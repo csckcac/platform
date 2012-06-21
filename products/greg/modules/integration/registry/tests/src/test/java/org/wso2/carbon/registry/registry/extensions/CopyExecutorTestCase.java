@@ -38,7 +38,7 @@ import org.wso2.carbon.registry.core.Resource;
 import org.wso2.carbon.registry.core.exceptions.RegistryException;
 import org.wso2.carbon.registry.governance.api.test.util.FileManagerUtil;
 import org.wso2.carbon.registry.lifecycle.test.utils.Utils;
-import org.wso2.carbon.registry.search.metadata.bean.SearchParameterBean;
+import org.wso2.carbon.registry.search.metadata.test.bean.SearchParameterBean;
 import org.wso2.carbon.registry.search.stub.SearchAdminServiceRegistryExceptionException;
 import org.wso2.carbon.registry.search.stub.beans.xsd.AdvancedSearchResultsBean;
 import org.wso2.carbon.registry.search.stub.beans.xsd.ArrayOfString;

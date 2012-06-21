@@ -15,7 +15,7 @@
 *specific language governing permissions and limitations
 *under the License.
 */
-package org.wso2.carbon.registry.search.metadata;
+package org.wso2.carbon.registry.search.metadata.test;
 
 import org.testng.Assert;
 import org.testng.annotations.BeforeClass;
@@ -33,11 +33,11 @@ import org.wso2.carbon.governance.api.wsdls.dataobjects.Wsdl;
 import org.wso2.carbon.integration.framework.ClientConnectionUtil;
 import org.wso2.carbon.integration.framework.LoginLogoutUtil;
 import org.wso2.carbon.integration.framework.utils.FrameworkSettings;
+import org.wso2.carbon.registry.core.Comment;
 import org.wso2.carbon.registry.core.Registry;
-import org.wso2.carbon.registry.core.Tag;
 import org.wso2.carbon.registry.core.exceptions.RegistryException;
-import org.wso2.carbon.registry.search.metadata.bean.SearchParameterBean;
-import org.wso2.carbon.registry.search.metadata.utils.GregTestUtils;
+import org.wso2.carbon.registry.search.metadata.test.bean.SearchParameterBean;
+import org.wso2.carbon.registry.search.metadata.test.utils.GregTestUtils;
 import org.wso2.carbon.registry.search.stub.SearchAdminServiceRegistryExceptionException;
 import org.wso2.carbon.registry.search.stub.beans.xsd.AdvancedSearchResultsBean;
 import org.wso2.carbon.registry.search.stub.beans.xsd.ArrayOfString;
@@ -51,9 +51,9 @@ import java.io.IOException;
 import java.rmi.RemoteException;
 
 /*
-Search Registry metadata by Tags
+Search Registry metadata by Comments
  */
-public class RegistrySearchByTagsTestCase {
+public class RegistrySearchByCommentsTestCase {
 
     private String sessionCookie;
 
@@ -76,57 +76,85 @@ public class RegistrySearchByTagsTestCase {
 
     }
 
-    @Test(priority = 1, groups = {"wso2.greg"}, description = "Metadata search by available Tag")
-    public void searchResourceByTag()
+    @Test(priority = 1, groups = {"wso2.greg"}, description = "Metadata search by available Comment")
+    public void searchResourceByComment()
             throws SearchAdminServiceRegistryExceptionException, RemoteException,
                    RegistryException {
         CustomSearchParameterBean searchQuery = new CustomSearchParameterBean();
         SearchParameterBean paramBean = new SearchParameterBean();
-        paramBean.setTags("AB");
+        paramBean.setCommentWords("TestAutomation");
         ArrayOfString[] paramList = paramBean.getParameterList();
 
         searchQuery.setParameterValues(paramList);
         AdvancedSearchResultsBean result = searchAdminService.getAdvancedSearchResults(sessionCookie, searchQuery);
         Assert.assertNotNull(result.getResourceDataList(), "No Record Found");
-        Assert.assertTrue((result.getResourceDataList().length > 0), "No Record Found. set valid Tag");
+        Assert.assertTrue((result.getResourceDataList().length > 0), "No Record Found. set valid Comment");
 
         for (ResourceData resource : result.getResourceDataList()) {
-            boolean tagFound = false;
-            for (Tag tag : registry.getTags(resource.getResourcePath())) {
-                if ("AB".equalsIgnoreCase(tag.getTagName())) {
-                    tagFound = true;
+            boolean commentFound = false;
+            for (Comment comment : registry.getComments(resource.getResourcePath())) {
+                if (comment.getText().contains("TestAutomation")) {
+                    commentFound = true;
                     break;
                 }
             }
-            Assert.assertTrue(tagFound, "Tag not found on Resource " + resource.getResourcePath());
+            Assert.assertTrue(commentFound, "Comment not found on Resource. " + resource.getResourcePath());
 
         }
 
 
     }
 
-    @Test(priority = 2, groups = {"wso2.greg"}, description = "Metadata search by available Tags")
-    public void searchResourceByTags()
+    /*@Test(priority = 2, groups = {"wso2.greg"}, description = "Metadata search by available Comment")
+    public void searchResourceByComments()
             throws SearchAdminServiceRegistryExceptionException, RemoteException,
                    RegistryException {
         CustomSearchParameterBean searchQuery = new CustomSearchParameterBean();
         SearchParameterBean paramBean = new SearchParameterBean();
-        paramBean.setTags("AB,BC");
+        paramBean.setCommentWords("AutomationComment Policy");
         ArrayOfString[] paramList = paramBean.getParameterList();
 
         searchQuery.setParameterValues(paramList);
         AdvancedSearchResultsBean result = searchAdminService.getAdvancedSearchResults(sessionCookie, searchQuery);
         Assert.assertNotNull(result.getResourceDataList(), "No Record Found");
-        Assert.assertTrue((result.getResourceDataList().length > 0), "No Record Found. set valid Tags");
+        Assert.assertTrue((result.getResourceDataList().length > 0), "No Record Found. set valid Comment");
         for (ResourceData resource : result.getResourceDataList()) {
-            boolean tagFound = false;
-            for (Tag tag : registry.getTags(resource.getResourcePath())) {
-                if ("AB".equalsIgnoreCase(tag.getTagName()) || "BC".equalsIgnoreCase(tag.getTagName())) {
-                    tagFound = true;
+            boolean commentFound = false;
+            for (Comment comment : registry.getComments(resource.getResourcePath())) {
+                if (comment.getText().contains("AutomationComment") || comment.getText().contains("Policy")) {
+                    commentFound = true;
                     break;
                 }
             }
-            Assert.assertTrue(tagFound, "Tags not found on Resource " + resource.getResourcePath());
+            Assert.assertTrue(commentFound, "Comment not found on Resource");
+
+        }
+
+
+    }*/
+
+    @Test(priority = 3, groups = {"wso2.greg"}, description = "Metadata search by Comment pattern matching")
+    public void searchResourceByCommentPattern()
+            throws SearchAdminServiceRegistryExceptionException, RemoteException,
+                   RegistryException {
+        CustomSearchParameterBean searchQuery = new CustomSearchParameterBean();
+        SearchParameterBean paramBean = new SearchParameterBean();
+        paramBean.setCommentWords("%Automation%");
+        ArrayOfString[] paramList = paramBean.getParameterList();
+
+        searchQuery.setParameterValues(paramList);
+        AdvancedSearchResultsBean result = searchAdminService.getAdvancedSearchResults(sessionCookie, searchQuery);
+        Assert.assertNotNull(result.getResourceDataList(), "No Record Found");
+        Assert.assertTrue((result.getResourceDataList().length > 0), "No Record Found. set valid Comment pattern");
+        for (ResourceData resource : result.getResourceDataList()) {
+            boolean commentFound = false;
+            for (Comment comment : registry.getComments(resource.getResourcePath())) {
+                if (comment.getText().contains("Automation")) {
+                    commentFound = true;
+                    break;
+                }
+            }
+            Assert.assertTrue(commentFound, "Comment pattern not found on Resource");
 
         }
 
@@ -134,12 +162,12 @@ public class RegistrySearchByTagsTestCase {
     }
 
 
-    @Test(priority = 4, groups = {"wso2.greg"}, description = "Metadata search by unavailable tag")
-    public void searchResourceByUnAvailableTag()
+    @Test(priority = 4, groups = {"wso2.greg"}, description = "Metadata search by unavailable Comment")
+    public void searchResourceByUnAvailableComment()
             throws SearchAdminServiceRegistryExceptionException, RemoteException {
         CustomSearchParameterBean searchQuery = new CustomSearchParameterBean();
         SearchParameterBean paramBean = new SearchParameterBean();
-        paramBean.setTags("xyz1234");
+        paramBean.setCommentWords("xyz1234ggf");
         ArrayOfString[] paramList = paramBean.getParameterList();
 
         searchQuery.setParameterValues(paramList);
@@ -150,13 +178,13 @@ public class RegistrySearchByTagsTestCase {
     }
 
     @Test(priority = 5, dataProvider = "invalidCharacter", groups = {"wso2.greg"},
-          description = "Metadata search by tag with invalid characters")
-    public void searchResourceByTagNameWithInvalidCharacter(String invalidInput)
+          description = "Metadata search by Comment with invalid characters")
+    public void searchResourceByCommentWithInvalidCharacter(String invalidInput)
             throws SearchAdminServiceRegistryExceptionException, RemoteException {
         CustomSearchParameterBean searchQuery = new CustomSearchParameterBean();
         SearchParameterBean paramBean = new SearchParameterBean();
 
-        paramBean.setTags(invalidInput);
+        paramBean.setCommentWords(invalidInput);
         ArrayOfString[] paramList = paramBean.getParameterList();
         searchQuery.setParameterValues(paramList);
         AdvancedSearchResultsBean result = searchAdminService.getAdvancedSearchResults(sessionCookie, searchQuery);
@@ -166,14 +194,14 @@ public class RegistrySearchByTagsTestCase {
     }
 
     private void addResources() throws RegistryException, IOException {
-        addService("sns1", "autoService1", "AB");
-        addService("sns2", "autoService2", "BC");
-        addWSDL("AB");
-        addPolicy("BC");
-        addSchema("ABB");
+        addService("sns1", "autoService1", "TestAutomationComment");
+        addService("sns2", "autoService2", "AutomationComment");
+        addWSDL("TestAutomationComment");
+        addPolicy("Policy");
+        addSchema("AutomationComment");
     }
 
-    private void addService(String nameSpace, String serviceName, String tag)
+    private void addService(String nameSpace, String serviceName, String commentString)
             throws RegistryException {
         ServiceManager serviceManager = new ServiceManager(governance);
         Service service;
@@ -182,7 +210,9 @@ public class RegistrySearchByTagsTestCase {
         for (String serviceId : serviceManager.getAllServiceIds()) {
             service = serviceManager.getService(serviceId);
             if (service.getPath().endsWith(serviceName)) {
-                governance.applyTag(service.getPath(), tag);
+                Comment comment = new Comment();
+                comment.setText(commentString);
+                governance.addComment(service.getPath(), comment);
 
             }
 
@@ -190,7 +220,7 @@ public class RegistrySearchByTagsTestCase {
 
     }
 
-    private void addWSDL(String tag) throws IOException, RegistryException {
+    private void addWSDL(String commentString) throws IOException, RegistryException {
         WsdlManager wsdlManager = new WsdlManager(governance);
         Wsdl wsdl;
         String wsdlFilePath = GregTestUtils.getResourcePath()
@@ -198,27 +228,34 @@ public class RegistrySearchByTagsTestCase {
         wsdl = wsdlManager.newWsdl(GregTestUtils.readFile(wsdlFilePath + "echo.wsdl").getBytes(), "echo.wsdl");
         wsdlManager.addWsdl(wsdl);
         wsdl = wsdlManager.getWsdl(wsdl.getId());
-        governance.applyTag(wsdl.getPath(), tag);
+        Comment comment = new Comment();
+        comment.setText(commentString);
+        governance.addComment(wsdl.getPath(), comment);
+
     }
 
-    private void addSchema(String tag) throws IOException, RegistryException {
+    private void addSchema(String commentString) throws IOException, RegistryException {
         SchemaManager schemaManager = new SchemaManager(governance);
         String schemaFilePath = GregTestUtils.getResourcePath()
                                 + File.separator + "schema" + File.separator;
         Schema schema = schemaManager.newSchema(GregTestUtils.readFile(schemaFilePath + "Person.xsd").getBytes(), "Person.xsd");
         schemaManager.addSchema(schema);
         schema = schemaManager.getSchema(schema.getId());
-        governance.applyTag(schema.getPath(), tag);
+        Comment comment = new Comment();
+        comment.setText(commentString);
+        governance.addComment(schema.getPath(), comment);
     }
 
-    private void addPolicy(String tag) throws RegistryException, IOException {
+    private void addPolicy(String commentString) throws RegistryException, IOException {
         PolicyManager policyManager = new PolicyManager(governance);
         String policyFilePath = GregTestUtils.getResourcePath()
                                 + File.separator + "policy" + File.separator;
         Policy policy = policyManager.newPolicy(GregTestUtils.readFile(policyFilePath + "UTPolicy.xml").getBytes(), "UTPolicy.xml");
         policyManager.addPolicy(policy);
         policy = policyManager.getPolicy(policy.getId());
-        governance.applyTag(policy.getPath(), tag);
+        Comment comment = new Comment();
+        comment.setText(commentString);
+        governance.addComment(policy.getPath(), comment);
 
     }
 

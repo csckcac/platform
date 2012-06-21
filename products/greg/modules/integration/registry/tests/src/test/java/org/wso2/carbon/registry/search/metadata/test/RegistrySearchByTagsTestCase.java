@@ -15,7 +15,7 @@
 *specific language governing permissions and limitations
 *under the License.
 */
-package org.wso2.carbon.registry.search.metadata;
+package org.wso2.carbon.registry.search.metadata.test;
 
 import org.testng.Assert;
 import org.testng.annotations.BeforeClass;
@@ -26,15 +26,18 @@ import org.wso2.carbon.governance.api.policies.PolicyManager;
 import org.wso2.carbon.governance.api.policies.dataobjects.Policy;
 import org.wso2.carbon.governance.api.schema.SchemaManager;
 import org.wso2.carbon.governance.api.schema.dataobjects.Schema;
+import org.wso2.carbon.governance.api.services.ServiceManager;
+import org.wso2.carbon.governance.api.services.dataobjects.Service;
+import org.wso2.carbon.governance.api.wsdls.WsdlManager;
+import org.wso2.carbon.governance.api.wsdls.dataobjects.Wsdl;
 import org.wso2.carbon.integration.framework.ClientConnectionUtil;
 import org.wso2.carbon.integration.framework.LoginLogoutUtil;
 import org.wso2.carbon.integration.framework.utils.FrameworkSettings;
-import org.wso2.carbon.registry.core.Association;
 import org.wso2.carbon.registry.core.Registry;
+import org.wso2.carbon.registry.core.Tag;
 import org.wso2.carbon.registry.core.exceptions.RegistryException;
-import org.wso2.carbon.registry.lifecycle.test.utils.Utils;
-import org.wso2.carbon.registry.search.metadata.bean.SearchParameterBean;
-import org.wso2.carbon.registry.search.metadata.utils.GregTestUtils;
+import org.wso2.carbon.registry.search.metadata.test.bean.SearchParameterBean;
+import org.wso2.carbon.registry.search.metadata.test.utils.GregTestUtils;
 import org.wso2.carbon.registry.search.stub.SearchAdminServiceRegistryExceptionException;
 import org.wso2.carbon.registry.search.stub.beans.xsd.AdvancedSearchResultsBean;
 import org.wso2.carbon.registry.search.stub.beans.xsd.ArrayOfString;
@@ -42,14 +45,15 @@ import org.wso2.carbon.registry.search.stub.beans.xsd.CustomSearchParameterBean;
 import org.wso2.carbon.registry.search.stub.common.xsd.ResourceData;
 import org.wso2.carbon.registry.ws.client.registry.WSRegistryServiceClient;
 
+import javax.xml.namespace.QName;
 import java.io.File;
 import java.io.IOException;
 import java.rmi.RemoteException;
 
 /*
-Search Registry metadata by AssociationType
+Search Registry metadata by Tags
  */
-public class RegistrySearchByAssociationTypeTestCase {
+public class RegistrySearchByTagsTestCase {
 
     private String sessionCookie;
 
@@ -59,11 +63,9 @@ public class RegistrySearchByAssociationTypeTestCase {
 
     @BeforeClass
     public void init() throws Exception {
-
         final String SERVER_URL = GregTestUtils.getServerUrl();
         ClientConnectionUtil.waitForPort(Integer.parseInt(FrameworkSettings.HTTP_PORT));
         sessionCookie = new LoginLogoutUtil().login();
-
         searchAdminService = new RegistrySearchAdminService(SERVER_URL);
         registry = GregTestUtils.getRegistry();
         governance = GregTestUtils.getGovernanceRegistry(registry);
@@ -74,106 +76,70 @@ public class RegistrySearchByAssociationTypeTestCase {
 
     }
 
-    @Test(priority = 1, groups = {"wso2.greg"}, description = "Metadata search by available AssociationType")
-    public void searchResourceByAssociationType()
+    @Test(priority = 1, groups = {"wso2.greg"}, description = "Metadata search by available Tag")
+    public void searchResourceByTag()
             throws SearchAdminServiceRegistryExceptionException, RemoteException,
                    RegistryException {
-        final String searchAssociationType = "associationType1";
         CustomSearchParameterBean searchQuery = new CustomSearchParameterBean();
         SearchParameterBean paramBean = new SearchParameterBean();
-        paramBean.setAssociationType(searchAssociationType);
+        paramBean.setTags("AB");
         ArrayOfString[] paramList = paramBean.getParameterList();
 
         searchQuery.setParameterValues(paramList);
         AdvancedSearchResultsBean result = searchAdminService.getAdvancedSearchResults(sessionCookie, searchQuery);
-        Assert.assertNotNull(result, "Result object null");
         Assert.assertNotNull(result.getResourceDataList(), "No Record Found");
-        Assert.assertTrue((result.getResourceDataList().length > 0), "No Record Found. set valid Association Type");
+        Assert.assertTrue((result.getResourceDataList().length > 0), "No Record Found. set valid Tag");
 
         for (ResourceData resource : result.getResourceDataList()) {
-            Assert.assertNotNull(resource, "Resource object null");
-            Association[] array = registry.getAssociations(resource.getResourcePath(), searchAssociationType);
-            Assert.assertNotNull(array, "Association list null");
-            Assert.assertTrue(array.length > 0);
-            for (Association association : array) {
-                Assert.assertEquals(association.getAssociationType(), searchAssociationType,
-                                    "AssociationT type not found on Resource");
+            boolean tagFound = false;
+            for (Tag tag : registry.getTags(resource.getResourcePath())) {
+                if ("AB".equalsIgnoreCase(tag.getTagName())) {
+                    tagFound = true;
+                    break;
+                }
             }
+            Assert.assertTrue(tagFound, "Tag not found on Resource " + resource.getResourcePath());
 
         }
 
 
     }
 
-    /*@Test(priority = 2, groups = {"wso2.greg"}, description = "Metadata search by available Association Types")
-    public void searchResourceByAssociationTypes()
-            throws SearchAdminServiceRegistryExceptionException, RemoteException,
-                   RegistryException {
-
-        CustomSearchParameterBean searchQuery = new CustomSearchParameterBean();
-        SearchParameterBean paramBean = new SearchParameterBean();
-        paramBean.setAssociationType("associationType1 associationType2");
-        ArrayOfString[] paramList = paramBean.getParameterList();
-
-        searchQuery.setParameterValues(paramList);
-        AdvancedSearchResultsBean result = searchAdminService.getAdvancedSearchResults(sessionCookie, searchQuery);
-        Assert.assertNotNull(result, "Result object null");
-        Assert.assertNotNull(result.getResourceDataList(), "No Record Found");
-        Assert.assertTrue((result.getResourceDataList().length > 0), "No Record Found. set valid Association Types");
-        for (ResourceData resource : result.getResourceDataList()) {
-            Assert.assertNotNull(resource, "Resource object null");
-            boolean associationTypeFound = false;
-            for (Association association : registry.getAllAssociations(resource.getResourcePath())) {
-                if ("associationType1".equalsIgnoreCase(association.getAssociationType())
-                    || "associationType2".equalsIgnoreCase(association.getAssociationType())) {
-                    associationTypeFound = true;
-                    break;
-                }
-            }
-            Assert.assertTrue(associationTypeFound, "Association Types not found on Resource");
-
-        }
-
-
-    }*/
-
-    /*@Test(priority = 3, groups = {"wso2.greg"}, description = "Metadata search by Association Type pattern matching")
-    public void searchResourceByAssociationTypePattern()
+    @Test(priority = 2, groups = {"wso2.greg"}, description = "Metadata search by available Tags")
+    public void searchResourceByTags()
             throws SearchAdminServiceRegistryExceptionException, RemoteException,
                    RegistryException {
         CustomSearchParameterBean searchQuery = new CustomSearchParameterBean();
         SearchParameterBean paramBean = new SearchParameterBean();
-        paramBean.setAssociationType("%Type%");
+        paramBean.setTags("AB,BC");
         ArrayOfString[] paramList = paramBean.getParameterList();
 
         searchQuery.setParameterValues(paramList);
         AdvancedSearchResultsBean result = searchAdminService.getAdvancedSearchResults(sessionCookie, searchQuery);
-        Assert.assertNotNull(result, "Result object null");
         Assert.assertNotNull(result.getResourceDataList(), "No Record Found");
-        Assert.assertTrue((result.getResourceDataList().length > 0), "No Record Found. set valid Association Type pattern");
+        Assert.assertTrue((result.getResourceDataList().length > 0), "No Record Found. set valid Tags");
         for (ResourceData resource : result.getResourceDataList()) {
-            Assert.assertNotNull(resource, "Resource object null");
-            boolean associationTypeFound = false;
-            for (Association association : registry.getAllAssociations(resource.getResourcePath())) {
-                if (association.getAssociationType().contains("Type")) {
-                    associationTypeFound = true;
+            boolean tagFound = false;
+            for (Tag tag : registry.getTags(resource.getResourcePath())) {
+                if ("AB".equalsIgnoreCase(tag.getTagName()) || "BC".equalsIgnoreCase(tag.getTagName())) {
+                    tagFound = true;
                     break;
                 }
             }
-            Assert.assertTrue(associationTypeFound, "Association Type pattern not found on Resource");
+            Assert.assertTrue(tagFound, "Tags not found on Resource " + resource.getResourcePath());
 
         }
 
 
-    }*/
+    }
 
 
-    @Test(priority = 4, groups = {"wso2.greg"}, description = "Metadata search by unavailable AssociationType")
-    public void searchResourceByUnAvailableAssociationType()
+    @Test(priority = 4, groups = {"wso2.greg"}, description = "Metadata search by unavailable tag")
+    public void searchResourceByUnAvailableTag()
             throws SearchAdminServiceRegistryExceptionException, RemoteException {
         CustomSearchParameterBean searchQuery = new CustomSearchParameterBean();
         SearchParameterBean paramBean = new SearchParameterBean();
-        paramBean.setAssociationType("xyz1234ggf");
+        paramBean.setTags("xyz1234");
         ArrayOfString[] paramList = paramBean.getParameterList();
 
         searchQuery.setParameterValues(paramList);
@@ -184,13 +150,13 @@ public class RegistrySearchByAssociationTypeTestCase {
     }
 
     @Test(priority = 5, dataProvider = "invalidCharacter", groups = {"wso2.greg"},
-          description = "Metadata search by AssociationType with invalid characters")
-    public void searchResourceByAssociationTypeWithInvalidCharacter(String invalidInput)
+          description = "Metadata search by tag with invalid characters")
+    public void searchResourceByTagNameWithInvalidCharacter(String invalidInput)
             throws SearchAdminServiceRegistryExceptionException, RemoteException {
         CustomSearchParameterBean searchQuery = new CustomSearchParameterBean();
         SearchParameterBean paramBean = new SearchParameterBean();
 
-        paramBean.setAssociationType(invalidInput);
+        paramBean.setTags(invalidInput);
         ArrayOfString[] paramList = paramBean.getParameterList();
         searchQuery.setParameterValues(paramList);
         AdvancedSearchResultsBean result = searchAdminService.getAdvancedSearchResults(sessionCookie, searchQuery);
@@ -199,34 +165,61 @@ public class RegistrySearchByAssociationTypeTestCase {
 
     }
 
-    private void addResources() throws Exception {
-
-        String path = Utils.addWSDL("echoSearch.wsdl",governance, "echoAssociationService");
-        addPolicy(path, "associationType1");
-        addSchema(path, "associationType2");
+    private void addResources() throws RegistryException, IOException {
+        addService("sns1", "autoService1", "AB");
+        addService("sns2", "autoService2", "BC");
+        addWSDL("AB");
+        addPolicy("BC");
+        addSchema("ABB");
     }
 
+    private void addService(String nameSpace, String serviceName, String tag)
+            throws RegistryException {
+        ServiceManager serviceManager = new ServiceManager(governance);
+        Service service;
+        service = serviceManager.newService(new QName(nameSpace, serviceName));
+        serviceManager.addService(service);
+        for (String serviceId : serviceManager.getAllServiceIds()) {
+            service = serviceManager.getService(serviceId);
+            if (service.getPath().endsWith(serviceName)) {
+                governance.applyTag(service.getPath(), tag);
 
-    private void addSchema(String destinationPath, String typ)
-            throws IOException, RegistryException {
+            }
+
+        }
+
+    }
+
+    private void addWSDL(String tag) throws IOException, RegistryException {
+        WsdlManager wsdlManager = new WsdlManager(governance);
+        Wsdl wsdl;
+        String wsdlFilePath = GregTestUtils.getResourcePath()
+                              + File.separator + "wsdl" + File.separator;
+        wsdl = wsdlManager.newWsdl(GregTestUtils.readFile(wsdlFilePath + "echo.wsdl").getBytes(), "echo.wsdl");
+        wsdlManager.addWsdl(wsdl);
+        wsdl = wsdlManager.getWsdl(wsdl.getId());
+        governance.applyTag(wsdl.getPath(), tag);
+    }
+
+    private void addSchema(String tag) throws IOException, RegistryException {
         SchemaManager schemaManager = new SchemaManager(governance);
         String schemaFilePath = GregTestUtils.getResourcePath()
                                 + File.separator + "schema" + File.separator;
-        Schema schema = schemaManager.newSchema(GregTestUtils.readFile(schemaFilePath + "Person.xsd").getBytes(), "Person2.xsd");
+        Schema schema = schemaManager.newSchema(GregTestUtils.readFile(schemaFilePath + "Person.xsd").getBytes(), "Person.xsd");
         schemaManager.addSchema(schema);
         schema = schemaManager.getSchema(schema.getId());
-        governance.addAssociation(schema.getPath(), destinationPath, typ);
+        governance.applyTag(schema.getPath(), tag);
     }
 
-    private void addPolicy(String destinationPath, String typ)
-            throws RegistryException, IOException {
+    private void addPolicy(String tag) throws RegistryException, IOException {
         PolicyManager policyManager = new PolicyManager(governance);
         String policyFilePath = GregTestUtils.getResourcePath()
                                 + File.separator + "policy" + File.separator;
-        Policy policy = policyManager.newPolicy(GregTestUtils.readFile(policyFilePath + "UTPolicy.xml").getBytes(), "UTPolicy2.xml");
+        Policy policy = policyManager.newPolicy(GregTestUtils.readFile(policyFilePath + "UTPolicy.xml").getBytes(), "UTPolicy.xml");
         policyManager.addPolicy(policy);
         policy = policyManager.getPolicy(policy.getId());
-        governance.addAssociation(policy.getPath(), destinationPath, typ);
+        governance.applyTag(policy.getPath(), tag);
+
     }
 
     @DataProvider(name = "invalidCharacter")

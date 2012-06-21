@@ -15,7 +15,7 @@
 *specific language governing permissions and limitations
 *under the License.
 */
-package org.wso2.carbon.registry.search.metadata.bean;
+package org.wso2.carbon.registry.search.metadata.test.bean;
 
 import org.wso2.carbon.registry.search.stub.beans.xsd.ArrayOfString;
 

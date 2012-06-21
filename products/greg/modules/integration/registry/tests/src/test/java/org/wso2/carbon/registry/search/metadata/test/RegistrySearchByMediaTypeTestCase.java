@@ -15,7 +15,7 @@
 *specific language governing permissions and limitations
 *under the License.
 */
-package org.wso2.carbon.registry.search.metadata;
+package org.wso2.carbon.registry.search.metadata.test;
 
 import org.testng.Assert;
 import org.testng.annotations.BeforeClass;
@@ -25,109 +25,88 @@ import org.wso2.carbon.admin.service.RegistrySearchAdminService;
 import org.wso2.carbon.integration.framework.ClientConnectionUtil;
 import org.wso2.carbon.integration.framework.LoginLogoutUtil;
 import org.wso2.carbon.integration.framework.utils.FrameworkSettings;
-import org.wso2.carbon.registry.search.metadata.bean.SearchParameterBean;
-import org.wso2.carbon.registry.search.metadata.utils.GregTestUtils;
+import org.wso2.carbon.registry.core.Resource;
+import org.wso2.carbon.registry.core.exceptions.RegistryException;
+import org.wso2.carbon.registry.search.metadata.test.bean.SearchParameterBean;
+import org.wso2.carbon.registry.search.metadata.test.utils.GregTestUtils;
 import org.wso2.carbon.registry.search.stub.SearchAdminServiceRegistryExceptionException;
 import org.wso2.carbon.registry.search.stub.beans.xsd.AdvancedSearchResultsBean;
 import org.wso2.carbon.registry.search.stub.beans.xsd.ArrayOfString;
 import org.wso2.carbon.registry.search.stub.beans.xsd.CustomSearchParameterBean;
 import org.wso2.carbon.registry.search.stub.common.xsd.ResourceData;
+import org.wso2.carbon.registry.ws.client.registry.WSRegistryServiceClient;
 
 import java.rmi.RemoteException;
 
 /*
-Search Registry metadata by Author Name
+Search Registry metadata by mediaType
  */
-public class RegistrySearchByAuthorTestCase {
-
+public class RegistrySearchByMediaTypeTestCase {
     private String sessionCookie;
-    private String userName;
+
     private RegistrySearchAdminService searchAdminService;
+    private WSRegistryServiceClient registry;
 
     @BeforeClass
     public void init() throws Exception {
         final String SERVER_URL = GregTestUtils.getServerUrl();
         ClientConnectionUtil.waitForPort(Integer.parseInt(FrameworkSettings.HTTP_PORT));
-        userName = FrameworkSettings.USER_NAME;
         sessionCookie = new LoginLogoutUtil().login();
         searchAdminService = new RegistrySearchAdminService(SERVER_URL);
+        registry = GregTestUtils.getRegistry();
 
     }
 
-    @Test(priority = 1, groups = {"wso2.greg"}, description = "Metadata search by available Author Name")
-    public void searchResourceByAuthor()
-            throws SearchAdminServiceRegistryExceptionException, RemoteException {
+    @Test(priority = 1, groups = {"wso2.greg"}, description = "Metadata search by available MediaType")
+    public void searchResourceByMediaType()
+            throws SearchAdminServiceRegistryExceptionException, RemoteException,
+                   RegistryException {
         CustomSearchParameterBean searchQuery = new CustomSearchParameterBean();
         SearchParameterBean paramBean = new SearchParameterBean();
-        paramBean.setAuthor(userName);
+        paramBean.setMediaType("application/vnd.wso2-service+xml");
         ArrayOfString[] paramList = paramBean.getParameterList();
 
         searchQuery.setParameterValues(paramList);
         AdvancedSearchResultsBean result = searchAdminService.getAdvancedSearchResults(sessionCookie, searchQuery);
         Assert.assertNotNull(result.getResourceDataList(), "No Record Found");
-        Assert.assertTrue((result.getResourceDataList().length > 0), "No Record Found. set valid Author name");
+        Assert.assertTrue((result.getResourceDataList().length > 0), "No Record Found. set valid MediaType");
         for (ResourceData resource : result.getResourceDataList()) {
-            Assert.assertTrue(resource.getAuthorUserName().contains(userName),
-                              "search keyword not contain on Author Name :" + resource.getResourcePath());
+            Assert.assertEquals(registry.get(resource.getResourcePath()).getMediaType(), "application/vnd.wso2-service+xml",
+                                "search keyword not contain on MediaType :" + resource.getResourcePath());
         }
 
 
     }
 
-    @Test(priority = 2, groups = {"wso2.greg"}, description = "Metadata search by available Author Name not")
-    public void searchResourceByAuthorNot()
-            throws SearchAdminServiceRegistryExceptionException, RemoteException {
+    @Test(priority = 3, groups = {"wso2.greg"}, description = "Metadata search by MediaType pattern matching")
+    public void searchResourceByMediaTypePattern()
+            throws SearchAdminServiceRegistryExceptionException, RemoteException,
+                   RegistryException {
         CustomSearchParameterBean searchQuery = new CustomSearchParameterBean();
         SearchParameterBean paramBean = new SearchParameterBean();
-        paramBean.setAuthor(userName);
-        ArrayOfString[] paramList = paramBean.getParameterList();
-
-        searchQuery.setParameterValues(paramList);
-
-        // to set updatedRangeNegate
-        ArrayOfString authorNameNegate = new ArrayOfString();
-        authorNameNegate.setArray(new String[]{"authorNameNegate", "on"});
-
-        searchQuery.addParameterValues(authorNameNegate);
-
-        AdvancedSearchResultsBean result = searchAdminService.getAdvancedSearchResults(sessionCookie, searchQuery);
-        Assert.assertNotNull(result.getResourceDataList(), "No Record Found");
-        Assert.assertTrue((result.getResourceDataList().length > 0), "No Record Found. set valid Author name");
-        for (ResourceData resource : result.getResourceDataList()) {
-            Assert.assertFalse(resource.getAuthorUserName().contains(userName),
-                               "search keyword contain on Author Name :" + resource.getResourcePath());
-        }
-
-
-    }
-
-    @Test(priority = 3, groups = {"wso2.greg"}, description = "Metadata search by Author Name pattern matching")
-    public void searchResourceByAuthorNamePattern()
-            throws SearchAdminServiceRegistryExceptionException, RemoteException {
-        CustomSearchParameterBean searchQuery = new CustomSearchParameterBean();
-        SearchParameterBean paramBean = new SearchParameterBean();
-        paramBean.setAuthor("wso2%user");
+        paramBean.setMediaType("%vnd%service%");
         ArrayOfString[] paramList = paramBean.getParameterList();
 
         searchQuery.setParameterValues(paramList);
         AdvancedSearchResultsBean result = searchAdminService.getAdvancedSearchResults(sessionCookie, searchQuery);
         Assert.assertNotNull(result.getResourceDataList(), "No Record Found");
-        Assert.assertTrue((result.getResourceDataList().length > 0), "No Record Found. set valid Author name pattern");
+        Assert.assertTrue((result.getResourceDataList().length > 0), "No Record Found. set valid MediaType pattern");
         for (ResourceData resource : result.getResourceDataList()) {
-            Assert.assertTrue((resource.getAuthorUserName().contains("wso2") && resource.getAuthorUserName().contains("user")),
-                              "search word pattern not contain on Author Name :" + resource.getResourcePath());
+            Resource rs = registry.get(resource.getResourcePath());
+            Assert.assertTrue((rs.getMediaType().contains("vnd") && rs.getMediaType().contains("service")),
+                              "search word pattern not contain on MediaType :" + resource.getResourcePath());
         }
 
 
     }
 
 
-    @Test(priority = 4, groups = {"wso2.greg"}, description = "Metadata search by unavailable Author Name")
-    public void searchResourceByUnAvailableAuthorName()
+    @Test(priority = 4, groups = {"wso2.greg"}, description = "Metadata search by unavailable MediaType")
+    public void searchResourceByUnAvailableMediaType()
             throws SearchAdminServiceRegistryExceptionException, RemoteException {
         CustomSearchParameterBean searchQuery = new CustomSearchParameterBean();
         SearchParameterBean paramBean = new SearchParameterBean();
-        paramBean.setAuthor("xyz1234");
+        paramBean.setMediaType("xyz1234");
         ArrayOfString[] paramList = paramBean.getParameterList();
 
         searchQuery.setParameterValues(paramList);
@@ -138,13 +117,13 @@ public class RegistrySearchByAuthorTestCase {
     }
 
     @Test(priority = 5, dataProvider = "invalidCharacter", groups = {"wso2.greg"},
-          description = "Metadata search by Author Name with invalid characters")
-    public void searchResourceByAuthorNameWithInvalidCharacter(String invalidInput)
+          description = "Metadata search by MediaType with invalid characters")
+    public void searchResourceByMediaTypeWithInvalidCharacter(String invalidInput)
             throws SearchAdminServiceRegistryExceptionException, RemoteException {
         CustomSearchParameterBean searchQuery = new CustomSearchParameterBean();
         SearchParameterBean paramBean = new SearchParameterBean();
 
-        paramBean.setAuthor(invalidInput);
+        paramBean.setMediaType(invalidInput);
         ArrayOfString[] paramList = paramBean.getParameterList();
         searchQuery.setParameterValues(paramList);
         AdvancedSearchResultsBean result = searchAdminService.getAdvancedSearchResults(sessionCookie, searchQuery);
@@ -164,7 +143,6 @@ public class RegistrySearchByAuthorTestCase {
                 {"@"},
                 {"|"},
                 {"^"},
-                {"/"},
                 {"\\"},
                 {","},
                 {"\""},
@@ -175,7 +153,6 @@ public class RegistrySearchByAuthorTestCase {
                 {"}"},
                 {"["},
                 {"]"},
-                {"-"},
                 {"("},
                 {")"}
         };

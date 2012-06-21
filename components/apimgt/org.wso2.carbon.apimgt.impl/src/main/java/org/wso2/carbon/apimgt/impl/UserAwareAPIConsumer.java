@@ -49,7 +49,7 @@ public class UserAwareAPIConsumer extends APIConsumerImpl {
     }
 
     UserAwareAPIConsumer(String username) throws APIManagementException {
-        super();
+        super(username);
         this.username = username;
         RegistryService registryService = ServiceReferenceHolder.getInstance().getRegistryService();
         RealmService realmService = ServiceReferenceHolder.getInstance().getRealmService();

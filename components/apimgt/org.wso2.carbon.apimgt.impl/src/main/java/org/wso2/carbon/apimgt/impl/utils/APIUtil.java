@@ -391,15 +391,13 @@ public final class APIUtil {
      * Crate an WSDL from given wsdl url.
      *
      * @param wsdlUrl  wsdl url
-     * @param provider of the API
+     * @param registry Registry space to save the WSDL
      * @return Path of the created resource
      * @throws APIManagementException  if failed to create WSDL in registry.
      */
-    public  static String  createWSDL(String wsdlUrl, String provider) throws APIManagementException {
+    public  static String  createWSDL(String wsdlUrl, Registry registry) throws APIManagementException {
         String path = null;
         try {
-            Registry registry = ServiceReferenceHolder.getInstance().getRegistryService().
-                    getGovernanceUserRegistry(provider);
             WsdlManager wsdlManager = new WsdlManager(registry);
             Wsdl wsdl = wsdlManager.newWsdl(wsdlUrl);
             wsdlManager.addWsdl(wsdl);
@@ -418,15 +416,13 @@ public final class APIUtil {
      * Create an Endpoint
      *
      * @param endpointUrl Endpoint url
-     * @param provider of the API
+     * @param registry Registry space to save the endpoint
      * @return Path of the created resource
      * @throws org.wso2.carbon.apimgt.api.APIManagementException failed to add endpoint
      */
-    public static String createEndpoint(String endpointUrl, String provider) throws APIManagementException{
+    public static String createEndpoint(String endpointUrl, Registry registry) throws APIManagementException{
         String path = null;
         try {
-            Registry registry = ServiceReferenceHolder.getInstance().getRegistryService().
-                    getGovernanceUserRegistry(provider);
             EndpointManager endpointManager = new EndpointManager(registry);
             Endpoint endpoint = endpointManager.newEndpoint(endpointUrl);
             endpointManager.addEndpoint(endpoint);

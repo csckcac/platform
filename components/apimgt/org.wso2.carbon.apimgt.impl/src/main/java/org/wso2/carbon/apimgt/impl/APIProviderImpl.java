@@ -41,8 +41,8 @@ import java.util.Collection;
  */
 class APIProviderImpl extends AbstractAPIManager implements APIProvider {
     
-    public APIProviderImpl() throws APIManagementException {
-        super();
+    public APIProviderImpl(String username) throws APIManagementException {
+        super(username);
     }
 
     /**
@@ -682,7 +682,6 @@ class APIProviderImpl extends AbstractAPIManager implements APIProvider {
         } catch (RegistryException e) {
             handleException("Failed to copy docs to new version : " + newVersion, e);
         }
-
     }
 
     /**
@@ -709,20 +708,17 @@ class APIProviderImpl extends AbstractAPIManager implements APIProvider {
                     registry.applyTag(artifactPath, tag);
                 }
             }
-            //Setting context name as property of API
-            Resource resource = registry.get(artifactPath);
-            resource.setProperty(APIConstants.API_CONTEXT_ID, api.getContext());
-            registry.put(artifactPath, resource);
+
             //create the wsdl in registry . if  failed we ignore after logging the error.
             if (api.getWsdlUrl() != null && !"".equals(api.getWsdlUrl())) {
-                String path = APIUtil.createWSDL(api.getWsdlUrl(), api.getId().getProviderName());
+                String path = APIUtil.createWSDL(api.getWsdlUrl(), registry);
                 if (path != null) {
                     registry.addAssociation(artifactPath, path, CommonConstants.ASSOCIATION_TYPE01);
                 }
             }
 
             if (api.getUrl() !=null && !"".equals(api.getUrl())){
-                String path = APIUtil.createEndpoint(api.getUrl(), api.getId().getProviderName());
+                String path = APIUtil.createEndpoint(api.getUrl(), registry);
                 if (path != null) {
                     registry.addAssociation(artifactPath, path, CommonConstants.ASSOCIATION_TYPE01);
                 }

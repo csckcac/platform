@@ -42,13 +42,9 @@ public class UserAwareAPIProvider extends APIProviderImpl {
     
     private String username;
     private AuthorizationManager authorizationManager;
-
-    UserAwareAPIProvider() throws APIManagementException {
-        super();
-    }
     
     UserAwareAPIProvider(String username) throws APIManagementException {
-        super();
+        super(username);
         this.username = username;
         RegistryService registryService = ServiceReferenceHolder.getInstance().getRegistryService();
         RealmService realmService = ServiceReferenceHolder.getInstance().getRealmService();

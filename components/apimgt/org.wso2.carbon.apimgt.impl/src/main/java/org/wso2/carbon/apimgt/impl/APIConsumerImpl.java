@@ -53,7 +53,11 @@ class APIConsumerImpl extends AbstractAPIManager implements APIConsumer {
 
     public APIConsumerImpl() throws APIManagementException {
         super();
-    }    
+    }
+
+    public APIConsumerImpl(String username) throws APIManagementException {
+        super(username);
+    }
 
     public Subscriber getSubscriber(String subscriberId) throws APIManagementException {
         Subscriber subscriber = null;
@@ -385,9 +389,7 @@ class APIConsumerImpl extends AbstractAPIManager implements APIConsumer {
         String apiPath = APIUtil.getAPIPath(identifier);
         org.wso2.carbon.registry.core.Comment comment = new org.wso2.carbon.registry.core.Comment(s);
         try {
-            UserRegistry userRegistry = ServiceReferenceHolder.getInstance().
-                    getRegistryService().getGovernanceUserRegistry(user);
-            userRegistry.addComment(apiPath, comment);
+            registry.addComment(apiPath, comment);
         } catch (RegistryException e) {
             handleException("Failed to add comment for api " + apiPath, e);
         }

@@ -62,6 +62,16 @@ public abstract class AbstractAPIManager implements APIManager {
         }
     }
 
+    public AbstractAPIManager(String username) throws APIManagementException {
+        apiMgtDAO = new ApiMgtDAO();
+        try {
+            this.registry = ServiceReferenceHolder.getInstance().
+                    getRegistryService().getGovernanceUserRegistry(username);
+        } catch (RegistryException e) {
+            handleException("Error while obtaining registry objects", e);
+        }
+    }
+
     public void cleanup() {
 
     }

@@ -48,14 +48,16 @@ public final class APIConstants {
 
     //registry location of providers
     public static final String PROVIDERS_PATH = "/providers";
+    
+    public static final String API_APPLICATION_DATA_LOCATION = "/apimgt/applicationdata";
 
     //registry location of API
-    public static final String API_LOCATION = "/apimgt/applicationdata/provider";
+    public static final String API_LOCATION = API_APPLICATION_DATA_LOCATION + "/provider";
     
-    public static final String API_TIER_LOCATION = "/apimgt/applicationdata/tiers.xml";
+    public static final String API_TIER_LOCATION = API_APPLICATION_DATA_LOCATION + "/tiers.xml";
 
     //registry location for consumer
-    public static final String API_ROOT_LOCATION = "/apimgt/applicationdata/provider";
+    public static final String API_ROOT_LOCATION = API_APPLICATION_DATA_LOCATION + "/provider";
     
     public static final String API_ICON_IMAGE = "icon";
 
@@ -173,5 +175,9 @@ public final class APIConstants {
     
     public static final String UNLIMITED_TIER = "Unlimited";
     public static final String UNLIMITED_TIER_DESC = "Allows unlimited requests";
+    
+    public static final int AM_CREATOR_EXECUTION_ID = 200;
+    public static final int AM_PUBLISHER_EXECUTION_ID = 201;
+
 
 }

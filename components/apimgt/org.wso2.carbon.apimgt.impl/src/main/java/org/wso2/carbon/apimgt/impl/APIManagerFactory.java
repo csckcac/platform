@@ -46,11 +46,7 @@ public class APIManagerFactory {
     }
     
     private APIProvider newProvider(String username) throws APIManagementException {
-        if (username.equals(ANONYMOUS_USER)) {
-            return new UserAwareAPIProvider();        
-        } else {
-            return new UserAwareAPIProvider(username);
-        }
+        return new UserAwareAPIProvider(username);
     }
 
     private APIConsumer newConsumer(String username) throws APIManagementException {

@@ -31,13 +31,18 @@ import org.wso2.carbon.governance.api.util.GovernanceConstants;
 import org.wso2.carbon.registry.core.Registry;
 import org.wso2.carbon.registry.core.RegistryConstants;
 import org.wso2.carbon.registry.core.Resource;
+import org.wso2.carbon.registry.core.config.RegistryContext;
 import org.wso2.carbon.registry.core.exceptions.RegistryException;
+import org.wso2.carbon.registry.core.secure.AuthorizeRoleListener;
 import org.wso2.carbon.registry.core.service.RegistryService;
 import org.wso2.carbon.registry.core.session.UserRegistry;
+import org.wso2.carbon.registry.core.utils.AuthorizationUtils;
+import org.wso2.carbon.registry.core.utils.RegistryUtils;
 import org.wso2.carbon.user.api.UserStoreException;
 import org.wso2.carbon.user.api.UserStoreManager;
 import org.wso2.carbon.user.core.AuthorizationManager;
 import org.wso2.carbon.user.core.UserRealm;
+import org.wso2.carbon.user.core.listener.AuthorizationManagerListener;
 import org.wso2.carbon.user.core.service.RealmService;
 import org.wso2.carbon.user.mgt.UserMgtConstants;
 import org.wso2.carbon.utils.CarbonUtils;
@@ -88,6 +93,17 @@ public class APIManagerComponent {
                     APIManagerConfigurationService.class.getName(),
                     configurationService, new Properties());
             setupSelfRegistration(configuration);
+
+            AuthorizationUtils.addAuthorizeRoleListener(APIConstants.AM_CREATOR_EXECUTION_ID,
+                    RegistryUtils.getAbsolutePath(RegistryContext.getBaseInstance(),
+                            RegistryConstants.GOVERNANCE_REGISTRY_BASE_PATH + APIConstants.API_APPLICATION_DATA_LOCATION),
+                    APIConstants.Permissions.API_CREATE,
+                    UserMgtConstants.EXECUTE_ACTION, null);
+            AuthorizationUtils.addAuthorizeRoleListener(APIConstants.AM_PUBLISHER_EXECUTION_ID,
+                    RegistryUtils.getAbsolutePath(RegistryContext.getBaseInstance(),
+                            RegistryConstants.GOVERNANCE_REGISTRY_BASE_PATH + APIConstants.API_APPLICATION_DATA_LOCATION),
+                    APIConstants.Permissions.API_PUBLISH,
+                    UserMgtConstants.EXECUTE_ACTION, null);
         } catch (APIManagementException e) {
             log.fatal("Error while initializing the API manager component", e);
         }

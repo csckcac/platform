@@ -26,11 +26,9 @@ import org.wso2.carbon.bam.mediationstats.data.publisher.data.MediationData;
 import org.wso2.carbon.bam.mediationstats.data.publisher.util.MediationDataPublisherConstants;
 import org.wso2.carbon.bam.mediationstats.data.publisher.util.PublisherUtils;
 import org.wso2.carbon.bam.mediationstats.data.publisher.util.TenantMediationStatConfigData;
-import org.wso2.carbon.mediation.statistics.StatisticsRecord;
 import org.wso2.carbon.eventbridge.agent.thrift.DataPublisher;
 import org.wso2.carbon.eventbridge.agent.thrift.conf.AgentConfiguration;
 import org.wso2.carbon.eventbridge.agent.thrift.exception.AgentException;
-import org.wso2.carbon.eventbridge.commons.Attribute;
 import org.wso2.carbon.eventbridge.commons.AttributeType;
 import org.wso2.carbon.eventbridge.commons.EventStreamDefinition;
 import org.wso2.carbon.eventbridge.commons.exception.AuthenticationException;
@@ -39,6 +37,7 @@ import org.wso2.carbon.eventbridge.commons.exception.MalformedStreamDefinitionEx
 import org.wso2.carbon.eventbridge.commons.exception.NoStreamDefinitionExistException;
 import org.wso2.carbon.eventbridge.commons.exception.StreamDefinitionException;
 import org.wso2.carbon.eventbridge.commons.exception.TransportException;
+import org.wso2.carbon.mediation.statistics.StatisticsRecord;
 
 import java.net.MalformedURLException;
 import java.util.ArrayList;
@@ -141,31 +140,18 @@ public class Publisher {
                     eventPublisherConfig.setAgentConfiguration(agentConfiguration);
                     eventPublisherConfig.setDataPublisher(dataPublisher);
 
-                    try {
-                        streamId = dataPublisher.findEventStream(mediationStatConfig.getStreamName(),
-                                                                 mediationStatConfig.getVersion());
-                    } catch (NoStreamDefinitionExistException e) {
-                        streamId = dataPublisher.defineEventStream(streamDef);
-                    } catch (StreamDefinitionException e) {
-                        e.printStackTrace();
-                    }
-                    Map<EventStreamDefinition, String> defMap = eventPublisherConfig.getEventStreamDefinitionMap();
-                    defMap.put(streamDef, streamId);
                     PublisherUtils.getEventPublisherConfigMap().put(key, eventPublisherConfig);
                 }
-                Map<EventStreamDefinition, String> eventStreamDefinitionMap =
-                        eventPublisherConfig.getEventStreamDefinitionMap();
 
-                if (eventStreamDefinitionMap.containsKey(streamDef)) {
-                    isStreamDefinitionAlreadyExist = true;
-                    streamId = eventStreamDefinitionMap.get(streamDef);
-                }
-
-                dataPublisher = eventPublisherConfig.getDataPublisher();
-                if (!isStreamDefinitionAlreadyExist) {
+                try {
+                    streamId = dataPublisher.findEventStream(mediationStatConfig.getStreamName(),
+                                                             mediationStatConfig.getVersion());
+                } catch (NoStreamDefinitionExistException e) {
                     streamId = dataPublisher.defineEventStream(streamDef);
-                    eventPublisherConfig.getEventStreamDefinitionMap().put(streamDef, streamId);
+                } catch (StreamDefinitionException e) {
+                    e.printStackTrace();
                 }
+
                 dataPublisher.publish(streamId, metaDataValueList.toArray(), null,
                                       eventData.toArray());
 
@@ -189,7 +175,7 @@ public class Publisher {
 
     }
 
-    private static EventStreamDefinition getEventStreamDefinition(
+    public static EventStreamDefinition getEventStreamDefinition(
             MediationStatConfig mediationStatConfig,
             Object[] metaData)
             throws MalformedStreamDefinitionException {

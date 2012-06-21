@@ -5,6 +5,8 @@
 <%@ page import="org.wso2.carbon.ui.CarbonUIUtil" %>
 <%@ page import="org.wso2.carbon.utils.ServerConstants" %>
 <%@ page import="org.apache.poi.hssf.record.formula.functions.True" %>
+<%@ page import="java.util.regex.Pattern" %>
+<%@ page import="java.util.regex.Matcher" %>
 <!--
 ~ Copyright (c) 2005-2010, WSO2 Inc. (http://www.wso2.org) All Rights Reserved.
 ~
@@ -72,6 +74,36 @@
             HiveScriptStoreClient client = new HiveScriptStoreClient(cookie, serverURL, configContext);
             scriptContent = client.getScript(scriptName);
             cron = client.getCronExpression(scriptName);
+            if (scriptContent != null && !scriptContent.equals("")) {
+             Pattern regex = Pattern.compile("[^\\s\"']+|\"([^\"]*)\"|'([^']*)'");
+                Matcher regexMatcher = regex.matcher(scriptContent);
+                String formattedScript = "";
+                while (regexMatcher.find()) {
+                    String temp = "";
+                    if (regexMatcher.group(1) != null) {
+                        // Add double-quoted string without the quotes
+                        temp = regexMatcher.group(1).replaceAll(";", "%%");
+                        temp = "\"" + temp + "\"";
+                    } else if (regexMatcher.group(2) != null) {
+                        // Add single-quoted string without the quotes
+                        temp = regexMatcher.group(2).replaceAll(";", "%%");
+                        temp = "\'" + temp + "\'";
+                    } else {
+                        temp = regexMatcher.group();
+                    }
+                    formattedScript += temp + " ";
+                }
+            String[] queries = formattedScript.split(";");
+            scriptContent = "";
+            for (String aquery : queries) {
+                aquery = aquery.trim();
+                if (!aquery.equals("")) {
+                    aquery = aquery.replaceAll("%%\n", ";");
+                    aquery = aquery.replaceAll("%%", ";");
+                    scriptContent = scriptContent + aquery + ";" + "\n";
+                }
+            }
+        }
         } catch (Exception e) {
             String errorString = e.getMessage();
             CarbonUIMessage.sendCarbonUIMessage(e.getMessage(), CarbonUIMessage.ERROR, request, e);
@@ -87,11 +119,30 @@
     if (isFromScheduling) {
         scriptContent = request.getParameter("scriptContent");
         if (scriptContent != null && !scriptContent.equals("")) {
-            String[] queries = scriptContent.split(";");
+             Pattern regex = Pattern.compile("[^\\s\"']+|\"([^\"]*)\"|'([^']*)'");
+                Matcher regexMatcher = regex.matcher(scriptContent);
+                String formattedScript = "";
+                while (regexMatcher.find()) {
+                    String temp = "";
+                    if (regexMatcher.group(1) != null) {
+                        // Add double-quoted string without the quotes
+                        temp = regexMatcher.group(1).replaceAll(";", "%%");
+                        temp = "\"" + temp + "\"";
+                    } else if (regexMatcher.group(2) != null) {
+                        // Add single-quoted string without the quotes
+                        temp = regexMatcher.group(2).replaceAll(";", "%%");
+                        temp = "\'" + temp + "\'";
+                    } else {
+                        temp = regexMatcher.group();
+                    }
+                    formattedScript += temp + " ";
+                }
+            String[] queries = formattedScript.split(";");
             scriptContent = "";
             for (String aquery : queries) {
                 aquery = aquery.trim();
                 if (!aquery.equals("")) {
+                    aquery = aquery.replaceAll("%%", ";");
                     scriptContent = scriptContent + aquery + ";" + "\n";
                 }
             }

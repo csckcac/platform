@@ -26,7 +26,7 @@ if(order.length != 0) {
 			"Infor" : "Sorry, Order was paid"
 		});
 	} else {
-		var order = db.query("UPDATE COFFEE_ORDER SET PAY=" + true + ", STATUS= 'Completed' WHERE ORDER_ID ='" + orderid + "'");
+		var order = db.query("UPDATE COFFEE_ORDER SET PAY=" + true + ", STATUS= 'Complete' WHERE ORDER_ID ='" + orderid + "'");
 		var order = db.query("SELECT * FROM COFFEE_ORDER WHERE ORDER_ID ='" + orderid + "'");
 		print(order[0]);
 	}

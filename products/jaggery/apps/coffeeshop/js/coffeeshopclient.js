@@ -32,10 +32,12 @@ CoffeeShop.loadOrders(html);
 }
 this.initViewOrders = function() {
 CoffeShopAppUtil.makeRequest("GET","/coffeeshop/orders/", null ,function(html) {
-console.log(html);
+//console.log(html);
 CoffeeShop.loadOrders(html);
 	$("#response-textarea").val(JSON.stringify(html));
-	//console.log(html.Infor);	
+	if(html.Infor != null){
+	alert(html.Infor +"\n Click 'New Order' to add order");
+ 	}	
 });
 }
 

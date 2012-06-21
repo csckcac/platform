@@ -218,7 +218,7 @@ public class RegistrySearchByAllTestCase {
         Wsdl wsdl;
         String wsdlFilePath = GregTestUtils.getResourcePath()
                               + File.separator + "wsdl" + File.separator;
-        wsdl = wsdlManager.newWsdl(GregTestUtils.readFile(wsdlFilePath + "echo.wsdl").getBytes(), "echo.wsdl");
+        wsdl = wsdlManager.newWsdl(GregTestUtils.readFile(wsdlFilePath + "echo.wsdl").getBytes(), "echo1.wsdl");
         wsdlManager.addWsdl(wsdl);
         wsdl = wsdlManager.getWsdl(wsdl.getId());
 
@@ -235,7 +235,7 @@ public class RegistrySearchByAllTestCase {
         SchemaManager schemaManager = new SchemaManager(governance);
         String schemaFilePath = GregTestUtils.getResourcePath()
                                 + File.separator + "schema" + File.separator;
-        Schema schema = schemaManager.newSchema(GregTestUtils.readFile(schemaFilePath + "Person.xsd").getBytes(), "Person.xsd");
+        Schema schema = schemaManager.newSchema(GregTestUtils.readFile(schemaFilePath + "Person.xsd").getBytes(), "Person3.xsd");
         schemaManager.addSchema(schema);
         schema = schemaManager.getSchema(schema.getId());
         governance.addAssociation(schema.getPath(), destinationPath, type);
@@ -251,7 +251,7 @@ public class RegistrySearchByAllTestCase {
         PolicyManager policyManager = new PolicyManager(governance);
         String policyFilePath = GregTestUtils.getResourcePath()
                                 + File.separator + "policy" + File.separator;
-        Policy policy = policyManager.newPolicy(GregTestUtils.readFile(policyFilePath + "UTPolicy.xml").getBytes(), "UTPolicy.xml");
+        Policy policy = policyManager.newPolicy(GregTestUtils.readFile(policyFilePath + "UTPolicy.xml").getBytes(), "UTPolicy3.xml");
         policyManager.addPolicy(policy);
         policy = policyManager.getPolicy(policy.getId());
         governance.addAssociation(policy.getPath(), destinationPath, type);

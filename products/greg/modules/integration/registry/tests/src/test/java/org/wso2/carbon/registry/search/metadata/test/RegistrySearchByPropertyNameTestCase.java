@@ -209,7 +209,7 @@ public class RegistrySearchByPropertyNameTestCase {
         SchemaManager schemaManager = new SchemaManager(governance);
         String schemaFilePath = GregTestUtils.getResourcePath()
                                 + File.separator + "schema" + File.separator;
-        Schema schema = schemaManager.newSchema(GregTestUtils.readFile(schemaFilePath + "Person.xsd").getBytes(), "Person.xsd");
+        Schema schema = schemaManager.newSchema(GregTestUtils.readFile(schemaFilePath + "Person.xsd").getBytes(), "Person4.xsd");
         schemaManager.addSchema(schema);
         schema = schemaManager.getSchema(schema.getId());
         Resource resource = governance.get(schema.getPath());
@@ -221,7 +221,7 @@ public class RegistrySearchByPropertyNameTestCase {
         PolicyManager policyManager = new PolicyManager(governance);
         String policyFilePath = GregTestUtils.getResourcePath()
                                 + File.separator + "policy" + File.separator;
-        Policy policy = policyManager.newPolicy(GregTestUtils.readFile(policyFilePath + "UTPolicy.xml").getBytes(), "UTPolicy.xml");
+        Policy policy = policyManager.newPolicy(GregTestUtils.readFile(policyFilePath + "UTPolicy.xml").getBytes(), "UTPolicy4.xml");
         policyManager.addPolicy(policy);
         policy = policyManager.getPolicy(policy.getId());
         Resource resource = governance.get(policy.getPath());

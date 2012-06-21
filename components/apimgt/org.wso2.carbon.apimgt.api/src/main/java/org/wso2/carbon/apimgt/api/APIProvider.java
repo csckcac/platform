@@ -250,4 +250,12 @@ public interface APIProvider extends APIManager {
     public List<LifeCycleEvent> getLifeCycleEvents(APIIdentifier apiId)
             throws APIManagementException;
 
+    /**
+     * Delete an API
+     *
+     * @param identifier APIIdentifier
+     * @throws APIManagementException if failed to remove the API
+     */
+    public void deleteAPI(APIIdentifier identifier) throws APIManagementException;
+
 }

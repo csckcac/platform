@@ -246,7 +246,10 @@ public class ServiceMediaTypeHandler extends Handler {
                 } else if (wsdlURL != null && wsdlURL.startsWith(RegistryConstants.ROOT_PATH)) {
                     // it seems wsdlUrl is a registry path..
                     String wsdlPath = RegistryUtils.getAbsolutePath(requestContext.getRegistryContext(), wsdlURL);
-                    if (!wsdlPath.startsWith(RegistryConstants.GOVERNANCE_REGISTRY_BASE_PATH)) {
+                    if (!wsdlPath.startsWith(RegistryUtils.getAbsolutePath(
+                            requestContext.getRegistryContext(),
+                            RegistryConstants.GOVERNANCE_REGISTRY_BASE_PATH))) {
+
                         wsdlPath = RegistryConstants.GOVERNANCE_REGISTRY_BASE_PATH + wsdlPath;
                     }
                     boolean addItHere = false;

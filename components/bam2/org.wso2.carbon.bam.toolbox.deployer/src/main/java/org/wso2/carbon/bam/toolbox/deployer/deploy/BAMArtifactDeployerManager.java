@@ -146,6 +146,8 @@ public class BAMArtifactDeployerManager {
     private void deployJaggeryApps(ToolBoxDTO toolBoxDTO) {
         String jaggeryDeployementDir = toolBoxDTO.getHotDeploymentRootDir() +
                 File.separator + BAMToolBoxDeployerConstants.JAGGERY_DEPLOYMENT_DIR;
+        File deployDir  =  new File(jaggeryDeployementDir);
+        if(!deployDir.exists()) deployDir.mkdirs();
         ArrayList<String> files = getFilesInDir(toolBoxDTO.getJaggeryAppParentDirectory());
         for (String aJaggeryApp : files) {
             String srcFile = toolBoxDTO.getJaggeryAppParentDirectory() + File.separator + aJaggeryApp;

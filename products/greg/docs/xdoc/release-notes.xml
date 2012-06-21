@@ -142,7 +142,7 @@
                 <li>Extract the downloaded zip file</li>
                 <li>Run the wso2server.sh or wso2server.bat file in the /bin directory</li>
                 <li>Once the server starts, point your Web browser to https://localhost:9443/carbon/</li>
-                <li>For more information, see the <a href="http://wso2.org/project/registry/@product.version@/docs/installation_guide.html">Installation Guide</a></li>
+                <li>For more information, see the <a href="http://docs.wso2.org/wiki/display/@product.version.docs@/Governance+Registry+Installation">Installation Guide</a></li>
             </ol>
 
             <h2>Known Issues</h2>

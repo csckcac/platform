@@ -296,7 +296,7 @@ public class APIProviderHostObject extends ScriptableObject {
         try {
             apiProvider.addAPI(api);
 
-            if (fileHostObject != null) {
+            if(fileHostObject != null && fileHostObject.getJavaScriptFile().getLength() != 0){
                 api.setThumbnailUrl(apiProvider.addIcon(apiId, fileHostObject.getInputStream(),
                                                         fileHostObject.getJavaScriptFile().getContentType()));
                 apiProvider.updateAPI(api);

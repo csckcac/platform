@@ -28,6 +28,7 @@ import org.wso2.carbon.governance.api.services.dataobjects.Service;
 import org.wso2.carbon.governance.api.util.GovernanceUtils;
 import org.wso2.carbon.governance.api.wsdls.WsdlManager;
 import org.wso2.carbon.governance.api.wsdls.dataobjects.Wsdl;
+import org.wso2.carbon.integration.framework.utils.FrameworkSettings;
 import org.wso2.carbon.registry.core.Registry;
 import org.wso2.carbon.registry.core.exceptions.RegistryException;
 import org.wso2.carbon.registry.extensions.utils.CommonConstants;
@@ -252,9 +253,12 @@ public class EndpointTestCase {
         Assert.assertEquals(service2.getAttribute("endpoints_entry"), ":" + endpoints[0].getUrl());
     }
 
-
+    @Test(groups = {"wso2.greg"})
     public void testServiceAddingEndpointsWithWsdl() throws Exception {
-        File file = new File("src/test/resources/service.metadata.xml");
+        String path = FrameworkSettings.getFrameworkPath() + File.separator + ".." +
+                File.separator + ".." + File.separator + ".." + File.separator + "src" +
+                File.separator + "test" + File.separator + "java" + File.separator + "resources";
+        File file = new File(path + File.separator + "service.metadata.xml");
         FileInputStream fileInputStream = new FileInputStream(file);
         byte[] fileContents = new byte[(int) file.length()];
         fileInputStream.read(fileContents);
@@ -296,6 +300,7 @@ public class EndpointTestCase {
     }
 
     // detach endpoints
+    @Test(groups = {"wso2.greg"})
     public void testDetachEndpointsToService() throws Exception {
         ServiceManager serviceManager = new ServiceManager(registry);
         Service service = serviceManager.newService(new QName("http://wso2.com/test234/xxxxxx", "_myServicxcde"));
@@ -324,6 +329,7 @@ public class EndpointTestCase {
     }
 
     // add non http endpoints as attachments
+    @Test(groups = {"wso2.greg"})
     public void testNonHttpEndpointsToService() throws Exception {
         ServiceManager serviceManager = new ServiceManager(registry);
         Service service = serviceManager.newService(new QName("http://wso2.com/doadf/spidf", "myServisdfcxcde"));

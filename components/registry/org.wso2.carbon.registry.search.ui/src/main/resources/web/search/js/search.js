@@ -184,10 +184,10 @@ function validateTagsInput(fld,fldName){
     return  validateForInput(fld,fldName);
 }
 
-function isNumberKey(evt){
-   var opLeft = document.getElementById('opLeft').value;
+function isNumberKey(evt) {
+   var opRight = document.getElementById('opRight').value;
 
-   if(opLeft != 'eq'){
+   if(opRight != 'eq') {
     var charCode = (evt.which) ? evt.which : event.keyCode;
     if (charCode > 31 && (charCode < 48 || charCode > 57))
           return false;
@@ -313,7 +313,7 @@ function submitAdvSearchForm(pageNumber) {
             
             if(validatePropertyValues() == 0){
             	searchResuts.innerHTML = "";			
-            	CARBON.showWarningDialog(org_wso2_carbon_registry_search_ui_jsi18n["left.needs.larger.than.right.property.value"]);
+            	CARBON.showWarningDialog(org_wso2_carbon_registry_search_ui_jsi18n["left.needs.less.than.right.property.value"]);
             	document.getElementById('advancedSearchFormDiv').style.display = "";            	
             	return false;
             }
@@ -361,23 +361,34 @@ function adjustPropertyOp(){
 	var txtRight = document.getElementById('valueRight');
 	var txtLeft = document.getElementById('valueLeft');
 
-	opRight.disabled=false;
-	txtRight.disabled=false;
+	opLeft.disabled=false;
+	txtLeft.disabled=false;
 
-	if(opLeft.options[opLeft.selectedIndex].value == "eq"){
-	  opRight.disabled=true;
-	  txtRight.disabled=true;
-	  txtRight.value = "";
+	if(opRight.options[opRight.selectedIndex].value == "eq"){
+	  opLeft.disabled=true;
+	  txtLeft.disabled=true;
+	  txtLeft.value = "";
 	}
-	txtLeft.value = "";
+	txtRight.value = "";
 }
 
-function validatePropertyValues(){
+function setPropertyName() {
+    var propName = document.getElementById("#_propertyName");
+    var propLabel = document.getElementById("lblPropName");
+
+    if(propName.value != "") {
+        propLabel.innerHTML = propName.value;
+    } else {
+        propLabel.innerHTML = "-";
+    }
+}
+
+function validatePropertyValues() {
     var leftVal = document.getElementById('valueLeft').value;
     var rightVal = document.getElementById('valueRight').value;
 
 	if(leftVal != "" && rightVal != ""){
-		if(leftVal <= rightVal){
+		if(leftVal >= rightVal){
 			return 0;
 		}
 	}
@@ -392,7 +403,7 @@ function validateEmptyPropertyValues(){
     var propertyName = document.getElementById('#_propertyName').value;
 
     if(leftVal != "" || rightVal != "") {
-    	   if(propertyName == "" && (opLeft.options[opLeft.selectedIndex].value != "eq")){
+    	   if(propertyName == "" && (opRight.options[opRight.selectedIndex].value != "eq")){
     	        return 1;
     	   }
     }

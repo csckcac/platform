@@ -358,7 +358,7 @@
                                     <input type="text" name="createdBefore" value="<%=createdBefore%>"
                                            id="ctoDate"
                                            style="width:140px;" onkeypress="handletextBoxKeyPress(event)"/>
-                                    <input type="checkbox" name="createdRangeNegate" /> ~       
+                                    <input type="checkbox" name="createdRangeNegate" /> not
 
                                 </td>
                             </tr>
@@ -398,7 +398,7 @@
                                     <input type="text" name="updatedBefore" value="<%=updatedBefore%>"
                                            id="utoDate"
                                            style="width:140px;" onkeypress="handletextBoxKeyPress(event)"/>
-                                    <input type="checkbox" name="updatedRangeNegate" /> ~       
+                                    <input type="checkbox" name="updatedRangeNegate" /> not
                                 </td>
                             </tr>
                             <tr>
@@ -419,7 +419,7 @@
                     <td><fmt:message key="created.by"/></td>
                     <td>
                         <input type="text" name="author" value="<%=author%>" id="#_author" onkeypress="handletextBoxKeyPress(event)"/>
-                        <input type="checkbox" name="authorNameNegate" /> ~
+                        <input type="checkbox" name="authorNameNegate" /> not
                     </td>
 
                 </tr>
@@ -427,7 +427,7 @@
                     <td><fmt:message key="updated.by"/></td>
                     <td>
                         <input type="text" name="updater" value="<%=updater%>" id="#_updater" onkeypress="handletextBoxKeyPress(event)"/>
-                        <input type="checkbox" name="updaterNameNegate" /> ~
+                        <input type="checkbox" name="updaterNameNegate" /> not
                     </td>
 
                 </tr>
@@ -462,7 +462,7 @@
                     <td><fmt:message key="property.name"/></td>
                     <td>
                         <input type="text" name="propertyName" value="<%=propertyName%>"
-                               id="#_propertyName" onkeypress="handletextBoxKeyPress(event)"/>
+                               id="#_propertyName" onkeypress="handletextBoxKeyPress(event)" onblur="setPropertyName()"/>
                     </td>
                 </tr>
                 <tr>
@@ -470,15 +470,21 @@
                     <td>
                        <%-- <input type="text" name="propertyValue" value="<%=propertyValue%>"
                                id="#_propertyValue" onkeypress="handletextBoxKeyPress(event)"/> --%>
-                        <select onChange="adjustPropertyOp();" id="opLeft" name="leftOp">
-  							<option value="lt">&lt;</option>
-  							<option value="le">&#8804;</option>
-  							<option value="eq">=</option>
-						</select>
 						<input type="text" onkeypress="return isNumberKey(event)" id="valueLeft" name="leftPropertyValue" value="<%=leftPropertyValue%>">
-						<select id="opRight" name="rightOp">
-  							<option value="gt">&gt;</option>
-  							<option value="ge">&#8805;</option>
+
+						<select id="opLeft" name="leftOp">
+                          	<option value="gt">&#60;</option>
+                          	<option value="ge">&#8804;</option>
+                        </select>
+
+                        <label>&#123;</label>
+                        <label id="lblPropName">-</label>
+                        <label>&#125;</label>
+
+						<select onChange="adjustPropertyOp();" id="opRight" name="rightOp">
+  							<option value="lt">&#60;</option>
+  							<option value="le">&#8804;</option>
+  							<option value="eq">&#61;</option>
 						</select>
 						<input type="text" onkeypress="return isNumberKey(event)" id="valueRight" name="rightPropertyValue" value="<%=rightPropertyValue%>">                               
                     </td>
@@ -497,7 +503,7 @@
 
                             <div id="mediaTypeAutoComplete">
                                 <input id="#_mediaType" name="mediaType" type="text" value="<%=mediaType%>" style="width:auto !important;" /> &nbsp;
-                                <input name="mediaTypeNegate" type="checkbox" /> ~
+                                <input name="mediaTypeNegate" type="checkbox" /> not
                                                                                                                          
                                 <div id="customUIButtonDiv">
                                     <%

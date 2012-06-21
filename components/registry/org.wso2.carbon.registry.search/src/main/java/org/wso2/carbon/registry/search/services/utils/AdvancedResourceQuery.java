@@ -533,22 +533,23 @@ public class AdvancedResourceQuery {
 
 	public void setLeftOp(String leftOp) {
         if (leftPropertyValue != null) {
-            if (leftOp.equals("lt")) {
-                this.leftOp = "<";
-            } else if (leftOp.equals("le")){
-                this.leftOp = "<=";
-            } else {
-                this.leftOp = "=";
+            if (leftOp.equals("gt")) {
+                this.leftOp = ">";
+            } else if (leftOp.equals("ge")){
+                this.leftOp = ">=";
             }
         }
 	}
 
 	public void setRightOp(String rightOp) {
         if (rightPropertyValue != null) {
-            if (rightOp.equals("gt"))
-                this.rightOp = ">";
-            if (rightOp.equals("ge"))
-                this.rightOp = ">=";
+            if (rightOp.equals("lt")) {
+                this.rightOp = "<";
+            } else if (rightOp.equals("le")) {
+                this.rightOp = "<=";
+            } else if (rightOp.equals("eq")){
+                this.rightOp = "=";
+            }
             if(leftPropertyValue != null)
                 propertyRange = true;
         }
@@ -705,7 +706,7 @@ public class AdvancedResourceQuery {
 				}
 			}
 		}
-        if (bool || (leftPropertyValue != null && leftOp.equals("=")) || propertyName != null) {
+        if (bool || (rightPropertyValue != null && rightOp.equals("=")) || propertyName != null) {
             tables.add(", REG_PROPERTY PP");
             tables.add(", REG_RESOURCE_PROPERTY RP");
             // StringBuffer propertyClause = new StringBuffer();
@@ -727,18 +728,18 @@ public class AdvancedResourceQuery {
                 conditions.add(" PP.REG_VALUE " + leftOp
                         + " ? AND PP.REG_VALUE " + rightOp + " ? ");
 
-            } else if(leftPropertyValue != null){
+            } else if(rightPropertyValue != null){
 
-                if(leftOp.equals("=")) {
+                if(rightOp.equals("=")) {
                     conditions.add(" PP.REG_VALUE LIKE ? ");
                 }else{
-                    conditions.add(" PP.REG_VALUE " + leftOp + " ? ");
+                    conditions.add(" PP.REG_VALUE " + rightOp + " ? ");
                 }
 
-            } else if(rightPropertyValue != null){
-                conditions.add(" PP.REG_VALUE " + rightOp + " ? ");
+            } else if(leftPropertyValue != null){
+                conditions.add(" PP.REG_VALUE " + leftOp + " ? ");
             }
-        } else if(leftPropertyValue != null && leftOp.equals("=")){
+        } else if(rightPropertyValue != null && rightOp.equals("=")){
             conditions.add(" PP.REG_VALUE LIKE ? ");
         }
 

@@ -44,7 +44,7 @@
         </fileSet>
 		<!--  copying modules xml -->
         <fileSet>
-            <directory>src/resources/modules</directory>
+            <directory>../p2-profile-gen/target/wso2carbon-core-${carbon.platform.version}/modules</directory>
             <outputDirectory>${pom.artifactId}-${pom.version}/modules/</outputDirectory>
 	    	<includes>
                 <include>*/**</include>

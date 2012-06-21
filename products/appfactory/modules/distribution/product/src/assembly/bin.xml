@@ -148,7 +148,7 @@
             </includes>
         </fileSet>
        <fileSet>
-                        <directory>resources/modules</directory>
+                        <directory>../../p2-profile-gen/product/target/wso2carbon-core-${wso2carbon.version}/modules</directory>
             <outputDirectory>wso2appfactory-${pom.version}/modules</outputDirectory>
         </fileSet>
 

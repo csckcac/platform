@@ -12,13 +12,18 @@
                 <td>Endpoint URL</td>
                 <td id="inUrl"><%=api.endpoint%></td>
             </tr>
+            <%if(api.sandbox!=''){%>
+            <tr>
+                <td>Sandbox URL</td>
+                <td id="sandbox"><%=api.sandbox%></td>
+            </tr>
+            <%}%>
             <%if(api.wsdl!=''){%>
             <tr>
                 <td>WSDL</td>
                 <td id="wsdl"><a href="<%=api.wsdl%>"><%=api.wsdl%></a></td>
             </tr>
-            <%}%>
-            <%
+            <%}
             if(api.wadl!=''){%>
             <tr>
                 <td>WADL</td>
@@ -33,8 +38,13 @@
                 <td>Tier Availability</td>
                 <td id="tierAvb"><%=api.availableTiers%></td>
             </tr>
+            <% if(api.tags!=''){%>
+            <tr>
+                <td>Tags</td>
+                <td id="tags"><%=api.tags%></td>
+            </tr>
              <%
-            if(api.bizOwner!=''){%>
+            }if(api.bizOwner!=''){%>
              <tr>
                 <td>Business Owner</td>
                 <td id="bizOwnerData"><%=api.bizOwner%> <% if(api.bizOwnerMail!=''){%>

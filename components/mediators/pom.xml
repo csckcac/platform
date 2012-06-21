@@ -68,7 +68,7 @@
 				<module>entitlement</module>
 				<module>oauth</module>
 				<module>transaction</module>
-		<!--		<module>rule</module> -->
+				<module>rule</module>
 				<!--module>autoscale</module-->
 				<module>uiless</module>
 				<module>enqueue</module>

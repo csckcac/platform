@@ -70,7 +70,7 @@ public class EventBridge implements EventBridgeSubscriberService, EventBridgeRec
             DifferentStreamDefinitionAlreadyDefinedException,
             MalformedStreamDefinitionException, SessionTimeoutException {
         AgentSession agentSession = authenticator.getSession(sessionId);
-        if (agentSession.getUsername() == null) {
+        if (agentSession.getCredentials() == null) {
             if (log.isDebugEnabled()) {
                 log.debug("session " + sessionId + " expired ");
             }

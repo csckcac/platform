@@ -29,6 +29,7 @@ import org.wso2.carbon.mediator.bam.config.stream.StreamConfiguration;
 import javax.xml.stream.XMLStreamException;
 import java.io.ByteArrayInputStream;
 import java.rmi.RemoteException;
+import java.util.ArrayList;
 import java.util.List;
 import java.util.Locale;
 
@@ -86,8 +87,12 @@ public class DdlAjaxProcessorHelper {
         String realServerProfilePath = this.getRealBamServerProfilePath(serverProfilePath);
         BamServerConfig bamServerConfig = this.getResource(realServerProfilePath);
         List<StreamConfiguration> streamConfigurations = bamServerConfig.getStreamConfigurations();
+        List<String> foundStreamNames = new ArrayList<String>();
         for (StreamConfiguration configuration : streamConfigurations) {
-            streamNames = streamNames + "<option>" + configuration.getName() + "<option>";
+            if(!foundStreamNames.contains(configuration.getName())){ // Add only unique stream names
+                streamNames = streamNames + "<option>" + configuration.getName() + "</option>";
+            }
+            foundStreamNames.add(configuration.getName());
         }
         return streamNames;
     }
@@ -99,7 +104,7 @@ public class DdlAjaxProcessorHelper {
         List<StreamConfiguration> streamConfigurations = bamServerConfig.getStreamConfigurations();
         for (StreamConfiguration configuration : streamConfigurations) {
             if(configuration.getName().equals(streamName)){
-                streamVersions = streamVersions + "<option>" + configuration.getVersion() + "<option>";
+                streamVersions = streamVersions + "<option>" + configuration.getVersion() + "</option>";
             }
         }
         return streamVersions;

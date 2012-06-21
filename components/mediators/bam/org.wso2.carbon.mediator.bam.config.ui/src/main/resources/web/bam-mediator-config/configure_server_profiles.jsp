@@ -293,7 +293,7 @@
                 bamServerConfig = bamServerProfileUtils.getResource(serverProfileLocation);
 
                 userName = bamServerConfig.getUsername();
-                password = bamServerConfig.getPassword();
+                password = bamServerProfileUtils.decryptPassword(bamServerConfig.getPassword());
                 ip = bamServerConfig.getIp();
                 port = bamServerConfig.getPort();
             }

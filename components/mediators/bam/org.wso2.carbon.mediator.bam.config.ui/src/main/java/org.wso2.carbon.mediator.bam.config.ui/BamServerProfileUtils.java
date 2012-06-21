@@ -113,7 +113,8 @@ public class BamServerProfileUtils {
 
         List<StreamConfiguration> streamConfigurations = this.getStreamConfigurationListFromString(streamConfigurationListString);
         BamServerConfigXml mediatorConfigurationXml = new BamServerConfigXml();
-        OMElement storeXml = mediatorConfigurationXml.buildServerProfile(ip, port, userName, password, streamConfigurations);
+        String encryptedPassword = this.encryptPassword(password);
+        OMElement storeXml = mediatorConfigurationXml.buildServerProfile(ip, port, userName, encryptedPassword, streamConfigurations);
         String stringStoreXml = storeXml.toString();
 
         try {
@@ -184,6 +185,14 @@ public class BamServerProfileUtils {
             e.printStackTrace();  //To change body of catch statement use File | Settings | File Templates.
         }
         return true;
+    }
+
+    public String encryptPassword(String plainTextPassword){
+        return plainTextPassword; // TODO
+    }
+
+    public String decryptPassword(String cipherTextPassword){
+        return cipherTextPassword; // TODO
     }
 
     public String getPropertiesString(StreamConfiguration streamConfiguration){

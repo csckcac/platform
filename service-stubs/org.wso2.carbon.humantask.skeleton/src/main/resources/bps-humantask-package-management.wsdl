@@ -77,10 +77,10 @@
         <part name="part" element="ns:TaskInfo"/>
     </message>
     <message name="downloadHumanTaskPackageRequest">
-        <part name="parameters" element="ns:downloadHumanTaskPackageArchive" />
+        <part name="part" element="ns:downloadHumanTaskPackageArchive" />
     </message>
     <message name="downloadHumanTaskPackageResponse">
-        <part name="parameters" element="ns:downloadHumanTaskPackageArchiveResponse" />
+        <part name="part" element="ns:downloadHumanTaskPackageArchiveResponse" />
     </message>
 
     <portType name="HumanTaskPackageManagementPortType">

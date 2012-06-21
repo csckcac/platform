@@ -570,15 +570,29 @@ class APIProviderImpl extends AbstractAPIManager implements APIProvider {
             registry.addAssociation(APIUtil.getAPIProviderPath(api.getId()), targetPath,
                     APIConstants.PROVIDER_ASSOCIATION);
 
+            // Retain the tags
+            org.wso2.carbon.registry.core.Tag[] tags = registry.getTags(apiSourcePath);
+            if (tags != null) {
+                for (org.wso2.carbon.registry.core.Tag tag : tags) {
+                    registry.applyTag(targetPath, tag.getTagName());
+                }
+            }
+
+            // Retain the docs
+            List<Documentation> docs = getAllDocumentation(api.getId());
+            APIIdentifier newId = new APIIdentifier(api.getId().getProviderName(),
+                    api.getId().getApiName(), newVersion);
+            for (Documentation doc : docs) {
+                addDocumentation(newId, doc);
+            }
+            
             // Make sure to unset the isLatest flag on the old version
             GenericArtifact oldArtifact = artifactManager.getGenericArtifact(
                     apiSourceArtifact.getUUID());
             oldArtifact.setAttribute(APIConstants.API_OVERVIEW_IS_LATEST, "false");
             artifactManager.updateGenericArtifact(oldArtifact);
 
-            APIIdentifier id = new APIIdentifier(api.getId().getProviderName(),
-                    api.getId().getApiName(), newVersion);
-            apiMgtDAO.addAPI(getAPI(id));
+            apiMgtDAO.addAPI(getAPI(newId));
 
         } catch (RegistryException e) {
             String msg = "Failed to create new version : " + newVersion + " of : "

@@ -452,7 +452,9 @@ class APIProviderImpl extends AbstractAPIManager implements APIProvider {
     private void removeFromGateway(API api) throws APIManagementException {
         try {
             RESTAPIAdminClient client = new RESTAPIAdminClient(api.getId());
-            client.deleteApi();
+            if (client.getApi() != null) {
+                client.deleteApi();
+            }
         } catch (AxisFault axisFault) {
             handleException("Error while creating new API in gateway", axisFault);
         }

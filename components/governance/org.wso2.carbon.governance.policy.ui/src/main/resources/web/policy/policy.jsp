@@ -46,7 +46,7 @@
     };
 
     function handleSuccess(o) {
-        window.location = "../list/policy.jsp?region=region3&item=governance_list_policy_menu";
+        window.location = "../listPolicy/policy.jsp?region=region3&item=governance_list_policy_menu";
     }
 
     function handleFailure(o) {
@@ -247,7 +247,7 @@
                                                  <input type="hidden" id="uPath" name="path" value="/"/>
                                                  <input type="hidden" id="uMediaType" name="mediaType"/>
                                                  <input type="hidden" id="uDescription" name="description" value=""/>
-                                                 <input type="hidden" id="uRedirect" name="redirect" value="list/policy.jsp?region=region3&item=governance_list_policy_menu"/>
+                                                 <input type="hidden" id="uRedirect" name="redirect" value="listPolicy/policy.jsp?region=region3&item=governance_list_policy_menu"/>
                                                  <input type="hidden" id="uErrorRedirect" name="errorRedirect" value="policy/policy.jsp?errorUpload=errorUpload"/>
 
                                                  <table class="normal">

@@ -8,6 +8,7 @@ import org.wso2.carbon.eventbridge.core.EventBridgeReceiverService;
 import org.wso2.carbon.eventbridge.core.EventConverter;
 import org.wso2.carbon.eventbridge.core.exception.StreamDefinitionNotFoundException;
 import org.wso2.carbon.eventbridge.core.exception.StreamDefinitionStoreException;
+import org.wso2.carbon.utils.multitenancy.MultitenantConstants;
 
 import java.util.List;
 import java.util.Map;
@@ -41,7 +42,7 @@ public class DummyEventBridge implements EventBridgeReceiverService {
 
 
     public DummyEventBridge() {
-        credentials = new Credentials(ALLOWED_DUMMY_USERNAME, ALLOWED_DUMMY_PASSWORD);
+        credentials = new Credentials(ALLOWED_DUMMY_USERNAME, ALLOWED_DUMMY_PASSWORD, MultitenantConstants.SUPER_TENANT_DOMAIN_NAME );
     }
 
     @Override
@@ -90,7 +91,7 @@ public class DummyEventBridge implements EventBridgeReceiverService {
     @Override
     public String login(String username, String password) throws AuthenticationException {
         // only allow dummy user to log in
-        Credentials newCredentials = new Credentials(username, password);
+        Credentials newCredentials = new Credentials(username, password,null);
         if (credentials.equals(newCredentials)) {
             String sessionId = UUID.randomUUID().toString();
             sessionIdCache.put(sessionId, credentials);

@@ -42,7 +42,8 @@ public abstract class AbstractStreamDefinitionStore implements StreamDefinitionS
         return EventBridgeUtils.constructStreamKey(name, version);
     }
 
-    public EventStreamDefinition getStreamDefinition(Credentials credentials, String name, String version)
+    public EventStreamDefinition getStreamDefinition(Credentials credentials, String name,
+                                                     String version)
             throws StreamDefinitionNotFoundException, StreamDefinitionStoreException {
         String streamId = getStreamIdFromStore(credentials, constructNameVersionKey(name, version));
         if (streamId == null) {
@@ -62,7 +63,8 @@ public abstract class AbstractStreamDefinitionStore implements StreamDefinitionS
 
     public void saveStreamDefinition(Credentials credentials,
                                      EventStreamDefinition eventStreamDefinition)
-            throws DifferentStreamDefinitionAlreadyDefinedException, StreamDefinitionStoreException {
+            throws DifferentStreamDefinitionAlreadyDefinedException,
+                   StreamDefinitionStoreException {
         EventStreamDefinition existingDefinition;
         try {
             existingDefinition = getStreamDefinition(credentials, eventStreamDefinition.getName(), eventStreamDefinition.getVersion());
@@ -73,7 +75,7 @@ public abstract class AbstractStreamDefinitionStore implements StreamDefinitionS
         }
         if (!existingDefinition.equals(eventStreamDefinition)) {
             throw new DifferentStreamDefinitionAlreadyDefinedException("Another Stream with same name and version exi" +
-                    "st :" + EventDefinitionConverterUtils
+                                                                       "st :" + EventDefinitionConverterUtils
                     .convertToJson(existingDefinition));
         }
     }
@@ -98,7 +100,8 @@ public abstract class AbstractStreamDefinitionStore implements StreamDefinitionS
     }
 
     protected abstract void saveStreamIdToStore(Credentials credentials, String streamIdKey,
-                                                String streamId) throws StreamDefinitionStoreException;
+                                                String streamId)
+            throws StreamDefinitionStoreException;
 
     protected abstract void saveStreamDefinitionToStore(Credentials credentials, String streamId,
                                                         EventStreamDefinition streamDefinition)

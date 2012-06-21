@@ -5,6 +5,7 @@ import org.wso2.carbon.eventbridge.commons.Credentials;
 import org.wso2.carbon.eventbridge.commons.exception.AuthenticationException;
 import org.wso2.carbon.eventbridge.restapi.RESTAPIConstants;
 import org.wso2.carbon.eventbridge.restapi.internal.Utils;
+import org.wso2.carbon.utils.multitenancy.MultitenantUtils;
 
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpSession;
@@ -36,9 +37,10 @@ public class RESTUtils {
         String usernameAndPassword = new String(Base64.decodeBase64(authHeader.substring(6).getBytes()));
 
         int userNameIndex = usernameAndPassword.indexOf(":");
+        String userName=usernameAndPassword.substring(0, userNameIndex);
 
-        return new Credentials(usernameAndPassword.substring(0, userNameIndex),
-                usernameAndPassword.substring(userNameIndex + 1));
+        return new Credentials(userName,
+                usernameAndPassword.substring(userNameIndex + 1), MultitenantUtils.getTenantDomain(userName));
     }
 
     public static boolean authenticate(HttpServletRequest request) {

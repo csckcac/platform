@@ -395,4 +395,66 @@ public class EventTest extends TestCase {
 
     }
 
+    public void testSessionTimeOut()
+            throws MalformedURLException, AuthenticationException, TransportException,
+                   AgentException, UndefinedEventTypeException,
+                   DifferentStreamDefinitionAlreadyDefinedException,
+                   InterruptedException, EventBridgeException,
+                   MalformedStreamDefinitionException,
+                   StreamDefinitionException {
+
+        TestServer testServer = new TestServer();
+        testServer.start(7631);
+        KeyStoreUtil.setTrustStoreParams();
+
+        Thread.sleep(2000);
+        //according to the convention the authentication port will be 7612+100= 7711 and its host will be the same
+        DataPublisher dataPublisher = new DataPublisher("tcp://localhost:7631", "admin", "admin");
+        String streamId = dataPublisher.defineEventStream("{" +
+                                                          "  'name':'org.wso2.esb.MediatorStatistics'," +
+                                                          "  'version':'1.3.0'," +
+                                                          "  'nickName': 'Stock Quote Information'," +
+                                                          "  'description': 'Some Desc'," +
+                                                          "  'metaData':[" +
+                                                          "          {'name':'ipAdd','type':'STRING'}" +
+                                                          "  ]," +
+                                                          "  'payloadData':[" +
+                                                          "          {'name':'symbol','type':'STRING'}," +
+                                                          "          {'name':'price','type':'DOUBLE'}," +
+                                                          "          {'name':'volume','type':'INT'}," +
+                                                          "          {'name':'max','type':'DOUBLE'}," +
+                                                          "          {'name':'min','type':'Double'}" +
+                                                          "  ]" +
+                                                          "}");
+        //In this case correlation data is null
+        dataPublisher.publish(streamId, new Object[]{"127.0.0.1"}, null, new Object[]{"IBM", 96.8, 300, 120.6, 70.4});
+        Thread.sleep(1000);
+        testServer.stop();
+        Thread.sleep(10000);
+        testServer.start(7631);
+        Thread.sleep(3000);
+        //Stream is again defined here because we are using inmMemoryDataStore at the server and it wont persist data
+        // when using casandra the defineEventStream() is not needed
+        dataPublisher.defineEventStream("{" +
+                                        "  'name':'org.wso2.esb.MediatorStatistics'," +
+                                        "  'version':'1.3.0'," +
+                                        "  'nickName': 'Stock Quote Information'," +
+                                        "  'description': 'Some Desc'," +
+                                        "  'metaData':[" +
+                                        "          {'name':'ipAdd','type':'STRING'}" +
+                                        "  ]," +
+                                        "  'payloadData':[" +
+                                        "          {'name':'symbol','type':'STRING'}," +
+                                        "          {'name':'price','type':'DOUBLE'}," +
+                                        "          {'name':'volume','type':'INT'}," +
+                                        "          {'name':'max','type':'DOUBLE'}," +
+                                        "          {'name':'min','type':'Double'}" +
+                                        "  ]" +
+                                        "}");   Thread.sleep(1000);
+        dataPublisher.publish(streamId, new Object[]{"127.0.0.1"}, null, new Object[]{"IBM", 96.8, 300, 120.6, 70.4});
+        dataPublisher.stop();
+        testServer.stop();
+
+    }
+
 }

@@ -90,9 +90,9 @@ public class EventDispatcher {
                                             EventStreamDefinition eventStreamDefinition) {
         EventStreamTypeHolder eventStreamTypeHolder;
         // this will occur only outside of carbon (ex: Siddhi)
-        if (domainName == null) {
-            domainName = HACK_DOMAIN_CONSTANT;
-        }
+//        if (domainName == null) {
+//            domainName = HACK_DOMAIN_CONSTANT;
+//        }
 
 //        if (eventStreamTypeCache.containsKey(domainName)) {
 //            eventStreamTypeHolder = eventStreamTypeCache.get(domainName);
@@ -120,9 +120,9 @@ public class EventDispatcher {
             throws StreamDefinitionNotFoundException {
         // this will occur only outside of carbon (ex: Siddhi)
 
-        String domainName = (credentials.getDomainName() == null) ? HACK_DOMAIN_CONSTANT : credentials.getDomainName();
+//        String domainName = (credentials.getDomainName() == null) ? HACK_DOMAIN_CONSTANT : credentials.getDomainName();
 
-        EventStreamTypeHolder eventStreamTypeHolder = eventStreamTypeCache.get(domainName);
+        EventStreamTypeHolder eventStreamTypeHolder = eventStreamTypeCache.get(credentials.getDomainName());
         if (eventStreamTypeHolder != null) {
             return eventStreamTypeHolder;
         } else {

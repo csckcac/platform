@@ -5,16 +5,6 @@ public class Credentials {
     private final String password;
     private final String domainName;
 
-    public Credentials(String username, String password) {
-        this.username = username;
-        this.password = password;
-        String[] userNameParts = username.split("@");
-        if (userNameParts.length == 2) {
-            domainName = userNameParts[1];
-        } else {
-            domainName = null;
-        }
-    }
 
     public Credentials(String username, String password, String domainName) {
         this.username = username;

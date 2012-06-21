@@ -79,8 +79,8 @@ public class AgentSession {
                '}';
     }
 
-    public void setCredentials(String userName, String password) {
-        this.credentials=new Credentials(userName,password);
+    public void setCredentials(String userName, String password, String domainName) {
+        this.credentials=new Credentials(userName,password, domainName);
     }
 
     public Credentials getCredentials() {

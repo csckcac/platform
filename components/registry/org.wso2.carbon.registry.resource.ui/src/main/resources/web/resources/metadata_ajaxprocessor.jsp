@@ -234,7 +234,8 @@
                             &nbsp;
                             &nbsp;
                             <%
-                                if(Boolean.parseBoolean(metadata.getWriteLocked())){
+                            if (metadata.getPutAllowed() && !metadata.getVersionView()) {
+                                if(Boolean.parseBoolean(metadata.getWriteLocked())) {
                             %>
                             <a  id="toggleSaveMediaType_editBtn" class="icon-link registryWriteOperation" style="background-image:url(../admin/images/edit.gif);"
                                onclick="retentionError();">
@@ -245,7 +246,8 @@
                                onclick="toggleSaveMediaType()">
                                 <fmt:message key="edit"/>
                             </a>
-                            <%}%>
+                            <%}
+                            }%>
 
                             <a  class="icon-link" style="background-image:url(../properties/images/save-button.gif);display:none" id="toggleSaveMediaType_saveBtn" onclick="updateMediaType('<%=metadata.getPath()%>' ,document.getElementById('toggleSaveMediaType_edit').value);">
                                 Save
@@ -350,9 +352,9 @@
             </td>
             <td valign="top" colspan="2">
                 <div id="descView" style="display:block;"><% if (metadata.getDescription() != null) { %><%=metadata.getDescription()%><% } %></div>
-                <% if (metadata.getPutAllowed()) { %>
+                <% if (metadata.getPutAllowed() && !metadata.getVersionView()) { %>
                 <div id="editButton" class="registryWriteOperation" style="display:inline;">
-                    <% if (!metadata.getVersionView() && !Boolean.parseBoolean(metadata.getWriteLocked())) {
+                    <% if (!Boolean.parseBoolean(metadata.getWriteLocked())) {
                     %>
                     <a name="editButtonLink"
                        onclick="processDescription('<%=metadata.getPathWithVersion()%>','editing');"

@@ -16,7 +16,6 @@
 
 package org.wso2.carbon.governance.list.operations;
 
-import org.apache.axiom.soap.SOAPEnvelope;
 import org.apache.axis2.AxisFault;
 import org.apache.axis2.context.MessageContext;
 

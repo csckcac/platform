@@ -26,11 +26,14 @@ import org.apache.commons.logging.LogFactory;
 import org.jaxen.JaxenException;
 import org.wso2.carbon.governance.api.generic.GenericArtifactManager;
 import org.wso2.carbon.governance.api.generic.dataobjects.GenericArtifact;
+import org.wso2.carbon.governance.list.operations.util.OperationUtil;
+import org.wso2.carbon.governance.list.operations.util.OperationsConstants;
 import org.wso2.carbon.registry.core.Registry;
 import org.wso2.carbon.registry.core.exceptions.RegistryException;
 
 import javax.xml.namespace.QName;
 import javax.xml.stream.XMLStreamException;
+import java.util.List;
 
 public class CreateOperation extends AbstractOperation {
     private Log log = LogFactory.getLog(CreateOperation.class);
@@ -46,8 +49,13 @@ public class CreateOperation extends AbstractOperation {
     }
 
     @Override
-    public String getRequestParameterSchemaFragment() {
-        return "<xs:element minOccurs=\"0\" name=\"info\" nillable=\"true\" type=\"xs:string\"/>";
+    public String getRequestName() {
+        return "info";
+    }
+
+    @Override
+    public String getRequestType() {
+        return "xs:string";
     }
 
     @Override
@@ -56,22 +64,26 @@ public class CreateOperation extends AbstractOperation {
     }
 
     public MessageContext process(MessageContext requestMessageContext) throws AxisFault {
-        OMElement content;
+        OMElement content = null;
         AXIOMXPath expression;
         try {
             String operation = requestMessageContext.getOperationContext().getAxisOperation().getName().getLocalPart();
             expression = new AXIOMXPath("//ns1:" + operation + "/ns1:info/ns2:metadata");
             expression.addNamespace("ns1", namespace);
-            expression.addNamespace("ns2", "http://www.wso2.org/governance/metadata");
-            content = (OMElement) expression.selectNodes(requestMessageContext.getEnvelope().getBody()).get(0);
+            expression.addNamespace("ns2", OperationsConstants.METADATA_NAMESPACE);
+
+
+            List elements = expression.selectNodes(requestMessageContext.getEnvelope().getBody());
+            if(elements.isEmpty()){
+                String msg = "Content of the resource should be in correct format";
+                log.error(msg);
+                OperationUtil.handleException(msg);
+            }
+            content = (OMElement) elements.get(0);
         } catch (JaxenException e) {
             String msg = "Error occured while reading the content of the SOAP message";
             log.error(msg);
-            throw new AxisFault(msg, e);
-        } catch (IndexOutOfBoundsException e) {
-            String msg = "Content of the resource should be in correct format";
-            log.error(msg);
-            throw new AxisFault(msg, e);
+            OperationUtil.handleException(msg, e);
         }
 
         try {
@@ -82,7 +94,7 @@ public class CreateOperation extends AbstractOperation {
         } catch (RegistryException e) {
             String msg = "Error occured while adding the content " + content;
             log.error(msg);
-            throw new AxisFault(msg, e);
+            OperationUtil.handleException(msg, e);
         }
 
         return getAbstractResponseMessageContext(requestMessageContext);

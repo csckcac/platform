@@ -25,11 +25,13 @@ import org.apache.commons.logging.Log;
 import org.apache.commons.logging.LogFactory;
 import org.jaxen.JaxenException;
 import org.wso2.carbon.governance.api.generic.GenericArtifactManager;
+import org.wso2.carbon.governance.list.operations.util.OperationUtil;
 import org.wso2.carbon.registry.core.Registry;
 import org.wso2.carbon.registry.core.exceptions.RegistryException;
 
 import javax.xml.namespace.QName;
 import javax.xml.stream.XMLStreamException;
+import java.util.List;
 
 public class DeleteOperation extends AbstractOperation{
     private Log log = LogFactory.getLog(DeleteOperation.class);
@@ -45,8 +47,13 @@ public class DeleteOperation extends AbstractOperation{
     }
 
     @Override
-    public String getRequestParameterSchemaFragment() {
-        return "<xs:element minOccurs=\"0\" name=\"artifactId\" nillable=\"true\" type=\"xs:string\"/>";
+    public String getRequestName() {
+        return "artifactId";
+    }
+
+    @Override
+    public String getRequestType() {
+        return "xs:string";
     }
 
     @Override
@@ -55,36 +62,39 @@ public class DeleteOperation extends AbstractOperation{
     }
 
     public MessageContext process(MessageContext requestMessageContext) throws AxisFault {
-        String artifactId;
+        String artifactId = null;
         AXIOMXPath expression;
         try {
             String operation = requestMessageContext.
                     getOperationContext().getAxisOperation().getName().getLocalPart();
             expression = new AXIOMXPath("//ns:" + operation + "/ns:artifactId");
             expression.addNamespace("ns", namespace);
-            artifactId = ((OMElement) expression.
-                    selectNodes(requestMessageContext.getEnvelope().getBody()).get(0)).getText().trim();
+
+            List elements = expression.selectNodes(requestMessageContext.getEnvelope().getBody());
+            if(elements.isEmpty()){
+                String msg = "Content of the resource should be in correct format";
+                log.error(msg);
+                OperationUtil.handleException(msg);
+            }
+            artifactId = ((OMElement)elements.get(0)).getText().trim();
         } catch (JaxenException e) {
             String msg = "Error occured while reading the content of the SOAP message";
             log.error(msg);
-            throw new AxisFault(msg, e);
-        } catch (IndexOutOfBoundsException e) {
-            String msg = "Content of the resource should be in correct format";
-            log.error(msg);
-            throw new AxisFault(msg, e);
+            OperationUtil.handleException(msg, e);
         }
 
         try {
             GenericArtifactManager artifactManager = new GenericArtifactManager(governanceSystemRegistry, rxtKey);
+            if(artifactManager.getGenericArtifact(artifactId) == null){
+                String msg = "Artifact not found for the artifact id " + artifactId;
+                log.error(msg);
+                OperationUtil.handleException(msg);
+            }
             artifactManager.removeGenericArtifact(artifactId);
         } catch (RegistryException e) {
             String msg = "Error occured while deleting the resource " + artifactId;
             log.error(msg);
-            throw new AxisFault(msg, e);
-        } catch (NullPointerException e){
-            String msg = "Artifact not found for the artifact id " + artifactId;
-            log.error(msg);
-            throw new AxisFault(msg, e);
+            OperationUtil.handleException(msg, e);
         }
         succeed = true;
 

@@ -18,6 +18,8 @@ package org.wso2.carbon.governance.list.operations;
 
 import org.apache.axiom.om.OMAbstractFactory;
 import org.apache.axiom.om.OMElement;
+import org.apache.axiom.om.util.AXIOMUtil;
+import org.apache.axiom.om.xpath.AXIOMXPath;
 import org.apache.axiom.soap.SOAP11Constants;
 import org.apache.axiom.soap.SOAP12Constants;
 import org.apache.axiom.soap.SOAPEnvelope;
@@ -34,6 +36,7 @@ import org.apache.commons.logging.Log;
 import org.apache.commons.logging.LogFactory;
 import org.apache.ws.commons.schema.XmlSchema;
 import org.apache.ws.commons.schema.XmlSchemaCollection;
+import org.wso2.carbon.governance.list.operations.util.OperationsConstants;
 import org.wso2.carbon.registry.core.Registry;
 
 import javax.xml.namespace.QName;
@@ -41,6 +44,7 @@ import javax.xml.stream.XMLStreamException;
 import javax.xml.transform.stream.StreamSource;
 import java.io.ByteArrayInputStream;
 import java.util.Arrays;
+import java.util.List;
 
 public abstract class AbstractOperation extends InOutAxisOperation implements MessageProcessor {
     private Log log = LogFactory.getLog(AbstractOperation.class);
@@ -49,7 +53,6 @@ public abstract class AbstractOperation extends InOutAxisOperation implements Me
     protected String name;
     protected String mediatype;
     protected String namespace;
-    protected MessageContext messageContext;
 
     protected AbstractOperation(QName name, Registry governanceSystemRegistry, String mediatype, String namespace) {
         super(name);
@@ -63,12 +66,12 @@ public abstract class AbstractOperation extends InOutAxisOperation implements Me
         this.rxtKey = rxtKey;
         receiver.setMessageProcessor(name, this);
         setMessageReceiver(receiver);
-        String namespace = "http://services." + name + ".governance.carbon.wso2.org";
-        AxisMessage in = getMessage("In");
-        in.setName(name + "Request");
+        String namespace = OperationsConstants.NAMESPACE_PART1 + name + OperationsConstants.NAMESPACE_PART2 ;
+        AxisMessage in = getMessage(OperationsConstants.IN);
+        in.setName(name + OperationsConstants.REQUEST);
         in.setElementQName(new QName(namespace, name));
-        AxisMessage out = getMessage("Out");
-        out.setName(name + "Response");
+        AxisMessage out = getMessage(OperationsConstants.OUT);
+        out.setName(name + OperationsConstants.RESPONSE);
         out.setElementQName(new QName(namespace, name));
         AxisMessage fault = new AxisMessage();
         fault.setName(name + "ServiceGovernanceException");
@@ -78,30 +81,7 @@ public abstract class AbstractOperation extends InOutAxisOperation implements Me
     }
 
     public XmlSchema[] getSchemas(XmlSchemaCollection collection) {
-        String str = "<xs:schema xmlns:xs=\"http://www.w3.org/2001/XMLSchema\" xmlns:ax2234=\"http://exception.api.governance.carbon.wso2.org/xsd\" attributeFormDefault=\"qualified\" elementFormDefault=\"qualified\" targetNamespace=\"" + namespace + "\">\n" +
-                "            <xs:import namespace=\"http://exception.api.governance.carbon.wso2.org/xsd\" />\n" +
-                "            <xs:element name=\"" + name + "ServiceGovernanceException\">\n" +
-                "                <xs:complexType>\n" +
-                "                    <xs:sequence>\n" +
-                "                        <xs:element minOccurs=\"0\" name=\"GovernanceException\" nillable=\"true\" type=\"ax2234:GovernanceException\" />\n" +
-                "                    </xs:sequence>\n" +
-                "                </xs:complexType>\n" +
-                "            </xs:element>\n" +
-                "            <xs:element name=\"" + name + "\">\n" +
-                "                <xs:complexType>\n" +
-                "                    <xs:sequence>\n" +
-                "                        " + getRequestParameterSchemaFragment() + "\n" +
-                "                    </xs:sequence>\n" +
-                "                </xs:complexType>\n" +
-                "            </xs:element>\n" +
-                "            <xs:element name=\"" + name + "Response\">\n" +
-                "                <xs:complexType>\n" +
-                "                    <xs:sequence>\n" +
-                "                        <xs:element minOccurs=\"0\" name=\"return\" type=\"xs:" + getResponseType() + "\" />\n" +
-                "                    </xs:sequence>\n" +
-                "                </xs:complexType>\n" +
-                "            </xs:element>\n" +
-                "        </xs:schema>";
+        String str = getCustomSchema(name, namespace, getResponseType(), getRequestName(), getRequestType());
         return Arrays.asList(collection.read(new StreamSource(new ByteArrayInputStream(str.getBytes())), null)).toArray(
                 new XmlSchema[1]);
     }
@@ -114,7 +94,7 @@ public abstract class AbstractOperation extends InOutAxisOperation implements Me
         AxisService service = requestMessageContext.getAxisService();
 
         OMElement bodyContent;
-        AxisMessage outMessage = operation.getMessage("Out");
+        AxisMessage outMessage = operation.getMessage(OperationsConstants.OUT);
 
         bodyContent = factory.createOMElement(outMessage.getName(),
                 factory.createOMNamespace(service.getTargetNamespace(),
@@ -144,9 +124,48 @@ public abstract class AbstractOperation extends InOutAxisOperation implements Me
         }
     }
 
+    private String getCustomSchema(String name, String targetNamespace, String responseType, String requestName, String requestType) {
+        OMElement omElement = null;
+        try {
+            omElement = AXIOMUtil.stringToOM(OperationsConstants.CUSTOM_XSD);
+            omElement.addAttribute("targetNamespace", targetNamespace, null);
+
+            AXIOMXPath expression = new AXIOMXPath("xs:element");
+            expression.addNamespace("xs", OperationsConstants.XSD_NAMESPACE);
+            List<OMElement> elements = expression.selectNodes(omElement);
+
+            OMElement element1 = elements.get(0);
+            element1.addAttribute("name", name + "ServiceGovernanceException", null);
+
+
+            OMElement element2 = elements.get(1);
+            element2.addAttribute("name", name, null);
+            expression = new AXIOMXPath("xs:complexType/xs:sequence/xs:element");
+            expression.addNamespace("xs", OperationsConstants.XSD_NAMESPACE);
+            OMElement ep2 = (OMElement)expression.selectNodes(element2).get(0);
+            ep2.addAttribute("type", requestName, null);
+            ep2.addAttribute("name", requestType, null);
+
+
+            OMElement element3 = elements.get(2);
+            element3.addAttribute("name", name + "Response", null);
+            expression = new AXIOMXPath("xs:complexType/xs:sequence/xs:element");
+            expression.addNamespace("xs", OperationsConstants.XSD_NAMESPACE);
+            OMElement ep3 = (OMElement)expression.selectNodes(element3).get(0);
+            ep3.addAttribute("type", responseType, null);
+        } catch (Exception e) {
+            //Should not throw outside
+            log.error("Error while creating the custom Schema");
+        }
+
+        return omElement.toString();
+    }
+
     public abstract void setPayload(OMElement bodyContent, String namespace) throws XMLStreamException;
 
-    public abstract String getRequestParameterSchemaFragment();
+    public abstract String getRequestName();
+
+    public abstract String getRequestType();
 
     public abstract String getResponseType();
 }

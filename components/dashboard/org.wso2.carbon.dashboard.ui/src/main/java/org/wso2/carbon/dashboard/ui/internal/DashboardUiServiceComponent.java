@@ -90,8 +90,7 @@ public class DashboardUiServiceComponent {
 
             log.debug("******* Dashboard UI Component bundle is activated ******* ");
 
-        } catch (Throwable e) {
-            e.printStackTrace();
+        } catch (Exception e) {
             log.debug("******* Failed to activate Dashboard UI Component bundle ******* ");
         }
     }

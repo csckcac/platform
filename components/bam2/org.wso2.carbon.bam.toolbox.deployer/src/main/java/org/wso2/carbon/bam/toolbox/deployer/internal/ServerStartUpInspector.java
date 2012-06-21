@@ -54,7 +54,7 @@ public class ServerStartUpInspector extends Thread {
                 if (isPortOpen) {
                     if (verbose) {
                         SuperTenantCarbonContext.getCurrentContext().setTenantId(MultitenantConstants.SUPER_TENANT_ID);
-                        log.info("Successfully connected to the server on port " + port);
+//                        log.info("Successfully connected to the server on port " + port);
                         serverStarted = true;
                          doPausedDeployments();
                     }
@@ -62,7 +62,7 @@ public class ServerStartUpInspector extends Thread {
                 }
             } catch (IOException e) {
                 if (verbose) {
-                    log.info("Waiting until server starts on port " + port);
+//                    log.info("Waiting until server starts on port " + port);
                 }
                 try {
                     Thread.sleep(1000);

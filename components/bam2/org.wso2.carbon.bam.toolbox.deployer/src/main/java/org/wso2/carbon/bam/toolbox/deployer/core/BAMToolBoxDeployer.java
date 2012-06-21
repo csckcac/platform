@@ -118,6 +118,7 @@ public class BAMToolBoxDeployer extends AbstractDeployer {
                     String barDir = processor.extractBAMArtifact(path, destDir + "/temp");
 
                     ToolBoxDTO aTool = processor.getToolBoxDTO(barDir);
+                    aTool.setHotDeploymentRootDir(this.configurationContext.getAxisConfiguration().getRepository().getPath());
 
                     int tenantId = getTenantId();
                     BAMArtifactDeployerManager.getInstance().deploy(aTool, tenantId, getTenantAdminName(tenantId));

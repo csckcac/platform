@@ -55,4 +55,6 @@ public class DashBoardTabDTO {
     public void addGadget(String gadgetName){
         this.gadgets.add(gadgetName);
     }
+
+
 }

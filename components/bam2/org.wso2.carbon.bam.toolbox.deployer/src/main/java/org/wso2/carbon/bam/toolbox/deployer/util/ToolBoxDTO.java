@@ -27,6 +27,8 @@ public class ToolBoxDTO {
     private String evenStreamDef;
     private String scriptsParentDirectory;
     private String gagetsParentDirectory;
+    private String jaggeryAppParentDirectory;
+    private String hotDeploymentRootDir;
 
     public ToolBoxDTO(String name) {
         this.name = name;
@@ -116,5 +118,21 @@ public class ToolBoxDTO {
               }
            }
        }
+    }
+
+    public String getJaggeryAppParentDirectory() {
+        return jaggeryAppParentDirectory;
+    }
+
+    public void setJaggeryAppParentDirectory(String jaggeryAppParentDirectory) {
+        this.jaggeryAppParentDirectory = jaggeryAppParentDirectory;
+    }
+
+    public String getHotDeploymentRootDir() {
+        return hotDeploymentRootDir;
+    }
+
+    public void setHotDeploymentRootDir(String hotDeploymentRootDir) {
+        this.hotDeploymentRootDir = hotDeploymentRootDir;
     }
 }

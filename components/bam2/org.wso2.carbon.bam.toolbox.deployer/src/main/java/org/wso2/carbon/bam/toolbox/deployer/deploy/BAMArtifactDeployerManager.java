@@ -18,6 +18,7 @@ package org.wso2.carbon.bam.toolbox.deployer.deploy;
 
 import org.apache.commons.logging.Log;
 import org.apache.commons.logging.LogFactory;
+import org.wso2.carbon.bam.toolbox.deployer.BAMToolBoxDeployerConstants;
 import org.wso2.carbon.bam.toolbox.deployer.ServiceHolder;
 import org.wso2.carbon.bam.toolbox.deployer.client.DashboardClient;
 import org.wso2.carbon.bam.toolbox.deployer.client.HiveScriptStoreClient;
@@ -66,7 +67,7 @@ public class BAMArtifactDeployerManager {
             String scriptName = scriptFile.getName();
             scriptName = scriptName.split("\\.")[0];
             String content = getContent(scriptFile);
-            scriptName = scriptName +"_"+ getRandomArtifactId();
+            scriptName = scriptName + "_" + getRandomArtifactId();
             scriptNameWithId.add(scriptName);
             try {
                 HiveScriptStoreClient scriptStoreClient = HiveScriptStoreClient.getInstance();
@@ -81,9 +82,9 @@ public class BAMArtifactDeployerManager {
 
     }
 
-    private static  int getRandomArtifactId(){
-         Random randomGenerator = new Random();
-         return randomGenerator.nextInt(1000);
+    private static int getRandomArtifactId() {
+        Random randomGenerator = new Random();
+        return randomGenerator.nextInt(1000);
     }
 
     private void deployGadget(ToolBoxDTO toolBoxDTO, String username) {
@@ -136,10 +137,52 @@ public class BAMArtifactDeployerManager {
         if (canDeployGadgets()) {
             transferGadgetsFilesToRegistry(new File(toolBoxDTO.getGagetsParentDirectory()), tenantId);
             deployGadget(toolBoxDTO, username);
+            deployJaggeryApps(toolBoxDTO);
         }
 
     }
 
+
+    private void deployJaggeryApps(ToolBoxDTO toolBoxDTO) {
+        String jaggeryDeployementDir = toolBoxDTO.getHotDeploymentRootDir() +
+                File.separator + BAMToolBoxDeployerConstants.JAGGERY_DEPLOYMENT_DIR;
+        ArrayList<String> files = getFilesInDir(toolBoxDTO.getJaggeryAppParentDirectory());
+        for (String aJaggeryApp : files) {
+            String srcFile = toolBoxDTO.getJaggeryAppParentDirectory() + File.separator + aJaggeryApp;
+            InputStream in = null;
+            try {
+                in = new FileInputStream(srcFile);
+
+                OutputStream out = new FileOutputStream(jaggeryDeployementDir + File.separator + aJaggeryApp);
+                byte[] buf = new byte[1024];
+                int len;
+                while ((len = in.read(buf)) > 0) {
+                    out.write(buf, 0, len);
+                }
+                in.close();
+                out.close();
+            } catch (FileNotFoundException e) {
+                log.error(e);
+            } catch (IOException e) {
+                log.error(e);
+            }
+        }
+    }
+
+    private ArrayList<String> getFilesInDir(String dirPath) {
+        File dir = new File(dirPath);
+        ArrayList<String> files = new ArrayList<String>();
+
+        String[] children = dir.list();
+        if (null != children) {
+            for (String aChildren : children) {
+                if (!new File(aChildren).isDirectory()) {
+                    files.add(aChildren);
+                }
+            }
+        }
+        return files;
+    }
 
     private boolean canDeployScripts() {
         try {

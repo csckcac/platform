@@ -16,7 +16,8 @@ package org.wso2.carbon.bam.toolbox.deployer;
  * limitations under the License.
  */
 public enum BasicToolBox {
-    MESSAGE_TRACING(1, "Message_Tracing.bar");
+    MESSAGE_TRACING(1, "Message_Tracing.bar"),
+    KPI(2, "KPI_Sample.bar");
 
     private int sampleId;
     private String toolboxName;

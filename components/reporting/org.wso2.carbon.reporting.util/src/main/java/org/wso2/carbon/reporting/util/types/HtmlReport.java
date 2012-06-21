@@ -47,13 +47,22 @@ public class HtmlReport {
             throw new ReportingException("jasperPrint null, can't convert to HTML report");
         }
         try {
+	    
+	    // exclude the repeating (paged) column headers
+	    jasperPrint.setProperty("net.sf.jasperreports.export.html.exclude.origin.keep.first.band.2", "columnHeader"); 
+	    // exclude the page footers
+	    jasperPrint.setProperty("net.sf.jasperreports.export.html.exclude.origin.band.2", "pageFooter");
+ 
             JRHtmlExporter jrHtmlExporter = new JRHtmlExporter();
             jrHtmlExporter.setParameter(JRHtmlExporterParameter.JASPER_PRINT, jasperPrint);
             jrHtmlExporter.setParameter(JRHtmlExporterParameter.IS_USING_IMAGES_TO_ALIGN, true);
             // To generate a HTML report we want configure ImageServlet in component.xml file of reporting UI bundle
             // Then want to set the  IMAGES_URI parameter
             jrHtmlExporter.setParameter(JRHtmlExporterParameter.IMAGES_URI, "../servlets/image?image=");
-            //  remove empty spaces
+	    // remove extra spaces between the report data
+            jrHtmlExporter.setParameter(JRHtmlExporterParameter.BETWEEN_PAGES_HTML, "");           
+	   
+ 	    // remove empty spaces
             jrHtmlExporter.setParameter(JRHtmlExporterParameter.IS_REMOVE_EMPTY_SPACE_BETWEEN_ROWS, Boolean.TRUE);
             jrHtmlExporter.setParameter(JRHtmlExporterParameter.IS_WHITE_PAGE_BACKGROUND, Boolean.TRUE);
             jrHtmlExporter.setParameter(JRHtmlExporterParameter.OUTPUT_STREAM, outputStream);

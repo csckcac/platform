@@ -49,6 +49,9 @@ public class ExcelReport {
         try {
             // Remove the pageHeader from pages except starting page
             jasperPrint.setProperty("net.sf.jasperreports.export.xls.exclude.origin.keep.first.band.1", "pageHeader");
+ 	    // Remove the column headers except the first one
+            jasperPrint.setProperty("net.sf.jasperreports.export.xls.exclude.origin.keep.first.band.2", "columnHeader");
+
             //  Remove the pageFooter from all the pages
             jasperPrint.setProperty("net.sf.jasperreports.export.xls.exclude.origin.band.2", "pageFooter");
             //  set the JXL parameters to generate Excel report

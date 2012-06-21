@@ -738,6 +738,9 @@ public class APIStoreHostObject extends ScriptableObject {
         row.put("context",row, api.getContext());
         row.put("status", row, api.getStatus().getStatus());
 
+        String user = getUsernameFromObject(thisObj);
+        int userRate=apiConsumer.getUserRating(apiIdentifier,user);
+        row.put("userRate", row, userRate);
         APIManagerConfiguration config = HostObjectComponent.getAPIManagerConfiguration();
         row.put("serverURL", row, config.getFirstProperty(APIConstants.API_GATEWAY_API_ENDPOINT));
 

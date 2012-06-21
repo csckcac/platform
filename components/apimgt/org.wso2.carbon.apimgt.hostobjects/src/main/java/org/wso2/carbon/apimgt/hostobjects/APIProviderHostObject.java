@@ -205,7 +205,8 @@ public class APIProviderHostObject extends ScriptableObject {
      */
     public static boolean jsFunction_addAPI(Context cx, Scriptable thisObj,
                                             Object[] args,
-                                            Function funObj) throws APIManagementException {
+                                            Function funObj)
+            throws APIManagementException, ScriptException {
         if (args.length == 0) {
             throw new APIManagementException("Invalid number of input parameters.");
         }
@@ -290,8 +291,9 @@ public class APIProviderHostObject extends ScriptableObject {
         api.setBusinessOwnerEmail(bizOwnerEmail);
         api.setTechnicalOwner(techOwner);
         api.setTechnicalOwnerEmail(techOwnerEmail);
+
+        checkFileSize(fileHostObject);
         try {
-            checkFileSize(fileHostObject);
             apiProvider.addAPI(api);
 
             if (fileHostObject != null) {
@@ -838,6 +840,7 @@ public class APIProviderHostObject extends ScriptableObject {
                 APIIdentifier apiIdentifier = api.getId();
                 row.put("apiName", row, apiIdentifier.getApiName());
                 row.put("version", row, apiIdentifier.getVersion());
+                row.put("provider", row, apiIdentifier.getProviderName());
                 row.put("updatedDate", row, api.getLastUpdated().toString());
                 myn.put(i, myn, row);
                 i++;
@@ -1143,7 +1146,11 @@ public class APIProviderHostObject extends ScriptableObject {
             throws APIManagementException {
         Boolean contextExist = false;
         String context = (String) args[0];
+        String oldContext = (String) args[1];
         if (context != null) {
+            if (context.equals(oldContext)) {
+                return contextExist.toString();
+            }
             APIProvider apiProvider = getAPIProvider(thisObj);
             try {
                 contextExist = apiProvider.isContextExist(context);
@@ -1394,12 +1401,12 @@ public class APIProviderHostObject extends ScriptableObject {
             //TODO : this regex pattern matching has to be moved to APIManager API implementation
             List<API> apiList = apiProvider.getAllAPIs();
             List<API> searchedList = new ArrayList<API>();
-            String regex = "[a-zA-Z0-9_.-|]*" + apiName.toUpperCase() + "[a-zA-Z0-9_.-|]*";
+            String regex = "(?i)[a-zA-Z0-9_.-|]*" + apiName + "(?i)[a-zA-Z0-9_.-|]*";
             Pattern pattern;
             Matcher matcher;
             for (API api : apiList) {
                 APIIdentifier apiIdentifier = api.getId();
-                String name = apiIdentifier.getApiName().toUpperCase();
+                String name = apiIdentifier.getApiName();
                 pattern = Pattern.compile(regex);
                 matcher = pattern.matcher(name);
                 if (matcher.matches()) {
@@ -1453,12 +1460,12 @@ public class APIProviderHostObject extends ScriptableObject {
                 //TODO : this regex pattern matching has to be moved to APIManager API implementation
                 List<API> apiList = apiProvider.getAPIsByProvider(providerName);
                 List<API> searchedList = new ArrayList<API>();
-                String regex = "[a-zA-Z0-9_.-|]*" + apiName.toUpperCase() + "[a-zA-Z0-9_.-|]*";
+                String regex = "(?i)[a-zA-Z0-9_.-|]*" + apiName + "(?i)[a-zA-Z0-9_.-|]*";
                 Pattern pattern;
                 Matcher matcher;
                 for (API api : apiList) {
                     APIIdentifier apiIdentifier = api.getId();
-                    String name = apiIdentifier.getApiName().toUpperCase();
+                    String name = apiIdentifier.getApiName();
                     pattern = Pattern.compile(regex);
                     matcher = pattern.matcher(name);
                     if (matcher.matches()) {
@@ -1555,6 +1562,24 @@ public class APIProviderHostObject extends ScriptableObject {
             log.error("Error from registry while checking the input context is already exist", e);
         }
         return lifeCycles;
+    }
+
+    public static void jsFunction_removeAPI(Context cx, Scriptable thisObj,
+                                            Object[] args,
+                                            Function funObj)
+            throws APIManagementException {
+        if (args.length == 0) {
+            throw new APIManagementException("Invalid number of input parameters.");
+        }
+        NativeObject apiData = (NativeObject) args[0];
+
+        String provider = (String) apiData.get("provider", apiData);
+        String name = (String) apiData.get("name", apiData);
+        String version = (String) apiData.get("version", apiData);
+        APIIdentifier apiId = new APIIdentifier(provider, name, version);
+
+        APIProvider apiProvider = getAPIProvider(thisObj);
+        apiProvider.deleteAPI(apiId);
     }
 }
 

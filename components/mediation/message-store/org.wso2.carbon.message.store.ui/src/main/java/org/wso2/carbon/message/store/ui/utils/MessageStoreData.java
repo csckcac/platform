@@ -62,6 +62,14 @@ public class MessageStoreData {
         return clazz;
     }
 
+    public void setName(String name){
+        this.name=name;
+    }
+
+    public void setClazz(String provider){
+        this.clazz=provider;
+    }
+
     private void populate(String xml) throws XMLStreamException {
         InputStream in = new ByteArrayInputStream(xml.getBytes());
         OMElement elem = new StAXOMBuilder(in).getDocumentElement();
@@ -97,6 +105,15 @@ public class MessageStoreData {
             params.put(name, value);
         }
 
+    }
+
+    public String getString() {
+        StringBuffer storeString = new StringBuffer();
+        storeString.append("name: " + name + "\n");
+        storeString.append("clazz: " + clazz + "\n");
+        storeString.append("sequence: " + sequence + "\n");
+        storeString.append("params: " + params + "\n");
+        return storeString.toString();
     }
 
 }

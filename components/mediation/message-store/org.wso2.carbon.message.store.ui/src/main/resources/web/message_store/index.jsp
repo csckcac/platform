@@ -28,7 +28,7 @@
 <carbon:breadcrumb
         label="Message Stores"
         resourceBundle="org.wso2.carbon.message.store.ui.i18n.Resources"
-        topPage="true"
+        topPage="false"
         request="<%=request%>"/>
 
 <link type="text/css" href="../dialog/js/jqueryui/tabs/ui.all.css" rel="stylesheet"/>

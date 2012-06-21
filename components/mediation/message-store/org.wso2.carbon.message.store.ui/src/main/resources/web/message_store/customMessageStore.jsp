@@ -15,6 +15,8 @@
 --%>
 
 <%@ page contentType="text/html" pageEncoding="UTF-8" %>
+<%@ page import="org.apache.axiom.om.OMElement" %>
+<%@ page import="org.apache.axiom.om.util.AXIOMUtil" %>
 <%@ page import="org.apache.axis2.context.ConfigurationContext" %>
 <%@ page import="org.wso2.carbon.CarbonConstants" %>
 <%@ page import="org.wso2.carbon.ui.CarbonUIUtil" %>
@@ -31,9 +33,9 @@
 <script type="text/javascript" src="localentrycommons.js"></script>
 
 <carbon:breadcrumb
-        label="message.store"
+        label="custom.message.store"
         resourceBundle="org.wso2.carbon.message.store.ui.i18n.Resources"
-        topPage="false"
+        topPage="true"
         request="<%=request%>"/>
 
 
@@ -55,6 +57,11 @@
         if (IsEmpty(form.Name)) {
             CARBON.showWarningDialog('<fmt:message key="name.field.cannot.be.empty"/>')
             form.Name.focus();
+            return false;
+        }
+        if (IsEmpty(form.Provider)) {
+            CARBON.showWarningDialog('<fmt:message key="provider.field.cannot.be.empty"/>')
+            form.Provider.focus();
             return false;
         }
 
@@ -214,6 +221,22 @@
         });
     }
 
+    function switchToSource() {
+        if(!ValidateTextForm(document.Submit))  {
+            return false;
+        }
+        addServiceParams();
+        var messageStoreStr = {Name : document.getElementById("Name").value,Provider : document.getElementById("Provider").value, tableParams : document.getElementById("tableParams").value};
+        jQuery.ajax({
+            type: 'POST',
+            url: 'updatePages/customMessageStoreUpdate.jsp',
+            data: messageStoreStr,
+            success: function(msg) {
+                location.href = "sourceView.jsp";
+            }
+        });
+    }
+
 
 </script>
 
@@ -226,7 +249,10 @@
 <input type="hidden" id="addedParams" name="addedParams" value=""/>
 <input type="hidden" id="removedParams" name="removedParams" value=""/>
 <input type="hidden" id="tableParams" name="tableParams" value="PARAMS:"/>
-<% String messageStoreName = request.getParameter("messageStoreName");
+<%
+    String origin = request.getParameter("origin");
+
+    String messageStoreName = request.getParameter("messageStoreName");
     String url = CarbonUIUtil.getServerURL(this.getServletConfig().getServletContext(),
             session);
     ConfigurationContext configContext =
@@ -244,6 +270,20 @@
                 messageStore = client.getMessageStore(name);
             }
         }
+    } else if (origin != null && !"".equals(origin)) {
+        String msString = (String) session.getAttribute("messageStoreConfiguration");
+        String msName = (String) session.getAttribute("msName");
+        String msProvider = (String) session.getAttribute("msProvider");
+
+        session.removeAttribute("messageStoreConfiguration");
+        session.removeAttribute("msName");
+        session.removeAttribute("msProvider");
+
+        msString = msString.replaceAll("\\s\\s+|\\n|\\r", ""); // remove the pretty printing from the string
+        OMElement messageStoreElement = AXIOMUtil.stringToOM(msString);
+        messageStore = new MessageStoreData(messageStoreElement.toString());
+        messageStore.setName(msName);
+        messageStore.setClazz(msProvider);
     }
 
 
@@ -253,6 +293,10 @@
     <tr>
         <th colspan="2"><span style="float: left; position: relative; margin-top: 2px;">
                             <fmt:message key="custom.message.store"/></span>
+            <a class="icon-link"
+               style="background-image: url(images/source-view.gif);"
+               onclick="switchToSource();"
+               href="#"><fmt:message key="switch.to.source.view"/></a>
         </th>
     </tr>
     </thead>
@@ -276,7 +320,7 @@
                 <%} else { %>
                 <tr>
                     <td width="271px"><fmt:message key="name"/><span class="required"> *</span></td>
-                    <td><input type="text" size="60" name="Name" value=""/></td>
+                    <td><input id="Name" type="text" size="60" name="Name" value=""/></td>
                 </tr>
                 <%}%>
                 <%if ((messageStore != null)) { %>
@@ -284,8 +328,8 @@
                     <td><fmt:message key="provider"/></td>
                     <td>
                         <input name="Provider" id="Provider" type="hidden"
-                               value="<%=client.getClassName(messageStoreName)%>"/>
-                        <label id="Provider_label" for="Provider"><%=client.getClassName(messageStoreName)%>
+                               value="<%=messageStore.getClazz()%>"/>
+                        <label id="Provider_label" for="Provider"><%=messageStore.getClazz()%>
                         </label>
                         <br/>
                     </td>
@@ -297,7 +341,7 @@
                 </tr>
                 <tr id="custom_class_input">
                     <td><fmt:message key="provider.class"/><span class="required"> *</span></td>
-                    <td><input name="custom_provider_class" size="60"
+                    <td><input id="Provider" name="custom_provider_class" size="60"
                                value=""/></td>
                 </tr>
                 <%}%>

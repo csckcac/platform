@@ -27,35 +27,13 @@
             <directory>target/site</directory>
             <outputDirectory>${pom.artifactId}-${build.version}-docs</outputDirectory>
             <excludes>
-                <exclude>developer_guide/custom_ui.html</exclude>
-                <exclude>samples_guide.html</exclude>
                 <exclude>release-notes.html</exclude>
                 <exclude>index.html</exclude>
             </excludes>
             <fileMode>644</fileMode>
         </fileSet>
-        <fileSet>
-            <directory>../../docs/xdoc/user.core</directory>
-            <outputDirectory>${pom.artifactId}-${build.version}-docs/user.core</outputDirectory>
-            <includes>
-                <include>user-mgt-*.xml</include>
-            </includes>
-            <fileMode>644</fileMode>
-        </fileSet>
     </fileSets>
     <files>
-        <file>
-            <source>target/site/developer_guide/custom_ui.html</source>
-            <outputDirectory>${pom.artifactId}-${build.version}-docs/developer_guide/</outputDirectory>
-            <filtered>true</filtered>
-            <fileMode>644</fileMode>
-        </file>
-        <file>
-            <source>target/site/samples_guide.html</source>
-            <outputDirectory>${pom.artifactId}-${build.version}-docs/</outputDirectory>
-            <filtered>true</filtered>
-            <fileMode>644</fileMode>
-        </file>
         <file>
             <source>target/site/release-notes.html</source>
             <outputDirectory>${pom.artifactId}-${build.version}-docs/</outputDirectory>

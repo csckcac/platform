@@ -54,16 +54,11 @@
                   href="http://www.wso2.org/downloads/governance-registry"/>
         </menu>
         <menu name="Documentation">
-            <item name="Index" href="docs_index.html"/>
-            <item name="Installation Guide" href="installation_guide.html"/>
-            <item name="Quick Start" href="quick_start.html"/>
-            <item name="User Guide" href="user_guide.html"/>
-            <item name="Developer Guide" href="developer_guide.html"/>
+
             <item name="Developer Tools" href="http://www.wso2.com/products/carbon-studio"/>
             <item name="Migration Guide" href="http://www.wso2.org/wiki/display/registry/Migration+Guide"/>
             <item name="Feature Management" href="component-mgt/docs/userguide.html"/>
             <item name="Cloud Service" href="http://governance.stratoslive.wso2.com/"/>
-            <item name="External Articles" href="external_articles.html"/>
 
 <!--
 			<item name="Setting up Registry with Derby" href="db_derby.html"/>
@@ -72,10 +67,6 @@
 			<item name="Setting up Registry with Oracle" href="db_oracle.html"/>
 			<item name="Setting up Registry with H2" href="db_h2.html"/>		
 -->
-        </menu>
-
-        <menu name="Samples">
-		<item name="Samples Guide" href="samples_guide.html"/>
         </menu>
 
         <menu name="Java Docs">

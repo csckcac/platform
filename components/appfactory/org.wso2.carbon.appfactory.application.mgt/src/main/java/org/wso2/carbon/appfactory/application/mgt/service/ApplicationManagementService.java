@@ -19,6 +19,7 @@ package org.wso2.carbon.appfactory.application.mgt.service;
 
 import org.apache.commons.logging.Log;
 import org.apache.commons.logging.LogFactory;
+import org.wso2.carbon.CarbonConstants;
 import org.wso2.carbon.appfactory.application.mgt.util.Util;
 import org.wso2.carbon.core.AbstractAdmin;
 import org.wso2.carbon.user.api.Tenant;
@@ -72,21 +73,22 @@ public class ApplicationManagementService extends AbstractAdmin {
         }
     }
 
-    
     public String[] getUsersOfApplication(String applicationId ) throws ApplicationManagementException {
         TenantManager tenantManager = Util.getRealmService().getTenantManager();
         ArrayList<String> userList = new ArrayList<String>();
         try {
             UserRealm realm = Util.getRealmService().getTenantUserRealm(tenantManager.getTenantId(applicationId));
             String[] roles = realm.getUserStoreManager().getRoleNames();
-            if (roles.length >0) {
-                for(String roleName : roles) {
+            if (roles.length > 0) {
+                for (String roleName : roles) {
                     if (!Util.getRealmService().getBootstrapRealmConfiguration().getEveryOneRoleName().equals(roleName)) {
                         String[] usersOfRole = realm.getUserStoreManager().getUserListOfRole(roleName);
                         if (usersOfRole != null && usersOfRole.length > 0) {
-                            for(String user : usersOfRole) {
-                                if(!userList.contains(user)) {
-                                    userList.add(user);
+                            for (String userName : usersOfRole) {
+                                if (!userList.contains(userName) &&
+                                    !Util.getRealmService().getBootstrapRealmConfiguration().getAdminUserName().equals(userName)
+                                    && !CarbonConstants.REGISTRY_ANONNYMOUS_USERNAME.equals(userName)) {
+                                    userList.add(userName);
                                 }
                             }
                         }
@@ -96,8 +98,8 @@ public class ApplicationManagementService extends AbstractAdmin {
             }
             return userList.toArray(new String[userList.size()]);
         } catch (UserStoreException e) {
-            String msg = "Error while getting users of application "+applicationId;
-            log.error(msg,e);
+            String msg = "Error while getting users of application " + applicationId;
+            log.error(msg, e);
             throw new ApplicationManagementException(msg, e);
         }
     }

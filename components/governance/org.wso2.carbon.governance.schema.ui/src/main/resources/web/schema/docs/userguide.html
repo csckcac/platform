@@ -1,0 +1,59 @@
+<!--
+ ~ Copyright (c) 2005-2011, WSO2 Inc. (http://www.wso2.org) All Rights Reserved.
+ ~
+ ~ WSO2 Inc. licenses this file to you under the Apache License,
+ ~ Version 2.0 (the "License"); you may not use this file except
+ ~ in compliance with the License.
+ ~ You may obtain a copy of the License at
+ ~
+ ~    http://www.apache.org/licenses/LICENSE-2.0
+ ~
+ ~ Unless required by applicable law or agreed to in writing,
+ ~ software distributed under the License is distributed on an
+ ~ "AS IS" BASIS, WITHOUT WARRANTIES OR CONDITIONS OF ANY
+ ~ KIND, either express or implied.  See the License for the
+ ~ specific language governing permissions and limitations
+ ~ under the License.
+ -->
+<!DOCTYPE HTML PUBLIC "-//W3C//DTD HTML 4.01 Transitional//EN" "http://www.w3.org/TR/html4/strict.dtd">
+<html>
+<head>
+  <title>Governance Registry Governance Artifacts - User Guide</title>
+  <link href="../../admin/css/documentation.css" rel="stylesheet" type="text/css" media="all" />
+</head>
+
+<body>
+<h1>Governance Artifacts</h1>
+<p>
+    WSO2 Governance Registry stores governance metadata and information on governance related
+    entities.
+    Registry resources storing these information and/or metadata are known as Governance Artifacts.
+    Examples for Governance Artifacts include Services, WSDLs, Schemas, Processes and People.
+</p>
+<ul>
+    <li><a href="#schema">Adding Schemas</a></li>
+</ul>
+
+<a name="schema"></a>
+<h2>Add Schemas</h2>
+<p>
+Similar to WSDL importing Governance Registry allow users to add Schema in to registry using add Schema UI.
+    User can provide the schema location in to Schema URL and Schema name will be automatically suggested
+    as in Add WSDL and Add Policy forms. Successful schema import will redirect the user in to the
+currently available imported schema listing page.</p>
+
+<p><img src="images/validation.png" width="492px"/></p>
+<p>Figure 1: Add Schema </p>
+
+<h3>Validation</h3>
+<p>Similar to WSDLs, WSO2 Governance Registry performs Schema validations on the wsdl provided once importing is done.
+    The result is displayed under &#34;properties&#34; section of the imported Schema resource.  Schema validation can optionally be disabled from the registry.xml.  Also, Schema validation requires a connection to the internet for the very first time,
+    and will not work on systems with no Internet connectivity.</p>
+
+<p><img src="images/validation.png" width="492px"/></p>
+<p>Figure 1: Add Schema </p>
+
+<p></p>
+</body>
+
+</html>

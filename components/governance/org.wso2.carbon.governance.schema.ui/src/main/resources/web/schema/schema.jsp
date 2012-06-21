@@ -46,7 +46,7 @@
     };
 
     function handleSuccess(o) {
-        window.location = "../list/schema.jsp?region=region3&item=governance_list_schema_menu";
+        window.location = "../listSchema/schema.jsp?region=region3&item=governance_list_schema_menu";
     }
 
     function handleFailure(o) {
@@ -253,7 +253,7 @@
                                                  <input type="hidden" id="uPath" name="path" value="/"/>
                                                  <input type="hidden" id="uMediaType" name="mediaType"/>
                                                  <input type="hidden" id="uDescription" name="description" value=""/>
-                                                 <input type="hidden" id="uRedirect" name="redirect" value="list/schema.jsp?region=region3&item=governance_list_schema_menu"/>
+                                                 <input type="hidden" id="uRedirect" name="redirect" value="listSchema/schema.jsp?region=region3&item=governance_list_schema_menu"/>
                                                  <input type="hidden" id="uErrorRedirect" name="errorRedirect" value="schema/schema.jsp?errorUpload=errorUpload"/>
 
                                                  <table class="normal">

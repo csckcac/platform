@@ -140,14 +140,16 @@ public class BamServerProfileUtils {
                     currentStreamConfiguration.setVersion(stream.split("\\^")[1]);
                     currentStreamConfiguration.setNickname(stream.split("\\^")[2]);
                     currentStreamConfiguration.setDescription(stream.split("\\^")[3]);
-                    propertiesString = stream.split("\\^")[4];
-                    properties = propertiesString.split(";");
-                    for (String property : properties) {
-                        if(this.isNotNullOrEmpty(property)){
-                            currentProperty = new Property();
-                            currentProperty.setKey(property.split(":")[0]);
-                            currentProperty.setValue(property.split(":")[1]);
-                            currentStreamConfiguration.getProperties().add(currentProperty);
+                    if(stream.split("\\^").length > 4){ // Only when properties exist
+                        propertiesString = stream.split("\\^")[4];
+                        properties = propertiesString.split(";");
+                        for (String property : properties) {
+                            if(this.isNotNullOrEmpty(property)){
+                                currentProperty = new Property();
+                                currentProperty.setKey(property.split(":")[0]);
+                                currentProperty.setValue(property.split(":")[1]);
+                                currentStreamConfiguration.getProperties().add(currentProperty);
+                            }
                         }
                     }
                     streamConfigurations.add(currentStreamConfiguration);

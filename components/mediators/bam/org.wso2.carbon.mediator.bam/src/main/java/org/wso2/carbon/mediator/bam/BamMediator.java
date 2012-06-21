@@ -19,22 +19,27 @@ package org.wso2.carbon.mediator.bam;
 import org.apache.synapse.MessageContext;
 import org.apache.synapse.SynapseLog;
 import org.apache.synapse.mediators.AbstractMediator;
+
+import java.io.File;
+import java.util.ArrayList;
 import java.util.List;
 import org.apache.axis2.description.AxisService;
 import org.apache.axis2.engine.AxisConfiguration;
 import org.apache.commons.logging.Log;
 import org.apache.commons.logging.LogFactory;
 import org.apache.synapse.core.axis2.Axis2MessageContext;
-import org.wso2.carbon.agent.Agent;
-import org.wso2.carbon.agent.DataPublisher;
-import org.wso2.carbon.agent.commons.Event;
-import org.wso2.carbon.agent.commons.exception.*;
-import org.wso2.carbon.agent.conf.AgentConfiguration;
-import org.wso2.carbon.agent.exception.AgentException;
-import org.wso2.carbon.agent.exception.TransportException;
+import org.wso2.carbon.eventbridge.agent.thrift.Agent;
+import org.wso2.carbon.eventbridge.agent.thrift.DataPublisher;
+import org.wso2.carbon.eventbridge.agent.thrift.conf.AgentConfiguration;
+import org.wso2.carbon.eventbridge.agent.thrift.exception.AgentException;
+import org.wso2.carbon.eventbridge.commons.Event;
+import org.wso2.carbon.eventbridge.commons.exception.*;
 import org.wso2.carbon.core.multitenancy.SuperTenantCarbonContext;
 import java.net.MalformedURLException;
+
+import org.wso2.carbon.eventbridge.commons.thrift.exception.ThriftAuthenticationException;
 import org.wso2.carbon.mediator.bam.config.stream.Property;
+import org.wso2.carbon.utils.CarbonUtils;
 
 /**
  * Transforms the current message payload using the given BAM configuration.
@@ -46,14 +51,6 @@ public class BamMediator extends AbstractMediator {
     private static final String ADMIN_SERVICE_PARAMETER = "adminService";
     private static final String HIDDEN_SERVICE_PARAMETER = "hiddenService";
 
-    /*private String serverProfile = "";
-    private String streamName = "org.wso2.carbon.mediator.bam.BamMediator";
-    private String streamVersion = "1.0.0";
-    private String serverIp = "localhost";
-    private String serverPort = "7611";
-    private String userName = "admin";
-    private String password = "admin";*/
-
     private String serverProfile = "";
     private String streamName = "";
     private String streamVersion = "";
@@ -63,14 +60,8 @@ public class BamMediator extends AbstractMediator {
     private String serverPort = "";
     private String userName = "";
     private String password = "";
-
-
-
-    private List<Property> properties = null;
-
+    private List<Property> properties = new ArrayList<Property>();
     private String streamId = null;
-    //private AgentConfiguration agentConfiguration = null;
-    //private Agent agent = null;
     private DataPublisher dataPublisher = null;
 
     public BamMediator() {
@@ -89,8 +80,6 @@ public class BamMediator extends AbstractMediator {
             }
         }
 
-        // Do somthing useful..
-        // Note the access to the Synapse Message context
         org.apache.axis2.context.MessageContext msgCtx = ((Axis2MessageContext) mc).getAxis2MessageContext();
 
         AxisService service = msgCtx.getAxisService();
@@ -102,8 +91,7 @@ public class BamMediator extends AbstractMediator {
 
         AxisConfiguration axisConfiguration = msgCtx.getConfigurationContext().getAxisConfiguration();
         int tenantId = SuperTenantCarbonContext.getCurrentContext(axisConfiguration).getTenantId();
-//        Map<Integer, ActivityConfigData> tenantSpecificActivity = TenantActivityConfigData.getTenantSpecificEventingConfigData();
-//        ActivityConfigData activityConfigData = tenantSpecificActivity.get(tenantId);
+
         try {
             logMessage(tenantId, mc);
         } catch (AgentException e) {
@@ -119,6 +107,8 @@ public class BamMediator extends AbstractMediator {
         } catch (AuthenticationException e) {
             e.printStackTrace();  //To change body of catch statement use File | Settings | File Templates.
         } catch (TransportException e) {
+            e.printStackTrace();  //To change body of catch statement use File | Settings | File Templates.
+        } catch (ThriftAuthenticationException e) {
             e.printStackTrace();  //To change body of catch statement use File | Settings | File Templates.
         }
 
@@ -136,24 +126,22 @@ public class BamMediator extends AbstractMediator {
     private void logMessage(int tenantId, MessageContext messageContext)
             throws AgentException, MalformedStreamDefinitionException, StreamDefinitionException,
                    DifferentStreamDefinitionAlreadyDefinedException,
-                   MalformedURLException, AuthenticationException, TransportException {
+                   MalformedURLException, AuthenticationException, TransportException, ThriftAuthenticationException {
 
         if (streamId == null) {
             AgentConfiguration agentConfiguration = new AgentConfiguration();
-            //agentConfiguration.setTrustStore("/works/platform_trunk/graphite/components/agent/org.wso2.carbon.agent.server/src/test/resources/client-truststore.jks");
-            /*String keyStorePath = CarbonUtils.getCarbonHome() + File.separator + "repository" +
+            String keyStorePath = CarbonUtils.getCarbonHome() + File.separator + "repository" +
                                   File.separator + "resources" + File.separator + "security" +
                                   File.separator + "client-truststore.jks";
             String keyStorePassword = "wso2carbon";
             agentConfiguration.setTrustStore(keyStorePath);
             agentConfiguration.setTrustStorePassword(keyStorePassword);
             System.setProperty("javax.net.ssl.trustStore", keyStorePath);
-            System.setProperty("javax.net.ssl.trustStorePassword", keyStorePassword);*/
+            System.setProperty("javax.net.ssl.trustStorePassword", keyStorePassword);
             Agent agent = new Agent(agentConfiguration);
             //create data publisher
             dataPublisher = new DataPublisher("tcp://" + this.serverIp + ":" + this.serverPort,
                                               this.userName, this.password, agent);
-            //dataPublisher = new DataPublisher("tcp://localhost:7612", "admin", "admin", agent);
 
             //Define event stream
             streamId = dataPublisher.defineEventStream("{" +
@@ -169,25 +157,51 @@ public class BamMediator extends AbstractMediator {
                                                        "          {'name':'MessageId','type':'STRING'}," +
                                                        "          {'name':'SOAPHeaddr','type':'STRING'}," +
                                                        "          {'name':'SOAPBody','type':'STRING'}" +
+                                                       this.getPropertyString() +
                                                        "  ]" +
                                                        "}");
             log.info("Event Stream Created.");
         }
+
+        int numOfProperties = properties.size();
+        Object[] payloadData = new Object[numOfProperties + 4];
+        payloadData[0] = tenantId;
+        payloadData[1] = messageContext.getMessageID();
+        payloadData[2] = messageContext.getEnvelope().getHeader().toString();
+        payloadData[3] = messageContext.getEnvelope().getBody().toString();
+
+        for (int i=0; i<numOfProperties; i++) {
+            payloadData[4 + i] = properties.get(i).getValue();
+        }
+
         //Publish event for a valid stream
         if (streamId != null && !streamId.isEmpty()) {
             log.info("Stream ID: " + streamId);
-            // Event for the message
+            // Event for each message
             Event eventJohnOne = new Event(streamId, System.currentTimeMillis(),
+                                           new Object[]{"external"},
+                                           null,
+                                           payloadData
+            );
+            /*Event eventJohnOne = new Event(streamId, System.currentTimeMillis(),
                                            new Object[]{"external"},
                                            null,
                                            new Object[]{tenantId, messageContext.getMessageID(),
                                                         messageContext.getEnvelope().getHeader().toString(),
                                                         messageContext.getEnvelope().getBody().toString()}
-            );
+            );*/
             dataPublisher.publish(eventJohnOne);
         } else {
             log.info("streamId is empty.");
         }
+    }
+    
+    private String getPropertyString(){
+        String propertyString = "";
+        for (Property property : properties) {
+            propertyString = propertyString + ",        {'name':'" + property.getKey() + "','type':'STRING'}";
+        }
+        return propertyString;
     }
 
     public String getType() {

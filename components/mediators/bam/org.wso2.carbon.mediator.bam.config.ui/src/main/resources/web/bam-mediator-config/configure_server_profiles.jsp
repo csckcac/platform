@@ -165,6 +165,7 @@
                                    "style='background-image: url(images/delete.gif);'class='icon-link addIcon'>Remove Stream</a></span>\n" +
                                    "<span><a onClick='javaScript:editStreamData(\"" + streamRowNum + "\")''" +
                                    "style='background-image: url(images/delete.gif);'class='icon-link addIcon'>Edit Stream</a></span>\n" +
+                                   "<input type=\"hidden\" id=\"hfStreamsTable_" + streamRowNum + "\" value=\"\"/>"
                                    "</td>" +
                                    "</tr>";
 
@@ -399,6 +400,14 @@
                 </td>
             </tr>
 
+            <tr>
+                <td colspan="2">
+                    <h3>
+                        <fmt:message key="stream.configuration"/>
+                    </h3>
+                </td>
+            </tr>
+
             <tr id="streamsTr">
                 <td colspan="2">
                     <input name="hfStreamTableData" id="hfStreamTableData" type="hidden" value="" />
@@ -501,6 +510,9 @@
                 <td colspan="2">
                     <input name="hfPropertyTableData" id="hfPropertyTableData" type="hidden" value="" />
                     <input id="hfStreamTableRowNumber" type="hidden" value="1" />
+                    <h3>
+                        <fmt:message key="stream.properties"/>
+                    </h3>
                     <table id="propertyTable" width="100%" class="styledLeft" style="margin-left: 0px;">
                         <thead>
                             <tr>

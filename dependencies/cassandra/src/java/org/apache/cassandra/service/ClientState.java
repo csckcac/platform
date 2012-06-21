@@ -18,13 +18,7 @@
 
 package org.apache.cassandra.service;
 
-import java.util.*;
-
-import org.apache.commons.lang.StringUtils;
 import org.apache.cassandra.auth.Action;
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
-
 import org.apache.cassandra.auth.AuthenticatedUser;
 import org.apache.cassandra.auth.Permission;
 import org.apache.cassandra.auth.Resources;
@@ -35,6 +29,11 @@ import org.apache.cassandra.db.Table;
 import org.apache.cassandra.thrift.AuthenticationException;
 import org.apache.cassandra.thrift.InvalidRequestException;
 import org.apache.cassandra.utils.SemanticVersion;
+import org.apache.commons.lang.StringUtils;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
+
+import java.util.*;
 
 /**
  * A container for per-client, thread-local state that Avro/Thrift threads must hold.
@@ -229,7 +228,7 @@ public class ClientState
      */
     public String resolveKeyspace(String keyspaceTobeResolved) {
         //return (prefix == null || keyspaceTobeResolved.startsWith(prefix)) ? keyspaceTobeResolved : (prefix + keyspaceTobeResolved);
-        return (prefix.equals("carbon_super_") || keyspaceTobeResolved.startsWith(prefix)) ? keyspaceTobeResolved : (prefix + keyspaceTobeResolved);
+        return (prefix==null ||prefix.equals("carbon_super_") || keyspaceTobeResolved.startsWith(prefix)) ? keyspaceTobeResolved : (prefix + keyspaceTobeResolved);
     }
 
     /**

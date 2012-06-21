@@ -205,8 +205,7 @@ public class GetResourceTreeProcessor {
                 }
                 boolean childHasChildren = false;
                 if (childResouceEntry.getCollection()) {
-                    String []childChildPaths =
-                            Utils.getSortedChildNodes(childResouceEntry.getChildren());
+                    String []childChildPaths = childResouceEntry.getChildren();
                     if (childChildPaths != null && childChildPaths.length > 0) childHasChildren = true;
                 } else if (hideResources) {
                     continue;

@@ -25,7 +25,7 @@
 
         resource.addProperty(APPLICATION_KEY, applicationKey);
         resource.addProperty(APPLICATION_NAME, applicationName);
-        resource.addProperty(APPLICATION_DESC, applicationName);
+        resource.addProperty(APPLICATION_DESC, applicationDescription);
         resource.addProperty(APPLICATION_REPO_LINK, repoLink);
 
 

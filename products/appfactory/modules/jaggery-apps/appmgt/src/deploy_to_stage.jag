@@ -4,12 +4,12 @@
         include('config_reader.jag');
 
 
-        var applicationName = request.getParameter("applicationName");
+        var applicationKey = request.getParameter("applicationKey");
         var applicationSvnLocation = request.getParameter("applicationSvnLocation");
         var stageName = request.getParameter("stageName");
 
         try{
-            var deployedArtifact = invokeDeployToStage(applicationSvnLocation,applicationName,stageName);
+            var deployedArtifact = invokeDeployToStage(applicationSvnLocation,applicationKey,stageName);
             print(deployedArtifact +" was successfully deployed");
 	    }catch(e){
 	        print(e.message);

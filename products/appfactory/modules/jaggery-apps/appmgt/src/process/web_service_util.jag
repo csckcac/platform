@@ -305,13 +305,13 @@
         }
     }
 
-    function invokeDeployToStage(applicationSvnLocation,applicationName,stageName){
+    function invokeDeployToStage(applicationSvnLocation,applicationKey,stageName){
         var ws = require('ws');
         var deployApplicationToStageProcess = new ws.WSRequest();
         var options = new Array();
         options.useSOAP = 1.1;
         options.action = "urn:process";
-        var payload = '<p:DeployApplicationTo'+stageName+'Request xmlns:p="http://wso2.org/carbon/appfactory/applicaiton/deployment"><p:applicationSvnLocation>'+applicationSvnLocation+'</p:applicationSvnLocation><p:applicationName>'+applicationName+'</p:applicationName></p:DeployApplicationTo'+stageName+'Request>';
+        var payload = '<p:DeployApplicationTo'+stageName+'Request xmlns:p="http://wso2.org/carbon/appfactory/applicaiton/deployment"><p:applicationSvnLocation>'+applicationSvnLocation+'</p:applicationSvnLocation><p:applicationId>'+applicationKey+'</p:applicationId></p:DeployApplicationTo'+stageName+'Request>';
         var result;
 
         try {

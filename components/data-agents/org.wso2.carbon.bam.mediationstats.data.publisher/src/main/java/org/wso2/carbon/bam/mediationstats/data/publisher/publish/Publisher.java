@@ -75,7 +75,7 @@ public class Publisher {
         if (properties != null) {
             for (int i = 0; i < properties.length; i++) {
                 Property property = properties[i];
-                if (property.getKey() != null && property.getKey().isEmpty()) {
+                if (property.getKey() != null && !property.getKey().isEmpty()) {
                     metaDataKeyList.add(property.getKey());
                     metaDataValueList.add(property.getValue());
                 }
@@ -195,6 +195,7 @@ public class Publisher {
             throws MalformedStreamDefinitionException {
         EventStreamDefinition eventStreamDefinition = new EventStreamDefinition(
                 mediationStatConfig.getStreamName(), mediationStatConfig.getVersion());
+        eventStreamDefinition.setNickName(mediationStatConfig.getNickName());
         eventStreamDefinition.setDescription(mediationStatConfig.getDescription());
         for (int i = 0; i < metaData.length; i++) {
             eventStreamDefinition.addMetaData(metaData[i].toString(), AttributeType.STRING);

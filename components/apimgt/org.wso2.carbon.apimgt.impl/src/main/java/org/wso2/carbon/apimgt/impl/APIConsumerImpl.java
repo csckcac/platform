@@ -239,9 +239,22 @@ class APIConsumerImpl extends AbstractAPIManager implements APIConsumer {
         }
     }
 
+    public int getUserRating(APIIdentifier apiId, String user) throws APIManagementException {
+        int rating = -1;
+        String path = APIUtil.getAPIPath(apiId);
+        try {
+            UserRegistry userRegistry = ServiceReferenceHolder.getInstance().
+                    getRegistryService().getGovernanceUserRegistry(user);
+            rating = userRegistry.getRating(path, user);
+        } catch (RegistryException e) {
+            handleException("Failed to get rating of user : " + user, e);
+        }
+        return rating;
+    }
+
     public Set<API> searchAPI(String searchTerm) throws APIManagementException {
         Set<API> apiSet = new HashSet<API>();
-        String regex = "[a-zA-Z0-9_.-|]*" + searchTerm + "[a-zA-Z0-9_.-|]*";
+        String regex = "(?i)[a-zA-Z0-9_.-|]*" + searchTerm + "(?i)[a-zA-Z0-9_.-|]*";
         Pattern pattern;
         Matcher matcher;
         try {

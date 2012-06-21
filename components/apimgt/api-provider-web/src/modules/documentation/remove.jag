@@ -7,9 +7,15 @@ var removeDocumentation = function (api, doc) {
         if (log.isDebugEnabled()) {
             log.debug("removeDocumentation : " + doc.name);
         }
-        return {
-            error:success
-        };
+        if(success){
+            return {
+                error:false
+            };
+        } else {
+            return {
+                error:true
+            };
+        }
     } catch (e) {
         log.error(e.message);
         return {

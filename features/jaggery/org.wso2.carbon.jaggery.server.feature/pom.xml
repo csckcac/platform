@@ -334,6 +334,11 @@
             <artifactId>json-simple</artifactId>
             <version>1.1.wso2v1</version>
         </dependency>
+		<dependency>
+				<groupId>commons-httpclient.wso2</groupId>
+				<artifactId>commons-httpclient</artifactId>
+				<version>${commons-httpclient.wso2.version}</version>			
+        </dependency>
             <dependency>
                 <groupId>com.google.code.gson</groupId>
                 <artifactId>gson</artifactId>
@@ -426,7 +431,8 @@
                                 <importBundleDef>org.wso2.carbon:org.wso2.carbon.addressing</importBundleDef>
                                 <importBundleDef>commons-dbcp.wso2:commons-dbcp</importBundleDef>
                                 <importBundleDef>org.wso2.carbon:org.wso2.carbon.utils</importBundleDef>
-
+								<importBundleDef>commons-httpclient.wso2:commons-httpclient</importBundleDef>
+		
                                 <importBundleDef>commons-fileupload.wso2:commons-fileupload</importBundleDef>
                                 <importBundleDef>rhino.wso2:js</importBundleDef>
                                 <importBundleDef>rome.wso2:rome</importBundleDef>

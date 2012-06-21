@@ -12,13 +12,13 @@
 	<content>
 		<table name="Overview">
 			<field type="text" required="true">
-				<name label="name">Name</name>
+				<name label="Name">Name</name>
 			</field>
 			<field type="text" required="true">                
 				<name>Version</name>
 			</field> 
 			<field type="text-area">
-				<name label="description">Test Method Description</name>
+				<name label="Description">Test Method Description</name>
 			</field>
 		</table>
 		<table name="Documentation" columns="3">  

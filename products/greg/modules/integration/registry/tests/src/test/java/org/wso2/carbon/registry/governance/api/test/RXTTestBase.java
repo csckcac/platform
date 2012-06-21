@@ -145,17 +145,17 @@ public class RXTTestBase {
         Assert.assertEquals(newArtifact.getQName(), artifact.getQName());
 
         GenericArtifact artifact2 = manager.newGovernanceArtifact(new QName("NewArtifact"));
-        addMandatoryAttributes(artifact);
+        addMandatoryAttributes(artifact2);
         artifact2.addAttribute("custom-attribute", "custom-value2");
         manager.addGenericArtifact(artifact2);
 
         GenericArtifact artifact3 = manager.newGovernanceArtifact(new QName("NewArtifact2"));
-        addMandatoryAttributes(artifact);
+        addMandatoryAttributes(artifact3);
         artifact3.addAttribute("custom-attribute", "not-custom-value");
         manager.addGenericArtifact(artifact3);
 
         GenericArtifact artifact4 = manager.newGovernanceArtifact(new QName("NewArtifact3"));
-        addMandatoryAttributes(artifact);
+        addMandatoryAttributes(artifact4);
         artifact4.addAttribute("not-custom-attribute", "custom-value3");
         manager.addGenericArtifact(artifact4);
 
@@ -309,23 +309,26 @@ public class RXTTestBase {
                 String shortName = element.getAttributeValue(new QName("shortName"));
                 file = new File(configPath.replace(fileName,
                         file.getName().replace("rxt", "metadata.xml")));
-                fileInputStream = null;
-                try {
-                    fileInputStream = new FileInputStream(file);
-                    fileContents = new byte[(int) file.length()];
-                    fileInputStream.read(fileContents);
-                } finally {
-                    if (fileInputStream != null) {
-                        fileInputStream.close();
+                if (file.exists()) {
+                    fileInputStream = null;
+                    try {
+                        fileInputStream = new FileInputStream(file);
+                        fileContents = new byte[(int) file.length()];
+                        fileInputStream.read(fileContents);
+                    } finally {
+                        if (fileInputStream != null) {
+                            fileInputStream.close();
+                        }
                     }
+
+                    OMElement contentElement = GovernanceUtils.buildOMElement(fileContents);
+
+                    GovernanceUtils.loadGovernanceArtifacts((UserRegistry)registry);
+                    GenericArtifactManager manager =
+                            new GenericArtifactManager(registry, shortName);
+                    GenericArtifact artifact = manager.newGovernanceArtifact(contentElement);
+                    manager.addGenericArtifact(artifact);
                 }
-
-                OMElement contentElement = GovernanceUtils.buildOMElement(fileContents);
-
-                GovernanceUtils.loadGovernanceArtifacts((UserRegistry)registry);
-                GenericArtifactManager manager = new GenericArtifactManager(registry, shortName);
-                GenericArtifact artifact = manager.newGovernanceArtifact(contentElement);
-                manager.addGenericArtifact(artifact);
             }
         } catch (RegistryException e) {
             Assert.fail("Unable to populate RXT configuration");

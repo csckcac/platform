@@ -16,13 +16,13 @@
 	<content>
 		<table name="Overview">
 			<field type="text" required="true">
-				<name label="name">Name</name>
+				<name label="Name">Name</name>
 			</field>
 			<field type="text" required="true">                
 				<name>Version</name>
 			</field> 
 			<field type="text-area">
-				<name label="description">Test Case Description</name>
+				<name label="Description">Test Case Description</name>
 			</field>
 		</table>
 		<table name="TestMethods">            

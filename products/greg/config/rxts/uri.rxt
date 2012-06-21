@@ -22,10 +22,11 @@
 	    <field type="options">
 		<name label="Type">Type</name>
 		<values>
+            <value>Generic</value>
 		    <value>WSDL</value>
 		    <value>XSD</value>
-                    <value>Policy</value>
-	        </values>
+            <value>Policy</value>
+	    </values>
 	    </field>
 	</table>
     </content>

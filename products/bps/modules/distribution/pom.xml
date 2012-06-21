@@ -383,16 +383,16 @@
                                 <mkdir dir="${tempdir}"/>
                                 <unzip dest="${tempdir}">
                                     <fileset dir="target">
-                                        <include name="${pom.artifactId}-${project.version}.zip"/>
+                                        <include name="${project.artifactId}-${project.version}.zip"/>
                                     </fileset>
                                 </unzip>
                                 <copy todir="target/wso2carbon-core-${carbon.version}/repository/components"
                                       overwrite="true">
                                     <fileset
-                                            dir="${tempdir}/${pom.artifactId}-${project.version}/repository/components">
+                                            dir="${tempdir}/${project.artifactId}-${project.version}/repository/components">
                                     </fileset>
                                 </copy>
-                                <delete file="target/${pom.artifactId}-${project.version}.zip"/>
+                                <delete file="target/${project.artifactId}-${project.version}.zip"/>
                                 <delete dir="${tempdir}"/>
                                 <mkdir dir="${tempdir}"/>
                                 <unzip dest="${tempdir}">
@@ -453,7 +453,7 @@
                                 <delete dir="target/dependency-maven-plugin-markers"/>
                                 <delete dir="target/maven-archiver"/>
                                 <delete dir="target/wso2carbon-core-${carbon.version}"/>
-                                <delete file="target/${pom.artifactId}-${project.version}.jar"/>
+                                <delete file="target/${project.artifactId}-${project.version}.jar"/>
                                 <delete dir="target/sources"/>
                                 <delete dir="target/site"/>
                                 <delete dir="target/database"/>

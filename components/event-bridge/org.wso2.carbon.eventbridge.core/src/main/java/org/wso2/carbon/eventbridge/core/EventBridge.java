@@ -90,7 +90,7 @@ public class EventBridge implements EventBridgeSubscriberService, EventBridgeRec
     public String findEventStreamId(String sessionId, String streamName, String streamVersion)
             throws NoStreamDefinitionExistException, SessionTimeoutException {
         AgentSession agentSession = authenticator.getSession(sessionId);
-        if (agentSession.getUsername() == null) {
+        if (agentSession.getCredentials() == null) {
             if (log.isDebugEnabled()) {
                 log.debug("session " + sessionId + " expired ");
             }
@@ -111,7 +111,7 @@ public class EventBridge implements EventBridgeSubscriberService, EventBridgeRec
     public void publish(Object eventBundle, String sessionId, EventConverter eventConverter)
             throws UndefinedEventTypeException, SessionTimeoutException {
         AgentSession agentSession = authenticator.getSession(sessionId);
-        if (agentSession.getUsername() == null) {
+        if (agentSession.getCredentials() == null) {
             if (log.isDebugEnabled()) {
                 log.debug("session " + sessionId + " expired ");
             }

@@ -21,6 +21,7 @@
 <%@ page import="org.wso2.carbon.governance.generic.ui.utils.ManageGenericArtifactUtil" %>
 <%@ page import="org.wso2.carbon.governance.services.ui.utils.AddServiceUIGenerator" %>
 <%@ page import="org.wso2.carbon.ui.CarbonUIMessage" %>
+<%@ page import="java.net.URLEncoder" %>
 <%
     String error1 = "Your modification cause replacement of another resource!";
     String dataName = request.getParameter("dataName");
@@ -43,13 +44,14 @@
                 head, request, config, session, dataName, dataNamespace);
         if (effectivePath != null){
             try {
-                if(request.getParameter("path")!=null){
-                    effectivePath = request.getParameter("path");
-                }
-                registryArtifactPath = effectivePath.replace("&", "%26");
+//REGISTRY-698
+//                if(request.getParameter("path")!=null){
+//                    effectivePath = request.getParameter("path");
+//                }
+                registryArtifactPath = effectivePath;
             } catch (Exception ignore) {}
             String resourcePagePath = "../resources/resource.jsp?region=region3&item=resource_browser_menu&path=" +
-                    registryArtifactPath;
+                    URLEncoder.encode(registryArtifactPath,"Utf-8");
             response.sendRedirect(resourcePagePath);
         }else{
             request.setAttribute(CarbonUIMessage.ID,new CarbonUIMessage(error1,error1,null));

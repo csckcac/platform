@@ -51,8 +51,8 @@
                 }
             }
             document.getElementById('selectedToolType').value = selected;
-                var toolbox = document.getElementById('toolbox').value;
-              if(selected == 0){
+            var toolbox = document.getElementById('toolbox').value;
+            if (selected == 0) {
                 if ('' == toolbox) {
                     CARBON.showErrorDialog('No ToolBox has been selected!');
                 } else if (toolbox.indexOf('.bar') == -1) {
@@ -60,9 +60,9 @@
                 } else {
                     document.getElementById('uploadBar').submit();
                 }
-              }else{
-                 document.getElementById('uploadBar').submit();
-              }
+            } else {
+                document.getElementById('uploadBar').submit();
+            }
         }
 
         function cancelDeploy() {
@@ -103,21 +103,71 @@
                     </thead>
                     <tbody>
 
+                    <%--<tr>--%>
+                        <%--<td width="10px">--%>
+                            <%--1.--%>
+                        <%--</td>--%>
+                        <%--<td width="10px">--%>
+                            <%--<input type="radio" name="typeToolbox" value="1" checked="true"--%>
+                                   <%--onclick="enableCustomToolBox();"/>--%>
+                        <%--</td>--%>
+                        <%--<td>--%>
+                            <%--Message Tracing--%>
+                        <%--</td>--%>
+                        <%--<td>--%>
+                            <%--This toolbox setup the model to trace the messages which are fired from a set of--%>
+                            <%--servers to WSO2 BAM by deploying respective Hive scripts and default gadgets.--%>
+                        <%--</td>--%>
+                    <%--</tr>--%>
+
                     <tr>
                         <td width="10px">
                             1.
                         </td>
                         <td width="10px">
-                            <input type="radio" name="typeToolbox" value="1" checked="true"
-                                   onclick="enableCustomToolBox();"/>
+                            <input type="radio" name="typeToolbox" value="2"
+                                   onclick="enableCustomToolBox();" checked="true"/>
                         </td>
                         <td>
-                            Message Tracing
+                            KPI Monitoring
                         </td>
                         <td>
-                            This toolbox deploys all the artifacts required to trace the messages in ESB
+                            KPI(Key Performance Indication) Toolbox enables to perform summarizations and visualize product and consumer data in a retail store .
                         </td>
                     </tr>
+
+                    <%--<tr>--%>
+                        <%--<td width="10px">--%>
+                            <%--3.--%>
+                        <%--</td>--%>
+                        <%--<td width="10px">--%>
+                            <%--<input type="radio" name="typeToolbox" value="3"--%>
+                                   <%--onclick="enableCustomToolBox();"/>--%>
+                        <%--</td>--%>
+                        <%--<td>--%>
+                           <%--Service Data Monitoring--%>
+                        <%--</td>--%>
+                        <%--<td>--%>
+                            <%--This Toolbox enable monitor  message activity from Service Hosting WSO2 Servers such as WSO2 AS, DSS, BPS, CEP, BRS and any other WSO2 Carbon server.--%>
+                        <%--</td>--%>
+                    <%--</tr>--%>
+
+                     <%--<tr>--%>
+                        <%--<td width="10px">--%>
+                            <%--4.--%>
+                        <%--</td>--%>
+                        <%--<td width="10px">--%>
+                            <%--<input type="radio" name="typeToolbox" value="4"--%>
+                                   <%--onclick="enableCustomToolBox();"/>--%>
+                        <%--</td>--%>
+                        <%--<td>--%>
+                           <%--Mediation Data Monitoring--%>
+                        <%--</td>--%>
+                        <%--<td>--%>
+                            <%--This Toolbox enable monitor message activity using Message Activity Mediators from the WSO2 ESB--%>
+                        <%--</td>--%>
+                    <%--</tr>--%>
+
 
                     <tr>
                         <td colspan="4"></td>

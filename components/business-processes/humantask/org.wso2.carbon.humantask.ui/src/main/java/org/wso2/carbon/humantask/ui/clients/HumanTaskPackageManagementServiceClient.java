@@ -25,12 +25,18 @@ import org.apache.commons.logging.LogFactory;
 import org.wso2.carbon.humantask.stub.mgt.HumanTaskPackageManagementStub;
 import org.wso2.carbon.humantask.stub.mgt.PackageManagementException;
 import org.wso2.carbon.humantask.stub.mgt.types.DeployedTaskDefinitionsPaginated;
+import org.wso2.carbon.humantask.stub.mgt.types.HumanTaskPackageDownloadData;
 import org.wso2.carbon.humantask.stub.mgt.types.TaskInfoType;
 import org.wso2.carbon.humantask.stub.mgt.types.Task_type0;
 import org.wso2.carbon.humantask.stub.mgt.types.UndeployStatus_type0;
 import org.wso2.carbon.humantask.ui.constants.HumanTaskUIConstants;
 
+import javax.activation.DataHandler;
+import javax.servlet.ServletOutputStream;
+import javax.servlet.http.HttpServletResponse;
 import javax.xml.namespace.QName;
+import java.io.IOException;
+import java.io.InputStream;
 import java.rmi.RemoteException;
 
 /**
@@ -161,5 +167,43 @@ public class HumanTaskPackageManagementServiceClient {
     public TaskInfoType getTaskInfo (QName taskId)
             throws PackageManagementException, RemoteException {
         return stub.getTaskInfo(taskId);
+    }
+
+    /**
+     * Download package archive.
+     *
+     * @param humanTaskPackageName : The package name.
+     * @param response :
+     *
+     * @throws PackageManagementException :
+     * @throws java.io.IOException :
+     */
+    public void downloadHumanTaskPackage(String humanTaskPackageName, HttpServletResponse response)
+            throws PackageManagementException, IOException {
+        try {
+            ServletOutputStream out = response.getOutputStream();
+
+            HumanTaskPackageDownloadData downloadData = stub.downloadHumanTaskPackage(humanTaskPackageName);
+            if (downloadData != null) {
+                DataHandler handler = downloadData.getPackageFileData();
+                response.setHeader("Content-Disposition", "fileName=" + downloadData.getPackageName());
+                response.setContentType(handler.getContentType());
+                InputStream in = handler.getDataSource().getInputStream();
+                int nextChar;
+                while ((nextChar = in.read()) != -1) {
+                    out.write((char) nextChar);
+                }
+                out.flush();
+                in.close();
+            } else {
+                out.write("The requested package archive was not found on the server".getBytes());
+            }
+        } catch (RemoteException e) {
+            log.error(e);
+            throw e;
+        } catch (IOException e) {
+            log.error(e);
+            throw e;
+        }
     }
 }

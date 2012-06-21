@@ -16,9 +16,9 @@
  ~ specific language governing permissions and limitations
  ~ under the License.
  -->
-<xsd:schema xmlns:xsd="http://www.w3.org/2001/XMLSchema" 
+<xsd:schema xmlns:xsd="http://www.w3.org/2001/XMLSchema"
             xmlns:tns="http://wso2.org/bps/humantask/management/schema"
-            attributeFormDefault="unqualified" 
+            attributeFormDefault="unqualified"
             elementFormDefault="qualified"
             targetNamespace="http://wso2.org/bps/humantask/management/schema">
     <!-- Deployment management -->
@@ -111,16 +111,16 @@
                     <xsd:complexType>
                         <xsd:sequence>
                             <xsd:element name="taskName" type="xsd:string"/>
-							<xsd:element name="packageName" type="xsd:string"/>
+                            <xsd:element name="packageName" type="xsd:string"/>
                         </xsd:sequence>
                         <xsd:attribute name="state" type="tns:TaskStatusType"/>
-						<xsd:attribute name="type" type="tns:TaskType"/>
+                        <xsd:attribute name="type" type="tns:TaskType"/>
                     </xsd:complexType>
                 </xsd:element>
             </xsd:sequence>
         </xsd:complexType>
     </xsd:element>
-        <xsd:element name="getTaskInfoIn">
+    <xsd:element name="getTaskInfoIn">
         <xsd:complexType>
             <xsd:sequence>
                 <xsd:element name="taskId" type="xsd:QName"/>
@@ -190,16 +190,39 @@
         </xsd:complexType>
     </xsd:element>
     <xsd:simpleType name="TaskType">
-            <xsd:restriction base="xsd:string">
-                <xsd:enumeration value="NOTIFICATION"/>
-                <xsd:enumeration value="TASK"/>
-            </xsd:restriction>
+        <xsd:restriction base="xsd:string">
+            <xsd:enumeration value="NOTIFICATION"/>
+            <xsd:enumeration value="TASK"/>
+        </xsd:restriction>
     </xsd:simpleType>
     <xsd:element name="packageManagementException">
         <xsd:complexType>
             <xsd:sequence>
                 <xsd:element name="result" type="xsd:string"/>
-                <xsd:element name="stackTrace" type="xsd:string" />
+                <xsd:element name="stackTrace" type="xsd:string"/>
+            </xsd:sequence>
+        </xsd:complexType>
+    </xsd:element>
+    <xsd:complexType name="HumanTaskPackageDownloadData">
+        <xsd:sequence>
+            <xsd:element minOccurs="0" name="packageName" nillable="true" type="xsd:string"/>
+            <xsd:element minOccurs="0" name="packageFileData" nillable="true"
+                         type="xsd:base64Binary"/>
+        </xsd:sequence>
+    </xsd:complexType>
+    <xsd:element name="downloadHumanTaskPackageArchive">
+        <xsd:complexType>
+            <xsd:sequence>
+                <xsd:element minOccurs="0" name="packageName" nillable="true"
+                             type="xsd:string"/>
+            </xsd:sequence>
+        </xsd:complexType>
+    </xsd:element>
+    <xsd:element name="downloadHumanTaskPackageArchiveResponse">
+        <xsd:complexType>
+            <xsd:sequence>
+                <xsd:element minOccurs="0" name="return" nillable="true"
+                             type="tns:HumanTaskPackageDownloadData"/>
             </xsd:sequence>
         </xsd:complexType>
     </xsd:element>

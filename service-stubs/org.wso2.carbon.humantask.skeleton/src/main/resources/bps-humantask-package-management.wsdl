@@ -76,6 +76,12 @@
     <message name="getTaskInfoResponse">
         <part name="part" element="ns:TaskInfo"/>
     </message>
+    <message name="downloadHumanTaskPackageRequest">
+        <part name="parameters" element="ns:downloadHumanTaskPackageArchive" />
+    </message>
+    <message name="downloadHumanTaskPackageResponse">
+        <part name="parameters" element="ns:downloadHumanTaskPackageArchiveResponse" />
+    </message>
 
     <portType name="HumanTaskPackageManagementPortType">
         <operation name="undeployHumanTaskPackage">
@@ -101,6 +107,11 @@
         <operation name="getTaskInfo">
             <input message="tns:getTaskInfoRequest"/>
             <output message="tns:getTaskInfoResponse"/>
+            <fault name="packageManagementException" message="tns:packageManagementException"/>
+        </operation>
+        <operation name="downloadHumanTaskPackage">
+            <input message="tns:downloadHumanTaskPackageRequest"/>
+            <output message="tns:downloadHumanTaskPackageResponse"/>
             <fault name="packageManagementException" message="tns:packageManagementException"/>
         </operation>
     </portType>
@@ -156,6 +167,18 @@
         </operation>
         <operation name="getTaskInfo">
             <soap:operation soapAction="urn:getTaskInfo"/>
+            <input>
+                <soap:body use="literal"/>
+            </input>
+            <output>
+                <soap:body use="literal"/>
+            </output>
+            <fault name="packageManagementException">
+                <soap:fault name="packageManagementException" use="literal"/>
+            </fault>
+        </operation>
+        <operation name="downloadHumanTaskPackage">
+            <soap:operation soapAction="urn:downloadHumanTaskPackage" style="document"/>
             <input>
                 <soap:body use="literal"/>
             </input>

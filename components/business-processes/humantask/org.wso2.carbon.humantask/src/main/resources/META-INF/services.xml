@@ -1040,6 +1040,11 @@
             <outputActionMapping>urn:getTaskInfoResponse</outputActionMapping>
             <parameter name="AuthorizationAction" locked="true">/permission/admin/manage/humantask/packages</parameter>
         </operation>
+        <operation name="downloadHumanTaskPackage" mep="http://www.w3.org/ns/wsdl/in-out" namespace="http://wso2.org/bps/management/wsdl/HumanTaskPackageManagement">
+            <actionMapping>urn:downloadHumanTaskPackage</actionMapping>
+            <outputActionMapping>urn:downloadHumanTaskPackageResponse</outputActionMapping>
+            <parameter name="AuthorizationAction" locked="true">/permission/admin/manage/humantask/packages</parameter>
+        </operation>
     </service>
     <parameter name="adminService" locked="true">true</parameter>
     <parameter name="hiddenService" locked="true">true</parameter>

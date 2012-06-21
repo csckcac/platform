@@ -154,6 +154,16 @@
                             </td>
                         </tr>
 
+                        <tr>
+                                <td>
+                                <a id="<%=packageName%>" class="icon-link-nofloat"
+                                   style="background-image:url(images/icon-download.jpg);"
+                                   href="humantask_package_download-ajaxprocessor.jsp?packageName=<%=packageName%>"
+                                   target="_self">Download</a>
+
+                                </td>
+                        </tr>
+
                         </tbody>
 
 

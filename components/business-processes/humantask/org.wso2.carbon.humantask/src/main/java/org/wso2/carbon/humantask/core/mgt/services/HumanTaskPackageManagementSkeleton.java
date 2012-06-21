@@ -35,6 +35,7 @@ import org.wso2.carbon.humantask.skeleton.mgt.services.PackageManagementExceptio
 import org.wso2.carbon.humantask.skeleton.mgt.services.types.DeployedPackagesPaginated;
 import org.wso2.carbon.humantask.skeleton.mgt.services.types.DeployedTaskDefinitionsPaginated;
 import org.wso2.carbon.humantask.skeleton.mgt.services.types.HumanTaskDefinition;
+import org.wso2.carbon.humantask.skeleton.mgt.services.types.HumanTaskPackageDownloadData;
 import org.wso2.carbon.humantask.skeleton.mgt.services.types.TaskDefinitionInfo;
 import org.wso2.carbon.humantask.skeleton.mgt.services.types.TaskDefinition_type0;
 import org.wso2.carbon.humantask.skeleton.mgt.services.types.TaskInfoType;
@@ -45,6 +46,8 @@ import org.wso2.carbon.humantask.skeleton.mgt.services.types.UndeployStatus_type
 import org.wso2.carbon.utils.multitenancy.CarbonContextHolder;
 import org.wso2.carbon.utils.multitenancy.MultitenantUtils;
 
+import javax.activation.DataHandler;
+import javax.activation.FileDataSource;
 import javax.xml.namespace.QName;
 import javax.xml.stream.XMLInputFactory;
 import javax.xml.stream.XMLStreamException;
@@ -251,6 +254,29 @@ public class HumanTaskPackageManagementSkeleton extends AbstractAdmin
         }
 
         return task;
+    }
+
+    @Override
+    public HumanTaskPackageDownloadData downloadHumanTaskPackage(String packageName)
+            throws PackageManagementException {
+        Integer tenentId = CarbonContextHolder.
+                getCurrentCarbonContextHolder().getTenantId();
+        CarbonContextHolder.getThreadLocalCarbonContextHolder().setTenantId(tenentId);
+
+        File humanTaskArchive = getTenantTaskStore().getHumanTaskArchiveLocation(packageName);
+
+        DataHandler handler;
+        if (humanTaskArchive != null) {
+            FileDataSource dataSource = new FileDataSource(humanTaskArchive);
+            handler = new DataHandler(dataSource);
+
+            HumanTaskPackageDownloadData data = new HumanTaskPackageDownloadData();
+            data.setPackageName(humanTaskArchive.getName());
+            data.setPackageFileData(handler);
+            return data;
+        } else {
+            return null;
+        }
     }
 
     @Override

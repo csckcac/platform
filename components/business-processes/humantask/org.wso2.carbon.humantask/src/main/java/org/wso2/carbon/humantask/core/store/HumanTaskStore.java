@@ -410,15 +410,15 @@ public class HumanTaskStore {
         }
     }
 
-    //deletes the human task package archive from the repository.
+    /**
+     * deletes the human task package archive from the repository.
+     *
+     * @param packageName : The package name to be deleted.
+     */
     public void deleteHumanTaskArchive(String packageName) {
-
-        String humanTaskArciveLocation = getTenantAxisConfig().getRepository().
-                getPath() + HumanTaskConstants.HUMANTASK_REPO_DIRECTORY + File.separator +
-                                         packageName + "." + HumanTaskConstants.HUMANTASK_PACKAGE_EXTENSION;
+        File humanTaskArchive = getHumanTaskArchiveLocation(packageName);
         log.info("UnDeploying HumanTask package " + packageName + ". Deleting HumanTask archive " +
-                 humanTaskArciveLocation + "....");
-        File humanTaskArchive = new File(humanTaskArciveLocation);
+                 humanTaskArchive.getName() + "....");
         if (humanTaskArchive.exists()) {
             if (!humanTaskArchive.delete()) {
                 //For windows
@@ -429,6 +429,20 @@ public class HumanTaskStore {
                      "] not found. This can happen if you delete " +
                      "the HumanTask archive from the file system.");
         }
+    }
+
+    /**
+     *Return the human task archive file for the given package name.
+     *
+     * @param packageName : The human task archive package name.
+     *
+     * @return : The matching human task archive file.
+     */
+    public File getHumanTaskArchiveLocation(String packageName) {
+        String humanTaskArciveLocation = getTenantAxisConfig().getRepository().
+                getPath() + HumanTaskConstants.HUMANTASK_REPO_DIRECTORY + File.separator +
+                                         packageName + "." + HumanTaskConstants.HUMANTASK_PACKAGE_EXTENSION;
+        return new File(humanTaskArciveLocation);
     }
 
     public ConfigurationContext getConfigContext() {

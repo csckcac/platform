@@ -68,18 +68,18 @@
         </dependency>
         <dependency>
             <groupId>org.wso2.carbon</groupId>
-            <artifactId>org.wso2.carbon.agent</artifactId>
-            <version>${wso2carbon.version}</version>
+            <artifactId>org.wso2.carbon.eventbridge.agent.thrift</artifactId>
+            <version>${wso2carbon.version.bam-data-publishers}</version>
         </dependency>
         <dependency>
             <groupId>org.wso2.carbon</groupId>
-            <artifactId>org.wso2.carbon.agent.commons</artifactId>
-            <version>${wso2carbon.version}</version>
+            <artifactId>org.wso2.carbon.eventbridge.commons</artifactId>
+            <version>${wso2carbon.version.bam-data-publishers}</version>
         </dependency>
         <dependency>
             <groupId>org.wso2.carbon</groupId>
-            <artifactId>org.wso2.carbon.agent.commons.thrift</artifactId>
-            <version>${wso2carbon.version}</version>
+            <artifactId>org.wso2.carbon.eventbridge.commons.thrift</artifactId>
+            <version>${wso2carbon.version.bam-data-publishers}</version>
         </dependency>
         <dependency>
             <groupId>org.wso2.carbon</groupId>

@@ -16,9 +16,9 @@
 package org.wso2.carbon.bam.mediationstats.data.publisher.conf;
 
 
-import org.wso2.carbon.agent.DataPublisher;
-import org.wso2.carbon.agent.commons.EventStreamDefinition;
-import org.wso2.carbon.agent.conf.AgentConfiguration;
+import org.wso2.carbon.eventbridge.agent.thrift.DataPublisher;
+import org.wso2.carbon.eventbridge.agent.thrift.conf.AgentConfiguration;
+import org.wso2.carbon.eventbridge.commons.EventStreamDefinition;
 
 import java.util.HashMap;
 import java.util.Map;

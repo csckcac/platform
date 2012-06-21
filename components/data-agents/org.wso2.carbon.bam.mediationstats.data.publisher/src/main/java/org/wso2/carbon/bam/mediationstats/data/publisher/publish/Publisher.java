@@ -18,17 +18,6 @@ package org.wso2.carbon.bam.mediationstats.data.publisher.publish;
 
 import org.apache.commons.logging.Log;
 import org.apache.commons.logging.LogFactory;
-import org.wso2.carbon.agent.DataPublisher;
-import org.wso2.carbon.agent.commons.AttributeType;
-import org.wso2.carbon.agent.commons.EventStreamDefinition;
-import org.wso2.carbon.agent.commons.exception.AuthenticationException;
-import org.wso2.carbon.agent.commons.exception.DifferentStreamDefinitionAlreadyDefinedException;
-import org.wso2.carbon.agent.commons.exception.MalformedStreamDefinitionException;
-import org.wso2.carbon.agent.commons.exception.NoStreamDefinitionExistException;
-import org.wso2.carbon.agent.commons.exception.StreamDefinitionException;
-import org.wso2.carbon.agent.conf.AgentConfiguration;
-import org.wso2.carbon.agent.exception.AgentException;
-import org.wso2.carbon.agent.exception.TransportException;
 import org.wso2.carbon.bam.data.publisher.util.BAMDataPublisherConstants;
 import org.wso2.carbon.bam.mediationstats.data.publisher.conf.EventPublisherConfig;
 import org.wso2.carbon.bam.mediationstats.data.publisher.conf.MediationStatConfig;
@@ -38,6 +27,18 @@ import org.wso2.carbon.bam.mediationstats.data.publisher.util.MediationDataPubli
 import org.wso2.carbon.bam.mediationstats.data.publisher.util.PublisherUtils;
 import org.wso2.carbon.bam.mediationstats.data.publisher.util.TenantMediationStatConfigData;
 import org.wso2.carbon.mediation.statistics.StatisticsRecord;
+import org.wso2.carbon.eventbridge.agent.thrift.DataPublisher;
+import org.wso2.carbon.eventbridge.agent.thrift.conf.AgentConfiguration;
+import org.wso2.carbon.eventbridge.agent.thrift.exception.AgentException;
+import org.wso2.carbon.eventbridge.commons.Attribute;
+import org.wso2.carbon.eventbridge.commons.AttributeType;
+import org.wso2.carbon.eventbridge.commons.EventStreamDefinition;
+import org.wso2.carbon.eventbridge.commons.exception.AuthenticationException;
+import org.wso2.carbon.eventbridge.commons.exception.DifferentStreamDefinitionAlreadyDefinedException;
+import org.wso2.carbon.eventbridge.commons.exception.MalformedStreamDefinitionException;
+import org.wso2.carbon.eventbridge.commons.exception.NoStreamDefinitionExistException;
+import org.wso2.carbon.eventbridge.commons.exception.StreamDefinitionException;
+import org.wso2.carbon.eventbridge.commons.exception.TransportException;
 
 import java.net.MalformedURLException;
 import java.util.ArrayList;

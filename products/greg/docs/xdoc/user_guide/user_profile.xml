@@ -1,0 +1,69 @@
+<?xml version="1.0" encoding="ISO-8859-1"?>
+
+<!--
+  ~  Copyright (c) 2005-2008, WSO2 Inc. (http://www.wso2.org) All Rights Reserved.
+  ~
+  ~  WSO2 Inc. licenses this file to you under the Apache License,
+  ~  Version 2.0 (the "License"); you may not use this file except
+  ~  in compliance with the License.
+  ~  You may obtain a copy of the License at
+  ~
+  ~    http://www.apache.org/licenses/LICENSE-2.0
+  ~
+  ~  Unless required by applicable law or agreed to in writing,
+  ~  software distributed under the License is distributed on an
+  ~  "AS IS" BASIS, WITHOUT WARRANTIES OR CONDITIONS OF ANY
+  ~  KIND, either express or implied.  See the License for the
+  ~  specific language governing permissions and limitations
+  ~  under the License.
+  ~
+  -->
+
+<!DOCTYPE html
+   PUBLIC "-//W3C//DTD XHTML 1.1//EN"
+   "http://www.w3.org/TR/xhtml11/DTD/xhtml11.dtd" >
+
+<html xmlns="http://www.w3.org/1999/xhtml">
+<head>
+<title> WSO2 Governance Registry - User Guide </title>
+<link href="../css/greg-docs.css" rel="stylesheet"/>
+<link href="../styles/dist-docs.css" rel="stylesheet" type="text/css" media="all"/>
+</head>
+<body>
+[ <a href="../docs_index.html"> Documentation Index </a> ]
+<h1> WSO2 Governance Registry - User Guide </h1>
+<h2 id="upm">User Profile Management</h2>
+
+<p>The User Profile Management component of the WSO2 Carbon facilitates the management
+and control of user's details. The key functionality of this component include:</p>
+<ul>
+  <li>Add new profiles</li>
+  <li>Add and modify details of a user in profile</li>
+</ul>
+    <p>
+The user profile component can be invoked in two ways.</p>
+<ul>
+	<li>Administrator or a person with &quot;Manage Security&quot; functionality can add/edit/view profiles of users</li>
+	<li>If the product is configured, the user himself can edit his profile</li>
+</ul>
+<p>
+<i>External profiles of a JDBC user store can be viewed only</i></p>
+
+<p><img alt="" src="../userprofile/images/UserProfileMgt.JPG" width="746px"/></p>
+
+<p>Figure 1: User Profile Management</p>
+
+    <p>
+Use the <strong>Add New Profile</strong> link to add new user accounts.
+To delete profiles use <strong>Delete</strong> link. The default profile of a user cannot be deleted.
+Click on the profile name to add/edit details of the profile.</p>
+
+<p><img alt="" src="../userprofile/images/EditUserProfile.JPG" width="486px" /></p>
+
+<p>Figure 2: Add/edit user details</p>
+
+<p>You also can <a href="resource_ui.html#adding-profile">add a profile to the registry</a> as a resource.</p>
+
+</body>
+
+</html>

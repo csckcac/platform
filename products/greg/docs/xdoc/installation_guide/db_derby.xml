@@ -1,0 +1,426 @@
+<?xml version="1.0" encoding="ISO-8859-1"?>
+
+<!--
+  ~  Copyright (c) 2005-2008, WSO2 Inc. (http://www.wso2.org) All Rights Reserved.
+  ~
+  ~  WSO2 Inc. licenses this file to you under the Apache License,
+  ~  Version 2.0 (the "License"); you may not use this file except
+  ~  in compliance with the License.
+  ~  You may obtain a copy of the License at
+  ~
+  ~    http://www.apache.org/licenses/LICENSE-2.0
+  ~
+  ~  Unless required by applicable law or agreed to in writing,
+  ~  software distributed under the License is distributed on an
+  ~  "AS IS" BASIS, WITHOUT WARRANTIES OR CONDITIONS OF ANY
+  ~  KIND, either express or implied.  See the License for the
+  ~  specific language governing permissions and limitations
+  ~  under the License.
+  ~
+  -->
+
+<!DOCTYPE html
+   PUBLIC "-//W3C//DTD XHTML 1.1//EN"
+   "http://www.w3.org/TR/xhtml11/DTD/xhtml11.dtd" >
+
+<html xmlns="http://www.w3.org/1999/xhtml">
+  <head>
+    <meta http-equiv="content-type" content="text/html; charset=iso-8859-1"/>
+    <title>
+      WSO2 Governance Registry - Setting up Database - Derby
+    </title>
+    <link href="../css/greg-docs.css" rel="stylesheet"/>
+    <link href="../styles/dist-docs.css" rel="stylesheet" type="text/css" media="all"/>
+  </head>
+  <body xml:lang="en">
+[ <a href="../docs_index.html"> Documentation Index </a> ]
+
+
+<h1>WSO2 Governance Registry - Setting up Database - Derby (Embedded And Remote)</h1>
+<h2>Table of Contents</h2>
+
+<ul>
+<li>
+<a href="#remote">Setting up Database - Derby  Remote</a>
+
+<ul>
+<li>
+<a href="#prepare_remote">Preparing the Derby Database</a>
+</li>
+<li>
+<a href="#conf_remote">Setup Configuration Files</a>
+</li>
+<li>
+<a href="#drivers_remote">Setup Drivers</a>
+</li>
+<li>
+<a href="#createdb_remote">Create Database</a>
+
+<ul>
+<li>
+<a href="#autodb_remote">Automatic Database Creation</a>
+</li>
+<li>
+<a href="#manualdb_remote">Manual Database Creation</a>
+</li>
+</ul>
+</li>
+</ul>
+</li>
+
+<li>
+<a href="#embedded">Setting up Database - Derby  Embedded</a>
+
+
+<ul>
+
+<li>
+<a href="#conf_embedded">Setup Configuration Files</a>
+</li>
+<li>
+<a href="#drivers_embedded">Setup Drivers</a>
+</li>
+<li>
+<a href="#createdb_embedded">Create Database</a>
+
+<ul>
+<li>
+<a href="#autodb_embedded">Automatic Database Creation</a>
+</li>
+<li>
+<a href="#manualdb_embedded">Manual Database Creation</a>
+</li>
+</ul>
+</li>
+</ul>
+
+</li>
+
+</ul>
+
+<h1 id="remote">Setting up Database - Derby Remote</h1>
+
+<h2 id="prepare_remote">Preparing the Derby Database</h2>
+<ol>
+<li>Download and install Apache Derby in you computer, if it is not already done.
+</li>
+<li>Go to the &lt;derby-installation directory&gt;/bin directory and run the derby network
+    server starting script. Usually this is named as &quot;startNetworkServer&quot;.</li>
+</ol>
+
+
+<h2 id="conf_remote">Setup Configuration Files</h2>
+<ol>
+<li>
+  <p>
+    Edit the registry.xml file (inside the $GREG_HOME/repository/conf directory) of the
+    deployed registry instance as below (note the highlighted configurations, You
+    may use your own database name, username and password).
+  </p>
+
+<pre>
+    &lt;currentDBConfig&gt;derby-db&lt;/currentDBConfig&gt;
+    &lt;dbConfig name="derby-db"&gt;
+        &lt;url&gt;<strong>jdbc:derby://localhost:1527/db;create=true</strong>&lt;/url&gt;
+        &lt;userName&gt;<strong>regadmin</strong>&lt;/userName&gt;
+        &lt;password&gt;<strong>regadmin</strong>&lt;/password&gt;
+        &lt;driverName&gt;<strong>org.apache.derby.jdbc.ClientDriver</strong>&lt;/driverName&gt;
+        &lt;maxActive&gt;<strong>80</strong>&lt;/maxActive&gt;
+        &lt;maxWait&gt;<strong>60000</strong>&lt;/maxWait&gt;
+        &lt;minIdle&gt;<strong>5</strong>&lt;/minIdle&gt;
+    &lt;/dbConfig&gt;
+</pre>
+<p>
+Explanation of the database configuration options.
+</p>
+<ul>
+<li>
+url: The URL of the database</li>
+<li>
+userName: The name of the database user</li>
+<li>
+password: The password of the database user</li>
+<li>
+driverName: The class name of the database driver</li>
+<li>
+maxActive: The maximum number of active connections that can be allocated from this pool at the same time, or negative for no limit. 
+</li>
+<li>
+maxWait: The maximum number of milliseconds that the pool will wait (when there 
+    are no available connections) for a connection to be returned before throwing an 
+    exception, or &lt;= 0 to wait indefinitely. </li>
+<li>
+minIdle: The minimum number of active connections that can remain idle in the 
+    pool, without extra ones being created, or 0 to create none. </li>
+</ul>
+<p>
+<em>NOTE: In contrast to the embedded registry, in remote registry you will set the database driver name ("driverName" element) to the value "org.apache.derby.jdbc.ClientDriver" and the database url ("url" element) to the database remote location. </em></p>
+</li>
+  <li>
+    <p>
+      Edit the user-mgt.xml file (inside the $GREG_HOME/repository/conf directory) of the deployed instance as below
+      (Note that you have to replace these settings with your custom values).
+    </p>
+
+
+<pre>
+    &lt;Configuration&gt;
+        ...
+        &lt;Property name="url"&gt;<strong>jdbc:derby://localhost:1527/db;create=true</strong>&lt;/Property&gt;
+        &lt;Property name="userName"&gt;<strong>regadmin</strong>&lt;/Property&gt;
+        &lt;Property name="password"&gt;<strong>regadmin</strong>&lt;/Property&gt;
+        &lt;Property name="driverName"&gt;<strong>org.apache.derby.jdbc.ClientDriver</strong>&lt;/Property&gt;
+        &lt;Property name="maxActive"&gt;<strong>50</strong>&lt;/Property&gt;
+        &lt;Property name="maxWait"&gt;<strong>60000</strong>&lt;/Property&gt;
+        &lt;Property name="minIdle"&gt;<strong>5</strong>&lt;/Property&gt;
+    &lt;/Configuration&gt;
+</pre>
+
+  </li>
+</ol>
+
+<h2 id="drivers_remote">Setup Drivers</h2>
+<ol> 
+
+    <li>
+        <p>Place derby.jar, derbyclient.jar and derbynet.jar in the
+        $GREG_HOME/repository/components/extensions directory (to the class path of the WSO2 Governance Registry web
+        application)</p>
+<p>
+<b>Note: </b>Remove old database driver from $GREG_HOME/repository/components/dropins ,when you upgrade the database driver.
+</p>
+</li>
+</ol>
+
+<h2 id="createdb_remote">Create Database</h2>
+<h3 id="autodb_remote">Automatic Database Creation</h3>
+    <ol>
+      <li>
+        <p>
+          Next at the first time you start the registry, run with the -Dsetup option, so
+          it will create the Derby database.
+        </p>
+
+        <p>
+          wso2server.sh -Dsetup (in linux)
+        </p>
+        <p>
+          wso2server.bat -Dsetup (in windows)
+        </p>
+      </li>
+      <li>
+        You just configured WSO2 Governance Registry to run using a remote Apache Derby database.
+       </li>
+</ol>
+
+<h3 id="manualdb_remote">Manual Database Creation</h3>
+
+
+<ol>
+    <li>Run the ij tool located in the &lt;derby-installation directory&gt;/bin directory.</li>
+    <li>
+        <p>
+            Create the registry database and connect to it using the following command 
+            inside the ij prompt (replace the database file path, user name and password in 
+            below command to suite your requirements).
+        </p>
+        <p>
+            connect 'jdbc:derby://localhost:1527/db;user=regadmin;password=regadmin;create=true';
+        </p>
+    </li>
+    <li>
+        <p>
+            Now Exit from the the ij tool by typing the exit command.</p>
+        <p>
+            exit;
+        </p>
+    </li>
+    <li>
+        <p>
+            Now login to the 'ij' tool with the username and password you just used to 
+            create the database.
+        </p>
+        <p>
+           connect 'jdbc:derby://localhost:1527/db' user 'regadmin' password 'regadmin';
+        </p>
+    </li>
+    <li>
+        <p>
+            Run the derby scripts for both registry and user manager (embedded inside the 
+            Registry) databases, provided with the WSO2 Governance Registry using the below 
+            command.</p>
+        <p>
+           run 'GREG_HOME/dbscripts/derby.sql';
+        </p>
+    </li>
+    <li>Restart the wso2 registry instance. Now WSO2 Governance Registry is running using a remote Apache 
+        Derby database!</li>
+</ol>
+
+<h1 id="embedded">Setting up Database - Derby - Embedded</h1>
+
+
+<h2 id="prepare_embedded">Preparing the Derby Database</h2>
+<ol>
+<li>Download and install Apache Derby in you computer, if it is not already done.
+</li>
+</ol>
+
+<h2 id="conf_embedded">Setup Configuration Files</h2>
+<ol>
+<li>
+  <p>
+    Edit the registry.xml file (inside the $GREG_HOME/repository/conf directory) of the
+    deployed registry instance as below (note the highlighted configurations, You
+    may use your own database name, username and password).
+  </p>
+<pre>
+    &lt;currentDBConfig&gt;derby-db&lt;/currentDBConfig&gt;
+    &lt;dbConfig name="derby-db"&gt;
+        &lt;url&gt;<strong>jdbc:derby:repository/database/WSO2CARBON_DB;create=true</strong>&lt;/url&gt;
+        &lt;userName&gt;<strong>regadmin</strong>&lt;/userName&gt;
+        &lt;password&gt;<strong>regadmin</strong>&lt;/password&gt;
+        &lt;driverName&gt;<strong>org.apache.derby.jdbc.EmbeddedDriver</strong>&lt;/driverName&gt;
+        &lt;maxActive&gt;<strong>80</strong>&lt;/maxActive&gt;
+        &lt;maxWait&gt;<strong>60000</strong>&lt;/maxWait&gt;
+        &lt;minIdle&gt;<strong>5</strong>&lt;/minIdle&gt;
+    &lt;/dbConfig&gt;
+</pre>
+
+<p>
+Explanation of the database configuration options.
+</p>
+<ul>
+<li>
+url: The URL of the database</li>
+<li>
+userName: The name of the database user</li>
+<li>
+password: The password of the database user</li>
+<li>
+driverName: The class name of the database driver</li>
+<li>
+maxActive: The maximum number of active connections that can be allocated from this pool at the same time, or negative for no limit. 
+</li>
+<li>
+maxWait: The maximum number of milliseconds that the pool will wait (when there 
+    are no available connections) for a connection to be returned before throwing an 
+    exception, or &lt;= 0 to wait indefinitely. </li>
+<li>
+minIdle: The minimum number of active connections that can remain idle in the 
+    pool, without extra ones being created, or 0 to create none. </li>
+</ul>
+<p>
+<em>NOTE: In contrast to the remote registry, in embedded registry you will 
+    set the database driver name (&quot;driverName&quot; element) to the value 
+    &quot;org.apache.derby.jdbc.EmbeddedDriver&quot; and the database url (&quot;url&quot; element) to 
+    the database directory location relative to the registry installation. (In the 
+    above sample configuration it is inside the &quot;database/WSO2CARBON_DB&quot; directory)</em></p>
+</li>
+  <li>
+    <p>
+      Edit the user-mgt.xml file (inside the $GREG_HOME/repository/conf directory) of the deployed instance as below
+      (Note that you have to replace these settings with your custom values).
+    </p>
+   
+<pre>
+    &lt;Configuration&gt;
+        ...
+        &lt;Property name="url"&gt;<strong>jdbc:derby:repository/database/WSO2CARBON_DB;create=true</strong>&lt;/Property&gt;
+        &lt;Property name="userName"&gt;<strong>regadmin</strong>&lt;/Property&gt;
+        &lt;Property name="password"&gt;<strong>regadmin</strong>&lt;/Property&gt;
+        &lt;Property name="driverName"&gt;<strong>org.apache.derby.jdbc.EmbeddedDriver</strong>&lt;/Property&gt;
+        &lt;Property name="maxActive"&gt;<strong>50</strong>&lt;/Property&gt;
+        &lt;Property name="maxWait"&gt;<strong>60000</strong>&lt;/Property&gt;
+        &lt;Property name="minIdle"&gt;<strong>5</strong>&lt;/Property&gt;
+    &lt;/Configuration&gt;
+</pre>
+
+  </li>
+</ol>
+
+<h2 id="drivers_embedded">Setup Drivers</h2>
+<ol> 
+
+    <li>
+        Place derby.jar, derbyclient.jar and derbynet.jar in the 
+        $GREG_HOME/repository/components/extensions directory (to the class path of the WSO2 Governance Registry web 
+        application) 
+</li>
+</ol>
+
+<h2 id="createdb_embedded">Create Database</h2>
+<h3 id="autodb_embedded">Automatic Database Creation</h3>
+    <ol>
+      <li>
+        <p>
+          Next at the first time you start the registry, run with the -Dsetup option, so
+          it will create the Derby database.
+        </p>
+
+        <p>
+           wso2server.sh -Dsetup
+        </p>
+        <p>
+           wso2server.bat -Dsetup
+        </p>
+      </li>
+      <li>
+          You just configured WSO2 Governance Registry to run using the embedded Apache Derby.
+      </li>
+    </ol>
+
+<h3 id="manualdb_embedded">Manual Database Creation</h3>
+<ol>
+    <li>Run the ij tool located in the &lt;derby-installation-directory&gt;/bin directory.n directory&gt;/bin directory.</li>
+    <li>
+        <p>
+            Create the registry database and connect to it using the following command 
+            inside the ij prompt (replace the database file path in 
+            below command to suite your requirements).
+        </p>
+        <p>
+            connect 'jdbc:derby:repository/database/WSO2CARBON_DB;create=true'; 
+    </p>
+    <p>
+	    <em>NOTE: Here you need to give the full path to your registry database in place of "/WSO2CARBON_DB"</em>
+    </p>
+    </li>
+    <li>
+        <p>
+            Now Exit from the the ij tool by typing the exit command.</p>
+        <p>
+            exit;
+        </p>
+    </li>
+    <li>
+        <p>
+            Now login to the 'ij' tool with the username and password you set in the registry.xml (and user-mgt.xml).
+        </p>
+        <p>
+           connect 'jdbc:derby:repository/database/WSO2CARBON_DB' user 'regadmin' password 'regadmin'; 
+        </p>
+    </li>
+    <li>
+        <p>
+            Run the derby scripts for both registry and user manager (embedded inside the 
+            Registry) databases, provided with the WSO2 Governance Registry using the below 
+            command.</p>
+        <p>
+           run 'GREG_HOME/dbscripts/derby.sql';
+        </p>
+    </li>
+    <li><p>start the wso2 registry instance.</p>
+        <p>
+            wso2server.sh (in linux)
+        </p>
+        <p>
+          wso2server.bat (in windows)
+        </p>
+
+        <p>Now WSO2 Governance Registry is running using the embedded Apache
+        Derby database!</p>     
+    </li>
+</ol>
+</body>
+</html>

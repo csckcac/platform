@@ -1,0 +1,106 @@
+<?xml version="1.0" encoding="ISO-8859-1"?>
+
+<!--
+  ~  Copyright (c) 2005-2008, WSO2 Inc. (http://www.wso2.org) All Rights Reserved.
+  ~
+  ~  WSO2 Inc. licenses this file to you under the Apache License,
+  ~  Version 2.0 (the "License"); you may not use this file except
+  ~  in compliance with the License.
+  ~  You may obtain a copy of the License at
+  ~
+  ~    http://www.apache.org/licenses/LICENSE-2.0
+  ~
+  ~  Unless required by applicable law or agreed to in writing,
+  ~  software distributed under the License is distributed on an
+  ~  "AS IS" BASIS, WITHOUT WARRANTIES OR CONDITIONS OF ANY
+  ~  KIND, either express or implied.  See the License for the
+  ~  specific language governing permissions and limitations
+  ~  under the License.
+  ~
+  -->
+
+<!DOCTYPE html
+   PUBLIC "-//W3C//DTD XHTML 1.1//EN"
+   "http://www.w3.org/TR/xhtml11/DTD/xhtml11.dtd" >
+
+<html xmlns="http://www.w3.org/1999/xhtml">
+  <head>
+    <meta http-equiv="content-type" content="text/html; charset=iso-8859-1"/>
+    <title>
+      WSO2 Governance Registry - Documentation Index
+    </title>
+    <link href="css/greg-docs.css" rel="stylesheet"/>
+    <link href="styles/dist-docs.css" rel="stylesheet" type="text/css" media="all"/>
+  </head>
+  <body xml:lang="en">
+    <h1>
+      WSO2 Governance Registry - Documentation Index
+    </h1>
+    <h2>
+      Getting Started
+    </h2>
+    <p>
+      <a href="quick_start.html">Quick Start</a> : A brief introduction helping
+      a user to get started with WSO2 Governance Registry in no-time. More detailed guidelines
+      are found in the documents listed below.
+    </p>
+    <p>
+      <a href="installation_guide.html">Installation Guide</a> : Gives
+      basic steps on how to download, install, and run WSO2 Governance Registry using the binary
+      distribution, and how to build WSO2 Governance Registry using the source distribution.
+    </p>
+    <p>
+      <a href="user_guide.html">User Guide</a> : A
+      manual on how to run and configure the WSO2 Governance Registry through the management
+      console.
+    </p>
+    <p>
+      <a href="developer_guide.html">Developer Guide</a> : A
+      manual on how developers can use WSO2 Governance Registry in their developments. 
+    </p>
+    <p>
+      <a href="http://www.wso2.org/wiki/display/registry/Migration+Guide">Migration Guide</a> : A
+      manual on how to migrate from older versions of the WSO2 Governance Registry to the
+      latest version.
+    </p>
+	<h2>
+      Samples
+    </h2>
+    <p>
+      <a href="samples_guide.html">How to Run the WSO2 Governance Registry Samples</a> :
+      While the document above gives you a generic description on how to set up
+      and and run the WSO2 Governance Registry samples, this document takes each sample, one by
+      one and discusses the objective of the sample, its prerequisites, and its
+      expected behavior when the sample is built.
+    </p>
+    <h2>
+      Setting Up Databases
+    </h2>
+    <p>
+	  Setting up registry with databases, 
+      <a href="installation_guide/db_h2.html">H2</a>,
+      <a href="installation_guide/db_mysql.html">MySQL</a>, 
+      <a href="installation_guide/db_mssql.html">MSSQL</a>, 
+      <a href="installation_guide/db_oracle.html">Oracle</a>,
+      <a href="installation_guide/db_derby.html">Derby</a>,
+      <a href="installation_guide/db_db2.html">DB2</a>,
+      <a href="installation_guide/db_postgresql.html">PostgreSQL</a> and
+      <a href="installation_guide/db_openedge.html">OpenEdge</a>.
+    </p>
+
+    <h2>
+      Other Resources
+    </h2>
+    <p/>
+    <p>
+      <a href="http://wso2.org/library">The WSO2 Oxygen Tank
+      Library</a> : The Library contains articles, tutorials,
+      presentations, and other knowledge base items published on The Oxygen
+      Tank.
+    </p>
+    <p>
+      <a href="http://wso2.org/wiki/display/registry/Home">Wiki Space</a> :
+      This is the working Wiki for WSO2 Governance Registry.
+    </p>
+  </body>
+</html>

@@ -1,0 +1,257 @@
+<?xml version="1.0" encoding="ISO-8859-1"?>
+
+<!--
+  ~  Copyright (c) 2005-2008, WSO2 Inc. (http://www.wso2.org) All Rights Reserved.
+  ~
+  ~  WSO2 Inc. licenses this file to you under the Apache License,
+  ~  Version 2.0 (the "License"); you may not use this file except
+  ~  in compliance with the License.
+  ~  You may obtain a copy of the License at
+  ~
+  ~    http://www.apache.org/licenses/LICENSE-2.0
+  ~
+  ~  Unless required by applicable law or agreed to in writing,
+  ~  software distributed under the License is distributed on an
+  ~  "AS IS" BASIS, WITHOUT WARRANTIES OR CONDITIONS OF ANY
+  ~  KIND, either express or implied.  See the License for the
+  ~  specific language governing permissions and limitations
+  ~  under the License.
+  ~
+  -->
+
+<!DOCTYPE html
+   PUBLIC "-//W3C//DTD XHTML 1.1//EN"
+   "http://www.w3.org/TR/xhtml11/DTD/xhtml11.dtd" >
+
+<html xmlns="http://www.w3.org/1999/xhtml">
+  <head>
+    <meta http-equiv="content-type" content="text/html; charset=iso-8859-1"/>
+    <title>
+      WSO2 Governance Registry - Guide for Governance Registry Samples
+    </title>
+    <link href="css/registry-docs.css" rel="stylesheet"/>
+    <link href="styles/dist-docs.css" rel="stylesheet" type="text/css" media="all"/>
+  </head>
+  <body xml:lang="en">
+<h1>WSO2 Governance Registry - Guide for Governance Registry Samples</h1>
+<h2>Table of Contents</h2>
+<ul>
+
+<li>
+<a href="#WS-API Sample">WS-API Sample</a>
+ </li>
+<li>
+<a href="#Exporting/importing a file to Remote registry">Exporting/importing a file to Remote registry</a>
+</li>
+<li>
+<a href="#ProjectProposalHandler Sample">Project Proposal Handler Sample</a>
+</li>
+<li>
+<a href="#Custom UI Sample">Custom UI Sample</a>
+</li>
+<li>
+<a href="#Shutterbug Sample">Shutterbug Sample</a>
+</li>
+<li>
+<a href="#JCR Sample">JCR Sample</a>
+</li>
+</ul>
+<h2 id="WS-API Sample">WS-API Sample</h2>
+      <p>
+          The WS Registry API exposes a complete set of registry operations that can be accessed through Web Service calls.
+          This readme explains how to run the sample that uses the WS Registry client sample.
+      </p>
+      <h3>Pre - Requirements</h3>
+      <ul>
+          <li>Before getting the sample to work you have to run ant from <strong>GREG_HOME/bin</strong>. This copies all the necessary libraries to their respective locations.</li>
+          <li>Start the WSO2 Governance Registry by running the respective script (wso2server.sh or wso2server.bat) from <strong>GREG_HOME/bin</strong>.</li>
+      </ul>
+      <h3>Steps to get this sample to work</h3>
+      <ul>
+          <li>Execute the ant command <strong>ant run</strong> from the ws-client sample directory.</li>
+          <li>Each operation that occurred will be printed on the console.</li>
+          <li>A resource will be created in root by the name of abc (i.e. path = \abc).
+              This can be checked through the Resource Browser which can be accessed through the Management Console.</li>
+      </ul>
+      <h2 id="Exporting/importing a file to Remote registry">Exporting/importing a file to Remote registry</h2>
+
+      <h3>Introduction</h3>
+      <p>
+This sample demonstrates how to export a local file system into a remote registry, and how to import
+a remote registry into a local file system.  We can build our content in the local file system with
+the folder hierarchy we want, including any type of content.  Then we can use the registry API to
+export our local file system into the registry.
+<br/>
+Once we upload a local file system into the registry we have <strong>socially enabled</strong> it.
+We can comment on resources, we can tag, we can rate, etc...
+<br/>
+We can also build our hierarchy in the Registry with the structure we want, and then we can download
+or import the remote registry into our local file system.  Then the registry will create the exact
+same folder structure and download all the files in the registry.
+      </p>
+
+      <h3>Running the sample</h3>
+      <p>
+          Running the sample is just a matter of executing an ant file.  If you don't
+          have ant, you can download it at <a href="http://ant.apache.org">http://ant.apache.org/</a>.
+          Run <strong>ant</strong> at the <strong>GREG_HOME/bin</strong> folder of the distribution.
+      </p>
+
+      <h3>Jars you may need to run the sample</h3>
+      <ul>
+          <li>jaxen-1.1.1.jar (http://www.java2s.com/Code/JarDownload/jaxen-1.1.1.jar.zip)</li>
+      </ul>
+      <p>
+          Place all those jars in <strong>GREG_HOME/lib</strong> folder.
+      </p>
+      <h3>Exporting local file system into a remote registry</h3>
+      <p>
+          Run <strong>ant upload</strong> inside the <strong>GREG_HOME/samples/filesampleutils/src</strong> folder.
+          You will be asked for:
+      </p>
+      <ul>
+          <li> Key store file path: Provide <strong>GREG_HOME/repository/resources/security/client-truststore.jks</strong></li>
+          <li> Registry URL : Provide <strong>https://localhost:9443/registry</strong>
+              (If your registry is in somewhere else then give that path)</li>
+          <li> User name : If you have not changed the admin user then pass <strong>admin</strong></li>
+          <li> Password : Use <strong>admin</strong></li>
+          <li> FromPath : Location in the file system to export from.  Enter the
+              full path to the <strong>resources</strong> folder (eg:- C:\test\test.txt)</li>
+          <li> ToPath : Where to put the resource.  In this sample let's use
+              <strong>/sample/file</strong></li>
+
+          <li>If you login to the management console you can see that all the files have been
+              moved and the registry has the same structure as the filesystem under
+              <strong>Resources</strong> listing.</li>
+      </ul>
+
+      <h3>Importing a file into the local file system</h3>
+      <p>
+          Now we go the other way. Again, run <strong>ant download</strong> first, and provide values:
+      </p>
+      <ul>
+          <li> Key store file path : Provide <strong>GREG_HOME/repository/resources/security/client-truststore.jks</strong></li>
+          <li> Registry URL : Provide <strong>https://localhost:9443/registry</strong>
+              (If your registry is in somewhere else then give that path)</li>
+          <li> User name : If you have not changed the admin user then pass <strong>admin</strong></li>
+          <li> Password : Use <strong>admin</strong></li>
+          <li> FromPath :  Resource path, such as <strong>/sample/file</strong></li>
+          <li> ToPath : Where to put the resource in the local filesystem. For this
+              sample let's use <strong>C:\Documents and Settings\test</strong></li>
+
+          <li>Once you run ant you will see a newly created folder hierarchy in the path you specified.</li>
+      </ul>
+
+      <h2 id="ProjectProposalHandler Sample">Project Proposal Handler Sample</h2>
+      <h3>Introduction</h3>
+      <p>
+          The idea of this sample is to demonstrate how to use media type handlers. The sample
+          application is to process project proposals, so we'll be using a component that intercepts
+          Registry put() requests with a particular <strong>proposal</strong> media-type. The Handler will read
+          the proposal and mark it as valid or not. In order to be a valid proposal there should be
+          a number of fields - if all of them are there then the handler will mark the proposal as
+          valid. If one or more fields are missing then the proposal would be invalid.
+      </p>
+      <ul>
+          <li>Copy the org.wso2.carbon.registry.samples.handler-@carbon.version@.jar into
+              <strong>GREG_HOME/repository/components/dropins</strong>.<br/>
+              You also can upload handlers through the administration console by visiting the Extensions --&gt; Add menu.
+          </li>
+          <li>Edit the registry.xml file which is in <strong>GREG_HOME/repository/conf</strong> folder with the following xml snippet.<p>
+          <dir>&lt;handler class="org.wso2.carbon.registry.samples.handler.ProjectProposalMediaTypeHandler" methods="PUT"&gt;
+              <dir>&lt;filter class="org.wso2.carbon.registry.core.jdbc.handlers.filters.MediaTypeMatcher"&gt;
+                  <dir>&lt;property name="mediaType"&gt;pp&lt;/property&gt;</dir>
+              &lt;/filter&gt;</dir>
+          &lt;/handler&gt;</dir>
+          </p><br />You also can add the handler configuration through the administration console by opening the
+   <strong>Handlers</strong> configuration (Extensions --&gt; Configure --&gt; Handlers) menu and clicking on <strong>Add New Handler</strong>.</li>
+          <li>Start the server.</li>
+
+          <li>Go to admin console.</li>
+
+          <li>Browse the resources tree and add a new resource by visiting Resources --> Browse menue.</li>
+
+          <li>Select the <strong>Upload content from file</strong> from the drop down list.</li>
+
+          <li>Select your project proposal and type the media type as <strong>pp</strong> (you can use whatever the media type you prefer).
+              <strong>Note</strong>:- Sample project proposals are available in <strong>GREG_HOME/samples/handler/src/resources</strong> folder.</li>
+
+          <li>And <strong>Add</strong> it.</li>
+          <li>Browse to the added project proposal. You could see the Properties and the Tag have been added to the resource..
+          </li>
+      </ul>
+
+      <h2 id="Custom UI Sample">Custom UI Sample</h2>
+      <p>
+          This sample demonstrates how a simple custom UI can be created to add, view, and edit,
+          endpoints stored on the WSO2 Governance Registry. Please note that the Resource Name,
+          Endpoint Name and the Endpoint URI are mandatory fields, and The URI must be valid.
+      </p>
+      <h3>Adding an endpoint reference as a resource</h3>
+      <ul>
+          <li>Drop the sample's jars into <strong>GREG_HOME/repository/components/dropins</strong>.
+              <ul>
+                  <li>Copy <strong>org.wso2.carbon.registry.samples.custom.topics-@carbon.version@.jar</strong> into the <strong>dropins</strong> folder.</li>
+                  <li>Copy <strong>org.wso2.carbon.registry.samples.custom.topics.ui-@carbon.version@.jar</strong> into the <strong>dropins</strong> folder.</li>
+              </ul>
+          </li>
+          <li>Restart the server and Log in to the admin console and go to the Resources menu.</li>
+          <li>Click <strong>Add Resource</strong> link to add a new resource and choose <strong>Create custom content</strong> from Method combo box.</li>
+          <li>A text box named <strong>Media type</strong> will be displayed, from which select <strong>other</strong> option from drop down button for media type.</li>
+          <li>Enter <strong>epr</strong> as the media type.</li>
+          <li>Click <strong>Create Content</strong>. A form to fill endpoint details will be displayed.</li>
+          <li>Fill the form and click <strong>Save</strong>. The resource  will be added.</li>
+      </ul>
+      <h3>Browsing the resource</h3>
+      <ul>
+          <li>Browse the added resource from the Entries table and click on it.</li>
+          <li>The content of the resource will be shown in a custom view.</li>
+          <li>The content can be edited by clicking <strong>Edit endpoint</strong>.</li>
+      </ul>
+
+      <h2 id="Shutterbug Sample">Shutterbug Sample</h2>
+      <p>
+          The idea of this sample is to demonstrate how to use the WSO2 Governance Registry to build
+          real world applications. This sample is designed to be used to host a competition on the
+          WSO2 Governance Registry that will select 12 images out of several hundreds of images to
+          be published on a calendar. Each user will be allowed to upload up to 2 images, and can
+          vote for 12 images. Finally the administrators can browse the images with the highest
+          number of votes and decide on the winners.
+      </p>
+      <h3>Steps</h3>
+      <ul>
+          <li>Deploy G-Reg on tomcat under a context named <strong>greg</strong>. More information can be found at
+              <a href="http://opensource-soa.blogspot.com/2009/03/deploying-wso2-registry-on-tomcat.html">
+                  http://opensource-soa.blogspot.com/2009/03/deploying-wso2-registry-on-tomcat.html</a>.</li>
+          <li>Copy org.wso2.governance.samples.shutterbug.ui/src/main/resources/web/shutterbug/resources/crossdomain.xml
+              in to the tomcat's <strong>ROOT</strong> context.</li>
+          <li>Copy the jars found in <strong>GREG_HOME/samples/shutterbug/bin</strong> to <strong>GREG_HOME/repository/components/dropins</strong>.</li>
+          <li>Set the Index Page URL in <strong>GREG_HOME/repository/conf/carbon.xml</strong> as follows.<p>
+              <dir>&lt;IndexPageURL&gt;/carbon/shutterbug/shutterbug-ajaxprocessor.jsp&lt;/IndexPageURL&gt;</dir>
+          </p></li>
+          <li>Start the server.</li>
+          <li>Go to the admin console.</li>
+      </ul>
+      <h3>Cooliris 3D Embed Wall</h3>
+      <p>
+          This sample uses the Cooliris 3D Embed Wall (online), to display uploaded images. More
+          information on how to use the Cooliris 3D Embed Wall, and Terms and Conditions of usage
+          can be found at <a href="http://www.cooliris.com">http://www.cooliris.com</a>.
+      </p>
+
+      <h2 id="JCR Sample">JCR Sample</h2>
+      <p>
+          This sample demonstrates how a simple JCR Client is using the JCR implementation of WSO2 G-Reg and doing sample operations through JCR API to the running G-Reg instance.
+      </p>
+      <h3>Pre - Requirements</h3>
+      <ul>
+          <li>Before getting the sample to work you have to run ant from <strong>GREG_HOME/bin</strong>. This copies all the necessary libraries to their respective locations.</li>
+          <li>Start the WSO2 Governance Registry by running the respective script (wso2server.sh or wso2server.bat) from <strong>GREG_HOME/bin</strong>.</li>
+      </ul>
+      <h3>Steps for running this sample</h3>
+      <ul>
+          <li>Run the ant command <strong>ant run</strong>, which will add a set of Collections and Resources to the Registry.</li>
+          <li>Login to the Registry and see the added Collections and Resources.</li>
+      </ul>
+  </body>
+</html>

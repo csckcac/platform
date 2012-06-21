@@ -1,0 +1,282 @@
+<?xml version="1.0" encoding="ISO-8859-1"?>
+
+<!--
+  ~  Copyright (c) 2005-2008, WSO2 Inc. (http://www.wso2.org) All Rights Reserved.
+  ~
+  ~  WSO2 Inc. licenses this file to you under the Apache License,
+  ~  Version 2.0 (the "License"); you may not use this file except
+  ~  in compliance with the License.
+  ~  You may obtain a copy of the License at
+  ~
+  ~    http://www.apache.org/licenses/LICENSE-2.0
+  ~
+  ~  Unless required by applicable law or agreed to in writing,
+  ~  software distributed under the License is distributed on an
+  ~  "AS IS" BASIS, WITHOUT WARRANTIES OR CONDITIONS OF ANY
+  ~  KIND, either express or implied.  See the License for the
+  ~  specific language governing permissions and limitations
+  ~  under the License.
+  ~
+  -->
+
+<!DOCTYPE html
+   PUBLIC "-//W3C//DTD XHTML 1.1//EN"
+   "http://www.w3.org/TR/xhtml11/DTD/xhtml11.dtd" >
+
+<html xmlns="http://www.w3.org/1999/xhtml">
+<head>
+<title> WSO2 Governance Registry - Developer Guide - Governance API</title>
+<link href="../css/greg-docs.css" rel="stylesheet"/>
+<link href="../styles/dist-docs.css" rel="stylesheet" type="text/css" media="all"/>
+</head>
+<body>
+[ <a href="../docs_index.html"> Documentation Index </a> ]
+<h1> WSO2 Governance Registry - Developer User Guide - Governance API</h1>
+
+<h2 id="overview">Overview</h2>
+
+<p>
+In the governance registry, you can store and govern the behaviours of SOA artifacts like services, wsdls, schemas, policies and endpoints. 
+Governance API provide a way to do it programatically.
+</p>
+
+<p>
+The relationship of the classes used in the governance API is shown in the following class diagram. 
+</p>
+<p><img alt="Class Hierarchy" src="../images/gov-api.png"/></p>
+
+<h3>Using the Governance API</h3>
+<strong>Obtaining a governance registry instance</strong>
+<p>
+The Governance API needs to be accessed through a governance registry (as opposed to root registry) instance. Inside an admin service, a governance registry instance can be obtained by inheriting from "org.wso2.carbon.core.AbstractAdmin" class and calling its getGovernanceRegistry() method. 
+</p>
+<p>
+When Remote Registry or WS-Registry is used, this instance can be created as shown below.
+</p>
+
+<pre>
+import org.wso2.carbon.governance.api.util.GovernanceUtils;
+
+Registry governanceRegistry = GovernanceUtils.getGovernanceUserRegistry(rootRegistry, username); //rootRegistry refers to an instance of RemoteRegistry or WSRegistryServiceClient
+</pre>
+
+<p>One other possible way is, governance registry can be obtained via Remote Registry as shown below.</p>
+
+<pre>
+import org.wso2.carbon.registry.app.RemoteRegistry;
+import org.wso2.carbon.governance.api.util.GovernanceUtils;
+
+Registry rootRegistry = new RemoteRegistry(new URL(remoteRegistryUrl), username, password);
+Registry governanceRegistry = GovernanceUtils.getGovernanceUserRegistry(rootRegistry, username);
+</pre>
+
+<p>As another way specific example, governance registry can be obtained via WS-Registry as shown below.</p>
+
+<pre>
+import org.wso2.carbon.registry.ws.client.registry.WSRegistryServiceClient;
+import org.wso2.carbon.governance.api.util.GovernanceUtils;
+import org.apache.axis2.context.ConfigurationContextFactory;
+import org.wso2.carbon.base.ServerConfiguration;
+
+ConfigurationContext configurationContext = ConfigurationContextFactory.createConfigurationContextFromFileSystem(
+                       carbon_home + File.separator + "repository" + File.separator + "deployment" + File.separator + "client",
+                           ServerConfiguration.getInstance().getFirstProperty("Axis2Config.clientAxis2XmlLocation")));
+
+WSRegistryServiceClient rootRegistry = new WSRegistryServiceClient(url, username, password,configurationContext);
+Registry governanceRegistry = GovernanceUtils.getGovernanceUserRegistry(rootRegistry, username);
+</pre>
+
+
+<h3>Services</h3>
+<strong>Adding a new service</strong>
+<p>
+Assuming that 'governanceRegistry' variable refers to a valid governanceRegistry object, you can create a new service and and save it using the following code.
+</p>
+
+<pre>
+import org.wso2.carbon.governance.api.services.ServiceManager;
+import org.wso2.carbon.governance.api.services.dataobjects.Service;
+
+ServiceManager serviceManager = new ServiceManager(governanceRegistry);
+Service service = serviceManager.newService(new QName("http://my.service.ns1", "MyService"));
+// you can do the changes to the service instance (like setting/unsettings attributes) in here.
+serviceManager.addService(service);
+</pre>
+
+<strong>Updating a service</strong>
+<p>
+After you have done additional changes to the service (after adding attributes), call updateService to update the service.
+</p>
+<pre>
+service.addAttribute("Owner", "Financial Department");
+serviceManager.updateService(service);
+</pre>
+
+<strong>Removing a service</strong>
+<p>
+In order to remove a service, you should have the reference to the service id, which can be retrieved from service.getId();
+</p>
+<pre>
+String serviceId = service.getId();
+serviceManager.removeService(serviceId);
+</pre>
+
+<strong>Retrieve a service</strong>
+<p>
+You can retrieve a service from the service id using the following code. So this method can only be used if you have the reference to the service id. If you don't have any reference to the service id,
+you can use the discovery methods (documented in the following section) to retrieve services.
+</p>
+<pre>
+Service service = serviceManager.getService(serviceId);
+</pre>
+
+<strong>Discovering services</strong>
+<p>
+Using the service discovery methods, you can retrieve services that match a given criteria. Here is an example on how to retrieve set of services
+that has the attribute, key="Owner" and value="Financial Department".
+</p>
+<pre>
+    Service[] services = serviceManager.findServices(new ServiceFilter() {
+        public boolean matches(Service service) throws GovernanceException {
+            String attributeVal = service.getAttribute("Owner");
+            if (attributeVal != null &amp;&amp; attributeVal.equals("Financial Department") {
+                return true;
+            }
+            return false;
+        }
+    });
+</pre>
+
+<strong>Attaching a WSDL to a service</strong>
+<p>
+You can attach wsdls, schemas, policies, endpoints or any other governance artifact to the service. In order to use the attach method you have to 
+first add the service to the registry (using addService), or you can use an existing service (which is already added).
+</p>
+<p>
+In order to attach any governance artifact, you can use 'attach' method which the 'Service' class inherits from the 'GovernanceArtifact' class.
+</p>
+<pre>
+service.attach(governanceArtifact);
+</pre>
+<p>
+Or you can use the 'Service' specific method to attach wsdls, schemas, policies and endpoints'.
+</p>
+<pre>
+service.attachWsdl(wsdl);
+service.attachSchema(schema);
+service.attachPolicy(poliyc);
+service.attachWndpoint(endpoint);
+</pre>
+
+<strong>Retrieving dependents &amp; dependencies</strong>
+<p>
+The 'GovernanceArtifact' class has the getDependents() and getDependencies() methods that are inherited by 'Service', 'Policy', 'Schema' and 'Wsdl'.
+</p>
+
+<pre>
+GovernanceArtifact[] dependents = service.getDependents();
+GovernanceArtifact[] dependencies = service.getDependencies();
+</pre>
+
+<h3>WSDLs</h3>
+<p>
+Similar to the methods in the 'Service' and 'ServiceManager' class, you can use the methods in the 'Wsdl' and 'WsdlManager' classes to manage wsdls.
+</p>
+<pre>
+import org.wso2.carbon.governance.api.wsdls.WsdlFilter;
+import org.wso2.carbon.governance.api.wsdls.WsdlManager;
+import org.wso2.carbon.governance.api.wsdls.dataobjects.Wsdl;
+
+// creating the wsdl manager with governanceRegistry
+WsdlManager wsdlManager = new WsdlManager(governanceRegistry);
+
+// creating and adding the a new wsdl.
+Wsdl wsdl = wsdlManager.newWsdl("http://www.example.com/wsdl-url.wsdl");
+wsdl.addAttribute("creator", "xxx");
+wsdl.addAttribute("version", "0.01");
+wsdlManager.addWsdl(wsdl);
+
+// updating the wsdl.
+wsdl.addAttribute("version", "0.02");
+wsdlManager.updateWsdl(wsdl);
+
+// get the attached schemas
+Schema[] schemas = wsdl.getAttachedSchemas();
+
+// get the endpoints
+Endpoint[] endpoints = wsdl.getAttachedEndpoints();
+
+// get the OM from the wsdl
+OMElement wsdlContent = wsdl.getWsdlElement();
+
+// get wsdls with attribute "creator" == "xxx"
+Wsdl[] wsdls = wsdlManager.findWsdls(new WsdlFilter() {
+    public boolean matches(Wsdl wsdl) throws GovernanceException {
+        String attributeVal = service.getAttribute("creator");
+        if (attributeVal != null &amp;&amp; attributeVal.equals("xxx") {
+            return true;
+        }
+        return false;
+    }
+});
+</pre>
+
+<h3>Schemas</h3>
+<p>
+Here is an example code snippet about handling schemas.
+</p>
+<pre>
+import org.wso2.carbon.governance.api.schema.SchemaFilter;
+import org.wso2.carbon.governance.api.schema.SchemaManager;
+import org.wso2.carbon.governance.api.schema.dataobjects.Schema;
+
+// starting with the schema manager created with governanceRegistry
+SchemaManager schemaManager = new SchemaManager(governanceRegistry);
+
+// creating and adding  new schema
+Schema schema = schemaManager.newSchema("http://www.example.com/schema-url.xsd");
+schema.addAttribute("creator", "yyy");
+schema.addAttribute("version", "0.01");
+schemaManager.addSchema(schema);
+
+// updating the schema
+schema.addAttribute("version", "0.02");
+schemaManager.updateSchema(schema);
+
+// get the OM from the schema.
+OMElement schemaContent = schema.getSchemaElement();
+
+// get schemas with attribute "creator" == "yyy"
+Schema[] schemas = schemaManager.findSchemas(new SchemaFilter() {
+    public boolean matches(Schema schema) throws GovernanceException {
+        String attributeVal = service.getAttribute("creator");
+        if (attributeVal != null &amp;&amp; attributeVal.equals("yyy") {
+            return true;
+        }
+        return false;
+    }
+});
+</pre>
+
+<h3>Policies</h3>
+<p>
+The class structures to manage policies also have the same structures to manage schemas as mentioned above. (With the Policy and
+PolicyManager classes).
+</p>
+
+<h3>Endpoints</h3>
+<p>
+Endpoint and EndpointManager (similar to the above mentioned Governance artifacts) can be used in add/update/remove endpoints and associate them with
+other GovernanceArtifact products. Anyway unlike all the above mentioned governance artifacts, Endpoint doesn't provide EndpointFilter or findEndpoints
+methods on discovering endpoints. Rather you can directly get a reference to the Endpoint object using getEndpointByUrl method in EndpointManager class.
+</p>
+<pre>
+
+import org.wso2.carbon.governance.api.endpoints.EndpointManager;
+import org.wso2.carbon.governance.api.endpoints.dataobjects.Endpoint;
+
+EndpointManager endpointManager = new EndpointManager(registry);
+Endpoint endpoint1 = endpointManager.getEndpointByUrl("http://localhost/papapa/booom");
+</pre>
+</body>
+</html>

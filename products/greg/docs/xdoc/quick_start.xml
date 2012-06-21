@@ -1,0 +1,192 @@
+<?xml version="1.0"?>
+<!--
+  ~  Copyright (c) 2005-2008, WSO2 Inc. (http://www.wso2.org) All Rights Reserved.
+  ~
+  ~  WSO2 Inc. licenses this file to you under the Apache License,
+  ~  Version 2.0 (the "License"); you may not use this file except
+  ~  in compliance with the License.
+  ~  You may obtain a copy of the License at
+  ~
+  ~    http://www.apache.org/licenses/LICENSE-2.0
+  ~
+  ~  Unless required by applicable law or agreed to in writing,
+  ~  software distributed under the License is distributed on an
+  ~  "AS IS" BASIS, WITHOUT WARRANTIES OR CONDITIONS OF ANY
+  ~  KIND, either express or implied.  See the License for the
+  ~  specific language governing permissions and limitations
+  ~  under the License.
+  ~
+  -->
+<!DOCTYPE html
+   PUBLIC "-//W3C//DTD XHTML 1.1//EN"
+   "http://www.w3.org/TR/xhtml11/DTD/xhtml11.dtd" >
+<html xmlns="http://www.w3.org/1999/xhtml">
+<head>
+<title> WSO2 Governance Registry - Quick Start </title>
+<link href="css/registry-docs.css" rel="stylesheet"/>
+<link href="styles/dist-docs.css" rel="stylesheet" type="text/css" media="all"/>
+</head>
+<body>
+[ <a href="docs_index.html"> Documentation Index </a> ]
+<h1> WSO2 Governance Registry Quick Start </h1>
+<p> The Quick start describes how to install Governance Registry in Linux, Windows and
+how to start working with G-Reg. </p>
+<h2> Table of Contents </h2>
+<div class="toc">
+  <ul>
+    <li> <a href="#Installing">Installing and Running the WSO2 Governance Registry</a> </li>
+    <li> <a href="#Accessing">Accessing the Registry Web based Management Console</a>
+    </li>
+    <li> <a href="#Signing">Signing In</a> </li>
+    <li> <a href="#ResourcesUI">Resources User Interface</a>
+      <ul>
+        <li><a href="#Meta">Meta Data Panel</a></li>
+        <li><a href="#Properties">Properties Panel</a></li>
+        <li><a href="#Content">Content Panel</a></li>
+        <li><a href="#Tag_Search">Search (Tag Search)</a></li>
+      </ul>
+    </li>
+    <li> <a href="#Activities">Activities</a> </li>
+    <li> <a href="#Advanced_Search">Advanced Search</a> </li>
+  </ul>
+</div>
+<h2 id="Installing"> Installing and Running the WSO2 Governance Registry </h2>
+<h3>Installing on Linux/Unix</h3>
+
+<p>The following steps will take you through the linux/unix distribution
+installation. </p>
+<ol>
+  <li><a href="http://wso2.org/downloads/governance-registry/">Download</a> the
+    WSO2 Governance Registry binary distribution. </li>
+  <li>Extract the zip archive where you want the WSO2 Governance Registry installed
+    (e.g. /opt) </li>
+  <li>Set the JAVA_HOME environment
+    variable to your Java home using the export command or by editing
+    /etc/profile, and add the Java /bin directory to your PATH </li>
+  <li>Execute the WSO2 Governance Registry start script or the daemon script from the
+    bin directory. e.g. ./wso2server.sh OR ./daemon.sh start OR
+    ./wso2server.sh --console 
+  </li>
+</ol>
+
+<h3 id="Installing1">Installing on MS Windows</h3>
+
+<p>The following steps will take you through the installation for the MS
+Windows operating system. </p>
+<ol>
+  <li><a href="http://wso2.org/downloads/governance-registry/">Download</a> the
+    WSO2 Governance Registry binary distribution. </li>
+  <li>Extract the zip archive where you want the WSO2 Governance Registry installed </li>
+  <li>Set the JAVA_HOME environment
+    variable to your Java installation, and the PATH environment variable to
+    the Java /bin directory. </li>
+  <li>Execute the WSO2 Governance Registry start script from the bin folder. e.g.
+    wso2server.bat 
+  </li>
+</ol>
+
+<h2 id="Accessing"> Accessing the Registry Web based Management Console </h2>
+<p> Once WSO2 Governance Registry has been successfully installed and started, launch a Web
+  browser instance and point it to the URL <a
+      href="https://localhost:9443/carbon">https://localhost:9443/carbon</a>.
+  This will take you to the <em>Sign In</em> page of the WSO2 Governance Registry
+  Management Console. </p>
+
+<h3 id="Signing"> Signing In </h3>
+<p> Enter your user name and password to log on to the Registry Management Console. </p>
+<p> <strong>The default username / password is : admin / admin</strong> </p>
+<p> If you get any errors when trying
+  to sign in, click <strong>Sign-in Help</strong>. A list of
+  possible errors, their descriptions and solutions will be displayed. </p>
+
+<p><img src="images/signin.png" width="900px"/></p>
+<p>Figure 1 : Registry login page </p>
+<h2 id="ResourcesUI"> Resources User Interface </h2>
+<p>In the navigator, under Resources, click <strong>Browse</strong>.</p>
+<br/><br/>
+<p><img src="images/registry_tree.png" width="744px"/></p>
+<p>Figure 2.1 : Registry User Interface in Tree View </p>
+<br/>
+<p><img src="images/registry.png" width="744px"/></p>
+<p>Figure 2.2 : Registry User Interface in Detail View </p>
+<h3><a name="Meta" id="Meta">Meta Data Panel</a></h3>
+<p>The meta data panel displays the following properties of the resource
+  or the collection </p>
+<ul>
+  <li>Created Time and Author </li>
+  <li>Last Updated Time and Author </li>
+  <li>Media Type </li>
+  <li>URL for the permanent link </li>
+  <li>Versions of the resource </li>
+  <li>Description about the resource/collection. </li>
+</ul>
+<p></p>
+<p><img src="images/metadata.png" width="492px"/></p>
+<p>Figure 3 : The meta data panel </p>
+<h3><a name="Properties" id="Properties">Properties Panel</a></h3>
+<p>This panel displays the properties of the currently selected resource
+or collection. New properties can be added, while existing properties can
+be edited or deleted. </p>
+<p></p>
+<p><img src="images/properties.png" width="492px"/></p>
+<p>Figure 4 : The properties panel </p>
+<h3><a name="Content" id="Content">Content Panel</a></h3>
+<p>If the currently selected entity is a collection, the Content Panel
+  shows the child entries under that collection. It provides details of each
+  entry. An entry can be either another collection or a resource. </p>
+<ul>
+  <li>Name - Click to access the content of this entry </li>
+  <li>Info - For various information about this entry </li>
+  <li>Actions - For various actions that are available for this entry </li>
+  <li>Created On </li>
+  <li>Author </li>
+</ul>
+<p><img src="images/entries.png" width="492px"/></p>
+<p>Figure 5 : View of Directory Entries </p>
+<strong>Adding a new Resource/Collection</strong>
+<p>To add a resource/collection, click on the "Add resource" or "Add collection" link
+  provided and a page will be presented to fill in the required information.</p>
+<p></p>
+<p><img src="images/add_resource.png" width="492px"/></p>
+<p>Figure 6 : Add Resource Panel</p>
+<p></p>
+<strong>Deleting a Resource</strong>
+<p>To delete a resource , click on the arrow in front of the resource name. Then the action panel will be displayed.  You can click
+on the cylindric icon provided, to delete the resource.</p>
+<p><img src="images/action_panel.png" width="479px"/></p>
+<p>Figure 7 : Action Panel </p>
+<p>Similarly Edit, move, copy buttons can be used to rename, move, copy the resource.</p>
+<p>If the currently selected entity is a resource, the Content panel
+  provides a user interface through which you can display, edit and
+  download the content.</p>
+<p><img src="images/content.png" width="492px"/></p>
+<p>Figure 8 : View of the Content </p>
+
+<p>The right side of the resources page houses 3 additional blocks, namely: Tags, Comments and Ratings.</p>
+Please refer the <a href="user_guide.html">user guide</a>
+
+<h3 id="Tag_Search">Tag Search</h3>
+<p> Users can perform a "tag" search using the search block within the registry browser. Note
+that this will only show the resources that contain the tag you are searching. In order
+to do a more customized search you have to use the Advanced Search described below.
+
+<p><img src="images/search-widget.png" width="279px"/></p>
+<p> Figure 9 : Search </p>
+</p>
+
+
+<h3 id="Advanced_Search"> Advanced Search </h3>
+<p>In the navigator, under Registry, click <strong>Search</strong>.</p>
+<p> All resources found in the registry, can be searched through this interface. 
+Search could be refined by optionally providing, resource name, created date range, 
+updated date range, tags, comments, property name, property value and the  content.</p>
+<p><img src="images/search.png" width="743px"/></p>
+<p>Figure 10 : Advanced Search </p>
+
+<h3 id="Activities"> Activities </h3>
+<p>In the navigator, under Registry, click <strong>Activities</strong>.</p>
+<p> All registry related activities can be searched through this interface. Your search can be refined by providing optional fields, username, resource path and date range. </p>
+<p><img src="images/activities.png" width="743px"/></p>
+<p>Figure 11 : Activity Search </p>
+
+</body></html>

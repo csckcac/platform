@@ -1,0 +1,79 @@
+<?xml version="1.0"?>
+<!--
+  ~  Copyright (c) 2005-2008, WSO2 Inc. (http://www.wso2.org) All Rights Reserved.
+  ~
+  ~  WSO2 Inc. licenses this file to you under the Apache License,
+  ~  Version 2.0 (the "License"); you may not use this file except
+  ~  in compliance with the License.
+  ~  You may obtain a copy of the License at
+  ~
+  ~    http://www.apache.org/licenses/LICENSE-2.0
+  ~
+  ~  Unless required by applicable law or agreed to in writing,
+  ~  software distributed under the License is distributed on an
+  ~  "AS IS" BASIS, WITHOUT WARRANTIES OR CONDITIONS OF ANY
+  ~  KIND, either express or implied.  See the License for the
+  ~  specific language governing permissions and limitations
+  ~  under the License.
+  ~
+  -->
+<!DOCTYPE html
+   PUBLIC "-//W3C//DTD XHTML 1.1//EN"
+   "http://www.w3.org/TR/xhtml11/DTD/xhtml11.dtd" >
+<html xmlns="http://www.w3.org/1999/xhtml">
+<head>
+<title> WSO2 Governance Registry - Quick Start </title>
+<link href="../css/registry-docs.css" rel="stylesheet"/>
+<link href="../styles/dist-docs.css" rel="stylesheet" type="text/css" media="all"/>
+</head>
+
+<body>
+[ <a href="../docs_index.html"> Documentation Index </a> ]
+<h1> WSO2 Governance Registry - User Guide </h1>
+
+<h2 id="remote-reg">Remote Registry Configurations</h2>
+
+<p>There are two models in which you can setup a remotely deployed registry instead of an embedded registry</p>
+
+<h3 id="remote-reg-jdbc">JDBC-Based Remote Registry Configuration</h3>
+
+<p>You have to change the URL of the database in the registry.xml file to point to the database of
+the remote registry instance.</p>
+
+<pre>
+
+    &lt;currentDBConfig&gt;wso2registry&lt;/currentDBConfig&gt;
+
+    &lt;dbConfig name="wso2registry"&gt;</pre><strong>
+<pre>        &lt;url&gt;jdbc:h2:repository/database/WSO2CARBON_DB;DB_CLOSE_ON_EXIT=FALSE&lt;/url&gt;</pre></strong>
+<pre>        &lt;userName&gt;wso2carbon&lt;/userName&gt;
+        &lt;password&gt;wso2carbon&lt;/password&gt;
+        &lt;driverName&gt;org.h2.Driver&lt;/driverName&gt;
+        &lt;maxActive&gt;50&lt;/maxActive&gt;
+        &lt;maxWait&gt;60000&lt;/maxWait&gt;
+        &lt;minIdle&gt;5&lt;/minIdle&gt;
+    &lt;/dbConfig&gt;
+
+</pre>
+
+<p>More information on setting up WSO2 Governance Registry with various types of databases can be found in the
+<a href="../user_guide/registry_config.html#db-config">Registry Configurations</a> guide.</p>
+
+<h3 id="remote-reg-atom">Atom-Based Remote Registry Configuration [Deprecated]</h3>
+
+<p>You have to add the following entry in the carbon.xml, which is inside conf directory.</p>
+
+<pre>
+    &lt;Registry&gt;
+        &lt;Type&gt;remote&lt;/Type&gt;
+        &lt;Url&gt;http://remote-ip:port/registry/&lt;/Url&gt;
+        &lt;registryRoot&gt;/prefix&lt;/registryRoot&gt;
+        &lt;Username&gt;username&lt;/Username&gt;
+        &lt;Password&gt;password&lt;/Password&gt;
+    &lt;/Registry&gt;
+</pre>
+
+<p>Provide the URL of the remote registry as the value of Url tag. As the value of chroot tag, you have to give the path to the directory
+you are going to use as the root. Then change the username and password by providing the credentials of the user.</p>
+</body>
+</html>

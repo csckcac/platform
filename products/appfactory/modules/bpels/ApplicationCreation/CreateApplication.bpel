@@ -159,6 +159,15 @@
                         <bpel:query queryLanguage="urn:oasis:names:tc:wsbpel:2.0:sublang:xpath1.0"><![CDATA[ns:tenantInfoBean/xsd:usagePlan]]></bpel:query>
                     </bpel:to>
                 </bpel:copy>
+                <bpel:copy>
+                    <bpel:from>
+                        
+                        <![CDATA['WSO2 Stratos Manager']]>
+                    </bpel:from>
+                    <bpel:to part="parameters" variable="TenantMgtPLRequest">
+                        <bpel:query queryLanguage="urn:oasis:names:tc:wsbpel:2.0:sublang:xpath1.0"><![CDATA[ns:tenantInfoBean/xsd:originatedService]]></bpel:query>
+                    </bpel:to>
+                </bpel:copy>
             </bpel:assign>
             <bpel:invoke name="Invoke-AddTenant" partnerLink="TenantMgtPL" operation="addTenant" portType="ns:TenantMgtAdminServicePortType" inputVariable="TenantMgtPLRequest" outputVariable="TenantMgtPLResponse"></bpel:invoke>
             <bpel:assign validate="no" name="Assign-ActivateTenant">

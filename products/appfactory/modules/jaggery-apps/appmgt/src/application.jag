@@ -116,7 +116,7 @@
                     %>
                     <div class="tab-pane" id="tab3">
                         <h3>devOps operations</h3>
-                        <table class="styledLeft">
+                        <table class="table table-bordered table-stripe">
                             <%
                             var stages = getProperties('ApplicationDeployment.DeploymentStage');
                             for(var i=0; i<stages.length;i++){
@@ -124,7 +124,7 @@
                             %>
                                <tr>
                                 <td class="buttonRow">
-                                    <input type="button" onclick="location.href='deploy_to_stage.jag?applicationName=<%=applicationName%>&applicationSvnLocation=<%=appInfo.repoLink%>&stageName=<%=stage%>'" value='Deploy to <%=stage%>' class='button'/>
+                                    <input type="button" onclick="location.href='deploy_to_stage.jag?applicationKey=<%=applicationKey%>&applicationSvnLocation=<%=appInfo.repoLink%>&stageName=<%=stage%>'" value='Deploy to <%=stage%>' class='btn btn-primary'/>
                                 </td>
                             </tr>
                             <%

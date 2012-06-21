@@ -739,10 +739,12 @@ if (CarbonUIUtil.isSuperTenant(request)) {
 
             <% if (resourceData.getResourceType().equals(UIConstants.COLLECTION)) { %> 
             
-	            <% if (resourceData.getDeleteAllowed()){ %>
-		            <a class="edit-icon-link registryWriteOperation"
-		               onclick="javascript:showHideCommon('rename_panel<%=entryNumber%>');hideOthers(<%=entryNumber%>,'rename');if($('rename_panel<%=entryNumber%>').style.display!='none')$('resourceEdit<%=entryNumber%>').focus();">
-		                <fmt:message key="rename"/></a>
+	            <% if (resourceData.getDeleteAllowed()){
+                    if (resourceData.getPutAllowed()) { %>
+                   <a class="edit-icon-link registryWriteOperation"
+                      onclick="javascript:showHideCommon('rename_panel<%=entryNumber%>');hideOthers(<%=entryNumber%>,'rename');if($('rename_panel<%=entryNumber%>').style.display!='none')$('resourceEdit<%=entryNumber%>').focus();">
+                       <fmt:message key="rename"/></a>
+                   <% } %>
 	    	    <a class="move-icon-link registryWriteOperation"
 	               onclick="showHideCommon('move_panel<%=entryNumber%>');hideOthers(<%=entryNumber%>,'move');">
 	                <fmt:message key="move"/></a>
@@ -759,10 +761,12 @@ if (CarbonUIUtil.isSuperTenant(request)) {
 
 
             <% } else { %>
-	            <% if(resourceData.getDeleteAllowed()){ %>
+	            <% if(resourceData.getDeleteAllowed()){
+                    if (resourceData.getPutAllowed()) { %>
                 <a class="edit-icon-link registryWriteOperation"
 	               onclick="javascript:showHideCommon('rename_panel<%=entryNumber%>');hideOthers(<%=entryNumber%>,'rename');if($('rename_panel<%=entryNumber%>').style.display!='none')$('resourceEdit<%=entryNumber%>').focus();">
 	                <fmt:message key="rename"/></a>
+                <% } %>
 	            <a class="move-icon-link registryWriteOperation"
 	               onclick="showHideCommon('move_panel<%=entryNumber%>');hideOthers(<%=entryNumber%>,'move');">
 	                <fmt:message key="move"/></a>

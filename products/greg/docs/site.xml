@@ -53,8 +53,8 @@
             <item name="Releases"
                   href="http://www.wso2.org/downloads/governance-registry"/>
         </menu>
-        <menu name="Documentation" href="http://docs.wso2.org/wiki/display/Governance450/Governance+Registry+Documentation">
-            
+        <menu name="Documentation">
+            <item name="Product Documentation" href="http://docs.wso2.org/wiki/display/Governance450/Governance+Registry+Documentation"/>
             <item name="Developer Tools" href="http://www.wso2.com/products/carbon-studio"/>
             <item name="Migration Guide" href="http://www.wso2.org/wiki/display/registry/Migration+Guide"/>
             <item name="Feature Management" href="component-mgt/docs/userguide.html"/>

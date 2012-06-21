@@ -199,7 +199,7 @@ function createActionOption(id, i) {
 function onActionTypeSelectionChange(id, i) {
 
 	var actionType = getSelectedValue(id);
-	if (actionType != null) {
+    if (actionType != null) {
 		settype(actionType, i);
 	}
 }
@@ -216,7 +216,7 @@ function settype(type, i) {
 	var regexTD = document.getElementById('mediator.urlrewrite.regex' + i);
 	var nsEditorButtonTD = document.getElementById('nsEditorButtonTD' + i);
 
-	
+
 	
 	if ( 'set' == type ||  'append' == type || 'prepend' == type) {	
 		valueTD.innerHTML="<input type='text' name='mediator.urlrewrite.valuetxt" + i + "' id='mediator.urlrewrite.valuetxt" + i + "'" +

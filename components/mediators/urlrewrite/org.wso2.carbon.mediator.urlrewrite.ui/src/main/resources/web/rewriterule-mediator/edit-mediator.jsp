@@ -125,7 +125,7 @@
 
 
 							<td><select id="action_select<%=i%>"
-								name="action_select<%=i%>" onchange="onActionTypeSelectionChange('action_select<%=i%>','<%=i%>')" style="width: 150px; " >
+								name="action_select<%=i%>" style="width: 150px;" onchange="onActionTypeSelectionChange('action_select<%=i%>',<%=i %>);">
 								<option value="set"
 									<%=urlRewriteAction.getAction() != null &&
 					          urlRewriteAction.getAction().equals("set") ? "selected=\"selected\""

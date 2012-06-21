@@ -431,44 +431,6 @@
     After successfully adding a new Service user will be directed to newly added resource location which
     is determined based on the service namespace and name.
 </p>
-<a name="policy"></a>
-<h2>Adding Policies</h2>
-
-<p>User can add Policy by clicking <b>Policies->Add->Service Policy</b> link. This form contains fields,
-    policy URL and policy name. Governance Registry will automatically suggest a name for the policy once the URL is entered. Policy will be imported as a resource in to the Governance Registry.
-    A successful import will redirect the user to the list view of existing Policies.</p>
-<p>Add Policy user interface is shown in Figures 3 &amp; 4.</p>
-<a name="wsdl"></a>
-<h2>Adding WSDLs </h2>
-<p>
-    If a WSDL URL is available and you need to import service information of the Service of that WSDL,
-    you can use the <b>Metadata->Add->WSDL</b> link.  Once the URL is provided to the UI, a name is
-    automatically suggested for the resource in GReg. When given WSDL is imported, a Service artifact will
-    be automatically created for that WSDL. Details such as service name, service namespaces and
-    service endpoints will be extracted from the WSDL and stored in the newly created Service.
-    User can later edit this automatically created Service using the Service UI. For example, user can
-    edit that service and enter the rest of the information which was not added through WSDL import
-    operation, such as Authentication Platform, Authentication Mechanism etc.</p>
-
-<h3>Validation</h3>
-<p>WSO2 Governance Registry performs WS-I, WSDL validations on the wsdl provided once importing is done.
-    The result is displayed under &#34;properties&#34; section of the imported WSDL resource.
-    WSDL validation can optionally be disabled from the registry.xml.  Also, WSDL validation requires
-    a connection to the internet for the very first time, and will not work on systems with no Internet connectivity.</p>
-<p><img src="images/validation.png" width="492px"/></p>
-<p>Figure 5: WSDL validation</p>
-<a name="schema"></a>
-<h2>Add Schemas</h2>
-<p>
-    Similar to WSDL importing Governance Registry allow users to add Schema in to registry using add Schema UI.
-    User can provide the schema location in to Schema URL and Schema name will be automatically suggested
-    as in Add WSDL and Add Policy forms. Successful schema import will redirect the user in to the
-    currently available imported schema listing page.</p>
-<h3>Validation</h3>
-<p>Similar to WSDLs, WSO2 Governance Registry performs Schema validations on the wsdl provided once importing is done.
-    The result is displayed under &#34;properties&#34; section of the imported Schema resource.  Schema validation can optionally be disabled from the registry.xml.  Also, Schema validation requires a connection to the internet for the very first time,
-    and will not work on systems with no Internet connectivity.</p>
-<p></p>
 </body>
 
 </html>

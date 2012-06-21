@@ -147,37 +147,12 @@
         </dependency>
         <dependency>
             <groupId>org.wso2.carbon</groupId>
-            <artifactId>org.wso2.carbon.tenant.register.stub</artifactId>
-            <version>${stub.version}</version>
-        </dependency>
-        <dependency>
-            <groupId>org.wso2.carbon</groupId>
-            <artifactId>org.wso2.carbon.server.admin.stub</artifactId>
-            <version>${stub.version}</version>
-        </dependency>
-        <dependency>
-            <groupId>org.wso2.carbon</groupId>
-            <artifactId>org.wso2.carbon.module.mgt.stub</artifactId>
-            <version>${stub.version}</version>
-        </dependency>
-        <dependency>
-            <groupId>org.wso2.carbon</groupId>
-            <artifactId>org.wso2.carbon.dashboard.mgt.gadgetrepo.stub</artifactId>
-            <version>${stub.version}</version>
-        </dependency>
-        <dependency>
-            <groupId>org.wso2.carbon</groupId>
             <artifactId>org.wso2.carbon.dashboard.mgt.gadgetrepo.stub</artifactId>
             <version>${stub.version}</version>
         </dependency>
         <dependency>
             <groupId>org.wso2.carbon</groupId>
             <artifactId>org.wso2.carbon.dashboard.stub</artifactId>
-            <version>${stub.version}</version>
-        </dependency>
-        <dependency>
-            <groupId>org.wso2.carbon</groupId>
-            <artifactId>org.wso2.carbon.dashboard.mgt.gadgetrepo.stub</artifactId>
             <version>${stub.version}</version>
         </dependency>
         <dependency>
@@ -203,11 +178,6 @@
         <dependency>
             <groupId>org.wso2.carbon</groupId>
             <artifactId>org.wso2.carbon.registry.search.stub</artifactId>
-            <version>${stub.version}</version>
-        </dependency>
-        <dependency>
-            <groupId>org.wso2.carbon</groupId>
-            <artifactId>org.wso2.carbon.governance.custom.lifecycles.checklist.stub</artifactId>
             <version>${stub.version}</version>
         </dependency>
         <dependency>
@@ -291,14 +261,14 @@
                 </exclusion>
             </exclusions>
         </dependency>
-        <dependency>
+        <!--<dependency>
             <groupId>junit</groupId>
             <artifactId>junit</artifactId>
             <version>3.8.1</version>
-        </dependency>
-        <dependency>
+        </dependency>-->
+        <!--<dependency>
             <groupId>org.wso2.carbon</groupId>
-            <artifactId>wso2carbon-core</artifactId>
+            <artifactId>wso2carbon-core</artifactId>           ``
             <version>${stub.version}</version>
             <type>zip</type>
             <exclusions>
@@ -307,7 +277,7 @@
                     <artifactId>servlet-api</artifactId>
                 </exclusion>
             </exclusions>
-        </dependency>
+        </dependency>-->
         <dependency>
             <groupId>net.sf.opencsv</groupId>
             <artifactId>opencsv</artifactId>
@@ -335,17 +305,7 @@
         </dependency>
         <dependency>
             <groupId>org.wso2.carbon</groupId>
-            <artifactId>org.wso2.carbon.registry.ws.client</artifactId>
-            <version>${stub.version}</version>
-        </dependency>
-        <dependency>
-            <groupId>org.wso2.carbon</groupId>
             <artifactId>org.wso2.carbon.registry.api</artifactId>
-            <version>${stub.version}</version>
-        </dependency>
-        <dependency>
-            <groupId>org.wso2.carbon</groupId>
-            <artifactId>org.wso2.carbon.registry.core</artifactId>
             <version>${stub.version}</version>
         </dependency>
         <dependency>
@@ -361,11 +321,6 @@
         <dependency>
             <groupId>org.wso2.carbon</groupId>
             <artifactId>org.wso2.carbon.datasource.stub</artifactId>
-            <version>${stub.version}</version>
-        </dependency>
-        <dependency>
-            <groupId>org.wso2.carbon</groupId>
-            <artifactId>org.wso2.carbon.dataservices.stub</artifactId>
             <version>${stub.version}</version>
         </dependency>
         <dependency>
@@ -415,11 +370,6 @@
         </dependency>
         <dependency>
             <groupId>org.wso2.carbon</groupId>
-            <artifactId>org.wso2.carbon.mediation.configadmin.stub</artifactId>
-            <version>${stub.version}</version>
-        </dependency>
-        <dependency>
-            <groupId>org.wso2.carbon</groupId>
             <artifactId>org.wso2.carbon.springservices.ui</artifactId>
             <version>${stub.version}</version>
         </dependency>
@@ -460,22 +410,7 @@
         </dependency>
         <dependency>
             <groupId>org.wso2.carbon</groupId>
-            <artifactId>org.wso2.carbon.tenant.mgt.stub</artifactId>
-            <version>${stub.version}</version>
-        </dependency>
-        <dependency>
-            <groupId>org.wso2.carbon</groupId>
             <artifactId>org.wso2.carbon.governance.list.stub</artifactId>
-            <version>${stub.version}</version>
-        </dependency>
-        <dependency>
-            <groupId>org.wso2.carbon</groupId>
-            <artifactId>org.wso2.carbon.governance.list.stub</artifactId>
-            <version>${stub.version}</version>
-        </dependency>
-        <dependency>
-            <groupId>org.wso2.carbon</groupId>
-            <artifactId>org.wso2.carbon.registry.extensions.stub</artifactId>
             <version>${stub.version}</version>
         </dependency>
         <dependency>

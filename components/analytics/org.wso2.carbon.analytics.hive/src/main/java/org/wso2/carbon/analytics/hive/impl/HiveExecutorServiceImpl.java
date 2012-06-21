@@ -28,6 +28,8 @@ import org.wso2.carbon.analytics.hive.service.HiveExecutorService;
 import java.sql.*;
 import java.util.ArrayList;
 import java.util.List;
+import java.util.regex.Matcher;
+import java.util.regex.Pattern;
 
 public class HiveExecutorServiceImpl implements HiveExecutorService {
 
@@ -74,13 +76,34 @@ public class HiveExecutorServiceImpl implements HiveExecutorService {
                         getConfValue(HiveConstants.HIVE_PASSWORD_KEY));*/
                 Statement stmt = con.createStatement(); // TODO: Use datasource
 
-                String[] cmdLines = script.split(";\\r?\\n|;"); // Tokenize with ;[new-line]
+                Pattern regex = Pattern.compile("[^\\s\"']+|\"([^\"]*)\"|'([^']*)'");
+                Matcher regexMatcher = regex.matcher(script);
+                String formattedScript = "";
+                while (regexMatcher.find()) {
+                    String temp = "";
+                    if (regexMatcher.group(1) != null) {
+                        // Add double-quoted string without the quotes
+                        temp = regexMatcher.group(1).replaceAll(";", "%%");
+                        temp = "\"" + temp + "\"";
+                    } else if (regexMatcher.group(2) != null) {
+                        // Add single-quoted string without the quotes
+                        temp = regexMatcher.group(2).replaceAll(";", "%%");
+                        temp = "\'" + temp + "\'";
+                    } else {
+                        temp = regexMatcher.group();
+                    }
+                    formattedScript += temp + " ";
+                }
+
+
+                String[] cmdLines = formattedScript.split(";\\r?\\n|;"); // Tokenize with ;[new-line]
 
                 List<QueryResult> queryResults = new ArrayList<QueryResult>();
                 for (String cmdLine : cmdLines) {
 
                     String trimmedCmdLine = cmdLine.trim();
                     trimmedCmdLine = trimmedCmdLine.replaceAll(";", "");
+                    trimmedCmdLine = trimmedCmdLine.replaceAll("%%", ";");
                     if (!"".equals(trimmedCmdLine)) {
                         QueryResult queryResult = new QueryResult();
                         queryResult.setQuery(trimmedCmdLine);
@@ -125,7 +148,7 @@ public class HiveExecutorServiceImpl implements HiveExecutorService {
 
 
             } catch (SQLException e) {
-                throw new HiveExecutionException("Error while executing Hive script.\n"+e.getMessage(), e);
+                throw new HiveExecutionException("Error while executing Hive script.\n" + e.getMessage(), e);
             } finally {
                 if (null != con) {
                     try {

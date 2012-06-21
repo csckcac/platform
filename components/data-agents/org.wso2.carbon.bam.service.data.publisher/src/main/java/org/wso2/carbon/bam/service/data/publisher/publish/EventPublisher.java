@@ -26,7 +26,6 @@ import org.wso2.carbon.eventbridge.commons.exception.TransportException;
 import java.net.MalformedURLException;
 import java.util.ArrayList;
 import java.util.List;
-import java.util.Map;
 
 public class EventPublisher {
 
@@ -63,27 +62,15 @@ public class EventPublisher {
                 eventPublisherConfig.setAgentConfiguration(agentConfiguration);
                 eventPublisherConfig.setDataPublisher(dataPublisher);
 
-                try {
-                    streamId = dataPublisher.findEventStream(configData.getStreamName(), configData.getVersion());
-                } catch (NoStreamDefinitionExistException e) {
-                    streamId = dataPublisher.defineEventStream(streamDef);
-                }
-                Map<EventStreamDefinition,String> defMap = eventPublisherConfig.getEventStreamDefinitionMap();
-                defMap.put(streamDef,streamId);
                 ServiceAgentUtil.getEventPublisherConfigMap().put(key,eventPublisherConfig);
-            }
-            Map<EventStreamDefinition,String> eventStreamDefinitionMap =
-                    eventPublisherConfig.getEventStreamDefinitionMap();
-
-            if(eventStreamDefinitionMap.containsKey(streamDef)){
-                isStreamDefinitionAlreadyExist =true;
-                streamId = eventStreamDefinitionMap.get(streamDef);
             }
 
             DataPublisher dataPublisher = eventPublisherConfig.getDataPublisher();
-            if(!isStreamDefinitionAlreadyExist){
+
+            try {
+                streamId = dataPublisher.findEventStream(configData.getStreamName(), configData.getVersion());
+            } catch (NoStreamDefinitionExistException e) {
                 streamId = dataPublisher.defineEventStream(streamDef);
-                eventPublisherConfig.getEventStreamDefinitionMap().put(streamDef,streamId);
             }
 
             dataPublisher.publish(streamId, getObjectArray(metaData), getObjectArray(correlationData),

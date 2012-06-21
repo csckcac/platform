@@ -47,6 +47,11 @@
                 <version>${cxf.wso2.version}</version>
             </dependency>
             <dependency>
+                <groupId>commons-pool.wso2</groupId>
+                <artifactId>commons-pool</artifactId>
+                <version>${commons.pool.version}</version>
+            </dependency>
+            <dependency>
                 <groupId>com.google.code.gson</groupId>
             <artifactId>gson</artifactId>
                 <version>${gson.version}</version>
@@ -115,7 +120,7 @@
     </dependencyManagement>
     <properties>
         <wso2carbon.version.eventbridge>${wso2carbon.version}</wso2carbon.version.eventbridge>
-
+	<commons.pool.version>1.5.0.wso2v1</commons.pool.version>
     </properties>
 </project>
 

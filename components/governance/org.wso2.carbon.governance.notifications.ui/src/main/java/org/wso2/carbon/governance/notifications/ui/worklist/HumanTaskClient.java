@@ -39,6 +39,7 @@ import org.wso2.carbon.utils.CarbonUtils;
 import org.wso2.carbon.utils.ServerConstants;
 
 import javax.servlet.ServletConfig;
+import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpSession;
 import java.rmi.RemoteException;
 import java.util.LinkedList;
@@ -86,8 +87,12 @@ public class HumanTaskClient {
         options.setManageSession(true);
     }
 
-    public WorkItem[] getWorkItems()
+    public WorkItem[] getWorkItems(HttpServletRequest request)
             throws IllegalArgumentFault, IllegalStateFault, IllegalAccessFault, RemoteException {
+        if (!CarbonUIUtil.isUserAuthorized(request,
+                "/permission/admin/manage/resources/notifications")) {
+            return new WorkItem[0];
+        }
         TSimpleQueryInput queryInput = new TSimpleQueryInput();
         queryInput.setPageNumber(0);
         queryInput.setSimpleQueryCategory(TSimpleQueryCategory.ASSIGNED_TO_ME);

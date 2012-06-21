@@ -26,7 +26,7 @@ under the License.
     try {
         HumanTaskClient client = new HumanTaskClient(config, session);
         roles = client.getRoles(session);
-        workItems = client.getWorkItems();
+        workItems = client.getWorkItems(request);
     } catch (Exception ignored) {
         return;
     }

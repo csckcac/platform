@@ -34,14 +34,14 @@
     <description>This feature contains the core bundles required for BAM Data Publisher Activity Mediation Server functionality</description>
 
     <dependencies>
-        <dependency>
+        <!--<dependency>
             <groupId>org.wso2.carbon</groupId>
             <artifactId>org.wso2.carbon.bam.activity.mediation.data.publisher.ui</artifactId>
         </dependency>
         <dependency>
             <groupId>org.wso2.carbon</groupId>
             <artifactId>org.wso2.carbon.bam.activity.mediation.data.publisher.stub</artifactId>
-        </dependency>
+        </dependency>-->
         <dependency>
             <groupId>org.wso2.carbon</groupId>
             <artifactId>org.wso2.carbon.bam.mediationstats.data.publisher.ui</artifactId>
@@ -76,8 +76,8 @@
                                 </properties>
                             </adviceFile>
                             <bundles>
-                                <bundleDef>org.wso2.carbon:org.wso2.carbon.bam.activity.mediation.data.publisher.ui</bundleDef>
-                                <bundleDef>org.wso2.carbon:org.wso2.carbon.bam.activity.mediation.data.publisher.stub</bundleDef>
+                                <!--<bundleDef>org.wso2.carbon:org.wso2.carbon.bam.activity.mediation.data.publisher.ui</bundleDef>
+                                <bundleDef>org.wso2.carbon:org.wso2.carbon.bam.activity.mediation.data.publisher.stub</bundleDef>-->
                                 <bundleDef>org.wso2.carbon:org.wso2.carbon.bam.mediationstats.data.publisher.ui</bundleDef>
                                 <bundleDef>org.wso2.carbon:org.wso2.carbon.bam.mediationstats.data.publisher.stub</bundleDef>
                             </bundles>

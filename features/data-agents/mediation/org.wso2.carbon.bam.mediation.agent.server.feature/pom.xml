@@ -35,10 +35,10 @@
 
 
     <dependencies>
-        <dependency>
+        <!--dependency>
             <groupId>org.wso2.carbon</groupId>
             <artifactId>org.wso2.carbon.bam.activity.mediation.data.publisher</artifactId>
-        </dependency>
+        </dependency-->
         <dependency>
             <groupId>org.wso2.carbon</groupId>
             <artifactId>org.wso2.carbon.bam.mediationstats.data.publisher</artifactId>
@@ -68,12 +68,15 @@
                                 </properties>
                             </adviceFile>
                             <bundles>
-                                <bundleDef>org.wso2.carbon:org.wso2.carbon.bam.activity.mediation.data.publisher</bundleDef>
+                                <!--bundleDef>org.wso2.carbon:org.wso2.carbon.bam.activity.mediation.data.publisher</bundleDef-->
                                 <bundleDef>org.wso2.carbon:org.wso2.carbon.bam.mediationstats.data.publisher</bundleDef>
-
+                                <bundleDef>org.wso2.carbon:org.wso2.carbon.bam.data.publisher.util</bundleDef>
                             </bundles>
                             <importFeatures>
                                 <importFeatureDef>org.wso2.carbon.core.server:${wso2carbon.version}</importFeatureDef>
+                                <importFeatureDef>org.wso2.carbon.eventbridge.agent.thrift.feature:${wso2carbon.version.event-bridge}</importFeatureDef>
+                                <importFeatureDef>org.wso2.carbon.eventbridge.commons.feature:${wso2carbon.version.event-bridge}</importFeatureDef>
+                                <importFeatureDef>org.wso2.carbon.eventbridge.thrift.commons.feature:${wso2carbon.version.event-bridge}</importFeatureDef>
                             </importFeatures>
                         </configuration>
                     </execution>

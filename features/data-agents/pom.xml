@@ -32,7 +32,7 @@
     <url>http://wso2.org</url>
 
     <modules>
-        <module>agent</module>
+        <!--<module>agent</module>-->
         <module>mediation</module>
         <module>service</module>
     </modules>
@@ -40,43 +40,17 @@
     <dependencyManagement>
         <dependencies>
             <dependency>
-                <groupId>libthrift.wso2</groupId>
-                <artifactId>libthrift</artifactId>
-                <version>${thrift.version}</version>
-            </dependency>
-            <!--<dependency>-->
-                <!--<groupId>org.slf4j</groupId>-->
-                <!--<artifactId>slf4j-api</artifactId>-->
-                <!--<version>${slf4j.version}</version>-->
-            <!--</dependency>-->
-            <!--<dependency>-->
-                <!--<groupId>org.slf4j</groupId>-->
-                <!--<artifactId>slf4j-log4j12</artifactId>-->
-                <!--<version>${slf4j.version}</version>-->
-            <!--</dependency>-->
-             <dependency>
-                <groupId>slf4j.wso2</groupId>
-                <artifactId>slf4j</artifactId>
-                <version>${slf4j.version}</version>
-            </dependency>
-            <dependency>
                 <groupId>org.wso2.carbon</groupId>
-                <artifactId>org.wso2.carbon.bam2.service</artifactId>
-                <version>${wso2carbon.version}</version>
-            </dependency>
-            <dependency>
-                <groupId>com.google.common.wso2</groupId>
-                <artifactId>google-collect</artifactId>
-                <version>${google.collect.osgi.version}</version>
+                <artifactId>org.wso2.carbon.bam.data.publisher.util</artifactId>
+                <version>${wso2carbon.version.bam-data-publishers}</version>
             </dependency>
         </dependencies>
    </dependencyManagement>
 
     <properties>
         <wso2carbon.version.activities>${wso2carbon.version}</wso2carbon.version.activities>
-        <thrift.version>0.5.wso2v2</thrift.version>
-        <slf4j.version>1.5.10.wso2v1</slf4j.version>
-        <google.collect.osgi.version>1.0.0.wso2v2</google.collect.osgi.version>
+        <wso2carbon.version.event-bridge>${wso2carbon.version}</wso2carbon.version.event-bridge>
+        <wso2carbon.version.bam-data-publishers>${wso2carbon.version}</wso2carbon.version.bam-data-publishers>
     </properties>
 
 </project>

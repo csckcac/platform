@@ -39,7 +39,7 @@
 
     <dependencyManagement>
         <dependencies>
-            <dependency>
+            <!--<dependency>
                 <groupId>org.wso2.carbon</groupId>
                 <artifactId>org.wso2.carbon.bam.activity.mediation.data.publisher</artifactId>
                 <version>${wso2carbon.version.bam.data.publisher.activity.mediation}</version>
@@ -53,7 +53,7 @@
                 <groupId>org.wso2.carbon</groupId>
                 <artifactId>org.wso2.carbon.bam.activity.mediation.data.publisher.stub</artifactId>
                 <version>${org.wso2.carbon.bam.data.publisher.activity.mediation.stub}</version>
-            </dependency>
+            </dependency>-->
             <dependency>
                 <groupId>org.wso2.carbon</groupId>
                 <artifactId>org.wso2.carbon.bam.mediationstats.data.publisher</artifactId>
@@ -77,9 +77,9 @@
         <wso2carbon.version.bam.data.publisher.mediationstats>${wso2carbon.version} </wso2carbon.version.bam.data.publisher.mediationstats>
         <wso2carbon.version.bam.data.publisher.mediationstats.ui>${wso2carbon.version} </wso2carbon.version.bam.data.publisher.mediationstats.ui>
         <org.wso2.carbon.bam.data.publisher.mediationstats.stub>${wso2carbon.version} </org.wso2.carbon.bam.data.publisher.mediationstats.stub>
-        <wso2carbon.version.bam.data.publisher.activity.mediation>${wso2carbon.version}</wso2carbon.version.bam.data.publisher.activity.mediation>
+        <!--wso2carbon.version.bam.data.publisher.activity.mediation>${wso2carbon.version}</wso2carbon.version.bam.data.publisher.activity.mediation>
         <wso2carbon.version.bam.data.publisher.activity.mediation.ui>${wso2carbon.version}</wso2carbon.version.bam.data.publisher.activity.mediation.ui>
-        <org.wso2.carbon.bam.data.publisher.activity.mediation.stub>${wso2carbon.version}</org.wso2.carbon.bam.data.publisher.activity.mediation.stub>
+        <org.wso2.carbon.bam.data.publisher.activity.mediation.stub>${wso2carbon.version}</org.wso2.carbon.bam.data.publisher.activity.mediation.stub-->
     </properties>
 </project>
 

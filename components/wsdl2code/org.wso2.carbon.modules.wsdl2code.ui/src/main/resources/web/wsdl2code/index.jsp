@@ -91,7 +91,13 @@
     }
 
     function startCodegen(optionsObj) {
-        if (document.getElementById("id_uri") == null || document.getElementById("id_uri").value == "") {
+        var genClientScenario = false;
+        <%if (generateClient != null) { %>
+            genClientScenario = true;
+        <%}%>
+
+        if (!genClientScenario && (document.getElementById("id_uri") == null ||
+                document.getElementById("id_uri").value == "")) {
             CARBON.showWarningDialog('<fmt:message key="error.uri.field.empty"/>');
             return false;
         }

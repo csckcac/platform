@@ -60,7 +60,7 @@ import org.wso2.carbon.governance.api.util.GovernanceUtils;
 Registry governanceRegistry = GovernanceUtils.getGovernanceUserRegistry(rootRegistry, username); //rootRegistry refers to an instance of RemoteRegistry or WSRegistryServiceClient
 </pre>
 
-<p>As an specific example, governance registry can be obtained via Remote Registry as shown below.</p>
+<p>One other possible way is, governance registry can be obtained via Remote Registry as shown below.</p>
 
 <pre>
 import org.wso2.carbon.registry.app.RemoteRegistry;
@@ -69,6 +69,23 @@ import org.wso2.carbon.governance.api.util.GovernanceUtils;
 Registry rootRegistry = new RemoteRegistry(new URL(remoteRegistryUrl), username, password);
 Registry governanceRegistry = GovernanceUtils.getGovernanceUserRegistry(rootRegistry, username);
 </pre>
+
+<p>As another way specific example, governance registry can be obtained via WS-Registry as shown below.</p>
+
+<pre>
+import org.wso2.carbon.registry.ws.client.registry.WSRegistryServiceClient;
+import org.wso2.carbon.governance.api.util.GovernanceUtils;
+import org.apache.axis2.context.ConfigurationContextFactory;
+import org.wso2.carbon.base.ServerConfiguration;
+
+ConfigurationContext configurationContext = ConfigurationContextFactory.createConfigurationContextFromFileSystem(
+                       carbon_home + File.separator + "repository" + File.separator + "deployment" + File.separator + "client",
+                           ServerConfiguration.getInstance().getFirstProperty("Axis2Config.clientAxis2XmlLocation")));
+
+WSRegistryServiceClient rootRegistry = new WSRegistryServiceClient(url, username, password,configurationContext);
+Registry governanceRegistry = GovernanceUtils.getGovernanceUserRegistry(rootRegistry, username);
+</pre>
+
 
 <h3>Services</h3>
 <strong>Adding a new service</strong>

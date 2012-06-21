@@ -145,9 +145,12 @@
 
 
                         <Private-Package>
-                            org.wso2.carbon.eventbridge.restapi.internal
+                            org.wso2.carbon.eventbridge.restapi.internal,
+                            org.wso2.carbon.eventbridge.restapi.internal.*
                         </Private-Package>
                         <Export-Package>
+                            !org.wso2.carbon.eventbridge.restapi.internal,
+                            !org.wso2.carbon.eventbridge.restapi.internal.*,
                             org.wso2.carbon.eventbridge.restapi.*
                         </Export-Package>
                         <Import-Package>

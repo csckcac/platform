@@ -54,7 +54,8 @@ import java.io.File;
 import java.io.IOException;
 import java.rmi.RemoteException;
 
-public class GregExtensionsCopyExecutor {
+public class GregExtentionsLCwithScript {
+
     private String sessionCookie;
 
     private WSRegistryServiceClient registry;
@@ -64,7 +65,7 @@ public class GregExtensionsCopyExecutor {
     private RegistrySearchAdminService searchAdminService;
     private UserInfo userInfo;
 
-    private final String ASPECT_NAME = "ApprovalLifeCycle";
+    private final String ASPECT_NAME = "LCwithScript";
     private String servicePathDev;
     LifecycleBean lifeCycle;
 
@@ -88,8 +89,8 @@ public class GregExtensionsCopyExecutor {
         registry = new RegistryProvider().getRegistry(userId, ProductConstant.GREG_SERVER_NAME);
         Registry governance = new RegistryProvider().getGovernance(registry, userId);
 
-        String serviceName = "CustomLifeCycleTestService";
-     //   Utils.deleteLifeCycleIfExist(sessionCookie, ASPECT_NAME, lifeCycleManagerAdminService);
+        String serviceName = "CustomLifeCycleTestService2";
+        //   Utils.deleteLifeCycleIfExist(sessionCookie, ASPECT_NAME, lifeCycleManagerAdminService);
         servicePathDev = "/_system/governance" + Utils.addService("sns", serviceName, governance);
         Thread.sleep(1000);
 
@@ -100,13 +101,13 @@ public class GregExtensionsCopyExecutor {
             throws IOException, LifeCycleManagementServiceExceptionException, InterruptedException,
                    SearchAdminServiceRegistryExceptionException {
         String filePath = ProductConstant.getResourceLocations(ProductConstant.GREG_SERVER_NAME)
-                          + File.separator + "lifecycle" + File.separator + "copyExecutorLifeCycle.xml";
+                          + File.separator + "lifecycle" + File.separator + "lcWithScript.xml";
         String lifeCycleConfiguration = FileManager.readFile(filePath);
         Assert.assertTrue(lifeCycleManagerAdminService.addLifeCycle(sessionCookie, lifeCycleConfiguration)
                 , "Adding New LifeCycle Failed");
         Thread.sleep(2000);
         lifeCycleConfiguration = lifeCycleManagerAdminService.getLifecycleConfiguration(sessionCookie, ASPECT_NAME);
-        Assert.assertTrue(lifeCycleConfiguration.contains("aspect name=\"ApprovalLifeCycle\""),
+        Assert.assertTrue(lifeCycleConfiguration.contains("aspect name=\"LCwithScript\""),
                           "LifeCycleName Not Found in lifecycle configuration");
 
         String[] lifeCycleList = lifeCycleManagerAdminService.getLifecycleList(sessionCookie);
@@ -179,11 +180,11 @@ public class GregExtensionsCopyExecutor {
         registry.removeAspect(ASPECT_NAME);
 
         if (servicePathDev != null) {
-         registry.delete(servicePathDev);
+            registry.delete(servicePathDev);
 
         }
         //Assert.assertTrue(lifeCycleManagerAdminService.deleteLifeCycle(sessionCookie, ASPECT_NAME),
-          //                "Life Cycle Deleted failed");
+        //                "Life Cycle Deleted failed");
         Thread.sleep(2000);
         CustomSearchParameterBean searchQuery = new CustomSearchParameterBean();
         SearchParameterBean paramBean = new SearchParameterBean();

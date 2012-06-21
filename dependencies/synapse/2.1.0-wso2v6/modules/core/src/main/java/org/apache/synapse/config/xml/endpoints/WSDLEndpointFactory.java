@@ -25,6 +25,7 @@ import org.apache.axiom.om.OMNamespace;
 import org.apache.axiom.om.OMNode;
 import org.apache.axis2.description.WSDL2Constants;
 import org.apache.axis2.util.JavaUtils;
+import org.apache.commons.httpclient.ConnectTimeoutException;
 import org.apache.synapse.SynapseConstants;
 import org.apache.synapse.config.SynapseConfigUtils;
 import org.apache.synapse.config.xml.endpoints.utils.WSDL11EndpointBuilder;
@@ -34,6 +35,7 @@ import org.apache.synapse.endpoints.EndpointDefinition;
 
 import javax.xml.namespace.QName;
 import java.io.File;
+import java.net.ConnectException;
 import java.net.URL;
 import java.util.Properties;
 
@@ -149,6 +151,8 @@ public class WSDLEndpointFactory extends DefaultEndpointFactory {
                                 }
                             }
                         }
+                    } catch (ConnectException e) {
+                        log.warn("Could not connect to the WSDL endpoint " + wsdlURI.trim(), e);
                     } catch (Exception e) {
                         handleException("Couldn't create endpoint from the given WSDL URI : "
                                 + e.getMessage(), e);

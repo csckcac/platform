@@ -36,4 +36,6 @@ public final class HumanTaskTestConstants {
     public static final String REGIONAL_CLERKS_ROLE = "regionalClerksRole";
 
     public static final String REGIONAL_MANAGER_ROLE = "regionalManagerRole";
+
+    public static final String CLAIMS_APPROVAL_PACKAGE_NAME = "ClaimsApprovalTask";
 }

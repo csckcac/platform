@@ -25,6 +25,8 @@ import org.testng.annotations.BeforeGroups;
 import org.testng.annotations.Test;
 import org.wso2.bps.integration.tests.util.FrameworkSettings;
 import org.wso2.bps.integration.tests.util.HumanTaskTestConstants;
+import org.wso2.carbon.humantask.stub.mgt.HumanTaskPackageManagementStub;
+import org.wso2.carbon.humantask.stub.mgt.types.HumanTaskPackageDownloadData;
 import org.wso2.carbon.humantask.stub.ui.task.client.api.HumanTaskClientAPIAdminStub;
 import org.wso2.carbon.humantask.stub.ui.task.client.api.types.TComment;
 import org.wso2.carbon.humantask.stub.ui.task.client.api.types.TTaskAbstract;
@@ -32,9 +34,7 @@ import org.wso2.carbon.humantask.stub.ui.task.client.api.types.TTaskEvent;
 import org.wso2.carbon.humantask.stub.ui.task.client.api.types.TTaskEvents;
 import org.wso2.carbon.utils.CarbonUtils;
 
-import java.util.ArrayList;
 import java.util.HashSet;
-import java.util.List;
 import java.util.Set;
 
 /**
@@ -44,6 +44,8 @@ public class TaskOperationsTestCase {
 
     private HumanTaskClientAPIAdminStub taskOperationsStub = null;
 
+    private HumanTaskPackageManagementStub packageManagementStub = null;
+
     private URI taskId = null;
 
     private Set<String> taskEvents = new HashSet<String>();
@@ -52,7 +54,20 @@ public class TaskOperationsTestCase {
     @BeforeGroups(groups = {"wso2.bps"}, description = " Copying sample HumanTask packages")
     public void init() throws Exception {
         initTaskOperationServiceStub();
+        initPackageManagementServiceStub();
         taskId = new URI("1");
+    }
+
+    private void initPackageManagementServiceStub() throws Exception {
+        String packageManagementServiceURL = "https://" + FrameworkSettings.HOST_NAME +
+                                             ":" + FrameworkSettings.HTTPS_PORT +
+                                             "/services/HumanTaskPackageManagement";
+
+        packageManagementStub = new HumanTaskPackageManagementStub(packageManagementServiceURL);
+        ServiceClient serviceClient = packageManagementStub._getServiceClient();
+        CarbonUtils.setBasicAccessSecurityHeaders("admin", "admin", serviceClient);
+        Options serviceClientOptions = serviceClient.getOptions();
+        serviceClientOptions.setManageSession(true);
     }
 
     private void initTaskOperationServiceStub() throws Exception {
@@ -68,6 +83,16 @@ public class TaskOperationsTestCase {
         Options serviceClientOptions = serviceClient.getOptions();
         serviceClientOptions.setManageSession(true);
 
+    }
+
+    @Test(groups = {}, description = "package download test case")
+    public void testDownloadPackage() throws Exception {
+        HumanTaskPackageDownloadData downloadData =
+                packageManagementStub.downloadHumanTaskPackage(
+                        HumanTaskTestConstants.CLAIMS_APPROVAL_PACKAGE_NAME);
+
+        Assert.assertNotNull(downloadData.getPackageFileData(), "The downloaded package data cannot be null");
+        Assert.assertEquals(downloadData.getPackageName(), HumanTaskTestConstants.CLAIMS_APPROVAL_PACKAGE_NAME + ".zip");
     }
 
     @Test(groups = {"wso2.bps"}, description = "Claims approval test case")
@@ -225,9 +250,9 @@ public class TaskOperationsTestCase {
 
         for (String occurredTaskEvent : this.taskEvents) {
             Assert.assertTrue(persistedTaskEvents.contains(occurredTaskEvent),
-                               "The occurred task event [" + occurredTaskEvent +
-                               "] is not in the persisted task event list :[" +
-                               StringUtils.join(persistedTaskEvents.toArray(), ",") + "]");
+                              "The occurred task event [" + occurredTaskEvent +
+                              "] is not in the persisted task event list :[" +
+                              StringUtils.join(persistedTaskEvents.toArray(), ",") + "]");
         }
 
     }

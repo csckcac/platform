@@ -28,6 +28,7 @@ import org.testng.annotations.AfterClass;
 import org.testng.annotations.BeforeClass;
 import org.testng.annotations.Test;
 import org.wso2.bps.integration.tests.util.FrameworkSettings;
+import org.wso2.bps.integration.tests.util.HumanTaskTestConstants;
 import org.wso2.carbon.humantask.stub.mgt.HumanTaskPackageManagementStub;
 import org.wso2.carbon.humantask.stub.mgt.PackageManagementException;
 import org.wso2.carbon.humantask.stub.mgt.types.DeployedTaskDefinitionsPaginated;
@@ -79,7 +80,7 @@ public class UnDeploymentTestCase {
 
     @Test(groups = {"wso2.bps", "g"}, dependsOnGroups = "f", description = "HumanTask Un-deployment test")
     public void UnDeploymentTestService() throws Exception {
-        unDeploy("ClaimsApprovalTask");
+        unDeploy(HumanTaskTestConstants.CLAIMS_APPROVAL_PACKAGE_NAME);
     }
 
     private void unDeploy(String packageName)

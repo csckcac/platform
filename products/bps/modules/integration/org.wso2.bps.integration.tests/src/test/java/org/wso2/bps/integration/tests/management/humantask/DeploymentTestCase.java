@@ -26,6 +26,7 @@ import org.testng.annotations.BeforeClass;
 import org.testng.annotations.Test;
 import org.wso2.bps.integration.tests.util.BPSTestUtils;
 import org.wso2.bps.integration.tests.util.FrameworkSettings;
+import org.wso2.bps.integration.tests.util.HumanTaskTestConstants;
 import org.wso2.carbon.humantask.stub.mgt.HumanTaskPackageManagementStub;
 import org.wso2.carbon.humantask.stub.mgt.PackageManagementException;
 import org.wso2.carbon.humantask.stub.mgt.types.DeployedTaskDefinitionsPaginated;
@@ -102,8 +103,8 @@ public class DeploymentTestCase {
         }
 
 
-        deployPackage("ClaimsApprovalTask", "ClaimService");
-        checkTaskDeployment("ClaimsApprovalTask");
+        deployPackage(HumanTaskTestConstants.CLAIMS_APPROVAL_PACKAGE_NAME, "ClaimService");
+        checkTaskDeployment(HumanTaskTestConstants.CLAIMS_APPROVAL_PACKAGE_NAME);
     }
 
     private void deployPackage(String packageName, String serviceToExposeProcess)

@@ -2067,6 +2067,62 @@ public class ApiMgtDAO {
             APIMgtDBUtil.closeAllConnections(prepStmt, connection, rs);
         }
     }
+
+    public void deleteAPI(APIIdentifier apiId) throws APIManagementException {
+        Connection connection = null;
+        PreparedStatement prepStmt = null;
+        ResultSet rs = null;
+        int id = -1;
+        String getAPIQuery = "SELECT " +
+                             "API.API_ID FROM AM_API API" +
+                             " WHERE " +
+                             "API.API_PROVIDER = ?" +
+                             "AND API.API_NAME = ?" +
+                             "AND API.API_VERSION = ?";
+        String deleteLCEventQuery = "DELETE FROM AM_API_LC_EVENT WHERE API_ID=? ";
+        String deleteSubscriptionQuery = "DELETE FROM AM_SUBSCRIPTION WHERE API_ID=?";
+        String deleteAPIQuery = "DELETE FROM AM_API WHERE API_PROVIDER=? AND API_NAME=? AND API_VERSION=? ";
+
+        try {
+            connection = APIMgtDBUtil.getConnection();
+            prepStmt = connection.prepareStatement(getAPIQuery);
+            prepStmt.setString(1, apiId.getProviderName());
+            prepStmt.setString(2, apiId.getApiName());
+            prepStmt.setString(3, apiId.getVersion());
+            rs = prepStmt.executeQuery();
+            if (rs.next()) {
+                id = rs.getInt("API_ID");
+            }
+            rs.close();
+            prepStmt.close();
+            if (id == -1) {
+                throw new APIManagementException("Unable to find the API: " + apiId);
+            }
+            prepStmt = connection.prepareStatement(deleteSubscriptionQuery);
+            prepStmt.setInt(1, id);
+            prepStmt.execute();
+
+            prepStmt = connection.prepareStatement(deleteLCEventQuery);
+            prepStmt.setInt(1, id);
+            prepStmt.execute();
+
+            prepStmt = connection.prepareStatement(deleteAPIQuery);
+            prepStmt.setString(1, apiId.getProviderName());
+            prepStmt.setString(2, apiId.getApiName());
+            prepStmt.setString(3, apiId.getVersion());
+            prepStmt.execute();
+
+            connection.commit();
+
+        } catch (SQLException e) {
+            String msg = "Error while removing the API: " + apiId + " from the database";
+            log.error(msg, e);
+            throw new APIManagementException(msg, e);
+
+        } finally {
+            APIMgtDBUtil.closeAllConnections(prepStmt, connection, rs);
+        }
+    }
     
     private static class SubscriptionInfo {
         private int subscriptionId;

@@ -129,10 +129,10 @@
             <groupId>org.wso2.carbon</groupId>
 	    <artifactId>org.wso2.carbon.mediator.router.ui</artifactId>
         </dependency>
-<!--        <dependency>
+        <dependency>
             <groupId>org.wso2.carbon</groupId>
 	    <artifactId>org.wso2.carbon.mediator.rule.ui</artifactId>
-        </dependency> -->
+        </dependency>
         <dependency>
             <groupId>org.wso2.carbon</groupId>
 	    <artifactId>org.wso2.carbon.mediator.script.ui</artifactId>
@@ -278,7 +278,7 @@
                                 <bundleDef>org.wso2.carbon:org.wso2.carbon.mediator.property.ui</bundleDef>
                                 <bundleDef>org.wso2.carbon:org.wso2.carbon.mediator.rmsequence.ui</bundleDef>
                                 <bundleDef>org.wso2.carbon:org.wso2.carbon.mediator.router.ui</bundleDef>
-                         <!--       <bundleDef>org.wso2.carbon:org.wso2.carbon.mediator.rule.ui</bundleDef> -->
+                                <bundleDef>org.wso2.carbon:org.wso2.carbon.mediator.rule.ui</bundleDef>
                                 <bundleDef>org.wso2.carbon:org.wso2.carbon.mediator.script.ui</bundleDef>
                                 <bundleDef>org.wso2.carbon:org.wso2.carbon.mediator.send.ui</bundleDef>
                                 <bundleDef>org.wso2.carbon:org.wso2.carbon.mediator.store.ui</bundleDef>

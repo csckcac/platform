@@ -111,11 +111,11 @@ public class HumanTaskClient {
 
     public String[] getRoles(HttpSession session) throws RemoteException,
             GetAllRolesNamesUserAdminExceptionException,
-            GetUserStoreInfoUserAdminExceptionException, GetRolesOfUserUserAdminExceptionException {
+            GetUserStoreInfoUserAdminExceptionException,
+            GetRolesOfCurrentUserUserAdminExceptionException {
         //TODO: This operations needs to make use of the cache for good reasons.
 
-        String username = (String) session.getAttribute("logged-user");
-        FlaggedName[] allRolesNames = umStub.getRolesOfUser(username);
+        FlaggedName[] allRolesNames = umStub.getRolesOfCurrentUser();
         String adminRole = umStub.getUserStoreInfo().getAdminRole();
 
         for (FlaggedName role : allRolesNames) {

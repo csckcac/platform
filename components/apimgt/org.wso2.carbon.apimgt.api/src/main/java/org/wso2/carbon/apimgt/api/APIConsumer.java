@@ -199,4 +199,5 @@ public interface APIConsumer extends APIManager {
     public Set<APIIdentifier> getAPIByConsumerKey(String accessToken) throws APIManagementException;
 
     public Set<API> searchAPI(String searchTerm, String searchType) throws APIManagementException;
+    public int getUserRating(APIIdentifier apiId, String user) throws APIManagementException;
 }

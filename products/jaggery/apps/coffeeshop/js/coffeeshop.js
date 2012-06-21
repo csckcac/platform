@@ -3,7 +3,7 @@ $('.message-trace').hide();
 $('.orderstatus').tooltip();
 
 this.addNewOrder = function () {
-console.log("Click  on addNewOrder");
+//console.log("Click  on addNewOrder");
 var bevType = $("#beverage-type").val();
 CoffeeShopClient.addOrder(bevType);
 $('#addOrder').modal('toggle');
@@ -11,7 +11,7 @@ $('#addOrder').modal('toggle');
 }
 
 this.markPaid = function (id) {
-console.log("Call markPaid" +id);
+//console.log("Call markPaid" +id);
 CoffeeShopClient.payOrder(id);
 $("#" + id).children(".paid").show();
 $("#" + id).children(".payment-action").hide();
@@ -19,14 +19,14 @@ $("#" + id).children(".payment-action").hide();
 }
 
 this.markComplete =  function (id) {
-console.log("Call markComplete" +id);
+//console.log("Call markComplete" +id);
 CoffeeShopClient.updateStatus(id,'Complete');
 $("#" + id).children(".completed").show();
 $("#" + id).children(".order-status").hide();
 }
 
 this.markDeletOrder = function(id) {
-console.log("Call delet" +id);
+//console.log("Call delet" +id);
 CoffeeShopClient.deletOrder(id);
 $("#" + id).children(".completed").show();
 $("#" + id).children(".order-status").hide();

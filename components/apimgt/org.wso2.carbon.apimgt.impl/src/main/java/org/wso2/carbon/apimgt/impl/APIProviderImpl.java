@@ -778,6 +778,10 @@ class APIProviderImpl extends AbstractAPIManager implements APIProvider {
                 throw new APIManagementException("artifact id is null for : " + path);
             }
             artifactManager.removeGenericArtifact(artifactId);
+            API api = new API(identifier);
+            if (isAPIPublished(api)) {
+                removeFromGateway(api);
+            }
             apiMgtDAO.deleteAPI(identifier);
 
         } catch (RegistryException e) {

@@ -107,8 +107,12 @@ public class DataServiceAdminClient {
 		return response;
     }
 
-	public String[] getColumnNames(String query) throws Exception {
+	public String[] getOutputColumnNames(String query) throws Exception {
 		return stub.getOutputColumnNames(query);
+	}
+
+    public String[] getInputMappingNames(String query) throws Exception {
+		return stub.getInputMappingNames(query);
 	}
 
     public PaginatedTableInfo getPaginatedTableInfo(int pageNumber,

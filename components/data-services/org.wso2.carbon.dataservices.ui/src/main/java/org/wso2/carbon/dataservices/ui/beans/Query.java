@@ -221,6 +221,31 @@ public class Query extends DataServiceConfigurationElement {
 		}
 	}
 
+    public void removeParam(String name) {
+        if (params != null) {
+            int paramToBeRemoved = -1;
+            Param[] existingParams = params;
+            Param[] modifiedParams;
+            for (int i = 0; i < existingParams.length; i++) {
+                if (existingParams[i].getName().equals(name)) {
+                    paramToBeRemoved = i;
+                    break;
+                }
+            }
+            if (paramToBeRemoved != -1) {
+                int tmpIndex = 0;
+                modifiedParams = new Param[existingParams.length - 1];
+                for (int i = 0; i < existingParams.length; i++) {
+                    if (i != paramToBeRemoved) {
+                        modifiedParams[tmpIndex] = existingParams[i];
+                        tmpIndex++;
+                    }
+                }
+                params = modifiedParams;
+            }
+        }
+    }
+
 	public Param getParam(String name) {
 		if (params != null) {
 			for (int a = 0; a < params.length; a++) {

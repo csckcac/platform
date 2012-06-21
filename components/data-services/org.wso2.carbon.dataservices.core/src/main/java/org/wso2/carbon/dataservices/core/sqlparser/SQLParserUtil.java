@@ -216,6 +216,7 @@ public class SQLParserUtil {
                 tmpQueue.add(tokens.poll());
             }
             analyser = AnalyzerFactory.createAnalyzer(LexicalConstants.SELECT, tmpQueue);
+            analyser.analyseStatement();
             syntaxQueue = analyser.getSyntaxQueue();
             tmpQueue.clear();
         }
@@ -230,26 +231,28 @@ public class SQLParserUtil {
      * @return      List of input mappings specified in the query
      */
     public static List<String> extractInputMappingNames(String sql) {
-        StringBuilder paramName = null;
         int paramCount = 0;
+        boolean isColon = false;
         List<String> inputMappings = new ArrayList<String>();
         Queue<String> tokens = SQLParserUtil.getTokens(sql);
         for (String token : tokens) {
             if (token != null && token.startsWith(LexicalConstants.COLON)) {
-                paramName = new StringBuilder();
-                paramName.append(token.substring(1, token.length()));
+                isColon = true;
                 continue;
             }
             if (LexicalConstants.QUESTION_MARK.equals(token)) {
-                paramName = new StringBuilder();
+                StringBuilder paramName = new StringBuilder();
                 paramName.append("param").append(paramCount);
                 inputMappings.add(paramCount, paramName.toString());
+                paramCount++;
             }
-            if (paramName != null && (SQLParserUtil.getKeyWords().contains(token) ||
-                    LexicalConstants.COMMA.equals(token))) {
-                inputMappings.add(paramCount, paramName.toString());
+            if (isColon && !LexicalConstants.COMMA.equals(token)) {
+                if (!inputMappings.contains(token)) {
+                    inputMappings.add(paramCount, token);
+                    isColon = false;
+                    paramCount++;
+                }
             }
-            paramCount++;
         }
         return inputMappings;
     }

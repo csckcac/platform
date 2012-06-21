@@ -317,14 +317,16 @@
                     
                 </td>
                 <td>
-                        <%--<input type="submit" id="addAutoResponse" value="Generate Response"
-                        onclick="document.dataForm.action='queryProcessor.jsp?addAutoResponse=true&flag=autoResponse';document.dataForm.submit();">--%>
+                    <a href="#" id="addAutoInputMappings"
+                       onclick="var validated=validateQueryId();if(validated){document.dataForm.action='queryProcessor.jsp?addAutoInputMappings=true&flag=autoInputMappings';document.dataForm.submit();showSQLDialects();}return validated;"
+                       class="icon-link"
+                       style="background-image: url(images/generate_input_mappings.png);"><fmt:message
+                            key="generate.input.mappings"/></a>
                     <a href="#" id="addAutoResponse"
                        onclick="var validated=validateQueryId();if(validated){document.dataForm.action='queryProcessor.jsp?addAutoResponse=true&flag=autoResponse';document.dataForm.submit();showSQLDialects();}return validated;"
                        class="icon-link"
                        style="background-image: url(images/create_svc.gif);"><fmt:message
                             key="generate.response"/></a>
-
                 </td>
             </tr>
         </table>

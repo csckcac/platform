@@ -15,19 +15,19 @@
  ~ specific language governing permissions and limitations
  ~ under the License.
  -->
-<%@ page import="org.apache.axis2.databinding.utils.BeanUtil" %>
-<%@ page import="org.wso2.carbon.dataservices.ui.beans.*" %>
-<%@ page import="java.util.List" %>
-<%@ page import="java.util.ArrayList" %>
-<%@ page import="org.wso2.carbon.ui.CarbonUIMessage" %>
-<%@ page import="org.wso2.carbon.dataservices.common.DBConstants" %>
+<%@ page import="org.apache.axis2.AxisFault" %>
+<%@ page import="org.apache.axis2.context.ConfigurationContext" %>
+<%@ page import="org.wso2.carbon.CarbonConstants" %>
 <%@ page import="org.wso2.carbon.CarbonError" %>
-<%@ page import="org.wso2.carbon.ui.CarbonUIUtil"%>
-<%@ page import="org.wso2.carbon.CarbonConstants"%>
-<%@ page import="org.apache.axis2.context.ConfigurationContext"%>
-<%@ page import="org.wso2.carbon.utils.ServerConstants"%>
-<%@ page import="org.apache.axis2.AxisFault"%>
+<%@ page import="org.wso2.carbon.dataservices.common.DBConstants" %>
 <%@ page import="org.wso2.carbon.dataservices.ui.DataServiceAdminClient" %>
+<%@ page import="org.wso2.carbon.dataservices.ui.beans.*" %>
+<%@ page import="org.wso2.carbon.ui.CarbonUIMessage"%>
+<%@ page import="org.wso2.carbon.ui.CarbonUIUtil"%>
+<%@ page import="org.wso2.carbon.utils.ServerConstants"%>
+<%@ page import="java.util.ArrayList"%>
+<%@ page import="java.util.Arrays"%>
+<%@ page import="java.util.List" %>
 <jsp:include page="../dialog/display_messages.jsp"/>
 <jsp:useBean id="dataService" class="org.wso2.carbon.dataservices.ui.beans.Data" scope="session"/>
 <%
@@ -68,6 +68,7 @@
     String scraperVariable = request.getParameter("scraperVariable");
     boolean isAutoResponse = false;
     String autoResponse = request.getParameter("addAutoResponse");
+    String autoInputMappings = request.getParameter("addAutoInputMappings");
     String returnGeneratedKeys = request.getParameter("returnGeneratedKeys");
     String keyColumns = request.getParameter("keyColumns");
     String setReturnGeneratedKeys = request.getParameter("setReturnGeneratedKeys");
@@ -83,6 +84,15 @@
     Result result = null;
     String forwardTo = "";
     boolean remove = true;
+
+    String backendServerURL = CarbonUIUtil.getServerURL(config.getServletContext(), session);
+    ConfigurationContext configContext =
+            (ConfigurationContext) config.getServletContext().getAttribute(
+                    CarbonConstants.CONFIGURATION_CONTEXT);
+    String cookie = (String) session.getAttribute(ServerConstants.ADMIN_SERVICE_COOKIE);
+    DataServiceAdminClient client =
+            new DataServiceAdminClient(cookie, backendServerURL, configContext);
+
     /* clear the validator session bean for add input mappings page */
     if (flag != null && flag.equals("inputMapping")) {
         session.setAttribute("validators", new ArrayList());
@@ -366,10 +376,6 @@
     if (autoResponse != null) {
         String columnNames[];
     	try{
-            String backendServerURL = CarbonUIUtil.getServerURL(config.getServletContext(), session);
-            ConfigurationContext configContext =(ConfigurationContext) config.getServletContext().getAttribute(CarbonConstants.CONFIGURATION_CONTEXT);
-            String cookie = (String) session.getAttribute(org.wso2.carbon.utils.ServerConstants.ADMIN_SERVICE_COOKIE);
-            DataServiceAdminClient client = new DataServiceAdminClient(cookie,backendServerURL,configContext);
             boolean isColumnAvailable = false;
             Config con = dataService.getConfig(datasource);
             if (con != null && "Cassandra".equals(con.getDataSourceType())) {
@@ -377,8 +383,8 @@
                 CarbonUIMessage.sendCarbonUIMessage(message, CarbonUIMessage.WARNING, request);
             } else {
                 if (sql != null && sql.trim().length() > 0)  {
-                    columnNames = client.getColumnNames(sql);
-                    if ((columnNames != null) && ( columnNames.length > 0))  {
+                    columnNames = client.getOutputColumnNames(sql);
+                    if ((columnNames != null) && (columnNames.length > 0))  {
                         if (columnNames[0].equals("ALL")) {
                          String message = "Please Enter column names to generate the response";
                          CarbonUIMessage.sendCarbonUIMessage(message, CarbonUIMessage.ERROR, request);
@@ -431,6 +437,52 @@
      	 
      	 }
     }
+    /* auto generate input mappings */
+    if (autoInputMappings != null) {
+        String[] inputMappingNames = new String[0];
+        Config con = dataService.getConfig(datasource);
+        if (con != null && "Cassandra".equals(con.getDataSourceType())) {
+            String message = "Generate input mappings feature is not supported for Cassandra datasources";
+            CarbonUIMessage.sendCarbonUIMessage(message, CarbonUIMessage.WARNING, request);
+        } else {
+            if (sql != null && sql.trim().length() > 0)  {
+                try {
+                    inputMappingNames = client.getInputMappingNames(sql);
+                } catch (Exception e) {
+                    CarbonError carbonError = new CarbonError();
+                    carbonError.addError("Error occurred while retrieving input mapping names");
+                    request.setAttribute(CarbonError.ID, carbonError);
+                }
+                if ((inputMappingNames != null) && (inputMappingNames.length > 0))  {
+                    Query q = dataService.getQuery(queryId);
+                    List<String> inputMappingList = Arrays.asList(inputMappingNames);
+                    List<String> currentInputMappingList = new ArrayList<String>();
+                    Param[] currentInputMappings = q.getParams();
+                    if (currentInputMappings != null && currentInputMappings.length > 0) {
+                        for (Param param : currentInputMappings) {
+                            currentInputMappingList.add(param.getName());
+                        }
+                    }
+                    for (String name : inputMappingNames) {
+                        if (!currentInputMappingList.contains(name)) {
+                            Param param = new Param();
+                            param.setName(name);
+                            param.setParamType("SCALAR");
+                            param.setSqlType("STRING");
+                            q.addParam(param);
+                        }
+                    }
+                    if (inputMappingList != null && inputMappingList.size() > 0) {
+                        for (String name : currentInputMappingList) {
+                            if (!inputMappingList.contains(name)) {
+                                q.removeParam(name);
+                            }
+                        }
+                    }
+                }
+            }
+        }
+    } 
 %>
 
 <table style="display:none">
@@ -465,7 +517,9 @@
     } else if (flag == 'ReturnRowChanged') {
         location.href = 'addQuery.jsp?queryId=' + document.getElementById('queryId').value;
     } else if (flag == 'autoResponse') {
-    	 location.href = 'addQuery.jsp?queryId=' + document.getElementById('queryId').value;
+        location.href = 'addQuery.jsp?queryId=' + document.getElementById('queryId').value;
+    } else if (flag == 'autoInputMappings') {
+        location.href = 'addQuery.jsp?queryId=' + document.getElementById('queryId').value;
     } else if (flag == 'save' || flag == 'delete') {
         <%--location.href = "queries.jsp?serviceName='" + document.getElementById('serviceName').value + '&useColumnNumbers='<%=useColumnNumbers%>'";--%>
         location.href = "queries.jsp?serviceName==<%=serviceName%>&useColumnNumbers=<%=useColumnNumbers%>&ordinal=2";

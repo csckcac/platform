@@ -768,4 +768,24 @@ class APIProviderImpl extends AbstractAPIManager implements APIProvider {
     public List<LifeCycleEvent> getLifeCycleEvents(APIIdentifier apiId) throws APIManagementException {
         return apiMgtDAO.getLifeCycleEvents(apiId);
     }
+
+    public void deleteAPI(APIIdentifier identifier) throws APIManagementException {
+        String path = APIConstants.API_ROOT_LOCATION + RegistryConstants.PATH_SEPARATOR +
+                      identifier.getProviderName() + RegistryConstants.PATH_SEPARATOR +
+                      identifier.getApiName();
+        try {
+            GenericArtifactManager artifactManager = APIUtil.getArtifactManager(registry,
+                                                                                APIConstants.API_KEY);
+            Resource apiResource = registry.get(path);
+            String artifactId = apiResource.getUUID();
+            if (artifactId == null) {
+                throw new APIManagementException("artifact id is null for : " + path);
+            }
+            artifactManager.removeGenericArtifact(artifactId);
+            apiMgtDAO.deleteAPI(identifier);
+
+        } catch (RegistryException e) {
+            handleException("Failed to remove the API from : " + path, e);
+        }
+    }
 }

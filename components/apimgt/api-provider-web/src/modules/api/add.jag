@@ -24,11 +24,11 @@ var addAPI = function (api) {
     }
 };
 
-var isContextExist = function (context) {
+var isContextExist = function (context,oldContext) {
     var exists, log = new Log(),
             provider = jagg.module("manager").getAPIProviderObj();
     try {
-        exists = provider.isContextExist(context);
+        exists = provider.isContextExist(context,oldContext);
         if (log.isDebugEnabled()) {
             log.debug("isContext exist for : " + context + " : " + exists);
         }

@@ -21,8 +21,7 @@
                    </a>
                    <a class="brand" style="position:absolute;" href="<%=jagg.getMappedUrl("/site/pages/index.jag")%>"><img src="<%=site.context%>/site/themes/default/images/logo.png"
                                                                                                        alt="API PROVIDER"></a>
-                       <%
-                       if(reqUrl.indexOf(inlineUrl)>=0){%> <div class="nav-collapse" style="height:35px">  <%}else{%>
+                      <div class="nav-collapse" style="height:35px">
                        <div class="nav-collapse">
                        <ul class="nav pull-right">
                            <li class="dropdown">
@@ -32,7 +31,7 @@
                              </ul>
                            </li>
                          </ul>
-                   </div><%}%>
+                   </div>
                    <!--/.nav-collapse -->
                </div>
            </div>

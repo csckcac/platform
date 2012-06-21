@@ -36,7 +36,7 @@
                     <span class="divider">/</span>
                 </li>
                 <li>
-                    <a href="<%=infoMappedUrl%>?name=<%=request.getParameter("name")%>&version=<%=request.getParameter("version")%>"><%=request.getParameter("name")%>-<%=request.getParameter("version")%></a>
+                    <a href="<%=infoMappedUrl%>?name=<%=request.getParameter("name")%>&version=<%=request.getParameter("version")%>&provider=<%=request.getParameter("provider")%>"><%=request.getParameter("name")%>-<%=request.getParameter("version")%></a>
                 </li>
                 <% } %>
 

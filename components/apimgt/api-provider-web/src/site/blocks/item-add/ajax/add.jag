@@ -60,7 +60,8 @@ include("/jagg/jagg.jag");
     } else if (action === "isContextExist") {
         mod = jagg.module("api");
         var context = request.getParameter("context");
-        result = mod.isContextExist(context);
+        var oldContext = request.getParameter("oldContext");
+        result = mod.isContextExist(context,oldContext);
         if (result.error) {
             obj = {
                 error:true,

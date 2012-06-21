@@ -4,7 +4,8 @@ $(document).ready(function() {
             value = "/" + value;
         }
         var contextExist = false;
-        jagg.syncPost("/site/blocks/item-add/ajax/add.jag", { action:"isContextExist", context:value },
+        var oldContext=$('#spanContext').text();
+        jagg.syncPost("/site/blocks/item-add/ajax/add.jag", { action:"isContextExist", context:value,oldContext:oldContext },
                       function (result) {
                           if (!result.error) {
                               contextExist = result.exist;

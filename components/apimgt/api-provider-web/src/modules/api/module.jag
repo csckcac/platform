@@ -4,6 +4,9 @@ jagg.module("api", {
     addAPI:function () {
         return jagg.require(jagg.getModulesDir() + "api/add.jag").addAPI.apply(this, arguments);
     },
+    removeAPI:function () {
+        return jagg.require(jagg.getModulesDir() + "api/remove.jag").removeAPI.apply(this, arguments);
+    },
 
     isContextExist:function () {
         return jagg.require(jagg.getModulesDir() + "api/add.jag").isContextExist.apply(this, arguments);

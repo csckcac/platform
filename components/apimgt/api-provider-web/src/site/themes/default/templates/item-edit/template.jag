@@ -39,7 +39,7 @@
             <input type="hidden" name="version" id="version" value="<%=api.version%>"/>
             <input type="hidden" name="provider" id="provider" value="<%=api.provider%>"/>
             <input type="hidden" name="tiersCollection" id="tiersCollection" value="<%=api.availableTiers%>"/>
-
+            <span id="spanContext" style="display:none;"><%=api.context%></span>
             <div class="control-group">
                 <label class="control-label" for="editDescription">Description:</label>
                 <div class="controls">
@@ -51,7 +51,7 @@
             <div class="control-group">
                 <label class="control-label" for="context">Context:<span class="requiredAstrix">*</span></label>
                 <div class="controls">
-                    <input type="text" class="input-xlarge required" id="context" name="context" value="<%=api.context%>" onChange="setContextValue('<%=api.version%>')"/>
+                    <input type="text" class="input-xlarge required contextExists" id="context" name="context" value="<%=api.context%>" onChange="setContextValue('<%=api.version%>')"/>
                 </div>
             </div>
 
@@ -242,6 +242,7 @@
  <script type="text/javascript">
 $(document).ready(function() {
  var v = $("#editAPIForm").validate({
+
         submitHandler: function(form) {
             $(form).ajaxSubmit({
                 success:function(responseText, statusText, xhr, $form)  {

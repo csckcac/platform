@@ -58,12 +58,6 @@ public class BPEL4PeopleExtensionOperation extends AbstractLongRunningExtensionO
         extensionContext.setCorrelationValues(new String[]{taskID});
         extensionContext.setCorrelatorId(peopleActivity.inferCorrelatorId(extensionContext));
         outputVarName = peopleActivity.getOutputVarName();
-//        } catch (FaultException e) {
-//            String errMsg = "peopleActivity failed.";
-//            log.error(errMsg, e);
-//            extensionContext.completeWithFault(cid, e);
-//
-//        }
     }
 
     /**
@@ -80,13 +74,7 @@ public class BPEL4PeopleExtensionOperation extends AbstractLongRunningExtensionO
                 outputVarName);
         log.info("RESPONSE: " + DOMUtils.domToString(notificationMessageEle));
         log.info("PART: " + DOMUtils.domToString(part));
-//        try {
         extensionContext.writeVariable(outputVarName, notificationMessageEle);
-//        } catch (FaultException e) {
-//            log.error("Error occurred while writing variable.", e);
-//            extensionContext.completeWithFault(cid, e);
-//            return;
-//        }
         extensionContext.complete(cid);
     }
 }

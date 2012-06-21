@@ -56,11 +56,7 @@ import javax.wsdl.extensions.http.HTTPBinding;
 import javax.wsdl.extensions.soap.SOAPBinding;
 import javax.wsdl.extensions.soap12.SOAP12Binding;
 import javax.xml.namespace.QName;
-import javax.xml.transform.*;
-import javax.xml.transform.dom.DOMSource;
-import javax.xml.transform.stream.StreamResult;
 import java.io.File;
-import java.io.StringWriter;
 import java.util.ArrayList;
 import java.util.Collection;
 import java.util.List;
@@ -386,10 +382,12 @@ public class PeopleActivity {
      * @throws FaultException can be raised if there are more than one &lt;attachmentPropagation/&gt; elements
      *                        defined or the namespace for the &lt;attachmentPropagation/&gt; element is not defined correctly
      */
-    private void processAttachmentPropagationElement(Element peopleActivityElement) throws FaultException {
-        NodeList attachmentElementList = peopleActivityElement.getElementsByTagNameNS(BPEL4PeopleConstants.B4P_NAMESPACE,
-                BPEL4PeopleConstants
-                        .ATTACHMENT_PROPAGATION_ACTIVITY);
+    private void processAttachmentPropagationElement(Element peopleActivityElement)
+            throws FaultException {
+        NodeList attachmentElementList =
+                peopleActivityElement.getElementsByTagNameNS(BPEL4PeopleConstants.B4P_NAMESPACE,
+                        BPEL4PeopleConstants
+                                .ATTACHMENT_PROPAGATION_ACTIVITY);
         if (attachmentElementList.getLength() > 1) {
             throw new FaultException(BPEL4PeopleConstants.B4P_FAULT,
                     "More than one elements defined for:" + BPEL4PeopleConstants
@@ -398,16 +396,19 @@ public class PeopleActivity {
         } else if (attachmentElementList.getLength() == 1) {
             // <attachmentPropagation/> element processing logic
             Node attachmentPropagationElement = attachmentElementList.item(0);
-            this.attachmentPropagation = new AttachmentPropagation((Element) attachmentPropagationElement);
+            this.attachmentPropagation =
+                    new AttachmentPropagation((Element) attachmentPropagationElement);
         } else if (attachmentElementList.getLength() == 0) {
             //As the BPEL4PeopleConstants.ATTACHMENT_PROPAGATION_ACTIVITY is not declared. So handling the default behavior
             if (log.isDebugEnabled()) {
-                log.debug("No " + BPEL4PeopleConstants.ATTACHMENT_PROPAGATION_ACTIVITY + " activities found. Hence " +
-                          "assuming the default values defined by specification.");
+                log.debug("No " + BPEL4PeopleConstants.ATTACHMENT_PROPAGATION_ACTIVITY + " " +
+                        "activities found. Hence " +
+                        "assuming the default values defined by specification.");
             }
             this.attachmentPropagation = new AttachmentPropagation();
         } else {
-            if (peopleActivityElement.getElementsByTagName(BPEL4PeopleConstants.ATTACHMENT_PROPAGATION_ACTIVITY)
+            if (peopleActivityElement.
+                    getElementsByTagName(BPEL4PeopleConstants.ATTACHMENT_PROPAGATION_ACTIVITY)
                     .getLength() > 0) {
                 throw new FaultException(BPEL4PeopleConstants.B4P_FAULT,
                         "Namespace defined for :" + BPEL4PeopleConstants
@@ -444,7 +445,8 @@ public class PeopleActivity {
         deriveServiceEPR(du, extensionContext);
     }
 
-    private void deriveServiceEPR(DeploymentUnitDir du, ExtensionContext extensionContext) throws FaultException {
+    private void deriveServiceEPR(DeploymentUnitDir du, ExtensionContext extensionContext)
+            throws FaultException {
         DeployDocument deployDocument = du.getDeploymentDescriptor();
         BpelRuntimeContext runTimeContext = extensionContext.getInternalInstance();
 
@@ -599,7 +601,8 @@ public class PeopleActivity {
      */
     private Collection<Long> getAttachmentIDs(ExtensionContext extensionContext) {
         Collection<Long> attachmentIDs = new ArrayList<Long>();
-        Collection<MessageExchange> mexList = extensionContext.getInternalInstance().getMessageExchangeDAOs();
+        Collection<MessageExchange> mexList =
+                extensionContext.getInternalInstance().getMessageExchangeDAOs();
 
         for (MessageExchange mex : mexList) {
             //extract the available mex references
@@ -612,8 +615,8 @@ public class PeopleActivity {
             }
         }
 
-        log.warn("Here we return a one level list, so the client doesn't knows which attachment ids are bind to which" +
-                " message exchanges");
+        log.warn("Here we return a one level list, so the client doesn't knows which " +
+                "attachment ids are bind to which message exchanges");
         return attachmentIDs;
     }
 
@@ -631,18 +634,19 @@ public class PeopleActivity {
         List<Long> attachmentIDList = new ArrayList<Long>();
         if (attachmentPropagation != null && attachmentPropagation.isInitialized) {
             if (FromProcessSpec.all.toString().equals(attachmentPropagation.getFromProcess())) {
-                attachmentIDList = (List) getAttachmentIDs(extensionContext);
+                attachmentIDList = (List<Long>) getAttachmentIDs(extensionContext);
                 taskMessageContext.setAttachmentIDList(attachmentIDList);
             } else if (FromProcessSpec.none.toString().equals(attachmentPropagation.getFromProcess())) {
                 if (log.isDebugEnabled()) {
                     log.debug("No attachments will be propagated to the human-task as attribute value of " +
-                            BPEL4PeopleConstants.ATTACHMENT_PROPAGATION_ACTIVITY_FROM_PROCESS + " is " + FromProcessSpec.none);
+                            BPEL4PeopleConstants.ATTACHMENT_PROPAGATION_ACTIVITY_FROM_PROCESS +
+                            " is " + FromProcessSpec.none);
                 }
             }
         } else {
             if (log.isDebugEnabled()) {
-                log.debug("AttachmentPropagation element is not initialized yet. So attachments are ignored by the " +
-                        "BPEL4People extension runtime.");
+                log.debug("AttachmentPropagation element is not initialized yet." +
+                        " So attachments are ignored by the BPEL4People extension runtime.");
             }
         }
         return attachmentIDList;
@@ -659,10 +663,14 @@ public class PeopleActivity {
 
             SOAPHelper soapHelper = new SOAPHelper(getBinding(), getSoapFactory(), isRPC);
             MessageContext messageContext = new MessageContext();
-            log.warn("Adding attachment ID list as a method input to createSoapRequest makes no sense. Have to fix. " +
-                    "Here we can't embed attachments in MessageContext, as we have only a list of attachment ids.");
+            /*
+            Adding attachment ID list as a method input to createSoapRequest makes no sense.
+            Have to fix. Here we can't embed attachments in MessageContext, as we have only a
+            list of attachment ids.
+            */
             soapHelper.createSoapRequest(messageContext,
-                    (Element) extensionContext.readVariable(inputVarName), getOperation(extensionContext), attachmentIDList);
+                    (Element) extensionContext.readVariable(inputVarName),
+                    getOperation(extensionContext), attachmentIDList);
 
             taskMessageContext.setInMessageContext(messageContext);
             taskMessageContext.setPort(getServicePort());
@@ -682,6 +690,16 @@ public class PeopleActivity {
         }
 // it seems the WSDLAwareMessage is not required.
 //        taskMessageContext.setRequestMessage();
+
+        if (taskMessageContext.getFaultMessageContext() != null ||
+                taskMessageContext.getOutMessageContext().isFault()) {
+            MessageContext faultContext = taskMessageContext.getFaultMessageContext() != null ?
+                    taskMessageContext.getFaultMessageContext() :
+                    taskMessageContext.getOutMessageContext();
+            log.warn("SOAP Fault: " + faultContext.getEnvelope().toString());
+            throw new FaultException(BPEL4PeopleConstants.B4P_FAULT,
+                    faultContext.getEnvelope().toString());
+        }
 
         return SOAPHelper.parseResponseFeedback(
                 taskMessageContext.getOutMessageContext().getEnvelope().getBody());
@@ -752,7 +770,8 @@ public class PeopleActivity {
         }
 
         private String extractFromProcessValue(String fromProcessValue) throws FaultException {
-            if (FromProcessSpec.all.toString().equals(fromProcessValue) || FromProcessSpec.none.toString().equals(fromProcessValue)) {
+            if (FromProcessSpec.all.toString().equals(fromProcessValue) ||
+                    FromProcessSpec.none.toString().equals(fromProcessValue)) {
                 return fromProcessValue;
             } else {
                 throw new FaultException(BPEL4PeopleConstants.B4P_FAULT,
@@ -763,8 +782,9 @@ public class PeopleActivity {
         }
 
         private String extractToProcessValue(String toProcessValue) throws FaultException {
-            if (ToProcessSpec.all.toString().equals(toProcessValue) || ToProcessSpec.none.toString().equals(toProcessValue) ||
-                ToProcessSpec.newOnly.toString().equals(toProcessValue)) {
+            if (ToProcessSpec.all.toString().equals(toProcessValue) ||
+                    ToProcessSpec.none.toString().equals(toProcessValue) ||
+                    ToProcessSpec.newOnly.toString().equals(toProcessValue)) {
                 return toProcessValue;
             } else {
                 throw new FaultException(BPEL4PeopleConstants.B4P_FAULT,

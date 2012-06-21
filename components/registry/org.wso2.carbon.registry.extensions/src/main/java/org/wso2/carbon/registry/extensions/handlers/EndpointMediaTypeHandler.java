@@ -152,6 +152,7 @@ public class EndpointMediaTypeHandler extends Handler {
 //                registry.createVersion(path);
 //            }
             ((ResourceImpl)resource).setPath(relativeArtifactPath);
+            requestContext.setActualPath(path);
             requestContext.setProcessingComplete(true);
         } finally {
             CommonUtil.releaseUpdateLock();

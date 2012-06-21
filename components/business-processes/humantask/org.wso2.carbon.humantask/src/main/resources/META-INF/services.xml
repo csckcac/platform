@@ -665,7 +665,7 @@
             <faultActionMapping faultName="illegalAccessFault">http://docs.oasis-open.org/ns/bpel4people/ws-humantask/api/200803/taskOperations/complete/Fault/illegalAccessFault</faultActionMapping>
             <faultActionMapping faultName="IllegalAccessFault">http://docs.oasis-open.org/ns/bpel4people/ws-humantask/api/200803/taskOperations/complete/Fault/illegalAccessFault</faultActionMapping>
             <faultActionMapping faultName="IllegalAccessFault_Exception">http://docs.oasis-open.org/ns/bpel4people/ws-humantask/api/200803/taskOperations/complete/Fault/illegalAccessFault</faultActionMapping>
-            <parameter name="AuthorizationAction" locked="true">/permission/admin/manage/humantask/viewtasks</parameter>
+            <parameter name="AuthorizationAction" locked="true">/permission/admin/manage/humantask/viewtasks,/permission/admin/manage/resources/notifications</parameter>
         </operation>
         <operation name="hasSubtasks" mep="http://www.w3.org/ns/wsdl/in-out" namespace="http://docs.oasis-open.org/ns/bpel4people/ws-humantask/api/200803">
             <actionMapping>http://docs.oasis-open.org/ns/bpel4people/ws-humantask/api/200803/hasSubtasks</actionMapping>
@@ -726,7 +726,7 @@
             <faultActionMapping faultName="illegalArgumentFault">http://docs.oasis-open.org/ns/bpel4people/ws-humantask/api/200803/taskOperations/simpleQuery/Fault/illegalArgumentFault</faultActionMapping>
             <faultActionMapping faultName="IllegalArgumentFault">http://docs.oasis-open.org/ns/bpel4people/ws-humantask/api/200803/taskOperations/simpleQuery/Fault/illegalArgumentFault</faultActionMapping>
             <faultActionMapping faultName="IllegalArgumentFault_Exception">http://docs.oasis-open.org/ns/bpel4people/ws-humantask/api/200803/taskOperations/simpleQuery/Fault/illegalArgumentFault</faultActionMapping>
-            <parameter name="AuthorizationAction" locked="true">/permission/admin/manage/humantask/viewtasks</parameter>
+            <parameter name="AuthorizationAction" locked="true">/permission/admin/manage/humantask/viewtasks,/permission/admin/manage/resources/notifications</parameter>
         </operation>
         <operation name="loadAuthorisationParams" mep="http://www.w3.org/ns/wsdl/in-out" namespace="http://docs.oasis-open.org/ns/bpel4people/ws-humantask/api/200803">
             <actionMapping>http://docs.oasis-open.org/ns/bpel4people/ws-humantask/api/200803/loadAuthorisationParams</actionMapping>
@@ -744,7 +744,7 @@
             <outputActionMapping>http://docs.oasis-open.org/ns/bpel4people/ws-humantask/api/200803/taskOperations/loadTaskEventsResponse</outputActionMapping>
             <faultActionMapping faultName="illegalArgumentFault">http://docs.oasis-open.org/ns/bpel4people/ws-humantask/api/200803/taskOperations/loadTaskEvents/Fault/illegalArgumentFault</faultActionMapping>
             <faultActionMapping faultName="IllegalStateFault">http://docs.oasis-open.org/ns/bpel4people/ws-humantask/api/200803/taskOperations/loadTaskEvents/Fault/illegalStateFault</faultActionMapping>
-            <parameter name="AuthorizationAction" locked="true">/permission/admin/manage/humantask/viewtasks</parameter>
+            <parameter name="AuthorizationAction" locked="true">/permission/admin/manage/humantask/viewtasks,/permission/admin/manage/resources/notifications</parameter>
         </operation>
         <operation name="getAssignableUserList" mep="http://www.w3.org/ns/wsdl/in-out" namespace="http://docs.oasis-open.org/ns/bpel4people/ws-humantask/api/200803">
             <actionMapping>http://docs.oasis-open.org/ns/bpel4people/ws-humantask/api/200803/getAssignableUserList</actionMapping>

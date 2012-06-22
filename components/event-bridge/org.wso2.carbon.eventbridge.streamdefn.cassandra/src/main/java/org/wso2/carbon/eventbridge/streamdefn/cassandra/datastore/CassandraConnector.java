@@ -19,7 +19,9 @@ package org.wso2.carbon.eventbridge.streamdefn.cassandra.datastore;
 import com.google.common.cache.CacheBuilder;
 import com.google.common.cache.CacheLoader;
 import com.google.common.cache.LoadingCache;
+import me.prettyprint.cassandra.model.BasicColumnFamilyDefinition;
 import me.prettyprint.cassandra.serializers.*;
+import me.prettyprint.cassandra.service.ThriftCfDef;
 import me.prettyprint.hector.api.Cluster;
 import me.prettyprint.hector.api.Keyspace;
 import me.prettyprint.hector.api.beans.ColumnSlice;
@@ -104,7 +106,7 @@ public class CassandraConnector {
     private final static ByteBufferSerializer byteBufferSerializer = ByteBufferSerializer.get();
 
 
-    Log logger = LogFactory.getLog(CassandraConnector.class);
+    Log log = LogFactory.getLog(CassandraConnector.class);
     private static final String STREAM_TIMESTAMP_KEY = "Timestamp";
 
 
@@ -165,32 +167,38 @@ public class CassandraConnector {
             List<ColumnFamilyDefinition> cfDef = keyspaceDef.getCfDefs();
             for (ColumnFamilyDefinition cfdef : cfDef) {
                 if (cfdef.getName().equals(columnFamilyName)) {
-                    if (logger.isTraceEnabled()) {
-                        logger.trace("Column Family " + columnFamilyName + " already exists.");
+                    if (log.isTraceEnabled()) {
+                        log.trace("Column Family " + columnFamilyName + " already exists.");
                     }
                     return;
                 }
             }
-            ColumnFamilyDefinition columnFamilyDefinition = HFactory.
-                    createColumnFamilyDefinition(keyspaceName, columnFamilyName);
-            cluster.addColumnFamily(columnFamilyDefinition, true);
+            ColumnFamilyDefinition columnFamilyDefinition = new BasicColumnFamilyDefinition();
+            columnFamilyDefinition.setKeyspaceName(keyspaceName);
+            columnFamilyDefinition.setName(columnFamilyName);
+
+//            ColumnFamilyDefinition columnFamilyDefinition = HFactory.
+//                    createColumnFamilyDefinition(keyspaceName, columnFamilyName);
+//            cluster.addColumnFamily(columnFamilyDefinition, true);
+
+            cluster.addColumnFamily(new ThriftCfDef(columnFamilyDefinition), true);
 
 
             // give some time to propogate changes
             keyspaceDef =
                     cluster.describeKeyspace(keyspace.getKeyspaceName());
             int retryCount = 0;
-            while (retryCount < 100 ) {
+            while (retryCount < 100) {
                 try {
                     Thread.sleep(100);
                 } catch (InterruptedException e) {
                     // ignore
                 }
 
-                for (ColumnFamilyDefinition cfdef :  keyspaceDef.getCfDefs()) {
+                for (ColumnFamilyDefinition cfdef : keyspaceDef.getCfDefs()) {
                     if (cfdef.getName().equals(columnFamilyName)) {
-                        if (logger.isTraceEnabled()) {
-                            logger.trace("Column Family " + columnFamilyName + " already exists.");
+                        if (log.isTraceEnabled()) {
+                            log.trace("Column Family " + columnFamilyName + " already exists.");
                         }
                         return;
                     }
@@ -200,8 +208,6 @@ public class CassandraConnector {
             throw new RuntimeException("The column family " + columnFamilyName + " was  not created");
         }
     }
-
-
 
 
     public boolean createKeySpaceIfNotExisting(Cluster cluster, String keySpaceName) {
@@ -235,7 +241,7 @@ public class CassandraConnector {
 
     private Mutator<String> prepareBatchMutate(Attribute attribute, Object[] data, DataType dataType, int eventDataIndex
             , String rowKey, String streamColumnFamily, Mutator<String> mutator) {
-        String columnName = CassandraSDSUtils.getColumnName(dataType,attribute);
+        String columnName = CassandraSDSUtils.getColumnName(dataType, attribute);
         if (attribute.getType().equals(AttributeType.STRING)) {
             String metaVal = (String) data[eventDataIndex];
             if (metaVal != null && !metaVal.isEmpty()) {
@@ -280,15 +286,25 @@ public class CassandraConnector {
 
 
     public String insertEvent(Cluster cluster, Event eventData)
-            throws MalformedStreamDefinitionException,  StreamDefinitionStoreException {
+            throws MalformedStreamDefinitionException, StreamDefinitionStoreException {
         EventStreamDefinition eventStreamDef;
         eventStreamDef = getStreamDefinitionFromStore(cluster, eventData.getStreamId());
         String streamColumnFamily = getCFNameFromStreamId(cluster, eventData.getStreamId());
         if ((eventStreamDef == null) || (streamColumnFamily == null)) {
             String errorMsg = "Event stream definition or column family cannot be null";
-            logger.error(errorMsg);
+            log.error(errorMsg);
             throw new StreamDefinitionStoreException(errorMsg);
         }
+
+
+        KeyspaceDefinition keyspaceDefinition = cluster.describeKeyspace(BAM_EVENT_DATA_KEYSPACE);
+        log.info("Keyspace desc. : " + keyspaceDefinition);
+
+        String CFInfo = "CFs present \n";
+        for (ColumnFamilyDefinition columnFamilyDefinition : keyspaceDefinition.getCfDefs()) {
+            CFInfo += "cf name : " + columnFamilyDefinition.getName() + "\n";
+        }
+        log.info(CFInfo);
 
 
         Keyspace keyspace = HFactory.createKeyspace(BAM_EVENT_DATA_KEYSPACE, cluster);
@@ -342,7 +358,7 @@ public class CassandraConnector {
         if (eventData.getPayloadData() != null) {
             eventDataIndex = 0;
             for (Attribute attribute : eventStreamDef.getPayloadData()) {
-                prepareBatchMutate(attribute, eventData.getPayloadData(), DataType.payload,  eventDataIndex,
+                prepareBatchMutate(attribute, eventData.getPayloadData(), DataType.payload, eventDataIndex,
                         rowKey, streamColumnFamily, mutator);
                 eventDataIndex++;
             }
@@ -353,16 +369,16 @@ public class CassandraConnector {
         return rowKey;
     }
 
-    public Event getEvent(Cluster cluster, String streamId, String rowKey ) throws EventProcessingException {
+    public Event getEvent(Cluster cluster, String streamId, String rowKey) throws EventProcessingException {
 
-       // get Event definition
+        // get Event definition
 
         EventStreamDefinition streamDefinition;
         try {
             streamDefinition = getStreamDefinitionFromStore(cluster, streamId);
         } catch (StreamDefinitionStoreException e) {
             String errorMsg = "Error processing stream definition for stream Id : " + streamId;
-            logger.error(errorMsg, e);
+            log.error(errorMsg, e);
             throw new EventProcessingException(errorMsg, e);
         }
         List<Attribute> payloadDefinitions = streamDefinition.getPayloadData();
@@ -372,7 +388,7 @@ public class CassandraConnector {
 
         // start conversion
 
-        SliceQuery<String,String,ByteBuffer> sliceQuery =
+        SliceQuery<String, String, ByteBuffer> sliceQuery =
                 HFactory.createSliceQuery(HFactory.createKeyspace(BAM_EVENT_DATA_KEYSPACE, cluster),
                         stringSerializer, stringSerializer, byteBufferSerializer);
         String cfName = getCFNameFromStreamId(cluster, streamId);
@@ -409,7 +425,7 @@ public class CassandraConnector {
             }
         } catch (IOException e) {
             String errorMsg = "Error during event data conversions.";
-            logger.error(errorMsg, e);
+            log.error(errorMsg, e);
             throw new EventProcessingException(errorMsg, e);
         }
 
@@ -429,7 +445,7 @@ public class CassandraConnector {
     }
 
     private Object getValueForDataTypeList(ColumnSlice<String, ByteBuffer> columnSlice,
-                                         Attribute payloadDefinition, DataType dataType) throws IOException {
+                                           Attribute payloadDefinition, DataType dataType) throws IOException {
         HColumn<String, ByteBuffer> eventCol =
                 columnSlice.getColumnByName(CassandraSDSUtils.getColumnName(dataType, payloadDefinition));
         return CassandraSDSUtils
@@ -612,7 +628,7 @@ public class CassandraConnector {
      */
     public void saveStreamDefinitionToStore(Cluster cluster,
                                             EventStreamDefinition eventStreamDefinition) {
-         saveStreamDefinitionToStore(cluster, eventStreamDefinition.getStreamId(), eventStreamDefinition);
+        saveStreamDefinitionToStore(cluster, eventStreamDefinition.getStreamId(), eventStreamDefinition);
     }
 
     /**
@@ -630,7 +646,7 @@ public class CassandraConnector {
                 .getStreamNameFromStreamKey(CassandraSDSUtils
                         .convertStreamNameToCFName(EventBridgeUtils.getStreamNameFromStreamKey
                                 (getStreamKeyFromStreamId
-                                (cluster, streamId)))));
+                                        (cluster, streamId)))));
         Mutator<String> mutator = HFactory.createMutator(keyspace, stringSerializer);
         mutator.addInsertion(streamId, BAM_META_STREAM_DEF_CF,
                 HFactory.createStringColumn(STREAM_DEF, EventDefinitionConverterUtils
@@ -641,13 +657,23 @@ public class CassandraConnector {
         // StreamDefnConverterUtils.convertToJson(eventStreamDefinition)));
         mutator.execute();
 
+        if (log.isTraceEnabled()) {
+            String logMsg = "saveStreamDefinition executed. \n";
+            try {
+                EventStreamDefinition streamDefinitionFromStore = getStreamDefinitionFromStore(cluster, streamId);
+                logMsg += " stream definition saved : " + streamDefinitionFromStore.toString() + " \n";
+            } catch (StreamDefinitionStoreException e) {
+                log.error(e.getErrorMessage(), e);
+            }
+            log.trace(logMsg);
+        }
+
     }
 
     /**
      * Store stream Id and the stream Id key to Cassandra data store
      *
-     * @param cluster     Tenant cluster
-     *
+     * @param cluster               Tenant cluster
      * @param eventStreamDefinition stream defn
      */
     public void saveStreamIdToStore(Cluster cluster, EventStreamDefinition eventStreamDefinition) {
@@ -668,20 +694,29 @@ public class CassandraConnector {
         Keyspace keyspace = HFactory.createKeyspace(BAM_META_KEYSPACE, cluster);
         Mutator<String> mutator = HFactory.createMutator(keyspace, stringSerializer);
 // domainName));
-        mutator.addInsertion(streamId, BAM_META_STREAM_ID_KEY_CF, HFactory.createStringColumn(STREAM_ID_KEY, streamIdKey));
+        mutator.addInsertion(streamId, BAM_META_STREAM_ID_KEY_CF,
+                HFactory.createStringColumn(STREAM_ID_KEY, streamIdKey));
         mutator.addInsertion(streamIdKey, BAM_META_STREAM_ID_CF, HFactory.createStringColumn(STREAM_ID, streamId));
         mutator.execute();
+
+        if (log.isTraceEnabled()) {
+            String logMsg = "saveStreamID executed. \n";
+            String streamIdFromStore = getStreamIdFromStore(cluster, streamIdKey);
+            logMsg += " stream id saved : " + streamIdFromStore + " \n";
+            log.trace(logMsg);
+        }
     }
 
     /**
      * Returns Stream ID stored under  key domainName-streamIdKey
      *
-     * @param cluster     Tenant cluster
+     * @param cluster          Tenant cluster
      * @param streamDefinition Stream Definition
      * @return Returns stored stream Ids
      */
     public String getStreamIdFromStore(Cluster cluster, EventStreamDefinition streamDefinition) {
-        String streamIdKey = EventBridgeUtils.constructStreamKey(streamDefinition.getName(), streamDefinition.getVersion());
+        String streamIdKey =
+                EventBridgeUtils.constructStreamKey(streamDefinition.getName(), streamDefinition.getVersion());
         return getStreamIdFromStore(cluster, streamIdKey);
     }
 
@@ -840,7 +875,8 @@ public class CassandraConnector {
 
         }
 
-        public static EventStreamDefinition getStreamDefinition(Cluster cluster, String streamId) throws ExecutionException {
+        public static EventStreamDefinition getStreamDefinition(Cluster cluster, String streamId)
+                throws ExecutionException {
             init();
             return streamDefnCache.get(new StreamIdClusterBean(cluster, streamId));
         }
@@ -886,9 +922,6 @@ public class CassandraConnector {
     }
 
 
-
-
-
     /**
      * Retrun all stream definitions stored under one domain
      *
@@ -900,6 +933,7 @@ public class CassandraConnector {
             throws StreamDefinitionStoreException {
 
         List<EventStreamDefinition> eventStreamDefinitions = new ArrayList<EventStreamDefinition>();
+
         Keyspace keyspace = HFactory.createKeyspace(BAM_META_KEYSPACE, cluster);
         ColumnQuery<String, String, String> columnQuery =
                 HFactory.createStringColumnQuery(keyspace);
@@ -912,6 +946,10 @@ public class CassandraConnector {
         query.setColumnNames(STREAM_ID);
         QueryResult<OrderedRows<String, String, String>> result = query.execute();
 
+        String logMsg = null;
+        if (log.isTraceEnabled()) {
+            logMsg = "getAllStreamDefinitions called : \n";
+        }
         for (Row<String, String, String> row : result.get()) {
             if (row == null) {
                 continue;
@@ -921,19 +959,29 @@ public class CassandraConnector {
             EventStreamDefinition streamDefinitionFromStore = getStreamDefinitionFromStore(cluster, streamId);
 
             // Stream defn is null if there if there is a valid stream id but no corresponding stream defn
+
             if (streamDefinitionFromStore != null) {
                 eventStreamDefinitions.add(streamDefinitionFromStore);
+                if (log.isTraceEnabled()) {
+                    logMsg += "Stream definitions with stream id : " + streamDefinitionFromStore.getStreamId() +
+                            " found. Stream Definition is : " + streamDefinitionFromStore.toString() + " \n";
+                }
+
             }
+        }
+        if (log.isTraceEnabled()) {
+            log.trace(logMsg);
         }
         return eventStreamDefinitions;
     }
 
-    /**
-     * Insert event definition to tenant event definition column family
-     *
-     * @param cluster               Tenant cluster
-     * @param eventStreamDefinition Event stream definition
-     */
+        /**
+         * Insert event definition to tenant event definition column family
+         *
+         * @param cluster               Tenant cluster
+         * @param eventStreamDefinition Event stream definition
+         */
+
     public void insertEventDefinition(Cluster cluster,
                                       EventStreamDefinition eventStreamDefinition) {
         Keyspace keyspace = HFactory.createKeyspace(BAM_EVENT_DATA_KEYSPACE, cluster);

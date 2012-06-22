@@ -19,6 +19,8 @@
 package org.wso2.carbon.eventbridge.core.internal;
 
 
+import org.apache.commons.logging.Log;
+import org.apache.commons.logging.LogFactory;
 import org.wso2.carbon.eventbridge.commons.Credentials;
 import org.wso2.carbon.eventbridge.commons.EventStreamDefinition;
 import org.wso2.carbon.eventbridge.commons.exception.DifferentStreamDefinitionAlreadyDefinedException;
@@ -37,6 +39,7 @@ import org.wso2.carbon.eventbridge.core.internal.queue.EventQueue;
 import org.wso2.carbon.eventbridge.core.internal.utils.EventComposite;
 
 import java.util.ArrayList;
+import java.util.Collection;
 import java.util.List;
 import java.util.Map;
 import java.util.concurrent.ConcurrentHashMap;
@@ -52,6 +55,9 @@ public class EventDispatcher {
     private Map<String, EventStreamTypeHolder> eventStreamTypeCache = new ConcurrentHashMap<String, EventStreamTypeHolder>();
     private EventQueue eventQueue;
 
+    private static final Log log = LogFactory.getLog(EventDispatcher.class);
+
+
     public EventDispatcher(AbstractStreamDefinitionStore streamDefinitionStore,
                            EventBridgeConfiguration eventBridgeConfiguration) {
         this.eventQueue = new EventQueue(subscribers, eventBridgeConfiguration);
@@ -66,24 +72,26 @@ public class EventDispatcher {
             throws
             MalformedStreamDefinitionException,
             DifferentStreamDefinitionAlreadyDefinedException, StreamDefinitionStoreException {
-        EventStreamDefinition eventStreamDefinition = EventDefinitionConverterUtils.convertFromJson(streamDefinition);
+        synchronized (EventDispatcher.class) {
+            EventStreamDefinition eventStreamDefinition = EventDefinitionConverterUtils.convertFromJson(streamDefinition);
 
-        EventStreamDefinition existingEventStreamDefinition;
-        try {
-            existingEventStreamDefinition = streamDefinitionStore.getStreamDefinition(agentSession.getCredentials(), eventStreamDefinition.getName(), eventStreamDefinition.getVersion());
-            if (!existingEventStreamDefinition.equals(eventStreamDefinition)) {
-                throw new DifferentStreamDefinitionAlreadyDefinedException("Similar event stream for " + eventStreamDefinition + " with the same name and version already exist: " + streamDefinitionStore.getStreamDefinition(agentSession.getCredentials(), eventStreamDefinition.getName(), eventStreamDefinition.getVersion()));
+            EventStreamDefinition existingEventStreamDefinition;
+            try {
+                existingEventStreamDefinition = streamDefinitionStore.getStreamDefinition(agentSession.getCredentials(), eventStreamDefinition.getName(), eventStreamDefinition.getVersion());
+                if (!existingEventStreamDefinition.equals(eventStreamDefinition)) {
+                    throw new DifferentStreamDefinitionAlreadyDefinedException("Similar event stream for " + eventStreamDefinition + " with the same name and version already exist: " + streamDefinitionStore.getStreamDefinition(agentSession.getCredentials(), eventStreamDefinition.getName(), eventStreamDefinition.getVersion()));
+                }
+                eventStreamDefinition = existingEventStreamDefinition;
+            } catch (StreamDefinitionNotFoundException e) {
+                streamDefinitionStore.saveStreamDefinition(agentSession.getCredentials(), eventStreamDefinition);
+                updateEventStreamTypeCache(agentSession.getDomainName(), eventStreamDefinition);
             }
-            eventStreamDefinition = existingEventStreamDefinition;
-        } catch (StreamDefinitionNotFoundException e) {
-            streamDefinitionStore.saveStreamDefinition(agentSession.getCredentials(), eventStreamDefinition);
-            updateEventStreamTypeCache(agentSession.getDomainName(), eventStreamDefinition);
-        }
 
-        for (AgentCallback agentCallback : subscribers) {
-            agentCallback.definedEventStream(eventStreamDefinition, agentSession.getCredentials());
+            for (AgentCallback agentCallback : subscribers) {
+                agentCallback.definedEventStream(eventStreamDefinition, agentSession.getCredentials());
+            }
+            return eventStreamDefinition.getStreamId();
         }
-        return eventStreamDefinition.getStreamId();
     }
 
     private void updateEventStreamTypeCache(String domainName,
@@ -94,15 +102,26 @@ public class EventDispatcher {
 //            domainName = HACK_DOMAIN_CONSTANT;
 //        }
 
-//        if (eventStreamTypeCache.containsKey(domainName)) {
-//            eventStreamTypeHolder = eventStreamTypeCache.get(domainName);
-//        } else {
-//            eventStreamTypeHolder = new EventStreamTypeHolder(domainName);
-//            eventStreamTypeCache.put(domainName, eventStreamTypeHolder);
-//        }
-        eventStreamTypeHolder = new EventStreamTypeHolder(domainName);
-        updateEventStreamTypeHolder(eventStreamTypeHolder, eventStreamDefinition);
-        eventStreamTypeCache.put(domainName, eventStreamTypeHolder);
+        synchronized (EventDispatcher.class) {
+            if (eventStreamTypeCache.containsKey(domainName)) {
+                eventStreamTypeHolder = eventStreamTypeCache.get(domainName);
+            } else {
+                eventStreamTypeHolder = new EventStreamTypeHolder(domainName);
+            }
+
+            updateEventStreamTypeHolder(eventStreamTypeHolder, eventStreamDefinition);
+            if (log.isTraceEnabled()) {
+                String logMsg = "Event Stream Type getting updated : ";
+                logMsg += "Event stream holder for domain name : " + domainName + " : \n ";
+                logMsg += "Correlation Data Type Map : " + eventStreamTypeHolder.getCorrelationDataTypeMap() + "\n";
+                logMsg += "Payload Data Type Map : " + eventStreamTypeHolder.getPayloadDataTypeMap() + "\n";
+                logMsg += "Meta Data Type Map : " + eventStreamTypeHolder.getMetaDataTypeMap() + "\n";
+                log.trace(logMsg);
+            }
+
+
+            eventStreamTypeCache.put(domainName, eventStreamTypeHolder);
+        }
     }
 
 
@@ -123,14 +142,36 @@ public class EventDispatcher {
 //        String domainName = (credentials.getDomainName() == null) ? HACK_DOMAIN_CONSTANT : credentials.getDomainName();
 
         EventStreamTypeHolder eventStreamTypeHolder = eventStreamTypeCache.get(credentials.getDomainName());
+        log.info("Retrieving Event Stream Type Cache : " + eventStreamTypeCache);
+
+
         if (eventStreamTypeHolder != null) {
+
+            String logMsg = "Event stream holder for domain name : " + credentials.getDomainName() + " : \n ";
+            logMsg += "Correlation Data Type Map : " + eventStreamTypeHolder.getCorrelationDataTypeMap() + "\n";
+            logMsg += "Payload Data Type Map : " + eventStreamTypeHolder.getPayloadDataTypeMap() + "\n";
+            logMsg += "Meta Data Type Map : " + eventStreamTypeHolder.getMetaDataTypeMap() + "\n";
+            log.info(logMsg);
+
             return eventStreamTypeHolder;
         } else {
-            eventStreamTypeHolder = new EventStreamTypeHolder(credentials.getDomainName());
-            for (EventStreamDefinition eventStreamDefinition : streamDefinitionStore.getAllStreamDefinitions(credentials)) {
-                updateEventStreamTypeHolder(eventStreamTypeHolder, eventStreamDefinition);
-                updateEventStreamTypeCache(credentials.getDomainName(), eventStreamDefinition);
+            synchronized (EventDispatcher.class) {
+                eventStreamTypeHolder = new EventStreamTypeHolder(credentials.getDomainName());
+                Collection<EventStreamDefinition> allStreamDefinitions =
+                        streamDefinitionStore.getAllStreamDefinitions(credentials);
+                for (EventStreamDefinition eventStreamDefinition : allStreamDefinitions) {
+                    updateEventStreamTypeHolder(eventStreamTypeHolder, eventStreamDefinition);
+                    updateEventStreamTypeCache(credentials.getDomainName(), eventStreamDefinition);
+                }
             }
+        }
+
+        if (log.isTraceEnabled()) {
+        String logMsg = "Event stream holder for domain name : " + credentials.getDomainName() + " : \n ";
+            logMsg += "Correlation Data Type Map : " + eventStreamTypeHolder.getCorrelationDataTypeMap() + "\n";
+            logMsg += "Payload Data Type Map : " + eventStreamTypeHolder.getPayloadDataTypeMap() + "\n";
+            logMsg += "Meta Data Type Map : " + eventStreamTypeHolder.getMetaDataTypeMap() + "\n";
+            log.trace(logMsg);
         }
         return eventStreamTypeHolder;
     }

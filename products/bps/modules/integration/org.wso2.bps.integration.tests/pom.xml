@@ -44,6 +44,7 @@
                         <suiteXmlFile>src/test/conf/bps-security-tests.xml</suiteXmlFile>
                         <suiteXmlFile>src/test/conf/bps-bpel-operation-tests.xml</suiteXmlFile>
                         <suiteXmlFile>src/test/conf/bps-humantask-operation-tests.xml</suiteXmlFile>
+                        <suiteXmlFile>src/test/conf/bps-humantask-fail-tests.xml</suiteXmlFile>
                     </suiteXmlFiles>
                     <systemProperties>
                         <maven.test.haltafterfailure>false</maven.test.haltafterfailure>

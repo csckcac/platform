@@ -17,17 +17,12 @@
 package org.wso2.bps.integration.tests.humantask;
 
 import org.apache.axis2.AxisFault;
-import org.apache.axis2.client.Options;
-import org.apache.axis2.client.ServiceClient;
 import org.apache.commons.logging.Log;
 import org.apache.commons.logging.LogFactory;
 import org.testng.Assert;
 import org.testng.annotations.BeforeGroups;
 import org.testng.annotations.Test;
-import org.wso2.bps.integration.tests.util.BPSMgtUtils;
-import org.wso2.bps.integration.tests.util.BPSTestUtils;
-import org.wso2.bps.integration.tests.util.FrameworkSettings;
-import org.wso2.bps.integration.tests.util.HumanTaskTestConstants;
+import org.wso2.bps.integration.tests.util.*;
 import org.wso2.carbon.bpel.stub.mgt.InstanceManagementException;
 import org.wso2.carbon.bpel.stub.mgt.InstanceManagementServiceStub;
 import org.wso2.carbon.humantask.stub.ui.task.client.api.*;
@@ -35,11 +30,8 @@ import org.wso2.carbon.humantask.stub.ui.task.client.api.types.TSimpleQueryCateg
 import org.wso2.carbon.humantask.stub.ui.task.client.api.types.TSimpleQueryInput;
 import org.wso2.carbon.humantask.stub.ui.task.client.api.types.TTaskSimpleQueryResultRow;
 import org.wso2.carbon.humantask.stub.ui.task.client.api.types.TTaskSimpleQueryResultSet;
-import org.wso2.carbon.integration.framework.ClientConnectionUtil;
-import org.wso2.carbon.integration.framework.LoginLogoutUtil;
 import org.wso2.carbon.user.mgt.stub.UserAdminStub;
 import org.wso2.carbon.user.mgt.stub.types.carbon.FlaggedName;
-import org.wso2.carbon.utils.CarbonUtils;
 
 import javax.xml.stream.XMLStreamException;
 import java.rmi.RemoteException;
@@ -54,16 +46,8 @@ import static org.testng.Assert.assertTrue;
  */
 public class TaskCreationTestCase {
 
-
     private static final Log log = LogFactory.getLog(TaskCreationTestCase.class);
-
-    private LoginLogoutUtil util = new LoginLogoutUtil();
-
     private static String SERVICE_URL_PREFIX;
-
-    final String USER_MANAGEMENT_SERVICE_URL = "https://" + FrameworkSettings.HOST_NAME +
-            ":" + FrameworkSettings.HTTPS_PORT +
-            "/services/UserAdmin";
 
     private UserAdminStub userAdminStub = null;
     private HumanTaskClientAPIAdminStub taskOperationsStub = null;
@@ -72,31 +56,17 @@ public class TaskCreationTestCase {
     @BeforeGroups(groups = {"wso2.bps"}, description = " Copying sample HumanTask packages")
     protected void init() throws Exception {
 
-        log.info("Initializing Basic Activities Test...");
+        log.info("Initializing HumanTask task creation Test...");
 
         SERVICE_URL_PREFIX = "https://" + FrameworkSettings.HOST_NAME + ":" +
                 FrameworkSettings.HTTPS_PORT + "/services/";
 
-
-        initUserAdminStub();
+        userAdminStub = HumanTaskAdminServiceUtils.getUserAdminStub();
         addRoles();
         addUsers();
-        initTaskOperationServiceStub();
-        initInstanceManagementServiceStub();
+        taskOperationsStub = HumanTaskAdminServiceUtils.getTaskOperationServiceStub();
+        instanceManagementServiceStub = HumanTaskAdminServiceUtils.getInstanceManagementServiceStub();
     }
-
-    private void initUserAdminStub() throws Exception {
-
-        userAdminStub = new UserAdminStub(USER_MANAGEMENT_SERVICE_URL);
-        String loggedInSessionCookie = util.login();
-
-        ServiceClient serviceClient = userAdminStub._getServiceClient();
-        Options serviceClientOptions = serviceClient.getOptions();
-        serviceClientOptions.setManageSession(true);
-        serviceClientOptions.setProperty(org.apache.axis2.transport.http.HTTPConstants.COOKIE_STRING,
-                loggedInSessionCookie);
-    }
-
 
     private void addRoles() throws Exception {
         userAdminStub.addRole(HumanTaskTestConstants.REGIONAL_CLERKS_ROLE, null,
@@ -180,10 +150,11 @@ public class TaskCreationTestCase {
 
     @Test(groups = {"wso2.bps"}, description = "Claims approval B4P test case")
     public void createTaskB4P() throws XMLStreamException, RemoteException, InterruptedException,
-            IllegalArgumentFault, IllegalStateFault, IllegalOperationFault, IllegalAccessFault, InstanceManagementException {
+            IllegalArgumentFault, IllegalStateFault, IllegalOperationFault, IllegalAccessFault,
+            InstanceManagementException {
         String soapBody =
                 "<cla:ClaimApprovalProcessInput xmlns:cla=\"http://www.wso2.org/humantask/claimsapprovalprocessservice.wsdl\">\n" +
-                        "         <cla:custID>C001</cla:custID>\n" +
+                        "         <cla:custID>C002</cla:custID>\n" +
                         "         <cla:custFName>Waruna</cla:custFName>\n" +
                         "         <cla:custLName>Ranasinghe</cla:custLName>\n" +
                         "         <cla:amount>10000</cla:amount>\n" +
@@ -194,7 +165,6 @@ public class TaskCreationTestCase {
         String operation = "claimsApprovalProcessOperation";
         String serviceName = "ClaimsApprovalProcessService";
         List<String> expectedOutput = Collections.emptyList();
-//        expectedOutput.add("taskid>2<");
         log.info("Calling Service: " + SERVICE_URL_PREFIX + serviceName);
         BPSTestUtils.sendRequest(SERVICE_URL_PREFIX + serviceName, operation, soapBody, 1,
                 expectedOutput, BPSTestUtils.ONE_WAY);
@@ -205,8 +175,6 @@ public class TaskCreationTestCase {
         TSimpleQueryInput queryInput = new TSimpleQueryInput();
         queryInput.setPageNumber(0);
         queryInput.setSimpleQueryCategory(TSimpleQueryCategory.ALL_TASKS);
-
-//        Thread.sleep(5000);
 
         TTaskSimpleQueryResultSet taskResults = taskOperationsStub.simpleQuery(queryInput);
 
@@ -235,7 +203,7 @@ public class TaskCreationTestCase {
         Assert.assertNotNull(claimApprovalRequest, "The input of the Task:" +
                 b4pTask.getId() + " is null.");
 
-        Assert.assertFalse(!claimApprovalRequest.contains("C001"),
+        Assert.assertFalse(!claimApprovalRequest.contains("C002"),
                 "Unexpected input found for the Task");
 
         taskOperationsStub.complete(b4pTask.getId(), "<sch:ClaimApprovalResponse xmlns:sch=\"http://www.example.com/claims/schema\">\n" +
@@ -248,35 +216,6 @@ public class TaskCreationTestCase {
 
         BPSMgtUtils.getInstanceInfo(instanceManagementServiceStub, "COMPLETED", "b4pOutput",
                 ">true<", instances);
-    }
-
-
-    private void initTaskOperationServiceStub() throws Exception {
-        String TASK_OPERATIONS_SERVICE_URL = "https://" + FrameworkSettings.HOST_NAME +
-                ":" + FrameworkSettings.HTTPS_PORT +
-                "/services/HumanTaskClientAPIAdmin";
-        taskOperationsStub = new HumanTaskClientAPIAdminStub(TASK_OPERATIONS_SERVICE_URL);
-
-        ServiceClient serviceClient = taskOperationsStub._getServiceClient();
-        CarbonUtils.setBasicAccessSecurityHeaders(HumanTaskTestConstants.CLERK1_USER,
-                HumanTaskTestConstants.CLERK1_PASSWORD, serviceClient);
-        Options serviceClientOptions = serviceClient.getOptions();
-        serviceClientOptions.setManageSession(true);
-    }
-
-    private void initInstanceManagementServiceStub() throws Exception {
-        final String INSTANCE_MANAGEMENT_SERVICE_URL = "https://" + FrameworkSettings.HOST_NAME +
-                ":" + FrameworkSettings.HTTPS_PORT +
-                "/services/InstanceManagementService";
-        ClientConnectionUtil.waitForPort(FrameworkSettings.HTTPS_PORT);
-        String loggedInSessionCookie = util.login();
-
-        instanceManagementServiceStub = new InstanceManagementServiceStub(INSTANCE_MANAGEMENT_SERVICE_URL);
-        ServiceClient instanceManagementServiceClient = instanceManagementServiceStub._getServiceClient();
-        Options instanceManagementServiceClientOptions = instanceManagementServiceClient.getOptions();
-        instanceManagementServiceClientOptions.setManageSession(true);
-        instanceManagementServiceClientOptions.setProperty(org.apache.axis2.transport.http.HTTPConstants.COOKIE_STRING,
-                loggedInSessionCookie);
-
+        BPSMgtUtils.deleteInstances(instanceManagementServiceStub, instances.size());
     }
 }

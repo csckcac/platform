@@ -1,7 +1,7 @@
 @product.name@, v@product.version@
 ================================
 
-12th March 2012
+22nd June 2012
 
 Welcome to the @product.name@, v@product.version@ release
 
@@ -16,19 +16,24 @@ Features
 * Data Agents
         A re-usable Agent API to publish events to the BAM server from any application (samples included)
         Apache Thrift based Agents to publish data at extremely high throughput rates
-        Option to use Binary or HTTP protocols
 * Event Storage
         Apache Cassandra based scalable data architecture for high throughput of writes and reads
         Carbon based security mechanism on top of Cassandra
 * Analytics
-        An Analyzer Framework with the capability of writing and plugging in any custom analysis tasks
-        Built in Analyzers for common operations such as get, put aggregate, alert, fault detection, etc.
-        Scheduling capability of analysis tasks
+        An Analyzer Framework with the capability of Writing the the Hive Scripts and run Hadoop Jobs, which enables provides more performance in big data. 
+	Capability for read/write from cassandra and read/write in JDBC database.
+	This has the capability of writing and plugging in any custom analysis tasks
+	Scheduling capability of analysis tasks 
 * Visualization
-        Drag and drop gadget IDE to visualize analyzed data with zero code
-        Capability to plug in additional UI elements and Data sources to Gadget IDE
-        Google gadgets based dashboard
-
+        Step-by-Step Easy Gadget Generation Wizard
+        Jaggery based gadgets generation
+	Capability use with most commonly used data sources, such as MySQL, H2, etc.
+	Google gadgets based dashboard
+* Tool Box Deployement
+	Easy deployment of default scenarios
+	Bundled required hive scripts and gadgets and deploy and undeploys with a click go.
+	capability to deploy custom toolboxes
+	
 System Requirements
 ===================
 
@@ -39,6 +44,7 @@ System Requirements
    NOTE:
      On Windows Server 2003, it is not allowed to go below the medium
      security level in Internet Explorer 6.x.
+
 
 Installation and Running
 ========================
@@ -52,11 +58,11 @@ Installation and Running
    NOTE: It is strongly recommended that you change your administrator 
        password from the admin to a more secure one at this point. To do
        this click on 'Configure->User Managment' link on the ledt menu.
-6. Publish events to BAM server using data agents.
-7. Write anaylizer sequence according to your requirement on the collected data by the BAM.
-8. Create your preferred gadget from the Gadget-Ide. 
-9. Publish the gadgets to the BAM dashboard. There you can view the created gadget from the BAM dashboard.
-10.There are many four samples which addresses the how to work with BAM and the features of BAM. 
+6. Publish events to BAM server.
+7. Write Hive Scripts according to your requirement on the collected data by the BAM.
+8. Create your preferred gadget from the Gadget Generation Wizard. 
+9. Add the gadgets to the BAM dashboard. There you can view the created gadget from the BAM dashboard.
+10.KPI sample is shipped with BAM which addresses the how to work with BAM and the features of BAM.
 
 Training
 ========
@@ -98,10 +104,8 @@ All known issues have been recorded at https://wso2.org/jira/browse/CARBON
 		|- repository <folder>
 		|- tmp <folder>
 		|- samples <folder>
-			|- cluster-monitor<folder>
-			|- end-to-end-messageTracing<folder>
-			|- fault-detection-and-alerting<folder>
-			|- kpi-definition<folder>		
+			|- kpi-definition<folder>
+			|- toolboxes<folder>		
 		|-- LICENSE.txt <file>
 		|-- README.txt <file>
 		|-- INSTALL.txt <file>
@@ -133,21 +137,13 @@ All known issues have been recorded at https://wso2.org/jira/browse/CARBON
           Contains the samples which describes the usage and fetures of 
 	  @product.name@. This includes four samples: 
 
-           	- cluster-monitor 
-		  This sample explains the scenario where you can monitor the cluster 
-		  of ESB and AS via  @product.name@.
-
-	        - end-to-end-messageTracing 
-		  This sample exaplains about the scenario of using @product.name@ when 
-                  tranferring message from one end to another end. 
-
-	        - fault-detection-and-alerting 
-		  This sample exaplains about the scenario of using @product.name@ to 
- 		  send e-mail alert in the failure.
-
 	        - kpi-definition 
 		  This sample exaplains about the scenario of using @product.name@ to 
  		  in monitoring Key performance Indicators.
+
+		- toolboxes
+		  Sample toolbox for KPI definition sample, which bundles 
+		  required Hive scripts and gadgets
 
 	- LICENSE.txt
 	  Apache License 2.0 under which @product.name@ is distributed.

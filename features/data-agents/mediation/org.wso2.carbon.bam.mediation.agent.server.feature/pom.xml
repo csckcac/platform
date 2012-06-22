@@ -74,35 +74,10 @@
                             </bundles>
                             <importFeatures>
                                 <importFeatureDef>org.wso2.carbon.core.server:${wso2carbon.version}</importFeatureDef>
-                                <importFeatureDef>org.wso2.carbon.eventbridge.agent.thrift.feature:${wso2carbon.version.event-bridge}</importFeatureDef>
-                                <importFeatureDef>org.wso2.carbon.eventbridge.commons.feature:${wso2carbon.version.event-bridge}</importFeatureDef>
-                                <importFeatureDef>org.wso2.carbon.eventbridge.thrift.commons.feature:${wso2carbon.version.event-bridge}</importFeatureDef>
+                                <importFeatureDef>org.wso2.carbon.eventbridge.agent.thrift:${wso2carbon.version.event-bridge}</importFeatureDef>
+                                <importFeatureDef>org.wso2.carbon.eventbridge.commons:${wso2carbon.version.event-bridge}</importFeatureDef>
+                                <importFeatureDef>org.wso2.carbon.eventbridge.thrift.commons:${wso2carbon.version.event-bridge}</importFeatureDef>
                             </importFeatures>
-                        </configuration>
-                    </execution>
-                </executions>
-            </plugin>
-            <plugin>
-                <artifactId>maven-resources-plugin</artifactId>
-                <executions>
-                    <execution>
-                        <id>copy-resources</id>
-                        <phase>generate-resources</phase>
-                        <goals>
-                            <goal>copy-resources</goal>
-                        </goals>
-                        <configuration>
-                            <outputDirectory>src/main/resources</outputDirectory>
-                            <resources>
-                                <resource>
-                                    <directory>resources</directory>
-                                    <includes>
-                                        <include>conf/agent.xml</include>
-                                        <include>p2.inf</include>
-                                        <include>build.properties</include>
-                                    </includes>
-                                </resource>
-                            </resources>
                         </configuration>
                     </execution>
                 </executions>

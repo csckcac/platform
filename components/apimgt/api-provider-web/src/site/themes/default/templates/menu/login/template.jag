@@ -4,7 +4,7 @@
         <div class="container">
             <div class="row">
             <div class="span4 offset4">
-            <a class="brand" href="#"><a class="brand" style="position:absolute;"><img src="<%=site.context%>/site/themes/default/images/logo.png"
+            <a class="brand" style="left: 50%;margin-left: -149px !important;position: absolute;"><img src="<%=site.context%>/site/themes/default/images/logo.png"
                                                                                        alt="API PROVIDER"></a>
 
                 <div class="nav-collapse" style="height:35px">

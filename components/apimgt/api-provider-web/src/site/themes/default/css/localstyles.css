@@ -75,6 +75,7 @@ footer h3{
     cursor:pointer;
 }
 .thumbnail img{
+    height:78px;
     width:78px;
 }
 .content-section{

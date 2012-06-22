@@ -401,6 +401,7 @@
                         <configuration>
                             <tasks>
                                 <delete dir="target/archive-tmp"/>
+                                <delete dir="target/database"/>
                                 <delete dir="target/dependency-maven-plugin-markers"/>
                                 <delete dir="target/maven-archiver"/>
                                 <delete dir="target/wso2carbon-core-${carbon.version}"/>

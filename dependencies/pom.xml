@@ -36,7 +36,6 @@
 
             <modules>
                 <!--module>cassandra</module-->
-                <module>cassandra-jdbc/1.0.5-wso2v1</module>
                 <module>commons-vfs/2.0-wso2v3</module>
                 <module>commons/balana</module>
                 <module>commons/caching</module>

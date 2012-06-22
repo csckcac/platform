@@ -32,7 +32,7 @@
     <artifactId>cassandra-jdbc</artifactId>
     <packaging>bundle</packaging>
     <name>cassandra-jdbc.wso2</name>
-    <version>1.0.5.wso2v1</version>
+    <version>1.1.1.wso2v1</version>
     <description>
         This bundle will represent JDBC driver for Cassandra/CQL.
     </description>
@@ -54,8 +54,13 @@
 <dependencies>
     <dependency>
       <groupId>org.apache.cassandra</groupId>
+      <artifactId>cassandra-clientutil</artifactId>
+      <version>1.1.1</version>
+    </dependency>
+    <dependency>
+      <groupId>org.apache.cassandra</groupId>
       <artifactId>cassandra-thrift</artifactId>
-      <version>1.0.0</version>
+      <version>1.1.1</version>
       <exclusions>
         <exclusion>
           <groupId>javax.servlet</groupId>
@@ -66,16 +71,6 @@
           <artifactId>httpclient</artifactId>
         </exclusion>
       </exclusions>
-    </dependency>
-    <dependency>
-      <groupId>org.apache.cassandra</groupId>
-      <artifactId>cassandra-clientutil</artifactId>
-      <version>1.0.2</version>
-    </dependency>
-   <dependency>
-      <groupId>com.google.guava</groupId>
-      <artifactId>guava</artifactId>
-      <version>r08</version>
     </dependency>
     <dependency>
       <groupId>junit</groupId>
@@ -89,20 +84,15 @@
       <version>1.6.1</version>
       <scope>test</scope>
     </dependency>
-    <dependency>
-    <groupId>org.apache.thrift</groupId>
-    <artifactId>libthrift</artifactId>
-    <version>0.6.1</version> 
-   </dependency>
    <dependency>
-    <groupId>org.apache-extras.cassandra-jdbc</groupId>
+    <groupId>org.wso2.carbon</groupId>
     <artifactId>cassandra-jdbc</artifactId>
-    <version>1.0.5-wso2v1</version>
+    <version>1.1.1</version>
    </dependency>
 </dependencies>
 
     <properties>
-        <cassandra.jdbc.version>1.0.5.wso2v1</cassandra.jdbc.version>
+        <cassandra.jdbc.version>1.1.1.wso2v1</cassandra.jdbc.version>
     </properties>
 
     <build>

@@ -174,7 +174,7 @@
                                 </div>
 
                                 <div class="form-actions">
-                                    <button type="btn btn-primary" class="btn btn-primary">Sing-in</button>
+                                    <button type="btn btn-primary" class="btn btn-primary">Sign in</button>
                                     <button class="btn btn-primary">Cancel</button>
                                 </div>
                             </fieldset>

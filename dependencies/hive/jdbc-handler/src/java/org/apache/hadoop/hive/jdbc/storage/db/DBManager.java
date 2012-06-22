@@ -17,6 +17,7 @@ public class DBManager {
                                        String password){
         BasicDataSource basicDataSource = new BasicDataSource();
         basicDataSource.setDriverClassName(driverClass);
+        connectionUrl = connectionUrl.replaceAll(" ", "");
         basicDataSource.setUrl(connectionUrl);
         basicDataSource.setUsername(userName);
         basicDataSource.setPassword(password);

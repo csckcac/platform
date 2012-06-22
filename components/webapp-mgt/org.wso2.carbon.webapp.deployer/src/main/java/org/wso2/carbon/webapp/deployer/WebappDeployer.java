@@ -129,15 +129,19 @@ public class WebappDeployer extends AbstractDeployer {
     private void deployThisWebApp(DeploymentFileData deploymentFileData)
             throws DeploymentException {
         try {
-            // Object can be of listeners interfaces in javax.servlet.*
-            ArrayList<Object> listeners = new ArrayList<Object>(1);
+            // We now support for exploded webapp deployment, so we have to check if unpackedWar
+            // files are getting deployed which will cause conflict at tomcat level.
+            if (!isUnpackedWebapp(deploymentFileData.getFile())) {
+                // Object can be of listeners interfaces in javax.servlet.*
+                ArrayList<Object> listeners = new ArrayList<Object>(1);
 //            listeners.add(new CarbonServletRequestListener());
-            tomcatWebappDeployer.deploy(deploymentFileData.getFile(),
-                                        (ArrayList<WebContextParameter>) configContext.
-                                                getProperty(CarbonConstants.
-                                                                    SERVLET_CONTEXT_PARAMETER_LIST),
-                                        listeners);
-            super.deploy(deploymentFileData);
+                tomcatWebappDeployer.deploy(deploymentFileData.getFile(),
+                                            (ArrayList<WebContextParameter>) configContext.
+                                                    getProperty(CarbonConstants.
+                                                                        SERVLET_CONTEXT_PARAMETER_LIST),
+                                            listeners);
+                super.deploy(deploymentFileData);
+            }
         } catch (Exception e) {
             String msg = "Error occurred while deploying webapp " + deploymentFileData.getFile().
                     getAbsolutePath();
@@ -197,5 +201,14 @@ public class WebappDeployer extends AbstractDeployer {
                 }
             }
         }
+    }
+
+    private boolean isUnpackedWebapp(File webappFile) {
+        boolean isExploded = false;
+        File warFile = new File(webappFile.getPath() + ".war");
+        if (webappFile.isDirectory() && warFile.exists()) {
+            isExploded = true;
+        }
+        return isExploded;
     }
 }

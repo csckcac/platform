@@ -22,5 +22,9 @@
             <extension>war</extension>
             <class>org.wso2.carbon.webapp.deployer.WebappDeployer</class>
         </deployer>
+        <deployer>
+            <directory>webapps</directory>
+            <class>org.wso2.carbon.webapp.deployer.WebappDeployer</class>
+        </deployer>
     </deployers>
 </component>

@@ -1,5 +1,9 @@
 Tryit = new function () {
     var viewurl = "/tryit/tryit.jag";
+    var pathArray = window.location.pathname.split( '/' );
+    var secondLevelLocation = pathArray[1];   
+   if(secondLevelLocation != "tryitview.jag"){
+   viewurl = "/"+secondLevelLocation +"/"+ viewurl;}
     this.call = function () {
         var arg = editor.getValue();
         console.log('Hii' + arg);

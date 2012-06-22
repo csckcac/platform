@@ -150,6 +150,8 @@ public class MediationPersistenceManager {
                 new MessageProcessorStore(configPath, registry, configName));
         dataStores.put(ServiceBusConstants.ITEM_TYPE_REST_API,
                 new APIStore(configPath, registry, configName));
+        dataStores.put(ServiceBusConstants.ITEM_TYPE_IMPORT,
+                new ImportStore(configPath, registry, configName));
     }
 
     public void destroy() {

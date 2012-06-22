@@ -65,6 +65,7 @@ public final class ServiceBusConstants {
     public static final int ITEM_TYPE_MESSAGE_PROCESSOR =11;
     public static final int ITEM_TYPE_TEMPLATE_ENDPOINTS = 12;
     public static final int ITEM_TYPE_REST_API      = 13;
+    public static final int ITEM_TYPE_IMPORT      = 14;
 
     public static final String ARTIFACT_EXTENSION = "xml";
     public static final String PERSISTENCE_MANAGER = "PERSISTENCE_MANAGER";
@@ -88,6 +89,7 @@ public final class ServiceBusConstants {
         public static final String MESSAGE_STORE_REGISTRY = "synapse-message-stores";
         public static final String MESSAGE_PROCESSOR_REGISTRY = "synapse-message-processors";
         public static final String REST_API_REGISTRY = "api";
+        public static final String IMPORT_REGISTRY = "imports";
     }
 
     // String constants used for storing information about synapse configurations

@@ -214,6 +214,7 @@
 				<module>org.wso2.carbon.bam.gadgetgenwizard.stub</module>
                 		<module>org.wso2.carbon.cassandra.explorer.stub</module>
 				<module>org.wso2.carbon.bam.toolbox.deployer.stub</module>
+				<module>org.wso2.carbon.ndatasource.stub</module>
 			</modules>
 
     <build>

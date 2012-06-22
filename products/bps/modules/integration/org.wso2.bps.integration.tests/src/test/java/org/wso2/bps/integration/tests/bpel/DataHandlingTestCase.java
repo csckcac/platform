@@ -218,10 +218,25 @@ public class DataHandlingTestCase {
                                  1, expectedOutput, BPSTestUtils.TWO_WAY);
     }
 
+    @Test(groups = {"wso2.bps"}, description = "test attribute manipulations in data handling test case")
+    public void manipulateXMLAttributes() throws XMLStreamException, AxisFault, InterruptedException {
+        String payload = "<p:XMLAttributeProcessRequest xmlns:p=\"http://eclipse.org/bpel/sample\">\n" +
+                "      <p:input>1</p:input>\n" +
+                "   </p:XMLAttributeProcessRequest>";
+        String operation = "initiate";
+        String serviceName = "XMLAttributeProcessService";
+        List<String> expectedOutput = new ArrayList<String>();
+        expectedOutput.add("testUserIdAttribute=\"1\"");
+        expectedOutput.add("testAttribute=\"testAttributeValue\"");
+
+        BPSTestUtils.sendRequest(SERVICE_URL_PREFIX + serviceName, operation, payload,
+                1, expectedOutput, BPSTestUtils.TWO_WAY);
+    }
+
 
     @BeforeClass(groups = {"wso2.bps"})
     public void setup() {
-        log.info("Seting up Data Handling Test...");
+        log.info("Setting up Data Handling Test...");
         SERVICE_URL_PREFIX = "https://" + FrameworkSettings.HOST_NAME + ":" +
                              FrameworkSettings.HTTPS_PORT + "/services/";
     }

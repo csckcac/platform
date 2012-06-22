@@ -282,8 +282,10 @@
                                      basedir="${basedir}/../samples/product/src/main/resources/bpel/2.0/TestXslTransform"/>
                                 <zip destfile="target/samples/bpel/ClaimsApprovalProcess.zip"
                                      basedir="${basedir}/../samples/product/src/main/resources/bpel/2.0/ClaimsApprovalProcess"/>
-				<zip destfile="target/samples/bpel/DynPartner.zip"
+                                <zip destfile="target/samples/bpel/DynPartner.zip"
                                      basedir="${basedir}/../samples/product/src/main/resources/bpel/2.0/DynPartner"/>
+                                <zip destfile="target/samples/bpel/XMLAttributeProcess.zip"
+                                     basedir="${basedir}/../samples/product/src/main/resources/bpel/2.0/XMLAttributeProcess"/>
                                 <!--  Copying Human Tasks Sample -->
 
                                 <zip destfile="target/samples/humantask/ClaimsApprovalTask.zip"
@@ -383,7 +385,8 @@
                                 <mkdir dir="${tempdir}"/>
                                 <unzip dest="${tempdir}">
                                     <fileset dir="target">
-                                        <include name="${project.artifactId}-${project.version}.zip"/>
+                                        <include
+                                                name="${project.artifactId}-${project.version}.zip"/>
                                     </fileset>
                                 </unzip>
                                 <copy todir="target/wso2carbon-core-${carbon.version}/repository/components"

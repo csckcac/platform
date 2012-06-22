@@ -152,6 +152,7 @@
                             org.apache.synapse.rest.*,
                             org.apache.synapse.startup.*,
                             org.apache.synapse.util.*,
+                            org.apache.synapse.libraries.*,
                         </Export-Package>
                         <Import-Package>
                             !javax.xml.namespace,

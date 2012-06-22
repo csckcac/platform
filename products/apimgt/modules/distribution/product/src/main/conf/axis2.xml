@@ -512,6 +512,9 @@
     <!-- Comment this out to disable Addressing -->
     <module ref="addressing"/>
 
+    <!-- Uncomment the following entry to work with the message relay  -->
+    <!--module ref="relay"/-->
+
 
     <!-- ================================================= -->
     <!--                Clustering                         -->

@@ -44,5 +44,7 @@ public class RESTConstants {
     public static final String REST_URL_PREFIX = "REST_URL_PREFIX";
 
     public static final String DEFAULT_ENCODING = "UTF-8";
+    
+    public static final String NO_MATCHING_RESOURCE_HANDLER = "NO_MATCHING_RESOURCE_HANDLER";
 
 }

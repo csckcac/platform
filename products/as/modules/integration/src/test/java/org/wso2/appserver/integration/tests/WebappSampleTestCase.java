@@ -44,15 +44,9 @@ public class WebappSampleTestCase {
 
     private static final Log log = LogFactory.getLog(WebappSampleTestCase.class);
 
+
     @Test(groups = {"wso2.as"})
-    public void testWebappExample() {
-        testUserManagerAndAuthenticationDemo();
-        testRegistryUsageDemo();
-        testCarbonCachingDemo();
-    }
-
-
-    public void testUserManagerAndAuthenticationDemo() {
+    public void testUserManagerAndAuthenticationDemo() throws IOException {
         log.info("Running carbon example webapp test case");
         ClientConnectionUtil.waitForPort(9763);
 
@@ -66,10 +60,6 @@ public class WebappSampleTestCase {
                 fail("Method failed: " + getMethod1.getStatusLine());
             }
 
-        } catch (Exception e) {
-            log.error("Error occurred while trying to add test user to user realm: "
-                               + e.getMessage());
-            fail("Caught exception " + e.toString());
         } finally {
             getMethod1.releaseConnection();
         }
@@ -94,16 +84,13 @@ public class WebappSampleTestCase {
                 }
             }
 
-        } catch (Exception e) {
-            log.error("Error occurred while trying authenticate test user: " +
-                               e.getMessage());
-            fail("Caught exception " + e.toString());
-        } finally {
+        }  finally {
             getMethod2.releaseConnection();
         }
     }
 
-    public void testRegistryUsageDemo() {
+    @Test(groups = {"wso2.as"}, dependsOnMethods = "testUserManagerAndAuthenticationDemo")
+    public void testRegistryUsageDemo() throws IOException {
         log.info("Running registry usage demo test case");
         ClientConnectionUtil.waitForPort(9763);
         String url1 = EXAMPLE_WEBAPP_URL + "/registry/index.jsp?add=Add&resourcePath=" +
@@ -116,11 +103,7 @@ public class WebappSampleTestCase {
             if (statusCode != HttpStatus.SC_OK) {
                 fail("Method failed: " + getMethod1.getStatusLine());
             }
-        } catch (IOException e) {
-            log.error("Error occurred while trying to add test resource to registry: "
-                               + e.getMessage());
-            fail("Caught exception " + e.toString());
-        } finally {
+        }  finally {
             getMethod1.releaseConnection();
         }
 
@@ -137,16 +120,13 @@ public class WebappSampleTestCase {
                         getResponseHeader("resource-content").getValue();
                 assertEquals(resourceContent, RESOURCE_VLAUE);
             }
-        } catch (IOException e) {
-            log.error("Error occurred while trying to get resource from registry: "
-                               + e.getMessage());
-            fail("Caught exception " + e.toString());
         } finally {
             getMethod2.releaseConnection();
         }
     }
 
-    public void testCarbonCachingDemo() {
+    @Test(groups = {"wso2.as"}, dependsOnMethods = "testRegistryUsageDemo")
+    public void testCarbonCachingDemo() throws IOException {
         log.info("Running carbon caching demo test case");
         ClientConnectionUtil.waitForPort(9763);
         String url1 = EXAMPLE_WEBAPP_URL + "/caching/index.jsp?add=Add&key=" + CACHE_KEY +
@@ -159,10 +139,6 @@ public class WebappSampleTestCase {
             if (statusCode != HttpStatus.SC_OK) {
                 fail("Method failed: " + getMethod1.getStatusLine());
             }
-        } catch (IOException e) {
-            log.error("Error occurred while trying to add test cache value to carbon context: "
-                               + e.getMessage());
-            fail("Caught exception " + e.toString());
         } finally {
             getMethod1.releaseConnection();
         }
@@ -179,10 +155,6 @@ public class WebappSampleTestCase {
                         getResponseHeader("cache-value").getValue();
                 assertEquals(cacheValue, CACHE_VALUE);
             }
-        } catch (IOException e) {
-            log.error("Error occurred while trying to get cache value from carbon context: "
-                               + e.getMessage());
-            fail("Caught exception " + e.toString());
         } finally {
             getMethod2.releaseConnection();
         }

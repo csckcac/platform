@@ -543,6 +543,9 @@
                                 <featureArtifactDef>
                                     org.wso2.carbon:org.wso2.carbon.bam.mediation.agent.feature:${carbon.version}
                                 </featureArtifactDef>
+				<featureArtifactDef>
+                                    org.wso2.carbon.ndatasource.feature:${carbon.version}
+                                </featureArtifactDef>
 <!--
                                 <featureArtifactDef>
                                     org.wso2.carbon:org.wso2.carbon.cassandra.explorer.feature:${carbon.version}
@@ -727,6 +730,10 @@
 										</catFeature>
 										<catFeature>
 											<id>org.wso2.carbon.captcha.mgt.server</id>
+											<version>${carbon.version}</version>
+										</catFeature>
+										<catFeature>
+											<id>org.wso2.carbon.ndatasource</id>
 											<version>${carbon.version}</version>
 										</catFeature>
 									</features>

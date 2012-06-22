@@ -55,7 +55,7 @@ $('#requireResubscriptionDiv').hide();
                  </div> <br/>
                  <div class="controls">
                     <label class="checkbox">
-                        <input type="checkbox" id="publishToGateway" name="publishToGateway" onChange="checkValue('#publishToGateway')" checked="true" value="true"> Push To Gateway
+                        <input type="checkbox" id="publishToGateway" name="publishToGateway" onChange="checkValue('#publishToGateway')" checked="true" value="true"> Propagate Changes to API Gateway
                     </label>
                      <label class="checkbox" id="deprecateOldVersionsDiv" style="display:none;">
                         <input type="checkbox" id="deprecateOldVersions" name="deprecateOldVersions" onChange="checkValue('#deprecateOldVersions')" value="false"> Deprecate Old Versions

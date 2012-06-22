@@ -154,6 +154,7 @@
 		<module>load-balancer</module>
         <module>cassandra-explorer</module>
         <module>event-bridge</module>
+		<module>ndatasource</module>
             </modules>
 	    <build>
 	        <plugins>

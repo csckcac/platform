@@ -91,7 +91,7 @@ public class APIProviderHostObject extends ScriptableObject {
 
     // The zero-argument constructor used for create instances for runtime
     public APIProviderHostObject() throws APIManagementException {
-        apiProvider = APIManagerFactory.getInstance().getAPIProvider();
+
     }
 
     public APIProviderHostObject(String loggedUser) throws APIManagementException {

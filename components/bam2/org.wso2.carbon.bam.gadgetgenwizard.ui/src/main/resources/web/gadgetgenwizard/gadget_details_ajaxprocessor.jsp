@@ -14,17 +14,17 @@
     <tr>
         <td>Gadget Title<span style="color: red; ">*</span>
         </td>
-        <td><input type="text" name="gadget-title" value="Gadget Generation Magnifique" style="width:150px"/></td>
+        <td><input type="text" name="gadget-title" value="" style="width:200px"/></td>
     </tr>
     <tr>
         <td>Gadget File Name<span style="color: red; ">*</span>
         </td>
-        <td><input type="text" name="gadget-filename" value="generated-gadget" style="width:150px"/></td>
+        <td><input type="text" name="gadget-filename" value="" style="width:200px"/></td>
     </tr>
     <tr>
         <td>Refresh Rate (in Seconds)<span style="color: red; ">*</span>
         </td>
-        <td><input type="text" name="refresh-rate" value="10" style="width:150px"/></td>
+        <td><input type="text" name="refresh-rate" value="10" style="width:200px"/></td>
     </tr>
     <input type="hidden" name="page" id="page" value="4">
     </tbody>

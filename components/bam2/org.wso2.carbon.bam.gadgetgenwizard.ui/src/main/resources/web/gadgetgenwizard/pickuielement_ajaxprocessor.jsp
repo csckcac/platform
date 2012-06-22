@@ -188,11 +188,11 @@
                                 <tr>
                                     <td>Chart Title<span style="color: red; ">*</span>
                                     </td>
-                                    <td><input type="text" class="bar" name="bar-title" value="Product vs Total Amount" style="width:150px"></td>
+                                    <td><input type="text" class="bar" name="bar-title" value="" style="width:150px"></td>
                                 </tr>
                                 <tr>
                                     <td>Y-Axis Label<span style="color: red; ">*</span></td>
-                                    <td><input class="bar" type="text" name="bar-ylabel" value="Total Amount (Rs.)" style="width:150px"></td>
+                                    <td><input class="bar" type="text" name="bar-ylabel" value="" style="width:150px"></td>
                                 </tr>
                                 <tr>
                                     <td>Y-Axis Column<span style="color: red; ">*</span></td>
@@ -200,7 +200,7 @@
                                 </tr>
                                 <tr>
                                     <td>X-Axis Label<span style="color: red; ">*</span></td>
-                                    <td><input type="text" class="bar" name="bar-xlabel" value="Product Name" style="width:150px"></td>
+                                    <td><input type="text" class="bar" name="bar-xlabel" value="" style="width:150px"></td>
                                 </tr>
                                 <tr>
                                     <td>X-Axis Column<span style="color: red; ">*</span></td>

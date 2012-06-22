@@ -10,7 +10,7 @@
     }
 
     Object sqlParam = session.getAttribute("sql");
-    String sql = (sqlParam == null) ? "select * from productsummary" : ((String[])sqlParam) [0];
+    String sql = (sqlParam == null) ? "" : ((String[])sqlParam) [0];
 
 %>
 <script type="text/javascript" src="../gadgetgenwizard/js/jquery.dataTables.min.js"></script>

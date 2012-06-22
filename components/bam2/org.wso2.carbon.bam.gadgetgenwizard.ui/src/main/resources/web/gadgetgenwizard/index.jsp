@@ -191,10 +191,10 @@
 
 <%
 
-    String jdbcurl = (session.getAttribute("jdbcurl") != null) ? ((String[]) session.getAttribute("jdbcurl")) [0] : "jdbc:h2:/Users/mackie/tmp/jaggery-1.0.0-SNAPSHOT_M4/repository/database/WSO2CARBON_DB;DB_CLOSE_ON_EXIT=FALSE";
-    String driver = (session.getAttribute("driver") != null) ? ((String[]) session.getAttribute("driver")) [0] : "org.h2.Driver";
-    String username = (session.getAttribute("username") != null) ? ((String[]) session.getAttribute("username")) [0] : "wso2carbon";
-    String password = (session.getAttribute("password") != null) ? ((String[]) session.getAttribute("password")) [0] : "wso2carbon";
+    String jdbcurl = (session.getAttribute("jdbcurl") != null) ? ((String[]) session.getAttribute("jdbcurl")) [0] : "";
+    String driver = (session.getAttribute("driver") != null) ? ((String[]) session.getAttribute("driver")) [0] : "";
+    String username = (session.getAttribute("username") != null) ? ((String[]) session.getAttribute("username")) [0] : "";
+    String password = (session.getAttribute("password") != null) ? ((String[]) session.getAttribute("password")) [0] : "";
 
 %>
 

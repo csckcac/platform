@@ -62,6 +62,6 @@ public class RESTUtils {
     }
 
     public static String getSessionId(HttpServletRequest request) {
-        return (String) request.getAttribute(RESTAPIConstants.SESSION_ID);
+        return (String) request.getSession().getAttribute(RESTAPIConstants.SESSION_ID);
     }
 }

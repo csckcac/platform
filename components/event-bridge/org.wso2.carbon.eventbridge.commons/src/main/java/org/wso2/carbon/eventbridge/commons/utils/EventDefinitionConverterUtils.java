@@ -105,7 +105,7 @@ public final class EventDefinitionConverterUtils {
             jsonDefnArray.put(convertToJson(existingDefinition));
         }
 
-        return jsonDefnArray.toString();
+        return gson.toJson(existingDefinitions);
     }
 
     public static List<EventStreamDefinition> convertMultipleEventDefns(String jsonArrayOfEventDefns)

@@ -92,11 +92,10 @@ public class EventResource {
     }
 
     @POST
-    @Path("/{eventStream}")
+    @Path("/")
     @Consumes(MediaType.APPLICATION_JSON)
     @Produces(MediaType.APPLICATION_JSON)
-    public Response saveEventStreamDefn(@PathParam("eventStream") String eventStream,
-                                   String requestBody, @Context HttpServletRequest request) {
+    public Response saveEventStreamDefn(String requestBody, @Context HttpServletRequest request) {
         try {
             EventStreamDefinition eventStreamDefinition = EventDefinitionConverterUtils.convertFromJson(requestBody);
             Utils.getEventBridgeReceiver().saveEventStreamDefinition(RESTUtils.getSessionId(request),
@@ -123,8 +122,10 @@ public class EventResource {
                 @Context HttpServletRequest request) {
 
             try {
-                Utils.getEventBridgeReceiver().getEventStreamDefinition(RESTUtils.getSessionId(request), eventStreamName, version);
-                return Response.status(Response.Status.ACCEPTED).build();
+                EventStreamDefinition eventStreamDefinition = Utils.getEventBridgeReceiver()
+                        .getEventStreamDefinition(RESTUtils.getSessionId(request), eventStreamName, version);
+                String json = EventDefinitionConverterUtils.convertToJson(eventStreamDefinition);
+                return Response.ok(json, MediaType.APPLICATION_JSON).build();
 
             } catch (SessionTimeoutException e) {
                 throw new WebApplicationException(e);
@@ -139,24 +140,18 @@ public class EventResource {
 
     @GET
     @Path("/")
-    public String getAllStreamDefinitions(
+    @Produces(MediaType.APPLICATION_JSON)
+    public Response getAllStreamDefinitions(
                 @Context HttpServletRequest request) {
 
             try {
                 List<EventStreamDefinition> allEventStreamDefinitions =
                         Utils.getEventBridgeReceiver().getAllEventStreamDefinitions(RESTUtils.getSessionId(request));
-                return EventDefinitionConverterUtils.convertToJson(allEventStreamDefinitions);
+                String json = EventDefinitionConverterUtils.convertToJson(allEventStreamDefinitions);
+                return Response.ok(json, MediaType.APPLICATION_JSON).build();
 
             } catch (SessionTimeoutException e) {
                 throw new WebApplicationException(e);
             }
-
-
     }
-
-
-
-
-
-
 }

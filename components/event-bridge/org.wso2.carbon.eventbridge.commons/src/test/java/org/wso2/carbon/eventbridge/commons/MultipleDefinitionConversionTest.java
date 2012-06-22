@@ -140,9 +140,9 @@ public class MultipleDefinitionConversionTest {
 
     @Test
     public void multipleEventStreamDefnToJSON() throws MalformedStreamDefinitionException, JSONException {
-//       EventStreamDefinition actualEventStreamDefinition1 =
-//                new EventStreamDefinition("org.wso2.esb.MediatorStatistics", "2.3.0");
-//
+       EventStreamDefinition actualEventStreamDefinition1 =
+                new EventStreamDefinition("org.wso2.esb.MediatorStatistics", "2.3.0");
+
 //        List<Attribute> meta = new ArrayList<Attribute>(1);
 //        meta.add(new Attribute("ipAdd", AttributeType.STRING));
 //        actualEventStreamDefinition1.setMetaData(meta);

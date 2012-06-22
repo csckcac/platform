@@ -74,7 +74,7 @@ public class SetPriority extends AbstractHumanTaskCommand {
     @Override
     protected EventDAO createTaskEvent() {
         EventDAO taskEvent = super.createTaskEvent();
-        taskEvent.setDetails("");
+        taskEvent.setDetails("Priority changed to :" + newPriority);
         return taskEvent;
     }
 

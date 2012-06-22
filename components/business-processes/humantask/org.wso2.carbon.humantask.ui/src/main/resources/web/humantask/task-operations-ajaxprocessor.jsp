@@ -96,6 +96,11 @@
             } else if ("remove".equals(operation)) {
                 taskOperationsClient.remove(new URI(taskId));
                 taskOperationJsonObject.put("TaskRemoved", "true");
+            } else if ("changePriority".equals(operation)) {
+                String priorityStr = request.getParameter("priority");
+                int priorityInt = Integer.valueOf(priorityStr);
+                taskOperationsClient.changePriority(new URI(taskId), priorityInt);
+                taskOperationJsonObject.put("TaskPriorityChanged", "true");
             }
 
             taskOperationJson = taskOperationJsonObject.toJSONString();

@@ -30,6 +30,7 @@ import org.wso2.carbon.humantask.stub.ui.task.client.api.types.*;
 import org.wso2.carbon.humantask.ui.constants.HumanTaskUIConstants;
 
 import javax.xml.stream.XMLStreamException;
+import java.math.BigInteger;
 import java.rmi.RemoteException;
 
 /**
@@ -822,5 +823,44 @@ public class HumanTaskClientAPIServiceClient {
             throw e;
         }
 
+    }
+
+    /**
+     * Change priority client operation.
+     *
+     * @param taskId : The task id.
+      @param priorityInt : The new priority value.
+     *
+     * @throws IllegalArgumentFault :
+     * @throws IllegalOperationFault :
+     * @throws IllegalAccessFault :
+     * @throws RemoteException :
+     * @throws IllegalStateFault :
+     */
+    public void changePriority(URI taskId, int priorityInt)
+            throws IllegalArgumentFault, IllegalOperationFault, IllegalAccessFault,
+                   RemoteException, IllegalStateFault {
+
+        String errMsg = "Error occurred while performing change priority operation.";
+        try {
+            TPriority priority = new TPriority();
+            priority.setTPriority(BigInteger.valueOf(priorityInt));
+            stub.setPriority(taskId, priority );
+        } catch (RemoteException e) {
+            log.error(errMsg, e);
+            throw e;
+        } catch (IllegalOperationFault e) {
+            log.error(errMsg, e);
+            throw e;
+        } catch (IllegalArgumentFault e) {
+            log.error(errMsg, e);
+            throw e;
+        } catch (IllegalAccessFault e) {
+            log.error(errMsg, e);
+            throw e;
+        } catch (IllegalStateFault e) {
+            log.error(errMsg, e);
+            throw e;
+        }
     }
 }

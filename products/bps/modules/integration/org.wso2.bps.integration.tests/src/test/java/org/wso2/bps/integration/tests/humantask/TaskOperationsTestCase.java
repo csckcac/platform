@@ -24,16 +24,19 @@ import org.testng.Assert;
 import org.testng.annotations.BeforeGroups;
 import org.testng.annotations.Test;
 import org.wso2.bps.integration.tests.util.FrameworkSettings;
+import org.wso2.bps.integration.tests.util.HumanTaskAdminServiceUtils;
 import org.wso2.bps.integration.tests.util.HumanTaskTestConstants;
 import org.wso2.carbon.humantask.stub.mgt.HumanTaskPackageManagementStub;
 import org.wso2.carbon.humantask.stub.mgt.types.HumanTaskPackageDownloadData;
 import org.wso2.carbon.humantask.stub.ui.task.client.api.HumanTaskClientAPIAdminStub;
 import org.wso2.carbon.humantask.stub.ui.task.client.api.types.TComment;
+import org.wso2.carbon.humantask.stub.ui.task.client.api.types.TPriority;
 import org.wso2.carbon.humantask.stub.ui.task.client.api.types.TTaskAbstract;
 import org.wso2.carbon.humantask.stub.ui.task.client.api.types.TTaskEvent;
 import org.wso2.carbon.humantask.stub.ui.task.client.api.types.TTaskEvents;
 import org.wso2.carbon.utils.CarbonUtils;
 
+import java.math.BigInteger;
 import java.util.HashSet;
 import java.util.Set;
 
@@ -53,36 +56,10 @@ public class TaskOperationsTestCase {
 
     @BeforeGroups(groups = {"wso2.bps"}, description = " Copying sample HumanTask packages")
     public void init() throws Exception {
-        initTaskOperationServiceStub();
-        initPackageManagementServiceStub();
+        taskOperationsStub = HumanTaskAdminServiceUtils.getTaskOperationServiceStub();
+        packageManagementStub = HumanTaskAdminServiceUtils.getPackageManagementServiceStub();
+
         taskId = new URI("1");
-    }
-
-    private void initPackageManagementServiceStub() throws Exception {
-        String packageManagementServiceURL = "https://" + FrameworkSettings.HOST_NAME +
-                                             ":" + FrameworkSettings.HTTPS_PORT +
-                                             "/services/HumanTaskPackageManagement";
-
-        packageManagementStub = new HumanTaskPackageManagementStub(packageManagementServiceURL);
-        ServiceClient serviceClient = packageManagementStub._getServiceClient();
-        CarbonUtils.setBasicAccessSecurityHeaders("admin", "admin", serviceClient);
-        Options serviceClientOptions = serviceClient.getOptions();
-        serviceClientOptions.setManageSession(true);
-    }
-
-    private void initTaskOperationServiceStub() throws Exception {
-
-        String TASK_OPERATIONS_SERVICE_URL = "https://" + FrameworkSettings.HOST_NAME +
-                                             ":" + FrameworkSettings.HTTPS_PORT +
-                                             "/services/HumanTaskClientAPIAdmin";
-        taskOperationsStub = new HumanTaskClientAPIAdminStub(TASK_OPERATIONS_SERVICE_URL);
-
-        ServiceClient serviceClient = taskOperationsStub._getServiceClient();
-        CarbonUtils.setBasicAccessSecurityHeaders(HumanTaskTestConstants.CLERK1_USER,
-                                                  HumanTaskTestConstants.CLERK1_PASSWORD, serviceClient);
-        Options serviceClientOptions = serviceClient.getOptions();
-        serviceClientOptions.setManageSession(true);
-
     }
 
     @Test(groups = {}, description = "package download test case")
@@ -159,6 +136,37 @@ public class TaskOperationsTestCase {
         Assert.assertEquals(loadedTask.getStatus().toString(), "IN_PROGRESS",
                             "The task status should be IN_PROGRESS after starting the task!");
         taskEvents.add("start");
+    }
+
+
+    @Test(groups = {"wso2.bps"}, description = "Task priority change test case")
+    public void testChangeTaskPriority() throws Exception {
+        TPriority newPriority1 = new TPriority();
+        newPriority1.setTPriority(BigInteger.valueOf(1));
+
+        HumanTaskClientAPIAdminStub clientAPIAdminStubForManager =
+                HumanTaskAdminServiceUtils.getTaskOperationServiceStub(HumanTaskTestConstants.MANAGER_USER,
+                                                                       HumanTaskTestConstants.MANAGER_PASSWORD);
+
+        clientAPIAdminStubForManager.setPriority(taskId, newPriority1);
+
+        TTaskAbstract taskAfterPriorityChange1 = taskOperationsStub.loadTask(taskId);
+        TPriority prio1 = taskAfterPriorityChange1.getPriority();
+        int newPriority1Int = prio1.getTPriority().intValue();
+        Assert.assertEquals(newPriority1Int, 1, "The new priority should be 1 after the set priority " +
+                                                "operation");
+
+        TPriority newPriority2 = new TPriority();
+        newPriority2.setTPriority(BigInteger.valueOf(10));
+
+        clientAPIAdminStubForManager.setPriority(taskId, newPriority2);
+
+        TTaskAbstract taskAfterPriorityChange2 = clientAPIAdminStubForManager.loadTask(taskId);
+        TPriority prio2 = taskAfterPriorityChange2.getPriority();
+        int newPriority2Int = prio2.getTPriority().intValue();
+        Assert.assertEquals(newPriority2Int, 10, "The new priority should be 10 after the set priority " +
+                                                 "operation");
+
     }
 
     @Test(groups = {"wso2.bps"}, description = "Claims approval test case")

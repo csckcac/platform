@@ -69,6 +69,7 @@
                 <li id="resumeLinkLi" style="display:none;"><a id="resumeLink">Resume</a></li>
                 <li id="commentLinkLi" style="display:none;"><a onclick="toggleMe('commentSection')">Comment</a></li>
                 <li id="delegateLinkLi" style="display:none;"><a onclick="HUMANTASK.handleDelegateSelection('delegateSection')">Assign</a></li>
+                <li id="changePriorityLinkLi" style="display:none;"><a onclick="HUMANTASK.handleChangePrioritySelection('changePrioritySection')">Change Priority</a></li>
                 <li id="removeLinkLi" style="display:none;"><a id="removeLink">Remove</a></li>
                 <li id="skipLinkLi" style="display:none;"><a id="skipLink">Skip</a></li>
                 <li id="failLinkLi" style="display:none;"><a id="failLink">Fail</a></li>
@@ -82,6 +83,9 @@
         </div>
         <div id="delegateSection" class="delegateDiv" style="display:none">
             <select id="assignableUserList"></select><input id="delegateButton" type="button" class="button" value="Assign" />
+        </div>
+        <div id="changePrioritySection" class="delegateDiv" style="display:none">
+            <select id="priorityList"></select><input id="changePriorityButton" type="button" class="button" value="Set Priority" />
         </div>
         <div class="tabLessContent-noBorder" id="tabContent">
             <div id="actionTab" class="tabContentData">

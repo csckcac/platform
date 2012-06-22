@@ -131,6 +131,9 @@ HUMANTASK.showHideActions = function() {
         jQuery('#responseFormFieldSet').show();
     }
 
+    if (HUMANTASK.authParams.authorisedToSetPriority) {
+        jQuery('#changePriorityLinkLi').show();
+    }
 
 };
 
@@ -215,7 +218,7 @@ HUMANTASK.populateAttachments = function (attachmentsJSONMap, taskId) {
     attachmentUploadForm += '</div>';
 
     jQuery('#attachmentsTab').append(attachmentUploadForm);
-}
+};
 
 HUMANTASK.uploadAttachment= function() {
     document.attachmentUpload.submit();
@@ -295,6 +298,7 @@ HUMANTASK.bindButtons = function() {
     jQuery('#addCommentButton').click(HUMANTASK.addComment);
     jQuery('#completeTaskButton').click(HUMANTASK.completeTask);
     jQuery('#delegateButton').click(HUMANTASK.delegateTask);
+    jQuery('#changePriorityButton').click(HUMANTASK.changePriority);
 
 };
 
@@ -474,6 +478,22 @@ HUMANTASK.delegateTask = function() {
               });
 };
 
+
+HUMANTASK.changePriority = function() {
+    var priority = jQuery('#priorityList').val();
+    var priorityURL = 'task-operations-ajaxprocessor.jsp?operation=changePriority&taskClient=' +
+                      HUMANTASK.taskClient + '&taskId=' + HUMANTASK.taskId + '&priority=' + priority;
+    $.getJSON(priorityURL,
+              function(json) {
+                  if (json.TaskPriorityChanged == 'true') {
+                      location.reload(true);
+                  } else {
+                      alert('Error occurred while changing task priority : ' + json.TaskPriorityChanged);
+                      return true;
+                  }
+              });
+};
+
 HUMANTASK.handleTabSelection = function (tabType) {
 
     if (tabType == 'commentsTab') {
@@ -517,6 +537,33 @@ HUMANTASK.handleDelegateSelection = function (tabId) {
     toggleMe(tabId);
     HUMANTASK.fillAssignableUsersList();
 };
+
+/**
+ *
+ * @param tabId
+ */
+HUMANTASK.handleChangePrioritySelection = function (tabId) {
+    toggleMe(tabId);
+    HUMANTASK.populatePriorityValuesDropDown();
+};
+
+/**
+ * Appends values to the priority list drop down.
+ */
+HUMANTASK.populatePriorityValuesDropDown = function () {
+    $('#priorityList').empty();
+    $('#priorityList').append($('<option>1 - Highest</option>').val('1'));
+    $('#priorityList').append($('<option>2 </option>').val('2'));
+    $('#priorityList').append($('<option>3  </option>').val('3'));
+    $('#priorityList').append($('<option>4  </option>').val('4'));
+    $('#priorityList').append($('<option>5  </option>').val('5'));
+    $('#priorityList').append($('<option>6  </option>').val('6'));
+    $('#priorityList').append($('<option>7  </option>').val('7'));
+    $('#priorityList').append($('<option>8  </option>').val('8'));
+    $('#priorityList').append($('<option>9  </option>').val('9'));
+    $('#priorityList').append($('<option>10 - Lowest</option>').val('10'));
+};
+
 
 /**
  *

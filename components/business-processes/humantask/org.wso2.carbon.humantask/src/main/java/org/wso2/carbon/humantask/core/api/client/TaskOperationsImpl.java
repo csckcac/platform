@@ -1596,14 +1596,20 @@ public class TaskOperationsImpl extends AbstractAdmin
             IllegalAccessFault {
         CarbonContextHolder.getThreadLocalCarbonContextHolder().setTenantId(CarbonContextHolder.
                 getCurrentCarbonContextHolder().getTenantId());
+
+        if (tPriority.getTPriority().intValue() < 1 || tPriority.getTPriority().intValue() > 10) {
+            log.warn("The priority value should be between 1 and 10. " +
+                     "Hence ignoring the provided priority :" + tPriority.getTPriority());
+        }
+
         try {
             final Long taskId = validateTaskId(taskIdURI);
             HumanTaskServiceComponent.getHumanTaskServer().getTaskEngine().getScheduler().
                     execTransaction(new Callable<Object>() {
                         public Object call() throws Exception {
-                            Integer newPriotity = tPriority.getTPriority().intValue();
+                            Integer newPriority = tPriority.getTPriority().intValue();
                             SetPriority setPriorityCommand =
-                                    new SetPriority(getCaller(), taskId, newPriotity);
+                                    new SetPriority(getCaller(), taskId, newPriority);
                             setPriorityCommand.execute();
                             return null;
                         }

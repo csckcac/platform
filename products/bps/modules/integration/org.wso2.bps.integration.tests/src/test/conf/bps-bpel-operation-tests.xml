@@ -25,6 +25,7 @@
         <classes>
             <class name="org.wso2.bps.integration.tests.BPSBPELServerManager"/>
             <class name="org.wso2.bps.integration.tests.bpel.BasicActivitiesTestCase"/>
+            <class name="org.wso2.bps.integration.tests.bpel.MiscBPELTestCase"/>
             <class name="org.wso2.bps.integration.tests.bpel.RestInvocationTestCase"/>
             <class name="org.wso2.bps.integration.tests.bpel.StructuredActivitiesTestCase"/>
             <class name="org.wso2.bps.integration.tests.bpel.DataHandlingTestCase"/>

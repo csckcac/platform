@@ -37,20 +37,6 @@ public class BPELFunctionalityTestCase {
     private static final Log log = LogFactory.getLog(BPELFunctionalityTestCase.class);
     private static String SERVICE_URL_PREFIX;
 
-    public void waitActivity() throws XMLStreamException, AxisFault, InterruptedException {
-        String payload = "<un:testOperation xmlns:un=\"http://ode/bpel/unit-test.wsdl\">" +
-                         "<TestPart>1</TestPart><Time>2</Time></un:testOperation>";
-        String operation = "testOperation";
-        String serviceName = "testService";
-        List<String> expectedOutput = new ArrayList<String>();
-        expectedOutput.add("<TestPart xmlns:un=\"http://ode/bpel/unit-test.wsdl\">" +
-                           "1</TestPart><Time xmlns:un=\"http://ode/bpel/unit-test.wsdl\">" +
-                           "2</Time>");
-
-        BPSTestUtils.sendRequest(SERVICE_URL_PREFIX + serviceName, operation, payload,
-                                 1, expectedOutput, BPSTestUtils.TWO_WAY);
-    }
-
     @Test(groups = {"wso2.bps"}, description = "onAlarm BPEL functionality test case")
     public void onAlarm() throws XMLStreamException, AxisFault, InterruptedException {
         String payload = "<exam:start xmlns:exam=\"http://ode.apache.org/example\">4</exam:start>";

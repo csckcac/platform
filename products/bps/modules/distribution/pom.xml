@@ -286,6 +286,10 @@
                                      basedir="${basedir}/../samples/product/src/main/resources/bpel/2.0/DynPartner"/>
                                 <zip destfile="target/samples/bpel/XMLAttributeProcess.zip"
                                      basedir="${basedir}/../samples/product/src/main/resources/bpel/2.0/XMLAttributeProcess"/>
+                                <zip destfile="target/samples/bpel/Async-Server.zip"
+                                     basedir="${basedir}/../samples/product/src/main/resources/bpel/2.0/SampleAsynchronousProcess/Async-Server"/>
+                                <zip destfile="target/samples/bpel/Async-Client.zip"
+                                     basedir="${basedir}/../samples/product/src/main/resources/bpel/2.0/SampleAsynchronousProcess/Async-Client"/>
                                 <!--  Copying Human Tasks Sample -->
 
                                 <zip destfile="target/samples/humantask/ClaimsApprovalTask.zip"

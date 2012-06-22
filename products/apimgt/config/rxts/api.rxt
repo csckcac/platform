@@ -92,7 +92,7 @@
 	    <heading>Template</heading>
 	</subheading>            
 	<field type="option-text" maxoccurs="unbounded">                
-	    <name>Test</name>                
+	    <name>Template</name>                
 	    <values>
 		<value>GET</value>
 		<value>PUT</value>

@@ -1,15 +1,15 @@
-<script type="text/javascript" src="/js/jquery-1.7.1.min.js"></script>
-<script src="/js/google-code-prettify/prettify.js"></script>
+<script type="text/javascript" src="<%=context%>/js/jquery-1.7.1.min.js"></script>
+<script src="<%=context%>/js/google-code-prettify/prettify.js"></script>
 <script>$(function () { prettyPrint(); })</script>
-<script src="/js/bootstrap-modal.js"></script>
-<script src="/js/bootstrap-alerts.js"></script>
-<script src=/js/bootstrap-twipsy.js"></script>
-<script src="/js/bootstrap-popover.js"></script>
-<script src="/js/bootstrap-dropdown.js"></script>
-<script src="/js/bootstrap-scrollspy.js"></script>
-<script src="/js/bootstrap-tabs.js"></script>
-<script src="/js/bootstrap-buttons.js"></script>
-<script src="/js/waypoints.js"></script>
+<script src="<%=context%>/js/bootstrap-modal.js"></script>
+<script src="<%=context%>/js/bootstrap-alerts.js"></script>
+<script src=<"%=context%>/js/bootstrap-twipsy.js"></script>
+<script src="<%=context%>/js/bootstrap-popover.js"></script>
+<script src="<%=context%>/js/bootstrap-dropdown.js"></script>
+<script src="<%=context%>/js/bootstrap-scrollspy.js"></script>
+<script src="<%=context%>/js/bootstrap-tabs.js"></script>
+<script src="<%=context%>/js/bootstrap-buttons.js"></script>
+<script src="<%=context%>/js/waypoints.js"></script>
 <script type="text/javascript">
 
 	$('#pageLinks').waypoint(function(event, direction) {

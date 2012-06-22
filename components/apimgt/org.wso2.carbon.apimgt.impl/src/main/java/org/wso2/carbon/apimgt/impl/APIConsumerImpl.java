@@ -439,7 +439,17 @@ class APIConsumerImpl extends AbstractAPIManager implements APIConsumer {
             List<APIKeyMapping> mappings = new ArrayList<APIKeyMapping>();
             for (SubscribedAPI api : apiSet) {
                 if (api.getApplication().getName().equals(application.getName())) {
-                    List<APIKey> keys = api.getKeys();
+                    /*List<APIKey> keys = api.getKeys();
+                    for (APIKey key : keys) {
+                        APIKeyMapping mapping = new APIKeyMapping();
+                        API apiDefinition = getAPI(api.getApiId());
+                        mapping.setApiVersion(api.getApiId().getVersion());
+                        mapping.setContext(apiDefinition.getContext());
+                        mapping.setKey(key.getKey());
+                        mappings.add(mapping);
+                    }*/
+
+                    List<APIKey> keys = api.getApplication().getKeys();
                     for (APIKey key : keys) {
                         APIKeyMapping mapping = new APIKeyMapping();
                         API apiDefinition = getAPI(api.getApiId());

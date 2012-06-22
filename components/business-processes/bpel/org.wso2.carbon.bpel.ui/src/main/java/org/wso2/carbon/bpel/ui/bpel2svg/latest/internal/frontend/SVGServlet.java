@@ -43,6 +43,7 @@ public class SVGServlet
 	@Override
 	protected void doGet(HttpServletRequest req, HttpServletResponse resp)
 		throws ServletException, IOException {
+        resp.setContentType("image/svg+xml");
 
 		// Get SVG from SVG data model map or single SVG data model
 		SVG svg = getSVG(req);
@@ -56,7 +57,6 @@ public class SVGServlet
 				sos.flush();
 			} finally {
 				sos.close();
-				resp.setContentType("image/svg+xml");
 			}
 		}
 	}

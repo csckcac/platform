@@ -45,7 +45,7 @@ public class LDAPServerStoreManagerTest extends TestCase {
         map.put(LDAPConstants.CONNECTION_NAME, "uid=admin,ou=system");
         map.put(LDAPConstants.CONNECTION_PASSWORD, "secret");
         map.put(UserCoreConstants.RealmConfig.PROPERTY_MAX_USER_LIST, "50");
-        map.put(LDAPConstants.USER_FILTER, "(objectClass=person)");
+        map.put(LDAPConstants.USER_NAME_LIST_FILTER, "(objectClass=person)");
 
 
         this.realmConfiguration.setUserStoreProperties(map);

@@ -363,7 +363,8 @@ public class LDAPServerStoreManager {
         }
 
         StringBuffer searchFilter;
-        searchFilter = new StringBuffer(this.realmConfiguration.getUserStoreProperty(LDAPConstants.USER_FILTER));
+        searchFilter = new StringBuffer(this.realmConfiguration.
+                                        getUserStoreProperty(LDAPConstants.USER_NAME_LIST_FILTER));
         String searchBase = this.realmConfiguration.getUserStoreProperty(LDAPConstants.USER_SEARCH_BASE);
 
         StringBuffer buff = new StringBuffer();

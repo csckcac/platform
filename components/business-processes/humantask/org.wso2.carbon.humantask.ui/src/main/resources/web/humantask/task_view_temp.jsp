@@ -177,10 +177,10 @@
             <div id="commentsTab" tabindex="100" class="tabContentData">
                 <%-- The task comments are populated and appended at this div --%>
             </div>
-            <div id="eventsTab" tabindex="101"  class="tabContentData" style="display:none;">
+            <div id="eventsTab" tabindex="101" class="tabContentData" style="display:none;">
                 <%-- The task events are populated and appended at this div --%>
             </div>
-            <div id="attachmentsTab" tabindex="102"  class="tabContentData" style="display:none;">
+            <div id="attachmentsTab" tabindex="102" class="tabContentData" style="display:none;">
                 <%-- The task attachments are populated and appended at this div --%>
             </div>
         </div>

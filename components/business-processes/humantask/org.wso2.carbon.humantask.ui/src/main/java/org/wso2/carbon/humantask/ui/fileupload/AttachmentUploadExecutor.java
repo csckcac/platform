@@ -51,8 +51,8 @@ public class AttachmentUploadExecutor extends AbstractFileUploadExecutor {
         String redirect = null;
 
         try {
-            if (formFieldsMap.get("taskId") != null) {
-                taskID = formFieldsMap.get("taskId").get(0);
+            if (formFieldsMap.get("taskID") != null) {
+                taskID = formFieldsMap.get("taskID").get(0);
             }
             if (formFieldsMap.get("redirect") != null) {
                 redirect = formFieldsMap.get("redirect").get(0);

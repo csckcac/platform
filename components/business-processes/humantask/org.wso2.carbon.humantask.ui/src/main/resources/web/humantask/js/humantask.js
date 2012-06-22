@@ -163,7 +163,7 @@ HUMANTASK.loadAttachments = function(taskId, taskClient) {
     var page = 'task-loading-ajaxprocessor.jsp?taskClient=' + taskClient + '&taskId=' + taskId + '&loadParam=taskAttachments';
     $.getJSON(page,
               function(attachmentsJson) {
-                  HUMANTASK.populateAttachments(attachmentsJson);
+                  HUMANTASK.populateAttachments(attachmentsJson, taskId);
               });
 };
 
@@ -183,7 +183,7 @@ HUMANTASK.populateEvents = function (eventJSONMap) {
     });
 };
 
-HUMANTASK.populateAttachments = function (attachmentsJSONMap) {
+HUMANTASK.populateAttachments = function (attachmentsJSONMap, taskId) {
     var attachmentTable = jQuery('<table class="styledLeft" id="taskAttachmentInfo"><thead>' +
                         '<tr>' +
                             '<th class="tvTableHeader">Name</th>' +
@@ -199,12 +199,27 @@ HUMANTASK.populateAttachments = function (attachmentsJSONMap) {
         jQuery('#taskAttachmentInfoBody',attachmentTable).append(t_row);
     });
 
-    jQuery('#attachmentsTab').append(attachmentTable)
+    jQuery('#attachmentsTab').append(attachmentTable);
+    var attachmentUploadForm = '<div id="attachmnetUploadForm">';
 
+    attachmentUploadForm += '<form id="attachment_upload_form" method="post" name="attachmentUpload" action="../..' +
+                            '/fileupload/attachment-mgt" enctype="multipart/form-data" target="_self">';
+    attachmentUploadForm += '<input type="hidden" id="uRedirect" name="redirect" value="humantask/task_list.jsp"/>';
+    attachmentUploadForm += '<input type="hidden" id="taskID" name="taskID" value=\"' + taskId + '\"/>';
+    attachmentUploadForm += '<table><tbody><tr><td>File</td><td><input type="file" ' +
+                            'name="fileToUpload"/></td></tr></tbody>' +
+                            '<tfoot><tr><td><input name="attachmentUploadButton" class="button" type="button" ' +
+                            'value="upload" onclick="HUMANTASK.uploadAttachment();"/></td>' +
+                            '</tr></tfoot></table>';
+    attachmentUploadForm += '</form>';
+    attachmentUploadForm += '</div>';
 
-    /*attachmentTable +=  '</tbody>' +
-                       '</table>'; */
+    jQuery('#attachmentsTab').append(attachmentUploadForm);
 }
+
+HUMANTASK.uploadAttachment= function() {
+    document.attachmentUpload.submit();
+};
 
 HUMANTASK.createCommentDiv = function(commentJSON) {
     var commentDiv = '<div class="commentBox">';

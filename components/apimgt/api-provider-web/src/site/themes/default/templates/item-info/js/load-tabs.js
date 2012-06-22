@@ -60,7 +60,8 @@ $(document).ready(function() {
         if (clickedTab == "versions") {
 
             jagg.fillProgress('versionChart');jagg.fillProgress('versionUserChart');
-            var apiName = $("#item-info h2")[0].innerHTML.split("-v")[0];
+            var api=$("#item-info h2")[0].innerHTML;
+            var apiName = $.trim(api.split("-")[0]);
             var provider = $("#item-info #spanProvider").text();
             jagg.post("/site/blocks/usage/ajax/usage.jag", { action:"getProviderAPIVersionUsage", provider:provider,apiName:apiName },
                       function (json) {
@@ -145,8 +146,9 @@ $(document).ready(function() {
 
         if (clickedTab == "users") {
             jagg.fillProgress('userVersionChart');jagg.fillProgress('userChart');
-            var name = $("#item-info h2")[0].innerHTML.split("-v")[0];
-            var version = $("#item-info h2")[0].innerHTML.split("-v")[1];
+             var api=$("#item-info h2")[0].innerHTML;
+             var name = $.trim(api.split("-")[0]);
+             var version = $.trim(api.split("-")[1]);
             var provider = $("#item-info #spanProvider").text();
             jagg.post("/site/blocks/usage/ajax/usage.jag", { action:"getProviderAPIUserUsage", provider:provider,apiName:name },
                       function (json) {

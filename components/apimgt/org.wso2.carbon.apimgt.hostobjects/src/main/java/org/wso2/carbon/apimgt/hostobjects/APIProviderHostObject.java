@@ -1204,10 +1204,15 @@ public class APIProviderHostObject extends ScriptableObject {
         return apiStatus;
     }
 
-    public static NativeArray jsFunction_getProviderAPIVersionUsage(String providerName,
-                                                                    String APIname)
+    public static NativeArray jsFunction_getProviderAPIVersionUsage(Context cx, Scriptable thisObj,
+                                                                    Object[] args, Function funObj)
             throws APIManagementException {
         List<APIVersionUsageDTO> list = null;
+        if (args.length == 0) {
+            throw new APIManagementException("Invalid number of parameters.");
+        }
+        String providerName = (String) args[0];
+        String APIname = (String) args[1];
         try {
             APIUsageStatisticsClient client = new APIUsageStatisticsClient();
             list = client.getUsageByAPIVersions(providerName, APIname);
@@ -1234,9 +1239,14 @@ public class APIProviderHostObject extends ScriptableObject {
         return myn;
     }
 
-    public static NativeArray jsFunction_getProviderAPIUsage(String providerName)
+    public static NativeArray jsFunction_getProviderAPIUsage(Context cx, Scriptable thisObj,
+                                                             Object[] args, Function funObj)
             throws APIManagementException {
         List<APIUsageDTO> list = null;
+        if (args.length == 0) {
+            throw new APIManagementException("Invalid number of parameters.");
+        }
+        String providerName = (String) args[0];
         try {
             APIUsageStatisticsClient client = new APIUsageStatisticsClient();
             list = client.getUsageByAPIs(providerName);
@@ -1264,10 +1274,15 @@ public class APIProviderHostObject extends ScriptableObject {
         return myn;
     }
 
-    public static NativeArray jsFunction_getProviderAPIUserUsage(String providerName,
-                                                                 String apiName)
+    public static NativeArray jsFunction_getProviderAPIUserUsage(Context cx, Scriptable thisObj,
+                                                                 Object[] args, Function funObj)
             throws APIManagementException {
         List<PerUserAPIUsageDTO> list = null;
+        if (args.length == 0) {
+            throw new APIManagementException("Invalid number of parameters.");
+        }
+        String providerName = (String) args[0];
+        String apiName = (String) args[1];
         try {
             APIUsageStatisticsClient client = new APIUsageStatisticsClient();
             list = client.getUsageBySubscribers(providerName, apiName, 10);
@@ -1294,11 +1309,18 @@ public class APIProviderHostObject extends ScriptableObject {
         return myn;
     }
 
-    public static NativeArray jsFunction_getProviderAPIVersionUserUsage(String providerName,
-                                                                        String apiName,
-                                                                        String version)
+    public static NativeArray jsFunction_getProviderAPIVersionUserUsage(Context cx,
+                                                                        Scriptable thisObj,
+                                                                        Object[] args,
+                                                                        Function funObj)
             throws APIManagementException {
         List<PerUserAPIUsageDTO> list = null;
+        if (args.length == 0) {
+            throw new APIManagementException("Invalid number of parameters.");
+        }
+        String providerName = (String) args[0];
+        String apiName = (String) args[1];
+        String version = (String) args[2];
         try {
             APIUsageStatisticsClient client = new APIUsageStatisticsClient();
             list = client.getUsageBySubscribers(providerName, apiName, version, 10);
@@ -1325,9 +1347,16 @@ public class APIProviderHostObject extends ScriptableObject {
         return myn;
     }
 
-    public static NativeArray jsFunction_getProviderAPIVersionUserLastAccess(String providerName)
+    public static NativeArray jsFunction_getProviderAPIVersionUserLastAccess(Context cx,
+                                                                             Scriptable thisObj,
+                                                                             Object[] args,
+                                                                             Function funObj)
             throws APIManagementException {
         List<APIVersionLastAccessTimeDTO> list = null;
+        if (args.length == 0) {
+            throw new APIManagementException("Invalid number of parameters.");
+        }
+        String providerName = (String) args[0];
         try {
             APIUsageStatisticsClient client = new APIUsageStatisticsClient();
             list = client.getLastAccessTimesByAPI(providerName);
@@ -1356,9 +1385,14 @@ public class APIProviderHostObject extends ScriptableObject {
         return myn;
     }
 
-    public static NativeArray jsFunction_getProviderAPIServiceTime(String providerName)
+    public static NativeArray jsFunction_getProviderAPIServiceTime(Context cx, Scriptable thisObj,
+                                                                   Object[] args, Function funObj)
             throws APIManagementException {
         List<APIResponseTimeDTO> list = null;
+        if (args.length == 0) {
+            throw new APIManagementException("Invalid number of parameters.");
+        }
+        String providerName = (String) args[0];
         try {
             APIUsageStatisticsClient client = new APIUsageStatisticsClient();
             list = client.getResponseTimesByAPIs(providerName);

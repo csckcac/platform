@@ -15,14 +15,15 @@
 --%>
 
 <%@ page contentType="text/html" pageEncoding="UTF-8" %>
+<%@ page import="org.apache.axiom.om.OMElement" %>
+<%@ page import="org.apache.axiom.om.util.AXIOMUtil" %>
 <%@ page import="org.apache.axis2.context.ConfigurationContext" %>
 <%@ page import="org.wso2.carbon.CarbonConstants" %>
+<%@ page import="org.wso2.carbon.message.processor.ui.MessageProcessorAdminServiceClient" %>
+<%@ page import="org.wso2.carbon.message.processor.ui.MessageStoreAdminServiceClient" %>
+<%@ page import="org.wso2.carbon.message.processor.ui.utils.MessageProcessorData" %>
 <%@ page import="org.wso2.carbon.ui.CarbonUIUtil" %>
 <%@ page import="org.wso2.carbon.utils.ServerConstants" %>
-<%@ page import="java.util.Iterator" %>
-<%@ page import="org.wso2.carbon.message.processor.ui.MessageProcessorAdminServiceClient" %>
-<%@ page import="org.wso2.carbon.message.processor.ui.utils.MessageProcessorData" %>
-<%@ page import="org.wso2.carbon.message.processor.ui.MessageStoreAdminServiceClient" %>
 <%@ taglib prefix="fmt" uri="http://java.sun.com/jsp/jstl/fmt" %>
 <%@ taglib uri="http://wso2.org/projects/carbon/taglibs/carbontags.jar" prefix="carbon" %>
 <fmt:bundle basename="org.wso2.carbon.message.processor.ui.i18n.Resources">
@@ -131,6 +132,22 @@
         }
     }
 
+    function switchToSource() {
+        if (!ValidateTextForm(document.Submit)) {
+            return false;
+        }
+        addServiceParams();
+        var messageStoreStr = {Name : document.getElementById("Name").value, Provider : document.getElementById("Provider").value, MessageStore : document.getElementById("MessageStore").value, tableParams : document.getElementById("tableParams").value};
+        jQuery.ajax({
+            type: 'POST',
+            url: 'updatePages/messageProcessorUpdate.jsp',
+            data: messageStoreStr,
+            success: function(msg) {
+                location.href = "sourceView.jsp";
+            }
+        });
+    }
+
 
 </script>
 
@@ -143,7 +160,9 @@
 <input type="hidden" id="addedParams" name="addedParams" value=""/>
 <input type="hidden" id="removedParams" name="removedParams" value=""/>
 <input type="hidden" id="tableParams" name="tableParams" value="PARAMS:"/>
-<% String messageStoreName = request.getParameter("messageProcessorName");
+<% String origin = request.getParameter("origin");
+
+    String messageStoreName = request.getParameter("messageProcessorName");
     String url = CarbonUIUtil.getServerURL(this.getServletConfig().getServletContext(),
             session);
     ConfigurationContext configContext =
@@ -161,6 +180,23 @@
                 processorData = client.getMessageProcessor(name);
             }
         }
+    } else if (origin != null && !"".equals(origin)) {
+        String mpString = (String) session.getAttribute("messageProcessorConfiguration");
+        String mpName = (String) session.getAttribute("mpName");
+        String mpProvider = (String) session.getAttribute("mpProvider");
+        String mpStore = (String) session.getAttribute("mpStore");
+
+        session.removeAttribute("messageProcessorConfiguration");
+        session.removeAttribute("mpName");
+        session.removeAttribute("mpProvider");
+        session.removeAttribute("mpStore");
+
+        mpString = mpString.replaceAll("\\s\\s+|\\n|\\r", ""); // remove the pretty printing from the string
+        OMElement messageProcessorElement = AXIOMUtil.stringToOM(mpString);
+        processorData = new MessageProcessorData(messageProcessorElement.toString());
+        processorData.setName(mpName);
+        processorData.setClazz(mpProvider);
+        processorData.setMessageStore(mpStore);
     }
 
 
@@ -193,6 +229,10 @@
     <tr>
         <th colspan="2"><span style="float: left; position: relative; margin-top: 2px;">
                             <fmt:message key="scheduled.message.forwarding.processor"/></span>
+            <a class="icon-link"
+               style="background-image: url(images/source-view.gif);"
+               onclick="switchToSource();"
+               href="#"><fmt:message key="switch.to.source.view"/></a>
         </th>
     </tr>
     </thead>
@@ -216,7 +256,7 @@
                 <%} else { %>
                 <tr>
                     <td width="276px"><fmt:message key="name"/><span class="required"> *</span></td>
-                    <td><input type="text" size="60" name="Name" value=""/></td>
+                    <td><input id="Name" type="text" size="60" name="Name" value=""/></td>
                 </tr>
                 <%}%>
                 <%if ((processorData != null)) { %>
@@ -224,9 +264,8 @@
                     <td><fmt:message key="provider"/><span class="required"> *</span></td>
                     <td>
                         <input name="Provider" id="Provider" type="hidden"
-                               value="<%=client.getClassName(messageStoreName)%>"/>
+                               value="org.apache.synapse.message.processors.forward.ScheduledMessageForwardingProcessor"/>
                         <%
-                            String providerClass = client.getClassName(messageStoreName).trim();
                             String providerLabel = "Scheduled Message Forwarding Processor";
                         %>
                         <label id="Provider_label" for="Provider"><%=providerLabel%>
@@ -235,7 +274,7 @@
                     </td>
                 </tr>
                 <%} else {%>
-                <input name="Provider" type="hidden"
+                <input id="Provider" name="Provider" type="hidden"
                        value="org.apache.synapse.message.processors.forward.ScheduledMessageForwardingProcessor"/>
                 <%}%>
                 <%if ((processorData != null)) { %>
@@ -253,7 +292,7 @@
                 <tr>
                     <td><fmt:message key="message.store"/><span class="required"> *</span></td>
                     <td>
-                        <select name="MessageStore">
+                        <select id="MessageStore" name="MessageStore">
                             <%for (String msn : messageStores) {%>
                             <option selected="true" value="<%=msn%>"><%=msn%>
                             </option>

@@ -63,6 +63,18 @@ public class MessageProcessorData {
         return clazz;
     }
 
+    public void setName(String name){
+        this.name=name;
+    }
+
+    public void setClazz(String provider){
+        this.clazz=provider;
+    }
+
+    public void setMessageStore(String store){
+        this.messageStore=store;
+    }
+
     private void populate(String xml) throws XMLStreamException {
         InputStream in = new ByteArrayInputStream(xml.getBytes());
         OMElement elem = new StAXOMBuilder(in).getDocumentElement();

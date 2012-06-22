@@ -45,8 +45,6 @@ public class DeployedModulesTestCase {
 
     private static final Log log = LogFactory.getLog(DeployedModulesTestCase.class);
 
-    String SERVICE_URL = null;
-
     private LoginLogoutUtil util = new LoginLogoutUtil();
     private ModuleAdminServiceStub moduleAdminServiceStub;
 
@@ -55,11 +53,11 @@ public class DeployedModulesTestCase {
         log.info("****Inside Login Service in Deployed Modules Test*****");
         String loggedInSessionCookie = util.login();
 
-        SERVICE_URL = "https://" + FrameworkSettings.HOST_NAME +
+        String moduleAdminServiceURL  = "https://" + FrameworkSettings.HOST_NAME +
                 ":" + FrameworkSettings.HTTPS_PORT + "/services/ModuleAdminService";
 
         moduleAdminServiceStub =
-                new ModuleAdminServiceStub(SERVICE_URL);
+                new ModuleAdminServiceStub(moduleAdminServiceURL);
         ServiceClient client = moduleAdminServiceStub._getServiceClient();
         Options options = client.getOptions();
         options.setManageSession(true);

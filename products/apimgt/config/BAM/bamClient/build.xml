@@ -26,13 +26,13 @@
     </target>
 
     <target name="download_jars" depends="init" description="Download necessary dependencies">
-	<get src="http://dist.wso2.org/p2/carbon/releases/3.2.4/plugins/google-collect-1.0.0.wso2v2.jar" dest="org.wso2.carbon.bam.client/lib"/>
-	<get src="http://dist.wso2.org/p2/carbon/releases/3.2.4/plugins/libthrift-0.5.0.wso2v2.jar" dest="org.wso2.carbon.bam.client/lib"/>
-	<get src="http://dist.wso2.org/p2/carbon/releases/3.2.4/plugins/org.wso2.carbon.bam.agent-3.2.4.jar" dest="org.wso2.carbon.bam.client/lib"/>
-	<get src="http://dist.wso2.org/p2/carbon/releases/3.2.4/plugins/org.wso2.carbon.bam.data.publisher.util-3.2.4.jar" dest="org.wso2.carbon.bam.client/lib"/>
-	<get src="http://dist.wso2.org/p2/carbon/releases/3.2.4/plugins/org.wso2.carbon.bam.service-3.2.4.jar" dest="org.wso2.carbon.bam.client/lib"/>
-	<get src="http://dist.wso2.org/p2/carbon/releases/3.2.4/plugins/slf4j.api-1.6.1.jar" dest="org.wso2.carbon.bam.client/lib"/>
-	<get src="http://dist.wso2.org/p2/carbon/releases/3.2.4/plugins/slf4j.log4j12-1.6.1.jar" dest="org.wso2.carbon.bam.client/lib"/>
+        <get src="http://dist.wso2.org/p2/carbon/releases/3.2.4/plugins/google-collect-1.0.0.wso2v2.jar" dest="org.wso2.carbon.bam.client/lib"/>
+        <get src="http://dist.wso2.org/p2/carbon/releases/3.2.4/plugins/libthrift-0.5.0.wso2v2.jar" dest="org.wso2.carbon.bam.client/lib"/>
+        <get src="http://dist.wso2.org/p2/carbon/releases/3.2.4/plugins/org.wso2.carbon.bam.agent-3.2.4.jar" dest="org.wso2.carbon.bam.client/lib"/>
+        <get src="http://dist.wso2.org/p2/carbon/releases/3.2.4/plugins/org.wso2.carbon.bam.data.publisher.util-3.2.4.jar" dest="org.wso2.carbon.bam.client/lib"/>
+        <get src="http://dist.wso2.org/p2/carbon/releases/3.2.4/plugins/org.wso2.carbon.bam.service-3.2.4.jar" dest="org.wso2.carbon.bam.client/lib"/>
+        <get src="http://dist.wso2.org/p2/carbon/releases/3.2.4/plugins/slf4j.api-1.6.1.jar" dest="org.wso2.carbon.bam.client/lib"/>
+        <get src="http://dist.wso2.org/p2/carbon/releases/3.2.4/plugins/slf4j.log4j12-1.6.1.jar" dest="org.wso2.carbon.bam.client/lib"/>
     </target>
 
     <target name="compile_client" depends="download_jars" description="Compile all Java">
@@ -48,7 +48,7 @@
     </target>
 
 
-    <target name="initalize_column_family_datastore" depends="compile_client">
+    <target name="initialize_column_family_datastore" depends="compile_client">
         <java classname="org.wso2.carbon.bam.client.Client"
               classpathref="javac.bam.client.classpath" fork="true">
             <sysproperty key="bamUrl" value="https://localhost:9444/services/"/>

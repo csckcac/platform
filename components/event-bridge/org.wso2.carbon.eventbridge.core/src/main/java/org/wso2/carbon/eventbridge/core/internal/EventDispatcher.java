@@ -142,17 +142,19 @@ public class EventDispatcher {
 //        String domainName = (credentials.getDomainName() == null) ? HACK_DOMAIN_CONSTANT : credentials.getDomainName();
 
         EventStreamTypeHolder eventStreamTypeHolder = eventStreamTypeCache.get(credentials.getDomainName());
-        log.info("Retrieving Event Stream Type Cache : " + eventStreamTypeCache);
 
+        if (log.isTraceEnabled()) {
+            log.trace("Retrieving Event Stream Type Cache : " + eventStreamTypeCache);
+        }
 
         if (eventStreamTypeHolder != null) {
-
-            String logMsg = "Event stream holder for domain name : " + credentials.getDomainName() + " : \n ";
-            logMsg += "Correlation Data Type Map : " + eventStreamTypeHolder.getCorrelationDataTypeMap() + "\n";
-            logMsg += "Payload Data Type Map : " + eventStreamTypeHolder.getPayloadDataTypeMap() + "\n";
-            logMsg += "Meta Data Type Map : " + eventStreamTypeHolder.getMetaDataTypeMap() + "\n";
-            log.info(logMsg);
-
+            if (log.isTraceEnabled()) {
+                String logMsg = "Event stream holder for domain name : " + credentials.getDomainName() + " : \n ";
+                logMsg += "Correlation Data Type Map : " + eventStreamTypeHolder.getCorrelationDataTypeMap() + "\n";
+                logMsg += "Payload Data Type Map : " + eventStreamTypeHolder.getPayloadDataTypeMap() + "\n";
+                logMsg += "Meta Data Type Map : " + eventStreamTypeHolder.getMetaDataTypeMap() + "\n";
+                log.trace(logMsg);
+            }
             return eventStreamTypeHolder;
         } else {
             synchronized (EventDispatcher.class) {

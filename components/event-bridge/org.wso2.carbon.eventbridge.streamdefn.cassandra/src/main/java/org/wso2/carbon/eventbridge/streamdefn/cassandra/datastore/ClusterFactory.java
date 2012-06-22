@@ -65,7 +65,9 @@ public class ClusterFactory {
 
                         @Override
                         public Cluster load(Credentials credentials) throws Exception {
-                            log.info("Cache not hit. Loading cluster for user : " + credentials.getUsername());
+                            if (log.isTraceEnabled()) {
+                                log.trace("Cache not hit. Loading cluster for user : " + credentials.getUsername());
+                            }
 
 //                            ClusterConfiguration configuration = ClusterConfigurationFactory.create(loadConfigXML());
 //                            CassandraHostConfigurator cassandraHostConfigurator = createCassandraHostConfigurator();

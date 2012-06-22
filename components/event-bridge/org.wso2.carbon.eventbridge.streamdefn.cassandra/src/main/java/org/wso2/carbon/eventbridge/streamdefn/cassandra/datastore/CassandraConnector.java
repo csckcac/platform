@@ -298,13 +298,16 @@ public class CassandraConnector {
 
 
         KeyspaceDefinition keyspaceDefinition = cluster.describeKeyspace(BAM_EVENT_DATA_KEYSPACE);
-        log.info("Keyspace desc. : " + keyspaceDefinition);
 
-        String CFInfo = "CFs present \n";
-        for (ColumnFamilyDefinition columnFamilyDefinition : keyspaceDefinition.getCfDefs()) {
-            CFInfo += "cf name : " + columnFamilyDefinition.getName() + "\n";
+        if (log.isTraceEnabled()) {
+            log.trace("Keyspace desc. : " + keyspaceDefinition);
+
+            String CFInfo = "CFs present \n";
+            for (ColumnFamilyDefinition columnFamilyDefinition : keyspaceDefinition.getCfDefs()) {
+                CFInfo += "cf name : " + columnFamilyDefinition.getName() + "\n";
+            }
+            log.trace(CFInfo);
         }
-        log.info(CFInfo);
 
 
         Keyspace keyspace = HFactory.createKeyspace(BAM_EVENT_DATA_KEYSPACE, cluster);
@@ -656,6 +659,8 @@ public class CassandraConnector {
         //mutator.addInsertion(domainName, BAM_META_STREAM_DEF_CF, HFactory.createStringColumn(STREAM_DEF,
         // StreamDefnConverterUtils.convertToJson(eventStreamDefinition)));
         mutator.execute();
+
+        log.info("Saving Stream Definition : " + eventStreamDefinition );
 
         if (log.isTraceEnabled()) {
             String logMsg = "saveStreamDefinition executed. \n";

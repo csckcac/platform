@@ -1,0 +1,19 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<artifact name="twitter_core" type="synapse/template" >
+
+    <subArtifacts> 
+	<artifact name="tweet" >
+    		<file>update_status.xml</file>
+    		<description>sample synapse library</description>
+	</artifact>
+	<artifact name="show_status" >
+    		<file>show_status.xml</file>
+    		<description>sample synapse library</description>
+	</artifact>
+	<artifact name="retweet" >
+    		<file>retweet_status.xml</file>
+    		<description>sample synapse library</description>
+	</artifact>
+    </subArtifacts>
+    
+</artifact>

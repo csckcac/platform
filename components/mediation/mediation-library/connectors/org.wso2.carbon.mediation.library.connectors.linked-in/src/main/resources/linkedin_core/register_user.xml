@@ -1,0 +1,13 @@
+<template xmlns="http://ws.apache.org/ns/synapse" name="register_user">
+        <parameter name="oauth.consumerKey"/>
+        <parameter name="oauth.consumerSecret"/>
+        <parameter name="oauth.accessToken"/>
+        <parameter name="oauth.accessTokenSecret"/>
+        <parameter name="profile.id"/>
+        <sequence>
+            	<log level="full">
+			<property name="Linkedin sample operation" expression="$func:profile.id" />
+		</log>
+		<class name="org.wso2.carbon.mediation.library.connectors.linkedin.LinkedinRegisterUserMediator" />
+        </sequence>
+    </template>	

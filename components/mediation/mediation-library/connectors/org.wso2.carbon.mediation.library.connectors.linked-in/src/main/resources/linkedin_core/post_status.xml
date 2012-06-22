@@ -1,0 +1,9 @@
+<template xmlns="http://ws.apache.org/ns/synapse" name="post_status">
+        <parameter name="status"/>
+        <sequence>
+            	<log level="full">
+			<property name="Linkedin sample operation" expression="$func:status" />
+		</log>
+		<class name="org.wso2.carbon.mediation.library.connectors.linkedin.LinkedinPostStatusMediator" />
+        </sequence>
+    </template>	

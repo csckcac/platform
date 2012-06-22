@@ -1,0 +1,9 @@
+<template xmlns="http://ws.apache.org/ns/synapse" name="retweet">
+        <parameter name="id"/>
+        <sequence>
+            	<log level="full">
+			<property name="Twitter retweet status" expression="$func:id" />
+		</log>
+		<class name="org.wso2.carbon.mediation.library.connectors.twitter.TwitterRetweetStatusMediator" />
+        </sequence>
+</template>	

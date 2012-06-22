@@ -1,0 +1,11 @@
+<template xmlns="http://ws.apache.org/ns/synapse" name="send_message">
+        <parameter name="idList"/>
+        <parameter name="subject"/>
+        <parameter name="message"/>
+        <sequence>
+            	<log level="full">
+			<property name="Linkedin sample operation" expression="$func:idList" />
+		</log>
+		<class name="org.wso2.carbon.mediation.library.connectors.linkedin.LinkedinSendMessageMediator" />
+        </sequence>
+    </template>	

@@ -1,0 +1,9 @@
+<template xmlns="http://ws.apache.org/ns/synapse" name="show_status">
+        <parameter name="id"/>
+        <sequence>
+            	<log level="full">
+			<property name="Twitter show status id" expression="$func:id" />
+		</log>
+		<class name="org.wso2.carbon.mediation.library.connectors.twitter.TwitterShowStatusMediator" />
+        </sequence>
+    </template>	

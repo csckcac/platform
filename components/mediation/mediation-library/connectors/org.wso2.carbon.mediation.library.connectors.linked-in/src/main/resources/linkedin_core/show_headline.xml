@@ -1,0 +1,9 @@
+<template xmlns="http://ws.apache.org/ns/synapse" name="show_headline">
+        <parameter name="id"/>
+        <sequence>
+            	<log level="full">
+			<property name="Linkedin sample operation" expression="$func:id" />
+		</log>
+		<class name="org.wso2.carbon.mediation.library.connectors.linkedin.LinkedinShowHeadlineMediator" />
+        </sequence>
+    </template>	

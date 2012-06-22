@@ -406,7 +406,7 @@ public class APIProviderHostObject extends ScriptableObject {
             api.setTechnicalOwnerEmail(techOwnerEmail);
             checkFileSize(fileHostObject);
 
-            if (fileHostObject != null) {
+            if (fileHostObject != null && fileHostObject.getJavaScriptFile().getLength() != 0) {
                 api.setThumbnailUrl(apiProvider.addIcon(apiId, fileHostObject.getInputStream(),
                                                         fileHostObject.getJavaScriptFile().getContentType()));
             } else if (oldApi.getThumbnailUrl() != null) {

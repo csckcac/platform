@@ -137,8 +137,8 @@ public class URLRulesMediator extends AbstractMediator {
 					                            + "value or xpath expression");
 
 				}
-				if (xpath != null) {
-					SynapseXPathSerializer.serializeXPath(xpath, actionElement, "xpath");
+				if (xpath != null) {				
+					SynapseXPathSerializer.serializeXPath(xpath, actionElement, "xpath");					
 				}
 				if (value != null) {
 					actionElement.addAttribute(fac.createOMAttribute("value", nullNS, value));
@@ -187,13 +187,12 @@ public class URLRulesMediator extends AbstractMediator {
 		
 		if (condEle != null) {
 			try {
-				evaluator =
-				            EvaluatorFactoryFinder.getInstance()
+				evaluator =  EvaluatorFactoryFinder.getInstance()
 				                                  .getEvaluator(condEle.getFirstElement());
 			} catch (EvaluatorException ee) {
-
+				String msg="Issue in the condition :";
+				throw new MediatorException(msg + ee);
 			}
-
 		}
 
 		// after successfully creating the mediator

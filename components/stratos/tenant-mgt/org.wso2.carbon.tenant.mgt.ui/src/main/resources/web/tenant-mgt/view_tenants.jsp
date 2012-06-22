@@ -205,12 +205,11 @@
                 <% }
                 }
                 %>
-                <carbon:paginator pageNumber="<%=pageNumber%>" numberOfPages="<%=numberOfPages%>"
-                                  noOfPageLinksToDisplay="<%=noOfPageLinksToDisplay%>"
-                                  page="view_tenants.jsp" pageNumberParameterName="pageNumber"/>
-
                 </tbody>
             </table>
         </div>
+                <carbon:paginator pageNumber="<%=pageNumber%>" numberOfPages="<%=numberOfPages%>"
+                                  noOfPageLinksToDisplay="<%=noOfPageLinksToDisplay%>"
+                                  page="view_tenants.jsp" pageNumberParameterName="pageNumber"/>
     </div>
 </fmt:bundle>

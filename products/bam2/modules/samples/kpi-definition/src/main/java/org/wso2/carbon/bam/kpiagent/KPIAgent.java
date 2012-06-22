@@ -30,7 +30,7 @@ public class KPIAgent {
         System.setProperty("javax.net.ssl.trustStorePassword", "wso2carbon");
         Agent agent = new Agent(agentConfiguration);
         //create data publisher
-        DataPublisher dataPublisher = new DataPublisher("tcp://127.0.0.1:7611", "admin", "admin", agent);
+        DataPublisher dataPublisher = new DataPublisher("tcp://10.150.3.211:7611", "admin", "admin", agent);
 
         String streamId1 = null;
         String streamId2 = null;

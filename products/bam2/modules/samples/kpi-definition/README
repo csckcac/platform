@@ -8,6 +8,6 @@ How to Run KPI Sample
 5. Go to management console and login
 6. Go to Main -> BAM Toolbox -> Add. Select 'KPI sample Toolbox' and click on deploy
 7. Go to Main -> BAM Toolbox -> List. And refresh the page until the 'KPI_Sample' toolbox status changes to deployed. 
-8. Go to Main -> Analytics -> List and click on execute on the kpi_script
+8. Go to Main -> Analytics -> List and click on Edit and Run the kpi_script
 9. Go to Main -> BAM Dashboard. You will see the sample gadgets for Analyzed Data.
 

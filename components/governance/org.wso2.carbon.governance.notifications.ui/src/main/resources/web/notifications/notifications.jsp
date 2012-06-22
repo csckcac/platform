@@ -30,6 +30,7 @@
 <%@ page import="org.wso2.carbon.registry.core.RegistryConstants" %>
 <%@ page import="org.wso2.carbon.registry.common.ui.UIConstants" %>
 <%@ page import="org.wso2.carbon.governance.notifications.ui.clients.SubscriptionsUIUtils" %>
+<%@ page import="java.net.URLEncoder" %>
 
 <link type="text/css" rel="stylesheet" href="css/menu.css"/>
 <link type="text/css" rel="stylesheet" href="css/style.css"/>
@@ -177,7 +178,7 @@
             }
             String encodedPath = path;
             try {
-                encodedPath = encodedPath.replace("&", "%26");
+                encodedPath = URLEncoder.encode(encodedPath, "UTF-8");
             } catch (Exception ignore) {}
             //TODO: Handle displaying long path names
             String eventId = null;

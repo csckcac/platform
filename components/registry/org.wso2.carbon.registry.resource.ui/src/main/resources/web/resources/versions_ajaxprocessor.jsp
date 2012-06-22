@@ -24,6 +24,7 @@
 <%@ page import="org.wso2.carbon.registry.resource.ui.Utils" %>
 <%@ page import="org.wso2.carbon.registry.resource.stub.beans.xsd.VersionsBean" %>
 <%@ page import="org.wso2.carbon.registry.resource.stub.beans.xsd.VersionPath" %>
+<%@ page import="java.net.URLEncoder" %>
 <%
     String cookie = (String) session.getAttribute(ServerConstants.ADMIN_SERVICE_COOKIE);
     String viewMode = Utils.getResourceViewMode(request);
@@ -77,8 +78,8 @@
                                         String vpath = versionPath.getCompleteVersionPath();
                                         String path = versionPath.getActiveResourcePath();
                                         try {
-                                            vpath = vpath.replaceAll("&", "%26");
-                                            path = path.replaceAll("&", "%26");
+                                            vpath = URLEncoder.encode(vpath, "UTF-8");
+                                            path = URLEncoder.encode(path, "UTF-8");
                                         } catch (Exception ignore) {}
                                 %>
 

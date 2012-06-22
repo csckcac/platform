@@ -27,6 +27,8 @@ import org.wso2.carbon.registry.core.session.UserRegistry;
 import org.wso2.carbon.registry.relations.beans.AssociationTreeBean;
 import org.wso2.carbon.registry.common.CommonConstants;
 
+import java.io.UnsupportedEncodingException;
+import java.net.URLEncoder;
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.Iterator;
@@ -142,7 +144,10 @@ public class AssociationTreeBeanPopulator {
             //associationTreePart += "<a title=\"" + path + "\" href=\"resource.jsp?path=" + calculateRelativePath(path) + "\">";
             String tempPath = path;
             if (tempPath != null) {
-                tempPath = tempPath.replace("&", "%26");
+                try {
+                    tempPath = URLEncoder.encode(tempPath, "UTF-8");
+                } catch (UnsupportedEncodingException ignored) {
+                }
             }
             associationTreePart.append("<a title=\"").append(path).append(
                     "\" href=\"../resources/resource.jsp?region=region3&item=resource_browser_menu&viewType=std&path=").append(

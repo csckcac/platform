@@ -19,10 +19,11 @@
 <%@ page import="org.wso2.carbon.registry.resource.ui.processors.RestoreVersionProcessor" %>
 <%@ page import="org.wso2.carbon.registry.resource.ui.Utils" %>
 <%@ page import="org.wso2.carbon.ui.CarbonUIMessage" %>
+<%@ page import="java.net.URLEncoder" %>
 <%
     String resourcePath = request.getParameter("path");
     try {
-        resourcePath = resourcePath.replaceAll("&", "%26");
+        resourcePath = URLEncoder.encode(resourcePath, "UTF-8");
     } catch (Exception ignore) {}
     String resourceConsumer = Utils.getResourceConsumer(request);
     String viewMode = Utils.getResourceViewMode(request);

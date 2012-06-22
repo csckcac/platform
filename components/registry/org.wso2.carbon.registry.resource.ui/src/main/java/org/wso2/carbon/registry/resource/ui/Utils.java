@@ -27,6 +27,8 @@ import org.wso2.carbon.ui.CarbonUIUtil;
 import javax.servlet.ServletContext;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpSession;
+import java.io.UnsupportedEncodingException;
+import java.net.URLEncoder;
 import java.util.LinkedList;
 import java.util.List;
 import java.util.Map;
@@ -69,7 +71,10 @@ public class Utils {
 
         String serverURL = CarbonUIUtil.getServerURL(context, session);
         String serverRoot = serverURL.substring(0, serverURL.length() - "services/".length());
-        resourcePath = resourcePath.replace("&", "%26");
+        try {
+            resourcePath = URLEncoder.encode(resourcePath, "UTF-8");
+        } catch (UnsupportedEncodingException ignored) {
+        }
         return serverRoot + "registry/resources?path=" + resourcePath;
     }
 

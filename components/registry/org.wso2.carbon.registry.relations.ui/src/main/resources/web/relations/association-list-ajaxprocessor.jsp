@@ -28,6 +28,7 @@
 <%@ page import="org.wso2.carbon.registry.core.RegistryConstants" %>
 <%@ page import="java.util.List" %>
 <%@ page import="java.util.LinkedList" %>
+<%@ page import="java.net.URLEncoder" %>
 
 <jsp:include page="../registry_common/registry_common-i18n-ajaxprocessor.jsp"/>
 <script type="text/javascript" src="../registry_common/js/registry_validation.js"></script>
@@ -144,7 +145,7 @@
                         if (!destPath.startsWith("http://") && !destPath.startsWith("https://")) {
                             String temp = destPath;
                             try {
-                                temp = destPath.replace("&", "%26");
+                                temp = URLEncoder.encode(destPath, "UTF-8");
                             } catch (Exception ignore) {}
                             destLink = "../resources/resource.jsp?region=region3&item=resource_browser_menu&viewType=std&path=" + temp;
                             destPathSmall = RegistryUtils.getResourceName(destPath);
@@ -283,7 +284,7 @@
                         if (!destPath.startsWith("http://") && !destPath.startsWith("https://")) {
                             String temp = destPath;
                             try {
-                                temp = destPath.replace("&", "%26");
+                                temp = URLEncoder.encode(destPath, "UTF-8");
                             } catch (Exception ignore) {}
                             destLink = "../resources/resource.jsp?region=region3&item=resource_browser_menu&viewType=std&path=" + temp;
                             destPathSmall = RegistryUtils.getResourceName(destPath);

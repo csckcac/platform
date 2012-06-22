@@ -182,7 +182,7 @@ public class AddResourceProcessor extends AbstractFileUploadExecutor {
                 if ("/".equals(parentPath)) {
                     parentPath += "&viewType=std";
                 } else {
-                    parentPath = parentPath.replace("&", "%26");
+                    parentPath = URLEncoder.encode(parentPath, "UTF-8");
                 }
                 response.sendRedirect(getContextRoot(request) + "/" + webContext + "/resources/resource.jsp?region=region3&item=resource_browser_menu&path=" +
                         parentPath);

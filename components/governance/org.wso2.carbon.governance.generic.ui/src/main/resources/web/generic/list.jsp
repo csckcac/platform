@@ -27,6 +27,7 @@
 <%@ page import="org.wso2.carbon.ui.CarbonUIUtil" %>
 <%@ page import="org.wso2.carbon.governance.generic.stub.beans.xsd.ArtifactsBean" %>
 <%@ page import="org.wso2.carbon.governance.generic.stub.beans.xsd.ArtifactBean" %>
+<%@ page import="java.net.URLEncoder" %>
 <script type="text/javascript" src="../ajax/js/prototype.js"></script>
 <link type="text/css" rel="stylesheet" href="css/menu.css"/>
 <link type="text/css" rel="stylesheet" href="css/style.css"/>
@@ -174,7 +175,7 @@
                     if (CarbonUIUtil.isUserAuthorized(request, "/permission/admin/manage/resources/browse")) {
                         for (int i = 0; i < bean.getNames().length; i++) {
                             if (bean.getTypes()[i].equals("path")) {
-                                %><td><a href="../resources/resource.jsp?region=region3&item=resource_browser_menu&path=<%=artifact.getValuesB()[i].replace("&", "%26")%>"><%= artifact.getValuesA()[i] != null ? artifact.getValuesA()[i] : "" %></a></td><%
+                                %><td><a href="../resources/resource.jsp?region=region3&item=resource_browser_menu&path=<%=URLEncoder.encode(artifact.getValuesB()[i], "UTF-8")%>"><%= artifact.getValuesA()[i] != null ? artifact.getValuesA()[i] : "" %></a></td><%
                             } else {
                                 %><td><%= artifact.getValuesA()[i] != null ? artifact.getValuesA()[i] : "" %></td><%
                             }

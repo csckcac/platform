@@ -29,6 +29,7 @@
 <%@ page import="org.wso2.carbon.registry.common.ui.utils.UIUtil" %>
 <%@ page import="org.wso2.carbon.ui.CarbonUIUtil" %>
 <%@ page import="org.wso2.carbon.registry.core.RegistryConstants" %>
+<%@ page import="java.net.URLEncoder" %>
 <script type="text/javascript" src="../search/js/search.js"></script>
 <link rel="stylesheet" type="text/css"
       href="../resources/css/registry.css"/>
@@ -127,7 +128,7 @@
                         ResourceData resourceData = searchResults[i];
                         String resourcePath = resourceData.getResourcePath();
                         try {
-                            resourcePath = resourcePath.replace("&", "%26");
+                            resourcePath = URLEncoder.encode(resourcePath, "UTF-8");
                         } catch (Exception ignore) {}
                 %>
                 <tr id="1">

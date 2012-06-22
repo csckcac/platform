@@ -28,6 +28,8 @@
 <%@ page import="org.wso2.carbon.registry.common.ui.utils.UIUtil" %>
 <%@ page import="org.wso2.carbon.registry.resource.ui.clients.RegistryAdminServiceClient" %>
 <%@ page import="org.wso2.carbon.registry.core.utils.MediaTypesUtils" %>
+<%@ page import="java.net.URLEncoder" %>
+<%@ page import="java.net.URLDecoder" %>
 
 <%
     String cookie = (String) session.getAttribute(ServerConstants.ADMIN_SERVICE_COOKIE);
@@ -166,11 +168,11 @@
                 <% if (metadata.getPutAllowed()) {
                     String decodedPath = versionRestoreFullpath;
                     try {
-                        decodedPath = decodedPath.replace("%26", "&");
+                        decodedPath = URLDecoder.decode(decodedPath, "UTF-8");
                     } catch (Exception ignore) {}
                     String encodedActivePath = versionRestoreActivepath;
                     try {
-                        encodedActivePath = encodedActivePath.replace("&", "%26");
+                        encodedActivePath = URLEncoder.encode(encodedActivePath, "UTF-8");
                     } catch (Exception ignore) {}
                 %>
 

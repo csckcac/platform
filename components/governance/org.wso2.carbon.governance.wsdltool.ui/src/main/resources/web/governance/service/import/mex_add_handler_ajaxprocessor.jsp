@@ -21,11 +21,12 @@
 <%@ page import="org.wso2.carbon.registry.core.RegistryConstants" %>
 <%@ page import="org.wso2.carbon.registry.profiles.ui.clients.ProfilesAdminServiceClient" %>
 <%@ page import="org.wso2.carbon.ui.CarbonUIMessage" %>
+<%@ page import="java.net.URLEncoder" %>
 
 <%
     String parentPath = request.getParameter("parentPath");
     try {
-        parentPath = parentPath.replace("&", "%26");
+        parentPath = URLEncoder.encode(parentPath, "UTF-8");
     } catch (Exception ignore) {}
     String username = request.getParameter("ownerName");
     String error = "There's no user profile with the given owner name";

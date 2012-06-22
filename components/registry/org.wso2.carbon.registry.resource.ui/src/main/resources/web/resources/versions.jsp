@@ -24,6 +24,7 @@
 <%@ page import="org.wso2.carbon.registry.common.utils.CommonUtil" %>
 <%@ page import="org.wso2.carbon.registry.resource.stub.beans.xsd.VersionsBean" %>
 <%@ page import="org.wso2.carbon.registry.resource.stub.beans.xsd.VersionPath" %>
+<%@ page import="java.net.URLEncoder" %>
 <%
     String cookie = (String) session.getAttribute(ServerConstants.ADMIN_SERVICE_COOKIE);
 
@@ -40,7 +41,7 @@
     }
     String tempPath = versionBean.getResourcePath();
     try {
-        tempPath = tempPath.replace("&", "%26");
+        tempPath = URLEncoder.encode(tempPath, "UTF-8");
     } catch (Exception ignore) {}
 %>
 <carbon:jsi18n
@@ -174,8 +175,8 @@ function submitDelete(path, snapshotId, screenWidth){
                         String vpath = versionPath.getCompleteVersionPath();
                         String path = versionPath.getActiveResourcePath();
                         try {
-                            vpath = vpath.replace("&", "%26");
-                            path = path.replace("&", "%26");
+                            vpath = URLEncoder.encode(vpath, "UTF-8");
+                            path = URLEncoder.encode(path, "UTF-8");
                         } catch (Exception ignore) {}
                 %>
 

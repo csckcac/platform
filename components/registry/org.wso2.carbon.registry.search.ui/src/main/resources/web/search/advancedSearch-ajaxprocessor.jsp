@@ -31,6 +31,7 @@
 <%@ page import="org.wso2.carbon.registry.search.ui.report.beans.MetaDataReportBean" %>
 <%@ page import="java.util.List" %>
 <%@ page import="java.util.ArrayList" %>
+<%@ page import="java.net.URLEncoder" %>
 
 
 <%
@@ -144,7 +145,7 @@
                 }
                 String tempPath = resourceData.getResourcePath();
                 try {
-                    tempPath = tempPath.replace("&", "%26");
+                    tempPath = URLEncoder.encode(tempPath, "UTF-8");
                 } catch (Exception ignore) {}
         %>
         <tr id="1">

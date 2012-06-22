@@ -30,6 +30,7 @@
 <%@ page import="org.wso2.carbon.ui.CarbonUIUtil" %>
 <%@ page import="javax.xml.namespace.QName" %>
 <%@ page import="java.util.Iterator" %>
+<%@ page import="java.net.URLEncoder" %>
 
 
 <%--YUI Rich Text script imports--%>
@@ -182,7 +183,7 @@
         if (type != null && widgetText.matches(".*<input[^>]*id=\"id_Overview_Version\"[^>]*>.*")) {
             String screenWidth = request.getParameter("screenWidth");
             String serviceLink = "&nbsp;(<a href=\"../resources/resource.jsp?region=region3&item=" +
-                    "resource_browser_menu&path=" + path.replaceAll("&","%26") +
+                    "resource_browser_menu&path=" + URLEncoder.encode(path, "UTF-8") +
                     (screenWidth != null ? "&screenWidth=" + screenWidth : "") + "\">" +
                     CarbonUIUtil.geti18nString(
                                     "goto.service",

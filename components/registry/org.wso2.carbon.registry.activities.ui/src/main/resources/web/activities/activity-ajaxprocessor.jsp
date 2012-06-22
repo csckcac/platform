@@ -28,6 +28,7 @@
 <%@ page import="org.wso2.carbon.registry.activities.ui.report.beans.ActivityReportBean" %>
 <%@ page import="java.util.ArrayList" %>
 <%@ page import="java.util.List" %>
+<%@ page import="java.net.URLEncoder" %>
 
 <fmt:bundle basename="org.wso2.carbon.registry.activities.ui.i18n.Resources">
 
@@ -119,7 +120,7 @@
                 else {
                     String path = explodedActivity[4];
                     try {
-                        path = path.replace("&", "%26");
+                        path = URLEncoder.encode(path, "UTF-8");
                     } catch (Exception ignore) {}
                     activity = "<a href='#" + explodedActivity[1] + "'>" + explodedActivity[2] + "</a>"
                             + explodedActivity[3] + "<a href='../resources/resource.jsp?region=region3&item=resource_browser_menu&viewType=std&path=" + path + "'>" + explodedActivity[5]

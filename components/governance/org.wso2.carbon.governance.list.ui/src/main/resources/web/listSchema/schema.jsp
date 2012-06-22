@@ -24,6 +24,7 @@
 <%@ page import="org.wso2.carbon.ui.CarbonUIUtil" %>
 <%@ page import="org.wso2.carbon.registry.core.utils.RegistryUtils" %>
 <%@ page import="org.wso2.carbon.registry.extensions.utils.CommonConstants" %>
+<%@ page import="java.net.URLEncoder" %>
 <link rel="stylesheet" type="text/css" href="../resources/css/registry.css"/>
 <link type="text/css" rel="stylesheet" href="css/menu.css"/>
 <link type="text/css" rel="stylesheet" href="css/style.css"/>
@@ -107,7 +108,7 @@
                   String tempPath = bean.getPath()[i];
                   String completePath = RegistryConstants.GOVERNANCE_REGISTRY_BASE_PATH + tempPath;
                   try {
-                      tempPath = tempPath.replaceAll("&", "%26");
+                      tempPath = URLEncoder.encode(tempPath, "UTF-8");
                   } catch (Exception ignore) {}
                   String urlCompletePath = RegistryConstants.GOVERNANCE_REGISTRY_BASE_PATH + tempPath;
                  %>

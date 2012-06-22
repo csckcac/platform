@@ -21,6 +21,7 @@ import org.apache.commons.logging.Log;
 import org.apache.commons.logging.LogFactory;
 import org.osgi.service.component.ComponentContext;
 import org.wso2.carbon.bam.toolbox.deployer.ServiceHolder;
+import org.wso2.carbon.base.api.ServerConfigurationService;
 import org.wso2.carbon.dashboard.DashboardDSService;
 import org.wso2.carbon.registry.core.service.RegistryService;
 import org.wso2.carbon.user.core.UserRealm;
@@ -29,6 +30,9 @@ import org.wso2.carbon.utils.ConfigurationContextService;
 
 /**
  * @scr.component name="bamtoolbox.component" immediate="true"
+ * @scr.reference name="server.configuration"
+ * interface="org.wso2.carbon.base.api.ServerConfigurationService"
+ * cardinality="1..1" policy="dynamic"  bind="setServerConfiguration" unbind="unsetServerConfiguration"
  * @scr.reference name="registry.service"
  * interface="org.wso2.carbon.registry.core.service.RegistryService"
  * cardinality="1..1" policy="dynamic" bind="setRegistryService" unbind="unsetRegistryService"
@@ -97,5 +101,13 @@ public class BAMToolBoxDeployerComponent {
 
     protected void unsetDashboardService(DashboardDSService dashboardService) {
         ServiceHolder.setDashboardService(null);
+    }
+
+     protected void setServerConfiguration(ServerConfigurationService serverConfiguration) {
+        ServiceHolder.setServerConfiguration(serverConfiguration);
+    }
+
+    protected void unsetServerConfiguration(ServerConfigurationService serverConfiguration) {
+        ServiceHolder.setConfigurationContextService(null);
     }
 }

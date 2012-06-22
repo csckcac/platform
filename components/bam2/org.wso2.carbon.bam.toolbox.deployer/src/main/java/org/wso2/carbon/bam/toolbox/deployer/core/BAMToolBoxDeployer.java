@@ -61,7 +61,10 @@ public class BAMToolBoxDeployer extends AbstractDeployer {
         if (!ServerStartUpInspector.isServerStarted()) {
             if (getTenantId() == MultitenantConstants.SUPER_TENANT_ID) {
                 pausedDeployments = this;
-                int port = CarbonUtils.getTransportPort(configurationContext, "https");
+                String portOffset = ServiceHolder.getServerConfiguration().
+                        getFirstProperty(BAMToolBoxDeployerConstants.PORT_OFF_SET);
+                int port = CarbonUtils.getTransportPort(this.configurationContext, "https")+
+                        Integer.parseInt(portOffset);
                 ServerStartUpInspector inspector = new ServerStartUpInspector();
                 inspector.setPort(port);
                 inspector.start();

@@ -45,5 +45,6 @@ public class BAMToolBoxDeployerConstants {
     public static final String LOCAL_TRANSPORT = "local:/";
 
     public static String BAM_DEPLOYMET_FOLDER = "bam-toolbox";
+    public static String PORT_OFF_SET = "Ports.Offset";
 
 }

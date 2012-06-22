@@ -16,6 +16,7 @@
 
 package org.wso2.carbon.bam.toolbox.deployer;
 
+import org.wso2.carbon.base.api.ServerConfigurationService;
 import org.wso2.carbon.dashboard.DashboardDSService;
 import org.wso2.carbon.registry.core.Registry;
 import org.wso2.carbon.registry.core.exceptions.RegistryException;
@@ -34,6 +35,7 @@ public class ServiceHolder {
     private static UserRealm userRealm;
     private static RealmService realmService;
     private static DashboardDSService dashboardService;
+    private static ServerConfigurationService serverConfiguration;
 
     public static ConfigurationContextService getConfigurationContextService() {
         return configurationContextService;
@@ -73,6 +75,14 @@ public class ServiceHolder {
 
     public static void setDashboardService(DashboardDSService dashboardService) {
         ServiceHolder.dashboardService = dashboardService;
+    }
+
+    public static ServerConfigurationService getServerConfiguration() {
+        return serverConfiguration;
+    }
+
+    public static void setServerConfiguration(ServerConfigurationService serverConf) {
+       serverConfiguration = serverConf;
     }
 }
 

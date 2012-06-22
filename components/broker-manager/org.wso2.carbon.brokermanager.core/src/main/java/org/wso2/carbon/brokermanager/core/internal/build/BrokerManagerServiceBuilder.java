@@ -16,25 +16,28 @@
 
 package org.wso2.carbon.brokermanager.core.internal.build;
 
-import org.apache.axis2.engine.AxisConfiguration;
+import org.apache.axiom.om.OMElement;
+import org.apache.axiom.om.impl.builder.StAXOMBuilder;
+import org.apache.commons.logging.Log;
+import org.apache.commons.logging.LogFactory;
+import org.wso2.carbon.base.MultitenantConstants;
 import org.wso2.carbon.brokermanager.core.BrokerManagerService;
 import org.wso2.carbon.brokermanager.core.exception.BMConfigurationException;
 import org.wso2.carbon.brokermanager.core.internal.CarbonBrokerManagerService;
 import org.wso2.carbon.brokermanager.core.internal.config.BrokerConfigurationHelper;
 import org.wso2.carbon.brokermanager.core.internal.util.BMConstants;
 import org.wso2.carbon.context.CarbonContext;
-import org.wso2.carbon.core.multitenancy.SuperTenantCarbonContext;
 import org.wso2.carbon.utils.ServerConstants;
-import org.apache.axiom.om.OMElement;
-import org.apache.axiom.om.impl.builder.StAXOMBuilder;
-import org.apache.commons.logging.Log;
-import org.apache.commons.logging.LogFactory;
 
-import javax.xml.stream.XMLStreamReader;
+import javax.xml.namespace.QName;
 import javax.xml.stream.XMLInputFactory;
 import javax.xml.stream.XMLStreamException;
-import javax.xml.namespace.QName;
-import java.io.*;
+import javax.xml.stream.XMLStreamReader;
+import java.io.BufferedInputStream;
+import java.io.File;
+import java.io.FileInputStream;
+import java.io.FileNotFoundException;
+import java.io.IOException;
 import java.util.Iterator;
 
 /**
@@ -54,7 +57,7 @@ public class BrokerManagerServiceBuilder {
     public static BrokerManagerService createBrokerManagerService() throws BMConfigurationException {
 
         carbonBrokerManagerService = new CarbonBrokerManagerService();
-        carbonBrokerManagerService.loadConfigurations(BMConstants.SUPER_TENANT_ID);
+        carbonBrokerManagerService.loadConfigurations(MultitenantConstants.SUPER_TENANT_ID);
         OMElement brokerManagerConfig = loadConfigXML();
 
         if (brokerManagerConfig != null) {

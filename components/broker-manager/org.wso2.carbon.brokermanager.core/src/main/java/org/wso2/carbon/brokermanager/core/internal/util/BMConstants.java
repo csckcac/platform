@@ -17,7 +17,6 @@
 package org.wso2.carbon.brokermanager.core.internal.util;
 
 public interface BMConstants {
-     int SUPER_TENANT_ID = 0;
 
     String BM_CONF = "broker-manager-config.xml";
     String BM_CONF_NS = "http://wso2.org/carbon/brokermanager";

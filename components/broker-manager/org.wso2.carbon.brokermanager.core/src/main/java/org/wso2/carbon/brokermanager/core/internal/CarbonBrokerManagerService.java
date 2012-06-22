@@ -16,16 +16,13 @@
 
 package org.wso2.carbon.brokermanager.core.internal;
 
-import org.apache.axis2.engine.AxisConfiguration;
 import org.apache.commons.logging.Log;
 import org.apache.commons.logging.LogFactory;
+import org.wso2.carbon.base.MultitenantConstants;
 import org.wso2.carbon.brokermanager.core.BrokerConfiguration;
 import org.wso2.carbon.brokermanager.core.BrokerManagerService;
 import org.wso2.carbon.brokermanager.core.exception.BMConfigurationException;
 import org.wso2.carbon.brokermanager.core.internal.registry.BrokerConfigurationRegistryInvoker;
-import org.wso2.carbon.brokermanager.core.internal.util.BMConstants;
-import org.wso2.carbon.context.CarbonContext;
-import org.wso2.carbon.core.multitenancy.SuperTenantCarbonContext;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -79,16 +76,16 @@ public class CarbonBrokerManagerService implements BrokerManagerService {
     public void addBrokerConfigurationForSuperTenant(
             BrokerConfiguration brokerConfiguration) throws BMConfigurationException{
        Map<String, BrokerConfiguration> brokerConfigurationMap
-               = tenantSpecificBrokerConfigurationMap.get(BMConstants.SUPER_TENANT_ID);
+               = tenantSpecificBrokerConfigurationMap.get(MultitenantConstants.SUPER_TENANT_ID);
         if (brokerConfigurationMap == null) {
             brokerConfigurationMap = new ConcurrentHashMap<String, BrokerConfiguration>();
             brokerConfigurationMap.put(brokerConfiguration.getName(), brokerConfiguration);
-            tenantSpecificBrokerConfigurationMap.put(BMConstants.SUPER_TENANT_ID, brokerConfigurationMap);
+            tenantSpecificBrokerConfigurationMap.put(MultitenantConstants.SUPER_TENANT_ID, brokerConfigurationMap);
         } else {
             brokerConfigurationMap.put(brokerConfiguration.getName(), brokerConfiguration);
         }
         brokerConfigurationRegistryInvoker.saveConfigurationToRegistry(brokerConfiguration,
-                BMConstants.SUPER_TENANT_ID);
+                                                                       MultitenantConstants.SUPER_TENANT_ID);
     }
 
     public void removeBrokerConfiguration(String name,

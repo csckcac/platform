@@ -1,0 +1,67 @@
+BAM DATA AGENT FOR MEDIATION STATISTICS.
+
+1. Download the WSO2 ESB server.
+	If we are running both ESB and BAM server parallely we should change the port number of AS by applying an offset.  In order to apply an offset, in the ESB product directory go to $esb_home/repository/conf and open file, carbon.xml . Then change the value in xpath Server/Ports/Offset from '0' to some other integer.
+To start the server, on Linux
+		sh wso2server.sh
+	on MS Windows
+		wso2server.bat
+
+
+
+2. After starting the server, go to ESB management console Configure→Features→Settings menu.
+	Give P2 repository link either from as a URL or from a file and install BAM Mediation Data Agent. Follow the instructions given in the UI. After the installation restart the server. 
+
+
+
+3. In the ESB product directory go to $esb_home/samples/axis2Server/src/SimpleStockQuoteService and build the service with Apache Ant. (You need to install Apache Ant before that.)
+
+
+
+4. Go to $esb_home/samples/axis2Server and run the Axis2 server.
+	For Linux,
+		sh axis2server.sh
+	For Windows,
+		axis2server.bat
+	
+	Test whether the service WSDL exists in http://localhost:9000/services/SimpleStockQuoteService?wsdl 
+
+
+
+5. Go to ESB management console and select Main→Web Services→Add→Proxy Service from the side panel. 
+
+	a) Click on 'WSDL Based Proxy' to create a new WSDL based proxy.
+    	b) Insert suitable Proxy Service Name (eg: Simple_Stock_Quote_Service).
+    	c) Set http://localhost:9000/services/SimpleStockQuoteService?wsdl as the WSDL URI.
+    	d) Set 'SimpleStockQuoteService' as the WSDL Service.
+    	e) Set 'SimpleStockQuoteServiceHttpSoap11Endpoint' as the WSDL Port.
+
+
+
+6. Select newly created proxy's name (here 'Simple_Stock_Quote_Service') from the shown list to see the Service Dashboard of it. 
+	click 'Enable Statistics' to configure the ESB to send statistics to the BAM.
+
+
+
+7. Go to ESB management console and select Configure→Mediation Data Publishing from side panel.
+
+    	a) Tick on 'Enable Mediation Stats'.
+	b) Configuring stream definition. 
+		  i) Provide qualified stream name for the stream definition.
+		 ii) Set the version. e.g.1.0.0
+		iii) Set the nickname
+		 iv) Set the description
+		  v) Click update.
+    	c) Set the 'BAM URL' as the URL of the BAM server. e.g. : tcp://IPAddress:7611	(tcp://<bam server IP>:<thrift port>)
+    	d) Set user name and password of BAM server.
+
+
+8. Send some request to proxy service.
+
+9. Now the proxy service Simple_Stock_Quote_Service  will send events from ESB to the BAM. Data in the Cassandra database can be seen from the Cassandra Explorer. Data will persist in bam_service_data_publisher column family (stream name is set as your column family name) in EVENT_KS keyspace.
+
+ 
+
+
+
+

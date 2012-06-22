@@ -9,9 +9,9 @@
   <body class="composite">
     <div id="bodyColumn">
       <div id="contentBox">
-        <head><meta http-equiv="content-type" content="text/html; charset=iso-8859-1"><link href="css/bam-docs.css" rel="stylesheet"><link href="styles/dist-docs.css" rel="stylesheet" type="text/css" media="all"></head><div id="header"></div><div id="main-content"><h1>WSO2 Business Activity Monitor 2.0.0 - ALPHA 2 Released!</h1><strong>Date : 12th March 2012 </strong><p>
-                WSO2 Business Activity Monitor devlopment team is pleased to announce the release of version 2.0.0 - ALPHA 2 of
-				<a href="http://wso2.org/projects/bam" class="externalLink">WSO2 Business Activity Monitor</a></p>
+        <head><meta http-equiv="content-type" content="text/html; charset=iso-8859-1"><link href="css/bam-docs.css" rel="stylesheet"><link href="styles/dist-docs.css" rel="stylesheet" type="text/css" media="all"></head><div id="header"></div><div id="main-content"><h1>WSO2 Business Activity Monitor 2.0.0 -Milestone 5 Released!</h1><strong>Date : 22nd June 2012 </strong><p>
+                WSO2 Business Activity Monitor devlopment team is pleased to announce the release of version Milestone 5 of
+				<a href="http://wso2.org/projects/bam" class="externalLink">WSO2 Business Activity Monitor 2.0.0</a></p>
 <p>
   WSO2 Business Activity Monitor (WSO2 BAM) is a comprehensive framework designed to solve the problems in the wide area of business activity monitoring. WSO2 BAM comprises of many modules to give the best of performance, scalability and customizability. This allows to achieve requirements of business users, dev ops, CEOs without spending countless months on customizing the solution without sacrificing performance or the ability to scale. 
             </p>
@@ -49,16 +49,19 @@
                     a more secure one at this point. To do this click on 'Configure->User Managment' link on the ledt menu. 
                 </li>
                 <li>
-                    Publish events to BAM server using data agents. You can see more information about this on Data Agents in WSO2-BAM2.0.0 ALPHA documentation.
+                    Publish events to BAM server.
                 </li>
                 <li>
-                    Write anaylizer sequence according to your requirement on the collected data by the BAM. You can find more information about writing a analyzer sequence from samples in WSO2-BAM2.0.0 ALPHA documentation..</a> 
+                    Write Hive Scripts according to your requirement on the collected data by the BAM. 
                 </li>
                 <li>
-                   Create your preferred gadget from the Gadget-Ide. You can find more information about the creating gagets from Gadget-IDE WSO2-BAM2.0.0 ALPHA documentation.
+                  Create your preferred gadget from the Gadget Generation Wizard. 
                 </li>
 		<li>
-                   Publish the gadgets to the BAM dashboard. There you can view the created gadget from the BAM dashboard.
+                   Add the gadgets to the BAM dashboard. There you can view the created gadget from the BAM dashboard.
+                </li>
+		<li>
+                   KPI sample is shipped with BAM which addresses the how to work with BAM and the features of BAM.
                 </li>
 		
 </ol>
@@ -66,9 +69,8 @@
                 <li>Data Agents</li>
 		<ol>
 
-    <li>A re-usable Agent API to publish events to the BAM server from any application (samples included)</li>
+    <li> A re-usable Agent API to publish events to the BAM server from any application (samples included)</li>
     <li>Apache Thrift based Agents to publish data at extremely high throughput rates</li>
-    <li>Option to use Binary or HTTP protocols</li>
 	</ol>
 
 <li>Event Storage</li>
@@ -79,16 +81,24 @@
 
 <li>Analytics</li>
 <ol>
-    <li>An Analyzer Framework with the capability of writing and plugging in any custom analysis tasks</li>
-    <li>Built in Analyzers for common operations such as get, put aggregate, alert, fault detection, etc.</li>
-    <li>Scheduling capability of analysis tasks</li>
+    <li>An Analyzer Framework with the capability of Writing the the Hive Scripts and run Hadoop Jobs, which enables provides more performance in big data</li>
+    <li>This has the capability of writing and plugging in any custom analysis tasks</li>
+    <li>Scheduling capability of analysis tasks </li>
 </ol>
 
 <li>Visualization</li>
 <ol>
-    <li>Drag and drop gadget IDE to visualize analyzed data with zero code</li>
-    <li>Capability to plug in additional UI elements and Data sources to Gadget IDE</li>
+    <li>Step-by-Step Easy Gadget Generation Wizard</li>
+    <li>Jaggery based gadgets generation</li>
+    <li>Capability use with most commonly used data sources, such as MySQL, H2, etc.</li>
     <li>Google gadgets based dashboard</li>
+</ol>
+
+<li>Tool Box Deployement</li>
+<ol>
+    <li>Easy deployment of default scenarios</li>
+    <li>Bundled required hive scripts and gadgets and deploy and undeploys with a click go</li>
+    <li>capability to deploy custom toolboxes</li>
 </ol>
             </ul>
 

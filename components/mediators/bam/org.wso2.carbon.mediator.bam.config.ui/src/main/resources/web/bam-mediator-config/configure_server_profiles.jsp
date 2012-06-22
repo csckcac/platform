@@ -10,6 +10,8 @@
 <%@ page import="java.util.List" %>
 <%@ page contentType="text/html;charset=UTF-8" language="java" %>
 
+<jsp:include page="../resources/resources-i18n-ajaxprocessor.jsp"/>
+
 <fmt:bundle basename="org.wso2.carbon.mediator.bam.config.ui.i18n.Resources">
 
 <carbon:breadcrumb
@@ -92,11 +94,43 @@
 
     %>
 
-        <%--<script type="text/javascript" src="'<%=CarbonUtils.getCarbonHome()%>' + 'sequences/js/registry-browser.js'"/>
-        <script type="text/javascript" src="'<%=CarbonUtils.getCarbonHome()%>' + 'resources/js/resource_util.js'"/>
-        <script type="text/javascript" src="'<%=CarbonUtils.getCarbonHome()%>' + 'yui/build/connection/connection-min.js'"/>--%>
+        <%--<script type="text/javascript" src="../sequences/js/registry-browser.js"/>
+        <script type="text/javascript" src="../resources/js/resource_util.js"/>
+        <script type="text/javascript" src="../yui/build/connection/connection-min.js"/>--%>
+
+        <!-- Dependencies -->
+        <script type="text/javascript" src="../yui/build/yahoo-dom-event/yahoo-dom-event.js"></script>
+        <script type="text/javascript" src="../yui/build/container/container_core-min.js"></script>
+
+        <!-- Connection handling lib -->
+        <script type="text/javascript" src="../yui/build/yahoo/yahoo-min.js"></script>
+        <script type="text/javascript" src="../yui/build/event/event-min.js"></script>
+        <script type="text/javascript" src="../yui/build/connection/connection-min.js"></script>
+        <script type="text/javascript" src="../resources/js/resource_util.js"></script>
+        <script type="text/javascript" src="../yui/build/utilities/utilities.js"></script>
+        <script type="text/javascript" src="../ajax/js/prototype.js"></script>
+
+        <!-- Source File -->
+        <script type="text/javascript" src="../sequences/js/registry-browser.js"></script>
+        <script type="text/javascript" src="../yui/build/menu/menu-min.js"></script>
+        <script type="text/javascript" src="../admin/js/main.js"></script>
+
+
+
+
+
+
+
 
         <script id="source" type="text/javascript">
+
+            function showConfigRegistryBrowser(id, path) {
+                elementId = id;
+                rootPath = path;
+                showResourceTree(id, setValue , path);
+            }
+
+
             var commonParameterString = "txtUsername=" + "<%=request.getParameter("txtUsername")%>" + "&"
                                                 + "txtPassword=" + "<%=request.getParameter("txtPassword")%>" + "&"
                                                 + "txtIp=" + "<%=request.getParameter("txtIp")%>" + "&"
@@ -136,7 +170,7 @@
                                    "                    </td>" +
                                    "<td>\n" +
                                    "                        <a onClick='javaScript:removePropertyColumn(\"" + sId + "\")'" +
-                                   "style='background-image: url(images/delete.gif);'class='icon-link addIcon'>Remove Property</a>\n" +
+                                   "style='background-image: url(../admin/images/delete.gif);'class='icon-link addIcon'>Remove Property</a>\n" +
                                    "                    </td>" +
                                    "</tr>";
 
@@ -162,9 +196,9 @@
                                    "</td>" +
                                    "<td>\n" +
                                    "<span><a onClick='javaScript:removeStreamColumn(\"" + sId + "\")'" +
-                                   "style='background-image: url(images/delete.gif);'class='icon-link addIcon'>Remove Stream</a></span>\n" +
+                                   "style='background-image: url(../admin/images/delete.gif);'class='icon-link addIcon'>Remove Stream</a></span>\n" +
                                    "<span><a onClick='javaScript:editStreamData(\"" + streamRowNum + "\")''" +
-                                   "style='background-image: url(images/delete.gif);'class='icon-link addIcon'>Edit Stream</a></span>\n" +
+                                   "style='background-image: url(../admin/images/edit.gif);'class='icon-link addIcon'>Edit Stream</a></span>\n" +
                                    "<input type=\"hidden\" id=\"hfStreamsTable_" + streamRowNum + "\" value=\"\"/>"
                                    "</td>" +
                                    "</tr>";
@@ -201,10 +235,13 @@
                 document.getElementById("hfStreamsTable_" + streamRowNumber).value = document.getElementById("hfPropertyTableData").value;
                 //alert("hfStreamsTable_ : " + document.getElementById("hfStreamsTable_" + streamRowNumber).value);
                 document.getElementById("propertiesTr").style.display = "none";
+                jQuery("#streamsTable_" + document.getElementById("hfStreamTableRowNumber").value).css("background-color","");
             }
 
             function editStreamData(rowNumber){
                 //alert("rowID : " + rowNumber);
+                jQuery("#streamsTable_" + document.getElementById("hfStreamTableRowNumber").value).css("background-color","");
+                jQuery("#streamsTable_" + rowNumber).css("background-color","rgb(234,234,255)");
                 document.getElementById("propertiesTr").style.display = "";
                 document.getElementById("hfStreamTableRowNumber").value = rowNumber;
                 loadPropertyDataTable();
@@ -247,6 +284,7 @@
             function cancelPropertyTableData(){
                 emptyPropertyTable();
                 document.getElementById("propertiesTr").style.display = "none";
+                jQuery("#streamsTable_" + document.getElementById("hfStreamTableRowNumber").value).css("background-color","");
             }
 
             function updateStreamTableData(){
@@ -357,7 +395,7 @@
     <div id="workArea">
         <form action="configure_server_profiles.jsp" method="post">
         <table>
-            <tr>
+            <%--<tr>
                 <td>
                     Registry
                 </td>
@@ -366,7 +404,46 @@
                     <input type="submit" value="Load Profile" onclick="document.getElementById('hfAction').value='load';"/>
                     <input type="hidden" name="hfAction" id="hfAction" value=""/>
                 </td>
+            </tr>--%>
+
+
+
+
+            <tr>
+                <td>
+                    <fmt:message key="profile.location"/><span class="required">*</span>
+                </td>
+                <td>
+                    <table>
+                        <tr>
+
+                            <td>
+                                <input class="longInput" type="text"
+                                       value="<%=serverProfileLocation%>"
+                                       id="txtServerProfileLocation" name="txtServerProfileLocation"/>
+                            </td>
+                            <td>
+                                <a href="#registryBrowserLink"
+                                   class="registry-picker-icon-link"
+                                   onclick="showConfigRegistryBrowser('txtServerProfileLocation','/_system/config')"><fmt:message key="conf.registry.browser"/>
+                                </a>
+                            </td>
+                        </tr>
+                    </table>
+                </td>
             </tr>
+
+            <tr>
+                <td></td>
+                <td>
+                    <input type="submit" value="Load Profile" onclick="document.getElementById('hfAction').value='load';"/>
+                    <input type="hidden" name="hfAction" id="hfAction" value=""/>
+                </td>
+            </tr>
+
+
+
+
             <tr>
                 <td>
                     <fmt:message key="username"/>
@@ -455,15 +532,15 @@
                                 <td><span><a onClick='javaScript:addStreamRow()' style='background-image:
                                         url(images/add.gif);'class='icon-link addIcon'>Add Stream</a></span>
                                     <span><a onClick='javaScript:editStreamData("<%=i%>")' style='background-image:
-                                        url(images/add.gif);'class='icon-link addIcon'>Edit Stream</a></span>
+                                        url(../admin/images/edit.gif);'class='icon-link addIcon'>Edit Stream</a></span>
                                     <input type="hidden" id="hfStreamsTable_<%=i%>" value="<%=bamServerProfileUtils.getPropertiesString(streamConfiguration)%>"/>
                                 </td>
                                 <% } else {  %>
                                 <td>
                                     <span><a onClick='javaScript:removeStreamColumn("streamsTable_<%=i%>")' style='background-image:
-                                        url(images/delete.gif);'class='icon-link addIcon'>Remove Stream</a></span>
+                                        url(../admin/images/delete.gif);'class='icon-link addIcon'>Remove Stream</a></span>
                                     <span><a onClick='javaScript:editStreamData("<%=i%>")' style='background-image:
-                                        url(images/add.gif);'class='icon-link addIcon'>Edit Stream</a></span>
+                                        url(../admin/images/edit.gif);'class='icon-link addIcon'>Edit Stream</a></span>
                                     <input type="hidden" id="hfStreamsTable_<%=i%>" value="<%=bamServerProfileUtils.getPropertiesString(streamConfiguration)%>"/>
                                 </td>
                                 <% } %>
@@ -491,7 +568,7 @@
 
                                 <td>
                                     <span><a onClick='javaScript:addStreamRow()' style='background-image: url(images/add.gif);'class='icon-link addIcon'>Add Stream</a></span>
-                                    <span><a onClick='javaScript:editStreamData("1")' style='background-image: url(images/add.gif);'class='icon-link addIcon'>Edit Stream</a></span>
+                                    <span><a onClick='javaScript:editStreamData("1")' style='background-image: url(../admin/images/edit.gif);'class='icon-link addIcon'>Edit Stream</a></span>
                                     <input type="hidden" id="hfStreamsTable_1" value=""/>
                                 </td>
                             </tr>

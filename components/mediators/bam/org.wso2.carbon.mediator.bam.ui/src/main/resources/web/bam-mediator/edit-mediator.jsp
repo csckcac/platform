@@ -124,17 +124,26 @@
                     <fmt:message key="server.profile"/><span class="required">*</span>
                 </td>
                 <td>
-                    <input class="longInput" type="text"
-                           value="<%=serverProfilePath%>"
-                           id="serverProfile" name="serverProfile" readonly="true"/>
+                    <table>
+                        <tr>
+                            <td>
+                                <input class="longInput" type="text"
+                                       value="<%=serverProfilePath%>"
+                                       id="serverProfile" name="serverProfile" readonly="true"/>
+                            </td>
+                            <td>
+                                <a href="#registryBrowserLink"
+                                   class="registry-picker-icon-link"
+                                   onclick="showRegistryBrowser('serverProfile','/_system/config')"><fmt:message key="conf.registry.browser"/>
+                                </a>
+                            </td>
+                            <td>
+                                <input type="button" value="Load Streams" onclick="loadStreamNames(document.getElementById('serverProfile').value, '')"/>
+                            </td>
+                        </tr>
+                    </table>
                 </td>
-                <td>
-                    <a href="#registryBrowserLink"
-                       class="registry-picker-icon-link"
-                       onclick="showRegistryBrowser('serverProfile','/_system/config')"><fmt:message key="conf.registry.browser"/>
-                    </a>
-                    <input type="button" value="Load" onclick="loadStreamNames(document.getElementById('serverProfile').value, '')"/>
-                </td>
+
                 <%--<td>
                     <a href="#registryBrowserLink"
                        class="registry-picker-icon-link"

@@ -118,7 +118,7 @@ public class BamServerProfileUtils {
         String stringStoreXml = storeXml.toString();
 
         try {
-            client.saveResourceString(stringStoreXml, bamServerProfileLocation);
+            client.saveResourceString(stringStoreXml, this.getRealBamServerProfilePath(bamServerProfileLocation));
         } catch (RemoteException e) {
             e.printStackTrace();  //To change body of catch statement use File | Settings | File Templates.
         }
@@ -163,7 +163,7 @@ public class BamServerProfileUtils {
 
     public BamServerConfig getResource(String bamServerProfileLocation){
         try {
-            String resourceString =  client.getResourceString(bamServerProfileLocation);
+            String resourceString =  client.getResourceString(this.getRealBamServerProfilePath(bamServerProfileLocation));
             OMElement resourceElement = new StAXOMBuilder(new ByteArrayInputStream(resourceString.getBytes())).getDocumentElement();
 
             BamServerConfigBuilder bamServerConfigBuilder = new BamServerConfigBuilder();
@@ -180,7 +180,7 @@ public class BamServerProfileUtils {
 
     public boolean resourceAlreadyExists(String bamServerProfileLocation){
         try {
-            return client.resourceAlreadyExists(bamServerProfileLocation);
+            return client.resourceAlreadyExists(this.getRealBamServerProfilePath(bamServerProfileLocation));
         } catch (RemoteException e) {
             e.printStackTrace();  //To change body of catch statement use File | Settings | File Templates.
         }
@@ -206,6 +206,17 @@ public class BamServerProfileUtils {
         } else {
             return "";
         }
+    }
+
+    private String getRealBamServerProfilePath(String shortServerProfilePath){
+        if(shortServerProfilePath != null){
+            String registryType = shortServerProfilePath.split(":")[0];
+            if (isNotNullOrEmpty(registryType) && registryType.equals("conf")){
+                return shortServerProfilePath.split(":")[1];
+            }
+            return shortServerProfilePath;
+        }
+        return shortServerProfilePath;
     }
 
     public boolean isNotNullOrEmpty(String string){

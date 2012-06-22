@@ -235,9 +235,7 @@ class APIConsumerImpl extends AbstractAPIManager implements APIConsumer {
                         String user) throws APIManagementException {
         String path = APIUtil.getAPIPath(apiId);
         try {
-            UserRegistry userRegistry = ServiceReferenceHolder.getInstance().
-                    getRegistryService().getGovernanceUserRegistry(user);
-            userRegistry.rateResource(path, rating.getRating());
+            registry.rateResource(path, rating.getRating());
         } catch (RegistryException e) {
             handleException("Failed to rate API : " + path, e);
         }

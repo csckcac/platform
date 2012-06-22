@@ -27,6 +27,7 @@ import org.wso2.carbon.application.mgt.stub.ApplicationAdminExceptionException;
 import org.wso2.carbon.integration.framework.ClientConnectionUtil;
 import org.wso2.carbon.integration.framework.LoginLogoutUtil;
 import org.wso2.carbon.integration.framework.utils.FrameworkSettings;
+import org.wso2.carbon.registry.capp.deployment.test.Utils.CAppTestUtils;
 import org.wso2.carbon.registry.core.exceptions.RegistryException;
 import org.wso2.carbon.registry.search.metadata.test.utils.GregTestUtils;
 import org.wso2.carbon.registry.ws.client.registry.WSRegistryServiceClient;
@@ -43,6 +44,11 @@ public class UploadCarFileHavingTextResourcesTestCase {
     private AdminServiceCarbonAppUploader cAppUploader;
     private AdminServiceApplicationAdmin adminServiceApplicationAdmin;
 
+    private final String cAppName = "text_resources";
+    private final String txtPath = "/_system/capps/buggggg.txt";
+    private final String xmlPath = "/_system/capps/text_files.xml";
+
+
     @BeforeClass
     public void init() throws Exception {
         ClientConnectionUtil.waitForPort(Integer.parseInt(FrameworkSettings.HTTP_PORT));
@@ -56,35 +62,46 @@ public class UploadCarFileHavingTextResourcesTestCase {
 
     @Test(priority = 1, description = "Upload CApp having Text Resources")
     public void uploadCApplicationWithTextResource()
-            throws MalformedURLException, RemoteException, InterruptedException {
+            throws MalformedURLException, RemoteException, InterruptedException,
+                   ApplicationAdminExceptionException {
         String filePath = GregTestUtils.getResourcePath() + File.separator +
                           "car" + File.separator + "text_resources_1.0.0.car";
         cAppUploader.uploadCarbonAppArtifact(sessionCookie, "text_resources_1.0.0.car",
                                              new DataHandler(new URL("file://" + filePath)));
-        Thread.sleep(10000);
 
+        Assert.assertTrue(CAppTestUtils.isCAppDeployed(sessionCookie, cAppName, adminServiceApplicationAdmin)
+                , "Deployed CApplication not in CApp List");
+    }
+
+    @Test(description = "Search whether CApp is in /_system/config/repository/applications", dependsOnMethods = {"uploadCApplicationWithTextResource"})
+    public void isCApplicationInRegistry() throws RegistryException {
+        registry.get("/_system/config/repository/applications/" + cAppName);
     }
 
     @Test(description = "Verify Uploaded Resources", dependsOnMethods = {"uploadCApplicationWithTextResource"})
     public void isResourcesExist() throws RegistryException {
 
-        registry.get("/_system/capps/text_files.xml");
-        registry.get("/_system/capps/buggggg.txt");
+        registry.get(xmlPath);
+        registry.get(txtPath);
 
     }
 
     @Test(description = "Delete Carbon Application ", dependsOnMethods = {"isResourcesExist"})
     public void deleteCApplication()
-            throws ApplicationAdminExceptionException, RemoteException, InterruptedException {
-        adminServiceApplicationAdmin.deleteApplication(sessionCookie, "text_resources");
-        Thread.sleep(20000);
+            throws ApplicationAdminExceptionException, RemoteException, InterruptedException,
+                   RegistryException {
+        adminServiceApplicationAdmin.deleteApplication(sessionCookie, cAppName);
+
+        Assert.assertTrue(CAppTestUtils.isCAppDeleted(sessionCookie, cAppName, adminServiceApplicationAdmin)
+                , "Deployed CApplication still in CApp List");
     }
 
     @Test(description = "Verify Resource Deletion", dependsOnMethods = {"deleteCApplication"})
     public void isResourcesDeleted() throws RegistryException {
 
-        Assert.assertFalse(registry.resourceExists("/_system/capps/text_files.xml"));
-        Assert.assertFalse(registry.resourceExists("/_system/capps/buggggg.txt"));
+        Assert.assertFalse(registry.resourceExists(xmlPath), "Resource not deleted");
+        Assert.assertFalse(registry.resourceExists(txtPath), "Resource not deleted");
+        Assert.assertFalse(registry.resourceExists("/_system/config/repository/applications/" + cAppName), "Resource not deleted");
 
     }
 

@@ -38,19 +38,16 @@ import java.net.MalformedURLException;
 import java.net.URL;
 import java.rmi.RemoteException;
 
-public class UploadCarFileHavingMixResourcesTestCase {
+public class UploadWsdlByCarFileTestCase {
     private String sessionCookie;
     private WSRegistryServiceClient registry;
     private AdminServiceCarbonAppUploader cAppUploader;
     private AdminServiceApplicationAdmin adminServiceApplicationAdmin;
 
-    private final String cAppName = "mix";
-    private final String warPath = "/_system/capp/servlets-examples-cluster-node2.war";
-    private final String xmlPath = "/_system/capps/text_files.xml";
-    private final String txtPath = "/_system/capps/buggggg.txt";
-    private final String jsPath = "/_system/capps/mytest.js";
-    private final String imagePath = "/_system/custom/Screenshot-6.png";
-    private final String pdfPath = "/_system/custom/CIS_Apache_Benchmark_v1.6.pdf";
+    private String cAppName = "wsdl_new";
+    private final String wsdlPath = "/_system/governance/trunk/wsdls/net/restfulwebservices/www/servicecontracts/_2008/_01/WeatherForecastService.svc.wsdl";
+    private final String wsdlUploadedPath = "/_system/wsdl_new/WeatherForecastService.svc.wsdl";
+    private final String servicePath = "/_system/governance/trunk/services/net/restfulwebservices/www/servicecontracts/_2008/_01/WeatherForecastService";
 
     @BeforeClass
     public void init() throws Exception {
@@ -64,34 +61,36 @@ public class UploadCarFileHavingMixResourcesTestCase {
     }
 
     @Test(priority = 1, description = "Upload CApp having Text Resources")
-    public void uploadCApplicationWIthMultipleResourceType()
+    public void uploadCApplicationWithWsdl()
             throws MalformedURLException, RemoteException, InterruptedException,
                    ApplicationAdminExceptionException {
         String filePath = GregTestUtils.getResourcePath() + File.separator +
-                          "car" + File.separator + "mix_1.0.0.car";
-        cAppUploader.uploadCarbonAppArtifact(sessionCookie, "mix_1.0.0.car",
+                          "car" + File.separator + "wsdl_1.0.0.car";
+        cAppUploader.uploadCarbonAppArtifact(sessionCookie, "wsdl_1.0.0.car",
                                              new DataHandler(new URL("file://" + filePath)));
 
         Assert.assertTrue(CAppTestUtils.isCAppDeployed(sessionCookie, cAppName, adminServiceApplicationAdmin)
                 , "Deployed CApplication not in CApp List");
-
     }
 
-    @Test(description = "Verify Uploaded Resources", dependsOnMethods = {"uploadCApplicationWIthMultipleResourceType"})
+    @Test(description = "Search whether CApp is in /_system/config/repository/applications", dependsOnMethods = {"uploadCApplicationWithTextResource"})
+    public void isCApplicationInRegistry() throws RegistryException {
+        registry.get("/_system/config/repository/applications/" + cAppName);
+    }
+
+    @Test(description = "Verify Uploaded Resources", dependsOnMethods = {"uploadCApplicationWithWsdl"})
     public void isResourcesExist() throws RegistryException {
 
-        registry.get(warPath);
-        registry.get(xmlPath);
-        registry.get(imagePath);
-        registry.get(jsPath);
-        registry.get(txtPath);
-        registry.get(pdfPath);
+        registry.get(wsdlPath);
+        registry.get(servicePath);
+        registry.get(wsdlUploadedPath);
 
     }
 
     @Test(description = "Delete Carbon Application ", dependsOnMethods = {"isResourcesExist"})
     public void deleteCApplication()
-            throws ApplicationAdminExceptionException, RemoteException, InterruptedException {
+            throws ApplicationAdminExceptionException, RemoteException, InterruptedException,
+                   RegistryException {
         adminServiceApplicationAdmin.deleteApplication(sessionCookie, cAppName);
 
         Assert.assertTrue(CAppTestUtils.isCAppDeleted(sessionCookie, cAppName, adminServiceApplicationAdmin)
@@ -101,17 +100,10 @@ public class UploadCarFileHavingMixResourcesTestCase {
     @Test(description = "Verify Resource Deletion", dependsOnMethods = {"deleteCApplication"})
     public void isResourcesDeleted() throws RegistryException {
 
-        Assert.assertFalse(registry.resourceExists(warPath), "Resource not deleted");
-
-        Assert.assertFalse(registry.resourceExists(xmlPath), "Resource not deleted");
-
-        Assert.assertFalse(registry.resourceExists(imagePath), "Resource not deleted");
-
-        Assert.assertFalse(registry.resourceExists(jsPath), "Resource not deleted");
-
-        Assert.assertFalse(registry.resourceExists(txtPath), "Resource not deleted");
-
-        Assert.assertFalse(registry.resourceExists(pdfPath), "Resource not deleted");
+        Assert.assertFalse(registry.resourceExists(wsdlPath), "Resource not deleted");
+        Assert.assertFalse(registry.resourceExists(wsdlUploadedPath), "Resource not deleted");
+        Assert.assertFalse(registry.resourceExists(servicePath), "Resource not deleted");
+        Assert.assertFalse(registry.resourceExists("/_system/config/repository/applications/" + cAppName), "CApp Resource not deleted");
 
     }
 

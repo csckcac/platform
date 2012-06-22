@@ -1,2 +1,12 @@
-Please find the guide for this sample located within the BAM documentation. A link to the documentation
-can be found at http://wso2.com/products/business-activity-monitor/
+How to Run KPI Sample
+======================
+1. Start the WSO2 BAM Server
+2. Go to 'WSO2_BAM_HOME/samples/kpi-definition/' directory throgh console
+3. Type 'ant' with in the directory from the console
+    (This publishes the events to BAM)
+4. Go to management console and login
+5. Go to Main -> BAM Toolbox -> Add. Select 'KPI sample Toolbox' and click on deploy
+6. Go to Main -> BAM Toolbox -> List. And refresh the page until the 'KPI_Sample' toolbox status changes to deployed. 
+5. Go to Main -> Analytics -> List and click on execute on the kpi_script
+4. Go to Main -> BAM Dashboard. You will see the sample gadgets for Analyzed Data.
+

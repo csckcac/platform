@@ -17,16 +17,18 @@
 package org.wso2.carbon.stratos.deployment;
 
 import org.apache.axiom.soap.RolePlayer;
+import org.wso2.carbon.base.MultitenantConstants;
+import org.wso2.carbon.context.CarbonContext;
 
 import java.util.List;
 import java.util.ArrayList;
 
 public class SuperTenantRolePlayer implements RolePlayer{
 
-    private List roles;
+    private List<String> roles;
 
     public SuperTenantRolePlayer() {
-        this.roles = new ArrayList();
+        this.roles = new ArrayList<String>();
         this.roles.add("supertenant");
     }
 
@@ -35,6 +37,7 @@ public class SuperTenantRolePlayer implements RolePlayer{
     }
 
     public boolean isUltimateDestination() {
-        return false;
+        return (CarbonContext.getCurrentContext().getTenantId() ==
+                MultitenantConstants.SUPER_TENANT_ID);
     }
 }

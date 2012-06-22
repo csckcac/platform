@@ -278,10 +278,10 @@ public class DBUtils {
         int tenantId = carbonContext.getTenantId();
         userName = MultitenantUtils.getTenantAwareUsername(userName);
         try {
-            if (tenantId < 0) {
+            if (tenantId < MultitenantConstants.SUPER_TENANT_ID) {
                 tenantId = realmService.getTenantManager().getTenantId(tenantDomain);
             }
-            if (tenantId < 0) {
+            if (tenantId < MultitenantConstants.SUPER_TENANT_ID) {
                 /* the tenant doesn't exist. */
                 log.error("The tenant doesn't exist. Tenant domain:" + tenantDomain);
                 throw new DataServiceFault("Access Denied. You are not authorized.");

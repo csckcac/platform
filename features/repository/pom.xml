@@ -89,7 +89,7 @@
                                     org.wso2.carbon:org.wso2.carbon.bpel.feature:${carbon.version}
                                 </featureArtifactDef>
                                 <featureArtifactDef>
-                                    org.wso2.carbon:org.wso2.carbon.claim.mgt.feature:${carbon.version}
+                       		    org.wso2.carbon:org.wso2.carbon.claim.mgt.feature:${carbon.version}
                                 </featureArtifactDef>
                                 <featureArtifactDef>
                                     org.wso2.carbon:org.wso2.carbon.cluster.mgt.feature:${carbon.version}
@@ -523,6 +523,26 @@
 				<featureArtifactDef>
 				    org.wso2.carbon:org.wso2.carbon.eventbridge.serverside.feature:${carbon.version}
 				</featureArtifactDef>
+				<!-- BAM data agent features -->
+
+				<featureArtifactDef>
+				    org.wso2.carbon:org.wso2.carbon.eventbridge.agent.thrift.feature:${carbon.version}
+				</featureArtifactDef>
+				<featureArtifactDef>
+				    org.wso2.carbon:org.wso2.carbon.eventbridge.commons.feature:${carbon.version}
+				</featureArtifactDef>
+				<featureArtifactDef>
+				    org.wso2.carbon:org.wso2.carbon.eventbridge.thrift.commons.feature:${carbon.version}
+				</featureArtifactDef>
+                                <featureArtifactDef>
+                                    org.wso2.carbon:org.wso2.carbon.system.statistics.feature:${carbon.version}
+                                </featureArtifactDef>
+                                <featureArtifactDef>
+                                    org.wso2.carbon:org.wso2.carbon.bam.service.agent.feature:${carbon.version}
+                                </featureArtifactDef>
+                                <featureArtifactDef>
+                                    org.wso2.carbon:org.wso2.carbon.bam.mediation.agent.feature:${carbon.version}
+                                </featureArtifactDef>
 <!--
                                 <featureArtifactDef>
                                     org.wso2.carbon:org.wso2.carbon.cassandra.explorer.feature:${carbon.version}
@@ -863,6 +883,34 @@
 										</catFeature>
 									</features>
 								</category>
+
+								<category>
+                                                                        <id>org.wso2.carbon.bam.data.agent.category</id>
+                                                                        <label>BAM Data Agent</label>
+                                                                        <description>This category contains features required for WSO2 BAM Data agents</description>
+                                                                        <features>
+                                                                               <catFeature>
+                                                                                        <id>org.wso2.carbon.eventbridge.agent.thrift</id>
+                                                                                        <version>${carbon.version}</version>
+                                                                                </catFeature>
+                                                                                <catFeature>
+                                                                                        <id>org.wso2.carbon.eventbridge.thrift.commons</id>
+                                                                                        <version>${carbon.version}</version>
+                                                                                </catFeature>
+                                                                                <catFeature>
+                                                                                        <id>org.wso2.carbon.eventbridge.commons</id>
+                                                                                        <version>${carbon.version}</version>
+                                                                                </catFeature>
+                                                                                <catFeature>
+                                                                                        <id>org.wso2.carbon.bam.service.agent</id>
+                                                                                        <version>${carbon.version}</version>
+                                                                                </catFeature>
+                                                                                <catFeature>
+                                                                                        <id>org.wso2.carbon.bam.mediation.agent</id>
+                                                                                        <version>${carbon.version}</version>
+                                                                                </catFeature>
+                                                                        </features>
+                                                                </category>
 
 								<category>
 									<id>org.wso2.styles.category</id>

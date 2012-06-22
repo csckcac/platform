@@ -4,7 +4,7 @@
    var isCreatePermitted=outputs.isCreatePermitted;
 %>
 <div id="item-info">
-    <h2><%=api.name%>-v<%=api.version%></h2>
+    <h2><%=api.name%> - <%=api.version%></h2>
     <span id="spanProvider" style="display:none;"><%=api.provider%></span>
     <ul id="tab" class="nav nav-tabs tabs">
         <li class="active"><a href="#view" data-toggle="tab" id="viewLink"><i class=" icon-list-alt"></i> Overview</a></li>

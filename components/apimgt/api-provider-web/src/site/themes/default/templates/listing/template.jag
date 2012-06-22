@@ -46,7 +46,7 @@
                 </a>
                 <h5>
                     <a href="<%=path%>" class="label label-info" title="<%=api.name%>-v<%=api.version%>">
-                        <%=nameSubstring%> - <span class="versionTxt">v<%=api.version%></span>
+                        <%=nameSubstring%> - <span class="versionTxt"><%=api.version%></span>
                     </a>
                     <div>(<%=api.provider%>)</div>
                 </h5>

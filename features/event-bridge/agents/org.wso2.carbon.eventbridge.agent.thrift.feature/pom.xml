@@ -39,13 +39,13 @@
                             <goal>p2-feature-gen</goal>
                         </goals>
                         <configuration>
-                            <id>org.wso2.carbon.eventbridge.thrift.commons</id>
-                            <propertiesFile>../etc/feature.properties</propertiesFile>
+                            <id>org.wso2.carbon.eventbridge.agent.thrift</id>
+                            <propertiesFile>../../../etc/feature.properties</propertiesFile>
                             <importFeatures>
                                 <importFeatureDef>org.wso2.carbon.core:${wso2carbon.version}</importFeatureDef>
                             </importFeatures>
                             <includedFeatures>
-                                <includedFeatureDef>org.wso2.carbon:org.wso2.carbon.eventbridge.thrift.commons.server.feature</includedFeatureDef>
+                                <includedFeatureDef>org.wso2.carbon:org.wso2.carbon.eventbridge.agent.thrift.server.feature</includedFeatureDef>
                             </includedFeatures>
                         </configuration>
                     </execution>

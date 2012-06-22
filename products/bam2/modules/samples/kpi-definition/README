@@ -2,12 +2,11 @@ How to Run KPI Sample
 ======================
 1. Start the WSO2 BAM Server
 2. Go to 'WSO2_BAM_HOME/samples/kpi-definition/' directory
-3. Change the 'WSO2_BAM_HOME/samples/kpi-definition/src/main/java/org/wso2/carbon/bam/kpiagent/KPIAgent.java', data publisher IP (Default:127.0.0.1) to the IP of WSO2 BAM Server. (IP of the machine will be printed along with Management console URL in server start up)
-4. Type 'ant' with in the directory from the console
+3. Type 'ant' with in the directory from the console
     (This publishes the events to BAM)
-5. Go to management console and login
-6. Go to Main -> BAM Toolbox -> Add. Select 'KPI sample Toolbox' and click on deploy
-7. Go to Main -> BAM Toolbox -> List. And refresh the page until the 'KPI_Sample' toolbox status changes to deployed. 
-8. Go to Main -> Analytics -> List and click on Edit and Run the kpi_script
-9. Go to Main -> BAM Dashboard. You will see the sample gadgets for Analyzed Data.
+4. Go to management console and login
+5. Go to Main -> BAM Toolbox -> Add. Select 'KPI sample Toolbox' and click on deploy
+6. Go to Main -> BAM Toolbox -> List. And refresh the page until the 'KPI_Sample' toolbox status changes to deployed. 
+7. Go to Main -> Analytics -> List and click on Edit and Run the kpi_script
+8. Go to Main -> BAM Dashboard. You will see the sample gadgets for Analyzed Data.
 

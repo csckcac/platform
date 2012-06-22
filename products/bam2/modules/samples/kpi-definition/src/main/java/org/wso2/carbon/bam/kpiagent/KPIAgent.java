@@ -9,9 +9,8 @@ import org.wso2.carbon.eventbridge.commons.Event;
 import org.wso2.carbon.eventbridge.commons.exception.*;
 
 import javax.security.sasl.AuthenticationException;
-import java.net.InetAddress;
-import java.net.MalformedURLException;
-import java.net.UnknownHostException;
+import java.net.*;
+import java.util.Enumeration;
 
 public class KPIAgent {
     private static Logger logger = Logger.getLogger(KPIAgent.class);
@@ -23,7 +22,10 @@ public class KPIAgent {
     public static final String VERSION3 = "2.0.5";
 
 
-    public static void main(String[] args) throws AgentException, MalformedStreamDefinitionException, StreamDefinitionException, DifferentStreamDefinitionAlreadyDefinedException, MalformedURLException, AuthenticationException, NoStreamDefinitionExistException, org.wso2.carbon.eventbridge.commons.exception.AuthenticationException, TransportException {
+    public static void main(String[] args) throws AgentException, MalformedStreamDefinitionException,
+            StreamDefinitionException, DifferentStreamDefinitionAlreadyDefinedException, MalformedURLException,
+            AuthenticationException, NoStreamDefinitionExistException,
+            org.wso2.carbon.eventbridge.commons.exception.AuthenticationException, TransportException, SocketException {
         System.out.println("Starting BAM KPI Agent");
         AgentConfiguration agentConfiguration = new AgentConfiguration();
         String currentDir = System.getProperty("user.dir");
@@ -31,11 +33,8 @@ public class KPIAgent {
         System.setProperty("javax.net.ssl.trustStorePassword", "wso2carbon");
         Agent agent = new Agent(agentConfiguration);
         String host;
-        try {
-            host = InetAddress.getLocalHost().getHostAddress();
-        } catch (UnknownHostException e) {
-            host = "127.0.0.1";
-        }
+        //host = InetAddress.getLocalHost().getHostAddress();
+        host = getLocalAddress().getHostAddress();
         //create data publisher
         DataPublisher dataPublisher = new DataPublisher("tcp://" + host + ":7611", "admin", "admin", agent);
 
@@ -258,5 +257,26 @@ public class KPIAgent {
                 new Object[]{"Sugar", 2, 150.0, "Paul"});
         dataPublisher.publish(eventSeven);
 
+    }
+
+    public static InetAddress getLocalAddress() throws SocketException
+    {
+        Enumeration<NetworkInterface> ifaces = NetworkInterface.getNetworkInterfaces();
+        while( ifaces.hasMoreElements() )
+        {
+            NetworkInterface iface = ifaces.nextElement();
+            Enumeration<InetAddress> addresses = iface.getInetAddresses();
+
+            while( addresses.hasMoreElements() )
+            {
+                InetAddress addr = addresses.nextElement();
+                if( addr instanceof Inet4Address && !addr.isLoopbackAddress() )
+                {
+                    return addr;
+                }
+            }
+        }
+
+        return null;
     }
 }

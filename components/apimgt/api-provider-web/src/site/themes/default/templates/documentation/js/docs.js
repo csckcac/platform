@@ -2,8 +2,9 @@ $(document).ready(function() {
     $("#addNewDoc").validate();
     $('#saveDoc').click(function() {
         if ($("#addNewDoc").valid()) {
-            var apiName = $("#item-info h2")[0].innerHTML.split("-v")[0];
-            var version = $("#item-info h2")[0].innerHTML.split("-v")[1];
+            var api=$("#item-info h2")[0].innerHTML;
+            var apiName = $.trim(api.split("-")[0]);
+            var version = $.trim(api.split("-")[1]);
             var provider = $("#spanProvider").text();
             var docName = $("#docName").val();
             var summary = $("#summary").val();

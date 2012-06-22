@@ -9,8 +9,9 @@ import org.wso2.carbon.eventbridge.commons.Event;
 import org.wso2.carbon.eventbridge.commons.exception.*;
 
 import javax.security.sasl.AuthenticationException;
+import java.net.InetAddress;
 import java.net.MalformedURLException;
-
+import java.net.UnknownHostException;
 
 public class KPIAgent {
     private static Logger logger = Logger.getLogger(KPIAgent.class);
@@ -29,8 +30,14 @@ public class KPIAgent {
         System.setProperty("javax.net.ssl.trustStore", currentDir + "/src/main/resources/client-truststore.jks");
         System.setProperty("javax.net.ssl.trustStorePassword", "wso2carbon");
         Agent agent = new Agent(agentConfiguration);
+        String host;
+        try {
+            host = InetAddress.getLocalHost().getHostAddress();
+        } catch (UnknownHostException e) {
+            host = "127.0.0.1";
+        }
         //create data publisher
-        DataPublisher dataPublisher = new DataPublisher("tcp://127.0.0.1:7611", "admin", "admin", agent);
+        DataPublisher dataPublisher = new DataPublisher("tcp://" + host + ":7611", "admin", "admin", agent);
 
         String streamId1 = null;
         String streamId2 = null;

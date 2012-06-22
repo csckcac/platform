@@ -1,0 +1,10 @@
+Running the REST Sample
+=======================
+
+Pre-requisites : You need to have curl installed and availale to the command line path
+
+1. Execute the rest-api.sh script with command: ./rest-api.sh
+
+2. You will see logs explain what is happening as the sample is executed.
+
+3. Look at the rest-api.sh to take a look at the curl commands that are taking place.

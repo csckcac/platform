@@ -43,23 +43,21 @@ import java.util.Calendar;
 import static org.testng.Assert.assertEquals;
 import static org.testng.Assert.fail;
 
-public class TenantMgtTestCase {
+public class TenantWebappDeploymentTestCase {
     private static final String USER_NAME = "test";
-    private static final String PASS_WORD = "test123";
+    private static final String PASSWORD = "test123";
     private static final String FIRST_NAME = "test";
     private static final String LAST_NAME = "test";
-    private static final String DOMAIN = "test.org";
+    private static final String DOMAIN = "test" + System.currentTimeMillis() + ".org";
     private static final String EMAIL = "test@test.org";
     private static final String USAGE_PLAN = "Demo";
 
-    private static final String EXAMPLE_WEBAPP_URL = "http://localhost:9763/t/" + DOMAIN +
-                                                     "/webapps/example/";
     private HttpClient httpClient = new HttpClient();
     private LoginLogoutUtil util = new LoginLogoutUtil();
     private TenantMgtAdminServiceStub tenantMgtStub;
     private ConfigurationContext configContext;
 
-    private static final Log log = LogFactory.getLog(TenantMgtTestCase.class);
+    private static final Log log = LogFactory.getLog(TenantWebappDeploymentTestCase.class);
 
 
     @BeforeMethod(groups = {"wso2.as"})
@@ -84,19 +82,14 @@ public class TenantMgtTestCase {
     }
 
     @Test(groups = {"wso2.as"})
-    public void testTenantMgt() throws TenantMgtAdminServiceExceptionException, RemoteException {
-        testTenantAddition();
-        testWebappDeployement();
-    }
-
-    private void testTenantAddition()
+    public void testTenantCreation()
             throws TenantMgtAdminServiceExceptionException, RemoteException {
-        log.info("Running tenant addition test case ...");
+        log.info("Running tenant creation test case ...");
         TenantInfoBean tenantInfoBean = new TenantInfoBean();
         tenantInfoBean.setAdmin(USER_NAME);
         tenantInfoBean.setFirstname(FIRST_NAME);
         tenantInfoBean.setLastname(LAST_NAME);
-        tenantInfoBean.setAdminPassword(PASS_WORD);
+        tenantInfoBean.setAdminPassword(PASSWORD);
         tenantInfoBean.setTenantDomain(DOMAIN);
         tenantInfoBean.setEmail(EMAIL);
         tenantInfoBean.setUsagePlan(USAGE_PLAN);
@@ -104,8 +97,8 @@ public class TenantMgtTestCase {
         tenantMgtStub.addTenant(tenantInfoBean);
     }
 
-
-    private void testWebappDeployement() {
+    @Test(groups = {"wso2.as"}, dependsOnMethods = "testTenantCreation")
+    public void testWebappDeployement() throws IOException {
         log.info("Running webapp deployment test for tenant : " + DOMAIN);
         String sourcePath = System.getProperty("carbon.home") +
                             File.separator + "repository" + File.separator + "deployment" +
@@ -118,26 +111,25 @@ public class TenantMgtTestCase {
                           File.separator + "example.war";
         File sourceFile = new File(sourcePath);
         File destFile = new File(destPath);
-        try {
-            FileManipulator.copyFile(sourceFile, destFile);
-        } catch (IOException e) {
-            log.error("Error while copying the example webapp sample into tenant " +
-                      DOMAIN + "'s space", e);
-            fail("Webapp Deployment for tenant : " + DOMAIN + " has failed");
-        }
+        FileManipulator.copyFile(sourceFile, destFile);
 
         HttpClientParams params = new HttpClientParams();
         params.setParameter("http.protocol.allow-circular-redirects", true);
         httpClient.setParams(params);
-        String url = EXAMPLE_WEBAPP_URL + "carbon/authentication/login.jsp?username=" +
-                     USER_NAME + "&password=" + PASS_WORD;
+        String exampleWebappUrl = "http://localhost:" + FrameworkSettings.HTTP_PORT + "/t/" + DOMAIN +
+                                  "/webapps/example/";
+        String url = exampleWebappUrl + "carbon/authentication/login.jsp?username=" +
+                     USER_NAME + "&password=" + PASSWORD;
         GetMethod getMethod = new GetMethod(url);
         try {
             log.info("Authenticating test user with carbon user realm");
             int statusCode = httpClient.executeMethod(getMethod);
             int noOfTry = 1;
             while (statusCode != HttpStatus.SC_OK && noOfTry < 10) {
-                Thread.sleep(1000);
+                try {
+                    Thread.sleep(1000);
+                } catch (InterruptedException ignored) {
+                }
                 noOfTry++;
                 statusCode = httpClient.executeMethod(getMethod);
             }
@@ -154,11 +146,6 @@ public class TenantMgtTestCase {
                     fail("Webapp testing for tenant :" + DOMAIN + " failed");
                 }
             }
-
-        } catch (Exception e) {
-            log.error("Error occurred while trying test webapp for tenant : " + DOMAIN + " : " +
-                      e.getMessage());
-            fail("Caught exception " + e.toString());
         } finally {
             getMethod.releaseConnection();
         }

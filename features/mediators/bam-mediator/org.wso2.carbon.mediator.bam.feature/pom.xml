@@ -26,7 +26,7 @@
     </parent>
 
     <modelVersion>4.0.0</modelVersion>
-    <artifactId>org.wso2.carbon.bam.feature</artifactId>
+    <artifactId>org.wso2.carbon.mediator.bam.feature</artifactId>
     <packaging>pom</packaging>
     <name>WSO2 Carbon - BAM Mediator Aggregated Feature</name>
     <url>http://wso2.org</url>
@@ -78,7 +78,7 @@
                             <importFeatures>
                                 <importFeatureDef>org.wso2.carbon.mediation.initializer:${mediation.initializer.feature.version}</importFeatureDef>
                                 <importFeatureDef>org.wso2.carbon.eventbridge.agent.thrift:${wso2carbon.version}</importFeatureDef>
-                                <importFeatureDef>org.wso2.carbon.eventbridge.commons.thrift:${wso2carbon.version}</importFeatureDef>
+                                <importFeatureDef>org.wso2.carbon.eventbridge.thrift.commons:${wso2carbon.version}</importFeatureDef>
                                 <importFeatureDef>org.wso2.carbon.eventbridge.commons:${wso2carbon.version}</importFeatureDef>
                             </importFeatures>
                             <includedFeatures>

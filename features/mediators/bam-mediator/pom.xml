@@ -66,6 +66,22 @@
                 <artifactId>org.wso2.carbon.mediator.bam.config.stub</artifactId>
                 <version>${wso2carbon.version.bam-mediator}</version>
             </dependency>
+
+            <dependency>
+                <groupId>org.wso2.carbon</groupId>
+                <artifactId>org.wso2.carbon.eventbridge.agent.thrift</artifactId>
+                <version>${wso2carbon.version.bam-mediator}</version>
+            </dependency>
+            <dependency>
+                <groupId>org.wso2.carbon</groupId>
+                <artifactId>org.wso2.carbon.eventbridge.thrift.commons</artifactId>
+                <version>${wso2carbon.version.bam-mediator}</version>
+            </dependency>
+            <dependency>
+                <groupId>org.wso2.carbon</groupId>
+                <artifactId>org.wso2.carbon.eventbridge.commons</artifactId>
+                <version>${wso2carbon.version.bam-mediator}</version>
+            </dependency>
         </dependencies>
     </dependencyManagement>
 

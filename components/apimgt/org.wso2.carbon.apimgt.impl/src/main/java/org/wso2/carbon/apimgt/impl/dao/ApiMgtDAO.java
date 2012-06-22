@@ -2026,6 +2026,7 @@ public class ApiMgtDAO {
             while (rs.next()) {
                 int applicationId = rs.getInt("APPLICATION_ID");
                 if (!subscribedApplications.contains(applicationId)) {
+                    apiId.setTier(rs.getString("TIER_ID"));
                     addSubscription(apiId, rs.getString("CONTEXT"), applicationId);
                 }
             }

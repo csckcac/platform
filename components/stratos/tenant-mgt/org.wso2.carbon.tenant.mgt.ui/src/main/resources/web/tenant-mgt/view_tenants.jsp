@@ -124,13 +124,12 @@
                 return;
             }
         %>
+
+        <h2><fmt:message key="tenants.list"/></h2>
+        <br/>
         <carbon:paginator pageNumber="<%=pageNumber%>" numberOfPages="<%=numberOfPages%>"
                           noOfPageLinksToDisplay="<%=noOfPageLinksToDisplay%>"
                           page="view_tenants.jsp" pageNumberParameterName="pageNumber"/>
-
-        <br/>
-
-        <h2><fmt:message key="tenants.list"/></h2>
 
         <div id="workArea">
             <table cellpadding="0" cellspacing="0" border="0" style="width:100%" class="styledLeft">

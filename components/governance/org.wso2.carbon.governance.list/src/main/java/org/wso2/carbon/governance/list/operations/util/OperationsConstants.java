@@ -13,7 +13,7 @@ public class OperationsConstants {
     public final static String REQUEST = "Request";
     public final static String RESPONSE = "Response";
     public final static String METADATA_NAMESPACE = "http://www.wso2.org/governance/metadata";
-    public final static String XSD_NAMESPACE = "http://www.wso2.org/governance/metadata";
+    public final static String XSD_NAMESPACE = "http://www.w3.org/2001/XMLSchema";
 
     public final static String REGISTRY_EXCEPTION2_XSD = "<xs:schema xmlns:xs=\"http://www.w3.org/2001/XMLSchema\" xmlns:ax2232=\"http://api.registry.carbon.wso2.org/xsd\" attributeFormDefault=\"qualified\" elementFormDefault=\"qualified\" targetNamespace=\"http://exceptions.core.registry.carbon.wso2.org/xsd\">\n" +
                             "            <xs:import namespace=\"http://api.registry.carbon.wso2.org/xsd\" />\n" +

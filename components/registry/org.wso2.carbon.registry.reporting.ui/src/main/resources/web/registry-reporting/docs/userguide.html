@@ -50,7 +50,7 @@
    continuous intervals.When click on the report name the user will get redirected to the edit report page and when click
    on the template page the template resource will be shown.</p>
 
-<p><img src="images/list_reports.png" alt="" width="749px"/></p>
+<p><img src="images/list_reports.png" alt="" width="900px"/></p>
 <p>Figure 1: List Reports</p>
 
 <a name="addReport"></a>
@@ -59,10 +59,11 @@
    to generate a report.Report name will defined what the name of the report should be and the type would define what the
    document type should be.The two most important entries would be the Jasper reporting template and the reporting bean
    class. The template has to be uploaded to the registry as any other resource. The reporting bean class should be bundled
-   as a jar and upload to the registry as well from <strong>Home > Extensions > Add</strong>.
+   as a jar and upload to the registry as well from <strong>Home > Extensions > Add</strong>.After loading the class do
+   <strong>Load Attributes</strong> to load the defined attributes.
  </p>
 
-<p><img src="images/add_report.png" alt="" width="749px"/></p>
+<p><img src="images/add_report.png" alt="" width="900px"/></p>
 <p>Figure 2: Add Report</p>
 
 <a name="generateReport"></a>
@@ -70,12 +71,18 @@
 <p>The Generate report would redirect to a page similar to add report where it is possible to edit all the fields mentioned
 in the Add Report. The generate report would create the report and will get downloaded to the working setup.</p>
 
-<p><img src="images/generate_report.png" alt="" width="749px"/></p>
+<p><img src="images/generate_report.png" alt="" width="900px"/></p>
 <p>Figure 3: Generate report</p>
 
 <a name="scheduleReport"></a>
 <h2>Schedule a Report</h2>
-<p>The user is able to schedule the report generation to be done in continuous intervals.</p>
+<p>The user is able to schedule the report generation to be done in continuous intervals.The cron expression is used to
+    define the event triggering time duration.The Registry URL is to give the registry where the report scheduling is being
+    done, and it is possible to include a local or remote registry by the URL. The user permissions should also be provided
+    by entering the username and password.</p>
+
+<p><img src="images/schedule_report.png" alt="" width="900px"/></p>
+<p>Figure 4: Schedule report</p>
 
 </body>
 </html>

@@ -72,6 +72,6 @@
     <%
     }
     %>
-     <% jagg.includeBlock("paginator", {currentPage:currentPage,numberOfPages:numberOfPages}); %>
+     <% jagg.includeBlock("paginator", {currentPage:String(currentPage),numberOfPages:numberOfPages}); %>
 </div>
 <% }); %>

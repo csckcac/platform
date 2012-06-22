@@ -215,7 +215,7 @@ public class ClientState
      * @return <String> the resolved keyspace name
      */
     public String getResolvedKeyspace() {
-
+        qualifiedKeyspace = prefix.equals("carbon_super_")?keyspace:prefix + keyspace;
         return qualifiedKeyspace == null ? keyspace : qualifiedKeyspace;
     }
 

@@ -302,4 +302,14 @@ public class ServiceTestCase {
         newService = serviceManager.getService(service.getId());
         Assert.assertNull(newService);
     }
+
+    @Test(groups = {"wso2.greg"})
+    public void testServicePath() throws Exception {
+        ServiceManager serviceManager = new ServiceManager(registry);
+
+        Service service = serviceManager.newService(new QName("http://banga.doom.queek/blaa", "rajanganaya"));
+        serviceManager.addService(service);
+        String servicePath = service.getPath();
+        Assert.assertNotNull(servicePath);
+    }
 }

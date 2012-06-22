@@ -14,6 +14,9 @@ import org.apache.axis2.transport.http.HTTPConstants;
 import org.apache.axis2.transport.http.HttpTransportProperties;
 import org.apache.commons.logging.Log;
 import org.apache.commons.logging.LogFactory;
+import org.wso2.carbon.authenticator.stub.AuthenticationAdminStub;
+import org.wso2.carbon.user.mgt.stub.UserAdminStub;
+import org.wso2.carbon.utils.CarbonUtils;
 
 import javax.xml.stream.XMLStreamException;
 import java.io.ByteArrayInputStream;
@@ -35,10 +38,21 @@ public class SamplesInvoker {
     private static String action = null;
     private static String serviceName = null;
 
-    private static String getProperty(String name, String def) {
-        String result = System.getProperty(name);
+    private static UserAdminStub userAdminStub = null;
+    private static AuthenticationAdminStub authenticationAdminStub = null;
+
+    final static String USER_MANAGEMENT_SERVICE_URL = "https://" + "localhost" +
+                                                      ":" + "9443" +
+                                                      "/services/UserAdmin";
+    final static String AUTHENTICATION_SERVICE_URL = "https://" + "localhost" +
+                                                          ":" + "9443" +
+                                                          "/services/AuthenticationAdmin";
+
+
+    private static String getProperty(String propertyName, String defaultValue) {
+        String result = System.getProperty(propertyName);
         if (result == null || result.length() == 0) {
-            result = def;
+            result = defaultValue;
         }
         return result;
     }
@@ -62,12 +76,12 @@ public class SamplesInvoker {
             properties.load(fin);
             serviceName = properties.getProperty(SVC_NAME).trim();
 
-            if(operation != null && !operation.equals("")) {
+            if (operation != null && !operation.equals("")) {
 
-               action = properties.getProperty(operation + "." + ACTION ).trim();
-               xmlStr = properties.getProperty(operation + "." + REQ_MSG).trim();
+                action = properties.getProperty(operation + "." + ACTION).trim();
+                xmlStr = properties.getProperty(operation + "." + REQ_MSG).trim();
 
-            }  else {
+            } else {
 
                 action = properties.getProperty(ACTION).trim();
                 xmlStr = properties.getProperty(REQ_MSG).trim();
@@ -138,6 +152,11 @@ public class SamplesInvoker {
         String sampleName = getProperty("sample", "CreditRating");
         String sampleDir = getProperty("sampleDir", ".");
         String operation = getProperty("operation", null);
+        String createUsers = getProperty("createUsers", "false");
+
+        if ("true".equals(createUsers)) {
+            createUsers();
+        }
 
 
         String propertyFile = getPropertyFile(sampleName, sampleDir);
@@ -155,8 +174,8 @@ public class SamplesInvoker {
         if (repository != null && !"null".equals(repository)) {
             configContext =
                     ConfigurationContextFactory.
-                        createConfigurationContextFromFileSystem(repository,
-                             repository + File.separator + "conf" + File.separator + "axis2.xml");
+                            createConfigurationContextFromFileSystem(repository,
+                                                                     repository + File.separator + "conf" + File.separator + "axis2.xml");
             serviceClient = new ServiceClient(configContext, null);
         } else {
             serviceClient = new ServiceClient();
@@ -164,7 +183,7 @@ public class SamplesInvoker {
 
         Options options = new Options();
 
-        if(action != null && !action.equals("")) {
+        if (action != null && !action.equals("")) {
 
             options.setAction(action);
 
@@ -198,6 +217,55 @@ public class SamplesInvoker {
         serviceClient.setOptions(options);
         OMElement response = serviceClient.sendReceive(requestPayload);
         printResult(response);
-        return;
+    }
+
+    //Creates a list of sample users and roles for the human task sample.
+    private static void createUsers() {
+
+        try {
+            initUserAdminStub();
+            addRoles();
+            addUsers();
+
+        } catch (Exception ex) {
+        }
+    }
+
+    private static void initUserAdminStub() throws Exception {
+        userAdminStub = new UserAdminStub(USER_MANAGEMENT_SERVICE_URL);
+
+        ServiceClient serviceClient = userAdminStub._getServiceClient();
+        Options serviceClientOptions = serviceClient.getOptions();
+        serviceClientOptions.setManageSession(true);
+        CarbonUtils.setBasicAccessSecurityHeaders("admin", "admin", serviceClient);
+    }
+
+    private static void iniAuthenticationAdminStub() throws Exception {
+
+        authenticationAdminStub = new AuthenticationAdminStub(AUTHENTICATION_SERVICE_URL);
+
+        ServiceClient client = authenticationAdminStub._getServiceClient();
+        Options options = client.getOptions();
+        options.setManageSession(true);
+    }
+
+
+    private static void addRoles() throws Exception {
+        userAdminStub.addRole("regionalClerksRole", null, new String[]{"/permission/admin/login",
+                                                                       "/permission/admin/manage/humantask/viewtasks"});
+        userAdminStub.addRole("regionalManagerRole", null, new String[]{"/permission/admin/login",
+                                                                        "/permission/admin/manage/humantask/viewtasks"});
+    }
+
+
+    private static void addUsers()
+            throws Exception {
+        userAdminStub.addUser("clerk1", "clerk1password",
+                              new String[]{"regionalClerksRole"}, null, null);
+        userAdminStub.addUser("clerk2", "clerk2password",
+                              new String[]{"regionalClerksRole"}, null, null);
+
+        userAdminStub.addUser("manager", "managerpassword",
+                              new String[]{"regionalManagerRole"}, null, null);
     }
 }

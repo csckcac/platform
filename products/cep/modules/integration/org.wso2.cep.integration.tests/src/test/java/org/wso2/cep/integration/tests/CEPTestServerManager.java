@@ -41,7 +41,7 @@ public class CEPTestServerManager extends TestServerManager {
 
         //waiting for Thrift ports
         ClientConnectionUtil.waitForPort(7611);
-        ClientConnectionUtil.waitForPort(7711);
+//        ClientConnectionUtil.waitForPort(7711);
 
         return carbonHome;
     }

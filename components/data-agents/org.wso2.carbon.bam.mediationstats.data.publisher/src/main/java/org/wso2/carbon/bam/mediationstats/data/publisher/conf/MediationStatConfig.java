@@ -24,7 +24,7 @@ public class MediationStatConfig {
     private String password = "";
     private Property[] properties;
 
-    private String streamName = "org.wso2.carbon.bam.mediationstats.data.publisher";
+    private String streamName = "bam_mediation_stats_data_publisher";
     private String version = "1.0.0";
     private String nickName = "MediationStatsDataAgent";
     private String description = "Publish Mediation statistics events";

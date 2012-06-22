@@ -18,14 +18,17 @@ package org.wso2.carbon.bam.mediationstats.data.publisher.services;
 
 import org.wso2.carbon.bam.mediationstats.data.publisher.conf.MediationStatConfig;
 import org.wso2.carbon.bam.mediationstats.data.publisher.conf.RegistryPersistenceManager;
+import org.wso2.carbon.bam.mediationstats.data.publisher.util.AgentUtil;
 import org.wso2.carbon.core.AbstractAdmin;
 
 public class BAMMediationStatsPublisherAdmin extends AbstractAdmin {
 
-   private RegistryPersistenceManager registryPersistenceManager;
+    private RegistryPersistenceManager registryPersistenceManager;
+    private AgentUtil agentUtil;
 
     public BAMMediationStatsPublisherAdmin() {
         registryPersistenceManager = new RegistryPersistenceManager();
+        agentUtil = new AgentUtil();
     }
 
     public void configureEventing(MediationStatConfig mediationStatConfig) {

@@ -28,6 +28,7 @@
 <%@ page import="org.wso2.carbon.ui.CarbonUIMessage" %>
 <%@ page import="javax.xml.namespace.QName" %>
 <%@ page import="java.util.Iterator" %>
+<%@ page import="java.net.URLEncoder" %>
 
 <%--YUI Rich Text script imports--%>
 <link rel="stylesheet" type="text/css"
@@ -84,10 +85,13 @@
 
         returnedServicePath = RegistryConstants.GOVERNANCE_REGISTRY_BASE_PATH + returnedServicePath;
         try {
-            registryServicePath = returnedServicePath.replaceAll("&", "%26");
+            //Ampersand replace from ServicePath removed to fix CARBON-13509
+            registryServicePath = returnedServicePath;
         } catch (Exception ignore) {
         }
-        String resourcePagePath = "../resources/resource.jsp?region=region3&item=resource_browser_menu&path=" + registryServicePath;
+        //Url encode to fix CARBON-13509
+        String resourcePagePath = "../resources/resource.jsp?region=region3&item=resource_browser_menu&path=" +
+                URLEncoder.encode(registryServicePath, "Utf-8");
 %>
 <script type="text/javascript">
     window.location = "<%=resourcePagePath%>";

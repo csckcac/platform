@@ -1,5 +1,8 @@
 package org.wso2.carbon.mediation.library.connectors.linkedin;
 
+import org.apache.commons.logging.Log;
+import org.apache.commons.logging.LogFactory;
+
 import java.io.IOException;
 import java.io.InputStream;
 import java.util.Properties;
@@ -12,7 +15,7 @@ import java.util.Properties;
  * To change this template use File | Settings | File Templates.
  */
 public class LinkedinConstants {
-
+    private static Log log = LogFactory.getLog(LinkedinConstants.class);
 
     static Properties property = new Properties();
 
@@ -41,7 +44,7 @@ public class LinkedinConstants {
             property.load(is);
             is.close();
         } catch (IOException e) {
-            System.out.println("Error while reading from properties file \n" + e.getMessage());
+            log.error("Error while reading from properties file \n" + e.getMessage());
         }
         //set default access tokens/secrets at startup
         _CONSUMER_KEY = property.getProperty("oauth.consumerKey");

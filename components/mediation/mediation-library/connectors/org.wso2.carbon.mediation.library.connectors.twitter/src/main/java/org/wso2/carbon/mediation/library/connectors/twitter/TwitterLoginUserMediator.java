@@ -1,5 +1,7 @@
 package org.wso2.carbon.mediation.library.connectors.twitter;
 
+import org.apache.commons.logging.Log;
+import org.apache.commons.logging.LogFactory;
 import org.apache.synapse.ManagedLifecycle;
 import org.apache.synapse.MessageContext;
 import org.apache.synapse.core.SynapseEnvironment;
@@ -19,6 +21,8 @@ public class TwitterLoginUserMediator extends AbstractMediator implements Manage
     public static final String ACCESS_TOKEN = "oauth.accessToken";
     public static final String ACCESS_TOKEN_SECRET = "oauth.accessTokenSecret";
 
+    private static Log log = LogFactory.getLog(TwitterLoginUserMediator.class);
+
     public void init(SynapseEnvironment synapseEnvironment) {
         //To change body of implemented methods use File | Settings | File Templates.
     }
@@ -34,12 +38,12 @@ public class TwitterLoginUserMediator extends AbstractMediator implements Manage
             String accessToken = TwitterMediatorUtils.lookupFunctionParam(messageContext, ACCESS_TOKEN);
             String accessTokenSecret = TwitterMediatorUtils.lookupFunctionParam(messageContext, ACCESS_TOKEN_SECRET);
             TwitterMediatorUtils.storeLoginUser(messageContext, consumerKey, consumerSecret, accessToken, accessTokenSecret);
-            System.out.println("User registered");
+            log.info("User registered");
         } catch (Exception e) {
-            System.out.println("Failed to login user: " + e.getMessage());
+            log.error("Failed to login user: " + e.getMessage(), e);
             TwitterMediatorUtils.storeErrorResponseStatus(messageContext, e);
         }
-        System.out.println("testing synapse twitter.......");
+        log.info("testing synapse twitter.......");
         return true;
     }
 }

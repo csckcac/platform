@@ -17,6 +17,8 @@
 */
 package org.wso2.carbon.mediation.library.connectors.twitter;
 
+import org.apache.commons.logging.Log;
+import org.apache.commons.logging.LogFactory;
 import org.apache.synapse.ManagedLifecycle;
 import org.apache.synapse.MessageContext;
 import org.apache.synapse.core.SynapseEnvironment;
@@ -28,7 +30,7 @@ import twitter4j.TwitterException;
 
 public class TwitterShowStatusMediator extends AbstractMediator implements ManagedLifecycle {
 
-
+    private static Log log = LogFactory.getLog(TwitterShowStatusMediator.class);
     public static final String ID = "id";
 
 
@@ -45,12 +47,12 @@ public class TwitterShowStatusMediator extends AbstractMediator implements Manag
             Twitter twitter = new TwitterClientLoader(messageContext).loadApiClient();
             Status status = twitter.showStatus(Long.parseLong(id));
             TwitterMediatorUtils.storeResponseStatus(messageContext, status);
-            System.out.println("@" + status.getUser().getScreenName() + " - " + status.getText());
+            log.info("@" + status.getUser().getScreenName() + " - " + status.getText());
         } catch (TwitterException te) {
-            System.out.println("Failed to show status: " + te.getMessage());
+            log.error("Failed to show status: " + te.getMessage(),te);
             TwitterMediatorUtils.storeErrorResponseStatus(messageContext, te);
         }
-        System.out.println("testing synapse twitter.......");
+        log.info("testing synapse twitter.......");
         return true;
     }
 

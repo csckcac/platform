@@ -1,5 +1,7 @@
 package org.wso2.carbon.mediation.library.connectors.linkedin;
 
+import org.apache.commons.logging.Log;
+import org.apache.commons.logging.LogFactory;
 import org.wso2.carbon.mediation.library.connectors.linkedin.util.LinkedinMediatorUtils;
 import org.apache.synapse.ManagedLifecycle;
 import org.apache.synapse.MessageContext;
@@ -14,6 +16,7 @@ import org.apache.synapse.mediators.AbstractMediator;
  * To change this template use File | Settings | File Templates.
  */
 public class LinkedinRegisterUserMediator extends AbstractMediator implements ManagedLifecycle {
+    private static Log log = LogFactory.getLog(LinkedinRegisterUserMediator.class);
 
     public static final String CONSUMER_KEY = "oauth.consumerKey";
     public static final String CONSUMER_SECRET = "oauth.consumerSecret";
@@ -38,9 +41,9 @@ public class LinkedinRegisterUserMediator extends AbstractMediator implements Ma
             LinkedinMediatorUtils.setupClassLoadingForLinkedIn(LinkedinRegisterUserMediator.class);
             LinkedinMediatorUtils.StoreRegisteringUser(messageContext, consumerKey, consumerSecret, accessToken, accessTokenSecret);
 
-            System.out.println("User registered");
+            log.info("User registered");
         } catch (Exception e) {
-            System.out.println("Failed to register the user");
+            log.info("Failed to register the user");
             LinkedinMediatorUtils.storeErrorResponseStatus(messageContext, e);
         }
         return true;

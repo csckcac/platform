@@ -4,6 +4,8 @@ import com.google.code.linkedinapi.client.LinkedInApiClient;
 import com.google.code.linkedinapi.client.enumeration.ProfileField;
 import com.google.code.linkedinapi.schema.Connections;
 import com.google.code.linkedinapi.schema.Person;
+import org.apache.commons.logging.Log;
+import org.apache.commons.logging.LogFactory;
 import org.wso2.carbon.mediation.library.connectors.linkedin.util.LinkedInClientLoader;
 import org.wso2.carbon.mediation.library.connectors.linkedin.util.LinkedinMediatorUtils;
 import org.apache.synapse.ManagedLifecycle;
@@ -21,7 +23,7 @@ import java.util.EnumSet;
  * To change this template use File | Settings | File Templates.
  */
 public class LinkedinShowHeadlineMediator extends AbstractMediator implements ManagedLifecycle {
-
+    private static Log log = LogFactory.getLog(LinkedinShowHeadlineMediator.class);
     public static final String ID = "id";
 
     public void init(SynapseEnvironment synapseEnvironment) {
@@ -46,10 +48,10 @@ public class LinkedinShowHeadlineMediator extends AbstractMediator implements Ma
             String[] response = getHeadlineById(client, id);
             if (response != null && response.length == 2) {
                 LinkedinMediatorUtils.storeResponseHeadline(messageContext, id, response[1]);
-                System.out.println("Headline of the ID @" + id + " : " + response[0] + " - " + response[1]);
+                log.info("Headline of the ID @" + id + " : " + response[0] + " - " + response[1]);
             }
         } catch (Exception e) {
-            System.out.println("Failed to get headline: " + e.getMessage());
+            log.error("Failed to get headline: " + e.getMessage());
             LinkedinMediatorUtils.storeErrorResponseStatus(messageContext, e);
         }
         return true;
@@ -74,7 +76,7 @@ public class LinkedinShowHeadlineMediator extends AbstractMediator implements Ma
         if (!"".equals(firstName)) {
             return new String[]{firstName, headline};
         } else {
-            System.out.println("Profile with Profile ID " + id + "is not accessible.");
+            log.info("Profile with Profile ID " + id + "is not accessible.");
             return null;
         }
     }

@@ -1,5 +1,7 @@
 package org.wso2.carbon.mediation.library.connectors.twitter;
 
+import org.apache.commons.logging.Log;
+import org.apache.commons.logging.LogFactory;
 import org.apache.synapse.ManagedLifecycle;
 import org.apache.synapse.MessageContext;
 import org.apache.synapse.core.SynapseEnvironment;
@@ -18,7 +20,7 @@ import twitter4j.TwitterException;
 public class TwitterRetweetStatusMediator extends AbstractMediator implements ManagedLifecycle {
 
     public static final String ID = "id";
-
+    private static Log log = LogFactory.getLog(TwitterRetweetStatusMediator.class);
 
     public void init(SynapseEnvironment synapseEnvironment) {
 
@@ -33,12 +35,12 @@ public class TwitterRetweetStatusMediator extends AbstractMediator implements Ma
             Twitter twitter = new TwitterClientLoader(messageContext).loadApiClient();
             Status status = twitter.retweetStatus(Long.parseLong(id));
             TwitterMediatorUtils.storeResponseStatus(messageContext, status);
-            System.out.println("@" + status.getUser().getScreenName() + " - " + status.getText());
+            log.info("@" + status.getUser().getScreenName() + " - " + status.getText());
         } catch (TwitterException te) {
-            System.out.println("Failed to retweet status: " + te.getMessage());
+            log.error("Failed to retweet status: " + te.getMessage(), te);
             TwitterMediatorUtils.storeErrorResponseStatus(messageContext, te);
         }
-        System.out.println("testing synapse twitter.......");
+        log.info("testing synapse twitter.......");
         return true;
     }
 

@@ -1,6 +1,8 @@
 package org.wso2.carbon.mediation.library.connectors.linkedin;
 
 import com.google.code.linkedinapi.client.LinkedInApiClient;
+import org.apache.commons.logging.Log;
+import org.apache.commons.logging.LogFactory;
 import org.wso2.carbon.mediation.library.connectors.linkedin.util.LinkedInClientLoader;
 import org.wso2.carbon.mediation.library.connectors.linkedin.util.LinkedinMediatorUtils;
 import org.apache.synapse.ManagedLifecycle;
@@ -18,6 +20,8 @@ import java.util.Arrays;
  * To change this template use File | Settings | File Templates.
  */
 public class LinkedinSendMessageMediator extends AbstractMediator implements ManagedLifecycle {
+
+    private static Log log = LogFactory.getLog(LinkedinSendMessageMediator.class);
 
     public static final String IDLIST = "idList";
     public static final String SUBJECT = "subject";
@@ -47,9 +51,9 @@ public class LinkedinSendMessageMediator extends AbstractMediator implements Man
             client.sendMessage(Arrays.asList(idList.split(",")), subject, message);
             LinkedinMediatorUtils.storeResponseMessaging(messageContext, idList, subject);
 
-            System.out.println("Message Sent to " + idList);
+            log.info("Message Sent to " + idList);
         } catch (Exception e) {
-            System.out.println("Failed to send message: " + e.getMessage());
+            log.info("Failed to send message: " + e.getMessage());
             LinkedinMediatorUtils.storeErrorResponseStatus(messageContext, e);
         }
         return true;

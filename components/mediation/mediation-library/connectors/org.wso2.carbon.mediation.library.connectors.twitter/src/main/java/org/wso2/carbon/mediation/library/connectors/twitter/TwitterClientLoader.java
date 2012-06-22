@@ -1,5 +1,7 @@
 package org.wso2.carbon.mediation.library.connectors.twitter;
 
+import org.apache.commons.logging.Log;
+import org.apache.commons.logging.LogFactory;
 import org.apache.synapse.MessageContext;
 import twitter4j.Twitter;
 import twitter4j.TwitterException;

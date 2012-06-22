@@ -30,7 +30,6 @@ import javax.jcr.lock.Lock;
 import javax.jcr.nodetype.ConstraintViolationException;
 import java.util.*;
 
-
 public class RegistryRepository implements Repository {
     //TODO implement the login, based on one login() method
 
@@ -89,12 +88,12 @@ public class RegistryRepository implements Repository {
         this.registryService = registryService;
 
 
-        credentialConstants.put(0, "SYSTEM:LOCAL_REPOSITORY");  //
-        credentialConstants.put(1, "USER:CONFIG_USER_REGISTRY");   //
-        credentialConstants.put(2, "SYSTEM:CONFIG_SYSTEM_REGISTRY"); //
-        credentialConstants.put(3, "SYSTEM:GOVERNANCE_SYSTEM_REGISTRY");//
-        credentialConstants.put(4, "USER:GOVERNANCE_USER_REGISTRY");  //
-        credentialConstants.put(5, "ALL:ROOT_REGISTRY"); //
+        credentialConstants.put(0, "SYSTEM:LOCAL_REPOSITORY");
+        credentialConstants.put(1, "USER:CONFIG_USER_REGISTRY");
+        credentialConstants.put(2, "SYSTEM:CONFIG_SYSTEM_REGISTRY");
+        credentialConstants.put(3, "SYSTEM:GOVERNANCE_SYSTEM_REGISTRY");
+        credentialConstants.put(4, "USER:GOVERNANCE_USER_REGISTRY");
+        credentialConstants.put(5, "ALL:ROOT_REGISTRY");
 
 
         keyMap.put(Repository.IDENTIFIER_STABILITY, "true");
@@ -159,13 +158,10 @@ public class RegistryRepository implements Repository {
         keyMap.put(Repository.QUERY_XPATH_DOC_ORDER, "true");
         keyMap.put(Repository.QUERY_JOINS, "true");
 
-
         RegistryJCRSpecificStandardLoderUtil.init();
     }
 
-
     public Set getWorkspaces() { // will be deprecated
-
         return workspaces;
     }
 
@@ -226,138 +222,64 @@ public class RegistryRepository implements Repository {
     }
 
     public Session login(Credentials credentials, String s) throws LoginException, NoSuchWorkspaceException, RepositoryException {
-
         //TODO login with a not available workspace name must throw NoSuchWorkspaceException
-
-
         // Obtain default workspace
-        if (s == null) {
-            s = RegistryJCRSpecificStandardLoderUtil.getDefaultRegistryWorkspaceName();
-        }
-
-
         UserRegistry userRegistry = null;
-        String userId = "";
-        //  s-workspace name(userName)[ LOCAL REPO,CONFIG_SYS.....]
-        SimpleCredentials registrySimpleCredentials = (SimpleCredentials) credentials;
-        userId = registrySimpleCredentials.getUserID();
-        try {
-
-            if (userId != null) {
-
-                if (userId.equals("CONFIG_USER_REGISTRY")) {
-                    userRegistry = registryService.getConfigUserRegistry(registrySimpleCredentials.getUserID(), new String(registrySimpleCredentials.getPassword()));
-
-                } else if (userId.equals("GOVERNANCE_USER_REGISTRY")) {
-                    userRegistry = registryService.getGovernanceUserRegistry(registrySimpleCredentials.getUserID(), new String(registrySimpleCredentials.getPassword()));
-
-                } else if (userId.equals("ROOT_REGISTRY")) {
-                    userRegistry = registryService.getRegistry(registrySimpleCredentials.getUserID(), new String(registrySimpleCredentials.getPassword()));
-
-                    userRegistry = registryService.getUserRegistry(RegistryConstants.ADMIN_USER);
-                }
-
-            } else {
-                userRegistry = registryService.getUserRegistry(RegistryConstants.ADMIN_USER);     //here we just return a registry which has admin previledges.
+        String userID = "";
+        if(credentials == null && s == null) {
+            s= RegistryJCRSpecificStandardLoderUtil.getDefaultRegistryWorkspaceName();
+            try {
+                userRegistry = registryService.getRegistry();
+            } catch (RegistryException e) {
+                throw new RepositoryException("Exception occurred when obtaining registry " +
+                       "from registry service :" + e.getMessage());
             }
-        } catch (RegistryException e) {
-            e.printStackTrace();
+        } else if (s == null) {
+            s = RegistryJCRSpecificStandardLoderUtil.getDefaultRegistryWorkspaceName();
+            userID = ((RegistrySimpleCredentials)credentials).getUserID();
+            try {
+                userRegistry = registryService.getRegistry(((RegistrySimpleCredentials)credentials).getUserID(),
+                               new String(((RegistrySimpleCredentials)credentials).getPassword()));
+            } catch (RegistryException e) {
+                throw new RepositoryException("Exception occurred when obtaining registry " +
+                       "from registry service :" + e.getMessage());
+            }
+        } else if(credentials == null) {
+            try {
+                userRegistry = registryService.getRegistry(((RegistrySimpleCredentials)credentials).getUserID());
+            } catch (RegistryException e) {
+                throw new RepositoryException("Exception occurred when obtaining registry " +
+                       "from registry service :" + e.getMessage());
+            }
+        } else {
+            userID = ((RegistrySimpleCredentials)credentials).getUserID();
+            try {
+                userRegistry = registryService.getRegistry(((RegistrySimpleCredentials)credentials).getUserID(),
+                        new String(((RegistrySimpleCredentials)credentials).getPassword()));
+            } catch (RegistryException e) {
+                throw new RepositoryException("Exception occurred when obtaining registry " +
+                       "from registry service :" + e.getMessage());
+            }
         }
 
-        RegistrySession registrySession = new RegistrySession(this, s, registrySimpleCredentials, userRegistry,userId);
+        RegistrySession registrySession = new RegistrySession(this, s, (SimpleCredentials)credentials, userRegistry,userID);
         workspaces.add(registrySession);
-
 
         return registrySession;
     }
 
     public Session login(Credentials credentials) throws LoginException, RepositoryException {
-
-        UserRegistry userRegistry = null;
-
-        //gives a root registry
-        SimpleCredentials registrySimpleCredentials = (SimpleCredentials) credentials;
-
-        try {
-            userRegistry = registryService.getRegistry(registrySimpleCredentials.getUserID(),
-                    new String(registrySimpleCredentials.getPassword()));
-
-        } catch (RegistryException e) {
-            e.printStackTrace();
-        }
-
-        RegistrySession registrySession = new RegistrySession(this,
-                RegistryJCRSpecificStandardLoderUtil.getDefaultRegistryWorkspaceName(),
-                registrySimpleCredentials, userRegistry,registrySimpleCredentials.getUserID());
-        workspaces.add(registrySession);
-        return registrySession;
+       return login(credentials,null);
     }
 
+  /**
+     *Here this login is used when ,we need to log to a workspace which is created as Workspace.createWorkspace
+     */
     public Session login(String s) throws LoginException, NoSuchWorkspaceException, RepositoryException {
-        UserRegistry userRegistry = null;
-/**
- *Here this login is used when ,we need to log to a workspace which is created as Workspace.createWorkspace
- */
-        // Obtain default workspace
-        if (s == null) {
-            s = RegistryJCRSpecificStandardLoderUtil.getDefaultRegistryWorkspaceName();
-        }
-
-        try {
-            //no credentials passed to the session.Problem of accessing credentials methods.. getAttruibute();;
-            if (s.equals("CONFIG_USER_REGISTRY")) {
-
-                userRegistry = registryService.getConfigUserRegistry();
-            } else if (s.equals("GOVERNANCE_USER_REGISTRY")) {
-
-                userRegistry = registryService.getGovernanceUserRegistry();
-
-            } else if (s.equals(RegistryConstants.ROOT_REGISTRY_INSTANCE)) {
-                userRegistry = registryService.getRegistry();
-            } else if (s.equals("LOCAL_REPOSITORY")) {
-
-                userRegistry = registryService.getLocalRepository();
-
-            } else if (s.equals("CONFIG_SYSTEM_REGISTRY")) {
-
-                userRegistry = registryService.getConfigSystemRegistry();
-
-            } else if (s.equals("GOVERNANCE_SYSTEM_REGISTRY")) {
-
-                userRegistry = registryService.getGovernanceSystemRegistry();
-
-            }
-
-        } catch (RegistryException e) {
-            String msg = "failed to login to WSO2 JCR repository " + this;
-            log.debug(msg);
-            throw new RepositoryException(msg, e);
-
-        }
-
-        RegistrySession registrySession = new RegistrySession(this, s, null, userRegistry,""); // 4.2.4 External Authentication
-        workspaces.add(registrySession);
-
-        return registrySession;
+     return login(null,s);
     }
 
     public Session login() throws LoginException, RepositoryException {
-        UserRegistry userRegistry = null;
-
-        try {
-            userRegistry = registryService.getRegistry();
-
-        } catch (RegistryException e) {
-            String msg = "failed to resolve the path of the given node " + this;
-            log.debug(msg);
-            throw new RepositoryException(msg, e);
-        }
-
-        RegistrySession registrySession = new RegistrySession(this,
-                RegistryJCRSpecificStandardLoderUtil.getDefaultRegistryWorkspaceName(),
-                null, userRegistry,""); // no workspace name provided to the session object
-
-        workspaces.add(registrySession);
-        return registrySession;
+        return login(null,null);
     }
 }

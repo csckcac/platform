@@ -32,7 +32,7 @@ public class RegistryRepositoryFactory implements RepositoryFactory {
         return repository;
     }
 
-    public Repository getRemoteRepository(Map map) throws Exception {
+    private Repository getRemoteRepository(Map map) throws Exception {
 
         RemoteRegistry remoteRegistry;
         Registry registry; // an admin registry
@@ -47,7 +47,7 @@ public class RegistryRepositoryFactory implements RepositoryFactory {
         return regRepo;
     }
 
-    private Repository getLocalRepository(Map map) throws Exception {
+    public Repository getLocalRepository(Map map) throws Exception {
 
         if ((map != null) && (map.get("org.wso2.registry.jcr") != null) && (map.get("org.wso2.registry.jcr").equals("greg"))) {
 

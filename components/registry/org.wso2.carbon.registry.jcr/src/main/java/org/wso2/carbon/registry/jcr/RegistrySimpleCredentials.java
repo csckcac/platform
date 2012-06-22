@@ -32,7 +32,6 @@ public class RegistrySimpleCredentials implements Credentials {
 
     public Object getAttribute(String name) {
         return registrySimpleCredentials.getAttribute(name);
-
     }
 
     public String[] getAttributeNames() {
@@ -40,28 +39,19 @@ public class RegistrySimpleCredentials implements Credentials {
     }
 
     public char[] getPassword() {
-
-
         return registrySimpleCredentials.getPassword();
-
     }
 
     public String getUserID() {
-
         return registrySimpleCredentials.getUserID();
-
     }
 
     public void removeAttribute(String name) {
-
         registrySimpleCredentials.removeAttribute(name);
-
     }
 
     public void setAttribute(String name, Object value) {
-
         registrySimpleCredentials.setAttribute(name, value);
-
     }
 
 

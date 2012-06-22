@@ -57,13 +57,6 @@ public class RegistryProperty implements Property {
         this.name = name;
     }
 
-//    public RegistryProperty(CollectionImpl aProp, RegistrySession session, String name) {
-////        collectionP = aProp;
-////        this.session = session;
-////        this.name = name;
-//
-//    }
-
     public RegistryProperty(CollectionImpl aProp, RegistrySession session, String name, String value) {
         collectionP = aProp;
         this.session = session;
@@ -92,13 +85,6 @@ public class RegistryProperty implements Property {
         this.name = name;
         setQValue(binary);
     }
-
-//    public RegistryProperty(Resource aProp, RegistrySession session, String name) {
-////        isResource = true;
-////        collectionR = aProp;
-////        this.session = session;
-////        this.name = name;
-//    }
 
     public RegistryProperty(Resource aProp, RegistrySession session, String name, BigDecimal bg) {
         isResource = true;

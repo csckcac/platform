@@ -27,7 +27,7 @@
     <modelVersion>4.0.0</modelVersion>
     <artifactId>org.wso2.carbon.mediation.library.stub</artifactId>
     <packaging>bundle</packaging>
-    <name>WSO2 Carbon - Mediation Library Management Stub</name>
+    <name>WSO2 Carbon - Mediation Library (Synapse) Management Stub</name>
     <url>http://wso2.org</url>
 
     <build>

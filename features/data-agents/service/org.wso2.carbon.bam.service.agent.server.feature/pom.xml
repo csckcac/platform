@@ -70,9 +70,9 @@
                             <importFeatures>
                                 <importFeatureDef>org.wso2.carbon.core.server:${wso2carbon.version}</importFeatureDef>
                                 <importFeatureDef>org.wso2.carbon.system.statistics.server:${wso2carbon.version}</importFeatureDef>
-                                <importFeatureDef>org.wso2.carbon.eventbridge.agent.thrift.feature:${wso2carbon.version.event-bridge}</importFeatureDef>
-                                <importFeatureDef>org.wso2.carbon.eventbridge.commons.feature:${wso2carbon.version.event-bridge}</importFeatureDef>
-                                <importFeatureDef>org.wso2.carbon.eventbridge.thrift.commons.feature:${wso2carbon.version.event-bridge}</importFeatureDef>
+                                <importFeatureDef>org.wso2.carbon.eventbridge.agent.thrift:${wso2carbon.version.event-bridge}</importFeatureDef>
+                                <importFeatureDef>org.wso2.carbon.eventbridge.commons:${wso2carbon.version.event-bridge}</importFeatureDef>
+                                <importFeatureDef>org.wso2.carbon.eventbridge.thrift.commons:${wso2carbon.version.event-bridge}</importFeatureDef>
                             </importFeatures>
                         </configuration>
                     </execution>

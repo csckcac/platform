@@ -16,14 +16,11 @@
 
 package org.wso2.bps.integration.tests.humantask;
 
-import org.apache.axis2.client.Options;
-import org.apache.axis2.client.ServiceClient;
 import org.apache.axis2.databinding.types.URI;
 import org.apache.commons.lang.StringUtils;
 import org.testng.Assert;
 import org.testng.annotations.BeforeGroups;
 import org.testng.annotations.Test;
-import org.wso2.bps.integration.tests.util.FrameworkSettings;
 import org.wso2.bps.integration.tests.util.HumanTaskAdminServiceUtils;
 import org.wso2.bps.integration.tests.util.HumanTaskTestConstants;
 import org.wso2.carbon.humantask.stub.mgt.HumanTaskPackageManagementStub;
@@ -34,7 +31,6 @@ import org.wso2.carbon.humantask.stub.ui.task.client.api.types.TPriority;
 import org.wso2.carbon.humantask.stub.ui.task.client.api.types.TTaskAbstract;
 import org.wso2.carbon.humantask.stub.ui.task.client.api.types.TTaskEvent;
 import org.wso2.carbon.humantask.stub.ui.task.client.api.types.TTaskEvents;
-import org.wso2.carbon.utils.CarbonUtils;
 
 import java.math.BigInteger;
 import java.util.HashSet;

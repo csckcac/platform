@@ -1435,8 +1435,18 @@ public class APIStoreHostObject extends ScriptableObject {
         if (isStringArray(args)) {
             String name = (String) args[0];
             String username = (String) args[1];
-            Application application = new Application(name, new Subscriber(username));
+
             APIConsumer apiConsumer = getAPIConsumer(thisObj);
+            Subscriber subscriber = new Subscriber(username);
+
+            Application[] apps = apiConsumer.getApplications(subscriber);
+            for (Application app : apps) {
+                if (app.getName().equals(name)) {
+                    throw new APIManagementException("A duplicate Application already exists by the name - " + name);
+                }
+            }
+
+            Application application = new Application(name, subscriber);
             apiConsumer.addApplication(application, username);
             return true;
         }

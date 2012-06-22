@@ -106,7 +106,6 @@
                 <tr>
                     <th>Name</th>
                     <th>Type</th>
-                    <th>Content</th>
                     <th>Modified On</th>
                     <%if(createPermitted){%>
                     <th>Actions</th>
@@ -120,17 +119,8 @@
                     doc= docs[i];
                 %>
                 <tr id="<%=api.name%>-<%=doc.name%>">
-                    <td><a href="#"><%=doc.name%></a></td>
+                    <td><%=doc.name%></td>
                     <td><%=doc.type%></td>
-                    <td><% if(doc.sourceType == "INLINE") { %>
-                        <a href="javascript:editInlineContent('<%=api.provider%>','<%=api.name%>','<%=api.version%>','<%=doc.name%>','view')">
-                        <%}else{%>
-                        <a href="<%=doc.sourceUrl%>">
-                        <%}%>
-                        View
-                        </a>
-                        </td>
-
                     <td><%=doc.lastUpdated%></td>
                     <%if(createPermitted){%>
                     <td><% if(doc.sourceType == "INLINE") { %>

@@ -309,7 +309,7 @@
             <td class="buttonRow">
                 <input class="button" type="button" name="activateButton" id="activateButton"
                        onclick="return activateDeactivate('<%=domainName%>','<%=isActive%>');"
-                        <% if (isActive) { %> value="<fmt:message key=" deactivate.account.btn"/>"
+                        <% if (isActive) { %> value="<fmt:message key="deactivate.account.btn"/>"
                 <% } else { %> value="<fmt:message key="activate.account.btn"/>" <% } %>/>
             </td>
 

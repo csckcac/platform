@@ -56,10 +56,6 @@ public class APIManagerFactory {
             return new UserAwareAPIConsumer(username);
         }
     }
-
-    public APIProvider getAPIProvider() throws APIManagementException {
-        return getAPIProvider(ANONYMOUS_USER);
-    }
     
     public APIProvider getAPIProvider(String username) throws APIManagementException {
         APIProvider provider = providers.get(username);

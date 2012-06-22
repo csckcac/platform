@@ -46,7 +46,7 @@ public class APIUsageStatisticsClient {
 
     private APIProvider apiProviderImpl;
 
-    public APIUsageStatisticsClient() throws APIMgtUsageQueryServiceClientException {
+    public APIUsageStatisticsClient(String username) throws APIMgtUsageQueryServiceClientException {
         APIManagerConfiguration config = APIUsageClientServiceComponent.getAPIManagerConfiguration();
         String targetEndpoint = config.getFirstProperty(APIMgtUsagePublisherConstants.API_USAGE_BAM_SERVER_URL);
         if (targetEndpoint == null || targetEndpoint.equals("")) {
@@ -55,7 +55,7 @@ public class APIUsageStatisticsClient {
 
         try {
             qss = new QueryServiceStub(targetEndpoint + "services/QueryService");
-            apiProviderImpl = APIManagerFactory.getInstance().getAPIProvider();
+            apiProviderImpl = APIManagerFactory.getInstance().getAPIProvider(username);
         } catch (AxisFault e) {
             throw new APIMgtUsageQueryServiceClientException("Error while instantiating QueryServiceStub", e);
         } catch (APIManagementException e) {

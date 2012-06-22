@@ -1212,10 +1212,10 @@ public class APIProviderHostObject extends ScriptableObject {
             throw new APIManagementException("Invalid number of parameters.");
         }
         String providerName = (String) args[0];
-        String APIname = (String) args[1];
+        String apiName = (String) args[1];
         try {
-            APIUsageStatisticsClient client = new APIUsageStatisticsClient();
-            list = client.getUsageByAPIVersions(providerName, APIname);
+            APIUsageStatisticsClient client = new APIUsageStatisticsClient(((APIProviderHostObject) thisObj).getUsername());
+            list = client.getUsageByAPIVersions(providerName, apiName);
         } catch (APIMgtUsageQueryServiceClientException e) {
             log.error("Error while invoking APIUsageStatisticsClient for ProviderAPIVersionUsage", e);
         }
@@ -1248,7 +1248,7 @@ public class APIProviderHostObject extends ScriptableObject {
         }
         String providerName = (String) args[0];
         try {
-            APIUsageStatisticsClient client = new APIUsageStatisticsClient();
+            APIUsageStatisticsClient client = new APIUsageStatisticsClient(((APIProviderHostObject) thisObj).getUsername());
             list = client.getUsageByAPIs(providerName);
         } catch (APIMgtUsageQueryServiceClientException e) {
             log.error("Error while invoking APIUsageStatisticsClient for ProviderAPIUsage", e);
@@ -1284,7 +1284,7 @@ public class APIProviderHostObject extends ScriptableObject {
         String providerName = (String) args[0];
         String apiName = (String) args[1];
         try {
-            APIUsageStatisticsClient client = new APIUsageStatisticsClient();
+            APIUsageStatisticsClient client = new APIUsageStatisticsClient(((APIProviderHostObject) thisObj).getUsername());
             list = client.getUsageBySubscribers(providerName, apiName, 10);
         } catch (APIMgtUsageQueryServiceClientException e) {
             log.error("Error while invoking APIUsageStatisticsClient for ProviderAPIUserUsage", e);
@@ -1322,7 +1322,7 @@ public class APIProviderHostObject extends ScriptableObject {
         String apiName = (String) args[1];
         String version = (String) args[2];
         try {
-            APIUsageStatisticsClient client = new APIUsageStatisticsClient();
+            APIUsageStatisticsClient client = new APIUsageStatisticsClient(((APIProviderHostObject) thisObj).getUsername());
             list = client.getUsageBySubscribers(providerName, apiName, version, 10);
         } catch (APIMgtUsageQueryServiceClientException e) {
             log.error("Error while invoking APIUsageStatisticsClient for ProviderAPIUserUsage", e);
@@ -1358,7 +1358,7 @@ public class APIProviderHostObject extends ScriptableObject {
         }
         String providerName = (String) args[0];
         try {
-            APIUsageStatisticsClient client = new APIUsageStatisticsClient();
+            APIUsageStatisticsClient client = new APIUsageStatisticsClient(((APIProviderHostObject) thisObj).getUsername());
             list = client.getLastAccessTimesByAPI(providerName);
         } catch (APIMgtUsageQueryServiceClientException e) {
             log.error("Error while invoking APIUsageStatisticsClient for ProviderAPIVersionLastAccess", e);
@@ -1394,7 +1394,7 @@ public class APIProviderHostObject extends ScriptableObject {
         }
         String providerName = (String) args[0];
         try {
-            APIUsageStatisticsClient client = new APIUsageStatisticsClient();
+            APIUsageStatisticsClient client = new APIUsageStatisticsClient(((APIProviderHostObject) thisObj).getUsername());
             list = client.getResponseTimesByAPIs(providerName);
         } catch (APIMgtUsageQueryServiceClientException e) {
             log.error("Error while invoking APIUsageStatisticsClient for ProviderAPIServiceTime", e);

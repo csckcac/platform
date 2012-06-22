@@ -54,7 +54,6 @@
                 <module>maven-scm-provider-svnexe</module>
                 <module>oauth</module>
                 <module>ode</module>
-                <!--module>openjpa</module-->
                 <module>qpid/0.12-wso2v1</module>
                 <module>rampart/1.6.1-wso2v4</module>
                 <module>sandesha/1.6.1-wso2v1/</module>

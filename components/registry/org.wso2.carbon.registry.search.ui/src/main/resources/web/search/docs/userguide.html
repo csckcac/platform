@@ -29,11 +29,12 @@
 <h2>Meta-data Search</h2>
 
     <p> All resources found in the registry, can be searched through this interface. Search could be
-    refined by optionally providing, resource name, created date range, updated date range, tags,
-    comments, property name, property value and the content. To search for matches containing a
-    specific pattern use the <strong>%</strong> symbol. The pattern matching can be used with the following fields
-    "Resource name", "created by", "updated by" and "property value". Also the search supports the use of part of
-        the user name in the "created by" and "updated by" fields.</p>
+    refined by optionally providing, resource name, created date range, updated date range, tags,comments, association type,
+    association destination, property name, property value and the content. To search for matches containing a specific
+    pattern use the <strong>%</strong> symbol. The pattern matching can be used with the following fields "Resource name",
+    "created by", "updated by" and "property value". Also the search supports the use of part of the user name in the "created by"
+    and "updated by" fields. And also for the fields like Created data range,Updated range,Created user and Updated user
+    the negation option is provided in order to search other than the provided criteria.</p>
 
     <p>To enter more than one term in tags, use comma (",") as the separator. To enter more than one
         term in keywords, use space (" ") as the separator.</p>
@@ -55,8 +56,9 @@
 <h3>Custom Search</h3>
 <p>The custom search provides the user with the ability to customize the search interface for a given media type.
 The search parameters for a given media type is configured by a user with admin privileges by creating a resource
-with the name of the media type and declaring the parameters as properties. The search parameter name is given as the
-property name and the property value describes whether this parameter should be included in the custom search.</p>
+with the name of the media type (for <strong>application/wsdl+xml</strong> the resource name should be <strong>application-wsdl-xml</strong>)
+and declaring the parameters as properties. The search parameter name is given as the property name and the property value
+describes whether this parameter should be included in the custom search.</p>
 
 <p><img src="images/configuration.png" width="777px"/></p>
 <p>Figure 3: Custom search configuration </p>

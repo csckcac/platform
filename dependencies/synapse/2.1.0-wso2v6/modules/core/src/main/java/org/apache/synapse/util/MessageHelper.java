@@ -438,7 +438,10 @@ public class MessageHelper {
         if (fault.getDetail() != null) {
             SOAPFaultDetail soapFaultDetail = fac.createSOAPFaultDetail();
             for (Iterator itr = fault.getDetail().getAllDetailEntries(); itr.hasNext();) {
-                soapFaultDetail.addDetailEntry(((OMElement) itr.next()).cloneOMElement());
+            	Object element = itr.next();
+				if (element instanceof OMElement) {
+					soapFaultDetail.addDetailEntry(((OMElement) element).cloneOMElement());
+				}
             }
             newFault.setDetail(soapFaultDetail);
         }

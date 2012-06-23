@@ -14,6 +14,7 @@ import org.apache.commons.logging.Log;
 import org.wso2.carbon.registry.jcr.RegistryRepositoryFactory;
 import org.wso2.carbon.registry.jcr.RegistrySession;
 import org.wso2.carbon.registry.jcr.RegistryPropertyType;
+import org.wso2.carbon.registry.jcr.RegistrySimpleCredentials;
 
 import javax.jcr.*;
 
@@ -29,7 +30,7 @@ public class SampleJCRRegistryClient {
     private static String username = "admin";
     private static String password = "admin";
     private static String serverURL = "https://localhost:9443/registry";
-    private static Credentials credentials = null;
+    private static RegistrySimpleCredentials credentials = null;
     private static Repository repository = null;
     String policyPath = "META-INF/policy.xml";
     private static Log log = LogFactory.getLog(SampleJCRRegistryClient.class);
@@ -48,7 +49,7 @@ public class SampleJCRRegistryClient {
         try{
             RegistryRepositoryFactory rf = new RegistryRepositoryFactory();
             repository = rf.getRepository(map);
-            credentials = new SimpleCredentials("admin", new String("admin").toCharArray());
+            credentials = new RegistrySimpleCredentials("admin", new String("admin").toCharArray());
 
         }catch (RepositoryException e){
             log.error("Error connecting Remote Registry instance",e);
@@ -237,6 +238,7 @@ public class SampleJCRRegistryClient {
     }
     
     public static void main(String[] args) throws Exception {
+
         initialize();
         Session session = repository.login(credentials);
         Workspace workspace = session.getWorkspace();

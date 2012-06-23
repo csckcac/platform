@@ -262,7 +262,7 @@ public class RegistryRepository implements Repository {
             }
         }
 
-        RegistrySession registrySession = new RegistrySession(this, s, (SimpleCredentials)credentials, userRegistry,userID);
+        RegistrySession registrySession = new RegistrySession(this, s,(RegistrySimpleCredentials)credentials, userRegistry,userID);
         workspaces.add(registrySession);
 
         return registrySession;

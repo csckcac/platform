@@ -21,7 +21,6 @@ public class RegistryRepositoryFactory implements RepositoryFactory {
     private Repository regRepo; //  for remote registry creation only
     private RealmService realmService = null;  // for embeded registry creation only
 
-    @Override
     public Repository getRepository(Map map) throws RepositoryException {
         Repository repository = null;
         try {
@@ -37,7 +36,10 @@ public class RegistryRepositoryFactory implements RepositoryFactory {
         RemoteRegistry remoteRegistry;
         Registry registry; // an admin registry
         try {
-            RemoteRegistryService remoteRegistryService = new RemoteRegistryService((String) map.get("registryURL"), (String) map.get("userName"), (String) map.get("password"));
+            RemoteRegistryService remoteRegistryService = new RemoteRegistryService(
+                    (String) map.get("registryURL"),
+                    (String) map.get("userName"),
+                    (String) map.get("password"));
             if (regRepo == null) {
                 regRepo = new RegistryRepository(remoteRegistryService);
             }

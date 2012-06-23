@@ -61,7 +61,7 @@ public class RegistrySession implements Session {
     */
     public UserRegistry userRegistry;
 
-    private SimpleCredentials registrySimpleCredentials;
+    private RegistrySimpleCredentials registrySimpleCredentials;
     private String workspaceName ="";
     private RegistryWorkspace registryWorkspace;
     private AccessControlManager regAccControlMngr;
@@ -86,7 +86,7 @@ public class RegistrySession implements Session {
     }
 
     public RegistrySession(RegistryRepository registryRepository, String workspaceName,
-                           SimpleCredentials registrySimpleCredentials, UserRegistry userReg, String userID) throws RepositoryException {
+                           RegistrySimpleCredentials registrySimpleCredentials, UserRegistry userReg, String userID) throws RepositoryException {
 
         this.workspaceName = workspaceName;
         this.USER_ID = userID;

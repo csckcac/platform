@@ -132,10 +132,25 @@
                         } catch (Exception ignore) {}
                 %>
                 <tr id="1">
-                    <td style="padding-left:5px;padding-top:3px;text-align:left;"><a
-                            href="../resources/resource.jsp?region=region3&item=resource_browser_menu&viewType=std&path=<%=resourcePath%>"><img
-                            src="images/icon-folder-small.gif">&nbsp;<%=resourceData.getResourcePath()%>
-                    </a></td>
+                    <% if (resourceData.getResourceType().equals("collection")) { %>
+                    <td style="padding-left:5px;padding-top:3px;text-align:left;"><img
+                            src="images/icon-folder-small.gif" style="margin-right:5px;" align="top"/>
+                        <% if (CarbonUIUtil.isUserAuthorized(request, "/permission/admin/manage/resources/browse")) {%>
+                        <a href="../resources/resource.jsp?region=region3&item=resource_browser_menu&viewType=std&path=<%=resourcePath%>"><%=resourceData.getResourcePath()%></a>
+                        <% } else { %>
+                        <%=resourceData.getResourcePath()%>
+                        <% } %>
+                    </td>
+                    <% } %>
+                    <% if (resourceData.getResourceType().equals("resource")) { %>
+                    <td style="padding-left:5px;padding-top:3px;text-align:left;"><img
+                            src="images/resource.gif" style="margin-right:5px;" align="top"/>
+                        <% if (CarbonUIUtil.isUserAuthorized(request, "/permission/admin/manage/resources/browse")) {%>
+                        <a href="../resources/resource.jsp?region=region3&item=resource_browser_menu&viewType=std&path=<%=resourcePath%>"><%=resourceData.getResourcePath()%></a>
+                        <% } else { %>
+                        <%=resourceData.getResourcePath()%>
+                        <% } %>
+                    </td>                   <% } %>
                     <td style="padding-left:5px;padding-top:3px;text-align:left;"><%=resourceData.getFormattedCreatedOn()%>
                     </td>
                     <td style="padding-left:5px;padding-top:3px;text-align:left;"><%=resourceData.getAuthorUserName()%>
@@ -151,30 +166,13 @@
                     </div>
                     </td>
                 </tr>
+                <% }  %>
                 <tr>
                     <td colspan="4">
-                        &nbsp;
-                        <%
-                            if (!"Content".equalsIgnoreCase(request.getParameter("searchType"))) {
-                                TagCount[] tagCounts = resourceData.getTagCounts();
-
-                                for (int j = 0; j < tagCounts.length; j++) {
-                                    String tag = tagCounts[j].getKey();
-                                    String count = String.valueOf(tagCounts[j].getValue());
-                                    if (((Long) tagCounts[j].getValue()).longValue() > 0) {
-                        %>
-
-                        <%=tag%> (<%=count%>) <% if (j != tagCounts.length - 1) { %> | <% } %>
-
-                        <% }
-                        }
-                        }%>
-
-
-                    </td>
+                                <% if (!"Content".equalsIgnoreCase(request.getParameter("searchType"))) {%>
+                                <%=request.getParameter("criteria")%> (<%=searchResults.length%>)
+                                <%}%>
                 </tr>
-
-                <% }  %>
             </table>
             <table width="100%" style="text-align:center; padding-top: 10px; margin-bottom: -10px">
                 <carbon:resourcePaginator pageNumber="<%=pageNumber%>" numberOfPages="<%=numberOfPages%>"

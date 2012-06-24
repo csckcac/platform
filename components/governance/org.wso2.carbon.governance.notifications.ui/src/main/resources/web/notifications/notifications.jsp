@@ -172,7 +172,11 @@
             String eventName = subscription.getEventName();
             String owner = subscription.getOwner();
             String path = subscription.getTopic();
-            path = (path.substring(RegistryEvent.TOPIC_PREFIX.length()+1, path.length())).split("/",2)[1];
+            if(path.contains("#")||path.contains("*")){
+                path = (path.substring(RegistryEvent.TOPIC_PREFIX.length()+1, path.lastIndexOf("/"))).split("/",2)[1];
+            }else{
+                path = (path.substring(RegistryEvent.TOPIC_PREFIX.length()+1, path.length())).split("/",2)[1];
+            }
             if(!path.startsWith("/")){
                 path="/"+path;
             }

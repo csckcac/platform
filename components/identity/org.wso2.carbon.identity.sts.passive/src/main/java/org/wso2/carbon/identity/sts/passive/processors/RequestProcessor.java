@@ -47,6 +47,7 @@ import org.wso2.carbon.security.keystore.service.KeyStoreData;
 import org.wso2.carbon.security.util.RampartConfigUtil;
 import org.wso2.carbon.security.util.ServerCrypto;
 import org.wso2.carbon.utils.ServerConstants;
+import org.wso2.carbon.utils.multitenancy.MultitenantConstants;
 
 import javax.xml.namespace.QName;
 import java.util.Iterator;
@@ -137,14 +138,14 @@ public abstract class RequestProcessor {
             issuerName = "Identity-passive-sts";
         }
 
-        admin = new KeyStoreAdmin(systemRegistry);
+        admin = new KeyStoreAdmin(MultitenantConstants.SUPER_TENANT_ID, systemRegistry);
         keystores = admin.getKeyStores(isSuperTenant);
 
         for (int i = 0; i < keystores.length; i++) {
             if (KeyStoreUtil.isPrimaryStore(keystores[i].getKeyStoreName())) {
                 keyStoreName = keystores[i].getKeyStoreName();
-                privateKeyAlias = KeyStoreUtil.getPrivateKeyAlias(KeyStoreManager.getInstance(systemRegistry)
-                                                                          .getKeyStore(keyStoreName));
+                privateKeyAlias = KeyStoreUtil.getPrivateKeyAlias(KeyStoreManager.getInstance(
+                        MultitenantConstants.SUPER_TENANT_ID).getKeyStore(keyStoreName));
                 break;
             }
         }

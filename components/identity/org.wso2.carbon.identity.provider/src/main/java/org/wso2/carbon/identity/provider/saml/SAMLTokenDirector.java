@@ -20,12 +20,10 @@ package org.wso2.carbon.identity.provider.saml;
 import org.apache.commons.logging.Log;
 import org.apache.commons.logging.LogFactory;
 import org.apache.rahas.RahasData;
-import org.joda.time.DateTime;
 import org.opensaml.DefaultBootstrap;
 import org.opensaml.xml.ConfigurationException;
-import org.w3c.dom.Element;
-import org.wso2.carbon.identity.provider.IdentityProviderException;
 import org.wso2.carbon.identity.provider.GenericIdentityProviderData;
+import org.wso2.carbon.identity.provider.IdentityProviderException;
 
 
 public class SAMLTokenDirector {
@@ -52,20 +50,4 @@ public class SAMLTokenDirector {
         this.ipData = iData;
     }
 
-    public Element createSAMLToken(DateTime notBefore, DateTime notAfter, String assertionId)
-            throws IdentityProviderException {
-
-        SignKeyDataHolder keyDataHolder = SignKeyDataHolder.getInstance();
-        String signatureAlgorithm = keyDataHolder.getSignatureAlgorithm();
-
-        Element elem = null;
-        builder.createStatement(ipData, rahasData);
-        builder.createSAMLAssertion(notAfter, notBefore, assertionId);
-        builder.setSignature(signatureAlgorithm, keyDataHolder);
-        builder.marshellAndSign();
-        elem = builder.getSAMLasDOM();
-        return elem;
-    }
-
-   
 }

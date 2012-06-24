@@ -20,16 +20,12 @@ import org.apache.axis2.context.ConfigurationContext;
 import org.apache.axis2.context.MessageContext;
 import org.apache.commons.logging.Log;
 import org.apache.commons.logging.LogFactory;
-import org.bouncycastle.jce.X509Principal;
-import org.bouncycastle.jce.X509V3CertificateGenerator;
-import org.wso2.carbon.core.util.KeyStoreManager;
 import org.wso2.carbon.identity.base.IdentityException;
 import org.wso2.carbon.identity.core.IdentityRegistryResources;
 import org.wso2.carbon.identity.core.model.SAMLSSOServiceProviderDO;
 import org.wso2.carbon.identity.core.persistence.IdentityPersistenceManager;
 import org.wso2.carbon.identity.sso.saml.dto.SAMLSSOServiceProviderDTO;
 import org.wso2.carbon.identity.sso.saml.dto.SAMLSSOServiceProviderInfoDTO;
-import org.wso2.carbon.identity.sso.saml.util.SAMLSSOUtil;
 import org.wso2.carbon.registry.core.Registry;
 import org.wso2.carbon.registry.core.Resource;
 import org.wso2.carbon.registry.core.session.UserRegistry;
@@ -39,13 +35,6 @@ import org.wso2.carbon.utils.WSO2Constants;
 import java.io.File;
 import java.io.FileOutputStream;
 import java.io.OutputStream;
-import java.math.BigInteger;
-import java.security.KeyPair;
-import java.security.KeyPairGenerator;
-import java.security.KeyStore;
-import java.security.SecureRandom;
-import java.security.cert.X509Certificate;
-import java.util.Date;
 import java.util.Hashtable;
 import java.util.Map;
 
@@ -147,62 +136,6 @@ public class SAMLSSOConfigAdmin {
             log.error("Error removing a Service Provider");
             throw new IdentityException("Error removing a Service Provider", e);
         }
-    }
-
-    /**
-     * Method used for generating a key pair for each tenant, except for tenant 0
-     *
-     * @return File path of the public key
-     * @throws Exception
-     */
-    private String generateKeyPair() throws Exception {
-
-        String domainName = SAMLSSOUtil.getRealmService().getTenantManager().getDomain(registry.getTenantId());
-        //load keystore
-        X509V3CertificateGenerator v3CertGen = new X509V3CertificateGenerator();
-        KeyStoreManager keyMan = KeyStoreManager.getInstance(null);
-        KeyStore keyStore = keyMan.getKeyStore("userSSO.jks");
-
-        //generate keypair
-        KeyPairGenerator keyPairGenerator = KeyPairGenerator.getInstance("RSA");
-        keyPairGenerator.initialize(1024);
-        KeyPair keyPair = keyPairGenerator.generateKeyPair();
-
-        v3CertGen.setSerialNumber(BigInteger.valueOf(new SecureRandom().nextInt()));
-        v3CertGen.setIssuerDN(new X509Principal("CN=" + domainName + ", OU=None, O=None L=None, C=None"));
-        v3CertGen.setNotBefore(new Date(System.currentTimeMillis() - 1000L * 60 * 60 * 24 * 30));
-        v3CertGen.setNotAfter(new Date(System.currentTimeMillis() + (1000L * 60 * 60 * 24 * 365 * 10)));
-        v3CertGen.setSubjectDN(new X509Principal("CN=" + domainName + ", OU=None, O=None L=None, C=None"));
-        v3CertGen.setPublicKey(keyPair.getPublic());
-        v3CertGen.setSignatureAlgorithm("MD5WithRSAEncryption");
-        X509Certificate PKCertificate = v3CertGen.generateX509Certificate(keyPair.getPrivate());
-
-        //Generate the password
-        SecureRandom random = new SecureRandom();
-        String randString = new BigInteger(130, random).toString(12);
-        String password = randString.substring(randString.length() - 10, randString.length());
-
-        //add private key to KS
-        keyStore.setKeyEntry(new Integer(registry.getTenantId()).toString(), keyPair.getPrivate(), password.toCharArray(),
-                new java.security.cert.Certificate[]{PKCertificate});
-
-        keyMan.updateKeyStore("userSSO.jks", keyStore);
-
-        //save pub. key to a file
-        String filePath = dumpPubCert(MessageContext.getCurrentMessageContext().getConfigurationContext()
-                , PKCertificate.getEncoded(), null);
-
-        //store the keyinfo in registry
-        Resource keyInfoResource = registry.newResource();
-
-        keyInfoResource.setContent(PKCertificate.getEncoded());
-        keyInfoResource.addProperty(IdentityRegistryResources.PROP_SAML_SSO_PUB_KEY_FILE_PATH, filePath);
-        keyInfoResource.addProperty(IdentityRegistryResources.PROP_SAML_SSO_GEN_KEY_PASS, password);
-        registry.put(IdentityRegistryResources.SAML_SSO_GEN_KEY, keyInfoResource);
-
-        keyInfoResource.discard();
-        //return the location of the pub. key
-        return filePath;
     }
 
     /**

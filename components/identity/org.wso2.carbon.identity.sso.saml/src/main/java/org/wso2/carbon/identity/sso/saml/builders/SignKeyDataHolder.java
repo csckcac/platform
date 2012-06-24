@@ -86,8 +86,7 @@ public class SignKeyDataHolder implements X509Credential {
             if (tenantID != MultitenantConstants.SUPER_TENANT_ID) {
                 String keyStoreName = SAMLSSOUtil.generateKSNameFromDomainName(tenantDomain);
                 keyAlias = tenantDomain;
-                keyMan = KeyStoreManager.getInstance(SAMLSSOUtil.getRegistryService().
-                        getGovernanceSystemRegistry(tenantID));
+                keyMan = KeyStoreManager.getInstance(tenantID);
                 KeyStore keyStore = keyMan.getKeyStore(keyStoreName);
                 issuerPK = (PrivateKey) keyMan.getPrivateKey(keyStoreName, tenantDomain);
                 certificates = keyStore.getCertificateChain(keyAlias);
@@ -109,8 +108,9 @@ public class SignKeyDataHolder implements X509Credential {
                 keyAlias = ServerConfiguration.getInstance().getFirstProperty(
                         "Security.KeyStore.KeyAlias");
 
-                keyAdmin = new KeyStoreAdmin(SAMLSSOUtil.getRegistryService().getGovernanceSystemRegistry());
-                keyMan = KeyStoreManager.getInstance(null);
+                keyAdmin = new KeyStoreAdmin(tenantID,
+                        SAMLSSOUtil.getRegistryService().getGovernanceSystemRegistry());
+                keyMan = KeyStoreManager.getInstance(tenantID);
 
                 issuerPK = (PrivateKey) keyAdmin.getPrivateKey(keyAlias, true);
 

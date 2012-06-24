@@ -31,22 +31,13 @@ import org.wso2.carbon.identity.base.IdentityConstants;
 import org.wso2.carbon.identity.base.IdentityException;
 import org.wso2.carbon.identity.core.IdentityClaimManager;
 import org.wso2.carbon.identity.core.util.IdentityTenantUtil;
-import org.wso2.carbon.identity.core.util.IdentityUtil;
-import org.wso2.carbon.identity.provider.internal.IdentityProviderServiceComponent;
-import org.wso2.carbon.security.keystore.KeyStoreAdmin;
-import org.wso2.carbon.security.keystore.service.CertData;
-import org.wso2.carbon.security.keystore.service.CertDataDetail;
-import org.wso2.carbon.security.keystore.service.KeyStoreData;
-import org.wso2.carbon.user.core.UserStoreException;
 import org.wso2.carbon.user.core.UserStoreManager;
 import org.wso2.carbon.user.core.claim.Claim;
-import org.wso2.carbon.user.core.util.UserCoreUtil;
 import org.wso2.carbon.utils.multitenancy.MultitenantUtils;
 
 import javax.xml.namespace.QName;
 import javax.xml.stream.XMLStreamException;
 import java.io.ByteArrayInputStream;
-import java.io.File;
 import java.security.KeyStore;
 import java.security.cert.X509Certificate;
 import java.util.*;
@@ -404,40 +395,6 @@ public class GenericIdentityProviderData {
             log.error("Error parsing stored KeyInfo");
             throw new IdentityProviderException("Error parsing stored KeyInfo");
         }
-    }
-
-    /**
-     * 
-     * @param alias
-     * @return
-     * @throws IdentityException
-     */
-    protected X509Certificate getCertificateFromUserTrustedRP(String alias)
-            throws IdentityException {
-        KeyStoreAdmin keyAdmin = null;
-        String storeFilePath = null;
-        KeyStoreData keyStoreData = null;
-        CertData[] certs = null;
-
-        try {
-            storeFilePath = IdentityUtil
-                    .getProperty(IdentityConstants.ServerConfig.USER_TRUSTED_RP_STORE_LOCATION);
-            keyAdmin = new KeyStoreAdmin(IdentityTenantUtil.getRegistry(null, null));
-            keyAdmin.setIncludeCert(true);
-            keyStoreData = keyAdmin.getKeystoreInfo(new File(storeFilePath).getName());
-            certs = keyStoreData.getCerts();
-
-            for (CertData certData : certs) {
-                if (certData.getAlias().equals(alias)) {
-                    return ((CertDataDetail) certData).getCertificate();
-                }
-            }
-        } catch (Exception e) {
-            log.error("Error occured while reading certificate from the user trusted key store", e);
-            throw new IdentityException(
-                    "Error occured while reading certificate from the user trusted key store", e);
-        }
-        return null;
     }
 
     protected void readRequestedTokenType(RahasData data) {

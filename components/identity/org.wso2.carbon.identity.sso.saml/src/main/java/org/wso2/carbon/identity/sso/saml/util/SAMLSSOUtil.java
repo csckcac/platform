@@ -34,12 +34,7 @@ import org.opensaml.xml.io.MarshallerFactory;
 import org.opensaml.xml.io.Unmarshaller;
 import org.opensaml.xml.io.UnmarshallerFactory;
 import org.opensaml.xml.security.x509.X509Credential;
-import org.opensaml.xml.signature.KeyInfo;
-import org.opensaml.xml.signature.Signature;
-import org.opensaml.xml.signature.SignatureValidator;
-import org.opensaml.xml.signature.Signer;
-import org.opensaml.xml.signature.X509Certificate;
-import org.opensaml.xml.signature.X509Data;
+import org.opensaml.xml.signature.*;
 import org.opensaml.xml.validation.ValidationException;
 import org.osgi.framework.BundleContext;
 import org.w3c.dom.Document;
@@ -55,7 +50,6 @@ import org.wso2.carbon.identity.core.util.IdentityUtil;
 import org.wso2.carbon.identity.sso.saml.SAMLSSOConstants;
 import org.wso2.carbon.identity.sso.saml.builders.X509CredentialImpl;
 import org.wso2.carbon.identity.sso.saml.exception.IdentitySAML2SSOException;
-import org.wso2.carbon.registry.core.exceptions.RegistryException;
 import org.wso2.carbon.registry.core.service.RegistryService;
 import org.wso2.carbon.user.core.service.RealmService;
 import org.wso2.carbon.utils.ConfigurationContextService;
@@ -368,14 +362,8 @@ public class SAMLSSOUtil {
         }
 
         KeyStoreManager keyStoreManager;
-        try {
-            // get an instance of the corresponding Key Store Manager instance
-            keyStoreManager = KeyStoreManager.getInstance(registryService.getGovernanceSystemRegistry(tenantID));
-        } catch (RegistryException e) {
-            String errorMsg = "Error getting a KeyStore Manager instance.";
-            log.error(errorMsg, e);
-            throw new IdentitySAML2SSOException(errorMsg, e);
-        }
+        // get an instance of the corresponding Key Store Manager instance
+        keyStoreManager = KeyStoreManager.getInstance(tenantID);
 
         X509CredentialImpl credentialImpl = null;
         KeyStore keyStore;

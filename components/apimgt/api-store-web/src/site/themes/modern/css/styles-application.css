@@ -11,7 +11,7 @@ div.star-ratings img{
     height: 64px;
     width:48px;
     line-height: 70px;
-    padding-left: 28px;''
+    padding-left: 28px;
 }
 
 .star-0 {
@@ -300,4 +300,10 @@ input.error{
 .api-info div.thumbnail{
     padding:10px;
     width:100px;
+}
+.main-heading div.span6{
+    display:none;
+}
+ul.login-sign-up li.divider-vertical{
+    height:30px;
 }

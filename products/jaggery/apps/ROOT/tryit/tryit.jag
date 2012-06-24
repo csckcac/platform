@@ -23,105 +23,19 @@ var F = File;
     //setting the print funtion for write funrion
     htmlResult = "";
 
-    inputStream = (function (script) {
-        var opened = false,
-                isExpression = false,
-                source = "",
-                html = "",
-                jsExp = "",
-                index = 0;
-
-        while (index < script.length) {
-            var ch = script.charAt(index);
-            if (ch == "<") {
-                ch = script.charAt(++index);
-                if (ch == "%") {
-                    opened = true;
-                    //as it is html, we can avoid adding empty $j.print("") calls
-                    if (html != "") {
-                        source += "print(\"" + html + "\");";
-                        html = "";
-                    }
-                    ch = script.charAt(++index);
-                    if (ch == "=") {
-                        isExpression = true;
-                    } else {
-                        continue;
-                    }
-                } else {
-                    if (opened) {
-                        source += "<";
-                    } else {
-                        html += "<";
-                    }
-                    continue;
-                }
-            } else if (ch == "%") {
-                ch = script.charAt(++index);
-                if (ch == ">") {
-                    opened = false;
-                    if (isExpression) {
-                        isExpression = false;
-                        source += "print(" + jsExp + ");";
-                        jsExp = "";
-                    }
-                } else {
-                    if (opened) {
-                        source += "%";
-                    } else {
-                        html += "%";
-                    }
-                    continue;
-                }
-            } else {
-                if (opened) {
-                    if (isExpression) {
-                        jsExp += ch;
-                    } else {
-                        source += ch;
-                    }
-                } else {
-                    if (ch == "\"") {
-                        html += "\\" + "\"";
-                    } else if (ch == "\\") {
-                        html += "\\" + "\\";
-                    } else if (ch == "\r") {
-                        html += "\\" + "r";
-                    } else if (ch == "\n") {
-                        source += "print(\"" + html + "\\" + "n" + "\");" + "\n";
-                        html = "";
-                    } else if (ch == "\t") { // Not sure we need this
-                        html += "\\" + "t";
-                    } else {
-                        html += ch;
-                    }
-                }
-            }
-            index++;
-        }
-        if (html != "") {
-            source += "print(\"" + html + "\");";
-        }
-        if (jsExp != "") {
-            source += "print(" + jsExp + ");";
-        }
-        return source;
-    }(inputStream));
-
+    inputStream = new JaggeryParser().parse(inputStream).toString();
+	
     //over riding the print funtion
-    print = function (text) {
-        var type = typeof(text);
-        if (type == "string" || type == "number" || type == "boolean") {
-            htmlResult += text;
-        } else {
-            htmlResult += stringify(text);
-        }
+    print = function (text) {       
+            htmlResult += text;        
     };
 
     File = function (path) {
         path = '/tmp' + path;
         return new F(path);
     };
+	
+
 
     (function() {
         try {
@@ -134,4 +48,3 @@ var F = File;
     p(htmlResult);
 })();
 %>
-

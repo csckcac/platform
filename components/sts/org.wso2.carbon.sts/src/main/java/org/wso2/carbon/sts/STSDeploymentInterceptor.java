@@ -31,6 +31,7 @@ import org.apache.commons.logging.LogFactory;
 import org.apache.rahas.impl.AbstractIssuerConfig;
 import org.apache.rahas.impl.SAMLTokenIssuerConfig;
 import org.apache.rahas.impl.TokenIssuerUtil;
+import org.wso2.carbon.base.MultitenantConstants;
 import org.wso2.carbon.base.ServerConfiguration;
 import org.wso2.carbon.core.RegistryResources;
 import org.wso2.carbon.core.deployment.DeploymentInterceptor;
@@ -118,14 +119,14 @@ public class STSDeploymentInterceptor implements AxisObserver {
             issuerName = ServerConstants.STS_NAME;
         }
 
-        admin = new KeyStoreAdmin(governRegistry);
+        admin = new KeyStoreAdmin(MultitenantConstants.SUPER_TENANT_ID, governRegistry);
         keystores = admin.getKeyStores(true);
 
         for (int i = 0; i < keystores.length; i++) {
             if (KeyStoreUtil.isPrimaryStore(keystores[i].getKeyStoreName())) {
                 keyStoreName = keystores[i].getKeyStoreName();
                 privateKeyAlias = KeyStoreUtil.getPrivateKeyAlias(KeyStoreManager.getInstance(
-                        STSServiceDataHolder.getInstance().getRegistryService().getGovernanceSystemRegistry())
+                        MultitenantConstants.SUPER_TENANT_ID)
                         .getKeyStore(keyStoreName));
                 break;
             }

@@ -193,8 +193,14 @@ public class SubscriptionBeanPopulator {
                         log.debug("path (invalid): " + testPath);
                         continue;
                     }
-                    testPath = (testPath.substring(RegistryEventingConstants.TOPIC_PREFIX.length()+1,testPath.length()))
-                            .split(RegistryConstants.PATH_SEPARATOR,2)[1];
+                    if(testPath.contains("#")||testPath.contains("*")){
+                        testPath = (testPath.substring(RegistryEventingConstants.TOPIC_PREFIX.length()+1,
+                                testPath.lastIndexOf(RegistryConstants.PATH_SEPARATOR)))
+                                .split(RegistryConstants.PATH_SEPARATOR,2)[1];
+                    }else{
+                        testPath = (testPath.substring(RegistryEventingConstants.TOPIC_PREFIX.length()+1,testPath.length()))
+                                .split(RegistryConstants.PATH_SEPARATOR,2)[1];
+                    }
 
                     if(!testPath.startsWith(RegistryConstants.PATH_SEPARATOR)){
                         testPath=RegistryConstants.PATH_SEPARATOR+testPath;

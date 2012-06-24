@@ -213,6 +213,10 @@
                id="txtDataServiceRowNamespace" size="30"
                type="hidden"/>
         <input value="<%=requiredRoles%>" id="requiredRoles" name="requiredRoles" type="hidden"/>
+        <% if (mappingType != null && !mappingType.equals("")) {%>
+        <input type="hidden" name="cmbDataServiceOMType" value="<%=mappingType%>"/>
+        <% } %>
+        
         <%
             if (isEdit) {
         %>
@@ -240,9 +244,15 @@
                     <td class="leftCol-med"><fmt:message key="data.services.mapping.type"/><font
                             color="red">*</font>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
                     </td>
+                    <% if (mappingType != null && !mappingType.equals("")) {%>
+                    <td><select onchange="changeToNextMapping(this, document);return false;"
+                                name="cmbDataServiceOMType"
+                                id="cmbDataServiceOMType" disabled="disabled">
+                     <% } else {%>   
                     <td><select onchange="changeToNextMapping(this, document);return false;"
                                 name="cmbDataServiceOMType"
                                 id="cmbDataServiceOMType">
+                        <% } %>
                         <% if (mappingType.equals("")) { %>
                         <option selected="selected" value="">--Select--</option>
                         <% } else { %>

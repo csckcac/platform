@@ -40,9 +40,9 @@
     <modules>
         <module>org.wso2.carbon.lb.common</module>
         <module>lb-endpoint</module>
-        <module>autoscaler-service</module>
+        <module>autoscaler-service/org.wso2.carbon.autoscaler.service</module>
         <!--module>jvm-autoscaler-agent</module-->
-        <module>autoscaler</module>
+        <module>autoscaler/org.wso2.carbon.mediator.autoscale</module>
         <!--module>autoscaler-service/jvmagentmgtservice</module>
         <module>autoscaler-service/autoscalerservice</module>
         <module>jvm-autoscaler-agent/jvmagentclient</module>

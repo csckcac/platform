@@ -210,7 +210,6 @@
 				<module>org.wso2.carbon.hosting.wnagent.stub</module>
 				<module>org.wso2.carbon.hosting.wnregistration.stub</module>
 				<module>org.wso2.carbon.load.balance.autoscaler.service.stub</module>
-				<module>org.wso2.carbon.autoscaler.service.jvm.agentmgt.stub</module>
 				<module>org.wso2.carbon.bam.gadgetgenwizard.stub</module>
                 		<module>org.wso2.carbon.cassandra.explorer.stub</module>
 				<module>org.wso2.carbon.bam.toolbox.deployer.stub</module>

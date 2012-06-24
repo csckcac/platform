@@ -129,6 +129,17 @@ public interface APIConsumer extends APIManager {
             throws APIManagementException;
 
     /**
+     * Unsubscribe the specified user from the specified API in the given application
+     *
+     * @param identifier    APIIdentifier
+     * @param userId        id of the user
+     * @param applicationId Application Id
+     * @throws APIManagementException if failed to add subscription details to database
+     */
+    public void removeSubscription(APIIdentifier identifier, String userId, int applicationId)
+            throws APIManagementException;
+
+    /**
      * Remove a Subscriber
      *
      * @param identifier APIIdentifier

@@ -665,6 +665,59 @@ public class ApiMgtDAO {
         return subscriptionId;
     }
 
+    public void removeSubscription(APIIdentifier identifier, int applicationId) throws APIManagementException {
+        Connection conn = null;
+        ResultSet resultSet = null;
+        PreparedStatement ps = null;
+        int subscriptionId = -1;
+        int apiId = -1;
+
+        try {
+            conn = APIMgtDBUtil.getConnection();
+            String getApiQuery = "SELECT API_ID FROM AM_API API WHERE API_PROVIDER = ? AND " +
+                    "API_NAME = ? AND API_VERSION = ?";
+            ps = conn.prepareStatement(getApiQuery);
+            ps.setString(1, identifier.getProviderName());
+            ps.setString(2, identifier.getApiName());
+            ps.setString(3, identifier.getVersion());
+            resultSet = ps.executeQuery();
+            if (resultSet.next()) {
+                apiId = resultSet.getInt("API_ID");
+            }
+            resultSet.close();
+            ps.close();
+
+            if (apiId == -1) {
+                throw new APIManagementException("Unable to get the API ID for: " + identifier);
+            }
+
+            //This query to updates the AM_SUBSCRIPTION table
+            String sqlQuery = "DELETE FROM AM_SUBSCRIPTION WHERE API_ID = ? AND APPLICATION_ID = ?";
+
+            ps = conn.prepareStatement(sqlQuery);
+            ps.setInt(1, apiId);
+            ps.setInt(2, applicationId);
+            ps.executeUpdate();
+
+            // finally commit transaction
+            conn.commit();
+
+        } catch (SQLException e) {
+            String msg = "Failed to add subscriber data ";
+            log.error(msg, e);
+            if (conn != null) {
+                try {
+                    conn.rollback();
+                } catch (SQLException e1) {
+                    log.error("Failed to rollback the add subscription ", e);
+                }
+            }
+            throw new APIManagementException(msg, e);
+        } finally {
+            APIMgtDBUtil.closeAllConnections(ps, conn, resultSet);
+        }
+    }
+
     /**
      * This method used tot get Subscriber from subscriberId.
      *

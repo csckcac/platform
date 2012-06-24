@@ -372,6 +372,11 @@ class APIConsumerImpl extends AbstractAPIManager implements APIConsumer {
         }
     }
 
+    public void removeSubscription(APIIdentifier identifier, String userId, int applicationId)
+            throws APIManagementException {
+        apiMgtDAO.removeSubscription(identifier, applicationId);
+    }
+
     public void removeSubscriber(APIIdentifier identifier, String userId)
             throws APIManagementException {
         throw new UnsupportedOperationException("Unsubscribe operation is not yet implemented");

@@ -16,7 +16,7 @@
   ~  specific language governing permissions and limitations
   ~  under the License.
   -->
-<sequence xmlns="http://ws.apache.org/ns/synapse" name="sandbox_key_error">
+<sequence xmlns="http://ws.apache.org/ns/synapse" name="_sandbox_key_error_">
     <property name="ERROR_CODE" value="900901"/>
     <property name="ERROR_MESSAGE" value="Sandbox key offered to the API with no sandbox endpoint"/>
     <property name="CUSTOM_HTTP_SC" value="403"/>

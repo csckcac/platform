@@ -32,13 +32,6 @@
     <url>http://wso2.org</url>
     <description>This feature contains the required bundles for autoscaling service functionality</description>
     <dependencies>
-	<dependency>
-            <groupId>org.wso2.carbon</groupId>
-            <artifactId>
-                org.wso2.carbon.hosting.wnagent.stub
-            </artifactId>
-            <version>4.0.0-SNAPSHOT</version>
-        </dependency>
         <dependency>
             <groupId>org.wso2.carbon</groupId>
             <artifactId>org.wso2.carbon.lb.common</artifactId>
@@ -49,11 +42,104 @@
             <artifactId>org.wso2.carbon.autoscaler.service</artifactId>
             <version>${project.version}</version>
         </dependency>
-	<dependency>
-            <groupId>org.wso2.carbon</groupId>
-            <artifactId>org.wso2.carbon.autoscaler.service.jvm.agentmgt</artifactId>
-            <version>${project.version}</version>
+        <dependency>
+           <groupId>org.jclouds</groupId>
+           <artifactId>jclouds-core</artifactId>
+           <version>${jclouds.version}</version>
         </dependency>
+        <dependency>
+           <groupId>org.jclouds</groupId>
+           <artifactId>jclouds-compute</artifactId>
+           <version>${jclouds.version}</version>
+         </dependency>
+         <dependency>
+           <groupId>org.jclouds.driver</groupId>
+           <artifactId>jclouds-bouncycastle</artifactId>
+           <version>${jclouds.version}</version>
+           <exclusions>
+              <exclusion>
+                 <groupId>org.bouncycastle</groupId>
+                 <artifactId>bcprov-jdk16</artifactId>
+              </exclusion>
+           </exclusions>
+         </dependency>
+         <dependency>
+           <groupId>org.jclouds.driver</groupId>
+           <artifactId>jclouds-sshj</artifactId>
+           <version>${jclouds.version}</version>
+         </dependency>
+         <dependency>
+           <groupId>org.jclouds.driver</groupId>
+           <artifactId>jclouds-log4j</artifactId>
+           <version>${jclouds.version}</version>
+         </dependency>
+         <dependency>
+           <groupId>org.jclouds.driver</groupId>
+           <artifactId>jclouds-enterprise</artifactId>
+           <version>${jclouds.version}</version>
+         </dependency>
+         <dependency>
+           <groupId>org.jclouds.api</groupId>
+           <artifactId>ec2</artifactId>
+           <version>${jclouds.version}</version>
+         </dependency>
+         <dependency>
+           <groupId>org.jclouds.provider</groupId>
+           <artifactId>aws-ec2</artifactId>
+           <version>${jclouds.version}</version>
+         </dependency>
+         <dependency>
+           <groupId>org.jclouds.api</groupId>
+           <artifactId>openstack-nova</artifactId>
+           <version>${jclouds.version}</version>
+         </dependency>
+         <dependency>
+          <groupId>org.jclouds</groupId>
+            <artifactId>jclouds-scriptbuilder</artifactId>
+              <version>${jclouds.version}</version>
+         </dependency>
+         <dependency>
+           <groupId>com.google.guava.wso2</groupId>
+           <artifactId>guava</artifactId>
+           <version>${google.guava.wso2.version}</version>
+         </dependency>
+         <dependency>
+          <groupId>org.jclouds.common</groupId>
+            <artifactId>aws-common</artifactId>
+              <version>${jclouds.version}</version>
+         </dependency>
+         <dependency>
+           <groupId>com.google.code.gson</groupId>
+           <artifactId>gson</artifactId>
+           <version>${gson2.version}</version>
+         </dependency>
+         <dependency>
+           <groupId>com.google.guice.wso2</groupId>
+           <artifactId>guice</artifactId>
+           <version>${google.guice.wso2.version}</version>
+         </dependency>
+         <dependency>
+           <groupId>com.google.guice.assistedinject.wso2</groupId>
+           <artifactId>guice-assistedinject</artifactId>
+           <version>${com.google.guice.assistedinject.wso2.version}</version>
+         </dependency>
+         <dependency>
+           <groupId>com.sun.jersey</groupId>
+           <artifactId>jersey-core</artifactId>
+           <version>${sun.jersey.version}</version>
+         </dependency>
+         <dependency>
+          <groupId>net.oauth.core</groupId>
+          <artifactId>oauth</artifactId>
+          <version>20100527</version>
+         </dependency>
+         <dependency>
+           <groupId>commons-io.wso2</groupId>
+           <artifactId>commons-io</artifactId>
+           <version>2.0.0.wso2v1</version>
+         </dependency>
+                          
+
     </dependencies>
 
     <build>
@@ -80,10 +166,44 @@
                             </adviceFile>
                             <bundles>
                                 <bundleDef>org.wso2.carbon:org.wso2.carbon.autoscaler.service</bundleDef>
-                                <bundleDef>org.wso2.carbon:org.wso2.carbon.autoscaler.service.jvm.agentmgt</bundleDef>
-				<bundleDef>org.wso2.carbon:org.wso2.carbon.hosting.wnagent.stub</bundleDef>
-				<bundleDef>org.wso2.carbon:org.wso2.carbon.lb.common</bundleDef>
+				                        <bundleDef>org.wso2.carbon:org.wso2.carbon.lb.common</bundleDef>
+                                <bundleDef>org.jclouds.driver:jclouds-bouncycastle:${jclouds.version}</bundleDef>
+                                <bundleDef>org.jclouds.driver:jclouds-sshj:${jclouds.version}</bundleDef>
+                                <bundleDef>org.jclouds.driver:jclouds-log4j:${jclouds.version}</bundleDef>
+                                <bundleDef>org.jclouds.driver:jclouds-enterprise:${jclouds.version}</bundleDef>
+                                <bundleDef>org.jclouds:jclouds-core:${jclouds.version}</bundleDef>
+                                <bundleDef>org.jclouds:jclouds-compute:${jclouds.version}</bundleDef>
+                                <bundleDef>org.jclouds.api:ec2:${jclouds.version}</bundleDef>
+                                <bundleDef>org.jclouds.api:openstack-nova:${jclouds.version}</bundleDef>
+                                <bundleDef>org.jclouds.common:openstack-common:${jclouds.version}</bundleDef>
+                                <bundleDef>org.jclouds.api:openstack-keystone:${jclouds.version}</bundleDef>
+                                <bundleDef>org.jclouds.provider:aws-ec2:${jclouds.version}</bundleDef>
+                                <bundleDef>com.google.guava.wso2:guava:${google.guava.wso2.version}</bundleDef>
+                                <bundleDef>org.jclouds.common:aws-common:${jclouds.version}</bundleDef>
+                                <bundleDef>com.google.code.gson:gson:${gson2.version}</bundleDef>
+                                <bundleDef>com.google.guice.wso2:guice:${google.guice.wso2.version}</bundleDef>
+                                <bundleDef>com.google.guice.assistedinject.wso2:guice-assistedinject:${com.google.guice.assistedinject.wso2.version}</bundleDef>
+                                <bundleDef>com.sun.jersey:jersey-core:${sun.jersey.version}</bundleDef>
+                                <bundleDef>org.jclouds:jclouds-scriptbuilder:${jclouds.version}</bundleDef>
+                                <bundleDef>org.apache.shindig.wso2:shindig:1.1.0.wso2v6</bundleDef>
+                                <bundleDef>org.99soft.guice:rocoto:6.1</bundleDef>
+                                <bundleDef>org.bouncycastle.wso2:bcprov-jdk16:1.45.wso2v1</bundleDef>
+                                <bundleDef>net.schmizz:sshj:0.8.0</bundleDef>
+                                <bundleDef>org.jclouds.driver:jclouds-joda:${jclouds.version}</bundleDef>
+                                <bundleDef>com.jcraft.wso2:jzlib:1.0.7.wso2v1</bundleDef>
+                                <bundleDef>org.jclouds.driver:jclouds-netty:${jclouds.version}</bundleDef>
+                                <bundleDef>io.netty:netty:3.3.0.Final</bundleDef>
+                                <bundleDef>commons-io.wso2:commons-io:2.0.0.wso2v1</bundleDef>
+                                <bundleDef>org.slf4j:slf4j-api:1.6.4</bundleDef>
+                                <bundleDef>org.slf4j:slf4j-log4j12:1.6.4</bundleDef>
+                                <bundleDef>org.jclouds.driver:jclouds-slf4j:${jclouds.version}</bundleDef>
+                                <bundleDef>com.google.common.wso2:google-collect:${google.collect.osgi.version}</bundleDef>
+                                <bundleDef>jdom.wso2:jdom:1.0.0.wso2v1</bundleDef>
+                                <bundleDef>org.json.wso2:json:1.0.0.wso2v1</bundleDef>
+                                
                             </bundles>
+                            <importBundles>
+                            </importBundles>
                             <importFeatures>
                                 <importFeatureDef>org.wso2.carbon.core.server:${wso2carbon.version}</importFeatureDef>
                             </importFeatures>

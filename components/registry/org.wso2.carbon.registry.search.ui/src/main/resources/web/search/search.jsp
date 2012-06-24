@@ -166,13 +166,30 @@
                     </div>
                     </td>
                 </tr>
-                <% }  %>
                 <tr>
                     <td colspan="4">
-                                <% if (!"Content".equalsIgnoreCase(request.getParameter("searchType"))) {%>
-                                <%=request.getParameter("criteria")%> (<%=searchResults.length%>)
-                                <%}%>
+                        &nbsp;
+                        <%
+                            if (!"Content".equalsIgnoreCase(request.getParameter("searchType"))) {
+                                TagCount[] tagCounts = resourceData.getTagCounts();
+
+                                for (int j = 0; j < tagCounts.length; j++) {
+                                    String tag = tagCounts[j].getKey();
+                                    String count = String.valueOf(tagCounts[j].getValue());
+                                    if (((Long) tagCounts[j].getValue()).longValue() > 0) {
+                        %>
+
+                        <%=tag%> (<%=count%>) <% if (j != tagCounts.length - 1) { %> | <% } %>
+
+                        <% }
+                        }
+                        }%>
+
+
+                    </td>
                 </tr>
+
+                <% }  %>
             </table>
             <table width="100%" style="text-align:center; padding-top: 10px; margin-bottom: -10px">
                 <carbon:resourcePaginator pageNumber="<%=pageNumber%>" numberOfPages="<%=numberOfPages%>"

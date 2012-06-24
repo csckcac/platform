@@ -37,7 +37,7 @@ public class RegistryJCRSpecificStandardLoderUtil {
     private static List<String> nameSpaceURIList = new ArrayList<String>();
     private static boolean initialized = false;
     private static final String DEFAULT_REGISTRY_WORKSPACE_NAME = "default_workspace";
-    private static final String JCR_REGISTRY_WORKSPACE_ROOT = "/jcr_system2/workspaces";
+    private static final String JCR_REGISTRY_WORKSPACE_ROOT = "/jcr_system/workspaces";
     public static final String WORKSPACE_ROOT_PRIMARY_NODETYPE_NAME = "system_config";
     public static final String WORKSPACE_ROOT_PRIMARY_ITEM_NAME = "greg";
     public static final String JCR_SYSTEM_PERSIS_PROP_DEFS = "prop_defs";

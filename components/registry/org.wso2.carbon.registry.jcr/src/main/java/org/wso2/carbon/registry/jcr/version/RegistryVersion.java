@@ -41,7 +41,6 @@ public class RegistryVersion implements Version {
     private Session session;
 
     public RegistryVersion(String versionId, long createdTime, String nodepath, Session session) {
-
         this.versionName = versionId;
         this.createdTime = createdTime;
         this.fNodepath = nodepath;
@@ -49,26 +48,20 @@ public class RegistryVersion implements Version {
     }
 
     public void setVersionHistory(VersionHistory vh) {
-
         this.vh = vh;
-
     }
 
     public VersionHistory getContainingHistory() throws RepositoryException {
-
         return vh;
     }
 
     public Calendar getCreated() throws RepositoryException {
-
         Calendar cal = Calendar.getInstance();
         cal.setTimeInMillis(createdTime);
-
         return cal;
     }
 
     public Version getLinearSuccessor() throws RepositoryException { //TODO Under Full Versioning
-
         return null;
     }
 
@@ -91,12 +84,9 @@ public class RegistryVersion implements Version {
         return (Node) session.getItem(fNodepath);
     }
 
-    /*
-    All following Node inherited methods will be apply under full versioning
-    */
+//   TODO  All following Node inherited methods will be apply under full versioning
 
     public Node addNode(String s) throws ItemExistsException, PathNotFoundException, VersionException, ConstraintViolationException, LockException, RepositoryException {
-
         return null;
     }
 

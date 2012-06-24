@@ -17,9 +17,18 @@
 package org.wso2.carbon.registry.jcr.util;
 
 import org.wso2.carbon.registry.api.Registry;
+import org.wso2.carbon.registry.core.ResourceImpl;
+import org.wso2.carbon.registry.jcr.RegistryProperty;
 import org.wso2.carbon.registry.jcr.RegistrySession;
+import org.wso2.carbon.registry.jcr.RegistryValue;
+import org.wso2.carbon.registry.jcr.retention.RegistryRetentionManager;
 
 import javax.jcr.*;
+import javax.jcr.retention.RetentionPolicy;
+import java.math.BigDecimal;
+import java.util.Calendar;
+import java.util.HashMap;
+import java.util.Map;
 
 public class RegistryJCRItemOperationUtil {
 
@@ -101,16 +110,58 @@ public class RegistryJCRItemOperationUtil {
 
     }
 
-//    public static boolean isNodeVersionable(Session session, String path) throws RepositoryException {
-//
-//      if(  session.getNode(path).isNodeType("mix:versionable") ||
-//           session.getNode(path).isNodeType("mix:simpleVersionable")){
-//         return true;
-//      } else {
-//          return false;
-//      }
-//    }
+    public static RegistryProperty getRegistryProperty(String s, String property,
+                                                       ResourceImpl res, String propQName, RegistrySession session) throws RepositoryException {
+        Object prop = null;
+        RegistryProperty regProp = null;
 
+        if (s != null) {
 
+            if (s.equals("boolean")) {
+                regProp = new RegistryProperty(res, session, propQName, Boolean.valueOf(property).booleanValue());
+            } else if (s.equals("long")) {
+                regProp = new RegistryProperty(res, session, propQName, Long.valueOf(property).longValue());
+            } else if (s.equals("double")) {
+                regProp = new RegistryProperty(res, session, propQName, Double.valueOf(property).longValue());
+            } else if (s.equals("big_decimal")) {
+                regProp = new RegistryProperty(res, session, propQName, new BigDecimal(property));
+            } else if (s.equals("value_type")) {
+                regProp = new RegistryProperty(res, session, propQName, new RegistryValue(property));
+            } else if (s.equals("calendar")) {
+                Calendar cal = Calendar.getInstance();
+                cal.setTimeInMillis(Long.valueOf(property));
+                regProp = new RegistryProperty(res, session, propQName, new RegistryValue(cal));
+            }
+        }
+
+        return regProp;
+    }
+
+    public static boolean isValidJCRName(String s) {
+      if(s == null ||
+              s.contains("*"))
+              // TODO  add more to validate JCR names
+      {
+        return false;
+      } else {
+       return true;
+      }
+    }
+
+    public static void persistPendingChanges(RegistrySession registrySession) throws RepositoryException {
+//       persistRententionPolicies(registrySession);
+
+    }
+    private static void persistRententionPolicies(RegistrySession registrySession) throws RepositoryException {
+     Map<String, RetentionPolicy> retentionPolicies = new HashMap<String, RetentionPolicy>();
+     Map<String, RetentionPolicy> pending = ((RegistryRetentionManager)registrySession.getRetentionManager()).
+                                              getPendingRetentionPolicies();
+        for(String s : pending.keySet()){
+         ((RegistryRetentionManager)registrySession.getRetentionManager()).
+                 getRetentionPolicies().put(s,pending.get(s));
+        }
+        ((RegistryRetentionManager) registrySession.getRetentionManager()).
+                getPendingRetentionPolicies().clear();
+    }
 
 }

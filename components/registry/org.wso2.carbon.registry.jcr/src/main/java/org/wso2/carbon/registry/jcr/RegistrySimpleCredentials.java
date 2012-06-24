@@ -24,8 +24,15 @@ public class RegistrySimpleCredentials implements Credentials {
 
     private SimpleCredentials registrySimpleCredentials;
 
+    public RegistrySimpleCredentials(){
+    }
+
     public RegistrySimpleCredentials(String userID, char[] password) {
         this.registrySimpleCredentials = new SimpleCredentials(userID, password);
+    }
+
+    public void setRegistrySimpleCredentials(SimpleCredentials registrySimpleCredentials) {
+        this.registrySimpleCredentials = registrySimpleCredentials;
     }
 
     public Object getAttribute(String name) {

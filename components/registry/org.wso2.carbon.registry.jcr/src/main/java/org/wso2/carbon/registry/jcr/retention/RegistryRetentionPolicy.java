@@ -32,13 +32,11 @@ public class RegistryRetentionPolicy implements RetentionPolicy {
      */
 
     public RegistryRetentionPolicy(String name, String description) {
-
         this.name = name;
         this.description = description;
     }
 
     public String getName() throws RepositoryException {
-
         return name;
     }
 

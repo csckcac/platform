@@ -28,7 +28,6 @@ import org.wso2.carbon.registry.jcr.nodetype.RegistryNodeDefinition;
 import org.wso2.carbon.registry.jcr.nodetype.RegistryNodeType;
 import org.wso2.carbon.registry.jcr.util.RegistryJCRItemOperationUtil;
 import org.wso2.carbon.registry.jcr.util.RegistryJCRSpecificStandardLoderUtil;
-
 import javax.jcr.*;
 import javax.jcr.lock.Lock;
 import javax.jcr.lock.LockException;
@@ -104,15 +103,8 @@ public class RegistryNode implements Node {
     public void setCollection(String s) throws RegistryException { //Non JCR method  //s-abs path:assume
 
         try {
-            if (s != null) {
+            if (s != null && registrySession.getUserRegistry().get(s) instanceof CollectionImpl) {
                 resource = (CollectionImpl) registrySession.getUserRegistry().get(s);
-//                resource = (CollectionImpl) registrySession.getUserRegistry().newCollection();
-//                resource.setDescription("nt:base");
-//                if (!registrySession.getUserRegistry().resourceExists("/")) {
-//                    resource.setDescription("nt:base");
-//                    registrySession.getUserRegistry().put("/", resource);
-//                }
-            } else {
             }
         } catch (RegistryException e) {
             String msg = "Exception occurred in registry collection creation " + this;
@@ -738,10 +730,12 @@ public class RegistryNode implements Node {
                 tempCollection = (CollectionImpl) registrySession.getUserRegistry().get(nodePath);
                 String[] children = tempCollection.getChildren();
                 for (int i = 0; i < children.length; i++) {
-                     if(RegistryJCRItemOperationUtil.isSystemConfigNode(children[i])) {
-                        continue;
-                     }
-                    nodes.add(registrySession.getNode(children[i]));
+                    if(isARegistryCollection(children[i])) {
+                        if(RegistryJCRItemOperationUtil.isSystemConfigNode(children[i])) {
+                            continue;
+                        }
+                        nodes.add(registrySession.getNode(children[i]));
+                    }
                 }
             }
         } catch (RegistryException e) {
@@ -753,13 +747,15 @@ public class RegistryNode implements Node {
         return (NodeIterator) nodeIterator;
     }
 
+    private boolean isARegistryCollection(String path) throws RegistryException {
+      return registrySession.getUserRegistry().get(path)  instanceof CollectionImpl;
+    }
+
     public NodeIterator getNodes(String s) throws RepositoryException {
         List<Node> nodes = new ArrayList<Node>();
         try {
-
             CollectionImpl coll = (CollectionImpl) registrySession.getUserRegistry().get(nodePath);
             String[] childpaths = coll.getChildren();
-
             for (int i = 0; i < childpaths.length; i++) {
                 if(RegistryJCRItemOperationUtil.isSystemConfigNode(childpaths[i])){
                  continue;
@@ -775,7 +771,6 @@ public class RegistryNode implements Node {
         }
         return new RegistryNodeIterator(nodes);
     }
-
 
     public NodeIterator getNodes(String[] strings) throws RepositoryException {
 
@@ -884,12 +879,9 @@ public class RegistryNode implements Node {
                 }
 
 
-                regProp = RegistrySession.getRegistryProperty(
+                regProp = RegistryJCRItemOperationUtil.getRegistryProperty(
                           res.getProperty("registry.jcr.property.type"), prop, res,propQName,registrySession);
-
                 resFlag = false;
-
-
             }
 
         } catch (RegistryException e) {
@@ -897,7 +889,6 @@ public class RegistryNode implements Node {
             log.debug(msg);
             throw new RepositoryException(msg, e);
         }
-
         return regProp;
     }
 
@@ -906,8 +897,6 @@ public class RegistryNode implements Node {
 
         Set<String> propNamesList = new HashSet<String>();
         Set<Property> properties = new HashSet<Property>();
-
-        //
         Resource resource = null;
         try {
             resource = registrySession.getUserRegistry().get(nodePath);
@@ -938,22 +927,15 @@ public class RegistryNode implements Node {
             }
 
             Iterator it = propNamesList.iterator();
-
             while (it.hasNext()) {
-
                 properties.add(getProperty(it.next().toString()));
-
             }
         } catch (Exception e) {
             String msg = "failed to resolve the path of the given node or violation of repository syntax " + this;
             log.debug(msg);
             throw new RepositoryException(msg, e);
         }
-
-
         RegistryPropertyIterator propertyIterator = new RegistryPropertyIterator(properties, this);
-
-
         return propertyIterator;
 
     }
@@ -961,9 +943,7 @@ public class RegistryNode implements Node {
     public PropertyIterator getProperties(String s) throws RepositoryException {
 
         boolean isMatch = false;
-
         Properties propyList = resource.getProperties();
-
         Iterator nameIt = getCollectionProperties(propyList).iterator();
         Set propValList = new HashSet();
 
@@ -971,25 +951,15 @@ public class RegistryNode implements Node {
         String input = "";
 
         while (nameIt.hasNext()) {
-
             input = nameIt.next().toString();
-
             isMatch = Pattern.matches(regex, input);
-
             propValList.add(resource.getProperty(input));
-
         }
-
-
         RegistryPropertyIterator propertyIterator = new RegistryPropertyIterator(propValList, this);
-
         return propertyIterator;
-
-
     }
 
     public PropertyIterator getProperties(String[] strings) throws RepositoryException {
-
         boolean isMatch = false;
 
         Properties propyList = resource.getProperties();
@@ -998,27 +968,21 @@ public class RegistryNode implements Node {
         Set propValList = new HashSet();
 
         String[] regex = new String[strings.length];
-
         String input = "";
         String reg = "";
 
         while (nameIt.hasNext()) {
 
             input = nameIt.next().toString();
-
             for (int i = 0; i < regex.length; i++) {
-
                 reg = regex[i] + "*";
                 isMatch = Pattern.matches(reg, input);
                 if (isMatch) break;
-
             }
-
             propValList.add(resource.getProperty(input));
         }
 
         RegistryPropertyIterator propertyIterator = new RegistryPropertyIterator(propValList, this);
-
         return propertyIterator;
     }
 
@@ -1680,9 +1644,6 @@ public class RegistryNode implements Node {
 
             }
         }
-
         return propNamesList;
     }
-
-
 }

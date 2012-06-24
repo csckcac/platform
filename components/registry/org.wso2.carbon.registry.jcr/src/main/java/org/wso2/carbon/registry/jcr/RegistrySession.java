@@ -98,7 +98,7 @@ public class RegistrySession implements Session {
         this.registrySimpleCredentials = registrySimpleCredentials;
         this.registryWorkspace = new RegistryWorkspace(registrySimpleCredentials.getUserID(), this);
         this.regAccControlMngr = new RegistryAccessControlManager(this);
-        this.regRetentionMngr = new RegistryRetentionManager();
+        this.regRetentionMngr = new RegistryRetentionManager(this);
 
     }
 
@@ -112,7 +112,7 @@ public class RegistrySession implements Session {
         loadJCRSystemConfiguration(userRegistry,WORKSPACE_ROOT);
         this.registryWorkspace = new RegistryWorkspace(this);
         this.regAccControlMngr = new RegistryAccessControlManager(this);
-        this.regRetentionMngr = new RegistryRetentionManager();
+        this.regRetentionMngr = new RegistryRetentionManager(this);
 
     }
     //TODO workspace name is "" and have to handle properly
@@ -125,7 +125,7 @@ public class RegistrySession implements Session {
         loadJCRSystemConfiguration(userRegistry,WORKSPACE_ROOT);
         this.registryWorkspace = new RegistryWorkspace(this);
         this.regAccControlMngr = new RegistryAccessControlManager(this);
-        this.regRetentionMngr = new RegistryRetentionManager();
+        this.regRetentionMngr = new RegistryRetentionManager(this);
     }
 
     public String getWorkspaceRootPath() {
@@ -231,7 +231,6 @@ public class RegistrySession implements Session {
 //            return getRootNode().getNode("testroot");
 //        }
 
-
         Item anItem = null;
         CollectionImpl collection = null;
         String[] tempArr = null;
@@ -298,32 +297,6 @@ public class RegistrySession implements Session {
         return subNode;
     }
 
-    public static RegistryProperty getRegistryProperty(String s, String property,
-                                                       ResourceImpl res, String propQName, RegistrySession session) throws RepositoryException {
-        Object prop = null;
-        RegistryProperty regProp = null;
-
-        if (s != null) {
-
-            if (s.equals("boolean")) {
-                regProp = new RegistryProperty(res, session, propQName, Boolean.valueOf(property).booleanValue());
-            } else if (s.equals("long")) {
-                regProp = new RegistryProperty(res, session, propQName, Long.valueOf(property).longValue());
-            } else if (s.equals("double")) {
-                regProp = new RegistryProperty(res, session, propQName, Double.valueOf(property).longValue());
-            } else if (s.equals("big_decimal")) {
-                regProp = new RegistryProperty(res, session, propQName, new BigDecimal(property));
-            } else if (s.equals("value_type")) {
-                regProp = new RegistryProperty(res, session, propQName, new RegistryValue(property));
-            } else if (s.equals("calendar")) {
-                Calendar cal = Calendar.getInstance();
-                cal.setTimeInMillis(Long.valueOf(property));
-                regProp = new RegistryProperty(res, session, propQName, new RegistryValue(cal));
-            }
-        }
-
-        return regProp;
-    }
 
     public Property getProperty(String s) throws PathNotFoundException, RepositoryException {
 
@@ -417,6 +390,7 @@ public class RegistrySession implements Session {
     public void save() throws AccessDeniedException, ItemExistsException, ReferentialIntegrityException,
             ConstraintViolationException, InvalidItemStateException, VersionException, LockException,
             NoSuchNodeTypeException, RepositoryException {
+         RegistryJCRItemOperationUtil.persistPendingChanges(this);
          sessionSaved();
     }
 

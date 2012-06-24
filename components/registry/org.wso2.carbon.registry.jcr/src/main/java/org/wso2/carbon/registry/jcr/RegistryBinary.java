@@ -27,9 +27,7 @@ public class RegistryBinary implements Binary {
     private Object key;
 
     public RegistryBinary(Object key) {
-
         this.key = key;
-
     }
 
     public InputStream getStream() throws RepositoryException {

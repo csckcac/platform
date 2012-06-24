@@ -26,18 +26,15 @@ public class RegistryHold implements Hold {
     private boolean isDeep = false;
 
     public RegistryHold(String name, boolean isDeep) {
-
         this.name = name;
         this.isDeep = isDeep;
     }
 
     public boolean isDeep() throws RepositoryException {
-
         return isDeep;
     }
 
     public String getName() throws RepositoryException {
-
         return name;
     }
 }

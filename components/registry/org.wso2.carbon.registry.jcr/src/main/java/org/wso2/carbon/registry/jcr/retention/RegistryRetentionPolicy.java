@@ -23,17 +23,13 @@ import javax.jcr.retention.RetentionPolicy;
 public class RegistryRetentionPolicy implements RetentionPolicy {
 
     private String name = "";
-    public String description = "";
 
-    /**
+   /**
      * @param name        -name of the policy
-     * @param description - An RetentionPolicy is an object with a name and an optional description.So here we
-     *                    set the constructor to set a description to the policy
      */
 
-    public RegistryRetentionPolicy(String name, String description) {
+    public RegistryRetentionPolicy(String name) {
         this.name = name;
-        this.description = description;
     }
 
     public String getName() throws RepositoryException {

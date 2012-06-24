@@ -16,23 +16,30 @@
 
 package org.wso2.carbon.registry.jcr.util.test.data;
 
+import org.wso2.carbon.registry.core.Resource;
 import org.wso2.carbon.registry.core.exceptions.RegistryException;
 import org.wso2.carbon.registry.jcr.RegistrySession;
 import org.wso2.carbon.registry.jcr.retention.RegistryRetentionPolicy;
-
 import javax.jcr.RepositoryException;
 import javax.jcr.retention.RetentionPolicy;
 import java.util.Map;
 
 public class TCKTestDataLoader {
 
-public static void loadRetentionPolicies(Map<String, RetentionPolicy> retentionPolicies, RegistrySession session) throws RegistryException, RepositoryException {
+public static void loadRetentionPolicies(RegistrySession session) throws RepositoryException {
 
-//    if(!session.getUserRegistry().resourceExists("/jcr_system/workspaces/default_workspace/test_policy_holder")){
-//       session.getRootNode().addNode("test_policy_holder");
-//    }
-//    retentionPolicies.put("/jcr_system/workspaces/default_workspace/test_policy_holder",
-//            new RegistryRetentionPolicy("test_policy_holder","test_policy_description"));
+    try {
+        if(!session.getUserRegistry().resourceExists("/jcr_system/workspaces/default_workspace/test_policy_holder")){
+           session.getRootNode().addNode("test_policy_holder");
+        }
+        Resource r = session.getUserRegistry().get("/jcr_system/workspaces/default_workspace/test_policy_holder");
+        r.setProperty("org.wso2.carbon.registry.jcr.retention.policy","test_policy_holder");
+        session.getUserRegistry().put("/jcr_system/workspaces/default_workspace/test_policy_holder",r);
+    } catch (RegistryException e) {
+        throw new RepositoryException("Unable to load TCK test data");
+    } catch (RepositoryException e) {
+        throw new RepositoryException("Unable to load TCK test data");
+    }
 }
 
 }

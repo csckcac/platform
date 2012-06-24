@@ -33,7 +33,6 @@ import org.w3c.dom.NodeList;
 import org.wso2.carbon.core.util.KeyStoreManager;
 import org.wso2.carbon.identity.authenticator.saml2.sso.SAML2SSOAuthenticatorException;
 import org.wso2.carbon.identity.authenticator.saml2.sso.internal.SAML2SSOAuthBEDataHolder;
-import org.wso2.carbon.registry.core.exceptions.RegistryException;
 import org.wso2.carbon.registry.core.service.RegistryService;
 import org.wso2.carbon.user.core.service.RealmService;
 import org.xml.sax.SAXException;
@@ -135,14 +134,8 @@ public class Util {
         }
 
         KeyStoreManager keyStoreManager = null;
-        try {
-            // get an instance of the corresponding Key Store Manager instance
-            keyStoreManager = KeyStoreManager.getInstance(registryService.getGovernanceSystemRegistry(tenantID));
-        } catch (RegistryException e) {
-            String errorMsg = "Error getting a KeyStore Manager instance.";
-            log.error(errorMsg, e);
-            throw new SAML2SSOAuthenticatorException(errorMsg, e);
-        }
+        // get an instance of the corresponding Key Store Manager instance
+        keyStoreManager = KeyStoreManager.getInstance(tenantID);
 
         X509CredentialImpl credentialImpl = null;
         try {

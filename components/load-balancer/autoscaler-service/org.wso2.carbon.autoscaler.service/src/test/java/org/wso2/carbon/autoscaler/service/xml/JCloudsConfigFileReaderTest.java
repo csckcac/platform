@@ -18,7 +18,6 @@
 package org.wso2.carbon.autoscaler.service.xml;
 
 import java.util.List;
-
 import org.wso2.carbon.autoscaler.service.util.IaaSProvider;
 import junit.framework.TestCase;
 
@@ -34,21 +33,26 @@ public class JCloudsConfigFileReaderTest extends TestCase {
         assertEquals(2, list.size());
         
         assertEquals("ec2", list.get(0).getName());
+        assertEquals("aaa", list.get(0).getIdentity());
         assertEquals(2, list.get(0).getScaleDownOrder());
         assertEquals(1, list.get(0).getScaleUpOrder());
-        assertEquals("temp1", list.get(0).getTemplate());
         assertEquals("a", list.get(0).getProperties().get("A"));
         assertEquals("b", list.get(0).getProperties().get("B"));
         assertEquals(null, list.get(0).getProperties().get("AA"));
         
         assertEquals("lxc", list.get(1).getName());
+        assertEquals("bbb", list.get(1).getIdentity());
         assertEquals(1, list.get(1).getScaleDownOrder());
         assertEquals(2, list.get(1).getScaleUpOrder());
-        assertEquals("temp2", list.get(1).getTemplate());
         assertEquals("x", list.get(1).getProperties().get("X"));
         assertEquals("y", list.get(1).getProperties().get("Y"));
         assertEquals(null, list.get(1).getProperties().get("x"));
         
+        
+        List<org.wso2.carbon.autoscaler.service.util.ServiceTemplate> temps =reader.getTemplates();
+      
+        assertEquals("wso2.as.domain", temps.get(0).getDomainName());
+        assertEquals("manager,default", temps.get(0).getProperty("securityGroups"));
         
     }
 

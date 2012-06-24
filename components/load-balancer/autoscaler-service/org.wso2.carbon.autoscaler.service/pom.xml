@@ -20,9 +20,9 @@
 
     <parent>
         <groupId>org.wso2.carbon</groupId>
-        <artifactId>autoscaler-service</artifactId>
+        <artifactId>loadbalancer-components</artifactId>
         <version>4.0.0-SNAPSHOT</version>
-        <relativePath>../pom.xml</relativePath>
+        <relativePath>../../pom.xml</relativePath>
     </parent>
 
     <modelVersion>4.0.0</modelVersion>
@@ -51,14 +51,16 @@
                         <Export-Package>
                             org.wso2.carbon.autoscaler.service
                         </Export-Package>
-                        <Private-Package>org.wso2.carbon.autoscaler.service.*, !org.wso2.carbon.autoscaler.service</Private-Package>
+                        <Private-Package>
+                            org.wso2.carbon.autoscaler.service.*, !org.wso2.carbon.autoscaler.service
+                        </Private-Package>
                         <Import-Package>
-                        	!org.apache.commons.logging,
+                        	  !org.apache.commons.logging,
                             org.apache.commons.logging; version=0.0.0,
-                            org.wso2.carbon.autoscaler.service.jvm.agentmgt,
-                            org.wso2.carbon.hosting.wnagent.stub.*;   version=0.0.0,   
                             org.wso2.carbon.lb.common.dto.*,
                             org.wso2.carbon.utils.*,
+                            org.jclouds.compute*;version="${jclouds.version}";resolution:=optional,
+                            org.jclouds*;version="${jclouds.version}",
                             *; resolution:=optional
                         </Import-Package>
                         <DynamicImport-Package>*</DynamicImport-Package>
@@ -79,59 +81,25 @@
         </dependency>
         <dependency>
             <groupId>org.wso2.carbon</groupId>
-            <artifactId>org.wso2.carbon.autoscaler.service.jvm.agentmgt</artifactId>
-            <version>${wso2carbon.version}</version>
-        </dependency>
-        <!--dependency>
-            <groupId>org.wso2.carbon</groupId>
-            <artifactId>org.wso2.carbon.autoscaler.agent.service.stub</artifactId>
-            <version>${wso2carbon.version}</version>
-        </dependency-->
-        <dependency>
-            <groupId>org.wso2.carbon</groupId>
             <artifactId>org.wso2.carbon.lb.common</artifactId>
             <version>${wso2carbon.version}</version>
         </dependency>
 	
-		<dependency>
-            <groupId>org.wso2.carbon</groupId>
-            <artifactId>
-                org.wso2.carbon.hosting.wnagent.stub
-            </artifactId>
-            <version>4.0.0-SNAPSHOT</version>
-        </dependency>
-        
         <!--  Jclouds dependencies -->
-        <!--dependency>
+         <dependency>
+           <groupId>org.jclouds</groupId>
+           <artifactId>jclouds-core</artifactId>
+           <version>${jclouds.version}</version>
+         </dependency>
+         <dependency>
            <groupId>org.jclouds</groupId>
            <artifactId>jclouds-compute</artifactId>
-           <version>1.5.0-beta.1</version>
-         </dependency>
-         <dependency>
-           <groupId>org.jclouds</groupId>
-           <artifactId>jclouds-allcompute</artifactId>
-           <version>1.5.0-beta.1</version>
-         </dependency>
-         <dependency>
-           <groupId>org.jclouds.labs</groupId>
-           <artifactId>glesys</artifactId>
-           <version>1.5.0-beta.1</version>
-         </dependency>
-         <dependency>
-           <groupId>org.jclouds.labs</groupId>
-           <artifactId>virtualbox</artifactId>
-           <version>1.5.0-beta.1</version>
-         </dependency>
-         <dependency>
-           <groupId>org.bouncycastle</groupId>
-           <artifactId>bcprov-jdk16</artifactId>
-           <version>1.46</version>
-           <scope>provided</scope>
+           <version>${jclouds.version}</version>
          </dependency>
          <dependency>
            <groupId>org.jclouds.driver</groupId>
            <artifactId>jclouds-bouncycastle</artifactId>
-           <version>1.5.0-beta.1</version>
+           <version>${jclouds.version}</version>
            <exclusions>
               <exclusion>
                  <groupId>org.bouncycastle</groupId>
@@ -142,22 +110,36 @@
          <dependency>
            <groupId>org.jclouds.driver</groupId>
            <artifactId>jclouds-sshj</artifactId>
-           <version>1.5.0-beta.1</version>
+           <version>${jclouds.version}</version>
          </dependency>
-
-       <dependency>
+         <dependency>
            <groupId>org.jclouds.driver</groupId>
            <artifactId>jclouds-log4j</artifactId>
-           <version>1.5.0-beta.1</version>
-       </dependency>
-
-       <dependency>
-         <groupId>org.jclouds.driver</groupId>
-         <artifactId>jclouds-enterprise</artifactId>
-         <version>1.5.0-beta.1</version>
-       </dependency-->
+           <version>${jclouds.version}</version>
+         </dependency>
+         <dependency>
+           <groupId>org.jclouds.driver</groupId>
+           <artifactId>jclouds-enterprise</artifactId>
+           <version>${jclouds.version}</version>
+         </dependency>
+         <dependency>
+           <groupId>org.jclouds.api</groupId>
+           <artifactId>ec2</artifactId>
+           <version>${jclouds.version}</version>
+         </dependency>
+         <dependency>
+           <groupId>org.jclouds.provider</groupId>
+           <artifactId>aws-ec2</artifactId>
+           <version>${jclouds.version}</version>
+         </dependency>
+         <dependency>
+           <groupId>org.jclouds.api</groupId>
+           <artifactId>openstack-nova</artifactId>
+           <version>${jclouds.version}</version>
+         </dependency>
        
     </dependencies>
+    
 
 </project>
 

@@ -20,19 +20,45 @@
 
 	<iaasProviders>
 		<iaasProvider name="ec2">
+			<provider>aws-ec2</provider>
+			<identity>aaa</identity>
+			<credential>aaaa</credential>
 			<scaleUpOrder>1</scaleUpOrder>
 			<scaleDownOrder>2</scaleDownOrder>
 			<property name="A" value="a"/>
 			<property name="B" value="b"/>
-			<template>temp1</template>
+			<template>tempEC2</template>
 		</iaasProvider>
 		<iaasProvider name="lxc">
+			<provider>lxc</provider>
+			<identity>bbb</identity>
+			<credential>bbbb</credential>
 			<scaleUpOrder>2</scaleUpOrder>
 			<scaleDownOrder>1</scaleDownOrder>
 			<property name="X" value="x"/>
 			<property name="Y" value="y"/>
-			<template>temp2</template>
+			<template>tempLXC</template>
 		</iaasProvider>
 	</iaasProviders>
+	
+	<services>
+		<default>
+			<property name="availabilityZone" value="us-east-1c"/>
+			<property name="securityGroups" value="manager,cep,mb,default"/>
+            <property name="instanceType" value="m1.large"/>
+            <property name="minAppInstances" value="1"/>
+            <property name="maxAppInstances" value="5"/>
+            <property name="queueLengthPerNode" value="50"/>
+            <property name="roundsToAverage" value="100"/>
+            <property name="instancesPerScaleUp" value="1"/>
+            <property name="messageExpiryTime" value="60000"/>
+            <property name="keyPair" value="aa"/>
+		</default>
+		<service domain="wso2.as.domain">
+			<property name="securityGroups" value="manager,default"/>
+            <property name="availabilityZone" value="us-east-1c"/>
+            <property name="payload" value="resources/as.zip"/>
+		</service>
+	</services>
 
 </jcloudConfig>

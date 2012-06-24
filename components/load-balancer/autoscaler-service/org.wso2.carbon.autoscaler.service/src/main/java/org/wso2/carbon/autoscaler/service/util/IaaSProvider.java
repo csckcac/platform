@@ -20,7 +20,9 @@ package org.wso2.carbon.autoscaler.service.util;
 import java.util.HashMap;
 import java.util.Map;
 
-
+/**
+ * This is the basic data structure which holds an IaaS specific details.
+ */
 public class IaaSProvider {
     
     /**
@@ -42,6 +44,13 @@ public class IaaSProvider {
      * Scale up order and scale down order of the IaaS.
      */
     private int scaleUpOrder, scaleDownOrder;
+    
+    private String provider, identity, credential;
+    
+    public enum SortParameter {
+        SCALE_UP, SCALE_DOWN
+    }
+
     
     public Map<String, String> getProperties() {
         return properties;
@@ -88,6 +97,30 @@ public class IaaSProvider {
 
     public void setName(String name) {
         this.name = name;
+    }
+
+    public String getProvider() {
+        return provider;
+    }
+
+    public void setProvider(String provider) {
+        this.provider = provider;
+    }
+
+    public String getIdentity() {
+        return identity;
+    }
+
+    public void setIdentity(String identity) {
+        this.identity = identity;
+    }
+
+    public String getCredential() {
+        return credential;
+    }
+
+    public void setCredential(String credential) {
+        this.credential = credential;
     }
 
     

@@ -17,53 +17,78 @@
 */
 package org.wso2.carbon.autoscaler.service;
 
-import org.wso2.carbon.autoscaler.service.exception.NoInstanceFoundException;
-
-import java.sql.SQLException;
-
 /**
- * AutoScaler task should communicate with AutoscalerService, when it decides to scale up
- * or down. Only {@link #startInstance(String)} and {@link #terminateInstance(String)}
- * operations are provided by this service.
+ * This Interface provides away for a component, to communicate with an underline
+ * Infrastructure which are supported by <i>JClouds</i>.
  * 
  */
 public interface IAutoscalerService {
+    
+    /**
+     * Initialize the service.
+     * @param isSpi if this service is to be used by SPI, this parameter should be set to
+     * true. When this is true, you should specify an image id, each time you
+     * are starting an instance i.e. you should use {@link #startSpiInstance(String, String)}
+     * method, instead of using {@link #startInstance(String)}.
+     * @return
+     */
+    public boolean initAutoscaler(boolean isSpi);
 
     
     /**
-     * This will be called by the Autoscaler task, if it wants to scale up.
-     * @param domainName spawning instance should be in this domain.
-     * @return whether an instance started successfully or not.
+     * Calling this method will result in an instance startup, which is belong
+     * to the provided service domain. This method is non-blocking, means we do not
+     * wait till the instance is started up.
+     * @param domainName service domain of the instance to be started up.
+     * @return whether the starting up is successful or not.
      */
-    public boolean startInstance(String domainName) throws ClassNotFoundException, SQLException;
+    public boolean startInstance(String domainName);
+    
+    /**
+     * Calling this method will result in an instance startup, which is belong
+     * to the provided service domain. This method will return the public IP address of
+     * the instance that is started. Thus, this method is blocking, since we need to 
+     * return the IP Address and for that we have to wait till the instance started up.
+     * @param domainName service domain of the instance.
+     * @param imageId starting instance will be an instance of this image. Image id should
+     * be a valid one.
+     * @return public IP address of the instance in String format. If instance failed to 
+     * start, this will return an empty String.
+     */
+    public String startSpiInstance(String domainName, String imageId);
     
    
     /**
-     * This will be called by the Autoscaler task, if it wants to scale down.
-     * @param domainName terminating instance should be in this domain.
+     * Calling this method will result in termination of an instance which is belong
+     * to the provided service domain.
+     * @param domainName service domain of the instance to be terminated.
      * @return whether an instance terminated successfully or not.
-     * @throws NoInstanceFoundException if no instance in this particular domain has
-     *  spawned.
      */
-	public boolean terminateInstance(String domainName)
-            throws NoInstanceFoundException, SQLException;
+	public boolean terminateInstance(String domainName);
 	
 	/**
-	 * This will be called by the Autoscaler task, in order to get the pending instances
+	 * Calling this method will result in termination of the lastly spawned instance which is
+	 * belong to the provided service domain.
+	 * @param domainName service domain of the instance to be terminated.
+	 * @return whether the termination is successful or not.
+	 */
+	public boolean terminateLastlySpawnedInstance(String domainName);
+	
+	/**
+     * Calling this method will result in termination of an instance which has the
+     * provided public IP address.
+     * @param publicIp public IP address of the instance to be terminated.
+     * @return whether the instance terminated successfully or not.
+     */
+    public boolean terminateSpiInstance(String publicIp);
+	
+	/**
+	 * Calling this method will result in returning the pending instances
 	 * count of a particular domain.
-	 * @param domainName name of the domain.
-	 * @return number of pending instances for this domain. If this domain is not present,
-	 * zero will be returned.
+	 * @param domainName service domain
+	 * @return number of pending instances for this domain. If no instances of this 
+	 * domain is present, this will return zero.
 	 */
 	public int getPendingInstanceCount(String domainName);
 	
-	/**
-	 * TODO remove this
-	 * This should be called in order to add to pending instance count for this domain.
-	 * If you want to deduct, you can simply send a negative value.
-	 * @param domainName name of the domain.
-	 * @param count number of instances to be added for this domain.
-	 */
-	public void addPendingInstanceCount(String domainName, int count);
-    
 }

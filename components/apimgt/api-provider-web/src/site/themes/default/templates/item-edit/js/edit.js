@@ -117,8 +117,13 @@ var updateResourcesToApi = function (rowNums) {
 
 };
 
-var deleteResource = function (id,rowNums) {
-    var count=$('#resource-table tr').length;
+var deleteResource = function (id, rowNums) {
+    var rowsNums = new Array();
+    var resCount = $('#resourceCount').val().split(',');
+    for (var i = 0; i < resCount.length; i++) {
+        rowsNums.push(parseInt(resCount[i]));
+    }
+    var count = $('#resource-table tr').length;
     //Check whether only one defined resource remains before delete operation
     if (count == 3) {
         $('#resourceTableError').show('fast');
@@ -129,9 +134,8 @@ var deleteResource = function (id,rowNums) {
     $('#item-' + id).remove();
     $('[name=resourceMethod-' + id + ']').remove();
     $('[name=uriTemplate-' + id + ']').remove();
-    rowNums.splice(rowNums.indexOf(id),1);
-    $('#resourceCount').val(rowNums);
-
+    rowsNums.splice(rowsNums.indexOf(id), 1);
+    $('#resourceCount').attr('value', rowsNums);
 };
 
 function setContextValue(version) {

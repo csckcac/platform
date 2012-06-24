@@ -24,15 +24,14 @@ import org.bouncycastle.jce.X509Principal;
 import org.bouncycastle.jce.X509V3CertificateGenerator;
 import org.wso2.carbon.core.RegistryResources;
 import org.wso2.carbon.core.util.CryptoUtil;
+import org.wso2.carbon.keystore.mgt.util.RealmServiceHolder;
+import org.wso2.carbon.keystore.mgt.util.RegistryServiceHolder;
 import org.wso2.carbon.registry.core.Resource;
 import org.wso2.carbon.registry.core.exceptions.RegistryException;
 import org.wso2.carbon.registry.core.session.UserRegistry;
 import org.wso2.carbon.security.SecurityConstants;
 import org.wso2.carbon.security.keystore.KeyStoreAdmin;
-import org.wso2.carbon.user.core.UserStoreException;
 import org.wso2.carbon.user.core.service.RealmService;
-import org.wso2.carbon.keystore.mgt.util.RealmServiceHolder;
-import org.wso2.carbon.keystore.mgt.util.RegistryServiceHolder;
 
 import java.io.ByteArrayOutputStream;
 import java.math.BigInteger;
@@ -153,7 +152,7 @@ public class KeyStoreGenerator {
 
             String keyStoreName = generateKSNameFromDomainName();
             // Use the keystore using the keystore admin
-            KeyStoreAdmin keystoreAdmin = new KeyStoreAdmin(govRegistry);
+            KeyStoreAdmin keystoreAdmin = new KeyStoreAdmin(tenantId, govRegistry);
             keystoreAdmin.addKeyStore(outputStream.toByteArray(), keyStoreName,
                                       password, " ", "JKS", password);
             

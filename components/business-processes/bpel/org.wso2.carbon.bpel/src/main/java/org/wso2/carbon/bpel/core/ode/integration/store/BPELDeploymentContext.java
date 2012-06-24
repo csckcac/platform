@@ -56,6 +56,8 @@ public class BPELDeploymentContext {
 
     private boolean isExistingPackage;
 
+    private boolean isFailed;
+
     public BPELDeploymentContext(Integer tenantId,
                                  String bpelFileSystemRepoRoot,
                                  File bpelArchive,
@@ -73,6 +75,7 @@ public class BPELDeploymentContext {
                 lastIndexOf("." + BPELConstants.BPEL_PACKAGE_EXTENSION));
         bpelPackageNameWithVersion = bpelPackageName + "-" + version;
         bpelPackageLocationInFileSystem = getTheLocationToExtract(bpelPackageNameWithVersion);
+        currentVersionOfBPELPackage = new File(bpelPackageLocationInFileSystem);
     }
 
     private String getTheLocationToExtract(String bpelPackageNameWithVersion) {
@@ -82,10 +85,6 @@ public class BPELDeploymentContext {
 
     public String getArchiveName() {
         return archiveName;
-    }
-
-    public void setBPELPackageContent(File bpelPackage) {
-        currentVersionOfBPELPackage = bpelPackage;
     }
 
     public File getBPELPackageContent() {
@@ -151,5 +150,13 @@ public class BPELDeploymentContext {
 
     public void setExistingPackage(boolean existingPackage) {
         isExistingPackage = existingPackage;
+    }
+
+    public boolean isFailed() {
+        return isFailed;
+    }
+
+    public void setFailed(boolean failed) {
+        isFailed = failed;
     }
 }

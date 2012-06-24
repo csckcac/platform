@@ -180,8 +180,6 @@ public final class Utils {
             }
 
             zipStream.close();
-            deploymentContext.setBPELPackageContent(
-                    new File(deploymentContext.getBpelPackageLocationInFileSystem()));
         } catch (IOException e) {
             String errMsg = "Error occurred during extracting the archive: " +
                     deploymentContext.getArchiveName();

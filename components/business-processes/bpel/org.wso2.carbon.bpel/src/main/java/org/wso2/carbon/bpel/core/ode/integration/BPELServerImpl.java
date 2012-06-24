@@ -755,25 +755,31 @@ public final class BPELServerImpl implements BPELServer {
                         //odeBpelServer.register(pConf);
                         try {
                             odeBpelServer.register(pConf);
-                        } catch (Exception ex) {
-                            String failureCause = "Process registration failed for:" + pConf.getProcessId() + ". Process deployment failed.";
-                            log.error(failureCause, ex);
+                        } catch (BpelEngineException ex) {
+                            String failureCause = "Process registration failed for:" +
+                                    pConf.getProcessId() + ". " + ex.getMessage();
                             //create DeploymentContext in order to persist the error
                             int tenantID = processStore.getTenantId(pConf.getProcessId());
                             String bpelRepoRoot = processStore.getLocalDeploymentUnitRepo().getAbsolutePath();
                             ProcessConfigurationImpl pConfImpl = (ProcessConfigurationImpl) pConf;
                             File bpelArchive = new File(pConfImpl.getAbsolutePathForBpelArchive());
 
-                            BPELDeploymentContext dCtx = new BPELDeploymentContext(tenantID, bpelRepoRoot, bpelArchive, pConf.getVersion());
-                            dCtx.setDeploymentFailureCause(failureCause);
-                            dCtx.setStackTrace(ex);
+                            BPELDeploymentContext deploymentContext =
+                                    new BPELDeploymentContext(tenantID,
+                                    bpelRepoRoot, bpelArchive, pConf.getVersion());
+                            deploymentContext.setDeploymentFailureCause(failureCause);
+                            deploymentContext.setStackTrace(ex);
+                            deploymentContext.setFailed(true);
 
-                            TenantProcessStoreImpl store = (TenantProcessStoreImpl) processStore.getTenantsProcessStore(tenantID);
+                            TenantProcessStoreImpl store =
+                                    (TenantProcessStoreImpl) processStore.getTenantsProcessStore(tenantID);
                             try {
-                                store.getBPELPackageRepository().handleBPELPackageDeploymentError(dCtx);
+                                store.getBPELPackageRepository().handleBPELPackageDeploymentError(deploymentContext);
                             } catch (Exception e) {
                                 log.error("Unable to persist the failure cause. Failure: " + failureCause, e);
                             }
+
+                            throw ex;
                         }
                     } else {
                         if (log.isDebugEnabled()) {

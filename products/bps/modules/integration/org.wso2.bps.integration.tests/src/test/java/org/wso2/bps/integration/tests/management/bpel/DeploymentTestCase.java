@@ -29,7 +29,7 @@ import org.wso2.bps.integration.tests.util.FrameworkSettings;
 import org.wso2.carbon.bpel.stub.mgt.BPELPackageManagementServiceStub;
 import org.wso2.carbon.bpel.stub.mgt.PackageManagementException;
 import org.wso2.carbon.bpel.stub.mgt.types.DeployedPackagesPaginated;
-import org.wso2.carbon.bpel.stub.mgt.types.Package_type0;
+import org.wso2.carbon.bpel.stub.mgt.types.PackageType;
 import org.wso2.carbon.bpel.stub.upload.BPELUploaderStub;
 import org.wso2.carbon.bpel.stub.upload.types.UploadedFileItem;
 import org.wso2.carbon.integration.framework.ClientConnectionUtil;
@@ -41,7 +41,6 @@ import java.net.MalformedURLException;
 import java.rmi.RemoteException;
 
 import static org.testng.Assert.assertFalse;
-import static org.testng.Assert.fail;
 
 //import org.wso2.carbon.integration.framework.utils.FrameworkSettings;
 //    import org.wso2.carbon.integration.framework.utils.
@@ -156,7 +155,7 @@ public class DeploymentTestCase {
                 listDeployedPackagesPaginated(FIRST_PAGE);
 
         boolean packageDeployed = false;
-        for (Package_type0 bpelPackage : deployedPackages.get_package()) {
+        for (PackageType bpelPackage : deployedPackages.get_package()) {
             log.info(bpelPackage.getName());
             if (bpelPackage.getName().equals(packageName)) {
                 log.info(packageName + " has deployed successfully");

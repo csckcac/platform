@@ -155,9 +155,8 @@ public final class BpelUIUtil {
         return pLinkEprMap;
     }
 
-    public static String getUndeployLink(String packageName, int pageNumber) {
-        return "process_list.jsp?operation=undeploy&packageName=" + packageName + "&pageNumber=" +
-                pageNumber;
+    public static String getUndeployLink(String packageName) {
+        return "process_list.jsp?operation=undeploy&packageName=" + packageName;
     }
 
     public static String getRetireLink(String pid, String filter, String order, int pageNumber) {

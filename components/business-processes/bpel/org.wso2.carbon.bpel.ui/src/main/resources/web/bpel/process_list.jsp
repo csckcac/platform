@@ -46,8 +46,7 @@
 
     BPELPackageManagementServiceClient pkgClient;
     ProcessManagementServiceClient client = null;
-    DeployedPackagesPaginated packageList;
-    PaginatedProcessInfoList processInfoList = null;
+    DeployedPackagesPaginated packageList = null;
     String processListFilter = null;
     String processListOrderBy = null;
     String parameters = "";
@@ -63,7 +62,8 @@
                 CarbonUIUtil.isUserAuthorized(request, "/permission/admin/manage/bpel/packages");
     boolean isAuthorizedToMonitor =
             CarbonUIUtil.isUserAuthorized(request, "/permission/admin/monitor/bpel");
-    boolean isAuthorizedToManageProcesses = CarbonUIUtil.isUserAuthorized(request, "/permission/admin/manage/bpel/processes");
+    boolean isAuthorizedToManageProcesses =
+            CarbonUIUtil.isUserAuthorized(request, "/permission/admin/manage/bpel/processes");
 
 
     if (isAuthorizedToManagePackages || isAuthorizedToMonitor ) {
@@ -178,18 +178,7 @@
 
         parameters = "filter=" + processListFilter + "&order=" + processListOrderBy;
 
-        try{
-            processInfoList = client.getPaginatedProcessList(processListFilter, processListOrderBy, pageNumberInt);
-            numberOfPages = processInfoList.getPages();
-        } catch(Exception e) {
-            response.setStatus(HttpStatus.SC_INTERNAL_SERVER_ERROR);
-            CarbonUIMessage uiMsg = new CarbonUIMessage(CarbonUIMessage.ERROR, e.getMessage(), e);
-            session.setAttribute(CarbonUIMessage.ID, uiMsg);
-%>
-<jsp:include page="../admin/error.jsp"/>
-<%
-            return;
-        }
+
     }
 
         if (isAuthorizedToMonitor || isAuthorizedToManagePackages) {
@@ -237,7 +226,8 @@
             <div id="process-list">
 <%
     if (isAuthorizedToMonitor || isAuthorizedToManageProcesses) {
-        if(processInfoList != null && processInfoList.getProcessInfo() != null) {
+        if(packageList != null && packageList.get_package() != null &&
+                packageList.get_package().length > 0) {
 %>
                 <carbon:paginator pageNumber="<%=pageNumberInt%>" numberOfPages="<%=numberOfPages%>"
                   page="process_list.jsp" pageNumberParameterName="pageNumber"
@@ -271,40 +261,47 @@
                     </thead>
                     <tbody>
 <%
-            for(LimitedProcessInfoType processInfo : processInfoList.getProcessInfo()) {
+            for(PackageType packageInfo : packageList.get_package()) {
+                for (Version_type0 packageWithVersion : packageInfo.getVersions().getVersion()) {
+                    if (isAuthorizedToManagePackages || isAuthorizedToMonitor) {
+%>
+<tr>
+    <%
                 // We need to differentiate process operation links(anchor tags) to attach onclick event callback.
                 // So here we are generating link based on a integer count.
                 String linkID = "processOperation" + linkNum;
                 linkNum++;
-%>
-<tr>
-    <%
-            if (isAuthorizedToManagePackages) {
-
     %>
-    <td>
+    <td rowspan="<%= packageWithVersion.getProcesses().getProcess().length%>">
         <%
-                    if (processInfo.getStatus().toString().trim().equals("ACTIVE")) {
+                    if (packageWithVersion.getIsLatest()) {
         %>
 
-        <a href="package_dashboard.jsp?packageName=<%=processInfo.getPackageName()%>"><%=processInfo.getPackageName()%>
+        <a href="package_dashboard.jsp?packageName=<%=packageWithVersion.getName()%>"><%=packageWithVersion.getName()%>
         </a>
 
         <%
-        } else {
+                    } else {
         %>
-        <%=processInfo.getPackageName()%>
+                        <%=packageWithVersion.getName()%>
         <%
-        }
+                    }
         %>
     </td>
      <%
-    }
+         int processIndex = 0;
+         for (LimitedProcessInfoType processInfo : packageWithVersion.getProcesses().getProcess()) {
+             if (processIndex != 0) {
      %>
-                            <td><a href="./process_info.jsp?Pid=<%=processInfo.getPid()%>"><%=processInfo.getPid()%></a></td> <!--./process_info.jsp?Pid=<%=processInfo.getPid()%>-->
-                            <td><%=processInfo.getVersion()%></td>
-                            <td><%=processInfo.getStatus().toString()%></td>
-                            <td><%=processInfo.getDeployedDate().getTime().toString()%></td>
+        <tr>
+    <%
+        }
+        processIndex++;
+    %>
+    <td><a href="./process_info.jsp?Pid=<%=processInfo.getPid()%>"><%=processInfo.getPid()%></a></td> <!--./process_info.jsp?Pid=<%=processInfo.getPid()%>-->
+    <td><%=processInfo.getVersion()%></td>
+    <td><%=processInfo.getStatus().toString()%></td>
+    <td><%=processInfo.getDeployedDate().getTime().toString()%></td>
 <%
                 if(isAuthorizedToManageProcesses) {
                     if (processInfo.getOlderVersion() == 0) {
@@ -354,9 +351,13 @@
                 }
             }
 %>
-                        </tr>
+            </tr>
 <%
+                 }
             }
+        }
+
+    }
 %>
                     </tbody>
                 </table>
@@ -381,5 +382,9 @@
         </div>
     </div>
 </div>
+
+<script type="text/javascript">
+    alternateTableRows('processListTable', 'tableEvenRow', 'tableOddRow');
+</script>
 
 </fmt:bundle>

@@ -239,6 +239,7 @@ public final class BPELConstants {
     public static final String BPEL_PACKAGE_PROP_STATUS = "bpel.package.status";
     public static final String BPEL_PACKAGE_PROP_LATEST_VERSION = "bpel.package.latest.version";
     public static final String BPEL_PACKAGE_PROP_DEPLOYMENT_ERROR_LOG = "bpel.package.error.log";
+    public static final String BPEL_PACKAGE_PROP_DEPLOYMENT_STACK_TRACE = "bpel.package.error.stack.trace";
 
     public static final String STATUS_DEPLOYED = "DEPLOYED";
     public static final String STATUS_UPDATED = "UPDATED";

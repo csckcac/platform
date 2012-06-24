@@ -17,16 +17,16 @@
  */
 package org.wso2.carbon.bpel.core.ode.integration.store.repository;
 
- import org.apache.ode.bpel.dd.TProcessEvents;
- import org.apache.ode.bpel.evt.BpelEvent;
- import org.apache.ode.bpel.iapi.ProcessConf;
- import org.apache.ode.bpel.iapi.ProcessState;
- import org.wso2.carbon.bpel.core.BPELConstants;
- import org.wso2.carbon.bpel.core.ode.integration.store.BPELDeploymentContext;
- import org.wso2.carbon.bpel.skeleton.ode.integration.mgt.services.ProcessManagementException;
- import org.wso2.carbon.bpel.skeleton.ode.integration.mgt.services.types.*;
- 
- import java.util.*;
+import org.apache.ode.bpel.dd.TProcessEvents;
+import org.apache.ode.bpel.evt.BpelEvent;
+import org.apache.ode.bpel.iapi.ProcessConf;
+import org.apache.ode.bpel.iapi.ProcessState;
+import org.wso2.carbon.bpel.core.BPELConstants;
+import org.wso2.carbon.bpel.core.ode.integration.store.BPELDeploymentContext;
+import org.wso2.carbon.bpel.skeleton.ode.integration.mgt.services.ProcessManagementException;
+import org.wso2.carbon.bpel.skeleton.ode.integration.mgt.services.types.*;
+
+import java.util.*;
 
 /**
  * Utility methods to use in BPEL package repository implementation.
@@ -42,10 +42,11 @@ public final class BPELPackageRepositoryUtils {
     *  @return packagelocation - location to the bpel package
     *
     */
-     public static  String getResourcePathForDeployInfoUpdatedBPELPackage(String packageName, String versionlessPackageName){
- 
-         return BPELConstants.REG_PATH_OF_BPEL_PACKAGES + versionlessPackageName + BPELConstants.BPEL_PACKAGE_VERSIONS + packageName ;
-     }
+    public static String getResourcePathForDeployInfoUpdatedBPELPackage(String packageName,
+                                                                        String versionlessPackageName) {
+        return BPELConstants.REG_PATH_OF_BPEL_PACKAGES + versionlessPackageName +
+                BPELConstants.BPEL_PACKAGE_VERSIONS + packageName;
+    }
 
     public static String getResourcePathForBPELPackage(BPELDeploymentContext deploymentContext) {
         return BPELConstants.REG_PATH_OF_BPEL_PACKAGES + deploymentContext.getBpelPackageName();
@@ -76,19 +77,19 @@ public final class BPELPackageRepositoryUtils {
     /*The following methods are used to write the updated fields of a bpel package into registry as properties*/
     protected static String getBPELPackageProcessEventsInList(Map<String, Set<BpelEvent.TYPE>> events) {
         String enabledEventsList = "";
-        if(events != null){
+        if (events != null) {
 
-           Set<Map.Entry<String,Set<BpelEvent.TYPE>>> eventEntries = events.entrySet();
-           for(Map.Entry entry : eventEntries){
-               if(entry.getKey()== null){
-                   HashSet<BpelEvent.TYPE> evtSet = (HashSet<BpelEvent.TYPE>) entry.getValue();
-                   for(BpelEvent.TYPE type : evtSet){
-                       enabledEventsList = enabledEventsList.concat(type.name() + ",");
-                   }
-               }
-           }
+            Set<Map.Entry<String, Set<BpelEvent.TYPE>>> eventEntries = events.entrySet();
+            for (Map.Entry entry : eventEntries) {
+                if (entry.getKey() == null) {
+                    HashSet<BpelEvent.TYPE> evtSet = (HashSet<BpelEvent.TYPE>) entry.getValue();
+                    for (BpelEvent.TYPE type : evtSet) {
+                        enabledEventsList = enabledEventsList.concat(type.name() + ",");
+                    }
+                }
+            }
         }
-        return  enabledEventsList;
+        return enabledEventsList;
     }
 
     protected static List<String> getBPELPackageScopeEventsInList(Map<String, Set<BpelEvent.TYPE>> events) {
@@ -110,50 +111,48 @@ public final class BPELPackageRepositoryUtils {
         }
         return scopeEvents;
     }
+
     public static String getBPELPackageSuccessCleanUpsInList(Set<ProcessConf.CLEANUP_CATEGORY> cleanupCategories) {
         String successCleanUpsList = "";
-        if(cleanupCategories != null){
-            for(ProcessConf.CLEANUP_CATEGORY category : cleanupCategories){
+        if (cleanupCategories != null) {
+            for (ProcessConf.CLEANUP_CATEGORY category : cleanupCategories) {
                 successCleanUpsList = successCleanUpsList.concat(category.name() + ",");
             }
-            if(!successCleanUpsList.equalsIgnoreCase("")){
+            if (!successCleanUpsList.equalsIgnoreCase("")) {
                 successCleanUpsList = successCleanUpsList.substring(0, successCleanUpsList.lastIndexOf(','));
             }
         }
-        return  successCleanUpsList;
+        return successCleanUpsList;
     }
 
     public static String getBPELPackageFailureCleanUpsAsString(Set<ProcessConf.CLEANUP_CATEGORY> cleanupCategories) {
         String failureCleanUpsList = "";
-        if(cleanupCategories != null){
-            for(ProcessConf.CLEANUP_CATEGORY category : cleanupCategories){
+        if (cleanupCategories != null) {
+            for (ProcessConf.CLEANUP_CATEGORY category : cleanupCategories) {
                 failureCleanUpsList = failureCleanUpsList.concat(category.name() + ",");
             }
-            if(!failureCleanUpsList.equalsIgnoreCase("")){
+            if (!failureCleanUpsList.equalsIgnoreCase("")) {
                 failureCleanUpsList = failureCleanUpsList.substring(0, failureCleanUpsList.lastIndexOf(','));
             }
         }
-        return  failureCleanUpsList;
+        return failureCleanUpsList;
     }
 
     public static String getBPELPackageProcessGenerateType(TProcessEvents.Generate.Enum generateType) {
 
-        if(generateType != null){
+        if (generateType != null) {
             return generateType.toString();
-        }
-        else {
+        } else {
             return "";
         }
     }
 
     public static ProcessState getProcessState(String stateInString) {
-        if(stateInString.equalsIgnoreCase("ACTIVE")){
+        if (stateInString.equalsIgnoreCase("ACTIVE")) {
             return ProcessState.ACTIVE;
-        }
-        else if(stateInString.equalsIgnoreCase("RETIRED")){
+        } else if (stateInString.equalsIgnoreCase("RETIRED")) {
             return ProcessState.RETIRED;
-        }
-        else {
+        } else {
             return ProcessState.DISABLED;
         }
     }
@@ -164,8 +163,8 @@ public final class BPELPackageRepositoryUtils {
     */
     public static String getVersionlessPackageName(String packageName) throws ProcessManagementException {
         String tPackageName = packageName;
-        if(tPackageName != null){
-        tPackageName = tPackageName.substring(0, tPackageName.lastIndexOf('-'));
+        if (tPackageName != null) {
+            tPackageName = tPackageName.substring(0, tPackageName.lastIndexOf('-'));
         }
         return tPackageName;
     }
@@ -174,7 +173,7 @@ public final class BPELPackageRepositoryUtils {
 
         EnableEventListType enableEventListType = new EnableEventListType();
         String[] enabledEvents = getStringsFromArray(processEventsInString);
-        for(String event : enabledEvents){
+        for (String event : enabledEvents) {
             enableEventListType.addEnableEvent(event);
         }
         return enableEventListType;
@@ -186,28 +185,29 @@ public final class BPELPackageRepositoryUtils {
 
     public static ScopeEventType getScopeEventFromString(String scopeEventInString) {
 
-        ScopeEventType scopeEvent= new ScopeEventType();
-        EnableEventListType enableEventListType= new EnableEventListType();
+        ScopeEventType scopeEvent = new ScopeEventType();
+        EnableEventListType enableEventListType = new EnableEventListType();
         String[] scopeEventEntries = getStringsFromArray(scopeEventInString);
-        for(int  i=0; i< scopeEventEntries.length-1;i++){
-            enableEventListType.addEnableEvent(scopeEventEntries[i+1]);
+        for (int i = 0; i < scopeEventEntries.length - 1; i++) {
+            enableEventListType.addEnableEvent(scopeEventEntries[i + 1]);
         }
         scopeEvent.setScope(scopeEventEntries[0]);
         scopeEvent.setEnabledEventList(enableEventListType);
         return scopeEvent;
     }
+
     public static CleanUpType getSuccessCleanUpType(String successCleanupsInString) {
         CleanUpType successCleanUp = new CleanUpType();
         String[] successCategories = getStringsFromArray(successCleanupsInString);
         CategoryListType categoryList = new CategoryListType();
 
-        for(String category : successCategories){
+        for (String category : successCategories) {
             Category_type1 categoryType1 = Category_type1.Factory.fromValue(category.toLowerCase());
             categoryList.addCategory(categoryType1);
         }
         successCleanUp.setOn(On_type1.success);
         successCleanUp.setCategoryList(categoryList);
-        return  successCleanUp;
+        return successCleanUp;
     }
 
     public static CleanUpType getFailureCleanUpType(String failureCleanupsInString) {
@@ -215,24 +215,24 @@ public final class BPELPackageRepositoryUtils {
         String[] failureCategories = getStringsFromArray(failureCleanupsInString);
         CategoryListType categoryList = new CategoryListType();
 
-        for(String category : failureCategories){
+        for (String category : failureCategories) {
             Category_type1 categoryType1 = Category_type1.Factory.fromValue(category.toLowerCase());
             categoryList.addCategory(categoryType1);
         }
         failureCleanUp.setOn(On_type1.failure);
         failureCleanUp.setCategoryList(categoryList);
-        return  failureCleanUp;
+        return failureCleanUp;
     }
 
 
-   /*  This method splits a string to remove its ',' characters
+    /*  This method splits a string to remove its ',' characters
     *  @param eventsInString  -  the string which contains the events each separated by commas
     *  @return new String[] - the string array which consists of events strings after splitting
     *
     */
     public static String[] getStringsFromArray(String eventsInString) {
-        if(!eventsInString.isEmpty()) {
-            return  eventsInString.split(",");
+        if (!eventsInString.isEmpty()) {
+            return eventsInString.split(",");
         } else {
             return new String[0];
         }

@@ -25,7 +25,9 @@ import org.wso2.carbon.application.deployer.bpel.BPELAppDeployer;
 import org.wso2.carbon.application.deployer.config.Artifact;
 import org.wso2.carbon.application.mgt.bpel.internal.BPELAppMgtServiceComponent;
 import org.wso2.carbon.bpel.core.ode.integration.mgt.services.BPELPackageManagementServiceSkeleton;
-import org.wso2.carbon.bpel.skeleton.ode.integration.mgt.services.types.ProcessesInPackage;
+import org.wso2.carbon.bpel.skeleton.ode.integration.mgt.services.types.LimitedProcessInfoType;
+import org.wso2.carbon.bpel.skeleton.ode.integration.mgt.services.types.PackageType;
+import org.wso2.carbon.bpel.skeleton.ode.integration.mgt.services.types.Version_type0;
 import org.wso2.carbon.core.AbstractAdmin;
 
 import java.util.ArrayList;
@@ -86,8 +88,18 @@ public class BPELApplicationAdmin extends AbstractAdmin {
                 packageMetadata.setPackageName(packageName);
 
                 // get the list of processes
-                ProcessesInPackage processes = bpelAdmin.listProcessesInPackage(packageName);
-                packageMetadata.setProcessList(processes.getProcess());
+                List<String> processList = new ArrayList<String>();
+                PackageType packageType = bpelAdmin.listProcessesInPackage(packageName);
+                for (Version_type0 packageVersion : packageType.getVersions().getVersion()) {
+                    if (packageVersion.getName().equals(packageName)) {
+                        for (LimitedProcessInfoType process :
+                                packageVersion.getProcesses().getProcess()) {
+                            processList.add(process.getPid());
+                        }
+                    }
+                }
+                String[] processes = new String[processList.size()];
+                packageMetadata.setProcessList(processes);
 
                 packageList.add(packageMetadata);
             }

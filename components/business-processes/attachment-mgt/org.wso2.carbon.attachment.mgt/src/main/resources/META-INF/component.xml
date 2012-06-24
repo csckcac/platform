@@ -16,6 +16,14 @@
  ~ under the License.
  -->
 <component xmlns="http://products.wso2.org/carbon">
-
-    <!-- <ManagementPermissions> </ManagementPermissions> -->
+    <ManagementPermissions>
+        <ManagementPermission>
+            <DisplayName>Attachment</DisplayName>
+            <ResourceId>/permission/admin/manage/attachment</ResourceId>
+        </ManagementPermission>
+        <ManagementPermission>
+            <DisplayName>Monitor BPEL</DisplayName>
+            <ResourceId>/permission/admin/monitor/attachment</ResourceId>
+        </ManagementPermission>
+    </ManagementPermissions>
 </component>

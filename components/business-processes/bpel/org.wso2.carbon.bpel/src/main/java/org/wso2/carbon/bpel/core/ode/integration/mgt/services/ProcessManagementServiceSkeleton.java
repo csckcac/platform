@@ -45,13 +45,12 @@ import org.w3c.dom.Node;
 import org.wso2.carbon.bpel.core.ode.integration.BPELServerImpl;
 import org.wso2.carbon.bpel.core.ode.integration.store.ProcessConfigurationImpl;
 import org.wso2.carbon.bpel.core.ode.integration.store.TenantProcessStoreImpl;
+import org.wso2.carbon.bpel.core.ode.integration.utils.AdminServiceUtils;
 import org.wso2.carbon.bpel.skeleton.ode.integration.mgt.services.ProcessManagementException;
 import org.wso2.carbon.bpel.skeleton.ode.integration.mgt.services.ProcessManagementServiceSkeletonInterface;
 import org.wso2.carbon.bpel.skeleton.ode.integration.mgt.services.types.*;
 import org.wso2.carbon.core.AbstractAdmin;
 import org.wso2.carbon.service.mgt.util.Utils;
-import org.wso2.carbon.utils.multitenancy.CarbonContextHolder;
-import org.wso2.carbon.utils.multitenancy.MultitenantUtils;
 
 import javax.xml.namespace.QName;
 import javax.xml.stream.XMLInputFactory;
@@ -63,7 +62,6 @@ import java.io.FileNotFoundException;
 import java.io.IOException;
 import java.text.ParseException;
 import java.util.*;
-import java.util.Set;
 import java.util.regex.Pattern;
 
 /**
@@ -74,7 +72,6 @@ public class ProcessManagementServiceSkeleton extends AbstractAdmin
     private static Log log = LogFactory.getLog(ProcessManagementServiceSkeleton.class);
     private BPELServerImpl bpelServer = BPELServerImpl.getInstance();
     private BpelDatabase bpelDb = bpelServer.getODEBPELServer().getBpelDb();
-    private Calendar calendar = Calendar.getInstance();
 
 
     public PaginatedProcessInfoList getPaginatedProcessList(String processListFilter,
@@ -84,7 +81,7 @@ public class ProcessManagementServiceSkeleton extends AbstractAdmin
         int tPage = page;
 
         PaginatedProcessInfoList processList = new PaginatedProcessInfoList();
-        TenantProcessStoreImpl tenantProcessStore = getTenantProcessStore();
+        TenantProcessStoreImpl tenantProcessStore = AdminServiceUtils.getTenantProcessStore();
 
         if (tPage < 0 || tPage == Integer.MAX_VALUE) {
             tPage = 0;
@@ -107,7 +104,7 @@ public class ProcessManagementServiceSkeleton extends AbstractAdmin
 
         for (int i = startIndexForCurrentPage;
              (i < endIndexForCurrentPage && i < processListSize); i++) {
-            processList.addProcessInfo(createLimitedProcessInfoObject(processConfigurations[i]));
+            processList.addProcessInfo(AdminServiceUtils.createLimitedProcessInfoObject(processConfigurations[i]));
         }
 
         return processList;
@@ -115,7 +112,7 @@ public class ProcessManagementServiceSkeleton extends AbstractAdmin
 
     public java.lang.String[] getAllProcesses(String getAllProcesses)
             throws ProcessManagementException {
-        TenantProcessStoreImpl tenantProcessStore = getTenantProcessStore();
+        TenantProcessStoreImpl tenantProcessStore = AdminServiceUtils.getTenantProcessStore();
         Set<QName> processIds = tenantProcessStore.getProcessConfigMap().keySet();
         List<String> pids = new ArrayList<String>();
         for (QName pid : processIds) {
@@ -136,7 +133,7 @@ public class ProcessManagementServiceSkeleton extends AbstractAdmin
         ProcessDeployDetailsList processDeployDetailsList = new ProcessDeployDetailsList();
         ProcessDeployDetailsList_type0 processDeployDetailsListType = new ProcessDeployDetailsList_type0();
 
-        TenantProcessStoreImpl tenantProcessStore = getTenantProcessStore();
+        TenantProcessStoreImpl tenantProcessStore = AdminServiceUtils.getTenantProcessStore();
         ProcessConf processConf = tenantProcessStore.getProcessConfiguration(pid);
         ProcessConfigurationImpl processConfiguration = (ProcessConfigurationImpl) processConf;
 
@@ -310,7 +307,7 @@ public class ProcessManagementServiceSkeleton extends AbstractAdmin
         final QName processId = processDeployDetailsListType.getProcessName();
         try {
 
-            TenantProcessStoreImpl tenantProcessStore = getTenantProcessStore();
+            TenantProcessStoreImpl tenantProcessStore = AdminServiceUtils.getTenantProcessStore();
             ProcessConfigurationImpl processConf =
                     (ProcessConfigurationImpl) tenantProcessStore.getProcessConfiguration(processId);
             final boolean oldIsInmemory = processConf.isTransient();
@@ -328,8 +325,8 @@ public class ProcessManagementServiceSkeleton extends AbstractAdmin
             bpelServer.getODEBPELServer().getContexts().scheduler.execTransaction(new java.util.concurrent.Callable<Boolean>() {
                 public Boolean call() throws Exception {
 
-                    ProcessDAO processDAO = null;
-                    ProcessDAO newProcessDAO = null;
+                    ProcessDAO processDAO;
+                    ProcessDAO newProcessDAO;
 
                     if (oldIsInmemory & !newIsInmemory) {
                         processDAO = bpelServer.getODEBPELServer().getContexts().getInMemDao().getConnection().getProcess(processId);
@@ -372,7 +369,7 @@ public class ProcessManagementServiceSkeleton extends AbstractAdmin
     }
 
     public void retireProcess(QName pid) throws ProcessManagementException {
-        TenantProcessStoreImpl tenantProcessStore = getTenantProcessStore();
+        TenantProcessStoreImpl tenantProcessStore = AdminServiceUtils.getTenantProcessStore();
         try {
             tenantProcessStore.setState(pid, ProcessState.RETIRED);
         } catch (Exception e) {
@@ -384,7 +381,7 @@ public class ProcessManagementServiceSkeleton extends AbstractAdmin
 
 
     public void activateProcess(QName pid) throws ProcessManagementException {
-        TenantProcessStoreImpl tenantProcessStore = getTenantProcessStore();
+        TenantProcessStoreImpl tenantProcessStore = AdminServiceUtils.getTenantProcessStore();
         try {
             tenantProcessStore.setState(pid, ProcessState.ACTIVE);
         } catch (Exception e) {
@@ -396,7 +393,7 @@ public class ProcessManagementServiceSkeleton extends AbstractAdmin
 
     public ProcessInfoType getProcessInfo(QName pid) throws ProcessManagementException {
         ProcessInfoType processInfoType = new ProcessInfoType();
-        TenantProcessStoreImpl tenantProcessStore = getTenantProcessStore();
+        TenantProcessStoreImpl tenantProcessStore = AdminServiceUtils.getTenantProcessStore();
         ProcessConf processConf = tenantProcessStore.getProcessConfiguration(pid);
         fillProcessInfo(processInfoType, processConf, ProcessInfoCustomizer.ALL, tenantProcessStore);
 
@@ -484,36 +481,6 @@ public class ProcessManagementServiceSkeleton extends AbstractAdmin
 //            }
 //        }
 
-    }
-
-    private LimitedProcessInfoType createLimitedProcessInfoObject(ProcessConf processConf) {
-        LimitedProcessInfoType processInfoObject = new LimitedProcessInfoType();
-        processInfoObject.setPid(processConf.getProcessId().toString());
-        processInfoObject.setDeployedDate(toCalendar(processConf.getDeployDate()));
-        processInfoObject.setVersion(processConf.getVersion());
-        if (processConf.getState() == ProcessState.RETIRED) {
-            processInfoObject.setStatus(ProcessStatus.RETIRED);
-        } else if (processConf.getState() == ProcessState.DISABLED) {
-            processInfoObject.setStatus(ProcessStatus.DISABLED);
-        } else {
-            processInfoObject.setStatus(ProcessStatus.ACTIVE);
-        }
-
-        //check and set the olderVersion of the process
-        if (processConf.getState() == ProcessState.RETIRED) {
-            processInfoObject.setStatus(ProcessStatus.RETIRED);
-            processInfoObject.setOlderVersion(isOlderVersion(processConf, getTenantProcessStore()));
-        } else if (processConf.getState() == ProcessState.DISABLED) {
-            processInfoObject.setStatus(ProcessStatus.DISABLED);
-            processInfoObject.setOlderVersion(0);
-        } else {
-            processInfoObject.setStatus(ProcessStatus.ACTIVE);
-            processInfoObject.setOlderVersion(0);
-        }
-
-        processInfoObject.setPackageName(processConf.getPackage());
-
-        return processInfoObject;
     }
 
     /**
@@ -712,7 +679,7 @@ public class ProcessManagementServiceSkeleton extends AbstractAdmin
         // Active process may be retired at the same time
         if (pconf.getState() == ProcessState.RETIRED) {
             info.setStatus(ProcessStatus.RETIRED);
-            info.setOlderVersion(isOlderVersion(pconf, tenantProcessStore));
+            info.setOlderVersion(AdminServiceUtils.isOlderVersion(pconf, tenantProcessStore));
         } else if (pconf.getState() == ProcessState.DISABLED) {
             info.setStatus(ProcessStatus.DISABLED);
             info.setOlderVersion(0);
@@ -733,7 +700,7 @@ public class ProcessManagementServiceSkeleton extends AbstractAdmin
         DeploymentInfo depInfo = new DeploymentInfo();
         depInfo.setPackageName(pconf.getPackage());
         depInfo.setDocument(pconf.getBpelDocument());
-        depInfo.setDeployDate(toCalendar(pconf.getDeployDate()));
+        depInfo.setDeployDate(AdminServiceUtils.toCalendar(pconf.getDeployDate()));
         // TODO: Need to fix this by adding info to process conf.
         depInfo.setDeployer(org.wso2.carbon.bpel.core.BPELConstants.BPEL_DEPLOYER_NAME);
         info.setDeploymentInfo(depInfo);
@@ -813,49 +780,12 @@ public class ProcessManagementServiceSkeleton extends AbstractAdmin
                 }
                 if (failureInstances > 0) {
                     failureInfo.setCount(failureInstances);
-                    failureInfo.setFailureDate(toCalendar(lastFailureDt));
+                    failureInfo.setFailureDate(AdminServiceUtils.toCalendar(lastFailureDt));
                     instSum.setFailures(failureInfo);
                 }
                 return null;
             }
         });
-    }
-
-    private int isOlderVersion(ProcessConf pconf, TenantProcessStoreImpl tenantProcessStore) {
-        Set<QName> processIDs = tenantProcessStore.getProcessConfigMap().keySet();
-        String filter = pconf.getProcessId().getLocalPart().substring(0, pconf.getProcessId().
-                getLocalPart().lastIndexOf("-"));
-
-        // Name filter can be implemented using only the PIDs.
-        final Pattern pattern = Pattern.compile(filter.replace("*", ".*") + "(-\\d*)?");
-        final List<QName> pids = new ArrayList<QName>();
-        for (QName pid : processIDs) {
-            if (pattern.matcher(pid.getLocalPart()).matches()) {
-                pids.add(pid);
-            }
-        }
-
-        if (pids.size() > 1) {
-            long currentVersion = pconf.getVersion();
-            for (QName pid : pids) {
-                long tempVersion = Long.parseLong(pid.getLocalPart().substring(pid.getLocalPart().
-                        lastIndexOf("-") + 1));
-                if (tempVersion > currentVersion) {
-                    return 1;
-                }
-            }
-        }
-        return 0;
-    }
-
-    private Calendar toCalendar(Date dtime) {
-        if (dtime == null) {
-            return null;
-        }
-
-        Calendar c = (Calendar) calendar.clone();
-        c.setTime(dtime);
-        return c;
     }
 
     /**
@@ -924,12 +854,6 @@ public class ProcessManagementServiceSkeleton extends AbstractAdmin
         String errMsg = "Process Definition for: " + pConf.getProcessId() + " not found";
         log.error(errMsg);
         throw new ProcessManagementException(errMsg);
-    }
-
-    private TenantProcessStoreImpl getTenantProcessStore() {
-        Integer tenantId = MultitenantUtils.getTenantId(getConfigContext());
-        return (TenantProcessStoreImpl) bpelServer.getMultiTenantProcessStore().
-                getTenantsProcessStore(tenantId);
     }
 }
     

@@ -227,11 +227,13 @@ public class TenantProcessStoreImpl implements TenantProcessStore {
                     + ".";
             deploymentContext.setDeploymentFailureCause(errMsg);
             deploymentContext.setStackTrace(e);
+            deploymentContext.setFailed(true);
             handleDeploymentError(deploymentContext);
             return; // Exist from the normal flow on extraction error.
         }
 
         if (!validateBPELPackage(deploymentContext, isExistingPackage)) {
+            deploymentContext.setFailed(true);
             handleDeploymentError(deploymentContext);
             return; // Exist from the normal flow on BPEL package validation error.
         }
@@ -538,8 +540,12 @@ public class TenantProcessStoreImpl implements TenantProcessStore {
         try {
             du.compile();
         } catch (CompilationException ce) {
-            String logMessage = "Deployment failed due to compilation issues.";
+            String logMessage = "Deployment failed due to compilation issues. " + ce.getMessage();
             log.error(logMessage, ce);
+            deploymentContext.setFailed(true);
+            deploymentContext.setDeploymentFailureCause(logMessage);
+            deploymentContext.setStackTrace(ce);
+            handleDeploymentError(deploymentContext);
             throw new BPELDeploymentException(logMessage, ce);
         }
 
@@ -552,6 +558,9 @@ public class TenantProcessStoreImpl implements TenantProcessStore {
             String logMessage = "Aborting deployment. Duplicate Deployment unit "
                     + du.getName() + ".";
             log.error(logMessage);
+            deploymentContext.setFailed(true);
+            deploymentContext.setDeploymentFailureCause(logMessage);
+            handleDeploymentError(deploymentContext);
             throw new BPELDeploymentException(logMessage);
         }
 
@@ -597,12 +606,8 @@ public class TenantProcessStoreImpl implements TenantProcessStore {
             deploymentContext.setDeploymentFailureCause("BPEL Package deployment failed at " +
                     "ODE layer. Possible cause: " + ce.getMessage());
             deploymentContext.setStackTrace(ce);
-            try {
-                handleDeploymentError(deploymentContext);
-            } catch (Exception e) {
-                e.initCause(ce);
-                throw e;
-            }
+            deploymentContext.setFailed(true);
+            handleDeploymentError(deploymentContext);
             throw ce;
         }
     }

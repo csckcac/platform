@@ -29,19 +29,32 @@
         <operation name="add" mep="http://www.w3.org/ns/wsdl/in-out"
                    namespace="http://www.wso2.org/carbon/bussiness/processes/AttachmentMgtService/">
             <actionMapping>urn:add</actionMapping>
+            <parameter name="AuthorizationAction" locked="true">
+                /permission/admin/manage/attachment
+            </parameter>
         </operation>
         <operation name="remove" mep="http://www.w3.org/ns/wsdl/in-out"
                    namespace="http://www.wso2.org/carbon/bussiness/processes/AttachmentMgtService/">
             <actionMapping>urn:remove</actionMapping>
+            <parameter name="AuthorizationAction" locked="true">
+                /permission/admin/manage/attachment
+            </parameter>
         </operation>
         <operation name="getAttachmentInfo" mep="http://www.w3.org/ns/wsdl/in-out"
                    namespace="http://www.wso2.org/carbon/bussiness/processes/AttachmentMgtService/">
             <actionMapping>urn:getAttachmentInfo</actionMapping>
+            <parameter name="AuthorizationAction" locked="true">
+                /permission/admin/monitor/attachment
+            </parameter>
         </operation>
         <operation name="getAttachmentInfo" mep="http://www.w3.org/ns/wsdl/in-out"
                    namespace="http://www.wso2.org/carbon/bussiness/processes/AttachmentMgtService/">
             <actionMapping>urn:getAttachmentInfoFromURL</actionMapping>
+            <parameter name="AuthorizationAction" locked="true">
+                /permission/admin/monitor/attachment
+            </parameter>
         </operation>
     </service>
-
+    <parameter name="adminService" locked="true">true</parameter>
+    <parameter name="hiddenService" locked="true">true</parameter>
 </serviceGroup>

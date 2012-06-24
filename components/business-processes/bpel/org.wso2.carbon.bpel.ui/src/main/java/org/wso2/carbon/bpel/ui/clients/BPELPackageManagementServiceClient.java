@@ -24,7 +24,7 @@ import org.apache.commons.logging.LogFactory;
 import org.wso2.carbon.bpel.stub.mgt.BPELPackageManagementServiceStub;
 import org.wso2.carbon.bpel.stub.mgt.PackageManagementException;
 import org.wso2.carbon.bpel.stub.mgt.types.DeployedPackagesPaginated;
-import org.wso2.carbon.bpel.stub.mgt.types.ProcessesInPackage;
+import org.wso2.carbon.bpel.stub.mgt.types.PackageType;
 import org.wso2.carbon.bpel.stub.mgt.types.UndeployStatus_type0;
 
 import java.rmi.RemoteException;
@@ -71,7 +71,7 @@ public class BPELPackageManagementServiceClient {
         }
     }
 
-    public ProcessesInPackage listProcessesInPackage(String packageName)
+    public PackageType listProcessesInPackage(String packageName)
             throws PackageManagementException, RemoteException {
         try {
             return stub.listProcessesInPackage(packageName);

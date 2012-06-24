@@ -174,9 +174,9 @@ public class BPELPackageRepository {
             throws Exception {
         try {
             if (isExistingBPELPackage(deploymentContext)) {
-                updateExistingBPELPackageOnLastDeploymentError(deploymentContext);
+                handleBPELPackageUpdate(deploymentContext);
             } else {
-                storeMetaDataAboutFailedNewBPELPackageDeployment(deploymentContext);
+                handleNewBPELPackageAddition(deploymentContext);
             }
         } catch (RegistryException re) {
             String errMessage = "Unable to handle BPEL package deployment error persistence."
@@ -200,7 +200,7 @@ public class BPELPackageRepository {
             if (!configRegistry.getRegistryContext().isReadOnly() && configRegistry.resourceExists(packageLocation)) {
                 configRegistry.delete(packageLocation);
             } else {
-				//TODO fix this logic
+                //TODO fix this logic
                 throw new IllegalAccessException();
             }
 
@@ -284,8 +284,8 @@ public class BPELPackageRepository {
                 // The above registry resource we retrieve only contains set of child collections.
                 // So we can directly cast the returned object to a string array.
                 String[] children = (String[]) parentCollection.getContent();
-                for (String childPath : children) {
-                    bpelPackages.add(getBPELPackageInfo(childPath));
+                for (int i = children.length - 1; i >= 0; i--) {
+                    bpelPackages.add(getBPELPackageInfo(children[i]));
                 }
 
                 return bpelPackages;
@@ -319,8 +319,8 @@ public class BPELPackageRepository {
         File bpelArchive = new File(bpelArchiveRepo, bpelPackage.getBPELArchiveFileName());
 
         if (log.isDebugEnabled() && bpelArchive.exists()) {
-                log.debug(bpelPackage.getName() + " File checksum: " +
-                        Utils.getMD5Checksum(bpelArchive) + " : " + bpelPackage.getChecksum());
+            log.debug(bpelPackage.getName() + " File checksum: " +
+                    Utils.getMD5Checksum(bpelArchive) + " : " + bpelPackage.getChecksum());
         }
         if (!bpelArchive.exists() ||
                 (bpelArchive.exists() &&
@@ -330,7 +330,7 @@ public class BPELPackageRepository {
                         File.separator + bpelPackage.getBPELArchiveFileName() +
                         " in the local repository. Re-storing from the registry");
             } else {
-                log.info("BPEL archive not found "  + bpelArchiveRepo.getAbsolutePath() +
+                log.info("BPEL archive not found " + bpelArchiveRepo.getAbsolutePath() +
                         File.separator + bpelPackage.getBPELArchiveFileName() +
                         " Re-storing from the registry");
             }
@@ -384,6 +384,14 @@ public class BPELPackageRepository {
         bpelPackage.setAvailableVersions(getVersionsOfPackage(packageLocationInRegistry));
 
         return bpelPackage;
+    }
+
+    public BPELPackageInfo getBPELPackageInfoForPackage(String packageName)
+            throws RegistryException {
+        String packageLocationInRegistry =
+                BPELPackageRepositoryUtils.getResourcePathForBPELPackage(packageName.substring(0,
+                        packageName.lastIndexOf('-')));
+        return getBPELPackageInfo(packageLocationInRegistry);
     }
 
     public List<String> getAllVersionsForPackage(String packageName) throws RegistryException {
@@ -445,8 +453,17 @@ public class BPELPackageRepository {
             log.debug(deploymentContext.getBpelPackageName() + " updating checksum: " +
                     Utils.getMD5Checksum(deploymentContext.getBpelArchive()) + " in registry");
         }
-        bpelPackage.setProperty(BPELConstants.BPEL_PACKAGE_PROP_STATUS,
-                BPELConstants.STATUS_DEPLOYED);
+        if (deploymentContext.isFailed()) {
+            bpelPackage.setProperty(BPELConstants.BPEL_PACKAGE_PROP_STATUS,
+                    BPELConstants.STATUS_FAILED);
+            bpelPackage.setProperty(BPELConstants.BPEL_PACKAGE_PROP_DEPLOYMENT_ERROR_LOG,
+                    deploymentContext.getDeploymentFailureCause());
+//            bpelPackage.setProperty(BPELConstants.BPEL_PACKAGE_PROP_DEPLOYMENT_STACK_TRACE,
+//                    ExceptionUtils.getStackTrace(deploymentContext.getStackTrace()));
+        } else {
+            bpelPackage.setProperty(BPELConstants.BPEL_PACKAGE_PROP_STATUS,
+                    BPELConstants.STATUS_DEPLOYED);
+        }
         bpelPackage.setProperty(BPELConstants.BPEL_PACKAGE_PROP_LATEST_VERSION,
                 Long.toString(deploymentContext.getVersion()));
 
@@ -494,45 +511,20 @@ public class BPELPackageRepository {
             log.debug(deploymentContext.getBpelPackageName() + " updated checksum to: " +
                     Utils.getMD5Checksum(deploymentContext.getBpelArchive()));
         }
-        bpelPackage.setProperty(BPELConstants.BPEL_PACKAGE_PROP_STATUS,
-                BPELConstants.STATUS_UPDATED);
+        if (deploymentContext.isFailed()) {
+            bpelPackage.setProperty(BPELConstants.BPEL_PACKAGE_PROP_STATUS,
+                    BPELConstants.STATUS_FAILED);
+            bpelPackage.setProperty(BPELConstants.BPEL_PACKAGE_PROP_DEPLOYMENT_ERROR_LOG,
+                    deploymentContext.getDeploymentFailureCause());
+//            bpelPackage.setProperty(BPELConstants.BPEL_PACKAGE_PROP_DEPLOYMENT_STACK_TRACE,
+//                    ExceptionUtils.getStackTrace(deploymentContext.getStackTrace()));
+        } else {
+            bpelPackage.setProperty(BPELConstants.BPEL_PACKAGE_PROP_STATUS,
+                    BPELConstants.STATUS_UPDATED);
+        }
         bpelPackage.setProperty(BPELConstants.BPEL_PACKAGE_PROP_LATEST_VERSION,
                 Long.toString(deploymentContext.getVersion()));
         configRegistry.put(packageLocation, bpelPackage);
-    }
-
-    private void updateExistingBPELPackageOnLastDeploymentError(
-            BPELDeploymentContext deploymentContext)
-            throws RegistryException, IOException, NoSuchAlgorithmException {
-        String packageLocation =
-                BPELPackageRepositoryUtils.getResourcePathForBPELPackage(deploymentContext);
-        Resource bpelPackage = configRegistry.get(packageLocation);
-        setBPELPackagePropertiesOnFailure(bpelPackage, deploymentContext);
-        configRegistry.put(packageLocation, bpelPackage);
-    }
-
-    private void storeMetaDataAboutFailedNewBPELPackageDeployment(
-            BPELDeploymentContext deploymentContext)
-            throws RegistryException, IOException, NoSuchAlgorithmException {
-        Collection bpelPackage = configRegistry.newCollection();
-        setBPELPackagePropertiesOnFailure(bpelPackage, deploymentContext);
-        configRegistry.put(
-                BPELPackageRepositoryUtils.getResourcePathForBPELPackage(deploymentContext),
-                bpelPackage);
-    }
-
-    private static void setBPELPackagePropertiesOnFailure(
-            Resource bpelPackage, BPELDeploymentContext deploymentContext)
-            throws RegistryException, IOException, NoSuchAlgorithmException {
-        bpelPackage.setProperty(BPELConstants.BPEL_PACKAGE_PROP_STATUS, BPELConstants.STATUS_FAILED);
-        bpelPackage.setProperty(BPELConstants.BPEL_PACKAGE_PROP_LATEST_CHECKSUM,
-                Utils.getMD5Checksum(deploymentContext.getBpelArchive()));
-        if (log.isDebugEnabled()) {
-            log.debug(deploymentContext.getBpelPackageName() + " updating checksum to: " +
-                    Utils.getMD5Checksum(deploymentContext.getBpelArchive()));
-        }
-        bpelPackage.setProperty(BPELConstants.BPEL_PACKAGE_PROP_DEPLOYMENT_ERROR_LOG,
-                deploymentContext.getDeploymentFailureCause());
     }
 
     /**
@@ -621,12 +613,18 @@ public class BPELPackageRepository {
                 BPELPackageRepositoryUtils.getResourcePathForDeployInfoUpdatedBPELPackage(processConfiguration.getPackage(), versionlessPackageName);
         Resource bpelPackage = configRegistry.get(packageLocation);
 
-        String stateInString = bpelPackage.getProperty(BPELConstants.BPEL_PROCESS_STATE + processConfiguration.getProcessId());
-        String inMemoryInString = bpelPackage.getProperty(BPELConstants.BPEL_PROCESS_INMEMORY + processConfiguration.getProcessId());
-        String processEventsInString = bpelPackage.getProperty(BPELConstants.BPEL_PROCESS_EVENTS + processConfiguration.getProcessId());
-        String generateTypeString = bpelPackage.getProperty(BPELConstants.BPEL_PROCESS_EVENT_GENERATE + processConfiguration.getProcessId());
-        String successCleanupsInString = bpelPackage.getProperty(BPELConstants.BPEL_INSTANCE_CLEANUP_SUCCESS + processConfiguration.getProcessId());
-        String failureCleanupsInString = bpelPackage.getProperty(BPELConstants.BPEL_INSTANCE_CLEANUP_FAILURE + processConfiguration.getProcessId());
+        String stateInString = bpelPackage.getProperty(BPELConstants.BPEL_PROCESS_STATE +
+                processConfiguration.getProcessId());
+        String inMemoryInString = bpelPackage.getProperty(BPELConstants.BPEL_PROCESS_INMEMORY +
+                processConfiguration.getProcessId());
+        String processEventsInString = bpelPackage.getProperty(BPELConstants.BPEL_PROCESS_EVENTS +
+                processConfiguration.getProcessId());
+        String generateTypeString = bpelPackage.getProperty(BPELConstants.BPEL_PROCESS_EVENT_GENERATE +
+                processConfiguration.getProcessId());
+        String successCleanupsInString = bpelPackage.getProperty(BPELConstants.BPEL_INSTANCE_CLEANUP_SUCCESS +
+                processConfiguration.getProcessId());
+        String failureCleanupsInString = bpelPackage.getProperty(BPELConstants.BPEL_INSTANCE_CLEANUP_FAILURE +
+                processConfiguration.getProcessId());
 
         //  first checks whether the process state is written to the registry, if so that implies the
         //  editor has been updated, read the updated fields
@@ -635,15 +633,21 @@ public class BPELPackageRepository {
             processConfiguration.setState(state);
             processConfiguration.setIsTransient(Boolean.parseBoolean(inMemoryInString));
             ProcessEventsListType processEventsList = new ProcessEventsListType();
-            EnableEventListType enabledEventList = BPELPackageRepositoryUtils.getEnabledEventsListFromString(processEventsInString);
+            EnableEventListType enabledEventList =
+                    BPELPackageRepositoryUtils.getEnabledEventsListFromString(processEventsInString);
             processEventsList.setEnableEventsList(enabledEventList);
-            Generate_type1 generateType = BPELPackageRepositoryUtils.getProcessGenerateTypeFromString(generateTypeString);
+            Generate_type1 generateType =
+                    BPELPackageRepositoryUtils.getProcessGenerateTypeFromString(generateTypeString);
             processEventsList.setGenerate(generateType);
             ScopeEventListType scopeEventList = new ScopeEventListType();
 
-            int j=0;
-            while (bpelPackage.getProperty(BPELConstants.BPEL_PROCESS_SCOPE_EVENT + (j + 1) + processConfiguration.getProcessId())!= null){
-                ScopeEventType scopeEvent = BPELPackageRepositoryUtils.getScopeEventFromString(bpelPackage.getProperty(BPELConstants.BPEL_PROCESS_SCOPE_EVENT + (j + 1) + processConfiguration.getProcessId()));
+            int j = 0;
+            while (bpelPackage.getProperty(BPELConstants.BPEL_PROCESS_SCOPE_EVENT + (j + 1) +
+                    processConfiguration.getProcessId()) != null) {
+                ScopeEventType scopeEvent =
+                        BPELPackageRepositoryUtils.getScopeEventFromString(bpelPackage.
+                                getProperty(BPELConstants.BPEL_PROCESS_SCOPE_EVENT + (j + 1) +
+                                        processConfiguration.getProcessId()));
                 scopeEventList.addScopeEvent(scopeEvent);
                 j++;
             }
@@ -651,9 +655,11 @@ public class BPELPackageRepository {
             processEventsList.setScopeEventsList(scopeEventList);
             processConfiguration.setProcessEventsList(processEventsList);
             CleanUpListType cleanUpList = new CleanUpListType();
-            CleanUpType successCleanUp = BPELPackageRepositoryUtils.getSuccessCleanUpType(successCleanupsInString);
+            CleanUpType successCleanUp =
+                    BPELPackageRepositoryUtils.getSuccessCleanUpType(successCleanupsInString);
             cleanUpList.addCleanUp(successCleanUp);
-            CleanUpType failureCleanUp = BPELPackageRepositoryUtils.getFailureCleanUpType(failureCleanupsInString);
+            CleanUpType failureCleanUp =
+                    BPELPackageRepositoryUtils.getFailureCleanUpType(failureCleanupsInString);
             cleanUpList.addCleanUp(failureCleanUp);
             processConfiguration.setProcessCleanupConfImpl(cleanUpList);
 

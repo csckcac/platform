@@ -23,14 +23,15 @@ import org.wso2.carbon.bpel.core.ode.integration.BPELServerImpl;
 import org.wso2.carbon.bpel.core.ode.integration.store.TenantProcessStoreImpl;
 import org.wso2.carbon.bpel.core.ode.integration.store.repository.BPELPackageInfo;
 import org.wso2.carbon.bpel.core.ode.integration.store.repository.BPELPackageRepository;
+import org.wso2.carbon.bpel.core.ode.integration.utils.AdminServiceUtils;
 import org.wso2.carbon.bpel.skeleton.ode.integration.mgt.services.BPELPackageManagementServiceSkeletonInterface;
 import org.wso2.carbon.bpel.skeleton.ode.integration.mgt.services.PackageManagementException;
 import org.wso2.carbon.bpel.skeleton.ode.integration.mgt.services.types.*;
 import org.wso2.carbon.core.AbstractAdmin;
-import org.wso2.carbon.utils.multitenancy.CarbonContextHolder;
 import org.wso2.carbon.utils.multitenancy.MultitenantUtils;
 
 import javax.xml.namespace.QName;
+import java.util.Collections;
 import java.util.List;
 
 /**
@@ -40,42 +41,35 @@ public class BPELPackageManagementServiceSkeleton extends AbstractAdmin
         implements BPELPackageManagementServiceSkeletonInterface {
     private static Log log = LogFactory.getLog(BPELPackageManagementServiceSkeleton.class);
 
-    public ProcessesInPackage listProcessesInPackage(String packageName) throws PackageManagementException {
+    public PackageType listProcessesInPackage(String packageName) throws PackageManagementException {
         TenantProcessStoreImpl tenantProcessStore = getTenantProcessStore();
-        ProcessesInPackage processInPackage = new ProcessesInPackage();
-        processInPackage.setPackageName(packageName);
-        
+        BPELPackageRepository packageRepo = tenantProcessStore.getBPELPackageRepository();
         try {
-            List<QName> processIds = tenantProcessStore.getProcessesInPackage(packageName);
-                for (QName pid : processIds) {
-                    processInPackage.addProcess(pid.toString());
-                }
+            return getPackageInfo(packageRepo.getBPELPackageInfoForPackage(packageName));
         } catch (Exception e) {
-            String errMsg = "List processes in BPEL package: " + packageName + " failed.";
+            String errMsg = "BPEL package: " + packageName + " failed to load from registry.";
             log.error(errMsg, e);
             throw new PackageManagementException(errMsg, e);
         }
-
-        return processInPackage;
     }
 
     public UndeployStatus_type0 undeployBPELPackage(String packageName) {
-        if(log.isDebugEnabled()) {
+        if (log.isDebugEnabled()) {
             log.debug("Starting undeployment of BPEL package " + packageName);
         }
         TenantProcessStoreImpl tenantProcessStore = getTenantProcessStore();
-        try{
+        try {
             tenantProcessStore.undeploy(packageName);
         } catch (Exception e) {
             log.error("Undeploying BPEL package " + packageName + " failed.", e);
-           return UndeployStatus_type0.FAILED;
+            return UndeployStatus_type0.FAILED;
         }
 
         return UndeployStatus_type0.SUCCESS;
     }
 
-    public DeployedPackagesPaginated listDeployedPackagesPaginated(int page) throws org.wso2.carbon.
-            bpel.skeleton.ode.integration.mgt.services.PackageManagementException {
+    public DeployedPackagesPaginated listDeployedPackagesPaginated(int page)
+            throws PackageManagementException {
         int tPage = page;
         List<BPELPackageInfo> packages;
         DeployedPackagesPaginated paginatedPackages = new DeployedPackagesPaginated();
@@ -107,18 +101,18 @@ public class BPELPackageManagementServiceSkeleton extends AbstractAdmin
             for (int i = startIndex; i < endIndex && i < numberOfPackages; i++) {
                 paginatedPackages.add_package(getPackageInfo(packagesArray[i]));
             }
-
-            return paginatedPackages;
+        } else {
+            // Returning empty result set with pages equal to zero for cases where null is returned from
+            // BPEL repo.
+            paginatedPackages.setPages(0);
         }
 
-        // Returning empty result set with pages equal to zero for cases where null is returned from
-        // BPEL repo.
-        paginatedPackages.setPages(0);
         return paginatedPackages;
     }
 
-    private Package_type0 getPackageInfo(BPELPackageInfo packageInfo) {
-        Package_type0 bpelPackage = new Package_type0();
+    private PackageType getPackageInfo(BPELPackageInfo packageInfo)
+            throws PackageManagementException {
+        PackageType bpelPackage = new PackageType();
         bpelPackage.setName(packageInfo.getName());
         bpelPackage.setState(convertToPackageStatusType(packageInfo.getStatus()));
         bpelPackage.setVersions(getAllVersionsOfPackage(packageInfo));
@@ -126,27 +120,54 @@ public class BPELPackageManagementServiceSkeleton extends AbstractAdmin
         return bpelPackage;
     }
 
-    private Versions_type0 getAllVersionsOfPackage(BPELPackageInfo packageInfo) {
+    private Versions_type0 getAllVersionsOfPackage(BPELPackageInfo packageInfo)
+            throws PackageManagementException {
+        Versions_type0 versionsList = new Versions_type0();
         List<String> versions = packageInfo.getAvailableVersions();
-        Versions_type0 versionsOfBPELPackage = new Versions_type0();
-        for(String version : versions) {
-            versionsOfBPELPackage.addPackageName(version);
+        Collections.reverse(versions);
+        for (String version : versions) {
+            Version_type0 packageVersion = new Version_type0();
+            packageVersion.setName(version);
+            packageVersion.setProcesses(getProcessesForPackage(version));
+            if (version.equals(packageInfo.getName() + "-" + packageInfo.getLatestVersion())) {
+                packageVersion.setIsLatest(true);
+            } else {
+                packageVersion.setIsLatest(false);
+            }
+            versionsList.addVersion(packageVersion);
         }
 
-        return versionsOfBPELPackage;
+        return versionsList;
+    }
+
+    private Processes_type0 getProcessesForPackage(String version) throws PackageManagementException {
+        Processes_type0 processes = new Processes_type0();
+        try {
+            List<QName> processIds = getTenantProcessStore().getProcessesInPackage(version);
+            for (QName pid : processIds) {
+                processes.addProcess(AdminServiceUtils.createLimitedProcessInfoObject(
+                        AdminServiceUtils.getTenantProcessStore().getProcessConfiguration(pid)));
+            }
+        } catch (Exception e) {
+            String errMsg = "Error occurred while listing processes in BPEL package: " + version;
+            log.error(errMsg, e);
+            throw new PackageManagementException(errMsg, e);
+        }
+
+        return processes;
     }
 
     private PackageStatusType convertToPackageStatusType(BPELPackageInfo.Status status) {
-        if(status.equals(BPELPackageInfo.Status.DEPLOYED)) {
+        if (status.equals(BPELPackageInfo.Status.DEPLOYED)) {
             return PackageStatusType.DEPLOYED;
-        } else if(status.equals(BPELPackageInfo.Status.UNDEPLOYED)) {
+        } else if (status.equals(BPELPackageInfo.Status.UNDEPLOYED)) {
             return PackageStatusType.UNDEPLOYED;
-        } else if(status.equals(BPELPackageInfo.Status.FAILED)) {
+        } else if (status.equals(BPELPackageInfo.Status.FAILED)) {
             return PackageStatusType.FAILED;
-        } else if(status.equals(BPELPackageInfo.Status.UPDATED)) {
+        } else if (status.equals(BPELPackageInfo.Status.UPDATED)) {
             return PackageStatusType.UPDATED;
         }
-         return PackageStatusType.UNDEFINED;
+        return PackageStatusType.UNDEFINED;
     }
 
     private TenantProcessStoreImpl getTenantProcessStore() {

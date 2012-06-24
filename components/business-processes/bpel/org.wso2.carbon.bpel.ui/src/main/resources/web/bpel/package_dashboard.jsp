@@ -47,28 +47,21 @@
             (ConfigurationContext) config.getServletContext().getAttribute(CarbonConstants.CONFIGURATION_CONTEXT);
     String cookie = (String)session.getAttribute(ServerConstants.ADMIN_SERVICE_COOKIE);
 
-    BPELPackageManagementServiceClient client;
-    ProcessManagementServiceClient processClient = null;
-    DeployedPackagesPaginated packageList = null;
-    int pageNumberInt = 0;
+    BPELPackageManagementServiceClient client = null;
+    PackageType processesInPackage = null;
+    LimitedProcessInfoType[] processList = null;
 
-    String pageNumber = request.getParameter("pageNumber");
     String operation = request.getParameter("operation");
     String packageName = request.getParameter("packageName");
 
-    boolean isAuthorizedToManageProcesses = CarbonUIUtil.isUserAuthorized(request, "/permission/admin/manage/bpel/processes");
     boolean isAuthorizedToManagePackages =
                 CarbonUIUtil.isUserAuthorized(request, "/permission/admin/manage/bpel/packages");
     boolean isAuthorizedToMonitor =
             CarbonUIUtil.isUserAuthorized(request, "/permission/admin/monitor/bpel");
 
-
-     String processList[] = null;
-
-    if (isAuthorizedToMonitor || isAuthorizedToManageProcesses) {
+    if (isAuthorizedToManagePackages || isAuthorizedToMonitor ) {
         try {
-            processClient = new ProcessManagementServiceClient(cookie, backendServerURL,
-                    configContext, request.getLocale());
+            client = new BPELPackageManagementServiceClient(cookie, backendServerURL, configContext);
         } catch (Exception e) {
             response.setStatus(HttpStatus.SC_INTERNAL_SERVER_ERROR);
             CarbonUIMessage uiMsg = new CarbonUIMessage(CarbonUIMessage.ERROR, e.getMessage(), e);
@@ -80,45 +73,16 @@
         }
     }
 
-    if(isAuthorizedToManageProcesses && operation != null && processClient != null) {
-        String pid = request.getParameter("processID");
-        if(operation.toLowerCase().trim().equals("retire")) {
-            if(pid != null && pid.length() > 0){
-                try{
-                    processClient.retireProcess(BpelUIUtil.stringToQName(pid));
-                } catch (Exception e) {
-                    response.setStatus(HttpStatus.SC_INTERNAL_SERVER_ERROR);
-                    CarbonUIMessage uiMsg = new CarbonUIMessage(CarbonUIMessage.ERROR, e.getMessage(), e);
-                    session.setAttribute(CarbonUIMessage.ID, uiMsg);
-%>
-<jsp:include page="../admin/error.jsp"/>
-<%
-                    return;
-                }
-            }
-
-        } else if(operation.toLowerCase().trim().equals("activate")) {
-            if(pid != null && pid.length() > 0){
-                try{
-                    processClient.activateProcess(BpelUIUtil.stringToQName(pid));
-                } catch (Exception e) {
-                    response.setStatus(HttpStatus.SC_INTERNAL_SERVER_ERROR);
-                    CarbonUIMessage uiMsg = new CarbonUIMessage(CarbonUIMessage.ERROR, e.getMessage(), e);
-                    session.setAttribute(CarbonUIMessage.ID, uiMsg);
-%>
-<jsp:include page="../admin/error.jsp"/>
-<%
-                    return;
-                }
-            }
-        }
-    }
-
     if (isAuthorizedToManagePackages) {
         try {
-            client = new BPELPackageManagementServiceClient(cookie, backendServerURL, configContext);
-            processList = client.listProcessesInPackage(packageName).getProcess();
-
+            processesInPackage = client.listProcessesInPackage(packageName);
+            Version_type0[] packageVersions =
+                    processesInPackage.getVersions().getVersion();
+            for (Version_type0 packageVersion : packageVersions) {
+                if (packageVersion.getName().equals(packageName)) {
+                    processList = packageVersion.getProcesses().getProcess();
+                }
+            }
         } catch (Exception e) {
             response.setStatus(HttpStatus.SC_INTERNAL_SERVER_ERROR);
             CarbonUIMessage uiMsg = new CarbonUIMessage(CarbonUIMessage.ERROR, e.getMessage(), e);
@@ -127,19 +91,6 @@
     }
 
     if (isAuthorizedToManagePackages || isAuthorizedToMonitor ) {
-        try{
-            client = new BPELPackageManagementServiceClient(cookie, backendServerURL, configContext);
-
-        } catch (Exception e) {
-            response.setStatus(HttpStatus.SC_INTERNAL_SERVER_ERROR);
-            CarbonUIMessage uiMsg = new CarbonUIMessage(CarbonUIMessage.ERROR, e.getMessage(), e);
-            session.setAttribute(CarbonUIMessage.ID, uiMsg);
-%>
-<jsp:include page="../admin/error.jsp"/>
-<%
-            return;
-        }
-
         if(isAuthorizedToManagePackages && operation != null && packageName != null &&
            operation.equals("undeploy")) {
             try {
@@ -164,62 +115,24 @@
 <jsp:include page="../admin/error.jsp"/>
 <%
                 return;
-        }
-    }
-
-        if (isAuthorizedToManagePackages && operation != null && packageName != null) {
-        try {
-            processList = client.listProcessesInPackage(packageName).getProcess();
-
-        } catch (Exception e) {
-            response.setStatus(HttpStatus.SC_INTERNAL_SERVER_ERROR);
-            CarbonUIMessage uiMsg = new CarbonUIMessage(CarbonUIMessage.ERROR, e.getMessage(), e);
-            session.setAttribute(CarbonUIMessage.ID, uiMsg);
-        }
-    }
-
-        if (isAuthorizedToMonitor || isAuthorizedToManagePackages) {
-            if(pageNumber == null) {
-                pageNumber = "0";
-            }
-
-            try{
-                pageNumberInt = Integer.parseInt(pageNumber);
-            } catch (NumberFormatException ignored) {
-
-            }
-
-            try{
-                packageList = client.getPaginatedPackageList(pageNumberInt);
-
-            } catch (Exception e) {
-                response.setStatus(HttpStatus.SC_INTERNAL_SERVER_ERROR);
-                CarbonUIMessage uiMsg = new CarbonUIMessage(CarbonUIMessage.ERROR, e.getMessage(), e);
-                session.setAttribute(CarbonUIMessage.ID, uiMsg);
-%>
-<jsp:include page="../admin/error.jsp"/>
-<%
-                return;
             }
         }
     }
 %>
 <fmt:bundle basename="org.wso2.carbon.bpel.ui.i18n.Resources">
     <carbon:breadcrumb
-            label="bpel.headertext_package_dashboard"
+            label="bpel.package.dashboard.headertext"
             resourceBundle="org.wso2.carbon.bpel.ui.i18n.Resources"
             topPage="false"
             request="<%=request%>"/>
         <jsp:include page="../dialog/display_messages.jsp"/>
     <div id="middle">
         <div id="package-list-main">
-            <h2><fmt:message key="bpel.headertext_package_dashboard"/>&nbsp;(<%=packageName%>)</h2>
+            <h2><fmt:message key="bpel.package.dashboard.headertext"/>&nbsp;(<%=packageName%>)</h2>
             <div id="workArea">
                 <div id="package-list">
 <%
     if (isAuthorizedToManagePackages || isAuthorizedToMonitor) {
-                        if(packageList != null && packageList.get_package() != null ) {
-
 %>
                     <table id="packageListTable" class="styledLeft" width="100%">
                         <thead>
@@ -251,13 +164,13 @@
                                     <a id="<%=jQueryCompliantID%>"
                                        class="icon-link-nofloat registryWriteOperation"
                                        style="background-image:url(images/undeploy.gif);"
-                                       href="<%=BpelUIUtil.getUndeployLink(name, pageNumberInt)%>">Undeploy</a>
+                                       href="<%=BpelUIUtil.getUndeployLink(name)%>">Undeploy</a>
 
                                     <a id="<%=jQueryCompliantID%>"
                                        class="icon-link-nofloat registryNonWriteOperation"
                                        style="background-image:url(images/undeploy.gif);color:#777;cursor:default;"
                                        onclick="return false"
-                                       href="<%=BpelUIUtil.getUndeployLink(name, pageNumberInt)%>">Undeploy</a>
+                                       href="<%=BpelUIUtil.getUndeployLink(name)%>">Undeploy</a>
 
                                     <script type="text/javascript">
                                         jQuery('#<%=jQueryCompliantID%>').click(function() {
@@ -278,7 +191,7 @@
                              </tr>
                              <%
                                  String path = RegistryConstants.CONFIG_REGISTRY_BASE_PATH + RegistryConstants.PATH_SEPARATOR + "bpel" + RegistryConstants.PATH_SEPARATOR + "packages" + RegistryConstants.PATH_SEPARATOR + name + RegistryConstants.PATH_SEPARATOR + name.concat(".zip");
-                                 if (isAuthorizedToManagePackages && packageName.contains(name)) {
+                                 if (packageName.contains(name)) {
                                 %>
                             <tr>
                                 <td>
@@ -293,10 +206,11 @@
                         <%
                                         }
                                     }
-                                }
+                        %>
+                        </table>
+                        <%
                             }
                         %>
-                    </table>
 
                     <table>
                         <tr>&nbsp;</tr>
@@ -314,12 +228,12 @@
 
                         <tbody>
 
-                        <% if (processList != null) {
-                            for (int i = 0; i < processList.length; i++) {
+                        <% if (isAuthorizedToManagePackages || isAuthorizedToMonitor) {
+                            for (LimitedProcessInfoType processInfo : processList) {
                         %>
                         <tr>
                             <td>
-                                <a href="./process_info.jsp?Pid=<%=processList[i]%>"><%=processList[i]%>
+                                <a href="./process_info.jsp?Pid=<%=processInfo.getPid()%>"><%=processInfo.getPid()%>
                                 </a>
 
                             </td>
@@ -331,6 +245,35 @@
 
                         </tbody>
                     </table>
+
+                    <table>
+                        <tr>&nbsp;</tr>
+                    </table>
+
+                    <%
+                        if (processesInPackage != null && processesInPackage.isErrorLogSpecified() &&
+                                (isAuthorizedToManagePackages || isAuthorizedToMonitor)) {
+                    %>
+                    <table id="packageErrorTable" class="styledLeft" width="100%" style="color:red">
+                        <thead>
+                        <tr>
+                            <th>
+                                <nobr><fmt:message key="deployment.error"/></nobr>
+                            </th>
+                        </tr>
+                        </thead>
+
+                        <tbody>
+                        <tr>
+                            <td>
+                                <%=processesInPackage.getErrorLog()%>
+                            </td>
+                        </tr>
+                        </tbody>
+                    </table>
+                    <%
+                        }
+                    %>
                 </div>
             </div>
         </div>

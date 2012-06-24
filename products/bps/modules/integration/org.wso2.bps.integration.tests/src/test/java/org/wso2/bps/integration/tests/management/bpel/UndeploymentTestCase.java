@@ -31,7 +31,7 @@ import org.wso2.bps.integration.tests.util.FrameworkSettings;
 import org.wso2.carbon.bpel.stub.mgt.BPELPackageManagementServiceStub;
 import org.wso2.carbon.bpel.stub.mgt.PackageManagementException;
 import org.wso2.carbon.bpel.stub.mgt.types.DeployedPackagesPaginated;
-import org.wso2.carbon.bpel.stub.mgt.types.Package_type0;
+import org.wso2.carbon.bpel.stub.mgt.types.PackageType;
 import org.wso2.carbon.integration.framework.ClientConnectionUtil;
 import org.wso2.carbon.integration.framework.LoginLogoutUtil;
 
@@ -98,7 +98,7 @@ public class UndeploymentTestCase {
 
         boolean packageUndeployed = true;
         if (deployedPackages.get_package() != null) {
-            for (Package_type0 bpelPackage : deployedPackages.get_package()) {
+            for (PackageType bpelPackage : deployedPackages.get_package()) {
                 log.info(bpelPackage.getName());
                 if (bpelPackage.getName().equals(packageName)) {
                     log.info(packageName + " has un-deployed successfully");

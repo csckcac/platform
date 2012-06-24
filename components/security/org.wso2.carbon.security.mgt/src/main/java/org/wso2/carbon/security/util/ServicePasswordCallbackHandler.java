@@ -231,7 +231,7 @@ public class ServicePasswordCallbackHandler implements CallbackHandler {
         UserRegistry govRegistry = SecurityServiceHolder.getRegistryService().
                 getGovernanceSystemRegistry(tenantId);
         try {
-            KeyStoreManager keyMan = KeyStoreManager.getInstance(govRegistry);
+            KeyStoreManager keyMan = KeyStoreManager.getInstance(tenantId);
             if (govRegistry.resourceExists(SecurityConstants.KEY_STORES)) {
                 Collection collection = (Collection) govRegistry.get(SecurityConstants.KEY_STORES);
                 String[] ks = collection.getChildren();

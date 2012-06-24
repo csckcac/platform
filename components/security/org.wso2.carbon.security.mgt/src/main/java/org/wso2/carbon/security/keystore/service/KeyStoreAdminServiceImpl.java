@@ -17,15 +17,17 @@
 */
 package org.wso2.carbon.security.keystore.service;
 
+import org.wso2.carbon.base.MultitenantConstants;
+import org.wso2.carbon.context.CarbonContext;
 import org.wso2.carbon.core.AbstractAdmin;
 import org.wso2.carbon.security.SecurityConfigException;
 import org.wso2.carbon.security.keystore.KeyStoreAdmin;
-import org.wso2.carbon.base.MultitenantConstants;
 
 public class KeyStoreAdminServiceImpl extends AbstractAdmin implements KeyStoreAdminInterface {
 
     public KeyStoreData[] getKeyStores() throws SecurityConfigException {
-        KeyStoreAdmin admin = new KeyStoreAdmin(getGovernanceSystemRegistry());
+        KeyStoreAdmin admin = new KeyStoreAdmin(CarbonContext.getCurrentContext().getTenantId(),
+                getGovernanceSystemRegistry());
         boolean isSuperTenant = MultitenantConstants.SUPER_TENANT_DOMAIN_NAME.equals(
                 super.getTenantDomain()) ? true : false;
         return admin.getKeyStores(isSuperTenant);
@@ -33,37 +35,43 @@ public class KeyStoreAdminServiceImpl extends AbstractAdmin implements KeyStoreA
 
     public void addKeyStore(String fileData, String filename, String password, String provider,
             String type, String pvtkeyPass) throws SecurityConfigException {
-        KeyStoreAdmin admin = new KeyStoreAdmin(getGovernanceSystemRegistry());
+        KeyStoreAdmin admin = new KeyStoreAdmin(CarbonContext.getCurrentContext().getTenantId(),
+                getGovernanceSystemRegistry());
         admin.addKeyStore(fileData, filename, password, provider, type, pvtkeyPass);
     }
 
     public void deleteStore(String keyStoreName) throws SecurityConfigException {
-        KeyStoreAdmin admin = new KeyStoreAdmin(getGovernanceSystemRegistry());
+        KeyStoreAdmin admin = new KeyStoreAdmin(CarbonContext.getCurrentContext().getTenantId(),
+                getGovernanceSystemRegistry());
         admin.deleteStore(keyStoreName);
 
     }
 
     public void importCertToStore(String fileName, String fileData, String keyStoreName)
             throws SecurityConfigException {
-        KeyStoreAdmin admin = new KeyStoreAdmin(getGovernanceSystemRegistry());
+        KeyStoreAdmin admin = new KeyStoreAdmin(CarbonContext.getCurrentContext().getTenantId(),
+                getGovernanceSystemRegistry());
         admin.importCertToStore(fileName, fileData, keyStoreName);
 
     }
 
     public String[] getStoreEntries(String keyStoreName) throws SecurityConfigException {
-        KeyStoreAdmin admin = new KeyStoreAdmin(getGovernanceSystemRegistry());
+        KeyStoreAdmin admin = new KeyStoreAdmin(CarbonContext.getCurrentContext().getTenantId(),
+                getGovernanceSystemRegistry());
         return admin.getStoreEntries(keyStoreName);
 
     }
 
     public KeyStoreData getKeystoreInfo(String keyStoreName) throws SecurityConfigException {
-        KeyStoreAdmin admin = new KeyStoreAdmin(getGovernanceSystemRegistry());
+        KeyStoreAdmin admin = new KeyStoreAdmin(CarbonContext.getCurrentContext().getTenantId(),
+                getGovernanceSystemRegistry());
         return admin.getKeystoreInfo(keyStoreName);
 
     }
 
     public void removeCertFromStore(String alias, String keyStoreName) throws SecurityConfigException{
-    	KeyStoreAdmin admin = new KeyStoreAdmin(getGovernanceSystemRegistry());
+    	KeyStoreAdmin admin = new KeyStoreAdmin(CarbonContext.getCurrentContext().getTenantId(),
+                getGovernanceSystemRegistry());
     	admin.removeCertFromStore(alias, keyStoreName);
     }
 

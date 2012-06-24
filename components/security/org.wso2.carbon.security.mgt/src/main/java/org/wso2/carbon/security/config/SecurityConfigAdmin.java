@@ -1193,8 +1193,9 @@ public class SecurityConfigAdmin {
             throws Exception {
         Properties props = new Properties();
 
+        int tenantId = ((UserRegistry) registry).getTenantId();
         UserRegistry govRegistry = SecurityServiceHolder.getRegistryService().
-                getGovernanceSystemRegistry(((UserRegistry)registry).getTenantId());
+                getGovernanceSystemRegistry(tenantId);
 
         if (trustedCertStores != null && trustedCertStores.length > 0) {
             StringBuilder trstString = new StringBuilder();
@@ -1210,7 +1211,7 @@ public class SecurityConfigAdmin {
         if (privateStore != null) {
             props.setProperty(ServerCrypto.PROP_ID_PRIVATE_STORE, privateStore);
 
-            KeyStoreManager keyMan = KeyStoreManager.getInstance(govRegistry);
+            KeyStoreManager keyMan = KeyStoreManager.getInstance(tenantId);
             KeyStore ks = keyMan.getKeyStore(privateStore);
 
             String privKeyAlias = KeyStoreUtil.getPrivateKeyAlias(ks);
@@ -1221,7 +1222,7 @@ public class SecurityConfigAdmin {
         if (privateStore != null || (trustedCertStores != null && trustedCertStores.length > 0)) {
             //Set the tenant-ID in the properties
             props.setProperty(ServerCrypto.PROP_ID_TENANT_ID,
-                              new Integer(((UserRegistry)registry).getTenantId()).toString());
+                              new Integer(tenantId).toString());
         }
 
         return props;

@@ -31,19 +31,15 @@ import org.wso2.carbon.registry.core.Collection;
 import org.wso2.carbon.registry.core.Registry;
 import org.wso2.carbon.registry.core.Resource;
 import org.wso2.carbon.registry.core.exceptions.RegistryException;
-import org.wso2.carbon.registry.core.session.UserRegistry;
 import org.wso2.carbon.security.SecurityConfigException;
 import org.wso2.carbon.security.SecurityConstants;
 import org.wso2.carbon.security.keystore.service.CertData;
 import org.wso2.carbon.security.keystore.service.CertDataDetail;
 import org.wso2.carbon.security.keystore.service.KeyStoreData;
 import org.wso2.carbon.security.util.KeyStoreMgtUtil;
+import org.wso2.carbon.utils.CarbonUtils;
 
-import java.io.ByteArrayInputStream;
-import java.io.File;
-import java.io.FileInputStream;
-import java.io.IOException;
-import java.io.InputStream;
+import java.io.*;
 import java.security.Key;
 import java.security.KeyStore;
 import java.security.PrivateKey;
@@ -61,7 +57,7 @@ import java.util.List;
 public class KeyStoreAdmin {
 
 	private Registry registry = null;
-
+    private int tenantId;
     
 	private static Log log = LogFactory.getLog(KeyStoreAdmin.class);
 	
@@ -75,8 +71,9 @@ public class KeyStoreAdmin {
 		this.includeCert = includeCert;
 	}
 
-	public KeyStoreAdmin(Registry registry) {
+	public KeyStoreAdmin(int tenantId, Registry registry) {
 		this.registry = registry;
+        this.tenantId = tenantId;
 	}
 
 	/**
@@ -86,7 +83,8 @@ public class KeyStoreAdmin {
 	 * @throws SecurityConfigException
 	 */
 	public KeyStoreData[] getKeyStores(boolean isSuperTenant) throws SecurityConfigException {
-		KeyStoreData[] names = new KeyStoreData[0];
+        CarbonUtils.checkSecurity();
+        KeyStoreData[] names = new KeyStoreData[0];
 		try {
 			if (registry.resourceExists(SecurityConstants.KEY_STORES)) {
 				Collection collection = (Collection) registry.get(SecurityConstants.KEY_STORES);
@@ -280,7 +278,7 @@ public class KeyStoreAdmin {
 				throw new SecurityConfigException("Key Store name can't be null");
 			}
 
-			KeyStoreManager keyMan = KeyStoreManager.getInstance((UserRegistry)registry);
+			KeyStoreManager keyMan = KeyStoreManager.getInstance(tenantId);
 			KeyStore ks = keyMan.getKeyStore(keyStoreName);
 
 			byte[] bytes = Base64.decode(certData);
@@ -323,7 +321,7 @@ public class KeyStoreAdmin {
 				throw new SecurityConfigException("Key Store name can't be null");
 			}
 
-			KeyStoreManager keyMan = KeyStoreManager.getInstance((UserRegistry)registry);
+			KeyStoreManager keyMan = KeyStoreManager.getInstance(tenantId);
 			KeyStore ks = keyMan.getKeyStore(keyStoreName);
 
 			byte[] bytes = Base64.decode(certData);
@@ -365,7 +363,7 @@ public class KeyStoreAdmin {
 				throw new SecurityConfigException("Key Store name can't be null");
 			}
 
-			KeyStoreManager keyMan = KeyStoreManager.getInstance((UserRegistry)registry);
+			KeyStoreManager keyMan = KeyStoreManager.getInstance(tenantId);
 			KeyStore ks = keyMan.getKeyStore(keyStoreName);
 
 			if (ks.getCertificate(alias) == null) {
@@ -389,7 +387,7 @@ public class KeyStoreAdmin {
 				throw new Exception("keystore name cannot be null");
 			}
 
-			KeyStoreManager keyMan = KeyStoreManager.getInstance((UserRegistry)registry);
+			KeyStoreManager keyMan = KeyStoreManager.getInstance(tenantId);
 			KeyStore ks = keyMan.getKeyStore(keyStoreName);
 
 			Enumeration<String> enm = ks.aliases();
@@ -446,7 +444,7 @@ public class KeyStoreAdmin {
 			String keyStoreType;
 			String privateKeyPassowrd;
 			if (KeyStoreUtil.isPrimaryStore(keyStoreName)) {
-				KeyStoreManager keyMan = KeyStoreManager.getInstance((UserRegistry)registry);
+				KeyStoreManager keyMan = KeyStoreManager.getInstance(tenantId);
 				keyStore = keyMan.getPrimaryKeyStore();
 				ServerConfiguration serverConfig = ServerConfiguration.getInstance();
 				keyStoreType = serverConfig
@@ -459,7 +457,7 @@ public class KeyStoreAdmin {
 					throw new SecurityConfigException("Key Store not found");
 				}
 				Resource resource = registry.get(path);
-				KeyStoreManager manager = KeyStoreManager.getInstance((UserRegistry)registry);
+				KeyStoreManager manager = KeyStoreManager.getInstance(tenantId);
 				keyStore = manager.getKeyStore(keyStoreName);
 				keyStoreType = resource.getProperty(SecurityConstants.PROP_TYPE);
 
@@ -529,7 +527,7 @@ public class KeyStoreAdmin {
 
 			for (int i = 0; i < keystores.length; i++) {
 				if (KeyStoreUtil.isPrimaryStore(keystores[i].getKeyStoreName())) {
-					KeyStoreManager keyMan = KeyStoreManager.getInstance((UserRegistry)registry);
+					KeyStoreManager keyMan = KeyStoreManager.getInstance(tenantId);
 					keyStore = keyMan.getPrimaryKeyStore();
 					ServerConfiguration serverConfig = ServerConfiguration.getInstance();
 					privateKeyPassowrd = serverConfig

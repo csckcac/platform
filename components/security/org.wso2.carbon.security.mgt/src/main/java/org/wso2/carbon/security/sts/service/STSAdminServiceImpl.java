@@ -24,6 +24,8 @@ import org.apache.axis2.description.Parameter;
 import org.apache.commons.logging.Log;
 import org.apache.commons.logging.LogFactory;
 import org.apache.rahas.impl.SAMLTokenIssuerConfig;
+import org.wso2.carbon.base.MultitenantConstants;
+import org.wso2.carbon.context.CarbonContext;
 import org.wso2.carbon.core.AbstractAdmin;
 import org.wso2.carbon.core.RegistryResources;
 import org.wso2.carbon.core.util.KeyStoreUtil;
@@ -193,13 +195,16 @@ public class STSAdminServiceImpl extends AbstractAdmin implements STSAdminServic
     }
 
     private KeyStoreData[] getKeyStores() throws SecurityConfigException {
-        KeyStoreAdmin admin = new KeyStoreAdmin(getGovernanceSystemRegistry());
-        boolean isSuperTenant = super.getTenantDomain() == null ? true : false;
+        KeyStoreAdmin admin = new KeyStoreAdmin(CarbonContext.getCurrentContext().getTenantId(),
+                getGovernanceSystemRegistry());
+        boolean isSuperTenant = MultitenantConstants.SUPER_TENANT_DOMAIN_NAME.equals(
+                super.getTenantDomain()) ? true : false;
         return admin.getKeyStores(isSuperTenant);
     }
 
     private String[] getStoreEntries(String keyStoreName) throws SecurityConfigException {
-        KeyStoreAdmin admin = new KeyStoreAdmin(getGovernanceSystemRegistry());
+        KeyStoreAdmin admin = new KeyStoreAdmin(CarbonContext.getCurrentContext().getTenantId(),
+                getGovernanceSystemRegistry());
         return admin.getStoreEntries(keyStoreName);
     }
 

@@ -18,7 +18,7 @@ package org.wso2.carbon.apimgt.handlers.security;
 
 public class APISecurityConstants {
     
-    public static final String API_AUTH_FAILURE_HANDLER = "API_AUTH_FAILURE_HANDLER";
+    public static final String API_AUTH_FAILURE_HANDLER = "_auth_failure_handler_";
     
     public static final int API_AUTH_GENERAL_ERROR       = 900900;
     public static final int API_AUTH_INVALID_CREDENTIALS = 900901;

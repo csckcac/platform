@@ -23,6 +23,6 @@ public class APIThrottleConstants {
     public static final String API_THROTTLE_NS = "http://wso2.org/apimanager/throttling";
     public static final String API_THROTTLE_NS_PREFIX = "amt";
     
-    public static final String API_THROTTLE_OUT_HANDLER = "API_THROTTLE_OUT_HANDLER";
+    public static final String API_THROTTLE_OUT_HANDLER = "_throttle_out_handler_";
     
 }

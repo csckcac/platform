@@ -26,7 +26,7 @@
                 </send>
             </then>
             <else>
-                <sequence key="sandbox_key_error"/>
+                <sequence key="_sandbox_key_error_"/>
             </else>
         </filter>
     </inSequence>

@@ -18,6 +18,8 @@
 */
 package org.wso2.carbon.mediator.autoscale.lbautoscale.clients;
 
+import java.rmi.RemoteException;
+
 import org.apache.axis2.AxisFault;
 import org.apache.commons.logging.Log;
 import org.apache.commons.logging.LogFactory;
@@ -48,23 +50,29 @@ public class AutoscaleServiceClient {
         }
     }
     
+    public boolean init(boolean isSpi) throws Exception {
+        
+        return stub.initAutoscaler(isSpi);
+    }
+    
     public boolean startInstance(String domainName) throws Exception{
 
         return stub.startInstance(domainName);
     }
 
-    public boolean terminateInstance(String instanceId) throws Exception {
+    public boolean terminateInstance(String domainName) throws Exception {
 
-        return stub.terminateInstance(instanceId);
+        return stub.terminateInstance(domainName);
+    }
+    
+    public boolean terminateLastlySpawnedInstance(String domainName) throws Exception {
+        
+        return stub.terminateLastlySpawnedInstance(domainName);
     }
     
     public int getPendingInstanceCount(String domainName) throws Exception{
         
         return stub.getPendingInstanceCount(domainName);
-    }
-    
-    public void addPendingInstanceCount(String domainName, int count) throws Exception {
-        stub.addPendingInstanceCount(domainName, count);
     }
 
 }

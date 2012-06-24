@@ -56,6 +56,16 @@ public class ServiceRequestsInFlightAutoscaler implements Task, ManagedLifecycle
     private LoadBalancerConfiguration loadBalancerConfig;
     
     private String autoscalerServiceEPR ;
+    
+    /**
+     * Server start up delay in milliseconds. 
+     */
+    private static final int SERVER_START_UP_DELAY = 60000;
+            
+    /**
+     * We gonna check this value in order to wait for {@link #SERVER_START_UP_DELAY}.
+     */
+    private int oldPendingInstanceCount;
 
     /**
      * AppDomainContexts for each domain
@@ -94,12 +104,19 @@ public class ServiceRequestsInFlightAutoscaler implements Task, ManagedLifecycle
                                     .getClusteringAgent());
 
         autoscalerServiceEPR = loadBalancerConfig.getLoadBalancerConfig().getAutoscalerServiceEpr();
+        
+        String msg = "Autoscaler Service initialization failed and cannot proceed.";
         try {
+            
             autoscalerService =
                 new AutoscaleServiceClient(autoscalerServiceEPR);
+            autoscalerService.init(false);
         } catch (AxisFault e) {
-            throw new RuntimeException(
-                                       "Autoscaler Service initialization failed and cannot proceed.");
+            log.error(msg, e);
+            throw new RuntimeException(msg, e);
+        } catch (Exception e) {
+            log.error(msg, e);
+            throw new RuntimeException(msg, e);
         }
         
         if (log.isDebugEnabled()) {
@@ -211,8 +228,35 @@ public class ServiceRequestsInFlightAutoscaler implements Task, ManagedLifecycle
             }
             
             // int diff;
+            
+            int previousPendingCount = appDomainContexts.get(serviceDomain).getPendingInstanceCount();
+            int previousRunningCount = appDomainContexts.get(serviceDomain).getRunningInstanceCount();
 
             if (appDomainContexts.get(serviceDomain) != null) {
+                
+                // if we need to wait for sometime to cover the server startup delay
+                if(previousPendingCount >0 && pendingInstanceCount==0 && 
+                        runningInstances < (previousPendingCount + previousRunningCount)){
+                    
+                    // we give some time for the server to be started
+                    try {
+                        Thread.sleep(SERVER_START_UP_DELAY);
+                    } catch (InterruptedException ignore) {}
+                    
+                    // we recalculate number of agents, to check whether an instance spawned up
+                    int newRunningInstanceCount = agent.getMembers().size();
+                    
+                    // if server hasn't yet started up, we gonna kill it.
+                    if(newRunningInstanceCount == runningInstances){
+                        // terminate the lastly spawned instance
+                        try {
+                            autoscalerService.terminateLastlySpawnedInstance(serviceDomain);
+                        } catch (Exception e) {
+                            log.error("Failed to terminate lastly spawned instance of domain "+
+                                    serviceDomain+ "! " , e);
+                        }
+                    }
+                }
                 
                 appDomainContexts.get(serviceDomain).setRunningInstanceCount(runningInstances);
                 
@@ -329,7 +373,7 @@ public class ServiceRequestsInFlightAutoscaler implements Task, ManagedLifecycle
                 } else {
                     if (context != null) {
                         context.incrementPendingInstances(1);
-                        autoscalerService.addPendingInstanceCount(domain, 1);
+                        //autoscalerService.addPendingInstanceCount(domain, 1);
                     }
                 }
             } catch (Exception e) {
@@ -345,11 +389,8 @@ public class ServiceRequestsInFlightAutoscaler implements Task, ManagedLifecycle
     }
 
     /**
-     * This sanity check is run only by non-primary LBs.
-     * This method assigns the elastic IP to this instance, if not already assigned.
-     * The primary LB will do this once. The secondary LBs will check this from time to time, to see
-     * whether the primary LB is still running
-     * FIXME: following check is not working at the moment. Discuss elastic IP thing.
+     * This method will check whether this LB is the primary LB or not and set 
+     * attribute accordingly.
      */
     private void nonPrimaryLBSanityCheck() {
         

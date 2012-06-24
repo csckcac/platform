@@ -39,7 +39,6 @@ import org.osgi.framework.BundleContext;
 import org.osgi.service.component.ComponentContext;
 import org.quartz.JobBuilder;
 import org.quartz.JobDetail;
-import org.quartz.SimpleTrigger;
 import org.wso2.carbon.mediator.autoscale.lbautoscale.util.ConfigHolder;
 import org.wso2.carbon.user.core.service.RealmService;
 import org.wso2.carbon.mediator.autoscale.lbautoscale.util.AutoscaleConstants;
@@ -196,7 +195,7 @@ public class AutoscalerTaskServiceComponent {
             final TaskDescription taskDescription = new TaskDescription();
             taskDescription.setTaskClass(ServiceRequestsInFlightAutoscaler.class.getName());
             taskDescription.setName("autoscaler");
-            taskDescription.setCount(SimpleTrigger.REPEAT_INDEFINITELY);
+            //taskDescription.setCount(SimpleTrigger.REPEAT_INDEFINITELY);
 
             int interval = lbConfig.getLoadBalancerConfig().getAutoscalerTaskInterval();
             taskDescription.setInterval(interval);

@@ -32,7 +32,7 @@ public class ActivityPublisherConstants {
 
 
     public static final String ACTIVITY_REG_PATH = RegistryResources.COMPONENTS
-                                                   + "org.wso2.carbon.bam.service.data.publisher/activity";
+                                                   + "org.wso2.carbon.bam.service.data.publisher/activity/";
 
 
 }

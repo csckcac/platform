@@ -31,7 +31,7 @@ public class CommonConstants {
 
 
     public static final String SERVICE_COMMON_REG_PATH = RegistryResources.COMPONENTS
-                                                   + "org.wso2.carbon.bam.service.data.publisher/common";
+                                                   + "org.wso2.carbon.bam.service.data.publisher/common/";
 
     public static final String SERVICE_PROPERTIES_REG_PATH = RegistryResources.COMPONENTS
                                                    + "org.wso2.carbon.bam.service.data.publisher/properties";

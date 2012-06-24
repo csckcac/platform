@@ -29,7 +29,7 @@ public final class ServiceStatisticsPublisherConstants {
 
     // Registry persistence related constants
     public static final String SERVICE_STATISTICS_REG_PATH = RegistryResources.COMPONENTS
-                                                             + "org.wso2.carbon.bam.service.data.publisher/service_stats";
+                                                             + "org.wso2.carbon.bam.service.data.publisher/service_stats/";
     public static final String ENABLE_SERVICE_STATS_EVENTING = "EnableServiceStats";
 
 

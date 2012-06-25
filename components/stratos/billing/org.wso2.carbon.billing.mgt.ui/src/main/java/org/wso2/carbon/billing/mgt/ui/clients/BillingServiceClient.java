@@ -84,20 +84,28 @@ public class BillingServiceClient {
         }
     }
 
-    public BillingPeriod[] getAvailableBillingPeriods() throws java.lang.Exception {
+    public BillingPeriod[] getAvailableBillingPeriods() throws Exception {
         return stub.getAvailableBillingPeriods();
     }
+    
+    public BillingPeriod[] getBillingPeriodsBySuperTenant(String tenantDomain) throws Exception {
+        return stub.getAvailableBillingPeriodsBySuperTenant(tenantDomain);
+    }
 
-    public MultitenancyInvoice getPastInvoice(int invoiceId) throws java.lang.Exception {
+    public MultitenancyInvoice getPastInvoice(int invoiceId) throws Exception {
         return stub.getPastInvoice(invoiceId);
     }
 
-    public MultitenancyInvoice getCurrentInvoice() throws java.lang.Exception {
+    public MultitenancyInvoice getCurrentInvoice() throws Exception {
         return stub.getCurrentInvoice();    
     }
 
     public int addPayment(Payment payment, String amount) throws Exception{
         return stub.addPayment(payment, amount);
+    }
+    
+    public int makeAdjustment(Payment payment, String amount) throws Exception {
+        return stub.makeAdjustment(payment, amount);
     }
 
     public PaginatedBalanceInfoBean getPaginatedBalanceInfo(int pageNumber) throws Exception {

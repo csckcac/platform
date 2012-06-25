@@ -58,6 +58,26 @@ public class BillingService extends AbstractAdmin {
     }
 
     /**
+     * Gets the available billigs dates of a given tenant
+     * @param tenantDomain is the tenant domain
+     * @return an array of BillingPeriods
+     * @throws Exception if an error occurs during the process
+     */
+    public BillingPeriod[] getAvailableBillingPeriodsBySuperTenant(String tenantDomain) throws Exception{
+
+        BillingManager billingManager = Util.getBillingManager();
+        BillingEngine billingEngine =
+                billingManager.getBillingEngine(StratosConstants.MULTITENANCY_VIEWING_TASK_ID);
+        
+        List<Customer> customers = billingEngine.getCustomersWithName(tenantDomain);
+        if(customers.size()>0){
+            return getBillingPeriodsFromInvoices(billingEngine.getInvoices(customers.get(0)));
+        }else{
+            return new BillingPeriod[0];
+        }
+    }
+
+    /**
      * Gets the invoice with a given invoice id
      * @param invoiceId is the id of the invoice expected
      * @return  a MultitenancyInvoice object
@@ -85,9 +105,29 @@ public class BillingService extends AbstractAdmin {
      * @param payment is the Payment object which contains the payment record details
      * @param amount is the paid amount (had to pass this as a string)
      * @return  the payment id for the added record
-     * @throws Exception Exception
+     * @throws Exception if an error occurs during the operation
      */
     public int addPayment(Payment payment, String amount) throws Exception {
+        int paymentId = addPaymentRecord(payment, amount);
+        if(paymentId>0){
+            payment.setId(paymentId);
+            sendPaymentReceivedEmail(payment);
+        }
+        return paymentId;
+    }
+
+    /**
+     * Adds a payment record for invoice adjustment purposes
+     * @param payment is the Payment object which contains the adjustment details
+     * @param amount is the adjustment amount (had to pass this as a string)
+     * @return the payment id for the added adjustment record
+     * @throws Exception if an error occurs during the operation
+     */
+    public int makeAdjustment(Payment payment, String amount) throws Exception {
+        return addPaymentRecord(payment, amount);
+    }
+    
+    private int addPaymentRecord(Payment payment, String amount) throws Exception{
         BillingManager billingManager = Util.getBillingManager();
         BillingEngine billingEngine =
                 billingManager.getBillingEngine(StratosConstants.MULTITENANCY_VIEWING_TASK_ID);
@@ -97,10 +137,6 @@ public class BillingService extends AbstractAdmin {
             payment.setSubscriptions(billingEngine.getInvoiceSubscriptions(payment.getInvoice().getId()));
         }
         int paymentId = billingEngine.addPayment(payment);
-        if(paymentId>0){
-            payment.setId(paymentId);
-            sendPaymentReceivedEmail(payment);
-        }
         return paymentId;
     }
 
@@ -136,10 +172,6 @@ public class BillingService extends AbstractAdmin {
         return balanceBeans.toArray(new OutstandingBalanceInfoBean[balanceBeans.size()]);
     }
     
-    public void makeAdjustment(int invoiceId, String amount) throws Exception{
-
-    }
-
     /**
      * Gets the past invoice for a given invoice id
      * @param registry  is the GovernanceUserRegistry
@@ -379,6 +411,15 @@ public class BillingService extends AbstractAdmin {
             return new BillingPeriod[0];
         }
         
+        return getBillingPeriodsFromInvoices(invoices);
+    }
+
+    /**
+     * Get the billing period details when given the invoices
+     * @param invoices is list of invoices
+     * @return an array of billing periods
+     */
+    private BillingPeriod[] getBillingPeriodsFromInvoices(List<Invoice> invoices){
         BillingPeriod[] billingPeriods = new BillingPeriod[invoices.size()];
         int index = 0;
         for (Invoice invoice : invoices) {

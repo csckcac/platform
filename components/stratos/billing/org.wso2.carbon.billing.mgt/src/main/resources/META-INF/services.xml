@@ -32,6 +32,14 @@
         <operation name="getOutstandingBalance">
             <parameter name="superTenantService" locked="true">true</parameter>
         </operation>
+
+        <operation name="getAvailableBillingPeriodsBySuperTenant">
+            <parameter name="superTenantService" locked="true">true</parameter>
+        </operation>
+
+        <operation name="makeAdjustment">
+            <parameter name="superTenantService" locked="true">true</parameter>
+        </operation>
   	</service>
 
     <service name="BillingDataAccessService" scope="transportsession">

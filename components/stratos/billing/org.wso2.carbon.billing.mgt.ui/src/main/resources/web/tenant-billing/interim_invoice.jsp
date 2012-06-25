@@ -17,8 +17,6 @@
 -->
 <%@ page import="org.wso2.carbon.billing.mgt.stub.beans.xsd.*" %>
 <%@ page import="org.wso2.carbon.billing.mgt.ui.utils.BillingUtil" %>
-<%@ page import="org.wso2.carbon.common.util.CommonUtil" %>
-<%@ page import="org.wso2.carbon.ui.CarbonUIUtil" %>
 <%@ page import="java.text.SimpleDateFormat" %>
 <%@ page import="java.util.Date" %>
 <%@ page import="java.util.Enumeration" %>

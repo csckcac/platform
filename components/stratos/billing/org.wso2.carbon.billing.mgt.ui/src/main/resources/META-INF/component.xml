@@ -28,8 +28,7 @@
             <style-class>home</style-class>
             <order>23</order>
             <icon>../services/images/services.gif</icon>
-	    <require-permission>/permission/admin/billing/invoice</require-permission>
-            <require-not-super-tenant>true</require-not-super-tenant>	
+	        <require-permission>/permission/admin/billing/invoice</require-permission>
         </menu>
         <menu>
             <id>multitenancy_invoice_menu</id>
@@ -62,7 +61,7 @@
             <i18n-key>adjustment.menu</i18n-key>
             <i18n-bundle>org.wso2.carbon.billing.mgt.ui.i18n.Resources</i18n-bundle>
             <parent-menu>multitenancy_billing_menu</parent-menu>
-            <link>../tenant-billing/adjustment.jsp</link>
+            <link>../tenant-billing/adjustments.jsp</link>
             <region>region4</region>
             <order>52</order>
             <style-class>manage</style-class>

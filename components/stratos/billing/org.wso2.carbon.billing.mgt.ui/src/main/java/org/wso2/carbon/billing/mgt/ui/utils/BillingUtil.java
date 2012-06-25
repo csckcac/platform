@@ -41,8 +41,22 @@ public class BillingUtil {
         try {
             BillingServiceClient serviceClient = new BillingServiceClient(config, session);
             return serviceClient.getAvailableBillingPeriods();
-        } catch (java.lang.Exception e) {
+        } catch (Exception e) {
             String msg = "Failed to get available billing periods.";
+            log.error(msg, e);
+            throw new UIException(msg, e);
+        }
+    }
+    
+    public static BillingPeriod[] getAvailableBillingPeriodsBySuperTenant(
+            ServletConfig config, HttpSession session, String tenantDomain) throws UIException {
+
+        try{
+            BillingServiceClient client = new BillingServiceClient(config, session);
+            return client.getBillingPeriodsBySuperTenant(tenantDomain);
+        }catch(Exception e){
+            String msg = "Error occurred while getting available invoice dates for tenant: " +
+                    tenantDomain;
             log.error(msg, e);
             throw new UIException(msg, e);
         }
@@ -60,7 +74,7 @@ public class BillingUtil {
         try {
             BillingServiceClient serviceClient = new BillingServiceClient(config, session);
             return serviceClient.getPastInvoice(invoiceId);
-        } catch (java.lang.Exception e) {
+        } catch (Exception e) {
             String msg = "Failed to get past invoice for invoice id:" + invoiceId + ".";
             log.error(msg, e);
             throw new UIException(msg, e);
@@ -99,6 +113,18 @@ public class BillingUtil {
         try{
             BillingServiceClient serviceClient = new BillingServiceClient(config, session);
             return serviceClient.addPayment(payment, amount);
+        }catch (Exception exp){
+            String msg = "Failed to add the payment record " + payment.getDescription();
+            log.error(msg, exp);
+            throw new UIException(msg, exp);
+        }
+    }
+
+    public static int makeAdjustment(ServletConfig config, HttpSession session,
+                                        Payment payment, String amount) throws UIException {
+        try{
+            BillingServiceClient serviceClient = new BillingServiceClient(config, session);
+            return serviceClient.makeAdjustment(payment, amount);
         }catch (Exception exp){
             String msg = "Failed to add the payment record " + payment.getDescription();
             log.error(msg, exp);

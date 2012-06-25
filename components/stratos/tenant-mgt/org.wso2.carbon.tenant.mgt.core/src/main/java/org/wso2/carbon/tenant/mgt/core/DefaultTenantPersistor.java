@@ -206,7 +206,7 @@ public class DefaultTenantPersistor implements TenantPersistor {
         } catch (UserStoreException e) {
             String msg = "Error in changing the tenant admin password for tenant domain: " +
                                  tenant.getDomain() + ".";
-            log.error(msg);
+            log.error(msg, e);
             throw new Exception(msg, e);
         }
     }

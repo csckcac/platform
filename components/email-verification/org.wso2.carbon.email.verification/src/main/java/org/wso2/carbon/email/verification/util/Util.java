@@ -149,15 +149,17 @@ public class Util {
 
             // when verifying the user,email address is being persisted in order to be recognized
             // for one time verification
-            Resource tempResource;
-            if (registry.resourceExists(VERIFIED_EMAIL_RESOURCE_PATH)) {
-                String verifyingEmail = data.getFirstChildWithName(new QName("email")).getText();
-                String key = UUIDGenerator.generateUUID();
-                tempResource = registry.get(VERIFIED_EMAIL_RESOURCE_PATH);
-                if (tempResource != null) {
-                    tempResource.setProperty(key, verifyingEmail);
+            if (Boolean.parseBoolean(System.getProperty("onetime.email.verification", Boolean.toString(false)))) {
+                Resource tempResource;
+                if (registry.resourceExists(VERIFIED_EMAIL_RESOURCE_PATH)) {
+                    String verifyingEmail = data.getFirstChildWithName(new QName("email")).getText();
+                    String key = UUIDGenerator.generateUUID();
+                    tempResource = registry.get(VERIFIED_EMAIL_RESOURCE_PATH);
+                    if (tempResource != null) {
+                        tempResource.setProperty(key, verifyingEmail);
+                    }
+                    registry.put(VERIFIED_EMAIL_RESOURCE_PATH, tempResource);
                 }
-                registry.put(VERIFIED_EMAIL_RESOURCE_PATH, tempResource);
             }
 
         } finally {

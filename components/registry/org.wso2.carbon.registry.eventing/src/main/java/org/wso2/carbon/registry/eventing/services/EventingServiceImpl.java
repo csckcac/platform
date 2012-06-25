@@ -222,21 +222,16 @@ public class EventingServiceImpl implements EventingService, SubscriptionEmailVe
     public String subscribe(Subscription subscription) {
         try {
             boolean emailAvailability = isEmailAlreadyAvailable(subscription);
-            if (subscription.getEventSinkURL().startsWith("mailto:") ||
-                    subscription.getEventSinkURL().startsWith("digest:")) {
-                if(!emailAvailability){
-                    Map<String, String> subscriptionData = subscription.getProperties();
-                    subscriptionData.put(RegistryEventingConstants.NOT_VERIFIED,
-                            Boolean.toString(true));
-                    subscription.setProperties(subscriptionData);
-                }
-                String subscribe = Utils.getRegistryEventBrokerService().subscribe(subscription);
-                requestEmailVerification(subscription, null, null);
-                return subscribe;
-            } else {
-                return Utils.getRegistryEventBrokerService().subscribe(subscription);
+            if ((subscription.getEventSinkURL().startsWith("mailto:") || subscription.getEventSinkURL().startsWith("digest:"))
+                    && !emailAvailability) {
+                Map<String, String> subscriptionData = subscription.getProperties();
+                subscriptionData.put(RegistryEventingConstants.NOT_VERIFIED,
+                        Boolean.toString(true));
+                subscription.setProperties(subscriptionData);
             }
-
+            String subscribe = Utils.getRegistryEventBrokerService().subscribe(subscription);
+            requestEmailVerification(subscription, null, null);
+            return subscribe;
         } catch (EventBrokerException e) {
             log.error("Unable to add subscription", e);
             return null;
@@ -244,30 +239,33 @@ public class EventingServiceImpl implements EventingService, SubscriptionEmailVe
     }
 
     private boolean isEmailAlreadyAvailable(Subscription subscription) {
-        String email = subscription.getEventSinkURL().substring(subscription.getEventSinkURL().indexOf(":") + 1
-                , subscription.getEventSinkURL().length());
-        boolean flag = false;
-        try {
-            UserRegistry registry = Utils.getRegistryService().getConfigSystemRegistry();
-            String emailIndexPath = this.emailIndexStoragePath;
-            Resource emailIndexResource;
-            if (registry.resourceExists(emailIndexPath)) {
-                emailIndexResource = registry.get(emailIndexPath);
-                Collection<Object> values = emailIndexResource.getProperties().values();
-                for (Iterator it = values.iterator(); it.hasNext(); ) {
-                    String value = (((ArrayList) (it.next())).toArray())[0].toString();
-                    if (value.equals(email)) {
-                        flag = true;
+        // if one-time email verification is false or not defined, we do not need to check resource, and we will treat it as the resource was
+        // not available.
+        if (Boolean.parseBoolean(System.getProperty("onetime.email.verification", Boolean.toString(false)))) {
+            String email = subscription.getEventSinkURL().substring(subscription.getEventSinkURL().indexOf(":") + 1
+                    , subscription.getEventSinkURL().length());
+            try {
+                UserRegistry registry = Utils.getRegistryService().getConfigSystemRegistry();
+                String emailIndexPath = this.emailIndexStoragePath;
+                Resource emailIndexResource;
+                if (registry.resourceExists(emailIndexPath)) {
+                    emailIndexResource = registry.get(emailIndexPath);
+                    Collection<Object> values = emailIndexResource.getProperties().values();
+                    for (Iterator it = values.iterator(); it.hasNext(); ) {
+                        String value = (((ArrayList) (it.next())).toArray())[0].toString();
+                        if (value.equals(email)) {
+                            return true;
+                        }
                     }
+                } else {
+                    emailIndexResource = registry.newResource();
+                    registry.put(emailIndexPath, emailIndexResource);
                 }
-            } else {
-                emailIndexResource = registry.newResource();
-                registry.put(emailIndexPath, emailIndexResource);
+            } catch (RegistryException e) {
+                log.error("Unable to check email verification resource", e);
             }
-        } catch (RegistryException e) {
-            e.printStackTrace();
         }
-        return flag;
+        return false;
     }
 
     public Subscription getSubscription(String id, String userName, String remoteURL) {

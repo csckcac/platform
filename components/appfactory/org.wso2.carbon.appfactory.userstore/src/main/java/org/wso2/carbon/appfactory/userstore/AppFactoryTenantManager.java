@@ -129,7 +129,7 @@ public class AppFactoryTenantManager extends CommonHybridLDAPTenantManager {
                     dnOfUserContext);
             //read user name attribute in user-mgt.xml
             String userNameAttribute = realmConfig.getUserStoreProperty(
-                    LDAPConstants.USER_NAME_ATTRIBUTE_NAME);
+                    LDAPConstants.USER_NAME_ATTRIBUTE);
 
             String userRDN = userNameAttribute + "=" + tenant.getAdminName();
             //organizationalUsersContext.bind(userRDN, null, userAttributes);

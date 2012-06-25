@@ -9,10 +9,10 @@ import org.wso2.carbon.user.api.RealmConfiguration;
 import org.wso2.carbon.user.core.UserRealm;
 import org.wso2.carbon.user.core.UserStoreException;
 import org.wso2.carbon.user.core.claim.ClaimManager;
-import org.wso2.carbon.user.core.ldap.ApacheDSUserStoreManager;
+import org.wso2.carbon.user.core.ldap.ReadWriteLDAPUserStoreManager;
 import org.wso2.carbon.user.core.profile.ProfileConfigurationManager;
 
-public class AppFactoryUserStore extends ApacheDSUserStoreManager {
+public class AppFactoryUserStore extends ReadWriteLDAPUserStoreManager {
 
     public AppFactoryUserStore(RealmConfiguration realmConfig,
                                Map<String, Object> properties, ClaimManager claimManager,

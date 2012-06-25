@@ -21,7 +21,7 @@ var lifecyleOperationStarted = false;
         sessionAwareFunction(function() {
             lifecyleOperationStarted = false;
             window.location = "../search/advancedSearch.jsp?region=region3&item=" +
-                              "registry_search_menu&propertyName=registry.LC.name&leftOp=eq&leftPropertyValue=" +
+                              "registry_search_menu&propertyName=registry.LC.name&leftOp=eq&rightPropertyValue=" +
                               lifecycleName;
         }, org_wso2_carbon_governance_lcm_ui_jsi18n["session.timed.out"]);
         lifecyleOperationStarted = false;

@@ -303,6 +303,12 @@ public class AddServiceUIGenerator {
                     String mandet = arg.getAttributeValue(new QName(null, UIGeneratorConstants.MANDETORY_ATTRIBUTE));
                     String richText = arg.getAttributeValue(new QName(null, UIGeneratorConstants.IS_RICH_TEXT));
 
+                    boolean isReadOnly = false;
+
+                    if (markReadonly && "true".equals(arg.getAttributeValue(new QName(null, UIGeneratorConstants.READONLY_ATTRIBUTE)))) {
+                        isReadOnly = true;
+                    }
+
                     boolean isRichText = false; //By default rich text is off
                     if (richText != null) {
                         isRichText = Boolean.valueOf(richText);
@@ -337,10 +343,10 @@ public class AddServiceUIGenerator {
                         }
                         if (value != null) {
                             table.append(printTextAreaSkipName(arg.getFirstChildWithName(
-                                    new QName(null, UIGeneratorConstants.ARGUMENT_NAME)).getText(), widgetName, value, height, width));
+                                    new QName(null, UIGeneratorConstants.ARGUMENT_NAME)).getText(), widgetName, value, height, width, isReadOnly));
                         } else {
                             table.append(printTextAreaSkipName(arg.getFirstChildWithName(
-                                    new QName(null, UIGeneratorConstants.ARGUMENT_NAME)).getText(), widgetName, height, width));
+                                    new QName(null, UIGeneratorConstants.ARGUMENT_NAME)).getText(), widgetName, height, width, isReadOnly));
                         }
                         columnCount++;
                         if (columnCount == columns) {
@@ -359,9 +365,9 @@ public class AddServiceUIGenerator {
                         }
 
                         if (value != null) {
-                            table.append(printTextArea(label, name, mandet, widgetName, value, height, width, isRichText));
+                            table.append(printTextArea(label, name, mandet, widgetName, value, height, width, isReadOnly, isRichText));
                         } else {
-                            table.append(printTextArea(label, name, mandet, widgetName, height, width, isRichText));
+                            table.append(printTextArea(label, name, mandet, widgetName, height, width, isReadOnly, isRichText));
                         }
                     }
                 } else if (UIGeneratorConstants.OPTION_TEXT_FIELD.equals(elementType)) {
@@ -574,7 +580,7 @@ public class AddServiceUIGenerator {
         return dropDown.toString();
     }
 
-    public String printTextArea(String label, String name, String mandatory, String widget, int height, int width, boolean isRichText) {
+    public String printTextArea(String label, String name, String mandatory, String widget, int height, int width, boolean isReadOnly, boolean isRichText) {
         StringBuilder element = new StringBuilder();
         StringBuilder size = new StringBuilder("style=\"");
         if (height > 0) {
@@ -589,14 +595,14 @@ public class AddServiceUIGenerator {
             if (isRichText) {
                 element.append("<tr><td class=\"leftCol-big\">" + label + "<span class=\"required\">*</span></td>\n" +
                         " <td  style=\"font-size:8px\" class=\"yui-skin-sam\"><textarea  name=\"" + widget.replaceAll(" ", "_") + "_" + name.replaceAll(" ", "-") + "\" id=\"id_"
-                        + widget.replaceAll(" ", "_") + "_" + name.replaceAll(" ", "-") + "\" " + size + "></textarea>");
+                        + widget.replaceAll(" ", "_") + "_" + name.replaceAll(" ", "-") + "\" " + size  + (isReadOnly ? " readonly" : "") + " ></textarea>");
                 element = appendRichTextScript(element, width, height, widget, name);
                 element.append("</td></tr>");
 
             } else {
                 element.append("<tr><td class=\"leftCol-big\">" + label + "<span class=\"required\">*</span></td>\n" +
                         " <td><textarea  name=\"" + widget.replaceAll(" ", "_") + "_" + name.replaceAll(" ", "-") + "\" id=\"id_"
-                        + widget.replaceAll(" ", "_") + "_" + name.replaceAll(" ", "-") + "\" " + size + "></textarea></td></tr>");
+                        + widget.replaceAll(" ", "_") + "_" + name.replaceAll(" ", "-") + "\" " + size  + (isReadOnly ? " readonly" : "") + " ></textarea></td></tr>");
                 element = appendEmptyScript(element, widget, name);
                 element.append("</td></tr>");
 
@@ -606,14 +612,14 @@ public class AddServiceUIGenerator {
             if (isRichText) {
                 element.append("<tr><td class=\"leftCol-big\">" + label + "</td>\n" +
                         " <td  style=\"font-size:8px\" class=\"yui-skin-sam\"><textarea  name=\"" + widget.replaceAll(" ", "_") + "_" + name.replaceAll(" ", "-") + "\" id=\"id_"
-                        + widget.replaceAll(" ", "_") + "_" + name.replaceAll(" ", "-") + "\" " + size + "></textarea>");
+                        + widget.replaceAll(" ", "_") + "_" + name.replaceAll(" ", "-") + "\" " + size  + (isReadOnly ? " readonly" : "") + " ></textarea>");
                 element = appendRichTextScript(element, width, height, widget, name);
                 element.append("</td></tr>");
 
             } else {
                 element.append("<tr><td class=\"leftCol-big\">" + label + "</td>\n" +
                         " <td><textarea  name=\"" + widget.replaceAll(" ", "_") + "_" + name.replaceAll(" ", "-") + "\" id=\"id_"
-                        + widget.replaceAll(" ", "_") + "_" + name.replaceAll(" ", "-") + "\" " + size + "></textarea></td></tr>");
+                        + widget.replaceAll(" ", "_") + "_" + name.replaceAll(" ", "-") + "\" " + size  + (isReadOnly ? " readonly" : "") + " ></textarea></td></tr>");
                 element = appendEmptyScript(element, widget, name);
                 element.append("</td></tr>");
 
@@ -622,7 +628,7 @@ public class AddServiceUIGenerator {
         return element.toString();
     }
 
-    public String printTextAreaSkipName(String name, String widget, int height, int width) {
+    public String printTextAreaSkipName(String name, String widget, int height, int width, boolean isReadOnly) {
         StringBuilder element = new StringBuilder();
         StringBuilder size = new StringBuilder();
         if (height > 0 || width > 0) {
@@ -636,7 +642,7 @@ public class AddServiceUIGenerator {
             size.append("\"");
         }
         element.append("<td><textarea  name=\"" + widget.replaceAll(" ", "_") + "_" + name.replaceAll(" ", "-") + "\" " +
-                "id=\"id_" + widget.replaceAll(" ", "_") + "_" + name.replaceAll(" ", "-") + "\" " + size + "></textarea></td>");
+                "id=\"id_" + widget.replaceAll(" ", "_") + "_" + name.replaceAll(" ", "-") + "\" " + size + (isReadOnly ? " readonly" : "") + " ></textarea></td>");
         return element.toString();
     }
 
@@ -748,7 +754,7 @@ public class AddServiceUIGenerator {
         }
     }
 
-    public String printTextArea(String label, String name, String mandatory, String widget, String value, int height, int width, boolean isRichText) {
+    public String printTextArea(String label, String name, String mandatory, String widget, String value, int height, int width, boolean isReadOnly, boolean isRichText) {
         StringBuilder element = new StringBuilder();
         StringBuilder size = new StringBuilder("style=\"");
         if (height > 0) {
@@ -763,14 +769,14 @@ public class AddServiceUIGenerator {
             if (isRichText) {
                 element.append("<tr><td class=\"leftCol-big\">" + label + "<span class=\"required\">*</span></td>\n" +
                         " <td  style=\"font-size:8px\" class=\"yui-skin-sam\"><textarea  name=\"" + widget.replaceAll(" ", "_") + "_" + name.replaceAll(" ", "-") + "\" id=\"id_"
-                        + widget.replaceAll(" ", "_") + "_" + name.replaceAll(" ", "-") + "\" " + size + ">" + value + "</textarea>");
+                        + widget.replaceAll(" ", "_") + "_" + name.replaceAll(" ", "-") + "\" " + size  + (isReadOnly ? " readonly" : "") + " >" + value + "</textarea>");
                 element = appendRichTextScript(element, width, height, widget, name);
                 element.append("</td></tr>");
 
             } else {
                 element.append("<tr><td class=\"leftCol-big\">" + label + "<span class=\"required\">*</span></td>\n" +
                         " <td><textarea  name=\"" + widget.replaceAll(" ", "_") + "_" + name.replaceAll(" ", "-") + "\" id=\"id_"
-                        + widget.replaceAll(" ", "_") + "_" + name.replaceAll(" ", "-") + "\" " + size + ">" + value + "</textarea>");
+                        + widget.replaceAll(" ", "_") + "_" + name.replaceAll(" ", "-") + "\" " + size  + (isReadOnly ? " readonly" : "") + " >" + value + "</textarea>");
                 element = appendEmptyScript(element, widget, name);
                 element.append("</td></tr>");
 
@@ -779,14 +785,14 @@ public class AddServiceUIGenerator {
             if (isRichText) {
                 element.append("<tr><td class=\"leftCol-big\">" + label + "<span class=\"required\">*</span></td>\n" +
                         " <td  style=\"font-size:8px\" class=\"yui-skin-sam\"><textarea  name=\"" + widget.replaceAll(" ", "_") + "_" + name.replaceAll(" ", "-") + "\" id=\"id_"
-                        + widget.replaceAll(" ", "_") + "_" + name.replaceAll(" ", "-") + "\" " + size + ">" + value + "</textarea>");
+                        + widget.replaceAll(" ", "_") + "_" + name.replaceAll(" ", "-") + "\" " + size  + (isReadOnly ? " readonly" : "") + " >" + value + "</textarea>");
                 element = appendRichTextScript(element, width, height, widget, name);
                 element.append("</td></tr>");
 
             } else {
                 element.append("<tr><td class=\"leftCol-big\">" + label + "</td>\n" +
                         " <td><textarea  name=\"" + widget.replaceAll(" ", "_") + "_" + name.replaceAll(" ", "-") + "\" id=\"id_"
-                        + widget.replaceAll(" ", "_") + "_" + name.replaceAll(" ", "-") + "\" " + size + ">" + value + "</textarea>");
+                        + widget.replaceAll(" ", "_") + "_" + name.replaceAll(" ", "-") + "\" " + size  + (isReadOnly ? " readonly" : "") + " >" + value + "</textarea>");
                 element = appendEmptyScript(element, widget, name);
                 element.append("</td></tr>");
 
@@ -849,7 +855,7 @@ public class AddServiceUIGenerator {
         return element;
     }
 
-    public String printTextAreaSkipName(String name, String widget, String value, int height, int width) {
+    public String printTextAreaSkipName(String name, String widget, String value, int height, int width, boolean isReadOnly) {
         StringBuilder element = new StringBuilder();
         StringBuilder size = new StringBuilder();
         if (height > 0 || width > 0) {
@@ -863,7 +869,7 @@ public class AddServiceUIGenerator {
             size.append("\"");
         }
         element.append("<td><textarea  name=\"" + widget.replaceAll(" ", "_") + "_" + name.replaceAll(" ", "-") + "\" " +
-                "id=\"id_" + widget.replaceAll(" ", "_") + "_" + name.replaceAll(" ", "-") + "\" " + size + ">" + value + "</textarea></td>");
+                "id=\"id_" + widget.replaceAll(" ", "_") + "_" + name.replaceAll(" ", "-") + "\" " + size  + (isReadOnly ? " readonly" : "") + " >" + value + "</textarea></td>");
         return element.toString();
     }
 

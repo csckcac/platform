@@ -162,6 +162,7 @@
                                         <div class="span8">
                                             <a href="<%=path%>" class="service-name" title="<%=api.name%>-<%=api.version%>"><%=apiName%> - <%=api.version%></a>
                                             <div class="item-info"><%=api.provider%></div>
+                                            <div class="item-info"><b>Subscription Tier:</b><%=api.tier%></div>
                                         </div>
                                     </div>
                                 </div>

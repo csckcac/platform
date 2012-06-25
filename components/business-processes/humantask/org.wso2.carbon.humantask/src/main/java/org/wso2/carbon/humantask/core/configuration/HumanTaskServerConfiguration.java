@@ -55,7 +55,8 @@ public class HumanTaskServerConfiguration {
 
     private String daoConnectionFactoryClass;
 
-    private String peopleQueryEvaluatorClass;
+    private String peopleQueryEvaluatorClass =
+            "org.wso2.carbon.humantask.core.integration.UserManagerBasedPeopleQueryEvaluator";
 
     private int threadPoolMaxSize = 50;
 
@@ -189,18 +190,27 @@ public class HumanTaskServerConfiguration {
         if (tTransactionManagerConfig.getTransactionManagerClass() != null) {
             this.transactionFactoryClass = tTransactionManagerConfig.getTransactionManagerClass().
                     trim();
+        } else {
+            log.debug("TransactionManagerClass not provided with HumanTask configuration." +
+                      "Using default TransactionManagerClass :" + transactionFactoryClass);
         }
     }
 
     private void initSchedulerConfig(TSchedulerConfig tSchedulerConfig) {
         if (tSchedulerConfig.getMaxThreadPoolSize() > 0) {
             this.threadPoolMaxSize = tSchedulerConfig.getMaxThreadPoolSize();
+        } else {
+            log.debug("ThreadPoolMaxSize not provided with HumanTask configuration." +
+                      "Using default thread pool max value of :" + threadPoolMaxSize);
         }
     }
 
     private void initPeopleQueryEvaluator(TPeopleQueryEvaluatorConfig tUserManagerConfig) {
         if (tUserManagerConfig.getPeopleQueryEvaluatorClass() != null) {
             this.peopleQueryEvaluatorClass = tUserManagerConfig.getPeopleQueryEvaluatorClass().trim();
+        } else {
+            log.debug("PeopleQueryEvaluatorConfig is not provided with HumanTask configuration." +
+                      "Using default PeopleQueryEvaluatorClass: " + peopleQueryEvaluatorClass);
         }
     }
 
@@ -231,6 +241,7 @@ public class HumanTaskServerConfiguration {
             this.dataSourceJNDIRepoProviderURL = urlWithoutPort.concat(Integer.toString(correctedPortValue));
 
         }
+
         if (tPersistenceConfig.getDAOConnectionFactoryClass() != null) {
             this.daoConnectionFactoryClass = tPersistenceConfig.getDAOConnectionFactoryClass().trim();
         }

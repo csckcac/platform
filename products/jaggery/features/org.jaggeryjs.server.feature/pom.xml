@@ -318,8 +318,13 @@
                                 <resource>
                                     <directory>resources</directory>
                                     <includes>
-                                        <include>modules/**</include>
                                         <include>p2.inf</include>
+                                    </includes>
+                                </resource>
+                                <resource>
+                                    <directory>../../</directory>
+                                    <includes>
+                                        <include>modules/**</include>
                                     </includes>
                                 </resource>
                             </resources>

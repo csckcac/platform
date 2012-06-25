@@ -1437,6 +1437,9 @@ public class APIProviderHostObject extends ScriptableObject {
             throw new APIManagementException("Invalid number of parameters.");
         }
         String apiName = (String) args[0];
+        if ("*".equals(apiName) || apiName.startsWith("*")) {
+            apiName = apiName.replaceFirst("\\*", ".*");
+        }
 
         APIProvider apiProvider = getAPIProvider(thisObj);
         try {
@@ -1495,6 +1498,9 @@ public class APIProviderHostObject extends ScriptableObject {
         }
         String providerName = (String) args[0];
         String apiName = (String) args[1];
+        if ("*".equals(apiName) || apiName.startsWith("*")) {
+            apiName = apiName.replaceFirst("\\*", ".*");
+        }
 
         if (providerName != null) {
             APIProvider apiProvider = getAPIProvider(thisObj);

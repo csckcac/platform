@@ -1325,6 +1325,7 @@ public class APIStoreHostObject extends ScriptableObject {
             apiObj.put("provider", apiObj, subscribedAPI.getApiId().getProviderName());
             apiObj.put("version", apiObj, subscribedAPI.getApiId().getVersion());
             apiObj.put("status", apiObj, api.getStatus().toString());
+            apiObj.put("tier", apiObj, subscribedAPI.getTier().getName());
             apiObj.put("thumburl", apiObj, api.getThumbnailUrl());
             apiObj.put("context", apiObj, api.getContext());
             apiObj.put("prodKey", apiObj, getKey(subscribedAPI, APIConstants.API_KEY_TYPE_PRODUCTION));

@@ -1645,4 +1645,28 @@ public class APIStoreHostObject extends ScriptableObject {
             throw new APIManagementException("Error while adding the user: " + username, e);
         }
     }
+
+    public static boolean jsFunction_removeSubscription(Context cx, Scriptable thisObj,
+                                                        Object[] args,
+                                                        Function funObj)
+            throws APIManagementException {
+        if (args.length == 0) {
+            throw new APIManagementException("Invalid number of input parameters.");
+        }
+        String username = args[0].toString();
+        int applicationId = ((Number) args[1]).intValue();
+        NativeObject apiData = (NativeObject) args[2];
+        String provider = (String) apiData.get("provider", apiData);
+        String name = (String) apiData.get("apiName", apiData);
+        String version = (String) apiData.get("version", apiData);
+        APIIdentifier apiId = new APIIdentifier(provider, name, version);
+
+        APIConsumer apiConsumer = getAPIConsumer(thisObj);
+        try {
+            apiConsumer.removeSubscription(apiId, username, applicationId);
+            return true;
+        } catch (APIManagementException e) {
+            throw new APIManagementException("Error while removing the subscription of" + name + "-" + version, e);
+        }
+    }
 }

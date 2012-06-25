@@ -67,6 +67,7 @@
 		<!--<module>hive</module>-->
 		<!--module>hadoop</module-->
 		<module>datanucleus</module>
+		<module>jaggery</module>
 		<!-- orbit/modules -->
                 <!--module>orbit/cassandra</module-->
                 <module>orbit/cassandra-jdbc</module>

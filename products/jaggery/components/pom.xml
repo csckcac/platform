@@ -183,7 +183,6 @@
                 <artifactId>jstl</artifactId>
                 <version>${jstl.version}</version>
             </dependency>
-            <!-- STAX implementation used in WSAS -->
             <dependency>
                 <groupId>org.apache.geronimo.specs.wso2</groupId>
                 <artifactId>geronimo-stax-api_1.0_spec</artifactId>
@@ -248,11 +247,6 @@
             <dependency>
                 <groupId>org.jaggeryjs</groupId>
                 <artifactId>org.jaggeryjs.hostobjects.feed</artifactId>
-                <version>${hostObject.version}</version>
-            </dependency>
-            <dependency>
-                <groupId>org.jaggeryjs</groupId>
-                <artifactId>org.jaggeryjs.hostobjects.atom</artifactId>
                 <version>${hostObject.version}</version>
             </dependency>
             <dependency>
@@ -364,8 +358,13 @@
     </dependencyManagement>
 
     <properties>
-        <wso2carbon.version>4.0.0-SNAPSHOT</wso2carbon.version>
         <jaggery.components.version>0.9.0-ALPHA</jaggery.components.version>
+        <jaggery.version>0.9.0-ALPHA</jaggery.version>
+        <jaggery.component.version>0.9.0-ALPHA</jaggery.component.version>
+        <hostObject.version>0.9.0-ALPHA</hostObject.version>
+
+        <wso2carbon.version>4.0.0-SNAPSHOT</wso2carbon.version>
+
         <felix.bundle.version>2.3.5</felix.bundle.version>
         <felix.scr.version>1.7.2</felix.scr.version>
         <axiom.e4x.version>2.0.0.SNAPSHOT</axiom.e4x.version>
@@ -373,9 +372,6 @@
         <common.httpclient.version>3.1</common.httpclient.version>
         <rhino.version>1.7R1</rhino.version>
         <gson.version>2.1</gson.version>
-        <jaggery.version>0.9.0-ALPHA</jaggery.version>
-        <jaggery.component.version>0.9.0-ALPHA</jaggery.component.version>
-        <hostObject.version>0.9.0-ALPHA</hostObject.version>
         <geronimo-stax-api.wso2.version>1.0.1.wso2v1</geronimo-stax-api.wso2.version>
         <rampart.wso2.version>1.6.1.wso2v2</rampart.wso2.version>
         <wss4j.wso2.version>1.5.11.wso2v1</wss4j.wso2.version>

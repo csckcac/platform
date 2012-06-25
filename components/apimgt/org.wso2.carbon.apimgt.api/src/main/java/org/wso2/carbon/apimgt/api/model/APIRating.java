@@ -21,6 +21,7 @@ package org.wso2.carbon.apimgt.api.model;
  * This is enum class used to present the APIRating values.
  */
 public enum APIRating {
+    RATING_ZERO(0),
     RATING_ONE(1),
     RATING_TWO(2),
     RATING_THREE(3),

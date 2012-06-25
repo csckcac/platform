@@ -140,14 +140,17 @@
         }
     %>
 
-    <h2><fmt:message key="invoice.adjustments"/></h2>
-
     <div id="middle">
-
+        <h2><fmt:message key="invoice.adjustments"/></h2>
         <div id="workArea">
             <form name="adjustmentForm" action="make_adjustment_ajaxprocessor.jsp" method="post">
                 <input type="hidden" name="invoiceId" id="invoiceId" />
                 <table class="styledLeft" cellspacing="0">
+                    <thead>
+                    <tr>
+                        <th colspan="3"><fmt:message key="find.invoices"/></th>
+                    </tr>
+                    </thead>
                     <tbody>
                     <tr>
                         <td style="width:180px"><fmt:message key="enter.tenant.domain"/></td>
@@ -156,12 +159,17 @@
                             <input type="button" onclick="javascript:findInvoices();" value="<fmt:message key="find.invoices"/>"/>
                         </td>
                     </tr>
+                    <tr><td colspan="3"></td></tr>
                     </tbody>
                 </table>
 
                 <table id="invoiceDetailTable" class="styledLeft" cellspacing="0" style="display: none">
+                    <thead>
+                    <tr>
+                        <th colspan="3"><fmt:message key="adjustment.information"/></th>
+                    </tr>
+                    </thead>
                     <tbody>
-                    <tr><td colspan="3"></td></tr>
                     <tr>
                         <td style="width:180px"><fmt:message key="select.invoice"/></td>
                         <td colspan="2"><select id="invoices"></select></td>

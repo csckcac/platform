@@ -1,6 +1,6 @@
 $(document).ready(function() {
-    $("#addNewDoc").validate();
     $('#saveDoc').click(function() {
+        $("#addNewDoc").validate();
         if ($("#addNewDoc").valid()) {
             var api=$("#item-info h2")[0].innerHTML;
             var apiName = $.trim(api.split("-")[0]);
@@ -94,6 +94,7 @@ var clearDocs = function () {
     doc.getElementById('summary').value = '';
     doc.getElementById('docUrl').value = '';
     $('#newDoc').hide('slow');
+
 };
 
 var getRadioValue = function (radioButton) {

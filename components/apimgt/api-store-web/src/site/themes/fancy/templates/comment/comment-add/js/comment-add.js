@@ -26,4 +26,5 @@ $(document).ready(function () {
 			warning: 470,
 			counterText: 'Characters left: '
 		});
+    $("#comment-text").val('');
 });

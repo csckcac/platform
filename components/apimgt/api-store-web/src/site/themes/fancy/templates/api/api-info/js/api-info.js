@@ -83,7 +83,8 @@ $(document).ready(function () {
     $('#application-list').change(
             function(){
                 if($(this).val() == "createNewApp"){
-                    window.location.href = '../site/pages/applications.jag';
+                    //$.cookie('apiPath','foo');
+                    window.location.href = '../site/pages/applications.jag?addFor=api';
                 }
             }
             );

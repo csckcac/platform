@@ -23,7 +23,7 @@
                 <tr>
                     <th>Rating:</th>
                     <td>
-                        <% if(user) { %><div class="average-rating"><%=String(api.rating)%></div><% } %>
+                        <% if(user && api.rating!=0) { %><div class="average-rating"><%=String(api.rating)%></div><% } %>
                     </td>
                     <td>
                         <div class="star-ratings">

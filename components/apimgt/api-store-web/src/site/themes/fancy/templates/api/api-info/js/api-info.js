@@ -104,4 +104,22 @@ $(document).ready(function () {
     }, function (api) {
 
     }, jagg.api);
+
 });
+
+var removeRating = function(api) {
+    jagg.post("/site/blocks/api/api-info/ajax/api-info.jag", {
+        action:"addRating",
+        name:api.name,
+        version:api.version,
+        provider:api.provider,
+        rating:'0'
+    }, function (result) {
+        if (!result.error) {
+            window.location.reload();
+        } else {
+            jagg.message({content:result.message,type:"error"});
+        }
+    }, "json");
+
+};

@@ -1,4 +1,4 @@
-<wsdl:definitions xmlns:wsdl="http://schemas.xmlsoap.org/wsdl/" xmlns:ax233="http://dataobjects.core.billing.carbon.wso2.org/xsd" xmlns:ns1="http://org.apache.axis2/xsd" xmlns:ns="http://services.mgt.billing.carbon.wso2.org" xmlns:ax231="http://beans.core.billing.carbon.wso2.org/xsd" xmlns:wsaw="http://www.w3.org/2006/05/addressing/wsdl" xmlns:http="http://schemas.xmlsoap.org/wsdl/http/" xmlns:xs="http://www.w3.org/2001/XMLSchema" xmlns:ax229="http://beans.mgt.billing.carbon.wso2.org/xsd" xmlns:soap="http://schemas.xmlsoap.org/wsdl/soap/" xmlns:mime="http://schemas.xmlsoap.org/wsdl/mime/" xmlns:soap12="http://schemas.xmlsoap.org/wsdl/soap12/" targetNamespace="http://services.mgt.billing.carbon.wso2.org">
+<wsdl:definitions xmlns:wsdl="http://schemas.xmlsoap.org/wsdl/" xmlns:ax233="http://beans.mgt.billing.carbon.wso2.org/xsd" xmlns:ns1="http://org.apache.axis2/xsd" xmlns:ns="http://services.mgt.billing.carbon.wso2.org" xmlns:ax231="http://dataobjects.core.billing.carbon.wso2.org/xsd" xmlns:wsaw="http://www.w3.org/2006/05/addressing/wsdl" xmlns:http="http://schemas.xmlsoap.org/wsdl/http/" xmlns:ax235="http://beans.core.billing.carbon.wso2.org/xsd" xmlns:xs="http://www.w3.org/2001/XMLSchema" xmlns:soap="http://schemas.xmlsoap.org/wsdl/soap/" xmlns:mime="http://schemas.xmlsoap.org/wsdl/mime/" xmlns:soap12="http://schemas.xmlsoap.org/wsdl/soap12/" targetNamespace="http://services.mgt.billing.carbon.wso2.org">
     <wsdl:documentation>MultitenancyBillingService</wsdl:documentation>
     <wsdl:types>
         <xs:schema attributeFormDefault="qualified" elementFormDefault="qualified" targetNamespace="http://beans.mgt.billing.carbon.wso2.org/xsd">
@@ -10,9 +10,9 @@
                     <xs:element minOccurs="0" name="endDate" nillable="true" type="xs:date" />
                     <xs:element minOccurs="0" name="invoiceId" type="xs:int" />
                     <xs:element minOccurs="0" name="lastInvoice" type="xs:boolean" />
-                    <xs:element maxOccurs="unbounded" minOccurs="0" name="purchaseOrders" nillable="true" type="ax229:MultitenancyPurchaseOrder" />
+                    <xs:element maxOccurs="unbounded" minOccurs="0" name="purchaseOrders" nillable="true" type="ax233:MultitenancyPurchaseOrder" />
                     <xs:element minOccurs="0" name="startDate" nillable="true" type="xs:date" />
-                    <xs:element maxOccurs="unbounded" minOccurs="0" name="subscriptions" nillable="true" type="ax229:MultitenancySubscription" />
+                    <xs:element maxOccurs="unbounded" minOccurs="0" name="subscriptions" nillable="true" type="ax233:MultitenancySubscription" />
                     <xs:element minOccurs="0" name="totalCost" nillable="true" type="xs:string" />
                     <xs:element minOccurs="0" name="totalPayments" nillable="true" type="xs:string" />
                 </xs:sequence>
@@ -30,7 +30,7 @@
                     <xs:element minOccurs="0" name="active" type="xs:boolean" />
                     <xs:element minOccurs="0" name="activeSince" nillable="true" type="xs:date" />
                     <xs:element minOccurs="0" name="activeUntil" nillable="true" type="xs:date" />
-                    <xs:element maxOccurs="unbounded" minOccurs="0" name="billedEntries" nillable="true" type="ax229:BilledEntry" />
+                    <xs:element maxOccurs="unbounded" minOccurs="0" name="billedEntries" nillable="true" type="ax233:BilledEntry" />
                     <xs:element minOccurs="0" name="subscribedPackage" nillable="true" type="xs:string" />
                 </xs:sequence>
             </xs:complexType>
@@ -49,10 +49,10 @@
                 </xs:sequence>
             </xs:complexType>
         </xs:schema>
-        <xs:schema xmlns:ax232="http://beans.core.billing.carbon.wso2.org/xsd" xmlns:ax230="http://beans.mgt.billing.carbon.wso2.org/xsd" xmlns:ax234="http://dataobjects.core.billing.carbon.wso2.org/xsd" attributeFormDefault="qualified" elementFormDefault="qualified" targetNamespace="http://services.mgt.billing.carbon.wso2.org">
+        <xs:schema xmlns:ax232="http://dataobjects.core.billing.carbon.wso2.org/xsd" xmlns:ax236="http://beans.core.billing.carbon.wso2.org/xsd" xmlns:ax234="http://beans.mgt.billing.carbon.wso2.org/xsd" attributeFormDefault="qualified" elementFormDefault="qualified" targetNamespace="http://services.mgt.billing.carbon.wso2.org">
+            <xs:import namespace="http://dataobjects.core.billing.carbon.wso2.org/xsd" />
             <xs:import namespace="http://beans.mgt.billing.carbon.wso2.org/xsd" />
             <xs:import namespace="http://beans.core.billing.carbon.wso2.org/xsd" />
-            <xs:import namespace="http://dataobjects.core.billing.carbon.wso2.org/xsd" />
             <xs:element name="MultitenancyBillingServiceException">
                 <xs:complexType>
                     <xs:sequence>
@@ -65,6 +65,21 @@
                     <xs:element minOccurs="0" name="Message" nillable="true" type="xs:string" />
                 </xs:sequence>
             </xs:complexType>
+            <xs:element name="makeAdjustment">
+                <xs:complexType>
+                    <xs:sequence>
+                        <xs:element minOccurs="0" name="payment" nillable="true" type="ax232:Payment" />
+                        <xs:element minOccurs="0" name="amount" nillable="true" type="xs:string" />
+                    </xs:sequence>
+                </xs:complexType>
+            </xs:element>
+            <xs:element name="makeAdjustmentResponse">
+                <xs:complexType>
+                    <xs:sequence>
+                        <xs:element minOccurs="0" name="return" type="xs:int" />
+                    </xs:sequence>
+                </xs:complexType>
+            </xs:element>
             <xs:element name="getPastInvoice">
                 <xs:complexType>
                     <xs:sequence>
@@ -75,7 +90,7 @@
             <xs:element name="getPastInvoiceResponse">
                 <xs:complexType>
                     <xs:sequence>
-                        <xs:element minOccurs="0" name="return" nillable="true" type="ax230:MultitenancyInvoice" />
+                        <xs:element minOccurs="0" name="return" nillable="true" type="ax233:MultitenancyInvoice" />
                     </xs:sequence>
                 </xs:complexType>
             </xs:element>
@@ -89,7 +104,7 @@
             <xs:element name="getPaginatedBalancesResponse">
                 <xs:complexType>
                     <xs:sequence>
-                        <xs:element minOccurs="0" name="return" nillable="true" type="ax232:PaginatedBalanceInfoBean" />
+                        <xs:element minOccurs="0" name="return" nillable="true" type="ax236:PaginatedBalanceInfoBean" />
                     </xs:sequence>
                 </xs:complexType>
             </xs:element>
@@ -103,7 +118,7 @@
             <xs:element name="getOutstandingBalanceResponse">
                 <xs:complexType>
                     <xs:sequence>
-                        <xs:element maxOccurs="unbounded" minOccurs="0" name="return" nillable="true" type="ax232:OutstandingBalanceInfoBean" />
+                        <xs:element maxOccurs="unbounded" minOccurs="0" name="return" nillable="true" type="ax236:OutstandingBalanceInfoBean" />
                     </xs:sequence>
                 </xs:complexType>
             </xs:element>
@@ -115,7 +130,21 @@
             <xs:element name="getCurrentInvoiceResponse">
                 <xs:complexType>
                     <xs:sequence>
-                        <xs:element minOccurs="0" name="return" nillable="true" type="ax230:MultitenancyInvoice" />
+                        <xs:element minOccurs="0" name="return" nillable="true" type="ax233:MultitenancyInvoice" />
+                    </xs:sequence>
+                </xs:complexType>
+            </xs:element>
+            <xs:element name="getAvailableBillingPeriodsBySuperTenant">
+                <xs:complexType>
+                    <xs:sequence>
+                        <xs:element minOccurs="0" name="tenantDomain" nillable="true" type="xs:string" />
+                    </xs:sequence>
+                </xs:complexType>
+            </xs:element>
+            <xs:element name="getAvailableBillingPeriodsBySuperTenantResponse">
+                <xs:complexType>
+                    <xs:sequence>
+                        <xs:element maxOccurs="unbounded" minOccurs="0" name="return" nillable="true" type="ax233:BillingPeriod" />
                     </xs:sequence>
                 </xs:complexType>
             </xs:element>
@@ -127,14 +156,14 @@
             <xs:element name="getAvailableBillingPeriodsResponse">
                 <xs:complexType>
                     <xs:sequence>
-                        <xs:element maxOccurs="unbounded" minOccurs="0" name="return" nillable="true" type="ax230:BillingPeriod" />
+                        <xs:element maxOccurs="unbounded" minOccurs="0" name="return" nillable="true" type="ax233:BillingPeriod" />
                     </xs:sequence>
                 </xs:complexType>
             </xs:element>
             <xs:element name="addPayment">
                 <xs:complexType>
                     <xs:sequence>
-                        <xs:element minOccurs="0" name="payment" nillable="true" type="ax233:Payment" />
+                        <xs:element minOccurs="0" name="payment" nillable="true" type="ax232:Payment" />
                         <xs:element minOccurs="0" name="amount" nillable="true" type="xs:string" />
                     </xs:sequence>
                 </xs:complexType>
@@ -150,11 +179,11 @@
         <xs:schema attributeFormDefault="qualified" elementFormDefault="qualified" targetNamespace="http://dataobjects.core.billing.carbon.wso2.org/xsd">
             <xs:complexType name="Payment">
                 <xs:sequence>
-                    <xs:element minOccurs="0" name="amount" nillable="true" type="ax233:Cash" />
+                    <xs:element minOccurs="0" name="amount" nillable="true" type="ax231:Cash" />
                     <xs:element minOccurs="0" name="date" nillable="true" type="xs:date" />
                     <xs:element minOccurs="0" name="description" nillable="true" type="xs:string" />
                     <xs:element minOccurs="0" name="id" type="xs:int" />
-                    <xs:element minOccurs="0" name="invoice" nillable="true" type="ax233:Invoice" />
+                    <xs:element minOccurs="0" name="invoice" nillable="true" type="ax231:Invoice" />
                     <xs:element minOccurs="0" name="subscriptions" nillable="true" type="xs:anyType" />
                 </xs:sequence>
             </xs:complexType>
@@ -162,7 +191,7 @@
                 <xs:sequence>
                     <xs:element minOccurs="0" name="currency" nillable="true" type="xs:string" />
                     <xs:element minOccurs="0" name="decimalNumber" type="xs:int" />
-                    <xs:element minOccurs="0" name="sign" nillable="true" type="ax233:Cash_Sign" />
+                    <xs:element minOccurs="0" name="sign" nillable="true" type="ax231:Cash_Sign" />
                     <xs:element minOccurs="0" name="wholeNumber" type="xs:int" />
                 </xs:sequence>
             </xs:complexType>
@@ -175,22 +204,22 @@
             </xs:complexType>
             <xs:complexType name="Invoice">
                 <xs:sequence>
-                    <xs:element minOccurs="0" name="boughtForward" nillable="true" type="ax233:Cash" />
-                    <xs:element minOccurs="0" name="carriedForward" nillable="true" type="ax233:Cash" />
-                    <xs:element minOccurs="0" name="customer" nillable="true" type="ax233:Customer" />
+                    <xs:element minOccurs="0" name="boughtForward" nillable="true" type="ax231:Cash" />
+                    <xs:element minOccurs="0" name="carriedForward" nillable="true" type="ax231:Cash" />
+                    <xs:element minOccurs="0" name="customer" nillable="true" type="ax231:Customer" />
                     <xs:element minOccurs="0" name="date" nillable="true" type="xs:date" />
                     <xs:element minOccurs="0" name="endDate" nillable="true" type="xs:date" />
                     <xs:element minOccurs="0" name="id" type="xs:int" />
                     <xs:element minOccurs="0" name="payments" nillable="true" type="xs:anyType" />
                     <xs:element minOccurs="0" name="startDate" nillable="true" type="xs:date" />
                     <xs:element minOccurs="0" name="subscriptions" nillable="true" type="xs:anyType" />
-                    <xs:element minOccurs="0" name="totalCost" nillable="true" type="ax233:Cash" />
-                    <xs:element minOccurs="0" name="totalPayment" nillable="true" type="ax233:Cash" />
+                    <xs:element minOccurs="0" name="totalCost" nillable="true" type="ax231:Cash" />
+                    <xs:element minOccurs="0" name="totalPayment" nillable="true" type="ax231:Cash" />
                 </xs:sequence>
             </xs:complexType>
             <xs:complexType name="Customer">
                 <xs:sequence>
-                    <xs:element minOccurs="0" name="activeInvoice" nillable="true" type="ax233:Invoice" />
+                    <xs:element minOccurs="0" name="activeInvoice" nillable="true" type="ax231:Invoice" />
                     <xs:element minOccurs="0" name="address" nillable="true" type="xs:string" />
                     <xs:element minOccurs="0" name="context" nillable="true" type="xs:string" />
                     <xs:element minOccurs="0" name="email" nillable="true" type="xs:string" />
@@ -206,7 +235,7 @@
         <xs:schema attributeFormDefault="qualified" elementFormDefault="qualified" targetNamespace="http://beans.core.billing.carbon.wso2.org/xsd">
             <xs:complexType name="PaginatedBalanceInfoBean">
                 <xs:sequence>
-                    <xs:element maxOccurs="unbounded" minOccurs="0" name="balanceInfoBeans" nillable="true" type="ax231:OutstandingBalanceInfoBean" />
+                    <xs:element maxOccurs="unbounded" minOccurs="0" name="balanceInfoBeans" nillable="true" type="ax235:OutstandingBalanceInfoBean" />
                     <xs:element minOccurs="0" name="numberOfPages" type="xs:int" />
                 </xs:sequence>
             </xs:complexType>
@@ -250,11 +279,23 @@
     <wsdl:message name="getCurrentInvoiceResponse">
         <wsdl:part name="parameters" element="ns:getCurrentInvoiceResponse" />
     </wsdl:message>
+    <wsdl:message name="makeAdjustmentRequest">
+        <wsdl:part name="parameters" element="ns:makeAdjustment" />
+    </wsdl:message>
+    <wsdl:message name="makeAdjustmentResponse">
+        <wsdl:part name="parameters" element="ns:makeAdjustmentResponse" />
+    </wsdl:message>
     <wsdl:message name="addPaymentRequest">
         <wsdl:part name="parameters" element="ns:addPayment" />
     </wsdl:message>
     <wsdl:message name="addPaymentResponse">
         <wsdl:part name="parameters" element="ns:addPaymentResponse" />
+    </wsdl:message>
+    <wsdl:message name="getAvailableBillingPeriodsBySuperTenantRequest">
+        <wsdl:part name="parameters" element="ns:getAvailableBillingPeriodsBySuperTenant" />
+    </wsdl:message>
+    <wsdl:message name="getAvailableBillingPeriodsBySuperTenantResponse">
+        <wsdl:part name="parameters" element="ns:getAvailableBillingPeriodsBySuperTenantResponse" />
     </wsdl:message>
     <wsdl:message name="getPaginatedBalancesRequest">
         <wsdl:part name="parameters" element="ns:getPaginatedBalances" />
@@ -283,10 +324,20 @@
             <wsdl:output message="ns:getCurrentInvoiceResponse" wsaw:Action="urn:getCurrentInvoiceResponse" />
             <wsdl:fault message="ns:MultitenancyBillingServiceException" name="MultitenancyBillingServiceException" wsaw:Action="urn:getCurrentInvoiceMultitenancyBillingServiceException" />
         </wsdl:operation>
+        <wsdl:operation name="makeAdjustment">
+            <wsdl:input message="ns:makeAdjustmentRequest" wsaw:Action="urn:makeAdjustment" />
+            <wsdl:output message="ns:makeAdjustmentResponse" wsaw:Action="urn:makeAdjustmentResponse" />
+            <wsdl:fault message="ns:MultitenancyBillingServiceException" name="MultitenancyBillingServiceException" wsaw:Action="urn:makeAdjustmentMultitenancyBillingServiceException" />
+        </wsdl:operation>
         <wsdl:operation name="addPayment">
             <wsdl:input message="ns:addPaymentRequest" wsaw:Action="urn:addPayment" />
             <wsdl:output message="ns:addPaymentResponse" wsaw:Action="urn:addPaymentResponse" />
             <wsdl:fault message="ns:MultitenancyBillingServiceException" name="MultitenancyBillingServiceException" wsaw:Action="urn:addPaymentMultitenancyBillingServiceException" />
+        </wsdl:operation>
+        <wsdl:operation name="getAvailableBillingPeriodsBySuperTenant">
+            <wsdl:input message="ns:getAvailableBillingPeriodsBySuperTenantRequest" wsaw:Action="urn:getAvailableBillingPeriodsBySuperTenant" />
+            <wsdl:output message="ns:getAvailableBillingPeriodsBySuperTenantResponse" wsaw:Action="urn:getAvailableBillingPeriodsBySuperTenantResponse" />
+            <wsdl:fault message="ns:MultitenancyBillingServiceException" name="MultitenancyBillingServiceException" wsaw:Action="urn:getAvailableBillingPeriodsBySuperTenantMultitenancyBillingServiceException" />
         </wsdl:operation>
         <wsdl:operation name="getPaginatedBalances">
             <wsdl:input message="ns:getPaginatedBalancesRequest" wsaw:Action="urn:getPaginatedBalances" />
@@ -344,8 +395,32 @@
                 <soap:fault use="literal" name="MultitenancyBillingServiceException" />
             </wsdl:fault>
         </wsdl:operation>
+        <wsdl:operation name="makeAdjustment">
+            <soap:operation soapAction="urn:makeAdjustment" style="document" />
+            <wsdl:input>
+                <soap:body use="literal" />
+            </wsdl:input>
+            <wsdl:output>
+                <soap:body use="literal" />
+            </wsdl:output>
+            <wsdl:fault name="MultitenancyBillingServiceException">
+                <soap:fault use="literal" name="MultitenancyBillingServiceException" />
+            </wsdl:fault>
+        </wsdl:operation>
         <wsdl:operation name="addPayment">
             <soap:operation soapAction="urn:addPayment" style="document" />
+            <wsdl:input>
+                <soap:body use="literal" />
+            </wsdl:input>
+            <wsdl:output>
+                <soap:body use="literal" />
+            </wsdl:output>
+            <wsdl:fault name="MultitenancyBillingServiceException">
+                <soap:fault use="literal" name="MultitenancyBillingServiceException" />
+            </wsdl:fault>
+        </wsdl:operation>
+        <wsdl:operation name="getAvailableBillingPeriodsBySuperTenant">
+            <soap:operation soapAction="urn:getAvailableBillingPeriodsBySuperTenant" style="document" />
             <wsdl:input>
                 <soap:body use="literal" />
             </wsdl:input>
@@ -419,8 +494,32 @@
                 <soap12:fault use="literal" name="MultitenancyBillingServiceException" />
             </wsdl:fault>
         </wsdl:operation>
+        <wsdl:operation name="makeAdjustment">
+            <soap12:operation soapAction="urn:makeAdjustment" style="document" />
+            <wsdl:input>
+                <soap12:body use="literal" />
+            </wsdl:input>
+            <wsdl:output>
+                <soap12:body use="literal" />
+            </wsdl:output>
+            <wsdl:fault name="MultitenancyBillingServiceException">
+                <soap12:fault use="literal" name="MultitenancyBillingServiceException" />
+            </wsdl:fault>
+        </wsdl:operation>
         <wsdl:operation name="addPayment">
             <soap12:operation soapAction="urn:addPayment" style="document" />
+            <wsdl:input>
+                <soap12:body use="literal" />
+            </wsdl:input>
+            <wsdl:output>
+                <soap12:body use="literal" />
+            </wsdl:output>
+            <wsdl:fault name="MultitenancyBillingServiceException">
+                <soap12:fault use="literal" name="MultitenancyBillingServiceException" />
+            </wsdl:fault>
+        </wsdl:operation>
+        <wsdl:operation name="getAvailableBillingPeriodsBySuperTenant">
+            <soap12:operation soapAction="urn:getAvailableBillingPeriodsBySuperTenant" style="document" />
             <wsdl:input>
                 <soap12:body use="literal" />
             </wsdl:input>
@@ -482,8 +581,26 @@
                 <mime:content type="text/xml" part="parameters" />
             </wsdl:output>
         </wsdl:operation>
+        <wsdl:operation name="makeAdjustment">
+            <http:operation location="makeAdjustment" />
+            <wsdl:input>
+                <mime:content type="text/xml" part="parameters" />
+            </wsdl:input>
+            <wsdl:output>
+                <mime:content type="text/xml" part="parameters" />
+            </wsdl:output>
+        </wsdl:operation>
         <wsdl:operation name="addPayment">
             <http:operation location="addPayment" />
+            <wsdl:input>
+                <mime:content type="text/xml" part="parameters" />
+            </wsdl:input>
+            <wsdl:output>
+                <mime:content type="text/xml" part="parameters" />
+            </wsdl:output>
+        </wsdl:operation>
+        <wsdl:operation name="getAvailableBillingPeriodsBySuperTenant">
+            <http:operation location="getAvailableBillingPeriodsBySuperTenant" />
             <wsdl:input>
                 <mime:content type="text/xml" part="parameters" />
             </wsdl:input>
@@ -503,13 +620,13 @@
     </wsdl:binding>
     <wsdl:service name="MultitenancyBillingService">
         <wsdl:port name="MultitenancyBillingServiceHttpsSoap11Endpoint" binding="ns:MultitenancyBillingServiceSoap11Binding">
-            <soap:address location="https://192.168.1.6:9443/services/MultitenancyBillingService.MultitenancyBillingServiceHttpsSoap11Endpoint/" />
+            <soap:address location="https://192.168.1.2:9443/services/MultitenancyBillingService.MultitenancyBillingServiceHttpsSoap11Endpoint/" />
         </wsdl:port>
         <wsdl:port name="MultitenancyBillingServiceHttpsSoap12Endpoint" binding="ns:MultitenancyBillingServiceSoap12Binding">
-            <soap12:address location="https://192.168.1.6:9443/services/MultitenancyBillingService.MultitenancyBillingServiceHttpsSoap12Endpoint/" />
+            <soap12:address location="https://192.168.1.2:9443/services/MultitenancyBillingService.MultitenancyBillingServiceHttpsSoap12Endpoint/" />
         </wsdl:port>
         <wsdl:port name="MultitenancyBillingServiceHttpsEndpoint" binding="ns:MultitenancyBillingServiceHttpBinding">
-            <http:address location="https://192.168.1.6:9443/services/MultitenancyBillingService.MultitenancyBillingServiceHttpsEndpoint/" />
+            <http:address location="https://192.168.1.2:9443/services/MultitenancyBillingService.MultitenancyBillingServiceHttpsEndpoint/" />
         </wsdl:port>
     </wsdl:service>
 </wsdl:definitions>

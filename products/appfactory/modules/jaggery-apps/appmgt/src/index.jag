@@ -62,7 +62,7 @@ include('includes/template_header.jag');
 
                             </tbody>
                         </table>
-                        <div class="pagination pagination-centered">
+                        <!--div class="pagination pagination-centered">
                             <ul>
                                 <li class="active"><a href="#">1</a></li>
                                 <li><a href="#">2</a></li>
@@ -70,7 +70,7 @@ include('includes/template_header.jag');
                                 <li><a href="#">4</a></li>
                                 <li><a href="#">5</a></li>
                             </ul>
-                        </div>
+                        </div-->
 
                     </div>
                 </div>

@@ -3,7 +3,6 @@
 
     var applicationName = request.getParameter("applicationName");
     var applicationKey = request.getParameter("applicationKey");
-    var userName = request.getParameter("userName");
 %>
 
 
@@ -13,7 +12,7 @@
 
 
         <form id='sampleform' method='post'
-              action="update_role_submit.jag?applicationName=<%=applicationName%>&applicationKey=<%=applicationKey%>&userName=<%=userName%>">
+              action="update_role_submit.jag?applicationName=<%=applicationName%>&applicationKey=<%=applicationKey%>">
             <input type="checkbox" name="developer" value="dev">Developer</br>
             <input type="checkbox" name="manager" value="manager">Manager</br>
             <input type="checkbox" name="devops" value="devops">DevOps</br>

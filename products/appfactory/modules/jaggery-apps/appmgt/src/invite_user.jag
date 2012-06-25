@@ -32,7 +32,7 @@
 
     <div id="workArea">
         <!--form id='inviteUserData' name='inviteUserForm' action="" method="post"-->
-        <form id='sampleform' method='post' action="invite_user_submit.jag?applicationName=<%=applicationName%>&applicationKey=<%=applicationKey%>&userName=<%=userName%>"class='well'>
+        <form id='sampleform' method='post' action="invite_user_submit.jag?applicationName=<%=applicationName%>&applicationKey=<%=applicationKey%>"class='well'>
         <table class="table table-bordered table-striped" id="table1">
                 <thead>
                 <tr>

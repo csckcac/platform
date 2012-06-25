@@ -4,7 +4,7 @@
     var applicationKey = request.getParameter("applicationKey");
     var newUsername = request.getParameter("newUsername");
     var newUserRole = request.getParameter("role");
-    var requestersUsername = request.getParameter("userName");
+    var requestersUsername = userName;
 %>
 
 

@@ -8,7 +8,7 @@
 
         <%
             print("applicationKey:" + request.getParameter("applicationKey") + "</br>");
-            print("userName:" + request.getParameter("userName") + "</br></br>");
+            print("userName:" + userName + "</br></br>");
             print("developer:" + request.getParameter("developer") + "</br>");
             print("manager:" + request.getParameter("manager") + "</br>");
             print("devops:" + request.getParameter("devops") + "</br>");

@@ -25,7 +25,7 @@ import org.wso2.carbon.admin.service.utils.AuthenticateStub;
 import org.wso2.carbon.bpel.stub.mgt.BPELPackageManagementServiceStub;
 import org.wso2.carbon.bpel.stub.mgt.PackageManagementException;
 import org.wso2.carbon.bpel.stub.mgt.types.DeployedPackagesPaginated;
-import org.wso2.carbon.bpel.stub.mgt.types.Package_type0;
+import org.wso2.carbon.bpel.stub.mgt.types.PackageType;
 import org.wso2.carbon.bpel.stub.upload.types.UploadedFileItem;
 
 import javax.activation.DataHandler;
@@ -69,7 +69,7 @@ public class AdminServiceBpelPackageManager {
                 listDeployedPackagesPaginated(0);
         boolean packageUndeployed = true;
         try {
-            for (Package_type0 bpelPackage : deployedPackages.get_package()) {
+            for (PackageType bpelPackage : deployedPackages.get_package()) {
                 if (bpelPackage.getName().equals(packageName)) {
 
                     packageUndeployed = false;
@@ -93,7 +93,7 @@ public class AdminServiceBpelPackageManager {
                 Thread.sleep(5000);
             } catch (InterruptedException e) {
             }
-            for (Package_type0 bpelPackage : deployedPackages.get_package()) {
+            for (PackageType bpelPackage : deployedPackages.get_package()) {
                 if (bpelPackage.getName().equals(packageName)) {
                     System.out.println(packageName + " has deployed successfully");
                     packageDeployed = true;

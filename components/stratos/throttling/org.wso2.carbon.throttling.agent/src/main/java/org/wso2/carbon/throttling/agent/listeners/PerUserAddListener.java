@@ -17,6 +17,8 @@ package org.wso2.carbon.throttling.agent.listeners;
 
 import org.apache.commons.logging.Log;
 import org.apache.commons.logging.LogFactory;
+import org.wso2.carbon.CarbonConstants;
+import org.wso2.carbon.base.ServerConfiguration;
 import org.wso2.carbon.stratos.common.constants.StratosConstants;
 import org.wso2.carbon.throttling.agent.cache.TenantThrottlingInfo;
 import org.wso2.carbon.throttling.agent.cache.ThrottlingActionInfo;
@@ -40,6 +42,14 @@ public class PerUserAddListener extends AbstractUserStoreManagerListener {
     public boolean addUser(String userName, Object credential, String[] roleList,
                            Map<String, String> claims, String profileName, UserStoreManager userStoreManager)
             throws UserStoreException {
+
+        //If this is not a cloud deployment there is no way to run the throttling rules
+        //This means the product is being used in the tenant mode
+        //Therefore we can ommit running the throttling rules
+        if("false".equals(ServerConfiguration.getInstance().getFirstProperty(CarbonConstants.IS_CLOUD_DEPLOYMENT))){
+            log.info("Omitting executing throttling rules becasue this is not a cloud deployment.");
+            return true;
+        }
         int tenantId = userStoreManager.getTenantId();
         if (tenantId == MultitenantConstants.SUPER_TENANT_ID) {
             return true;

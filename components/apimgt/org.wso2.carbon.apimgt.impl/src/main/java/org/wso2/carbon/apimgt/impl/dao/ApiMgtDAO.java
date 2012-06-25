@@ -2122,6 +2122,33 @@ public class ApiMgtDAO {
         }
     }
 
+    public void updateAPI(API api) throws APIManagementException {
+        Connection connection = null;
+        PreparedStatement prepStmt = null;
+        ResultSet rs = null;
+
+        String query = "UPDATE AM_API SET CONTEXT = ? WHERE API_PROVIDER = ? AND API_NAME = ? AND" +
+                " API_VERSION = ? ";
+        try {
+            connection = APIMgtDBUtil.getConnection();
+            prepStmt = connection.prepareStatement(query);
+            prepStmt.setString(1, api.getContext());
+            prepStmt.setString(2, api.getId().getProviderName());
+            prepStmt.setString(3, api.getId().getApiName());
+            prepStmt.setString(4, api.getId().getVersion());
+            prepStmt.execute();
+            connection.commit();
+
+        } catch (SQLException e) {
+            String msg = "Error while updating the API: " + api.getId() + " in the database";
+            log.error(msg, e);
+            throw new APIManagementException(msg, e);
+
+        } finally {
+            APIMgtDBUtil.closeAllConnections(prepStmt, connection, rs);
+        }
+    }
+
     public void deleteAPI(APIIdentifier apiId) throws APIManagementException {
         Connection connection = null;
         PreparedStatement prepStmt = null;

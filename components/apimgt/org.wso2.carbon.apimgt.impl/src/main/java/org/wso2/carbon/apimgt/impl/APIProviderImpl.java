@@ -360,6 +360,10 @@ class APIProviderImpl extends AbstractAPIManager implements APIProvider {
         API oldApi = getAPI(api.getId());
         if (oldApi.getStatus().equals(api.getStatus())) {
             updateApiArtifact(api);
+            if (!oldApi.getContext().equals(api.getContext())) {
+                apiMgtDAO.updateAPI(api);
+            }
+
             if (isAPIPublished(api)) {
                 publishToGateway(api);
             }

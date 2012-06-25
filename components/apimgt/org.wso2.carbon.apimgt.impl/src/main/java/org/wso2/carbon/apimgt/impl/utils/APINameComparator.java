@@ -27,6 +27,6 @@ import java.util.Comparator;
 public class APINameComparator implements Comparator<API> ,Serializable{
 
     public int compare(API api1, API api2) {
-        return api1.getId().getApiName().compareTo(api2.getId().getApiName());
+        return api1.getId().getApiName().compareToIgnoreCase(api2.getId().getApiName());
     }
 }

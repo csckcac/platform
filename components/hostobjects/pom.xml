@@ -280,6 +280,6 @@
         <rampart.wso2.version>1.6.1.wso2v2</rampart.wso2.version>
         <wss4j.wso2.version>1.5.11.wso2v1</wss4j.wso2.version>
         <axis2.wso2.version>1.6.1.wso2v5</axis2.wso2.version>
-        <axiom.e4x.version>2.0.0.SNAPSHOT</axiom.e4x.version>
+        <axiom.e4x.version>2.0.1.SNAPSHOT</axiom.e4x.version>
     </properties>
 </project>

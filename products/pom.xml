@@ -268,7 +268,7 @@
             <module>lb</module>	
             <module>wsf</module>
             <module>csg</module>
-            <!--module>apimgt</module-->
+            <module>apimgt</module>
             <module>jaggery</module>
             <module>gs</module>
         </modules>

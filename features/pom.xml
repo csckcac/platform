@@ -131,7 +131,7 @@
         <module>transaction-manager</module>
         <module>rest-api</module>
 		<module>jaggery</module>
-        <!--module>apimgt</module-->
+        <module>apimgt</module>
 	<module>andes</module>
         <module>url-mapper</module>
 	<module>data-agents</module>

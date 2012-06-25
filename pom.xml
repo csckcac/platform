@@ -45,6 +45,7 @@
                 <module>platform-integration/system-test-framework</module>
 		<module>features</module>
 		<module>samples/shopping-cart</module>               
+		<module>samples/shopping-cart-global</module>               
              </modules>
 	</profile>
         <profile>

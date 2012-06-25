@@ -40,10 +40,10 @@ public class AbstractServiceBusAdmin extends AbstractAdmin {
      *
      *
      */
-    protected AbstractServiceBusAdmin() {
-        CarbonContextHolder.getThreadLocalCarbonContextHolder().setTenantId(CarbonContextHolder.
-                getCurrentCarbonContextHolder().getTenantId());
-    }
+   // protected AbstractServiceBusAdmin() {
+     //   CarbonContextHolder.getThreadLocalCarbonContextHolder().setTenantId(CarbonContextHolder.
+       //         getCurrentCarbonContextHolder().getTenantId());
+    //}
 
     /**
      * Helper method to retrieve the Synapse configuration from the relevant axis configuration

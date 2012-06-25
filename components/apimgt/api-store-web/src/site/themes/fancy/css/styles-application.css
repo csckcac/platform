@@ -307,3 +307,6 @@ input.error{
 }
 #comment-add .warning{color:#600;}
 #comment-add .exceeded{color:#e00;}
+.application-add div.help-block{
+    padding-left: 0px; margin-left: 0px;
+}

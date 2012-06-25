@@ -1,4 +1,9 @@
 $(document).ready(function () {
+    $("#appAddForm").validate({
+        submitHandler: function(form) {
+            applicationAdd();
+        }
+    });
     var applicationAdd = function(){
         var application = $("#application-name").val();
         jagg.post("/site/blocks/application/application-add/ajax/application-add.jag", {
@@ -13,12 +18,11 @@ $(document).ready(function () {
             }
         }, "json");
     };
-    $("#application-add-button").click(applicationAdd);
 
 
-    $('#application-name').keydown(function(event) {
+    /*$('#application-name').keydown(function(event) {
          if (event.which == 13) {
                applicationAdd();
             }
-        });
+        });*/
 });

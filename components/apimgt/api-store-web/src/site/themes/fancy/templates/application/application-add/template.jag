@@ -1,17 +1,18 @@
 <% jagg.template("application/application-add", function(inputs, outputs, jagg) { %>
 <h3>Add New Application</h3>
-
+<form id="appAddForm">
 <div class="application-add well form-horizontal">
 
     <div class="control-group">
         <label class="control-label" for="application-name">Name</label>
 
         <div class="controls">
-            <div class="span6"><input type="text" class="span12" id="application-name" autofocus="autofocus" /></div>
-            <div class="span6"><button id="application-add-button" class="btn btn-primary">Add</button></div>
+            <div class="span6"><input type="text" class="span12 required" id="application-name" autofocus="autofocus" /></div>
+            <div class="span6"><input type="submit" id="application-add-button" class="btn btn-primary" value="Add" /></div>
 
-            <p class="help-block">Applications are required to make API subscriptions and consume them. You will be able to subscribe to these applications from the API details page.</p>
+            <div class="help-block span12">Applications are required to make API subscriptions and consume them. You will be able to subscribe to these applications from the API details page.</div>
         </div>
     </div>
 </div>
+</form>
 <% }); %>

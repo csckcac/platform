@@ -1112,74 +1112,78 @@ public class APIStoreHostObject extends ScriptableObject {
 	}
 
 
-	public static NativeArray jsFunction_rateAPI(Context cx,
-			Scriptable thisObj, Object[] args, Function funObj)
-			throws ScriptException, APIManagementException {
+    public static NativeArray jsFunction_rateAPI(Context cx,
+                                                 Scriptable thisObj, Object[] args, Function funObj)
+            throws ScriptException, APIManagementException {
 
-		NativeArray myn = new NativeArray(0);
-		if (isStringArray(args)) {
-			String providerName = args[0].toString();
-			String apiName = args[1].toString();
-			String version = args[2].toString();
-			String rateStr = args[3].toString();
-			int rate;
-			try{
-			rate = Integer.parseInt(rateStr.substring(0, 1));
-			} catch (NumberFormatException e) {
-				log.error("Rate must to be number " + rateStr+ e);
-				return myn;
-			}
-			catch (Exception e) {
-				log.error("Error from while Rating API " + rateStr+ e);
-				return myn;
-			}
+        NativeArray myn = new NativeArray(0);
+        if (isStringArray(args)) {
+            String providerName = args[0].toString();
+            String apiName = args[1].toString();
+            String version = args[2].toString();
+            String rateStr = args[3].toString();
+            int rate;
+            try {
+                rate = Integer.parseInt(rateStr.substring(0, 1));
+            } catch (NumberFormatException e) {
+                log.error("Rate must to be number " + rateStr + e);
+                return myn;
+            } catch (Exception e) {
+                log.error("Error from while Rating API " + rateStr + e);
+                return myn;
+            }
 
             APIConsumer apiConsumer = getAPIConsumer(thisObj);
-			try {
-				APIIdentifier apiId = new APIIdentifier(providerName, apiName, version);
+            try {
+                APIIdentifier apiId = new APIIdentifier(providerName, apiName, version);
                 String user = getUsernameFromObject(thisObj);
-				switch (rate) {
-				   case 1: {
-					  apiConsumer.rateAPI(apiId, APIRating.RATING_ONE, user);
-				      break;
-				   }
-				   case 2: {
-                       apiConsumer.rateAPI(apiId, APIRating.RATING_TWO, user);
-				      break;
-				   }
-				   case 3: {
-                       apiConsumer.rateAPI(apiId, APIRating.RATING_THREE, user);
-                      break;
-                   }
-				   case 4: {
-                       apiConsumer.rateAPI(apiId, APIRating.RATING_FOUR, user);
-                      break;
-                   }
-				   case 5: {
-                       apiConsumer.rateAPI(apiId, APIRating.RATING_FIVE, user);
-                      break;
-                   }
-				   default: {
-				      throw new IllegalArgumentException("Can't handle " + rate);
-				   }
+                switch (rate) {
+                    //Below case 0[Rate 0] - is to remove ratings from a user
+                    case 0: {
+                        apiConsumer.rateAPI(apiId, APIRating.RATING_ZERO, user);
+                        break;
+                    }
+                    case 1: {
+                        apiConsumer.rateAPI(apiId, APIRating.RATING_ONE, user);
+                        break;
+                    }
+                    case 2: {
+                        apiConsumer.rateAPI(apiId, APIRating.RATING_TWO, user);
+                        break;
+                    }
+                    case 3: {
+                        apiConsumer.rateAPI(apiId, APIRating.RATING_THREE, user);
+                        break;
+                    }
+                    case 4: {
+                        apiConsumer.rateAPI(apiId, APIRating.RATING_FOUR, user);
+                        break;
+                    }
+                    case 5: {
+                        apiConsumer.rateAPI(apiId, APIRating.RATING_FIVE, user);
+                        break;
+                    }
+                    default: {
+                        throw new IllegalArgumentException("Can't handle " + rate);
+                    }
 
-			    }
-			} catch (APIManagementException e) {
-				log.error("Error from Registry API while Rating API " + apiName
-						+ e);
-				return myn;
-			} catch (IllegalArgumentException e) {
-				log.error("Error from Registry API while Rating API " + apiName
-						+ e);
-				return myn;
-			} catch (NullPointerException e) {
-				log.error("Error from Registry API while Rating API " + apiName
-						+ e);
-				return myn;
-			} catch (Exception e) {
-				log.error("Error while Rating API " + apiName+ e);
-				return myn;
-			}
+                }
+            } catch (APIManagementException e) {
+                log.error("Error from Registry API while Rating API " + apiName
+                          + e);
+                return myn;
+            } catch (IllegalArgumentException e) {
+                log.error("Error from Registry API while Rating API " + apiName
+                          + e);
+                return myn;
+            } catch (NullPointerException e) {
+                log.error("Error from Registry API while Rating API " + apiName
+                          + e);
+                return myn;
+            } catch (Exception e) {
+                log.error("Error while Rating API " + apiName + e);
+                return myn;
+            }
 
             NativeObject row = new NativeObject();
             row.put("name", row, apiName);
@@ -1188,11 +1192,11 @@ public class APIStoreHostObject extends ScriptableObject {
             row.put("rates", row, rateStr);
             myn.put(0, myn, row);
 
-		}// end of the if
-		return myn;
-	}
+        }// end of the if
+        return myn;
+    }
 
-	public static NativeArray jsFunction_getSubscribedAPIs()
+    public static NativeArray jsFunction_getSubscribedAPIs()
 			throws ScriptException {
 		NativeArray purchases = new NativeArray(0);
 

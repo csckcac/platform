@@ -515,7 +515,7 @@ public class ApiMgtDAO {
         	String query = "INSERT" +
                     " INTO AM_SUBSCRIBER (USER_ID, TENANT_ID, EMAIL_ADDRESS, DATE_SUBSCRIBED)" +
                     " VALUES (?,?,?,?)";
-            ps = conn.prepareStatement(query);
+            ps = conn.prepareStatement(query, Statement.RETURN_GENERATED_KEYS);
             ps.setString(1, subscriber.getName());
             ps.setInt(2, subscriber.getTenantId());
             ps.setString(3, subscriber.getEmail());
@@ -633,7 +633,7 @@ public class ApiMgtDAO {
                     " VALUES (?,?,?)";
 
             //Adding data to the AM_SUBSCRIPTION table
-            ps = conn.prepareStatement(sqlQuery);
+            ps = conn.prepareStatement(sqlQuery, Statement.RETURN_GENERATED_KEYS);
             ps.setString(1, identifier.getTier());
             ps.setInt(2, apiId);
             ps.setInt(3, applicationId);

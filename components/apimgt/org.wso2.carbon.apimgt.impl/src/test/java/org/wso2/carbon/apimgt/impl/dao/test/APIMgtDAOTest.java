@@ -317,5 +317,16 @@ public class APIMgtDAOTest extends TestCase {
         }
     }
 
+    public void testUnsubscribe() throws Exception {
+        Subscriber subscriber = new Subscriber("THILINA");
+        Set<SubscribedAPI> subscriptions = apiMgtDAO.getSubscribedAPIs(subscriber);
+        assertEquals(1, subscriptions.size());
+        SubscribedAPI sub = subscriptions.toArray(new SubscribedAPI[subscriptions.size()])[0];
+        apiMgtDAO.removeSubscription(sub.getApiId(), sub.getApplication().getId());
+
+        subscriptions = apiMgtDAO.getSubscribedAPIs(subscriber);
+        assertTrue(subscriptions.isEmpty());
+    }
+
 }
 

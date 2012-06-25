@@ -40,7 +40,7 @@ function loadTiers() {
 }
 
 
-var updateResourcesToApi = function (rowNums) {
+var updateResourcesToApi = function () {
     var isChecked = $('#resource-get').is(":checked") || $('#resource-put').is(":checked") || $('#resource-post').is(":checked")
                     || $('#resource-delete').is(":checked");
 
@@ -49,9 +49,17 @@ var updateResourcesToApi = function (rowNums) {
         $('#resourceTableError').html('The new row can not be added. Please enter a value for URI Template and Resource Method.<br />');
         return;
     }
+    var rowNums=new Array();
     var resourcesCount=$('#resource-table tr').length-2;
     $('#resourceTableError').hide('fast');
-
+    var resCountLength=$('#resourceCount').length;
+    if(resCountLength!=0){
+       var resCount = $('#resourceCount').val().split(',');
+       for (var i = 0; i < resCount.length; i++) {
+        if(parseInt(resCount[i])==resourcesCount){resourcesCount++;}
+        rowNums.push(parseInt(resCount[i]));
+      }
+    }
     $('#resourceRow').clone(true).attr('id', 'item-' + resourcesCount).insertAfter($('#resourceRow'));
     var resourceGet,resourcePut,resourcePost,resourceDelete,resourceHead;
     if($('#resource-get').is(":checked")){

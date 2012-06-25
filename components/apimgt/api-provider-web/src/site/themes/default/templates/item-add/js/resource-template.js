@@ -12,6 +12,12 @@ var addResourcesToApi = function () {
     }
     var resourcesCount=$('#resourceTable tr').length-2;
     var countLength=$('#resourceCount').length;
+    if(countLength!=0){
+       var resCount = $('#resourceCount').val().split(',');
+       for (var i = 0; i < resCount.length; i++) {
+        if(parseInt(resCount[i])==resourcesCount){resourcesCount++;}
+      }
+    }
     $('#resourceTableError').hide('fast');
     $('#resourceRow').clone(true).attr('id', 'item-' + resourcesCount).insertAfter($('#resourceRow'));
     var resourceGet,resourcePut,resourcePost,resourceDelete;

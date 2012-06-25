@@ -24,7 +24,7 @@
 <%@ page import="org.wso2.carbon.registry.common.beans.utils.Tag" %>
 <%@ page import="org.wso2.carbon.registry.info.ui.Utils" %>
 <%@ page import="org.wso2.carbon.ui.CarbonUIUtil" %>
-
+<fmt:bundle basename="org.wso2.carbon.registry.info.ui.i18n.Resources">
 <%
     String cookie = (String) session.getAttribute(ServerConstants.ADMIN_SERVICE_COOKIE);
     InfoServiceClient client = new InfoServiceClient(cookie, config, session);
@@ -58,12 +58,12 @@
     Tag[] tags = tag.getTags();
 
     String content = "";
+    if(tags.length > 0){
     for (int i = 0; i < tags.length; i++) {
         Tag tag1 = tags[i];
         String tagName = tag1.getTagName();
         String style = "cloud-x" + tag1.getCategory();
 %>
-<fmt:bundle basename="org.wso2.carbon.registry.info.ui.i18n.Resources">
 <% if (CarbonUIUtil.isUserAuthorized(request, "/permission/admin/manage/search/resources")) { %>
 <a href="../search/search.jsp?region=region3&item=registry_search_menu&searchType=tag&criteria=<%=tagName%>" class="<%=style%>" onmouseover="showDel('<%=i%>')"><%=tagName%>
 <% } else { %>
@@ -72,9 +72,16 @@
 <% if (!tag.isVersionView()) { %>
 </a><a class="closeButton registryWriteOperation" onclick="delTag('<%=tagName%>','<%=tag.getPathWithVersion()%>')" id="close<%=i%>" style="display:none" title="<fmt:message key="delete"/>"><img src="../admin/images/delete.gif" style="width:8px"/></a>&nbsp;&nbsp;
 <% } %>
-</fmt:bundle>
+<%
+    }
+    }else{
+%>
+<div id="noTags" class="summeryStyle">
+    <fmt:message key="no.tags.on.this.entry.yet"/>
+</div>
 <%
     }
 %>
 
 <%=content%>
+</fmt:bundle>

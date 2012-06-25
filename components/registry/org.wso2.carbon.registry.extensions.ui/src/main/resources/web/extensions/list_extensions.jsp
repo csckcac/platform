@@ -32,6 +32,10 @@
         resourceBundle="org.wso2.carbon.registry.extensions.ui.i18n.JSResources"
         request="<%=request%>" namespace="org.wso2.carbon.registry.extensions.ui"/>
 <%
+    int pageNumber = 0;
+    int numberOfPages = 1;
+    String[] paginatedExtensions = new  String[0];
+
     String requestedPage = request.getParameter(UIConstants.REQUESTED_PAGE);
     String[] extensions;
     try {
@@ -95,14 +99,12 @@
             int end;
             int itemsPerPage = (int)(RegistryConstants.ITEMS_PER_PAGE * 1.5);
 
-            int pageNumber;
             if (requestedPage != null && requestedPage.length() > 0) {
                 pageNumber = new Integer(requestedPage);
             } else {
                 pageNumber = 1;
             }
 
-            int numberOfPages = 1;
             if (extensions.length % itemsPerPage == 0) {
                 numberOfPages = extensions.length / itemsPerPage;
             } else {
@@ -116,7 +118,8 @@
                 start = (pageNumber - 1) * itemsPerPage;
                 end = (pageNumber - 1) * itemsPerPage + itemsPerPage;
             }
-       String[] paginatedExtensions = ExtensionsUIUtils.getPaginatedExtension(start,itemsPerPage,extensions);
+        paginatedExtensions = ExtensionsUIUtils.getPaginatedExtension(start,itemsPerPage,extensions);
+       }
 %>  <div id="workArea">
     <form id="profilesEditForm">
     <table class="styledLeft" id="customTable">
@@ -163,17 +166,6 @@
                                   resourceBundle="org.wso2.carbon.registry.extensions.ui.i18n.Resources"
                                   nextKey="next" prevKey="prev"
                                   paginationFunction="submitExtension(1,{0})"/>
- <%
-     }else{
- %>
-
-    </div>
-    <div>
-        <a><fmt:message key="no.extensions"/></a>
-    </div>
-    <%
-        }
-    %>
         <script type="text/javascript">
         alternateTableRows('customTable','tableEvenRow','tableOddRow');
 </script>

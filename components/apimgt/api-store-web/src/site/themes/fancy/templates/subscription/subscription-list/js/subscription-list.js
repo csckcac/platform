@@ -68,3 +68,30 @@ function collapseKeys(index,type,link){
         $('#appDetails'+index).toggle();
     }
 }
+
+function removeSubscription(apiName, version, provider, applicationId) {
+    $('#messageModal').html($('#confirmation-data').html());
+    $('#messageModal h3.modal-title').html('Confirm Delete');
+    $('#messageModal div.modal-body').html('\n\nAre you sure you want to delete the subscription of <b>"' + apiName+'-'+version + '</b>"?');
+    $('#messageModal a.btn-primary').html('Yes');
+    $('#messageModal a.btn-other').html('No');
+    $('#messageModal a.btn-primary').click(function() {
+    jagg.post("/site/blocks/subscription/subscription-remove/ajax/subscription-remove.jag", {
+        action:"removeSubscription",
+        name:apiName,
+        version:version,
+        provider:provider,
+        applicationId:applicationId
+    }, function (result) {
+        if (!result.error) {
+            window.location.reload();
+        } else {
+
+            jagg.message({content:result.message,type:"error"});
+        }
+    }, "json"); });
+    $('#messageModal a.btn-other').click(function() {
+        return;
+    });
+    $('#messageModal').modal();
+}

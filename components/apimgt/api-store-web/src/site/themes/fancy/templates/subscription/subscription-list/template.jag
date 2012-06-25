@@ -160,6 +160,7 @@
                                             <a href="<%=path%>" class="thumbnailInsideLink"><img width="70" alt="" src="<% if(api.thumburl) { %><%=api.thumburl%><% } else { %>/apistore/site/themes/<%=jagg.getUserTheme()%>/images/api-default.png<% }%>"/></a>
                                         </div>
                                         <div class="span8">
+                                            <img src="<%=jagg.getAbsoluteUrl("/site/themes/"+jagg.getUserTheme()+"/images/close.png")%>" onClick="removeSubscription('<%=api.name%>','<%=api.version%>','<%=api.provider%>','<%=app.id%>')" align="right" style="height:15px;width:15px;">
                                             <a href="<%=path%>" class="service-name" title="<%=api.name%>-<%=api.version%>"><%=apiName%> - <%=api.version%></a>
                                             <div class="item-info"><%=api.provider%></div>
                                             <div class="item-info"><b>Subscription Tier:</b><%=api.tier%></div>

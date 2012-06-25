@@ -4,6 +4,9 @@ jagg.module("subscription", {
     addAPISubscription:function () {
         return jagg.require(jagg.getModulesDir() + "subscription/add.jag").addAPISubscription.apply(this, arguments);
     },
+    removeAPISubscription:function () {
+        return jagg.require(jagg.getModulesDir() + "subscription/remove.jag").removeAPISubscription.apply(this, arguments);
+    },
 
     getAllSubscriptions:function () {
         return jagg.require(jagg.getModulesDir() + "subscription/list.jag").getAllSubscriptions.apply(this, arguments);

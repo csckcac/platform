@@ -264,7 +264,12 @@ $(document).ready(function() {
     });
     $('#cancelEdit').click(
             function(){
-                window.location.href = 'site/pages/index.jag';
+                var current = window.location.pathname;
+                if (current.indexOf(".jag") >= 0) {
+                location.href = 'index.jag';
+                }else{
+                location.href = 'site/pages/index.jag';
+                }
             }
             );
  });

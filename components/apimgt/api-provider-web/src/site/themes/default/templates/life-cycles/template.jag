@@ -125,11 +125,7 @@ $(document).ready(function() {
             });
         }
     });
-    $('#cancelEdit').click(
-            function(){
-                window.location.href = 'site/pages/index.jag';
-            }
-            );
+
 
  });
  function enableUpdateBtn(){

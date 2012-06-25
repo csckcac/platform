@@ -19,6 +19,7 @@ import org.apache.axiom.om.OMAbstractFactory;
 import org.apache.axiom.om.OMElement;
 import org.apache.axiom.om.OMFactory;
 import org.wso2.carbon.dataservices.common.DBConstants;
+import org.wso2.carbon.dataservices.common.RDBMSUtils;
 import org.wso2.carbon.dataservices.common.DBConstants.*;
 
 import java.util.ArrayList;
@@ -37,11 +38,21 @@ public class Config extends DataServiceConfigurationElement {
     }
 
     public void setProperties(ArrayList<Property> properties) {
-        this.properties = properties;
+        this.properties = new ArrayList<Property>();
+        for (Property prop : properties) {
+        	this.addProperty(prop);
+        }
     }
 
     public void addProperty(Property property) {
-        addProperty(property.getName(), property.getValue());
+    	if (RDBMSUtils.configPropContainsInV2(property.getName())) {
+    		String newPropName = RDBMSUtils.convertConfigPropFromV2toV3(property.getName());
+    		if (newPropName != null) {
+    			addProperty(newPropName, property.getValue());
+    		}
+    	} else {
+            addProperty(property.getName(), property.getValue());
+    	}
     }
 
     public void addProperty(String name, Object value) {
@@ -66,9 +77,9 @@ public class Config extends DataServiceConfigurationElement {
     }
 
     private void setDatasourceType(String propertyName) {
-        if (RDBMS.DRIVER.equals(propertyName) || RDBMS.XA_DATASOURCE_CLASS.equals(propertyName)) {
+        if (RDBMS.DRIVER_CLASSNAME.equals(propertyName) || RDBMS.DATASOURCE_CLASSNAME.equals(propertyName)) {
             for (int i =0; i < properties.size(); i ++) {
-                if (properties.get(i).getName().equals(RDBMS.DRIVER)
+                if (properties.get(i).getName().equals(RDBMS.DRIVER_CLASSNAME)
                         && properties.get(i).getValue().toString().equals("org.apache.cassandra.cql.jdbc.CassandraDriver")) {
                     dataSourceType = DataSourceTypes.CASSANDRA;
                     break;

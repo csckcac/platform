@@ -18,6 +18,9 @@
  */
 package org.wso2.carbon.dataservices.common;
 
+import java.util.HashMap;
+import java.util.Map;
+
 /**
  * Represents the global constants defined by data services.
  */
@@ -252,11 +255,11 @@ public final class DBConstants {
     }
 
     /**
-     * Constants related to RDBMS data source.
+     * Constants related to RDBMS data source, DSS v2.x.
      */
-    public static final class RDBMS {
+    public static final class RDBMS_OLD {
 
-        private RDBMS() {
+        private RDBMS_OLD() {
             throw new AssertionError();
         }
 
@@ -293,7 +296,96 @@ public final class DBConstants {
         public static final String XA_DATASOURCE_CLASS = "org.wso2.ws.dataservice.xa_datasource_class";
         public static final String XA_DATASOURCE_PROPS = "org.wso2.ws.dataservice.xa_datasource_properties";
     }
+    
+    /**
+     * Constants related to RDBMS data source, DSS v3.0+.
+     */
+    public static final class RDBMS {
 
+        private RDBMS() {
+            throw new AssertionError();
+        }
+        
+        public static final String DEFAULT_AUTOCOMMIT = "defaultAutoCommit";
+        public static final String DEFAULT_READONLY = "defaultReadOnly";
+        public static final String DEFAULT_TX_ISOLATION = "defaultTransactionIsolation";
+        public static final String DEFAULT_CATALOG = "defaultCatalog";
+        public static final String DRIVER_CLASSNAME = "driverClassName";
+        public static final String URL = "url";
+        public static final String USERNAME = "username";
+        public static final String PASSWORD = "password";
+        public static final String MAX_ACTIVE = "maxActive";
+        public static final String MAX_IDLE = "maxIdle";
+        public static final String MIN_IDLE = "minIdle";
+        public static final String INITIAL_SIZE = "initialSize";
+        public static final String MAX_WAIT = "maxWait";
+        public static final String TEST_ON_BORROW = "testOnBorrow";
+        public static final String TEST_ON_RETURN = "testOnReturn";
+        public static final String TEST_WHILE_IDLE = "testWhileIdle";
+        public static final String VALIDATION_QUERY = "validationQuery";
+        public static final String VALIDATOR_CLASSNAME = "validatorClassName";
+        public static final String TIME_BETWEEN_EVICTION_RUNS_MILLIS = "timeBetweenEvictionRunsMillis";
+        public static final String MIN_EVICTABLE_IDLE_TIME_MILLIS = "minEvictableIdleTimeMillis";
+        public static final String REMOVE_ABANDONED = "removeAbandoned";
+        public static final String REMOVE_ABANDONED_TIMEOUT = "removeAbandonedTimeout";
+        public static final String LOG_ABANDONED = "logAbandoned";
+        public static final String CONNECTION_PROPERTIES = "connectionProperties";
+        public static final String INIT_SQL = "initSQL";
+        public static final String JDBC_INTERCEPTORS = "jdbcInterceptors";
+        public static final String VALIDATION_INTERVAL = "validationInterval";
+        public static final String JMX_ENABLED = "jmxEnabled";
+        public static final String FAIR_QUEUE = "fairQueue";
+        public static final String ABANDON_WHEN_PERCENTAGE_FULL = "abandonWhenPercentageFull";
+        public static final String MAX_AGE = "maxAge";
+        public static final String USE_EQUALS = "useEquals";
+        public static final String SUSPECT_TIMEOUT = "suspectTimeout";
+        public static final String ALTERNATE_USERNAME_ALLOWED = "alternateUsernameAllowed";
+        public static final String DATASOURCE_CLASSNAME = "dataSourceClassName";
+        public static final String DATASOURCE_PROPS = "dataSourceProps";
+        public static final String FORCE_STORED_PROC = "forceStoredProc";
+        public static final String FORCE_JDBC_BATCH_REQUESTS = "forceJDBCBatchRequests";
+        public static final String QUERY_TIMEOUT = "queryTimeout";
+        public static final String AUTO_COMMIT = "autoCommit";
+        public static final String FETCH_DIRECTION = "fetchDirection";
+        public static final String FETCH_SIZE = "fetchSize";
+        public static final String MAX_FIELD_SIZE = "maxFieldSize";
+        public static final String MAX_ROWS = "maxRows";
+    }
+
+    public static final Map<String, String> RDBMSv2ToV3Map = new HashMap<String, String>();
+    
+    static {
+    	RDBMSv2ToV3Map.put(RDBMS_OLD.DRIVER, RDBMS.DRIVER_CLASSNAME);
+    	RDBMSv2ToV3Map.put(RDBMS_OLD.PROTOCOL, RDBMS.URL);
+    	RDBMSv2ToV3Map.put(RDBMS_OLD.USER, RDBMS.USERNAME);
+    	RDBMSv2ToV3Map.put(RDBMS_OLD.PASSWORD, RDBMS.PASSWORD);
+    	RDBMSv2ToV3Map.put(RDBMS_OLD.QUERY_TIMEOUT, RDBMS.QUERY_TIMEOUT);
+    	RDBMSv2ToV3Map.put(RDBMS_OLD.AUTO_COMMIT, RDBMS.AUTO_COMMIT);
+    	RDBMSv2ToV3Map.put(RDBMS_OLD.FETCH_DIRECTION, RDBMS.FETCH_DIRECTION);
+    	RDBMSv2ToV3Map.put(RDBMS_OLD.FETCH_SIZE, RDBMS.FETCH_SIZE);
+    	RDBMSv2ToV3Map.put(RDBMS_OLD.MAX_FIELD_SIZE, RDBMS.MAX_FIELD_SIZE);
+    	RDBMSv2ToV3Map.put(RDBMS_OLD.MAX_ROWS, RDBMS.MAX_ROWS);
+    	RDBMSv2ToV3Map.put(RDBMS_OLD.FORCE_JDBC_BATCH_REQUESTS, RDBMS.FORCE_JDBC_BATCH_REQUESTS);
+    	RDBMSv2ToV3Map.put(RDBMS_OLD.FORCE_STORED_PROC, RDBMS.FORCE_STORED_PROC);
+    	RDBMSv2ToV3Map.put(RDBMS_OLD.TRANSACTION_ISOLATION, RDBMS.DEFAULT_TX_ISOLATION);
+    	RDBMSv2ToV3Map.put(RDBMS_OLD.INITIAL_SIZE, RDBMS.INITIAL_SIZE);
+    	RDBMSv2ToV3Map.put(RDBMS_OLD.MAX_POOL_SIZE, RDBMS.MAX_ACTIVE);
+    	RDBMSv2ToV3Map.put(RDBMS_OLD.MAX_IDLE, RDBMS.MAX_IDLE);
+    	RDBMSv2ToV3Map.put(RDBMS_OLD.MIN_POOL_SIZE, RDBMS.MIN_IDLE);
+    	RDBMSv2ToV3Map.put(RDBMS_OLD.MAX_WAIT, RDBMS.MAX_WAIT);
+    	RDBMSv2ToV3Map.put(RDBMS_OLD.VALIDATION_QUERY, RDBMS.VALIDATION_QUERY);
+    	RDBMSv2ToV3Map.put(RDBMS_OLD.TEST_ON_BORROW, RDBMS.TEST_ON_BORROW);
+    	RDBMSv2ToV3Map.put(RDBMS_OLD.TEST_ON_RETURN, RDBMS.TEST_ON_RETURN);
+    	RDBMSv2ToV3Map.put(RDBMS_OLD.TEST_WHILE_IDLE, RDBMS.TEST_WHILE_IDLE);
+    	RDBMSv2ToV3Map.put(RDBMS_OLD.TIME_BETWEEN_EVICTION_RUNS_MILLS, RDBMS.TIME_BETWEEN_EVICTION_RUNS_MILLIS);
+    	RDBMSv2ToV3Map.put(RDBMS_OLD.NUM_TESTS_PER_EVICTION_RUN, null);
+    	RDBMSv2ToV3Map.put(RDBMS_OLD.MIN_EVICTABLE_IDLE_TIME_MILLIS, RDBMS.MIN_EVICTABLE_IDLE_TIME_MILLIS);
+    	RDBMSv2ToV3Map.put(RDBMS_OLD.REMOVE_ABANDONED, RDBMS.REMOVE_ABANDONED);
+    	RDBMSv2ToV3Map.put(RDBMS_OLD.REMOVE_ABONDONED_TIMEOUT, RDBMS.REMOVE_ABANDONED_TIMEOUT);
+    	RDBMSv2ToV3Map.put(RDBMS_OLD.LOG_ABANDONED, RDBMS.LOG_ABANDONED);
+    	RDBMSv2ToV3Map.put(RDBMS_OLD.XA_DATASOURCE_CLASS, RDBMS.DATASOURCE_CLASSNAME);
+    	RDBMSv2ToV3Map.put(RDBMS_OLD.XA_DATASOURCE_PROPS, RDBMS.DATASOURCE_PROPS);
+    }
 
     /**
      * Constants related to Database configuration properties

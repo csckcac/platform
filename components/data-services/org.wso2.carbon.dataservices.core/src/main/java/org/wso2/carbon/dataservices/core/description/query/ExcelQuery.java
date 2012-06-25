@@ -18,8 +18,6 @@
  */
 package org.wso2.carbon.dataservices.core.description.query;
 
-import org.apache.commons.logging.Log;
-import org.apache.commons.logging.LogFactory;
 import org.apache.poi.hssf.usermodel.HSSFCell;
 import org.apache.poi.ss.usermodel.Cell;
 import org.apache.poi.ss.usermodel.Row;
@@ -49,8 +47,6 @@ public class ExcelQuery extends Query {
     private int startingRow;
 
     private int maxRowCount;
-
-    private static final Log log = LogFactory.getLog(ExcelQuery.class);
 
     private Map<Integer, String> columnMappings;
 

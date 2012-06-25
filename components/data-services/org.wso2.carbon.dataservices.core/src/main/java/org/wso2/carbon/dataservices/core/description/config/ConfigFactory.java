@@ -129,9 +129,9 @@ public class ConfigFactory {
 	}
 		
 	private static String getConfigType(Map<String, String> properties) throws DataServiceFault {
-		if ((properties.get(RDBMS.DRIVER) != null && 
-				properties.get(RDBMS.PROTOCOL) != null) || 
-				properties.get(RDBMS.XA_DATASOURCE_CLASS) != null) {
+		if ((properties.get(RDBMS.DRIVER_CLASSNAME) != null) || (properties.get(RDBMS_OLD.DRIVER) != null) ||
+				(properties.get(RDBMS.DATASOURCE_CLASSNAME) != null) || 
+				(properties.get(RDBMS_OLD.XA_DATASOURCE_CLASS) != null)) {
 		    return DataSourceTypes.RDBMS;
 		} else if (properties.get(Excel.DATASOURCE) != null) {
 		    return DataSourceTypes.EXCEL;

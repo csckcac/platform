@@ -66,8 +66,6 @@
         <opencsv.version.data-services>1.8</opencsv.version.data-services>
         <wso2carbon.version.data-services>${wso2carbon.version}</wso2carbon.version.data-services>
         <wso2carbon.version.eventing.data-services>${wso2carbon.version.data-services}</wso2carbon.version.eventing.data-services>
-        <commons-dbcp.version.data-services>1.4.0.wso2v1</commons-dbcp.version.data-services>
-        <commons-pool.version.data-services>1.5.6.wso2v1</commons-pool.version.data-services>
         <jena-arq.wso2.version.data-services>1.0.0.wso2v1</jena-arq.wso2.version.data-services>
         <gdata-core.wso2.version.data-services>${gdata-core.wso2.version}</gdata-core.wso2.version.data-services>
         <gdata-spreadsheet.wso2.version.data-services>${gdata-spreadsheet.wso2.version}</gdata-spreadsheet.wso2.version.data-services>

@@ -16,6 +16,7 @@
  ~ under the License.
  -->
 
+<%@page import="org.wso2.carbon.dataservices.common.DBConstants.RDBMS"%>
 <%@ taglib prefix="fmt" uri="http://java.sun.com/jsp/jstl/fmt" %>
 <%@ taglib uri="http://wso2.org/projects/carbon/taglibs/carbontags.jar" prefix="carbon" %>
 <%@ page import="org.wso2.carbon.utils.ServerConstants" %>
@@ -82,15 +83,15 @@ function setValueGov() {
 
 <%!
 private boolean isFieldMandatory(String propertName) {
-	if (propertName.equals(DBConstants.RDBMS.DRIVER)) {
+	if (propertName.equals(DBConstants.RDBMS.DRIVER_CLASSNAME)) {
 		return true;
-	} else if (propertName.equals(DBConstants.RDBMS.PROTOCOL)) {
+	} else if (propertName.equals(DBConstants.RDBMS.URL)) {
 		return true;
 	}
-    else if (propertName.equals(DBConstants.RDBMS.XA_DATASOURCE_CLASS)) {
+    else if (propertName.equals(DBConstants.RDBMS.DATASOURCE_CLASSNAME)) {
        return true;
     }
-    else if (propertName.equals(DBConstants.RDBMS.XA_DATASOURCE_PROPS)) {
+    else if (propertName.equals(DBConstants.RDBMS.DATASOURCE_PROPS)) {
        return true;
     }
     else if (propertName.equals(DBConstants.GSpread.HAS_HEADER)) {
@@ -141,20 +142,20 @@ private boolean isFieldMandatory(String propertName) {
 private Config addNotAvailableFunctions(Config config,String selectedType, HttpServletRequest request) {
     String xaVal = request.getParameter ("xaVal");
 	if (DBConstants.DataSourceTypes.RDBMS.equals(selectedType)) {
-		 if (config.getPropertyValue(DBConstants.RDBMS.DRIVER) == null) {
-			 config.addProperty(DBConstants.RDBMS.DRIVER, "");
+		 if (config.getPropertyValue(DBConstants.RDBMS.DRIVER_CLASSNAME) == null) {
+			 config.addProperty(DBConstants.RDBMS.DRIVER_CLASSNAME, "");
 		 }
-		 if (config.getPropertyValue(DBConstants.RDBMS.PROTOCOL) == null) {
-			 config.addProperty(DBConstants.RDBMS.PROTOCOL, "");
+		 if (config.getPropertyValue(DBConstants.RDBMS.URL) == null) {
+			 config.addProperty(DBConstants.RDBMS.URL, "");
 		 }
-		 if (config.getPropertyValue(DBConstants.RDBMS.USER) == null) {
-			 config.addProperty(DBConstants.RDBMS.USER, "");
+		 if (config.getPropertyValue(DBConstants.RDBMS.USERNAME) == null) {
+			 config.addProperty(DBConstants.RDBMS.USERNAME, "");
 		 }
 		 if (config.getPropertyValue(DBConstants.RDBMS.PASSWORD) == null) {
 			 config.addProperty(DBConstants.RDBMS.PASSWORD, "");
 		 }
-            if (config.getPropertyValue(DBConstants.RDBMS.XA_DATASOURCE_CLASS) == null) {
-                config.addProperty(DBConstants.RDBMS.XA_DATASOURCE_CLASS, "");
+            if (config.getPropertyValue(DBConstants.RDBMS.DATASOURCE_CLASSNAME) == null) {
+                config.addProperty(DBConstants.RDBMS.DATASOURCE_CLASSNAME, "");
             }
 
             ArrayList<Property> property = new ArrayList<Property>();
@@ -164,22 +165,22 @@ private Config addNotAvailableFunctions(Config config,String selectedType, HttpS
 
 
 
-            if (config.getPropertyValue(DBConstants.RDBMS.XA_DATASOURCE_PROPS) == null) {
-                config.addProperty(DBConstants.RDBMS.XA_DATASOURCE_PROPS, property);
+            if (config.getPropertyValue(DBConstants.RDBMS.DATASOURCE_PROPS) == null) {
+                config.addProperty(DBConstants.RDBMS.DATASOURCE_PROPS, property);
             }
 
 
-		 if (config.getPropertyValue(DBConstants.RDBMS.TRANSACTION_ISOLATION) == null) {
-			 config.addProperty(DBConstants.RDBMS.TRANSACTION_ISOLATION, "");
+		 if (config.getPropertyValue(DBConstants.RDBMS.DEFAULT_TX_ISOLATION) == null) {
+			 config.addProperty(DBConstants.RDBMS.DEFAULT_TX_ISOLATION, "");
 		 }
 		 if (config.getPropertyValue(DBConstants.RDBMS.INITIAL_SIZE) == null) {
 			 config.addProperty(DBConstants.RDBMS.INITIAL_SIZE, "");
 		 }
-		 if (config.getPropertyValue(DBConstants.RDBMS.MAX_POOL_SIZE) == null) {
-			 config.addProperty(DBConstants.RDBMS.MAX_POOL_SIZE, "");
+		 if (config.getPropertyValue(DBConstants.RDBMS.MAX_ACTIVE) == null) {
+			 config.addProperty(DBConstants.RDBMS.MAX_ACTIVE, "");
 		 }
-		 if (config.getPropertyValue(DBConstants.RDBMS.MIN_POOL_SIZE) == null) {
-			 config.addProperty(DBConstants.RDBMS.MIN_POOL_SIZE, "");
+		 if (config.getPropertyValue(DBConstants.RDBMS.MIN_IDLE) == null) {
+			 config.addProperty(DBConstants.RDBMS.MIN_IDLE, "");
 		 }
 		 if (config.getPropertyValue(DBConstants.RDBMS.MAX_WAIT) == null) {
 			 config.addProperty(DBConstants.RDBMS.MAX_WAIT, "");
@@ -196,11 +197,8 @@ private Config addNotAvailableFunctions(Config config,String selectedType, HttpS
 		 if (config.getPropertyValue(DBConstants.RDBMS.TEST_WHILE_IDLE) == null) {
 			 config.addProperty(DBConstants.RDBMS.TEST_WHILE_IDLE, "");
 		 }
-		 if (config.getPropertyValue(DBConstants.RDBMS.TIME_BETWEEN_EVICTION_RUNS_MILLS) == null) {
-			 config.addProperty(DBConstants.RDBMS.TIME_BETWEEN_EVICTION_RUNS_MILLS, "");
-		 }
-		 if (config.getPropertyValue(DBConstants.RDBMS.NUM_TESTS_PER_EVICTION_RUN) == null) {
-			 config.addProperty(DBConstants.RDBMS.NUM_TESTS_PER_EVICTION_RUN, "");
+		 if (config.getPropertyValue(DBConstants.RDBMS.TIME_BETWEEN_EVICTION_RUNS_MILLIS) == null) {
+			 config.addProperty(DBConstants.RDBMS.TIME_BETWEEN_EVICTION_RUNS_MILLIS, "");
 		 }
 		 if (config.getPropertyValue(DBConstants.RDBMS.MIN_EVICTABLE_IDLE_TIME_MILLIS) == null) {
 			 config.addProperty(DBConstants.RDBMS.MIN_EVICTABLE_IDLE_TIME_MILLIS, "");
@@ -208,8 +206,8 @@ private Config addNotAvailableFunctions(Config config,String selectedType, HttpS
 		 if (config.getPropertyValue(DBConstants.RDBMS.REMOVE_ABANDONED) == null) {
 			 config.addProperty(DBConstants.RDBMS.REMOVE_ABANDONED, "");
 		 }
-		 if (config.getPropertyValue(DBConstants.RDBMS.REMOVE_ABONDONED_TIMEOUT) == null) {
-			 config.addProperty(DBConstants.RDBMS.REMOVE_ABONDONED_TIMEOUT, "");
+		 if (config.getPropertyValue(DBConstants.RDBMS.REMOVE_ABANDONED_TIMEOUT) == null) {
+			 config.addProperty(DBConstants.RDBMS.REMOVE_ABANDONED_TIMEOUT, "");
 		 }
 		 if (config.getPropertyValue(DBConstants.RDBMS.LOG_ABANDONED) == null) {
 			 config.addProperty(DBConstants.RDBMS.LOG_ABANDONED, "");
@@ -277,17 +275,17 @@ private Config addNotAvailableFunctions(Config config,String selectedType, HttpS
 			 config.addProperty(DBConstants.WebDatasource.WEB_CONFIG, "");
 		 }
     } else if (DBConstants.DataSourceTypes.CASSANDRA.equals(selectedType)) {
-        if (config.getPropertyValue(DBConstants.RDBMS.PROTOCOL) == null) {
-            config.addProperty(DBConstants.RDBMS.PROTOCOL, "");
+        if (config.getPropertyValue(DBConstants.RDBMS.URL) == null) {
+            config.addProperty(DBConstants.RDBMS.URL, "");
         }
-        if (config.getPropertyValue(DBConstants.RDBMS.USER) == null) {
-            config.addProperty(DBConstants.RDBMS.USER, "");
+        if (config.getPropertyValue(DBConstants.RDBMS.USERNAME) == null) {
+            config.addProperty(DBConstants.RDBMS.USERNAME, "");
         }
         if (config.getPropertyValue(DBConstants.RDBMS.PASSWORD) == null) {
             config.addProperty(DBConstants.RDBMS.PASSWORD, "");
         }
-        if (config.getPropertyValue(DBConstants.RDBMS.DRIVER) == null) {
-            config.addProperty(DBConstants.RDBMS.DRIVER, "org.apache.cassandra.cql.jdbc.CassandraDriver");
+        if (config.getPropertyValue(DBConstants.RDBMS.DRIVER_CLASSNAME) == null) {
+            config.addProperty(DBConstants.RDBMS.DRIVER_CLASSNAME, "org.apache.cassandra.cql.jdbc.CassandraDriver");
         }
     }
 	return config;
@@ -331,35 +329,34 @@ private Config addNotAvailableFunctions(Config config,String selectedType, HttpS
             if (selectedType != null && selectedType.trim().length() > 0 && newConfig.getId() == null) {
                 newConfig.setId(configId);
                 if (DBConstants.DataSourceTypes.RDBMS.equals(selectedType)) {
-                    newConfig.addProperty(DBConstants.RDBMS.DRIVER, "");
-                    newConfig.addProperty(DBConstants.RDBMS.PROTOCOL, "");
-                    newConfig.addProperty(DBConstants.RDBMS.USER, "");
+                    newConfig.addProperty(DBConstants.RDBMS.DRIVER_CLASSNAME, "");
+                    newConfig.addProperty(DBConstants.RDBMS.URL, "");
+                    newConfig.addProperty(DBConstants.RDBMS.USERNAME, "");
                     newConfig.addProperty(DBConstants.RDBMS.PASSWORD, "");
-                        newConfig.addProperty(DBConstants.RDBMS.XA_DATASOURCE_CLASS, "");
+                        newConfig.addProperty(DBConstants.RDBMS.DATASOURCE_CLASSNAME, "");
 
                         ArrayList<Property> property = new ArrayList<Property>();
                         property.add(new Property("URL", ""));
                         property.add(new Property("User", ""));
                         property.add(new Property("Password", ""));
 
-                        newConfig.addProperty(DBConstants.RDBMS.XA_DATASOURCE_PROPS, property);
+                        newConfig.addProperty(DBConstants.RDBMS.DATASOURCE_PROPS, property);
 
                     //pool config properties
-            		newConfig.addProperty(DBConstants.RDBMS.TRANSACTION_ISOLATION,"");
+            		newConfig.addProperty(DBConstants.RDBMS.DEFAULT_TX_ISOLATION,"");
             		newConfig.addProperty(DBConstants.RDBMS.INITIAL_SIZE,"");
-            		newConfig.addProperty(DBConstants.RDBMS.MAX_POOL_SIZE,"");
+            		newConfig.addProperty(DBConstants.RDBMS.MAX_ACTIVE,"");
             		newConfig.addProperty(DBConstants.RDBMS.MAX_IDLE,"");
-            		newConfig.addProperty(DBConstants.RDBMS.MIN_POOL_SIZE,"");
+            		newConfig.addProperty(DBConstants.RDBMS.MIN_IDLE,"");
             		newConfig.addProperty(DBConstants.RDBMS.MAX_WAIT,"");
             		newConfig.addProperty(DBConstants.RDBMS.VALIDATION_QUERY,"");
             		newConfig.addProperty(DBConstants.RDBMS.TEST_ON_RETURN,"");
             		newConfig.addProperty(DBConstants.RDBMS.TEST_ON_BORROW,"");
             		newConfig.addProperty(DBConstants.RDBMS.TEST_WHILE_IDLE,"");
-            		newConfig.addProperty(DBConstants.RDBMS.TIME_BETWEEN_EVICTION_RUNS_MILLS,"");
-            		newConfig.addProperty(DBConstants.RDBMS.NUM_TESTS_PER_EVICTION_RUN,"");
+            		newConfig.addProperty(DBConstants.RDBMS.TIME_BETWEEN_EVICTION_RUNS_MILLIS,"");
             		newConfig.addProperty(DBConstants.RDBMS.MIN_EVICTABLE_IDLE_TIME_MILLIS,"");
             		newConfig.addProperty(DBConstants.RDBMS.REMOVE_ABANDONED,"");
-            		newConfig.addProperty(DBConstants.RDBMS.REMOVE_ABONDONED_TIMEOUT,"");
+            		newConfig.addProperty(DBConstants.RDBMS.REMOVE_ABANDONED_TIMEOUT,"");
             		newConfig.addProperty(DBConstants.RDBMS.LOG_ABANDONED,"");
                 } else if (DBConstants.DataSourceTypes.EXCEL.equals(selectedType)) {
                     newConfig.addProperty(DBConstants.Excel.DATASOURCE, "");
@@ -393,16 +390,16 @@ private Config addNotAvailableFunctions(Config config,String selectedType, HttpS
                 } else if (DBConstants.DataSourceTypes.WEB.equals(selectedType)) {
                     newConfig.addProperty(DBConstants.WebDatasource.WEB_CONFIG, "");
                 } else if (DBConstants.DataSourceTypes.CASSANDRA.equals(selectedType)) {
-                    newConfig.addProperty(DBConstants.RDBMS.PROTOCOL,"");
-                    newConfig.addProperty(DBConstants.RDBMS.USER,"");
+                    newConfig.addProperty(DBConstants.RDBMS.URL,"");
+                    newConfig.addProperty(DBConstants.RDBMS.USERNAME,"");
                     newConfig.addProperty(DBConstants.RDBMS.PASSWORD,"");
-                    newConfig.addProperty(DBConstants.RDBMS.DRIVER, "org.apache.cassandra.cql.jdbc.CassandraDriver");
+                    newConfig.addProperty(DBConstants.RDBMS.DRIVER_CLASSNAME, "org.apache.cassandra.cql.jdbc.CassandraDriver");
                 }
 
             }
         } else {
-            if (dsConfig.getPropertyValue("org.wso2.ws.dataservice.xa_datasource_class") !=null &&
-                    dsConfig.getPropertyValue("org.wso2.ws.dataservice.xa_datasource_class").toString().trim().length() >0  ) {
+            if (dsConfig.getPropertyValue(RDBMS.DATASOURCE_CLASSNAME) !=null &&
+                    dsConfig.getPropertyValue(RDBMS.DATASOURCE_CLASSNAME).toString().trim().length() >0  ) {
                isXAType = true;
             }
             if(dsConfig.getPropertyValue("gspread_visibility") instanceof String) {
@@ -415,34 +412,33 @@ private Config addNotAvailableFunctions(Config config,String selectedType, HttpS
                 Config conf = new Config();
                 conf.setId(configId);
                 if (DBConstants.DataSourceTypes.RDBMS.equals(selectedType)) {
-                    conf.addProperty(DBConstants.RDBMS.DRIVER, "");
-                    conf.addProperty(DBConstants.RDBMS.PROTOCOL, "");
-                    conf.addProperty(DBConstants.RDBMS.USER, "");
+                    conf.addProperty(DBConstants.RDBMS.DRIVER_CLASSNAME, "");
+                    conf.addProperty(DBConstants.RDBMS.URL, "");
+                    conf.addProperty(DBConstants.RDBMS.USERNAME, "");
                     conf.addProperty(DBConstants.RDBMS.PASSWORD, "");
-                    conf.addProperty(DBConstants.RDBMS.XA_DATASOURCE_CLASS,"");
+                    conf.addProperty(DBConstants.RDBMS.DATASOURCE_CLASSNAME,"");
 
                      ArrayList<Property> property = new ArrayList<Property>();
                         property.add(new Property("URL", ""));
                         property.add(new Property("User", ""));
                         property.add(new Property("Password", ""));
 
-                    conf.addProperty(DBConstants.RDBMS.XA_DATASOURCE_PROPS,property);
+                    conf.addProperty(DBConstants.RDBMS.DATASOURCE_PROPS,property);
                     //pool config properties
-            		conf.addProperty(DBConstants.RDBMS.TRANSACTION_ISOLATION,"");
+            		conf.addProperty(DBConstants.RDBMS.DEFAULT_TX_ISOLATION,"");
             		conf.addProperty(DBConstants.RDBMS.INITIAL_SIZE,"");
-            		conf.addProperty(DBConstants.RDBMS.MAX_POOL_SIZE,"");
+            		conf.addProperty(DBConstants.RDBMS.MAX_ACTIVE,"");
             		conf.addProperty(DBConstants.RDBMS.MAX_IDLE,"");
-            		conf.addProperty(DBConstants.RDBMS.MIN_POOL_SIZE,"");
+            		conf.addProperty(DBConstants.RDBMS.MIN_IDLE,"");
             		conf.addProperty(DBConstants.RDBMS.MAX_WAIT,"");
             		conf.addProperty(DBConstants.RDBMS.VALIDATION_QUERY,"");
             		conf.addProperty(DBConstants.RDBMS.TEST_ON_RETURN,"");
             		conf.addProperty(DBConstants.RDBMS.TEST_ON_BORROW,"");
             		conf.addProperty(DBConstants.RDBMS.TEST_WHILE_IDLE,"");
-            		conf.addProperty(DBConstants.RDBMS.TIME_BETWEEN_EVICTION_RUNS_MILLS,"");
-            		conf.addProperty(DBConstants.RDBMS.NUM_TESTS_PER_EVICTION_RUN,"");
+            		conf.addProperty(DBConstants.RDBMS.TIME_BETWEEN_EVICTION_RUNS_MILLIS,"");
             		conf.addProperty(DBConstants.RDBMS.MIN_EVICTABLE_IDLE_TIME_MILLIS,"");
             		conf.addProperty(DBConstants.RDBMS.REMOVE_ABANDONED,"");
-            		conf.addProperty(DBConstants.RDBMS.REMOVE_ABONDONED_TIMEOUT,"");
+            		conf.addProperty(DBConstants.RDBMS.REMOVE_ABANDONED_TIMEOUT,"");
             		conf.addProperty(DBConstants.RDBMS.LOG_ABANDONED,"");
 
                 } else if (DBConstants.DataSourceTypes.EXCEL.equals(selectedType)) {
@@ -478,10 +474,10 @@ private Config addNotAvailableFunctions(Config config,String selectedType, HttpS
                 } else if (DBConstants.DataSourceTypes.WEB.equals(selectedType)) {
                     conf.addProperty(DBConstants.WebDatasource.WEB_CONFIG, "");
                 } else if (DBConstants.DataSourceTypes.CASSANDRA.equals(selectedType)) {
-                    conf.addProperty(DBConstants.RDBMS.PROTOCOL,"");
-                    conf.addProperty(DBConstants.RDBMS.USER,"");
+                    conf.addProperty(DBConstants.RDBMS.URL,"");
+                    conf.addProperty(DBConstants.RDBMS.USERNAME,"");
                     conf.addProperty(DBConstants.RDBMS.PASSWORD,"");
-                    conf.addProperty(DBConstants.RDBMS.DRIVER,"org.apache.cassandra.cql.jdbc.CassandraDriver");
+                    conf.addProperty(DBConstants.RDBMS.DRIVER_CLASSNAME,"org.apache.cassandra.cql.jdbc.CassandraDriver");
                 }
                 dataService.setConfig(conf);
             }
@@ -511,16 +507,16 @@ private Config addNotAvailableFunctions(Config config,String selectedType, HttpS
                 propertyIterator = configProperties.iterator();
 
                 if ("RDBMS".equals(dataSourceType) && !isXAType) {
-                    if (dsConfig.getPropertyValue(DBConstants.RDBMS.PROTOCOL) instanceof String) {
-                        String jdbcUrl = dsConfig.getPropertyValue(DBConstants.RDBMS.PROTOCOL).toString();
+                    if (dsConfig.getPropertyValue(DBConstants.RDBMS.URL) instanceof String) {
+                        String jdbcUrl = dsConfig.getPropertyValue(DBConstants.RDBMS.URL).toString();
                         if ((jdbcUrl != null) && jdbcUrl.trim().length() > 0) {
                             rdbmsEngineType = RDBMSUtils.getRDBMSEngine(jdbcUrl);
                         }
                     }
                 }
                 else if ("RDBMS".equals(dataSourceType) && isXAType) {
-                    if (dsConfig.getPropertyValue(DBConstants.RDBMS.XA_DATASOURCE_CLASS) instanceof String) {
-                        String xaDataSourceClass = dsConfig.getPropertyValue(DBConstants.RDBMS.XA_DATASOURCE_CLASS).toString();
+                    if (dsConfig.getPropertyValue(DBConstants.RDBMS.DATASOURCE_CLASSNAME) instanceof String) {
+                        String xaDataSourceClass = dsConfig.getPropertyValue(DBConstants.RDBMS.DATASOURCE_CLASSNAME).toString();
                         if ((xaDataSourceClass != null) && xaDataSourceClass.trim().length() > 0) {
                             rdbmsEngineType = RDBMSUtils.getRDBMSEngine4XADataSource(xaDataSourceClass);
                         }
@@ -598,7 +594,7 @@ private Config addNotAvailableFunctions(Config config,String selectedType, HttpS
              <input type="hidden" id="flag" name="flag" value="<%=flag%>"/>
             <input type="hidden" id="propertyCount" name="propertyCount" value="0"/>
             <% if(dataSourceType.equals("Cassandra")) {%>
-                <input type="hidden" id="org.wso2.ws.dataservice.driver" name="org.wso2.ws.dataservice.driver" value="org.apache.cassandra.cql.jdbc.CassandraDriver" />
+                <input type="hidden" id="RDBMS.DRIVER_CLASSNAME" name="RDBMS.DRIVER_CLASSNAME" value="org.apache.cassandra.cql.jdbc.CassandraDriver" />
             <% } %>
         </tr>
 
@@ -965,7 +961,7 @@ private Config addNotAvailableFunctions(Config config,String selectedType, HttpS
             if(property.getValue() instanceof String){
                propertyValue = (String)property.getValue();
             }   else if (property.getValue() instanceof ArrayList) {
-                    if (propertyName.equals("org.wso2.ws.dataservice.xa_datasource_properties") && isXAType) {
+                    if (propertyName.equals(RDBMS.DATASOURCE_PROPS) && isXAType) {
                        Iterator<Property> iterator = ((ArrayList<Property>)property.getValue()).iterator();
                         while (iterator.hasNext()) {
                             Property availableProperty = iterator.next();
@@ -1002,13 +998,13 @@ private Config addNotAvailableFunctions(Config config,String selectedType, HttpS
     <% if (!(propertyName.equals("rdf_datasource")
             ||propertyName.equals("excel_datasource")
             ||propertyName.equals("csv_datasource")
-    		||propertyName.equals("org.wso2.ws.dataservice.driver")
-    		||propertyName.equals("org.wso2.ws.dataservice.protocol")
-    		||propertyName.equals("org.wso2.ws.dataservice.user")
-    		||propertyName.equals("org.wso2.ws.dataservice.password")
-    		||propertyName.equals("org.wso2.ws.dataservice.xa_datasource_properties")
-    		||propertyName.equals("org.wso2.ws.dataservice.xa_datasource_class")
-    		||propertyName.equals(DBConstants.RDBMS.TRANSACTION_ISOLATION)
+    		||propertyName.equals(RDBMS.DRIVER_CLASSNAME)
+    		||propertyName.equals(RDBMS.URL)
+    		||propertyName.equals(RDBMS.USERNAME)
+    		||propertyName.equals(RDBMS.PASSWORD)
+    		||propertyName.equals(RDBMS.DATASOURCE_PROPS)
+    		||propertyName.equals(RDBMS.DATASOURCE_CLASSNAME)
+    		||propertyName.equals(DBConstants.RDBMS.DEFAULT_TX_ISOLATION)
     		||propertyName.equals(DBConstants.RDBMS.TEST_ON_RETURN)
     		||propertyName.equals(DBConstants.RDBMS.TEST_WHILE_IDLE)
     		||propertyName.equals(DBConstants.RDBMS.TEST_ON_BORROW)
@@ -1016,18 +1012,17 @@ private Config addNotAvailableFunctions(Config config,String selectedType, HttpS
     		||propertyName.equals(DBConstants.RDBMS.LOG_ABANDONED)
     		||propertyName.equals(DBConstants.RDBMS.REMOVE_ABANDONED)
     		||propertyName.equals(DBConstants.RDBMS.INITIAL_SIZE)
-    		||propertyName.equals(DBConstants.RDBMS.MAX_POOL_SIZE)
+    		||propertyName.equals(DBConstants.RDBMS.MAX_ACTIVE)
     		||propertyName.equals(DBConstants.RDBMS.MAX_IDLE)
-    		||propertyName.equals(DBConstants.RDBMS.MIN_POOL_SIZE)
+    		||propertyName.equals(DBConstants.RDBMS.MIN_IDLE)
     		||propertyName.equals(DBConstants.RDBMS.MAX_WAIT)
     		||propertyName.equals(DBConstants.RDBMS.VALIDATION_QUERY)
     		||propertyName.equals(DBConstants.RDBMS.TEST_ON_RETURN)
     		||propertyName.equals(DBConstants.RDBMS.TEST_ON_BORROW)
     		||propertyName.equals(DBConstants.RDBMS.TEST_WHILE_IDLE)
-    		||propertyName.equals(DBConstants.RDBMS.TIME_BETWEEN_EVICTION_RUNS_MILLS)
-    		||propertyName.equals(DBConstants.RDBMS.NUM_TESTS_PER_EVICTION_RUN)
+    		||propertyName.equals(DBConstants.RDBMS.TIME_BETWEEN_EVICTION_RUNS_MILLIS)
     		||propertyName.equals(DBConstants.RDBMS.MIN_EVICTABLE_IDLE_TIME_MILLIS)
-    		||propertyName.equals(DBConstants.RDBMS.REMOVE_ABONDONED_TIMEOUT))) {%>
+    		||propertyName.equals(DBConstants.RDBMS.REMOVE_ABANDONED_TIMEOUT))) {%>
     <td class="leftCol-small" style="white-space: nowrap;">
         <fmt:message key="<%=propertyName%>"/><%=(isFieldMandatory(propertyName)?"<font color=\"red\">*</font>":"")%>
     </td>
@@ -1065,28 +1060,28 @@ private Config addNotAvailableFunctions(Config config,String selectedType, HttpS
             <option value="public">Public</option>
             <% } %>
         </select>
-         <% } else if (propertyName.equals("org.wso2.ws.dataservice.driver")
-                    ||propertyName.equals("org.wso2.ws.dataservice.protocol")
-                    ||propertyName.equals("org.wso2.ws.dataservice.user")
-         		    ||propertyName.equals("org.wso2.ws.dataservice.password")
-         		    ||propertyName.equals("org.wso2.ws.dataservice.xa_datasource_class")) {
-         		  if ((propertyName.equals("org.wso2.ws.dataservice.driver")
-         		    ||propertyName.equals("org.wso2.ws.dataservice.protocol")
-         		    ||propertyName.equals("org.wso2.ws.dataservice.user")
-         		    || propertyName.equals("org.wso2.ws.dataservice.password")) && !isXAType) {
+         <% } else if (propertyName.equals(RDBMS.DRIVER_CLASSNAME)
+                    ||propertyName.equals(RDBMS.URL)
+                    ||propertyName.equals(RDBMS.USERNAME)
+         		    ||propertyName.equals(RDBMS.PASSWORD)
+         		    ||propertyName.equals(RDBMS.DATASOURCE_CLASSNAME)) {
+         		  if ((propertyName.equals(RDBMS.DRIVER_CLASSNAME)
+         		    ||propertyName.equals(RDBMS.URL)
+         		    ||propertyName.equals(RDBMS.USERNAME)
+         		    || propertyName.equals(RDBMS.PASSWORD)) && !isXAType) {
          		%>
                  <tr>
-                     <% if((dataSourceType.equals("Cassandra") && propertyName.equals("org.wso2.ws.dataservice.protocol"))) { %>
+                     <% if((dataSourceType.equals("Cassandra") && propertyName.equals(RDBMS.URL))) { %>
                         <td>Server URL<%=(isFieldMandatory(propertyName)?"<font color=\"red\">*</font>":"")%></td>
-                     <% } else if(!(propertyName.equals("org.wso2.ws.dataservice.driver") && dataSourceType.equals("Cassandra"))){ %>
+                     <% } else if(!(propertyName.equals(RDBMS.DRIVER_CLASSNAME) && dataSourceType.equals("Cassandra"))){ %>
                         <td><fmt:message key="<%=propertyName%>"/><%=(isFieldMandatory(propertyName)?"<font color=\"red\">*</font>":"")%></td>
                      <% } %>
-	         		 <%if(propertyName.equals("org.wso2.ws.dataservice.password")) { %>
+	         		 <%if(propertyName.equals(RDBMS.PASSWORD)) { %>
 	               		<td><input type="password" size="50" id="<%=propertyName%>" name="<%=propertyName%>" value="<%=propertyValue%>"/></td>
                 </tr>
 					<%} else {  %>
-                  <%  if(!(dataSourceType.equals("Cassandra") && propertyName.equals("org.wso2.ws.dataservice.driver"))) {%>
-                           <% if((dataSourceType.equals("Cassandra") && propertyName.equals("org.wso2.ws.dataservice.protocol"))) {
+                  <%  if(!(dataSourceType.equals("Cassandra") && propertyName.equals(RDBMS.DRIVER_CLASSNAME))) {%>
+                           <% if((dataSourceType.equals("Cassandra") && propertyName.equals(RDBMS.URL))) {
                                String cassandraServerUrl = propertyValue;
                                if (propertyValue != null && !propertyValue.equals("")) {
                                    cassandraServerUrl = propertyValue.substring(DBConstants.CASSANDRA.CASSANDRA_URL_PREFIX.length());
@@ -1100,7 +1095,7 @@ private Config addNotAvailableFunctions(Config config,String selectedType, HttpS
                     <% } } } %>
 
 
-                 <% }  else if (propertyName.equals("org.wso2.ws.dataservice.xa_datasource_class") && isXAType) {  %>
+                 <% }  else if (propertyName.equals(RDBMS.DATASOURCE_CLASSNAME) && isXAType) {  %>
                     <tr>
                         <td><label><fmt:message key="xa.datasource.class"/><font color="red">*</font></label>
                         </td>
@@ -1165,8 +1160,8 @@ private Config addNotAvailableFunctions(Config config,String selectedType, HttpS
                                 <td><a onclick="showResourceTree('<%=propertyName%>', setValueConf, '/_system/config')" style="background-image:url(images/registry_picker.gif);" class="icon-link" href="#"> Configuration Registry </a></td>
            	   					<td><a onclick="showResourceTree('<%=propertyName%>', setValueGov, '/_system/governance')" style="background-image:url(images/registry_picker.gif);" class="icon-link" href="#"> Govenance Registry </a></td>
                              </tr>
-       <%} else if (propertyName.equals("org.wso2.ws.dataservice.xa_datasource_properties")){}
-       else if (!(propertyName.equals(DBConstants.RDBMS.TRANSACTION_ISOLATION)
+       <%} else if (propertyName.equals(RDBMS.DATASOURCE_PROPS)){}
+       else if (!(propertyName.equals(DBConstants.RDBMS.DEFAULT_TX_ISOLATION)
     		||propertyName.equals(DBConstants.RDBMS.TEST_ON_RETURN)
     		||propertyName.equals(DBConstants.RDBMS.TEST_WHILE_IDLE)
     		||propertyName.equals(DBConstants.RDBMS.TEST_ON_BORROW)
@@ -1174,18 +1169,17 @@ private Config addNotAvailableFunctions(Config config,String selectedType, HttpS
     		||propertyName.equals(DBConstants.RDBMS.LOG_ABANDONED)
     		||propertyName.equals(DBConstants.RDBMS.REMOVE_ABANDONED)
     		||propertyName.equals(DBConstants.RDBMS.INITIAL_SIZE)
-    		||propertyName.equals(DBConstants.RDBMS.MAX_POOL_SIZE)
+    		||propertyName.equals(DBConstants.RDBMS.MAX_ACTIVE)
     		||propertyName.equals(DBConstants.RDBMS.MAX_IDLE)
-    		||propertyName.equals(DBConstants.RDBMS.MIN_POOL_SIZE)
+    		||propertyName.equals(DBConstants.RDBMS.MIN_IDLE)
     		||propertyName.equals(DBConstants.RDBMS.MAX_WAIT)
     		||propertyName.equals(DBConstants.RDBMS.VALIDATION_QUERY)
     		||propertyName.equals(DBConstants.RDBMS.TEST_ON_RETURN)
     		||propertyName.equals(DBConstants.RDBMS.TEST_ON_BORROW)
     		||propertyName.equals(DBConstants.RDBMS.TEST_WHILE_IDLE)
-    		||propertyName.equals(DBConstants.RDBMS.TIME_BETWEEN_EVICTION_RUNS_MILLS)
-    		||propertyName.equals(DBConstants.RDBMS.NUM_TESTS_PER_EVICTION_RUN)
+    		||propertyName.equals(DBConstants.RDBMS.TIME_BETWEEN_EVICTION_RUNS_MILLIS)
     		||propertyName.equals(DBConstants.RDBMS.MIN_EVICTABLE_IDLE_TIME_MILLIS)
-    		||propertyName.equals(DBConstants.RDBMS.REMOVE_ABONDONED_TIMEOUT))){ %>
+    		||propertyName.equals(DBConstants.RDBMS.REMOVE_ABANDONED_TIMEOUT))){ %>
             <input type="text" size="50" id="<%=propertyName%>" name="<%=propertyName%>"
                                value="<%=propertyValue%>"/>
        <%}%>
@@ -1243,15 +1237,14 @@ private Config addNotAvailableFunctions(Config config,String selectedType, HttpS
                        propertyValue = (String)property.getValue();
                     }
                     if (propertyName.equals(DBConstants.RDBMS.INITIAL_SIZE)
-                        ||propertyName.equals(DBConstants.RDBMS.MAX_POOL_SIZE)
+                        ||propertyName.equals(DBConstants.RDBMS.MAX_ACTIVE)
                         ||propertyName.equals(DBConstants.RDBMS.MAX_IDLE)
-                        ||propertyName.equals(DBConstants.RDBMS.MIN_POOL_SIZE)
+                        ||propertyName.equals(DBConstants.RDBMS.MIN_IDLE)
                         ||propertyName.equals(DBConstants.RDBMS.MAX_WAIT)
                         ||propertyName.equals(DBConstants.RDBMS.VALIDATION_QUERY)
-                        ||propertyName.equals(DBConstants.RDBMS.TIME_BETWEEN_EVICTION_RUNS_MILLS)
-                        ||propertyName.equals(DBConstants.RDBMS.NUM_TESTS_PER_EVICTION_RUN)
+                        ||propertyName.equals(DBConstants.RDBMS.TIME_BETWEEN_EVICTION_RUNS_MILLIS)
                         ||propertyName.equals(DBConstants.RDBMS.MIN_EVICTABLE_IDLE_TIME_MILLIS)
-                        ||propertyName.equals(DBConstants.RDBMS.REMOVE_ABONDONED_TIMEOUT)) {%>
+                        ||propertyName.equals(DBConstants.RDBMS.REMOVE_ABANDONED_TIMEOUT)) {%>
                         <tr>
                          <td class="leftCol-small" style="white-space: nowrap;"><label><fmt:message key="<%=propertyName%>"/></label></td>
                          <td> <input type="text" size="50" id="<%=propertyName%>" name="<%=propertyName%>"  value="<%=propertyValue%>"/></td>
@@ -1296,7 +1289,7 @@ private Config addNotAvailableFunctions(Config config,String selectedType, HttpS
                         </select>
                             </td>
                             </tr>
-                    <%} else if ( propertyName.equals(DBConstants.RDBMS.TRANSACTION_ISOLATION)) {
+                    <%} else if ( propertyName.equals(DBConstants.RDBMS.DEFAULT_TX_ISOLATION)) {
                     %>
                         <tr>
                             <td class="leftCol-small" style="white-space: nowrap;"><label><fmt:message key="<%=propertyName%>"/></label></td>
@@ -1374,18 +1367,18 @@ private Config addNotAvailableFunctions(Config config,String selectedType, HttpS
                 var password;
                 if(!document.getElementById('datasourceType').options[document.getElementById('datasourceType').selectedIndex].value == 'Cassandra'
                         && document.getElementById("xaType").options[document.getElementById("xaType").selectedIndex].value == 'xaType') {
-                    driver = document.getElementById('org.wso2.ws.dataservice.xa_datasource_class').value;
+                    driver = document.getElementById(RDBMS.DATASOURCE_CLASSNAME).value;
                     jdbcUrl = document.getElementById('URL').value;
                     userName = document.getElementById('User').value;
                     password = document.getElementById('Password').value;
                 } else{
-                    driver = document.getElementById('org.wso2.ws.dataservice.driver').value;
-                    jdbcUrl = document.getElementById('org.wso2.ws.dataservice.protocol').value;
+                    driver = document.getElementById(RDBMS.DRIVER_CLASSNAME).value;
+                    jdbcUrl = document.getElementById(RDBMS.URL).value;
                     if(document.getElementById('datasourceType').options[document.getElementById('datasourceType').selectedIndex].value == 'Cassandra') {
-                        jdbcUrl = "jdbc:cassandra://"+document.getElementById('org.wso2.ws.dataservice.protocol').value;
+                        jdbcUrl = "jdbc:cassandra://"+document.getElementById(RDBMS.URL).value;
                     }
-                    userName = document.getElementById('org.wso2.ws.dataservice.user').value;
-                    password = document.getElementById('org.wso2.ws.dataservice.password').value;
+                    userName = document.getElementById(RDBMS.USERNAME).value;
+                    password = document.getElementById(RDBMS.PASSWORD).value;
                 }
 
 

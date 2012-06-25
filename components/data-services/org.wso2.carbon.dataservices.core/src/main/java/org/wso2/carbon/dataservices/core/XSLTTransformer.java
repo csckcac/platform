@@ -51,13 +51,9 @@ public class XSLTTransformer {
 
     private XMLInputFactory xmlInputFactory;
 
-    private int tenantId;
-
     public XSLTTransformer(String xsltPath) throws TransformerConfigurationException,
             DataServiceFault, IOException {
         this.xsltPath = xsltPath;
-        /* set tenant id */
-        this.tenantId = DBUtils.getDeploymentTimeTenantId();
         if (!(xsltPath.startsWith(DBConstants.CONF_REGISTRY_PATH_PREFIX) ||
                 xsltPath.startsWith(DBConstants.GOV_REGISTRY_PATH_PREFIX))) {
             TransformerFactory tFactory = TransformerFactory.newInstance();

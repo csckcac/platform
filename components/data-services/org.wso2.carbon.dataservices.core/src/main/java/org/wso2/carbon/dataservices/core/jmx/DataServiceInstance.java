@@ -142,7 +142,11 @@ public class DataServiceInstance implements DataServiceInstanceMBean {
 		Config config = this.getDataService().getConfig(configId);
 		if (config instanceof SQLConfig) {
 			SQLConfig sqlConfig = (SQLConfig) config;
-			return sqlConfig.isStatsAvailable();
+			try {
+			    return sqlConfig.isStatsAvailable();
+			} catch (Exception e) {
+				throw new RuntimeException(e.getMessage(), e);
+			}
 		} else {
 			return false;
 		}
@@ -152,7 +156,11 @@ public class DataServiceInstance implements DataServiceInstanceMBean {
 		Config config = this.getDataService().getConfig(configId);
 		if (config instanceof SQLConfig) {
 			SQLConfig sqlConfig = (SQLConfig) config;
-			return sqlConfig.getActiveConnectionCount();
+			try {
+			    return sqlConfig.getActiveConnectionCount();
+			} catch (Exception e) {
+				throw new RuntimeException(e.getMessage(), e);
+			}
 		} else {
 			return -1;
 		}

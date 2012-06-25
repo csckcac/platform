@@ -20,7 +20,6 @@ package org.wso2.carbon.dataservices.core.description.config;
 
 import org.wso2.carbon.dataservices.common.DBConstants;
 import org.wso2.carbon.dataservices.common.DBConstants.DataSourceTypes;
-import org.wso2.carbon.dataservices.core.DBCPConnectionManager;
 import org.wso2.carbon.dataservices.core.DBUtils;
 import org.wso2.carbon.dataservices.core.DataServiceFault;
 import org.wso2.carbon.dataservices.core.engine.DataService;
@@ -36,15 +35,16 @@ import java.util.Properties;
 /**
  * This class represents a JNDI based data source configuration.
  */
-public class JNDIConfig extends DBCPSQLConfig {
+public class JNDIConfig extends SQLConfig {
 
+	private DataSource dataSource;
+	
 	public JNDIConfig(DataService dataService, String configId, Map<String, String> properties) 
 			throws DataServiceFault {
 		super(dataService, configId, DataSourceTypes.JNDI, properties);
 		if (!dataService.isServiceInactive()) {
 			this.validateJNDIConfig();
-		    DataSource externalDS = this.createDataSource();
-		    this.setDBCPConnectionManager(new DBCPConnectionManager(this, externalDS));
+		    this.dataSource = this.createDataSource();
 		    try {
 			    this.initSQLDataSource();
 		    } catch (SQLException e) {
@@ -59,13 +59,13 @@ public class JNDIConfig extends DBCPSQLConfig {
         	throw new DataServiceFault("Resource name cannot be null in config '" + 
 					this.getConfigId() + "'");
 		}
-        this.validateDBCPSQLConfig();
 	}
 	
 	private DataSource createDataSource() throws DataServiceFault {
 		Properties properties = new Properties();
 		String username = this.getProperty(DBConstants.JNDI.USERNAME);
-		String password = DBUtils.resolvePasswordValue(this.getDataService(), this.getProperty(DBConstants.JNDI.PASSWORD));
+		String password = DBUtils.resolvePasswordValue(this.getDataService(), 
+				this.getProperty(DBConstants.JNDI.PASSWORD));
 		String factoryClass = this.getProperty(DBConstants.JNDI.INITIAL_CONTEXT_FACTORY);
 		String contextUrl = this.getProperty(DBConstants.JNDI.PROVIDER_URL);
 		String resourceName = this.getProperty(DBConstants.JNDI.RESOURCE_NAME);
@@ -93,6 +93,37 @@ public class JNDIConfig extends DBCPSQLConfig {
 			throw new DataServiceFault(e, 
 					"Naming error occurred while trying to retrieve JDBC Connection from JNDI tree.");
 		}
+	}
+
+	@Override
+	public DataSource getDataSource() throws DataServiceFault {
+		if (this.dataSource == null) {
+		    synchronized (this) {
+		    	if (this.dataSource == null) {
+		    	    this.dataSource = this.createDataSource();
+		    	}
+		    }
+		}
+		return dataSource;
+	}
+
+	@Override
+	public boolean isStatsAvailable() {
+		return false;
+	}
+
+	@Override
+	public int getActiveConnectionCount() {
+		return -1;
+	}
+
+	@Override
+	public int getIdleConnectionCount() {
+		return -1;
+	}
+
+	@Override
+	public void close() {
 	}
 		
 }

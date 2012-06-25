@@ -23,6 +23,8 @@ import java.sql.SQLException;
 import java.util.Map;
 
 import javax.sql.DataSource;
+import javax.sql.XAConnection;
+import javax.transaction.Transaction;
 
 import org.apache.commons.logging.Log;
 import org.apache.commons.logging.LogFactory;
@@ -50,7 +52,7 @@ public abstract class SQLConfig extends Config {
 		super(dataService, configId, type, properties);
 		/* set validation query, if exists */
 		this.validationQuery = this.getProperty(RDBMS.VALIDATION_QUERY);
-		this.processAutoCommitValue();		
+		this.processAutoCommitValue();
 	}
 	
 	private void processAutoCommitValue() throws DataServiceFault {
@@ -88,13 +90,13 @@ public abstract class SQLConfig extends Config {
 		conn.close();
 	}
 		
-	public abstract DataSource getDataSource();
+	public abstract DataSource getDataSource() throws DataServiceFault;
 	
-	public abstract boolean isStatsAvailable();
+	public abstract boolean isStatsAvailable() throws DataServiceFault;
 	
-	public abstract int getActiveConnectionCount();
+	public abstract int getActiveConnectionCount() throws DataServiceFault;
 	
-	public abstract int getIdleConnectionCount();
+	public abstract int getIdleConnectionCount() throws DataServiceFault;
 		
 	public String getValidationQuery() {
 		return validationQuery;
@@ -107,6 +109,17 @@ public abstract class SQLConfig extends Config {
 		DataSource ds = this.getDataSource();
 		if (ds != null) {
 			Connection conn = ds.getConnection();
+			if (this.getDataService().isEnableXA() && this.getDataService().isInTransaction() &&
+					conn instanceof XAConnection) {
+				try {
+					Transaction tx = this.getDataService().getDSSTxManager().
+							getTransactionManager().getTransaction();
+					tx.enlistResource(((XAConnection) conn).getXAResource());
+				} catch (Exception e) {
+					throw new DataServiceFault(e, 
+							"Error in getting current transaction: " + e.getMessage());
+				}
+			}
 			return conn;
 		} else {
 			throw new DataServiceFault("The data source is nonexistent");

@@ -22,6 +22,10 @@ import org.wso2.carbon.dataservices.common.DBConstants.JDBCDriverPrefixes;
 import org.wso2.carbon.dataservices.common.DBConstants.XAJDBCDriverClasses;
 
 import java.sql.Connection;
+import java.util.HashMap;
+import java.util.Iterator;
+import java.util.Map;
+import java.util.Map.Entry;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 
@@ -134,5 +138,32 @@ public class RDBMSUtils {
 			return DBConstants.RDBMSEngines.GENERIC;
 		}
 
+	}
+	
+	public static boolean configPropContainsInV2(String propName) {
+		return DBConstants.RDBMSv2ToV3Map.containsKey(propName);
+	}
+	
+	public static String convertConfigPropFromV2toV3(String propName) {
+		return DBConstants.RDBMSv2ToV3Map.get(propName);
+	}
+
+	public static Map<String, String> convertConfigPropsFromV2toV3(Map<String, String> props) {
+		Entry<String, String> entry;
+		String newPropName, oldPropName;
+		Map<String, String> newValueMap = new HashMap<String, String>();
+		for (Iterator<Entry<String, String>> itr = props.entrySet().iterator(); itr.hasNext();) {
+			entry = itr.next();
+			oldPropName = entry.getKey();
+			if (configPropContainsInV2(oldPropName)) {
+				newPropName = convertConfigPropFromV2toV3(oldPropName);
+				if (newPropName != null) {
+					newValueMap.put(newPropName, props.get(oldPropName));
+				}
+				itr.remove();
+			}
+		}
+		props.putAll(newValueMap);
+		return props;
 	}
 }

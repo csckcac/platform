@@ -25,7 +25,6 @@ import org.osgi.service.component.ComponentContext;
 import org.wso2.carbon.CarbonConstants;
 import org.wso2.carbon.core.multitenancy.SuperTenantCarbonContext;
 import org.wso2.carbon.dataservices.core.listeners.EventBrokerServiceListener;
-import org.wso2.carbon.datasource.DataSourceInformationRepositoryService;
 import org.wso2.carbon.event.core.EventBroker;
 import org.wso2.carbon.ndatasource.core.DataSourceService;
 import org.wso2.carbon.registry.core.service.RegistryService;
@@ -43,8 +42,6 @@ import java.util.List;
  * cardinality="1..1" policy="dynamic"  bind="setRegistryService" unbind="unsetRegistryService"
  * @scr.reference name="user.realmservice.default" interface="org.wso2.carbon.user.core.service.RealmService"
  * cardinality="1..1" policy="dynamic" bind="setRealmService" unbind="unsetRealmService"
- * @scr.reference name="org.wso2.carbon.datasource.DataSourceInformationRepositoryService" interface="org.wso2.carbon.datasource.DataSourceInformationRepositoryService"
- * cardinality="1..1" policy="dynamic" bind="setCarbonDataSourceService" unbind="unsetCarbonDataSourceService"
  * @scr.reference name="eventbrokerbuilder.component" interface="org.wso2.carbon.event.core.EventBroker"
  * cardinality="0..1" policy="dynamic" bind="setEventBroker" unbind="unsetEventBroker"
  * @scr.reference name="datasources.service" interface="org.wso2.carbon.ndatasource.core.DataSourceService"
@@ -57,8 +54,6 @@ public class DataServicesDSComponent {
     private static RegistryService registryService = null;
 
     private static RealmService realmService = null;
-
-    private static DataSourceInformationRepositoryService carbonDataSourceService;
 
     private static EventBroker eventBroker;
     
@@ -126,26 +121,6 @@ public class DataServicesDSComponent {
 
     public static RealmService getRealmService() {
         return realmService;
-    }
-
-    protected void setCarbonDataSourceService(
-            DataSourceInformationRepositoryService dataSourceService) {
-        if (log.isDebugEnabled()) {
-            log.debug("Setting the Carbon Data Sources Service");
-        }
-        DataServicesDSComponent.carbonDataSourceService = dataSourceService;
-    }
-
-    protected void unsetCarbonDataSourceService(
-            DataSourceInformationRepositoryService dataSourceService) {
-        if (log.isDebugEnabled()) {
-            log.debug("Unsetting the Carbon Data Sources Service");
-        }
-        DataServicesDSComponent.carbonDataSourceService = null;
-    }
-
-    public static DataSourceInformationRepositoryService getCarbonDataSourceService() {
-        return carbonDataSourceService;
     }
     
     protected void setDataSourceService(DataSourceService dataSourceService) {

@@ -299,7 +299,7 @@ public class QueryFactory {
         Connection con = null;
 		Config config = dataService.getConfig(configId);
 		// RDBMS data source
-		String connectionURL = config.getProperty(RDBMS.PROTOCOL);
+		String connectionURL = config.getProperty(RDBMS.URL);
         if (connectionURL == null) { // if generic rdbms url is null then check for XA data source url
             connectionURL = DBUtils.getConnectionURL4XADataSource(config);
             if (connectionURL == null) {

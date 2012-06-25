@@ -282,7 +282,7 @@ propertyIterator = configProperties.iterator();
         while (propertyIterator.hasNext()) {
             Property property = (Property) propertyIterator.next();
             String propertyName = property.getName().toString();
-            String propertyValue = property.getValue();
+            String propertyValue = property.getValue().toString();
 %>
 <tr> 
 <td><label><%=propertyName%></label></td>

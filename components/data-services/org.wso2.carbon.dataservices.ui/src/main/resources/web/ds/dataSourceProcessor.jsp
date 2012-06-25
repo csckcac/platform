@@ -43,11 +43,11 @@
     String datasourceId = request.getParameter("datasourceId");
     String datasourceType = request.getParameter("datasourceType");
     String selectBox = request.getParameter("selectbox");
-    String driverClass = request.getParameter(DBConstants.RDBMS.DRIVER);
-    String jdbcUrl = request.getParameter(DBConstants.RDBMS.PROTOCOL);
-    String dsUserName = request.getParameter(DBConstants.RDBMS.USER);
+    String driverClass = request.getParameter(DBConstants.RDBMS.DRIVER_CLASSNAME);
+    String jdbcUrl = request.getParameter(DBConstants.RDBMS.URL);
+    String dsUserName = request.getParameter(DBConstants.RDBMS.USERNAME);
     String dsPassword = request.getParameter(DBConstants.RDBMS.PASSWORD);
-    String xaDataSourceClass = request.getParameter(DBConstants.RDBMS.XA_DATASOURCE_CLASS);
+    String xaDataSourceClass = request.getParameter(DBConstants.RDBMS.DATASOURCE_CLASSNAME);
     String user = request.getParameter("User");
     String url = request.getParameter("URL");
     String password = request.getParameter("Password");
@@ -56,21 +56,20 @@
        propertyCount = Integer.parseInt(request.getParameter("propertyCount")); 
     }
     String xaType = request.getParameter("isXAType");
-    String transactionIsolation = request.getParameter(DBConstants.RDBMS.TRANSACTION_ISOLATION);
+    String transactionIsolation = request.getParameter(DBConstants.RDBMS.DEFAULT_TX_ISOLATION);
     String initialSize = request.getParameter(DBConstants.RDBMS.INITIAL_SIZE);
-    String maxPool = request.getParameter(DBConstants.RDBMS.MAX_POOL_SIZE);
+    String maxPool = request.getParameter(DBConstants.RDBMS.MAX_ACTIVE);
     String maxIdle = request.getParameter(DBConstants.RDBMS.MAX_IDLE);
-    String minPool = request.getParameter(DBConstants.RDBMS.MIN_POOL_SIZE);
+    String minPool = request.getParameter(DBConstants.RDBMS.MIN_IDLE);
     String maxWait = request.getParameter(DBConstants.RDBMS.MAX_WAIT);
     String validationQuery = request.getParameter(DBConstants.RDBMS.VALIDATION_QUERY);
     String testOnBorrow = request.getParameter(DBConstants.RDBMS.TEST_ON_BORROW);
     String testOnReturn = request.getParameter(DBConstants.RDBMS.TEST_ON_RETURN);
     String testWhileIdle = request.getParameter(DBConstants.RDBMS.TEST_WHILE_IDLE);
-    String timeBetweenEvictionRunsMillis = request.getParameter(DBConstants.RDBMS.TIME_BETWEEN_EVICTION_RUNS_MILLS);
-    String numTestsPerEvictionRun = request.getParameter(DBConstants.RDBMS.NUM_TESTS_PER_EVICTION_RUN);
+    String timeBetweenEvictionRunsMillis = request.getParameter(DBConstants.RDBMS.TIME_BETWEEN_EVICTION_RUNS_MILLIS);
     String minEvictableIdleTimeMillis = request.getParameter(DBConstants.RDBMS.MIN_EVICTABLE_IDLE_TIME_MILLIS);
     String removeAbandoned = request.getParameter(DBConstants.RDBMS.REMOVE_ABANDONED);
-    String removeAbandonedTimeout = request.getParameter(DBConstants.RDBMS.REMOVE_ABONDONED_TIMEOUT);
+    String removeAbandonedTimeout = request.getParameter(DBConstants.RDBMS.REMOVE_ABANDONED_TIMEOUT);
     String logAbandoned = request.getParameter(DBConstants.RDBMS.LOG_ABANDONED);
 
     String excelDatasource = request.getParameter(DBConstants.Excel.DATASOURCE);
@@ -102,12 +101,12 @@
 
     String carbonDatasourceName = request.getParameter(DBConstants.CarbonDatasource.NAME);
 
-    String cassandraDriverClass = request.getParameter(DBConstants.RDBMS.DRIVER);
-    String cassandraJdbcUrl = request.getParameter(DBConstants.RDBMS.PROTOCOL);
+    String cassandraDriverClass = request.getParameter(DBConstants.RDBMS.DRIVER_CLASSNAME);
+    String cassandraJdbcUrl = request.getParameter(DBConstants.RDBMS.URL);
     if(cassandraJdbcUrl != null) {
         cassandraJdbcUrl = DBConstants.CASSANDRA.CASSANDRA_URL_PREFIX + cassandraJdbcUrl;
     }
-    String cassandraUserName = request.getParameter(DBConstants.RDBMS.USER);
+    String cassandraUserName = request.getParameter(DBConstants.RDBMS.USERNAME);
     String cassandraPassword = request.getParameter(DBConstants.RDBMS.PASSWORD);
 
     String webConfig;
@@ -190,32 +189,32 @@
                                     break;
                                 }
                             }
-                            updateConfiguration(dsConfig, DBConstants.RDBMS.XA_DATASOURCE_CLASS, xaDataSourceClass);
-                            updateConfiguration(dsConfig, DBConstants.RDBMS.XA_DATASOURCE_PROPS, property);
+                            updateConfiguration(dsConfig, DBConstants.RDBMS.DATASOURCE_CLASSNAME, xaDataSourceClass);
+                            updateConfiguration(dsConfig, DBConstants.RDBMS.DATASOURCE_PROPS, property);
 
-                            dsConfig.removeProperty(DBConstants.RDBMS.DRIVER);
-                            dsConfig.removeProperty(DBConstants.RDBMS.PROTOCOL);
-                            dsConfig.removeProperty(DBConstants.RDBMS.USER);
+                            dsConfig.removeProperty(DBConstants.RDBMS.DRIVER_CLASSNAME);
+                            dsConfig.removeProperty(DBConstants.RDBMS.URL);
+                            dsConfig.removeProperty(DBConstants.RDBMS.USERNAME);
                             dsConfig.removeProperty(DBConstants.RDBMS.PASSWORD);
                         }
                     } else {
-                        updateConfiguration(dsConfig, DBConstants.RDBMS.DRIVER, driverClass);
-                        updateConfiguration(dsConfig, DBConstants.RDBMS.PROTOCOL, jdbcUrl);
-                        updateConfiguration(dsConfig, DBConstants.RDBMS.USER, dsUserName);
+                        updateConfiguration(dsConfig, DBConstants.RDBMS.DRIVER_CLASSNAME, driverClass);
+                        updateConfiguration(dsConfig, DBConstants.RDBMS.URL, jdbcUrl);
+                        updateConfiguration(dsConfig, DBConstants.RDBMS.USERNAME, dsUserName);
                         updateConfiguration(dsConfig, DBConstants.RDBMS.PASSWORD, dsPassword);
 
-                        dsConfig.removeProperty(DBConstants.RDBMS.XA_DATASOURCE_CLASS);
-                        dsConfig.removeProperty(DBConstants.RDBMS.XA_DATASOURCE_PROPS);
+                        dsConfig.removeProperty(DBConstants.RDBMS.DATASOURCE_CLASSNAME);
+                        dsConfig.removeProperty(DBConstants.RDBMS.DATASOURCE_PROPS);
                     }
                     if (!"TRANSACTION_UNKNOWN".equals(transactionIsolation)) {
-                        updateConfiguration(dsConfig, DBConstants.RDBMS.TRANSACTION_ISOLATION, transactionIsolation);
+                        updateConfiguration(dsConfig, DBConstants.RDBMS.DEFAULT_TX_ISOLATION, transactionIsolation);
                     } else {
-                        dsConfig.removeProperty(DBConstants.RDBMS.TRANSACTION_ISOLATION);
+                        dsConfig.removeProperty(DBConstants.RDBMS.DEFAULT_TX_ISOLATION);
                     }
                     updateConfiguration(dsConfig, DBConstants.RDBMS.INITIAL_SIZE, initialSize);
-                    updateConfiguration(dsConfig, DBConstants.RDBMS.MAX_POOL_SIZE, maxPool);
+                    updateConfiguration(dsConfig, DBConstants.RDBMS.MAX_ACTIVE, maxPool);
                     updateConfiguration(dsConfig, DBConstants.RDBMS.MAX_IDLE, maxIdle);
-                    updateConfiguration(dsConfig, DBConstants.RDBMS.MIN_POOL_SIZE, minPool);
+                    updateConfiguration(dsConfig, DBConstants.RDBMS.MIN_IDLE, minPool);
                     updateConfiguration(dsConfig, DBConstants.RDBMS.MAX_WAIT, maxWait);
                     updateConfiguration(dsConfig, DBConstants.RDBMS.VALIDATION_QUERY, validationQuery);
                     if (!"true".equals(testOnBorrow)) {
@@ -233,15 +232,14 @@
                     } else {
                         dsConfig.removeProperty(DBConstants.RDBMS.TEST_WHILE_IDLE);
                     }
-                    updateConfiguration(dsConfig, DBConstants.RDBMS.TIME_BETWEEN_EVICTION_RUNS_MILLS, timeBetweenEvictionRunsMillis);
-                    updateConfiguration(dsConfig, DBConstants.RDBMS.NUM_TESTS_PER_EVICTION_RUN, numTestsPerEvictionRun);
+                    updateConfiguration(dsConfig, DBConstants.RDBMS.TIME_BETWEEN_EVICTION_RUNS_MILLIS, timeBetweenEvictionRunsMillis);
                     updateConfiguration(dsConfig, DBConstants.RDBMS.MIN_EVICTABLE_IDLE_TIME_MILLIS, minEvictableIdleTimeMillis);
                     if (!"false".equals(removeAbandoned)) {
                         updateConfiguration(dsConfig, DBConstants.RDBMS.REMOVE_ABANDONED, removeAbandoned);
                     } else {
                         dsConfig.removeProperty(DBConstants.RDBMS.REMOVE_ABANDONED);
                     }
-                    updateConfiguration(dsConfig, DBConstants.RDBMS.REMOVE_ABONDONED_TIMEOUT, removeAbandonedTimeout);
+                    updateConfiguration(dsConfig, DBConstants.RDBMS.REMOVE_ABANDONED_TIMEOUT, removeAbandonedTimeout);
                     if (!"false".equals(logAbandoned)) {
                         updateConfiguration(dsConfig, DBConstants.RDBMS.LOG_ABANDONED, logAbandoned);
                     } else {
@@ -281,10 +279,10 @@
                 } else if (DBConstants.DataSourceTypes.WEB.equals(datasourceType)) {
                     updateConfiguration(dsConfig, DBConstants.WebDatasource.WEB_CONFIG, webConfig);
                 } else if (DBConstants.DataSourceTypes.CASSANDRA.equals(datasourceType)) {
-                    updateConfiguration(dsConfig, DBConstants.RDBMS.PROTOCOL, cassandraJdbcUrl);
-                    updateConfiguration(dsConfig, DBConstants.RDBMS.USER, cassandraUserName);
+                    updateConfiguration(dsConfig, DBConstants.RDBMS.URL, cassandraJdbcUrl);
+                    updateConfiguration(dsConfig, DBConstants.RDBMS.USERNAME, cassandraUserName);
                     updateConfiguration(dsConfig, DBConstants.RDBMS.PASSWORD, cassandraPassword);
-                    updateConfiguration(dsConfig, DBConstants.RDBMS.DRIVER, cassandraDriverClass);
+                    updateConfiguration(dsConfig, DBConstants.RDBMS.DRIVER_CLASSNAME, cassandraDriverClass);
                 }
             }
         }

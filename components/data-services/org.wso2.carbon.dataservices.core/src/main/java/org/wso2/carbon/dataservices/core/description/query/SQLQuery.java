@@ -181,7 +181,7 @@ public class SQLQuery extends Query implements BatchRequestParticipant {
         this.resultOnlyOutParams = this.calculateResultOnlyOutParams();
         /* set the optimal JDBC result set fetch size */
         this.optimalRSFetchSize = DBUtils.getOptimalRSFetchSizeForRDBMS(
-                this.getConfig().getProperty(RDBMS.PROTOCOL));
+                this.getConfig().getProperty(RDBMS.URL));
         /* set batch update support for this query */
         try {
             this.hasBatchQuerySupport = this.getDataService().isBatchRequestsEnabled() &&

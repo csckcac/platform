@@ -20,8 +20,6 @@ package org.wso2.carbon.dataservices.core.script;
 
 import org.apache.commons.logging.Log;
 import org.apache.commons.logging.LogFactory;
-import org.apache.synapse.commons.datasource.DataSourceInformationRepository;
-import org.apache.synapse.commons.datasource.DataSourceRepositoryManager;
 import org.wso2.carbon.dataservices.common.DBConstants;
 import org.wso2.carbon.dataservices.common.DBConstants.ResultTypes;
 import org.wso2.carbon.dataservices.core.DBUtils;
@@ -36,6 +34,9 @@ import org.wso2.carbon.dataservices.core.engine.*;
 import org.wso2.carbon.dataservices.core.engine.CallQuery.WithParam;
 import org.wso2.carbon.dataservices.core.internal.DataServicesDSComponent;
 import org.wso2.carbon.dataservices.core.validation.Validator;
+import org.wso2.carbon.ndatasource.common.DataSourceException;
+import org.wso2.carbon.ndatasource.core.CarbonDataSource;
+import org.wso2.carbon.ndatasource.core.DataSourceService;
 
 import javax.sql.DataSource;
 import javax.xml.namespace.QName;
@@ -119,15 +120,21 @@ public class DSGenerator {
 
 	private static Connection createConnection(String dataSourceId)
             throws SQLException, DataServiceFault {
-        DataSourceInformationRepository repository = DataServicesDSComponent
-                .getCarbonDataSourceService()
-                .getDataSourceInformationRepository();
-        DataSource dataSource = ((DataSourceRepositoryManager) (repository.getRepositoryListener())).
-                getDataSource(dataSourceId);
-        if (dataSource == null) {
-            throw new DataServiceFault("DataSource "+ dataSourceId +" not available.");
+        DataSourceService dataSourceService = DataServicesDSComponent.getDataSourceService();
+        CarbonDataSource cds;
+		try {
+			cds = dataSourceService.getDataSource(dataSourceId);
+		} catch (DataSourceException e) {
+			throw new DataServiceFault(e, "Error in retrieving data source: " + e.getMessage());
+		}
+        if (cds == null) {
+            throw new DataServiceFault("DataSource '" + dataSourceId + "' is not available.");
         }
-        return dataSource.getConnection();
+        Object ds = cds.getDSObject();
+        if (!(ds instanceof DataSource)) {
+        	throw new DataServiceFault("DataSource '" + dataSourceId + "' is not an RDBMS data source.");
+        }
+        return ((DataSource) ds).getConnection();
     }
 
 	private DataService generateService(String datasourceId, String dbName,

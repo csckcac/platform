@@ -764,7 +764,7 @@ public class DBUtils {
 
     public static String getConnectionURL4XADataSource(Config config) throws XMLStreamException {
         String connectionURL = null;
-        String connectionProperty = config.getProperty(DBConstants.RDBMS.XA_DATASOURCE_PROPS);
+        String connectionProperty = config.getProperty(DBConstants.RDBMS.DATASOURCE_PROPS);
         if (connectionProperty != null) {
             OMElement payload = AXIOMUtil.stringToOM(connectionProperty);
             Map<String, String> properties = extractProperties(payload);

@@ -161,13 +161,10 @@ public class WSDLToDataService {
 	private static Config getDummyConfig(DataService dataService,
 			String configId) throws DataServiceFault {
 		Map<String, String> props = new HashMap<String, String>();
-		props.put(DBConstants.RDBMS.DRIVER, null);
-		props.put(DBConstants.RDBMS.PROTOCOL, null);
-		props.put(DBConstants.RDBMS.USER, null);
+		props.put(DBConstants.RDBMS.DRIVER_CLASSNAME, null);
+		props.put(DBConstants.RDBMS.URL, null);
+		props.put(DBConstants.RDBMS.USERNAME, null);
 		props.put(DBConstants.RDBMS.PASSWORD, null);
-		props.put(DBConstants.RDBMS.MIN_POOL_SIZE, null);
-		props.put(DBConstants.RDBMS.MAX_POOL_SIZE, null);
-		props.put(DBConstants.RDBMS.VALIDATION_QUERY, null);		
 		RDBMSConfig config = new RDBMSConfig(dataService, configId, props);		
 		return config;
 	}

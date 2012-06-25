@@ -20,19 +20,18 @@ package org.wso2.carbon.dataservices.core.description.config;
 
 import org.apache.commons.logging.Log;
 import org.apache.commons.logging.LogFactory;
-import org.apache.synapse.commons.datasource.DataSourceInformation;
-import org.apache.synapse.commons.datasource.DataSourceInformationRepository;
-import org.apache.synapse.commons.datasource.DataSourceRepositoryManager;
 import org.wso2.carbon.dataservices.common.DBConstants;
 import org.wso2.carbon.dataservices.common.DBConstants.DataSourceTypes;
 import org.wso2.carbon.dataservices.core.DataServiceFault;
 import org.wso2.carbon.dataservices.core.engine.DataService;
 import org.wso2.carbon.dataservices.core.internal.DataServicesDSComponent;
-import org.wso2.carbon.datasource.DataSourceInformationRepositoryService;
+import org.wso2.carbon.ndatasource.common.DataSourceException;
+import org.wso2.carbon.ndatasource.core.CarbonDataSource;
+import org.wso2.carbon.ndatasource.core.DataSourceService;
+import org.wso2.carbon.ndatasource.rdbms.RDBMSDataSourceConstants;
 
 import javax.sql.DataSource;
 import java.util.ArrayList;
-import java.util.Iterator;
 import java.util.List;
 import java.util.Map;
 
@@ -63,36 +62,48 @@ public class CarbonDataSourceConfig extends SQLConfig {
 		return dataSourceName;
 	}
 
-	private DataSource initDataSource() {
-        DataSourceInformationRepositoryService dataSourceService =
-                DataServicesDSComponent.getCarbonDataSourceService();
+	private DataSource initDataSource() throws DataServiceFault {
+        DataSourceService dataSourceService = DataServicesDSComponent.getDataSourceService();
         if (dataSourceService == null) {
-            log.error("Carbon DataSource Service is not initialized properly");
-            return null;
+            throw new DataServiceFault("Carbon DataSource Service is not initialized properly");
         }
-		DataSourceInformationRepository datasourceRepo =
-                dataSourceService.getDataSourceInformationRepository();
-		return ((DataSourceRepositoryManager) (
-				datasourceRepo.getRepositoryListener())).getDataSource(this.getDataSourceName());
+        CarbonDataSource cds;
+		try {
+			cds = dataSourceService.getDataSource(this.getDataSourceName());
+			if (cds == null) {
+				throw new DataServiceFault("Cannot find data source with the name: " + this.getDataSourceName());
+			}
+			Object result = cds.getDSObject();
+			if (!(result instanceof DataSource)) {
+				throw new DataServiceFault("The data source '" + this.getDataSourceName() +
+						"' is not of type RDBMS");
+			}
+			return (DataSource) result;
+		} catch (DataSourceException e) {
+			throw new DataServiceFault(e, "Error in retrieving data source: " + e.getMessage());
+		}        
 	}
 	
 	public static List<String> getCarbonDataSourceNames() {
-		DataSourceInformationRepositoryService dataSourceService = DataServicesDSComponent.
-				getCarbonDataSourceService();
+		DataSourceService dataSourceService = DataServicesDSComponent.getDataSourceService();
 		if (dataSourceService == null) {
 			log.error("CarbonDataSourceConfig.getCarbonDataSourceNames(): " +
                     "Carbon data source service is not available, returning empty list");
 			return new ArrayList<String>();
 		}
-		List<String> namesList = new ArrayList<String>();
-		Iterator<DataSourceInformation> dataItr = dataSourceService.
-				getDataSourceInformationRepository().getAllDataSourceInformation();
-		DataSourceInformation dataInfo = null;
-		while (dataItr.hasNext()) {
-			dataInfo = dataItr.next();
-			namesList.add(dataInfo.getDatasourceName());
+		try {
+		    List<CarbonDataSource> dsList = dataSourceService.getAllDataSourcesForType(
+				    RDBMSDataSourceConstants.RDBMS_DATASOURCE_TYPE);
+		    List<String> result = new ArrayList<String>(dsList.size());
+		    for (CarbonDataSource cds : dsList) {
+		    	result.add(cds.getDSMInfo().getName());
+		    }
+		    return result;
+		} catch (Exception e) {
+			log.error("Error retrieving data source list, returning empty list: " + 
+		            e.getMessage(), e);
+			return new ArrayList<String>();
 		}
-		return namesList;
 	}
 
 	@Override

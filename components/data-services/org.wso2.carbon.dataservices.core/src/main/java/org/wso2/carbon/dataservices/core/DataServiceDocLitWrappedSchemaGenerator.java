@@ -683,7 +683,7 @@ public class DataServiceDocLitWrappedSchemaGenerator {
 	 * Represents commonly used parameters in the schema generator,
 	 * an instance of this is passed around the methods.
 	 */
-	private static class CommonParams {
+	public static class CommonParams {
 		
 		private AxisService axisService;
 		

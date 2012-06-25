@@ -270,6 +270,7 @@
 
             <plugin>
                 <artifactId>maven-clean-plugin</artifactId>
+                <version>${maven-clean-plugin.version}</version>
                 <executions>
                     <execution>
                         <id>auto-clean</id>

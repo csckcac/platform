@@ -632,6 +632,10 @@
         <saxon.version>9.1.0.8</saxon.version>
         <saxon.bps.wso2.version>9.0.0.x-wso2v1</saxon.bps.wso2.version>
         <build-helper-maven-plugin.version>1.7</build-helper-maven-plugin.version>
+        <maven-compiler-plugin.version>2.3.1</maven-compiler-plugin.version>
+        <maven-resources-plugin.version>2.5</maven-resources-plugin.version>
+        <maven-clean-plugin.version>2.5</maven-clean-plugin.version>
+        <maven-surefire-plugin.version>2.12</maven-surefire-plugin.version>
     </properties>
 
 

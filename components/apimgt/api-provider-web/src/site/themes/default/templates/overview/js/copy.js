@@ -20,3 +20,12 @@ var copyAPIToNewVersion = function (provider) {
               }, "json");
 
 };
+$(document).ready(
+                 function() {
+                     $('#copyApiForm').validate({
+                         submitHandler: function(form) {
+                             copyAPIToNewVersion(provider)
+                         }
+                     });
+                 }
+        );

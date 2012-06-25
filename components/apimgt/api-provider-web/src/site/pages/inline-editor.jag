@@ -11,7 +11,7 @@ var site = require("/site/conf/site.json");
     jagg.render({
         "name":"page/base",
         "inputs":{
-            "title":"API Provider- Inline Editor",
+            "title":"API Publisher- Inline Editor",
              "header":{
                 "name":"menu/primary"
             },

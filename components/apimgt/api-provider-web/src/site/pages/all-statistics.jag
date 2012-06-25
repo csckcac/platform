@@ -12,7 +12,7 @@ var site = require("/site/conf/site.json");
     jagg.render({
         "name":"page/base",
         "inputs":{
-            "title":"API Provider- All Statistics",
+            "title":"API Publisher - All Statistics",
              "header":{
                 "name":"menu/primary"
             },

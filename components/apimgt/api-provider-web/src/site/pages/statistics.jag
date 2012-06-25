@@ -17,7 +17,7 @@ var site = require("/site/conf/site.json");
     jagg.render({
         "name":"page/base",
         "inputs":{
-            "title":"API Provider- Statistics",
+            "title":"API Publisher- Statistics",
              "header":{
                 "name":"menu/primary"
             },

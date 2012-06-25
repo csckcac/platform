@@ -8,7 +8,7 @@
         <version>0.9.0-ALPHA</version>
     </parent>
     <modelVersion>4.0.0</modelVersion>
-    <artifactId>org.wso2.carbon.hostobjects.log</artifactId>
+    <artifactId>org.jaggeryjs.hostobjects.log</artifactId>
     <packaging>bundle</packaging>
     <name>Log HostObjects</name>
     <url>http://wso2.org</url>

@@ -12,11 +12,11 @@
 		<deployer>
 			<directory>apps</directory>
 			<extension>zip</extension>
-			<class>org.wso2.carbon.jaggery.deployer.JaggeryDeployer</class>
+			<class>org.jaggeryjs.jaggery.deployer.JaggeryDeployer</class>
 		</deployer>
         <deployer>
             <directory>apps</directory>
-            <class>org.wso2.carbon.jaggery.deployer.JaggeryDeployer</class>
+            <class>org.jaggeryjs.jaggery.deployer.JaggeryDeployer</class>
         </deployer>
 	</deployers>
 </component>

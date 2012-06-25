@@ -35,14 +35,14 @@ import org.wso2.carbon.integration.framework.ClientConnectionUtil;
 public class FeedHostObjectTestCase {
 
     @Test(groups = {"jaggery"},
-          description = "Test feed host object")
+          description = "Test org.jaggeryjs.hostobjects.feed1 host object")
     public void testFeed() {
         ClientConnectionUtil.waitForPort(9763);
         
         String finalOutput = null;
         
         try {
-        	URL jaggeryURL = new URL("http://localhost:9763/testapp/feed.jag");
+        	URL jaggeryURL = new URL("http://localhost:9763/testapp/org.jaggeryjs.hostobjects.feed1.jag");
         	URLConnection jaggeryServerConnection = jaggeryURL.openConnection();
         	BufferedReader in = new BufferedReader(new InputStreamReader(
         			jaggeryServerConnection.getInputStream()));

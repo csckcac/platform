@@ -27,7 +27,7 @@
             <artifactId>org.wso2.carbon.logging</artifactId>
         </dependency>
         <dependency>
-            <groupId>rhino</groupId>
+            <groupId>rhino.wso2</groupId>
             <artifactId>js</artifactId>
         </dependency>
         <dependency>

@@ -24,7 +24,7 @@
             <artifactId>commons-logging</artifactId>
         </dependency>
         <dependency>
-            <groupId>rhino</groupId>
+            <groupId>rhino.wso2</groupId>
             <artifactId>js</artifactId>
         </dependency>
         <dependency>
@@ -58,7 +58,7 @@
                         <Bundle-SymbolicName>${project.artifactId}</Bundle-SymbolicName>
                         <Bundle-Name>${project.artifactId}</Bundle-Name>
                         <Export-Package>
-                            org.wso2.carbon.hostobjects.uri.*;
+                            org.jaggeryjs.hostobjects.uri.*;
                         </Export-Package>
                         <Import-Package>
                             javax.servlet.*;version="2.4.0",

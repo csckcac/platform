@@ -122,15 +122,15 @@
                                     <fileset dir="src/resources/jar"/>
                                     <zipfileset includes="**/*" src="target/wso2carbon-core-${carbon.platform.version}/repository/components/plugins/org.wso2.carbon.jaggery.deployer_${jaggery.components.version}.jar"/>
                                 </jar-->
-                                <unzip src="target/wso2carbon-core-${carbon.platform.version}/repository/components/plugins/org.wso2.carbon.jaggery.deployer_${jaggery.components.version}.jar"
+                                <unzip src="target/wso2carbon-core-${carbon.platform.version}/repository/components/plugins/org.jaggeryjs.jaggery.deployer_${jaggery.deployer.osgi.version}.jar"
                                        dest="${jardir}/deployer">
                                     <patternset>
                                         <exclude name="**/component.xml"/>
                                     </patternset>
                                 </unzip>
                                 <copy file="src/resources/jar/META-INF/component.xml" todir="${jardir}/deployer/META-INF"/>
-                                <delete file="target/wso2carbon-core-${carbon.platform.version}/repository/components/plugins/org.wso2.carbon.jaggery.deployer_${jaggery.components.version}.jar"></delete>
-                                <zip destfile="target/wso2carbon-core-${carbon.platform.version}/repository/components/plugins/org.wso2.carbon.jaggery.deployer_${jaggery.components.version}.jar" basedir="${jardir}/deployer"/>
+                                <delete file="target/wso2carbon-core-${carbon.platform.version}/repository/components/plugins/org.jaggeryjs.jaggery.deployer_${jaggery.deployer.osgi.version}.jar"></delete>
+                                <zip destfile="target/wso2carbon-core-${carbon.platform.version}/repository/components/plugins/org.jaggeryjs.jaggery.deployer_${jaggery.deployer.osgi.version}.jar" basedir="${jardir}/deployer"/>
 
 
                                 <delete file="target/jaggery-${carbon.product.version}.zip"/>

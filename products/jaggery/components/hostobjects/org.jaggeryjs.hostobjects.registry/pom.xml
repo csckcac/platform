@@ -34,7 +34,7 @@
             <artifactId>commons-io</artifactId>
         </dependency>
         <dependency>
-            <groupId>rhino</groupId>
+            <groupId>rhino.wso2</groupId>
             <artifactId>js</artifactId>
         </dependency>
         <dependency>

@@ -85,10 +85,7 @@
 
                             <featureArtifacts>
                                 <featureArtifactDef>
-                                    org.wso2.carbon:org.wso2.carbon.jaggery.server.feature:1.0.0-SNAPSHOT
-                                </featureArtifactDef>
-                                <featureArtifactDef>
-                                    org.wso2.carbon:org.wso2.carbon.jaggery.ui.feature:1.0.0-SNAPSHOT
+                                    org.jaggeryjs:org.jaggeryjs.feature:0.9.0-ALPHA
                                 </featureArtifactDef>
                                 <featureArtifactDef>
                                     org.jaggeryjs:org.jaggeryjs.admin.styles.feature:0.9.0-ALPHA
@@ -117,12 +114,8 @@
 
                             <features>
                                 <feature>
-                                    <id>org.wso2.carbon.jaggery.server.feature.group</id>
-                                    <version>1.0.0-SNAPSHOT</version>
-                                </feature>
-                                <feature>
-                                    <id>org.wso2.carbon.jaggery.ui.feature.group</id>
-                                    <version>1.0.0-SNAPSHOT</version>
+                                    <id>org.jaggeryjs.feature.group</id>
+                                    <version>0.9.0-ALPHA</version>
                                 </feature>
                                 <feature>
                                     <id>org.wso2.jaggery.styles.feature.group</id>

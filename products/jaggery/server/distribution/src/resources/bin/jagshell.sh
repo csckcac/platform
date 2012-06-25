@@ -49,4 +49,4 @@ if [ -z "$MY_PATH" ] ; then
   exit 1  # fail
 fi
 
-java -cp "$MY_PATH/../carbon/repository/components/plugins/org.wso2.carbon.jaggery.tools-1.0-SNAPSHOT.jar:$MY_PATH/../carbon/repository/components/plugins/*" org.wso2.carbon.jaggery.tools.CommandLineClient $1
+java -cp "$MY_PATH/../carbon/repository/components/plugins/org.wso2.carbon.jaggery.tools-1.0-SNAPSHOT.jar:$MY_PATH/../carbon/repository/components/plugins/*" org.jaggeryjs.jaggery.tools.CommandLineClient $1

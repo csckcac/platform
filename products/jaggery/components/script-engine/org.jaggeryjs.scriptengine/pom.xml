@@ -27,7 +27,7 @@
             <artifactId>commons-httpclient</artifactId>
         </dependency>
         <dependency>
-            <groupId>rhino</groupId>
+            <groupId>rhino.wso2</groupId>
             <artifactId>js</artifactId>
         </dependency>
         <dependency>
@@ -53,7 +53,7 @@
                         <Bundle-SymbolicName>${project.artifactId}</Bundle-SymbolicName>
                         <Bundle-Name>${project.artifactId}</Bundle-Name>
                         <Export-Package>
-                            org.wso2.carbon.scriptengine.*;
+                            org.jaggeryjs.scriptengine.*;
                         </Export-Package>
                         <DynamicImport-Package>*</DynamicImport-Package>
                     </instructions>

@@ -22,11 +22,11 @@
             <artifactId>commons-logging</artifactId>
         </dependency>
         <dependency>
-            <groupId>rhino</groupId>
+            <groupId>rhino.wso2</groupId>
             <artifactId>js</artifactId>
         </dependency>
         <dependency>
-            <groupId>commons-fileupload</groupId>
+            <groupId>commons-fileupload.wso2</groupId>
             <artifactId>commons-fileupload</artifactId>
         </dependency>
         <dependency>

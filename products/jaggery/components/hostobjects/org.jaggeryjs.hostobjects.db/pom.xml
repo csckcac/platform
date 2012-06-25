@@ -26,11 +26,11 @@
             <artifactId>commons-logging</artifactId>
         </dependency>
         <dependency>
-            <groupId>commons-pool</groupId>
+            <groupId>commons-pool.wso2</groupId>
             <artifactId>commons-pool</artifactId>
         </dependency>
         <dependency>
-            <groupId>rhino</groupId>
+            <groupId>rhino.wso2</groupId>
             <artifactId>js</artifactId>
         </dependency>
         <dependency>

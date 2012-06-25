@@ -38,7 +38,7 @@ Release Notes - Jaggery - Version M5
     * [JAGGERY-212] - App depoyer doesn't validate incorrect folder stuctures
     * [JAGGERY-214] - Binary Distribution Directory Structure in the README need to be updated to reflect the new structure
     * [JAGGERY-215] - Server startup instructions given in the INSTALL.txt need to be updated to reflect the changes
-    * [JAGGERY-216] - Gets "ClassNotFoundException: org.wso2.carbon.jaggery.tools.CommandLineClient" for jaggery.sh
+    * [JAGGERY-216] - Gets "ClassNotFoundException: org.jaggeryjs.jaggery.tools.CommandLineClient" for jaggery.sh
     * [JAGGERY-217] - Modules aren't loading when the server is started from $CARBON_HOME/bin/wso2server.sh
     * [JAGGERY-218] - Warning "Could not create directory /apps" appears when starting from $CARBON_HOME/bin/wso2server.sh
     * [JAGGERY-219] - Cannot add apps when started as a carbon server

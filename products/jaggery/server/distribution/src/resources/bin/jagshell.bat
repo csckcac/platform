@@ -36,6 +36,6 @@ echo "You must set the JAVA_HOME variable before running Jaggery command line cl
 goto end
 
 :runcommandlinetool
-java -cp "%~dp0../carbon/repository/components/plugins/org.wso2.carbon.jaggery.tools-1.0-SNAPSHOT.jar;%~dp0../carbon/repository/components/plugins/*" org.wso2.carbon.jaggery.tools.CommandLineClient %1
+java -cp "%~dp0../carbon/repository/components/plugins/org.wso2.carbon.jaggery.tools-1.0-SNAPSHOT.jar;%~dp0../carbon/repository/components/plugins/*" org.jaggeryjs.jaggery.tools.CommandLineClient %1
 
 :END

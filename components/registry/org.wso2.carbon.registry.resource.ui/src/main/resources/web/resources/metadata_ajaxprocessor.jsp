@@ -175,14 +175,25 @@
                         encodedActivePath = URLEncoder.encode(encodedActivePath, "UTF-8");
                     } catch (Exception ignore) {}
                 %>
-
+                <%
+                    if(Boolean.valueOf(metadata.getDeleteLocked()) || Boolean.valueOf(metadata.getWriteLocked())) {
+                %>
                 <a
                         style="background-image:url(../resources/images/icon-restore.gif)"
                         class="icon-link registryWriteOperation"
-                        href="./restore_version_ajaxprocessor.jsp?versionPath=<%=versionRestoreFullpath%>&path=<%=encodedActivePath%>"
+                        onclick="retentionError();"
                         >
                     <fmt:message key="restore.to.this.version"/> (<span style="text-decoration:italic"><%=decodedPath%></span>) </a>
             </td>
+            <% } else { %>
+            <a
+                    style="background-image:url(../resources/images/icon-restore.gif)"
+                    class="icon-link registryWriteOperation"
+                    href="./restore_version_ajaxprocessor.jsp?versionPath=<%=versionRestoreFullpath%>&path=<%=encodedActivePath%>"
+                    >
+                <fmt:message key="restore.to.this.version"/> (<span style="text-decoration:italic"><%=decodedPath%></span>) </a>
+           </td>
+            <% } %>
             <% } %>
             <% } %>
             <td align="right" style="text-align:right !important;">

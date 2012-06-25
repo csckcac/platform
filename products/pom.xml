@@ -231,20 +231,7 @@
            </modules>
         </profile>
 		
-		<!-- WSO2 Jaggery profile  -->
-		<profile>
-			<id>product-jaggery</id>
-			<activation>
-				<property>
-					<name>product</name>
-					<value>jaggery</value>
-				</property>
-			</activation>
-			<modules>
-				<!--<module>integration/security-verifier</module>-->
-				<module>jaggery</module>
-		   </modules>
-		</profile>
+
 
         <!-- WSO2 All products  -->
         <profile>
@@ -269,7 +256,6 @@
             <module>wsf</module>
             <module>csg</module>
             <module>apimgt</module>
-            <module>jaggery</module>
             <module>gs</module>
         </modules>
 	    <build>

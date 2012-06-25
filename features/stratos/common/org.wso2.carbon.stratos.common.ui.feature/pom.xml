@@ -106,9 +106,7 @@
                             	<!-- Tenant Mgmt-->
 								<bundleDef>org.wso2.carbon:org.wso2.carbon.tenant.mgt.ui</bundleDef>
 								<bundleDef>org.wso2.carbon:org.wso2.carbon.stratos.common.stub</bundleDef>
-								<bundleDef>org.wso2.carbon:org.wso2.carbon.theme.mgt.ui</bundleDef>
 								<bundleDef>org.wso2.carbon:org.wso2.carbon.tenant.mgt.stub</bundleDef>
-								<bundleDef>org.wso2.carbon:org.wso2.carbon.theme.mgt.stub</bundleDef>
                             	<!-- Tenant Mgmt End-->
                             	                            
                             </bundles>

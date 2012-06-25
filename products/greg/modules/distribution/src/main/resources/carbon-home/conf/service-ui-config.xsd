@@ -48,6 +48,7 @@
       <xs:attribute name="path" type="xs:boolean"/>
       <xs:attribute name="required" type="xs:boolean"/>
       <xs:attribute name="type" use="required" type="xs:NCName"/>
+      <xs:attribute name="isRichText" type="xs:boolean"/>
     </xs:complexType>
   </xs:element>
   <xs:element name="name">

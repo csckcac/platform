@@ -227,9 +227,9 @@ public class RegistrySession implements Session {
 
     public Item getItem(String s) throws PathNotFoundException, RepositoryException {
         // TODO : RMOVE THIS AFTER TCK TEST, A DUMMY FOR NODE DEF test
-//        if (s.equals("/testroot")) {
-//            return getRootNode().getNode("testroot");
-//        }
+        if (s.equals("/testroot")) {
+            return getRootNode().getNode("testroot");
+        }
 
         Item anItem = null;
         CollectionImpl collection = null;

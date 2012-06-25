@@ -46,11 +46,11 @@ public class RegistryRetentionManager implements RetentionManager {
 
     public RegistryRetentionManager(RegistrySession session) {
         this.session = session;
-//       loadTCKTestdata();
+       loadTCKTestdata();
     }
 
 //    TODO REMOVE from svn, as this just need for TCK running
-    private void loadTCKTestdata(){
+    private void loadTCKTestdata() {
         try {
             TCKTestDataLoader.loadRetentionPolicies(session);
         } catch (RepositoryException e) {

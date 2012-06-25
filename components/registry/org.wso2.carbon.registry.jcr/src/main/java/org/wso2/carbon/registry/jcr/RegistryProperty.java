@@ -35,8 +35,10 @@ import javax.jcr.version.VersionException;
 import java.io.ByteArrayInputStream;
 import java.io.InputStream;
 import java.math.BigDecimal;
+import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.Calendar;
+import java.util.List;
 
 
 public class RegistryProperty implements Property {
@@ -45,119 +47,110 @@ public class RegistryProperty implements Property {
     Value[] values;
     String[] stringMultipleVals;
     private String name;
-    private CollectionImpl collectionP;  //a collection which has the required property
+    //    private CollectionImpl collectionP;  //a collection which has the required property
     private RegistrySession session;
     private boolean isResource = false;
-    private Resource collectionR = null;
+    //    private Resource collectionR = null;
     private static Log log = LogFactory.getLog(RegistryNode.class);
-
+    private String path = "";
 
     public RegistryProperty(RegistryNode node, String name) {
 
         this.name = name;
     }
 
-    public RegistryProperty(CollectionImpl aProp, RegistrySession session, String name, String value) {
-        collectionP = aProp;
+    public RegistryProperty(String path, RegistrySession session, String name, String value) {
+        this.path = path;
         this.session = session;
         this.name = name;
         setQValue(value);
-
     }
 
-    public RegistryProperty(CollectionImpl aProp, RegistrySession session, String name, String[] values) {
-        collectionP = aProp;
+    public RegistryProperty(String path, RegistrySession session, String name, String[] values) {
+        this.path = path;
         this.session = session;
         this.name = name;
         setQValue(values);
     }
 
-    public RegistryProperty(CollectionImpl aProp, RegistrySession session, String name, Node node) {
-        collectionP = aProp;
+    public RegistryProperty(String path, RegistrySession session, String name, Node node) {
+        this.path = path;
         this.session = session;
         this.name = name;
         setQValue(node);
     }
 
-       public RegistryProperty(CollectionImpl aProp, RegistrySession session, String name, Binary binary) {
-        collectionP = aProp;
+    public RegistryProperty(String path, RegistrySession session, String name, Binary binary) {
+        this.path = path;
         this.session = session;
         this.name = name;
         setQValue(binary);
     }
 
-    public RegistryProperty(Resource aProp, RegistrySession session, String name, BigDecimal bg) {
+    public RegistryProperty(String path, RegistrySession session, String name, BigDecimal bg) {
         isResource = true;
-        collectionR = aProp;
+        this.path = path;
         this.session = session;
         this.name = name;
         setQValue(bg);
     }
 
-    public RegistryProperty(Resource aProp, RegistrySession session, String name, Calendar calendar) {
+    public RegistryProperty(String path, RegistrySession session, String name, Calendar calendar) {
         isResource = true;
-        collectionR = aProp;
+        this.path = path;
         this.session = session;
         this.name = name;
         setQValue(calendar);
     }
 
-    public RegistryProperty(Resource aProp, RegistrySession session, String name, InputStream inputStream) {
+    public RegistryProperty(String path, RegistrySession session, String name, InputStream inputStream) {
         isResource = true;
-        collectionR = aProp;
+        this.path = path;
         this.session = session;
         this.name = name;
         setQValue(inputStream);
     }
 
-    public RegistryProperty(Resource aProp, RegistrySession session, String name, Value val) {
+    public RegistryProperty(String path, RegistrySession session, String name, Value val) {
         isResource = true;
-        collectionR = aProp;
+        this.path = path;
         this.session = session;
         this.name = name;
         setQValue(val);
     }
 
-    public RegistryProperty(Resource aProp, RegistrySession session, String name, Value[] vals) {
+    public RegistryProperty(String path, RegistrySession session, String name, Value[] vals) {
         isResource = true;
-        collectionR = aProp;
+        this.path = path;
         this.session = session;
         this.name = name;
         setQValue(vals);
     }
 
-    public RegistryProperty(Resource aProp, RegistrySession session, String name, boolean val) {
+    public RegistryProperty(String path, RegistrySession session, String name, boolean val) {
         isResource = true;
-        collectionR = aProp;
+        this.path = path;
         this.session = session;
         this.name = name;
         setQValue(val);
     }
 
 
-    public RegistryProperty(Resource aProp, RegistrySession session, String name, double val) {
+    public RegistryProperty(String path, RegistrySession session, String name, double val) {
         isResource = true;
-        collectionR = aProp;
+        this.path = path;
         this.session = session;
         this.name = name;
         setQValue(val);
     }
 
 
-    public RegistryProperty(Resource aProp, RegistrySession session, String name, long val) {
+    public RegistryProperty(String path, RegistrySession session, String name, long val) {
         isResource = true;
-        collectionR = aProp;
+        this.path = path;
         this.session = session;
         this.name = name;
         setQValue(val);
-    }
-
-    public CollectionImpl getPropColl() {    //mine
-
-        if (isResource) {
-            return null;
-        } else
-            return collectionP;
     }
 
     private void validatePropertyModifyPrivilege() throws RepositoryException {
@@ -171,6 +164,7 @@ public class RegistryProperty implements Property {
         validatePropertyModifyPrivilege();
         if (value != null) {
             this.value = (RegistryValue) value;
+            persistNewPropertyValue("value", value);
         } else {
             remove();
         }
@@ -191,17 +185,12 @@ public class RegistryProperty implements Property {
 
     public void setValue(Value[] values) throws ValueFormatException, VersionException, LockException, ConstraintViolationException, RepositoryException {
         validatePropertyModifyPrivilege();
-
         if (values != null) {
-
             this.values = Arrays.copyOf(values, values.length);
-
+            setValuesToProperty(values);
         } else {
-
             remove();
-
         }
-
     }
 
     public void setQValue(Value[] values) {
@@ -219,7 +208,7 @@ public class RegistryProperty implements Property {
     public void setValue(String s) throws ValueFormatException, VersionException, LockException, ConstraintViolationException, RepositoryException {
         validatePropertyModifyPrivilege();
         value = new RegistryValue(s);
-
+        persistNewPropertyValue("string",s);
     }
 
     private void setQValue(String s) {
@@ -236,6 +225,7 @@ public class RegistryProperty implements Property {
             values[i] = new RegistryValue(s);
             i++;
         }
+        RegistryJCRItemOperationUtil.persistStringPropertyValues(session,path,name,strings);
     }
 
     private void setQValue(String[] strings) {
@@ -252,6 +242,7 @@ public class RegistryProperty implements Property {
     public void setValue(InputStream inputStream) throws ValueFormatException, VersionException, LockException, ConstraintViolationException, RepositoryException {
         validatePropertyModifyPrivilege();
         value = new RegistryValue(inputStream);
+        persistNewPropertyValue("is",inputStream);
     }
 
     private void setQValue(InputStream inputStream) {
@@ -261,8 +252,8 @@ public class RegistryProperty implements Property {
 
     public void setValue(Binary binary) throws ValueFormatException, VersionException, LockException, ConstraintViolationException, RepositoryException {
         validatePropertyModifyPrivilege();
-
         value = new RegistryValue(binary);
+        //TODO persist binary type value
     }
 
     private void setQValue(Binary binary) {
@@ -272,6 +263,7 @@ public class RegistryProperty implements Property {
     public void setValue(long l) throws ValueFormatException, VersionException, LockException, ConstraintViolationException, RepositoryException {
         validatePropertyModifyPrivilege();
         value = new RegistryValue(l);
+        persistNewPropertyValue("long",new Long(l));
     }
 
     private void setQValue(long l) {
@@ -281,6 +273,7 @@ public class RegistryProperty implements Property {
     public void setValue(double v) throws ValueFormatException, VersionException, LockException, ConstraintViolationException, RepositoryException {
         validatePropertyModifyPrivilege();
         value = new RegistryValue(v);
+        persistNewPropertyValue("double",new Double(v));
     }
 
     private void setQValue(double v) {
@@ -289,9 +282,8 @@ public class RegistryProperty implements Property {
 
     public void setValue(BigDecimal bigDecimal) throws ValueFormatException, VersionException, LockException, ConstraintViolationException, RepositoryException {
         validatePropertyModifyPrivilege();
-
         value = new RegistryValue(bigDecimal);
-
+        persistNewPropertyValue("big_d",bigDecimal);
     }
 
     private void setQValue(BigDecimal bigDecimal) {
@@ -301,10 +293,10 @@ public class RegistryProperty implements Property {
 
     public void setValue(Calendar calendar) throws ValueFormatException, VersionException, LockException, ConstraintViolationException, RepositoryException {
         validatePropertyModifyPrivilege();
-
         if (calendar != null) {
             value = new RegistryValue(calendar);
         }
+        persistNewPropertyValue("calendar",calendar);
     }
 
     private void setQValue(Calendar calendar) {
@@ -316,8 +308,8 @@ public class RegistryProperty implements Property {
 
     public void setValue(boolean b) throws ValueFormatException, VersionException, LockException, ConstraintViolationException, RepositoryException {
         validatePropertyModifyPrivilege();
-
         value = new RegistryValue(b);
+        persistNewPropertyValue("boolean",String.valueOf(b));
     }
 
     private void setQValue(boolean b) {
@@ -326,9 +318,8 @@ public class RegistryProperty implements Property {
 
     public void setValue(Node node) throws ValueFormatException, VersionException, LockException, ConstraintViolationException, RepositoryException {
         validatePropertyModifyPrivilege();
-
         value = new RegistryValue(node);
-
+        //TODO set node type of values
     }
 
     private void setQValue(Node node) {
@@ -359,15 +350,11 @@ public class RegistryProperty implements Property {
 
 
     public InputStream getStream() throws ValueFormatException, RepositoryException {
-
-
         if (value != null) {
-
             return value.getStream();
         } else {
             return new ByteArrayInputStream(new byte[]{12, 12, 22});
         }
-
     }
 
     public Binary getBinary() throws ValueFormatException, RepositoryException {
@@ -399,20 +386,19 @@ public class RegistryProperty implements Property {
     }
 
     public BigDecimal getDecimal() throws ValueFormatException, RepositoryException {
-        if (value != null)
-
+        if (value != null) {
             return value.getDecimal();
-        else
+        } else {
             return new BigDecimal(0);
+        }
     }
 
     public Calendar getDate() throws ValueFormatException, RepositoryException {
-        if (value != null)
-
-
+        if (value != null) {
             return value.getDate();
-        else
+        } else {
             return null;
+        }
 
     }
 
@@ -430,7 +416,6 @@ public class RegistryProperty implements Property {
         } else {
             return null;
         }
-
     }
 
     public Property getProperty() throws ItemNotFoundException, ValueFormatException, RepositoryException {
@@ -439,27 +424,17 @@ public class RegistryProperty implements Property {
 
     public long getLength() throws ValueFormatException, RepositoryException {
         long length = 0;
-
         if (value != null) {
-
             length = value.toString().length();
-
         }
-
         return length;
-
     }
 
     public long[] getLengths() throws ValueFormatException, RepositoryException {
-
         long[] lengths = new long[values.length];     //here only considers about strings,not binaries and all dat.
-
         for (int i = 0; i < values.length; i++) {
-
             lengths[i] = values[i].toString().length();
         }
-
-
         return lengths;
     }
 
@@ -484,13 +459,7 @@ public class RegistryProperty implements Property {
         return isMul;
     }
 
-    public String getPath() throws RepositoryException {     //as we cant ask for the path of a property in greg,we do this
-        String path = "";
-        if ((isResource) && (collectionR != null)) {
-            path = collectionR.getPath();
-        } else if (!isResource) {
-            path = collectionP.getPath() + "/" + getName();
-        }
+    public String getPath() throws RepositoryException {
         return path;
     }
 
@@ -505,19 +474,16 @@ public class RegistryProperty implements Property {
 
     public Node getParent() throws ItemNotFoundException, AccessDeniedException, RepositoryException {
         String parent = "";
-
         if (isResource) {
-
-            parent = collectionR.getParentPath();
+            try {
+                parent = session.getUserRegistry().get(path).getParentPath();
+            } catch (RegistryException e) {
+                log.error("Registry Exception occurred while obtaining " + path);
+            }
         } else {
-            parent = collectionP.getParentPath();
+            parent = path;
         }
-
-        RegistryNode par = new RegistryNode(parent, session);
-//        par.resource.setPath(parent);
-
-        return par;
-
+        return (Node) session.getItem(parent);
     }
 
     public int getDepth() throws RepositoryException {
@@ -559,14 +525,19 @@ public class RegistryProperty implements Property {
     }
 
     public boolean isModified() {
+        return isPropertyResourceModified();
+    }
 
+    private boolean isPropertyResourceModified() {
         boolean isModified = true;
-
-
-        if (!isResource) {
-            isModified = collectionP.isPropertiesModified();
+        try {
+            Resource resource = session.getUserRegistry().get(path);
+            if (!isResource) {
+                isModified = ((CollectionImpl) resource).isPropertiesModified();
+            }
+        } catch (RegistryException e) {
+            log.error("Registry exception occurred while checking content modification " + e);
         }
-
         return isModified;
     }
 
@@ -575,7 +546,6 @@ public class RegistryProperty implements Property {
         if (name.equals(item.getName())) {
             isSame = true;
         }
-
         return isSame;
     }
 
@@ -589,16 +559,14 @@ public class RegistryProperty implements Property {
     }
 
     public void remove() throws VersionException, LockException, ConstraintViolationException, AccessDeniedException, RepositoryException {
-
         RegistryJCRItemOperationUtil.validateReadOnlyItemOpr(session);
-
         try {
             if (isResource) {
-                collectionR.removeProperty(this.name);
-                session.getUserRegistry().put(getPath(), collectionR);
+                session.getUserRegistry().delete(path);
             } else {
-                collectionP.removeProperty(this.name);
-                session.getUserRegistry().put(getPath(), collectionP);
+                Resource node = session.getUserRegistry().get(path);
+                node.removeProperty(name);
+                session.getUserRegistry().put(path, node);
             }
         } catch (RegistryException e) {
             String msg = "failed to remove the property " + this;
@@ -607,4 +575,64 @@ public class RegistryProperty implements Property {
         }
 
     }
+
+    private void persistNewPropertyValue(String type, Object value) throws RepositoryException {
+        Resource property;
+        try {
+            if (isResource) {
+                property = session.getUserRegistry().get(path);
+            } else {
+                property = session.getUserRegistry().get(path);
+            }
+
+            if (type.equals("value")) {
+                property.setContent(((Value) value).getString());
+            } else if (type.equals("string")) {
+                property.setProperty(name,value.toString());
+            }  else if (type.equals("is")) {
+                property.setContentStream((InputStream)value);
+            } else if (type.equals("long")) {
+                property.setContent(String.valueOf(((Long) value).longValue()));
+            } else if (type.equals("double")) {
+                property.setContent(String.valueOf(((Double) value).doubleValue()));
+            } else if (type.equals("big_d")) {
+                property.setContent(((BigDecimal)value).toString());
+            } else if (type.equals("calendar")) {
+                property.setContent(String.valueOf(((Calendar) value).getTimeInMillis()));
+            } else if (type.equals("boolean")) {
+                property.setContent(String.valueOf(value.toString()));
+            }
+         session.getUserRegistry().put(path,property);
+
+        } catch (RegistryException e) {
+            throw new RepositoryException("Registry level exception occurred while " +
+                    "setting value for " + path + e.getMessage());
+        } catch (ValueFormatException e) {
+            throw new ValueFormatException(e.getMessage());
+        } catch (RepositoryException e) {
+           throw new RepositoryException(e.getMessage());
+        }
+    }
+
+    private void setValuesToProperty(Value[] values) throws RepositoryException {
+        Resource resource = null;
+        try {
+            resource = session.getUserRegistry().get(path);
+            List<String> properties = new ArrayList<String>();
+            if (values != null) {
+
+                for (Value val : values) {
+                    if (val != null) {
+                        properties.add(val.getString());
+                    }
+                }
+                resource.setProperty(name, properties);
+            }
+            session.getUserRegistry().put(path, resource);
+        } catch (RegistryException e) {
+          throw new RepositoryException("Registry level exception occurred" +
+                  " while setting values[] for " + path);
+        }
+    }
 }
+

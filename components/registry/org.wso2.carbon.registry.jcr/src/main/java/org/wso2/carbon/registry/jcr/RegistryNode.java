@@ -49,8 +49,7 @@ public class RegistryNode implements Node {
     public String nodePath = "";
     public CollectionImpl resource = null;
     private RegistrySession registrySession;
-    private RegistryProperty property;
-    private RegistryItem item;
+    private Property property;
 
     public RegistryNodeType nodeType = null;
     private static Log log = LogFactory.getLog(RegistryNode.class);
@@ -60,7 +59,6 @@ public class RegistryNode implements Node {
         this.nodePath = s;
         this.registrySession = registrySession;
         initColl(s);
-        item = new RegistryItem(this);
     }
 
 
@@ -318,7 +316,7 @@ public class RegistryNode implements Node {
                     res.setProperty("registry.jcr.property.type", "value_type");
 
                     registrySession.getUserRegistry().put(nodePath + "/" + s, res);
-                    property = new RegistryProperty(registrySession.getUserRegistry().get(nodePath + "/" + s), registrySession, s,value);
+                    property = new RegistryProperty(nodePath + "/" + s, registrySession, s,value);
 
                 } catch (RegistryException e) {
                     String msg = "failed to resolve the path of the given node " + this;
@@ -327,7 +325,6 @@ public class RegistryNode implements Node {
                 }
             }
 //            property.setValue(value);
-            item = new RegistryItem(property);
             return property;
 
         } else if (value == null) {
@@ -375,14 +372,13 @@ public class RegistryNode implements Node {
                 res.setProperty(s, properties);
                 res.setProperty("registry.jcr.property.type", "values_type");
                 registrySession.getUserRegistry().put(nodePath + "/" + s, res);
-                property = new RegistryProperty(registrySession.getUserRegistry().get(nodePath + "/" + s), registrySession, s,values);
+                property = new RegistryProperty(nodePath + "/" + s, registrySession, s,values);
 
             } catch (RegistryException e) {
                 String msg = "failed to resolve the path of the given node or violation of repository syntax " + this;
                 log.debug(msg);
                 throw new RepositoryException(msg, e);
             }
-            item = new RegistryItem(property);
             return property;
 
         } else {
@@ -398,47 +394,8 @@ public class RegistryNode implements Node {
     }
 
     private Property setPropertyToNode(String s, String[] strings) throws ValueFormatException, VersionException, LockException, ConstraintViolationException, RepositoryException {
-        boolean allNullInSide = true;
-        List<String> properties = new ArrayList<String>();
-        try {
-            resource = (CollectionImpl)registrySession.getUserRegistry().get(nodePath);
-
-            if (strings != null) {
-                for (String val : strings) {
-
-                    if (val != null) {
-                        properties.add(val);
-                        allNullInSide = false;
-                    }
-                }
-
-               // if all values inside are null, returns a empty string
-                if (allNullInSide) {
-
-                    resource.setProperty(s,"");
-                    registrySession.getUserRegistry().put(nodePath, resource);
-                    property = new RegistryProperty(resource, registrySession, s,new String[0]);
-                    return property;
-                } else {
-                    resource.setProperty(s, properties);
-                }
-                registrySession.getUserRegistry().put(nodePath, resource);
-
-            } else {
-                resource.removeProperty(s);
-                registrySession.getUserRegistry().put(nodePath, resource);
-            }
-
-        } catch (RegistryException e) {
-            String msg = "failed to resolve the path of the given node or violation of repository syntax " + this;
-            log.debug(msg);
-            throw new RepositoryException(msg, e);
-        }
-
-        property = new RegistryProperty(resource, registrySession, s,properties.toArray(new String[0]));
-        item = new RegistryItem(property);
-        return property;
-
+      return RegistryJCRItemOperationUtil.persistStringPropertyValues(
+                   registrySession,nodePath,s,strings);
     }
 
     public Property setProperty(String s, String[] strings) throws ValueFormatException, VersionException, LockException, ConstraintViolationException, RepositoryException {
@@ -491,8 +448,7 @@ public class RegistryNode implements Node {
             throw new RepositoryException(msg, e);
         }
 
-        property = new RegistryProperty(resource, registrySession, s,s1);
-        item = new RegistryItem(property);
+        property = new RegistryProperty(resource.getPath(), registrySession, s,s1);
         return property;
     }
 
@@ -512,7 +468,7 @@ public class RegistryNode implements Node {
                 res.setContentStream(inputStream);
                 res.setProperty("registry.jcr.property.type", "input_stream");
                 registrySession.getUserRegistry().put(nodePath + "/" + s, res);
-                property = new RegistryProperty(registrySession.getUserRegistry().get(nodePath + "/" + s), registrySession, s,inputStream);
+                property = new RegistryProperty(nodePath + "/" + s, registrySession, s,inputStream);
             }
         } catch (RegistryException e) {
             String msg = "failed to resolve the path of the given node or violation of repository syntax " + this;
@@ -521,7 +477,6 @@ public class RegistryNode implements Node {
         }
 
 //        property.setValue(inputStream);
-        item = new RegistryItem(property);
         return property;
     }
 
@@ -531,12 +486,7 @@ public class RegistryNode implements Node {
         validatePropertyModifyPrivilege(s);
 
         //still we can return a property.But we actually have only string to set
-
-        property = new RegistryProperty(this.resource, registrySession, s,binary);
-//        property.setValue(binary);
-
-        item = new RegistryItem(property);
-
+        property = new RegistryProperty(this.resource.getPath(), registrySession, s,binary);
         return property;
     }
 
@@ -550,7 +500,7 @@ public class RegistryNode implements Node {
             res.setContent(String.valueOf(b));
             res.setProperty("registry.jcr.property.type", "boolean");
             registrySession.getUserRegistry().put(nodePath + "/" + s, res);
-            property = new RegistryProperty(registrySession.getUserRegistry().get(nodePath + "/" + s), registrySession, s,b);
+            property = new RegistryProperty(nodePath + "/" + s, registrySession, s,b);
 
         } catch (RegistryException e) {
             String msg = "failed to resolve the path of the given node or violation of repository syntax " + this;
@@ -560,9 +510,6 @@ public class RegistryNode implements Node {
 
 
 //        property.setValue(b);
-
-        item = new RegistryItem(property);
-
         return property;
     }
 
@@ -576,17 +523,14 @@ public class RegistryNode implements Node {
             res.setContent(String.valueOf(v));
             res.setProperty("registry.jcr.property.type", "double");
             registrySession.getUserRegistry().put(nodePath + "/" + s, res);
-            property = new RegistryProperty(registrySession.getUserRegistry().get(nodePath + "/" + s), registrySession, s,v);
+            property = new RegistryProperty(nodePath + "/" + s, registrySession, s,v);
 
         } catch (RegistryException e) {
             String msg = "failed to resolve the path of the given node or violation of repository syntax " + this;
             log.debug(msg);
             throw new RepositoryException(msg, e);
         }
-
-
 //        property.setValue(v);
-        item = new RegistryItem(property);
         return property;
     }
 
@@ -602,7 +546,7 @@ public class RegistryNode implements Node {
                 res.setContent(bigDecimal.toString());
                 res.setProperty("registry.jcr.property.type", "big_decimal");
                 registrySession.getUserRegistry().put(nodePath + "/" + s, res);
-                property = new RegistryProperty(registrySession.getUserRegistry().get(nodePath + "/" + s), registrySession, s,bigDecimal);
+                property = new RegistryProperty(nodePath + "/" + s, registrySession, s,bigDecimal);
 
             } catch (RegistryException e) {
                 String msg = "failed to resolve the path of the given node or violation of repository syntax " + this;
@@ -610,9 +554,6 @@ public class RegistryNode implements Node {
                 throw new RepositoryException(msg, e);
             }
 
-
-//            property.setValue(bigDecimal);
-            item = new RegistryItem(property);
             return property;
 
         } else
@@ -637,20 +578,16 @@ public class RegistryNode implements Node {
             res.setContent(String.valueOf(l));
             res.setProperty("registry.jcr.property.type", "long");
             registrySession.getUserRegistry().put(nodePath + "/" + s, res);
-            property = new RegistryProperty(registrySession.getUserRegistry().get(nodePath + "/" + s), registrySession, s,l);
+            property = new RegistryProperty(nodePath + "/" + s, registrySession, s,l);
 
         } catch (RegistryException e) {
             String msg = "failed to resolve the path of the given node or violation of repository syntax " + this;
             log.debug(msg);
             throw new RepositoryException(msg, e);
         }
-
-
 //        property.setValue(l);
-        item = new RegistryItem(property);
         return property;
     }
-
 
     public Property setProperty(String s, Calendar calendar) throws ValueFormatException, VersionException, LockException, ConstraintViolationException, RepositoryException {
         registrySession.sessionPending();
@@ -659,21 +596,20 @@ public class RegistryNode implements Node {
         if (calendar != null) {
 
             Resource res = null;
-
+            Property _property;
             try {
                 res = registrySession.getUserRegistry().newResource();
                 res.setContent(String.valueOf(calendar.getTimeInMillis()));
                 res.setProperty("registry.jcr.property.type", "calendar");
                 registrySession.getUserRegistry().put(nodePath + "/" + s, res);
-                property = new RegistryProperty(registrySession.getUserRegistry().get(nodePath + "/" + s), registrySession, s,calendar);
+                _property = new RegistryProperty(nodePath + "/" + s, registrySession, s,calendar);
 
             } catch (RegistryException e) {
                 String msg = "failed to resolve the path of the given node or violation of repository syntax " + this;
                 log.debug(msg);
                 throw new RepositoryException(msg, e);
             }
-            item = new RegistryItem(property);
-            return property;
+            return _property;
 
         } else {
             return null;
@@ -686,8 +622,7 @@ public class RegistryNode implements Node {
         validatePropertyModifyPrivilege(s);
 
         if (node != null) {
-            property = new RegistryProperty(this.resource, registrySession, s,node);
-            item = new RegistryItem(property);
+            property = new RegistryProperty(this.resource.getPath(), registrySession, s,node);
         }
         return property;
 
@@ -823,7 +758,7 @@ public class RegistryNode implements Node {
                 if ((propList != null) && (propList.size() == 1)) {
 
                     prop = propList.get(0);
-            regProp = new RegistryProperty(collecImpl, registrySession, propQName,prop);
+            regProp = new RegistryProperty(collecImpl.getPath(), registrySession, propQName,prop);
 //                    regProp.setValue(prop);
 
                 } else if (propList != null) {
@@ -836,7 +771,7 @@ public class RegistryNode implements Node {
                         arr[i] = ob.toString();
                         i++;
                     }
-                    regProp = new RegistryProperty(collecImpl, registrySession, propQName,arr);
+                    regProp = new RegistryProperty(collecImpl.getPath(), registrySession, propQName,arr);
 //                    regProp.setValue(arr);
 
                 } else  {
@@ -849,7 +784,7 @@ public class RegistryNode implements Node {
                 if ((res.getProperty("registry.jcr.property.type") != null)
                         && (res.getProperty("registry.jcr.property.type").equals("input_stream"))) {
 
-                    regProp = new RegistryProperty(res, registrySession, propQName,res.getContentStream());
+                    regProp = new RegistryProperty(res.getPath(), registrySession, propQName,res.getContentStream());
 //                    regProp.setValue(res.getContentStream());
 
                 } else if ((res.getProperty("registry.jcr.property.type") != null)
@@ -864,7 +799,7 @@ public class RegistryNode implements Node {
                             values[j] = new RegistryValue(valuesProp.get(j));
 
                         }
-                        regProp = new RegistryProperty(res, registrySession, propQName,values);
+                        regProp = new RegistryProperty(res.getPath(), registrySession, propQName,values);
 //                        regProp.setValue(values);
                     }
                 } else if (res.getContent() instanceof String) {
@@ -1546,7 +1481,7 @@ public class RegistryNode implements Node {
     }
 
     public boolean isNode() {
-        return item.isNode();
+        return true;
     }
 
     public boolean isNew() {
@@ -1573,7 +1508,8 @@ public class RegistryNode implements Node {
         common feature of many content storage systems. In JCR this feature is
         supported through shareable nodes.
         */
-        return this.item.isSame(item);
+      return false; //TODO
+//        return this.item.isSame(item);
 
     }
 
@@ -1595,11 +1531,10 @@ public class RegistryNode implements Node {
     public void refresh(boolean b) throws InvalidItemStateException, RepositoryException {
         try {
             if (!(registrySession.getUserRegistry().resourceExists(nodePath))) {
-
-                throw new InvalidItemStateException();
+                throw new InvalidItemStateException("Cannot refresh on non existing nodes ..!! ");
             }
         } catch (RegistryException e) {
-            e.printStackTrace();  //To change body of catch statement use File | Settings | File Templates.
+            throw new RepositoryException("Problem occurred while refresh on node " + nodePath);
         }
     }
 

@@ -16,8 +16,12 @@
 
 package org.wso2.carbon.registry.jcr.util;
 
+import org.apache.commons.ssl.asn1.Strings;
 import org.wso2.carbon.registry.api.Registry;
+import org.wso2.carbon.registry.core.CollectionImpl;
+import org.wso2.carbon.registry.core.Resource;
 import org.wso2.carbon.registry.core.ResourceImpl;
+import org.wso2.carbon.registry.core.exceptions.RegistryException;
 import org.wso2.carbon.registry.jcr.RegistryProperty;
 import org.wso2.carbon.registry.jcr.RegistrySession;
 import org.wso2.carbon.registry.jcr.RegistryValue;
@@ -26,9 +30,7 @@ import org.wso2.carbon.registry.jcr.retention.RegistryRetentionManager;
 import javax.jcr.*;
 import javax.jcr.retention.RetentionPolicy;
 import java.math.BigDecimal;
-import java.util.Calendar;
-import java.util.HashMap;
-import java.util.Map;
+import java.util.*;
 
 public class RegistryJCRItemOperationUtil {
 
@@ -118,19 +120,19 @@ public class RegistryJCRItemOperationUtil {
         if (s != null) {
 
             if (s.equals("boolean")) {
-                regProp = new RegistryProperty(res, session, propQName, Boolean.valueOf(property).booleanValue());
+                regProp = new RegistryProperty(res.getPath(), session, propQName, Boolean.valueOf(property).booleanValue());
             } else if (s.equals("long")) {
-                regProp = new RegistryProperty(res, session, propQName, Long.valueOf(property).longValue());
+                regProp = new RegistryProperty(res.getPath(), session, propQName, Long.valueOf(property).longValue());
             } else if (s.equals("double")) {
-                regProp = new RegistryProperty(res, session, propQName, Double.valueOf(property).longValue());
+                regProp = new RegistryProperty(res.getPath(), session, propQName, Double.valueOf(property).longValue());
             } else if (s.equals("big_decimal")) {
-                regProp = new RegistryProperty(res, session, propQName, new BigDecimal(property));
+                regProp = new RegistryProperty(res.getPath(), session, propQName, new BigDecimal(property));
             } else if (s.equals("value_type")) {
-                regProp = new RegistryProperty(res, session, propQName, new RegistryValue(property));
+                regProp = new RegistryProperty(res.getPath(), session, propQName, new RegistryValue(property));
             } else if (s.equals("calendar")) {
                 Calendar cal = Calendar.getInstance();
                 cal.setTimeInMillis(Long.valueOf(property));
-                regProp = new RegistryProperty(res, session, propQName, new RegistryValue(cal));
+                regProp = new RegistryProperty(res.getPath(), session, propQName, new RegistryValue(cal));
             }
         }
 
@@ -162,6 +164,48 @@ public class RegistryJCRItemOperationUtil {
         }
         ((RegistryRetentionManager) registrySession.getRetentionManager()).
                 getPendingRetentionPolicies().clear();
+    }
+
+
+    public static Property persistStringPropertyValues(RegistrySession registrySession,String nodePath,String s, String[] strings) throws RepositoryException {
+        boolean allNullInSide = true;
+         List<String> properties = new ArrayList<String>();
+         Property property; Resource resource;
+        try {
+             resource = (CollectionImpl)registrySession.getUserRegistry().get(nodePath);
+
+             if (strings != null) {
+                 for (String val : strings) {
+
+                     if (val != null) {
+                         properties.add(val);
+                         allNullInSide = false;
+                     }
+                 }
+
+                // if all values inside are null, returns a empty string
+                 if (allNullInSide) {
+
+                     resource.setProperty(s,"");
+                     registrySession.getUserRegistry().put(nodePath, resource);
+                     property = new RegistryProperty(resource.getPath(), registrySession, s,new String[0]);
+                     return property;
+                 } else {
+                     resource.setProperty(s, properties);
+                 }
+                 registrySession.getUserRegistry().put(nodePath, resource);
+
+             } else {
+                 resource.removeProperty(s);
+                 registrySession.getUserRegistry().put(nodePath, resource);
+             }
+
+         } catch (RegistryException e) {
+             String msg = "failed to resolve the path of the given node or violation of repository syntax ";
+             throw new RepositoryException(msg, e);
+         }
+         property = new RegistryProperty(resource.getPath(), registrySession, s,properties.toArray(new String[0]));
+         return property;
     }
 
 }

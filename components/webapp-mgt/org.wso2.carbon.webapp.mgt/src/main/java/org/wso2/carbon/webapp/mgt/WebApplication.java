@@ -248,7 +248,8 @@ public class WebApplication {
         //lozyunload the context of Host
         handleHotUpdateToHost("lazyUnload");
         File webappDir = new File(getAppBase(), context.getBaseName());
-        if (TomcatUtil.checkUnpackWars() && webappDir.exists() && !FileManipulator.deleteDir(webappDir)) {
+        if (TomcatUtil.checkUnpackWars() && webappDir.exists() && !webappFile.isDirectory() &&
+            !FileManipulator.deleteDir(webappDir)) {
             throw new CarbonException("exploded Webapp directory " + webappDir + " deletion failed");
         }
 

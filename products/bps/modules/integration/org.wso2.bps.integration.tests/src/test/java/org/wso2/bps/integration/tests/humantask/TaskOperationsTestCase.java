@@ -16,6 +16,8 @@
 
 package org.wso2.bps.integration.tests.humantask;
 
+import org.apache.axiom.om.OMElement;
+import org.apache.axis2.databinding.types.NCName;
 import org.apache.axis2.databinding.types.URI;
 import org.apache.commons.lang.StringUtils;
 import org.testng.Assert;
@@ -119,8 +121,31 @@ public class TaskOperationsTestCase {
                             "The assignee should be clerk1 !");
         Assert.assertEquals(loadedTaskAferReClaim.getStatus().toString(), "RESERVED",
                             "The task status should be RESERVED!");
+    }
+
+    @Test(groups = {"wso2.bps"}, description = "Claims approval test case release and reclaim task")
+    public void testTaskGetInput() throws Exception {
+
+        String input = (String) taskOperationsStub.getInput(taskId, null);
+
+        Assert.assertNotNull(input, "The input message cannot be null");
+        Assert.assertTrue(input.contains("<ClaimApprovalData xmlns=\"http://www.example.com/claims/schema\" " +
+                                         "xmlns:p=\"http://www.example.com/claims/schema\" " +
+                                         "xmlns:soapenv=\"http://schemas.xmlsoap.org/soap/envelope/\">"),
+                          "The retrieved input message should contain message data");
+
+        NCName ncName = new NCName();
+        ncName.setValue("ClaimApprovalRequest");
+
+        String inputMessageWithPartName = (String) taskOperationsStub.getInput(taskId, ncName);
+        Assert.assertNotNull(input, "The input message cannot be null");
+        Assert.assertTrue(input.contains("<ClaimApprovalData xmlns=\"http://www.example.com/claims/schema\" " +
+                                         "xmlns:p=\"http://www.example.com/claims/schema\" " +
+                                         "xmlns:soapenv=\"http://schemas.xmlsoap.org/soap/envelope/\">"),
+                          "The retrieved input message should contain message data");
 
 
+        Assert.assertEquals(input, inputMessageWithPartName, "2 returned values are different");
     }
 
     @Test(groups = {"wso2.bps"}, description = "Claims approval test case")

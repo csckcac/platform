@@ -1103,7 +1103,7 @@ public class TaskOperationsImpl extends AbstractAdmin
 
                             GetInput getInput = new GetInput(getCaller(), taskId, partName);
                             getInput.execute();
-                            Node input = getInput.getInputElement().getFirstChild().getFirstChild();
+                            Node input = getInput.getInputElement();
                             return DOMUtils.domToString(input);
                         }
                     });

@@ -90,7 +90,7 @@ public class GetInput extends AbstractHumanTaskCommand {
             inputElement = CommonTaskUtil.getMessagePart(task.getInputMessage(), partName);
 
         } else {
-            inputElement = task.getInputMessage().getBodyData();
+            inputElement = (Element) task.getInputMessage().getBodyData().getFirstChild().getFirstChild();
         }
         checkPostConditions();
     }

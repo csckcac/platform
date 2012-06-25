@@ -467,13 +467,14 @@ public final class CommonTaskUtil {
     public static Element getMessagePart(MessageDAO inputMessage, String partName) {
         Element node = inputMessage.getBodyData();
         if (node.hasChildNodes()) {
-            NodeList nodeList = node.getChildNodes();
             Element matchingElement = null;
-            for (int i = 0; i < nodeList.getLength(); i++) {
-                if (nodeList.item(i).getNodeName().equals(partName)) {
-                    matchingElement = (Element) nodeList.item(i);
-                    break;
-                }
+
+            if(node.getElementsByTagName(partName).getLength() > 0) {
+                matchingElement = (Element) node.getElementsByTagName(partName).item(0);
+            }
+
+            if (matchingElement != null && matchingElement.getFirstChild() != null) {
+                return  (Element) matchingElement.getFirstChild();
             }
 
             return matchingElement;

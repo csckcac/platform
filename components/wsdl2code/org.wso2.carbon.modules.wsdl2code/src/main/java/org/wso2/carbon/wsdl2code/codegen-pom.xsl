@@ -518,13 +518,6 @@
                     </exclusion>
                 </exclusions>
             </dependency>
-
-            <dependency>
-                <groupId>junit</groupId>
-                <artifactId>junit</artifactId>
-                <version>3.8.2</version>
-                <scope>test</scope>
-            </dependency>
         </dependencies>
 
             <properties>

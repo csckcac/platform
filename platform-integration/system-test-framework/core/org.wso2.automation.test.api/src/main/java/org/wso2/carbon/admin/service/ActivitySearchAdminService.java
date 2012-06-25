@@ -20,7 +20,6 @@ package org.wso2.carbon.admin.service;
 import org.apache.axis2.AxisFault;
 import org.apache.commons.logging.Log;
 import org.apache.commons.logging.LogFactory;
-import org.apache.openjpa.jdbc.meta.strats.StringFieldStrategy;
 import org.wso2.carbon.admin.service.utils.AuthenticateStub;
 import org.wso2.carbon.registry.activities.stub.ActivityAdminServiceStub;
 import org.wso2.carbon.registry.activities.stub.RegistryExceptionException;

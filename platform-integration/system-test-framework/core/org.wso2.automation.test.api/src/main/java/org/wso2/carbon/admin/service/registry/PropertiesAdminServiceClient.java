@@ -21,13 +21,9 @@ package org.wso2.carbon.admin.service.registry;
 import org.apache.axis2.AxisFault;
 import org.apache.commons.logging.Log;
 import org.apache.commons.logging.LogFactory;
-import org.apache.openjpa.jdbc.meta.strats.StringFieldStrategy;
 import org.wso2.carbon.admin.service.utils.AuthenticateStub;
-import org.wso2.carbon.registry.activities.stub.RegistryExceptionException;
-import org.wso2.carbon.registry.activities.stub.beans.xsd.ActivityBean;
 import org.wso2.carbon.registry.properties.stub.PropertiesAdminServiceRegistryExceptionException;
 import org.wso2.carbon.registry.properties.stub.PropertiesAdminServiceStub;
-import org.wso2.carbon.registry.properties.stub.beans.xsd.PropertiesBean;
 import org.wso2.carbon.registry.properties.stub.beans.xsd.RetentionBean;
 
 import java.rmi.RemoteException;

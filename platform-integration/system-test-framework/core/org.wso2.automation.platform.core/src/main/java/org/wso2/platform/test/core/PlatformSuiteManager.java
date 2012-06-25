@@ -36,7 +36,7 @@ public class PlatformSuiteManager implements ISuiteListener {
             if (startosEnabled) {
                 //stratos user populate on manager. there for product lis set to null
 
-             //   new UserPopulator().populateUsers(null);
+                new UserPopulator().populateUsers(null);
             } else {
              /*   if (environmentBuilder.getFrameworkSettings().getCoverageSettings().getCoverageEnable()) {
                     for (Object carbonHomePath : environmentBuilder.getFrameworkSettings().getCoverageSettings().getCarbonHome().values()) {
@@ -54,9 +54,9 @@ public class PlatformSuiteManager implements ISuiteListener {
                         log.info("Starting all servers");
                         ServerGroupManager.startServers(productList);
                     }
-                 //   new UserPopulator().populateUsers(productList);
+                    new UserPopulator().populateUsers(productList);
                 } else {
-                  //  new UserPopulator().populateUsers(defaultProductList);
+                    new UserPopulator().populateUsers(defaultProductList);
                 }
             }
 

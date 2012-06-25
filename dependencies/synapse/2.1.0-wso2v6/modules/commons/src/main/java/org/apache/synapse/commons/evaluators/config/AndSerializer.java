@@ -25,8 +25,6 @@ import org.apache.synapse.commons.evaluators.AndEvaluator;
 import org.apache.synapse.commons.evaluators.EvaluatorConstants;
 import org.apache.synapse.commons.evaluators.EvaluatorException;
 
-import javax.xml.namespace.QName;
-
 /**
  * Serialize the {@link AndEvaluator} to the XML configuration defined in
  * the {@link AndFactory}. 
@@ -38,8 +36,7 @@ public class AndSerializer extends AbstractEvaluatorSerializer {
         }
 
         AndEvaluator andEvaluator = (AndEvaluator) evaluator;
-
-        OMElement andElement = fac.createOMElement(new QName((EvaluatorConstants.AND)));
+        OMElement andElement  = fac.createOMElement(EvaluatorConstants.AND, EvaluatorConstants.SYNAPSE_NAMESPACE, EvaluatorConstants.EMPTY_PREFIX);
         serializeChildren(andElement, andEvaluator.getEvaluators());
 
         if (parent != null) {

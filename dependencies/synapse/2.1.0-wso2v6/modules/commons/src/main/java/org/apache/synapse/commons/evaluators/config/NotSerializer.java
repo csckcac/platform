@@ -25,8 +25,6 @@ import org.apache.synapse.commons.evaluators.EvaluatorException;
 import org.apache.synapse.commons.evaluators.NotEvaluator;
 import org.apache.synapse.commons.evaluators.EvaluatorConstants;
 
-import javax.xml.namespace.QName;
-
 /**
  * Serialize the {@link NotEvaluator} to the XML configuration defined in
  * the {@link NotFactory}. 
@@ -39,8 +37,7 @@ public class NotSerializer extends AbstractEvaluatorSerializer {
         }
 
         NotEvaluator notEvaluator = (NotEvaluator) evaluator;
-
-        OMElement notElement = fac.createOMElement(new QName(EvaluatorConstants.NOT));
+        OMElement notElement  = fac.createOMElement(EvaluatorConstants.NOT, EvaluatorConstants.SYNAPSE_NAMESPACE, EvaluatorConstants.EMPTY_PREFIX);
         serializeChild(notElement, notEvaluator.getEvaluator());
 
         if (parent != null) {

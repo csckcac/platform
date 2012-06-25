@@ -22,8 +22,6 @@ package org.apache.synapse.commons.evaluators.config;
 import org.apache.axiom.om.OMElement;
 import org.apache.synapse.commons.evaluators.*;
 
-import javax.xml.namespace.QName;
-
 /**
  * Serialize the {@link EqualEvaluator} to the XML configuration defined in
  * the {@link EqualFactory}. 
@@ -37,7 +35,7 @@ public class EqualSerializer extends TextProcessingEvaluatorSerializer {
         }
 
         EqualEvaluator equalEvaluator = (EqualEvaluator) evaluator;
-        OMElement equalElement = fac.createOMElement(new QName(EvaluatorConstants.EQUAL));
+        OMElement equalElement  = fac.createOMElement(EvaluatorConstants.EQUAL, EvaluatorConstants.SYNAPSE_NAMESPACE, EvaluatorConstants.EMPTY_PREFIX);
         serializeSourceTextRetriever(equalEvaluator.getTextRetriever(), equalElement);
 
         equalElement.addAttribute(fac.createOMAttribute(EvaluatorConstants.VALUE, nullNS,

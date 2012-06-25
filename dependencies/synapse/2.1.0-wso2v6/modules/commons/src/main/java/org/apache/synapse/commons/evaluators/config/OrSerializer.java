@@ -25,8 +25,6 @@ import org.apache.synapse.commons.evaluators.OrEvaluator;
 import org.apache.synapse.commons.evaluators.EvaluatorException;
 import org.apache.synapse.commons.evaluators.EvaluatorConstants;
 
-import javax.xml.namespace.QName;
-
 /**
  * Serialize the {@link OrEvaluator} to the XML configuration defined in
  * the {@link OrFactory}. 
@@ -38,8 +36,7 @@ public class OrSerializer extends AbstractEvaluatorSerializer {
         }
 
         OrEvaluator orEvaluator = (OrEvaluator) evaluator;
-
-        OMElement orElement = fac.createOMElement(new QName((EvaluatorConstants.OR)));
+        OMElement orElement  = fac.createOMElement(EvaluatorConstants.OR, EvaluatorConstants.SYNAPSE_NAMESPACE, EvaluatorConstants.EMPTY_PREFIX);
         serializeChildren(orElement, orEvaluator.getEvaluators());
 
         if (parent != null) {

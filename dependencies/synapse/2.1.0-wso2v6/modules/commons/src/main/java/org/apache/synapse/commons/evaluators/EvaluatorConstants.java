@@ -56,4 +56,6 @@ public class EvaluatorConstants {
         query,
         ref
     }
+    public static final String SYNAPSE_NAMESPACE = "http://ws.apache.org/ns/synapse";
+    public static final String EMPTY_PREFIX = "";
 }

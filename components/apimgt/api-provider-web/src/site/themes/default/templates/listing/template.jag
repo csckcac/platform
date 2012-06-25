@@ -32,11 +32,11 @@
                 nameSubstring = api.name.substring(0,10);
             }
         %>
-        <li class="span2">
+        <li>
+            <% if(api.status != "PUBLISHED") { %>
+                <button type="button" class="close btn-api-del" onClick="removeAPI('<%=api.name%>','<%=api.version%>','<%=api.provider%>')">×</button>
+            <% } %>
             <div class="thumbnail">
-               <!-- <% if(api.status != "PUBLISHED") { %>
-                <img src="close.gif" onClick="removeAPI('<%=api.name%>','<%=api.version%>','<%=api.provider%>')" align="right" style="height:15px;width:15px;">
-                <% } %>-->
                 <a href="<%=path%>">
                     <% if(api.thumb == null) { %>
                     <img class="thumb" src="<%=site.context%>/site/themes/default/images/api-default.png" alt=""/>

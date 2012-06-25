@@ -1,5 +1,10 @@
 var removeAPI = function(name, version, provider) {
-    jagg.post("/site/blocks/item-add/ajax/remove.jag", { action:"removeAPI",name:name, version:version,provider:provider },
+    jagg.message({
+        content:"Are you sure you want to delete, API - " + name + " - " + version ,
+        type:"confirm",
+        okCallback:function(){
+
+            jagg.post("/site/blocks/item-add/ajax/remove.jag", { action:"removeAPI",name:name, version:version,provider:provider },
               function (result) {
                   if (!result.error) {
                       var current = window.location.pathname;
@@ -12,5 +17,7 @@ var removeAPI = function(name, version, provider) {
                   }
               }, "json");
 
+    }});
 
-}
+};
+

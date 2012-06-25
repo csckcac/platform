@@ -81,7 +81,7 @@
             <button type="button" class="btn cancel-button" onclick="javascript:$('#copy-api').toggle('slow');$('#show-copy-api').toggle()">Cancel</button>
         </div>
     </div>
-    <div id="show-copy-api" class="form-actions" >
+    <div id="show-copy-api" class="form-actions">
         <button type="submit" class="btn" onclick="javascript:$('#copy-api').toggle('slow');$('#show-copy-api').toggle()">Copy</button>
     </div>
 </div>

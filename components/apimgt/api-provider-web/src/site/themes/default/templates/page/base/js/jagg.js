@@ -40,15 +40,45 @@ var jagg = jagg || {};
         $('#messageModal a.btn-other').hide();
         $('#messageModal').modal();
     };
+    /*
+    usage
+    Show info dialog
+    jagg.message({content:'foo',type:'info'});
+
+    Show warning
+    dialog jagg.message({content:'foo',type:'warning'});
+
+    Show error dialog
+    jagg.message({content:'foo',type:'error'});
+
+    Show confirm dialog
+    jagg.message({content:'foo',type:'confirm',okCallback:function(){},cancelCallback:function(){}});
+     */
     jagg.message = function(params){
         if(params.type == "custom"){
             jagg.messageDisplay(params);
             return;
+        }else if(params.type = "confirm"){
+            params.content = '<img src="'+siteRoot+'/images/'+params.type+'.png" align="center" hspace="10" /><span class="messageText">'+params.content+'</span>';
+            jagg.messageDisplay({content:params.content,title:"API Publisher" ,buttons:[
+                {name:"OK",cssClass:"btn btn-primary",cbk:function() {
+                    $('#messageModal').modal('hide');
+                    if(typeof params.okCallback == "function") {params.okCallback()};
+                }},
+                {name:"Cancel",cssClass:"btn",cbk:function() {
+                    $('#messageModal').modal('hide');
+                    if(typeof params.cancelCallback  == "function") {params.cancelCallback()};
+                }}
+            ]
+            });
+            return;
         }
+
         params.content = '<img src="'+siteRoot+'/images/'+params.type+'.png" align="center" hspace="10" /><span class="messageText">'+params.content+'</span>';
         jagg.messageDisplay({content:params.content,title:"API Publisher - "+params.type,buttons:[
             {name:"OK",cssClass:"btn btn-primary",cbk:function() {
                 $('#messageModal').modal('hide');
+                params.cbk();
             }}
         ]
         });

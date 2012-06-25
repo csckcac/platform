@@ -125,7 +125,20 @@ input.error{
 .api-thumb {
     margin-bottom: 5px;
 }
-
+ul.thumbnails div.thumbnail{
+    width:130px;
+}
+ul.thumbnails div.thumbnail:hover{
+     border-color: rgba(82, 168, 236, 0.8);
+    box-shadow: 0 1px 1px rgba(0, 0, 0, 0.075) inset, 0 0 8px rgba(82, 168, 236, 0.6);
+    outline: 0 none;
+}
+.btn-api-del{
+    margin-left: 106px;
+    margin-top: -12px;
+    opacity: 1;
+    position: absolute;
+}
 .top-spaced{
     padding-top:40px;
 }

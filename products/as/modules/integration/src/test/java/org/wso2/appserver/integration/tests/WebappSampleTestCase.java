@@ -17,17 +17,29 @@
 
 package org.wso2.appserver.integration.tests;
 
+import org.apache.catalina.util.Base64;
 import org.apache.commons.httpclient.HttpClient;
 import org.apache.commons.httpclient.HttpStatus;
 import org.apache.commons.httpclient.methods.GetMethod;
 import org.apache.commons.logging.Log;
 import org.apache.commons.logging.LogFactory;
+import org.apache.tomcat.util.buf.ByteChunk;
 import org.testng.annotations.Test;
 import org.wso2.carbon.integration.framework.ClientConnectionUtil;
 
+import javax.servlet.http.HttpServletResponse;
+import java.io.BufferedInputStream;
 import java.io.IOException;
+import java.io.InputStream;
+import java.net.HttpURLConnection;
+import java.net.URL;
+import java.util.ArrayList;
+import java.util.HashMap;
+import java.util.List;
+import java.util.Map;
 
 import static org.testng.Assert.assertEquals;
+import static org.testng.Assert.assertNull;
 import static org.testng.Assert.fail;
 
 
@@ -40,6 +52,7 @@ public class WebappSampleTestCase {
     private static final String CACHE_VALUE = "cacheValue1";
 
     private static final String EXAMPLE_WEBAPP_URL = "http://localhost:9763/example/carbon";
+    private static String CLIENT_AUTH_HEADER = "authorization";
     private HttpClient httpClient = new HttpClient();
 
     private static final Log log = LogFactory.getLog(WebappSampleTestCase.class);
@@ -158,5 +171,99 @@ public class WebappSampleTestCase {
         } finally {
             getMethod2.releaseConnection();
         }
+    }
+
+    @Test(groups = {"wso2.as"})
+    public void testBasicAuth() throws Exception {
+        log.info("Running Basic Authentication test case for example webapp ...");
+        String userName = "admin";
+        String pwd = "admin";
+        String resourceURL = "http://localhost:9763/example/jsp/security/protected/index.jsp";
+
+        // the first access attempt should be challenged
+        Map<String, List<String>> reqHeaders1 =
+                new HashMap<String, List<String>>();
+        Map<String, List<String>> respHeaders1 =
+                new HashMap<String, List<String>>();
+
+        ByteChunk bc = new ByteChunk();
+        int rc = getResponseCode(resourceURL, bc, 1000000, reqHeaders1,
+                                 respHeaders1);
+
+        assertEquals(401, rc);
+        assertNull(bc.toString());
+
+        // the second access attempt should be sucessful
+        String credentials = userName + ":" + pwd;
+        byte[] credentialsBytes = ByteChunk.convertToBytes(credentials);
+        String base64auth = Base64.encode(credentialsBytes);
+        String authLine = "Basic " + base64auth;
+
+        List<String> auth = new ArrayList<String>();
+        auth.add(authLine);
+        Map<String, List<String>> reqHeaders2 = new HashMap<String, List<String>>();
+        reqHeaders2.put(CLIENT_AUTH_HEADER, auth);
+
+        Map<String, List<String>> respHeaders2 =
+                new HashMap<String, List<String>>();
+
+        bc.reset();
+        rc = getResponseCode(resourceURL, bc, 1000000, reqHeaders2,
+                             respHeaders2);
+
+
+        assertEquals(200, rc);
+//            assertEquals("OK", bc.toString());
+    }
+
+    private static int getResponseCode(String path, ByteChunk out, int readTimeout,
+                                       Map<String, List<String>> reqHead,
+                                       Map<String, List<String>> resHead) throws IOException {
+
+        URL url = new URL(path);
+        HttpURLConnection connection =
+                (HttpURLConnection) url.openConnection();
+        connection.setUseCaches(false);
+        connection.setReadTimeout(readTimeout);
+        if (reqHead != null) {
+            for (Map.Entry<String, List<String>> entry : reqHead.entrySet()) {
+                StringBuilder valueList = new StringBuilder();
+                for (String value : entry.getValue()) {
+                    if (valueList.length() > 0) {
+                        valueList.append(',');
+                    }
+                    valueList.append(value);
+                }
+                connection.setRequestProperty(entry.getKey(),
+                                              valueList.toString());
+            }
+        }
+        connection.connect();
+        int rc = connection.getResponseCode();
+        if (resHead != null) {
+            Map<String, List<String>> head = connection.getHeaderFields();
+            resHead.putAll(head);
+        }
+        if (rc == HttpServletResponse.SC_OK) {
+            InputStream is = connection.getInputStream();
+            BufferedInputStream bis = null;
+            try {
+                bis = new BufferedInputStream(is);
+                byte[] buf = new byte[2048];
+                int rd = 0;
+                while ((rd = bis.read(buf)) > 0) {
+                    out.append(buf, 0, rd);
+                }
+            } finally {
+                if (bis != null) {
+                    try {
+                        bis.close();
+                    } catch (IOException e) {
+                        // Ignore
+                    }
+                }
+            }
+        }
+        return rc;
     }
 }

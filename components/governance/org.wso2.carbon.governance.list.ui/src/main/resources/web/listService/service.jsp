@@ -243,7 +243,7 @@
         <carbon:resourcePaginator pageNumber="<%=pageNumber%>" numberOfPages="<%=numberOfPages%>"
                                   resourceBundle="org.wso2.carbon.governance.list.ui.i18n.Resources"
                                   nextKey="next" prevKey="prev"
-                                  paginationFunction="<%="loadPagedList({0}, " + Boolean.toString(filter) + ", 'service', 'services')"%>" />
+                                  paginationFunction="<%="loadPagedList({0}, " + Boolean.toString(filter) + ", 'listService', 'service', 'services')"%>" />
     <%}%>
     </table>
 </form>

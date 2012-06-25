@@ -120,7 +120,7 @@
                     <td><%=version%></td>
                     <td>
                         <%if (bean.getCanDelete()[i])  { %>
-                            <a title="<fmt:message key="delete"/>" onclick="deleteService('<%=completePath%>','/','../list/policy.jsp?region=region3&item=governance_list_policy_menu')" href="#" class="icon-link registryWriteOperation" style="background-image:url(../admin/images/delete.gif);"><fmt:message key="delete"/></a>
+                            <a title="<fmt:message key="delete"/>" onclick="deleteService('<%=completePath%>','/','../listPolicy/policy.jsp?region=region3&item=governance_list_policy_menu')" href="#" class="icon-link registryWriteOperation" style="background-image:url(../admin/images/delete.gif);"><fmt:message key="delete"/></a>
                          <%} else { %>
                             <a class="icon-link registryWriteOperation" style="background-image:url(./images/delete-desable.gif);color:#aaa !important;cursor:default;"><fmt:message key="delete"/></a>
                          <%} %>
@@ -140,7 +140,7 @@
             <carbon:resourcePaginator pageNumber="<%=pageNumber%>" numberOfPages="<%=numberOfPages%>"
                                       resourceBundle="org.wso2.carbon.governance.list.ui.i18n.Resources"
                                       nextKey="next" prevKey="prev"
-                                      paginationFunction="loadPagedList({0}, false, 'policy', 'policy')" />
+                                      paginationFunction="loadPagedList({0}, false, 'listPolicy', 'policy', 'policy')" />
         <%}%>
         </table>
     </form>

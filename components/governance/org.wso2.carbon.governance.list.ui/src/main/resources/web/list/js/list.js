@@ -51,11 +51,11 @@ function clearAll(){
     }
 }
 
-function loadPagedList(page, filter, pageName, itemName) {
+function loadPagedList(page, filter, contextName, pageName, itemName) {
     if (filter == true) {
-        window.location = "../list/" + pageName + ".jsp?filter=filter&region=region3&item=governance_list_" + itemName + "menu&page=" + page;
+        window.location = "../" + contextName + "/" + pageName + ".jsp?filter=filter&region=region3&item=governance_list_" + itemName + "menu&page=" + page;
     } else {
-        window.location = "../list/" + pageName + ".jsp?region=region3&item=governance_list_" + itemName + "_menu&page=" + page;
+        window.location = "../" + contextName + "/" + pageName + ".jsp?region=region3&item=governance_list_" + itemName + "_menu&page=" + page;
 
     }
 }

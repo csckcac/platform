@@ -24,8 +24,10 @@ $(document).ready(function() {
     });
     $('#newPassword').focus(function(){
         $('#password-help').show();
+        $('.password-meter').show();
     });
     $('#newPassword').blur(function(){
         $('#password-help').hide();
+        $('.password-meter').hide();
     });
 });

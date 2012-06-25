@@ -37,7 +37,7 @@
                         </div>
                     </div>
                     <div class="span6">
-                        <div class="password-meter">
+                        <div class="password-meter" style="display:none;">
                             <div class="password-meter-message"></div>
                             <div class="password-meter-bg">
                                 <div class="password-meter-bar"></div>

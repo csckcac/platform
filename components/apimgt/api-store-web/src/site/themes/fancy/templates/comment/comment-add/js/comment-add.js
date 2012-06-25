@@ -1,6 +1,10 @@
 $(document).ready(function () {
     $("#comment-add-button").click(function () {
         var comment = $("#comment-text").val();
+        if(comment.length > 490){
+            $('#commentAdd-error').show();
+            return;
+        }
         var api = jagg.api;
         jagg.post("/site/blocks/comment/comment-add/ajax/comment-add.jag", {
             action:"addComment",
@@ -16,4 +20,10 @@ $(document).ready(function () {
             }
         }, "json");
     });
+
+    $("#comment-text").charCount({
+			allowed: 490,
+			warning: 470,
+			counterText: 'Characters left: '
+		});
 });

@@ -16,7 +16,7 @@ var getAPIComments = function (api) {
             comment = comments[i];
             list.push({
                 username:comment.userName,
-                comment:comment.comment,
+                comment:HTMLEncode(comment.comment),
                 createdTime:comment.createdTime
             });
         }
@@ -31,6 +31,20 @@ var getAPIComments = function (api) {
             comments:null
         };
     }
+};
+var HTMLEncode = function(str){
+  var i = str.length,
+      aRet = [];
+
+  while (i--) {
+    var iC = str[i].charCodeAt();
+    if (iC < 65 || iC > 127 || (iC>90 && iC<97)) {
+      aRet[i] = '&#'+iC+';';
+    } else {
+      aRet[i] = str[i];
+    }
+   }
+  return aRet.join('');
 };
 %>
 

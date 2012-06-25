@@ -79,9 +79,8 @@
 		.addClass("password-meter-message-" + rating.messageKey)
 		.text($.validator.passwordRating.messages[rating.messageKey]);
 		// display process bar instead of error message
-		
 		return rating.rate > 2;
-	}, "&nbsp;");
+	}, "Minimum system requirements not met");
 	// manually add class rule, to make username param optional
 	$.validator.classRuleSettings.password = { password: true };
 	

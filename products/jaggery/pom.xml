@@ -577,7 +577,7 @@
 
         <felix.bundle.version>2.3.5</felix.bundle.version>
         <felix.scr.version>1.7.2</felix.scr.version>
-        <axiom.e4x.version>2.0.0.SNAPSHOT</axiom.e4x.version>
+        <axiom.e4x.version>2.0.1.SNAPSHOT</axiom.e4x.version>
         <commons.logging.version>1.1.1</commons.logging.version>
         <common.httpclient.version>3.1</common.httpclient.version>
         <rhino.version>1.7.0.R1-wso2v2</rhino.version>

@@ -33,9 +33,7 @@
             }
         %>
         <li>
-            <% if(api.status != "PUBLISHED") { %>
-                <button type="button" class="close btn-api-del" onClick="removeAPI('<%=api.name%>','<%=api.version%>','<%=api.provider%>')">×</button>
-            <% } %>
+            <button title="Delete API" type="button" class="close btn-api-del" onClick="removeAPI('<%=api.name%>','<%=api.version%>','<%=api.provider%>')">×</button>
             <div class="thumbnail">
                 <a href="<%=path%>">
                     <% if(api.thumb == null) { %>

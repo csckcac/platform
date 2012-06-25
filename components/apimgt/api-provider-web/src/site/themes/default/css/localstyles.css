@@ -136,7 +136,7 @@ ul.thumbnails div.thumbnail:hover{
 .btn-api-del{
     margin-left: 106px;
     margin-top: -12px;
-    opacity: 1;
+    opacity: .5;
     position: absolute;
 }
 .top-spaced{

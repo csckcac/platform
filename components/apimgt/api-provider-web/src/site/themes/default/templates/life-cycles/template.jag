@@ -2,24 +2,24 @@
 
 <script type="text/javascript">
 function checkValue(element) {
-if($(element).is(":checked")==false){
-$(element).attr('value','false');
+    if ($(element).is(":checked") == false) {
+        $(element).attr('value', 'false');
+    }
+    else {
+        $(element).attr('value', 'true');
+    }
 }
-else{
-$(element).attr('value','true');
-}
-}
-function getSelectedValue(oldStatus){
-var selObj = document.getElementById('editStatus');
-var selIndex = selObj.selectedIndex;
-var newStatus=selObj.options[selIndex].value;
-if(oldStatus=="CREATED" && newStatus=="PUBLISHED"){
-$('#deprecateOldVersionsDiv').show();
-$('#requireResubscriptionDiv').show();
-}else{
-$('#deprecateOldVersionsDiv').hide();
-$('#requireResubscriptionDiv').hide();
-}
+function getSelectedValue(oldStatus) {
+    var selObj = document.getElementById('editStatus');
+    var selIndex = selObj.selectedIndex;
+    var newStatus = selObj.options[selIndex].value;
+    if (oldStatus == "CREATED" && newStatus == "PUBLISHED") {
+        $('#deprecateOldVersionsDiv').show();
+        $('#requireResubscriptionDiv').show();
+    } else {
+        $('#deprecateOldVersionsDiv').hide();
+        $('#requireResubscriptionDiv').hide();
+    }
 }
 </script>
 
@@ -45,7 +45,7 @@ $('#requireResubscriptionDiv').hide();
      <div class="control-group">
                 <label class="control-label" for="editStatus" name="state">State:</label>
                 <div class="controls">
-                    <select id="editStatus" name="status" onChange="getSelectedValue('<%=api.status%>');">
+                    <select id="editStatus" name="status" onChange="getSelectedValue('<%=api.status%>');enableUpdateBtn()">
                         <option value="CREATED"<%=(api.status == "CREATED" ? ' selected="selected"' : '')%>>CREATED</option>
                         <option value="PUBLISHED"<%=(api.status == "PUBLISHED" ? ' selected="selected"' : '')%>>PUBLISHED</option>
                         <option value="DEPRECATED"<%=(api.status == "DEPRECATED" ? ' selected="selected"' : '')%>>DEPRECATED</option>
@@ -55,14 +55,14 @@ $('#requireResubscriptionDiv').hide();
                  </div> <br/>
                  <div class="controls">
                     <label class="checkbox">
-                        <input type="checkbox" id="publishToGateway" name="publishToGateway" onChange="checkValue('#publishToGateway')" checked="true" value="true"> Propagate Changes to API Gateway
+                        <input type="checkbox" id="publishToGateway" name="publishToGateway" onChange="checkValue('#publishToGateway');enableUpdateBtn()" checked="true" value="true"> Propagate Changes to API Gateway
                     </label>
                      <label class="checkbox" id="deprecateOldVersionsDiv" style="display:none;">
-                        <input type="checkbox" id="deprecateOldVersions" name="deprecateOldVersions" onChange="checkValue('#deprecateOldVersions')" value="false"> Deprecate Old Versions
+                        <input type="checkbox" id="deprecateOldVersions" name="deprecateOldVersions" onChange="checkValue('#deprecateOldVersions');enableUpdateBtn()" value="false"> Deprecate Old Versions
                      </label>
 
                      <label class="checkbox" id="requireResubscriptionDiv" style="display:none;">
-                        <input type="checkbox" id="requireResubscription" name="requireResubscription" onChange="checkValue('#requireResubscription')"  checked="true" value="true"> Require Re-Subscription
+                        <input type="checkbox" id="requireResubscription" name="requireResubscription" onChange="checkValue('#requireResubscription');enableUpdateBtn()"  checked="true" value="true"> Require Re-Subscription
                      </label>
                  </div>
 
@@ -70,7 +70,7 @@ $('#requireResubscriptionDiv').hide();
 
       </div>
        <div class="form-actions">
-                <input type="submit" id="updateButton" class="btn btn-primary" value="Update"/>
+                <input type="submit" id="updateStateButton" disabled="disabled" class="btn btn-primary" value="Update"/>
                 <input type="reset" id="cancelEdit" class="btn btn-primary" value="Reset">
        </div>
 </form>
@@ -130,7 +130,10 @@ $(document).ready(function() {
                 window.location.href = 'site/pages/index.jag';
             }
             );
- });
 
+ });
+ function enableUpdateBtn(){
+    $('#updateStateButton').removeAttr("disabled");
+ }
  </script>
 <% }); %>

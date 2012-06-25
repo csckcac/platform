@@ -195,7 +195,7 @@ public class AssociationTreeBeanPopulator {
 
             String pathSmall = getShortnedPath(associationTreeBean, path);
             associationTreePart.append("<img src=\"../resources/images/goto_url.gif\" style=\"margin-right:2px;\" />");
-            associationTreePart.append("<a title=\"").append(path).append("\" href=\"").append(
+            associationTreePart.append("<a target=\"_blank\" title=\"").append(path).append("\" href=\"").append(
                     path).append("\">");
            associationTreePart.append(pathSmall).append("</a></li>");
             if (!associationTreeBean.getAssoType().equals(CommonConstants.ASSOCIATION_TYPE01))

@@ -131,7 +131,7 @@
           </div>
           <% if (searchFound) { %>
           <div style="height:25px;">
-              <a class="icon-link" style="background-image: url(../search/images/search-resources.gif);" href="../search/advancedSearch.jsp?region=region3&item=registry_search_menu&leftOp=eq&leftPropertyName=registry.LC.name"><fmt:message key="search.resources.with.lc"/></a>
+              <a class="icon-link" style="background-image: url(../search/images/search-resources.gif);" href="../search/advancedSearch.jsp?region=region3&item=registry_search_menu&PropertyName=registry.LC.name"><fmt:message key="search.resources.with.lc"/></a>
           </div>
           <% } %>
       </div>

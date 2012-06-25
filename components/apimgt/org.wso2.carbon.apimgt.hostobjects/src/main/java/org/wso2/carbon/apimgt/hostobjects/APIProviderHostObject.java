@@ -245,6 +245,10 @@ public class APIProviderHostObject extends ScriptableObject {
         String techOwnerEmail = (String) apiData.get("techOwnerEmail", apiData);
         String bizOwner = (String) apiData.get("bizOwner", apiData);
         String bizOwnerEmail = (String) apiData.get("bizOwnerEmail", apiData);
+
+        provider = provider.trim();
+        name = name.trim();
+        version = version.trim();
         APIIdentifier apiId = new APIIdentifier(provider, name, version);
         APIProvider apiProvider = getAPIProvider(thisObj);
         if (apiProvider.isAPIAvailable(apiId)) {
@@ -347,6 +351,10 @@ public class APIProviderHostObject extends ScriptableObject {
         } else {
             tag.add(tags);
         }
+
+        provider = provider.trim();
+        name = name.trim();
+        version = version.trim();
         APIIdentifier oldApiId = new APIIdentifier(provider, name, version);
         APIProvider apiProvider = getAPIProvider(thisObj);
         try {

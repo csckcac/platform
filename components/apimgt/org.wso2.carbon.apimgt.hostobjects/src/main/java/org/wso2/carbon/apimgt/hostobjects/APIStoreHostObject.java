@@ -1447,7 +1447,7 @@ public class APIStoreHostObject extends ScriptableObject {
             Application[] apps = apiConsumer.getApplications(subscriber);
             for (Application app : apps) {
                 if (app.getName().equals(name)) {
-                    throw new APIManagementException("A duplicate Application already exists by the name - " + name);
+                    throw new APIManagementException("A duplicate application already exists by the name - " + name);
                 }
             }
 

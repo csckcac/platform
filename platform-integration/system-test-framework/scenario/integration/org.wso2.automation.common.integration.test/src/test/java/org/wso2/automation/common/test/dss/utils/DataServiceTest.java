@@ -128,12 +128,6 @@ public abstract class DataServiceTest {
         adminServiceClientDSS.isServiceDeployed(sessionCookie, serviceName,
                                                 frameworkSettings.getEnvironmentVariables().getDeploymentDelay());
 
-        //todo this sleep should be removed after fixing CARBON-11900 gira
-        try {
-            Thread.sleep(10000);
-        } catch (InterruptedException e) {
-            Assert.fail("Thread InterruptedException");
-        }
     }
 
     protected DataHandler createArtifact(String serviceFileName, ArrayList<File> sqlScript)

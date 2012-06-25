@@ -130,12 +130,6 @@ public class EditFaultyDataServiceTest extends DataServiceTest {
     public void serviceReDeployment() throws RemoteException {
         adminServiceClientDSS.isServiceDeployed(sessionCookie, serviceName, frameworkSettings.getEnvironmentVariables().getDeploymentDelay());
         log.info(serviceName + " redeployed");
-        //todo this sleep should be removed after fixing CARBON-11900 gira
-        try {
-            Thread.sleep(10000);
-        } catch (InterruptedException e) {
-            Assert.fail("Thread InterruptedException");
-        }
 
 
     }

@@ -46,13 +46,7 @@ public class SecureDataServiceTest extends DataServiceTest {
                                                                    " Clients have Username Tokens")
     public void securityPolicy1() throws Exception {
         final int policyId = 1;
-        //todo this sleep should be removed after fixing CARBON-11900 jira
-        try {
-            Thread.sleep(10000);
-        } catch (InterruptedException e) {
-            Assert.fail("InterruptedException :" + e);
 
-        }
         this.secureService(policyId);
         SecureAxisServiceClient secureAxisServiceClient = new SecureAxisServiceClient();
         serviceEndPoint = DataServiceUtility.getServiceEndpointHttps(sessionCookie, dssBackEndUrl, serviceName);

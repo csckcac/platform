@@ -20,7 +20,7 @@
         <menu>
             <id>jagger_webapps_menu</id>
             <i18n-key>jaggeryappmgt.services.menu</i18n-key>
-            <i18n-bundle>org.wso2.carbon.jaggery.app.mgt.ui.i18n.Resources</i18n-bundle>
+            <i18n-bundle>org.jaggeryjs.jaggery.app.mgt.ui.i18n.Resources</i18n-bundle>
             <parent-menu>manage_menu</parent-menu>
             <link>#</link>
             <region>region1</region>
@@ -32,7 +32,7 @@
         <menu>
             <id>jagger_webapps_list_menu</id>
             <i18n-key>jaggeryappmgt.listservices.menu</i18n-key>
-            <i18n-bundle>org.wso2.carbon.jaggery.app.mgt.ui.i18n.Resources</i18n-bundle>
+            <i18n-bundle>org.jaggeryjs.jaggery.app.mgt.ui.i18n.Resources</i18n-bundle>
             <parent-menu>jagger_webapps_menu</parent-menu>
             <link>../jaggeryapp-mgt/index.jsp</link>
             <region>region1</region>
@@ -44,7 +44,7 @@
         <menu>
             <id>jagger_webapps_add_menu</id>
             <i18n-key>jaggeryappmgt.add.webapp.menu</i18n-key>
-            <i18n-bundle>org.wso2.carbon.jaggery.app.mgt.ui.i18n.Resources</i18n-bundle>
+            <i18n-bundle>org.jaggeryjs.jaggery.app.mgt.ui.i18n.Resources</i18n-bundle>
             <parent-menu>jagger_webapps_menu</parent-menu>
             <link>../jaggeryapp-mgt/uploadjaggeryapp.jsp</link>
             <region>region1</region>

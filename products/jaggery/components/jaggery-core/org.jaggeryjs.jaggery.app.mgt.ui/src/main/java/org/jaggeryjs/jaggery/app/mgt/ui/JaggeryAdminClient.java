@@ -43,7 +43,7 @@ import java.util.ResourceBundle;
 public class JaggeryAdminClient {
     private static final String CANNOT_EXPIRE_ALL_SESSIONS_IN_WEBAPPS = "cannot.expire.all.sessions.in.webapps";
 	private static final String CANNOT_DELETE_WEBAPPS = "cannot.delete.webapps";
-	public static final String BUNDLE = "org.wso2.carbon.jaggery.app.mgt.ui.i18n.Resources";
+	public static final String BUNDLE = "org.jaggeryjs.jaggery.app.mgt.ui.i18n.Resources";
     private static final Log log = LogFactory.getLog(JaggeryAdminClient.class);
     private ResourceBundle bundle;
     private JaggeryAppAdminStub stub;

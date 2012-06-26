@@ -89,6 +89,11 @@
             <artifactId>org.wso2.carbon.apimgt.handlers.security.stub</artifactId>
             <version>${wso2carbon.version}</version>
         </dependency>
+        <dependency>
+            <groupId>org.wso2.carbon</groupId>
+            <artifactId>org.wso2.carbon.um.ws.api</artifactId>
+            <version>${wso2carbon.version}</version>
+        </dependency>
     </dependencies>
     <build>
         <plugins>

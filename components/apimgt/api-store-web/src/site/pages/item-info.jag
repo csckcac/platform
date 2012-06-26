@@ -35,13 +35,15 @@ var site = require("/site/conf/site.json");
                         },
                         "left":{
                             "name":"api/provider-apis",
-                            "inputs":null
+                            "inputs":{
+                                     "providerId":api.provider
+                                     }
                         },
                         "middle":{
                             "name":"api/api-info",
                             "inputs":{
-                                "api":api
-                            }
+                                     "api":api
+                                     }
                         },
                         "right":null
                     }

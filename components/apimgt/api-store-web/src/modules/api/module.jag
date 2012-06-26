@@ -8,6 +8,9 @@ jagg.module("api", {
     getAllPublishedAPIs:function () {
         return jagg.require(jagg.getModulesDir() + "api/published.jag").getAllPublishedAPIs.apply(this, arguments);
     },
+    getPublishedAPIsByProvider:function () {
+        return jagg.require(jagg.getModulesDir() + "api/published-by-provider.jag").getPublishedAPIsByProvider.apply(this, arguments);
+    },
 
     getRecentlyAddedAPIs:function () {
         return jagg.require(jagg.getModulesDir() + "api/recently-added.jag").getRecentlyAddedAPIs.apply(this, arguments);

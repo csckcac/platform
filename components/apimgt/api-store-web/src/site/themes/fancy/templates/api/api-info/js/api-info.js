@@ -84,7 +84,7 @@ $(document).ready(function () {
             function(){
                 if($(this).val() == "createNewApp"){
                     //$.cookie('apiPath','foo');
-                    window.location.href = '../site/pages/applications.jag?addFor=api';
+                    window.location.href = '../site/pages/applications.jag?goBack=yes';
                 }
             }
             );

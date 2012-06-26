@@ -6,6 +6,7 @@
         thumbURL = site.context + "/site/themes/"+jagg.getUserTheme()+"/" + thumbURL;
    }
    var subsPermitted = jagg.module("subscription").hasSubscribePermission().permitted;
+   session.put("apiPath",request.getQueryString());
 %>
 <h2><%=api.name%> - <%=api.version%></h2>
 <h6><i class="icon-user"></i> <%=api.provider%></h6>

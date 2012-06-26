@@ -59,8 +59,7 @@ var jagg = jagg || {};
             jagg.messageDisplay(params);
             return;
         }else if(params.type = "confirm"){
-            params.content = params.content;
-            if( params.title == undefined ){ param.title = "API Publisher"}
+            if( params.title == undefined ){ params.title = "API Publisher"}
             jagg.messageDisplay({content:params.content,title:params.title ,buttons:[
                 {name:"No",cssClass:"btn",cbk:function() {
                     $('#messageModal').modal('hide');

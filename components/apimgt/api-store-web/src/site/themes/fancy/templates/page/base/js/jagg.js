@@ -28,9 +28,37 @@ var jagg = jagg || {};
         $('#messageModal a.btn-other').hide();
         $('#messageModal').modal();
     };
+     /*
+    usage
+    Show info dialog
+    jagg.message({content:'foo',type:'info'});
+
+    Show warning
+    dialog jagg.message({content:'foo',type:'warning'});
+
+    Show error dialog
+    jagg.message({content:'foo',type:'error'});
+
+    Show confirm dialog
+    jagg.message({content:'foo',type:'confirm',okCallback:function(){},cancelCallback:function(){}});
+     */
     jagg.message = function(params){
         if(params.type == "custom"){
             jagg.messageDisplay(params);
+            return;
+        }else if(params.type = "confirm"){
+            if( params.title == undefined ){ params.title = "API Store"}
+            jagg.messageDisplay({content:params.content,title:params.title ,buttons:[
+                {name:"Yes",cssClass:"btn btn-primary",cbk:function() {
+                    $('#messageModal').modal('hide');
+                    if(typeof params.okCallback == "function") {params.okCallback()};
+                }},
+                {name:"No",cssClass:"btn",cbk:function() {
+                    $('#messageModal').modal('hide');
+                    if(typeof params.cancelCallback  == "function") {params.cancelCallback()};
+                }}
+            ]
+            });
             return;
         }
         params.content = '<table><tr><td><img src="'+siteRoot+'/images/'+params.type+'.png" align="center" hspace="10" /></td><td><span class="messageText">'+params.content+'</span></td></tr></table>';

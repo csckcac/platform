@@ -6,13 +6,24 @@ $(document).ready(function () {
     });
     var applicationAdd = function(){
         var application = $("#application-name").val();
+        var apiPath = $("#apiPath").val();
+        var goBack = $("#goBack").val();
         jagg.post("/site/blocks/application/application-add/ajax/application-add.jag", {
             action:"addApplication",
             application:application
         }, function (result) {
             if (result.error == false) {
                 $.cookie('highlight','true');
-                window.location.reload();
+                if(goBack == "yes"){
+                    jagg.message({content:'Return back to API detail page?',type:'confirm',okCallback:function(){
+                         window.location.href = apiViewUrl + "?" +  apiPath;
+                    },cancelCallback:function(){
+                        window.location.href= appAddUrl;
+                    }});
+                } else{
+                    window.location.reload();
+                }
+
             } else {
                 jagg.message({content:result.error,type:"error"});
             }

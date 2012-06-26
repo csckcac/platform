@@ -238,7 +238,7 @@
         <tr>
             <td><fmt:message key="media.type1"/>:</td>
             <td colspan="2">
-                     <div style="width:400px">
+                     <div style="width:100%">
                     <div id="toggleSaveMediaType_view" style="float:left;line-height: 25px;"><% if (metadata.getMediaType() != null && metadata.getMediaType().length() != 0) { %><%=MediaTypesUtils.getHumanReadableMediaTypeFromMimeType(metadata.getMediaType())%><% } else { %>
                             <fmt:message key="unknown"/><% } %>
                             </div>

@@ -14,7 +14,7 @@
         <tbody id="users">
 
         <%
-        var i, path,apiPath,subscriber, subscribers = outputs.subscribers;
+        var i, apiPath,subscriber, subscribers = outputs.subscribers;
         if(subscribers!=null){
         var length = subscribers.length;
         if (length == 0) {
@@ -24,10 +24,9 @@
         }
         for(i = 0; i < length; i++) {
         subscriber = subscribers[i];
-        path = jagg.getMappedUrl("/site/pages/user.jag") + "?uname=" + subscriber.username;
         %>
         <tr>
-        <td><i class="icon-user"></i><a href="<%=path%>"><%=subscriber.username%></a></td>
+        <td><i class="icon-user"></i><%=subscriber.username%></td>
         <td><%=subscriber.application%></td><td>
         <% var apiList =subscriber.apis;
         var apiName;

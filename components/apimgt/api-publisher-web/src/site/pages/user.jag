@@ -18,8 +18,8 @@ var site = require("/site/conf/site.json");
     return;
     }
 
-    mod = jagg.module("subscription");
-    result = mod.getSubscribedAPIs(userId);
+    mod = jagg.module("api");
+    result = mod.getAPIsByProvider(userId);
     apis = result.apis;
     jagg.render({
         "name":"page/base",

@@ -1,6 +1,6 @@
 <% jagg.template("user-apis", function(inputs, outputs, jagg) { %>
-<div id="user"><h2><%=request.getParameter("uname")%></h2>
-  <% jagg.includeBlock("search/api-search", null); %>
+<div id="user"><h2>APIs By Provider - <%=request.getParameter("uname")%></h2>
+  <div></div>
 <div class="row">
 
     <div class="span7">
@@ -22,7 +22,7 @@
             apiPath=jagg.getMappedUrl("/site/pages/item-info.jag") + "?name=" + api.name + "&version=" + api.version +"&provider=" + api.provider;
             %>
             <tr>
-            <td><i class="icon-user"></i><a href="<%=apiPath%>"><%=api.name%></a></td>
+            <td><i class="icon-file"></i><a href="<%=apiPath%>"><%=api.name%></a></td>
             <td><%=api.lastUpdatedDate%></td>
             <!--<td><i class="icon-edit"></i><a href="#">Stats</a>
                 <i class="icon-trash"></i><a href="#">Revoke Access</a>

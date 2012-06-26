@@ -68,11 +68,12 @@
 
 
                 <% if(reqUrl.indexOf(userUrl)>=0||reqUrl.indexOf(userMappedUrl)>=0){%>
+
                 <li>
-                    My APIs <span class="divider">/</span>
+                    APIs <span class="divider">/</span>
                 </li>
                 <li>
-                    <a href="<%=subsMappedUrl%>">Users-Keys</a>
+                    <a href="<%=listMappedUrl%>">All</a>
                 </li>
                 <li>
                     <span class="divider">/</span>

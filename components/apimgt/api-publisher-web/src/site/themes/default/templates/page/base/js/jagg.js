@@ -59,15 +59,16 @@ var jagg = jagg || {};
             jagg.messageDisplay(params);
             return;
         }else if(params.type = "confirm"){
-            params.content = '<img src="'+siteRoot+'/images/'+params.type+'.png" align="center" hspace="10" /><span class="messageText">'+params.content+'</span>';
-            jagg.messageDisplay({content:params.content,title:"API Publisher" ,buttons:[
-                {name:"OK",cssClass:"btn btn-primary",cbk:function() {
-                    $('#messageModal').modal('hide');
-                    if(typeof params.okCallback == "function") {params.okCallback()};
-                }},
-                {name:"Cancel",cssClass:"btn",cbk:function() {
+            params.content = params.content;
+            if( params.title == undefined ){ param.title = "API Publisher"}
+            jagg.messageDisplay({content:params.content,title:params.title ,buttons:[
+                {name:"No",cssClass:"btn",cbk:function() {
                     $('#messageModal').modal('hide');
                     if(typeof params.cancelCallback  == "function") {params.cancelCallback()};
+                }},
+                {name:"Yes",cssClass:"btn btn-primary",cbk:function() {
+                    $('#messageModal').modal('hide');
+                    if(typeof params.okCallback == "function") {params.okCallback()};
                 }}
             ]
             });

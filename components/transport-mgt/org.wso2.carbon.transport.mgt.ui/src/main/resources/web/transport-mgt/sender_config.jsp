@@ -97,6 +97,7 @@
         var row=document.createElement("TR");
         var cell1 = document.createElement("TD");
         var cell2 = document.createElement("TD");
+        var cell3 = document.createElement("TD");
         var textnode1=document.createTextNode(paramName);
         var textArea=document.createElement("TEXTAREA");
         textArea.setAttribute("rows", "3");
@@ -111,9 +112,10 @@
 
         cell1.appendChild(textnode1);
         cell2.appendChild(textArea);
-        cell2.appendChild(delButton);
+        cell3.appendChild(delButton);
         row.appendChild(cell1);
         row.appendChild(cell2);
+        row.appendChild(cell3);
         tabBody.appendChild(row);
         inputBox.value = "";
 
@@ -144,6 +146,7 @@
         <tr>
             <td class="sub-header"><fmt:message key="transport.parameter.name"/></td>
             <td class="sub-header"><fmt:message key="transport.parameter.value"/></td>
+            <td class="sub-header"><fmt:message key="transport.parameter.action"/></td>
         </tr>
 
         <%
@@ -161,6 +164,7 @@
                 <input type='checkbox' name='<%=chkName%>' value='<%=chkName%>' id='<%=chkName%>' checked='checked' onclick="setType('<%=chkName%>','<%=currentParam.getName()%>')" />
                 <input type="hidden" name="<%=currentParam.getName()%>" id="<%=currentParam.getName()%>" value="true"/>
             </td>
+                <td><a href="#" onclick="deleteRow(this)"><fmt:message key="transport.parameter.remove"/></a></td>
             <%
             }else if ("false".equalsIgnoreCase(currentParam.getValue())){
             %>
@@ -168,10 +172,12 @@
                 <input type='checkbox' name='<%=chkName%>' id='<%=chkName%>' value='<%=chkName%>' onclick="setType('<%=chkName%>','<%=currentParam.getName()%>')" />
                 <input type='hidden' name='<%=currentParam.getName()%>' id='<%=currentParam.getName()%>' value='false' />
             </td>
+                <td><a href="#" onclick="deleteRow(this)"><fmt:message key="transport.parameter.remove"/></a></td>
             <%} else {
             %>
             <td><textarea rows="3" cols="60" name="<%=currentParam.getName()%>"><%=currentParam.getValue()%></textarea>
             </td>
+                <td><a href="#" onclick="deleteRow(this)"><fmt:message key="transport.parameter.remove"/></a></td>
             <%}%>
         </tr>
         <%} %>

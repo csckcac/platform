@@ -52,6 +52,16 @@
                                             location="${settings.localRepository}/org/apache/axis2/wso2/axis2-client/${axis2.wso2.version}/axis2-client-${axis2.wso2.version}.jar"/>
                                     <pathelement
                                             location="${settings.localRepository}/org/apache/axis2/wso2/axis2/${axis2.wso2.version}/axis2-${axis2.wso2.version}.jar"/>
+                                    <pathelement
+                                            location="${settings.localRepository}/wsdl4j/wso2/wsdl4j/${wsdl4j.version}/wsdl4j-${wsdl4j.version}.jar"/>
+                                    <pathelement
+                                            location="${settings.localRepository}/commons-logging/commons-logging/${commons.logging.version}/commons-logging-${commons.logging.version}.jar"/>
+                                    <pathelement
+                                            location="${settings.localRepository}/org/apache/neethi/neethi/${neethi.version}/neethi-${neethi.version}.jar"/>
+                                    <pathelement
+                                            location="${settings.localRepository}/org/apache/ws/commons/axiom/wso2/axiom/${axiom.version}/axiom-${axiom.version}.jar"/>
+                                    <pathelement
+                                            location="${settings.localRepository}/org/apache/ws/commons/schema/wso2/XmlSchema/${XmlSchema.version}/XmlSchema-${XmlSchema.version}.jar"/>
                                 </path>
                                 <java classname="org.apache.axis2.wsdl.WSDL2Java" fork="true">
                                     <arg line="-uri src/main/resources/JaggeryAppAdmin.wsdl -u -uw
@@ -122,6 +132,18 @@
         <dependency>
             <groupId>wsdl4j.wso2</groupId>
             <artifactId>wsdl4j</artifactId>
+        </dependency>
+        <dependency>
+            <groupId>commons-logging</groupId>
+            <artifactId>commons-logging</artifactId>
+        </dependency>
+        <dependency>
+            <groupId>org.apache.neethi</groupId>
+            <artifactId>neethi</artifactId>
+        </dependency>
+        <dependency>
+            <groupId>org.apache.ws.commons.axiom.wso2</groupId>
+            <artifactId>axiom</artifactId>
         </dependency>
     </dependencies>
 </project>

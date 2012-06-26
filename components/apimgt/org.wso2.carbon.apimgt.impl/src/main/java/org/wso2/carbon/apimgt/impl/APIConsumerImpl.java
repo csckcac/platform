@@ -28,8 +28,11 @@ import org.wso2.carbon.apimgt.impl.utils.APIAuthenticationAdminClient;
 import org.wso2.carbon.apimgt.impl.utils.APINameComparator;
 import org.wso2.carbon.apimgt.impl.utils.APIUtil;
 import org.wso2.carbon.apimgt.impl.utils.APIVersionComparator;
+import org.wso2.carbon.governance.api.exception.GovernanceException;
 import org.wso2.carbon.governance.api.generic.GenericArtifactManager;
 import org.wso2.carbon.governance.api.generic.dataobjects.GenericArtifact;
+import org.wso2.carbon.registry.core.Association;
+import org.wso2.carbon.registry.core.RegistryConstants;
 import org.wso2.carbon.registry.core.Resource;
 import org.wso2.carbon.registry.core.exceptions.RegistryException;
 import org.wso2.carbon.registry.core.session.UserRegistry;
@@ -252,6 +255,40 @@ class APIConsumerImpl extends AbstractAPIManager implements APIConsumer {
             handleException("Failed to get rating of user : " + user, e);
         }
         return rating;
+    }
+
+    @Override
+    public Set<API> getPublishedAPIsByProvider(String providerId) throws APIManagementException {
+        SortedSet<API> apiSortedSet = new TreeSet<API>(new APINameComparator());
+        try {
+            String providerPath = APIConstants.API_ROOT_LOCATION + RegistryConstants.PATH_SEPARATOR +
+                                  providerId;
+
+            GenericArtifactManager artifactManager = APIUtil.getArtifactManager(registry,
+                                                                                APIConstants.API_KEY);
+            Association[] associations = registry.getAssociations(providerPath,
+                                                                  APIConstants.PROVIDER_ASSOCIATION);
+            for (Association association : associations) {
+                String apiPath = association.getDestinationPath();
+                Resource resource = registry.get(apiPath);
+                String apiArtifactId = resource.getUUID();
+                if (apiArtifactId != null) {
+                    GenericArtifact apiArtifact = artifactManager.getGenericArtifact(apiArtifactId);
+                    // check the API status
+                    String status = apiArtifact.getAttribute(APIConstants.API_OVERVIEW_STATUS);
+                    if (status.equals(APIConstants.PUBLISHED)) {
+                        apiSortedSet.add(APIUtil.getAPI(apiArtifact, registry));
+                    }
+                } else {
+                    throw new GovernanceException("artifact id is null of " + apiPath);
+                }
+            }
+
+        } catch (RegistryException e) {
+            handleException("Failed to get Published APIs for provider : " + providerId, e);
+        }
+
+        return apiSortedSet;
     }
 
     public Set<API> searchAPI(String searchTerm) throws APIManagementException {

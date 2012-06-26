@@ -606,7 +606,7 @@ public class JaggeryAppAdmin extends AbstractAdmin {
 
         String jaggeryAppsPath = repoPath + File.separator +
                 JaggeryConstants.WEBAPP_DEPLOYMENT_FOLDER;
-        if (!repoPath.endsWith("/deployment/server/")) {
+        if (!repoPath.endsWith("/deployment/server")) {
             jaggeryAppsPath = repoPath + File.separator +
                     JaggeryConstants.WEBAPP_DEPLOYMENT_FOLDER_IN_JAGGERY;
         }

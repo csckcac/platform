@@ -25,6 +25,7 @@ import org.apache.axiom.om.util.Base64;
 import org.wso2.carbon.rssmanager.common.RSSManagerCommonUtil;
 import org.wso2.carbon.rssmanager.common.RSSManagerConstants;
 import org.wso2.carbon.rssmanager.core.dao.RSSConfig;
+import org.wso2.carbon.rssmanager.core.dao.RSSDAO;
 import org.wso2.carbon.rssmanager.core.dao.RSSDAOFactory;
 import org.wso2.carbon.rssmanager.core.description.*;
 import org.wso2.carbon.rssmanager.core.internal.RSSManagerServiceComponent;
@@ -534,6 +535,33 @@ public class RSSManagerUtil {
     public static int getRSSInstanceId(int dbInsId) throws RSSDAOException {
         DatabaseInstance dbIns = RSSDAOFactory.getRSSDAO().getDatabaseInstanceById(dbInsId);
         return dbIns.getRssInstanceId();
+    }
+
+    /**
+     * Retrieves the round robin assigned RSS instance that should be used to create the next
+     * database for a given tenant
+     *
+     * @return                  RSSInstance data
+     * @throws RSSDAOException  RSSDAOException
+     */
+    public static RSSInstanceEntry getRoundRobinAssignedRSSInstance() throws RSSDAOException {
+         int insCount;
+        RSSDAO dao = RSSDAOFactory.getRSSDAO();
+        List<RSSInstance> rdsInstances = dao.getAllServiceProviderHostedRSSInstances();
+        insCount = dao.getServiceProviderHostedRSSDatabaseInstanceCount();
+
+        for (int i = 0; i < rdsInstances.size(); i++) {
+            if (i == insCount % rdsInstances.size()) {
+                RSSInstance rssIns = rdsInstances.get(i);
+                if (rssIns != null) {
+                    RSSInstanceEntry rssEntry =
+                            RSSManagerUtil.createRSSInstanceEntryFromRSSInstanceData(rssIns);
+                    rssEntry.setName(RSSManagerConstants.WSO2_RSS_INSTANCE_TYPE);
+                    return rssEntry;
+                }
+            }
+        }
+        return null;
     }
 
 

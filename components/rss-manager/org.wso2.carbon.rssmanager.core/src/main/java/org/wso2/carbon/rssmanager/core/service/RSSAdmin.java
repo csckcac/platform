@@ -163,23 +163,7 @@ public class RSSAdmin extends AbstractAdmin {
      * @throws RSSDAOException rssDaoException
      */
     public RSSInstanceEntry getRoundRobinAssignedRSSInstance() throws RSSDAOException {
-        int insCount;
-        RSSDAO dao = RSSDAOFactory.getRSSDAO();
-        List<RSSInstance> rdsInstances = dao.getAllServiceProviderHostedRSSInstances();
-        insCount = dao.getServiceProviderHostedRSSDatabaseInstanceCount();
-
-        for (int i = 0; i < rdsInstances.size(); i++) {
-            if (i == insCount % rdsInstances.size()) {
-                RSSInstance rssIns = rdsInstances.get(i);
-                if (rssIns != null) {
-                    RSSInstanceEntry rssEntry =
-                            RSSManagerUtil.createRSSInstanceEntryFromRSSInstanceData(rssIns);
-                    rssEntry.setName(RSSManagerConstants.WSO2_RSS_INSTANCE_TYPE);
-                    return rssEntry;
-                }
-            }
-        }
-        return null;
+        return RSSManagerUtil.getRoundRobinAssignedRSSInstance();
     }
 
     /**

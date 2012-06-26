@@ -104,7 +104,7 @@
                  <div class="control-group">
                     <label class="control-label" for="bizOwnerMail">Business Owner Email:</label>
                     <div class="controls">
-                         <input type="text" class="input-xlarge" id="bizOwnerMail" name="bizOwnerMail"/>
+                         <input type="text" class="input-xlarge email" id="bizOwnerMail" name="bizOwnerMail"/>
                     </div>
                 </div>
                  <div class="control-group">
@@ -116,7 +116,7 @@
                  <div class="control-group">
                     <label class="control-label" for="techOwnerMail">Technical Owner Email:</label>
                     <div class="controls">
-                         <input type="text" class="input-xlarge" id="techOwnerMail" name="techOwnerMail"/>
+                         <input type="text" class="input-xlarge email" id="techOwnerMail" name="techOwnerMail"/>
                     </div>
                 </div>
 

@@ -53,6 +53,15 @@
             <groupId>org.mozilla</groupId>
             <artifactId>rhino</artifactId>
         </dependency>
+        <dependency>
+            <groupId>org.wso2.carbon</groupId>
+            <artifactId>org.wso2.carbon.ntask.core</artifactId>
+        </dependency>
+        <dependency>
+            <groupId>org.wso2.carbon</groupId>
+            <artifactId>org.wso2.carbon.ntask.solutions</artifactId>
+            <version>${carbon.platform.version}</version>
+        </dependency>
     </dependencies>
 
     <build>
@@ -64,17 +73,20 @@
             <plugin>
                 <groupId>org.apache.felix</groupId>
                 <artifactId>maven-bundle-plugin</artifactId>
-
                 <extensions>true</extensions>
                 <configuration>
                     <instructions>
                         <Bundle-SymbolicName>${project.artifactId}</Bundle-SymbolicName>
                         <Bundle-Name>${project.artifactId}</Bundle-Name>
                         <Export-Package>
-                            org.wso2.carbon.jaggery.core.*;
+                        	org.wso2.carbon.jaggery.core.*,
+                        	!org.wso2.carbon.jaggery.core.internal
                         </Export-Package>
+                        <Private-Package>org.wso2.carbon.jaggery.core.internal</Private-Package>
                         <Import-Package>
+                        	!org.wso2.carbon.jaggery.core.*,
                             javax.servlet; version=2.4.0,
+                            javax.servlet.http; version=2.4.0,
                             *;resolution:=optional
                         </Import-Package>
                         <DynamicImport-Package>*</DynamicImport-Package>
@@ -83,6 +95,5 @@
             </plugin>
         </plugins>
     </build>
-
 </project>
 

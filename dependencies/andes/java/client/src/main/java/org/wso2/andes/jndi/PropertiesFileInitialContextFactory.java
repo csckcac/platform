@@ -21,8 +21,11 @@
 package org.wso2.andes.jndi;
 
 import java.io.BufferedInputStream;
+import java.io.File;
 import java.io.FileInputStream;
 import java.io.IOException;
+import java.net.URI;
+import java.net.URISyntaxException;
 import java.util.Hashtable;
 import java.util.Iterator;
 import java.util.Map;
@@ -33,6 +36,7 @@ import javax.jms.ConnectionFactory;
 import javax.jms.Destination;
 import javax.jms.Queue;
 import javax.jms.Topic;
+import javax.naming.ConfigurationException;
 import javax.naming.Context;
 import javax.naming.NamingException;
 import javax.naming.spi.InitialContextFactory;
@@ -44,22 +48,24 @@ import org.wso2.andes.client.AMQQueue;
 import org.wso2.andes.client.AMQTopic;
 import org.wso2.andes.exchange.ExchangeDefaults;
 import org.wso2.andes.framing.AMQShortString;
-import org.wso2.andes.url.AMQBindingURL;
 import org.wso2.andes.url.BindingURL;
 import org.wso2.andes.url.URLSyntaxException;
 import org.wso2.andes.util.Strings;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
+
+
 public class PropertiesFileInitialContextFactory implements InitialContextFactory
 {
-    protected final Logger _logger = LoggerFactory.getLogger(PropertiesFileInitialContextFactory.class);
+    private final Logger _logger = LoggerFactory.getLogger(PropertiesFileInitialContextFactory.class);
 
     private String CONNECTION_FACTORY_PREFIX = "connectionfactory.";
     private String DESTINATION_PREFIX = "destination.";
     private String QUEUE_PREFIX = "queue.";
     private String TOPIC_PREFIX = "topic.";
 
+    @SuppressWarnings({ "rawtypes", "unchecked" })
     public Context getInitialContext(Hashtable environment) throws NamingException
     {
         Map data = new ConcurrentHashMap();
@@ -77,13 +83,23 @@ public class PropertiesFileInitialContextFactory implements InitialContextFactor
                 file = System.getProperty(Context.PROVIDER_URL);
             }
 
+            // Load the properties specified
             if (file != null)
             {
                 _logger.info("Loading Properties from:" + file);
+                BufferedInputStream inputStream = null;
 
-                // Load the properties specified
-                BufferedInputStream inputStream = new BufferedInputStream(new FileInputStream(file));
+                if(file.contains("file:"))
+                {
+                    inputStream = new BufferedInputStream(new FileInputStream(new File(new URI(file))));
+                }
+                else
+                {
+                    inputStream = new BufferedInputStream(new FileInputStream(file));
+                }
+
                 Properties p = new Properties();
+
                 try
                 {
                     p.load(inputStream);
@@ -119,6 +135,11 @@ public class PropertiesFileInitialContextFactory implements InitialContextFactor
             _logger.warn("Unable to load property file specified in Provider_URL:" + environment.get(Context.PROVIDER_URL) +"\n" +
                          "Due to:"+ioe.getMessage());
         }
+        catch(URISyntaxException uoe)
+        {
+            _logger.warn("Unable to load property file specified in Provider_URL:" + environment.get(Context.PROVIDER_URL) +"\n" +
+                            "Due to:"+uoe.getMessage());
+        }
 
         createConnectionFactories(data, environment);
 
@@ -138,7 +159,7 @@ public class PropertiesFileInitialContextFactory implements InitialContextFactor
         return new ReadOnlyContext(environment, data);
     }
 
-    protected void createConnectionFactories(Map data, Hashtable environment)
+    protected void createConnectionFactories(Map data, Hashtable environment) throws ConfigurationException
     {
         for (Iterator iter = environment.entrySet().iterator(); iter.hasNext();)
         {
@@ -156,7 +177,7 @@ public class PropertiesFileInitialContextFactory implements InitialContextFactor
         }
     }
 
-    protected void createDestinations(Map data, Hashtable environment)
+    protected void createDestinations(Map data, Hashtable environment) throws ConfigurationException
     {
         for (Iterator iter = environment.entrySet().iterator(); iter.hasNext();)
         {
@@ -224,7 +245,7 @@ public class PropertiesFileInitialContextFactory implements InitialContextFactor
     /**
      * Factory method to create new Connection Factory instances
      */
-    protected ConnectionFactory createFactory(String url)
+    protected ConnectionFactory createFactory(String url) throws ConfigurationException
     {
         try
         {
@@ -232,16 +253,18 @@ public class PropertiesFileInitialContextFactory implements InitialContextFactor
         }
         catch (URLSyntaxException urlse)
         {
-            _logger.warn("Unable to createFactories:" + urlse);
-        }
+            _logger.warn("Unable to create factory:" + urlse);
 
-        return null;
+            ConfigurationException ex = new ConfigurationException("Failed to parse entry: " + urlse + " due to : " +  urlse.getMessage());
+            ex.initCause(urlse);
+            throw ex;
+        }
     }
 
     /**
      * Factory method to create new Destination instances from an AMQP BindingURL
      */
-    protected Destination createDestination(String str)
+    protected Destination createDestination(String str) throws ConfigurationException
     {
         try
         {
@@ -251,7 +274,9 @@ public class PropertiesFileInitialContextFactory implements InitialContextFactor
         {
             _logger.warn("Unable to create destination:" + e, e);
 
-            return null;
+            ConfigurationException ex = new ConfigurationException("Failed to parse entry: " + str + " due to : " +  e.getMessage());
+            ex.initCause(e);
+            throw ex;
         }
     }
 

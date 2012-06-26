@@ -1669,4 +1669,55 @@ public class APIStoreHostObject extends ScriptableObject {
             throw new APIManagementException("Error while removing the subscription of" + name + "-" + version, e);
         }
     }
+
+    public static NativeArray jsFunction_getPublishedAPIsByProvider(Context cx, Scriptable thisObj,
+                                                                    Object[] args,
+                                                                    Function funObj)
+            throws APIManagementException {
+        NativeArray apiArray = new NativeArray(0);
+        if (isStringArray(args)) {
+            String providerName = args[0].toString();
+            Set<API> apiSet;
+            APIConsumer apiConsumer = getAPIConsumer(thisObj);
+            try {
+                apiSet = apiConsumer.getPublishedAPIsByProvider(providerName);
+            } catch (APIManagementException e) {
+                throw new APIManagementException("Error while getting Published APIs Information of the provider - " + providerName
+                        , e);
+
+            } catch (Exception e) {
+                throw new APIManagementException(e.getMessage()
+                        , e);
+
+            }
+            Iterator it = apiSet.iterator();
+            int i = 0;
+            while (it.hasNext()) {
+                NativeObject currentApi = new NativeObject();
+                Object apiObject = it.next();
+                API api = (API) apiObject;
+                APIIdentifier apiIdentifier = api.getId();
+                currentApi.put("name", currentApi, apiIdentifier.getApiName());
+                currentApi.put("provider", currentApi,
+                               apiIdentifier.getProviderName());
+                currentApi.put("version", currentApi,
+                               apiIdentifier.getVersion());
+                currentApi.put("description", currentApi, api.getDescription());
+                currentApi.put("rates", currentApi, api.getRating());
+                if (api.getThumbnailUrl() == null) {
+                    currentApi.put("thumbnailurl", currentApi, "images/api-default.png");
+                } else {
+                    currentApi.put("thumbnailurl", currentApi, api.getThumbnailUrl());
+                }
+                apiArray.put(i, apiArray, currentApi);
+                i++;
+            }
+            return apiArray;
+
+        } else {
+            throw new APIManagementException("Invalid types of input parameters.");
+        }
+
+
+    }
 }

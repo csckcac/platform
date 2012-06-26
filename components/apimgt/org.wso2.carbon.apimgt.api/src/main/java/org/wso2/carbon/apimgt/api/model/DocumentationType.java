@@ -24,7 +24,7 @@ package org.wso2.carbon.apimgt.api.model;
 @SuppressWarnings("unused")
 public enum DocumentationType {
     HOWTO("How To"),
-    SAMPLES("samples"),
+    SAMPLES("Samples"),
     PUBLIC_FORUM("Public Forum"),
     SUPPORT_FORUM("Support Forum"),
     API_MESSAGE_FORMAT("API Message Format"),

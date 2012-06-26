@@ -1,6 +1,6 @@
 var removeAPI = function(name, version, provider) {
     jagg.message({
-        content:"Are you sure you want to delete, API - " + name + " - " + version ,
+        content:"Are you sure you want to delete the API - " + name + " - " + version ,
         type:"confirm",
         title:"Confirm Delete",
         okCallback:function(){

@@ -8,7 +8,7 @@
             <thead>
             <tr>
                 <th>API</th>
-                <th>Last Accessed</th>
+                <th>Last Modified</th>
                 <!--<th>Actions</th>-->
             </tr>
             </thead>

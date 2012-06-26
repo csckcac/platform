@@ -72,7 +72,7 @@ function collapseKeys(index,type,link){
 function removeSubscription(apiName, version, provider, applicationId) {
     $('#messageModal').html($('#confirmation-data').html());
     $('#messageModal h3.modal-title').html('Confirm Delete');
-    $('#messageModal div.modal-body').html('\n\nAre you sure you want to delete the subscription of <b>"' + apiName+'-'+version + '</b>"?');
+    $('#messageModal div.modal-body').html('\n\nAre you sure you want to unsubscribe from <b>"' + apiName+'-'+version + '</b>"?');
     $('#messageModal a.btn-primary').html('Yes');
     $('#messageModal a.btn-other').html('No');
     $('#messageModal a.btn-primary').click(function() {

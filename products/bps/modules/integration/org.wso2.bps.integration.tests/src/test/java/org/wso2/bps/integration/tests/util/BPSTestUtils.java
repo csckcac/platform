@@ -296,12 +296,20 @@ public class BPSTestUtils {
 
     /**
      *  Get the BPS Sample folder location relative to the extracted BPS Distribution
-     * @return
+     * @param carbonHome Carbon Home
+     * @return BPEL sample location in the BPS distribution
      */
     public static String getBpelSampleLocation(String carbonHome){
-
         return carbonHome + File.separator + "repository" + File.separator + "samples" +
                 File.separator  + "bpel" + File.separator;
+    }
+
+    /**
+     * Get the BPS integration test samples location
+     * @return BPS integration test samples location
+     */
+    public static String getBpelTestSampleLocation(){
+        return System.getProperty("bps.sample.location") + "bpel" + File.separator;
     }
 
     public static String getHumanTaskSampleLocation(String carbonHome){

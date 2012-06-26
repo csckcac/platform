@@ -21,8 +21,11 @@ import org.apache.commons.logging.Log;
 import org.apache.commons.logging.LogFactory;
 import org.testng.annotations.AfterSuite;
 import org.testng.annotations.BeforeSuite;
+import org.wso2.bps.integration.tests.util.BPSTestUtils;
 import org.wso2.carbon.integration.framework.TestServerManager;
+import org.wso2.carbon.utils.FileManipulator;
 
+import java.io.File;
 import java.io.IOException;
 
 /**
@@ -51,7 +54,15 @@ public class BPSTestServerManager extends TestServerManager {
 
     @Override
     protected void copyArtifacts(String carbonHome) throws IOException {
+        File[] samples = FileManipulator.getMatchingFiles(BPSTestUtils.getBpelTestSampleLocation(),
+                null, "zip");
+        File bpelRepo = new File(carbonHome + File.separator + "repository" + File.separator +
+                                 "samples" + File.separator + "bpel" + File.separator);
+        for (File sample : samples) {
 
+            FileManipulator.copyFileToDir(sample, bpelRepo);
+            log.info("Copying: " + sample.getAbsolutePath() + " to " + bpelRepo.getAbsolutePath());
+        }
     }
 
 }

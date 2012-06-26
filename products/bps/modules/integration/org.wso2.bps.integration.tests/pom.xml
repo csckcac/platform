@@ -62,7 +62,7 @@
                         <property>
                             <name>bps.sample.location</name>
                             <value>
-                                ${basedir}/../../samples/product/src/main/resources/bpel/2.0/
+                                ${basedir}/target/samples/
                             </value>
                         </property>
                         <property>
@@ -114,7 +114,7 @@
                         </configuration>
                     </execution>
                     <execution>
-                    	<id>copy-secVerifier</id>
+                        <id>copy-secVerifier</id>
                         <phase>compile</phase>
                         <goals>
                             <goal>copy-dependencies</goal>
@@ -124,6 +124,35 @@
                             <includeTypes>aar</includeTypes>
                             <includeArtifactIds>SecVerifier</includeArtifactIds>
                             <stripVersion>true</stripVersion>
+                        </configuration>
+                    </execution>
+                </executions>
+            </plugin>
+            <plugin>
+                <groupId>org.apache.maven.plugins</groupId>
+                <artifactId>maven-antrun-plugin</artifactId>
+                <version>1.2</version>
+
+                <executions>
+                    <execution>
+                        <id>create-bpel-sample-archives</id>
+                        <phase>compile</phase>
+                        <goals>
+                            <goal>run</goal>
+                        </goals>
+                        <configuration>
+                            <tasks>
+                                <echo message="######## Creating BPEL / HumanTask Archives. #########"/>
+                                <property name="bpelSampleDir" value="target/samples/bpel"/>
+                                <property name="humantaskSampleDir"
+                                          value="target/samples/humantask"/>
+                                <mkdir dir="${bpelSampleDir}"/>
+                                <mkdir dir="${humantaskSampleDir}"/>
+                                <!--zip destfile="target/samples/CreditRating.zip"
+                                basedir="${basedir}/../samples/src/main/resources/bpel/2.0/CreditRating"/-->
+                                <zip destfile="target/samples/bpel/ExtVar.zip"
+                                     basedir="${basedir}/src/test/resources/bpel/ExtVar"/>
+                            </tasks>
                         </configuration>
                     </execution>
                 </executions>

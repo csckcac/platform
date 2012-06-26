@@ -114,6 +114,21 @@ public class URLRulesMediator extends AbstractMediator {
 	            }
 	        }
 		
+		  serializeAction(urlRule);
+
+		if (parent != null) {
+			parent.addChild(urlRule);
+		}
+		return urlRule;
+	}
+
+	/**
+	 * Serilize the "action" block
+	 * 
+	 * @param parent
+	 */
+	private void serializeAction(OMElement parent) {
+
 		for (URLRewriteActions rewriteAction : actions) {
 
 			String type = rewriteAction.getAction();
@@ -123,7 +138,7 @@ public class URLRulesMediator extends AbstractMediator {
 			String fragment = rewriteAction.getFragment();
 
 			// add action block
-			OMElement actionElement = fac.createOMElement("action", synNS);		
+			OMElement actionElement = fac.createOMElement("action", synNS);
 
 			// 'set', 'append' or 'prepend' needs 'value'
 			// attribute or the
@@ -133,42 +148,36 @@ public class URLRulesMediator extends AbstractMediator {
 			    URLRewriteActions.TYPE_SET.equals(type) ||
 			    URLRewriteActions.TYPE_REPLACE.equals(type)) {
 				if ((value == null && xpath == null) || (value != null && value.isEmpty())) {
-					throw new MediatorException("At URL rules definition if the action sets as (Set or Append or Prepend)," + "then repalced actions required "
-					                            + "value or xpath expression");
-
+					throw new MediatorException( "At URL rules definition if the action sets as (Set or Append or Prepend),"
+					                                    + "then repalced actions required "
+					                                    + "value or xpath expression");
 				}
-				if (xpath != null) {				
-					SynapseXPathSerializer.serializeXPath(xpath, actionElement, "xpath");					
+				if (xpath != null) {
+					SynapseXPathSerializer.serializeXPath(xpath, actionElement, "xpath");
 				}
 				if (value != null) {
 					actionElement.addAttribute(fac.createOMAttribute("value", nullNS, value));
 				}
-
 			}
 			// 'regex' attribute must be specified
 			if (URLRewriteActions.TYPE_REPLACE.equals(type)) {
 				if (regex != null) {
-					actionElement.addAttribute(fac.createOMAttribute("regex", nullNS,regex));
+					actionElement.addAttribute(fac.createOMAttribute("regex", nullNS, regex));
 				} else {
 					throw new MediatorException("Replace action needs " + "'regex'attribute to"
 					                            + " be specified");
 				}
 			}
-			if(type !=null){
-				actionElement.addAttribute(fac.createOMAttribute("type", nullNS,type));
+			if (type != null) {
+				actionElement.addAttribute(fac.createOMAttribute("type", nullNS, type));
 			}
 			// specify the URL fragment
 			if (fragment != URLRewriteActions.FRAGMENT_FULL) {
 				actionElement.addAttribute(fac.createOMAttribute("fragment", nullNS,
 				                                                 rewriteAction.getFragment()));
 			}
-			urlRule.addChild(actionElement);
-		}		
-
-		if (parent != null) {
-			parent.addChild(urlRule);
+			parent.addChild(actionElement);
 		}
-		return urlRule;
 	}
 
 	/**

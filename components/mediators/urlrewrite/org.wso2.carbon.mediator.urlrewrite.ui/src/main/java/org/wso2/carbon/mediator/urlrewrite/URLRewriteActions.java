@@ -105,14 +105,14 @@ public class URLRewriteActions {
 	}
 
 	public static List<URLRewriteActions> getAllActions(OMElement elem) {
-		QName ATT_VALUE = new QName("value");
-		QName ATT_XPATH = new QName("xpath");
-		QName ATT_REGEX = new QName("regex");
-		QName ATT_FRAGMENT = new QName("fragment");
-		QName ATT_TYPE = new QName("type");
+		QName VALUE_Q = new QName("value");
+		QName XPATH_Q = new QName("xpath");
+		QName REGEX_Q = new QName("regex");
+		QName FRAGMENT_Q = new QName("fragment");
+		QName TYPE_Q = new QName("type");
 
 		QName ACTION_Q = new QName(XMLConfigConstants.SYNAPSE_NAMESPACE, "action");
-		QName XPATH_Q = new QName(XMLConfigConstants.NULL_NAMESPACE, "xpath");
+		
 
 		List<URLRewriteActions> actionList = new ArrayList<URLRewriteActions>();
 		Iterator itr = elem.getChildrenWithName(ACTION_Q);
@@ -120,11 +120,11 @@ public class URLRewriteActions {
 
 		while (itr.hasNext()) {
 			OMElement actionEle = (OMElement) itr.next();
-			OMAttribute xpathAttr = actionEle.getAttribute(ATT_XPATH);
-			OMAttribute valueAttr = actionEle.getAttribute(ATT_VALUE);
-			OMAttribute regexAttr = actionEle.getAttribute(ATT_REGEX);
-			OMAttribute fragmentAttr = actionEle.getAttribute(ATT_FRAGMENT);
-			OMAttribute typeAttr = actionEle.getAttribute(ATT_TYPE);
+			OMAttribute xpathAttr = actionEle.getAttribute(XPATH_Q);
+			OMAttribute valueAttr = actionEle.getAttribute(VALUE_Q);
+			OMAttribute regexAttr = actionEle.getAttribute(REGEX_Q);
+			OMAttribute fragmentAttr = actionEle.getAttribute(FRAGMENT_Q);
+			OMAttribute typeAttr = actionEle.getAttribute(TYPE_Q);
 			
 			URLRewriteActions urlRewriteActions = new URLRewriteActions();
 			
@@ -146,7 +146,7 @@ public class URLRewriteActions {
 				if (xpathAttr != null && xpathAttr.getAttributeValue() != null) {
 					try {
 						urlRewriteActions.setXpath(SynapseXPathFactory.getSynapseXPath(actionEle,
-						                                                               ATT_XPATH));
+						                                                               XPATH_Q));
 
 					} catch (JaxenException e) {
 						throw new MediatorException("Could not construct the" + " xpath");

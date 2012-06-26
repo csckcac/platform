@@ -47,8 +47,8 @@
             <artifactId>org.wso2.carbon.mashup.jsservices.custom-ui</artifactId>
         </dependency>
 		<dependency>
-            <groupId>org.wso2.carbon</groupId>
-            <artifactId>org.wso2.carbon.scriptengine</artifactId>
+            <groupId>org.jaggeryjs</groupId>
+            <artifactId>org.jaggeryjs.scriptengine</artifactId>
         </dependency>
         <dependency>
             <groupId>org.wso2.carbon</groupId>
@@ -371,7 +371,7 @@
                                 <importBundleDef>org.apache.rampart.wso2:rampart-policy
                                 </importBundleDef>
                                 <importBundleDef>net.sf.saxon.wso2:saxon</importBundleDef>
-								<importBundleDef>org.wso2.carbon:org.wso2.carbon.scriptengine</importBundleDef>
+								<importBundleDef>org.jaggeryjs:org.jaggeryjs.scriptengine</importBundleDef>
 								<importBundleDef>com.google.code.gson:gson</importBundleDef>
                                 <importBundleDef>
                                     org.apache.geronimo.specs.wso2:geronimo-stax-api_1.0_spec

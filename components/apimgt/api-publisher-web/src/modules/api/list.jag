@@ -62,6 +62,7 @@ var getAPIsByProvider = function (username) {
             list.push({
                 name:api.apiName,
                 version:api.version,
+                provider:api.provider,
                 lastUpdatedDate:api.updatedDate
             });
         }

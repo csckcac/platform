@@ -58,7 +58,7 @@ import org.slf4j.LoggerFactory;
 
 public class PropertiesFileInitialContextFactory implements InitialContextFactory
 {
-    private final Logger _logger = LoggerFactory.getLogger(PropertiesFileInitialContextFactory.class);
+    protected final Logger _logger = LoggerFactory.getLogger(PropertiesFileInitialContextFactory.class);
 
     private String CONNECTION_FACTORY_PREFIX = "connectionfactory.";
     private String DESTINATION_PREFIX = "destination.";

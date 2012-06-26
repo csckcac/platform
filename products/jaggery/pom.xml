@@ -620,7 +620,7 @@
         <carbon.product.version>0.9.0-ALPHA</carbon.product.version>
         <carbon.version>4.0.0-SNAPSHOT</carbon.version>
         <jaggery.version>0.9.0-ALPHA</jaggery.version>
-        <carbon.p2.plugin.version>1.5-SNAPSHOT</carbon.p2.plugin.version>
+        <carbon.p2.plugin.version>1.4-SNAPSHOT</carbon.p2.plugin.version>
         <emma.version>2.1.5320</emma.version>
         <httpcore.version>4.1.0-wso2v1</httpcore.version>
         <commons-codec.version>1.4.0.wso2v1</commons-codec.version>

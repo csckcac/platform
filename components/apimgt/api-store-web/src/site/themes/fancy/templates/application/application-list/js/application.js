@@ -55,13 +55,15 @@ function deleteApp(linkObj) {
 
 function alertMsg() {
     $('#applicationTable tr:last').css("background-color", "");
+    $('#appAddMessage').hide("fast");
 }
 $(document).ready(function() {
     if ($.cookie('highlight') != null && $.cookie('highlight') == "true") {
         $.cookie('highlight', "false");
 
         $('#applicationTable tr:last').css("background-color", "#d1dce3");
-
+        $('#appAddMessage').show();
+        $('#applicationShowName').text($.cookie('lastAppName'));
         var t = setTimeout("alertMsg()", 3000);
     }
 });

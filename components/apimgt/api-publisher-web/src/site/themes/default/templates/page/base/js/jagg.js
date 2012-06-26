@@ -58,7 +58,8 @@ var jagg = jagg || {};
         if(params.type == "custom"){
             jagg.messageDisplay(params);
             return;
-        }else if(params.type = "confirm"){
+        }
+        if(params.type == "confirm"){
             if( params.title == undefined ){ params.title = "API Publisher"}
             jagg.messageDisplay({content:params.content,title:params.title ,buttons:[
                 {name:"No",cssClass:"btn",cbk:function() {

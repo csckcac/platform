@@ -1,4 +1,5 @@
 $(document).ready(function () {
+    var application = $("#application-name").val("");
     $("#appAddForm").validate({
         submitHandler: function(form) {
             applicationAdd();
@@ -14,6 +15,7 @@ $(document).ready(function () {
         }, function (result) {
             if (result.error == false) {
                 $.cookie('highlight','true');
+                $.cookie('lastAppName',application);
                 if(goBack == "yes"){
                     jagg.message({content:'Return back to API detail page?',type:'confirm',okCallback:function(){
                          window.location.href = apiViewUrl + "?" +  apiPath;
@@ -37,3 +39,4 @@ $(document).ready(function () {
             }
         });*/
 });
+

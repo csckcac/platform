@@ -105,4 +105,8 @@ public class APIKeyValidator {
         log.debug("Initializing WS API key data store");
         dataStore = new WSAPIKeyDataStore();
     }
+
+    public void cleanup() {
+        dataStore.cleanup();
+    }
 }

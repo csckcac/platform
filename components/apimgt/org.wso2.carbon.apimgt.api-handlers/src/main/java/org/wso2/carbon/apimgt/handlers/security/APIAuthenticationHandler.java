@@ -75,6 +75,7 @@ public class APIAuthenticationHandler extends AbstractHandler implements Managed
 
     public void destroy() {
         log.debug("Destroying API authentication handler instance");
+        authenticator.destroy();
     }
 
     public boolean handleRequest(MessageContext messageContext) {

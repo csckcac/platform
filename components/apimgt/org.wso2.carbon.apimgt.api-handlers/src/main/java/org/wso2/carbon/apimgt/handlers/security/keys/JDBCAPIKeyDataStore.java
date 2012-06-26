@@ -49,4 +49,8 @@ public class JDBCAPIKeyDataStore implements APIKeyDataStore {
                     "Error while looking up API key data in the database", e);
         }
     }
+
+    public void cleanup() {
+
+    }
 }

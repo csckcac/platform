@@ -48,6 +48,10 @@ public class OAuthAuthenticator implements Authenticator {
         initOAuthParams();
     }
 
+    public void destroy() {
+        this.keyValidator.cleanup();
+    }
+
     public boolean authenticate(MessageContext synCtx) throws APISecurityException {
         Map headers = (Map) ((Axis2MessageContext) synCtx).getAxis2MessageContext().
                 getProperty(org.apache.axis2.context.MessageContext.TRANSPORT_HEADERS);

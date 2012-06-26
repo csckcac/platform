@@ -38,4 +38,9 @@ public interface APIKeyDataStore {
     public APIKeyValidationInfoDTO getAPIKeyData(String context, String apiVersion,
                                                  String apiKey) throws APISecurityException;
 
+    /**
+     * Clean up any resources allocated to this API key data store instance.
+     */
+    public void cleanup();
+
 }

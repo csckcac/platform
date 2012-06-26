@@ -27,6 +27,7 @@ import org.osgi.service.component.ComponentContext;
 import org.wso2.carbon.CarbonConstants;
 import org.wso2.carbon.apimgt.api.APIManagementException;
 import org.wso2.carbon.apimgt.impl.*;
+import org.wso2.carbon.apimgt.impl.utils.RemoteAuthorizationManager;
 import org.wso2.carbon.governance.api.util.GovernanceConstants;
 import org.wso2.carbon.registry.core.Registry;
 import org.wso2.carbon.registry.core.RegistryConstants;
@@ -104,6 +105,9 @@ public class APIManagerComponent {
                             RegistryConstants.GOVERNANCE_REGISTRY_BASE_PATH + APIConstants.API_APPLICATION_DATA_LOCATION),
                     APIConstants.Permissions.API_PUBLISH,
                     UserMgtConstants.EXECUTE_ACTION, null);
+
+            RemoteAuthorizationManager authorizationManager = RemoteAuthorizationManager.getInstance();
+            authorizationManager.init();
         } catch (APIManagementException e) {
             log.fatal("Error while initializing the API manager component", e);
         }
@@ -115,6 +119,8 @@ public class APIManagerComponent {
         }
         registration.unregister();
         APIManagerFactory.getInstance().clearAll();
+        RemoteAuthorizationManager authorizationManager = RemoteAuthorizationManager.getInstance();
+        authorizationManager.destroy();
     }
 
     protected void setRegistryService(RegistryService registryService) {

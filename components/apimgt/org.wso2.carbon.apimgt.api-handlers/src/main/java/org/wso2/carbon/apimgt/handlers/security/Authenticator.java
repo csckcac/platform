@@ -35,6 +35,11 @@ public interface Authenticator {
     public void init(SynapseEnvironment env);
 
     /**
+     * Destroys this authenticator and releases any resources allocated to it.
+     */
+    public void destroy();
+
+    /**
      * Authenticates the given request to see if an API consumer is allowed to access
      * a particular API or not. If the request can be properly authenticated, this method
      * should return true. However implementations of this method must never return

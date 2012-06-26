@@ -62,4 +62,12 @@ public class WSAPIKeyDataStore implements APIKeyDataStore {
             }
         }
     }
+
+    public void cleanup() {
+        try {
+            clientPool.close();
+        } catch (Exception ignored) {
+
+        }
+    }
 }

@@ -65,7 +65,7 @@ public class PayloadFactoryMediatorFactory extends AbstractMediatorFactory {
                 String value;
 
                 if ((value = argElem.getAttributeValue(ATT_VALUE)) != null) {
-                    arg.setValue(value);
+                    arg.setValue(value);      /**/
                 } else if ((value = argElem.getAttributeValue(ATT_EXPRN)) != null) {
 
                     if (value.trim().length() == 0) {

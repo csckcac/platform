@@ -127,15 +127,17 @@ public class Axis2Sender {
                     SynapseConstants.PRESERVE_WS_ADDRESSING);
             if (preserveAddressingProperty != null &&
                     Boolean.parseBoolean(preserveAddressingProperty)) {
-                 messageContext.setMessageID(smc.getMessageID());
-             } else {
-                 MessageHelper.removeAddressingHeaders(messageContext);
-                 messageContext.setMessageID(UIDGenerator.generateURNString());
-             }
+                /*Avoiding duplicate addressing headers*/
+                messageContext.setProperty(AddressingConstants.REPLACE_ADDRESSING_HEADERS, "true");
+                messageContext.setMessageID(smc.getMessageID());
+            } else {
+                MessageHelper.removeAddressingHeaders(messageContext);
+                messageContext.setMessageID(UIDGenerator.generateURNString());
+            }
 
             // determine weather we need to preserve the processed headers
             String preserveHeaderProperty = (String) smc.getProperty(
-                            SynapseConstants.PRESERVE_PROCESSED_HEADERS);
+                    SynapseConstants.PRESERVE_PROCESSED_HEADERS);
             if (preserveHeaderProperty == null || !Boolean.parseBoolean(preserveHeaderProperty)) {
                 // remove the processed headers
                 MessageHelper.removeProcessedHeaders(messageContext,
@@ -145,7 +147,7 @@ public class Axis2Sender {
 
             // temporary workaround for https://issues.apache.org/jira/browse/WSCOMMONS-197
             if (messageContext.isEngaged(SynapseConstants.SECURITY_MODULE_NAME) &&
-                messageContext.getEnvelope().getHeader() == null) {
+                    messageContext.getEnvelope().getHeader() == null) {
                 SOAPFactory fac = messageContext.isSOAP11() ?
                     OMAbstractFactory.getSOAP11Factory() : OMAbstractFactory.getSOAP12Factory();
                 fac.createSOAPHeader(messageContext.getEnvelope());

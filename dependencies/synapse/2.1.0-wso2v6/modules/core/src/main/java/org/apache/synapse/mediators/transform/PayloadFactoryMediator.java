@@ -49,7 +49,7 @@ public class PayloadFactoryMediator extends AbstractMediator {
         OMElement resultElement;
         try {
             resultElement = AXIOMUtil.stringToOM(result.toString());
-        } catch (XMLStreamException e) {
+        } catch (XMLStreamException e) {      /*Use the XMLStreamException and log the proper stack trace*/
             handleException("Unable to create a valid XML payload", synCtx);
             return false;
         }
@@ -67,6 +67,7 @@ public class PayloadFactoryMediator extends AbstractMediator {
         return true;
     }
 
+    /* ToDO : Return string buffer*/
     private void regexTransform(StringBuffer result, MessageContext synCtx) {
         Object[] argValues = getArgValues(synCtx);
         Matcher matcher = pattern.matcher("<dummy>" + format + "</dummy>");
@@ -81,12 +82,12 @@ public class PayloadFactoryMediator extends AbstractMediator {
     private Object[] getArgValues(MessageContext synCtx) {
 
         Object[] argValues = new Object[argumentList.size()];
-        for (int i = 0; i < argumentList.size(); ++i) {
+        for (int i = 0; i < argumentList.size(); ++i) {       /*ToDo use foreach*/
             Argument arg = argumentList.get(i);
             if (arg.getValue() != null) {
                 argValues[i] = arg.getValue();
             } else if (arg.getExpression() != null) {
-                String value = arg.getExpression().stringValueOf(synCtx);
+                String value = arg.getExpression().stringValueOf(synCtx);   /*ToDo We can change this to string array*/
                 if (value != null) {
                     argValues[i] = value;
                 } else {

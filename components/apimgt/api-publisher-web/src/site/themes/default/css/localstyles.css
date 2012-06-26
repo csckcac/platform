@@ -126,7 +126,7 @@ input.error{
     margin-bottom: 5px;
 }
 ul.thumbnails div.thumbnail{
-    width:150px;
+    width:160px;
 }
 ul.thumbnails div.thumbnail:hover{
      border-color: rgba(82, 168, 236, 0.8);
@@ -134,7 +134,7 @@ ul.thumbnails div.thumbnail:hover{
     outline: 0 none;
 }
 .btn-api-del{
-    margin-left: 126px;
+    margin-left: 136px;
     margin-top: -12px;
     opacity: .5;
     position: absolute;

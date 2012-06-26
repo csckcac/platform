@@ -38,11 +38,12 @@
                 <exclude>**/carbon.xml</exclude>
                 <exclude>**/axis2/axis2.xml</exclude>
                 <exclude>**/dbscripts/**</exclude>
-		        <exclude>**/INSTALL.txt</exclude>
+		<exclude>**/INSTALL.txt</exclude>
                 <exclude>**/README.txt</exclude>
                 <exclude>**/LICENSE.txt</exclude>
                 <exclude>**/release-notes.html</exclude>
                 <exclude>**/log4j.properties</exclude>
+                <exclude>**/user-mgt.xml</exclude>
             </excludes>
         </fileSet>
         <fileSet>
@@ -319,10 +320,25 @@
 			<outputDirectory>wso2appfactory-${pom.version}/repository/conf/appfactory</outputDirectory>
             <fileMode>644</fileMode>
         </file>
-		<file>
+	<file>
 			<source>resources/sso-idp-config.xml</source>
 			<outputDirectory>wso2appfactory-${pom.version}/repository/conf</outputDirectory>
             <fileMode>644</fileMode>
+        </file>
+        <file>  
+                        <source>resources/embedded-ldap.xml</source>
+                        <outputDirectory>wso2appfactory-${pom.version}/repository/conf</outputDirectory>
+            <fileMode>644</fileMode>
+        </file>
+        <file>
+            <source>
+                ../../p2-profile-gen/product/target/wso2carbon-core-${wso2carbon.version}/repository/data/is-default-schema.zip
+            </source>
+            <outputDirectory>wso2appfactory-${pom.version}/repository/data</outputDirectory>
+        </file>
+       <file>
+            <source>resources/user-mgt.xml</source>
+            <outputDirectory>wso2appfactory-${pom.version}/repository/conf</outputDirectory>
         </file>
 
 	   

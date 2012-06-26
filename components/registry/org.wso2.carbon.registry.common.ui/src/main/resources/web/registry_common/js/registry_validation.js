@@ -4,7 +4,7 @@ function validateEmpty(fld,fldName) {
     if (fld.value.length == 0) {
         error = org_wso2_carbon_registry_common_ui_jsi18n["the.required.field"] + " "+fldName+" " + org_wso2_carbon_registry_common_ui_jsi18n["not.filled"] + "<br />";
     } else {
-        fld.style.background = 'White';
+//        fld.style.background = 'White';
     }
     return error;
 }
@@ -40,7 +40,7 @@ function validateIllegal(fld,fldName){
     if (illegalChars.test(fld.value) || illegalCharsInput.test(fld.value)) {
         error = org_wso2_carbon_registry_common_ui_jsi18n["the"] + " "+fldName+" " + org_wso2_carbon_registry_common_ui_jsi18n["contains.illegal.chars"] + "<br />";
     } else{
-        fld.style.background = 'White';
+//        fld.style.background = 'White';
     }
 
    return error;
@@ -53,7 +53,7 @@ function validateIllegalNoPercent(fld,fldName){
     if (illegalChars.test(fld.value) || illegalCharsInput.test(fld.value)) {
         error = org_wso2_carbon_registry_common_ui_jsi18n["the"] + " "+fldName+" " + org_wso2_carbon_registry_common_ui_jsi18n["contains.illegal.chars"] + "<br />";
     } else{
-        fld.style.background = 'White';
+//        fld.style.background = 'White';
     }
 
     return error;
@@ -66,7 +66,7 @@ function validateForInput(fld,fldName){
     if (illegalChars.test(fld.value)) {
         error = org_wso2_carbon_registry_common_ui_jsi18n["the"] + " "+fldName+" " + org_wso2_carbon_registry_common_ui_jsi18n["input.contains.illegal.chars"] + "<br />";
     } else{
-        fld.style.background = 'White';
+//        fld.style.background = 'White';
     }
    return error;
 }
@@ -93,7 +93,7 @@ function validateDate(fld,fldName){
     var error = "";
     var allowed= /^((0[1-9]|1[0-2])\/([0-2][0-9]|3[0-1])\/[1-2][0-9][0-9][0-9])$/;
     if (allowed.test(fld.value)) {
-        fld.style.background = 'White';
+//        fld.style.background = 'White';
     }
     else {
         error = org_wso2_carbon_registry_common_ui_jsi18n["the"] + " "+fldName+ " " + org_wso2_carbon_registry_common_ui_jsi18n["invalid.date"] + "<br />";
@@ -111,7 +111,7 @@ function validateUsername(fld) {
     } else if (illegalChars.test(fld.value)) {
         error = org_wso2_carbon_registry_common_ui_jsi18n["illegal.username"] + "<br />";
     } else {
-        fld.style.background = 'White';
+//        fld.style.background = 'White';
     }
     return error;
 }
@@ -130,7 +130,7 @@ function validatePassword(fld) {
     } /*else if (!((fld.value.search(/(a-z)+/)) && (fld.value.search(/(0-9)+/)))) {
         error = "The password must contain at least one numeral.<br />";
     } */else {
-        fld.style.background = 'White';
+//        fld.style.background = 'White';
     }
    return error;
 }
@@ -161,7 +161,7 @@ function validateEmail(fld) {
     } else if (fld.value.match(illegalChars)) {
         error = org_wso2_carbon_registry_common_ui_jsi18n["illegal.email"] + "<br />";
     } else {
-        fld.style.background = 'White';
+//        fld.style.background = 'White';
     }
     return error;
 }

@@ -1133,8 +1133,8 @@ function saveNewPassword(userName) {
     var newPasswordConfirm = document.getElementById('newPasswordConfirm').value;
     if (newPassword != newPasswordConfirm) {
         error = org_wso2_carbon_registry_resource_ui_jsi18n["verify.password"] + "<br />";
-        document.getElementById('newPassword').style.background = "Yellow";
-        document.getElementById('newPasswordConfirm').style.background = "Yellow";
+//        document.getElementById('newPassword').style.background = "Yellow";
+//        document.getElementById('newPasswordConfirm').style.background = "Yellow";
     }
     error += validatePassword(document.getElementById('newPassword'));
     var passwordErrorMessage = document.getElementById('passwordErrorMessage');
@@ -1148,8 +1148,8 @@ function saveNewPassword(userName) {
         showHideCommon('passwordEdit1');
         showHideCommon('passwordEdit2');
         showHideCommon('passwordEdit3');
-        document.getElementById('newPassword').style.background = "White";
-        document.getElementById('newPasswordConfirm').style.background = "White";
+//        document.getElementById('newPassword').style.background = "White";
+//        document.getElementById('newPasswordConfirm').style.background = "White";
 
         new Ajax.Updater({success:'passwordDiv',failure:'userReason'}, '/wso2registry/system/saveNewPassword', { method: 'post', parameters: {userName: userName, newPassword: newPassword,random:getRandom()} });
     }
@@ -2260,15 +2260,15 @@ function submitUserAddForm() {
         reason += validateEmpty(document.getElementById('passwordMain'), org_wso2_carbon_registry_resource_ui_jsi18n["password"]);
     }
     if (document.getElementById('passwordMain').value != document.getElementById('confirmedPassword').value) {
-        document.getElementById('confirmedPassword').style.background = "Yellow";
-        document.getElementById('passwordMain').style.background = "Yellow";
+//        document.getElementById('confirmedPassword').style.background = "Yellow";
+//        document.getElementById('passwordMain').style.background = "Yellow";
         if (reason == "") {
             reason += org_wso2_carbon_registry_resource_ui_jsi18n["please.make.sure.passwords.are.matching"] + "<br />";
         }
     }
     else {
-        document.getElementById('confirmedPassword').style.background = "White";
-        document.getElementById('passwordMain').style.background = "White";
+//        document.getElementById('confirmedPassword').style.background = "White";
+//        document.getElementById('passwordMain').style.background = "White";
     }
     if (reason == "") {
         reason += validateForInput(document.getElementById('friendlyName'), org_wso2_carbon_registry_resource_ui_jsi18n["display.name"]);

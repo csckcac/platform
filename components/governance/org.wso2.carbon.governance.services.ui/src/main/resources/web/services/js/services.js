@@ -14,7 +14,7 @@ function validateIllegalQName(fld, fldName) {
         error = org_wso2_carbon_governance_services_ui_jsi18n["the"] + " " + fldName + " " +
                 org_wso2_carbon_governance_services_ui_jsi18n["qname.contains.illegal.chars"] + "<br />";
     } else {
-        fld.style.background = 'White';
+//        fld.style.background = 'White';
     }
 
     return error;

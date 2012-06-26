@@ -41,7 +41,7 @@ function so_clearInnerHTML(obj) {
 
 function cleanField(fld){
     fld.value="";
-    fld.style.background="White";
+//    fld.style.background="White";
 }
 
 function disableFields(idHideInput,idShowInput){

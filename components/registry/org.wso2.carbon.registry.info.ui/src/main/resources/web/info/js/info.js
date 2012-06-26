@@ -31,7 +31,7 @@ function addComment(path) {
             });
 
             commentElement.value = '';
-            commentElement.style.background="White";
+//            commentElement.style.background="White";
             showHideCommon('add-comment-div');
             return true;
         }else{
@@ -551,9 +551,9 @@ function resetInputVisibility() {
     $('subscriptionEmail').value = "";
     $('subscriptionREST').value = "";
     $('subscriptionSOAP').value = "";
-    $('subscriptionEmail').style.background = 'White';
-    $('subscriptionREST').style.background = 'White';
-    $('subscriptionSOAP').style.background = 'White';
+//    $('subscriptionEmail').style.background = 'White';
+//    $('subscriptionREST').style.background = 'White';
+//    $('subscriptionSOAP').style.background = 'White';
     $('subscriptionDataInputRecord').style.display = "none";
     $('subscriptionDataEmail').style.display = "none";
     $('digestDeliveryEmail').disabled = true;
@@ -714,7 +714,7 @@ function validateTags(fld,fldName){
     if (illegalChars.test(fld.value) || illegalCharsInput.test(fld.value)) {
         error = org_wso2_carbon_registry_common_ui_jsi18n["the"] + " "+fldName+" " + org_wso2_carbon_registry_info_ui_jsi18n["tag.contains.illegal.chars"] + "<br />";
     } else{
-        fld.style.background = 'White';
+//        fld.style.background = 'White';
     }
 
    return error;

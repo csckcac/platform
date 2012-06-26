@@ -150,7 +150,7 @@ function validateIllegalContentSearchString(fld,fldName){
     if (illegalChars.test(fld.value) || illegalCharsInput.test(fld.value)) {
         error = org_wso2_carbon_registry_search_ui_jsi18n["the"] + " "+fldName+" " + org_wso2_carbon_registry_search_ui_jsi18n["contains.illegal.chars"] + "<br />";
     } else{
-        fld.style.background = 'White';
+//        fld.style.background = 'White';
     }
 
    return error;
@@ -175,7 +175,7 @@ function validateTagsInput(fld,fldName){
     if (illegalChars.test(fld.value)) {
          error = org_wso2_carbon_registry_search_ui_jsi18n["the"] + " "+fldName+" " + org_wso2_carbon_registry_search_ui_jsi18n["contains.invalid.tag.search"] + "<br />";
     } else{
-        fld.style.background = 'White';
+//        fld.style.background = 'White';
     }
     if (error != "") {
        return error;

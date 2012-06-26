@@ -224,7 +224,7 @@
         if (illegalChars.test(fld.value) || illegalCharsInput.test(fld.value)) {
             error = "The namespace field contains one or more illegal characters [_&`()?-\[\]~!@#;%^*+={}\|\\<>\"\',]" + "<br />";
         } else{
-            fld.style.background = 'White';
+//            fld.style.background = 'White';
         }
 
         return error;

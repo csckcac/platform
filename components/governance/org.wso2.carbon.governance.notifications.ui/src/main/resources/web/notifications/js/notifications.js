@@ -364,7 +364,7 @@ function resetInputVisibility() {
     $('subscribeButton').disabled = true;
     $('subscriptionInput').value = "";
     $('subscriptionInput').style.display = "";
-    $('subscriptionInput').style.background = 'White';
+//    $('subscriptionInput').style.background = 'White';
     $('subscriptionDataInputRecord').style.display = "none";
     $('subscriptionDataEmail').style.display = "none";
     $('subscriptionDataREST').style.display = "none";

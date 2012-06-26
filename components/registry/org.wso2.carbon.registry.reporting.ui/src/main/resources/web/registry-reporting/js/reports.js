@@ -257,7 +257,7 @@ function validateIllegal(fld, fldName) {
         error = org_wso2_carbon_registry_reporting_ui_jsi18n["the"] + " " + fldName + " " +
                 org_wso2_carbon_registry_reporting_ui_jsi18n["contains.illegal.chars"] + "<br />";
     } else {
-        fld.style.background = 'White';
+//        fld.style.background = 'White';
     }
 
     return error;

@@ -93,10 +93,7 @@
                                 <!-- Jaggery Features -->
 
                                 <featureArtifactDef>
-                                    org.wso2.carbon:org.wso2.carbon.jaggery.server.feature:${jaggery.feature.version}
-                                </featureArtifactDef>
-                                <featureArtifactDef>
-                                    org.wso2.carbon:org.wso2.carbon.jaggery.ui.feature:${jaggery.feature.version}
+                                    org.jaggeryjs:org.jaggeryjs.feature:${jaggery.feature.version}
                                 </featureArtifactDef>
 
                                 <!--Dashboard Features-->
@@ -317,14 +314,10 @@
                                 <!-- Jaggery -->
 
                                 <feature>
-                                    <id>org.wso2.carbon.jaggery.server.feature.group</id>
+                                    <id>org.jaggeryjs.feature.group</id>
                                     <version>${jaggery.feature.version}</version>
                                 </feature>
-                                <feature>
-                                    <id>org.wso2.carbon.jaggery.ui.feature.group</id>
-                                    <version>${jaggery.feature.version}</version>
-                                </feature>
-
+  
                                 <!--Dashboard-->
                                 <feature>
                                     <id>org.wso2.carbon.dashboard.dashboardpopulator.server.feature.group</id>
@@ -585,7 +578,7 @@
     </build>
 
     <properties>
-        <jaggery.feature.version>1.0.0-SNAPSHOT</jaggery.feature.version>
+        <jaggery.feature.version>0.9.0-SNAPSHOT</jaggery.feature.version>
 	<cassandra.explorer.version>4.0.0-SNAPSHOT</cassandra.explorer.version>
     </properties>
 

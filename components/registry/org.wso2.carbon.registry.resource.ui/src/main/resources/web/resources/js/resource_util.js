@@ -2927,7 +2927,12 @@ function loadJSPPage(pagePrefixName, path, viewMode, consumerID, targetDiv) {
         return false;
     } else {
         path = path.replace(/&/g, "%26");
-        document.location.href = '../resources/' + pagePrefixName + '.jsp?path=' + path + "&screenWidth=" + screen.width;
+        if (pagePrefixName == 'resource') {
+            document.location.href = '../resources/' + pagePrefixName + '.jsp?region=region3&item=resource_browser_menu&path=' + path + "&screenWidth=" + screen.width;
+        } else {
+            document.location.href = '../resources/' + pagePrefixName + '.jsp?path=' + path + "&screenWidth=" + screen.width;
+
+        }
     }
     return true;
 }

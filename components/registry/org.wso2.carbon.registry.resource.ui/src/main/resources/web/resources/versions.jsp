@@ -57,7 +57,7 @@ function setAndGo(fullpath,activepath){
 	    parameters: {fullpath: fullpath,activepath:activepath,random:random},
 	
 	    onSuccess: function() {
-	        window.location = "./resource.jsp?viewType=std&path="+fullpath.replace(/&/g,"%26");
+	        window.location = "./resource.jsp?region=region3&item=resource_browser_menu&viewType=std&path="+fullpath.replace(/&/g,"%26");
 	    },
 	
 	    onFailure: function() {
@@ -107,7 +107,7 @@ function submitDelete(path, snapshotId, screenWidth){
     <div id="middle">
 
         <h2><fmt:message key="versions.of"/> <a style="font-size:80%;line-height:18px;"
-                href="resource.jsp?viewType=std&path=<%=tempPath.replaceAll("&","%26")%>">
+                href="resource.jsp?region=region3&item=resource_browser_menu&viewType=std&path=<%=tempPath.replaceAll("&","%26")%>">
                 <%
                		String resourcePath = versionBean.getResourcePath();
                 	String firstPart = "";

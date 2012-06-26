@@ -53,7 +53,7 @@ public class GovImpactAnalysisDataProcessor {
     }
 
     private String getResourceURL(String path) {
-        return serverURL + "resources/resource.jsp?path=" + "/_system/governance" + path;
+        return serverURL + "resources/resource.jsp?region=region3&item=resource_browser_menu&path=" + "/_system/governance" + path;
     }
 
     private Map<String, Map<String, ServiceBean>> buildServiceVersionHierarchy(

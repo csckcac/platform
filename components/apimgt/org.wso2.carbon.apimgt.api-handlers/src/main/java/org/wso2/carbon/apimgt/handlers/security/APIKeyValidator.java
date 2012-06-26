@@ -107,6 +107,8 @@ public class APIKeyValidator {
     }
 
     public void cleanup() {
-        dataStore.cleanup();
+        if (dataStore != null) {
+            dataStore.cleanup();
+        }
     }
 }

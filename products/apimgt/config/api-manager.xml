@@ -1,6 +1,6 @@
 <APIManager>
     <!--
-        Database configuration used by API provider, API store and API key manager.
+        Database configuration used by API publisher, API store and API key manager.
         When these components are deployed separately, each of them should have
         separate database configurations pointing to the same physical database.
     -->
@@ -27,7 +27,7 @@
     </Database>
 
     <!--
-        Authentication manager configuration for API provider and API store. This is
+        Authentication manager configuration for API publisher and API store. This is
         a required configuration for both web applications as their user authentication
         logic relies on this.
     -->
@@ -48,7 +48,7 @@
 
     <!--
         Credentials for the API gateway admin server. This configuration
-        is mainly used by the API provider and store to connect to the API gateway and
+        is mainly used by the API publisher and store to connect to the API gateway and
         create/update published API configurations.
     -->
     <APIGateway>

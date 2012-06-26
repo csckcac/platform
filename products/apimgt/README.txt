@@ -9,11 +9,11 @@ associated with API provisioning, governance and integration.
 
 WSO2 API Manager consists of several loosely coupled modules.
 
-        * API provider
+        * API publisher
         * API store
         * API gateway
 
-The API provider module allows API publishers to easily define APIs and manage them
+The API publisher module allows API publishers to easily define APIs and manage them
 using a strong governance model which consists of well-established concepts such as
 versioning and lifecycles. API consumers can use the API store module to discover
 published, production-ready APIs and access them in a secure and reliable manner

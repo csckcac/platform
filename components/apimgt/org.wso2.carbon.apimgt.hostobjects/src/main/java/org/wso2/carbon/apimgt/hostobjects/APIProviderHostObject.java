@@ -63,16 +63,7 @@ import org.wso2.carbon.hostobjects.file.FileHostObject;
 import org.wso2.carbon.scriptengine.exceptions.ScriptException;
 
 import java.net.URL;
-import java.util.ArrayList;
-import java.util.Arrays;
-import java.util.Collections;
-import java.util.Date;
-import java.util.HashSet;
-import java.util.Iterator;
-import java.util.List;
-import java.util.Map;
-import java.util.Set;
-import java.util.TreeMap;
+import java.util.*;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 
@@ -634,12 +625,38 @@ public class APIProviderHostObject extends ScriptableObject {
                         subscriptions.put(key, count);
                     }
                 }
+                
+                List<APISubscription> subscriptionData = new ArrayList<APISubscription>();
+                for (Map.Entry<String,Long> entry : subscriptions.entrySet()) {
+                    APISubscription sub = new APISubscription();
+                    sub.name = entry.getKey();
+                    sub.count = entry.getValue();
+                    subscriptionData.add(sub);    
+                }
+                Collections.sort(subscriptionData, new Comparator<APISubscription>() {
+                    public int compare(APISubscription o1, APISubscription o2) {
+                        // Note that o2 appears before o1
+                        // This is because we need to sort in the descending order
+                        return (int) (o2.count - o1.count);
+                    }
+                });
+                if (subscriptionData.size() > 10) {
+                    APISubscription other = new APISubscription();
+                    other.name = "[Other]";
+                    for (int i = 10; i < subscriptionData.size(); i++) {
+                        other.count = other.count + subscriptionData.get(i).count;
+                    }
+                    for (int i = 10; i < subscriptionData.size(); i++) {
+                        subscriptionData.remove(i);
+                    }
+                    subscriptionData.add(other);
+                }
 
                 int i = 0;
-                for (Map.Entry<String, Long> entry : subscriptions.entrySet()) {
+                for (APISubscription sub : subscriptionData) {
                     NativeObject row = new NativeObject();
-                    row.put("apiName", row, entry.getKey());
-                    row.put("count", row, entry.getValue().longValue());
+                    row.put("apiName", row, sub.name);
+                    row.put("count", row, sub.count);
                     myn.put(i, myn, row);
                     i++;
                 }
@@ -1628,6 +1645,11 @@ public class APIProviderHostObject extends ScriptableObject {
 
         APIProvider apiProvider = getAPIProvider(thisObj);
         apiProvider.deleteAPI(apiId);
+    }
+    
+    private static class APISubscription {                
+        private String name;
+        private long count;
     }
 }
 

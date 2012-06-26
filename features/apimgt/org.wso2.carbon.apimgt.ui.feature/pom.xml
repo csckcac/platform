@@ -45,6 +45,12 @@
             <artifactId>org.wso2.carbon.bam.presentation.stub</artifactId>
             <version>${carbon.platform.version}</version>
         </dependency>
+	<dependency>
+            <groupId>org.wso2.carbon</groupId>
+            <artifactId>org.wso2.carbon.um.ws.service.client.feature</artifactId>
+	    <type>zip</type>
+            <version>${carbon.platform.version}</version>
+        </dependency>
     </dependencies>
 
     <build>
@@ -80,6 +86,7 @@
                             </importBundles>
                             <importFeatures>
                                 <importFeatureDef>org.wso2.carbon.core.ui:${wso2carbon.version}</importFeatureDef>
+				<importFeatureDef>org.wso2.carbon.um.ws.service.client:${wso2carbon.version}</importFeatureDef>
                             </importFeatures>
                         </configuration>
                     </execution>

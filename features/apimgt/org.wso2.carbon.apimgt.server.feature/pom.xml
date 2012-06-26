@@ -77,6 +77,11 @@
             <artifactId>org.wso2.carbon.apimgt.keymgt.client</artifactId>
             <version>${apimgt.version}</version>
         </dependency>
+	<dependency>
+            <groupId>org.wso2.carbon</groupId>
+            <artifactId>org.wso2.carbon.apimgt.handlers.security.stub</artifactId>
+	    <version>${carbon.platform.version}</version>
+        </dependency>
         <dependency>
             <groupId>org.wso2.carbon</groupId>
             <artifactId>org.wso2.carbon.identity.core</artifactId>
@@ -127,6 +132,7 @@
                                 <bundleDef>org.wso2.carbon:org.wso2.carbon.apimgt.keymgt.client</bundleDef>
                                 <bundleDef>org.wso2.carbon:org.wso2.carbon.apimgt.usage.publisher</bundleDef>
                                 <bundleDef>org.wso2.carbon:org.wso2.carbon.apimgt.usage.client</bundleDef>
+				<bundleDef>org.wso2.carbon:org.wso2.carbon.apimgt.handlers.security.stub</bundleDef>
                             </bundles>
                             <importBundles>
                                  <!--<importBundleDef>org.wso2.carbon:org.wso2.carbon.identity.core</importBundleDef>-->

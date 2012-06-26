@@ -62,14 +62,4 @@ public class WSAPIKeyDataStore implements APIKeyDataStore {
             }
         }
     }
-
-    private APIKeyValidationInfoDTO toDTO(
-            org.wso2.carbon.apimgt.impl.dto.xsd.APIKeyValidationInfoDTO generatedDto) {
-        APIKeyValidationInfoDTO dto = new APIKeyValidationInfoDTO();
-        dto.setUsername(generatedDto.getUsername());
-        dto.setAuthorized(generatedDto.getAuthorized());
-        dto.setTier(generatedDto.getTier());
-        dto.setType(generatedDto.getType());
-        return dto;
-    }
 }

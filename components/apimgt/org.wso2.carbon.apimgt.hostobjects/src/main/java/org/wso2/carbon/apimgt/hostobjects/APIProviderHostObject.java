@@ -1650,6 +1650,42 @@ public class APIProviderHostObject extends ScriptableObject {
         private String name;
         private long count;
     }
+
+     public static boolean jsFunction_updateDocumentation(Context cx, Scriptable thisObj,
+                                                      Object[] args, Function funObj)
+            throws APIManagementException {
+        if (args.length < 5 || !isStringValues(args)) {
+            throw new APIManagementException("Invalid number of parameters or their types.");
+        }
+        boolean success;
+        String providerName = args[0].toString();
+        String apiName = args[1].toString();
+        String version = args[2].toString();
+        String docName = args[3].toString();
+        String docType = args[4].toString();
+        String summary = args[5].toString();
+        String sourceType = args[6].toString();
+        String sourceURL = null;
+
+        APIIdentifier apiId = new APIIdentifier(providerName, apiName, version);
+        Documentation doc = new Documentation(getDocType(docType), docName);
+        if (sourceType.equalsIgnoreCase(Documentation.DocumentSourceType.URL.toString())) {
+            doc.setSourceType(Documentation.DocumentSourceType.URL);
+            sourceURL = args[7].toString();
+        } else {
+            doc.setSourceType(Documentation.DocumentSourceType.INLINE);
+        }
+        doc.setSummary(summary);
+        doc.setSourceUrl(sourceURL);
+        APIProvider apiProvider = getAPIProvider(thisObj);
+        try {
+            apiProvider.updateDocumentation(apiId, doc);
+            success = true;
+        } catch (APIManagementException e) {
+            throw new APIManagementException("Error occurred while adding the document- " + docName, e);
+        }
+        return success;
+    }
 }
 
 

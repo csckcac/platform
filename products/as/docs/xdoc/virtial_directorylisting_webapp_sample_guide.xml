@@ -41,15 +41,15 @@
         <ol type="1">
 
 			<li>Start the WSO2AppServer server</li>
-			<li>Switch to the HelloWorldWebapp sample directory</li>
-			<pre>e.g. In <strong>MS Windows</strong> cd CARBON_HOME\samples\HelloWorldWebapp or in
-	    <strong>Linux</strong> cd CARBON_HOME/samples/HelloWorldWebapp</pre>
+			<li>Switch to the VirtualDirectoryListing sample directory</li>
+			<pre>e.g. In <strong>MS Windows</strong> cd CARBON_HOME\samples\VirtualDirectoryListing or in
+	    <strong>Linux</strong> cd CARBON_HOME/samples/VirtualDirectoryListing</pre>
 
 			<li>Type ant and press enter</li>
-			<pre>e.g. CARBON_HOME\samples\HelloWorldWebapp&gt;ant or
-                CARBON_HOME/samples/HelloWorldWebapp$ ant</pre>
+			<pre>e.g. CARBON_HOME\samples\VirtualDirectoryListing&gt;ant or
+                CARBON_HOME/samples/VirtualDirectoryListing$ ant</pre>
 
-			<li>This will copy  the sample webapp (wso2appserver-samples-hello-webapp-1.0.war file) in the &quot;target&quot; 
+			<li>This will copy  the sample webapp (virtual.war file) in the &quot;build&quot; 
 				directory to the &quot;CARBON_HOME/repository/deployment/server/webapps/&quot; directory.
 				If you start AppServer if its not already started,  will be available as a deployed webapp under 
 				&quot;<strong>Manage&gt; Web Applications&gt; List</strong>&quot;.</li>

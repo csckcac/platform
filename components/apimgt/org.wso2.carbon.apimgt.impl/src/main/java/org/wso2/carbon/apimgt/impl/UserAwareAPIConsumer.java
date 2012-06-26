@@ -16,18 +16,10 @@
 
 package org.wso2.carbon.apimgt.impl;
 
-import org.wso2.carbon.CarbonException;
 import org.wso2.carbon.apimgt.api.APIManagementException;
 import org.wso2.carbon.apimgt.api.model.APIIdentifier;
 import org.wso2.carbon.apimgt.api.model.Application;
-import org.wso2.carbon.apimgt.impl.internal.ServiceReferenceHolder;
 import org.wso2.carbon.apimgt.impl.utils.APIUtil;
-import org.wso2.carbon.core.util.AnonymousSessionUtil;
-import org.wso2.carbon.registry.core.service.RegistryService;
-import org.wso2.carbon.user.core.AuthorizationManager;
-import org.wso2.carbon.user.core.UserRealm;
-import org.wso2.carbon.user.core.UserStoreException;
-import org.wso2.carbon.user.core.service.RealmService;
 
 /**
  * User aware APIConsumer implementation which ensures that the invoking user has the
@@ -42,7 +34,6 @@ import org.wso2.carbon.user.core.service.RealmService;
 public class UserAwareAPIConsumer extends APIConsumerImpl {
 
     private String username;
-    private AuthorizationManager authorizationManager;
 
     UserAwareAPIConsumer() throws APIManagementException {
         super();
@@ -51,58 +42,47 @@ public class UserAwareAPIConsumer extends APIConsumerImpl {
     UserAwareAPIConsumer(String username) throws APIManagementException {
         super(username);
         this.username = username;
-        RegistryService registryService = ServiceReferenceHolder.getInstance().getRegistryService();
-        RealmService realmService = ServiceReferenceHolder.getInstance().getRealmService();
-        try {
-            UserRealm realm = AnonymousSessionUtil.getRealmByUserName(registryService,
-                    realmService, username);
-            authorizationManager = realm.getAuthorizationManager();
-        } catch (CarbonException e) {
-            handleException("Error while loading user realm for user: " + username, e);
-        } catch (UserStoreException e) {
-            handleException("Error while loading the authorization manager", e);
-        }
     }
 
     @Override
     public void addSubscription(APIIdentifier identifier,
                                 String userId, int applicationId) throws APIManagementException {
-        checkPermission(APIConstants.Permissions.API_SUBSCRIBE);
+        checkSubscribePermission();
         super.addSubscription(identifier, userId, applicationId);
     }
 
     @Override
     public void removeSubscription(APIIdentifier identifier, String userId,
                                    int applicationId) throws APIManagementException {
-        checkPermission(APIConstants.Permissions.API_SUBSCRIBE);
+        checkSubscribePermission();
         super.removeSubscription(identifier, userId, applicationId);
     }
 
     @Override
     public void addApplication(Application application, String userId) throws APIManagementException {
-        checkPermission(APIConstants.Permissions.API_SUBSCRIBE);
+        checkSubscribePermission();
         super.addApplication(application, userId);
     }
 
     @Override
     public void updateApplication(Application application) throws APIManagementException {
-        checkPermission(APIConstants.Permissions.API_SUBSCRIBE);
+        checkSubscribePermission();
         super.updateApplication(application);
     }
 
     @Override
     public void removeApplication(Application application) throws APIManagementException {
-        checkPermission(APIConstants.Permissions.API_SUBSCRIBE);
+        checkSubscribePermission();
         super.removeApplication(application);
     }
 
     @Override
     public void addComment(APIIdentifier identifier, String s, String user) throws APIManagementException {
-        checkPermission(APIConstants.Permissions.API_SUBSCRIBE);
+        checkSubscribePermission();
         super.addComment(identifier, s, user);
     }
 
-    public void checkPermission(String permission) throws APIManagementException {
-        APIUtil.checkPermission(username, permission, authorizationManager);
+    public void checkSubscribePermission() throws APIManagementException {
+        APIUtil.checkPermission(username, APIConstants.Permissions.API_SUBSCRIBE);
     }
 }

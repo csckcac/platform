@@ -16,17 +16,9 @@
 
 package org.wso2.carbon.apimgt.impl;
 
-import org.wso2.carbon.CarbonException;
 import org.wso2.carbon.apimgt.api.APIManagementException;
 import org.wso2.carbon.apimgt.api.model.*;
-import org.wso2.carbon.apimgt.impl.internal.ServiceReferenceHolder;
 import org.wso2.carbon.apimgt.impl.utils.APIUtil;
-import org.wso2.carbon.core.util.AnonymousSessionUtil;
-import org.wso2.carbon.registry.core.service.RegistryService;
-import org.wso2.carbon.user.core.AuthorizationManager;
-import org.wso2.carbon.user.core.UserRealm;
-import org.wso2.carbon.user.core.UserStoreException;
-import org.wso2.carbon.user.core.service.RealmService;
 
 /**
  * User aware APIProvider implementation which ensures that the invoking user has the
@@ -41,85 +33,77 @@ import org.wso2.carbon.user.core.service.RealmService;
 public class UserAwareAPIProvider extends APIProviderImpl {
     
     private String username;
-    private AuthorizationManager authorizationManager;
     
     UserAwareAPIProvider(String username) throws APIManagementException {
         super(username);
         this.username = username;
-        RegistryService registryService = ServiceReferenceHolder.getInstance().getRegistryService();
-        RealmService realmService = ServiceReferenceHolder.getInstance().getRealmService();
-        try {
-            UserRealm realm = AnonymousSessionUtil.getRealmByUserName(registryService,
-                    realmService, username);
-            authorizationManager = realm.getAuthorizationManager();
-        } catch (CarbonException e) {
-            handleException("Error while loading user realm for user: " + username, e);
-        } catch (UserStoreException e) {
-            handleException("Error while loading the authorization manager", e);
-        }
     }
 
     @Override
     public void addAPI(API api) throws APIManagementException {
-        checkPermission(APIConstants.Permissions.API_CREATE);
+        checkCreatePermission();
         super.addAPI(api);
     }
 
     @Override
     public void createNewAPIVersion(API api, String newVersion) throws DuplicateAPIException,
             APIManagementException {
-        checkPermission(APIConstants.Permissions.API_CREATE);
+        checkCreatePermission();
         super.createNewAPIVersion(api, newVersion);
     }
 
     @Override
     public void updateAPI(API api) throws APIManagementException {
-        checkPermission(APIConstants.Permissions.API_CREATE);
+        checkCreatePermission();
         super.updateAPI(api);
     }
 
     @Override
     public void changeAPIStatus(API api, APIStatus status, String userId,
                                 boolean updateGatewayConfig) throws APIManagementException {
-        checkPermission(APIConstants.Permissions.API_PUBLISH);
+        checkPublishPermission();
         super.changeAPIStatus(api, status, userId, updateGatewayConfig);
     }
 
     @Override
     public void addDocumentation(APIIdentifier apiId,
                                  Documentation documentation) throws APIManagementException {
-        checkPermission(APIConstants.Permissions.API_CREATE);
+        checkCreatePermission();
         super.addDocumentation(apiId, documentation);
     }
 
     @Override
     public void removeDocumentation(APIIdentifier apiId, String docName,
                                     String docType) throws APIManagementException {
-        checkPermission(APIConstants.Permissions.API_CREATE);
+        checkCreatePermission();
         super.removeDocumentation(apiId, docName, docType);
     }
 
     @Override
     public void updateDocumentation(APIIdentifier apiId,
                                     Documentation documentation) throws APIManagementException {
-        checkPermission(APIConstants.Permissions.API_CREATE);
+        checkCreatePermission();
         super.updateDocumentation(apiId, documentation);
     }
 
     @Override
     public void addDocumentationContent(APIIdentifier identifier, String documentationName,
                                         String text) throws APIManagementException {
-        checkPermission(APIConstants.Permissions.API_CREATE);
+        checkCreatePermission();
         super.addDocumentationContent(identifier, documentationName, text);
     }
 
     @Override
     public void copyAllDocumentation(APIIdentifier apiId, String toVersion) throws APIManagementException {
-        checkPermission(APIConstants.Permissions.API_CREATE);
+        checkCreatePermission();
         super.copyAllDocumentation(apiId, toVersion);
     }
 
-    public void checkPermission(String permission) throws APIManagementException {
-        APIUtil.checkPermission(username, permission, authorizationManager);
+    public void checkCreatePermission() throws APIManagementException {
+        APIUtil.checkPermission(username, APIConstants.Permissions.API_CREATE);
+    }
+
+    public void checkPublishPermission() throws APIManagementException {
+        APIUtil.checkPermission(username, APIConstants.Permissions.API_PUBLISH);
     }
 }

@@ -22,13 +22,11 @@ import org.apache.axiom.om.OMElement;
 import org.apache.axiom.om.util.AXIOMUtil;
 import org.apache.commons.logging.Log;
 import org.apache.commons.logging.LogFactory;
-import org.wso2.carbon.CarbonConstants;
 import org.wso2.carbon.apimgt.api.APIManagementException;
 import org.wso2.carbon.apimgt.api.model.*;
 import org.wso2.carbon.apimgt.impl.APIConstants;
 import org.wso2.carbon.apimgt.impl.APIManagerConfiguration;
 import org.wso2.carbon.apimgt.impl.internal.ServiceReferenceHolder;
-import org.wso2.carbon.core.util.AnonymousSessionUtil;
 import org.wso2.carbon.governance.api.common.dataobjects.GovernanceArtifact;
 import org.wso2.carbon.governance.api.endpoints.EndpointManager;
 import org.wso2.carbon.governance.api.endpoints.dataobjects.Endpoint;
@@ -43,11 +41,6 @@ import org.wso2.carbon.registry.core.RegistryConstants;
 import org.wso2.carbon.registry.core.Resource;
 import org.wso2.carbon.registry.core.Tag;
 import org.wso2.carbon.registry.core.exceptions.RegistryException;
-import org.wso2.carbon.registry.core.service.RegistryService;
-import org.wso2.carbon.user.core.AuthorizationManager;
-import org.wso2.carbon.user.core.UserRealm;
-import org.wso2.carbon.user.core.UserStoreException;
-import org.wso2.carbon.user.core.service.RealmService;
 
 import javax.xml.stream.XMLStreamException;
 import java.util.*;
@@ -475,44 +468,23 @@ public final class APIUtil {
         return tiers;
     }
 
-    public static void checkPermission(String username, String permission,
-                                       AuthorizationManager authorizationManager) throws APIManagementException {
+    public static void checkPermission(String username, String permission) throws APIManagementException {
         if (username == null) {
             throw new APIManagementException("Attempt to execute privileged operation as" +
                     " the anonymous user");
         }
 
-        boolean authorized;
-        try {
-            authorized = authorizationManager.isUserAuthorized(username, permission,
-                    CarbonConstants.UI_PERMISSION_ACTION);
-        } catch (UserStoreException e) {
-            throw new APIManagementException("Error while checking user authorization", e);
-        }
-
+        RemoteAuthorizationManager authorizationManager = RemoteAuthorizationManager.getInstance();
+        boolean authorized = authorizationManager.isUserAuthorized(username, permission);
         if (!authorized) {
             throw new APIManagementException("User '" + username + "' does not have the " +
                     "required permission: " + permission);
         }
     }
-
-    public static boolean checkPermissionQuietly(String username, String permission) {
-        RegistryService registryService = ServiceReferenceHolder.getInstance().getRegistryService();
-        RealmService realmService = ServiceReferenceHolder.getInstance().getRealmService();
-        try {
-            UserRealm realm = AnonymousSessionUtil.getRealmByUserName(registryService,
-                    realmService, username);
-            AuthorizationManager authorizationManager = realm.getAuthorizationManager();
-            return checkPermissionQuietly(username, permission, authorizationManager);
-        } catch (Exception e) {
-            return false;
-        }
-    }
     
-    public static boolean checkPermissionQuietly(String username, String permission,
-                                                 AuthorizationManager authorizationManager) {
+    public static boolean checkPermissionQuietly(String username, String permission) {
         try {
-            checkPermission(username, permission, authorizationManager);
+            checkPermission(username, permission);
             return true;
         } catch (APIManagementException e) {
             return false;

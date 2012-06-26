@@ -1599,7 +1599,7 @@ public class APIStoreHostObject extends ScriptableObject {
         APIConsumer consumer = getAPIConsumer(thisObj);
         if (consumer instanceof UserAwareAPIConsumer) {
             try {
-                ((UserAwareAPIConsumer) consumer).checkPermission(APIConstants.Permissions.API_SUBSCRIBE);
+                ((UserAwareAPIConsumer) consumer).checkSubscribePermission();
                 return true;
             } catch (APIManagementException e) {
                 return false;

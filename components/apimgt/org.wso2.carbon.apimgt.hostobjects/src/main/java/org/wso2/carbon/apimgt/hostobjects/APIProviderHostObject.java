@@ -1572,7 +1572,7 @@ public class APIProviderHostObject extends ScriptableObject {
         APIProvider provider = getAPIProvider(thisObj);
         if (provider instanceof UserAwareAPIProvider) {
             try {
-                ((UserAwareAPIProvider) provider).checkPermission(APIConstants.Permissions.API_CREATE);
+                ((UserAwareAPIProvider) provider).checkCreatePermission();
                 return true;
             } catch (APIManagementException e) {
                 return false;
@@ -1587,7 +1587,7 @@ public class APIProviderHostObject extends ScriptableObject {
         APIProvider provider = getAPIProvider(thisObj);
         if (provider instanceof UserAwareAPIProvider) {
             try {
-                ((UserAwareAPIProvider) provider).checkPermission(APIConstants.Permissions.API_PUBLISH);
+                ((UserAwareAPIProvider) provider).checkPublishPermission();
                 return true;
             } catch (APIManagementException e) {
                 return false;

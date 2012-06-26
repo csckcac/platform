@@ -75,8 +75,8 @@
             </includes>
         </fileSet>
         <fileSet>
-            <directory>../../jaggery-apps/api-provider-web/src</directory>
-            <outputDirectory>wso2am-${pom.version}/repository/deployment/server/jaggeryapps/apiprovider</outputDirectory>
+            <directory>../../jaggery-apps/api-publisher-web/src</directory>
+            <outputDirectory>wso2am-${pom.version}/repository/deployment/server/jaggeryapps/apipublisher</outputDirectory>
         </fileSet>
         <fileSet>
             <directory>../../jaggery-apps/api-store-web/src</directory>

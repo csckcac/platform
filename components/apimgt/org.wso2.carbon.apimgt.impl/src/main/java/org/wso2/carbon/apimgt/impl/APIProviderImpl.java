@@ -678,7 +678,25 @@ class APIProviderImpl extends AbstractAPIManager implements APIProvider {
      */
     public void updateDocumentation(APIIdentifier apiId, Documentation documentation)
             throws APIManagementException {
-        createDocumentation(apiId, documentation);
+
+        String docPath = APIConstants.API_ROOT_LOCATION + RegistryConstants.PATH_SEPARATOR +
+                         apiId.getProviderName() + RegistryConstants.PATH_SEPARATOR + apiId.getApiName() +
+                         RegistryConstants.PATH_SEPARATOR + apiId.getVersion() + RegistryConstants.PATH_SEPARATOR +
+                         APIConstants.DOC_DIR + RegistryConstants.PATH_SEPARATOR + documentation.getName();
+        try {
+            String apiArtifactId = registry.get(docPath).getUUID();
+            GenericArtifactManager artifactManager = APIUtil.getArtifactManager(registry,
+                                                                                APIConstants.DOCUMENTATION_KEY);
+            GenericArtifact artifact = artifactManager.getGenericArtifact(apiArtifactId);
+            GenericArtifact updateApiArtifact = APIUtil.createDocArtifactContent(artifact, apiId, documentation);
+            artifactManager.updateGenericArtifact(updateApiArtifact);
+
+        } catch (RegistryException e) {
+            handleException("Failed to update documentation", e);
+
+        }
+
+
     }
 
     /**

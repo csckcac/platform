@@ -536,7 +536,7 @@ public class APIStoreHostObject extends ScriptableObject {
 				currentApi.put("rates", currentApi, api.getRating());
 				if (api.getThumbnailUrl() == null) {
 					currentApi.put("thumbnailurl", currentApi,
-							"images/service-test-icon.png");
+							"images/api-default.png");
 				} else {
 					currentApi.put("thumbnailurl", currentApi,
 							api.getThumbnailUrl());

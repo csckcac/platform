@@ -26,9 +26,11 @@ import java.util.Iterator;
 import java.util.Properties;
 import java.util.concurrent.ConcurrentHashMap;
 import java.util.Map;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 
 public class TenantAwareInitialContextFactory extends PropertiesFileInitialContextFactory {
-    
+    private static final Logger _logger = LoggerFactory.getLogger(TenantAwareInitialContextFactory.class);
     private static final String TRANSPORT_CON_FAC = "transport.jms.ConnectionFactoryJNDIName";
     private static final String DEFAULT_CON_FAC = "org.apache.qpid.wso2.default.ConnectionFactoryJNDIName";
     private static final String USERNAEM_START_TOKEN = "://";

@@ -349,7 +349,7 @@
 
     <build>
         <plugins>
-	<plugin>
+			<plugin>
                 <artifactId>maven-resources-plugin</artifactId>
                 <executions>
                     <execution>
@@ -364,7 +364,7 @@
                                 <resource>
                                     <directory>resources</directory>
                                     <includes>
-					<include>modules/**</include>
+										<include>modules/**</include>
                                         <include>p2.inf</include>                                       
                                     </includes>
                                 </resource>
@@ -407,10 +407,9 @@
                                 <bundleDef>org.wso2.carbon:org.wso2.carbon.hostobjects.xslt</bundleDef>
                                 <bundleDef>org.wso2.carbon:org.wso2.carbon.hostobjects.uri</bundleDef>
                                 <bundleDef>org.wso2.carbon:org.wso2.carbon.hostobjects.jaggeryparser</bundleDef>
-				<bundleDef>org.wso2.carbon:org.wso2.carbon.hostobjects.log</bundleDef>
- <bundleDef>org.wso2.carbon:org.wso2.carbon.hostobjects.oauth</bundleDef>
-                           
- </bundles>
+								<bundleDef>org.wso2.carbon:org.wso2.carbon.hostobjects.log</bundleDef>
+ 								<bundleDef>org.wso2.carbon:org.wso2.carbon.hostobjects.oauth</bundleDef>
+ 							</bundles>
                             <importBundles>
                                 <importBundleDef>org.codehaus.jettison:jettison</importBundleDef>
                                 <importBundleDef>org.wso2.wsf.javascript:axiom-e4x</importBundleDef>
@@ -420,13 +419,10 @@
                                 <importBundleDef>org.apache.geronimo.specs.wso2:geronimo-stax-api_1.0_spec
                                 </importBundleDef>
                                 <importBundleDef>org.apache.ws.security.wso2:wss4j</importBundleDef>
-
                                 <importBundleDef>org.apache.ws.commons.axiom.wso2:axiom</importBundleDef>
-
                                 <importBundleDef>commons-io:commons-io</importBundleDef>
                                 <importBundleDef>org.hectorclient:hector-core</importBundleDef>
                                 <importBundleDef>org.eclipse.equinox:javax.servlet.jsp</importBundleDef>
-
                                 <importBundleDef>org.apache.axis2.wso2:axis2</importBundleDef>
                                 <importBundleDef>org.wso2.carbon:org.wso2.carbon.addressing</importBundleDef>
                                 <importBundleDef>commons-dbcp.wso2:commons-dbcp</importBundleDef>
@@ -442,10 +438,11 @@
                                 <importBundleDef>jdom.wso2:jdom</importBundleDef>
                                 <importBundleDef>commons-cli:commons-cli</importBundleDef>
                                 <importBundleDef>com.googlecode.json-simple.wso2:json-simple</importBundleDef>
-				<importBundleDef>com.google.code.gson:gson</importBundleDef>
+								<importBundleDef>com.google.code.gson:gson</importBundleDef>
                             </importBundles>
-
-
+                            <importFeatures>
+                                <importFeatureDef>org.wso2.carbon.ntask.core:${wso2carbon.version}</importFeatureDef>
+                            </importFeatures>
                         </configuration>
                     </execution>
                 </executions>
@@ -473,6 +470,4 @@
             </plugin>
         </plugins>
     </build>
-
-
 </project>

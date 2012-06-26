@@ -93,14 +93,28 @@ public class BPELPackageManagementServiceSkeleton extends AbstractAdmin
             int endIndex = (tPage + 1) * BPELConstants.ITEMS_PER_PAGE;
 
             int numberOfPackages = packages.size();
-            int pages = (int) Math.ceil((double) numberOfPackages / BPELConstants.ITEMS_PER_PAGE);
-            paginatedPackages.setPages(pages);
-
+            int totalPackages = 0;
             BPELPackageInfo[] packagesArray =
                     packages.toArray(new BPELPackageInfo[numberOfPackages]);
-            for (int i = startIndex; i < endIndex && i < numberOfPackages; i++) {
-                paginatedPackages.add_package(getPackageInfo(packagesArray[i]));
+
+            for (int i = 0; i < numberOfPackages; i++) {
+                int count = getPackageVersionCount(packagesArray[i]);
+                if (totalPackages + count > startIndex && totalPackages < endIndex) {
+//                    In-order to get the total number of packages count
+//                    if (totalPackages >= endIndex) {
+//                        break;
+//                    }
+                    int maxRemainingPackages =
+                            totalPackages < startIndex && (totalPackages + count) > startIndex ?
+                                    startIndex - (totalPackages + count) :
+                                    endIndex - totalPackages;
+                    PackageType packageType = getPackageInfo(packagesArray[i], maxRemainingPackages);
+                    paginatedPackages.add_package(packageType);
+                }
+                totalPackages += count;
             }
+            int pages = (int) Math.ceil((double) totalPackages / BPELConstants.ITEMS_PER_PAGE);
+            paginatedPackages.setPages(pages);
         } else {
             // Returning empty result set with pages equal to zero for cases where null is returned from
             // BPEL repo.
@@ -110,22 +124,27 @@ public class BPELPackageManagementServiceSkeleton extends AbstractAdmin
         return paginatedPackages;
     }
 
-    private PackageType getPackageInfo(BPELPackageInfo packageInfo)
+    private PackageType getPackageInfo(BPELPackageInfo packageInfo, int maxRemainingPackages)
             throws PackageManagementException {
         PackageType bpelPackage = new PackageType();
         bpelPackage.setName(packageInfo.getName());
         bpelPackage.setState(convertToPackageStatusType(packageInfo.getStatus()));
-        bpelPackage.setVersions(getAllVersionsOfPackage(packageInfo));
+        bpelPackage.setVersions(getAllVersionsOfPackage(packageInfo, maxRemainingPackages));
         bpelPackage.setErrorLog(packageInfo.getCauseForDeploymentFailure());
         return bpelPackage;
     }
 
-    private Versions_type0 getAllVersionsOfPackage(BPELPackageInfo packageInfo)
+    private Versions_type0 getAllVersionsOfPackage(BPELPackageInfo packageInfo,
+                                                   int maxRemainingPackages)
             throws PackageManagementException {
         Versions_type0 versionsList = new Versions_type0();
         List<String> versions = packageInfo.getAvailableVersions();
         Collections.reverse(versions);
-        for (String version : versions) {
+        int count = 0;
+        int startIndex = maxRemainingPackages < 0 ? versions.size() + maxRemainingPackages : 0;
+        int endIndex = versions.size() - 1;
+        for (int i = startIndex; i <= endIndex && Math.abs(maxRemainingPackages) > count; i++) {
+            String version = versions.get(i);
             Version_type0 packageVersion = new Version_type0();
             packageVersion.setName(version);
             packageVersion.setProcesses(getProcessesForPackage(version));
@@ -135,9 +154,19 @@ public class BPELPackageManagementServiceSkeleton extends AbstractAdmin
                 packageVersion.setIsLatest(false);
             }
             versionsList.addVersion(packageVersion);
+            count++;
         }
 
         return versionsList;
+    }
+
+    private int getPackageVersionCount(BPELPackageInfo bpelPackageInfo) {
+        return bpelPackageInfo.getAvailableVersions().size();
+    }
+
+    private PackageType getPackageInfo(BPELPackageInfo packageInfo)
+            throws PackageManagementException {
+        return getPackageInfo(packageInfo, packageInfo.getAvailableVersions().size());
     }
 
     private Processes_type0 getProcessesForPackage(String version) throws PackageManagementException {

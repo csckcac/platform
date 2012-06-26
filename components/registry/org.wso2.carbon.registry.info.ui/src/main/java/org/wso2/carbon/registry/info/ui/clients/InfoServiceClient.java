@@ -46,9 +46,6 @@ public class InfoServiceClient implements IInfoService {
     public InfoServiceClient(String cookie, ServletConfig config, HttpSession session)
             throws RegistryException {
 
-        proxy = (IInfoService) CarbonUIUtil.getServerProxy(null,
-                IInfoService.class, session);
-
         if (proxy == null) {
             String backendServerURL = CarbonUIUtil.getServerURL(config.getServletContext(),
                     session);
@@ -70,8 +67,7 @@ public class InfoServiceClient implements IInfoService {
                 log.error(msg, axisFault);
                 throw new RegistryException(msg, axisFault);
             }
-            proxy = (IInfoService) CarbonUIUtil.getServerProxy(this,
-                IInfoService.class, session);
+            proxy = this;
         }
     }
 
@@ -82,7 +78,6 @@ public class InfoServiceClient implements IInfoService {
     public CommentBean getComments(HttpServletRequest request) throws Exception {
 
         String sessionId = UUIDGenerator.generateUUID();
-        proxy.setSession(sessionId, request.getSession());
 
         String path = (String) Utils.getParameter(request, "path");
 
@@ -92,15 +87,12 @@ public class InfoServiceClient implements IInfoService {
             String msg = "Failed to get comments from the comment service.";
             log.error(msg, e);
             throw new Exception(msg);
-        } finally {
-            proxy.removeSession(sessionId);    
         }
 
     }
 
     public void addComment(HttpServletRequest request) throws Exception {
         String sessionId = UUIDGenerator.generateUUID();
-        proxy.setSession(sessionId, request.getSession());
 
         String path = (String) Utils.getParameter(request, "path");
         String comment = (String) Utils.getParameter(request, "comment");
@@ -111,14 +103,11 @@ public class InfoServiceClient implements IInfoService {
             String msg = "Failed to get comments from the comment service.";
             log.error(msg, e);
             throw new Exception(msg);
-        } finally {
-            proxy.removeSession(sessionId);
         }
     }
     
     public void removeComment(HttpServletRequest request) throws Exception {
     	String sessionId = UUIDGenerator.generateUUID();
-    	proxy.setSession(sessionId, request.getSession());
 
     	String mountedPath = getMountedCommentPath(request);
     	
@@ -130,8 +119,6 @@ public class InfoServiceClient implements IInfoService {
     		String msg = "Failed to remove the comment.";
     		log.error(msg, e);
     		throw new Exception(msg);
-    	} finally {
-    		proxy.removeSession(sessionId);
     	}
     }
 
@@ -141,13 +128,11 @@ public class InfoServiceClient implements IInfoService {
     	
     	// To fix bug when registry is mounted
     	String[] commentParts = commentPath.split(";");
-    	String mountedPath = path +";" + commentParts[1];
-		return mountedPath;
+    	return path +";" + commentParts[1];
 	}
 
     public TagBean getTags(HttpServletRequest request) throws Exception {
         String sessionId = UUIDGenerator.generateUUID();
-        proxy.setSession(sessionId, request.getSession());
 
         String path = (String) Utils.getParameter(request, "path");
 
@@ -157,14 +142,11 @@ public class InfoServiceClient implements IInfoService {
             String msg = "Failed to get comments from the comment service.";
             log.error(msg, e);
             throw new Exception(msg);
-        } finally {
-            proxy.removeSession(sessionId);
         }
     }
 
     public void addTag(HttpServletRequest request) throws Exception {
         String sessionId = UUIDGenerator.generateUUID();
-        proxy.setSession(sessionId, request.getSession());
 
         String path = (String) Utils.getParameter(request, "path");
         String tag = (String) Utils.getParameter(request, "tag");
@@ -175,14 +157,11 @@ public class InfoServiceClient implements IInfoService {
             String msg = "Failed to add the tag.";
             log.error(msg, e);
             throw new Exception(msg);
-        } finally {
-            proxy.removeSession(sessionId);
         }
     }
     
     public void removeTag(HttpServletRequest request) throws Exception {
         String sessionId = UUIDGenerator.generateUUID();
-        proxy.setSession(sessionId, request.getSession());
 
         String path = (String) Utils.getParameter(request, "path");
         String tag = (String) Utils.getParameter(request, "tag");
@@ -193,14 +172,11 @@ public class InfoServiceClient implements IInfoService {
             String msg = "Failed to remove the tag.";
             log.error(msg, e);
             throw new Exception(msg);
-        } finally {
-            proxy.removeSession(sessionId);
         }
     }
 
     public RatingBean getRatings(HttpServletRequest request) throws Exception {
         String sessionId = UUIDGenerator.generateUUID();
-        proxy.setSession(sessionId, request.getSession());
 
         String path = (String) Utils.getParameter(request, "path");
 
@@ -210,14 +186,11 @@ public class InfoServiceClient implements IInfoService {
             String msg = "Failed to get ratings.";
             log.error(msg, e);
             throw new Exception(msg);
-        } finally {
-            proxy.removeSession(sessionId);
         }
     }
 
     public void rateResource(HttpServletRequest request) throws Exception {
         String sessionId = UUIDGenerator.generateUUID();
-        proxy.setSession(sessionId, request.getSession());
 
         String path = (String) Utils.getParameter(request, "path");
         String rating = (String) Utils.getParameter(request, "rating");
@@ -228,14 +201,11 @@ public class InfoServiceClient implements IInfoService {
             String msg = "Failed to rate the resource.";
             log.error(msg, e);
             throw new Exception(msg);
-        } finally {
-            proxy.removeSession(sessionId);
         }
     }
 
     public EventTypeBean getEventTypes(HttpServletRequest request) throws Exception {
         String sessionId = UUIDGenerator.generateUUID();
-        proxy.setSession(sessionId, request.getSession());
 
         String path = (String) Utils.getParameter(request, "path");
 
@@ -245,14 +215,11 @@ public class InfoServiceClient implements IInfoService {
             String msg = "Failed to get Event Types.";
             log.error(msg, e);
             throw new Exception(msg);
-        } finally {
-            proxy.removeSession(sessionId);
         }
     }
 
     public SubscriptionBean getSubscriptions(HttpServletRequest request) throws Exception {
         String sessionId = UUIDGenerator.generateUUID();
-        proxy.setSession(sessionId, request.getSession());
 
         String path = (String) Utils.getParameter(request, "path");
 
@@ -262,14 +229,11 @@ public class InfoServiceClient implements IInfoService {
             String msg = "Failed to get Subscriptions.";
             log.error(msg, e);
             throw new Exception(msg);
-        } finally {
-            proxy.removeSession(sessionId);
         }
     }
 
     public SubscriptionBean subscribe(HttpServletRequest request) throws Exception {
         String sessionId = UUIDGenerator.generateUUID();
-        proxy.setSession(sessionId, request.getSession());
 
         String path = (String) Utils.getParameter(request, "path");
         String endpoint = (String) Utils.getParameter(request, "endpoint");
@@ -291,14 +255,11 @@ public class InfoServiceClient implements IInfoService {
             String msg = "Failed to subscribe.";
             log.error(msg, e);
             throw new Exception(msg);
-        } finally {
-            proxy.removeSession(sessionId);
         }
     }
 
     public SubscriptionBean subscribeREST(HttpServletRequest request) throws Exception {
         String sessionId = UUIDGenerator.generateUUID();
-        proxy.setSession(sessionId, request.getSession());
 
         String path = (String) Utils.getParameter(request, "path");
         String endpoint = (String) Utils.getParameter(request, "endpoint");
@@ -310,14 +271,11 @@ public class InfoServiceClient implements IInfoService {
             String msg = "Failed to subscribe.";
             log.error(msg, e);
             throw new Exception(msg);
-        } finally {
-            proxy.removeSession(sessionId);
         }
     }
 
     public boolean unsubscribe(HttpServletRequest request) throws Exception {
         String sessionId = UUIDGenerator.generateUUID();
-        proxy.setSession(sessionId, request.getSession());
 
         String path = (String) Utils.getParameter(request, "path");
         String id = (String) Utils.getParameter(request, "id");
@@ -328,14 +286,11 @@ public class InfoServiceClient implements IInfoService {
             String msg = "Failed to unsubscribe.";
             log.error(msg, e);
             throw new Exception(msg);
-        } finally {
-            proxy.removeSession(sessionId);
         }
     }
 
     public boolean isResource(HttpServletRequest request) throws Exception {
         String sessionId = UUIDGenerator.generateUUID();
-        proxy.setSession(sessionId, request.getSession());
 
         String path = (String) Utils.getParameter(request, "path");
 
@@ -345,15 +300,12 @@ public class InfoServiceClient implements IInfoService {
             String msg = "Failed to get resource type.";
             log.error(msg, e);
             throw new Exception(msg);
-        } finally {
-            proxy.removeSession(sessionId);
         }
     }
 
 
     public String getRemoteURL(HttpServletRequest request) throws Exception {
         String sessionId = UUIDGenerator.generateUUID();
-        proxy.setSession(sessionId, request.getSession());
 
         String path = (String) Utils.getParameter(request, "path");
 
@@ -363,14 +315,11 @@ public class InfoServiceClient implements IInfoService {
             String msg = "Failed to get remote URL.";
             log.error(msg, e);
             throw new Exception(msg);
-        } finally {
-            proxy.removeSession(sessionId);
         }
     }
 
     public String verifyEmail(HttpServletRequest request) throws Exception {
         String sessionId = UUIDGenerator.generateUUID();
-        proxy.setSession(sessionId, request.getSession());
 
         String data = (String)request.getSession().getAttribute("intermediate-data");
 
@@ -380,14 +329,11 @@ public class InfoServiceClient implements IInfoService {
             String msg = "Failed to verify e-mail address.";
             log.error(msg, e);
             throw new Exception(msg);
-        } finally {
-            proxy.removeSession(sessionId);
         }
     }
 
     public boolean isUserValid(HttpServletRequest request) throws Exception {
         String sessionId = UUIDGenerator.generateUUID();
-        proxy.setSession(sessionId, request.getSession());
 
         String username = (String) Utils.getParameter(request, "username");
 
@@ -397,14 +343,11 @@ public class InfoServiceClient implements IInfoService {
             String msg = "Failed to check existence of user.";
             log.error(msg, e);
             throw new Exception(msg);
-        } finally {
-            proxy.removeSession(sessionId);
         }
     }
 
     public boolean isProfileExisting(HttpServletRequest request) throws Exception {
         String sessionId = UUIDGenerator.generateUUID();
-        proxy.setSession(sessionId, request.getSession());
 
         String username = (String) Utils.getParameter(request, "username");
 
@@ -414,14 +357,11 @@ public class InfoServiceClient implements IInfoService {
             String msg = "Failed to check existence of user's profile.";
             log.error(msg, e);
             throw new Exception(msg);
-        } finally {
-            proxy.removeSession(sessionId);
         }
     }
 
     public boolean isRoleValid(HttpServletRequest request) throws Exception {
         String sessionId = UUIDGenerator.generateUUID();
-        proxy.setSession(sessionId, request.getSession());
 
         String role = (String) Utils.getParameter(request, "role");
 
@@ -431,14 +371,11 @@ public class InfoServiceClient implements IInfoService {
             String msg = "Failed to check existence of role.";
             log.error(msg, e);
             throw new Exception(msg);
-        } finally {
-            proxy.removeSession(sessionId);
         }
     }
 
     public boolean isRoleProfileExisting(HttpServletRequest request) throws Exception {
         String sessionId = UUIDGenerator.generateUUID();
-        proxy.setSession(sessionId, request.getSession());
 
         String role = (String) Utils.getParameter(request, "role");
 
@@ -448,8 +385,6 @@ public class InfoServiceClient implements IInfoService {
             String msg = "Failed to check existence of the profile for the role.";
             log.error(msg, e);
             throw new Exception(msg);
-        } finally {
-            proxy.removeSession(sessionId);
         }
     }
 
@@ -478,7 +413,6 @@ public class InfoServiceClient implements IInfoService {
                 resultComments[i].setCreatedTime(comment.getCreatedTime());
                 resultComments[i].setDescription(comment.getDescription());
                 resultComments[i].setLastModified(comment.getLastModified());
-                resultComments[i].setMediaType(comment.getMediaType());
                 resultComments[i].setResourcePath(comment.getResourcePath());
                 resultComments[i].setText(comment.getText());
                 resultComments[i].setTime(comment.getTime());

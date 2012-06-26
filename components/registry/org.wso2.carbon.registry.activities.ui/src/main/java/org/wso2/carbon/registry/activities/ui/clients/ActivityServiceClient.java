@@ -45,9 +45,6 @@ public class ActivityServiceClient implements IActivityService {
     public ActivityServiceClient(String cookie, ServletConfig config, HttpSession session)
             throws RegistryException {
 
-        proxy = (IActivityService) CarbonUIUtil.getServerProxy(null,
-                IActivityService.class, session);
-
         if (proxy == null) {
 
             String backendServerURL = CarbonUIUtil.getServerURL(config.getServletContext(),
@@ -70,8 +67,7 @@ public class ActivityServiceClient implements IActivityService {
                 log.error(msg, axisFault);
                 throw new RegistryException(msg, axisFault);
             }
-            proxy = (IActivityService) CarbonUIUtil.getServerProxy(this,
-                IActivityService.class, session);
+            proxy = this;
         }
     }
 
@@ -82,7 +78,6 @@ public class ActivityServiceClient implements IActivityService {
     public ActivityBean getActivities(HttpServletRequest request) {
 
         String sessionId = UUIDGenerator.generateUUID();
-        proxy.setSession(sessionId, request.getSession());
 
         String userName = request.getParameter("userName");
         String resourcePath = request.getParameter("path");
@@ -98,15 +93,12 @@ public class ActivityServiceClient implements IActivityService {
             String msg = "Failed to get activities from the activity service.";
             log.error(msg, e);
             return null;
-        } finally {
-            proxy.removeSession(sessionId);
         }
     }
 
     public ActivityBean getRecentActivitiesForLoginUser(HttpServletRequest request) {
 
         String sessionId = UUIDGenerator.generateUUID();
-        proxy.setSession(sessionId, request.getSession());
 
         String LOGGED_USER = "logged-user";
 
@@ -124,8 +116,6 @@ public class ActivityServiceClient implements IActivityService {
             String msg = "Failed to get activities from the activity service.";
             log.error(msg, e);
             return null;
-        } finally {
-            proxy.removeSession(sessionId);
         }
     }
 

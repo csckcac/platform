@@ -52,29 +52,11 @@ import java.util.concurrent.ConcurrentHashMap;
 public class InfoService extends RegistryAbstractAdmin implements IInfoService {
 
     private static final Log log = LogFactory.getLog(InfoService.class);
-    private static final String USERNAME = "UserName";
-
-    private Map<String, HttpSession> sessions = new ConcurrentHashMap<String, HttpSession>();
 
     public void setSession(String sessionId, HttpSession session) {
-        if (sessionId == null) {
-            return;
-        }
-        sessions.put(sessionId, session);
     }
 
     public void removeSession(String sessionId) {
-        if (sessionId == null) {
-            return;
-        }
-        sessions.remove(sessionId);
-    }
-
-    private HttpSession getSession(String sessionId) {
-        if (sessionId == null) {
-            return null;
-        }
-        return sessions.get(sessionId);
     }
 
     public CommentBean getComments(String path, String sessionId) throws RegistryException {

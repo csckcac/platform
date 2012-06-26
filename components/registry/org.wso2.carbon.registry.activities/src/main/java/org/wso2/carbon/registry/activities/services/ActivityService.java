@@ -30,27 +30,10 @@ import java.util.concurrent.ConcurrentHashMap;
 
 public class ActivityService extends RegistryAbstractAdmin implements IActivityService {
 
-    private Map<String, HttpSession> sessions = new ConcurrentHashMap<String, HttpSession>();
-
     public void setSession(String sessionId, HttpSession session) {
-        if (sessionId == null) {
-            return;
-        }
-        sessions.put(sessionId, session);
     }
 
     public void removeSession(String sessionId) {
-        if (sessionId == null) {
-            return;
-        }
-        sessions.remove(sessionId);
-    }
-
-    private HttpSession getSession(String uuid) {
-        if (uuid == null) {
-            return null;
-        }
-        return sessions.get(uuid);
     }
 
     public ActivityBean getActivities(String userName, String resourcePath, String fromDate,

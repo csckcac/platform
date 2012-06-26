@@ -1,6 +1,9 @@
-<% jagg.template("search/api-search", function(inputs, outputs, jagg) { %>
+<% jagg.template("search/api-search", function(inputs, outputs, jagg) {
+var query=request.getParameter("query");
+%>
 <form class="well form-search" action="<%=jagg.getMappedUrl("/site/pages/index.jag")%>">
-    <input type="text" name="query" class="input-medium search-query" placeholder="Filter APIs" />
+    <input type="text" name="query" class="input-medium search-query" <%if(query!=null){%> value="<%=query%>" <%}else{%>
+    placeholder="Filter APIs"<%}%> />
     <button class="btn btn-primary">Search</button>
 </form>
 <div class="alert alert-success" id="searchMessageContainer" style="display:none">

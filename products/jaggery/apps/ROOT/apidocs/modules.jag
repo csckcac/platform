@@ -70,7 +70,7 @@ include('/includes/navi.jag');
 &lt;module name=&quot;module_name&quot; namespace=&quot;ns&quot; expose=&quot;true&quot; xmlns=&quot;http://wso2.org/projects/jaggery/module.xml&quot;&gt;
     &lt;!-- Hostobjects --&gt;
     &lt;hostObject readOnly=&quot;true&quot;&gt;
-        &lt;className&gt;org.wso2.carbon.hostobjects.xhr.XMLHttpRequest&lt;/className&gt;
+        &lt;className&gt;org.jaggeryjs.hostobjects.xhr.XMLHttpRequest&lt;/className&gt;
         &lt;name&gt;XMLHttpRequest&lt;/name&gt;
     &lt;/hostObject&gt;
     .............

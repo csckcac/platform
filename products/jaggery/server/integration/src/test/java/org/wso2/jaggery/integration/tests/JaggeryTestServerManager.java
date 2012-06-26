@@ -96,7 +96,7 @@ public class JaggeryTestServerManager extends TestServerManager {
         copySampleFile(sourcePath, destinationPath);
         
         //org.jaggeryjs.hostobjects.feed1 host object
-    	fileName = "org.jaggeryjs.hostobjects.feed1.jag";
+    	fileName = "feed.jag";
     	sourcePath = computeSourcePath(fileName);
     	destinationPath = computeDestPath(carbonHome, fileName);
         copySampleFile(sourcePath, destinationPath);

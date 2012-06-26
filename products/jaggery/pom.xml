@@ -23,7 +23,7 @@
     <modelVersion>4.0.0</modelVersion>
     <groupId>org.jaggeryjs</groupId>
     <artifactId>jaggery-parent</artifactId>
-    <version>0.9.0-ALPHA</version>
+    <version>0.9.0-SNAPSHOT</version>
     <packaging>pom</packaging>
     <name>jaggeryjs - Parent</name>
     <url>http://jaggeryjs.org</url>
@@ -568,10 +568,10 @@
     </issueManagement>
 
     <properties>
-        <jaggery.components.version>0.9.0-ALPHA</jaggery.components.version>
-        <jaggery.version>0.9.0-ALPHA</jaggery.version>
-        <hostObject.version>0.9.0-ALPHA</hostObject.version>
-        <jaggery.deployer.osgi.version>0.9.0.ALPHA</jaggery.deployer.osgi.version>
+        <jaggery.components.version>0.9.0-SNAPSHOT</jaggery.components.version>
+        <jaggery.version>0.9.0-SNAPSHOT</jaggery.version>
+        <hostObject.version>0.9.0-SNAPSHOT</hostObject.version>
+        <jaggery.deployer.osgi.version>0.9.0.SNAPSHOT</jaggery.deployer.osgi.version>
 
         <wso2carbon.version>4.0.0-SNAPSHOT</wso2carbon.version>
 
@@ -617,9 +617,9 @@
         <h2.engine.version>1.2.140.wso2v2</h2.engine.version>
         <mvn.gpg>1.0-alpha-3</mvn.gpg>
         <carbon.platform.version>4.0.0-SNAPSHOT</carbon.platform.version>
-        <carbon.product.version>0.9.0-ALPHA</carbon.product.version>
+        <carbon.product.version>0.9.0-SNAPSHOT</carbon.product.version>
         <carbon.version>4.0.0-SNAPSHOT</carbon.version>
-        <jaggery.version>0.9.0-ALPHA</jaggery.version>
+        <jaggery.version>0.9.0-SNAPSHOT</jaggery.version>
         <carbon.p2.plugin.version>1.5-SNAPSHOT</carbon.p2.plugin.version>
         <emma.version>2.1.5320</emma.version>
         <httpcore.version>4.1.0-wso2v1</httpcore.version>

@@ -35,7 +35,7 @@ import org.wso2.carbon.integration.framework.ClientConnectionUtil;
 public class FeedHostObjectTestCase {
 
     @Test(groups = {"jaggery"},
-          description = "Test org.jaggeryjs.hostobjects.feed host object")
+          description = "Test feed hostobject")
     public void testFeed() {
         ClientConnectionUtil.waitForPort(9763);
         

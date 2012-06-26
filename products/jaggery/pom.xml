@@ -585,7 +585,7 @@
         <geronimo-stax-api.wso2.version>1.0.1.wso2v1</geronimo-stax-api.wso2.version>
         <rampart.wso2.version>1.6.1.wso2v2</rampart.wso2.version>
         <wss4j.wso2.version>1.5.11.wso2v1</wss4j.wso2.version>
-        <axis2.wso2.version>1.6.1.wso2v4</axis2.wso2.version>
+        <axis2.wso2.version>1.6.1.wso2v5</axis2.wso2.version>
         <abdera.version>0.4.0.wso2v1</abdera.version>
         <jsr107cache.version>1.1.wso2v1</jsr107cache.version>
         <jdom.version>1.0.0.wso2v1</jdom.version>
@@ -620,7 +620,7 @@
         <carbon.product.version>0.9.0-ALPHA</carbon.product.version>
         <carbon.version>4.0.0-SNAPSHOT</carbon.version>
         <jaggery.version>0.9.0-ALPHA</jaggery.version>
-        <carbon.p2.plugin.version>1.4</carbon.p2.plugin.version>
+        <carbon.p2.plugin.version>1.5-SNAPSHOT</carbon.p2.plugin.version>
         <emma.version>2.1.5320</emma.version>
         <httpcore.version>4.1.0-wso2v1</httpcore.version>
         <commons-codec.version>1.4.0.wso2v1</commons-codec.version>

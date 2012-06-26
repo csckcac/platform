@@ -825,9 +825,8 @@ public class APIProviderHostObject extends ScriptableObject {
                     APIIdentifier apiIdentifier = api.getId();
                     row.put("apiName", row, apiIdentifier.getApiName());
                     row.put("version", row, apiIdentifier.getVersion());
-                    row.put("status", row, checkValue(api.getStatus().toString()));
-                    row.put("thumb", row, api.getThumbnailUrl());
-                    row.put("subs", row, getSubscriberCount(apiIdentifier, thisObj));
+                    row.put("provider", row, apiIdentifier.getProviderName());
+                    row.put("updatedDate", row, api.getLastUpdated().toString());
                     myn.put(i, myn, row);
                     i++;
                 }

@@ -18,7 +18,14 @@
 
 package org.wso2.carbon.apimgt.api;
 
-import org.wso2.carbon.apimgt.api.model.*;
+import org.wso2.carbon.apimgt.api.model.API;
+import org.wso2.carbon.apimgt.api.model.APIIdentifier;
+import org.wso2.carbon.apimgt.api.model.APIRating;
+import org.wso2.carbon.apimgt.api.model.Application;
+import org.wso2.carbon.apimgt.api.model.Comment;
+import org.wso2.carbon.apimgt.api.model.SubscribedAPI;
+import org.wso2.carbon.apimgt.api.model.Subscriber;
+import org.wso2.carbon.apimgt.api.model.Tag;
 
 import java.util.Set;
 
@@ -211,4 +218,13 @@ public interface APIConsumer extends APIManager {
 
     public Set<API> searchAPI(String searchTerm, String searchType) throws APIManagementException;
     public int getUserRating(APIIdentifier apiId, String user) throws APIManagementException;
+
+    /**
+     * Get a list of published APIs by the given provider.
+     *
+     * @param providerId , provider id
+     * @return set of API
+     * @throws APIManagementException if failed to get set of API
+     */
+    public Set<API> getPublishedAPIsByProvider(String providerId) throws APIManagementException;
 }

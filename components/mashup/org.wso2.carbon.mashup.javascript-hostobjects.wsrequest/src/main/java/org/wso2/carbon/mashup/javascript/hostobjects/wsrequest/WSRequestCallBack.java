@@ -23,7 +23,7 @@ import org.apache.axis2.util.Utils;
 import org.apache.commons.logging.Log;
 import org.apache.commons.logging.LogFactory;
 import org.mozilla.javascript.Context;
-import org.wso2.carbon.scriptengine.engine.RhinoEngine;
+import org.jaggeryjs.scriptengine.engine.RhinoEngine;
 
 import javax.xml.namespace.QName;
 

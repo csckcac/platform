@@ -38,8 +38,8 @@ import org.wso2.carbon.mashup.utils.MashupUtils;
 import org.wso2.carbon.ntask.core.AbstractTask;
 import org.wso2.carbon.ntask.core.TaskInfo;
 import org.wso2.carbon.ntask.core.internal.TasksDSComponent;
-import org.wso2.carbon.scriptengine.engine.RhinoEngine;
-import org.wso2.carbon.scriptengine.exceptions.ScriptException;
+import org.jaggeryjs.scriptengine.engine.RhinoEngine;
+import org.jaggeryjs.scriptengine.exceptions.ScriptException;
 import org.wso2.carbon.utils.multitenancy.MultitenantConstants;
 
 public class MSTask extends AbstractTask {

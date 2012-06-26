@@ -20,8 +20,8 @@ import org.apache.commons.logging.Log;
 import org.apache.commons.logging.LogFactory;
 import org.wso2.carbon.mashup.javascript.messagereceiver.JavaScriptEngineUtils;
 import org.wso2.carbon.mashup.javascript.hostobjects.hostobjectservice.service.HostObjectService;
-import org.wso2.carbon.scriptengine.cache.CacheManager;
-import org.wso2.carbon.scriptengine.engine.RhinoEngine;
+import org.jaggeryjs.scriptengine.cache.CacheManager;
+import org.jaggeryjs.scriptengine.engine.RhinoEngine;
 
 
 /**

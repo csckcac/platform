@@ -60,7 +60,7 @@ import org.apache.ws.commons.schema.XmlSchemaSimpleTypeRestriction;
 import org.apache.ws.commons.schema.XmlSchemaType;
 import org.apache.ws.commons.schema.constants.Constants;
 import org.mozilla.javascript.*;
-import org.wso2.carbon.scriptengine.engine.RhinoEngine;
+import org.jaggeryjs.scriptengine.engine.RhinoEngine;
 import org.wso2.javascript.xmlimpl.XML;
 import org.wso2.javascript.xmlimpl.XMLList;
 import org.wso2.carbon.mashup.utils.MashupConstants;

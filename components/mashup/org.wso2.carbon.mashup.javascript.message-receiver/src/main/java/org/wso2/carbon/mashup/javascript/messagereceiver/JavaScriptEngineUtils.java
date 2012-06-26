@@ -26,10 +26,10 @@ import org.mozilla.javascript.ScriptableObject;
 import org.mozilla.javascript.Context;
 import org.wso2.carbon.mashup.javascript.hostobjects.hostobjectservice.service.HostObjectService;
 import org.wso2.carbon.mashup.utils.MashupConstants;
-import org.wso2.carbon.scriptengine.engine.JavaScriptHostObject;
-import org.wso2.carbon.scriptengine.engine.JavaScriptMethod;
-import org.wso2.carbon.scriptengine.engine.JavaScriptProperty;
-import org.wso2.carbon.scriptengine.engine.RhinoEngine;
+import org.jaggeryjs.scriptengine.engine.JavaScriptHostObject;
+import org.jaggeryjs.scriptengine.engine.JavaScriptMethod;
+import org.jaggeryjs.scriptengine.engine.JavaScriptProperty;
+import org.jaggeryjs.scriptengine.engine.RhinoEngine;
 
 import java.lang.reflect.InvocationTargetException;
 import java.lang.reflect.Method;

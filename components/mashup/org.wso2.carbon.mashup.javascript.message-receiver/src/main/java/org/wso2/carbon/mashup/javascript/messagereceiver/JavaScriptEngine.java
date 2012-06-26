@@ -35,9 +35,9 @@ import org.mozilla.javascript.Undefined;
 import org.wso2.carbon.mashup.utils.MashupConstants;
 import org.wso2.carbon.mashup.utils.MashupReader;
 import org.wso2.carbon.mashup.utils.MashupUtils;
-import org.wso2.carbon.scriptengine.cache.ScriptCachingContext;
-import org.wso2.carbon.scriptengine.engine.RhinoEngine;
-import org.wso2.carbon.scriptengine.exceptions.ScriptException;
+import org.jaggeryjs.scriptengine.cache.ScriptCachingContext;
+import org.jaggeryjs.scriptengine.engine.RhinoEngine;
+import org.jaggeryjs.scriptengine.exceptions.ScriptException;
 
 import java.io.FileNotFoundException;
 import java.io.IOException;

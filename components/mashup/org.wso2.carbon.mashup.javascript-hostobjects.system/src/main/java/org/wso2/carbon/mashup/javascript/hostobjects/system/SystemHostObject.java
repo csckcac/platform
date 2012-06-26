@@ -63,8 +63,8 @@ import org.wso2.carbon.CarbonException;
 import org.wso2.carbon.mashup.javascript.messagereceiver.JavaScriptEngineUtils;
 import org.wso2.carbon.mashup.utils.MashupConstants;
 import org.wso2.carbon.mashup.utils.MashupUtils;
-import org.wso2.carbon.scriptengine.engine.RhinoEngine;
-import org.wso2.carbon.scriptengine.exceptions.ScriptException;
+import org.jaggeryjs.scriptengine.engine.RhinoEngine;
+import org.jaggeryjs.scriptengine.exceptions.ScriptException;
 import org.wso2.carbon.utils.NetworkUtils;
 
 /**

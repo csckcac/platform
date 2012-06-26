@@ -32,7 +32,7 @@ import org.apache.commons.logging.LogFactory;
 import org.apache.http.protocol.HTTP;
 import org.wso2.carbon.CarbonException;
 import org.wso2.carbon.core.transports.CarbonHttpResponse;
-import org.wso2.carbon.scriptengine.cache.ScriptCachingContext;
+import org.jaggeryjs.scriptengine.cache.ScriptCachingContext;
 import org.wso2.carbon.utils.CarbonUtils;
 import org.wso2.carbon.utils.multitenancy.MultitenantUtils;
 

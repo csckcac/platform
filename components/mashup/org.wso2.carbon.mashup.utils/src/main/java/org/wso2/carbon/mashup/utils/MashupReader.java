@@ -3,8 +3,8 @@ package org.wso2.carbon.mashup.utils;
 import org.apache.axis2.AxisFault;
 import org.apache.axis2.description.AxisService;
 import org.apache.axis2.description.Parameter;
-import org.wso2.carbon.scriptengine.exceptions.ScriptException;
-import org.wso2.carbon.scriptengine.util.HostObjectUtil;
+import org.jaggeryjs.scriptengine.exceptions.ScriptException;
+import org.jaggeryjs.scriptengine.util.HostObjectUtil;
 
 import java.io.ByteArrayInputStream;
 import java.io.IOException;

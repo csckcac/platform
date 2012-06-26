@@ -319,7 +319,7 @@
                         }
                     %>
                 </div>
-                <div id="subscriptionDataJMX" style="display:none">
+                <div id="subscriptionDataJMX" style="display:none"/>
             </td>
         </tr>
         <%

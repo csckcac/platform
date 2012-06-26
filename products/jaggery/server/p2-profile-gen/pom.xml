@@ -90,6 +90,9 @@
                                 <featureArtifactDef>
                                     org.jaggeryjs:org.jaggeryjs.admin.styles.feature:0.9.0-SNAPSHOT
                                 </featureArtifactDef>
+								<featureArtifactDef>
+									org.wso2.carbon:org.wso2.carbon.ntask.feature:${carbon.version}
+								</featureArtifactDef>
                             </featureArtifacts>
 
                         </configuration>
@@ -120,6 +123,10 @@
                                 <feature>
                                     <id>org.wso2.jaggery.styles.feature.group</id>
                                     <version>0.9.0-SNAPSHOT</version>
+                                </feature>
+								<feature>
+                                    <id>org.wso2.carbon.ntask.feature.group</id>
+                                    <version>${carbon.version}</version>
                                 </feature>
                             </features>
 

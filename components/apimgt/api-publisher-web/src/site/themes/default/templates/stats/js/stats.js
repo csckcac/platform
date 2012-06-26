@@ -29,7 +29,12 @@ $(document).ready(function() {
                           var plot1 = $.jqplot('serviceTimeChart', [s1], {
                               seriesDefaults:{
                                   renderer:$.jqplot.BarRenderer,
-                                  rendererOptions: {fillToZero: true}
+                                  rendererOptions: {fillToZero: true} ,
+                                  tickRenderer: $.jqplot.CanvasAxisTickRenderer ,
+                                  tickOptions: {
+                                      angle: -30,
+                                      fontSize: '10pt'
+                                  }
                               },
                               seriesColors: [ "#ed3c3c", "#ffe03e", "#48ca48", "#49baff","#7d7dff", "#ff468b", "#de621d", "#cb68c9"],
                               series:[

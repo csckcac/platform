@@ -71,10 +71,10 @@ public class PaymentServiceClient {
     }
 
     public TransactionResponse doExpressCheckout(String token, String payerId, String amount,
-                                  String paymentAction) throws Exception{
+                                  String tenantDomain) throws Exception{
         TransactionResponse tr = new TransactionResponse();
         try{
-            tr = stub.doExpressCheckout(token, payerId, amount, paymentAction);
+            tr = stub.doExpressCheckout(token, payerId, amount, tenantDomain);
         }catch (Exception e){
             log.error("Error occurred while DoExpressCheckout operation: " + e.getMessage());
             throw e;

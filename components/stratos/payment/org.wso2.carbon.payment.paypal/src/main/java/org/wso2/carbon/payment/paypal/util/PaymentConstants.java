@@ -21,10 +21,10 @@ package org.wso2.carbon.payment.paypal.util;
  */
 public class PaymentConstants {
 
-    public static final String DO_EXPRESSCHECKOUT_OPERATION = "DoExpressCheckoutPayment";
-    public static final String SET_EXPRESSCHECKOUT_OPERATION = "SetExpressCheckout";
-    public static final String GET_EXPRESSCHECKOUT_OPERATION = "GetExpressCheckoutDetails";
+    public static String DO_EXPRESSCHECKOUT_OPERATION = "DoExpressCheckoutPayment";
+    public static String SET_EXPRESSCHECKOUT_OPERATION = "SetExpressCheckout";
+    public static String GET_EXPRESSCHECKOUT_OPERATION = "GetExpressCheckoutDetails";
 
-    public static final String RESPONSE_SUCCESS = "Success";
-    public static final String RESPONSE_FAILURE = "Failure";
+    public static String RESPONSE_SUCCESS = "Success";
+    public static String RESPONSE_FAILURE = "Failure";
 }

@@ -36,11 +36,9 @@
     PaymentServiceClient paymentService = new PaymentServiceClient(configContext, serverURL, cookie);
 
     String token = request.getParameter("token");
-    System.out.println("Toke: " + token);
 
     String adminConsoleURL = CarbonUIUtil.getAdminConsoleURL(request);
     adminConsoleURL = adminConsoleURL.substring(0, adminConsoleURL.indexOf("carbon"));
-    System.out.println("New admin console URL: " + adminConsoleURL);
     String tenantDomain = (String) session.getAttribute("tenantDomain");
     String cancelUrl = adminConsoleURL + "t/" + tenantDomain + "/carbon/tenant-billing/past_invoice.jsp";
 
@@ -50,7 +48,6 @@
 
     //this is necessary when updating the payment table
     int invoiceId =  (Integer) session.getAttribute("invoiceId");
-    System.out.println("InvoiceID: " + invoiceId);
     session.removeAttribute("invoiceId");
 
 %>
@@ -72,13 +69,13 @@
         var token = '<%=ecdResponse.getToken()%>';
         var payerId = '<%=ecdResponse.getPayer().getPayerId()%>';
         var amount = '<%=ecdResponse.getOrderTotal()%>';
-        var paymentAction = '<fmt:message key="payment.action"/>';
+        var tenantDomain = '<%=tenantDomain%>';
         document.getElementById('messageTd').style.display='';
         jQuery.ajax({
             type: 'POST',
             url: 'doEC-ajaxprocessor.jsp',
             data: 'token=' + token + '&payerId=' + payerId + '&amount=' + amount
-                    + '&paymentAction=' + paymentAction,
+                    + '&tenantDomain=' + tenantDomain,
             async: false,
             success: function(msg) {
                 var resp = eval('(' + msg + ')');

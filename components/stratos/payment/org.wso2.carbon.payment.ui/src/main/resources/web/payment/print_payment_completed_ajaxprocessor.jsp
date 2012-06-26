@@ -57,9 +57,9 @@
                 </tr>
                 <tr>
                     <td> <ul class="invoice-inside-listing">
-                            <li>800 West El Camino Real Suite 180,
+                            <li>4131, El Camino Real Suite 200,
                             </li>
-                            <li>Mountain View, CA 94040
+                            <li>Palo Alto, CA 94306
                             </li>
                             <li>Tel: (408) 754 7388
                             </li>

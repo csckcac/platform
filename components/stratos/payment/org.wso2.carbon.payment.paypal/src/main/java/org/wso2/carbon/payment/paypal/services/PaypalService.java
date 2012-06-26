@@ -94,11 +94,11 @@ public class PaypalService extends AbstractAdmin{
      * @param token token received at beginning the transaction
      * @param payerId
      * @param amount amount to be paid (this has to be taken after payer has confirmed in the paypal site)
-     * @param paymentAction
+     * @param tenantDetails tenant domain and tenant id
      * @return returns the response object
      */
     public TransactionResponse doExpressCheckout(String token, String payerId, String amount,
-                                    String paymentAction) throws PayPalException {
+                                    String tenantDetails) throws PayPalException {
         DoExpressCheckoutPaymentRequestType doECRequest = new DoExpressCheckoutPaymentRequestType();
 
         DoExpressCheckoutPaymentRequestDetailsType paymentRequestDetails =
@@ -107,9 +107,7 @@ public class PaypalService extends AbstractAdmin{
         paymentRequestDetails.setPayerID(payerId);
 
         log.debug("PayerId: " + payerId);
-        //I am setting payment action as sale. It seems like the payment action
-        //passed to this method is not necessary
-        //TODO:set the payment action based on the string passed to the method
+        //I am setting payment action as sale.
         paymentRequestDetails.setPaymentAction(PaymentActionCodeType.Sale);
 
         PaymentDetailsType paymentDetails = new PaymentDetailsType();
@@ -117,6 +115,9 @@ public class PaypalService extends AbstractAdmin{
         orderTotal.set_value(amount);
         orderTotal.setCurrencyID(CurrencyCodeType.USD);
         paymentDetails.setOrderTotal(orderTotal);
+
+        //setting custom info - setting the tenant domain
+        paymentDetails.setCustom(tenantDetails);
 
         paymentRequestDetails.setPaymentDetails(paymentDetails);
 
@@ -144,8 +145,6 @@ public class PaypalService extends AbstractAdmin{
 
         TransactionResponse tr = populator.populateDoECResponse(doECResponse);
         
-        log.debug("Returning transaction response");
-        //return populator.populateDoECResponse(doECResponse);
         return tr;
     }
 }

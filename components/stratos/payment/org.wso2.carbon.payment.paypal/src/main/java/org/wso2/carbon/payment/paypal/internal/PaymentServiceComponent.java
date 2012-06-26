@@ -46,6 +46,7 @@ public class PaymentServiceComponent {
             profile.setAPIUsername(CommonUtil.getStratosConfig().getPaypalAPIUsername());
             profile.setAPIPassword(CommonUtil.getStratosConfig().getPaypalAPIPassword());
             profile.setSignature(CommonUtil.getStratosConfig().getPaypalAPISignature());
+            profile.setEnvironment(CommonUtil.getStratosConfig().getPaypalEnvironment());
 
             PaypalService.proxy = PaypalSOAPProxy.createPaypalSOAPProxy(profile);
             log.info("PaymentService Bundle activated");

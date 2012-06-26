@@ -26,7 +26,6 @@
 
 <%
     String serverURL = CarbonUIUtil.getServerURL(config.getServletContext(), session);
-    System.out.println("Server Url: " + serverURL);
     ConfigurationContext configContext = (ConfigurationContext) config.getServletContext().
             getAttribute(CarbonConstants.CONFIGURATION_CONTEXT);
     String cookie = (String) session.getAttribute(ServerConstants.ADMIN_SERVICE_COOKIE);
@@ -35,11 +34,11 @@
     String token = request.getParameter("token");
     String payerId = request.getParameter("payerId");
     String amount = request.getParameter("amount");
-    String paymentAction = request.getParameter("paymentAction");
+    String tenantDomain = request.getParameter("tenantDomain");
 
     TransactionResponse tr = new TransactionResponse();
     try{
-        tr = paymentService.doExpressCheckout(token, payerId, amount, paymentAction);
+        tr = paymentService.doExpressCheckout(token, payerId, amount, tenantDomain);
     }catch (Exception e){
         System.out.println("Error occurred while getting the transaction response: " + e.getMessage());
         e.printStackTrace();

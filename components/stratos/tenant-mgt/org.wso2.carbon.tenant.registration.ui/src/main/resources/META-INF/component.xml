@@ -43,6 +43,7 @@
                 <skip-link>../tenant-register/self_registration_complete.jsp</skip-link>
                 <skip-link>../tenant-register/domain_availability_ajaxprocessor.jsp</skip-link>
                 <skip-link>../tenant-register/select_domain.jsp</skip-link>
+                <skip-link>../tenant-register/select_usage_plan.jsp</skip-link>
                 <skip-link>../tenant-register/success_register.jsp</skip-link>
 
                 <!-- the following files need to be placed in the validate-domain ui component,

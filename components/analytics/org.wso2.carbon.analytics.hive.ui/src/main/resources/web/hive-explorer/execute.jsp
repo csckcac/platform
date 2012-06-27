@@ -76,10 +76,12 @@
 
         function executeQuery(allQueries) {
             if (allQueries != "") {
+                document.getElementById('middle').style.cursor = 'wait';
                 new Ajax.Request('../hive-explorer/queryresults.jsp', {
                             method: 'post',
                             parameters: {queries:allQueries},
                             onSuccess: function(transport) {
+                                 document.getElementById('middle').style.cursor = '';
                                 var allPage = transport.responseText;
                                 var divText = '<div id="returnedResults">';
                                 var closeDivText = '</div>';
@@ -90,11 +92,13 @@
                                 document.getElementById('hiveResult').innerHTML = queryResults;
                             },
                             onFailure: function(transport) {
+                                 document.getElementById('middle').style.cursor = '';
                                 CARBON.showErrorDialog(transport.responseText);
                             }
                         });
 
             } else {
+                document.getElementById('middle').style.cursor = 'wait';
                 var message = "Empty query can not be executed";
                 CARBON.showErrorDialog(message);
             }

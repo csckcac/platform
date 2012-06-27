@@ -35,10 +35,10 @@
 <script type="text/javascript">
     YAHOO.util.Event.onDOMReady(function() {
         editAreaLoader.init({
-            id : "allcommands"
-            ,syntax: "sql"
-            ,start_highlight: true
-        });
+                    id : "allcommands"
+                    ,syntax: "sql"
+                    ,start_highlight: true
+                });
     });
 </script>
 
@@ -75,7 +75,7 @@
             scriptContent = client.getScript(scriptName);
             cron = client.getCronExpression(scriptName);
             if (scriptContent != null && !scriptContent.equals("")) {
-             Pattern regex = Pattern.compile("[^\\s\"']+|\"([^\"]*)\"|'([^']*)'");
+                Pattern regex = Pattern.compile("[^\\s\"']+|\"([^\"]*)\"|'([^']*)'");
                 Matcher regexMatcher = regex.matcher(scriptContent);
                 String formattedScript = "";
                 while (regexMatcher.find()) {
@@ -93,17 +93,30 @@
                     }
                     formattedScript += temp + " ";
                 }
-            String[] queries = formattedScript.split(";");
-            scriptContent = "";
-            for (String aquery : queries) {
-                aquery = aquery.trim();
-                if (!aquery.equals("")) {
-                    aquery = aquery.replaceAll("%%\n", ";");
-                    aquery = aquery.replaceAll("%%", ";");
-                    scriptContent = scriptContent + aquery + ";" + "\n";
+                String[] queries = formattedScript.split(";");
+                scriptContent = "";
+                for (String aquery : queries) {
+                    aquery = aquery.trim();
+                    if (!aquery.equals("")) {
+                        aquery = aquery.replaceAll("%%\n", ";");
+                        aquery = aquery.replaceAll("%%", ";");
+                        aquery = wrapTextInVisibleWidth(aquery);
+                        String[] temp = aquery.split(",");
+
+                        if (null != temp) {
+                            aquery = "";
+                            for (String aSubQuery : temp) {
+                                aSubQuery = aSubQuery.trim();
+                                if (!aSubQuery.equals("")) {
+                                    aquery += aSubQuery + "," + "\n\t";
+                                }
+                            }
+                            aquery = aquery.substring(0, aquery.length() - 3);
+                        }
+                            scriptContent = scriptContent + aquery + ";" + "\n";
+                    }
                 }
             }
-        }
         } catch (Exception e) {
             String errorString = e.getMessage();
             CarbonUIMessage.sendCarbonUIMessage(e.getMessage(), CarbonUIMessage.ERROR, request, e);
@@ -119,34 +132,79 @@
     if (isFromScheduling) {
         scriptContent = request.getParameter("scriptContent");
         if (scriptContent != null && !scriptContent.equals("")) {
-             Pattern regex = Pattern.compile("[^\\s\"']+|\"([^\"]*)\"|'([^']*)'");
-                Matcher regexMatcher = regex.matcher(scriptContent);
-                String formattedScript = "";
-                while (regexMatcher.find()) {
-                    String temp = "";
-                    if (regexMatcher.group(1) != null) {
-                        // Add double-quoted string without the quotes
-                        temp = regexMatcher.group(1).replaceAll(";", "%%");
-                        temp = "\"" + temp + "\"";
-                    } else if (regexMatcher.group(2) != null) {
-                        // Add single-quoted string without the quotes
-                        temp = regexMatcher.group(2).replaceAll(";", "%%");
-                        temp = "\'" + temp + "\'";
-                    } else {
-                        temp = regexMatcher.group();
-                    }
-                    formattedScript += temp + " ";
+            Pattern regex = Pattern.compile("[^\\s\"']+|\"([^\"]*)\"|'([^']*)'");
+            Matcher regexMatcher = regex.matcher(scriptContent);
+            String formattedScript = "";
+            while (regexMatcher.find()) {
+                String temp = "";
+                if (regexMatcher.group(1) != null) {
+                    // Add double-quoted string without the quotes
+                    temp = regexMatcher.group(1).replaceAll(";", "%%");
+                    temp = "\"" + temp + "\"";
+                } else if (regexMatcher.group(2) != null) {
+                    // Add single-quoted string without the quotes
+                    temp = regexMatcher.group(2).replaceAll(";", "%%");
+                    temp = "\'" + temp + "\'";
+                } else {
+                    temp = regexMatcher.group();
                 }
+                formattedScript += temp + " ";
+            }
             String[] queries = formattedScript.split(";");
             scriptContent = "";
             for (String aquery : queries) {
                 aquery = aquery.trim();
                 if (!aquery.equals("")) {
+                    aquery = aquery.replaceAll("%%\n", ";");
                     aquery = aquery.replaceAll("%%", ";");
-                    scriptContent = scriptContent + aquery + ";" + "\n";
+                     aquery = wrapTextInVisibleWidth(aquery);
+                    String[] temp = aquery.split(",");
+
+                    if (null != temp) {
+                        aquery = "";
+                        for (String aSubQuery : temp) {
+                            aSubQuery = aSubQuery.trim();
+                            if (!aSubQuery.equals("")) {
+                                aquery += "\t" + aSubQuery + "," + "\n\t";
+                            }
+                        }
+                        aquery = aquery.substring(0, aquery.length() - 3);
+
+                    }
+                        scriptContent = scriptContent + aquery + ";" + "\n";
                 }
             }
         }
+    }
+%>
+
+
+<%!
+    private String wrapTextInVisibleWidth(String line) {
+        int max = 150;
+        if (null != line) {
+            if (line.length() <= max) {
+                return line;
+            } else {
+                String newLine = "";
+                String[] spaceSplit = line.split(" ");
+                int count = 0;
+                for (String word : spaceSplit) {
+                    if (count + word.length() <= max) {
+                        newLine += word + " ";
+                        count += word.length() + 1;
+                    } else {
+                        newLine += "\n\t" + word + " ";
+                        count = ("\t" + word + " ").length();
+                    }
+                }
+                return newLine;
+            }
+        } else {
+            return null;
+        }
+
+
     }
 %>
 <script type="text/javascript">
@@ -154,27 +212,32 @@
     var scriptName = '<%=scriptName%>';
     var allQueries = '';
     function executeQuery() {
+        document.getElementById('hiveResult').innerHTML = '';
         var allQueries = editAreaLoader.getValue("allcommands");
         if (allQueries != "") {
+            document.getElementById('middle').style.cursor = 'wait';
             new Ajax.Request('../hive-explorer/queryresults.jsp', {
-                method: 'post',
-                parameters: {queries:allQueries},
-                onSuccess: function(transport) {
-                    var allPage = transport.responseText;
-                    var divText = '<div id="returnedResults">';
-                    var closeDivText = '</div>';
-                    var temp = allPage.indexOf(divText, 0);
-                    var startIndex = temp + divText.length;
-                    var endIndex = allPage.indexOf(closeDivText, temp);
-                    var queryResults = allPage.substring(startIndex, endIndex);
-                    document.getElementById('hiveResult').innerHTML = queryResults;
-                },
-                onFailure: function(transport) {
-                    CARBON.showErrorDialog(transport.responseText);
-                }
-            });
+                        method: 'post',
+                        parameters: {queries:allQueries},
+                        onSuccess: function(transport) {
+                            document.getElementById('middle').style.cursor = '';
+                            var allPage = transport.responseText;
+                            var divText = '<div id="returnedResults">';
+                            var closeDivText = '</div>';
+                            var temp = allPage.indexOf(divText, 0);
+                            var startIndex = temp + divText.length;
+                            var endIndex = allPage.indexOf(closeDivText, temp);
+                            var queryResults = allPage.substring(startIndex, endIndex);
+                            document.getElementById('hiveResult').innerHTML = queryResults;
+                        },
+                        onFailure: function(transport) {
+                            document.getElementById('middle').style.cursor = '';
+                            CARBON.showErrorDialog(transport.responseText);
+                        }
+                    });
 
         } else {
+             document.getElementById('middle').style.cursor = '';
             var message = "Empty query can not be executed";
             CARBON.showErrorDialog(message);
         }
@@ -216,7 +279,7 @@
     function scheduleTask() {
         var allQueries = editAreaLoader.getValue("allcommands");
         document.getElementById('scriptContent').value = allQueries;
-        document.getElementById('commandForm').action = "../hive-explorer/scheduletask.jsp?mode=" + '<%=mode%>'+'&cron=' + '<%=cron%>';
+        document.getElementById('commandForm').action = "../hive-explorer/scheduletask.jsp?mode=" + '<%=mode%>' + '&cron=' + '<%=cron%>';
         document.getElementById('commandForm').submit();
     }
 
@@ -224,21 +287,21 @@
         var mode = '<%=mode%>';
         if (mode != 'edit') {
             new Ajax.Request('../hive-explorer/ScriptNameChecker', {
-                method: 'post',
-                parameters: {scriptName:scriptName},
-                onSuccess: function(transport) {
-                    var result = transport.responseText;
-                    if (result.indexOf('true') != -1) {
-                        var message = "The script name: " + scriptName + 'already exists in the database. Please enter a different script name.';
-                        CARBON.showErrorDialog(message);
-                    } else {
-                        sendRequestToSaveScript();
-                    }
-                },
-                onFailure: function(transport) {
-                    return true;
-                }
-            });
+                        method: 'post',
+                        parameters: {scriptName:scriptName},
+                        onSuccess: function(transport) {
+                            var result = transport.responseText;
+                            if (result.indexOf('true') != -1) {
+                                var message = "The script name: " + scriptName + 'already exists in the database. Please enter a different script name.';
+                                CARBON.showErrorDialog(message);
+                            } else {
+                                sendRequestToSaveScript();
+                            }
+                        },
+                        onFailure: function(transport) {
+                            return true;
+                        }
+                    });
         } else {
             sendRequestToSaveScript();
         }
@@ -246,26 +309,26 @@
 
     function sendRequestToSaveScript() {
         new Ajax.Request('../hive-explorer/SaveScriptProcessor', {
-            method: 'post',
-            parameters: {queries:allQueries, scriptName:scriptName,
-                cronExp:cron},
-            onSuccess: function(transport) {
-                var result = transport.responseText;
-                if (result.indexOf('Success') != -1) {
-                    CARBON.showInfoDialog(result, function() {
-                        location.href = "../hive-explorer/listscripts.jsp";
-                    }, function() {
-                        location.href = "../hive-explorer/listscripts.jsp";
-                    });
+                    method: 'post',
+                    parameters: {queries:allQueries, scriptName:scriptName,
+                        cronExp:cron},
+                    onSuccess: function(transport) {
+                        var result = transport.responseText;
+                        if (result.indexOf('Success') != -1) {
+                            CARBON.showInfoDialog(result, function() {
+                                location.href = "../hive-explorer/listscripts.jsp";
+                            }, function() {
+                                location.href = "../hive-explorer/listscripts.jsp";
+                            });
 
-                } else {
-                    CARBON.showErrorDialog(result);
-                }
-            },
-            onFailure: function(transport) {
-                CARBON.showErrorDialog(result);
-            }
-        });
+                        } else {
+                            CARBON.showErrorDialog(result);
+                        }
+                    },
+                    onFailure: function(transport) {
+                        CARBON.showErrorDialog(result);
+                    }
+                });
     }
 
 </script>
@@ -298,7 +361,7 @@
 </style>
 
 <script type="text/javascript">
-     $(document).ready(function() {
+    $(document).ready(function() {
         document.getElementById('allcommands').focus();
     });
 </script>
@@ -354,24 +417,24 @@
                 <input type="hidden" value="<%=scriptName%>" name="scriptName" id="scriptName">
                 <% }
                 %>
-                <%--<tr>--%>
+                    <%--<tr>--%>
                     <%--<td>--%>
-                        <%--<table class="normal-nopadding">--%>
-                            <%--<tbody>--%>
-                            <%--<tr>--%>
-                                <%--<td class="leftCol-small">--%>
-                                    <%--<fmt:message key="script.type"/>--%>
-                                <%--</td>--%>
-                                <%--<td>--%>
-                                    <%--<select style="width:100px">--%>
-                                        <%--<option value="hive">Hive</option>--%>
-                                    <%--</select>--%>
-                                <%--</td>--%>
-                            <%--</tr>--%>
-                            <%--</tbody>--%>
-                        <%--</table>--%>
+                    <%--<table class="normal-nopadding">--%>
+                    <%--<tbody>--%>
+                    <%--<tr>--%>
+                    <%--<td class="leftCol-small">--%>
+                    <%--<fmt:message key="script.type"/>--%>
                     <%--</td>--%>
-                <%--</tr>--%>
+                    <%--<td>--%>
+                    <%--<select style="width:100px">--%>
+                    <%--<option value="hive">Hive</option>--%>
+                    <%--</select>--%>
+                    <%--</td>--%>
+                    <%--</tr>--%>
+                    <%--</tbody>--%>
+                    <%--</table>--%>
+                    <%--</td>--%>
+                    <%--</tr>--%>
                 <tr>
                     <td>
                         <table class="normal-nopadding">
@@ -418,7 +481,7 @@
                                                 <a href="javascript: scheduleTask();"><label><img
                                                         src="images/schedule_icon.png"
                                                         alt="schedule_icon">Schedule
-                                                                            Script</label></a>
+                                                    Script</label></a>
                                             </td>
                                         </tr>
                                         </tbody>

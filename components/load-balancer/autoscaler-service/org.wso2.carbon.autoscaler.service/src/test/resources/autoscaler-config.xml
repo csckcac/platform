@@ -21,8 +21,8 @@
 	<iaasProviders>
 		<iaasProvider name="ec2">
 			<provider>aws-ec2</provider>
-			<identity>aaa</identity>
-			<credential>aaaa</credential>
+			<identity>cdcd</identity>
+			<credential>cdccdc</credential>
 			<scaleUpOrder>1</scaleUpOrder>
 			<scaleDownOrder>2</scaleDownOrder>
 			<property name="A" value="a"/>
@@ -31,8 +31,8 @@
 		</iaasProvider>
 		<iaasProvider name="lxc">
 			<provider>lxc</provider>
-			<identity>bbb</identity>
-			<credential>bbbb</credential>
+			<identity>bebbe</identity>
+			<credential>bebebe</credential>
 			<scaleUpOrder>2</scaleUpOrder>
 			<scaleDownOrder>1</scaleDownOrder>
 			<property name="X" value="x"/>

@@ -48,7 +48,7 @@ import org.wso2.carbon.autoscaler.service.IAutoscalerService;
 import org.wso2.carbon.autoscaler.service.jcloud.ComputeServiceBuilder;
 import org.wso2.carbon.autoscaler.service.util.IaaSProvider;
 import org.wso2.carbon.autoscaler.service.util.IaaSProviderComparator;
-import org.wso2.carbon.autoscaler.service.xml.JCloudsConfigFileReader;
+import org.wso2.carbon.autoscaler.service.xml.AutoscalerConfigFileReader;
 import org.wso2.carbon.lb.common.persistence.AgentPersistenceManager;
 import org.wso2.carbon.utils.CarbonUtils;
 
@@ -116,7 +116,7 @@ public class AutoscalerServiceImpl implements IAutoscalerService {
     public boolean initAutoscaler(boolean isSpi) {
 
         // load configuration file
-        JCloudsConfigFileReader configReader = new JCloudsConfigFileReader();
+        AutoscalerConfigFileReader configReader = new AutoscalerConfigFileReader();
 
         // from config file, we grab the details unique to IaaS providers.
         iaasProviders = configReader.getIaasProvidersList();

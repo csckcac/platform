@@ -80,24 +80,24 @@ import org.wso2.carbon.utils.CarbonUtils;
  *      $lt;/services&gt;
  *  &lt;/jcloudConfig&gt;
  */
-public class JCloudsConfigFileReader {
+public class AutoscalerConfigFileReader {
 	
-	private static final Log log = LogFactory.getLog(JCloudsConfigFileReader.class);
+	private static final Log log = LogFactory.getLog(AutoscalerConfigFileReader.class);
 
 	//get the factory
 	private DocumentBuilderFactory dbf = DocumentBuilderFactory.newInstance();
 	private Document dom;
 
 	/**
-	 * Path to JClouds config XML file, which specifies the JClouds specific details.
+	 * Path to Autoscaler config XML file, which specifies the Iaas specific details.
 	 */
-	private String jcloudsConfigXMLFile;
+	private String autoscalerConfigXMLFile;
 	
 	
-	public JCloudsConfigFileReader(){
+	public AutoscalerConfigFileReader(){
 	    
-	    jcloudsConfigXMLFile = 
-	            CarbonUtils.getCarbonConfigDirPath() + File.separator + "jclouds-config.xml";
+	    autoscalerConfigXMLFile = 
+	            CarbonUtils.getCarbonConfigDirPath() + File.separator + "autoscaler-config.xml";
 	    
 		/**
 		 * Parse the configuration file.
@@ -107,17 +107,17 @@ public class JCloudsConfigFileReader {
 			DocumentBuilder db = dbf.newDocumentBuilder();
 
 			//parse using builder to get DOM representation of the XML file
-			dom = db.parse(jcloudsConfigXMLFile);
+			dom = db.parse(autoscalerConfigXMLFile);
 			
 
 		}catch(Exception ex) {
-			String msg = "Error occurred while parsing the "+jcloudsConfigXMLFile+".";
+			String msg = "Error occurred while parsing the "+autoscalerConfigXMLFile+".";
 			log.error(msg, ex);
 			throw new MalformedConfigurationFileException(msg, ex);
 		}
 	}
 	
-	public JCloudsConfigFileReader(String file) {
+	public AutoscalerConfigFileReader(String file) {
         
         /**
          * Parse the configuration file.
@@ -155,7 +155,7 @@ public class JCloudsConfigFileReader {
 	        
 	    }
 	    else{
-	        String msg = "Essential 'iaasProvider' element cannot be found in "+jcloudsConfigXMLFile;
+	        String msg = "Essential 'iaasProvider' element cannot be found in "+autoscalerConfigXMLFile;
 	        log.error(msg);
 	        throw new MalformedConfigurationFileException(msg);
 	    }
@@ -231,7 +231,7 @@ public class JCloudsConfigFileReader {
                         if ("".equals(imageElt.getAttribute("domain"))) {
                             String msg =
                                 "Essential 'domain' attribute of 'image' element" +
-                                    " cannot be found in " + jcloudsConfigXMLFile;
+                                    " cannot be found in " + autoscalerConfigXMLFile;
                             log.error(msg);
                             throw new MalformedConfigurationFileException(msg);
                         }
@@ -310,7 +310,7 @@ public class JCloudsConfigFileReader {
         
         // if no images specified, the config file is a malformed one.
         if(domainToTemplateMap.size()==0){
-            String msg = "Essential 'images' element cannot be found in "+jcloudsConfigXMLFile;
+            String msg = "Essential 'images' element cannot be found in "+autoscalerConfigXMLFile;
             log.error(msg);
             throw new MalformedConfigurationFileException(msg);
         }
@@ -326,7 +326,7 @@ public class JCloudsConfigFileReader {
         if (nl != null && nl.getLength() > 0) {
             
             if (nl.getLength() > 1){
-                log.warn(jcloudsConfigXMLFile +" contains more than one credential elements!" +
+                log.warn(autoscalerConfigXMLFile +" contains more than one credential elements!" +
                         " Elements other than the first will be neglected.");
             }
             
@@ -338,7 +338,7 @@ public class JCloudsConfigFileReader {
             }
         }
         else{
-            String msg = "Essential 'credential' element has not specified in "+jcloudsConfigXMLFile;
+            String msg = "Essential 'credential' element has not specified in "+autoscalerConfigXMLFile;
             log.error(msg);
             throw new MalformedConfigurationFileException(msg);
         }
@@ -352,7 +352,7 @@ public class JCloudsConfigFileReader {
         if (nl != null && nl.getLength() > 0) {
             
             if (nl.getLength() > 1){
-                log.warn(jcloudsConfigXMLFile +" contains more than one identity elements!" +
+                log.warn(autoscalerConfigXMLFile +" contains more than one identity elements!" +
                         " Elements other than the first will be neglected.");
             }
             
@@ -364,7 +364,7 @@ public class JCloudsConfigFileReader {
             }
         }
         else{
-            String msg = "Essential 'identity' element has not specified in "+jcloudsConfigXMLFile;
+            String msg = "Essential 'identity' element has not specified in "+autoscalerConfigXMLFile;
             log.error(msg);
             throw new MalformedConfigurationFileException(msg);
         }
@@ -378,7 +378,7 @@ public class JCloudsConfigFileReader {
         if (nl != null && nl.getLength() > 0) {
             
             if (nl.getLength() > 1){
-                log.warn(jcloudsConfigXMLFile +" contains more than one provider elements!" +
+                log.warn(autoscalerConfigXMLFile +" contains more than one provider elements!" +
                         " Elements other than the first will be neglected.");
             }
             
@@ -390,7 +390,7 @@ public class JCloudsConfigFileReader {
             }
         }
         else{
-            String msg = "Essential 'provider' element has not specified in "+jcloudsConfigXMLFile;
+            String msg = "Essential 'provider' element has not specified in "+autoscalerConfigXMLFile;
             log.error(msg);
             throw new MalformedConfigurationFileException(msg);
         }
@@ -404,7 +404,7 @@ public class JCloudsConfigFileReader {
         if (nl != null && nl.getLength() > 0) {
             
             if (nl.getLength() > 1){
-                log.warn(jcloudsConfigXMLFile +" contains more than one scaleUpOrder elements!" +
+                log.warn(autoscalerConfigXMLFile +" contains more than one scaleUpOrder elements!" +
                         " Elements other than the first will be neglected.");
             }
             
@@ -414,7 +414,7 @@ public class JCloudsConfigFileReader {
                 try {
                     iaas.setScaleUpOrder(Integer.parseInt(prop.getTextContent()));
                 }catch (NumberFormatException e) {
-                    String msg = "scaleUpOrder element contained in "+jcloudsConfigXMLFile +"" +
+                    String msg = "scaleUpOrder element contained in "+autoscalerConfigXMLFile +"" +
                     		" has a value which is not an Integer value.";
                     log.error(msg, e);
                     throw new MalformedConfigurationFileException(msg, e);
@@ -423,7 +423,7 @@ public class JCloudsConfigFileReader {
             }
         }
         else{
-            String msg = "Essential 'scaleUpOrder' element has not specified in "+jcloudsConfigXMLFile;
+            String msg = "Essential 'scaleUpOrder' element has not specified in "+autoscalerConfigXMLFile;
             log.error(msg);
             throw new MalformedConfigurationFileException(msg);
         }
@@ -435,7 +435,7 @@ public class JCloudsConfigFileReader {
         if (nl != null && nl.getLength() > 0) {
             
             if (nl.getLength() > 1){
-                log.warn(jcloudsConfigXMLFile +" contains more than one scaleDownOrder elements!" +
+                log.warn(autoscalerConfigXMLFile +" contains more than one scaleDownOrder elements!" +
                         " Elements other than the first will be neglected.");
             }
             
@@ -445,7 +445,7 @@ public class JCloudsConfigFileReader {
                 try {
                     iaas.setScaleDownOrder(Integer.parseInt(prop.getTextContent()));
                 }catch (NumberFormatException e) {
-                    String msg = "scaleDownOrder element contained in "+jcloudsConfigXMLFile +"" +
+                    String msg = "scaleDownOrder element contained in "+autoscalerConfigXMLFile +"" +
                             " has a value which is not an Integer value.";
                     log.error(msg, e);
                     throw new MalformedConfigurationFileException(msg, e);
@@ -454,7 +454,7 @@ public class JCloudsConfigFileReader {
             }
         }
         else{
-            String msg = "Essential 'scaleDownOrder' element has not specified in "+jcloudsConfigXMLFile;
+            String msg = "Essential 'scaleDownOrder' element has not specified in "+autoscalerConfigXMLFile;
             log.error(msg);
             throw new MalformedConfigurationFileException(msg);
         }
@@ -468,7 +468,7 @@ public class JCloudsConfigFileReader {
         if (nl != null && nl.getLength() > 0) {
             
             if (nl.getLength() > 1){
-                log.warn(jcloudsConfigXMLFile +" contains more than one template elements!" +
+                log.warn(autoscalerConfigXMLFile +" contains more than one template elements!" +
                 		" Elements other than the first will be neglected.");
             }
             
@@ -480,7 +480,7 @@ public class JCloudsConfigFileReader {
             }
         }
         else{
-            String msg = "Essential 'template' element has not specified in "+jcloudsConfigXMLFile;
+            String msg = "Essential 'template' element has not specified in "+autoscalerConfigXMLFile;
             log.error(msg);
             throw new MalformedConfigurationFileException(msg);
         }
@@ -500,7 +500,7 @@ public class JCloudsConfigFileReader {
                     
                     if("".equals(prop.getAttribute("name")) || "".equals(prop.getAttribute("value"))){
                         String msg ="Property element's, name and value attributes should be specified " +
-                        		"in "+jcloudsConfigXMLFile;
+                        		"in "+autoscalerConfigXMLFile;
                         log.error(msg);
                         throw new MalformedConfigurationFileException(msg);
                     }

@@ -266,6 +266,17 @@ public class RequestHostObject extends ScriptableObject {
         return rho.request.getPathInfo();
     }
 
+    public static String jsFunction_getLocale(Context cx, Scriptable thisObj, Object[] args, Function funObj) throws ScriptException {
+        String functionName = "getLocale";
+        int argsCount = args.length;
+        if (argsCount != 0) {
+            HostObjectUtil.invalidNumberOfArgs(hostObjectName, functionName, argsCount, false);
+        }
+
+        RequestHostObject rho = (RequestHostObject) thisObj;
+        return rho.request.getLocale().getLanguage();
+    }
+
     public static int jsFunction_getLocalPort(Context cx, Scriptable thisObj, Object[] args, Function funObj) throws ScriptException {
         String functionName = "getLocalPort";
         int argsCount = args.length;

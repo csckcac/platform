@@ -359,7 +359,7 @@ class APIProviderImpl extends AbstractAPIManager implements APIProvider {
     public void updateAPI(API api) throws APIManagementException {
         API oldApi = getAPI(api.getId());
         if (oldApi.getStatus().equals(api.getStatus())) {
-            updateApiArtifact(api);
+            updateApiArtifact(api, true);
             if (!oldApi.getContext().equals(api.getContext())) {
                 apiMgtDAO.updateAPI(api);
             }
@@ -374,7 +374,7 @@ class APIProviderImpl extends AbstractAPIManager implements APIProvider {
         }
     }
 
-    private void updateApiArtifact(API api) throws APIManagementException {
+    private void updateApiArtifact(API api, boolean updateMetadata) throws APIManagementException {
         try {
             String apiArtifactId = registry.get(APIUtil.getAPIPath(api.getId())).getUUID();
             GenericArtifactManager artifactManager = APIUtil.getArtifactManager(registry,
@@ -397,6 +397,23 @@ class APIProviderImpl extends AbstractAPIManager implements APIProvider {
             }
             artifactManager.updateGenericArtifact(updateApiArtifact);
 
+            if (updateMetadata) {
+                //create the wsdl in registry . if  failed we ignore after logging the error.
+                if (api.getWsdlUrl() != null && !"".equals(api.getWsdlUrl())) {
+                    String path = APIUtil.createWSDL(api.getWsdlUrl(), registry);
+                    if (path != null) {
+                        registry.addAssociation(artifactPath, path, CommonConstants.ASSOCIATION_TYPE01);
+                    }
+                }
+
+                if (api.getUrl() != null && !"".equals(api.getUrl())){
+                    String path = APIUtil.createEndpoint(api.getUrl(), registry);
+                    if (path != null) {
+                        registry.addAssociation(artifactPath, path, CommonConstants.ASSOCIATION_TYPE01);
+                    }
+                }
+            }
+
         } catch (RegistryException e) {
             throw new APIManagementException("Failed to obtain id of the API artifact ", e);
         }
@@ -407,7 +424,7 @@ class APIProviderImpl extends AbstractAPIManager implements APIProvider {
         APIStatus currentStatus = api.getStatus();
         if (!currentStatus.equals(status)) {
             api.setStatus(status);
-            updateApiArtifact(api);
+            updateApiArtifact(api, false);
             if (updateGatewayConfig) {
                 if (status.equals(APIStatus.PUBLISHED) || status.equals(APIStatus.DEPRECATED) ||
                         status.equals(APIStatus.BLOCKED)) {
@@ -762,7 +779,7 @@ class APIProviderImpl extends AbstractAPIManager implements APIProvider {
                 }
             }
 
-            if (api.getUrl() !=null && !"".equals(api.getUrl())){
+            if (api.getUrl() != null && !"".equals(api.getUrl())){
                 String path = APIUtil.createEndpoint(api.getUrl(), registry);
                 if (path != null) {
                     registry.addAssociation(artifactPath, path, CommonConstants.ASSOCIATION_TYPE01);

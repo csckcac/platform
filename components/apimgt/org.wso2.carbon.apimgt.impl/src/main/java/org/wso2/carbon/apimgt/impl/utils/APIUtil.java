@@ -386,9 +386,8 @@ public final class APIUtil {
      * @param wsdlUrl  wsdl url
      * @param registry Registry space to save the WSDL
      * @return Path of the created resource
-     * @throws APIManagementException  if failed to create WSDL in registry.
      */
-    public  static String  createWSDL(String wsdlUrl, Registry registry) throws APIManagementException {
+    public  static String  createWSDL(String wsdlUrl, Registry registry) {
         String path = null;
         try {
             WsdlManager wsdlManager = new WsdlManager(registry);
@@ -411,9 +410,8 @@ public final class APIUtil {
      * @param endpointUrl Endpoint url
      * @param registry Registry space to save the endpoint
      * @return Path of the created resource
-     * @throws org.wso2.carbon.apimgt.api.APIManagementException failed to add endpoint
      */
-    public static String createEndpoint(String endpointUrl, Registry registry) throws APIManagementException{
+    public static String createEndpoint(String endpointUrl, Registry registry) {
         String path = null;
         try {
             EndpointManager endpointManager = new EndpointManager(registry);

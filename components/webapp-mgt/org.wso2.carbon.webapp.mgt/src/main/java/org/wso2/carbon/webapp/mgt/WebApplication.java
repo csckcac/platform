@@ -247,7 +247,15 @@ public class WebApplication {
         lazyUnload(this.context);
         //lozyunload the context of Host
         handleHotUpdateToHost("lazyUnload");
-        File webappDir = new File(getAppBase(), context.getBaseName());
+        File webappDir;
+        if (webappFile.getAbsolutePath().endsWith(".war")) {
+            String filePath = webappFile.getAbsolutePath();
+            webappDir = new File(filePath.substring(0, filePath.lastIndexOf('.')));
+        } else {
+            webappDir = webappFile;
+        }
+        // Delete the exploded dir of war based webapps upon undeploy. But omit deleting
+        // directory based webapps.
         if (TomcatUtil.checkUnpackWars() && webappDir.exists() && !webappFile.isDirectory() &&
             !FileManipulator.deleteDir(webappDir)) {
             throw new CarbonException("exploded Webapp directory " + webappDir + " deletion failed");
@@ -293,8 +301,10 @@ public class WebApplication {
      */
     public void delete() throws CarbonException {
         undeploy();
-        if (!webappFile.delete()) {
+        if (webappFile.isFile() && !webappFile.delete()) {
             throw new CarbonException("Webapp file " + webappFile + " deletion failed");
+        } else if(webappFile.isDirectory() && !FileManipulator.deleteDir(webappFile)) {
+            throw new CarbonException("Webapp Directory " + webappFile + " deletion failed");
         }
     }
 

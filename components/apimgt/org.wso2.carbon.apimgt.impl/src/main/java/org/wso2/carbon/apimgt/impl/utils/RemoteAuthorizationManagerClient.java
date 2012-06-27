@@ -29,6 +29,15 @@ import org.wso2.carbon.apimgt.impl.internal.ServiceReferenceHolder;
 import org.wso2.carbon.um.ws.api.stub.RemoteAuthorizationManagerServiceStub;
 import org.wso2.carbon.utils.CarbonUtils;
 
+/**
+ * Service client implementation for the RemoteAuthorizationManagerService (an admin service
+ * offered by the remote-user-manager component). This class is implemented as a wrapper for
+ * the RemoteAuthorizationManagerServiceStub. This implementation loads the necessary service
+ * endpoint information and admin user credentials required to invoke the admin service
+ * from the APIManagerConfiguration. All invocations of the RemoteAuthorizationManagerService
+ * are properly secured with UsernameToken security. This implementation is not thread safe
+ * and hence must not be shared among multiple threads at the same time.
+ */
 class RemoteAuthorizationManagerClient {
 
     private static final int TIMEOUT_IN_MILLIS = 15 * 60 * 1000;
@@ -64,7 +73,16 @@ class RemoteAuthorizationManagerClient {
                     "validation stub", axisFault);
         }
     }
-    
+
+    /**
+     * Query the remote user manager to find out whether the specified user has the
+     * specified permission.
+     *
+     * @param user Username
+     * @param permission A valid Carbon permission
+     * @return true if the user has the specified permission and false otherwise
+     * @throws APIManagementException If and error occurs while accessing the admin service
+     */
     public boolean isUserAuthorized(String user, String permission) throws APIManagementException {
         CarbonUtils.setBasicAccessSecurityHeaders(username, password,
                 true, clientStub._getServiceClient());

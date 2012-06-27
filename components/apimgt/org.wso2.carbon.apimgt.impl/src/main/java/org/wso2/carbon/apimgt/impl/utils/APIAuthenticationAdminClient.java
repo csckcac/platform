@@ -22,15 +22,17 @@ import org.wso2.carbon.apimgt.handlers.security.stub.types.APIKeyMapping;
 
 import java.util.List;
 
+/**
+ * A service client implementation for the APIAuthenticationService (an admin service offered
+ * by the API gateway).
+ */
 public class APIAuthenticationAdminClient extends AbstractAPIGatewayAdminClient {
 
     private APIAuthenticationServiceStub stub;
 
     public APIAuthenticationAdminClient() throws AxisFault {
-        String url = getServerURL();
-        String cookie = login(url);
-        stub = new APIAuthenticationServiceStub(null, url + "APIAuthenticationService");
-        setup(stub, cookie);
+        stub = new APIAuthenticationServiceStub(null, getServiceEndpoint("APIAuthenticationService"));
+        setup(stub);
     }
 
     public void invalidateKeys(List<APIKeyMapping> mappings) throws AxisFault {

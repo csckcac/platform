@@ -427,6 +427,13 @@ public final class APIUtil {
         return path;
     }
 
+    /**
+     * Returns a map of API availability tiers as defined in the underlying governance
+     * registry.
+     *
+     * @return a Map of tier names and Tier objects - possibly empty
+     * @throws APIManagementException if an error occurs when loading tiers from the registry
+     */
     public static Map<String,Tier> getTiers() throws APIManagementException {
         Map<String,Tier> tiers = new TreeMap<String,Tier>();
         try {
@@ -468,6 +475,13 @@ public final class APIUtil {
         return tiers;
     }
 
+    /**
+     * Checks whether the specified user has the specified permission.
+     *
+     * @param username A username
+     * @param permission A valid Carbon permission
+     * @throws APIManagementException If the user does not have the specified permission or if an error occurs
+     */
     public static void checkPermission(String username, String permission) throws APIManagementException {
         if (username == null) {
             throw new APIManagementException("Attempt to execute privileged operation as" +
@@ -481,7 +495,15 @@ public final class APIUtil {
                     "required permission: " + permission);
         }
     }
-    
+
+    /**
+     * Checks whether the specified user has the specified permission without throwing
+     * any exceptions.
+     *
+     * @param username A username
+     * @param permission A valid Carbon permission
+     * @return true if the user has the specified permission and false otherwise
+     */
     public static boolean checkPermissionQuietly(String username, String permission) {
         try {
             checkPermission(username, permission);

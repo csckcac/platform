@@ -32,9 +32,24 @@ import java.net.MalformedURLException;
 import java.net.URL;
 import java.rmi.RemoteException;
 
-public abstract class AbstractAPIGatewayAdminClient {
-    
-    protected void setup(Stub stub, String cookie) {
+/**
+ * An abstract service client implementation that can be used to access any admin service
+ * hosted in the API gateway. This implementation loads the necessary admin service
+ * credentials and the API gateway connection settings from the APIManagerConfiguration.
+ */
+public abstract class AbstractAPIGatewayAdminClient {    
+
+    /**
+     * Log into the API gateway as an admin, and initialize the specified client stub using
+     * the established authentication session. This method will also set some timeout
+     * values and enable session management on the stub so that it can be successfully used
+     * for any subsequent admin service invocations.
+     * 
+     * @param stub A client stub to be setup
+     * @throws AxisFault if an error occurs when logging into the API gateway
+     */
+    protected void setup(Stub stub) throws AxisFault {
+        String cookie = login();
         ServiceClient client = stub._getServiceClient();
         Options options = client.getOptions();
         options.setTimeOutInMilliSeconds(15 * 60 * 1000);
@@ -44,11 +59,18 @@ public abstract class AbstractAPIGatewayAdminClient {
         options.setProperty(org.apache.axis2.transport.http.HTTPConstants.COOKIE_STRING, cookie);
     }
 
-    protected String login(String url) throws AxisFault {
+    /**
+     * Login to the API gateway as an admin
+     * 
+     * @return A session cookie string
+     * @throws AxisFault if an error occurs while logging in
+     */
+    private String login() throws AxisFault {
         APIManagerConfiguration config = ServiceReferenceHolder.getInstance().
                 getAPIManagerConfigurationService().getAPIManagerConfiguration();
         String user = config.getFirstProperty(APIConstants.API_GATEWAY_USERNAME);
         String password = config.getFirstProperty(APIConstants.API_GATEWAY_PASSWORD);
+        String url = config.getFirstProperty(APIConstants.API_GATEWAY_SERVER_URL);
 
         if (url == null || user == null || password == null) {
             throw new AxisFault("Required API gateway admin configuration unspecified");
@@ -77,10 +99,17 @@ public abstract class AbstractAPIGatewayAdminClient {
             throw new AxisFault("Error while authenticating against the API gateway admin", e);
         }
     }
-    
-    protected String getServerURL() {
+
+    /**
+     * Compute the endpoint of the given API gateway admin service
+     * 
+     * @param serviceName Name of the admin service
+     * @return A String representation of the service endpoint
+     */
+    protected String getServiceEndpoint(String serviceName) {
         APIManagerConfiguration config = ServiceReferenceHolder.getInstance().
                 getAPIManagerConfigurationService().getAPIManagerConfiguration();
-        return config.getFirstProperty(APIConstants.API_GATEWAY_SERVER_URL);
+        String url = config.getFirstProperty(APIConstants.API_GATEWAY_SERVER_URL);
+        return url + serviceName;
     }
 }

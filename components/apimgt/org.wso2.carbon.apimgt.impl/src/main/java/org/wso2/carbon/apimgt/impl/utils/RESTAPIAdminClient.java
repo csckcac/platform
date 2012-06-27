@@ -30,10 +30,8 @@ public class RESTAPIAdminClient extends AbstractAPIGatewayAdminClient {
     public RESTAPIAdminClient(APIIdentifier apiId) throws AxisFault {
         this.qualifiedName = apiId.getProviderName() + "--" + apiId.getApiName() +
                 ":v" + apiId.getVersion();
-        String url = getServerURL();
-        String cookie = login(url);
-        restApiAdminStub = new RestApiAdminStub(null, url + "RestApiAdmin");
-        setup(restApiAdminStub, cookie);
+        restApiAdminStub = new RestApiAdminStub(null, getServiceEndpoint("RestApiAdmin"));
+        setup(restApiAdminStub);
     }
 
     public void addApi(APITemplateBuilder builder) throws AxisFault {

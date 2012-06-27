@@ -120,7 +120,19 @@ public class ConfigurationUtils {
     public final static String[] getPrimaryKeyFields(Configuration conf) {
         String primaryKeyFields = conf.get(HIVE_JDBC_PRIMARY_KEY_FIELDS);
         if (primaryKeyFields != null) {
-            return primaryKeyFields.split(",");
+            //Hive keeps column names in lower case letters.
+            return convertingToLowerCase(primaryKeyFields.split(","));
+        }
+        return null;
+    }
+
+    private static String[] convertingToLowerCase(String[] primaryKeyFields) {
+        if(primaryKeyFields!=null){
+            String[] fields = new String[primaryKeyFields.length];
+              for(int i=0; i< primaryKeyFields.length; i++){
+                  fields[i] = primaryKeyFields[i].toLowerCase();
+              }
+            return fields;
         }
         return null;
     }

@@ -17,7 +17,7 @@ package org.wso2.carbon.bam.toolbox.deployer;
  */
 public enum BasicToolBox {
     MESSAGE_TRACING(1, "Message_Tracing.bar"),
-    KPI(2, "KPI_Sample.bar");
+    KPI_PHONE_RETAIL_STORE(2, "KPI_Phone_Retail_Store.bar");
 
     private int sampleId;
     private String toolboxName;

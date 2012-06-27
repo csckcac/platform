@@ -129,10 +129,11 @@
                                    onclick="enableCustomToolBox();" checked="true"/>
                         </td>
                         <td>
-                            KPI Monitoring
+                             <fmt:message key="kpi.toolbox"/> <fmt:message key="toolbox"/>
                         </td>
                         <td>
-                            KPI(Key Performance Indication) Toolbox enables to perform summarizations and visualize product and consumer data in a retail store .
+                            <fmt:message key="kpi.toolbox"/> <fmt:message key="toolbox"/> intended to monitor the KPI(Key Performance Indication) of a <fmt:message key="kpi.toolbox"/>.
+                            And also this  includes analytics and visualization gadgets for <fmt:message key="kpi.toolbox"/>.
                         </td>
                     </tr>
 

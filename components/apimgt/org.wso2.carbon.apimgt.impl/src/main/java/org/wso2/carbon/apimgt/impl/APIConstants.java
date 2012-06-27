@@ -176,8 +176,8 @@ public final class APIConstants {
     public static final String UNLIMITED_TIER = "Unlimited";
     public static final String UNLIMITED_TIER_DESC = "Allows unlimited requests";
     
-    public static final int AM_CREATOR_EXECUTION_ID = 200;
-    public static final int AM_PUBLISHER_EXECUTION_ID = 201;
-
+    public static final int AM_CREATOR_APIMGT_EXECUTION_ID = 200;
+    public static final int AM_CREATOR_GOVERNANCE_EXECUTION_ID = 201;
+    public static final int AM_PUBLISHER_APIMGT_EXECUTION_ID = 202;
 
 }

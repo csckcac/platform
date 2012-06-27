@@ -95,12 +95,17 @@ public class APIManagerComponent {
                     configurationService, new Properties());
             setupSelfRegistration(configuration);
 
-            AuthorizationUtils.addAuthorizeRoleListener(APIConstants.AM_CREATOR_EXECUTION_ID,
+            AuthorizationUtils.addAuthorizeRoleListener(APIConstants.AM_CREATOR_APIMGT_EXECUTION_ID,
                     RegistryUtils.getAbsolutePath(RegistryContext.getBaseInstance(),
                             RegistryConstants.GOVERNANCE_REGISTRY_BASE_PATH + APIConstants.API_APPLICATION_DATA_LOCATION),
                     APIConstants.Permissions.API_CREATE,
                     UserMgtConstants.EXECUTE_ACTION, null);
-            AuthorizationUtils.addAuthorizeRoleListener(APIConstants.AM_PUBLISHER_EXECUTION_ID,
+            AuthorizationUtils.addAuthorizeRoleListener(APIConstants.AM_CREATOR_GOVERNANCE_EXECUTION_ID,
+                    RegistryUtils.getAbsolutePath(RegistryContext.getBaseInstance(),
+                            RegistryConstants.GOVERNANCE_REGISTRY_BASE_PATH + "/trunk"),
+                    APIConstants.Permissions.API_CREATE,
+                    UserMgtConstants.EXECUTE_ACTION, null);
+            AuthorizationUtils.addAuthorizeRoleListener(APIConstants.AM_PUBLISHER_APIMGT_EXECUTION_ID,
                     RegistryUtils.getAbsolutePath(RegistryContext.getBaseInstance(),
                             RegistryConstants.GOVERNANCE_REGISTRY_BASE_PATH + APIConstants.API_APPLICATION_DATA_LOCATION),
                     APIConstants.Permissions.API_PUBLISH,

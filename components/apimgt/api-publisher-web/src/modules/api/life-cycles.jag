@@ -26,6 +26,36 @@ var updateAPIStatus = function (api) {
         };
     }
 };
+var isAPIOlderVersionExist = function (api) {
+    var log = new Log(),
+            provider = jagg.module("manager").getAPIProviderObj();
+    try {
+        var exist = provider.isAPIOlderVersionExist(api);
+        if (log.isDebugEnabled()) {
+            log.debug("isAPIOlderVersionExist : " + api.name + "-" + api.version);
+        }
+        if (!exist) {
+            return {
+                error:true,
+                exist:false
+            };
+        } else {
+            return {
+                error:false,
+                exist:true
+            };
+        }
+
+    } catch (e) {
+        log.error(e.message);
+        return {
+            error:e,
+            exist:false,
+            message:e.message.split(":")[1]
+
+        };
+    }
+};
 
 var getLifeCyclesEvents = function(api) {
     var log = new Log(),lc,lcs,length,list = [],

@@ -1,4 +1,9 @@
-<% jagg.template("life-cycles", function(inputs, outputs, jagg) { %>
+<% jagg.template("life-cycles", function(inputs, outputs, jagg) {
+        var api = outputs.api;
+        var modApi = jagg.module("api");
+        var result = modApi.isAPIOlderVersionExist(api);
+        var oldExist=result.exist;
+ %>
 
 <script type="text/javascript">
 function checkValue(element) {
@@ -13,7 +18,7 @@ function getSelectedValue(oldStatus) {
     var selObj = document.getElementById('editStatus');
     var selIndex = selObj.selectedIndex;
     var newStatus = selObj.options[selIndex].value;
-    if (oldStatus == "CREATED" && newStatus == "PUBLISHED") {
+    if (oldStatus == "CREATED" && newStatus == "PUBLISHED" && <%=oldExist%>) {
         $('#deprecateOldVersionsDiv').show();
         $('#requireResubscriptionDiv').show();
     } else {
@@ -23,7 +28,7 @@ function getSelectedValue(oldStatus) {
 }
 </script>
 
-<% var i,resCount,rowNums = [],api = outputs.api;
+<% var i,resCount,rowNums = [];
    var mod = jagg.module("api");
    var apiData={};
    apiData.provider= api.provider;

@@ -253,7 +253,8 @@ public class APIProviderHostObject extends ScriptableObject {
             Set<URITemplate> uriTemplates = new HashSet<URITemplate>();
             for (int i = 0; i < uriTemplateArr.getLength(); i++) {
                 URITemplate templates = new URITemplate();
-                templates.setUriTemplate((String) uriTemplateArr.get(i, uriTemplateArr));
+                String uriTemp=(String) uriTemplateArr.get(i, uriTemplateArr);
+                templates.setUriTemplate(uriTemp);
                 String uriMethods = (String) uriMethodArr.get(i, uriMethodArr);
                 String[] uriMethodArray = uriMethods.split(",");
                 for (String anUriMethod : uriMethodArray) {
@@ -261,6 +262,13 @@ public class APIProviderHostObject extends ScriptableObject {
                 }
                 templates.setResourceURI(endpoint);
                 templates.setResourceSandboxURI(sandboxUrl);
+                //Checking whether duplicate api resources have been added or not
+                for (URITemplate uri : uriTemplates) {
+                    if (uri.getUriTemplate().equals(uriTemp) && Arrays.equals(uri.getMethods().toArray(), uriMethodArray)) {
+                        throw new APIManagementException("Duplicate API resources with same URI Template and HTTP Methods.");
+                    }
+                }
+
                 uriTemplates.add(templates);
             }
             api.setUriTemplates(uriTemplates);
@@ -348,7 +356,7 @@ public class APIProviderHostObject extends ScriptableObject {
         version = version.trim();
         APIIdentifier oldApiId = new APIIdentifier(provider, name, version);
         APIProvider apiProvider = getAPIProvider(thisObj);
-        try {
+
             API oldApi = apiProvider.getAPI(oldApiId);
 
             String tier = (String) apiData.get("tier", apiData);
@@ -376,6 +384,12 @@ public class APIProviderHostObject extends ScriptableObject {
                     }
                     templates.setResourceURI(endpoint);
                     templates.setResourceSandboxURI(sandboxUrl);
+                    //Checking whether duplicate api resources have been added or not
+                    for (URITemplate uri : uriTemplates) {
+                        if (uri.getUriTemplate().equals(template) && Arrays.equals(uri.getMethods().toArray(), uriMethodArray)) {
+                            throw new APIManagementException("Duplicate API resources with same URI Template and HTTP Methods.");
+                        }
+                }
                     uriTemplates.add(templates);
                 }
                 api.setUriTemplates(uriTemplates);
@@ -403,6 +417,7 @@ public class APIProviderHostObject extends ScriptableObject {
             api.setBusinessOwnerEmail(bizOwnerEmail);
             api.setTechnicalOwner(techOwner);
             api.setTechnicalOwnerEmail(techOwnerEmail);
+            try {
             checkFileSize(fileHostObject);
 
             if (fileHostObject != null && fileHostObject.getJavaScriptFile().getLength() != 0) {

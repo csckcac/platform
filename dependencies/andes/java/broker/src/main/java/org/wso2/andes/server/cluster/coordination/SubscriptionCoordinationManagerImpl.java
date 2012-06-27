@@ -56,7 +56,9 @@ public class SubscriptionCoordinationManagerImpl implements SubscriptionCoordina
             }
         } catch (Exception e) {
             throw new CoordinationException("Error while initializing " +
-                    "SubscriptionCoordinationManagerImpl");
+                    "SubscriptionCoordinationManagerImpl" ,e
+
+            );
         }
 
 

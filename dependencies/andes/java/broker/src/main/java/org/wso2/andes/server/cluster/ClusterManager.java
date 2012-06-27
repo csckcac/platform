@@ -215,6 +215,11 @@ public class ClusterManager {
 
             }
 
+
+
+
+            log.debug("Current Candidiate znode : " + currentCandidateNode + " znode data : " + currentCandidateNodeData);
+
             log.debug("Node selected  to add queue worker node : " + currentCandidateNode +
                     " for queue : " + queueName);
             String[] candidateNodeDataParts = currentCandidateNodeData.split(":");
@@ -240,11 +245,13 @@ public class ClusterManager {
                             replacePart + queueName + ",");
                 }
             } else {
-                newData = currentCandidateNodeData + queueName + ",";
+                newData = candidateNodeDataParts[0] + ":" + queueName + ",";
             }
+
 
             String leaderPath = CoordinationConstants.QUEUE_WORKER_COORDINATION_PARENT +
                     CoordinationConstants.NODE_SEPARATOR + currentCandidateNode;
+            log.debug("Adding new queue data to znode to add new queue workers  : " + newData);
             zkAgent.getZooKeeper().setData(leaderPath, newData.getBytes(), -1);
 
             //Select and update PMC
@@ -870,7 +877,7 @@ public class ClusterManager {
 
         private void removeFromQLeaderFromZnode(String node, String queue)
                 throws InterruptedException, KeeperException {
-            String zkDataElement = node + "=" + queue + ",";
+            String zkDataElement = node + "=" + queue;
             byte[] data = zkAgent.getZooKeeper().getData(CoordinationConstants.
                     QUEUE_WORKER_COORDINATION_PARENT +
                     CoordinationConstants.NODE_SEPARATOR + zkNode, false, null);

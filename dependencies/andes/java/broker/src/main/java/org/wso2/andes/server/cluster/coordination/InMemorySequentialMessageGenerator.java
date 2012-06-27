@@ -24,7 +24,7 @@ import java.util.concurrent.atomic.AtomicLong;
 
 public class InMemorySequentialMessageGenerator implements MessageIdGenerator {
 
-    private AtomicLong lastId = new AtomicLong(0);
+
 
     @Override
     public long getNextId() {
@@ -34,7 +34,7 @@ public class InMemorySequentialMessageGenerator implements MessageIdGenerator {
                     "non clustered message broker setup");
         }
 
-        return lastId.incrementAndGet();
+        return ClusterResourceHolder.getInstance().getCassandraMessageStore().currentMessageId().incrementAndGet();
 
     }
 }

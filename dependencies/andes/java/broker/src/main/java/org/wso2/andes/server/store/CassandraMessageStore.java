@@ -1765,7 +1765,7 @@ public void addMessageBatchToUserQueues(CassandraQueueMessage[] messages) throws
         try {
             CassandraDataAccessHelper.addMappingToRaw(NODE_DETAIL_COLUMN_FAMILY,NODE_DETAIL_ROW,nodeId,data,keyspace);
         } catch (CassandraDataAccessException e) {
-            throw new RuntimeException("Error writing Node details to cassandra database");
+            throw new RuntimeException("Error writing Node details to cassandra database" ,e);
         }
     }
 

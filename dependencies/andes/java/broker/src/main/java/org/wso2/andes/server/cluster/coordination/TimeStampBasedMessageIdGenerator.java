@@ -23,21 +23,20 @@ import org.wso2.andes.server.store.CassandraMessageStore;
 
 /**
  * Generate Message ids based on the TimeStamp.
- *
+ * <p/>
  * Here to preserve the long range we use a time stamp that is created by getting difference between
  * System.currentTimeMillis() and a configured reference time. Reference time can be configured.
- *
+ * <p/>
  * Message Id will created by appending time stamp , two digit node id and two digit sequence number
- *
+ * <p/>
  * <time stamp> + <node id> + <seq number>
- *
+ * <p/>
  * sequence number is used in a scenario when two or more messages comes with same timestamp
  * (within the same millisecond). So to allow message rages higher than 1000 msg/s we use this sequence number
  * where it will be incremented in case of message comes in same millisecond within the same node. With this approach
  * We can go up to 100,000 msg/s
  */
-public class TimeStampBasedMessageIdGenerator implements MessageIdGenerator{
-
+public class TimeStampBasedMessageIdGenerator implements MessageIdGenerator {
 
 
     private volatile long lastCurrentTime;
@@ -49,16 +48,21 @@ public class TimeStampBasedMessageIdGenerator implements MessageIdGenerator{
         long ts = ClusterResourceHolder.getInstance().getReferenceTime().getCurrentTime();
         CassandraMessageStore ms = ClusterResourceHolder.getInstance().getCassandraMessageStore();
 
-        if(lastCurrentTime == ts) {
+        if (lastCurrentTime == ts) {
             synchronized (this) {
-                if(lastCurrentTime == ts) {
+                if (lastCurrentTime == ts) {
                     lastMessageId = ms.currentMessageId().incrementAndGet();
                     return lastMessageId;
                 } else {
-                    String id = "" + ts +
-                            getTwoDigitNodeId(ClusterResourceHolder.getInstance().getClusterManager().getNodeId())
-                            + "00";
-                    long mid = Long.parseLong(id);
+
+                    StringBuffer buffer = new StringBuffer();
+
+                    buffer.append(ts).
+                            append(getTwoDigitNodeId(ClusterResourceHolder.getInstance().getClusterManager().
+                                    getNodeId())).append("00");
+
+
+                    long mid = Long.parseLong(buffer.toString());
                     lastMessageId = mid;
                     ms.currentMessageId().set(lastMessageId);
                     lastCurrentTime = ts;
@@ -66,10 +70,12 @@ public class TimeStampBasedMessageIdGenerator implements MessageIdGenerator{
                 }
             }
         } else {
-            String id = "" + ts +
-                    getTwoDigitNodeId(ClusterResourceHolder.getInstance().getClusterManager().getNodeId())
-                    + "00";
-            long mid = Long.parseLong(id);
+            StringBuffer buffer = new StringBuffer();
+
+            buffer.append(ts).
+                    append(getTwoDigitNodeId(ClusterResourceHolder.getInstance().getClusterManager().
+                            getNodeId())).append("00");
+            long mid = Long.parseLong(buffer.toString());
             synchronized (this) {
                 lastCurrentTime = ts;
                 lastMessageId = mid;
@@ -85,8 +91,10 @@ public class TimeStampBasedMessageIdGenerator implements MessageIdGenerator{
 
 
     private static String getTwoDigitNodeId(int nodeId) {
-        switch (nodeId/10) {
-            case 0: { return "0"+nodeId; }
+        switch (nodeId / 10) {
+            case 0: {
+                return "0" + nodeId;
+            }
             case 1:
             case 2:
             case 3:
@@ -95,8 +103,11 @@ public class TimeStampBasedMessageIdGenerator implements MessageIdGenerator{
             case 6:
             case 7:
             case 8:
-            case 9: { return ""+nodeId; }
-            default : throw new RuntimeException("Node id range exceeded - supported range 0-99");
+            case 9: {
+                return "" + nodeId;
+            }
+            default:
+                throw new RuntimeException("Node id range exceeded - supported range 0-99");
 
         }
     }

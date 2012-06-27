@@ -39,7 +39,7 @@ public class JaggeryTask extends AbstractTask {
 
 	@Override
 	public void execute() {
-		log.error("test");
+		
         try {
 
 			Map<String, Object> taskMap = JaggeryCoreServiceComponent.getTaskMap();

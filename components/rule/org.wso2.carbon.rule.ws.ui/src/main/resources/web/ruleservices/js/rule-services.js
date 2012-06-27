@@ -227,21 +227,6 @@ function deleteRuleFile(name) {
     return false;
 }
 
-//function deleteFactArchiveRaw(name) {
-//    var propRow1 = document.getElementById(name);
-//    if (propRow1 != undefined && propRow1 != null) {
-//        var parentTBody1 = propRow1.parentNode;
-//        if (parentTBody1 != undefined && parentTBody1 != null) {
-//            parentTBody1.removeChild(propRow1);
-//            if (!isContainRaw(parentTBody1)) {
-//                var factTable1 = document.getElementById("factArchiveListTable");
-//                factTable1.style.display = "none";
-//            }
-//        }
-//    }
-//}
-
-
 function getSelectedValue(id) {
     var variableType = document.getElementById(id);
     var variableType_indexstr = null;
@@ -287,20 +272,11 @@ function addFact(category, opName) {
 
     var factNameSpace = document.createElement("td");
     factNameSpace.appendChild(createFactTextBox(category + "NameSpace" + i));
-    var factXPath = document.createElement("td");
-    factXPath.appendChild(createFactTextBox(category + "XPath" + i));
-
-
-    var nsBrowserTD = document.createElement("td");
-    nsBrowserTD.setAttribute("id", category + 'NsEditorButtonTD' + i);
-    nsBrowserTD.appendChild(createNSEditorLink(category, i, opName));
 
     factRaw.appendChild(factTypeTD);
     factRaw.appendChild(factSelectorTD);
     factRaw.appendChild(nameTD);
     factRaw.appendChild(factNameSpace);
-    factRaw.appendChild(factXPath);
-    factRaw.appendChild(nsBrowserTD);
     factRaw.appendChild(deleteTD);
     facttbody.appendChild(factRaw);
     return true;
@@ -423,26 +399,26 @@ function validateFacts(category) {
     return true;
 }
 
-function addRuleScript(scriptType, ruleSourceType){
+function addRuleScript(scriptType, ruleSourceType) {
 
-    if(!validateRule(scriptType)){
+    if (!validateRule(scriptType)) {
         return false;
     }
 
     var ruleScriptValue = document.getElementById(scriptType);
     var ruleScript = ruleScriptValue.value;
-    var suffix = "scriptValue=" + ruleScript + "&scriptSourceType=" +ruleSourceType ;
+    var suffix = "scriptValue=" + ruleScript + "&scriptSourceType=" + ruleSourceType;
     var url = 'rule_script_add-ajaxprocessor.jsp?' + suffix;
     jQuery.get(url, ({}),
-    function(data, status) {
-                       if (status != "success") {
-                           CARBON.showWarningDialog(ruleservicejsi18n['error.occurred']);
-                           return false;
-                       }
-                   });
+        function(data, status) {
+            if (status != "success") {
+                CARBON.showWarningDialog(ruleservicejsi18n['error.occurred']);
+                return false;
+            }
+        });
 
-    var scriptListTH =document.getElementById("ruleScriptHeader");
-        scriptListTH.style.display="";
+    var scriptListTH = document.getElementById("ruleScriptHeader");
+    scriptListTH.style.display = "";
 
 
     ruleScriptValue.value = "";
@@ -454,24 +430,24 @@ function addRuleScript(scriptType, ruleSourceType){
     ruleScriptCount.value = currentCount;
 
     var ruleScriptList = document.getElementById("ruleScriptList");
-    ruleScriptList.style.display="";
+    ruleScriptList.style.display = "";
 
-    var ruleScriptListTBody= document.getElementById("ruleScriptListTBody");
+    var ruleScriptListTBody = document.getElementById("ruleScriptListTBody");
 
     var scriptRaw = document.createElement("tr");
-    scriptRaw.setAttribute("id","ruleScriptListRaw" + i);
+    scriptRaw.setAttribute("id", "ruleScriptListRaw" + i);
     var typeTD = document.createElement("td");
     typeTD.appendChild(createScriptLabel(ruleSourceType))
 
     var nameTD = document.createElement("td");
     var nameTDWrapper = document.createElement("div");
-   nameTD.appendChild(createScriptInput("ruleScriptName" + i,ruleScript));
+    nameTD.appendChild(createScriptInput("ruleScriptName" + i, ruleScript));
     nameTD.appendChild(nameTDWrapper);
 
     nameTDWrapper.className = "scriptListNameWrapper";
-    nameTDWrapper.appendChild(createScriptInput("ruleScriptSource" + i,ruleSourceType));
-   nameTDWrapper.appendChild(createScriptLabel(ruleScript));
-   var deleteTD = document.createElement("td");
+    nameTDWrapper.appendChild(createScriptInput("ruleScriptSource" + i, ruleSourceType));
+    nameTDWrapper.appendChild(createScriptLabel(ruleScript));
+    var deleteTD = document.createElement("td");
     deleteTD.style.width = '200px';
     deleteTD.appendChild(createRuleDeleteLink("ruleScriptList", i, ruleSourceType, ruleScript));
 
@@ -481,47 +457,35 @@ function addRuleScript(scriptType, ruleSourceType){
     ruleScriptListTBody.appendChild(scriptRaw);
     return true;
 
-
-
-
 }
 
-function validateRule(scriptType){
+function validateRule(scriptType) {
     var ruleScript = document.getElementById(scriptType);
-    if(ruleScript.value == ""){
+    if (ruleScript.value == "") {
         //TODO  Add proper message
         CARBON.showWarningDialog(ruleservicejsi18n["invalid." + scriptType]);
-                        return false;
+        return false;
 
     }
     return true;
 }
 
 function createRuleDeleteLink(category, i, ruleSourceType, ruleScript) {
-        // Create the element:
-   /* return jQuery(jQuery('<a style="width:40px" href="#" class="delete-icon-link">'+'yourtext'+'</a>')).click(function(){
 
-    });*/
-    // Create the element:
     var factDeleteLink = document.createElement('a');
     // Set some properties:
     factDeleteLink.setAttribute("href", "#");
     factDeleteLink.style.paddingLeft = '40px';
     factDeleteLink.className = "delete-icon-link";
     factDeleteLink.appendChild(document.createTextNode(ruleservicejsi18n["rule.action.delete"]));
- /*     jQuery(factDeleteLink).click(function(){
-       alert('hi');
-    });*/
-    jQuery(factDeleteLink).click(function(){
+
+    jQuery(factDeleteLink).click(function() {
         deleteScript(category, i, ruleSourceType, ruleScript);
     });
-   /* factDeleteLink.onclick = function () {
-        deleteScript(category, i, ruleSourceType, ruleScript)
-    };*/
     return factDeleteLink;
 }
 
-function createScriptInput(id , ruleScript) {
+function createScriptInput(id, ruleScript) {
     // Create the element:
     var ruleName = document.createElement('input');
 
@@ -529,12 +493,12 @@ function createScriptInput(id , ruleScript) {
     ruleName.setAttribute("type", 'hidden');
     ruleName.setAttribute("id", id);
     ruleName.setAttribute("name", id);
-    ruleName.setAttribute("value" , ruleScript);
+    ruleName.setAttribute("value", ruleScript);
     return ruleName;
 }
 
 
-function createScriptLabel(ruleScript){
+function createScriptLabel(ruleScript) {
     var ruleLabel = document.createElement('label');
     ruleLabel.innerHTML = ruleScript;
     return ruleLabel;
@@ -549,7 +513,7 @@ function deleteScript(category, i, sourceType, scriptName) {
 }
 
 function deleteScriptRaw(category, i, sourceType, scriptName) {
-       var ruleScriptCount = document.getElementById("ruleScriptHiddenCount");
+    var ruleScriptCount = document.getElementById("ruleScriptHiddenCount");
     var j = ruleScriptCount.value;
     var currentCount = parseInt(j);
     currentCount = currentCount + 1;
@@ -557,26 +521,23 @@ function deleteScriptRaw(category, i, sourceType, scriptName) {
 
     var propRow = document.getElementById(category + "Raw" + i);
 
-        var suffix = "ruleFileName=" + scriptName + "&sourceType=" + sourceType ;
-               var url = 'rule_file_delete-ajaxprocessor.jsp?' + suffix;
-               jQuery.get(url, ({}),
-                   function(data, status) {
-                      // location.reload();
-                       if (status != "success") {
-                           CARBON.showWarningDialog(ruleservicejsi18n['error.occurred']);
-                           return false;
-                       }
-                   });
+    var suffix = "ruleFileName=" + scriptName + "&sourceType=" + sourceType;
+    var url = 'rule_file_delete-ajaxprocessor.jsp?' + suffix;
+    jQuery.get(url, ({}),
+        function(data, status) {
+            if (status != "success") {
+                CARBON.showWarningDialog(ruleservicejsi18n['error.occurred']);
+                return false;
+            }
+        });
 
     if (propRow != undefined && propRow != null) {
         var parentTBody = propRow.parentNode;
         if (parentTBody != undefined && parentTBody != null) {
             parentTBody.removeChild(propRow);
             if (!isContainRaw(parentTBody)) {
-//                var factTable = document.getElementById("ruleScriptList");
-//                factTable.style.display = "none";
-                var scriptListTH =document.getElementById("ruleScriptHeader");
-                 scriptListTH.style.display="none";
+                var scriptListTH = document.getElementById("ruleScriptHeader");
+                scriptListTH.style.display = "none";
             }
         }
     }

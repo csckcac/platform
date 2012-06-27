@@ -1,20 +1,20 @@
 <!--
- ~ Copyright (c) 2005-2010, WSO2 Inc. (http://www.wso2.org) All Rights Reserved.
- ~
- ~ WSO2 Inc. licenses this file to you under the Apache License,
- ~ Version 2.0 (the "License"); you may not use this file except
- ~ in compliance with the License.
- ~ You may obtain a copy of the License at
- ~
- ~    http://www.apache.org/licenses/LICENSE-2.0
- ~
- ~ Unless required by applicable law or agreed to in writing,
- ~ software distributed under the License is distributed on an
- ~ "AS IS" BASIS, WITHOUT WARRANTIES OR CONDITIONS OF ANY
- ~ KIND, either express or implied.  See the License for the
- ~ specific language governing permissions and limitations
- ~ under the License.
- -->
+~ Copyright (c) 2005-2010, WSO2 Inc. (http://www.wso2.org) All Rights Reserved.
+~
+~ WSO2 Inc. licenses this file to you under the Apache License,
+~ Version 2.0 (the "License"); you may not use this file except
+~ in compliance with the License.
+~ You may obtain a copy of the License at
+~
+~ http://www.apache.org/licenses/LICENSE-2.0
+~
+~ Unless required by applicable law or agreed to in writing,
+~ software distributed under the License is distributed on an
+~ "AS IS" BASIS, WITHOUT WARRANTIES OR CONDITIONS OF ANY
+~ KIND, either express or implied. See the License for the
+~ specific language governing permissions and limitations
+~ under the License.
+-->
 <%@ page import="org.wso2.carbon.rule.common.*" %>
 <%@ page import="org.wso2.carbon.rule.ws.ui.ns.NameSpacesInformation" %>
 <%@ page import="org.wso2.carbon.rule.ws.ui.ns.NameSpacesInformationRepository" %>
@@ -32,7 +32,6 @@
     RuleService ruleService =
             ruleServiceAdminClient.getRuleServiceDescription(request);
     String opname = request.getParameter("opname");
-//    boolean isNew = opname == null || "".equals(opname);
     if (opname == null) {
         opname = "";
     }
@@ -47,21 +46,21 @@
         topPage="false"
         request="<%=request%>"/>
 <style type="text/css">
-     a.fact-selector-icon-link {
-         background-image: url("../rule_service/images/facts-selector.gif");
-         background-position: left top;
-         background-repeat: no-repeat;
-         float: left;
-         height: 17px;
-         line-height: 17px;
-         margin-bottom: 3px;
-         margin-left: 10px;
-         margin-top: 5px;
-         padding-left: 20px;
-         position: relative;
-         white-space: nowrap;
-     }
- </style>
+    a.fact-selector-icon-link {
+        background-image: url("../rule_service/images/facts-selector.gif");
+        background-position: left top;
+        background-repeat: no-repeat;
+        float: left;
+        height: 17px;
+        line-height: 17px;
+        margin-bottom: 3px;
+        margin-left: 10px;
+        margin-top: 5px;
+        padding-left: 20px;
+        position: relative;
+        white-space: nowrap;
+    }
+</style>
 <script type="text/javascript">
     function validateStep5() {
         var serviceName = document.getElementById('operationName').value;
@@ -108,7 +107,7 @@
                     <input type="text" name="operationName" id="operationName"
                            value="<%=opname.trim()%>"/>
                 </td>
-                <td> <input type="hidden" id="<%=opname%>" name="opName" value="<%=opname%>"/></td>
+                <td><input type="hidden" id="<%=opname%>" name="opName" value="<%=opname%>"/></td>
             </tr>
         </table>
     </td>
@@ -125,13 +124,12 @@
     String outputWrapperName = "";
     String outputNameSpace = " ";
 
-    if(operation == null){
+    if (operation == null) {
         inputFacts = new ArrayList<Fact>();
         outputFacts = new ArrayList<Fact>();
-    }
-    else {
+    } else {
         input = operation.getInput();
-        if(input != null){
+        if (input != null) {
             inputFacts = input.getFacts();
             inputWrapperName = input.getWrapperElementName();
             inputWrapperName = inputWrapperName == null ? "" : inputWrapperName;
@@ -141,10 +139,10 @@
         }
 
         output = operation.getOutput();
-        if(output != null){
+        if (output != null) {
             outputFacts = output.getFacts();
             outputWrapperName = output.getWrapperElementName();
-            String   outputNameSpaceValue =  output.getNameSpace();
+            String outputNameSpaceValue = output.getNameSpace();
             outputNameSpace = (outputNameSpaceValue == null) ? "" : outputNameSpaceValue;
 
 
@@ -180,11 +178,6 @@
     </td>
 </tr>
 
-
-
-
-
-
 <tr>
     <td class="formRaw">
         <h3 class="mediator"><fmt:message key="facts"/></h3>
@@ -198,8 +191,6 @@
                     <th width="8%"><fmt:message key="th.selector"/></th>
                     <th width="8%"><fmt:message key="th.name"/></th>
                     <th width="8%"><fmt:message key="th.namespace"/></th>
-                    <th width="8%"><fmt:message key="th.xpath"/></th>
-                    <th><fmt:message key="xpath.namespaceeditor"/></th>
                     <th><fmt:message key="actions"/></th>
                 </tr>
                 <tbody id="inputFacttbody">
@@ -210,31 +201,15 @@
                             String type = property.getType();
                             String name = property.getElementName();
                             String namespace = property.getNamespace();
-                            String xpath = property.getXpath();
-                            Map<String, String> nsMap = property.getPrefixToNamespaceMap();
-                            NameSpacesInformationRepository repository = (NameSpacesInformationRepository) session.getAttribute(
-            NameSpacesInformationRepository.NAMESPACES_INFORMATION_REPOSITORY);
-                            if(nsMap != null){
-                                if(repository== null){
-                                    repository = new NameSpacesInformationRepository();
-                                }
-                                NameSpacesInformation   nameSpacesInformation = new NameSpacesInformation();
-                                nameSpacesInformation.setNameSpaces(nsMap);
-                                repository.addNameSpacesInformation(opname,"inputFactValue"+k, nameSpacesInformation);
-        session.setAttribute(NameSpacesInformationRepository.NAMESPACES_INFORMATION_REPOSITORY, repository);
 
-                            }
                             if (name == null) {
                                 name = "";
                             }
-                            if(type == null){
+                            if (type == null) {
                                 type = "";
                             }
-                             if(namespace == null){
-                                 namespace = "";
-                            }
-                             if(xpath == null){
-                                 xpath = "";
+                            if (namespace == null) {
+                                namespace = "";
                             }
                 %>
                 <tr id="inputFactRaw<%=k%>">
@@ -257,17 +232,6 @@
                         <input class="longInput" id="inputFactNameSpace<%=k%>"
                                name="inputFactNameSpace<%=k%>"
                                type="text" value="<%=namespace%>"/>
-                    </td>
-                                        <td>
-                        <input class="longInput" id="inputFactXPath<%=k%>"
-                               name="inputFactXPath<%=k%>"
-                               type="text" value="<%=xpath%>"/>
-                    </td>
-                    <td id="factNsEditorButtonTD<%=k%>">
-                        <a href="#nsEditorLink" class="nseditor-icon-link"
-                           style="padding-left:40px"
-                           onclick="showNameSpaceEditor('inputFactValue<%=k%>','<%=opname.trim()%>')"><fmt:message
-                                key="namespaces"/></a>
                     </td>
                     <td><a href="#" href="#" class="delete-icon-link" style="padding-left:40px"
                            onclick="deleteFact('inputFact','<%=k%>')"><fmt:message
@@ -299,15 +263,9 @@
 </tr>
 
 
-
-
-
 <tr>
     <td><h3 class="mediator"><fmt:message key="output"/></h3></td>
 </tr>
-
-
-
 
 
 <tr>
@@ -320,7 +278,7 @@
                     <input type="text" name="outputWrapperName" id="outputWrapperName"
                            value="<%=outputWrapperName%>"/>
                 </td>
-                <td> <fmt:message key="namespace"/>
+                <td><fmt:message key="namespace"/>
                 </td>
                 <td>
                     <input type="text" name="outputNameSpace" id="outputNameSpace"
@@ -335,6 +293,7 @@
 <tr>
     <td class="formRaw">
         <h3 class="mediator"><fmt:message key="facts"/></h3>
+
         <div style="margin-top:0px;">
             <table id="outputFacttable" style="<%=outputTableStyle%>;"
                    class="styledInner">
@@ -344,8 +303,6 @@
                     <th width="8%"><fmt:message key="th.selector"/></th>
                     <th width="8%"><fmt:message key="th.name"/></th>
                     <th width="8%"><fmt:message key="th.namespace"/></th>
-                    <th width="8%"><fmt:message key="th.xpath"/></th>
-                    <th><fmt:message key="xpath.namespaceeditor"/></th>
                     <th><fmt:message key="actions"/></th>
                 </tr>
                 <tbody id="outputFacttbody">
@@ -356,31 +313,15 @@
                             String type = property.getType();
                             String name = property.getElementName();
                             String namespace = property.getNamespace();
-                            String xpath = property.getXpath();
-                              Map<String, String> outputNSMap = property.getPrefixToNamespaceMap();
-                            NameSpacesInformationRepository repository = (NameSpacesInformationRepository) session.getAttribute(
-            NameSpacesInformationRepository.NAMESPACES_INFORMATION_REPOSITORY);
-                            if(outputNSMap != null){
-                                if(repository== null){
-                                    repository = new NameSpacesInformationRepository();
-                                }
-                                NameSpacesInformation   nameSpacesInformation = new NameSpacesInformation();
-                                nameSpacesInformation.setNameSpaces(outputNSMap);
-                                repository.addNameSpacesInformation(opname,"outputFactValue"+j, nameSpacesInformation);
-        session.setAttribute(NameSpacesInformationRepository.NAMESPACES_INFORMATION_REPOSITORY, repository);
 
-                            }
                             if (name == null) {
                                 name = "";
                             }
-                            if(type == null){
+                            if (type == null) {
                                 type = "";
                             }
-                             if(namespace == null){
-                                 namespace = "";
-                            }
-                             if(xpath == null){
-                                 xpath = "";
+                            if (namespace == null) {
+                                namespace = "";
                             }
 
                 %>
@@ -405,16 +346,6 @@
                                name="outputFactNameSpace<%=j%>"
                                type="text" value="<%=namespace%>"/>
                     </td>
-                                        <td>
-                        <input class="longInput" id="outputFactXPath<%=j%>"
-                               name="outputFactXPath<%=j%>"
-                               type="text" value="<%=xpath%>"/>
-                    </td>
-                    <td id="factNsEditorButtonTD<%=j%>">
-                        <a href="#nsEditorLink" class="nseditor-icon-link"
-                           style="padding-left:40px"
-                           onclick="showNameSpaceEditor('outputFactValue<%=j%>','<%=opname.trim()%>')"><fmt:message
-                                key="namespaces"/></a>
                     <td><a href="#" href="#" class="delete-icon-link" style="padding-left:40px"
                            onclick="deleteFact('outputFact','<%=j%>')"><fmt:message
                             key="delete"/></a></td>

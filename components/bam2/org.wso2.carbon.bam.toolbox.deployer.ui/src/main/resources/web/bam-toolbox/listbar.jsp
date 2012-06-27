@@ -208,16 +208,16 @@
                                 <fmt:message key="toolbox.status"/>:&nbsp;&nbsp;
                                 <select name="toolType" id="tooType">
                                     <option value="1" <%= (null == toolBoxType || toolBoxType.equals("1")) ? "selected=\'selected\'" : ""%>>
-                                        All
+                                        <fmt:message key="all"/>
                                     </option>
                                     <option value="2" <%= (null != toolBoxType && toolBoxType.equals("2")) ? "selected=\'selected\'" : ""%>>
-                                        Deployed
+                                        <fmt:message key="bam.tool.status.deployed"/>
                                     </option>
                                     <option value="3" <%= (null != toolBoxType && toolBoxType.equals("3")) ? "selected=\'selected\'" : ""%>>
-                                        Awaiting To Deploy
+                                        <fmt:message key="bam.tool.status.tobedeployed"/>
                                     </option>
                                     <option value="4" <%= (null != toolBoxType && toolBoxType.equals("4")) ? "selected=\'selected\'" : ""%>>
-                                        Awaiting To Undeploy
+                                       <fmt:message key="bam.tool.status.tobeundeployed"/>
                                     </option>
                                 </select>
                                 &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
@@ -229,7 +229,7 @@
                         <td style="border:0; !important">
                             <a class="icon-link" href="#" style="background-image: url(images/search.gif);"
                                onclick="javascript:searchServices(); return false;"
-                               alt="<fmt:message key="search"/>"></a>
+                               alt="<fmt:message key='search'/>"></a>
                         </td>
                     </tr>
                     </tbody>

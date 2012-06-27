@@ -31,7 +31,7 @@ import org.wso2.carbon.ntask.common.TaskException;
 import org.wso2.carbon.ntask.core.service.TaskService;
 
 /**
- * @scr.component name="org.wso2.carbon.jaggery.core" immediate="true"
+ * @scr.component name="org.jaggeryjs.jaggery.core" immediate="true"
  * @scr.reference name="ntask.component" interface="org.wso2.carbon.ntask.core.service.TaskService"
  * cardinality="1..1" policy="dynamic" bind="setTaskService" unbind="unsetTaskService"
  **/

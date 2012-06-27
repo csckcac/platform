@@ -37,6 +37,7 @@ public class JaggeryTask extends AbstractTask {
 
 	private static final Log log = LogFactory.getLog(JaggeryTask.class);
 
+	@Override
 	public void execute() {
 		log.error("test");
         try {

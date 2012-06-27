@@ -110,9 +110,9 @@ public class InMemoryMessageStore extends AbstractMessageStore {
 
     public MessageContext remove(String messageID) {
         lock.lock();
+        MessageContext removable = null;
         try {
             if (messageID != null) {
-                MessageContext removable = null;
                 for (MessageContext msgCtx : messageList) {
                     if (msgCtx.getMessageID().equals(messageID)) {
                         removable = msgCtx;
@@ -127,7 +127,7 @@ public class InMemoryMessageStore extends AbstractMessageStore {
         } finally {
             lock.unlock();
         }
-        return null;
+        return removable;
     }
 
     public void clear() {

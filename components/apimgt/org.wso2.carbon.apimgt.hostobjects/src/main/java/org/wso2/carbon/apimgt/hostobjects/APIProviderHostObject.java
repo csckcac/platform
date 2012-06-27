@@ -1686,6 +1686,35 @@ public class APIProviderHostObject extends ScriptableObject {
         }
         return success;
     }
+
+    public static boolean jsFunction_isAPIOlderVersionExist(Context cx, Scriptable thisObj,
+                                                 Object[] args, Function funObj)
+            throws APIManagementException {
+        boolean apiOlderVersionExist = false;
+        if (args.length == 0) {
+            throw new APIManagementException("Invalid number of input parameters.");
+        }
+
+        NativeObject apiData = (NativeObject) args[0];
+        String provider = (String) apiData.get("provider", apiData);
+        String name = (String) apiData.get("name", apiData);
+        String version = (String) apiData.get("version", apiData);
+
+        APIProvider apiProvider = getAPIProvider(thisObj);
+        APIIdentifier apiId = new APIIdentifier(provider, name, version);
+        API api = apiProvider.getAPI(apiId);
+
+        List<API> apiList = apiProvider.getAPIsByProvider(provider);
+        APIVersionComparator versionComparator = new APIVersionComparator();
+        for (API oldAPI : apiList) {
+            if (oldAPI.getId().getApiName().equals(name) &&
+                versionComparator.compare(oldAPI, api) < 0) {
+                apiOlderVersionExist = true;
+            }
+        }
+        return apiOlderVersionExist;
+
+    }
 }
 
 

@@ -22,6 +22,10 @@ import org.apache.commons.pool.impl.StackObjectPool;
 import org.wso2.carbon.apimgt.api.APIManagementException;
 
 import java.util.Map;
+import java.util.concurrent.Executors;
+import java.util.concurrent.ScheduledExecutorService;
+import java.util.concurrent.ScheduledFuture;
+import java.util.concurrent.TimeUnit;
 
 public class RemoteAuthorizationManager {
 
@@ -29,6 +33,9 @@ public class RemoteAuthorizationManager {
 
     private ObjectPool clientPool;
     private Map<String,Boolean> authorizationDataCache = new LRUCache<String, Boolean>(1000);
+
+    private ScheduledExecutorService exec;
+    private ScheduledFuture future;
 
     private RemoteAuthorizationManager() {
 
@@ -45,6 +52,13 @@ public class RemoteAuthorizationManager {
                 return new RemoteAuthorizationManagerClient();
             }
         });
+
+        exec = Executors.newSingleThreadScheduledExecutor();
+        future = exec.scheduleWithFixedDelay(new Runnable() {
+            public void run() {
+                authorizationDataCache.clear();
+            }
+        }, 20, 20, TimeUnit.MINUTES);
     }
 
     public void destroy() {
@@ -52,6 +66,9 @@ public class RemoteAuthorizationManager {
             clientPool.close();
         } catch (Exception ignored) {
         }
+
+        future.cancel(true);
+        exec.shutdownNow();
     }
     
     public boolean isUserAuthorized(String user, String permission) throws APIManagementException {

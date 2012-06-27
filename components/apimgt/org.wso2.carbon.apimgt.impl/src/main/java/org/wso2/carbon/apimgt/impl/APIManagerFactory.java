@@ -34,8 +34,8 @@ public class APIManagerFactory {
     
     private static final APIManagerFactory instance = new APIManagerFactory();
     
-    private APIManagerCache<APIProvider> providers = new APIManagerCache<APIProvider>(100);
-    private APIManagerCache<APIConsumer> consumers = new APIManagerCache<APIConsumer>(100);
+    private APIManagerCache<APIProvider> providers = new APIManagerCache<APIProvider>(50);
+    private APIManagerCache<APIConsumer> consumers = new APIManagerCache<APIConsumer>(500);
     
     private APIManagerFactory() {
         

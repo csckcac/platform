@@ -5,7 +5,10 @@
          <% jagg.includeBlock("item-nav-list",{api:api}); %>
     </div>
     <div class="span6">
-        <div class="well" id="apiView"><%=api.description%></div>
+    <%if(api.description!=''){%>
+        <div class="well" id="apiView"><%=api.description%>
+        </div>
+    <%}%>
         <table class="table table-bordered">
             <tbody>
             <tr>

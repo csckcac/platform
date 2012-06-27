@@ -1,0 +1,23 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE suite SYSTEM "http://testng.org/testng-1.0.dtd">
+<suite verbose="0" name="Command line suite">
+    <test name="ESBTestServer" preserve-order="true" verbose="2">
+        <classes>
+            <class name="org.wso2.esb.integration.ESBTestServerManager"/>
+        </classes>
+    </test>
+
+    <test name="Test - Mediator fault" preserve-order="true" verbose="2">
+        <classes>
+            <class name="org.wso2.carbon.mediator.tests.fault.CustomErrorMessageTestCase"/>
+            <class name="org.wso2.carbon.mediator.tests.fault.MakeFaultMediatorTest"/>
+        </classes>
+    </test>
+
+    <test name="Test - Mediator XQuery" preserve-order="true" verbose="2">
+        <classes>
+            <class name="org.wso2.carbon.mediator.tests.xquery.XQueryMediatorTestCase"/>
+        </classes>
+    </test>
+
+</suite>

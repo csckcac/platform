@@ -19,7 +19,7 @@ package org.wso2.carbon.apimgt.hostobjects;
 
 import org.apache.commons.logging.Log;
 import org.apache.commons.logging.LogFactory;
-import org.wso2.carbon.scriptengine.exceptions.ScriptException;
+import org.jaggeryjs.scriptengine.exceptions.ScriptException;
 
 /**
  * APIStore Test Suite

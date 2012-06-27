@@ -59,8 +59,8 @@ import org.wso2.carbon.apimgt.usage.client.dto.APIVersionUsageDTO;
 import org.wso2.carbon.apimgt.usage.client.dto.PerUserAPIUsageDTO;
 import org.wso2.carbon.apimgt.usage.client.exception.APIMgtUsageQueryServiceClientException;
 import org.wso2.carbon.authenticator.stub.AuthenticationAdminStub;
-import org.wso2.carbon.hostobjects.file.FileHostObject;
-import org.wso2.carbon.scriptengine.exceptions.ScriptException;
+import org.jaggeryjs.hostobjects.file.FileHostObject;
+import org.jaggeryjs.scriptengine.exceptions.ScriptException;
 
 import java.net.URL;
 import java.util.*;

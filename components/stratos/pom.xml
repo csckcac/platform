@@ -543,6 +543,16 @@
                  <artifactId>org.wso2.carbon.tenant.activity</artifactId>
                  <version>${stratos.version}</version>
             </dependency>
+            <dependency>
+            <groupId>org.wso2.carbon</groupId>
+            <artifactId>org.wso2.carbon.ndatasource.core</artifactId>
+            <version>${wso2carbon.version}</version>
+        </dependency>
+        <dependency>
+            <groupId>org.wso2.carbon</groupId>
+            <artifactId>org.wso2.carbon.ndatasource.rdbms</artifactId>
+            <version>${wso2carbon.version}</version>
+        </dependency>
         </dependencies>
     </dependencyManagement>    
     <build>

@@ -81,7 +81,8 @@
         <tr class="tableOddRow">
             <td><fmt:message key="minimum.response.time"/></td>
             <td>
-                <%if (serviceStats.getMinResponseTime() == 0) { %>
+                <%if (serviceStats.getMinResponseTime() == 0 &&
+                      serviceStats.getTotalResponseCount() > 0) { %>
                 &lt; 1.00 ms
                 <%} else {%>
                 <%=serviceStats.getMinResponseTime() %> ms

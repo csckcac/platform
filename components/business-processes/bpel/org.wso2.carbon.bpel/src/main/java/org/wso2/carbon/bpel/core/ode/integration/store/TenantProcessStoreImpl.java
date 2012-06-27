@@ -602,7 +602,6 @@ public class TenantProcessStoreImpl implements TenantProcessStore {
                     BPELPackageRepositoryUtils.getResourcePathForBPELPackageContent(deploymentContext),
                     processConfs);
         } catch (ContextException ce) {
-            handleDeploymentErrorsAtODELayer(deploymentContext, du.getName());
             deploymentContext.setDeploymentFailureCause("BPEL Package deployment failed at " +
                     "ODE layer. Possible cause: " + ce.getMessage());
             deploymentContext.setStackTrace(ce);

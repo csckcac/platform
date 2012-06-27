@@ -292,7 +292,7 @@ public class ProcessStoreImpl implements ProcessStore, MultiTenantProcessStore {
                         processConfiguration.getState(),
                         duName);
             } catch (Exception e) {
-                log.error("Error while firing state change event fpr process "
+                log.error("Error while firing state change event for process "
                         + processConfiguration.getProcessId() + " in deployment unit "
                         + duName + ".");
             }

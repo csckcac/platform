@@ -190,12 +190,6 @@ public class BPELBindingContextImpl implements BindingContext {
                     processProxy);
         } catch (AxisFault e) {
             log.error("Error occurred creating the axis service " + serviceName.toString());
-
-            int tenantId = bpelServer.getMultiTenantProcessStore().
-                    getTenantId(processConfiguration.getProcessId());
-            TenantProcessStoreImpl pStore = (TenantProcessStoreImpl) bpelServer.
-                    getMultiTenantProcessStore().getTenantsProcessStore(tenantId);
-            pStore.removeProcessConfiguration(processConfiguration.getProcessId());
             throw new DeploymentException("BPEL Package undeployment failed.", e);
         }
 

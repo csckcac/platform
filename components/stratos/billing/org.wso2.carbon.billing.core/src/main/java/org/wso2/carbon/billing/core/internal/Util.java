@@ -24,13 +24,13 @@ import org.wso2.carbon.billing.core.BillingException;
 import org.wso2.carbon.billing.core.BillingManager;
 import org.wso2.carbon.billing.core.DataAccessManager;
 import org.wso2.carbon.billing.core.conf.BillingConfiguration;
-import org.wso2.carbon.billing.core.jdbc.DataAccessObject;
+import org.wso2.carbon.ndatasource.core.DataSourceService;
 import org.wso2.carbon.registry.core.service.RegistryService;
-import org.wso2.carbon.user.core.service.RealmService;
-import org.wso2.carbon.utils.CarbonUtils;
 import org.wso2.carbon.rule.kernel.config.RuleEngineConfigService;
 import org.wso2.carbon.stratos.common.exception.StratosException;
 import org.wso2.carbon.stratos.common.listeners.TenantMgtListener;
+import org.wso2.carbon.user.core.service.RealmService;
+import org.wso2.carbon.utils.CarbonUtils;
 
 import java.io.File;
 import java.util.ArrayList;
@@ -44,6 +44,7 @@ public class Util {
     private static RuleEngineConfigService ruleEngineConfigService;
     private static List<TenantMgtListener> tenantMgtListeners = new ArrayList<TenantMgtListener>();
     private static DataAccessManager dataAccessManager;
+    private static DataSourceService dataSourceService;
 
     public static synchronized void setRegistryService(RegistryService service) {
         if (registryService == null) {
@@ -101,7 +102,17 @@ public class Util {
         tenantMgtListeners.remove(tenantMgtListener);
         sortTenantMgtListeners();
     }
-    
+
+    public static void setDataSourceService(DataSourceService service) {
+        if (dataSourceService == null) {
+            dataSourceService = service;
+        }
+    }
+
+    public static DataSourceService getDataSourceService(){
+        return dataSourceService;
+    }
+
     private static void sortTenantMgtListeners() {
         Collections.sort(tenantMgtListeners, new Comparator<TenantMgtListener>() {
             public int compare(TenantMgtListener o1, TenantMgtListener o2) {

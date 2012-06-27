@@ -122,10 +122,17 @@
             <groupId>org.wso2.carbon</groupId>
             <artifactId>org.wso2.carbon.rule.backend</artifactId>
         </dependency>
-
         <dependency>
            <groupId>org.wso2.carbon</groupId>
            <artifactId>org.wso2.carbon.stratos.common</artifactId>
        </dependency>
+        <dependency>
+            <groupId>org.wso2.carbon</groupId>
+            <artifactId>org.wso2.carbon.ndatasource.core</artifactId>
+        </dependency>
+        <dependency>
+            <groupId>org.wso2.carbon</groupId>
+            <artifactId>org.wso2.carbon.ndatasource.rdbms</artifactId>
+        </dependency>
     </dependencies>
 </project>

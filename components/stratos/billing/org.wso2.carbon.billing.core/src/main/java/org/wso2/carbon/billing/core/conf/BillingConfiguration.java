@@ -17,11 +17,12 @@ package org.wso2.carbon.billing.core.conf;
 
 import org.apache.axiom.om.OMElement;
 import org.apache.axiom.om.impl.builder.StAXOMBuilder;
-import org.apache.commons.dbcp.BasicDataSource;
 import org.apache.commons.logging.Log;
 import org.apache.commons.logging.LogFactory;
 import org.wso2.carbon.billing.core.BillingConstants;
 import org.wso2.carbon.billing.core.BillingException;
+import org.wso2.carbon.billing.core.internal.Util;
+import org.wso2.carbon.ndatasource.common.DataSourceException;
 
 import javax.sql.DataSource;
 import javax.xml.namespace.QName;
@@ -43,17 +44,21 @@ import java.util.Map;
  */
 public class BillingConfiguration {
     private static final Log log = LogFactory.getLog(BillingConfiguration.class);
-    BasicDataSource dataSource;
-    Map<String, BillingTaskConfiguration> billingTaskConfigs =
-            new HashMap<String, BillingTaskConfiguration>();
+    DataSource dataSource;
+    Map<String, BillingTaskConfiguration> billingTaskConfigs = new HashMap<String, BillingTaskConfiguration>();
 
     public BillingConfiguration(String billingConfigFile) throws BillingException {
         try {
+            dataSource = (DataSource) Util.getDataSourceService().getDataSource(BillingConstants.WSO2_BILLING_DS).getDSObject();
             OMElement billingConfig = buildOMElement(new FileInputStream(billingConfigFile));
             deserialize(billingConfig);
         } catch (FileNotFoundException e) {
             String msg = "Unable to find the file responsible for billing task configs: "
                             + billingConfigFile;
+            log.error(msg, e);
+            throw new BillingException(msg, e);
+        } catch (DataSourceException e) {
+            String msg = "Error retrieving Billing datasource from master-datasources.xml configuration.";
             log.error(msg, e);
             throw new BillingException(msg, e);
         }
@@ -95,11 +100,7 @@ public class BillingConfiguration {
         while (billingConfigChildIt.hasNext()) {
             OMElement billingConfigChildEle = (OMElement) billingConfigChildIt.next();
             
-            if (new QName(BillingConstants.CONFIG_NS, BillingConstants.DB_CONFIG,
-                    BillingConstants.NS_PREFIX).equals(billingConfigChildEle.getQName())) {
-                //element is "dbConfig"
-                initDataSource(billingConfigChildEle);
-            } else if (new QName(BillingConstants.CONFIG_NS, BillingConstants.TASKS,
+            if (new QName(BillingConstants.CONFIG_NS, BillingConstants.TASKS,
                     BillingConstants.NS_PREFIX).equals(billingConfigChildEle.getQName())) {
                 //element is "tasks"
                 Iterator taskConfigChildIt = billingConfigChildEle.getChildElements();
@@ -132,7 +133,7 @@ public class BillingConfiguration {
             <validationQuery>SELECT 1</validationQuery>
         </dbConfig>
      */
-    private void initDataSource(OMElement dbConfigEle) throws BillingException {
+    /*private void initDataSource(OMElement dbConfigEle) throws BillingException {
         // initializing the data source and load the database configurations
         Iterator dbConfigChildIt = dbConfigEle.getChildElements();
         dataSource = new BasicDataSource();
@@ -172,7 +173,7 @@ public class BillingConfiguration {
                 throw new BillingException(msg);
             }
         }
-    }
+    }*/
 
     public Map<String, BillingTaskConfiguration> getBillingTaskConfigs() {
         return billingTaskConfigs;

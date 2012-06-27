@@ -21,6 +21,7 @@ import org.wso2.carbon.billing.core.BillingHandler;
 import org.wso2.carbon.billing.core.BillingTenantMgtListenerImpl;
 import org.wso2.carbon.billing.core.conf.BillingTaskConfiguration;
 import org.wso2.carbon.billing.core.scheduler.ScheduleHelper;
+import org.wso2.carbon.ndatasource.core.DataSourceService;
 import org.wso2.carbon.registry.core.service.RegistryService;
 import org.wso2.carbon.rule.kernel.config.RuleEngineConfigService;
 import org.wso2.carbon.stratos.common.listeners.TenantMgtListener;
@@ -66,6 +67,10 @@ import org.osgi.service.component.ComponentContext;
  *                cardinality="0..n" policy="dynamic"
  *                bind="setTenantMgtListenerService"
  *                unbind="unsetTenantMgtListenerService"
+ * @scr.reference name="datasources.service"
+ *                interface="org.wso2.carbon.ndatasource.core.DataSourceService"
+ *                cardinality="1..1" policy="dynamic"
+ *                bind="setDataSourceService" unbind="unsetDataSourceService" 
  */
 public class BillingServiceComponent {
     private static Log log = LogFactory.getLog(BillingServiceComponent.class);
@@ -148,5 +153,19 @@ public class BillingServiceComponent {
 
     protected void unsetTenantMgtListenerService(TenantMgtListener tenantMgtListener) {
         Util.removeTenantMgtListenerService(tenantMgtListener);
+    }
+
+    protected void setDataSourceService(DataSourceService dataSourceService) {
+        if (log.isDebugEnabled()) {
+            log.debug("Setting the Data Sources Service");
+        }
+        Util.setDataSourceService(dataSourceService);
+    }
+
+    protected void unsetDataSourceService(DataSourceService dataSourceService) {
+        if (log.isDebugEnabled()) {
+            log.debug("Unsetting the Data Sources Service");
+        }
+        Util.setDataSourceService(null);
     }
 }

@@ -50,4 +50,5 @@ public class BillingConstants {
     public static final String STORAGE_SUBITEM = "storageOveruse";
     public static final String PAYMENT_RECEIVED_EMAIL_CUSTOMER_FILE = "email-payment-received-customer.xml";
     public static final String PAYMENT_RECEIVED_EMAIL_WSO2_FILE = "email-payment-received-wso2.xml";
+    public static final String WSO2_BILLING_DS = "WSO2BillingDS";
 }

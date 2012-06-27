@@ -39,11 +39,11 @@ public class TomcatGenericWebappsDeployer {
 
     private static Log log = LogFactory.getLog(TomcatGenericWebappsDeployer.class);
 
-    private String webContextPrefix;
-    private int tenantId;
-    private String tenantDomain;
+    protected String webContextPrefix;
+    protected int tenantId;
+    protected String tenantDomain;
 
-    private WebApplicationsHolder webappsHolder;
+    protected WebApplicationsHolder webappsHolder;
 
     /**
      * Constructor
@@ -113,7 +113,7 @@ public class TomcatGenericWebappsDeployer {
      * @param applicationEventListeners Application event listeners
      * @throws CarbonException If an error occurs during deployment
      */
-    private void handleHotDeployment(File webapp, List<WebContextParameter> webContextParams,
+    protected void handleHotDeployment(File webapp, List<WebContextParameter> webContextParams,
                                      List<Object> applicationEventListeners)
             throws CarbonException {
         String filename = webapp.getName();
@@ -121,6 +121,8 @@ public class TomcatGenericWebappsDeployer {
             handleExplodedWebappDeployment(webapp, webContextParams, applicationEventListeners);
         } else if (filename.endsWith(".war")) {
             handleWarWebappDeployment(webapp, webContextParams, applicationEventListeners);
+        } else if(filename.endsWith(".zip")) {
+            handleZipWebappDeployment(webapp, webContextParams, applicationEventListeners);
         }
     }
 
@@ -132,7 +134,7 @@ public class TomcatGenericWebappsDeployer {
      * @param applicationEventListeners Application event listeners
      * @throws CarbonException If a deployment error occurs
      */
-    private void handleWarWebappDeployment(File webappWAR,
+    protected void handleWarWebappDeployment(File webappWAR,
                                            List<WebContextParameter> webContextParams,
                                            List<Object> applicationEventListeners)
             throws CarbonException {
@@ -152,6 +154,13 @@ public class TomcatGenericWebappsDeployer {
                 webContextParams, applicationEventListeners);
     }
 
+    protected void handleZipWebappDeployment(File webapp,
+                                               List<WebContextParameter> webContextParams,
+                                               List<Object> applicationEventListeners)
+            throws CarbonException {
+
+    }
+
     /**
      * Handle the deployment of a an exploded webapp. i.e., a webapp deployed as a directory
      * & not an archive
@@ -161,7 +170,7 @@ public class TomcatGenericWebappsDeployer {
      * @param applicationEventListeners Application event listeners
      * @throws CarbonException If a deployment error occurs
      */
-    private void handleExplodedWebappDeployment(File webappDir,
+    protected void handleExplodedWebappDeployment(File webappDir,
                                                 List<WebContextParameter> webContextParams,
                                                 List<Object> applicationEventListeners)
             throws CarbonException {
@@ -181,7 +190,7 @@ public class TomcatGenericWebappsDeployer {
                                 webContextParams, applicationEventListeners);
     }
 
-    private void handleWebappDeployment(File webappFile, String contextStr,
+    protected void handleWebappDeployment(File webappFile, String contextStr,
                                         List<WebContextParameter> webContextParams,
                                         List<Object> applicationEventListeners) throws CarbonException {
         String filename = webappFile.getName();
@@ -251,7 +260,7 @@ public class TomcatGenericWebappsDeployer {
      * @param applicationEventListeners Application event listeners
      * @throws CarbonException If a deployment error occurs
      */
-    private void handleHotUpdate(WebApplication webApplication,
+    protected void handleHotUpdate(WebApplication webApplication,
                                  List<WebContextParameter> webContextParams,
                                  List<Object> applicationEventListeners) throws CarbonException {
         File webappFile = webApplication.getWebappFile();

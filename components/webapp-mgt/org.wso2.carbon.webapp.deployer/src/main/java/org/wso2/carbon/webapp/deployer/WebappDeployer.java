@@ -42,13 +42,13 @@ import java.util.List;
  */
 public class WebappDeployer extends AbstractDeployer {
     private static final Log log = LogFactory.getLog(WebappDeployer.class);
-    private String webappsDir;
-    private TomcatGenericWebappsDeployer tomcatWebappDeployer;
-    private final List<WebContextParameter> servletContextParameters =
+    protected String webappsDir;
+    protected TomcatGenericWebappsDeployer tomcatWebappDeployer;
+    protected final List<WebContextParameter> servletContextParameters =
             new ArrayList<WebContextParameter>();
     protected ConfigurationContext configContext;
     protected AxisConfiguration axisConfig;
-    private WebApplicationsHolder webappsHolder;
+    protected WebApplicationsHolder webappsHolder;
 
     public void init(ConfigurationContext configCtx) {
         this.configContext = configCtx;

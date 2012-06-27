@@ -254,10 +254,10 @@ $(document).ready(function() {
                       location.href = "site/pages/item-info.jag?name=<%=api.name%>&version=<%=api.version%>&provider=<%=api.provider%>";
                       }
                       $("#editAPIForm")[0].reset();
-                  }else{
-                        $('#editAPIError').show('fast');
-                        $('#editErrorSpan').html('<strong>Sorry. This API cannot be updated.</strong><br />'+responseText.message);
-                  }
+                  } else {
+                          jagg.message({content:responseText.message,type:"error"});
+
+                                                                         }
                 }, dataType: 'json'
             });
         }

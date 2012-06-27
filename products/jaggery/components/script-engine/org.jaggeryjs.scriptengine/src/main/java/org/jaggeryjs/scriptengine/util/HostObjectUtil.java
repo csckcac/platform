@@ -74,7 +74,7 @@ public class HostObjectUtil {
             return "null";
         }
         if (obj instanceof Undefined) {
-            return "undefined";
+            return "null";
         }
         if (obj instanceof Boolean) {
             return Boolean.toString((Boolean) obj);

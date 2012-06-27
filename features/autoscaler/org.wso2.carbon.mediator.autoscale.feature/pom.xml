@@ -73,9 +73,12 @@
                                 </properties>
                             </adviceFile>
                             <bundles>
-                                <bundleDef>org.wso2.carbon:org.wso2.carbon.load.balance.agent.stub</bundleDef>
- <bundleDef>org.wso2.carbon:org.wso2.carbon.load.balance.autoscaler.service.stub</bundleDef>
+                                <!--bundleDef>org.wso2.carbon:org.wso2.carbon.load.balance.agent.stub</bundleDef>
+                                -->
+                                <bundleDef>org.wso2.carbon:org.wso2.carbon.load.balance.autoscaler.service.stub</bundleDef>
                                 <bundleDef>org.wso2.carbon:org.wso2.carbon.mediator.autoscale</bundleDef>
+                                <bundleDef>org.slf4j:slf4j-api:1.6.4</bundleDef>
+                                <bundleDef>org.slf4j:slf4j-log4j12:1.6.4</bundleDef>
                             </bundles>
                             <importFeatures>
                                 <importFeatureDef>org.apache.synapse.wso2:${synapse.version}</importFeatureDef>

@@ -29,6 +29,7 @@ function loadTiers() {
 
 
 $(document).ready(function() {
+
     $("select[name='tier']").change(function() {
         // multipleValues will be an array
         var multipleValues = $(this).val() || [];
@@ -70,6 +71,10 @@ $(document).ready(function() {
                                                                  });
                                           }
                                       });
+
+
+
+
 
 });
 

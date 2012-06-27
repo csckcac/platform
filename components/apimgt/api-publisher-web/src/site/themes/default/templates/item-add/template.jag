@@ -16,7 +16,7 @@
                 <div class="control-group">
                     <label class="control-label" for="apiName">Name:<span class="requiredAstrix">*</span></label>
                     <div class="controls">
-                        <input type="text" class="input-xlarge required" id="name" name="name" autofocus="autofocus"/>
+                        <input type="text" class="input-xlarge required validRegistryName" id="name" name="name" autofocus="autofocus"/>
                     </div>
                 </div>
 

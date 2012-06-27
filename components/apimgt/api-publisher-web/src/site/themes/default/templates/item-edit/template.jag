@@ -122,7 +122,7 @@
                  <div class="control-group">
                     <label class="control-label" for="bizOwnerMail">Business Owner Email:</label>
                     <div class="controls">
-                         <input type="text" class="input-xlarge" id="bizOwnerMail" name="bizOwnerMail" value="<%=api.bizOwnerMail%>"/>
+                         <input type="text" class="input-xlarge email" id="bizOwnerMail" name="bizOwnerMail" value="<%=api.bizOwnerMail%>"/>
                     </div>
                 </div>
                  <div class="control-group">
@@ -134,7 +134,7 @@
                  <div class="control-group">
                     <label class="control-label" for="techOwnerMail">Technical Owner Email:</label>
                     <div class="controls">
-                         <input type="text" class="input-xlarge" id="techOwnerMail" name="techOwnerMail" value="<%=api.techOwnerMail%>"/>
+                         <input type="text" class="input-xlarge email" id="techOwnerMail" name="techOwnerMail" value="<%=api.techOwnerMail%>"/>
                     </div>
             </div>
 

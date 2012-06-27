@@ -116,6 +116,13 @@
                 <include>tenant-reg-agent.xml</include>
             </includes>
         </fileSet>
+		<fileSet>
+            <directory>../../../conf</directory>
+            <outputDirectory>${pom.artifactId}-${pom.version}/repository/conf/datasources</outputDirectory>
+            <includes>
+                <include>stratos-datasources.xml</include>
+            </includes>
+        </fileSet>
 
         <fileSet>
             <directory>carbon-home/scripts</directory>

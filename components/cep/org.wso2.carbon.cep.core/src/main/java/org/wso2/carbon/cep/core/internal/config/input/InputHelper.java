@@ -7,8 +7,10 @@ import org.wso2.carbon.cep.core.Bucket;
 import org.wso2.carbon.cep.core.mapping.input.Input;
 import org.wso2.carbon.cep.core.exception.CEPConfigurationException;
 import org.wso2.carbon.cep.core.internal.config.input.mapping.InputMappingHelper;
-import org.wso2.carbon.cep.core.internal.config.input.mapping.TupleInputMappingHelper;
 import org.wso2.carbon.cep.core.internal.config.input.mapping.XMLInputMappingHelper;
+import org.wso2.carbon.cep.core.mapping.input.mapping.XMLInputMapping;
+import org.wso2.carbon.cep.core.internal.config.input.mapping.TupleInputMappingHelper;
+
 import org.wso2.carbon.cep.core.internal.util.CEPConstants;
 import org.wso2.carbon.registry.core.Collection;
 import org.wso2.carbon.registry.core.Registry;
@@ -16,6 +18,17 @@ import org.wso2.carbon.registry.core.exceptions.RegistryException;
 
 import javax.xml.namespace.QName;
 import java.util.List;
+
+import javax.xml.stream.XMLInputFactory;
+import javax.xml.stream.XMLOutputFactory;
+import javax.xml.stream.XMLStreamException;
+import javax.xml.stream.XMLStreamReader;
+import javax.xml.stream.XMLStreamWriter;
+
+import org.apache.axiom.om.OMAbstractFactory;
+import org.apache.axiom.om.OMElement;
+import org.apache.axiom.om.OMFactory;
+import org.apache.axiom.om.OMNamespace;
 
 /**
  * This class helps to build an Input Object from a given OMElement
@@ -134,4 +147,27 @@ public class InputHelper {
         }
 
     }
+    
+	public static OMElement inputToOM(Input input) {
+		OMFactory factory = OMAbstractFactory.getOMFactory();
+		OMElement inputChild = factory.createOMElement(new QName(
+				CEPConstants.CEP_CONF_NAMESPACE,
+				CEPConstants.CEP_CONF_ELE_INPUT,
+				CEPConstants.CEP_CONF_CEP_NAME_SPACE_PREFIX));
+		if (input.getInputMapping() instanceof XMLInputMapping) {
+			XMLInputMapping xmlInputMap = (XMLInputMapping) input
+					.getInputMapping();
+			OMElement xmlInputMapping = XMLInputMappingHelper
+					.xmlInputMappingToOM(xmlInputMap);
+			String inputName = input.getTopic();
+			String inputBrokerName = input.getBrokerName();
+			inputChild.addChild(xmlInputMapping);
+			inputChild.addAttribute(CEPConstants.CEP_CONF_ELE_TOPIC, inputName,
+					null);
+			inputChild.addAttribute(CEPConstants.CEP_CONF_ELE_BROKER_NAME,
+					inputBrokerName, null);
+		}
+		return inputChild;
+	}
+
 }

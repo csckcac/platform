@@ -25,6 +25,17 @@ import org.wso2.carbon.cep.core.exception.CEPConfigurationException;
 import org.wso2.carbon.registry.core.Registry;
 import org.wso2.carbon.registry.core.Resource;
 import org.wso2.carbon.registry.core.exceptions.RegistryException;
+import javax.xml.namespace.QName;
+import javax.xml.stream.XMLInputFactory;
+import javax.xml.stream.XMLOutputFactory;
+import javax.xml.stream.XMLStreamException;
+import javax.xml.stream.XMLStreamReader;
+import javax.xml.stream.XMLStreamWriter;
+
+import org.apache.axiom.om.OMAbstractFactory;
+import org.apache.axiom.om.OMElement;
+import org.apache.axiom.om.OMFactory;
+import org.apache.axiom.om.OMNamespace;
 
 /**
  * This class will help to build the Output Mapping from a given OMELement
@@ -94,5 +105,24 @@ public class XMLOutputMappingHelper {
 
         return xmlOutputMapping;
     }
+
+    
+
+	public static OMElement xmlOutputMappingToOM(
+			XMLOutputMapping xmlOutputMapping) {
+		OMFactory factory = OMAbstractFactory.getOMFactory();
+		OMElement queryXMLOutputMapping = factory.createOMElement(new QName(
+				CEPConstants.CEP_CONF_NAMESPACE,
+				CEPConstants.CEP_CONF_ELE_XML_MAPPING,
+				CEPConstants.CEP_CONF_CEP_NAME_SPACE_PREFIX));
+		String mappingXMLText = xmlOutputMapping.getMappingXMLText();
+		factory.createOMText(queryXMLOutputMapping, mappingXMLText,
+				XMLStreamReader.CDATA);
+		return queryXMLOutputMapping;
+}
+
+
+
+
 
 }

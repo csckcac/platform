@@ -34,6 +34,17 @@ import java.util.ArrayList;
 import java.util.Enumeration;
 import java.util.Hashtable;
 import java.util.Iterator;
+import java.util.List;
+import javax.xml.stream.XMLInputFactory;
+import javax.xml.stream.XMLOutputFactory;
+import javax.xml.stream.XMLStreamException;
+import javax.xml.stream.XMLStreamReader;
+import javax.xml.stream.XMLStreamWriter;
+
+import org.apache.axiom.om.OMAbstractFactory;
+import org.apache.axiom.om.OMElement;
+import org.apache.axiom.om.OMFactory;
+import org.apache.axiom.om.OMNamespace;
 
 /**
  * This class will help to build the Element Xml Output Object from a given OMELement
@@ -176,5 +187,33 @@ public class ElementOutputMappingHelper {
         }
         return elementOutputMapping;
     }
+
+
+    
+
+
+	public static OMElement elementOutputMappingToOM(
+			ElementOutputMapping elementOutputMapping) {
+		OMFactory factory = OMAbstractFactory.getOMFactory();
+		OMElement queryElementOutputMapping = factory
+				.createOMElement(new QName(CEPConstants.CEP_CONF_NAMESPACE,
+						CEPConstants.CEP_CONF_ELE_EMAPPING,
+						CEPConstants.CEP_CONF_CEP_NAME_SPACE_PREFIX));
+		String documentElement = elementOutputMapping.getDocumentElement();
+		String elementNameSpace = elementOutputMapping.getNamespace();
+		queryElementOutputMapping.addAttribute(
+				CEPConstants.CEP_REGISTRY_DOC_ELEMENT, documentElement, null);
+		queryElementOutputMapping.addAttribute(CEPConstants.CEP_REGISTRY_NS,
+				elementNameSpace, null);
+		List<XMLProperty> xmlPropertyList = elementOutputMapping
+				.getProperties();
+		for (XMLProperty xmlProperty : xmlPropertyList) {
+			OMElement propertyChild = PropertyHelper
+					.xmlPropertyToOM(xmlProperty);
+			queryElementOutputMapping.addChild(propertyChild);
+		}
+		return queryElementOutputMapping;
+	}
+
 
 }

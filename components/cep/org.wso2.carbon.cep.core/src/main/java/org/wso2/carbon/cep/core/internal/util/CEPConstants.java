@@ -52,10 +52,6 @@ public interface CEPConstants {
     String CEP_CONF_ELE_TUPLE_DATA_TYPE_META ="metaData" ;
     String CEP_CONF_ELE_TUPLE_DATA_TYPE_CORRELATION ="correlationData" ;
     String CEP_CONF_ELE_TUPLE_DATA_TYPE_PAYLOAD ="payloadData" ;
-
-
-
-
     String CEP_CONF_ATTR_EVENT_CLASS = "eventClass";
     String CEP_CONF_ATTR_NAME = "name";
     String CEP_CONF_ATTR_ENGINE_PROVIDER = "engineProvider";
@@ -70,7 +66,7 @@ public interface CEPConstants {
     String CEP_CONF_ATTR_OVER_WRITE_REGISTRY = "overWriteRegistryStoredBucket";
     String CEP_CONF_CLASS_NAME_TUPLE = "Tuple";
     String CEP_CONF_CLASS_NAME_MAP = "Map";
-
+    String CEP_CONF_CEP_NAME_SPACE_PREFIX="cep";
 
 
     String CEP_CONF_WS_PROP_URI = "uri";
@@ -123,4 +119,7 @@ public interface CEPConstants {
     String CEP_REGISTRY_TUPLE_MAPPING_META = "metaData";
     String CEP_REGISTRY_TUPLE_MAPPING_CORRELATION = "correlationData";
     String CEP_REGISTRY_TUPLE_MAPPING_PAYLOAD = "payloadData";
+    String CEP_REGISTRY_EXPRESSION_LOOK_UP_KEY="expressionLookUpKey";
+    
+    
 }

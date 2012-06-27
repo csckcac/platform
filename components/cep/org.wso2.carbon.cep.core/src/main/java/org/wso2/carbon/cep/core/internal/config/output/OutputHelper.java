@@ -16,6 +16,17 @@ import org.wso2.carbon.registry.core.exceptions.RegistryException;
 
 import javax.xml.namespace.QName;
 
+import javax.xml.stream.XMLInputFactory;
+import javax.xml.stream.XMLOutputFactory;
+import javax.xml.stream.XMLStreamException;
+import javax.xml.stream.XMLStreamReader;
+import javax.xml.stream.XMLStreamWriter;
+
+import org.apache.axiom.om.OMAbstractFactory;
+import org.apache.axiom.om.OMElement;
+import org.apache.axiom.om.OMFactory;
+import org.apache.axiom.om.OMNamespace;
+
 /**
  * This class will help to build Output Object from a given OMELement
  */
@@ -155,4 +166,36 @@ public class OutputHelper {
 
         return output;
     }
+
+    
+
+	public static OMElement outputToOM(Output output) {
+		OMFactory factory = OMAbstractFactory.getOMFactory();
+		OMElement queryOutput = factory.createOMElement(new QName(
+				CEPConstants.CEP_CONF_NAMESPACE,
+				CEPConstants.CEP_CONF_ELE_OUTPUT,
+				CEPConstants.CEP_CONF_CEP_NAME_SPACE_PREFIX));
+		String queryOutputName = output.getTopic();
+		String queryOutputBrokerName = output.getBrokerName();
+		queryOutput.addAttribute(CEPConstants.CEP_REGISTRY_TOPIC,
+				queryOutputName, null);
+		queryOutput.addAttribute(CEPConstants.CEP_CONF_ELE_BROKER_NAME,
+				queryOutputBrokerName, null);
+		if (output.getOutputMapping() instanceof XMLOutputMapping) {
+			OMElement queryXMLOutputMapping = XMLOutputMappingHelper
+					.xmlOutputMappingToOM((XMLOutputMapping) output
+							.getOutputMapping());
+			queryOutput.addChild(queryXMLOutputMapping);
+		} else if (output.getOutputMapping() instanceof ElementOutputMapping) {
+			OMElement queryElementOutputMapping = ElementOutputMappingHelper
+					.elementOutputMappingToOM((ElementOutputMapping) output
+							.getOutputMapping());
+			queryOutput.addChild(queryElementOutputMapping);
+		}
+
+		return queryOutput;
+	}
+
+	
+
 }

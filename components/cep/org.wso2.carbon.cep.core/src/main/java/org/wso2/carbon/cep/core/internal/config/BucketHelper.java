@@ -31,6 +31,42 @@ import org.wso2.carbon.registry.core.exceptions.RegistryException;
 
 import javax.xml.namespace.QName;
 import java.util.Iterator;
+import java.io.BufferedInputStream;
+import java.io.BufferedWriter;
+import java.io.File;
+import java.io.FileInputStream;
+import java.io.FileNotFoundException;
+import java.io.FileWriter;
+import java.io.IOException;
+import java.util.ArrayList;
+import java.util.Iterator;
+import java.util.List;
+import javax.xml.namespace.QName;
+import javax.xml.stream.XMLInputFactory;
+import javax.xml.stream.XMLOutputFactory;
+import javax.xml.stream.XMLStreamException;
+import javax.xml.stream.XMLStreamReader;
+import javax.xml.stream.XMLStreamWriter;
+
+import org.apache.axiom.om.OMAbstractFactory;
+
+import org.apache.axiom.om.OMFactory;
+import org.apache.axiom.om.OMNamespace;
+
+import org.apache.axis2.deployment.DeploymentException;
+import org.apache.axis2.deployment.repository.util.DeploymentFileData;
+
+import org.wso2.carbon.cep.core.Expression;
+
+import org.wso2.carbon.cep.core.XpathDefinition;
+import org.wso2.carbon.cep.core.internal.config.BucketHelper;
+import org.wso2.carbon.cep.core.internal.util.CEPConstants;
+
+import org.wso2.carbon.cep.core.mapping.input.mapping.XMLInputMapping;
+import org.wso2.carbon.cep.core.mapping.output.Output;
+import org.wso2.carbon.cep.core.mapping.output.mapping.ElementOutputMapping;
+import org.wso2.carbon.cep.core.mapping.output.mapping.XMLOutputMapping;
+import org.wso2.carbon.cep.core.mapping.property.XMLProperty;
 
 /**
  * this class is used to parse the top level bucket attributes
@@ -158,7 +194,6 @@ public class BucketHelper {
         return buckets;
     }
 
-
     public static Bucket loadBucketFromRegistry(Registry registry, String bucketName)
             throws CEPConfigurationException {
         try {
@@ -176,7 +211,6 @@ public class BucketHelper {
         }
         return null;
     }
-
     private static Bucket formatBucket(Registry registry, Collection bucketDetailsCollection)
             throws RegistryException, CEPConfigurationException {
         Bucket bucket = new Bucket();
@@ -206,7 +240,6 @@ public class BucketHelper {
         return bucket;
     }
 
-
     public static void modifyBucketsInRegistry(Registry registry,
                                                Bucket bucket) throws CEPConfigurationException {
         try {
@@ -224,4 +257,51 @@ public class BucketHelper {
         }
 
     }
+
+   
+    public static OMElement bucketToOM(Bucket bucket) {
+    	String bucketName = bucket.getName();
+    	String bucketDescription = bucket.getDescription();
+    	String bucketEngineProvider = bucket.getEngineProvider();
+    	List<Input> inputList = bucket.getInputs();
+    	List<Query> queryList = bucket.getQueries();
+    	boolean overWriteRegistry = bucket.isOverWriteRegistry();
+    	String overWrite = "true";
+    	if (!overWriteRegistry) {
+    		overWrite = "false";
+    	}
+    	OMFactory factory = OMAbstractFactory.getOMFactory();
+    	OMElement bucketItem = factory.createOMElement(new QName(
+    			CEPConstants.CEP_CONF_NAMESPACE,
+    			CEPConstants.CEP_CONF_ELE_BUCKET,
+    			CEPConstants.CEP_CONF_CEP_NAME_SPACE_PREFIX));
+    	bucketItem.addAttribute(CEPConstants.CEP_CONF_ATTR_OVER_WRITE_REGISTRY,
+    			overWrite, null);
+    	bucketItem.addAttribute(CEPConstants.CEP_CONF_ELE_NAME, bucketName,
+    			null);
+    	bucketItem.addAttribute(CEPConstants.CEP_CONF_ATTR_ENGINE_PROVIDER,
+    			bucketEngineProvider, null);
+    	OMElement description = factory.createOMElement(new QName(
+    			CEPConstants.CEP_CONF_NAMESPACE,
+    			CEPConstants.CEP_CONF_ELE_DESCRIPTION,
+    			CEPConstants.CEP_CONF_CEP_NAME_SPACE_PREFIX));
+
+    	description.setText(bucketDescription);
+
+    	bucketItem.addChild(description);
+
+    	for (Input input : inputList) {
+    		OMElement inputChild = InputHelper.inputToOM(input);
+    		bucketItem.addChild(inputChild);
+    	}
+    	for (Query query : queryList) {
+    		OMElement queryChild = QueryHelper.queryToOM(query);
+    		bucketItem.addChild(queryChild);
+    	}
+    	return bucketItem;
+    }
+
+    
+    
+    
 }

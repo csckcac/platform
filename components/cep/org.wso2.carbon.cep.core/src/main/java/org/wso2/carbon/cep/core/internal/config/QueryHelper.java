@@ -33,6 +33,25 @@ import org.wso2.carbon.registry.core.exceptions.RegistryException;
 
 import javax.xml.namespace.QName;
 import java.util.List;
+import javax.xml.namespace.QName;
+import javax.xml.stream.XMLInputFactory;
+import javax.xml.stream.XMLOutputFactory;
+import javax.xml.stream.XMLStreamException;
+import javax.xml.stream.XMLStreamReader;
+import javax.xml.stream.XMLStreamWriter;
+
+
+
+
+import org.apache.axiom.om.OMAbstractFactory;
+import org.apache.axiom.om.OMElement;
+import org.apache.axiom.om.OMFactory;
+import org.apache.axiom.om.OMNamespace;
+
+
+
+
+
 
 /**
  * This class will help to build Query object from a given OMElement
@@ -156,4 +175,27 @@ public class QueryHelper {
         }
 
     }
+
+
+    
+    
+	public static OMElement queryToOM(Query query) {
+		OMFactory factory = OMAbstractFactory.getOMFactory();
+		OMElement queryChild = factory.createOMElement(new QName(
+				CEPConstants.CEP_CONF_NAMESPACE,
+				CEPConstants.CEP_CONF_ELE_QUERY,
+				CEPConstants.CEP_CONF_CEP_NAME_SPACE_PREFIX));
+		OMElement queryOutput = OutputHelper.outputToOM(query.getOutput());
+		Expression queryExpression = query.getExpression();
+		String queryName = query.getName();
+		queryChild
+				.addAttribute(CEPConstants.CEP_REGISTRY_NAME, queryName, null);
+		OMElement omQueryExpression = ExpressionHelper
+				.expressionToOM(queryExpression);
+		queryChild.addChild(omQueryExpression);
+		queryChild.addChild(queryOutput);
+		return queryChild;
+	}
+    
+    
 }

@@ -7,6 +7,17 @@ import org.wso2.carbon.cep.core.internal.util.CEPConstants;
 
 import javax.xml.namespace.QName;
 
+import javax.xml.stream.XMLInputFactory;
+import javax.xml.stream.XMLOutputFactory;
+import javax.xml.stream.XMLStreamException;
+import javax.xml.stream.XMLStreamReader;
+import javax.xml.stream.XMLStreamWriter;
+
+import org.apache.axiom.om.OMAbstractFactory;
+import org.apache.axiom.om.OMElement;
+import org.apache.axiom.om.OMFactory;
+import org.apache.axiom.om.OMNamespace;
+
 /**
  * This class will help to build Property object from a given OMElement
  */
@@ -39,4 +50,45 @@ public class PropertyHelper {
 
         return property;
     }
+
+
+
+   
+
+	public static OMElement xmlPropertyToOM(XMLProperty xmlProperty) {
+		OMFactory factory = OMAbstractFactory.getOMFactory();
+		OMElement propertyChild = factory.createOMElement(new QName(
+				CEPConstants.CEP_CONF_NAMESPACE,
+				CEPConstants.CEP_CONF_ELE_PROPERTY,
+				CEPConstants.CEP_CONF_CEP_NAME_SPACE_PREFIX));
+		String propertyName = xmlProperty.getName();
+		String propertyXPath = xmlProperty.getXpath();
+		String propertyType = xmlProperty.getType();
+		String propertyXmlField = xmlProperty.getXmlFieldName();
+		String propertyXmlFielType = xmlProperty.getXmlFieldType();
+		propertyChild.addAttribute(CEPConstants.CEP_CONF_ATTR_NAME,
+				propertyName, null);
+		if (propertyXPath != null) {
+			propertyChild.addAttribute(CEPConstants.CEP_CONF_ELE_XPATH,
+					propertyXPath, null);
+		}
+		if (propertyType != null) {
+			propertyChild.addAttribute(CEPConstants.CEP_CONT_ATTR_TYPE,
+					propertyType, null);
+		}
+		if (propertyXmlField != null) {
+			propertyChild.addAttribute(CEPConstants.CEP_REGISTRY_XML_FIELD_NAME,
+					propertyXmlField, null);
+		}
+		if (propertyXmlFielType != null) {
+			propertyChild.addAttribute(CEPConstants.CEP_REGISTRY_XML_FIELD_TYPE,
+					propertyXmlFielType, null);
+		}
+		return propertyChild;
+	}
+
+
+
+
+
 }

@@ -14,11 +14,22 @@ import org.wso2.carbon.registry.core.Collection;
 import org.wso2.carbon.registry.core.Registry;
 import org.wso2.carbon.registry.core.Resource;
 import org.wso2.carbon.registry.core.exceptions.RegistryException;
-
+import java.util.ArrayList;
 import javax.xml.namespace.QName;
 import java.util.Iterator;
 import java.util.List;
 import java.util.Map;
+
+import javax.xml.stream.XMLInputFactory;
+import javax.xml.stream.XMLOutputFactory;
+import javax.xml.stream.XMLStreamException;
+import javax.xml.stream.XMLStreamReader;
+import javax.xml.stream.XMLStreamWriter;
+
+import org.apache.axiom.om.OMAbstractFactory;
+import org.apache.axiom.om.OMElement;
+import org.apache.axiom.om.OMFactory;
+import org.apache.axiom.om.OMNamespace;
 
 /**
  * This Class will help to build XMLMapping object from a given OMElement
@@ -147,5 +158,46 @@ public class XMLInputMappingHelper {
             }
         }
     }
+
+
+    
+
+
+	public static OMElement xmlInputMappingToOM(XMLInputMapping xmlInputMapping) {
+		OMFactory factory = OMAbstractFactory.getOMFactory();
+		OMElement omXMLInputMapping = factory.createOMElement(new QName(
+				CEPConstants.CEP_CONF_NAMESPACE,
+				CEPConstants.CEP_CONF_ELE_XML_MAPPING,
+				CEPConstants.CEP_CONF_CEP_NAME_SPACE_PREFIX));
+		String inputStream = xmlInputMapping.getStream();
+		List<XpathDefinition> xpathDefinitionList = xmlInputMapping
+				.getXpathDefinitionList();
+		List<XMLProperty> xmlPropertyList = xmlInputMapping.getProperties();
+		for (XpathDefinition xpathDefinition : xpathDefinitionList) {
+			OMElement xpathChild = factory.createOMElement(new QName(
+					CEPConstants.CEP_CONF_NAMESPACE,
+					CEPConstants.CEP_CONF_ELE_XPATH_DEFINITON,
+					CEPConstants.CEP_CONF_CEP_NAME_SPACE_PREFIX));
+			String inputXpathPrefix = xpathDefinition.getPrefix();
+			String inputXpathNameSpace = xpathDefinition.getNamespace();
+			xpathChild.addAttribute(CEPConstants.CEP_CONF_ATTR_PREFIX,
+					inputXpathPrefix, null);
+			xpathChild.addAttribute(CEPConstants.CEP_CONF_ATTR_NAMESPACE,
+					inputXpathNameSpace, null);
+			omXMLInputMapping.addChild(xpathChild);
+		}
+		for (XMLProperty xmlProperty : xmlPropertyList) {
+			OMElement propertychild = PropertyHelper
+					.xmlPropertyToOM(xmlProperty);
+			omXMLInputMapping.addChild(propertychild);
+		}
+		omXMLInputMapping.addAttribute(CEPConstants.CEP_CONF_ATTR_STREAM,
+				inputStream, null);
+		return omXMLInputMapping;
+	}
+
+
+
+
 
 }

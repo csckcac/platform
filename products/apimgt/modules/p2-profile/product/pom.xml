@@ -186,6 +186,7 @@
 
                                 <featureArtifactDef>org.wso2.carbon:org.wso2.carbon.um.ws.service.server.feature:${carbon.version}</featureArtifactDef>
                                 <featureArtifactDef>org.wso2.carbon:org.wso2.carbon.um.ws.service.client.feature:${carbon.version}</featureArtifactDef>
+                                <featureArtifactDef>org.wso2.carbon:org.wso2.carbon.ntask.core.feature:${carbon.version}</featureArtifactDef>
 
                                 <!---->
                             </featureArtifacts>

@@ -99,7 +99,27 @@
         <className>org.jaggeryjs.scriptengine.engine.CarbonTopLevel</className>
         <name>stringify</name>
     </method>
-
+	<method>
+        <className>org.wso2.carbon.jaggery.core.task.JaggeryTaskManager</className>
+        <name>setTimeout</name>
+    </method>    
+    <method>
+        <className>org.wso2.carbon.jaggery.core.task.JaggeryTaskManager</className>
+        <name>setInterval</name>
+    </method>
+    <method>
+        <className>org.wso2.carbon.jaggery.core.task.JaggeryTaskManager</className>
+        <name>clearTimeout</name>
+    </method>    
+    <method>
+        <className>org.wso2.carbon.jaggery.core.task.JaggeryTaskManager</className>
+        <name>clearInterval</name>
+    </method>
+    <method>
+        <className>org.wso2.carbon.jaggery.core.task.JaggeryTaskManager</className>
+        <name>isTaskScheduled</name>
+    </method>
+    
     <!-- scripts -->
     <script>
         <name>http</name>

@@ -167,9 +167,7 @@
             <outputDirectory>wso2appfactory-${pom.version}/repository/lib</outputDirectory>
             <includes>
                 <include>bouncycastle:bcprov-jdk15:jar</include>
-                <!--<include>bouncycastle:bcprov-jdk16:jar</include>-->
-                <!--<include>org.apache.derby.wso2:derby:jar</include>-->
-                <!--include>org.hibernate:hibernate:jar</include-->
+                <include>org.wso2.carbon:org.wso2.carbon.appfactory.tenant.roles:jar</include>
             </includes>
         </dependencySet>
         <dependencySet>

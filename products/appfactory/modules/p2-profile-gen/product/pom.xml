@@ -159,7 +159,9 @@
                                 <featureArtifactDef>
                                     org.wso2.carbon:org.wso2.carbon.logging.mgt.feature:${carbon.version}
                                 </featureArtifactDef>
-
+                                <featureArtifactDef>
+                                    org.wso2.carbon:org.wso2.carbon.ldap.server.feature:${wso2carbon.version}
+                                </featureArtifactDef>
 
                             </featureArtifacts>
                         </configuration>
@@ -246,6 +248,10 @@
                                 <feature>
                                     <id>org.wso2.carbon.logging.mgt.feature.group</id>
                                     <version>${carbon.version}</version>
+                                </feature>
+                                <feature>
+                                    <id>org.wso2.carbon.ldap.server.feature.group</id>
+                                    <version>${wso2carbon.version}</version>
                                 </feature>
 
                                 <!-- AppFactory related features -->

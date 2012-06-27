@@ -99,6 +99,7 @@ border-radius: 5px;
    width:95%;
     margin-top:10px;
     height:60px;
+	font-family:'courier new' !IMPORTANT;
 }
 
 .paid, .completed {

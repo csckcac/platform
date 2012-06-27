@@ -54,6 +54,11 @@ public final class ArchiveExtractor {
                         log.debug("Extracting directory " + entry.getName());
                     }
 
+                    //Ignore hidden directories
+                    if (entry.getName().startsWith(".")) {
+                        continue;
+                    }
+
                     File dir = new File(destination, entry.getName());
                     if (!dir.exists() && !dir.mkdir()) {
                         throw new IOException("Fail to create the directory: " + dir.getAbsolutePath());

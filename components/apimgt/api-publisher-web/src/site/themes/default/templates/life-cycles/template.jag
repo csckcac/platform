@@ -1,4 +1,5 @@
 <% jagg.template("life-cycles", function(inputs, outputs, jagg) {
+if(outputs.isPublishPermitted){
         var api = outputs.api;
         var modApi = jagg.module("api");
         var result = modApi.isAPIOlderVersionExist(api);
@@ -137,4 +138,4 @@ $(document).ready(function() {
     $('#updateStateButton').removeAttr("disabled");
  }
  </script>
-<% }); %>
+<% }}); %>

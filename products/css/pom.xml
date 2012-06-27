@@ -46,6 +46,7 @@
 
     <modules>
         <module>modules/p2-profile</module>
+        <!--module>modules/styles</module-->
         <module>modules/distribution</module>
     </modules>
 

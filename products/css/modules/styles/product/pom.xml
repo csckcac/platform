@@ -25,14 +25,14 @@
     <parent>
         <groupId>org.wso2.css</groupId>
     	<artifactId>css-styles-parent</artifactId>
-        <version>4.5.0-SNAPSHOT</version>
+        <version>2.0.0-SNAPSHOT</version>
         <relativePath>../pom.xml</relativePath>
     </parent>
 
     <modelVersion>4.0.0</modelVersion>
     <artifactId>org.wso2.css.styles</artifactId>
     <packaging>bundle</packaging>
-    <name>WSO2 ESB - Styles</name>
+    <name>WSO2 CSS - Styles</name>
     <url>http://wso2.org</url>
 
     <build>

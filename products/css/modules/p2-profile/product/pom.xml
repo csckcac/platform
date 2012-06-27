@@ -111,7 +111,16 @@
 				<featureArtifactDef>
                                      org.wso2.carbon:org.wso2.carbon.cassandra.explorer.ui.feature:${carbon.platform.version}
                                  </featureArtifactDef>
-                            </featureArtifacts>
+				<featureArtifactDef>org.wso2.carbon:org.wso2.carbon.stratos.common.feature:${stratos.version}</featureArtifactDef>
+                                <featureArtifactDef>org.wso2.carbon:org.wso2.carbon.stratos.deployment.feature:${stratos.version}</featureArtifactDef>
+                                <featureArtifactDef>org.wso2.carbon:org.wso2.carbon.stratos.usage.agent.feature:${stratos.version}</featureArtifactDef>
+                                <featureArtifactDef>org.wso2.carbon:org.wso2.carbon.stratos.throttling.agent.feature:${stratos.version}</featureArtifactDef>
+                                <featureArtifactDef>org.wso2.carbon:org.wso2.carbon.identity.authenticator.token.feature:${carbon.version}</featureArtifactDef>
+				<featureArtifactDef>org.wso2.carbon:org.wso2.carbon.security.mgt.feature:${carbon.version}</featureArtifactDef>
+                        	<featureArtifactDef>org.wso2.carbon:org.wso2.carbon.registry.core.feature:${carbon.version}</featureArtifactDef>
+                                <featureArtifactDef>org.wso2.carbon:org.wso2.carbon.registry.ui.menu.feature:${carbon.version}</featureArtifactDef>
+                                <featureArtifactDef>org.wso2.carbon:org.wso2.carbon.registry.resource.properties.feature:${carbon.version}</featureArtifactDef>
+			    </featureArtifacts>
                         </configuration>
                     </execution>
                     <execution>
@@ -163,7 +172,44 @@
                                     <id>org.wso2.carbon.cassandra.explorer.ui.feature.group</id>
                                     <version>${carbon.platform.version}</version>
                                 </feature>
+				     <feature>
+                                    <id>org.wso2.carbon.stratos.common.feature.group</id>
+                                    <version>${stratos.version}</version>
+                                </feature>
+				<feature>
+                                    <id>org.wso2.carbon.stratos.deployment.feature.group</id>
+                                    <version>${stratos.version}</version>
+                                </feature>
+				<feature>
+                                    <id>org.wso2.carbon.identity.authenticator.token.feature.group</id>
+                                    <version>${carbon.version}</version>
+                                </feature>
+				<feature>
+                                    <id>org.wso2.carbon.stratos.usage.agent.feature.group</id>
+                                    <version>${stratos.version}</version>
+                                </feature>
+                                <feature>
+                                    <id>org.wso2.carbon.stratos.throttling.agent.feature.group</id>
+                                    <version>${stratos.version}</version>
+                                </feature>
+				 <feature>
+                                    <id>org.wso2.carbon.security.mgt.feature.group</id>
+                                    <version>${carbon.version}</version>
+                                </feature>
+				<feature>
+                                    <id>org.wso2.carbon.registry.core.feature.group</id>
+                                    <version>${carbon.version}</version>
+                                </feature>
 
+                                <feature>
+                                    <id>org.wso2.carbon.registry.ui.menu.feature.group</id>
+                                    <version>${carbon.version}</version>
+                                </feature>
+
+                                <feature>
+                                    <id>org.wso2.carbon.registry.resource.properties.feature.group</id>
+                                    <version>${carbon.version}</version>
+				</feature>
                             </features>
                         </configuration>
                     </execution>

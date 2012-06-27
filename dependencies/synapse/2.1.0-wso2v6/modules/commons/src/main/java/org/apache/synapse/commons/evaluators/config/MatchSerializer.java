@@ -20,7 +20,7 @@ public class MatchSerializer extends TextProcessingEvaluatorSerializer {
         }
 
         MatchEvaluator matchEvaluator = (MatchEvaluator) evaluator;
-        OMElement matchElement = fac.createOMElement(new QName(EvaluatorConstants.MATCH));
+        OMElement matchElement = fac.createOMElement(EvaluatorConstants.MATCH,EvaluatorConstants.SYNAPSE_NAMESPACE, EvaluatorConstants.EMPTY_PREFIX);
         serializeSourceTextRetriever(matchEvaluator.getTextRetriever(), matchElement);
 
         matchElement.addAttribute(fac.createOMAttribute(EvaluatorConstants.REGEX, nullNS,

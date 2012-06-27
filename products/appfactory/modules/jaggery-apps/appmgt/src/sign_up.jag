@@ -17,7 +17,7 @@
     }
 </script>
 
- <h2>SignUp for Application Management Tool</h2>
+ <h2>Sign Up for Application Management Tool</h2>
 
 
         <form method='post' name="inputData" class='well'>

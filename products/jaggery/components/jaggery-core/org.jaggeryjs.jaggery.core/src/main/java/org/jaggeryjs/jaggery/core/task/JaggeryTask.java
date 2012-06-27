@@ -72,7 +72,7 @@ public class JaggeryTask extends AbstractTask {
                 return;
             }
             jaggeryDir = jaggeryDir + File.separator + JaggeryTaskConstants.JAGGERY_MODULES_DIR;
-            log.error("test " + jaggeryDir);
+            
             RhinoEngine engine = new CommonManager(jaggeryDir).getEngine();
             ScriptableObject scope = engine.getRuntimeScope();
             if (jsFunction instanceof Function) {

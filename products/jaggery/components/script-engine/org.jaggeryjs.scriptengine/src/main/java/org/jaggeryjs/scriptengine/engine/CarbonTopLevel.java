@@ -4,6 +4,7 @@ import com.google.gson.*;
 import org.apache.commons.logging.Log;
 import org.apache.commons.logging.LogFactory;
 import org.mozilla.javascript.*;
+import org.jaggeryjs.scriptengine.EngineConstants;
 import org.jaggeryjs.scriptengine.exceptions.ScriptException;
 import org.jaggeryjs.scriptengine.util.HostObjectUtil;
 
@@ -11,8 +12,6 @@ import org.jaggeryjs.scriptengine.util.HostObjectUtil;
 public class CarbonTopLevel extends ImporterTopLevel {
 
     private static final Log log = LogFactory.getLog(CarbonTopLevel.class);
-
-    private static final String hostObjectName = "CarbonTopLevel";
 
     public CarbonTopLevel(Context context, boolean sealed) {
         super(context, sealed);
@@ -23,10 +22,12 @@ public class CarbonTopLevel extends ImporterTopLevel {
         String functionName = "parse";
         int argsCount = args.length;
         if (argsCount != 1) {
-            HostObjectUtil.invalidNumberOfArgs(hostObjectName, functionName, argsCount, false);
+            HostObjectUtil.invalidNumberOfArgs(EngineConstants.GLOBAL_OBJECT_NAME,
+                    functionName, argsCount, false);
         }
         if (!(args[0] instanceof String)) {
-            HostObjectUtil.invalidArgsError(hostObjectName, hostObjectName, "1", "string", args[0], true);
+            HostObjectUtil.invalidArgsError(EngineConstants.GLOBAL_OBJECT_NAME,
+                    EngineConstants.GLOBAL_OBJECT_NAME, "1", "string", args[0], true);
         }
 
         Gson gson = new Gson();
@@ -42,7 +43,8 @@ public class CarbonTopLevel extends ImporterTopLevel {
         String functionName = "stringify";
         int argsCount = args.length;
         if (argsCount != 1) {
-            HostObjectUtil.invalidNumberOfArgs(hostObjectName, functionName, argsCount, false);
+            HostObjectUtil.invalidNumberOfArgs(EngineConstants.GLOBAL_OBJECT_NAME,
+                    functionName, argsCount, false);
         }
         return HostObjectUtil.serializeJSON(args[0]);
     }

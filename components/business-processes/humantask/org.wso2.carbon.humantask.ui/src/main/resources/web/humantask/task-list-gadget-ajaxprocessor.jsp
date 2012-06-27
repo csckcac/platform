@@ -47,14 +47,14 @@
         ConfigurationContext configContext =
                 (ConfigurationContext) config.getServletContext().getAttribute(CarbonConstants.CONFIGURATION_CONTEXT);
 
-        AuthenticationAdminStub hh = new AuthenticationAdminStub(configContext, backendServerURL);
+        AuthenticationAdminStub authenticationAdminStub = new AuthenticationAdminStub(configContext, backendServerURL);
         try {
-            Options option = hh._getServiceClient().getOptions();
+            Options option = authenticationAdminStub._getServiceClient().getOptions();
             option.setManageSession(true);
             option.setProperty(org.apache.axis2.transport.http.HTTPConstants.COOKIE_STRING, requestSessionId);
-            boolean loggedIn = hh.login(userName.trim(), password.trim(), "what-should-go-here");
+            boolean loggedIn = authenticationAdminStub.login(userName.trim(), password.trim(), "0.0.0.0");
             if (loggedIn) {
-                String responseCookie = (String) hh._getServiceClient().getServiceContext().getProperty(org.apache.axis2.transport.http.HTTPConstants.COOKIE_STRING);
+                String responseCookie = (String) authenticationAdminStub._getServiceClient().getServiceContext().getProperty(org.apache.axis2.transport.http.HTTPConstants.COOKIE_STRING);
                 response.setHeader("Set-Cookie", responseCookie);
                 requestSessionId = responseCookie;
             }

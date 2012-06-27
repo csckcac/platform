@@ -114,9 +114,9 @@ public class Start extends AbstractHumanTaskCommand {
 
     @Override
     public void execute() {
+        checkPreConditions();
         authorise();
         TaskDAO task = getTask();
-        checkPreConditions();
         checkState();
         task.start();
         processTaskEvent();

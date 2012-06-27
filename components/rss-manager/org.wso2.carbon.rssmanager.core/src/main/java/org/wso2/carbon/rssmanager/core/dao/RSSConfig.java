@@ -145,22 +145,25 @@ public class RSSConfig {
 		tmpEl = tmpItr.next();
 		String serverCategory = tmpEl.getText().trim();
 		
-		tmpItr = rssInstEl.getChildrenWithLocalName("service-username");
+		tmpItr = rssInstEl.getChildrenWithLocalName("admin-username");
 		if (!tmpItr.hasNext()) {
-			throw new RSSDAOException("Server instance adming username is missing in RSS database definition");
+			throw new RSSDAOException("Server instance admin username is missing in RSS " +
+                    "database definition");
 		}
 		tmpEl = tmpItr.next();		
 		String adminUsername = tmpEl.getText().trim();
 		
-		tmpItr = rssInstEl.getChildrenWithLocalName("service-password");
+		tmpItr = rssInstEl.getChildrenWithLocalName("admin-password");
 		if (!tmpItr.hasNext()) {
-			throw new RSSDAOException("Server instance service password is missing in RSS database definition");
+			throw new RSSDAOException("Server instance service admin password is missing " +
+                    "in RSS database definition");
 		}
 		tmpEl = tmpItr.next();
 		String adminPassword = tmpEl.getText().trim();
 		
 		return new RSSInstance(0, name, serverURL, dbmsType, 
-				RSSManagerConstants.WSO2_RSS_INSTANCE_TYPE, serverCategory, adminUsername, adminPassword, 0);
+				RSSManagerConstants.WSO2_RSS_INSTANCE_TYPE, serverCategory, adminUsername, 
+                adminPassword, 0);
 	}
 
 	public String getRssDatabaseDriver() {

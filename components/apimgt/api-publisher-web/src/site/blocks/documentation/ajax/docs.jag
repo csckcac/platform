@@ -10,6 +10,7 @@ include("/jagg/jagg.jag");
         mod = jagg.module("documentation");
         var apiData = {};
         var docData = {};
+        var mode =request.getParameter("mode");
         apiData.provider =request.getParameter("provider");
         apiData.name = request.getParameter("apiName");
         apiData.version = request.getParameter("version");
@@ -20,9 +21,13 @@ include("/jagg/jagg.jag");
         docData.summary = request.getParameter("summary");
         docData.content = "";
 
+         if(mode=="Update"){
+         result = mod.updateDocumentation(apiData, docData);
+         }else{
+         result = mod.addDocumentation(apiData, docData);
+         }
 
-        result = mod.addDocumentation(apiData, docData);
-        if (result.error) {
+         if(result.error) {
             obj = {
                 error:result.error,
                 message:result.message

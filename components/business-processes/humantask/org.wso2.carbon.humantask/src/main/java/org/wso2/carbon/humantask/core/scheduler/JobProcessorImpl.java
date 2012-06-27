@@ -235,7 +235,7 @@ public class JobProcessorImpl implements Scheduler.JobProcessor {
     }
 
     // Checks the particular role name exists.
-    private boolean isExistingRole(String roleName, Integer tenantId) {
+    private boolean isExistingRole(String roleName, int tenantId) {
         RegistryService registryService = HumanTaskServiceComponent.getRegistryService();
         try {
             UserRealm userRealm = registryService.getUserRealm(tenantId);

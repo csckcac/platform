@@ -21,6 +21,7 @@ import org.apache.commons.logging.LogFactory;
 import org.wso2.carbon.humantask.core.dao.EventDAO;
 import org.wso2.carbon.humantask.core.dao.TaskDAO;
 import org.wso2.carbon.humantask.core.dao.TaskStatus;
+import org.wso2.carbon.humantask.core.engine.runtime.api.HumanTaskIllegalStateException;
 import org.wso2.carbon.humantask.core.engine.runtime.api.HumanTaskRuntimeException;
 
 /**
@@ -70,7 +71,7 @@ public class Exit extends AbstractHumanTaskCommand {
                     TaskStatus.ERROR, TaskStatus.FAILED, TaskStatus.OBSOLETE,
                     TaskStatus.COMPLETED);
             log.error(errMsg);
-            throw new HumanTaskRuntimeException(errMsg);
+            throw new HumanTaskIllegalStateException(errMsg);
         }
     }
 
@@ -84,7 +85,7 @@ public class Exit extends AbstractHumanTaskCommand {
             String errMsg = String.format("The task[id:%d] did not exit successfully as " +
                     "it's state is still in [%s]", task.getId(), task.getStatus());
             log.error(errMsg);
-            throw new HumanTaskRuntimeException(errMsg);
+            throw new HumanTaskIllegalStateException(errMsg);
         }
     }
 
@@ -97,9 +98,9 @@ public class Exit extends AbstractHumanTaskCommand {
 
     @Override
     public void execute() {
+        authorise();
         TaskDAO task = getTask();
         checkPreConditions();
-        authorise();
         checkState();
         task.exit();
         processTaskEvent();

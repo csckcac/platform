@@ -79,9 +79,9 @@ public class Remove extends AbstractHumanTaskCommand {
      */
     @Override
     public void execute() {
+        authorise();
         TaskDAO task = getTask();
         checkPreConditions();
-        authorise();
         checkState();
         task.remove();
         //task.persistEvent(createTaskEvent());

@@ -27,7 +27,7 @@ import java.util.List;
  * Set priority operation
  */
 public class SetPriority extends AbstractHumanTaskCommand {
-    private Integer newPriority;
+    private int newPriority;
 
     public SetPriority(String callerId, Long taskId, Integer newPriority) {
         super(callerId, taskId);
@@ -80,9 +80,9 @@ public class SetPriority extends AbstractHumanTaskCommand {
 
     @Override
     public void execute() {
+        authorise();
         TaskDAO task = getTask();
         checkPreConditions();
-        authorise();
         checkState();
         task.persistPriority(newPriority);
         processTaskEvent();

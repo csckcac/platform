@@ -88,9 +88,9 @@ public class Fail extends AbstractHumanTaskCommand {
      */
     @Override
     public void execute() {
+        authorise();
         TaskDAO task = getTask();
         checkPreConditions();
-        authorise();
         checkState();
         task.fail(faultName, faultElement);
         processTaskEvent();

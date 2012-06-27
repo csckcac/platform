@@ -65,7 +65,7 @@ public class HumanTaskBuilderImpl {
         validateParams();
         TaskDAO task;
         HumanTaskBaseConfiguration taskConfiguration = creationContext.getTaskConfiguration();
-        Integer tenantId = creationContext.getTenantId();
+        int tenantId = creationContext.getTenantId();
 
         if (creationContext.getTaskConfiguration().isTask()) {
             task = new Task(taskConfiguration.getName(), TaskType.TASK, tenantId);

@@ -21,6 +21,7 @@ import org.w3c.dom.Document;
 import org.w3c.dom.Element;
 import org.w3c.dom.Node;
 import org.wso2.carbon.humantask.core.dao.*;
+import org.wso2.carbon.humantask.core.engine.runtime.api.HumanTaskIllegalArgumentException;
 import org.wso2.carbon.humantask.core.engine.runtime.api.HumanTaskRuntimeException;
 import org.wso2.carbon.humantask.core.internal.HumanTaskServiceComponent;
 import org.wso2.carbon.humantask.core.store.TaskConfiguration;
@@ -39,7 +40,7 @@ public class Complete extends AbstractHumanTaskCommand {
     public Complete(String callerId, Long taskId, Element output) {
         super(callerId, taskId);
         if (output == null) {
-            throw new HumanTaskRuntimeException("The task output cannot be null.");
+            throw new HumanTaskIllegalArgumentException("The task output cannot be null.");
         }
 
         this.taskOutput = output;
@@ -84,10 +85,10 @@ public class Complete extends AbstractHumanTaskCommand {
      */
     @Override
     public void execute() {
+        authorise();
         TaskDAO task = getTask();
-        //   checkPreConditions();
-        //   authorise();
-        //    checkState();
+        checkPreConditions();
+        checkState();
         task.complete(createMessage());
         TaskConfiguration taskConf = (TaskConfiguration) HumanTaskServiceComponent.
                 getHumanTaskServer().getTaskStoreManager().getHumanTaskStore(task.getTenantId()).

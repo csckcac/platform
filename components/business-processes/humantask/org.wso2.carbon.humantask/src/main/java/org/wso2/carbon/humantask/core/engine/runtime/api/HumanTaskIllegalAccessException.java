@@ -1,5 +1,5 @@
 /*
- * Copyright (c) 2012, WSO2 Inc. (http://www.wso2.org) All Rights Reserved.
+ * Copyright (c) WSO2 Inc. (http://www.wso2.org) All Rights Reserved.
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -17,23 +17,15 @@
 package org.wso2.carbon.humantask.core.engine.runtime.api;
 
 /**
- * Representation of run time issue in the Human Task expression evaluation.
- *
+ * Represents the illegal access exceptions on human task operations.
  */
-public class HumanTaskRuntimeException extends RuntimeException{
+public class HumanTaskIllegalAccessException extends HumanTaskRuntimeException {
 
-    private static final long serialVersionUID = 846241039383944159L;
-
-    public HumanTaskRuntimeException(){
-        super();
-    }
-
-    public HumanTaskRuntimeException(String msg) {
+    public HumanTaskIllegalAccessException(String msg) {
         super(msg);
     }
 
-    public HumanTaskRuntimeException(String msg, Throwable clause) {
+    public HumanTaskIllegalAccessException(String msg, Throwable clause) {
         super(msg, clause);
     }
-
 }

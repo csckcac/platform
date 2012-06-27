@@ -82,9 +82,9 @@ public class DeleteComment extends AbstractHumanTaskCommand {
 
     @Override
     public void execute() {
+        authorise();
         TaskDAO task = getTask();
         checkPreConditions();
-        authorise();
         checkState();
         task.deleteComment(updatingCommentId);
         processTaskEvent();

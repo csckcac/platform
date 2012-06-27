@@ -77,8 +77,8 @@ public class GetFault extends AbstractHumanTaskCommand {
 
     @Override
     public void execute() {
-        checkPreConditions();
         authorise();
+        checkPreConditions();
         checkState();
         MessageDAO faultMessage = getTask().getFailureMessage();
         this.faultName = faultMessage.getName().toString();

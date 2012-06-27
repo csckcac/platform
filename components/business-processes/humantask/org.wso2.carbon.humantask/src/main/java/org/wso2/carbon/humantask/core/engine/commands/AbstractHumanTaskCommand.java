@@ -29,6 +29,10 @@ import org.wso2.carbon.humantask.core.dao.TaskStatus;
 import org.wso2.carbon.humantask.core.dao.TaskType;
 import org.wso2.carbon.humantask.core.engine.HumanTaskCommand;
 import org.wso2.carbon.humantask.core.engine.HumanTaskEngine;
+import org.wso2.carbon.humantask.core.engine.runtime.api.HumanTaskIllegalAccessException;
+import org.wso2.carbon.humantask.core.engine.runtime.api.HumanTaskIllegalArgumentException;
+import org.wso2.carbon.humantask.core.engine.runtime.api.HumanTaskIllegalOperationException;
+import org.wso2.carbon.humantask.core.engine.runtime.api.HumanTaskIllegalStateException;
 import org.wso2.carbon.humantask.core.engine.runtime.api.HumanTaskRuntimeException;
 import org.wso2.carbon.humantask.core.engine.util.CommonTaskUtil;
 import org.wso2.carbon.humantask.core.engine.util.OperationAuthorizationUtil;
@@ -98,7 +102,7 @@ public abstract class AbstractHumanTaskCommand implements HumanTaskCommand {
             String errMsg = String.format("The caller[name:%s] is not a valid user in the user store.",
                                           operationInvoker.getName());
             log.error(errMsg);
-            throw new HumanTaskRuntimeException(errMsg);
+            throw new HumanTaskIllegalArgumentException(errMsg);
         }
     }
 
@@ -114,7 +118,7 @@ public abstract class AbstractHumanTaskCommand implements HumanTaskCommand {
             String errMsg = String.format("The task[%d] is a notification, hence cannot perform [%s].",
                                           task.getId(), this.getClass().getSimpleName());
             log.error(errMsg);
-            throw new HumanTaskRuntimeException(errMsg);
+            throw new HumanTaskIllegalArgumentException(errMsg);
         }
     }
 
@@ -131,7 +135,7 @@ public abstract class AbstractHumanTaskCommand implements HumanTaskCommand {
             String errMsg = String.format("The task[%d] is a task, hence cannot perform [%s].",
                                           task.getId(), this.getClass().getSimpleName());
             log.error(errMsg);
-            throw new HumanTaskRuntimeException(errMsg);
+            throw new HumanTaskIllegalOperationException(errMsg);
         }
     }
 
@@ -146,7 +150,7 @@ public abstract class AbstractHumanTaskCommand implements HumanTaskCommand {
                                           " as it's state is still in[%s]", this.getClass().getSimpleName(),
                                           task.getId(), task.getStatus());
             log.error(errMsg);
-            throw new HumanTaskRuntimeException(errMsg);
+            throw new HumanTaskIllegalStateException(errMsg);
         }
     }
 
@@ -164,7 +168,7 @@ public abstract class AbstractHumanTaskCommand implements HumanTaskCommand {
                                           task.getStatus(), this.getClass().getSimpleName(),
                                           expectedStatus);
             log.error(errMsg);
-            throw new HumanTaskRuntimeException(errMsg);
+            throw new HumanTaskIllegalStateException(errMsg);
         }
     }
 
@@ -182,14 +186,14 @@ public abstract class AbstractHumanTaskCommand implements HumanTaskCommand {
                                           task.getStatus(), this.getClass().getSimpleName(),
                                           expectedStates);
             log.error(errMsg);
-            throw new HumanTaskRuntimeException(errMsg);
+            throw new HumanTaskIllegalStateException(errMsg);
         }
     }
 
     protected void authoriseRoles(List<GenericHumanRoleDAO.GenericHumanRoleType> allowedRoles) {
         if (!OperationAuthorizationUtil.authoriseUser(this.task, operationInvoker, allowedRoles,
                                                       engine.getPeopleQueryEvaluator())) {
-            throw new HumanTaskRuntimeException(String.format("The user[%s] cannot perform [%s]" +
+            throw new HumanTaskIllegalAccessException(String.format("The user[%s] cannot perform [%s]" +
                                                               " operation as he is not in task roles[%s]",
                                                               operationInvoker.getName(), this.getClass().getSimpleName(),
                                                               allowedRoles));

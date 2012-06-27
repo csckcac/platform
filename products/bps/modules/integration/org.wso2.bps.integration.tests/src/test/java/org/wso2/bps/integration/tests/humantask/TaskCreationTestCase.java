@@ -196,8 +196,6 @@ public class TaskCreationTestCase {
 
         Assert.assertNotNull(b4pTask, "Task creation has failed");
 
-//        String claimApprovalRequest = (String) taskOperationsStub.getInput(b4pTask.getId(),
-//                new NCName("ClaimApprovalRequest"));
         String claimApprovalRequest = (String) taskOperationsStub.getInput(b4pTask.getId(), null);
 
         Assert.assertNotNull(claimApprovalRequest, "The input of the Task:" +
@@ -205,6 +203,12 @@ public class TaskCreationTestCase {
 
         Assert.assertFalse(!claimApprovalRequest.contains("C002"),
                 "Unexpected input found for the Task");
+
+        //claim the task before starting.
+        taskOperationsStub.claim(b4pTask.getId());
+
+        //start the task before completing.
+        taskOperationsStub.start(b4pTask.getId());
 
         taskOperationsStub.complete(b4pTask.getId(), "<sch:ClaimApprovalResponse xmlns:sch=\"http://www.example.com/claims/schema\">\n" +
                 "         <sch:approved>true</sch:approved>\n" +

@@ -74,8 +74,8 @@ public class GetComments extends AbstractHumanTaskCommand {
 
     @Override
     public void execute() {
-        checkPreConditions();
         authorise();
+        checkPreConditions();
         checkState();
         this.comments.addAll(getTask().getComments());
         checkPostConditions();

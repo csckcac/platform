@@ -90,9 +90,9 @@ public class Skip extends AbstractHumanTaskCommand {
 
     @Override
     public void execute() {
+        authorise();
         TaskDAO task = getTask();
         checkPreConditions();
-        authorise();
         checkState();
         task.skip();
         processTaskEvent();

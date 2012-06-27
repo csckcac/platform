@@ -62,7 +62,7 @@ import java.util.concurrent.Callable;
 public class HumanTaskStore {
     private static final Log log = LogFactory.getLog(HumanTaskStore.class);
 
-    private Integer tenantId;
+    private int tenantId;
     
     private ConfigurationContext configContext;
 
@@ -71,7 +71,7 @@ public class HumanTaskStore {
 
     private File humanTaskDeploymentRepo;
 
-    public HumanTaskStore(Integer tenantId, ConfigurationContext configContext) {
+    public HumanTaskStore(int tenantId, ConfigurationContext configContext) {
         this.tenantId = tenantId;
         this.configContext = configContext;
     }
@@ -245,7 +245,7 @@ public class HumanTaskStore {
     /**
      * @return : The tenant id of this task store.
      */
-    public Integer getTenantId() {
+    public int getTenantId() {
         return tenantId;
     }
 
@@ -341,7 +341,7 @@ public class HumanTaskStore {
     private boolean removeMatchingPackageAfterTaskObsoletion(String packageName) {
         final HumanTaskEngine taskEngine = HumanTaskServiceComponent.getHumanTaskServer().getTaskEngine();
         boolean matchingPackagesFound = false;
-        final Integer tId = this.tenantId;
+        final int tId = this.tenantId;
         List<HumanTaskBaseConfiguration> matchingTaskConfigurations =
                 new ArrayList<HumanTaskBaseConfiguration>();
         for (final HumanTaskBaseConfiguration configuration : this.getTaskConfigurations()) {

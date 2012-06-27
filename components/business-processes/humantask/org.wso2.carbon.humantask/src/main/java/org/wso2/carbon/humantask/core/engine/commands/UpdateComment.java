@@ -84,9 +84,9 @@ public class UpdateComment extends AbstractHumanTaskCommand {
 
     @Override
     public void execute() {
+        authorise();
         TaskDAO task = getTask();
         checkPreConditions();
-        authorise();
         checkState();
         task.updateAndPersistComment(updatingCommentId, updatedCommentString, getOperationInvoker().getName());
         processTaskEvent();

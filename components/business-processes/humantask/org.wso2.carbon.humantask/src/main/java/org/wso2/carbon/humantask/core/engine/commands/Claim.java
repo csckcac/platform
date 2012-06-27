@@ -19,6 +19,7 @@ package org.wso2.carbon.humantask.core.engine.commands;
 import org.apache.commons.logging.Log;
 import org.apache.commons.logging.LogFactory;
 import org.wso2.carbon.humantask.core.dao.*;
+import org.wso2.carbon.humantask.core.engine.runtime.api.HumanTaskIllegalOperationException;
 import org.wso2.carbon.humantask.core.engine.runtime.api.HumanTaskRuntimeException;
 
 import java.util.ArrayList;
@@ -42,7 +43,7 @@ public class Claim extends AbstractHumanTaskCommand {
         for (GenericHumanRoleDAO humanRole : task.getHumanRoles()) {
             if (GenericHumanRoleDAO.GenericHumanRoleType.ACTUAL_OWNER.equals(humanRole.getType())
                 && humanRole.getOrgEntities().size() > 0) {
-                throw new HumanTaskRuntimeException(String.format("The task[%d] already has an actual" +
+                throw new HumanTaskIllegalOperationException(String.format("The task[%d] already has an actual" +
                                                                   " owner[%s]", task.getId(),
                                                                   humanRole.getOrgEntities()));
             }
@@ -83,9 +84,9 @@ public class Claim extends AbstractHumanTaskCommand {
                     .getId()));
         }
 
+        authorise();
         checkPreConditions();
         checkState();
-        authorise();
         task.claim(caller);
         processTaskEvent();
         checkPostConditions();

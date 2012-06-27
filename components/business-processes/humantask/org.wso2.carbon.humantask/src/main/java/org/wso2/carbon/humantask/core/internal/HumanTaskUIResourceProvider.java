@@ -42,7 +42,7 @@ public class HumanTaskUIResourceProvider implements UIResourceProvider {
         if (name.contains("humantaskui")) {
             String[] nameElements = name.split("/");
             if (nameElements != null && nameElements.length == 5) {
-                Integer tenantId = Integer.parseInt(nameElements[2]);
+                int tenantId = Integer.parseInt(nameElements[2]);
                 String packageName = nameElements[3];
                 String fileName = nameElements[4];
                 HumanTaskStore taskStore = HumanTaskServiceComponent.getHumanTaskServer().getTaskStoreManager().getHumanTaskStore(tenantId);

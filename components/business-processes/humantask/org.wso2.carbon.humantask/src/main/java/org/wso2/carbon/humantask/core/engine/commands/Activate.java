@@ -20,6 +20,7 @@ import org.wso2.carbon.humantask.core.dao.EventDAO;
 import org.wso2.carbon.humantask.core.dao.GenericHumanRoleDAO;
 import org.wso2.carbon.humantask.core.dao.TaskDAO;
 import org.wso2.carbon.humantask.core.dao.TaskStatus;
+import org.wso2.carbon.humantask.core.engine.runtime.api.HumanTaskIllegalStateException;
 import org.wso2.carbon.humantask.core.engine.runtime.api.HumanTaskRuntimeException;
 import org.wso2.carbon.humantask.core.engine.util.CommonTaskUtil;
 
@@ -55,7 +56,7 @@ public class Activate extends AbstractHumanTaskCommand {
         if (CommonTaskUtil.
                 getOrgEntitiesForRole(task,
                         GenericHumanRoleDAO.GenericHumanRoleType.POTENTIAL_OWNERS).size() < 1) {
-            throw new HumanTaskRuntimeException(String.format("The are no matching users for the " +
+            throw new HumanTaskIllegalStateException(String.format("The are no matching users for the " +
                     "task's[id:%d] potential owners", task.getId()));
         }
     }
@@ -99,8 +100,8 @@ public class Activate extends AbstractHumanTaskCommand {
 
     @Override
     public void execute() {
-        checkPreConditions();
         authorise();
+        checkPreConditions();
         checkState();
         getTask().activate();
         processTaskEvent();

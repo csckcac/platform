@@ -127,14 +127,14 @@ public class HumanTaskPackageManagementSkeleton extends AbstractAdmin
                 tPage = 0;
             }
 
-            Integer itemsPerPage = 10;
-            Integer startIndexForCurrentPage = tPage * itemsPerPage;
-            Integer endIndexForCurrentPage = (tPage + 1) * itemsPerPage;
+            int itemsPerPage = 10;
+            int startIndexForCurrentPage = tPage * itemsPerPage;
+            int endIndexForCurrentPage = (tPage + 1) * itemsPerPage;
 
             List<SimpleTaskDefinitionInfo> taskConfigs = getTenantTaskStore().getTaskConfigurationInfoList();
 
-            Integer taskDefListSize = taskConfigs.size();
-            Integer pages = (int) Math.ceil((double) taskDefListSize / itemsPerPage);
+            int taskDefListSize = taskConfigs.size();
+            int pages = (int) Math.ceil((double) taskDefListSize / itemsPerPage);
             paginatedTaskDefs.setPages(pages);
 
             SimpleTaskDefinitionInfo[] taskDefinitionInfoArray =
@@ -155,7 +155,7 @@ public class HumanTaskPackageManagementSkeleton extends AbstractAdmin
 
     @Override
     public TaskInfoType getTaskInfo(QName taskId) throws PackageManagementException {
-        Integer tenentId = CarbonContextHolder.
+        int tenentId = CarbonContextHolder.
                 getCurrentCarbonContextHolder().getTenantId();
         CarbonContextHolder.getThreadLocalCarbonContextHolder().setTenantId(tenentId);
 
@@ -259,7 +259,7 @@ public class HumanTaskPackageManagementSkeleton extends AbstractAdmin
     @Override
     public HumanTaskPackageDownloadData downloadHumanTaskPackage(String packageName)
             throws PackageManagementException {
-        Integer tenentId = CarbonContextHolder.
+        int tenentId = CarbonContextHolder.
                 getCurrentCarbonContextHolder().getTenantId();
         CarbonContextHolder.getThreadLocalCarbonContextHolder().setTenantId(tenentId);
 
@@ -297,7 +297,7 @@ public class HumanTaskPackageManagementSkeleton extends AbstractAdmin
     // Returns the task store for the tenant.
     private HumanTaskStore getTenantTaskStore() {
         ConfigurationContext configContext = getConfigContext();
-        Integer tenantId = MultitenantUtils.getTenantId(configContext);
+        int tenantId = MultitenantUtils.getTenantId(configContext);
         HumanTaskServer server = HumanTaskServiceComponent.getHumanTaskServer();
         return server.getTaskStoreManager().getHumanTaskStore(tenantId);
     }

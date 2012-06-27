@@ -86,9 +86,9 @@ public class SetFault extends AbstractHumanTaskCommand {
      */
     @Override
     public void execute() {
+        authorise();
         TaskDAO task = getTask();
         checkPreConditions();
-        authorise();
         checkState();
         task.persistFault(faultName, faultElement);
         processTaskEvent();

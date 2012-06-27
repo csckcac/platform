@@ -24,12 +24,12 @@ import java.util.List;
  * PeopleQuery evaluator is used to get the set of users from user manager giving set
  * of arguments as defined in human interaction file's logical people groups
  */
-public class UserManagerBasedPeopleQueryEvaluator implements PeopleQueryEvaluator {
-    private static Log log = LogFactory.getLog(UserManagerBasedPeopleQueryEvaluator.class);
+public class CarbonUserManagerBasedPeopleQueryEvaluator implements PeopleQueryEvaluator {
+    private static Log log = LogFactory.getLog(CarbonUserManagerBasedPeopleQueryEvaluator.class);
 
     private RegistryService registryService;
 
-    public UserManagerBasedPeopleQueryEvaluator() {
+    public CarbonUserManagerBasedPeopleQueryEvaluator() {
         this.registryService = HumanTaskServiceComponent.getRegistryService();
     }
 
@@ -208,7 +208,7 @@ public class UserManagerBasedPeopleQueryEvaluator implements PeopleQueryEvaluato
     }
 
     private UserRealm getUserRealm() {
-        Integer tenantId = CarbonContextHolder.getThreadLocalCarbonContextHolder().getTenantId();
+        int tenantId = CarbonContextHolder.getThreadLocalCarbonContextHolder().getTenantId();
 
         try {
             // TODO - add null check for the user realm.

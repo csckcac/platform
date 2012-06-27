@@ -61,6 +61,10 @@ import org.wso2.carbon.humantask.core.engine.commands.Start;
 import org.wso2.carbon.humantask.core.engine.commands.Stop;
 import org.wso2.carbon.humantask.core.engine.commands.Suspend;
 import org.wso2.carbon.humantask.core.engine.commands.UpdateComment;
+import org.wso2.carbon.humantask.core.engine.runtime.api.HumanTaskIllegalAccessException;
+import org.wso2.carbon.humantask.core.engine.runtime.api.HumanTaskIllegalArgumentException;
+import org.wso2.carbon.humantask.core.engine.runtime.api.HumanTaskIllegalOperationException;
+import org.wso2.carbon.humantask.core.engine.runtime.api.HumanTaskIllegalStateException;
 import org.wso2.carbon.humantask.core.engine.runtime.api.HumanTaskRuntimeException;
 import org.wso2.carbon.humantask.core.engine.util.CommonTaskUtil;
 import org.wso2.carbon.humantask.core.internal.HumanTaskServiceComponent;
@@ -121,10 +125,12 @@ public class TaskOperationsImpl extends AbstractAdmin
                 resultSet.addRow(TransformerUtils.transformToSimpleQueryRow(instanceArray[i]));
             }
             return resultSet;
+        } catch (HumanTaskIllegalStateException ex) {
+            log.error(ex);
+            throw new IllegalStateFault(ex);
         } catch (Exception ex) {
-            String errMsg = "simpleQuery operation failed";
-            log.error(errMsg, ex);
-            throw new IllegalStateFault(errMsg, ex);
+            log.error(ex);
+            throw new IllegalArgumentFault(ex);
         }
     }
 
@@ -167,9 +173,7 @@ public class TaskOperationsImpl extends AbstractAdmin
                         }
                     });
         } catch (Exception ex) {
-            String errMsg = "stop operation failed";
-            log.error(errMsg, ex);
-            throw new IllegalStateFault(errMsg, ex);
+            handleException(ex);
         }
     }
 
@@ -199,19 +203,7 @@ public class TaskOperationsImpl extends AbstractAdmin
                         }
                     });
         } catch (Exception ex) {
-            String errMsg = "resume operation failed";
-            log.error(errMsg, ex);
-            if (ex instanceof IllegalArgumentFault) {
-                throw (IllegalArgumentFault) ex;
-            } else if (ex instanceof IllegalOperationFault) {
-                throw (IllegalOperationFault) ex;
-            } else if (ex instanceof IllegalStateFault) {
-                throw (IllegalStateFault) ex;
-            } else if (ex instanceof IllegalAccessFault) {
-                throw (IllegalAccessFault) ex;
-            } else {
-                throw new IllegalStateFault(errMsg, ex);
-            }
+            handleException(ex);
         }
     }
 
@@ -258,19 +250,7 @@ public class TaskOperationsImpl extends AbstractAdmin
                 throw new IllegalArgumentFault("The output data cannot be empty!");
             }
         } catch (Exception ex) {
-            String errMsg = "setOutput operation failed";
-            log.error(errMsg, ex);
-            if (ex instanceof IllegalArgumentFault) {
-                throw (IllegalArgumentFault) ex;
-            } else if (ex instanceof IllegalOperationFault) {
-                throw (IllegalOperationFault) ex;
-            } else if (ex instanceof IllegalStateFault) {
-                throw (IllegalStateFault) ex;
-            } else if (ex instanceof IllegalAccessFault) {
-                throw (IllegalAccessFault) ex;
-            } else {
-                throw new IllegalStateFault(errMsg, ex);
-            }
+            handleException(ex);
         }
     }
 
@@ -340,25 +320,13 @@ public class TaskOperationsImpl extends AbstractAdmin
                         }
                     });
         } catch (Exception ex) {
-            String errMsg = "suspend operation failed";
-            log.error(errMsg, ex);
-            if (ex instanceof IllegalArgumentFault) {
-                throw (IllegalArgumentFault) ex;
-            } else if (ex instanceof IllegalOperationFault) {
-                throw (IllegalOperationFault) ex;
-            } else if (ex instanceof IllegalStateFault) {
-                throw (IllegalStateFault) ex;
-            } else if (ex instanceof IllegalAccessFault) {
-                throw (IllegalAccessFault) ex;
-            } else {
-                throw new IllegalStateFault(errMsg, ex);
-            }
+            handleException(ex);
         }
     }
 
     @Override
     public TUser[] getAssignableUserList(URI taskIdURI) throws IllegalStateFault, IllegalArgumentFault {
-        final Integer tenantId = CarbonContextHolder.
+        final int tenantId = CarbonContextHolder.
                 getCurrentCarbonContextHolder().getTenantId();
                 CarbonContextHolder.getThreadLocalCarbonContextHolder().setTenantId(tenantId);
         try {
@@ -382,16 +350,12 @@ public class TaskOperationsImpl extends AbstractAdmin
                             return getUserListForRole(roleName, tenantId, actualOwnerUserName);
                         }
                     });
+        } catch (HumanTaskIllegalStateException ex) {
+            log.error(ex);
+            throw new IllegalStateFault(ex);
         } catch (Exception ex) {
-            String errMsg = "loadAuthorisationParams operation failed";
-            log.error(errMsg, ex);
-            if (ex instanceof IllegalArgumentFault) {
-                throw (IllegalArgumentFault) ex;
-            } else if (ex instanceof IllegalStateFault) {
-                throw (IllegalStateFault) ex;
-            } else {
-                throw new IllegalStateFault(errMsg, ex);
-            }
+            log.error(ex);
+            throw new IllegalArgumentFault(ex);
         }
     }
 
@@ -413,19 +377,7 @@ public class TaskOperationsImpl extends AbstractAdmin
                         }
                     });
         } catch (Exception ex) {
-            String errMsg = "updateComment operation failed";
-            log.error(errMsg, ex);
-            if (ex instanceof IllegalArgumentFault) {
-                throw (IllegalArgumentFault) ex;
-            } else if (ex instanceof IllegalOperationFault) {
-                throw (IllegalOperationFault) ex;
-            } else if (ex instanceof IllegalStateFault) {
-                throw (IllegalStateFault) ex;
-            } else if (ex instanceof IllegalAccessFault) {
-                throw (IllegalAccessFault) ex;
-            } else {
-                throw new IllegalStateFault(errMsg, ex);
-            }
+            handleException(ex);
         }
     }
 
@@ -445,13 +397,8 @@ public class TaskOperationsImpl extends AbstractAdmin
                     });
             return TransformerUtils.transformTask(task, getCaller());
         }  catch (Exception ex) {
-            String errMsg = "loadTask operation failed";
-            log.error(errMsg, ex);
-            if (ex instanceof IllegalAccessFault) {
-                throw (IllegalAccessFault) ex;
-            } else {
-                throw new IllegalAccessFault(errMsg, ex);
-            }
+            log.error(ex);
+            throw new IllegalAccessFault(ex);
         }
     }
 
@@ -517,19 +464,7 @@ public class TaskOperationsImpl extends AbstractAdmin
                         }
                     });
         } catch (Exception ex) {
-            String errMsg = "skip operation failed";
-            log.error(errMsg, ex);
-            if (ex instanceof IllegalArgumentFault) {
-                throw (IllegalArgumentFault) ex;
-            } else if (ex instanceof IllegalOperationFault) {
-                throw (IllegalOperationFault) ex;
-            } else if (ex instanceof IllegalStateFault) {
-                throw (IllegalStateFault) ex;
-            } else if (ex instanceof IllegalAccessFault) {
-                throw (IllegalAccessFault) ex;
-            } else {
-                throw new IllegalStateFault(errMsg, ex);
-            }
+            handleException(ex);
         }
     }
 
@@ -567,19 +502,7 @@ public class TaskOperationsImpl extends AbstractAdmin
                         }
                     });
         } catch (Exception ex) {
-            String errMsg = "start operation failed";
-            log.error(errMsg, ex);
-            if (ex instanceof IllegalArgumentFault) {
-                throw (IllegalArgumentFault) ex;
-            } else if (ex instanceof IllegalOperationFault) {
-                throw (IllegalOperationFault) ex;
-            } else if (ex instanceof IllegalStateFault) {
-                throw (IllegalStateFault) ex;
-            } else if (ex instanceof IllegalAccessFault) {
-                throw (IllegalAccessFault) ex;
-            } else {
-                throw new IllegalStateFault(errMsg, ex);
-            }
+            handleException(ex);
         }
     }
 
@@ -607,19 +530,7 @@ public class TaskOperationsImpl extends AbstractAdmin
                         }
                     });
         } catch (Exception ex) {
-            String errMsg = "fail operation failed";
-            log.error(errMsg, ex);
-            if (ex instanceof IllegalArgumentFault) {
-                throw (IllegalArgumentFault) ex;
-            } else if (ex instanceof IllegalOperationFault) {
-                throw (IllegalOperationFault) ex;
-            } else if (ex instanceof IllegalStateFault) {
-                throw (IllegalStateFault) ex;
-            } else if (ex instanceof IllegalAccessFault) {
-                throw (IllegalAccessFault) ex;
-            } else {
-                throw new IllegalStateFault(errMsg, ex);
-            }
+            handleException(ex);
         }
     }
 
@@ -641,19 +552,7 @@ public class TaskOperationsImpl extends AbstractAdmin
                         }
                     });
         } catch (Exception ex) {
-            String errMsg = "activate operation failed";
-            log.error(errMsg, ex);
-            if (ex instanceof IllegalArgumentFault) {
-                throw (IllegalArgumentFault) ex;
-            } else if (ex instanceof IllegalOperationFault) {
-                throw (IllegalOperationFault) ex;
-            } else if (ex instanceof IllegalStateFault) {
-                throw (IllegalStateFault) ex;
-            } else if (ex instanceof IllegalAccessFault) {
-                throw (IllegalAccessFault) ex;
-            } else {
-                throw new IllegalStateFault(errMsg, ex);
-            }
+            handleException(ex);
         }
     }
 
@@ -681,20 +580,9 @@ public class TaskOperationsImpl extends AbstractAdmin
                         }
                     });
         } catch (Exception ex) {
-            String errMsg = "addComment operation failed";
-            log.error(errMsg, ex);
-            if (ex instanceof IllegalArgumentFault) {
-                throw (IllegalArgumentFault) ex;
-            } else if (ex instanceof IllegalOperationFault) {
-                throw (IllegalOperationFault) ex;
-            } else if (ex instanceof IllegalStateFault) {
-                throw (IllegalStateFault) ex;
-            } else if (ex instanceof IllegalAccessFault) {
-                throw (IllegalAccessFault) ex;
-            } else {
-                throw new IllegalStateFault(errMsg, ex);
-            }
+            handleException(ex);
         }
+        return null;
     }
 
     @Override
@@ -716,19 +604,7 @@ public class TaskOperationsImpl extends AbstractAdmin
                         }
                     });
         } catch (Exception ex) {
-            String errMsg = "deleteComment operation failed";
-            log.error(errMsg, ex);
-            if (ex instanceof IllegalArgumentFault) {
-                throw (IllegalArgumentFault) ex;
-            } else if (ex instanceof IllegalOperationFault) {
-                throw (IllegalOperationFault) ex;
-            } else if (ex instanceof IllegalStateFault) {
-                throw (IllegalStateFault) ex;
-            } else if (ex instanceof IllegalAccessFault) {
-                throw (IllegalAccessFault) ex;
-            } else {
-                throw new IllegalStateFault(errMsg, ex);
-            }
+            handleException(ex);
         }
     }
 
@@ -759,19 +635,7 @@ public class TaskOperationsImpl extends AbstractAdmin
                         }
                     });
         } catch (Exception ex) {
-            String errMsg = "delegate operation failed";
-            log.error(errMsg, ex);
-            if (ex instanceof IllegalArgumentFault) {
-                throw (IllegalArgumentFault) ex;
-            } else if (ex instanceof IllegalOperationFault) {
-                throw (IllegalOperationFault) ex;
-            } else if (ex instanceof IllegalStateFault) {
-                throw (IllegalStateFault) ex;
-            } else if (ex instanceof IllegalAccessFault) {
-                throw (IllegalAccessFault) ex;
-            } else {
-                throw new IllegalStateFault(errMsg, ex);
-            }
+            handleException(ex);
         }
     }
 
@@ -794,20 +658,9 @@ public class TaskOperationsImpl extends AbstractAdmin
                         }
                     });
         } catch (Exception ex) {
-            String errMsg = "getComments operation failed";
-            log.error(errMsg, ex);
-            if (ex instanceof IllegalArgumentFault) {
-                throw (IllegalArgumentFault) ex;
-            } else if (ex instanceof IllegalOperationFault) {
-                throw (IllegalOperationFault) ex;
-            } else if (ex instanceof IllegalStateFault) {
-                throw (IllegalStateFault) ex;
-            } else if (ex instanceof IllegalAccessFault) {
-                throw (IllegalAccessFault) ex;
-            } else {
-                throw new IllegalStateFault(errMsg, ex);
-            }
+            handleException(ex);
         }
+        return null;
     }
 
     @Override
@@ -891,14 +744,9 @@ public class TaskOperationsImpl extends AbstractAdmin
             });
             return isAdded;
         } catch (Exception ex) {
-            String errMsg = "addAttachment operation failed";
-            log.error(errMsg, ex);
-            if (ex instanceof IllegalAccessFault) {
-                throw (IllegalAccessFault) ex;
-            } else {
-                throw new IllegalAccessFault(errMsg, ex);
-            }
+            handleException(ex);
         }
+        return false;
     }
 
     @Override
@@ -919,13 +767,8 @@ public class TaskOperationsImpl extends AbstractAdmin
                     });
             return TransformerUtils.transformAttachments(attachmentList);
         } catch (Exception ex) {
-            String errMsg = "getAttachmentInfos operation failed";
-            log.error(errMsg, ex);
-            if (ex instanceof IllegalAccessFault) {
-                throw (IllegalAccessFault) ex;
-            } else {
-                throw new IllegalAccessFault(errMsg, ex);
-            }
+            log.error(ex);
+            throw new IllegalAccessFault(ex);
         }
     }
 
@@ -944,18 +787,15 @@ public class TaskOperationsImpl extends AbstractAdmin
                             return null;
                         }
                     });
+        } catch (HumanTaskIllegalOperationException ex) {
+            log.error(ex);
+            throw new IllegalOperationFault(ex);
+        } catch (HumanTaskIllegalAccessException ex) {
+            log.error(ex);
+            throw new IllegalAccessFault(ex);
         } catch (Exception ex) {
-            String errMsg = "remove operation failed";
-            log.error(errMsg, ex);
-            if (ex instanceof IllegalArgumentFault) {
-                throw (IllegalArgumentFault) ex;
-            } else if (ex instanceof IllegalOperationFault) {
-                throw (IllegalOperationFault) ex;
-            } else if (ex instanceof IllegalAccessFault) {
-                throw (IllegalAccessFault) ex;
-            } else {
-                throw new IllegalAccessFault(errMsg, ex);
-            }
+            log.error(ex);
+            throw new IllegalArgumentFault(ex);
         }
     }
 
@@ -995,16 +835,12 @@ public class TaskOperationsImpl extends AbstractAdmin
                             return TransformerUtils.transformTaskAuthorization(task, getCaller());
                         }
                     });
+        } catch (HumanTaskIllegalArgumentException ex) {
+            log.error(ex);
+            throw new IllegalArgumentFault(ex);
         } catch (Exception ex) {
-            String errMsg = "loadAuthorisationParams operation failed";
-            log.error(errMsg, ex);
-            if (ex instanceof IllegalArgumentFault) {
-                throw (IllegalArgumentFault) ex;
-            } else if (ex instanceof IllegalStateFault) {
-                throw (IllegalStateFault) ex;
-            } else {
-                throw new IllegalStateFault(errMsg, ex);
-            }
+            log.error(ex);
+            throw new IllegalStateFault(ex);
         }
     }
 
@@ -1028,7 +864,8 @@ public class TaskOperationsImpl extends AbstractAdmin
     }
 
     @Override
-    public TTaskEvents loadTaskEvents(URI taskIdURI) throws IllegalArgumentFault, IllegalStateFault {
+    public TTaskEvents loadTaskEvents(URI taskIdURI)
+            throws IllegalArgumentFault, IllegalStateFault {
         CarbonContextHolder.getThreadLocalCarbonContextHolder().setTenantId(CarbonContextHolder.
                 getCurrentCarbonContextHolder().getTenantId());
         try {
@@ -1044,16 +881,12 @@ public class TaskOperationsImpl extends AbstractAdmin
                             return TransformerUtils.transformTaskEvents(task, getCaller());
                         }
                     });
+        } catch (HumanTaskIllegalArgumentException ex) {
+            log.error(ex);
+            throw new IllegalArgumentFault(ex);
         } catch (Exception ex) {
-            String errMsg = "loadAuthorisationParams operation failed";
-            log.error(errMsg, ex);
-            if (ex instanceof IllegalArgumentFault) {
-                throw (IllegalArgumentFault) ex;
-            } else if (ex instanceof IllegalStateFault) {
-                throw (IllegalStateFault) ex;
-            } else {
-                throw new IllegalStateFault(errMsg, ex);
-            }
+            log.error(ex);
+            throw new IllegalStateFault(ex);
         }
     }
 
@@ -1108,20 +941,9 @@ public class TaskOperationsImpl extends AbstractAdmin
                         }
                     });
         } catch (Exception ex) {
-            String errMsg = "getInput operation failed";
-            log.error(errMsg, ex);
-            if (ex instanceof IllegalArgumentFault) {
-                throw (IllegalArgumentFault) ex;
-            } else if (ex instanceof IllegalOperationFault) {
-                throw (IllegalOperationFault) ex;
-            } else if (ex instanceof IllegalStateFault) {
-                throw (IllegalStateFault) ex;
-            } else if (ex instanceof IllegalAccessFault) {
-                throw (IllegalAccessFault) ex;
-            } else {
-                throw new IllegalStateFault(errMsg, ex);
-            }
+            handleException(ex);
         }
+        return null;
     }
 
     @Override
@@ -1150,19 +972,7 @@ public class TaskOperationsImpl extends AbstractAdmin
                         }
                     });
         } catch (Exception ex) {
-            String errMsg = "complete operation failed";
-            log.error(errMsg, ex);
-            if (ex instanceof IllegalArgumentFault) {
-                throw (IllegalArgumentFault) ex;
-            } else if (ex instanceof IllegalOperationFault) {
-                throw (IllegalOperationFault) ex;
-            } else if (ex instanceof IllegalStateFault) {
-                throw (IllegalStateFault) ex;
-            } else if (ex instanceof IllegalAccessFault) {
-                throw (IllegalAccessFault) ex;
-            } else {
-                throw new IllegalStateFault(errMsg, ex);
-            }
+            handleException(ex);
         }
     }
 
@@ -1201,19 +1011,7 @@ public class TaskOperationsImpl extends AbstractAdmin
                         }
                     });
         } catch (Exception ex) {
-            String errMsg = "claim operation failed";
-            log.error(errMsg, ex);
-            if (ex instanceof IllegalArgumentFault) {
-                throw (IllegalArgumentFault) ex;
-            } else if (ex instanceof IllegalOperationFault) {
-                throw (IllegalOperationFault) ex;
-            } else if (ex instanceof IllegalStateFault) {
-                throw (IllegalStateFault) ex;
-            } else if (ex instanceof IllegalAccessFault) {
-                throw (IllegalAccessFault) ex;
-            } else {
-                throw new IllegalStateFault(errMsg, ex);
-            }
+            handleException(ex);
         }
     }
 
@@ -1265,19 +1063,7 @@ public class TaskOperationsImpl extends AbstractAdmin
                         }
                     });
         } catch (Exception ex) {
-            String errMsg = "setFault operation failed";
-            log.error(errMsg, ex);
-            if (ex instanceof IllegalArgumentFault) {
-                throw (IllegalArgumentFault) ex;
-            } else if (ex instanceof IllegalOperationFault) {
-                throw (IllegalOperationFault) ex;
-            } else if (ex instanceof IllegalStateFault) {
-                throw (IllegalStateFault) ex;
-            } else if (ex instanceof IllegalAccessFault) {
-                throw (IllegalAccessFault) ex;
-            } else {
-                throw new IllegalStateFault(errMsg, ex);
-            }
+            handleException(ex);
         }
     }
 
@@ -1323,14 +1109,12 @@ public class TaskOperationsImpl extends AbstractAdmin
                             return taskDescriptionCommand.getTaskDescription();
                         }
                     });
+        } catch (HumanTaskIllegalArgumentException ex) {
+            log.error(ex);
+            throw new IllegalArgumentFault(ex);
         } catch (Exception ex) {
-            String errMsg = "getTaskDescription operation failed";
-            log.error(errMsg, ex);
-            if (ex instanceof IllegalArgumentFault) {
-                throw (IllegalArgumentFault) ex;
-            } else {
-                throw new IllegalArgumentFault(errMsg, ex);
-            }
+            log.error(ex);
+            throw new IllegalArgumentFault(ex);
         }
     }
 
@@ -1363,19 +1147,7 @@ public class TaskOperationsImpl extends AbstractAdmin
                         }
                     });
         } catch (Exception ex) {
-            String errMsg = "nominate operation failed";
-            log.error(errMsg, ex);
-            if (ex instanceof IllegalArgumentFault) {
-                throw (IllegalArgumentFault) ex;
-            } else if (ex instanceof IllegalOperationFault) {
-                throw (IllegalOperationFault) ex;
-            } else if (ex instanceof IllegalStateFault) {
-                throw (IllegalStateFault) ex;
-            } else if (ex instanceof IllegalAccessFault) {
-                throw (IllegalAccessFault) ex;
-            } else {
-                throw new IllegalStateFault(errMsg, ex);
-            }
+            handleException(ex);
         }
     }
 
@@ -1396,19 +1168,7 @@ public class TaskOperationsImpl extends AbstractAdmin
                         }
                     });
         } catch (Exception ex) {
-            String errMsg = "deleteOutput operation failed";
-            log.error(errMsg, ex);
-            if (ex instanceof IllegalArgumentFault) {
-                throw (IllegalArgumentFault) ex;
-            } else if (ex instanceof IllegalOperationFault) {
-                throw (IllegalOperationFault) ex;
-            } else if (ex instanceof IllegalStateFault) {
-                throw (IllegalStateFault) ex;
-            } else if (ex instanceof IllegalAccessFault) {
-                throw (IllegalAccessFault) ex;
-            } else {
-                throw new IllegalStateFault(errMsg, ex);
-            }
+            handleException(ex);
         }
     }
 
@@ -1456,19 +1216,7 @@ public class TaskOperationsImpl extends AbstractAdmin
                         }
                     });
         } catch (Exception ex) {
-            String errMsg = "deleteFault operation failed";
-            log.error(errMsg, ex);
-            if (ex instanceof IllegalArgumentFault) {
-                throw (IllegalArgumentFault) ex;
-            } else if (ex instanceof IllegalOperationFault) {
-                throw (IllegalOperationFault) ex;
-            } else if (ex instanceof IllegalStateFault) {
-                throw (IllegalStateFault) ex;
-            } else if (ex instanceof IllegalAccessFault) {
-                throw (IllegalAccessFault) ex;
-            } else {
-                throw new IllegalStateFault(errMsg, ex);
-            }
+            handleException(ex);
         }
     }
 
@@ -1501,20 +1249,9 @@ public class TaskOperationsImpl extends AbstractAdmin
                         }
                     });
         } catch (Exception ex) {
-            String errMsg = "getOutput operation failed";
-            log.error(errMsg, ex);
-            if (ex instanceof IllegalArgumentFault) {
-                throw (IllegalArgumentFault) ex;
-            } else if (ex instanceof IllegalOperationFault) {
-                throw (IllegalOperationFault) ex;
-            } else if (ex instanceof IllegalStateFault) {
-                throw (IllegalStateFault) ex;
-            } else if (ex instanceof IllegalAccessFault) {
-                throw (IllegalAccessFault) ex;
-            } else {
-                throw new IllegalStateFault(errMsg, ex);
-            }
+            handleException(ex);
         }
+        return null;
     }
 
     @Override
@@ -1535,19 +1272,7 @@ public class TaskOperationsImpl extends AbstractAdmin
                         }
                     });
         } catch (Exception ex) {
-            String errMsg = "release operation failed";
-            log.error(errMsg, ex);
-            if (ex instanceof IllegalArgumentFault) {
-                throw (IllegalArgumentFault) ex;
-            } else if (ex instanceof IllegalOperationFault) {
-                throw (IllegalOperationFault) ex;
-            } else if (ex instanceof IllegalStateFault) {
-                throw (IllegalStateFault) ex;
-            } else if (ex instanceof IllegalAccessFault) {
-                throw (IllegalAccessFault) ex;
-            } else {
-                throw new IllegalStateFault(errMsg, ex);
-            }
+            handleException(ex);
         }
     }
 
@@ -1574,20 +1299,10 @@ public class TaskOperationsImpl extends AbstractAdmin
                         }
                     });
         } catch (Exception ex) {
-            String errMsg = "getFault operation failed";
-            log.error(errMsg, ex);
-            if (ex instanceof IllegalArgumentFault) {
-                throw (IllegalArgumentFault) ex;
-            } else if (ex instanceof IllegalOperationFault) {
-                throw (IllegalOperationFault) ex;
-            } else if (ex instanceof IllegalStateFault) {
-                throw (IllegalStateFault) ex;
-            } else if (ex instanceof IllegalAccessFault) {
-                throw (IllegalAccessFault) ex;
-            } else {
-                throw new IllegalStateFault(errMsg, ex);
-            }
+            handleException(ex);
         }
+
+        return null;
     }
 
     @Override
@@ -1607,7 +1322,7 @@ public class TaskOperationsImpl extends AbstractAdmin
             HumanTaskServiceComponent.getHumanTaskServer().getTaskEngine().getScheduler().
                     execTransaction(new Callable<Object>() {
                         public Object call() throws Exception {
-                            Integer newPriority = tPriority.getTPriority().intValue();
+                            int newPriority = tPriority.getTPriority().intValue();
                             SetPriority setPriorityCommand =
                                     new SetPriority(getCaller(), taskId, newPriority);
                             setPriorityCommand.execute();
@@ -1615,19 +1330,7 @@ public class TaskOperationsImpl extends AbstractAdmin
                         }
                     });
         } catch (Exception ex) {
-            String errMsg = "setPriority operation failed";
-            log.error(errMsg, ex);
-            if (ex instanceof IllegalArgumentFault) {
-                throw (IllegalArgumentFault) ex;
-            } else if (ex instanceof IllegalOperationFault) {
-                throw (IllegalOperationFault) ex;
-            } else if (ex instanceof IllegalStateFault) {
-                throw (IllegalStateFault) ex;
-            } else if (ex instanceof IllegalAccessFault) {
-                throw (IllegalAccessFault) ex;
-            } else {
-                throw new IllegalStateFault(errMsg, ex);
-            }
+            handleException(ex);
         }
     }
 
@@ -1685,7 +1388,7 @@ public class TaskOperationsImpl extends AbstractAdmin
     }
 
 
-    private TUser[] getUserListForRole(String roleName, Integer tenantId, String actualOwnerUserName)
+    private TUser[] getUserListForRole(String roleName, int tenantId, String actualOwnerUserName)
             throws RegistryException, UserStoreException {
         TUser[] userList = new TUser[0];
 
@@ -1710,5 +1413,23 @@ public class TaskOperationsImpl extends AbstractAdmin
             log.warn("Cannot load User Realm for Tenant Id: " + tenantId);
         }
         return userList;
+    }
+
+
+    private void handleException(Exception ex) throws IllegalStateFault, IllegalOperationFault, IllegalArgumentFault,
+            IllegalAccessFault {
+        log.error(ex);
+
+        if(ex instanceof HumanTaskIllegalAccessException) {
+            throw new IllegalAccessFault(ex);
+        } else if(ex instanceof HumanTaskIllegalArgumentException) {
+            throw new  IllegalArgumentFault(ex);
+        } else if (ex instanceof HumanTaskIllegalOperationException) {
+            throw new IllegalOperationFault(ex);
+        } else if (ex instanceof HumanTaskIllegalStateException) {
+            throw new  IllegalStateFault(ex);
+        }  else {
+            throw new IllegalStateFault(ex);
+        }
     }
 }

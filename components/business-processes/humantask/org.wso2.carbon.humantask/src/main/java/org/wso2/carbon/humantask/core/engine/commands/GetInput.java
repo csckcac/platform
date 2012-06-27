@@ -82,9 +82,9 @@ public class GetInput extends AbstractHumanTaskCommand {
 
     @Override
     public void execute() {
+        authorise();
         TaskDAO task = getTask();
         checkPreConditions();
-        authorise();
         checkState();
         if (StringUtils.isNotEmpty(partName)) {
             inputElement = CommonTaskUtil.getMessagePart(task.getInputMessage(), partName);

@@ -19,6 +19,7 @@ package org.wso2.carbon.humantask.core.engine.commands;
 import org.apache.commons.logging.Log;
 import org.apache.commons.logging.LogFactory;
 import org.wso2.carbon.humantask.core.dao.*;
+import org.wso2.carbon.humantask.core.engine.runtime.api.HumanTaskIllegalStateException;
 import org.wso2.carbon.humantask.core.engine.runtime.api.HumanTaskRuntimeException;
 
 import java.util.ArrayList;
@@ -70,7 +71,7 @@ public class Resume extends AbstractHumanTaskCommand {
                     caller.getName(), Resume.class, task.getId(),
                     task.getStatus(), TaskStatus.SUSPENDED);
             log.error(errMsg);
-            throw new HumanTaskRuntimeException(errMsg);
+            throw new HumanTaskIllegalStateException(errMsg);
         }
 
 
@@ -87,7 +88,7 @@ public class Resume extends AbstractHumanTaskCommand {
                     task.getStatus(), Suspend.class, TaskStatus.RESERVED,
                     TaskStatus.READY, TaskStatus.IN_PROGRESS);
             log.error(errMsg);
-            throw new HumanTaskRuntimeException(errMsg);
+            throw new HumanTaskIllegalStateException(errMsg);
         }
     }
 
@@ -107,7 +108,7 @@ public class Resume extends AbstractHumanTaskCommand {
             String errMsg = String.format("The task[id:%d] did not resume successfully as " +
                     "it's state is still in [%s]", task.getId(), task.getStatus());
             log.error(errMsg);
-            throw new HumanTaskRuntimeException(errMsg);
+            throw new HumanTaskIllegalStateException(errMsg);
         }
     }
 
@@ -120,9 +121,9 @@ public class Resume extends AbstractHumanTaskCommand {
 
     @Override
     public void execute() {
+        authorise();
         TaskDAO task = getTask();
         checkPreConditions();
-        authorise();
         checkState();
         task.resume();
         processTaskEvent();

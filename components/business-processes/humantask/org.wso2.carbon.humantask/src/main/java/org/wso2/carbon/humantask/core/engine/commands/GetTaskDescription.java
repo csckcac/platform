@@ -77,8 +77,8 @@ public class GetTaskDescription extends AbstractHumanTaskCommand {
 
     @Override
     public void execute() {
-        checkPreConditions();
         authorise();
+        checkPreConditions();
         checkState();
         taskDescription = getTask().getTaskDescription(mimeType);
         checkPostConditions();

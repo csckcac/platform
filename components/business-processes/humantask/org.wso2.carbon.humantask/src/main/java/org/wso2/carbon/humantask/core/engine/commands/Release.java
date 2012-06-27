@@ -17,6 +17,7 @@
 package org.wso2.carbon.humantask.core.engine.commands;
 
 import org.wso2.carbon.humantask.core.dao.*;
+import org.wso2.carbon.humantask.core.engine.runtime.api.HumanTaskIllegalAccessException;
 import org.wso2.carbon.humantask.core.engine.runtime.api.HumanTaskRuntimeException;
 import org.wso2.carbon.humantask.core.engine.util.OperationAuthorizationUtil;
 
@@ -49,7 +50,7 @@ public class Release extends AbstractHumanTaskCommand {
 
             if (!OperationAuthorizationUtil.authoriseUser(task, caller, allowedRoles,
                                                           getEngine().getPeopleQueryEvaluator())) {
-                throw new HumanTaskRuntimeException(String.format("The user[%s] cannot perform [%s]" +
+                throw new HumanTaskIllegalAccessException(String.format("The user[%s] cannot perform [%s]" +
                                                                   " operation as he is not in task roles[%s]",
                                                                   caller.getName(), Release.class, allowedRoles));
             }
@@ -95,9 +96,9 @@ public class Release extends AbstractHumanTaskCommand {
 
     @Override
     public void execute() {
+        authorise();
         TaskDAO task = getTask();
         checkPreConditions();
-        authorise();
         checkState();
         task.release();
         processTaskEvent();

@@ -79,8 +79,8 @@ public class DeleteFault extends AbstractHumanTaskCommand {
     @Override
     public void execute() {
         TaskDAO task = getTask();
-        checkPreConditions();
         authorise();
+        checkPreConditions();
         checkState();
         task.deleteFault();
         processTaskEvent();

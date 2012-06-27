@@ -69,7 +69,7 @@ public final class HumanTaskConstants {
     public static final String CARBON_CONFIG_PORT_OFFSET_NODE = "Ports.Offset";
 
     /** The specification defines the default task priority to be set as 5 */
-    public static final Integer DEFAULT_TASK_PRIORITY = 5;
+    public static final int DEFAULT_TASK_PRIORITY = 5;
 
     /** The default access type value for an attachment*/
     public static final String DEFAULT_ATTACHMENT_ACCESS_TYPE = "AnonymousAccessType";

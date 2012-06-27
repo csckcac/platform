@@ -38,7 +38,7 @@ public class HumanTaskStoreManager {
      * @param configContext axis configuration of the tenant which requested a task store
      * @return HumanTaskStore instance
      */
-    public HumanTaskStore createHumanTaskStoreForTenant(Integer tenantId, ConfigurationContext configContext) {
+    public HumanTaskStore createHumanTaskStoreForTenant(int tenantId, ConfigurationContext configContext) {
         HumanTaskStore taskStore = new HumanTaskStore(tenantId, configContext);
         taskStore.setHumanTaskDeploymentRepo(new File(CarbonUtils.getCarbonHome() +
                 File.separator + "repository" + File.separator + HumanTaskConstants.HUMANTASK_REPO_DIRECTORY));
@@ -53,7 +53,7 @@ public class HumanTaskStoreManager {
      * @param tenantId Tenant's Identifier
      * @return HumanTaskStore instance
      */
-    public HumanTaskStore getHumanTaskStore(Integer tenantId){
+    public HumanTaskStore getHumanTaskStore(int tenantId){
         return tenantTaskStoreMap.get(tenantId);
     }
 

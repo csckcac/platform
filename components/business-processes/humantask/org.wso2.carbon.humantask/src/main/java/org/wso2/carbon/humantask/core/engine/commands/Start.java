@@ -18,6 +18,8 @@ package org.wso2.carbon.humantask.core.engine.commands;
 import org.apache.commons.logging.Log;
 import org.apache.commons.logging.LogFactory;
 import org.wso2.carbon.humantask.core.dao.*;
+import org.wso2.carbon.humantask.core.engine.runtime.api.HumanTaskIllegalAccessException;
+import org.wso2.carbon.humantask.core.engine.runtime.api.HumanTaskIllegalStateException;
 import org.wso2.carbon.humantask.core.engine.runtime.api.HumanTaskRuntimeException;
 import org.wso2.carbon.humantask.core.engine.util.OperationAuthorizationUtil;
 
@@ -50,7 +52,7 @@ public class Start extends AbstractHumanTaskCommand {
 
             if (!OperationAuthorizationUtil.authoriseUser(task, caller, allowedRoles,
                     getEngine().getPeopleQueryEvaluator())) {
-                throw new HumanTaskRuntimeException(String.format("The user[%s] cannot perform [%s]" +
+                throw new HumanTaskIllegalAccessException(String.format("The user[%s] cannot perform [%s]" +
                         " operation as he is not in task roles[%s]",
                         caller.getName(), Claim.class, allowedRoles));
             }
@@ -84,7 +86,7 @@ public class Start extends AbstractHumanTaskCommand {
                     getOperationInvoker().getName(), Start.class, task.getId(),
                     task.getStatus(), Start.class, TaskStatus.RESERVED);
             log.error(errMsg);
-            throw new HumanTaskRuntimeException(errMsg);
+            throw new HumanTaskIllegalStateException(errMsg);
         }
     }
 
@@ -98,7 +100,7 @@ public class Start extends AbstractHumanTaskCommand {
             String errMsg = String.format("The task[id:%d] did not start successfully as " +
                     "it's state is still in [%s]", task.getId(), task.getStatus());
             log.error(errMsg);
-            throw new HumanTaskRuntimeException(errMsg);
+            throw new HumanTaskIllegalStateException(errMsg);
         }
     }
 
@@ -112,9 +114,9 @@ public class Start extends AbstractHumanTaskCommand {
 
     @Override
     public void execute() {
+        authorise();
         TaskDAO task = getTask();
         checkPreConditions();
-        authorise();
         checkState();
         task.start();
         processTaskEvent();

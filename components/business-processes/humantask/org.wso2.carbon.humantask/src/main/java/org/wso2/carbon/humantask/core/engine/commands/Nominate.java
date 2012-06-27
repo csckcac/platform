@@ -20,6 +20,7 @@ import org.apache.commons.logging.Log;
 import org.apache.commons.logging.LogFactory;
 import org.wso2.carbon.humantask.core.dao.*;
 import org.wso2.carbon.humantask.core.engine.PeopleQueryEvaluator;
+import org.wso2.carbon.humantask.core.engine.runtime.api.HumanTaskIllegalStateException;
 import org.wso2.carbon.humantask.core.engine.runtime.api.HumanTaskRuntimeException;
 
 import java.util.ArrayList;
@@ -79,7 +80,7 @@ public class Nominate extends AbstractHumanTaskCommand {
         if (!(TaskStatus.RESERVED.equals(task.getStatus()) || TaskStatus.READY.equals(task.getStatus()))) {
             String errMsg = String.format("The task nomination failed. Task status is not in Reserved or Ready.");
             log.error(errMsg);
-            throw new HumanTaskRuntimeException();
+            throw new HumanTaskIllegalStateException(errMsg);
         }
     }
 
@@ -95,9 +96,9 @@ public class Nominate extends AbstractHumanTaskCommand {
      */
     @Override
     public void execute() {
+        authorise();
         TaskDAO task = getTask();
         checkPreConditions();
-        authorise();
         checkState();
         task.nominate(nominees);
         processTaskEvent();

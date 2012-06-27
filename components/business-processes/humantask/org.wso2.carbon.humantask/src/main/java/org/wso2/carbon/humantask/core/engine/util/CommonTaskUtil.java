@@ -362,12 +362,12 @@ public final class CommonTaskUtil {
      * @param evalCtx    : The evaluation context.
      * @return : The task priority
      */
-    public static Integer calculateTaskPriority(HumanTaskBaseConfiguration taskConfig,
+    public static int calculateTaskPriority(HumanTaskBaseConfiguration taskConfig,
                                                 EvaluationContext evalCtx) {
 
         TPriorityExpr priorityDef = taskConfig.getPriorityExpression();
 
-        Integer taskPriorityInt = HumanTaskConstants.DEFAULT_TASK_PRIORITY;
+        int taskPriorityInt = HumanTaskConstants.DEFAULT_TASK_PRIORITY;
 
         if (priorityDef != null) {
             String expLang = priorityDef.getExpressionLanguage() == null ?

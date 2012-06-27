@@ -86,8 +86,8 @@ public class AddComment extends AbstractHumanTaskCommand {
 
     @Override
     public void execute() {
-        checkPreConditions();
         authorise();
+        checkPreConditions();
         checkState();
         persistedComment = getTask().persistComment(getEngine().getDaoConnectionFactory().
                 getConnection().getCommentDAO(commentString, getOperationInvoker().getName()));

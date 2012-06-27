@@ -20,6 +20,7 @@ package org.wso2.carbon.humantask.core.engine.commands;
 import org.apache.commons.logging.Log;
 import org.apache.commons.logging.LogFactory;
 import org.wso2.carbon.humantask.core.dao.*;
+import org.wso2.carbon.humantask.core.engine.runtime.api.HumanTaskIllegalStateException;
 import org.wso2.carbon.humantask.core.engine.runtime.api.HumanTaskRuntimeException;
 
 import java.util.ArrayList;
@@ -70,7 +71,7 @@ public class Stop extends AbstractHumanTaskCommand {
                     getOperationInvoker().getName(), task.getId(),
                     task.getStatus(), TaskStatus.IN_PROGRESS);
             log.error(errMsg);
-            throw new HumanTaskRuntimeException(errMsg);
+            throw new HumanTaskIllegalStateException(errMsg);
         }
     }
 
@@ -91,9 +92,9 @@ public class Stop extends AbstractHumanTaskCommand {
 
     @Override
     public void execute() {
+        authorise();
         TaskDAO task = getTask();
         checkPreConditions();
-        authorise();
         checkState();
         task.stop();
         processTaskEvent();

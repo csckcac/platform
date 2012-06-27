@@ -77,9 +77,9 @@ public class DeleteOutput extends AbstractHumanTaskCommand {
 
     @Override
     public void execute() {
+        authorise();
         TaskDAO task = getTask();
         checkPreConditions();
-        authorise();
         checkState();
         task.deleteOutput();
         processTaskEvent();

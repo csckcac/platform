@@ -56,7 +56,7 @@ public class HumanTaskServerConfiguration {
     private String daoConnectionFactoryClass;
 
     private String peopleQueryEvaluatorClass =
-            "org.wso2.carbon.humantask.core.integration.UserManagerBasedPeopleQueryEvaluator";
+            "org.wso2.carbon.humantask.core.integration.CarbonUserManagerBasedPeopleQueryEvaluator";
 
     private int threadPoolMaxSize = 50;
 
@@ -93,7 +93,7 @@ public class HumanTaskServerConfiguration {
         this.daoConnectionFactoryClass = "org.wso2.carbon.humantask.dao.jpa.openjpa.HumanTaskDAOConnectionFactoryImpl";
         this.dataSourceJNDIRepoInitialContextFactory = "com.sun.jndi.rmi.registry.RegistryContextFactory";
         this.dataSourceJNDIRepoProviderURL = "rmi://localhost:2199";
-        this.peopleQueryEvaluatorClass = "org.wso2.carbon.humantask.core.integration.UserManagerBasedPeopleQueryEvaluator";
+        this.peopleQueryEvaluatorClass = "org.wso2.carbon.humantask.core.integration.CarbonUserManagerBasedPeopleQueryEvaluator";
 //        this.threadPoolMaxSize = 50;
     }
 

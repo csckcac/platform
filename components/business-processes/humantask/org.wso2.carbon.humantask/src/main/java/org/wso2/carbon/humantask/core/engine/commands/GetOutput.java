@@ -79,8 +79,8 @@ public class GetOutput extends AbstractHumanTaskCommand {
 
     @Override
     public void execute() {
-        checkPreConditions();
         authorise();
+        checkPreConditions();
         checkState();
         MessageDAO outputMessage = getTask().getOutputMessage();
         if (StringUtils.isNotEmpty(partName)) {

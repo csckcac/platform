@@ -68,7 +68,7 @@ public class HumanTaskEngine {
 
     // create task logic.
     private TaskDAO createTask(WSDLAwareMessage message,
-                               HumanTaskBaseConfiguration taskConfiguration, Integer tenantId)
+                               HumanTaskBaseConfiguration taskConfiguration, int tenantId)
             throws HumanTaskException {
 
         TaskCreationContext creationContext = new TaskCreationContext();

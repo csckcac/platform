@@ -19,6 +19,8 @@ package org.wso2.carbon.humantask.core.engine.commands;
 import org.apache.commons.logging.Log;
 import org.apache.commons.logging.LogFactory;
 import org.wso2.carbon.humantask.core.dao.*;
+import org.wso2.carbon.humantask.core.engine.runtime.api.HumanTaskIllegalAccessException;
+import org.wso2.carbon.humantask.core.engine.runtime.api.HumanTaskIllegalArgumentException;
 import org.wso2.carbon.humantask.core.engine.runtime.api.HumanTaskRuntimeException;
 
 import java.util.ArrayList;
@@ -53,7 +55,7 @@ public class Delegate extends AbstractHumanTaskCommand {
                     " delegatee[name:%s] as he/she does not exist in the user store",
                     caller.getName(), task.getId(), delegatee.getName());
             log.error(errMsg);
-            throw new HumanTaskRuntimeException(errMsg);
+            throw new HumanTaskIllegalArgumentException(errMsg);
         }
 
         //if the task is in reserved or in-progress we have to release it first.
@@ -73,10 +75,8 @@ public class Delegate extends AbstractHumanTaskCommand {
                         "Given user[%s] is not in those roles!",
                         task.getId(), caller.getName());
                 log.error(err);
-                throw new HumanTaskRuntimeException(err, ex);
+                throw new HumanTaskIllegalAccessException(err, ex);
             }
-
-
             task.release();
         }
 
@@ -132,9 +132,9 @@ public class Delegate extends AbstractHumanTaskCommand {
 
     @Override
     public void execute() {
+        authorise();
         TaskDAO task = getTask();
         checkPreConditions();
-        authorise();
         checkState();
         task.delegate(delegatee);
         processTaskEvent();

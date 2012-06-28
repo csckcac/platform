@@ -32,6 +32,8 @@
 <%@ page import="org.wso2.carbon.humantask.ui.clients.HumanTaskClientAPIServiceClient" %>
 <%@ page import="org.wso2.carbon.humantask.ui.util.HumanTaskUIUtil" %>
 <%@ page import="org.wso2.carbon.ui.CarbonUIUtil" %>
+<%@ page import="org.apache.commons.logging.LogFactory" %>
+<%@ page import="org.apache.commons.logging.Log" %>
 <%
 
 
@@ -41,6 +43,28 @@
     String userName = request.getParameter("userName");
     String password = request.getParameter("password");
     String queryType = request.getParameter("queryType");
+    String logoutParam = request.getParameter("logout");
+    Log log = LogFactory.getLog("GADGET.jsp");
+    String logoutLink = "/carbon/humantask/task-list-gadget-ajaxprocessor.jsp?logout=true";
+
+    if ("true".equals(logoutParam)) {
+        String backendServerURL = CarbonUIUtil.getServerURL(config.getServletContext(), session) + "AuthenticationAdmin";
+        ConfigurationContext configContext =
+                (ConfigurationContext) config.getServletContext().getAttribute(CarbonConstants.CONFIGURATION_CONTEXT);
+
+        AuthenticationAdminStub authenticationAdminStub = new AuthenticationAdminStub(configContext, backendServerURL);
+        Options option = authenticationAdminStub._getServiceClient().getOptions();
+        option.setManageSession(true);
+        option.setProperty(org.apache.axis2.transport.http.HTTPConstants.COOKIE_STRING, requestSessionId);
+        authenticationAdminStub.logout();
+        response.setHeader("Set-Cookie", null);
+
+%>
+<script type="text/javascript">window.location = "task-list-gadget-login-ajaxprocessor.jsp?displayMsg=User Logged Out"</script>
+<%
+
+        return;
+    }
 
     if (userName != null && userName.trim().length() > 0 && password != null && password.trim().length() > 0) {
         String backendServerURL = CarbonUIUtil.getServerURL(config.getServletContext(), session) + "AuthenticationAdmin";
@@ -57,9 +81,20 @@
                 String responseCookie = (String) authenticationAdminStub._getServiceClient().getServiceContext().getProperty(org.apache.axis2.transport.http.HTTPConstants.COOKIE_STRING);
                 response.setHeader("Set-Cookie", responseCookie);
                 requestSessionId = responseCookie;
+            } else {
+               %>
+                <script type="text/javascript">window.location = "task-list-gadget-login-ajaxprocessor.jsp?displayMsg=Login Failed"</script>
+            <%
+
+        return;
+
             }
         } catch (Exception ex) {
             HumanTaskUIUtil.logError(ex.getMessage(), ex);
+            %>
+                <script type="text/javascript">window.location = "task-list-gadget-login-ajaxprocessor.jsp?displayMsg=Login Failed"</script>
+            <%
+        return;
         }
     }
     response.setHeader("Cache-Control", "no-cache");
@@ -164,6 +199,7 @@
     </script>
     </head>
     <body>
+    <div id="logOut"><a class="taskListLogout" href="<%=logoutLink%>" style="display:block;padding:0px 0px 10px 0px">Logout</a></div>
     <div class="titleStrip">
         <div class="titleStripSide">&nbsp;</div>
         Task List

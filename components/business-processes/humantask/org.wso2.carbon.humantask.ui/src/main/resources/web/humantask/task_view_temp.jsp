@@ -21,6 +21,7 @@
         import="org.wso2.carbon.humantask.stub.ui.task.client.api.types.TTaskAuthorisationParams" %>
 <%@ page import="org.wso2.carbon.humantask.ui.util.HumanTaskUIUtil" %>
 <%@ page import="org.wso2.carbon.CarbonConstants" %>
+<%@ page import="org.wso2.carbon.humantask.ui.constants.HumanTaskUIConstants" %>
 <%
     TTaskAbstract task = (TTaskAbstract) request.getAttribute("LoadedTask");
     boolean isNotification = task.getTaskType().equals("NOTIFICATION");
@@ -32,6 +33,8 @@
     String responseJspContextPath = "/humantaskui/" + task.getTenantId() + "/" + task.getPackageName() + "/" + task.getName().getLocalPart() + "-response.jsp";
     String taskListLink = HumanTaskUIUtil.getTaskListURL(taskClient);
     taskListLink = "/carbon" + taskListLink;
+
+    String taskListLogout = taskListLink + "?logout=true";
 %>
 <fmt:bundle basename="org.wso2.carbon.humantask.ui.i18n.Resources">
 
@@ -55,7 +58,16 @@
 </script>
 
 <div>
+    <div>
     <a class="backToTaskList" href="<%=taskListLink%>" style="display:block;padding:0px 0px 10px 0px"><< Back to Task List</a>
+    <%
+        if(HumanTaskUIConstants.CLIENTS.GADGET.equals(taskClient)) {
+            %>
+    <a class="taskListLogout" href="<%=taskListLogout%>" style="display:block;padding:0px 0px 10px 0px">Logout</a>
+    <%
+        }
+    %>
+    </div>
     <div class="titleStrip" id="taskSubjectTxt"><div class="titleStripSide">&nbsp;</div></div>
     <div id="errorStrip" style="display:none;"></div>
     <div class="contentPlacer">

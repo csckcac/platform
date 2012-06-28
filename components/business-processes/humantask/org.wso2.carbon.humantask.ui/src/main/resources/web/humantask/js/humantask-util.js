@@ -35,6 +35,16 @@ function validateLoginForm(){
     }
     return true;
 }
+
+function displayMessage(message){
+    var errorStrip = document.getElementById('errorStrip');
+    if('null' != message && message.value != ''){
+        errorStrip.style.display = "";
+        errorStrip.innerHTML = message;
+    }
+}
+
+
 function selectTabTaskFilteringGadget(selectedTab){
     //unselect all tabs
     var tabs = document.getElementById('tabs_task').getElementsByTagName('a');

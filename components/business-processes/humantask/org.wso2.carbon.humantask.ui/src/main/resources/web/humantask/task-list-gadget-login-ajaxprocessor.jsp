@@ -16,12 +16,29 @@
 ~ under the License.
 -->
 <!DOCTYPE HTML>
+
+
+<%
+    String displayMessage = request.getParameter("displayMsg");
+
+%>
 <html>
 <head>
     <title>Login</title>
     <script type="text/javascript" src="js/humantask-util.js"></script>
-    <link href="css/humantask-gadget.css" rel="stylesheet" />
+    <script type="text/javascript" src="../admin/js/jquery-1.5.2.min.js"></script>
+    <script type="text/javascript" src="../dialog/js/jqueryui/jquery-ui.min.js"></script>
+    <link href="css/humantask-gadget.css" rel="stylesheet"/>
+    <script type="text/javascript">
+
+        jQuery(document).ready(function() {
+            var message = '<%=displayMessage%>';
+            displayMessage(message);
+        });
+    </script>
 </head>
+
+
 <body>
     <div class="titleStrip"><div class="titleStripSide">&nbsp;</div>LOGIN</div>
     <div id="errorStrip" style="display:none;"></div>

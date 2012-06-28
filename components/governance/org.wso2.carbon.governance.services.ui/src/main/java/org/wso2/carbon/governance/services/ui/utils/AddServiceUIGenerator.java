@@ -542,6 +542,7 @@ public class AddServiceUIGenerator {
             subHeaders.append((header == null) ? "" : header);
             subHeaders.append("</td>");
         }
+        subHeaders.append("<td class=\"sub-header\"></td>");
         subHeaders.append("</tr>");
         return subHeaders.toString();
     }

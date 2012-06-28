@@ -67,7 +67,7 @@
                                 <bundleDef>org.wso2.carbon:org.wso2.carbon.bam.gadgetgenwizard</bundleDef>
                             </bundles>
                             <importFeatures>
-                                <importFeatureDef>org.wso2.carbon.jaggery.server:${jaggery.feature.version}</importFeatureDef>
+                                <importFeatureDef>org.jaggeryjs.server:${jaggery.feature.version}</importFeatureDef>
                                 <importFeatureDef>org.wso2.carbon.dashboard.server:${wso2carbon.version}</importFeatureDef>
                             </importFeatures>
                         </configuration>

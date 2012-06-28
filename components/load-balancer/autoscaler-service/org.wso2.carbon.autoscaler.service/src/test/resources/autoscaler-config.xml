@@ -16,13 +16,14 @@
   ~ limitations under the License.
   -->
 
-<jcloudConfig>
+<jcloudConfig xmlns:svns="http://org.wso2.securevault/configuration">
 
+<svns:secureVault provider="org.wso2.securevault.secret.handler.SecretManagerSecretCallbackHandler"/>
 	<iaasProviders>
 		<iaasProvider name="ec2">
 			<provider>aws-ec2</provider>
-			<identity>cdcd</identity>
-			<credential>cdccdc</credential>
+			<identity svns:secretAlias="autoscaler.ec2.identity">cdcd</identity>
+			<credential svns:secretAlias="autoscaler.ec2.credential">cdccdc</credential>
 			<scaleUpOrder>1</scaleUpOrder>
 			<scaleDownOrder>2</scaleDownOrder>
 			<property name="A" value="a"/>
@@ -31,8 +32,8 @@
 		</iaasProvider>
 		<iaasProvider name="lxc">
 			<provider>lxc</provider>
-			<identity>bebbe</identity>
-			<credential>bebebe</credential>
+			<identity svns:secretAlias="autoscaler.openstack.identity">bebbe</identity>
+			<credential svns:secretAlias="autoscaler.openstack.credential">bebebe</credential>
 			<scaleUpOrder>2</scaleUpOrder>
 			<scaleDownOrder>1</scaleDownOrder>
 			<property name="X" value="x"/>

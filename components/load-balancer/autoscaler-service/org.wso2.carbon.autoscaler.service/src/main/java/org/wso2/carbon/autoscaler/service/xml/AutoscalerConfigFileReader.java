@@ -37,12 +37,14 @@ import org.wso2.carbon.autoscaler.service.exception.MalformedConfigurationFileEx
 import org.wso2.carbon.autoscaler.service.util.IaaSProvider;
 import org.wso2.carbon.autoscaler.service.util.ServiceTemplate;
 import org.wso2.carbon.utils.CarbonUtils;
+import org.wso2.securevault.SecretResolver;
+import org.wso2.securevault.SecretResolverFactory;
 
 /**
- * Responsible for reading the JClouds configuration file.
+ * Responsible for reading the Autoscaler configuration file.
  * Following is a sample XML.
  *
- * &lt;jcloudConfig&gt;
+ * &lt;autoscalerConfig&gt;
  *      &lt;iaasProviders&gt;
  *          &lt;iaasProvider name="ec2"&gt;
  *              &lt;provider&gt;aws-ec2&lt;/provider&gt;
@@ -78,7 +80,7 @@ import org.wso2.carbon.utils.CarbonUtils;
  *              $lt;property name="payload" value="resources/as.zip"/&gt;
  *          $lt;/service&gt;
  *      $lt;/services&gt;
- *  &lt;/jcloudConfig&gt;
+ *  &lt;/autoscalerConfig&gt;
  */
 public class AutoscalerConfigFileReader {
 	
@@ -87,12 +89,20 @@ public class AutoscalerConfigFileReader {
 	//get the factory
 	private DocumentBuilderFactory dbf = DocumentBuilderFactory.newInstance();
 	private Document dom;
+	private Element docEle;
 
 	/**
 	 * Path to Autoscaler config XML file, which specifies the Iaas specific details.
 	 */
 	private String autoscalerConfigXMLFile;
 	
+	/**
+	 * Secret Manager related aliases.
+	 */
+	private static final String EC2_IDENTITY_ALIAS = "autoscaler.ec2.identity";
+	private static final String EC2_CREDENTIAL_ALIAS = "autoscaler.ec2.credential";
+	private static final String OPENSTACK_IDENTITY_ALIAS = "autoscaler.openstack.identity";
+	private static final String OPENSTACK_CREDENTIAL_ALIAS = "autoscaler.openstack.credential";
 	
 	public AutoscalerConfigFileReader(){
 	    
@@ -144,7 +154,7 @@ public class AutoscalerConfigFileReader {
 	public List<IaaSProvider> getIaasProvidersList() {
 	    List<IaaSProvider> iaasProviders = new ArrayList<IaaSProvider>();
 	    
-	    Element docEle = dom.getDocumentElement();
+	    docEle = dom.getDocumentElement();
 	    NodeList nl = docEle.getElementsByTagName("iaasProvider");
 	    
 	    if (nl != null && nl.getLength() > 0) {
@@ -207,7 +217,6 @@ public class AutoscalerConfigFileReader {
 
             if (item.getNodeType() == Node.ELEMENT_NODE) {
                 Element defaultElt = (Element) item;
-
                 template.setProperties(loadProperties(defaultElt));
             }
 
@@ -331,9 +340,31 @@ public class AutoscalerConfigFileReader {
             }
             
             if (nl.item(0).getNodeType() == Node.ELEMENT_NODE) {
-                Element prop = (Element) nl.item(0);
+//                Element prop = (Element) nl.item(0);
 
-                iaas.setCredential(prop.getTextContent());
+                // retrieve the value using secure vault
+                SecretResolver secretResolver = SecretResolverFactory.create(docEle, false);
+                String alias;
+
+                // FIXME following is a hack to find the correct alias.
+                if (iaas.getProvider().contains("ec2")) {
+                    alias = EC2_CREDENTIAL_ALIAS;
+                } else {
+                    alias = OPENSTACK_CREDENTIAL_ALIAS;
+                }
+
+                // retrieve the secured password
+
+                if (secretResolver != null && secretResolver.isInitialized() &&
+
+                secretResolver.isTokenProtected(alias)) {
+                    log.info("****** "+secretResolver.resolve(alias) + " |||| "+alias);
+
+                    iaas.setCredential(secretResolver.resolve(alias));
+
+                }
+
+//                iaas.setCredential(prop.getTextContent());
 
             }
         }
@@ -357,9 +388,31 @@ public class AutoscalerConfigFileReader {
             }
             
             if (nl.item(0).getNodeType() == Node.ELEMENT_NODE) {
-                Element prop = (Element) nl.item(0);
+//                Element prop = (Element) nl.item(0);
 
-                iaas.setIdentity(prop.getTextContent());
+                // retrieve the value using secure vault
+                SecretResolver secretResolver = SecretResolverFactory.create(docEle, false);
+                String alias;
+                
+                //FIXME following is a hack to find the correct alias.
+                if(iaas.getProvider().contains("ec2")){
+                    alias = EC2_IDENTITY_ALIAS;
+                }
+                else{
+                    alias = OPENSTACK_IDENTITY_ALIAS;
+                }
+
+                // retrieve the secured password
+
+                if (secretResolver != null && secretResolver.isInitialized() &&
+
+                secretResolver.isTokenProtected(alias)) {
+
+                    iaas.setIdentity(secretResolver.resolve(alias));
+
+                }
+
+//                iaas.setIdentity(prop.getTextContent());
 
             }
         }

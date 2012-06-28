@@ -84,6 +84,16 @@
             <artifactId>org.wso2.carbon.lb.common</artifactId>
             <version>${wso2carbon.version}</version>
         </dependency>
+        <dependency>
+            <groupId>org.wso2.carbon</groupId>
+            <artifactId>org.wso2.carbon.securevault</artifactId>
+            <version>${wso2carbon.version}</version>
+        </dependency>
+        <dependency>
+            <groupId>org.apache.synapse</groupId>
+            <artifactId>synapse-commons</artifactId>
+            <version>${synapse.version}</version>
+        </dependency> 
 	
         <!--  Jclouds dependencies -->
          <dependency>

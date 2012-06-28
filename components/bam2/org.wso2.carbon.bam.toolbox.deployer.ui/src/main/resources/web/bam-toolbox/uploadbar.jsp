@@ -20,6 +20,7 @@
 <%@ page import="org.wso2.carbon.CarbonConstants" %>
 <%@ page import="org.wso2.carbon.bam.toolbox.deployer.stub.BAMToolboxDepolyerServiceStub" %>
 <%@ page import="org.wso2.carbon.bam.toolbox.deployer.stub.BAMToolboxDepolyerServiceStub.BasicToolBox" %>
+<%@ page import="org.wso2.carbon.bam.toolbox.deployer.stub.BAMToolboxDepolyerServiceStub.ToolBoxStatusDTO" %>
 <%@ page import="org.wso2.carbon.bam.toolbox.deployer.ui.client.BAMToolBoxDeployerClient" %>
 <%@ page import="org.wso2.carbon.ui.CarbonUIUtil" %>
 <%@ page import="org.wso2.carbon.utils.ServerConstants" %>
@@ -40,6 +41,13 @@
     if (null != success && success.equalsIgnoreCase("false")) {
         message = request.getParameter("message");
     }
+    if (!message.equals("")) {
+%>
+<script type="text/javascript">
+    CARBON.showErrorDialog("Error installing uploaded toolbox. <%=message%>");
+</script>
+
+<% }
 
     String serverURL = CarbonUIUtil.getServerURL(config.getServletContext(), session);
     ConfigurationContext configContext =
@@ -48,14 +56,45 @@
 
     BAMToolBoxDeployerClient client = new BAMToolBoxDeployerClient(cookie, serverURL, configContext);
     BasicToolBox[] toolBoxes = null;
+    ToolBoxStatusDTO toolsInRepo = null;
     try {
         toolBoxes = client.getAllBasicTools();
+        toolsInRepo = client.getToolBoxStatus("1", null);
     } catch (Exception e) {
 %>
 <script type="text/javascript">
     CARBON.showErrorDialog("Error while getting the status of BAM ToolBox");
 </script>
 <%
+    }
+%>
+
+<%!
+    private boolean isToolInRepo(String toolName, ToolBoxStatusDTO statusDTO) {
+        if (isInList(toolName, statusDTO.getDeployedTools())) {
+            return true;
+        } else if (isInList(toolName, statusDTO.getToBeDeployedTools())) {
+            return true;
+        } else if (isInList(toolName, statusDTO.getToBeUndeployedTools())) {
+            return true;
+        } else {
+            return false;
+        }
+    }
+
+
+    private boolean isInList(String name, String[] searchList) {
+        name = name.replaceAll(".bar", "");
+        if (null != searchList) {
+            for (String aName : searchList) {
+                if (name.equalsIgnoreCase(aName)) {
+                    return true;
+                }
+            }
+            return false;
+        } else {
+            return false;
+        }
     }
 %>
 
@@ -142,24 +181,33 @@
 
 
                 <% int count = 1;
+                    boolean checked = false;
                     if (null != toolBoxes) {
                         for (BasicToolBox aToolbox : toolBoxes) {
+                            String isDisabled = "";
+                            if (isToolInRepo(aToolbox.getToolboxName(), toolsInRepo)) {
+                                isDisabled = "disabled=\"true\"";
+                            } else {
+                                isDisabled = "";
+                            }
                 %>
+
                 <tr>
                     <td width="10px">
                         <%=count%>.
                     </td>
                     <td width="10px">
                         <%
-                            if (count == 1) {
+                            if (isDisabled.equals("") && !checked) {
+                                checked = true;
                         %>
                         <input type="radio" name="typeToolbox" value="<%=aToolbox.getSampleId()%>"
-                               onclick="enableCustomToolBox();" checked="true"/>
+                               onclick="enableCustomToolBox();" checked="true" <%=isDisabled%>/>
                         <%
                         } else {
                         %>
                         <input type="radio" name="typeToolbox" value="<%=aToolbox.getSampleId()%>"
-                               onclick="enableCustomToolBox();"/>
+                               onclick="enableCustomToolBox();" <%=isDisabled%>/>
                         <%
                             }
                         %>
@@ -235,14 +283,39 @@
                     <td width="10px">
                     </td>
                     <td width="10px">
+                        <%
+                            if (!checked) {
+                        %>
+                        <input type="radio" name="typeToolbox" value="0" checked="true"
+                               onclick="enableCustomToolBox();"/>
+                        <%
+                        } else {
+                        %>
                         <input type="radio" name="typeToolbox" value="0" onclick="enableCustomToolBox();"/>
+                        <%
+                            }
+                        %>
                     </td>
                     <td>
+                        <%
+                            if (!checked) {
+                        %>
+                        <nobr><fmt:message key="bar.artifact"/> <span
+                                class="required">*</span>&nbsp;&nbsp;&nbsp;
+                            <input type="file" name="toolbox"
+                                   id="toolbox" size="80px"/>
+                        </nobr>
+                        <%
+                        } else {
+                        %>
                         <nobr><fmt:message key="bar.artifact"/> <span
                                 class="required">*</span>&nbsp;&nbsp;&nbsp;
                             <input type="file" name="toolbox"
                                    id="toolbox" size="80px" disabled="true"/>
                         </nobr>
+                        <%
+                            }
+                        %>
                     </td>
                 </tr>
 

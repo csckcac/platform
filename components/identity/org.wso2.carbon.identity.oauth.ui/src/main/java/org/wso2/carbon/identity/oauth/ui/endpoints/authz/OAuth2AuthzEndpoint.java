@@ -217,13 +217,15 @@ public class OAuth2AuthzEndpoint extends HttpServlet {
                     .getServletContext(), req.getSession());
             ConfigurationContext configContext = (ConfigurationContext) req.getSession()
                     .getServletContext().getAttribute(CarbonConstants.CONFIGURATION_CONTEXT);
-            OAuth2ServiceClient oauth2ServiceClient = new OAuth2ServiceClient(backendServerURL, configContext);
+            OAuth2ServiceClient oauth2ServiceClient = new OAuth2ServiceClient(backendServerURL,
+                    configContext);
 
             OAuth2AuthorizeReqDTO authzReqDTO = new OAuth2AuthorizeReqDTO();
             authzReqDTO.setCallbackUrl(oauth2Params.getRedirectURI());
             authzReqDTO.setConsumerKey(oauth2Params.getClientId());
             authzReqDTO.setResponseType(oauth2Params.getResponseType());
-            authzReqDTO.setScopes(oauth2Params.getScopes().toArray(new String[oauth2Params.getScopes().size()]));
+            authzReqDTO.setScopes(oauth2Params.getScopes().toArray(
+                    new String[oauth2Params.getScopes().size()]));
             authzReqDTO.setUsername(req.getParameter("oauth_user_name"));
             authzReqDTO.setPassword(req.getParameter("oauth_user_password"));
 

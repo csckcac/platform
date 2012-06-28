@@ -29,6 +29,8 @@ import org.apache.commons.logging.LogFactory;
 import org.wso2.carbon.core.AbstractAdmin;
 import org.wso2.carbon.identity.core.model.OAuthAppDO;
 import org.wso2.carbon.identity.oauth.IdentityOAuthAdminException;
+import org.wso2.carbon.identity.oauth.authz.OAuthAuthorizationCallback;
+import org.wso2.carbon.identity.oauth.authz.OAuthAuthorizationHandler;
 import org.wso2.carbon.identity.oauth.common.OAuth2ErrorCodes;
 import org.wso2.carbon.identity.oauth.dao.OAuthAppDAO;
 import org.wso2.carbon.identity.oauth2.dao.TokenMgtDAO;
@@ -89,12 +91,49 @@ public class OAuth2Service extends AbstractAdmin {
             return respDTO;
         }
 
+        // handle authorization
+        OAuthAuthorizationCallback authzCallback = new OAuthAuthorizationCallback(authorizeDTO.getUsername(),
+                authorizeDTO.getConsumerKey(),
+                authorizeDTO.getScopes());
+        try {
+            OAuthAuthorizationHandler authzHandler = new OAuthAuthorizationHandler();
+            authzHandler.handleAuthorization(authzCallback);
+        } catch (IdentityOAuth2Exception e) {
+            handleErrorRequest(respDTO, OAuth2ErrorCodes.SERVER_ERROR,
+                    "Error occurred when authorizing the user.");
+            return respDTO;
+        }
+
+        if(!authzCallback.isAuthorized() || authzCallback.isInvalidScope()){
+            if(authzCallback.isInvalidScope()){
+                if (log.isDebugEnabled()) {
+                    log.debug("Invalid scope. :" +
+                            " Username : " + authorizeDTO.getUsername() +
+                            " Scope : " + OAuth2Util.buildScopeString(authorizeDTO.getScopes()));
+                }
+                handleErrorRequest(respDTO, OAuth2ErrorCodes.INVALID_SCOPE,
+                        "Invalid Scope.");
+            } else {
+                if (log.isDebugEnabled()) {
+                    log.debug("User does not have right permissions to grant access to the resource :" +
+                            " Username : " + authorizeDTO.getUsername() +
+                            " Scope : " + OAuth2Util.buildScopeString(authorizeDTO.getScopes()));
+                }
+                handleErrorRequest(respDTO, OAuth2ErrorCodes.UNAUTHORIZED_CLIENT,
+                        "Resource Owner does not have enough permissions to grant access.");
+            }
+            return respDTO;
+        }
+
+
         OAuthIssuerImpl oauthIssuerImpl = new OAuthIssuerImpl(new MD5Generator());
         TokenMgtDAO tokenMgtDAO = new TokenMgtDAO();
-        String scopeString = OAuth2Util.buildScopeString(authorizeDTO.getScopes());
+        // Need to get the scope available in the authz callback. Scope might be different than the
+        // scope that was present in the request.
+        String scopeString = OAuth2Util.buildScopeString(authzCallback.getScope());
 
         try {
-            if (ResponseType.CODE.toString().equals(authorizeDTO.getResponseType())) {        // generate code
+            if (ResponseType.CODE.toString().equals(authorizeDTO.getResponseType())) { // generate code
 
                 String authorizationCode = oauthIssuerImpl.authorizationCode();
 
@@ -112,7 +151,7 @@ public class OAuth2Service extends AbstractAdmin {
                 respDTO.setCallbackURI(authorizeDTO.getCallbackUrl());
                 return respDTO;
 
-            } else {   // generate token
+            } else if (ResponseType.TOKEN.toString().equals(authorizeDTO.getResponseType())){   // generate token
                 String accessToken = oauthIssuerImpl.accessToken();
                 Timestamp timestamp = new Timestamp(new Date().getTime());
                 // Default Validity Period
@@ -134,6 +173,13 @@ public class OAuth2Service extends AbstractAdmin {
                 respDTO.setCallbackURI(authorizeDTO.getCallbackUrl());
                 return respDTO;
 
+            } else {
+                if (log.isDebugEnabled()) {
+                    log.debug("Unsupported Response Type." + authorizeDTO.getResponseType());
+                }
+                handleErrorRequest(respDTO, OAuth2ErrorCodes.UNSUPPORTED_RESP_TYPE,
+                        "Unsupported Response Type.");
+                return respDTO;
             }
         } catch (Exception e) {
             log.error("Error occurred when processing the authorization request. Returning an error back to client.", e);
@@ -207,6 +253,11 @@ public class OAuth2Service extends AbstractAdmin {
         }
     }
 
+    /**
+     * Issue access token in exchange to an Authorization Grant.
+     * @param tokenReqDTO <Code>OAuth2AccessTokenReqDTO</Code> representing the Access Token request
+     * @return  <Code>OAuth2AccessTokenRespDTO</Code> representing the Access Token response
+     */
     public OAuth2AccessTokenRespDTO issueAccessToken(OAuth2AccessTokenReqDTO tokenReqDTO) {
 
         if (log.isDebugEnabled()) {
@@ -215,22 +266,22 @@ public class OAuth2Service extends AbstractAdmin {
         }
 
         OAuth2AccessTokenRespDTO tokenRespDTO = new OAuth2AccessTokenRespDTO();
-
+        // Authenticate the client.
         try {
             boolean authenticateClient = OAuth2Util.authenticateClient(
                     tokenReqDTO.getClientId(), tokenReqDTO.getClientSecret());
-            if (!authenticateClient) {
+            if (!authenticateClient) {  // if client auth. fails
                 tokenRespDTO.setError(true);
                 tokenRespDTO.setErrorCode(OAuthError.TokenResponse.INVALID_CLIENT);
                 tokenRespDTO.setErrorMsg("Client Authentication Failed. " +
                         "Provided client id or client secret is incorrect.");
                 return tokenRespDTO;
             }
-
+            // Issue the token
             AccessTokenIssuer tokenIssuer = new AccessTokenIssuer(getAuthzGrantHandler(tokenReqDTO));
             return tokenIssuer.issue(tokenReqDTO);
 
-        } catch (Exception e) {
+        } catch (Exception e) { // in case of an error, consider it as a system error
             log.error("Error when issuing the access token. ", e);
             tokenRespDTO.setError(true);
             tokenRespDTO.setErrorCode(OAuth2ErrorCodes.SERVER_ERROR);

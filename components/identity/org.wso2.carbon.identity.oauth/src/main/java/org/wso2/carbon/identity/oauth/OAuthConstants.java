@@ -48,4 +48,6 @@ public final class OAuthConstants {
     public static final String OAUTH_AUTHORIZE_TOK_ENDPOINT = "/authorize_token";
     public static final String OAUTH_ACCESS_TOK_ENDPOINT = "/access_token";
 
+    public static final int OAUTH_AUTHZ_CB_HANDLER_DEFAULT_PRIORITY = 1;
+
 }

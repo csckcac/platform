@@ -46,6 +46,16 @@ public class PasswordGrantHandler extends AbstractAuthorizationGrantHandler {
     public boolean validate() throws IdentityException {
         String username = oAuth2AccessTokenReqDTO.getResourceOwnerUsername();
         int tenantId = IdentityUtil.getTenantIdOFUser(username);
+
+        // tenantId < 0, means an invalid tenant.
+        if(tenantId < 0){
+            if (log.isDebugEnabled()) {
+                log.debug("Token request with Password Grant Type for an invalid tenant : " +
+                        MultitenantUtils.getTenantDomain(username));
+            }
+            return false;
+        }
+
         RealmService realmService = OAuthComponentServiceHolder.getRealmService();
         boolean authStatus;
         try {
@@ -63,8 +73,9 @@ public class PasswordGrantHandler extends AbstractAuthorizationGrantHandler {
         } catch (UserStoreException e) {
             throw new IdentityException("Error when authenticating the user credentials.", e);
         }
+
         authorizedUser = oAuth2AccessTokenReqDTO.getResourceOwnerUsername();
-        scope = oAuth2AccessTokenReqDTO.getScope();
+        //scope = oAuth2AccessTokenReqDTO.getScope();
         return authStatus;
     }
 

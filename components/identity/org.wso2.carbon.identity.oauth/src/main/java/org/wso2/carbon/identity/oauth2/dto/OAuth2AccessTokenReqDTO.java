@@ -22,7 +22,7 @@ public class OAuth2AccessTokenReqDTO {
     private String clientId;
     private String clientSecret;
     private String grantType;
-    private String scope;
+    private String[] scope;
     private String authorizationCode;
     private String callbackURI;
     private String resourceOwnerUsername;
@@ -84,11 +84,11 @@ public class OAuth2AccessTokenReqDTO {
         this.resourceOwnerPassword = resourceOwnerPassword;
     }
 
-    public String getScope() {
+    public String[] getScope() {
         return scope;
     }
 
-    public void setScope(String scope) {
+    public void setScope(String[] scope) {
         this.scope = scope;
     }
 }

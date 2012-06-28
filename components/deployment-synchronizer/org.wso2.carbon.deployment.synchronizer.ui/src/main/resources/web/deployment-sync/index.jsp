@@ -425,7 +425,12 @@
 		                    <tbody>
 		                    	<%for(int i=0; i<configParams.length; i++){ %>
 		                    		<tr id="<%=repositoryType + ".row."+i%>">
-		                    			<td width="30%"><fmt:message key="<%=configParams[i].getName()%>"/></td>
+		                    			<td width="30%">
+		                    				<fmt:message key="<%=configParams[i].getName()%>"/>
+		                    				<%if(configParams[i].getRequired()){%>
+		                    					<span class="required">*</span>
+		                    				<%} %>
+		                    			</td>
 		                    			<td>
 			                    			<!-- If type of parameter is string. Display text/password field. If not, display check-box -->
 			                        		<input id="<%=configParams[i].getName()%>" name="<%=configParams[i].getName()%>"

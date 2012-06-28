@@ -163,8 +163,8 @@ public class BamMediator extends AbstractMediator {
             log.info("Stream ID: " + streamId);
             // Event for each message
             Event event = new Event(streamId, System.currentTimeMillis(),
-                                           this.createMetadata(),
-                                           this.createCorrelationData(),
+                                           this.createMetadata(tenantId),
+                                           this.createCorrelationData(messageContext),
                                            this.createPayloadData(tenantId, messageContext, request)
             );
             dataPublisher.publish(event);
@@ -286,12 +286,13 @@ public class BamMediator extends AbstractMediator {
                                                    "  'version':'"+ this.streamVersion + "'," +
                                                    "  'nickName': '" + this.streamNickName + "'," +
                                                    "  'description': '" + this.streamDescription + "'," +
+                                                   "  'correlationData':[" +
+                                                   "          {'name':'ActivityId','type':'STRING'}" +
+                                                   "  ]," +
                                                    "  'metaData':[" +
-                                                   "          {'name':'ProductName','type':'STRING'}" +
+                                                   "          {'name':'TenantId','type':'INT'}" +
                                                    "  ]," +
                                                    "  'payloadData':[" +
-                                                   "          {'name':'TenantId','type':'INT'}," +
-                                                   "          {'name':'ActivityId','type':'STRING'}," +
                                                    "          {'name':'Request','type':'STRING'}," +
                                                    "          {'name':'MessageId','type':'STRING'}," +
                                                    "          {'name':'SOAPHeaddr','type':'STRING'}," +
@@ -304,27 +305,29 @@ public class BamMediator extends AbstractMediator {
 
     private Object[] createPayloadData(int tenantId, MessageContext messageContext, boolean request){
         int numOfProperties = properties.size();
-        Object[] payloadData = new Object[numOfProperties + 6];
-        payloadData[0] = tenantId;
-        payloadData[1] = messageContext.getProperty(BamMediatorConstants.MSG_ACTIVITY_ID);
-        payloadData[2] = request ?
+        Object[] payloadData = new Object[numOfProperties + 4];
+        payloadData[0] = request ?
                          BamMediatorConstants.DIRECTION_IN : BamMediatorConstants.DIRECTION_OUT;
-        payloadData[3] = messageContext.getMessageID();
-        payloadData[4] = messageContext.getEnvelope().getHeader().toString();
-        payloadData[5] = messageContext.getEnvelope().getBody().toString();
+        payloadData[1] = messageContext.getMessageID();
+        payloadData[2] = messageContext.getEnvelope().getHeader().toString();
+        payloadData[3] = messageContext.getEnvelope().getBody().toString();
 
         for (int i=0; i<numOfProperties; i++) {
-            payloadData[6 + i] = properties.get(i).getValue();
+            payloadData[4 + i] = properties.get(i).getValue();
         }
         return payloadData;
     }
 
-    private Object[] createMetadata(){
-        return new Object[]{"external"};
+    private Object[] createMetadata(int tenantId){
+        Object[] metaData = new Object[1];
+        metaData[0] = tenantId;
+        return metaData;
     }
 
-    private Object[] createCorrelationData(){
-        return null;
+    private Object[] createCorrelationData(MessageContext messageContext){
+        Object[] correlationData = new Object[1];
+        correlationData[0] = messageContext.getProperty(BamMediatorConstants.MSG_ACTIVITY_ID);
+        return correlationData;
     }
     
     private String getPropertyString(){

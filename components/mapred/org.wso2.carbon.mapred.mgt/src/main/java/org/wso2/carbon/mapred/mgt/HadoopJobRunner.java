@@ -91,7 +91,7 @@ public class HadoopJobRunner extends AbstractAdmin {
 			}
 		}
 		CarbonJobReporter reporter = hadoopJobThread.getCarbonJobReporter();
-		CarbonJobReporterMap.putCarbonHadoopJobReporter(threadUuid, hadoopJobThread.getCarbonJobReporter());
+		CarbonJobReporterMap.putCarbonHadoopJobReporter(threadUuid, reporter);
 		synchronized (reporter) {
 			try {
 				reporter.wait();

@@ -253,7 +253,26 @@ public class MessageHelper {
                 SOAPFault fault = envelope.getBody().getFault();
                 newEnvelope.getBody().addFault(cloneSOAPFault(fault));
             } else {
-                Iterator itr = envelope.getBody().cloneOMElement().getChildren();
+                OMElement body = envelope.getBody().cloneOMElement();
+                Iterator ns = body.getAllDeclaredNamespaces();
+                OMNamespace bodyNs = body.getNamespace();
+                String nsUri = bodyNs.getNamespaceURI();
+                String nsPrefix = bodyNs.getPrefix();
+                while (ns.hasNext()) {
+                    OMNamespace namespace = ((OMNamespace)ns.next());
+                    if (nsUri != null && !nsUri.equals(namespace.getNamespaceURI())
+                        && nsPrefix != null && !nsPrefix.equals(namespace.getPrefix())) {
+                        newEnvelope.getBody().declareNamespace(namespace);
+                    }
+                    ns.remove();
+                }
+                Iterator attributes = body.getAllAttributes();
+                while (attributes.hasNext()) {
+                    OMAttribute attrb = (OMAttribute) attributes.next();
+                    newEnvelope.getBody().addAttribute(attrb);
+                    attributes.remove();
+                }
+                Iterator itr = body.getChildren();
                 while (itr.hasNext()) {
                     OMNode node = (OMNode) itr.next();
                     itr.remove();

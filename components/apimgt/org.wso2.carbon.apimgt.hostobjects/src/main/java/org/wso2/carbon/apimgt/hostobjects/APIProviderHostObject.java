@@ -373,7 +373,7 @@ public class APIProviderHostObject extends ScriptableObject {
             NativeArray uriMethodArr = (NativeArray) apiData.get("uriMethodArr", apiData);
 
             if (uriTemplateArr.getLength() == uriMethodArr.getLength()) {
-                Set<URITemplate> uriTemplates = new HashSet<URITemplate>();
+                Set<URITemplate> uriTemplates = new LinkedHashSet<URITemplate>();
 
                 for (int i = 0; i < uriTemplateArr.getLength(); i++) {
                     URITemplate templates = new URITemplate();

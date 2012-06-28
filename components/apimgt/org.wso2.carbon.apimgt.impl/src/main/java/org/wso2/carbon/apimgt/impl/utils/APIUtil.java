@@ -107,7 +107,7 @@ public final class APIUtil {
             api.setContext(artifact.getAttribute(APIConstants.API_OVERVIEW_CONTEXT));
             api.setLatest(Boolean.valueOf(artifact.getAttribute(APIConstants.API_OVERVIEW_IS_LATEST)));
 
-            Set<URITemplate> uriTemplates = new HashSet<URITemplate>();
+            Set<URITemplate> uriTemplates = new LinkedHashSet<URITemplate>();
             String[] templates = artifact.getAttributes(APIConstants.API_URI_TEMPLATES);
             if (!(templates == null)) {
                 for (String template : templates) {

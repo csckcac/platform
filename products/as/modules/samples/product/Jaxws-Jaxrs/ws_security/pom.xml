@@ -40,7 +40,7 @@
         <dependencies>
             <dependency>
                 <groupId>org.apache.cxf</groupId>
-                <artifactId>cxf-rt-ws-security</artifactId>
+                <artifactId>cxf-bundle</artifactId>
                 <version>${cxf.version}</version>
             </dependency>
         </dependencies>

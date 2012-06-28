@@ -65,7 +65,7 @@
                         <configuration>
                             <wsdlOptions>
                                 <wsdlOption>
-                                    <wsdl>src/main/resources/hello_world_wssec.wsdl</wsdl>
+                                    <wsdl>src/main/resources/hello_world_wssec_client.wsdl</wsdl>
                                 </wsdlOption>
                             </wsdlOptions>
                         </configuration>
@@ -147,8 +147,7 @@
                                     <mainClass>demo.wssec.client.Client</mainClass>
                                     <!--send the WSDL location as an argument-->
                                     <arguments>
-                                        <argument>src/main/resources/hello_world_wssec.wsdl
-                                        </argument>
+                                        <argument>src/main/resources/hello_world_wssec_client.wsdl</argument>
                                     </arguments>
                                 </configuration>
                             </execution>
@@ -162,15 +161,7 @@
     <dependencies>
         <dependency>
             <groupId>org.apache.cxf</groupId>
-            <artifactId>cxf-rt-frontend-jaxws</artifactId>
-        </dependency>
-        <dependency>
-            <groupId>org.apache.cxf</groupId>
-            <artifactId>cxf-rt-transports-http</artifactId>
-        </dependency>
-        <dependency>
-            <groupId>org.apache.cxf</groupId>
-            <artifactId>cxf-rt-ws-security</artifactId>
+            <artifactId>cxf-bundle</artifactId>
         </dependency>
         <dependency>
             <groupId>junit</groupId>

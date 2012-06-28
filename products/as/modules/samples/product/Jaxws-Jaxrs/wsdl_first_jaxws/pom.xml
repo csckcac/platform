@@ -57,7 +57,7 @@
             <plugin>
                 <groupId>org.apache.cxf</groupId>
                 <artifactId>cxf-codegen-plugin</artifactId>
-                <version>2.5.2</version>
+                <version>${cxf.version}</version>
                 <executions>
                     <execution>
                         <id>generate-sources</id>
@@ -145,11 +145,8 @@
     <dependencies>
         <dependency>
             <groupId>org.apache.cxf</groupId>
-            <artifactId>cxf-rt-frontend-jaxws</artifactId>
-        </dependency>
-        <dependency>
-            <groupId>org.apache.cxf</groupId>
-            <artifactId>cxf-rt-transports-http</artifactId>
+            <artifactId>cxf-bundle</artifactId>
+            <version>${cxf.version}</version>
         </dependency>
         <dependency>
             <groupId>junit</groupId>

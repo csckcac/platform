@@ -73,7 +73,7 @@
     </dependencyManagement>
 
     <properties>
-        <cxf.version>2.5.2</cxf.version>
+        <cxf.version>2.6.1</cxf.version>
         <junit.version>4.8.2</junit.version>
     </properties>
 

@@ -15,13 +15,13 @@
     <% if(api.wsdl && api.wsdl != ""){ %>
         <h6>WSDL:</h6>
     <p>
-        <a href="<%=api.wsdl%>"><%=api.wsdl%> </a>
+        <a href="<%=api.wsdl%>" target="_blank"><%=api.wsdl%> </a>
     </p>
     <% } %>
     <% if(api.wadl && api.wadl != ""){ %>
         <h6>WADL:</h6>
     <p>
-        <a href="<%=api.wadl%>"><%=api.wadl%></a>
+        <a href="<%=api.wadl%>" target="_blank"><%=api.wadl%></a>
     </p>
         <% } %>
     <% if(api.description && api.description != ""){ %>

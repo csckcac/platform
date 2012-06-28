@@ -17,7 +17,7 @@ var addUser = function (username, password) {
         log.error(e.message);
         return {
             error:e,
-            message:e.message.split(":")[1]
+            message:e.message.split("Exception:")[1]
         };
     }
 };

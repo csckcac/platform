@@ -221,6 +221,8 @@ public final class BPELConstants {
     public static final String BPEL_PACKAGE_TEMP_DIRECTORY = File.separator + "tmp" +
             File.separator + "bpeluploads";
 
+    public static final String BPEL_METAFILES_DIRECTORY = "bpelmetafiles";
+
     /* Constants for process store */
     public static final String REG_PATH_OF_BPEL_PACKAGES =
             RegistryConstants.PATH_SEPARATOR + "bpel" + RegistryConstants.PATH_SEPARATOR +

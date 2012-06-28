@@ -21,7 +21,9 @@ import org.apache.commons.logging.Log;
 import org.apache.commons.logging.LogFactory;
 import org.apache.ode.bpel.compiler.api.CompilationException;
 import org.apache.ode.bpel.dd.DeployDocument;
+import org.apache.ode.bpel.dd.TCleanup;
 import org.apache.ode.bpel.dd.TDeployment;
+import org.apache.ode.bpel.dd.TProcessEvents;
 import org.apache.ode.bpel.dd.TProvide;
 import org.apache.ode.bpel.iapi.ContextException;
 import org.apache.ode.bpel.iapi.ProcessConf;
@@ -36,6 +38,13 @@ import org.wso2.carbon.bpel.core.ode.integration.store.clustering.BPELProcessSta
 import org.wso2.carbon.bpel.core.ode.integration.store.repository.BPELPackageInfo;
 import org.wso2.carbon.bpel.core.ode.integration.store.repository.BPELPackageRepository;
 import org.wso2.carbon.bpel.core.ode.integration.store.repository.BPELPackageRepositoryUtils;
+import org.wso2.carbon.bpel.skeleton.ode.integration.mgt.services.types.CleanUpListType;
+import org.wso2.carbon.bpel.skeleton.ode.integration.mgt.services.types.CleanUpType;
+import org.wso2.carbon.bpel.skeleton.ode.integration.mgt.services.types.EnableEventListType;
+import org.wso2.carbon.bpel.skeleton.ode.integration.mgt.services.types.Generate_type1;
+import org.wso2.carbon.bpel.skeleton.ode.integration.mgt.services.types.ProcessEventsListType;
+import org.wso2.carbon.bpel.skeleton.ode.integration.mgt.services.types.ScopeEventListType;
+import org.wso2.carbon.bpel.skeleton.ode.integration.mgt.services.types.ScopeEventType;
 import org.wso2.carbon.core.multitenancy.SuperTenantCarbonContext;
 import org.wso2.carbon.bpel.skeleton.ode.integration.mgt.services.ProcessManagementException;
 import org.wso2.carbon.registry.core.Registry;
@@ -48,6 +57,9 @@ import org.wso2.carbon.utils.multitenancy.MultitenantUtils;
 
 import javax.xml.namespace.QName;
 import java.io.File;
+import java.io.FileNotFoundException;
+import java.io.UnsupportedEncodingException;
+import java.net.URLEncoder;
 import java.util.*;
 import java.util.concurrent.ConcurrentHashMap;
 import java.util.regex.Matcher;
@@ -694,7 +706,10 @@ public class TenantProcessStoreImpl implements TenantProcessStore {
             processIds.add(pConfDAO.getPID());
             // if the deployment descriptor is updated at runtime, first load the updated data in
             // registry and use them with the specific process
-            repository.readPropertiesOfUpdatedDeploymentInfo(pConf, bpelPackageName);
+            //repository.readPropertiesOfUpdatedDeploymentInfo(pConf, bpelPackageName);
+
+            readModifiedDDFromFile(pConf);
+
             processConfigMap.put(pConf.getProcessId(), pConf);
             loaded.add(pConf);
         }
@@ -702,6 +717,57 @@ public class TenantProcessStoreImpl implements TenantProcessStore {
         deploymentUnits.put(du.getName(), du);
         processesInDeploymentUnit.put(du.getName(), processIds);
         parentProcessStore.onBPELPackageReload(tenantId, du.getName(), loaded);
+    }
+
+    private void readModifiedDDFromFile(ProcessConfigurationImpl pConf) {
+        String bpelMetafilesLocation = tenantConfigContext.getAxisConfiguration().getRepository().getPath()
+                                       + BPELConstants.BPEL_METAFILES_DIRECTORY;
+
+        DeployDocument _dd = null;
+        String encodedPath = null;
+        try {
+            encodedPath = URLEncoder.encode(pConf.getProcessId().toString(), "UTF-8");
+        } catch (UnsupportedEncodingException e) {
+            throw new ContextException("Couldn't encode path for file: "
+                                       + pConf.getProcessId().toString(), e);
+        }
+        String ddFilePath = bpelMetafilesLocation + File.separator + encodedPath + ".xml";
+        File deployDescDest = new File(ddFilePath);
+        try {
+
+            _dd = DeployDocument.Factory.parse(deployDescDest);
+        } catch (FileNotFoundException e) {
+            log.debug("Deployment Descriptor for "+encodedPath+" not updated at runtime.");
+        } catch (Exception e) {
+            throw new ContextException("Couldn't read deployment descriptor at location "
+                                       + deployDescDest.getAbsolutePath(), e);
+        }
+
+
+        if (_dd != null) {
+            TDeployment.Process process = _dd.getDeploy().getProcessArray(0);
+
+            pConf.setIsTransient(process.getInMemory());
+            pConf.setState(ProcessState.ACTIVE);
+            if (process.getRetired()) {
+                pConf.setState(ProcessState.RETIRED);
+            } else if (!process.getActive()) {
+                pConf.setState(ProcessState.DISABLED);
+            }
+
+            TProcessEvents processEvents = process.getProcessEvents();
+
+
+            if (processEvents.getGenerate() != null) {
+                TProcessEvents.Generate.Enum value = processEvents.getGenerate();
+                pConf.setGenerateType(value);
+            }
+            pConf.setProcessEventsList(processEvents);
+
+            List<TCleanup> tCleanups = process.getCleanupList();
+            pConf.setProcessCleanupConfImpl(tCleanups);
+
+        }
     }
 
     private File findBPELPackageInFileSystem(DeploymentUnitDAO dudao) {

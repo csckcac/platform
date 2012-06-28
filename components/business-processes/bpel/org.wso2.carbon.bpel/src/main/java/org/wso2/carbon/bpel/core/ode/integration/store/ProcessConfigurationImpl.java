@@ -863,5 +863,55 @@ public class ProcessConfigurationImpl implements ProcessConf, MultiTenantProcess
 
     }
 
+    public void setGenerateType(TProcessEvents.Generate.Enum value) {
+        generateType = value;
+    }
 
+    public void setProcessEventsList(TProcessEvents processEvents) {
+        if (processEvents != null) {
+            events.clear();
+            HashSet<BpelEvent.TYPE> enabledEvtSet = new HashSet<BpelEvent.TYPE>();
+            if (processEvents.getEnableEventList() != null) {
+                for (String enabledEvent : processEvents.getEnableEventList()) {
+                    enabledEvtSet.add(BpelEvent.TYPE.valueOf(enabledEvent));
+                }
+            }
+            events.put(null, enabledEvtSet);
+
+            List<TScopeEvents> scopeEventsList = processEvents.getScopeEventsList();
+            if (scopeEventsList != null) {
+
+
+                for (TScopeEvents scopeEvents : scopeEventsList) {
+                    HashSet<BpelEvent.TYPE> scopeEnabledEventSet = new HashSet<BpelEvent.TYPE>();
+                    List<String> enableScopeEventList = scopeEvents.getEnableEventList();
+                    if (enableScopeEventList != null) {
+                        for (String event : enableScopeEventList) {
+                            scopeEnabledEventSet.add(BpelEvent.TYPE.valueOf(event));
+                        }
+                    }
+                    events.put(scopeEvents.getName(), scopeEnabledEventSet);
+
+                }
+            }
+
+        }
+    }
+
+    public void setProcessCleanupConfImpl(List<TCleanup> tCleanups) {
+        if (tCleanups != null) {
+            processCleanupConfImpl.getCleanupCategories(true).clear();
+            processCleanupConfImpl.getCleanupCategories(false).clear();
+
+            for (TCleanup cleanup : tCleanups) {
+                if (cleanup.getOn() == TCleanup.On.SUCCESS || cleanup.getOn() == TCleanup.On.ALWAYS) {
+                    ProcessCleanupConfImpl.processACleanup(processCleanupConfImpl.getCleanupCategories(true), cleanup.getCategoryList());
+                }
+                if (cleanup.getOn() == TCleanup.On.FAILURE || cleanup.getOn() == TCleanup.On.ALWAYS) {
+                    ProcessCleanupConfImpl.processACleanup(processCleanupConfImpl.getCleanupCategories(false), cleanup.getCategoryList());
+                }
+            }
+
+        }
+    }
 }

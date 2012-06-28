@@ -41,7 +41,9 @@ import org.apache.ode.utils.DOMUtils;
 import org.apache.ode.utils.ISO8601DateParser;
 import org.apache.ode.utils.stl.CollectionsX;
 import org.apache.ode.utils.stl.MemberOfFunction;
+import org.apache.xmlbeans.XmlOptions;
 import org.w3c.dom.Node;
+import org.wso2.carbon.bpel.core.BPELConstants;
 import org.wso2.carbon.bpel.core.ode.integration.BPELServerImpl;
 import org.wso2.carbon.bpel.core.ode.integration.store.ProcessConfigurationImpl;
 import org.wso2.carbon.bpel.core.ode.integration.store.TenantProcessStoreImpl;
@@ -60,6 +62,7 @@ import java.io.File;
 import java.io.FileInputStream;
 import java.io.FileNotFoundException;
 import java.io.IOException;
+import java.net.URLEncoder;
 import java.text.ParseException;
 import java.util.*;
 import java.util.regex.Pattern;
@@ -317,10 +320,12 @@ public class ProcessManagementServiceSkeleton extends AbstractAdmin
             processConf.setProcessEventsList(processDeployDetailsListType.getProcessEventsList());
             processConf.setGenerateType(processDeployDetailsListType.getProcessEventsList());
             processConf.setProcessCleanupConfImpl(processDeployDetailsListType.getCleanUpList());
-            if (tenantProcessStore.getBPELPackageRepository() != null) {
+            /*if (tenantProcessStore.getBPELPackageRepository() != null) {
                 tenantProcessStore.getBPELPackageRepository().
                         createPropertiesForUpdatedDeploymentInfo(processConf);
-            }
+            }*/
+
+            persistDeployDescInFile(processDeployDetailsListType, processConf, newIsInmemory);
 
             bpelServer.getODEBPELServer().getContexts().scheduler.execTransaction(new java.util.concurrent.Callable<Boolean>() {
                 public Boolean call() throws Exception {
@@ -361,6 +366,103 @@ public class ProcessManagementServiceSkeleton extends AbstractAdmin
             log.error(errMsg, e);
             throw new ProcessManagementException(errMsg, e);
         }
+
+
+    }
+
+    private void persistDeployDescInFile(
+            ProcessDeployDetailsList_type0 processDeployDetailsListType,
+            ProcessConfigurationImpl processConf, boolean newIsInmemory)
+            throws ProcessManagementException, IOException {
+        DeployDocument dd = DeployDocument.Factory.newInstance();
+        TDeployment.Process process = dd.addNewDeploy().addNewProcess();
+        process.setName(processConf.getProcessId());
+        process.setInMemory(newIsInmemory);
+        process.setActive(true);
+        if (processConf.getState() == ProcessState.DISABLED) {
+            process.setActive(false);
+        }
+        if (processConf.getState() == ProcessState.RETIRED) {
+            process.setRetired(true);
+        }
+
+        ProcessEventsListType processEventsList = processDeployDetailsListType.getProcessEventsList();
+        process.addNewProcessEvents();
+        if (processEventsList.getEnableEventsList() != null && processEventsList.getEnableEventsList().getEnableEvent() != null) {
+            EnableEventListType enableEventListType = processEventsList.getEnableEventsList();
+            String[] enabledEvents = enableEventListType.getEnableEvent();
+
+            for (String event : enabledEvents) {
+                process.getProcessEvents().addEnableEvent(event);
+            }
+        }
+
+
+        if (processEventsList.getScopeEventsList() != null && processEventsList.getScopeEventsList().getScopeEvent() != null) {
+            ScopeEventListType scopeEventListType = processEventsList.getScopeEventsList();
+            ScopeEventType[] scopeEvents = scopeEventListType.getScopeEvent();
+
+            for (ScopeEventType scopeEvent : scopeEvents) {
+                EnableEventListType enabledEventLst = scopeEvent.getEnabledEventList();
+                TScopeEvents tScopeEvents = process.getProcessEvents().addNewScopeEvents();
+                tScopeEvents.setName(scopeEvent.getScope());
+
+                if (enabledEventLst != null && enabledEventLst.getEnableEvent() != null) {
+                    for (String event : enabledEventLst.getEnableEvent()) {
+                        tScopeEvents.addEnableEvent(event);
+                    }
+                }
+            }
+        }
+
+        if (processEventsList.getGenerate() != null) {
+            String value = processEventsList.getGenerate().getValue();
+            process.getProcessEvents().setGenerate(TProcessEvents.Generate.Enum.forString(value));
+        }
+
+        CleanUpListType cleanUpList = processDeployDetailsListType.getCleanUpList();
+        CleanUpType[] cleanUps = cleanUpList.getCleanUp();
+        if (cleanUps != null) {
+            for (CleanUpType cleanUp : cleanUps) {
+                if (cleanUp.isOnSpecified()) {
+                    TCleanup tCleanup = process.addNewCleanup();
+                    String value = cleanUp.getOn().getValue();
+                    tCleanup.setOn(TCleanup.On.Enum.forString(value));
+                    CategoryListType categoryListType = cleanUp.getCategoryList();
+                    if (categoryListType != null && categoryListType.getCategory() != null) {
+                        for (Category_type1 categoryType1 : categoryListType.getCategory()) {
+                            tCleanup.addCategory(TCleanup.Category.Enum.forString(categoryType1.getValue()));
+                        }
+
+                    }
+
+                }
+
+
+            }
+        }
+
+        String bpelMetafilesLocation = getConfigContext().getAxisConfiguration().getRepository().getPath()
+                                       + File.separator + BPELConstants.BPEL_METAFILES_DIRECTORY;
+
+        File bpelMetaDir = new File(bpelMetafilesLocation);
+        if (!bpelMetaDir.exists() && !bpelMetaDir.mkdirs()) {
+            String errMsg = "Failed to create the directory: " + bpelMetaDir.getAbsolutePath();
+            log.error(errMsg);
+            throw new ProcessManagementException(errMsg);
+        }
+
+        String encodedPath = URLEncoder.encode(processConf.getProcessId().toString(), "UTF-8");
+        File deployDescDest = new File(bpelMetafilesLocation, encodedPath + ".xml");
+
+        if (!deployDescDest.exists() && !deployDescDest.createNewFile()) {
+            String errMsg = "Failed to create the file: " + deployDescDest.getAbsolutePath();
+            log.error(errMsg);
+            throw new ProcessManagementException(errMsg);
+        }
+        XmlOptions options = new XmlOptions();
+        options.setSavePrettyPrint();
+        dd.save(deployDescDest, options);
     }
 
     public ProcessState getProcessState(ProcessDeployDetailsList_type0 deployDetailsListType) {

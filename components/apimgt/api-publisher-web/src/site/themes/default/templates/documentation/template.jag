@@ -17,9 +17,14 @@
         <div class="row-fluid">
             <div class="control-group">
                 <%if(createPermitted){%>
+                <div id="addDoc">
                 <a onclick="javascript:$('#newDoc').toggle('slow')" href="#">
                     <i class=" icon-plus-sign"></i> Add New Document
                 </a>
+                </div>
+                <div id="updateDoc" style="display:none;">
+                 <h4></h4>
+                </div>
                 <%}%>
             </div>
         </div>

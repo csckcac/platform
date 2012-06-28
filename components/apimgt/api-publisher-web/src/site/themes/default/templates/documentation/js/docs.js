@@ -62,6 +62,9 @@ var removeDocumentation = function (provider, apiName, version, docName, docType
 var updateDocumentation = function (docName, docType, summary, sourceType, docUrl) {
     $('#newDoc .btn-primary').text('Update');
     $('#newDoc .btn-primary').val('Update');
+    $('#addDoc').hide('fast');
+    $('#updateDoc h4')[0].innerHTML="Update Document - "+docName;
+    $('#updateDoc').show('fast');
     $('#newDoc').show('slow');
     $('#newDoc #docName').val(docName);
     $('#newDoc #docName').attr('disabled', 'disabled');
@@ -102,6 +105,8 @@ var clearDocs = function () {
     $('#newDoc #docUrl').val('');
     $('#newDoc .btn-primary').text('Add New Document');
     $('#newDoc .btn-primary').val('Add New Document');
+    $('#addDoc').show('fast');
+    $('#updateDoc').hide('fast');
     $('#newDoc').hide('slow');
 
 };

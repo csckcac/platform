@@ -31,6 +31,9 @@ import java.util.ListIterator;
 import java.util.Map;
 import java.util.Set;
 import java.util.Map.Entry;
+
+import org.apache.commons.lang.builder.EqualsBuilder;
+import org.apache.commons.lang.builder.HashCodeBuilder;
 import org.apache.commons.logging.Log;
 import org.apache.commons.logging.LogFactory;
 import org.apache.synapse.SynapseException;
@@ -780,10 +783,16 @@ public class AutoscalerServiceImpl implements IAutoscalerService {
         public boolean equals(Object obj) {
 
             if (obj instanceof Iaas) {
-                return this.getName().equals(((Iaas) obj).getName());
+                return new EqualsBuilder().append(getName(), ((Iaas) obj).getName()).isEquals();
             }
             return false;
 
+        }
+        
+        public int hashCode() {
+            return new HashCodeBuilder(17, 31). // two randomly chosen prime numbers
+            append(name).
+            toHashCode();
         }
 
     }

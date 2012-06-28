@@ -33,7 +33,7 @@
             <class name="org.wso2.bps.integration.tests.management.bpel.ProcessManagementTestCase"/>
             <class name="org.wso2.bps.integration.tests.management.bpel.InstanceCleanupTestCase"/>
             <class name="org.wso2.bps.integration.tests.management.bpel.InstanceManagementTestCase"/>
-            <!--<class name="org.wso2.bps.integration.tests.management.bpel.DeploymentDescriptorEditorFunctionalityTestCase"/>-->
+            <class name="org.wso2.bps.integration.tests.management.bpel.DeploymentDescriptorEditorFunctionalityTestCase"/>
             <class name="org.wso2.bps.integration.tests.management.bpel.UndeploymentTestCase"/>
             <class name="org.wso2.bps.integration.tests.management.humantask.DeploymentTestCase"/>
             <class name="org.wso2.bps.integration.tests.management.humantask.UnDeploymentTestCase"/>

@@ -9,6 +9,7 @@ import org.apache.commons.logging.LogFactory;
 import org.wso2.carbon.bam.toolbox.deployer.stub.BAMToolboxDepolyerServiceBAMToolboxDeploymentExceptionException;
 import org.wso2.carbon.bam.toolbox.deployer.stub.BAMToolboxDepolyerServiceStub;
 import org.wso2.carbon.bam.toolbox.deployer.stub.BAMToolboxDepolyerServiceStub.ToolBoxStatusDTO;
+import org.wso2.carbon.bam.toolbox.deployer.stub.BAMToolboxDepolyerServiceStub.BasicToolBox;
 
 import javax.activation.DataHandler;
 import javax.servlet.ServletOutputStream;
@@ -130,6 +131,16 @@ public class BAMToolBoxDeployerClient {
         } catch (BAMToolboxDepolyerServiceBAMToolboxDeploymentExceptionException e) {
             log.error(e.getFaultMessage().getBAMToolboxDeploymentException().getMessage(), e);
             throw e;
+        }
+    }
+
+    public BasicToolBox[] getAllBasicTools()
+            throws BAMToolboxDepolyerServiceBAMToolboxDeploymentExceptionException {
+        try {
+            return stub.getBasicToolBoxes();
+        } catch (RemoteException e) {
+            log.error(e.getMessage(), e);
+             throw new BAMToolboxDepolyerServiceBAMToolboxDeploymentExceptionException(e);
         }
     }
 

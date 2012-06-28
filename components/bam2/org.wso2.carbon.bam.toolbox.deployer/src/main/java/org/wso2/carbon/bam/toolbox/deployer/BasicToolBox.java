@@ -16,15 +16,20 @@ package org.wso2.carbon.bam.toolbox.deployer;
  * limitations under the License.
  */
 public enum BasicToolBox {
-    MESSAGE_TRACING(1, "Message_Tracing.bar"),
-    KPI_PHONE_RETAIL_STORE(2, "KPI_Phone_Retail_Store.bar");
+   //MESSAGE_TRACING(1, "Message_Tracing.bar", "Message Tracing in wso2 ESB", "some description"),
+    KPI_PHONE_RETAIL_STORE(1, "KPI_Phone_Retail_Store.bar", "Phone Retail Store", "Phone Retail Store toolbox is intended to monitor the KPI(Key Performance Indication) of a Phone Retail Store.\n" +
+           "                            And also this  includes analytics and visualization gadgets for Phone Retail Store.");
 
     private int sampleId;
     private String toolboxName;
+    private String displayName;
+    private String description;
 
-  private BasicToolBox(int sampleId, String toolName){
+  private BasicToolBox(int sampleId, String toolName, String displayName, String description){
       this.sampleId = sampleId;
       this.toolboxName = toolName;
+      this.displayName = displayName;
+      this.description = description;
   }
 
     public int getSampleId() {
@@ -33,5 +38,13 @@ public enum BasicToolBox {
 
     public String getToolboxName() {
         return toolboxName;
+    }
+
+    public String getDisplayName() {
+        return displayName;
+    }
+
+    public String getDescription() {
+        return description;
     }
 }

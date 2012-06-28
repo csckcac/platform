@@ -139,7 +139,6 @@ public class BAMArtifactDeployerManager {
             deployGadget(toolBoxDTO, username);
             deployJaggeryApps(toolBoxDTO);
         }
-
     }
 
 

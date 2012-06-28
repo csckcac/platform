@@ -291,4 +291,8 @@ public class BAMToolBoxUploaderService extends AbstractAdmin {
         }
     }
 
+    public BasicToolBox[] getBasicToolBoxes(){
+         return BasicToolBox.values();
+    }
+
 }

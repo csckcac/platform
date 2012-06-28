@@ -214,18 +214,24 @@ defined in the Order Approval Sample presented above. </p>
 
 <p>Step 2 : Creating a rule service configuration. Please refer the <a href="configuration_language.html">Configuration Guide</a>
  for writing a rule service configuration. The configuration
-required for the sample is shown bellow. It should name as {service name}.rsl
-(Rule Service Language). Fo the sample , it is OrderApprovalService.rsl </p>
-<pre xml:space="preserve">  &lt;ruleService name="OrderApprovalService"&gt;
-    &lt;description&gt;OrderApprovalService&lt;/description&gt;
-    &lt;ruleset path="conf/rules.drl"/&gt;
-    &lt;operation name="placeOrder"&gt;
-        &lt;with-param type="samples.userguide.PlaceOrder"/&gt;
-        &lt;result&gt;
-            &lt;element type="samples.userguide.OrderReject"/&gt;
-            &lt;element type="samples.userguide.OrderAccept"/&gt;
-        &lt;/result&gt;       
-    &lt;/operation&gt; 
+required for the sample is shown bellow. It should name as service.rsl
+(Rule Service Language). </p>
+<pre xml:space="preserve">&lt;ruleService
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;name=&quot;OrderApprovalService&quot;
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;xmlns=&quot;http://wso2.org/carbon/rules&quot;
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;targetNamespace=&quot;http://com.test/orderApproval&quot;&gt;
+&nbsp;&nbsp;&lt;ruleSet&gt;
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&lt;rule&nbsp;resourceType=&quot;regular&quot;&nbsp;sourceType=&quot;file&quot;&gt;orderApprovalRules.drl&lt;/rule&gt;
+&nbsp;&nbsp;&nbsp;&nbsp;&lt;/ruleSet&gt;
+&nbsp;&nbsp;&nbsp;&nbsp;&lt;operation&nbsp;name=&quot;placeOrder&quot;&gt;
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&lt;input&nbsp;wrapperElementName=&quot;placeOrder&quot;&nbsp;namespace=&quot;http://com.test/placeorder&quot;&gt;
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&lt;fact&nbsp;elementName=&quot;order&quot;&nbsp;namespace=&quot;http://com.test/placeorder&quot;&nbsp;type=&quot;samples.userguide.PlaceOrder&quot;&gt;&lt;/fact&gt;
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&lt;/input&gt;
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&lt;output&nbsp;wrapperElementName=&quot;placeOrderRespone&quot;&nbsp;namespace=&quot;http://com.test/placeorder&quot;&gt;
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&lt;fact&nbsp;elementName=&quot;orderAccept&quot;&nbsp;namespace=&quot;http://com.test/placeorder&quot;&nbsp;type=&quot;samples.userguide.OrderAccept&quot;&gt;&lt;/fact&gt;
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&lt;fact&nbsp;elementName=&quot;orderReject&quot;&nbsp;namespace=&quot;http://com.test/placeorder&quot;&nbsp;type=&quot;samples.userguide.OrderReject&quot;&gt;&lt;/fact&gt;
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&lt;/output&gt;
+&nbsp;&nbsp;&nbsp;&nbsp;&lt;/operation&gt;
 &lt;/ruleService&gt;</pre>
 
 <p>Step 4 : Organizing created three artifacts as per the figure showen
@@ -264,39 +270,48 @@ code(stub) required for the service invocation. There is an option for code
 generation in the services management page. A client using generated stub codes
 is shown bellow. Codes was generated with option - Unpacks the databinding
 classes. </p>
-<pre>/**
- * Client for testing the place order sample
- */
-public class TestPlaceOrder {
-     public static void main(String arg[]) {
+<pre>package org.wso2.carbon.samples;
+import org.wso2.carbon.samples.orderApprovalService.order.OrderAccept;
+import org.wso2.carbon.samples.orderApprovalService.order.PlaceOrder;
+import org.wso2.carbon.samples.orderApprovalService.order.PlaceOrderE;
+import org.wso2.carbon.samples.orderApprovalService.order.PlaceOrderRespone;
+import org.wso2.carbon.samples.orderApprovalService.stub.OrderApprovalServiceCallbackHandler;
+import org.wso2.carbon.samples.orderApprovalService.stub.OrderApprovalServiceStub;
+import java.rmi.RemoteException;
+
+public class PlaceOrderTestCase {
+
+    public static void main(String[] args) {
+
         try {
-            OrderApprovalServiceStub orderApprovalServiceStub =
-                    new OrderApprovalServiceStub("http://localhost:9763/services/OrderApprovalService");
-            PlaceOrderRequest placeOrderRequest = new PlaceOrderRequest();
+            OrderApprovalServiceStub orderApprovalServiceStub = new OrderApprovalServiceStub("http://localhost:9763/services/OrderApprovalService");
+            PlaceOrderE placeOrderE = new PlaceOrderE();
             PlaceOrder placeOrder = new PlaceOrder();
-            placeOrder.setPrice(2);
             placeOrder.setSymbol("IBM");
-            placeOrder.setQuantity(2);
-            placeOrderRequest.setPlaceOrder(placeOrder);
-            PlaceOrderResponse response =
-                    orderApprovalServiceStub.placeOrder(placeOrderRequest);
-            Result result = response.getResult();
-            OrderAccept orderAccept = result.getOrderAccept();
-            if (orderAccept == null) {
-                OrderReject orderReject = result.getOrderReject();
-                if (orderReject != null) {
-                    System.out.print("Order Rejected : " + orderReject.getReason());
-                }
-            } else {
-                System.out.println("Order Accepted : " + orderAccept.getMessage());
+            placeOrder.setPrice(150);
+            placeOrder.setQuantity(128);
+            PlaceOrder[] placeOrders = new PlaceOrder[1];
+            placeOrders[0] = placeOrder;
+            placeOrderE.setOrder(placeOrders);
+
+            PlaceOrderRespone placeOrderRespone = null; //new PlaceOrderRespone();
+            try {
+                placeOrderRespone = orderApprovalServiceStub.placeOrder(placeOrders);
+            } catch (RemoteException e) {
+                e.printStackTrace();  //To change body of catch statement use File | Settings | File Templates.
             }
-        } catch (AxisFault axisFault) {
-            axisFault.printStackTrace();
-        } catch (RemoteException e) {
+            OrderAccept[] orderAccepts = placeOrderRespone.getOrderAccept();
+            String result = orderAccepts[0].getMessage();
+            System.out.println(result);
+
+
+
+        } catch (Exception e) {
             e.printStackTrace();
         }
     }
-}</pre>
+}
+</pre>
 
 <h2 id="Wizard">Rule Service Wizard</h2>
 
@@ -306,10 +321,10 @@ already. The description is optional. Now go to the next step </p>
 
 <p><img src="images/setp-1.PNG" alt="Step-1" /></p>
 
-<p>Step 2 : Rule Set Information. There are three ways to specify the rule set
-or rule script. In-lined, upload or as a registry key. If you are going to
+<p>Step 2 : Rule Set Information. There are four ways to specify the rule set
+or rule script. In-lined, upload, url or as a registry key. If you are going to
 specify as a registry key, then you have to put the rule script in the system
-governance registry. </p>
+governance registry.(Multiple scripts can be added here) </p>
 
 <h3>In-Lined</h3>
 
@@ -323,9 +338,13 @@ governance registry. </p>
 
 <p><img src="images/setp-2-upload.PNG" alt="Step-2-Uplaod" /> </p>
 
+<h3>URL</h3>
+
+<p><img src="images/setp-2-url.PNG" alt="Step-2-Url" /> </p>
+
 <p>Step 3 : Facts Upload. In this step, you have to upload facts and results
 that are used in your rule script. It should be a valid jar file. Please make a
-jar file from the facts and results define in section one </p>
+jar file from the facts and results define in section one (Multiple jars can be uploaded) </p>
 
 <p><img src="images/setp-3.PNG" alt="Step-3" /></p>
 
@@ -335,10 +354,10 @@ service. You can uses add operation button to create a new operation </p>
 <p><img src="images/setp-4.PNG" alt="Step-4" /></p>
 
 <p>Step 5 : Add Operation. Please put the operation name. It is mandatory.
-Then, defines the required facts and results.The type is the only mandatory
-attribute in both facts and results. You can use fact selector to select a
-type, which we have already uploaded in the fact upload step. Please add a one
-fact with the type as samples.userguide.PlaceOrder and two results with types
+Then, defines the required input and output facts.The type is the only mandatory
+attribute in both input and output facts. You can use fact selector to select a
+type, which we have already uploaded in the input fact upload step. Please add a one
+fact with the type as samples.userguide.PlaceOrder and two outputs with types
 as samples.userguide.OrderReject and samples.userguide.OrderAccept. Now click
 the add button. This will bring you to the previous step (i.e. Operations
 Summary). Now click finish button to create and deploy the rule service. </p>
@@ -348,12 +367,6 @@ Summary). Now click finish button to create and deploy the rule service. </p>
 <h3>Fact Selector</h3>
 
 <p><img src="images/setp-5-fact.PNG" alt="Step-5-Fact" /> </p>
-
-<h3>Adding NameSpaces</h3>
-
-<p>This step is not required for this sample.</p>
-
-<p><img src="images/setp-5-ns.PNG" alt="Step-5-NS" /> </p>
 
 <p>Testing the sample is similar to the testing procedure described in the rule
 service upload sample. </p>

@@ -35,16 +35,17 @@ import org.wso2.carbon.governance.list.operations.*;
 import org.wso2.carbon.governance.list.operations.util.OperationsConstants;
 import org.wso2.carbon.governance.list.util.CommonUtil;
 import org.wso2.carbon.governance.list.util.ListServiceUtil;
-import org.wso2.carbon.registry.core.*;
+import org.wso2.carbon.registry.core.Collection;
+import org.wso2.carbon.registry.core.Registry;
+import org.wso2.carbon.registry.core.RegistryConstants;
+import org.wso2.carbon.registry.core.Resource;
 import org.wso2.carbon.registry.core.exceptions.RegistryException;
 import org.wso2.carbon.registry.core.jdbc.handlers.Handler;
 import org.wso2.carbon.registry.core.jdbc.handlers.HandlerManager;
 import org.wso2.carbon.registry.core.jdbc.handlers.RequestContext;
 import org.wso2.carbon.registry.core.jdbc.handlers.filters.MediaTypeMatcher;
 import org.wso2.carbon.registry.core.service.RegistryService;
-import org.wso2.carbon.registry.core.session.CurrentSession;
 import org.wso2.carbon.registry.core.session.UserRegistry;
-import org.wso2.carbon.user.core.UserStoreException;
 import org.wso2.carbon.utils.AbstractAxis2ConfigurationContextObserver;
 import org.wso2.carbon.utils.Axis2ConfigurationContextObserver;
 import org.wso2.carbon.utils.ConfigurationContextService;
@@ -112,26 +113,15 @@ public class GovernanceMgtUIListMetadataServiceComponent {
                                      throw new RegistryException("Violation of RXT definition in configuration file, follow the schema correctly..!!");
                                     }
 
-                                    Registry systemRegistry = requestContext.getSystemRegistry();
-
-                                    String layoutStoragePath =
-                                            RegistryConstants.CONFIG_REGISTRY_BASE_PATH +
-                                                    RegistryConstants.GOVERNANCE_COMPONENT_PATH +
-                                                    "/configuration/";
-
-                                    if(!CurrentSession.getUserRealm().getAuthorizationManager().isUserAuthorized(
-                                            CurrentSession.getUser(),layoutStoragePath, ActionConstants.PUT)){
-                                        throw new RegistryException("The user is not authorised to add a configurable governance artifact. The required permissions to configure the artifact are not given.");
-                                    }
-                                    systemRegistry.put(
+                                    Registry userRegistry = requestContext.getRegistry();
+                                    userRegistry.put(
                                             requestContext.getResourcePath().getPath(),
                                             requestContext.getResource());
+                                    Registry systemRegistry = requestContext.getSystemRegistry();
                                     configureGovernanceArtifacts(systemRegistry,
                                             CommonUtil.getConfigurationContext().getAxisConfiguration());
                                     requestContext.setProcessingComplete(true);
-                                } catch (UserStoreException e) {
-                                    log.error("Could not get user information", e);
-                                }  finally {
+                                } finally {
                                     org.wso2.carbon.registry.extensions.utils.CommonUtil
                                             .releaseUpdateLock();
                                 }

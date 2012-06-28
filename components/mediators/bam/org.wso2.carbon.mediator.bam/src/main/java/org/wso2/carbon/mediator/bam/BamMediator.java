@@ -154,73 +154,20 @@ public class BamMediator extends AbstractMediator {
                    MalformedURLException, AuthenticationException, TransportException, ThriftAuthenticationException {
 
         if (streamId == null) {
-            AgentConfiguration agentConfiguration = new AgentConfiguration();
-            String keyStorePath = CarbonUtils.getCarbonHome() + File.separator + "repository" +
-                                  File.separator + "resources" + File.separator + "security" +
-                                  File.separator + "client-truststore.jks";
-            String keyStorePassword = "wso2carbon";
-            agentConfiguration.setTrustStore(keyStorePath);
-            agentConfiguration.setTrustStorePassword(keyStorePassword);
-            System.setProperty("javax.net.ssl.trustStore", keyStorePath);
-            System.setProperty("javax.net.ssl.trustStorePassword", keyStorePassword);
-            Agent agent = new Agent(agentConfiguration);
-            //create data publisher
-            dataPublisher = new DataPublisher("tcp://" + this.serverIp + ":" + this.serverPort,
-                                              this.userName, this.password, agent);
-
-            //Define event stream
-            streamId = dataPublisher.defineEventStream("{" +
-                                                       "  'name':'" + this.streamName + "'," +
-                                                       "  'version':'"+ this.streamVersion + "'," +
-                                                       "  'nickName': '" + this.streamNickName + "'," +
-                                                       "  'description': '" + this.streamDescription + "'," +
-                                                       "  'metaData':[" +
-                                                       "          {'name':'ProductName','type':'STRING'}" +
-                                                       "  ]," +
-                                                       "  'payloadData':[" +
-                                                       "          {'name':'TenantId','type':'INT'}," +
-                                                       "          {'name':'ActivityId','type':'STRING'}," +
-                                                       "          {'name':'Request','type':'STRING'}," +
-                                                       "          {'name':'MessageId','type':'STRING'}," +
-                                                       "          {'name':'SOAPHeaddr','type':'STRING'}," +
-                                                       "          {'name':'SOAPBody','type':'STRING'}" +
-                                                       this.getPropertyString() +
-                                                       "  ]" +
-                                                       "}");
-            log.info("Event Stream Created.");
-        }
-
-        int numOfProperties = properties.size();
-        Object[] payloadData = new Object[numOfProperties + 6];
-        payloadData[0] = tenantId;
-        payloadData[1] = messageContext.getProperty(BamMediatorConstants.MSG_ACTIVITY_ID);
-        payloadData[2] = request ?
-                         BamMediatorConstants.DIRECTION_IN : BamMediatorConstants.DIRECTION_OUT;
-        payloadData[3] = messageContext.getMessageID();
-        payloadData[4] = messageContext.getEnvelope().getHeader().toString();
-        payloadData[5] = messageContext.getEnvelope().getBody().toString();
-
-        for (int i=0; i<numOfProperties; i++) {
-            payloadData[6 + i] = properties.get(i).getValue();
+            Agent agent = this.createAgent();
+            this.createDataPublisher(agent);
         }
 
         //Publish event for a valid stream
         if (streamId != null && !streamId.isEmpty()) {
             log.info("Stream ID: " + streamId);
             // Event for each message
-            Event eventJohnOne = new Event(streamId, System.currentTimeMillis(),
-                                           new Object[]{"external"},
-                                           null,
-                                           payloadData
+            Event event = new Event(streamId, System.currentTimeMillis(),
+                                           this.createMetadata(),
+                                           this.createCorrelationData(),
+                                           this.createPayloadData(tenantId, messageContext, request)
             );
-            /*Event eventJohnOne = new Event(streamId, System.currentTimeMillis(),
-                                           new Object[]{"external"},
-                                           null,
-                                           new Object[]{tenantId, messageContext.getMessageID(),
-                                                        messageContext.getEnvelope().getHeader().toString(),
-                                                        messageContext.getEnvelope().getBody().toString()}
-            );*/
-            dataPublisher.publish(eventJohnOne);
+            dataPublisher.publish(event);
         } else {
             log.info("streamId is empty.");
         }
@@ -311,6 +258,73 @@ public class BamMediator extends AbstractMediator {
             log.error("Error while processing MessageHeaderMediator...", e);
         }
 
+    }
+
+    private Agent createAgent(){
+        AgentConfiguration agentConfiguration = new AgentConfiguration();
+        String keyStorePath = CarbonUtils.getCarbonHome() + File.separator + "repository" +
+                              File.separator + "resources" + File.separator + "security" +
+                              File.separator + "client-truststore.jks";
+        String keyStorePassword = "wso2carbon";
+        agentConfiguration.setTrustStore(keyStorePath);
+        agentConfiguration.setTrustStorePassword(keyStorePassword);
+        System.setProperty("javax.net.ssl.trustStore", keyStorePath);
+        System.setProperty("javax.net.ssl.trustStorePassword", keyStorePassword);
+        return new Agent(agentConfiguration);
+    }
+
+    private void createDataPublisher(Agent agent) throws AgentException, MalformedStreamDefinitionException, StreamDefinitionException,
+                                                         DifferentStreamDefinitionAlreadyDefinedException,
+                                                         MalformedURLException, AuthenticationException, TransportException {
+        //create data publisher
+        dataPublisher = new DataPublisher("tcp://" + this.serverIp + ":" + this.serverPort,
+                                          this.userName, this.password, agent);
+
+        //Define event stream
+        streamId = dataPublisher.defineEventStream("{" +
+                                                   "  'name':'" + this.streamName + "'," +
+                                                   "  'version':'"+ this.streamVersion + "'," +
+                                                   "  'nickName': '" + this.streamNickName + "'," +
+                                                   "  'description': '" + this.streamDescription + "'," +
+                                                   "  'metaData':[" +
+                                                   "          {'name':'ProductName','type':'STRING'}" +
+                                                   "  ]," +
+                                                   "  'payloadData':[" +
+                                                   "          {'name':'TenantId','type':'INT'}," +
+                                                   "          {'name':'ActivityId','type':'STRING'}," +
+                                                   "          {'name':'Request','type':'STRING'}," +
+                                                   "          {'name':'MessageId','type':'STRING'}," +
+                                                   "          {'name':'SOAPHeaddr','type':'STRING'}," +
+                                                   "          {'name':'SOAPBody','type':'STRING'}" +
+                                                   this.getPropertyString() +
+                                                   "  ]" +
+                                                   "}");
+        log.info("Event Stream Created.");
+    }
+
+    private Object[] createPayloadData(int tenantId, MessageContext messageContext, boolean request){
+        int numOfProperties = properties.size();
+        Object[] payloadData = new Object[numOfProperties + 6];
+        payloadData[0] = tenantId;
+        payloadData[1] = messageContext.getProperty(BamMediatorConstants.MSG_ACTIVITY_ID);
+        payloadData[2] = request ?
+                         BamMediatorConstants.DIRECTION_IN : BamMediatorConstants.DIRECTION_OUT;
+        payloadData[3] = messageContext.getMessageID();
+        payloadData[4] = messageContext.getEnvelope().getHeader().toString();
+        payloadData[5] = messageContext.getEnvelope().getBody().toString();
+
+        for (int i=0; i<numOfProperties; i++) {
+            payloadData[6 + i] = properties.get(i).getValue();
+        }
+        return payloadData;
+    }
+
+    private Object[] createMetadata(){
+        return new Object[]{"external"};
+    }
+
+    private Object[] createCorrelationData(){
+        return null;
     }
     
     private String getPropertyString(){

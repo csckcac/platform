@@ -264,7 +264,10 @@ public class APIProviderHostObject extends ScriptableObject {
                 templates.setResourceSandboxURI(sandboxUrl);
                 //Checking whether duplicate api resources have been added or not
                 for (URITemplate uri : uriTemplates) {
-                    if (uri.getUriTemplate().equals(uriTemp) && Arrays.equals(uri.getMethods().toArray(), uriMethodArray)) {
+                    String[] uriMethodsArr = uri.getMethods().toArray(new String[uri.getMethods().size()]);
+                    Arrays.sort(uriMethodsArr);
+                    Arrays.sort(uriMethodArray);
+                    if (uri.getUriTemplate().equals(uriTemp) && Arrays.equals(uriMethodsArr, uriMethodArray)) {
                         throw new APIManagementException("Duplicate API resources with same URI Template and HTTP Methods.");
                     }
                 }
@@ -386,7 +389,10 @@ public class APIProviderHostObject extends ScriptableObject {
                     templates.setResourceSandboxURI(sandboxUrl);
                     //Checking whether duplicate api resources have been added or not
                     for (URITemplate uri : uriTemplates) {
-                        if (uri.getUriTemplate().equals(template) && Arrays.equals(uri.getMethods().toArray(), uriMethodArray)) {
+                        String[] uriMethodsArr = uri.getMethods().toArray(new String[uri.getMethods().size()]);
+                        Arrays.sort(uriMethodsArr);
+                        Arrays.sort(uriMethodArray);
+                        if (uri.getUriTemplate().equals(template) && Arrays.equals(uriMethodsArr, uriMethodArray)) {
                             throw new APIManagementException("Duplicate API resources with same URI Template and HTTP Methods.");
                         }
                 }

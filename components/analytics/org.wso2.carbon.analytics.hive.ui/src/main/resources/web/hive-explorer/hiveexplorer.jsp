@@ -166,7 +166,7 @@
                         for (String aSubQuery : temp) {
                             aSubQuery = aSubQuery.trim();
                             if (!aSubQuery.equals("")) {
-                               aquery += aSubQuery + "," + "\n\t";
+                                aquery += aSubQuery + "," + "\n\t";
                             }
                         }
                         aquery = aquery.substring(0, aquery.length() - 3);
@@ -219,11 +219,13 @@
         var allQueries = editAreaLoader.getValue("allcommands");
         if (allQueries != "") {
             document.getElementById('middle').style.cursor = 'wait';
+            openProgressBar();
             new Ajax.Request('../hive-explorer/queryresults.jsp', {
                         method: 'post',
                         parameters: {queries:allQueries},
                         onSuccess: function(transport) {
                             document.getElementById('middle').style.cursor = '';
+                            closeProgrsssBar();
                             var allPage = transport.responseText;
                             var divText = '<div id="returnedResults">';
                             var closeDivText = '</div>';
@@ -234,12 +236,14 @@
                             document.getElementById('hiveResult').innerHTML = queryResults;
                         },
                         onFailure: function(transport) {
+                            closeProgrsssBar();
                             document.getElementById('middle').style.cursor = '';
                             CARBON.showErrorDialog(transport.responseText);
                         }
                     });
 
         } else {
+            closeProgrsssBar();
             document.getElementById('middle').style.cursor = '';
             var message = "Empty query can not be executed";
             CARBON.showErrorDialog(message);
@@ -335,6 +339,15 @@
                 });
     }
 
+    function openProgressBar() {
+        var content = '<div id="overlay"><div id="box_frame"><div id="box">Executing Hive Queries...<br/><img src="images/executing.gif"/></div></div></div>';
+        document.getElementById('dynamic').innerHTML = content;
+    }
+
+    function closeProgrsssBar() {
+        document.getElementById('dynamic').innerHTML = '';
+    }
+
 </script>
 
 
@@ -362,14 +375,26 @@
         width: 100%;
     }
 
-    #loading_screen {
-        width: 400px;
-        height: 400px;
-        position: absolute;
+    #overlay {
+        width: 100%;
+        height: 100%;
+        position: fixed;
+        top: 0;
+        left: 0;
+    }
+
+    #box_frame {
+        width: 100%;
+        position: fixed;
         top: 50%;
-        left: 50%;
-        margin: -200px 0px 0px -200px;
-    / / Half the height and width
+    }
+
+    #box {
+        width: 230px;
+        padding: 10px;
+        margin: auto;
+        background-color: white;
+        border: 1px solid #d3d3d3;
     }
 
 </style>
@@ -380,7 +405,7 @@
     });
 </script>
 
-
+<div id="dynamic"></div>
 <div id="middle">
     <%
         if (scriptNameExists) {
@@ -402,7 +427,7 @@
                 <thead>
                 <tr>
                     <th><span style="float: left; position: relative; margin-top: 2px;">
-                            <fmt:message key="script"/></span>
+<fmt:message key="script"/></span>
                     </th>
                 </tr>
                 </thead>

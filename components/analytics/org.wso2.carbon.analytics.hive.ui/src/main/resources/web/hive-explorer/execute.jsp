@@ -77,11 +77,13 @@
         function executeQuery(allQueries) {
             if (allQueries != "") {
                 document.getElementById('middle').style.cursor = 'wait';
+                openProgressBar();
                 new Ajax.Request('../hive-explorer/queryresults.jsp', {
                             method: 'post',
                             parameters: {queries:allQueries},
                             onSuccess: function(transport) {
-                                 document.getElementById('middle').style.cursor = '';
+                                closeProgrsssBar();
+                                document.getElementById('middle').style.cursor = '';
                                 var allPage = transport.responseText;
                                 var divText = '<div id="returnedResults">';
                                 var closeDivText = '</div>';
@@ -92,16 +94,27 @@
                                 document.getElementById('hiveResult').innerHTML = queryResults;
                             },
                             onFailure: function(transport) {
-                                 document.getElementById('middle').style.cursor = '';
+                                closeProgrsssBar();
+                                document.getElementById('middle').style.cursor = '';
                                 CARBON.showErrorDialog(transport.responseText);
                             }
                         });
 
             } else {
+                closeProgrsssBar();
                 document.getElementById('middle').style.cursor = 'wait';
                 var message = "Empty query can not be executed";
                 CARBON.showErrorDialog(message);
             }
+        }
+
+        function openProgressBar() {
+            var content = '<div id="overlay"><div id="box_frame"><div id="box">Executing Hive Queries...<br/><img src="images/executing.gif"/></div></div></div>';
+            document.getElementById('dynamic').innerHTML = content;
+        }
+
+        function closeProgrsssBar() {
+            document.getElementById('dynamic').innerHTML = '';
         }
 
     </script>
@@ -131,9 +144,31 @@
             width: 100%;
         }
 
+        #overlay {
+            width: 100%;
+            height: 100%;
+            position: fixed;
+            top: 0;
+            left: 0;
+        }
+
+        #box_frame {
+            width: 100%;
+            position: fixed;
+            top: 50%;
+        }
+
+        #box {
+            width: 230px;
+            padding: 10px;
+            margin: auto;
+            background-color: white;
+            border: 1px solid #d3d3d3;
+        }
+
     </style>
 
-
+    <div id="dynamic"></div>
     <div id="middle">
 
         <h2>Script Editor<%=" - " + scriptName%>

@@ -33,28 +33,32 @@
 
 <p>The goal of this guide is to provide a detailed description about the
 configurations specific to the BRS. There are two types of configurations:
-rule-component.conf and services.xml and next sections discuss those in detail.
+rule-engine-config.xml and services.xml and next sections discuss those in detail.
 </p>
 
 <h2>Contents</h2>
 
 <div class="toc">
 <ul>
-  <li><a href="#rule-component.conf">Rule Component Configuration</a> </li>
+  <li><a href="#rule-engine-config.xml">Rule Engine Configuration</a> </li>
   <li><a href="#rule-service.conf">Rule Service Configuration</a> </li>
 </ul>
 </div>
 
-<h2 id="rule-component.conf">Rule Component Configuration</h2>
+<h2 id="rule-engine-config.xml">Rule Engine Configuration</h2>
 
-<p>Rule component configuration is to provide the capability to define the
-configuration information related to the rule component . The configuration for
-the rule-component.conf is shown bellow. </p>
+<p>Rule engine configuration is to provide the capability to define the
+Rule engine information. The configuration for the rule-engine-config.xml
+is shown bellow. </p>
 
-<p><img src="images/rule-component-conf.png" alt="Rule Component Configuration"
-/> </p>
+<pre xml:space="preserve"> &lt;ruleEngineConfig xmlns=&quot;xs:string&quot;&gt;
+   &lt;ruleEngineProvider className=&quot;xs:string&quot;&gt;
+       &lt;property name=&quot;xs:string&quot;
+                 value=&quot;xs:string&quot;/&gt;*
+   &lt;/ruleEngineProvider&gt;
+&lt;/ruleEngineConfig&gt;</pre>
 
-<p>RuleEngineProvider : The <i>class</i> is to specify the rule service
+<p>RuleEngineProvider : The <i>className</i> is to specify the rule service
 provider implementation. The default one is
 <i>org.wso2.carbon.rule.engine.jsr94.JSR94BackendRuntimeFactory</i>. The
 default JSR94 API provider is the open source Drools rule engine.
@@ -70,38 +74,34 @@ provide the JSR 94 rule service provider URI and the default value of it is
 properties to be used when creating rule execution sets and loading rule
 service provider. </p>
 
-<p>FactAdapters : To register adapters for creating facts to be injected in to
-the rule engine from the data in the message. The registered fact adapters can
-be used within fact definitions by specifying the name of a fact adapter. </p>
-
-<p>ResultAdapters : To register adapters for handling results from the rule
-engine execution.The registered result adapters can be used within result
-definitions by specifying the name of a result adapter. </p>
-
-<p>A example rule-component.conf is shown bellow.</p>
-<pre xml:space="preserve"> &lt;RuleServer&gt;
-    &lt;RuleEngineProvider class="org.wso2.carbon.rule.engine.jsr94.JSR94BackendRuntimeFactory"&gt;
-        &lt;Property name="default.properties.provider"
-                  value="org.wso2.carbon.rule.engine.drools.DroolsJSR94DefaultPropertiesProvider"/&gt;
-    &lt;/RuleEngineProvider&gt;
-&lt;/RuleServer&gt;</pre>
+<p>A example rule-engine-config.xml is shown bellow.</p>
+<pre xml:space="preserve">&lt;ruleEngineConfig xmlns=&quot;http://wso2.org/carbon/rules/conf&quot;&gt;
+    &lt;ruleEngineProvider className=&quot;org.wso2.carbon.rule.backend.drools.DroolsBackendRuntimeFactory&quot;/&gt;
+&lt;/ruleEngineConfig&gt;</pre>
 
 <p>The configuration to be used to provide information required to expose a
 rule script as a web service. There are two important parts in the services.xml
-of a rule service: rule set definition and facts/results definitions. </p>
+of a rule service: rule set definition and  input/output facts definitions. </p>
 </p>
 
-<h3>Rule Service Configuration ({service name}.rsl) </h3>
-<pre>&lt;ruleService name="xs:string" tns="xs:string"&gt;
-    &lt;description&gt;xs:string&lt;/description&gt;
-    &lt;ruleset [ path="xs:string" ] [ key="xs:string" ]&gt;
-      In-Lined
-    &lt;/ruleset&gt;
-    &lt;operation name="xs:string"&gt; *
-        &lt;with-param type="xs:string"/&gt;*
-        &lt;result [ name="xs:string" ]&gt;
-            &lt;element type="xs:string"/&gt;*
-        &lt;/result&gt;
+<h3>Rule Service Configuration (service.rsl) </h3>
+<pre>&lt;ruleService
+        name=&quot;xs:string&quot;
+        xmlns=&quot;xs:string&quot;
+        targetNamespace=&quot;xs:string&quot;&gt;
+  &lt;ruleSet&gt;
+        &lt;rule resourceType=&quot;regular|dtable&quot; sourceType=&quot;inline|registry|file|url&quot;&quot;&gt;        &lt;/rule&gt;
+    &lt;/ruleSet&gt;
+            &lt;properties&gt;
+            &lt;property&gt;&lt;/property&gt;*
+        &lt;/properties&gt;
+    &lt;operation name=&quot;xs:stringr&quot;&gt;
+        &lt;input wrapperElementName=&quot;xs:stringr&quot; namespace=&quot;xs:stringr&quot;&gt;
+            &lt;fact elementName=&quot;xs:stringr&quot; namespace=&quot;xs:stringr&quot; type=&quot;xs:stringr&quot;&gt;&lt;/fact&gt;*
+        &lt;/input&gt;
+        &lt;output wrapperElementName=&quot;xs:stringr&quot; namespace=&quot;xs:stringr&quot;&gt;
+            &lt;fact elementName=&quot;xs:stringr&quot; namespace=&quot;xs:stringr&quot; type=&quot;xs:stringr&quot;&gt;&lt;/fact&gt;*
+        &lt;/output&gt;
     &lt;/operation&gt;
 &lt;/ruleService&gt;</pre>
 
@@ -124,15 +124,21 @@ execution and used in constructing out-message of the WSDL for a rule service.
 
 <p>OrderApprovalService Rule Service Configuration -
 <strong>OrderApprovalService.drl</strong></p>
-<pre>&lt;ruleService name="OrderApprovalService"&gt;
-    &lt;description&gt;OrderApproval Service Description&lt;/description&gt;
-    &lt;ruleset path="conf/rules.drl"/&gt;
-    &lt;operation name="placeOrder"&gt;
-        &lt;with-param type="samples.userguide.PlaceOrder"/&gt;
-        &lt;result&gt;
-            &lt;element type="samples.userguide.OrderReject"/&gt;
-            &lt;element type="samples.userguide.OrderAccept"/&gt;
-        &lt;/result&gt;       
+<pre>&lt;ruleService
+        name=&quot;OrderApprovalService&quot;
+        xmlns=&quot;http://wso2.org/carbon/rules&quot;
+        targetNamespace=&quot;http://com.test/orderApproval&quot;&gt;
+  &lt;ruleSet&gt;
+        &lt;rule resourceType=&quot;regular&quot; sourceType=&quot;file&quot;&gt;orderApprovalRules.drl&lt;/rule&gt;
+    &lt;/ruleSet&gt;
+    &lt;operation name=&quot;placeOrder&quot;&gt;
+        &lt;input wrapperElementName=&quot;placeOrder&quot; namespace=&quot;http://com.test/placeorder&quot;&gt;
+            &lt;fact elementName=&quot;order&quot; namespace=&quot;http://com.test/placeorder&quot; type=&quot;samples.userguide.PlaceOrder&quot;&gt;&lt;/fact&gt;
+        &lt;/input&gt;
+        &lt;output wrapperElementName=&quot;placeOrderRespone&quot; namespace=&quot;http://com.test/placeorder&quot;&gt;
+            &lt;fact elementName=&quot;orderAccept&quot; namespace=&quot;http://com.test/placeorder&quot; type=&quot;samples.userguide.OrderAccept&quot;&gt;&lt;/fact&gt;
+            &lt;fact elementName=&quot;orderReject&quot; namespace=&quot;http://com.test/placeorder&quot; type=&quot;samples.userguide.OrderReject&quot;&gt;&lt;/fact&gt;
+        &lt;/output&gt;
     &lt;/operation&gt;
 &lt;/ruleService&gt;</pre>
 

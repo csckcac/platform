@@ -39,7 +39,6 @@
                 <exclude>**/INSTALL.txt</exclude>
                 <exclude>**/release-notes.html</exclude>
                 <exclude>**/carbon.xml</exclude>
-                <exclude>**/web.xml</exclude>
             </excludes>
         </fileSet>
         <fileSet>
@@ -231,11 +230,7 @@
             <outputDirectory>wso2mb-${pom.version}/repository/conf/</outputDirectory>
             <filtered>true</filtered>
         </file>
-        <file>
-            <source>../p2-profile/target/wso2carbon-core-${carbon.version}/repository/conf/tomcat/carbon/WEB-INF/web.xml</source>
-            <outputDirectory>wso2mb-${pom.version}/repository/conf/tomcat/carbon/WEB-INF</outputDirectory>
-            <filtered>true</filtered>
-        </file>
+
 	<!-- Including syslog-config.xml file -->
  	<file>
             <source>../p2-profile/target/wso2carbon-core-${carbon.version}/repository/conf/etc/syslog-config.xml</source>

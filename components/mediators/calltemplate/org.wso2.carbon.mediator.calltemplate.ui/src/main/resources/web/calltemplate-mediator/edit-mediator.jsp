@@ -76,7 +76,7 @@
 
            <tr>
                 <td>
-                    <fmt:message key="mediator.call.target"/>
+                    <fmt:message key="mediator.call.target"/><span class="required">*</span>
                 </td>
                 <td>
                     <input class="longInput" type="text" id="mediator.call.target" name="mediator.call.target"

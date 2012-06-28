@@ -341,23 +341,15 @@ function isContainRaw(tbody) {
     return false;
 }
 
-function xsltMediatorValidate() {
-
-    var key;
-    var keyGroup = document.getElementById("keyGroupDynamic");
-    if (keyGroup!=null && keyGroup.checked) {
-        key = document.getElementById("mediator.xslt.key.dynamic_val");
-    } else {
-        key = document.getElementById("mediator.xslt.key.static_val");
-    }
-    if (key && key.value == "") {
-        CARBON.showErrorDialog(xsltjsi18n["mediator.call.script.key.empty"]);
+function calltemplateMediatorValidate() {
+    var target = document.getElementById("mediator.call.target").value;
+    if(target == null || target.trim()==""){
+//        alert('validate');
+        CARBON.showErrorDialog(xsltjsi18n["call.mediator.target.validInputmsg"]);
         return false;
     }
-    if (!isValidFeatures(xsltjsi18n["mediator.call.feature.name.empty"])) {
-        return false;
-    }
-    return isValidProperties(xsltjsi18n["mediator.call.property.name.empty"], xsltjsi18n["mediator.call.property.value.empty"]);
+//    alert('true : target = ' + target);
+    return true;
 
 }
 

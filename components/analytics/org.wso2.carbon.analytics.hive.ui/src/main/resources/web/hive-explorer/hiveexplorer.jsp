@@ -155,7 +155,6 @@
             scriptContent = "";
             for (String aquery : queries) {
                 aquery = aquery.trim();
-                System.out.println(aquery);
                 if (!aquery.equals("")) {
                     aquery = aquery.replaceAll("%%\n", ";");
                     aquery = aquery.replaceAll("%%", ";");

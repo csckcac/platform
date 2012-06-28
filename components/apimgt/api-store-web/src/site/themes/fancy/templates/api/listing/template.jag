@@ -25,12 +25,33 @@
                         </div>
                         <!-- /navbar-inner -->
                     </div>
-
-
                     <ul class="thumbnails">
+
                       <%
                         var i, api, path, thumbURL, apis = outputs.apis, length = apis.length;
-                        for(i = 0; i < length; i++) {
+
+                        var itemsPerPage = 10; //reduce this number to preview the pagination
+                        var currentPage = 1;
+                        var numberOfPages = parseInt(length / itemsPerPage);
+
+                        if (length % itemsPerPage != 0) {
+                            numberOfPages++;
+                        }
+
+                        if (request.getParameter('currentPage') != null) {
+                            currentPage = parseInt(request.getParameter('currentPage'));
+                        }
+                        var from = (currentPage - 1)*itemsPerPage;
+                        var to = currentPage*itemsPerPage;
+                        if(currentPage == numberOfPages){
+                            to = length%(itemsPerPage*currentPage);
+                            if(to == 0){
+                                to=itemsPerPage*currentPage;
+                            }
+                        }
+
+
+                        for(i = from; i < to; i++) {
                             api = apis[i];
                             thumbURL = api.thumbURL;
                             if(thumbURL && thumbURL.indexOf("images/") == 0) {
@@ -54,6 +75,18 @@
                         <% } %>
 
                     </ul>
+                    <% if(numberOfPages > 1) { %>
+                    <div class="pagination">
+                        <ul>
+                          <li <% if(currentPage == 1) { %> class="disabled" <% } %>><a href="?currentPage=<%=(currentPage-1)%>">Prev</a></li>
+                          <% for(var i=1;i<=numberOfPages;i++) { %>
+                            <li <% if(parseInt(i)==parseInt(currentPage)){ %> class="active" <% } %>><a href="?currentPage=<%=i%>"><%=String(i).split('.')[0]%></a></li>
+                          <% } %>
+                          <li <% if(currentPage == numberOfPages) { %> class="disabled" <% } %>><a href="?currentPage=<%=(currentPage+1)%>">Next</a></li>
+                        </ul>
+                      </div>
+                     <% } %>
+
 
                     <% if(length == 0) { %>
                     <div class="alert alert-info">

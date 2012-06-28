@@ -1640,7 +1640,7 @@ public class APIStoreHostObject extends ScriptableObject {
                     true, stub._getServiceClient());
             stub.addUser(username, password, new String[] { role }, null, null);
         } catch (RemoteException e) {
-            throw new APIManagementException("Error while invoking user admin service", e);
+            throw new APIManagementException(e.getMessage(), e);
         } catch (AddUserUserAdminExceptionException e) {
             throw new APIManagementException("Error while adding the user: " + username, e);
         }

@@ -22,6 +22,10 @@
         <parameter name="ServiceClass" locked="false">
             org.wso2.carbon.appfactory.application.mgt.service.ApplicationManagementService
         </parameter>
+        <operation name="getAllApplications">
+            <parameter name="AuthorizationAction" locked="false">/permission/admin/login</parameter>
+        </operation>
+
         <parameter name="adminService" locked="ture">true</parameter>
         <parameter name="AuthorizationAction" locked="true">/permission/admin/</parameter>
     </service>

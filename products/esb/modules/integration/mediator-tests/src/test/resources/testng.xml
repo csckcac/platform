@@ -32,6 +32,9 @@
             <class name="org.wso2.carbon.mediator.tests.rewrite.UrlReWriteByPort"/>
             <class name="org.wso2.carbon.mediator.tests.rewrite.UrlReWriteByHost"/>
             <class name="org.wso2.carbon.mediator.tests.rewrite.UrlReWriteByContext"/>
+            <class name="org.wso2.carbon.mediator.tests.rewrite.ReWriteFullUrlTestCase"/>
+            <class name="org.wso2.carbon.mediator.tests.rewrite.RemoveReWriteHostNameTestCase"/>
+            <class name="org.wso2.carbon.mediator.tests.rewrite.RemoveReWritePortTestCase"/>
 
         </classes>
     </test>

@@ -113,7 +113,8 @@
                             }
                             aquery = aquery.substring(0, aquery.length() - 3);
                         }
-                            scriptContent = scriptContent + aquery + ";" + "\n";
+                        aquery = aquery.trim();
+                        scriptContent = scriptContent + aquery + ";" + "\n";
                     }
                 }
             }
@@ -154,10 +155,11 @@
             scriptContent = "";
             for (String aquery : queries) {
                 aquery = aquery.trim();
+                System.out.println(aquery);
                 if (!aquery.equals("")) {
                     aquery = aquery.replaceAll("%%\n", ";");
                     aquery = aquery.replaceAll("%%", ";");
-                     aquery = wrapTextInVisibleWidth(aquery);
+                    aquery = wrapTextInVisibleWidth(aquery);
                     String[] temp = aquery.split(",");
 
                     if (null != temp) {
@@ -165,24 +167,26 @@
                         for (String aSubQuery : temp) {
                             aSubQuery = aSubQuery.trim();
                             if (!aSubQuery.equals("")) {
-                                aquery += "\t" + aSubQuery + "," + "\n\t";
+                               aquery += aSubQuery + "," + "\n\t";
                             }
                         }
                         aquery = aquery.substring(0, aquery.length() - 3);
 
                     }
-                        scriptContent = scriptContent + aquery + ";" + "\n";
+                    aquery = aquery.trim();
+                    scriptContent = scriptContent + aquery + ";" + "\n";
                 }
             }
         }
     }
+
+
 %>
-
-
 <%!
     private String wrapTextInVisibleWidth(String line) {
         int max = 150;
         if (null != line) {
+            line = line.trim();
             if (line.length() <= max) {
                 return line;
             } else {
@@ -237,7 +241,7 @@
                     });
 
         } else {
-             document.getElementById('middle').style.cursor = '';
+            document.getElementById('middle').style.cursor = '';
             var message = "Empty query can not be executed";
             CARBON.showErrorDialog(message);
         }
@@ -252,6 +256,7 @@
                     checkExistingNameAndSaveScript();
                 }
                 else {
+                    document.getElementById('saveWithCron').value = 'true';
                     CARBON.showConfirmationDialog("Do you want to schedule the script?", function() {
                         scheduleTask();
                     }, function() {
@@ -358,6 +363,16 @@
         width: 100%;
     }
 
+    #loading_screen {
+        width: 400px;
+        height: 400px;
+        position: absolute;
+        top: 50%;
+        left: 50%;
+        margin: -200px 0px 0px -200px;
+    / / Half the height and width
+    }
+
 </style>
 
 <script type="text/javascript">
@@ -365,6 +380,7 @@
         document.getElementById('allcommands').focus();
     });
 </script>
+
 
 <div id="middle">
     <%
@@ -537,6 +553,7 @@
                 </tr>
                 </tbody>
                 <input type="hidden" name="scriptContent" id="scriptContent"/>
+                <input type="hidden" name="saveWithCron" id="saveWithCron"/>
             </table>
             </td>
             </tr>
@@ -548,6 +565,16 @@
 
     </div>
 </div>
+<%
+    String saveWithCron = request.getParameter("saveWithCron");
+    if (null != saveWithCron && !saveWithCron.equals("")) {
+%>
 
+<script type="text/javascript">
+    saveScript();
+</script>
+<%
+    }
+%>
 
 </fmt:bundle>

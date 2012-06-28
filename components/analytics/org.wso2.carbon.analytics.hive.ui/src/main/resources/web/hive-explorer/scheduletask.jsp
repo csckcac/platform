@@ -47,6 +47,8 @@
     }
     String mode = request.getParameter("mode");
     String cron = request.getParameter("cron");
+    String saveWithCron = request.getParameter("saveWithCron");
+    if(null == saveWithCron)saveWithCron = "";
 %>
 <script type="text/javascript">
     var cronExpSelected = '';
@@ -86,7 +88,8 @@
                                     <%--document.getElementById('scriptContent').value = '<%=scriptContent%>';--%>
                                     <%--document.getElementById('cronForm').action = "../hive-explorer/hiveexplorer.jsp";--%>
                                     <%--document.getElementById('cronForm').submit();--%>
-                                    location.href = '../hive-explorer/hiveexplorer.jsp?cron=' + cronExpSelected + '&scriptName=' + '<%=scriptName%>' + '&mode=' + '<%=mode%>' + '&scriptContent=' + '<%=scriptContent%>';
+                                    location.href = '../hive-explorer/hiveexplorer.jsp?cron=' + cronExpSelected + '&scriptName=' + '<%=scriptName%>' + '&mode=' + '<%=mode%>' + '&scriptContent=' + '<%=scriptContent%>'
+                                            +'&saveWithCron='+'<%=saveWithCron%>';
                                 }, function() {
                                     <%--document.getElementById('cron').value = cronExpSelected;--%>
                                     <%--document.getElementById('scriptName').value = '<%=scriptName%>';--%>
@@ -94,7 +97,8 @@
                                     <%--document.getElementById('scriptContent').value = '<%=scriptContent%>';--%>
                                     <%--document.getElementById('cronForm').action = "../hive-explorer/hiveexplorer.jsp";--%>
                                     <%--document.getElementById('cronForm').submit();--%>
-                                    location.href = '../hive-explorer/hiveexplorer.jsp?cron=' + cronExpSelected + '&scriptName=' + '<%=scriptName%>' + '&mode=' + '<%=mode%>' + '&scriptContent=' + '<%=scriptContent%>';
+                                    location.href = '../hive-explorer/hiveexplorer.jsp?cron=' + cronExpSelected + '&scriptName=' + '<%=scriptName%>' + '&mode=' + '<%=mode%>' + '&scriptContent=' + '<%=scriptContent%>'
+                                            +'&saveWithCron='+'<%=saveWithCron%>';
                                 });
 
                             } else {
@@ -126,7 +130,8 @@
                                     <%--document.getElementById('scriptContent').value = '<%=scriptContent%>';--%>
                                     <%--document.getElementById('cronForm').action = "../hive-explorer/hiveexplorer.jsp";--%>
                                     <%--document.getElementById('cronForm').submit();--%>
-                                    location.href = '../hive-explorer/hiveexplorer.jsp?cron=' + cronExpSelected + '&scriptName=' + '<%=scriptName%>' + '&mode=' + '<%=mode%>' + '&scriptContent=' + '<%=scriptContent%>';
+                                    location.href = '../hive-explorer/hiveexplorer.jsp?cron=' + cronExpSelected + '&scriptName=' + '<%=scriptName%>' + '&mode=' + '<%=mode%>' + '&scriptContent=' + '<%=scriptContent%>'
+                                            +'&saveWithCron='+'<%=saveWithCron%>';
                                 }, function() {
                                     <%--document.getElementById('cron').value = cronExpSelected;--%>
                                     <%--document.getElementById('scriptName').value = '<%=scriptName%>';--%>
@@ -134,7 +139,8 @@
                                     <%--document.getElementById('scriptContent').value = '<%=scriptContent%>';--%>
                                     <%--document.getElementById('cronForm').action = "../hive-explorer/hiveexplorer.jsp";--%>
                                     <%--document.getElementById('cronForm').submit();--%>
-                                    location.href = '../hive-explorer/hiveexplorer.jsp?cron=' + cronExpSelected + '&scriptName=' + '<%=scriptName%>' + '&mode=' + '<%=mode%>' + '&scriptContent=' + '<%=scriptContent%>';
+                                    location.href = '../hive-explorer/hiveexplorer.jsp?cron=' + cronExpSelected + '&scriptName=' + '<%=scriptName%>' + '&mode=' + '<%=mode%>' + '&scriptContent=' + '<%=scriptContent%>'
+                                            +'&saveWithCron='+'<%=saveWithCron%>';
                                 });
 
                                 if (message.contains("Success")) {

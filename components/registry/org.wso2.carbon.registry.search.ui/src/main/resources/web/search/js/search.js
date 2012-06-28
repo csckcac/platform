@@ -164,6 +164,10 @@ function clearAll(){
          if (rows[i].type == "text") {
             rows[i].value = "";
          }
+
+         if(rows[i].type == "checkbox"){
+            rows[i].checked = false;
+         }
     }
     collapseCustomUI();
 }

@@ -109,10 +109,10 @@ public class InMemorySubscriptionStorage {
             String currentTopicName = "";
             String[] topicParts = topicName.split("/");
             int i = 0; // the first part if the split parts are "" since always topics start with /
-            while (i < (topicParts.length - 1)) {
+            while (i < (topicParts.length)) {
                 currentTopicName = currentTopicName + topicParts[i] + "/";
                 matchingTopicNames.add(currentTopicName + "#");
-                if (i == topicParts.length - 2) {
+                if (i == (topicParts.length - 1)||i == (topicParts.length - 2)) {
                     matchingTopicNames.add(currentTopicName + "*");
                 }
                 i++;

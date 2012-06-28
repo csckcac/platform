@@ -169,7 +169,7 @@ public class ApplicationDeploymentService extends AbstractAdmin {
 
     //TODO car files deployment???
     public Application[] deployApplication(String applicationSvnUrl, String applicationId,
-                                           String stage) throws ApplicationDeploymentExceptions {
+                                           String stage, String version) throws ApplicationDeploymentExceptions {
 
         String key = new StringBuilder(AppFactoryConstants.DEPLOYMENT_STAGES).append(".").
                 append(stage).append(".").append(AppFactoryConstants.DEPLOYMENT_URL).toString();

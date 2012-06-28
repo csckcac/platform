@@ -830,7 +830,7 @@ class APIProviderImpl extends AbstractAPIManager implements APIProvider {
     public void deleteAPI(APIIdentifier identifier) throws APIManagementException {
         String path = APIConstants.API_ROOT_LOCATION + RegistryConstants.PATH_SEPARATOR +
                       identifier.getProviderName() + RegistryConstants.PATH_SEPARATOR +
-                      identifier.getApiName();
+                      identifier.getApiName()+RegistryConstants.PATH_SEPARATOR+identifier.getVersion();
         try {
             GenericArtifactManager artifactManager = APIUtil.getArtifactManager(registry,
                                                                                 APIConstants.API_KEY);

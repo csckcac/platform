@@ -149,35 +149,41 @@ public class Policy {
     }
 }</pre>
 
-<p><h3>Drools Rule File - InsuranceService.drl</h3>
+<p><h3>Rule Service Configuration - service.rsl</h3>
 </p>
-<pre>package insurance
+<pre>&lt;ruleService
+        name=&quot;InsuranceService&quot;
+        xmlns=&quot;http://wso2.org/carbon/rules&quot;
+        targetNamespace=&quot;http://com.test/insurance&quot;&gt;
+    &lt;ruleSet&gt;
+        &lt;rule resourceType=&quot;regular&quot; sourceType=&quot;inline&quot;&gt;
+            &lt;![CDATA[
+                package insurance
 
-import samples.insurance.Driver;
-import samples.insurance.Car;
-import samples.insurance.Policy;
+                import samples.insurance.Driver;
+                import samples.insurance.Car;
+                import samples.insurance.Policy;
 
-rule "High Risk"
-when
-      Driver( ( male == true) &amp;&amp; ( age &gt;= 16 ) &amp;&amp; ( age &lt;= 25 ))
-      Car ( ( style == "sport") &amp;&amp; ( color=="red" ) ) 
-then
-      Policy p = new Policy ();
-           p.increasePremium(0.2);
-           insertLogical(p);
-end  </pre>
-
-<p><h3>Rule Service Configuration - InsuranceService.rsl</h3>
-</p>
-<pre>&lt;ruleService name="InsuranceService"&gt;
-    &lt;description&gt;Insurance Service&lt;/description&gt;
-    &lt;ruleset path="InsuranceService.drl"/&gt;
-    &lt;operation name="applyForInsurance"&gt;
-        &lt;with-param type="samples.insurance.Car"/&gt;
-        &lt;with-param type="samples.insurance.Driver"/&gt;
-        &lt;result&gt;
-            &lt;element type="samples.insurance.Policy"/&gt;
-        &lt;/result&gt;
+                rule &quot;High Risk&quot;
+                when
+                      Driver( ( male == true) &amp;&amp; ( age &gt;= 16 ) &amp;&amp; ( age &lt;= 25 ))
+                      Car ( ( style == &quot;sport&quot;) &amp;&amp; ( color==&quot;red&quot; ) )
+                then
+                      Policy p = new Policy ();
+                           p.increasePremium(0.2);
+                           insertLogical(p);
+                end
+            ]]&gt;
+        &lt;/rule&gt;
+    &lt;/ruleSet&gt;
+    &lt;operation name=&quot;applyForInsurance&quot;&gt;
+        &lt;input wrapperElementName=&quot;applyForInsurance&quot; namespace=&quot;http://com.test/applyForInsurance&quot;&gt;
+            &lt;fact elementName=&quot;carInsurance&quot; namespace=&quot;http://com.test/applyForInsurance&quot; type=&quot;samples.insurance.Car&quot;&gt;&lt;/fact&gt;
+	    &lt;fact elementName=&quot;driverInsurance&quot; namespace=&quot;http://com.test/applyForInsurance&quot; type=&quot;samples.insurance.Driver&quot;&gt;&lt;/fact&gt;
+        &lt;/input&gt;
+        &lt;output wrapperElementName=&quot;insurancerApplicationRespone&quot; namespace=&quot;http://com.test/applyForInsurance&quot;&gt;
+            &lt;fact elementName=&quot;insurancePolicy&quot; namespace=&quot;http://com.test/applyForInsurance&quot; type=&quot;samples.insurance.Policy&quot;&gt;&lt;/fact&gt;
+        &lt;/output&gt;
     &lt;/operation&gt;
 &lt;/ruleService&gt;</pre>
 
@@ -201,50 +207,44 @@ You can use Try-it tool with a request similar to the following. </p>
 <p>You can also use the code generation. There is an option for code generation
 in the services management page. A client using generated stub codes is shown
 bellow. Codes was generated with option - Unpacks the databinding classes.</p>
-<pre>import org.apache.axis2.AxisFault;
-import org.wso2.carbon.brs.ApplyForInsuranceRequest;
-import org.wso2.carbon.brs.ApplyForInsuranceResponse;
-import org.wso2.carbon.brs.InsuranceServiceStub;
-import org.wso2.carbon.brs.Result;
-import samples.insurance.xsd.Car;
-import samples.insurance.xsd.Driver;
-import samples.insurance.xsd.Policy;
+<pre>package org.wso2.carbon.samples;
 
+import org.apache.axis2.AxisFault;
+import org.wso2.carbon.samples.insuranceService.insurance.ApplyForInsurance;
+import org.wso2.carbon.samples.insuranceService.insurance.Car;
+import org.wso2.carbon.samples.insuranceService.insurance.Driver;
+import org.wso2.carbon.samples.insuranceService.insurance.Policy;
+import org.wso2.carbon.samples.insuranceService.stub.InsuranceServiceStub;
 import java.rmi.RemoteException;
 
-/**
- * A client for testing InsuranceService
- */
-public class TestInsuranceService {
+public class InsuranceServiceTestCase {
 
-    public static void main(String arg[]) {
+    public static void main(String[] args) {
 
         try {
-
             InsuranceServiceStub insuranceServiceStub =
                     new InsuranceServiceStub("http://localhost:9763/services/InsuranceService");
-            ApplyForInsuranceRequest applyForInsuranceRequest = new ApplyForInsuranceRequest();
+            ApplyForInsurance applyForInsurance = new ApplyForInsurance();
 
             Car car = new Car();
             car.setColor("red");
             car.setStyle("sport");
+            Car[] cars = new Car[1];
+            cars[0] = car;
 
             Driver driver = new Driver();
-            driver.setAge(20);
-            driver.setMale(true);
             driver.setName("your name");
+            driver.setAge(24);
+            driver.setMale(true);
+            Driver[] drivers = new Driver[1];
+            drivers[0] = driver;
 
-            applyForInsuranceRequest.setCar(car);
-            applyForInsuranceRequest.setDriver(driver);
+            applyForInsurance.setCarInsurance(cars);
+            applyForInsurance.setDriverInsurance(drivers);
 
-            ApplyForInsuranceResponse response =
-                    insuranceServiceStub.applyForInsurance(applyForInsuranceRequest);
-            Result result = response.getResult();
-            Policy policy = result.getPolicy();
-            if (policy != null) {
-                System.out.print(" Insurance Premium : " + policy.getPremium());
-            }
-
+            Policy[] policies = insuranceServiceStub.applyForInsurance(cars, drivers);
+            double result = policies[0].getPremium();
+            System.out.println(result);
         } catch (AxisFault axisFault) {
             axisFault.printStackTrace();
         } catch (RemoteException e) {

@@ -104,53 +104,60 @@ public class GreetingMessage {
     }
 }</pre>
 
-<p><h3>Drools Rule File - greeting.drl</h3>
+<p><h3>Rule Service Configuration - service.rsl</h3>
+Here we use inlined rule set within the service.rsl file
 </p>
-<pre>package greeting
+<pre>&lt;ruleService
+       name=&quot;GreetingService&quot;
+       xmlns=&quot;http://wso2.org/carbon/rules&quot;
+       targetNamespace=&quot;http://com.test/greeting&quot;&gt;
+    &lt;ruleSet&gt;
+       &lt;rule resourceType=&quot;regular&quot; sourceType=&quot;inline&quot;&gt;
+           &lt;![CDATA[
+               package greeting
 
-import samples.greeting.GreetingMessage;
-import samples.greeting.User;
+               import samples.greeting.GreetingMessage;
+               import samples.greeting.User;
 
-rule "Is Morning" no-loop true
-when
-    user : User()
-    eval((6 &lt; user.now()) &amp;&amp; (user.now()&lt; 12))
-then
-    GreetingMessage msg = new GreetingMessage();
-    msg.setMessage("Good Morning  " + user.getName() + " !!! ");
-    insertLogical(msg);
-end
+               rule &quot;Is Morning&quot; no-loop true
+               when
+                   user : User()
+                   eval((6 &lt; user.now()) &amp;&amp; (user.now()&lt; 12))
+               then
+                   GreetingMessage msg = new GreetingMessage();
+                   msg.setMessage(&quot;Good Morning  &quot; + user.getName() + &quot; !!! &quot;);
+                   insertLogical(msg);
+               end
 
-rule "Is afternoon" no-loop true
-when
-    user : User()
-    eval((12 &lt;= user.now()) &amp;&amp; (user.now() &lt; 18))
-then
-    GreetingMessage msg = new GreetingMessage();
-    msg.setMessage("Good Afternoon  " + user.getName() + " !!! ");
-    insertLogical(msg);
-end
+               rule &quot;Is afternoon&quot; no-loop true
+               when
+                   user : User()
+                   eval((12 &lt;= user.now()) &amp;&amp; (user.now() &lt; 18))
+               then
+                   GreetingMessage msg = new GreetingMessage();
+                   msg.setMessage(&quot;Good Afternoon  &quot; + user.getName() + &quot; !!! &quot;);
+                   insertLogical(msg);
+               end
 
-rule "Is Night" no-loop true
-when
-    user : User()
-    eval( (18 &lt;= user.now()) &amp;&amp; (user.now() &lt; 24))
-then
-    GreetingMessage msg = new GreetingMessage();
-    msg.setMessage("Good Night  " + user.getName() + " !!! ");
-    insertLogical(msg);
-end</pre>
-
-<p><h3>Rule Service Configuration - GreetingService.rsl</h3>
-</p>
-<pre>&lt;ruleService name="GreetingService"&gt;
-    &lt;description&gt;Greeting Service&lt;/description&gt;
-    &lt;ruleset path="greeting.drl"/&gt;
-    &lt;operation name="greetMe"&gt;
-        &lt;with-param type="samples.greeting.User"/&gt;
-        &lt;result&gt;
-            &lt;element type="samples.greeting.GreetingMessage"/&gt;
-        &lt;/result&gt;
+               rule &quot;Is Night&quot; no-loop true
+               when
+                   user : User()
+                   eval( (18 &lt;= user.now()) &amp;&amp; (user.now() &lt; 24))
+               then
+                   GreetingMessage msg = new GreetingMessage();
+                   msg.setMessage(&quot;Good Night  &quot; + user.getName() + &quot; !!! &quot;);
+                   insertLogical(msg);
+               end
+           ]]&gt;
+       &lt;/rule&gt;
+    &lt;/ruleSet&gt;
+    &lt;operation name=&quot;greetMe&quot;&gt;
+       &lt;input wrapperElementName=&quot;user&quot; namespace=&quot;http://com.test/greeting&quot;&gt;
+           &lt;fact elementName=&quot;user&quot; namespace=&quot;http://com.test/greeting&quot; type=&quot;samples.greeting.User&quot;&gt;&lt;/fact&gt;
+       &lt;/input&gt;
+       &lt;output wrapperElementName=&quot;greetingMessage&quot; namespace=&quot;http://com.test/greeting&quot;&gt;
+           &lt;fact elementName=&quot;greetingMessage&quot; namespace=&quot;http://com.test/greeting&quot; type=&quot;samples.greeting.GreetingMessage&quot;&gt;&lt;/fact&gt;
+       &lt;/output&gt;
     &lt;/operation&gt;
 &lt;/ruleService&gt;</pre>
 
@@ -167,40 +174,30 @@ You can use Try-it tool with a request similar to the following. </p>
 <p>You can also use the code generation. There is an option for code generation
 in the services management page. A client using generated stub codes is shown
 bellow. Codes were generated with option Unpacks the databinding classes.</p>
-<pre>import org.apache.axis2.AxisFault;
-import org.wso2.carbon.brs.GreetMeRequest;
-import org.wso2.carbon.brs.GreetMeResponse;
-import org.wso2.carbon.brs.GreetingServiceStub;
-import org.wso2.carbon.brs.Result;
-import samples.greeting.xsd.GreetingMessage;
-import samples.greeting.xsd.User;
+<pre>package org.wso2.carbon.samples;
 
+import java.lang.String;
+import org.wso2.carbon.samples.greetingService.greeting.*;
+import org.apache.axis2.AxisFault;
 import java.rmi.RemoteException;
 
-/**
- * A client for testing  GreetingService
- */
-public class TestGreetingService {
+public class GreetingServiceTestCase {
 
-    public static void main(String arg[]) {
+    public static void main(String[] args) {
 
         try {
+            GreetingServiceStub greetingServiceStub = new GreetingServiceStub("http://localhost:9763/services/GreetingService");
 
-            GreetingServiceStub greetingServiceStub =
-                    new GreetingServiceStub("http://localhost:9763/services/GreetingService");
-
-            GreetMeRequest greetMeRequest = new GreetMeRequest();
+            UserE userRequest = new UserE();
             User user = new User();
             user.setName("your name");
-            greetMeRequest.setUser(user);
+            User[] users = new User[1];
+            users[0] = user;
+            userRequest.setUser(users);
 
-            GreetMeResponse response =
-                    greetingServiceStub.greetMe(greetMeRequest);
-            Result result = response.getResult();
-            GreetingMessage greetingMessage = result.getGreetingMessage();
-            if (greetingMessage != null) {
-                System.out.print(greetingMessage.getMessage());
-            }
+            GreetingMessage[] greetingMessages = greetingServiceStub.greetMe(users);
+            String result = greetingMessages[0].getMessage();
+            System.out.println(result);
 
         } catch (AxisFault axisFault) {
             axisFault.printStackTrace();
@@ -208,8 +205,8 @@ public class TestGreetingService {
             e.printStackTrace();
         }
     }
-
-}</pre>
+}
+</pre>
 
 <p><h2 id="References">References</h2>
 </p>

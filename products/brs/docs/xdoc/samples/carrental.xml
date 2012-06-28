@@ -111,84 +111,90 @@ public class Charge {
     }
 }</pre>
 
-<h3>Drools Rule File - CarRentalService.drl</h3>
-<pre xml:space="preserve">package carrental
+<h3>Rule Service Configuration - service.rsl</h3>
+<pre xml:space="preserve">&lt;ruleService
+        name=&quot;CarRentalService&quot;
+        xmlns=&quot;http://wso2.org/carbon/rules&quot;
+        targetNamespace=&quot;http://com.test/carrental&quot;&gt;
+    &lt;ruleSet&gt;
+        &lt;rule resourceType=&quot;regular&quot; sourceType=&quot;inline&quot;&gt;
+            &lt;![CDATA[
+                package carrental
 
-import samples.carrental.Reservation;
-import samples.carrental.Charge;
+                import samples.carrental.Reservation;
+                import samples.carrental.Charge;
 
-rule "Daily Reservation"
-when
-      r : Reservation( ( type == "daily" ) &amp;&amp;  ( MPD &lt;= 18 ) ) 
-then
-      Charge charge = new Charge();
-           double total = r.getMPD() * 3;
-           charge.setMessage("The charge for a mile is 3 dollars. The total charge is " + total );        
-           insertLogical(charge);
-end 
+                rule &quot;Daily Reservation&quot;
+                when
+                      r : Reservation( ( type == &quot;daily&quot; ) &amp;&amp;  ( MPD &lt;= 18 ) )
+                then
+                      Charge charge = new Charge();
+                           double total = r.getMPD() * 3;
+                           charge.setMessage(&quot;The charge for a mile is 3 dollars. The total charge is &quot; + total );
+                           insertLogical(charge);
+                end
 
-rule "Daily Reservation with additional miles"
-when
-      r : Reservation( (type == "daily") &amp;&amp;  ( MPD &gt; 18 ) ) 
-then
-      Charge charge = new Charge();
-           double total = (r.getMPD() - 18) * 3 + r.getMPD() * 3;
-           charge.setMessage("The charge for a mile is 3 dollars and the amount of 3 dollar a per mile fee will be charged for any additional miles. The total charge is " + total );   
-           insertLogical(charge);
-end 
+                rule &quot;Daily Reservation with additional miles&quot;
+                when
+                      r : Reservation( (type == &quot;daily&quot;) &amp;&amp;  ( MPD &gt; 18 ) )
+                then
+                      Charge charge = new Charge();
+                           double total = (r.getMPD() - 18) * 3 + r.getMPD() * 3;
+                           charge.setMessage(&quot;The charge for a mile is 3 dollars and the amount of 3 dollar a per mile fee will be charged for any additional miles. The total charge is &quot; + total );
+                           insertLogical(charge);
+                end
 
-rule "Weekly Reservation"
-when
-      r : Reservation( (type == "weekly") &amp;&amp;  ( MPD &lt;= 18 ) ) 
-then
-      Charge charge = new Charge();
-           double total = r.getMPD() * 2.5;
-           charge.setMessage("The charge for a mile is 2.5 dollars. The total charge is " + total );        
-           insertLogical(charge);
-end 
+                rule &quot;Weekly Reservation&quot;
+                when
+                      r : Reservation( (type == &quot;weekly&quot;) &amp;&amp;  ( MPD &lt;= 18 ) )
+                then
+                      Charge charge = new Charge();
+                           double total = r.getMPD() * 2.5;
+                           charge.setMessage(&quot;The charge for a mile is 2.5 dollars. The total charge is &quot; + total );
+                           insertLogical(charge);
+                end
 
-rule "Weekly Reservation with additional miles"
-when
-      r : Reservation( (type == "weekly") &amp;&amp;  ( MPD &gt; 18 ) ) 
-then
-      Charge charge = new Charge();
-           double total = (r.getMPD() - 18) * 3 + r.getMPD() * 2.5;
-           charge.setMessage("The charge for a mile is 2.5 dollars and the amount of 3 dollar a per mile fee will be charged for any additional miles. The total charge is " + total );        
-           insertLogical(charge);
-end 
+                rule &quot;Weekly Reservation with additional miles&quot;
+                when
+                      r : Reservation( (type == &quot;weekly&quot;) &amp;&amp;  ( MPD &gt; 18 ) )
+                then
+                      Charge charge = new Charge();
+                           double total = (r.getMPD() - 18) * 3 + r.getMPD() * 2.5;
+                           charge.setMessage(&quot;The charge for a mile is 2.5 dollars and the amount of 3 dollar a per mile fee will be charged for any additional miles. The total charge is &quot; + total );
+                           insertLogical(charge);
+                end
 
-rule "Unlimited Reservation"
-when
-      r : Reservation( (type == "unlimited") &amp;&amp;  ( MPD &lt;= 18 ) ) 
-then
-      Charge charge = new Charge();
-           double total = r.getMPD() * 2;
-           charge.setMessage("The charge for a mile is 2 dollars. The total charge is " + total );        
-           insertLogical(charge);
-end 
+                rule &quot;Unlimited Reservation&quot;
+                when
+                      r : Reservation( (type == &quot;unlimited&quot;) &amp;&amp;  ( MPD &lt;= 18 ) )
+                then
+                      Charge charge = new Charge();
+                           double total = r.getMPD() * 2;
+                           charge.setMessage(&quot;The charge for a mile is 2 dollars. The total charge is &quot; + total );
+                           insertLogical(charge);
+                end
 
-rule "Unlimited Reservation with additional miles"
-when
-      r : Reservation( (type == "unlimited") &amp;&amp;  ( MPD &gt; 18 ) ) 
-then
-      Charge charge = new Charge();
-           double total = (r.getMPD() - 18) * 3 + r.getMPD() * 2;
-           charge.setMessage("The charge for a mile is 2 dollars and the amount of 3 dollar a per mile fee will be charged for any additional miles. The total charge is " + total );        
-           insertLogical(charge);
-end 
+                rule &quot;Unlimited Reservation with additional miles&quot;
+                when
+                      r : Reservation( (type == &quot;unlimited&quot;) &amp;&amp;  ( MPD &gt; 18 ) )
+                then
+                      Charge charge = new Charge();
+                           double total = (r.getMPD() - 18) * 3 + r.getMPD() * 2;
+                           charge.setMessage(&quot;The charge for a mile is 2 dollars and the amount of 3 dollar a per mile fee will be charged for any additional miles. The total charge is &quot; + total );
+                           insertLogical(charge);
+                end
 
 
-          </pre>
-
-<h3>Rule Service Configuration - CarRentalService.rsl</h3>
-<pre xml:space="preserve">&lt;ruleService name="CarRentalService"&gt;
-    &lt;description&gt;CarRentalService&lt;/description&gt;
-    &lt;ruleset path="CarRentalService.drl"/&gt;
-    &lt;operation name="rent"&gt;
-        &lt;with-param type="samples.carrental.Reservation"/&gt;
-        &lt;result&gt;
-            &lt;element type="samples.carrental.Charge"/&gt;
-        &lt;/result&gt;
+            ]]&gt;
+        &lt;/rule&gt;
+    &lt;/ruleSet&gt;
+    &lt;operation name=&quot;rent&quot;&gt;
+        &lt;input wrapperElementName=&quot;carReservation&quot; namespace=&quot;http://com.test/carReservation&quot;&gt;
+            &lt;fact elementName=&quot;reserve&quot; namespace=&quot;http://com.test/carReservation&quot; type=&quot;samples.carrental.Reservation&quot;&gt;&lt;/fact&gt;
+        &lt;/input&gt;
+        &lt;output wrapperElementName=&quot;carReservationRespone&quot; namespace=&quot;http://com.test/carReservation&quot;&gt;
+            &lt;fact elementName=&quot;charge&quot; namespace=&quot;http://com.test/carReservation&quot; type=&quot;samples.carrental.Charge&quot;&gt;&lt;/fact&gt;
+        &lt;/output&gt;
     &lt;/operation&gt;
 &lt;/ruleService&gt;</pre>
 </p>
@@ -212,43 +218,33 @@ You can use Try-it tool with the requests similar to the following. </p>
 <p>You can also use the code generation. There is an option for code generation
 in the services management page. A client using generated stub codes is shown
 bellow. Codes was generated with option - Unpacks the databinding classes.</p>
-<pre>import org.apache.axis2.AxisFault;
-import org.wso2.carbon.brs.CarRentalServiceStub;
-import org.wso2.carbon.brs.RentRequest;
-import org.wso2.carbon.brs.RentResponse;
-import org.wso2.carbon.brs.Result;
-import samples.carrental.xsd.Charge;
-import samples.carrental.xsd.Reservation;
+<pre>package org.wso2.carbon.samples;
 
+import org.apache.axis2.AxisFault;
+import org.wso2.carbon.samples.carRentalService.reservation.CarReservation;
+import org.wso2.carbon.samples.carRentalService.reservation.Charge;
+import org.wso2.carbon.samples.carRentalService.reservation.Reservation;
+import org.wso2.carbon.samples.carRentalService.stub.CarRentalServiceStub;
 import java.rmi.RemoteException;
 
-/**
- * A client for testing CarRentalService
- */
-public class TestCarRentalService {
+public class CarRentalTestCase {
 
-    public static void main(String arg[]) {
+    public static void main(String[] args) {
 
         try {
-
             CarRentalServiceStub carRentalServiceStub =
                     new CarRentalServiceStub("http://localhost:9763/services/CarRentalService");
-
-            RentRequest rentRequest = new RentRequest();
+            CarReservation carReservation = new CarReservation();
             Reservation reservation = new Reservation();
             reservation.setMPD(18.5);
             reservation.setType("weekly");
+            Reservation[] reservations = new Reservation[1];
+            reservations[0] = reservation;
+            carReservation.setReserve(reservations);
 
-            rentRequest.setReservation(reservation);
-
-            RentResponse response =
-                    carRentalServiceStub.rent(rentRequest);
-
-            Result result = response.getResult();
-            Charge charge = result.getCharge();
-            if (charge != null) {
-                System.out.println(charge.getMessage());
-            }
+            Charge[] charges = carRentalServiceStub.rent(reservations);
+            String result = charges[0].getMessage();
+            System.out.println(result);
 
         } catch (AxisFault axisFault) {
             axisFault.printStackTrace();

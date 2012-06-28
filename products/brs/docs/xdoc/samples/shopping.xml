@@ -59,13 +59,6 @@ or transport scope. This demonstrate the stateful behavior of a rule session .
 <p>There are two facts - <i>A customer made a purchase</i> and <i>a product is
 added</i>. </p>
 
-<p>Because, this is a stateful session, we have to remove any object that
-should not be in the working memory after a one-rule execution. In order to do
-that, you have to annotate those class with
-<strong>@TransientObject()</strong>. This requires you to have
-<strong>org.wso2.carbon.rule.core-3.0.0.jar</strong> in the class path. From
-the next release, we may introduce another ways to specifying transient
-behavior of an object in the working memory. </p>
 <pre xml:space="preserve">package samples.shopping;
 
 /**
@@ -129,12 +122,9 @@ public class Customer {
 
 package samples.shopping;
 
-import org.wso2.carbon.rule.core.TransientObject;
-
 /**
  * Discount
  */
-@TransientObject()
 public class Discount {
 
     private Customer customer;
@@ -165,12 +155,9 @@ public class Discount {
 
 package samples.shopping;
 
-import org.wso2.carbon.rule.core.TransientObject;
-
 /**
  * Purchase
  */
-@TransientObject()
 public class Purchase {
 
     private String customer;
@@ -227,71 +214,83 @@ public class PurchaseLog {
 }
             </pre>
 
-<h3>Drools Rule File - shopping.drl</h3>
-<pre xml:space="preserve">package shopping
+<h3>Rule Service Configuration - service.rsl</h3>
+<pre xml:space="preserve">&lt;ruleService
+        name=&quot;ShoppingService&quot;
+        xmlns=&quot;http://wso2.org/carbon/rules&quot;
+        targetNamespace=&quot;http://com.test/shopping&quot;
+	    scope=&quot;transportsession&quot;&gt;
+    &lt;ruleSet&gt;
+        &lt;rule resourceType=&quot;regular&quot; sourceType=&quot;inline&quot;&gt;
+            &lt;![CDATA[
+                package shopping
 
-dialect "mvel"
+                dialect &quot;mvel&quot;
 
-import samples.shopping.Customer;
-import samples.shopping.Product;
-import samples.shopping.Purchase;
-import samples.shopping.Discount;
-import samples.shopping.PurchaseLog;
+                import samples.shopping.Customer;
+                import samples.shopping.Product;
+                import samples.shopping.Purchase;
+                import samples.shopping.Discount;
+                import samples.shopping.PurchaseLog;
 
-rule "Purchase notification new customer"
-    salience 11 no-loop true
-when
-    $p : Purchase()
-    not Customer(name == $p.customer)
-then
-    insert(new Customer($p.customer, 0));
-end
+                rule &quot;Purchase notification new customer&quot;
+                    salience 11 no-loop true
+                when
+                    $p : Purchase()
+                    not Customer(name == $p.customer)
+                then
+                    System.out.println( &quot;New Customer : &quot; + $p.customer);
+                    insert(new Customer($p.customer, 0));
+                end
 
-rule "Purchase notification"
-    salience 10 no-loop true
-when
-    $c : Customer()
-    $purchase : Purchase( customer == $c.name) 
-    $product : Product( name == $purchase.product)
-then      
-    insert(new PurchaseLog($c.name, $product));
-    modify($c){
-     setDiscount(0)
-    }       
-    System.out.println( "Customer " + $c.name + " just purchased " + $product.name );
-end
+                rule &quot;Purchase notification&quot;
+                    salience 10 no-loop true
+                when
+                    $c : Customer()
+                    $purchase : Purchase( customer == $c.name)
+                    $product : Product( name == $purchase.product)
+                then
+                    insert(new PurchaseLog($c.name, $product));
+                    modify($c){
+                     setDiscount(0)
+                    }
+                    System.out.println( &quot;Customer &quot; + $c.name + &quot; just purchased &quot; + $product.name );
+                end
 
-rule "Apply 10% discount if total purchases is over 100" salience 9  no-loop true dialect "java"
-    when    
-            $p : Purchase()  
-$c : Customer(name == $p.customer)
-$i : Double(doubleValue  &gt; 100) from accumulate ( PurchaseLog( customer == $c.name, $price : product.price ), 
-                                                            sum( $price ) )
-    then            
-  $c.setDiscount( 10 );
-insert( new Discount($c, 10) );
-System.out.println( "Customer " + $c.getName() + " now has a shopping total of " + $i );
-end
+                rule &quot;Apply 10% discount if total purchases is over 100&quot; salience 9  no-loop true dialect &quot;java&quot;
+                    when
+                            $p : Purchase()
+                $c : Customer(name == $p.customer)
+                $i : Double(doubleValue  &gt; 100) from accumulate ( PurchaseLog( customer == $c.name, $price : product.price ),
+                                                                            sum( $price ) )
+                    then
+                  $c.setDiscount( 10 );
+                insert( new Discount($c, 10) );
+                System.out.println( &quot;Customer &quot; + $c.getName() + &quot; now has a shopping total of &quot; + $i );
+                end
 
-rule "cleanUp" salience 8
-when  
- $p : Purchase()  
-then
- retract($p);
-end </pre>
+                rule &quot;cleanUp&quot; salience 8
+                when
+                 $p : Purchase()
+                then
+                 retract($p);
+                end
+            ]]&gt;
+        &lt;/rule&gt;
+    &lt;/ruleSet&gt;
 
-<h3>Rule Service Configuration - ShoppingService.rsl</h3>
-<pre xml:space="preserve">&lt;ruleService name="ShoppingService"&gt;
-    &lt;description&gt;ShoppingService&lt;/description&gt;
-    &lt;ruleset path="shopping.drl"/&gt;
-    &lt;operation name="purchase"&gt;
-        &lt;with-param type="samples.shopping.Purchase"/&gt;
-        &lt;result&gt;
-            &lt;element type="samples.shopping.Discount"/&gt;
-        &lt;/result&gt;
+ 	&lt;operation name=&quot;purchase&quot;&gt;
+        &lt;input wrapperElementName=&quot;purchaseOrder&quot; namespace=&quot;http://com.test/purchaseOrder&quot;&gt;
+            &lt;fact elementName=&quot;purchase&quot; namespace=&quot;http://com.test/purchaseOrder&quot; type=&quot;samples.shopping.Purchase&quot;&gt;&lt;/fact&gt;
+        &lt;/input&gt;
+        &lt;output wrapperElementName=&quot;purchaseOrderRespone&quot; namespace=&quot;http://com.test/purchaseOrder&quot;&gt;
+            &lt;fact elementName=&quot;discount&quot; namespace=&quot;http://com.test/purchaseOrder&quot; type=&quot;samples.shopping.Discount&quot;&gt;&lt;/fact&gt;
+        &lt;/output&gt;
     &lt;/operation&gt;
-    &lt;operation name="addProduct"&gt;
-        &lt;with-param type="samples.shopping.Product"/&gt;
+    &lt;operation name=&quot;addProduct&quot;&gt;
+        &lt;input wrapperElementName=&quot;addProduct&quot; namespace=&quot;http://com.test/addProduct&quot;&gt;
+            &lt;fact elementName=&quot;addProduct&quot; namespace=&quot;http://com.test/addProduct&quot; type=&quot;samples.shopping.Product&quot;&gt;&lt;/fact&gt;
+        &lt;/input&gt;
     &lt;/operation&gt;
 &lt;/ruleService&gt;</pre>
 </p>
@@ -332,48 +331,47 @@ addProduct. Therefore, prior to use the code generation, you have to remove
 redeploys the service. This makes addProduct method returning an empty result.
 A client using generated stub codes is shown bellow. Codes was generated with
 option - Unpacks the databinding classes.</p>
-<pre>import org.apache.axis2.AxisFault;
-import org.wso2.carbon.brs.*;
-import samples.shopping.xsd.Discount;
-import samples.shopping.xsd.Product;
-import samples.shopping.xsd.Purchase;
+<pre>package org.wso2.carbon.samples;
 
+import org.apache.axis2.AxisFault;
+import org.wso2.carbon.samples.shoppingService.product.AddProduct;
+import org.wso2.carbon.samples.shoppingService.product.Product;
+import org.wso2.carbon.samples.shoppingService.purchaseOrder.Discount;
+import org.wso2.carbon.samples.shoppingService.purchaseOrder.Purchase;
+import org.wso2.carbon.samples.shoppingService.purchaseOrder.PurchaseOrder;
+import org.wso2.carbon.samples.shoppingService.stub.ShoppingServiceStub;
 import java.rmi.RemoteException;
 
-/**
- * A client for testing ShoppingService
- */
-public class TestShoppingService {
+public class ShoppingServiceTestCase {
 
-    public static void main(String arg[]) {
+    public static void main(String[] args) {
 
+        ShoppingServiceStub shoppingServiceStub = null;
         try {
-
-            ShoppingServiceStub shoppingServiceStub =
-                    new ShoppingServiceStub("http://localhost:9763/services/ShoppingService");
+            shoppingServiceStub = new ShoppingServiceStub("http://localhost:9763/services/ShoppingService");
             shoppingServiceStub._getServiceClient().getOptions().setManageSession(true);
-            // Adding a product
-            AddProductRequest addProductRequest = new AddProductRequest();
+
+            AddProduct addProduct = new AddProduct();
             Product product = new Product();
             product.setName("toy");
             product.setPrice(200);
-            addProductRequest.setProduct(product);
+            Product[] products = new Product[1];
+            products[0] = product;
 
-            shoppingServiceStub.addProduct(addProductRequest);
+            shoppingServiceStub.addProduct(products);
 
-            // Purchasing a product
-            PurchaseRequest purchaseRequest = new PurchaseRequest();
+            PurchaseOrder purchaseOrder = new PurchaseOrder();
             Purchase purchase = new Purchase();
+            purchase.setCustomer("Ishara");
             purchase.setProduct("toy");
-            purchase.setCustomer("your name");
-            purchaseRequest.setPurchase(purchase);
 
-            PurchaseResponse response = shoppingServiceStub.purchase(purchaseRequest);
-            Result result = response.getResult();
-            Discount discount = result.getDiscount();
-            if (discount != null) {
-                System.out.println("Discount : " + discount.getAmount());
-            }
+            Purchase[] purchases = new Purchase[1];
+            purchases[0] = purchase;
+
+            purchaseOrder.setPurchase(purchases);
+            Discount[] discounts = shoppingServiceStub.purchase(purchases);
+            int result = discounts[0].getAmount();
+            System.out.println(result);
 
         } catch (AxisFault axisFault) {
             axisFault.printStackTrace();
@@ -381,7 +379,8 @@ public class TestShoppingService {
             e.printStackTrace();
         }
     }
-}</pre>
+}
+</pre>
 
 <p><h2 id="References">References</h2>
 </p>

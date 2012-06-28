@@ -119,40 +119,46 @@ public class Dose {
 }
      </pre>
 
-<h3>Drools Rule File - HealthCareService.drl</h3>
-<pre xml:space="preserve">package HeathCareService 
+<h3>Rule Service Configuration - service.rsl</h3>
+<pre xml:space="preserve">&lt;ruleService
+        name=&quot;HealthCareService&quot;
+        xmlns=&quot;http://wso2.org/carbon/rules&quot;
+        targetNamespace=&quot;http://com.test/HeathCareService&quot;&gt;
+    &lt;ruleSet&gt;
+        &lt;rule resourceType=&quot;regular&quot; sourceType=&quot;inline&quot;&gt;
+            &lt;![CDATA[
+                package HeathCareService
 
-import samples.heathcare.Patient;
-import samples.heathcare.Dose;
+                import samples.heathcare.Patient;
+                import samples.heathcare.Dose;
 
-rule "Rule one" no-loop true
-when
-    Patient( ( medication in ( "Amoxicillin", "Cefuroxime", "Levofloxacin" ) ) &amp;&amp; ( ( age  &gt; 16 ) &amp;&amp; ( age &lt; 60 ) ) &amp;&amp; ( creatinineLevel == 0 )  )
-then
-    Dose msg = new Dose();
-    msg.setMessage("500 mg every 24 hours for 14 days");
-    insertLogical(msg);
-end
+                rule &quot;Rule one&quot; no-loop true
+                when
+                    Patient( ( medication in ( &quot;Amoxicillin&quot;, &quot;Cefuroxime&quot;, &quot;Levofloxacin&quot; ) ) &amp;&amp; ( ( age  &gt; 16 ) &amp;&amp; ( age &lt; 60 ) ) &amp;&amp; ( creatinineLevel == 0 )  )
+                then
+                    Dose msg = new Dose();
+                    msg.setMessage(&quot;500 mg every 24 hours for 14 days&quot;);
+                    insertLogical(msg);
+                end
 
-rule "Rule two" no-loop true
-when
-    Patient( ( medication in ( "Amoxicillin", "Cefuroxime", "Levofloxacin" ) ) &amp;&amp; ( ( age  &gt; 16) &amp;&amp; ( age &lt; 60 ) ) &amp;&amp; ( ( creatinineLevel &gt; 0 ) &amp;&amp;  ( creatinineLevel &lt; 1.5 ) ) )
-then
-    Dose msg = new Dose();
-    msg.setMessage("250 mg every 24 hours for 14 days");
-    insertLogical(msg);
-end
-            </pre>
-
-<h3>Rule Service Configuration - HealthCareService.rsl</h3>
-<pre xml:space="preserve">&lt;ruleService name="HealthCareService"&gt;
-    &lt;description&gt;HealthCareService&lt;/description&gt;
-    &lt;ruleset path="HealthCareService.drl"/&gt;
-    &lt;operation name="recommendDose"&gt;
-        &lt;with-param type="samples.heathcare.Patient"/&gt;        
-        &lt;result&gt;
-            &lt;element type="samples.heathcare.Dose"/&gt;
-        &lt;/result&gt;
+                rule &quot;Rule two&quot; no-loop true
+                when
+                    Patient( ( medication in ( &quot;Amoxicillin&quot;, &quot;Cefuroxime&quot;, &quot;Levofloxacin&quot; ) ) &amp;&amp; ( ( age  &gt; 16) &amp;&amp; ( age &lt; 60 ) ) &amp;&amp; ( ( creatinineLevel &gt; 0 ) &amp;&amp;  ( creatinineLevel &lt; 1.5 ) ) )
+                then
+                    Dose msg = new Dose();
+                    msg.setMessage(&quot;250 mg every 24 hours for 14 days&quot;);
+                    insertLogical(msg);
+                end
+            ]]&gt;
+        &lt;/rule&gt;
+    &lt;/ruleSet&gt;
+    &lt;operation name=&quot;recommendDose&quot;&gt;
+        &lt;input wrapperElementName=&quot;patientDetail&quot; namespace=&quot;http://com.test/patientDetail&quot;&gt;
+            &lt;fact elementName=&quot;patientDetail&quot; namespace=&quot;http://com.test/patientDetail&quot; type=&quot;samples.heathcare.Patient&quot;&gt;&lt;/fact&gt;
+        &lt;/input&gt;
+        &lt;output wrapperElementName=&quot;patientDetailRespone&quot; namespace=&quot;http://com.test/patientDetail&quot;&gt;
+            &lt;fact elementName=&quot;recommendDose&quot; namespace=&quot;http://com.test/patientDetail&quot; type=&quot;samples.heathcare.Dose&quot;&gt;&lt;/fact&gt;
+        &lt;/output&gt;
     &lt;/operation&gt;
 &lt;/ruleService&gt;</pre>
 </p>
@@ -177,52 +183,43 @@ You can use Try-it tool with the requests similar to the following. </p>
 <p>You can also use the code generation. There is an option for code generation
 in the services management page. A client using generated stub codes is shown
 bellow. Codes was generated with option - Unpacks the databinding classes.</p>
-<pre>import org.apache.axis2.AxisFault;
-import org.wso2.carbon.brs.HealthCareServiceStub;
-import org.wso2.carbon.brs.RecommendDoseRequest;
-import org.wso2.carbon.brs.RecommendDoseResponse;
-import org.wso2.carbon.brs.Result;
-import samples.heathcare.xsd.Dose;
-import samples.heathcare.xsd.Patient;
+<pre>package org.wso2.carbon.samples;
 
+import org.apache.axis2.AxisFault;
+import org.wso2.carbon.samples.healthCareService.patientDetail.Dose;
+import org.wso2.carbon.samples.healthCareService.patientDetail.Patient;
+import org.wso2.carbon.samples.healthCareService.patientDetail.PatientDetail;
+import org.wso2.carbon.samples.healthCareService.stub.HealthCareServiceStub;
 import java.rmi.RemoteException;
 
-/**
- * A client for testing HealthCareService
- */
-public class TestHealthCareService {
+public class HealthCareServiceTestCase {
 
-      public static void main(String arg[]) {
+    public static void main(String[] args) {
 
         try {
-
             HealthCareServiceStub healthCareServiceStub =
                     new HealthCareServiceStub("http://localhost:9763/services/HealthCareService");
 
-
-            RecommendDoseRequest recommendDoseRequest = new RecommendDoseRequest();
+            PatientDetail patientDetail = new PatientDetail();
             Patient patient = new Patient();
             patient.setAge(43);
             patient.setCreatinineLevel(1.0);
             patient.setMedication("Levofloxacin");
-            recommendDoseRequest.setPatient(patient);
 
-            RecommendDoseResponse response =
-                    healthCareServiceStub.recommendDose(recommendDoseRequest);
+            Patient[] patients = new Patient[1];
+            patients[0] = patient;
+            patientDetail.setPatientDetail(patients);
 
-            Result result = response.getResult();
-            Dose dose = result.getDose();
-            if (dose != null) {
-                System.out.println("Recommended Dose :"+dose.getMessage());
-            }
+            Dose[] doses = healthCareServiceStub.recommendDose(patients);
+            String result = doses[0].getMessage();
+            System.out.println(result);
 
         } catch (AxisFault axisFault) {
             axisFault.printStackTrace();
         } catch (RemoteException e) {
             e.printStackTrace();
         }
-    }
-}</pre>
+    }</pre>
 
 <p><h2 id="References">References</h2>
 </p>

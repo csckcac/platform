@@ -116,47 +116,53 @@ public class MIP {
 
             </pre>
 
-<h3>Drools Rule File - MIPCalculateService.drl</h3>
-<pre xml:space="preserve">package MIPCalculateService
+<h3>Rule Service Configuration - service.rsl</h3>
+<pre xml:space="preserve">&lt;ruleService
+        name=&quot;MIPCalculateService&quot;
+        xmlns=&quot;http://wso2.org/carbon/rules&quot;
+        targetNamespace=&quot;http://com.test/MIPCalculateService&quot;&gt;
+    &lt;ruleSet&gt;
+        &lt;rule resourceType=&quot;regular&quot; sourceType=&quot;inline&quot;&gt;
+            &lt;![CDATA[
+                package MIPCalculateService
 
-import samples.MIPCalculate.Client;
-import samples.MIPCalculate.MIP;
+                import samples.MIPCalculate.Client;
+                import samples.MIPCalculate.MIP;
 
-rule "Calculate the MIP for PMI " no-loop true
-when
-    user : Client(loanType == "PMI")
-then
-    MIP mip = new MIP();
-    double loanAmount = user.getMortgageValue() - user.getDownPayment();
-    double lvt = loanAmount / user.getMortgageValue();
-    double lvtAmount = lvt * user.getMortgageValue();
-    mip.setAnnualMIP(lvtAmount * 0.05);
-    insertLogical(mip);
+                rule &quot;Calculate the MIP for PMI &quot; no-loop true
+                when
+                    user : Client(loanType == &quot;PMI&quot;)
+                then
+                    MIP mip = new MIP();
+                    double loanAmount = user.getMortgageValue() - user.getDownPayment();
+                    double lvt = loanAmount / user.getMortgageValue();
+                    double lvtAmount = lvt * user.getMortgageValue();
+                    mip.setAnnualMIP(lvtAmount * 0.05);
+                    insertLogical(mip);
 
-end
+                end
 
-rule "Calculate the MIP for FHA loan" no-loop true
-when
-    user : Client(loanType == "FHA")
-then
-    MIP mip = new MIP();
-    double loanAmount = user.getMortgageValue() - user.getDownPayment();
-    double lvt = loanAmount / user.getMortgageValue();
-    double lvtAmount = lvt * user.getMortgageValue();
-    mip.setAnnualMIP(lvtAmount * 0.15);
-    insertLogical(mip);
-end
-            </pre>
-
-<h3>Rule Service Configuration - MIPCalculateService.rsl</h3>
-<pre xml:space="preserve">&lt;ruleService name="MIPCalculateService"&gt;
-    &lt;description&gt;MIPCalculateService&lt;/description&gt;
-    &lt;ruleset path="MIPCalculateService.drl"/&gt;
-    &lt;operation name="calculate"&gt;
-        &lt;with-param type="samples.MIPCalculate.Client"/&gt;
-        &lt;result&gt;
-            &lt;element type="samples.MIPCalculate.MIP"/&gt;
-        &lt;/result&gt;
+                rule &quot;Calculate the MIP for FHA loan&quot; no-loop true
+                when
+                    user : Client(loanType == &quot;FHA&quot;)
+                then
+                    MIP mip = new MIP();
+                    double loanAmount = user.getMortgageValue() - user.getDownPayment();
+                    double lvt = loanAmount / user.getMortgageValue();
+                    double lvtAmount = lvt * user.getMortgageValue();
+                    mip.setAnnualMIP(lvtAmount * 0.15);
+                    insertLogical(mip);
+                end
+            ]]&gt;
+        &lt;/rule&gt;
+    &lt;/ruleSet&gt;
+    &lt;operation name=&quot;calculate&quot;&gt;
+        &lt;input wrapperElementName=&quot;placeClientDetail&quot; namespace=&quot;http://com.test/placeClientDetail&quot;&gt;
+            &lt;fact elementName=&quot;clientDetail&quot; namespace=&quot;http://com.test/placeClientDetail&quot; type=&quot;samples.MIPCalculate.Client&quot;&gt;&lt;/fact&gt;
+        &lt;/input&gt;
+        &lt;output wrapperElementName=&quot;placeClientDetailRespone&quot; namespace=&quot;http://com.test/placeClientDetail&quot;&gt;
+            &lt;fact elementName=&quot;MIP&quot; namespace=&quot;http://com.test/placeClientDetail&quot; type=&quot;samples.MIPCalculate.MIP&quot;&gt;&lt;/fact&gt;
+        &lt;/output&gt;
     &lt;/operation&gt;
 &lt;/ruleService&gt;</pre>
 </p>
@@ -182,44 +188,34 @@ You can use Try-it tool with the requests similar to the following. </p>
 <p>You can also use the code generation. There is an option for code generation
 in the services management page. A client using generated stub codes is shown
 bellow. Codes was generated with option - Unpacks the databinding classes.</p>
-<pre>import org.apache.axis2.AxisFault;
-import org.wso2.carbon.brs.CalculateRequest;
-import org.wso2.carbon.brs.CalculateResponse;
-import org.wso2.carbon.brs.MIPCalculateServiceStub;
-import org.wso2.carbon.brs.Result;
-import samples.mipcalculate.xsd.Client;
-import samples.mipcalculate.xsd.MIP;
+<pre>package org.wso2.carbon.samples;
 
+import org.apache.axis2.AxisFault;
+import org.wso2.carbon.samples.mipCalculateService.clientDetail.Client;
+import org.wso2.carbon.samples.mipCalculateService.clientDetail.MIP;
+import org.wso2.carbon.samples.mipCalculateService.clientDetail.PlaceClientDetail;
+import org.wso2.carbon.samples.mipCalculateService.stub.MIPCalculateServiceStub;
 import java.rmi.RemoteException;
 
-/**
- * A client for testing MIPCalculateService
- */
-public class TestMIPCalculateService {
+public class MIPCalculateServiceTestCase {
 
-    public static void main(String arg[]) {
+    public static void main(String[] args) {
 
         try {
-
             MIPCalculateServiceStub mipCalculateServiceStub =
                     new MIPCalculateServiceStub("http://localhost:9763/services/MIPCalculateService");
+            PlaceClientDetail placeClientDetail = new PlaceClientDetail();
 
-
-            CalculateRequest calculateRequest = new CalculateRequest();
             Client client = new Client();
             client.setLoanType("FHA");
             client.setDownPayment(8000);
             client.setMortgageValue(90000);
-            calculateRequest.setClient(client);
+            Client[] clients = new Client[1];
+            clients[0] = client;
 
-            CalculateResponse response =
-                    mipCalculateServiceStub.calculate(calculateRequest);
-
-            Result result = response.getResult();
-            MIP mip = result.getMIP();
-            if (mip != null) {
-                System.out.println("Annual Mortgage Insurance Premium (PMI) : " + mip.getAnnualMIP());
-            }
+            MIP[] mips = mipCalculateServiceStub.calculate(clients);
+            double result = mips[0].getAnnualMIP();
+            System.out.println(result);
 
         } catch (AxisFault axisFault) {
             axisFault.printStackTrace();

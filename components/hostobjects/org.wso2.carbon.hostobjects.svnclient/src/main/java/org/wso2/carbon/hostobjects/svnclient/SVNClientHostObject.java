@@ -23,7 +23,7 @@ import org.tigris.subversion.svnclientadapter.*;
 import org.tigris.subversion.svnclientadapter.commandline.CmdLineClientAdapterFactory;
 import org.tigris.subversion.svnclientadapter.javahl.JhlClientAdapterFactory;
 import org.tigris.subversion.svnclientadapter.svnkit.SvnKitClientAdapterFactory;
-import org.wso2.carbon.scriptengine.exceptions.ScriptException;
+import org.jaggeryjs.scriptengine.exceptions.ScriptException;
 
 import java.net.MalformedURLException;
 import java.text.ParseException;

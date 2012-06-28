@@ -34,23 +34,6 @@
     <url>http://wso2.org</url>
 
     <modules>
-        <module>org.wso2.carbon.hostobjects.registry</module>
-        <module>org.wso2.carbon.hostobjects.ws</module>
-        <module>org.wso2.carbon.hostobjects.file</module>
-        <module>org.wso2.carbon.hostobjects.xhr</module>
-        <module>org.wso2.carbon.hostobjects.db</module>
-        <module>org.wso2.carbon.hostobjects.web</module>
-        <module>org.wso2.carbon.hostobjects.xslt</module>
-        <module>org.wso2.carbon.hostobjects.oauth</module>
-        <module>org.wso2.carbon.hostobjects.email</module>
-        <module>org.wso2.carbon.hostobjects.feed</module>
-       
-        <module>org.wso2.carbon.hostobjects.scripts</module>
-        <module>org.wso2.carbon.hostobjects.uri</module>
-        <module>org.wso2.carbon.hostobjects.stream</module>
-        <module>org.wso2.carbon.hostobjects.log</module>
-        <module>org.wso2.carbon.hostobjects.jaggeryparser</module>
-        <!--module>org.wso2.carbon.hostobjects.log</module-->
         <module>org.wso2.carbon.hostobjects.svnclient</module>
     </modules>
 

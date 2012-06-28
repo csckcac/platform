@@ -93,8 +93,33 @@ public class TaskOperationsTestCase {
 
         taskEvents.add("claim");
 
-        // Now reclaim the task to continue with other operations.
+    }
 
+    @Test(groups = {"wso2.bps"}, description = "Claims approval test case")
+    public void testTaskStartWithoutClaim() throws Exception {
+        taskOperationsStub.release(taskId);
+
+        // Now start the task without claiming it explicitly.
+        taskOperationsStub.start(taskId);
+
+        TTaskAbstract loadedTask = taskOperationsStub.loadTask(taskId);
+
+        //2. The task status should go back to READY
+        Assert.assertEquals(loadedTask.getStatus().toString(), "IN_PROGRESS",
+                            "The task status should be IN_PROGRESS!");
+
+        taskOperationsStub.stop(taskId);
+
+        taskOperationsStub.release(taskId);
+
+        taskOperationsStub.claim(taskId);
+
+        loadedTask = taskOperationsStub.loadTask(taskId);
+
+        Assert.assertNotNull(loadedTask.getActualOwner(),
+                             "After releasing the task the actual owner should be null");
+
+        Assert.assertEquals("clerk1", loadedTask.getActualOwner().getTUser(), "Actual owner should be clerk1");
     }
 
     @Test(groups = {"wso2.bps"}, description = "Claims approval test case release and reclaim task")

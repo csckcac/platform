@@ -148,7 +148,7 @@ public class APIProviderHostObject extends ScriptableObject {
 
             boolean authorized =
                     APIUtil.checkPermissionQuietly(username, APIConstants.Permissions.API_CREATE) ||
-                    APIUtil.checkPermissionQuietly(username, APIConstants.Permissions.API_PUBLISH);
+                            APIUtil.checkPermissionQuietly(username, APIConstants.Permissions.API_PUBLISH);
 
             if (authorized) {
                 row.put("user", row, username);
@@ -244,13 +244,13 @@ public class APIProviderHostObject extends ScriptableObject {
         APIProvider apiProvider = getAPIProvider(thisObj);
         if (apiProvider.isAPIAvailable(apiId)) {
             throw new APIManagementException("Error occurred while adding the API. A duplicate API already exists for " +
-                                             name + "-" + version);
+                    name + "-" + version);
         }
 
         API api = new API(apiId);
         NativeArray uriMethodArr = (NativeArray) apiData.get("uriMethodArr", apiData);
         if (uriTemplateArr.getLength() == uriMethodArr.getLength()) {
-            Set<URITemplate> uriTemplates = new HashSet<URITemplate>();
+            Set<URITemplate> uriTemplates = new LinkedHashSet<URITemplate>();
             for (int i = 0; i < uriTemplateArr.getLength(); i++) {
                 URITemplate templates = new URITemplate();
                 String uriTemp=(String) uriTemplateArr.get(i, uriTemplateArr);
@@ -304,7 +304,7 @@ public class APIProviderHostObject extends ScriptableObject {
 
             if(fileHostObject != null && fileHostObject.getJavaScriptFile().getLength() != 0){
                 api.setThumbnailUrl(apiProvider.addIcon(apiId, fileHostObject.getInputStream(),
-                                                        fileHostObject.getJavaScriptFile().getContentType()));
+                        fileHostObject.getJavaScriptFile().getContentType()));
                 apiProvider.updateAPI(api);
             }
             success = true;
@@ -360,75 +360,75 @@ public class APIProviderHostObject extends ScriptableObject {
         APIIdentifier oldApiId = new APIIdentifier(provider, name, version);
         APIProvider apiProvider = getAPIProvider(thisObj);
 
-            API oldApi = apiProvider.getAPI(oldApiId);
+        API oldApi = apiProvider.getAPI(oldApiId);
 
-            String tier = (String) apiData.get("tier", apiData);
-            String contextVal = (String) apiData.get("context", apiData);
-            String context = contextVal.startsWith("/") ? contextVal : ("/" + contextVal);
+        String tier = (String) apiData.get("tier", apiData);
+        String contextVal = (String) apiData.get("context", apiData);
+        String context = contextVal.startsWith("/") ? contextVal : ("/" + contextVal);
 
-            APIIdentifier apiId = new APIIdentifier(provider, name, version);
-            API api = new API(apiId);
+        APIIdentifier apiId = new APIIdentifier(provider, name, version);
+        API api = new API(apiId);
 
-            NativeArray uriTemplateArr = (NativeArray) apiData.get("uriTemplateArr", apiData);
-            NativeArray uriMethodArr = (NativeArray) apiData.get("uriMethodArr", apiData);
+        NativeArray uriTemplateArr = (NativeArray) apiData.get("uriTemplateArr", apiData);
+        NativeArray uriMethodArr = (NativeArray) apiData.get("uriMethodArr", apiData);
 
-            if (uriTemplateArr.getLength() == uriMethodArr.getLength()) {
-                Set<URITemplate> uriTemplates = new LinkedHashSet<URITemplate>();
+        if (uriTemplateArr.getLength() == uriMethodArr.getLength()) {
+            Set<URITemplate> uriTemplates = new LinkedHashSet<URITemplate>();
 
-                for (int i = 0; i < uriTemplateArr.getLength(); i++) {
-                    URITemplate templates = new URITemplate();
-                    String templateVal = (String) uriTemplateArr.get(i, uriTemplateArr);
-                    String template = templateVal.startsWith("/") ? templateVal : ("/" + templateVal);
-                    templates.setUriTemplate(template);
-                    String uriMethods = (String) uriMethodArr.get(i, uriMethodArr);
-                    String[] uriMethodArray = uriMethods.split(",");
-                    for (String anUriMethod : uriMethodArray) {
-                        templates.addMethod(anUriMethod);
+            for (int i = 0; i < uriTemplateArr.getLength(); i++) {
+                URITemplate templates = new URITemplate();
+                String templateVal = (String) uriTemplateArr.get(i, uriTemplateArr);
+                String template = templateVal.startsWith("/") ? templateVal : ("/" + templateVal);
+                templates.setUriTemplate(template);
+                String uriMethods = (String) uriMethodArr.get(i, uriMethodArr);
+                String[] uriMethodArray = uriMethods.split(",");
+                for (String anUriMethod : uriMethodArray) {
+                    templates.addMethod(anUriMethod);
+                }
+                templates.setResourceURI(endpoint);
+                templates.setResourceSandboxURI(sandboxUrl);
+                //Checking whether duplicate api resources have been added or not
+                for (URITemplate uri : uriTemplates) {
+                    String[] uriMethodsArr = uri.getMethods().toArray(new String[uri.getMethods().size()]);
+                    Arrays.sort(uriMethodsArr);
+                    Arrays.sort(uriMethodArray);
+                    if (uri.getUriTemplate().equals(template) && Arrays.equals(uriMethodsArr, uriMethodArray)) {
+                        throw new APIManagementException("Duplicate API resources with same URI Template and HTTP Methods.");
                     }
-                    templates.setResourceURI(endpoint);
-                    templates.setResourceSandboxURI(sandboxUrl);
-                    //Checking whether duplicate api resources have been added or not
-                    for (URITemplate uri : uriTemplates) {
-                        String[] uriMethodsArr = uri.getMethods().toArray(new String[uri.getMethods().size()]);
-                        Arrays.sort(uriMethodsArr);
-                        Arrays.sort(uriMethodArray);
-                        if (uri.getUriTemplate().equals(template) && Arrays.equals(uriMethodsArr, uriMethodArray)) {
-                            throw new APIManagementException("Duplicate API resources with same URI Template and HTTP Methods.");
-                        }
                 }
-                    uriTemplates.add(templates);
-                }
-                api.setUriTemplates(uriTemplates);
+                uriTemplates.add(templates);
             }
+            api.setUriTemplates(uriTemplates);
+        }
 
-            api.setDescription(description);
-            api.setLastUpdated(new Date());
-            api.setUrl(endpoint);
-            api.setSandboxUrl(sandboxUrl);
-            api.addTags(tag);
-            api.setContext(context);
+        api.setDescription(description);
+        api.setLastUpdated(new Date());
+        api.setUrl(endpoint);
+        api.setSandboxUrl(sandboxUrl);
+        api.addTags(tag);
+        api.setContext(context);
 
-            Set<Tier> availableTier = new HashSet<Tier>();
-            String[] tierNames = tier.split(",");
-            for (String tierName : tierNames) {
-                availableTier.add(new Tier(tierName));
-            }
-            api.addAvailableTiers(availableTier);
+        Set<Tier> availableTier = new HashSet<Tier>();
+        String[] tierNames = tier.split(",");
+        for (String tierName : tierNames) {
+            availableTier.add(new Tier(tierName));
+        }
+        api.addAvailableTiers(availableTier);
 
-            api.setStatus(oldApi.getStatus());
-            api.setWsdlUrl(wsdl);
-            api.setWadlUrl(wadl);
-            api.setLastUpdated(new Date());
-            api.setBusinessOwner(bizOwner);
-            api.setBusinessOwnerEmail(bizOwnerEmail);
-            api.setTechnicalOwner(techOwner);
-            api.setTechnicalOwnerEmail(techOwnerEmail);
-            try {
+        api.setStatus(oldApi.getStatus());
+        api.setWsdlUrl(wsdl);
+        api.setWadlUrl(wadl);
+        api.setLastUpdated(new Date());
+        api.setBusinessOwner(bizOwner);
+        api.setBusinessOwnerEmail(bizOwnerEmail);
+        api.setTechnicalOwner(techOwner);
+        api.setTechnicalOwnerEmail(techOwnerEmail);
+        try {
             checkFileSize(fileHostObject);
 
             if (fileHostObject != null && fileHostObject.getJavaScriptFile().getLength() != 0) {
                 api.setThumbnailUrl(apiProvider.addIcon(apiId, fileHostObject.getInputStream(),
-                                                        fileHostObject.getJavaScriptFile().getContentType()));
+                        fileHostObject.getJavaScriptFile().getContentType()));
             } else if (oldApi.getThumbnailUrl() != null) {
                 // retain the previously uploaded image
                 api.setThumbnailUrl(oldApi.getThumbnailUrl());
@@ -480,10 +480,10 @@ public class APIProviderHostObject extends ScriptableObject {
                     APIVersionComparator versionComparator = new APIVersionComparator();
                     for (API oldAPI : apiList) {
                         if (oldAPI.getId().getApiName().equals(name) &&
-                            versionComparator.compare(oldAPI, api) < 0 &&
-                            (oldAPI.getStatus().equals(APIStatus.PUBLISHED))) {
+                                versionComparator.compare(oldAPI, api) < 0 &&
+                                (oldAPI.getStatus().equals(APIStatus.PUBLISHED))) {
                             apiProvider.changeAPIStatus(oldAPI, APIStatus.DEPRECATED,
-                                                        currentUser, publishToGateway);
+                                    currentUser, publishToGateway);
                         }
                     }
                 }
@@ -646,13 +646,13 @@ public class APIProviderHostObject extends ScriptableObject {
                         subscriptions.put(key, count);
                     }
                 }
-                
+
                 List<APISubscription> subscriptionData = new ArrayList<APISubscription>();
                 for (Map.Entry<String,Long> entry : subscriptions.entrySet()) {
                     APISubscription sub = new APISubscription();
                     sub.name = entry.getKey();
                     sub.count = entry.getValue();
-                    subscriptionData.add(sub);    
+                    subscriptionData.add(sub);
                 }
                 Collections.sort(subscriptionData, new Comparator<APISubscription>() {
                     public int compare(APISubscription o1, APISubscription o2) {
@@ -754,7 +754,7 @@ public class APIProviderHostObject extends ScriptableObject {
             }
         } catch (APIManagementException e) {
             log.error("Error from registry while getting subscribers of the " +
-                      "provider: " + providerName + " and API: " + apiName, e);
+                    "provider: " + providerName + " and API: " + apiName, e);
         } catch (Exception e) {
             log.error(e.getMessage(), e);
         }
@@ -853,7 +853,7 @@ public class APIProviderHostObject extends ScriptableObject {
                 }
             } catch (APIManagementException e) {
                 throw new APIManagementException("Error occurred while getting APIs for " +
-                                                 "the provider: " + providerName, e);
+                        "the provider: " + providerName, e);
             } catch (Exception e) {
                 throw new APIManagementException(e.getMessage(), e);
             }
@@ -892,7 +892,7 @@ public class APIProviderHostObject extends ScriptableObject {
             }
         } catch (APIManagementException e) {
             throw new APIManagementException("Error occurred while getting the subscribed APIs information " +
-                                             "for the subscriber-" + userName, e);
+                    "for the subscriber-" + userName, e);
         } catch (Exception e) {
             throw new APIManagementException(e.getMessage(), e);
         }
@@ -983,7 +983,7 @@ public class APIProviderHostObject extends ScriptableObject {
 
         } catch (APIManagementException e) {
             throw new APIManagementException("Error occurred while getting documentation of the api - " +
-                                             apiName + "-" + version, e);
+                    apiName + "-" + version, e);
         } catch (Exception e) {
             throw new APIManagementException(e.getMessage(), e);
         }
@@ -1047,7 +1047,7 @@ public class APIProviderHostObject extends ScriptableObject {
             docContent = docContent.replaceAll("\n", "");
         }
         APIIdentifier apiId = new APIIdentifier(providerName, apiName,
-                                                version);
+                version);
         APIProvider apiProvider = getAPIProvider(thisObj);
         try {
             apiProvider.addDocumentationContent(apiId, docName, docContent);
@@ -1113,7 +1113,7 @@ public class APIProviderHostObject extends ScriptableObject {
             success = true;
         } catch (APIManagementException e) {
             throw new APIManagementException("Error occurred while removing the document- " + docName +
-                                             ".", e);
+                    ".", e);
         }
         return success;
     }
@@ -1181,7 +1181,7 @@ public class APIProviderHostObject extends ScriptableObject {
 
         } catch (APIManagementException e) {
             throw new APIManagementException("Error occurred while getting subscribers of the API- " + apiName +
-                                             "-" + version, e);
+                    "-" + version, e);
         }
         return myn;
     }
@@ -1666,14 +1666,14 @@ public class APIProviderHostObject extends ScriptableObject {
         APIProvider apiProvider = getAPIProvider(thisObj);
         apiProvider.deleteAPI(apiId);
     }
-    
-    private static class APISubscription {                
+
+    private static class APISubscription {
         private String name;
         private long count;
     }
 
-     public static boolean jsFunction_updateDocumentation(Context cx, Scriptable thisObj,
-                                                      Object[] args, Function funObj)
+    public static boolean jsFunction_updateDocumentation(Context cx, Scriptable thisObj,
+                                                         Object[] args, Function funObj)
             throws APIManagementException {
         if (args.length < 5 || !isStringValues(args)) {
             throw new APIManagementException("Invalid number of parameters or their types.");
@@ -1709,7 +1709,7 @@ public class APIProviderHostObject extends ScriptableObject {
     }
 
     public static boolean jsFunction_isAPIOlderVersionExist(Context cx, Scriptable thisObj,
-                                                 Object[] args, Function funObj)
+                                                            Object[] args, Function funObj)
             throws APIManagementException {
         boolean apiOlderVersionExist = false;
         if (args.length == 0) {
@@ -1729,7 +1729,7 @@ public class APIProviderHostObject extends ScriptableObject {
         APIVersionComparator versionComparator = new APIVersionComparator();
         for (API oldAPI : apiList) {
             if (oldAPI.getId().getApiName().equals(name) &&
-                versionComparator.compare(oldAPI, api) < 0) {
+                    versionComparator.compare(oldAPI, api) < 0) {
                 apiOlderVersionExist = true;
             }
         }

@@ -261,12 +261,10 @@ public class AssociationTreeBeanPopulator {
         while (iAssociations.hasNext()) {
             Association tmpAsso = (Association) iAssociations.next();
             //Get all associations filtered by it's association type
-            if (!path.equals(tmpAsso.getDestinationPath())) {
                 if (tmpAsso.getAssociationType().equals(CommonConstants.ASSOCIATION_TYPE01) && assoType.equals(CommonConstants.ASSOCIATION_TYPE01))
                     associations.add(tmpAsso);
                 if (!tmpAsso.getAssociationType().equals(CommonConstants.ASSOCIATION_TYPE01) && !assoType.equals(CommonConstants.ASSOCIATION_TYPE01))
                     associations.add(tmpAsso);
-            }
         }
 
         resource.discard();

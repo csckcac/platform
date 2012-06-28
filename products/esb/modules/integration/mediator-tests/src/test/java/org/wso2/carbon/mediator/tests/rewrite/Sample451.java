@@ -15,66 +15,57 @@
 *specific language governing permissions and limitations
 *under the License.
 */
-package org.wso2.carbon.mediator.tests.fault;
+package org.wso2.carbon.mediator.tests.rewrite;
 
 import org.apache.axiom.om.OMElement;
 import org.apache.axis2.AxisFault;
+import org.testng.annotations.DataProvider;
 import org.testng.annotations.Test;
 import org.wso2.esb.integration.ESBIntegrationTestCase;
 import org.wso2.esb.integration.axis2.SampleAxis2Server;
 import org.wso2.esb.integration.axis2.StockQuoteClient;
 
 import static org.testng.Assert.assertTrue;
-import static org.testng.Assert.fail;
 
-/*This Class tests ESB Sample4*/
-public class CustomErrorMessageTestCase extends ESBIntegrationTestCase {
+public class Sample451 extends ESBIntegrationTestCase {
     private StockQuoteClient axis2Client;
 
     public void init() throws Exception {
         axis2Client = new StockQuoteClient();
-        loadSampleESBConfiguration(4);
+        String filePath = "/mediators/rewrite/synapse_sample451.xml";
+        loadESBConfigurationFromClasspath(filePath);
         launchBackendAxis2Service(SampleAxis2Server.SIMPLE_STOCK_QUOTE_SERVICE);
+
     }
 
-    @Test(groups = {"wso2.esb"}, description = "Sample 4: Introduction to error handling.")
-    public void testErrorHandling() throws AxisFault {
+    @Test(priority = 1, groups = {"wso2.esb"}, description = "Sample 451:  Conditional URL Rewriting"
+            , dataProvider = "addressingUrl")
+    public void invokeService(String addUrl) throws AxisFault {
         OMElement response;
-        try {
-            response = axis2Client.sendSimpleStockQuoteRequest(
-                    getMainSequenceURL(),
-                    null,
-                    "MSFT");
-            fail("This query must throw an exception.");
-        } catch (AxisFault expected) {
-            assertTrue(expected.getMessage().contains("The input stream for an incoming message is null")
-                    , "Error message not contain message > The input stream for an incoming message is null");
-            log.info("Test passed with symbol MSFT");
-        }
-
-        try {
-            response = axis2Client.sendSimpleStockQuoteRequest(
-                    getMainSequenceURL(),
-                    null,
-                    "SUN");
-            fail("This query must throw an exception.");
-        } catch (AxisFault expected) {
-            assertTrue(expected.getMessage().contains("The input stream for an incoming message is null")
-                    , "Error message not contain message > The input stream for an incoming message is null");
-            log.info("Test passed with symbol SUN");
-        }
 
         response = axis2Client.sendSimpleStockQuoteRequest(
                 getMainSequenceURL(),
-                null,
+                addUrl,
                 "IBM");
         assertTrue(response.toString().contains("IBM"));
+
     }
+
 
     @Override
     protected void cleanup() {
         super.cleanup();
         axis2Client.destroy();
+    }
+
+    @DataProvider(name = "addressingUrl")
+    public Object[][] addressingUrl() {
+        return new Object[][]{
+                {"http://localhost:9000/services/SimpleStockQuoteService"},
+                {"https://localhost:9002/services/SimpleStockQuoteService"},
+                {"jms://localhost:8989/services/SimpleStockQuoteService"},
+        };
+
     }
 
 }

@@ -11,13 +11,28 @@
         <classes>
             <class name="org.wso2.carbon.mediator.tests.fault.CustomErrorMessageTestCase"/>
             <class name="org.wso2.carbon.mediator.tests.fault.MakeFaultMediatorTest"/>
+
         </classes>
     </test>
-
     <test name="Test - Mediator XQuery" preserve-order="true" verbose="2">
         <classes>
             <class name="org.wso2.carbon.mediator.tests.xquery.XQueryMediatorTestCase"/>
+            <class name="org.wso2.carbon.mediator.tests.xquery.XQuerySample391"/>
+            <class name="org.wso2.carbon.mediator.tests.xquery.XQueryCustom"/>
+
         </classes>
     </test>
+    <test name="Test - Mediator - rewrite" preserve-order="true" verbose="2">
+        <classes>
+            <class name="org.wso2.carbon.mediator.tests.rewrite.Sample450"/>
+            <class name="org.wso2.carbon.mediator.tests.rewrite.Sample451"/>
+            <class name="org.wso2.carbon.mediator.tests.rewrite.Sample452"/>
+            <class name="org.wso2.carbon.mediator.tests.rewrite.ProtocolReWriteTest"/>
+            <class name="org.wso2.carbon.mediator.tests.rewrite.ProtocolReWriteFromProperty"/>
+            <class name="org.wso2.carbon.mediator.tests.rewrite.UrlReWriteByPort"/>
+            <class name="org.wso2.carbon.mediator.tests.rewrite.UrlReWriteByHost"/>
+            <class name="org.wso2.carbon.mediator.tests.rewrite.UrlReWriteByContext"/>
 
+        </classes>
+    </test>
 </suite>

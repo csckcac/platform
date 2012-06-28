@@ -15,7 +15,7 @@
 *specific language governing permissions and limitations
 *under the License.
 */
-package org.wso2.carbon.mediator.tests.fault;
+package org.wso2.carbon.mediator.tests.xquery;
 
 import org.apache.axiom.om.OMElement;
 import org.apache.axis2.AxisFault;
@@ -24,39 +24,29 @@ import org.wso2.esb.integration.ESBIntegrationTestCase;
 import org.wso2.esb.integration.axis2.SampleAxis2Server;
 import org.wso2.esb.integration.axis2.StockQuoteClient;
 
-import static org.testng.Assert.fail;
+import static org.testng.Assert.assertTrue;
 
-public class MakeFaultMediatorTest extends ESBIntegrationTestCase {
+public class XQueryCustom extends ESBIntegrationTestCase {
     private StockQuoteClient axis2Client;
 
     public void init() throws Exception {
         axis2Client = new StockQuoteClient();
-        loadSampleESBConfiguration(5);
+        String filePath = "/mediators/xquery/synapse101.xml";
+        loadESBConfigurationFromClasspath(filePath);
+
         launchBackendAxis2Service(SampleAxis2Server.SIMPLE_STOCK_QUOTE_SERVICE);
     }
 
-    @Test(groups = {"wso2.esb"}, description = "Sample 5: Creating SOAP fault messages and changing the direction of a message")
-    public void testSOAPFaultCreation() throws AxisFault {
+    @Test(groups = {"wso2.esb"},
+          description = "Do XQuery transformation with target attribute specified as XPath value - <xquery key=\"string\" target = xpath>")
+    public void testXQueryTransformation() throws AxisFault {
         OMElement response;
-        try {
-            response = axis2Client.sendSimpleStockQuoteRequest(
-                    getMainSequenceURL(),
-                    null,
-                    "MSFT");
-            fail("This query must throw an exception.");
-        } catch (AxisFault expected) {
-            log.info("Test passed with symbol MSFT - Fault Message : " + expected.getMessage());
-        }
 
-        try {
-            response = axis2Client.sendSimpleStockQuoteRequest(
-                    getMainSequenceURL(),
-                    null,
-                    "SUN");
-            fail("This query must throw an exception.");
-        } catch (AxisFault expected) {
-            log.info("Test passed with symbol SUN - Fault Message : " + expected.getMessage());
-        }
+        response = axis2Client.sendSimpleStockQuoteRequest(
+                null,
+                getProxyServiceURL("StockQuoteProxy", false),
+                "IBM");
+        assertTrue(response.toString().contains("IBM"));
 
     }
 
@@ -65,4 +55,5 @@ public class MakeFaultMediatorTest extends ESBIntegrationTestCase {
         super.cleanup();
         axis2Client.destroy();
     }
+
 }

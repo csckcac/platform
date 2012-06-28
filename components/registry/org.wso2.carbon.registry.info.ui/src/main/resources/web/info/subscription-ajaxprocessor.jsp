@@ -341,7 +341,7 @@
             }
         %>
         <tr>
-            <td colspan="2" class="buttonRow">
+            <td colspan="2">
                 <input type="button" id="subscribeButton" class="button" value="<fmt:message key="subscribe"/>"
                         onclick="subscribe('<%=request.getParameter("path")%>');" disabled="disabled"/>&nbsp;
                 <input type="button"

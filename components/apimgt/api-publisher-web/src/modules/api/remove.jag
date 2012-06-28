@@ -7,9 +7,15 @@ var removeAPI = function (api) {
         if (log.isDebugEnabled()) {
             log.debug("addAPI : " + api.name + "-" + api.version);
         }
+        return {
+            error:false
+        };
 
     } catch (e) {
         log.error(e.message);
+        return {
+            error:true
+        };
 
     }
 };

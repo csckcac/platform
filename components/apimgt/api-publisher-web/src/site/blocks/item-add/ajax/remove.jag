@@ -12,7 +12,17 @@ include("/jagg/jagg.jag");
         apiData.name = request.getParameter("name");
         apiData.version = request.getParameter("version");
         apiData.provider= request.getParameter("provider");
-        mod.removeAPI(apiData);
+        var result=mod.removeAPI(apiData);
+        if (result.error==true) {
+            obj = {
+                error:true,
+                message:result.message
+            };
+        } else {
+            obj = {
+                error:false
+            }
+        }
         print(obj);
 
     }

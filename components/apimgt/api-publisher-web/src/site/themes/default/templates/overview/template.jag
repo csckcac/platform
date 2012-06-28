@@ -24,13 +24,13 @@
             <%if(api.wsdl!=''){%>
             <tr>
                 <td>WSDL</td>
-                <td id="wsdl"><a href="<%=api.wsdl%>"><%=api.wsdl%></a></td>
+                <td id="wsdl"><a href="<%=api.wsdl%>" target="_blank"><%=api.wsdl%></a></td>
             </tr>
             <%}
             if(api.wadl!=''){%>
             <tr>
                 <td>WADL</td>
-                <td id="wadl"><a href="<%=api.wadl%>"><%=api.wadl%></a></td>
+                <td id="wadl"><a href="<%=api.wadl%>" target="_blank"><%=api.wadl%></a></td>
             </tr>
             <%}%>
             <tr>

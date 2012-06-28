@@ -47,6 +47,7 @@ import org.wso2.carbon.eventbridge.commons.Event;
 import org.wso2.carbon.eventbridge.commons.exception.*;
 import org.wso2.carbon.core.multitenancy.SuperTenantCarbonContext;
 import java.net.MalformedURLException;
+import java.util.Map;
 import java.util.UUID;
 
 import org.wso2.carbon.eventbridge.commons.thrift.exception.ThriftAuthenticationException;
@@ -104,21 +105,10 @@ public class BamMediator extends AbstractMediator {
             return true;
         }
 
-        AxisConfiguration axisConfiguration = msgCtx.getConfigurationContext().getAxisConfiguration();
-        int tenantId = SuperTenantCarbonContext.getCurrentContext(axisConfiguration).getTenantId();
-
         this.setActivityIdInSOAPHeader(messageContext);
 
-        boolean request;
-
-        if (!messageContext.isResponse() && !messageContext.isFaultResponse()) {
-            request = true;
-        } else {
-            request = false;
-        }
-
         try {
-            logMessage(tenantId, messageContext, request);
+            logMessage(messageContext);
         } catch (AgentException e) {
             e.printStackTrace();  //To change body of catch statement use File | Settings | File Templates.
         } catch (MalformedStreamDefinitionException e) {
@@ -148,10 +138,26 @@ public class BamMediator extends AbstractMediator {
         return true;
     }
 
-    private void logMessage(int tenantId, MessageContext messageContext, boolean request)
+    private void logMessage(MessageContext messageContext)
             throws AgentException, MalformedStreamDefinitionException, StreamDefinitionException,
                    DifferentStreamDefinitionAlreadyDefinedException,
                    MalformedURLException, AuthenticationException, TransportException, ThriftAuthenticationException {
+
+        org.apache.axis2.context.MessageContext msgCtx = ((Axis2MessageContext) messageContext).getAxis2MessageContext();
+        AxisConfiguration axisConfiguration = msgCtx.getConfigurationContext().getAxisConfiguration();
+        int tenantId = SuperTenantCarbonContext.getCurrentContext(axisConfiguration).getTenantId();
+        boolean direction = (!messageContext.isResponse() && !messageContext.isFaultResponse());
+        String service = msgCtx.getAxisService().getName();
+        String operation = msgCtx.getAxisOperation().getName().getLocalPart();
+
+        /*Map<String, Object> hashMap = ((Axis2MessageContext) messageContext).getProperties();
+        for (Map.Entry entry : hashMap.entrySet()) {
+            Object value = entry.getValue();
+            if (value instanceof String && entry.getKey().toString().startsWith(
+                    BamMediatorConstants.BAM_PREFIX)) {
+                activity.setProperty(entry.getKey().toString(), value.toString());
+            }
+        }*/
 
         if (streamId == null) {
             Agent agent = this.createAgent();
@@ -165,7 +171,7 @@ public class BamMediator extends AbstractMediator {
             Event event = new Event(streamId, System.currentTimeMillis(),
                                            this.createMetadata(tenantId),
                                            this.createCorrelationData(messageContext),
-                                           this.createPayloadData(tenantId, messageContext, request)
+                                           this.createPayloadData(messageContext, direction, service, operation)
             );
             dataPublisher.publish(event);
         } else {
@@ -293,9 +299,11 @@ public class BamMediator extends AbstractMediator {
                                                    "          {'name':'TenantId','type':'INT'}" +
                                                    "  ]," +
                                                    "  'payloadData':[" +
-                                                   "          {'name':'Request','type':'STRING'}," +
+                                                   "          {'name':'Direction','type':'STRING'}," +
+                                                   "          {'name':'Service','type':'STRING'}," +
+                                                   "          {'name':'Operation','type':'STRING'}," +
                                                    "          {'name':'MessageId','type':'STRING'}," +
-                                                   "          {'name':'SOAPHeaddr','type':'STRING'}," +
+                                                   "          {'name':'SOAPHeader','type':'STRING'}," +
                                                    "          {'name':'SOAPBody','type':'STRING'}" +
                                                    this.getPropertyString() +
                                                    "  ]" +
@@ -303,18 +311,31 @@ public class BamMediator extends AbstractMediator {
         log.info("Event Stream Created.");
     }
 
-    private Object[] createPayloadData(int tenantId, MessageContext messageContext, boolean request){
+    private Object[] createPayloadData(MessageContext messageContext,
+                                       boolean direction, String service, String operation){
         int numOfProperties = properties.size();
-        Object[] payloadData = new Object[numOfProperties + 4];
-        payloadData[0] = request ?
+        Object[] payloadData = new Object[numOfProperties + 6];
+        payloadData[0] = direction ?
                          BamMediatorConstants.DIRECTION_IN : BamMediatorConstants.DIRECTION_OUT;
-        payloadData[1] = messageContext.getMessageID();
-        payloadData[2] = messageContext.getEnvelope().getHeader().toString();
-        payloadData[3] = messageContext.getEnvelope().getBody().toString();
+        payloadData[1] = service;
+        payloadData[2] = operation;
+        payloadData[3] = messageContext.getMessageID();
+        payloadData[4] = messageContext.getEnvelope().getHeader().toString();
+        payloadData[5] = messageContext.getEnvelope().getBody().toString();
 
         for (int i=0; i<numOfProperties; i++) {
-            payloadData[4 + i] = properties.get(i).getValue();
+            payloadData[6 + i] = properties.get(i).getValue();
         }
+
+
+
+
+
+
+
+
+
+
         return payloadData;
     }
 

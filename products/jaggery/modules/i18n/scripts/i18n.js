@@ -1,14 +1,15 @@
 var i18n = {
     localeResourcesBasePath:'',
+    localizations:{},
 
     init:function (req) {
         locale = req.getLocale();
+        this.localizations = require(this.localeResourcesBasePath + 'locale_' + locale + '.json');
     },
 
     getLocalString:function (key, fallback) {
-        var localizations = require(this.localeResourcesBasePath + 'locale_' + locale + '.json');
-        if (localizations[key]) {
-            return localizations[key]
+        if (this.localizations[key]) {
+            return this.localizations[key]
         } else {
             return  key;
         }

@@ -320,6 +320,11 @@
                 <version>${org.wso2.carbon.webapp.mgt.version}</version>
             </dependency>
             <dependency>
+                <groupId>org.wso2.carbon</groupId>
+                <artifactId>org.wso2.carbon.webapp.deployer</artifactId>
+                <version>${org.wso2.carbon.webapp.mgt.version}</version>
+            </dependency>
+            <dependency>
                 <groupId>org.apache.neethi</groupId>
                 <artifactId>neethi</artifactId>
                 <version>${neethi.version}</version>

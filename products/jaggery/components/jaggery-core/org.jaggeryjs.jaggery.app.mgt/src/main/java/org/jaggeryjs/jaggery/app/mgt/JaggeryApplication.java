@@ -15,11 +15,14 @@
  */
 package org.jaggeryjs.jaggery.app.mgt;
 
+import org.apache.catalina.Container;
 import org.apache.catalina.Context;
+import org.apache.catalina.LifecycleState;
 import org.apache.commons.logging.Log;
 import org.apache.commons.logging.LogFactory;
 import org.wso2.carbon.CarbonException;
 import org.wso2.carbon.utils.FileManipulator;
+import org.wso2.carbon.webapp.mgt.DataHolder;
 import org.wso2.carbon.webapp.mgt.WebApplication;
 
 import java.io.File;
@@ -42,7 +45,7 @@ public class JaggeryApplication extends WebApplication {
         setWebappFile(webappFile);
         setLastModifiedTime(webappFile.lastModified());
         if (JaggeryDeploymentUtil.getConfig(webappFile) != null) {
-        	this.configDirLastModifiedTime = JaggeryDeploymentUtil.getConfig(webappFile).lastModified();
+            this.configDirLastModifiedTime = JaggeryDeploymentUtil.getConfig(webappFile).lastModified();
         }
     }
 
@@ -51,7 +54,7 @@ public class JaggeryApplication extends WebApplication {
         setWebappFile(webappFile);
         setLastModifiedTime(webappFile.lastModified());
         if (JaggeryDeploymentUtil.getConfig(webappFile) != null) {
-        	this.configDirLastModifiedTime = JaggeryDeploymentUtil.getConfig(webappFile).lastModified();
+            this.configDirLastModifiedTime = JaggeryDeploymentUtil.getConfig(webappFile).lastModified();
         }
     }
 
@@ -79,24 +82,4 @@ public class JaggeryApplication extends WebApplication {
             List<ServletMappingParameter> servletMappingParameters) {
         this.servletMappingParameters = servletMappingParameters;
     }
-
-    public void delete() throws CarbonException {
-        undeploy();
-        if (getWebappFile().isDirectory()) {
-            if (!FileManipulator.deleteDir(getWebappFile())) {
-                throw new CarbonException("Webapp file " + getWebappFile() + " deletion failed");
-            }
-        } else if (!getWebappFile().delete()) {
-            throw new CarbonException("Webapp file " + getWebappFile() + " deletion failed");
-        }
-    }
-
-    public void undeploy() throws CarbonException {
-        lazyUnload();
-        File webappDir = new File(getAppBase(), getContext().getBaseName());
-        if (webappDir.exists() && !FileManipulator.deleteDir(webappDir)) {
-            throw new CarbonException("exploded Webapp directory " + webappDir + " deletion failed");
-        }
-    }
-
 }

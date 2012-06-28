@@ -214,7 +214,7 @@ public class WebApplication {
         lazyUnload(this.context);
     }
 
-    protected void lazyUnload(Context contextOfWepap) throws CarbonException {
+    private void lazyUnload(Context contextOfWepap) throws CarbonException {
         try {
             if (contextOfWepap.getAvailable()) {
                 // If the following is not done, the Realm will throw a LifecycleException, because
@@ -270,7 +270,7 @@ public class WebApplication {
      * @param nameOfOperation  the operation to be performed in oder to hot update the host
      * @throws CarbonException if errors occurs when hot update the host
      */
-    protected void handleHotUpdateToHost(String nameOfOperation) throws CarbonException {
+    private void handleHotUpdateToHost(String nameOfOperation) throws CarbonException {
         if (DataHolder.getHotUpdateService() != null) {
             Container[] containers = DataHolder.getCarbonTomcatService().getTomcat().getEngine().findChildren();
             Context hostContext;

@@ -16,6 +16,7 @@
 
 package org.jaggeryjs.jaggery.app.mgt;
 
+import org.apache.axis2.context.ConfigurationContext;
 import org.apache.catalina.*;
 import org.apache.catalina.core.StandardContext;
 import org.apache.catalina.deploy.*;
@@ -29,9 +30,7 @@ import org.json.simple.JSONValue;
 import org.wso2.carbon.CarbonException;
 import org.jaggeryjs.jaggery.core.manager.CommonManager;
 import org.wso2.carbon.utils.multitenancy.CarbonContextHolder;
-import org.wso2.carbon.webapp.mgt.CarbonTomcatSessionManager;
-import org.wso2.carbon.webapp.mgt.DataHolder;
-import org.wso2.carbon.webapp.mgt.WebContextParameter;
+import org.wso2.carbon.webapp.mgt.*;
 
 import java.io.File;
 import java.io.FileInputStream;
@@ -45,15 +44,9 @@ import java.util.*;
  * This deployer is responsible for deploying/undeploying/updating those Jaggery apps.
  */
 
-public class TomcatJaggeryWebappsDeployer {
+public class TomcatJaggeryWebappsDeployer extends TomcatGenericWebappsDeployer {
 
     private static Log log = LogFactory.getLog(TomcatJaggeryWebappsDeployer.class);
-
-    private String webContextPrefix;
-    private int tenantId;
-    private String tenantDomain;
-
-    private JaggeryApplicationsHolder webappsHolder;
 
     /**
      * Constructor
@@ -66,35 +59,21 @@ public class TomcatJaggeryWebappsDeployer {
     public TomcatJaggeryWebappsDeployer(String webContextPrefix,
                                         int tenantId,
                                         String tenantDomain,
-                                        JaggeryApplicationsHolder webappsHolder) {
-        SecurityManager secMan = System.getSecurityManager();
-        if (secMan != null) {
-            secMan.checkPermission(new ManagementPermission("control"));
-        }
-        this.tenantId = tenantId;
-        this.tenantDomain = tenantDomain;
-        this.webContextPrefix = webContextPrefix;
-        this.webappsHolder = webappsHolder;
+                                        WebApplicationsHolder webappsHolder) {
+        super(webContextPrefix, tenantId, tenantDomain, webappsHolder);
     }
 
     /**
-     * Deploy Jaggery app
+     * Deploy webapps
      *
-     * @param webappFile                The Jaggery app file to be deployed
-     * @param webContextParams          context-params for this Jaggery app
+     * @param webappFile The webapp file to be deployed
+     * @param webContextParams  context-params for this webapp
      * @param applicationEventListeners Application event listeners
-     * @param servletParameters         Jaggery servlet params
-     * @param servletMappingParameters  jaggery servletmappings
-     * @param securityConstraint        restrict jaggery conf
      * @throws CarbonException If a deployment error occurs
      */
-    @SuppressWarnings(value = "unused")
     public void deploy(File webappFile,
                        List<WebContextParameter> webContextParams,
-                       List<Object> applicationEventListeners,
-                       List<ServletParameter> servletParameters,
-                       List<ServletMappingParameter> servletMappingParameters,
-                       SecurityConstraint securityConstraint) throws CarbonException {
+                       List<Object> applicationEventListeners) throws CarbonException {
         CarbonContextHolder currentCarbonContextHolder =
                 CarbonContextHolder.getCurrentCarbonContextHolder();
         currentCarbonContextHolder.startTenantFlow();
@@ -107,28 +86,21 @@ public class TomcatJaggeryWebappsDeployer {
                 configLastModified = JaggeryDeploymentUtil.getConfig(webappFile).lastModified();
             }
 
-            //long configLastModified = webappFile.
             JaggeryApplication deployedWebapp =
-                    webappsHolder.getStartedWebapps().get(webappFile.getName());
+                    (JaggeryApplication) webappsHolder.getStartedWebapps().get(webappFile.getName());
             JaggeryApplication undeployedWebapp =
-                    webappsHolder.getStoppedWebapps().get(webappFile.getName());
+                    (JaggeryApplication) webappsHolder.getStoppedWebapps().get(webappFile.getName());
             JaggeryApplication faultyWebapp =
-                    webappsHolder.getFaultyWebapps().get(webappFile.getName());
+                    (JaggeryApplication) webappsHolder.getFaultyWebapps().get(webappFile.getName());
             if (deployedWebapp == null && faultyWebapp == null && undeployedWebapp == null) {
-                handleHotDeployment(webappFile, webContextParams, applicationEventListeners,
-                        servletParameters, servletMappingParameters, securityConstraint);
-            } else if (deployedWebapp != null &&
-                    deployedWebapp.getLastModifiedTime() != lastModifiedTime &&
+                handleHotDeployment(webappFile, webContextParams, applicationEventListeners);
+            } else if (deployedWebapp != null && deployedWebapp.getLastModifiedTime() != lastModifiedTime &&
                     (configLastModified != 0 && deployedWebapp.getConfigDirLastModifiedTime() != configLastModified)) {
-                /*handleHotUpdate(deployedWebapp, webContextParams, applicationEventListeners,
-                        servletParameters, servletMappingParameters, securityConstraint);*/
-                undeploy(deployedWebapp);
-                handleHotDeployment(webappFile, webContextParams, applicationEventListeners,
-                        servletParameters, servletMappingParameters, securityConstraint);
-            } else if (faultyWebapp != null &&
-                    faultyWebapp.getLastModifiedTime() != lastModifiedTime && (configLastModified != 0 && faultyWebapp.getConfigDirLastModifiedTime() != configLastModified)) {
-                handleHotDeployment(webappFile, webContextParams, applicationEventListeners,
-                        servletParameters, servletMappingParameters, securityConstraint);
+                webappsHolder.undeployWebapp(deployedWebapp);
+                handleHotDeployment(webappFile, webContextParams, applicationEventListeners);
+            } else if (faultyWebapp != null && faultyWebapp.getLastModifiedTime() != lastModifiedTime &&
+                    (configLastModified != 0 && faultyWebapp.getConfigDirLastModifiedTime() != configLastModified)) {
+                handleHotDeployment(webappFile, webContextParams, applicationEventListeners);
             }
         } finally {
             currentCarbonContextHolder.endTenantFlow();
@@ -136,113 +108,30 @@ public class TomcatJaggeryWebappsDeployer {
     }
 
     /**
-     * Hot deployment of a Jaggery app. i.e., deploy a Jaggery app that has newly become available.
-     *
-     * @param webapp                    The Jaggery app WAR or directory that needs to be deployed
-     * @param webContextParams          ServletContext params for this webapp
-     * @param applicationEventListeners Application event listeners
-     * @param servletParameters         web.xml servlet entries
-     * @param servletMappingParameters  web.xml servlet mapping entries
-     * @param securityConstraint        to restrinct the config file
-     * @throws CarbonException If an error occurs during deployment
-     */
-    private void handleHotDeployment(File webapp, List<WebContextParameter> webContextParams,
-                                     List<Object> applicationEventListeners,
-                                     List<ServletParameter> servletParameters,
-                                     List<ServletMappingParameter> servletMappingParameters, SecurityConstraint securityConstraint)
-            throws CarbonException {
-        String filename = webapp.getName();
-        if (webapp.isDirectory()) {
-            handleExplodedWebappDeployment(webapp, webContextParams, applicationEventListeners,
-                    servletParameters, servletMappingParameters, securityConstraint);
-        } else if (filename.endsWith(".zip")) {
-            synchronized (this) {
-                String appPath = webapp.getAbsolutePath().substring(0, webapp.getAbsolutePath().indexOf(".zip"));
-                try {
-                    JaggeryDeploymentUtil.unZip(new FileInputStream(webapp), appPath);
-                    if (!webapp.delete()) {
-                        throw new CarbonException(appPath + "could not be deleted");
-                    }
-                } catch (FileNotFoundException e) {
-                    throw new CarbonException(e);
-                }
-                File unzippedWebapp = new File(appPath);
-                handleExplodedWebappDeployment(unzippedWebapp, webContextParams, applicationEventListeners,
-                        servletParameters, servletMappingParameters, securityConstraint);
-            }
-        } else if (filename.endsWith(".war")) {
-            handleWarWebappDeployment(webapp, webContextParams, applicationEventListeners,
-                    servletParameters, servletMappingParameters, securityConstraint);
-        }
-    }
-
-    /**
      * Handle the deployment of a an archive Jaggery app. i.e., a WAR
      *
-     * @param webappWAR                 The WAR Jaggery app file
+     * @param webapp                    The WAR Jaggery app file
      * @param webContextParams          ServletContext params for this webapp
      * @param applicationEventListeners Application event listeners
-     * @param servletParameters         web.xml servlet entries
-     * @param servletMappingParameters  web.xml servlet mapping entries
-     * @param securityConstraint        to restrict config file
      * @throws CarbonException If a deployment error occurs
      */
-    private void handleWarWebappDeployment(File webappWAR,
-                                           List<WebContextParameter> webContextParams,
-                                           List<Object> applicationEventListeners,
-                                           List<ServletParameter> servletParameters,
-                                           List<ServletMappingParameter> servletMappingParameters, SecurityConstraint securityConstraint)
+    protected void handleZipWebappDeployment(File webapp,
+                                             List<WebContextParameter> webContextParams,
+                                             List<Object> applicationEventListeners)
             throws CarbonException {
-        String filename = webappWAR.getName();
-        String warContext = "";
-        if (filename.equals("ROOT.war")) {  // FIXME: This is not working for some reason!
-            if (webContextPrefix != null && !webContextPrefix.endsWith("/")) {
-                warContext = "/";
+        synchronized (this) {
+            String appPath = webapp.getAbsolutePath().substring(0, webapp.getAbsolutePath().indexOf(".zip"));
+            try {
+                JaggeryDeploymentUtil.unZip(new FileInputStream(webapp), appPath);
+                if (!webapp.delete()) {
+                    throw new CarbonException(appPath + "could not be deleted");
+                }
+            } catch (FileNotFoundException e) {
+                throw new CarbonException(e);
             }
-        } else {
-            warContext = filename.substring(0, filename.indexOf(".zip"));
+            File unzippedWebapp = new File(appPath);
+            handleExplodedWebappDeployment(unzippedWebapp, webContextParams, applicationEventListeners);
         }
-        if (!warContext.equals("/") && webContextPrefix.length() == 0) {
-            webContextPrefix = "/";
-        }
-        handleWebappDeployment(webappWAR, webContextPrefix + warContext,
-                webContextParams, applicationEventListeners,
-                servletParameters, servletMappingParameters, securityConstraint);
-    }
-
-    /**
-     * Handle the deployment of a an exploded Jaggery app. i.e., a Jaggery app deployed as a directory
-     * & not an archive
-     *
-     * @param webappDir                 The exploded Jaggery app directory
-     * @param webContextParams          ServletContext params for this webapp
-     * @param applicationEventListeners Application event listeners
-     * @param servletParameters         web.xml servlet entries
-     * @param servletMappingParameters  web.xml servlet mapping entries
-     * @param securityConstraint        to restrict config file
-     * @throws CarbonException If a deployment error occurs
-     */
-    private void handleExplodedWebappDeployment(File webappDir,
-                                                List<WebContextParameter> webContextParams,
-                                                List<Object> applicationEventListeners,
-                                                List<ServletParameter> servletParameters,
-                                                List<ServletMappingParameter> servletMappingParameters, SecurityConstraint securityConstraint)
-            throws CarbonException {
-        String filename = webappDir.getName();
-        String warContext = "";
-        if (filename.equals("ROOT")) {
-            if (webContextPrefix != null && !webContextPrefix.endsWith("/")) {
-                warContext = "/";
-            }
-        } else {
-            warContext = filename;
-        }
-        if (!warContext.equals("/") && webContextPrefix.length() == 0) {
-            webContextPrefix = "/";
-        }
-        handleWebappDeployment(webappDir, webContextPrefix + warContext,
-                webContextParams, applicationEventListeners,
-                servletParameters, servletMappingParameters, securityConstraint);
     }
 
     private void registerApplicationEventListeners(List<Object> applicationEventListeners,
@@ -263,102 +152,60 @@ public class TomcatJaggeryWebappsDeployer {
     }
 
     /**
-     * Handle undeployment.
-     *
-     * @param webappFile The Jaggery app file to be undeployed
-     * @throws CarbonException If an error occurs while undeploying Jaggery app
-     */
-    @SuppressWarnings(value = "unused")
-    public void undeploy(File webappFile) throws CarbonException {
-        CarbonContextHolder currentCarbonContextHolder =
-                CarbonContextHolder.getCurrentCarbonContextHolder();
-        currentCarbonContextHolder.startTenantFlow();
-        try {
-            currentCarbonContextHolder.setTenantId(tenantId);
-            currentCarbonContextHolder.setTenantDomain(tenantDomain);
-            Map deployedWebapps = webappsHolder.getStartedWebapps();
-            Map stoppedWebapps = webappsHolder.getStoppedWebapps();
-            String fileName = webappFile.getName();
-
-            if (deployedWebapps.containsKey(fileName)) {
-                undeploy((JaggeryApplication) deployedWebapps.get(fileName));
-            }
-            //also checking the stopped webapps.
-            else if (stoppedWebapps.containsKey(fileName)) {
-                undeploy((JaggeryApplication) stoppedWebapps.get(fileName));
-            }
-
-            clearFaultyWebapp(fileName);
-        } finally {
-            currentCarbonContextHolder.endTenantFlow();
-        }
-    }
-
-    /**
-     * Handle undeployment.
-     *
-     * @param webappFile The Jaggery app file to be undeployed
-     * @throws CarbonException If an error occurs while lazy unloading
-     */
-    @SuppressWarnings(value = "unused")
-    public void lazyUnload(File webappFile) throws CarbonException {
-        CarbonContextHolder currentCarbonContextHolder =
-                CarbonContextHolder.getCurrentCarbonContextHolder();
-        currentCarbonContextHolder.startTenantFlow();
-        try {
-            currentCarbonContextHolder.setTenantId(tenantId);
-            currentCarbonContextHolder.setTenantDomain(tenantDomain);
-            Map deployedWebapps = webappsHolder.getStartedWebapps();
-            String fileName = webappFile.getName();
-            if (deployedWebapps.containsKey(fileName)) {
-                ((JaggeryApplication) deployedWebapps.get(fileName)).lazyUnload();
-            }
-
-            clearFaultyWebapp(fileName);
-        } finally {
-            currentCarbonContextHolder.endTenantFlow();
-        }
-    }
-
-    private void clearFaultyWebapp(String fileName) {
-        Map faultyWebapps = webappsHolder.getFaultyWebapps();
-        if (faultyWebapps.containsKey(fileName)) {
-            JaggeryApplication faultyWebapp = (JaggeryApplication) faultyWebapps.get(fileName);
-            faultyWebapps.remove(fileName);
-            log.info("Removed faulty webapp " + faultyWebapp);
-        }
-    }
-
-    /**
-     * Undeploy a Jaggery app
-     *
-     * @param webapp The Jaggery app being undeployed
-     * @throws CarbonException If an error occurs while undeploying
-     */
-    private void undeploy(JaggeryApplication webapp) throws CarbonException {
-        webappsHolder.undeployWebapp(webapp);
-        log.info("Undeployed Jaggery App: " + webapp);
-    }
-
-    /**
      * Deployment procedure of Jaggery apps
      *
      * @param webappFile                The Jaggery app file to be deployed
      * @param contextStr                jaggery app context string
      * @param webContextParams          context-params for this Jaggery app
      * @param applicationEventListeners Application event listeners
-     * @param servletParameters         web.xml servlet entries
-     * @param servletMappingParameters  web.xml servlet mapping entries
-     * @param securityConstraint        to restrict config file
      * @throws CarbonException If a deployment error occurs
      */
-    private void handleWebappDeployment(File webappFile, String contextStr,
-                                        List<WebContextParameter> webContextParams,
-                                        List<Object> applicationEventListeners,
-                                        List<ServletParameter> servletParameters,
-                                        List<ServletMappingParameter> servletMappingParameters, SecurityConstraint securityConstraint) throws CarbonException {
+    protected void handleWebappDeployment(File webappFile, String contextStr,
+                                          List<WebContextParameter> webContextParams,
+                                          List<Object> applicationEventListeners) throws CarbonException {
 
         String filename = webappFile.getName();
+        ArrayList<Object> listeners = new ArrayList<Object>(1);
+        // listeners.add(new CarbonServletRequestListener());
+        ServletParameter jaggeryServletParameter = new ServletParameter();
+        ServletParameter jsspParameter = new ServletParameter();
+
+        jaggeryServletParameter.setServletName(JaggeryConstants.JAGGERY_SERVLET_NAME);
+        jaggeryServletParameter.setServletClass(JaggeryConstants.JAGGERY_SERVLET_CLASS);
+
+        jsspParameter.setServletName(JaggeryConstants.JSSP_NAME);
+        jsspParameter.setServletClass(JaggeryConstants.JSSP_CLASS);
+        jsspParameter.setLoadOnStartup(2);
+        HashMap<String, String> jsspInitParamMap = new HashMap<String, String>();
+        jsspInitParamMap.put("fork", "false");
+        jsspParameter.setInitParams(jsspInitParamMap);
+
+        List<ServletParameter> servletParameters =
+                new ArrayList<ServletParameter>();
+        servletParameters.add(jaggeryServletParameter);
+        servletParameters.add(jsspParameter);
+
+        ServletMappingParameter jaggeryServletMappingParameter = new ServletMappingParameter();
+        ServletMappingParameter jsspMappingParameter = new ServletMappingParameter();
+
+        jaggeryServletMappingParameter.setServletName(JaggeryConstants.JAGGERY_SERVLET_NAME);
+        jaggeryServletMappingParameter.setUrlPattern(JaggeryConstants.JAGGERY_SERVLET_URL_PATTERN);
+
+        SecurityConstraint securityConstraint = new SecurityConstraint();
+        securityConstraint.setAuthConstraint(true);
+
+        SecurityCollection securityCollection = new SecurityCollection();
+        securityCollection.setName("ConfigDir");
+        securityCollection.setDescription("Jaggery Configuration Dir");
+        securityCollection.addPattern("/" + JaggeryConstants.JAGGERY_CONF_FILE);
+
+        securityConstraint.addCollection(securityCollection);
+
+        List<ServletMappingParameter> servletMappingParameters =
+                new ArrayList<ServletMappingParameter>();
+        servletMappingParameters.add(jaggeryServletMappingParameter);
+        servletMappingParameters.add(jsspMappingParameter);
+
         try {
             JSONObject jaggeryConfigObj = readJaggeryConfig(webappFile);
 
@@ -367,11 +214,16 @@ public class TomcatJaggeryWebappsDeployer {
             Context context =
                     DataHolder.getCarbonTomcatService().addWebApp(contextStr, webappFile.getAbsolutePath(),
                             new JaggeryConfListener(tomcat, servletParameters, servletMappingParameters, jaggeryConfigObj, securityConstraint));
-
-
+            //deploying web app for url-mapper
+            if (DataHolder.getHotUpdateService() != null) {
+                List<String> hostNames = DataHolder.getHotUpdateService().getMappigsPerWebapp(contextStr);
+                for (String hostName : hostNames) {
+                    Host host = (Host) tomcat.getEngine().findChild(hostName);
+                    DataHolder.getCarbonTomcatService().addWebApp(host, "/", webappFile.getAbsolutePath());
+                }
+            }
             context.setManager(new CarbonTomcatSessionManager(tenantId)); // TODO: Must use a clusterable manager such as BackupManager
             context.setReloadable(true);
-
             JaggeryApplication webapp = new JaggeryApplication(context, webappFile);
             webapp.setServletParameters(servletParameters);
             webapp.setServletMappingParameters(servletMappingParameters);
@@ -384,7 +236,7 @@ public class TomcatJaggeryWebappsDeployer {
             webappsHolder.getStartedWebapps().put(filename, webapp);
             webappsHolder.getFaultyWebapps().remove(filename);
             registerApplicationEventListeners(applicationEventListeners, context);
-            log.info("Deployed Jaggery App: " + webapp);
+            log.info("Deployed webapp: " + webapp);
         } catch (Throwable e) {
             //catching a Throwable here to avoid web-apps crashing the server during startup
             StandardContext context = new StandardContext();
@@ -399,16 +251,16 @@ public class TomcatJaggeryWebappsDeployer {
         }
     }
 
-    public static class JaggeryConfListener implements LifecycleListener {
+    private static class JaggeryConfListener implements LifecycleListener {
         private List<ServletParameter> servletParameters;
         private List<ServletMappingParameter> servletMappingParameters;
         private JSONObject jaggeryConfig;
         private Tomcat tomcat;
         private SecurityConstraint securityConstraint;
 
-        public JaggeryConfListener(Tomcat tomcat, List<ServletParameter> servletParameters,
-                                   List<ServletMappingParameter> servletMappingParameters,
-                                   JSONObject jaggeryConfig, SecurityConstraint securityConstraint) {
+        private JaggeryConfListener(Tomcat tomcat, List<ServletParameter> servletParameters,
+                                    List<ServletMappingParameter> servletMappingParameters,
+                                    JSONObject jaggeryConfig, SecurityConstraint securityConstraint) {
             this.servletParameters = servletParameters;
             this.servletMappingParameters = servletMappingParameters;
             this.jaggeryConfig = jaggeryConfig;
@@ -416,7 +268,6 @@ public class TomcatJaggeryWebappsDeployer {
             this.securityConstraint = securityConstraint;
         }
 
-        @Override
         public void lifecycleEvent(LifecycleEvent event) {
             if (Lifecycle.BEFORE_START_EVENT.equals(event.getType())) {
                 initJaggeryappDefaults((Context) event.getLifecycle(), this.tomcat,
@@ -425,9 +276,9 @@ public class TomcatJaggeryWebappsDeployer {
         }
     }
 
-    public static void initJaggeryappDefaults(Context ctx, Tomcat tomcat,
-                                              JSONObject jaggeryConfig, List<ServletParameter> servletParameters,
-                                              List<ServletMappingParameter> servletMappingParameters, SecurityConstraint securityConstraint) {
+    private static void initJaggeryappDefaults(Context ctx, Tomcat tomcat,
+                                               JSONObject jaggeryConfig, List<ServletParameter> servletParameters,
+                                               List<ServletMappingParameter> servletMappingParameters, SecurityConstraint securityConstraint) {
 
         for (ServletParameter servletParameter : servletParameters) {
             if (servletParameter.getServletName() != null && servletParameter.getServletClass() != null) {

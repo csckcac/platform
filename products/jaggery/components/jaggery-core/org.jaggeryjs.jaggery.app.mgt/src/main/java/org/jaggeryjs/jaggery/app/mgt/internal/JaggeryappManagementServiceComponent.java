@@ -22,6 +22,7 @@ import org.wso2.carbon.registry.core.service.RegistryService;
 import org.wso2.carbon.user.core.service.RealmService;
 import org.wso2.carbon.utils.ConfigurationContextService;
 import org.wso2.carbon.tomcat.ext.valves.CarbonTomcatValve;
+import org.wso2.carbon.webapp.mgt.GhostWebappDeployerValve;
 import org.wso2.carbon.webapp.mgt.TenantLazyLoaderValve;
 import org.wso2.carbon.tomcat.ext.valves.TomcatValveContainer;
 import org.wso2.carbon.webapp.mgt.DataHolder;
@@ -49,6 +50,7 @@ public class JaggeryappManagementServiceComponent {
             // Register the valves with Tomcat
             ArrayList<CarbonTomcatValve> valves = new ArrayList<CarbonTomcatValve>();
             valves.add(new TenantLazyLoaderValve());
+            valves.add(new GhostWebappDeployerValve());
             TomcatValveContainer.addValves(valves);
         } catch (Exception e) {
             log.error("Error occurred while activating JaggeryappManagementServiceComponent", e);

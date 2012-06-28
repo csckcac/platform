@@ -20,6 +20,7 @@ import org.apache.axis2.AxisFault;
 import org.apache.axis2.engine.AxisConfiguration;
 import org.apache.commons.logging.Log;
 import org.apache.commons.logging.LogFactory;
+import org.wso2.carbon.CarbonConstants;
 import org.wso2.carbon.CarbonException;
 import org.wso2.carbon.core.AbstractAdmin;
 import org.wso2.carbon.utils.CarbonUtils;
@@ -84,11 +85,11 @@ public class JaggeryAppAdmin extends AbstractAdmin {
      * @return
      */
     public WebappMetadata getStartedWebapp(String webappFileName) {
-        JaggeryApplicationsHolder holder = getWebappsHolder();
-        JaggeryApplication jaggeryApplication = (JaggeryApplication) holder.getStartedWebapps().get(webappFileName);
+        WebApplicationsHolder holder = getWebappsHolder();
+        WebApplication webapp = holder.getStartedWebapps().get(webappFileName);
         WebappMetadata webappMetadata = null;
-        if (jaggeryApplication != null) {
-            webappMetadata = getWebapp(jaggeryApplication);
+        if (webapp != null) {
+            webappMetadata = getWebapp(webapp);
             webappMetadata.setStarted(true);
         }
         return webappMetadata;
@@ -101,26 +102,26 @@ public class JaggeryAppAdmin extends AbstractAdmin {
      * @return
      */
     public WebappMetadata getStoppedWebapp(String webappFileName) {
-        JaggeryApplicationsHolder holder = getWebappsHolder();
-        JaggeryApplication jaggeryApplication = (JaggeryApplication) holder.getStoppedWebapps().get(webappFileName);
+        WebApplicationsHolder holder = getWebappsHolder();
+        WebApplication webapp = holder.getStoppedWebapps().get(webappFileName);
         WebappMetadata webappMetadata = null;
-        if (jaggeryApplication != null) {
-            webappMetadata = getWebapp(jaggeryApplication);
+        if (webapp != null) {
+            webappMetadata = getWebapp(webapp);
             webappMetadata.setStarted(false);
         }
         return webappMetadata;
     }
 
-    private WebappMetadata getWebapp(JaggeryApplication jaggeryApplication) {
+    private WebappMetadata getWebapp(WebApplication webapp) {
         WebappMetadata webappMetadata;
         webappMetadata = new WebappMetadata();
-        webappMetadata.setDisplayName(jaggeryApplication.getDisplayName());
-        webappMetadata.setContext(jaggeryApplication.getContextName());
-        webappMetadata.setLastModifiedTime(jaggeryApplication.getLastModifiedTime());
-        webappMetadata.setWebappFile(jaggeryApplication.getWebappFile().getName());
-        webappMetadata.setState(jaggeryApplication.getState());
+        webappMetadata.setDisplayName(webapp.getDisplayName());
+        webappMetadata.setContext(webapp.getContextName());
+        webappMetadata.setLastModifiedTime(webapp.getLastModifiedTime());
+        webappMetadata.setWebappFile(webapp.getWebappFile().getName());
+        webappMetadata.setState(webapp.getState());
 
-        JaggeryApplication.Statistics statistics = jaggeryApplication.getStatistics();
+        WebApplication.Statistics statistics = webapp.getStatistics();
         WebappStatistics stats = new WebappStatistics();
         stats.setActiveSessions(statistics.getActiveSessions());
         stats.setAvgSessionLifetime(statistics.getAvgSessionLifetime());
@@ -146,7 +147,7 @@ public class JaggeryAppAdmin extends AbstractAdmin {
     }
 
     private WebappsWrapper getPagedWebapps(int pageNumber, List<WebappMetadata> webapps) {
-        JaggeryApplicationsHolder webappsHolder = getWebappsHolder();
+        WebApplicationsHolder webappsHolder = getWebappsHolder();
         WebappsWrapper webappsWrapper = getWebappsWrapper(webappsHolder, webapps);
         try {
             webappsWrapper.setHostName(NetworkUtils.getLocalHostname());
@@ -202,17 +203,17 @@ public class JaggeryAppAdmin extends AbstractAdmin {
                                             String webappsSearchString) {
         List<WebappMetadata> webapps = new ArrayList<WebappMetadata>();
         for (Object webapp : allWebapps) {
-            if (!doesWebappSatisfySearchString((JaggeryApplication) webapp, webappsSearchString)) {
+            if (!doesWebappSatisfySearchString((WebApplication) webapp, webappsSearchString)) {
                 continue;
             }
             WebappMetadata webappMetadata = new WebappMetadata();
-            webappMetadata.setDisplayName(((JaggeryApplication) webapp).getDisplayName());
-            webappMetadata.setContext(((JaggeryApplication) webapp).getContextName());
-            webappMetadata.setLastModifiedTime(((JaggeryApplication) webapp).getLastModifiedTime());
-            webappMetadata.setWebappFile(((JaggeryApplication) webapp).getWebappFile().getName());
-            webappMetadata.setState(((JaggeryApplication) webapp).getState());
+            webappMetadata.setDisplayName(((WebApplication) webapp).getDisplayName());
+            webappMetadata.setContext(((WebApplication) webapp).getContextName());
+            webappMetadata.setLastModifiedTime(((WebApplication) webapp).getLastModifiedTime());
+            webappMetadata.setWebappFile(((WebApplication) webapp).getWebappFile().getName());
+            webappMetadata.setState(((WebApplication) webapp).getState());
             WebappStatistics statistics = new WebappStatistics();
-            statistics.setActiveSessions(((JaggeryApplication) webapp).getStatistics().getActiveSessions());
+            statistics.setActiveSessions(((WebApplication) webapp).getStatistics().getActiveSessions());
             webappMetadata.setStatistics(statistics);
 
             webapps.add(webappMetadata);
@@ -221,19 +222,19 @@ public class JaggeryAppAdmin extends AbstractAdmin {
     }
 
     private List<WebappMetadata> getFaultyWebapps(String webappsSearchString) {
-        JaggeryApplicationsHolder webappsHolder = getWebappsHolder();
+        WebApplicationsHolder webappsHolder = getWebappsHolder();
         if (webappsHolder == null) {
             return null;
         }
         List<WebappMetadata> webapps = new ArrayList<WebappMetadata>();
-        for (JaggeryApplication webapp : webappsHolder.getFaultyWebapps().values()) {
-            if (!doesWebappSatisfySearchString((JaggeryApplication) webapp, webappsSearchString)) {
+        for (WebApplication webapp : webappsHolder.getFaultyWebapps().values()) {
+            if (!doesWebappSatisfySearchString(webapp, webappsSearchString)) {
                 continue;
             }
             WebappMetadata webappMetadata = new WebappMetadata();
-            webappMetadata.setContext(((JaggeryApplication) webapp).getContextName());
-            webappMetadata.setLastModifiedTime(((JaggeryApplication) webapp).getLastModifiedTime());
-            webappMetadata.setWebappFile(((JaggeryApplication) webapp).getWebappFile().getName());
+            webappMetadata.setContext(webapp.getContextName());
+            webappMetadata.setLastModifiedTime(webapp.getLastModifiedTime());
+            webappMetadata.setWebappFile(webapp.getWebappFile().getName());
             webappMetadata.setStarted(false); //TODO
             webappMetadata.setRunning(false); //TODO
             webappMetadata.setFaulty(true);
@@ -249,18 +250,18 @@ public class JaggeryAppAdmin extends AbstractAdmin {
         return webapps;
     }
 
-    private boolean doesWebappSatisfySearchString(JaggeryApplication webapp,
+    private boolean doesWebappSatisfySearchString(WebApplication webapp,
                                                   String searchString) {
         return searchString == null || searchString.trim().length() == 0 ||
                 webapp.getContextName().toLowerCase(Locale.getDefault()).contains(searchString.toLowerCase(Locale.getDefault()));
     }
 
-    private JaggeryApplicationsHolder getWebappsHolder() {
-        return (JaggeryApplicationsHolder) getConfigContext().
-                getProperty(JaggeryMgtConstants.JAGGERY_APPLICATIONS_HOLDER);
+    private WebApplicationsHolder getWebappsHolder() {
+        return (WebApplicationsHolder) getConfigContext().
+                getProperty(CarbonConstants.WEB_APPLICATIONS_HOLDER);
     }
 
-    private WebappsWrapper getWebappsWrapper(JaggeryApplicationsHolder webappsHolder,
+    private WebappsWrapper getWebappsWrapper(WebApplicationsHolder webappsHolder,
                                              List<WebappMetadata> webapps) {
         WebappsWrapper webappsWrapper = new WebappsWrapper();
         webappsWrapper.setWebapps(webapps.toArray(new WebappMetadata[webapps.size()]));
@@ -307,7 +308,7 @@ public class JaggeryAppAdmin extends AbstractAdmin {
      * @throws org.apache.axis2.AxisFault - If an error occurs while deleting the webapp
      */
     public void deleteWebapp(String webappFileName) throws AxisFault {
-        JaggeryApplicationsHolder holder = getWebappsHolder();
+        WebApplicationsHolder holder = getWebappsHolder();
         if (holder.getStartedWebapps().get(webappFileName) != null) {
             deleteStartedWebapps(new String[]{webappFileName});
         } else if (holder.getStoppedWebapps().get(webappFileName) != null) {
@@ -318,9 +319,9 @@ public class JaggeryAppAdmin extends AbstractAdmin {
     }
 
     private void deleteWebapps(String[] webappFileNames,
-                               Map<String, JaggeryApplication> webapps) throws AxisFault {
+                               Map<String, WebApplication> webapps) throws AxisFault {
         for (String webappFileName : webappFileNames) {
-            JaggeryApplication webapp = (JaggeryApplication) webapps.get(webappFileName);
+            WebApplication webapp = webapps.get(webappFileName);
             try {
                 webapps.remove(webappFileName);
                 webapp.delete();
@@ -370,10 +371,10 @@ public class JaggeryAppAdmin extends AbstractAdmin {
         deleteAllWebapps(getWebappsHolder().getFaultyWebapps());
     }
 
-    private void deleteAllWebapps(Map<String, JaggeryApplication> webapps) throws AxisFault {
-        for (JaggeryApplication webapp : webapps.values()) {
+    private void deleteAllWebapps(Map<String, WebApplication> webapps) throws AxisFault {
+        for (WebApplication webapp : webapps.values()) {
             try {
-                ((JaggeryApplication) webapp).delete();
+                webapp.delete();
             } catch (CarbonException e) {
                 handleException("Could not delete started webapp " + webapp, e);
             }
@@ -385,9 +386,9 @@ public class JaggeryAppAdmin extends AbstractAdmin {
      * Reload all webapps
      */
     public void reloadAllWebapps() {
-        Map<String, JaggeryApplication> startedWebapps = getWebappsHolder().getStartedWebapps();
-        for (JaggeryApplication webapp : startedWebapps.values()) {
-            ((JaggeryApplication) webapp).reload();
+        Map<String, WebApplication> startedWebapps = getWebappsHolder().getStartedWebapps();
+        for (WebApplication webapp : startedWebapps.values()) {
+            webapp.reload();
         }
     }
 
@@ -408,10 +409,10 @@ public class JaggeryAppAdmin extends AbstractAdmin {
      * @throws org.apache.axis2.AxisFault If an error occurs while undeploying
      */
     public void stopAllWebapps() throws AxisFault {
-        Map<String, JaggeryApplication> startedWebapps = getWebappsHolder().getStartedWebapps();
-        for (JaggeryApplication webapp : startedWebapps.values()) {
+        Map<String, WebApplication> startedWebapps = getWebappsHolder().getStartedWebapps();
+        for (WebApplication webapp : startedWebapps.values()) {
             try {
-                ((JaggeryApplication) webapp).stop();
+                webapp.stop();
             } catch (CarbonException e) {
                 handleException("Error occurred while undeploying all webapps", e);
             }
@@ -426,12 +427,12 @@ public class JaggeryAppAdmin extends AbstractAdmin {
      * @throws org.apache.axis2.AxisFault If an error occurs while undeploying
      */
     public void stopWebapps(String[] webappFileNames) throws AxisFault {
-        JaggeryApplicationsHolder webappsHolder = getWebappsHolder();
-        Map<String, JaggeryApplication> startedWebapps = webappsHolder.getStartedWebapps();
+        WebApplicationsHolder webappsHolder = getWebappsHolder();
+        Map<String, WebApplication> startedWebapps = webappsHolder.getStartedWebapps();
         for (String webappFileName : webappFileNames) {
             try {
-                JaggeryApplication jaggeryApplication = (JaggeryApplication) startedWebapps.get(webappFileName);
-                webappsHolder.stopWebapp(jaggeryApplication);
+                WebApplication webapp = startedWebapps.get(webappFileName);
+                webappsHolder.stopWebapp(webapp);
             } catch (CarbonException e) {
                 handleException("Error occurred while undeploying webapps", e);
             }
@@ -444,12 +445,12 @@ public class JaggeryAppAdmin extends AbstractAdmin {
      * @throws org.apache.axis2.AxisFault If an error occurs while restarting webapps
      */
     public void startAllWebapps() throws AxisFault {
-        Map<String, JaggeryApplication> stoppedWebapps = getWebappsHolder().getStoppedWebapps();
+        Map<String, WebApplication> stoppedWebapps = getWebappsHolder().getStoppedWebapps();
 //        Deployer webappDeployer =
 //                ((DeploymentEngine) getAxisConfig().getConfigurator()).getDeployer(JaggeryConstants
 //                        .WEBAPP_DEPLOYMENT_FOLDER, JaggeryConstants.WEBAPP_EXTENSION);
-        for (JaggeryApplication webapp : stoppedWebapps.values()) {
-            startWebapp(stoppedWebapps, (JaggeryApplication) webapp);
+        for (WebApplication webapp : stoppedWebapps.values()) {
+            startWebapp(stoppedWebapps, webapp);
         }
         stoppedWebapps.clear();
     }
@@ -461,26 +462,26 @@ public class JaggeryAppAdmin extends AbstractAdmin {
      * @throws org.apache.axis2.AxisFault If a deployment error occurs
      */
     public void startWebapps(String[] webappFileNames) throws AxisFault {
-        JaggeryApplicationsHolder webappsHolder = getWebappsHolder();
-        Map<String, JaggeryApplication> stoppedWebapps = webappsHolder.getStoppedWebapps();
+        WebApplicationsHolder webappsHolder = getWebappsHolder();
+        Map<String, WebApplication> stoppedWebapps = webappsHolder.getStoppedWebapps();
 //        Deployer webappDeployer =
 //                ((DeploymentEngine) getAxisConfig().getConfigurator()).getDeployer(JaggeryConstants
 //                        .WEBAPP_DEPLOYMENT_FOLDER, JaggeryConstants.WEBAPP_EXTENSION);
         for (String webappFileName : webappFileNames) {
-            JaggeryApplication webapp = (JaggeryApplication) stoppedWebapps.get(webappFileName);
-            startWebapp(stoppedWebapps, (JaggeryApplication) webapp);
+            WebApplication webapp = stoppedWebapps.get(webappFileName);
+            startWebapp(stoppedWebapps, webapp);
         }
     }
 
-    private void startWebapp(Map<String, JaggeryApplication> stoppedWebapps,
-                             JaggeryApplication webapp) throws AxisFault {
+    private void startWebapp(Map<String, WebApplication> stoppedWebapps,
+                             WebApplication webapp) throws AxisFault {
         try {
             boolean started = webapp.start();
             if (started) {
                 String webappFileName = webapp.getWebappFile().getName();
                 stoppedWebapps.remove(webappFileName);
-                JaggeryApplicationsHolder webappsHolder = getWebappsHolder();
-                Map<String, JaggeryApplication> startedWebapps = webappsHolder.getStartedWebapps();
+                WebApplicationsHolder webappsHolder = getWebappsHolder();
+                Map<String, WebApplication> startedWebapps = webappsHolder.getStartedWebapps();
                 startedWebapps.put(webappFileName, webapp);
             }
         } catch (CarbonException e) {
@@ -498,13 +499,13 @@ public class JaggeryAppAdmin extends AbstractAdmin {
      * @return The session array
      */
     public SessionsWrapper getActiveSessions(String webappFileName, int pageNumber) {
-        JaggeryApplication webapp = (JaggeryApplication) getWebappsHolder().getStartedWebapps().get(webappFileName);
+        WebApplication webapp = getWebappsHolder().getStartedWebapps().get(webappFileName);
         List<SessionMetadata> sessionMetadataList = new ArrayList<SessionMetadata>();
         int numOfActiveSessions = 0;
         if (webapp != null) {
-            List<JaggeryApplication.HttpSession> sessions = webapp.getSessions();
+            List<WebApplication.HttpSession> sessions = webapp.getSessions();
             numOfActiveSessions = sessions.size();
-            for (JaggeryApplication.HttpSession session : sessions) {
+            for (WebApplication.HttpSession session : sessions) {
                 sessionMetadataList.add(new SessionMetadata(session));
             }
         }
@@ -530,9 +531,9 @@ public class JaggeryAppAdmin extends AbstractAdmin {
      * Expire all sessions in all webapps
      */
     public void expireSessionsInAllWebapps() {
-        Map<String, JaggeryApplication> webapps = getWebappsHolder().getStartedWebapps();
-        for (JaggeryApplication webapp : webapps.values()) {
-            ((JaggeryApplication) webapp).expireAllSessions();
+        Map<String, WebApplication> webapps = getWebappsHolder().getStartedWebapps();
+        for (WebApplication webapp : webapps.values()) {
+            webapp.expireAllSessions();
         }
     }
 
@@ -542,10 +543,10 @@ public class JaggeryAppAdmin extends AbstractAdmin {
      * @param webappFileNames The file names of the webapps whose sessions should be expired
      */
     public void expireSessionsInWebapps(String[] webappFileNames) {
-        Map<String, JaggeryApplication> webapps = getWebappsHolder().getStartedWebapps();
+        Map<String, WebApplication> webapps = getWebappsHolder().getStartedWebapps();
         for (String webappFileName : webappFileNames) {
-            JaggeryApplication webapp = webapps.get(webappFileName);
-            ((JaggeryApplication) webapp).expireAllSessions();
+            WebApplication webapp = webapps.get(webappFileName);
+            webapp.expireAllSessions();
         }
     }
 
@@ -557,9 +558,9 @@ public class JaggeryAppAdmin extends AbstractAdmin {
      * @param maxSessionLifetimeMillis The max allowed lifetime for the sessions
      */
     public void expireSessionsInWebapp(String webappFileName, long maxSessionLifetimeMillis) {
-        Map<String, JaggeryApplication> webapps = getWebappsHolder().getStartedWebapps();
-        JaggeryApplication webapp = (JaggeryApplication) webapps.get(webappFileName);
-        ((JaggeryApplication) webapp).expireSessions(maxSessionLifetimeMillis);
+        Map<String, WebApplication> webapps = getWebappsHolder().getStartedWebapps();
+        WebApplication webapp = webapps.get(webappFileName);
+        webapp.expireSessions(maxSessionLifetimeMillis);
     }
 
     /**
@@ -570,10 +571,10 @@ public class JaggeryAppAdmin extends AbstractAdmin {
      * @throws org.apache.axis2.AxisFault If an error occurs while retrieving sessions
      */
     public void expireSessions(String webappFileName, String[] sessionIDs) throws AxisFault {
-        Map<String, JaggeryApplication> webapps = getWebappsHolder().getStartedWebapps();
-        JaggeryApplication webapp = (JaggeryApplication) webapps.get(webappFileName);
+        Map<String, WebApplication> webapps = getWebappsHolder().getStartedWebapps();
+        WebApplication webapp = webapps.get(webappFileName);
         try {
-            ((JaggeryApplication) webapp).expireSessions(sessionIDs);
+            webapp.expireSessions(sessionIDs);
         } catch (CarbonException e) {
             handleException("Cannot expire specified sessions in webapp " + webappFileName, e);
         }
@@ -585,9 +586,9 @@ public class JaggeryAppAdmin extends AbstractAdmin {
      * @param webappFileName The file name of the webapp whose sessions should be expired
      */
     public void expireAllSessions(String webappFileName) {
-        Map<String, JaggeryApplication> webapps = getWebappsHolder().getStartedWebapps();
-        JaggeryApplication webapp = (JaggeryApplication) webapps.get(webappFileName);
-        ((JaggeryApplication) webapp).expireAllSessions();
+        Map<String, WebApplication> webapps = getWebappsHolder().getStartedWebapps();
+        WebApplication webapp = webapps.get(webappFileName);
+        webapp.expireAllSessions();
     }
 
     /**

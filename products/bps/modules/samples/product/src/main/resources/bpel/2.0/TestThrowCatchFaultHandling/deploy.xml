@@ -5,9 +5,9 @@
     <provide partnerLink="TestCase">
       <service name="q1:LinkTest" port="Workflow" />
     </provide>
+		<process-events>
+    	<enable-event>dataHandling</enable-event>
+    	<enable-event>activityLifecycle</enable-event>
+  	</process-events>  
   </process>
-  <process-events>
-    <enable-event>dataHandling</enable-event>
-    <enable-event>activityLifecycle</enable-event>
-  </process-events>  
 </deploy>

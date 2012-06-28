@@ -20,6 +20,8 @@ package org.wso2.carbon.identity.oauth.common;
 
 public class OAuth2ErrorCodes {
     public static final String UNAUTHORIZED_CLIENT = "unauthorized_client";
+    public static final String INVALID_SCOPE = "invalid_scope";
+    public static final String UNSUPPORTED_RESP_TYPE = "unsupported_response_type";
     public static final String SERVER_ERROR = "server_error";
     public static final String ACCESS_DENIED = "access_denied";
     public static final String INVALID_CALLBACK = "invalid_callback";

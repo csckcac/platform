@@ -55,9 +55,17 @@ public class BPSBPELServerManager extends TestServerManager {
 
     @Override
     protected void copyArtifacts(String carbonHome) throws IOException {
+        File[] samples = FileManipulator.getMatchingFiles(BPSTestUtils.getBpelTestSampleLocation(),
+                null, "zip");
+        File bpelRepo = new File(BPSTestUtils.getBpelSampleLocation(carbonHome));
+        for (File sample : samples) {
 
-        File[] samples = FileManipulator.getMatchingFiles(BPSTestUtils.getBpelSampleLocation(carbonHome), null, "zip");
-        File bpelRepo = new File(carbonHome + File.separator + "repository" + File.separator +
+            FileManipulator.copyFileToDir(sample, bpelRepo);
+            log.info("Copying: " + sample.getAbsolutePath() + " to " + bpelRepo.getAbsolutePath());
+        }
+
+        samples = FileManipulator.getMatchingFiles(BPSTestUtils.getBpelSampleLocation(carbonHome), null, "zip");
+        bpelRepo = new File(carbonHome + File.separator + "repository" + File.separator +
                                  "deployment" + File.separator +
                                  "server" + File.separator + "bpel" + File.separator);
         for (File sample : samples) {

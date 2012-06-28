@@ -30,6 +30,7 @@ import org.wso2.bps.integration.tests.util.FrameworkSettings;
 
 import javax.xml.stream.XMLStreamException;
 import java.util.ArrayList;
+import java.util.Collections;
 import java.util.List;
 
 /**
@@ -56,6 +57,31 @@ public class MiscBPELTestCase {
         String serviceName = "ClientService";
         List<String> expectedOutput = new ArrayList<String>();
         expectedOutput.add("Server says 2");
+
+        BPSTestUtils.sendRequest(SERVICE_URL_PREFIX + serviceName, operation, payload,
+                1, expectedOutput, BPSTestUtils.TWO_WAY);
+    }
+
+    @Test(groups = {"wso2.bps"}, description = "Correlation with attribute sample test case")
+    public void testCorrelationWithAttribute() throws XMLStreamException, AxisFault, InterruptedException {
+        String payload = "<p:TestCorrelationWithAttributeRequest xmlns:p=\"http://wso2.org/bps/sample\">\n" +
+                "      <p:input>attributeCorrelation</p:input>\n" +
+                "   </p:TestCorrelationWithAttributeRequest>";
+        String operation = "process";
+        String serviceName = "TestCorrelationWithAttribute";
+        List<String> expectedOutput = Collections.emptyList();
+
+        BPSTestUtils.sendRequest(SERVICE_URL_PREFIX + serviceName, operation, payload,
+                1, expectedOutput, BPSTestUtils.ONE_WAY);
+
+        Thread.sleep(2000);
+        payload = "<p:CallbackOperation xmlns:p=\"http://www.example.org/callback/\" corId=\"attributeCorrelation\">\n" +
+                "      <in>99ee992</in>\n" +
+                "   </p:CallbackOperation>";
+        operation = "CallbackOperation";
+        serviceName = "CallbackService";
+        expectedOutput = new ArrayList<String>();
+        expectedOutput.add("99ee992");
 
         BPSTestUtils.sendRequest(SERVICE_URL_PREFIX + serviceName, operation, payload,
                 1, expectedOutput, BPSTestUtils.TWO_WAY);

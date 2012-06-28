@@ -23,7 +23,7 @@
     xmlns:xvar="http://ode.apache.org/externalVariables"
     xmlns:jdbc="http://ode.apache.org/externalVariables/jdbc" >
 
-	<process name="pns:HelloWorld2">
+	<process name="pns:ExtVar">
 		<active>true</active>
 		<provide partnerLink="helloPartnerLink">
 			<service name="wns:ExtVarService" port="HelloPort"/>

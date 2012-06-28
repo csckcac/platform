@@ -152,6 +152,8 @@
                                 basedir="${basedir}/../samples/src/main/resources/bpel/2.0/CreditRating"/-->
                                 <zip destfile="target/samples/bpel/ExtVar.zip"
                                      basedir="${basedir}/src/test/resources/bpel/ExtVar"/>
+                                <zip destfile="target/samples/bpel/TestCorrelationWithAttribute.zip"
+                                     basedir="${basedir}/src/test/resources/bpel/TestCorrelationWithAttribute"/>
                             </tasks>
                         </configuration>
                     </execution>

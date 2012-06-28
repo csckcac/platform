@@ -15,7 +15,7 @@
 <fieldset>
     <div class="control-group">
         <label class="control-label"  for="newUsername">Username</label>
-        <div class="controls"><input id="newUsername" name="newUsername" type="text" class="required input-xlarge" /></div>
+        <div class="controls"><input id="newUsername" name="newUsername" minlength="5" type="text" class="required input-xlarge" /></div>
     </div>
 
     <div class="control-group">

@@ -95,7 +95,7 @@ var jagg = jagg || {};
             var newWidth = currentWidth + parseInt((100 - currentWidth) / divider);
             newWidth += "%";
             $(progressBar).css('width', newWidth);
-            var t = setTimeout('fillProgress("'+chartId+'")', time);
+            var t = setTimeout('jagg.fillProgress("'+chartId+'")', time);
         }
     }
 }());

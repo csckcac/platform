@@ -9,62 +9,58 @@ $(document).ready(function() {
     //Initiating the fake progress bar
     jagg.fillProgress('apiChart');jagg.fillProgress('subsChart');jagg.fillProgress('serviceTimeChart');jagg.fillProgress('tempLoadingSpace');
     var currentLocation=window.location.pathname;
+
     jagg.post("/site/blocks/stats/ajax/stats.jag", { action:"getProviderAPIServiceTime",currentLocation:currentLocation },
-              function (json) {
-                  if (!json.error) {
-                      var length = json.usage.length,s1 = [];
-                      var ticks = [];
-                      $('#serviceTimeChart').empty();
-                      $('#serviceTimeTable').find("tr:gt(0)").remove();
-                      for (var i = 0; i < length; i++) {
-                          s1[i] = parseFloat(json.usage[i].serviceTime);
-                          ticks[i] = json.usage[i].apiName;
-                          $('#serviceTimeTable').append($('<tr><td>' + json.usage[i].apiName + '</td><td>' + json.usage[i].serviceTime + '</td></tr>'));
+             function (json) {
+                 if (!json.error) {
+                     var length = json.usage.length,s1 = [];
+                     $('#serviceTimeChart').empty();
+                     for (var i = 0; i < length; i++) {
+                         var tmp = [parseFloat(json.usage[i].serviceTime),json.usage[i].apiName];
+                         s1.push(tmp);
+                     }
 
-                      }
+                     if (length > 0) {
+                         var height = 200;
+                         if (30 * length > 200) height = 30 * length;
+                         $('#serviceTimeChart').height(height);
+                         var plot1 = $.jqplot('serviceTimeChart', [s1], {
+                             seriesDefaults: {
+                                 renderer:$.jqplot.BarRenderer,
+                                 // Show point labels to the right ('e'ast) of each bar.
+                                 // edgeTolerance of -15 allows labels flow outside the grid
+                                 // up to 15 pixels.  If they flow out more than that, they
+                                 // will be hidden.
+                                 pointLabels: { show: true, location: 'e', edgeTolerance: -15 },
+                                 // Rotate the bar shadow as if bar is lit from top right.
+                                 shadowAngle: 135,
+                                 // Here's where we tell the chart it is oriented horizontally.
+                                 rendererOptions: {
+                                     barDirection: 'horizontal'
+                                 }
+                             },
+                             axes: {
+                                 yaxis: {
+                                     renderer: $.jqplot.CategoryAxisRenderer
+                                 },
+                                 xaxis:{
+                                     pad: 1.05,
+                                     tickOptions: {formatString: '%dms'}
+                                 }
+                             }
+                         });
 
-                      if (length > 0) {
-                          $('#serviceTimeTable').show();
-
-                          var plot1 = $.jqplot('serviceTimeChart', [s1], {
-                              seriesDefaults:{
-                                  renderer:$.jqplot.BarRenderer,
-                                  rendererOptions: {fillToZero: true} ,
-                                  tickRenderer: $.jqplot.CanvasAxisTickRenderer ,
-                                  tickOptions: {
-                                      angle: -30,
-                                      fontSize: '10pt'
-                                  }
-                              },
-                              seriesColors: [ "#ed3c3c", "#ffe03e", "#48ca48", "#49baff","#7d7dff", "#ff468b", "#de621d", "#cb68c9"],
-                              series:[
-                                  {label:'API'}
-                              ],
-                              axes: {
-                                  xaxis: {
-                                      renderer: $.jqplot.CategoryAxisRenderer,
-                                      ticks: ticks
-                                  },
-                                  yaxis: {
-                                      pad: 1.05,
-                                      tickOptions: {formatString: '%dms'}
-                                  }
-                              }
-                          });
-
-                      } else {
-                          $('#serviceTimeTable').hide();
-                          $('#serviceTimeChart').css("fontSize", 14);
-                          $('#serviceTimeChart').append($('<span class="label label-info">No data found. Check BAM server connectivity...</span>'));
-                      }
+                     } else {
+                         $('#serviceTimeChart').css("fontSize", 14);
+                         $('#serviceTimeChart').append($('<span class="label label-info">No data found. Check BAM server connectivity...</span>'));
+                     }
 
 
-                  } else {
-                      jagg.message({content:json.message,type:"error"});
-                  }
-                  t_on['serviceTimeChart'] = 0;
-              }, "json");
-
+                 } else {
+                     jagg.message({content:json.message,type:"error"});
+                 }
+                 t_on['serviceTimeChart'] = 0;
+             }, "json");
 
     jagg.post("/site/blocks/stats/ajax/stats.jag", { action:"getSubscriberCountByAPIs",currentLocation:currentLocation  },
               function (json) {

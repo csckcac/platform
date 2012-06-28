@@ -109,8 +109,16 @@ public class BamMediator extends AbstractMediator {
 
         this.setActivityIdInSOAPHeader(messageContext);
 
+        boolean request;
+
+        if (!messageContext.isResponse() && !messageContext.isFaultResponse()) {
+            request = true;
+        } else {
+            request = false;
+        }
+
         try {
-            logMessage(tenantId, messageContext);
+            logMessage(tenantId, messageContext, request);
         } catch (AgentException e) {
             e.printStackTrace();  //To change body of catch statement use File | Settings | File Templates.
         } catch (MalformedStreamDefinitionException e) {
@@ -140,7 +148,7 @@ public class BamMediator extends AbstractMediator {
         return true;
     }
 
-    private void logMessage(int tenantId, MessageContext messageContext)
+    private void logMessage(int tenantId, MessageContext messageContext, boolean request)
             throws AgentException, MalformedStreamDefinitionException, StreamDefinitionException,
                    DifferentStreamDefinitionAlreadyDefinedException,
                    MalformedURLException, AuthenticationException, TransportException, ThriftAuthenticationException {
@@ -172,6 +180,7 @@ public class BamMediator extends AbstractMediator {
                                                        "  'payloadData':[" +
                                                        "          {'name':'TenantId','type':'INT'}," +
                                                        "          {'name':'ActivityId','type':'STRING'}," +
+                                                       "          {'name':'Request','type':'STRING'}," +
                                                        "          {'name':'MessageId','type':'STRING'}," +
                                                        "          {'name':'SOAPHeaddr','type':'STRING'}," +
                                                        "          {'name':'SOAPBody','type':'STRING'}" +
@@ -182,15 +191,17 @@ public class BamMediator extends AbstractMediator {
         }
 
         int numOfProperties = properties.size();
-        Object[] payloadData = new Object[numOfProperties + 5];
+        Object[] payloadData = new Object[numOfProperties + 6];
         payloadData[0] = tenantId;
         payloadData[1] = messageContext.getProperty(BamMediatorConstants.MSG_ACTIVITY_ID);
-        payloadData[2] = messageContext.getMessageID();
-        payloadData[3] = messageContext.getEnvelope().getHeader().toString();
-        payloadData[4] = messageContext.getEnvelope().getBody().toString();
+        payloadData[2] = request ?
+                         BamMediatorConstants.DIRECTION_IN : BamMediatorConstants.DIRECTION_OUT;
+        payloadData[3] = messageContext.getMessageID();
+        payloadData[4] = messageContext.getEnvelope().getHeader().toString();
+        payloadData[5] = messageContext.getEnvelope().getBody().toString();
 
         for (int i=0; i<numOfProperties; i++) {
-            payloadData[5 + i] = properties.get(i).getValue();
+            payloadData[6 + i] = properties.get(i).getValue();
         }
 
         //Publish event for a valid stream

@@ -39,7 +39,7 @@
 
     <!--Application repository related configurations-->
     <RepositoryMGTConfig>
-        <SCMServerIp>192.168.4.26</SCMServerIp>
+        <SCMServerIp>0.0.0.0</SCMServerIp>
         <SCMServerPort>8080</SCMServerPort>
         <SCMServerRealmName>SONIA :: SCM Manager</SCMServerRealmName>
         <SCMServerAdminUserName>scmadmin</SCMServerAdminUserName>

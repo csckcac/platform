@@ -20,15 +20,16 @@ import org.apache.axiom.om.OMElement;
 import org.apache.axis2.engine.AxisConfiguration;
 import org.apache.commons.logging.Log;
 import org.apache.commons.logging.LogFactory;
-import org.wso2.carbon.cep.core.*;
+import org.wso2.carbon.cep.core.Bucket;
+import org.wso2.carbon.cep.core.CEPServiceInterface;
+import org.wso2.carbon.cep.core.exception.CEPConfigurationException;
+import org.wso2.carbon.cep.core.internal.config.BucketHelper;
 import org.wso2.carbon.cep.core.internal.registry.CEPRegistryInvoker;
 import org.wso2.carbon.cep.core.internal.util.CEPConstants;
-import org.wso2.carbon.cep.core.internal.config.BucketHelper;
-import org.wso2.carbon.cep.core.exception.CEPConfigurationException;
 import org.wso2.carbon.core.multitenancy.SuperTenantCarbonContext;
 
 import javax.xml.namespace.QName;
-import java.util.*;
+import java.util.Iterator;
 
 /**
  * this class is used to add CEP buckets to cep runtime engine
@@ -43,13 +44,13 @@ public class CEPBucketBuilder {
      *
      * @param bucketsElement - Buckets XML Element
      */
-    public static void addNewBucketsToRegistry(OMElement bucketsElement) throws CEPConfigurationException {
+    public static void addNewBucketsToRegistry(OMElement bucketsElement,int tenantId) throws CEPConfigurationException {
         // add the buckets through an iterator
         OMElement bucketElement;
         for (Iterator bucketsIterator = bucketsElement.getChildElements();
              bucketsIterator.hasNext(); ) {
             bucketElement = (OMElement) bucketsIterator.next();
-            addNewBucketToRegistry(bucketElement);
+            addNewBucketToRegistry(bucketElement,tenantId);
         }
     }
 
@@ -59,7 +60,7 @@ public class CEPBucketBuilder {
      *
      * @param bucketElement - Bucket XML Element
      */
-    public static void addNewBucketToRegistry(OMElement bucketElement)
+    public static void addNewBucketToRegistry(OMElement bucketElement,int tenantId)
             throws CEPConfigurationException {
         if (!bucketElement.getQName().equals(
                 new QName(CEPConstants.CEP_CONF_NAMESPACE, CEPConstants.CEP_CONF_ELE_BUCKET))) {
@@ -71,7 +72,7 @@ public class CEPBucketBuilder {
         }
 
         Bucket bucket = BucketHelper.fromOM(bucketElement);
-        CEPRegistryInvoker.addBucketsToRegistry(bucket, 0);
+        CEPRegistryInvoker.addBucketsToRegistry(bucket, tenantId);
     }
 
     /**

@@ -27,20 +27,23 @@ import org.apache.axis2.deployment.repository.util.DeploymentFileData;
 import org.apache.axis2.engine.AxisConfiguration;
 import org.apache.commons.logging.Log;
 import org.apache.commons.logging.LogFactory;
+import org.wso2.carbon.CarbonConstants;
 import org.wso2.carbon.cep.core.exception.CEPConfigurationException;
 import org.wso2.carbon.cep.core.internal.CEPService;
 import org.wso2.carbon.cep.core.internal.builder.CEPBucketBuilder;
 import org.wso2.carbon.cep.core.internal.ds.CEPServiceValueHolder;
 import org.wso2.carbon.cep.core.internal.util.CEPConstants;
-import org.wso2.carbon.context.CarbonContext;
 import org.wso2.carbon.core.multitenancy.SuperTenantCarbonContext;
-import org.wso2.carbon.CarbonConstants;
 
 import javax.xml.namespace.QName;
 import javax.xml.stream.XMLInputFactory;
 import javax.xml.stream.XMLStreamException;
 import javax.xml.stream.XMLStreamReader;
-import java.io.*;
+import java.io.BufferedInputStream;
+import java.io.File;
+import java.io.FileInputStream;
+import java.io.FileNotFoundException;
+import java.io.IOException;
 import java.util.Map;
 import java.util.concurrent.ConcurrentHashMap;
 
@@ -88,7 +91,8 @@ public class BucketDeployer extends AbstractDeployer {
             CEPService cepService = CEPServiceValueHolder.getInstance().getCepService();
             if (null != cepService) {
                 AxisConfiguration axisConfiguration = this.configurationContext.getAxisConfiguration();
-                CEPBucketBuilder.addNewBucketToRegistry(bucketElement);
+                int tenantId = SuperTenantCarbonContext.getCurrentContext(axisConfiguration).getTenantId();
+                CEPBucketBuilder.addNewBucketToRegistry(bucketElement,tenantId);
                 CEPBucketBuilder.loadBucketFromRegistry(cepService, axisConfiguration, bucketName);
             } else {
                 CEPServiceValueHolder.getInstance().getUnDeployedBuckets().add(bucketElement);

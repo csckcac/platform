@@ -27,6 +27,7 @@ import org.wso2.carbon.cep.core.internal.CEPService;
 import org.wso2.carbon.cep.core.internal.ds.CEPServiceValueHolder;
 import org.wso2.carbon.cep.core.internal.util.CEPConstants;
 import org.wso2.carbon.utils.ServerConstants;
+import org.wso2.carbon.utils.multitenancy.MultitenantConstants;
 
 import javax.xml.namespace.QName;
 import javax.xml.stream.XMLInputFactory;
@@ -70,7 +71,7 @@ public class CEPServiceBuilder {
                             CEPConstants.CEP_CONF_ELE_BUCKETS));
             // If there are new buckets elements those are added to the registry
             if (bucketsElement != null) {
-                CEPBucketBuilder.addNewBucketsToRegistry(bucketsElement);
+                CEPBucketBuilder.addNewBucketsToRegistry(bucketsElement, MultitenantConstants.SUPER_TENANT_ID);  //these will be added to super tenant
             }
         }
 
@@ -86,9 +87,11 @@ public class CEPServiceBuilder {
     }
 
     private static void deployAllCEPBuckets() throws CEPConfigurationException {
+        //only super tenant's deployer will we populating unDeployedBuckets as its the only one called at server startup
+        //these are added as super tenant buckets
         List<OMElement> unDeployedBuckets = CEPServiceValueHolder.getInstance().getUnDeployedBuckets();
         for (OMElement bucketElement : unDeployedBuckets) {
-            CEPBucketBuilder.addNewBucketToRegistry(bucketElement);
+            CEPBucketBuilder.addNewBucketToRegistry(bucketElement,MultitenantConstants.SUPER_TENANT_ID);
         }
         unDeployedBuckets.clear();
     }

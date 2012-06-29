@@ -153,6 +153,7 @@ public class BamMediator extends AbstractMediator {
         if (streamId == null) {
             Agent agent = this.createAgent();
             this.createDataPublisher(agent);
+            this.defineEventStream();
         }
 
         //Publish event for a valid stream
@@ -270,14 +271,15 @@ public class BamMediator extends AbstractMediator {
         return new Agent(agentConfiguration);
     }
 
-    private void createDataPublisher(Agent agent) throws AgentException, MalformedStreamDefinitionException, StreamDefinitionException,
-                                                         DifferentStreamDefinitionAlreadyDefinedException,
-                                                         MalformedURLException, AuthenticationException, TransportException {
-        //create data publisher
-        dataPublisher = new DataPublisher("tcp://" + this.serverIp + ":" + this.serverPort,
-                                          this.userName, this.password, agent);
+    private void createDataPublisher(Agent agent) throws MalformedURLException, AgentException, AuthenticationException, TransportException{
 
-        //Define event stream
+        dataPublisher = new DataPublisher("tcp://" + this.serverIp + ":" + this.serverPort,
+                                              this.userName, this.password, agent);
+
+        log.info("Data Publisher Created.");
+    }
+
+    private void defineEventStream() throws AgentException, MalformedStreamDefinitionException, StreamDefinitionException, DifferentStreamDefinitionAlreadyDefinedException{
         streamId = dataPublisher.defineEventStream("{" +
                                                    "  'name':'" + this.streamName + "'," +
                                                    "  'version':'"+ this.streamVersion + "'," +
@@ -299,7 +301,7 @@ public class BamMediator extends AbstractMediator {
                                                    this.getPropertyString() +
                                                    "  ]" +
                                                    "}");
-        log.info("Event Stream Created.");
+        log.info("Event Stream Defined.");
     }
 
     private Object[] createPayloadData(MessageContext messageContext,

@@ -51,7 +51,9 @@ public class IdentityDBInitializer {
                 statement = conn.createStatement();
                 executeSQLScript();
                 conn.commit();
-                log.info("Identity tables are created successfully.");
+				if(log.isDebugEnabled()){
+					log.info("Identity tables are created successfully.");
+				}
             } catch (SQLException e) {
                 String msg = "Failed to create database tables for Identity meta-data store. "
                         + e.getMessage();
@@ -67,7 +69,9 @@ public class IdentityDBInitializer {
                 }
             }
         } else {
-            log.info("Identity Database already exists. Not creating a new database.");
+			if(log.isDebugEnabled()){
+				log.debug("Identity Database already exists. Not creating a new database.");
+			}
         }
     }
 
@@ -79,7 +83,7 @@ public class IdentityDBInitializer {
     private boolean isDatabaseStructureCreated() {
         try {
             if (log.isDebugEnabled()) {
-                log.trace("Running a query to test the database tables existence.");
+                log.debug("Running a query to test the database tables existence.");
             }
             // check whether the tables are already created with a query
             Connection conn = dataSource.getConnection();

@@ -251,7 +251,7 @@ public class ManageGenericArtifactService extends RegistryAbstractAdmin implemen
         if (!registry.resourceExists(new ResourcePath(path).getPath())) {
             return null;
         }
-        return new String((byte[]) registry.get(path).getContent());
+        return RegistryUtils.decodeBytes((byte[]) registry.get(path).getContent());
     }
 
     public String getArtifactUIConfiguration(String key) throws RegistryException {

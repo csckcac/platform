@@ -20,8 +20,6 @@ import org.apache.axiom.om.OMException;
 import org.apache.axiom.om.impl.builder.StAXOMBuilder;
 import org.apache.commons.logging.Log;
 import org.apache.commons.logging.LogFactory;
-import org.apache.xerces.parsers.SAXParser;
-import org.jaxen.JaxenException;
 import org.wso2.carbon.governance.api.common.dataobjects.GovernanceArtifact;
 import org.wso2.carbon.governance.api.exception.GovernanceException;
 import org.wso2.carbon.governance.api.services.ServiceFilter;
@@ -29,7 +27,6 @@ import org.wso2.carbon.governance.api.services.ServiceManager;
 import org.wso2.carbon.governance.api.services.dataobjects.Service;
 import org.wso2.carbon.governance.api.util.GovernanceUtils;
 import org.wso2.carbon.governance.services.util.Util;
-import org.wso2.carbon.governance.services.util.XMLConfigValidatorUtil;
 import org.wso2.carbon.registry.admin.api.governance.IManageServicesService;
 import org.wso2.carbon.registry.common.CommonConstants;
 import org.wso2.carbon.registry.common.services.RegistryAbstractAdmin;
@@ -39,17 +36,11 @@ import org.wso2.carbon.registry.core.session.UserRegistry;
 import org.wso2.carbon.registry.core.utils.RegistryUtils;
 import org.wso2.carbon.registry.core.utils.UUIDGenerator;
 import org.wso2.carbon.registry.extensions.utils.CommonUtil;
-import org.wso2.carbon.utils.CarbonUtils;
-import org.xml.sax.InputSource;
-import org.xml.sax.SAXException;
-import org.xml.sax.SAXNotRecognizedException;
-import org.xml.sax.SAXNotSupportedException;
 
 import javax.xml.namespace.QName;
 import javax.xml.stream.XMLInputFactory;
-import javax.xml.stream.XMLStreamException;
 import javax.xml.stream.XMLStreamReader;
-import java.io.*;
+import java.io.StringReader;
 import java.sql.SQLException;
 import java.util.*;
 
@@ -232,13 +223,12 @@ public class AddServicesService extends RegistryAbstractAdmin implements IManage
         if (!registry.resourceExists(new ResourcePath(path).getPath())) {
             //if a service have a symLink and when click on the symLink
             if (Boolean.parseBoolean(getRootRegistry().get(servicename).getProperty(RegistryConstants.REGISTRY_LINK))) {
-                return (new String((byte[]) getRootRegistry().get(servicename).getContent()));
+                return RegistryUtils.decodeBytes((byte[]) getRootRegistry().get(servicename).getContent());
             }
             throw new RegistryException("Resource does not exist path : " + path);
         }
         Resource resource = registry.get(path);
-        String serviceinfo = new String((byte[]) resource.getContent());
-        return serviceinfo;
+        return RegistryUtils.decodeBytes((byte[]) resource.getContent());
     }
 
     public String getServiceConfiguration() throws RegistryException {

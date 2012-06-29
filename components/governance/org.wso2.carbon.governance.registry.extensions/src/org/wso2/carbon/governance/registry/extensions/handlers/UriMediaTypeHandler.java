@@ -28,6 +28,7 @@ import org.wso2.carbon.registry.core.Registry;
 import org.wso2.carbon.registry.core.Resource;
 import org.wso2.carbon.registry.core.jdbc.handlers.Handler;
 import org.wso2.carbon.registry.core.jdbc.handlers.RequestContext;
+import org.wso2.carbon.registry.core.utils.RegistryUtils;
 
 import java.util.Iterator;
 import java.util.List;
@@ -49,7 +50,7 @@ public class UriMediaTypeHandler extends Handler {
             if(resource.getContent() instanceof String){
                 newContent = (String) resource.getContent();
             } else {
-                newContent = new String((byte[])resource.getContent());
+                newContent = RegistryUtils.decodeBytes((byte[])resource.getContent());
             }
 
             if(registry.resourceExists(resourcePath)){

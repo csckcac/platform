@@ -2,7 +2,6 @@ package org.wso2.carbon.governance.registry.extensions.handlers;
 
 import org.apache.axiom.om.OMElement;
 import org.apache.axiom.om.util.AXIOMUtil;
-import org.hsqldb.User;
 import org.wso2.carbon.governance.api.common.GovernanceArtifactManager;
 import org.wso2.carbon.governance.api.common.dataobjects.GovernanceArtifact;
 import org.wso2.carbon.governance.api.exception.GovernanceException;
@@ -10,7 +9,6 @@ import org.wso2.carbon.governance.api.generic.GenericArtifactManager;
 import org.wso2.carbon.governance.api.generic.dataobjects.GenericArtifact;
 import org.wso2.carbon.governance.api.util.GovernanceArtifactConfiguration;
 import org.wso2.carbon.governance.api.util.GovernanceUtils;
-import org.wso2.carbon.registry.core.Registry;
 import org.wso2.carbon.registry.core.Resource;
 import org.wso2.carbon.registry.core.exceptions.RegistryException;
 import org.wso2.carbon.registry.core.jdbc.handlers.Handler;
@@ -62,7 +60,7 @@ public class JCRHandler extends Handler {
                 if (content instanceof String) {
                     contentString = (String) content;
                 } else {
-                    contentString = new String((byte[])content);
+                    contentString = RegistryUtils.decodeBytes((byte[])content);
                 }
                 Resource oldResource = requestContext.getOldResource();
                 String oldContentString = "";

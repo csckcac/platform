@@ -128,7 +128,7 @@ public class Policy extends GovernanceArtifact {
         try {
             resource = registry.get(path);
             byte[] content = (byte[]) resource.getContent();
-            policyContent = new String(content);
+            policyContent = RegistryUtils.decodeBytes(content);
 
         } catch (RegistryException e) {
             String msg =

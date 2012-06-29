@@ -22,17 +22,14 @@ import org.apache.axiom.om.OMFactory;
 import org.apache.axiom.om.util.AXIOMUtil;
 import org.apache.commons.logging.Log;
 import org.apache.commons.logging.LogFactory;
-import org.apache.commons.scxml.io.SCXMLParser;
-import org.apache.commons.scxml.model.SCXML;
 import org.wso2.carbon.governance.lcm.beans.*;
 import org.wso2.carbon.registry.core.Registry;
 import org.wso2.carbon.registry.core.Resource;
 import org.wso2.carbon.registry.core.exceptions.RegistryException;
-import org.xml.sax.InputSource;
+import org.wso2.carbon.registry.core.utils.RegistryUtils;
 
 import javax.xml.namespace.QName;
 import javax.xml.stream.XMLStreamException;
-import java.io.CharArrayReader;
 import java.util.Iterator;
 
 public class LifecycleBeanPopulator {
@@ -180,7 +177,7 @@ public class LifecycleBeanPopulator {
                         if(resource.getContent() instanceof String){
                             lifecycleElement = CommonUtil.buildOMElement((String) resource.getContent());
                         }else if(resource.getContent() instanceof byte[]){
-                            lifecycleElement = CommonUtil.buildOMElement(new String((byte[]) resource.getContent()));
+                            lifecycleElement = CommonUtil.buildOMElement(RegistryUtils.decodeBytes((byte[]) resource.getContent()));
                         }else{
                             String msg = "Could not find valid lifecycle configuration";
                             log.error(msg);

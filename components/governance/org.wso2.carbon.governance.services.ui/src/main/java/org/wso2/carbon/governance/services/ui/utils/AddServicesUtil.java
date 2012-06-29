@@ -238,7 +238,8 @@ public class AddServicesUtil {
 
     public static OMElement loadAddedServiceContent(String xmlContent) throws Exception {
         try {
-            XMLStreamReader reader = XMLInputFactory.newInstance().createXMLStreamReader(new StringReader(xmlContent));
+            XMLStreamReader reader = XMLInputFactory.newInstance().
+                    createXMLStreamReader(new StringReader(xmlContent));
             StAXOMBuilder builder = new StAXOMBuilder(reader);
             return builder.getDocumentElement();
         } catch (Exception ex) {

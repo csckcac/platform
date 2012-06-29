@@ -37,6 +37,7 @@ import org.wso2.carbon.registry.core.Resource;
 import org.wso2.carbon.registry.core.exceptions.RegistryException;
 import org.wso2.carbon.registry.core.jdbc.handlers.RequestContext;
 import org.wso2.carbon.registry.core.session.CurrentSession;
+import org.wso2.carbon.registry.core.utils.RegistryUtils;
 import org.wso2.carbon.user.core.UserStoreException;
 
 import javax.xml.namespace.QName;
@@ -222,7 +223,7 @@ public class ChecklistLifeCycle extends Aspect {
                         </lifecycle>
                  */
                 Resource configurationResource = registry.get(configurationResourcePath);
-                xmlContent = new String((byte[])configurationResource.getContent());
+                xmlContent = RegistryUtils.decodeBytes((byte[])configurationResource.getContent());
                 configurationElement =  AXIOMUtil.stringToOM(xmlContent);
             }
             else {

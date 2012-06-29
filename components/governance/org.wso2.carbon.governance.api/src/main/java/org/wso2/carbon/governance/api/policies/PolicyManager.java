@@ -15,10 +15,6 @@
  */
 package org.wso2.carbon.governance.api.policies;
 
-import java.net.MalformedURLException;
-import java.net.URL;
-import java.util.*;
-
 import org.apache.commons.logging.Log;
 import org.apache.commons.logging.LogFactory;
 import org.wso2.carbon.governance.api.common.dataobjects.GovernanceArtifact;
@@ -30,6 +26,10 @@ import org.wso2.carbon.registry.core.Registry;
 import org.wso2.carbon.registry.core.Resource;
 import org.wso2.carbon.registry.core.exceptions.RegistryException;
 import org.wso2.carbon.registry.core.utils.RegistryUtils;
+
+import java.net.MalformedURLException;
+import java.net.URL;
+import java.util.*;
 
 /**
  * This provides the management functionality for policy artifacts stored on the
@@ -57,7 +57,7 @@ public class PolicyManager {
      * @return the artifact added.
      * @throws GovernanceException if the operation failed.
      */
-    public Policy newPolicy(byte[] content) throws GovernanceException {
+    public Policy newPolicy(byte[] content) throws RegistryException {
         return newPolicy(content, null);
     }
 
@@ -71,11 +71,11 @@ public class PolicyManager {
      * @throws GovernanceException if the operation failed.
      */
     public Policy newPolicy(byte[] content, String name)
-            throws GovernanceException {
+            throws RegistryException {
         String policyId = UUID.randomUUID().toString();
         Policy policy = new Policy(policyId, name != null ? "name://" + name : null);
         policy.associateRegistry(registry);
-        policy.setPolicyContent(new String(content));
+        policy.setPolicyContent(RegistryUtils.decodeBytes(content));
         return policy;
     }
 

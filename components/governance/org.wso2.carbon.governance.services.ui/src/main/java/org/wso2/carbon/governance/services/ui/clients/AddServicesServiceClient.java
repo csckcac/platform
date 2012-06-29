@@ -26,12 +26,12 @@ import org.apache.commons.logging.LogFactory;
 import org.wso2.carbon.CarbonConstants;
 import org.wso2.carbon.governance.services.stub.AddServicesServiceStub;
 import org.wso2.carbon.registry.core.exceptions.RegistryException;
+import org.wso2.carbon.registry.core.utils.RegistryUtils;
 import org.wso2.carbon.ui.CarbonUIUtil;
 import org.wso2.carbon.utils.ServerConstants;
 
 import javax.servlet.ServletConfig;
 import javax.servlet.http.HttpSession;
-import java.rmi.RemoteException;
 
 public class AddServicesServiceClient {
     private static final Log log = LogFactory.getLog(AddServicesServiceClient.class);

@@ -25,12 +25,12 @@ import org.wso2.carbon.governance.api.generic.GenericArtifactManager;
 import org.wso2.carbon.governance.api.generic.dataobjects.GenericArtifact;
 import org.wso2.carbon.governance.api.services.ServiceManager;
 import org.wso2.carbon.governance.api.services.dataobjects.Service;
-import org.wso2.carbon.governance.api.util.GovernanceConstants;
 import org.wso2.carbon.governance.registry.extensions.interfaces.Execution;
 import org.wso2.carbon.registry.core.Resource;
 import org.wso2.carbon.registry.core.exceptions.RegistryException;
 import org.wso2.carbon.registry.core.internal.RegistryCoreServiceComponent;
 import org.wso2.carbon.registry.core.jdbc.handlers.RequestContext;
+import org.wso2.carbon.registry.core.utils.RegistryUtils;
 import org.wso2.carbon.registry.extensions.utils.CommonUtil;
 
 import javax.xml.namespace.QName;
@@ -84,7 +84,7 @@ public class ApiStoreExecutor implements Execution {
 
         Resource resource = context.getResource();
         try {
-            String artifactString = new String((byte[]) resource.getContent());
+            String artifactString = RegistryUtils.decodeBytes((byte[]) resource.getContent());
             String user = CarbonContext.getCurrentContext().getUsername();
             OMElement xmlContent = AXIOMUtil.stringToOM(artifactString);
             String serviceName = CommonUtil.getServiceName(xmlContent);

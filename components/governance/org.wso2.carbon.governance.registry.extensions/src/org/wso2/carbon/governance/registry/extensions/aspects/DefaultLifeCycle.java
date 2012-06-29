@@ -198,7 +198,7 @@ public class DefaultLifeCycle extends Aspect {
             if (registry.resourceExists(configurationResourcePath)) {
                 try {
                     Resource configurationResource = registry.get(configurationResourcePath);
-                    xmlContent = new String((byte[]) configurationResource.getContent());
+                    xmlContent = RegistryUtils.decodeBytes((byte[]) configurationResource.getContent());
                     configurationElement = AXIOMUtil.stringToOM(xmlContent);
                 } catch (Exception e) {
                     String msg = "Invalid lifecycle configuration found at " + configurationResourcePath;

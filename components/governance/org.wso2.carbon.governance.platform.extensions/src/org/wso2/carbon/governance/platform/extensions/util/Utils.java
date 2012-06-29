@@ -24,6 +24,7 @@ import org.apache.commons.logging.Log;
 import org.apache.commons.logging.LogFactory;
 import org.wso2.carbon.registry.core.Resource;
 import org.wso2.carbon.registry.core.exceptions.RegistryException;
+import org.wso2.carbon.registry.core.utils.RegistryUtils;
 
 import javax.xml.stream.XMLStreamException;
 
@@ -38,7 +39,7 @@ public class Utils {
             if (content instanceof String) {
                 proxyContent = AXIOMUtil.stringToOM((String) content);
             } else {
-                proxyContent = AXIOMUtil.stringToOM(new String((byte[]) content));
+                proxyContent = AXIOMUtil.stringToOM(RegistryUtils.decodeBytes((byte[]) content));
             }
         } catch (XMLStreamException e) {
             String msg = "Unable to parse the provided payload";

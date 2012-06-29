@@ -33,6 +33,7 @@ import org.wso2.carbon.registry.core.ActionConstants;
 import org.wso2.carbon.registry.core.RegistryConstants;
 import org.wso2.carbon.registry.core.Resource;
 import org.wso2.carbon.registry.core.exceptions.RegistryException;
+import org.wso2.carbon.registry.core.utils.RegistryUtils;
 import org.wso2.carbon.registry.ws.client.registry.WSRegistryServiceClient;
 import org.wso2.carbon.ui.CarbonUIAuthenticator;
 import org.wso2.carbon.ui.CarbonUIUtil;
@@ -115,7 +116,7 @@ public class GovernanceListUIServiceComponent {
                                 OMElement layout = configuration.getContentDefinition();
                                 if (layout != null && !registry.resourceExists(layoutStoragePath)) {
                                     Resource resource = registry.newResource();
-                                    resource.setContent(layout.toString().getBytes());
+                                    resource.setContent(RegistryUtils.encodeString(layout.toString()));
                                     resource.setMediaType("application/xml");
                                     registry.put(layoutStoragePath, resource);
                                 }

@@ -17,19 +17,15 @@
 */
 package org.wso2.carbon.governance.wsdltool.services;
 
-import org.wso2.carbon.core.AbstractAdmin;
-import org.wso2.carbon.governance.wsdltool.util.CommonUtil;
-import org.wso2.carbon.governance.wsdltool.beans.ServiceInfoBean;
-import org.wso2.carbon.registry.core.Resource;
-import org.wso2.carbon.registry.core.Registry;
-import org.wso2.carbon.registry.core.RegistryConstants;
-import org.wso2.carbon.registry.core.utils.RegistryUtils;
-import org.wso2.carbon.registry.extensions.handlers.utils.WSDLProcessor;
-import org.wso2.carbon.governance.wsdltool.beans.ServiceInfoBean;
-import org.wso2.carbon.governance.wsdltool.util.CommonUtil;
-import org.apache.axiom.om.OMFactory;
 import org.apache.axiom.om.OMAbstractFactory;
 import org.apache.axiom.om.OMElement;
+import org.apache.axiom.om.OMFactory;
+import org.wso2.carbon.core.AbstractAdmin;
+import org.wso2.carbon.governance.wsdltool.beans.ServiceInfoBean;
+import org.wso2.carbon.registry.core.Registry;
+import org.wso2.carbon.registry.core.RegistryConstants;
+import org.wso2.carbon.registry.core.Resource;
+import org.wso2.carbon.registry.core.utils.RegistryUtils;
 
 public class WSDLToolService extends AbstractAdmin {
 
@@ -80,7 +76,7 @@ public class WSDLToolService extends AbstractAdmin {
         }
 
         String content = serviceInfoElement.toString();
-        resource.setContent(content.getBytes());
+        resource.setContent(RegistryUtils.encodeString(content));
         resource.setMediaType(RegistryConstants.MEX_MEDIA_TYPE);
         registry.put(path, resource);
     }

@@ -38,7 +38,6 @@ import org.wso2.carbon.registry.core.Registry;
 import org.wso2.carbon.registry.core.RegistryConstants;
 import org.wso2.carbon.registry.core.Resource;
 import org.wso2.carbon.registry.core.config.RegistryContext;
-import org.wso2.carbon.registry.core.config.StaticConfiguration;
 import org.wso2.carbon.registry.core.exceptions.RegistryException;
 import org.wso2.carbon.registry.core.service.RegistryService;
 import org.wso2.carbon.registry.core.session.UserRegistry;
@@ -52,8 +51,6 @@ import javax.xml.namespace.QName;
 import javax.xml.stream.XMLInputFactory;
 import javax.xml.stream.XMLStreamException;
 import javax.xml.stream.XMLStreamReader;
-import java.io.ByteArrayInputStream;
-import java.io.InputStream;
 import java.io.StringReader;
 import java.util.*;
 
@@ -394,7 +391,7 @@ public class GovernanceUtils {
             if (content instanceof String) {
                 elementString = (String) content;
             } else {
-                elementString = new String((byte[])content);
+                elementString = RegistryUtils.decodeBytes((byte[])content);
             }
             configurations.add(getGovernanceArtifactConfiguration(elementString));
         }
@@ -824,10 +821,11 @@ public class GovernanceUtils {
      * @return the AXIOM element.
      * @throws GovernanceException if the operation failed.
      */
-    public static OMElement buildOMElement(byte[] content) throws GovernanceException {
+    public static OMElement buildOMElement(byte[] content) throws RegistryException {
         XMLStreamReader parser;
         try {
-            parser = XMLInputFactory.newInstance().createXMLStreamReader(new StringReader(new String(content)));
+            parser = XMLInputFactory.newInstance().createXMLStreamReader(new StringReader(
+                    RegistryUtils.decodeBytes(content)));
         } catch (XMLStreamException e) {
             String msg = "Error in initializing the parser to build the OMElement.";
             log.error(msg, e);

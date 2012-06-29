@@ -75,7 +75,7 @@ public class WadlMediaTypeHandler extends Handler {
             if (resourceContent instanceof String) {
                 wadlContent = (String) resourceContent;
             } else {
-                wadlContent = new String((byte[]) resourceContent);
+                wadlContent = RegistryUtils.decodeBytes((byte[]) resourceContent);
             }
 
             try {
@@ -186,7 +186,7 @@ public class WadlMediaTypeHandler extends Handler {
         }
 
         resource = registry.newResource();
-        resource.setContent(url.getBytes());
+        resource.setContent(RegistryUtils.encodeString(url));
         resource.setMediaType(CommonConstants.ENDPOINT_MEDIA_TYPE);
         resource.setUUID(UUID.randomUUID().toString());
         return  registry.put(endpointAbsolutePath, resource);

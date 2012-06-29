@@ -94,7 +94,7 @@ public class PolicyUriHandler extends Handler {
         policyResource.setContent(outputStream.toByteArray());
 
         try {
-            AXIOMUtil.stringToOM(new String(outputStream.toByteArray()));
+            AXIOMUtil.stringToOM(RegistryUtils.decodeBytes(outputStream.toByteArray()));
         } catch (Exception e) {
             throw new RegistryException("The given policy file does not contain valid XML.");
         }

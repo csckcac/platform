@@ -7,8 +7,8 @@ import org.apache.commons.logging.LogFactory;
 import org.wso2.carbon.registry.core.*;
 import org.wso2.carbon.registry.core.exceptions.RegistryException;
 import org.wso2.carbon.registry.core.jdbc.handlers.RequestContext;
+import org.wso2.carbon.registry.core.utils.RegistryUtils;
 import org.wso2.carbon.registry.extensions.utils.CommonConstants;
-import org.wso2.carbon.registry.extensions.utils.CommonUtil;
 
 import javax.xml.stream.XMLInputFactory;
 import javax.xml.stream.XMLStreamReader;
@@ -39,7 +39,7 @@ public class Utils {
         if (tempResource.getContent() instanceof String) {
             return (String) tempResource.getContent();
         } else if (tempResource.getContent() instanceof byte[]) {
-            return new String((byte[]) tempResource.getContent());
+            return RegistryUtils.decodeBytes((byte[]) tempResource.getContent());
         }
         return null;
     }

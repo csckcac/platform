@@ -22,6 +22,7 @@ import org.wso2.carbon.registry.api.Registry;
 import org.wso2.carbon.registry.api.RegistryException;
 import org.wso2.carbon.registry.api.Resource;
 import org.wso2.carbon.registry.core.RegistryConstants;
+import org.wso2.carbon.registry.core.utils.RegistryUtils;
 
 import javax.xml.namespace.QName;
 import javax.xml.stream.XMLStreamException;
@@ -94,7 +95,7 @@ public class CommonUtil {
 
 //        here we get the resource content and build a OMElement from it
         try {
-            String xmlContent = new String((byte[])resource.getContent());
+            String xmlContent = RegistryUtils.decodeBytes((byte[])resource.getContent());
             OMElement configurationElement =  AXIOMUtil.stringToOM(xmlContent);
 
 //            if the config type is literal we take the lifecycle element from it

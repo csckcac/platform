@@ -15,49 +15,25 @@
  */
 package org.wso2.carbon.governance.services.util;
 
-import org.apache.axiom.om.util.AXIOMUtil;
-import org.apache.axiom.om.xpath.AXIOMXPath;
-import org.jaxen.JaxenException;
-import org.wso2.carbon.registry.core.session.UserRegistry;
-import org.wso2.carbon.registry.core.exceptions.RegistryException;
-import org.wso2.carbon.registry.core.RegistryConstants;
-import org.wso2.carbon.registry.core.service.RegistryService;
-import org.apache.axis2.context.MessageContext;
-import org.apache.commons.logging.Log;
-import org.apache.commons.logging.LogFactory;
-import org.apache.commons.logging.Log;
-import org.apache.commons.logging.LogFactory;
-import org.apache.axis2.context.MessageContext;
 import org.apache.axiom.om.OMElement;
-import org.apache.axiom.om.OMFactory;
-import org.apache.axiom.om.OMAbstractFactory;
-import org.apache.axiom.om.impl.builder.StAXOMBuilder;
-import org.wso2.carbon.registry.core.service.RegistryService;
-import org.wso2.carbon.registry.core.session.UserRegistry;
-import org.wso2.carbon.registry.core.exceptions.RegistryException;
-import org.wso2.carbon.registry.core.RegistryConstants;
-import org.wso2.carbon.registry.core.Resource;
+import org.apache.axiom.om.util.AXIOMUtil;
+import org.apache.commons.logging.Log;
+import org.apache.commons.logging.LogFactory;
 import org.wso2.carbon.registry.core.Registry;
-import org.wso2.carbon.registry.extensions.utils.CommonConstants;
+import org.wso2.carbon.registry.core.RegistryConstants;
+import org.wso2.carbon.registry.core.exceptions.RegistryException;
+import org.wso2.carbon.registry.core.service.RegistryService;
+import org.wso2.carbon.registry.core.utils.RegistryUtils;
 import org.wso2.carbon.utils.CarbonUtils;
 import org.xml.sax.SAXException;
 
-import javax.servlet.http.HttpServletRequest;
 import javax.xml.XMLConstants;
-import javax.xml.stream.XMLStreamException;
-import javax.xml.stream.XMLStreamReader;
-import javax.xml.stream.XMLInputFactory;
-import javax.xml.namespace.QName;
-import java.io.*;
-import java.util.Iterator;
-
-
-import javax.servlet.http.HttpServletRequest;
 import javax.xml.transform.Source;
 import javax.xml.transform.stream.StreamSource;
 import javax.xml.validation.Schema;
 import javax.xml.validation.SchemaFactory;
 import javax.xml.validation.Validator;
+import java.io.*;
 
 public class Util {
 
@@ -78,7 +54,8 @@ public class Util {
     }
 
     public static String getServiceConfig(Registry registry)throws Exception{
-        return new String((byte[])registry.get(RegistryConstants.GOVERNANCE_SERVICES_CONFIG_PATH + "service").getContent());
+        return RegistryUtils.decodeBytes((byte[])registry.get(RegistryConstants.GOVERNANCE_SERVICES_CONFIG_PATH +
+                "service").getContent());
     }
 
 //    The methods have been duplicated in several places because there is no common bundle to place them.

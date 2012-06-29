@@ -30,6 +30,7 @@ import org.wso2.carbon.registry.core.Resource;
 import org.wso2.carbon.registry.core.exceptions.RegistryException;
 import org.wso2.carbon.registry.core.service.RegistryService;
 import org.wso2.carbon.registry.core.session.UserRegistry;
+import org.wso2.carbon.registry.core.utils.RegistryUtils;
 import org.wso2.carbon.utils.CarbonUtils;
 import org.wso2.carbon.utils.FileUtil;
 
@@ -93,7 +94,7 @@ public class GovernanceRegistryExtensionsComponent {
                 Registry registry = registryService.getRegistry();
                 UserRegistry systemRegistry = registryService.getRegistry(CarbonConstants.REGISTRY_SYSTEM_USERNAME);
                 Resource resource = registry.newResource();
-                resource.setContent(rxt.getBytes());
+                resource.setContent(RegistryUtils.encodeString(rxt));
                 resource.setMediaType(RXT_MEDIA_TYPE);
                 String resourcePath = RXT_PATH + RegistryConstants.PATH_SEPARATOR + rxtPath;
                 if (!registry.resourceExists(resourcePath)) {

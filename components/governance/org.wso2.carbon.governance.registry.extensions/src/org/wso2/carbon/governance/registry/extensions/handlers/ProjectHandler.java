@@ -29,6 +29,7 @@ import org.wso2.carbon.registry.core.Resource;
 import org.wso2.carbon.registry.core.exceptions.RegistryException;
 import org.wso2.carbon.registry.core.jdbc.handlers.Handler;
 import org.wso2.carbon.registry.core.jdbc.handlers.RequestContext;
+import org.wso2.carbon.registry.core.utils.RegistryUtils;
 
 import javax.xml.namespace.QName;
 import javax.xml.stream.XMLStreamException;
@@ -48,7 +49,7 @@ public class ProjectHandler extends Handler {
         if (content instanceof String) {
             contentString = (String) content;
         } else {
-            contentString = new String((byte[]) content);
+            contentString = RegistryUtils.decodeBytes((byte[]) content);
         }
         OMElement payload;
         try {

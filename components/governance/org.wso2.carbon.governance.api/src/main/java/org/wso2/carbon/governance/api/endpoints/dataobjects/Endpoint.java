@@ -19,10 +19,10 @@ import org.apache.commons.logging.Log;
 import org.apache.commons.logging.LogFactory;
 import org.wso2.carbon.governance.api.common.dataobjects.GovernanceArtifact;
 import org.wso2.carbon.governance.api.exception.GovernanceException;
-import org.wso2.carbon.governance.api.util.GovernanceConstants;
 import org.wso2.carbon.registry.core.Registry;
 import org.wso2.carbon.registry.core.Resource;
 import org.wso2.carbon.registry.core.exceptions.RegistryException;
+import org.wso2.carbon.registry.core.utils.RegistryUtils;
 
 import javax.xml.namespace.QName;
 import java.util.List;
@@ -95,7 +95,7 @@ public class Endpoint extends GovernanceArtifact {
                 url = (String) contentObj;
             } else {
                 byte[] content = (byte[]) contentObj;
-                url = new String(content);
+                url = RegistryUtils.decodeBytes(content);
             }
 
         } catch (RegistryException e) {

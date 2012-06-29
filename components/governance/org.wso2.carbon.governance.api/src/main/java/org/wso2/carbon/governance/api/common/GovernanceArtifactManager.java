@@ -149,7 +149,7 @@ public class GovernanceArtifactManager {
                 if (content instanceof String) {
                     oldContent = (String) content;
                 } else {
-                    oldContent = new String((byte[]) content);
+                    oldContent = RegistryUtils.decodeBytes((byte[]) content);
                 }
                 String newContent;
                 content = resource.getContent();

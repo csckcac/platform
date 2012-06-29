@@ -27,6 +27,7 @@ import org.jaxen.SimpleNamespaceContext;
 import org.wso2.carbon.registry.core.Resource;
 import org.wso2.carbon.registry.core.exceptions.RegistryException;
 import org.wso2.carbon.registry.core.service.RegistryService;
+import org.wso2.carbon.registry.core.utils.RegistryUtils;
 import org.wso2.carbon.registry.extensions.utils.CommonConstants;
 import org.wso2.carbon.utils.CarbonUtils;
 
@@ -183,8 +184,7 @@ public class CommonUtil {
         try {
             XMLStreamReader reader = XMLInputFactory.newInstance().createXMLStreamReader(new StringReader(serviceInfo));
             StAXOMBuilder builder = new StAXOMBuilder(reader);
-            OMElement serviceInfoElement = builder.getDocumentElement();
-            return serviceInfoElement;
+            return builder.getDocumentElement();
         } catch (Exception e) {
             log.error("Unable to build service OMElement", e);
         }
@@ -193,11 +193,11 @@ public class CommonUtil {
 
     private static String convertContentToString(Resource resource) throws RegistryException {
         if (resource.getContent() instanceof String) {
-            return (String) resource.getContent();
+            return RegistryUtils.decodeBytes(((String) resource.getContent()).getBytes());
         } else if (resource.getContent() instanceof byte[]) {
-            return new String((byte[]) resource.getContent());
+            return RegistryUtils.decodeBytes((byte[]) resource.getContent());
         }
-        return "";
+        return RegistryUtils.decodeBytes("".getBytes());
     }
 
     public static String getVersionFromContent(OMElement content) {
@@ -258,7 +258,7 @@ public class CommonUtil {
 
     public static OMElement getRXTContentOMElement(String xml) throws RegistryException {
 
-        XMLStreamReader parser = null;
+        XMLStreamReader parser;
         try {
             parser = XMLInputFactory.newInstance().createXMLStreamReader(new ByteArrayInputStream(xml.getBytes("utf-8")));
             StAXOMBuilder builder = new StAXOMBuilder(parser);

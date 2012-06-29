@@ -15,10 +15,6 @@
  */
 package org.wso2.carbon.governance.api.schema;
 
-import java.net.MalformedURLException;
-import java.net.URL;
-import java.util.*;
-
 import org.apache.axiom.om.OMAttribute;
 import org.apache.axiom.om.OMElement;
 import org.apache.commons.logging.Log;
@@ -35,6 +31,9 @@ import org.wso2.carbon.registry.core.exceptions.RegistryException;
 import org.wso2.carbon.registry.core.utils.RegistryUtils;
 
 import javax.xml.namespace.QName;
+import java.net.MalformedURLException;
+import java.net.URL;
+import java.util.*;
 
 /**
  * This provides the management functionality for schema artifacts stored on the
@@ -77,7 +76,7 @@ public class SchemaManager {
      * @return the artifact added.
      * @throws GovernanceException if the operation failed.
      */
-    public Schema newSchema(byte[] content) throws GovernanceException {
+    public Schema newSchema(byte[] content) throws RegistryException {
         return newSchema(content, null);
     }
 
@@ -91,7 +90,7 @@ public class SchemaManager {
      * @throws GovernanceException if the operation failed.
      */
     public Schema newSchema(byte[] content, String name)
-            throws GovernanceException {
+            throws RegistryException {
         String schemaId = UUID.randomUUID().toString();
     	Schema schema = new Schema(schemaId, name != null ? "name://" + name : null);
     	schema.associateRegistry(registry);

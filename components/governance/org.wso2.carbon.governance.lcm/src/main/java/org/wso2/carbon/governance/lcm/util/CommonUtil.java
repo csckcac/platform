@@ -30,6 +30,7 @@ import org.wso2.carbon.registry.core.config.StaticConfiguration;
 import org.wso2.carbon.registry.core.exceptions.RegistryException;
 import org.wso2.carbon.registry.core.service.RegistryService;
 import org.wso2.carbon.registry.core.session.UserRegistry;
+import org.wso2.carbon.registry.core.utils.RegistryUtils;
 import org.wso2.carbon.utils.CarbonUtils;
 import org.wso2.carbon.utils.ServerConstants;
 import org.xml.sax.SAXException;
@@ -340,7 +341,7 @@ public class CommonUtil {
         Resource resource;
         if (lifeCycleExists(name, registry)) {
             resource = registry.get(path);
-            return new String((byte[])resource.getContent());
+            return RegistryUtils.decodeBytes((byte[])resource.getContent());
         }
 
         return null;

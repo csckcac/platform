@@ -37,7 +37,6 @@ import org.wso2.carbon.governance.api.exception.GovernanceException;
 import org.wso2.carbon.governance.api.services.ServiceFilter;
 import org.wso2.carbon.governance.api.services.ServiceManager;
 import org.wso2.carbon.governance.api.services.dataobjects.Service;
-import org.wso2.carbon.governance.api.util.GovernanceConstants;
 import org.wso2.carbon.governance.api.wsdls.WsdlManager;
 import org.wso2.carbon.governance.api.wsdls.dataobjects.Wsdl;
 import org.wso2.carbon.governance.sramp.exceptions.SRAMPServletException;
@@ -282,7 +281,7 @@ public class SRAMPServlet extends HttpServlet {
                     if (temp instanceof String) {
                         content = (String) temp;
                     } else if (temp instanceof byte[]) {
-                        content = new String((byte[]) temp);
+                        content = RegistryUtils.decodeBytes((byte[]) temp);
                     } else {
                         log.error(errorMessage);
                         throw new SRAMPServletException(errorMessage);
@@ -723,7 +722,7 @@ public class SRAMPServlet extends HttpServlet {
             Object temp = resource.getContent();
             byte[] content;
             if (temp instanceof String) {
-                content = ((String) temp).getBytes();
+                content = RegistryUtils.encodeString((String) temp);
             } else if (temp instanceof byte[]) {
                 content = (byte[]) temp;
             } else {

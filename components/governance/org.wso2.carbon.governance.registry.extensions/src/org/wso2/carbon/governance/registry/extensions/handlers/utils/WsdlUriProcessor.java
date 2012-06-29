@@ -958,7 +958,7 @@ public class WsdlUriProcessor {
         String artifactId = UUID.randomUUID().toString();
         resource.setUUID(artifactId);
         String content = service.toString();
-        resource.setContent(content.getBytes());
+        resource.setContent(RegistryUtils.encodeString(content));
         resource.setMediaType(RegistryConstants.SERVICE_MEDIA_TYPE);
         // when saving the resource we are expecting to call the service media type handler, so
         // we intentionally release the lock here.

@@ -29,6 +29,7 @@ import org.wso2.carbon.governance.list.operations.util.OperationUtil;
 import org.wso2.carbon.registry.core.Registry;
 import org.wso2.carbon.registry.core.Resource;
 import org.wso2.carbon.registry.core.exceptions.RegistryException;
+import org.wso2.carbon.registry.core.utils.RegistryUtils;
 
 import javax.xml.namespace.QName;
 import javax.xml.stream.XMLStreamException;
@@ -93,7 +94,7 @@ public class ReadOperation extends AbstractOperation{
                 log.error(msg);
                 OperationUtil.handleException(msg);
             }
-            content = new String((byte [])resource.getContent());
+            content = RegistryUtils.decodeBytes((byte [])resource.getContent());
         } catch (RegistryException e) {
             String msg = "Error occured while deleting the resource at " + artifactId;
             log.error(msg);

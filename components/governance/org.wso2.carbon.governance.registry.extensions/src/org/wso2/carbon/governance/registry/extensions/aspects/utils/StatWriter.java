@@ -4,12 +4,12 @@ import org.apache.axiom.om.OMAbstractFactory;
 import org.apache.axiom.om.OMElement;
 import org.apache.axiom.om.OMFactory;
 import org.apache.axiom.om.impl.builder.StAXOMBuilder;
-import org.apache.axiom.om.util.AXIOMUtil;
 import org.apache.commons.logging.Log;
 import org.apache.commons.logging.LogFactory;
 import org.wso2.carbon.registry.core.Registry;
 import org.wso2.carbon.registry.core.RegistryConstants;
 import org.wso2.carbon.registry.core.Resource;
+import org.wso2.carbon.registry.core.utils.RegistryUtils;
 
 import javax.xml.namespace.QName;
 import javax.xml.stream.XMLInputFactory;
@@ -71,7 +71,7 @@ public class StatWriter {
             if (resource.getContent() instanceof String) {
                 content = (String) resource.getContent();
             } else if (resource.getContent() instanceof byte[]) {
-                content = new String((byte[]) resource.getContent());
+                content = RegistryUtils.decodeBytes((byte[]) resource.getContent());
             }
         }
 

@@ -85,43 +85,47 @@ public class WebappDeployer extends AbstractDeployer {
     }
 
     public void deploy(DeploymentFileData deploymentFileData) throws DeploymentException {
+        // We now support for exploded webapp deployment, so we have to check if unpackedWar
+        // files are getting deployed again, which will cause conflict at tomcat level.
+        if (!isUnpackedWebapp(deploymentFileData.getFile())) {
 
-        if (!GhostWebappDeployerUtils.isGhostOn()) {
-            deployThisWebApp(deploymentFileData);
-
-        } else {
-            String absoluteFilePath = deploymentFileData.getAbsolutePath();
-
-            // Check the ghost file
-            File ghostFile = GhostWebappDeployerUtils.getGhostFile(absoluteFilePath, axisConfig);
-            if (ghostFile == null || !ghostFile.exists()) {
-                // ghost file is not found. so this is a new webapp and we have to deploy it
+            if (!GhostWebappDeployerUtils.isGhostOn()) {
                 deployThisWebApp(deploymentFileData);
 
-                // iterate all deployed webapps and find the deployed webapp and create the ghost file
-                WebApplication webApplication = GhostWebappDeployerUtils.
-                        findDeployedWebapp(configContext, absoluteFilePath);
-
-                if (webApplication != null) {
-                    GhostWebappDeployerUtils.updateLastUsedTime(webApplication);
-                    GhostWebappDeployerUtils.serializeWebApp(webApplication, axisConfig,
-                                                             absoluteFilePath);
-                }
             } else {
-                // load the ghost webapp
-                WebApplication ghostWebApplication = GhostWebappDeployerUtils.
-                        createGhostWebApp(ghostFile, deploymentFileData.getFile());
-                ghostWebApplication.setServletContextParameters(servletContextParameters);
-                String ghostWebappFileName = deploymentFileData.getFile().getName();
+                String absoluteFilePath = deploymentFileData.getAbsolutePath();
 
-                WebApplicationsHolder webappsHolder = (WebApplicationsHolder) configContext.
-                        getProperty(CarbonConstants.WEB_APPLICATIONS_HOLDER);
+                // Check the ghost file
+                File ghostFile = GhostWebappDeployerUtils.getGhostFile(absoluteFilePath, axisConfig);
+                if (ghostFile == null || !ghostFile.exists()) {
+                    // ghost file is not found. so this is a new webapp and we have to deploy it
+                    deployThisWebApp(deploymentFileData);
 
-                log.info("Deploying Ghost WebApp : " + ghostWebappFileName);
-                webappsHolder.getStartedWebapps().put(ghostWebappFileName, ghostWebApplication);
-                webappsHolder.getFaultyWebapps().remove(ghostWebappFileName);
+                    // iterate all deployed webapps and find the deployed webapp and create the ghost file
+                    WebApplication webApplication = GhostWebappDeployerUtils.
+                            findDeployedWebapp(configContext, absoluteFilePath);
 
-                // TODO:  add webbapp to eventlistners
+                    if (webApplication != null) {
+                        GhostWebappDeployerUtils.updateLastUsedTime(webApplication);
+                        GhostWebappDeployerUtils.serializeWebApp(webApplication, axisConfig,
+                                                                 absoluteFilePath);
+                    }
+                } else {
+                    // load the ghost webapp
+                    WebApplication ghostWebApplication = GhostWebappDeployerUtils.
+                            createGhostWebApp(ghostFile, deploymentFileData.getFile(), axisConfig);
+                    ghostWebApplication.setServletContextParameters(servletContextParameters);
+                    String ghostWebappFileName = deploymentFileData.getFile().getName();
+
+                    WebApplicationsHolder webappsHolder = (WebApplicationsHolder) configContext.
+                            getProperty(CarbonConstants.WEB_APPLICATIONS_HOLDER);
+
+                    log.info("Deploying Ghost WebApp : " + ghostWebappFileName);
+                    webappsHolder.getStartedWebapps().put(ghostWebappFileName, ghostWebApplication);
+                    webappsHolder.getFaultyWebapps().remove(ghostWebappFileName);
+
+                    // TODO:  add webbapp to eventlistners
+                }
             }
         }
     }
@@ -129,26 +133,22 @@ public class WebappDeployer extends AbstractDeployer {
     private void deployThisWebApp(DeploymentFileData deploymentFileData)
             throws DeploymentException {
         try {
-            // We now support for exploded webapp deployment, so we have to check if unpackedWar
-            // files are getting deployed which will cause conflict at tomcat level.
-            if (!isUnpackedWebapp(deploymentFileData.getFile())) {
-                // Object can be of listeners interfaces in javax.servlet.*
-                ArrayList<Object> listeners = new ArrayList<Object>(1);
+            // Object can be of listeners interfaces in javax.servlet.*
+            ArrayList<Object> listeners = new ArrayList<Object>(1);
 //            listeners.add(new CarbonServletRequestListener());
-                tomcatWebappDeployer.deploy(deploymentFileData.getFile(),
-                                            (ArrayList<WebContextParameter>) configContext.
-                                                    getProperty(CarbonConstants.
-                                                                        SERVLET_CONTEXT_PARAMETER_LIST),
-                                            listeners);
-                super.deploy(deploymentFileData);
-            }
+            tomcatWebappDeployer.deploy(deploymentFileData.getFile(),
+                                        (ArrayList<WebContextParameter>) configContext.
+                                                getProperty(CarbonConstants.
+                                                                    SERVLET_CONTEXT_PARAMETER_LIST),
+                                        listeners);
+            super.deploy(deploymentFileData);
+
         } catch (Exception e) {
             String msg = "Error occurred while deploying webapp " + deploymentFileData.getFile().
                     getAbsolutePath();
             log.error(msg, e);
             throw new DeploymentException(msg, e);
         }
-
     }
 
 
@@ -163,11 +163,18 @@ public class WebappDeployer extends AbstractDeployer {
         try {
             tomcatWebappDeployer.undeploy(new File(fileName));
             if (GhostWebappDeployerUtils.isGhostOn()) {
-                // Remove the corresponding ghost file
+                // Remove the corresponding ghost file and dummy context directory
                 File ghostFile = GhostWebappDeployerUtils.getGhostFile(fileName, axisConfig);
+                File dummyContextDir = GhostWebappDeployerUtils.
+                        getDummyContextFile(fileName, axisConfig);
                 if (ghostFile != null && ghostFile.exists() && !ghostFile.delete()) {
                     log.error("Error while deleting ghost webapp file : " +
                               ghostFile.getAbsolutePath());
+                }
+                if (dummyContextDir != null && dummyContextDir.exists() &&
+                    !dummyContextDir.delete()) {
+                    log.error("Error while deleting dummy context file : " +
+                              dummyContextDir.getAbsolutePath());
                 }
             }
         } catch (CarbonException e) {

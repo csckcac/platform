@@ -17,7 +17,7 @@ sub stratos_config_common {
         $common_broker_config_file = $stratos_dir."/repository/conf/broker-config.xml";
         $common_cache_file = $stratos_dir."/repository/conf/cache.xml";
         $common_jgroups_s3_ping_aws_file = $stratos_dir."/repository/conf/jgroups-s3_ping-aws.xml";
-        $common_cloud_services_desc_file = $stratos_dir."/repository/conf/cloud-services-desc.xml";
+        $common_cloud_services_desc_file = $stratos_dir."/repository/conf/multitenancy/cloud-services-desc.xml";
         $common_identity_file = $stratos_dir."/repository/conf/identity.xml";
         $common_throttling_agent_config_file = $stratos_dir."/repository/conf/throttling-agent-config.xml";
         $common_mgt_transports_file = $stratos_dir."/repository/conf/mgt-transports.xml";
@@ -30,7 +30,7 @@ sub stratos_config_common {
         $common_broker_config_target_file = $stratos_target_dir."/repository/conf/broker-config.xml";
         $common_cache_target_file = $stratos_target_dir."/repository/conf/cache.xml";
         $common_jgroups_s3_ping_aws_target_file = $stratos_target_dir."/repository/conf/jgroups-s3_ping-aws.xml";
-        $common_cloud_services_desc_target_file = $stratos_target_dir."/repository/conf/cloud-services-desc.xml";
+        $common_cloud_services_desc_target_file = $stratos_target_dir."/repository/conf/multitenancy/cloud-services-desc.xml";
         $common_identity_target_file = $stratos_target_dir."/repository/conf/identity.xml";
         $common_throttling_agent_config_target_file = $stratos_target_dir."/repository/conf/throttling-agent-config.xml";
         $common_mgt_transports_target_file = $stratos_target_dir."/repository/conf/mgt-transports.xml";

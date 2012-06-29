@@ -76,7 +76,9 @@ public class TenantDispatcherServiceComponent {
         multitenantSvcGroup.addParameter(CarbonConstants.HIDDEN_SERVICE_PARAM_NAME, "true");
         multitenantSvcGroup.addService(service);
         axisCfg.addServiceGroup(multitenantSvcGroup);
-        log.info("Deployed " + MultitenantConstants.MULTITENANT_DISPATCHER_SERVICE);
+		if(log.isDebugEnabled()){
+			log.debug("Deployed " + MultitenantConstants.MULTITENANT_DISPATCHER_SERVICE);
+		}
     }
 
     /**

@@ -41,34 +41,6 @@
 	</organization>
 
             <modules>
-                <module>axis2-repo-mgt</module>
-                <module>aar-services</module>
-                <module>admin-mgt</module>
-                <module>application-mgt</module>
-                <module>application-deployers</module>
-		<module>agent</module>
-               <module>bam</module>
-                <module>bam-data-publishers</module>
-                <module>business-processes</module>
-                <module>business-messaging</module>
-                <module>caching</module>
-                <module>captcha-mgt</module>
-                <module>claim-mgt</module>
-                <module>cluster-mgt</module>
-                <module>dashboard</module>
-                <module>data-services</module>
-                <module>data-sources</module>
-              <module>deployment-synchronizer</module>
-                <module>doc-request-processor</module>
-                <module>ec2-client</module>
-               <module>ejb-services</module>
-               <module>email-verification</module>
-               <module>endpoint</module>
-               <!--Removing eventing component since we are now using event component>
-                <module>eventing</module-->
-                <module>event</module>
-                <module>governance</module>
-                <!--<module>health-monitor</module>-->
                 <module>identity</module>
                 <module>jar-services</module>
                 <module>java2wsdl</module>
@@ -141,9 +113,7 @@
                 <module>ntask</module>
                 <module>transaction-manager</module>
                 <module>rest-api</module>
-                <module>script-engine</module>
                 <module>hostobjects</module>
-                <module>jaggery</module>
                 <module>apimgt</module>
 		<module>andes</module>
 		<module>bam2</module>

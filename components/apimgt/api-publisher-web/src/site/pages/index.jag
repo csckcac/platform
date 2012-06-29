@@ -35,7 +35,8 @@ var site = require("/site/conf/site.json");
             currentPage = 1;
     }
     }
-
+    var perMod = jagg.module("api");
+    isCreatePermitted = perMod.hasCreatePermission();
 
     jagg.render({
         "name":"page/base",
@@ -53,7 +54,8 @@ var site = require("/site/conf/site.json");
                             "inputs":{
                                 "apis":apis,
                                 "currentPage":currentPage,
-                                "numberOfPages":numberOfPages
+                                "numberOfPages":numberOfPages,
+                                "isCreatePermitted":isCreatePermitted.permitted
                             }
                         }
                     }

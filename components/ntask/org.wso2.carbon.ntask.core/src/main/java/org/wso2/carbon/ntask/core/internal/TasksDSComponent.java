@@ -72,7 +72,9 @@ public class TasksDSComponent {
 					this.getTaskService(), null);
 			bundleContext.registerService(Axis2ConfigurationContextObserver.class.getName(),
                     new TaskAxis2ConfigurationContextObserver(this.getTaskService()), null);
-			log.info("Task service started");
+			if (log.isDebugEnabled()) {
+				log.debug("Task service started");
+			}
 		} catch (Exception e) {
 			log.error("Error in intializing Tasks component", e);
 		}

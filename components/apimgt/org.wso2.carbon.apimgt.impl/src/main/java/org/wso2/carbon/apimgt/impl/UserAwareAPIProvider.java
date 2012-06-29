@@ -59,6 +59,12 @@ public class UserAwareAPIProvider extends APIProviderImpl {
     }
 
     @Override
+    public void deleteAPI(APIIdentifier identifier) throws APIManagementException {
+        checkCreatePermission();
+        super.deleteAPI(identifier);
+    }
+
+    @Override
     public void changeAPIStatus(API api, APIStatus status, String userId,
                                 boolean updateGatewayConfig) throws APIManagementException {
         checkPublishPermission();

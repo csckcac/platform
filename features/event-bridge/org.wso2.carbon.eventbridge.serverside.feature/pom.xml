@@ -53,6 +53,14 @@
                          <configuration>
                              <id>org.wso2.carbon.eventbridge.serverside</id>
                              <propertiesFile>../etc/feature.properties</propertiesFile>
+                             <adviceFile>
+                                <properties>
+                                    <propertyDef>org.wso2.carbon.p2.category.type:server
+                                    </propertyDef>
+                                    <propertyDef>org.eclipse.equinox.p2.type.group:true
+                                    </propertyDef>
+                                </properties>
+                            </adviceFile>
                              <importFeatures>
                                  <importFeatureDef>org.wso2.carbon.core:${wso2carbon.version}</importFeatureDef>
                              </importFeatures>

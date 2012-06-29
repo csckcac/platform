@@ -122,7 +122,9 @@ public class TenantDispatcherServiceComponent {
                 }
             }
         }
-        log.info("Added multitenant dispatchers");
+		if (log.isDebugEnabled()) {
+			log.info("Added multitenant dispatchers");
+		}
     }
 
     protected void deactivate(ComponentContext ctxt) {

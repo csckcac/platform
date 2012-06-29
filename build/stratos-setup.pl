@@ -6,7 +6,7 @@ no warnings 'all' ;
 
 my $packs_dir;
 my $stratos_dir;
-my $manager_version='1.1.0-SNAPSHOT';
+my $manager_version='2.0.0-SNAPSHOT';
 my $as_version='4.5.0-SNAPSHOT';
 my $stratos_version;
 my $sso_enabled;
@@ -975,11 +975,11 @@ if ($as_enabled eq 'true') {
 if ($create_db eq 'true') {
 	if ($manager_enabled eq 'true') {
         #system "find setup/dbscripts -name \"*.sql\"|xargs rm -f";
-		system "cp $stratos_dir/wso2stratos-manager-$stratos_version/dbscripts/mysql.sql setup/dbscripts/";
-		system "cp $stratos_dir/wso2stratos-manager-$stratos_version/dbscripts/billing-mysql.sql setup/dbscripts/";
-		system "cp $stratos_dir/wso2stratos-manager-$stratos_version/dbscripts/bam/bam_schema_mysql.sql setup/dbscripts";
-		system "cp $stratos_dir/wso2stratos-manager-$stratos_version/dbscripts/metering_mysql.sql setup/dbscripts";
-		system "cp $stratos_dir/wso2stratos-manager-$stratos_version/dbscripts/wso2_rss.sql setup/dbscripts";
+		system "cp $stratos_dir/wso2stratos-manager-$manager_version/dbscripts/mysql.sql setup/dbscripts/";
+		system "cp $stratos_dir/wso2stratos-manager-$manager_version/dbscripts/billing-mysql.sql setup/dbscripts/";
+		system "cp $stratos_dir/wso2stratos-manager-$manager_version/dbscripts/bam/bam_schema_mysql.sql setup/dbscripts";
+		system "cp $stratos_dir/wso2stratos-manager-$manager_version/dbscripts/metering_mysql.sql setup/dbscripts";
+		system "cp $stratos_dir/wso2stratos-manager-$manager_version/dbscripts/wso2_rss.sql setup/dbscripts";
 		system "cp setup/init_quaries.sql setup/dbscripts";
 		print "Dropping the existing database...\n";
 		chdir('setup/dbscripts') or die "$!";

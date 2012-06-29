@@ -62,8 +62,14 @@ var jagg = jagg || {};
             });
             return;
         }
-        params.content = '<table><tr><td><img src="'+siteRoot+'/images/'+params.type+'.png" align="center" hspace="10" /></td><td><span class="messageText">'+params.content+'</span></td></tr></table>';
-        jagg.messageDisplay({content:params.content,title:"API Store - "+params.type,buttons:[
+        params.content = '<table><tr><td style="vertical-align:top"><img src="'+siteRoot+'/images/'+params.type+'.png" align="center" hspace="10" /></td><td><span class="messageText">'+params.content+'</span></td></tr></table>';
+        var type = "";
+        if(params.title == undefined){
+            if(params.type == "info"){ type = "Notification"}
+            if(params.type == "warning"){ type = "Warning"}
+            if(params.type == "error"){ type = "Error"}
+        }
+        jagg.messageDisplay({content:params.content,title:"API Store - " + type,buttons:[
             {name:"OK",cssClass:"btn btn-primary",cbk:function() {
                 $('#messageModal').modal('hide');
                 if(params.cbk && typeof params.cbk == "function")

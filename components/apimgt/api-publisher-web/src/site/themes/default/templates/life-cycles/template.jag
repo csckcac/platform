@@ -27,6 +27,10 @@ function getSelectedValue(oldStatus) {
         $('#requireResubscriptionDiv').hide();
     }
 }
+var initOf_state = '<%=api.status%>';
+var initOf_publishToGateway = 'true';
+var initOf_deprecateOldVersions = 'false';
+var initOf_requireResubscription = 'true';
 </script>
 
 <% var i,resCount,rowNums = [];
@@ -38,6 +42,7 @@ function getSelectedValue(oldStatus) {
    var result = mod.getLifeCyclesEvents(apiData);
    var lcs=result.lcs;
 %>
+
 <div class="alert alert-error" id="statusAPIError" style="display:none">
 <span id="statusErrorSpan"></span>
 </div>
@@ -51,7 +56,7 @@ function getSelectedValue(oldStatus) {
      <div class="control-group">
                 <label class="control-label" for="editStatus" name="state">State:</label>
                 <div class="controls">
-                    <select id="editStatus" name="status" onChange="getSelectedValue('<%=api.status%>');enableUpdateBtn()">
+                    <select id="editStatus" name="status" onChange="getSelectedValue('<%=api.status%>')">
                         <option value="CREATED"<%=(api.status == "CREATED" ? ' selected="selected"' : '')%>>CREATED</option>
                         <option value="PUBLISHED"<%=(api.status == "PUBLISHED" ? ' selected="selected"' : '')%>>PUBLISHED</option>
                         <option value="DEPRECATED"<%=(api.status == "DEPRECATED" ? ' selected="selected"' : '')%>>DEPRECATED</option>
@@ -61,14 +66,14 @@ function getSelectedValue(oldStatus) {
                  </div> <br/>
                  <div class="controls">
                     <label class="checkbox">
-                        <input type="checkbox" id="publishToGateway" name="publishToGateway" onChange="checkValue('#publishToGateway');enableUpdateBtn()" checked="true" value="true"> Propagate Changes to API Gateway
+                        <input type="checkbox" id="publishToGateway" name="publishToGateway" onChange="checkValue('#publishToGateway')" checked="true" value="true"> Propagate Changes to API Gateway
                     </label>
                      <label class="checkbox" id="deprecateOldVersionsDiv" style="display:none;">
-                        <input type="checkbox" id="deprecateOldVersions" name="deprecateOldVersions" onChange="checkValue('#deprecateOldVersions');enableUpdateBtn()" value="false"> Deprecate Old Versions
+                        <input type="checkbox" id="deprecateOldVersions" name="deprecateOldVersions" onChange="checkValue('#deprecateOldVersions')" value="false"> Deprecate Old Versions
                      </label>
 
                      <label class="checkbox" id="requireResubscriptionDiv" style="display:none;">
-                        <input type="checkbox" id="requireResubscription" name="requireResubscription" onChange="checkValue('#requireResubscription');enableUpdateBtn()"  checked="true" value="true"> Require Re-Subscription
+                        <input type="checkbox" id="requireResubscription" name="requireResubscription" onChange="checkValue('#requireResubscription')"  checked="true" value="true"> Require Re-Subscription
                      </label>
                  </div>
 
@@ -134,8 +139,25 @@ $(document).ready(function() {
 
 
  });
- function enableUpdateBtn(){
-    $('#updateStateButton').removeAttr("disabled");
- }
+ var toggleUpdateBtn = function enableUpdateBtn(){
+     var initPreserved = true;
+     if($('#editStatus').val() != initOf_state) initPreserved = false;
+     if($('#publishToGateway').val() != initOf_publishToGateway) initPreserved = false;
+     if($('#deprecateOldVersions').val() != initOf_deprecateOldVersions) initPreserved = false;
+     if($('#requireResubscription').val() != initOf_requireResubscription) initPreserved = false;
+     if (initPreserved) {
+         $('#updateStateButton').attr("disabled","disabled");
+     } else {
+         $('#updateStateButton').removeAttr("disabled");
+     }
+     console.info(initPreserved);
+     return;
+
+ };
+$('#editStatus').change(toggleUpdateBtn);
+$('#publishToGateway').change(toggleUpdateBtn);
+$('#deprecateOldVersions').change(toggleUpdateBtn);
+$('#requireResubscription').change(toggleUpdateBtn);
+
  </script>
 <% }}); %>

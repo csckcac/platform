@@ -19,7 +19,7 @@ $(document).ready(function() {
     }, 'Select a value for the tier.');
 
     $.validator.addMethod('validRegistryName', function(value, element) {
-        var illegalChars = /([~!@#;%^*+={}\|\\<>\"\',])/;
+        var illegalChars = /([~!@#;%^*+={}\|\\<>\"\'\/,])/;
         return !illegalChars.test(value);
-    }, 'The Name contains one or more illegal characters (~!@#;%^*+={}|&lt;&gt;,\'"\).');
+    }, 'The Name contains one or more illegal characters (~ ! @ #  ; % ^ * + = { } | &lt; &gt;, \' / " \\ ) .');
 });

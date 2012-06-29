@@ -12,25 +12,25 @@
         var i, api,path,itemsPerPage=10,apis = outputs.apis,currentPage=outputs.currentPage,numberOfPages=outputs.numberOfPages;
         var from = currentPage * itemsPerPage - itemsPerPage;
         var to = currentPage * itemsPerPage;
-         if(apis!=null){
-         if (to > apis.length) {
-         to = apis.length;
-         }
-        if(apis.length==0 ){
-        if(request.getParameter("query")!=null){
-        return;
-        }
-        }
-        else{
-        var length = apis.length;
-        for(i = from; i < to; i++) {
-            api = apis[i];
-            path = jagg.getMappedUrl("/site/pages/item-info.jag") + "?name=" + api.name + "&version=" + api.version + "&provider=" + api.provider;
-
-            var nameSubstring = api.name;
-            if(api.name.length > 12){
-                nameSubstring = api.name.substring(0,10);
+        if (apis != null) {
+            if (to > apis.length) {
+                to = apis.length;
             }
+            if (apis.length == 0) {
+                if (request.getParameter("query") != null) {
+                    return;
+                }
+            }
+            else {
+                var length = apis.length;
+                for (i = from; i < to; i++) {
+                    api = apis[i];
+                    path = jagg.getMappedUrl("/site/pages/item-info.jag") + "?name=" + api.name + "&version=" + api.version + "&provider=" + api.provider;
+
+                    var nameSubstring = api.name;
+                    if (api.name.length > 12) {
+                        nameSubstring = api.name.substring(0, 10);
+                    }
         %>
         <li>
             <%if(outputs.isCreatePermitted){%>

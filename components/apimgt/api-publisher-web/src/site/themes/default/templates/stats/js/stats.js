@@ -27,14 +27,9 @@ $(document).ready(function() {
                          var plot1 = $.jqplot('serviceTimeChart', [s1], {
                              seriesDefaults: {
                                  renderer:$.jqplot.BarRenderer,
-                                 // Show point labels to the right ('e'ast) of each bar.
-                                 // edgeTolerance of -15 allows labels flow outside the grid
-                                 // up to 15 pixels.  If they flow out more than that, they
-                                 // will be hidden.
                                  pointLabels: { show: true, location: 'e', edgeTolerance: -15 },
-                                 // Rotate the bar shadow as if bar is lit from top right.
                                  shadowAngle: 135,
-                                 // Here's where we tell the chart it is oriented horizontally.
+                                 seriesColors: [ "#ed3c3c", "#ffe03e", "#48ca48", "#49baff","#7d7dff", "#ff468b", "#de621d", "#cb68c9"],
                                  rendererOptions: {
                                      barDirection: 'horizontal'
                                  }

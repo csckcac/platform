@@ -27,14 +27,18 @@ import org.apache.axis2.deployment.repository.util.DeploymentFileData;
 import org.apache.axis2.description.Parameter;
 import org.apache.axis2.engine.AxisConfiguration;
 import org.apache.catalina.Context;
+import org.apache.catalina.Host;
 import org.apache.catalina.core.StandardContext;
+import org.apache.catalina.startup.ContextConfig;
 import org.apache.commons.logging.Log;
 import org.apache.commons.logging.LogFactory;
 import org.wso2.carbon.CarbonConstants;
 import org.wso2.carbon.CarbonException;
 import org.wso2.carbon.base.ServerConfiguration;
+import org.wso2.carbon.core.multitenancy.utils.TenantAxisUtils;
 import org.wso2.carbon.utils.CarbonUtils;
 import org.wso2.carbon.utils.deployment.GhostDeployer;
+import org.wso2.carbon.webapp.mgt.DataHolder;
 import org.wso2.carbon.webapp.mgt.TomcatGenericWebappsDeployer;
 import org.wso2.carbon.webapp.mgt.WebApplication;
 import org.wso2.carbon.webapp.mgt.WebApplicationsHolder;
@@ -331,9 +335,11 @@ public class GhostWebappDeployerUtils {
      *
      * @param ghostFile    - ghost metadata file
      * @param originalFile - original webapp file
+     * @param axisConfig - axisconfig to get tenant details
      * @return - WebApplication which is created
      */
-    public static WebApplication createGhostWebApp(File ghostFile, File originalFile) {
+    public static WebApplication createGhostWebApp(File ghostFile, File originalFile,
+                                                   AxisConfiguration axisConfig) {
         WebApplication ghostWebApp = null;
 
         OMElement webAppElm;
@@ -388,8 +394,25 @@ public class GhostWebappDeployerUtils {
                 ghostWebApp.setProperty(WebappsConstants.WEBAPP_FILTER, filterProp);
             }
 
+            // We have to add a context for the ghost webapp in tomcat so that when Tomcat's CoyoteAdaptor
+            // searches for available contexts, this will result in not null for a request for ghost webapp
+            String dummyContextPath = getDummyContextDirectoryPath(contextName, axisConfig);
+
+            File dummyCtxFolder = new File(dummyContextPath);
+            if (!dummyCtxFolder.exists() && !dummyCtxFolder.mkdir()) {
+                log.error("Error while creating dummy context folder at : " + dummyContextPath);
+                return null;
+            }
+            if (dummyContextPath != null) {
+                Host host = DataHolder.getCarbonTomcatService().getTomcat().getHost();
+                context.setDocBase(dummyContextPath);
+                ContextConfig ctxCfg = new ContextConfig();
+                context.addLifecycleListener(ctxCfg);
+                host.addChild(context);
+            }
+
         } catch (Exception e) {
-            log.error("Error while creating Ghost Service from Ghost File : " +
+            log.error("Error while creating Ghost Webapp from Ghost File : " +
                       ghostFile.getAbsolutePath(), e);
         }
 
@@ -562,6 +585,62 @@ public class GhostWebappDeployerUtils {
             log.error("Error while retrieving the webapp from webappsHolder..", e);
         }
         return null;
+    }
+
+    /**
+     * Method which will return the dummy context directory path for current tenant which will be
+     * created in /tmp/tenants/ directory
+     * @param contextName - context name
+     * @param axisConfig - axisConfig used to get tenant info
+     * @return - dummyContextDirPath
+     */
+    public static String getDummyContextDirectoryPath(String contextName,
+                                                   AxisConfiguration axisConfig) {
+        if (contextName.contains("/t/")) {
+            String tenantCtx = "/t/" + TenantAxisUtils.getTenantDomain(contextName) +
+                               File.separator + WebappsConstants.WEBAPP_PREFIX;
+            contextName = contextName.substring(tenantCtx.length());
+        }
+
+        String tenantTmpDirPath = CarbonUtils.getTenantTmpDirPath(axisConfig);
+
+        return  tenantTmpDirPath + File.separator +
+                                  CarbonConstants.GHOST_WEBAPPS_FOLDER + File.separator +
+                                  contextName;
+
+    }
+
+    /**
+     * Calculate the dummy context file name using the original file name.
+     *
+     * @param fileName - original file name
+     * @param axisConfig - axisConfig
+     * @return - derived context file
+     */
+    public static File getDummyContextFile(String fileName, AxisConfiguration axisConfig) {
+        File dummyContextFile = null;
+        String dummyContextName = null;
+        String repoPath = axisConfig.getRepository().getPath();
+        if (fileName != null && fileName.startsWith(repoPath)) {
+            // first drop the repo path
+            dummyContextName = fileName.
+                    substring((repoPath + File.separator + WebappsConstants.
+                            WEBAPP_DEPLOYMENT_FOLDER).length());
+            // then remove the extension
+            if (dummyContextName.lastIndexOf('.') != -1) {
+                dummyContextName = dummyContextName.substring(0, dummyContextName.lastIndexOf('.'));
+            }
+            // adjust the path for windows..
+            if (File.separatorChar == '\\') {
+                dummyContextName = dummyContextName.replace('\\', '/');
+            }
+
+            String tenantTmpDirPath = CarbonUtils.getTenantTmpDirPath(axisConfig);
+            dummyContextFile = new File(tenantTmpDirPath + File.separator +
+                                  CarbonConstants.GHOST_WEBAPPS_FOLDER + File.separator +
+                                  dummyContextName);
+        }
+        return dummyContextFile;
     }
 
 }

@@ -99,7 +99,8 @@ public class WebappUnloader implements ArtifactUnloader {
                                                  configCtx.getAxisConfiguration());
                             if (ghostFile.exists()) {
                                 WebApplication ghostWebapp = GhostWebappDeployerUtils.
-                                        createGhostWebApp(ghostFile, webappFileData.getFile());
+                                        createGhostWebApp(ghostFile, webappFileData.getFile(),
+                                                          configCtx.getAxisConfiguration());
 
                                 webApplicationsHolder.getStartedWebapps().
                                         put(webappFileData.getName(), ghostWebapp);

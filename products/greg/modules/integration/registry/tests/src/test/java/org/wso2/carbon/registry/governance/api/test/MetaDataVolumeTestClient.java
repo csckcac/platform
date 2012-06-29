@@ -45,15 +45,12 @@ import org.wso2.carbon.integration.framework.utils.FrameworkSettings;
 import org.wso2.carbon.registry.core.Registry;
 import org.wso2.carbon.registry.core.exceptions.RegistryException;
 import org.wso2.carbon.registry.governance.api.test.util.FileManagerUtil;
-import org.wso2.carbon.registry.ws.client.registry.WSRegistryServiceClient;
 
 import javax.xml.namespace.QName;
 import java.io.File;
 import java.io.IOException;
 
-import static org.testng.Assert.assertEquals;
-import static org.testng.Assert.assertNull;
-import static org.testng.Assert.assertTrue;
+import static org.testng.Assert.*;
 
 
 /**
@@ -305,6 +302,8 @@ public class MetaDataVolumeTestClient {
             }
         } catch (GovernanceException e) {
             throw new GovernanceException("Error found while adding multiple schemas : " + e.getMessage());
+        } catch (RegistryException e) {
+            e.printStackTrace();
         }
     }
 
@@ -339,6 +338,8 @@ public class MetaDataVolumeTestClient {
             }
         } catch (GovernanceException e) {
             throw new GovernanceException("Error found while adding multiple Wsdl : " + e.getMessage());
+        } catch (RegistryException e) {
+            e.printStackTrace();
         }
     }
 }

@@ -174,6 +174,8 @@ public class WSDLManagerAPITestCase {
         } catch (GovernanceException e) {
             throw new GovernanceException("Error occurred while executing WsdlManager:newWsdl method " +
                                           "which have Inline wsdl content and wsdl Name" + e.getMessage());
+        } catch (RegistryException e) {
+            e.printStackTrace();
         }
     }
 
@@ -196,6 +198,8 @@ public class WSDLManagerAPITestCase {
         } catch (GovernanceException e) {
             throw new GovernanceException("Error occurred while executing WsdlManager:newWsdl method " +
                                           "which have Inline wsdl content" + e.getMessage());
+        } catch (RegistryException e) {
+            e.printStackTrace();
         }
     }
 

@@ -230,6 +230,8 @@ public class SchemaClientTestCase{
                        schema.getAttribute("Schema Validation").equalsIgnoreCase("invalid"));
         } catch (GovernanceException e) {
             throw new GovernanceException("Exception thrown while adding Invalid schema : " + e.getMessage());
+        } catch (RegistryException e) {
+            e.printStackTrace();
         }
     }
 

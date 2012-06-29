@@ -209,6 +209,8 @@ public class SchemaManagerAPITestCase {
         } catch (GovernanceException e) {
             throw new GovernanceException("Exception thrown while executing newSchema API method with " +
                                           "inline wsdl content" + e.getMessage());
+        } catch (RegistryException e) {
+            e.printStackTrace();
         }
         schemaObj = schemaManager.getSchema(schemaObj.getId());
         assertTrue(schemaObj.getQName().getNamespaceURI().contains("http://charitha.org/"), "Error" +
@@ -228,6 +230,8 @@ public class SchemaManagerAPITestCase {
         } catch (GovernanceException e) {
             throw new GovernanceException("Exception thrown while executing newSchema API method with " +
                                           "inline wsdl content and name" + e.getMessage());
+        } catch (RegistryException e) {
+            e.printStackTrace();
         }
         schemaObj = schemaManager.getSchema(schemaObj.getId());
         assertTrue(schemaObj.getQName().getLocalPart().equalsIgnoreCase("SampleSchemaContentWithName.xsd"),

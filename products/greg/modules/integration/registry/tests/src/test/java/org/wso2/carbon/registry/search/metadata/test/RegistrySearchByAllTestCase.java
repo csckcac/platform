@@ -94,8 +94,8 @@ public class RegistrySearchByAllTestCase {
 
     @Test(priority = 2, description = "Metadata search by All fields for wsdl when having two wsdl name starting same prefix")
     public void searchWsdlByAllCriteriaHavingTwoResources()
-            throws SearchAdminServiceRegistryExceptionException, IOException, GovernanceException,
-                   InterruptedException {
+            throws SearchAdminServiceRegistryExceptionException, IOException, RegistryException,
+            InterruptedException {
         WsdlManager wsdlManager = new WsdlManager(governance);
         Wsdl wsdl;
         String wsdlFilePath = GregTestUtils.getResourcePath()
@@ -118,8 +118,8 @@ public class RegistrySearchByAllTestCase {
 
     @Test(priority = 4, description = "Metadata search by All fields for schema when having two schema name starting same prefix")
     public void searchSchemaByAllCriteriaHavingTwoResources()
-            throws SearchAdminServiceRegistryExceptionException, IOException, GovernanceException,
-                   InterruptedException {
+            throws SearchAdminServiceRegistryExceptionException, IOException, RegistryException,
+            InterruptedException {
         SchemaManager schemaManager = new SchemaManager(governance);
         String schemaFilePath = GregTestUtils.getResourcePath()
                                 + File.separator + "schema" + File.separator;
@@ -141,8 +141,8 @@ public class RegistrySearchByAllTestCase {
 
     @Test(priority = 6, description = "Metadata search by All fields for policy when having two policy name starting same prefix")
     public void searchPolicyByAllCriteriaHavingTwoResources()
-            throws SearchAdminServiceRegistryExceptionException, IOException, GovernanceException,
-                   InterruptedException {
+            throws SearchAdminServiceRegistryExceptionException, IOException, RegistryException,
+            InterruptedException {
         PolicyManager policyManager = new PolicyManager(governance);
         String policyFilePath = GregTestUtils.getResourcePath()
                                 + File.separator + "policy" + File.separator;

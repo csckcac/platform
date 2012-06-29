@@ -16,14 +16,6 @@
 
 package org.wso2.carbon.registry.indexing.service;
 
-import java.io.FileNotFoundException;
-import java.io.IOException;
-import java.util.ArrayList;
-import java.util.Calendar;
-import java.util.List;
-
-import javax.servlet.http.HttpServletRequest;
-
 import org.apache.axis2.AxisFault;
 import org.apache.axis2.context.MessageContext;
 import org.apache.axis2.transport.http.HTTPConstants;
@@ -31,7 +23,6 @@ import org.apache.commons.logging.Log;
 import org.apache.commons.logging.LogFactory;
 import org.apache.solr.common.SolrDocument;
 import org.apache.solr.common.SolrDocumentList;
-import org.apache.solr.common.SolrException;
 import org.wso2.carbon.registry.admin.api.indexing.IContentBasedSearchService;
 import org.wso2.carbon.registry.common.ResourceData;
 import org.wso2.carbon.registry.common.services.RegistryAbstractAdmin;
@@ -42,7 +33,6 @@ import org.wso2.carbon.registry.core.RegistryConstants;
 import org.wso2.carbon.registry.core.Resource;
 import org.wso2.carbon.registry.core.exceptions.RegistryException;
 import org.wso2.carbon.registry.core.session.UserRegistry;
-import org.wso2.carbon.registry.indexing.IndexingConstants;
 import org.wso2.carbon.registry.indexing.IndexingManager;
 import org.wso2.carbon.registry.indexing.indexer.IndexerException;
 import org.wso2.carbon.registry.indexing.solr.SolrClient;
@@ -51,6 +41,13 @@ import org.wso2.carbon.user.core.UserRealm;
 import org.wso2.carbon.user.core.UserStoreException;
 import org.wso2.carbon.utils.ServerConstants;
 
+import javax.servlet.http.HttpServletRequest;
+import java.io.FileNotFoundException;
+import java.io.IOException;
+import java.util.ArrayList;
+import java.util.Calendar;
+import java.util.List;
+
 public class ContentBasedSearchService extends RegistryAbstractAdmin 
         implements IContentBasedSearchService {
 	private static final Log log = LogFactory.getLog(ContentBasedSearchService.class);
@@ -58,7 +55,7 @@ public class ContentBasedSearchService extends RegistryAbstractAdmin
 	private String solrServerUrl;
 
 
-	public String getSolrUrl(int tenantId)throws IOException,FileNotFoundException{
+	public String getSolrUrl(int tenantId) throws IOException, FileNotFoundException, RegistryException {
 		if(solrServerUrl == null){
 			solrServerUrl = IndexingUtils.getSolrUrl();
 		}	

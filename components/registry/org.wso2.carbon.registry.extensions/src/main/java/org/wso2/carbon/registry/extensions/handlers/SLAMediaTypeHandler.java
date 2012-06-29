@@ -75,7 +75,7 @@ public class SLAMediaTypeHandler extends Handler {
             if (resourceContent instanceof String) {
                 slaInfo = (String) resourceContent;
             } else {
-                slaInfo = new String((byte[]) resourceContent);
+                slaInfo = RegistryUtils.decodeBytes((byte[]) resourceContent);
             }
             try {
                 XMLStreamReader reader = XMLInputFactory.newInstance().
@@ -112,7 +112,7 @@ public class SLAMediaTypeHandler extends Handler {
             }
             if (registry.resourceExists(slaVersionPath)) {
                 Resource oldResource = registry.get(slaVersionPath);
-                String oldContent = new String((byte[]) oldResource.getContent());
+                String oldContent = RegistryUtils.decodeBytes((byte[]) oldResource.getContent());
                 OMElement oldSLAInfoElement = null;
                 if (slaInfo.equals(oldContent)) {
                     /* if user is not changing anything in sla we skip the processing done in this handler */

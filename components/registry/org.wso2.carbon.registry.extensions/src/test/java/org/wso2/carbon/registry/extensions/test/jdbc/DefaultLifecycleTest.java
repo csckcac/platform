@@ -20,6 +20,7 @@ import junit.framework.Assert;
 import org.wso2.carbon.base.MultitenantConstants;
 import org.wso2.carbon.registry.core.internal.RegistryCoreServiceComponent;
 import org.wso2.carbon.registry.core.jdbc.EmbeddedRegistryService;
+import org.wso2.carbon.registry.core.utils.RegistryUtils;
 import org.wso2.carbon.registry.extensions.aspects.DefaultLifecycle;
 import org.wso2.carbon.registry.extensions.test.utils.BaseTestCase;
 import org.wso2.carbon.registry.core.exceptions.RegistryException;
@@ -49,7 +50,7 @@ public class DefaultLifecycleTest extends BaseTestCase {
     public void testLifecycle() throws RegistryException {
 
         Resource r1 = registry.newResource();
-        byte[] r1content = "R1 content".getBytes();
+        byte[] r1content = RegistryUtils.encodeString("R1 content");
         r1.setContent(r1content);
         registry.put("/d12/r1", r1);
 

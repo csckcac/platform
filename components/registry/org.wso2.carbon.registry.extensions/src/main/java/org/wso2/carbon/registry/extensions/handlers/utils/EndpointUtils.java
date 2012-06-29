@@ -36,8 +36,6 @@ import javax.xml.namespace.QName;
 import javax.xml.stream.XMLInputFactory;
 import javax.xml.stream.XMLStreamException;
 import javax.xml.stream.XMLStreamReader;
-import java.io.ByteArrayInputStream;
-import java.io.InputStream;
 import java.io.StringReader;
 import java.util.*;
 
@@ -83,7 +81,7 @@ public class EndpointUtils {
         }
         OMElement wsdlElement;
         try {
-            wsdlElement = buildOMElement(new String(wsdlContentBytes));
+            wsdlElement = buildOMElement(RegistryUtils.decodeBytes(wsdlContentBytes));
         } catch (Exception e) {
             String msg = "Error in building the wsdl element for path: " + wsdlPath + ".";
             log.error(msg, e);
@@ -147,7 +145,7 @@ public class EndpointUtils {
         }
         OMElement wsdlElement;
         try {
-            wsdlElement = buildOMElement(new String(wsdlContentBytes));
+            wsdlElement = buildOMElement(RegistryUtils.decodeBytes(wsdlContentBytes));
         } catch (Exception e) {
             String msg = "Error in building the wsdl element for path: " + wsdlPath + ".";
             log.error(msg, e);
@@ -503,7 +501,7 @@ public class EndpointUtils {
             endpointId = resource.getUUID();
         } else {
             resource = registry.newResource();
-            resource.setContent(url.getBytes());
+            resource.setContent(RegistryUtils.encodeString(url));
         }
         boolean endpointIdCreated = false;
         if (endpointId == null) {
@@ -540,7 +538,7 @@ public class EndpointUtils {
                                             String endpointEnv) throws RegistryException {
         Resource serviceResource = registry.get(servicePath);
         byte[] serviceBytes = (byte[])serviceResource.getContent();
-        String serviceContent = new String(serviceBytes);
+        String serviceContent = RegistryUtils.decodeBytes(serviceBytes);
 
         OMElement serviceElement;
         try {
@@ -585,7 +583,7 @@ public class EndpointUtils {
 
             // now we are saving it to the registry.
             String serviceElementStr = serviceElement.toString();
-            serviceResource.setContent(serviceElementStr.getBytes());
+            serviceResource.setContent(RegistryUtils.encodeString(serviceElementStr));
             registry.put(servicePath, serviceResource);
         }
     }
@@ -596,7 +594,7 @@ public class EndpointUtils {
                                             String endpointEnv) throws RegistryException {
         Resource serviceResource = registry.get(servicePath);
         byte[] serviceBytes = (byte[])serviceResource.getContent();
-        String serviceContent = new String(serviceBytes);
+        String serviceContent = RegistryUtils.decodeBytes(serviceBytes);
 
         OMElement serviceElement;
         try {
@@ -634,7 +632,7 @@ public class EndpointUtils {
                 next.detach();
                 // now we are saving it to the registry.
                 String serviceElementStr = serviceElement.toString();
-                serviceResource.setContent(serviceElementStr.getBytes());
+                serviceResource.setContent(RegistryUtils.encodeString(serviceElementStr));
                 registry.put(servicePath, serviceResource);
                 break;
             }

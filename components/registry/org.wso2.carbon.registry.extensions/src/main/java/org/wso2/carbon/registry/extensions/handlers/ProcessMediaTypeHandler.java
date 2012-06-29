@@ -75,7 +75,7 @@ public class ProcessMediaTypeHandler extends Handler {
             if (resourceContent instanceof String) {
                 processInfo = (String) resourceContent;
             } else {
-                processInfo = new String((byte[]) resourceContent);
+                processInfo = RegistryUtils.decodeBytes((byte[]) resourceContent);
             }
             try {
                 XMLStreamReader reader = XMLInputFactory.newInstance().
@@ -116,7 +116,7 @@ public class ProcessMediaTypeHandler extends Handler {
             }
             if (registry.resourceExists(processVersionPath)) {
                 Resource oldResource = registry.get(processVersionPath);
-                String oldContent = new String((byte[]) oldResource.getContent());
+                String oldContent = RegistryUtils.decodeBytes((byte[]) oldResource.getContent());
                 OMElement oldProcessInfoElement = null;
                 if (processInfo.equals(oldContent)) {
                     /* if user is not changing anything in process we skip the processing done in this handler */

@@ -22,6 +22,7 @@ import org.wso2.carbon.registry.core.RegistryConstants;
 import org.wso2.carbon.registry.core.Resource;
 import org.wso2.carbon.registry.core.exceptions.RegistryException;
 import org.wso2.carbon.registry.core.session.UserRegistry;
+import org.wso2.carbon.registry.core.utils.RegistryUtils;
 
 import java.sql.SQLException;
 
@@ -46,7 +47,7 @@ public class AddTextResourceUtil {
 
         byte[] content = null;
         if (contentString != null) {
-            content = contentString.getBytes();
+            content = RegistryUtils.encodeString(contentString);
         }
 
         try {
@@ -54,7 +55,7 @@ public class AddTextResourceUtil {
 
             resource.setMediaType(mediaType);
             resource.setDescription(description);
-            resource.setContent(content);
+            resource.setContent(RegistryUtils.decodeBytes(content));
 
             userRegistry.put(resourcePath, resource);
             resource.discard();

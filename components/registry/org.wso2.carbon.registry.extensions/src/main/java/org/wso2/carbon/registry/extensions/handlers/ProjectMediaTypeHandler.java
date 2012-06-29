@@ -70,7 +70,7 @@ public class ProjectMediaTypeHandler extends Handler {
             if (content instanceof String) {
                 payload = (String) content;
             } else {
-                payload = new String((byte[]) content);
+                payload = RegistryUtils.decodeBytes((byte[]) content);
             }
             try {
                 populateProjectProperties(AXIOMUtil.stringToOM(payload),
@@ -127,7 +127,8 @@ public class ProjectMediaTypeHandler extends Handler {
             byte[] bytes = outputStream.toByteArray();
             resource.setContent(bytes);
             try {
-                populateProjectProperties(AXIOMUtil.stringToOM(new String(bytes)), resource);
+                populateProjectProperties(AXIOMUtil.stringToOM(RegistryUtils.decodeBytes(bytes)),
+                        resource);
             } catch (ParseException e) {
                 throw new RegistryException("Unable to parse project configuration", e);
             } catch (XMLStreamException e) {

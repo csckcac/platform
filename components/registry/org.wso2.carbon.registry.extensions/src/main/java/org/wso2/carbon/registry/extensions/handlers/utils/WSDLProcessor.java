@@ -17,6 +17,7 @@
 package org.wso2.carbon.registry.extensions.handlers.utils;
 
 import com.ibm.wsdl.util.xml.DOM2Writer;
+import com.ibm.wsdl.xml.WSDLReaderImpl;
 import org.apache.axiom.om.OMAbstractFactory;
 import org.apache.axiom.om.OMElement;
 import org.apache.axiom.om.OMFactory;
@@ -46,13 +47,12 @@ import javax.wsdl.xml.WSDLReader;
 import javax.wsdl.xml.WSDLWriter;
 import javax.xml.namespace.QName;
 import java.io.ByteArrayInputStream;
+import java.io.File;
 import java.io.IOException;
 import java.net.ConnectException;
 import java.net.UnknownHostException;
 import java.util.*;
 import java.util.concurrent.ConcurrentSkipListSet;
-import com.ibm.wsdl.xml.WSDLReaderImpl;
-import java.io.File;
 
 public class WSDLProcessor {
     private Registry registry;
@@ -1130,7 +1130,7 @@ public class WSDLProcessor {
         String path = getChrootedServiceLocation(registry, context.getRegistryContext()) + tempNamespace +
                 CommonUtil.getServiceName(service);
         String content = service.toString();
-        resource.setContent(content.getBytes());
+        resource.setContent(RegistryUtils.encodeString(content));
         resource.setMediaType(RegistryConstants.SERVICE_MEDIA_TYPE);
         // when saving the resource we are expecting to call the service media type handler, so
         // we intentionally release the lock here.

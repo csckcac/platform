@@ -30,7 +30,6 @@ import org.wso2.carbon.registry.core.utils.AuthorizationUtils;
 import org.wso2.carbon.registry.core.utils.RegistryUtils;
 import org.wso2.carbon.registry.extensions.handlers.utils.SchemaProcessor;
 import org.wso2.carbon.registry.extensions.handlers.utils.SchemaValidator;
-import org.wso2.carbon.registry.extensions.utils.CommonConstants;
 import org.wso2.carbon.registry.extensions.utils.CommonUtil;
 import org.wso2.carbon.registry.extensions.utils.WSDLValidationInfo;
 import org.wso2.carbon.user.mgt.UserMgtConstants;
@@ -106,7 +105,7 @@ public class XSDMediaTypeHandler extends Handler {
                 // logic to compare content, and return only if the content didn't change.
                 Object newContent = resource.getContent();
                 if (newContent instanceof String) {
-                    newContent = ((String) newContent).getBytes();
+                    newContent = RegistryUtils.encodeString(((String) newContent));
                 }
                 Resource oldResource = registry.get(resourcePath);
                 Object oldContent = oldResource.getContent();
@@ -116,14 +115,14 @@ public class XSDMediaTypeHandler extends Handler {
                     if (newContent instanceof String) {
                         newContentString = (String) newContent;
                     } else {
-                        newContentString = new String((byte[]) newContent);
+                        newContentString = RegistryUtils.decodeBytes((byte[]) newContent);
                     }
                 }
                 if (oldContent != null) {
                     if (oldContent instanceof String) {
                         oldContentString = (String) oldContent;
                     } else {
-                        oldContentString = new String((byte[]) oldContent);
+                        oldContentString = RegistryUtils.decodeBytes((byte[]) oldContent);
                     }
                 }
                 if ((newContent == null && oldContent == null) ||
@@ -137,7 +136,7 @@ public class XSDMediaTypeHandler extends Handler {
             WSDLValidationInfo validationInfo = null;
             Object resourceContent = resource.getContent();
             if (resourceContent instanceof String) {
-                resourceContent = ((String) resourceContent).getBytes();
+                resourceContent = RegistryUtils.encodeString(((String) resourceContent));
                 resource.setContent(resourceContent);
             }
             if (resourceContent instanceof byte[]) {
@@ -312,7 +311,7 @@ public class XSDMediaTypeHandler extends Handler {
                 } else if (resourceContent instanceof byte[]) {
                     resourceContentBytes = (byte[]) resourceContent;
                 } else if (resourceContent instanceof String) {
-                    resourceContentBytes = ((String) resourceContent).getBytes();
+                    resourceContentBytes = RegistryUtils.encodeString(((String) resourceContent));
                 } else {
                     String msg = "Unknown type for the content resourcePath: " + registryPath + ", content type: " +
                             resourceContent.getClass().getName() + ".";

@@ -33,6 +33,7 @@ import org.wso2.carbon.registry.core.jdbc.handlers.Handler;
 import org.wso2.carbon.registry.core.jdbc.handlers.filters.Filter;
 import org.wso2.carbon.registry.core.config.RegistryContext;
 import org.wso2.carbon.registry.core.config.RegistryConfigurationProcessor;
+import org.wso2.carbon.registry.core.utils.RegistryUtils;
 import org.wso2.carbon.registry.handler.beans.*;
 
 import javax.xml.stream.XMLStreamException;
@@ -697,7 +698,7 @@ public class CommonUtil {
         Resource resource;
         if (handlerExists(configSystemRegistry, name)) {
             resource = configSystemRegistry.get(path);
-            return new String((byte[])resource.getContent());
+            return RegistryUtils.decodeBytes((byte[])resource.getContent());
         }
         return null;
     }
@@ -755,7 +756,7 @@ public class CommonUtil {
         if (resource != null) {
             String content = null;
             if (resource.getContent() != null) {
-                content = new String((byte[])resource.getContent());
+                content = RegistryUtils.decodeBytes((byte[])resource.getContent());
             }
             if (content != null) {
                 OMElement handler = AXIOMUtil.stringToOM(content);

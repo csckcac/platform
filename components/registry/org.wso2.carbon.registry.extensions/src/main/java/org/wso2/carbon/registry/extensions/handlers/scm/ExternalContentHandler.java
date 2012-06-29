@@ -152,7 +152,7 @@ public class ExternalContentHandler extends Handler {
         } else {
             Object content = resource.getContent();
             if (content instanceof String) {
-                filesystemManager.createOrUpdateFile(path, ((String)content).getBytes());
+                filesystemManager.createOrUpdateFile(path, RegistryUtils.encodeString(((String)content)));
             } else {
                 filesystemManager.createOrUpdateFile(path, (byte[])content);
             }

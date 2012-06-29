@@ -22,6 +22,7 @@ import org.wso2.carbon.registry.core.exceptions.RegistryException;
 import org.wso2.carbon.registry.core.jdbc.EmbeddedRegistryService;
 import org.wso2.carbon.registry.core.Collection;
 import org.wso2.carbon.registry.core.*;
+import org.wso2.carbon.registry.core.utils.RegistryUtils;
 import org.wso2.carbon.registry.extensions.test.utils.BaseTestCase;
 
 public class IndexingTest extends BaseTestCase {
@@ -43,7 +44,7 @@ public class IndexingTest extends BaseTestCase {
     public void testIndexing() throws RegistryException {
         Resource r6 = registry.newResource();
         String r6Content = "this is r6 content";
-        r6.setContent(r6Content.getBytes());
+        r6.setContent(RegistryUtils.encodeString(r6Content));
         r6.setDescription("production ready.");
         r6.setMediaType("text/plain");
         String r6Path = "/c1/r6";

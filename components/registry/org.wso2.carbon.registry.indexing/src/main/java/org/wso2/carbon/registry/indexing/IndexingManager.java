@@ -18,7 +18,6 @@
 
 package org.wso2.carbon.registry.indexing;
 
-import edu.umd.cs.findbugs.annotations.*;
 import org.apache.commons.logging.Log;
 import org.apache.commons.logging.LogFactory;
 import org.wso2.carbon.CarbonConstants;
@@ -26,6 +25,7 @@ import org.wso2.carbon.registry.core.Collection;
 import org.wso2.carbon.registry.core.Resource;
 import org.wso2.carbon.registry.core.exceptions.RegistryException;
 import org.wso2.carbon.registry.core.session.UserRegistry;
+import org.wso2.carbon.registry.core.utils.RegistryUtils;
 import org.wso2.carbon.registry.indexing.indexer.Indexer;
 import org.wso2.carbon.registry.indexing.utils.IndexingUtils;
 import org.wso2.carbon.utils.multitenancy.MultitenantConstants;
@@ -205,7 +205,7 @@ public class IndexingManager {
             setLastAccessTime(
                     registry.resourceExists(lastAccessTimeLocation) ?
                         new Date(Long.parseLong(
-                            new String((byte[]) registry.get(lastAccessTimeLocation).getContent())
+                                RegistryUtils.decodeBytes((byte[]) registry.get(lastAccessTimeLocation).getContent())
                          )) : null
             );
         } catch (RegistryException e) {

@@ -102,9 +102,9 @@ public class EndpointMediaTypeHandler extends Handler {
             String resourceContent; // here the resource content is url
             if (resourceContentObj instanceof String) {
                 resourceContent = (String)resourceContentObj;
-                resource.setContent(resourceContent.getBytes());
+                resource.setContent(RegistryUtils.encodeString(resourceContent));
             } else {
-                resourceContent = new String((byte[])resourceContentObj);
+                resourceContent = RegistryUtils.decodeBytes((byte[])resourceContentObj);
             }
 
             String urlToPath = EndpointUtils.deriveEndpointFromUrl(resourceContent);            
@@ -119,14 +119,14 @@ public class EndpointMediaTypeHandler extends Handler {
             if (registry.resourceExists(path)) {
                 Resource oldResource = registry.get(path);
                 byte[] oldContent = (byte[])oldResource.getContent();
-                if (oldContent != null && !new String(oldContent).equals(resourceContent)) {
+                if (oldContent != null && !RegistryUtils.decodeBytes(oldContent).equals(resourceContent)) {
                     // oops somebody trying to update the endpoint resource content. that should not happen
 //                    String msg = "Endpoint content for endpoint resource is not allowed to change, " +
 //                            "path: " + path + ".";
 //                    log.error(msg);
 //                    throw new RegistryException(msg);
                     //This is for fixing REGISTRY-785.
-                    resource.setContent(resourceContent.getBytes());
+                    resource.setContent(RegistryUtils.encodeString(resourceContent));
                 }
             } else if (endpointId == null) {
                 endpointId = UUID.randomUUID().toString();
@@ -247,7 +247,7 @@ public class EndpointMediaTypeHandler extends Handler {
                 if (sourceContent == null) {
                     return;
                 }
-                String endpointUrl = new String(sourceContent);
+                String endpointUrl = RegistryUtils.decodeBytes(sourceContent);
                 String endpointEnv = sourceResource.getProperty(CommonConstants.ENDPOINT_ENVIRONMENT_ATTR);
                 if (endpointEnv == null) {
                     endpointEnv = "";
@@ -287,7 +287,7 @@ public class EndpointMediaTypeHandler extends Handler {
                 if (sourceContent == null) {
                     return;
                 }
-                String endpointUrl = new String(sourceContent);
+                String endpointUrl = RegistryUtils.decodeBytes(sourceContent);
                 String endpointEnv = sourceResource.getProperty(CommonConstants.ENDPOINT_ENVIRONMENT_ATTR);
                 if (endpointEnv == null) {
                     endpointEnv = "";

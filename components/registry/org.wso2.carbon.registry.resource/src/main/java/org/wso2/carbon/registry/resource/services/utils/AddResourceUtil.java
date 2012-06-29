@@ -23,6 +23,7 @@ import org.wso2.carbon.registry.core.Resource;
 import org.wso2.carbon.registry.core.ResourceImpl;
 import org.wso2.carbon.registry.core.RegistryConstants;
 import org.wso2.carbon.registry.core.exceptions.RegistryException;
+import org.wso2.carbon.registry.core.utils.RegistryUtils;
 import org.wso2.carbon.registry.extensions.utils.CommonConstants;
 
 import javax.activation.DataHandler;
@@ -52,7 +53,7 @@ public class AddResourceUtil {
            //allow to upload a file with empty content
             if (content == null) {
                 String temp = "";
-                resourceImpl.setContentStream(new ByteArrayInputStream(temp.getBytes()));
+                resourceImpl.setContentStream(new ByteArrayInputStream(RegistryUtils.encodeString(temp)));
             } else {
                 resourceImpl.setContentStream(content.getInputStream());
             }

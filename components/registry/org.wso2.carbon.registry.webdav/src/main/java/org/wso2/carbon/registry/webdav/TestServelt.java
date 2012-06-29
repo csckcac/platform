@@ -17,13 +17,15 @@
 */
 package org.wso2.carbon.registry.webdav;
 
-import java.io.IOException;
+import org.wso2.carbon.registry.core.exceptions.RegistryException;
+import org.wso2.carbon.registry.core.utils.RegistryUtils;
 
 import javax.servlet.ServletConfig;
 import javax.servlet.ServletException;
 import javax.servlet.http.HttpServlet;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
+import java.io.IOException;
 
 public class TestServelt extends HttpServlet{
 	@Override
@@ -35,14 +37,22 @@ public class TestServelt extends HttpServlet{
 	@Override
 	protected void doGet(HttpServletRequest req, HttpServletResponse resp)
 			throws ServletException, IOException {
-		resp.getOutputStream().write("testing".getBytes());
-	}
+        try {
+            resp.getOutputStream().write(RegistryUtils.encodeString("testing"));
+        } catch (RegistryException e) {
+            e.printStackTrace();
+        }
+    }
 
 	@Override
 	protected void doPost(HttpServletRequest req, HttpServletResponse resp)
 			throws ServletException, IOException {
 		// TODO Auto-generated method stub
-		resp.getOutputStream().write("testing".getBytes());
-	}
+        try {
+            resp.getOutputStream().write(RegistryUtils.encodeString("testing"));
+        } catch (RegistryException e) {
+            e.printStackTrace();
+        }
+    }
 
 }

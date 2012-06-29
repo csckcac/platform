@@ -22,6 +22,7 @@ import org.wso2.carbon.registry.core.Registry;
 import org.wso2.carbon.registry.core.RegistryConstants;
 import org.wso2.carbon.registry.core.Resource;
 import org.wso2.carbon.registry.core.exceptions.RegistryException;
+import org.wso2.carbon.registry.core.utils.RegistryUtils;
 import org.wso2.carbon.registry.extensions.utils.CommonConstants;
 
 import java.sql.SQLException;
@@ -47,7 +48,7 @@ public class UpdateTextContentUtil {
                 resource.setDescription(description);
                 resource.setProperties(properties);
             }
-            resource.setContent(contentText.getBytes());
+            resource.setContent(RegistryUtils.encodeString(contentText));
             registry.put(path, resource);
             resource.discard();
 

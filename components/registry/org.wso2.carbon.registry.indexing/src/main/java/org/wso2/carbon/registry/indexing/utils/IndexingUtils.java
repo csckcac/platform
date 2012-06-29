@@ -1,26 +1,24 @@
 package org.wso2.carbon.registry.indexing.utils;
 
-import java.io.*;
-import java.net.URL;
-import java.util.Properties;
-
 import org.apache.axis2.context.MessageContext;
 import org.apache.axis2.transport.http.HTTPConstants;
-import org.wso2.carbon.registry.core.Collection;
 import org.wso2.carbon.registry.core.Resource;
 import org.wso2.carbon.registry.core.exceptions.RegistryException;
 import org.wso2.carbon.registry.core.session.UserRegistry;
-import org.wso2.carbon.registry.indexing.IndexingManager;
+import org.wso2.carbon.registry.core.utils.RegistryUtils;
 import org.wso2.carbon.user.core.UserRealm;
 import org.wso2.carbon.user.core.UserStoreException;
 import org.wso2.carbon.utils.ServerConstants;
 
 import javax.servlet.http.HttpServletRequest;
+import java.io.*;
+import java.net.URL;
+import java.util.Properties;
 
 public class IndexingUtils {
 	
 	@Deprecated
-	public static String getSolrUrl() throws IOException {
+	public static String getSolrUrl() throws IOException, RegistryException {
 
 		String solrServerUrl = null;
 		String carbonHome = System.getProperty("carbon.home");
@@ -43,7 +41,7 @@ public class IndexingUtils {
 				FileOutputStream outputStream = new FileOutputStream(confFile);
 				//outputStream.write("solr.endpoint=http://localhost:8080/solr\n\n".getBytes());
                 try {
-				    outputStream.write(("solr.endpoint=" + solrServerUrl + "\n\n").getBytes());
+				    outputStream.write(RegistryUtils.encodeString("solr.endpoint=" + solrServerUrl + "\n\n"));
                 } finally {
 				    outputStream.close();
                 }
@@ -103,7 +101,7 @@ public class IndexingUtils {
                     if (content instanceof byte[]) {
                         return (byte[]) content;
                     } else if (content instanceof String) {
-                        return ((String) content).getBytes();
+                        return RegistryUtils.encodeString((String) content);
                     } else {
                         throw new RegistryException("Unknown type found as content " + content);
                     }

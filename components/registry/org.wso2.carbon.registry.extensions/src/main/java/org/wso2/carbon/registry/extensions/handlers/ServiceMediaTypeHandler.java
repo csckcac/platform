@@ -93,7 +93,7 @@ public class ServiceMediaTypeHandler extends Handler {
             if (resourceContent instanceof String) {
                 serviceInfo = (String) resourceContent;
             } else {
-                serviceInfo = new String((byte[]) resourceContent);
+                serviceInfo = RegistryUtils.decodeBytes((byte[]) resourceContent);
             }
             try {
                 XMLStreamReader reader = XMLInputFactory.newInstance().
@@ -151,7 +151,7 @@ public class ServiceMediaTypeHandler extends Handler {
                 if (content instanceof String) {
                     oldContent = (String) content;
                 } else {
-                    oldContent = new String((byte[]) content);
+                    oldContent = RegistryUtils.decodeBytes((byte[]) content);
                 }
                 OMElement oldServiceInfoElement = null;
                 if (serviceInfo.equals(oldContent)) {
@@ -234,7 +234,7 @@ public class ServiceMediaTypeHandler extends Handler {
                     }
                     wsdlURL = RegistryUtils.getRelativePath(requestContext.getRegistryContext(), wsdlPath);
                     CommonUtil.setWSDLURL(serviceInfoElement, wsdlURL);
-                    resource.setContent(serviceInfoElement.toString().getBytes());
+                    resource.setContent(RegistryUtils.decodeBytes((serviceInfoElement.toString()).getBytes()));
                     // updating the wsdl url
                     ((ResourceImpl) resource).prepareContentForPut();
                     persistServiceResource(registry, resource, servicePath);

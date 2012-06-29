@@ -31,6 +31,7 @@ import org.apache.solr.common.SolrException.ErrorCode;
 import org.apache.solr.common.SolrInputDocument;
 import org.apache.solr.core.CoreContainer;
 import org.wso2.carbon.base.MultitenantConstants;
+import org.wso2.carbon.registry.core.exceptions.RegistryException;
 import org.wso2.carbon.registry.indexing.AsyncIndexer.File2Index;
 import org.wso2.carbon.registry.indexing.indexer.Indexer;
 import org.wso2.carbon.registry.indexing.indexer.IndexerException;
@@ -199,7 +200,7 @@ public class SolrClient {
 		}
 	}
 
-	public void indexDocument(File2Index fileData, Indexer indexer) {
+	public void indexDocument(File2Index fileData, Indexer indexer) throws RegistryException {
 		IndexDocument doc = indexer.getIndexedDocument(fileData);
 		doc.setTenantId(fileData.tenantId);
 		addDocument(doc);

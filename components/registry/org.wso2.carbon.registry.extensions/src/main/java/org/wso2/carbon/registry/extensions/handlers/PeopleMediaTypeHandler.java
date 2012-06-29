@@ -4,12 +4,14 @@ import org.apache.axiom.om.OMElement;
 import org.apache.axiom.om.impl.builder.StAXOMBuilder;
 import org.apache.commons.logging.Log;
 import org.apache.commons.logging.LogFactory;
-import org.wso2.carbon.registry.core.*;
+import org.wso2.carbon.registry.core.Registry;
+import org.wso2.carbon.registry.core.RegistryConstants;
+import org.wso2.carbon.registry.core.Resource;
+import org.wso2.carbon.registry.core.ResourceImpl;
 import org.wso2.carbon.registry.core.exceptions.RegistryException;
 import org.wso2.carbon.registry.core.jdbc.handlers.Handler;
 import org.wso2.carbon.registry.core.jdbc.handlers.RequestContext;
 import org.wso2.carbon.registry.core.utils.RegistryUtils;
-import org.wso2.carbon.registry.extensions.utils.CommonConstants;
 import org.wso2.carbon.registry.extensions.utils.CommonUtil;
 
 import javax.xml.stream.XMLInputFactory;
@@ -41,7 +43,7 @@ public class PeopleMediaTypeHandler extends Handler {
             if (resourceContent instanceof String) {
                 artifactInfo = (String) resourceContent;
             } else {
-                artifactInfo = new String((byte[]) resourceContent);
+                artifactInfo = RegistryUtils.decodeBytes((byte[]) resourceContent);
             }
             try {
                 XMLStreamReader reader = XMLInputFactory.newInstance().
@@ -73,7 +75,7 @@ public class PeopleMediaTypeHandler extends Handler {
             }
             if (registry.resourceExists(artifactStorePath)) {
                 Resource oldResource = registry.get(artifactStorePath);
-                String oldContent = new String((byte[]) oldResource.getContent());
+                String oldContent = RegistryUtils.decodeBytes((byte[]) oldResource.getContent());
                 if (artifactInfo.equals(oldContent)) {
                     /* if user is not changing anything in the people artifact we skip
                     the processing done in this handler */
@@ -84,7 +86,7 @@ public class PeopleMediaTypeHandler extends Handler {
 //                    CommonUtil.getUnchrootedSystemRegistry(requestContext),
 //                    peopleArtifactId, artifactStorePath);
 
-            resource.setContent(artifactInfoElement.toString().getBytes());
+            resource.setContent(RegistryUtils.encodeString(artifactInfoElement.toString()));
             // updating the wsdl url
             ((ResourceImpl) resource).prepareContentForPut();
             registry.put(artifactStorePath, resource);

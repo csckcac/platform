@@ -21,6 +21,7 @@ import org.apache.commons.logging.LogFactory;
 import org.wso2.carbon.registry.core.Registry;
 import org.wso2.carbon.registry.core.Resource;
 import org.wso2.carbon.registry.core.exceptions.RegistryException;
+import org.wso2.carbon.registry.core.utils.RegistryUtils;
 
 import java.sql.SQLException;
 
@@ -37,7 +38,7 @@ public class GetTextContentUtil {
             byte[] content = (byte[]) resource.getContent();
             String contentString = "";
             if (content != null) {
-                contentString = new String(content);
+                contentString = RegistryUtils.decodeBytes(content);
             }
             resource.discard();
 

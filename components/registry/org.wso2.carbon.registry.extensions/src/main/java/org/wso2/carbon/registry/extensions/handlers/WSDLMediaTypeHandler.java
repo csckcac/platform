@@ -26,6 +26,7 @@ import org.wso2.carbon.registry.core.exceptions.RegistryException;
 import org.wso2.carbon.registry.core.jdbc.handlers.Handler;
 import org.wso2.carbon.registry.core.jdbc.handlers.RequestContext;
 import org.wso2.carbon.registry.core.utils.AuthorizationUtils;
+import org.wso2.carbon.registry.core.utils.RegistryUtils;
 import org.wso2.carbon.registry.extensions.beans.BusinessServiceInfo;
 import org.wso2.carbon.registry.extensions.handlers.utils.SchemaProcessor;
 import org.wso2.carbon.registry.extensions.handlers.utils.UDDIPublisher;
@@ -222,14 +223,14 @@ public class WSDLMediaTypeHandler extends Handler {
                         if (newContent instanceof String) {
                             newContentString = (String) newContent;
                         } else {
-                            newContentString = new String((byte[]) newContent);
+                            newContentString = RegistryUtils.decodeBytes((byte[]) newContent);
                         }
                     }
                     if (oldContent != null) {
                         if (oldContent instanceof String) {
                             oldContentString = (String) oldContent;
                         } else {
-                            oldContentString = new String((byte[]) oldContent);
+                            oldContentString = RegistryUtils.decodeBytes((byte[]) oldContent);
                         }
                     }
                     if ((newContent == null && oldContent == null) ||
@@ -288,7 +289,7 @@ public class WSDLMediaTypeHandler extends Handler {
                         } else if (resourceContent instanceof byte[]) {
                             resourceContentBytes = (byte[])resourceContent;
                         } else if (resourceContent instanceof String) {
-                            resourceContentBytes = ((String)resourceContent).getBytes();
+                            resourceContentBytes = RegistryUtils.encodeString(((String)resourceContent));
                         } else {
                             String msg = "Unknown type for the content path: " + path + ", content type: " +
                                     resourceContent.getClass().getName() + ".";
@@ -364,7 +365,7 @@ public class WSDLMediaTypeHandler extends Handler {
                 } else if (resourceContent instanceof byte[]) {
                     resourceContentBytes = (byte[])resourceContent;
                 } else if (resourceContent instanceof String) {
-                    resourceContentBytes = ((String)resourceContent).getBytes();
+                    resourceContentBytes = RegistryUtils.encodeString(((String)resourceContent));
                 } else {
                     String msg = "Unknown type for the content path: " + path + ", content type: " +
                             resourceContent.getClass().getName() + ".";

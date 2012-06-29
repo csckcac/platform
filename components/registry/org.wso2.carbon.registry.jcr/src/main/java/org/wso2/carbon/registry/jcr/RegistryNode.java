@@ -18,16 +18,17 @@ package org.wso2.carbon.registry.jcr;
 
 import org.apache.commons.logging.Log;
 import org.apache.commons.logging.LogFactory;
-import org.wso2.carbon.registry.api.Registry;
 import org.wso2.carbon.registry.core.CollectionImpl;
 import org.wso2.carbon.registry.core.Resource;
 import org.wso2.carbon.registry.core.ResourceImpl;
 import org.wso2.carbon.registry.core.exceptions.RegistryException;
+import org.wso2.carbon.registry.core.utils.RegistryUtils;
 import org.wso2.carbon.registry.jcr.lock.RegistryLockManager;
 import org.wso2.carbon.registry.jcr.nodetype.RegistryNodeDefinition;
 import org.wso2.carbon.registry.jcr.nodetype.RegistryNodeType;
 import org.wso2.carbon.registry.jcr.util.RegistryJCRItemOperationUtil;
 import org.wso2.carbon.registry.jcr.util.RegistryJCRSpecificStandardLoderUtil;
+
 import javax.jcr.*;
 import javax.jcr.lock.Lock;
 import javax.jcr.lock.LockException;
@@ -806,7 +807,7 @@ public class RegistryNode implements Node {
                     prop = res.getContent().toString();
 
                 } else if (res.getContent() instanceof byte[]) {
-                    prop = new String((byte[]) res.getContent());
+                    prop = RegistryUtils.decodeBytes((byte[]) res.getContent());
 
                 } else if (prop.equals("")) {
 

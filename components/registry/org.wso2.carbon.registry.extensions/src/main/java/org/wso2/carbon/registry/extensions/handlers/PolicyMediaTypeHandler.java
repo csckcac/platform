@@ -16,28 +16,27 @@
 
 package org.wso2.carbon.registry.extensions.handlers;
 
+import org.apache.axiom.om.OMElement;
 import org.apache.axiom.om.util.AXIOMUtil;
 import org.apache.commons.logging.Log;
 import org.apache.commons.logging.LogFactory;
+import org.wso2.carbon.registry.core.*;
 import org.wso2.carbon.registry.core.config.RegistryContext;
+import org.wso2.carbon.registry.core.exceptions.RegistryException;
 import org.wso2.carbon.registry.core.jdbc.handlers.Handler;
 import org.wso2.carbon.registry.core.jdbc.handlers.RequestContext;
-import org.wso2.carbon.registry.core.*;
-import org.wso2.carbon.registry.core.utils.RegistryUtils;
 import org.wso2.carbon.registry.core.utils.AuthorizationUtils;
-import org.wso2.carbon.registry.core.exceptions.RegistryException;
-import org.wso2.carbon.registry.extensions.utils.CommonConstants;
+import org.wso2.carbon.registry.core.utils.RegistryUtils;
 import org.wso2.carbon.registry.extensions.utils.CommonUtil;
 import org.wso2.carbon.user.mgt.UserMgtConstants;
-import org.apache.axiom.om.OMElement;
 
 import javax.xml.namespace.QName;
-import java.util.Iterator;
-import java.net.URL;
-import java.io.InputStream;
-import java.io.IOException;
-import java.io.ByteArrayOutputStream;
 import java.io.ByteArrayInputStream;
+import java.io.ByteArrayOutputStream;
+import java.io.IOException;
+import java.io.InputStream;
+import java.net.URL;
+import java.util.Iterator;
 import java.util.UUID;
 
 public class PolicyMediaTypeHandler extends Handler {
@@ -93,7 +92,7 @@ public class PolicyMediaTypeHandler extends Handler {
 
             Object newContent = resource.getContent();
             if (newContent instanceof String) {
-                newContent = ((String)newContent).getBytes();
+                newContent = RegistryUtils.encodeString(((String)newContent));
             }
             try {
                 // If the policy is already there, we don't need to re-run this handler unless the content is changed.
@@ -167,7 +166,7 @@ public class PolicyMediaTypeHandler extends Handler {
         policyResource.setContent(outputStream.toByteArray());
 
         try {
-            AXIOMUtil.stringToOM(new String(outputStream.toByteArray()));   
+            AXIOMUtil.stringToOM(RegistryUtils.decodeBytes(outputStream.toByteArray()));
         } catch (Exception e) {
             throw new RegistryException("The given policy file does not contain valid XML.");
         }

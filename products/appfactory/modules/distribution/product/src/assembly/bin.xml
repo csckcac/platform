@@ -227,7 +227,7 @@
 
          <!--Deploy SCM manager webapp -->
         <file>
-            <source>../../webapps/target/scm-webapp-${sonia.scm.version}.war</source>
+            <source>../../webapps/scm-web-app/target/scm-webapp-${sonia.scm.version}.war</source>
             <outputDirectory>wso2appfactory-${pom.version}/repository/deployment/server/webapps</outputDirectory>
             <filtered>false</filtered>
             <fileMode>644</fileMode>

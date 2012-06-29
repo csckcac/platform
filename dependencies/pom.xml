@@ -95,7 +95,7 @@
 		<!--<module>orbit/hive</module>-->
 		<module>orbit/datanucleus-core</module>
 		<!--module>orbit/hadoop-core</module-->
-		<!--module>jaggery</module-->
+		<module>jaggery</module>
 	     </modules>
    <dependencyManagement>
 	<dependencies>

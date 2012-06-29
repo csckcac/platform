@@ -18,6 +18,7 @@ package org.wso2.carbon.apimgt.impl.template;
 
 import org.apache.axiom.om.OMElement;
 import org.apache.axiom.om.util.AXIOMUtil;
+import org.apache.commons.lang.StringEscapeUtils;
 import org.apache.commons.logging.Log;
 import org.apache.commons.logging.LogFactory;
 
@@ -124,22 +125,28 @@ public class BasicTemplateBuilder implements APITemplateBuilder {
                     singleResMap.get(KEY_FOR_RESOURCE_URI) != null &&
                     singleResMap.get(KEY_FOR_RESOURCE_SANDBOX_URI) != null) {
                 String resourceTemplate = templateLoader.getTemplate(TemplateLoader.TEMPLATE_TYPE_COMPLEX_RESOURCE);
+                String endpoint = StringEscapeUtils.escapeXml(StringEscapeUtils.unescapeXml(
+                        singleResMap.get(KEY_FOR_RESOURCE_URI)));
+                String testEndpoint = StringEscapeUtils.escapeXml(StringEscapeUtils.unescapeXml(
+                        singleResMap.get(KEY_FOR_RESOURCE_SANDBOX_URI)));
                 String replacedStr = resourceTemplate.
                         replaceAll("\\[1\\]", singleResMap.get(KEY_FOR_RESOURCE_URI_TEMPLATE)).
                         replaceAll("\\[2\\]", singleResMap.get(KEY_FOR_RESOURCE_METHODS)).
-                        replaceAll("\\[3\\]", singleResMap.get(KEY_FOR_RESOURCE_URI)).
+                        replaceAll("\\[3\\]", endpoint).
                         replaceAll("\\[4\\]", apiMappings.get(KEY_FOR_API_NAME)).
                         replaceAll("\\[5\\]", String.valueOf(i)).
-                        replaceAll("\\[6\\]", singleResMap.get(KEY_FOR_RESOURCE_SANDBOX_URI));
+                        replaceAll("\\[6\\]", testEndpoint);
                 resourceListString.add(replacedStr);
             } else if (singleResMap != null && singleResMap.get(KEY_FOR_RESOURCE_METHODS) != null &&
                     singleResMap.get(KEY_FOR_RESOURCE_URI_TEMPLATE) != null &&
                     singleResMap.get(KEY_FOR_RESOURCE_URI) != null) {
                 String resourceTemplate = templateLoader.getTemplate(TemplateLoader.TEMPLATE_TYPE_RESOURCE);
+                String endpoint = StringEscapeUtils.escapeXml(StringEscapeUtils.unescapeXml(
+                        singleResMap.get(KEY_FOR_RESOURCE_URI)));
                 String replacedStr = resourceTemplate.
                         replaceAll("\\[1\\]", singleResMap.get(KEY_FOR_RESOURCE_URI_TEMPLATE)).
                         replaceAll("\\[2\\]", singleResMap.get(KEY_FOR_RESOURCE_METHODS)).
-                        replaceAll("\\[3\\]", singleResMap.get(KEY_FOR_RESOURCE_URI)).
+                        replaceAll("\\[3\\]", endpoint).
                         replaceAll("\\[4\\]", apiMappings.get(KEY_FOR_API_NAME)).
                         replaceAll("\\[5\\]", String.valueOf(i));
                 resourceListString.add(replacedStr);

@@ -73,6 +73,54 @@ public class TemplateBuilderTest extends TestCase {
         assertEquals(expected, output);
     }
 
+    public void testURLEncode() throws Exception {
+        Map<String,String> apiMappings = new HashMap<String, String>();
+        apiMappings.put(APITemplateBuilder.KEY_FOR_API_NAME, "TestAPI");
+        apiMappings.put(APITemplateBuilder.KEY_FOR_API_CONTEXT, "/test");
+        apiMappings.put(APITemplateBuilder.KEY_FOR_API_VERSION, "1.0.0");
+
+        List<Map<String, String>> resourceMappings = new ArrayList<Map<String, String>>();
+        Map<String,String> resource = new HashMap<String, String>();
+        resource.put(APITemplateBuilder.KEY_FOR_RESOURCE_URI_TEMPLATE, "/*");
+        resource.put(APITemplateBuilder.KEY_FOR_RESOURCE_METHODS, "GET");
+        resource.put(APITemplateBuilder.KEY_FOR_RESOURCE_URI, "http://search.wso2.com/search.json?q=blue%20angels&rpp=5&include_entities=true&result_type=mixed");
+        resource.put(APITemplateBuilder.KEY_FOR_RESOURCE_SANDBOX_URI, null);
+        resourceMappings.add(resource);
+
+        Map<String, String> testHandlerMappings_1 = new HashMap<String, String>();
+        testHandlerMappings_1.put(APITemplateBuilder.KEY_FOR_HANDLER,
+                "org.wso2.carbon.apimgt.usage.publisher.APIMgtUsageHandler");
+
+        Map<String, String> testHandlerMappings_2 = new HashMap<String, String>();
+        testHandlerMappings_2.put(APITemplateBuilder.KEY_FOR_HANDLER,
+                "org.wso2.carbon.apimgt.handlers.security.APIAuthenticationHandler");
+
+        Map<String, String> testHandlerMappings_3 = new HashMap<String, String>();
+        testHandlerMappings_3.put(APITemplateBuilder.KEY_FOR_HANDLER,
+                "org.wso2.carbon.apimgt.handlers.throttling.APIThrottleHandler");
+        testHandlerMappings_3.put(APITemplateBuilder.KEY_FOR_HANDLER_POLICY_KEY,
+                "conf:/basic-throttle-policy.xml");
+
+        List<Map<String, String>> handlerMappings = new ArrayList<Map<String, String>>();
+        handlerMappings.add(testHandlerMappings_1);
+        handlerMappings.add(testHandlerMappings_2);
+        handlerMappings.add(testHandlerMappings_3);
+
+        BasicTemplateBuilder builder = new BasicTemplateBuilder(apiMappings, resourceMappings, handlerMappings);
+        String output = builder.getConfigStringForTemplate();
+        String expected = "<api xmlns=\"http://ws.apache.org/ns/synapse\" name=\"TestAPI\" context=\"/test\" " +
+                "version=\"1.0.0\" version-type=\"url\"><resource url-mapping=\"/*\" methods=\"GET\"><inSequence>" +
+                "<filter source=\"$ctx:AM_KEY_TYPE\" regex=\"PRODUCTION\"><then><send><endpoint name=\"TestAPI_APIEndpoint_0\">" +
+                "<address uri=\"http://search.wso2.com/search.json?q=blue%20angels&amp;rpp=5&amp;include_entities=true&amp;result_type=mixed\"/></endpoint></send></then><else><sequence key=\"_sandbox_key_error_\"/>" +
+                "</else></filter></inSequence><outSequence><send/></outSequence></resource><handlers>" +
+                "<handler class=\"org.wso2.carbon.apimgt.usage.publisher.APIMgtUsageHandler\"/>" +
+                "<handler class=\"org.wso2.carbon.apimgt.handlers.security.APIAuthenticationHandler\"/>" +
+                "<handler class=\"org.wso2.carbon.apimgt.handlers.throttling.APIThrottleHandler\">" +
+                "<property name=\"id\" value=\"A\"/><property name=\"policyKey\" value=\"conf:/basic-throttle-policy.xml\"/>" +
+                "</handler></handlers></api>";
+        assertEquals(expected, output);
+    }
+
     public void testAdvancedAPI() throws Exception {
         Map<String,String> apiMappings = new HashMap<String, String>();
         apiMappings.put(APITemplateBuilder.KEY_FOR_API_NAME, "TestAPI");

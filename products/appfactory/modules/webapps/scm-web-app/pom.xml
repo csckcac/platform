@@ -1,0 +1,111 @@
+<?xml version="1.0"?>
+<!--       /*
+* Copyright (c) 2005-2010, WSO2 Inc. (http://www.wso2.org) All Rights Reserved.
+*
+* WSO2 Inc. licenses this file to you under the Apache License,
+* Version 2.0 (the "License"); you may not use this file except
+* in compliance with the License.
+* You may obtain a copy of the License at
+*
+* http://www.apache.org/licenses/LICENSE-2.0
+*
+* Unless required by applicable law or agreed to in writing,
+* software distributed under the License is distributed on an
+* "AS IS" BASIS, WITHOUT WARRANTIES OR CONDITIONS OF ANY
+* KIND, either express or implied. See the License for the
+* specific language governing permissions and limitations
+* under the License.
+*/-->
+<project xmlns="http://maven.apache.org/POM/4.0.0" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/xsd/maven-4.0.0.xsd">
+
+
+
+    <parent>
+        <groupId>org.wso2.appfactory</groupId>
+        <artifactId>webapps-parent</artifactId>
+        <version>1.0.0-SNAPSHOT</version>
+        <relativePath>../pom.xml</relativePath>
+    </parent>
+    <modelVersion>4.0.0</modelVersion>
+    <artifactId>scm-web-app</artifactId>
+    <packaging>war</packaging>
+    <name>SCM Web App</name>
+
+    <dependencies>
+    <dependency>
+        <groupId>sonia.scm</groupId>
+        <artifactId>scm-webapp</artifactId>
+        <version>${sonia.scm.version}</version>
+        <type>war</type>
+        <scope>runtime</scope>
+    </dependency>
+</dependencies>
+
+<build>
+<plugins>
+    <plugin>
+        <groupId>org.apache.maven.plugins</groupId>
+        <artifactId>maven-dependency-plugin</artifactId>
+        <version>2.0-alpha-4</version>
+        <inherited>false</inherited>
+        <executions>
+            <execution>
+                <id>get-webapp</id>
+                <phase>package</phase>
+                <goals>
+                    <goal>copy</goal>
+                </goals>
+                <configuration>
+                    <artifactItems>
+                        <artifactItem>
+                            <groupId>sonia.scm</groupId>
+                            <artifactId>scm-webapp</artifactId>
+                            <version>1.6</version>
+                            <type>war</type>
+                            <overWrite>true</overWrite>
+                            <outputDirectory>temp</outputDirectory>
+                        </artifactItem>
+                    </artifactItems>
+                </configuration>
+            </execution>
+        </executions>
+    </plugin>
+    <plugin>
+        <groupId>org.apache.maven.plugins</groupId>
+        <artifactId>maven-antrun-plugin</artifactId>
+        <version>1.2</version>
+        <executions>
+            <execution>
+                <id>create-scm-as-webapp</id>
+                <phase>install</phase>
+                <goals>
+                    <goal>run</goal>
+                </goals>
+                <configuration>
+                    <tasks>
+                        <unzip src="temp/scm-webapp-${sonia.scm.version}.war"
+                               dest="temp/scm-webapp-${sonia.scm.version}">
+                        </unzip>
+                        <copy todir="temp/scm-webapp-refactored-${sonia.scm.version}"
+                              overwrite="true"
+                              includeemptydirs="false">
+                            <fileset
+                                    dir="temp/scm-webapp-${sonia.scm.version}">
+                                <exclude
+                                        name="**/WEB-INF/lib/log4j-over-slf4j-1.6.1.jar"/>
+                                <exclude name="**/WEB-INF/lib/slf4j-api-1.6.1.jar"/>
+                            </fileset>
+                        </copy>
+                        <mkdir dir="target"/>
+                        <war destfile="target/scm-webapp-${sonia.scm.version}.war"
+                             webxml="temp/scm-webapp-refactored-${sonia.scm.version}/WEB-INF/web.xml"
+                             basedir="temp/scm-webapp-refactored-${sonia.scm.version}"/>
+                        <delete dir="temp"/>
+                    </tasks>
+                </configuration>
+            </execution>
+        </executions>
+    </plugin>
+</plugins>
+</build>
+</project>

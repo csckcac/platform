@@ -29,84 +29,11 @@
     <artifactId>webapps-parent</artifactId>
     <packaging>pom</packaging>
     <name>Web Apps parent</name>
+    <modules>
+       <module>scm-carbon-auth-plugin</module>
+        <module>scm-web-app</module>
+    </modules>
 
-    <dependencies>
-        <dependency>
-            <groupId>sonia.scm</groupId>
-            <artifactId>scm-webapp</artifactId>
-            <version>${sonia.scm.version}</version>
-            <type>war</type>
-            <scope>runtime</scope>
-        </dependency>
-    </dependencies>
-
-    <build>
-        <plugins>
-            <plugin>
-                <groupId>org.apache.maven.plugins</groupId>
-                <artifactId>maven-dependency-plugin</artifactId>
-                <version>2.0-alpha-4</version>
-                <inherited>false</inherited>
-                <executions>
-                    <execution>
-                        <id>get-webapp</id>
-                        <phase>package</phase>
-                        <goals>
-                            <goal>copy</goal>
-                        </goals>
-                        <configuration>
-                            <artifactItems>
-                                <artifactItem>
-                                    <groupId>sonia.scm</groupId>
-                                    <artifactId>scm-webapp</artifactId>
-                                    <version>1.6</version>
-                                    <type>war</type>
-                                    <overWrite>true</overWrite>
-                                    <outputDirectory>temp</outputDirectory>
-                                </artifactItem>
-                            </artifactItems>
-                        </configuration>
-                    </execution>
-                </executions>
-            </plugin>
-            <plugin>
-                <groupId>org.apache.maven.plugins</groupId>
-                <artifactId>maven-antrun-plugin</artifactId>
-                <version>1.2</version>
-                <executions>
-                    <execution>
-                        <id>create-scm-as-webapp</id>
-                        <phase>install</phase>
-                        <goals>
-                            <goal>run</goal>
-                        </goals>
-                        <configuration>
-                            <tasks>
-                                <unzip src="temp/scm-webapp-${sonia.scm.version}.war"
-                                       dest="temp/scm-webapp-${sonia.scm.version}">
-                                </unzip>
-                                <copy todir="temp/scm-webapp-refactored-${sonia.scm.version}"
-                                      overwrite="true"
-                                      includeemptydirs="false">
-                                    <fileset
-                                            dir="temp/scm-webapp-${sonia.scm.version}">
-                                        <exclude
-                                                name="**/WEB-INF/lib/log4j-over-slf4j-1.6.1.jar"/>
-                                        <exclude name="**/WEB-INF/lib/slf4j-api-1.6.1.jar"/>
-                                    </fileset>
-                                </copy>
-                                <mkdir dir="target"/>
-                                <war destfile="target/scm-webapp-${sonia.scm.version}.war"
-                                     webxml="temp/scm-webapp-refactored-${sonia.scm.version}/WEB-INF/web.xml"
-                                     basedir="temp/scm-webapp-refactored-${sonia.scm.version}"/>
-                                <delete dir="temp"/>
-                            </tasks>
-                        </configuration>
-                    </execution>
-                </executions>
-            </plugin>
-        </plugins>
-    </build>
 
     <repositories>
         <repository>

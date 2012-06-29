@@ -46,6 +46,7 @@ import org.wso2.carbon.registry.core.jdbc.handlers.RequestContext;
 import org.wso2.carbon.registry.core.jdbc.handlers.filters.MediaTypeMatcher;
 import org.wso2.carbon.registry.core.service.RegistryService;
 import org.wso2.carbon.registry.core.session.UserRegistry;
+import org.wso2.carbon.registry.core.utils.RegistryUtils;
 import org.wso2.carbon.utils.AbstractAxis2ConfigurationContextObserver;
 import org.wso2.carbon.utils.Axis2ConfigurationContextObserver;
 import org.wso2.carbon.utils.ConfigurationContextService;
@@ -109,8 +110,12 @@ public class GovernanceMgtUIListMetadataServiceComponent {
                                 org.wso2.carbon.registry.extensions.utils.CommonUtil
                                         .acquireUpdateLock();
                                 try {
-                                    if(!CommonUtil.validateXMLConfigOnSchema(new String((byte[]) requestContext.getResource().getContent()), "rxt-ui-config")) {
-                                     throw new RegistryException("Violation of RXT definition in configuration file, follow the schema correctly..!!");
+                                    if(!CommonUtil.validateXMLConfigOnSchema(
+                                            RegistryUtils.decodeBytes((byte[])
+                                                    requestContext.getResource().getContent()),
+                                            "rxt-ui-config")) {
+                                     throw new RegistryException("Violation of RXT definition in" +
+                                             " configuration file, follow the schema correctly..!!");
                                     }
 
                                     Registry userRegistry = requestContext.getRegistry();
@@ -134,7 +139,7 @@ public class GovernanceMgtUIListMetadataServiceComponent {
                                 if (content instanceof String) {
                                     elementString = (String) content;
                                 } else {
-                                    elementString = new String((byte[]) content);
+                                    elementString = RegistryUtils.decodeBytes((byte[]) content);
                                 }
                                 GovernanceArtifactConfiguration artifactConfiguration =
                                         GovernanceUtils.getGovernanceArtifactConfiguration(elementString);

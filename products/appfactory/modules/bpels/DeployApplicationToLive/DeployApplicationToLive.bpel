@@ -76,6 +76,7 @@
 <ns:applicationSvnUrl></ns:applicationSvnUrl>
 <ns:applicationId></ns:applicationId>
 <ns:version></ns:version>
+<ns:svnRevision></ns:svnRevision>
 <ns:stage></ns:stage>
 </ns:deployApplication></bpel:literal>
                 
@@ -117,6 +118,14 @@
                 </bpel:from>
                 <bpel:to part="parameters" variable="ApplicationDeploymentServicePLRequest">
                     <bpel:query queryLanguage="urn:oasis:names:tc:wsbpel:2.0:sublang:xpath1.0"><![CDATA[ns:version]]></bpel:query>
+                </bpel:to>
+            </bpel:copy>
+            <bpel:copy>
+                <bpel:from part="payload" variable="input">
+                    <bpel:query queryLanguage="urn:oasis:names:tc:wsbpel:2.0:sublang:xpath1.0"><![CDATA[tns:svnRevision]]></bpel:query>
+                </bpel:from>
+                <bpel:to part="parameters" variable="ApplicationDeploymentServicePLRequest">
+                    <bpel:query queryLanguage="urn:oasis:names:tc:wsbpel:2.0:sublang:xpath1.0"><![CDATA[ns:svnRevision]]></bpel:query>
                 </bpel:to>
             </bpel:copy>
         </bpel:assign>

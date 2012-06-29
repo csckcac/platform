@@ -20,6 +20,7 @@
                     	<element name="applicationSvnLocation"
                     		type="string" />
                     	<element name="applicationName" type="string"></element>
+                    	<element name="svnRevision" type="string"></element>
                     </sequence>
                 </complexType>
             </element>

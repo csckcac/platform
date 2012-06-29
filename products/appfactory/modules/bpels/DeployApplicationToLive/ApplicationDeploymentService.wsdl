@@ -28,6 +28,7 @@
                         <xs:element minOccurs="0" name="applicationId" nillable="true" type="xs:string" />
                         <xs:element minOccurs="0" name="stage" nillable="true" type="xs:string" />
                         <xs:element minOccurs="0" name="version" nillable="true" type="xs:string" />
+                        <xs:element minOccurs="0" name="svnRevision" nillable="true" type="xs:string" />
                     </xs:sequence>
                 </xs:complexType>
             </xs:element>

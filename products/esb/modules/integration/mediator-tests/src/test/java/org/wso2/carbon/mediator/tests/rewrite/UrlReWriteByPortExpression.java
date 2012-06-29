@@ -63,6 +63,7 @@ public class UrlReWriteByPortExpression extends ESBIntegrationTestCase {
     public Object[][] addressingUrl() {
         return new Object[][]{
                 {"http://localhost:8000/services/SimpleStockQuoteService"},
+                {"https://localhost:8000/services/SimpleStockQuoteService"},
         };
 
     }

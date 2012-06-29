@@ -38,7 +38,7 @@ public class AppendPortTestCase extends ESBIntegrationTestCase {
 
     }
 
-    @Test(priority = 1, groups = {"wso2.esb"}, description = "Remove and rewrite host name",
+    @Test(priority = 1, groups = {"wso2.esb"}, description = "Append text to port",
           dataProvider = "addressingUrl")
     public void appendPort(String addUrl) throws AxisFault {
         OMElement response;

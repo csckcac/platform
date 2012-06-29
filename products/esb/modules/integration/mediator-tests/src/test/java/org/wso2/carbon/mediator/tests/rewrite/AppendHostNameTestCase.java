@@ -38,7 +38,7 @@ public class AppendHostNameTestCase extends ESBIntegrationTestCase {
 
     }
 
-    @Test(priority = 1, groups = {"wso2.esb"}, description = "Remove and rewrite host name",
+    @Test(priority = 1, groups = {"wso2.esb"}, description = "Append text to host name",
           dataProvider = "addressingUrl")
     public void appendHostName(String addUrl) throws AxisFault {
         OMElement response;

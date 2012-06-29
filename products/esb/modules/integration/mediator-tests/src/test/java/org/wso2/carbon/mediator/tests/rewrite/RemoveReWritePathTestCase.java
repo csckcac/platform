@@ -38,7 +38,7 @@ public class RemoveReWritePathTestCase extends ESBIntegrationTestCase {
 
     }
 
-    @Test(priority = 1, groups = {"wso2.esb"}, description = "Remove and rewrite host name",
+    @Test(priority = 1, groups = {"wso2.esb"}, description = "Remove and rewrite path",
           dataProvider = "addressingUrl")
     public void removeAndReWritePath(String addUrl) throws AxisFault {
         OMElement response;

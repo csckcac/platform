@@ -4,25 +4,26 @@
            startOnLoad="true">
         <target>
             <inSequence>
-                <property name="http.port" value="9000" scope="default"/>
+                <property name="path.prepend" value="/services" scope="default"/>
                 <log level="full"/>
                 <rewrite>
                     <rewriterule>
                         <condition>
-                            <equal xmlns="" type="url" source="protocol" value="https"/>
+                            <equal xmlns="" type="url" source="protocol" value="http"/>
                         </condition>
-                        <action value="9000" regex="\w.*" type="replace" fragment="port"/>
-                        <action value="http" fragment="protocol" type="set"/>
+                        <action value="/services" type="prepend" fragment="path"/>
                     </rewriterule>
                     <rewriterule>
                         <condition>
-                            <equal xmlns="" type="url" source="protocol" value="http"/>
+                            <equal xmlns="" type="url" source="protocol" value="https"/>
                         </condition>
-                        <action xpath="get-property('http.port')" regex="\w.*" type="replace"
-                                fragment="port"/>
+                        <action xpath="get-property('path.prepend')" type="prepend"
+                                fragment="path"/>
+                        <action value="http" fragment="protocol" type="set"/>
                     </rewriterule>
                 </rewrite>
                 <log level="full"/>
+                <log/>
                 <send/>
             </inSequence>
             <outSequence>

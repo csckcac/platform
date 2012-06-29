@@ -26,22 +26,21 @@ import org.wso2.esb.integration.axis2.SampleAxis2Server;
 import org.wso2.esb.integration.axis2.StockQuoteClient;
 
 import static org.testng.Assert.assertTrue;
-import static org.testng.Assert.fail;
 
-public class AppendProtocolTestCase extends ESBIntegrationTestCase {
+public class PrependFullUrlTestCase extends ESBIntegrationTestCase {
     private StockQuoteClient axis2Client;
 
     public void init() throws Exception {
         axis2Client = new StockQuoteClient();
-        String filePath = "/mediators/rewrite/protocol_append_synapse.xml";
+        String filePath = "/mediators/rewrite/full_url_prepend_synapse.xml";
         loadESBConfigurationFromClasspath(filePath);
         launchBackendAxis2Service(SampleAxis2Server.SIMPLE_STOCK_QUOTE_SERVICE);
 
     }
-
-    @Test(priority = 1, groups = {"wso2.esb"}, description = "Append text to protocol",
+    //todo requirement not clear for prepend keyword. it replace full url
+    @Test(priority = 1, groups = {"wso2.esb"}, description = "Prepend text to full url",
           dataProvider = "addressingUrl")
-    public void appendProtocol(String addUrl) throws AxisFault {
+    public void prependFulUrl(String addUrl) throws AxisFault {
         OMElement response;
 
         response = axis2Client.sendSimpleStockQuoteRequest(
@@ -49,21 +48,6 @@ public class AppendProtocolTestCase extends ESBIntegrationTestCase {
                 addUrl,
                 "IBM");
         assertTrue(response.toString().contains("IBM"));
-
-    }
-
-    @Test(priority = 1, groups = {"wso2.esb"}, description = "Conditional URL Rewriting")
-    public void invalidUrl() throws AxisFault {
-        OMElement response;
-        try {
-            response = axis2Client.sendSimpleStockQuoteRequest(
-                    getProxyServiceURL("urlRewriteProxy", false),
-                    "http://localhost:9010/services/SimpleStockQuoteService",
-                    "IBM");
-            fail("This Query Must fail");
-        } catch (AxisFault fault) {
-
-        }
 
     }
 
@@ -77,10 +61,8 @@ public class AppendProtocolTestCase extends ESBIntegrationTestCase {
     @DataProvider(name = "addressingUrl")
     public Object[][] addressingUrl() {
         return new Object[][]{
-                {"htt://localhost:9000/services/SimpleStockQuoteService"},
-                {"http://localhost:9000/services/SimpleStockQuoteService"},
-                {"htt://localhost:9010/services/SimpleStockQuoteService"},
-                {"https://localhost:9002/services/SimpleStockQuoteService"},
+                {"http://test.com:9000/services/SimpleStockQuoteService"},
+                {"https://test.com"},
 
         };
 

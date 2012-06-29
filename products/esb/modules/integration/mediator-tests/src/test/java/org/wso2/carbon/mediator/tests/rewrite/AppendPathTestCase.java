@@ -38,7 +38,7 @@ public class AppendPathTestCase extends ESBIntegrationTestCase {
 
     }
 
-    @Test(priority = 1, groups = {"wso2.esb"}, description = "Remove and rewrite host name",
+    @Test(priority = 1, groups = {"wso2.esb"}, description = "Append text to path",
           dataProvider = "addressingUrl")
     public void appendPath(String addUrl) throws AxisFault {
         OMElement response;

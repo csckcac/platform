@@ -4,22 +4,21 @@
            startOnLoad="true">
         <target>
             <inSequence>
-                <property name="http.port" value="9000" scope="default"/>
+                <property name="protocol.prepend" value="ht" scope="default"/>
                 <log level="full"/>
                 <rewrite>
                     <rewriterule>
                         <condition>
-                            <equal xmlns="" type="url" source="protocol" value="https"/>
+                            <equal xmlns="" type="url" source="protocol" value="tp"/>
                         </condition>
-                        <action value="9000" regex="\w.*" type="replace" fragment="port"/>
-                        <action value="http" fragment="protocol" type="set"/>
+                        <action xpath="get-property('protocol.prepend')" type="prepend"
+                                fragment="protocol"/>
                     </rewriterule>
                     <rewriterule>
                         <condition>
-                            <equal xmlns="" type="url" source="protocol" value="http"/>
+                            <equal xmlns="" type="url" source="protocol" value="ttp"/>
                         </condition>
-                        <action xpath="get-property('http.port')" regex="\w.*" type="replace"
-                                fragment="port"/>
+                        <action value="h" type="prepend" fragment="protocol"/>
                     </rewriterule>
                 </rewrite>
                 <log level="full"/>

@@ -4,7 +4,7 @@
     var i, classes, path, app, apps = outputs.applications, length = apps.length;
     if(length > 0) {
 
-    var itemsPerPage = 10; //reduce this number to preview the pagination
+    var itemsPerPage = 20; //reduce this number to preview the pagination
     var currentPage = 1;
     var numberOfPages = parseInt(length / itemsPerPage);
 
@@ -23,7 +23,9 @@
            to=itemsPerPage*currentPage;
        }
     }
-
+    if(length==0){
+        to=0;
+    }
     %>
     <script type="text/javascript">
         var foo='<%=apps%>';

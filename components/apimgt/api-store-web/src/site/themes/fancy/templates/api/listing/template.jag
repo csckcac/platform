@@ -49,8 +49,9 @@
                                 to=itemsPerPage*currentPage;
                             }
                         }
-
-
+                        if(length==0){
+                            to=0;
+                        }
                         for(i = from; i < to; i++) {
                             api = apis[i];
                             thumbURL = api.thumbURL;

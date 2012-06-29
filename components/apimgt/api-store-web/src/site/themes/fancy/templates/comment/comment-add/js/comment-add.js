@@ -1,7 +1,7 @@
 $(document).ready(function () {
     $("#comment-add-button").click(function () {
         var comment = $("#comment-text").val();
-        if(comment.length > 490){
+        if(comment.length > 450){
             $('#commentAdd-error').show();
             return;
         }
@@ -22,8 +22,8 @@ $(document).ready(function () {
     });
 
     $("#comment-text").charCount({
-			allowed: 490,
-			warning: 470,
+			allowed: 450,
+			warning: 420,
 			counterText: 'Characters left: '
 		});
     $("#comment-text").val('');

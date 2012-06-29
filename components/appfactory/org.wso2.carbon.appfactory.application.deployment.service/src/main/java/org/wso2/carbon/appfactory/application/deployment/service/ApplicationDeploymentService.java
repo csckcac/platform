@@ -35,6 +35,7 @@ import java.io.File;
 import java.io.IOException;
 import java.net.MalformedURLException;
 import java.net.URL;
+import java.text.ParseException;
 import java.util.ArrayList;
 import java.util.List;
 
@@ -97,7 +98,7 @@ public class ApplicationDeploymentService extends AbstractAdmin {
      * @throws ApplicationDeploymentExceptions
      *
      */
-    private String checkoutApplication(String applicationSvnUrl, String applicationId)
+    private String checkoutApplication(String applicationSvnUrl, String applicationId,String svnRevision)
             throws ApplicationDeploymentExceptions {
         File checkoutDirectory = createApplicationCheckoutDirectory(applicationId);
         initSVNClient();
@@ -110,15 +111,23 @@ public class ApplicationDeploymentService extends AbstractAdmin {
         }
 
         try {
+            if(svnRevision!=null && !"".equals(svnRevision)) {
+                  SVNRevision revision=SVNRevision.getRevision(svnRevision);
+
             if (svnClient instanceof CmdLineClientAdapter) {
                 // CmdLineClientAdapter does not support all the options
-                svnClient.checkout(svnUrl, checkoutDirectory, SVNRevision.HEAD, true);
+                svnClient.checkout(svnUrl, checkoutDirectory, revision, true);
             } else {
-                svnClient.checkout(svnUrl, checkoutDirectory, SVNRevision.HEAD,
+                svnClient.checkout(svnUrl, checkoutDirectory, revision,
                                    Depth.infinity, true, true);
+            }
+            }else {
+              throw new ApplicationDeploymentExceptions("SVN revision number is null or empty");
             }
         } catch (SVNClientException e) {
             handleException("Failed to checkout code from SVN URL:" + svnUrl, e);
+        } catch (ParseException e) {
+            handleException("SVN revision: "+svnRevision+" is not valid ", e);
         }
         return checkoutDirectory.getAbsolutePath();
     }
@@ -169,7 +178,7 @@ public class ApplicationDeploymentService extends AbstractAdmin {
 
     //TODO car files deployment???
     public Application[] deployApplication(String applicationSvnUrl, String applicationId,
-                                           String stage, String version) throws ApplicationDeploymentExceptions {
+                                           String stage, String version,String svnRevision) throws ApplicationDeploymentExceptions {
 
         String key = new StringBuilder(AppFactoryConstants.DEPLOYMENT_STAGES).append(".").
                 append(stage).append(".").append(AppFactoryConstants.DEPLOYMENT_URL).toString();
@@ -179,7 +188,7 @@ public class ApplicationDeploymentService extends AbstractAdmin {
             handleException("No deployment paths are configured for stage:" + stage);
         }
 
-        String checkoutPath = checkoutApplication(applicationSvnUrl, applicationId);
+        String checkoutPath = checkoutApplication(applicationSvnUrl, applicationId,svnRevision);
         try {
             buildApplication(checkoutPath);
 

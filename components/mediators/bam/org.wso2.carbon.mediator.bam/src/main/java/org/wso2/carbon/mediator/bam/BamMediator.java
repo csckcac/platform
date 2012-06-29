@@ -152,7 +152,7 @@ public class BamMediator extends AbstractMediator {
 
         if (streamId == null) {
             Agent agent = this.createAgent();
-            this.createDataPublisher(agent, messageContext);
+            this.createDataPublisher(agent);
         }
 
         //Publish event for a valid stream
@@ -270,7 +270,7 @@ public class BamMediator extends AbstractMediator {
         return new Agent(agentConfiguration);
     }
 
-    private void createDataPublisher(Agent agent, MessageContext messageContext) throws AgentException, MalformedStreamDefinitionException, StreamDefinitionException,
+    private void createDataPublisher(Agent agent) throws AgentException, MalformedStreamDefinitionException, StreamDefinitionException,
                                                          DifferentStreamDefinitionAlreadyDefinedException,
                                                          MalformedURLException, AuthenticationException, TransportException {
         //create data publisher
@@ -297,7 +297,6 @@ public class BamMediator extends AbstractMediator {
                                                    "          {'name':'SOAPHeader','type':'STRING'}," +
                                                    "          {'name':'SOAPBody','type':'STRING'}" +
                                                    this.getPropertyString() +
-                                                   this.getMessagePropertyString(messageContext) +
                                                    "  ]" +
                                                    "}");
         log.info("Event Stream Created.");
@@ -306,18 +305,8 @@ public class BamMediator extends AbstractMediator {
     private Object[] createPayloadData(MessageContext messageContext,
                                        boolean direction, String service, String operation){
         int numOfProperties = properties.size();
-        int numOfMessageProperties = 0;
 
-        Map<String, Object> messagePropertiesMap = ((Axis2MessageContext) messageContext).getProperties();
-        for (Map.Entry entry : messagePropertiesMap.entrySet()) {
-            Object value = entry.getValue();
-            if (value instanceof String && entry.getKey().toString().startsWith(
-                BamMediatorConstants.BAM_PREFIX)) {
-                numOfMessageProperties ++ ;
-            }
-        }
-
-        Object[] payloadData = new Object[numOfProperties + numOfMessageProperties + 6];
+        Object[] payloadData = new Object[numOfProperties + 6];
         payloadData[0] = direction ?
                          BamMediatorConstants.DIRECTION_IN : BamMediatorConstants.DIRECTION_OUT;
         payloadData[1] = service;
@@ -329,18 +318,6 @@ public class BamMediator extends AbstractMediator {
         for (int i=0; i<numOfProperties; i++) {
             payloadData[6 + i] = properties.get(i).getValue();
         }
-
-        int i=0;
-        for (Map.Entry entry : messagePropertiesMap.entrySet()) {
-            Object value = entry.getValue();
-            if (value instanceof String && entry.getKey().toString().startsWith(
-                    BamMediatorConstants.BAM_PREFIX)) {
-                payloadData[6 + numOfProperties + i] = value.toString();
-                i++;
-                //activity.setProperty(entry.getKey().toString(), value.toString());
-            }
-        }
-
 
         return payloadData;
     }
@@ -363,39 +340,6 @@ public class BamMediator extends AbstractMediator {
             propertyString = propertyString + ",        {'name':'" + property.getKey() + "','type':'STRING'}";
         }
         return propertyString;
-    }
-
-    private String getMessagePropertyString(MessageContext messageContext){
-        String messagePropertyString = "";
-        Map<String, Object> messagePropertiesMap = ((Axis2MessageContext) messageContext).getProperties();
-        for (Map.Entry entry : messagePropertiesMap.entrySet()) {
-            Object value = entry.getValue();
-            if (value instanceof String && entry.getKey().toString().startsWith(
-                    BamMediatorConstants.BAM_PREFIX)) {
-                messagePropertyString = messagePropertyString + ",        {'name':'" + entry.getKey().toString() + "','type':'STRING'}";
-            }
-        }
-        return messagePropertyString;
-    }
-
-    public String getType() {
-        return null;
-    }
-
-    public void setTraceState(int traceState) {
-        traceState = 0;
-    }
-
-    public int getTraceState() {
-        return 0;
-    }
-
-    public void setDescription(String s) {
-        //To change body of implemented methods use File | Settings | File Templates.
-    }
-
-    public String getDescription() {
-        return null;  //To change body of implemented methods use File | Settings | File Templates.
     }
 
     public void setServerIP(String newValue) {

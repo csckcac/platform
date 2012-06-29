@@ -22,7 +22,7 @@
   </extensions>
   <extensions>
     <extendedObject href="DeployApplicationToDev.bpel#/"/>
-    <extensionObject xsi:type="org.eclipse.bpel.ui.uiextensionmodel:ProcessExtension" modificationStamp="1337962068000"/>
+    <extensionObject xsi:type="org.eclipse.bpel.ui.uiextensionmodel:ProcessExtension" modificationStamp="1340473241000"/>
   </extensions>
   <extensions>
     <extendedObject href="DeployApplicationToDev.bpel#//@activity/@activities.1"/>

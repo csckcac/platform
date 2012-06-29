@@ -54,9 +54,7 @@
              Note: This maps to operation defined in DeployApplicationToDev.wsdl 
              -->
         <bpel:receive name="receiveInput" partnerLink="client"
-                 portType="tns:DeployApplicationToDev"
-                 operation="process" variable="input"
-                 createInstance="yes"/>
+                 createInstance="yes" operation="process" portType="tns:DeployApplicationToDev" variable="input"/>
         
         <!-- Generate reply to synchronous request -->
         <bpel:assign validate="no" name="Assign">
@@ -88,10 +86,14 @@
             
             </bpel:copy>
             <bpel:copy><bpel:from part="payload" variable="input">
-                    <bpel:query queryLanguage="urn:oasis:names:tc:wsbpel:2.0:sublang:xpath1.0"><![CDATA[tns:applicationName]]></bpel:query>
+                    <bpel:query queryLanguage="urn:oasis:names:tc:wsbpel:2.0:sublang:xpath1.0">
+                        <![CDATA[tns:applicationId]]>
+                    </bpel:query>
                 </bpel:from>
                 <bpel:to part="parameters" variable="ApplicationDeploymentServicePLRequest">
-                    <bpel:query queryLanguage="urn:oasis:names:tc:wsbpel:2.0:sublang:xpath1.0"><![CDATA[ns:applicationId]]></bpel:query>
+                    <bpel:query queryLanguage="urn:oasis:names:tc:wsbpel:2.0:sublang:xpath1.0">
+                        <![CDATA[ns:applicationId]]>
+                    </bpel:query>
                 </bpel:to>
             
             </bpel:copy>

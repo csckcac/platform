@@ -3273,7 +3273,12 @@ function validateExists(pickedPath) {
 }
 
 function loadFromPath() {
-    var pickedPath=$('uLocationBar');
+    var pickedPath = $('uLocationBar');
+    if(!validateTextForIllegal(pickedPath,"resource path")){
+        CARBON.showWarningDialog(org_wso2_carbon_registry_common_ui_jsi18n["the"] + " "+ "resource path"+" " + org_wso2_carbon_registry_common_ui_jsi18n["not.valid.path"]);
+        return;
+    }
+//    validateIllegal(pickedPath,"resource path");
     if (validateProvidedResoucePath(pickedPath, org_wso2_carbon_registry_resource_ui_jsi18n["location.bar.empty"])) {
         window.location = "../resources/resource.jsp?region=region3&item=resource_browser_menu&viewType=std&path=" + pickedPath.value.replace(/^\s\s*/, '').replace(/\s\s*$/, '').replace(/&/g, "%26");
     }

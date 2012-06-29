@@ -44,7 +44,9 @@ public class JSServicesServiceComponent {
             hostObjectsThatNeedServices = hostObjectService.getHostObjectsThatNeedServices();
             if (hostObjectsThatNeedServices.isEmpty()) {
                 Utils.registerDeployerServices(bundleContext);
-                log.info("JS Deployer initialized");
+				if (log.isDebugEnabled()) {
+					log.debug("JS Deployer initialized");
+				}
             } else {
                 final HostObjectServiceListener listener = new HostObjectServiceListener(componentContext.getBundleContext(), hostObjectsThatNeedServices);
                 bundleContext.addServiceListener(listener);
@@ -72,7 +74,9 @@ public class JSServicesServiceComponent {
                 } else {
                     bundleContext.removeServiceListener(listener);
                     Utils.registerDeployerServices(bundleContext);
-                    log.info("JS Deployer initialized");
+                    if (log.isDebugEnabled()) {
+						log.debug("JS Deployer initialized");
+					}
                 }
             }
             //JavaScriptEngineUtils.setHostObjectService(hostObjectService);
@@ -83,7 +87,9 @@ public class JSServicesServiceComponent {
     }
 
    protected void setHostObjectService(HostObjectService hostObjectService) {
-        log.info("Setting hostobject services");
+	    if (log.isDebugEnabled()) {
+			log.debug("Setting hostobject services");
+		}        
         this.hostObjectService = hostObjectService;
     }
 

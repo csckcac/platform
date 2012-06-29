@@ -71,8 +71,9 @@ public class IdentityCoreServiceComponent {
             // initialize the identity database, if it is not already initialized.
             JDBCPersistenceManager jdbcPersistenceManager = JDBCPersistenceManager.getInstance();
             jdbcPersistenceManager.initializeDatabase();
-            log.info("Initialized Identity Persistence Store.");
-
+			if(log.isDebugEnabled()){
+				log.info("Initialized Identity Persistence Store.");
+			}
         } catch (Throwable e) {
             log.error("Error occured while populating identity configuration properties", e);
         }
@@ -84,7 +85,7 @@ public class IdentityCoreServiceComponent {
      */
     protected void deactivate(ComponentContext ctxt) {
         if (log.isDebugEnabled()) {
-            log.info("Identity Core bundle is deactivated");
+            log.debug("Identity Core bundle is deactivated");
         }
     }
 
@@ -118,7 +119,7 @@ public class IdentityCoreServiceComponent {
      */
     protected void setSecurityConfigAdminService(SecurityConfigAdmin securityConfig) {
         if (log.isDebugEnabled()) {
-            log.info("SecurityConfigAdmin set in Identity Core bundle");
+            log.debug("SecurityConfigAdmin set in Identity Core bundle");
         }
     }
 
@@ -128,7 +129,7 @@ public class IdentityCoreServiceComponent {
      */
     protected void unsetSecurityConfigAdminService(SecurityConfigAdmin securityConfig) {
         if (log.isDebugEnabled()) {
-            log.info("SecurityConfigAdmin unset in Identity Core bundle");
+            log.debug("SecurityConfigAdmin unset in Identity Core bundle");
         }
     }
 

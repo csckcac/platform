@@ -393,7 +393,7 @@ public class APIProviderHostObject extends ScriptableObject {
                     Arrays.sort(uriMethodsArr);
                     Arrays.sort(uriMethodArray);
                     if (uri.getUriTemplate().equals(template) && Arrays.equals(uriMethodsArr, uriMethodArray)) {
-                        throw new APIManagementException("Duplicate API resources with same URI Template and HTTP Methods.");
+                        throw new APIManagementException("Duplicate API resources with same URL patterns and HTTP methods.");
                     }
                 }
                 uriTemplates.add(templates);

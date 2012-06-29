@@ -20,17 +20,15 @@ function validateUrl(fld,fldName) {
 
 	return error;
 }
-function validateFilePath(fld,fldName) {
+function validateTextForIllegal(fld,fldName) {
 
-	var error = "";
-	var regx = RegExp("([a-zA-Z]:\\.*)|(/.*)");
-	if(!fld.value.match(regx)){
-		error = org_wso2_carbon_registry_common_ui_jsi18n["the"] + " "+fldName+" " + org_wso2_carbon_registry_common_ui_jsi18n["not.valid.url"] + "<br />";
-
-	}
-
-	return error;
-
+    var illegalChars = /([?#^\|<>\"\'])/;
+    var illegalCharsInput = /(\<[a-zA-Z0-9\s\/]*>)/;
+    if (illegalChars.test(fld.value) || illegalCharsInput.test(fld.value)) {
+       return false;
+    } else {
+       return true;
+    }
 }
 function validateIllegal(fld,fldName){
     var error = "";

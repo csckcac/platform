@@ -23,9 +23,7 @@ import org.apache.commons.logging.LogFactory;
 import org.wso2.carbon.CarbonConstants;
 import org.wso2.carbon.CarbonException;
 import org.wso2.carbon.core.AbstractAdmin;
-import org.wso2.carbon.utils.CarbonUtils;
-import org.wso2.carbon.utils.DataPaginator;
-import org.wso2.carbon.utils.NetworkUtils;
+import org.wso2.carbon.utils.*;
 import org.wso2.carbon.webapp.mgt.*;
 
 import javax.activation.DataHandler;
@@ -633,10 +631,12 @@ public class JaggeryAppAdmin extends AbstractAdmin {
                 }
             }
 
+            ArchiveManipulator archiveManipulator = new ArchiveManipulator();
             try {
-                unZip(uploadData.getDataHandler().getInputStream(), jaggeryAppsPath + File.separator + fName);
+                archiveManipulator.extractFromStream(uploadData.getDataHandler().getInputStream(),
+                        jaggeryAppsPath + File.separator + fName);
             } catch (IOException e) {
-                log.error("Error Uploading Jaggery App", e);
+                log.error("Could not unzip the Jaggery App Archive", e);
                 throw new AxisFault(e.getMessage(), e);
             }
 
@@ -671,9 +671,10 @@ public class JaggeryAppAdmin extends AbstractAdmin {
         if (webAppFile.isDirectory()) {
             String zipTo = "tmp" + File.separator + fileName + ".zip";
             File fDownload = new File(zipTo);
+            ArchiveManipulator archiveManipulator = new ArchiveManipulator();
             synchronized (this) {
                 try {
-                    zipDirectory(webAppFile, fDownload);
+                    archiveManipulator.archiveDir(zipTo, webAppFile.getAbsolutePath());
                     FileDataSource datasource = new FileDataSource(fDownload);
                     handler = new DataHandler(datasource);
                 } catch (IOException e) {
@@ -685,110 +686,6 @@ public class JaggeryAppAdmin extends AbstractAdmin {
             handler = new DataHandler(datasource);
         }
         return handler;
-    }
-
-    private static void zipDirectory(File directory, File zip) throws IOException {
-        ZipOutputStream zos = null;
-        try {
-            zos = new ZipOutputStream(new FileOutputStream(zip));
-            zip(directory, directory, zos);
-        } catch (Exception e) {
-            log.error("Error zipping directory " + directory.getName() + " " + zip.getName(), e);
-
-        } finally {
-            try {
-                if (zos != null) {
-                    zos.close();
-                }
-            } catch (Exception e) {
-                log.error("Error closing output stream ", e);
-            }
-        }
-    }
-
-    private static void zip(File directory, File base,
-                            ZipOutputStream zos) {
-        File[] files = directory.listFiles();
-        byte[] buffer = new byte[BYTE_BUFFER_SIZE];
-        int read = 0;
-        for (int i = 0, n = files.length; i < n; i++) {
-            if (files[i].isDirectory()) {
-                zip(files[i], base, zos);
-            } else {
-                FileInputStream in = null;
-                try {
-                    in = new FileInputStream(files[i]);
-                    ZipEntry entry = new ZipEntry(files[i].getPath().substring(
-                            base.getPath().length() + 1));
-                    zos.putNextEntry(entry);
-                    while (-1 != (read = in.read(buffer))) {
-                        zos.write(buffer, 0, read);
-                    }
-                } catch (IOException e) {
-                    log.error("Error zipping file " + files[i].getName(), e);
-
-                } finally {
-                    try {
-                        if (in != null) {
-                            in.close();
-                        }
-                    } catch (IOException e) {
-                        log.error("Error closing input stream ", e);
-                    }
-                }
-            }
-        }
-    }
-
-    private static void unZip(InputStream is, String destDir) {
-        BufferedOutputStream dest = null;
-        try {
-            File unzipDestinationDirectory = new File(destDir);
-
-            boolean created = unzipDestinationDirectory.mkdir();
-            if (!created) {
-                log.error("Could not create DIR : " + unzipDestinationDirectory.getAbsolutePath());
-                return;
-            }
-
-            ZipInputStream zis = new
-                    ZipInputStream(new BufferedInputStream(is));
-            ZipEntry entry;
-            while ((entry = zis.getNextEntry()) != null) {
-                if (entry.isDirectory()) {
-                    File entryDir = new File(unzipDestinationDirectory.getAbsolutePath() + File.separator + entry.getName());
-                    created = entryDir.mkdir();
-                    if (!created) {
-                        log.error("Could not create DIR : " + unzipDestinationDirectory.getAbsolutePath() +
-                                File.separator + entry.getName());
-                    }
-                } else {
-                    int count;
-                    byte data[] = new byte[BYTE_BUFFER_SIZE];
-                    // write the files to the disk
-                    FileOutputStream fos = new
-                            FileOutputStream(unzipDestinationDirectory.getAbsolutePath() + File.separator + entry.getName());
-                    dest = new
-                            BufferedOutputStream(fos, BYTE_BUFFER_SIZE);
-                    while ((count = zis.read(data, 0, BYTE_BUFFER_SIZE))
-                            != -1) {
-                        dest.write(data, 0, count);
-                    }
-                    dest.flush();
-                }
-            }
-            zis.close();
-        } catch (IOException e) {
-            log.error("Could not unzip the Jaggery App Archive", e);
-        } finally {
-            try {
-                if (dest != null) {
-                    dest.close();
-                }
-            } catch (IOException e) {/* we can't do anything */
-
-            }
-        }
     }
 
 }

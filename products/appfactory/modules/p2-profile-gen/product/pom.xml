@@ -163,6 +163,11 @@
                                     org.wso2.carbon:org.wso2.carbon.ldap.server.feature:${wso2carbon.version}
                                 </featureArtifactDef>
 
+                                <!-- webapp management feature -->
+                                <featureArtifactDef>
+                                    org.wso2.carbon:org.wso2.carbon.webapp.mgt.feature:${carbon.version}
+                                </featureArtifactDef>
+
                             </featureArtifacts>
                         </configuration>
                     </execution>
@@ -275,6 +280,12 @@
                                 </feature>
                                 <feature>
                                     <id>org.wso2.carbon.identity.relying.party.feature.group</id>
+                                    <version>${carbon.version}</version>
+                                </feature>
+
+                                <!-- webapp management features -->
+                                <feature>
+                                    <id>org.wso2.carbon.webapp.mgt.feature.group</id>
                                     <version>${carbon.version}</version>
                                 </feature>
 

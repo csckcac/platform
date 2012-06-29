@@ -35,6 +35,12 @@
             <class name="org.wso2.carbon.mediator.tests.rewrite.ReWriteFullUrlTestCase"/>
             <class name="org.wso2.carbon.mediator.tests.rewrite.RemoveReWriteHostNameTestCase"/>
             <class name="org.wso2.carbon.mediator.tests.rewrite.RemoveReWritePortTestCase"/>
+            <class name="org.wso2.carbon.mediator.tests.rewrite.RemoveReWritePathTestCase"/>
+            <class name="org.wso2.carbon.mediator.tests.rewrite.RemoveReWriteFullUrlTestCase"/>
+            <class name="org.wso2.carbon.mediator.tests.rewrite.AppendProtocolTestCase"/>
+            <class name="org.wso2.carbon.mediator.tests.rewrite.AppendHostNameTestCase"/>
+            <class name="org.wso2.carbon.mediator.tests.rewrite.AppendPortTestCase"/>
+            <class name="org.wso2.carbon.mediator.tests.rewrite.AppendPathTestCase"/>
 
         </classes>
     </test>

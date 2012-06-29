@@ -4,22 +4,24 @@
            startOnLoad="true">
         <target>
             <inSequence>
-                <property name="path.value" value="services" scope="default"/>
+                <property name="protocol" value="p" scope="default"/>
                 <log level="full"/>
                 <rewrite>
                     <rewriterule>
                         <condition>
-                            <equal xmlns="" type="url" source="protocol" value="https"/>
+                            <equal xmlns="" type="url" source="protocol" value="htt"/>
                         </condition>
-                        <action value="services" regex="soap" type="replace" fragment="path"/>
-                        <action value="http" fragment="protocol" type="set"/>
+                        <action xpath="get-property('protocol')" type="append" fragment="protocol"/>
+                        <action value="9000" regex="\w.*" type="replace" fragment="port"/>
                     </rewriterule>
                     <rewriterule>
                         <condition>
-                            <equal xmlns="" type="url" source="protocol" value="http"/>
+                            <equal xmlns="" type="url" source="protocol" value="https"/>
                         </condition>
-                        <action xpath="get-property('path.value')" regex="soap" type="replace"
-                                fragment="path"/>
+                        <action value="s" type="append" fragment="protocol"/>
+                        <action type="remove" fragment="protocol"/>
+                        <action value="http" type="set" fragment="protocol"/>
+                        <action value="9000" regex="\w.*" type="replace" fragment="port"/>
                     </rewriterule>
                 </rewrite>
                 <log level="full"/>

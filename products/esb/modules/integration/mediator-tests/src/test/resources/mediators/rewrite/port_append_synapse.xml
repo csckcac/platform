@@ -1,25 +1,24 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <definitions xmlns="http://ws.apache.org/ns/synapse">
-    <proxy name="urlRewriteProxy" transports="https,http" statistics="disable" trace="disable"
-           startOnLoad="true">
+    <proxy name="urlRewriteProxy" transports="https,http"
+           statistics="disable" trace="disable" startOnLoad="true">
         <target>
             <inSequence>
-                <property name="path.value" value="services" scope="default"/>
+                <property name="port.append" value="0" scope="default"/>
                 <log level="full"/>
                 <rewrite>
                     <rewriterule>
                         <condition>
-                            <equal xmlns="" type="url" source="protocol" value="https"/>
+                            <equal xmlns="" type="url" source="protocol" value="http"/>
                         </condition>
-                        <action value="services" regex="soap" type="replace" fragment="path"/>
-                        <action value="http" fragment="protocol" type="set"/>
+                        <action value="0" type="append" fragment="port"/>
                     </rewriterule>
                     <rewriterule>
                         <condition>
-                            <equal xmlns="" type="url" source="protocol" value="http"/>
+                            <equal xmlns="" type="url" source="protocol" value="https"/>
                         </condition>
-                        <action xpath="get-property('path.value')" regex="soap" type="replace"
-                                fragment="path"/>
+                        <action xpath="get-property('port.append')" type="append" fragment="port"/>
+                        <action value="http" fragment="protocol" type="set"/>
                     </rewriterule>
                 </rewrite>
                 <log level="full"/>

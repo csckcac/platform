@@ -5,6 +5,7 @@
         <target>
             <inSequence>
                 <property name="host.name" value="localhost" scope="default"/>
+                <log level="full"/>
                 <rewrite>
                     <rewriterule>
                         <action xpath="get-property('host.name')" regex="\w.*" type="replace"

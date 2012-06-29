@@ -5,6 +5,7 @@
         <target>
             <inSequence>
                 <property name="http.port" value="9000" scope="default"/>
+                <log level="full"/>
                 <rewrite>
                     <rewriterule>
                         <condition>

@@ -4,6 +4,7 @@
            statistics="disable" trace="disable" startOnLoad="true">
         <target>
             <inSequence>
+                <log level="full"/>
                 <rewrite>
                     <rewriterule>
                         <action type="remove" fragment="host"/>

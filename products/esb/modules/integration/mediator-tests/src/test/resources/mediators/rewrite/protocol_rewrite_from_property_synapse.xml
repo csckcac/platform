@@ -5,6 +5,7 @@
         <target>
             <inSequence>
                 <property name="protocol" value="http" scope="default"/>
+                <log level="full"/>
                 <rewrite>
                     <rewriterule>
                         <action xpath="get-property('protocol')" regex="\w.*" type="replace"

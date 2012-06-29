@@ -4,6 +4,7 @@
         <description/>
         <target>
             <inSequence>
+                <log level="full"/>
                 <rewrite>
                     <rewriterule>
                         <action value="http" regex="\w.*" type="replace" fragment="protocol"/>

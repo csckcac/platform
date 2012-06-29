@@ -27,12 +27,12 @@ import org.wso2.esb.integration.axis2.StockQuoteClient;
 
 import static org.testng.Assert.assertTrue;
 
-public class RemoveReWriteHostNameTestCase extends ESBIntegrationTestCase {
+public class RemoveReWritePathTestCase extends ESBIntegrationTestCase {
     private StockQuoteClient axis2Client;
 
     public void init() throws Exception {
         axis2Client = new StockQuoteClient();
-        String filePath = "/mediators/rewrite/remove_rewrite_host_synapse.xml";
+        String filePath = "/mediators/rewrite/remove_rewrite_path_synapse.xml";
         loadESBConfigurationFromClasspath(filePath);
         launchBackendAxis2Service(SampleAxis2Server.SIMPLE_STOCK_QUOTE_SERVICE);
 
@@ -40,7 +40,7 @@ public class RemoveReWriteHostNameTestCase extends ESBIntegrationTestCase {
 
     @Test(priority = 1, groups = {"wso2.esb"}, description = "Remove and rewrite host name",
           dataProvider = "addressingUrl")
-    public void removeAndReWriteHostName(String addUrl) throws AxisFault {
+    public void removeAndReWritePath(String addUrl) throws AxisFault {
         OMElement response;
 
         response = axis2Client.sendSimpleStockQuoteRequest(
@@ -61,8 +61,10 @@ public class RemoveReWriteHostNameTestCase extends ESBIntegrationTestCase {
     @DataProvider(name = "addressingUrl")
     public Object[][] addressingUrl() {
         return new Object[][]{
-                {"http://10.100.10.9:9000/services/SimpleStockQuoteService"},
-                {"http://test.com:9000/services/SimpleStockQuoteService"},
+                {"http://localhost:9000/soap/SimpleStockQuoteService"},
+                {"http://localhost:9000/SimpleStockQuoteService"},
+                {"http://localhost:9000/soap/SimpleStockQuote"},
+                {"http://localhost:9000/soap/service/SimpleStockQuote"},
         };
 
     }

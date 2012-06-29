@@ -40,7 +40,7 @@ public class UrlReWriteByContext extends ESBIntegrationTestCase {
     }
 
     @Test(priority = 1, groups = {"wso2.esb"}, description = "Conditional URL Rewriting",
-    dataProvider = "addressingUrl")
+          dataProvider = "addressingUrl")
     public void reWriteContext(String addUrl) throws AxisFault {
         OMElement response;
 
@@ -62,7 +62,9 @@ public class UrlReWriteByContext extends ESBIntegrationTestCase {
     public Object[][] addressingUrl() {
         return new Object[][]{
                 {"http://localhost:9000/soap/SimpleStockQuoteService"},
-                {"http://localhost:9000/services/SimpleStockQuoteService"}
+                {"http://localhost:9000/services/SimpleStockQuoteService"},
+                {"https://localhost:9000/soap/SimpleStockQuoteService"},
+                {"https://localhost:9000/services/SimpleStockQuoteService"}
         };
 
 

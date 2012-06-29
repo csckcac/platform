@@ -27,7 +27,7 @@ var F = File;
 	
     //over riding the print funtion
     print = function (text) {       
-            htmlResult += text;        
+            htmlResult += stringify(text);
     };
 
     File = function (path) {

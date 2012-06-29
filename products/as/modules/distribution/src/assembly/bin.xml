@@ -454,6 +454,12 @@
             <fileMode>644</fileMode>
         </file>
         <file>
+            <source>src/resources/db/demo.h2.db</source>
+            <outputDirectory>${pom.artifactId}-${pom.version}/tmp/</outputDirectory>
+            <filtered>true</filtered>
+			<fileMode>644</fileMode>
+        </file>
+        <file>
             <source>
                 ../p2-profile-gen/target/wso2carbon-core-${carbon.version}/repository/conf/claim-config.xml
             </source>

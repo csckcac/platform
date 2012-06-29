@@ -30,9 +30,13 @@ import org.wso2.carbon.humantask.stub.mgt.types.HumanTaskPackageDownloadData;
 import org.wso2.carbon.humantask.stub.ui.task.client.api.HumanTaskClientAPIAdminStub;
 import org.wso2.carbon.humantask.stub.ui.task.client.api.types.TComment;
 import org.wso2.carbon.humantask.stub.ui.task.client.api.types.TPriority;
+import org.wso2.carbon.humantask.stub.ui.task.client.api.types.TSimpleQueryCategory;
+import org.wso2.carbon.humantask.stub.ui.task.client.api.types.TSimpleQueryInput;
 import org.wso2.carbon.humantask.stub.ui.task.client.api.types.TTaskAbstract;
 import org.wso2.carbon.humantask.stub.ui.task.client.api.types.TTaskEvent;
 import org.wso2.carbon.humantask.stub.ui.task.client.api.types.TTaskEvents;
+import org.wso2.carbon.humantask.stub.ui.task.client.api.types.TTaskSimpleQueryResultRow;
+import org.wso2.carbon.humantask.stub.ui.task.client.api.types.TTaskSimpleQueryResultSet;
 
 import java.math.BigInteger;
 import java.util.HashSet;
@@ -68,6 +72,20 @@ public class TaskOperationsTestCase {
 
         Assert.assertNotNull(downloadData.getPackageFileData(), "The downloaded package data cannot be null");
         Assert.assertEquals(downloadData.getPackageName(), HumanTaskTestConstants.CLAIMS_APPROVAL_PACKAGE_NAME + ".zip");
+    }
+
+    @Test(groups = {"wso2.bps"}, description = "package download test case")
+    public void testSimpleTaskQuery() throws Exception {
+        TSimpleQueryInput queryInput = new TSimpleQueryInput();
+        queryInput.setPageNumber(0);
+        queryInput.setSimpleQueryCategory(TSimpleQueryCategory.ALL_TASKS);
+
+        TTaskSimpleQueryResultSet allTasksList = taskOperationsStub.simpleQuery(queryInput);
+
+        TTaskSimpleQueryResultRow[] rows = allTasksList.getRow();
+
+        Assert.assertNotNull(rows, "The task results cannot be null");
+        Assert.assertEquals(rows.length, 3, "There should be 3 tasks from the query");
     }
 
     @Test(groups = {"wso2.bps"}, description = "Claims approval test case")

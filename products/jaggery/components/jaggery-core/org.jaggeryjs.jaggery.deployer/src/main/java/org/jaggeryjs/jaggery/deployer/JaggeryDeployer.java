@@ -99,4 +99,10 @@ public class JaggeryDeployer extends WebappDeployer {
         }
     }
 
+    public void undeploy(String fileName) throws DeploymentException {
+        if (!new File(fileName).exists()) {
+            super.undeploy(fileName);
+        }
+    }
+
 }

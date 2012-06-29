@@ -96,7 +96,7 @@ public class TomcatJaggeryWebappsDeployer extends TomcatGenericWebappsDeployer {
                 handleHotDeployment(webappFile, webContextParams, applicationEventListeners);
             } else if (deployedWebapp != null && deployedWebapp.getLastModifiedTime() != lastModifiedTime &&
                     (configLastModified != 0 && deployedWebapp.getConfigDirLastModifiedTime() != configLastModified)) {
-                webappsHolder.undeployWebapp(deployedWebapp);
+                undeploy(webappFile);
                 handleHotDeployment(webappFile, webContextParams, applicationEventListeners);
             } else if (faultyWebapp != null && faultyWebapp.getLastModifiedTime() != lastModifiedTime &&
                     (configLastModified != 0 && faultyWebapp.getConfigDirLastModifiedTime() != configLastModified)) {

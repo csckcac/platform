@@ -45,7 +45,7 @@ public class JaggeryApplication extends WebApplication {
         setWebappFile(webappFile);
         setLastModifiedTime(webappFile.lastModified());
         if (JaggeryDeploymentUtil.getConfig(webappFile) != null) {
-            this.configDirLastModifiedTime = JaggeryDeploymentUtil.getConfig(webappFile).lastModified();
+            setConfigDirLastModifiedTime(JaggeryDeploymentUtil.getConfig(webappFile).lastModified());
         }
     }
 
@@ -54,7 +54,7 @@ public class JaggeryApplication extends WebApplication {
         setWebappFile(webappFile);
         setLastModifiedTime(webappFile.lastModified());
         if (JaggeryDeploymentUtil.getConfig(webappFile) != null) {
-            this.configDirLastModifiedTime = JaggeryDeploymentUtil.getConfig(webappFile).lastModified();
+            setConfigDirLastModifiedTime(JaggeryDeploymentUtil.getConfig(webappFile).lastModified());
         }
     }
 

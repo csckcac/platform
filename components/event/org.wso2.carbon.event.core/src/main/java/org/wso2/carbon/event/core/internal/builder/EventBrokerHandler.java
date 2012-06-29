@@ -63,8 +63,9 @@ public class EventBrokerHandler implements EventBundleNotificationService {
 
             this.context.getBundleContext().registerService(
                     Axis2ConfigurationContextObserver.class.getName(), observer, null);
-
-            log.info("Successfully registered the event broker");
+            if(log.isDebugEnabled()){ 
+				log.info("Successfully registered the event broker");
+			}
         } catch (EventBrokerConfigurationException e) {
             log.error("Can not create the event broker", e);
         } finally {

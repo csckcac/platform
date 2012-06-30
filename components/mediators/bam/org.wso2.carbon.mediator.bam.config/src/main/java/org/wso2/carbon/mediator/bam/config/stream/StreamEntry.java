@@ -21,10 +21,15 @@ package org.wso2.carbon.mediator.bam.config.stream;
 public class StreamEntry {
 
     private String name = "";
+    private String value = "";
     private String type = "";
 
     public void setName(String name){
         this.name = name;
+    }
+
+    public void setValue(String value) {
+        this.value = value;
     }
 
     public void setType(String type){
@@ -33,6 +38,10 @@ public class StreamEntry {
 
     public String getName(){
         return this.name;
+    }
+
+    public String getValue() {
+        return value;
     }
 
     public String getType(){

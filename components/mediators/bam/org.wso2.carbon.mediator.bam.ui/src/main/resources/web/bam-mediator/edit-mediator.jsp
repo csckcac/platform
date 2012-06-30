@@ -143,13 +143,6 @@
                         </tr>
                     </table>
                 </td>
-
-                <%--<td>
-                    <a href="#registryBrowserLink"
-                       class="registry-picker-icon-link"
-                       onclick="showRegistryBrowser('serverProfile','/_system/governance')"><fmt:message key="gov.registry.browser"/>
-                    </a>
-                </td>--%>
             </tr>
 
             <tr>
@@ -162,30 +155,23 @@
             <tr>
                 <td><fmt:message key="stream.name"/></td>
                 <td>
-                    <%--<input type="text" name="streamName" id="streamName" value="<%=streamName%>"/>--%>
-
                     <select name="streamNameList" id="streamNameList" disabled="disabled" onchange="selectStreamVersionList()">
                         <option>- Select Stream Name -</option>
                     </select>
                     <script type="text/javascript">
                         loadStreamNames("<%=serverProfilePath%>", "<%=streamName%>");
                     </script>
-
-
                 </td>
             </tr>
             <tr>
                 <td><fmt:message key="stream.version"/></td>
                 <td>
-                    <%--<input type="text" name="streamVersion" id="streamVersion" value="<%=streamVersion%>"/>--%>
-
                     <select name="streamVersionList" id="streamVersionList" disabled="disabled">
                         <option>- Select Stream Version -</option>
                     </select>
                     <script type="text/javascript">
                         loadStreamVersions("<%=serverProfilePath%>", "<%=streamName%>", "<%=streamVersion%>");
                     </script>
-
                 </td>
             </tr>
 

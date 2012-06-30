@@ -27,6 +27,7 @@ import org.wso2.carbon.mediator.bam.config.BamServerConfigBuilder;
 import org.wso2.carbon.mediator.bam.config.BamServerConfigXml;
 import org.wso2.carbon.mediator.bam.config.stream.StreamConfiguration;
 import org.wso2.carbon.mediator.bam.config.stream.Property;
+import org.wso2.carbon.mediator.bam.config.stream.StreamEntry;
 
 import javax.xml.stream.XMLStreamException;
 import java.io.ByteArrayInputStream;
@@ -131,6 +132,10 @@ public class BamServerProfileUtils {
         Property currentProperty;
         String propertiesString;
         String[] properties;
+        String dump;
+        boolean dumpHeader = true;
+        boolean dumpBody = true;
+        StreamEntry headerEntry, bodyEntry;
 
         String [] streams = streamConfigurationListString.split("~");
         if(streams != null){
@@ -141,7 +146,7 @@ public class BamServerProfileUtils {
                     currentStreamConfiguration.setVersion(stream.split("\\^")[1]);
                     currentStreamConfiguration.setNickname(stream.split("\\^")[2]);
                     currentStreamConfiguration.setDescription(stream.split("\\^")[3]);
-                    if(stream.split("\\^").length > 4){ // Only when properties exist
+                    if(stream.split("\\^").length > 4 && (stream.split("\\^")[4].contains(":") || stream.split("\\^")[5].contains(":"))){ // Only when properties exist
                         propertiesString = stream.split("\\^")[4];
                         properties = propertiesString.split(";");
                         for (String property : properties) {
@@ -151,6 +156,25 @@ public class BamServerProfileUtils {
                                 currentProperty.setValue(property.split(":")[1]);
                                 currentStreamConfiguration.getProperties().add(currentProperty);
                             }
+                        }
+                    }
+                    if(stream.split("\\^")[stream.split("\\^").length-1].contains(";") && !stream.split("\\^")[stream.split("\\^").length-1].contains(":")){
+                        dump = stream.split("\\^")[stream.split("\\^").length-1];
+                        dumpHeader = dump.split(";")[0].equals("dump");
+                        dumpBody = dump.split(";")[1].equals("dump");
+                        if(dumpHeader){
+                            headerEntry = new StreamEntry();
+                            headerEntry.setName("SOAPHeader");
+                            headerEntry.setValue("$SOAPHeader");
+                            headerEntry.setType("STRING");
+                            currentStreamConfiguration.getEntries().add(headerEntry);
+                        }
+                        if(dumpBody){
+                            bodyEntry = new StreamEntry();
+                            bodyEntry.setName("SOAPBody");
+                            bodyEntry.setValue("$SOAPBody");
+                            bodyEntry.setType("STRING");
+                            currentStreamConfiguration.getEntries().add(bodyEntry);
                         }
                     }
                     streamConfigurations.add(currentStreamConfiguration);
@@ -195,12 +219,23 @@ public class BamServerProfileUtils {
         return cipherTextPassword; // TODO
     }
 
-    public String getPropertiesString(StreamConfiguration streamConfiguration){
+    public String getStreamConfigurationListString(StreamConfiguration streamConfiguration){
         String returnString = "";
         if(streamConfiguration != null){
             List<Property> properties = streamConfiguration.getProperties();
             for (Property property : properties) {
                 returnString = returnString + property.getKey() + ":" + property.getValue() + ";";
+            }
+            returnString = returnString + "^";
+            List<StreamEntry> streamEntries = streamConfiguration.getEntries();
+            if(streamEntries.size() == 2){
+                returnString = returnString + "dump;dump";
+            } else if (streamEntries.size() == 1 && streamEntries.get(0).getValue().equals("$SOAPHeader")){
+                returnString = returnString + "dump;notDump";
+            } else if (streamEntries.size() == 1 && streamEntries.get(0).getValue().equals("$SOAPBody")){
+                returnString = returnString + "notDump;dump";
+            } else if (streamEntries.size() == 0){
+                returnString = returnString + "notDump;notDump";
             }
             return returnString;
         } else {

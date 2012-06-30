@@ -238,6 +238,30 @@
                 jQuery("#streamsTable_" + document.getElementById("hfStreamTableRowNumber").value).css("background-color","");
             }
 
+            function saveDumpData(){
+                var data = "";
+                if(document.getElementById("mHeader").checked){
+                    data = "dump";
+                } else{
+                    data = "notDump";
+                }
+                data = data + ";";
+                if(document.getElementById("mBody").checked){
+                    data = data + "dump";
+                } else{
+                    data = data + "notDump";
+                }
+                var streamRowNumber = document.getElementById("hfStreamTableRowNumber").value;
+                document.getElementById("hfStreamsTable_" + streamRowNumber).value = document.getElementById("hfStreamsTable_" + streamRowNumber).value + "^" + data;
+                document.getElementById("mHeader").checked = "checked";
+                document.getElementById("mBody").checked = "checked";
+            }
+
+            function saveStreamData(){
+                savePropertyTableData();
+                saveDumpData();
+            }
+
             function editStreamData(rowNumber){
                 //alert("rowID : " + rowNumber);
                 jQuery("#streamsTable_" + document.getElementById("hfStreamTableRowNumber").value).css("background-color","");
@@ -245,12 +269,14 @@
                 document.getElementById("propertiesTr").style.display = "";
                 document.getElementById("hfStreamTableRowNumber").value = rowNumber;
                 loadPropertyDataTable();
+                loadDumpData();
             }
 
             function loadPropertyDataTable(){
                 emptyPropertyTable();
                 var rowNumber =  document.getElementById("hfStreamTableRowNumber").value;
-                var propertyDataString = document.getElementById("streamsTable_" + rowNumber).getElementsByTagName("input")[4].value;
+                var configDataString = document.getElementById("streamsTable_" + rowNumber).getElementsByTagName("input")[4].value;
+                var propertyDataString = configDataString.split("^")[0];
                 var propertyDataArray = propertyDataString.split(";");
                 var numOfProperties = 0;
                 for(var i=0; i<propertyDataArray.length; i++){
@@ -266,6 +292,29 @@
                     }
                 }
                 updatePropertyTableData();
+            }
+
+            function loadDumpData(){
+                cancelDumpData();
+                var rowNumber =  document.getElementById("hfStreamTableRowNumber").value;
+                var configDataString = document.getElementById("streamsTable_" + rowNumber).getElementsByTagName("input")[4].value;
+                var dumpDataString = "";
+                if(configDataString.split("^").length == 2){
+                    dumpDataString = configDataString.split("^")[1];
+                    var dumpDataArray = dumpDataString.split(";");
+                    if(dumpDataArray.length == 2){
+                        if(dumpDataArray[0] == "dump"){
+                            document.getElementById("mHeader").checked = "checked";
+                        } else {
+                            document.getElementById("mHeader").checked = "";
+                        }
+                        if(dumpDataArray[1] == "dump"){
+                            document.getElementById("mBody").checked = "checked";
+                        } else {
+                            document.getElementById("mBody").checked = "";
+                        }
+                    }
+                }
             }
 
             function emptyPropertyTable(){
@@ -285,6 +334,16 @@
                 emptyPropertyTable();
                 document.getElementById("propertiesTr").style.display = "none";
                 jQuery("#streamsTable_" + document.getElementById("hfStreamTableRowNumber").value).css("background-color","");
+            }
+
+            function cancelDumpData(){
+                document.getElementById("mHeader").checked = "checked";
+                document.getElementById("mBody").checked = "checked";
+            }
+
+            function cancelStreamData(){
+                cancelPropertyTableData();
+                cancelDumpData();
             }
 
             function updateStreamTableData(){
@@ -395,20 +454,6 @@
     <div id="workArea">
         <form action="configure_server_profiles.jsp" method="post">
         <table>
-            <%--<tr>
-                <td>
-                    Registry
-                </td>
-                <td>
-                    <input type="text" name="txtServerProfileLocation" id="txtServerProfileLocation" value="<%=serverProfileLocation%>"/>
-                    <input type="submit" value="Load Profile" onclick="document.getElementById('hfAction').value='load';"/>
-                    <input type="hidden" name="hfAction" id="hfAction" value=""/>
-                </td>
-            </tr>--%>
-
-
-
-
             <tr>
                 <td>
                     <fmt:message key="profile.location"/><span class="required">*</span>
@@ -480,7 +525,7 @@
             <tr>
                 <td colspan="2">
                     <h3>
-                        <fmt:message key="stream.configuration"/>
+                        <fmt:message key="streams.configuration"/>
                     </h3>
                 </td>
             </tr>
@@ -533,7 +578,7 @@
                                         url(images/add.gif);'class='icon-link addIcon'>Add Stream</a></span>
                                     <span><a onClick='javaScript:editStreamData("<%=i%>")' style='background-image:
                                         url(../admin/images/edit.gif);'class='icon-link addIcon'>Edit Stream</a></span>
-                                    <input type="hidden" id="hfStreamsTable_<%=i%>" value="<%=bamServerProfileUtils.getPropertiesString(streamConfiguration)%>"/>
+                                    <input type="hidden" id="hfStreamsTable_<%=i%>" value="<%=bamServerProfileUtils.getStreamConfigurationListString(streamConfiguration)%>"/>
                                 </td>
                                 <% } else {  %>
                                 <td>
@@ -541,7 +586,7 @@
                                         url(../admin/images/delete.gif);'class='icon-link addIcon'>Remove Stream</a></span>
                                     <span><a onClick='javaScript:editStreamData("<%=i%>")' style='background-image:
                                         url(../admin/images/edit.gif);'class='icon-link addIcon'>Edit Stream</a></span>
-                                    <input type="hidden" id="hfStreamsTable_<%=i%>" value="<%=bamServerProfileUtils.getPropertiesString(streamConfiguration)%>"/>
+                                    <input type="hidden" id="hfStreamsTable_<%=i%>" value="<%=bamServerProfileUtils.getStreamConfigurationListString(streamConfiguration)%>"/>
                                 </td>
                                 <% } %>
 
@@ -588,37 +633,86 @@
                     <input name="hfPropertyTableData" id="hfPropertyTableData" type="hidden" value="" />
                     <input id="hfStreamTableRowNumber" type="hidden" value="1" />
                     <h3>
-                        <fmt:message key="stream.properties"/>
+                        <fmt:message key="stream.configuration"/>
                     </h3>
-                    <table id="propertyTable" width="100%" class="styledLeft" style="margin-left: 0px;">
-                        <thead>
-                            <tr>
-                                <th width="40%">
-                                    <fmt:message key="property.name"/>
-                                </th>
-                                <th width="40%">
-                                    <fmt:message key="property.value"/>
-                                </th>
-                                <th></th>
-                            </tr>
-                        </thead>
-                        <tbody>
-                            <tr id="propertyTable_1">
-                                <td>
-                                    <input type="text" name="<%=PROPERTY_KEYS%>" value=""/>
-                                </td>
-                                <td>
-                                    <input type="text" name="<%=PROPERTY_VALUES%>" value=""/>
-                                </td>
 
-                                <td>
-                                    <a onClick='javaScript:addPropertyRow()' style='background-image: url(images/add.gif);'class='icon-link addIcon'>Add Property</a>
-                                </td>
-                            </tr>
-                        </tbody>
+                    <table>
+                        <tr>
+                            <td>
+                                <h4>
+                                    <fmt:message key="stream.payload"/>
+                                </h4>
+                            </td>
+                        </tr>
+                        <tr>
+                            <td>
+                                <table>
+                                    <tr>
+                                        <td>
+                                            <fmt:message key="dump.header"/>
+                                        </td>
+                                        <td>
+                                            <input type="checkbox" id="mHeader" name="mHeader" checked="checked" value="dump"/>
+                                        </td>
+                                    </tr>
+                                    <tr>
+                                        <td>
+                                            <fmt:message key="dump.body"/>
+                                        </td>
+                                        <td>
+                                            <input type="checkbox" id="mBody" name="mBody" checked="checked" value="dump"/>
+                                        </td>
+                                    </tr>
+                                </table>
+                            </td>
+                        </tr>
+
+
+                        <tr>
+                            <td>
+                                <h4>
+                                    <fmt:message key="stream.properties"/>
+                                </h4>
+                            </td>
+                        </tr>
+                        <tr>
+                            <td>
+                                <table id="propertyTable" width="100%" class="styledLeft" style="margin-left: 0px;">
+                                    <thead>
+                                    <tr>
+                                        <th width="40%">
+                                            <fmt:message key="property.name"/>
+                                        </th>
+                                        <th width="40%">
+                                            <fmt:message key="property.value"/>
+                                        </th>
+                                        <th></th>
+                                    </tr>
+                                    </thead>
+                                    <tbody>
+                                    <tr id="propertyTable_1">
+                                        <td>
+                                            <input type="text" name="<%=PROPERTY_KEYS%>" value=""/>
+                                        </td>
+                                        <td>
+                                            <input type="text" name="<%=PROPERTY_VALUES%>" value=""/>
+                                        </td>
+
+                                        <td>
+                                            <a onClick='javaScript:addPropertyRow()' style='background-image: url(images/add.gif);'class='icon-link addIcon'>Add Property</a>
+                                        </td>
+                                    </tr>
+                                    </tbody>
+                                </table>
+                            </td>
+                        </tr>
+                        <tr>
+                            <td>
+                                <input type="button" value="Update" onclick="saveStreamData()"/>
+                                <input type="button" value="Cancel" onclick="cancelStreamData()"/>
+                            </td>
+                        </tr>
                     </table>
-                    <input type="button" value="Update" onclick="savePropertyTableData()"/>
-                    <input type="button" value="Cancel" onclick="cancelPropertyTableData()"/>
                 </td>
             </tr>
 

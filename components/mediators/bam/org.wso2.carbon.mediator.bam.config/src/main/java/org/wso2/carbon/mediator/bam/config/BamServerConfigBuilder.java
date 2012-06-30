@@ -78,23 +78,6 @@ public class BamServerConfigBuilder {
         return null;
     }
 
-    /*public String getUserName(OMElement bamServerConfig){
-        OMElement credentialElement = bamServerConfig.getFirstChildWithName(
-                new QName(SynapseConstants.SYNAPSE_NAMESPACE, "credential"));
-        if(credentialElement != null && !credentialElement.equals("")){
-            OMAttribute pathAttr = credentialElement.getAttribute(new QName("path"));
-            if (pathAttr != null && !pathAttr.equals("")){
-                return pathAttr.getAttributeValue();
-            }
-            else {
-                return null;
-            }
-        }
-        else {
-            return null;
-        }
-    }*/
-
     private boolean processCredentialElement(OMElement bamServerConfig){
         OMElement credentialElement = bamServerConfig.getFirstChildWithName(
                 new QName(SynapseConstants.SYNAPSE_NAMESPACE, "credential"));
@@ -168,12 +151,12 @@ public class BamServerConfigBuilder {
             streamConfiguration.setNickname(nickNameAttr.getAttributeValue());
             streamConfiguration.setDescription(descriptionAttr.getAttributeValue());
 
-            /*boolean payloadElementOk = this.processPayloadElement(streamElement, streamConfiguration);
+            boolean payloadElementOk = this.processPayloadElement(streamElement, streamConfiguration);
 
             boolean propertiesElementOk = this.processPropertiesElement(streamElement, streamConfiguration);
         
-            return (payloadElementOk & propertiesElementOk);*/
-            return this.processPropertiesElement(streamElement, streamConfiguration);
+            return (payloadElementOk & propertiesElementOk);
+            /*return this.processPropertiesElement(streamElement, streamConfiguration);*/
         }
         return false; // Incomplete attributes are not accepted
     }
@@ -192,27 +175,26 @@ public class BamServerConfigBuilder {
         Iterator itr = payloadElement.getChildrenWithName(new QName("entry"));
         while (itr.hasNext()){
             entryElement = (OMElement)itr.next();
-            if (entryElement != null && this.processEntryElement(entryElement, streamConfiguration)){
-
-            }
-            else {
+            if (!(entryElement != null && this.processEntryElement(entryElement, streamConfiguration))){
                 return false;
             }
         }
-        return true;
+        return true; // Empty Entry elements are accepted
     }
 
     private boolean processEntryElement(OMElement entryElement, StreamConfiguration streamConfiguration){
         OMAttribute nameAttr = entryElement.getAttribute(new QName("name"));
+        OMAttribute valueAttr = entryElement.getAttribute(new QName("value"));
         OMAttribute typeAttr = entryElement.getAttribute(new QName("type"));
-        if(nameAttr != null && typeAttr != null && !nameAttr.getAttributeValue().equals("") && !typeAttr.getAttributeValue().equals("")){
+        if(nameAttr != null && valueAttr != null && typeAttr != null && !nameAttr.getAttributeValue().equals("") && !valueAttr.getAttributeValue().equals("") && !typeAttr.getAttributeValue().equals("")){
             StreamEntry streamEntry = new StreamEntry();
             streamEntry.setName(nameAttr.getAttributeValue());
+            streamEntry.setValue(valueAttr.getAttributeValue());
             streamEntry.setType(typeAttr.getAttributeValue());
             streamConfiguration.getEntries().add(streamEntry);
             return true;
         }
-        return false;
+        return false; // Empty Entry elements and incomplete Entry parameters are not accepted
     }
     
     private boolean processPropertiesElement(OMElement streamElement, StreamConfiguration streamConfiguration){

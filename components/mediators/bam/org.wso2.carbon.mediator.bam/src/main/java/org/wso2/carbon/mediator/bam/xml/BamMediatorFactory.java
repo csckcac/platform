@@ -141,6 +141,7 @@ public class BamMediatorFactory extends AbstractMediatorFactory {
         bamMediator.setServerIP(bamServerConfig.getIp());
         bamMediator.setServerPort(bamServerConfig.getPort());
         bamMediator.setProperties(bamServerConfig.getAUniqueStreamConfiguration(streamName, streamVersion).getProperties());
+        bamMediator.setStreamEntries(bamServerConfig.getAUniqueStreamConfiguration(streamName, streamVersion).getEntries());
     }
 
     private boolean isNotNullOrEmpty(String string){

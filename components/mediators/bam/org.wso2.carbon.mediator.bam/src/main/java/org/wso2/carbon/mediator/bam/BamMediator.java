@@ -47,11 +47,11 @@ import org.wso2.carbon.eventbridge.commons.Event;
 import org.wso2.carbon.eventbridge.commons.exception.*;
 import org.wso2.carbon.core.multitenancy.SuperTenantCarbonContext;
 import java.net.MalformedURLException;
-import java.util.Map;
 import java.util.UUID;
 
 import org.wso2.carbon.eventbridge.commons.thrift.exception.ThriftAuthenticationException;
 import org.wso2.carbon.mediator.bam.config.stream.Property;
+import org.wso2.carbon.mediator.bam.config.stream.StreamEntry;
 import org.wso2.carbon.mediator.bam.util.BamMediatorConstants;
 import org.wso2.carbon.utils.CarbonUtils;
 
@@ -77,6 +77,7 @@ public class BamMediator extends AbstractMediator {
     private String userName = "";
     private String password = "";
     private List<Property> properties = new ArrayList<Property>();
+    private List<StreamEntry> streamEntries = new ArrayList<StreamEntry>();
     private String streamId = null;
     private DataPublisher dataPublisher = null;
 
@@ -295,10 +296,11 @@ public class BamMediator extends AbstractMediator {
                                                    "          {'name':'Direction','type':'STRING'}," +
                                                    "          {'name':'Service','type':'STRING'}," +
                                                    "          {'name':'Operation','type':'STRING'}," +
-                                                   "          {'name':'MessageId','type':'STRING'}," +
-                                                   "          {'name':'SOAPHeader','type':'STRING'}," +
-                                                   "          {'name':'SOAPBody','type':'STRING'}" +
-                                                   this.getPropertyString() +
+                                                   "          {'name':'MessageId','type':'STRING'}" +
+                                                   /*"          {'name':'SOAPHeader','type':'STRING'}," +
+                                                   "          {'name':'SOAPBody','type':'STRING'}" +*/
+                                                   this.getEntityStreamDefinitionString() +
+                                                   this.getPropertyStreamDefinitionString() +
                                                    "  ]" +
                                                    "}");
         log.info("Event Stream Defined.");
@@ -307,8 +309,9 @@ public class BamMediator extends AbstractMediator {
     private Object[] createPayloadData(MessageContext messageContext,
                                        boolean direction, String service, String operation){
         int numOfProperties = properties.size();
+        int numOfEntities = streamEntries.size();
 
-        Object[] payloadData = new Object[numOfProperties + 6];
+        Object[] payloadData = new Object[numOfProperties + numOfEntities + 6];
         payloadData[0] = direction ?
                          BamMediatorConstants.DIRECTION_IN : BamMediatorConstants.DIRECTION_OUT;
         payloadData[1] = service;
@@ -319,6 +322,10 @@ public class BamMediator extends AbstractMediator {
 
         for (int i=0; i<numOfProperties; i++) {
             payloadData[6 + i] = properties.get(i).getValue();
+        }
+        
+        for (int i=0; i<numOfEntities; i++) {
+            payloadData[6 + numOfEntities + i] = this.produceEntityValue(streamEntries.get(i).getValue(), messageContext);
         }
 
         return payloadData;
@@ -336,12 +343,34 @@ public class BamMediator extends AbstractMediator {
         return correlationData;
     }
     
-    private String getPropertyString(){
+    private String getPropertyStreamDefinitionString(){
         String propertyString = "";
         for (Property property : properties) {
             propertyString = propertyString + ",        {'name':'" + property.getKey() + "','type':'STRING'}";
         }
         return propertyString;
+    }
+    
+    private String getEntityStreamDefinitionString(){
+        String entityString = "";
+        for (StreamEntry streamEntry : streamEntries) {
+            entityString = entityString + ",        {'name':'" + streamEntry.getName() + "','type':'" + streamEntry.getType() +"'}";
+        }
+        return entityString;
+    }
+    
+    private Object produceEntityValue(String valueName, MessageContext messageContext){
+        if(valueName.startsWith("$")){ // When entity value is a mediator parameter
+            if(valueName == "$SOAPHeader"){
+                return messageContext.getEnvelope().getHeader().toString();
+            } else if (valueName == "$SOAPBody"){
+                return messageContext.getEnvelope().getBody().toString();
+            } else {
+                return "Invalid Entity Parameter !";
+            }
+        } else {
+            return valueName;
+        }
     }
 
     public void setServerIP(String newValue) {
@@ -422,6 +451,14 @@ public class BamMediator extends AbstractMediator {
 
     public List<Property> getProperties(){
         return properties;
+    }
+
+    public List<StreamEntry> getStreamEntries() {
+        return streamEntries;
+    }
+
+    public void setStreamEntries(List<StreamEntry> streamEntries) {
+        this.streamEntries = streamEntries;
     }
 
 }

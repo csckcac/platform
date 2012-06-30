@@ -133,14 +133,19 @@ public class BamServerConfigXml {
 
         payloadElement = streamElement.getFirstChildWithName(
                 new QName(SynapseConstants.SYNAPSE_NAMESPACE, "payload"));
+        if(payloadElement == null){
+            streamElement.addChild(this.serializePayload());
+        }
         List<StreamEntry> streamEntries = streamConfiguration.getEntries();
         if(streamEntries != null){
             String tmpEntryName;
+            String tmpEntryValue;
             String tmpEntryType;
             for (StreamEntry streamEntry : streamEntries) {
                 tmpEntryName = streamEntry.getName();
+                tmpEntryValue = streamEntry.getValue();
                 tmpEntryType = streamEntry.getType();
-                payloadElement.addChild(this.serializeEntry(tmpEntryName, tmpEntryType));
+                payloadElement.addChild(this.serializeEntry(tmpEntryName, tmpEntryValue, tmpEntryType));
             }
         }
 
@@ -170,9 +175,10 @@ public class BamServerConfigXml {
         return payloadElement;
     }
 
-    private OMElement serializeEntry(String name, String type){
+    private OMElement serializeEntry(String name, String value, String type){
         OMElement entryElement = fac.createOMElement("entry", synNS);
         entryElement.addAttribute("name", name, nullNS);
+        entryElement.addAttribute("value", value, nullNS);
         entryElement.addAttribute("type", type, nullNS);
         return entryElement;
     }

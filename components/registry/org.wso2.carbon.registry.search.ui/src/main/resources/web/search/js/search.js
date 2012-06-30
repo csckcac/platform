@@ -403,7 +403,7 @@ function validateEmptyPropertyValues(){
 
     var leftVal = document.getElementById('valueLeft').value;
     var rightVal = document.getElementById('valueRight').value;
-    var opLeft = document.getElementById('opLeft');
+    var opRight = document.getElementById('opRight');
     var propertyName = document.getElementById('#_propertyName').value;
 
     if(leftVal != "" || rightVal != "") {

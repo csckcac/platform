@@ -192,6 +192,13 @@ public class EntitlementConstants {
                                                       "Please de-active this policy, If policy is not" +
                                                       " relevant for the search";
 
+    public static final String XACML_3_POLICY_XMLNS = "urn:oasis:names:tc:xacml:3.0:core:schema:wd-17";
 
+    public static final String XACML_2_POLICY_XMLNS = "urn:oasis:names:tc:xacml:2.0:policy:schema:os";
 
+    public static final String XACML_3_POLICY_SCHEMA = "xacml3.xsd";
+
+    public static final String XACML_2_POLICY_SCHEMA = "xacml2.xsd";
+
+    public static final String XACML_1_POLICY_SCHEMA = "xacml1.xsd";
 }

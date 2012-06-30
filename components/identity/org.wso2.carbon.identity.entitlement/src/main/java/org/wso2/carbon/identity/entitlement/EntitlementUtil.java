@@ -18,6 +18,9 @@
 package org.wso2.carbon.identity.entitlement;
 
 import java.io.ByteArrayOutputStream;
+import java.io.IOException;
+import java.io.InputStream;
+import java.io.StringReader;
 import java.io.StringWriter;
 import java.net.URI;
 import java.net.URISyntaxException;
@@ -42,24 +45,33 @@ import org.apache.commons.logging.Log;
 import org.apache.commons.logging.LogFactory;
 
 import org.wso2.balana.attr.AttributeValue;
-import org.wso2.balana.Attribute;
-import org.wso2.balana.xacml2.ctx.RequestCtx;
-import org.wso2.balana.ctx.Subject;
 import org.w3c.dom.Document;
 import org.w3c.dom.Element;
+import org.wso2.balana.Attribute;
+import org.wso2.balana.ctx.Subject;
+import org.wso2.balana.xacml2.ctx.RequestCtx;
 import org.wso2.carbon.identity.base.IdentityException;
 import org.wso2.carbon.identity.entitlement.dto.AttributeValueDTO;
+import org.wso2.carbon.identity.entitlement.dto.PolicyDTO;
 import org.wso2.carbon.utils.multitenancy.CarbonContextHolder;
 import org.wso2.carbon.utils.multitenancy.MultitenantConstants;
+import org.xml.sax.InputSource;
+import org.xml.sax.SAXException;
 
+import javax.xml.XMLConstants;
 import javax.xml.parsers.DocumentBuilder;
 import javax.xml.parsers.DocumentBuilderFactory;
 import javax.xml.parsers.ParserConfigurationException;
 import javax.xml.transform.Transformer;
 import javax.xml.transform.TransformerException;
 import javax.xml.transform.TransformerFactory;
+import javax.xml.transform.dom.DOMResult;
 import javax.xml.transform.dom.DOMSource;
 import javax.xml.transform.stream.StreamResult;
+import javax.xml.transform.stream.StreamSource;
+import javax.xml.validation.Schema;
+import javax.xml.validation.SchemaFactory;
+import javax.xml.validation.Validator;
 
 /**
  * 
@@ -382,6 +394,55 @@ public class EntitlementUtil {
 
         } catch(TransformerException e){
             throw new IdentityException("While transforming policy element to String", e);
+        }
+    }
+
+    /**
+     * Validates the given policy XML files against the standard XACML policies.
+     * @param policy Policy to validate
+     * @throws IdentityException If validation failed or XML parsing failed or any IOException occurs
+     */
+    public static void validatePolicy(PolicyDTO policy) throws IdentityException{
+        try {
+            //build XML document
+            DocumentBuilderFactory documentBuilderFactory = DocumentBuilderFactory.newInstance();
+            documentBuilderFactory.setNamespaceAware(true);
+            DocumentBuilder documentBuilder = documentBuilderFactory.newDocumentBuilder();
+            InputSource inputSource = new InputSource();
+            inputSource.setCharacterStream(new StringReader(policy.getPolicy()));
+            Document doc = documentBuilder.parse(inputSource);
+
+            //get policy version
+            Element policyElement = doc.getDocumentElement();
+            String policyXMLNS = policyElement.getAttribute("xmlns");
+
+            //load correct schema by version
+            InputStream schemaFileStream = null;
+            if(EntitlementConstants.XACML_3_POLICY_XMLNS.equals(policyXMLNS)){
+                schemaFileStream = EntitlementUtil.class.getResourceAsStream("/"+EntitlementConstants.XACML_3_POLICY_SCHEMA);
+            }
+            if(EntitlementConstants.XACML_2_POLICY_XMLNS.equals(policyXMLNS)){
+                schemaFileStream = EntitlementUtil.class.getResourceAsStream("/"+EntitlementConstants.XACML_2_POLICY_SCHEMA);
+            }else{
+                schemaFileStream = EntitlementUtil.class.getResourceAsStream("/"+EntitlementConstants.XACML_1_POLICY_SCHEMA);
+            }
+
+            //Do the DOM validation
+            DOMSource domSource = new DOMSource(doc);
+            DOMResult domResult = new DOMResult();
+            SchemaFactory schemaFactory = SchemaFactory.newInstance(XMLConstants.W3C_XML_SCHEMA_NS_URI);
+            Schema schema = schemaFactory.newSchema(new StreamSource(schemaFileStream));
+            Validator validator = schema.newValidator();
+            validator.validate(domSource,domResult);
+            log.info("XML validation succeeded");
+
+        } catch (SAXException e) {
+            log.info("XML validation failed :" +e.getMessage());
+            throw new IdentityException("XML Validation failed : "+e.getMessage());
+        } catch (IOException e) {
+            throw new IdentityException(e.getMessage());
+        } catch (ParserConfigurationException e) {
+            throw new IdentityException(e.getMessage());
         }
     }
 

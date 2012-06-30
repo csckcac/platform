@@ -19,6 +19,8 @@ package org.wso2.carbon.identity.entitlement;
 
 import org.apache.commons.logging.Log;
 import org.apache.commons.logging.LogFactory;
+import org.wso2.balana.AbstractPolicy;
+import org.wso2.carbon.base.ServerConfiguration;
 import org.wso2.carbon.context.CarbonContext;
 import org.wso2.carbon.core.AbstractAdmin;
 import org.wso2.carbon.identity.base.IdentityException;
@@ -37,19 +39,16 @@ import org.wso2.carbon.identity.entitlement.policy.PolicyReader;
 import org.wso2.carbon.identity.entitlement.policy.PolicySearch;
 import org.wso2.carbon.identity.entitlement.policy.PolicyStore;
 import org.wso2.carbon.identity.entitlement.policy.PolicyStoreReader;
-import org.wso2.carbon.base.ServerConfiguration;
 import org.wso2.carbon.identity.entitlement.policy.finder.RegistryBasedPolicyFinder;
 import org.wso2.carbon.registry.core.Registry;
 import org.wso2.carbon.registry.core.Resource;
 import org.wso2.carbon.registry.core.exceptions.RegistryException;
-import org.wso2.balana.AbstractPolicy;
 
 import java.io.BufferedReader;
 import java.io.IOException;
 import java.io.InputStream;
 import java.io.InputStreamReader;
 import java.util.ArrayList;
-import java.util.Iterator;
 import java.util.List;
 import java.util.Map;
 import java.util.Properties;
@@ -84,6 +83,7 @@ public class EntitlementPolicyAdminService extends AbstractAdmin {
 				throw new IdentityException(
 						"An Entitlement Policy with the given ID already exists");
 			}
+            EntitlementUtil.validatePolicy(policy);
 			policyAdmin.addOrUpdatePolicy(policy);
 			entitlementEngine.getRegistryModule().init(null);
 			// Whenever we add a policy - we need to clear decision cache.
@@ -118,6 +118,7 @@ public class EntitlementPolicyAdminService extends AbstractAdmin {
 						throw new IdentityException(
 								"An Entitlement Policy with the given ID already exists");
 					}
+                    EntitlementUtil.validatePolicy(policy);
 					policyAdmin.addOrUpdatePolicy(policy);
 					entitlementEngine.getRegistryModule().init(null);
 					// Whenever we add a policy - we need to clear decision cache.
@@ -336,8 +337,9 @@ public class EntitlementPolicyAdminService extends AbstractAdmin {
             } else {
                 throw new IdentityException("Invalid Entitlement Policy");
             }
+            EntitlementUtil.validatePolicy(policy);
+            policyAdmin.addOrUpdatePolicy(policy);
         }
-        policyAdmin.addOrUpdatePolicy(policy);
         // Reload the policies to the memory.
         entitlementEngine.getRegistryModule().init(null);
         entitlementEngine.clearDecisionCache(true);

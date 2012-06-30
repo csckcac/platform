@@ -51,11 +51,11 @@ public class VersionHandlingTest extends TestSetup {
     public void testResourceContentVersioning() throws Exception {
 
         Resource r1 = registry.newResource();
-        r1.setContent("content 1".getBytes());
+        r1.setContent(RegistryUtils.encodeString("content 1"));
         registry.put("/v2/r1", r1);
 
         Resource r12 = registry.get("/v2/r1");
-        r12.setContent("content 2".getBytes());
+        r12.setContent(RegistryUtils.encodeString("content 2"));
         registry.put("/v2/r1", r12);
         registry.put("/v2/r1", r12);
 
@@ -64,12 +64,12 @@ public class VersionHandlingTest extends TestSetup {
         Resource r1vv1 = registry.get(r1Versions[1]);
 
         assertEquals("r1's first version's content should be 'content 1'",
-                new String((byte[]) r1vv1.getContent()), "content 1");
+                RegistryUtils.decodeBytes((byte[]) r1vv1.getContent()), "content 1");
 
         Resource r1vv2 = registry.get(r1Versions[0]);
 
         assertEquals("r1's second version's content should be 'content 2'",
-                new String((byte[]) r1vv2.getContent()), "content 2");
+                RegistryUtils.decodeBytes((byte[]) r1vv2.getContent()), "content 2");
     }
 
     public void testResourcePropertyVersioning() throws Exception {
@@ -137,11 +137,11 @@ public class VersionHandlingTest extends TestSetup {
     public void testResourceRestore() throws Exception {
 
         Resource r1 = registry.newResource();
-        r1.setContent("content 1".getBytes());
+        r1.setContent(RegistryUtils.encodeString("content 1"));
         registry.put("/test/v10/r1", r1);
 
         Resource r1e1 = registry.get("/test/v10/r1");
-        r1e1.setContent("content 2".getBytes());
+        r1e1.setContent(RegistryUtils.encodeString("content 2"));
         registry.put("/test/v10/r1", r1e1);
         registry.put("/test/v10/r1", r1e1);
 
@@ -151,7 +151,7 @@ public class VersionHandlingTest extends TestSetup {
         Resource r1r1 = registry.get("/test/v10/r1");
 
         assertEquals("Restored resource should have content 'content 1'",
-                "content 1", new String((byte[]) r1r1.getContent()));
+                "content 1", RegistryUtils.decodeBytes(byte[]) r1r1.getContent()));
     }
 
     public void testSimpleCollectionRestore() throws Exception {
@@ -232,7 +232,7 @@ public class VersionHandlingTest extends TestSetup {
         registry.createVersion("/test/v12/c1");
 
         Resource r1 = registry.newResource();
-        r1.setContent("r1c1".getBytes());
+        r1.setContent(RegistryUtils.encodeString("r1c1"));
         registry.put("/test/v12/c1/c11/r1", r1);
 
         registry.createVersion("/test/v12/c1");
@@ -243,7 +243,7 @@ public class VersionHandlingTest extends TestSetup {
         registry.createVersion("/test/v12/c1");
 
         Resource r1e1 = registry.get("/test/v12/c1/c11/r1");
-        r1e1.setContent("r1c2".getBytes());
+        r1e1.setContent(RegistryUtils.encodeString("r1c2"));
         registry.put("/test/v12/c1/c11/r1", r1e1);
 
         registry.createVersion("/test/v12/c1");
@@ -288,13 +288,13 @@ public class VersionHandlingTest extends TestSetup {
             fail("Version 2 of c1 should have child c11/c2");
         }
 
-        String r1e2Content = new String((byte[]) r1e2.getContent());
+        String r1e2Content = RegistryUtils.decodeBytes((byte[]) r1e2.getContent());
         assertEquals("c11/r1 content should be 'r1c1", r1e2Content, "r1c1");
 
         registry.restoreVersion(c1Versions[0]);
 
         Resource r1e3 = registry.get("/test/v12/c1/c11/r1");
-        String r1e3Content = new String((byte[]) r1e3.getContent());
+        String r1e3Content = RegistryUtils.decodeBytes((byte[]) r1e3.getContent());
         assertEquals("c11/r1 content should be 'r1c2", r1e3Content, "r1c2");
     }
 

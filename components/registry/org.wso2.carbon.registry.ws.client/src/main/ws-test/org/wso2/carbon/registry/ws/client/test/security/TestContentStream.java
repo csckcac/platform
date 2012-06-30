@@ -20,6 +20,7 @@ import java.io.*;
 
 import org.wso2.carbon.registry.core.Resource;
 import org.wso2.carbon.registry.core.exceptions.RegistryException;
+import org.wso2.carbon.registry.core.utils.RegistryUtils;
 
 public class TestContentStream extends SecurityTestSetup {
     public TestContentStream(String text) {
@@ -44,7 +45,7 @@ public class TestContentStream extends SecurityTestSetup {
 
         Resource resource = registry.newResource();
 
-        resource.setContent(st.getBytes());
+        resource.setContent(RegistryUtils.encodeString(st));
         resource.setDescription(description);
         resource.setMediaType(mediaType);
         registry.put(registryPath, resource);
@@ -52,8 +53,8 @@ public class TestContentStream extends SecurityTestSetup {
 
         Resource r2 = registry.get(registryPath);
 
-        assertEquals("File content is not matching", new String((byte[]) resource.getContent()),
-                new String((byte[]) r2.getContent()));
+        assertEquals("File content is not matching", RegistryUtils.encodeString((byte[]) resource.getContent()),
+                RegistryUtils.decodeBytes((byte[]) r2.getContent()));
 
     }
 
@@ -62,7 +63,7 @@ public class TestContentStream extends SecurityTestSetup {
 
         Resource r3 = registry.newResource();
         String path = "/content/stream/content.txt";
-        r3.setContent(new String("this is the content").getBytes());
+        r3.setContent(RegistryUtils.encodeString("this is the content"));
         r3.setDescription("this is test desc");
         r3.setMediaType("plain/text");
         r3.setProperty("test2", "value2");
@@ -71,12 +72,12 @@ public class TestContentStream extends SecurityTestSetup {
 
         Resource r4 = registry.get("/content/stream/content.txt");
 
-        assertEquals("Content is not equal.", new String((byte[]) r3.getContent()),
-                new String((byte[]) r4.getContent()));
+        assertEquals("Content is not equal.", RegistryUtils.decodeBytes((byte[]) r3.getContent()),
+                RegistryUtils.decodeBytes((byte[]) r4.getContent()));
 
         InputStream isTest = r4.getContentStream();
 
-        assertEquals("Content stream is not equal.", new String((byte[]) r3.getContent()),
+        assertEquals("Content stream is not equal.", RegistryUtils.decodeBytes((byte[]) r3.getContent()),
                 convertStreamToString(isTest));
 
         r3.discard();
@@ -102,8 +103,8 @@ public class TestContentStream extends SecurityTestSetup {
 
         Resource r2 = registry.get(registryPath);
 
-        assertEquals("File content is not matching", new String((byte[]) resource.getContent()),
-                new String((byte[]) r2.getContent()));
+        assertEquals("File content is not matching", RegistryUtils.decodeBytes((byte[]) resource.getContent()),
+                RegistryUtils.decodeBytes((byte[]) r2.getContent()));
 
     }
 

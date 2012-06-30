@@ -19,6 +19,7 @@ package org.wso2.carbon.registry.ws.client.test;
 
 import org.wso2.carbon.registry.core.Resource;
 import org.wso2.carbon.registry.core.exceptions.RegistryException;
+import org.wso2.carbon.registry.core.utils.RegistryUtils;
 import org.wso2.carbon.registry.ws.client.registry.WSRegistryServiceClient;
 
 public class Worker2 extends Worker {
@@ -34,7 +35,7 @@ public class Worker2 extends Worker {
         try {
             for (int i = 0; i < iterations; i++) {
                 Resource r1 = registry.newResource();
-                r1.setContent("test content".getBytes());
+                r1.setContent(RegistryUtils.encodeString("test content"));
                 r1.setProperty("property1", "value1");
                 r1.setProperty("property2", "value2");
                 r1.setProperty("property3", "value3");

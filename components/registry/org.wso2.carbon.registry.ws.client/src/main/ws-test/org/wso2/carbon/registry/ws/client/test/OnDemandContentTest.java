@@ -1,6 +1,7 @@
 package org.wso2.carbon.registry.ws.client.test;
 
 import org.wso2.carbon.registry.core.Resource;
+import org.wso2.carbon.registry.core.utils.RegistryUtils;
 import org.wso2.carbon.registry.ws.client.resource.OnDemandContentResourceImpl;
 
 
@@ -14,7 +15,7 @@ public class OnDemandContentTest extends TestSetup {
 		try {
 			String testPath = "ondemand/test";
 	        Resource r1 = registry.newResource();
-	        r1.setContent("This is test content. It should not be loaded unless getContent() is called.".getBytes());
+	        r1.setContent(RegistryUtils.encodeString("This is test content. It should not be loaded unless getContent() is called."));
 	        registry.put(testPath, r1);
 	        
 	        OnDemandContentResourceImpl r1_get = (OnDemandContentResourceImpl) registry.get(testPath);

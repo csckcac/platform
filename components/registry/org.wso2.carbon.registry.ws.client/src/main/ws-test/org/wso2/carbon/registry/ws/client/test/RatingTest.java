@@ -17,6 +17,7 @@
 package org.wso2.carbon.registry.ws.client.test;
 
 import org.wso2.carbon.registry.core.Resource;
+import org.wso2.carbon.registry.core.utils.RegistryUtils;
 
 public class RatingTest extends TestSetup {
 
@@ -26,7 +27,7 @@ public class RatingTest extends TestSetup {
 
 	public void testAddResourceRating() throws Exception {
 		Resource r1 = registry.newResource();
-		byte[] r1content = "R1 content".getBytes();
+		byte[] r1content = RegistryUtils.encodeString("R1 content");
 		r1.setContent(r1content);
 
 		registry.put("/d16/d17/r1", r1);
@@ -55,7 +56,7 @@ public class RatingTest extends TestSetup {
 
 	public void testEditResourceRating() throws Exception {
 		Resource r1 = registry.newResource();
-		byte[] r1content = "R1 content".getBytes();
+		byte[] r1content = RegistryUtils.encodeString("R1 content");
 		r1.setContent(r1content);
 
 		registry.put("/d61/d17/d18/r1", r1);
@@ -83,7 +84,7 @@ public class RatingTest extends TestSetup {
 	public void testRatingsPath() throws Exception {
 		Resource r5 = registry.newResource();
 		String r5Content = "this is r5 content";
-		r5.setContent(r5Content.getBytes());
+		r5.setContent(RegistryUtils.encodeString(r5Content));
 		r5.setDescription("production ready.");
 		String r5Path = "/c1/r5";
 

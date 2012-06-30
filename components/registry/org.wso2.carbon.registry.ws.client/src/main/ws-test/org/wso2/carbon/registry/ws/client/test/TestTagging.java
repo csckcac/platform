@@ -21,6 +21,7 @@ import org.wso2.carbon.registry.core.CollectionImpl;
 import org.wso2.carbon.registry.core.Resource;
 import org.wso2.carbon.registry.core.Tag;
 import org.wso2.carbon.registry.core.TaggedResourcePath;
+import org.wso2.carbon.registry.core.utils.RegistryUtils;
 
 public class TestTagging extends TestSetup {
 
@@ -31,19 +32,19 @@ public class TestTagging extends TestSetup {
     public void testAddTagging() throws Exception {
         // add a resource
         Resource r1 = registry.newResource();
-        byte[] r1content = "q1 content".getBytes();
+        byte[] r1content = RegistryUtils.encodeString("q1 content");
         r1.setContent(r1content);
         registry.put("/d11/r1", r1);
 
 //        RemoteRegistry q2Registry = new RemoteRegistry(baseURL, "q2", "");
         Resource r2 = registry.newResource();
-        byte[] r2content = "q2 content".getBytes();
+        byte[] r2content = RegistryUtils.encodeString("q2 content");
         r2.setContent(r2content);
         registry.put("/d11/r2", r2);
 
 //        RemoteRegistry q3Registry = new RemoteRegistry(baseURL, "q3", "");
         Resource r3 = registry.newResource();
-        byte[] r3content = "q3 content".getBytes();
+        byte[] r3content = RegistryUtils.encodeString("q3 content");
         r3.setContent(r3content);
         registry.put("/d11/r3", r3);
 
@@ -96,7 +97,7 @@ public class TestTagging extends TestSetup {
 
     public void testDuplicateTagging() throws Exception {
         Resource r1 = registry.newResource();
-        byte[] r1content = "q1 content".getBytes();
+        byte[] r1content = RegistryUtils.encodeString("q1 content");
         r1.setContent(r1content);
         registry.put("/d12/r1", r1);
 
@@ -139,7 +140,7 @@ public class TestTagging extends TestSetup {
 
     public void testEditTagging() throws Exception {
         Resource r1 = registry.newResource();
-        byte[] r1content = "q1 content".getBytes();
+        byte[] r1content = RegistryUtils.encodeString("q1 content");
         r1.setContent(r1content);
         registry.put("/d14/d13/r1", r1);
 
@@ -194,7 +195,7 @@ public class TestTagging extends TestSetup {
 
     public void testRemoveResourceTagging() throws Exception {
         Resource r1 = registry.newResource();
-        byte[] r1content = "q1 content".getBytes();
+        byte[] r1content = RegistryUtils.encodeString("q1 content");
         r1.setContent(r1content);
         registry.put("/d15/d14/r1", r1);
 
@@ -302,17 +303,17 @@ public class TestTagging extends TestSetup {
     public void testTagging() throws Exception {
         // add a resource
         Resource r1 = registry.newResource();
-        byte[] r1content = "R1 content".getBytes();
+        byte[] r1content = RegistryUtils.encodeString("R1 content");
         r1.setContent(r1content);
         registry.put("/d11/r1", r1);
 
         Resource r2 = registry.newResource();
-        byte[] r2content = "R2 content".getBytes();
+        byte[] r2content = RegistryUtils.encodeString("R2 content");
         r2.setContent(r2content);
         registry.put("/d11/r2", r2);
 
         Resource r3 = registry.newResource();
-        byte[] r3content = "R3 content".getBytes();
+        byte[] r3content = RegistryUtils.encodeString("R3 content");
         r3.setContent(r3content);
         registry.put("/d11/r3", r3);
 

@@ -22,6 +22,7 @@ import org.wso2.carbon.registry.core.Comment;
 import org.wso2.carbon.registry.core.Registry;
 import org.wso2.carbon.registry.core.Resource;
 import org.wso2.carbon.registry.core.exceptions.RegistryException;
+import org.wso2.carbon.registry.core.utils.RegistryUtils;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -35,7 +36,7 @@ public class CommentTest extends TestSetup {
     public void testAddComment() throws Exception {
         Resource r1 = registry.newResource();
         String path = "/d112/r3";
-        byte[] r1content = "R1 content".getBytes();
+        byte[] r1content = RegistryUtils.encodeString("R1 content");
         r1.setContent(r1content);
         registry.put(path, r1);
 
@@ -104,7 +105,7 @@ public class CommentTest extends TestSetup {
 
     public void testAddCommentToResource() throws Exception {
         Resource r1 = registry.newResource();
-        byte[] r1content = "R1 content".getBytes();
+        byte[] r1content = RegistryUtils.encodeString("R1 content");
         r1.setContent(r1content);
         registry.put("/d1/r3", r1);
 
@@ -377,7 +378,7 @@ public class CommentTest extends TestSetup {
 
     public void testEditComment() throws Exception {
         Resource r1 = registry.newResource();
-        byte[] r1content = "R1 content".getBytes();
+        byte[] r1content = RegistryUtils.encodeString("R1 content");
         r1.setContent(r1content);
         r1.setDescription("this is a resource to edit comment");
         registry.put("/c101/c11/r1", r1);

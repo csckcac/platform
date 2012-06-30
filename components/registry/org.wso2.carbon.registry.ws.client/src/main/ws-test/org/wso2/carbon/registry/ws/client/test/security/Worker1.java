@@ -21,6 +21,7 @@ import org.wso2.carbon.registry.core.Registry;
 import org.wso2.carbon.registry.core.Resource;
 import org.wso2.carbon.registry.core.exceptions.RegistryException;
 import org.wso2.carbon.registry.core.exceptions.ResourceNotFoundException;
+import org.wso2.carbon.registry.core.utils.RegistryUtils;
 import org.wso2.carbon.registry.ws.client.registry.WSRegistryServiceClient;
 
 public class Worker1 extends Worker {
@@ -39,7 +40,7 @@ public class Worker1 extends Worker {
                 long start = System.nanoTime();
 
                 Resource r1 = registry.newResource();
-                r1.setContent("test content".getBytes());
+                r1.setContent(RegistryUtils.encodeString("test content"));
                 //System.out.println("~~~~~begin put~~~~~");
                 long putStart = System.nanoTime();
                 //*****************************//

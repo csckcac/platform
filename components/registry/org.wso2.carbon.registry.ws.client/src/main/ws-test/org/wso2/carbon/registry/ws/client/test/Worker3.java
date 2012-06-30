@@ -23,6 +23,7 @@ import org.wso2.carbon.registry.core.Collection;
 import org.wso2.carbon.registry.core.RegistryConstants;
 import org.wso2.carbon.registry.core.Resource;
 import org.wso2.carbon.registry.core.exceptions.RegistryException;
+import org.wso2.carbon.registry.core.utils.RegistryUtils;
 import org.wso2.carbon.registry.ws.client.registry.WSRegistryServiceClient;
 
 public class Worker3 extends Worker {
@@ -58,7 +59,7 @@ public class Worker3 extends Worker {
                 System.out.println("Iteration number: " + i);
 
                 Resource r1 = registry.newResource();
-                r1.setContent("test content for custom queries".getBytes());
+                r1.setContent(RegistryUtils.encodeString("test content for custom queries"));
                 r1.setDescription("production ready.");
 
                 //System.out.println("~~~~~begin put~~~~~");

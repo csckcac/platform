@@ -21,6 +21,7 @@ import org.wso2.carbon.registry.app.RemoteRegistry;
 import org.wso2.carbon.registry.core.exceptions.RegistryException;
 import org.wso2.carbon.registry.core.Association;
 import org.wso2.carbon.registry.core.Resource;
+import org.wso2.carbon.registry.core.utils.RegistryUtils;
 
 
 import java.util.List;
@@ -36,7 +37,7 @@ public class TestAssociation extends TestSetup {
 
         Resource r2 = registry.newResource();
         String path = "/testk12/testa/testbsp/test.txt";
-        r2.setContent(new String("this is the content").getBytes());
+        r2.setContent(RegistryUtils.encodeString("this is the content"));
         r2.setDescription("this is test desc");
         r2.setMediaType("plain/text");
         r2.setProperty("test2", "value2");
@@ -121,7 +122,7 @@ public class TestAssociation extends TestSetup {
 
         Resource r2 = registry.newResource();
         String path = "/testk1234/testa/testbsp/test.txt";
-        r2.setContent(new String("this is the content").getBytes());
+        r2.setContent(RegistryUtils.encodeString("this is the content"));
         r2.setDescription("this is test desc");
         r2.setMediaType("plain/text");
         r2.setProperty("test2", "value2");
@@ -203,7 +204,7 @@ public class TestAssociation extends TestSetup {
 
         Resource r2 = registry.newResource();
         String path = "/testk123456/testa/testbsp/test.txt";
-        r2.setContent(new String("this is the content").getBytes());
+        r2.setContent(RegistryUtils.encodeString("this is the content"));
         r2.setDescription("this is test desc");
         r2.setMediaType("plain/text");
         r2.setProperty("test2", "value2");

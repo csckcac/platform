@@ -19,6 +19,7 @@ package org.wso2.carbon.registry.ws.client.test;
 import org.wso2.carbon.registry.core.Collection;
 import org.wso2.carbon.registry.core.Resource;
 import org.wso2.carbon.registry.core.exceptions.RegistryException;
+import org.wso2.carbon.registry.core.utils.RegistryUtils;
 
 import java.util.List;
 
@@ -31,7 +32,7 @@ public class TestResources extends TestSetup {
     public void testHierachicalResource() throws Exception {
         Resource r1 = registry.newResource();
         String content = "this is my content1";
-        r1.setContent(content.getBytes());
+        r1.setContent(RegistryUtils.encodeString(content));
         r1.setDescription("This is r1 file description");
 
         String path = "/d1/d2/d3/r1";
@@ -48,8 +49,8 @@ public class TestResources extends TestSetup {
             fail("Couldn't get content from path /d1/d2/d3/r1");
         }
 
-        assertEquals("Content is not equal.", new String((byte[]) r1.getContent()),
-                new String((byte[]) r1_actual.getContent()));
+        assertEquals("Content is not equal.", RegistryUtils.decodeBytes((byte[]) r1.getContent()),
+                RegistryUtils.decodeBytes((byte[]) r1_actual.getContent()));
         assertEquals("LastUpdatedUser is not Equal", "admin", r1_actual.getLastUpdaterUserName());
         assertEquals("Can not get Resource path", "/d1/d2/d3/r1", r1_actual.getPath());
         assertEquals("Can not get Resource parent path", "/d1/d2/d3", r1_actual.getParentPath());
@@ -63,7 +64,7 @@ public class TestResources extends TestSetup {
 
         Resource r1 = registry.newResource();
         String content = "this is my content1";
-        r1.setContent(content.getBytes());
+        r1.setContent(RegistryUtils.encodeString(content)));
         r1.setDescription("This is r1 file description");
         r1.setProperty("key1", "value1");
         r1.setProperty("key2", "value2");
@@ -77,8 +78,8 @@ public class TestResources extends TestSetup {
 
         Resource r1_actual = registry.get("/d1/d2/d3/d4/r1");
 
-        assertEquals("Content is not equal.", new String((byte[]) r1.getContent()),
-                new String((byte[]) r1_actual.getContent()));
+        assertEquals("Content is not equal.", RegistryUtils.decodeBytes((byte[]) r1.getContent()),
+                RegistryUtils.decodeBytes((byte[]) r1_actual.getContent()));
         assertEquals("LastUpdatedUser is not Equal", "admin", r1_actual.getLastUpdaterUserName());
         assertEquals("Can not get Resource path", "/d1/d2/d3/d4/r1", r1_actual.getPath());
         assertEquals("Can not get Resource parent path", "/d1/d2/d3/d4", r1_actual.getParentPath());
@@ -93,7 +94,7 @@ public class TestResources extends TestSetup {
                 r1_actual.getProperty("key3_update"));
 
         String contentUpdated = "this is my content updated";
-        r1.setContent(contentUpdated.getBytes());
+        r1.setContent(RegistryUtils.encodeString(contentUpdated));
         r1.setDescription("This is r1 file description updated");
         r1.setProperty("key1", "value1_update");
         r1.setProperty("key2", "value2_update");
@@ -102,8 +103,8 @@ public class TestResources extends TestSetup {
         registry.put(path, r1);
         Resource r2_actual = registry.get("/d1/d2/d3/d4/r1");
 
-        assertEquals("Content is not equal.", new String((byte[]) r1.getContent()),
-                new String((byte[]) r2_actual.getContent()));
+        assertEquals("Content is not equal.", RegistryUtils.decodeBytes((byte[]) r1.getContent()),
+                RegistryUtils.decodeBytes((byte[]) r2_actual.getContent()));
         assertEquals("LastUpdatedUser is not Equal", "admin", r2_actual.getLastUpdaterUserName());
         assertEquals("Can not get Resource path", "/d1/d2/d3/d4/r1", r2_actual.getPath());
         assertEquals("Can not get Resource parent path", "/d1/d2/d3/d4", r2_actual.getParentPath());
@@ -121,7 +122,7 @@ public class TestResources extends TestSetup {
     public void testGetMetaData() throws Exception {
     	Resource r1 = registry.newResource();
         String content = "this is my content1";
-        r1.setContent(content.getBytes());
+        r1.setContent(RegistryUtils.encodeString(content));
         r1.setDescription("This is r1 file description");
         r1.setProperty("key1", "value1");
         r1.setProperty("key2", "value2");
@@ -153,7 +154,7 @@ public class TestResources extends TestSetup {
     public void testAddAnotherResource() throws Exception {
         Resource r1 = registry.newResource();
         String content = "this is my content2";
-        r1.setContent(content.getBytes());
+        r1.setContent(RegistryUtils.encodeString(content));
         r1.setDescription("r2 file description");
         String path = "/d1/d2/r2";
 
@@ -172,8 +173,8 @@ public class TestResources extends TestSetup {
             fail("Couldn't get content from path /d1/d2/r2");
         }
 
-        assertEquals("Content is not equal.", new String((byte[]) r1.getContent()),
-                new String((byte[]) r1_actual.getContent()));
+        assertEquals("Content is not equal.", RegistryUtils.decodeBytes((byte[]) r1.getContent()),
+                RegistryUtils.decodeBytes((byte[]) r1_actual.getContent()));
         assertEquals("LastUpdatedUser is not Equal", "admin", r1_actual.getLastUpdaterUserName());
         assertEquals("Can not get Resource path", "/d1/d2/r2", r1_actual.getPath());
         assertEquals("Can not get Resource parent path", "/d1/d2", r1_actual.getParentPath());
@@ -228,7 +229,7 @@ public class TestResources extends TestSetup {
     public void testCollectionDetails() throws Exception {
         Resource r1 = registry.newResource();
         String content = "this is my content4";
-        r1.setContent(content.getBytes());
+        r1.setContent(RegistryUtils.encodeString(content));
         r1.setDescription("r3 file description");
         String path = "/c1/c2/c3/c4/r3";
 
@@ -523,7 +524,7 @@ public class TestResources extends TestSetup {
 
         Resource r1 = registry.newResource();
         String content = "this is my content";
-        r1.setContent(content.getBytes());
+        r1.setContent(RegistryUtils.encodeString(content));
         r1.setDescription("This is r1 file description");
         String path = "/d30/d31/r1";
 
@@ -540,8 +541,8 @@ public class TestResources extends TestSetup {
             fail("Couldn't get content from path" + path);
         }
 
-        assertEquals("Content is not equal.", new String((byte[]) r1.getContent()),
-                new String((byte[]) r1_actual.getContent()));
+        assertEquals("Content is not equal.", RegistryUtils.decodeBytes((byte[]) r1.getContent()),
+                RegistryUtils.decodeBytes((byte[]) r1_actual.getContent()));
 
         /*rename the resource*/
 
@@ -575,7 +576,7 @@ public class TestResources extends TestSetup {
 
         Resource r1 = registry.newResource();
         String content = "this is my content";
-        r1.setContent(content.getBytes());
+        r1.setContent(RegistryUtils.encodeString(content));
         r1.setDescription("This is r1 file description");
         String path = "/d40/d43/r1";
 
@@ -592,8 +593,8 @@ public class TestResources extends TestSetup {
             fail("Couldn't get content from path" + path);
         }
 
-        assertEquals("Content is not equal.", new String((byte[]) r1.getContent()),
-                new String((byte[]) r1_actual.getContent()));
+        assertEquals("Content is not equal.",RegistryUtils.decodeBytes((byte[]) r1.getContent()),
+                RegistryUtils.decodeBytes(byte[]) r1_actual.getContent()));
 
         boolean deleted = true;
         try {
@@ -609,7 +610,7 @@ public class TestResources extends TestSetup {
 
         Resource r2 = registry.newResource();
         String content2 = "this is my content updated";
-        r2.setContent(content2.getBytes());
+        r2.setContent(RegistryUtils.encodeString(content2));
         r2.setDescription("This is r1 file description");
 
         String path_new = "/d40/d43/r1";
@@ -626,8 +627,8 @@ public class TestResources extends TestSetup {
             fail("Couldn't get content from path" + path_new);
         }
 
-        assertEquals("Content is not equal.", new String((byte[]) r2.getContent()),
-                new String((byte[]) r1_actual2.getContent()));
+        assertEquals("Content is not equal.", RegistryUtils.decodeBytes(byte[]) r2.getContent()),
+                RegistryUtils.decodeBytes((byte[]) r1_actual2.getContent());
     }
 
     public void testResourcemultipleProperties() throws Exception {
@@ -636,7 +637,7 @@ public class TestResources extends TestSetup {
             String path = "/m11/m12/r1";
             Resource r1 = registry.newResource();
             String content = "this is my content";
-            r1.setContent(content.getBytes());
+            r1.setContent(RegistryUtils.encodeString(content));
             r1.setDescription("This is r1 file description");
 
             r1.addProperty("key1", "value1");
@@ -649,8 +650,8 @@ public class TestResources extends TestSetup {
 
             Resource r1_actual2 = registry.get(path);
 
-            assertEquals("Content is not equal.", new String((byte[]) r1.getContent()),
-                    new String((byte[]) r1_actual2.getContent()));
+            assertEquals("Content is not equal.", RegistryUtils.decodeBytes((byte[]) r1.getContent()),
+                    RegistryUtils.decodeBytes((byte[]) r1_actual2.getContent()));
 
             List propertyValues = r1_actual2.getPropertyValues("key1");
             Object[] valueName = propertyValues.toArray();

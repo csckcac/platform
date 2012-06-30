@@ -18,6 +18,7 @@ package org.wso2.carbon.registry.ws.client.test;
 
 import org.wso2.carbon.registry.core.Collection;
 import org.wso2.carbon.registry.core.Resource;
+import org.wso2.carbon.registry.core.utils.RegistryUtils;
 
 public class TestCopy extends TestSetup {
 
@@ -45,8 +46,8 @@ public class TestCopy extends TestSetup {
         assertEquals("Original resource should have a property named 'test' with value 'copy'.",
                 oldR1.getProperty("test"), "copy");
 
-        String newContent = new String((byte[]) newR1.getContent());
-        String oldContent = new String((byte[]) oldR1.getContent());
+        String newContent = RegistryUtils.decodeBytes((byte[]) newR1.getContent());
+        String oldContent = RegistryUtils.decodeBytes((byte[]) oldR1.getContent();
         assertEquals("Contents are not equal in copied resources", newContent, oldContent);
     }
 

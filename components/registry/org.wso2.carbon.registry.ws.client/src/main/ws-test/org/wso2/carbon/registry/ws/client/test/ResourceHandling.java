@@ -21,6 +21,7 @@ import org.wso2.carbon.registry.core.RegistryConstants;
 import org.wso2.carbon.registry.core.Resource;
 import org.wso2.carbon.registry.core.Tag;
 import org.wso2.carbon.registry.core.exceptions.RegistryException;
+import org.wso2.carbon.registry.core.utils.RegistryUtils;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -40,7 +41,7 @@ public class ResourceHandling extends TestSetup {
             String commentPathNew = new_path + RegistryConstants.URL_SEPARATOR + "comments";
             Resource r1 = registry.newResource();
             r1.setDescription("This is a file to be renamed");
-            byte[] r1content = "R2 content".getBytes();
+            byte[] r1content = RegistryUtils.encodeString("R2 content");
             r1.setContent(r1content);
             r1.setMediaType("txt");
 
@@ -67,8 +68,8 @@ public class ResourceHandling extends TestSetup {
 
             assertEquals("Properties are not equal", r1.getProperty("key1"), r2.getProperty("key1"));
             assertEquals("Properties are not equal", r1.getProperty("key2"), r2.getProperty("key2"));
-            assertEquals("File content is not matching", new String((byte[]) r1.getContent()),
-                    new String((byte[]) r2.getContent()));
+            assertEquals("File content is not matching", RegistryUtils.decodeBytes((byte[]) r1.getContent()),
+                    RegistryUtils.decodeBytes((byte[]) r2.getContent()));
             assertTrue(c1.getText() + " is not associated for resource" + path,
                     containsComment(commentPath, c1.getText()));
             assertTrue(c2.getText() + " is not associated for resource" + path,
@@ -92,8 +93,8 @@ public class ResourceHandling extends TestSetup {
 
             Resource r1Renamed = registry.get(new_path);
 
-            assertEquals("File content is not matching", new String((byte[]) r2.getContent()),
-                    new String((byte[]) r1Renamed.getContent()));
+            assertEquals("File content is not matching", RegistryUtils.decodeBytes((byte[]) r2.getContent()),
+                    RegistryUtils.decodeBytes((byte[]) r1Renamed.getContent()));
             assertEquals("Properties are not equal", r2.getProperty("key1"),
                     r1Renamed.getProperty("key1"));
             assertEquals("Properties are not equal", r2.getProperty("key2"),
@@ -201,7 +202,7 @@ public class ResourceHandling extends TestSetup {
 
         Resource r2 = registry.newResource();
         String path = "/testk/testa/derby.log";
-        r2.setContent(new String("this is the content").getBytes());
+        r2.setContent(RegistryUtils.encodeString("this is the content"));
         r2.setDescription("this is test desc this is test desc this is test desc this is test desc this is test desc " +
                 "this is test desc this is test desc this is test desc this is test descthis is test desc ");
         r2.setMediaType("plain/text");

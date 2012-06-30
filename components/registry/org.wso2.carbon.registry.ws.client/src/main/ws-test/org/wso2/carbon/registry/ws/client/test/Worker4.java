@@ -19,6 +19,7 @@ package org.wso2.carbon.registry.ws.client.test;
 import org.wso2.carbon.registry.core.Comment;
 import org.wso2.carbon.registry.core.Resource;
 import org.wso2.carbon.registry.core.exceptions.RegistryException;
+import org.wso2.carbon.registry.core.utils.RegistryUtils;
 import org.wso2.carbon.registry.ws.client.registry.WSRegistryServiceClient;
 
 public class Worker4 extends Worker {
@@ -46,7 +47,7 @@ public class Worker4 extends Worker {
                 String rPath = basePath + "/original/r" + i;
                 Resource r = registry.newResource();
                 String content = "this is the content of first test resource.";
-                r.setContent(content.getBytes());
+                r.setContent(RegistryUtils.encodeString(content));
                 r.setProperty("p1", "v1");
                 r.setProperty("p2", "v2");
                 //long startPut = System.nanoTime();

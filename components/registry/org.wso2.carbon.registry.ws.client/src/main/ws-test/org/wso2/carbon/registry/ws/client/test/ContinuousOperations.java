@@ -19,6 +19,7 @@ package org.wso2.carbon.registry.ws.client.test;
 import org.wso2.carbon.registry.core.exceptions.RegistryException;
 import org.wso2.carbon.registry.core.Resource;
 import org.wso2.carbon.registry.core.ResourceImpl;
+import org.wso2.carbon.registry.core.utils.RegistryUtils;
 
 public class ContinuousOperations extends TestSetup {
     public ContinuousOperations(String text) {
@@ -32,7 +33,7 @@ public class ContinuousOperations extends TestSetup {
         for (int i = 0; i < iterations; i++) {
 
             Resource res1 = registry.newResource();
-            byte[] r1content = "R2 content".getBytes();
+            byte[] r1content = RegistryUtils.encodeString("R2 content");
             res1.setContent(r1content);
             String path = "/con-delete/test/" + i + 1;
 
@@ -40,8 +41,8 @@ public class ContinuousOperations extends TestSetup {
 
             Resource resource1 = registry.get(path);
 
-            assertEquals("File content is not matching", new String((byte[]) resource1.getContent()),
-                    new String((byte[]) res1.getContent()));
+            assertEquals("File content is not matching", RegistryUtils.decodeBytes((byte[]) resource1.getContent()),
+                    RegistryUtils.decodeBytes((byte[]) res1.getContent()));
 
             registry.delete(path);
 
@@ -66,7 +67,7 @@ public class ContinuousOperations extends TestSetup {
         for (int i = 0; i < iterations; i++) {
 
             Resource res1 = registry.newResource();
-            byte[] r1content = "R2 content".getBytes();
+            byte[] r1content = RegistryUtils.encodeString("R2 content");
             res1.setContent(r1content);
             String path = "/con-delete/test-update/" + i + 1;
 
@@ -74,11 +75,11 @@ public class ContinuousOperations extends TestSetup {
 
             Resource resource1 = registry.get(path);
 
-            assertEquals("File content is not matching", new String((byte[]) resource1.getContent()),
-                    new String((byte[]) res1.getContent()));
+            assertEquals("File content is not matching", RegistryUtils.decodeBytes((byte[]) resource1.getContent()),
+                    RegistryUtils.decodeBytes((byte[]) res1.getContent()));
 
             Resource resource = new ResourceImpl();
-            byte[] r1content1 = "R2 content updated".getBytes();
+            byte[] r1content1 = RegistryUtils.encodeString("R2 content updated");
             resource.setContent(r1content1);
             resource.setProperty("abc", "abc");
 
@@ -86,8 +87,8 @@ public class ContinuousOperations extends TestSetup {
 
             Resource resource2 = registry.get(path);
 
-            assertEquals("File content is not matching", new String((byte[]) resource.getContent()),
-                    new String((byte[]) resource2.getContent()));
+            assertEquals("File content is not matching", RegistryUtils.decodeBytes((byte[]) resource.getContent()),
+                    RegistryUtils.decodeBytes((byte[]) resource2.getContent()));
 
             resource.discard();
             res1.discard();

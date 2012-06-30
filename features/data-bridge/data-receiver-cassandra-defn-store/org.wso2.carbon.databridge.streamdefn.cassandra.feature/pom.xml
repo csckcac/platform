@@ -1,0 +1,66 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<project xmlns="http://maven.apache.org/POM/4.0.0"
+         xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+         xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/xsd/maven-4.0.0.xsd">
+    <modelVersion>4.0.0</modelVersion>
+
+    <parent>
+        <groupId>org.wso2.carbon</groupId>
+        <artifactId>org.wso2.carbon.databridge.streamdefn.cassandra</artifactId>
+        <version>4.0.0-SNAPSHOT</version>
+    </parent>
+
+    <groupId>org.wso2.carbon</groupId>
+    <artifactId>org.wso2.carbon.databridge.streamdefn.cassandra.feature</artifactId>
+    <packaging>pom</packaging>
+    <name>WSO2 Carbon - Data Bridge - Cassandra Defn Storage Aggregator Feature</name>
+    <url>http://wso2.org</url>
+    <description>The aggregator feature containing Cassandra Defn Storage of data bridge core
+    </description>
+
+
+    <dependencies>
+        <dependency>
+            <groupId>org.wso2.carbon</groupId>
+            <artifactId>org.wso2.carbon.databridge.streamdefn.cassandra.server.feature</artifactId>
+            <version>${wso2carbon.version.databridge}</version>
+            <type>zip</type>
+        </dependency>
+    </dependencies>
+
+
+    <build>
+        <plugins>
+            <plugin>
+                <groupId>org.wso2.maven</groupId>
+                <artifactId>carbon-p2-plugin</artifactId>
+                <version>${carbon.p2.plugin.version}</version>
+                <executions>
+                    <execution>
+                        <id>4-p2-feature-generation</id>
+                        <phase>package</phase>
+                        <goals>
+                            <goal>p2-feature-gen</goal>
+                        </goals>
+                        <configuration>
+                            <id>org.wso2.carbon.databridge.streamdefn.cassandra</id>
+                            <propertiesFile>../../etc/feature.properties</propertiesFile>
+                            <adviceFile>
+                                <properties>
+                                    <propertyDef>org.eclipse.equinox.p2.type.group:true
+                                    </propertyDef>
+                                </properties>
+                            </adviceFile>
+                            <includedFeatures>
+                                <includedFeatureDef>org.wso2.carbon:org.wso2.carbon.databridge.streamdefn.cassandra.server.feature</includedFeatureDef>
+                            </includedFeatures>
+                        </configuration>
+                    </execution>
+                </executions>
+            </plugin>
+        </plugins>
+    </build>
+
+
+    
+</project>

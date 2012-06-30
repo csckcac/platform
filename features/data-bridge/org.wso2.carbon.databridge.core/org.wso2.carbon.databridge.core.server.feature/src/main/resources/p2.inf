@@ -1,0 +1,4 @@
+instructions.configure = \
+org.eclipse.equinox.p2.touchpoint.natives.copy(source:${installFolder}/features/org.wso2.carbon.databridge.core.server_${feature.version}/conf/event-bridge-config.xml,target:${installFolder}/../conf/event-bridge/event-bridge-config.xml,overwrite:true);\
+org.eclipse.equinox.p2.touchpoint.natives.remove(path:${installFolder}/features/org.wso2.carbon.databridge.core.server_${feature.version}/conf);
+

@@ -36,7 +36,7 @@ of codifying, executing, and maintaining your organization's decisions. </p>
 
 <p>BRS @product.version@ supports exposing your organization' decisions as <strong>Secure,
 Reliable Web services</strong>. The integration with our Enterprise Service Bus
-supports incorporating your dynamic integration decisions to the your
+supports incorporating your dynamic integration decisions to your
 enterprise' applications integration solution. 
 <p>WSO2 BRS @product.version@ is developed on top of the revolutionary <a
 href="http://wso2.org/projects/carbon">Carbon platform</a>

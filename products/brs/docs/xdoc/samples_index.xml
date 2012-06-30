@@ -56,11 +56,8 @@
     <p>
     This guide demonstrates a set of application that uses business rules.
     Each sample only presents a sub set of rules related to a particular application domain.
-    The main goal of the samples is to make you an expertise in using WSO2 BRS for writing, deploying, and testing business rules.</p>
-    <p>
-        The source code used in the samples is in the following location.
-    </p>
-    <h4><pre>https://svn.wso2.org/repos/wso2/branches/carbon/3.2.0/products/brs/1.2.0/modules/samples/</pre></h4>
+    The main goal of the samples is to make you an expertise in using WSO2 BRS for writing, deploying, and testing business rules. Source code for all the samples can be found under the 
+    samples directory of the distribution</p>
     <p>
        Please refers the <a href="user_guide.html">User Guide</a> for getting know how to deploy rule services
     </p>

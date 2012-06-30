@@ -95,12 +95,12 @@ of a rule service: rule set definition and  input/output facts definitions. </p>
             &lt;properties&gt;
             &lt;property&gt;&lt;/property&gt;*
         &lt;/properties&gt;
-    &lt;operation name=&quot;xs:stringr&quot;&gt;
-        &lt;input wrapperElementName=&quot;xs:stringr&quot; namespace=&quot;xs:stringr&quot;&gt;
-            &lt;fact elementName=&quot;xs:stringr&quot; namespace=&quot;xs:stringr&quot; type=&quot;xs:stringr&quot;&gt;&lt;/fact&gt;*
+    &lt;operation name=&quot;xs:string&quot;&gt;
+        &lt;input wrapperElementName=&quot;xs:string&quot; namespace=&quot;xs:string&quot;&gt;
+            &lt;fact elementName=&quot;xs:string&quot; namespace=&quot;xs:string&quot; type=&quot;xs:string&quot;&gt;&lt;/fact&gt;*
         &lt;/input&gt;
-        &lt;output wrapperElementName=&quot;xs:stringr&quot; namespace=&quot;xs:stringr&quot;&gt;
-            &lt;fact elementName=&quot;xs:stringr&quot; namespace=&quot;xs:stringr&quot; type=&quot;xs:stringr&quot;&gt;&lt;/fact&gt;*
+        &lt;output wrapperElementName=&quot;xs:string&quot; namespace=&quot;xs:string&quot;&gt;
+            &lt;fact elementName=&quot;xs:string&quot; namespace=&quot;xs:string&quot; type=&quot;xs:string&quot;&gt;&lt;/fact&gt;*
         &lt;/output&gt;
     &lt;/operation&gt;
 &lt;/ruleService&gt;</pre>

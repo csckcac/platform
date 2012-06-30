@@ -55,7 +55,7 @@
                                     <directory>resources</directory>
                                     <includes>
                                         <include>build.properties</include>
-                                        <include>conf/event-bridge-config.xml</include>
+                                        <include>conf/data-bridge-config.xml</include>
                                         <include>p2.inf</include>
                                     </includes>
                                 </resource>

@@ -14,8 +14,9 @@
     <packaging>pom</packaging>
     <name>WSO2 Carbon - Data Bridge - Data Publisher Aggregator pom</name>
     <url>http://wso2.org</url>
+
     <modules>
-        <module>org.wso2.carbon.databridge.datapublihser.feature</module>
+        <module>org.wso2.carbon.databridge.datapublisher.feature</module>
     </modules>
 
 </project>

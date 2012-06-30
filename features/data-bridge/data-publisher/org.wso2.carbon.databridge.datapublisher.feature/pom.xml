@@ -12,7 +12,7 @@
 
 
     <groupId>org.wso2.carbon</groupId>
-    <artifactId>org.wso2.carbon.databridge.datapublihser.feature</artifactId>
+    <artifactId>org.wso2.carbon.databridge.datapublisher.feature</artifactId>
     <packaging>pom</packaging>
     <name>WSO2 Carbon - Data Bridge - Data Publisher Aggregate Feature</name>
     <url>http://wso2.org</url>
@@ -27,6 +27,12 @@
         <dependency>
             <groupId>org.wso2.carbon</groupId>
             <artifactId>org.wso2.carbon.databridge.commons.thrift.server.feature</artifactId>
+            <version>${wso2carbon.version.databridge}</version>
+            <type>zip</type>
+        </dependency>
+        <dependency>
+            <groupId>org.wso2.carbon</groupId>
+            <artifactId>org.wso2.carbon.databridge.agent.thrift.server.feature</artifactId>
             <version>${wso2carbon.version.databridge}</version>
             <type>zip</type>
         </dependency>
@@ -46,7 +52,7 @@
                             <goal>p2-feature-gen</goal>
                         </goals>
                         <configuration>
-                            <id>org.wso2.carbon.databridge.datapublihser</id>
+                            <id>org.wso2.carbon.databridge.datapublisher</id>
                             <propertiesFile>../../etc/feature.properties</propertiesFile>
                             <adviceFile>
                                 <properties>
@@ -57,6 +63,7 @@
                             <includedFeatures>
                                 <includedFeatureDef>org.wso2.carbon:org.wso2.carbon.databridge.commons.server.feature</includedFeatureDef>
                                 <includedFeatureDef>org.wso2.carbon:org.wso2.carbon.databridge.commons.thrift.server.feature</includedFeatureDef>
+                                <includedFeatureDef>org.wso2.carbon:org.wso2.carbon.databridge.agent.thrift.server.feature</includedFeatureDef>
                             </includedFeatures>
                         </configuration>
                     </execution>

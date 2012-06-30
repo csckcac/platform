@@ -27,6 +27,12 @@
             <version>${wso2carbon.version.databridge}</version>
             <type>zip</type>
         </dependency>
+        <dependency>
+            <groupId>org.wso2.carbon</groupId>
+            <artifactId>org.wso2.carbon.databridge.core.server.feature</artifactId>
+            <version>${wso2carbon.version.databridge}</version>
+            <type>zip</type>
+        </dependency>
     </dependencies>
 
     <build>
@@ -47,8 +53,6 @@
                             <propertiesFile>../etc/feature.properties</propertiesFile>
                             <adviceFile>
                                 <properties>
-                                    <propertyDef>org.wso2.carbon.p2.category.type:server
-                                    </propertyDef>
                                     <propertyDef>org.eclipse.equinox.p2.type.group:true
                                     </propertyDef>
                                 </properties>
@@ -57,6 +61,7 @@
                                 <importFeatureDef>org.wso2.carbon.core:${wso2carbon.version}</importFeatureDef>
                             </importFeatures>
                             <includedFeatures>
+                                <includedFeatureDef>org.wso2.carbon:org.wso2.carbon.databridge.core.server.feature</includedFeatureDef>
                                 <includedFeatureDef>org.wso2.carbon:org.wso2.carbon.databridge.receiver.thrift.server.feature</includedFeatureDef>
                                 <includedFeatureDef>org.wso2.carbon:org.wso2.carbon.databridge.receiver.restapi.server.feature</includedFeatureDef>
                             </includedFeatures>

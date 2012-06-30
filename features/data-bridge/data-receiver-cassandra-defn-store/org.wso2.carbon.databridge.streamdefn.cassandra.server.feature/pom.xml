@@ -23,6 +23,13 @@
             <groupId>org.wso2.carbon</groupId>
             <artifactId>org.wso2.carbon.databridge.streamdefn.cassandra</artifactId>
         </dependency>
+        <dependency>
+            <groupId>org.wso2.carbon</groupId>
+            <artifactId>org.wso2.carbon.cassandra.dataaccess.feature</artifactId>
+            <version>${wso2carbon.version.databridge}</version>
+            <type>zip</type>
+        </dependency>
+
     </dependencies>
 
     <build>

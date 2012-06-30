@@ -156,7 +156,7 @@ public class GovernanceArtifactManager {
                 if (content instanceof String) {
                     newContent = (String) content;
                 } else {
-                    newContent = new String((byte[]) content);
+                    newContent = RegistryUtils.decodeBytes((byte[]) content);
                 }
                 if (newContent.equals(oldContent)) {
                     artifact.setId(oldResource.getUUID());

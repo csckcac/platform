@@ -257,9 +257,8 @@ public class ManageGenericArtifactService extends RegistryAbstractAdmin implemen
     public String getArtifactUIConfiguration(String key) throws RegistryException {
         try {
             Registry registry = getConfigSystemRegistry();
-            return new String(
-                    (byte[]) registry.get(GOVERNANCE_ARTIFACT_CONFIGURATION_PATH + key)
-                            .getContent());
+            return RegistryUtils.decodeBytes((byte[]) registry.get(GOVERNANCE_ARTIFACT_CONFIGURATION_PATH + key)
+                    .getContent());
         } catch (Exception e) {
             log.error("An error occurred while obtaining configuration", e);
             return null;

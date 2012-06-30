@@ -366,7 +366,7 @@ public class CommonUtil {
         if (resource != null) {
             String content = null;
             if (resource.getContent() != null) {
-                content = new String((byte[])resource.getContent());
+                content = RegistryUtils.decodeBytes((byte[])resource.getContent());
             }
             if (content != null) {
                 OMElement aspect = AXIOMUtil.stringToOM(content);

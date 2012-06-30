@@ -18,6 +18,7 @@ package org.wso2.carbon.wsdl.ui.test;
 import junit.framework.TestCase;
 import org.wso2.carbon.governance.wsdl.ui.TreeNodeBuilder;
 import org.wso2.carbon.registry.common.ui.utils.TreeNode;
+import org.wso2.carbon.registry.core.utils.RegistryUtils;
 
 
 import java.io.File;
@@ -50,7 +51,7 @@ public class WSDLDataTest extends TestCase {
         FileInputStream fileInputStream = new FileInputStream(file);
         byte[] fileContents = new byte[(int)file.length()];
         fileInputStream.read(fileContents);
-        return new String(fileContents);
+        return RegistryUtils.decodeBytes(fileContents);
     }
 
     public void testRetrieveWSDLDataFull() throws Exception {

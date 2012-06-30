@@ -488,7 +488,7 @@ public class ChecklistLifeCycle extends Aspect {
                 String xmlContent = "";
                 if (isConfigurationFromResource) {
                     Resource configurationResource = registry.get(configurationResourcePath);
-                    xmlContent = new String((byte[])configurationResource.getContent());
+                    xmlContent = RegistryUtils.decodeBytes((byte[])configurationResource.getContent());
                     configurationElement =  AXIOMUtil.stringToOM(xmlContent);
                 }
 

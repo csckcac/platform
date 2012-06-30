@@ -69,7 +69,7 @@ public class JCRHandler extends Handler {
                     if (oldContent instanceof String) {
                         oldContentString = (String) oldContent;
                     } else {
-                        oldContentString = new String((byte[])oldContent);
+                        oldContentString = RegistryUtils.decodeBytes((byte[])oldContent);
                     }
                 }
                 if (oldResource == null || !contentString.equals(oldContentString)) {

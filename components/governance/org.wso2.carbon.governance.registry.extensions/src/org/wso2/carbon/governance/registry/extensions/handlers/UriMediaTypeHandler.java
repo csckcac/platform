@@ -59,7 +59,7 @@ public class UriMediaTypeHandler extends Handler {
                 if(oldResource.getContent() instanceof String){
                     oldContent = (String) oldResource.getContent();
                 } else {
-                    oldContent = new String((byte[])oldResource.getContent());
+                    oldContent = RegistryUtils.decodeBytes((byte[])oldResource.getContent());
                 }
 
                 if (oldContent.equals(newContent)) {

@@ -161,6 +161,8 @@ public class RegistryProperty implements Property {
     }
 
     public void setValue(Value value) throws ValueFormatException, VersionException, LockException, ConstraintViolationException, RepositoryException {
+        RegistryJCRItemOperationUtil.checkRetentionPolicy(session,getPath());
+
         validatePropertyModifyPrivilege();
         if (value != null) {
             this.value = (RegistryValue) value;
@@ -184,6 +186,9 @@ public class RegistryProperty implements Property {
     }
 
     public void setValue(Value[] values) throws ValueFormatException, VersionException, LockException, ConstraintViolationException, RepositoryException {
+        RegistryJCRItemOperationUtil.checkRetentionPolicy(session, getNodePath());
+        RegistryJCRItemOperationUtil.checkRetentionHold(session, getNodePath());
+
         validatePropertyModifyPrivilege();
         if (values != null) {
             this.values = Arrays.copyOf(values, values.length);
@@ -206,6 +211,9 @@ public class RegistryProperty implements Property {
     }
 
     public void setValue(String s) throws ValueFormatException, VersionException, LockException, ConstraintViolationException, RepositoryException {
+        RegistryJCRItemOperationUtil.checkRetentionPolicy(session, getNodePath());
+        RegistryJCRItemOperationUtil.checkRetentionHold(session, getNodePath());
+
         validatePropertyModifyPrivilege();
         value = new RegistryValue(s);
         persistNewPropertyValue("string",s);
@@ -216,8 +224,8 @@ public class RegistryProperty implements Property {
     }
 
     public void setValue(String[] strings) throws ValueFormatException, VersionException, LockException, ConstraintViolationException, RepositoryException {
+        RegistryJCRItemOperationUtil.checkRetentionPolicy(session, getNodePath());
         validatePropertyModifyPrivilege();
-
         stringMultipleVals = strings.clone();
         values = new RegistryValue[strings.length];
         int i = 0;
@@ -240,6 +248,9 @@ public class RegistryProperty implements Property {
 
 
     public void setValue(InputStream inputStream) throws ValueFormatException, VersionException, LockException, ConstraintViolationException, RepositoryException {
+        RegistryJCRItemOperationUtil.checkRetentionPolicy(session, getNodePath());
+        RegistryJCRItemOperationUtil.checkRetentionHold(session, getNodePath());
+
         validatePropertyModifyPrivilege();
         value = new RegistryValue(inputStream);
         persistNewPropertyValue("is",inputStream);
@@ -251,6 +262,9 @@ public class RegistryProperty implements Property {
 
 
     public void setValue(Binary binary) throws ValueFormatException, VersionException, LockException, ConstraintViolationException, RepositoryException {
+        RegistryJCRItemOperationUtil.checkRetentionPolicy(session, getNodePath());
+        RegistryJCRItemOperationUtil.checkRetentionHold(session, getNodePath());
+
         validatePropertyModifyPrivilege();
         value = new RegistryValue(binary);
         //TODO persist binary type value
@@ -261,6 +275,9 @@ public class RegistryProperty implements Property {
     }
 
     public void setValue(long l) throws ValueFormatException, VersionException, LockException, ConstraintViolationException, RepositoryException {
+        RegistryJCRItemOperationUtil.checkRetentionPolicy(session, getNodePath());
+        RegistryJCRItemOperationUtil.checkRetentionHold(session, getNodePath());
+
         validatePropertyModifyPrivilege();
         value = new RegistryValue(l);
         persistNewPropertyValue("long",new Long(l));
@@ -271,6 +288,9 @@ public class RegistryProperty implements Property {
     }
 
     public void setValue(double v) throws ValueFormatException, VersionException, LockException, ConstraintViolationException, RepositoryException {
+        RegistryJCRItemOperationUtil.checkRetentionPolicy(session, getNodePath());
+        RegistryJCRItemOperationUtil.checkRetentionHold(session, getNodePath());
+
         validatePropertyModifyPrivilege();
         value = new RegistryValue(v);
         persistNewPropertyValue("double",new Double(v));
@@ -281,6 +301,9 @@ public class RegistryProperty implements Property {
     }
 
     public void setValue(BigDecimal bigDecimal) throws ValueFormatException, VersionException, LockException, ConstraintViolationException, RepositoryException {
+        RegistryJCRItemOperationUtil.checkRetentionPolicy(session, getNodePath());
+        RegistryJCRItemOperationUtil.checkRetentionHold(session, getNodePath());
+
         validatePropertyModifyPrivilege();
         value = new RegistryValue(bigDecimal);
         persistNewPropertyValue("big_d",bigDecimal);
@@ -292,6 +315,9 @@ public class RegistryProperty implements Property {
     }
 
     public void setValue(Calendar calendar) throws ValueFormatException, VersionException, LockException, ConstraintViolationException, RepositoryException {
+        RegistryJCRItemOperationUtil.checkRetentionPolicy(session, getNodePath());
+        RegistryJCRItemOperationUtil.checkRetentionHold(session, getNodePath());
+
         validatePropertyModifyPrivilege();
         if (calendar != null) {
             value = new RegistryValue(calendar);
@@ -307,6 +333,9 @@ public class RegistryProperty implements Property {
     }
 
     public void setValue(boolean b) throws ValueFormatException, VersionException, LockException, ConstraintViolationException, RepositoryException {
+        RegistryJCRItemOperationUtil.checkRetentionPolicy(session, getNodePath());
+        RegistryJCRItemOperationUtil.checkRetentionHold(session, getNodePath());
+
         validatePropertyModifyPrivilege();
         value = new RegistryValue(b);
         persistNewPropertyValue("boolean",String.valueOf(b));
@@ -317,6 +346,9 @@ public class RegistryProperty implements Property {
     }
 
     public void setValue(Node node) throws ValueFormatException, VersionException, LockException, ConstraintViolationException, RepositoryException {
+        RegistryJCRItemOperationUtil.checkRetentionPolicy(session, getNodePath());
+        RegistryJCRItemOperationUtil.checkRetentionHold(session, getNodePath());
+
         validatePropertyModifyPrivilege();
         value = new RegistryValue(node);
         //TODO set node type of values
@@ -560,6 +592,9 @@ public class RegistryProperty implements Property {
 
     public void remove() throws VersionException, LockException, ConstraintViolationException, AccessDeniedException, RepositoryException {
         RegistryJCRItemOperationUtil.validateReadOnlyItemOpr(session);
+        RegistryJCRItemOperationUtil.checkRetentionPolicy(session, getNodePath());
+        RegistryJCRItemOperationUtil.checkRetentionHold(session, getNodePath());
+
         try {
             if (isResource) {
                 session.getUserRegistry().delete(path);
@@ -574,6 +609,19 @@ public class RegistryProperty implements Property {
             throw new RepositoryException(msg, e);
         }
 
+    }
+
+    private String getNodePath() throws RepositoryException {
+         if(isResource) {
+             try {
+                 return session.getUserRegistry().get(path).getParentPath();
+             } catch (RegistryException e) {
+                 throw new RepositoryException("Registry level Exception occurred, cannot " +
+                         "obtain parent path of " + path);
+             }
+         } else {
+             return path;
+         }
     }
 
     private void persistNewPropertyValue(String type, Object value) throws RepositoryException {

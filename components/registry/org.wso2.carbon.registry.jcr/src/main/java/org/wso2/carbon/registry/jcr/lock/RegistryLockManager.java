@@ -24,35 +24,35 @@ import javax.jcr.*;
 import javax.jcr.lock.Lock;
 import javax.jcr.lock.LockException;
 import javax.jcr.lock.LockManager;
-import java.util.Iterator;
+import java.util.*;
 
 
 public class RegistryLockManager implements LockManager {
 
+    private Map<String, Lock> allLocks = new HashMap<String, Lock>();
+    private Set<String> lockTokens = new HashSet<String>();
+
     private Session session;
 
     public RegistryLockManager(Session session) {
-
         this.session = session;
     }
 
     public void addLockToken(String s) throws LockException, RepositoryException {
-
-        ((RegistrySession) session).getLockTokenList().add(s);
-
+       lockTokens.add(s);
     }
 
     public Lock getLock(String s) throws PathNotFoundException, LockException, AccessDeniedException, RepositoryException {
 
-        return (Lock) ((RegistryRepository) session.getRepository()).getAllLocks().get(s);
+        return allLocks.get(s);
     }
 
     public String[] getLockTokens() throws RepositoryException {
 
-        if (((RegistrySession) session).getLockTokenList().size() != 0) {
+        if (lockTokens.size() != 0) {
             int i = 0;
-            String[] arr = new String[((RegistrySession) session).getLockTokenList().size()];
-            Iterator it = ((RegistrySession) session).getLockTokenList().iterator();
+            String[] arr = new String[lockTokens.size()];
+            Iterator it = lockTokens.iterator();
 
             while (it.hasNext()) {
                 Object temp = it.next();
@@ -72,13 +72,14 @@ public class RegistryLockManager implements LockManager {
     }
 
     public boolean holdsLock(String s) throws PathNotFoundException, RepositoryException {
-        boolean holdLock = false;
-
-        if (getLock(s) != null) {
-            holdLock = true;
-        }
-
-        return holdLock;
+        return getAllLocks().containsKey(s);
+//        boolean holdLock = false;
+//
+//        if (getLock(s) != null) {
+//            holdLock = true;
+//        }
+//
+//        return holdLock;
     }
 
     /*
@@ -97,7 +98,7 @@ public class RegistryLockManager implements LockManager {
             } else {
 
                 lock = new RegistryLock(session, s, b, b1, l, s1);
-                ((RegistryRepository) session.getRepository()).getAllLocks().put(s, lock);
+                allLocks.put(s, lock);
             }
         } catch (Exception e) {
             e.printStackTrace();
@@ -112,7 +113,7 @@ public class RegistryLockManager implements LockManager {
         boolean islocked = false;
         String parentPath = ((RegistryNode) (session.getItem(s))).getParent().getPath();
 
-        if ((((RegistryRepository) session.getRepository()).getAllLocks().get(s) != null)
+        if ((allLocks.get(s) != null)
                 || (getLock(parentPath) != null) && (getLock(parentPath).isDeep())) {
 
             islocked = true;
@@ -123,12 +124,15 @@ public class RegistryLockManager implements LockManager {
     }
 
     public void removeLockToken(String s) throws LockException, RepositoryException {
-
-        ((RegistrySession) session).getLockTokenList().remove(s);
+        lockTokens.remove(s);
     }
 
     public void unlock(String s) throws PathNotFoundException, LockException, AccessDeniedException, InvalidItemStateException, RepositoryException {
-
-        ((RegistryRepository) session.getRepository()).getAllLocks().remove(s);
+        allLocks.remove(s);
     }
+
+    private Map<String, Lock> getAllLocks() {
+        return allLocks;
+    }
+
 }

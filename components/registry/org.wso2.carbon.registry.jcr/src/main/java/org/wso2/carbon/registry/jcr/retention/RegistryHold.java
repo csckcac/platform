@@ -16,6 +16,8 @@
 
 package org.wso2.carbon.registry.jcr.retention;
 
+import org.wso2.carbon.registry.jcr.util.retention.EffectiveRetentionUtil;
+
 import javax.jcr.RepositoryException;
 import javax.jcr.retention.Hold;
 

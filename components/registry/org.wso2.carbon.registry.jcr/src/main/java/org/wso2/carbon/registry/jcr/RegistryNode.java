@@ -114,6 +114,8 @@ public class RegistryNode implements Node {
 
 
     public Node addNode(String s) throws ItemExistsException, PathNotFoundException, VersionException, ConstraintViolationException, LockException, RepositoryException {
+        RegistryJCRItemOperationUtil.checkRetentionPolicy(registrySession, getPath());
+        RegistryJCRItemOperationUtil.checkRetentionHold(registrySession, getPath());
 
         String absPath = "";
         String ntName = "";
@@ -303,6 +305,9 @@ public class RegistryNode implements Node {
     }
 
     public Property setProperty(String s, Value value) throws ValueFormatException, VersionException, LockException, ConstraintViolationException, RepositoryException {
+        RegistryJCRItemOperationUtil.checkRetentionPolicy(registrySession,getPath());
+        RegistryJCRItemOperationUtil.checkRetentionHold(registrySession, getPath());
+
         registrySession.sessionPending();
         validatePropertyModifyPrivilege(s);
 
@@ -348,6 +353,9 @@ public class RegistryNode implements Node {
     }
 
     public Property setProperty(String s, Value value, int i) throws ValueFormatException, VersionException, LockException, ConstraintViolationException, RepositoryException {
+        RegistryJCRItemOperationUtil.checkRetentionPolicy(registrySession,getPath());
+        RegistryJCRItemOperationUtil.checkRetentionHold(registrySession, getPath());
+
         validatePropertyModifyPrivilege(s);
 
          //TODO consider TYPE "i" when set the value
@@ -355,6 +363,9 @@ public class RegistryNode implements Node {
     }
 
     public Property setProperty(String s, Value[] values) throws ValueFormatException, VersionException, LockException, ConstraintViolationException, RepositoryException {
+        RegistryJCRItemOperationUtil.checkRetentionPolicy(registrySession,getPath());
+        RegistryJCRItemOperationUtil.checkRetentionHold(registrySession, getPath());
+
         registrySession.sessionPending();
         validatePropertyModifyPrivilege(s);
 
@@ -389,17 +400,25 @@ public class RegistryNode implements Node {
 
 
     public Property setProperty(String s, Value[] values, int i) throws ValueFormatException, VersionException, LockException, ConstraintViolationException, RepositoryException {
-        validatePropertyModifyPrivilege(s);
+        RegistryJCRItemOperationUtil.checkRetentionPolicy(registrySession,getPath());
+        RegistryJCRItemOperationUtil.checkRetentionHold(registrySession, getPath());
 
+        validatePropertyModifyPrivilege(s);
         return setProperty(s, values);
     }
 
     private Property setPropertyToNode(String s, String[] strings) throws ValueFormatException, VersionException, LockException, ConstraintViolationException, RepositoryException {
+        RegistryJCRItemOperationUtil.checkRetentionPolicy(registrySession,getPath());
+        RegistryJCRItemOperationUtil.checkRetentionHold(registrySession, getPath());
+
       return RegistryJCRItemOperationUtil.persistStringPropertyValues(
                    registrySession,nodePath,s,strings);
     }
 
     public Property setProperty(String s, String[] strings) throws ValueFormatException, VersionException, LockException, ConstraintViolationException, RepositoryException {
+        RegistryJCRItemOperationUtil.checkRetentionPolicy(registrySession,getPath());
+        RegistryJCRItemOperationUtil.checkRetentionHold(registrySession, getPath());
+
         registrySession.sessionPending();
         validatePropertyModifyPrivilege(s);
 
@@ -412,12 +431,18 @@ public class RegistryNode implements Node {
     }
 
     public Property setProperty(String s, String[] strings, int i) throws ValueFormatException, VersionException, LockException, ConstraintViolationException, RepositoryException {
+        RegistryJCRItemOperationUtil.checkRetentionPolicy(registrySession,getPath());
+        RegistryJCRItemOperationUtil.checkRetentionHold(registrySession, getPath());
+
         validatePropertyModifyPrivilege(s);
 
         return setProperty(s, strings);
     }
 
     public Property setProperty(String s, String s1) throws ValueFormatException, VersionException, LockException, ConstraintViolationException, RepositoryException {
+        RegistryJCRItemOperationUtil.checkRetentionPolicy(registrySession,getPath());
+        RegistryJCRItemOperationUtil.checkRetentionHold(registrySession, getPath());
+
         registrySession.sessionPending();
         validatePropertyModifyPrivilege(s);
 
@@ -454,11 +479,17 @@ public class RegistryNode implements Node {
     }
 
     public Property setProperty(String s, String s1, int i) throws ValueFormatException, VersionException, LockException, ConstraintViolationException, RepositoryException {
+        RegistryJCRItemOperationUtil.checkRetentionPolicy(registrySession,getPath());
+        RegistryJCRItemOperationUtil.checkRetentionHold(registrySession, getPath());
+
         validatePropertyModifyPrivilege(s);
         return setProperty(s, s1);
     }
 
     public Property setProperty(String s, InputStream inputStream) throws ValueFormatException, VersionException, LockException, ConstraintViolationException, RepositoryException {
+        RegistryJCRItemOperationUtil.checkRetentionPolicy(registrySession,getPath());
+        RegistryJCRItemOperationUtil.checkRetentionHold(registrySession, getPath());
+
         registrySession.sessionPending();
         validatePropertyModifyPrivilege(s);
 
@@ -482,6 +513,9 @@ public class RegistryNode implements Node {
     }
 
     public Property setProperty(String s, Binary binary) throws ValueFormatException, VersionException, LockException, ConstraintViolationException, RepositoryException {
+        RegistryJCRItemOperationUtil.checkRetentionPolicy(registrySession,getPath());
+        RegistryJCRItemOperationUtil.checkRetentionHold(registrySession, getPath());
+
        //TODO finish Impl of set binary type
         registrySession.sessionPending();
         validatePropertyModifyPrivilege(s);
@@ -492,6 +526,9 @@ public class RegistryNode implements Node {
     }
 
     public Property setProperty(String s, boolean b) throws ValueFormatException, VersionException, LockException, ConstraintViolationException, RepositoryException {
+        RegistryJCRItemOperationUtil.checkRetentionPolicy(registrySession,getPath());
+        RegistryJCRItemOperationUtil.checkRetentionHold(registrySession, getPath());
+
         registrySession.sessionPending();
         validatePropertyModifyPrivilege(s);
 
@@ -515,6 +552,9 @@ public class RegistryNode implements Node {
     }
 
     public Property setProperty(String s, double v) throws ValueFormatException, VersionException, LockException, ConstraintViolationException, RepositoryException {
+        RegistryJCRItemOperationUtil.checkRetentionPolicy(registrySession,getPath());
+        RegistryJCRItemOperationUtil.checkRetentionHold(registrySession, getPath());
+
         registrySession.sessionPending();
         validatePropertyModifyPrivilege(s);
 
@@ -536,6 +576,9 @@ public class RegistryNode implements Node {
     }
 
     public Property setProperty(String s, BigDecimal bigDecimal) throws ValueFormatException, VersionException, LockException, ConstraintViolationException, RepositoryException {
+        RegistryJCRItemOperationUtil.checkRetentionPolicy(registrySession,getPath());
+        RegistryJCRItemOperationUtil.checkRetentionHold(registrySession, getPath());
+
         registrySession.sessionPending();
         validatePropertyModifyPrivilege(s);
 
@@ -570,6 +613,9 @@ public class RegistryNode implements Node {
 
 
     public Property setProperty(String s, long l) throws ValueFormatException, VersionException, LockException, ConstraintViolationException, RepositoryException {
+        RegistryJCRItemOperationUtil.checkRetentionPolicy(registrySession,getPath());
+        RegistryJCRItemOperationUtil.checkRetentionHold(registrySession, getPath());
+
         registrySession.sessionPending();
         validatePropertyModifyPrivilege(s);
 
@@ -591,6 +637,9 @@ public class RegistryNode implements Node {
     }
 
     public Property setProperty(String s, Calendar calendar) throws ValueFormatException, VersionException, LockException, ConstraintViolationException, RepositoryException {
+        RegistryJCRItemOperationUtil.checkRetentionPolicy(registrySession,getPath());
+        RegistryJCRItemOperationUtil.checkRetentionHold(registrySession, getPath());
+
         registrySession.sessionPending();
         validatePropertyModifyPrivilege(s);
 
@@ -618,6 +667,9 @@ public class RegistryNode implements Node {
     }
 
     public Property setProperty(String s, Node node) throws ValueFormatException, VersionException, LockException, ConstraintViolationException, RepositoryException {
+        RegistryJCRItemOperationUtil.checkRetentionPolicy(registrySession,getPath());
+        RegistryJCRItemOperationUtil.checkRetentionHold(registrySession, getPath());
+
        //TODO finish impl set NODE
         registrySession.sessionPending();
         validatePropertyModifyPrivilege(s);
@@ -1191,6 +1243,8 @@ public class RegistryNode implements Node {
  }
 
     public void removeMixin(String s) throws NoSuchNodeTypeException, VersionException, ConstraintViolationException, LockException, RepositoryException {
+        RegistryJCRItemOperationUtil.checkRetentionHold(registrySession, getPath());
+
         try {
             Resource resource = registrySession.getUserRegistry().get(nodePath);
             if (resource.getPropertyValues("jcr:mixinTypes").contains(s)) {
@@ -1395,16 +1449,13 @@ public class RegistryNode implements Node {
 
     public void followLifecycleTransition(String s) throws UnsupportedRepositoryOperationException, InvalidLifecycleTransitionException, RepositoryException {
 
-
     }
 
     public String[] getAllowedLifecycleTransistions() throws UnsupportedRepositoryOperationException, RepositoryException {
-
         return new String[0];
     }
 
     public String getPath() throws RepositoryException {
-
         return nodePath;
     }
 
@@ -1543,9 +1594,13 @@ public class RegistryNode implements Node {
         //TODO  if nodetype is a mandatory one should throw ConstraintViolationException
 
 //           A read only session must not be allowed to remove a node
+
         RegistryJCRItemOperationUtil.validateReadOnlyItemOpr(registrySession);
 
         try {
+            RegistryJCRItemOperationUtil.checkRetentionPolicyWithParent(registrySession,getPath());
+            RegistryJCRItemOperationUtil.checkRetentionHoldWithParent(registrySession,getPath());
+
             if (registrySession.getUserRegistry().resourceExists(nodePath)) {
                 registrySession.removeItem(nodePath);
             } else {

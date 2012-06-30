@@ -17,10 +17,13 @@
 package org.wso2.carbon.registry.jcr.retention;
 
 import org.apache.xalan.xsltc.dom.LoadDocument;
+import org.wso2.carbon.registry.common.CommonConstants;
 import org.wso2.carbon.registry.core.CollectionImpl;
 import org.wso2.carbon.registry.core.Resource;
 import org.wso2.carbon.registry.core.exceptions.RegistryException;
 import org.wso2.carbon.registry.jcr.RegistrySession;
+import org.wso2.carbon.registry.jcr.util.RegistryJCRSpecificStandardLoderUtil;
+import org.wso2.carbon.registry.jcr.util.retention.EffectiveRetentionUtil;
 import org.wso2.carbon.registry.jcr.util.test.data.TCKTestDataLoader;
 
 import javax.jcr.AccessDeniedException;
@@ -37,19 +40,24 @@ import java.util.*;
 public class RegistryRetentionManager implements RetentionManager {
 
 
-    private Map<String, Set<Hold>> holdMap = new HashMap<String, Set<Hold>>();
-    private Map<String, RetentionPolicy> retentionPolicies = new HashMap<String, RetentionPolicy>();
+    private Map<String, Set<Hold>> pendingHoldMap = new HashMap<String, Set<Hold>>();
+    //    private Map<String, RetentionPolicy> retentionPolicies = new HashMap<String, RetentionPolicy>();
     private Map<String, RetentionPolicy> pendingRetentionPolicies = new HashMap<String, RetentionPolicy>();
+    private List<String> pendingPolicyRemoveList = new ArrayList<String>();
+
+    public List<String> getPendingPolicyRemoveList() {
+        return pendingPolicyRemoveList;
+    }
 
 
     private RegistrySession session;
 
     public RegistryRetentionManager(RegistrySession session) {
         this.session = session;
-       loadTCKTestdata();
+        loadTCKTestdata();
     }
 
-//    TODO REMOVE from svn, as this just need for TCK running
+    //    TODO REMOVE from svn, as this just need for TCK running
     private void loadTCKTestdata() {
         try {
             TCKTestDataLoader.loadRetentionPolicies(session);
@@ -58,56 +66,69 @@ public class RegistryRetentionManager implements RetentionManager {
         }
     }
 
+    public Map<String, Set<Hold>> getPendingRetentionHolds() {
+        return pendingHoldMap;
+    }
+
     public Map<String, RetentionPolicy> getPendingRetentionPolicies() {
         return pendingRetentionPolicies;
     }
 
-    public Map<String, RetentionPolicy> getRetentionPolicies() {
-        return retentionPolicies;
-    }
-
     public Hold[] getHolds(String s) throws PathNotFoundException, AccessDeniedException, RepositoryException {
 
+        if(RegistryJCRSpecificStandardLoderUtil.isSessionReadOnly(session.getUserID())){
+            throw new AccessDeniedException("Read-only session doesn't have " +
+                    "sufficient privileges to retrieve retention holds");
+        }
         if (!isPathValid(s)) {
             throw new RepositoryException("Cannot apply invalid path for retention holds " + s);
         }
         if (!isPathExists(s)) {
             throw new PathNotFoundException("No such Path exists for getting hold: " + s);
         }
-
-//        if (holdMap.size() != 0) {
-//            return holdMap.get(s).toArray(new Hold[holdMap.size()]);
-//        } else {
-//            return new Hold[0];
-//        }
-
-       return getHoldsFromRegistry(s);
+        return EffectiveRetentionUtil.getHoldsFromRegistry(session, s);
     }
 
     public Hold addHold(String s, String s1, boolean b) throws PathNotFoundException, AccessDeniedException, LockException, VersionException, RepositoryException {
 
-        if (!isPathValid(s1)) {
+        if (!isPathValid(s)) {
             throw new RepositoryException("Cannot apply invalid path for retention holds " + s);
         }
-//        Hold aHold = new RegistryHold(s1, b);
-//        if (holdMap.get(s) == null) {
-//            Set<Hold> tempHd = new HashSet<Hold>();
-//            tempHd.add(aHold);
-//            holdMap.put(s, tempHd);
-//        } else {
-//            holdMap.get(s).add(aHold);
-//        }
-//        return aHold;
-    return addHoldsToRegistry(s,s1,b);
+
+        if(!isValidJCRName(s1)) {
+            throw new RepositoryException("Cannot apply invalid name for retention holds " + s);
+        }
+
+        return addHoldsToPending(s, s1, b);
+//    return EffectiveRetentionUtil.addHoldsToRegistry(session,s,s1,b);
+    }
+
+    private Hold addHoldsToPending(String s, String s1, boolean b) {
+        Hold aHold = new RegistryHold(s1, b);
+        if (pendingHoldMap.get(s) == null) {
+            Set<Hold> tempHd = new HashSet<Hold>();
+            tempHd.add(aHold);
+            pendingHoldMap.put(s, tempHd);
+        } else {
+            pendingHoldMap.get(s).add(aHold);
+        }
+        return aHold;
+
     }
 
     public void removeHold(String s, Hold hold) throws PathNotFoundException, AccessDeniedException, LockException, VersionException, RepositoryException {
-           removeHoldFromRegistry(s, hold);
-//        ((Set) holdMap.get(s)).remove(hold);
+        if(pendingHoldMap.containsKey(s)) {
+            ((Set)pendingHoldMap.get(s)).remove(hold);
+        }
+        EffectiveRetentionUtil.removeHoldFromRegistry(session, s, hold);
     }
 
     public RetentionPolicy getRetentionPolicy(String s) throws PathNotFoundException, AccessDeniedException, RepositoryException {
 
+        if(RegistryJCRSpecificStandardLoderUtil.isSessionReadOnly(session.getUserID())){
+            throw new AccessDeniedException("Read-only session doesn't have " +
+                    "sufficient privileges to retrieve retention policy.");
+        }
         //Invalid path check
         if (!isPathValid(s)) {
             throw new RepositoryException("Cannot apply invalid path for retention policies " + s);
@@ -117,8 +138,12 @@ public class RegistryRetentionManager implements RetentionManager {
             throw new PathNotFoundException("No such Path exists for apply retention: " + s);
         }
 
-//        return retentionPolicies.get(s);
-      return getRetentionPolicyFromRegistry(s);
+        RetentionPolicy persistedPolicy = EffectiveRetentionUtil.getRetentionPolicyFromRegistry(session, s);
+        if(persistedPolicy != null) {
+          return persistedPolicy;
+        } else {
+         return pendingRetentionPolicies.get(s);
+        }
     }
 
     private boolean isPathExists(String s) throws RepositoryException {
@@ -131,6 +156,14 @@ public class RegistryRetentionManager implements RetentionManager {
     }
 
     public void setRetentionPolicy(String s, RetentionPolicy retentionPolicy) throws PathNotFoundException, AccessDeniedException, LockException, VersionException, RepositoryException {
+
+        if(session.getWorkspace().getLockManager().holdsLock(s)) {
+           throw new LockException("Cannot set retention policy on a locked node");
+        }
+        if(RegistryJCRSpecificStandardLoderUtil.isSessionReadOnly(session.getUserID())){
+            throw new AccessDeniedException("Read-only session doesn't have " +
+                    "sufficient privileges to retrieve retention policy.");
+        }
         //Invalid path check
         if (!isPathValid(s)) {
             throw new RepositoryException("Cannot apply invalid path for retention policies " + s);
@@ -143,13 +176,15 @@ public class RegistryRetentionManager implements RetentionManager {
         if (!isPathExists(s)) {
             throw new PathNotFoundException("No such Path exists for apply retention: " + s);
         }
-
-        setRetentionPolicyToRegistry(s,retentionPolicy);
-//        retentionPolicies.put(s, retentionPolicy);
+        pendingRetentionPolicies.put(s, retentionPolicy);
+//        EffectiveRetentionUtil.setRetentionPolicyToRegistry(session,s,retentionPolicy);
     }
 
     public void removeRetentionPolicy(String s) throws PathNotFoundException, AccessDeniedException, LockException, VersionException, RepositoryException {
 
+        if(session.getWorkspace().getLockManager().holdsLock(s)) {
+           throw new LockException("Cannot set retention policy on a locked node");
+        }
         if (!isPathValid(s)) {
             throw new RepositoryException("Cannot apply invalid path for retention policies " + s);
         }
@@ -158,14 +193,25 @@ public class RegistryRetentionManager implements RetentionManager {
             throw new PathNotFoundException("No such Path exists for apply retention: " + s);
         }
 
-//        if (retentionPolicies.get(s) == null) {
-//            throw new RepositoryException("Cannot remove retention from other nodes" + s);
-//        }
-//        retentionPolicies.remove(s);
-        if (getRetentionPolicy(s) == null) {
+        try {
+            if ((getRetentionPolicy(s) == null) && getRetentionPolicy(
+                    session.getUserRegistry().get(s).getParentPath()) != null) {
+                throw new RepositoryException("Cannot remove retention from other nodes" + s);
+            }
+        } catch (RegistryException e) {
             throw new RepositoryException("Cannot remove retention from other nodes" + s);
         }
-        removeRetentionPolicyFromRegistry(s);
+
+//        if(getRetentionPolicy(s) != null) {
+//            EffectiveRetentionUtil.removeRetentionPolicyFromRegistry(session, s);
+//            return;
+//        }
+        if(pendingRetentionPolicies.get(s) != null) {
+            pendingRetentionPolicies.remove(s);
+        } else if(getRetentionPolicy(s) != null){
+            EffectiveRetentionUtil.removeRetentionPolicyFromRegistry(session, s);
+            pendingPolicyRemoveList.add(s);
+        }
     }
 
     private boolean isPathValid(String path) {
@@ -173,7 +219,7 @@ public class RegistryRetentionManager implements RetentionManager {
                 || path.contains("*")
                 || path.contains("[")
                 || path.contains("]"))
-//            TODO add more to validate jcr path naming
+//            TODO add more to validate jcr path naming or use regex
         {
             return false;
         } else {
@@ -184,7 +230,7 @@ public class RegistryRetentionManager implements RetentionManager {
     private boolean isValidJCRName(String name) {
         if (name == null || name.contains("/")
                 || name.contains("*"))
-//            TODO add more to validate jcr naming
+//            TODO add more to validate jcr naming or use regex
         {
             return false;
         } else {
@@ -192,105 +238,5 @@ public class RegistryRetentionManager implements RetentionManager {
         }
     }
 
-    private void setRetentionPolicyToRegistry(String s, RetentionPolicy retentionPolicy) throws  RepositoryException {
-        Resource resource= null;
-        try {
-            resource = session.getUserRegistry().get(s);
-        resource.setProperty("org.wso2.carbon.registry.jcr.retention.policy",retentionPolicy.getName());
-         session.getUserRegistry().put(s,resource);
-        } catch (RegistryException e) {
-            throw new RepositoryException("Registry level exception when setting retention policy at " + s);
-        }
-    }
 
-     private void removeRetentionPolicyFromRegistry(String s) throws  RepositoryException {
-        Resource resource= null;
-        try {
-            resource = session.getUserRegistry().get(s);
-            resource.removeProperty("org.wso2.carbon.registry.jcr.retention.policy");
-         session.getUserRegistry().put(s,resource);
-        } catch (RegistryException e) {
-            throw new RepositoryException("Registry level exception when setting retention policy at " + s);
-        }
-    }
-
-
-     private RetentionPolicy getRetentionPolicyFromRegistry(String s) throws RepositoryException {
-         Resource resource= null;
-         try {
-             resource = session.getUserRegistry().get(s);
-         } catch (RegistryException e) {
-             throw new RepositoryException("Registry level exception when setting retention policy at " + s);
-         }
-         String name = resource.getProperty("org.wso2.carbon.registry.jcr.retention.policy");
-         if(name != null) {
-             return new RegistryRetentionPolicy(name);
-         } else {
-            return null;
-         }
-     }
-
-
-
-    private Hold addHoldsToRegistry(String s, String s1, boolean b) throws RepositoryException {
-        Resource resource = null;
-        try {
-            resource = session.getUserRegistry().get(s);
-        if(resource.getPropertyValues("org.wso2.carbon.registry.jcr.retention.holds") == null) {
-            List list = new ArrayList();
-            list.add(s1 + ";" + String.valueOf(b));
-            resource.setProperty("org.wso2.carbon.registry.jcr.retention.holds",list);
-        } else {
-          resource.getPropertyValues("org.wso2.carbon.registry.jcr.retention.holds").
-                   add(s1 + ";" + String.valueOf(b));
-        }
-        session.getUserRegistry().put(s,resource);
-        } catch (RegistryException e) {
-            throw new RepositoryException("Registry level exception when setting retention policy at " + s);
-        }
-
-       return  new RegistryHold(s1, b);
-
-    }
-
-    private Hold[] getHoldsFromRegistry(String s) throws RepositoryException {
-        Resource resource = null;
-        List<Hold> holdList = new ArrayList<Hold>();
-        try {
-            resource = session.getUserRegistry().get(s);
-            List holds = resource.getPropertyValues("org.wso2.carbon.registry.jcr.retention.holds");
-        if(holds != null ){
-          for(Object hold:holds) {
-             String[] vals = hold.toString().split(";");
-              holdList.add(new RegistryHold(vals[0],Boolean.valueOf(vals[1])));
-          }
-        }
-        } catch (RegistryException e) {
-            throw new RepositoryException("Registry level exception when setting retention policy at " + s);
-        }
-
-        return holdList.toArray(new RegistryHold[0]);
-    }
-
-    private void removeHoldFromRegistry(String s, Hold hold) throws RepositoryException {
-        Resource resource = null;
-        try {
-            resource = session.getUserRegistry().get(s);
-        List holds = resource.getPropertyValues("org.wso2.carbon.registry.jcr.retention.holds");
-        List<Hold> holdList = new ArrayList<Hold>();
-        String refHold = hold.getName()+";"+hold.isDeep();
-        if(holds != null ) {
-          for(Object _hold:holds) {
-              if(_hold.equals(refHold)) {
-                  resource.getPropertyValues("org.wso2.carbon.registry.jcr.retention.holds").remove(_hold);
-              }
-          }
-        }
-         session.getUserRegistry().put(s,resource);
-
-        } catch (RegistryException e) {
-            throw new RepositoryException("Registry level exception when setting retention policy at " + s);
-        }
-
-    }
 }

@@ -33,7 +33,7 @@ public static void loadRetentionPolicies(RegistrySession session) throws Reposit
            session.getRootNode().addNode("test_policy_holder");
         }
         Resource r = session.getUserRegistry().get("/jcr_system/workspaces/default_workspace/test_policy_holder");
-        r.setProperty("org.wso2.carbon.registry.jcr.retention.policy","test_policy_holder");
+        r.setProperty("org.wso2.carbon.registry.jcr.retention.policy","fullLocked");
         session.getUserRegistry().put("/jcr_system/workspaces/default_workspace/test_policy_holder",r);
     } catch (RegistryException e) {
         throw new RepositoryException("Unable to load TCK test data");
@@ -42,4 +42,17 @@ public static void loadRetentionPolicies(RegistrySession session) throws Reposit
     }
 }
 
+    public static void removeRetentionPolicies(RegistrySession session) throws RepositoryException {
+        try {
+           if(session.getUserRegistry().resourceExists("/jcr_system/workspaces/default_workspace/testroot")) {
+              Resource r = session.getUserRegistry().get("/jcr_system/workspaces/default_workspace/testroot");
+                r.removeProperty("org.wso2.carbon.registry.jcr.retention.policy");
+                r.removeProperty("org.wso2.carbon.registry.jcr.retention.holds");
+               session.getUserRegistry().put(r.getPath(),r);
+           }
+        } catch (RegistryException e) {
+            throw new RepositoryException("Unable to remove TCK retention test data");
+        }
+
+    }
 }

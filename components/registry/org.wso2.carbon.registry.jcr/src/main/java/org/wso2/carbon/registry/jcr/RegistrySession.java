@@ -27,10 +27,12 @@ import org.wso2.carbon.registry.core.exceptions.RegistryException;
 import org.wso2.carbon.registry.core.session.UserRegistry;
 import org.wso2.carbon.registry.jcr.nodetype.RegistryNodeType;
 import org.wso2.carbon.registry.jcr.retention.RegistryRetentionManager;
+import org.wso2.carbon.registry.jcr.retention.RegistryRetentionPolicy;
 import org.wso2.carbon.registry.jcr.security.RegistryAccessControlManager;
 import org.wso2.carbon.registry.jcr.util.RegistryJCRItemOperationUtil;
 import org.wso2.carbon.registry.jcr.util.RegistryJCRSpecificStandardLoderUtil;
 import org.wso2.carbon.registry.jcr.util.security.PrivilegeRegistry;
+import org.wso2.carbon.registry.jcr.util.test.data.TCKTestDataLoader;
 import org.wso2.carbon.user.core.UserStoreException;
 import org.xml.sax.ContentHandler;
 import org.xml.sax.SAXException;
@@ -67,7 +69,6 @@ public class RegistrySession implements Session {
     private AccessControlManager regAccControlMngr;
     private RetentionManager regRetentionMngr;
     private RegistryRepository registryRepository;
-    private Set<String> lockTokens = new HashSet<String>();
     private String WORKSPACE_ROOT = "";
     private static Log log = LogFactory.getLog(RegistrySession.class);
     private String USER_ID = "";
@@ -167,10 +168,6 @@ public class RegistrySession implements Session {
 
     public UserRegistry getUserRegistry() {  //my method
         return userRegistry;
-    }
-
-    public Set getLockTokenList() {
-        return lockTokens;
     }
 
     public String getWorkspaceName() {
@@ -395,7 +392,19 @@ public class RegistrySession implements Session {
     }
 
     public void refresh(boolean b) throws RepositoryException {   //TODO
+        if(!b){
+         removePendingChanges();
+        }
+    }
 
+    private void removePendingChanges() throws RepositoryException {
+        ((RegistryRetentionManager)getRetentionManager()).getPendingRetentionPolicies().clear();
+
+        // revert transient deletions
+        for(String s:((RegistryRetentionManager)getRetentionManager()).getPendingPolicyRemoveList()){
+         getRetentionManager().setRetentionPolicy(s,new RegistryRetentionPolicy());
+        }
+        ((RegistryRetentionManager)getRetentionManager()).getPendingPolicyRemoveList().clear();
     }
 
     public boolean hasPendingChanges() throws RepositoryException {
@@ -521,6 +530,11 @@ public class RegistrySession implements Session {
     }
 
     public void logout() {       //TODO
+        try {
+            TCKTestDataLoader.removeRetentionPolicies(this);
+        } catch (RepositoryException e) {
+          log.error("Cannot remove tck test data");
+        }
 
     }
 

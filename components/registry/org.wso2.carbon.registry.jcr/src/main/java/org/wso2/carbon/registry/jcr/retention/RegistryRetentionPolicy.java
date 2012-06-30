@@ -16,18 +16,22 @@
 
 package org.wso2.carbon.registry.jcr.retention;
 
+import org.wso2.carbon.registry.jcr.util.retention.EffectiveRetentionUtil;
+
 import javax.jcr.RepositoryException;
 import javax.jcr.retention.RetentionPolicy;
 
 
 public class RegistryRetentionPolicy implements RetentionPolicy {
 
-    private String name = "";
+    private String name = EffectiveRetentionUtil.JCR_FULL_LOCKED;
+
+    public RegistryRetentionPolicy() {
+    }
 
    /**
      * @param name        -name of the policy
      */
-
     public RegistryRetentionPolicy(String name) {
         this.name = name;
     }

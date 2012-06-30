@@ -49,7 +49,6 @@ public class RegistryRepository implements Repository {
 //    private Set<NodeType> nodeTypesList = new HashSet<NodeType>();
 //    private Set primaryNodetypes = new HashSet();
 //    private Set mixinNodetypes = new HashSet();
-    private Map<String, Lock> allLocks = new HashMap<String, Lock>();
 
 
     private static final String[] multivaluedKeys = {IDENTIFIER_STABILITY, NODE_TYPE_MANAGEMENT_INHERITANCE
@@ -166,10 +165,6 @@ public class RegistryRepository implements Repository {
 
     public Map<String, Workspace> getWorkspaceMap() {
         return workspaceMap;
-    }
-
-    public Map getAllLocks() {          //non JCR custom method
-        return allLocks;
     }
 
     public String[] getDescriptorKeys() {

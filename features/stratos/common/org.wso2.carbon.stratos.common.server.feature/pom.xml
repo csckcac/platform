@@ -106,11 +106,6 @@
         </dependency>
 		
 		<dependency>
-			<groupId>kaptcha.wso2</groupId>
-			<artifactId>kaptcha</artifactId>
-			<version>2.3.0.wso2v1</version>
-		</dependency>
-		<dependency>
 			<groupId>org.wso2.carbon</groupId>
 			<artifactId>org.wso2.carbon.keystore.mgt</artifactId>
 			<version>${stratos.version}</version>
@@ -119,11 +114,6 @@
 			<groupId>org.wso2.carbon</groupId>
 			<artifactId>org.wso2.carbon.tenant.mgt.core</artifactId>
 			<version>${stratos.version}</version>
-		</dependency>
-		<dependency>
-			<groupId>org.wso2.carbon</groupId>
-			<artifactId>org.wso2.carbon.captcha.mgt</artifactId>
-			<version>${carbon.version}</version>
 		</dependency>
 		<dependency>
 			<groupId>org.wso2.carbon</groupId>
@@ -206,10 +196,8 @@
                                 <!-- Tenant Mgmt -->
                                 <bundleDef>org.json.wso2:json</bundleDef>
 								<bundleDef>org.wso2.carbon:org.wso2.carbon.tenant.mgt</bundleDef>
-								<bundleDef>kaptcha.wso2:kaptcha</bundleDef>
 								<bundleDef>org.wso2.carbon:org.wso2.carbon.keystore.mgt</bundleDef>
 								<bundleDef>org.wso2.carbon:org.wso2.carbon.tenant.mgt.core</bundleDef>
-								<bundleDef>org.wso2.carbon:org.wso2.carbon.captcha.mgt</bundleDef>
 								<bundleDef>org.wso2.carbon:org.wso2.carbon.theme.mgt</bundleDef>
                                 <!-- End Tenant Mgmt -->
                                 

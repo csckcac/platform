@@ -228,7 +228,7 @@
 
                         <tbody>
 
-                        <% if (isAuthorizedToManagePackages || isAuthorizedToMonitor) {
+                        <% if ((isAuthorizedToManagePackages || isAuthorizedToMonitor) && processList != null) {
                             for (LimitedProcessInfoType processInfo : processList) {
                         %>
                         <tr>

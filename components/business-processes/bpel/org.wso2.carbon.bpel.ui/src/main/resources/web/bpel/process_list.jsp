@@ -272,7 +272,7 @@
                 String linkID = "processOperation" + linkNum;
                 linkNum++;
     %>
-    <td rowspan="<%= packageWithVersion.getProcesses().getProcess().length%>">
+    <td rowspan="<%= packageWithVersion.getProcesses().getProcess() == null ? 1 : packageWithVersion.getProcesses().getProcess().length%>">
         <%
                     if (packageWithVersion.getIsLatest()) {
         %>
@@ -290,6 +290,7 @@
     </td>
      <%
          int processIndex = 0;
+         if (packageWithVersion.getProcesses().getProcess() != null) {
          for (LimitedProcessInfoType processInfo : packageWithVersion.getProcesses().getProcess()) {
              if (processIndex != 0) {
      %>
@@ -352,6 +353,11 @@
             }
 %>
             </tr>
+<%
+                 }
+                } else {
+%>
+            <td colspan="5" style="color: #ff0000;"><fmt:message key="deployment.error"/></td>
 <%
                  }
             }

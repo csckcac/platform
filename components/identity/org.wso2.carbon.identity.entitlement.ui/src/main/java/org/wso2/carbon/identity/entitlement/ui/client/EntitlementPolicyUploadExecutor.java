@@ -26,7 +26,9 @@ import org.wso2.carbon.utils.ServerConstants;
 
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
+import java.io.BufferedReader;
 import java.io.IOException;
+import java.io.InputStreamReader;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Map;
@@ -74,8 +76,13 @@ public class EntitlementPolicyUploadExecutor extends AbstractFileUploadExecutor 
                     throw new CarbonException("File with extension " +
                             getFileName(fileItem.getFileItem().getName())  + " is not supported!");
                 } else {
-                    String policyContent = (String) fileItem.getDataHandler().getContent();
-                    if (policyContent != null) {
+                    BufferedReader br = new BufferedReader(new InputStreamReader(fileItem.getDataHandler().getInputStream()));
+                    String temp;
+                    String policyContent = "";
+                    while ((temp=br.readLine()) != null){
+                        policyContent += temp;
+                    }
+                    if (policyContent != "") {
                         client.uploadPolicy(policyContent);
                     }
                 }

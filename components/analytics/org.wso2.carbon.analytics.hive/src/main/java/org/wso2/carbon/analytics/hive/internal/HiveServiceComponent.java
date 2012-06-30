@@ -36,6 +36,7 @@ import org.wso2.carbon.analytics.hive.ServiceHolder;
 import org.wso2.carbon.analytics.hive.conf.HiveConnectionManager;
 import org.wso2.carbon.analytics.hive.impl.HiveExecutorServiceImpl;
 import org.wso2.carbon.analytics.hive.service.HiveExecutorService;
+import org.wso2.carbon.base.ServerConfiguration;
 import org.wso2.carbon.datasource.DataSourceInformationRepositoryService;
 import org.wso2.carbon.ntask.common.TaskException;
 import org.wso2.carbon.ntask.core.TaskManager;
@@ -71,6 +72,12 @@ public class HiveServiceComponent {
     private static final Log log = LogFactory.getLog(HiveServiceComponent.class);
 
     private static final String CARBON_HOME_ENV = "CARBON_HOME";
+
+    public static final int HIVE_SERVER_DEFAULT_PORT = 11000;
+
+    public static final String CARBON_CONFIG_PORT_OFFSET_NODE = "Ports.Offset";
+
+    public static final int CARBON_DEFAULT_PORT_OFFSET = 0;
 
     private static final String LOG4J_LOCATION = "repository" + File.separator + "conf" +
                                                  File.separator + "log4j.properties";
@@ -210,6 +217,14 @@ public class HiveServiceComponent {
         ServiceHolder.setDataSourceInformationRepositoryService(null);
     }
 
+    protected void setServerConfiguration(ServerConfiguration serverConfiguration) {
+        ServiceHolder.setCarbonConfiguration(serverConfiguration);
+    }
+
+    protected void unsetServerConfiguration(ServerConfiguration serverConfiguration) {
+        ServiceHolder.setCarbonConfiguration(null);
+    }
+
     public class HiveRunnable implements Runnable {
 
         public void run() {
@@ -236,7 +251,11 @@ public class HiveServiceComponent {
 
                 HiveConf conf = new HiveConf(HiveServer.HiveServerHandler.class);
                 ServerUtils.cleanUpScratchDir(conf);
-                TServerTransport serverTransport = new TServerSocket(cli.port);
+
+                int carbonPortOffset = getPortOffset();
+
+                TServerTransport serverTransport = new TServerSocket(HIVE_SERVER_DEFAULT_PORT +
+                                                                     carbonPortOffset);
 
                 // set all properties specified on the command line
                 for (Map.Entry<Object, Object> item : hiveconf.entrySet()) {
@@ -254,11 +273,12 @@ public class HiveServiceComponent {
 
                 TServer server = new TThreadPoolServer(sargs);
 
-                String msg = "Starting hive server on port " + cli.port
-                             + " with " + cli.minWorkerThreads + " min worker threads and "
-                             + cli.maxWorkerThreads + " max worker threads";
+                String msg = "Started Hive Thrift server on port " + (HIVE_SERVER_DEFAULT_PORT +
+                                                                       carbonPortOffset) + "..";
 
                 HiveServer.HiveServerHandler.LOG.info(msg);
+
+                log.info(msg);
 
                 // Start Hive Thrift service
                 server.serve();
@@ -267,5 +287,18 @@ public class HiveServiceComponent {
                 log.error("Hive server initialization failed..", e);
             }
         }
+
+        private int getPortOffset() {
+            String portOffset = ServerConfiguration.getInstance().getFirstProperty(
+                    CARBON_CONFIG_PORT_OFFSET_NODE);
+
+            try {
+                return ((portOffset != null) ? Integer.parseInt(portOffset.trim()) :
+                        CARBON_DEFAULT_PORT_OFFSET);
+            } catch (Exception e) {
+                return CARBON_DEFAULT_PORT_OFFSET;
+            }
+        }
+
     }
 }

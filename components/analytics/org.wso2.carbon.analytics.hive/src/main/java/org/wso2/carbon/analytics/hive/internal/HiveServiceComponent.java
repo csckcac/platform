@@ -73,7 +73,7 @@ public class HiveServiceComponent {
 
     private static final String CARBON_HOME_ENV = "CARBON_HOME";
 
-    public static final int HIVE_SERVER_DEFAULT_PORT = 11000;
+    public static final int HIVE_SERVER_DEFAULT_PORT = 10000;
 
     public static final String CARBON_CONFIG_PORT_OFFSET_NODE = "Ports.Offset";
 

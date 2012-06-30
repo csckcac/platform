@@ -189,7 +189,8 @@ public class BAMToolBoxDeployer extends AbstractDeployer {
         ToolBoxConfigurationManager manager = ToolBoxConfigurationManager.getInstance();
         ToolBoxDTO toolBoxDTO = manager.getToolBox(aToolName, getTenantId());
 
-        BAMArtifactDeployerManager.getInstance().undeploy(toolBoxDTO, getTenantAdminName(tenantId));
+        BAMArtifactDeployerManager.getInstance().undeploy(toolBoxDTO, getTenantAdminName(tenantId),
+                                                          tenantId);
         manager.deleteToolBoxConfiguration(aToolName, getTenantId());
     }
 

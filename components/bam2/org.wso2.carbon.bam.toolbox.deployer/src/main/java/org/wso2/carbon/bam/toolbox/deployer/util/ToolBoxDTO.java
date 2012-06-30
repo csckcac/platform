@@ -24,9 +24,11 @@ public class ToolBoxDTO {
     private String name;
     private ArrayList<String> scriptNames;
     private ArrayList<DashBoardTabDTO> dashboardTabs;
+    private ArrayList<JasperTabDTO> jasperTabs;
     private String evenStreamDef;
     private String scriptsParentDirectory;
     private String gagetsParentDirectory;
+    private String jasperParentDirectory;
     private String jaggeryAppParentDirectory;
     private String hotDeploymentRootDir;
 
@@ -34,6 +36,7 @@ public class ToolBoxDTO {
         this.name = name;
         scriptNames = new ArrayList<String>();
         dashboardTabs = new ArrayList<DashBoardTabDTO>();
+        jasperTabs = new ArrayList<JasperTabDTO>();
         evenStreamDef = "";
     }
 
@@ -49,16 +52,22 @@ public class ToolBoxDTO {
         this.dashboardTabs = dashboardTabs;
     }
 
+    public ArrayList<JasperTabDTO> getJasperTabs() {
+        return jasperTabs;
+    }
+
+    public void setJasperTabs(ArrayList<JasperTabDTO> jasperTabs) {
+        this.jasperTabs = jasperTabs;
+    }
+
     public ArrayList<String> getScriptNames() {
         return scriptNames;
     }
 
 
-
     public void addScriptName(String scriptName) {
         this.scriptNames.add(scriptName);
     }
-
 
 
     public String getEvenStreamDef() {
@@ -72,7 +81,6 @@ public class ToolBoxDTO {
     public void setScriptNames(ArrayList<String> scriptNames) {
         this.scriptNames = scriptNames;
     }
-
 
 
     public String getScriptsParentDirectory() {
@@ -91,33 +99,37 @@ public class ToolBoxDTO {
         this.gagetsParentDirectory = gagetsParentDirectory;
     }
 
-    public void addGadgets(int tabId, String gadgetName){
-       for(DashBoardTabDTO aTab: dashboardTabs){
-           if(aTab.getTabId()== tabId){
-              aTab.addGadget(gadgetName);
-           }
-       }
+    public void addGadgets(int tabId, String gadgetName) {
+        for (DashBoardTabDTO aTab : dashboardTabs) {
+            if (aTab.getTabId() == tabId) {
+                aTab.addGadget(gadgetName);
+            }
+        }
     }
 
-    public void addDashboradTab(DashBoardTabDTO dashBoardTabDTO){
-      this.dashboardTabs.add(dashBoardTabDTO);
+    public void addDashboradTab(DashBoardTabDTO dashBoardTabDTO) {
+        this.dashboardTabs.add(dashBoardTabDTO);
     }
 
-    public void addGadgetsInTabIndex(int index, String gadgetName){
-         dashboardTabs.get(index).addGadget(gadgetName);
+    public void addJasperTab(JasperTabDTO jasperTabDTO) {
+        this.jasperTabs.add(jasperTabDTO);
     }
 
-    public void replaceGadgetName(String oldName, String newName){
-       for (DashBoardTabDTO tabDTO : this.dashboardTabs){
-           ArrayList<String> newGadgetNames = new ArrayList<String>();
-           for (String aGadget: tabDTO.getGadgets()){
-              if(aGadget.equals(oldName)){
-                  newGadgetNames.add(newName);
-              }else {
-                  newGadgetNames.add(oldName);
-              }
-           }
-       }
+    public void addGadgetsInTabIndex(int index, String gadgetName) {
+        dashboardTabs.get(index).addGadget(gadgetName);
+    }
+
+    public void replaceGadgetName(String oldName, String newName) {
+        for (DashBoardTabDTO tabDTO : this.dashboardTabs) {
+            ArrayList<String> newGadgetNames = new ArrayList<String>();
+            for (String aGadget : tabDTO.getGadgets()) {
+                if (aGadget.equals(oldName)) {
+                    newGadgetNames.add(newName);
+                } else {
+                    newGadgetNames.add(oldName);
+                }
+            }
+        }
     }
 
     public String getJaggeryAppParentDirectory() {
@@ -135,4 +147,13 @@ public class ToolBoxDTO {
     public void setHotDeploymentRootDir(String hotDeploymentRootDir) {
         this.hotDeploymentRootDir = hotDeploymentRootDir;
     }
+
+    public String getJasperParentDirectory() {
+        return jasperParentDirectory;
+    }
+
+    public void setJasperParentDirectory(String jasperParentDirectory) {
+        this.jasperParentDirectory = jasperParentDirectory;
+    }
+
 }

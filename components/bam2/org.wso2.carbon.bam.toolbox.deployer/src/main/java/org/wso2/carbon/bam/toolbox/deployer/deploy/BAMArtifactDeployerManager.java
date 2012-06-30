@@ -25,9 +25,11 @@ import org.wso2.carbon.bam.toolbox.deployer.client.HiveScriptStoreClient;
 import org.wso2.carbon.bam.toolbox.deployer.exception.BAMComponentNotFoundException;
 import org.wso2.carbon.bam.toolbox.deployer.exception.BAMToolboxDeploymentException;
 import org.wso2.carbon.bam.toolbox.deployer.util.DashBoardTabDTO;
+import org.wso2.carbon.bam.toolbox.deployer.util.JasperTabDTO;
 import org.wso2.carbon.bam.toolbox.deployer.util.ToolBoxDTO;
 import org.wso2.carbon.registry.core.Collection;
 import org.wso2.carbon.registry.core.Registry;
+import org.wso2.carbon.registry.core.RegistryConstants;
 import org.wso2.carbon.registry.core.Resource;
 import org.wso2.carbon.registry.core.exceptions.RegistryException;
 import org.wso2.carbon.registry.core.utils.MediaTypesUtils;
@@ -45,6 +47,8 @@ public class BAMArtifactDeployerManager {
     private static final Log log = LogFactory.getLog(BAMArtifactDeployerManager.class);
 
     private static final String gadgetsPath = "/repository/dashboards/gadgets";
+
+    private static final String jasperPath = "/repository/dashboards/dashboard";
 
     private BAMArtifactDeployerManager() {
 
@@ -95,7 +99,8 @@ public class BAMArtifactDeployerManager {
                 tabDTO.setTabId(tabID);
                 for (String aGadget : tabDTO.getGadgets()) {
                     dashboardClient.addNewGadget(username, String.valueOf(tabID),
-                            "/registry/resource/_system/config/repository/dashboards/gadgets/" + aGadget);
+                                                 "/registry/resource/_system/config/repository/dashboards/gadgets/" + aGadget);
+                    ///registry/resource/_system/config/repository/dashboards/gadgets/
                 }
             }
         } catch (BAMComponentNotFoundException e) {
@@ -129,7 +134,24 @@ public class BAMArtifactDeployerManager {
 
     }
 
-    public void deploy(ToolBoxDTO toolBoxDTO, int tenantId, String username) throws BAMToolboxDeploymentException {
+    private void undeployJasperTab(JasperTabDTO tabDTO, int tenantId)
+            throws BAMToolboxDeploymentException {
+        try {
+            Registry registry = ServiceHolder.getRegistry(tenantId);
+
+            String jrxmlPath = jasperPath + RegistryConstants.PATH_SEPARATOR +
+                               tabDTO.getJrxmlFileName();
+            registry.delete(jrxmlPath);
+
+        } catch (RegistryException e) {
+            log.error(e.getMessage(), e);
+            throw new BAMToolboxDeploymentException(e.getMessage(), e);
+        }
+
+    }
+
+    public void deploy(ToolBoxDTO toolBoxDTO, int tenantId, String username)
+            throws BAMToolboxDeploymentException {
         if (canDeployScripts()) {
             deployScripts(toolBoxDTO);
         }
@@ -138,15 +160,22 @@ public class BAMArtifactDeployerManager {
             transferGadgetsFilesToRegistry(new File(toolBoxDTO.getGagetsParentDirectory()), tenantId);
             deployGadget(toolBoxDTO, username);
             deployJaggeryApps(toolBoxDTO);
+
+            if (toolBoxDTO.getJasperParentDirectory() != null) { // Jasper is optional for the moment
+                transferJRXMLFilesToRegistry(new File(toolBoxDTO.getJasperParentDirectory()),
+                                             tenantId);
+            }
         }
     }
 
 
     private void deployJaggeryApps(ToolBoxDTO toolBoxDTO) {
         String jaggeryDeployementDir = toolBoxDTO.getHotDeploymentRootDir() +
-                File.separator + BAMToolBoxDeployerConstants.JAGGERY_DEPLOYMENT_DIR;
-        File deployDir  =  new File(jaggeryDeployementDir);
-        if(!deployDir.exists()) deployDir.mkdirs();
+                                       File.separator + BAMToolBoxDeployerConstants.JAGGERY_DEPLOYMENT_DIR;
+        File deployDir = new File(jaggeryDeployementDir);
+        if (!deployDir.exists()) {
+            deployDir.mkdirs();
+        }
         ArrayList<String> files = getFilesInDir(toolBoxDTO.getJaggeryAppParentDirectory());
         for (String aJaggeryApp : files) {
             String srcFile = toolBoxDTO.getJaggeryAppParentDirectory() + File.separator + aJaggeryApp;
@@ -203,7 +232,8 @@ public class BAMArtifactDeployerManager {
         }
     }
 
-    private void transferGadgetsFilesToRegistry(File rootDirectory, int tenantId) throws BAMToolboxDeploymentException {
+    private void transferGadgetsFilesToRegistry(File rootDirectory, int tenantId)
+            throws BAMToolboxDeploymentException {
         try {
             // Storing the root path for future reference
             String rootPath = rootDirectory.getAbsolutePath();
@@ -217,7 +247,38 @@ public class BAMArtifactDeployerManager {
                 if (!registry.resourceExists(gadgetsPath)) {
                     registry.put(gadgetsPath, registry.newCollection());
                 }
-                transferDirectoryContentToRegistry(rootDirectory, registry, rootPath, tenantId);
+                transferDirectoryContentToRegistry(rootDirectory, registry, rootPath, gadgetsPath,
+                                                   tenantId);
+                registry.commitTransaction();
+            } catch (Exception e) {
+                registry.rollbackTransaction();
+                log.error(e.getMessage(), e);
+            }
+
+
+        } catch (RegistryException e) {
+            log.error(e.getMessage(), e);
+            throw new BAMToolboxDeploymentException(e.getMessage(), e);
+        }
+    }
+
+    private void transferJRXMLFilesToRegistry(File rootDirectory, int tenantId)
+            throws BAMToolboxDeploymentException {
+        try {
+            // Storing the root path for future reference
+            String rootPath = rootDirectory.getAbsolutePath();
+
+            Registry registry = ServiceHolder.getRegistry(tenantId);
+
+            // Creating the default gadget collection resource
+
+            try {
+                registry.beginTransaction();
+                if (!registry.resourceExists(jasperPath)) {
+                    registry.put(jasperPath, registry.newCollection());
+                }
+                transferDirectoryContentToRegistry(rootDirectory, registry, rootPath, jasperPath,
+                                                   tenantId);
                 registry.commitTransaction();
             } catch (Exception e) {
                 registry.rollbackTransaction();
@@ -232,7 +293,8 @@ public class BAMArtifactDeployerManager {
     }
 
     private static void transferDirectoryContentToRegistry(File rootDirectory, Registry registry,
-                                                           String rootPath, int tenantId)
+                                                           String rootPath, String registryPath,
+                                                           int tenantId)
             throws FileNotFoundException, BAMToolboxDeploymentException {
 
         try {
@@ -245,16 +307,17 @@ public class BAMArtifactDeployerManager {
                     // This is a Directory add a new collection
                     // This path is used to store the file resource under registry
                     String directoryRegistryPath =
-                            gadgetsPath + file.getAbsolutePath()
+                            registryPath + file.getAbsolutePath()
                                     .substring(rootPath.length()).replaceAll("[/\\\\]+", "/");
                     Collection newCollection = registry.newCollection();
                     registry.put(directoryRegistryPath, newCollection);
 
                     // recurse
-                    transferDirectoryContentToRegistry(file, registry, rootPath, tenantId);
+                    transferDirectoryContentToRegistry(file, registry, rootPath, registryPath,
+                                                       tenantId);
                 } else {
                     // Add this to registry
-                    addToRegistry(rootPath, file, tenantId);
+                    addToRegistry(rootPath, file, registryPath, tenantId);
                 }
             }
         } catch (Exception e) {
@@ -264,13 +327,14 @@ public class BAMArtifactDeployerManager {
 
     }
 
-    private static void addToRegistry(String rootPath, File file, int tenantId) throws BAMToolboxDeploymentException {
+    private static void addToRegistry(String rootPath, File file, String registryPath, int tenantId)
+            throws BAMToolboxDeploymentException {
         try {
             Registry registry = ServiceHolder.getRegistry(tenantId);
 
             // This path is used to store the file resource under registry
             String fileRegistryPath =
-                    gadgetsPath + file.getAbsolutePath().substring(rootPath.length())
+                    registryPath + file.getAbsolutePath().substring(rootPath.length())
                             .replaceAll("[/\\\\]+", "/");
 
             // Adding the file to the Registry
@@ -294,7 +358,8 @@ public class BAMArtifactDeployerManager {
         }
     }
 
-    public void undeploy(ToolBoxDTO toolBoxDTO, String username) throws BAMToolboxDeploymentException {
+    public void undeploy(ToolBoxDTO toolBoxDTO, String username, int tenantId)
+            throws BAMToolboxDeploymentException {
         if (canDeployScripts()) {
             for (String aScript : toolBoxDTO.getScriptNames()) {
                 undeployScript(aScript);
@@ -305,6 +370,12 @@ public class BAMArtifactDeployerManager {
             for (DashBoardTabDTO tabDTO : toolBoxDTO.getDashboardTabs()) {
                 int tabId = tabDTO.getTabId();
                 undeployTab(tabId, username);
+            }
+
+            if (toolBoxDTO.getJasperTabs() != null) {
+                for (JasperTabDTO tabDTO : toolBoxDTO.getJasperTabs()) {
+                    undeployJasperTab(tabDTO, tenantId);
+                }
             }
         }
     }

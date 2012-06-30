@@ -24,6 +24,7 @@ import org.wso2.carbon.bam.toolbox.deployer.BAMToolBoxDeployerConstants;
 import org.wso2.carbon.bam.toolbox.deployer.ServiceHolder;
 import org.wso2.carbon.bam.toolbox.deployer.exception.BAMToolboxDeploymentException;
 import org.wso2.carbon.bam.toolbox.deployer.util.DashBoardTabDTO;
+import org.wso2.carbon.bam.toolbox.deployer.util.JasperTabDTO;
 import org.wso2.carbon.bam.toolbox.deployer.util.ToolBoxDTO;
 import org.wso2.carbon.registry.core.Collection;
 import org.wso2.carbon.registry.core.Registry;
@@ -70,6 +71,7 @@ public class ToolBoxConfigurationManager {
         ToolBoxDTO aToolBox = new ToolBoxDTO(aToolName);
         aToolBox.setScriptNames(configuration.getScriptNames());
         aToolBox.setDashboardTabs(configuration.getDashboardTabs());
+        aToolBox.setJasperTabs(configuration.getJasperTabs());
 
         return aToolBox;
     }
@@ -128,6 +130,12 @@ public class ToolBoxConfigurationManager {
             for (String aGadget:gadgets){
                 configuration.addGadgetToTab(tabDTO.getTabId(), aGadget);
             }
+        }
+
+        for (JasperTabDTO tabDTO : toolboxDTO.getJasperTabs()) {
+            String jrxmlFileName = tabDTO.getJrxmlFileName();
+            String tabName = tabDTO.getTabName();
+            configuration.addJRXMLToTab(tabDTO.getTabId(), jrxmlFileName, tabName);
         }
         return configuration;
     }

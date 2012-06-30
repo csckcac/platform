@@ -23,12 +23,15 @@ public class BAMToolBoxDeployerConstants {
     public static final String SCRIPTS_DIR = "scripts";
     public static final String DASHBOARD_DIR = "dashboard";
     public static final String GADGETS_DIR = "gadgets";
-     public static final String JAGGERY_DIR = "jaggery";
+    public static final String JASPER_DIR = "dashboard";
+    public static final String JAGGERY_DIR = "jaggery";
     public static final String GADGET_META_FILE = "dashboard.properties";
+    public static final String JASPER_META_FILE = "dashboard.properties";
 
     public static final String TAB_NAMES = "tab.names";
     public static final String GADGET_XMLS_PREFIX = "tab.name";
     public static final String GADGET_XMLS_SUFFIX = "gadget.xmls";
+    public static final String JRXML_SUFFIX = "jrxml";
 
     public static final String JAGGERY_APP_FILES = "jaggery.app.files";
     public static final String JAGGERY_DEPLOYMENT_DIR = "jaggeryapps/gadgetgen";

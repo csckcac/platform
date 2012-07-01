@@ -26,6 +26,7 @@ import org.apache.axiom.om.OMAttribute;
 import org.wso2.carbon.mediator.bam.BamMediator;
 import org.wso2.carbon.mediator.bam.config.BamServerConfig;
 import org.wso2.carbon.mediator.bam.config.BamServerConfigBuilder;
+import org.wso2.carbon.mediator.bam.config.CryptographyManager;
 import org.wso2.carbon.mediator.bam.config.RegistryManager;
 
 import javax.xml.namespace.QName;
@@ -134,10 +135,11 @@ public class BamMediatorFactory extends AbstractMediatorFactory {
 
     private void updateBamMediator(BamServerConfigBuilder bamServerConfigBuilder, BamMediator bamMediator, String streamName, String streamVersion){
         BamServerConfig bamServerConfig=  bamServerConfigBuilder.getBamServerConfig();
+        CryptographyManager cryptographyManager = new CryptographyManager();
         bamMediator.setStreamNickName(bamServerConfig.getAUniqueStreamConfiguration(streamName, streamVersion).getNickname());
         bamMediator.setStreamDescription(bamServerConfig.getAUniqueStreamConfiguration(streamName, streamVersion).getDescription());
         bamMediator.setUserName(bamServerConfig.getUsername());
-        bamMediator.setPassword(bamServerConfig.getPassword());
+        bamMediator.setPassword(cryptographyManager.base64DecodeAndDecrypt(bamServerConfig.getPassword()));
         bamMediator.setServerIP(bamServerConfig.getIp());
         bamMediator.setServerPort(bamServerConfig.getPort());
         bamMediator.setProperties(bamServerConfig.getAUniqueStreamConfiguration(streamName, streamVersion).getProperties());

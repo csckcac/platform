@@ -59,7 +59,7 @@ public class BamServerProfileConfigAdminClient {
         try {
             return stub.getResourceString(bamServerProfileLocation);
         } catch (RemoteException e) {
-            handleException(bundle.getString("cannot.get.bam.server.location"), e);
+            handleException(bundle.getString("cannot.get.resource.string"), e);
         }
         return null;
     }
@@ -68,9 +68,27 @@ public class BamServerProfileConfigAdminClient {
         try {
             return stub.resourceAlreadyExists(bamServerProfileLocation);
         } catch (RemoteException e) {
-            handleException(bundle.getString("cannot.get.bam.server.location"), e);
+            handleException(bundle.getString("cannot.check.resource.exists"), e);
         }
         return true;
+    }
+
+    public String encryptAndBase64Encode(String plainText) throws RemoteException {
+        try {
+            return stub.encryptAndBase64Encode(plainText);
+        } catch (RemoteException e) {
+            handleException(bundle.getString("cannot.encrypt.encode.string"), e);
+        }
+        return "";
+    }
+
+    public String base64DecodeAndDecrypt(String cipherText) throws RemoteException {
+        try {
+            return stub.base64DecodeAndDecrypt(cipherText);
+        } catch (RemoteException e) {
+            handleException(bundle.getString("cannot.decode.decrypt.string"), e);
+        }
+        return "";
     }
 
     private void handleException(String msg, Exception e) throws RemoteException {

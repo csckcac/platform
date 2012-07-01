@@ -212,11 +212,21 @@ public class BamServerProfileUtils {
     }
 
     public String encryptPassword(String plainTextPassword){
-        return plainTextPassword; // TODO
+        try {
+            return client.encryptAndBase64Encode(plainTextPassword);
+        } catch (RemoteException e) {
+            e.printStackTrace();  //To change body of catch statement use File | Settings | File Templates.
+        }
+        return "";
     }
 
     public String decryptPassword(String cipherTextPassword){
-        return cipherTextPassword; // TODO
+        try {
+            return client.base64DecodeAndDecrypt(cipherTextPassword);
+        } catch (RemoteException e) {
+            e.printStackTrace();  //To change body of catch statement use File | Settings | File Templates.
+        }
+        return "";
     }
 
     public String getStreamConfigurationListString(StreamConfiguration streamConfiguration){

@@ -299,8 +299,8 @@ public class BamMediator extends AbstractMediator {
                                                    "          {'name':'MessageId','type':'STRING'}" +
                                                    /*"          {'name':'SOAPHeader','type':'STRING'}," +
                                                    "          {'name':'SOAPBody','type':'STRING'}" +*/
-                                                   this.getEntityStreamDefinitionString() +
                                                    this.getPropertyStreamDefinitionString() +
+                                                   this.getEntityStreamDefinitionString() +
                                                    "  ]" +
                                                    "}");
         log.info("Event Stream Defined.");
@@ -311,21 +311,21 @@ public class BamMediator extends AbstractMediator {
         int numOfProperties = properties.size();
         int numOfEntities = streamEntries.size();
 
-        Object[] payloadData = new Object[numOfProperties + numOfEntities + 6];
+        Object[] payloadData = new Object[numOfProperties + numOfEntities + 4];
         payloadData[0] = direction ?
                          BamMediatorConstants.DIRECTION_IN : BamMediatorConstants.DIRECTION_OUT;
         payloadData[1] = service;
         payloadData[2] = operation;
         payloadData[3] = messageContext.getMessageID();
-        payloadData[4] = messageContext.getEnvelope().getHeader().toString();
-        payloadData[5] = messageContext.getEnvelope().getBody().toString();
+        /*payloadData[4] = messageContext.getEnvelope().getHeader().toString();
+        payloadData[5] = messageContext.getEnvelope().getBody().toString();*/
 
         for (int i=0; i<numOfProperties; i++) {
-            payloadData[6 + i] = properties.get(i).getValue();
+            payloadData[4 + i] = properties.get(i).getValue();
         }
         
         for (int i=0; i<numOfEntities; i++) {
-            payloadData[6 + numOfEntities + i] = this.produceEntityValue(streamEntries.get(i).getValue(), messageContext);
+            payloadData[4 + numOfProperties + i] = this.produceEntityValue(streamEntries.get(i).getValue(), messageContext);
         }
 
         return payloadData;
@@ -361,9 +361,9 @@ public class BamMediator extends AbstractMediator {
     
     private Object produceEntityValue(String valueName, MessageContext messageContext){
         if(valueName.startsWith("$")){ // When entity value is a mediator parameter
-            if(valueName == "$SOAPHeader"){
+            if("$SOAPHeader".equals(valueName)){
                 return messageContext.getEnvelope().getHeader().toString();
-            } else if (valueName == "$SOAPBody"){
+            } else if ("$SOAPBody".equals(valueName)){
                 return messageContext.getEnvelope().getBody().toString();
             } else {
                 return "Invalid Entity Parameter !";

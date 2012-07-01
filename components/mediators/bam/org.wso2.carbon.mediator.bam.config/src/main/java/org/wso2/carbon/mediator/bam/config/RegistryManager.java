@@ -1,28 +1,3 @@
-package org.wso2.carbon.mediator.bam.config;
-
-import org.apache.commons.io.IOUtils;
-import org.apache.commons.logging.Log;
-import org.apache.commons.logging.LogFactory;
-import org.wso2.carbon.CarbonConstants;
-
-import org.wso2.carbon.registry.common.services.RegistryAbstractAdmin;
-import org.wso2.carbon.registry.core.ActionConstants;
-import org.wso2.carbon.registry.core.Registry;
-import org.wso2.carbon.registry.core.RegistryConstants;
-import org.wso2.carbon.registry.core.Resource;
-import org.wso2.carbon.registry.core.exceptions.RegistryException;
-import org.wso2.carbon.registry.core.session.UserRegistry;
-import org.wso2.carbon.user.core.AuthorizationManager;
-import org.wso2.carbon.user.core.UserStoreException;
-import org.wso2.carbon.utils.CarbonUtils;
-
-import java.io.File;
-import java.io.IOException;
-import java.io.InputStream;
-import java.util.ArrayList;
-import java.util.Arrays;
-import java.util.List;
-
 /**
  * Copyright (c) WSO2 Inc. (http://www.wso2.org) All Rights Reserved.
  * <p/>
@@ -38,14 +13,30 @@ import java.util.List;
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
+
+package org.wso2.carbon.mediator.bam.config;
+
+import org.apache.commons.logging.Log;
+import org.apache.commons.logging.LogFactory;
+import org.wso2.carbon.registry.common.services.RegistryAbstractAdmin;
+import org.wso2.carbon.registry.core.Registry;
+import org.wso2.carbon.registry.core.Resource;
+import org.wso2.carbon.registry.core.exceptions.RegistryException;
+
 public class RegistryManager extends RegistryAbstractAdmin {
 
     private static final Log log = LogFactory.getLog(RegistryManager.class);
+    private Registry registry;
+    private Resource resource;
+
+    public RegistryManager(){
+        registry = getConfigSystemRegistry();
+    }
 
     public void saveResourceString(String resourceString, String gadgetResourcePath) {
 
-        Registry registry = getConfigSystemRegistry();
-        Resource resource;
+        /*Registry registry = getConfigSystemRegistry();
+        Resource resource;*/
         try {
             resource = registry.newResource();
             resource.setContent(resourceString);
@@ -57,7 +48,7 @@ public class RegistryManager extends RegistryAbstractAdmin {
     }
     
     public boolean resourceAlreadyExists(String bamServerProfileLocation){
-        Registry registry = getConfigSystemRegistry();
+        /*Registry registry = getConfigSystemRegistry();*/
         try {
             return registry.resourceExists(bamServerProfileLocation);
         } catch (RegistryException e) {
@@ -67,9 +58,9 @@ public class RegistryManager extends RegistryAbstractAdmin {
     }
 
     public String getResourceString(String bamServerProfileLocation){
-        Registry registry = getConfigSystemRegistry();
+        /*Registry registry = getConfigSystemRegistry();
         //Registry registry = getGovernanceSystemRegistry();
-        Resource resource;
+        Resource resource;*/
         try {
             resource = registry.get(bamServerProfileLocation);
             return new String((byte[])resource.getContent());

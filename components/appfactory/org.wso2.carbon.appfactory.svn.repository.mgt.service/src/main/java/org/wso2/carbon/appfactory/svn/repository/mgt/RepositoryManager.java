@@ -16,6 +16,7 @@
 
 package org.wso2.carbon.appfactory.svn.repository.mgt;
 
+import org.tigris.subversion.svnclientadapter.SVNRevision;
 import org.wso2.carbon.appfactory.common.AppFactoryConfiguration;
 import org.wso2.carbon.appfactory.svn.repository.mgt.RepositoryMgtException;
 
@@ -25,14 +26,12 @@ import org.wso2.carbon.appfactory.svn.repository.mgt.RepositoryMgtException;
  */
 public interface RepositoryManager {
     /**
-     *
      * @param applicationKey
-     * @return  URL of the created repository
+     * @return URL of the created repository
      */
-    public String createRepository(String applicationKey)throws RepositoryMgtException;
+    public String createRepository(String applicationKey) throws RepositoryMgtException;
 
     /**
-     *
      * @param applicationKey
      * @return
      * @throws RepositoryMgtException
@@ -42,4 +41,10 @@ public interface RepositoryManager {
     public void setConfig(AppFactoryConfiguration configuration);
 
     public AppFactoryConfiguration getConfig();
+
+    public void createDirectory(String url, String commitMessage);
+
+    public void svnCopy(String sourceUrl, String destinationUrl, String commitMessage, SVNRevision rev);
+
+    public void svnMove(String sourceUrl, String destinationUrl, String commitMessage, SVNRevision rev);
 }

@@ -16,6 +16,7 @@
 
 package org.wso2.carbon.appfactory.svn.repository.mgt.service;
 
+import org.tigris.subversion.svnclientadapter.SVNRevision;
 import org.wso2.carbon.appfactory.svn.repository.mgt.RepositoryManager;
 import org.wso2.carbon.appfactory.svn.repository.mgt.RepositoryMgtException;
 import org.wso2.carbon.appfactory.svn.repository.mgt.builder.RepositoryManagerHolder;
@@ -25,7 +26,7 @@ import org.wso2.carbon.core.AbstractAdmin;
  *
  *
  */
-public class RepositoryManagementService extends AbstractAdmin{
+public class RepositoryManagementService extends AbstractAdmin {
     private RepositoryManager repositoryManager;
 
     public RepositoryManager getRepositoryManager() {
@@ -37,8 +38,8 @@ public class RepositoryManagementService extends AbstractAdmin{
     }
 
     public RepositoryManagementService() {
-        RepositoryManagerHolder holder= RepositoryManagerHolder.getInstance();
-        this.repositoryManager=holder.getRepositoryManager();
+        RepositoryManagerHolder holder = RepositoryManagerHolder.getInstance();
+        this.repositoryManager = holder.getRepositoryManager();
     }
 
     public String createRepository(String applicationKey) throws RepositoryMgtException {
@@ -49,4 +50,20 @@ public class RepositoryManagementService extends AbstractAdmin{
     public String getURL(String applicationKey) throws RepositoryMgtException {
         return repositoryManager.getURL(applicationKey);
     }
+
+    public void createDirectory(String url, String commitMessage) {
+        repositoryManager.createDirectory(url, commitMessage);
+    }
+
+
+    public void svnCopy(String sourceUrl, String destinationUrl, String commitMessage, SVNRevision rev) {
+        repositoryManager.svnCopy(sourceUrl, destinationUrl, commitMessage, rev);
+    }
+
+
+    public void svnMove(String sourceUrl, String destinationUrl, String commitMessage, SVNRevision rev) {
+        repositoryManager.svnMove(sourceUrl, destinationUrl, commitMessage, rev);
+    }
+
+
 }

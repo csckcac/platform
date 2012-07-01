@@ -29,7 +29,11 @@ import org.apache.commons.httpclient.methods.GetMethod;
 import org.apache.commons.httpclient.methods.PostMethod;
 import org.apache.commons.logging.Log;
 import org.apache.commons.logging.LogFactory;
+import org.tigris.subversion.svnclientadapter.*;
+import org.tigris.subversion.svnclientadapter.commandline.CmdLineClientAdapterFactory;
+import org.tigris.subversion.svnclientadapter.svnkit.SvnKitClientAdapterFactory;
 import org.wso2.carbon.appfactory.common.AppFactoryConfiguration;
+import org.wso2.carbon.appfactory.common.AppFactoryConstants;
 import org.wso2.carbon.appfactory.svn.repository.mgt.RepositoryMgtException;
 import org.wso2.carbon.appfactory.svn.repository.mgt.beans.Permission;
 import org.wso2.carbon.appfactory.svn.repository.mgt.beans.PermissionType;
@@ -41,6 +45,7 @@ import javax.xml.stream.XMLStreamReader;
 import java.io.IOException;
 import java.io.InputStream;
 import java.io.StringWriter;
+import java.net.MalformedURLException;
 import java.util.ArrayList;
 import java.util.Iterator;
 
@@ -66,6 +71,8 @@ public class SCMManagerBasedRepositoryManager extends AbstractRepositoryManager 
     private static final String PERMISSION_NAME_ELEMENT = "name";
     private static final String PERMISSION_GROUP_PERMISSION_ELEMENT = "groupPermission";
     private AppFactoryConfiguration configuration;
+    private ISVNClientAdapter svnClient;
+    private String clientType;
 
     @Override
     public String createRepository(String applicationKey) throws RepositoryMgtException {
@@ -248,4 +255,100 @@ public class SCMManagerBasedRepositoryManager extends AbstractRepositoryManager 
 
         return repository;
     }
+
+
+    /*
+        setup SVNClientAdapterFactory
+    */
+    private void setUp() {
+        try {
+            try {
+                SvnKitClientAdapterFactory.setup();
+                System.out.print("SVN Kit client adapter initialized");
+            } catch (Throwable t) {
+                System.out.print("Unable to initialize the SVN Kit client adapter - Required jars " + "may be missing");
+            }
+            //setup CmdLineClientAdapterFactory - which is the default
+            CmdLineClientAdapterFactory.setup();
+
+            clientType = SVNClientAdapterFactory.getPreferredSVNClientType();
+            svnClient = SVNClientAdapterFactory.createSVNClient(clientType);
+
+            // providing the credentials
+            svnClient.setUsername(AppFactoryConstants.SCM_ADMIN_NAME);
+            svnClient.setPassword(AppFactoryConstants.SCM_ADMIN_NAME);
+
+            log.info("Command line client adapter initialized");
+
+        } catch (SVNClientException e) {
+            log.error("Unable to initialize the command line client adapter" + e);
+        }
+    }
+
+    /*
+     Create a new directory in the svn
+    */
+    public void createDirectory(String url, String commitMessage) {
+        setUp();
+        try {
+            SVNUrl svnUrl = null;
+            try {
+                svnUrl = new SVNUrl(url);
+            } catch (MalformedURLException e) {
+                log.error("Malformed url" + e);
+            }
+            svnClient.mkdir(svnUrl, commitMessage);
+        } catch (SVNClientException e) {
+            log.error(e);
+        }
+
+    }
+
+    /*
+      svn copy operation
+    */
+    public void svnCopy(String sourceUrl, String destinationUrl, String commitMessage, SVNRevision rev) {
+        setUp();
+        rev = SVNRevision.HEAD; //last revision is used
+        try {
+            SVNUrl svnUrl = null;
+            SVNUrl copyURL = null;
+            try {
+                // construct the svnURL
+                svnUrl = new SVNUrl(sourceUrl);
+                copyURL = new SVNUrl(destinationUrl);
+            } catch (MalformedURLException e) {
+                log.error("Malformed url" + e);
+            }
+            svnClient.copy(svnUrl, copyURL, commitMessage, rev);
+        } catch (SVNClientException e) {
+            log.error(e);
+        }
+
+    }
+
+    /*
+      svn move operation
+    */
+    public void svnMove(String sourceUrl, String destinationUrl, String commitMessage, SVNRevision rev) {
+        setUp();
+        // Get the current revision
+        rev = SVNRevision.HEAD; //last revision is used
+        try {
+            SVNUrl svnUrl = null;
+            SVNUrl copyURL = null;
+            try {
+                // construct the svnURL
+                svnUrl = new SVNUrl(sourceUrl);
+                copyURL = new SVNUrl(destinationUrl);
+            } catch (MalformedURLException e) {
+                log.error("Malformed url" + e);
+            }
+            svnClient.move(svnUrl, copyURL, commitMessage, rev);
+        } catch (SVNClientException e) {
+            log.error(e);
+        }
+
+    }
+
 }

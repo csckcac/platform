@@ -70,8 +70,6 @@ import java.util.concurrent.Executors;
  * @scr.reference name="org.wso2.carbon.identity.authentication.internal.AuthenticationServiceComponent"
  * interface="org.wso2.carbon.identity.authentication.AuthenticationService"
  * cardinality="1..1" policy="dynamic" bind="setAuthenticationService"  unbind="unsetAuthenticationService"
- * @scr.reference name="server.configuration" interface="org.wso2.carbon.base.ServerConfiguration"
- * cardinality="1..1" policy="dynamic" bind="setServerConfiguration" unbind="unsetServerConfiguration"
  */
 
 public class BAMReceiverServiceComponent {

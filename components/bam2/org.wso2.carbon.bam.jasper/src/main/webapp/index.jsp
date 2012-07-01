@@ -1,17 +1,11 @@
-<%@ page import="org.wso2.carbon.core.multitenancy.SuperTenantCarbonContext" %>
-<%@ page import="org.wso2.carbon.registry.core.service.RegistryService" %>
-<%@ page import="org.wso2.carbon.context.CarbonContext" %>
-<%@ page import="org.wso2.carbon.registry.core.Registry" %>
-<%@ page
-        import="org.wso2.carbon.bam.toolbox.deployer.config.*" %>
-<%@ page import="java.util.List" %>
-<%@ page import="org.wso2.carbon.bam.toolbox.deployer.util.ToolBoxDTO" %>
+<%@ page import="org.wso2.carbon.bam.toolbox.deployer.config.ToolBoxConfigurationManager" %>
 <%@ page import="org.wso2.carbon.bam.toolbox.deployer.util.JasperTabDTO" %>
+<%@ page import="org.wso2.carbon.bam.toolbox.deployer.util.ToolBoxDTO" %>
+<%@ page import="org.wso2.carbon.context.CarbonContext" %>
+<%@ page import="java.util.List" %>
 
-<%@ page import="org.wso2.carbon.registry.core.exceptions.RegistryException" %>
-<%@ page import="org.wso2.carbon.registry.core.Resource" %>
-
-<script type="text/javascript" src="../../carbon/dialog/js/jqueryui/tabs/jquery-1.2.6.min.js"></script>
+<script type="text/javascript"
+        src="../../carbon/dialog/js/jqueryui/tabs/jquery-1.2.6.min.js"></script>
 <script type="text/javascript"
         src="../../carbon/dialog/js/jqueryui/tabs/jquery-ui-1.6.custom.min.js"></script>
 <script type="text/javascript" src="../../carbon/dialog/js/jqueryui/tabs/jquery.cookie.js"></script>

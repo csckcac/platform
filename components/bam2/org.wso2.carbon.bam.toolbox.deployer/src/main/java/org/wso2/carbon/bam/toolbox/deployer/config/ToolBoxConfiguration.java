@@ -14,7 +14,7 @@
  * limitations under the License.
  */
 
-package org.wso2.carbon.bam.toolbox.deployer.internal.config;
+package org.wso2.carbon.bam.toolbox.deployer.config;
 
 import org.apache.axiom.om.OMAbstractFactory;
 import org.apache.axiom.om.OMElement;

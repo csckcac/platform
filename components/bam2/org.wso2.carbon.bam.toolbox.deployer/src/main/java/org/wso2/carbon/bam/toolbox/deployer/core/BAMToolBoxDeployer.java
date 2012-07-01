@@ -12,7 +12,7 @@ import org.wso2.carbon.bam.toolbox.deployer.ServiceHolder;
 import org.wso2.carbon.bam.toolbox.deployer.deploy.BAMArtifactDeployerManager;
 import org.wso2.carbon.bam.toolbox.deployer.exception.BAMToolboxDeploymentException;
 import org.wso2.carbon.bam.toolbox.deployer.internal.ServerStartUpInspector;
-import org.wso2.carbon.bam.toolbox.deployer.internal.config.ToolBoxConfigurationManager;
+import org.wso2.carbon.bam.toolbox.deployer.config.ToolBoxConfigurationManager;
 import org.wso2.carbon.bam.toolbox.deployer.util.ToolBoxDTO;
 import org.wso2.carbon.context.CarbonContext;
 import org.wso2.carbon.core.multitenancy.SuperTenantCarbonContext;

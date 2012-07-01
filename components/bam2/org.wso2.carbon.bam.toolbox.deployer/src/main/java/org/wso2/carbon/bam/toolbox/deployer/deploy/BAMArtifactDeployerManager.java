@@ -48,7 +48,7 @@ public class BAMArtifactDeployerManager {
 
     private static final String gadgetsPath = "/repository/dashboards/gadgets";
 
-    private static final String jasperPath = "/repository/dashboards/dashboard";
+    private static final String jasperPath = "/repository/dashboards/jasper";
 
     private BAMArtifactDeployerManager() {
 

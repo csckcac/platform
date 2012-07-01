@@ -89,7 +89,8 @@
                                 <featureArtifactDef>org.wso2.carbon:org.wso2.carbon.dataservices.feature:${carbon.version}</featureArtifactDef>
 				<featureArtifactDef>org.wso2.carbon:org.wso2.carbon.dataservices.task.feature:${carbon.version}</featureArtifactDef>
                                 <featureArtifactDef>org.wso2.carbon:org.wso2.carbon.datasource.server.feature:${carbon.version}</featureArtifactDef>
-                                <featureArtifactDef>org.wso2.carbon:org.wso2.carbon.datasource.ui.feature:${carbon.version}</featureArtifactDef>
+				<featureArtifactDef>org.wso2.carbon:org.wso2.carbon.ndatasource.feature:${carbon.version}</featureArtifactDef>
+                                <featureArtifactDef>org.wso2.carbon:org.wso2.carbon.ndatasource.ui.feature:${carbon.version}</featureArtifactDef>
                                 <featureArtifactDef>org.wso2.carbon:org.wso2.carbon.service.mgt.feature:${carbon.version}</featureArtifactDef>
                                 <featureArtifactDef>org.wso2.carbon:org.wso2.carbon.transport.mgt.feature:${carbon.version}</featureArtifactDef>
                                 <featureArtifactDef>org.wso2.carbon:org.wso2.carbon.transport.jms.feature:${carbon.version}</featureArtifactDef>
@@ -244,8 +245,13 @@
                                     <version>${carbon.version}</version>
                                 </feature>
 
-				                <feature>
-                                    <id>org.wso2.carbon.datasource.ui.feature.group</id>
+				<feature>
+                                    <id>org.wso2.carbon.ndatasource.feature.group</id>
+                                    <version>${carbon.version}</version>
+                                </feature>
+
+				<feature>
+                                    <id>org.wso2.carbon.ndatasource.ui.feature.group</id>
                                     <version>${carbon.version}</version>
                                 </feature>
 

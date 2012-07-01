@@ -59,9 +59,9 @@
             <version>${carbon.platform.version}</version>
             <type>zip</type>
         </dependency>
-        <dependency>
+      	 <dependency>
             <groupId>org.wso2.carbon</groupId>
-            <artifactId>org.wso2.carbon.datasource.ui.feature</artifactId>
+            <artifactId>org.wso2.carbon.ndatasource.ui.feature</artifactId>
             <version>${carbon.platform.version}</version>
             <type>zip</type>
         </dependency>
@@ -98,7 +98,7 @@
                             </bundles>
                             <importFeatures>
                                 <importFeatureDef>org.wso2.carbon.service.mgt.ui</importFeatureDef>
-                                <importFeatureDef>org.wso2.carbon.datasource.ui</importFeatureDef>
+                                <importFeatureDef>org.wso2.carbon.ndatasource.ui</importFeatureDef>
                             </importFeatures>
                         </configuration>
                     </execution>

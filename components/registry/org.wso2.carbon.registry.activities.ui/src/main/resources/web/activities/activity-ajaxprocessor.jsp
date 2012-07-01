@@ -166,7 +166,7 @@
                     activityReportBean.setAccessedTime(tempTime.substring(4,tempTime.indexOf("w")));
                 }
                 else {
-                    activityReportBean.setAccessedTime(tempTime.split(" on ")[1]);
+                    activityReportBean.setAccessedTime(tempTime);
                 }
                 activityBeanList.add(activityReportBean);
             }

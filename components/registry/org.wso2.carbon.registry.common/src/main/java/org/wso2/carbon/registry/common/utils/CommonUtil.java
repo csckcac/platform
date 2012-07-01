@@ -259,6 +259,7 @@ public class CommonUtil {
                 formatter = new SimpleDateFormat("yyyy");
                 value += " " + formatter.format(dateToParse);
             }
+            value = "on" + value;
         }
         return value;
     }

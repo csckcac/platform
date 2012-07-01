@@ -148,88 +148,88 @@ public class ActivityBeanPopulator {
 
             LogEntry logEntry = logs[i];
             if (logEntry.getAction() == LogEntry.ADD) {
-                String entry = Boolean.toString(resourceExists(registry, logEntry)) + "|" + logEntry.getUserName() + "|" + logEntry.getUserName() + "|" + " has added the resource " + "|" + logEntry.getResourcePath() + "|" + logEntry.getResourcePath() + "|" + " on " + CommonUtil.formatDate(logEntry.getDate()) + ".";
+                String entry = Boolean.toString(resourceExists(registry, logEntry)) + "|" + logEntry.getUserName() + "|" + logEntry.getUserName() + "|" + " has added the resource " + "|" + logEntry.getResourcePath() + "|" + logEntry.getResourcePath() + "|" + "  " + CommonUtil.formatDate(logEntry.getDate()) + ".";
                 activity[i] = entry;
 
             } else if (logEntry.getAction() == LogEntry.UPDATE) {
-                String entry = Boolean.toString(resourceExists(registry, logEntry)) + "|" + logEntry.getUserName() + "|" + logEntry.getUserName() + "|" + " has updated the resource " + "|" + logEntry.getResourcePath() + "|" + logEntry.getResourcePath() + "|" + " on " + CommonUtil.formatDate(logEntry.getDate()) + ".";
+                String entry = Boolean.toString(resourceExists(registry, logEntry)) + "|" + logEntry.getUserName() + "|" + logEntry.getUserName() + "|" + " has updated the resource " + "|" + logEntry.getResourcePath() + "|" + logEntry.getResourcePath() + "|" + "  " + CommonUtil.formatDate(logEntry.getDate()) + ".";
                 activity[i] = entry;
 
             } else if (logEntry.getAction() == LogEntry.DELETE_RESOURCE) {
-                String entry = Boolean.toString(resourceExists(registry, logEntry)) + "|" + logEntry.getUserName() + "|" + logEntry.getUserName() + "|" + " has deleted the resource " + "|" + logEntry.getResourcePath() + "|" + logEntry.getResourcePath() + "|" + " on " + CommonUtil.formatDate(logEntry.getDate()) + ".";
+                String entry = Boolean.toString(resourceExists(registry, logEntry)) + "|" + logEntry.getUserName() + "|" + logEntry.getUserName() + "|" + " has deleted the resource " + "|" + logEntry.getResourcePath() + "|" + logEntry.getResourcePath() + "|" + "  " + CommonUtil.formatDate(logEntry.getDate()) + ".";
                 activity[i] = entry;
 
             } else if (logEntry.getAction() == LogEntry.COMMENT) {
-                String entry = Boolean.toString(resourceExists(registry, logEntry)) + "|" + logEntry.getUserName() + "|" + logEntry.getUserName() + "|" + " has commented on resource " + "|" + logEntry.getResourcePath() + "|" + logEntry.getResourcePath() + "|" + " on " + CommonUtil.formatDate(logEntry.getDate()) + " with the following comment." + "|" + logEntry.getActionData();
+                String entry = Boolean.toString(resourceExists(registry, logEntry)) + "|" + logEntry.getUserName() + "|" + logEntry.getUserName() + "|" + " has commented on resource " + "|" + logEntry.getResourcePath() + "|" + logEntry.getResourcePath() + "|" + "  " + CommonUtil.formatDate(logEntry.getDate()) + " with the following comment." + "|" + logEntry.getActionData();
                 activity[i] = entry;
 
             } else if (logEntry.getAction() == LogEntry.DELETE_COMMENT) {
-                String entry = Boolean.toString(resourceExists(registry, logEntry)) + "|" + logEntry.getUserName() + "|" + logEntry.getUserName() + "|" + " has deleted the comment '" + logEntry.getActionData() + "' on the resource " + "|" + logEntry.getResourcePath() + "|" + logEntry.getResourcePath() + "|" + " on " + CommonUtil.formatDate(logEntry.getDate()) + ".";
+                String entry = Boolean.toString(resourceExists(registry, logEntry)) + "|" + logEntry.getUserName() + "|" + logEntry.getUserName() + "|" + " has deleted the comment '" + logEntry.getActionData() + "' on the resource " + "|" + logEntry.getResourcePath() + "|" + logEntry.getResourcePath() + "|" + "  " + CommonUtil.formatDate(logEntry.getDate()) + ".";
                 activity[i] = entry;
 
             } else if (logEntry.getAction() == LogEntry.TAG) {
-                String entry = Boolean.toString(resourceExists(registry, logEntry)) + "|" + logEntry.getUserName() + "|" + logEntry.getUserName() + "|" + " has tagged the resource " + "|" + logEntry.getResourcePath() + "|" + logEntry.getResourcePath() + "|" + " with tag '" + logEntry.getActionData() + "' on " + CommonUtil.formatDate(logEntry.getDate()) + ".";
+                String entry = Boolean.toString(resourceExists(registry, logEntry)) + "|" + logEntry.getUserName() + "|" + logEntry.getUserName() + "|" + " has tagged the resource " + "|" + logEntry.getResourcePath() + "|" + logEntry.getResourcePath() + "|" + " with tag '" + logEntry.getActionData() + "'  " + CommonUtil.formatDate(logEntry.getDate()) + ".";
                 activity[i] = entry;
 
             } else if (logEntry.getAction() == LogEntry.REMOVE_TAG) {
-                String entry = Boolean.toString(resourceExists(registry, logEntry)) + "|" + logEntry.getUserName() + "|" + logEntry.getUserName() + "|" + " has removed the tag '" + logEntry.getActionData() + "' on the resource " + "|" + logEntry.getResourcePath() + "|" + logEntry.getResourcePath() + "|" + " on " + CommonUtil.formatDate(logEntry.getDate()) + ".";
+                String entry = Boolean.toString(resourceExists(registry, logEntry)) + "|" + logEntry.getUserName() + "|" + logEntry.getUserName() + "|" + " has removed the tag '" + logEntry.getActionData() + "' on the resource " + "|" + logEntry.getResourcePath() + "|" + logEntry.getResourcePath() + "|" + "  " + CommonUtil.formatDate(logEntry.getDate()) + ".";
                 activity[i] = entry;
 
             } else if (logEntry.getAction() == LogEntry.RATING) {
-                String entry = Boolean.toString(resourceExists(registry, logEntry)) + "|" + logEntry.getUserName() + "|" + logEntry.getUserName() + "|" + " has rated the resource " + "|" + logEntry.getResourcePath() + "|" + logEntry.getResourcePath() + "|" + " with rating " + logEntry.getActionData() + " on " + CommonUtil.formatDate(logEntry.getDate()) + ".";
+                String entry = Boolean.toString(resourceExists(registry, logEntry)) + "|" + logEntry.getUserName() + "|" + logEntry.getUserName() + "|" + " has rated the resource " + "|" + logEntry.getResourcePath() + "|" + logEntry.getResourcePath() + "|" + " with rating " + logEntry.getActionData() + "  " + CommonUtil.formatDate(logEntry.getDate()) + ".";
                 activity[i] = entry;
 
             } else if (logEntry.getAction() == LogEntry.ADD_ASSOCIATION) {
                 String[] actionData = logEntry.getActionData().split(";");
                 if (actionData != null && actionData.length >= 2) {
-                    String entry = Boolean.toString(resourceExists(registry, logEntry)) + "|" + logEntry.getUserName() + "|" + logEntry.getUserName() + "|" + " has added an association of type " + actionData[0] + " from the resource " + "|" + logEntry.getResourcePath() + "|" + logEntry.getResourcePath() + "|" + " to the resource " + actionData[1] + " on " + CommonUtil.formatDate(logEntry.getDate()) + ".";
+                    String entry = Boolean.toString(resourceExists(registry, logEntry)) + "|" + logEntry.getUserName() + "|" + logEntry.getUserName() + "|" + " has added an association of type " + actionData[0] + " from the resource " + "|" + logEntry.getResourcePath() + "|" + logEntry.getResourcePath() + "|" + " to the resource " + actionData[1] + "  " + CommonUtil.formatDate(logEntry.getDate()) + ".";
                     activity[i] = entry;
                 }
 
             } else if (logEntry.getAction() == LogEntry.REMOVE_ASSOCIATION) {
                 String[] actionData = logEntry.getActionData().split(";");
                 if (actionData != null && actionData.length >= 2) {
-                    String entry = Boolean.toString(resourceExists(registry, logEntry)) + "|" + logEntry.getUserName() + "|" + logEntry.getUserName() + "|" + " has removed an association of type " + actionData[0] + " from the resource " + "|" + logEntry.getResourcePath() + "|" + logEntry.getResourcePath() + "|" + " to the resource " + actionData[1] + " on " + CommonUtil.formatDate(logEntry.getDate()) + ".";
+                    String entry = Boolean.toString(resourceExists(registry, logEntry)) + "|" + logEntry.getUserName() + "|" + logEntry.getUserName() + "|" + " has removed an association of type " + actionData[0] + " from the resource " + "|" + logEntry.getResourcePath() + "|" + logEntry.getResourcePath() + "|" + " to the resource " + actionData[1] + "  " + CommonUtil.formatDate(logEntry.getDate()) + ".";
                     activity[i] = entry;
                 }
 
             } else if (logEntry.getAction() == LogEntry.RESTORE) {
-                String entry = Boolean.toString(resourceExists(registry, logEntry)) + "|" + logEntry.getUserName() + "|" + logEntry.getUserName() + "|" + " has restored the resource " + "|" + logEntry.getResourcePath() + "|" + logEntry.getResourcePath() + "|" + ((logEntry.getActionData() != null) ? " to the version " + logEntry.getActionData() : "") + " on " + CommonUtil.formatDate(logEntry.getDate()) + ".";
+                String entry = Boolean.toString(resourceExists(registry, logEntry)) + "|" + logEntry.getUserName() + "|" + logEntry.getUserName() + "|" + " has restored the resource " + "|" + logEntry.getResourcePath() + "|" + logEntry.getResourcePath() + "|" + ((logEntry.getActionData() != null) ? " to the version " + logEntry.getActionData() : "") + "  " + CommonUtil.formatDate(logEntry.getDate()) + ".";
                 activity[i] = entry;
             } else if (logEntry.getAction() == LogEntry.ASSOCIATE_ASPECT) {
-                String entry = Boolean.toString(resourceExists(registry, logEntry)) + "|" + logEntry.getUserName() + "|" + logEntry.getUserName() + "|" + " has associated the aspect " + logEntry.getActionData() + " to the resource " + "|" + logEntry.getResourcePath() + "|" + logEntry.getResourcePath() + "|" + " on " + CommonUtil.formatDate(logEntry.getDate()) + ".";
+                String entry = Boolean.toString(resourceExists(registry, logEntry)) + "|" + logEntry.getUserName() + "|" + logEntry.getUserName() + "|" + " has associated the aspect " + logEntry.getActionData() + " to the resource " + "|" + logEntry.getResourcePath() + "|" + logEntry.getResourcePath() + "|" + "  " + CommonUtil.formatDate(logEntry.getDate()) + ".";
                 activity[i] = entry;
             }
             else if (logEntry.getAction() == LogEntry.COPY) {
-                String entry = Boolean.toString(resourceExists(registry, logEntry)) + "|" + logEntry.getUserName() + "|" + logEntry.getUserName() + "|" + " has copied the resource " + "|" + logEntry.getResourcePath() + "|" + logEntry.getResourcePath() + "|" + " to the Location " + logEntry.getActionData() + " on " + CommonUtil.formatDate(logEntry.getDate()) + ".";
+                String entry = Boolean.toString(resourceExists(registry, logEntry)) + "|" + logEntry.getUserName() + "|" + logEntry.getUserName() + "|" + " has copied the resource " + "|" + logEntry.getResourcePath() + "|" + logEntry.getResourcePath() + "|" + " to the Location " + logEntry.getActionData() + "  " + CommonUtil.formatDate(logEntry.getDate()) + ".";
                 activity[i] = entry;
             }
             else if (logEntry.getAction() == LogEntry.RENAME) {
-                String entry = Boolean.toString(resourceExists(registry, logEntry)) + "|" + logEntry.getUserName() + "|" + logEntry.getUserName() + "|" + " has renamed the resource to " + "|" + logEntry.getResourcePath() + "|" + logEntry.getResourcePath() + "|" + " from old Name: " + logEntry.getActionData() + " on " + CommonUtil.formatDate(logEntry.getDate()) + ".";
+                String entry = Boolean.toString(resourceExists(registry, logEntry)) + "|" + logEntry.getUserName() + "|" + logEntry.getUserName() + "|" + " has renamed the resource to " + "|" + logEntry.getResourcePath() + "|" + logEntry.getResourcePath() + "|" + " from old Name: " + logEntry.getActionData() + "  " + CommonUtil.formatDate(logEntry.getDate()) + ".";
                 activity[i] = entry;
             }
             else if (logEntry.getAction() == LogEntry.MOVE) {
-                String entry = Boolean.toString(resourceExists(registry, logEntry)) + "|" + logEntry.getUserName() + "|" + logEntry.getUserName() + "|" + " has moved the resource to " + "|" + logEntry.getResourcePath() + "|" + logEntry.getResourcePath() + "|" + " from the Location " + logEntry.getActionData() + " on " + CommonUtil.formatDate(logEntry.getDate()) + ".";
+                String entry = Boolean.toString(resourceExists(registry, logEntry)) + "|" + logEntry.getUserName() + "|" + logEntry.getUserName() + "|" + " has moved the resource to " + "|" + logEntry.getResourcePath() + "|" + logEntry.getResourcePath() + "|" + " from the Location " + logEntry.getActionData() + "  " + CommonUtil.formatDate(logEntry.getDate()) + ".";
                 activity[i] = entry;
             }
             else if (logEntry.getAction() == LogEntry.CREATE_SYMBOLIC_LINK) {
-                String entry = Boolean.toString(resourceExists(registry, logEntry)) + "|" + logEntry.getUserName() + "|" + logEntry.getUserName() + "|" + " has created a symbolic link " + "|" + logEntry.getResourcePath() + "|" + logEntry.getResourcePath() + "|" + " to the Location " + logEntry.getActionData() + " on " + CommonUtil.formatDate(logEntry.getDate()) + ".";
+                String entry = Boolean.toString(resourceExists(registry, logEntry)) + "|" + logEntry.getUserName() + "|" + logEntry.getUserName() + "|" + " has created a symbolic link " + "|" + logEntry.getResourcePath() + "|" + logEntry.getResourcePath() + "|" + " to the Location " + logEntry.getActionData() + "  " + CommonUtil.formatDate(logEntry.getDate()) + ".";
                 activity[i] = entry;
             }
             else if (logEntry.getAction() == LogEntry.CREATE_REMOTE_LINK) {
                 if (logEntry.getActionData().contains(";")) {
                     String[] actionData = logEntry.getActionData().split(";");
                     if (actionData != null && actionData.length >= 2) {
-                        String entry = Boolean.toString(resourceExists(registry, logEntry)) + "|" + logEntry.getUserName() + "|" + logEntry.getUserName() + "|" + " has created a remote link " + "|" + logEntry.getResourcePath() + "|" + logEntry.getResourcePath() + "|" + " to the instance " + actionData[0] + " at path " + actionData[1] + " on " + CommonUtil.formatDate(logEntry.getDate()) + ".";
+                        String entry = Boolean.toString(resourceExists(registry, logEntry)) + "|" + logEntry.getUserName() + "|" + logEntry.getUserName() + "|" + " has created a remote link " + "|" + logEntry.getResourcePath() + "|" + logEntry.getResourcePath() + "|" + " to the instance " + actionData[0] + " at path " + actionData[1] + "  " + CommonUtil.formatDate(logEntry.getDate()) + ".";
                         activity[i] = entry;
                     }
                 } else {
-                    String entry = Boolean.toString(resourceExists(registry, logEntry)) + "|" + logEntry.getUserName() + "|" + logEntry.getUserName() + "|" + " has created a remote link " + "|" + logEntry.getResourcePath() + "|" + logEntry.getResourcePath() + "|" + " to the Location " + logEntry.getActionData() + " on " + CommonUtil.formatDate(logEntry.getDate()) + ".";
+                    String entry = Boolean.toString(resourceExists(registry, logEntry)) + "|" + logEntry.getUserName() + "|" + logEntry.getUserName() + "|" + " has created a remote link " + "|" + logEntry.getResourcePath() + "|" + logEntry.getResourcePath() + "|" + " to the Location " + logEntry.getActionData() + "  " + CommonUtil.formatDate(logEntry.getDate()) + ".";
                     activity[i] = entry;
                 }
             }
             else if (logEntry.getAction() == LogEntry.REMOVE_LINK) {
-                String entry = Boolean.toString(resourceExists(registry, logEntry)) + "|" + logEntry.getUserName() + "|" + logEntry.getUserName() + "|" + " has removed link " + "|" + logEntry.getResourcePath() + "|" + logEntry.getResourcePath() + "|" + " on " + CommonUtil.formatDate(logEntry.getDate()) + ".";
+                String entry = Boolean.toString(resourceExists(registry, logEntry)) + "|" + logEntry.getUserName() + "|" + logEntry.getUserName() + "|" + " has removed link " + "|" + logEntry.getResourcePath() + "|" + logEntry.getResourcePath() + "|" + "  " + CommonUtil.formatDate(logEntry.getDate()) + ".";
                 activity[i] = entry;
             }
         }
@@ -254,89 +254,89 @@ public class ActivityBeanPopulator {
             LogEntry logEntry = logs[i];
             if(logEntry.getUserName().equals(Username)){
                 if (logEntry.getAction() == LogEntry.ADD) {
-                    String entry = Boolean.toString(resourceExists(registry, logEntry)) + "|" + logEntry.getUserName() + "|" + logEntry.getUserName() + "|" + " has added the resource " + "|" + logEntry.getResourcePath() + "|" + logEntry.getResourcePath() + "|" + " on " + CommonUtil.formatDate(logEntry.getDate()) + ".";
+                    String entry = Boolean.toString(resourceExists(registry, logEntry)) + "|" + logEntry.getUserName() + "|" + logEntry.getUserName() + "|" + " has added the resource " + "|" + logEntry.getResourcePath() + "|" + logEntry.getResourcePath() + "|" + "  " + CommonUtil.formatDate(logEntry.getDate()) + ".";
                     list.add(entry);
 
                 } else if (logEntry.getAction() == LogEntry.UPDATE) {
-                    String entry = Boolean.toString(resourceExists(registry, logEntry)) + "|" + logEntry.getUserName() + "|" + logEntry.getUserName() + "|" + " has updated the resource " + "|" + logEntry.getResourcePath() + "|" + logEntry.getResourcePath() + "|" + " on " + CommonUtil.formatDate(logEntry.getDate()) + ".";
+                    String entry = Boolean.toString(resourceExists(registry, logEntry)) + "|" + logEntry.getUserName() + "|" + logEntry.getUserName() + "|" + " has updated the resource " + "|" + logEntry.getResourcePath() + "|" + logEntry.getResourcePath() + "|" + "  " + CommonUtil.formatDate(logEntry.getDate()) + ".";
                     list.add(entry);
 
                 } else if (logEntry.getAction() == LogEntry.DELETE_RESOURCE) {
-                    String entry = Boolean.toString(resourceExists(registry, logEntry)) + "|" + logEntry.getUserName() + "|" + logEntry.getUserName() + "|" + " has deleted the resource " + "|" + logEntry.getResourcePath() + "|" + logEntry.getResourcePath() + "|" + " on " + CommonUtil.formatDate(logEntry.getDate()) + ".";
+                    String entry = Boolean.toString(resourceExists(registry, logEntry)) + "|" + logEntry.getUserName() + "|" + logEntry.getUserName() + "|" + " has deleted the resource " + "|" + logEntry.getResourcePath() + "|" + logEntry.getResourcePath() + "|" + "  " + CommonUtil.formatDate(logEntry.getDate()) + ".";
                     list.add(entry);
 
                 } else if (logEntry.getAction() == LogEntry.COMMENT) {
-                    String entry = Boolean.toString(resourceExists(registry, logEntry)) + "|" + logEntry.getUserName() + "|" + logEntry.getUserName() + "|" + " has commented on resource " + "|" + logEntry.getResourcePath() + "|" + logEntry.getResourcePath() + "|" + " on " + CommonUtil.formatDate(logEntry.getDate()) + " with the following comment." + "|" + logEntry.getActionData();
+                    String entry = Boolean.toString(resourceExists(registry, logEntry)) + "|" + logEntry.getUserName() + "|" + logEntry.getUserName() + "|" + " has commented on resource " + "|" + logEntry.getResourcePath() + "|" + logEntry.getResourcePath() + "|" + "  " + CommonUtil.formatDate(logEntry.getDate()) + " with the following comment." + "|" + logEntry.getActionData();
                     list.add(entry);
 
                 } else if (logEntry.getAction() == LogEntry.DELETE_COMMENT) {
-                    String entry = Boolean.toString(resourceExists(registry, logEntry)) + "|" + logEntry.getUserName() + "|" + logEntry.getUserName() + "|" + " has deleted the comment '" + logEntry.getActionData() + "' on the resource " + "|" + logEntry.getResourcePath() + "|" + logEntry.getResourcePath() + "|" + " on " + CommonUtil.formatDate(logEntry.getDate()) + ".";
+                    String entry = Boolean.toString(resourceExists(registry, logEntry)) + "|" + logEntry.getUserName() + "|" + logEntry.getUserName() + "|" + " has deleted the comment '" + logEntry.getActionData() + "' on the resource " + "|" + logEntry.getResourcePath() + "|" + logEntry.getResourcePath() + "|" + "  " + CommonUtil.formatDate(logEntry.getDate()) + ".";
                     list.add(entry);
 
                 } else if (logEntry.getAction() == LogEntry.TAG) {
-                    String entry = Boolean.toString(resourceExists(registry, logEntry)) + "|" + logEntry.getUserName() + "|" + logEntry.getUserName() + "|" + " has tagged the resource " + "|" + logEntry.getResourcePath() + "|" + logEntry.getResourcePath() + "|" + " with tag '" + logEntry.getActionData() + "' on " + CommonUtil.formatDate(logEntry.getDate()) + ".";
+                    String entry = Boolean.toString(resourceExists(registry, logEntry)) + "|" + logEntry.getUserName() + "|" + logEntry.getUserName() + "|" + " has tagged the resource " + "|" + logEntry.getResourcePath() + "|" + logEntry.getResourcePath() + "|" + " with tag '" + logEntry.getActionData() + "'  " + CommonUtil.formatDate(logEntry.getDate()) + ".";
                     list.add(entry);
 
                 } else if (logEntry.getAction() == LogEntry.REMOVE_TAG) {
-                    String entry = Boolean.toString(resourceExists(registry, logEntry)) + "|" + logEntry.getUserName() + "|" + logEntry.getUserName() + "|" + " has removed the tag '" + logEntry.getActionData() + "' on the resource " + "|" + logEntry.getResourcePath() + "|" + logEntry.getResourcePath() + "|" + " on " + CommonUtil.formatDate(logEntry.getDate()) + ".";
+                    String entry = Boolean.toString(resourceExists(registry, logEntry)) + "|" + logEntry.getUserName() + "|" + logEntry.getUserName() + "|" + " has removed the tag '" + logEntry.getActionData() + "' on the resource " + "|" + logEntry.getResourcePath() + "|" + logEntry.getResourcePath() + "|" + "  " + CommonUtil.formatDate(logEntry.getDate()) + ".";
                     list.add(entry);
 
                 } else if (logEntry.getAction() == LogEntry.RATING) {
-                    String entry = Boolean.toString(resourceExists(registry, logEntry)) + "|" + logEntry.getUserName() + "|" + logEntry.getUserName() + "|" + " has rated the resource " + "|" + logEntry.getResourcePath() + "|" + logEntry.getResourcePath() + "|" + " with rating " + logEntry.getActionData() + " on " + CommonUtil.formatDate(logEntry.getDate()) + ".";
+                    String entry = Boolean.toString(resourceExists(registry, logEntry)) + "|" + logEntry.getUserName() + "|" + logEntry.getUserName() + "|" + " has rated the resource " + "|" + logEntry.getResourcePath() + "|" + logEntry.getResourcePath() + "|" + " with rating " + logEntry.getActionData() + "  " + CommonUtil.formatDate(logEntry.getDate()) + ".";
                     list.add(entry);
 
                 } else if (logEntry.getAction() == LogEntry.ADD_ASSOCIATION) {
                     String[] actionData = logEntry.getActionData().split(";");
                     if (actionData != null && actionData.length >= 2) {
-                        String entry = Boolean.toString(resourceExists(registry, logEntry)) + "|" + logEntry.getUserName() + "|" + logEntry.getUserName() + "|" + " has added an association of type " + actionData[0] + " from the resource " + "|" + logEntry.getResourcePath() + "|" + logEntry.getResourcePath() + "|" + " to the resource " + actionData[1] + " on " + CommonUtil.formatDate(logEntry.getDate()) + ".";
+                        String entry = Boolean.toString(resourceExists(registry, logEntry)) + "|" + logEntry.getUserName() + "|" + logEntry.getUserName() + "|" + " has added an association of type " + actionData[0] + " from the resource " + "|" + logEntry.getResourcePath() + "|" + logEntry.getResourcePath() + "|" + " to the resource " + actionData[1] + "  " + CommonUtil.formatDate(logEntry.getDate()) + ".";
                         list.add(entry);
                     }
 
                 } else if (logEntry.getAction() == LogEntry.REMOVE_ASSOCIATION) {
                     String[] actionData = logEntry.getActionData().split(";");
                     if (actionData != null && actionData.length >= 2) {
-                        String entry = Boolean.toString(resourceExists(registry, logEntry)) + "|" + logEntry.getUserName() + "|" + logEntry.getUserName() + "|" + " has removed an association of type " + actionData[0] + " from the resource " + "|" + logEntry.getResourcePath() + "|" + logEntry.getResourcePath() + "|" + " to the resource " + actionData[1] + " on " + CommonUtil.formatDate(logEntry.getDate()) + ".";
+                        String entry = Boolean.toString(resourceExists(registry, logEntry)) + "|" + logEntry.getUserName() + "|" + logEntry.getUserName() + "|" + " has removed an association of type " + actionData[0] + " from the resource " + "|" + logEntry.getResourcePath() + "|" + logEntry.getResourcePath() + "|" + " to the resource " + actionData[1] + "  " + CommonUtil.formatDate(logEntry.getDate()) + ".";
                         list.add(entry);
                     }
 
                 } else if (logEntry.getAction() == LogEntry.RESTORE) {
-                    String entry = Boolean.toString(resourceExists(registry, logEntry)) + "|" + logEntry.getUserName() + "|" + logEntry.getUserName() + "|" + " has restored the resource " + "|" + logEntry.getResourcePath() + "|" + logEntry.getResourcePath() + "|" + ((logEntry.getActionData() != null) ? " to the version " + logEntry.getActionData() : "") + " on " + CommonUtil.formatDate(logEntry.getDate()) + ".";
+                    String entry = Boolean.toString(resourceExists(registry, logEntry)) + "|" + logEntry.getUserName() + "|" + logEntry.getUserName() + "|" + " has restored the resource " + "|" + logEntry.getResourcePath() + "|" + logEntry.getResourcePath() + "|" + ((logEntry.getActionData() != null) ? " to the version " + logEntry.getActionData() : "") + "  " + CommonUtil.formatDate(logEntry.getDate()) + ".";
                     list.add(entry);
 
                 } else if (logEntry.getAction() == LogEntry.ASSOCIATE_ASPECT) {
-                    String entry = Boolean.toString(resourceExists(registry, logEntry)) + "|" + logEntry.getUserName() + "|" + logEntry.getUserName() + "|" + " has associated the aspect " + logEntry.getActionData() + " to the resource " + "|" + logEntry.getResourcePath() + "|" + logEntry.getResourcePath() + "|" + " on " + CommonUtil.formatDate(logEntry.getDate()) + ".";
+                    String entry = Boolean.toString(resourceExists(registry, logEntry)) + "|" + logEntry.getUserName() + "|" + logEntry.getUserName() + "|" + " has associated the aspect " + logEntry.getActionData() + " to the resource " + "|" + logEntry.getResourcePath() + "|" + logEntry.getResourcePath() + "|" + "  " + CommonUtil.formatDate(logEntry.getDate()) + ".";
                     list.add(entry);
 
                 } else if (logEntry.getAction() == LogEntry.COPY) {
-                    String entry = Boolean.toString(resourceExists(registry, logEntry)) + "|" + logEntry.getUserName() + "|" + logEntry.getUserName() + "|" + " has copied the resource " + "|" + logEntry.getResourcePath() + "|" + logEntry.getResourcePath() + "|" + " to the Location " + logEntry.getActionData() + " on " + CommonUtil.formatDate(logEntry.getDate()) + ".";
+                    String entry = Boolean.toString(resourceExists(registry, logEntry)) + "|" + logEntry.getUserName() + "|" + logEntry.getUserName() + "|" + " has copied the resource " + "|" + logEntry.getResourcePath() + "|" + logEntry.getResourcePath() + "|" + " to the Location " + logEntry.getActionData() + "  " + CommonUtil.formatDate(logEntry.getDate()) + ".";
                     list.add(entry);
 
                 } else if (logEntry.getAction() == LogEntry.RENAME) {
-                    String entry = Boolean.toString(resourceExists(registry, logEntry)) + "|" + logEntry.getUserName() + "|" + logEntry.getUserName() + "|" + " has renamed the resource " + "|" + logEntry.getResourcePath() + "|" + logEntry.getResourcePath() + "|" + " to new Name: " + logEntry.getActionData() + " on " + CommonUtil.formatDate(logEntry.getDate()) + ".";
+                    String entry = Boolean.toString(resourceExists(registry, logEntry)) + "|" + logEntry.getUserName() + "|" + logEntry.getUserName() + "|" + " has renamed the resource " + "|" + logEntry.getResourcePath() + "|" + logEntry.getResourcePath() + "|" + " to new Name: " + logEntry.getActionData() + "  " + CommonUtil.formatDate(logEntry.getDate()) + ".";
                     list.add(entry);
 
                 } else if (logEntry.getAction() == LogEntry.MOVE) {
-                    String entry = Boolean.toString(resourceExists(registry, logEntry)) + "|" + logEntry.getUserName() + "|" + logEntry.getUserName() + "|" + " has moved the resource " + "|" + logEntry.getResourcePath() + "|" + logEntry.getResourcePath() + "|" + " to the Location " + logEntry.getActionData() + " on " + CommonUtil.formatDate(logEntry.getDate()) + ".";
+                    String entry = Boolean.toString(resourceExists(registry, logEntry)) + "|" + logEntry.getUserName() + "|" + logEntry.getUserName() + "|" + " has moved the resource " + "|" + logEntry.getResourcePath() + "|" + logEntry.getResourcePath() + "|" + " to the Location " + logEntry.getActionData() + "  " + CommonUtil.formatDate(logEntry.getDate()) + ".";
                     list.add(entry);
 
                 } else if (logEntry.getAction() == LogEntry.CREATE_SYMBOLIC_LINK) {
-                    String entry = Boolean.toString(resourceExists(registry, logEntry)) + "|" + logEntry.getUserName() + "|" + logEntry.getUserName() + "|" + " has created a symbolic link " + "|" + logEntry.getResourcePath() + "|" + logEntry.getResourcePath() + "|" + " to the Location " + logEntry.getActionData() + " on " + CommonUtil.formatDate(logEntry.getDate()) + ".";
+                    String entry = Boolean.toString(resourceExists(registry, logEntry)) + "|" + logEntry.getUserName() + "|" + logEntry.getUserName() + "|" + " has created a symbolic link " + "|" + logEntry.getResourcePath() + "|" + logEntry.getResourcePath() + "|" + " to the Location " + logEntry.getActionData() + "  " + CommonUtil.formatDate(logEntry.getDate()) + ".";
                     list.add(entry);
 
                 } else if (logEntry.getAction() == LogEntry.CREATE_REMOTE_LINK) {
                     if (logEntry.getActionData().contains(";")) {
                         String[] actionData = logEntry.getActionData().split(";");
                         if (actionData != null && actionData.length >= 2) {
-                            String entry = Boolean.toString(resourceExists(registry, logEntry)) + "|" + logEntry.getUserName() + "|" + logEntry.getUserName() + "|" + " has created a remote link " + "|" + logEntry.getResourcePath() + "|" + logEntry.getResourcePath() + "|" + " to the instance " + actionData[0] + " at path " + actionData[1] + " on " + CommonUtil.formatDate(logEntry.getDate()) + ".";
+                            String entry = Boolean.toString(resourceExists(registry, logEntry)) + "|" + logEntry.getUserName() + "|" + logEntry.getUserName() + "|" + " has created a remote link " + "|" + logEntry.getResourcePath() + "|" + logEntry.getResourcePath() + "|" + " to the instance " + actionData[0] + " at path " + actionData[1] + "  " + CommonUtil.formatDate(logEntry.getDate()) + ".";
                             list.add(entry);
                         }
                     } else {
-                        String entry = Boolean.toString(resourceExists(registry, logEntry)) + "|" + logEntry.getUserName() + "|" + logEntry.getUserName() + "|" + " has created a remote link " + "|" + logEntry.getResourcePath() + "|" + logEntry.getResourcePath() + "|" + " to the Location " + logEntry.getActionData() + " on " + CommonUtil.formatDate(logEntry.getDate()) + ".";
+                        String entry = Boolean.toString(resourceExists(registry, logEntry)) + "|" + logEntry.getUserName() + "|" + logEntry.getUserName() + "|" + " has created a remote link " + "|" + logEntry.getResourcePath() + "|" + logEntry.getResourcePath() + "|" + " to the Location " + logEntry.getActionData() + "  " + CommonUtil.formatDate(logEntry.getDate()) + ".";
                         list.add(entry);
                     }
 
                 } else if (logEntry.getAction() == LogEntry.REMOVE_LINK) {
-                    String entry = Boolean.toString(resourceExists(registry, logEntry)) + "|" + logEntry.getUserName() + "|" + logEntry.getUserName() + "|" + " has removed link " + "|" + logEntry.getResourcePath() + "|" + logEntry.getResourcePath() + "|" + " on " + CommonUtil.formatDate(logEntry.getDate()) + ".";
+                    String entry = Boolean.toString(resourceExists(registry, logEntry)) + "|" + logEntry.getUserName() + "|" + logEntry.getUserName() + "|" + " has removed link " + "|" + logEntry.getResourcePath() + "|" + logEntry.getResourcePath() + "|" + "  " + CommonUtil.formatDate(logEntry.getDate()) + ".";
                     list.add(entry);
                 }
             }

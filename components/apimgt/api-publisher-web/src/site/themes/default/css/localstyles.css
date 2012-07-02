@@ -211,6 +211,6 @@ a.powered-by-logo {
     padding:20px;
     cursor:default;
 }
-.versionTxt{
-    /*color:#000;*/
+.nav-list > li > a.noHover:hover{
+    background:#fff;
 }

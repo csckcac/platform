@@ -151,11 +151,15 @@ function populateServiceParams(tableName) {
         var propertyName = headerTable.rows[j].getElementsByTagName("input")[0].value;
         var propertyValue = headerTable.rows[j].getElementsByTagName("input")[1].value;
         var propertyScope = headerTable.rows[j].getElementsByTagName("select")[0].value;
-        if (j == 1) {
+
+        if (propertyName == "" | propertyValue == "") {
+            continue;
+        }
+
+        if (str == "") {
             str += propertyName + ',' + propertyValue + ',' + propertyScope;
         } else {
             str += '::' + propertyName + ',' + propertyValue + ',' + propertyScope;
-            ;
         }
     }
     return str;

@@ -170,6 +170,7 @@
                                 <featureArtifactDef>org.wso2.carbon:org.wso2.carbon.application.mgt.synapse.feature:${carbon.version}</featureArtifactDef>
                                 <featureArtifactDef>org.wso2.carbon:org.wso2.carbon.application.deployer.synapse.feature:${carbon.version}</featureArtifactDef>
                                 <featureArtifactDef>org.wso2.carbon:org.wso2.carbon.transports.passthru.feature:${passthru.transport.version}</featureArtifactDef>
+				<featureArtifactDef>org.wso2.carbon:org.wso2.carbon.transports.sap.feature:${carbon.version}</featureArtifactDef>
                                 <featureArtifactDef>org.wso2.carbon:org.wso2.carbon.mediation.templates.feature:${carbon.version}</featureArtifactDef>
                                 <featureArtifactDef>org.wso2.carbon:org.wso2.carbon.message.store.feature:${carbon.version}</featureArtifactDef>
                                 <featureArtifactDef>org.wso2.carbon:org.wso2.carbon.message.processor.feature:${carbon.version}</featureArtifactDef>
@@ -476,6 +477,10 @@
                                 <feature>
                                     <id>org.wso2.carbon.transports.passthru.feature.group</id>
                                     <version>${passthru.transport.version}</version>
+                                </feature>
+				<feature>
+                                    <id>org.wso2.carbon.transports.sap.feature.group</id>
+                                    <version>${carbon.version}</version>
                                 </feature>
                                 <feature>
                                     <id>org.wso2.carbon.mediation.templates.feature.group</id>

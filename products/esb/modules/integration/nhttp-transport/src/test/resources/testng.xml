@@ -13,6 +13,7 @@
             <class name="org.wso2.esb.integration.nhttp.HTTP10TestCase"/>
             <class name="org.wso2.esb.integration.nhttp.GZipMediationTestCase"/>
             <class name="org.wso2.esb.integration.nhttp.GETRequestHandlerTestCase"/>
+	    <class name="org.wso2.esb.integration.nhttp.HTTPRequestHostHeaderPropertyTestCase"/>
         </classes>
     </test>
 </suite>

@@ -20,7 +20,7 @@
                 <tr>
                                     <td>Application Description:</td>
                                     <!--td><input type='text' name='applicationDescription' size='50'/></td-->
-                                    <td><<textarea name='applicationDescription' rows=5 cols=50></textarea></td>
+                                    <td><textarea name='applicationDescription' rows=5 cols=50></textarea></td>
                  </tr>
             </table>
             <table class="styledLeft">

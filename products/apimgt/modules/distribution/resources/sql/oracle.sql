@@ -73,7 +73,7 @@ CREATE OR REPLACE TRIGGER AM_API_TRIGGER
                     REFERENCING NEW AS NEW
                     FOR EACH ROW
                     BEGIN
-                    SELECT AM_API_SEQUENCE.nextval INTO :NEW.AM_API FROM dual;
+                    SELECT AM_API_SEQUENCE.nextval INTO :NEW.API_ID FROM dual;
                     END;
 /
 

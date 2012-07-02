@@ -51,4 +51,9 @@
 
         </classes>
     </test>
+    <test name="Test - Mediator Clone" preserve-order="true" verbose="2">
+        <classes>
+            <class name="org.wso2.carbon.mediator.tests.clone.CloneMediatorTestCase"/>
+        </classes>
+    </test>
 </suite>

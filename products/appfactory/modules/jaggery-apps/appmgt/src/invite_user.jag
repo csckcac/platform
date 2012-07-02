@@ -40,7 +40,7 @@
                 </tr>
                 </thead>
                 <tr>
-                    <td class="formRow">User Name:</td>
+                    <td class="formRow">User Name/Email:</td>
                     <td class="formRow"><input type='text' name='newUsername' size='50'/></td>
                 </tr>
                 <tr>

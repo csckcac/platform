@@ -97,10 +97,15 @@
 			</bpel:copy>
 		</bpel:assign>
 		<bpel:sequence name="Sequence">
-			<bpel:invoke name="InvokeApplicationMgtService"
-				partnerLink="ApplicationMgtPL" operation="addUserToApplication"
-				portType="ns:ApplicationManagementServicePortType" inputVariable="ApplicationMgtPLRequest"
-				outputVariable="ApplicationMgtPLResponse"></bpel:invoke>
+            <bpel:if name="If">
+                <bpel:condition><![CDATA[contains($input.payload/tns:userName, '@')]]></bpel:condition>
+                <bpel:invoke name="InvokeApplicationMgtService" partnerLink="ApplicationMgtPL" operation="addUserToApplication" portType="ns:ApplicationManagementServicePortType" inputVariable="ApplicationMgtPLRequest" outputVariable="ApplicationMgtPLResponse"></bpel:invoke>
+                <bpel:else>
+                    <!-- todo: add bpel4people ext to call the human task to send notification -->
+                    <bpel:invoke name="InvokeApplicationMgtService" partnerLink="ApplicationMgtPL" operation="addUserToApplication" portType="ns:ApplicationManagementServicePortType" inputVariable="ApplicationMgtPLRequest" outputVariable="ApplicationMgtPLResponse"></bpel:invoke>
+                </bpel:else>
+            </bpel:if>
+            
 		</bpel:sequence>
 		<bpel:assign validate="no" name="AssignOutputParams">
 			<bpel:copy>

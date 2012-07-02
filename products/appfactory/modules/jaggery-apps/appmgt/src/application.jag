@@ -82,7 +82,7 @@
                                 </tr>
                                 <tr>
                                     <td>SVN URL:</td>
-                                    <td><%=appInfo.repoLink%></td>
+                                    <td><a href="<%=appInfo.repoLink%>"><%=appInfo.repoLink%></a></td>
                                 </tr>
                             </table>
                         </div>

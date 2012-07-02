@@ -20,10 +20,13 @@ import org.apache.axis2.client.Options;
 import org.apache.axis2.client.ServiceClient;
 import org.apache.axis2.context.ConfigurationContext;
 import org.apache.axis2.context.ConfigurationContextFactory;
+import org.apache.commons.httpclient.DefaultHttpMethodRetryHandler;
+import org.apache.commons.httpclient.Header;
 import org.apache.commons.httpclient.HttpClient;
 import org.apache.commons.httpclient.HttpStatus;
-import org.apache.commons.httpclient.methods.GetMethod;
+import org.apache.commons.httpclient.methods.PostMethod;
 import org.apache.commons.httpclient.params.HttpClientParams;
+import org.apache.commons.httpclient.params.HttpMethodParams;
 import org.apache.commons.logging.Log;
 import org.apache.commons.logging.LogFactory;
 import org.testng.annotations.BeforeMethod;
@@ -118,36 +121,50 @@ public class TenantWebappDeploymentTestCase {
         httpClient.setParams(params);
         String exampleWebappUrl = "http://localhost:" + FrameworkSettings.HTTP_PORT + "/t/" + DOMAIN +
                                   "/webapps/example/";
-        String url = exampleWebappUrl + "carbon/authentication/login.jsp?username=" +
-                     USER_NAME + "&password=" + PASSWORD;
-        GetMethod getMethod = new GetMethod(url);
+        String url = exampleWebappUrl + "carbon/authentication/login.jsp";
+        PostMethod postMethod = new PostMethod(url);
+        postMethod.addParameter("username", USER_NAME);
+        postMethod.addParameter("password", PASSWORD);
+
+        postMethod.getParams().setParameter(HttpMethodParams.RETRY_HANDLER,
+                                            new DefaultHttpMethodRetryHandler(3, false));
         try {
             log.info("Authenticating test user with carbon user realm");
-            int statusCode = httpClient.executeMethod(getMethod);
+            int statusCode = httpClient.executeMethod(postMethod);
             int noOfTry = 1;
+            if (statusCode == HttpStatus.SC_MOVED_TEMPORARILY) {
+                Header locationHeader = postMethod.getResponseHeader("location");
+                postMethod.releaseConnection();
+                if (locationHeader != null) {
+                    postMethod = new PostMethod(locationHeader.getValue());
+                    statusCode = httpClient.executeMethod(postMethod);
+                }
+            }
             while (statusCode != HttpStatus.SC_OK && noOfTry < 10) {
+                postMethod = new PostMethod(url);
                 try {
                     Thread.sleep(1000);
                 } catch (InterruptedException ignored) {
                 }
                 noOfTry++;
-                statusCode = httpClient.executeMethod(getMethod);
+                statusCode = httpClient.executeMethod(postMethod);
             }
+
             if (noOfTry == 10) {
                 fail("Webapp deployment for tenant : " + DOMAIN + " was not successful");
             }
             if (statusCode == HttpStatus.SC_OK) {
                 boolean success = Boolean.
-                        parseBoolean(getMethod.getResponseHeader("logged-in").getValue());
+                        parseBoolean(postMethod.getResponseHeader("logged-in").getValue());
                 if (success) {
-                    String username = getMethod.getResponseHeader("username").getValue();
+                    String username = postMethod.getResponseHeader("username").getValue();
                     assertEquals(username, USER_NAME);
                 } else {
                     fail("Webapp testing for tenant :" + DOMAIN + " failed");
                 }
             }
         } finally {
-            getMethod.releaseConnection();
+            postMethod.releaseConnection();
         }
     }
 }

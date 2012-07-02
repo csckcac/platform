@@ -188,6 +188,8 @@
                                     org.wso2.carbon:org.wso2.carbon.dataservices.feature:${carbon.platform.version}
                                 </featureArtifactDef>
 
+				<featureArtifactDef>org.wso2.carbon:org.wso2.carbon.dataservices.task.feature:${carbon.platform.version}</featureArtifactDef>
+
                                 <featureArtifactDef>
                                     org.wso2.carbon:org.wso2.carbon.datasource.feature:${carbon.platform.version}
                                 </featureArtifactDef>
@@ -296,9 +298,6 @@
 								<featureArtifactDef>
 									org.wso2.carbon:org.wso2.carbon.application.deployer.mashup.feature:${carbon.version}
 								</featureArtifactDef>
-								<featureArtifactDef>
-									org.wso2.carbon:org.wso2.carbon.task.feature:${carbon.version}
-								</featureArtifactDef>			
 								<featureArtifactDef>
 									org.wso2.carbon:org.apache.synapse.wso2.feature:${synapse.version}
 								</featureArtifactDef>                    
@@ -498,6 +497,11 @@
                                     <version>${carbon.platform.version}</version>
                                 </feature>
 
+				<feature>
+                                    <id>org.wso2.carbon.dataservices.task.feature.group</id>
+                                    <version>${carbon.version}</version>
+                                </feature>
+
                                 <feature>
                                     <id>org.wso2.carbon.datasource.feature.group</id>
                                     <version>${carbon.platform.version}</version>
@@ -650,12 +654,7 @@
                                     <id>org.wso2.carbon.application.deployer.mashup.feature.group</id>
                                     <version>${carbon.version}</version>
                                 </feature>
-
-								<feature>
-                                    <id>org.wso2.carbon.task.feature.group</id>
-                                    <version>${carbon.version}</version>
-                                </feature>
-								<feature>
+				<feature>
                                     <id>org.apache.synapse.wso2.feature.group</id>
                                     <version>${synapse.version}</version>
                                 </feature>

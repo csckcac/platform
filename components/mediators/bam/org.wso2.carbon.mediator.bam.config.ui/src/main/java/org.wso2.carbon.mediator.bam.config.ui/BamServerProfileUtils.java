@@ -210,6 +210,23 @@ public class BamServerProfileUtils {
         }
         return true;
     }
+    
+    public void addCollection(String path){
+        try {
+            client.addCollection(path);
+        } catch (RemoteException e) {
+            e.printStackTrace();  //To change body of catch statement use File | Settings | File Templates.
+        }
+    }
+    
+    public boolean removeResource(String path){
+        try {
+            return client.removeResource(path);
+        } catch (RemoteException e) {
+            e.printStackTrace();  //To change body of catch statement use File | Settings | File Templates.
+        }
+        return false;
+    }
 
     public String encryptPassword(String plainTextPassword){
         try {

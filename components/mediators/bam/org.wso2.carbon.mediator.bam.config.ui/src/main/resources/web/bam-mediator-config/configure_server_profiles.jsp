@@ -26,6 +26,7 @@
     public static final String STREAM_VERSIONS = "streamVersions";
     public static final String STREAM_NICKNAME = "streamNickname";
     public static final String STREAM_DESCRIPTION = "streamDescription";
+    public static final String SERVER_PROFILE_LOCATION = "bamServerProfiles";
 %>
 
 <%
@@ -34,8 +35,9 @@
     String ip = "";
     String port = "";
     String serverProfileLocation = "";
+    String serverProfileName = "";
     String action = "";
-    String overwrite = "false";
+    String force = "false";
     String streamTable = "";
 
 
@@ -76,15 +78,16 @@
         streamTable = tmpStreamTable;
     }
     
-    String tmpOverwrite = request.getParameter("overwrite");
-    if(tmpOverwrite != null && !tmpOverwrite.equals("")){
-        overwrite = tmpOverwrite;
+    String tmpForce = request.getParameter("force");
+    if(tmpForce != null && !tmpForce.equals("")){
+        force = tmpForce;
     }
 
 
-    String tmpServerProfileLocation = request.getParameter("txtServerProfileLocation");
-    if(bamServerProfileUtils.isNotNullOrEmpty(tmpServerProfileLocation)){
-        serverProfileLocation = tmpServerProfileLocation;
+    String tmpServerProfileName = request.getParameter("txtServerProfileLocation");
+    if(bamServerProfileUtils.isNotNullOrEmpty(tmpServerProfileName)){
+        serverProfileName = tmpServerProfileName;
+        serverProfileLocation = SERVER_PROFILE_LOCATION + "/" + serverProfileName;
     }
 
     String tmpAction = request.getParameter("hfAction");
@@ -98,7 +101,7 @@
         <script type="text/javascript" src="../resources/js/resource_util.js"/>
         <script type="text/javascript" src="../yui/build/connection/connection-min.js"/>--%>
 
-        <!-- Dependencies -->
+        <%--<!-- Dependencies -->
         <script type="text/javascript" src="../yui/build/yahoo-dom-event/yahoo-dom-event.js"></script>
         <script type="text/javascript" src="../yui/build/container/container_core-min.js"></script>
 
@@ -113,7 +116,7 @@
         <!-- Source File -->
         <script type="text/javascript" src="../sequences/js/registry-browser.js"></script>
         <script type="text/javascript" src="../yui/build/menu/menu-min.js"></script>
-        <script type="text/javascript" src="../admin/js/main.js"></script>
+        <script type="text/javascript" src="../admin/js/main.js"></script>--%>
 
 
 
@@ -123,6 +126,26 @@
 
 
         <script id="source" type="text/javascript">
+
+            function loadServerProfiles(serverProfileLocationPath, serverProfilePath) {
+                jQuery.ajax({
+                                type:"GET",
+                                url:"../bam-mediator-config/dropdown_ajaxprocessor.jsp",
+                                data:{action:"getServerProfiles", serverProfilePath:serverProfileLocationPath},
+                                success:function(data){
+                                    document.getElementById("serverProfileList").innerHTML = "";
+                                    jQuery("#serverProfileList").append("<option>- Select Server Profile -</option>");
+                                    jQuery("#serverProfileList").append(data);
+                                    if(serverProfilePath != null && serverProfilePath != ""){
+                                        document.getElementById("serverProfileList").value = serverProfilePath;
+                                    }
+                                }
+                            })
+            }
+
+            function onServerProfileSelected(parentPath){
+                document.getElementById('txtServerProfileLocation').value = document.getElementById('serverProfileList').value;
+            }
 
             function showConfigRegistryBrowser(id, path) {
                 elementId = id;
@@ -139,7 +162,11 @@
                                                 + "txtServerProfileLocation=" + "<%=request.getParameter("txtServerProfileLocation")%>";
 
             function saveOverwrite(){
-                window.location.href = "configure_server_profiles.jsp?" + commonParameterString + "&hfAction=save&overwrite=true";
+                window.location.href = "configure_server_profiles.jsp?" + commonParameterString + "&hfAction=save&force=true";
+            }
+
+            function removeOverwrite(){
+                window.location.href = "configure_server_profiles.jsp?" + commonParameterString + "&hfAction=remove&force=true";
             }
 
             function reloadPage(){
@@ -377,7 +404,11 @@
 
     <%
 
-    if("save".equals(action) && !"true".equals(overwrite) && bamServerProfileUtils.resourceAlreadyExists(serverProfileLocation)){
+    if(!bamServerProfileUtils.resourceAlreadyExists(SERVER_PROFILE_LOCATION)){
+        bamServerProfileUtils.addCollection(SERVER_PROFILE_LOCATION);
+    }
+
+    if("save".equals(action) && !"true".equals(force) && bamServerProfileUtils.resourceAlreadyExists(serverProfileLocation)){
         %>
 
             <script>
@@ -387,9 +418,20 @@
         <%
     }
 
+    else if("remove".equals(action) && !"true".equals(force) && bamServerProfileUtils.resourceAlreadyExists(serverProfileLocation)){
+        %>
+
+            <script>
+                CARBON.showConfirmationDialog("Are you sure you want to remove the existing Server Profile Configuration?", removeOverwrite, stayInPage, true);
+            </script>
+
+        <%
+    }
+
     else if("load".equals(action)){  // loading an existing configuration
-        if(bamServerProfileUtils.isNotNullOrEmpty(tmpServerProfileLocation)){
-            serverProfileLocation = tmpServerProfileLocation;
+        if(bamServerProfileUtils.isNotNullOrEmpty(tmpServerProfileName)){
+            serverProfileName = tmpServerProfileName;
+            serverProfileLocation = SERVER_PROFILE_LOCATION + "/" + serverProfileName;
             if(bamServerProfileUtils.resourceAlreadyExists(serverProfileLocation)){
                 bamServerConfig = bamServerProfileUtils.getResource(serverProfileLocation);
 
@@ -423,11 +465,15 @@
 
     }
 
+    else if("remove".equals(action) && !"".equals(serverProfileLocation) && "true".equals(force)){  // staying in the existing page
+        bamServerProfileUtils.removeResource(serverProfileLocation);
+    }
+
     else if("save".equals(action) && !"".equals(serverProfileLocation)){ // Saving a configuration
-        if("true".equals(overwrite)){
+        if("true".equals(force)){
             bamServerProfileUtils.addResource(ip, port, userName, password, streamTable, serverProfileLocation);
         }
-        else if (!"true".equals(overwrite)){
+        else if (!"true".equals(force)){
             if(!bamServerProfileUtils.resourceAlreadyExists(serverProfileLocation)){
                 bamServerProfileUtils.addResource(ip, port, userName, password, streamTable, serverProfileLocation);
             }
@@ -472,31 +518,29 @@
 
                             <td>
                                 <input class="longInput" type="text"
-                                       value="<%=serverProfileLocation%>"
+                                       value="<%=serverProfileName%>"
                                        id="txtServerProfileLocation" name="txtServerProfileLocation"/>
                             </td>
                             <td>
-                                <a href="#registryBrowserLink"
-                                   class="registry-picker-icon-link"
-                                   onclick="showConfigRegistryBrowser('txtServerProfileLocation','/_system/config')"><fmt:message key="conf.registry.browser"/>
-                                </a>
+                                <select name="serverProfileList" id="serverProfileList" onchange="onServerProfileSelected('<%=SERVER_PROFILE_LOCATION%>')">
+                                    <option>- Select Server Profile -</option>
+                                </select>
+                                <script type="text/javascript">
+                                    loadServerProfiles("<%=SERVER_PROFILE_LOCATION%>", "<%=serverProfileLocation%>");
+                                </script>
                             </td>
                         </tr>
                     </table>
                 </td>
             </tr>
-
             <tr>
                 <td></td>
                 <td>
                     <input type="submit" value="Load Profile" onclick="document.getElementById('hfAction').value='load';"/>
+                    <input type="submit" value="Remove Profile" onclick="document.getElementById('hfAction').value='remove';"/>
                     <input type="hidden" name="hfAction" id="hfAction" value=""/>
                 </td>
             </tr>
-
-
-
-
             <tr>
                 <td>
                     <fmt:message key="username"/>
@@ -632,10 +676,6 @@
                 </td>
             </tr>
 
-
-
-
-
             <tr id="propertiesTr" style="display: none;">
                 <td colspan="2">
                     <input name="hfPropertyTableData" id="hfPropertyTableData" type="hidden" value="" />
@@ -674,7 +714,6 @@
                                 </table>
                             </td>
                         </tr>
-
 
                         <tr>
                             <td>
@@ -723,9 +762,6 @@
                     </table>
                 </td>
             </tr>
-
-
-
 
             <tr>
                 <td>

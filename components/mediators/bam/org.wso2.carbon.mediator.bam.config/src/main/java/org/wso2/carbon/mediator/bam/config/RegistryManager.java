@@ -53,6 +53,16 @@ public class RegistryManager extends RegistryAbstractAdmin {
         return true;
     }
 
+    public boolean removeResource(String path){
+        try {
+            registry.delete(path);
+            return true;
+        } catch (RegistryException e) {
+            e.printStackTrace();  //To change body of catch statement use File | Settings | File Templates.
+        }
+        return false;
+    }
+
     public String getResourceString(String bamServerProfileLocation){
         try {
             resource = registry.get(bamServerProfileLocation);

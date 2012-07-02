@@ -73,6 +73,28 @@ public class BamServerProfileConfigAdminClient {
         return true;
     }
 
+    public boolean addCollection(String path) throws RemoteException {
+        try {
+            return stub.addCollection(path);
+        } catch (RemoteException e) {
+            handleException(bundle.getString("cannot.add.collection"), e);
+        }
+        return false;
+    }
+    
+    public boolean removeResource(String path) throws RemoteException {
+        try {
+            return stub.removeResource(path);
+        } catch (RemoteException e) {
+            handleException(bundle.getString("cannot.remove.resource"), e);
+        }
+        return false;
+    }
+
+    public String[] getServerProfilePathList(String bamServerProfileLocation) throws RemoteException {
+        return stub.getServerProfileNameList(bamServerProfileLocation);
+    }
+
     public String encryptAndBase64Encode(String plainText) throws RemoteException {
         try {
             return stub.encryptAndBase64Encode(plainText);

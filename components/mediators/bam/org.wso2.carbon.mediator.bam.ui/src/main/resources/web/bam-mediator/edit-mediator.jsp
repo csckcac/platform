@@ -117,7 +117,7 @@
 
             function onServerProfileSelected(parentPath){
                 //document.getElementById('serverProfile').value = document.getElementById('serverProfileList').value;
-                loadStreamNames(parentPath + "/" + document.getElementById('serverProfileList').value, "")
+                loadStreamNames(parentPath + "/" + document.getElementById('serverProfileList').value, "");
             }
 
             function selectStreamVersionList(parentPath){

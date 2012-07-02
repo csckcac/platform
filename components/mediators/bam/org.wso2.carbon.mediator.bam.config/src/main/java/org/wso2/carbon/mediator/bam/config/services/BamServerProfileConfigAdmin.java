@@ -54,6 +54,10 @@ public class BamServerProfileConfigAdmin extends AbstractAdmin {
         return registryManager.resourceAlreadyExists(bamServerProfileLocation);
     }
 
+    public boolean removeResource(String path){
+        return registryManager.removeResource(path);
+    }
+
     public BamServerConfig getBamServerConfig(String bamServerConfigLocation){
         String resourceString = registryManager.getResourceString(bamServerConfigLocation);
         BamServerConfigBuilder bamServerConfigBuilder = new BamServerConfigBuilder();

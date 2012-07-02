@@ -44,7 +44,7 @@
             <item name="Deploying the process" href="bpel-quick-start-guide/deploying_process.html"/>
             <item name="Testing the process" href="bpel-quick-start-guide/testing_process.html"/>
         </menu>
-	<menu name="User Guide" ref="">
+	    <menu name="User Guide" ref="">
               <item name="Deploying BPEL Processes" href="user_guide.html#Using-ProcessDeployment"/>
               <item name="Deploying Human Tasks" href="user_guide.html#HumanTaskDeployment"/>
               <item name="Managing BPEL processes" href="user_guide.html#Managing-BPEL-processes"/>
@@ -56,7 +56,7 @@
               <item name="Management API" href="user_guide.html#Using-Management-API"/>
         </menu>
         <menu name="Administrator Guide" ref="">
-	    <item name="External data sources Configuration" href="bpel-admin-guide/administrator_guide.html#Configure-WSO2-BPS-with-external-data-sources"/>
+	        <item name="External data sources Configuration" href="bpel-admin-guide/administrator_guide.html#Configure-WSO2-BPS-with-external-data-sources"/>
             <item name="Registry Configuration" href="bpel-admin-guide/administrator_guide.html#Registry-Conf"/>
             <item name="Events" href="bpel-admin-guide/administrator_guide.html#Using-Events"/>
             <item name="Unified Endpoints" href="bpel-admin-guide/administrator_guide.html#Using-Manipulating-Endpoints"/>
@@ -114,6 +114,5 @@
         <menu name="Project Information" ref="">
             <item name="Issue Tracking" href="issue-tracking.html"/>
         </menu>
-
     </body>
 </project>

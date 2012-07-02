@@ -41,7 +41,7 @@ public class CloneMediatorTestCase extends ESBIntegrationTestCase {
 
     @Test(groups = {"wso2.esb"})
     public void testCloneProperty() throws RemoteException {
-        String filePath = "/mediator/clone/clone_with_property.xml";
+        String filePath = "/mediators/clone/clone_with_property.xml";
         loadESBConfigurationFromClasspath(filePath);
         OMElement response = axis2Client.sendSimpleStockQuoteRequest(
                 null, getMainSequenceURL(), "MSFT");
@@ -51,7 +51,7 @@ public class CloneMediatorTestCase extends ESBIntegrationTestCase {
     @Test(groups = {"wso2.esb"})
     public void testContinueParentTrue() throws RemoteException {
         boolean isParentMsgFound = false;
-        String filePath = "/mediator/clone/continue_parent_True.xml";
+        String filePath = "/mediators/clone/continue_parent_True.xml";
         loadESBConfigurationFromClasspath(filePath);
 
         LogViewerStub logViewerStub = new LogViewerStub(getAdminServiceURL("LogViewer"));
@@ -75,7 +75,7 @@ public class CloneMediatorTestCase extends ESBIntegrationTestCase {
     @Test(groups = {"wso2.esb"})
     public void testWithoutContinueParent() throws RemoteException {
         boolean isParentMsgFound = false;
-        String filePath = "/mediator/clone/continue_parent_False.xml";
+        String filePath = "/mediators/clone/continue_parent_False.xml";
         loadESBConfigurationFromClasspath(filePath);
 
         OMElement response = axis2Client.sendSimpleStockQuoteRequest(

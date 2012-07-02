@@ -4,28 +4,28 @@
  var i,resCount,rowNums = [],api = outputs.api;%>
 
 <script type="text/javascript">
-    var addSelectedTiers;
-    $(document).ready(function() {
-    addSelectedTiers = function(target){
-    var tierDescs,tiersList,tiersDescList,tiers=[];
-    tiersList="<%=api.availableTiers%>";
-    tiersDescList="<%=api.tierDescs%>";
-    tiers=tiersList.split(",");
-    tierDescs=tiersDescList.split(",");
-    for(var i=0;i<tiers.length;i++){
-    var tier=tiers[i];
-    var tierDesc=tierDescs[i];
-    for(var j=0;j<target.options.length;j++){
-    if(tier==target.options[j].value){
-    target.options[j].selected="selected";
-    if(tierDesc!="null"){
-    $("#editTiersHelp").html(tierDesc);
+var addSelectedTiers;
+$(document).ready(function() {
+    addSelectedTiers = function(target) {
+        var tierDescs,tiersList,tiersDescList,tiers = [];
+        tiersList = "<%=api.availableTiers%>";
+        tiersDescList = "<%=api.tierDescs%>";
+        tiers = tiersList.split(",");
+        tierDescs = tiersDescList.split(",");
+        for (var i = 0; i < tiers.length; i++) {
+            var tier = tiers[i];
+            var tierDesc = tierDescs[i];
+            for (var j = 0; j < target.options.length; j++) {
+                if (tier == target.options[j].value) {
+                    target.options[j].selected = "selected";
+                    if (tierDesc != "null") {
+                        $("#editTiersHelp").html(tierDesc);
+                    }
+                }
+            }
+        }
     }
-    }
-    }
-    }
-    }
-    });
+});
 </script>
 <div class="alert alert-error" id="editAPIError" style="display:none">
 <span id="editErrorSpan"></span>
@@ -230,7 +230,10 @@
             </div>
              <input type="hidden" name="resourceCount" id="resourceCount" value="<%=String(rowNums)%>">
 
-            <div class="form-actions">
+             <div class="form-actions" style="display:none" id="saveMessage">
+                    <div class="btn loadingButton">Saving API. Please wait..</div>
+             </div>
+            <div class="form-actions" id="saveButtons">
                 <input type="submit" id="updateButton" class="btn btn-primary" value="Save"/>
                 <input type="reset" id="cancelEdit" class="btn btn-primary" value="Cancel">
             </div>
@@ -244,6 +247,7 @@ $(document).ready(function() {
  var v = $("#editAPIForm").validate({
 
         submitHandler: function(form) {
+            $('#saveMessage').show(); $('#saveButtons').hide();
             $(form).ajaxSubmit({
                 success:function(responseText, statusText, xhr, $form)  {
                   if(!responseText.error){

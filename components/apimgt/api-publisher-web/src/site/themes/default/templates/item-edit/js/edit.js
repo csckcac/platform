@@ -36,6 +36,8 @@ function loadTiers() {
                       addSelectedTiers(target);
 
                   }
+                  $('#saveMessage').hide(); $('#saveButtons').show();
+
               }, "json");
 }
 

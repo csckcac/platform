@@ -64,19 +64,19 @@ var jagg = jagg || {};
                 params.title = "API Store"
             }
             jagg.messageDisplay({content:params.content,title:params.title ,buttons:[
-                {name:"Yes",cssClass:"btn btn-primary",cbk:function() {
-                    $('#messageModal').modal('hide');
-                    if (typeof params.okCallback == "function") {
-                        params.okCallback()
-                    }
-                    ;
-                }},
                 {name:"No",cssClass:"btn",cbk:function() {
                     $('#messageModal').modal('hide');
                     if (typeof params.cancelCallback == "function") {
                         params.cancelCallback()
                     }
-                    ;
+
+                }},
+                {name:"Yes",cssClass:"btn btn-primary",cbk:function() {
+                    $('#messageModal').modal('hide');
+                    if (typeof params.okCallback == "function") {
+                        params.okCallback()
+                    }
+
                 }}
             ]
             });

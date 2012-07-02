@@ -12,7 +12,7 @@
         <table class="table table-bordered">
             <tbody>
             <tr>
-                <td>Endpoint URL</td>
+                <td class="span3">Endpoint URL</td>
                 <td id="inUrl"><%=api.endpoint%></td>
             </tr>
             <%if(api.sandbox!=''){%>

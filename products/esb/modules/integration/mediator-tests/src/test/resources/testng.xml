@@ -11,6 +11,24 @@
         <classes>
             <class name="org.wso2.carbon.mediator.tests.fault.CustomErrorMessageTestCase"/>
             <class name="org.wso2.carbon.mediator.tests.fault.MakeFaultMediatorTest"/>
+            <class name="org.wso2.carbon.mediator.tests.fault.Soap11FaultStringValueTestCase"/>
+            <class name="org.wso2.carbon.mediator.tests.fault.Soap11FaultStringExpressionTestCase"/>
+            <class name="org.wso2.carbon.mediator.tests.fault.Soap11FaultCodeVersionMismatchedTestCase"/>
+            <class name="org.wso2.carbon.mediator.tests.fault.Soap11FaultCodeMustUnderstandTestCase"/>
+            <class name="org.wso2.carbon.mediator.tests.fault.Soap11FaultCodeClientTestCase"/>
+            <class name="org.wso2.carbon.mediator.tests.fault.Soap11FaultCodeServerTestCase"/>
+            <class name="org.wso2.carbon.mediator.tests.fault.Soap11FaultActorTestCase"/>
+            <class name="org.wso2.carbon.mediator.tests.fault.Soap11FaultDetailsTestCase"/>
+            <class name="org.wso2.carbon.mediator.tests.fault.Soap12FaultStringValueTestCase"/>
+            <class name="org.wso2.carbon.mediator.tests.fault.Soap12FaultStringExpressionTestCase"/>
+            <class name="org.wso2.carbon.mediator.tests.fault.Soap12FaultCodeVersionMismatchedTestCase"/>
+            <class name="org.wso2.carbon.mediator.tests.fault.Soap12FaultCodeMustUnderstandTestCase"/>
+            <class name="org.wso2.carbon.mediator.tests.fault.Soap12FaultCodeDataEncodingUnknownTestCase"/>
+            <class name="org.wso2.carbon.mediator.tests.fault.Soap12FaultCodeReceiverTestCase"/>
+            <class name="org.wso2.carbon.mediator.tests.fault.Soap12FaultCodeSenderTestCase"/>
+            <class name="org.wso2.carbon.mediator.tests.fault.Soap12FaultActorTestCase"/>
+            <class name="org.wso2.carbon.mediator.tests.fault.Soap12FaultDetailsTestCase"/>
+            <class name="org.wso2.carbon.mediator.tests.fault.Soap12FaultNodeTestCase"/>
 
         </classes>
     </test>

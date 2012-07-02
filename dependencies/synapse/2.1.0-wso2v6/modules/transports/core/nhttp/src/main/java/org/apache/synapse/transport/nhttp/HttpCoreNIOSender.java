@@ -689,18 +689,20 @@ public class HttpCoreNIOSender extends AbstractHandler implements TransportSende
             
             // shall faults be transmitted with HTTP 200
             boolean faultsAsHttp200 =
-                NhttpConstants.TRUE.equals(
-                    msgContext.getProperty(NhttpConstants.FAULTS_AS_HTTP_200));
+                NhttpConstants.TRUE.equalsIgnoreCase(
+                        (String) msgContext.getProperty(NhttpConstants.FAULTS_AS_HTTP_200));
             
             // Set HTTP status code to 500 if this is a fault case and we shall not use HTTP 200
             if (handleFault && !faultsAsHttp200) {
                 httpStatus = HttpStatus.SC_INTERNAL_SERVER_ERROR;
+            } else if (handleFault & faultsAsHttp200) {
+                return HttpStatus.SC_OK;
             }
-            
+
             /* 
-             * Any status code previously set shall be overwritten with the value of the following
-             * message context property if it is set. 
-             */
+            * Any status code previously set shall be overwritten with the value of the following
+            * message context property if it is set.
+            */
             Object statusCode = msgContext.getProperty(NhttpConstants.HTTP_SC);
             if (statusCode != null) {
                 try {

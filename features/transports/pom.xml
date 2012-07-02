@@ -34,7 +34,8 @@
     <modules>
         <module>org.apache.axis2.transports.jms.feature</module>
         <module>org.wso2.carbon.transports.passthru.feature</module>
-        <module>hl7</module>
+	<module>hl7</module>
+	<module>org.wso2.carbon.transports.sap.feature</module>
     </modules>
 
     <dependencyManagement>

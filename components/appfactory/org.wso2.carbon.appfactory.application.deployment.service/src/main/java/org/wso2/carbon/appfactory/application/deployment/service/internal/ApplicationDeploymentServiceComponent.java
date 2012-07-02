@@ -28,6 +28,7 @@ import org.wso2.carbon.appfactory.common.AppFactoryConfiguration;
  * @scr.reference name="appfactory.common"
  * interface="org.wso2.carbon.appfactory.common.AppFactoryConfiguration" cardinality="1..1"
  * policy="dynamic" bind="setAppFactoryConfiguration" unbind="unsetAppFactoryConfiguration"
+ *
  */
 public class ApplicationDeploymentServiceComponent {
 

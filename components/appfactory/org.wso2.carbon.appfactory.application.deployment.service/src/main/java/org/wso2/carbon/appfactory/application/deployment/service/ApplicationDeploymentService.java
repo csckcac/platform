@@ -23,6 +23,7 @@ import org.tigris.subversion.svnclientadapter.svnkit.SvnKitClientAdapterFactory;
 import org.tigris.subversion.svnclientadapter.utils.Depth;
 import org.wso2.carbon.appfactory.application.deployment.service.internal.AppFactoryConfigurationHolder;
 import org.wso2.carbon.appfactory.application.deployment.service.internal.ApplicationUploadClient;
+import org.wso2.carbon.appfactory.application.deployment.service.internal.WebXMLParametersUpdater;
 import org.wso2.carbon.appfactory.common.AppFactoryConfiguration;
 import org.wso2.carbon.appfactory.common.AppFactoryConstants;
 import org.wso2.carbon.application.mgt.stub.upload.types.carbon.UploadedFileItem;
@@ -37,7 +38,9 @@ import java.net.MalformedURLException;
 import java.net.URL;
 import java.text.ParseException;
 import java.util.ArrayList;
+import java.util.HashMap;
 import java.util.List;
+import java.util.Map;
 
 
 public class ApplicationDeploymentService extends AbstractAdmin {
@@ -98,7 +101,8 @@ public class ApplicationDeploymentService extends AbstractAdmin {
      * @throws ApplicationDeploymentExceptions
      *
      */
-    private String checkoutApplication(String applicationSvnUrl, String applicationId,String svnRevision)
+    private String checkoutApplication(String applicationSvnUrl, String applicationId,
+                                       String svnRevision)
             throws ApplicationDeploymentExceptions {
         File checkoutDirectory = createApplicationCheckoutDirectory(applicationId);
         initSVNClient();
@@ -111,23 +115,23 @@ public class ApplicationDeploymentService extends AbstractAdmin {
         }
 
         try {
-            if(svnRevision!=null && !"".equals(svnRevision)) {
-                  SVNRevision revision=SVNRevision.getRevision(svnRevision);
+            if (svnRevision != null && !"".equals(svnRevision)) {
+                SVNRevision revision = SVNRevision.getRevision(svnRevision);
 
-            if (svnClient instanceof CmdLineClientAdapter) {
-                // CmdLineClientAdapter does not support all the options
-                svnClient.checkout(svnUrl, checkoutDirectory, revision, true);
+                if (svnClient instanceof CmdLineClientAdapter) {
+                    // CmdLineClientAdapter does not support all the options
+                    svnClient.checkout(svnUrl, checkoutDirectory, revision, true);
+                } else {
+                    svnClient.checkout(svnUrl, checkoutDirectory, revision,
+                                       Depth.infinity, true, true);
+                }
             } else {
-                svnClient.checkout(svnUrl, checkoutDirectory, revision,
-                                   Depth.infinity, true, true);
-            }
-            }else {
-              throw new ApplicationDeploymentExceptions("SVN revision number is null or empty");
+                throw new ApplicationDeploymentExceptions("SVN revision number is null or empty");
             }
         } catch (SVNClientException e) {
             handleException("Failed to checkout code from SVN URL:" + svnUrl, e);
         } catch (ParseException e) {
-            handleException("SVN revision: "+svnRevision+" is not valid ", e);
+            handleException("SVN revision: " + svnRevision + " is not valid ", e);
         }
         return checkoutDirectory.getAbsolutePath();
     }
@@ -178,7 +182,8 @@ public class ApplicationDeploymentService extends AbstractAdmin {
 
     //TODO car files deployment???
     public Application[] deployApplication(String applicationSvnUrl, String applicationId,
-                                           String stage, String version,String svnRevision) throws ApplicationDeploymentExceptions {
+                                           String stage, String version, String svnRevision)
+            throws ApplicationDeploymentExceptions {
 
         String key = new StringBuilder(AppFactoryConstants.DEPLOYMENT_STAGES).append(".").
                 append(stage).append(".").append(AppFactoryConstants.DEPLOYMENT_URL).toString();
@@ -188,7 +193,8 @@ public class ApplicationDeploymentService extends AbstractAdmin {
             handleException("No deployment paths are configured for stage:" + stage);
         }
 
-        String checkoutPath = checkoutApplication(applicationSvnUrl, applicationId,svnRevision);
+        String checkoutPath = checkoutApplication(applicationSvnUrl, applicationId, svnRevision);
+        new WebXMLParametersUpdater().updateParameters(checkoutPath, getDBParameters(stage));
         try {
             buildApplication(checkoutPath);
 
@@ -302,6 +308,22 @@ public class ApplicationDeploymentService extends AbstractAdmin {
     private String getAdminUsername(String applicationId) {
         return appFactoryConfiguration.getFirstProperty(
                 AppFactoryConstants.SERVER_ADMIN_NAME) + "@" + applicationId;
+    }
+
+    private Map<String, String> getDBParameters(String stage) {
+        Map<String, String> parameters = new HashMap<String, String>();
+        String baseKey = new StringBuilder(AppFactoryConstants.DEPLOYMENT_STAGES).append(".").
+                append(stage).append(".").toString();
+        String key = baseKey.concat(WebXMLParametersUpdater.DB_URL);
+        String dBURL = appFactoryConfiguration.getFirstProperty(key);
+        key = baseKey.concat(WebXMLParametersUpdater.DB_USERNAME);
+        String dBUsername = appFactoryConfiguration.getFirstProperty(key);
+        key = baseKey.concat(WebXMLParametersUpdater.DB_PASSWORD);
+        String dBPassword = appFactoryConfiguration.getFirstProperty(key);
+        parameters.put("databaseUrl", dBURL);
+        parameters.put("username", dBUsername);
+        parameters.put("password", dBPassword);
+        return parameters;
     }
 
 }

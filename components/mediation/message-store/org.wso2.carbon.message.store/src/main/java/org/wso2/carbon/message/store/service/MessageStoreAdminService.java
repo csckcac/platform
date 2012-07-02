@@ -35,6 +35,7 @@ import org.wso2.carbon.mediation.initializer.persistence.MediationPersistenceMan
 import javax.xml.stream.XMLStreamException;
 import java.io.ByteArrayInputStream;
 import java.io.InputStream;
+import java.io.UnsupportedEncodingException;
 import java.util.ArrayList;
 import java.util.Collection;
 import java.util.List;
@@ -418,7 +419,17 @@ public class MessageStoreAdminService extends AbstractServiceBusAdmin {
      *          if building the <code>OmElement</code> is unsuccessful
      */
     private OMElement createElement(String str) throws XMLStreamException {
-        InputStream in = new ByteArrayInputStream(str.getBytes());
+		byte[] bytes = null;
+		try {
+			bytes = str.getBytes("UTF-8");
+		} catch (UnsupportedEncodingException e) {
+			log.error("Unable to extract bytes in UTF-8 encoding. "
+					+ "Extracting bytes in the system default encoding"
+					+ e.getMessage());
+			bytes = str.getBytes();
+		}
+
+        InputStream in = new ByteArrayInputStream(bytes);
         return new StAXOMBuilder(in).getDocumentElement();
     }
 

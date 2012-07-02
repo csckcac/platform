@@ -49,6 +49,7 @@ import org.wso2.carbon.message.store.persistence.jms.message.JMSPersistentSynaps
 import javax.xml.stream.XMLStreamException;
 import javax.xml.stream.XMLStreamReader;
 import java.io.ByteArrayInputStream;
+import java.io.UnsupportedEncodingException;
 import java.util.ArrayList;
 import java.util.Iterator;
 
@@ -269,7 +270,7 @@ public class JMSPersistentMessageHelper {
     private SOAPEnvelope getSoapEnvelope(String soapEnvelpe) {
         try {
             XMLStreamReader xmlReader =
-                    StAXUtils.createXMLStreamReader(new ByteArrayInputStream(soapEnvelpe.getBytes()));
+                    StAXUtils.createXMLStreamReader(new ByteArrayInputStream(getUTF8Bytes(soapEnvelpe)));
             StAXBuilder builder = new StAXSOAPModelBuilder(xmlReader);
             SOAPEnvelope soapEnvelope = (SOAPEnvelope) builder.getDocumentElement();
             soapEnvelope.build();
@@ -289,5 +290,19 @@ public class JMSPersistentMessageHelper {
             return null;
         }
     }
+    
+	private byte[] getUTF8Bytes(String soapEnvelpe) {
+		byte[] bytes = null;
+		try {
+			bytes = soapEnvelpe.getBytes("UTF-8");
+		} catch (UnsupportedEncodingException e) {
+			log.error("Unable to extract bytes in UTF-8 encoding. "
+					+ "Extracting bytes in the system default encoding"
+					+ e.getMessage());
+			bytes = soapEnvelpe.getBytes();
+		}
+		return bytes;
+	}
+
 
 }

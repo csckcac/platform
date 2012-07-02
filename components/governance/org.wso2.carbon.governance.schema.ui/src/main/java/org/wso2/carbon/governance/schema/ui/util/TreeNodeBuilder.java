@@ -61,9 +61,9 @@ public class TreeNodeBuilder {
         /* Adding schema import namespaces*/
         attributeList.clear();
         attributeList.add(SchemaConstants.SCHEMALOCATION);
-        attributeList.add(SchemaConstants.NAMESPACE);        
-        addSchemaDataWithAttributesToTree(SchemaConstants.SCHEMA_IMPORTS_EXPR,SchemaConstants.IMPORTS,
-                root,schemaElement,attributeList);
+        attributeList.add(SchemaConstants.NAMESPACE);
+        addSchemaDataToTreeWithHyperlink(SchemaConstants.SCHEMA_IMPORTS_EXPR,SchemaConstants.IMPORTS,
+                root,schemaElement,true);
         return root;
     }
 

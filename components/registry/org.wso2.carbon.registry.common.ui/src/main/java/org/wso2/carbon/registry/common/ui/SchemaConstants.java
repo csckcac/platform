@@ -31,7 +31,7 @@ public class SchemaConstants {
     public static final String INCLUDES = "Includes";
     public static final String IMPORTS = "Imports";    
     public static final String SCHEMA_INCLUDES_EXPR = "//xsd:include/@schemaLocation";
-    public static final String SCHEMA_IMPORTS_EXPR = "//xsd:import/@namespace";
+    public static final String SCHEMA_IMPORTS_EXPR = "//xsd:import/@schemaLocation";
     public static final String RESOURCE_JSP_PAGE = "resource.jsp";
     public static final String PATH_REQ_PARAMETER = "path";
     public static final String TARGETNAMESPACE = "TargetNamespace";

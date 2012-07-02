@@ -28,7 +28,6 @@
         throw new RuntimeException("Unable to edit the mediator");
     }
     BamMediator bamMediator = (BamMediator) mediator;
-
     bamMediator.setServerProfile(request.getParameter("serverProfileList"));
     bamMediator.setStreamName(request.getParameter("streamNameList"));
     bamMediator.setStreamVersion(request.getParameter("streamVersionList"));

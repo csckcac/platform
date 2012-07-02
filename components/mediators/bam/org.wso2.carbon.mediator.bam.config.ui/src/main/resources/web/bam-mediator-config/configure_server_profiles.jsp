@@ -97,34 +97,6 @@
 
     %>
 
-        <%--<script type="text/javascript" src="../sequences/js/registry-browser.js"/>
-        <script type="text/javascript" src="../resources/js/resource_util.js"/>
-        <script type="text/javascript" src="../yui/build/connection/connection-min.js"/>--%>
-
-        <%--<!-- Dependencies -->
-        <script type="text/javascript" src="../yui/build/yahoo-dom-event/yahoo-dom-event.js"></script>
-        <script type="text/javascript" src="../yui/build/container/container_core-min.js"></script>
-
-        <!-- Connection handling lib -->
-        <script type="text/javascript" src="../yui/build/yahoo/yahoo-min.js"></script>
-        <script type="text/javascript" src="../yui/build/event/event-min.js"></script>
-        <script type="text/javascript" src="../yui/build/connection/connection-min.js"></script>
-        <script type="text/javascript" src="../resources/js/resource_util.js"></script>
-        <script type="text/javascript" src="../yui/build/utilities/utilities.js"></script>
-        <script type="text/javascript" src="../ajax/js/prototype.js"></script>
-
-        <!-- Source File -->
-        <script type="text/javascript" src="../sequences/js/registry-browser.js"></script>
-        <script type="text/javascript" src="../yui/build/menu/menu-min.js"></script>
-        <script type="text/javascript" src="../admin/js/main.js"></script>--%>
-
-
-
-
-
-
-
-
         <script id="source" type="text/javascript">
 
             function loadServerProfiles(serverProfileLocationPath, serverProfilePath) {
@@ -495,7 +467,6 @@
 
         <%
     }
-
 
 %>
 

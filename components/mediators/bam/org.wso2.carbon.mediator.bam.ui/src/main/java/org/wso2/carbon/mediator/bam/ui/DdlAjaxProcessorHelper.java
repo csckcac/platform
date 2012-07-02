@@ -36,9 +36,6 @@ import java.util.Locale;
 public class DdlAjaxProcessorHelper {
     
     private BamServerProfileConfigAdminClient client;
-    //private List<StreamConfiguration> streamConfigurations = new ArrayList<StreamConfiguration>();
-    //private StreamConfiguration streamConfiguration = new StreamConfiguration();
-
 
     public DdlAjaxProcessorHelper(String cookie, String backendServerURL,
                                   ConfigurationContext configContext, Locale locale){
@@ -99,7 +96,6 @@ public class DdlAjaxProcessorHelper {
 
     public String getStreamConfigurationNames(String serverProfilePath){
         String streamNames = "";
-        /*String realServerProfilePath = this.getRealBamServerProfilePath(serverProfilePath);*/
         BamServerConfig bamServerConfig = this.getResource(serverProfilePath);
         List<StreamConfiguration> streamConfigurations = bamServerConfig.getStreamConfigurations();
         List<String> foundStreamNames = new ArrayList<String>();
@@ -114,7 +110,6 @@ public class DdlAjaxProcessorHelper {
     
     public String getVersionListForStreamName(String serverProfilePath, String streamName){
         String streamVersions = "";
-        /*String realServerProfilePath = this.getRealBamServerProfilePath(serverProfilePath);*/
         BamServerConfig bamServerConfig = this.getResource(serverProfilePath);
         List<StreamConfiguration> streamConfigurations = bamServerConfig.getStreamConfigurations();
         for (StreamConfiguration configuration : streamConfigurations) {
@@ -125,14 +120,4 @@ public class DdlAjaxProcessorHelper {
         return streamVersions;
     }
 
-    /*private String getRealBamServerProfilePath(String shortServerProfilePath){
-        if(shortServerProfilePath != null){
-            String registryType = shortServerProfilePath.split(":")[0];
-            if (isNotNullOrEmpty(registryType) && registryType.equals("conf")){
-                return shortServerProfilePath.split(":")[1];
-            }
-            return null;
-        }
-        return null;
-    }*/
 }

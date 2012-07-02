@@ -37,10 +37,7 @@ public class DdlAjaxProcessorHelper {
     }
 
     public boolean isNotNullOrEmpty(String string){
-        if(string != null && !string.equals("")){
-            return true;
-        }
-        return false;
+        return string != null && !string.equals("");
     }
 
     public String getServerProfileNames(String serverProfilePath){

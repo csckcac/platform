@@ -15,7 +15,6 @@
  */
 package org.wso2.carbon.mediator.bam.config.ui;
 
-
 import org.apache.axis2.AxisFault;
 import org.apache.axis2.client.Options;
 import org.apache.axis2.client.ServiceClient;
@@ -117,6 +116,5 @@ public class BamServerProfileConfigAdminClient {
         log.error(msg, e);
         throw new RemoteException(msg, e);
     }
-
 
 }

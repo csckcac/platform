@@ -51,67 +51,6 @@ public class BamServerProfileUtils {
     public void addResource(String ip, String port, String userName, String password, String streamConfigurationListString,
                             String bamServerProfileLocation){
 
-        /*List<StreamConfiguration> scs = new ArrayList<StreamConfiguration>();
-        StreamConfiguration sc1 = new StreamConfiguration();
-        sc1.setName("org.wso2.carbon.mediator.bam.BamMediator100");
-        sc1.setVersion("1.0.1");
-        sc1.setNickname("Log1");
-        sc1.setDescription("Description1");
-        Property p1 = new Property();
-        Property p2 = new Property();
-        Property p3 = new Property();
-        p1.setKey("key11");
-        p1.setValue("val11");
-        p2.setKey("key12");
-        p2.setValue("val12");
-        p3.setKey("key13");
-        p3.setValue("val13");
-        sc1.getProperties().add(p1);
-        sc1.getProperties().add(p2);
-        sc1.getProperties().add(p3);
-        scs.add(sc1);
-
-        StreamConfiguration sc2 = new StreamConfiguration();
-        sc2.setName("org.wso2.carbon.mediator.bam.BamMediator200");
-        sc2.setVersion("1.0.2");
-        sc2.setNickname("Log2");
-        sc2.setDescription("Description2");
-        Property p21 = new Property();
-        Property p22 = new Property();
-        Property p23 = new Property();
-        p21.setKey("key21");
-        p21.setValue("val21");
-        p22.setKey("key22");
-        p22.setValue("val22");
-        p23.setKey("key23");
-        p23.setValue("val23");
-        sc2.getProperties().add(p21);
-        sc2.getProperties().add(p22);
-        sc2.getProperties().add(p23);
-        scs.add(sc2);
-
-        StreamConfiguration sc3 = new StreamConfiguration();
-        sc3.setName("org.wso2.carbon.mediator.bam.BamMediator300");
-        sc3.setVersion("1.0.3");
-        sc3.setNickname("Log3");
-        sc3.setDescription("Description3");
-        Property p31 = new Property();
-        Property p32 = new Property();
-        Property p33 = new Property();
-        p31.setKey("key31");
-        p31.setValue("val31");
-        p32.setKey("key32");
-        p32.setValue("val32");
-        p33.setKey("key33");
-        p33.setValue("val33");
-        sc3.getProperties().add(p31);
-        sc3.getProperties().add(p32);
-        sc3.getProperties().add(p33);
-        scs.add(sc3);*/
-
-
-
-
         List<StreamConfiguration> streamConfigurations = this.getStreamConfigurationListFromString(streamConfigurationListString);
         BamServerConfigXml mediatorConfigurationXml = new BamServerConfigXml();
         String encryptedPassword = this.encryptPassword(password);
@@ -123,7 +62,6 @@ public class BamServerProfileUtils {
         } catch (RemoteException e) {
             e.printStackTrace();  //To change body of catch statement use File | Settings | File Templates.
         }
-
     }
 
     private List<StreamConfiguration> getStreamConfigurationListFromString(String streamConfigurationListString){
@@ -133,8 +71,8 @@ public class BamServerProfileUtils {
         String propertiesString;
         String[] properties;
         String dump;
-        boolean dumpHeader = true;
-        boolean dumpBody = true;
+        boolean dumpHeader;
+        boolean dumpBody;
         StreamEntry headerEntry, bodyEntry;
 
         String [] streams = streamConfigurationListString.split("~");
@@ -282,9 +220,6 @@ public class BamServerProfileUtils {
     }
 
     public boolean isNotNullOrEmpty(String string){
-        if(string != null && !string.equals("")){
-            return true;
-        }
-        return false;
+        return string != null && !string.equals("");
     }
 }

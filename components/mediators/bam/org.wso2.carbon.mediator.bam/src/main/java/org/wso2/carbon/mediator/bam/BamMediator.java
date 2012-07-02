@@ -297,8 +297,6 @@ public class BamMediator extends AbstractMediator {
                                                    "          {'name':'Service','type':'STRING'}," +
                                                    "          {'name':'Operation','type':'STRING'}," +
                                                    "          {'name':'MessageId','type':'STRING'}" +
-                                                   /*"          {'name':'SOAPHeader','type':'STRING'}," +
-                                                   "          {'name':'SOAPBody','type':'STRING'}" +*/
                                                    this.getPropertyStreamDefinitionString() +
                                                    this.getEntityStreamDefinitionString() +
                                                    "  ]" +
@@ -317,8 +315,6 @@ public class BamMediator extends AbstractMediator {
         payloadData[1] = service;
         payloadData[2] = operation;
         payloadData[3] = messageContext.getMessageID();
-        /*payloadData[4] = messageContext.getEnvelope().getHeader().toString();
-        payloadData[5] = messageContext.getEnvelope().getBody().toString();*/
 
         for (int i=0; i<numOfProperties; i++) {
             payloadData[4 + i] = properties.get(i).getValue();

@@ -20,6 +20,7 @@ package org.wso2.carbon.mediator.bam.ui;
 import org.apache.axiom.om.OMAttribute;
 import org.apache.axiom.om.OMElement;
 import org.apache.synapse.SynapseConstants;
+import org.wso2.carbon.mediator.service.MediatorException;
 import org.wso2.carbon.mediator.service.ui.AbstractMediator;
 
 import javax.xml.namespace.QName;
@@ -63,40 +64,36 @@ public class BamMediator extends AbstractMediator {
         OMElement bamElement = fac.createOMElement("bam", synNS);
         saveTracingState(bamElement, this);
 
-        /*if (serverProfile != null) {
-            bamElement.addAttribute(fac.createOMAttribute(
-                    "config-key", nullNS, serverProfile));
-        } else {
-            throw new MediatorException("config-key not specified");
-        }*/
         bamElement.addChild(serializeServerProfile());
         bamElement.addChild(serializeStreamConfiguration());
 
         if (parent != null) {
             parent.addChild(bamElement);
+        } else {
+            String msg = "The parent element is not specified";
+            throw new MediatorException(msg);
         }
         return bamElement;
     }
 
     public void build(OMElement omElement) {
-        /*OMAttribute key = omElement.getAttribute(ATT_CONFIG_KEY);
-
-        if (key == null) {
-            String msg = "The 'config-key' attribute is required";
-            throw new MediatorException(msg);
-        }
-        this.serverProfile = key.getAttributeValue();*/
 
         OMElement profileElement = omElement.getFirstChildWithName(
                 new QName(SynapseConstants.SYNAPSE_NAMESPACE, "serverProfile"));
         if (profileElement != null){
             processProfile(profileElement);
+        } else {
+            String msg = "The 'serverProfile' element is not specified";
+            throw new MediatorException(msg);
         }
 
         OMElement streamElement = omElement.getFirstChildWithName(
                 new QName(SynapseConstants.SYNAPSE_NAMESPACE, "streamConfig"));
         if(streamElement != null){
             processStreamConfiguration(streamElement);
+        } else {
+            String msg = "The 'streamConfig' element is not specified";
+            throw new MediatorException(msg);
         }
 
         processAuditStatus(this, omElement);
@@ -107,6 +104,9 @@ public class BamMediator extends AbstractMediator {
         if(pathAttr != null){
             String pathValue = pathAttr.getAttributeValue();
             this.setServerProfile(pathValue);
+        } else {
+            String msg = "The 'name' attribute of Profile is not specified";
+            throw new MediatorException(msg);
         }
     }
 
@@ -118,6 +118,9 @@ public class BamMediator extends AbstractMediator {
             String versionValue = streamVersionAttr.getAttributeValue();
             this.setStreamName(nameValue);
             this.setStreamVersion(versionValue);
+        } else {
+            String msg = "The stream name or stream version attributes are not specified";
+            throw new MediatorException(msg);
         }
     }
 

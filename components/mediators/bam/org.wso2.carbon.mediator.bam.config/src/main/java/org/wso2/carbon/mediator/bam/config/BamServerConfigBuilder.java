@@ -39,43 +39,6 @@ public class BamServerConfigBuilder {
         boolean connectionOk = this.processConnectionElement(bamServerConfigElement);
         boolean streamsOk = this.processStreamsElement(bamServerConfigElement);
         return credentialsOk && connectionOk && streamsOk;
-        /*return credentialsOk && connectionOk;*/
-    }
-
-
-
-    public String getRealBamServerProfilePath(String shortServerProfilePath){
-        if(shortServerProfilePath != null){
-            String registryType = shortServerProfilePath.split(":")[0];
-            String remainingPath = shortServerProfilePath.split(":")[1];
-            if(registryType.equals("conf")){
-                return "/_system/config" + remainingPath;
-            }
-            else if(registryType.equals("gov")){
-                return "/_system/governance" + remainingPath;
-            }
-            else {
-                return null;
-            }
-        }
-        else{
-            return null;
-        }
-    }
-
-    public String getShortBamServerProfilePath(String realServerProfilePath){
-        if(realServerProfilePath != null){
-            if(realServerProfilePath.startsWith("/_system/config")){
-                return realServerProfilePath.replaceFirst("/_system/config", "conf:");
-            }
-            else if(realServerProfilePath.startsWith("/_system/governance")){
-                return realServerProfilePath.replaceFirst("/_system/governance", "gov:");
-            }
-            else {
-                return null;
-            }
-        }
-        return null;
     }
 
     private boolean processCredentialElement(OMElement bamServerConfig){
@@ -156,7 +119,6 @@ public class BamServerConfigBuilder {
             boolean propertiesElementOk = this.processPropertiesElement(streamElement, streamConfiguration);
         
             return (payloadElementOk & propertiesElementOk);
-            /*return this.processPropertiesElement(streamElement, streamConfiguration);*/
         }
         return false; // Incomplete attributes are not accepted
     }

@@ -13,8 +13,8 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-package org.wso2.carbon.mediator.bam.ui;
 
+package org.wso2.carbon.mediator.bam.ui;
 
 import org.apache.axis2.AxisFault;
 import org.apache.axis2.client.Options;

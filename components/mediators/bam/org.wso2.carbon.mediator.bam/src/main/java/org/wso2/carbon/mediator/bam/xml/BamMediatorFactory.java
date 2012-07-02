@@ -55,7 +55,6 @@ public class BamMediatorFactory extends AbstractMediatorFactory {
             bam.setStreamVersion(streamVersion);
         }
 
-        //String realServerProfilePath = this.getRealBamServerProfilePath(serverProfilePath);
         RegistryManager registryManager = new RegistryManager();
         if(registryManager.resourceAlreadyExists(serverProfilePath)){
             resourceString = registryManager.getResourceString(serverProfilePath);
@@ -120,17 +119,6 @@ public class BamMediatorFactory extends AbstractMediatorFactory {
             else{
                 return null;
             }
-        }
-        return null;
-    }
-
-    private String getRealBamServerProfilePath(String shortServerProfilePath){
-        if(shortServerProfilePath != null){
-            String registryType = shortServerProfilePath.split(":")[0];
-            if (isNotNullOrEmpty(registryType) && registryType.equals("conf")){
-                return shortServerProfilePath.split(":")[1];
-            }
-            return null;
         }
         return null;
     }

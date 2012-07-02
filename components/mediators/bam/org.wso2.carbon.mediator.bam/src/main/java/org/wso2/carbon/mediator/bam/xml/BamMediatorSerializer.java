@@ -15,6 +15,7 @@
 * specific language governing permissions and limitations
 * under the License.
 */
+
 package org.wso2.carbon.mediator.bam.xml;
 
 import org.apache.synapse.config.xml.AbstractMediatorSerializer;
@@ -22,11 +23,7 @@ import org.apache.synapse.Mediator;
 import org.apache.axiom.om.OMElement;
 import org.wso2.carbon.mediator.bam.BamMediator;
 
-import java.util.List;
-
-
 public class BamMediatorSerializer extends AbstractMediatorSerializer {
-
 
     public OMElement serializeSpecificMediator(Mediator mediator) {
         assert mediator instanceof BamMediator : "BAM mediator is expected";
@@ -42,19 +39,6 @@ public class BamMediatorSerializer extends AbstractMediatorSerializer {
         streamConfigElement.addAttribute(fac.createOMAttribute("name", nullNS, bamMediator.getStreamName()));
         streamConfigElement.addAttribute(fac.createOMAttribute("version", nullNS, bamMediator.getStreamVersion()));
         bam.addChild(streamConfigElement);
-
-       /* OMElement propertiesElement = fac.createOMElement("properties", synNS);
-        List<Property> properties = bamMediator.getProperties();
-        if(properties != null){
-            OMElement propertyElement;
-            for (Property property : properties) {
-                propertyElement = fac.createOMElement("property", synNS);
-                propertyElement.addAttribute("name", property.getKey(), nullNS);
-                propertyElement.addAttribute("value", property.getValue(), nullNS);
-                propertiesElement.addChild(propertyElement);
-            }
-        }
-        bam.addChild(propertiesElement);*/
 
         return bam;
     }

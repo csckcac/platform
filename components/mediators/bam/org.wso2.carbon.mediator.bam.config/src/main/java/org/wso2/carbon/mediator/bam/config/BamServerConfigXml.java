@@ -27,7 +27,6 @@ import org.wso2.carbon.mediator.bam.config.stream.StreamConfiguration;
 import org.wso2.carbon.mediator.bam.config.stream.StreamEntry;
 
 import javax.xml.namespace.QName;
-import java.util.Iterator;
 import java.util.List;
 
 
@@ -45,47 +44,6 @@ public class BamServerConfigXml {
         serverProfileElement.addChild(this.serializeCredential(userName, password));
         serverProfileElement.addChild(this.serializeStreams(streamConfigurations));
         return serverProfileElement;
-    }
-
-    /*public OMElement addStream(StreamConfiguration streamConfiguration){
-        OMElement streamsElement = serverProfileElement.getFirstChildWithName(
-                new QName(SynapseConstants.SYNAPSE_NAMESPACE, "streams"));
-        if(streamsElement == null){
-            serverProfileElement.addChild(this.serializeStreams());
-        }
-        if(!streamExists(streamConfiguration)){
-            streamsElement = serverProfileElement.getFirstChildWithName(
-                    new QName(SynapseConstants.SYNAPSE_NAMESPACE, "streams"));
-            OMElement streamElement = this.serializeStream(streamConfiguration);
-            streamsElement.addChild(streamElement);
-            return streamsElement;
-        }
-        else {
-            return fac.createOMElement(new QName(""));
-        }
-    }*/
-    
-    public boolean streamExists(StreamConfiguration streamConfiguration){
-        String streamName = streamConfiguration.getName();
-        Iterator itr = serverProfileElement.getChildrenWithName(
-                new QName(SynapseConstants.SYNAPSE_NAMESPACE, "stream"));
-        OMElement tmpStream;
-        QName tmpStreamName = new QName(SynapseConstants.SYNAPSE_NAMESPACE, "name");
-        while (itr.hasNext()){
-            tmpStream = (OMElement)itr.next();
-            if(tmpStream.getAttributeValue(tmpStreamName).equals(streamName)){
-                return true;
-            }
-        }
-        return false;
-    }
-
-    public OMElement getServerProfileElement(){
-        return this.serverProfileElement;
-    }
-
-    public void setServerProfileElement(OMElement serverProfileElement){
-        this.serverProfileElement = serverProfileElement;
     }
 
     private OMElement serializeConnection(String ip, String port){
@@ -166,7 +124,6 @@ public class BamServerConfigXml {
                 propertiesElement.addChild(this.serializeProperty(tmpEntryName, tmpEntryValue));
             }
         }
-
         return streamElement;
     }
 
@@ -183,20 +140,6 @@ public class BamServerConfigXml {
         return entryElement;
     }
 
-    private boolean entryExists(OMElement payloadElement, String name){
-        Iterator itr = payloadElement.getChildrenWithName(
-                new QName(SynapseConstants.SYNAPSE_NAMESPACE, "entry"));
-        OMElement tmpEntry;
-        QName tmpEntryName = new QName(SynapseConstants.SYNAPSE_NAMESPACE, "name");
-        while (itr.hasNext()){
-            tmpEntry = (OMElement)itr.next();
-            if(tmpEntry.getAttributeValue(tmpEntryName).equals(name)){
-                return true;
-            }
-        }
-        return false;
-    }
-
     private OMElement serializeProperties(){
         OMElement propertiesElement = fac.createOMElement("properties", synNS);
         return propertiesElement;
@@ -209,17 +152,4 @@ public class BamServerConfigXml {
         return propertyElement;
     }
 
-    /*private OMElement serializePropertyList(List<Property> properties){
-        OMElement propertiesElement = fac.createOMElement("properties", synNS);
-        if(properties != null){
-            OMElement propertyElement;
-            for (Property property : properties) {
-                propertyElement = fac.createOMElement("property", synNS);
-                propertyElement.addAttribute("name", property.getKey(), nullNS);
-                propertyElement.addAttribute("value", property.getValue(), nullNS);
-                propertiesElement.addChild(propertyElement);
-            }
-        }
-        return propertiesElement;
-    }*/
 }

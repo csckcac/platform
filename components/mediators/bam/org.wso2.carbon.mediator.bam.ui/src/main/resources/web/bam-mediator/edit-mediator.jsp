@@ -116,7 +116,6 @@
             }
 
             function onServerProfileSelected(parentPath){
-                //document.getElementById('serverProfile').value = document.getElementById('serverProfileList').value;
                 loadStreamNames(parentPath + "/" + document.getElementById('serverProfileList').value, "");
             }
 
@@ -143,7 +142,6 @@
                         <fmt:message key="server.profile.header"/>
                     </h3>
                 </td>
-
             </tr>
 
             <tr>
@@ -153,12 +151,6 @@
                 <td>
                     <table>
                         <tr>
-                            <%--<td>
-                                <input class="longInput" type="text"
-                                       value="<%=SERVER_PROFILE_LOCATION + "/" + serverProfilePath%>"
-                                       id="serverProfile" name="serverProfile" readonly="true"/>
-                            </td>--%>
-
                             <td>
                                 <select name="serverProfileList" id="serverProfileList" onchange="onServerProfileSelected('<%=SERVER_PROFILE_LOCATION%>')">
                                     <option>- Select Server Profile -</option>
@@ -171,7 +163,6 @@
                     </table>
                 </td>
             </tr>
-
             <tr>
                 <td colspan="4">
                     <h3 class="mediator">
@@ -201,7 +192,6 @@
                     </script>
                 </td>
             </tr>
-
         </table>
     </div>
 </fmt:bundle>

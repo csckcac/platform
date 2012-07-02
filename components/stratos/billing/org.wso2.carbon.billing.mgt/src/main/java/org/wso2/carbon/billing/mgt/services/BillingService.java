@@ -36,6 +36,7 @@ import org.wso2.carbon.registry.core.session.UserRegistry;
 import org.wso2.carbon.user.core.tenant.Tenant;
 import org.wso2.carbon.user.core.tenant.TenantManager;
 import org.wso2.carbon.utils.DataPaginator;
+import org.wso2.carbon.utils.multitenancy.MultitenantConstants;
 
 import java.text.SimpleDateFormat;
 import java.util.HashMap;
@@ -170,6 +171,31 @@ public class BillingService extends AbstractAdmin {
                 billingManager.getBillingEngine(StratosConstants.MULTITENANCY_VIEWING_TASK_ID);
         List<OutstandingBalanceInfoBean> balanceBeans = billingEngine.getAllOutstandingBalanceInfoBeans(tenantDomain);
         return balanceBeans.toArray(new OutstandingBalanceInfoBean[balanceBeans.size()]);
+    }
+
+    /**
+     * Adds a discount entry
+     * @param discount is the discount object which contains discount information
+     * @param tenantDomain is passed to get the tenant id and set to the discount object
+     * @return true or false based on the result of the operation
+     * @throws Exception if an error occurs during the operation
+     */
+    public boolean addDiscount (Discount discount, String tenantDomain) throws Exception {
+        TenantManager tenantManager = Util.getRealmService().getTenantManager();
+        int tenantId = tenantManager.getTenantId(tenantDomain);
+        if(tenantId== MultitenantConstants.INVALID_TENANT_ID){
+            throw new Exception("Invalid tenant domain submitted for a discount");
+        }
+        discount.setTenantId(tenantId);
+
+        BillingManager billingManager = Util.getBillingManager();
+        BillingEngine billingEngine = billingManager.getBillingEngine(StratosConstants.MULTITENANCY_VIEWING_TASK_ID);
+
+        boolean added = billingEngine.addDiscount(discount);
+        if(added){
+            log.info("Discount entry added for tenant: " + discount.getTenantId());
+        }
+        return added;
     }
     
     /**

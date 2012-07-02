@@ -2379,4 +2379,118 @@ public class DataAccessObject {
         }
     }
 
+    public boolean addDiscount(Discount discount) throws BillingException{
+        Connection conn = Transaction.getConnection();
+        PreparedStatement ps = null;
+        int added = 0;
+        try {
+            String sql = "INSERT INTO BC_DISCOUNT (BC_TENANT_ID, BC_PERCENTAGE, BC_AMOUNT, BC_START_DATE, BC_END_DATE, BC_PERCENTAGE_TYPE)" +
+                        " VALUES (?, ?, ?, ?, ?, ?)";
+            ps = conn.prepareStatement(sql);
+
+            ps.setInt(1, discount.getTenantId());
+            if(discount.isPercentageType()){
+                ps.setInt(6, 1);
+                ps.setFloat(2, discount.getPercentage());
+                ps.setNull(3, Types.FLOAT);
+            }else{
+                ps.setInt(6, 0);
+                ps.setNull(2, Types.FLOAT);
+                ps.setFloat(3, discount.getAmount());
+            }
+            ps.setTimestamp(4, new Timestamp(discount.getStartDate().getTime()));
+            if(discount.getEndDate()!=null){
+                ps.setTimestamp(5, new Timestamp(discount.getEndDate().getTime()));
+            }else{
+                ps.setNull(5, Types.TIMESTAMP);
+            }
+
+            added = ps.executeUpdate();
+        } catch (SQLException e) {
+            String msg = "Error in adding the discount for tenant: ";
+            log.error(msg, e);
+            throw new BillingException(msg, e);
+
+        }finally {
+            try {
+                if (ps != null) {
+                    ps.close();
+                }
+            }
+            catch (SQLException ex) {
+                String msg = RegistryConstants.RESULT_SET_PREPARED_STATEMENT_CLOSE_ERROR;
+                log.error(msg, ex);
+            }
+        }
+
+        if(added>0){
+            return true;
+        }else{
+            return false;
+        }
+    }
+
+
+    public List<Discount> getAllActiveDiscounts() throws BillingException {
+        Connection conn = Transaction.getConnection();
+        PreparedStatement ps = null;
+        ResultSet result = null;
+        List<Discount> discounts = new ArrayList<Discount>();
+        try {
+            String sql = "SELECT BC_ID, BC_TENANT_ID, BC_PERCENTAGE, BC_AMOUNT, BC_START_DATE, BC_END_DATE, " +
+                        "BC_PERCENTAGE_TYPE FROM BC_DISCOUNT";
+            ps = conn.prepareStatement(sql);
+            result = ps.executeQuery();
+
+            while (result.next()) {
+                Discount discount = new Discount();
+                discount.setId(result.getInt("BC_ID"));
+                discount.setTenantId(result.getInt("BC_TENANT_ID"));
+                int isPercentageType = result.getInt("BC_PERCENTAGE_TYPE");
+                if(isPercentageType==1){
+                    discount.setPercentageType(true);
+                    discount.setPercentage(result.getFloat("BC_PERCENTAGE"));
+                }else{
+                    discount.setPercentageType(false);
+                    discount.setAmount(result.getFloat("BC_AMOUNT"));
+                }
+                discount.setStartDate(new java.util.Date(result.getTimestamp("BC_START_DATE").getTime()));
+
+                if(result.getTimestamp("BC_END_DATE")!=null){
+                    discount.setEndDate(new java.util.Date(result.getTimestamp("BC_END_DATE").getTime()));
+                }
+                //we are only returning non expired discounts
+                if(discount.getEndDate()==null || discount.getEndDate().after(new java.util.Date())){
+                    discounts.add(discount);
+                }
+            }
+        } catch (SQLException e) {
+            String msg = "Failed to get the list of discounts.";
+            log.error(msg, e);
+            throw new BillingException(msg, e);
+
+        } finally {
+            try {
+                if (ps != null) {
+                    ps.close();
+                }
+            } catch (SQLException ex) {
+                String msg = RegistryConstants.RESULT_SET_PREPARED_STATEMENT_CLOSE_ERROR
+                        + ex.getMessage();
+                log.error(msg, ex);
+                throw new BillingException(msg, ex);
+            }
+
+            try {
+                if (result != null) {
+                    result.close();
+                }
+            } catch (SQLException ex) {
+                String msg = RegistryConstants.RESULT_SET_PREPARED_STATEMENT_CLOSE_ERROR;
+                log.error(msg, ex);
+            }
+        }
+        return discounts;
+    }
+
 }

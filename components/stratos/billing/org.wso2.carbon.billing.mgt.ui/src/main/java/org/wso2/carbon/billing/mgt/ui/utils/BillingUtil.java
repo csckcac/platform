@@ -20,11 +20,7 @@ package org.wso2.carbon.billing.mgt.ui.utils;
 
 import org.apache.commons.logging.Log;
 import org.apache.commons.logging.LogFactory;
-import org.wso2.carbon.billing.mgt.stub.beans.xsd.BillingPeriod;
-import org.wso2.carbon.billing.mgt.stub.beans.xsd.MultitenancyInvoice;
-import org.wso2.carbon.billing.mgt.stub.beans.xsd.OutstandingBalanceInfoBean;
-import org.wso2.carbon.billing.mgt.stub.beans.xsd.PaginatedBalanceInfoBean;
-import org.wso2.carbon.billing.mgt.stub.beans.xsd.Payment;
+import org.wso2.carbon.billing.mgt.stub.beans.xsd.*;
 import org.wso2.carbon.billing.mgt.ui.clients.BillingServiceClient;
 import org.wso2.carbon.registry.common.ui.UIException;
 
@@ -151,6 +147,19 @@ public class BillingUtil {
             return serviceClient.getOutstandingBalance(tenantDomain);
         }catch (Exception exp){
             String msg = "Failed to get balance info for domain: " + tenantDomain;
+            log.error(msg, exp);
+            throw new UIException(msg, exp);
+        }
+    }
+
+    public static boolean addDiscount(
+            ServletConfig config, HttpSession session, Discount discount, String tenantDomain) throws UIException{
+
+        try{
+            BillingServiceClient serviceClient = new BillingServiceClient(config, session);
+            return serviceClient.addDiscount(discount, tenantDomain);
+        }catch (Exception exp){
+            String msg = "Failed to failed to add the discount for tenant: " + discount.getTenantId();
             log.error(msg, exp);
             throw new UIException(msg, exp);
         }

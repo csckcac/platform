@@ -70,6 +70,19 @@
             <require-super-tenant>true</require-super-tenant>
         </menu>
         <menu>
+            <id>discount_menu</id>
+            <i18n-key>discount.menu</i18n-key>
+            <i18n-bundle>org.wso2.carbon.billing.mgt.ui.i18n.Resources</i18n-bundle>
+            <parent-menu>multitenancy_billing_menu</parent-menu>
+            <link>../tenant-billing/discounts.jsp</link>
+            <region>region4</region>
+            <order>53</order>
+            <style-class>manage</style-class>
+            <icon>../tenant-billing/images/view-invoice.gif</icon>
+            <require-permission>/permission/admin/billing/invoice</require-permission>
+            <require-super-tenant>true</require-super-tenant>
+        </menu>
+        <menu>
             <id>multitenancy_interim_invoice_menu</id>
             <i18n-key>interim.invoice</i18n-key>
             <i18n-bundle>org.wso2.carbon.billing.mgt.ui.i18n.Resources</i18n-bundle>

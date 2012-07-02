@@ -426,4 +426,21 @@ public class BillingEngine {
         EmailSender sender = new EmailSender(senderConfiguration);
         sender.sendEmail(toAddress, mailParameters);
     }
+    
+    public boolean addDiscount(Discount discount) throws Exception {
+        boolean added = false;
+        try {
+            beginTransaction();
+            added = dataAccessObject.addDiscount(discount);
+            commitTransaction();
+        } catch(Exception e){
+            String msg = "Error occurred while adding the discount for tenant: " + discount.getTenantId()+
+                    ". " + e.getMessage();
+            log.error(msg, e);
+            rollbackTransaction();
+            throw new BillingException(msg, e);
+        }
+
+        return added;
+    }
 }

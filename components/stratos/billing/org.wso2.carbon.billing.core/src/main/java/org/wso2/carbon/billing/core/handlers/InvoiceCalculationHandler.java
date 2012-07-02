@@ -17,11 +17,9 @@ package org.wso2.carbon.billing.core.handlers;
 
 import org.apache.commons.logging.Log;
 import org.apache.commons.logging.LogFactory;
-import org.wso2.carbon.billing.core.BillingConstants;
-import org.wso2.carbon.billing.core.BillingEngineContext;
-import org.wso2.carbon.billing.core.BillingException;
-import org.wso2.carbon.billing.core.BillingHandler;
+import org.wso2.carbon.billing.core.*;
 import org.wso2.carbon.billing.core.dataobjects.*;
+import org.wso2.carbon.billing.core.internal.Util;
 
 import java.text.NumberFormat;
 import java.util.HashMap;
@@ -34,9 +32,14 @@ import java.util.Map;
 public class InvoiceCalculationHandler implements BillingHandler {
 
     Log log = LogFactory.getLog(InvoiceCalculationHandler.class);
+    Map<Integer, Discount> discountMap = new HashMap<Integer, Discount>();
 
     public void init(Map<String, String> handlerConfig) throws BillingException {
-        // nothing to initialize
+        //we are getting the discount list and put them in to a map
+        List<Discount> discountList = BillingManager.getInstance().getDataAccessObject().getAllActiveDiscounts();
+        for(Discount discount : discountList){
+            discountMap.put(discount.getTenantId(), discount);
+        }
     }
 
     public void execute(BillingEngineContext handlerContext) throws BillingException {
@@ -163,6 +166,9 @@ public class InvoiceCalculationHandler implements BillingHandler {
         NumberFormat nf = NumberFormat.getInstance();
 		nf.setMaximumFractionDigits(2);
 
+        int tenantId = invoice.getCustomer().getId();
+        Discount discount = discountMap.get(tenantId);
+
         long period;
         long days;
 
@@ -183,14 +189,38 @@ public class InvoiceCalculationHandler implements BillingHandler {
         //I am considering 28 days or more as a complete month
         days = period/milisecondsPerDay;
         if(days<28){
-            double multiplyingFactor = (double)days/30;
-            multiplyingFactor = Double.parseDouble(nf.format(multiplyingFactor));
+            float multiplyingFactor = (float)days/30;
+            multiplyingFactor = Float.parseFloat(nf.format(multiplyingFactor));
 
+            //prorate the subscription fee...
             if(subItem.getCost()!=null){
                 subItem.setCost(subItem.getCost().multiply(multiplyingFactor));
             }
+
+            //prorating the discount too (if the discount is defined as a raw amount)...
+            if(discount!=null && !discount.isPercentageType()){
+                discount.setAmount(discount.getAmount()*multiplyingFactor);
+            }
         }
+        
+        //Check whether the customer is offered any discounts and reduce the subscription fee
+        
+        if(discount!=null){
+            
+            if(discount.isPercentageType()){
+                subItem.setCost(subItem.getCost().multiply(1 - (discount.getPercentage()/100)));
+                subItem.setDescription(subItem.getDescription() + " (with " + discount.getPercentage() + "% discount)");
+                log.info("Customer: " + tenantId + " was qualified for a discount of " +
+                        discount.getPercentage() + "% for subscription:" + subscription.getSubscriptionPlan() +
+                        " which started from:" + subscription.getActiveSince().toString());
+            }else{
+                subItem.setCost(Cash.subtract(subItem.getCost(), new Cash(String.valueOf(discount.getAmount()))));
+                subItem.setDescription(subItem.getDescription() + " (with " + new Cash(String.valueOf(discount.getAmount())).toString() + " discount)");
+                log.info("Customer: " + tenantId + " was qualified for a discount of " +
+                        new Cash(String.valueOf(discount.getAmount())).toString() + " for subscription:" + subscription.getSubscriptionPlan() +
+                        " which started from:" + subscription.getActiveSince().toString());
+            }
 
-
+        }
     }
 }

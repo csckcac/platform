@@ -115,4 +115,8 @@ public class BillingServiceClient {
     public OutstandingBalanceInfoBean[] getOutstandingBalance(String tenantDomain) throws Exception {
         return stub.getOutstandingBalance(tenantDomain);
     }
+    
+    public boolean addDiscount(Discount discount, String tenantDomain) throws Exception {
+        return stub.addDiscount(discount, tenantDomain);
+    }
 }

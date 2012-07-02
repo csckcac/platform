@@ -33,7 +33,6 @@ var getStaticStars = function (context, rating, theme) {
     return '<div class="static-rating-stars">' + html + '</div>';
 };
 
-
 var getDynamicStars = function (rating) {
     var getHTML = function (clazz) {
         return '<a class="' + clazz + '"></a>';
@@ -46,6 +45,6 @@ var getDynamicStars = function (rating) {
             '<span>Your rating:</span>' +
             '<span class="dynamic-rating-stars">' + html + '</span>' +
             '<a class="selected-rating">' + rating + '</a>/5' +
-            '<a title="Remove Rating" class="remove-rating"></a>' +
+            '<a title="Remove Rating" class="remove-rating"  onclick="removeRating(jagg.api)"></a>' +
             '</div>';
 };

@@ -31,13 +31,13 @@ var jagg = jagg || {};
      /*
     usage
     Show info dialog
-    jagg.message({content:'foo',type:'info'});
+    jagg.message({content:'foo',type:'info', cbk:function(){alert('Do something here.')} });
 
     Show warning
-    dialog jagg.message({content:'foo',type:'warning'});
+    dialog jagg.message({content:'foo',type:'warning', cbk:function(){alert('Do something here.')} });
 
     Show error dialog
-    jagg.message({content:'foo',type:'error'});
+    jagg.message({content:'foo',type:'error', cbk:function(){alert('Do something here.')} });
 
     Show confirm dialog
     jagg.message({content:'foo',type:'confirm',okCallback:function(){},cancelCallback:function(){}});

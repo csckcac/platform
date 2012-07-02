@@ -77,7 +77,7 @@ var jagg = jagg || (function () {
     };
 
     var getTemplateFile = function (name) {
-        return getThemesDir() + getTheme() + "/templates/" + name + "/template.jag";
+        return getThemesDir() + getUserTheme() + "/templates/" + name + "/template.jag";
     };
 
     var getModuleFile = function (name) {

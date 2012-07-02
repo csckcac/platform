@@ -3,6 +3,19 @@ function changeAppNameMode(linkObj){
     var appName = $(theTr).attr('data-value');
     $('td:first',theTr).html('<div class="row-fluid"><div class="span6"> <input class="app_name_new" value="'+theTr.attr('data-value')+'" type="text" /> </div><div class="span6"><button class="btn btn-primary" onclick="updateApplication(this)">Save</button> <button class="btn" onclick="updateApplication_reset(this)">Cancel</button></div></div> ');
     $('input.app_name_new',theTr).focus();
+    $('input.app_name_new',theTr).keyup(function(){
+        if($(this).val() == ""){
+            $(this).addClass('error');
+            if(!$(this).next().hasClass('error')){
+                $(this).parent().append('<label class="error">This field is required.</label>');
+            }else{
+                $(this).next().show();
+            }
+        }else{
+            $(this).removeClass('error');
+            $(this).next().hide();
+        }
+    });
 }
 function updateApplication_reset(linkObj){
     var theTr = $(linkObj).parent().parent().parent().parent();
@@ -13,6 +26,9 @@ function updateApplication(linkObj){
     var theTr = $(linkObj).parent().parent().parent().parent();
     var applicationOld = $(theTr).attr('data-value');
     var applicationNew = $('input.app_name_new',theTr).val();
+    if(applicationNew == ""){
+        return;
+    }
         jagg.post("/site/blocks/application/application-update/ajax/application-update.jag", {
             action:"updateApplication",
             applicationOld:applicationOld,
@@ -55,13 +71,15 @@ function deleteApp(linkObj) {
 
 function alertMsg() {
     $('#applicationTable tr:last').css("background-color", "");
+    $('#appAddMessage').hide("fast");
 }
 $(document).ready(function() {
     if ($.cookie('highlight') != null && $.cookie('highlight') == "true") {
         $.cookie('highlight', "false");
 
         $('#applicationTable tr:last').css("background-color", "#d1dce3");
-
+        $('#appAddMessage').show();
+        $('#applicationShowName').text($.cookie('lastAppName'));
         var t = setTimeout("alertMsg()", 3000);
     }
 });

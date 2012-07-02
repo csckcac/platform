@@ -11,7 +11,7 @@ div.star-ratings img{
     height: 64px;
     width:48px;
     line-height: 70px;
-    padding-left: 28px;
+    padding-left: 28px;''
 }
 
 .star-0 {
@@ -301,9 +301,12 @@ input.error{
     padding:10px;
     width:100px;
 }
-.main-heading div.span6{
-    display:none;
+#comment-add .counter{
+    color: #666666;
+    font-size:11px;
 }
-ul.login-sign-up li.divider-vertical{
-    height:30px;
+#comment-add .warning{color:#600;}
+#comment-add .exceeded{color:#e00;}
+.application-add div.help-block{
+    padding-left: 0px; margin-left: 0px;
 }

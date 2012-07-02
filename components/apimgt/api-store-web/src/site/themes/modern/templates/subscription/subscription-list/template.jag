@@ -1,7 +1,7 @@
 <% jagg.template("subscription/subscription-list", function(inputs, outputs, jagg) { %>
 <div class="subscription-listing" style="margin-top:22px;">
     <%
-    var i, j, app, api, apis, key, lenI, clazz, lenJ, path, apps = outputs.applications, lenI = apps.length;
+    var i, j, app, api, apis, key, lenI, clazz, lenJ, path, apps = outputs.applications; if(apps!=null){lenI = apps.length;}
     for(i = 0; i < lenI; i++) {
         app = apps[i];
         var str_i = String(i).replace('.','_');
@@ -160,8 +160,10 @@
                                             <a href="<%=path%>" class="thumbnailInsideLink"><img width="70" alt="" src="<% if(api.thumburl) { %><%=api.thumburl%><% } else { %>/apistore/site/themes/<%=jagg.getUserTheme()%>/images/api-default.png<% }%>"/></a>
                                         </div>
                                         <div class="span8">
+                                            <img src="<%=jagg.getAbsoluteUrl("/site/themes/"+jagg.getUserTheme()+"/images/close.png")%>" onClick="removeSubscription('<%=api.name%>','<%=api.version%>','<%=api.provider%>','<%=app.id%>')" align="right" style="height:15px;width:15px;">
                                             <a href="<%=path%>" class="service-name" title="<%=api.name%>-<%=api.version%>"><%=apiName%> - <%=api.version%></a>
                                             <div class="item-info"><%=api.provider%></div>
+                                            <div class="item-info"><%=api.tier%> Subscription</div>
                                         </div>
                                     </div>
                                 </div>
@@ -170,7 +172,7 @@
                     <% } %>
                     </div><!-- End row -->
                    </div><!-- End container-fluid -->
-    </div><!-- data-contnet -->
+    </div><!-- data-content -->
 
 </div>
 

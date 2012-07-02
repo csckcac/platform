@@ -6,6 +6,7 @@
         thumbURL = site.context + "/site/themes/"+jagg.getUserTheme()+"/" + thumbURL;
    }
    var subsPermitted = jagg.module("subscription").hasSubscribePermission().permitted;
+   session.put("apiPath",request.getQueryString());
 %>
 <h2><%=api.name%> - <%=api.version%></h2>
 <h6><i class="icon-user"></i> <%=api.provider%></h6>
@@ -23,12 +24,12 @@
                 <tr>
                     <th>Rating:</th>
                     <td>
-                        <% if(user) { %><div class="average-rating"><%=String(api.rating)%></div><% } %>
+                        <% if(user && api.rating!=0) { %><div class="average-rating"><%=String(api.rating)%></div><% } %>
                     </td>
                     <td>
                         <div class="star-ratings">
-                            <% if(user) { %><%=stars.getDynamicStars(api.rating)%>
-                            <% } else { %><%=stars.getStaticStars(site.context, api.rating,jagg.getUserTheme())%><% } %>
+                             <% if(user) { %><%=stars.getDynamicStars(api.userRate)%>
+                            <% } else { %><%=stars.getStaticStars(site.context, api.userRate,jagg.getUserTheme())%><% } %>
                         </div>
                     </td>
 

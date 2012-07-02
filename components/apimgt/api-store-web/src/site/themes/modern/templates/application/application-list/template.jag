@@ -2,8 +2,31 @@
 <div id="application-list">
     <%
     var i, classes, path, app, apps = outputs.applications, length = apps.length;
-    if(length > 0) { %>
+    if(length > 0) {
 
+    var itemsPerPage = 20; //reduce this number to preview the pagination
+    var currentPage = 1;
+    var numberOfPages = parseInt(length / itemsPerPage);
+
+    if (length % itemsPerPage != 0) {
+       numberOfPages++;
+    }
+
+    if (request.getParameter('currentPage') != null) {
+       currentPage = parseInt(request.getParameter('currentPage'));
+    }
+    var from = (currentPage - 1)*itemsPerPage;
+    var to = currentPage*itemsPerPage;
+    if(currentPage == numberOfPages){
+       to = length%(itemsPerPage*currentPage);
+       if(to == 0){
+           to=itemsPerPage*currentPage;
+       }
+    }
+    if(length==0){
+        to=0;
+    }
+    %>
     <script type="text/javascript">
         var foo='<%=apps%>';
     </script>
@@ -16,7 +39,7 @@
         </thead>
         <tbody>
             <%
-            for(i = 0; i < length; i++) {
+            for(i = from ; i < to; i++) {
                 app = apps[i];
                 if(i == 0) classes = "first";
                 else if(i + 1 == length) classes = "last";
@@ -33,6 +56,17 @@
             <% } %>
         </tbody>
     </table>
+    <% if(numberOfPages > 1) { %>
+    <div class="pagination">
+        <ul>
+          <li <% if(currentPage == 1) { %> class="disabled" <% } %>><a href="?currentPage=<%=(currentPage-1)%>">Prev</a></li>
+          <% for(var i=1;i<=numberOfPages;i++) { %>
+            <li <% if(parseInt(i)==parseInt(currentPage)){ %> class="active" <% } %>><a href="?currentPage=<%=i%>"><%=String(i).split('.')[0]%></a></li>
+          <% } %>
+          <li <% if(currentPage == numberOfPages) { %> class="disabled" <% } %>><a href="?currentPage=<%=(currentPage+1)%>">Next</a></li>
+        </ul>
+      </div>
+    <% } %>
     <% } else { %>
     <p>No applications yet</p>
     <% } %>

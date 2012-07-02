@@ -51,9 +51,12 @@
 
         </classes>
     </test>
+
     <test name="Test - Mediator Clone" preserve-order="true" verbose="2">
         <classes>
             <class name="org.wso2.carbon.mediator.tests.clone.CloneMediatorTestCase"/>
+            <class name="org.wso2.carbon.mediator.tests.clone.ValidSoapActionTestCase"/>
+            <class name="org.wso2.carbon.mediator.tests.clone.Soap_action_with_TO_Address"/>
         </classes>
     </test>
 </suite>

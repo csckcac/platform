@@ -96,5 +96,9 @@ public class CloneMediatorTestCase extends ESBIntegrationTestCase {
         assertFalse(isParentMsgFound, "Parent message printed without continue parent property enabled");
     }
 
-
+    @Override
+    protected void cleanup() {
+        super.cleanup();
+        axis2Client.destroy();
+    }
 }

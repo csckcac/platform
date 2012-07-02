@@ -38,13 +38,15 @@ public class BamMediatorFactory extends AbstractMediatorFactory {
     public static final QName BAM_Q = new QName(
             SynapseConstants.SYNAPSE_NAMESPACE, "bam");
 
+    public static final String SERVER_PROFILE_LOCATION = "bamServerProfiles";
+
     public Mediator createSpecificMediator(OMElement omElement, Properties properties) {
         BamMediator bam = new BamMediator();
 
         BamServerConfigBuilder bamServerConfigBuilder = new BamServerConfigBuilder();
         String resourceString;
 
-        String serverProfilePath = this.getServerProfilePath(omElement);
+        String serverProfilePath = SERVER_PROFILE_LOCATION + "/" + this.getServerProfileName(omElement);
         String streamName = this.getStreamName(omElement);
         String streamVersion = this.getStreamVersion(omElement);
         if(isNotNullOrEmpty(serverProfilePath) && isNotNullOrEmpty(streamName) && isNotNullOrEmpty(streamVersion)){
@@ -53,10 +55,10 @@ public class BamMediatorFactory extends AbstractMediatorFactory {
             bam.setStreamVersion(streamVersion);
         }
 
-        String realServerProfilePath = this.getRealBamServerProfilePath(serverProfilePath);
+        //String realServerProfilePath = this.getRealBamServerProfilePath(serverProfilePath);
         RegistryManager registryManager = new RegistryManager();
-        if(registryManager.resourceAlreadyExists(realServerProfilePath)){
-            resourceString = registryManager.getResourceString(realServerProfilePath);
+        if(registryManager.resourceAlreadyExists(serverProfilePath)){
+            resourceString = registryManager.getResourceString(serverProfilePath);
             try {
                 OMElement resourceElement = new StAXOMBuilder(new ByteArrayInputStream(resourceString.getBytes())).getDocumentElement();
                 boolean bamServerConfigCreated = bamServerConfigBuilder.createBamServerConfig(resourceElement);
@@ -74,12 +76,12 @@ public class BamMediatorFactory extends AbstractMediatorFactory {
         return BAM_Q;
     }
 
-    private String getServerProfilePath(OMElement omElement){
+    private String getServerProfileName(OMElement omElement){
         OMElement serverProfileElement = omElement.getFirstChildWithName(
                 new QName(SynapseConstants.SYNAPSE_NAMESPACE, "serverProfile"));
 
         if(serverProfileElement != null){
-            OMAttribute serverProfileAttr = serverProfileElement.getAttribute(new QName("path"));
+            OMAttribute serverProfileAttr = serverProfileElement.getAttribute(new QName("name"));
             if(serverProfileAttr != null){
                 return serverProfileAttr.getAttributeValue();
             }

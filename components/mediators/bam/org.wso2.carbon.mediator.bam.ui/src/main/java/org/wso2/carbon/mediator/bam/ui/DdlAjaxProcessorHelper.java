@@ -82,10 +82,25 @@ public class DdlAjaxProcessorHelper {
         return false;
     }
 
+    public String getServerProfileNames(String serverProfilePath){
+        String serverProfileNamesString = "";
+        try {
+            String[] serverProfileNames = client.getServerProfilePathList(serverProfilePath);
+            for (String serverProfileName : serverProfileNames) {
+                serverProfileNamesString = serverProfileNamesString + "<option>" +
+                                           serverProfileName.split("/")[serverProfileName.split("/").length-1] +
+                                           "</option>";
+            }
+        } catch (RemoteException e) {
+            e.printStackTrace();  //To change body of catch statement use File | Settings | File Templates.
+        }
+        return serverProfileNamesString;
+    }
+
     public String getStreamConfigurationNames(String serverProfilePath){
         String streamNames = "";
-        String realServerProfilePath = this.getRealBamServerProfilePath(serverProfilePath);
-        BamServerConfig bamServerConfig = this.getResource(realServerProfilePath);
+        /*String realServerProfilePath = this.getRealBamServerProfilePath(serverProfilePath);*/
+        BamServerConfig bamServerConfig = this.getResource(serverProfilePath);
         List<StreamConfiguration> streamConfigurations = bamServerConfig.getStreamConfigurations();
         List<String> foundStreamNames = new ArrayList<String>();
         for (StreamConfiguration configuration : streamConfigurations) {
@@ -99,8 +114,8 @@ public class DdlAjaxProcessorHelper {
     
     public String getVersionListForStreamName(String serverProfilePath, String streamName){
         String streamVersions = "";
-        String realServerProfilePath = this.getRealBamServerProfilePath(serverProfilePath);
-        BamServerConfig bamServerConfig = this.getResource(realServerProfilePath);
+        /*String realServerProfilePath = this.getRealBamServerProfilePath(serverProfilePath);*/
+        BamServerConfig bamServerConfig = this.getResource(serverProfilePath);
         List<StreamConfiguration> streamConfigurations = bamServerConfig.getStreamConfigurations();
         for (StreamConfiguration configuration : streamConfigurations) {
             if(configuration.getName().equals(streamName)){
@@ -110,7 +125,7 @@ public class DdlAjaxProcessorHelper {
         return streamVersions;
     }
 
-    private String getRealBamServerProfilePath(String shortServerProfilePath){
+    /*private String getRealBamServerProfilePath(String shortServerProfilePath){
         if(shortServerProfilePath != null){
             String registryType = shortServerProfilePath.split(":")[0];
             if (isNotNullOrEmpty(registryType) && registryType.equals("conf")){
@@ -119,5 +134,5 @@ public class DdlAjaxProcessorHelper {
             return null;
         }
         return null;
-    }
+    }*/
 }

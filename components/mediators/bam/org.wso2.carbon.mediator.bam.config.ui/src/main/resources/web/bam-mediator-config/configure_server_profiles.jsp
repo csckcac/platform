@@ -146,6 +146,10 @@
                 window.location.href = "configure_server_profiles.jsp?" + commonParameterString + "&hfAction=load";
             }
 
+            function stayInPage(){
+                window.location.href = "configure_server_profiles.jsp?" + commonParameterString + "&hfAction=stay";
+            }
+
             function showHideDiv(divId) {
                 var theDiv = document.getElementById(divId);
                 if (theDiv.style.display == "none") {
@@ -377,7 +381,7 @@
         %>
 
             <script>
-                CARBON.showConfirmationDialog("Are you sure you want to overwrite the existing Server Profile Configuration?", saveOverwrite, reloadPage, true);
+                CARBON.showConfirmationDialog("Are you sure you want to overwrite the existing Server Profile Configuration?", saveOverwrite, stayInPage, true);
             </script>
 
         <%
@@ -413,6 +417,10 @@
 
             <%
         }
+    }
+
+    else if("stay".equals(action)){  // staying in the existing page
+
     }
 
     else if("save".equals(action) && !"".equals(serverProfileLocation)){ // Saving a configuration

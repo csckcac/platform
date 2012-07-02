@@ -23,6 +23,10 @@
 <%@ taglib uri="http://java.sun.com/jsp/jstl/fmt" prefix="fmt" %>
 <%@ taglib uri="http://wso2.org/projects/carbon/taglibs/carbontags.jar" prefix="carbon" %>
 
+<%!
+    public static final String SERVER_PROFILE_LOCATION = "bamServerProfiles";
+%>
+
 <%
     Mediator mediator = SequenceEditorHelper.getEditingMediator(request, session);
 
@@ -38,8 +42,8 @@
     String streamVersion = "";
 
 
-    if(bamMediator.getServerProfilePath() != null){
-        serverProfilePath = bamMediator.getServerProfilePath();
+    if(bamMediator.getServerProfile() != null){
+        serverProfilePath = bamMediator.getServerProfile();
     }
 
     if(bamMediator.getStreamName() != null){
@@ -59,6 +63,24 @@
     <div>
         <script type="text/javascript" src="../bam-mediator/js/mediator-util.js"></script>
         <script type="text/javascript">
+
+            function loadServerProfiles(serverProfileLocationPath, serverProfilePath) {
+                jQuery.ajax({
+                                type:"GET",
+                                url:"../bam-mediator/dropdown_ajaxprocessor.jsp",
+                                data:{action:"getServerProfiles", serverProfilePath:serverProfileLocationPath},
+                                success:function(data){
+                                    document.getElementById("serverProfileList").innerHTML = "";
+                                    jQuery("#serverProfileList").append("<option>- Select Server Profile -</option>");
+                                    jQuery("#serverProfileList").append(data);
+                                    if(serverProfilePath != null && serverProfilePath != ""){
+                                        document.getElementById("serverProfileList").value = serverProfilePath;
+                                    }
+                                    document.getElementById('streamNameList').disabled = "";
+                                }
+                            })
+            }
+
             function loadStreamNames(serverProfilePath, streamName) {
                 jQuery.ajax({
                                 type:"GET",
@@ -93,8 +115,13 @@
                             })
             }
 
-            function selectStreamVersionList(){
-                loadStreamVersions(document.getElementById('serverProfile').value, document.getElementById('streamNameList').value);
+            function onServerProfileSelected(parentPath){
+                //document.getElementById('serverProfile').value = document.getElementById('serverProfileList').value;
+                loadStreamNames(parentPath + "/" + document.getElementById('serverProfileList').value, "")
+            }
+
+            function selectStreamVersionList(parentPath){
+                loadStreamVersions(parentPath + "/" + document.getElementById('serverProfileList').value, document.getElementById('streamNameList').value);
                 document.getElementById('streamVersionList').disabled = "";
             }
 
@@ -126,19 +153,19 @@
                 <td>
                     <table>
                         <tr>
-                            <td>
+                            <%--<td>
                                 <input class="longInput" type="text"
-                                       value="<%=serverProfilePath%>"
+                                       value="<%=SERVER_PROFILE_LOCATION + "/" + serverProfilePath%>"
                                        id="serverProfile" name="serverProfile" readonly="true"/>
-                            </td>
+                            </td>--%>
+
                             <td>
-                                <a href="#registryBrowserLink"
-                                   class="registry-picker-icon-link"
-                                   onclick="showRegistryBrowser('serverProfile','/_system/config')"><fmt:message key="conf.registry.browser"/>
-                                </a>
-                            </td>
-                            <td>
-                                <input type="button" value="Load Streams" onclick="loadStreamNames(document.getElementById('serverProfile').value, '')"/>
+                                <select name="serverProfileList" id="serverProfileList" onchange="onServerProfileSelected('<%=SERVER_PROFILE_LOCATION%>')">
+                                    <option>- Select Server Profile -</option>
+                                </select>
+                                <script type="text/javascript">
+                                    loadServerProfiles("<%=SERVER_PROFILE_LOCATION%>", "<%=serverProfilePath%>");
+                                </script>
                             </td>
                         </tr>
                     </table>
@@ -155,11 +182,11 @@
             <tr>
                 <td><fmt:message key="stream.name"/></td>
                 <td>
-                    <select name="streamNameList" id="streamNameList" disabled="disabled" onchange="selectStreamVersionList()">
+                    <select name="streamNameList" id="streamNameList" disabled="disabled" onchange="selectStreamVersionList('<%=SERVER_PROFILE_LOCATION%>')">
                         <option>- Select Stream Name -</option>
                     </select>
                     <script type="text/javascript">
-                        loadStreamNames("<%=serverProfilePath%>", "<%=streamName%>");
+                        loadStreamNames("<%=SERVER_PROFILE_LOCATION + "/" + serverProfilePath%>", "<%=streamName%>");
                     </script>
                 </td>
             </tr>
@@ -170,7 +197,7 @@
                         <option>- Select Stream Version -</option>
                     </select>
                     <script type="text/javascript">
-                        loadStreamVersions("<%=serverProfilePath%>", "<%=streamName%>", "<%=streamVersion%>");
+                        loadStreamVersions("<%=SERVER_PROFILE_LOCATION + "/" + serverProfilePath%>", "<%=streamName%>", "<%=streamVersion%>");
                     </script>
                 </td>
             </tr>

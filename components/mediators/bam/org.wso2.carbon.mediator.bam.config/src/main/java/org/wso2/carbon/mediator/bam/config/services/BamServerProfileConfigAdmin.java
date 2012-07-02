@@ -74,6 +74,14 @@ public class BamServerProfileConfigAdmin extends AbstractAdmin {
     public boolean bamServerConfigExists(String bamServerConfigLocation){
         return registryManager.resourceAlreadyExists(bamServerConfigLocation);
     }
+
+    public boolean addCollection(String bamServerProfileCollectionLocation){
+        return registryManager.addCollection(bamServerProfileCollectionLocation);
+    }
+
+    public String[] getServerProfileNameList(String bamServerProfileCollectionLocation){
+        return registryManager.getServerProfileNameList(bamServerProfileCollectionLocation);
+    }
     
     public String encryptAndBase64Encode(String plainText) {
         return cryptographyManager.encryptAndBase64Encode(plainText);

@@ -39,7 +39,10 @@
     String responseText = "";
 
     if(ddlAjaxProcessorHelper.isNotNullOrEmpty(action)){
-        if(action.equals("getStreamNames") && ddlAjaxProcessorHelper.isNotNullOrEmpty(serverProfilePath)){
+        if(action.equals("getServerProfiles") && ddlAjaxProcessorHelper.isNotNullOrEmpty(serverProfilePath)){
+            responseText = ddlAjaxProcessorHelper.getServerProfileNames(serverProfilePath);
+            out.write(responseText);
+        } else if(action.equals("getStreamNames") && ddlAjaxProcessorHelper.isNotNullOrEmpty(serverProfilePath)){
             responseText = ddlAjaxProcessorHelper.getStreamConfigurationNames(serverProfilePath);
             out.write(responseText);
         } else if (action.equals("getStreamVersions") &&

@@ -74,6 +74,10 @@ public class BamServerProfileConfigAdminClient {
         return true;
     }
 
+    public String[] getServerProfilePathList(String bamServerProfileLocation) throws RemoteException {
+        return stub.getServerProfileNameList(bamServerProfileLocation);
+    }
+
     private void handleException(String msg, Exception e) throws RemoteException {
         log.error(msg, e);
         throw new RemoteException(msg, e);

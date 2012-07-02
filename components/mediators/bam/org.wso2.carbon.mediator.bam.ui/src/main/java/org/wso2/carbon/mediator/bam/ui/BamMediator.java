@@ -27,16 +27,16 @@ import javax.xml.namespace.QName;
 
 public class BamMediator extends AbstractMediator {
 
-    private String serverProfilePath = "";
+    private String serverProfile = "";
     private String streamName = "";
     private String streamVersion = "";
 
-    public String getServerProfilePath(){
-        return this.serverProfilePath;
+    public String getServerProfile(){
+        return this.serverProfile;
     }
 
-    public void setServerProfilePath(String serverProfile1){
-        this.serverProfilePath = serverProfile1;
+    public void setServerProfile(String serverProfile1){
+        this.serverProfile = serverProfile1;
     }
 
     public String getStreamName(){
@@ -63,9 +63,9 @@ public class BamMediator extends AbstractMediator {
         OMElement bamElement = fac.createOMElement("bam", synNS);
         saveTracingState(bamElement, this);
 
-        /*if (serverProfilePath != null) {
+        /*if (serverProfile != null) {
             bamElement.addAttribute(fac.createOMAttribute(
-                    "config-key", nullNS, serverProfilePath));
+                    "config-key", nullNS, serverProfile));
         } else {
             throw new MediatorException("config-key not specified");
         }*/
@@ -85,7 +85,7 @@ public class BamMediator extends AbstractMediator {
             String msg = "The 'config-key' attribute is required";
             throw new MediatorException(msg);
         }
-        this.serverProfilePath = key.getAttributeValue();*/
+        this.serverProfile = key.getAttributeValue();*/
 
         OMElement profileElement = omElement.getFirstChildWithName(
                 new QName(SynapseConstants.SYNAPSE_NAMESPACE, "serverProfile"));
@@ -103,10 +103,10 @@ public class BamMediator extends AbstractMediator {
     }
 
     private void processProfile(OMElement profile){
-        OMAttribute pathAttr = profile.getAttribute(new QName("path"));
+        OMAttribute pathAttr = profile.getAttribute(new QName("name"));
         if(pathAttr != null){
             String pathValue = pathAttr.getAttributeValue();
-            this.setServerProfilePath(pathValue);
+            this.setServerProfile(pathValue);
         }
     }
 
@@ -123,7 +123,7 @@ public class BamMediator extends AbstractMediator {
 
     private OMElement serializeServerProfile(){
         OMElement profileElement = fac.createOMElement("serverProfile", synNS);
-        profileElement.addAttribute("path", this.serverProfilePath, nullNS);
+        profileElement.addAttribute("name", this.serverProfile, nullNS);
         return profileElement;
     }
 

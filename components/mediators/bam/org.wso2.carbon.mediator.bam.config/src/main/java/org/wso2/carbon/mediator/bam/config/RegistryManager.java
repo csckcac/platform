@@ -34,9 +34,6 @@ public class RegistryManager extends RegistryAbstractAdmin {
     }
 
     public void saveResourceString(String resourceString, String gadgetResourcePath) {
-
-        /*Registry registry = getConfigSystemRegistry();
-        Resource resource;*/
         try {
             resource = registry.newResource();
             resource.setContent(resourceString);
@@ -48,7 +45,6 @@ public class RegistryManager extends RegistryAbstractAdmin {
     }
     
     public boolean resourceAlreadyExists(String bamServerProfileLocation){
-        /*Registry registry = getConfigSystemRegistry();*/
         try {
             return registry.resourceExists(bamServerProfileLocation);
         } catch (RegistryException e) {
@@ -58,9 +54,6 @@ public class RegistryManager extends RegistryAbstractAdmin {
     }
 
     public String getResourceString(String bamServerProfileLocation){
-        /*Registry registry = getConfigSystemRegistry();
-        //Registry registry = getGovernanceSystemRegistry();
-        Resource resource;*/
         try {
             resource = registry.get(bamServerProfileLocation);
             return new String((byte[])resource.getContent());
@@ -68,6 +61,26 @@ public class RegistryManager extends RegistryAbstractAdmin {
             e.printStackTrace();  //To change body of catch statement use File | Settings | File Templates.
         }
         return null;
+    }
+    
+    public boolean addCollection(String bamServerProfileCollectionLocation){
+        try {
+            resource = registry.newCollection();
+            registry.put(bamServerProfileCollectionLocation, resource);
+            return true;
+        } catch (RegistryException e) {
+            e.printStackTrace();  //To change body of catch statement use File | Settings | File Templates.
+        }
+        return false;
+    }
+    
+    public String[] getServerProfileNameList(String bamServerProfileCollectionLocation){
+        try {
+            return ((String[])registry.get(bamServerProfileCollectionLocation).getContent());
+        } catch (RegistryException e) {
+            e.printStackTrace();  //To change body of catch statement use File | Settings | File Templates.
+        }
+        return new String[0];
     }
 
 }

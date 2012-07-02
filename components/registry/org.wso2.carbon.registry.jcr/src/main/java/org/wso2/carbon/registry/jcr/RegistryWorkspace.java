@@ -221,6 +221,9 @@ public class RegistryWorkspace implements Workspace {
     public void createWorkspace(String s) throws AccessDeniedException, UnsupportedRepositoryOperationException, RepositoryException {  //TODO
 
         //    Here we create a workspace bind to the same session that this particular workspace bound to.
+        if(RegistryJCRItemOperationUtil.isWorkspaceExists(registrySession,s)){
+         throw new RepositoryException("New workspace with the name already exists: "+s);
+        }
         Workspace workspace = new RegistryWorkspace(s);           //TODO should provide a new root
         registrySession.getRepository().getWorkspaceMap().put(s, workspace);
 
@@ -237,6 +240,9 @@ public class RegistryWorkspace implements Workspace {
     }
 
     public void deleteWorkspace(String s) throws AccessDeniedException, UnsupportedRepositoryOperationException, NoSuchWorkspaceException, RepositoryException { //TODO
+        if(!RegistryJCRItemOperationUtil.isWorkspaceExists(registrySession,s)){
+         throw new NoSuchWorkspaceException("Cannot remove non existing workspace: "+s);
+        }
         registrySession.getRepository().getWorkspaceMap().remove(s);  //TODO
     }
 

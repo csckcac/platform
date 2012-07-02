@@ -44,14 +44,14 @@ public class RegistryJCRItemOperationUtil {
         return path;
     }
 
-    public static String getAncestorPathAtGivenDepth(String path, int depth) throws ItemNotFoundException {
+    public static String getAncestorPathAtGivenDepth(RegistrySession registrySession,String path, int depth) throws ItemNotFoundException {
         String[] tmp = path.split("/");
-        if ((depth > tmp.length - 1) || depth < 0) {
+        if ((depth > tmp.length - 4) || depth < 0) {
             throw new ItemNotFoundException("No such Ancestor exists. 0 < depth < n violated");
         }
 
         if (depth == 0) {
-            return "/";   //TODO should use a given root whose path return from session.getRootNode();
+            return registrySession.getWorkspaceRootPath();
         } else {
             int index = nthOccurrence(path, '/', depth);
             return path.substring(0, index);
@@ -284,6 +284,20 @@ public class RegistryJCRItemOperationUtil {
         } catch (RegistryException e) {
             throw new RepositoryException("Cannot remove a node under retention hold" + path);
         }
+    }
+
+     public static boolean isWorkspaceExists(RegistrySession registrySession,String s){
+        Set sessions = registrySession.getRepository().getWorkspaces();
+        boolean matchFound = false;
+           for(Object ss:sessions) {
+               RegistrySession session = (RegistrySession)ss;
+                   if (session.getWorkspaceName() != null) {
+                       if (session.getWorkspaceName().equals(s)) {
+                           matchFound = true;
+                       }
+                   }
+          }
+     return matchFound;
     }
 
 }

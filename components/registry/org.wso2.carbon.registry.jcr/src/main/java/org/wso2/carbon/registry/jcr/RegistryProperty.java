@@ -477,7 +477,13 @@ public class RegistryProperty implements Property {
     }
 
     public int getType() throws RepositoryException {
-        return value.getType();
+        if(value != null) {
+            return value.getType();
+        } else if(values != null) {
+         return values[0].getType();
+        } else {
+          throw new RepositoryException("No such type for the property at " + path);
+        }
     }
 
     public boolean isMultiple() throws RepositoryException {
@@ -501,7 +507,7 @@ public class RegistryProperty implements Property {
 
     public Item getAncestor(int i) throws ItemNotFoundException, AccessDeniedException, RepositoryException {
         return session.getItem(RegistryJCRItemOperationUtil
-                .getAncestorPathAtGivenDepth(getPath(), i));
+                .getAncestorPathAtGivenDepth(session,getPath(), i));
     }
 
     public Node getParent() throws ItemNotFoundException, AccessDeniedException, RepositoryException {
@@ -522,7 +528,7 @@ public class RegistryProperty implements Property {
         if (getPath().equals("/")) {
             return 0;
         } else {
-            return getPath().split("/").length - 1;
+            return getPath().split("/").length - 4;
         }
 
     }

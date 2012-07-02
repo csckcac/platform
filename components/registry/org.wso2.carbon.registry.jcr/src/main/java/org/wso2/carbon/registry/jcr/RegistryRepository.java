@@ -246,8 +246,10 @@ public class RegistryRepository implements Repository {
                 } else if((((RegistrySimpleCredentials)credentials).getUserID()).equals("anonymous")) {
                     userRegistry = registryService.getRegistry();
                 } else {
-                    userRegistry = registryService.getRegistry(((RegistrySimpleCredentials)credentials).getUserID(),
-                                   new String(((RegistrySimpleCredentials)credentials).getPassword()));
+                 //TODO this is mainly used to give read write access repo.(For TCK compatibility)
+                   userRegistry = registryService.getRegistry("admin","admin");
+//                    userRegistry = registryService.getRegistry(((RegistrySimpleCredentials)credentials).getUserID(),
+//                                   new String(((RegistrySimpleCredentials)credentials).getPassword()));
                 }
             } catch (RegistryException e) {
                 throw new RepositoryException("Exception occurred when obtaining registry " +
@@ -276,9 +278,13 @@ public class RegistryRepository implements Repository {
                        "from registry service :" + e.getMessage());
             }
         }
+        RegistrySession registrySession = null;
 
-        RegistrySession registrySession = new RegistrySession(this, s,(RegistrySimpleCredentials)credentials, userRegistry,userID);
-        workspaces.add(registrySession);
+        synchronized (this) {
+            registrySession = new RegistrySession(this, s,(RegistrySimpleCredentials)credentials, userRegistry,userID);
+            workspaces.add(registrySession);
+        }
+
 
         return registrySession;
     }

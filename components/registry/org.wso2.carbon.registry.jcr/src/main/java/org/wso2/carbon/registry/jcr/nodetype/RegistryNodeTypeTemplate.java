@@ -31,11 +31,11 @@ public class RegistryNodeTypeTemplate implements NodeTypeTemplate {
 
     private String name = null;
     private String[] declSupTpNames = null;
+    private String primItmName = null;
     private boolean isAbstract = false;
     private boolean isMixin = false;
     private boolean isOrderbleChildN = false;
     private boolean isQble = false;
-    private String primItmName = null;
 
     private List<NodeDefinition> nodeDefList = new ArrayList<NodeDefinition>();
     private List<PropertyDefinition> propDefList = new ArrayList<PropertyDefinition>();
@@ -97,7 +97,7 @@ public class RegistryNodeTypeTemplate implements NodeTypeTemplate {
                 throw new ConstraintViolationException("Invalid JCR super type type name");
             }
         }
-        if (strings != null) {
+        if (strings != null) { //TODO unnecessary check
             declSupTpNames = Arrays.copyOf(strings, strings.length);
         }
     }

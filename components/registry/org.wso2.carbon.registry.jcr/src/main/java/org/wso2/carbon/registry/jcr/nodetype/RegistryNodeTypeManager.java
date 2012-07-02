@@ -184,10 +184,15 @@ public class RegistryNodeTypeManager implements NodeTypeManager {
         NodeType nt = null;
         boolean matchNTFound = false;
 
+//        TODO hack to support all nodes in greg other than jcr repo
+       if(s != null && s.equals("")) {
+         return  getNodeType("default");
+       }
+
         NodeTypeIterator it = getAllNodeTypes();
         while (it.hasNext()) {
             nt = (NodeType) it.next();
-            if ((nt != null) && (nt.getName().equals(s))) {
+            if ((nt != null) && (nt.getName() != null) && (nt.getName().equals(s))) {
                 matchNt = nt;
                 matchNTFound = true;
                 break;

@@ -123,7 +123,9 @@ public class RegistryNodeTypeUtil {
             //set primary attributes of node type
             nodetype.setProperty("name", nodeTypeTemplate.getName());
             nodetype.setProperty("primaryItemName", nodeTypeTemplate.getPrimaryItemName());
-            nodetype.setProperty("declaredSuperTypes", Arrays.asList(nodeTypeTemplate.getDeclaredSupertypeNames()));
+            if(nodeTypeTemplate.getDeclaredSupertypeNames() != null){
+                nodetype.setProperty("declaredSuperTypes", Arrays.asList(nodeTypeTemplate.getDeclaredSupertypeNames()));
+            }
             nodetype.setProperty("hasOrderableChildNodes", String.valueOf(nodeTypeTemplate.hasOrderableChildNodes()));
             nodetype.setProperty("isAbstract", String.valueOf(nodeTypeTemplate.isAbstract()));
             nodetype.setProperty("isMixin", String.valueOf(nodeTypeTemplate.isMixin()));
@@ -146,17 +148,23 @@ public class RegistryNodeTypeUtil {
                 pdNode.setProperty("multiple", String.valueOf(pd.isMultiple()));
                 pdNode.setProperty("isFullTextSearchable", String.valueOf(pd.isFullTextSearchable()));
                 pdNode.setProperty("isQueryOrderable", String.valueOf(pd.isQueryOrderable()));
-                pdNode.setProperty("availableQueryOperators", Arrays.asList(pd.getAvailableQueryOperators()));
+                if(pd.getAvailableQueryOperators() != null){
+                    pdNode.setProperty("availableQueryOperators", Arrays.asList(pd.getAvailableQueryOperators()));
+                }
                 pdNode.setProperty("requiredType", String.valueOf(pd.getRequiredType())); //type is integer
-                pdNode.setProperty("valueConstraints", Arrays.asList(pd.getValueConstraints())); //type is string[]
+                if(pd.getValueConstraints() != null) {
+                    pdNode.setProperty("valueConstraints", Arrays.asList(pd.getValueConstraints())); //type is string[]
+                }
                 pdNode.setProperty("onParentVersion", String.valueOf(pd.getOnParentVersion())); //type int
 
                 //Adding default values
-                List<String> defaultValList = new ArrayList<String>();
-                for (Value value : pd.getDefaultValues()) {
-                    defaultValList.add(value.getString());    // TODO supports only for String type Values
+                if(pd.getDefaultValues() != null) {
+                    List<String> defaultValList = new ArrayList<String>();
+                    for (Value value : pd.getDefaultValues()) {
+                        defaultValList.add(value.getString());    // TODO supports only for String type Values
+                    }
+                    pdNode.setProperty("defaultValues", defaultValList); // type is string []
                 }
-                pdNode.setProperty("defaultValues", defaultValList); // type is string []
 
                 registrySession.getUserRegistry().put(propDefPath, pdNode);
             }
@@ -176,7 +184,9 @@ public class RegistryNodeTypeUtil {
                 childNode.setProperty("onParentVersion", String.valueOf(nd.getOnParentVersion())); //type is int
                 childNode.setProperty("sameNameSiblings", String.valueOf(nd.allowsSameNameSiblings()));
                 childNode.setProperty("defaultPrimaryType", nd.getDefaultPrimaryTypeName());
-                childNode.setProperty("requiredPrimaryTypes", Arrays.asList(nd.getRequiredPrimaryTypeNames()));
+                if(nd.getRequiredPrimaryTypeNames() != null) {
+                    childNode.setProperty("requiredPrimaryTypes", Arrays.asList(nd.getRequiredPrimaryTypeNames()));
+                }
                 registrySession.getUserRegistry().put(childDefPath, childNode);
             }
 
@@ -200,11 +210,14 @@ public class RegistryNodeTypeUtil {
 
             for (String path : paths) {
                 CollectionImpl nodeType = (CollectionImpl) registrySession.getUserRegistry().get(path);
-                String nodeTypePat = RegistryJCRSpecificStandardLoderUtil.getSystemConfigNodeTypePath(registrySession) + "/" +
-                        nodeType.getProperty("name").replaceAll(":","-");
+//                String nodeTypePat = RegistryJCRSpecificStandardLoderUtil.getSystemConfigNodeTypePath(registrySession) + "/" +
+//                        nodeType.getProperty("name").replaceAll(":","-");
 
                 nodeTypeTemplate.setName(nodeType.getProperty("name"));
-                nodeTypeTemplate.setDeclaredSuperTypeNames(nodeType.getPropertyValues("declaredSuperTypes").toArray(new String[0]));
+
+                if(nodeType.getPropertyValues("declaredSuperTypes") != null) {
+                    nodeTypeTemplate.setDeclaredSuperTypeNames(nodeType.getPropertyValues("declaredSuperTypes").toArray(new String[0]));
+                }
                 nodeTypeTemplate.setMixin(Boolean.valueOf(nodeType.getProperty("isMixin")));
                 nodeTypeTemplate.setOrderableChildNodes(Boolean.valueOf(nodeType.getProperty("hasOrderableChildNodes")));
                 nodeTypeTemplate.setAbstract(Boolean.valueOf(nodeType.getProperty("isAbstract")));
@@ -227,9 +240,10 @@ public class RegistryNodeTypeUtil {
                     nodeDefinitionTemplate.setOnParentVersion(Integer.valueOf(childDef.getProperty("onParentVersion")));
                     nodeDefinitionTemplate.setSameNameSiblings(Boolean.valueOf(childDef.getProperty("sameNameSiblings")));
                     nodeDefinitionTemplate.setDefaultPrimaryTypeName(childDef.getProperty("defaultPrimaryType"));
-                    nodeDefinitionTemplate.setRequiredPrimaryTypeNames(childDef.
-                            getPropertyValues("requiredPrimaryTypes").toArray(new String[0]));
-
+                    if(childDef.getPropertyValues("requiredPrimaryTypes") != null) {
+                        nodeDefinitionTemplate.setRequiredPrimaryTypeNames(childDef.
+                                getPropertyValues("requiredPrimaryTypes").toArray(new String[0]));
+                    }
                     nodeTypeTemplate.getNodeDefinitionTemplates().add(nodeDefinitionTemplate);
                 }
                 }
@@ -249,23 +263,31 @@ public class RegistryNodeTypeUtil {
                     propertyDefinitionTemplate.setMultiple(Boolean.valueOf(propdDef.getProperty("multiple")));
                     propertyDefinitionTemplate.setFullTextSearchable(Boolean.valueOf(propdDef.getProperty("isFullTextSearchable")));
                     propertyDefinitionTemplate.setQueryOrderable(Boolean.valueOf(propdDef.getProperty("isQueryOrderable")));
-                    propertyDefinitionTemplate.setAvailableQueryOperators(propdDef.
-                            getPropertyValues("availableQueryOperators").toArray(new String[0]));
+
+                    if(propdDef.getPropertyValues("availableQueryOperators") != null) {
+                        propertyDefinitionTemplate.setAvailableQueryOperators(propdDef.
+                                getPropertyValues("availableQueryOperators").toArray(new String[0]));
+                    }
 
                     propertyDefinitionTemplate.setOnParentVersion(Integer.valueOf(propdDef.getProperty("onParentVersion")));
                     propertyDefinitionTemplate.setOnParentVersion(Integer.valueOf(propdDef.getProperty("requiredType")));
-                    propertyDefinitionTemplate.setValueConstraints(propdDef.
-                            getPropertyValues("valueConstraints").toArray(new String[0]));
-                    propertyDefinitionTemplate.setValueConstraints(propdDef.
-                            getPropertyValues("defaultValues").toArray(new String[0]));
 
+                    if(propdDef.getPropertyValues("valueConstraints") != null) {
+                        propertyDefinitionTemplate.setValueConstraints(propdDef.
+                                getPropertyValues("valueConstraints").toArray(new String[0]));
+                    }
+
+                    if(propdDef.getPropertyValues("defaultValues") != null) {
+                        propertyDefinitionTemplate.setValueConstraints(propdDef.
+                                getPropertyValues("defaultValues").toArray(new String[0]));
+                    }
                     nodeTypeTemplate.getPropertyDefinitionTemplates().add(propertyDefinitionTemplate);
                 }
                 }
 
                 // Creating the node type
                 NodeType nodeTypeBean = new RegistryNodeType(nodeTypeTemplate, registryNodeTypeManager);
-                if (nodeTypeTemplate.getName().startsWith("mix")) {
+                if (nodeTypeTemplate.getName() != null && nodeTypeTemplate.getName().startsWith("mix")) {
                     registryNodeTypeManager.getMixinNodetypes().add(nodeTypeBean);
                 } else {
                     registryNodeTypeManager.getPrimaryNodetypes().add(nodeTypeBean);

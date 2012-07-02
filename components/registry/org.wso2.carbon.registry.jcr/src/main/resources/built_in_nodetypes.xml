@@ -543,5 +543,19 @@
                             onParentVersion="ABORT" protected="true" multiple="false"/>
     </nodeType>
 
+    <!--Custom nodetypes-->
+
+    <nodeType name="default" isMixin="false" hasOrderableChildNodes="false" primaryItemName="">
+        <supertypes>
+            <supertype>nt:base</supertype>
+        </supertypes>
+    </nodeType>
+
+    <nodeType name="nt:orderable" isMixin="false" hasOrderableChildNodes="false" primaryItemName="">
+        <supertypes>
+            <supertype>nt:base</supertype>
+        </supertypes>
+    </nodeType>
+
 
 </nodeTypes>

@@ -19,6 +19,7 @@ package org.wso2.carbon.registry.jcr;
 import org.apache.commons.logging.Log;
 import org.apache.commons.logging.LogFactory;
 import org.wso2.carbon.registry.core.CollectionImpl;
+import org.wso2.carbon.registry.core.Registry;
 import org.wso2.carbon.registry.core.Resource;
 import org.wso2.carbon.registry.core.ResourceImpl;
 import org.wso2.carbon.registry.core.exceptions.RegistryException;
@@ -51,9 +52,11 @@ public class RegistryNode implements Node {
     public CollectionImpl resource = null;
     private RegistrySession registrySession;
     private Property property;
+    private boolean isModified = false;
 
     public RegistryNodeType nodeType = null;
     private static Log log = LogFactory.getLog(RegistryNode.class);
+    private boolean isRemoved = false;//TODO use this when a node is removed (not currently using )
 
     public RegistryNode(String s, RegistrySession registrySession) {
 
@@ -173,6 +176,8 @@ public class RegistryNode implements Node {
             log.debug(msg);
             throw new PathNotFoundException(msg, e);
         }
+
+        isModified = true;
         return subNode;
     }
 
@@ -260,21 +265,23 @@ public class RegistryNode implements Node {
         ntName = s1;
         CollectionImpl subCollection = null;
 
+        if(ntName.startsWith("mix")) {
+         throw new ConstraintViolationException("Cannot add mixin type nodes, instead do addmixin for " + s1);
+        }
+
         try {
             subCollection = (CollectionImpl) registrySession.getUserRegistry().newCollection();
             subCollection.setDescription(ntName);   // sets the node type
             subCollection.setProperty("jcr:uuid", absPath);  //Here we use node's path as its identifier
-//            subCollection.setProperty("wso2.registry.jcr.versions", versionList);
 
-            if (ntName.equals("mix:simpleVersionable") || ntName.equals("mix:versionable")) {
-                subCollection.setProperty("jcr:checkedOut", "true");
-                subCollection.setProperty("jcr:isCheckedOut", "true");
-                subCollection.setProperty("jcr:frozenPrimaryType",ntName);
-            }
-
-            if (ntName.startsWith("mix")) {
-                addMixin(s1);
-            }
+//            if (ntName.equals("mix:simpleVersionable") || ntName.equals("mix:versionable")) {
+//                subCollection.setProperty("jcr:checkedOut", "true");
+//                subCollection.setProperty("jcr:isCheckedOut", "true");
+//                subCollection.setProperty("jcr:frozenPrimaryType",ntName);
+//            }
+//            if (ntName.startsWith("mix")) {
+//                addMixin(s1);
+//            }
 
             registrySession.getUserRegistry().put(absPath, subCollection);
             subNode.setCollection(absPath);
@@ -288,11 +295,7 @@ public class RegistryNode implements Node {
         }
         subNode.setPrimaryType(s1);
         subNode.nodeType = (RegistryNodeType) (registrySession.getWorkspace().getNodeTypeManager().getNodeType(s1));
-
-//        if (subNode.nodeType != null) {
-//            subNode.nodeType.setNode(subNode);
-//        }
-
+        isModified = true;
         return subNode;
     }
 
@@ -330,7 +333,8 @@ public class RegistryNode implements Node {
                     throw new RepositoryException(msg, e);
                 }
             }
-//            property.setValue(value);
+            isModified = true;
+//            TODO call setproperty based on value.getType and support all value types;
             return property;
 
         } else if (value == null) {
@@ -339,7 +343,7 @@ public class RegistryNode implements Node {
                 Resource resource = registrySession.getUserRegistry().get(nodePath);
                 resource.removeProperty(s);
                 registrySession.getUserRegistry().put(nodePath, resource);
-
+                isModified = true;
             } catch (RegistryException e) {
                 String msg = "failed to resolve the path of the given node or violation of repository syntax " + this;
                 log.debug(msg);
@@ -358,7 +362,8 @@ public class RegistryNode implements Node {
 
         validatePropertyModifyPrivilege(s);
 
-         //TODO consider TYPE "i" when set the value
+        isModified = true;
+        //TODO consider TYPE "i" when set the value
         return setProperty(s, value);
     }
 
@@ -391,6 +396,7 @@ public class RegistryNode implements Node {
                 log.debug(msg);
                 throw new RepositoryException(msg, e);
             }
+            isModified = true;
             return property;
 
         } else {
@@ -404,6 +410,7 @@ public class RegistryNode implements Node {
         RegistryJCRItemOperationUtil.checkRetentionHold(registrySession, getPath());
 
         validatePropertyModifyPrivilege(s);
+        isModified = true;
         return setProperty(s, values);
     }
 
@@ -411,7 +418,8 @@ public class RegistryNode implements Node {
         RegistryJCRItemOperationUtil.checkRetentionPolicy(registrySession,getPath());
         RegistryJCRItemOperationUtil.checkRetentionHold(registrySession, getPath());
 
-      return RegistryJCRItemOperationUtil.persistStringPropertyValues(
+        isModified = true;
+        return RegistryJCRItemOperationUtil.persistStringPropertyValues(
                    registrySession,nodePath,s,strings);
     }
 
@@ -425,6 +433,7 @@ public class RegistryNode implements Node {
         if (hasProperty(s) && (!getProperty(s).isMultiple())) {
             throw new ValueFormatException("Cannot overrride the initial value format " + s);
         } else {
+            isModified = true;
             return setPropertyToNode(s, strings);
         }
 
@@ -436,6 +445,7 @@ public class RegistryNode implements Node {
 
         validatePropertyModifyPrivilege(s);
 
+        isModified = true;
         return setProperty(s, strings);
     }
 
@@ -475,6 +485,7 @@ public class RegistryNode implements Node {
         }
 
         property = new RegistryProperty(resource.getPath(), registrySession, s,s1);
+        isModified = true;
         return property;
     }
 
@@ -483,6 +494,7 @@ public class RegistryNode implements Node {
         RegistryJCRItemOperationUtil.checkRetentionHold(registrySession, getPath());
 
         validatePropertyModifyPrivilege(s);
+        isModified = true;
         return setProperty(s, s1);
     }
 
@@ -508,7 +520,7 @@ public class RegistryNode implements Node {
             throw new RepositoryException(msg, e);
         }
 
-//        property.setValue(inputStream);
+        isModified = true;
         return property;
     }
 
@@ -516,12 +528,13 @@ public class RegistryNode implements Node {
         RegistryJCRItemOperationUtil.checkRetentionPolicy(registrySession,getPath());
         RegistryJCRItemOperationUtil.checkRetentionHold(registrySession, getPath());
 
-       //TODO finish Impl of set binary type
+        //TODO finish Impl of set binary type
         registrySession.sessionPending();
         validatePropertyModifyPrivilege(s);
 
         //still we can return a property.But we actually have only string to set
         property = new RegistryProperty(this.resource.getPath(), registrySession, s,binary);
+        isModified = true;
         return property;
     }
 
@@ -546,7 +559,7 @@ public class RegistryNode implements Node {
             throw new RepositoryException(msg, e);
         }
 
-
+        isModified = true;
 //        property.setValue(b);
         return property;
     }
@@ -571,6 +584,7 @@ public class RegistryNode implements Node {
             log.debug(msg);
             throw new RepositoryException(msg, e);
         }
+        isModified = true;
 //        property.setValue(v);
         return property;
     }
@@ -597,11 +611,13 @@ public class RegistryNode implements Node {
                 log.debug(msg);
                 throw new RepositoryException(msg, e);
             }
-
+            isModified = true;
             return property;
 
-        } else
+        } else {
+            isModified = true;
             return null;
+        }
     }
 
     private void validatePropertyModifyPrivilege(String name) throws RepositoryException {
@@ -632,7 +648,7 @@ public class RegistryNode implements Node {
             log.debug(msg);
             throw new RepositoryException(msg, e);
         }
-//        property.setValue(l);
+        isModified = true;
         return property;
     }
 
@@ -642,28 +658,30 @@ public class RegistryNode implements Node {
 
         registrySession.sessionPending();
         validatePropertyModifyPrivilege(s);
-
+         String _propertyPath = nodePath + "/" + s;
+        try {
         if (calendar != null) {
-
             Resource res = null;
             Property _property;
-            try {
                 res = registrySession.getUserRegistry().newResource();
                 res.setContent(String.valueOf(calendar.getTimeInMillis()));
                 res.setProperty("registry.jcr.property.type", "calendar");
-                registrySession.getUserRegistry().put(nodePath + "/" + s, res);
-                _property = new RegistryProperty(nodePath + "/" + s, registrySession, s,calendar);
-
-            } catch (RegistryException e) {
-                String msg = "failed to resolve the path of the given node or violation of repository syntax " + this;
-                log.debug(msg);
-                throw new RepositoryException(msg, e);
-            }
+                registrySession.getUserRegistry().put(_propertyPath, res);
+                _property = new RegistryProperty(_propertyPath, registrySession, s,calendar);
+            isModified = true;
             return _property;
 
         } else {
+            isModified = true;
+            registrySession.getUserRegistry().delete(_propertyPath);
             return null;
         }
+        } catch (RegistryException e) {
+            String msg = "failed to resolve the path of the given node or violation of repository syntax " + this;
+            log.debug(msg);
+            throw new RepositoryException(msg, e);
+        }
+
     }
 
     public Property setProperty(String s, Node node) throws ValueFormatException, VersionException, LockException, ConstraintViolationException, RepositoryException {
@@ -677,6 +695,7 @@ public class RegistryNode implements Node {
         if (node != null) {
             property = new RegistryProperty(this.resource.getPath(), registrySession, s,node);
         }
+        isModified = true;
         return property;
 
     }
@@ -808,10 +827,10 @@ public class RegistryNode implements Node {
 
                 propList = registrySession.getUserRegistry().get(tempPath).getPropertyValues(propName); // remove added isMultiple value for the property
 
-                if ((propList != null) && (propList.size() == 1)) {
+                if ((propList != null) && (propList.size() == 1) && !isSystemMultiValuedProperty(propName)) {
 
                     prop = propList.get(0);
-            regProp = new RegistryProperty(collecImpl.getPath(), registrySession, propQName,prop);
+                    regProp = new RegistryProperty(collecImpl.getPath(), registrySession, propQName,prop);
 //                    regProp.setValue(prop);
 
                 } else if (propList != null) {
@@ -878,6 +897,16 @@ public class RegistryNode implements Node {
             throw new RepositoryException(msg, e);
         }
         return regProp;
+    }
+
+    private boolean isSystemMultiValuedProperty(String name){
+        //TODO add system specific multivalued values in future
+        if(name.equals("jcr:mixinTypes")) {
+          return true;
+        } else {
+          return false;
+        }
+
     }
 
 
@@ -1043,7 +1072,8 @@ public class RegistryNode implements Node {
             }
         } catch (RegistryException e) {
             String msg = "failed to resolve the path of the given node or violation of repository syntax " + this;
-            log.debug(msg);
+            log.error(msg,e);
+            e.printStackTrace();
             throw new RepositoryException(msg, e);
         }
         return hasNode;
@@ -1179,6 +1209,12 @@ public class RegistryNode implements Node {
 
     public void setPrimaryType(String s) throws NoSuchNodeTypeException, VersionException, ConstraintViolationException, LockException, RepositoryException {
 
+        // Check if node type already exists
+        registrySession.getWorkspace().getNodeTypeManager().getNodeType(s);
+
+        if(s!= null && s.startsWith("mix")) {
+         throw  new ConstraintViolationException("Cannpot set mixin as primary types");
+        }
         try {
 
             Resource resource = registrySession.getUserRegistry().get(nodePath);
@@ -1231,8 +1267,7 @@ public class RegistryNode implements Node {
             log.debug(msg);
             throw new RepositoryException(msg, e);
         }
-
-
+        isModified = true;
     }
 
     private void validateNTPropertyDefs(String  nPath,String nodeType) throws RepositoryException {
@@ -1259,8 +1294,7 @@ public class RegistryNode implements Node {
             log.debug(msg);
             throw new RepositoryException(msg, e);
         }
-
-
+       isModified = true;
     }
 
     public boolean canAddMixin(String s) throws NoSuchNodeTypeException, RepositoryException {
@@ -1296,12 +1330,10 @@ public class RegistryNode implements Node {
     }
 
     public void update(String s) throws NoSuchWorkspaceException, AccessDeniedException, LockException, InvalidItemStateException, RepositoryException {
-//         if(!registrySession.getRepository().getWorkspaceMap().containsKey(s)) {
-//            throw new NoSuchWorkspaceException ("Invalid workspace to update");
-//         }
-
+         if(!RegistryJCRItemOperationUtil.isWorkspaceExists(registrySession,s)) {
+                 throw new NoSuchWorkspaceException("No such workspace named "+s);
+         }
         //Else  TODO: DO UPDATE
-
     }
 
     public NodeIterator merge(String s, boolean b) throws NoSuchWorkspaceException, AccessDeniedException, MergeException, LockException, InvalidItemStateException, RepositoryException {
@@ -1312,33 +1344,29 @@ public class RegistryNode implements Node {
     public String getCorrespondingNodePath(String s) throws ItemNotFoundException, NoSuchWorkspaceException, AccessDeniedException, RepositoryException {
 
         String npath = null;
-        Set a = registrySession.getRepository().getWorkspaces();
+        Set sessions = registrySession.getRepository().getWorkspaces();
 
+        RegistrySession session;
+        boolean matchFound = false;
         try {
 
-            RegistrySession sess;
-
-            for (Object aa : a) {
-
-                sess = (RegistrySession) aa;
-
-                if (sess.getWorkspaceName() != null) {
-                    if (sess.getWorkspaceName().equals(s)) {
-
-                        npath = sess.getUserRegistry().get(nodePath).getPath();
+            for (Object _s : sessions) {
+                session = (RegistrySession)_s;
+                if (session.getWorkspaceName() != null) {
+                    if (session.getWorkspaceName().equals(s)) {
+                        npath = session.getUserRegistry().get(nodePath).getPath();
+                        matchFound = true;
                     }
-                } else {
-
-                    throw new NoSuchWorkspaceException();
                 }
-
+            }
+            if(!matchFound) {
+                throw new NoSuchWorkspaceException("There is no such workspace named " + s);
             }
 
         } catch (RegistryException e) {
-            e.printStackTrace();
+            throw new RepositoryException("Registry level exception " +
+                    "occurred while get corresponding Node Path for "+s);
         }
-
-
         return npath;
     }
 
@@ -1474,7 +1502,7 @@ public class RegistryNode implements Node {
 
     public Item getAncestor(int i) throws ItemNotFoundException, AccessDeniedException, RepositoryException {
         return registrySession.getItem(RegistryJCRItemOperationUtil
-                .getAncestorPathAtGivenDepth(getPath(), i));
+                .getAncestorPathAtGivenDepth(registrySession,getPath(), i));
     }
 
     public Node getParent() throws ItemNotFoundException, AccessDeniedException, RepositoryException {
@@ -1502,20 +1530,15 @@ public class RegistryNode implements Node {
     }
 
     private boolean isNodeRoot() throws RegistryException{
-        try {
-            String parentPath = registrySession.getUserRegistry().get(nodePath).getParentPath();
-            if(!parentPath.endsWith("/")) {
-               parentPath=parentPath+"/";
+            String tmp =  nodePath;
+            if(!tmp.endsWith("/")) {
+               tmp=tmp+"/";
             }
-            if(parentPath.equals(registrySession.getWorkspaceRootPath())){
-              return true;
-            }else {
-              return false;
-            }
-        } catch (RegistryException e) {
-          throw new RegistryException(""+ e.getMessage());
+        if(tmp.equals(registrySession.getWorkspaceRootPath())) {
+          return true;
+        } else {
+           return false;
         }
-
     }
 
 
@@ -1550,19 +1573,17 @@ public class RegistryNode implements Node {
     }
 
     public boolean isModified() {
-        return resource.isContentModified();
+        return isModified;
     }
 
     public boolean isSame(Item item) throws RepositoryException {
-
+     return nodePath.equals(item.getPath());
         /*
         The ability to address the same piece of data via more than one path is a
         common feature of many content storage systems. In JCR this feature is
         supported through shareable nodes.
         */
-      return false; //TODO
 //        return this.item.isSame(item);
-
     }
 
     public void accept(ItemVisitor itemVisitor) throws RepositoryException {
@@ -1572,7 +1593,7 @@ public class RegistryNode implements Node {
     public void save() throws AccessDeniedException, ItemExistsException, ConstraintViolationException, InvalidItemStateException, ReferentialIntegrityException, VersionException, LockException, NoSuchNodeTypeException, RepositoryException {
         try {
             if (!(registrySession.getUserRegistry().resourceExists(nodePath))) {
-                throw new InvalidItemStateException();
+                throw new InvalidItemStateException("Unable to save the node at" + nodePath);
             }
         } catch (RegistryException e) {
             e.printStackTrace();  //To change body of catch statement use File | Settings | File Templates.
@@ -1609,7 +1630,7 @@ public class RegistryNode implements Node {
         } catch (RegistryException e) {
             log.error("Error occured while removing the node at" + nodePath);
         }
-
+        isRemoved = true;
     }
 
     private boolean isImplicitProperty(String s) {

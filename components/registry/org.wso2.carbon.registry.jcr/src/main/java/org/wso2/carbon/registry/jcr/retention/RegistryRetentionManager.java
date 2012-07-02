@@ -45,12 +45,12 @@ public class RegistryRetentionManager implements RetentionManager {
     private Map<String, RetentionPolicy> pendingRetentionPolicies = new HashMap<String, RetentionPolicy>();
     private List<String> pendingPolicyRemoveList = new ArrayList<String>();
 
+    private RegistrySession session;
+
+
     public List<String> getPendingPolicyRemoveList() {
         return pendingPolicyRemoveList;
     }
-
-
-    private RegistrySession session;
 
     public RegistryRetentionManager(RegistrySession session) {
         this.session = session;

@@ -54,9 +54,11 @@ public class RegistryNamespace implements NamespaceRegistry {
         if ((s == null) || ((s.equals("jcr")) || (s.equals("nt")) || (s.equals("xml")) || (s.equals("mix")) || (s.equals("sv")))) {
 
             throw new NamespaceException();
-        } else if ((uri_nameSpace != null) && (prefix_nameSpace != null)) {
+        } else if (uri_nameSpace.containsKey(s)) {
             uri_nameSpace.remove(s);
             prefix_nameSpace.remove(s);
+        } else if(!uri_nameSpace.containsKey(s)) {
+          throw  new NamespaceException("Cannot remove unregistered ");
         }
 
     }

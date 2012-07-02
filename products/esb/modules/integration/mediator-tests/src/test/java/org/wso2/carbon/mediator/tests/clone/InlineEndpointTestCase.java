@@ -18,6 +18,8 @@ package org.wso2.carbon.mediator.tests.clone;/*
 
 import org.apache.axiom.om.OMElement;
 import org.testng.annotations.Test;
+import org.wso2.carbon.logging.view.stub.LogViewerStub;
+import org.wso2.carbon.logging.view.stub.types.carbon.LogMessage;
 import org.wso2.esb.integration.ESBIntegrationTestCase;
 import org.wso2.esb.integration.axis2.SampleAxis2Server;
 import org.wso2.esb.integration.axis2.StockQuoteClient;
@@ -26,7 +28,7 @@ import java.rmi.RemoteException;
 
 import static org.testng.Assert.assertTrue;
 
-public class Soap_action_with_TO_Address extends ESBIntegrationTestCase {
+public class InlineEndpointTestCase extends ESBIntegrationTestCase {
 
     private StockQuoteClient axis2Client;
 
@@ -36,12 +38,28 @@ public class Soap_action_with_TO_Address extends ESBIntegrationTestCase {
     }
 
     @Test(groups = {"wso2.esb"})
-    public void testCloneProperty() throws RemoteException {
-        String filePath = "/mediators/clone/soap_action_with_to_address.xml";
+    // https://wso2.org/jira/browse/ESBJAVA-1046
+    public void testInlineEndpoint() throws RemoteException {
+        boolean isInlineMsgFound = false;
+        String filePath = "/mediators/clone/Inline_endpoint.xml";
         loadESBConfigurationFromClasspath(filePath);
+
+        LogViewerStub logViewerStub = new LogViewerStub(getAdminServiceURL("LogViewer"));
+        authenticate(logViewerStub);
+
         OMElement response = axis2Client.sendSimpleStockQuoteRequest(
-                null, getMainSequenceURL(), "MSFT");
-        assertTrue(response.toString().contains("MSFT"));
+                null, getMainSequenceURL(), "IBM");
+        assertTrue(response.toString().contains("IBM"));
+
+        LogMessage[] logs = logViewerStub.getLogs("INFO", "LogMediator");
+        assertTrue(logs != null && logs.length > 0 && logs[0] != null);
+
+        for (LogMessage l : logs) {
+            if (l.getLogMessage().contains("CLONE1-TARGET2")) {
+                isInlineMsgFound = true;
+            }
+        }
+        assertTrue(isInlineMsgFound, "Inline Endpoint test case failed");
     }
 
     @Override
@@ -50,4 +68,3 @@ public class Soap_action_with_TO_Address extends ESBIntegrationTestCase {
         axis2Client.destroy();
     }
 }
-

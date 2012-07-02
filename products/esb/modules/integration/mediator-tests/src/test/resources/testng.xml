@@ -61,7 +61,8 @@
         <classes>
             <class name="org.wso2.carbon.mediator.tests.clone.CloneMediatorTestCase"/>
             <class name="org.wso2.carbon.mediator.tests.clone.ValidSoapActionTestCase"/>
-            <class name="org.wso2.carbon.mediator.tests.clone.Soap_action_with_TO_Address"/>
+            <class name="org.wso2.carbon.mediator.tests.clone.ToAddressTestCase"/>
+            <class name="org.wso2.carbon.mediator.tests.clone.InlineEndpointTestCase"/>
         </classes>
     </test>
 </suite>

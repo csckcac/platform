@@ -26,7 +26,7 @@ import java.rmi.RemoteException;
 
 import static org.testng.Assert.assertTrue;
 
-public class ValidSoapActionTestCase extends ESBIntegrationTestCase {
+public class ToAddressTestCase extends ESBIntegrationTestCase {
 
     private StockQuoteClient axis2Client;
 
@@ -36,8 +36,8 @@ public class ValidSoapActionTestCase extends ESBIntegrationTestCase {
     }
 
     @Test(groups = {"wso2.esb"})
-    public void testValidSoapAction() throws RemoteException {
-        String filePath = "/mediators/clone/valid_soap_action.xml";
+    public void testToAddressProperty() throws RemoteException {
+        String filePath = "/mediators/clone/soap_action_with_to_address.xml";
         loadESBConfigurationFromClasspath(filePath);
         OMElement response = axis2Client.sendSimpleStockQuoteRequest(
                 null, getMainSequenceURL(), "MSFT");
@@ -50,3 +50,4 @@ public class ValidSoapActionTestCase extends ESBIntegrationTestCase {
         axis2Client.destroy();
     }
 }
+

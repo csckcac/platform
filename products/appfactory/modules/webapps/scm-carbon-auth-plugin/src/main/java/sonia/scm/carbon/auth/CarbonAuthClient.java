@@ -20,6 +20,7 @@ package sonia.scm.carbon.auth;
 
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
+import org.wso2.carbon.context.CarbonContext;
 import sonia.scm.user.User;
 import sonia.scm.web.security.AuthenticationResult;
 
@@ -76,8 +77,9 @@ public class CarbonAuthClient {
         String cookie;
         boolean loggedIn = false;
         try {
-            cookie = authStub.login(username, password, remoteAddress);
-            loggedIn = (cookie != null);
+//            cookie = authStub.login(username, password, remoteAddress);
+//            loggedIn = (cookie != null);
+            loggedIn = CarbonContext.getCurrentContext().getUserRealm().getUserStoreManager().authenticate(username,password);
         } catch (Exception e) {
             e.printStackTrace();
         }

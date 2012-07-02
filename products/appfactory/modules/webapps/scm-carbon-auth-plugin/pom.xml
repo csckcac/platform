@@ -36,25 +36,25 @@
 
   <dependencies>
 
-  <dependency>
-      <groupId>javax.servlet</groupId>
-      <artifactId>servlet-api</artifactId>
-      <version>${servlet-api.version}</version>
-      <scope>provided</scope>
-    </dependency>
-
-    <dependency>
-      <groupId>sonia.scm</groupId>
-      <artifactId>scm-core</artifactId>
-      <version>1.14</version>
-        <scope>provided</scope>
-    </dependency>
-
-
-
-
-
+      <dependency>
+          <groupId>javax.servlet</groupId>
+          <artifactId>servlet-api</artifactId>
+          <version>${servlet-api.version}</version>
+          <scope>provided</scope>
+      </dependency>
+      <dependency>
+          <groupId>sonia.scm</groupId>
+          <artifactId>scm-core</artifactId>
+          <version>1.14</version>
+          <scope>provided</scope>
+      </dependency>
+      <dependency>
+          <groupId>org.wso2.carbon</groupId>
+          <artifactId>org.wso2.carbon.core</artifactId>
+          <version>${wso2carbon.version}</version>
+      </dependency>
   </dependencies>
+
     <repositories>
         <repository>
             <id>wso2-nexus</id>
@@ -66,7 +66,6 @@
                 <checksumPolicy>ignore</checksumPolicy>
             </releases>
         </repository>
-
     </repositories>
-  
+
 </project>

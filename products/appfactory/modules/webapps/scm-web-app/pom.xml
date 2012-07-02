@@ -28,7 +28,7 @@
     </parent>
     <modelVersion>4.0.0</modelVersion>
     <artifactId>scm-web-app</artifactId>
-    <packaging>war</packaging>
+    <packaging>pom</packaging>
     <name>SCM Web App</name>
 
     <dependencies>
@@ -96,11 +96,19 @@
                                 <exclude name="**/WEB-INF/lib/slf4j-api-1.6.1.jar"/>
                             </fileset>
                         </copy>
+                        <copy todir="temp/scm-webapp-refactored-${sonia.scm.version}/WEB-INF/lib"
+                              overwrite="true"
+                              includeemptydirs="false">
+                            <fileset
+                                    dir="../scm-carbon-auth-plugin/target/">
+                                <include name="scm-carbon-auth-plugin-1.13-SNAPSHOT.jar"/>
+                            </fileset>
+                        </copy>
                         <mkdir dir="target"/>
                         <war destfile="target/scm-webapp-${sonia.scm.version}.war"
                              webxml="temp/scm-webapp-refactored-${sonia.scm.version}/WEB-INF/web.xml"
                              basedir="temp/scm-webapp-refactored-${sonia.scm.version}"/>
-                        <delete dir="temp"/>
+                       <!-- <delete dir="temp"/>-->
                     </tasks>
                 </configuration>
             </execution>

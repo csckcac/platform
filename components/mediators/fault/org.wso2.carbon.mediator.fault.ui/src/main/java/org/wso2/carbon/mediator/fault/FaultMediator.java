@@ -17,6 +17,7 @@
 */
 package org.wso2.carbon.mediator.fault;
 
+import org.apache.axiom.soap.SOAP11Constants;
 import org.wso2.carbon.mediator.service.ui.AbstractMediator;
 import org.wso2.carbon.mediator.service.MediatorException;
 import org.apache.axiom.om.*;
@@ -321,6 +322,10 @@ public class FaultMediator extends AbstractMediator {
             } else {
                 throw new MediatorException("Invalid SOAP version");
             }
+        }else {
+            //although not complete ,we will try to implicitly derive a SOAP version
+            //we will check for available namesapaces and derive from that
+            extractImplicitSoapVersionFrom(elem);
         }
 
         OMAttribute response = elem.getAttribute(ATT_RESPONSE_Q);
@@ -437,5 +442,32 @@ public class FaultMediator extends AbstractMediator {
                 }
             }
         }        
+    }
+
+    public void extractImplicitSoapVersionFrom(OMElement elem) {
+        boolean searchChildren = true;
+        Iterator allNamespaces = elem.getAllDeclaredNamespaces();
+        while (allNamespaces.hasNext()) {
+            OMNamespace ns = (OMNamespace) allNamespaces.next();
+            if (ns.getNamespaceURI().equals(SOAP12Constants.SOAP_ENVELOPE_NAMESPACE_URI)) {
+                searchChildren = false;
+                soapVersion = SOAP12;
+                break;
+            } else if (ns.getNamespaceURI().equals(SOAP11Constants.SOAP_ENVELOPE_NAMESPACE_URI)) {
+                searchChildren = false;
+                soapVersion = SOAP11;
+                break;
+            }
+
+        }
+
+        if(searchChildren){
+            Iterator children = elem.getChildElements();
+            while (children.hasNext()) {
+                OMElement child = (OMElement) children.next();
+                extractImplicitSoapVersionFrom(child);
+            }
+
+        }
     }
 }

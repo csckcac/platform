@@ -7,6 +7,12 @@ var removeAPI = function(name, version, provider) {
 
             jagg.post("/site/blocks/item-add/ajax/remove.jag", { action:"removeAPI",name:name, version:version,provider:provider },
               function (result) {
+                  debugger;
+                  if (result.message == "timeout") {
+                      jagg.showLogin();
+                  } else {
+                      jagg.message({content:result.message,type:"error"});
+                  }
                   if (!result.error) {
                       window.location.reload();
                   }

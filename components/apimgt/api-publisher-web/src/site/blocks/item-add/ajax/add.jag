@@ -6,99 +6,109 @@ include("/jagg/jagg.jag");
             action = request.getParameter("action"),
             site = require("/site/conf/site.json"),
             msg = require("/site/conf/ui-messages.jag");
-    if (action === "addAPI" ||action === "updateAPI") {
-        mod = jagg.module("api");
-        var apiData = {};
-        apiData.request = request;
-        apiData.apiName = request.getParameter("name");
-        apiData.version = request.getParameter("version");
-        apiData.description = request.getParameter("description");
-        apiData.endpoint = request.getParameter("endpoint");
-        apiData.sandbox = request.getParameter("sandbox");
-        apiData.wsdl = request.getParameter("wsdl");
-        apiData.wadl = request.getParameter("wadl");
-        apiData.tags = request.getParameter("tags");
-        apiData.tier = request.getParameter("tiersCollection");
-        apiData.imageUrl = request.getFile("apiThumb");
-        apiData.context = request.getParameter("context");
-        apiData.bizOwner = request.getParameter("bizOwner");
-        apiData.bizOwnerEmail = request.getParameter("bizOwnerMail");
-        apiData.techOwner = request.getParameter("techOwner");
-        apiData.techOwnerEmail = request.getParameter("techOwnerMail");
-        var resCount = new Array();
-        if (request.getParameter("resourceCount") != null) {
-            resCount = request.getParameter("resourceCount").split(',');
-        }
-        var uriTemplateArr = new Array();
-        var uriMethodArr = new Array();
 
-        for (var i = 0; i < resCount.length; i++) {
-        uriTemplateArr.push(request.getParameter("uriTemplate-" + resCount[i]));
-        uriMethodArr.push(request.getParameter("resourceMethod-" + resCount[i]))
-        }
-        apiData.uriTemplateArr = uriTemplateArr;
-
-        apiData.uriMethodArr = uriMethodArr;
-        if(action === "addAPI"){
-        apiData.provider= jagg.getUser().username;
-        result = mod.addAPI(apiData);
-        }else{
-        apiData.provider= request.getParameter("provider");
-        result = mod.updateAPI(apiData);
-        }
-        if (result.error==true) {
-            obj = {
-                error:true,
-                message:result.message
-            };
-        } else {
-            obj = {
-                error:false
-            }
-        }
-        print(obj);
-    } else if (action === "isContextExist") {
-        mod = jagg.module("api");
-        var context = request.getParameter("context");
-        var oldContext = request.getParameter("oldContext");
-        result = mod.isContextExist(context,oldContext);
-        if (result.error) {
-            obj = {
-                error:true,
-                message:msg.error.backendError(action)
-            };
-        } else {
-            obj = {
-                error:false,
-                exist:result.exist
-            }
-        }
-
-        print(obj);
-
-    } else if (action === "getTiers") {
-        mod = jagg.module("api");
-        result = mod.getTiers();
-        if (result.error) {
-            obj = {
-                error:true,
-                message:msg.error.backendError(action)
-            };
-        } else {
-            obj = {
-                error:false,
-                tiers:result.tiers
-            }
-        }
-
-        print(obj);
-
-    }
-    else {
+    if(jagg.getUser() == null){
         print({
-                  error:true,
-                  message:msg.error.invalidAction(action)
-              });
+            error:true,
+            message:'timeout'
+        });
+    }else{
+        if (action === "addAPI" ||action === "updateAPI") {
+            mod = jagg.module("api");
+            var apiData = {};
+
+            apiData.request = request;
+            apiData.apiName = request.getParameter("name");
+            apiData.version = request.getParameter("version");
+            apiData.description = request.getParameter("description");
+            apiData.endpoint = request.getParameter("endpoint");
+            apiData.sandbox = request.getParameter("sandbox");
+            apiData.wsdl = request.getParameter("wsdl");
+            apiData.wadl = request.getParameter("wadl");
+            apiData.tags = request.getParameter("tags");
+            apiData.tier = request.getParameter("tiersCollection");
+            apiData.imageUrl = request.getFile("apiThumb");
+            apiData.context = request.getParameter("context");
+            apiData.bizOwner = request.getParameter("bizOwner");
+            apiData.bizOwnerEmail = request.getParameter("bizOwnerMail");
+            apiData.techOwner = request.getParameter("techOwner");
+            apiData.techOwnerEmail = request.getParameter("techOwnerMail");
+            var resCount = new Array();
+            if (request.getParameter("resourceCount") != null) {
+                resCount = request.getParameter("resourceCount").split(',');
+            }
+            var uriTemplateArr = new Array();
+            var uriMethodArr = new Array();
+
+            for (var i = 0; i < resCount.length; i++) {
+            uriTemplateArr.push(request.getParameter("uriTemplate-" + resCount[i]));
+            uriMethodArr.push(request.getParameter("resourceMethod-" + resCount[i]))
+            }
+            apiData.uriTemplateArr = uriTemplateArr;
+
+            apiData.uriMethodArr = uriMethodArr;
+            if(action === "addAPI"){
+            apiData.provider= jagg.getUser().username;
+            result = mod.addAPI(apiData);
+            }else{
+            apiData.provider= request.getParameter("provider");
+            result = mod.updateAPI(apiData);
+            }
+            if (result.error==true) {
+                obj = {
+                    error:true,
+                    message:result.message
+                };
+            } else {
+                obj = {
+                    error:false
+                }
+            }
+            print(obj);
+
+        } else if (action === "isContextExist") {
+            mod = jagg.module("api");
+            var context = request.getParameter("context");
+            var oldContext = request.getParameter("oldContext");
+            result = mod.isContextExist(context,oldContext);
+            if (result.error) {
+                obj = {
+                    error:true,
+                    message:msg.error.backendError(action)
+                };
+            } else {
+                obj = {
+                    error:false,
+                    exist:result.exist
+                }
+            }
+
+            print(obj);
+
+        } else if (action === "getTiers") {
+            mod = jagg.module("api");
+            result = mod.getTiers();
+            if (result.error) {
+                obj = {
+                    error:true,
+                    message:msg.error.backendError(action)
+                };
+            } else {
+                obj = {
+                    error:false,
+                    tiers:result.tiers
+                }
+            }
+
+            print(obj);
+
+        }
+        else {
+            print({
+                      error:true,
+                      message:msg.error.invalidAction(action)
+                  });
+        }
     }
 }());
 %>

@@ -48,32 +48,31 @@ $(document).ready(function() {
 
     });
     var v = $("#addAPIForm").validate({
-                                          submitHandler: function(form) {
-                                              $('#saveMessage').show();
-                                              $('#saveButtons').hide();
-                                              $(form).ajaxSubmit({
-                                                                     success:function(responseText,
-                                                                                      statusText,
-                                                                                      xhr, $form) {
-                                                                         if (!responseText.error) {
-                                                                             var current = window.location.pathname;
-                                                                             if (current.indexOf(".jag") >= 0) {
-                                                                                 location.href = "index.jag";
-                                                                             } else {
-                                                                                 location.href = 'site/pages/index.jag';
-                                                                             }
-                                                                         } else {
-                                                                             jagg.message({content:responseText.message,type:"error"});
-                                                                             $('#saveMessage').hide();
-                                                                             $('#saveButtons').show();
-                                                                         }
-                                                                     }, dataType: 'json'
-                                                                 });
-                                          }
-                                      });
-
-
-
+        submitHandler: function(form) {
+            $('#saveMessage').show();
+            $('#saveButtons').hide();
+            $(form).ajaxSubmit({
+                success:function(responseText, statusText, xhr, $form) {
+                    if (!responseText.error) {
+                        var current = window.location.pathname;
+                        if (current.indexOf(".jag") >= 0) {
+                            location.href = "index.jag";
+                        } else {
+                            location.href = 'site/pages/index.jag';
+                        }
+                    } else {
+                        if(responseText.message == "timeout"){
+                            jagg.showLogin();
+                        }else{
+                            jagg.message({content:responseText.message,type:"error"});
+                        }
+                        $('#saveMessage').hide();
+                        $('#saveButtons').show();
+                    }
+                }, dataType: 'json'
+            });
+        }
+    });
 
 
 });

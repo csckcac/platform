@@ -6,31 +6,40 @@ include("/jagg/jagg.jag");
             action = request.getParameter("action"),
             site = require("/site/conf/site.json"),
             msg = require("/site/conf/ui-messages.jag");
-    if (action === "removeAPI") {
-        mod = jagg.module("api");
-        var apiData = {};
-        apiData.name = request.getParameter("name");
-        apiData.version = request.getParameter("version");
-        apiData.provider= request.getParameter("provider");
-        var result=mod.removeAPI(apiData);
-        if (result.error==true) {
-            obj = {
-                error:true,
-                message:result.message
-            };
-        } else {
-            obj = {
-                error:false
-            }
-        }
-        print(obj);
-
-    }
-    else {
+        var log = new Log();
+log.info(jagg.getUser());
+    if(jagg.getUser() == null){
         print({
-                  error:true,
-                  message:msg.error.invalidAction(action)
-              });
+            error:true,
+            message:'timeout'
+        });
+    }else{
+        if (action === "removeAPI") {
+            mod = jagg.module("api");
+            var apiData = {};
+            apiData.name = request.getParameter("name");
+            apiData.version = request.getParameter("version");
+            apiData.provider= request.getParameter("provider");
+            var result=mod.removeAPI(apiData);
+            if (result.error==true) {
+                obj = {
+                    error:true,
+                    message:result.message
+                };
+            } else {
+                obj = {
+                    error:false
+                }
+            }
+            print(obj);
+
+        }
+        else {
+            print({
+                      error:true,
+                      message:msg.error.invalidAction(action)
+                  });
+        }
     }
 }());
 %>

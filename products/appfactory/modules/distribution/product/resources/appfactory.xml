@@ -52,11 +52,17 @@
         <DeploymentStage name="Development">
             <ProcesEndPoint>https://localhost:9443/services/DeployApplicationToDev</ProcesEndPoint>
             <DeploymentServerURL>https://localhost:9443/services/</DeploymentServerURL>
+            <databaseUrl>dev.mysql</databaseUrl>
+            <databaseUsername>root</databaseUsername>
+            <databasePassword>root</databasePassword>
         </DeploymentStage>
         <DeploymentStage name="QA">
             <ProcesEndPoint>https://localhost:9443/services/DeployApplicationToQA</ProcesEndPoint>
             <DeploymentServerURL>https://localhost:9445/services/</DeploymentServerURL>
             <DeploymentServerURL>https://localhost:9447/services/</DeploymentServerURL>
+            <databaseUrl>qa.mysql</databaseUrl>
+            <databaseUsername>root</databaseUsername>
+            <databasePassword>root</databasePassword>
         </DeploymentStage>
     </ApplicationDeployment>
 </AppFactory>

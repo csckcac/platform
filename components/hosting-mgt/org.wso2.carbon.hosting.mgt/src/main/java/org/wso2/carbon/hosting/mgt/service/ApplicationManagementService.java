@@ -111,12 +111,10 @@ public class ApplicationManagementService extends AbstractAdmin{
 
     public void deleteAllPhpApps(){
         deleteApps(listPhpApplications());
-        log.info("--------------------------------   success" );
     }
 
     public void deletePhpApps(String[] phpAppFileNames){
         deleteApps(phpAppFileNames);
-        log.info("--------------------------------   success" + phpAppFileNames[0]);
 
     }
 

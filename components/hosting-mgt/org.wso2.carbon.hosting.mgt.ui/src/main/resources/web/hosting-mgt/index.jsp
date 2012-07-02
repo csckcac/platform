@@ -85,43 +85,71 @@
     <jsp:include page="javascript_include.jsp"/>
 
 <script type="text/javascript">
-    function deletePHPapps() {
-            var selected = isPHPappSelected();
-            if (!selected) {
-                CARBON.showInfoDialog('<fmt:message key="select.phpapps.to.be.deleted"/>');
-                return;
-            }
-            if (allWebappsSelected()) {
-                CARBON.showConfirmationDialog("<fmt:message key="delete.all.webapps.prompt"><fmt:param value="<%= numOfPhpapps%>"/></fmt:message>",
-                                              function() {
-                                                  location.href = 'delete_phpapps.jsp?deleteAllPhpapps=true';
-                                              }
-                        );
-            } else {
-                CARBON.showConfirmationDialog("<fmt:message key="delete.webapps.on.page.prompt"/>",
-                                              function() {
-                                                  document.webappsForm.action = 'delete_phpapps.jsp';
-                                                  document.webappsForm.submit();
-                                              }
-                        );
-            }
-        }
 
+    var allPhpAppsSelected = false;
     function isPHPappSelected() {
-            var selected = false;
-            if (document.phpappsForm.phpappFileName[0] != null) { // there is more than 1
-                for (var j = 0; j < document.phpappsForm.phpappFileName.length; j++) {
-                    selected = document.phpappsForm.phpappFileName[j].checked;
-                    if (selected) break;
-                }
-            } else if (document.phpappsForm.name != null) { // only 1
-                selected = document.phpappsForm.phpappFileName.checked;
+        var selected = false;
+        if (document.phpappsForm.phpappFileName[0] != null) { // there is more than 1
+            for (var j = 0; j < document.phpappsForm.phpappFileName.length; j++) {
+                selected = document.phpappsForm.phpappFileName[j].checked;
+                if (selected) break;
             }
-            return selected;
+        } else if (document.phpappsForm.name != null) { // only 1
+            selected = document.phpappsForm.phpappFileName.checked;
         }
+        return selected;
+    }
+
+    function selectAllInThisPage(isSelected) {
+        allPhpAppsSelected = false;
+        if (document.phpappsForm.phpappFileName != null &&
+            document.phpappsForm.phpappFileName[0] != null) { // there is more than 1
+            if (isSelected) {
+                for (var j = 0; j < document.phpappsForm.phpappFileName.length; j++) {
+                    document.phpappsForm.phpappFileName[j].checked = true;
+                }
+            } else {
+                for (j = 0; j < document.phpappsForm.phpappFileName.length; j++) {
+                    document.phpappsForm.phpappFileName[j].checked = false;
+                }
+            }
+        } else if (document.phpappsForm.phpappFileName != null) { // only 1
+            document.phpappsForm.phpappFileName.checked = isSelected;
+        }
+        return false;
+    }
+
+    function deletePHPapps() {
+        var selected = isPHPappSelected();
+        if (!selected) {
+            CARBON.showInfoDialog('<fmt:message key="select.phpapps.to.be.deleted"/>');
+            return;
+        }
+        if (allPhpAppsSelected) {
+            CARBON.showConfirmationDialog("<fmt:message key="delete.all.phpapps.prompt"><fmt:param value="<%= numOfPhpapps%>"/></fmt:message>",
+                              function() {
+                                  location.href = 'delete_phpapps.jsp?deleteAllPhpapps=true';
+                              }
+        );
+        } else {
+            CARBON.showConfirmationDialog("<fmt:message key="delete.phpapps.on.page.prompt"/>",
+                function() {
+                  document.phpappsForm.action = 'delete_phpapps.jsp';
+                  document.phpappsForm.submit();
+                }
+            );
+        }
+    }
+
+    function selectAllInAllPages() {
+        selectAllInThisPage(true);
+        allPhpAppsSelected = true;
+        return false;
+    }
+
 
     function resetVars() {
-        allWebappsSelected = false;
+        allPhpAppsSelected = false;
 
         var isSelected = false;
         if (document.phpappsForm.phpappFileName[0] != null) { // there is more than 1 sg
@@ -137,8 +165,6 @@
         }
         return false;
     }
-
-
 </script>
 
 
@@ -192,7 +218,6 @@
     </table>
 </form>
 
-
 <p>&nbsp;</p>
    <%
        if (phpApps != null) {
@@ -220,61 +245,58 @@
                              numberOfPages="<%=numberOfPages%>"/>
    <p>&nbsp;</p>
 <form action="delete_phpapps.jsp" name="phpappsForm" method="post">
-    <input type="hidden" name="pageNumber" value="<%= pageNumber%>"/>
-    <table class="styledLeft" id="webappsTable" width="100%">
-        <thead>
-        <tr>
-            <th>&nbsp;</th>
-            <th width="15%"><fmt:message key="name"/></th>
-        </tr>
-        </thead>
-        <tbody>
-        <%
-            for (String phpApp : phpApps) {
-        %>
-            <tr>
-                <td width="10px" style="text-align:center; !important">
-                                <input type="checkbox" name="phpappFileName"
-                                       value="<%=phpApp%>"
-                                       onclick="resetVars()" class="chkBox"/>
-                            </td>
-                <td>
-                    <%=phpApp.substring(0, phpApp.indexOf(".zip"))%>
-                </td>
-            </tr>
-        <%
-            }
-        %>
-
-    </table>
-    </form>
-    <carbon:itemGroupSelector selectAllInPageFunction="selectAllInThisPage(true)"
-                              selectAllFunction="selectAllInAllPages()"
-                              selectNoneFunction="selectAllInThisPage(false)"
-                              resourceBundle="org.wso2.carbon.hosting.mgt.ui.i18n.Resources"
-                              selectAllInPageKey="selectAllInPage"
-                              selectAllKey="selectAll"
-                              selectNoneKey="selectNone"
-                              addRemoveFunction="deleteWebapps()"
-                              addRemoveButtonId="delete2"
-                              addRemoveKey="delete"
-                              numberOfPages="<%=numberOfPages%>"/>
-    <carbon:paginator pageNumber="<%=pageNumberInt%>" numberOfPages="<%=numberOfPages%>"
-                      page="index.jsp" pageNumberParameterName="pageNumber"
-                      resourceBundle="org.wso2.carbon.hosting.mgt.ui.i18n.Resources"
-                      prevKey="prev" nextKey="next"
-                      parameters="<%= parameters%>"/>
+<input type="hidden" name="pageNumber" value="<%= pageNumber%>"/>
+<table class="styledLeft" id="webappsTable" width="100%">
+    <thead>
+    <tr>
+        <th>&nbsp;</th>
+        <th width="15%"><fmt:message key="name"/></th>
+    </tr>
+    </thead>
+    <tbody>
     <%
+        for (String phpApp : phpApps) {
+    %>
+    <tr>
+        <td width="10px" style="text-align:center; !important">
+                        <input type="checkbox" name="phpappFileName"
+                               value="<%=phpApp%>"
+                               onclick="resetVars()" class="chkBox"/>
+        </td>
+        <td>
+            <%=phpApp.substring(0, phpApp.indexOf(".zip"))%>
+        </td>
+    </tr>
+    <% } %>
+    </tbody>
+
+</table>
+</form>
+
+<p>&nbsp;</p>
+<carbon:itemGroupSelector selectAllInPageFunction="selectAllInThisPage(true)"
+                          selectAllFunction="selectAllInAllPages()"
+                          selectNoneFunction="selectAllInThisPage(false)"
+                          resourceBundle="org.wso2.carbon.hosting.mgt.ui.i18n.Resources"
+                          selectAllInPageKey="selectAllInPage"
+                          selectAllKey="selectAll"
+                          selectNoneKey="selectNone"
+                          addRemoveFunction="deleteWebapps()"
+                          addRemoveButtonId="delete2"
+                          addRemoveKey="delete"
+                          numberOfPages="<%=numberOfPages%>"/>
+<carbon:paginator pageNumber="<%=pageNumberInt%>" numberOfPages="<%=numberOfPages%>"
+                  page="index.jsp" pageNumberParameterName="pageNumber"
+                  resourceBundle="org.wso2.carbon.hosting.mgt.ui.i18n.Resources"
+                  prevKey="prev" nextKey="next"
+                  parameters="<%= parameters%>"/>
+<%
+} else {
+%>
+<b><fmt:message key="no.phpapps.found"/></b>
+<%
     }
-    else {
-    %>
-    <b><fmt:message key="no.phpapps.found"/></b>
-    <%
-        }
-    %>
-    </div>
+%>
 </div>
-
-
-
+</div>
 </fmt:bundle>

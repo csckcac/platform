@@ -71,22 +71,10 @@ public class HostingAdminClient {
         throw new AxisFault(msg, e);
     }
 
-    public String[] listPhpApps(){
-        try {
-            PHPappsWrapper phPappsWrapper = getPagedPhpAppsSummary("d", 0);
-            log.info(phPappsWrapper.getPhpapps().length);
-            return stub.listPhpApplications();
-        } catch (RemoteException e) {
-            String msg = "Cannot list php apps. Backend service may be unvailable";
-            log.error(msg);
-        }
-        return null;
-    }
-
     public PHPappsWrapper getPagedPhpAppsSummary(String phpappSearchString, int pageNumber)
             throws AxisFault {
         try {
-            return stub.getPagedPhpAppsSummary("test" , 1);
+            return stub.getPagedPhpAppsSummary(phpappSearchString , pageNumber);
         } catch (RemoteException e) {
             handleException("cannot.get.phpapp.data", e);
         }

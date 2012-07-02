@@ -153,9 +153,9 @@ public class GovernanceListUIServiceComponent {
             log.error("The singular label and plural label have not " +
                     "been defined for the artifact type: " + key);
         } else {
-            String path = "../generic/edit_ajaxprocessor.jsp?key=" + key + "&lifecycleAttribute=" +
-                    lifecycleAttribute +"&add_edit_breadcrumb=" + singularLabel +
-                    "&add_edit_region=region3&add_edit_item=governance_add_" + key +
+            String path = "../generic/edit_ajaxprocessor.jsp?hideEditView=true&key=" + key +
+                    "&lifecycleAttribute=" + lifecycleAttribute +"&add_edit_breadcrumb=" +
+                    singularLabel + "&add_edit_region=region3&add_edit_item=governance_add_" + key +
                     "_menu&breadcrumb=" + singularLabel;
             viewUIMap.put(configuration.getMediaType(), path);
         }

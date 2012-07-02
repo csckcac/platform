@@ -98,8 +98,8 @@
             <item name="Fault Handling" href="bpel-samples/throw_catch_fault_handling.html"/>
             <item name="Split" href="bpel-samples/split.html"/>
             <item name="XslTransform" href="bpel-samples/xsl_transform.html"/>
-	    <item name="Compensation Handler" href="bpel-samples/compensation_handler.html" />
-	    <item name="Event Handler" href="bpel-samples/event_handler.html" />
+	        <item name="Compensation Handler" href="bpel-samples/compensation_handler.html" />
+	        <item name="Event Handler" href="bpel-samples/event_handler.html" />
         </menu>
         <menu name="Resources">
 	    <item name="FAQ" href="faq.html"/>

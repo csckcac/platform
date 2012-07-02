@@ -16,9 +16,14 @@
 
 package org.wso2.carbon.webapp.mgt;
 
+import org.apache.catalina.Context;
+import org.apache.catalina.Wrapper;
+import org.apache.catalina.connector.Request;
+import org.apache.tomcat.util.http.mapper.MappingData;
 import org.wso2.carbon.tomcat.api.CarbonTomcatService;
 import org.wso2.carbon.utils.CarbonUtils;
 
+import javax.servlet.http.HttpServletRequest;
 import java.util.Collections;
 import java.util.HashMap;
 import java.util.Map;
@@ -64,5 +69,29 @@ public class TomcatUtil {
     public static Map<String, TomcatGenericWebappsDeployer> getWebappsDeployers() {
         CarbonUtils.checkSecurity();
         return Collections.unmodifiableMap(webappsDeployers);
+    }
+
+    /**
+     * This method is used in remapping a request with context at tomcat level. This is mainly used
+     * with Lazy loading of tenants and Lazy loading of webapps, where we can remap a request for a
+     * lazy loaded webapp so that any request (GET, POST) parameters will not get lost with the
+     * first request.
+     *
+     * @param request - servlet request to be remapped for contexts
+     * @throws Exception - on error
+     */
+    public static void remapRequest(HttpServletRequest request) throws Exception {
+        Request connectorReq = (Request) request;
+
+        MappingData mappingData = connectorReq.getMappingData();
+        mappingData.recycle();
+
+        connectorReq.getConnector().
+                getMapper().map(connectorReq.getCoyoteRequest().serverName(),
+                                connectorReq.getCoyoteRequest().decodedURI(), null,
+                                mappingData);
+
+        connectorReq.setContext((Context) connectorReq.getMappingData().context);
+        connectorReq.setWrapper((Wrapper) connectorReq.getMappingData().wrapper);
     }
 }

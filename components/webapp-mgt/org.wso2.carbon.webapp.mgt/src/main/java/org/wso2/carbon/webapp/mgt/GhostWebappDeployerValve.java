@@ -28,7 +28,6 @@ import org.wso2.carbon.webapp.mgt.utils.GhostWebappDeployerUtils;
 
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
-import java.io.IOException;
 
 /**
  * Handles management of webapps when ghost deployer is enabled. This includes deployment of
@@ -78,9 +77,9 @@ public class GhostWebappDeployerValve implements CarbonTomcatValve {
                             waitForWebAppToLeaveTransit(transitWebapp.getContextName(),
                                                         currentCtx);
                     try {
-                        response.sendRedirect(requestURI);
+                        TomcatUtil.remapRequest(request);
                         return;
-                    } catch (IOException e) {
+                    } catch (Exception e) {
                         log.error("Error when redirecting response to " + requestURI, e);
                     }
                 }
@@ -89,9 +88,9 @@ public class GhostWebappDeployerValve implements CarbonTomcatValve {
             if (GhostWebappDeployerUtils.isGhostWebApp(deployedWebapp)) {
                 handleWebapp(deployedWebapp.getWebappFile().getName(), currentCtx);
                 try {
-                    response.sendRedirect(requestURI);
+                    TomcatUtil.remapRequest(request);
                     return;
-                } catch (IOException e) {
+                } catch (Exception e) {
                     log.error("Error when redirecting response to " + requestURI, e);
                 }
             } else {

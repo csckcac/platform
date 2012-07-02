@@ -26,7 +26,6 @@ import org.wso2.carbon.utils.multitenancy.MultitenantUtils;
 
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
-import java.util.Enumeration;
 
 /**
  * Handles lazily loading tenant artifacts if a tenant webapp request comes in
@@ -44,42 +43,30 @@ public class TenantLazyLoaderValve implements CarbonTomcatValve {
         if (requestURI.indexOf("/" + WebappsConstants.WEBAPP_PREFIX + "/") == -1) {
             return;
         }
-        
+
         //check whether the tenant exists. If not, return. This will end up
         //by showing a 404 in the browser
-        try{
+        try {
             TenantManager tenantManager = DataHolder.getRealmService().getTenantManager();
             int tenantId = tenantManager.getTenantId(domain);
-            if(tenantId == MultitenantConstants.INVALID_TENANT_ID){
-                if(log.isDebugEnabled()){
+            if (tenantId == MultitenantConstants.INVALID_TENANT_ID) {
+                if (log.isDebugEnabled()) {
                     log.debug("Tenant does not exist: " + domain);
                 }
                 return;
             }
-        }catch(Exception e){
+        } catch (Exception e) {
             log.error("Error occurred while checking tenant existence", e);
             return;
         }
 
 
-
         ConfigurationContext serverConfigCtx = DataHolder.getServerConfigContext();
         if (TenantAxisUtils.getLastAccessed(domain, serverConfigCtx) == -1) { // First time access
             try {
+                setTenantAccessed(domain, serverConfigCtx);
                 if (requestURI.indexOf("/" + WebappsConstants.WEBAPP_PREFIX + "/") != -1) {
-                    if (request.getParameterMap().size() > 0) {
-                        requestURI = requestURI + "?";
-                        Enumeration e = request.getParameterNames();
-                        while (e.hasMoreElements()) {
-                            String paramName = (String) e.nextElement();
-                            requestURI = requestURI + paramName + "=" +
-                                         request.getParameter(paramName);
-                            if (e.hasMoreElements()) {
-                                requestURI = requestURI + "&";
-                            }
-                        }
-                    }
-                    response.sendRedirect(requestURI);
+                    TomcatUtil.remapRequest(request);
                 } else {
                     request.getRequestDispatcher(requestURI).forward(request, response);
                 }
@@ -90,9 +77,15 @@ public class TenantLazyLoaderValve implements CarbonTomcatValve {
                 throw new RuntimeException(msg, e);
             }
         }
+        setTenantAccessed(domain, serverConfigCtx);
+    }
+
+
+    private void setTenantAccessed(String domain, ConfigurationContext serverConfigCtx) {
         ClassLoader tccl = Thread.currentThread().getContextClassLoader();
         try {
-            Thread.currentThread().setContextClassLoader(TenantLazyLoaderValve.class.getClassLoader());
+            Thread.currentThread().setContextClassLoader(TenantLazyLoaderValve.
+                                                                 class.getClassLoader());
             TenantAxisUtils.setTenantAccessed(domain, serverConfigCtx);
         } finally {
             Thread.currentThread().setContextClassLoader(tccl);

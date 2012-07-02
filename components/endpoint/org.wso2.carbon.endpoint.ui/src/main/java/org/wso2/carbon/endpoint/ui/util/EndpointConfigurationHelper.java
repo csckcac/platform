@@ -97,7 +97,8 @@ public class EndpointConfigurationHelper {
         if (url != null && !url.equals("")) {
             try {
                 URL conn = new URL(url);
-                conn.getContent();
+                conn.openConnection().connect();
+                testWSDLURI(url + "?wsdl");
                 returnValue = "success";
             } catch (UnknownHostException e) {
                 returnValue = "unknown";
@@ -110,7 +111,7 @@ public class EndpointConfigurationHelper {
             } catch (SSLHandshakeException e) {
                 returnValue = "ssl_error";
             } catch (Exception e) {
-                returnValue = testWSDLURI(url + "?wsdl");
+                returnValue = "Cannot establish connection to the provided address";
             }
 
         } else {

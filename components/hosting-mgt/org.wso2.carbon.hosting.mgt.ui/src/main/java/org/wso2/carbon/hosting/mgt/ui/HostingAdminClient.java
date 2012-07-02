@@ -24,6 +24,7 @@ import org.apache.commons.logging.Log;
 import org.apache.commons.logging.LogFactory;
 import org.wso2.carbon.hosting.mgt.stub.ApplicationManagementServiceStub;
 import org.wso2.carbon.hosting.mgt.stub.types.carbon.FileUploadData;
+import org.wso2.carbon.hosting.mgt.stub.types.carbon.PHPappsWrapper;
 //import org.wso2.carbon.hosting.mgt.stub.types.carbon.PHPappsWrapper;
 
 
@@ -72,6 +73,8 @@ public class HostingAdminClient {
 
     public String[] listPhpApps(){
         try {
+            PHPappsWrapper phPappsWrapper = getPagedPhpAppsSummary("d", 0);
+            log.info(phPappsWrapper.getPhpapps().length);
             return stub.listPhpApplications();
         } catch (RemoteException e) {
             String msg = "Cannot list php apps. Backend service may be unvailable";
@@ -79,5 +82,35 @@ public class HostingAdminClient {
         }
         return null;
     }
+
+    public PHPappsWrapper getPagedPhpAppsSummary(String phpappSearchString, int pageNumber)
+            throws AxisFault {
+        try {
+            return stub.getPagedPhpAppsSummary("test" , 1);
+        } catch (RemoteException e) {
+            handleException("cannot.get.phpapp.data", e);
+        }
+        return null;
+    }
+
+
+    public void deleteAllPhpApps() throws AxisFault {
+        try {
+            stub.deleteAllPhpApps();
+        } catch (RemoteException e) {
+            handleException("cannot.delete.webapps", e);
+        }
+    }
+
+    public void deletePhpApps(String[] phpAppFileNames) throws AxisFault {
+        try {
+            stub.deletePhpApps(phpAppFileNames) ;
+            log.info("success");
+        } catch (RemoteException e) {
+            handleException("cannot.delete.webapps", e);
+        }
+    }
+
+
 
 }

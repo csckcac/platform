@@ -16,6 +16,7 @@ import java.io.IOException;
 import java.rmi.RemoteException;
 
 import org.wso2.carbon.core.AbstractAdmin;
+import org.wso2.carbon.hosting.mgt.utils.PHPappsWrapper;
 
 /**
  * @author wso2
@@ -101,4 +102,29 @@ public class ApplicationManagementService extends AbstractAdmin{
 
     }
 
+    public PHPappsWrapper getPagedPhpAppsSummary(String phpAppSearchString, int pageNumber){
+         PHPappsWrapper phpAppsWrapper = new PHPappsWrapper();
+        phpAppsWrapper.setPhpapps(listPhpApplications());
+        phpAppsWrapper.setNumberOfPages(1);
+        return phpAppsWrapper;
+    }
+
+    public void deleteAllPhpApps(){
+        deleteApps(listPhpApplications());
+        log.info("--------------------------------   success" );
+    }
+
+    public void deletePhpApps(String[] phpAppFileNames){
+        deleteApps(phpAppFileNames);
+        log.info("--------------------------------   success" + phpAppFileNames[0]);
+
+    }
+
+    private void deleteApps(String phpApps[]){
+        File phpAppFile;
+        for (String phpApp : phpApps) {
+            phpAppFile = new File(getWebappDeploymentDirPath() + File.separator + phpApp);
+            phpAppFile.delete();
+        }
+    }
 }

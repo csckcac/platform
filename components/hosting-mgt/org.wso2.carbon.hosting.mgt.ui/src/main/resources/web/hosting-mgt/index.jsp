@@ -22,10 +22,9 @@
 <%@ page import="org.wso2.carbon.ui.CarbonUIUtil" %>
 <%@ page import="org.wso2.carbon.utils.ServerConstants" %>
 <%@ taglib uri="http://wso2.org/projects/carbon/taglibs/carbontags.jar" prefix="carbon" %>
-<%@ page import="java.text.SimpleDateFormat" %>
 <%@ page import="java.util.ResourceBundle" %>
 <%@ page import="org.wso2.carbon.hosting.mgt.ui.HostingAdminClient" %>
-<%@ taglib prefix="fmt" uri="http://java.sun.com/jsp/jstl/fmt" %>
+<%@ page import="org.wso2.carbon.hosting.mgt.stub.types.carbon.PHPappsWrapper" %>
 
 <%
     response.setHeader("Cache-Control", "no-cache");
@@ -35,14 +34,32 @@
 
     String cookie = (String) session.getAttribute(ServerConstants.ADMIN_SERVICE_COOKIE);
     HostingAdminClient client;
+    int numberOfPages;
 
+    String pageNumber = request.getParameter("pageNumber");
+    if (pageNumber == null) {
+        pageNumber = "0";
+    }
+    int pageNumberInt = 0;
+    try {
+        pageNumberInt = Integer.parseInt(pageNumber);
+    } catch (NumberFormatException ignored) {
+    }
 
+    PHPappsWrapper phpAppsWrapper;
+    String[] phpApps;
 
-    String[]  phpApps;
+    String phpappSearchString = request.getParameter("phpappSearchString");
 
-     try {
+    if (phpappSearchString == null) {
+        phpappSearchString = "";
+    }
+    try {
          client = new HostingAdminClient(cookie, serverURL, configContext , request.getLocale());
-         phpApps = client.listPhpApps();
+         phpAppsWrapper = client.getPagedPhpAppsSummary(phpappSearchString,
+                                                        Integer.parseInt(pageNumber));
+         numberOfPages = phpAppsWrapper.getNumberOfPages();
+         phpApps = phpAppsWrapper.getPhpapps();
     } catch (Exception e) {
          response.setStatus(500);
          CarbonUIMessage uiMsg = new CarbonUIMessage(CarbonUIMessage.ERROR, e.getMessage(), e);
@@ -55,6 +72,8 @@
         return;
     }
 
+        int numOfPhpapps = phpAppsWrapper.getNumberOfPhpapps();
+
             ResourceBundle bundle = ResourceBundle.getBundle(HostingAdminClient.BUNDLE, request.getLocale());
     %>
 
@@ -63,17 +82,149 @@
                        resourceBundle="org.wso2.carbon.hosting.mgt.ui.i18n.Resources"
                        topPage="true" request="<%=request%>"/>
 
+    <jsp:include page="javascript_include.jsp"/>
+
+<script type="text/javascript">
+    function deletePHPapps() {
+            var selected = isPHPappSelected();
+            if (!selected) {
+                CARBON.showInfoDialog('<fmt:message key="select.phpapps.to.be.deleted"/>');
+                return;
+            }
+            if (allWebappsSelected()) {
+                CARBON.showConfirmationDialog("<fmt:message key="delete.all.webapps.prompt"><fmt:param value="<%= numOfPhpapps%>"/></fmt:message>",
+                                              function() {
+                                                  location.href = 'delete_phpapps.jsp?deleteAllPhpapps=true';
+                                              }
+                        );
+            } else {
+                CARBON.showConfirmationDialog("<fmt:message key="delete.webapps.on.page.prompt"/>",
+                                              function() {
+                                                  document.webappsForm.action = 'delete_phpapps.jsp';
+                                                  document.webappsForm.submit();
+                                              }
+                        );
+            }
+        }
+
+    function isPHPappSelected() {
+            var selected = false;
+            if (document.phpappsForm.phpappFileName[0] != null) { // there is more than 1
+                for (var j = 0; j < document.phpappsForm.phpappFileName.length; j++) {
+                    selected = document.phpappsForm.phpappFileName[j].checked;
+                    if (selected) break;
+                }
+            } else if (document.phpappsForm.name != null) { // only 1
+                selected = document.phpappsForm.phpappFileName.checked;
+            }
+            return selected;
+        }
+
+    function resetVars() {
+        allWebappsSelected = false;
+
+        var isSelected = false;
+        if (document.phpappsForm.phpappFileName[0] != null) { // there is more than 1 sg
+            for (var j = 0; j < document.phpappsForm.phpappFileName.length; j++) {
+                if (document.phpappsForm.phpappFileName[j].checked) {
+                    isSelected = true;
+                }
+            }
+        } else if (document.phpappsForm.phpappFileName != null) { // only 1 sg
+            if (document.phpappsForm.phpappFileName.checked) {
+                isSelected = true;
+            }
+        }
+        return false;
+    }
+
+
+</script>
+
+
+<script type="text/javascript">
+    function searchPhpapps() {
+        document.searchForm.submit();
+    }
+</script>
 
 <div id="middle">
 <h2><fmt:message key="phpapps"/></h2>
 
 <div id="workArea">
 
+<form action="index.jsp" name="searchForm">
+    <table class="styledLeft">
+        <tr>
+            <td style="border:0; !important">
+                <nobr>
+                    <%= numOfPhpapps%> <fmt:message key="phpapps"/>.&nbsp;
+                </nobr>
+            </td>
+        </tr>
+        <tr>
+            <td style="border:0; !important">&nbsp;</td>
+        </tr>
+        <tr>
+            <td>
+                <table style="border:0; !important">
+                    <tbody>
+                    <tr style="border:0; !important">
+                        <td style="border:0; !important">
+                            <nobr>
+                                <fmt:message key="search.phpapps"/>
+                                <input type="text" name="phpappSearchString"
+                                       value="<%= phpappSearchString != null? phpappSearchString : ""%>"/>&nbsp;
+                            </nobr>
+                        </td>
+                        <td style="border:0; !important">
+                            <a class="icon-link" href="#"
+                               style="background-image: url(images/search.gif);"
+                               onclick="searchPhpapps(); return false;"
+                               alt="<fmt:message key="search"/>">
+                            </a>
+                        </td>
+                    </tr>
+                    </tbody>
+                </table>
+            </td>
+        </tr>
+    </table>
+</form>
+
+
+<p>&nbsp;</p>
+   <%
+       if (phpApps != null) {
+           String parameters = "phpappSearchString=" + phpappSearchString;
+
+
+   %>
+
+   <carbon:paginator pageNumber="<%=pageNumberInt%>" numberOfPages="<%=numberOfPages%>"
+                     page="index.jsp" pageNumberParameterName="pageNumber"
+                     resourceBundle="org.wso2.carbon.hosting.mgt.ui.i18n.Resources"
+                     prevKey="prev" nextKey="next"
+                     parameters="<%=parameters%>"/>
+
+   <carbon:itemGroupSelector selectAllInPageFunction="selectAllInThisPage(true)"
+                             selectAllFunction="selectAllInAllPages()"
+                             selectNoneFunction="selectAllInThisPage(false)"
+                             resourceBundle="org.wso2.carbon.hosting.mgt.ui.i18n.Resources"
+                             selectAllInPageKey="selectAllInPage"
+                             selectAllKey="selectAll"
+                             selectNoneKey="selectNone"
+                             addRemoveFunction="deletePHPapps()"
+                             addRemoveButtonId="delete1"
+                             addRemoveKey="delete"
+                             numberOfPages="<%=numberOfPages%>"/>
    <p>&nbsp;</p>
 <form action="delete_phpapps.jsp" name="phpappsForm" method="post">
+    <input type="hidden" name="pageNumber" value="<%= pageNumber%>"/>
     <table class="styledLeft" id="webappsTable" width="100%">
         <thead>
         <tr>
+            <th>&nbsp;</th>
             <th width="15%"><fmt:message key="name"/></th>
         </tr>
         </thead>
@@ -82,6 +233,11 @@
             for (String phpApp : phpApps) {
         %>
             <tr>
+                <td width="10px" style="text-align:center; !important">
+                                <input type="checkbox" name="phpappFileName"
+                                       value="<%=phpApp%>"
+                                       onclick="resetVars()" class="chkBox"/>
+                            </td>
                 <td>
                     <%=phpApp.substring(0, phpApp.indexOf(".zip"))%>
                 </td>
@@ -101,8 +257,21 @@
                               selectNoneKey="selectNone"
                               addRemoveFunction="deleteWebapps()"
                               addRemoveButtonId="delete2"
-                              addRemoveKey="delete"/>
-
+                              addRemoveKey="delete"
+                              numberOfPages="<%=numberOfPages%>"/>
+    <carbon:paginator pageNumber="<%=pageNumberInt%>" numberOfPages="<%=numberOfPages%>"
+                      page="index.jsp" pageNumberParameterName="pageNumber"
+                      resourceBundle="org.wso2.carbon.hosting.mgt.ui.i18n.Resources"
+                      prevKey="prev" nextKey="next"
+                      parameters="<%= parameters%>"/>
+    <%
+    }
+    else {
+    %>
+    <b><fmt:message key="no.phpapps.found"/></b>
+    <%
+        }
+    %>
     </div>
 </div>
 

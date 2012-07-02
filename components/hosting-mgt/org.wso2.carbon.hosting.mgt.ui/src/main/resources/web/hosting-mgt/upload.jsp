@@ -18,9 +18,6 @@
 <%@ taglib prefix="fmt" uri="http://java.sun.com/jsp/jstl/fmt" %>
 <%@ taglib uri="http://wso2.org/projects/carbon/taglibs/carbontags.jar" prefix="carbon" %>
 
-<!-- This page is included to display messages which are set to request scope or session scope -->
-<jsp:include page="../dialog/display_messages.jsp"/>
-
 <fmt:bundle basename="org.wso2.carbon.hosting.mgt.ui.i18n.Resources">
     <carbon:breadcrumb label="add.webapp"
                        resourceBundle="org.wso2.carbon.hosting.mgt.ui.i18n.Resources"

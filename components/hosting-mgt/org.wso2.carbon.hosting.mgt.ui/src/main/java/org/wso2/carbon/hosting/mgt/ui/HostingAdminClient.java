@@ -24,6 +24,7 @@ import org.apache.commons.logging.Log;
 import org.apache.commons.logging.LogFactory;
 import org.wso2.carbon.hosting.mgt.stub.ApplicationManagementServiceStub;
 import org.wso2.carbon.hosting.mgt.stub.types.carbon.FileUploadData;
+//import org.wso2.carbon.hosting.mgt.stub.types.carbon.PHPappsWrapper;
 
 
 import java.rmi.RemoteException;
@@ -68,4 +69,15 @@ public class HostingAdminClient {
         log.error(msg, e);
         throw new AxisFault(msg, e);
     }
+
+    public String[] listPhpApps(){
+        try {
+            return stub.listPhpApplications();
+        } catch (RemoteException e) {
+            String msg = "Cannot list php apps. Backend service may be unvailable";
+            log.error(msg);
+        }
+        return null;
+    }
+
 }

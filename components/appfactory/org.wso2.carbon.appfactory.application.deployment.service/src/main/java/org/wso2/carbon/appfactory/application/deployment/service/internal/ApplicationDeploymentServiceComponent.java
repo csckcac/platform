@@ -19,7 +19,10 @@ package org.wso2.carbon.appfactory.application.deployment.service.internal;
 import org.apache.commons.logging.Log;
 import org.apache.commons.logging.LogFactory;
 import org.osgi.service.component.ComponentContext;
+import org.wso2.carbon.appfactory.application.deployment.service.util.RepositoryManagerUtil;
 import org.wso2.carbon.appfactory.common.AppFactoryConfiguration;
+import org.wso2.carbon.appfactory.svn.repository.mgt.RepositoryManager;
+
 
 /**
  * this class is used to get the AppFactory Configuration.
@@ -28,7 +31,9 @@ import org.wso2.carbon.appfactory.common.AppFactoryConfiguration;
  * @scr.reference name="appfactory.common"
  * interface="org.wso2.carbon.appfactory.common.AppFactoryConfiguration" cardinality="1..1"
  * policy="dynamic" bind="setAppFactoryConfiguration" unbind="unsetAppFactoryConfiguration"
- *
+ * @scr.reference name="appfactory.svn"
+ * interface="org.wso2.carbon.appfactory.svn.repository.mgt.RepositoryManager" cardinality="1..1"
+ * policy="dynamic" bind="setRepositoryManager" unbind="unsetRepositoryManager"
  */
 public class ApplicationDeploymentServiceComponent {
 
@@ -37,6 +42,7 @@ public class ApplicationDeploymentServiceComponent {
     protected void activate(ComponentContext ctxt) {
         if (log.isDebugEnabled()) {
             log.debug("Activated ApplicationDeploymentServiceComponent");
+
         }
     }
 
@@ -52,6 +58,14 @@ public class ApplicationDeploymentServiceComponent {
 
     protected void unsetAppFactoryConfiguration(AppFactoryConfiguration appFactoryConfiguration) {
         AppFactoryConfigurationHolder.getInstance().unRegisterAppFactoryConfiguration(appFactoryConfiguration);
+    }
+
+    protected void setRepositoryManager(RepositoryManager repositoryManager) {
+        RepositoryManagerUtil.setConfiguration(repositoryManager);
+    }
+
+    protected void unsetRepositoryManager(RepositoryManager repositoryManager) {
+        RepositoryManagerUtil.setConfiguration(null);
     }
 
 

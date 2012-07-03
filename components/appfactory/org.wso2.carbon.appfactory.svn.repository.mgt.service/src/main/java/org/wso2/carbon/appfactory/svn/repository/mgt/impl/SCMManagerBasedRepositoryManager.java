@@ -38,6 +38,8 @@ import org.wso2.carbon.appfactory.svn.repository.mgt.RepositoryMgtException;
 import org.wso2.carbon.appfactory.svn.repository.mgt.beans.Permission;
 import org.wso2.carbon.appfactory.svn.repository.mgt.beans.PermissionType;
 import org.wso2.carbon.appfactory.svn.repository.mgt.beans.Repository;
+import org.wso2.carbon.appfactory.svn.repository.mgt.internal.SVNRepositoryMgtServiceComponent;
+import org.wso2.carbon.appfactory.svn.repository.mgt.util.Util;
 
 import javax.xml.stream.XMLInputFactory;
 import javax.xml.stream.XMLStreamException;
@@ -73,6 +75,9 @@ public class SCMManagerBasedRepositoryManager extends AbstractRepositoryManager 
     private AppFactoryConfiguration configuration;
     private ISVNClientAdapter svnClient;
     private String clientType;
+  //  private static AppFactoryConfiguration appFactoryConfiguration = Util.getConfiguration();
+
+    private static AppFactoryConfiguration appFactoryConfiguration = Util.getConfiguration();
 
     @Override
     public String createRepository(String applicationKey) throws RepositoryMgtException {
@@ -279,6 +284,9 @@ public class SCMManagerBasedRepositoryManager extends AbstractRepositoryManager 
             svnClient.setPassword(AppFactoryConstants.SCM_ADMIN_NAME);
 
             log.info("Command line client adapter initialized");
+
+           // SVNRepositoryMgtServiceComponent
+            //appFactoryConfiguration.getFirstProperty().
 
         } catch (SVNClientException e) {
             log.error("Unable to initialize the command line client adapter" + e);

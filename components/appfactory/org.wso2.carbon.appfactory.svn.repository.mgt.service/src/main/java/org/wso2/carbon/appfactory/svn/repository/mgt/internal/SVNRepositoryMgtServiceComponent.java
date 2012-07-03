@@ -18,8 +18,11 @@ package org.wso2.carbon.appfactory.svn.repository.mgt.internal;
 
 import org.apache.commons.logging.Log;
 import org.apache.commons.logging.LogFactory;
+import org.osgi.framework.BundleContext;
 import org.osgi.service.component.ComponentContext;
 import org.wso2.carbon.appfactory.common.AppFactoryConfiguration;
+import org.wso2.carbon.appfactory.svn.repository.mgt.RepositoryManager;
+import org.wso2.carbon.appfactory.svn.repository.mgt.impl.SCMManagerBasedRepositoryManager;
 import org.wso2.carbon.appfactory.svn.repository.mgt.util.Util;
 
 /**
@@ -31,7 +34,7 @@ import org.wso2.carbon.appfactory.svn.repository.mgt.util.Util;
  * unbind="unsetAppFactoryConfiguration"
  */
 public class SVNRepositoryMgtServiceComponent {
-                           Log log= LogFactory.getLog(SVNRepositoryMgtServiceComponent.class);
+    Log log = LogFactory.getLog(SVNRepositoryMgtServiceComponent.class);
 
     protected void unsetAppFactoryConfiguration(AppFactoryConfiguration appFactoryConfiguration) {
         Util.setConfiguration(null);
@@ -40,12 +43,21 @@ public class SVNRepositoryMgtServiceComponent {
     protected void setAppFactoryConfiguration(AppFactoryConfiguration appFactoryConfiguration) {
         Util.setConfiguration(appFactoryConfiguration);
     }
+
     protected void activate(ComponentContext context) {
 
         if (log.isDebugEnabled()) {
             log.info("**************SVN repository mgt bundle is activated*************");
         }
+        try {
+            BundleContext bundleContext = context.getBundleContext();
+            RepositoryManager repositoryManager = new SCMManagerBasedRepositoryManager();
+            bundleContext.registerService(RepositoryManager.class.getName(), repositoryManager, null);
+        } catch (Throwable e) {
+            log.error("Error in registering Repository Management Service  ", e);
+        }
     }
+
     protected void deactivate(ComponentContext ctxt) {
         if (log.isDebugEnabled()) {
             log.info("*************SVN repository mgt bundle is deactivated*************");

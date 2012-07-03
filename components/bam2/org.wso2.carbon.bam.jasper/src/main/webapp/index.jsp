@@ -53,7 +53,7 @@
                 }*/
 
         %>
-        <li><a href='<%= tabId %>'></a><%= tabName %>
+        <li><a href='<%= tabId %>'><%= tabName %></a>
         </li>
         <%
             }

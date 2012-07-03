@@ -75,16 +75,14 @@ public class SCMManagerBasedRepositoryManager extends AbstractRepositoryManager 
     private AppFactoryConfiguration configuration;
     private ISVNClientAdapter svnClient;
     private String clientType;
-  //  private static AppFactoryConfiguration appFactoryConfiguration = Util.getConfiguration();
-
-    private static AppFactoryConfiguration appFactoryConfiguration = Util.getConfiguration();
+    //  private static AppFactoryConfiguration appFactoryConfiguration = Util.getConfiguration();
 
     @Override
     public String createRepository(String applicationKey) throws RepositoryMgtException {
 
         HttpClient client = getClient(configuration);
         PostMethod post = new PostMethod(getServerURL(configuration) + REST_BASE_URI +
-                                         REST_CREATE_REPOSITORY_URI);
+                REST_CREATE_REPOSITORY_URI);
         Repository repository = new Repository();
         repository.setName(applicationKey);
         repository.setType("svn");
@@ -120,7 +118,7 @@ public class SCMManagerBasedRepositoryManager extends AbstractRepositoryManager 
             url = getURL(applicationKey);
         } else {
             String msg = "Repository creation is failed for " + applicationKey + " server returned status " +
-                         post.getStatusText();
+                    post.getStatusText();
             log.error(msg);
             throw new RepositoryMgtException(msg);
         }
@@ -183,7 +181,7 @@ public class SCMManagerBasedRepositoryManager extends AbstractRepositoryManager 
 
         HttpClient client = getClient(configuration);
         GetMethod get = new GetMethod(getServerURL(configuration) + REST_BASE_URI + REST_GET_REPOSITORY_URI
-                                      + applicationKey);
+                + applicationKey);
         get.setDoAuthentication(true);
         get.addRequestHeader("Content-Type", "application/xml;charset=UTF-8");
         String repository = null;
@@ -284,9 +282,6 @@ public class SCMManagerBasedRepositoryManager extends AbstractRepositoryManager 
             svnClient.setPassword(AppFactoryConstants.SCM_ADMIN_NAME);
 
             log.info("Command line client adapter initialized");
-
-           // SVNRepositoryMgtServiceComponent
-            //appFactoryConfiguration.getFirstProperty().
 
         } catch (SVNClientException e) {
             log.error("Unable to initialize the command line client adapter" + e);

@@ -13,6 +13,6 @@ public interface BuildDriver {
      * @param version
      * @param revision
      */
-    public void buildArtifact(String applicationId, String version, String revision);
+    public void buildArtifact(String applicationId, String version, String revision, BuildDriverListener listener);
 
 }

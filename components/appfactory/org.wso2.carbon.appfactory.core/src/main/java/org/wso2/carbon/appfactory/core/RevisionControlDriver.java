@@ -12,6 +12,6 @@ public interface RevisionControlDriver {
      * @param version
      * @param revision
      */
-    public void getSource(String applicationId, String version, String revision);
+    public void getSource(String applicationId, String version, String revision, RevisionControlDriverListener listener);
 
 }

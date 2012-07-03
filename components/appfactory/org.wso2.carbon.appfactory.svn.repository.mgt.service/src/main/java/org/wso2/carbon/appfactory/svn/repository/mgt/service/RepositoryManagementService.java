@@ -20,7 +20,10 @@ import org.tigris.subversion.svnclientadapter.SVNRevision;
 import org.wso2.carbon.appfactory.svn.repository.mgt.RepositoryManager;
 import org.wso2.carbon.appfactory.svn.repository.mgt.RepositoryMgtException;
 import org.wso2.carbon.appfactory.svn.repository.mgt.builder.RepositoryManagerHolder;
+import org.wso2.carbon.appfactory.svn.repository.mgt.impl.SCMManagerExceptions;
 import org.wso2.carbon.core.AbstractAdmin;
+
+import java.io.File;
 
 /**
  *
@@ -65,5 +68,36 @@ public class RepositoryManagementService extends AbstractAdmin {
         repositoryManager.svnMove(sourceUrl, destinationUrl, commitMessage, rev);
     }
 
+    public void initSVNClient() throws SCMManagerExceptions {
+        repositoryManager.initSVNClient();
+    }
+
+    public String checkoutApplication(String applicationSvnUrl, String applicationId, String svnRevision)
+            throws SCMManagerExceptions {
+        return repositoryManager.checkoutApplication(applicationSvnUrl, applicationId, svnRevision);
+    }
+
+    public void buildApplication(String sourcePath) throws SCMManagerExceptions {
+        repositoryManager.buildApplication(sourcePath);
+    }
+
+    public File createApplicationCheckoutDirectory(String applicationName)
+            throws SCMManagerExceptions {
+        return repositoryManager.createApplicationCheckoutDirectory(applicationName);
+
+    }
+
+    public boolean executeMavenGoal(String applicationPath)
+            throws SCMManagerExceptions {
+        return repositoryManager.executeMavenGoal(applicationPath);
+    }
+
+    public void cleanApplicationDir(String applicationPath) {
+        repositoryManager.cleanApplicationDir(applicationPath);
+    }
+
+    public String getAdminUsername(String applicationId) {
+        return repositoryManager.getAdminUsername(applicationId);
+    }
 
 }

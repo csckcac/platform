@@ -18,7 +18,9 @@ package org.wso2.carbon.appfactory.svn.repository.mgt;
 
 import org.tigris.subversion.svnclientadapter.SVNRevision;
 import org.wso2.carbon.appfactory.common.AppFactoryConfiguration;
-import org.wso2.carbon.appfactory.svn.repository.mgt.RepositoryMgtException;
+import org.wso2.carbon.appfactory.svn.repository.mgt.impl.SCMManagerExceptions;
+
+import java.io.File;
 
 /**
  *
@@ -47,4 +49,21 @@ public interface RepositoryManager {
     public void svnCopy(String sourceUrl, String destinationUrl, String commitMessage, SVNRevision rev);
 
     public void svnMove(String sourceUrl, String destinationUrl, String commitMessage, SVNRevision rev);
+
+    public void initSVNClient() throws SCMManagerExceptions;
+
+    public String checkoutApplication(String applicationSvnUrl, String applicationId, String svnRevision)
+            throws SCMManagerExceptions;
+
+    public void buildApplication(String sourcePath) throws SCMManagerExceptions;
+
+    public File createApplicationCheckoutDirectory(String applicationName)
+            throws SCMManagerExceptions;
+
+    public boolean executeMavenGoal(String applicationPath)
+            throws SCMManagerExceptions;
+
+    public void cleanApplicationDir(String applicationPath);
+
+    public String getAdminUsername(String applicationId);
 }

@@ -18,8 +18,10 @@ package org.wso2.carbon.bam.toolbox.deployer;
 public enum BasicToolBox {
    //MESSAGE_TRACING(1, "Message_Tracing.bar", "Message Tracing in wso2 ESB", "some description"),
     KPI_PHONE_RETAIL_STORE(1, "KPI_Phone_Retail_Store.bar", "Phone Retail Store", "Phone Retail Store toolbox is intended to monitor the KPI(Key Performance Indication) of a Phone Retail Store.\n" +
-           "                            And also this  includes analytics and visualization gadgets for Phone Retail Store.");
+           "                            And also this  includes analytics and visualization gadgets for Phone Retail Store."),
 
+     HTTPD_LOGS(2, "HTTPD_Logs.bar", "HTTPD Logs Analysis", "HTTPD Logs toolbox is intended to show the capability of WSO2 BAM which can analyze the raw httpd logs and produce useful result.\n" +
+           "                            And also this  includes analytics and visualization gadgets for analyzed data of HTTPD Logs.");
     private int sampleId;
     private String toolboxName;
     private String displayName;

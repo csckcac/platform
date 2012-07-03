@@ -167,6 +167,14 @@
             </excludes>
         </fileSet>
 
+	<fileSet>
+            <directory>../samples/httpd-logs/resources</directory>
+            <outputDirectory>${pom.artifactId}-${pom.version}/repository/components/lib</outputDirectory>
+            <includes>
+                <include>**/CustomUDF_Country.jar</include>
+            </includes>
+        </fileSet>
+
         <!-- copy executables in samples with execute permissions -->
         <fileSet>
             <directory>../samples</directory>

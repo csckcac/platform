@@ -226,18 +226,6 @@
 </property>
 
 <property>
-  <name>hive.metastore.warehouse.dir</name>
-  <value>file://${CARBON_HOME}/repository/data/hive/warehouse</value>
-  <description>location of default database for the warehouse</description>
-</property>
-
-<!--<property>
-  <name>hive.metastore.warehouse.dir</name>
-  <value>/user/hive/warehouse</value>
-  <description>location of default database for the warehouse</description>
-</property>-->
-
-<property>
   <name>hive.metastore.execute.setugi</name>
   <value>false</value>
   <description>In unsecure mode, setting this property to true will cause the metastore to execute DFS operations using the client's reported user and group permissions. Note that this property must be set on both the client and server sides. Further note that its best effort. If client sets its to true and server sets it to false, client setting will be ignored.</description>
@@ -1224,23 +1212,8 @@
 </property>
 
   <property>
-    <name>fs.default.name</name>
-    <value>file://${CARBON_HOME}/data/hive</value>
-  </property>
-
-  <property>
     <name>hadoop.tmp.dir</name>
     <value>${CARBON_HOME}/tmp/hadoop</value>
-  </property>
-
-  <property>
-    <name>mapred.job.tracker</name>
-    <value>local</value>
-  </property>
-
-  <property>
-    <name>dfs.replication</name>
-    <value>1</value>
   </property>
 
   <property>
@@ -1260,12 +1233,65 @@
 
   <property>
     <name>hadoop.embedded.local.mode.trace.enable</name>
-    <value>true</value>
+    <value>false</value>
   </property>
 
   <property>
     <name>mapred.local.dir</name>
     <value>${CARBON_HOME}/tmp/hadoop/local</value>
   </property>
+
+  <!-- Comment out below properties in order to point to a local pesudo distributed mode Hadoop installation running with default parameters provided in 
+http://hadoop.apache.org/common/docs/r0.20.2/quickstart.html#PseudoDistributed -->
+
+  <property>
+    <name>hive.metastore.warehouse.dir</name>
+    <value>file://${CARBON_HOME}/repository/data/hive/warehouse</value>
+    <description>location of default database for the warehouse</description>
+  </property>
+
+  <property>
+    <name>fs.default.name</name>
+    <value>file://${CARBON_HOME}/data/hive</value>
+  </property>
+
+  <property>
+    <name>mapred.job.tracker</name>
+    <value>local</value>
+  </property>
+
+  <property>
+    <name>dfs.replication</name>
+    <value>1</value>
+  </property>
+
+  <!-- Uncomment below properties in order to point to a local pesudo distributed mode Hadoop installation running with default parameters provided in 
+http://hadoop.apache.org/common/docs/r0.20.2/quickstart.html#PseudoDistributed -->
+
+  <!--<property>
+    <name>hive.metastore.warehouse.dir</name>
+    <value>/user/hive/warehouse</value>
+    <description>location of default database for the warehouse</description>
+  </property>
+
+  <property>
+    <name>hadoop.embedded.local.mode</name>
+    <value>false</value>
+  </property>
+
+  <property>
+    <name>fs.default.name</name>
+    <value>hdfs://localhost:9000</value>
+  </property>
+
+  <property>
+    <name>mapred.job.tracker</name>
+    <value>localhost:9001</value>
+  </property>
+
+  <property>
+    <name>dfs.replication</name>
+    <value>1</value>
+  </property>-->
 
 </configuration>

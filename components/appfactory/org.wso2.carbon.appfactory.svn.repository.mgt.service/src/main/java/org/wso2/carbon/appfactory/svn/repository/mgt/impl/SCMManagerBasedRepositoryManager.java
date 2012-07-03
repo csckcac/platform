@@ -267,41 +267,12 @@ public class SCMManagerBasedRepositoryManager extends AbstractRepositoryManager 
         return repository;
     }
 
-
-    /*
-        setup SVNClientAdapterFactory
-    */
-    private void setUp() {
-        try {
-            try {
-                SvnKitClientAdapterFactory.setup();
-                System.out.print("SVN Kit client adapter initialized");
-            } catch (Throwable t) {
-                System.out.print("Unable to initialize the SVN Kit client adapter - Required jars " + "may be missing");
-            }
-            //setup CmdLineClientAdapterFactory - which is the default
-            CmdLineClientAdapterFactory.setup();
-
-            clientType = SVNClientAdapterFactory.getPreferredSVNClientType();
-            svnClient = SVNClientAdapterFactory.createSVNClient(clientType);
-
-            // providing the credentials
-            svnClient.setUsername(AppFactoryConstants.SCM_ADMIN_NAME);
-            svnClient.setPassword(AppFactoryConstants.SCM_ADMIN_NAME);
-
-            log.info("Command line client adapter initialized");
-
-        } catch (SVNClientException e) {
-            log.error("Unable to initialize the command line client adapter" + e);
-        }
-    }
-
     /*
      Create a new directory in the svn
     */
     public void createDirectory(String url, String commitMessage) {
-        setUp();
         try {
+            initSVNClient();
             SVNUrl svnUrl = null;
             try {
                 svnUrl = new SVNUrl(url);
@@ -311,6 +282,8 @@ public class SCMManagerBasedRepositoryManager extends AbstractRepositoryManager 
             svnClient.mkdir(svnUrl, commitMessage);
         } catch (SVNClientException e) {
             log.error(e);
+        } catch (SCMManagerExceptions scmManagerExceptions) {
+            log.error("Error in svn client initialization" + scmManagerExceptions);
         }
 
     }
@@ -319,9 +292,9 @@ public class SCMManagerBasedRepositoryManager extends AbstractRepositoryManager 
       svn copy operation
     */
     public void svnCopy(String sourceUrl, String destinationUrl, String commitMessage, SVNRevision rev) {
-        setUp();
         rev = SVNRevision.HEAD; //last revision is used
         try {
+            initSVNClient();
             SVNUrl svnUrl = null;
             SVNUrl copyURL = null;
             try {
@@ -334,6 +307,8 @@ public class SCMManagerBasedRepositoryManager extends AbstractRepositoryManager 
             svnClient.copy(svnUrl, copyURL, commitMessage, rev);
         } catch (SVNClientException e) {
             log.error(e);
+        } catch (SCMManagerExceptions scmManagerExceptions) {
+            log.error("Error in svn client initialization" + scmManagerExceptions);
         }
 
     }
@@ -342,10 +317,10 @@ public class SCMManagerBasedRepositoryManager extends AbstractRepositoryManager 
       svn move operation
     */
     public void svnMove(String sourceUrl, String destinationUrl, String commitMessage, SVNRevision rev) {
-        setUp();
         // Get the current revision
         rev = SVNRevision.HEAD; //last revision is used
         try {
+            initSVNClient();
             SVNUrl svnUrl = null;
             SVNUrl copyURL = null;
             try {
@@ -358,6 +333,8 @@ public class SCMManagerBasedRepositoryManager extends AbstractRepositoryManager 
             svnClient.move(svnUrl, copyURL, commitMessage, rev);
         } catch (SVNClientException e) {
             log.error(e);
+        } catch (SCMManagerExceptions scmManagerExceptions) {
+            log.error("Error in svn client initialization" + scmManagerExceptions);
         }
 
     }

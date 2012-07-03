@@ -23,6 +23,7 @@ import org.apache.commons.logging.LogFactory;
 import org.quartz.*;
 import org.quartz.impl.StdSchedulerFactory;
 
+import java.util.List;
 import java.util.Map;
 import java.util.Properties;
 
@@ -204,8 +205,13 @@ public class TaskScheduler {
             if (log.isDebugEnabled()) {
                 log.debug("scheduling job : " + jobDetail + " with trigger " + trigger);
             }
-            if (taskDescription.getCount() != 0) {
-                scheduler.scheduleJob(jobDetail, trigger);
+            if (taskDescription.getCount() != 0 && !isTaskAlreadyRunning(jobDetail.getKey())) {
+                try {
+                    scheduler.scheduleJob(jobDetail, trigger);
+                } catch (ObjectAlreadyExistsException e) {
+                    log.warn("did not schedule the job : " + jobDetail + ". the job is already running.");
+                }
+
             } else {
                 if (log.isDebugEnabled()) {
                     log.debug("did not schedule the job : " + jobDetail + ". count is zero.");
@@ -267,8 +273,12 @@ public class TaskScheduler {
             if (log.isDebugEnabled()) {
                 log.debug("scheduling job : " + jobDetail + " with trigger " + trigger);
             }
-            if (taskDescription.getCount() != 0) {
-                scheduler.scheduleJob(jobDetail, trigger);
+            if (taskDescription.getCount() != 0 && !isTaskAlreadyRunning(jobDetail.getKey())) {
+                try {
+                    scheduler.scheduleJob(jobDetail, trigger);
+                } catch (ObjectAlreadyExistsException e) {
+                    log.warn("did not schedule the job : " + jobDetail + ". the job is already running.");
+                }
             } else {
                 if (log.isDebugEnabled()) {
                     log.debug("did not schedule the job : " + jobDetail + ". count is zero.");
@@ -356,6 +366,20 @@ public class TaskScheduler {
             log.error("Error querying currently executing jobs", e);
         }
         return runningTasks;
+    }
+
+    public boolean isTaskAlreadyRunning(JobKey jobKey) throws SchedulerException {
+        List<JobExecutionContext> currentJobs = this.scheduler.getCurrentlyExecutingJobs();
+        JobKey currentJobKey;
+        for (JobExecutionContext jobCtx : currentJobs) {
+            currentJobKey = jobCtx.getJobDetail().getKey();
+            if (currentJobKey.compareTo(jobKey) == 0) {
+                //found it!
+                log.warn("the job is already running");
+                return true;
+            }
+        }
+        return false;
     }
 
     /**

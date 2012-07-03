@@ -2,6 +2,9 @@ package org.apache.hadoop.hive.jdbc.storage;
 
 
 import org.apache.hadoop.conf.Configuration;
+import org.apache.hadoop.hive.jdbc.storage.db.DBOperation;
+import org.apache.hadoop.hive.jdbc.storage.input.JDBCDataInputFormat;
+import org.apache.hadoop.hive.jdbc.storage.utils.ConfigurationUtils;
 import org.apache.hadoop.hive.metastore.HiveMetaHook;
 import org.apache.hadoop.hive.metastore.MetaStoreUtils;
 import org.apache.hadoop.hive.metastore.api.MetaException;
@@ -9,9 +12,7 @@ import org.apache.hadoop.hive.metastore.api.Table;
 import org.apache.hadoop.hive.ql.metadata.HiveStorageHandler;
 import org.apache.hadoop.hive.ql.plan.TableDesc;
 import org.apache.hadoop.hive.serde2.SerDe;
-import org.apache.hadoop.hive.jdbc.storage.db.DBOperation;
-import org.apache.hadoop.hive.jdbc.storage.utils.ConfigurationUtils;
-import org.apache.hadoop.hive.jdbc.storage.input.JDBCDataInputFormat;
+
 import java.util.Map;
 import java.util.Properties;
 

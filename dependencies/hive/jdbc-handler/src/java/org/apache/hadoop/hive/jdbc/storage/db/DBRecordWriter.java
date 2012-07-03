@@ -15,11 +15,10 @@ public class DBRecordWriter implements RecordWriter {
     DatabaseProperties dbProperties;
     DBManager dbManager;
 
-    public DBRecordWriter(DatabaseProperties databaseProperties)
+    public DBRecordWriter(DatabaseProperties databaseProperties, DBManager dbManager)
             throws ClassNotFoundException, SQLException {
         dbProperties = databaseProperties;
-        dbManager = new DBManager();
-        dbManager.configureDB(databaseProperties);
+        this.dbManager = dbManager;
         connection = dbManager.getConnection();
     }
 

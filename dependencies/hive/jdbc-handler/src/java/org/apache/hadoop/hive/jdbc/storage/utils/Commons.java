@@ -1,6 +1,7 @@
 package org.apache.hadoop.hive.jdbc.storage.utils;
 
 
+import org.apache.commons.dbcp.BasicDataSource;
 import org.apache.hadoop.hive.serde2.io.ByteWritable;
 import org.apache.hadoop.hive.serde2.io.ShortWritable;
 import org.apache.hadoop.io.BooleanWritable;
@@ -10,6 +11,7 @@ import org.apache.hadoop.io.IntWritable;
 import org.apache.hadoop.io.LongWritable;
 import org.apache.hadoop.io.NullWritable;
 import org.apache.hadoop.io.Writable;
+import org.apache.hadoop.mapred.JobConf;
 import org.apache.hadoop.mapred.lib.db.DBConfiguration;
 
 import java.sql.PreparedStatement;
@@ -63,7 +65,7 @@ public class Commons {
      * @return
      */
     public static PreparedStatement assignCorrectObjectType(Object value, int position,
-                                                      PreparedStatement statement) {
+                                                            PreparedStatement statement) {
         try {
             if (value instanceof Integer) {
                 statement.setInt(position, (Integer) value);
@@ -120,7 +122,7 @@ public class Commons {
         return tableName;
     }
 
-    public static final String extractFieldNames(String selectQuery){
+    public static final String extractFieldNames(String selectQuery) {
         String fields = "";
         List<String> queryList = Arrays.asList(selectQuery.split(" "));
         Iterator<String> iterator = queryList.iterator();
@@ -128,7 +130,7 @@ public class Commons {
             if (iterator.next().equalsIgnoreCase("select")) {
                 while (iterator.hasNext()) {
                     String nextString = iterator.next();
-                    if(nextString.equalsIgnoreCase("from")){
+                    if (nextString.equalsIgnoreCase("from")) {
                         return fields;
                     }
                     fields += nextString;
@@ -136,6 +138,125 @@ public class Commons {
             }
         }
         return fields;
+    }
+
+    // Configuring basicDataSource
+    public static BasicDataSource configureBasicDataSource(JobConf conf) {
+        BasicDataSource basicDataSource = new BasicDataSource();
+        String connectionUrl = ConfigurationUtils.getConnectionUrl(conf);
+        connectionUrl=  connectionUrl.replaceAll(" ", "");
+        basicDataSource.setUrl(connectionUrl);
+        basicDataSource.setDriverClassName(ConfigurationUtils.getDriverClass(conf));
+        basicDataSource.setUsername(ConfigurationUtils.getDatabaseUserName(conf));
+        basicDataSource.setPassword(ConfigurationUtils.getDatabasePassword(conf));
+
+
+        //Set connection pool properties
+
+        if (ConfigurationUtils.getWso2CarbonDataSourceName(conf) != null) {
+            String defaultAutoCommit = ConfigurationUtils.isDefaultAutoCommit(conf);
+            if (defaultAutoCommit != null) {
+                basicDataSource.setDefaultAutoCommit(Boolean.parseBoolean(defaultAutoCommit));
+            }
+
+            String defaultReadOnly = ConfigurationUtils.isDefaultReadOnly(conf);
+            if (defaultReadOnly != null) {
+                basicDataSource.setDefaultReadOnly(Boolean.parseBoolean(defaultReadOnly));
+            }
+
+            String defaultCatalog = ConfigurationUtils.getDefaultCatalog(conf);
+            if (defaultCatalog != null) {
+                basicDataSource.setDefaultCatalog(defaultCatalog);
+            }
+
+            String defaultTransactionIsolation = ConfigurationUtils.getDefaultTransactionIsolation(conf);
+            if (defaultTransactionIsolation != null) {
+                basicDataSource.setDefaultTransactionIsolation(Integer.parseInt(defaultTransactionIsolation));
+            }
+
+            String testOnBorrow = ConfigurationUtils.isTestOnBorrow(conf);
+            if (testOnBorrow != null) {
+                basicDataSource.setTestOnBorrow(Boolean.parseBoolean(testOnBorrow));
+            }
+
+            String testOnReturn = ConfigurationUtils.isTestOnReturn(conf);
+            if (testOnReturn != null) {
+                basicDataSource.setTestOnReturn(Boolean.parseBoolean(testOnReturn));
+            }
+
+            String timeBetweenEvictionRunsMillis = ConfigurationUtils.getTimeBetweenEvictionRunsMillis(conf);
+            if (timeBetweenEvictionRunsMillis != null) {
+                basicDataSource.setTimeBetweenEvictionRunsMillis(Long.parseLong(timeBetweenEvictionRunsMillis));
+            }
+
+            String numTestsPerEvictionRun = ConfigurationUtils.getNumTestsPerEvictionRun(conf);
+            if (numTestsPerEvictionRun != null) {
+                basicDataSource.setNumTestsPerEvictionRun(Integer.parseInt(numTestsPerEvictionRun));
+            }
+
+            String minEvictableIdleTimeMillis = ConfigurationUtils.getMinEvictableIdleTimeMillis(conf);
+            if (minEvictableIdleTimeMillis != null) {
+                basicDataSource.setMinEvictableIdleTimeMillis(Long.parseLong(minEvictableIdleTimeMillis));
+            }
+
+            String testWhileIdle = ConfigurationUtils.isTestWhileIdle(conf);
+            if (testWhileIdle != null) {
+                basicDataSource.setTestWhileIdle(Boolean.parseBoolean(testWhileIdle));
+            }
+
+            String validationQuery = ConfigurationUtils.getValidationQuery(conf);
+            if (validationQuery != null) {
+                basicDataSource.setValidationQuery(validationQuery);
+            }
+
+            String maxActive = ConfigurationUtils.getMaxActive(conf);
+            if (maxActive != null) {
+                basicDataSource.setMaxActive(Integer.parseInt(maxActive));
+            }
+
+            String maxIdle = ConfigurationUtils.getMaxIdle(conf);
+            if (maxIdle != null) {
+                basicDataSource.setMaxIdle(Integer.parseInt(maxIdle));
+            }
+
+            String maxWait = ConfigurationUtils.getMaxWait(conf);
+            if (maxWait != null) {
+                basicDataSource.setMaxWait(Long.parseLong(maxWait));
+            }
+
+            String minIdle = ConfigurationUtils.getMinIdle(conf);
+            if (minIdle != null) {
+                basicDataSource.setMinIdle(Integer.parseInt(minIdle));
+            }
+
+            String initialSize = ConfigurationUtils.getInitialSize(conf);
+            if (initialSize != null) {
+                basicDataSource.setInitialSize(Integer.parseInt(initialSize));
+            }
+
+            String accessToUnderlyingConnectionAllowed = ConfigurationUtils.isAccessToUnderlyingConnectionAllowed(conf);
+            if (accessToUnderlyingConnectionAllowed != null) {
+                basicDataSource.setAccessToUnderlyingConnectionAllowed(Boolean.parseBoolean(
+                        accessToUnderlyingConnectionAllowed));
+            }
+
+            String removeAbandoned = ConfigurationUtils.isRemoveAbandoned(conf);
+            if (removeAbandoned != null) {
+                basicDataSource.setRemoveAbandoned(Boolean.parseBoolean(removeAbandoned));
+            }
+
+            String removeAbandonedTimeout = ConfigurationUtils.getRemoveAbandonedTimeout(conf);
+            if (removeAbandonedTimeout != null) {
+                basicDataSource.setRemoveAbandonedTimeout(Integer.parseInt(removeAbandonedTimeout));
+            }
+
+            String logAbandoned = ConfigurationUtils.isLogAbandoned(conf);
+            if (logAbandoned != null) {
+                basicDataSource.setLogAbandoned(Boolean.parseBoolean(logAbandoned));
+            }
+
+        }
+        return basicDataSource;
     }
 
 }

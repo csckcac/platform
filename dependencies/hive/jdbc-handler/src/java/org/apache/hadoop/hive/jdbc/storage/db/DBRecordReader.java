@@ -2,6 +2,7 @@ package org.apache.hadoop.hive.jdbc.storage.db;
 
 
 import org.apache.hadoop.hive.jdbc.storage.exception.UnsupportedDatabaseException;
+import org.apache.hadoop.hive.jdbc.storage.input.JDBCSplit;
 import org.apache.hadoop.io.BooleanWritable;
 import org.apache.hadoop.io.ByteWritable;
 import org.apache.hadoop.io.DoubleWritable;
@@ -11,9 +12,7 @@ import org.apache.hadoop.io.LongWritable;
 import org.apache.hadoop.io.MapWritable;
 import org.apache.hadoop.io.Text;
 import org.apache.hadoop.io.Writable;
-import org.apache.hadoop.mapred.JobConf;
 import org.apache.hadoop.mapred.RecordReader;
-import org.apache.hadoop.hive.jdbc.storage.input.JDBCSplit;
 
 import java.io.IOException;
 import java.sql.Connection;
@@ -33,9 +32,8 @@ public class DBRecordReader implements RecordReader<LongWritable, MapWritable> {
     private JDBCSplit split;
     private long pos = 0;
 
-    public DBRecordReader(JDBCSplit split, JobConf job, DatabaseProperties dbProperties) {
-        DBManager dbManager = new DBManager();
-        dbManager.configureDB(dbProperties);
+    public DBRecordReader(JDBCSplit split, DatabaseProperties dbProperties,
+                          DBManager dbManager) {
         DatabaseType databaseType = null;
         try {
             this.split = split;

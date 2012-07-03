@@ -3,6 +3,8 @@ package org.apache.hadoop.hive.jdbc.storage.db;
 
 import org.apache.commons.dbcp.BasicDataSource;
 import org.apache.hadoop.hive.jdbc.storage.exception.UnsupportedDatabaseException;
+import org.apache.hadoop.hive.jdbc.storage.utils.Commons;
+import org.apache.hadoop.mapred.JobConf;
 
 import javax.sql.DataSource;
 import java.sql.Connection;
@@ -13,34 +15,13 @@ public class DBManager {
 
     private DataSource dataSource;
 
-    public DataSource createDataSource(String driverClass, String connectionUrl, String userName,
-                                       String password){
-        BasicDataSource basicDataSource = new BasicDataSource();
-        basicDataSource.setDriverClassName(driverClass);
-        connectionUrl = connectionUrl.replaceAll(" ", "");
-        basicDataSource.setUrl(connectionUrl);
-        basicDataSource.setUsername(userName);
-        basicDataSource.setPassword(password);
-        return basicDataSource;
-    }
-
     public void setDataSource(DataSource dSource){
         dataSource = dSource;
     }
 
-
     public Connection getConnection() throws ClassNotFoundException, SQLException {
 
         return dataSource.getConnection();
-    }
-
-    public void configureDB(DatabaseProperties databaseProperties) {
-        if(databaseProperties.getDataSourceName()==null){
-            setDataSource(createDataSource(databaseProperties.getDriverClass(),
-                                           databaseProperties.getConnectionUrl(),
-                                           databaseProperties.getUserName(),
-                                           databaseProperties.getPassword()));
-        }
     }
 
     public DatabaseType getDatabaseName(Connection connection) throws UnsupportedDatabaseException {
@@ -73,4 +54,10 @@ public class DBManager {
         return databaseType;
     }
 
+    public void configureDB(JobConf conf) {
+        //Configure BasicDataSource
+        BasicDataSource basicDataSource = Commons.configureBasicDataSource(conf);
+        setDataSource(basicDataSource);
+
+    }
 }

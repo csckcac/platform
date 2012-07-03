@@ -2,6 +2,10 @@ package org.apache.hadoop.hive.jdbc.storage;
 
 import org.apache.hadoop.fs.FileSystem;
 import org.apache.hadoop.fs.Path;
+import org.apache.hadoop.hive.jdbc.storage.db.DBManager;
+import org.apache.hadoop.hive.jdbc.storage.db.DBRecordWriter;
+import org.apache.hadoop.hive.jdbc.storage.db.DatabaseProperties;
+import org.apache.hadoop.hive.jdbc.storage.utils.ConfigurationUtils;
 import org.apache.hadoop.hive.ql.exec.FileSinkOperator;
 import org.apache.hadoop.hive.ql.io.HiveOutputFormat;
 import org.apache.hadoop.io.MapWritable;
@@ -11,9 +15,6 @@ import org.apache.hadoop.mapred.JobConf;
 import org.apache.hadoop.mapred.OutputFormat;
 import org.apache.hadoop.mapred.RecordWriter;
 import org.apache.hadoop.util.Progressable;
-import org.apache.hadoop.hive.jdbc.storage.utils.ConfigurationUtils;
-import org.apache.hadoop.hive.jdbc.storage.db.DBRecordWriter;
-import org.apache.hadoop.hive.jdbc.storage.db.DatabaseProperties;
 
 import java.io.IOException;
 import java.sql.SQLException;
@@ -30,10 +31,6 @@ public class JDBCDataOutputFormat implements OutputFormat<NullWritable, MapWrita
         try {
 
             DatabaseProperties dbProperties = new DatabaseProperties();
-            dbProperties.setConnectionUrl(ConfigurationUtils.getConnectionUrl(conf));
-            dbProperties.setDriverClass(ConfigurationUtils.getDriverClass(conf));
-            dbProperties.setUserName(ConfigurationUtils.getDatabaseUserName(conf));
-            dbProperties.setPassword(ConfigurationUtils.getDatabasePassword(conf));
             dbProperties.setTableName(ConfigurationUtils.getOutputTableName(conf));
             dbProperties.setFieldsNames(ConfigurationUtils.getOutputFieldNames(conf));
             dbProperties.setUpdateOnDuplicate(ConfigurationUtils.isUpdateOnDuplicate(conf));
@@ -42,7 +39,10 @@ public class JDBCDataOutputFormat implements OutputFormat<NullWritable, MapWrita
             dbProperties.setDbSpecificUpsertQuery(ConfigurationUtils.getDbSpecificUpdateQuery(conf));
             dbProperties.setUpsertQueryValuesOrder(ConfigurationUtils.getUpsertQueryValuesOrder(conf));
 
-            return new DBRecordWriter(dbProperties);
+            DBManager dbManager = new DBManager();
+            dbManager.configureDB(conf);
+
+            return new DBRecordWriter(dbProperties, dbManager);
 
         } catch (ClassNotFoundException e) {
             e.printStackTrace();
@@ -51,6 +51,7 @@ public class JDBCDataOutputFormat implements OutputFormat<NullWritable, MapWrita
         }
         return null;
     }
+
 
     public RecordWriter<NullWritable, MapWritable> getRecordWriter(FileSystem fileSystem,
                                                                    JobConf entries, String s,

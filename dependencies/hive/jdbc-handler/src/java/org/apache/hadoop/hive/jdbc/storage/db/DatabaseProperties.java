@@ -9,29 +9,13 @@ public class DatabaseProperties {
     private String driverClass;
     private String tableName;
     private String dbSpecificUpsertQuery;
-    private String tableCreateQuery;
-    private String dataSourceName;
     private String[] upsertQueryValuesOrder;
     private String[] fieldsNames;
     private String[] primaryFields;
     private String[] columnMappingFields;
     private boolean updateOnDuplicate;
+    private String dataSourceName;
 
-    public String getTableCreateQuery() {
-        return tableCreateQuery;
-    }
-
-    public void setTableCreateQuery(String tableCreateQuery) {
-        this.tableCreateQuery = tableCreateQuery;
-    }
-
-    public String getDataSourceName() {
-        return dataSourceName;
-    }
-
-    public void setDataSourceName(String dataSourceName) {
-        this.dataSourceName = dataSourceName;
-    }
 
     public String getDbSpecificUpsertQuery() {
         return dbSpecificUpsertQuery;
@@ -78,6 +62,9 @@ public class DatabaseProperties {
     }
 
     public void setConnectionUrl(String connectionUrl) {
+        if(connectionUrl!=null){
+           connectionUrl=  connectionUrl.replaceAll(" ", "");
+        }
         this.connectionUrl = connectionUrl;
     }
 
@@ -119,5 +106,13 @@ public class DatabaseProperties {
 
     public void setFieldsNames(String[] fieldsNames) {
         this.fieldsNames = fieldsNames;
+    }
+
+    public void setDataSourceName(String wso2CarbonDataSourceName) {
+        dataSourceName = wso2CarbonDataSourceName;
+    }
+
+    public String getDataSourceName(){
+        return dataSourceName;
     }
 }

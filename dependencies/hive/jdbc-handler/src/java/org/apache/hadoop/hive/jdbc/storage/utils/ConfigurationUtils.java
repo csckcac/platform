@@ -2,6 +2,8 @@ package org.apache.hadoop.hive.jdbc.storage.utils;
 
 
 import org.apache.hadoop.conf.Configuration;
+import org.apache.hadoop.hive.jdbc.storage.datasource.BasicDataSourceConstants;
+import org.apache.hadoop.hive.jdbc.storage.datasource.CarbonDataSourceFetcher;
 import org.apache.hadoop.hive.metastore.api.Constants;
 import org.apache.hadoop.mapred.JobConf;
 import org.apache.hadoop.mapred.lib.db.DBConfiguration;
@@ -18,6 +20,7 @@ public class ConfigurationUtils {
     public static final String HIVE_JDBC_TABLE_CREATE_QUERY = "hive.jdbc.table.create.query";
     public static final String HIVE_JDBC_OUTPUT_UPSERT_QUERY = "hive.jdbc.output.upsert.query";
     public static final String HIVE_JDBC_UPSERT_QUERY_VALUES_ORDER = "hive.jdbc.upsert.query.values.order";
+    public static final String HIVE_PROP_CARBON_DS_NAME = "wso2.carbon.datasource.name";
 
 
     public static final String[] ALL_PROPERTIES = new String[]{
@@ -34,7 +37,8 @@ public class ConfigurationUtils {
             HIVE_JDBC_COLUMNS_MAPPING,
             HIVE_JDBC_TABLE_CREATE_QUERY,
             HIVE_JDBC_OUTPUT_UPSERT_QUERY,
-            HIVE_JDBC_UPSERT_QUERY_VALUES_ORDER};
+            HIVE_JDBC_UPSERT_QUERY_VALUES_ORDER,
+            HIVE_PROP_CARBON_DS_NAME};
 
 
     public static void copyJDBCProperties(Properties from, Map<String, String> to) {
@@ -42,8 +46,18 @@ public class ConfigurationUtils {
             String value = from.getProperty(key);
             if (value != null) {
                 to.put(key, value);
+                // This is for supporting wso2 carbon datasources
+                if (key.equals(HIVE_PROP_CARBON_DS_NAME)) {
+                    addingProperties(value, to);
+                }
             }
         }
+    }
+
+    private static void addingProperties(String dataSourceName, Map<String, String> to) {
+        CarbonDataSourceFetcher carbonDataSourceFetcher = new CarbonDataSourceFetcher();
+        Map<String, String> dataSource = carbonDataSourceFetcher.getCarbonDataSource(dataSourceName);
+        to.putAll(dataSource);
     }
 
     public final static String getOutputTableName(Configuration configuration) {
@@ -55,8 +69,8 @@ public class ConfigurationUtils {
             } else {
                 //assign the meta table name
                 tableName = configuration.get(Constants.META_TABLE_NAME);
-                if(tableName.contains("default.")){
-                    tableName = tableName.replace("default.","");
+                if (tableName.contains("default.")) {
+                    tableName = tableName.replace("default.", "");
                 }
             }
         }
@@ -68,8 +82,8 @@ public class ConfigurationUtils {
         if (inputTableName == null) {
             //assign the meta table name
             inputTableName = configuration.get(Constants.META_TABLE_NAME);
-            if(inputTableName.contains("default.")){
-                inputTableName = inputTableName.replace("default.","");
+            if (inputTableName.contains("default.")) {
+                inputTableName = inputTableName.replace("default.", "");
             }
         }
         return inputTableName.trim();
@@ -104,7 +118,7 @@ public class ConfigurationUtils {
         return fieldNames;
     }
 
-    public final static String[] getOutputFieldNames(Configuration conf){
+    public final static String[] getOutputFieldNames(Configuration conf) {
         String[] fieldNames = null;
         String outputFieldNames = conf.get(DBConfiguration.OUTPUT_FIELD_NAMES_PROPERTY);
         if (outputFieldNames != null) {
@@ -127,11 +141,11 @@ public class ConfigurationUtils {
     }
 
     private static String[] convertingToLowerCase(String[] primaryKeyFields) {
-        if(primaryKeyFields!=null){
+        if (primaryKeyFields != null) {
             String[] fields = new String[primaryKeyFields.length];
-              for(int i=0; i< primaryKeyFields.length; i++){
-                  fields[i] = primaryKeyFields[i].toLowerCase();
-              }
+            for (int i = 0; i < primaryKeyFields.length; i++) {
+                fields[i] = primaryKeyFields[i].toLowerCase();
+            }
             return fields;
         }
         return null;
@@ -159,4 +173,92 @@ public class ConfigurationUtils {
         }
         return order;
     }
+
+    /// getting wso2 carbon data source name
+
+    public static String getWso2CarbonDataSourceName(JobConf conf){
+        return conf.get(ConfigurationUtils.HIVE_PROP_CARBON_DS_NAME);
+    }
+
+    //For getting connection pool properties
+    public static String isDefaultAutoCommit(JobConf conf) {
+        return conf.get(BasicDataSourceConstants.PROP_DEFAULT_AUTO_COMMIT);
+    }
+
+    public static String isDefaultReadOnly(JobConf conf) {
+        return conf.get(BasicDataSourceConstants.PROP_DEFAULT_READ_ONLY);
+    }
+
+    public static String getDefaultCatalog(JobConf conf) {
+        return conf.get(BasicDataSourceConstants.PROP_DEFAULT_CATALOG);
+    }
+
+    public static String getDefaultTransactionIsolation(JobConf conf) {
+        return conf.get(BasicDataSourceConstants.PROP_DEFAULT_TRANSACTION_ISOLATION);
+    }
+
+    public static String isTestOnBorrow(JobConf conf) {
+        return conf.get(BasicDataSourceConstants.PROP_TEST_ON_BORROW);
+    }
+
+    public static String isTestOnReturn(JobConf conf) {
+        return conf.get(BasicDataSourceConstants.PROP_TEST_ON_RETURN);
+    }
+
+    public static String getTimeBetweenEvictionRunsMillis(JobConf conf) {
+        return conf.get(BasicDataSourceConstants.PROP_TIME_BETWEEN_EVICTION_RUNS_MILLIS);
+    }
+
+    public static String getNumTestsPerEvictionRun(JobConf conf) {
+        return conf.get(BasicDataSourceConstants.PROP_NUM_TESTS_PER_EVICTION_RUN);
+    }
+
+    public static String getMinEvictableIdleTimeMillis(JobConf conf) {
+        return conf.get(BasicDataSourceConstants.PROP_MIN_EVICTABLE_IDLE_TIME_MILLIS);
+    }
+
+    public static String isTestWhileIdle(JobConf conf) {
+        return conf.get(BasicDataSourceConstants.PROP_TEST_WHILE_IDLE);
+    }
+
+    public static String getValidationQuery(JobConf conf) {
+        return conf.get(BasicDataSourceConstants.PROP_VALIDATION_QUERY);
+    }
+
+    public static String getMaxActive(JobConf conf) {
+        return conf.get(BasicDataSourceConstants.PROP_MAX_ACTIVE);
+    }
+
+    public static String getMaxIdle(JobConf conf) {
+        return conf.get(BasicDataSourceConstants.PROP_MAX_IDLE);
+    }
+
+    public static String getMaxWait(JobConf conf) {
+        return conf.get(BasicDataSourceConstants.PROP_MAX_WAIT);
+    }
+
+    public static String getMinIdle(JobConf conf) {
+        return conf.get(BasicDataSourceConstants.PROP_MIN_IDLE);
+    }
+
+    public static String getInitialSize(JobConf conf) {
+        return conf.get(BasicDataSourceConstants.PROP_INITIAL_SIZE);
+    }
+
+    public static String isAccessToUnderlyingConnectionAllowed(JobConf conf) {
+        return conf.get(BasicDataSourceConstants.PROP_ACCESS_TO_UNDERLYING_CONNECTION_ALLOWED);
+    }
+
+    public static String isRemoveAbandoned(JobConf conf) {
+        return conf.get(BasicDataSourceConstants.PROP_REMOVE_ABANDONED);
+    }
+
+    public static String getRemoveAbandonedTimeout(JobConf conf) {
+        return conf.get(BasicDataSourceConstants.PROP_REMOVE_ABANDONED_TIMEOUT);
+    }
+
+    public static String isLogAbandoned(JobConf conf) {
+        return conf.get(BasicDataSourceConstants.PROP_LOG_ABANDONED);
+    }
+
 }

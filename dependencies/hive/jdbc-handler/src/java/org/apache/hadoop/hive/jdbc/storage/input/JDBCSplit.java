@@ -94,7 +94,7 @@ public class JDBCSplit extends FileSplit implements InputSplit {
         String sql = queryConstructor.constructCountQuery(dbProperties);
 
         DBManager dbManager = new DBManager();
-        dbManager.configureDB(dbProperties);
+        dbManager.configureDB(conf);
         JDBCSplit[] splits = null;
         try {
             Connection connection = dbManager.getConnection();

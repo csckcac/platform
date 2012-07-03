@@ -1,11 +1,13 @@
 package org.apache.hadoop.hive.jdbc.storage.db;
 
 
+import org.apache.commons.dbcp.BasicDataSource;
+import org.apache.hadoop.hive.jdbc.storage.datasource.CarbonDataSourceFetcher;
+import org.apache.hadoop.hive.jdbc.storage.utils.Commons;
+import org.apache.hadoop.hive.jdbc.storage.utils.ConfigurationUtils;
 import org.apache.hadoop.io.MapWritable;
 import org.apache.hadoop.io.Writable;
 import org.apache.hadoop.mapred.lib.db.DBConfiguration;
-import org.apache.hadoop.hive.jdbc.storage.utils.Commons;
-import org.apache.hadoop.hive.jdbc.storage.utils.ConfigurationUtils;
 
 import java.sql.Connection;
 import java.sql.PreparedStatement;
@@ -205,13 +207,27 @@ public class DBOperation {
             dbProperties.setPassword(tableParameters.get(DBConfiguration.PASSWORD_PROPERTY));
             dbProperties.setConnectionUrl(tableParameters.get(DBConfiguration.URL_PROPERTY));
             dbProperties.setDriverClass(tableParameters.get(DBConfiguration.DRIVER_CLASS_PROPERTY));
+            dbProperties.setDataSourceName(tableParameters.get(ConfigurationUtils.HIVE_PROP_CARBON_DS_NAME));
 
             if (dbProperties.getTableName() == null) {
                 dbProperties.setTableName(Commons.extractingTableNameFromQuery(createTableQuery));
             }
 
+            if(dbProperties.getConnectionUrl()==null && dbProperties.getDataSourceName()!=null){
+                CarbonDataSourceFetcher carbonDataSourceFetcher = new CarbonDataSourceFetcher();
+                Map<String, String> dataSource = carbonDataSourceFetcher.getCarbonDataSource(
+                        dbProperties.getDataSourceName());
+                dbProperties.setConnectionUrl(dataSource.get(DBConfiguration.URL_PROPERTY));
+                dbProperties.setDriverClass(DBConfiguration.DRIVER_CLASS_PROPERTY);
+                dbProperties.setUserName(DBConfiguration.USERNAME_PROPERTY);
+                dbProperties.setPassword(DBConfiguration.PASSWORD_PROPERTY);
+                // We are not getting connection pool parameters,
+                // because this is just for creating a table.
+            }
+
             DBManager dbManager = new DBManager();
-            dbManager.configureDB(dbProperties);
+            BasicDataSource basicDataSource = createBasicDataSource(dbProperties);
+            dbManager.setDataSource(basicDataSource);
             Connection connection = null;
             Statement statement = null;
             try {
@@ -241,6 +257,15 @@ public class DBOperation {
                 }
             }
         }
+    }
+
+    private BasicDataSource createBasicDataSource(DatabaseProperties dbProperties) {
+        BasicDataSource basicDataSource = new BasicDataSource();
+        basicDataSource.setUrl(dbProperties.getConnectionUrl());
+        basicDataSource.setDriverClassName(dbProperties.getDriverClass());
+        basicDataSource.setUsername(dbProperties.getUserName());
+        basicDataSource.setPassword(dbProperties.getPassword());
+        return basicDataSource;
     }
 
 

@@ -107,9 +107,5 @@
             <version>1.2.11.wso2v1</version>
             <scope>provided</scope>
         </dependency>
-         <dependency>
-            <groupId>org.wso2.carbon</groupId>
-            <artifactId>org.wso2.carbon.ui</artifactId>
-        </dependency>
     </dependencies>
 </project>

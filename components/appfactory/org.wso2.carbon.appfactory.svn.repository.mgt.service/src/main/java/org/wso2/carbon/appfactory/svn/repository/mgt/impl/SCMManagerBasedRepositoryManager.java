@@ -27,29 +27,37 @@ import org.apache.commons.httpclient.SimpleHttpConnectionManager;
 import org.apache.commons.httpclient.methods.ByteArrayRequestEntity;
 import org.apache.commons.httpclient.methods.GetMethod;
 import org.apache.commons.httpclient.methods.PostMethod;
+import org.apache.commons.io.FileUtils;
 import org.apache.commons.logging.Log;
 import org.apache.commons.logging.LogFactory;
+import org.apache.maven.shared.invoker.*;
 import org.tigris.subversion.svnclientadapter.*;
+import org.tigris.subversion.svnclientadapter.commandline.CmdLineClientAdapter;
 import org.tigris.subversion.svnclientadapter.commandline.CmdLineClientAdapterFactory;
+import org.tigris.subversion.svnclientadapter.javahl.JhlClientAdapterFactory;
 import org.tigris.subversion.svnclientadapter.svnkit.SvnKitClientAdapterFactory;
+import org.tigris.subversion.svnclientadapter.utils.Depth;
 import org.wso2.carbon.appfactory.common.AppFactoryConfiguration;
 import org.wso2.carbon.appfactory.common.AppFactoryConstants;
 import org.wso2.carbon.appfactory.svn.repository.mgt.RepositoryMgtException;
 import org.wso2.carbon.appfactory.svn.repository.mgt.beans.Permission;
 import org.wso2.carbon.appfactory.svn.repository.mgt.beans.PermissionType;
 import org.wso2.carbon.appfactory.svn.repository.mgt.beans.Repository;
-import org.wso2.carbon.appfactory.svn.repository.mgt.internal.SVNRepositoryMgtServiceComponent;
 import org.wso2.carbon.appfactory.svn.repository.mgt.util.Util;
+import org.wso2.carbon.utils.CarbonUtils;
 
 import javax.xml.stream.XMLInputFactory;
 import javax.xml.stream.XMLStreamException;
 import javax.xml.stream.XMLStreamReader;
+import java.io.File;
 import java.io.IOException;
 import java.io.InputStream;
 import java.io.StringWriter;
 import java.net.MalformedURLException;
+import java.text.ParseException;
 import java.util.ArrayList;
 import java.util.Iterator;
+import java.util.List;
 
 /**
  * SCM-manager specific repository manager implementation
@@ -75,7 +83,7 @@ public class SCMManagerBasedRepositoryManager extends AbstractRepositoryManager 
     private AppFactoryConfiguration configuration;
     private ISVNClientAdapter svnClient;
     private String clientType;
-    //  private static AppFactoryConfiguration appFactoryConfiguration = Util.getConfiguration();
+    private static AppFactoryConfiguration appFactoryConfiguration = Util.getConfiguration();
 
     @Override
     public String createRepository(String applicationKey) throws RepositoryMgtException {
@@ -353,5 +361,191 @@ public class SCMManagerBasedRepositoryManager extends AbstractRepositoryManager 
         }
 
     }
+
+    public void initSVNClient() throws SCMManagerExceptions {
+        try {
+            SvnKitClientAdapterFactory.setup();
+            log.debug("SVN Kit client adapter initialized");
+        } catch (Throwable t) {
+            log.debug("Unable to initialize the SVN Kit client adapter - Required jars " +
+                    "may be missing", t);
+        }
+
+        try {
+            JhlClientAdapterFactory.setup();
+            log.debug("Java HL client adapter initialized");
+        } catch (Throwable t) {
+            log.debug("Unable to initialize the Java HL client adapter - Required jars " +
+                    " or the native libraries may be missing", t);
+        }
+
+        try {
+            CmdLineClientAdapterFactory.setup();
+            log.debug("Command line client adapter initialized");
+        } catch (Throwable t) {
+            log.debug("Unable to initialize the command line client adapter - SVN command " +
+                    "line tools may be missing", t);
+        }
+
+
+        String clientType;
+        try {
+            clientType = SVNClientAdapterFactory.getPreferredSVNClientType();
+            svnClient = SVNClientAdapterFactory.createSVNClient(clientType);
+            svnClient.setUsername(appFactoryConfiguration.getFirstProperty(
+                    AppFactoryConstants.SCM_ADMIN_NAME));
+            svnClient.setPassword(appFactoryConfiguration.getFirstProperty(
+                    AppFactoryConstants.SCM_ADMIN_PASSWORD));
+        } catch (SVNClientException e) {
+            throw new SCMManagerExceptions("Client type can not be defined.");
+        }
+
+        if (svnClient == null) {
+            throw new SCMManagerExceptions("Failed to instantiate svn client.");
+        }
+    }
+
+    /**
+     * Check out from given url
+     *
+     * @param applicationSvnUrl - application svn url location
+     * @param applicationId     - application id
+     * @return application check out path.
+     * @throws SCMManagerExceptions
+     *
+     */
+    public String checkoutApplication(String applicationSvnUrl, String applicationId, String svnRevision)
+            throws SCMManagerExceptions {
+        File checkoutDirectory = createApplicationCheckoutDirectory(applicationId);
+        initSVNClient();
+
+        SVNUrl svnUrl = null;
+        try {
+            svnUrl = new SVNUrl(applicationSvnUrl);
+        } catch (MalformedURLException e) {
+            handleException("SVN URL of application is malformed.", e);
+        }
+
+        try {
+            if (svnRevision != null && !"".equals(svnRevision)) {
+                SVNRevision revision = SVNRevision.getRevision(svnRevision);
+
+                if (svnClient instanceof CmdLineClientAdapter) {
+                    // CmdLineClientAdapter does not support all the options
+                    svnClient.checkout(svnUrl, checkoutDirectory, revision, true);
+                } else {
+                    svnClient.checkout(svnUrl, checkoutDirectory, revision,
+                            Depth.infinity, true, true);
+                }
+            } else {
+                throw new SCMManagerExceptions("SVN revision number is null or empty");
+            }
+        } catch (SVNClientException e) {
+            handleException("Failed to checkout code from SVN URL:" + svnUrl, e);
+        } catch (ParseException e) {
+            handleException("SVN revision: " + svnRevision + " is not valid ", e);
+        }
+        return checkoutDirectory.getAbsolutePath();
+    }
+
+    /**
+     * Build the application from given location
+     *
+     * @param sourcePath - source location
+     * @throws SCMManagerExceptions
+     *
+     */
+    public void buildApplication(String sourcePath) throws SCMManagerExceptions {
+        String pomFilePath = sourcePath + File.separator + "pom.xml";
+        File pomFile = new File(pomFilePath);
+        if (!pomFile.exists()) {
+            handleException("pom.xml file not found at " + pomFilePath);
+        }
+        executeMavenGoal(sourcePath);
+        String targetDirPath = sourcePath + File.separator + "target";
+        File targetDir = new File(targetDirPath);
+        if (!targetDir.exists()) {
+            handleException("Application build failure.");
+        }
+    }
+
+    public File createApplicationCheckoutDirectory(String applicationName)
+            throws SCMManagerExceptions {
+        File tempDir = new File(CarbonUtils.getTmpDir() + File.separator + applicationName);
+        if (!tempDir.exists()) {
+            boolean directoriesCreated = tempDir.mkdirs();
+            if (!directoriesCreated) {
+                handleException("Failed to create directory path:" + tempDir.getAbsolutePath());
+            }
+        }
+        return tempDir;
+    }
+
+
+    private void handleException(String msg) throws SCMManagerExceptions {
+        log.error(msg);
+        throw new SCMManagerExceptions(msg);
+    }
+
+    private void handleException(String msg, Exception e) throws SCMManagerExceptions {
+        log.error(msg, e);
+        throw new SCMManagerExceptions(msg, e);
+    }
+
+    public boolean executeMavenGoal(String applicationPath)
+            throws SCMManagerExceptions {
+        InvocationRequest request = new DefaultInvocationRequest();
+        request.setShowErrors(true);
+
+        request.setPomFile(new File(applicationPath + File.separator + "pom.xml"));
+
+        List<String> goals = new ArrayList<String>();
+        goals.add("clean");
+        goals.add("install");
+
+        request.setGoals(goals);
+        Invoker invoker = new DefaultInvoker();
+        InvocationOutputHandler outputHandler = new SystemOutHandler();
+        invoker.setErrorHandler(outputHandler);
+
+        try {
+            InvocationResult result = invoker.execute(request);
+            //Todo: need to get the build error, exception back to the user.
+            if (result.getExecutionException() == null) {
+                if (result.getExitCode() != 0) {
+                    request.setOffline(true);
+                    result = invoker.execute(request);
+                    if (result.getExitCode() == 0) {
+                        return true;
+                    } else {
+                        final String errorMessage = "No maven Application found at "
+                                + applicationPath;
+                        handleException(errorMessage);
+                    }
+                }
+                return true;
+            }
+        } catch (MavenInvocationException e) {
+            handleException("Maven invocation failed with error:" + e.getLocalizedMessage(), e);
+        }
+        return false;
+    }
+
+    public void cleanApplicationDir(String applicationPath) {
+        File application = new File(applicationPath);
+        try {
+            FileUtils.deleteDirectory(application);
+        } catch (IOException ignore) {
+            log.warn("Failed to clean up application at path:" + applicationPath);
+        }
+    }
+
+    public String getAdminUsername(String applicationId) {
+        return appFactoryConfiguration.getFirstProperty(
+                AppFactoryConstants.SERVER_ADMIN_NAME) + "@" + applicationId;
+    }
+
+
+
 
 }

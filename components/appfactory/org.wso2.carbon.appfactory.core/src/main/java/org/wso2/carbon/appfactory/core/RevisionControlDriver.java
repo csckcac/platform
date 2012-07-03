@@ -1,7 +1,17 @@
 package org.wso2.carbon.appfactory.core;
 
+/**
+ * Implementations of this will communicate with the revision control driver
+ */
 public interface RevisionControlDriver {
     
-    public void copySource(String applicationId, String version, String revision);
+    /**
+     * TODO
+     * 
+     * @param applicationId
+     * @param version
+     * @param revision
+     */
+    public void getSource(String applicationId, String version, String revision);
 
 }

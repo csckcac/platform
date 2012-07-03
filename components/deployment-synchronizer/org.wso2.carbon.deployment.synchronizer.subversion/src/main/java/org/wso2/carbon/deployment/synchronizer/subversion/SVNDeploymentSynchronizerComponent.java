@@ -22,15 +22,10 @@ import org.apache.commons.logging.Log;
 import org.apache.commons.logging.LogFactory;
 import org.osgi.framework.ServiceRegistration;
 import org.osgi.service.component.ComponentContext;
-import org.tigris.subversion.svnclientadapter.SVNClientException;
 import org.tigris.subversion.svnclientadapter.commandline.CmdLineClientAdapterFactory;
 import org.tigris.subversion.svnclientadapter.javahl.JhlClientAdapterFactory;
 import org.tigris.subversion.svnclientadapter.svnkit.SvnKitClientAdapterFactory;
 import org.wso2.carbon.deployment.synchronizer.ArtifactRepository;
-import org.wso2.carbon.deployment.synchronizer.DeploymentSynchronizerException;
-import org.wso2.carbon.deployment.synchronizer.internal.util.RepositoryReferenceHolder;
-
-import java.util.Arrays;
 
 /**
  * @scr.component name="org.wso2.carbon.deployment.synchronizer.subversion" immediate="true"
@@ -41,7 +36,7 @@ public class SVNDeploymentSynchronizerComponent {
 
     private ServiceRegistration svnDepSyncServiceRegistration;
 
-    protected void activate(ComponentContext context) throws DeploymentSynchronizerException {
+    protected void activate(ComponentContext context) {
         
         boolean allClientsFailed = true;
         
@@ -75,8 +70,8 @@ public class SVNDeploymentSynchronizerComponent {
         if(allClientsFailed){
             String error = "Could not initialize any of the SVN client adapters - " +
                     "Required jars/libraries may be missing";
-            log.error(error);
-            throw new DeploymentSynchronizerException(error);
+            log.debug(error);
+            return;
         }
 
         ArtifactRepository svnBasedArtifactRepository = new SVNBasedArtifactRepository();

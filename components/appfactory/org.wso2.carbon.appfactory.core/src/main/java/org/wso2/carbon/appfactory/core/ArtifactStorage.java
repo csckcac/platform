@@ -27,6 +27,6 @@ public interface ArtifactStorage {
      * @param revision The revision of the artifact
      * @param file The artifact
      */
-    public void storeArtifact(String applicationId, String version, String revision, String file);
+    public void storeArtifact(String applicationId, String version, String revision, File file);
 
 }

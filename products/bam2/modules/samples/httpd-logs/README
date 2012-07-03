@@ -1,0 +1,9 @@
+Please Follow below instructions to run the HTTPD Logs sample
+===================================================================
+
+1. Start the WSO2 BAM Server
+2. Go to $WSO2_BAM_HOME/samples/httpd-logs directory via console
+3. Type 'ant' from the console
+ (This will read the access.log from the $WSO2_BAM_HOME/samples/httpd-logs/resources Directory and send each log line as event )
+4. Go to Management console of WSO2 BAM by clicking the url which is displayed on the server startup
+5. Go to Main -> ToolBox -> Add ToolBox 

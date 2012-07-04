@@ -345,8 +345,20 @@ class APIProviderImpl extends AbstractAPIManager implements APIProvider {
      *          if failed to add API
      */
     public void addAPI(API api) throws APIManagementException {
-        createAPI(api);
-        apiMgtDAO.addAPI(api);
+        try {
+            registry.beginTransaction();
+            createAPI(api);
+            apiMgtDAO.addAPI(api);
+            registry.commitTransaction();
+        } catch (RegistryException e) {
+            try {
+                registry.rollbackTransaction();
+            } catch (RegistryException regE) {
+                throw new APIManagementException("Error occurred while rollback the transaction for API" + api.getId().getApiName(), regE);
+            }
+            throw new APIManagementException("Error occurred while committing the transaction for the API" + api.getId().getApiName(), e);
+        }
+
     }
 
     /**

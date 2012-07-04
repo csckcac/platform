@@ -90,7 +90,7 @@ function addAssociation(mainType) {
 
     //JS injection validation
     if(!validateTextForIllegal(document.getElementById('associationPaths'))) {
-        CARBON.showWarningDialog(org_wso2_carbon_registry_common_ui_jsi18n["the"] + " "+ "search content"+" " + org_wso2_carbon_registry_common_ui_jsi18n["contains.illegal.chars"]);
+        CARBON.showWarningDialog(org_wso2_carbon_registry_common_ui_jsi18n["the"] + " "+ "association path content"+" " + org_wso2_carbon_registry_common_ui_jsi18n["contains.illegal.chars"]);
         return false;
     }
 

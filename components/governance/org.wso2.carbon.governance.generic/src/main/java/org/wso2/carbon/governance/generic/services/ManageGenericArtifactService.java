@@ -173,6 +173,8 @@ public class ManageGenericArtifactService extends RegistryAbstractAdmin implemen
                             governanceRegistry.getUserRealm().getAuthorizationManager()
                                     .isUserAuthorized(governanceRegistry.getUserName(),
                                             path, ActionConstants.DELETE));
+                    artifactBean.setLCName(artifact.getLifecycleName());
+                    artifactBean.setLCState(artifact.getLifecycleState());
                     artifactBeans.add(artifactBean);
                 }
                 bean.setArtifacts(artifactBeans.toArray(new ArtifactBean[artifactBeans.size()]));

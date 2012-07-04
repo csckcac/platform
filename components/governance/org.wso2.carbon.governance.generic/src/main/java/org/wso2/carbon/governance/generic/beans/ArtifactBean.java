@@ -26,6 +26,8 @@ public class ArtifactBean {
     private String[] valuesB;
     private String path;
     private boolean canDelete;
+    private String LCName;
+    private String LCState;
 
     public String[] getValuesA() {
         return valuesA;
@@ -57,5 +59,21 @@ public class ArtifactBean {
 
     public void setCanDelete(boolean canDelete) {
         this.canDelete = canDelete;
+    }
+
+    public String getLCName() {
+        return LCName;
+    }
+
+    public void setLCName(String LCName) {
+        this.LCName = LCName;
+    }
+
+    public String getLCState() {
+        return LCState;
+    }
+
+    public void setLCState(String LCState) {
+        this.LCState = LCState;
     }
 }

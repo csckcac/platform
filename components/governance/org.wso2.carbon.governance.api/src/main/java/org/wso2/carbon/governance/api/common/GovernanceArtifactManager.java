@@ -140,31 +140,11 @@ public class GovernanceArtifactManager {
             // the artifact will not actually stored in the tmp path.
             String path = GovernanceUtils.getPathFromPathExpression(
                     pathExpression, artifact);
-            if (registry.resourceExists(path)) {
-                Resource oldResource = registry.get(path);
-                Properties properties = (Properties) oldResource.getProperties().clone();
-                resource.setProperties(properties);
-                String oldContent;
-                Object content = oldResource.getContent();
-                if (content instanceof String) {
-                    oldContent = (String) content;
-                } else {
-                    oldContent = RegistryUtils.decodeBytes((byte[]) content);
-                }
-                String newContent;
-                content = resource.getContent();
-                if (content instanceof String) {
-                    newContent = (String) content;
-                } else {
-                    newContent = RegistryUtils.decodeBytes((byte[]) content);
-                }
-                if (newContent.equals(oldContent)) {
-                    artifact.setId(oldResource.getUUID());
-                    addRelationships(path, artifact);
-                    succeeded = true;
-                    return;
-                }
+
+            if(registry.resourceExists(path)){
+                throw new GovernanceException("Governance artifact already exists");
             }
+
             String artifactId = artifact.getId();
             resource.setUUID(artifactId);
             registry.put(path, resource);
@@ -180,7 +160,7 @@ public class GovernanceArtifactManager {
                         ", path: " + artifact.getPath() + ". " + e.getMessage();
             } else {
                 msg = "Failed to add artifact: artifact id: " + artifact.getId() +
-                         ". " + e.getMessage();
+                        ". " + e.getMessage();
             }
             log.error(msg, e);
             throw new GovernanceException(msg, e);
@@ -192,10 +172,10 @@ public class GovernanceArtifactManager {
                     String msg ;
                     if (artifact.getPath() != null) {
                         msg = "Error in committing transactions. Failed to add artifact: artifact " +
-                                    "id: " + artifact.getId() + ", path: " + artifact.getPath() + ".";
+                                "id: " + artifact.getId() + ", path: " + artifact.getPath() + ".";
                     } else {
                         msg = "Error in committing transactions. Failed to add artifact: artifact " +
-                                    "id: " + artifact.getId() + ".";
+                                "id: " + artifact.getId() + ".";
                     }
                     log.error(msg, e);
                 }
@@ -331,10 +311,57 @@ public class GovernanceArtifactManager {
                     String oldPath = oldArtifact.getPath();
                     // so just delete the old path
                     registry.delete(oldPath);
+
+                    String artifactName = artifact.getQName().getLocalPart();
+                    artifact.setAttributes(artifactNameAttribute,
+                            new String[]{artifactName});
+                    String namespace = artifact.getQName().getNamespaceURI();
+                    if (artifactNamespaceAttribute != null) {
+                        artifact.setAttributes(artifactNamespaceAttribute,
+                                new String[]{namespace});
+                    }
+                }
+            } else {
+                throw new GovernanceException("No artifact found for the artifact id :" + artifact.getId());
+            }
+
+            String artifactId =  artifact.getId();
+            Resource resource = registry.newResource();
+            resource.setMediaType(mediaType);
+            setContent(artifact, resource);
+            String path = GovernanceUtils.getPathFromPathExpression(
+                    pathExpression, artifact);
+
+            if (registry.resourceExists(path)) {
+                Resource oldResource = registry.get(path);
+                Properties properties = (Properties) oldResource.getProperties().clone();
+                resource.setProperties(properties);
+                String oldContent;
+                Object content = oldResource.getContent();
+                if (content instanceof String) {
+                    oldContent = (String) content;
+                } else {
+                    oldContent = new String((byte[]) content);
+                }
+                String newContent;
+                content = resource.getContent();
+                if (content instanceof String) {
+                    newContent = (String) content;
+                } else {
+                    newContent = new String((byte[]) content);
+                }
+                if (newContent.equals(oldContent)) {
+                    artifact.setId(oldResource.getUUID());
+                    addRelationships(path, artifact);
+                    succeeded = true;
+                    return;
                 }
             }
-            String artifactId =  artifact.getId();
-            addGovernanceArtifact(artifact);
+
+            resource.setUUID(artifactId);
+            registry.put(path, resource);
+            artifact.setId(resource.getUUID()); //This is done to get the UUID of a existing resource.
+            addRelationships(path, artifact);
             artifact.updatePath(artifactId);
             succeeded = true;
         } catch (RegistryException e) {
@@ -359,10 +386,10 @@ public class GovernanceArtifactManager {
                     String msg;
                     if (artifact.getPath() != null) {
                         msg = "Error in committing transactions. Update artifact failed: artifact " +
-                                        "id: " + artifact.getId() + ", path: " + artifact.getPath() + ".";
+                                "id: " + artifact.getId() + ", path: " + artifact.getPath() + ".";
                     } else {
                         msg = "Error in committing transactions. Update artifact failed: artifact " +
-                                        "id: " + artifact.getId() + ".";
+                                "id: " + artifact.getId() + ".";
                     }
 
                     log.error(msg, e);

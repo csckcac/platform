@@ -65,7 +65,7 @@ public class RuleMediator extends AbstractMediator {
 
         OMElement inputOMElement = getOMElement(messageContext, this.source.getValue());
 
-        if (this.source.getXpath() != null) {
+        if ((this.source.getXpath() != null) && (!this.source.getXpath().equals(""))) {
             inputOMElement = executeXpath(inputOMElement,
                                             this.source.getXpath(),
                                             this.source.getPrefixToNamespaceMap(),
@@ -76,7 +76,7 @@ public class RuleMediator extends AbstractMediator {
             RuleSession ruleSession = ruleEngine.createSession(Constants.RULE_STATEFUL_SESSION);
             OMNode resultOMNode = ruleSession.execute(inputOMElement, this.input, this.output);
 
-            if (this.target.getResultXpath() != null) {
+            if ((this.target.getResultXpath() != null) && (!this.target.getResultXpath().equals(""))) {
                 try {
                     AXIOMXPath axiomXPath = new AXIOMXPath(this.target.getResultXpath());
                     for (String prefix : this.target.getPrefixToNamespaceMap().keySet()) {
@@ -95,7 +95,7 @@ public class RuleMediator extends AbstractMediator {
 
             OMElement targetOMElement = getOMElement(messageContext, this.target.getValue());
 
-            if ((this.target.getXpath() != null)) {
+            if ((this.target.getXpath() != null) && (!this.target.getXpath().equals(""))) {
                 if (targetOMElement == null) {
                     handleException("Target element is null for the target"
                             + this.target.getValue() + ". Can not apply xpaths.", messageContext);

@@ -1,4 +1,4 @@
-<data name="CSVSampleService" serviceGroup="CSV" baseURI="http://ws.wso2.org/dataservice/samples/csv_sample_service">
+<data name="CSVSampleService" baseURI="http://ws.wso2.org/dataservice/samples/csv_sample_service">
     
     <config>
         <property name="csv_datasource">./samples/resources/Products.csv</property>

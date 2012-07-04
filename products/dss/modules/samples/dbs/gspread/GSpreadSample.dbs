@@ -1,5 +1,5 @@
 <?xml version="1.0" encoding="UTF-8"?>
-<data name="GSpreadSample" serviceGroup="GSpread" baseURI="http://ws.wso2.org/dataservice/samples/gspread_sample_service">
+<data name="GSpreadSample" baseURI="http://ws.wso2.org/dataservice/samples/gspread_sample_service">
     <config id="xx">
         <property name="gspread_datasource">https://spreadsheets.google.com/ccc?key=0Av5bU8aVtFjPdElrUVN3VmZlRkoyM1ZzVlE1MzdtbXc&amp;hl=en</property>
         <property name="gspread_visibility">private</property>

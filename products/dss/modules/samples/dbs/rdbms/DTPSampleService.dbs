@@ -1,4 +1,4 @@
-<data name="DTPSampleService" enableBoxcarring="true" enableDTP="true" serviceGroup="rdbms" baseURI="http://ws.wso2.org/dataservice/samples/dtp_sample">
+<data name="DTPSampleService" enableBoxcarring="true" enableDTP="true" baseURI="http://ws.wso2.org/dataservice/samples/dtp_sample">
 
    <config id="H2DataSource1">
       <property name="org.wso2.ws.dataservice.xa_datasource_class">org.h2.jdbcx.JdbcDataSource</property>

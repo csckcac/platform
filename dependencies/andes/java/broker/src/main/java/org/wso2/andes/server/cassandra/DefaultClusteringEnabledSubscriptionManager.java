@@ -97,6 +97,12 @@ public class DefaultClusteringEnabledSubscriptionManager implements ClusteringEn
 
 
         if (subscription.getSubscription() instanceof SubscriptionImpl.BrowserSubscription) {
+            try {
+                ClusterResourceHolder.getInstance().getCassandraMessageStore()
+                        .addUserQueueToGlobalQueue(queue.getResourceName());
+            } catch (AMQStoreException e) {
+                e.printStackTrace();  //To change body of catch statement use File | Settings | File Templates.
+            }
             QueueBrowserFlusher flusher = new QueueBrowserFlusher(subscription.getSubscription(),queue,subscription.getSession());
             flusher.send();
 

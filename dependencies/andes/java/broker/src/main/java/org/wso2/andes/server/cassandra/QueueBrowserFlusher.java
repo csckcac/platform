@@ -67,9 +67,9 @@ public class QueueBrowserFlusher extends Thread {
 
 
     public void send(){
-
+           List<QueueEntry> messages = null;
         try {
-            List<QueueEntry> messages = getSortedMessages();
+            messages = getSortedMessages();
             if (messages.size() > 0) {
                 for (QueueEntry message : messages) {
                     try {
@@ -82,14 +82,22 @@ public class QueueBrowserFlusher extends Thread {
                                 "while delivering the message : ", e);
                     }
                 }
-                // It is essential to confirm auto close , since in the client side it waits to know the end of the messages
-                subscription.confirmAutoClose();
-                clearBrowserQueue(messages);
+
             }
         } catch (AMQStoreException e) {
             log.error("Error while sending message for Browser subscription",e);
         } catch (Exception e) {
             e.printStackTrace();
+        }finally {
+             // It is essential to confirm auto close , since in the client side it waits to know the end of the messages
+                subscription.confirmAutoClose();
+            try {
+                if (messages.size() >0) {
+                    clearBrowserQueue(messages);
+                }
+            } catch (CassandraDataAccessException e) {
+                e.printStackTrace();  //To change body of catch statement use File | Settings | File Templates.
+            }
         }
     }
 

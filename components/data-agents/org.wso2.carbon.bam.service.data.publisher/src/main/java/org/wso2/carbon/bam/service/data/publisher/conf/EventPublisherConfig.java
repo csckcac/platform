@@ -1,8 +1,8 @@
 package org.wso2.carbon.bam.service.data.publisher.conf;
 
 
-import org.wso2.carbon.eventbridge.agent.thrift.DataPublisher;
-import org.wso2.carbon.eventbridge.agent.thrift.conf.AgentConfiguration;
+import org.wso2.carbon.databridge.agent.thrift.DataPublisher;
+import org.wso2.carbon.databridge.agent.thrift.conf.AgentConfiguration;
 
 public class EventPublisherConfig {
 

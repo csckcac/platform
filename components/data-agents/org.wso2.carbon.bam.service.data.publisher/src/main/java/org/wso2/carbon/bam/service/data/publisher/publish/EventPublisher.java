@@ -10,18 +10,18 @@ import org.wso2.carbon.bam.service.data.publisher.conf.Property;
 import org.wso2.carbon.bam.service.data.publisher.data.Event;
 import org.wso2.carbon.bam.service.data.publisher.util.ServiceStatisticsPublisherConstants;
 import org.wso2.carbon.bam.service.data.publisher.util.StatisticsType;
-import org.wso2.carbon.eventbridge.agent.thrift.DataPublisher;
-import org.wso2.carbon.eventbridge.agent.thrift.conf.AgentConfiguration;
-import org.wso2.carbon.eventbridge.agent.thrift.exception.AgentException;
-import org.wso2.carbon.eventbridge.commons.Attribute;
-import org.wso2.carbon.eventbridge.commons.AttributeType;
-import org.wso2.carbon.eventbridge.commons.EventStreamDefinition;
-import org.wso2.carbon.eventbridge.commons.exception.AuthenticationException;
-import org.wso2.carbon.eventbridge.commons.exception.DifferentStreamDefinitionAlreadyDefinedException;
-import org.wso2.carbon.eventbridge.commons.exception.MalformedStreamDefinitionException;
-import org.wso2.carbon.eventbridge.commons.exception.NoStreamDefinitionExistException;
-import org.wso2.carbon.eventbridge.commons.exception.StreamDefinitionException;
-import org.wso2.carbon.eventbridge.commons.exception.TransportException;
+import org.wso2.carbon.databridge.agent.thrift.DataPublisher;
+import org.wso2.carbon.databridge.agent.thrift.conf.AgentConfiguration;
+import org.wso2.carbon.databridge.agent.thrift.exception.AgentException;
+import org.wso2.carbon.databridge.commons.Attribute;
+import org.wso2.carbon.databridge.commons.AttributeType;
+import org.wso2.carbon.databridge.commons.StreamDefinition;
+import org.wso2.carbon.databridge.commons.exception.AuthenticationException;
+import org.wso2.carbon.databridge.commons.exception.DifferentStreamDefinitionAlreadyDefinedException;
+import org.wso2.carbon.databridge.commons.exception.MalformedStreamDefinitionException;
+import org.wso2.carbon.databridge.commons.exception.NoStreamDefinitionExistException;
+import org.wso2.carbon.databridge.commons.exception.StreamDefinitionException;
+import org.wso2.carbon.databridge.commons.exception.TransportException;
 
 import java.net.MalformedURLException;
 import java.util.ArrayList;
@@ -30,9 +30,9 @@ import java.util.List;
 public class EventPublisher {
 
 
-    private static EventStreamDefinition streamDefForActivity;
-    private static EventStreamDefinition streamDefForServiceStats;
-    private static EventStreamDefinition streamDefForActivityServiceStats;
+    private static StreamDefinition streamDefForActivity;
+    private static StreamDefinition streamDefForServiceStats;
+    private static StreamDefinition streamDefForActivityServiceStats;
 
     private boolean isStreamDefinitionAlreadyExist = false;
 
@@ -48,7 +48,7 @@ public class EventPublisher {
         String key = configData.getUrl() + "_" + configData.getUserName() + "_" + configData.getPassword();
         EventPublisherConfig eventPublisherConfig = ServiceAgentUtil.getEventPublisherConfig(key);
 
-        EventStreamDefinition streamDef = getStreamDefinition(configData, statisticsType);
+        StreamDefinition streamDef = getStreamDefinition(configData, statisticsType);
         String streamId = null;
         //create data publisher
         try {
@@ -68,9 +68,9 @@ public class EventPublisher {
             DataPublisher dataPublisher = eventPublisherConfig.getDataPublisher();
 
             try {
-                streamId = dataPublisher.findEventStream(configData.getStreamName(), configData.getVersion());
+                streamId = dataPublisher.findStream(configData.getStreamName(), configData.getVersion());
             } catch (NoStreamDefinitionExistException e) {
-                streamId = dataPublisher.defineEventStream(streamDef);
+                streamId = dataPublisher.defineStream(streamDef);
             }
 
             dataPublisher.publish(streamId, getObjectArray(metaData), getObjectArray(correlationData),
@@ -102,9 +102,9 @@ public class EventPublisher {
         return null;
     }
 
-    private EventStreamDefinition getStreamDefinition(EventingConfigData configData,
+    private StreamDefinition getStreamDefinition(EventingConfigData configData,
                                                       StatisticsType statisticsType) {
-        EventStreamDefinition streamDef= null;
+        StreamDefinition streamDef= null;
         switch (statisticsType) {
 
             case ACTIVITY_STATS:
@@ -129,10 +129,10 @@ public class EventPublisher {
         return streamDef;
     }
 
-    private EventStreamDefinition streamDefinitionForActivity(EventingConfigData configData) {
-        EventStreamDefinition streamDef = null;
+    private StreamDefinition streamDefinitionForActivity(EventingConfigData configData) {
+        StreamDefinition streamDef = null;
         try {
-            streamDef = new EventStreamDefinition(
+            streamDef = new StreamDefinition(
                     configData.getStreamName(), configData.getVersion());
             streamDef.setNickName(configData.getNickName());
             streamDef.setDescription(configData.getDescription());
@@ -156,10 +156,10 @@ public class EventPublisher {
         return streamDef;
     }
 
-    private EventStreamDefinition streamDefinitionForServiceStats(EventingConfigData configData) {
-        EventStreamDefinition streamDef = null;
+    private StreamDefinition streamDefinitionForServiceStats(EventingConfigData configData) {
+        StreamDefinition streamDef = null;
         try {
-            streamDef = new EventStreamDefinition(
+            streamDef = new StreamDefinition(
                     configData.getStreamName(), configData.getVersion());
             streamDef.setNickName(configData.getNickName());
             streamDef.setDescription(configData.getDescription());
@@ -181,10 +181,10 @@ public class EventPublisher {
         return streamDef;
     }
 
-    private EventStreamDefinition streamDefinitionForActivityServiceStats(EventingConfigData configData) {
-        EventStreamDefinition streamDef = null;
+    private StreamDefinition streamDefinitionForActivityServiceStats(EventingConfigData configData) {
+        StreamDefinition streamDef = null;
         try {
-            streamDef = new EventStreamDefinition(
+            streamDef = new StreamDefinition(
                     configData.getStreamName(), configData.getVersion());
             streamDef.setNickName(configData.getNickName());
             streamDef.setDescription(configData.getDescription());

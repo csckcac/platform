@@ -26,17 +26,17 @@ import org.wso2.carbon.bam.mediationstats.data.publisher.data.MediationData;
 import org.wso2.carbon.bam.mediationstats.data.publisher.util.MediationDataPublisherConstants;
 import org.wso2.carbon.bam.mediationstats.data.publisher.util.PublisherUtils;
 import org.wso2.carbon.bam.mediationstats.data.publisher.util.TenantMediationStatConfigData;
-import org.wso2.carbon.eventbridge.agent.thrift.DataPublisher;
-import org.wso2.carbon.eventbridge.agent.thrift.conf.AgentConfiguration;
-import org.wso2.carbon.eventbridge.agent.thrift.exception.AgentException;
-import org.wso2.carbon.eventbridge.commons.AttributeType;
-import org.wso2.carbon.eventbridge.commons.EventStreamDefinition;
-import org.wso2.carbon.eventbridge.commons.exception.AuthenticationException;
-import org.wso2.carbon.eventbridge.commons.exception.DifferentStreamDefinitionAlreadyDefinedException;
-import org.wso2.carbon.eventbridge.commons.exception.MalformedStreamDefinitionException;
-import org.wso2.carbon.eventbridge.commons.exception.NoStreamDefinitionExistException;
-import org.wso2.carbon.eventbridge.commons.exception.StreamDefinitionException;
-import org.wso2.carbon.eventbridge.commons.exception.TransportException;
+import org.wso2.carbon.databridge.agent.thrift.DataPublisher;
+import org.wso2.carbon.databridge.agent.thrift.conf.AgentConfiguration;
+import org.wso2.carbon.databridge.agent.thrift.exception.AgentException;
+import org.wso2.carbon.databridge.commons.AttributeType;
+import org.wso2.carbon.databridge.commons.StreamDefinition;
+import org.wso2.carbon.databridge.commons.exception.AuthenticationException;
+import org.wso2.carbon.databridge.commons.exception.DifferentStreamDefinitionAlreadyDefinedException;
+import org.wso2.carbon.databridge.commons.exception.MalformedStreamDefinitionException;
+import org.wso2.carbon.databridge.commons.exception.NoStreamDefinitionExistException;
+import org.wso2.carbon.databridge.commons.exception.StreamDefinitionException;
+import org.wso2.carbon.databridge.commons.exception.TransportException;
 import org.wso2.carbon.mediation.statistics.StatisticsRecord;
 
 import java.net.MalformedURLException;
@@ -129,7 +129,7 @@ public class Publisher {
                          + "_" + passWord;
             EventPublisherConfig eventPublisherConfig = PublisherUtils.getEventPublisherConfig(key);
 
-            EventStreamDefinition streamDef = getEventStreamDefinition(mediationStatConfig, metaData);
+            StreamDefinition streamDef = getEventStreamDefinition(mediationStatConfig, metaData);
             try {
                 if (eventPublisherConfig == null) {
                     eventPublisherConfig = new EventPublisherConfig();
@@ -144,10 +144,10 @@ public class Publisher {
                 }
 
                 try {
-                    streamId = dataPublisher.findEventStream(mediationStatConfig.getStreamName(),
-                                                             mediationStatConfig.getVersion());
+                    streamId = dataPublisher.findStream(mediationStatConfig.getStreamName(),
+                                                        mediationStatConfig.getVersion());
                 } catch (NoStreamDefinitionExistException e) {
-                    streamId = dataPublisher.defineEventStream(streamDef);
+                    streamId = dataPublisher.defineStream(streamDef);
                 } catch (StreamDefinitionException e) {
                     e.printStackTrace();
                 }
@@ -175,11 +175,11 @@ public class Publisher {
 
     }
 
-    public static EventStreamDefinition getEventStreamDefinition(
+    public static StreamDefinition getEventStreamDefinition(
             MediationStatConfig mediationStatConfig,
             Object[] metaData)
             throws MalformedStreamDefinitionException {
-        EventStreamDefinition eventStreamDefinition = new EventStreamDefinition(
+        StreamDefinition eventStreamDefinition = new StreamDefinition(
                 mediationStatConfig.getStreamName(), mediationStatConfig.getVersion());
         eventStreamDefinition.setNickName(mediationStatConfig.getNickName());
         eventStreamDefinition.setDescription(mediationStatConfig.getDescription());

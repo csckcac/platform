@@ -99,6 +99,7 @@
                     <th><fmt:message key="schema.name"/></th>
                     <th><fmt:message key="schema.namespace"/></th>
                     <th><fmt:message key="version"/></th>
+                    <th><fmt:message key="schema.LC.info"/></th>
                     <th colspan="2"><fmt:message key="actions"/></th>
                 </tr>
             </thead>
@@ -116,7 +117,10 @@
                     <%
                         String schemaName = bean.getName()[i];
                         String schemaNamespace = (bean.getNamespace()[i] == null)? "" : bean.getNamespace()[i] ;
-
+                        String LCState = "";
+                        if(!bean.getLCName()[i].equals("")){
+                            LCState = bean.getLCName()[i] + " / " + bean.getLCState()[i];
+                        }
                         String version = "";
                         if (RegistryUtils.getResourceName(RegistryUtils.getParentPath(completePath)).replace(
                                 "-SNAPSHOT", "").matches(CommonConstants.SERVICE_VERSION_REGEX)) {
@@ -126,6 +130,7 @@
                     <td><a href="../resources/resource.jsp?region=region3&item=resource_browser_menu&path=<%=urlCompletePath%>"><%=schemaName%></a></td>
                     <td><%=schemaNamespace%></td>
                     <td><%=version%></td>
+                    <td><%=LCState%></td>
                     <td>
                         <%if (bean.getCanDelete()[i])  { %>
                             <a title="<fmt:message key="delete"/>" onclick="deleteService('<%=completePath%>','/','../listSchema/schema.jsp?region=region3&item=governance_list_schema_menu')" href="#" class="icon-link registryWriteOperation" style="background-image:url(../admin/images/delete.gif);"><fmt:message key="delete"/></a>
@@ -137,6 +142,7 @@
                     <% } else { %>
                     <td><%=schemaName%></td>
                     <td><%=version%></td>
+                    <td><%=LCState%></td>
                     <td><% if (bean.getCanDelete()[i] && CarbonUIUtil.isUserAuthorized(request, "/permission/admin/manage/resources/browse")) {%><a title="<fmt:message key="delete"/>" onclick="deleteService('<%=completePath%>','/','../listSchema/schema.jsp?region=region3&item=governance_list_schema_menu')" href="#" class="icon-link registryWriteOperation" style="background-image:url(../admin/images/delete.gif);"><fmt:message key="delete"/></a><% }%> </td>
                     <td><a title="<fmt:message key="dependency"/>" onclick="CARBON.showWarningDialog('<fmt:message key="not.sufficient.permissions"/>');" href="#" class="icon-link" style="background-image:url(../relations/images/dep-tree.gif);"> <fmt:message key="view.dependency"/></a> </td>
                     <% } %>

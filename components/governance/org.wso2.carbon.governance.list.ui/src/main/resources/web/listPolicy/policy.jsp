@@ -93,6 +93,7 @@
             <tr>
                     <th><fmt:message key="policy.name"/></th>
                     <th><fmt:message key="version"/></th>
+                    <th><fmt:message key="policy.LC.info"/></th>
                     <% if (CarbonUIUtil.isUserAuthorized(request,
                     "/permission/admin/manage/resources/browse")) {%><th><fmt:message key="actions"/></th><%} %>
                 </tr>
@@ -110,6 +111,10 @@
                 <tr>
                     <%
                         String policyName = bean.getName()[i];
+                        String LCState = "";
+                        if(!bean.getLCName()[i].equals("")){
+                            LCState = bean.getLCName()[i] + " / " + bean.getLCState()[i];
+                        }
                         String version = "";
                         if (RegistryUtils.getResourceName(RegistryUtils.getParentPath(completePath)).replace(
                                 "-SNAPSHOT", "").matches(CommonConstants.SERVICE_VERSION_REGEX)) {
@@ -118,6 +123,7 @@
                         if (CarbonUIUtil.isUserAuthorized(request, "/permission/admin/manage/resources/browse")) { %>
                     <td><a href="../resources/resource.jsp?region=region3&item=resource_browser_menu&path=<%=urlCompletePath%>"><%=policyName%></a></td>
                     <td><%=version%></td>
+                    <td><%=LCState%></td>
                     <td>
                         <%if (bean.getCanDelete()[i])  { %>
                             <a title="<fmt:message key="delete"/>" onclick="deleteService('<%=completePath%>','/','../listPolicy/policy.jsp?region=region3&item=governance_list_policy_menu')" href="#" class="icon-link registryWriteOperation" style="background-image:url(../admin/images/delete.gif);"><fmt:message key="delete"/></a>
@@ -128,6 +134,7 @@
                     <% } else { %>
                     <td><%=policyName%></td>
                     <td><%=version%></td>
+                    <td><%=LCState%></td>
                     <% } %>
                 </tr>
 

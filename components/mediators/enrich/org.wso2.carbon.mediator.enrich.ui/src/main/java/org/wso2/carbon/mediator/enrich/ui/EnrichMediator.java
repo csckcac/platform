@@ -163,10 +163,11 @@ public class EnrichMediator extends AbstractMediator {
 
         if (null != sourceExpression) {
             SynapseXPathSerializer.serializeXPath(sourceExpression, sourceElem, XPATH);
-        } else {
-            sourceElem.addAttribute(XPATH, "", nullNS);
         }
-        sourceElem.addAttribute(PROPERTY, sourceProperty, nullNS);
+        if (sourceProperty != null && !sourceProperty.equals("")) {
+            sourceElem.addAttribute(PROPERTY, sourceProperty, nullNS);
+        }
+
         if (sourceType.equals(INLINE)) {
             /*XMLStreamReader parser = XMLInputFactory.newInstance().createXMLStreamReader("sfsdf");
             //create the builder
@@ -189,7 +190,6 @@ public class EnrichMediator extends AbstractMediator {
             }
         }
 
-
         OMElement targetElem = fac.createOMElement(TARGET, synNS);
 
         targetElem.addAttribute(ACTION, targetAction, nullNS);
@@ -197,12 +197,10 @@ public class EnrichMediator extends AbstractMediator {
 
         if (null != targetExpression) {
             SynapseXPathSerializer.serializeXPath(targetExpression, targetElem, XPATH);
-        } else {
-            targetElem.addAttribute(XPATH, "", nullNS);
-
         }
-
-        targetElem.addAttribute(PROPERTY, targetProperty, nullNS);
+        if (targetProperty != null && !targetProperty.equals("")) {
+            targetElem.addAttribute(PROPERTY, targetProperty, nullNS);
+        }
 
         enrichElem.addChild(sourceElem);
         enrichElem.addChild(targetElem);

@@ -39,6 +39,8 @@ import org.apache.axis2.engine.AxisConfiguration;
 import org.apache.commons.logging.Log;
 import org.apache.commons.logging.LogFactory;
 import org.apache.synapse.core.axis2.Axis2MessageContext;
+import org.apache.synapse.util.xpath.SynapseXPath;
+import org.jaxen.JaxenException;
 import org.wso2.carbon.eventbridge.agent.thrift.Agent;
 import org.wso2.carbon.eventbridge.agent.thrift.DataPublisher;
 import org.wso2.carbon.eventbridge.agent.thrift.conf.AgentConfiguration;
@@ -317,7 +319,7 @@ public class BamMediator extends AbstractMediator {
         payloadData[3] = messageContext.getMessageID();
 
         for (int i=0; i<numOfProperties; i++) {
-            payloadData[4 + i] = properties.get(i).getValue();
+            payloadData[4 + i] = this.producePropertyValue(properties.get(i).getValue(), messageContext);
         }
         
         for (int i=0; i<numOfEntities; i++) {
@@ -353,6 +355,16 @@ public class BamMediator extends AbstractMediator {
             entityString = entityString + ",        {'name':'" + streamEntry.getName() + "','type':'" + streamEntry.getType() +"'}";
         }
         return entityString;
+    }
+    
+    private Object producePropertyValue(String expression, MessageContext messageContext){
+        try {
+            SynapseXPath synapseXPath = new SynapseXPath(expression);
+            return synapseXPath.stringValueOf(messageContext);
+        } catch (JaxenException e) {
+            e.printStackTrace();  //To change body of catch statement use File | Settings | File Templates.
+        }
+        return "";
     }
     
     private Object produceEntityValue(String valueName, MessageContext messageContext){

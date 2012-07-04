@@ -62,7 +62,13 @@ import org.wso2.carbon.authenticator.stub.AuthenticationAdminStub;
 import org.jaggeryjs.hostobjects.file.FileHostObject;
 import org.jaggeryjs.scriptengine.exceptions.ScriptException;
 
+import javax.net.ssl.SSLHandshakeException;
+import java.net.ConnectException;
+import java.net.MalformedURLException;
+import java.net.URI;
+import java.net.URISyntaxException;
 import java.net.URL;
+import java.net.UnknownHostException;
 import java.util.*;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
@@ -1734,6 +1740,32 @@ public class APIProviderHostObject extends ScriptableObject {
             }
         }
         return apiOlderVersionExist;
+
+    }
+
+    public static String jsFunction_isURLValid(String uri)
+            throws APIManagementException {
+        String response = "";
+        if (uri != null && !uri.equals("")) {
+            try {
+                URI validUri = new URI(uri);
+                validUri.toURL().getContent();
+                response = "success";
+            } catch (URISyntaxException e) {
+                response = "malformed";
+            } catch (MalformedURLException e) {
+                response = "malformed";
+            } catch (UnknownHostException e) {
+                response = "unknown";
+            } catch (ConnectException e) {
+                response = "Cannot establish connection to the provided address";
+            } catch (SSLHandshakeException e) {
+                response = "ssl_error";
+            } catch (Exception e) {
+                response = e.getMessage();
+            }
+        }
+        return response;
 
     }
 }

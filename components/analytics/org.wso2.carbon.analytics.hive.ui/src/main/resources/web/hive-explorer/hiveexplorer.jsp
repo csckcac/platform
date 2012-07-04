@@ -513,7 +513,7 @@
                             <tbody>
                             <tr>
                                 <td>
-                                    <textarea id="allcommands" name="allcommands" rows="15"
+                                    <textarea id="allcommands" name="allcommands" rows="25"
                                               style="width:99%"><%=scriptContent%>
                                     </textarea>
                                 </td>

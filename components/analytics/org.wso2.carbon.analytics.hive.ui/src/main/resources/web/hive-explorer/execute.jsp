@@ -42,17 +42,7 @@
                     (ConfigurationContext) config.getServletContext().getAttribute(CarbonConstants.CONFIGURATION_CONTEXT);
             String cookie = (String) session.getAttribute(ServerConstants.ADMIN_SERVICE_COOKIE);
             HiveScriptStoreClient client = new HiveScriptStoreClient(cookie, serverURL, configContext);
-            scriptContent = client.getScript(scriptName);
-            if (null != scriptContent && !"".equals(scriptContent)) {
-                scriptContent = scriptContent.trim();
-                scriptContent = scriptContent.replaceAll("\"", "\\\\\"");
-                scriptContent = scriptContent.replaceAll("'", "\\\\\'");
-                String[] allQueries = scriptContent.split("\n");
-                scriptContent = "";
-                for (String aQuery : allQueries) {
-                    scriptContent += aQuery.trim() + " ";
-                }
-            }
+//
         } catch (Exception e) {
             String errorString = e.getMessage();
             CarbonUIMessage.sendCarbonUIMessage(e.getMessage(), CarbonUIMessage.ERROR, request, e);
@@ -66,21 +56,20 @@
     %>
     <script type="text/javascript">
         jQuery(document).ready(function() {
-            var allQueries = '<%=scriptContent%>';
-            executeQuery(allQueries);
+            executeQuery();
         });
     </script>
 
 
     <script type="text/javascript">
 
-        function executeQuery(allQueries) {
-            if (allQueries != "") {
+        function executeQuery() {
+                var execScriptName = '<%=scriptName%>';
                 document.getElementById('middle').style.cursor = 'wait';
                 openProgressBar();
-                new Ajax.Request('../hive-explorer/queryresults.jsp', {
+                new Ajax.Request('../hive-explorer/executeQuery.jsp', {
                             method: 'post',
-                            parameters: {queries:allQueries},
+                            parameters: {scriptName:execScriptName},
                             onSuccess: function(transport) {
                                 closeProgrsssBar();
                                 document.getElementById('middle').style.cursor = '';
@@ -99,13 +88,6 @@
                                 CARBON.showErrorDialog(transport.responseText);
                             }
                         });
-
-            } else {
-                closeProgrsssBar();
-                document.getElementById('middle').style.cursor = 'wait';
-                var message = "Empty query can not be executed";
-                CARBON.showErrorDialog(message);
-            }
         }
 
         function openProgressBar() {

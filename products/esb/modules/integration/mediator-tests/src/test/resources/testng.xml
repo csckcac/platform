@@ -81,10 +81,12 @@
 
     <test name="Test - Mediator Clone" preserve-order="true" verbose="2">
         <classes>
-            <class name="org.wso2.carbon.mediator.tests.clone.CloneMediatorTestCase"/>
+         <!--   <class name="org.wso2.carbon.mediator.tests.clone.CloneMediatorTestCase"/>
             <class name="org.wso2.carbon.mediator.tests.clone.ValidSoapActionTestCase"/>
-            <class name="org.wso2.carbon.mediator.tests.clone.ToAddressTestCase"/>
             <class name="org.wso2.carbon.mediator.tests.clone.InlineEndpointTestCase"/>
+            <class name="org.wso2.carbon.mediator.tests.clone.ToAddressTestCase"/>
+            <class name="org.wso2.carbon.mediator.tests.clone.AnonymousSequenceCallTestCase"/>   -->
+
         </classes>
     </test>
 </suite>

@@ -672,6 +672,38 @@ public class SQLQuery extends Query implements BatchRequestParticipant {
         return config;
     }
 
+    private boolean isValidCreds(String[] creds) {
+    	return (creds != null && creds.length > 1 && creds[0] != null);
+    }
+    
+    public String[] lookupConnectionCredentials() throws DataServiceFault {
+    	if (this.getConfig().getPrimaryDynAuth() != null) {
+    		String user = DBUtils.getCurrentContextUsername();
+    		String[] creds = this.getConfig().getPrimaryDynAuth().lookupCredentials(user);
+    		if (this.isValidCreds(creds)) {
+    			return creds;
+    		} else {
+    			if (this.getConfig().getSecondaryDynAuth() != null) {
+    				creds = this.getConfig().getSecondaryDynAuth().lookupCredentials(user);
+    				if (this.isValidCreds(creds)) {
+    					return creds;
+    				}
+    			}
+    			creds = this.getConfig().getPrimaryDynAuth().lookupCredentials(
+						RDBMS.USERNAME_WILDCARD);
+    			if (this.isValidCreds(creds)) {
+    				return creds;
+    			} else {
+					throw new DataServiceFault(
+							"A username/password mapping does not exist for the " +
+							"request user: " + user);
+				}
+    		}
+    	} else {
+    		return new String[] { null, null };
+    	}
+    }
+    
     /**
      * Creates a new connection and return it.
      *
@@ -679,25 +711,27 @@ public class SQLQuery extends Query implements BatchRequestParticipant {
      */
     private Connection createConnection() throws DataServiceFault {
         try {
+        	String[] creds = this.lookupConnectionCredentials();
             Connection connection = null;
             DataService dataService = this.getDataService();
             if (dataService.isInTransaction() && !dataService.isEnableXA()) {
                 /* if in a transaction, and not XA transactions */
-                connection = TLConnectionStore.getConnection(this.getConfigId());
+                connection = TLConnectionStore.getConnection(this.getConfigId(), creds[0]);
                 if (connection == null) {
-                    connection = this.getConfig().createConnection();
+                    connection = this.getConfig().createConnection(creds[0], creds[1]);
                     /* disable autocommit, and add to the connection list */
                     connection.setAutoCommit(false);
-                    TLConnectionStore.addConnection(this.getConfigId(), connection);
+                    TLConnectionStore.addConnection(this.getConfigId(), creds[0], connection);
                 }
             } else {
                 /* for normal operations and XA-transactions */
-                connection = this.getConfig().createConnection();
+                connection = this.getConfig().createConnection(creds[0], creds[1]);
                 /* set auto commit, but don't mess with XA-transactions */
                 if (!(dataService.isInTransaction() && dataService.isEnableXA())) {
                     switch (this.getAutoCommit()) {
                         case AUTO_COMMIT_ON:
                             connection.setAutoCommit(true);
+                            break;
                         case AUTO_COMMIT_OFF:
                             connection.setAutoCommit(false);
                             break;

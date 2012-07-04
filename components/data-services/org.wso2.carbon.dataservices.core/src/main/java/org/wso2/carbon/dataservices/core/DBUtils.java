@@ -250,6 +250,15 @@ public class DBUtils {
     public static void setBatchRequestNumber(int val) {
         batchRequestNumber.set(val);
     }
+    
+    public static String getCurrentContextUsername() {
+    	MessageContext ctx = MessageContext.getCurrentMessageContext();
+    	if (ctx != null) {
+    		return getUsername(ctx);
+    	} else {
+    		return null;
+    	}
+    }
 
     public static String getUsername(MessageContext msgContext) {
         String userName = (String) msgContext.getProperty(

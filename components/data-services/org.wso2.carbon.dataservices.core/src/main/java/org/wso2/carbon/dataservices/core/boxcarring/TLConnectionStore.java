@@ -40,14 +40,24 @@ public class TLConnectionStore {
 		}
 	};
 	
-	public static void addConnection(String configId, Connection connection) {
-		Map<String, Connection> conns = tlCons.get();
-		conns.put(configId, connection);
+	private static String generateConnectionMapId(String confidId, String user) {
+		String userSuffix;
+		if (user != null) {
+			userSuffix = " # " + user; 
+		} else {
+			userSuffix = " # #NULL#";
+		}
+		return confidId + userSuffix;
 	}
 	
-	public static Connection getConnection(String configId) {
+	public static void addConnection(String configId, String user, Connection connection) {
 		Map<String, Connection> conns = tlCons.get();
-		return conns.get(configId);
+		conns.put(generateConnectionMapId(configId, user), connection);
+	}
+	
+	public static Connection getConnection(String configId, String user) {
+		Map<String, Connection> conns = tlCons.get();
+		return conns.get(generateConnectionMapId(configId, user));
 	}
 	
 	public static void commitAll() throws SQLException {

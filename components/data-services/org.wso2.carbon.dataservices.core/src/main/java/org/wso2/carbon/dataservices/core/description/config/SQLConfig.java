@@ -32,6 +32,8 @@ import org.wso2.carbon.dataservices.common.DBConstants.AutoCommit;
 import org.wso2.carbon.dataservices.common.DBConstants.RDBMS;
 import org.wso2.carbon.dataservices.core.DBUtils;
 import org.wso2.carbon.dataservices.core.DataServiceFault;
+import org.wso2.carbon.dataservices.core.auth.ConfigurationBasedAuthenticator;
+import org.wso2.carbon.dataservices.core.auth.DynamicUserAuthenticator;
 import org.wso2.carbon.dataservices.core.engine.DataService;
 
 /**
@@ -47,12 +49,39 @@ public abstract class SQLConfig extends Config {
 	
 	private AutoCommit autoCommit;
 	
+	private DynamicUserAuthenticator primaryDynAuth;
+	
+	private DynamicUserAuthenticator secondaryDynAuth;
+	
 	public SQLConfig(DataService dataService, String configId, 
 			String type, Map<String, String> properties) throws DataServiceFault {
 		super(dataService, configId, type, properties);
 		/* set validation query, if exists */
 		this.validationQuery = this.getProperty(RDBMS.VALIDATION_QUERY);
 		this.processAutoCommitValue();
+		this.processDynamicAuth();
+	}
+	
+	private void processDynamicAuth() throws DataServiceFault {
+		String dynAuthMapping = this.getProperty(RDBMS.DYNAMIC_USER_AUTH_MAPPING);
+		if (dynAuthMapping != null) {
+			this.primaryDynAuth = new ConfigurationBasedAuthenticator(dynAuthMapping);
+		}
+		String dynAuthClass = this.getProperty(RDBMS.DYNAMIC_USER_AUTH_CLASS);
+		if (dynAuthClass != null) {
+			try {
+				DynamicUserAuthenticator authObj = (DynamicUserAuthenticator) Class.forName(
+						dynAuthClass).newInstance();
+				if (this.primaryDynAuth == null) {
+					this.primaryDynAuth = authObj;
+				} else {
+					this.secondaryDynAuth = authObj;
+				}
+			} catch (Exception e) {
+				throw new DataServiceFault(e, 
+						"Error in creating dynamic user authenticator: " + e.getMessage());
+			}
+		}
 	}
 	
 	private void processAutoCommitValue() throws DataServiceFault {
@@ -75,6 +104,14 @@ public abstract class SQLConfig extends Config {
 		}
 	}
 	
+	public DynamicUserAuthenticator getPrimaryDynAuth() {
+		return primaryDynAuth;
+	}
+
+	public DynamicUserAuthenticator getSecondaryDynAuth() {
+		return secondaryDynAuth;
+	}
+
 	public boolean hasJDBCBatchUpdateSupport() {
 		return jdbcBatchUpdateSupport;
 	}
@@ -103,12 +140,22 @@ public abstract class SQLConfig extends Config {
 	}
 	
 	public Connection createConnection() throws SQLException, DataServiceFault {
+		return this.createConnection(null, null);
+	}
+	
+	public Connection createConnection(String user, String pass) 
+			throws SQLException, DataServiceFault {
 		if (log.isDebugEnabled()){
 			log.debug("Creating data source connection");
 		}
 		DataSource ds = this.getDataSource();
 		if (ds != null) {
-			Connection conn = ds.getConnection();
+			Connection conn;
+			if (user != null) {
+				conn = ds.getConnection(user, pass);
+			} else {
+			    conn = ds.getConnection();
+			}
 			if (this.getDataService().isEnableXA() && this.getDataService().isInTransaction() &&
 					conn instanceof XAConnection) {
 				try {

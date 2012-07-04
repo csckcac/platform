@@ -103,6 +103,7 @@ public class JDBCPoolSQLConfig extends SQLConfig {
 		this.filterJDBCPoolProps(props);
 		RDBMSDataSourceUtils.assignBeanProps(config,
 				new HashMap<String, Object>(props));
+		this.handlePostConfigInit(config);
 		return config;
 	}
 	
@@ -136,6 +137,14 @@ public class JDBCPoolSQLConfig extends SQLConfig {
 		props.remove(RDBMS.MAX_FIELD_SIZE);
 		props.remove(RDBMS.MAX_ROWS);
 		props.remove(RDBMS.MAX_WAIT);
+		props.remove(RDBMS.DYNAMIC_USER_AUTH_CLASS);
+		props.remove(RDBMS.DYNAMIC_USER_AUTH_MAPPING);
+	}
+	
+	private void handlePostConfigInit(RDBMSConfiguration config) {
+		if (this.getPrimaryDynAuth() != null) {
+			config.setAlternateUsernameAllowed(true);
+		}
 	}
 
 }

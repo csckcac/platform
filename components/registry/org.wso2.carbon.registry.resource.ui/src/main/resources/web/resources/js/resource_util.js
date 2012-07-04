@@ -2330,6 +2330,10 @@ function generateNewUI(parentPath) {
     sessionAwareFunction(function() {
         var mediaType = document.getElementById('customMediaTypeID').value;
         if (mediaType == "other") {
+             if(!validateTextForIllegal(document.getElementById('customMediaTypeIDOtherValue'))) {
+               CARBON.showWarningDialog(org_wso2_carbon_registry_common_ui_jsi18n["the"] + " "+ "media type content"+" " + org_wso2_carbon_registry_common_ui_jsi18n["contains.illegal.chars"]);
+               return false;
+               }
             mediaType = document.getElementById('customMediaTypeIDOtherValue').value;
         }
         new Ajax.Updater('customAddUIDiv', '../resources/custom_add_ajaxprocessor.jsp', { method: 'get', evalScripts:true, parameters: {mediaType:mediaType, parentPath:parentPath,random:getRandom()} });

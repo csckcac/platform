@@ -31,6 +31,8 @@
 <%@ page import="java.util.List" %>
 <%@ page import="java.util.LinkedList" %>
 <%@ page import="org.wso2.carbon.ui.CarbonUIUtil" %>
+<script type="text/javascript" src="../registry_common/js/registry_validation.js"></script>
+
 <%
     String cookie = (String) session.getAttribute(ServerConstants.ADMIN_SERVICE_COOKIE);
     String viewMode = Utils.getResourceViewMode(request);

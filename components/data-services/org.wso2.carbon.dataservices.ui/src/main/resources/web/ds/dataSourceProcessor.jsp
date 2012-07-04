@@ -71,6 +71,21 @@
     String removeAbandoned = request.getParameter(DBConstants.RDBMS.REMOVE_ABANDONED);
     String removeAbandonedTimeout = request.getParameter(DBConstants.RDBMS.REMOVE_ABANDONED_TIMEOUT);
     String logAbandoned = request.getParameter(DBConstants.RDBMS.LOG_ABANDONED);
+    String defaultAutoCommit = request.getParameter(DBConstants.RDBMS.DEFAULT_AUTOCOMMIT);
+    String defaultReadOnly = request.getParameter(DBConstants.RDBMS.DEFAULT_READONLY);
+    String defaultCatalog = request.getParameter(DBConstants.RDBMS.DEFAULT_CATALOG);
+    String validatorClassName = request.getParameter(DBConstants.RDBMS.VALIDATOR_CLASSNAME);
+    String connectionProperties = request.getParameter(DBConstants.RDBMS.CONNECTION_PROPERTIES);
+    String initSql = request.getParameter(DBConstants.RDBMS.INIT_SQL);
+    String jdbcInterceptors = request.getParameter(DBConstants.RDBMS.JDBC_INTERCEPTORS);
+    String validationInterval = request.getParameter(DBConstants.RDBMS.VALIDATION_INTERVAL);
+    String jmxEnabled = request.getParameter(DBConstants.RDBMS.JMX_ENABLED);
+    String fairQueue = request.getParameter(DBConstants.RDBMS.FAIR_QUEUE);
+    String abandonWhenPercentageFull = request.getParameter(DBConstants.RDBMS.ABANDON_WHEN_PERCENTAGE_FULL);
+    String maxAge = request.getParameter(DBConstants.RDBMS.MAX_AGE);
+    String useEquals = request.getParameter(DBConstants.RDBMS.USE_EQUALS);
+    String suspectTimeout = request.getParameter(DBConstants.RDBMS.SUSPECT_TIMEOUT);
+    String alternateUserNameAllowed = request.getParameter(DBConstants.RDBMS.ALTERNATE_USERNAME_ALLOWED);
 
     String excelDatasource = request.getParameter(DBConstants.Excel.DATASOURCE);
 
@@ -244,6 +259,45 @@
                         updateConfiguration(dsConfig, DBConstants.RDBMS.LOG_ABANDONED, logAbandoned);
                     } else {
                         dsConfig.removeProperty(DBConstants.RDBMS.LOG_ABANDONED);
+                    }
+                    updateConfiguration(dsConfig,DBConstants.RDBMS.DEFAULT_CATALOG, defaultCatalog);
+                    updateConfiguration(dsConfig,DBConstants.RDBMS.VALIDATOR_CLASSNAME, validatorClassName);
+                    updateConfiguration(dsConfig,DBConstants.RDBMS.CONNECTION_PROPERTIES, connectionProperties);
+                    updateConfiguration(dsConfig,DBConstants.RDBMS.INIT_SQL, initSql);
+                    updateConfiguration(dsConfig,DBConstants.RDBMS.JDBC_INTERCEPTORS, jdbcInterceptors);
+                    updateConfiguration(dsConfig,DBConstants.RDBMS.VALIDATION_INTERVAL, validationInterval);
+                    updateConfiguration(dsConfig,DBConstants.RDBMS.ABANDON_WHEN_PERCENTAGE_FULL, abandonWhenPercentageFull);
+                    updateConfiguration(dsConfig,DBConstants.RDBMS.MAX_AGE, maxAge);
+                    updateConfiguration(dsConfig,DBConstants.RDBMS.SUSPECT_TIMEOUT, suspectTimeout);
+                    if (!"false".equals(defaultAutoCommit)) {
+                        updateConfiguration(dsConfig, DBConstants.RDBMS.DEFAULT_AUTOCOMMIT, defaultAutoCommit);
+                    } else {
+                        dsConfig.removeProperty(DBConstants.RDBMS.DEFAULT_AUTOCOMMIT);
+                    }
+                    if (!"false".equals(defaultReadOnly)) {
+                        updateConfiguration(dsConfig, DBConstants.RDBMS.DEFAULT_READONLY, defaultReadOnly);
+                    } else {
+                        dsConfig.removeProperty(DBConstants.RDBMS.DEFAULT_READONLY);
+                    }
+                    if (!"false".equals(jmxEnabled)) {
+                        updateConfiguration(dsConfig, DBConstants.RDBMS.JMX_ENABLED, jmxEnabled);
+                    } else {
+                        dsConfig.removeProperty(DBConstants.RDBMS.JMX_ENABLED);
+                    }
+                    if (!"false".equals(fairQueue)) {
+                        updateConfiguration(dsConfig, DBConstants.RDBMS.FAIR_QUEUE, fairQueue);
+                    } else {
+                        dsConfig.removeProperty(DBConstants.RDBMS.FAIR_QUEUE);
+                    }
+                    if (!"false".equals(alternateUserNameAllowed)) {
+                        updateConfiguration(dsConfig, DBConstants.RDBMS.ALTERNATE_USERNAME_ALLOWED, alternateUserNameAllowed);
+                    } else {
+                        dsConfig.removeProperty(DBConstants.RDBMS.ALTERNATE_USERNAME_ALLOWED);
+                    }
+                    if (!"false".equals(useEquals)) {
+                        updateConfiguration(dsConfig, DBConstants.RDBMS.USE_EQUALS, useEquals);
+                    } else {
+                        dsConfig.removeProperty(DBConstants.RDBMS.USE_EQUALS);
                     }
                 } else if (DBConstants.DataSourceTypes.EXCEL.equals(datasourceType)) {
                     updateConfiguration(dsConfig, DBConstants.Excel.DATASOURCE, excelDatasource);

@@ -163,12 +163,9 @@ private Config addNotAvailableFunctions(Config config,String selectedType, HttpS
             property.add(new Property("User", ""));
             property.add(new Property("Password", ""));
 
-
-
             if (config.getPropertyValue(DBConstants.RDBMS.DATASOURCE_PROPS) == null) {
                 config.addProperty(DBConstants.RDBMS.DATASOURCE_PROPS, property);
             }
-
 
 		 if (config.getPropertyValue(DBConstants.RDBMS.DEFAULT_TX_ISOLATION) == null) {
 			 config.addProperty(DBConstants.RDBMS.DEFAULT_TX_ISOLATION, "");
@@ -211,6 +208,51 @@ private Config addNotAvailableFunctions(Config config,String selectedType, HttpS
 		 }
 		 if (config.getPropertyValue(DBConstants.RDBMS.LOG_ABANDONED) == null) {
 			 config.addProperty(DBConstants.RDBMS.LOG_ABANDONED, "");
+		 }
+         if (config.getPropertyValue(DBConstants.RDBMS.DEFAULT_AUTOCOMMIT) == null) {
+			 config.addProperty(DBConstants.RDBMS.DEFAULT_AUTOCOMMIT, "");
+		 }
+         if (config.getPropertyValue(DBConstants.RDBMS.DEFAULT_READONLY) == null) {
+			 config.addProperty(DBConstants.RDBMS.DEFAULT_READONLY, "");
+		 }
+         if (config.getPropertyValue(DBConstants.RDBMS.DEFAULT_CATALOG) == null) {
+			 config.addProperty(DBConstants.RDBMS.DEFAULT_CATALOG, "");
+		 }
+         if (config.getPropertyValue(DBConstants.RDBMS.VALIDATOR_CLASSNAME) == null) {
+			 config.addProperty(DBConstants.RDBMS.VALIDATOR_CLASSNAME, "");
+		 }
+         if (config.getPropertyValue(DBConstants.RDBMS.CONNECTION_PROPERTIES) == null) {
+			 config.addProperty(DBConstants.RDBMS.CONNECTION_PROPERTIES, "");
+		 }
+         if (config.getPropertyValue(DBConstants.RDBMS.INIT_SQL) == null) {
+			 config.addProperty(DBConstants.RDBMS.INIT_SQL, "");
+		 }
+         if (config.getPropertyValue(DBConstants.RDBMS.JDBC_INTERCEPTORS) == null) {
+			 config.addProperty(DBConstants.RDBMS.JDBC_INTERCEPTORS, "");
+		 }
+         if (config.getPropertyValue(DBConstants.RDBMS.VALIDATION_INTERVAL) == null) {
+			 config.addProperty(DBConstants.RDBMS.VALIDATION_INTERVAL, "");
+		 }
+         if (config.getPropertyValue(DBConstants.RDBMS.JMX_ENABLED) == null) {
+			 config.addProperty(DBConstants.RDBMS.JMX_ENABLED, "");
+		 }
+         if (config.getPropertyValue(DBConstants.RDBMS.FAIR_QUEUE) == null) {
+			 config.addProperty(DBConstants.RDBMS.FAIR_QUEUE, "");
+		 }
+         if (config.getPropertyValue(DBConstants.RDBMS.ABANDON_WHEN_PERCENTAGE_FULL) == null) {
+			 config.addProperty(DBConstants.RDBMS.ABANDON_WHEN_PERCENTAGE_FULL, "");
+		 }
+         if (config.getPropertyValue(DBConstants.RDBMS.MAX_AGE) == null) {
+			 config.addProperty(DBConstants.RDBMS.MAX_AGE, "");
+		 }
+         if (config.getPropertyValue(DBConstants.RDBMS.USE_EQUALS) == null) {
+			 config.addProperty(DBConstants.RDBMS.USE_EQUALS, "");
+		 }
+         if (config.getPropertyValue(DBConstants.RDBMS.SUSPECT_TIMEOUT) == null) {
+			 config.addProperty(DBConstants.RDBMS.SUSPECT_TIMEOUT, "");
+		 }
+         if (config.getPropertyValue(DBConstants.RDBMS.ALTERNATE_USERNAME_ALLOWED) == null) {
+			 config.addProperty(DBConstants.RDBMS.ALTERNATE_USERNAME_ALLOWED, "");
 		 }
     } else if (DBConstants.DataSourceTypes.EXCEL.equals(selectedType)) {
     	 if (config.getPropertyValue(DBConstants.Excel.DATASOURCE) == null) {
@@ -358,6 +400,22 @@ private Config addNotAvailableFunctions(Config config,String selectedType, HttpS
             		newConfig.addProperty(DBConstants.RDBMS.REMOVE_ABANDONED,"");
             		newConfig.addProperty(DBConstants.RDBMS.REMOVE_ABANDONED_TIMEOUT,"");
             		newConfig.addProperty(DBConstants.RDBMS.LOG_ABANDONED,"");
+                    newConfig.addProperty(DBConstants.RDBMS.DEFAULT_AUTOCOMMIT,"");
+                    newConfig.addProperty(DBConstants.RDBMS.DEFAULT_READONLY,"");
+                    newConfig.addProperty(DBConstants.RDBMS.DEFAULT_CATALOG,"");
+                    newConfig.addProperty(DBConstants.RDBMS.VALIDATOR_CLASSNAME,"");
+                    newConfig.addProperty(DBConstants.RDBMS.CONNECTION_PROPERTIES,"");
+                    newConfig.addProperty(DBConstants.RDBMS.INIT_SQL,"");
+                    newConfig.addProperty(DBConstants.RDBMS.JDBC_INTERCEPTORS,"");
+                    newConfig.addProperty(DBConstants.RDBMS.VALIDATION_INTERVAL,"");
+                    newConfig.addProperty(DBConstants.RDBMS.JMX_ENABLED,"");
+                    newConfig.addProperty(DBConstants.RDBMS.FAIR_QUEUE,"");
+                    newConfig.addProperty(DBConstants.RDBMS.ABANDON_WHEN_PERCENTAGE_FULL,"");
+                    newConfig.addProperty(DBConstants.RDBMS.MAX_AGE,"");
+                    newConfig.addProperty(DBConstants.RDBMS.USE_EQUALS,"");
+                    newConfig.addProperty(DBConstants.RDBMS.SUSPECT_TIMEOUT,"");
+                    newConfig.addProperty(DBConstants.RDBMS.ALTERNATE_USERNAME_ALLOWED,"");
+                    
                 } else if (DBConstants.DataSourceTypes.EXCEL.equals(selectedType)) {
                     newConfig.addProperty(DBConstants.Excel.DATASOURCE, "");
 
@@ -440,6 +498,22 @@ private Config addNotAvailableFunctions(Config config,String selectedType, HttpS
             		conf.addProperty(DBConstants.RDBMS.REMOVE_ABANDONED,"");
             		conf.addProperty(DBConstants.RDBMS.REMOVE_ABANDONED_TIMEOUT,"");
             		conf.addProperty(DBConstants.RDBMS.LOG_ABANDONED,"");
+
+                    conf.addProperty(DBConstants.RDBMS.DEFAULT_AUTOCOMMIT,"");
+                    conf.addProperty(DBConstants.RDBMS.DEFAULT_READONLY,"");
+                    conf.addProperty(DBConstants.RDBMS.DEFAULT_CATALOG,"");
+                    conf.addProperty(DBConstants.RDBMS.VALIDATOR_CLASSNAME,"");
+                    conf.addProperty(DBConstants.RDBMS.CONNECTION_PROPERTIES,"");
+                    conf.addProperty(DBConstants.RDBMS.INIT_SQL,"");
+                    conf.addProperty(DBConstants.RDBMS.JDBC_INTERCEPTORS,"");
+                    conf.addProperty(DBConstants.RDBMS.VALIDATION_INTERVAL,"");
+                    conf.addProperty(DBConstants.RDBMS.JMX_ENABLED,"");
+                    conf.addProperty(DBConstants.RDBMS.FAIR_QUEUE,"");
+                    conf.addProperty(DBConstants.RDBMS.ABANDON_WHEN_PERCENTAGE_FULL,"");
+                    conf.addProperty(DBConstants.RDBMS.MAX_AGE,"");
+                    conf.addProperty(DBConstants.RDBMS.USE_EQUALS,"");
+                    conf.addProperty(DBConstants.RDBMS.SUSPECT_TIMEOUT,"");
+                    conf.addProperty(DBConstants.RDBMS.ALTERNATE_USERNAME_ALLOWED,"");
 
                 } else if (DBConstants.DataSourceTypes.EXCEL.equals(selectedType)) {
                     conf.addProperty(DBConstants.Excel.DATASOURCE, "");
@@ -1022,7 +1096,22 @@ private Config addNotAvailableFunctions(Config config,String selectedType, HttpS
     		||propertyName.equals(DBConstants.RDBMS.TEST_WHILE_IDLE)
     		||propertyName.equals(DBConstants.RDBMS.TIME_BETWEEN_EVICTION_RUNS_MILLIS)
     		||propertyName.equals(DBConstants.RDBMS.MIN_EVICTABLE_IDLE_TIME_MILLIS)
-    		||propertyName.equals(DBConstants.RDBMS.REMOVE_ABANDONED_TIMEOUT))) {%>
+    		||propertyName.equals(DBConstants.RDBMS.REMOVE_ABANDONED_TIMEOUT)
+    		||propertyName.equals(DBConstants.RDBMS.DEFAULT_AUTOCOMMIT)
+            ||propertyName.equals(DBConstants.RDBMS.DEFAULT_READONLY)
+            ||propertyName.equals(DBConstants.RDBMS.DEFAULT_CATALOG)
+            ||propertyName.equals(DBConstants.RDBMS.VALIDATOR_CLASSNAME)
+            ||propertyName.equals(DBConstants.RDBMS.CONNECTION_PROPERTIES)
+            ||propertyName.equals(DBConstants.RDBMS.INIT_SQL)
+            ||propertyName.equals(DBConstants.RDBMS.JDBC_INTERCEPTORS)
+            ||propertyName.equals(DBConstants.RDBMS.VALIDATION_INTERVAL)
+            ||propertyName.equals(DBConstants.RDBMS.JMX_ENABLED)
+            ||propertyName.equals(DBConstants.RDBMS.FAIR_QUEUE)
+            ||propertyName.equals(DBConstants.RDBMS.ABANDON_WHEN_PERCENTAGE_FULL)
+            ||propertyName.equals(DBConstants.RDBMS.MAX_AGE)
+            ||propertyName.equals(DBConstants.RDBMS.USE_EQUALS)
+            ||propertyName.equals(DBConstants.RDBMS.SUSPECT_TIMEOUT)
+            ||propertyName.equals(DBConstants.RDBMS.ALTERNATE_USERNAME_ALLOWED))) {%>
     <td class="leftCol-small" style="white-space: nowrap;">
         <fmt:message key="<%=propertyName%>"/><%=(isFieldMandatory(propertyName)?"<font color=\"red\">*</font>":"")%>
     </td>
@@ -1179,7 +1268,22 @@ private Config addNotAvailableFunctions(Config config,String selectedType, HttpS
     		||propertyName.equals(DBConstants.RDBMS.TEST_WHILE_IDLE)
     		||propertyName.equals(DBConstants.RDBMS.TIME_BETWEEN_EVICTION_RUNS_MILLIS)
     		||propertyName.equals(DBConstants.RDBMS.MIN_EVICTABLE_IDLE_TIME_MILLIS)
-    		||propertyName.equals(DBConstants.RDBMS.REMOVE_ABANDONED_TIMEOUT))){ %>
+    		||propertyName.equals(DBConstants.RDBMS.REMOVE_ABANDONED_TIMEOUT)
+            ||propertyName.equals(DBConstants.RDBMS.DEFAULT_AUTOCOMMIT)
+            ||propertyName.equals(DBConstants.RDBMS.DEFAULT_READONLY)
+            ||propertyName.equals(DBConstants.RDBMS.DEFAULT_CATALOG)
+            ||propertyName.equals(DBConstants.RDBMS.VALIDATOR_CLASSNAME)
+            ||propertyName.equals(DBConstants.RDBMS.CONNECTION_PROPERTIES)
+            ||propertyName.equals(DBConstants.RDBMS.INIT_SQL)
+            ||propertyName.equals(DBConstants.RDBMS.JDBC_INTERCEPTORS)
+            ||propertyName.equals(DBConstants.RDBMS.VALIDATION_INTERVAL)
+            ||propertyName.equals(DBConstants.RDBMS.JMX_ENABLED)
+            ||propertyName.equals(DBConstants.RDBMS.FAIR_QUEUE)
+            ||propertyName.equals(DBConstants.RDBMS.ABANDON_WHEN_PERCENTAGE_FULL)
+            ||propertyName.equals(DBConstants.RDBMS.MAX_AGE)
+            ||propertyName.equals(DBConstants.RDBMS.USE_EQUALS)
+            ||propertyName.equals(DBConstants.RDBMS.SUSPECT_TIMEOUT)
+            ||propertyName.equals(DBConstants.RDBMS.ALTERNATE_USERNAME_ALLOWED))){ %>
             <input type="text" size="50" id="<%=propertyName%>" name="<%=propertyName%>"
                                value="<%=propertyValue%>"/>
        <%}%>
@@ -1244,7 +1348,16 @@ private Config addNotAvailableFunctions(Config config,String selectedType, HttpS
                         ||propertyName.equals(DBConstants.RDBMS.VALIDATION_QUERY)
                         ||propertyName.equals(DBConstants.RDBMS.TIME_BETWEEN_EVICTION_RUNS_MILLIS)
                         ||propertyName.equals(DBConstants.RDBMS.MIN_EVICTABLE_IDLE_TIME_MILLIS)
-                        ||propertyName.equals(DBConstants.RDBMS.REMOVE_ABANDONED_TIMEOUT)) {%>
+                        ||propertyName.equals(DBConstants.RDBMS.REMOVE_ABANDONED_TIMEOUT)
+                        ||propertyName.equals(DBConstants.RDBMS.DEFAULT_CATALOG)
+                        ||propertyName.equals(DBConstants.RDBMS.VALIDATOR_CLASSNAME)
+                        ||propertyName.equals(DBConstants.RDBMS.CONNECTION_PROPERTIES)
+                        ||propertyName.equals(DBConstants.RDBMS.INIT_SQL)
+                        ||propertyName.equals(DBConstants.RDBMS.JDBC_INTERCEPTORS)
+                        ||propertyName.equals(DBConstants.RDBMS.VALIDATION_INTERVAL)
+                        ||propertyName.equals(DBConstants.RDBMS.ABANDON_WHEN_PERCENTAGE_FULL)
+                        ||propertyName.equals(DBConstants.RDBMS.MAX_AGE)
+                        ||propertyName.equals(DBConstants.RDBMS.SUSPECT_TIMEOUT)) {%>
                         <tr>
                          <td class="leftCol-small" style="white-space: nowrap;"><label><fmt:message key="<%=propertyName%>"/></label></td>
                          <td> <input type="text" size="50" id="<%=propertyName%>" name="<%=propertyName%>"  value="<%=propertyValue%>"/></td>
@@ -1271,7 +1384,13 @@ private Config addNotAvailableFunctions(Config config,String selectedType, HttpS
                    <%} else if (propertyName.equals(DBConstants.RDBMS.TEST_ON_RETURN)
                            || propertyName.equals(DBConstants.RDBMS.LOG_ABANDONED)
                            || propertyName.equals(DBConstants.RDBMS.TEST_WHILE_IDLE)
-                           || propertyName.equals(DBConstants.RDBMS.REMOVE_ABANDONED)) {%>
+                           || propertyName.equals(DBConstants.RDBMS.REMOVE_ABANDONED)
+                           ||propertyName.equals(DBConstants.RDBMS.DEFAULT_AUTOCOMMIT)
+                           ||propertyName.equals(DBConstants.RDBMS.DEFAULT_READONLY)
+                           ||propertyName.equals(DBConstants.RDBMS.JMX_ENABLED)
+                           ||propertyName.equals(DBConstants.RDBMS.FAIR_QUEUE)
+                           ||propertyName.equals(DBConstants.RDBMS.ALTERNATE_USERNAME_ALLOWED)
+                           ||propertyName.equals(DBConstants.RDBMS.USE_EQUALS)) {%>
                         <tr>
                             <td class="leftCol-small" style="white-space: nowrap;"><label><fmt:message key="<%=propertyName%>"/></label></td>
                             <td>

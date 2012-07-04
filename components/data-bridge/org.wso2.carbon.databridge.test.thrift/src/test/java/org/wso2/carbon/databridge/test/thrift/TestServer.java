@@ -41,8 +41,8 @@ public class TestServer extends TestCase {
 
     public void testServerTest() throws DataBridgeException, InterruptedException {
         TestServer testServer = new TestServer();
-        testServer.start(7611);
-        Thread.sleep(1000);
+        testServer.start(7661);
+        Thread.sleep(2000);
         testServer.stop();
     }
 

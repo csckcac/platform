@@ -1,15 +1,23 @@
 package org.wso2.carbon.bam.kpiagent;
 
 import org.apache.log4j.Logger;
-import org.wso2.carbon.eventbridge.agent.thrift.Agent;
-import org.wso2.carbon.eventbridge.agent.thrift.DataPublisher;
-import org.wso2.carbon.eventbridge.agent.thrift.conf.AgentConfiguration;
-import org.wso2.carbon.eventbridge.agent.thrift.exception.AgentException;
-import org.wso2.carbon.eventbridge.commons.Event;
-import org.wso2.carbon.eventbridge.commons.exception.*;
+import org.wso2.carbon.databridge.agent.thrift.Agent;
+import org.wso2.carbon.databridge.agent.thrift.DataPublisher;
+import org.wso2.carbon.databridge.agent.thrift.conf.AgentConfiguration;
+import org.wso2.carbon.databridge.agent.thrift.exception.AgentException;
+import org.wso2.carbon.databridge.commons.Event;
+import org.wso2.carbon.databridge.commons.exception.DifferentStreamDefinitionAlreadyDefinedException;
+import org.wso2.carbon.databridge.commons.exception.MalformedStreamDefinitionException;
+import org.wso2.carbon.databridge.commons.exception.NoStreamDefinitionExistException;
+import org.wso2.carbon.databridge.commons.exception.StreamDefinitionException;
+import org.wso2.carbon.databridge.commons.exception.TransportException;
 
 import javax.security.sasl.AuthenticationException;
-import java.net.*;
+import java.net.Inet4Address;
+import java.net.InetAddress;
+import java.net.MalformedURLException;
+import java.net.NetworkInterface;
+import java.net.SocketException;
 import java.util.Enumeration;
 import java.util.Random;
 
@@ -24,10 +32,15 @@ public class KPIAgent {
     public static final int[] price = {50000, 55000, 90000, 80000, 70000};
 
 
-    public static void main(String[] args) throws AgentException, MalformedStreamDefinitionException,
-            StreamDefinitionException, DifferentStreamDefinitionAlreadyDefinedException, MalformedURLException,
-            AuthenticationException, NoStreamDefinitionExistException,
-            org.wso2.carbon.eventbridge.commons.exception.AuthenticationException, TransportException, SocketException {
+    public static void main(String[] args) throws AgentException,
+                                                  MalformedStreamDefinitionException,
+                                                  StreamDefinitionException,
+                                                  DifferentStreamDefinitionAlreadyDefinedException,
+                                                  MalformedURLException,
+                                                  AuthenticationException,
+                                                  NoStreamDefinitionExistException,
+                                                  TransportException, SocketException,
+                                                  org.wso2.carbon.databridge.commons.exception.AuthenticationException {
         System.out.println("Starting BAM Phone Reatil Shop KPI Agent");
         AgentConfiguration agentConfiguration = new AgentConfiguration();
         String currentDir = System.getProperty("user.dir");
@@ -43,25 +56,25 @@ public class KPIAgent {
         String streamId = null;
 
         try {
-            streamId = dataPublisher.findEventStream(PHONE_RETAIL_STREAM, VERSION);
+            streamId = dataPublisher.findStream(PHONE_RETAIL_STREAM, VERSION);
             System.out.println("Stream already defined");
 
         } catch (NoStreamDefinitionExistException e) {
-            streamId = dataPublisher.defineEventStream("{" +
-                    "  'name':'" + PHONE_RETAIL_STREAM + "'," +
-                    "  'version':'" + VERSION + "'," +
-                    "  'nickName': 'Phone_Retail_Shop'," +
-                    "  'description': 'Phone Sales'," +
-                    "  'metaData':[" +
-                    "          {'name':'clientType','type':'STRING'}" +
-                    "  ]," +
-                    "  'payloadData':[" +
-                    "          {'name':'brand','type':'STRING'}," +
-                    "          {'name':'quantity','type':'INT'}," +
-                    "          {'name':'total','type':'INT'}," +
-                    "          {'name':'user','type':'STRING'}" +
-                    "  ]" +
-                    "}");
+            streamId = dataPublisher.defineStream("{" +
+                                                  "  'name':'" + PHONE_RETAIL_STREAM + "'," +
+                                                  "  'version':'" + VERSION + "'," +
+                                                  "  'nickName': 'Phone_Retail_Shop'," +
+                                                  "  'description': 'Phone Sales'," +
+                                                  "  'metaData':[" +
+                                                  "          {'name':'clientType','type':'STRING'}" +
+                                                  "  ]," +
+                                                  "  'payloadData':[" +
+                                                  "          {'name':'brand','type':'STRING'}," +
+                                                  "          {'name':'quantity','type':'INT'}," +
+                                                  "          {'name':'total','type':'INT'}," +
+                                                  "          {'name':'user','type':'STRING'}" +
+                                                  "  ]" +
+                                                  "}");
 //            //Define event stream
         }
 

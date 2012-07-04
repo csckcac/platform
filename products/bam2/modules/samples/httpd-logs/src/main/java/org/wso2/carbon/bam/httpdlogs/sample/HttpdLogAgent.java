@@ -1,15 +1,20 @@
 package org.wso2.carbon.bam.httpdlogs.sample;
 
-import org.wso2.carbon.eventbridge.agent.thrift.Agent;
-import org.wso2.carbon.eventbridge.agent.thrift.DataPublisher;
-import org.wso2.carbon.eventbridge.agent.thrift.conf.AgentConfiguration;
-import org.wso2.carbon.eventbridge.agent.thrift.exception.AgentException;
-import org.wso2.carbon.eventbridge.commons.Event;
-import org.wso2.carbon.eventbridge.commons.exception.*;
+import org.wso2.carbon.databridge.agent.thrift.Agent;
+import org.wso2.carbon.databridge.agent.thrift.DataPublisher;
+import org.wso2.carbon.databridge.agent.thrift.conf.AgentConfiguration;
+import org.wso2.carbon.databridge.agent.thrift.exception.AgentException;
+import org.wso2.carbon.databridge.commons.Event;
+import org.wso2.carbon.databridge.commons.exception.*;
 
 import java.io.FileInputStream;
 import java.io.FileNotFoundException;
-import java.net.*;
+import java.net.Inet4Address;
+import java.net.InetAddress;
+import java.net.MalformedURLException;
+import java.net.NetworkInterface;
+import java.net.SocketException;
+import java.net.UnknownHostException;
 import java.util.Enumeration;
 import java.util.Scanner;
 
@@ -50,11 +55,11 @@ public class HttpdLogAgent {
         String streamId = null;
 
         try {
-            streamId = dataPublisher.findEventStream(HTTPD_LOG_STREAM, VERSION);
+            streamId = dataPublisher.findStream(HTTPD_LOG_STREAM, VERSION);
             System.out.println("Stream already defined");
 
         } catch (NoStreamDefinitionExistException e) {
-            streamId = dataPublisher.defineEventStream("{" +
+            streamId = dataPublisher.defineStream("{" +
                     "  'name':'" + HTTPD_LOG_STREAM + "'," +
                     "  'version':'" + VERSION + "'," +
                     "  'nickName': 'Httpd_Log_Stream'," +

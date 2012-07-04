@@ -178,29 +178,14 @@
                                 </featureArtifactDef>
                                 <!-- end BAM features -->
 
-                                <!-- Event Bridge Features -->
-
-                                <featureArtifactDef>
-                                    org.wso2.carbon:org.wso2.carbon.eventbridge.commons.server.feature:${carbon.version}
-                                </featureArtifactDef>
-                                <featureArtifactDef>
-                                    org.wso2.carbon:org.wso2.carbon.eventbridge.receiver.thrift.server.feature:${carbon.version}
-                                </featureArtifactDef>
-                                <featureArtifactDef>
-                                    org.wso2.carbon:org.wso2.carbon.eventbridge.receiver.restapi.server.feature:${carbon.version}
-                                </featureArtifactDef>
-                                <featureArtifactDef>
-                                    org.wso2.carbon:org.wso2.carbon.eventbridge.thrift.commons.server.feature:${carbon.version}
-                                </featureArtifactDef>
-                                <featureArtifactDef>
-                                    org.wso2.carbon:org.wso2.carbon.eventbridge.core.server.feature:${carbon.version}
-                                </featureArtifactDef>
-                                <featureArtifactDef>
-                                    org.wso2.carbon:org.wso2.carbon.eventbridge.streamdefn.cassandra.server.feature:${carbon.version}
-                                </featureArtifactDef>
+                                <!-- Data Bridge Features -->
+                                <!--<featureArtifactDef>org.wso2.carbon:org.wso2.carbon.databridge.datapublisher.feature:4.0.0-SNAPSHOT</featureArtifactDef>-->
+                                <featureArtifactDef>org.wso2.carbon:org.wso2.carbon.databridge.datareceiver.feature:4.0.0-SNAPSHOT</featureArtifactDef>
+                                <featureArtifactDef>org.wso2.carbon:org.wso2.carbon.databridge.streamdefn.cassandra.feature:4.0.0-SNAPSHOT</featureArtifactDef>
 
 
-			        <!-- Analytics features -->
+
+                                <!-- Analytics features -->
 				<featureArtifactDef>
                                     org.wso2.carbon:org.wso2.carbon.analytics.feature:${carbon.version}
                                 </featureArtifactDef>
@@ -415,30 +400,20 @@
                                     <!--<id>org.wso2.carbon.bam2.receiver.server.feature.group</id>-->
                                     <!--<version>${carbon.version}</version>-->
                                 <!--</feature>-->
+                                <!--<feature>-->
+                                    <!--<id>org.wso2.carbon.databridge.datapublisher.feature.group</id>-->
+                                    <!--<version>${carbon.version}</version>-->
+                                <!--</feature>-->
                                 <feature>
-                                    <id>org.wso2.carbon.eventbridge.commons.server.feature.group</id>
+                                    <id>org.wso2.carbon.databridge.datareceiver.feature.group</id>
                                     <version>${carbon.version}</version>
                                 </feature>
                                 <feature>
-                                    <id>org.wso2.carbon.eventbridge.receiver.thrift.server.feature.group</id>
+                                    <id>org.wso2.carbon.databridge.streamdefn.cassandra.feature.group</id>
                                     <version>${carbon.version}</version>
                                 </feature>
-                                <feature>
-                                    <id>org.wso2.carbon.eventbridge.receiver.restapi.server.feature.group</id>
-                                    <version>${carbon.version}</version>
-                                </feature>
-                                <feature>
-                                    <id>org.wso2.carbon.eventbridge.thrift.commons.server.feature.group</id>
-                                    <version>${carbon.version}</version>
-                                </feature>
-                                <feature>
-                                    <id>org.wso2.carbon.eventbridge.core.server.feature.group</id>
-                                    <version>${carbon.version}</version>
-                                </feature>
-                                <feature>
-                                    <id>org.wso2.carbon.eventbridge.streamdefn.cassandra.server.feature.group</id>
-                                    <version>${carbon.version}</version>
-                                </feature>
+
+
                                 <!-- end BAM features -->
 
 				<!-- Analytics features -->

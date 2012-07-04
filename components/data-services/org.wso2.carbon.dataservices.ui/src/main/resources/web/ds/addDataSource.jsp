@@ -1486,18 +1486,18 @@ private Config addNotAvailableFunctions(Config config,String selectedType, HttpS
                 var password;
                 if(!document.getElementById('datasourceType').options[document.getElementById('datasourceType').selectedIndex].value == 'Cassandra'
                         && document.getElementById("xaType").options[document.getElementById("xaType").selectedIndex].value == 'xaType') {
-                    driver = document.getElementById(RDBMS.DATASOURCE_CLASSNAME).value;
+                    driver = document.getElementById('<%=RDBMS.DATASOURCE_CLASSNAME%>').value;
                     jdbcUrl = document.getElementById('URL').value;
                     userName = document.getElementById('User').value;
                     password = document.getElementById('Password').value;
                 } else{
-                    driver = document.getElementById(RDBMS.DRIVER_CLASSNAME).value;
-                    jdbcUrl = document.getElementById(RDBMS.URL).value;
+                    driver = document.getElementById('<%=RDBMS.DRIVER_CLASSNAME%>').value;
+                    jdbcUrl = document.getElementById('<%=RDBMS.URL%>').value;
                     if(document.getElementById('datasourceType').options[document.getElementById('datasourceType').selectedIndex].value == 'Cassandra') {
-                        jdbcUrl = "jdbc:cassandra://"+document.getElementById(RDBMS.URL).value;
+                        jdbcUrl = "jdbc:cassandra://"+document.getElementById(<%=RDBMS.URL%>).value;
                     }
-                    userName = document.getElementById(RDBMS.USERNAME).value;
-                    password = document.getElementById(RDBMS.PASSWORD).value;
+                    userName = document.getElementById('<%=RDBMS.USERNAME%>').value;
+                    password = document.getElementById('<%=RDBMS.PASSWORD%>').value;
                 }
 
 

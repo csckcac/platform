@@ -504,8 +504,8 @@ function setJDBCValues(obj, document) {
     var selectedValue = obj[obj.selectedIndex].value;
     var jdbcUrl = selectedValue.substring(0, selectedValue.indexOf("#"));
     var driverClass = selectedValue.substring(selectedValue.indexOf("#") + 1, selectedValue.length);
-    document.getElementById('org.wso2.ws.dataservice.protocol').value = jdbcUrl;
-    document.getElementById('org.wso2.ws.dataservice.driver').value = driverClass;
+    document.getElementById('url').value = jdbcUrl;
+    document.getElementById('driverClassName').value = driverClass;
 }
 
 function validateOutputMappingFields(obj){

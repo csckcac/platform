@@ -58,6 +58,8 @@
 							</importFeatures>
                             <includedFeatures>
                                 <includedFeatureDef>org.wso2.carbon:org.wso2.carbon.databridge.core.server.feature</includedFeatureDef>
+                                <includedFeatureDef>org.wso2.carbon:org.wso2.carbon.databridge.commons.server.feature</includedFeatureDef>
+                                <includedFeatureDef>org.wso2.carbon:org.wso2.carbon.databridge.commons.thrift.server.feature</includedFeatureDef>
                                 <includedFeatureDef>org.wso2.carbon:org.wso2.carbon.databridge.receiver.thrift.server.feature</includedFeatureDef>
                                 <includedFeatureDef>org.wso2.carbon:org.wso2.carbon.databridge.receiver.restapi.server.feature</includedFeatureDef>
                             </includedFeatures>

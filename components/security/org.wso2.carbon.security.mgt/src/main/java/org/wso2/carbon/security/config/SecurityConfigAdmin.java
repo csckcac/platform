@@ -23,7 +23,11 @@ import org.apache.axiom.om.OMElement;
 import org.apache.axiom.om.OMNode;
 import org.apache.axiom.om.impl.builder.StAXOMBuilder;
 import org.apache.axis2.AxisFault;
-import org.apache.axis2.description.*;
+import org.apache.axis2.description.AxisBinding;
+import org.apache.axis2.description.AxisEndpoint;
+import org.apache.axis2.description.AxisModule;
+import org.apache.axis2.description.AxisService;
+import org.apache.axis2.description.Parameter;
 import org.apache.axis2.engine.AxisConfiguration;
 import org.apache.axis2.engine.AxisEvent;
 import org.apache.commons.logging.Log;
@@ -50,18 +54,31 @@ import org.wso2.carbon.core.persistence.PersistenceFactory;
 import org.wso2.carbon.core.persistence.PersistenceUtils;
 import org.wso2.carbon.core.persistence.file.ModuleFilePersistenceManager;
 import org.wso2.carbon.core.persistence.file.ServiceGroupFilePersistenceManager;
-import org.wso2.carbon.core.util.*;
+import org.wso2.carbon.core.util.CryptoException;
+import org.wso2.carbon.core.util.CryptoUtil;
+import org.wso2.carbon.core.util.KeyStoreManager;
+import org.wso2.carbon.core.util.KeyStoreUtil;
+import org.wso2.carbon.core.util.ParameterUtil;
 import org.wso2.carbon.registry.core.Registry;
 import org.wso2.carbon.registry.core.RegistryConstants;
 import org.wso2.carbon.registry.core.Resource;
 import org.wso2.carbon.registry.core.exceptions.RegistryException;
 import org.wso2.carbon.registry.core.jdbc.utils.Transaction;
 import org.wso2.carbon.registry.core.session.UserRegistry;
-import org.wso2.carbon.security.*;
+import org.wso2.carbon.security.SecurityConfigException;
+import org.wso2.carbon.security.SecurityConstants;
+import org.wso2.carbon.security.SecurityScenario;
+import org.wso2.carbon.security.SecurityScenarioDatabase;
+import org.wso2.carbon.security.SecurityServiceHolder;
 import org.wso2.carbon.security.config.service.KerberosConfigData;
 import org.wso2.carbon.security.config.service.SecurityConfigData;
 import org.wso2.carbon.security.config.service.SecurityScenarioData;
-import org.wso2.carbon.security.util.*;
+import org.wso2.carbon.security.util.RahasUtil;
+import org.wso2.carbon.security.util.RampartConfigUtil;
+import org.wso2.carbon.security.util.SecurityTokenStore;
+import org.wso2.carbon.security.util.ServerCrypto;
+import org.wso2.carbon.security.util.ServicePasswordCallbackHandler;
+import org.wso2.carbon.user.core.AuthorizationManager;
 import org.wso2.carbon.user.core.UserCoreConstants;
 import org.wso2.carbon.user.core.UserRealm;
 import org.wso2.carbon.utils.ServerException;
@@ -71,9 +88,17 @@ import javax.security.auth.callback.CallbackHandler;
 import javax.xml.namespace.QName;
 import javax.xml.stream.XMLInputFactory;
 import javax.xml.stream.XMLStreamReader;
-import java.io.*;
+import java.io.File;
+import java.io.FileInputStream;
+import java.io.FileOutputStream;
+import java.io.IOException;
+import java.io.InputStream;
 import java.security.KeyStore;
-import java.util.*;
+import java.util.ArrayList;
+import java.util.Iterator;
+import java.util.List;
+import java.util.Map;
+import java.util.Properties;
 
 /**
  * Admin service for configuring Security scenarios
@@ -348,13 +373,20 @@ public class SecurityConfigAdmin {
                 }
 //                registry.removeAssociation(resourceUri, servicePath,
 //                        SecurityConstants.ASSOCIATION_SERVICE_SECURING_POLICY);
-                List roleElements = serviceGroupFilePM.getAll(
-                        serviceGroupId, serviceXPath +
-                        "/" + Resources.SecurityManagement.ROLE_XML_TAG+
-                        PersistenceUtils.getXPathAttrPredicate(
-                                Resources.Associations.TYPE, Resources.SecurityManagement.ROLE_XML_TAG));
-                for (Object roleElement : roleElements) {
-                    ((OMElement) roleElement).detach();
+
+                serviceGroupFilePM.delete(serviceGroupId,
+                        serviceXPath +
+                        "/" + Resources.Associations.ASSOCIATION_XML_TAG +
+                        PersistenceUtils.getXPathAttrPredicate(Resources.Associations.DESTINATION_PATH, resourceUri) );
+
+                AuthorizationManager acAdmin = realm.getAuthorizationManager();
+                String resourceName = serviceGroupId+"/"+serviceName;
+                String[] roles = acAdmin.getAllowedRolesForResource(
+                        resourceName,
+                        UserCoreConstants.INVOKE_SERVICE_PERMISSION);
+                for (int i = 0; i < roles.length; i++) {
+                    acAdmin.clearRoleAuthorization(roles[i], resourceName,
+                            UserCoreConstants.INVOKE_SERVICE_PERMISSION);
                 }
 
                 List kss = serviceGroupFilePM.getAssociations(
@@ -371,7 +403,7 @@ public class SecurityConfigAdmin {
                     ((OMNode) tks).detach();
                 }
 
-                if ((roleElements == null || !roleElements.isEmpty() ) ||
+                if ((roles == null || roles.length ==0 ) ||
                         (kss == null || kss.isEmpty() ) ||
                         (tkss == null || tkss.isEmpty() )) {
                     serviceGroupFilePM.setMetaFileModification(serviceGroupId);
@@ -1023,23 +1055,13 @@ public class SecurityConfigAdmin {
                 }
             } 
 
-//            todo check whether this is needed in the new file-based persistence model.
+
             if (userGroups != null) {
                 for (String value : userGroups) {
-                    if (!serviceGroupFilePM.elementExists(serviceGroupId, serviceXPath+
-                            "/"+Resources.SecurityManagement.ROLE_XML_TAG+
-                            PersistenceUtils.getXPathAttrPredicate(
-                                    Resources.SecurityManagement.ROLENAME_XML_ATTR, value) )) {
-                        OMElement roleElement = OMAbstractFactory.getOMFactory().
-                                createOMElement(Resources.SecurityManagement.ROLE_XML_TAG, null);
-                        roleElement.addAttribute(Resources.SecurityManagement.ROLENAME_XML_ATTR, value, null);
-                        roleElement.addAttribute(
-                                Resources.Associations.TYPE, UserCoreConstants.INVOKE_SERVICE_PERMISSION, null);
+                    AuthorizationManager acAdmin = realm.getAuthorizationManager();
 
-                        serviceGroupFilePM.put(serviceGroupId, roleElement, serviceXPath);
-                    }
-//                    acAdmin.authorizeRole(value, registryServicePath,
-//                            UserCoreConstants.INVOKE_SERVICE_PERMISSION);
+                        acAdmin.authorizeRole(value, serviceGroupId+"/"+service.getName(),
+                                UserCoreConstants.INVOKE_SERVICE_PERMISSION);
                 }
             }
 
@@ -1367,12 +1389,11 @@ public class SecurityConfigAdmin {
 
             //may be we don't need this in the new persistence model
             String serviceXPath = PersistenceUtils.getResourcePath(service);
-            List roleElements = serviceGroupFilePM.getAll(serviceGroupId, serviceXPath + "/" + Resources.SecurityManagement.ROLE_XML_TAG);
-            String[] roles = new String[roleElements.size()];
-            for (int i = 0; i < roleElements.size(); i++) {
-                OMElement roleElement = (OMElement) roleElements.get(i);
-                roles[i] = roleElement.getAttributeValue(new QName(Resources.SecurityManagement.ROLENAME_XML_ATTR));
-            }
+            AuthorizationManager acReader = realm.getAuthorizationManager();
+            String[] roles = acReader.getAllowedRolesForResource(
+                    serviceGroupId+"/"+serviceName,
+                    UserCoreConstants.INVOKE_SERVICE_PERMISSION);
+
             data.setUserGroups(roles);
 
             List pvtStores = serviceGroupFilePM.getAssociations(serviceGroupId, serviceXPath,

@@ -13,6 +13,7 @@ import org.wso2.carbon.user.core.UserStoreException;
 import java.util.ArrayList;
 import java.util.List;
 
+@Deprecated
 public class SecurityPersistenceUtils {
 
     private static Log log = LogFactory.getLog(SecurityPersistenceUtils.class);
@@ -27,6 +28,7 @@ public class SecurityPersistenceUtils {
      * @param serviceGroupFilePM serviceGroupFilePM
      * @return false if any of the roles of user does not have permission to access it or no roles assigned for the service.
      * @throws UserStoreException
+     * @deprecated do not use this method
      */
     public static boolean isUserAuthorized(
             String serviceGroupId, String serviceId, UserRealm realm, String tenantAwareUserName, String permissionType,

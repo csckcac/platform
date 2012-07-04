@@ -1,13 +1,13 @@
-<wsdl:definitions xmlns:wsdl="http://schemas.xmlsoap.org/wsdl/" xmlns:ns1="http://org.apache.axis2/xsd" xmlns:ns="http://services.generic.governance.carbon.wso2.org" xmlns:wsaw="http://www.w3.org/2006/05/addressing/wsdl" xmlns:http="http://schemas.xmlsoap.org/wsdl/http/" xmlns:xs="http://www.w3.org/2001/XMLSchema" xmlns:ax2217="http://beans.generic.governance.carbon.wso2.org/xsd" xmlns:soap="http://schemas.xmlsoap.org/wsdl/soap/" xmlns:mime="http://schemas.xmlsoap.org/wsdl/mime/" xmlns:ax2214="http://api.registry.carbon.wso2.org/xsd" xmlns:ax2213="http://exceptions.core.registry.carbon.wso2.org/xsd" xmlns:soap12="http://schemas.xmlsoap.org/wsdl/soap12/" targetNamespace="http://services.generic.governance.carbon.wso2.org">
+<wsdl:definitions xmlns:wsdl="http://schemas.xmlsoap.org/wsdl/" xmlns:ns1="http://org.apache.axis2/xsd" xmlns:ns="http://services.generic.governance.carbon.wso2.org" xmlns:wsaw="http://www.w3.org/2006/05/addressing/wsdl" xmlns:http="http://schemas.xmlsoap.org/wsdl/http/" xmlns:ax2197="http://api.registry.carbon.wso2.org/xsd" xmlns:xs="http://www.w3.org/2001/XMLSchema" xmlns:soap="http://schemas.xmlsoap.org/wsdl/soap/" xmlns:mime="http://schemas.xmlsoap.org/wsdl/mime/" xmlns:ax2200="http://beans.generic.governance.carbon.wso2.org/xsd" xmlns:ax2196="http://exceptions.core.registry.carbon.wso2.org/xsd" xmlns:soap12="http://schemas.xmlsoap.org/wsdl/soap12/" targetNamespace="http://services.generic.governance.carbon.wso2.org">
     <wsdl:documentation>ManageGenericArtifactService</wsdl:documentation>
     <wsdl:types>
-        <xs:schema xmlns:ax2218="http://beans.generic.governance.carbon.wso2.org/xsd" xmlns:ax2216="http://exceptions.core.registry.carbon.wso2.org/xsd" attributeFormDefault="qualified" elementFormDefault="qualified" targetNamespace="http://services.generic.governance.carbon.wso2.org">
+        <xs:schema xmlns:ax2201="http://beans.generic.governance.carbon.wso2.org/xsd" xmlns:ax2199="http://exceptions.core.registry.carbon.wso2.org/xsd" attributeFormDefault="qualified" elementFormDefault="qualified" targetNamespace="http://services.generic.governance.carbon.wso2.org">
             <xs:import namespace="http://exceptions.core.registry.carbon.wso2.org/xsd" />
             <xs:import namespace="http://beans.generic.governance.carbon.wso2.org/xsd" />
             <xs:element name="ManageGenericArtifactServiceRegistryException">
                 <xs:complexType>
                     <xs:sequence>
-                        <xs:element minOccurs="0" name="RegistryException" nillable="true" type="ax2216:RegistryException" />
+                        <xs:element minOccurs="0" name="RegistryException" nillable="true" type="ax2199:RegistryException" />
                     </xs:sequence>
                 </xs:complexType>
             </xs:element>
@@ -37,7 +37,7 @@
             <xs:element name="listArtifactsResponse">
                 <xs:complexType>
                     <xs:sequence>
-                        <xs:element minOccurs="0" name="return" nillable="true" type="ax2218:ArtifactsBean" />
+                        <xs:element minOccurs="0" name="return" nillable="true" type="ax2201:ArtifactsBean" />
                     </xs:sequence>
                 </xs:complexType>
             </xs:element>
@@ -140,11 +140,11 @@
                 </xs:complexType>
             </xs:element>
         </xs:schema>
-        <xs:schema xmlns:ax2215="http://api.registry.carbon.wso2.org/xsd" attributeFormDefault="qualified" elementFormDefault="qualified" targetNamespace="http://exceptions.core.registry.carbon.wso2.org/xsd">
+        <xs:schema xmlns:ax2198="http://api.registry.carbon.wso2.org/xsd" attributeFormDefault="qualified" elementFormDefault="qualified" targetNamespace="http://exceptions.core.registry.carbon.wso2.org/xsd">
             <xs:import namespace="http://api.registry.carbon.wso2.org/xsd" />
             <xs:complexType name="RegistryException">
                 <xs:complexContent>
-                    <xs:extension base="ax2215:RegistryException">
+                    <xs:extension base="ax2198:RegistryException">
                         <xs:sequence />
                     </xs:extension>
                 </xs:complexContent>
@@ -153,15 +153,17 @@
         <xs:schema attributeFormDefault="qualified" elementFormDefault="qualified" targetNamespace="http://beans.generic.governance.carbon.wso2.org/xsd">
             <xs:complexType name="ArtifactsBean">
                 <xs:sequence>
-                    <xs:element maxOccurs="unbounded" minOccurs="0" name="artifacts" nillable="true" type="ax2217:ArtifactBean" />
+                    <xs:element maxOccurs="unbounded" minOccurs="0" name="artifacts" nillable="true" type="ax2200:ArtifactBean" />
                     <xs:element maxOccurs="unbounded" minOccurs="0" name="names" nillable="true" type="xs:string" />
                     <xs:element maxOccurs="unbounded" minOccurs="0" name="types" nillable="true" type="xs:string" />
                 </xs:sequence>
             </xs:complexType>
             <xs:complexType name="ArtifactBean">
                 <xs:sequence>
+                    <xs:element minOccurs="0" name="LCName" nillable="true" type="xs:string" />
+                    <xs:element minOccurs="0" name="LCState" nillable="true" type="xs:string" />
                     <xs:element minOccurs="0" name="canDelete" type="xs:boolean" />
-                    <xs:element minOccurs="0" name="path" type="xs:string" />
+                    <xs:element minOccurs="0" name="path" nillable="true" type="xs:string" />
                     <xs:element maxOccurs="unbounded" minOccurs="0" name="valuesA" nillable="true" type="xs:string" />
                     <xs:element maxOccurs="unbounded" minOccurs="0" name="valuesB" nillable="true" type="xs:string" />
                 </xs:sequence>
@@ -537,13 +539,13 @@
     </wsdl:binding>
     <wsdl:service name="ManageGenericArtifactService">
         <wsdl:port name="ManageGenericArtifactServiceHttpsSoap11Endpoint" binding="ns:ManageGenericArtifactServiceSoap11Binding">
-            <soap:address location="https://10.0.0.11:9443/services/ManageGenericArtifactService.ManageGenericArtifactServiceHttpsSoap11Endpoint/" />
+            <soap:address location="https://10.200.3.166:9443/services/ManageGenericArtifactService.ManageGenericArtifactServiceHttpsSoap11Endpoint/" />
         </wsdl:port>
         <wsdl:port name="ManageGenericArtifactServiceHttpsSoap12Endpoint" binding="ns:ManageGenericArtifactServiceSoap12Binding">
-            <soap12:address location="https://10.0.0.11:9443/services/ManageGenericArtifactService.ManageGenericArtifactServiceHttpsSoap12Endpoint/" />
+            <soap12:address location="https://10.200.3.166:9443/services/ManageGenericArtifactService.ManageGenericArtifactServiceHttpsSoap12Endpoint/" />
         </wsdl:port>
         <wsdl:port name="ManageGenericArtifactServiceHttpsEndpoint" binding="ns:ManageGenericArtifactServiceHttpBinding">
-            <http:address location="https://10.0.0.11:9443/services/ManageGenericArtifactService.ManageGenericArtifactServiceHttpsEndpoint/" />
+            <http:address location="https://10.200.3.166:9443/services/ManageGenericArtifactService.ManageGenericArtifactServiceHttpsEndpoint/" />
         </wsdl:port>
     </wsdl:service>
 </wsdl:definitions>

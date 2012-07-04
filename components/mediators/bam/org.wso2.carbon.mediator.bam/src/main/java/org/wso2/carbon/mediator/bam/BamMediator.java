@@ -26,38 +26,40 @@ import org.apache.axiom.soap.SOAP12Constants;
 import org.apache.axiom.soap.SOAPEnvelope;
 import org.apache.axiom.soap.SOAPFactory;
 import org.apache.axiom.soap.SOAPHeaderBlock;
-import org.apache.synapse.MessageContext;
-import org.apache.synapse.SynapseLog;
-import org.apache.synapse.mediators.AbstractMediator;
-
-import java.io.File;
-import java.util.ArrayList;
-import java.util.Iterator;
-import java.util.List;
 import org.apache.axis2.description.AxisService;
 import org.apache.axis2.engine.AxisConfiguration;
 import org.apache.commons.logging.Log;
 import org.apache.commons.logging.LogFactory;
+import org.apache.synapse.MessageContext;
+import org.apache.synapse.SynapseLog;
 import org.apache.synapse.core.axis2.Axis2MessageContext;
+import org.apache.synapse.mediators.AbstractMediator;
 import org.apache.synapse.util.xpath.SynapseXPath;
 import org.jaxen.JaxenException;
-import org.wso2.carbon.eventbridge.agent.thrift.Agent;
-import org.wso2.carbon.eventbridge.agent.thrift.DataPublisher;
-import org.wso2.carbon.eventbridge.agent.thrift.conf.AgentConfiguration;
-import org.wso2.carbon.eventbridge.agent.thrift.exception.AgentException;
-import org.wso2.carbon.eventbridge.commons.Event;
-import org.wso2.carbon.eventbridge.commons.exception.*;
 import org.wso2.carbon.core.multitenancy.SuperTenantCarbonContext;
-import java.net.MalformedURLException;
-import java.util.UUID;
-
-import org.wso2.carbon.eventbridge.commons.thrift.exception.ThriftAuthenticationException;
+import org.wso2.carbon.databridge.agent.thrift.Agent;
+import org.wso2.carbon.databridge.agent.thrift.DataPublisher;
+import org.wso2.carbon.databridge.agent.thrift.conf.AgentConfiguration;
+import org.wso2.carbon.databridge.agent.thrift.exception.AgentException;
+import org.wso2.carbon.databridge.commons.Event;
+import org.wso2.carbon.databridge.commons.exception.AuthenticationException;
+import org.wso2.carbon.databridge.commons.exception.DifferentStreamDefinitionAlreadyDefinedException;
+import org.wso2.carbon.databridge.commons.exception.MalformedStreamDefinitionException;
+import org.wso2.carbon.databridge.commons.exception.StreamDefinitionException;
+import org.wso2.carbon.databridge.commons.exception.TransportException;
+import org.wso2.carbon.databridge.commons.thrift.exception.ThriftAuthenticationException;
 import org.wso2.carbon.mediator.bam.config.stream.Property;
 import org.wso2.carbon.mediator.bam.config.stream.StreamEntry;
 import org.wso2.carbon.mediator.bam.util.BamMediatorConstants;
 import org.wso2.carbon.utils.CarbonUtils;
 
 import javax.xml.namespace.QName;
+import java.io.File;
+import java.net.MalformedURLException;
+import java.util.ArrayList;
+import java.util.Iterator;
+import java.util.List;
+import java.util.UUID;
 
 /**
  * Transforms the current message payload using the given BAM configuration.
@@ -283,7 +285,7 @@ public class BamMediator extends AbstractMediator {
     }
 
     private void defineEventStream() throws AgentException, MalformedStreamDefinitionException, StreamDefinitionException, DifferentStreamDefinitionAlreadyDefinedException{
-        streamId = dataPublisher.defineEventStream("{" +
+        streamId = dataPublisher.defineStream("{" +
                                                    "  'name':'" + this.streamName + "'," +
                                                    "  'version':'"+ this.streamVersion + "'," +
                                                    "  'nickName': '" + this.streamNickName + "'," +

@@ -1,0 +1,114 @@
+<!--
+  ~ Copyright 2005-2012 WSO2, Inc. (http://wso2.com)
+  ~
+  ~    Licensed under the Apache License, Version 2.0 (the "License");
+  ~    you may not use this file except in compliance with the License.
+  ~    You may obtain a copy of the License at
+  ~
+  ~    http://www.apache.org/licenses/LICENSE-2.0
+  ~
+  ~    Unless required by applicable law or agreed to in writing, software
+  ~    distributed under the License is distributed on an "AS IS" BASIS,
+  ~    WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+  ~    See the License for the specific language governing permissions and
+  ~    limitations under the License.
+  -->
+<!-- this is a example appfactory.xml -->
+<AppFactory xmlns="http://www.wso2.org/appfactory/">
+
+    <!--Admin user in the app factory. This user is added to each and every application as the administrator-->
+    <AdminUserName>admin</AdminUserName>
+    <AdminPassword>admin</AdminPassword>
+
+    <!--Application Management configurations-->
+    <ApplicationMgt>
+         <DefaultApplicationUserRole name="appFactoryUsers">
+            <Permission>/permission/login/</Permission>
+        </DefaultApplicationUserRole>
+    </ApplicationMgt>
+
+    <ArtifactStorage class="">
+        <Property name=""></Property>
+        <Property name=""></Property>
+    </ArtifactStorage>
+    <BuildSystemDriver class=""></BuildSystemDriver>
+    <RevisionControlDriver class=""></RevisionControlDriver>
+
+    <DefaultRoles>
+        <Role name="developer">
+            <Permission>/permission/login/</Permission>
+        </Role>
+        <Role name="devOps">
+            <Permission>/permission/login/</Permission>
+        </Role>
+        <Role name="qa">
+            <Permission>/permission/login/</Permission>
+        </Role>
+        <Role name="appOwner">
+            <Permission>/permission/login/</Permission>
+        </Role>
+    </DefaultRoles>
+
+    <!--SSO relying party configuration.-->
+    <SSORelyingParty>
+        <Name>WSO2 AppFactory Application Management</Name>
+        <IdentityProviderURL>https://localhost:9443/samlsso</IdentityProviderURL>
+        <KeyStorePassword>wso2carbon</KeyStorePassword>
+        <IdentityKeyAlias>wso2carbon</IdentityKeyAlias>
+        <KeyStoreName>
+            E:\src\java\carbon_trunk\platform\products\appfactory\modules\distribution\product\target\wso2appfactory-1.0.0-SNAPSHOT/repository/resources/security/wso2carbon.jks
+        </KeyStoreName>
+    </SSORelyingParty>
+
+    <!-- Web service end points including BPEL services-->
+    <WebServiceEndPoints>
+        <GetRolesOfUserForApplication>
+            http://localhost:9763/services/UserRoleService/getRolesOfUserPerApplication
+        </GetRolesOfUserForApplication>
+
+        <CreateRepo>http://localhost:9763/services/IDTMESVNService/createRepository</CreateRepo>
+
+        <GetUsersOfApplication>http://localhost:9763/services/UserMgtService/getUserListForApplication
+        </GetUsersOfApplication>
+
+        <EmailVerificationService>https://localhost:9443/services/EmailVerificationService
+        </EmailVerificationService>
+
+        <AddUserToApplication>http://localhost:9763/services/AddUserToApplicationService/process
+        </AddUserToApplication>
+        <CreateApplication>http://localhost:9763/services/CreateApplicationService/process</CreateApplication>
+        <CreateUser>http://localhost:9763/services/UserCreationProcess</CreateUser>
+        <ActivateUser>http://localhost:9763/services/activateUserProcess</ActivateUser>
+        <GetAllApps>https://localhost:9443/services/ApplicationManagementService</GetAllApps>
+        <GetAuthCookie>https://localhost:9443/services/AuthenticationAdmin</GetAuthCookie>
+    </WebServiceEndPoints>
+
+    <!--Application repository related configurations-->
+    <RepositoryMGTConfig>
+        <SCMServerIp>0.0.0.0</SCMServerIp>
+        <SCMServerPort>8080</SCMServerPort>
+        <SCMServerRealmName>SONIA :: SCM Manager</SCMServerRealmName>
+        <SCMServerAdminUserName>scmadmin</SCMServerAdminUserName>
+        <SCMServerAdminPassword>scmadmin</SCMServerAdminPassword>
+        <ReadWritePermissionName>RW</ReadWritePermissionName>
+    </RepositoryMGTConfig>
+
+    <!--This element defines the set of staging servers, where the application applications are deployed. -->
+   <ApplicationDeployment>
+        <DeploymentStage name="Development">
+            <ProcesEndPoint>https://localhost:9443/services/DeployApplicationToDev</ProcesEndPoint>
+            <DeploymentServerURL>
+                https://localhost:9443/services/
+            </DeploymentServerURL>
+        </DeploymentStage>
+        <DeploymentStage name="QA">
+            <ProcesEndPoint>https://localhost:9443/services/DeployApplicationToQA</ProcesEndPoint>
+            <DeploymentServerURL>
+                https://localhost:9445/services/
+            </DeploymentServerURL>
+            <DeploymentServerURL>
+                https://localhost:9447/services/
+            </DeploymentServerURL>
+        </DeploymentStage>
+    </ApplicationDeployment>
+</AppFactory>

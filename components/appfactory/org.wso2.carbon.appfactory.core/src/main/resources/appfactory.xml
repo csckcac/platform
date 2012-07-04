@@ -27,6 +27,12 @@
         </DefaultApplicationUserRole>
     </ApplicationMgt>
 
+    <ArtifactStorage class="">
+        <Property name=""></Property>
+        <Property name=""></Property>
+    </ArtifactStorage>
+    <BuildSystemDriver class=""></BuildSystemDriver>
+    <RevisionControlDriver class=""></RevisionControlDriver>
 
     <DefaultRoles>
         <Role name="developer">

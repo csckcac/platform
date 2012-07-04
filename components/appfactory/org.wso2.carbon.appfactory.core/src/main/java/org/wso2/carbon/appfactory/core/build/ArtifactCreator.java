@@ -1,5 +1,6 @@
 package org.wso2.carbon.appfactory.core.build;
 
+import org.wso2.carbon.appfactory.common.AppFactoryException;
 import org.wso2.carbon.appfactory.core.internal.ServiceHolder;
 import org.wso2.carbon.appfactory.core.RevisionControlDriver;
 import org.wso2.carbon.core.AbstractAdmin;
@@ -10,7 +11,7 @@ import org.wso2.carbon.core.AbstractAdmin;
  */
 public class ArtifactCreator extends AbstractAdmin {
 
-	public void createArtifact(String applicationId, String version, String revision) {
+	public void createArtifact(String applicationId, String version, String revision) throws AppFactoryException{
 		if (ServiceHolder.getContinuousIntegrationSystemDriver() != null) {
 			// TODO : we are yet to define a continuous build system driver
 		} else {

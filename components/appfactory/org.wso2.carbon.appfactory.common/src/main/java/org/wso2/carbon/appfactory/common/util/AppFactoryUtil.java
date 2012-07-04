@@ -18,7 +18,6 @@ package org.wso2.carbon.appfactory.common.util;
 
 import java.io.File;
 import java.io.FileInputStream;
-import java.io.FileNotFoundException;
 import java.io.IOException;
 import java.io.InputStream;
 import java.util.ArrayList;
@@ -29,12 +28,11 @@ import java.util.Map;
 import java.util.Stack;
 
 import javax.xml.namespace.QName;
-import javax.xml.stream.XMLInputFactory;
 import javax.xml.stream.XMLStreamException;
-import javax.xml.stream.XMLStreamReader;
 
 import org.apache.axiom.om.OMElement;
-import org.apache.axiom.om.impl.builder.StAXOMBuilder;
+import org.apache.axiom.om.util.AXIOMUtil;
+import org.apache.commons.io.IOUtils;
 import org.apache.commons.logging.Log;
 import org.apache.commons.logging.LogFactory;
 import org.wso2.carbon.appfactory.common.AppFactoryConfiguration;
@@ -98,18 +96,16 @@ public class AppFactoryUtil {
         OMElement configXMLFile = null;
         try {
             inputStream = new FileInputStream(configFile);
-            XMLStreamReader parser =
-                    XMLInputFactory.newInstance().createXMLStreamReader(inputStream);
-            StAXOMBuilder builder = new StAXOMBuilder(parser);
-            configXMLFile = builder.getDocumentElement();
-        } catch (FileNotFoundException e) {
+            String xmlContent = IOUtils.toString(inputStream);
+            configXMLFile = AXIOMUtil.stringToOM(xmlContent);
+        } catch (IOException e) {
             String msg = 
-                "Unable to locate the file " + AppFactoryConstants.CONFIG_FILE_NAME 
+                "Unable to read the file " + AppFactoryConstants.CONFIG_FILE_NAME 
                 + " at " + fileLocation;
             log.error(msg, e);
             throw new AppFactoryException(msg, e);
         } catch (XMLStreamException e) {
-            String msg = "Error in reading " + AppFactoryConstants.CONFIG_FILE_NAME;
+            String msg = "Error in parsing " + AppFactoryConstants.CONFIG_FILE_NAME;
             log.error(msg, e);
             throw new AppFactoryException(msg, e);
         } finally {

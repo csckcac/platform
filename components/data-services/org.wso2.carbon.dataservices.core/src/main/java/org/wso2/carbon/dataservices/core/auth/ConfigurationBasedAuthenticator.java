@@ -65,7 +65,7 @@ public class ConfigurationBasedAuthenticator implements DynamicUserAuthenticator
 	}
 	
 	@XmlRootElement (name = "configuration")
-	public class Configuration {
+	public static class Configuration {
 		
 		private List<Entry> entries;
 
@@ -80,7 +80,7 @@ public class ConfigurationBasedAuthenticator implements DynamicUserAuthenticator
 		
 	}
 	
-	public class Entry {
+	public static class Entry {
 		
 		private String request;
 		

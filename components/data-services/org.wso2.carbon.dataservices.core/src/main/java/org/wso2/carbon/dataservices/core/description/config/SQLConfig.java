@@ -25,7 +25,10 @@ import java.util.Map;
 import javax.sql.DataSource;
 import javax.sql.XAConnection;
 import javax.transaction.Transaction;
+import javax.xml.stream.XMLStreamException;
 
+import org.apache.axiom.om.OMElement;
+import org.apache.axiom.om.util.AXIOMUtil;
 import org.apache.commons.logging.Log;
 import org.apache.commons.logging.LogFactory;
 import org.wso2.carbon.dataservices.common.DBConstants.AutoCommit;
@@ -64,11 +67,24 @@ public abstract class SQLConfig extends Config {
 	
 	private void processDynamicAuth() throws DataServiceFault {
 		String dynAuthMapping = this.getProperty(RDBMS.DYNAMIC_USER_AUTH_MAPPING);
-		if (dynAuthMapping != null) {
-			this.primaryDynAuth = new ConfigurationBasedAuthenticator(dynAuthMapping);
+		if (!DBUtils.isEmptyString(dynAuthMapping)) {
+			OMElement dynUserAuthPropEl;
+			try {
+				dynUserAuthPropEl = AXIOMUtil.stringToOM(dynAuthMapping);
+			} catch (XMLStreamException e) {
+				throw new DataServiceFault(e, 
+						"Error in reading dynamic user auth mapping configuration: " + 
+				                e.getMessage());
+			}
+			OMElement dynUserAuthConfEl = dynUserAuthPropEl.getFirstElement();
+			if (dynUserAuthConfEl == null) {
+				throw new DataServiceFault("Invalid dynamic user auth mapping configuration");
+			}
+			this.primaryDynAuth = new ConfigurationBasedAuthenticator(
+					dynUserAuthConfEl.toString());
 		}
 		String dynAuthClass = this.getProperty(RDBMS.DYNAMIC_USER_AUTH_CLASS);
-		if (dynAuthClass != null) {
+		if (!DBUtils.isEmptyString(dynAuthClass)) {
 			try {
 				DynamicUserAuthenticator authObj = (DynamicUserAuthenticator) Class.forName(
 						dynAuthClass).newInstance();

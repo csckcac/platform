@@ -218,9 +218,9 @@ public class DBOperation {
                 Map<String, String> dataSource = carbonDataSourceFetcher.getCarbonDataSource(
                         dbProperties.getDataSourceName());
                 dbProperties.setConnectionUrl(dataSource.get(DBConfiguration.URL_PROPERTY));
-                dbProperties.setDriverClass(DBConfiguration.DRIVER_CLASS_PROPERTY);
-                dbProperties.setUserName(DBConfiguration.USERNAME_PROPERTY);
-                dbProperties.setPassword(DBConfiguration.PASSWORD_PROPERTY);
+                dbProperties.setDriverClass(dataSource.get(DBConfiguration.DRIVER_CLASS_PROPERTY));
+                dbProperties.setUserName(dataSource.get(DBConfiguration.USERNAME_PROPERTY));
+                dbProperties.setPassword(dataSource.get(DBConfiguration.PASSWORD_PROPERTY));
                 // We are not getting connection pool parameters,
                 // because this is just for creating a table.
             }

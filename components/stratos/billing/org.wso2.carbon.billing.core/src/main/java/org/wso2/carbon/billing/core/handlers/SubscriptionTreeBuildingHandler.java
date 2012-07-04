@@ -112,7 +112,6 @@ public class SubscriptionTreeBuildingHandler implements BillingHandler {
 
             // and we will count for the subscriptions for the invoice
             invoice.setSubscriptions(customerSubscriptions);
-            log.info("Subscriptions added to relevant customers' invoices");
 
             // and then we will count on the un-billed purchases of all the subscriptions of the
             // customer
@@ -123,8 +122,6 @@ public class SubscriptionTreeBuildingHandler implements BillingHandler {
             for (Payment payment : purchaseOrders.values()) {
                 invoice.addPayment(payment);
             }
-
-            log.info("Unbilled payment details were captured and included in the relevant invoices.");
 
             customer.setActiveInvoice(invoice);
             invoice.setCustomer(customer);

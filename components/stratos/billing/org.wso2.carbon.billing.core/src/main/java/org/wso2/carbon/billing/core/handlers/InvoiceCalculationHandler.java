@@ -199,7 +199,7 @@ public class InvoiceCalculationHandler implements BillingHandler {
 
             //prorating the discount too (if the discount is defined as a raw amount)...
             if(discount!=null && !discount.isPercentageType()){
-                discount.setAmount(discount.getAmount()*multiplyingFactor);
+                discount.setAmount(Float.parseFloat(nf.format(discount.getAmount()*multiplyingFactor)));
             }
         }
         

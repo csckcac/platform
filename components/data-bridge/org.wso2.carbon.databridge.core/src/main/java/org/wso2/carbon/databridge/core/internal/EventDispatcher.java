@@ -148,12 +148,12 @@ public class EventDispatcher {
         }
 
         if (streamTypeHolder != null) {
-            if (log.isTraceEnabled()) {
+            if (log.isDebugEnabled()) {
                 String logMsg = "Event stream holder for domain name : " + credentials.getDomainName() + " : \n ";
                 logMsg += "Correlation Data Type Map : " + streamTypeHolder.getCorrelationDataTypeMap() + "\n";
                 logMsg += "Payload Data Type Map : " + streamTypeHolder.getPayloadDataTypeMap() + "\n";
                 logMsg += "Meta Data Type Map : " + streamTypeHolder.getMetaDataTypeMap() + "\n";
-                log.trace(logMsg);
+                log.debug(logMsg);
             }
             return streamTypeHolder;
         } else {
@@ -168,12 +168,12 @@ public class EventDispatcher {
             }
         }
 
-        if (log.isTraceEnabled()) {
+        if (log.isDebugEnabled()) {
         String logMsg = "Event stream holder for domain name : " + credentials.getDomainName() + " : \n ";
             logMsg += "Correlation Data Type Map : " + streamTypeHolder.getCorrelationDataTypeMap() + "\n";
             logMsg += "Payload Data Type Map : " + streamTypeHolder.getPayloadDataTypeMap() + "\n";
             logMsg += "Meta Data Type Map : " + streamTypeHolder.getMetaDataTypeMap() + "\n";
-            log.trace(logMsg);
+            log.debug(logMsg);
         }
         return streamTypeHolder;
     }

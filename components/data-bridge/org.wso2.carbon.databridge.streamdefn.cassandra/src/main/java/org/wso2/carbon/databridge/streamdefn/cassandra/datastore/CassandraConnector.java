@@ -167,8 +167,8 @@ public class CassandraConnector {
             List<ColumnFamilyDefinition> cfDef = keyspaceDef.getCfDefs();
             for (ColumnFamilyDefinition cfdef : cfDef) {
                 if (cfdef.getName().equals(columnFamilyName)) {
-                    if (log.isTraceEnabled()) {
-                        log.trace("Column Family " + columnFamilyName + " already exists.");
+                    if (log.isDebugEnabled()) {
+                        log.debug("Column Family " + columnFamilyName + " already exists.");
                     }
                     return;
                 }
@@ -197,8 +197,8 @@ public class CassandraConnector {
 
                 for (ColumnFamilyDefinition cfdef : keyspaceDef.getCfDefs()) {
                     if (cfdef.getName().equals(columnFamilyName)) {
-                        if (log.isTraceEnabled()) {
-                            log.trace("Column Family " + columnFamilyName + " already exists.");
+                        if (log.isDebugEnabled()) {
+                            log.debug("Column Family " + columnFamilyName + " already exists.");
                         }
                         return;
                     }
@@ -299,14 +299,14 @@ public class CassandraConnector {
 
         KeyspaceDefinition keyspaceDefinition = cluster.describeKeyspace(BAM_EVENT_DATA_KEYSPACE);
 
-        if (log.isTraceEnabled()) {
-            log.trace("Keyspace desc. : " + keyspaceDefinition);
+        if (log.isDebugEnabled()) {
+            log.debug("Keyspace desc. : " + keyspaceDefinition);
 
             String CFInfo = "CFs present \n";
             for (ColumnFamilyDefinition columnFamilyDefinition : keyspaceDefinition.getCfDefs()) {
                 CFInfo += "cf name : " + columnFamilyDefinition.getName() + "\n";
             }
-            log.trace(CFInfo);
+            log.debug(CFInfo);
         }
 
 
@@ -662,7 +662,7 @@ public class CassandraConnector {
 
         log.info("Saving Stream Definition : " + streamDefinition );
 
-        if (log.isTraceEnabled()) {
+        if (log.isDebugEnabled()) {
             String logMsg = "saveStreamDefinition executed. \n";
             try {
                 StreamDefinition streamDefinitionFromStore = getStreamDefinitionFromStore(cluster, streamId);
@@ -670,7 +670,7 @@ public class CassandraConnector {
             } catch (StreamDefinitionStoreException e) {
                 log.error(e.getErrorMessage(), e);
             }
-            log.trace(logMsg);
+            log.debug(logMsg);
         }
 
     }
@@ -704,11 +704,11 @@ public class CassandraConnector {
         mutator.addInsertion(streamIdKey, BAM_META_STREAM_ID_CF, HFactory.createStringColumn(STREAM_ID, streamId));
         mutator.execute();
 
-        if (log.isTraceEnabled()) {
+        if (log.isDebugEnabled()) {
             String logMsg = "saveStreamID executed. \n";
             String streamIdFromStore = getStreamIdFromStore(cluster, streamIdKey);
             logMsg += " stream id saved : " + streamIdFromStore + " \n";
-            log.trace(logMsg);
+            log.debug(logMsg);
         }
     }
 
@@ -952,7 +952,7 @@ public class CassandraConnector {
         QueryResult<OrderedRows<String, String, String>> result = query.execute();
 
         String logMsg = null;
-        if (log.isTraceEnabled()) {
+        if (log.isDebugEnabled()) {
             logMsg = "getAllStreamDefinitions called : \n";
         }
         for (Row<String, String, String> row : result.get()) {
@@ -967,15 +967,15 @@ public class CassandraConnector {
 
             if (streamDefinitionFromStore != null) {
                 streamDefinitions.add(streamDefinitionFromStore);
-                if (log.isTraceEnabled()) {
+                if (log.isDebugEnabled()) {
                     logMsg += "Stream definitions with stream id : " + streamDefinitionFromStore.getStreamId() +
                             " found. Stream Definition is : " + streamDefinitionFromStore.toString() + " \n";
                 }
 
             }
         }
-        if (log.isTraceEnabled()) {
-            log.trace(logMsg);
+        if (log.isDebugEnabled()) {
+            log.debug(logMsg);
         }
         return streamDefinitions;
     }

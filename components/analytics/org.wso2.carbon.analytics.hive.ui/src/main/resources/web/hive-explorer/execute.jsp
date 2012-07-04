@@ -109,8 +109,8 @@
         }
 
         function openProgressBar() {
-            var content = '<div id="overlay"><div id="box_frame"><div id="box">Executing Hive Queries...<br/><img src="images/executing.gif"/></div></div></div>';
-            document.getElementById('dynamic').innerHTML = content;
+          var content = '<div id="overlay"><div id="box_frame"><div id="closebox"><a href="#" id="msgClose" title="Close" onclick="closeProgrsssBar();">x</a></div><div id="box">Executing Hive Queries...<br/><img src="images/executing.gif"/></div></div></div>';
+        document.getElementById('dynamic').innerHTML = content;
         }
 
         function closeProgrsssBar() {
@@ -163,14 +163,31 @@
             padding: 10px;
             margin: auto;
             background-color: white;
-            border: 1px solid #d3d3d3;
+            border: 1px solid #E799A3;
+        }
+
+        #closebox {
+            width: 250px;
+            padding: 0 0 0 0;
+            margin: auto;
+            background-color: transparent;
+        }
+
+        #msgClose {
+            float: right;
+            font-weight: bolder;
+            color: white;
+            background-color: #cd5c5c;
+            padding: 1px 1px 1px 1px;
+            margin-top: 0;
+            margin-right: 0;
         }
 
     </style>
 
-    <div id="dynamic"></div>
-    <div id="middle">
 
+    <div id="middle">
+       <div id="dynamic"></div>
         <h2>Script Editor<%=" - " + scriptName%>
         </h2>
 

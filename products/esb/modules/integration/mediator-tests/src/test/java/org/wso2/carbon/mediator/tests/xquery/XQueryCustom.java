@@ -17,13 +17,21 @@
 */
 package org.wso2.carbon.mediator.tests.xquery;
 
+import org.apache.axiom.om.OMAbstractFactory;
 import org.apache.axiom.om.OMElement;
+import org.apache.axiom.om.OMFactory;
+import org.apache.axiom.om.OMNamespace;
 import org.apache.axis2.AxisFault;
+import org.apache.axis2.addressing.EndpointReference;
+import org.apache.axis2.client.Options;
+import org.apache.axis2.client.ServiceClient;
+import org.testng.Assert;
 import org.testng.annotations.Test;
 import org.wso2.esb.integration.ESBIntegrationTestCase;
 import org.wso2.esb.integration.axis2.SampleAxis2Server;
 import org.wso2.esb.integration.axis2.StockQuoteClient;
 
+import static org.testng.Assert.assertNotNull;
 import static org.testng.Assert.assertTrue;
 
 public class XQueryCustom extends ESBIntegrationTestCase {
@@ -42,10 +50,10 @@ public class XQueryCustom extends ESBIntegrationTestCase {
     public void testXQueryTransformation() throws AxisFault {
         OMElement response;
 
-        response = axis2Client.sendSimpleStockQuoteRequest(
-                null,
+        response = sendReceive(
                 getProxyServiceURL("StockQuoteProxy", false),
                 "IBM");
+        assertNotNull(response, "Response message null");
         assertTrue(response.toString().contains("IBM"));
 
     }
@@ -54,6 +62,41 @@ public class XQueryCustom extends ESBIntegrationTestCase {
     protected void cleanup() {
         super.cleanup();
         axis2Client.destroy();
+    }
+
+    private OMElement sendReceive(String endPointReference, String symbol)
+            throws AxisFault {
+        ServiceClient sender;
+        Options options;
+        OMElement response = null;
+
+        sender = new ServiceClient();
+        options = new Options();
+        options.setTo(new EndpointReference(endPointReference));
+        options.setProperty(org.apache.axis2.transport.http.HTTPConstants.CHUNKED, Boolean.FALSE);
+        options.setAction("urn:getQuote");
+
+        sender.setOptions(options);
+
+        response = sender.sendReceive(getCustomPayload(symbol));
+
+        return response;
+    }
+
+    private OMElement getCustomPayload(String symbol) {
+        OMFactory fac = OMAbstractFactory.getOMFactory();
+        OMNamespace omNs = fac.createOMNamespace("http://services.samples", "ns");
+        OMElement payload = fac.createOMElement("getQuote", omNs);
+        OMElement request = fac.createOMElement("request", omNs);
+        OMElement symbols = fac.createOMElement("symbols", omNs);
+
+        OMElement company = fac.createOMElement("company", omNs);
+        company.setText(symbol);
+
+        symbols.addChild(company);
+        request.addChild(symbols);
+        payload.addChild(request);
+        return payload;
     }
 
 }

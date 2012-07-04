@@ -9,10 +9,12 @@
         <target>
             <inSequence>
                 <property name="body" expression="$body/child::*[position()=1]"/>
+                <log level="full"/>
                 <xquery xmlns:m="http://services.samples" key="new-xquery-req"
                         target="//m:getQuote/m:request/m:symbols">
                     <variable name="payload" type="ELEMENT"/>
                 </xquery>
+                <log level="full"/>
                 <send>
                     <endpoint>
                         <address uri="http://localhost:9000/services/SimpleStockQuoteService"/>

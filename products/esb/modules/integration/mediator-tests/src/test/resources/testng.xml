@@ -21,6 +21,9 @@
             <class name="org.wso2.carbon.mediator.tests.fault.Soap11FaultDetailsTestCase"/>
             <class name="org.wso2.carbon.mediator.tests.fault.Soap11FaultDetailAsElementTestCase"/>
             <class name="org.wso2.carbon.mediator.tests.fault.Soap11FaultFullTestCase"/>
+            <class name="org.wso2.carbon.mediator.tests.fault.Soap11FaultOutSequenceTestCase"/>
+            <class name="org.wso2.carbon.mediator.tests.fault.Soap11FaultWithAttributeResponseTrueTestCase"/>
+            <class name="org.wso2.carbon.mediator.tests.fault.Soap11FaultWithAttributeResponseFalseTestCase"/>
             <class name="org.wso2.carbon.mediator.tests.fault.Soap12FaultStringValueTestCase"/>
             <class name="org.wso2.carbon.mediator.tests.fault.Soap12FaultStringExpressionTestCase"/>
             <class name="org.wso2.carbon.mediator.tests.fault.Soap12FaultCodeVersionMismatchedTestCase"/>
@@ -33,6 +36,9 @@
             <class name="org.wso2.carbon.mediator.tests.fault.Soap12FaultDetailAsElementTestCase"/>
             <class name="org.wso2.carbon.mediator.tests.fault.Soap12FaultNodeTestCase"/>
             <class name="org.wso2.carbon.mediator.tests.fault.Soap12FaultFullTestCase"/>
+            <class name="org.wso2.carbon.mediator.tests.fault.Soap12FaultWithAttributeResponseTrueTestCase"/>
+            <class name="org.wso2.carbon.mediator.tests.fault.Soap12FaultWithAttributeResponseFalseTestCase"/>
+            <class name="org.wso2.carbon.mediator.tests.fault.Soap12FaultOutSequenceTestCase"/>
 
         </classes>
     </test>
@@ -78,12 +84,12 @@
         </classes>
     </test>
 
-    <test name="Test - Mediator Clone" preserve-order="true" verbose="2">
+   <!-- <test name="Test - Mediator Clone" preserve-order="true" verbose="2">
         <classes>
             <class name="org.wso2.carbon.mediator.tests.clone.CloneMediatorTestCase"/>
             <class name="org.wso2.carbon.mediator.tests.clone.ValidSoapActionTestCase"/>
             <class name="org.wso2.carbon.mediator.tests.clone.ToAddressTestCase"/>
 
         </classes>
-    </test>
+    </test>-->
 </suite>

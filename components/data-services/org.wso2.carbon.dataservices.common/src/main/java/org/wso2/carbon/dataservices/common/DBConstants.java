@@ -349,7 +349,10 @@ public final class DBConstants {
         public static final String FETCH_DIRECTION = "fetchDirection";
         public static final String FETCH_SIZE = "fetchSize";
         public static final String MAX_FIELD_SIZE = "maxFieldSize";
-        public static final String MAX_ROWS = "maxRows";
+        public static final String MAX_ROWS = "maxRows";        
+        public static final String DYNAMIC_USER_AUTH_CLASS = "dynamicUserAuthClass";
+        public static final String DYNAMIC_USER_AUTH_MAPPING = "dynamicUserAuthMapping";
+        public static final String USERNAME_WILDCARD = "*";
     }
 
     public static final Map<String, String> RDBMSv2ToV3Map = new HashMap<String, String>();

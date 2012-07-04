@@ -12,8 +12,10 @@ function deleteService(pathToDelete, parentPath,redirectpath) {
 
                 },
 
-                onFailure: function() {
+                onFailure: function(transport) {
                     addSuccess = false;
+                    CARBON.showErrorDialog(org_wso2_carbon_registry_resource_ui_jsi18n["failed.to.delete"] +
+                                            " <strong>'" + pathToDelete + "'</strong>. " + transport.responseText);
                 }
             });
 

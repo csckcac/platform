@@ -58,7 +58,6 @@
     String protectedTokens = "";
     String passwordProvider = "";
     String serviceNamespace = "";
-    String serviceGroup="";
 
     String detailedServiceName = null;
 
@@ -74,7 +73,6 @@
             if (flag.equals("addXAData")) {
                 serviceName = dataService.getName();
                 serviceNamespace = dataService.getServiceNamespace();
-                serviceGroup = dataService.getServiceGroup();
                 //txManagerClass = dataService.getTxManagerClass();
                 txManagerJNDIName = dataService.getTxManagerName();
                 description = dataService.getDescription();
@@ -108,7 +106,6 @@
                 data = new Data();
                 data.populate(configElement);
                 serviceNamespace = data.getServiceNamespace();
-                serviceGroup = data.getServiceGroup();
                 //txManagerClass = data.getTxManagerClass();
                 txManagerJNDIName = data.getTxManagerName();
                 description = data.getDescription();
@@ -129,7 +126,6 @@
             //txManagerCleanupMethod = (txManagerCleanupMethod == null) ? "" : txManagerCleanupMethod;
             txManagerJNDIName = (txManagerJNDIName == null) ? "" : txManagerJNDIName;
             serviceNamespace = (serviceNamespace == null) ? "" : serviceNamespace;
-            serviceGroup = (serviceGroup == null) ? "" : serviceGroup;
             protectedTokens = (protectedTokens == null) ? "" : protectedTokens;
             passwordProvider = (passwordProvider == null) ? "" : passwordProvider;
 
@@ -153,8 +149,6 @@
             description = (description == null) ? "" : description;
             serviceNamespace = dataService.getServiceNamespace();
             serviceNamespace = (serviceNamespace == null) ? "" : serviceNamespace;
-            serviceGroup = dataService.getServiceGroup();
-            serviceGroup = (serviceGroup == null) ? "" : serviceGroup;
             protectedTokens = dataService.getProtectedTokens();
             protectedTokens = (protectedTokens == null) ? "" : protectedTokens;
             passwordProvider = dataService.getPasswordProvider();
@@ -215,25 +209,6 @@
                                         }
                                     %>
                                 </td>
-
-                            <tr>
-                                <td class="leftCol-small" style="white-space: nowrap;"><fmt:message
-                                        key="service.group"/></td>
-                                <td align="left"><%
-                                    if (!serviceGroup.equals("")) {
-                                %>
-                                    <input type="text" name="serviceGroup" size="35"
-                                           id="serviceGroup" value="<%=serviceGroup%>"/>
-                                    <%
-                                    } else {
-                                    %>
-                                    <input type="text" name="serviceGroup" size="35"
-                                           id="serviceGroup" value="<%=serviceGroup%>"/>
-                                    <%
-                                        }
-                                    %>
-                                </td>
-                            </tr>
 
                             <tr>
                                 <td class="leftCol-small" style="white-space: nowrap;"><fmt:message

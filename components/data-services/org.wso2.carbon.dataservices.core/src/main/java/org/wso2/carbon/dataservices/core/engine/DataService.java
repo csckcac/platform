@@ -71,11 +71,6 @@ public class DataService implements EventBrokerServiceListener {
     private String serviceNamespace;
 
     /**
-     * Service group
-     */
-    private String serviceGroup;
-
-    /**
      * All the requests that are handled by the dataservice, i.e. operations, resources
      */
     private Map<String, CallableRequest> callableRequests;
@@ -280,14 +275,6 @@ public class DataService implements EventBrokerServiceListener {
     public int getTenantId() {
 		return tenantId;
 	}
-
-    public String getServiceGroup() {
-        return serviceGroup;
-    }
-
-    public void setServiceGroup(String serviceGroup) {
-        this.serviceGroup = serviceGroup;
-    }
 
     public boolean isDisableStreaming() {
         return disableStreaming;

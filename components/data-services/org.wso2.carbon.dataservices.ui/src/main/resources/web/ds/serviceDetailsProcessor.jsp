@@ -31,7 +31,6 @@
  //retrieve value from serviceDetails.jsp
     String description = request.getParameter("description");
 	String serviceName = request.getParameter("serviceName");
-    String serviceGroup=request.getParameter("serviceGroup");
     String batchRequest = request.getParameter("enableBatchReq");
     String isUseAppServerTS = request.getParameter("useAppServerTS");
     String boxcarring = request.getParameter("enableBoxcarring");
@@ -83,9 +82,6 @@
         if (serviceNamespace != null) {
             dataService.setServiceNamespace(serviceNamespace);
         }
-        if (serviceGroup != null) {
-            dataService.setServiceGroup(serviceGroup);
-        }
         if (txManagerClass != null) {
             dataService.setTxManagerClass(txManagerClass);
         }
@@ -104,7 +100,6 @@
         description = (description == null) ? "" : description;
         txManagerCleanupMethod = (txManagerCleanupMethod == null) ? "" : txManagerCleanupMethod;
         serviceNamespace = (serviceNamespace == null) ? "" : serviceNamespace;
-        serviceGroup = (serviceGroup == null) ? "" : serviceGroup;
         txManagerClass = (txManagerClass == null) ? "" : txManagerClass;
         txManagerJNDIName = (txManagerJNDIName == null) ? "" : txManagerJNDIName;
         protectedTokens = (protectedTokens == null) ? "" : protectedTokens;

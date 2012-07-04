@@ -121,10 +121,7 @@ public class DataServiceFactory {
                     defaultNamespace, dsLocation, serviceStatus,
                     batchRequestsEnabled, boxcarringEnabled, enableDTP,
                     userTxJNDIName);
-
-            /* set service group */
-            dataService.setServiceGroup(serviceGroup);
-
+            
             /* set service namespace */
             dataService.setServiceNamespace(serviceNamespace);
 

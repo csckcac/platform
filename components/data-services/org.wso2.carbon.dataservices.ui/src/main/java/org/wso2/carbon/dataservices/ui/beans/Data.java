@@ -80,8 +80,6 @@ public class Data extends DataServiceConfigurationElement{
     
     private String status;
 
-    private String serviceGroup;
-
     public Data() {
         this.configs = new ArrayList<Config>();
         this.queries = new ArrayList<Query>();
@@ -114,14 +112,6 @@ public class Data extends DataServiceConfigurationElement{
 	public void setServiceNamespace(String serviceNamespace) {
 		this.serviceNamespace = serviceNamespace;
 	}
-
-    public String getServiceGroup() {
-        return serviceGroup;
-    }
-
-    public void setServiceGroup(String serviceGroup) {
-        this.serviceGroup = serviceGroup;
-    }
 
     public String getDescription() {
         return description;
@@ -882,12 +872,6 @@ public boolean isDTP() {
 			setServiceNamespace(serviceNamespaceAttr.getAttributeValue());
 		}
 		
-		/* serviceGroup property */
-		OMAttribute serviceGroupAttr = dsXml.getAttribute(new QName("serviceGroup"));
-		if (serviceGroupAttr != null) {
-			setServiceGroup(serviceGroupAttr.getAttributeValue());
-		}
-		
 		/* service status property */
 		OMAttribute serviceStatus = dsXml.getAttribute(new QName("serviceStatus"));
 		if (serviceStatus != null) {
@@ -1210,10 +1194,6 @@ public boolean isDTP() {
 
 		if (this.getServiceNamespace() != null && this.getServiceNamespace().trim().length() > 0) {
 			dataEl.addAttribute("serviceNamespace", this.getServiceNamespace().trim(), null);
-		}
-		
-		if (this.getServiceGroup() != null && this.getServiceGroup().trim().length() > 0) {
-			dataEl.addAttribute("serviceGroup", this.getServiceGroup().trim(), null);
 		}
 
         //adding password manager to the dbs configuration

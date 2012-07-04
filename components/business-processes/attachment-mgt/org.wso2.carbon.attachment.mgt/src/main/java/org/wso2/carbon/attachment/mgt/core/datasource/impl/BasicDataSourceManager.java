@@ -20,16 +20,12 @@ import org.apache.commons.logging.Log;
 import org.apache.commons.logging.LogFactory;
 import org.wso2.carbon.attachment.mgt.configuration.AttachmentServerConfiguration;
 import org.wso2.carbon.attachment.mgt.core.datasource.AbstractDataSourceManager;
-import org.wso2.carbon.attachment.mgt.core.datasource.DataSourceManager;
 import org.wso2.carbon.attachment.mgt.core.exceptions.AttachmentMgtException;
-import org.wso2.carbon.attachment.mgt.server.internal.AttachmentServerHolder;
-import org.wso2.carbon.attachment.mgt.util.ConfigurationUtil;
 
 import javax.naming.Context;
 import javax.naming.InitialContext;
 import javax.naming.NamingException;
 import javax.sql.DataSource;
-import java.io.IOException;
 import java.util.Properties;
 
 /**
@@ -63,7 +59,7 @@ public class BasicDataSourceManager extends AbstractDataSourceManager {
      */
     public void init(AttachmentServerConfiguration serverConfig) {
         loadDataSourceConfiguration(serverConfig.getDataSourceName(), serverConfig.getDataSourceJNDIRepoInitialContextFactory(),
-                                    serverConfig.getDataSourceJNDIRepoProviderURL());
+                serverConfig.getDataSourceJNDIRepoProviderURL());
     }
 
     @Override
@@ -89,8 +85,8 @@ public class BasicDataSourceManager extends AbstractDataSourceManager {
                                              String dataSourceJNDIRepoInitialContextFactory,
                                              String dataSourceJNDIRepoProviderURL) {
         dataSourceConfig = new BasicDataSourceConfiguration(dataSourceName,
-                                                            dataSourceJNDIRepoInitialContextFactory,
-                                                            dataSourceJNDIRepoProviderURL);
+                dataSourceJNDIRepoInitialContextFactory,
+                dataSourceJNDIRepoProviderURL);
     }
 
     /**
@@ -121,15 +117,20 @@ public class BasicDataSourceManager extends AbstractDataSourceManager {
 
     private DataSource lookupInJNDI(String remoteObjectName) throws NamingException {
         InitialContext ctx = null;
-        Properties jndiProps = new Properties();
-
-        jndiProps.setProperty(Context.INITIAL_CONTEXT_FACTORY,
-                              dataSourceConfig.getDataSourceJNDIRepoInitialContextFactory());
-        jndiProps.setProperty(Context.PROVIDER_URL,
-                              dataSourceConfig.getDataSourceJNDIRepoProviderURL());
-
         try {
-            ctx = new InitialContext(jndiProps);
+            if (dataSourceConfig.getDataSourceJNDIRepoInitialContextFactory() != null &&
+                    dataSourceConfig.getDataSourceJNDIRepoProviderURL() != null) {
+                Properties jndiProps = new Properties();
+
+                jndiProps.setProperty(Context.INITIAL_CONTEXT_FACTORY,
+                        dataSourceConfig.getDataSourceJNDIRepoInitialContextFactory());
+                jndiProps.setProperty(Context.PROVIDER_URL,
+                        dataSourceConfig.getDataSourceJNDIRepoProviderURL());
+
+                ctx = new InitialContext(jndiProps);
+            } else {
+                ctx = new InitialContext();
+            }
             return (DataSource) ctx.lookup(remoteObjectName);
         } finally {
             if (ctx != null) {

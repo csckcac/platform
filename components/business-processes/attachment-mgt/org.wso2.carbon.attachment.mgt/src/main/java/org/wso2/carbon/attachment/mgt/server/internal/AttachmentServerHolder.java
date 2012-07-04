@@ -16,14 +16,12 @@
 
 package org.wso2.carbon.attachment.mgt.server.internal;
 
-import org.wso2.carbon.attachment.mgt.core.exceptions.AttachmentMgtException;
-import org.wso2.carbon.attachment.mgt.server.AttachmentServer;
 import org.wso2.carbon.attachment.mgt.server.Server;
 
 /**
  * [Singleton Class] Act as the main resource holder for Attachment Server
  */
-public class AttachmentServerHolder {
+public final class AttachmentServerHolder {
     private static AttachmentServerHolder instance = new AttachmentServerHolder();
 
     /**
@@ -34,7 +32,7 @@ public class AttachmentServerHolder {
     private Server attachmentServer;
 
     /**
-     * Private construtor disables new objects creation
+     * Private constructor disables new objects creation
      */
     private AttachmentServerHolder() {
     }

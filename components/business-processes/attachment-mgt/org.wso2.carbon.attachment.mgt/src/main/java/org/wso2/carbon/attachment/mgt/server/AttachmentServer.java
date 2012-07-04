@@ -42,6 +42,14 @@ public class AttachmentServer extends AbstractAttachmentServer {
      */
     private AttachmentServerConfiguration serverConfig;
 
+    private static AttachmentServer instance = new AttachmentServer();
+
+    private AttachmentServer() {}
+
+    public static AttachmentServer getInstance() {
+        return instance;
+    }
+
     /**
      * Main public method of this class. org.wso2.carbon.attachment.mgt.server.internal
      * .AttachmentServiceComponent invokes it when the bundle resolved.

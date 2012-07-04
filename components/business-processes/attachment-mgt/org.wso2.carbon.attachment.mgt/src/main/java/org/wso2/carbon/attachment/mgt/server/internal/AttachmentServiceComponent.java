@@ -21,16 +21,13 @@ package org.wso2.carbon.attachment.mgt.server.internal;
 import org.apache.commons.logging.Log;
 import org.apache.commons.logging.LogFactory;
 import org.osgi.framework.BundleContext;
-import org.osgi.framework.ServiceRegistration;
 import org.osgi.service.component.ComponentContext;
-import org.wso2.carbon.attachment.mgt.configuration.AttachmentMgtConfigurationConstants;
 import org.wso2.carbon.attachment.mgt.server.AttachmentServer;
 import org.wso2.carbon.attachment.mgt.server.AttachmentServerService;
 import org.wso2.carbon.attachment.mgt.server.AttachmentServerServiceImpl;
 import org.wso2.carbon.attachment.mgt.servlet.AttachmentDownloadServlet;
 import org.wso2.carbon.core.multitenancy.SuperTenantCarbonContext;
 import org.wso2.carbon.datasource.DataSourceInformationRepositoryService;
-import org.wso2.carbon.utils.multitenancy.CarbonContextHolder;
 import org.wso2.carbon.utils.multitenancy.MultitenantConstants;
 
 import javax.servlet.Servlet;
@@ -58,24 +55,42 @@ public class AttachmentServiceComponent {
     private boolean dataSourceInfoRepoProvided = false;
 
     /**
-     * Singleton AttachmentServerHolder reference - which manager the run-rime configuration
-     * objects
-     * required.
-     */
-    AttachmentServerHolder attachmentServerHolder;
-
-    /**
      * The bundle context.
      */
     private BundleContext bundleContext;
 
     /**
+     * Bundle activation method.
+     *
+     * @param componentContext : The component context.
+     */
+    protected void activate(ComponentContext componentContext) {
+        try {
+            SuperTenantCarbonContext.startTenantFlow();
+            SuperTenantCarbonContext.getCurrentContext().setTenantId(
+                    MultitenantConstants.SUPER_TENANT_ID);
+
+            this.bundleContext = componentContext.getBundleContext();
+            if (dataSourceInfoRepoProvided) {
+                initAttachmentServer();
+                registerAttachmentDownloadServlet();
+                registerAttachmentServerService();
+            }
+        } catch (Throwable t) {
+            log.error("Failed to activate Attachment management bundle", t);
+        }
+        if (log.isDebugEnabled()) {
+            log.debug("Attachment management bundle is activated.");
+        }
+    }
+
+    /**
      * Initializing Attachment Server
      */
-    protected void initAttachmentServer(AttachmentServerHolder attachmentServerHolder) {
-        attachmentServerHolder.setAttachmentServer(new AttachmentServer());
+    private void initAttachmentServer() {
+        AttachmentServerHolder.getInstance().setAttachmentServer(AttachmentServer.getInstance());
         log.info("Initialising Attachment Server");
-        attachmentServerHolder.getAttachmentServer().init();
+        AttachmentServerHolder.getInstance().getAttachmentServer().init();
     }
 
     /**
@@ -84,59 +99,21 @@ public class AttachmentServiceComponent {
     private void registerAttachmentServerService() {
         log.info("Registering AttachmentServerService");
         bundleContext.registerService(AttachmentServerService.class.getName(),
-                                      new AttachmentServerServiceImpl(),
-                                      null);
-    }
-
-    /**
-     * Bundle activation method.
-     *
-     * @param componentContext : The component context.
-     */
-    protected void activate(ComponentContext componentContext) {
-        this.bundleContext = componentContext.getBundleContext();
-
-        registerAttachmentDownloadServlet();
-
-        this.attachmentServerHolder = AttachmentServerHolder.getInstance();
-
-        if (dataSourceInfoRepoProvided) {
-            SuperTenantCarbonContext.startTenantFlow();
-            SuperTenantCarbonContext.getCurrentContext().setTenantId(
-                    MultitenantConstants.SUPER_TENANT_ID);
-
-            int tenantId = CarbonContextHolder.getCurrentCarbonContextHolder().getTenantId();
-
-            registerAttachmentServerService();
-
-        } else {
-            log.warn("Data-Source service is not initialized yet. If the declarative services are" +
-                     " correctly configured this WARN shouldn't be thrown.");
-        }
-
-        initAttachmentServer(this.attachmentServerHolder);
+                new AttachmentServerServiceImpl(),
+                null);
     }
 
     /**
      * Register the Servlet used to download attachments
      */
     private void registerAttachmentDownloadServlet() {
-        try {
-            HttpServlet attachmentDownloadServlet = new AttachmentDownloadServlet();
-
-            Dictionary redirectorParams = new Hashtable(1);
-            redirectorParams.put("url-pattern", "/attachment-mgt/download");
-            //redirectorParams.put("url-pattern", "/t/carbon.super" + AttachmentMgtConfigurationConstants.ATTACHMENT_DOWNLOAD_SERVELET_URL_PATTERN);
-
-            ServiceRegistration reg= bundleContext.registerService(Servlet.class.getName(), attachmentDownloadServlet,
-                                                              redirectorParams);
-
-            log.info("Attachment Download Servlet registered.");
-        } catch (NullPointerException npe) {
-            log.error("Bundle Context is not initialized.", npe);
-        } catch (Throwable e) {
-            log.error("Servlet registration failed for Attachment Download Servlet.", e);
-        }
+        HttpServlet attachmentDownloadServlet = new AttachmentDownloadServlet();
+        Dictionary redirectorParams = new Hashtable(1);
+        redirectorParams.put("url-pattern", "/attachment-mgt/download");
+        //redirectorParams.put("url-pattern", "/t/carbon.super" + AttachmentMgtConfigurationConstants.ATTACHMENT_DOWNLOAD_SERVELET_URL_PATTERN);
+        bundleContext.registerService(Servlet.class.getName(), attachmentDownloadServlet,
+                redirectorParams);
+        log.info("Attachment Download Servlet registered.");
     }
 
     /**

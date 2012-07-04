@@ -44,8 +44,8 @@ import org.wso2.carbon.utils.Axis2ConfigurationContextObserver;
  * interface="org.wso2.carbon.user.core.service.RealmService"
  * cardinality="1..1" policy="dynamic" bind="setRealmService"
  * unbind="unsetRealmService"
- *
- * @scr.reference name="attachment.mgt.service" interface="org.wso2.carbon.attachment.mgt.server.AttachmentServerService"
+ * @scr.reference name="attachment.mgt.service"
+ * interface="org.wso2.carbon.attachment.mgt.server.AttachmentServerService"
  * cardinality="1..1" policy="dynamic"  bind="setAttachmentMgtService"
  * unbind="unsetAttachmentMgtService"
  */

@@ -263,10 +263,14 @@ public class BPELServerConfiguration {
         if (dsType == DataSourceType.EXTERNAL) {
             odeConfig.setProperty(addPrefix(OdeConfigProperties.PROP_DB_EXTERNAL_DS),
                     dataSourceName);
-            odeConfig.setProperty(addPrefix(BPELConstants.PROP_DB_EXTERNAL_JNDI_CTX_FAC),
-                    dataSourceJNDIRepoInitialContextFactory);
-            odeConfig.setProperty(addPrefix(BPELConstants.PROP_DB_EXTERNAL_JNDI_PROVIDER_URL),
-                    dataSourceJNDIRepoProviderURL);
+            if (dataSourceJNDIRepoInitialContextFactory != null) {
+                odeConfig.setProperty(addPrefix(BPELConstants.PROP_DB_EXTERNAL_JNDI_CTX_FAC),
+                        dataSourceJNDIRepoInitialContextFactory);
+            }
+            if (dataSourceJNDIRepoProviderURL != null) {
+                odeConfig.setProperty(addPrefix(BPELConstants.PROP_DB_EXTERNAL_JNDI_PROVIDER_URL),
+                        dataSourceJNDIRepoProviderURL);
+            }
         }
 
         if (transactionFactoryClass != null) {
@@ -366,26 +370,24 @@ public class BPELServerConfiguration {
                         "when data source mode is external.");
             }
 
-            TDataBaseConfig.DataSource.JNDI jndiConfig = databaseConfig.getDataSource().getJNDI();
-            if (jndiConfig.getContextFactory() != null &&
-                    jndiConfig.getContextFactory().length() > 0 &&
-                    jndiConfig.getProviderURL() != null &&
-                    jndiConfig.getProviderURL().length() > 0) {
-                dataSourceJNDIRepoInitialContextFactory = jndiConfig.getContextFactory().trim();
-                dataSourceJNDIRepoProviderURL = jndiConfig.getProviderURL().trim();
+            if (databaseConfig.getDataSource().isSetJNDI()) {
+                TDataBaseConfig.DataSource.JNDI jndiConfig = databaseConfig.getDataSource().getJNDI();
+                if (jndiConfig.getContextFactory() != null &&
+                        jndiConfig.getContextFactory().length() > 0 &&
+                        jndiConfig.getProviderURL() != null &&
+                        jndiConfig.getProviderURL().length() > 0) {
+                    dataSourceJNDIRepoInitialContextFactory = jndiConfig.getContextFactory().trim();
+                    dataSourceJNDIRepoProviderURL = jndiConfig.getProviderURL().trim();
 
-                // Read Port Offset
-                int portOffset = readPortOffset();
-                //applying port offset operation
-                String urlWithoutPort = dataSourceJNDIRepoProviderURL.substring(0,
-                        dataSourceJNDIRepoProviderURL.lastIndexOf(':') + 1);
-                int dataSourceJNDIRepoProviderPort = Integer.parseInt(
-                        dataSourceJNDIRepoProviderURL.substring(urlWithoutPort.length())) + portOffset;
-                dataSourceJNDIRepoProviderURL = urlWithoutPort + dataSourceJNDIRepoProviderPort;
-
-            } else {
-                throw new RuntimeException("Data source configuration must contain JNDI " +
-                        "Initial Context Factory.");
+                    // Read Port Offset
+                    int portOffset = readPortOffset();
+                    //applying port offset operation
+                    String urlWithoutPort = dataSourceJNDIRepoProviderURL.substring(0,
+                            dataSourceJNDIRepoProviderURL.lastIndexOf(':') + 1);
+                    int dataSourceJNDIRepoProviderPort = Integer.parseInt(
+                            dataSourceJNDIRepoProviderURL.substring(urlWithoutPort.length())) + portOffset;
+                    dataSourceJNDIRepoProviderURL = urlWithoutPort + dataSourceJNDIRepoProviderPort;
+                }
             }
         }
     }

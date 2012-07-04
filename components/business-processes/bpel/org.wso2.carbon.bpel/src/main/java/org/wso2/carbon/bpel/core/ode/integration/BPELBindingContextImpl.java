@@ -190,7 +190,7 @@ public class BPELBindingContextImpl implements BindingContext {
                     processProxy);
         } catch (AxisFault e) {
             log.error("Error occurred creating the axis service " + serviceName.toString());
-            throw new DeploymentException("BPEL Package undeployment failed.", e);
+            throw new DeploymentException("BPEL Package deployment failed.", e);
         }
 
         processProxy.setAxisService(axisService);

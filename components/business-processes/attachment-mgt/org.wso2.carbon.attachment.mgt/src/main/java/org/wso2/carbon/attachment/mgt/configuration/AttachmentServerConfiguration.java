@@ -58,8 +58,8 @@ public class AttachmentServerConfiguration {
 
     public AttachmentServerConfiguration() {
         this.dataSourceName = "attachmentds";
-        this.dataSourceJNDIRepoInitialContextFactory = "com.sun.jndi.rmi.registry.RegistryContextFactory";
-        this.dataSourceJNDIRepoProviderURL = applyPortOffset("rmi://localhost:2199");
+        this.dataSourceJNDIRepoInitialContextFactory = null;
+        this.dataSourceJNDIRepoProviderURL = null;
         this.daoConnectionFactoryClass = "org.wso2.carbon.attachment.mgt.core.dao.impl.jpa" +
                 ".openjpa.AttachmentMgtDAOConnectionFactoryImpl";
         this.daoTransformerFactoryClass = "org.wso2.carbon.attachment.mgt.core.dao.impl.jpa.openjpa.AttachmentMgtDAOTransformerFactoryImpl";
@@ -78,9 +78,12 @@ public class AttachmentServerConfiguration {
             this.dataSourceJNDIRepoInitialContextFactory =
                     serverConfigProperties.getProperty(AttachmentMgtConfigurationConstants.
                             DATASOURCE_JNDI_CONTEXT_FACTORY);
-            this.dataSourceJNDIRepoProviderURL =
-                    applyPortOffset(serverConfigProperties.getProperty(
-                            AttachmentMgtConfigurationConstants.DATASOURCE_JNDI_PROVIDER_URL));
+            if (serverConfigProperties.getProperty(
+                    AttachmentMgtConfigurationConstants.DATASOURCE_JNDI_PROVIDER_URL) != null) {
+                this.dataSourceJNDIRepoProviderURL =
+                        applyPortOffset(serverConfigProperties.getProperty(
+                                AttachmentMgtConfigurationConstants.DATASOURCE_JNDI_PROVIDER_URL));
+            }
             this.daoConnectionFactoryClass =
                     serverConfigProperties.getProperty(AttachmentMgtConfigurationConstants.
                             DAO_CONNECTION_FACTORY_IMPL_CLASS);

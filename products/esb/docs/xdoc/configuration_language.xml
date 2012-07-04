@@ -1921,79 +1921,36 @@ ApplicationContext/Configuration used for the bean </p>
 
 <p>Rule mediator is to integrate the WSO2 Rules component to the WSO2 ESB in
 order to define dynamic integration decisions in terms of rules.</p>
-<pre> &lt;rule&gt;
-
-    &lt;ruleset&gt;
-        &lt;source [ key="xs:string" ]&gt;
-            [ in-Lined ]
-        &lt;/source&gt;
-        &lt;creation&gt;
-            &lt;property name="xs:string" value="xs:string"/&gt;*
-        &lt;/creation&gt;
-    &lt;/ruleset&gt;
-
-    &lt;session type="[stateless|stateful]"/&gt;*
-
-    &lt;facts&gt;
-        &lt;fact name="xs:string" type="xs:string" expression="xs:string" value="xs:string"/&gt;+
-    &lt;/facts&gt;
-
-    &lt;results&gt;
-        &lt;result name="xs:string" type="xs:string" expression="xs:string" value="xs:string"/&gt;*
-    &lt;/results&gt;
-
-    [ &lt;childMediators&gt;
-        &lt;mediator/&gt;*
-      &lt;/childMediators&gt; ]
-
-  &lt;/rule&gt;
+<pre> &lt;ruleMediator backendRuntimeFactory=&quot;xs:string&quot;&gt;
+    &lt;source xpath=&quot;//&quot; &gt;soapBody|soapHeader|$foo|$bar&lt;/source&gt;
+    &lt;target xpath=&quot;//&quot; resultXpath=&quot;xs:string&quot;&gt;soapBody|soapHeader|$foo|$bar&lt;/target&gt;
+    &lt;ruleSet&gt;
+        &lt;rule resourceType=&quot;drl|dtable&quot; sourceType=&quot;inline|registry|file&quot;&gt;
+        &lt;/rule&gt;
+        &lt;properties&gt;
+            &lt;property&gt;&lt;/property&gt;
+        &lt;/properties&gt;
+    &lt;/ruleSet&gt;
+    &lt;input wrapperElementName=&quot;xs:string&quot; namespace=&quot;xs:string&quot;&gt;
+        &lt;fact elementName=&quot;xs:string&quot; namespace=&quot;xs:string&quot; type=&quot;xs:string&quot;&gt;&lt;/fact&gt;
+    &lt;/input&gt;
+    &lt;output wrapperElementName=&quot;xs:string&quot; namespace=&quot;xs:string&quot;&gt;
+        &lt;fact elementName=&quot;xs:string&quot; namespace=&quot;xs:string&quot; type=&quot;xs:string&quot;&gt;&lt;/fact&gt;
+    &lt;/output&gt;
+&lt;/ruleMediator&gt;
         </pre>
 
 <h2 id="Configurat">The Configuration of the Rule Mediator</h2>
 
 <h4>RuleSet</h4>
 
-<p>The source is the only mandatory element of the ruleset. However, the
-properties required for the creation of the ruleset can also be specified
-within ruleset. The key attribute is a registry key, which is to lookup the
-rule script from the registry if the rule script is in the registry. The rule
-set can be given as a child node of source elemenent. If the rule set is
-non-XML, you may need to wrap it with a CDATA section inside a XML tag ex:
-&lt;X&gt;&lt;![CDATA[ native code]]&gt;&lt;/X&gt;</p>
+<p>ruleset is to specify the rule script which can be in the classpath, registry, or in-lined. </p>
 
-<p>Note : The key or in-lined rule script must be defined. Otherwise, the rule
-mediator configuration is invalid. </p>
+<h4 id="Input">Input / Output Facts</h4>
 
-<h4 id="RuleSessio">RuleSession</h4>
-
-<p>Rule Session specify the stateful or stateless behavior of the rule engine.
-If this has value &#x2018;stateful&#x2019;, then the rule engine will execute
-rules in a stateful manner, for any other value , it assumes as stateless.
-There are optional properties, which are used when creating the rule session.
-Rule session is optional and the default one is stateful.</p>
-
-<h4 id="Input">Facts / Results</h4>
-<ul>
-  <li>name - the unique name</li>
-  <li>value - Represents any static value</li>
-  <li>expression - XPath expression for extracting data from the message being
-    passed between ESB components. The default value is the first child of the
-    SOAP Body. </li>
-  <li>type - Defines the type of the input data. There are a few built in types
-    such as Message, Context, Map, POJO and Mediator and there are samples
-    using these. Using the rule-component.conf, you can register new types
-    along with adapters, which are responsible for formulating specified types
-    from the data. If there is no registered adapter for a given type, then, we
-    assume the given type as a valid java class name and uses POJO adapter to
-    formulate the POJO instance whose class is the given type.</li>
-</ul>
-
-<p>Facts specify the facts being used in rule set. It also defines how to
-formulate facts from the message, etc. Results define how to handle results
-from the rule set execution. Usually, results adapters enrich the message with
-results. For example, If you are using POJO adapter (i.e. a java class as the
-type &#x2013; the class name of a result), then we transform POJO into an XML
-and attached to the SOAP message. </p>
+<p>Input facts are used for formulating the facts to be inserted into the rule engine
+    from the incoming message. And Output facts are used to extract the results of a
+    rule engine execution. </p>
 
 <h2>UI Integration</h2>
 <p>As mentioned earlier the ESB management console provides tools that can be

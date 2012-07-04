@@ -292,42 +292,16 @@ logging into the console. </p>
         <a href="samples/rule_samples.html">Introduction to Rule Mediator</a>
         <ul>
             <li>
-                <a href="samples/rule_samples.html#Sample600">Sample 600: Rule mediator as a Filter
-                    - Simple rule based routing using an in-lined rule script
-                </a>
-            </li>
-            <li>
-                <a href="samples/rule_samples.html#Sample601">Sample 601: Rule mediator as a Filter
-                    - Simple rule based routing using rule script from registry
-                </a>
-            </li>
-            <li>
-                <a href="samples/rule_samples.html#Sample602">Sample 602: Rule mediator as a Filter
-                    - Simple rule based routing using an Drools native language
-                </a>
-            </li>
-            <li>
-                <a href="samples/rule_samples.html#Sample603">Sample 603: Advance rule based routing
-                    - Switching routing
-                    decision according to the rules - Rule mediator as a Switch mediator
-                </a>
-            </li>
-            <li>
-                <a href="samples/rule_samples.html#Sample604">Sample 604: Simple message
+                <a href="samples/rule_samples.html#Sample600">Sample 600: Simple message
                     transformation - Rule mediator for message transformation
                 </a>
             </li>
             <li>
-                <a href="samples/rule_samples.html#Sample605">Sample 605: Simple message
-                    transformation - Rule mediator for message transformation
+                <a href="samples/rule_samples.html#Sample601">Sample 601: Rule based routing
+                    - Switching routing decision according to the rules
                 </a>
             </li>
-            <li>
-                <a href="samples/rule_samples.html#Sample606">Sample 606: Advanced transformation
-                    and use of custom Java
-                    objects
-                </a>
-            </li>
+
         </ul>
     </li>
     <li>

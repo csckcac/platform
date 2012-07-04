@@ -169,29 +169,25 @@
                     aquery = wrapTextInVisibleWidth(aquery);
                     String[] temp = aquery.split(",");
 
-                    if (null != temp) {
-                        aquery = "";
-                        int count = 0;
-                        int iter = 0;
-                        for (String aSubQuery : temp) {
-                            aSubQuery = aSubQuery.trim();
-                            if (!aSubQuery.equals("")) {
-                                count += aSubQuery.length() + 1;
-                                if (count > max) {
-                                    aquery += aSubQuery + "," + "\n\t";
-                                    count = 0;
-                                } else {
-                                    aquery += aSubQuery + ",";
+                     if (null != temp) {
+                            aquery = "";
+                            int count = 0;
+                            for (String aSubQuery : temp) {
+                                aSubQuery = aSubQuery.trim();
+                                if (!aSubQuery.equals("")) {
+                                    count += aSubQuery.length() + 1;
+                                    if (count > max) {
+                                        aquery += aSubQuery + "," + "\n\t";
+                                        count = 0;
+                                    } else {
+                                        aquery += aSubQuery + ",";
+                                    }
                                 }
                             }
-                            iter++;
+                            aquery = aquery.trim();
+                            if (aquery.endsWith(",")) aquery = aquery.substring(0, aquery.length() - 1);
+                            scriptContent = scriptContent + aquery + ";" + "\n";
                         }
-                        aquery = aquery.substring(0, aquery.length() - 3);
-
-                    }
-                    aquery = aquery.trim();
-                    if (aquery.endsWith(",")) aquery = aquery.substring(0, aquery.length() - 1);
-                    scriptContent = scriptContent + aquery + ";" + "\n";
                 }
             }
         }

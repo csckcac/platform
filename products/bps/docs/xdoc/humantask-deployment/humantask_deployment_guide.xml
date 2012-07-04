@@ -21,11 +21,56 @@
         "http://www.w3.org/TR/xhtml1/DTD/xhtml1-strict.dtd">
 <html xmlns="http://www.w3.org/1999/xhtml" xml:lang="en" lang="en">
     <head>
-        <title>@product.name@ - Deployment Guide For Human Tasks - TODO - </title>
+        <title>@product.name@ - Human Task Artifact Deployment </title>
         <link href="../css/bps-docs.css" rel="stylesheet"/>
         <link href="styles/dist-docs.css" rel="stylesheet" type="text/css" media="all"/>
     </head>
     <body>
-        <h1>Deployment Guide For Human Tasks - TODO</h1>
+        <h1>Human Task Artifact Deployment</h1>
+
+        <h2 id="HumanTask-Deployment">Human Task Deployment</h2>
+
+        <p>
+            Each Human Task artifact is a zipped file with all relevant deployment artifacts.
+            It should contain the task deployment descriptor, one or more human task definitions (.ht files),
+            WSDL and JSPs files for rendering task input and output. The task deployment descriptor
+            is a file named htconfig.xml (see the next paragraph for its description).
+        </p>
+        <p>
+            During deployment, the task engine loads all documents from the deployment descriptor. Loading documents
+            allow it to reference tasks, service and schema definitions using fully qualified names, and import
+            based on namespaces instead of locations.
+        </p>
+
+        <p>Two ways to deploy a task in @product.name@</p>
+        <ol>
+            <li><b>Using the @product.name@ Web Management Console</b>
+            <br/>
+            <p>
+                Login to BPS Management Console by providing your credentials (default:- user:admin pass:admin). Go to <b>Add</b>
+                menu item under the <b>Human Tasks</b> section of the left pane of the Management Console.<br/>
+            </p>
+            <img src="../images/humantask-deployment-guide/humantask_deployment_menu.png" alt="Add Human Task"/>
+
+            <p>
+                 Browse and select the zipped Human Task archive. You can upload multiple task artifacts
+                in a single upload using the <b>+</b> button and selecting artifacts one after another.
+                <br/>
+            </p>
+            <img src="../images/humantask-deployment-guide/humantask_upload_screen.png" alt="Add Human Task"/>
+            <p><br /></p>
+            </li>
+
+
+
+            <li><b>Manually copying the zipped task artifact file</b>
+            <br/>
+            <p>
+                To deploy manually, just copy the zipped task definition file containing your artifacts, to the
+                BPS_HOME/repository/deployment/server/humantasks directory. In this case, you need to be aware of the structure
+                of the zipped task configuration. The deployment descriptor (i.e. htconfig.xml file) should be in the root of the zip.
+            </p>
+            </li>
+        </ol>
     </body>
 </html>

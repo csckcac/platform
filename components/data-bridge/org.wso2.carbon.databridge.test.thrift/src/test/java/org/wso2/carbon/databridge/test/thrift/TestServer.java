@@ -24,6 +24,7 @@ import org.apache.log4j.Logger;
 import org.wso2.carbon.databridge.commons.Credentials;
 import org.wso2.carbon.databridge.commons.Event;
 import org.wso2.carbon.databridge.commons.StreamDefinition;
+import org.wso2.carbon.databridge.commons.thrift.utils.HostAddressFinder;
 import org.wso2.carbon.databridge.core.AgentCallback;
 import org.wso2.carbon.databridge.core.DataBridge;
 import org.wso2.carbon.databridge.core.definitionstore.InMemoryStreamDefinitionStore;
@@ -31,6 +32,7 @@ import org.wso2.carbon.databridge.core.exception.DataBridgeException;
 import org.wso2.carbon.databridge.core.internal.authentication.AuthenticationHandler;
 import org.wso2.carbon.databridge.receiver.thrift.internal.ThriftDataReceiver;
 
+import java.net.SocketException;
 import java.util.List;
 
 public class TestServer extends TestCase {
@@ -61,7 +63,7 @@ public class TestServer extends TestCase {
             int totalSize = 0;
 
             public void definedStream(StreamDefinition streamDefinition,
-                                           Credentials credentials) {
+                                      Credentials credentials) {
                 log.info("StreamDefinition " + streamDefinition);
             }
 
@@ -71,8 +73,15 @@ public class TestServer extends TestCase {
             }
 
         });
-        thriftDataReceiver.start("localhost");
-        log.info("Test Server Started");
+
+        try {
+            String address = HostAddressFinder.findAddress("localhost");
+            log.info("Test Server starting on " + address);
+            thriftDataReceiver.start(address);
+            log.info("Test Server Started");
+        } catch (SocketException e) {
+            log.error("Test Server not started !", e);
+        }
     }
 
     public void stop() {

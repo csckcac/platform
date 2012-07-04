@@ -18,6 +18,8 @@
 package org.wso2.carbon.databridge.agent.thrift;
 
 import com.google.gson.Gson;
+import org.apache.commons.logging.Log;
+import org.apache.commons.logging.LogFactory;
 import org.wso2.carbon.databridge.agent.thrift.conf.DataPublisherConfiguration;
 import org.wso2.carbon.databridge.agent.thrift.conf.ReceiverConfiguration;
 import org.wso2.carbon.databridge.agent.thrift.exception.AgentException;
@@ -34,9 +36,11 @@ import org.wso2.carbon.databridge.commons.exception.MalformedStreamDefinitionExc
 import org.wso2.carbon.databridge.commons.exception.NoStreamDefinitionExistException;
 import org.wso2.carbon.databridge.commons.exception.StreamDefinitionException;
 import org.wso2.carbon.databridge.commons.thrift.utils.CommonThriftConstants;
+import org.wso2.carbon.databridge.commons.thrift.utils.HostAddressFinder;
 
 import java.lang.reflect.Field;
 import java.net.MalformedURLException;
+import java.net.SocketException;
 import java.util.concurrent.RejectedExecutionException;
 import java.util.concurrent.ThreadPoolExecutor;
 
@@ -48,6 +52,7 @@ public class DataPublisher {
 
 //    private static Log log = LogFactory.getLog(DataPublisher.class);
 
+    private static Log log = LogFactory.getLog(DataPublisher.class);
     private Agent agent;
     private DataPublisherConfiguration dataPublisherConfiguration;
     private EventPublisher eventPublisher;
@@ -68,8 +73,11 @@ public class DataPublisher {
      * @param password    password
      * @throws java.net.MalformedURLException
      * @throws org.wso2.carbon.databridge.agent.thrift.exception.AgentException
+     *
      * @throws org.wso2.carbon.databridge.commons.exception.AuthenticationException
+     *
      * @throws org.wso2.carbon.databridge.commons.exception.TransportException
+     *
      */
     public DataPublisher(String receiverUrl, String userName, String password)
             throws MalformedURLException, AgentException, AuthenticationException,
@@ -88,8 +96,11 @@ public class DataPublisher {
      * @param password          password
      * @throws java.net.MalformedURLException
      * @throws org.wso2.carbon.databridge.agent.thrift.exception.AgentException
+     *
      * @throws org.wso2.carbon.databridge.commons.exception.AuthenticationException
+     *
      * @throws org.wso2.carbon.databridge.commons.exception.TransportException
+     *
      */
     public DataPublisher(String authenticationUrl, String receiverUrl, String userName,
                          String password)
@@ -111,8 +122,11 @@ public class DataPublisher {
      * @param agent       the underlining agent
      * @throws java.net.MalformedURLException
      * @throws org.wso2.carbon.databridge.agent.thrift.exception.AgentException
+     *
      * @throws org.wso2.carbon.databridge.commons.exception.AuthenticationException
+     *
      * @throws org.wso2.carbon.databridge.commons.exception.TransportException
+     *
      */
     public DataPublisher(String receiverUrl, String userName,
                          String password, Agent agent)
@@ -121,13 +135,13 @@ public class DataPublisher {
         AgentServerURL receiverURL = new AgentServerURL(receiverUrl);
         if (receiverURL.isSecured()) {
             this.start(new ReceiverConfiguration(userName, password,
-                                                 receiverURL.getHost(), receiverURL.getPort(),
-                                                 receiverURL.getHost(), receiverURL.getPort(), receiverURL.isSecured()),
+                                                 findHostAddress(receiverURL.getHost()), receiverURL.getPort(),
+                                                 findHostAddress(receiverURL.getHost()), receiverURL.getPort(), receiverURL.isSecured()),
                        agent);
         } else {
             this.start(new ReceiverConfiguration(userName, password,
-                                                 receiverURL.getHost(), receiverURL.getPort(),
-                                                 receiverURL.getHost(), receiverURL.getPort() + CommonThriftConstants.SECURE_EVENT_RECEIVER_PORT_OFFSET, receiverURL.isSecured()),
+                                                 findHostAddress(receiverURL.getHost()), receiverURL.getPort(),
+                                                 findHostAddress(receiverURL.getHost()), receiverURL.getPort() + CommonThriftConstants.SECURE_EVENT_RECEIVER_PORT_OFFSET, receiverURL.isSecured()),
                        agent);
         }
 
@@ -145,8 +159,11 @@ public class DataPublisher {
      * @param agent             the underlining agent
      * @throws java.net.MalformedURLException
      * @throws org.wso2.carbon.databridge.agent.thrift.exception.AgentException
+     *
      * @throws org.wso2.carbon.databridge.commons.exception.AuthenticationException
+     *
      * @throws org.wso2.carbon.databridge.commons.exception.TransportException
+     *
      */
     public DataPublisher(String authenticationUrl, String receiverUrl, String userName,
                          String password, Agent agent)
@@ -158,10 +175,19 @@ public class DataPublisher {
         }
         AgentServerURL receiverURL = new AgentServerURL(receiverUrl);
         this.start(new ReceiverConfiguration(userName, password,
-                                             receiverURL.getHost(), receiverURL.getPort(),
-                                             authenticationURL.getHost(), authenticationURL.getPort(), receiverURL.isSecured()),
+                                             findHostAddress(receiverURL.getHost()), receiverURL.getPort(),
+                                             findHostAddress(authenticationURL.getHost()), authenticationURL.getPort(), receiverURL.isSecured()),
                    agent);
 
+    }
+
+    private String findHostAddress(String hostAddress) {
+        try {
+            return HostAddressFinder.findAddress(hostAddress);
+        } catch (SocketException e) {
+            log.warn("Cannot find the appropriate server host address hence using " + hostAddress + " due to SocketException: " + e.getMessage());
+            return hostAddress;
+        }
     }
 
     /**
@@ -170,8 +196,11 @@ public class DataPublisher {
      *
      * @param agent the underlining agent
      * @throws org.wso2.carbon.databridge.agent.thrift.exception.AgentException
+     *
      * @throws org.wso2.carbon.databridge.commons.exception.AuthenticationException
+     *
      * @throws org.wso2.carbon.databridge.commons.exception.TransportException
+     *
      */
     public void setAgent(Agent agent)
             throws AgentException, AuthenticationException, TransportException {
@@ -211,11 +240,13 @@ public class DataPublisher {
      * @param streamDefinition on json format
      * @return the stream id
      * @throws org.wso2.carbon.databridge.agent.thrift.exception.AgentException
+     *
      * @throws org.wso2.carbon.databridge.commons.exception.DifferentStreamDefinitionAlreadyDefinedException
      *
      * @throws org.wso2.carbon.databridge.commons.exception.MalformedStreamDefinitionException
      *
      * @throws org.wso2.carbon.databridge.commons.exception.StreamDefinitionException
+     *
      */
     public String defineStream(String streamDefinition)
             throws AgentException, MalformedStreamDefinitionException, StreamDefinitionException,
@@ -230,11 +261,13 @@ public class DataPublisher {
      * @param streamDefinition on json format
      * @return the stream id
      * @throws org.wso2.carbon.databridge.agent.thrift.exception.AgentException
+     *
      * @throws org.wso2.carbon.databridge.commons.exception.DifferentStreamDefinitionAlreadyDefinedException
      *
      * @throws org.wso2.carbon.databridge.commons.exception.MalformedStreamDefinitionException
      *
      * @throws org.wso2.carbon.databridge.commons.exception.StreamDefinitionException
+     *
      */
     public String defineStream(StreamDefinition streamDefinition)
             throws AgentException, MalformedStreamDefinitionException, StreamDefinitionException,
@@ -301,6 +334,7 @@ public class DataPublisher {
      * @param correlationDataArray correlation data array of the event
      * @param payloadDataArray     payload data array of the event
      * @throws org.wso2.carbon.databridge.agent.thrift.exception.AgentException
+     *
      */
     public void publish(String streamId, Object[] metaDataArray, Object[] correlationDataArray,
                         Object[] payloadDataArray)
@@ -317,6 +351,7 @@ public class DataPublisher {
      * @param correlationDataArray correlation data array of the event
      * @param payloadDataArray     payload data array of the event
      * @throws org.wso2.carbon.databridge.agent.thrift.exception.AgentException
+     *
      */
     public void publish(String streamId, long timeStamp, Object[] metaDataArray,
                         Object[] correlationDataArray, Object[] payloadDataArray)

@@ -21,6 +21,7 @@ package org.apache.synapse.mediators;
 
 import org.apache.axiom.om.OMText;
 import org.apache.axis2.addressing.EndpointReference;
+import org.apache.axis2.addressing.RelatesTo;
 import org.apache.axis2.description.AxisOperation;
 import org.apache.axis2.transport.base.BaseConstants;
 import org.apache.commons.logging.Log;
@@ -212,6 +213,13 @@ public class GetPropertyFunction implements Function , XPathFunction {
                 } else {
                     return NULL_STRING;
                 }
+            } else if (SynapseConstants.HEADER_RELATES_TO.equals(key)) {
+                RelatesTo relatesTo = synCtx.getRelatesTo();
+                if (relatesTo != null) {
+                    return relatesTo.getValue();
+                } else {
+                    return NULL_STRING;
+                }
             } else if (SynapseConstants.HEADER_MESSAGE_ID.equals(key)) {
                 String messageID = synCtx.getMessageID();
                 if (messageID != null) {
@@ -246,7 +254,7 @@ public class GetPropertyFunction implements Function , XPathFunction {
                     SynapseConstants.PROPERTY_OPERATION_NAMESPACE.equals(key)) {
                 if (synCtx instanceof Axis2MessageContext) {
                     AxisOperation axisOperation
-                            = ((Axis2MessageContext)synCtx).getAxis2MessageContext().getAxisOperation();
+                            = ((Axis2MessageContext) synCtx).getAxis2MessageContext().getAxisOperation();
                     if (axisOperation != null) {
                         if (SynapseConstants.PROPERTY_OPERATION_NAMESPACE.equals(key)) {
                             return axisOperation.getName().getNamespaceURI();

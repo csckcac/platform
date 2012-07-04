@@ -110,7 +110,6 @@
                             for (String aSubQuery : temp) {
                                 aSubQuery = aSubQuery.trim();
                                 if (!aSubQuery.equals("")) {
-//                                    if (!aSubQuery.startsWith("\'") || !aSubQuery.startsWith("\"")) {
                                     count += aSubQuery.length() + 1;
                                     if (count > max) {
                                         aquery += aSubQuery + "," + "\n\t";
@@ -118,9 +117,6 @@
                                     } else {
                                         aquery += aSubQuery + ",";
                                     }
-//                                    } else {
-//                                        aquery += aSubQuery + "," + "\n\t";
-//                                    }
                                 }
                             }
                             aquery = aquery.trim();
@@ -180,7 +176,6 @@
                         for (String aSubQuery : temp) {
                             aSubQuery = aSubQuery.trim();
                             if (!aSubQuery.equals("")) {
-//                                if (!aSubQuery.startsWith("\'") || !aSubQuery.startsWith("\"")) {
                                 count += aSubQuery.length() + 1;
                                 if (count > max) {
                                     aquery += aSubQuery + "," + "\n\t";
@@ -188,9 +183,6 @@
                                 } else {
                                     aquery += aSubQuery + ",";
                                 }
-//                                } else {
-//                                    aquery += aSubQuery + "," + "\n\t";
-//                                }
                             }
                             iter++;
                         }

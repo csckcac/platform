@@ -50,7 +50,7 @@ public final class DataBridgeCoreBuilder {
     public static OMElement loadConfigXML() throws DataBridgeConfigurationException {
 
         String carbonHome = System.getProperty(ServerConstants.CARBON_CONFIG_DIR_PATH);
-        String path = carbonHome + File.separator + DataBridgeConstants.EVENT_BRIDGE_DIR + File.separator + DataBridgeConstants.EVENT_BRIDGE_CONFIG_XML;
+        String path = carbonHome + File.separator + DataBridgeConstants.DATA_BRIDGE_DIR + File.separator + DataBridgeConstants.DATA_BRIDGE_CONFIG_XML;
 
         BufferedInputStream inputStream = null;
         try {
@@ -62,12 +62,12 @@ public final class DataBridgeCoreBuilder {
             omElement.build();
             return omElement;
         } catch (FileNotFoundException e) {
-            String errorMessage = DataBridgeConstants.EVENT_BRIDGE_CONFIG_XML
+            String errorMessage = DataBridgeConstants.DATA_BRIDGE_CONFIG_XML
                                   + "cannot be found in the path : " + path;
             log.error(errorMessage, e);
             throw new DataBridgeConfigurationException(errorMessage, e);
         } catch (XMLStreamException e) {
-            String errorMessage = "Invalid XML for " + DataBridgeConstants.EVENT_BRIDGE_CONFIG_XML
+            String errorMessage = "Invalid XML for " + DataBridgeConstants.DATA_BRIDGE_CONFIG_XML
                                   + " located in the path : " + path;
             log.error(errorMessage, e);
             throw new DataBridgeConfigurationException(errorMessage, e);
@@ -86,8 +86,8 @@ public final class DataBridgeCoreBuilder {
     public static void populateStreamDefinitions(OMElement config,
                                                       List<String[]> streamDefinitionList) {
         OMElement streamDefinitions = config.getFirstChildWithName(
-                new QName(DataBridgeConstants.EVENT_BRIDGE_NAMESPACE,
-                          DataBridgeConstants.EVENT_STREAM_DEFINITIONS_ELEMENT));
+                new QName(DataBridgeConstants.DATA_BRIDGE_NAMESPACE,
+                          DataBridgeConstants.STREAM_DEFINITIONS_ELEMENT));
 
         if (streamDefinitions != null) {
             for (Iterator streamDefinitionIterator = streamDefinitions.getChildElements();
@@ -104,7 +104,7 @@ public final class DataBridgeCoreBuilder {
     public static void populateStreamDefinitionStore(OMElement config,
                                                      DataBridgeConfiguration dataBridgeConfiguration) {
         OMElement streamDefinitionStore = config.getFirstChildWithName(
-                new QName(DataBridgeConstants.EVENT_BRIDGE_NAMESPACE,
+                new QName(DataBridgeConstants.DATA_BRIDGE_NAMESPACE,
                           DataBridgeConstants.STREAM_DEFINITION_STORE_ELEMENT));
         if (streamDefinitionStore != null) {
             dataBridgeConfiguration.setStreamDefinitionStoreName(streamDefinitionStore.getText());
@@ -115,7 +115,7 @@ public final class DataBridgeCoreBuilder {
     public static void populateRuntimeParameters(OMElement config,
                                                  DataBridgeConfiguration dataBridgeConfiguration) {
         OMElement workerThreads = config.getFirstChildWithName(
-                new QName(DataBridgeConstants.EVENT_BRIDGE_NAMESPACE,
+                new QName(DataBridgeConstants.DATA_BRIDGE_NAMESPACE,
                           DataBridgeConstants.WORKER_THREADS_ELEMENT));
         if (workerThreads != null) {
             try {
@@ -125,7 +125,7 @@ public final class DataBridgeCoreBuilder {
             }
         }
         OMElement eventBufferCapacity = config.getFirstChildWithName(
-                new QName(DataBridgeConstants.EVENT_BRIDGE_NAMESPACE,
+                new QName(DataBridgeConstants.DATA_BRIDGE_NAMESPACE,
                           DataBridgeConstants.EVENT_BUFFER_CAPACITY_ELEMENT));
         if (eventBufferCapacity != null) {
             try {
@@ -135,7 +135,7 @@ public final class DataBridgeCoreBuilder {
             }
         }
         OMElement clientTimeout = config.getFirstChildWithName(
-                new QName(DataBridgeConstants.EVENT_BRIDGE_NAMESPACE,
+                new QName(DataBridgeConstants.DATA_BRIDGE_NAMESPACE,
                           DataBridgeConstants.CLIENT_TIMEOUT_ELEMENT));
         if (clientTimeout != null) {
             try {
@@ -154,7 +154,7 @@ public final class DataBridgeCoreBuilder {
 
         if (bridgeConfig != null) {
             if (!bridgeConfig.getQName().equals(
-                    new QName(DataBridgeConstants.EVENT_BRIDGE_NAMESPACE, DataBridgeConstants.EVENT_BRIDGE_ROOT_ELEMENT))) {
+                    new QName(DataBridgeConstants.DATA_BRIDGE_NAMESPACE, DataBridgeConstants.DATA_BRIDGE_ROOT_ELEMENT))) {
                 throw new DataBridgeConfigurationException("Invalid root element in data Bridge server config");
             }
             DataBridgeCoreBuilder.populateStreamDefinitions(bridgeConfig, streamDefinitions);

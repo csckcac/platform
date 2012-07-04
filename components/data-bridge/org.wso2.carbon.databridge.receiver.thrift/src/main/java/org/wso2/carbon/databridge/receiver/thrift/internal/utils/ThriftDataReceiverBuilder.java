@@ -41,7 +41,7 @@ public final class ThriftDataReceiverBuilder {
                                       int portOffset,
                                       ThriftDataReceiverConfiguration thriftDataReceiverConfiguration) {
         OMElement secureDataReceiverPort = config.getFirstChildWithName(
-                new QName(DataBridgeConstants.EVENT_BRIDGE_NAMESPACE,
+                new QName(DataBridgeConstants.DATA_BRIDGE_NAMESPACE,
                           ThriftDataReceiverConstants.SECURE_PORT_ELEMENT));
         if (secureDataReceiverPort != null) {
             try {
@@ -51,7 +51,7 @@ public final class ThriftDataReceiverBuilder {
             }
         }
         OMElement receiverPort = config.getFirstChildWithName(
-                new QName(DataBridgeConstants.EVENT_BRIDGE_NAMESPACE,
+                new QName(DataBridgeConstants.DATA_BRIDGE_NAMESPACE,
                           ThriftDataReceiverConstants.PORT_ELEMENT));
         if (receiverPort != null) {
             try {
@@ -80,7 +80,7 @@ public final class ThriftDataReceiverBuilder {
                                               OMElement initialConfig) {
         if (initialConfig != null) {
             OMElement thriftReceiverConfig = initialConfig.getFirstChildWithName(
-                    new QName(DataBridgeConstants.EVENT_BRIDGE_NAMESPACE,
+                    new QName(DataBridgeConstants.DATA_BRIDGE_NAMESPACE,
                               ThriftDataReceiverConstants.THRIFT_EVENT_RECEIVER_ELEMENT));
             if (thriftReceiverConfig != null) {
                 populatePorts(thriftReceiverConfig, portOffset, thriftDataReceiverConfiguration);

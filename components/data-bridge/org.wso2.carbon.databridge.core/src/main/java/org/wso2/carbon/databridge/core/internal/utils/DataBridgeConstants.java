@@ -24,7 +24,7 @@ package org.wso2.carbon.databridge.core.internal.utils;
  */
 public final class DataBridgeConstants {
 
-    public static final String EVENT_BRIDGE_DIR = "data-bridge";
+    public static final String DATA_BRIDGE_DIR = "data-bridge";
 
     private DataBridgeConstants(){ }
 
@@ -32,12 +32,12 @@ public final class DataBridgeConstants {
     public static final int EVENT_BUFFER_CAPACITY = 10000;
     public static final int CLIENT_TIMEOUT_MS = 30000;
 
-    public static final String EVENT_BRIDGE_CONFIG_XML = "data-bridge-config.xml";
-    public static final String EVENT_BRIDGE_NAMESPACE = "http://wso2.org/carbon/databridge";
+    public static final String DATA_BRIDGE_CONFIG_XML = "data-bridge-config.xml";
+    public static final String DATA_BRIDGE_NAMESPACE = "http://wso2.org/carbon/databridge";
 
-    public static final String EVENT_BRIDGE_ROOT_ELEMENT = "databridgeConfiguration";
+    public static final String DATA_BRIDGE_ROOT_ELEMENT = "dataBridgeConfiguration";
     public static final String STREAM_DEFINITION_STORE_ELEMENT = "StreamDefinitionStore";
-    public static final String EVENT_STREAM_DEFINITIONS_ELEMENT = "streamDefinitions";
+    public static final String STREAM_DEFINITIONS_ELEMENT = "streamDefinitions";
     public static final String DOMAIN_NAME_ATTRIBUTE = "domainName";
 
     public static final String WORKER_THREADS_ELEMENT= "workerThreads";

@@ -29,6 +29,7 @@ import org.w3c.dom.Element;
 import org.w3c.dom.NamedNodeMap;
 import org.w3c.dom.Node;
 import org.w3c.dom.NodeList;
+import org.wso2.carbon.governance.api.exception.GovernanceException;
 import org.wso2.carbon.governance.api.generic.GenericArtifactManager;
 import org.wso2.carbon.governance.api.generic.dataobjects.GenericArtifact;
 import org.wso2.carbon.registry.core.*;
@@ -313,16 +314,27 @@ public class WsdlUriProcessor {
                         String path = policyURL.substring(policyURL.lastIndexOf(RegistryConstants.PATH_SEPARATOR) + 1);
                         if(policyURL.lastIndexOf(RegistryConstants.PATH_SEPARATOR) > 0){
                             String source = getSource(policyURL);
+
+                            String policyPath = getChrootedPolicyLocation(context.getRegistryContext()) + path;
                             GenericArtifactManager genericArtifactManager = new GenericArtifactManager(systemGovernanceRegistry, "uri");
-                            GenericArtifact policy = genericArtifactManager.newGovernanceArtifact(new QName(source));
-                            policy.setAttribute("overview_name", source);
-                            policy.setAttribute("overview_uri", policyURL);
-                            policy.setAttribute("overview_type", HandlerConstants.POLICY);
-                            genericArtifactManager.addGenericArtifact(policy);
-                            registry.addAssociation(getChrootedPolicyLocation(context.getRegistryContext()) + path,
+
+                            if(!registry.resourceExists(policyPath)){
+                                GenericArtifact policy = genericArtifactManager.newGovernanceArtifact(new QName(source));
+                                policy.setAttribute("overview_name", source);
+                                policy.setAttribute("overview_uri", policyURL);
+                                policy.setAttribute("overview_type", HandlerConstants.POLICY);
+                                genericArtifactManager.addGenericArtifact(policy);
+                            } else {
+                                Resource resource = registry.get(policyPath);
+                                GenericArtifact artifact = genericArtifactManager.getGenericArtifact(resource.getUUID());
+                                if(!artifact.getAttribute("overview_uri").equals(policyURL)){
+                                    throw new GovernanceException("Policy URI already exists");
+                                }
+                            }
+                            registry.addAssociation(policyPath,
                                     wsdlInfo.getProposedRegistryURL(), CommonConstants.USED_BY);
                             registry.addAssociation(wsdlInfo.getProposedRegistryURL(),
-                                    getChrootedPolicyLocation(context.getRegistryContext()) + path, CommonConstants.DEPENDS);
+                                    policyPath, CommonConstants.DEPENDS);
                         }
                     }finally {
                         if (lockAlreadyAcquired) {

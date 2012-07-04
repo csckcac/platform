@@ -25,9 +25,11 @@ import org.apache.ws.commons.schema.XmlSchemaCollection;
 import org.apache.ws.commons.schema.XmlSchemaExternal;
 import org.apache.ws.commons.schema.XmlSchemaObjectCollection;
 import org.wso2.carbon.CarbonException;
+import org.wso2.carbon.governance.api.exception.GovernanceException;
 import org.wso2.carbon.governance.api.generic.GenericArtifactManager;
 import org.wso2.carbon.governance.api.generic.dataobjects.GenericArtifact;
 import org.wso2.carbon.registry.core.*;
+import org.wso2.carbon.registry.core.config.RegistryContext;
 import org.wso2.carbon.registry.core.exceptions.RegistryException;
 import org.wso2.carbon.registry.core.internal.RegistryCoreServiceComponent;
 import org.wso2.carbon.registry.core.jdbc.handlers.RequestContext;
@@ -94,10 +96,10 @@ public class SchemaUriProcessor {
        only. 
      */
     public String importSchemaToRegistry(RequestContext requestContext,
-                                       String resourcePath,
-                                       String commonLocation,
-                                       boolean processIncludes,
-                                       String sourceURL) throws RegistryException {
+                                         String resourcePath,
+                                         String commonLocation,
+                                         boolean processIncludes,
+                                         String sourceURL) throws RegistryException {
         resourceName = resourcePath.substring(resourcePath.lastIndexOf(RegistryConstants.PATH_SEPARATOR) + 1);
 
         XmlSchemaCollection xmlSchemaCollection = new XmlSchemaCollection();
@@ -430,12 +432,12 @@ public class SchemaUriProcessor {
                             new File(new URI(schemaInfo.getOriginalURL()))));
                 } catch (CarbonException e) {
                     String errMsg = "Trying to store original schema in registry failed while " +
-                                    "generating the content from original schema.";
+                            "generating the content from original schema.";
                     log.error(errMsg, e);
                     throw new RegistryException(errMsg, e);
                 } catch (URISyntaxException e) {
                     String errMsg = "Trying to store original schema in registry failed due to error " +
-                                    "occurred in file url:" + schemaInfo.getOriginalURL();
+                            "occurred in file url:" + schemaInfo.getOriginalURL();
                     log.error(errMsg, e);
                     throw new RegistryException(errMsg, e);
                 }
@@ -579,14 +581,23 @@ public class SchemaUriProcessor {
                                        Resource resource, Registry registry, boolean isMasterSchema) throws RegistryException {
         String source = getSource(path);
         GenericArtifactManager genericArtifactManager = new GenericArtifactManager(systemGovernanceRegistry, "uri");
-        GenericArtifact xsd = genericArtifactManager.newGovernanceArtifact(new QName(source));
-        if(isMasterSchema){
-            xsd.setId(resource.getUUID());
+
+        if(!registry.resourceExists(path)){
+            GenericArtifact xsd = genericArtifactManager.newGovernanceArtifact(new QName(source));
+            if(isMasterSchema){
+                xsd.setId(resource.getUUID());
+            }
+            xsd.setAttribute("overview_name", source);
+            xsd.setAttribute("overview_uri", url);
+            xsd.setAttribute("overview_type", HandlerConstants.XSD);
+            genericArtifactManager.addGenericArtifact(xsd);
+        } else {
+            Resource existResource = registry.get(path);
+            GenericArtifact artifact = genericArtifactManager.getGenericArtifact(existResource.getUUID());
+            if(!artifact.getAttribute("overview_uri").equals(url)){
+                throw new GovernanceException("Schema URI already exists");
+            }
         }
-        xsd.setAttribute("overview_name", source);
-        xsd.setAttribute("overview_uri", url);
-        xsd.setAttribute("overview_type", HandlerConstants.XSD);
-        genericArtifactManager.addGenericArtifact(xsd);
     }
 
     private String extractResourceFromURL(String wsdlURL, String suffix) {
@@ -602,20 +613,25 @@ public class SchemaUriProcessor {
     }
 
     private String getAbsoluteSchemaURL(String schemaLocation) throws RegistryException {
-         if (schemaLocation != null && baseURI != null) {
-             try {
-                 URI uri = new URI(baseURI);
-                 URI absoluteURI = uri.resolve(schemaLocation);
-                 return absoluteURI.toString();
-             } catch (URISyntaxException e) {
-                 throw new RegistryException(e.getMessage(), e);
-             }
-         }
+        if (schemaLocation != null && baseURI != null) {
+            try {
+                URI uri = new URI(baseURI);
+                URI absoluteURI = uri.resolve(schemaLocation);
+                return absoluteURI.toString();
+            } catch (URISyntaxException e) {
+                throw new RegistryException(e.getMessage(), e);
+            }
+        }
         return schemaLocation;
     }
 
     public static String getSource(String uri){
         return uri.split("/")[uri.split("/").length -1];
     }
-    
+
+    private String getChrootedSchemaLocation(RegistryContext registryContext) {
+        return RegistryUtils.getAbsolutePath(registryContext,
+                RegistryConstants.GOVERNANCE_REGISTRY_BASE_PATH + HandlerConstants.XSD_LOCATION);
+    }
+
 }

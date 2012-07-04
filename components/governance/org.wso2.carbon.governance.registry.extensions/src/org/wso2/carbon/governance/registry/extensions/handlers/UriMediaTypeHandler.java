@@ -41,7 +41,6 @@ public class UriMediaTypeHandler extends Handler {
         Registry registry = requestContext.getRegistry();
         Resource resource = requestContext.getResource();
         String resourcePath = requestContext.getResourcePath().getPath();
-        String resourceId = resource.getId();
         String fileUri = null;
         String type = null;
 
@@ -54,17 +53,7 @@ public class UriMediaTypeHandler extends Handler {
             }
 
             if(registry.resourceExists(resourcePath)){
-                Resource oldResource = registry.get(resourcePath);
-                String oldContent;
-                if(oldResource.getContent() instanceof String){
-                    oldContent = (String) oldResource.getContent();
-                } else {
-                    oldContent = RegistryUtils.decodeBytes((byte[])oldResource.getContent());
-                }
-
-                if (oldContent.equals(newContent)) {
-                    return;
-                }
+                return;
             }
 
             OMElement docElement = AXIOMUtil.stringToOM(newContent);

@@ -1893,6 +1893,14 @@ function submitTextContentForm() {
 }
 
 function submitSymlinkContentForm() {
+
+    if(!validateTextForIllegal(document.forms["symlinkContentForm1"].targetpath)){
+      CARBON.showWarningDialog(org_wso2_carbon_registry_common_ui_jsi18n["the"] + " "+ "symlink content"+" " + org_wso2_carbon_registry_common_ui_jsi18n["contains.illegal.chars"]);
+        document.getElementById('add-link-div').style.display = "";
+        document.getElementById('whileUpload').style.display = "none";
+      return false;
+    }
+
     sessionAwareFunction(function() {
         var rForm = document.forms["symlinkContentForm1"];
 

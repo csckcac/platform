@@ -158,7 +158,9 @@
                 <th><%=name%></th>
                 <%
                     }
-
+                %>
+                <th><fmt:message key="lifecycle.info"/></th>
+                <%
                     if (CarbonUIUtil.isUserAuthorized(request,
                         "/permission/admin/manage/resources/browse")) {%><th><fmt:message key="actions"/></th><%} %>
             </tr>
@@ -181,8 +183,12 @@
                             }
                         }
                 %>
-
-
+                <% String LCState = "";
+                    if(!artifact.getLCName().equals("")){
+                        LCState = artifact.getLCName() + " / " + artifact.getLCState();
+                    }
+                %>
+                <td><%=LCState%></td>
                 <td><% if (artifact.getCanDelete()) { %><a title="<fmt:message key="delete"/>" onclick="deleteService('<%=artifact.getPath()%>','/','../generic/list.jsp?region=<%=region%>&item=<%=item%><%=queryTrailer%>')" href="#" class="icon-link registryWriteOperation" style="background-image:url(../admin/images/delete.gif);"><fmt:message key="delete"/></a><% } else {%><a class="icon-link registryWriteOperation" style="background-image:url(../list/images/delete-desable.gif);color:#aaa !important;cursor:default;"><fmt:message key="delete"/></a><% } %></td>
                 <%
                     } else {

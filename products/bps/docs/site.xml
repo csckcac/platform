@@ -45,15 +45,23 @@
             <item name="Testing the process" href="bpel-quick-start-guide/testing_process.html"/>
         </menu>
 	    <menu name="User Guide" ref="">
-              <item name="Deploying BPEL Processes" href="user_guide.html#Using-ProcessDeployment"/>
-              <item name="Deploying Human Tasks" href="user_guide.html#HumanTaskDeployment"/>
-              <item name="Managing BPEL processes" href="user_guide.html#Managing-BPEL-processes"/>
-              <item name="Managing BPEL process instances" href="user_guide.html#Managing-BPEL-process-instances"/>
-              <item name="QoS for BPEL processes" href="user_guide.html#QoS-for-BPEL-processes"/>
-              <item name="Securing BPEL processes" href="user_guide.html#Securing-BPEL-processes"/>
-              <item name="Invoking secured partner services" href="user_guide.html#Invoking-secured-partner-services"/>
-              <item name="Versioning" href="user_guide.html#Using-Versioning"/>
-              <item name="Management API" href="user_guide.html#Using-Management-API"/>
+            <item name="Deploying BPEL Processes" href="user_guide.html#Using-ProcessDeployment"/>
+            <item name="Deploying Human Tasks" href="user_guide.html#HumanTaskDeployment"/>
+            <item name="Managing BPEL processes" href="user_guide.html#Managing-BPEL-processes"/>
+            <item name="Managing BPEL process instances" href="user_guide.html#Managing-BPEL-process-instances"/>
+            <item name="QoS for BPEL processes" href="user_guide.html#QoS-for-BPEL-processes"/>
+            <item name="Securing BPEL processes" href="user_guide.html#Securing-BPEL-processes"/>
+            <item name="Invoking secured partner services" href="user_guide.html#Invoking-secured-partner-services"/>
+            <item name="Versioning" href="user_guide.html#Using-Versioning"/>
+            <item name="Management API" href="user_guide.html#Using-Management-API"/>
+        </menu>
+        <menu name="Human Task Guide" ref="">
+            <item name="Human Tasks Quick Start Guide" href="humantask-quick-start-guide/index.html" />
+            <item name="Deploying HumanTasks" href="humantask-deployment/humantask_deployment_guide.html" />
+            <item name="Managing Tasks" href="humantask-instance-management/managing_tasks.html" />
+            <item name="Developing a Human Task Artifact" href="humantask-developing-a-task-artifact/index.html" />
+            <item name="Human Task Management and Configuration" href="humantask-admin-guide/administrator_guide.html" />
+            <item name="Human Task Concepts" href="humantask-concepts/index.html" />
         </menu>
         <menu name="Administrator Guide" ref="">
 	        <item name="External data sources Configuration" href="bpel-admin-guide/administrator_guide.html#Configure-WSO2-BPS-with-external-data-sources"/>

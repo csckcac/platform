@@ -42,5 +42,6 @@
         <module>org.wso2.carbon.appfactory.login.ui</module>
         <module>org.wso2.carbon.appfactory.tenant.roles</module>
 	<module>org.wso2.carbon.appfactory.config.reader.xpath.ext</module>
+        <module>org.wso2.carbon.appfactory.maven.build</module>
     </modules>
 </project>

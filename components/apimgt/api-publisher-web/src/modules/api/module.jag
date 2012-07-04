@@ -11,6 +11,9 @@ jagg.module("api", {
     isContextExist:function () {
         return jagg.require(jagg.getModulesDir() + "api/add.jag").isContextExist.apply(this, arguments);
     },
+    isURLValid:function () {
+        return jagg.require(jagg.getModulesDir() + "api/add.jag").isURLValid.apply(this, arguments);
+    },
 
     copyAPI:function () {
         return jagg.require(jagg.getModulesDir() + "api/copy.jag").copyAPI.apply(this, arguments);

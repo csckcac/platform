@@ -85,7 +85,27 @@ include("/jagg/jagg.jag");
 
             print(obj);
 
-        } else if (action === "getTiers") {
+        }else if (action === "isURLValid") {
+            mod = jagg.module("api");
+            var url = request.getParameter("url");
+            result = mod.isURLValid(url);
+            if (result.error) {
+                obj = {
+                    error:true,
+                    message:msg.error.backendError(action)
+                };
+            } else {
+                obj = {
+                    error:false,
+                    response:result.response
+                }
+            }
+
+            print(obj);
+
+        }
+
+        else if (action === "getTiers") {
             mod = jagg.module("api");
             result = mod.getTiers();
             if (result.error) {

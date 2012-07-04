@@ -32,15 +32,16 @@
     <url>http://wso2.org</url>
 
     <modules>
-        <module>org.wso2.carbon.databridge.commons.thrift</module>
-        <module>org.wso2.carbon.databridge.commons</module>
-        <module>org.wso2.carbon.databridge.agent.thrift</module>
-        <module>org.wso2.carbon.databridge.core</module>
-        <module>org.wso2.carbon.databridge.receiver.thrift</module>
-        <module>org.wso2.carbon.databridge.receiver.restapi</module>
-        <module>data-publisher</module>
-        <module>data-receiver</module>
-        <module>data-receiver-cassandra-defn-store</module>
+        <module>org.wso2.carbon.databridge.commons.server.feature</module>
+        <module>org.wso2.carbon.databridge.commons.thrift.server.feature</module>
+        <module>org.wso2.carbon.databridge.core.server.feature</module>
+        <module>org.wso2.carbon.databridge.agent.thrift.server.feature</module>
+        <module>org.wso2.carbon.databridge.receiver.thrift.server.feature</module>
+        <module>org.wso2.carbon.databridge.receiver.restapi.server.feature</module>
+        <module>org.wso2.carbon.databridge.streamdefn.cassandra.server.feature</module>
+        <module>org.wso2.carbon.databridge.datapublisher.feature</module>
+        <module>org.wso2.carbon.databridge.datareceiver.feature</module>
+        <module>org.wso2.carbon.databridge.streamdefn.cassandra.feature</module>
     </modules>
 
     <dependencyManagement>

@@ -25,6 +25,8 @@
         resourceBundle="org.wso2.carbon.registry.search.ui.i18n.JSResources"
         request="<%=request%>" namespace="org.wso2.carbon.registry.search.ui"/>
 <script type="text/javascript" src="../search/js/search.js"></script>
+<script type="text/javascript" src="../registry_common/js/registry_validation.js"></script>
+
 <link rel="stylesheet" type="text/css"
       href="../resources/css/registry.css"/>
 <%

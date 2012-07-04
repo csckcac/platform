@@ -679,15 +679,31 @@ function showSimpleSearch() {
         $('searchMinimized').style.display = "";
     }
 }
-function validateSimpleSearch(){
+function validateSimpleSearch() {
+    // JS injection validation
+    if(!validateTextForIllegal(document.forms["searchForm"]["criteria"],"resource path")) {
+        CARBON.showWarningDialog(org_wso2_carbon_registry_common_ui_jsi18n["the"] + " "+ "search content"+" " + org_wso2_carbon_registry_common_ui_jsi18n["contains.illegal.chars"]);
+        return false;
+    }
 
     var searchText = document.forms["searchForm"]["criteria"].value;
-    if(searchText ==null || searchText ==""){
+    if(searchText == null || searchText =="") {
         CARBON.showWarningDialog(org_wso2_carbon_registry_search_ui_jsi18n["validate.simple.search"]);
         return false;
     }
     document.forms['searchForm'].submit();
     return true;
+}
+
+function validateTextForIllegal(fld,fldName) {
+
+    var illegalChars = /([?#^\|<>\"\'])/;
+    var illegalCharsInput = /(\<[a-zA-Z0-9\s\/]*>)/;
+    if (illegalChars.test(fld.value) || illegalCharsInput.test(fld.value)) {
+       return false;
+    } else {
+       return true;
+    }
 }
 
 

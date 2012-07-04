@@ -26,7 +26,7 @@ import org.wso2.esb.integration.axis2.SampleAxis2Server;
 import org.wso2.esb.integration.axis2.StockQuoteClient;
 
 import static org.testng.Assert.assertTrue;
-
+//todo https://wso2.org/jira/browse/ESBJAVA-1008
 public class AppendPortTestCase extends ESBIntegrationTestCase {
     private StockQuoteClient axis2Client;
 

@@ -65,7 +65,8 @@ public class SetProtocolTestCase extends ESBIntegrationTestCase {
                 {"https://localhost:9000/services/SimpleStockQuoteService"},
                 {"http://localhost:9000/services/SimpleStockQuoteService"},
                 {"//localhost:9010/services/SimpleStockQuoteService"},
-                {"localhost:9010/services/SimpleStockQuoteService"},
+                //todo https://wso2.org/jira/browse/ESBJAVA-1015
+//                {"localhost:9010/services/SimpleStockQuoteService"},
 
         };
 

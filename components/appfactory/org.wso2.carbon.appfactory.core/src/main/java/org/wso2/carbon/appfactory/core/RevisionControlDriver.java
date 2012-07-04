@@ -8,7 +8,7 @@ import org.wso2.carbon.appfactory.common.AppFactoryException;
 public interface RevisionControlDriver {
 
 	/**
-	 * TODO
+	 * This method is responsible for copying the code from rvision control to the file system
 	 * 
 	 * @param applicationId
 	 * @param version

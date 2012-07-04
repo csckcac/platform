@@ -4,7 +4,7 @@ import org.wso2.carbon.appfactory.common.AppFactoryException;
 
 /**
  * This will drive the build.
- * Maven2, Maven3 and Ant are some possible implmentations of this
+ * Maven2, Maven3 and Ant are some possible implementations of this
  */
 public interface BuildDriver {
 

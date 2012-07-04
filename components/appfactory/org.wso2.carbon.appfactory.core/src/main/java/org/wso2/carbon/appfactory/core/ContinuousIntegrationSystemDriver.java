@@ -2,6 +2,10 @@ package org.wso2.carbon.appfactory.core;
 
 import org.wso2.carbon.appfactory.common.AppFactoryException;
 
+/**
+ * Continuous build system driver 
+ *
+ */
 public interface ContinuousIntegrationSystemDriver {
 
 	/**

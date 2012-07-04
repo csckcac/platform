@@ -18,11 +18,10 @@ import org.wso2.carbon.appfactory.common.AppFactoryException;
 import org.wso2.carbon.appfactory.common.util.AppFactoryUtil;
 import org.wso2.carbon.appfactory.core.BuildDriver;
 import org.wso2.carbon.appfactory.core.BuildDriverListener;
-import org.wso2.carbon.appfactory.maven.build.internal.MavenBuildServiceComponent;
 
 public class Maven2BuildDriver implements BuildDriver {
 
-	private static final Log log = LogFactory.getLog(MavenBuildServiceComponent.class);
+	private static final Log log = LogFactory.getLog(Maven2BuildDriver.class);
 	
 	@Override
 	public void buildArtifact(String applicationId, String version, String revision,
@@ -39,7 +38,9 @@ public class Maven2BuildDriver implements BuildDriver {
 		File targetDir = new File(targetDirPath);
 		if (!targetDir.exists()) {
 			handleException("Application build failure.");
+			listener.onBuildFailure(applicationId, version, revision, targetDir);
 		}
+		listener.onBuildSuccessful(applicationId, version, revision, targetDir);
 	}
 
 	// TODO : Run in a thread pool

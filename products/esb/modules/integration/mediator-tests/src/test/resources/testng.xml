@@ -19,6 +19,8 @@
             <class name="org.wso2.carbon.mediator.tests.fault.Soap11FaultCodeServerTestCase"/>
             <class name="org.wso2.carbon.mediator.tests.fault.Soap11FaultActorTestCase"/>
             <class name="org.wso2.carbon.mediator.tests.fault.Soap11FaultDetailsTestCase"/>
+            <class name="org.wso2.carbon.mediator.tests.fault.Soap11FaultDetailAsElementTestCase"/>
+            <class name="org.wso2.carbon.mediator.tests.fault.Soap11FaultFullTestCase"/>
             <class name="org.wso2.carbon.mediator.tests.fault.Soap12FaultStringValueTestCase"/>
             <class name="org.wso2.carbon.mediator.tests.fault.Soap12FaultStringExpressionTestCase"/>
             <class name="org.wso2.carbon.mediator.tests.fault.Soap12FaultCodeVersionMismatchedTestCase"/>
@@ -28,7 +30,9 @@
             <class name="org.wso2.carbon.mediator.tests.fault.Soap12FaultCodeSenderTestCase"/>
             <class name="org.wso2.carbon.mediator.tests.fault.Soap12FaultActorTestCase"/>
             <class name="org.wso2.carbon.mediator.tests.fault.Soap12FaultDetailsTestCase"/>
+            <class name="org.wso2.carbon.mediator.tests.fault.Soap12FaultDetailAsElementTestCase"/>
             <class name="org.wso2.carbon.mediator.tests.fault.Soap12FaultNodeTestCase"/>
+            <class name="org.wso2.carbon.mediator.tests.fault.Soap12FaultFullTestCase"/>
 
         </classes>
     </test>

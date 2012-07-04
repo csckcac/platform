@@ -9,6 +9,7 @@
             <role>automation</role>
         </makefault>
         <header name="To" expression="get-property('ReplyTo')"/>
+        <log level="full"/>
         <send/>
     </sequence>
 

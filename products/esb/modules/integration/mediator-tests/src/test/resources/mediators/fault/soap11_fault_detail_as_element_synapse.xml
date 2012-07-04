@@ -1,12 +1,15 @@
 <definitions xmlns="http://ws.apache.org/ns/synapse">
 
     <sequence name="myFaultHandler">
-        <makefault version="soap12">
-            <code  xmlns:soap12Env="http://www.w3.org/2003/05/soap-envelope"
-                  value="soap12Env:Receiver"/>
+        <makefault version="soap11">
+            <code xmlns:soap11Env="http://schemas.xmlsoap.org/soap/envelope/"
+                  value="soap11Env:VersionMismatch"/>
             <reason xmlns:ns="http://org.apache.synapse/xsd"
                     expression="get-property('ERROR_MESSAGE')"/>
-            <detail>fault details by automation</detail>
+            <detail>
+                <StatusCode>1000</StatusCode>
+                <message>fault details by automation</message>
+            </detail>
         </makefault>
         <header name="To" expression="get-property('ReplyTo')"/>
         <log level="full"/>

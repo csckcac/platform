@@ -8,6 +8,7 @@
                     expression="get-property('ERROR_MESSAGE')"/>
         </makefault>
         <header name="To" expression="get-property('ReplyTo')"/>
+        <log level="full"/>
         <send/>
     </sequence>
 

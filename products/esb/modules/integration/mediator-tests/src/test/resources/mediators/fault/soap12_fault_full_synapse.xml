@@ -2,11 +2,12 @@
 
     <sequence name="myFaultHandler">
         <makefault version="soap12">
-            <code  xmlns:soap12Env="http://www.w3.org/2003/05/soap-envelope"
-                  value="soap12Env:Receiver"/>
-            <reason xmlns:ns="http://org.apache.synapse/xsd"
-                    expression="get-property('ERROR_MESSAGE')"/>
+            <code xmlns:soap12Env="http://www.w3.org/2003/05/soap-envelope"
+                  value="soap12Env:VersionMismatch"/>
+            <reason value="Custom ERROR Message"/>
+            <role>automation</role>
             <detail>fault details by automation</detail>
+            <node>automation-node</node>
         </makefault>
         <header name="To" expression="get-property('ReplyTo')"/>
         <log level="full"/>

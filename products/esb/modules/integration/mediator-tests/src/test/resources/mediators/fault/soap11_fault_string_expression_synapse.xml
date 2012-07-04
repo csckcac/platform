@@ -7,6 +7,7 @@
             <reason xmlns:ns="http://org.apache.synapse/xsd" expression="get-property('ERROR_MESSAGE')"/>
         </makefault>
         <header name="To" expression="get-property('ReplyTo')"/>
+        <log level="full"/>
         <send/>
     </sequence>
 

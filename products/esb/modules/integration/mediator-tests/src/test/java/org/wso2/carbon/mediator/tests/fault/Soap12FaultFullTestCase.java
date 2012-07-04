@@ -24,20 +24,19 @@ import org.wso2.esb.integration.ESBIntegrationTestCase;
 import org.wso2.esb.integration.axis2.StockQuoteClient;
 
 import static org.testng.Assert.assertEquals;
-import static org.testng.Assert.assertTrue;
 import static org.testng.Assert.fail;
 
-public class Soap12FaultNodeTestCase extends ESBIntegrationTestCase {
+public class Soap12FaultFullTestCase extends ESBIntegrationTestCase {
     private StockQuoteClient axis2Client;
 
     public void init() throws Exception {
         axis2Client = new StockQuoteClient();
-        String filePath = "/mediators/fault/soap12_fault_node_synapse.xml";
+        String filePath = "/mediators/fault/soap12_fault_full_synapse.xml";
         loadESBConfigurationFromClasspath(filePath);
     }
 
-    @Test(groups = {"wso2.esb"}, description = "Creating SOAP1.2 fault node")
-    public void testSOAP12FaultNode() throws AxisFault {
+    @Test(groups = {"wso2.esb"}, description = "Creating SOAP1.2 fault messages with all fault values")
+    public void testSOAP12FullFaultMessage() throws AxisFault {
         OMElement response;
         try {
             response = axis2Client.sendSimpleStockQuoteRequest(
@@ -47,10 +46,12 @@ public class Soap12FaultNodeTestCase extends ESBIntegrationTestCase {
             fail("This query must throw an exception.");
         } catch (AxisFault expected) {
             log.info("Test passed with Fault Message : " + expected.getMessage());
-            assertTrue(expected.getReason().contains("Connection refused"), "ERROR Message mismatched");
+            assertEquals(expected.getReason(), "Custom ERROR Message", "Custom ERROR Message mismatched");
             assertEquals(expected.getFaultCode().getLocalPart(), "VersionMismatch", "Fault code value mismatched");
             assertEquals(expected.getFaultCode().getPrefix(), "soap12Env", "Fault code prefix mismatched");
+            assertEquals(expected.getFaultRoleElement().getRoleValue(), "automation", "Role mismatched");
             assertEquals(expected.getFaultNodeElement().getNodeValue(), "automation-node", "Fault node mismatched");
+            assertEquals(expected.getFaultDetailElement().getText(), "fault details by automation", "Fault detail mismatched");
 
         }
 

@@ -6,9 +6,10 @@
                   value="soap12Env:VersionMismatch"/>
             <reason xmlns:ns="http://org.apache.synapse/xsd"
                     expression="get-property('ERROR_MESSAGE')"/>
-            <node>automation node</node>
+            <node>automation-node</node>
         </makefault>
         <header name="To" expression="get-property('ReplyTo')"/>
+        <log level="full"/>
         <send/>
     </sequence>
 

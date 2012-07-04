@@ -50,6 +50,7 @@
     if (null != request.getParameter("cron")) {
         cron = request.getParameter("cron").toString();
     }
+    int max = 40;
     boolean scriptNameExists = false;
     if (request.getParameter("scriptName") != null && !request.getParameter("scriptName").equals("")) {
         scriptName = request.getParameter("scriptName");
@@ -105,16 +106,27 @@
 
                         if (null != temp) {
                             aquery = "";
+                            int count = 0;
                             for (String aSubQuery : temp) {
                                 aSubQuery = aSubQuery.trim();
                                 if (!aSubQuery.equals("")) {
-                                    aquery += aSubQuery + "," + "\n\t";
+//                                    if (!aSubQuery.startsWith("\'") || !aSubQuery.startsWith("\"")) {
+                                    count += aSubQuery.length() + 1;
+                                    if (count > max) {
+                                        aquery += aSubQuery + "," + "\n\t";
+                                        count = 0;
+                                    } else {
+                                        aquery += aSubQuery + ",";
+                                    }
+//                                    } else {
+//                                        aquery += aSubQuery + "," + "\n\t";
+//                                    }
                                 }
                             }
-                            aquery = aquery.substring(0, aquery.length() - 3);
+                            aquery = aquery.trim();
+                            if (aquery.endsWith(",")) aquery = aquery.substring(0, aquery.length() - 1);
+                            scriptContent = scriptContent + aquery + ";" + "\n";
                         }
-                        aquery = aquery.trim();
-                        scriptContent = scriptContent + aquery + ";" + "\n";
                     }
                 }
             }
@@ -163,16 +175,30 @@
 
                     if (null != temp) {
                         aquery = "";
+                        int count = 0;
+                        int iter = 0;
                         for (String aSubQuery : temp) {
                             aSubQuery = aSubQuery.trim();
                             if (!aSubQuery.equals("")) {
-                                aquery += aSubQuery + "," + "\n\t";
+//                                if (!aSubQuery.startsWith("\'") || !aSubQuery.startsWith("\"")) {
+                                count += aSubQuery.length() + 1;
+                                if (count > max) {
+                                    aquery += aSubQuery + "," + "\n\t";
+                                    count = 0;
+                                } else {
+                                    aquery += aSubQuery + ",";
+                                }
+//                                } else {
+//                                    aquery += aSubQuery + "," + "\n\t";
+//                                }
                             }
+                            iter++;
                         }
                         aquery = aquery.substring(0, aquery.length() - 3);
 
                     }
                     aquery = aquery.trim();
+                    if (aquery.endsWith(",")) aquery = aquery.substring(0, aquery.length() - 1);
                     scriptContent = scriptContent + aquery + ";" + "\n";
                 }
             }
@@ -183,7 +209,7 @@
 %>
 <%!
     private String wrapTextInVisibleWidth(String line) {
-        int max = 150;
+        int max = 100;
         if (null != line) {
             line = line.trim();
             if (line.length() <= max) {
@@ -198,7 +224,7 @@
                         count += word.length() + 1;
                     } else {
                         newLine += "\n\t" + word + " ";
-                        count = ("\t" + word + " ").length();
+                        count = (word + " ").length();
                     }
                 }
                 return newLine;

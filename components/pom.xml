@@ -106,7 +106,7 @@
 		<module>cep</module>
 		<module>cassandra</module>
                 <module>stratos</module>
-				<module>csg</module>
+                <module>csg</module>
                 <module>dbconsole</module>
                 <module>rss-manager</module>
                 <module>coordination</module>
@@ -863,16 +863,16 @@
                 <artifactId>org.wso2.carbon.claim.mgt.stub</artifactId>
                 <version>${carbon.platform.version}</version>
             </dependency>
-			<dependency>
+            <dependency>
                 <groupId>org.wso2.carbon</groupId>
                 <artifactId>org.wso2.carbon.cloud.csg.agent.stub</artifactId>
                 <version>${carbon.platform.version}</version>
-			</dependency>
-			<dependency>
-				<groupId>org.wso2.carbon</groupId>
-				<artifactId>org.wso2.carbon.cloud.csg.stub</artifactId>
-				<version>${carbon.platform.version}</version>
-			</dependency>
+            </dependency>
+            <dependency>
+                <groupId>org.wso2.carbon</groupId>
+                <artifactId>org.wso2.carbon.cloud.csg.stub</artifactId>
+                <version>${carbon.platform.version}</version>
+                </dependency>
             <dependency>
                 <groupId>org.wso2.carbon</groupId>
                 <artifactId>org.wso2.carbon.cluster.mgt.admin.stub</artifactId>

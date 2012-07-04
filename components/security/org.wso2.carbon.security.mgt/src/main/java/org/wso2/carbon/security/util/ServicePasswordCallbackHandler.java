@@ -208,10 +208,10 @@ public class ServicePasswordCallbackHandler implements CallbackHandler {
             UserRealm realm = AnonymousSessionUtil.getRealmByUserName(
                     SecurityServiceHolder.getRegistryService(),
                     SecurityServiceHolder.getRealmService(),user);
-
-            isAuthorized = SecurityPersistenceUtils.isUserAuthorized(
-                    serviceGroupId, serviceId, realm, tenantAwareUserName,
-                    UserCoreConstants.INVOKE_SERVICE_PERMISSION, persistenceFactory.getServiceGroupFilePM());
+            isAuthorized = realm.getAuthorizationManager().isUserAuthorized(
+                    tenantAwareUserName,
+                    serviceGroupId+"/"+serviceId,
+                    UserCoreConstants.INVOKE_SERVICE_PERMISSION);
 
             if (isAuthorized == true) {
                 isAuthenticated = realm.getUserStoreManager().authenticate(tenantAwareUserName, password);

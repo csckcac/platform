@@ -87,6 +87,8 @@ public class ListMetadataService extends AbstractAdmin implements IListMetadataS
         String[] name = new String[path.length];
         String[] namespaces = new String[path.length];
         boolean[] canDelete = new boolean[path.length];
+        String[] LCName = new String[path.length];
+        String[] LCState = new String[path.length];
         for(int i=0;i<path.length;i++){
             bean.increment();
             name[i] = CommonUtil.getResourceName(path[i]);
@@ -123,11 +125,17 @@ public class ListMetadataService extends AbstractAdmin implements IListMetadataS
             } else {
                 canDelete[i] = false;
             }
+
+            Resource resource = registry.get(path[i]);
+            LCName[i] = CommonUtil.getLifeCycleName(resource);
+            LCState[i] = CommonUtil.getLifeCycleState(resource);
         }
         bean.setName(name);
         bean.setNamespace(namespaces);
         bean.setPath(path);
         bean.setCanDelete(canDelete);
+        bean.setLCName(LCName);
+        bean.setLCState(LCState);
         return bean;
     }
     public PolicyBean listpolicies()throws RegistryException{
@@ -144,6 +152,8 @@ public class ListMetadataService extends AbstractAdmin implements IListMetadataS
         }
         String[] name = new String[path.length];
         boolean[] canDelete = new boolean[path.length];
+        String[] LCName = new String[path.length];
+        String[] LCState = new String[path.length];
         for(int i=0;i<path.length;i++){
             bean.increment();
             name[i] = CommonUtil.getResourceName(path[i]);
@@ -160,10 +170,15 @@ public class ListMetadataService extends AbstractAdmin implements IListMetadataS
             } else {
                 canDelete[i] = false;
             }
+            Resource resource = registry.get(path[i]);
+            LCName[i] = CommonUtil.getLifeCycleName(resource);
+            LCState[i] = CommonUtil.getLifeCycleState(resource);
         }
         bean.setName(name);
         bean.setPath(path);
         bean.setCanDelete(canDelete);
+        bean.setLCName(LCName);
+        bean.setLCState(LCState);
         return bean;
     }
     public SchemaBean listschema()throws RegistryException{
@@ -181,6 +196,8 @@ public class ListMetadataService extends AbstractAdmin implements IListMetadataS
         String[] name = new String[path.length];
         String[] namespace = new String[path.length];
         boolean[] canDelete = new boolean[path.length];
+        String[] LCName = new String[path.length];
+        String[] LCState = new String[path.length];
 
         for(int i=0;i<path.length;i++){
             bean.increment();
@@ -219,11 +236,17 @@ public class ListMetadataService extends AbstractAdmin implements IListMetadataS
             } else {
                 canDelete[i] = false;
             }
+
+            Resource resource = registry.get(path[i]);
+            LCName[i] = CommonUtil.getLifeCycleName(resource);
+            LCState[i] = CommonUtil.getLifeCycleState(resource);
         }
         bean.setName(name);
         bean.setNamespace(namespace);
         bean.setPath(path);
         bean.setCanDelete(canDelete);
+        bean.setLCName(LCName);
+        bean.setLCState(LCState);
         return bean;
     }
 }

@@ -25,6 +25,8 @@ public class SchemaBean {
     private String[] namespace;
     private String[] path;
     private boolean[] canDelete;
+    private String[] LCName;
+    private String[] LCState;
     private int size=0;
 
     public void setName(String[] name) {
@@ -65,5 +67,21 @@ public class SchemaBean {
 
     public void setCanDelete(boolean[] canDelete) {
         this.canDelete = canDelete;
+    }
+
+    public String[] getLCName() {
+        return LCName;
+    }
+
+    public void setLCName(String[] LCName) {
+        this.LCName = LCName;
+    }
+
+    public String[] getLCState() {
+        return LCState;
+    }
+
+    public void setLCState(String[] LCState) {
+        this.LCState = LCState;
     }
 }

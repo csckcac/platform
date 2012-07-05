@@ -23,6 +23,7 @@ public class Property {
     private String key = "";
     private String value = "";
     private String type = "";
+    private boolean isExpression = false;
 
     public String getKey() {
         return key;
@@ -46,6 +47,14 @@ public class Property {
 
     public void setType(String type) {
         this.type = type;
+    }
+
+    public boolean isExpression() {
+        return isExpression;
+    }
+
+    public void setExpression(boolean expression) {
+        isExpression = expression;
     }
 
 }

@@ -96,7 +96,14 @@
     }
 
     %>
-
+        <style type="text/css">
+            .no-border-all{
+                border: none!important;
+            }
+            .no-border-all td{
+                border: none!important;
+            }
+        </style>
         <script id="source" type="text/javascript">
 
             function loadServerProfiles(serverProfileLocationPath, serverProfilePath) {
@@ -164,18 +171,48 @@
             function addPropertyRow() {
                 propertyRowNum++;
                 var sId = "propertyTable_" + propertyRowNum;
+                <%--var tableContent = "<tr id=\"" + sId + "\">" +--%>
+                                   <%--"<td>\n" +--%>
+                                   <%--"                        <input type=\"text\" name=\"<%=PROPERTY_KEYS%>\" value=\"\">\n" +--%>
+                                   <%--"                    </td>\n" +--%>
+                                   <%--"                    <td>\n" +--%>
+                                   <%--"                        <input type=\"text\" name=\"<%=PROPERTY_VALUES%>\" value=\"\">\n" +--%>
+                                   <%--"                    </td>" +--%>
+                                   <%--"<td>\n" +--%>
+                                   <%--"                        <a onClick='javaScript:removePropertyColumn(\"" + sId + "\")'" +--%>
+                                   <%--"style='background-image: url(../admin/images/delete.gif);'class='icon-link addIcon'>Remove Property</a>\n" +--%>
+                                   <%--"                    </td>" +--%>
+                                   <%--"</tr>";--%>
+
                 var tableContent = "<tr id=\"" + sId + "\">" +
-                                   "<td>\n" +
-                                   "                        <input type=\"text\" name=\"<%=PROPERTY_KEYS%>\" value=\"\">\n" +
-                                   "                    </td>\n" +
-                                   "                    <td>\n" +
-                                   "                        <input type=\"text\" name=\"<%=PROPERTY_VALUES%>\" value=\"\">\n" +
-                                   "                    </td>" +
-                                   "<td>\n" +
-                                   "                        <a onClick='javaScript:removePropertyColumn(\"" + sId + "\")'" +
-                                   "style='background-image: url(../admin/images/delete.gif);'class='icon-link addIcon'>Remove Property</a>\n" +
-                                   "                    </td>" +
-                                   "</tr>";
+                                    "<td>\n" +
+                                    "                        <input type=\"text\" name=\"<%=PROPERTY_KEYS%>\" value=\"\">\n" +
+                                    "                    </td>\n" +
+                                    "                    <td>\n" +
+                                    "<table class=\"no-border-all\">" +
+                                    "         <tr> " +
+                                    "         <td> " +
+                                    "         <table> " +
+                                    "         <tr> " +
+                                    "         <td><input type=\"radio\" name=\"fieldType_" + sId + "\" value=\"value\" checked=\"checked\"/></td> " +
+                                    "          <td>Value</td> " +
+                                    "         <tr> " +
+                                    "         <tr> " +
+                                    "         <td><input type=\"radio\" name=\"fieldType_" + sId + "\" value=\"expression\"/></td> " +
+                                    "       <td>Expression</td> " +
+                                    "         <tr> " +
+                                    "       </table> " +
+                                    "       </td> " +
+                                    "         <td> " +
+                                    "<input type=\"text\" name=\"<%=PROPERTY_VALUES%>\" value=\"\"/>" +
+                                    "         </td> " +
+                                    "         </tr> " +
+                                    "         </table> " +
+                                    "         </td> " +
+                                    "<td> " +
+                                    "<a onClick='javaScript:removePropertyColumn(\"" + sId + "\")' style='background-image: url(../admin/images/delete.gif);'class='icon-link addIcon'>Remove Property</a> " +
+                                    "</td> " +
+                                    "</tr>;"
 
                 jQuery("#propertyTable").append(tableContent);
                 updatePropertyTableData();
@@ -223,12 +260,27 @@
                 var tableData = "", inputs, numOfInputs;
                 inputs = document.getElementById("propertyTable").getElementsByTagName("input");
                 numOfInputs = inputs.length;
-                for(var i=0; i<numOfInputs; i=i+2){
+                /*for(var i=0; i<numOfInputs; i=i+2){
                     if(inputs[i].value != "" && inputs[i+1].value != ""){
                         tableData = tableData + inputs[i].value + "::" + inputs[i+1].value + ";";
                     }
                 }
+                document.getElementById("hfPropertyTableData").value = tableData;*/
+
+
+                for(var i=0; i<numOfInputs; i=i+4){
+                    if(inputs[i].value != "" && inputs[i+3].value != ""){
+                        tableData = tableData + inputs[i].value + "::" + inputs[i+3].value;
+                        if(inputs[i+1].checked){
+                            tableData = tableData + "::" + "value";
+                        } else {
+                            tableData = tableData + "::" + "expression";
+                        }
+                        tableData = tableData + ";";
+                    }
+                }
                 document.getElementById("hfPropertyTableData").value = tableData;
+
                 //alert("hfPropertyTableData : " + document.getElementById("hfPropertyTableData").value);
             }
 
@@ -288,10 +340,48 @@
                         numOfProperties++;
                     }
                 }
+
+
+
+
+
+                /*var inputNumber = jQuery("#propertyTable").find("input").length;
+                var inputColumn = "name";
+                //var j = 0;
+                var currentInput;
+                for(var i=0, j = 0; i<inputNumber && j<numOfProperties; i=i+1){
+                    currentInput = jQuery("#propertyTable").find("input")[i];
+                    if(currentInput.type !=  "radio" && inputColumn == "name"){
+                        currentInput.value = propertyDataArray[j].split("::")[0];
+                        inputColumn = "value";
+                    }
+                    if(currentInput.type == "radio"){
+                        if(propertyDataArray[j].split("::")[2] == "value"){
+
+                        }
+                    }
+                    if(currentInput.type !=  "radio" && inputColumn == "value"){
+                        currentInput.value = propertyDataArray[j].split("::")[1];
+                        inputColumn = "name";
+                        j++;
+                    }
+                }*/
+
+
+
+
+
+
+
                 for(var i=0; i<numOfProperties; i=i+1){
-                    if(propertyDataArray[i].split("::").length == 2){
-                        jQuery("#propertyTable").find("tr").find("input")[2*i].value = propertyDataArray[i].split("::")[0];
-                        jQuery("#propertyTable").find("tr").find("input")[2*i+1].value = propertyDataArray[i].split("::")[1];
+                    if(propertyDataArray[i].split("::").length == 3){
+                        jQuery("#propertyTable").find("tr").find("input")[4*i].value = propertyDataArray[i].split("::")[0];
+                        jQuery("#propertyTable").find("tr").find("input")[4*i+3].value = propertyDataArray[i].split("::")[1];
+                        if(propertyDataArray[i].split("::")[2] == "value"){
+                            jQuery("#propertyTable").find("tr").find("input")[4*i+1].checked = true;
+                        } else if(propertyDataArray[i].split("::")[2] == "expression"){
+                            jQuery("#propertyTable").find("tr").find("input")[4*i+2].checked = true;
+                        }
                     }
                 }
                 updatePropertyTableData();
@@ -323,14 +413,33 @@
             function emptyPropertyTable(){
                 document.getElementById("hfPropertyTableData").value = "";
                 jQuery("#propertyTable").find("tr").find("input")[0].value = "";
-                jQuery("#propertyTable").find("tr").find("input")[1].value = "";
+                jQuery("#propertyTable").find("tr").find("input")[3].value = "";
+                jQuery("#propertyTable").find("tr").find("input")[1].checked = true;
                 var tableRowNumber = jQuery("#propertyTable").find("tr").length;
-                if(tableRowNumber > 2){
+                var isFirstRow = true;
+                //var firstRowId = "";
+                var currentRowId;
+                var trArray = new Array();
+                for(var i=0; i<tableRowNumber; i=i+1){
+                    currentRowId = jQuery("#propertyTable").find("tr")[i].id;
+                    if(currentRowId.split("_")[0] == "propertyTable"){
+                        if(!isFirstRow){
+                            //jQuery("#" + currentRowId).remove();
+                            trArray.push(currentRowId);
+                        }
+                        isFirstRow = false;
+                    }
+                }
+                for(var i=0; i<trArray.length; i++){
+                    jQuery("#" + trArray[i]).remove();
+                }
+
+                /*if(tableRowNumber > 2){
                     for(var i=2; i<tableRowNumber; i++){
                         var currentRowId = jQuery("#propertyTable").find("tr")[2].id;
                         jQuery("#" + currentRowId).remove();
                     }
-                }
+                }*/
             }
 
             function cancelPropertyTableData(){
@@ -713,7 +822,25 @@
                                             <input type="text" name="<%=PROPERTY_KEYS%>" value=""/>
                                         </td>
                                         <td>
-                                            <input type="text" name="<%=PROPERTY_VALUES%>" value=""/>
+                                            <table class="no-border-all">
+                                                <tr>
+                                                    <td>
+                                                        <table>
+                                                            <tr>
+                                                                <td><input type="radio" name="fieldType_1" value="value" checked="checked"/></td>
+                                                                <td><fmt:message key="property.field.value"/></td>
+                                                            </tr>
+                                                            <tr>
+                                                                <td><input type="radio" name="fieldType_1" value="expression"/></td>
+                                                                <td><fmt:message key="property.field.expression"/></td>
+                                                            </tr>
+                                                        </table>
+                                                    </td>
+                                                    <td>
+                                                        <input type="text" name="<%=PROPERTY_VALUES%>" value=""/>
+                                                    </td>
+                                                </tr>
+                                            </table>
                                         </td>
 
                                         <td>

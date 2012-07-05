@@ -103,7 +103,9 @@ public class BamServerConfigXml {
                 tmpEntryName = streamEntry.getName();
                 tmpEntryValue = streamEntry.getValue();
                 tmpEntryType = streamEntry.getType();
-                payloadElement.addChild(this.serializeEntry(tmpEntryName, tmpEntryValue, tmpEntryType));
+                if (payloadElement != null) {
+                    payloadElement.addChild(this.serializeEntry(tmpEntryName, tmpEntryValue, tmpEntryType));
+                }
             }
         }
 
@@ -118,18 +120,19 @@ public class BamServerConfigXml {
         if(properties != null){
             String tmpEntryName;
             String tmpEntryValue;
+            boolean tmpIsExpression;
             for (Property property : properties) {
                 tmpEntryName = property.getKey();
                 tmpEntryValue = property.getValue();
-                propertiesElement.addChild(this.serializeProperty(tmpEntryName, tmpEntryValue));
+                tmpIsExpression = property.isExpression();
+                propertiesElement.addChild(this.serializeProperty(tmpEntryName, tmpEntryValue, tmpIsExpression));
             }
         }
         return streamElement;
     }
 
     private OMElement serializePayload(){
-        OMElement payloadElement = fac.createOMElement("payload", synNS);
-        return payloadElement;
+        return fac.createOMElement("payload", synNS);
     }
 
     private OMElement serializeEntry(String name, String value, String type){
@@ -141,14 +144,18 @@ public class BamServerConfigXml {
     }
 
     private OMElement serializeProperties(){
-        OMElement propertiesElement = fac.createOMElement("properties", synNS);
-        return propertiesElement;
+        return fac.createOMElement("properties", synNS);
     }
 
-    private OMElement serializeProperty(String name, String value){
+    private OMElement serializeProperty(String name, String value, boolean isExpression){
         OMElement propertyElement = fac.createOMElement("property", synNS);
         propertyElement.addAttribute("name", name, nullNS);
         propertyElement.addAttribute("value", value, nullNS);
+        if(isExpression){
+            propertyElement.addAttribute("isExpression", "true", nullNS);
+        } else {
+            propertyElement.addAttribute("isExpression", "false", nullNS);
+        }
         return propertyElement;
     }
 

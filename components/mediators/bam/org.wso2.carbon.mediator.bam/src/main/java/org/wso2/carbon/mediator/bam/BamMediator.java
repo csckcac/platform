@@ -321,7 +321,7 @@ public class BamMediator extends AbstractMediator {
         payloadData[3] = messageContext.getMessageID();
 
         for (int i=0; i<numOfProperties; i++) {
-            payloadData[4 + i] = this.producePropertyValue(properties.get(i).getValue(), messageContext);
+            payloadData[4 + i] = this.producePropertyValue(properties.get(i), messageContext);
         }
         
         for (int i=0; i<numOfEntities; i++) {
@@ -359,10 +359,14 @@ public class BamMediator extends AbstractMediator {
         return entityString;
     }
     
-    private Object producePropertyValue(String expression, MessageContext messageContext){
+    private Object producePropertyValue(Property property, MessageContext messageContext){
         try {
-            SynapseXPath synapseXPath = new SynapseXPath(expression);
-            return synapseXPath.stringValueOf(messageContext);
+            if(property.isExpression()){
+                SynapseXPath synapseXPath = new SynapseXPath(property.getValue());
+                return synapseXPath.stringValueOf(messageContext);
+            } else {
+                return property.getValue();
+            }
         } catch (JaxenException e) {
             e.printStackTrace();  //To change body of catch statement use File | Settings | File Templates.
         }

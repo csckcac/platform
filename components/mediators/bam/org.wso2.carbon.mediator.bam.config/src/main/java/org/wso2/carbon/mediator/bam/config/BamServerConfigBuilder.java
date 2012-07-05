@@ -183,11 +183,13 @@ public class BamServerConfigBuilder {
     private boolean processPropertyElement(OMElement propertyElement, StreamConfiguration streamConfiguration){
         OMAttribute nameAttr = propertyElement.getAttribute(new QName("name"));
         OMAttribute valueAttr = propertyElement.getAttribute(new QName("value"));
-        if(nameAttr != null && valueAttr != null && !nameAttr.getAttributeValue().equals("") &&
-           !valueAttr.getAttributeValue().equals("")){
+        OMAttribute isExpressionAttr = propertyElement.getAttribute(new QName("isExpression"));
+        if(nameAttr != null && valueAttr != null && isExpressionAttr != null && !nameAttr.getAttributeValue().equals("") &&
+           !valueAttr.getAttributeValue().equals("") && !isExpressionAttr.getAttributeValue().equals("")){
             Property property = new Property();
             property.setKey(nameAttr.getAttributeValue());
             property.setValue(valueAttr.getAttributeValue());
+            property.setExpression("true".equals(isExpressionAttr.getAttributeValue()));
             streamConfiguration.getProperties().add(property);
             return true;
         }

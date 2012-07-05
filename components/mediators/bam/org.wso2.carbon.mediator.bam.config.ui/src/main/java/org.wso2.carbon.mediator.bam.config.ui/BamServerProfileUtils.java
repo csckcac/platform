@@ -92,6 +92,11 @@ public class BamServerProfileUtils {
                                 currentProperty = new Property();
                                 currentProperty.setKey(property.split("::")[0]);
                                 currentProperty.setValue(property.split("::")[1]);
+                                if("value".equals(property.split("::")[2])){
+                                    currentProperty.setExpression(false);
+                                } else if("expression".equals(property.split("::")[2])){
+                                    currentProperty.setExpression(true);
+                                }
                                 currentStreamConfiguration.getProperties().add(currentProperty);
                             }
                         }
@@ -189,7 +194,13 @@ public class BamServerProfileUtils {
         if(streamConfiguration != null){
             List<Property> properties = streamConfiguration.getProperties();
             for (Property property : properties) {
-                returnString = returnString + property.getKey() + "::" + property.getValue() + ";";
+                returnString = returnString + property.getKey() + "::" + property.getValue() + "::";
+                if(property.isExpression()){
+                    returnString = returnString + "expression";
+                } else {
+                    returnString = returnString + "value";
+                }
+                returnString = returnString + ";";
             }
             returnString = returnString + "^";
             List<StreamEntry> streamEntries = streamConfiguration.getEntries();

@@ -14,7 +14,7 @@
  * limitations under the License.
  */
 
-package org.wso2.carbon.dashboard.mgt.gadgetrepo;
+    package org.wso2.carbon.dashboard.mgt.gadgetrepo;
 
 import org.apache.axiom.om.util.Base64;
 import org.apache.axis2.context.MessageContext;
@@ -1454,7 +1454,7 @@ public class GadgetRepoService extends AbstractAdmin {
         } catch (Exception e) {
             log.error("Failed to save the new gadget : " + e);
             if (registry != null) {
-                try {
+                try                                                 {
                     registry.rollbackTransaction();
                 } catch (Exception ex) {
                     log.error(ex);

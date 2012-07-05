@@ -276,6 +276,7 @@ public class DashboardUiUtils {
     public static boolean isGadgetServer() {
         return CarbonUtils.getServerConfiguration().getFirstProperty("Name").toLowerCase().replaceAll(" ", "").equals("wso2gadgetserver") ||
                 CarbonUtils.getServerConfiguration().getFirstProperty("Name").toLowerCase().replaceAll(" ", "").equals("wso2stratosgadgetserver") ||
+                CarbonUtils.getServerConfiguration().getFirstProperty("Name").toLowerCase().replaceAll(" ", "").equals("wso2businessactivitymonitor") ||
                 CarbonUtils.getServerConfiguration().getFirstProperty("Name").toLowerCase().replaceAll(" ", "").equals("wso2stratosmanager");
     }
 

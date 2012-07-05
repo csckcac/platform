@@ -21,6 +21,7 @@ import org.apache.commons.logging.LogFactory;
 import org.osgi.service.component.ComponentContext;
 import org.wso2.carbon.dashboard.common.DashboardConstants;
 import org.wso2.carbon.dashboard.mgt.gadgetrepo.GadgetRepoContext;
+import org.wso2.carbon.dashboard.mgt.gadgetrepo.GadgetRepoService;
 import org.wso2.carbon.dashboard.mgt.gadgetrepo.handlers.GadgetZipUploadHandler;
 import org.wso2.carbon.registry.core.jdbc.handlers.filters.MediaTypeMatcher;
 import org.wso2.carbon.registry.core.service.RegistryService;
@@ -45,18 +46,21 @@ public class GadgetRepoServiceComponent {
 			.getLog(GadgetRepoServiceComponent.class);
 
 	protected void activate(ComponentContext context) {
-		try {
+        try {
             log.debug("Gadget Repository Backend Component bundle is activated");
             GadgetRepoContext.getRegistryService().getConfigSystemRegistry().getRegistryContext().getHandlerManager().
                     addHandler(null, new MediaTypeMatcher(DashboardConstants.GADGET_MEDIA_TYPE),
-                               new GadgetZipUploadHandler());
+                            new GadgetZipUploadHandler());
+            context.getBundleContext().registerService(
+                    GadgetRepoService.class.getName(),
+                    new GadgetRepoService(), null);
 
-		} catch (Exception e) {
-			log.debug("Failed to activate Dashboard Backend Component bundle ");
-		}
-	}
+        } catch (Exception e) {
+            log.debug("Failed to activate Dashboard Backend Component bundle ");
+        }
+    }
 
-	protected void deactivate(ComponentContext context) {
+    protected void deactivate(ComponentContext context) {
 		log.debug("Dashboard Backend Component bundle is deactivated ");
 	}
 

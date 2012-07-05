@@ -56,8 +56,6 @@ import org.wso2.carbon.utils.xml.XMLPrettyPrinter;
 import org.wso2.securevault.SecretResolver;
 
 import javax.naming.InitialContext;
-import javax.servlet.http.HttpServletRequest;
-import javax.servlet.http.HttpSession;
 import javax.transaction.TransactionManager;
 import javax.xml.namespace.QName;
 import javax.xml.stream.XMLInputFactory;
@@ -271,16 +269,9 @@ public class DBUtils {
      */
     public static String[] getUserRoles(MessageContext msgContext)
             throws DataServiceFault {
-        HttpServletRequest request = (HttpServletRequest) msgContext.getProperty(
-                HTTPConstants.MC_HTTP_SERVLETREQUEST);
-        HttpSession httpSession = request.getSession(false);
         String userName = DBUtils.getUsername(msgContext);
         RealmService realmService = DataServicesDSComponent.getRealmService();
         RegistryService registryService = DataServicesDSComponent.getRegistryService();
-        /* if session does not exist, return empty array of roles */
-        if (httpSession == null) {
-            return new String[0];
-        }
         /* first return the tenant id from the tenant domain */
         CarbonContextHolder carbonContext = CarbonContextHolder.getCurrentCarbonContextHolder(msgContext);
         String tenantDomain = carbonContext.getTenantDomain();

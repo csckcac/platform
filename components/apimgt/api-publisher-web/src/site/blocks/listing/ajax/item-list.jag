@@ -1,0 +1,35 @@
+<%
+include("/jagg/jagg.jag");
+
+(function () {
+    var mod, obj, result,
+            action = request.getParameter("action"),
+            site = require("/site/conf/site.json"),
+            msg = require("/site/conf/ui-messages.jag");
+
+
+    if (action === "getAllAPIs") {
+        mod = jagg.module("api");
+        result = mod.getAllAPIs();
+        if (result.error) {
+            obj = {
+                error:true,
+                message:result.message
+            };
+        } else {
+            obj = {
+                error:false,
+                apis:result.apis
+            }
+        }
+        print(obj);
+
+    } else {
+        print({
+                  error:true,
+                  message:msg.error.invalidAction(action)
+              });
+    }
+
+}());
+%>

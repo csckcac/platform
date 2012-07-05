@@ -264,6 +264,31 @@
                                 </featureArtifactDef>
 
 
+                                  <!-- ADDED-->
+                               <featureArtifactDef>org.wso2.carbon:org.wso2.carbon.dashboard.feature:${carbon.version}</featureArtifactDef>
+                                <featureArtifactDef>org.wso2.carbon:org.wso2.carbon.dashboard.mgt.gadgetrepo.feature:${carbon.version}</featureArtifactDef>
+                                <featureArtifactDef>org.wso2.carbon:org.wso2.carbon.dashboard.mgt.users.feature:${carbon.version}</featureArtifactDef>
+                                <featureArtifactDef>org.wso2.carbon:org.wso2.carbon.dashboard.gadgetrepopopulator.server.feature:${carbon.version}</featureArtifactDef>
+                                <featureArtifactDef>org.wso2.carbon:org.wso2.carbon.registry.social.feature:${carbon.version}</featureArtifactDef>
+                                <!--  Gadget editor -->
+                                <featureArtifactDef>
+                                    org.wso2.carbon:org.wso2.carbon.gadget.editor.ui.feature:${carbon.version}
+                                </featureArtifactDef>
+                                <featureArtifactDef>
+                                    org.wso2.carbon:org.wso2.carbon.gadget.editor.feature:${carbon.version}
+                                </featureArtifactDef>
+
+                                <featureArtifactDef>
+                                    org.wso2.carbon:org.wso2.carbon.dashboard.gadgetrepopopulator.server.feature:${carbon.version}
+                                </featureArtifactDef>
+
+                                <!--END Dashboard Features-->
+                                <featureArtifactDef>
+                                    org.wso2.carbon:org.wso2.carbon.dashboard.themepopulator.server.feature:${carbon.version}
+                                </featureArtifactDef>
+                                <!--ADDED END-->
+
+
 				<!-- stratos features -->
 				<featureArtifactDef>org.wso2.carbon:org.wso2.carbon.stratos.common.feature:${stratos.version}</featureArtifactDef>
 				<featureArtifactDef>org.wso2.carbon:org.wso2.carbon.captcha.mgt.server.feature:${carbon.version}</featureArtifactDef>
@@ -527,7 +552,42 @@
                                     <version>${carbon.version}</version>
                                 </feature>
 
+                                  <!--ADDED-->
+                                <feature>
+                                    <id>org.wso2.carbon.dashboard.gadgetrepopopulator.server.feature.group</id>
+                                    <version>${carbon.version}</version>
+                                </feature>
+                                <feature>
+                                    <id>org.wso2.carbon.dashboard.feature.group</id>
+                                    <version>${carbon.version}</version>
+                                </feature>
+                                <feature>
+                                    <id>org.wso2.carbon.dashboard.mgt.gadgetrepo.feature.group</id>
+                                    <version>${carbon.version}</version>
+                                </feature>
+                                <feature>
+                                    <id>org.wso2.carbon.dashboard.mgt.users.feature.group</id>
+                                    <version>${carbon.version}</version>
+                                </feature>
+                                <feature>
+                                    <id>org.wso2.carbon.registry.social.feature.group</id>
+                                    <version>${carbon.version}</version>
+                                </feature>
+                                <feature>
+                                    <id>
+                                       org.wso2.carbon.gadget.editor.ui.feature.group
+                                    </id>
+                                    <version>${carbon.version}</version>
+                                </feature>
+                                <feature>
+                                    <id>
+                                        org.wso2.carbon.gadget.editor.feature.group
+                                    </id>
+                                    <version>${carbon.version}</version>
+                                </feature>
 
+
+                                <!--ADDED END-->
                             </features>
                         </configuration>
                     </execution>

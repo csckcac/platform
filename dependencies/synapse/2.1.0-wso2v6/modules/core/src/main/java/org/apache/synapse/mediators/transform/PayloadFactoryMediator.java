@@ -22,6 +22,7 @@ package org.apache.synapse.mediators.transform;
 import org.apache.axiom.om.OMElement;
 import org.apache.axiom.om.util.AXIOMUtil;
 import org.apache.axiom.soap.SOAPBody;
+import org.apache.commons.lang.StringEscapeUtils;
 import org.apache.synapse.MessageContext;
 import org.apache.synapse.mediators.AbstractMediator;
 
@@ -89,6 +90,9 @@ public class PayloadFactoryMediator extends AbstractMediator {
             } else if (arg.getExpression() != null) {
                 String value = arg.getExpression().stringValueOf(synCtx);   /*ToDo We can change this to string array*/
                 if (value != null) {
+                    //escaping string unless there might be exceptions when tries to insert values
+                    // such as string with &
+                    value = StringEscapeUtils.escapeXml(value);
                     argValues[i] = value;
                 } else {
                     argValues[i] = "";

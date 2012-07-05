@@ -31,6 +31,7 @@ import org.wso2.carbon.ndatasource.ui.stub.NDataSourceAdminStub;
 import org.wso2.carbon.ndatasource.ui.stub.NDataSourceAdminDataSourceException;
 import org.wso2.carbon.ndatasource.ui.stub.core.services.xsd.WSDataSourceMetaInfo;
 import org.wso2.carbon.ndatasource.ui.stub.core.services.xsd.WSDataSourceInfo;
+import org.wso2.carbon.ndatasource.common.DataSourceException;
 import org.wso2.carbon.ui.CarbonUIUtil;
 import org.wso2.carbon.utils.ServerConstants;
 
@@ -62,83 +63,142 @@ public class NDataSourceAdminServiceClient {
 	}
 
 	public void addDataSource(WSDataSourceMetaInfo dataSourceMetaInfo) throws RemoteException,
-			NDataSourceAdminDataSourceException {
+			DataSourceException {
 		validateDataSourceMetaInformation(dataSourceMetaInfo);
 		if (log.isDebugEnabled()) {
 			log.debug("Going to add Datasource :" + dataSourceMetaInfo.getName());
 		}
-		stub.addDataSource(dataSourceMetaInfo);
+		try {
+			stub.addDataSource(dataSourceMetaInfo);
+		} catch (NDataSourceAdminDataSourceException e) {
+			if (e.getFaultMessage().getDataSourceException().isErrorMessageSpecified()) {
+				handleException(e.getFaultMessage().getDataSourceException().getErrorMessage(), e);
+			}
+			handleException(e.getMessage(), e);
+		}
 	}
 	
 	public boolean testDataSourceConnection(WSDataSourceMetaInfo dataSourceMetaInfo) throws RemoteException, 
-			NDataSourceAdminDataSourceException {
+			DataSourceException {
 		validateDataSourceMetaInformation(dataSourceMetaInfo);
 		if (log.isDebugEnabled()) {
 			log.debug("Going test connection of Datasource :" + dataSourceMetaInfo.getName());
 		}
 		try {
-		    return stub.testDataSourceConnection(dataSourceMetaInfo);
+			return stub.testDataSourceConnection(dataSourceMetaInfo);
 		} catch (NDataSourceAdminDataSourceException e) {
-			e.getMessage();
-			throw e;
+			if (e.getFaultMessage().getDataSourceException().isErrorMessageSpecified()) {
+				handleException(e.getFaultMessage().getDataSourceException().getErrorMessage(), e);
+			}
+			handleException(e.getMessage(), e);
 		}
+		return false;
 	}
 
 	public void deleteDataSource(String dsName) throws RemoteException,
-			NDataSourceAdminDataSourceException {
+			DataSourceException {
 		validateName(dsName);
 		if (log.isDebugEnabled()) {
 			log.debug("Going to delete a Datasource with name : " + dsName);
 		}
-		stub.deleteDataSource(dsName);
+		try {
+			stub.deleteDataSource(dsName);
+		} catch (NDataSourceAdminDataSourceException e) {
+			if (e.getFaultMessage().getDataSourceException().isErrorMessageSpecified()) {
+				handleException(e.getFaultMessage().getDataSourceException().getErrorMessage(), e);
+			}
+			handleException(e.getMessage(), e);
+		}
 	}
 
 	public WSDataSourceInfo[] getAllDataSources() throws RemoteException,
-			NDataSourceAdminDataSourceException {
-		WSDataSourceInfo[] allDataSources = stub.getAllDataSources();
+			DataSourceException {
+		WSDataSourceInfo[] allDataSources = null;
+		try {
+			allDataSources = stub.getAllDataSources();
+		} catch (NDataSourceAdminDataSourceException e) {
+			if (e.getFaultMessage().getDataSourceException().isErrorMessageSpecified()) {
+				handleException(e.getFaultMessage().getDataSourceException().getErrorMessage(), e);
+			}
+			handleException(e.getMessage(), e);
+		}
 		return allDataSources;
 	}
 
 	public WSDataSourceInfo getDataSource(String dsName) throws RemoteException,
-			NDataSourceAdminDataSourceException {
+			DataSourceException {
 		validateName(dsName);
-		WSDataSourceInfo wsDataSourceInfo = stub.getDataSource(dsName);
+		WSDataSourceInfo wsDataSourceInfo = null;
+		try {
+			wsDataSourceInfo = stub.getDataSource(dsName);
+		} catch (NDataSourceAdminDataSourceException e) {
+			if (e.getFaultMessage().getDataSourceException().isErrorMessageSpecified()) {
+				handleException(e.getFaultMessage().getDataSourceException().getErrorMessage(), e);
+			}
+			handleException(e.getMessage(), e);
+		}
 		return wsDataSourceInfo;
 	}
 
 	public WSDataSourceInfo[] getAllDataSourcesForType(String dsType) throws RemoteException,
-			NDataSourceAdminDataSourceException {
+			DataSourceException {
 		validateType(dsType);
-		WSDataSourceInfo[] allDataSources = stub.getAllDataSourcesForType(dsType);
+		WSDataSourceInfo[] allDataSources = null;
+		try {
+			allDataSources = stub.getAllDataSourcesForType(dsType);
+		} catch (NDataSourceAdminDataSourceException e) {
+			if (e.getFaultMessage().getDataSourceException().isErrorMessageSpecified()) {
+				handleException(e.getFaultMessage().getDataSourceException().getErrorMessage(), e);
+			}
+			handleException(e.getMessage(), e);
+		}
 		return allDataSources;
 	}
 
 	public String[] getDataSourceTypes() throws RemoteException,
-			NDataSourceAdminDataSourceException {
-		String[] dataSourceTypes = stub.getDataSourceTypes();
+			DataSourceException {
+		String[] dataSourceTypes = null;
+		try {
+			dataSourceTypes = stub.getDataSourceTypes();
+		} catch (NDataSourceAdminDataSourceException e) {
+			if (e.getFaultMessage().getDataSourceException().isErrorMessageSpecified()) {
+				handleException(e.getFaultMessage().getDataSourceException().getErrorMessage(), e);
+			}
+			handleException(e.getMessage(), e);
+		}
 		return dataSourceTypes;
 	}
 
 	public boolean reloadAllDataSources() throws RemoteException,
-			NDataSourceAdminDataSourceException {
-		return stub.reloadAllDataSources();
+			DataSourceException {
+		try {
+			return stub.reloadAllDataSources();
+		} catch (NDataSourceAdminDataSourceException e) {
+			if (e.getFaultMessage().getDataSourceException().isErrorMessageSpecified()) {
+				handleException(e.getFaultMessage().getDataSourceException().getErrorMessage(), e);
+			}
+			handleException(e.getMessage(), e);
+		}
+		return false;
 	}
 
 	public boolean reloadDataSource(String dsName) throws RemoteException,
-			NDataSourceAdminDataSourceException {
+			DataSourceException {
 		validateName(dsName);
-		return stub.reloadDataSource(dsName);
+		try {
+			return stub.reloadDataSource(dsName);
+		} catch (NDataSourceAdminDataSourceException e) {
+			if (e.getFaultMessage().getDataSourceException().isErrorMessageSpecified()) {
+				handleException(e.getFaultMessage().getDataSourceException().getErrorMessage(), e);
+			}
+			handleException(e.getMessage(), e);
+		}
+		return false;
 	}
 
 	private static void validateDataSourceMetaInformation(WSDataSourceMetaInfo dataSourceMetaInfo) {
 		if (dataSourceMetaInfo == null) {
 			handleException("WSDataSourceMetaInfo can not be found.");
-		}
-	}
-
-	private static void validateDataSourceInformation(WSDataSourceInfo dataSourceInfo) {
-		if (dataSourceInfo == null) {
-			handleException("WSDataSourceInfo can not be found.");
 		}
 	}
 
@@ -157,6 +217,10 @@ public class NDataSourceAdminServiceClient {
 	private static void handleException(String msg) {
 		log.error(msg);
 		throw new IllegalArgumentException(msg);
+	}
+	
+	private static void handleException(String msg, Exception e) throws DataSourceException{
+		throw new DataSourceException(msg, e);
 	}
 
 }

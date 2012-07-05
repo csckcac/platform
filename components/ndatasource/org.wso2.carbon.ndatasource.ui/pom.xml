@@ -67,8 +67,13 @@
         </dependency>
         <dependency>
             <groupId>org.wso2.carbon</groupId>
+            <artifactId>org.wso2.carbon.ndatasource.common</artifactId>
+            <version>${wso2carbon.version.ndatasource}</version>
+        </dependency>
+        <dependency>
+            <groupId>org.wso2.carbon</groupId>
             <artifactId>org.wso2.carbon.ndatasource.stub</artifactId>
-            <version>${carbon.platform.version}</version>
+            <version>${wso2carbon.version.ndatasource}</version>
         </dependency>
     </dependencies>
 </project>

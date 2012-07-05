@@ -127,7 +127,27 @@
                 <include>**/**.png</include>
             </includes>
         </fileSet>
-  
+
+        	<!--Files for GS portal-->
+ 	<fileSet>
+           <directory>src/main/resources/carbon-home/resources/gadget-repo</directory>
+            <outputDirectory>${pom.artifactId}-${pom.version}/repository/resources/gadget-repo</outputDirectory>
+            <includes>
+                <include>**/*</include>
+            </includes>
+	</fileSet>
+
+	<fileSet>
+            <directory>src/main/resources/carbon-home/resources/gs-themes</directory>
+            <outputDirectory>${pom.artifactId}-${pom.version}/repository/resources/gs-themes</outputDirectory>
+            <includes>
+                <include>**/*</include>
+           </includes>
+	</fileSet>
+
+
+	<!--End: Files for GS portal-->
+
 
 	<!--<fileSet>
             <directory>carbon-home/resources/theme</directory>

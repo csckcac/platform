@@ -59,8 +59,8 @@ public class SVNRepositoryMgtServiceComponent {
             SVNManager repositoryManager = new SVNManager();
             bundleContext.registerService(RevisionControlDriver.class.getName(), repositoryManager, null);
 
-           // SVNArtifactStorage svnArtifactStorage = new SVNArtifactStorage();
-           // bundleContext.registerService(ArtifactStorage.class.getName(), svnArtifactStorage, null);
+            SVNArtifactStorage svnArtifactStorage = new SVNArtifactStorage();
+            bundleContext.registerService(ArtifactStorage.class.getName(), svnArtifactStorage, null);
 
         } catch (Throwable e) {
             log.error("Error in registering Repository Management Service  ", e);

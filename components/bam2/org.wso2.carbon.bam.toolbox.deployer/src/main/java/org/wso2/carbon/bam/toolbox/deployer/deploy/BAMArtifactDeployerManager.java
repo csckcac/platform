@@ -18,6 +18,7 @@ package org.wso2.carbon.bam.toolbox.deployer.deploy;
 
 import org.apache.commons.logging.Log;
 import org.apache.commons.logging.LogFactory;
+import org.wso2.carbon.CarbonConstants;
 import org.wso2.carbon.bam.toolbox.deployer.BAMToolBoxDeployerConstants;
 import org.wso2.carbon.bam.toolbox.deployer.ServiceHolder;
 import org.wso2.carbon.bam.toolbox.deployer.client.DashboardClient;
@@ -27,12 +28,11 @@ import org.wso2.carbon.bam.toolbox.deployer.exception.BAMToolboxDeploymentExcept
 import org.wso2.carbon.bam.toolbox.deployer.util.DashBoardTabDTO;
 import org.wso2.carbon.bam.toolbox.deployer.util.JasperTabDTO;
 import org.wso2.carbon.bam.toolbox.deployer.util.ToolBoxDTO;
-import org.wso2.carbon.registry.core.Collection;
-import org.wso2.carbon.registry.core.Registry;
-import org.wso2.carbon.registry.core.RegistryConstants;
-import org.wso2.carbon.registry.core.Resource;
+import org.wso2.carbon.registry.core.*;
 import org.wso2.carbon.registry.core.exceptions.RegistryException;
+import org.wso2.carbon.registry.core.session.UserRegistry;
 import org.wso2.carbon.registry.core.utils.MediaTypesUtils;
+import org.wso2.carbon.user.core.AuthorizationManager;
 
 import java.io.*;
 import java.util.ArrayList;
@@ -46,7 +46,9 @@ public class BAMArtifactDeployerManager {
 
     private static final Log log = LogFactory.getLog(BAMArtifactDeployerManager.class);
 
-    private static final String gadgetsPath = "/repository/dashboards/gadgets";
+    // private static final String gadgetsPath = "/repository/dashboards/gadgets";
+
+    private static final String gadgetsPath = "/repository/gadget-server/gadgets";
 
     private static final String jasperPath = "/repository/dashboards/jasper";
 
@@ -99,8 +101,9 @@ public class BAMArtifactDeployerManager {
                 tabDTO.setTabId(tabID);
                 for (String aGadget : tabDTO.getGadgets()) {
                     dashboardClient.addNewGadget(username, String.valueOf(tabID),
-                                                 "/registry/resource/_system/config/repository/dashboards/gadgets/" + aGadget);
-                    ///registry/resource/_system/config/repository/dashboards/gadgets/
+                            "/registry/resource/_system/config/repository/gadget-server/gadgets/" + aGadget);
+//                            "/registry/resource/_system/config/repository/dashboards/gadgets/" + aGadget);
+                    // ServiceHolder.getGadgetRepoService().addGadgetEntryToRepo("Test", "Test1", "Test2", null, null, null);
                 }
             }
         } catch (BAMComponentNotFoundException e) {
@@ -140,7 +143,7 @@ public class BAMArtifactDeployerManager {
             Registry registry = ServiceHolder.getRegistry(tenantId);
 
             String jrxmlPath = jasperPath + RegistryConstants.PATH_SEPARATOR +
-                               tabDTO.getJrxmlFileName();
+                    tabDTO.getJrxmlFileName();
             registry.delete(jrxmlPath);
 
         } catch (RegistryException e) {
@@ -163,7 +166,7 @@ public class BAMArtifactDeployerManager {
 
             if (toolBoxDTO.getJasperParentDirectory() != null) { // Jasper is optional for the moment
                 transferJRXMLFilesToRegistry(new File(toolBoxDTO.getJasperParentDirectory()),
-                                             tenantId);
+                        tenantId);
             }
         }
     }
@@ -171,7 +174,7 @@ public class BAMArtifactDeployerManager {
 
     private void deployJaggeryApps(ToolBoxDTO toolBoxDTO) {
         String jaggeryDeployementDir = toolBoxDTO.getHotDeploymentRootDir() +
-                                       File.separator + BAMToolBoxDeployerConstants.JAGGERY_DEPLOYMENT_DIR;
+                File.separator + BAMToolBoxDeployerConstants.JAGGERY_DEPLOYMENT_DIR;
         File deployDir = new File(jaggeryDeployementDir);
         if (!deployDir.exists()) {
             deployDir.mkdirs();
@@ -248,7 +251,7 @@ public class BAMArtifactDeployerManager {
                     registry.put(gadgetsPath, registry.newCollection());
                 }
                 transferDirectoryContentToRegistry(rootDirectory, registry, rootPath, gadgetsPath,
-                                                   tenantId);
+                        tenantId);
                 registry.commitTransaction();
             } catch (Exception e) {
                 registry.rollbackTransaction();
@@ -278,7 +281,7 @@ public class BAMArtifactDeployerManager {
                     registry.put(jasperPath, registry.newCollection());
                 }
                 transferDirectoryContentToRegistry(rootDirectory, registry, rootPath, jasperPath,
-                                                   tenantId);
+                        tenantId);
                 registry.commitTransaction();
             } catch (Exception e) {
                 registry.rollbackTransaction();
@@ -314,7 +317,7 @@ public class BAMArtifactDeployerManager {
 
                     // recurse
                     transferDirectoryContentToRegistry(file, registry, rootPath, registryPath,
-                                                       tenantId);
+                            tenantId);
                 } else {
                     // Add this to registry
                     addToRegistry(rootPath, file, registryPath, tenantId);
@@ -349,10 +352,22 @@ public class BAMArtifactDeployerManager {
             fileResource.setContentStream(new FileInputStream(file));
             registry.put(fileRegistryPath, fileResource);
 
+            //adding anon role to the gadget
+             AuthorizationManager authorizationManager = ((UserRegistry)ServiceHolder.getRegistry(tenantId)).getUserRealm().getAuthorizationManager();
+             authorizationManager.authorizeRole(CarbonConstants.REGISTRY_ANONNYMOUS_ROLE_NAME,
+                        RegistryConstants.CONFIG_REGISTRY_BASE_PATH  + fileRegistryPath, ActionConstants.GET);
+            Registry reg = ServiceHolder.getGovernanceSystemRegistry(tenantId);
+            Resource resource = reg.newResource();
+            resource.setProperty("timestamp", Long.toString(System.currentTimeMillis()));
+            registry.put("/repository/components/org.wso2.carbon.user.mgt/updatedTime", resource);
+
         } catch (RegistryException e) {
             log.error(e.getMessage(), e);
             throw new BAMToolboxDeploymentException(e.getMessage(), e);
         } catch (FileNotFoundException e) {
+            log.error(e.getMessage(), e);
+            throw new BAMToolboxDeploymentException(e.getMessage(), e);
+        } catch (Exception e) {
             log.error(e.getMessage(), e);
             throw new BAMToolboxDeploymentException(e.getMessage(), e);
         }

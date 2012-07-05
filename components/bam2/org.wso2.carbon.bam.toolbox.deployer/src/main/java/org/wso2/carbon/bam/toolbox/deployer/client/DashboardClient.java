@@ -45,7 +45,7 @@ public class DashboardClient {
 
     public boolean addNewGadget(String userId, String tabId, String url) {
         try {
-            return service.addGadgetToUser(userId, tabId, url, "bam", null);
+            return service.addGadgetToUser(userId, tabId, url, null, null);
         } catch (Exception e) {
             log.error("Exception while adding a new gadget", e);
             return false;
@@ -55,9 +55,9 @@ public class DashboardClient {
 
     public int addTab(String userId, String tabTitle) {
         try {
-
-            int tabId = service.addNewTab(userId, tabTitle, "bam");
-            return tabId;
+           //int tabId = service.addNewTab(userId, tabTitle, "bam");
+           int tabId = service.addNewTab(userId, tabTitle, null);
+           return tabId;
         } catch (Exception e) {
             log.error("Exception while adding a new gadget", e);
             return -1;
@@ -67,7 +67,7 @@ public class DashboardClient {
     public void removeTab(String userId, int tabId) {
         try {
             MessageContext.setCurrentMessageContext(new MessageContext());
-            service.removeTab(userId, String.valueOf(tabId), "bam");
+            service.removeTab(userId, String.valueOf(tabId), null);
         } catch (Exception e) {
             log.error("Exception while deleting tab: " + tabId, e);
         }

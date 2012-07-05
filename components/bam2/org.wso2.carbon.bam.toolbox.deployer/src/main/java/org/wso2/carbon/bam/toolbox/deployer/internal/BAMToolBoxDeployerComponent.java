@@ -23,6 +23,7 @@ import org.osgi.service.component.ComponentContext;
 import org.wso2.carbon.bam.toolbox.deployer.ServiceHolder;
 import org.wso2.carbon.base.api.ServerConfigurationService;
 import org.wso2.carbon.dashboard.DashboardDSService;
+import org.wso2.carbon.dashboard.mgt.gadgetrepo.GadgetRepoService;
 import org.wso2.carbon.registry.core.service.RegistryService;
 import org.wso2.carbon.user.core.UserRealm;
 import org.wso2.carbon.user.core.service.RealmService;
@@ -53,6 +54,10 @@ import org.wso2.carbon.utils.ConfigurationContextService;
  * interface="org.wso2.carbon.dashboard.DashboardDSService"
  * cardinality="0..1" policy="dynamic" bind="setDashboardService"
  * unbind="unsetDashboardService"
+ *  @scr.reference name="org.wso2.carbon.dashboard.mgt.gadgetrepo.GadgetRepoService"
+ * interface="org.wso2.carbon.dashboard.mgt.gadgetrepo.GadgetRepoService"
+ * cardinality="0..1" policy="dynamic" bind="setGadgetRepoService"
+ * unbind="unsetGadgetRepoService"
  */
 
 public class BAMToolBoxDeployerComponent {
@@ -110,4 +115,14 @@ public class BAMToolBoxDeployerComponent {
     protected void unsetServerConfiguration(ServerConfigurationService serverConfiguration) {
         ServiceHolder.setConfigurationContextService(null);
     }
+
+
+    protected void setGadgetRepoService(GadgetRepoService gadgetRepoService) {
+        ServiceHolder.setGadgetRepoService(gadgetRepoService);
+    }
+
+    protected void unsetGadgetRepoService(GadgetRepoService gadgetRepoService) {
+        ServiceHolder.setGadgetRepoService(null);
+    }
+
 }

@@ -18,6 +18,7 @@ package org.wso2.carbon.bam.toolbox.deployer;
 
 import org.wso2.carbon.base.api.ServerConfigurationService;
 import org.wso2.carbon.dashboard.DashboardDSService;
+import org.wso2.carbon.dashboard.mgt.gadgetrepo.GadgetRepoService;
 import org.wso2.carbon.registry.core.Registry;
 import org.wso2.carbon.registry.core.exceptions.RegistryException;
 import org.wso2.carbon.registry.core.service.RegistryService;
@@ -36,6 +37,7 @@ public class ServiceHolder {
     private static RealmService realmService;
     private static DashboardDSService dashboardService;
     private static ServerConfigurationService serverConfiguration;
+    private static GadgetRepoService gadgetRepoService;
 
     public static ConfigurationContextService getConfigurationContextService() {
         return configurationContextService;
@@ -84,6 +86,20 @@ public class ServiceHolder {
     public static void setServerConfiguration(ServerConfigurationService serverConf) {
        serverConfiguration = serverConf;
     }
+
+    public static GadgetRepoService getGadgetRepoService() {
+        return gadgetRepoService;
+    }
+
+    public static void setGadgetRepoService(GadgetRepoService gadgetRepoService) {
+        ServiceHolder.gadgetRepoService = gadgetRepoService;
+    }
+
+    public static Registry getGovernanceSystemRegistry(int tenantId) throws RegistryException {
+        return ServiceHolder.registryService.getGovernanceSystemRegistry(tenantId);
+    }
+
+
 }
 
 

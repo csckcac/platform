@@ -1,7 +1,7 @@
 package org.wso2.carbon.hive.data.source.access.util;
 
 
-import org.apache.hadoop.hive.jdbc.storage.datasource.BasicDataSourceConstants;
+import org.wso2.carbon.hadoop.hive.jdbc.storage.datasource.BasicDataSourceConstants;
 import org.apache.hadoop.hive.service.CarbonContextThreadLocal;
 import org.apache.hadoop.mapred.lib.db.DBConfiguration;
 import org.w3c.dom.Element;

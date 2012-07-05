@@ -20,11 +20,13 @@
 package org.apache.synapse.mediators.eip;
 
 import org.apache.axiom.om.OMElement;
+import org.apache.axiom.om.OMNamespace;
 import org.apache.axiom.om.OMNode;
 import org.apache.axiom.soap.SOAPEnvelope;
 import org.apache.commons.logging.Log;
 import org.apache.commons.logging.LogFactory;
 import org.apache.synapse.MessageContext;
+import org.apache.synapse.SynapseException;
 import org.apache.synapse.util.xpath.SynapseXPath;
 import org.jaxen.JaxenException;
 
@@ -110,35 +112,66 @@ public class EIPUtils {
      * @param expression SynapseXPath describing the enriching element
      * @throws JaxenException on failing of processing the xpath
      */
-    public static void enrichEnvelope(SOAPEnvelope envelope, SOAPEnvelope enricher,  MessageContext synCtxt,
-        SynapseXPath expression) throws JaxenException {
+    public static void enrichEnvelope(SOAPEnvelope envelope, SOAPEnvelope enricher,
+                                      MessageContext synCtxt,
+                                      SynapseXPath expression) throws JaxenException {
 
         OMElement enrichingElement;
         List elementList = getMatchingElements(envelope, synCtxt, expression);
+        List list = getMatchingElements(enricher, synCtxt, expression);
+        if ((checkNotEmpty(elementList) && checkNotEmpty(list))
+            || (!checkNotEmpty(elementList) && checkNotEmpty(list))) {
+            if (checkNotEmpty(elementList)) {
+                // attach at parent of the first result from the XPath, or to the SOAPBody
+                Object o = elementList.get(0);
 
-        if (elementList != null && !elementList.isEmpty()) {
-
-            // attach at parent of the first result from the XPath, or to the SOAPBody
-            Object o = elementList.get(0);
-
-            if (o instanceof OMElement &&
-                ((OMElement) o).getParent() != null &&
-                ((OMElement) o).getParent() instanceof OMElement) {
-                enrichingElement = (OMElement) ((OMElement) o).getParent();
-            } else {
-                enrichingElement = envelope.getBody();
-            }
-
-            List list = getMatchingElements(enricher, synCtxt, expression);
-            if (list != null) {
-                Iterator itr = list.iterator();
-                while (itr.hasNext()) {
-                    o = itr.next();
-                    if (o != null && o instanceof OMElement) {
-                        enrichingElement.addChild((OMElement) o);
+                if (o instanceof OMElement &&
+                    ((OMElement) o).getParent() != null &&
+                    ((OMElement) o).getParent() instanceof OMElement) {
+                    enrichingElement = (OMElement) ((OMElement) o).getParent();
+                    OMElement body = envelope.getBody();
+                    if (!isBody(body, enrichingElement)) {
+                        OMElement nonBodyElem = enrichingElement;
+                        enrichingElement = envelope.getBody();
+                        addChildren(elementList, enrichingElement);
+                        while (!isBody(body, (OMElement) nonBodyElem.getParent())) {
+                            nonBodyElem = (OMElement) nonBodyElem.getParent();
+                        }
+                        nonBodyElem.detach();
                     }
                 }
             }
+            enrichingElement = envelope.getBody();
+            if (list != null) {
+                addChildren(list, enrichingElement);
+            }
+        } else {
+            throw new SynapseException("Could not find matching elements to aggregate.");
+        }
+    }
+
+    private static boolean isBody(OMElement body, OMElement enrichingElement) {
+        try {
+            return (body.getLocalName().equals(enrichingElement.getLocalName()) &&
+                    body.getNamespace().getNamespaceURI().equals(enrichingElement.getNamespace().getNamespaceURI()));
+        } catch (NullPointerException e) {
+            return false;
+        }
+    }
+
+    private static boolean checkNotEmpty(List list) {
+        return list != null && !list.isEmpty();
+    }
+
+    private static void addChildren(List list, OMElement element) {
+        Iterator itr = list.iterator();
+        Object o;
+        while (itr.hasNext()) {
+            o = itr.next();
+            if (o != null && o instanceof OMElement) {
+                element.addChild((OMElement) o);
+            }
+            itr.remove();
         }
     }
 

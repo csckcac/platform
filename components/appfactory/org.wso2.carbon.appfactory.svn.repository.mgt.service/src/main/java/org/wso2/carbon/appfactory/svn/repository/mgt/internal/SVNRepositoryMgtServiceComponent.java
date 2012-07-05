@@ -21,8 +21,12 @@ import org.apache.commons.logging.LogFactory;
 import org.osgi.framework.BundleContext;
 import org.osgi.service.component.ComponentContext;
 import org.wso2.carbon.appfactory.common.AppFactoryConfiguration;
+import org.wso2.carbon.appfactory.core.ArtifactStorage;
+import org.wso2.carbon.appfactory.core.RevisionControlDriver;
 import org.wso2.carbon.appfactory.svn.repository.mgt.RepositoryManager;
 import org.wso2.carbon.appfactory.svn.repository.mgt.impl.SCMManagerBasedRepositoryManager;
+import org.wso2.carbon.appfactory.svn.repository.mgt.impl.SVNArtifactStorage;
+import org.wso2.carbon.appfactory.svn.repository.mgt.impl.SVNManager;
 import org.wso2.carbon.appfactory.svn.repository.mgt.util.Util;
 
 /**
@@ -51,8 +55,13 @@ public class SVNRepositoryMgtServiceComponent {
         }
         try {
             BundleContext bundleContext = context.getBundleContext();
-            RepositoryManager repositoryManager = new SCMManagerBasedRepositoryManager();
-            bundleContext.registerService(RepositoryManager.class.getName(), repositoryManager, null);
+
+            SVNManager repositoryManager = new SVNManager();
+            bundleContext.registerService(RevisionControlDriver.class.getName(), repositoryManager, null);
+
+           // SVNArtifactStorage svnArtifactStorage = new SVNArtifactStorage();
+           // bundleContext.registerService(ArtifactStorage.class.getName(), svnArtifactStorage, null);
+
         } catch (Throwable e) {
             log.error("Error in registering Repository Management Service  ", e);
         }

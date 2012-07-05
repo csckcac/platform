@@ -24,7 +24,7 @@
     <includeBaseDirectory>false</includeBaseDirectory>
     <fileSets>
         <fileSet>
-            <directory>target/site</directory>
+            <directory>${basedir}/target/site</directory>
             <outputDirectory>${pom.artifactId}-${pom.version}-docs</outputDirectory>
             <excludes>
                 <exclude>index.html</exclude>
@@ -42,7 +42,7 @@
     </fileSets>
     <files>
         <file>
-            <source>target/site/index.html</source>
+            <source>${basedir}/target/site/index.html</source>
             <outputDirectory>${pom.artifactId}-${pom.version}-docs/</outputDirectory>
             <filtered>true</filtered>
             <fileMode>644</fileMode>

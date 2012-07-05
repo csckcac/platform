@@ -19,7 +19,6 @@
 package org.wso2.carbon.cassandra.explorer.ui;
 
 import org.apache.axis2.AxisFault;
-import org.apache.axis2.Constants;
 import org.apache.axis2.client.Options;
 import org.apache.axis2.client.ServiceClient;
 import org.apache.axis2.context.ConfigurationContext;
@@ -64,85 +63,8 @@ public class CassandraExplorerAdminClient {
         options.setProperty(org.apache.axis2.transport.http.HTTPConstants.COOKIE_STRING, cookie);
         //options.setProperty(Constants.Configuration.ENABLE_MTOM, Constants.VALUE_TRUE);
         options.setTimeOutInMilliSeconds(10000);
-        options.setProperty(org.apache.axis2.Constants.Configuration.CHARACTER_SET_ENCODING, "UTF-16");
-    }
-
-    /**
-     * Get All the rows for a given Column family
-     *
-     * @param keyspaceName
-     * @param columnFamily
-     * @param startKey
-     * @param endKey
-     * @param limit
-     * @return
-     * @throws java.rmi.RemoteException
-     */
-    public String[] getRows(String keyspaceName, String columnFamily, String startKey,
-                            String endKey, int limit)
-            throws RemoteException, CassandraExplorerAdminCassandraExplorerException {
-        return explorerAdminStub.getRowNamesForColumnFamily(keyspaceName, columnFamily, startKey,
-                                                            endKey, limit);
-
-    }
-
-    /**
-     * Get columns for a given row key
-     *
-     * @param keyspaceName
-     * @param columnFamily
-     * @param rowName
-     * @param startColumn
-     * @param lastCoulmn
-     * @param limit
-     * @param isReversed
-     * @return
-     * @throws java.rmi.RemoteException
-     */
-    public Column[] getColumnsForRowName(String keyspaceName, String columnFamily, String rowName,
-                                         String startColumn,
-                                         String lastCoulmn, int limit, boolean isReversed)
-            throws RemoteException, CassandraExplorerAdminCassandraExplorerException {
-        return explorerAdminStub.getColumnsForRow(keyspaceName, columnFamily,
-                                                  rowName, startColumn,
-                                                  lastCoulmn, limit, isReversed);
-    }
-
-    /**
-     * Get columns sorted on last updated first order
-     *
-     * @param keyspaceName
-     * @param columnFamily
-     * @param rowName
-     * @param startColumn
-     * @param lastColumn
-     * @param limit
-     * @param isReversed
-     * @throws java.rmi.RemoteException
-     * @ * @throws org.wso2.carbon.cassandra.mgt.stub.explorer.CassandraExplorerAdminCassandraServerManagementException
-     */
-    public Column[] getColumnsInUpdateOrder(String keyspaceName, String columnFamily,
-                                            String rowName,
-                                            String startColumn, String lastColumn, int limit,
-                                            boolean isReversed)
-            throws RemoteException, CassandraExplorerAdminCassandraExplorerException {
-        return explorerAdminStub.getColumnsInUpdateOrder(keyspaceName, columnFamily, rowName,
-                                                         startColumn, lastColumn, limit, isReversed);
-    }
-
-    /**
-     * Get a column for its key
-     *
-     * @param keyspace
-     * @param columnFamily
-     * @param rowName
-     * @param columnName
-     * @return
-     * @throws java.rmi.RemoteException
-     */
-    public Column getColumn(String keyspace, String columnFamily, String rowName, String columnName)
-            throws RemoteException, CassandraExplorerAdminCassandraExplorerException {
-        return explorerAdminStub.getColumn(keyspace, columnFamily, rowName, columnName);
+        options.setProperty(org.apache.axis2.Constants.Configuration
+                                    .CHARACTER_SET_ENCODING, "UTF-16");
     }
 
     public Column[] getPaginateSliceforColumns(String keyspace, String columnFamily, String rowName,
@@ -157,18 +79,21 @@ public class CassandraExplorerAdminClient {
         return explorerAdminStub.getNoOfColumns(keyspace, columnFamily, rowName);
     }
 
-    public Column[] searchColumns(String keyspace, String columnFamily, String rowName, String searchKey,
-                           int startingNo, int limit)
+    public Column[] searchColumns(String keyspace, String columnFamily, String rowName,
+                                  String searchKey,
+                                  int startingNo, int limit)
             throws RemoteException, CassandraExplorerAdminCassandraExplorerException {
         return explorerAdminStub.searchColumns(keyspace, columnFamily, rowName, searchKey,
                                                startingNo, limit);
     }
 
-    public int getNoOfFilteredResultsoforColumns(String keyspace, String columnFamily, String rowName,
-                                      String searchKey)
+    public int getNoOfFilteredResultsoforColumns(String keyspace, String columnFamily,
+                                                 String rowName,
+                                                 String searchKey)
             throws RemoteException, CassandraExplorerAdminCassandraExplorerException {
         return explorerAdminStub.getNoOfColumnSearchResults(keyspace, columnFamily, rowName, searchKey);
     }
+
     public Row[] getPaginateSliceforRows(String keyspace, String columnFamily,
                                          int startingNo, int limit)
             throws RemoteException, CassandraExplorerAdminCassandraExplorerException {
@@ -185,7 +110,7 @@ public class CassandraExplorerAdminClient {
     }
 
     public int getNoOfFilteredResultsoforRows(String keyspace, String columnFamily,
-                                                 String searchKey)
+                                              String searchKey)
             throws RemoteException, CassandraExplorerAdminCassandraExplorerException {
         return explorerAdminStub.getNoOfRowSearchResults(keyspace, columnFamily, searchKey);
     }
@@ -211,7 +136,7 @@ public class CassandraExplorerAdminClient {
 
     public int getNoOfRows(String keyspace, String columnFamily)
             throws CassandraExplorerAdminCassandraExplorerException, RemoteException {
-         return explorerAdminStub.getNoOfRows(keyspace,columnFamily);
+        return explorerAdminStub.getNoOfRows(keyspace, columnFamily);
     }
 
 }

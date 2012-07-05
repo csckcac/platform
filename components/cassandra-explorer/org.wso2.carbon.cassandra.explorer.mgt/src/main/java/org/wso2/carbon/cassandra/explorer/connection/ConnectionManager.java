@@ -26,15 +26,19 @@ import me.prettyprint.hector.api.Cluster;
 import me.prettyprint.hector.api.Keyspace;
 import me.prettyprint.hector.api.ddl.KeyspaceDefinition;
 import me.prettyprint.hector.api.factory.HFactory;
+import org.apache.axis2.context.MessageContext;
+import org.apache.axis2.context.ServiceContext;
 import org.wso2.carbon.cassandra.explorer.exception.CassandraExplorerException;
+import org.wso2.carbon.cassandra.explorer.session.ExplorerSessionManager;
 
+import java.io.File;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Map;
 
 public class ConnectionManager {
 
-    private static Cluster cluster = null;
+    private static final String EXPLORER_CLUSTER_CONNECTION = "connection";
 
     public ConnectionManager(String clusterName, String connectionUrl,
                              Map<String, String> credentials) throws CassandraExplorerException {
@@ -47,13 +51,11 @@ public class ConnectionManager {
         try {
             CassandraHostConfigurator hostConfigurator = new CassandraHostConfigurator(connectionUrl);
             hostConfigurator.setRetryDownedHosts(false);
-           // this.cluster = HFactory.getOrCreateCluster(clusterName, hostConfigurator, credentials);
-            this.cluster = new ThriftCluster(clusterName, hostConfigurator, credentials);
+            // this.cluster = HFactory.getOrCreateCluster(clusterName, hostConfigurator, credentials);
+            Cluster cluster = new ThriftCluster(clusterName, hostConfigurator, credentials);
+            ExplorerSessionManager.setSessionObject(EXPLORER_CLUSTER_CONNECTION, cluster);
         } catch (Exception exception) {
             throw new CassandraExplorerException(exception.getMessage(), exception.getCause());
-        }
-        if (cluster == null) {
-            throw new CassandraExplorerException("Cannot connect to cluster");
         }
     }
 
@@ -71,6 +73,7 @@ public class ConnectionManager {
     }
 
     public static Cluster getCluster() throws CassandraExplorerException {
+        Cluster cluster = (Cluster) ExplorerSessionManager.getSessionObject(EXPLORER_CLUSTER_CONNECTION);
         if (cluster != null) {
             return cluster;
         } else {
@@ -79,13 +82,9 @@ public class ConnectionManager {
     }
 
     public boolean isConnected() {
-        return (cluster != null);
+        return (ExplorerSessionManager.getSessionObject(EXPLORER_CLUSTER_CONNECTION)
+                != null);
     }
 
-    private void refreshClusterConnections(String connectionUrl){
-       if(isConnected()){
-           cluster.getConnectionManager().removeCassandraHost(new CassandraHost(connectionUrl));
-       }
-    }
 
 }

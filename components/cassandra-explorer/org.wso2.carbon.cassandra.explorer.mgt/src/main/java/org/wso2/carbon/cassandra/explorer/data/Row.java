@@ -19,8 +19,17 @@
 
 package org.wso2.carbon.cassandra.explorer.data;
 
+/**
+ * Bean class to store information about a Row
+ */
 public class Row {
+    /*
+    ID of the row
+     */
     private String rowId = "";
+    /**
+     * Columns in the ROW
+     */
     private Column[] columns = new Column[0];
 
     public String getRowId() {

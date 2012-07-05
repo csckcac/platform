@@ -53,7 +53,7 @@
             request="<%=request%>"/>
 
     <div id="middle">
-        <h2><fmt:message key="cassandra.cf"/> : <%=columnFamily%>
+        <h2><%=keyspace%> : <%=columnFamily%>
         </h2>
 
         <div id="workArea">

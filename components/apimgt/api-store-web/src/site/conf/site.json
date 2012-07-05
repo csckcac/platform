@@ -1,6 +1,6 @@
 {
     "theme" : "fancy",
-    "context" : "/apistore",
+    "context" : "/store",
     "recentAPIsCount" : 5,
     "topRatedCount" : 5,
     "defaultUser" : {

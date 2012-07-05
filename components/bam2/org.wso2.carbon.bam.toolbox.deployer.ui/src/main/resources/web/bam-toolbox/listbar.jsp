@@ -156,12 +156,6 @@
         <tr>
             <td style="border:0; !important">
                 <nobr>
-                </nobr>
-            </td>
-        </tr>
-        <tr>
-            <td style="border:0; !important">
-                <nobr>
                     <%
                         if (null == toolBoxType || toolBoxType.equals("") || toolBoxType.equals("1")) {
                     %>
@@ -235,11 +229,6 @@
                     </tbody>
                 </table>
             </td>
-        </tr>
-
-        <tr>
-            <td style="border:0; !important">&nbsp;</td>
-        </tr>
         </tr>
     </table>
 </form>

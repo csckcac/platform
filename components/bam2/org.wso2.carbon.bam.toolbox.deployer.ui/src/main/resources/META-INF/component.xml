@@ -24,8 +24,10 @@
 			<parent-menu>manage_menu</parent-menu>
 			<link>#</link>
             <region>region1</region>
-			<order>50</order>
+			<order>23</order>
 			<style-class>manage</style-class>
+            <icon>../bam-toolbox/images/toolbox-icon.png
+            </icon>
             <require-permission>/permission/admin/bam/view</require-permission>
 		</menu>
         <menu>
@@ -35,7 +37,7 @@
 			<parent-menu>bam_toolbox_menu</parent-menu>
 			<link>../bam-toolbox/listbar.jsp</link>
             <region>region1</region>
-			<order>60</order>
+			<order>24</order>
             <icon>../bam-toolbox/images/list.gif</icon>
 			<style-class>manage</style-class>
             <require-permission>/permission/admin/bam/view</require-permission>
@@ -47,7 +49,7 @@
 			<parent-menu>bam_toolbox_menu</parent-menu>
 			<link>../bam-toolbox/uploadbar.jsp</link>
             <region>region1</region>
-			<order>70</order>
+			<order>25</order>
             <icon>../bam-toolbox/images/add.gif</icon>
 			<style-class>manage</style-class>
             <require-permission>/permission/admin/bam/view</require-permission>

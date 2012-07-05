@@ -25,6 +25,7 @@ import org.apache.commons.logging.Log;
 import org.apache.commons.logging.LogFactory;
 import org.apache.synapse.ManagedLifecycle;
 import org.apache.synapse.MessageContext;
+import org.apache.synapse.SynapseException;
 import org.apache.synapse.SynapseLog;
 import org.apache.synapse.core.SynapseEnvironment;
 import org.apache.synapse.mediators.AbstractMediator;
@@ -390,6 +391,8 @@ public class AggregateMediator extends AbstractMediator implements ManagedLifecy
                 } catch (JaxenException e) {
                     handleException("Error merging aggregation results using XPath : " +
                             aggregationExpression.toString(), e, synCtx);
+                } catch (SynapseException e) {
+                    handleException("Error evaluating expression: " + aggregationExpression.toString() , e, synCtx);
                 }
             }
         }

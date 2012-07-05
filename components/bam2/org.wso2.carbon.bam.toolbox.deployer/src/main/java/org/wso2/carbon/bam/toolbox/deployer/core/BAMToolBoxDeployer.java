@@ -9,10 +9,10 @@ import org.apache.commons.logging.Log;
 import org.apache.commons.logging.LogFactory;
 import org.wso2.carbon.bam.toolbox.deployer.BAMToolBoxDeployerConstants;
 import org.wso2.carbon.bam.toolbox.deployer.ServiceHolder;
+import org.wso2.carbon.bam.toolbox.deployer.config.ToolBoxConfigurationManager;
 import org.wso2.carbon.bam.toolbox.deployer.deploy.BAMArtifactDeployerManager;
 import org.wso2.carbon.bam.toolbox.deployer.exception.BAMToolboxDeploymentException;
 import org.wso2.carbon.bam.toolbox.deployer.internal.ServerStartUpInspector;
-import org.wso2.carbon.bam.toolbox.deployer.config.ToolBoxConfigurationManager;
 import org.wso2.carbon.bam.toolbox.deployer.util.ToolBoxDTO;
 import org.wso2.carbon.context.CarbonContext;
 import org.wso2.carbon.core.multitenancy.SuperTenantCarbonContext;
@@ -51,6 +51,7 @@ public class BAMToolBoxDeployer extends AbstractDeployer {
 
     private static BAMToolBoxDeployer pausedDeployments = new BAMToolBoxDeployer();
     private ArrayList<DeploymentFileData> pausedDeploymentFileDatas = new ArrayList<DeploymentFileData>();
+    private int port;
 
     @Override
     public void init(ConfigurationContext configurationContext) {
@@ -58,19 +59,23 @@ public class BAMToolBoxDeployer extends AbstractDeployer {
         createHotDeployementFolderIfNotExists();
         CarbonContext.getCurrentContext().getTenantId();
 
+
+        String portOffset = CarbonUtils.getServerConfiguration().
+                getFirstProperty(BAMToolBoxDeployerConstants.PORT_OFF_SET);
+        port = CarbonUtils.getTransportPort(this.configurationContext, "https")+
+                Integer.parseInt(portOffset);
+        ServerStartUpInspector inspector = new ServerStartUpInspector();
+        inspector.setPort(port);
+        inspector.start();
+
         if (!ServerStartUpInspector.isServerStarted()) {
             if (getTenantId() == MultitenantConstants.SUPER_TENANT_ID) {
                 pausedDeployments = this;
-                String portOffset = ServiceHolder.getServerConfiguration().
-                        getFirstProperty(BAMToolBoxDeployerConstants.PORT_OFF_SET);
-                int port = CarbonUtils.getTransportPort(this.configurationContext, "https")+
-                        Integer.parseInt(portOffset);
-                ServerStartUpInspector inspector = new ServerStartUpInspector();
-                inspector.setPort(port);
-                inspector.start();
+
 
             }
         } else {
+
             doInitialUnDeployments();
         }
 

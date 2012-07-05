@@ -78,7 +78,8 @@ public class WebappDeployer extends AbstractDeployer {
         tomcatWebappDeployer = new TomcatGenericWebappsDeployer(webContextPrefix,
                                                                 tenantId,
                                                                 tenantDomain,
-                                                                webappsHolder);
+                                                                webappsHolder,
+                                                                configContext);
 
         configCtx.setProperty(CarbonConstants.TOMCAT_GENERIC_WEBAPP_DEPLOYER, tomcatWebappDeployer);
 

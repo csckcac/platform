@@ -16,12 +16,15 @@
 
 package org.wso2.carbon.webapp.mgt;
 
+import org.apache.axis2.context.ConfigurationContext;
 import org.apache.catalina.Context;
 import org.apache.catalina.Host;
 import org.apache.catalina.core.StandardContext;
 import org.apache.commons.logging.Log;
 import org.apache.commons.logging.LogFactory;
+import org.wso2.carbon.CarbonConstants;
 import org.wso2.carbon.CarbonException;
+import org.wso2.carbon.core.session.CarbonTomcatClusterableSessionManager;
 import org.wso2.carbon.utils.multitenancy.CarbonApplicationContextHolder;
 import org.wso2.carbon.utils.multitenancy.CarbonContextHolder;
 
@@ -29,6 +32,7 @@ import java.io.File;
 import java.lang.management.ManagementPermission;
 import java.util.List;
 import java.util.Map;
+import java.util.concurrent.ConcurrentHashMap;
 
 /**
  * This deployer is responsible for deploying/undeploying/updating those webapps.
@@ -43,8 +47,10 @@ public class TomcatGenericWebappsDeployer {
     protected String webContextPrefix;
     protected int tenantId;
     protected String tenantDomain;
-
+    protected ConfigurationContext configurationContext;
     protected WebApplicationsHolder webappsHolder;
+    protected Map<String, CarbonTomcatClusterableSessionManager> sessionManagerMap =
+            new ConcurrentHashMap<String, CarbonTomcatClusterableSessionManager>();
 
     /**
      * Constructor
@@ -57,7 +63,8 @@ public class TomcatGenericWebappsDeployer {
     public TomcatGenericWebappsDeployer(String webContextPrefix,
                                         int tenantId,
                                         String tenantDomain,
-                                        WebApplicationsHolder webappsHolder) {
+                                        WebApplicationsHolder webappsHolder,
+                                        ConfigurationContext configurationContext) {
         SecurityManager secMan = System.getSecurityManager();
         if (secMan != null) {
             secMan.checkPermission(new ManagementPermission("control"));
@@ -66,6 +73,7 @@ public class TomcatGenericWebappsDeployer {
         this.tenantDomain = tenantDomain;
         this.webContextPrefix = webContextPrefix;
         this.webappsHolder = webappsHolder;
+        this.configurationContext = configurationContext;
     }
 
     /**
@@ -222,7 +230,20 @@ public class TomcatGenericWebappsDeployer {
                             DataHolder.getCarbonTomcatService().addWebApp(host, "/", webappFile.getAbsolutePath());
                 }
             }
-            context.setManager(new CarbonTomcatSessionManager(tenantId)); // TODO: Must use a clusterable manager such as BackupManager
+            if (context.getDistributable() &&
+                (DataHolder.getCarbonTomcatService().getTomcat().
+                        getService().getContainer().getCluster()) != null) {
+                // Using clusterable manager
+                CarbonTomcatClusterableSessionManager sessionManager =
+                        new CarbonTomcatClusterableSessionManager(tenantId);
+                context.setManager(sessionManager);
+                sessionManagerMap.put(context.getName(), sessionManager);
+                configurationContext.setProperty(CarbonConstants.TOMCAT_SESSION_MANAGER_MAP,
+                                                 sessionManagerMap);
+            } else {
+                context.setManager(new CarbonTomcatSessionManager(tenantId));
+            }
+
             context.setReloadable(false);
             WebApplication webapp = new WebApplication(context, webappFile);
             webapp.setServletContextParameters(webContextParams);

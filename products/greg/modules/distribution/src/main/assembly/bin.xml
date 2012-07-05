@@ -58,7 +58,6 @@
             <outputDirectory>${pom.artifactId}-${build.version}/samples</outputDirectory>
             <excludes>
                 <exclude>**/**.sh</exclude>
-                <exclude>**/README*</exclude>
                 <exclude>**/target/**</exclude>
                 <exclude>**/**.iws</exclude>
                 <exclude>**/**.ipr</exclude>

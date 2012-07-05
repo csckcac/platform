@@ -45,7 +45,7 @@
 
 <fmt:bundle basename="org.wso2.carbon.endpoint.ui.i18n.Resources">
     <carbon:jsi18n
-            resourceBundle="org.wso2.carbon.endpoint.admin.ui.i18n.Resources"
+            resourceBundle="org.wso2.carbon.endpoint.ui.i18n.Resources"
             request="<%=request%>"/>
 
     <script type="text/javascript">
@@ -94,7 +94,7 @@
                 <fmt:message key="endpoint.session.timeout"/>
             </td>
             <td>
-                <input type="text" id="sessionTimeOutValue"
+                <input type="text" name="sessionTimeOutValue" id="sessionTimeOutValue"
                        value="<%=sessionTimeout%>"
                         <%=sessionTimeout == 0 ? "disabled=\"disabled\"" : ""%>
                        onkeypress="return validateText(event);"/>

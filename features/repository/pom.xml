@@ -544,7 +544,7 @@
                                     org.wso2.carbon:org.wso2.carbon.bam.mediation.agent.feature:${carbon.version}
                                 </featureArtifactDef>
 				<featureArtifactDef>
-                                    org.wso2.carbon.ndatasource.feature:${carbon.version}
+                                    org.wso2.carbon:org.wso2.carbon.ndatasource.feature:${carbon.version}
                                 </featureArtifactDef>
 <!--
                                 <featureArtifactDef>

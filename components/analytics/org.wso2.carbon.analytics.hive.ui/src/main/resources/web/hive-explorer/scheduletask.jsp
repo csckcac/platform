@@ -267,273 +267,241 @@
 
 <form id="cronForm" name="cronForm" action="" method="POST">
 <table class="styledLeft">
+<thead>
+    <tr>
+        <th>
+                            <input TYPE=RADIO NAME="cronExpSelect" id="cronExpSelect" VALUE="cronExpSelect"
+                                   checked="true" onclick="customCronEnable();" class="selectedOption"><label>Schedule
+                            By Cron Expression: </label>
+        </th>
+    </tr>
+</thead>
 <tbody>
+    <tr>
+        <td>
+            <table class="normal-nopadding">
+                <tbody>
+                    <tr>
+                        <td width="250px"><fmt:message key="cron.expression"/>
+                            <span class="required">*</span></td>
+                        <td><input name="cronExpression"
+                                           id="cronExpression"
+                                        <%
+                                            if (cron != null && !cron.equals("")) {
+                                        %>
+                                           value='<%=cron%>'
+                                        <%
+                                        } else {
+                                        %>
+                                           value="<fmt:message key="default.cron.expression"/>"
+                                        <%
+                                            }
+                                        %>
+                                           size="60"/>
+                        </td>
+                    </tr>
+                </tbody>
+            </table>
+        </td>
+    </tr>
+</tbody>
+<thead>
+    <tr>
+        <th>
+                            <input TYPE=RADIO NAME="cronExpSelect" id="selectUI" VALUE="selectUI"
+                                   onclick="simpleUI()" class="selectedOption"><label>Simple
+                            Scheduling:</label>
+        </th>
+    </tr>
+</thead>
+<tbody>
+    <tr>
+        <td>
+            <table class="normal-nopadding" id='allSimpleConf'>
+                <tbody>
+                    <tr>
+                        <td width="250px"><fmt:message key="year"/></td>
+                        <td>
+                            <select name="year" id="year">
+                                        <%
+                                            int year = Calendar.getInstance().get(Calendar.YEAR);
+                                        %>
+                                        <option value="All">Every Year</option>
+                                        <%
+                                            for (int i = year; i <= 2099; i++) {
+                                        %>
+                                        <option value="<%=i%>"><%=i%>
+                                        </option>
+                                        <%
+                                            }
+                                        %>
+                            </select>
 
-<tr>
-    <td>
-        <table class="normal-nopadding">
-            <tbody>
-            <tr>
-                <td>
-                    <div class="sectionSeperator togglebleTitle">
-                        <input TYPE=RADIO NAME="cronExpSelect" id="cronExpSelect" VALUE="cronExpSelect"
-                               checked="true" onclick="customCronEnable();" class="selectedOption"><label>Schedule
-                        By Cron Expression: </label></div>
-                    <br>
-                </td>
-            </tr>
-            <tr>
-                <td>
-                    <table class="normal-nopadding">
-                        <tbody>
+                        </td>
+                    </tr>
+                    <tr>
+                        <td width="250px"><fmt:message key="month"/></td>
+                        <td>
+                                    <select name="month" id="month">
+                                        <%
+                                            String[] months = new DateFormatSymbols().getMonths();
+                                        %>
+                                        <option value="All">Every Month</option>
+                                        <%
+                                            for (int i = 0; i < 12; i++) {
+                                        %>
+                                        <option value="<%=i%>"><%=months[i]%>
+                                        </option>
+                                        <%
+                                            }
+                                        %>
+                                    </select>
 
-                        <tr>
-                            <td width="250px"><fmt:message key="cron.expression"/> <span
-                                    class="required">*</span></td>
-                            <td><input name="cronExpression"
-                                       id="cronExpression"
-                                    <%
-                                        if (cron != null && !cron.equals("")) {
-                                    %>
-                                       value='<%=cron%>'
-                                    <%
-                                    } else {
-                                    %>
-                                       value="<fmt:message key="default.cron.expression"/>"
-                                    <%
-                                        }
-                                    %>
-                                       size="60"/>
-                            </td>
+                        </td>
+                    </tr>
+                    <tr>
+                        <td>
+                                    <input TYPE=RADIO NAME="selectDay" id="selectDayMonth"
+                                           VALUE="selectDayMonth"
+                                           checked="true" onclick="dayMonthSelection()"><label>Use
+                                    day of month for scheduling </label><br>
+                        </td>
 
-                        </tbody>
-                    </table>
-                </td>
-            </tr>
-            </tbody>
-        </table>
-    </td>
-</tr>
+                        <td>
+                                    <select name="dayMonth" id="dayMonth">
+                                        <option value="All">Every Days of a Month</option>
 
-<tr>
-    <td>
-        <table class="normal-nopadding">
-            <tbody>
-            <tr>
-                <td>
-                    <div class="sectionSeperator togglebleTitle">
-                        <input TYPE=RADIO NAME="cronExpSelect" id="selectUI" VALUE="selectUI"
-                               onclick="simpleUI()" class="selectedOption"><label>Simple
-                        Scheduling:</label></div>
-                    <br>
-                </td>
-            </tr>
+                                        <%
+                                            for (int i = 1; i <= 31; i++) {
+                                        %>
+                                        <option value="<%=i%>">Day - <%=i%> of Selected Month
+                                        </option>
+                                        <%
+                                            }
+                                        %>
 
-            <tr>
-                <td>
-                    <table class="normal-nopadding" id='allSimpleConf'>
-                        <tbody>
-                        <tr>
-                            <td width="250px"><fmt:message key="year"/></td>
-                            <td>
-                                <select name="year" id="year">
-                                    <%
-                                        int year = Calendar.getInstance().get(Calendar.YEAR);
-                                    %>
-                                    <option value="All">Every Year</option>
-                                    <%
-                                        for (int i = year; i <= 2099; i++) {
-                                    %>
-                                    <option value="<%=i%>"><%=i%>
-                                    </option>
-                                    <%
-                                        }
-                                    %>
-                                </select>
+                                    </select>
 
-                            </td>
-                        </tr>
-                        <tr>
-                            <td width="250px"><fmt:message key="month"/></td>
-                            <td>
-                                <select name="month" id="month">
-                                    <%
-                                        String[] months = new DateFormatSymbols().getMonths();
-                                    %>
-                                    <option value="All">Every Month</option>
-                                    <%
-                                        for (int i = 0; i < 12; i++) {
-                                    %>
-                                    <option value="<%=i%>"><%=months[i]%>
-                                    </option>
-                                    <%
-                                        }
-                                    %>
-                                </select>
+                        </td>
+                    </tr>
+                    <tr>
+                        <td>
+                            <input TYPE=RADIO NAME="selectDay" id="selectDayWeek"
+                                           VALUE="selectDayWeek"
+                                           onclick="dayWeekSelection();"><label>Use
+                                    day of week for scheduling</label><br>
 
-                            </td>
-                        </tr>
-                        <tr>
-                            <td>
-                                <input TYPE=RADIO NAME="selectDay" id="selectDayMonth"
-                                       VALUE="selectDayMonth"
-                                       checked="true" onclick="dayMonthSelection()"><label>Use
-                                day of month for scheduling </label><br>
-                            </td>
+                        </td>
+                        <td>
+                                    <select name="dayWeek" id="dayWeek" onclick="">
+                                        <%
+                                            String[] weekdays = new DateFormatSymbols().getWeekdays();
+                                        %>                 scriptName != null && !scriptName.equals("")
+                                        <option value="All">Every Days of a week</option>
+                                        <%
+                                            for (int i = 1; i <= 7; i++) {
+                                        %>
 
-                            <td>
-                                <select name="dayMonth" id="dayMonth">
-                                    <option value="All">Every Days of a Month</option>
+                                        <option value="<%=i%>"><%=weekdays[i]%>
+                                        </option>
+                                        <%
+                                            }
+                                        %>
+                                    </select>
+                        </td>
+                    </tr>
+                    <tr>
+                        <td><fmt:message key="hours"></fmt:message></td>
+                        <td>
+                                    <select name="hours" id="hours">
+                                        <option value="All">Every Hours</option>
+                                        <%
+                                            for (int i = 0; i <= 23; i++) {
+                                        %>
+                                        <option value="<%=i%>"><%=i%>
+                                        </option>
+                                        <%
+                                            }
+                                        %>
+                                    </select>
 
-                                    <%
-                                        for (int i = 1; i <= 31; i++) {
-                                    %>
-                                    <option value="<%=i%>">Day - <%=i%> of Selected Month
-                                    </option>
-                                    <%
-                                        }
-                                    %>
+                        </td>
+                    </tr>
+                    <tr>
+                        <td width="250px"><fmt:message key="minutes"/></td>
+                        <td>
+                                    <select name="minutes" id="minutes">
+                                        <option value="All">Every Minutes</option>
+                                        <%
+                                            for (int i = 0; i <= 59; i++) {
+                                        %>
+                                        <option value="<%=i%>"><%=i%>
+                                        </option>
+                                        <%
+                                            }
+                                        %>
+                                    </select>
 
-                                </select>
+                        </td>
+                    </tr>
 
-                            </td>
-                        </tr>
+                                <%--<tr>--%>
+                                <%--<td width="250px"><fmt:message key="seconds"/></td>--%>
+                                <%--<td>--%>
+                                <%--<select name="seconds" id="seconds">--%>
+                                <%--<%--%>
+                                <%--for (int i = 0; i <= 59; i++) {--%>
+                                <%--%>--%>
+                                <%--<option value="<%=i%>"><%=i%>--%>
+                                <%--</option>--%>
+                                <%--<%--%>
+                                <%--}--%>
+                                <%--%>--%>
+                                <%--</select>--%>
 
+                                <%--</td>--%>
+                                <%--</tr>--%>
+                </tbody>
+            </table>
+        </td>
+    </tr>
+</tbody>
+<thead>
+    <tr>
+        <th>
+                            <input TYPE=RADIO NAME="cronExpSelect" id="intervalSelect" VALUE="selectInterval"
+                                   onclick="intervalSelection()"><label>Schedule by Interval:</label>
+        </th>
+    </tr>
+</thead>
+<tbody>
+    <tr>
+        <td>
+            <table class="normal-nopadding" id='intervalSchedule'>
+                <tbody>
+                    <tr>
+                        <td width="250px"><fmt:message key="interval"/></td>
+                        <td>
+                            <input name="interval"
+                                           id="interval"
+                                           size="60"/>
 
-                        <tr>
-                            <td>
-                                <input TYPE=RADIO NAME="selectDay" id="selectDayWeek"
-                                       VALUE="selectDayWeek"
-                                       onclick="dayWeekSelection();"><label>Use
-                                day of week for scheduling</label><br>
+                        </td>
+                    </tr>
+                    <tr>
+                        <td width="250px"><fmt:message key="count"/></td>
+                        <td>
+                                    <input name="count"
+                                           id="count"
+                                           size="60"/>
 
-                            </td>
+                        </td>
+                    </tr>
+                </tbody>
+            </table>
+        </td>
+    </tr>
 
-                            <td>
-                                <select name="dayWeek" id="dayWeek" onclick="">
-                                    <%
-                                        String[] weekdays = new DateFormatSymbols().getWeekdays();
-                                    %>                 scriptName != null && !scriptName.equals("")
-                                    <option value="All">Every Days of a week</option>
-                                    <%
-                                        for (int i = 1; i <= 7; i++) {
-                                    %>
-
-                                    <option value="<%=i%>"><%=weekdays[i]%>
-                                    </option>
-                                    <%
-                                        }
-                                    %>
-                                </select>
-
-                            </td>
-                        </tr>
-
-
-                        <tr>
-                            <td><fmt:message key="hours"></fmt:message></td>
-                            <td>
-                                <select name="hours" id="hours">
-                                    <option value="All">Every Hours</option>
-                                    <%
-                                        for (int i = 0; i <= 23; i++) {
-                                    %>
-                                    <option value="<%=i%>"><%=i%>
-                                    </option>
-                                    <%
-                                        }
-                                    %>
-                                </select>
-
-                            </td>
-                        </tr>
-
-                        <tr>
-                            <td width="250px"><fmt:message key="minutes"/></td>
-                            <td>
-                                <select name="minutes" id="minutes">
-                                    <option value="All">Every Minutes</option>
-                                    <%
-                                        for (int i = 0; i <= 59; i++) {
-                                    %>
-                                    <option value="<%=i%>"><%=i%>
-                                    </option>
-                                    <%
-                                        }
-                                    %>
-                                </select>
-
-                            </td>
-                        </tr>
-
-                            <%--<tr>--%>
-                            <%--<td width="250px"><fmt:message key="seconds"/></td>--%>
-                            <%--<td>--%>
-                            <%--<select name="seconds" id="seconds">--%>
-                            <%--<%--%>
-                            <%--for (int i = 0; i <= 59; i++) {--%>
-                            <%--%>--%>
-                            <%--<option value="<%=i%>"><%=i%>--%>
-                            <%--</option>--%>
-                            <%--<%--%>
-                            <%--}--%>
-                            <%--%>--%>
-                            <%--</select>--%>
-
-                            <%--</td>--%>
-                            <%--</tr>--%>
-                        </tbody>
-                    </table>
-                </td>
-            </tr>
-            </tbody>
-        </table>
-    </td>
-</tr>
-<tr>
-    <td>
-        <table class="normal-nopadding">
-            <tbody>
-            <tr>
-                <td>
-                    <div class="sectionSeperator togglebleTitle">
-                        <input TYPE=RADIO NAME="cronExpSelect" id="intervalSelect" VALUE="selectInterval"
-                               onclick="intervalSelection()"><label>Schedule by Interval:</label></div>
-                    <br>
-                </td>
-            </tr>
-
-            <tr>
-                <td>
-                    <table class="normal-nopadding" id='intervalSchedule'>
-                        <tbody>
-                        <tr>
-                            <td width="250px"><fmt:message key="interval"/></td>
-                            <td>
-                                <input name="interval"
-                                       id="interval"
-                                       size="60"/>
-
-                            </td>
-                        </tr>
-                        <tr>
-                            <td width="250px"><fmt:message key="count"/></td>
-                            <td>
-                                <input name="count"
-                                       id="count"
-                                       size="60"/>
-
-                            </td>
-                        </tr>
-
-                        </tbody>
-                    </table>
-                </td>
-            </tr>
-            </tbody>
-        </table>
-    </td>
-</tr>
 <tr>
     <td>
         <input class="button" type="button" value="Save" onclick="saveCron()"/>

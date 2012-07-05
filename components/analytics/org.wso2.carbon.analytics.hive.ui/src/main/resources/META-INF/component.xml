@@ -54,8 +54,9 @@
             <parent-menu>manage_menu</parent-menu>
             <link>#</link>
             <region>region1</region>
-            <order>50</order>
+            <order>19</order>
             <style-class>tools</style-class>
+            <icon>../hive-explorer/images/analyzerFramework.png</icon>
             <require-permission>/permission/admin</require-permission>
         </menu>
         <menu>
@@ -65,7 +66,7 @@
             <parent-menu>analytics_menu</parent-menu>
             <link>../hive-explorer/listscripts.jsp</link>
             <region>region1</region>
-            <order>60</order>
+            <order>20</order>
             <style-class>tools</style-class>
             <icon>../hive-explorer/images/list.gif</icon>
             <require-permission>/permission/admin</require-permission>
@@ -77,8 +78,9 @@
             <parent-menu>configure_menu</parent-menu>
             <link>../hive-explorer/index.jsp</link>
             <region>region1</region>
-            <order>20</order>
+            <order>21</order>
             <style-class>manage</style-class>
+            <icon>../hive-explorer/images/analyzerFramework.png</icon>
             <require-permission>/permission/admin</require-permission>
         </menu>
 <!--        <menu>
@@ -100,7 +102,7 @@
             <parent-menu>analytics_menu</parent-menu>
             <link>../hive-explorer/hiveexplorer.jsp</link>
             <region>region1</region>
-            <order>69</order>
+            <order>22</order>
             <style-class>tools</style-class>
             <icon>../hive-explorer/images/add.gif</icon>
             <require-permission>/permission/admin</require-permission>

@@ -135,13 +135,6 @@
                         </td>
                     </tr>
 
-                    </tbody>
-                </table>
-
-
-                <table class="normal-nopadding">
-                    <tbody>
-
                     <tr>
                         <td class="buttonRow" colspan="2">
                             <input type="button" value="<fmt:message key="hive.connect"/>"

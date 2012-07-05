@@ -77,34 +77,18 @@
 
 %>
 <div id="returnedResults">
-    <table class="allResult">
-        <tbody>
 
         <% if (null != results) {
             for (QueryResult result : results) {
         %>
-        <tr>
-            <td>
-                <hr color="#E66C2C"/>
-            </td>
-        </tr>
-        <tr>
-            <td><b><font color="#8a2be2">Query: <%=result.getQuery()%>
-            </font></b>
-            </td>
-        </tr>
+
+                Query: <span class="queryView"><%=result.getQuery()%></span>
         <%
             QueryResultRow[] rows = result.getResultRows();
             if (null != rows && rows.length > 0) {
                 String[] columnNames = result.getColumnNames();
         %>
-        <tr>
-            <td>
-                <b><font color="#006400"> Results: </font></b>
-            </td>
-        </tr>
-        <tr>
-            <td>
+               <b>Results:
                 <table class="result">
                     <tbody>
 
@@ -136,57 +120,33 @@
                         <% }
                         %>
                     </tr>
-
                     <%
                         }
                     %>
                     </tbody>
-                </table>
-            </td>
-        </tr>
-        <tr>
-            <td>OK</td>
-        </tr>
+                    </table>
+                    <br />
+                    <br />
+                    <span class="queryInfo"><%=rows.length%> rows returned.</span><br />
         <% } else {
         %>
-        <tr>
-            <td><b><font color="#006400">Nothing to Display</font></b></td>
-        </tr>
-        <tr>
-            <td>OK</td>
-        </tr>
+                    <br />
+                    <br />
+        <span class="queryInfo">Query Executed</span>
+                    <br />
         <%
-                }
+                }  %><hr color="#888888"/>
+                    <%
             }
-        } else {
-        %>
-        <tr>
-            <td><b><font color="#006400">Nothing to Display</font></b></td>
-        </tr>
-
-        <%
             }
         %>
-
-        </tbody>
-    </table>
 </div>
 <%
-} catch (Exception e) {
-%>
+    }catch (Exception e){
+        %>
 <div id="returnedResults">
-    <table class="allResult">
-        <tbody>
-        <tr>
-            <td><b><font color="red">ERROR:</font></b></td>
-        </tr>
-        <tr>
-            <td><%=e.getMessage()%>
-            </td>
-        </tr>
-        </tbody>
-    </table>
+    <span class="errorView"> <b>ERROR: </b><%=e.getMessage()%> </span>
 </div>
 
-<% }
+<%   }
 %>

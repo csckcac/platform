@@ -25,6 +25,9 @@
 <%@ taglib uri="http://wso2.org/projects/carbon/taglibs/carbontags.jar" prefix="carbon" %>
 
 <fmt:bundle basename="org.wso2.carbon.analytics.hive.ui.i18n.Resources">
+    <carbon:breadcrumb label="hive.listScripts"
+                       resourceBundle="org.wso2.carbon.analytics.hive.ui.i18n.Resources"
+                       topPage="false" request="<%=request%>"/>
     <script type="text/javascript">
         function deleteRow(name, msg) {
     CARBON.showConfirmationDialog(msg + "' " + name + " ' ?", function() {
@@ -60,9 +63,10 @@
                 <table class="styledLeft">
                     <thead>
                     <tr>
-                        <th colspan="4"><span style="float: left; position: relative; margin-top: 2px;">
+                        <th style="width:200px"><span style="float: left; position: relative; margin-top: 2px;">
                             <fmt:message key="analytic.scripts"/></span>
                         </th>
+                        <th>Actions</th>
                     </tr>
                     </thead>
                     <tbody>
@@ -71,15 +75,16 @@
                         for (String aName : scriptNames) {
                     %>
                     <tr>
-                        <td width="40%"> <label>
+                        <td> <label>
                             <%=aName%>
                             </label>
                         </td>
-                        <td width="20%"><a href="../hive-explorer/hiveexplorer.jsp?mode=edit&scriptName=<%=aName%>"><img src="../hive-explorer/images/reports.png">Edit</a>
-                        </td>
-                        <td width="20%"><a href="../hive-explorer/execute.jsp?scriptName=<%=aName%>"><img src="../hive-explorer/images/reports.png">Execute</a>
-                        </td>
-                        <td width="20%">
+                        <td>
+                            <a class="icon-link" style="background: url('../hive-explorer/images/edit.gif') no-repeat;"
+                               href="../hive-explorer/hiveexplorer.jsp?mode=edit&scriptName=<%=aName%>">Edit</a>
+                        <a class="icon-link" href="../hive-explorer/execute.jsp?scriptName=<%=aName%>"
+                           style="background: url('../hive-explorer/images/execute.gif') no-repeat;">
+                            Execute</a>
                         <a onclick="deleteRow('<%=aName%>','Do you want to delete')"
                                class="delete-icon-link" href="#">Delete</a>
                         </td>
@@ -89,7 +94,7 @@
                         }
                         }else { %>
                     <tr>
-                        <td><b>No scripts found.</b></td>
+                        <td colspan="2">No scripts found.</td>
                     </tr>
 
                        <% }

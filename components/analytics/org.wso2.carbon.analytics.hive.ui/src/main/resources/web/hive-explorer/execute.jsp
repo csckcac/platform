@@ -29,7 +29,7 @@
 <fmt:bundle basename="org.wso2.carbon.analytics.hive.ui.i18n.Resources">
     <script src="../editarea/edit_area_full.js" type="text/javascript"></script>
     <script type="text/javascript" src="../ajax/js/prototype.js"></script>
-
+    <link rel="stylesheet" type="text/css" href="css/hive-explorer-styles.css">
 
     <%
         String scriptName = "";
@@ -91,7 +91,11 @@
         }
 
         function openProgressBar() {
-          var content = '<div id="overlay"><div id="box_frame"><div id="closebox"><a href="#" id="msgClose" title="Close" onclick="closeProgrsssBar();">x</a></div><div id="box">Executing Hive Queries...<br/><img src="images/executing.gif"/></div></div></div>';
+          var content = '<div id="overlay"><div id="box"><div class="ui-dialog-title-bar">'+
+                  'Executing Hive Queries<a href="#" title="Close" class="ui-dialog-titlebar-close" onclick="closeProgrsssBar();">'+
+                    '<span style="display: none">x</span></a>'+
+                  '</div><div class="dialog-content"><img src="../resources/images/ajax-loader.gif" />'+
+                  ' Executing Hive Queries...</div></div></div>';
         document.getElementById('dynamic').innerHTML = content;
         }
 
@@ -101,71 +105,6 @@
 
     </script>
 
-
-    <style type="text/css">
-        .scrollable {
-            border: 1px solid black;
-            width: 85%;
-            height: 300px;
-            overflow-y: scroll;
-            overflow-x: auto; /*clip-rect:(20px, 500px, 600px, 20px );*/
-        }
-
-        table.result {
-            border-width: 2px;
-            border-style: solid;
-            border-color: maroon;
-            background-color: white;
-        }
-
-        table.allResult {
-            border-width: 1px;
-            border-style: solid;
-            border-color: white;
-            background-color: white;
-            width: 100%;
-        }
-
-        #overlay {
-            width: 100%;
-            height: 100%;
-            position: fixed;
-            top: 0;
-            left: 0;
-        }
-
-        #box_frame {
-            width: 100%;
-            position: fixed;
-            top: 50%;
-        }
-
-        #box {
-            width: 230px;
-            padding: 10px;
-            margin: auto;
-            background-color: white;
-            border: 1px solid #E799A3;
-        }
-
-        #closebox {
-            width: 250px;
-            padding: 0 0 0 0;
-            margin: auto;
-            background-color: transparent;
-        }
-
-        #msgClose {
-            float: right;
-            font-weight: bolder;
-            color: white;
-            background-color: #cd5c5c;
-            padding: 1px 1px 1px 1px;
-            margin-top: 0;
-            margin-right: 0;
-        }
-
-    </style>
 
 
     <div id="middle">

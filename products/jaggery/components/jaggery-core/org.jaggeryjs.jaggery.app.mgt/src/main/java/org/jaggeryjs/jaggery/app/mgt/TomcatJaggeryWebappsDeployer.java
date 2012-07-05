@@ -59,8 +59,9 @@ public class TomcatJaggeryWebappsDeployer extends TomcatGenericWebappsDeployer {
     public TomcatJaggeryWebappsDeployer(String webContextPrefix,
                                         int tenantId,
                                         String tenantDomain,
-                                        WebApplicationsHolder webappsHolder) {
-        super(webContextPrefix, tenantId, tenantDomain, webappsHolder);
+                                        WebApplicationsHolder webappsHolder,
+                                        ConfigurationContext configurationContext) {
+        super(webContextPrefix, tenantId, tenantDomain, webappsHolder, configurationContext);
     }
 
     /**

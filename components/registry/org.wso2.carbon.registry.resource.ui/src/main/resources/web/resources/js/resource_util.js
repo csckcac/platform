@@ -2075,31 +2075,33 @@ function deleteResource(pathToDelete, parentPath) {
                     refreshMetadataSection(parentPath);
                     refreshContentSection(parentPath);
 
-                    pathlength = parentPath.length;
-                    pathlength = pathlength-1;
-
-                    if ((pathToDelete.length - pathlength) > 25)
-                    {
-                        tempPath = pathToDelete.substring(pathlength,pathlength+25);
-                    }
-                    else
-                    {
-                        tempPath = pathToDelete.substring(pathlength);
-                    }
-
-                    if (document.getElementById(tempPath) == null)
-                    {
-                        removeAssociation(parentPath,pathToDelete,'depends','dependenciesDiv',1);
-                    }
-                    else
-                    {
-                        assoT = document.getElementById(tempPath).innerHTML;
-                        assoT = assoT.replace(/^\s+/,"");
-                        assoT = assoT.replace(/\s+$/,"");
-                        assoT = assoT.replace(" ","");
-                        assoT = assoT.replace("<br/>","");
-                        removeAssociation(parentPath,pathToDelete,assoT,'associationsDiv',1);
-                    }
+                    //Following code removed for fixing REGISTRY-968
+//
+//                    pathlength = parentPath.length;
+//                    pathlength = pathlength-1;
+//
+//                    if ((pathToDelete.length - pathlength) > 25)
+//                    {
+//                        tempPath = pathToDelete.substring(pathlength,pathlength+25);
+//                    }
+//                    else
+//                    {
+//                        tempPath = pathToDelete.substring(pathlength);
+//                    }
+//
+//                    if (document.getElementById(tempPath) == null)
+//                    {
+//                        removeAssociation(parentPath,pathToDelete,'depends','dependenciesDiv',1);
+//                    }
+//                    else
+//                    {
+//                        assoT = document.getElementById(tempPath).innerHTML;
+//                        assoT = assoT.replace(/^\s+/,"");
+//                        assoT = assoT.replace(/\s+$/,"");
+//                        assoT = assoT.replace(" ","");
+//                        assoT = assoT.replace("<br/>","");
+//                        removeAssociation(parentPath,pathToDelete,assoT,'associationsDiv',1);
+//                    }
                 },
 
                 onFailure: function(transport) {

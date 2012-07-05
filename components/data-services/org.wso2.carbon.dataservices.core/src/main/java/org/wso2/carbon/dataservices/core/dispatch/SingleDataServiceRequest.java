@@ -75,6 +75,8 @@ public class SingleDataServiceRequest extends DataServiceRequest {
 		try {
 			OMElement result = processSingleRequest();
 			if (inTx) {
+				/* build the result immediately, if we are in a transaction */
+				result.build();
 				/* signal the end of transaction, this wont necessarily commit the 
 			 	* transaction, it will be done by the external transaction creator */
 				dataService.endTransaction();

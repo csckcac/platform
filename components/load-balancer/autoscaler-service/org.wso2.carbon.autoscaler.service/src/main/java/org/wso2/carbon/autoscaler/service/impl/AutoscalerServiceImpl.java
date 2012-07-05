@@ -23,17 +23,14 @@ import java.io.IOException;
 import java.io.InputStream;
 import java.util.ArrayList;
 import java.util.Collections;
+import java.util.Comparator;
 import java.util.HashMap;
 import java.util.Iterator;
-import java.util.LinkedHashMap;
 import java.util.List;
-import java.util.ListIterator;
 import java.util.Map;
 import java.util.Set;
-import java.util.Map.Entry;
+import java.util.regex.Pattern;
 
-import org.apache.commons.lang.builder.EqualsBuilder;
-import org.apache.commons.lang.builder.HashCodeBuilder;
 import org.apache.commons.logging.Log;
 import org.apache.commons.logging.LogFactory;
 import org.apache.synapse.SynapseException;
@@ -49,10 +46,9 @@ import org.jclouds.compute.options.TemplateOptions;
 import org.jclouds.openstack.nova.v2_0.compute.options.NovaTemplateOptions;
 import org.wso2.carbon.autoscaler.service.IAutoscalerService;
 import org.wso2.carbon.autoscaler.service.jcloud.ComputeServiceBuilder;
-import org.wso2.carbon.autoscaler.service.util.IaaSProvider;
-import org.wso2.carbon.autoscaler.service.util.IaaSProviderComparator;
-import org.wso2.carbon.autoscaler.service.xml.AutoscalerConfigFileReader;
-import org.wso2.carbon.lb.common.persistence.AgentPersistenceManager;
+import org.wso2.carbon.autoscaler.service.util.IaasProvider;
+import org.wso2.carbon.autoscaler.service.util.IaasContext;
+import org.wso2.carbon.autoscaler.service.xml.ElasticScalerConfigFileReader;
 import org.wso2.carbon.utils.CarbonUtils;
 
 /**
@@ -62,11 +58,8 @@ import org.wso2.carbon.utils.CarbonUtils;
  */
 public class AutoscalerServiceImpl implements IAutoscalerService {
 
-    AgentPersistenceManager agentPersistenceManager =
-        AgentPersistenceManager.getPersistenceManager();
-
     private static final Log log = LogFactory.getLog(AutoscalerServiceImpl.class);
-    
+
     /**
      * pointer to Carbon Home directory.
      */
@@ -75,70 +68,53 @@ public class AutoscalerServiceImpl implements IAutoscalerService {
     /**
      * List of all IaaSProviders specified in the config file.
      */
-    private List<IaaSProvider> iaasProviders;
+    private List<IaasProvider> iaasProviders;
 
     /**
      * List of all ServiceTemplate objects.
      */
-    private List<org.wso2.carbon.autoscaler.service.util.ServiceTemplate> temps;
+    private List<org.wso2.carbon.autoscaler.service.util.ServiceTemplate> serviceTemps;
 
     /**
      * We keep an enum which contains all supported IaaSes.
      */
-    private enum iaases {
-        ec2, lxc
+    public enum iaases {
+        ec2, openstack
     };
 
     /**
-     * Scale up order of IaaSes.
+     * List which keeps <code>IaasContext</code> objects. TODO this should be persisted.
      */
-    private List<Enum<iaases>> scaleUpOrder = new ArrayList<Enum<iaases>>();
+    private List<IaasContext> iaasContextList = new ArrayList<IaasContext>();
 
     /**
-     * Scale down order of IaaSes.
+     * We keep track of the lastly built IaasContext object. TODO this should be persisted.
      */
-    private List<Enum<iaases>> scaleDownOrder = new ArrayList<Enum<iaases>>();
-
-    /**
-     * We need this map to find the respective node Id assigned by JClouds for each
-     * spawned instance.
-     */
-    private Map<String, String> nodeIdToDomainMap = new HashMap<String, String>();
-
-    /**
-     * List which keeps Iaas objects
-     */
-    private List<Iaas> iaasEntities = new ArrayList<Iaas>();
-
-    /**
-     * We keep track of the lastly built Iaas object.
-     */
-    private Map<String, Iaas> domainToLastlyBuiltIaasMap = new HashMap<String, Iaas>();
+    private Map<String, IaasContext> domainToLastlyBuiltIaasContextMap = new HashMap<String, IaasContext>();
 
     @Override
     public boolean initAutoscaler(boolean isSpi) {
 
         // load configuration file
-        AutoscalerConfigFileReader configReader = new AutoscalerConfigFileReader();
+        ElasticScalerConfigFileReader configReader = new ElasticScalerConfigFileReader();
 
         // from config file, we grab the details unique to IaaS providers.
         iaasProviders = configReader.getIaasProvidersList();
 
         // from config file, we grab the details related to each service domain.
-        temps = configReader.getTemplates();
+        serviceTemps = configReader.getTemplates();
 
         // we iterate through each IaaSProvider which is loaded from the config file.
-        for (IaaSProvider iaas : iaasProviders) {
+        for (IaasProvider iaas : iaasProviders) {
 
             // build the JClouds specific ComputeService object
             ComputeService computeService = ComputeServiceBuilder.buildComputeService(iaas);
 
             // build JClouds Template objects according to different IaaSes
-            if (iaas.getName().equalsIgnoreCase(iaases.ec2.toString())) {
+            if (iaas.getType().equalsIgnoreCase(iaases.ec2.toString())) {
 
                 // add to the compute service map
-                // computeServiceMap.put(iaases.ec2, computeService);
-                Iaas entity = new Iaas(iaases.ec2, computeService);
+                IaasContext entity = new IaasContext(iaases.ec2, computeService);
 
                 // we should build the templates only if this is not SPI stuff
                 if (!isSpi) {
@@ -146,15 +122,13 @@ public class AutoscalerServiceImpl implements IAutoscalerService {
                     buildEC2Templates(entity, iaas.getTemplate(), isSpi);
 
                 } else {
-
                     // add to data structure
-                    iaasEntities.add(entity);
+                    iaasContextList.add(entity);
                 }
 
-            } else if (iaas.getName().equalsIgnoreCase(iaases.lxc.toString())) {
-                // computeServiceMap.put(iaases.lxc, computeService);
+            } else if (iaas.getType().equalsIgnoreCase(iaases.openstack.toString())) {
 
-                Iaas entity = new Iaas(iaases.lxc, computeService);
+                IaasContext entity = new IaasContext(iaases.openstack, computeService);
 
                 // we should build the templates only if this is not SPI stuff
                 if (!isSpi) {
@@ -162,13 +136,12 @@ public class AutoscalerServiceImpl implements IAutoscalerService {
                     buildLXCTemplates(entity, iaas.getTemplate(), isSpi);
 
                 } else {
-
                     // add to data structure
-                    iaasEntities.add(entity);
+                    iaasContextList.add(entity);
                 }
 
             } else {
-                throw new RuntimeException("Unsupported IaaS! " + iaas.getName());
+                throw new RuntimeException("Unsupported IaaS! " + iaas.getType());
             }
         }
 
@@ -181,72 +154,57 @@ public class AutoscalerServiceImpl implements IAutoscalerService {
         return true;
     }
 
-    
-
     @Override
     public boolean startInstance(String domainName) {
 
-        // FIXME the instanceId param can be removed, given that we pass domain to terminate method!
-
         ComputeService computeService;
         Template template;
-        // List<Template> templates;
 
         log.info("Starting new instance of domain : " + domainName);
 
-        // traverse through scale up order
-        for (Enum<iaases> iaas : scaleUpOrder) {
+        // sort the IaasContext entities according to scale up order
+        Collections.sort(iaasContextList,
+                         IaasContextComparator.ascending(IaasContextComparator.getComparator(IaasContextComparator.SCALE_UP_SORT)));
 
-            // find the matching data holder
-            Iaas iaasTemp = findIaas(iaas);
-
-            if (iaasTemp == null) {
-                log.warn("Failed to start an instance in " + iaas + "" +
-                    ". Hence, will try to start in another IaaS if available.");
-                continue;
-            }
+        // traverse through IaasContext object instances in scale up order
+        for (IaasContext iaasCtxt : iaasContextList) {
 
             // get the ComputeService
-            computeService = iaasTemp.getComputeService();// computeServiceMap.get(iaas);
-
-            // get the list of Templates for this IaaS
-            // templates = templatesMap.get(iaas);
+            computeService = iaasCtxt.getComputeService();
 
             // from the list grab the Template corresponds to this domain
-            template = iaasTemp.getTemplate(domainName);// templates.get(domainsMap.get(iaas).indexOf(domainName));
+            template = iaasCtxt.getTemplate(domainName);
 
             // generate the group id from domain name, by replacing "." with a "-"
             String group = domainName.contains(".") ? domainName.replace('.', '-') : domainName;
 
             try {
                 // create and start a node
-                Set<? extends NodeMetadata> nodes =
-                    computeService.createNodesInGroup(group, 1, template);
+                Set<? extends NodeMetadata> nodes = computeService.createNodesInGroup(group,
+                                                                                      1,
+                                                                                      template);
 
                 NodeMetadata node = nodes.iterator().next();
 
-                // get the id of the started node
-                // String id = node.getId();
-
                 // add the details of the started node to maps
-                iaasTemp.addNode(node, domainName);
-                replaceIaas(iaasTemp);
-                domainToLastlyBuiltIaasMap.put(domainName, iaasTemp);
-                // nodeIdsMap.put(iaasTemp, id);
-                // nodeIdToDomainMap.put(id, domainName);
-                // addToIaasToNodeIdsMap(iaas, id);
+                iaasCtxt.addNode(node, domainName);
+                replaceIaasContext(iaasCtxt);
+                domainToLastlyBuiltIaasContextMap.put(domainName, iaasCtxt);
 
-                // FIXME remove later
-                log.info("*************** getProviderId = " + node.getProviderId());
-                log.info("*************** getType = " + node.getType().toString());
+                if (log.isDebugEnabled()) {
+                    log.debug("*************** Node details: \n" + node.toString() +
+                              "\n***************\n");
+                }
 
             } catch (RunNodesException e) {
-                log.warn("Failed to start an instance in " + iaas + "" +
-                    ". Hence, will try to start in another IaaS if available.", e);
+                log.warn("Failed to start an instance in " + iaasCtxt.getName().toString() +
+                         "" +
+                         ". Hence, will try to start in another IaaS if available.", e);
                 continue;
             }
 
-            log.info("Done.... Started...");
+            log.info("Node is successfully starting up in IaaS " + iaasCtxt.getName().toString() +
+                     " ...");
             return true;
         }
 
@@ -257,22 +215,22 @@ public class AutoscalerServiceImpl implements IAutoscalerService {
     @Override
     public String startSpiInstance(String domainName, String imageId) {
 
-        Iaas entry;
+        IaasContext entry;
         Enum<iaases> iaas;
 
         // FIXME: Build the Templates, for now we're doing a hack here. I don't know whether
         // there's a proper fix.
-        if (imageId.startsWith("nova") && ((entry = findIaas(iaases.lxc)) != null)) {
-            iaas = iaases.lxc;
+        if (imageId.startsWith("nova") && ((entry = findIaasContext(iaases.openstack)) != null)) {
+            iaas = iaases.openstack;
             buildLXCTemplates(entry, imageId, true);
-        } else if (((entry = findIaas(iaases.ec2)) != null)) {
+        } else if (((entry = findIaasContext(iaases.ec2)) != null)) {
             iaas = iaases.ec2;
             buildEC2Templates(entry, imageId, true);
         } else {
             throw new RuntimeException("Invalid image id!!");
         }
 
-        NodeMetadata node = findIaas(iaas).getLastMatchingNode(domainName);
+        NodeMetadata node = findIaasContext(iaas).getLastMatchingNode(domainName);
 
         if (startInstance(domainName) && node != null && node.getPublicAddresses().size() > 0) {
             return node.getPublicAddresses().iterator().next();
@@ -285,53 +243,36 @@ public class AutoscalerServiceImpl implements IAutoscalerService {
     @Override
     public boolean terminateInstance(String domainName) {
 
+        log.info("Starting to terminate an instance of domain : " + domainName);
+
+        // sort the IaasContext entities according to scale down order.
+        Collections.sort(iaasContextList,
+                         IaasContextComparator.ascending(IaasContextComparator.getComparator(IaasContextComparator.SCALE_DOWN_SORT)));
+
         // traverse in scale down order
-        for (Enum<iaases> iaas : scaleDownOrder) {
+        for (IaasContext iaasTemp : iaasContextList) {
 
-            String msg =
-                "Failed to terminate an instance in " + iaas.toString() + "" +
-                    ". Hence, will try to terminate an instance in another IaaS if possible.";
-
-            // find the matching data holder
-            Iaas iaasTemp = findIaas(iaas);
-
-            if (iaasTemp == null) {
-                log.warn(msg + " : Reason- Iaas' data cannot be located!");
-                continue;
-            }
+            String msg = "Failed to terminate an instance in " + iaasTemp.getName().toString() +
+                         "" +
+                         ". Hence, will try to terminate an instance in another IaaS if possible.";
 
             // grab the first node maps with the given domain
             NodeMetadata node = iaasTemp.getFirstMatchingNode(domainName);
 
             if (node == null) {
-                log.warn(msg + " : Reason- No matching instance found for domain '" + domainName +
-                    "'.");
+                log.warn(msg + " : Reason- No matching instance found for domain '" +
+                         domainName +
+                         "'.");
                 continue;
             }
 
             // terminate it!
             terminate(iaasTemp, node);
 
+            log.info("A termination request has successfully sent to terminate node : " + node.getId());
+
             return true;
 
-            // if (iaasToNodeIdsMap.containsKey(iaas) && computeServiceMap.containsKey(iaas)) {
-            // // find a node which is spawned in this IaaS
-            // for (String nodeId : iaasToNodeIdsMap.get(iaas)) {
-            //
-            // // if it matches the correct domain
-            // if (domainName.equals(nodeIdToDomainMap.get(nodeId))) {
-            // // found the correct node to destroy
-            // computeServiceMap.get(iaas).destroyNode(nodeId);
-            //
-            // // remove from the maps
-            // nodeIdToDomainMap.remove(nodeId);
-            // iaasToNodeIdsMap.get(iaas).remove(nodeId);
-            //
-            // log.info("******** Terminated! Node Id: " + nodeId);
-            // return true;
-            // }
-            // }
-            // }
         }
 
         return false;
@@ -341,12 +282,11 @@ public class AutoscalerServiceImpl implements IAutoscalerService {
     @Override
     public boolean terminateLastlySpawnedInstance(String domainName) {
 
-        if (domainToLastlyBuiltIaasMap.containsKey(domainName)) {
-            Iaas iaasTemp = domainToLastlyBuiltIaasMap.get(domainName);
+        if (domainToLastlyBuiltIaasContextMap.containsKey(domainName)) {
+            IaasContext iaasTemp = domainToLastlyBuiltIaasContextMap.get(domainName);
 
-            String msg =
-                "Failed to terminate the lastly spawned instance of '" + domainName +
-                    "' service domain.";
+            String msg = "Failed to terminate the lastly spawned instance of '" + domainName +
+                         "' service domain.";
 
             if (iaasTemp == null) {
                 log.error(msg + " : Reason- Iaas' data cannot be located!");
@@ -357,8 +297,9 @@ public class AutoscalerServiceImpl implements IAutoscalerService {
             NodeMetadata node = iaasTemp.getLastMatchingNode(domainName);
 
             if (node == null) {
-                log.error(msg + " : Reason- No matching instance found for domain '" + domainName +
-                    "'.");
+                log.error(msg + " : Reason- No matching instance found for domain '" +
+                          domainName +
+                          "'.");
                 return false;
             }
 
@@ -375,27 +316,24 @@ public class AutoscalerServiceImpl implements IAutoscalerService {
     @Override
     public boolean terminateSpiInstance(String publicIp) {
 
+        // sort the IaasContext entities according to scale down order.
+        Collections.sort(iaasContextList,
+                         IaasContextComparator.ascending(IaasContextComparator.getComparator(IaasContextComparator.SCALE_DOWN_SORT)));
+
         // traverse in scale down order
-        for (Enum<iaases> iaas : scaleDownOrder) {
+        for (IaasContext iaasTemp : iaasContextList) {
 
-            String msg =
-                "Failed to terminate an instance in " + iaas.toString() + "" +
-                    ". Hence, will try to terminate an instance in another IaaS if possible.";
-
-            // find the matching data holder
-            Iaas iaasTemp = findIaas(iaas);
-
-            if (iaasTemp == null) {
-                log.warn(msg + " : Reason- Iaas' data cannot be located!");
-                continue;
-            }
+            String msg = "Failed to terminate an instance in " + iaasTemp.getName().toString() +
+                         "" +
+                         ". Hence, will try to terminate an instance in another IaaS if possible.";
 
             // grab the node maps with the given public IP address
             NodeMetadata node = iaasTemp.getNodeWithPublicIp(publicIp);
 
             if (node == null) {
-                log.warn(msg + " : Reason- No matching instance found for public ip '" + publicIp +
-                    "'.");
+                log.warn(msg + " : Reason- No matching instance found for public ip '" +
+                         publicIp +
+                         "'.");
                 continue;
             }
 
@@ -407,7 +345,7 @@ public class AutoscalerServiceImpl implements IAutoscalerService {
         return false;
     }
 
-    private void terminate(Iaas iaasTemp, NodeMetadata node) {
+    private void terminate(IaasContext iaasTemp, NodeMetadata node) {
         // gets the node id
         String nodeId = node.getId();
 
@@ -417,10 +355,10 @@ public class AutoscalerServiceImpl implements IAutoscalerService {
         // remove the reference to the node from the data structure.
         iaasTemp.removeNode(node);
 
-        // replace this Iaas instance, as it reflects the new changes.
-        replaceIaas(iaasTemp);
+        // replace this IaasContext instance, as it reflects the new changes.
+        replaceIaasContext(iaasTemp);
 
-        log.info("******** Terminated! Node Id: " + nodeId);
+        log.info("Node with Id: " + nodeId + " is terminated!");
     }
 
     @Override
@@ -428,7 +366,7 @@ public class AutoscalerServiceImpl implements IAutoscalerService {
 
         int pendingInstanceCount = 0;
 
-        for (Iaas entry : iaasEntities) {
+        for (IaasContext entry : iaasContextList) {
 
             ComputeService computeService = entry.getComputeService();
 
@@ -441,8 +379,7 @@ public class AutoscalerServiceImpl implements IAutoscalerService {
 
             // traverse through all nodes of this ComputeService object
             while (iterator.hasNext()) {
-                org.jclouds.compute.domain.internal.NodeMetadataImpl nodeMetadata =
-                    (org.jclouds.compute.domain.internal.NodeMetadataImpl) iterator.next();
+                org.jclouds.compute.domain.internal.NodeMetadataImpl nodeMetadata = (org.jclouds.compute.domain.internal.NodeMetadataImpl) iterator.next();
 
                 // if this node belongs to the requested domain
                 if (nodeIds.contains(nodeMetadata.getId())) {
@@ -458,44 +395,15 @@ public class AutoscalerServiceImpl implements IAutoscalerService {
             }
         }
 
-        // // get list of node Ids which are belong to the requested domain
-        // List<String> nodeIds = getNodeIds(domainName);
-        //
-        // // traverse through all compute service objects in the map
-        // for (ComputeService computeService : computeServiceMap.values()) {
-        //
-        // Set<? extends ComputeMetadata> set = computeService.listNodes();
-        //
-        // Iterator<? extends ComputeMetadata> iterator = set.iterator();
-        //
-        // // traverse through all nodes of this ComputeService object
-        // while (iterator.hasNext()) {
-        // org.jclouds.compute.domain.internal.NodeMetadataImpl nodeMetadata =
-        // (org.jclouds.compute.domain.internal.NodeMetadataImpl) iterator.next();
-        //
-        // // if this node belongs to the requested domain
-        // if (nodeIds.contains(nodeMetadata.getId())) {
-        // // org.jclouds.compute.domain. nodeState = nodeMetadata.gets.getState();
-        // Status nodeStatus = nodeMetadata.getStatus();
-        //
-        // // count nodes that are in pending state
-        // if (nodeStatus.toString().equalsIgnoreCase("PENDING")) {
-        // pendingInstanceCount++;
-        // }
-        // }
-        //
-        // }
-        // }
-
-        log.info("*********** pending instance count " + pendingInstanceCount);
+        log.info("Pending instance count of domain '" + domainName + "' is " + pendingInstanceCount);
 
         return pendingInstanceCount;
 
     }
 
-    private Iaas findIaas(Enum<iaases> iaas) {
+    private IaasContext findIaasContext(Enum<iaases> iaas) {
 
-        for (Iaas entry : iaasEntities) {
+        for (IaasContext entry : iaasContextList) {
             if (entry.getName().equals(iaas)) {
                 return entry;
             }
@@ -504,93 +412,39 @@ public class AutoscalerServiceImpl implements IAutoscalerService {
         return null;
     }
 
-    // private List<String> getNodeIds(String domainName) {
-    //
-    // List<String> nodeIds = new ArrayList<String>();
-    //
-    // // traverse through all the entries
-    // for (Entry<String, String> entry : nodeIdToDomainMap.entrySet()) {
-    // // find entries with matching domain name
-    // if (entry.getValue().equals(domainName)) {
-    // // add them to the list
-    // nodeIds.add(entry.getKey());
-    // }
-    // }
-    //
-    // return nodeIds;
-    // }
+    private IaasContext findIaasContext(String iaasId) {
 
-    // private void addToIaasToNodeIdsMap(Enum<iaases> iaas, String id) {
-    //
-    // List<String> nodeIds;
-    //
-    // if (iaasToNodeIdsMap.containsKey(iaas)) {
-    // nodeIds = iaasToNodeIdsMap.get(iaas);
-    // } else {
-    // nodeIds = new ArrayList<String>();
-    // }
-    //
-    // nodeIds.add(id);
-    // iaasToNodeIdsMap.put(iaas, nodeIds);
-    // }
+        for (IaasContext entry : iaasContextList) {
+            if (entry.getName().toString().equals(iaasId)) {
+                return entry;
+            }
+        }
 
-    // private void addToTemplatesMap(iaases key, Template temp) {
-    //
-    // List<Template> tempList;
-    //
-    // if (!templatesMap.containsKey(key)) {
-    // tempList = new ArrayList<Template>();
-    //
-    // } else {
-    // tempList = templatesMap.get(key);
-    // }
-    //
-    // tempList.add(temp);
-    //
-    // templatesMap.put(key, tempList);
-    //
-    // }
-    //
-    // private void addToDomainsMap(iaases key, String domain) {
-    //
-    // List<String> domainList;
-    //
-    // if (!domainsMap.containsKey(key)) {
-    // domainList = new ArrayList<String>();
-    //
-    // } else {
-    // domainList = domainsMap.get(key);
-    // }
-    //
-    // if (!domainList.contains(domain)) {
-    // domainList.add(domain);
-    // }
-    //
-    // domainsMap.put(key, domainList);
-    //
-    // }
+        return null;
+    }
 
     private void fillInScaleDownOrder() {
-        Collections.sort(iaasProviders,
-                         IaaSProviderComparator.ascending(IaaSProviderComparator.getComparator(IaaSProviderComparator.SCALE_DOWN_SORT)));
 
-        for (IaaSProvider iaas : iaasProviders) {
-            scaleDownOrder.add(iaases.valueOf(iaas.getName()));
+        for (IaasProvider iaas : iaasProviders) {
+            if (findIaasContext(iaas.getType()) != null) {
+                findIaasContext(iaas.getType()).setScaleDownOrder(iaas.getScaleDownOrder());
+            }
         }
+
     }
 
     private void fillInScaleUpOrder() {
 
-        Collections.sort(iaasProviders,
-                         IaaSProviderComparator.ascending(IaaSProviderComparator.getComparator(IaaSProviderComparator.SCALE_UP_SORT)));
-
-        for (IaaSProvider iaas : iaasProviders) {
-            scaleUpOrder.add(iaases.valueOf(iaas.getName()));
+        for (IaasProvider iaas : iaasProviders) {
+            if (findIaasContext(iaas.getType()) != null) {
+                findIaasContext(iaas.getType()).setScaleUpOrder(iaas.getScaleUpOrder());
+            }
         }
+
     }
 
     public byte[] getUserData(String payloadFileName) {
-        // String userData = null;
+
         byte[] bytes = null;
         try {
             File file = new File(payloadFileName);
@@ -645,8 +499,7 @@ public class AutoscalerServiceImpl implements IAutoscalerService {
             // Read in the bytes
             int offset = 0;
             int numRead;
-            while (offset < bytes.length &&
-                (numRead = is.read(bytes, offset, bytes.length - offset)) >= 0) {
+            while (offset < bytes.length && (numRead = is.read(bytes, offset, bytes.length - offset)) >= 0) {
                 offset += numRead;
             }
 
@@ -686,115 +539,40 @@ public class AutoscalerServiceImpl implements IAutoscalerService {
         throw new SynapseException(msg, e);
     }
 
-    /**
-     * This object holds all IaaS related runtime data.
-     */
-    private class Iaas {
-        // name of the IaaS
-        private Enum<iaases> name;
-        Map<String, Template> domainToTemplateMap = new HashMap<String, Template>();
-        ComputeService computeService;
-        Map<NodeMetadata, String> nodeToDomainMap = new LinkedHashMap<NodeMetadata, String>();
+    public enum IaasContextComparator implements Comparator<IaasContext> {
+        SCALE_UP_SORT {
+            public int compare(IaasContext o1, IaasContext o2) {
+                return Integer.valueOf(o1.getScaleUpOrder()).compareTo(o2.getScaleUpOrder());
+            }
+        },
+        SCALE_DOWN_SORT {
+            public int compare(IaasContext o1, IaasContext o2) {
+                return Integer.valueOf(o1.getScaleDownOrder()).compareTo(o2.getScaleDownOrder());
+            }
+        };
 
-        public Iaas(Enum<iaases> name, ComputeService computeService) {
-            this.name = name;
-            this.computeService = computeService;
-        }
-
-        public Enum<iaases> getName() {
-            return name;
-        }
-
-        // public void setName(Enum<iaases> name) {
-        // this.name = name;
-        // }
-        //
-        public void addToDomainToTemplateMap(String key, Template value) {
-            domainToTemplateMap.put(key, value);
-        }
-
-        public Template getTemplate(String key) {
-            return domainToTemplateMap.get(key);
-        }
-
-        public ComputeService getComputeService() {
-            return computeService;
-        }
-
-        public void addNode(NodeMetadata node, String domain) {
-            nodeToDomainMap.put(node, domain);
-        }
-
-        public NodeMetadata getLastMatchingNode(String domain) {
-            ListIterator<Map.Entry<NodeMetadata, String>> iter =
-                new ArrayList(nodeToDomainMap.entrySet()).listIterator(nodeToDomainMap.size());
-
-            while (iter.hasPrevious()) {
-                Map.Entry<NodeMetadata, String> entry = iter.previous();
-                if (entry.getValue().equals(domain)) {
-                    return entry.getKey();
+        public static Comparator<IaasContext> ascending(final Comparator<IaasContext> other) {
+            return new Comparator<IaasContext>() {
+                public int compare(IaasContext o1, IaasContext o2) {
+                    return other.compare(o1, o2);
                 }
-            }
-
-            // for (Entry<NodeMetadata, String> entry : nodeToDomainMap.entrySet()) {
-            // if(entry.getValue().equals(domain)){
-            // return entry.getKey();
-            // }
-            // }
-            return null;
+            };
         }
 
-        public NodeMetadata getFirstMatchingNode(String domain) {
-            for (Entry<NodeMetadata, String> entry : nodeToDomainMap.entrySet()) {
-                if (entry.getValue().equals(domain)) {
-                    return entry.getKey();
+        public static Comparator<IaasContext>
+                getComparator(final IaasContextComparator... multipleOptions) {
+            return new Comparator<IaasContext>() {
+                public int compare(IaasContext o1, IaasContext o2) {
+                    for (IaasContextComparator option : multipleOptions) {
+                        int result = option.compare(o1, o2);
+                        if (result != 0) {
+                            return result;
+                        }
+                    }
+                    return 0;
                 }
-            }
-            return null;
+            };
         }
-
-        public NodeMetadata getNodeWithPublicIp(String publicIp) {
-            for (NodeMetadata node : nodeToDomainMap.keySet()) {
-                if (node.getPublicAddresses().iterator().next().equals(publicIp)) {
-                    return node;
-                }
-            }
-
-            return null;
-        }
-
-        public List<String> getNodeIds(String domain) {
-
-            List<String> nodeIds = new ArrayList<String>();
-
-            for (Entry<NodeMetadata, String> entry : nodeToDomainMap.entrySet()) {
-                if (entry.getValue().equals(domain)) {
-                    nodeIds.add(entry.getKey().getId());
-                }
-            }
-
-            return nodeIds;
-        }
-
-        public void removeNode(NodeMetadata node) {
-            nodeIdToDomainMap.remove(node);
-        }
-
-        public boolean equals(Object obj) {
-
-            if (obj instanceof Iaas) {
-                return new EqualsBuilder().append(getName(), ((Iaas) obj).getName()).isEquals();
-            }
-            return false;
-
-        }
-        
-        public int hashCode() {
-            return new HashCodeBuilder(17, 31). // two randomly chosen prime numbers
-            append(name).
-            toHashCode();
-        }
-
     }
 
     /**
@@ -802,25 +580,24 @@ public class AutoscalerServiceImpl implements IAutoscalerService {
      * If not this will add the replacement value to the list.
      * 
      * @param replacement
-     *            Iaas entry to be added.
+     *            IaasContext entry to be added.
      */
-    private void replaceIaas(Iaas replacement) {
-        for (Iaas entry : iaasEntities) {
+    private void replaceIaasContext(IaasContext replacement) {
+        for (IaasContext entry : iaasContextList) {
             if (entry.equals(replacement)) {
-                int idx = iaasEntities.indexOf(entry);
-                iaasEntities.remove(idx);
-                iaasEntities.add(idx, replacement);
+                int idx = iaasContextList.indexOf(entry);
+                iaasContextList.remove(idx);
+                iaasContextList.add(idx, replacement);
                 return;
             }
         }
-        iaasEntities.add(replacement);
+        iaasContextList.add(replacement);
     }
-    
-    private void buildLXCTemplates(Iaas entity, String imageId, boolean blockUntilRunning) {
+
+    private void buildLXCTemplates(IaasContext entity, String imageId, boolean blockUntilRunning) {
 
         if (entity.getComputeService() == null) {
-            throw new RuntimeException("Compute service is null for IaaS provider: " +
-                entity.getName());
+            throw new RuntimeException("Compute service is null for IaaS provider: " + entity.getName());
         }
 
         TemplateBuilder templateBuilder = entity.getComputeService().templateBuilder();
@@ -828,43 +605,55 @@ public class AutoscalerServiceImpl implements IAutoscalerService {
 
         // to avoid creation of template objects in each and every time, we create all
         // at once!
-        for (org.wso2.carbon.autoscaler.service.util.ServiceTemplate temp : temps) {
+        for (org.wso2.carbon.autoscaler.service.util.ServiceTemplate temp : serviceTemps) {
 
-            // templateBuilder.hardwareId(temp.getProperty("instanceType"));
+            String instanceType;
+
+            // set instance type eg: 1. Openstack expects instance type to be a positive integer
+            if (((instanceType = temp.getProperty("instanceType." + iaases.openstack.toString())) != null) && (Pattern.matches("[0-9]+",
+                                                                                                                               instanceType))) {
+
+                templateBuilder.hardwareId(instanceType);
+            }
+
             Template template = templateBuilder.build();
 
             template.getOptions().as(TemplateOptions.class).blockUntilRunning(blockUntilRunning);
-            // template.getOptions().as(NovaTemplateOptions.class)
-            // .placementGroup(temp.getProperty("availabilityZone"));
 
-            template.getOptions().as(NovaTemplateOptions.class)
+            template.getOptions()
+                    .as(NovaTemplateOptions.class)
                     .securityGroupNames(temp.getProperty("securityGroups").split(","));
 
-            template.getOptions().as(NovaTemplateOptions.class).userData(
-             getUserData(carbonHome + File.separator + temp.getProperty("payload")));
+            if (temp.getProperty("payload") != null) {
+                template.getOptions()
+                        .as(NovaTemplateOptions.class)
+                        .userData(getUserData(carbonHome + File.separator +
+                                              temp.getProperty("payload")));
+            }
 
-            template.getOptions().as(NovaTemplateOptions.class)
+            template.getOptions()
+                    .as(NovaTemplateOptions.class)
                     .keyPairName(temp.getProperty("keyPair"));
 
-            // add to data structure
             // add to the data structure
             entity.addToDomainToTemplateMap(temp.getDomainName(), template);
 
-            // add to domains map
-            // addToDomainsMap(iaases.lxc, temp.getDomainName());
-
-            // adds to template map
-            // addToTemplatesMap(iaases.lxc, template);
         }
 
-        replaceIaas(entity);
+        replaceIaasContext(entity);
     }
 
-    private void buildEC2Templates(Iaas entity, String imageId, boolean blockUntilRunning) {
+    /**
+     * Builds EC2 Template object
+     * 
+     * @param entity
+     * @param imageId
+     * @param blockUntilRunning
+     */
+    private void buildEC2Templates(IaasContext entity, String imageId, boolean blockUntilRunning) {
 
         if (entity.getComputeService() == null) {
-            throw new RuntimeException("Compute service is null for IaaS provider: " +
-                entity.getName());
+            throw new RuntimeException("Compute service is null for IaaS provider: " + entity.getName());
         }
 
         TemplateBuilder templateBuilder = entity.getComputeService().templateBuilder();
@@ -874,10 +663,12 @@ public class AutoscalerServiceImpl implements IAutoscalerService {
 
         // to avoid creation of template objects in each and every time, we create all
         // at once! FIXME we could use caching and lazy loading
-        for (org.wso2.carbon.autoscaler.service.util.ServiceTemplate temp : temps) {
+        for (org.wso2.carbon.autoscaler.service.util.ServiceTemplate temp : serviceTemps) {
 
-            // set instance type eg: m1.large
-            templateBuilder.hardwareId(temp.getProperty("instanceType"));
+            if (temp.getProperty("instanceType." + iaases.ec2.toString()) != null) {
+                // set instance type eg: m1.large
+                templateBuilder.hardwareId(temp.getProperty("instanceType." + iaases.ec2.toString()));
+            }
 
             // build the Template
             Template template = templateBuilder.build();
@@ -886,29 +677,31 @@ public class AutoscalerServiceImpl implements IAutoscalerService {
             template.getOptions().as(TemplateOptions.class).blockUntilRunning(blockUntilRunning);
 
             // set EC2 specific options
-            template.getOptions().as(AWSEC2TemplateOptions.class)
+            template.getOptions()
+                    .as(AWSEC2TemplateOptions.class)
                     .placementGroup(temp.getProperty("availabilityZone"));
 
-            template.getOptions().as(AWSEC2TemplateOptions.class)
+            template.getOptions()
+                    .as(AWSEC2TemplateOptions.class)
                     .securityGroups(temp.getProperty("securityGroups").split(","));
 
-             template.getOptions().as(AWSEC2TemplateOptions.class).userData(
-             getUserData(carbonHome + File.separator + temp.getProperty("payload")));
+            if (temp.getProperty("payload") != null) {
+                template.getOptions()
+                        .as(AWSEC2TemplateOptions.class)
+                        .userData(getUserData(carbonHome + File.separator +
+                                              temp.getProperty("payload")));
+            }
 
-            template.getOptions().as(AWSEC2TemplateOptions.class)
+            template.getOptions()
+                    .as(AWSEC2TemplateOptions.class)
                     .keyPair(temp.getProperty("keyPair"));
 
             // add to the data structure
             entity.addToDomainToTemplateMap(temp.getDomainName(), template);
 
-            // // add to domains map
-            // addToDomainsMap(iaases.ec2, temp.getDomainName());
-            //
-            // // adds to template map
-            // addToTemplatesMap(iaases.ec2, template);
         }
 
-        replaceIaas(entity);
+        replaceIaasContext(entity);
 
     }
 

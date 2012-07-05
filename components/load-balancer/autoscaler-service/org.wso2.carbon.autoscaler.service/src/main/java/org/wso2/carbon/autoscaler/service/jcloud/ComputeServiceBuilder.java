@@ -26,7 +26,7 @@ import org.jclouds.compute.ComputeServiceContext;
 import org.jclouds.enterprise.config.EnterpriseConfigurationModule;
 import org.jclouds.logging.slf4j.config.SLF4JLoggingModule;
 import org.jclouds.sshj.config.SshjSshClientModule;
-import org.wso2.carbon.autoscaler.service.util.IaaSProvider;
+import org.wso2.carbon.autoscaler.service.util.IaasProvider;
 
 import com.google.common.collect.ImmutableSet;
 import com.google.inject.Module;
@@ -36,7 +36,7 @@ import com.google.inject.Module;
  */
 public class ComputeServiceBuilder {
     
-    public static ComputeService buildComputeService(IaaSProvider iaas) {
+    public static ComputeService buildComputeService(IaasProvider iaas) {
 
         Properties properties = new Properties();
 

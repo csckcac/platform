@@ -18,29 +18,29 @@
 package org.wso2.carbon.autoscaler.service.xml;
 
 import java.util.List;
-import org.wso2.carbon.autoscaler.service.util.IaaSProvider;
+import org.wso2.carbon.autoscaler.service.util.IaasProvider;
 import junit.framework.TestCase;
 
-public class AutoscalerConfigFileReaderTest extends TestCase {
+public class ElasticScalerConfigFileReaderTest extends TestCase {
 
     public void testGetIaasProvidersListy() throws Exception {
         
-        String file = "src/test/resources/autoscaler-config.xml";
-        AutoscalerConfigFileReader reader = new AutoscalerConfigFileReader(file);
+        String file = "src/test/resources/elastic-scaler-config.xml";
+        ElasticScalerConfigFileReader reader = new ElasticScalerConfigFileReader(file);
         
-        List<IaaSProvider> list =reader.getIaasProvidersList();
+        List<IaasProvider> list =reader.getIaasProvidersList();
         
         assertEquals(2, list.size());
         
-        assertEquals("ec2", list.get(0).getName());
+        assertEquals("ec2", list.get(0).getType());
         //assertEquals("cdcd", list.get(0).getIdentity());
         assertEquals(2, list.get(0).getScaleDownOrder());
         assertEquals(1, list.get(0).getScaleUpOrder());
-        assertEquals("a", list.get(0).getProperties().get("A"));
+        assertEquals("a", list.get(0).getProperties().get("A.x"));
         assertEquals("b", list.get(0).getProperties().get("B"));
         assertEquals(null, list.get(0).getProperties().get("AA"));
         
-        assertEquals("lxc", list.get(1).getName());
+        assertEquals("openstack", list.get(1).getType());
         //assertEquals("bebbe", list.get(1).getIdentity());
         assertEquals(1, list.get(1).getScaleDownOrder());
         assertEquals(2, list.get(1).getScaleUpOrder());

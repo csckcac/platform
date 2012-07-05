@@ -16,29 +16,29 @@
   ~ limitations under the License.
   -->
 
-<jcloudConfig xmlns:svns="http://org.wso2.securevault/configuration">
+<elasticScalerConfig xmlns:svns="http://org.wso2.securevault/configuration">
 
 <svns:secureVault provider="org.wso2.securevault.secret.handler.SecretManagerSecretCallbackHandler"/>
 	<iaasProviders>
-		<iaasProvider name="ec2">
+		<iaasProvider type="ec2" name="EC2 specific details">
 			<provider>aws-ec2</provider>
-			<identity svns:secretAlias="autoscaler.ec2.identity">cdcd</identity>
-			<credential svns:secretAlias="autoscaler.ec2.credential">cdccdc</credential>
+			<identity svns:secretAlias="elastic.scaler.ec2.identity">cdcd</identity>
+			<credential svns:secretAlias="elastic.scaler.ec2.credential">cdccdc</credential>
 			<scaleUpOrder>1</scaleUpOrder>
 			<scaleDownOrder>2</scaleDownOrder>
-			<property name="A" value="a"/>
+			<property name="A.x" value="a"/>
 			<property name="B" value="b"/>
-			<template>tempEC2</template>
+			<imageId>tempEC2</imageId>
 		</iaasProvider>
-		<iaasProvider name="lxc">
+		<iaasProvider type="openstack" >
 			<provider>lxc</provider>
-			<identity svns:secretAlias="autoscaler.openstack.identity">bebbe</identity>
-			<credential svns:secretAlias="autoscaler.openstack.credential">bebebe</credential>
+			<identity svns:secretAlias="elastic.scaler.openstack.identity">bebbe</identity>
+			<credential svns:secretAlias="elastic.scaler.openstack.credential">bebebe</credential>
 			<scaleUpOrder>2</scaleUpOrder>
 			<scaleDownOrder>1</scaleDownOrder>
 			<property name="X" value="x"/>
 			<property name="Y" value="y"/>
-			<template>tempLXC</template>
+			<imageId>tempLXC</imageId>
 		</iaasProvider>
 	</iaasProviders>
 	
@@ -46,7 +46,8 @@
 		<default>
 			<property name="availabilityZone" value="us-east-1c"/>
 			<property name="securityGroups" value="manager,cep,mb,default"/>
-            <property name="instanceType" value="m1.large"/>
+            <property name="instanceType.ec2" value="m1.large"/>
+            <property name="instanceType.openstack" value="1"/>
             <property name="minAppInstances" value="1"/>
             <property name="maxAppInstances" value="5"/>
             <property name="queueLengthPerNode" value="50"/>
@@ -62,4 +63,4 @@
 		</service>
 	</services>
 
-</jcloudConfig>
+</elasticScalerConfig>

@@ -18,7 +18,7 @@
 package org.wso2.carbon.autoscaler.service;
 
 /**
- * This Interface provides away for a component, to communicate with an underline
+ * This Interface provides a way for a component, to communicate with an underline
  * Infrastructure which are supported by <i>JClouds</i>.
  * 
  */
@@ -38,7 +38,9 @@ public interface IAutoscalerService {
     /**
      * Calling this method will result in an instance startup, which is belong
      * to the provided service domain. This method is non-blocking, means we do not
-     * wait till the instance is started up.
+     * wait till the instance is started up. Also note that the instance that is starting up
+     * belongs to the group whose name is derived from its service domain, replacing <i>.</i>
+     * by a hyphen (<i>-</i>). 
      * @param domainName service domain of the instance to be started up.
      * @return whether the starting up is successful or not.
      */

@@ -34,17 +34,18 @@ import org.w3c.dom.Element;
 import org.w3c.dom.Node;
 import org.w3c.dom.NodeList;
 import org.wso2.carbon.autoscaler.service.exception.MalformedConfigurationFileException;
-import org.wso2.carbon.autoscaler.service.util.IaaSProvider;
+import org.wso2.carbon.autoscaler.service.util.AutoscalerConstant;
+import org.wso2.carbon.autoscaler.service.util.IaasProvider;
 import org.wso2.carbon.autoscaler.service.util.ServiceTemplate;
 import org.wso2.carbon.utils.CarbonUtils;
 import org.wso2.securevault.SecretResolver;
 import org.wso2.securevault.SecretResolverFactory;
 
 /**
- * Responsible for reading the Autoscaler configuration file.
+ * Responsible for reading the Elastic scaler configuration file.
  * Following is a sample XML.
  *
- * &lt;autoscalerConfig&gt;
+ * &lt;elasticScalerConfig&gt;
  *      &lt;iaasProviders&gt;
  *          &lt;iaasProvider name="ec2"&gt;
  *              &lt;provider&gt;aws-ec2&lt;/provider&gt;
@@ -80,11 +81,11 @@ import org.wso2.securevault.SecretResolverFactory;
  *              $lt;property name="payload" value="resources/as.zip"/&gt;
  *          $lt;/service&gt;
  *      $lt;/services&gt;
- *  &lt;/autoscalerConfig&gt;
+ *  &lt;/elasticScalerConfig&gt;
  */
-public class AutoscalerConfigFileReader {
+public class ElasticScalerConfigFileReader {
 	
-	private static final Log log = LogFactory.getLog(AutoscalerConfigFileReader.class);
+	private static final Log log = LogFactory.getLog(ElasticScalerConfigFileReader.class);
 
 	//get the factory
 	private DocumentBuilderFactory dbf = DocumentBuilderFactory.newInstance();
@@ -92,22 +93,16 @@ public class AutoscalerConfigFileReader {
 	private Element docEle;
 
 	/**
-	 * Path to Autoscaler config XML file, which specifies the Iaas specific details.
+	 * Path to elastic-scaler-config XML file, which specifies the Iaas specific details and 
+	 * services related details.
 	 */
-	private String autoscalerConfigXMLFile;
+	private String elasticScalerConfigFile;
 	
-	/**
-	 * Secret Manager related aliases.
-	 */
-	private static final String EC2_IDENTITY_ALIAS = "autoscaler.ec2.identity";
-	private static final String EC2_CREDENTIAL_ALIAS = "autoscaler.ec2.credential";
-	private static final String OPENSTACK_IDENTITY_ALIAS = "autoscaler.openstack.identity";
-	private static final String OPENSTACK_CREDENTIAL_ALIAS = "autoscaler.openstack.credential";
 	
-	public AutoscalerConfigFileReader(){
+	public ElasticScalerConfigFileReader(){
 	    
-	    autoscalerConfigXMLFile = 
-	            CarbonUtils.getCarbonConfigDirPath() + File.separator + "autoscaler-config.xml";
+	    elasticScalerConfigFile = CarbonUtils.getCarbonConfigDirPath() +
+	            File.separator + "elastic-scaler-config.xml";
 	    
 		/**
 		 * Parse the configuration file.
@@ -117,17 +112,20 @@ public class AutoscalerConfigFileReader {
 			DocumentBuilder db = dbf.newDocumentBuilder();
 
 			//parse using builder to get DOM representation of the XML file
-			dom = db.parse(autoscalerConfigXMLFile);
+			dom = db.parse(elasticScalerConfigFile);
 			
 
 		}catch(Exception ex) {
-			String msg = "Error occurred while parsing the "+autoscalerConfigXMLFile+".";
-			log.error(msg, ex);
-			throw new MalformedConfigurationFileException(msg, ex);
+			String msg = "Error occurred while parsing the "+elasticScalerConfigFile+".";
+			handleException(msg, ex);
 		}
 	}
 	
-	public AutoscalerConfigFileReader(String file) {
+	/**
+	 * Constructor to be used in the test cases.
+	 * @param file path to elastic-scaler-config xml file.
+	 */
+	public ElasticScalerConfigFileReader(String file) {
         
         /**
          * Parse the configuration file.
@@ -142,8 +140,7 @@ public class AutoscalerConfigFileReader {
 
         }catch(Exception ex) {
             String msg = "Error occurred when parsing the "+file+".";
-            log.error(msg, ex);
-            throw new MalformedConfigurationFileException(msg, ex);
+            handleException(msg, ex);
         }
     }
 	
@@ -151,11 +148,11 @@ public class AutoscalerConfigFileReader {
 	 * Load all IaasProviders from the configuration file and returns a list.
 	 * @return a list of IaasProvider instances.
 	 */
-	public List<IaaSProvider> getIaasProvidersList() {
-	    List<IaaSProvider> iaasProviders = new ArrayList<IaaSProvider>();
+	public List<IaasProvider> getIaasProvidersList() {
+	    List<IaasProvider> iaasProviders = new ArrayList<IaasProvider>();
 	    
 	    docEle = dom.getDocumentElement();
-	    NodeList nl = docEle.getElementsByTagName("iaasProvider");
+	    NodeList nl = docEle.getElementsByTagName(AutoscalerConstant.IAAS_PROVIDER_ELEMENT);
 	    
 	    if (nl != null && nl.getLength() > 0) {
 	        
@@ -165,28 +162,33 @@ public class AutoscalerConfigFileReader {
 	        
 	    }
 	    else{
-	        String msg = "Essential 'iaasProvider' element cannot be found in "+autoscalerConfigXMLFile;
-	        log.error(msg);
-	        throw new MalformedConfigurationFileException(msg);
+	        String msg = "Essential '"+AutoscalerConstant.IAAS_PROVIDER_ELEMENT+"' element cannot" +
+	        		" be found in "+elasticScalerConfigFile;
+	        handleException(msg);
 	    }
 	    
 	    return iaasProviders;
 	    
     }
 
-    private IaaSProvider getIaasProvider(Node item) {
+    private IaasProvider getIaasProvider(Node item) {
 
-        IaaSProvider iaas = new IaaSProvider();
+        IaasProvider iaas = new IaasProvider();
         
         if (item.getNodeType() == Node.ELEMENT_NODE) {
             Element iaasElt = (Element) item;
-            iaas.setName(iaasElt.getAttribute("name"));
+            iaas.setType(iaasElt.getAttribute(AutoscalerConstant.IAAS_PROVIDER_TYPE_ATTR));
             
-            if("".equals(iaas.getName())){
-                String msg = "'iaasProvider' element's 'name' attribute should be specified!";
-                log.error(msg);
-                throw new MalformedConfigurationFileException(msg);
+            if("".equals(iaas.getType())){
+                String msg = "'"+AutoscalerConstant.IAAS_PROVIDER_ELEMENT+"' element's '"+
+            AutoscalerConstant.IAAS_PROVIDER_TYPE_ATTR+"' attribute should be specified!";
+                
+                handleException(msg);
+
             }
+            
+            // this is not mandatory
+            iaas.setName(iaasElt.getAttribute(AutoscalerConstant.IAAS_PROVIDER_NAME_ATTR));
             
             iaas.setProperties(loadProperties(iaasElt));
             loadTemplate(iaas, iaasElt);
@@ -200,7 +202,10 @@ public class AutoscalerConfigFileReader {
         return iaas;
     }
     
-    
+    /**
+     * Load all ServiceTemplates from the configuration file and returns a list.
+     * @return a list of ServiceTemplate instances.
+     */
     public List<ServiceTemplate> getTemplates() {
         
         List<ServiceTemplate> templates = new ArrayList<ServiceTemplate>();
@@ -209,7 +214,7 @@ public class AutoscalerConfigFileReader {
         ServiceTemplate template = new ServiceTemplate();
         
         Element docEle = dom.getDocumentElement();
-        NodeList nl = docEle.getElementsByTagName("default");
+        NodeList nl = docEle.getElementsByTagName(AutoscalerConstant.DEFAULT_SERVICE_ELEMENT);
         
         if (nl != null && nl.getLength() > 0) {
 
@@ -223,7 +228,7 @@ public class AutoscalerConfigFileReader {
         }
         
         // append / overwrite the default template object with values in each domain
-        nl = docEle.getElementsByTagName("service");
+        nl = docEle.getElementsByTagName(AutoscalerConstant.SERVICE_ELEMENT);
         
         if (nl != null && nl.getLength() > 0) {
 
@@ -237,16 +242,18 @@ public class AutoscalerConfigFileReader {
                     if (item.getNodeType() == Node.ELEMENT_NODE) {
                         Element imageElt = (Element) item;
 
-                        if ("".equals(imageElt.getAttribute("domain"))) {
+                        if ("".equals(imageElt.getAttribute(
+                                             AutoscalerConstant.SERVICE_DOMAIN_ATTR))) {
                             String msg =
-                                "Essential 'domain' attribute of 'image' element" +
-                                    " cannot be found in " + autoscalerConfigXMLFile;
-                            log.error(msg);
-                            throw new MalformedConfigurationFileException(msg);
+                                "Essential '"+AutoscalerConstant.SERVICE_DOMAIN_ATTR+"' " +
+                                		"attribute of '"+AutoscalerConstant.SERVICE_ELEMENT+
+                                		"' element cannot be found in " + elasticScalerConfigFile;
+
+                            handleException(msg);
                         }
 
                         // set domain name
-                        temp.setDomainName(imageElt.getAttribute("domain"));
+                        temp.setDomainName(imageElt.getAttribute(AutoscalerConstant.SERVICE_DOMAIN_ATTR));
                         
                         // load custom properties
                         Map<String, String> customProperties = loadProperties(imageElt);
@@ -263,8 +270,7 @@ public class AutoscalerConfigFileReader {
 
                 } catch (CloneNotSupportedException e) {
                     String msg = "This is extraordinary!! ";
-                    log.error(msg, e);
-                    throw new RuntimeException(msg, e);
+                    handleException(msg, e);
                 }
             }
         }
@@ -272,75 +278,20 @@ public class AutoscalerConfigFileReader {
         return templates;
     }
     
-    public Map<String, String> getDomainToTemplateMap() {
-        
-        Map<String, String> domainToTemplateMap = new HashMap<String, String>();
-        
-        Element docEle = dom.getDocumentElement();
-        
-        // load images to the map
-        NodeList nl = docEle.getElementsByTagName("image");
-        
-        if (nl != null && nl.getLength() > 0) {
-            
-            for(int i=0; i< nl.getLength() ; i++){
-                Node item = nl.item(i);
-                
-                if (item.getNodeType() == Node.ELEMENT_NODE) {
-                    Element imageElt = (Element) item;
-                    
-                    if (!"".equals(imageElt.getAttribute("domain"))) {
-                        domainToTemplateMap.put(imageElt.getAttribute("domain"),
-                                                imageElt.getAttribute("payload"));
-                    }
-                }
-            }
-            
-        }
-        
-        // load default template to the map
-        nl = docEle.getElementsByTagName("default");
-        
-        if (nl != null && nl.getLength() > 0) {
-            
-            Node item = nl.item(0);
-            
-            if (item.getNodeType() == Node.ELEMENT_NODE) {
-                Element imageElt = (Element) item;
-                
-                if (!"".equals(imageElt.getAttribute("payload"))) {
-                    // default template's domain is denoted by a '*' 
-                    domainToTemplateMap.put("*",
-                                            imageElt.getAttribute("payload"));
-                }
-            }
-            
-        }
-        
-        // if no images specified, the config file is a malformed one.
-        if(domainToTemplateMap.size()==0){
-            String msg = "Essential 'images' element cannot be found in "+autoscalerConfigXMLFile;
-            log.error(msg);
-            throw new MalformedConfigurationFileException(msg);
-        }
-        
-        return domainToTemplateMap;
-    }
+    private void loadCredentials(IaasProvider iaas, Element iaasElt) {
 
-    private void loadCredentials(IaaSProvider iaas, Element iaasElt) {
-
-        NodeList nl = iaasElt.getElementsByTagName("credential");
+        NodeList nl = iaasElt.getElementsByTagName(AutoscalerConstant.CREDENTIAL_ELEMENT);
 
         // there should be only one credential element, we neglect all the others
         if (nl != null && nl.getLength() > 0) {
             
             if (nl.getLength() > 1){
-                log.warn(autoscalerConfigXMLFile +" contains more than one credential elements!" +
+                log.warn(elasticScalerConfigFile +" contains more than one "+
+                         AutoscalerConstant.CREDENTIAL_ELEMENT+" elements!" +
                         " Elements other than the first will be neglected.");
             }
             
             if (nl.item(0).getNodeType() == Node.ELEMENT_NODE) {
-//                Element prop = (Element) nl.item(0);
 
                 // retrieve the value using secure vault
                 SecretResolver secretResolver = SecretResolverFactory.create(docEle, false);
@@ -348,47 +299,42 @@ public class AutoscalerConfigFileReader {
 
                 // FIXME following is a hack to find the correct alias.
                 if (iaas.getProvider().contains("ec2")) {
-                    alias = EC2_CREDENTIAL_ALIAS;
+                    alias = AutoscalerConstant.EC2_CREDENTIAL_ALIAS;
                 } else {
-                    alias = OPENSTACK_CREDENTIAL_ALIAS;
+                    alias = AutoscalerConstant.OPENSTACK_CREDENTIAL_ALIAS;
                 }
 
                 // retrieve the secured password
-
-                if (secretResolver != null && secretResolver.isInitialized() &&
-
-                secretResolver.isTokenProtected(alias)) {
-                    log.info("****** "+secretResolver.resolve(alias) + " |||| "+alias);
+                if (secretResolver != null && secretResolver.isInitialized() && 
+                        secretResolver.isTokenProtected(alias)) {
 
                     iaas.setCredential(secretResolver.resolve(alias));
 
                 }
 
-//                iaas.setCredential(prop.getTextContent());
-
             }
         }
         else{
-            String msg = "Essential 'credential' element has not specified in "+autoscalerConfigXMLFile;
-            log.error(msg);
-            throw new MalformedConfigurationFileException(msg);
+            String msg = "Essential '"+AutoscalerConstant.CREDENTIAL_ELEMENT+"' element" +
+            		" has not specified in "+elasticScalerConfigFile;
+            handleException(msg);
         }
     }
 
-    private void loadIdentity(IaaSProvider iaas, Element iaasElt) {
+    private void loadIdentity(IaasProvider iaas, Element iaasElt) {
 
-        NodeList nl = iaasElt.getElementsByTagName("identity");
+        NodeList nl = iaasElt.getElementsByTagName(AutoscalerConstant.IDENTITY_ELEMENT);
 
         // there should be only one identity element, we neglect all the others
         if (nl != null && nl.getLength() > 0) {
             
             if (nl.getLength() > 1){
-                log.warn(autoscalerConfigXMLFile +" contains more than one identity elements!" +
+                log.warn(elasticScalerConfigFile +" contains more than one "+
+                        AutoscalerConstant.IDENTITY_ELEMENT+" elements!" +
                         " Elements other than the first will be neglected.");
             }
             
             if (nl.item(0).getNodeType() == Node.ELEMENT_NODE) {
-//                Element prop = (Element) nl.item(0);
 
                 // retrieve the value using secure vault
                 SecretResolver secretResolver = SecretResolverFactory.create(docEle, false);
@@ -396,42 +342,39 @@ public class AutoscalerConfigFileReader {
                 
                 //FIXME following is a hack to find the correct alias.
                 if(iaas.getProvider().contains("ec2")){
-                    alias = EC2_IDENTITY_ALIAS;
+                    alias = AutoscalerConstant.EC2_IDENTITY_ALIAS;
                 }
                 else{
-                    alias = OPENSTACK_IDENTITY_ALIAS;
+                    alias = AutoscalerConstant.OPENSTACK_IDENTITY_ALIAS;
                 }
 
                 // retrieve the secured password
-
-                if (secretResolver != null && secretResolver.isInitialized() &&
-
-                secretResolver.isTokenProtected(alias)) {
+                if (secretResolver != null && secretResolver.isInitialized() && 
+                        secretResolver.isTokenProtected(alias)) {
 
                     iaas.setIdentity(secretResolver.resolve(alias));
 
                 }
 
-//                iaas.setIdentity(prop.getTextContent());
-
             }
         }
         else{
-            String msg = "Essential 'identity' element has not specified in "+autoscalerConfigXMLFile;
-            log.error(msg);
-            throw new MalformedConfigurationFileException(msg);
+            String msg = "Essential '"+AutoscalerConstant.IDENTITY_ELEMENT+"' element" +
+            		" has not specified in "+elasticScalerConfigFile;
+            handleException(msg);
         }
     }
 
-    private void loadProvider(IaaSProvider iaas, Element iaasElt) {
+    private void loadProvider(IaasProvider iaas, Element iaasElt) {
 
-        NodeList nl = iaasElt.getElementsByTagName("provider");
+        NodeList nl = iaasElt.getElementsByTagName(AutoscalerConstant.PROVIDER_ELEMENT);
 
         // there should be only one provider element, we neglect all the others
         if (nl != null && nl.getLength() > 0) {
             
             if (nl.getLength() > 1){
-                log.warn(autoscalerConfigXMLFile +" contains more than one provider elements!" +
+                log.warn(elasticScalerConfigFile +" contains more than one "+
+                        AutoscalerConstant.PROVIDER_ELEMENT+" elements!" +
                         " Elements other than the first will be neglected.");
             }
             
@@ -443,21 +386,22 @@ public class AutoscalerConfigFileReader {
             }
         }
         else{
-            String msg = "Essential 'provider' element has not specified in "+autoscalerConfigXMLFile;
-            log.error(msg);
-            throw new MalformedConfigurationFileException(msg);
+            String msg = "Essential '"+AutoscalerConstant.PROVIDER_ELEMENT+"' element " +
+            		"has not specified in "+elasticScalerConfigFile;
+            handleException(msg);
         }
     }
 
-    private void loadScalingOrders(IaaSProvider iaas, Element iaasElt) {
+    private void loadScalingOrders(IaasProvider iaas, Element iaasElt) {
 
-        NodeList nl = iaasElt.getElementsByTagName("scaleUpOrder");
+        NodeList nl = iaasElt.getElementsByTagName(AutoscalerConstant.SCALE_UP_ORDER_ELEMENT);
 
         // there should be only one scaleUpOrder element, we neglect all the others
         if (nl != null && nl.getLength() > 0) {
             
             if (nl.getLength() > 1){
-                log.warn(autoscalerConfigXMLFile +" contains more than one scaleUpOrder elements!" +
+                log.warn(elasticScalerConfigFile +" contains more than one "+
+                        AutoscalerConstant.SCALE_UP_ORDER_ELEMENT+" elements!" +
                         " Elements other than the first will be neglected.");
             }
             
@@ -467,28 +411,29 @@ public class AutoscalerConfigFileReader {
                 try {
                     iaas.setScaleUpOrder(Integer.parseInt(prop.getTextContent()));
                 }catch (NumberFormatException e) {
-                    String msg = "scaleUpOrder element contained in "+autoscalerConfigXMLFile +"" +
+                    String msg = AutoscalerConstant.SCALE_UP_ORDER_ELEMENT+" element contained" +
+                    		" in "+elasticScalerConfigFile +"" +
                     		" has a value which is not an Integer value.";
-                    log.error(msg, e);
-                    throw new MalformedConfigurationFileException(msg, e);
+                    handleException(msg, e);
                 }
 
             }
         }
         else{
-            String msg = "Essential 'scaleUpOrder' element has not specified in "+autoscalerConfigXMLFile;
-            log.error(msg);
-            throw new MalformedConfigurationFileException(msg);
+            String msg = "Essential '"+AutoscalerConstant.SCALE_UP_ORDER_ELEMENT+"' element" +
+            		" has not specified in "+elasticScalerConfigFile;
+            handleException(msg);
         }
         
         
-        nl = iaasElt.getElementsByTagName("scaleDownOrder");
+        nl = iaasElt.getElementsByTagName(AutoscalerConstant.SCALE_DOWN_ORDER_ELEMENT);
 
-        // there should be only one scaleUpOrder element, we neglect all the others
+        // there should be only one scaleDownOrder element, we neglect all the others
         if (nl != null && nl.getLength() > 0) {
             
             if (nl.getLength() > 1){
-                log.warn(autoscalerConfigXMLFile +" contains more than one scaleDownOrder elements!" +
+                log.warn(elasticScalerConfigFile +" contains more than one "+
+                        AutoscalerConstant.SCALE_DOWN_ORDER_ELEMENT+" elements!" +
                         " Elements other than the first will be neglected.");
             }
             
@@ -498,31 +443,32 @@ public class AutoscalerConfigFileReader {
                 try {
                     iaas.setScaleDownOrder(Integer.parseInt(prop.getTextContent()));
                 }catch (NumberFormatException e) {
-                    String msg = "scaleDownOrder element contained in "+autoscalerConfigXMLFile +"" +
+                    String msg = AutoscalerConstant.SCALE_DOWN_ORDER_ELEMENT+" element contained" +
+                            " in "+elasticScalerConfigFile +"" +
                             " has a value which is not an Integer value.";
-                    log.error(msg, e);
-                    throw new MalformedConfigurationFileException(msg, e);
+                    handleException(msg, e);
                 }
 
             }
         }
         else{
-            String msg = "Essential 'scaleDownOrder' element has not specified in "+autoscalerConfigXMLFile;
-            log.error(msg);
-            throw new MalformedConfigurationFileException(msg);
+            String msg = "Essential '"+AutoscalerConstant.SCALE_DOWN_ORDER_ELEMENT+"' element" +
+                    " has not specified in "+elasticScalerConfigFile;
+            handleException(msg);
         }
     }
 
-    private void loadTemplate(IaaSProvider iaas, Element iaasElt) {
+    private void loadTemplate(IaasProvider iaas, Element iaasElt) {
 
-        NodeList nl = iaasElt.getElementsByTagName("template");
+        NodeList nl = iaasElt.getElementsByTagName(AutoscalerConstant.IMAGE_ID_ELEMENT);
 
-        // there should be only one template element, we neglect all the others
+        // there should be only one imageId element, we neglect all the others
         if (nl != null && nl.getLength() > 0) {
             
             if (nl.getLength() > 1){
-                log.warn(autoscalerConfigXMLFile +" contains more than one template elements!" +
-                		" Elements other than the first will be neglected.");
+                log.warn(elasticScalerConfigFile +" contains more than one "+
+                        AutoscalerConstant.IMAGE_ID_ELEMENT+" elements!" +
+                        " Elements other than the first will be neglected.");
             }
             
             if (nl.item(0).getNodeType() == Node.ELEMENT_NODE) {
@@ -533,9 +479,9 @@ public class AutoscalerConfigFileReader {
             }
         }
         else{
-            String msg = "Essential 'template' element has not specified in "+autoscalerConfigXMLFile;
-            log.error(msg);
-            throw new MalformedConfigurationFileException(msg);
+            String msg = "Essential '"+AutoscalerConstant.IMAGE_ID_ELEMENT+"' element" +
+                    " has not specified in "+elasticScalerConfigFile;
+            handleException(msg);
         }
     }
 
@@ -543,7 +489,7 @@ public class AutoscalerConfigFileReader {
 
         Map<String, String> propertyMap = new HashMap<String, String>();
         
-        NodeList nl = iaasElt.getElementsByTagName("property");
+        NodeList nl = iaasElt.getElementsByTagName(AutoscalerConstant.PROPERTY_ELEMENT);
         
         if (nl != null && nl.getLength() > 0) {
             for(int i=0; i< nl.getLength() ; i++){
@@ -551,19 +497,32 @@ public class AutoscalerConfigFileReader {
                 if (nl.item(i).getNodeType() == Node.ELEMENT_NODE) {
                     Element prop = (Element) nl.item(i);
                     
-                    if("".equals(prop.getAttribute("name")) || "".equals(prop.getAttribute("value"))){
+                    if("".equals(prop.getAttribute(AutoscalerConstant.PROPERTY_NAME_ATTR)) ||
+                            "".equals(prop.getAttribute(AutoscalerConstant.PROPERTY_VALUE_ATTR))){
+                        
                         String msg ="Property element's, name and value attributes should be specified " +
-                        		"in "+autoscalerConfigXMLFile;
-                        log.error(msg);
-                        throw new MalformedConfigurationFileException(msg);
+                        		"in "+elasticScalerConfigFile;
+
+                        handleException(msg);
                     }
-                    propertyMap.put(prop.getAttribute("name"), prop.getAttribute("value"));
+                    propertyMap.put(prop.getAttribute(AutoscalerConstant.PROPERTY_NAME_ATTR), 
+                                    prop.getAttribute(AutoscalerConstant.PROPERTY_VALUE_ATTR));
                     
                 }
             }
         }
         
         return propertyMap;
+    }
+    
+    private void handleException(String msg){
+        log.error(msg);
+        throw new MalformedConfigurationFileException(msg);
+    }
+    
+    private void handleException(String msg, Exception e) {
+        log.error(msg, e);
+        throw new MalformedConfigurationFileException(msg, e);
     }
 	
     

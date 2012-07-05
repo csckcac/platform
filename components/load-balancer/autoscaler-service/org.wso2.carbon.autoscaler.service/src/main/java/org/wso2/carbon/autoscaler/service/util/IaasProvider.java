@@ -23,10 +23,15 @@ import java.util.Map;
 /**
  * This is the basic data structure which holds an IaaS specific details.
  */
-public class IaaSProvider {
+public class IaasProvider {
     
     /**
-     * Unique name of this IaaS provider
+     * Unique id to identify this IaaS provider.
+     */
+    private String type;
+    
+    /**
+     * human description of this IaaS provider
      */
     private String name;
     
@@ -47,11 +52,19 @@ public class IaaSProvider {
     
     private String provider, identity, credential;
     
-    public enum SortParameter {
-        SCALE_UP, SCALE_DOWN
-    }
+//    public enum SortParameter {
+//        SCALE_UP, SCALE_DOWN
+//    }
 
     
+    public String getType() {
+        return type;
+    }
+
+    public void setType(String id) {
+        this.type = id;
+    }
+
     public Map<String, String> getProperties() {
         return properties;
     }

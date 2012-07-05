@@ -344,28 +344,28 @@ public final class AxisServiceUtils {
 
         Input input = bop.getOperation().getInput();
         if (input != null) {
-            Object actionQName = input.getExtensionAttribute(new QName(Namespaces.WS_ADDRESSING_NS,
+            Object action = input.getExtensionAttribute(new QName(Namespaces.WS_ADDRESSING_NS,
                     "Action"));
-            if (actionQName instanceof QName) {
-                return ((QName) actionQName).getLocalPart();
+            if (action instanceof String) {
+                return ((String) action);
             }
 
-            actionQName = input.getExtensionAttribute(new QName(BPELConstants.WS_ADDRESSING_NS2,
+            action = input.getExtensionAttribute(new QName(BPELConstants.WS_ADDRESSING_NS2,
                     "Action"));
-            if (actionQName instanceof QName) {
-                return ((QName) actionQName).getLocalPart();
+            if (action instanceof String) {
+                return ((String) action);
             }
 
-            actionQName = input.getExtensionAttribute(new QName(BPELConstants.WS_ADDRESSING_NS3,
+            action = input.getExtensionAttribute(new QName(BPELConstants.WS_ADDRESSING_NS3,
                     "Action"));
-            if (actionQName instanceof QName) {
-                return ((QName) actionQName).getLocalPart();
+            if (action instanceof String) {
+                return ((String) action);
             }
 
-            actionQName = input.getExtensionAttribute(new QName(BPELConstants.WS_ADDRESSING_NS4,
+            action = input.getExtensionAttribute(new QName(BPELConstants.WS_ADDRESSING_NS4,
                     "Action"));
-            if (actionQName instanceof QName) {
-                return ((QName) actionQName).getLocalPart();
+            if (action instanceof String) {
+                return ((String) action);
             }
         }
         return "";

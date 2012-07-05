@@ -1,0 +1,12 @@
+How to Run OTAnalytics Sample
+======================
+1. Start the WSO2 BAM Server
+2. Go to 'WSO2_BAM_HOME/samples/OTAnalytics/' directory
+3. Type 'ant' with in the directory from the console
+    (This publishes the events to BAM)
+4. Go to management console and login
+5. Go to Main -> BAM Toolbox -> Add. Select 'OTAnalytics Toolbox' and click on install
+6. Go to Main -> BAM Toolbox -> List. And refresh the page until the 'OTAnalytics' toolbox status changes to deployed. 
+7. Go to Main -> Analytics -> List and click on Edit and Run the OT_script
+8. Go to Main -> View Portal. You will see the sample gadgets for Analyzed Data.
+

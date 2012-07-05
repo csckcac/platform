@@ -141,6 +141,11 @@
                                 <featureArtifactDef>
                                     org.wso2.carbon:org.wso2.carbon.service.mgt.feature:${carbon.version}
                                 </featureArtifactDef>
+
+                                <featureArtifactDef>
+                                    org.wso2.carbon:org.wso2.carbon.webapp.mgt.feature:${carbon.version}
+                                </featureArtifactDef>
+
                                 <featureArtifactDef>
                                     org.wso2.carbon:org.wso2.carbon.transport.mgt.feature:${carbon.version}
                                 </featureArtifactDef>
@@ -372,6 +377,11 @@
                                     <id>org.wso2.carbon.service.mgt.feature.group</id>
                                     <version>${carbon.version}</version>
                                 </feature-->
+
+                               <feature>
+                                    <id>org.wso2.carbon.webapp.mgt.feature.group</id>
+                                    <version>${carbon.version}</version>
+                                </feature>
 
                                 <feature>
                                     <id>org.wso2.carbon.transport.mgt.feature.group</id>

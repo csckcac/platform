@@ -84,19 +84,19 @@ public class BamServerProfileUtils {
                     currentStreamConfiguration.setVersion(stream.split("\\^")[1]);
                     currentStreamConfiguration.setNickname(stream.split("\\^")[2]);
                     currentStreamConfiguration.setDescription(stream.split("\\^")[3]);
-                    if(stream.split("\\^").length > 4 && (stream.split("\\^")[4].contains(":") || stream.split("\\^")[5].contains(":"))){ // Only when properties exist
+                    if(stream.split("\\^").length > 4 && (stream.split("\\^")[4].contains("::") || stream.split("\\^")[5].contains("::"))){ // Only when properties exist
                         propertiesString = stream.split("\\^")[4];
                         properties = propertiesString.split(";");
                         for (String property : properties) {
                             if(this.isNotNullOrEmpty(property)){
                                 currentProperty = new Property();
-                                currentProperty.setKey(property.split(":")[0]);
-                                currentProperty.setValue(property.split(":")[1]);
+                                currentProperty.setKey(property.split("::")[0]);
+                                currentProperty.setValue(property.split("::")[1]);
                                 currentStreamConfiguration.getProperties().add(currentProperty);
                             }
                         }
                     }
-                    if(stream.split("\\^")[stream.split("\\^").length-1].contains(";") && !stream.split("\\^")[stream.split("\\^").length-1].contains(":")){
+                    if(stream.split("\\^")[stream.split("\\^").length-1].contains(";") && !stream.split("\\^")[stream.split("\\^").length-1].contains("::")){
                         dump = stream.split("\\^")[stream.split("\\^").length-1];
                         dumpHeader = dump.split(";")[0].equals("dump");
                         dumpBody = dump.split(";")[1].equals("dump");
@@ -189,7 +189,7 @@ public class BamServerProfileUtils {
         if(streamConfiguration != null){
             List<Property> properties = streamConfiguration.getProperties();
             for (Property property : properties) {
-                returnString = returnString + property.getKey() + ":" + property.getValue() + ";";
+                returnString = returnString + property.getKey() + "::" + property.getValue() + ";";
             }
             returnString = returnString + "^";
             List<StreamEntry> streamEntries = streamConfiguration.getEntries();
@@ -210,9 +210,9 @@ public class BamServerProfileUtils {
 
     private String getRealBamServerProfilePath(String shortServerProfilePath){
         if(shortServerProfilePath != null){
-            String registryType = shortServerProfilePath.split(":")[0];
+            String registryType = shortServerProfilePath.split("::")[0];
             if (isNotNullOrEmpty(registryType) && registryType.equals("conf")){
-                return shortServerProfilePath.split(":")[1];
+                return shortServerProfilePath.split("::")[1];
             }
             return shortServerProfilePath;
         }

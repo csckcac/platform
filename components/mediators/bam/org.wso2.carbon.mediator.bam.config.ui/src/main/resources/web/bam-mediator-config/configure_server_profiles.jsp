@@ -225,7 +225,7 @@
                 numOfInputs = inputs.length;
                 for(var i=0; i<numOfInputs; i=i+2){
                     if(inputs[i].value != "" && inputs[i+1].value != ""){
-                        tableData = tableData + inputs[i].value + ":" + inputs[i+1].value + ";";
+                        tableData = tableData + inputs[i].value + "::" + inputs[i+1].value + ";";
                     }
                 }
                 document.getElementById("hfPropertyTableData").value = tableData;
@@ -289,9 +289,9 @@
                     }
                 }
                 for(var i=0; i<numOfProperties; i=i+1){
-                    if(propertyDataArray[i].split(":").length == 2){
-                        jQuery("#propertyTable").find("tr").find("input")[2*i].value = propertyDataArray[i].split(":")[0];
-                        jQuery("#propertyTable").find("tr").find("input")[2*i+1].value = propertyDataArray[i].split(":")[1];
+                    if(propertyDataArray[i].split("::").length == 2){
+                        jQuery("#propertyTable").find("tr").find("input")[2*i].value = propertyDataArray[i].split("::")[0];
+                        jQuery("#propertyTable").find("tr").find("input")[2*i+1].value = propertyDataArray[i].split("::")[1];
                     }
                 }
                 updatePropertyTableData();

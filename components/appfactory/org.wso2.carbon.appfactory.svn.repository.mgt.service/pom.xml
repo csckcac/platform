@@ -88,6 +88,11 @@
             <artifactId>maven-invoker</artifactId>
             <version>2.0.11.wso2v1</version>
         </dependency>
+        <dependency>
+            <groupId>org.wso2.carbon</groupId>
+            <artifactId>org.wso2.carbon.appfactory.core</artifactId>
+            <version>${pom.version}</version>
+        </dependency>
     </dependencies>
     <repositories>
         <repository>

@@ -1,7 +1,7 @@
-<wsdl:definitions xmlns:wsdl="http://schemas.xmlsoap.org/wsdl/" xmlns:ns1="http://org.apache.axis2/xsd" xmlns:ns="http://services.mgt.billing.carbon.wso2.org" xmlns:wsaw="http://www.w3.org/2006/05/addressing/wsdl" xmlns:http="http://schemas.xmlsoap.org/wsdl/http/" xmlns:ax235="http://dataobjects.core.billing.carbon.wso2.org/xsd" xmlns:xs="http://www.w3.org/2001/XMLSchema" xmlns:soap="http://schemas.xmlsoap.org/wsdl/soap/" xmlns:mime="http://schemas.xmlsoap.org/wsdl/mime/" xmlns:soap12="http://schemas.xmlsoap.org/wsdl/soap12/" targetNamespace="http://services.mgt.billing.carbon.wso2.org">
+<wsdl:definitions xmlns:wsdl="http://schemas.xmlsoap.org/wsdl/" xmlns:ns1="http://org.apache.axis2/xsd" xmlns:ns="http://services.mgt.billing.carbon.wso2.org" xmlns:wsaw="http://www.w3.org/2006/05/addressing/wsdl" xmlns:http="http://schemas.xmlsoap.org/wsdl/http/" xmlns:ax237="http://dataobjects.core.billing.carbon.wso2.org/xsd" xmlns:xs="http://www.w3.org/2001/XMLSchema" xmlns:soap="http://schemas.xmlsoap.org/wsdl/soap/" xmlns:mime="http://schemas.xmlsoap.org/wsdl/mime/" xmlns:soap12="http://schemas.xmlsoap.org/wsdl/soap12/" targetNamespace="http://services.mgt.billing.carbon.wso2.org">
     <wsdl:documentation>BillingDataAccessService</wsdl:documentation>
     <wsdl:types>
-        <xs:schema xmlns:ax236="http://dataobjects.core.billing.carbon.wso2.org/xsd" attributeFormDefault="qualified" elementFormDefault="qualified" targetNamespace="http://services.mgt.billing.carbon.wso2.org">
+        <xs:schema xmlns:ax238="http://dataobjects.core.billing.carbon.wso2.org/xsd" attributeFormDefault="qualified" elementFormDefault="qualified" targetNamespace="http://services.mgt.billing.carbon.wso2.org">
             <xs:import namespace="http://dataobjects.core.billing.carbon.wso2.org/xsd" />
             <xs:element name="BillingDataAccessServiceException">
                 <xs:complexType>
@@ -25,7 +25,7 @@
             <xs:element name="getSubscriptionResponse">
                 <xs:complexType>
                     <xs:sequence>
-                        <xs:element minOccurs="0" name="return" nillable="true" type="ax236:Subscription" />
+                        <xs:element minOccurs="0" name="return" nillable="true" type="ax238:Subscription" />
                     </xs:sequence>
                 </xs:complexType>
             </xs:element>
@@ -54,7 +54,7 @@
             <xs:element name="getInactiveSubscriptionsOfCustomerResponse">
                 <xs:complexType>
                     <xs:sequence>
-                        <xs:element maxOccurs="unbounded" minOccurs="0" name="return" nillable="true" type="ax236:Subscription" />
+                        <xs:element maxOccurs="unbounded" minOccurs="0" name="return" nillable="true" type="ax238:Subscription" />
                     </xs:sequence>
                 </xs:complexType>
             </xs:element>
@@ -68,7 +68,7 @@
             <xs:element name="getCustomerWithNameResponse">
                 <xs:complexType>
                     <xs:sequence>
-                        <xs:element minOccurs="0" name="return" nillable="true" type="ax236:Customer" />
+                        <xs:element minOccurs="0" name="return" nillable="true" type="ax238:Customer" />
                     </xs:sequence>
                 </xs:complexType>
             </xs:element>
@@ -80,7 +80,7 @@
             <xs:element name="getActiveSubscriptionOfCustomerByTenantResponse">
                 <xs:complexType>
                     <xs:sequence>
-                        <xs:element minOccurs="0" name="return" nillable="true" type="ax236:Subscription" />
+                        <xs:element minOccurs="0" name="return" nillable="true" type="ax238:Subscription" />
                     </xs:sequence>
                 </xs:complexType>
             </xs:element>
@@ -94,7 +94,14 @@
             <xs:element name="getActiveSubscriptionOfCustomerBySuperTenantResponse">
                 <xs:complexType>
                     <xs:sequence>
-                        <xs:element minOccurs="0" name="return" nillable="true" type="ax236:Subscription" />
+                        <xs:element minOccurs="0" name="return" nillable="true" type="ax238:Subscription" />
+                    </xs:sequence>
+                </xs:complexType>
+            </xs:element>
+            <xs:element name="deleteBillingData">
+                <xs:complexType>
+                    <xs:sequence>
+                        <xs:element minOccurs="0" name="tenantId" type="xs:int" />
                     </xs:sequence>
                 </xs:complexType>
             </xs:element>
@@ -118,6 +125,21 @@
                 </xs:complexType>
             </xs:element>
             <xs:element name="deactivateActiveSubscriptionBySuperTenantResponse">
+                <xs:complexType>
+                    <xs:sequence>
+                        <xs:element minOccurs="0" name="return" type="xs:boolean" />
+                    </xs:sequence>
+                </xs:complexType>
+            </xs:element>
+            <xs:element name="changeSubscriptionForTenant">
+                <xs:complexType>
+                    <xs:sequence>
+                        <xs:element minOccurs="0" name="subscriptionPlan" nillable="true" type="xs:string" />
+                        <xs:element minOccurs="0" name="tenantDomain" nillable="true" type="xs:string" />
+                    </xs:sequence>
+                </xs:complexType>
+            </xs:element>
+            <xs:element name="changeSubscriptionForTenantResponse">
                 <xs:complexType>
                     <xs:sequence>
                         <xs:element minOccurs="0" name="return" type="xs:boolean" />
@@ -156,7 +178,7 @@
             <xs:element name="addSubscription">
                 <xs:complexType>
                     <xs:sequence>
-                        <xs:element minOccurs="0" name="subscription" nillable="true" type="ax236:Subscription" />
+                        <xs:element minOccurs="0" name="subscription" nillable="true" type="ax238:Subscription" />
                     </xs:sequence>
                 </xs:complexType>
             </xs:element>
@@ -188,17 +210,17 @@
                     <xs:element minOccurs="0" name="active" type="xs:boolean" />
                     <xs:element minOccurs="0" name="activeSince" nillable="true" type="xs:date" />
                     <xs:element minOccurs="0" name="activeUntil" nillable="true" type="xs:date" />
-                    <xs:element minOccurs="0" name="customer" nillable="true" type="ax235:Customer" />
+                    <xs:element minOccurs="0" name="customer" nillable="true" type="ax237:Customer" />
                     <xs:element minOccurs="0" name="id" type="xs:int" />
                     <xs:element minOccurs="0" name="invoiceSubscriptionId" type="xs:int" />
-                    <xs:element minOccurs="0" name="item" nillable="true" type="ax235:Item" />
+                    <xs:element minOccurs="0" name="item" nillable="true" type="ax237:Item" />
                     <xs:element minOccurs="0" name="payments" nillable="true" type="xs:anyType" />
                     <xs:element minOccurs="0" name="subscriptionPlan" nillable="true" type="xs:string" />
                 </xs:sequence>
             </xs:complexType>
             <xs:complexType name="Customer">
                 <xs:sequence>
-                    <xs:element minOccurs="0" name="activeInvoice" nillable="true" type="ax235:Invoice" />
+                    <xs:element minOccurs="0" name="activeInvoice" nillable="true" type="ax237:Invoice" />
                     <xs:element minOccurs="0" name="address" nillable="true" type="xs:string" />
                     <xs:element minOccurs="0" name="context" nillable="true" type="xs:string" />
                     <xs:element minOccurs="0" name="email" nillable="true" type="xs:string" />
@@ -212,24 +234,24 @@
             </xs:complexType>
             <xs:complexType name="Invoice">
                 <xs:sequence>
-                    <xs:element minOccurs="0" name="boughtForward" nillable="true" type="ax235:Cash" />
-                    <xs:element minOccurs="0" name="carriedForward" nillable="true" type="ax235:Cash" />
-                    <xs:element minOccurs="0" name="customer" nillable="true" type="ax235:Customer" />
+                    <xs:element minOccurs="0" name="boughtForward" nillable="true" type="ax237:Cash" />
+                    <xs:element minOccurs="0" name="carriedForward" nillable="true" type="ax237:Cash" />
+                    <xs:element minOccurs="0" name="customer" nillable="true" type="ax237:Customer" />
                     <xs:element minOccurs="0" name="date" nillable="true" type="xs:date" />
                     <xs:element minOccurs="0" name="endDate" nillable="true" type="xs:date" />
                     <xs:element minOccurs="0" name="id" type="xs:int" />
                     <xs:element minOccurs="0" name="payments" nillable="true" type="xs:anyType" />
                     <xs:element minOccurs="0" name="startDate" nillable="true" type="xs:date" />
                     <xs:element minOccurs="0" name="subscriptions" nillable="true" type="xs:anyType" />
-                    <xs:element minOccurs="0" name="totalCost" nillable="true" type="ax235:Cash" />
-                    <xs:element minOccurs="0" name="totalPayment" nillable="true" type="ax235:Cash" />
+                    <xs:element minOccurs="0" name="totalCost" nillable="true" type="ax237:Cash" />
+                    <xs:element minOccurs="0" name="totalPayment" nillable="true" type="ax237:Cash" />
                 </xs:sequence>
             </xs:complexType>
             <xs:complexType name="Cash">
                 <xs:sequence>
                     <xs:element minOccurs="0" name="currency" nillable="true" type="xs:string" />
                     <xs:element minOccurs="0" name="decimalNumber" type="xs:int" />
-                    <xs:element minOccurs="0" name="sign" nillable="true" type="ax235:Cash_Sign" />
+                    <xs:element minOccurs="0" name="sign" nillable="true" type="ax237:Cash_Sign" />
                     <xs:element minOccurs="0" name="wholeNumber" type="xs:int" />
                 </xs:sequence>
             </xs:complexType>
@@ -243,16 +265,16 @@
             <xs:complexType name="Item">
                 <xs:sequence>
                     <xs:element minOccurs="0" name="bandwidthLimit" type="xs:int" />
-                    <xs:element minOccurs="0" name="bandwidthOveruseCharge" nillable="true" type="ax235:Cash" />
+                    <xs:element minOccurs="0" name="bandwidthOveruseCharge" nillable="true" type="ax237:Cash" />
                     <xs:element minOccurs="0" name="children" nillable="true" type="xs:anyType" />
-                    <xs:element minOccurs="0" name="cost" nillable="true" type="ax235:Cash" />
-                    <xs:element minOccurs="0" name="creditLimit" nillable="true" type="ax235:Cash" />
+                    <xs:element minOccurs="0" name="cost" nillable="true" type="ax237:Cash" />
+                    <xs:element minOccurs="0" name="creditLimit" nillable="true" type="ax237:Cash" />
                     <xs:element minOccurs="0" name="description" nillable="true" type="xs:string" />
                     <xs:element minOccurs="0" name="id" type="xs:int" />
                     <xs:element minOccurs="0" name="name" nillable="true" type="xs:string" />
-                    <xs:element minOccurs="0" name="parent" nillable="true" type="ax235:Item" />
+                    <xs:element minOccurs="0" name="parent" nillable="true" type="ax237:Item" />
                     <xs:element minOccurs="0" name="resourceVolumeLimit" type="xs:int" />
-                    <xs:element minOccurs="0" name="resourceVolumeOveruseCharge" nillable="true" type="ax235:Cash" />
+                    <xs:element minOccurs="0" name="resourceVolumeOveruseCharge" nillable="true" type="ax237:Cash" />
                 </xs:sequence>
             </xs:complexType>
         </xs:schema>
@@ -277,6 +299,9 @@
     </wsdl:message>
     <wsdl:message name="getInactiveSubscriptionsOfCustomerResponse">
         <wsdl:part name="parameters" element="ns:getInactiveSubscriptionsOfCustomerResponse" />
+    </wsdl:message>
+    <wsdl:message name="deleteBillingDataRequest">
+        <wsdl:part name="parameters" element="ns:deleteBillingData" />
     </wsdl:message>
     <wsdl:message name="getItemIdWithNameRequest">
         <wsdl:part name="parameters" element="ns:getItemIdWithName" />
@@ -332,6 +357,12 @@
     <wsdl:message name="changeSubscriptionBySuperTenantResponse">
         <wsdl:part name="parameters" element="ns:changeSubscriptionBySuperTenantResponse" />
     </wsdl:message>
+    <wsdl:message name="changeSubscriptionForTenantRequest">
+        <wsdl:part name="parameters" element="ns:changeSubscriptionForTenant" />
+    </wsdl:message>
+    <wsdl:message name="changeSubscriptionForTenantResponse">
+        <wsdl:part name="parameters" element="ns:changeSubscriptionForTenantResponse" />
+    </wsdl:message>
     <wsdl:portType name="BillingDataAccessServicePortType">
         <wsdl:operation name="changeSubscriptionByTenant">
             <wsdl:input message="ns:changeSubscriptionByTenantRequest" wsaw:Action="urn:changeSubscriptionByTenant" />
@@ -347,6 +378,10 @@
             <wsdl:input message="ns:getInactiveSubscriptionsOfCustomerRequest" wsaw:Action="urn:getInactiveSubscriptionsOfCustomer" />
             <wsdl:output message="ns:getInactiveSubscriptionsOfCustomerResponse" wsaw:Action="urn:getInactiveSubscriptionsOfCustomerResponse" />
             <wsdl:fault message="ns:BillingDataAccessServiceException" name="BillingDataAccessServiceException" wsaw:Action="urn:getInactiveSubscriptionsOfCustomerBillingDataAccessServiceException" />
+        </wsdl:operation>
+        <wsdl:operation name="deleteBillingData">
+            <wsdl:input message="ns:deleteBillingDataRequest" wsaw:Action="urn:deleteBillingData" />
+            <wsdl:fault message="ns:BillingDataAccessServiceException" name="BillingDataAccessServiceException" wsaw:Action="urn:deleteBillingDataBillingDataAccessServiceException" />
         </wsdl:operation>
         <wsdl:operation name="getItemIdWithName">
             <wsdl:input message="ns:getItemIdWithNameRequest" wsaw:Action="urn:getItemIdWithName" />
@@ -392,6 +427,11 @@
             <wsdl:input message="ns:changeSubscriptionBySuperTenantRequest" wsaw:Action="urn:changeSubscriptionBySuperTenant" />
             <wsdl:output message="ns:changeSubscriptionBySuperTenantResponse" wsaw:Action="urn:changeSubscriptionBySuperTenantResponse" />
             <wsdl:fault message="ns:BillingDataAccessServiceException" name="BillingDataAccessServiceException" wsaw:Action="urn:changeSubscriptionBySuperTenantBillingDataAccessServiceException" />
+        </wsdl:operation>
+        <wsdl:operation name="changeSubscriptionForTenant">
+            <wsdl:input message="ns:changeSubscriptionForTenantRequest" wsaw:Action="urn:changeSubscriptionForTenant" />
+            <wsdl:output message="ns:changeSubscriptionForTenantResponse" wsaw:Action="urn:changeSubscriptionForTenantResponse" />
+            <wsdl:fault message="ns:BillingDataAccessServiceException" name="BillingDataAccessServiceException" wsaw:Action="urn:changeSubscriptionForTenantBillingDataAccessServiceException" />
         </wsdl:operation>
     </wsdl:portType>
     <wsdl:binding name="BillingDataAccessServiceSoap11Binding" type="ns:BillingDataAccessServicePortType">
@@ -452,6 +492,15 @@
             <wsdl:output>
                 <soap:body use="literal" />
             </wsdl:output>
+            <wsdl:fault name="BillingDataAccessServiceException">
+                <soap:fault use="literal" name="BillingDataAccessServiceException" />
+            </wsdl:fault>
+        </wsdl:operation>
+        <wsdl:operation name="deleteBillingData">
+            <soap:operation soapAction="urn:deleteBillingData" style="document" />
+            <wsdl:input>
+                <soap:body use="literal" />
+            </wsdl:input>
             <wsdl:fault name="BillingDataAccessServiceException">
                 <soap:fault use="literal" name="BillingDataAccessServiceException" />
             </wsdl:fault>
@@ -540,6 +589,18 @@
                 <soap:fault use="literal" name="BillingDataAccessServiceException" />
             </wsdl:fault>
         </wsdl:operation>
+        <wsdl:operation name="changeSubscriptionForTenant">
+            <soap:operation soapAction="urn:changeSubscriptionForTenant" style="document" />
+            <wsdl:input>
+                <soap:body use="literal" />
+            </wsdl:input>
+            <wsdl:output>
+                <soap:body use="literal" />
+            </wsdl:output>
+            <wsdl:fault name="BillingDataAccessServiceException">
+                <soap:fault use="literal" name="BillingDataAccessServiceException" />
+            </wsdl:fault>
+        </wsdl:operation>
     </wsdl:binding>
     <wsdl:binding name="BillingDataAccessServiceSoap12Binding" type="ns:BillingDataAccessServicePortType">
         <soap12:binding transport="http://schemas.xmlsoap.org/soap/http" style="document" />
@@ -599,6 +660,15 @@
             <wsdl:output>
                 <soap12:body use="literal" />
             </wsdl:output>
+            <wsdl:fault name="BillingDataAccessServiceException">
+                <soap12:fault use="literal" name="BillingDataAccessServiceException" />
+            </wsdl:fault>
+        </wsdl:operation>
+        <wsdl:operation name="deleteBillingData">
+            <soap12:operation soapAction="urn:deleteBillingData" style="document" />
+            <wsdl:input>
+                <soap12:body use="literal" />
+            </wsdl:input>
             <wsdl:fault name="BillingDataAccessServiceException">
                 <soap12:fault use="literal" name="BillingDataAccessServiceException" />
             </wsdl:fault>
@@ -687,6 +757,18 @@
                 <soap12:fault use="literal" name="BillingDataAccessServiceException" />
             </wsdl:fault>
         </wsdl:operation>
+        <wsdl:operation name="changeSubscriptionForTenant">
+            <soap12:operation soapAction="urn:changeSubscriptionForTenant" style="document" />
+            <wsdl:input>
+                <soap12:body use="literal" />
+            </wsdl:input>
+            <wsdl:output>
+                <soap12:body use="literal" />
+            </wsdl:output>
+            <wsdl:fault name="BillingDataAccessServiceException">
+                <soap12:fault use="literal" name="BillingDataAccessServiceException" />
+            </wsdl:fault>
+        </wsdl:operation>
     </wsdl:binding>
     <wsdl:binding name="BillingDataAccessServiceHttpBinding" type="ns:BillingDataAccessServicePortType">
         <http:binding verb="POST" />
@@ -734,6 +816,12 @@
             <wsdl:output>
                 <mime:content type="text/xml" part="parameters" />
             </wsdl:output>
+        </wsdl:operation>
+        <wsdl:operation name="deleteBillingData">
+            <http:operation location="deleteBillingData" />
+            <wsdl:input>
+                <mime:content type="text/xml" part="parameters" />
+            </wsdl:input>
         </wsdl:operation>
         <wsdl:operation name="addSubscription">
             <http:operation location="addSubscription" />
@@ -798,16 +886,25 @@
                 <mime:content type="text/xml" part="parameters" />
             </wsdl:output>
         </wsdl:operation>
+        <wsdl:operation name="changeSubscriptionForTenant">
+            <http:operation location="changeSubscriptionForTenant" />
+            <wsdl:input>
+                <mime:content type="text/xml" part="parameters" />
+            </wsdl:input>
+            <wsdl:output>
+                <mime:content type="text/xml" part="parameters" />
+            </wsdl:output>
+        </wsdl:operation>
     </wsdl:binding>
     <wsdl:service name="BillingDataAccessService">
         <wsdl:port name="BillingDataAccessServiceHttpsSoap11Endpoint" binding="ns:BillingDataAccessServiceSoap11Binding">
-            <soap:address location="https://10.100.2.91:9443/services/BillingDataAccessService.BillingDataAccessServiceHttpsSoap11Endpoint/" />
+            <soap:address location="https://172.16.172.1:9443/services/BillingDataAccessService.BillingDataAccessServiceHttpsSoap11Endpoint/" />
         </wsdl:port>
         <wsdl:port name="BillingDataAccessServiceHttpsSoap12Endpoint" binding="ns:BillingDataAccessServiceSoap12Binding">
-            <soap12:address location="https://10.100.2.91:9443/services/BillingDataAccessService.BillingDataAccessServiceHttpsSoap12Endpoint/" />
+            <soap12:address location="https://172.16.172.1:9443/services/BillingDataAccessService.BillingDataAccessServiceHttpsSoap12Endpoint/" />
         </wsdl:port>
         <wsdl:port name="BillingDataAccessServiceHttpsEndpoint" binding="ns:BillingDataAccessServiceHttpBinding">
-            <http:address location="https://10.100.2.91:9443/services/BillingDataAccessService.BillingDataAccessServiceHttpsEndpoint/" />
+            <http:address location="https://172.16.172.1:9443/services/BillingDataAccessService.BillingDataAccessServiceHttpsEndpoint/" />
         </wsdl:port>
     </wsdl:service>
 </wsdl:definitions>

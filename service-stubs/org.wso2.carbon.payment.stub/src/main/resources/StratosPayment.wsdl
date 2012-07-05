@@ -1,8 +1,8 @@
-<wsdl:definitions xmlns:wsdl="http://schemas.xmlsoap.org/wsdl/" xmlns:ax2308="http://exceptions.sdk.paypal.com/xsd" xmlns:ns1="http://org.apache.axis2/xsd" xmlns:ns="http://services.paypal.payment.carbon.wso2.org" xmlns:wsaw="http://www.w3.org/2006/05/addressing/wsdl" xmlns:http="http://schemas.xmlsoap.org/wsdl/http/" xmlns:ax2310="http://dto.paypal.payment.carbon.wso2.org/xsd" xmlns:xs="http://www.w3.org/2001/XMLSchema" xmlns:soap="http://schemas.xmlsoap.org/wsdl/soap/" xmlns:mime="http://schemas.xmlsoap.org/wsdl/mime/" xmlns:soap12="http://schemas.xmlsoap.org/wsdl/soap12/" targetNamespace="http://services.paypal.payment.carbon.wso2.org">
+<wsdl:definitions xmlns:wsdl="http://schemas.xmlsoap.org/wsdl/" xmlns:ns1="http://org.apache.axis2/xsd" xmlns:ns="http://services.paypal.payment.carbon.wso2.org" xmlns:wsaw="http://www.w3.org/2006/05/addressing/wsdl" xmlns:http="http://schemas.xmlsoap.org/wsdl/http/" xmlns:ax2264="http://dto.paypal.payment.carbon.wso2.org/xsd" xmlns:xs="http://www.w3.org/2001/XMLSchema" xmlns:soap="http://schemas.xmlsoap.org/wsdl/soap/" xmlns:mime="http://schemas.xmlsoap.org/wsdl/mime/" xmlns:ax2262="http://exceptions.sdk.paypal.com/xsd" xmlns:soap12="http://schemas.xmlsoap.org/wsdl/soap12/" targetNamespace="http://services.paypal.payment.carbon.wso2.org">
     <wsdl:documentation>StratosPayment</wsdl:documentation>
     <wsdl:types>
         <xs:schema attributeFormDefault="qualified" elementFormDefault="qualified" targetNamespace="http://exceptions.sdk.paypal.com/xsd">
-            <xs:complexType name="PayPalException">
+            <xs:complexType abstract="true" name="PayPalException">
                 <xs:sequence />
             </xs:complexType>
         </xs:schema>
@@ -10,7 +10,7 @@
             <xs:complexType name="ECResponse">
                 <xs:sequence>
                     <xs:element minOccurs="0" name="ack" nillable="true" type="xs:string" />
-                    <xs:element minOccurs="0" name="error" nillable="true" type="ax2310:PaypalError" />
+                    <xs:element minOccurs="0" name="error" nillable="true" type="ax2264:PaypalError" />
                     <xs:element minOccurs="0" name="timestamp" nillable="true" type="xs:string" />
                     <xs:element minOccurs="0" name="token" nillable="true" type="xs:string" />
                 </xs:sequence>
@@ -24,11 +24,11 @@
             </xs:complexType>
             <xs:complexType name="ECDetailResponse">
                 <xs:complexContent>
-                    <xs:extension base="ax2310:ECResponse">
+                    <xs:extension base="ax2264:ECResponse">
                         <xs:sequence>
-                            <xs:element minOccurs="0" name="address" nillable="true" type="ax2310:Address" />
+                            <xs:element minOccurs="0" name="address" nillable="true" type="ax2264:Address" />
                             <xs:element minOccurs="0" name="orderTotal" nillable="true" type="xs:string" />
-                            <xs:element minOccurs="0" name="payer" nillable="true" type="ax2310:Payer" />
+                            <xs:element minOccurs="0" name="payer" nillable="true" type="ax2264:Payer" />
                         </xs:sequence>
                     </xs:extension>
                 </xs:complexContent>
@@ -58,7 +58,7 @@
             </xs:complexType>
             <xs:complexType name="TransactionResponse">
                 <xs:complexContent>
-                    <xs:extension base="ax2310:ECResponse">
+                    <xs:extension base="ax2264:ECResponse">
                         <xs:sequence>
                             <xs:element minOccurs="0" name="amount" nillable="true" type="xs:string" />
                             <xs:element minOccurs="0" name="paymentStatus" nillable="true" type="xs:string" />
@@ -69,13 +69,13 @@
                 </xs:complexContent>
             </xs:complexType>
         </xs:schema>
-        <xs:schema xmlns:ax2311="http://dto.paypal.payment.carbon.wso2.org/xsd" xmlns:ax2309="http://exceptions.sdk.paypal.com/xsd" attributeFormDefault="qualified" elementFormDefault="qualified" targetNamespace="http://services.paypal.payment.carbon.wso2.org">
+        <xs:schema xmlns:ax2263="http://exceptions.sdk.paypal.com/xsd" xmlns:ax2265="http://dto.paypal.payment.carbon.wso2.org/xsd" attributeFormDefault="qualified" elementFormDefault="qualified" targetNamespace="http://services.paypal.payment.carbon.wso2.org">
             <xs:import namespace="http://exceptions.sdk.paypal.com/xsd" />
             <xs:import namespace="http://dto.paypal.payment.carbon.wso2.org/xsd" />
-            <xs:element name="initExpressCheckoutPayPalException">
+            <xs:element name="StratosPaymentPayPalException">
                 <xs:complexType>
                     <xs:sequence>
-                        <xs:element minOccurs="0" name="PayPalException" nillable="true" type="ax2309:PayPalException" />
+                        <xs:element minOccurs="0" name="PayPalException" nillable="true" type="ax2263:PayPalException" />
                     </xs:sequence>
                 </xs:complexType>
             </xs:element>
@@ -91,14 +91,7 @@
             <xs:element name="initExpressCheckoutResponse">
                 <xs:complexType>
                     <xs:sequence>
-                        <xs:element minOccurs="0" name="return" nillable="true" type="ax2310:ECResponse" />
-                    </xs:sequence>
-                </xs:complexType>
-            </xs:element>
-            <xs:element name="getExpressCheckoutDetailsPayPalException">
-                <xs:complexType>
-                    <xs:sequence>
-                        <xs:element minOccurs="0" name="PayPalException" nillable="true" type="ax2309:PayPalException" />
+                        <xs:element minOccurs="0" name="return" nillable="true" type="ax2264:ECResponse" />
                     </xs:sequence>
                 </xs:complexType>
             </xs:element>
@@ -112,14 +105,7 @@
             <xs:element name="getExpressCheckoutDetailsResponse">
                 <xs:complexType>
                     <xs:sequence>
-                        <xs:element minOccurs="0" name="return" nillable="true" type="ax2310:ECDetailResponse" />
-                    </xs:sequence>
-                </xs:complexType>
-            </xs:element>
-            <xs:element name="doExpressCheckoutPayPalException">
-                <xs:complexType>
-                    <xs:sequence>
-                        <xs:element minOccurs="0" name="PayPalException" nillable="true" type="ax2309:PayPalException" />
+                        <xs:element minOccurs="0" name="return" nillable="true" type="ax2264:ECDetailResponse" />
                     </xs:sequence>
                 </xs:complexType>
             </xs:element>
@@ -129,14 +115,14 @@
                         <xs:element minOccurs="0" name="token" nillable="true" type="xs:string" />
                         <xs:element minOccurs="0" name="payerId" nillable="true" type="xs:string" />
                         <xs:element minOccurs="0" name="amount" nillable="true" type="xs:string" />
-                        <xs:element minOccurs="0" name="paymentAction" nillable="true" type="xs:string" />
+                        <xs:element minOccurs="0" name="tenantDetails" nillable="true" type="xs:string" />
                     </xs:sequence>
                 </xs:complexType>
             </xs:element>
             <xs:element name="doExpressCheckoutResponse">
                 <xs:complexType>
                     <xs:sequence>
-                        <xs:element minOccurs="0" name="return" nillable="true" type="ax2310:TransactionResponse" />
+                        <xs:element minOccurs="0" name="return" nillable="true" type="ax2264:TransactionResponse" />
                     </xs:sequence>
                 </xs:complexType>
             </xs:element>
@@ -148,8 +134,8 @@
     <wsdl:message name="initExpressCheckoutResponse">
         <wsdl:part name="parameters" element="ns:initExpressCheckoutResponse" />
     </wsdl:message>
-    <wsdl:message name="initExpressCheckoutPayPalException">
-        <wsdl:part name="parameters" element="ns:initExpressCheckoutPayPalException" />
+    <wsdl:message name="StratosPaymentPayPalException">
+        <wsdl:part name="parameters" element="ns:StratosPaymentPayPalException" />
     </wsdl:message>
     <wsdl:message name="doExpressCheckoutRequest">
         <wsdl:part name="parameters" element="ns:doExpressCheckout" />
@@ -157,33 +143,27 @@
     <wsdl:message name="doExpressCheckoutResponse">
         <wsdl:part name="parameters" element="ns:doExpressCheckoutResponse" />
     </wsdl:message>
-    <wsdl:message name="doExpressCheckoutPayPalException">
-        <wsdl:part name="parameters" element="ns:doExpressCheckoutPayPalException" />
-    </wsdl:message>
     <wsdl:message name="getExpressCheckoutDetailsRequest">
         <wsdl:part name="parameters" element="ns:getExpressCheckoutDetails" />
     </wsdl:message>
     <wsdl:message name="getExpressCheckoutDetailsResponse">
         <wsdl:part name="parameters" element="ns:getExpressCheckoutDetailsResponse" />
     </wsdl:message>
-    <wsdl:message name="getExpressCheckoutDetailsPayPalException">
-        <wsdl:part name="parameters" element="ns:getExpressCheckoutDetailsPayPalException" />
-    </wsdl:message>
     <wsdl:portType name="StratosPaymentPortType">
         <wsdl:operation name="initExpressCheckout">
             <wsdl:input message="ns:initExpressCheckoutRequest" wsaw:Action="urn:initExpressCheckout" />
             <wsdl:output message="ns:initExpressCheckoutResponse" wsaw:Action="urn:initExpressCheckoutResponse" />
-            <wsdl:fault message="ns:initExpressCheckoutPayPalException" name="initExpressCheckoutPayPalException" wsaw:Action="urn:initExpressCheckoutinitExpressCheckoutPayPalException" />
+            <wsdl:fault message="ns:StratosPaymentPayPalException" name="StratosPaymentPayPalException" wsaw:Action="urn:initExpressCheckoutStratosPaymentPayPalException" />
         </wsdl:operation>
         <wsdl:operation name="doExpressCheckout">
             <wsdl:input message="ns:doExpressCheckoutRequest" wsaw:Action="urn:doExpressCheckout" />
             <wsdl:output message="ns:doExpressCheckoutResponse" wsaw:Action="urn:doExpressCheckoutResponse" />
-            <wsdl:fault message="ns:doExpressCheckoutPayPalException" name="doExpressCheckoutPayPalException" wsaw:Action="urn:doExpressCheckoutdoExpressCheckoutPayPalException" />
+            <wsdl:fault message="ns:StratosPaymentPayPalException" name="StratosPaymentPayPalException" wsaw:Action="urn:doExpressCheckoutStratosPaymentPayPalException" />
         </wsdl:operation>
         <wsdl:operation name="getExpressCheckoutDetails">
             <wsdl:input message="ns:getExpressCheckoutDetailsRequest" wsaw:Action="urn:getExpressCheckoutDetails" />
             <wsdl:output message="ns:getExpressCheckoutDetailsResponse" wsaw:Action="urn:getExpressCheckoutDetailsResponse" />
-            <wsdl:fault message="ns:getExpressCheckoutDetailsPayPalException" name="getExpressCheckoutDetailsPayPalException" wsaw:Action="urn:getExpressCheckoutDetailsgetExpressCheckoutDetailsPayPalException" />
+            <wsdl:fault message="ns:StratosPaymentPayPalException" name="StratosPaymentPayPalException" wsaw:Action="urn:getExpressCheckoutDetailsStratosPaymentPayPalException" />
         </wsdl:operation>
     </wsdl:portType>
     <wsdl:binding name="StratosPaymentSoap11Binding" type="ns:StratosPaymentPortType">
@@ -196,8 +176,8 @@
             <wsdl:output>
                 <soap:body use="literal" />
             </wsdl:output>
-            <wsdl:fault name="initExpressCheckoutPayPalException">
-                <soap:fault use="literal" name="initExpressCheckoutPayPalException" />
+            <wsdl:fault name="StratosPaymentPayPalException">
+                <soap:fault use="literal" name="StratosPaymentPayPalException" />
             </wsdl:fault>
         </wsdl:operation>
         <wsdl:operation name="doExpressCheckout">
@@ -208,8 +188,8 @@
             <wsdl:output>
                 <soap:body use="literal" />
             </wsdl:output>
-            <wsdl:fault name="doExpressCheckoutPayPalException">
-                <soap:fault use="literal" name="doExpressCheckoutPayPalException" />
+            <wsdl:fault name="StratosPaymentPayPalException">
+                <soap:fault use="literal" name="StratosPaymentPayPalException" />
             </wsdl:fault>
         </wsdl:operation>
         <wsdl:operation name="getExpressCheckoutDetails">
@@ -220,8 +200,8 @@
             <wsdl:output>
                 <soap:body use="literal" />
             </wsdl:output>
-            <wsdl:fault name="getExpressCheckoutDetailsPayPalException">
-                <soap:fault use="literal" name="getExpressCheckoutDetailsPayPalException" />
+            <wsdl:fault name="StratosPaymentPayPalException">
+                <soap:fault use="literal" name="StratosPaymentPayPalException" />
             </wsdl:fault>
         </wsdl:operation>
     </wsdl:binding>
@@ -235,8 +215,8 @@
             <wsdl:output>
                 <soap12:body use="literal" />
             </wsdl:output>
-            <wsdl:fault name="initExpressCheckoutPayPalException">
-                <soap12:fault use="literal" name="initExpressCheckoutPayPalException" />
+            <wsdl:fault name="StratosPaymentPayPalException">
+                <soap12:fault use="literal" name="StratosPaymentPayPalException" />
             </wsdl:fault>
         </wsdl:operation>
         <wsdl:operation name="doExpressCheckout">
@@ -247,8 +227,8 @@
             <wsdl:output>
                 <soap12:body use="literal" />
             </wsdl:output>
-            <wsdl:fault name="doExpressCheckoutPayPalException">
-                <soap12:fault use="literal" name="doExpressCheckoutPayPalException" />
+            <wsdl:fault name="StratosPaymentPayPalException">
+                <soap12:fault use="literal" name="StratosPaymentPayPalException" />
             </wsdl:fault>
         </wsdl:operation>
         <wsdl:operation name="getExpressCheckoutDetails">
@@ -259,8 +239,8 @@
             <wsdl:output>
                 <soap12:body use="literal" />
             </wsdl:output>
-            <wsdl:fault name="getExpressCheckoutDetailsPayPalException">
-                <soap12:fault use="literal" name="getExpressCheckoutDetailsPayPalException" />
+            <wsdl:fault name="StratosPaymentPayPalException">
+                <soap12:fault use="literal" name="StratosPaymentPayPalException" />
             </wsdl:fault>
         </wsdl:operation>
     </wsdl:binding>
@@ -296,13 +276,13 @@
     </wsdl:binding>
     <wsdl:service name="StratosPayment">
         <wsdl:port name="StratosPaymentHttpsSoap11Endpoint" binding="ns:StratosPaymentSoap11Binding">
-            <soap:address location="https://10.100.0.30:9443/services/StratosPayment.StratosPaymentHttpsSoap11Endpoint/" />
+            <soap:address location="https://cloud-test.wso2.com:9443/services/StratosPayment.StratosPaymentHttpsSoap11Endpoint/" />
         </wsdl:port>
         <wsdl:port name="StratosPaymentHttpsSoap12Endpoint" binding="ns:StratosPaymentSoap12Binding">
-            <soap12:address location="https://10.100.0.30:9443/services/StratosPayment.StratosPaymentHttpsSoap12Endpoint/" />
+            <soap12:address location="https://cloud-test.wso2.com:9443/services/StratosPayment.StratosPaymentHttpsSoap12Endpoint/" />
         </wsdl:port>
         <wsdl:port name="StratosPaymentHttpsEndpoint" binding="ns:StratosPaymentHttpBinding">
-            <http:address location="https://10.100.0.30:9443/services/StratosPayment.StratosPaymentHttpsEndpoint/" />
+            <http:address location="https://cloud-test.wso2.com:9443/services/StratosPayment.StratosPaymentHttpsEndpoint/" />
         </wsdl:port>
     </wsdl:service>
 </wsdl:definitions>

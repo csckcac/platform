@@ -1,6 +1,8 @@
 package org.wso2.carbon.hive.data.source.access.util;
 
 
+import org.apache.hadoop.hive.jdbc.storage.datasource.BasicDataSourceConstants;
+import org.apache.hadoop.hive.service.CarbonContextThreadLocal;
 import org.apache.hadoop.mapred.lib.db.DBConfiguration;
 import org.w3c.dom.Element;
 import org.wso2.carbon.core.multitenancy.SuperTenantCarbonContext;
@@ -9,8 +11,6 @@ import org.wso2.carbon.ndatasource.core.DataSourceService;
 import org.wso2.carbon.ndatasource.core.utils.DataSourceUtils;
 import org.wso2.carbon.ndatasource.rdbms.RDBMSConfiguration;
 import org.wso2.carbon.ndatasource.rdbms.RDBMSDataSourceReader;
-import org.wso2.carbon.utils.multitenancy.CarbonContextHolder;
-import org.apache.hadoop.hive.jdbc.storage.datasource.BasicDataSourceConstants;
 
 import java.util.HashMap;
 import java.util.Map;
@@ -31,14 +31,13 @@ public class DataSourceAccessUtil {
 
     public static Map<String, String> getDataSourceProperties(String dataSourceName) {
 
-        int tenantId = CarbonContextHolder.getCurrentCarbonContextHolder().getTenantId();
+        int tenantId = CarbonContextThreadLocal.getTenantId();
 
         Map<String, String> dataSourceProperties = new HashMap<String, String>();
         try {
 
             SuperTenantCarbonContext.startTenantFlow();
-            //TODO: Fix the hard coded value properly
-            SuperTenantCarbonContext.getCurrentContext().setTenantId(-1234);
+            SuperTenantCarbonContext.getCurrentContext().setTenantId(tenantId);
 
             Element element = (Element) carbonDataSourceService.getDataSource(dataSourceName).
                     getDSMInfo().getDefinition().getDsXMLConfiguration();

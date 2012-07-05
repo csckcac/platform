@@ -1,4 +1,4 @@
-package org.apache.hadoop.hive.jdbc.storage.datasource;
+package org.wso2.carbon.hadoop.hive.jdbc.storage.datasource;
 
 import java.lang.reflect.InvocationTargetException;
 import java.lang.reflect.Method;

@@ -18,25 +18,13 @@
 
 package org.apache.hadoop.hive.service;
 
-import java.io.BufferedReader;
-import java.io.File;
-import java.io.FileNotFoundException;
-import java.io.FileOutputStream;
-import java.io.FileReader;
-import java.io.IOException;
-import java.io.PrintStream;
-import java.io.UnsupportedEncodingException;
-import java.util.ArrayList;
-import java.util.List;
-import java.util.Map;
-import java.util.Properties;
-
+import com.facebook.fb303.fb_status;
 import org.apache.commons.cli.OptionBuilder;
 import org.apache.commons.logging.Log;
 import org.apache.commons.logging.LogFactory;
-import org.apache.hadoop.hive.common.ServerUtils;
 import org.apache.hadoop.hive.common.LogUtils;
 import org.apache.hadoop.hive.common.LogUtils.LogInitializationException;
+import org.apache.hadoop.hive.common.ServerUtils;
 import org.apache.hadoop.hive.common.cli.CommonCliOptions;
 import org.apache.hadoop.hive.conf.HiveConf;
 import org.apache.hadoop.hive.metastore.HiveMetaStore;
@@ -61,9 +49,19 @@ import org.apache.thrift.transport.TServerSocket;
 import org.apache.thrift.transport.TServerTransport;
 import org.apache.thrift.transport.TTransport;
 import org.apache.thrift.transport.TTransportFactory;
-import org.apache.hadoop.fs.FileSystem;
-import org.apache.hadoop.fs.Path;
-import com.facebook.fb303.fb_status;
+
+import java.io.BufferedReader;
+import java.io.File;
+import java.io.FileNotFoundException;
+import java.io.FileOutputStream;
+import java.io.FileReader;
+import java.io.IOException;
+import java.io.PrintStream;
+import java.io.UnsupportedEncodingException;
+import java.util.ArrayList;
+import java.util.List;
+import java.util.Map;
+import java.util.Properties;
 
 /**
  * Thrift Hive Server Implementation.
@@ -167,6 +165,12 @@ public class HiveServer extends ThriftHive {
      *          HiveQL query to execute
      */
     public void execute(String cmd) throws HiveServerException, TException {
+
+      //Get tenant id from query and set it to thread local variable
+      String[] command = cmd.split(Utils.TENANT_ID_SEPARATOR_CHAR_SEQ);
+      cmd = setTenantIdToThreadLocal(cmd, command);
+
+
       HiveServerHandler.LOG.info("Running the query: " + cmd);
       SessionState session = SessionState.get();
 
@@ -206,6 +210,8 @@ public class HiveServer extends ThriftHive {
         ex.setMessage("Error running query: " + e.toString());
         ex.setErrorCode(ret == 0? -10000: ret);
         throw ex;
+      }finally {
+           threadLocalCleanUp(command);
       }
 
       if (ret != 0) {
@@ -214,7 +220,22 @@ public class HiveServer extends ThriftHive {
       }
     }
 
-    /**
+    private void threadLocalCleanUp(String[] command) {
+        if (command.length > 1) {
+            CarbonContextThreadLocal.unsetTenantId();
+        }
+    }
+
+    private String setTenantIdToThreadLocal(String cmd, String[] command) {
+        if (command.length > 1) {
+            cmd = command[0];
+            int tenantId = Integer.parseInt(command[1]);
+            CarbonContextThreadLocal.setTenantId(tenantId);
+        }
+        return cmd;
+    }
+
+      /**
      * Should be called by the client at the end of a session.
      */
     public void clean() {

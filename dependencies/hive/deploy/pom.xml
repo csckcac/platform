@@ -188,7 +188,7 @@
                             <goal>install-file</goal>
                         </goals>
                         <configuration>
-                            <groupId>org.apache.hive</groupId>
+                            <groupId>org.wso2.carbon</groupId>
                             <artifactId>hive-jdbc-handler</artifactId>
                             <version>${hive.version}</version>
                             <packaging>jar</packaging>

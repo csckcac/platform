@@ -1,4 +1,4 @@
-package org.apache.hadoop.hive.jdbc.storage.exception;
+package org.wso2.carbon.hadoop.hive.jdbc.storage.exception;
 
 
 public class UnsupportedDatabaseException extends Exception{

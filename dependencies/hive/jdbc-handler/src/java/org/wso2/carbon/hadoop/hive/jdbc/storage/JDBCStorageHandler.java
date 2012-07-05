@@ -1,10 +1,10 @@
-package org.apache.hadoop.hive.jdbc.storage;
+package org.wso2.carbon.hadoop.hive.jdbc.storage;
 
 
 import org.apache.hadoop.conf.Configuration;
-import org.apache.hadoop.hive.jdbc.storage.db.DBOperation;
-import org.apache.hadoop.hive.jdbc.storage.input.JDBCDataInputFormat;
-import org.apache.hadoop.hive.jdbc.storage.utils.ConfigurationUtils;
+import org.wso2.carbon.hadoop.hive.jdbc.storage.db.DBOperation;
+import org.wso2.carbon.hadoop.hive.jdbc.storage.input.JDBCDataInputFormat;
+import org.wso2.carbon.hadoop.hive.jdbc.storage.utils.ConfigurationUtils;
 import org.apache.hadoop.hive.metastore.HiveMetaHook;
 import org.apache.hadoop.hive.metastore.MetaStoreUtils;
 import org.apache.hadoop.hive.metastore.api.MetaException;

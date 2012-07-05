@@ -1,4 +1,4 @@
-package org.apache.hadoop.hive.jdbc.storage.input;
+package org.wso2.carbon.hadoop.hive.jdbc.storage.input;
 
 
 import org.apache.hadoop.fs.Path;
@@ -6,11 +6,11 @@ import org.apache.hadoop.mapred.FileInputFormat;
 import org.apache.hadoop.mapred.FileSplit;
 import org.apache.hadoop.mapred.InputSplit;
 import org.apache.hadoop.mapred.JobConf;
-import org.apache.hadoop.hive.jdbc.storage.db.DBManager;
-import org.apache.hadoop.hive.jdbc.storage.db.DBOperation;
-import org.apache.hadoop.hive.jdbc.storage.db.DatabaseProperties;
-import org.apache.hadoop.hive.jdbc.storage.db.QueryConstructor;
-import org.apache.hadoop.hive.jdbc.storage.utils.ConfigurationUtils;
+import org.wso2.carbon.hadoop.hive.jdbc.storage.db.DBManager;
+import org.wso2.carbon.hadoop.hive.jdbc.storage.db.DBOperation;
+import org.wso2.carbon.hadoop.hive.jdbc.storage.db.DatabaseProperties;
+import org.wso2.carbon.hadoop.hive.jdbc.storage.db.QueryConstructor;
+import org.wso2.carbon.hadoop.hive.jdbc.storage.utils.ConfigurationUtils;
 
 import java.io.DataInput;
 import java.io.DataOutput;

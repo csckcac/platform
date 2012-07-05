@@ -1,9 +1,9 @@
-package org.apache.hadoop.hive.jdbc.storage.db;
+package org.wso2.carbon.hadoop.hive.jdbc.storage.db;
 
 
 import org.apache.commons.dbcp.BasicDataSource;
-import org.apache.hadoop.hive.jdbc.storage.exception.UnsupportedDatabaseException;
-import org.apache.hadoop.hive.jdbc.storage.utils.Commons;
+import org.wso2.carbon.hadoop.hive.jdbc.storage.exception.UnsupportedDatabaseException;
+import org.wso2.carbon.hadoop.hive.jdbc.storage.utils.Commons;
 import org.apache.hadoop.mapred.JobConf;
 
 import javax.sql.DataSource;

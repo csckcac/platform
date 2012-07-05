@@ -1,4 +1,4 @@
-package org.apache.hadoop.hive.jdbc.storage.datasource;
+package org.wso2.carbon.hadoop.hive.jdbc.storage.datasource;
 
 
 public class BasicDataSourceConstants {

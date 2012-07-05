@@ -1,4 +1,4 @@
-package org.apache.hadoop.hive.jdbc.storage.utils;
+package org.wso2.carbon.hadoop.hive.jdbc.storage.utils;
 
 
 import org.apache.commons.dbcp.BasicDataSource;

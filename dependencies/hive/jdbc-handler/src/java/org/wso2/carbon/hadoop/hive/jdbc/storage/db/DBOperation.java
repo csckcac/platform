@@ -1,10 +1,10 @@
-package org.apache.hadoop.hive.jdbc.storage.db;
+package org.wso2.carbon.hadoop.hive.jdbc.storage.db;
 
 
 import org.apache.commons.dbcp.BasicDataSource;
-import org.apache.hadoop.hive.jdbc.storage.datasource.CarbonDataSourceFetcher;
-import org.apache.hadoop.hive.jdbc.storage.utils.Commons;
-import org.apache.hadoop.hive.jdbc.storage.utils.ConfigurationUtils;
+import org.wso2.carbon.hadoop.hive.jdbc.storage.datasource.CarbonDataSourceFetcher;
+import org.wso2.carbon.hadoop.hive.jdbc.storage.utils.Commons;
+import org.wso2.carbon.hadoop.hive.jdbc.storage.utils.ConfigurationUtils;
 import org.apache.hadoop.io.MapWritable;
 import org.apache.hadoop.io.Writable;
 import org.apache.hadoop.mapred.lib.db.DBConfiguration;

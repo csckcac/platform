@@ -1,4 +1,4 @@
-package org.apache.hadoop.hive.jdbc.storage.db;
+package org.wso2.carbon.hadoop.hive.jdbc.storage.db;
 
 
 public class DatabaseProperties {

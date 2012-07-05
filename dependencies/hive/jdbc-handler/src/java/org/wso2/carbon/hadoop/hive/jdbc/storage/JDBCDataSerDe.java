@@ -1,4 +1,4 @@
-package org.apache.hadoop.hive.jdbc.storage;
+package org.wso2.carbon.hadoop.hive.jdbc.storage;
 
 import org.apache.hadoop.conf.Configuration;
 import org.apache.hadoop.hive.serde.Constants;

@@ -1,11 +1,11 @@
-package org.apache.hadoop.hive.jdbc.storage;
+package org.wso2.carbon.hadoop.hive.jdbc.storage;
 
 import org.apache.hadoop.fs.FileSystem;
 import org.apache.hadoop.fs.Path;
-import org.apache.hadoop.hive.jdbc.storage.db.DBManager;
-import org.apache.hadoop.hive.jdbc.storage.db.DBRecordWriter;
-import org.apache.hadoop.hive.jdbc.storage.db.DatabaseProperties;
-import org.apache.hadoop.hive.jdbc.storage.utils.ConfigurationUtils;
+import org.wso2.carbon.hadoop.hive.jdbc.storage.db.DBManager;
+import org.wso2.carbon.hadoop.hive.jdbc.storage.db.DBRecordWriter;
+import org.wso2.carbon.hadoop.hive.jdbc.storage.db.DatabaseProperties;
+import org.wso2.carbon.hadoop.hive.jdbc.storage.utils.ConfigurationUtils;
 import org.apache.hadoop.hive.ql.exec.FileSinkOperator;
 import org.apache.hadoop.hive.ql.io.HiveOutputFormat;
 import org.apache.hadoop.io.MapWritable;

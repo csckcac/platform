@@ -1,9 +1,9 @@
-package org.apache.hadoop.hive.jdbc.storage.utils;
+package org.wso2.carbon.hadoop.hive.jdbc.storage.utils;
 
 
 import org.apache.hadoop.conf.Configuration;
-import org.apache.hadoop.hive.jdbc.storage.datasource.BasicDataSourceConstants;
-import org.apache.hadoop.hive.jdbc.storage.datasource.CarbonDataSourceFetcher;
+import org.wso2.carbon.hadoop.hive.jdbc.storage.datasource.BasicDataSourceConstants;
+import org.wso2.carbon.hadoop.hive.jdbc.storage.datasource.CarbonDataSourceFetcher;
 import org.apache.hadoop.hive.metastore.api.Constants;
 import org.apache.hadoop.mapred.JobConf;
 import org.apache.hadoop.mapred.lib.db.DBConfiguration;

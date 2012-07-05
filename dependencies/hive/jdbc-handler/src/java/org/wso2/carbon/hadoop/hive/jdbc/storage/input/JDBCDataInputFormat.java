@@ -1,9 +1,9 @@
-package org.apache.hadoop.hive.jdbc.storage.input;
+package org.wso2.carbon.hadoop.hive.jdbc.storage.input;
 
-import org.apache.hadoop.hive.jdbc.storage.db.DBManager;
-import org.apache.hadoop.hive.jdbc.storage.db.DBRecordReader;
-import org.apache.hadoop.hive.jdbc.storage.db.DatabaseProperties;
-import org.apache.hadoop.hive.jdbc.storage.utils.ConfigurationUtils;
+import org.wso2.carbon.hadoop.hive.jdbc.storage.db.DBManager;
+import org.wso2.carbon.hadoop.hive.jdbc.storage.db.DBRecordReader;
+import org.wso2.carbon.hadoop.hive.jdbc.storage.db.DatabaseProperties;
+import org.wso2.carbon.hadoop.hive.jdbc.storage.utils.ConfigurationUtils;
 import org.apache.hadoop.hive.ql.io.HiveInputFormat;
 import org.apache.hadoop.io.LongWritable;
 import org.apache.hadoop.io.MapWritable;

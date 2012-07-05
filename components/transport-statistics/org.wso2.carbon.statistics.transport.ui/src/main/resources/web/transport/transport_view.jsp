@@ -32,7 +32,7 @@
     <script type="text/javascript" src="../admin/js/jquery.flot.js"></script>
     <script type="text/javascript" src="../admin/js/excanvas.js"></script>
     <script type="text/javascript" src="../admin/js/main.js"></script>
-    <script type="text/javascript" src="../ajax/js/prototype.js"></script>
+    <%--<script type="text/javascript" src="../ajax/js/prototype.js"></script>--%>
 
     <%
         String transportParamType = request.getParameter("transportType");

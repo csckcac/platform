@@ -114,7 +114,7 @@ function autoResize(id){
         <%
 
             String renderJsp = "render.jsp";
-            String dataSource = "test";
+            String dataSource = toolBoxDTO.getDataSource();
 
             for (int i = 0; i < tabs.size(); i++) {
                 JasperTabDTO tab = tabs.get(i);

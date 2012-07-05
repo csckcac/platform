@@ -22,7 +22,10 @@
 <%@ page import="net.sf.jasperreports.engine.export.JRHtmlExporterParameter" %>
 <%@ page import="java.io.PrintWriter" %>
 <%@ page import="org.wso2.carbon.ndatasource.core.DataSourceService" %>
-<%@ page import="javax.sql.DataSource" %>
+<%@ page import="org.w3c.dom.Element" %>
+<%@ page import="org.wso2.carbon.ndatasource.rdbms.RDBMSConfiguration" %>
+<%@ page import="org.wso2.carbon.ndatasource.rdbms.RDBMSDataSourceReader" %>
+<%@ page import="org.wso2.carbon.ndatasource.core.utils.DataSourceUtils" %>
 
 <%
 
@@ -32,7 +35,7 @@
             SuperTenantCarbonContext.getCurrentContext().getOSGiService(RegistryService.class);
 
     DataSourceService dataSourceService =
-            (DataSourceService)SuperTenantCarbonContext.getCurrentContext().
+            (DataSourceService) SuperTenantCarbonContext.getCurrentContext().
                     getOSGiService(DataSourceService.class);
 
     int tenantId = CarbonContext.getCurrentContext().getTenantId();
@@ -69,9 +72,19 @@
     try {
 /*        Class.forName("com.mysql.jdbc.Driver");
         con = DriverManager.getConnection("jdbc:mysql://localhost:3306/testdb", "root", "root");*/
-        DataSource dataSource  = (DataSource) dataSourceService.getDataSource(dataSourceName)
+
+        Element element = (Element) dataSourceService.getDataSource(dataSourceName).
+                getDSMInfo().getDefinition().getDsXMLConfiguration();
+        RDBMSConfiguration rdbmsConfiguration = RDBMSDataSourceReader.loadConfig(
+                DataSourceUtils.elementToString(element));
+
+        Class.forName(rdbmsConfiguration.getDriverClassName());
+        con = DriverManager.getConnection(rdbmsConfiguration.getUrl(),
+                                          rdbmsConfiguration.getUsername(),
+                                          rdbmsConfiguration.getPassword());
+/*        DataSource dataSource = (DataSource) dataSourceService.getDataSource(dataSourceName)
                 .getDSObject();
-        con = dataSource.getConnection();
+        con = dataSource.getConnection();*/
     } catch (Exception e) {
         e.printStackTrace();
     }

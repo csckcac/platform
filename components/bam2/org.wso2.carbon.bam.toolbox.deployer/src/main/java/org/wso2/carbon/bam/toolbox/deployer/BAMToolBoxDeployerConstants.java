@@ -27,6 +27,8 @@ public class BAMToolBoxDeployerConstants {
     public static final String JAGGERY_DIR = "jaggery";
     public static final String GADGET_META_FILE = "dashboard.properties";
     public static final String JASPER_META_FILE = "jasper.properties";
+    public static final String DATASOURCE = "datasource";
+    public static final String DATASOURCE_CONFIGURATION = "datasource.configuration";
 
     public static final String TAB_NAMES = "tab.names";
     public static final String GADGET_XMLS_PREFIX = "tab.name";

@@ -31,6 +31,8 @@ public class ToolBoxDTO {
     private String jasperParentDirectory;
     private String jaggeryAppParentDirectory;
     private String hotDeploymentRootDir;
+    private String datasource;
+    private String dsConfiguration;
 
     public ToolBoxDTO(String name) {
         this.name = name;
@@ -38,6 +40,7 @@ public class ToolBoxDTO {
         dashboardTabs = new ArrayList<DashBoardTabDTO>();
         jasperTabs = new ArrayList<JasperTabDTO>();
         evenStreamDef = "";
+        datasource = "";
     }
 
     public String getName() {
@@ -154,6 +157,22 @@ public class ToolBoxDTO {
 
     public void setJasperParentDirectory(String jasperParentDirectory) {
         this.jasperParentDirectory = jasperParentDirectory;
+    }
+
+    public void setDataSource(String dataSourceName) {
+        this.datasource = dataSourceName;
+    }
+
+    public String getDataSource() {
+        return datasource;
+    }
+
+    public void setDataSourceConfiguration(String dsConfiguration) {
+        this.dsConfiguration = dsConfiguration;
+    }
+
+    public String getDataSourceConfiguration() {
+        return dsConfiguration;
     }
 
 }

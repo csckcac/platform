@@ -19,6 +19,7 @@ package org.wso2.carbon.bam.toolbox.deployer;
 import org.wso2.carbon.base.api.ServerConfigurationService;
 import org.wso2.carbon.dashboard.DashboardDSService;
 import org.wso2.carbon.dashboard.mgt.gadgetrepo.GadgetRepoService;
+import org.wso2.carbon.ndatasource.core.DataSourceService;
 import org.wso2.carbon.registry.core.Registry;
 import org.wso2.carbon.registry.core.exceptions.RegistryException;
 import org.wso2.carbon.registry.core.service.RegistryService;
@@ -38,12 +39,14 @@ public class ServiceHolder {
     private static DashboardDSService dashboardService;
     private static ServerConfigurationService serverConfiguration;
     private static GadgetRepoService gadgetRepoService;
+    private static DataSourceService dataSourceService;
 
     public static ConfigurationContextService getConfigurationContextService() {
         return configurationContextService;
     }
 
-    public static void setConfigurationContextService(ConfigurationContextService configurationContextService) {
+    public static void setConfigurationContextService(
+            ConfigurationContextService configurationContextService) {
         ServiceHolder.configurationContextService = configurationContextService;
     }
 
@@ -84,7 +87,7 @@ public class ServiceHolder {
     }
 
     public static void setServerConfiguration(ServerConfigurationService serverConf) {
-       serverConfiguration = serverConf;
+        serverConfiguration = serverConf;
     }
 
     public static GadgetRepoService getGadgetRepoService() {
@@ -97,6 +100,14 @@ public class ServiceHolder {
 
     public static Registry getGovernanceSystemRegistry(int tenantId) throws RegistryException {
         return ServiceHolder.registryService.getGovernanceSystemRegistry(tenantId);
+    }
+
+    public static void setDataSourceService(DataSourceService dataSourceService) {
+        ServiceHolder.dataSourceService = dataSourceService;
+    }
+
+    public static DataSourceService getDataSourceService() {
+        return ServiceHolder.dataSourceService;
     }
 
 

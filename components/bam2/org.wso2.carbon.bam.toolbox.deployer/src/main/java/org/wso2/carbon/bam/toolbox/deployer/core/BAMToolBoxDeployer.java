@@ -1,12 +1,16 @@
 package org.wso2.carbon.bam.toolbox.deployer.core;
 
+import org.apache.axiom.om.util.AXIOMUtil;
 import org.apache.axis2.context.ConfigurationContext;
 import org.apache.axis2.deployment.AbstractDeployer;
 import org.apache.axis2.deployment.DeploymentException;
 import org.apache.axis2.deployment.repository.util.DeploymentFileData;
 import org.apache.axis2.engine.AxisConfiguration;
+import org.apache.commons.io.IOUtils;
 import org.apache.commons.logging.Log;
 import org.apache.commons.logging.LogFactory;
+import org.w3c.dom.Document;
+import org.w3c.dom.Element;
 import org.wso2.carbon.bam.toolbox.deployer.BAMToolBoxDeployerConstants;
 import org.wso2.carbon.bam.toolbox.deployer.ServiceHolder;
 import org.wso2.carbon.bam.toolbox.deployer.config.ToolBoxConfigurationManager;
@@ -16,13 +20,28 @@ import org.wso2.carbon.bam.toolbox.deployer.internal.ServerStartUpInspector;
 import org.wso2.carbon.bam.toolbox.deployer.util.ToolBoxDTO;
 import org.wso2.carbon.context.CarbonContext;
 import org.wso2.carbon.core.multitenancy.SuperTenantCarbonContext;
+import org.wso2.carbon.ndatasource.common.DataSourceException;
+import org.wso2.carbon.ndatasource.core.DataSourceMetaInfo;
+import org.wso2.carbon.ndatasource.core.DataSourceService;
+import org.wso2.carbon.ndatasource.rdbms.RDBMSConfiguration;
+import org.wso2.carbon.ndatasource.rdbms.RDBMSDataSourceReader;
 import org.wso2.carbon.user.api.Tenant;
 import org.wso2.carbon.user.core.UserStoreException;
 import org.wso2.carbon.user.core.tenant.TenantManager;
 import org.wso2.carbon.utils.CarbonUtils;
 import org.wso2.carbon.utils.multitenancy.MultitenantConstants;
+import org.xml.sax.InputSource;
+import org.xml.sax.SAXException;
 
+import javax.xml.parsers.DocumentBuilder;
+import javax.xml.parsers.DocumentBuilderFactory;
+import javax.xml.parsers.ParserConfigurationException;
+import java.io.ByteArrayInputStream;
 import java.io.File;
+import java.io.FileInputStream;
+import java.io.FileNotFoundException;
+import java.io.IOException;
+import java.io.StringReader;
 import java.util.ArrayList;
 
 /**
@@ -71,8 +90,6 @@ public class BAMToolBoxDeployer extends AbstractDeployer {
         if (!ServerStartUpInspector.isServerStarted()) {
             if (getTenantId() == MultitenantConstants.SUPER_TENANT_ID) {
                 pausedDeployments = this;
-
-
             }
         } else {
 
@@ -133,11 +150,25 @@ public class BAMToolBoxDeployer extends AbstractDeployer {
 
                     manager.addNewToolBoxConfiguration(aTool, getTenantId());
 
+                    createDataSource(aTool);
+
                     String repoPath = this.configurationContext.getAxisConfiguration().getRepository().getPath();
                     removeTempFiles(new File(repoPath + File.separator + this.directory + "/temp"));
                     log.info("Deployed successfully file: " + path);
                 }
             } catch (BAMToolboxDeploymentException e) {
+                log.error("Error while deploying bam  artifact :" + deploymentFileData.getAbsolutePath(), e);
+                throw new BAMToolboxDeploymentException("Error while deploying bam  artifact :" + deploymentFileData.getAbsolutePath(), e);
+            } catch (DataSourceException e) {
+                log.error("Error while deploying bam  artifact :" + deploymentFileData.getAbsolutePath(), e);
+                throw new BAMToolboxDeploymentException("Error while deploying bam  artifact :" + deploymentFileData.getAbsolutePath(), e);
+            } catch (IOException e) {
+                log.error("Error while deploying bam  artifact :" + deploymentFileData.getAbsolutePath(), e);
+                throw new BAMToolboxDeploymentException("Error while deploying bam  artifact :" + deploymentFileData.getAbsolutePath(), e);
+            } catch (ParserConfigurationException e) {
+                log.error("Error while deploying bam  artifact :" + deploymentFileData.getAbsolutePath(), e);
+                throw new BAMToolboxDeploymentException("Error while deploying bam  artifact :" + deploymentFileData.getAbsolutePath(), e);
+            }catch (SAXException e) {
                 log.error("Error while deploying bam  artifact :" + deploymentFileData.getAbsolutePath(), e);
                 throw new BAMToolboxDeploymentException("Error while deploying bam  artifact :" + deploymentFileData.getAbsolutePath(), e);
             }
@@ -150,6 +181,42 @@ public class BAMToolBoxDeployer extends AbstractDeployer {
     private int getTenantId() {
         AxisConfiguration axisConfiguration = this.configurationContext.getAxisConfiguration();
         return SuperTenantCarbonContext.getCurrentContext(axisConfiguration).getTenantId();
+    }
+
+    private void createDataSource(ToolBoxDTO toolBox) throws DataSourceException,
+                                                             IOException,
+                                                             ParserConfigurationException,
+                                                             SAXException {
+        String dataSource = toolBox.getDataSource();
+        String dataSourceConfigurationFile = toolBox.getDataSourceConfiguration();
+
+        if (dataSource != null && dataSourceConfigurationFile != null) {
+            DataSourceService dataSourceService = ServiceHolder.getDataSourceService();
+
+            String dsConfigXML = IOUtils.toString(new FileInputStream(
+                    dataSourceConfigurationFile));
+            RDBMSConfiguration config = RDBMSDataSourceReader.loadConfig(dsConfigXML);
+
+            DocumentBuilderFactory factory = DocumentBuilderFactory.newInstance();
+
+            factory.setNamespaceAware(true);
+            DocumentBuilder builder = factory.newDocumentBuilder();
+
+            Document document = builder.parse(new InputSource(new StringReader(dsConfigXML)));
+
+            Element configElement = document.getDocumentElement();
+
+            DataSourceMetaInfo.DataSourceDefinition dsDef = new DataSourceMetaInfo.
+                    DataSourceDefinition();
+            dsDef.setDsXMLConfiguration(configElement);
+            dsDef.setType("RDBMS");
+
+            DataSourceMetaInfo metaInfo = new DataSourceMetaInfo();
+            metaInfo.setName(dataSource);
+            metaInfo.setDefinition(dsDef);
+            dataSourceService.addDataSource(metaInfo);
+
+        }
     }
 
 
@@ -169,7 +236,7 @@ public class BAMToolBoxDeployer extends AbstractDeployer {
 
     private ArrayList<String> getAllBAMArtifacts() {
         String repoPath = this.configurationContext.getAxisConfiguration().getRepository().getPath();
-        File dir = new File(repoPath+ File.separator + this.directory);
+        File dir = new File(repoPath + File.separator + this.directory);
         log.info(dir.getAbsolutePath());
         ArrayList<String> files = new ArrayList<String>();
 
@@ -207,12 +274,15 @@ public class BAMToolBoxDeployer extends AbstractDeployer {
     }
 
     private boolean removeTempFiles(File tempDir) {
-        if (tempDir == null)
+        if (tempDir == null) {
             return false;
-        if (!tempDir.exists())
+        }
+        if (!tempDir.exists()) {
             return true;
-        if (!tempDir.isDirectory())
+        }
+        if (!tempDir.isDirectory()) {
             return false;
+        }
 
         String[] list = tempDir.list();
 
@@ -220,11 +290,13 @@ public class BAMToolBoxDeployer extends AbstractDeployer {
             for (int i = 0; i < list.length; i++) {
                 File entry = new File(tempDir, list[i]);
                 if (entry.isDirectory()) {
-                    if (!this.removeTempFiles(entry))
+                    if (!this.removeTempFiles(entry)) {
                         return false;
+                    }
                 } else {
-                    if (!entry.delete())
+                    if (!entry.delete()) {
                         return false;
+                    }
                 }
             }
         }
@@ -247,7 +319,7 @@ public class BAMToolBoxDeployer extends AbstractDeployer {
             } catch (UserStoreException e) {
                 log.error(e.getMessage(), e);
                 throw new BAMToolboxDeploymentException("Error while obtaining " +
-                        "the admin username for tenant: " + tenantId, e);
+                                                        "the admin username for tenant: " + tenantId, e);
             }
         } else {
             TenantManager manager = ServiceHolder.getRealmService().getTenantManager();
@@ -257,7 +329,7 @@ public class BAMToolBoxDeployer extends AbstractDeployer {
             } catch (org.wso2.carbon.user.api.UserStoreException e) {
                 log.error(e.getMessage(), e);
                 throw new BAMToolboxDeploymentException("Error while obtaining " +
-                        "the admin username for tenant: " + tenantId, e);
+                                                        "the admin username for tenant: " + tenantId, e);
             }
         }
     }

@@ -44,6 +44,8 @@ public class ToolBoxConfiguration {
     private static String JRXML = "jrxml";
     private static String TAB_ID = "id";
     private static String TAB_NAME = "name";
+    private static String DATASOURCE = "datasource";
+    private static String CONFIGURATION = "configuration";
 
 
     private static final Log log = LogFactory.getLog(ToolBoxConfiguration.class);
@@ -58,6 +60,13 @@ public class ToolBoxConfiguration {
         this.config = config;
     }
 
+    public void addDataSource(String datasource) {
+        config.addAttribute(DATASOURCE, datasource, null);
+    }
+
+    public void addDataSourceConfiguration(String dsConfiguration) {
+        config.addAttribute(CONFIGURATION, dsConfiguration, null);
+    }
 
     public void addScript(String scriptName) throws BAMToolboxDeploymentException {
         OMElement scripts;
@@ -204,6 +213,14 @@ public class ToolBoxConfiguration {
             log.error("Configuration has not been set for the tool box:" + this.toolboxName);
             throw new BAMToolboxDeploymentException("Configuration has not been set for the tool box:" + this.toolboxName);
         }
+    }
+
+    public String getDataSource() {
+       return config.getAttribute(new QName(DATASOURCE)).getAttributeValue();
+    }
+
+    public String getDataSourceConfiguration() {
+        return config.getAttribute(new QName(CONFIGURATION)).getAttributeValue();
     }
 
 //    public ArrayList<String> getGadgetNames() throws BAMToolboxDeploymentException {

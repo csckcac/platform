@@ -24,6 +24,7 @@ import org.wso2.carbon.bam.toolbox.deployer.ServiceHolder;
 import org.wso2.carbon.base.api.ServerConfigurationService;
 import org.wso2.carbon.dashboard.DashboardDSService;
 import org.wso2.carbon.dashboard.mgt.gadgetrepo.GadgetRepoService;
+import org.wso2.carbon.ndatasource.core.DataSourceService;
 import org.wso2.carbon.registry.core.service.RegistryService;
 import org.wso2.carbon.user.core.UserRealm;
 import org.wso2.carbon.user.core.service.RealmService;
@@ -54,10 +55,12 @@ import org.wso2.carbon.utils.ConfigurationContextService;
  * interface="org.wso2.carbon.dashboard.DashboardDSService"
  * cardinality="1..1" policy="dynamic" bind="setDashboardService"
  * unbind="unsetDashboardService"
- *  @scr.reference name="org.wso2.carbon.dashboard.mgt.gadgetrepo.GadgetRepoService"
+ * @scr.reference name="org.wso2.carbon.dashboard.mgt.gadgetrepo.GadgetRepoService"
  * interface="org.wso2.carbon.dashboard.mgt.gadgetrepo.GadgetRepoService"
  * cardinality="1..1" policy="dynamic" bind="setGadgetRepoService"
  * unbind="unsetGadgetRepoService"
+ * @scr.reference name="datasources.service" interface="org.wso2.carbon.ndatasource.core.DataSourceService"
+ * cardinality="1..1" policy="dynamic" bind="setDataSourceService" unbind="unsetDataSourceService"
  */
 
 public class BAMToolBoxDeployerComponent {
@@ -108,7 +111,7 @@ public class BAMToolBoxDeployerComponent {
         ServiceHolder.setDashboardService(null);
     }
 
-     protected void setServerConfiguration(ServerConfigurationService serverConfiguration) {
+    protected void setServerConfiguration(ServerConfigurationService serverConfiguration) {
         ServiceHolder.setServerConfiguration(serverConfiguration);
     }
 
@@ -123,6 +126,21 @@ public class BAMToolBoxDeployerComponent {
 
     protected void unsetGadgetRepoService(GadgetRepoService gadgetRepoService) {
         ServiceHolder.setGadgetRepoService(null);
+    }
+
+    protected void setDataSourceService(DataSourceService dataSourceService) {
+        if (log.isDebugEnabled()) {
+            log.debug("Setting the Carbon Data Sources Service");
+        }
+        ServiceHolder.setDataSourceService(dataSourceService);
+    }
+
+    protected void unsetDataSourceService(
+            DataSourceService dataSourceService) {
+        if (log.isDebugEnabled()) {
+            log.debug("Unsetting the Carbon Data Sources Service");
+        }
+        ServiceHolder.setDataSourceService(null);
     }
 
 }

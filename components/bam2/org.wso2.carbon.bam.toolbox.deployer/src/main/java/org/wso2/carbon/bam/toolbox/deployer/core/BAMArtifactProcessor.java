@@ -208,6 +208,13 @@ public class BAMArtifactProcessor {
                 setJRXMLForTab(aTab, value);
                 tabIndex++;
             }
+
+            toolBoxDTO.setDataSource(properties.getProperty(BAMToolBoxDeployerConstants.DATASOURCE));
+            toolBoxDTO.setDataSourceConfiguration(barDir + File.separator +
+                                                BAMToolBoxDeployerConstants.DASHBOARD_DIR +
+                                                File.separator +
+                                                properties.getProperty(BAMToolBoxDeployerConstants.
+                                                        DATASOURCE_CONFIGURATION));
         } catch (FileNotFoundException e) {
             log.error("No " + BAMToolBoxDeployerConstants.JASPER_META_FILE +
                       " found in dir:" + barDir + File.separator + BAMToolBoxDeployerConstants.DASHBOARD_DIR, e);

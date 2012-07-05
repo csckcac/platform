@@ -72,6 +72,8 @@ public class ToolBoxConfigurationManager {
         aToolBox.setScriptNames(configuration.getScriptNames());
         aToolBox.setDashboardTabs(configuration.getDashboardTabs());
         aToolBox.setJasperTabs(configuration.getJasperTabs());
+        aToolBox.setDataSource(configuration.getDataSource());
+        aToolBox.setDataSourceConfiguration(configuration.getDataSourceConfiguration());
 
         return aToolBox;
     }
@@ -137,6 +139,10 @@ public class ToolBoxConfigurationManager {
             String tabName = tabDTO.getTabName();
             configuration.addJRXMLToTab(tabDTO.getTabId(), jrxmlFileName, tabName);
         }
+
+        configuration.addDataSource(toolboxDTO.getDataSource());
+        configuration.addDataSourceConfiguration(toolboxDTO.getDataSourceConfiguration());
+
         return configuration;
     }
 

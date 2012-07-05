@@ -31,28 +31,40 @@
             <artifactId>org.wso2.carbon.dashboard</artifactId>
             <version>4.0.0-SNAPSHOT</version>
         </dependency>
-         <dependency>
+
+        <dependency>
             <groupId>org.wso2.carbon</groupId>
             <artifactId>org.wso2.carbon.core</artifactId>
         </dependency>
 
+        <dependency>
+            <groupId>org.wso2.carbon</groupId>
+            <artifactId>org.wso2.carbon.ndatasource.core</artifactId>
+            <version>4.0.0-SNAPSHOT</version>
+        </dependency>
+        
+        <dependency>
+            <groupId>org.wso2.carbon</groupId>
+            <artifactId>org.wso2.carbon.ndatasource.rdbms</artifactId>
+            <version>4.0.0-SNAPSHOT</version>
+        </dependency>
 
         <dependency>
             <groupId>org.wso2.carbon</groupId>
             <artifactId>org.wso2.carbon.dashboard.common</artifactId>
-          <version>4.0.0-SNAPSHOT</version>
+            <version>4.0.0-SNAPSHOT</version>
         </dependency>
         <dependency>
             <groupId>org.wso2.carbon</groupId>
             <artifactId>org.wso2.carbon.dashboard.ui</artifactId>
-           <version>4.0.0-SNAPSHOT</version>
+            <version>4.0.0-SNAPSHOT</version>
         </dependency>
 
-     <dependency>
-        <groupId>org.wso2.carbon</groupId>
-        <artifactId>org.wso2.carbon.dashboard.mgt.gadgetrepo</artifactId>
-         <version>4.0.0-SNAPSHOT</version>
-    </dependency>
+        <dependency>
+            <groupId>org.wso2.carbon</groupId>
+            <artifactId>org.wso2.carbon.dashboard.mgt.gadgetrepo</artifactId>
+            <version>4.0.0-SNAPSHOT</version>
+        </dependency>
 
     </dependencies>
 
@@ -89,14 +101,14 @@
                         <Bundle-Name>${project.artifactId}</Bundle-Name>
                         <Private-Package>
                             org.wso2.carbon.bam.toolbox.deployer.internal,
-                             org.wso2.carbon.bam.toolbox.deployer.internal.*
+                            org.wso2.carbon.bam.toolbox.deployer.internal.*
                         </Private-Package>
                         <Export-Package>
                             !org.wso2.carbon.bam.toolbox.deployer.internal,
                             !org.wso2.carbon.bam.toolbox.deployer.internal.*,
                             org.wso2.carbon.bam.toolbox.deployer.core.*,
-                             org.wso2.carbon.bam.toolbox.deployer.exception.*,
-                             org.wso2.carbon.bam.toolbox.deployer.util.*,
+                            org.wso2.carbon.bam.toolbox.deployer.exception.*,
+                            org.wso2.carbon.bam.toolbox.deployer.util.*,
                             org.wso2.carbon.bam.toolbox.deployer.*
                         </Export-Package>
                         <Import-Package>

@@ -20,28 +20,58 @@ import org.apache.commons.logging.Log;
 import org.apache.commons.logging.LogFactory;
 import org.osgi.framework.BundleContext;
 import org.osgi.service.component.ComponentContext;
+import org.wso2.carbon.appfactory.core.ArtifactStorage;
+import org.wso2.carbon.appfactory.core.BuildDriver;
+import org.wso2.carbon.appfactory.core.RevisionControlDriver;
 
 /**
- * @scr.component name="appfactory.common" immediate="true"
+ * @scr.component name="org.wso2.carbon.appfactory.core.internal.AppFactoryCoreServiceComponent" immediate="true"
+ * @scr.reference name="appfactory.maven"
+ * interface="org.wso2.carbon.appfactory.core.BuildDriver" cardinality="1..1"
+ * policy="dynamic" bind="setBuildDriver" unbind="unsetBuildDriver"
+ * @scr.reference name="appfactory.svn"
+ * interface="org.wso2.carbon.appfactory.core.RevisionControlDriver" cardinality="1..1"
+ * policy="dynamic" bind="setRevisionControlDriver" unbind="unsetRevisionControlDriver"
+ *
  */
+
+
 public class AppFactoryCoreServiceComponent {
 
-	private static final Log log = LogFactory.getLog(AppFactoryCoreServiceComponent.class);
+    private static final Log log = LogFactory.getLog(AppFactoryCoreServiceComponent.class);
 
-	protected void activate(ComponentContext context) {
-		// BundleContext bundleContext = context.getBundleContext();
-		try {
-			if (log.isDebugEnabled()) {
-				log.debug("Appfactory common bundle is activated");
-			}
-		} catch (Throwable e) {
-			log.error("Error in creating appfactory configuration", e);
-		}
-	}
+    protected void activate(ComponentContext context) {
+        // BundleContext bundleContext = context.getBundleContext();
+        try {
+            if (log.isDebugEnabled()) {
+                log.debug("Appfactory common bundle is activated");
+            }
+        } catch (Throwable e) {
+            log.error("Error in creating appfactory configuration", e);
+        }
+    }
 
-	protected void deactivate(ComponentContext context) {
-		if (log.isDebugEnabled()) {
-			log.debug("Appfactory common bundle is deactivated");
-		}
-	}
+    protected void deactivate(ComponentContext context) {
+        if (log.isDebugEnabled()) {
+            log.debug("Appfactory common bundle is deactivated");
+        }
+    }
+
+    protected void unsetBuildDriver(BuildDriver buildDriver) {
+        ServiceHolder.setBuildDriver(null);
+    }
+
+    protected void setBuildDriver(BuildDriver buildDriver) {
+        ServiceHolder.setBuildDriver(buildDriver);
+    }
+
+    protected void unsetRevisionControlDriver(RevisionControlDriver revisionControlDriver) {
+        ServiceHolder.setRevisionControlDriver(null);
+    }
+
+    protected void setRevisionControlDriver(RevisionControlDriver revisionControlDriver) {
+        ServiceHolder.setRevisionControlDriver(revisionControlDriver);
+    }
+
+
 }

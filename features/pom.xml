@@ -45,6 +45,57 @@
     </organization>
 
     <modules>
+         <module>admin-mgt</module>
+         <module>captcha-mgt</module>
+         <module>service-mgt</module>
+         <module>security-mgt</module>
+         <module>logging-mgt</module>
+         <module>transport-mgt</module>
+         <module>message-flows</module>
+         <module>rm</module>
+         <module>synapse</module>
+         <module>soap-tracer</module>
+         <module>rule</module>
+         <module>xkms</module>
+         <module>caching</module>
+         <module>module-mgt</module>
+         <module>axis2-repo-mgt</module>
+         <module>service-hosting</module>
+         <module>sts</module>
+         <module>throttle</module>
+         <module>system-statistics</module>
+         <module>transport-statistics</module>
+         <module>data-sources</module>
+         <module>mediation-initializer</module>
+         <module>mediation-statistics</module>
+         <module>mediation-tracer</module>
+         <module>mediation</module>
+         <!--module>eventing</module-->
+         <module>event</module>
+         <module>synapse-config-admin</module>
+         <module>synapse-artifact-uploader</module>
+         <module>scheduled-tasks</module>
+         <module>endpoints</module>
+         <module>localentry</module>
+         <module>sequence-editor</module>
+         <module>proxyadmin</module>
+         <module>cluster-mgt</module>
+         <module>dashboard</module>
+         <module>registry</module>
+         <module>ws-discovery</module>
+         <module>mashup</module>
+         <module>bam</module>
+         <module>bam-data-publishers</module>
+         <module>reporting</module>
+         <module>priority-mediation</module>
+         <module>multiple-instance</module>
+         <module>message-relay</module>
+         <module>mediators</module>
+         <module>profile-management</module>
+         <module>claim-management</module>
+         <module>identity</module>
+         <module>humantask</module>
+         <module>bpel</module>
         <module>authenticators</module>
         <module>gadgets</module>
         <module>tryit</module>

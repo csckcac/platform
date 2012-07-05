@@ -26,7 +26,7 @@
             <region>region4</region>
             <order>21</order>
             <style-class>monitor</style-class>
-            <icon>../gadgetgenwizard/images/cluster_monitor.png
+            <icon>../gadgetgenwizard/images/gadgetgen-wizard.png
             </icon>
             <require-permission>/permission/admin/bam/view</require-permission>
         </menu>

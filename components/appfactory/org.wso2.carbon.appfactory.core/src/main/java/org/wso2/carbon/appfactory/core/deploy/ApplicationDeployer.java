@@ -2,7 +2,7 @@ package org.wso2.carbon.appfactory.core.deploy;
 
 public class ApplicationDeployer {
 
-	public void deployArtifact(String applicationId, String version, String revision) {
+	public void deployArtifact(String applicationId,String stage, String version, String revision) {
 		// ArtifactStorage storage = ServiceHolder.getArtifactStorage();
 		// File file = storage.retrieveArtifact(applicationId, version,
 		// revision);

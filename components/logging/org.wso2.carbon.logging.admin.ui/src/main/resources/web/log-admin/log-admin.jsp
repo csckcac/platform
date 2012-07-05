@@ -74,11 +74,11 @@
                     <%--<p><fmt:message key="loading"/></p> --%>
                 </div>
 
-                <p>&nbsp;</p>
+<!--                 <p>&nbsp;</p> -->
                 
-                 <div id="syslogConfig">
-                    <%--<p><fmt:message key="loading"/></p> --%>
-                </div>
+<!--                  <div id="syslogConfig"> -->
+<%--                     <p><fmt:message key="loading"/></p> --%>
+<!--                 </div> -->
 
                 <p>&nbsp;</p>
 

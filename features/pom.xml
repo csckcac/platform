@@ -84,7 +84,6 @@
          <module>registry</module>
          <module>ws-discovery</module>
          <module>mashup</module>
-         <module>bam</module>
          <module>bam-data-publishers</module>
          <module>reporting</module>
          <module>priority-mediation</module>

@@ -25,31 +25,34 @@ import org.wso2.esb.integration.ESBIntegrationTestCase;
 import org.wso2.esb.integration.axis2.SampleAxis2Server;
 import org.wso2.esb.integration.axis2.StockQuoteClient;
 
-import static org.testng.Assert.assertNotNull;
-import static org.testng.Assert.assertTrue;
+import javax.xml.namespace.QName;
 
-public class XQueryCustom extends ESBIntegrationTestCase {
+import static org.testng.Assert.assertEquals;
+import static org.testng.Assert.assertNotNull;
+
+public class XQueryCustomVariableAsBoolean extends ESBIntegrationTestCase {
     private StockQuoteClient axis2Client;
 
     public void init() throws Exception {
         axis2Client = new StockQuoteClient();
-        String filePath = "/mediators/xquery/synapse101.xml";
+        String filePath = "/mediators/xquery/xquery_variable_type_boolean_synapse101.xml";
         loadESBConfigurationFromClasspath(filePath);
 
         launchBackendAxis2Service(SampleAxis2Server.SIMPLE_STOCK_QUOTE_SERVICE);
     }
 
     @Test(groups = {"wso2.esb"},
-          description = "Do XQuery transformation with target attribute specified as XPath value - <xquery key=\"string\" target = xpath>")
-    public void testXQueryTransformation() throws AxisFault {
+          description = "Do XQuery transformation with target attribute specified as XPath value and variable as Boolean")
+    public void testXQueryTransformationWithBooleanValue() throws AxisFault {
         OMElement response;
         RequestUtil getQuoteCustomRequest = new RequestUtil();
 
         response = getQuoteCustomRequest.sendReceive(
                 getProxyServiceURL("StockQuoteProxy", false),
-                "IBM");
+                "WSO2");
         assertNotNull(response, "Response message null");
-        assertTrue(response.toString().contains("IBM"));
+        assertEquals(response.getFirstElement().getFirstChildWithName(
+                new QName("http://services.samples/xsd", "symbol", "ax21")).getText(), "true", "Symbol name mismatched");
 
     }
 
@@ -58,6 +61,7 @@ public class XQueryCustom extends ESBIntegrationTestCase {
         super.cleanup();
         axis2Client.destroy();
     }
+
 
 
 }

@@ -47,6 +47,15 @@
             <class name="org.wso2.carbon.mediator.tests.xquery.XQueryMediatorTestCase"/>
             <class name="org.wso2.carbon.mediator.tests.xquery.XQuerySample391"/>
             <class name="org.wso2.carbon.mediator.tests.xquery.XQueryCustom"/>
+            <class name="org.wso2.carbon.mediator.tests.xquery.XQueryCustomVariableAsString"/>
+            <class name="org.wso2.carbon.mediator.tests.xquery.XQueryCustomVariableAsByte"/>
+            <class name="org.wso2.carbon.mediator.tests.xquery.XQueryCustomVariableAsInteger"/>
+            <class name="org.wso2.carbon.mediator.tests.xquery.XQueryCustomVariableAsInt"/>
+            <class name="org.wso2.carbon.mediator.tests.xquery.XQueryCustomVariableAsBoolean"/>
+            <class name="org.wso2.carbon.mediator.tests.xquery.XQueryCustomVariableAsFloat"/>
+            <class name="org.wso2.carbon.mediator.tests.xquery.XQueryCustomVariableAsDouble"/>
+            <class name="org.wso2.carbon.mediator.tests.xquery.XQueryCustomVariableAsLong"/>
+            <class name="org.wso2.carbon.mediator.tests.xquery.XQueryReplaceEmptyMessageBody"/>
 
         </classes>
     </test>
@@ -89,7 +98,7 @@
             <class name="org.wso2.carbon.mediator.tests.clone.CloneMediatorTestCase"/>
             <class name="org.wso2.carbon.mediator.tests.clone.ValidSoapActionTestCase"/>
             <class name="org.wso2.carbon.mediator.tests.clone.ToAddressTestCase"/>
-            </classes>
+        </classes>
     </test>
 
     <test name="Test - Mediator Cache" preserve-order="true" verbose="2">

@@ -20,6 +20,7 @@ function showDesign(thisVar) {
         beforeSubmit:  addCustomParam,  // pre-submit callback
         success:       executeShowDesign  // post-submit callback
     };
+    editAreaLoader.delete_instance("mediatorSrc");
     document.getElementById("mediatorSrc").value = editAreaLoader.getValue("mediatorSrc");
     jQuery('#mediator-source-form').ajaxForm(options);
     jQuery('#mediator-source-form').submit();
@@ -67,35 +68,34 @@ function showSource() {
 
 function executeShowSource() {
     var url = 'mediator-source-ajaxprocessor.jsp';
-    jQuery("#mediatorSource").load(url, null, function (responseText, status, XMLHttpRequest) {
+    var xmlData = "";
+    jQuery.ajax({
+      url: url,
+      async:false,
+      success: function(data,status) {
         if (status != "success") {
             CARBON.showErrorDialog(jsi18n["mediator.source.load.error"]);
         } else {
-            var ele = document.getElementById("mediatorSource");
-            if (ele != null && ele != undefined) {
-                ele.innerHTML = responseText;
-                  //debugger;
-                //document.getElementById('mediatorSrcTD').style.display = "";
-                //document.getElementById('mediatorSrc').style.display = "";
-                editAreaLoader.delete_instance("mediatorSrc");
-                YAHOO.util.Event.onAvailable("mediatorSrc",
-	            	function() {
-	            		editAreaLoader.init({
-			            id : "mediatorSrc"		// textarea id
-			            ,syntax: "xml"			// syntax to be uses for highgliting
-			            ,start_highlight: true		// to display with highlight mode on start-up
-			        });
-	            	}
-    );
-            }
+            jQuery("#mediatorSource").html(data);
+            hide("mediator-designview-header");
+            showObj("mediator-sourceview-header");
+            showObj("mediator-edit-tab");
+            showObj("mediatorSource");
+            hide("mediatorDesign");
+            xmlData = data;
         }
+      }
     });
-
-    hide("mediator-designview-header");
-    showObj("mediator-sourceview-header");
-    showObj("mediator-edit-tab");
-    showObj("mediatorSource");
-    hide("mediatorDesign");
+    var ele = document.getElementById("mediatorSource");
+    if (ele != null && ele != undefined) {
+         jQuery(document).ready(function(){
+                 editAreaLoader.init({
+                        id : "mediatorSrc"
+                        ,syntax: "xml"
+                        ,start_highlight: true
+                  });
+         });
+    }
 }
 
 function hide(objid) {

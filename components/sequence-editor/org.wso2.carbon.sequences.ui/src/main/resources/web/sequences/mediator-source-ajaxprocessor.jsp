@@ -22,7 +22,7 @@
 <%@ page import="java.util.ResourceBundle"%>
 <%@ taglib uri="http://java.sun.com/jsp/jstl/fmt" prefix="fmt"%>
 <%@ taglib uri="http://wso2.org/projects/carbon/taglibs/carbontags.jar" prefix="carbon" %>
-<script src="../codepress/codepress.js" type="text/javascript"></script>
+<%--<script src="../codepress/codepress.js" type="text/javascript"></script>--%>
 
 <%
     ResourceBundle bundle = ResourceBundle.getBundle(SequenceEditorHelper.BUNDLE, request.getLocale());
@@ -78,14 +78,7 @@
         </form>
     </div>
     <script type="text/javascript">
-       /* YAHOO.util.Event.onAvailable('mediatorSrcTD', function() {
-            YAHOO.util.Event.onAvailable('mediatorSrc', function() {
-                editAreaLoader.init({
-                    id : "mediatorSrc"		// textarea id
-                    ,syntax: "xml"			// syntax to be uses for highgliting
-                    ,start_highlight: true		// to display with highlight mode on start-up
-                });
-            });
-        });*/
+         editAreaLoader.delete_instance("mediatorSrc");
+
     </script>
 </fmt:bundle>

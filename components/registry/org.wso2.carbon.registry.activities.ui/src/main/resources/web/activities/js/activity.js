@@ -40,6 +40,7 @@ function submitActivityForm(page, pageNumber) {
         reasonDiv.innerHTML = reason;
         if (reason != "") {
             CARBON.showWarningDialog(reason);
+            $('activityList').innerHTML = "";
             return false;
         }
         else {

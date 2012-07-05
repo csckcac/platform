@@ -1,0 +1,4 @@
+<%
+var site = require("site.json");
+response.sendRedirect(site.context+"/site/pages/index.jag");
+%>

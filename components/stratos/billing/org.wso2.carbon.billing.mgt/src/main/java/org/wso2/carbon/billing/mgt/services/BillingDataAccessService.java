@@ -265,4 +265,17 @@ public class BillingDataAccessService extends AbstractAdmin {
         DataAccessManager dataAccessManager = Util.getDataAccessManager();
         return dataAccessManager.deactivateActiveSubscription(tenantId);
     }
+
+    /**
+     * This method is used to update the usage plan when updating the from Demo to a paying plan
+     * @param subscriptionPlan new Usage plan name that user expect to go
+     * @param tenantDomain the domain of the tenant that should be updated 
+     * @return whether the operation was successful or not
+     * @throws Exception Exception
+     */
+    public boolean changeSubscriptionForTenant(String subscriptionPlan, String tenantDomain) throws Exception {
+        int tenantId = Util.getRealmService().getTenantManager().getTenantId(tenantDomain);
+        return changeSubscription(tenantId, subscriptionPlan);
+    }
+
 }

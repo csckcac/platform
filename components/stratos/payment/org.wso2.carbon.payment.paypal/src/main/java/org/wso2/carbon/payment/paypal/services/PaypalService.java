@@ -16,11 +16,21 @@
 package org.wso2.carbon.payment.paypal.services;
 
 import com.paypal.sdk.exceptions.PayPalException;
-import com.paypal.soap.api.*;
+import com.paypal.soap.api.BasicAmountType;
+import com.paypal.soap.api.CurrencyCodeType;
+import com.paypal.soap.api.DoExpressCheckoutPaymentRequestDetailsType;
+import com.paypal.soap.api.DoExpressCheckoutPaymentRequestType;
+import com.paypal.soap.api.DoExpressCheckoutPaymentResponseType;
+import com.paypal.soap.api.GetExpressCheckoutDetailsRequestType;
+import com.paypal.soap.api.GetExpressCheckoutDetailsResponseType;
+import com.paypal.soap.api.PaymentActionCodeType;
+import com.paypal.soap.api.PaymentDetailsType;
+import com.paypal.soap.api.SetExpressCheckoutRequestDetailsType;
+import com.paypal.soap.api.SetExpressCheckoutRequestType;
+import com.paypal.soap.api.SetExpressCheckoutResponseType;
 import org.apache.commons.logging.Log;
 import org.apache.commons.logging.LogFactory;
 import org.wso2.carbon.business.messaging.paypal.integration.PaypalSOAPProxy;
-import org.wso2.carbon.core.AbstractAdmin;
 import org.wso2.carbon.payment.paypal.dto.ECDetailResponse;
 import org.wso2.carbon.payment.paypal.dto.ECResponse;
 import org.wso2.carbon.payment.paypal.dto.TransactionResponse;
@@ -31,7 +41,7 @@ import org.wso2.carbon.payment.paypal.util.ResponsePopulator;
  * The <code>PaypalService</code> class provides the methods required to access Paypal web service
  */
 
-public class PaypalService extends AbstractAdmin{
+public class PaypalService {
 
     //NOTE: EC stands for ExpressCheckout
     //PayPal soap proxy object

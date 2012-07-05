@@ -49,7 +49,6 @@ public class PaymentServiceClient {
         ECResponse response = null;
         try {
             response = stub.initExpressCheckout(amount, successUrl, cancelUrl);
-            System.out.println("response: " + response.getAck());
         } catch (Exception e) {
             log.error("Error occurred while initiating express checkout transaction: " +
                         e.getMessage());

@@ -35,6 +35,7 @@
 
         session.removeAttribute(StratosConstants.ORIGINATED_SERVICE);
         session.setAttribute("add-tenant-success", "true");
+        session.setAttribute("regTenantDomain", domain);
 
         String contextPath = "/" + MultitenantConstants.TENANT_AWARE_URL_PREFIX + "/" + request.getParameter("domain");
         //response.sendRedirect(contextPath + "/carbon/tenant-theme/theme_mgt.jsp?redirectWith=" + key);
@@ -48,7 +49,7 @@
         }
         else {
             // send me direct to the add tenant form, without successkey they will add the suffix -unverified
-            response.sendRedirect("../tenant-register/success_register.jsp");
+            response.sendRedirect("../tenant-register/select_usage_plan.jsp");
         }
 
     } catch (Exception e) {

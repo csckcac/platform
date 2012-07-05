@@ -5,8 +5,8 @@
         </transports>
         <parameter name="ServiceClass">org.wso2.carbon.payment.paypal.services.PaypalService</parameter>
     </service>
-    
-    <parameter name="adminService" locked="true">true</parameter>
+
     <parameter name="hiddenService" locked="true">true</parameter>
-    <parameter name="AuthorizationAction" locked="true">/permission/admin/protected</parameter>
+    <!--parameter name="adminService" locked="true">true</parameter>
+    <parameter name="AuthorizationAction" locked="true">/permission/admin/protected</parameter-->
 </serviceGroup>

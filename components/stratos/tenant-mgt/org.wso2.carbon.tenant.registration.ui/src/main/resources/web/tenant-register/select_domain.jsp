@@ -44,37 +44,19 @@
 <script type="text/javascript">
 
     var packageInfo;
-    function showRentalMessage() {
-
-        if (packageInfo == null) {
-            jQuery.ajax({
-                type: 'POST',
-                url: 'get_package_info_ajaxprocessor.jsp',
-                dataType: 'json',
-                data: 'plan=0',
-                async: false,
-                success: function(data) {
-                    packageInfo = data;
-                },
-                error:function (xhr, ajaxOptions, thrownError) {
-                    CARBON.showErrorDialog('Could not get package information.');
-                }
-            });
-        }
-
-        var plan = document.getElementById('usage-plan-name').
-                options[document.getElementById('usage-plan-name').selectedIndex].value;
-        var charge;
+    
+    function setFreeUsagePlan() {
+        var foundFreePlan = false;
         for (var i = 0; i < packageInfo.length; i++) {
-            if (packageInfo[i].name == plan) {
-                charge = packageInfo[i].subscriptionCharge;
-                break;
+            if (packageInfo[i].subscriptionCharge == "0") {
+                document.getElementById("usage-plan-name").value = packageInfo[i].name;
+                foundFreePlan = true;
+                return;
             }
-
         }
-
-        document.getElementById('packagePrice').innerHTML = '<b>' + charge + " per month" + '</b>';
-
+        if(!foundFreePlan) {
+            document.getElementById("usage-plan-name").value = packageInfo[0].name;
+        }
     }
 
     jQuery(document).ready(
@@ -93,17 +75,6 @@
                                   }
                               });
 
-                              var charge;
-                              var name;
-                              for (var i = 0; i < packageInfo.length; i++) {
-                                  charge = packageInfo[i].subscriptionCharge;
-                                  name = packageInfo[i].name;
-                                  option = document.createElement("option");
-                                  option.value = name;
-                                  option.innerHTML = name;
-                                  document.getElementById('usage-plan-name').appendChild(option);
-
-                              }
                           }
             );
 </script>
@@ -177,11 +148,6 @@
         lastname = (String) session.getAttribute("submit-admin-lastname");
         session.setAttribute("submit-admin-lastname", null);
     }
-    if (session.getAttribute("submit-usage-plan-name") != null) {
-        usagePlan = (String) session.getAttribute("submit-usage-plan-name");
-        session.setAttribute("submit-usage-plan-name", null);
-    }
-
 %>
 
 <%@ taglib prefix="fmt" uri="http://java.sun.com/jsp/jstl/fmt" %>
@@ -289,39 +255,6 @@
                             </table>
                         </div>
 
-                        <h2 class="trigger"><a href="#"><fmt:message key="usage.plan.information"/></a></h2>
-
-                        <div class="toggle_container">
-                            <table class="normal-nopadding" cellspacing="0">
-                                <tbody>
-                                <tr>
-                                    <td class="leftCol-med">
-                                        <fmt:message key="select.usage.plan.for.tenant"/><span class="required">*</span>
-                                    </td>
-                                    <td colspan="2">
-                                        <select name="usage-plan-name" id="usage-plan-name"
-                                                onchange="showRentalMessage();">
-
-                                        </select>
-                                        <a href="<%=CommonUtil.getStratosConfig().getUsagePlanURL()%>" target="_blank">
-                                            <b>Pricing Info</b>
-                                        </a>
-                                    </td>
-                                </tr>
-                                <tr>
-                                    <td></td>
-                                    <td colspan="2" id="packagePrice" class="registration_help"><b><fmt:message
-                                            key="demo.package.price"/></b></td>
-                                </tr>
-                                <tr>
-                                    <td></td>
-                                    <td colspan="2" class="registration_help"><fmt:message
-                                            key="select.package.message"/>
-                                    </td>
-                                </tr>
-                                </tbody>
-                            </table>
-                        </div>
                         <h2 class="trigger"><a href="#"><fmt:message key="contact.details"/></a></h2>
 
                         <div class="toggle_container">
@@ -421,17 +354,18 @@
                 </tr>
                 <tr id="buttonRow">
                     <td class="buttonRow">
+                        <input type="hidden" name="usage-plan-name" id="usage-plan-name"/>
                         <input type="hidden" name="captcha-secret-key" value="<%=captchaSecretKey%>"/>
                         <%
                             if (isPublicCloud) {
                         %>
                         <input class="button" id="submit-button" type="button" disabled="disabled"
-                               value="Submit" onclick="addTenant()"/>
+                               value="Submit" onclick="setFreeUsagePlan();addTenant()"/>
                         <%
                         } else {
                         %>
                         <input class="button" id="submit-button" type="button"
-                               value="Submit" onclick="addTenant()"/>
+                               value="Next >" onclick="setFreeUsagePlan();addTenant()"/>
                         <%
                             }
                         %>

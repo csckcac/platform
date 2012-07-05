@@ -73,7 +73,25 @@
 
         }
 
-        document.getElementById('packagePrice').innerHTML = '<b>' + charge + " per month" + '</b>';
+        document.getElementById('packagePrice').innerHTML = '<b>' + '<fmt:message key="billing.currency"/>' + charge + " per month" + '</b>';
+
+    }
+
+    function makePayment() {
+        var selectEl = document.getElementById("usage-plan-name");
+        var selectedUsagePlan = selectEl.options[selectEl.selectedIndex].value;
+
+        var freePlan = false;
+        for (var i = 0; i < packageInfo.length; i++) {
+            if (packageInfo[i].name == selectedUsagePlan && packageInfo[i].subscriptionCharge != "0") {
+                document.forms["selectUsagePlan"].submit();    
+            } else if (packageInfo[i].name == selectedUsagePlan && packageInfo[i].subscriptionCharge == "0") {
+                location.href = "../tenant-register/success_register.jsp";
+            }
+        }
+    }
+
+    function cancelPaymet() {
 
     }
 
@@ -110,13 +128,6 @@
 
 
 <%
-    String domainName = "";
-    String admin = "";
-    String email = "";
-    String firstname = "";
-    String lastname = "";
-    String usagePlan = "";
-    String license = CommonUtil.getEula();
     boolean isPublicCloud = CommonUtil.isPublicCloudSetup();
 
     session.setAttribute(StratosConstants.ORIGINATED_SERVICE,
@@ -144,74 +155,9 @@
     }
 %>
 <link href="../tenant-register/css/tenant-register.css" rel="stylesheet" type="text/css" media="all"/>
-
-<%
-    CaptchaInfoBean captchaInfoBean;
-    try {
-        captchaInfoBean = TenantConfigUtil.generateRandomCaptcha(config, session);
-    } catch (Exception e) {
-        return;
-    }
-    String captchaImagePath = captchaInfoBean.getImagePath();
-
-    String captchaImageUrl = "../../" + captchaImagePath;
-    String captchaSecretKey = captchaInfoBean.getSecretKey();
-
-    if (session.getAttribute("submit-domain") != null) {
-        domain = (String) session.getAttribute("submit-domain");
-        session.setAttribute("submit-domain", null);
-    }
-    if (session.getAttribute("submit-admin") != null) {
-        admin = (String) session.getAttribute("submit-admin");
-        session.setAttribute("submit-admin", null);
-    }
-    if (session.getAttribute("submit-admin-email") != null) {
-        email = (String) session.getAttribute("submit-admin-email");
-        session.setAttribute("submit-admin-email", null);
-    }
-    if (session.getAttribute("submit-admin-firstname") != null) {
-        firstname = (String) session.getAttribute("submit-admin-firstname");
-        session.setAttribute("submit-admin-firstname", null);
-    }
-    if (session.getAttribute("submit-admin-lastname") != null) {
-        lastname = (String) session.getAttribute("submit-admin-lastname");
-        session.setAttribute("submit-admin-lastname", null);
-    }
-    if (session.getAttribute("submit-usage-plan-name") != null) {
-        usagePlan = (String) session.getAttribute("submit-usage-plan-name");
-        session.setAttribute("submit-usage-plan-name", null);
-    }
-
-%>
-
 <%@ taglib prefix="fmt" uri="http://java.sun.com/jsp/jstl/fmt" %>
 <%@ taglib uri="http://wso2.org/projects/carbon/taglibs/carbontags.jar" prefix="carbon" %>
 
-<%
-    if ("failed".equals(session.getAttribute("kaptcha-status"))) {
-        session.setAttribute("kaptcha-status", null);
-%>
-
-<script type="text/javascript">
-    jQuery(document).ready(function() {
-        CARBON.showWarningDialog('Please enter the letters shown as in the image to register.');
-    });
-</script>
-<%
-    }
-
-    if ("true".equals(session.getAttribute("add-tenant-failed"))) {
-        session.removeAttribute("add-tenant-failed");
-%>
-
-<script type="text/javascript">
-    jQuery(document).ready(function() {
-        CARBON.showWarningDialog('Organization registration failed. Please try again with a different domain.');
-    });
-</script>
-<%
-    }
-%>
 <script type="text/javascript">
     jQuery(document).ready(function() {
 
@@ -238,7 +184,7 @@
     <div id="workArea">
         <div class="registration_help"><fmt:message key="required.msg"/></div>
         <div id="activityReason" style="display: none;"></div>
-        <form id="addTenantForm" action="submit_tenant_ajaxprocessor.jsp" method="post">
+        <form id="selectUsagePlan" action="init_payment_ajaxprocessor.jsp" method="post">
 
             <table class="styledLeft">
                 <tbody>
@@ -256,7 +202,6 @@
                                     <td colspan="2">
                                         <select name="usage-plan-name" id="usage-plan-name"
                                                 onchange="showRentalMessage();">
-
                                         </select>
                                         <a href="<%=CommonUtil.getStratosConfig().getUsagePlanURL()%>" target="_blank">
                                             <b>Pricing Info</b>
@@ -282,7 +227,9 @@
                 <tr id="buttonRow">
                     <td class="buttonRow">
                         <input class="button" id="submit-button" type="button"
-                               value="Submit" onclick="addTenant()"/>
+                               value="Submit" onclick="makePayment()"/>
+                        <input class="button" id="cancel-button" type="button"
+                               value="Cancel" onclick="cancelPaymet()"/>
                     </td>
                 </tr>
                 <tr id="waitMessage" style="display:none">
@@ -299,9 +246,6 @@
         <br/>
     </div>
 </div>
-<script type="text/javascript">
-    showKaptcha('<%=captchaImageUrl%>');
-</script>
 </fmt:bundle>
 
 

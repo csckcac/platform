@@ -59,6 +59,9 @@
                 <skip-link>../email-verification/invalid_email.jsp</skip-link>
                 <skip-link>../account-mgt/update_verifier_redirector_ajaxprocessor.jsp</skip-link>
 
+                <!--payment stuff -->
+                <skip-link>../payment/registration_payment.jsp</skip-link>
+                <skip-link>../payment/registration_payment_completed.jsp</skip-link>
             </skip-authentication>
             <require-not-logged-in>true</require-not-logged-in>
         </menu>

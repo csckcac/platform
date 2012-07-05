@@ -62,10 +62,8 @@ public class PackageInfoServiceClient {
             for (PackageInfo packageInfo : packageInfoArray) {
                 JSONObject packageInfoObj = new JSONObject();
                 packageInfoObj.put("name", packageInfo.getName());
-                int subscriptionCharge = packageInfo.getSubscriptionCharge();
                 //TODO https://wso2.org/jira/browse/STRATOS-1819
-                StringBuffer charge = new StringBuffer("$" + subscriptionCharge);
-                packageInfoObj.put("subscriptionCharge", charge.toString());
+                packageInfoObj.put("subscriptionCharge", packageInfo.getSubscriptionCharge());
                 jsonPackageInfoArray.put(packageInfoObj);
             }
             return jsonPackageInfoArray;

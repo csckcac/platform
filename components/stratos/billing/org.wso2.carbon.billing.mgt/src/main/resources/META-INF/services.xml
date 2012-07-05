@@ -82,6 +82,10 @@
         <operation name="activateSubscription">
             <parameter name="superTenantService" locked="true">true</parameter>
         </operation>
+        
+        <operation name="changeSubscriptionForTenant">
+            <parameter name="superTenantService" locked="true">true</parameter>
+        </operation>
   	</service>
 
     <parameter name="hiddenService" locked="true">true</parameter>

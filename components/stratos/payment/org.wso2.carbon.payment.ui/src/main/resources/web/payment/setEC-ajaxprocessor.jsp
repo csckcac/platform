@@ -26,7 +26,6 @@
 
 <%
     String serverURL = CarbonUIUtil.getServerURL(config.getServletContext(), session);
-    System.out.println("Server Url: " + serverURL);
     ConfigurationContext configContext = (ConfigurationContext) config.getServletContext().
             getAttribute(CarbonConstants.CONFIGURATION_CONTEXT);
     String cookie = (String) session.getAttribute(ServerConstants.ADMIN_SERVICE_COOKIE);

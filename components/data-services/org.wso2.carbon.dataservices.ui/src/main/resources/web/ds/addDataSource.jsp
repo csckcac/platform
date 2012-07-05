@@ -668,7 +668,7 @@ private Config addNotAvailableFunctions(Config config,String selectedType, HttpS
              <input type="hidden" id="flag" name="flag" value="<%=flag%>"/>
             <input type="hidden" id="propertyCount" name="propertyCount" value="0"/>
             <% if(dataSourceType.equals("Cassandra")) {%>
-                <input type="hidden" id="RDBMS.DRIVER_CLASSNAME" name="RDBMS.DRIVER_CLASSNAME" value="org.apache.cassandra.cql.jdbc.CassandraDriver" />
+                <input type="hidden" id="driverClassName" name="driverClassName" value="org.apache.cassandra.cql.jdbc.CassandraDriver" />
             <% } %>
         </tr>
 
@@ -1494,7 +1494,7 @@ private Config addNotAvailableFunctions(Config config,String selectedType, HttpS
                     driver = document.getElementById('<%=RDBMS.DRIVER_CLASSNAME%>').value;
                     jdbcUrl = document.getElementById('<%=RDBMS.URL%>').value;
                     if(document.getElementById('datasourceType').options[document.getElementById('datasourceType').selectedIndex].value == 'Cassandra') {
-                        jdbcUrl = "jdbc:cassandra://"+document.getElementById(<%=RDBMS.URL%>).value;
+                        jdbcUrl = "jdbc:cassandra://"+document.getElementById('<%=RDBMS.URL%>').value;
                     }
                     userName = document.getElementById('<%=RDBMS.USERNAME%>').value;
                     password = document.getElementById('<%=RDBMS.PASSWORD%>').value;

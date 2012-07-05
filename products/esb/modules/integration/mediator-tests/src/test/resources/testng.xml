@@ -84,12 +84,19 @@
         </classes>
     </test>
 
-   <!-- <test name="Test - Mediator Clone" preserve-order="true" verbose="2">
+    <test name="Test - Mediator Clone" preserve-order="true" verbose="2">
         <classes>
             <class name="org.wso2.carbon.mediator.tests.clone.CloneMediatorTestCase"/>
             <class name="org.wso2.carbon.mediator.tests.clone.ValidSoapActionTestCase"/>
             <class name="org.wso2.carbon.mediator.tests.clone.ToAddressTestCase"/>
+            </classes>
+    </test>
 
+    <test name="Test - Mediator Cache" preserve-order="true" verbose="2">
+        <classes>
+            <class name="org.wso2.carbon.mediator.tests.cache.PerHostTestCase"/>
+            <class name="org.wso2.carbon.mediator.tests.cache.MessageSizeTestCase"/>
+            <class name="org.wso2.carbon.mediator.tests.cache.MessageSizeNullTestCase"/>
         </classes>
-    </test>-->
+    </test>
 </suite>

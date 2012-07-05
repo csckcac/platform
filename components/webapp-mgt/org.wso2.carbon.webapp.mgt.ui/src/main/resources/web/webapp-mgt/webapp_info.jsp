@@ -155,8 +155,8 @@
                             }
                         });
         });
-    }   
-</script> 
+    }
+</script>
 <script type="text/javascript">
    function sendToURLMapper(myepr){
             jQuery.ajax({
@@ -164,11 +164,11 @@
                             url: "../urlmapper/index.jsp",
                             data: "type=add&carbonEndpoint=" + myepr,
                             success: function(msg){
-                               
+
                             }
                         });
-    }   
-</script> 
+    }
+</script>
 <div id="middle">
     <h2><fmt:message key="webapp.dashboard"/> (<%= webapp.getContext() %>)</h2>
 
@@ -188,9 +188,22 @@
                         <tr>
                             <td width="30%"><fmt:message key="webapp.context"/></td>
                             <td>
+
+                                <%
+                                    if ("Stopped".equalsIgnoreCase( webapp.getState())) {
+                                %>
+                                <%=webapp.getContext()%>
+                                <%
+                                } else {
+                                %>
+
                                 <a href="<%= urlPrefix + "/" + webapp.getContext() %>" target="_blank">
                                     <%=webapp.getContext()%>
                                 </a>
+                                <%
+                                    }
+                                %>
+
                             </td>
                         </tr>
                         <tr>
@@ -358,8 +371,8 @@
                         </a></nobr>
                     </td>
                         </tr>
-                           <% 
-                  
+                           <%
+
                    			 }
            				   %>
                         <tr>
@@ -369,8 +382,8 @@
                 <td>&nbsp;</td>
             </tr>
         </table>
-        
-  
+
+
         <script type="text/javascript">
             alternateTableRows('webappTable', 'tableEvenRow', 'tableOddRow');
             alternateTableRows('sessionStatsTable', 'tableEvenRow', 'tableOddRow');

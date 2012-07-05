@@ -24,7 +24,7 @@
 
 <serviceStatusConfig xmlns="http://wso2.com/carbon/status/monitor/config">
    <authConfig>
-        <jksLocation>../../../repository/resources/security/wso2carbon.jks</jksLocation> <!--location to the jks file-->
+        <jksLocation>../../repository/resources/security/wso2carbon.jks</jksLocation> <!--location to the jks file-->
 
         <!--The tenant credentials that to be used to login to the Stratos 
 	services. Make sure the correct credentials are given to avoid 

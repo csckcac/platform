@@ -65,8 +65,15 @@
     ant fixclient
         A client which could post a FIX message (of type Order-Single) embedded into a SOAP message.
 
-    example:
+        example:
         ant fixclient -Dsymbol=IBM -Dqty=5 -Dmode=buy -Daddurl=http://localhost:8280/soap/FIXProxy
+
+    ant amqpconsumer
+        A JMS based amqp consumer that accept orders and generates executions.
+        [-Dpropfile=$ESB_HOME/repository/samples/resources/fix/direct.properties]
+
+	example:
+        ant amqpconsumer
 
     ant mddproducer
         A JMS client to produce market data on binary format seq#|symbol|price|market
@@ -174,6 +181,13 @@
             <sysproperty key="java.naming.factory.url.pkg" value="${java.naming.factory.url.pkg}"/>-->
             <sysproperty key="java.io.tmpdir" value="./../../tmp/sampleClient"/>
             <sysproperty key="carbon.home" value="./../.."/>
+        </java>
+    </target>
+
+    <target name="amqpconsumer" depends="compile">
+        <java classname="samples.userguide.AMQPConsumer"
+             classpathref="javac.classpath" fork="true">
+            <sysproperty key="propfile" value="${propfile}"/>
         </java>
     </target>
 

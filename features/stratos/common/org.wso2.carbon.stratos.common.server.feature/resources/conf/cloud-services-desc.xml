@@ -34,7 +34,7 @@
         <productPageURL>http://wso2.com/products/data-services-server/</productPageURL>
         <description>Data Services Server in the cloud.</description>
     </cloudService>
-    <cloudService name="WSO2 Governance" default="true">
+    <cloudService name="WSO2 Governance Registry" default="true">
         <label>Governance</label>
         <link>https://governance.cloud.wso2.com</link>
         <description>Governance in the cloud.</description>

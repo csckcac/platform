@@ -68,6 +68,18 @@
     function forward() {
         location.href = "<%=forwardTo%>";
     }
+
+function validateTextForIllegal(fld,fldName) {
+
+    var illegalChars = /([?#^\|<>\"\'])/;
+    var illegalCharsInput = /(\<[a-zA-Z0-9\s\/]*>)/;
+    if (illegalChars.test(fld.value) || illegalCharsInput.test(fld.value)) {
+       return false;
+    } else {
+       return true;
+    }
+}
+
 </script>
 
 <script type="text/javascript">
@@ -102,6 +114,13 @@
         <div id="workArea">
             <script type="text/javascript">
                 function validate() {
+                    // JS injection validation for name fields
+
+                    if(!validateTextForIllegal(document.getElementsByName("profile")[0],"profile")) {
+                        CARBON.showWarningDialog(org_wso2_carbon_registry_common_ui_jsi18n["the"] + " "+ "profile name content"+" " + org_wso2_carbon_registry_common_ui_jsi18n["contains.illegal.chars"]);
+                        return false;
+                    }
+
                     var value = document.getElementsByName("profile")[0].value;
                     if (value == '') {
                         CARBON.showWarningDialog('<fmt:message key="user.profilename.is.required"/>');
@@ -111,6 +130,13 @@
                 <%if (userFields!=null) {
                     for (int i=0; i< userFields.length;i++) { %>
                     var value = document.getElementsByName("<%=userFields[i].getClaimUri()%>")[0].value;
+
+                    // JS injection validation for name fields
+                    if(!validateTextForIllegal(document.getElementsByName("<%=userFields[i].getClaimUri()%>")[0],"profilefiled")) {
+                        CARBON.showWarningDialog(org_wso2_carbon_registry_common_ui_jsi18n["the"] + " "+ "profile content"+" " + org_wso2_carbon_registry_common_ui_jsi18n["contains.illegal.chars"]);
+                        return false;
+                    }
+
                 <% if (userFields[i].getRequired()&& userFields[i].getDisplayName()!=null) {%>
                     if (validateEmpty("<%=userFields[i].getClaimUri()%>").length > 0) {
                         CARBON.showWarningDialog("<%=userFields[i].getDisplayName()%>" + " <fmt:message key='is.required'/>");

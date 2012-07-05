@@ -43,6 +43,7 @@ public class HiveExecutionClient {
         ServiceClient client = stub._getServiceClient();
         Options option = client.getOptions();
         option.setManageSession(true);
+        option.setTimeOutInMilliSeconds(5*60000);
         option.setProperty(org.apache.axis2.transport.http.HTTPConstants.COOKIE_STRING, cookie);
     }
 

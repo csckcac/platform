@@ -114,11 +114,12 @@ function autoResize(id){
         <%
 
             String renderJsp = "render.jsp";
+            String dataSource = "test";
 
             for (int i = 0; i < tabs.size(); i++) {
                 JasperTabDTO tab = tabs.get(i);
                 String jrxml = tab.getJrxmlFileName();
-                String renderUrl = renderJsp + "?jrxml=" + jrxml;
+                String renderUrl = renderJsp + "?jrxml=" + jrxml + "&datasource=" + dataSource;
                 String iframeId = "iframe" + i;
                 String tabId = "tabs-" + i;
 

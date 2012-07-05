@@ -21,6 +21,8 @@
 <%@ page import="net.sf.jasperreports.engine.JRExporterParameter" %>
 <%@ page import="net.sf.jasperreports.engine.export.JRHtmlExporterParameter" %>
 <%@ page import="java.io.PrintWriter" %>
+<%@ page import="org.wso2.carbon.ndatasource.core.DataSourceService" %>
+<%@ page import="javax.sql.DataSource" %>
 
 <%
 
@@ -28,6 +30,10 @@
 
     RegistryService registryService = (RegistryService)
             SuperTenantCarbonContext.getCurrentContext().getOSGiService(RegistryService.class);
+
+    DataSourceService dataSourceService =
+            (DataSourceService)SuperTenantCarbonContext.getCurrentContext().
+                    getOSGiService(DataSourceService.class);
 
     int tenantId = CarbonContext.getCurrentContext().getTenantId();
 
@@ -39,6 +45,7 @@
     }
 
     String jrxml = request.getParameter("jrxml");
+    String dataSourceName = request.getParameter("datasource");
 
     String registryPath = jasperPath + RegistryConstants.PATH_SEPARATOR + jrxml;
 
@@ -60,8 +67,11 @@
 
     Connection con = null;
     try {
-        Class.forName("com.mysql.jdbc.Driver");
-        con = DriverManager.getConnection("jdbc:mysql://localhost:3306/testdb", "root", "root");
+/*        Class.forName("com.mysql.jdbc.Driver");
+        con = DriverManager.getConnection("jdbc:mysql://localhost:3306/testdb", "root", "root");*/
+        DataSource dataSource  = (DataSource) dataSourceService.getDataSource(dataSourceName)
+                .getDSObject();
+        con = dataSource.getConnection();
     } catch (Exception e) {
         e.printStackTrace();
     }

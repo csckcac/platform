@@ -1,3 +1,7 @@
+<%@ page import="org.apache.axiom.om.OMElement" %>
+<%@ page import="org.apache.axiom.om.util.AXIOMUtil" %>
+<%@ page import="org.apache.synapse.config.xml.endpoints.EndpointFactory" %>
+<%@ page import="java.util.Properties" %>
 <!--
 ~ Copyright (c) 2012, WSO2 Inc. (http://www.wso2.org) All Rights Reserved.
 ~
@@ -19,7 +23,19 @@
 <%
     String configuration = request.getParameter("endpointString");
     configuration = configuration.replaceAll("\\s\\s+|\\n|\\r", ""); // remove the pretty printing from the string
-    configuration = configuration.replace("&","&amp;"); // this is to ensure that url is properly encoded
+    configuration = configuration.replace("&", "&amp;"); // this is to ensure that url is properly encoded
 
     session.setAttribute("endpointConfiguration", configuration);
+    OMElement endpointElement = AXIOMUtil.stringToOM(configuration);
+
+    try {
+        EndpointFactory.getEndpointFromElement(endpointElement, false, new Properties());
+        %>
+        <div>Success:</div>
+        <%
+    } catch (Exception e) {
+        %>
+            <div>Error:</div><%=e.getMessage()%>
+        <%
+    }
 %>

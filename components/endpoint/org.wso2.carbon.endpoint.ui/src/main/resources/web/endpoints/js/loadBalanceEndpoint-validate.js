@@ -14,14 +14,14 @@
  ~  limitations under the License.
  */
 
-function validateLoadBalanceEndpoint(isAnonymous, isFromTemplateEditor) {
+function validateLoadBalanceEndpoint(isAnonymous, validateChildEpsAvailability) {
     if (!isAnonymous && isEmptyField('listEndpointName')) {
         CARBON.showWarningDialog(jsi18n['name.field.cannot.be.empty']);
         return false;
     }
 
     var elementId = document.getElementById('childEndpoint-0');
-    if (elementId == null || elementId == undefined) {
+    if (validateChildEpsAvailability && (elementId == null || elementId == undefined)) {
         CARBON.showWarningDialog(jsi18n['no.child.endpoints.added']);
         return false;
     }

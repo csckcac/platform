@@ -108,8 +108,14 @@
                         type: 'POST',
                         url: 'updatePages/sourceView-update.jsp',
                         data: 'endpointString=' + epString,
-                        success: directToSubmitPage
-
+                        success: function(msg) {
+                            var index = msg.toString().trim().indexOf('<div>');
+                            if (msg.toString().trim().indexOf('<div>Error:') == index) {
+                                CARBON.showErrorDialog(msg.toString().trim().substring(index + 17));
+                            } else {
+                                directToSubmitPage();
+                            }
+                        }
                     });
     }
 
@@ -125,8 +131,14 @@
                         type: 'POST',
                         url: 'updatePages/sourceView-update.jsp',
                         data: 'endpointString=' + epString,
-                        success: directToSubmitDynamicEndpointPage
-
+                        success: function(msg) {
+                            var index = msg.toString().trim().indexOf('<div>');
+                            if (msg.toString().trim().indexOf('<div>Error:') == index) {
+                                CARBON.showErrorDialog(msg.toString().trim().substring(index + 17));
+                            } else {
+                                directToSubmitDynamicEndpointPage();
+                            }
+                        }
                     });
     }
 
@@ -183,7 +195,12 @@
                         url: 'updatePages/sourceView-update.jsp',
                         data: 'endpointString=' + epString,
                         success: function(msg) {
-                            location.href = url;
+                            var index = msg.toString().trim().indexOf('<div>');
+                            if (msg.toString().trim().indexOf('<div>Error:') == index) {
+                                CARBON.showErrorDialog(msg.toString().trim().substring(index + 17));
+                            } else {
+                                location.href = url;
+                            }
                         }
                     });
     }

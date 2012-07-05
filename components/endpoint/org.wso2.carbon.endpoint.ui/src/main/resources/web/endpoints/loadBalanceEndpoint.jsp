@@ -386,7 +386,7 @@
             <input type="button" value="<fmt:message key="save"/>"
                    class="button"
                    name="save"
-                   onclick="submitEndpointData('LoadBalance','<%=isAnonymous%>','false');"/>
+                   onclick="submitEndpointData('LoadBalance','<%=isAnonymous%>','true');"/>
             <%
                 if (!isAnonymous) {
             %>
@@ -444,7 +444,7 @@
             <td class="buttonRow">
                 <input type="button" class="button" value="<fmt:message key="save"/>"
                        id="saveSynRegButton"
-                       onclick="javascript:submitDynamicEndpointData('LoadBalance','false'); return false;"/>
+                       onclick="javascript:submitDynamicEndpointData('LoadBalance','true'); return false;"/>
                 <input type="button" class="button" value="<fmt:message key="cancel"/>"
                        id="cancelSynRegButton"
                        onclick="javascript:showSaveAsForm(false,false); return false;">

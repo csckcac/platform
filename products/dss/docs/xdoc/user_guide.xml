@@ -70,6 +70,7 @@ our <a href="mail-lists.html">mailing lists</a>.</p>
   <li><a href="xa-dataSources.html">Distributed Transactions Support</a></li>
   <li><a href="binary_data.html">Binary Data Support</a></li>
   <li><a href="array_data_type.html">Array Data Type Support</a></li>
+  <li><a href="advanced_datasource_prop.html">Advanced Data Source Properties in RDBMS Data Sources</a></li>
   <li><a href="advanced_query_prop.html">Advanced Query Properties</a></li>
   <li><a href="export.html">Query Result Export</a></li>
   <li><a href="complex_types.html">Complex Elements</a></li>

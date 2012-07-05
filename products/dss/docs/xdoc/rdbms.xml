@@ -88,7 +88,7 @@
         <img alt="DS" src="images/ds-wizard/rdbms/step1.1.png"/>
         <p>Figure 3: Configure Data Source</p>
         <p>To find more details about data source configuration parameters refer to
-            <a href="http://commons.apache.org/dbcp/configuration.html">http://commons.apache.org/dbcp/configuration.html</a>.</p>
+            <a href="advanced_datasource_prop.html">Advanced Data Source Properties in RDBMS Data Sources</a>.</p>
         <br/>
         <p>Enter query details using which values will be extracted and specify how SQL response is
             mapped to output XML.

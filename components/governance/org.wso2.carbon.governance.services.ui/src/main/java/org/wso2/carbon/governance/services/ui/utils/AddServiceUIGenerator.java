@@ -22,6 +22,7 @@ import org.apache.axiom.om.OMNamespace;
 import org.apache.axiom.om.impl.builder.StAXOMBuilder;
 import org.apache.commons.logging.Log;
 import org.apache.commons.logging.LogFactory;
+import org.wso2.carbon.governance.api.util.GovernanceConstants;
 import org.wso2.carbon.registry.core.RegistryConstants;
 import org.wso2.carbon.ui.CarbonUIUtil;
 
@@ -1138,11 +1139,21 @@ public class AddServiceUIGenerator {
                     } else {
                         String input = request.getParameter(widgetName.replaceAll(" ", "_") + "_" +
                                 name.replaceAll(" ", "-"));
+                        OMElement text = null;
+
                         if (input != null && !("".equals(input)) && !("None".equals(input))) {
-                            OMElement text = fac.createOMElement(AddServicesUtil.getDataElementName(name), namespace);
+                            text = fac.createOMElement(AddServicesUtil.getDataElementName(name), namespace);
                             text.setText(input);
                             widgetData.addChild(text);
+
+                        } else {
+                            if (name.equals("Name")) {
+                                text = fac.createOMElement(AddServicesUtil.getDataElementName(name), namespace);
+                                text.setText(GovernanceConstants.DEFAULT_SERVICE_NAME);
+                                widgetData.addChild(text);
+                            }
                         }
+
                     }
                 }
             }

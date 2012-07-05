@@ -250,4 +250,6 @@ public class GovernanceConstants {
      * Defines the environment change of the resource in order to be used in creating notifications
      */
     public static final String REGISTRY_IS_ENVIRONMENT_CHANGE = "registry.is.environment.change.property";
+
+    public static final String DEFAULT_SERVICE_NAME="C0E6D4A8-C446-4f01-99DB-70E212685A40";
 }

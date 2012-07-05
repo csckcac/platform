@@ -21,7 +21,7 @@ import org.apache.commons.logging.Log;
 import org.apache.commons.logging.LogFactory;
 import org.wso2.carbon.governance.api.common.dataobjects.GovernanceArtifact;
 import org.wso2.carbon.governance.api.exception.GovernanceException;
-import org.wso2.carbon.governance.api.services.dataobjects.Service;
+import org.wso2.carbon.governance.api.util.GovernanceConstants;
 
 public class GovernanceArtifactFilter {
 
@@ -46,6 +46,10 @@ public class GovernanceArtifactFilter {
             }
             if (key.toLowerCase().contains("count")) {
                 // we ignore the count.
+                continue;
+            }
+            String serviceName = referenceArtifact.getAttribute("overview_name");
+            if (serviceName.equals(GovernanceConstants.DEFAULT_SERVICE_NAME)) {
                 continue;
             }
             String[] referenceValues = referenceArtifact.getAttributes(key);

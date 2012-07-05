@@ -546,10 +546,11 @@
 				<featureArtifactDef>
                                     org.wso2.carbon:org.wso2.carbon.ndatasource.feature:${carbon.version}
                                 </featureArtifactDef>
-<!--
+
                                 <featureArtifactDef>
                                     org.wso2.carbon:org.wso2.carbon.cassandra.explorer.feature:${carbon.version}
                                 </featureArtifactDef>
+<!--
   <featureArtifactDef>
                                     org.wso2.carbon:org.wso2.carbon.cassandra.feature:${carbon.version}
                                 </featureArtifactDef> -->

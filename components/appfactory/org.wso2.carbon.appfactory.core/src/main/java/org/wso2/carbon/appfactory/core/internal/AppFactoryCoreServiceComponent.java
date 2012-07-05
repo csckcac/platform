@@ -73,5 +73,13 @@ public class AppFactoryCoreServiceComponent {
         ServiceHolder.setRevisionControlDriver(revisionControlDriver);
     }
 
+    protected void unsetArtifactStorage(ArtifactStorage artifactStorage) {
+        ServiceHolder.setArtifactStorage(null);
+    }
+
+    protected void setArtifactStorage(ArtifactStorage artifactStorage) {
+        ServiceHolder.setArtifactStorage(artifactStorage);
+    }
+
 
 }

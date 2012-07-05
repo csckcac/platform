@@ -15,9 +15,7 @@
  */
 package org.wso2.carbon.cloud.csg.common;
 
-import java.io.File;
-import java.io.IOException;
-import java.io.InputStream;
+import java.io.*;
 import java.net.Socket;
 import java.net.SocketException;
 import java.util.List;
@@ -351,5 +349,29 @@ public class CSGUtils {
             }
         }
         return permissionList;
+    }
+
+    public static void dumpBytesAsString(ByteArrayOutputStream baos) {
+        byte b[] = baos.toByteArray();
+        for (byte i : b) {
+            System.out.print((char) i);
+        }
+        System.out.println();
+    }
+
+    public static void dumpInputStreamAsString(InputStream is) throws IOException {
+        BufferedReader br = new BufferedReader(new InputStreamReader(is));
+        StringBuilder sb = new StringBuilder();
+        String line;
+        while ((line = br.readLine()) != null) {
+            sb.append(line);
+        }
+        System.out.println(sb.toString());
+    }
+
+    public static void dumpStringMap(Map<String, String> map) {
+        for (Map.Entry<String, String> entry : map.entrySet()) {
+            System.out.println(entry.getKey() + "/" + entry.getValue());
+        }
     }
 }

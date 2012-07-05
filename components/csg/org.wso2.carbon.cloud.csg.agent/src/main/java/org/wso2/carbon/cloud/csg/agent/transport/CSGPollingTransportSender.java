@@ -15,14 +15,17 @@
  */
 package org.wso2.carbon.cloud.csg.agent.transport;
 
+import org.apache.axiom.om.OMOutputFormat;
 import org.apache.axis2.AxisFault;
 import org.apache.axis2.context.ConfigurationContext;
 import org.apache.axis2.context.MessageContext;
 import org.apache.axis2.description.TransportOutDescription;
 import org.apache.axis2.description.WSDL2Constants;
+import org.apache.axis2.transport.MessageFormatter;
 import org.apache.axis2.transport.OutTransportInfo;
+import org.apache.axis2.transport.TransportUtils;
 import org.apache.axis2.transport.base.AbstractTransportSender;
-import org.wso2.carbon.cloud.csg.agent.transport.CSGPollingTransportBuffers;
+import org.apache.axis2.transport.base.BaseUtils;
 import org.wso2.carbon.cloud.csg.common.CSGConstant;
 import org.wso2.carbon.cloud.csg.common.thrift.gen.Message;
 
@@ -57,17 +60,25 @@ public class CSGPollingTransportSender extends AbstractTransportSender {
 
         Message thriftMsg = new Message();
         thriftMsg.setMessageId(relatesTo);
-        thriftMsg.setSoapAction(msgCtx.getSoapAction());        
+        thriftMsg.setSoapAction(msgCtx.getSoapAction());
         ByteArrayOutputStream out = new ByteArrayOutputStream();
+
+        MessageFormatter messageFormatter = TransportUtils.getMessageFormatter(msgCtx);
+        if (messageFormatter == null) throw new AxisFault("No MessageFormatter in MessageContext");
+
+        OMOutputFormat format = BaseUtils.getOMOutputFormat(msgCtx);
+        thriftMsg.setContentType(messageFormatter.getContentType(msgCtx, format, msgCtx.getSoapAction()));
+
 
         try {
             if (msgCtx.isDoingREST()) {
                 // result comes as the body of envelope
                 msgCtx.getEnvelope().getBody().getFirstElement().serialize(out);
             } else {
+                thriftMsg.setIsDoingMTOM(msgCtx.isDoingMTOM());
+                thriftMsg.setIsDoingSwA(msgCtx.isDoingSwA());
                 msgCtx.getEnvelope().serialize(out);
             }
-            // handle other cases MTOM, SWA if required
         } catch (XMLStreamException e) {
             handleException("Cloud not serialize the request message", e);
         }

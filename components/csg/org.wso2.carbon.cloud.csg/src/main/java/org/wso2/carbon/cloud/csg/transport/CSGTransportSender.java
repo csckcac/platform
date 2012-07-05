@@ -24,7 +24,6 @@ import org.apache.axis2.context.ConfigurationContext;
 import org.apache.axis2.context.MessageContext;
 import org.apache.axis2.description.Parameter;
 import org.apache.axis2.description.TransportOutDescription;
-import org.apache.axis2.description.WSDL2Constants;
 import org.apache.axis2.engine.AxisEngine;
 import org.apache.axis2.transport.OutTransportInfo;
 import org.apache.axis2.transport.base.AbstractTransportSender;
@@ -44,6 +43,7 @@ import org.wso2.carbon.relay.BinaryRelayBuilder;
 import org.wso2.carbon.relay.ExpandingMessageFormatter;
 
 import java.io.ByteArrayInputStream;
+import java.io.ByteArrayOutputStream;
 import java.util.Map;
 import java.util.Set;
 import java.util.UUID;
@@ -192,28 +192,46 @@ public class CSGTransportSender extends AbstractTransportSender {
             }
 
             Message thriftMsg = new Message();
-            thriftMsg.setIsDoingREST(msgContext.isDoingREST());
-            thriftMsg.setIsDoingMTOM(msgContext.isDoingMTOM());
-            thriftMsg.setIsDoingSwA(msgContext.isDoingSwA());
+
+            if (msgContext.isDoingMTOM()) {
+                thriftMsg.setIsDoingMTOM(msgContext.isDoingMTOM());
+                msgContext.setProperty(
+                        org.apache.axis2.Constants.Configuration.ENABLE_MTOM,
+                        org.apache.axis2.Constants.VALUE_TRUE);
+            } else if (msgContext.isDoingSwA()) {
+                thriftMsg.setIsDoingSwA(msgContext.isDoingSwA());
+                msgContext.setProperty(
+                        org.apache.axis2.Constants.Configuration.ENABLE_SWA,
+                        org.apache.axis2.Constants.VALUE_TRUE);
+            } else if (msgContext.isDoingREST()) {
+                thriftMsg.setIsDoingREST(msgContext.isDoingREST());
+                // if this is a REST request make sure we set the correct epr key
+                targetEPR = calculateBufferKey(targetEPR);
+            }
+
             thriftMsg.setHttpMethod((String) msgContext.getProperty(
                     Constants.Configuration.HTTP_METHOD));
             thriftMsg.setMessageId(requestMsgIdMsgId);
             thriftMsg.setEpoch(System.currentTimeMillis());
+
             // a class cast exception (if any) will be logged in case mismatch type is returned,
             // we will not worry about the type because correct type should be returned
-            thriftMsg.setTransportHeaders((Map) headers);
             thriftMsg.setRequestURI(requestUri);
             thriftMsg.setSoapAction(msgContext.getSoapAction());
 
             OMOutputFormat format = BaseUtils.getOMOutputFormat(msgContext);
-            thriftMsg.setMessage(formatter.getBytes(msgContext, format));
+            ByteArrayOutputStream out = new ByteArrayOutputStream();
+            formatter.writeTo(msgContext, format, out, false);
+            thriftMsg.setMessage(out.toByteArray());
+            String contentType = formatter.getContentType(msgContext, format, msgContext.getSoapAction());
+            thriftMsg.setContentType(contentType);
+
+            if (((Map) headers).containsKey(HTTP.CONTENT_TYPE)) {
+                ((Map) headers).put(HTTP.CONTENT_TYPE, contentType);
+            }
+            thriftMsg.setTransportHeaders((Map) headers);
 
             Semaphore available = null;
-
-            // if this is a REST request make sure we set the correct epr key
-            if (msgContext.isDoingREST()) {
-                targetEPR = calculateBufferKey(targetEPR);
-            }
 
             // The csg polling transport on the other side will directly use the EPR as the key for
             // message buffer. Although this introduce a tight couple between the CSGTransport
@@ -243,7 +261,7 @@ public class CSGTransportSender extends AbstractTransportSender {
                     CSGThriftServerHandler.getSemaphoreMap().remove(requestMsgIdMsgId);
                     Message msg = CSGThriftServerHandler.getMiddleBuffer().remove(requestMsgIdMsgId);
                     if (msg != null) {
-                        handleSyncResponse(msgContext, msg);
+                        handleSyncResponse(msgContext, msg, contentType);
                     } else {
                         // we don't have a response come yet, so send a fault to client
                         log.warn("The semaphore with id '" + requestMsgIdMsgId + "' was time out while "
@@ -260,24 +278,34 @@ public class CSGTransportSender extends AbstractTransportSender {
         }
     }
 
-    private void handleSyncResponse(MessageContext msgCtx, Message message) throws AxisFault {
+    private void handleSyncResponse(MessageContext requestMsgCtx, Message message, String requestContentType)
+            throws AxisFault {
         try {
-            MessageContext responseMsgCtx = createResponseMessageContext(msgCtx);
+            MessageContext responseMsgCtx = createResponseMessageContext(requestMsgCtx);
             // set the message type of the original message, this is required for REST to work
             // properly
             responseMsgCtx.setProperty(Constants.Configuration.MESSAGE_TYPE,
-                    msgCtx.getProperty(Constants.Configuration.MESSAGE_TYPE));
+                    requestMsgCtx.getProperty(Constants.Configuration.MESSAGE_TYPE));
 
             responseMsgCtx.setProperty(Constants.Configuration.CONTENT_TYPE,
-                    msgCtx.getProperty(Constants.Configuration.CONTENT_TYPE));
-                        
+                    requestMsgCtx.getProperty(Constants.Configuration.CONTENT_TYPE));
+
+            if (message.isIsDoingMTOM()) {
+                responseMsgCtx.setProperty(
+                        org.apache.axis2.Constants.Configuration.ENABLE_MTOM,
+                        org.apache.axis2.Constants.VALUE_TRUE);
+            } else if (message.isIsDoingSwA()) {
+                responseMsgCtx.setProperty(
+                        org.apache.axis2.Constants.Configuration.ENABLE_SWA,
+                        org.apache.axis2.Constants.VALUE_TRUE);
+            }
+
             String contentType = message.getContentType();
             if (contentType == null) {
-                contentType = inferContentType(msgCtx, responseMsgCtx);
+                contentType = inferContentType(requestContentType, responseMsgCtx);
             }
 
             ByteArrayInputStream inputStream = new ByteArrayInputStream(message.getMessage());
-
             // a class cast will be thrown if incorrect type was return, we are not worrying about
             // that because that should be handle by the builder
             SOAPEnvelope envelope = (SOAPEnvelope) builder.processDocument(
@@ -441,7 +469,7 @@ public class CSGTransportSender extends AbstractTransportSender {
         }
     }
 
-    private String inferContentType(MessageContext incomingMsgCtx, MessageContext responseMsgCtx) {
+    private String inferContentType(String requestContentType, MessageContext responseMsgCtx) {
         // Try to get the content type from the message context
         Object cTypeProperty = responseMsgCtx.getProperty(Constants.Configuration.CONTENT_TYPE);
         if (cTypeProperty != null) {
@@ -454,14 +482,10 @@ public class CSGTransportSender extends AbstractTransportSender {
             return cTypeParam.getValue().toString();
         }
 
-        //Try to determine the content type using incoming request.
-        Map transportHeaders = (Map) incomingMsgCtx.getProperty(
-                org.apache.axis2.context.MessageContext.TRANSPORT_HEADERS);
-        String contentTypeHeader = CSGUtils.getContentType(transportHeaders);
-        if (contentTypeHeader != null) {
-            return contentTypeHeader;
+        if (requestContentType != null) {
+            return requestContentType;
         }
-        
+
         // Unable to determine the content type - Return default value
         return CSGConstant.DEFAULT_CONTENT_TYPE;
     }

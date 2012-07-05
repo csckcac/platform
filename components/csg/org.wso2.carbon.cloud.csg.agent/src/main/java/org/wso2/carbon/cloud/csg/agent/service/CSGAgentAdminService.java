@@ -103,7 +103,7 @@ public class CSGAgentAdminService extends AbstractAdmin {
             // ip or host name but not both so below is used
             String hostName = csgServer.getHost();
             if ("localhost".equals(hostName) || "127.0.0.1".equals(hostName)) {
-                hostName = bean.getHostName(); //
+                hostName = bean.getHostName(); // bean is the remote thrift server information
             } else {
                 bean.setHostName(hostName);
             }

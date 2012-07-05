@@ -27,6 +27,7 @@ import org.apache.axis2.transport.base.threads.WorkerPool;
 import org.apache.axis2.transport.http.HTTPConstants;
 import org.apache.axis2.transport.http.HTTPTransportUtils;
 import org.apache.axis2.transport.http.util.RESTUtil;
+import org.apache.commons.io.IOUtils;
 import org.apache.commons.logging.Log;
 import org.apache.commons.logging.LogFactory;
 import org.apache.thrift.TException;
@@ -43,10 +44,7 @@ import org.wso2.carbon.cloud.csg.common.thrift.gen.Message;
 import org.wso2.carbon.cloud.csg.common.thrift.gen.NotAuthorizedException;
 
 import javax.xml.stream.XMLStreamException;
-import java.io.ByteArrayInputStream;
-import java.io.ByteArrayOutputStream;
-import java.io.IOException;
-import java.io.InputStream;
+import java.io.*;
 import java.util.*;
 
 /**
@@ -406,7 +404,7 @@ public class CSGPollingTransportTaskManager {
                     msgContext.setMessageID(msgId);
                     msgContext.setProperty(CSGConstant.CSG_CORRELATION_KEY, msgId);
                     Map<String, String> trpHeaders = message.getTransportHeaders();
-                    String contentType = CSGUtils.getContentType(trpHeaders);
+                    String contentType = message.getContentType();
 
                     HTTPTransportUtils.initializeMessageContext(
                             msgContext,
@@ -429,11 +427,25 @@ public class CSGPollingTransportTaskManager {
 
                         msgContext.setProperty(Constants.Configuration.CONTENT_TYPE, contentType);
                         msgContext.setProperty(MessageContext.TRANSPORT_HEADERS, trpHeaders);
-                        msgContext.setDoingMTOM(message.isIsDoingMTOM());
-                        msgContext.setDoingSwA(message.isIsDoingSwA());
+                        if (message.isIsDoingMTOM()) {
+                            msgContext.setDoingMTOM(message.isIsDoingMTOM());
+                            msgContext.setProperty(
+                                    org.apache.axis2.Constants.Configuration.ENABLE_MTOM,
+                                    org.apache.axis2.Constants.VALUE_TRUE);
+
+                        } else if (message.isIsDoingREST()) {
+                            msgContext.setDoingSwA(message.isIsDoingSwA());
+                            msgContext.setProperty(
+                                    org.apache.axis2.Constants.Configuration.ENABLE_SWA,
+                                    org.apache.axis2.Constants.VALUE_TRUE);
+                        }
 
                         InputStream gzipInputStream =
                                 HTTPTransportUtils.handleGZip(msgContext, inputStream);
+                        // FIXME - just for debugging remove later
+                        if (log.isDebugEnabled()) {
+                            CSGUtils.dumpInputStreamAsString(gzipInputStream);
+                        }
                         msgContext.setEnvelope(
                                 TransportUtils.createSOAPMessage(
                                         msgContext,
@@ -463,7 +475,7 @@ public class CSGPollingTransportTaskManager {
             SOAPEnvelope faultEnvelope = factory.getDefaultFaultEnvelope();
             soapFaultDocument.addChild(faultEnvelope);
 
-            // create the fault element  if it is need
+            // create the fault element  if it is needed
             SOAPFault fault = faultEnvelope.getBody().getFault();
             if (fault == null) {
                 fault = factory.createSOAPFault();

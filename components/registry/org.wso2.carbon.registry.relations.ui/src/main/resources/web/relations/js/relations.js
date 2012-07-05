@@ -86,6 +86,15 @@ function loadAssociationDiv(resourcePath, assoType, page) {
     }, org_wso2_carbon_registry_relations_ui_jsi18n["session.timed.out"]);
 }
 
+function changeTextVisibility(optionTYpe){
+  var option = $('associationOptionList').value;
+    if(option == "other") {
+      $('type').disabled = "";
+    } else {
+        $('type').disabled = "disabled";
+    }
+}
+
 function addAssociation(mainType) {
 
     //JS injection validation
@@ -93,7 +102,7 @@ function addAssociation(mainType) {
         CARBON.showWarningDialog(org_wso2_carbon_registry_common_ui_jsi18n["the"] + " "+ "association path content"+" " + org_wso2_carbon_registry_common_ui_jsi18n["contains.illegal.chars"]);
         return false;
     }
-
+    var ass_option = $('associationOptionList').value;
     var typeForm = document.forms[mainType];
     var addDivId = 'associationsAddDiv';
     var fillingDiv = 'associationsDiv';
@@ -110,21 +119,31 @@ function addAssociation(mainType) {
     }
     
     if (mainType != "depForm") {
-        reason += validateForInput(typeForm.type, org_wso2_carbon_registry_relations_ui_jsi18n["type"]);
+        var assTypeVal;
+
+        if(ass_option == "other") {
+            assoType = typeForm.type.value;
+            assTypeVal = typeForm.type;
+        } else if(ass_option == "ownedBy" || ass_option == "usedBy") {
+          assoType = ass_option;
+          assTypeVal = $('associationOptionList');
+        }
+
+        reason += validateForInput(assTypeVal, org_wso2_carbon_registry_relations_ui_jsi18n["type"]);
         if (reason == "") {
-            reason += validateEmpty(typeForm.type, org_wso2_carbon_registry_relations_ui_jsi18n["type"]);
+                reason += validateEmpty(assTypeVal, org_wso2_carbon_registry_relations_ui_jsi18n["type"]);
         }
         if (reason == "") {
             reason += validateNotExists(assoPathField.value);
         }
 
         if (reason == "") {
-            typeForm.type.value = typeForm.type.value.replace(/^\s\s*/, '').replace(/\s\s*$/, '');
-            if (typeForm.type.value == "") {
+            assoType = assoType.replace(/^\s\s*/, '').replace(/\s\s*$/, '');
+            if (assoType == "") {
                 reason = org_wso2_carbon_registry_relations_ui_jsi18n["association.type.cannot.contain.only.white.spaces"];
             }
         }
-        assoType = typeForm.type.value;
+
         if (assoType == "depends") {
             fillingDiv = 'dependenciesDiv';
         }
@@ -159,6 +178,7 @@ function addAssociation(mainType) {
         var resourcePath = $('resourcePath').value;
         var associationPaths = assoPathField.value;
         typeForm.type.value = "";
+        $('associationOptionList').value = "0";
         assoPathField.value = "";
         showHideCommon(addDivId);
         if (assoType != "depends" && associationPaths.toString().indexOf(";") > 0) {

@@ -99,7 +99,13 @@
                     <tbody>
                         <tr>
                             <td valign="top"><fmt:message key="type"/> <span class="required">*</span></td>
-                            <td><input type="text" name="type" id="type"
+                            <td><select id="associationOptionList" onchange="changeTextVisibility()">
+                                     <option value="0">-SELECT-</option>
+                                     <option value="usedBy">usedBy</option>
+                                     <option value="ownedBy">ownedBy</option>
+                                     <option value="other">other</option>
+                                </select>
+                                <input type="text" name="type" id="type" disabled="disabled"
                                        style="width:130px;margin-bottom:5px;"/>
                             </td>
                         </tr>

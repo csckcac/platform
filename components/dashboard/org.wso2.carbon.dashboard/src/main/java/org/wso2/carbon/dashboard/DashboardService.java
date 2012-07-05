@@ -916,9 +916,9 @@ public class DashboardService extends AbstractAdmin {
     public String getTabTitle(String userId, String tabId, String dashboardName) {
         String response = "Tab " + tabId;
 
-        if (((dashboardName == null) && ("0".equals(tabId))) || ("null".equals(dashboardName)) && ("0".equals(tabId))) {
-            return "Home";
-        }
+//        if (((dashboardName == null) && ("0".equals(tabId))) || ("null".equals(dashboardName)) && ("0".equals(tabId))) {
+//            return "Home";
+//        }
 
         String tabPath;
         if ((dashboardName == null) || ("null".equals(dashboardName))) {
@@ -932,6 +932,9 @@ public class DashboardService extends AbstractAdmin {
 
         try {
             Registry registry = getConfigSystemRegistry();
+            if ("0".equals(tabId) && (!registry.resourceExists(tabPath) || registry.get(tabPath).getProperty(DashboardConstants.TAB_TITLE) == null)) {
+                return "Home";
+            }
             Resource tabResource = registry.get(tabPath);
             if (tabResource.getProperty(DashboardConstants.TAB_TITLE) != null) {
                 return tabResource.getProperty(DashboardConstants.TAB_TITLE);
@@ -1261,7 +1264,7 @@ public class DashboardService extends AbstractAdmin {
             } else {
                 response = "http://" + newUrl.getHost() + ":" + getBackendHttpPort() + newUrl.getPath();
             }
-            
+
             if (hostName != null && !hostName.equals("")) {
                 if (!"".equals(newUrl.getPath())) {
                     response = "http://" + hostName + ":" + getBackendHttpPort() + newUrl.getPath();
@@ -1818,6 +1821,7 @@ public class DashboardService extends AbstractAdmin {
     /**
      * Populating Gadget resources to registry for the given tenant
      * (On demand  Gadget population)
+     *
      * @param tabId
      * @return boolean
      * @throws AxisFault
@@ -1897,7 +1901,7 @@ public class DashboardService extends AbstractAdmin {
         Collection defaultGadgetCollection = registry.newCollection();
         try {
             registry.beginTransaction();
-            if(!registry.resourceExists(registryGadgetPath)){
+            if (!registry.resourceExists(registryGadgetPath)) {
 
                 registry.put(registryGadgetPath, defaultGadgetCollection);
             }
@@ -1984,8 +1988,10 @@ public class DashboardService extends AbstractAdmin {
 
     /**
      * Setting read permission for anonymous user
+     *
      * @param fileRegistryPath
      * @throws org.wso2.carbon.user.api.UserStoreException
+     *
      */
     private void setAnonymousReadPermission(String fileRegistryPath)
             throws org.wso2.carbon.user.api.UserStoreException {

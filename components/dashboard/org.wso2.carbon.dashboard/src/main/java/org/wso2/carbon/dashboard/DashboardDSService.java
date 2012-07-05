@@ -973,9 +973,9 @@ public class DashboardDSService extends AbstractAdmin {
     public String getTabTitle(String userId, String tabId, String dashboardName) {
         String response = "Tab " + tabId;
 
-        if (((dashboardName == null) && ("0".equals(tabId))) || ("null".equals(dashboardName)) && ("0".equals(tabId))) {
-            return "Home";
-        }
+//        if (((dashboardName == null) && ("0".equals(tabId))) || ("null".equals(dashboardName)) && ("0".equals(tabId))) {
+//            return "Home";
+//        }
 
         String tabPath;
         if ((dashboardName == null) || ("null".equals(dashboardName))) {
@@ -989,6 +989,9 @@ public class DashboardDSService extends AbstractAdmin {
 
         try {
             Registry registry = getConfigSystemRegistry();
+            if ("0".equals(tabId) && (!registry.resourceExists(tabPath) || registry.get(tabPath).getProperty(DashboardConstants.TAB_TITLE) == null)) {
+                return "Home";
+            }
             Resource tabResource = registry.get(tabPath);
             if (tabResource.getProperty(DashboardConstants.TAB_TITLE) != null) {
                 return tabResource.getProperty(DashboardConstants.TAB_TITLE);
@@ -2021,14 +2024,14 @@ public class DashboardDSService extends AbstractAdmin {
     }
 
     protected Registry getConfigSystemRegistry() {
-            return (Registry) SuperTenantCarbonContext.getCurrentContext().
-                    getRegistry(RegistryType.SYSTEM_CONFIGURATION);
+        return (Registry) SuperTenantCarbonContext.getCurrentContext().
+                getRegistry(RegistryType.SYSTEM_CONFIGURATION);
     }
 
 
-     protected Registry getConfigUserRegistry() {
-            return (Registry) SuperTenantCarbonContext.getCurrentContext().
-                    getRegistry(RegistryType.USER_CONFIGURATION);
+    protected Registry getConfigUserRegistry() {
+        return (Registry) SuperTenantCarbonContext.getCurrentContext().
+                getRegistry(RegistryType.USER_CONFIGURATION);
     }
 
 }

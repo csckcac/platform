@@ -42,6 +42,8 @@ public class HeaderMediator extends AbstractMediator {
     private int action = ACTION_SET;
     /** An expression which should be evaluated, and the result set as the header value */
     private SynapseXPath expression = null;
+    // An XML content as a complex header.
+    private OMElement xml;
 
     public int getAction() {
         return action;
@@ -75,6 +77,14 @@ public class HeaderMediator extends AbstractMediator {
         this.expression = expression;
     }
 
+    public void setXml(OMElement xml) {
+        this.xml = xml;
+    }
+
+    public OMElement getXml() {
+        return xml;
+    }
+
     public String getTagLocalName() {
         return "header";
     }
@@ -83,6 +93,9 @@ public class HeaderMediator extends AbstractMediator {
         OMElement header = fac.createOMElement("header", synNS);
         saveTracingState(header, this);
 
+        if (getXml() != null) {
+            header.addChild(getXml());
+        }
         QName qName = getQName();
         if (qName != null) {
             if (qName.getNamespaceURI() != null) {
@@ -111,8 +124,8 @@ public class HeaderMediator extends AbstractMediator {
                 SynapseXPathSerializer.serializeXPath(
                     getExpression(), header, "expression");
 
-            } else {
-                //TODO error
+            } else if (getXml() == null) {
+                // todo: error
             }
         }
 
@@ -133,11 +146,15 @@ public class HeaderMediator extends AbstractMediator {
         OMAttribute value  = elem.getAttribute(ATT_VALUE);
         OMAttribute exprn  = elem.getAttribute(ATT_EXPRN);
         OMAttribute action = elem.getAttribute(ATT_ACTION);
+        OMElement childElem = elem.getFirstElement();
+        if (childElem != null) {
+            setXml(childElem);
+        }
 
-        if (name == null || name.getAttributeValue() == null) {
+        if ((name == null || name.getAttributeValue() == null) && childElem == null) {
             //String msg = "A valid name attribute is required for the header mediator";
             // TODO error
-        } else {
+        } else if (childElem == null) {
             String nameAtt = name.getAttributeValue();
             int colonPos = nameAtt.indexOf(":");
             if (colonPos != -1) {
@@ -167,7 +184,7 @@ public class HeaderMediator extends AbstractMediator {
         }
 
         if (getAction() == org.apache.synapse.mediators.transform.HeaderMediator.ACTION_SET &&
-            value == null && exprn == null) {
+            value == null && exprn == null && childElem == null) {
             // String msg = "A 'value' or 'expression' attribute is required for a [set] header mediator";
             // TODO error
         }

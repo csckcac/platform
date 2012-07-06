@@ -27,8 +27,10 @@
 <%
     Mediator mediator = SequenceEditorHelper.getEditingMediator(request, session);
     boolean isExpression = false;
+    int type = 1;
     String prefix = "", uri = "";
     String val = "";
+    String xml = "";
     NameSpacesRegistrar nmspRegistrar = NameSpacesRegistrar.getInstance();
     if (!(mediator instanceof HeaderMediator)) {
         // todo : proper error handling
@@ -45,11 +47,16 @@
     }
     if (headerMediator.getValue() != null) {
         isExpression = false;
+        type = 1;
         val = headerMediator.getValue();
     } else if (headerMediator.getExpression() != null) {
         isExpression = true;
+        type = 2;
         val = headerMediator.getExpression().toString();
-        nmspRegistrar.registerNameSpaces(headerMediator.getExpression(), "mediator.header.val_ex", session);        
+        nmspRegistrar.registerNameSpaces(headerMediator.getExpression(), "mediator.header.val_ex", session);
+    } else if (headerMediator.getXml() != null) {
+        type = 3;
+        xml = headerMediator.getXml().toString();
     }
 %>
 
@@ -69,15 +76,15 @@
     <td>
     <table class="styledLeft">
         <tbody>
-            <tr>
-                <td style="width: 200px;">
+            <tr id="mediator.header.name.row" style="<%=(type == 1 || type == 2) ? "": "display:none;"%> ">
+                <td width="20%">
                     <fmt:message key="mediator.header.name"/>
                     <font style="color: red; font-size: 8pt;"> *</font></td>
-                <td style="width: 305px;">
-                    <input type="text" size="40" id="mediator.header.name" name="mediator.header.name" style="width:300px"
+                <td width="5%">
+                    <input type="text" size="40" id="mediator.header.name" name="mediator.header.name"
                            value="<%=headerMediator.getQName() != null ? headerMediator.getQName().getLocalPart() : ""%>"/>
                 </td>
-                <td>
+                <td width="75%" align="left">
                     <a id="mediator.header.name.namespace_button" href="#"
                            onclick="javascript:showSingleNameSpaceEditor('mediator.header.name');" class="nseditor-icon-link"
                            style="padding-left:40px">
@@ -85,40 +92,56 @@
                 </td>
             </tr>
             <tr>
-                <td><fmt:message key="mediator.header.action"/> :</td>
-                <td><input type="radio" id="set" name="mediator.header.action" value="set"
-                                        onclick="javascript: displayElement('mediator.header.value_row', true);"
+                <td width="20%"><fmt:message key="mediator.header.action"/> :</td>
+                <td width="80%">
+                    <input type="radio" id="set" name="mediator.header.action" value="set"
+                                        onclick="javascript: displayElement('mediator.header.value_row', true); displayElement('mediator.header.inlinexmltext_row', true);"
                         <%=headerMediator.getAction() == HeaderMediator.ACTION_SET ? "checked=\"checked\"": "" %>/>
                     <fmt:message key="mediator.header.set"/>
                     <input type="radio" id="remove" name="mediator.header.action" value="remove"
                            onclick="javascript: displayElement('mediator.header.value_row', false);
-                           displayElement('mediator.header.name.expression', false);"
+                           displayElement('mediator.header.name.expression', false);
+                           displayElement('mediator.header.inlinexmltext_row', false);
+                           displayElement('mediator.header.name.row', true)"
                         <%=headerMediator.getAction() == HeaderMediator.ACTION_REMOVE ? "checked=\"checked\"": "" %>/>
                     <fmt:message key="mediator.header.remove"/>
                 </td>
-                <td>
-                </td>
             </tr>
             <tr id="mediator.header.value_row" <%=headerMediator.getAction() == HeaderMediator.ACTION_REMOVE ? "style=\"display:none\"" : ""%>>
-                <td><input type="radio" name="mediator.header.actionType" id="value" value="value" 
-                           onclick="javascript: displayElement('mediator.header.expression.namespace_button', false);displayElement('mediator.header.expression.nmsp', false)"
-                           <%=!isExpression ? "checked=\"checked\"": "" %>/>
+                <td width="20%"><input type="radio" name="mediator.header.actionType" id="value" value="value"
+                           onclick="javascript: displayElement('mediator.header.val_ex', true); displayElement('mediator.header.expression.namespace_button', false);
+                           displayElement('mediator.header.expression.nmsp', false);displayElement('mediator.header.inlinexmltext', false);
+                           displayElement('mediator.header.name.row', true)"
+                           <%=(type == 1) ? "checked=\"checked\"": "" %>/>
                     <fmt:message key="mediator.header.value"/>
                     <input type="radio" name="mediator.header.actionType" id="expression" value="expression"
-                           onclick="javascript: displayElement('mediator.header.expression.namespace_button', true);"
-                           <%=isExpression ? "checked=\"checked\"": "" %>/>
+                           onclick="javascript:  displayElement('mediator.header.val_ex', true); displayElement('mediator.header.expression.namespace_button', true);
+                           displayElement('mediator.header.inlinexmltext', false);displayElement('mediator.header.name.row', true)"
+                           <%=(type == 2) ? "checked=\"checked\"": "" %>/>
                     <fmt:message key="mediator.header.expression"/><font style="color: red; font-size: 8pt;"> *</font>
                 </td>
-                <td>
-                    <input type="text" id="mediator.header.val_ex" name="mediator.header.val_ex" value="<%=val%>" style="width: 300px;"/>
+                <td width="30%">
+                    <input type="text" id="mediator.header.val_ex" size="40" name="mediator.header.val_ex" value="<%=val%>" style="<%=(type == 3) ? "display:none" : ""%>"/>
                 </td>
-                <td><a id="mediator.header.expression.namespace_button" href="#" 
+                <td width="50%" align="left"><a id="mediator.header.expression.namespace_button" href="#"
                            onclick="javascript:showNameSpaceEditor('mediator.header.val_ex');" class="nseditor-icon-link"
-                           style="padding-left:40px;<%=!isExpression ? "display:none;" : ""%> ">
+                           style="padding-left:40px;<%=(type == 1 || type == 3) ? "display:none;" : ""%> ">
                         <fmt:message key="mediator.header.namespace"/></a>
                 </td>
             </tr>
-
+            <tr id="mediator.header.inlinexmltext_row">
+                <td width="20%">
+                    <input type="radio" name="mediator.header.actionType" id="inlineXML" value="inlineXML"
+                           onclick="javascript: displayElement('mediator.header.expression.namespace_button', false);displayElement('mediator.header.expression.nmsp', false);
+                           displayElement('mediator.header.inlinexmltext', true);displayElement('mediator.header.val_ex', false);
+                           displayElement('mediator.header.name.row', false)"
+                           <%=(type == 3) ? "checked=\"checked\"": "" %>/>
+                    <fmt:message key="mediator.header.inlinexml"/><font style="color: red; font-size: 8pt;"> *</font>
+                </td>
+                <td width="80%">
+                    <textarea rows="8" cols="50" id="mediator.header.inlinexmltext" name="mediator.header.inlinexmltext"  style="<%=(type == 3) ? "": "display:none;"%> " ><%=xml%></textarea>
+                </td>
+            </tr>
         </tbody>
     </table>
     </td>

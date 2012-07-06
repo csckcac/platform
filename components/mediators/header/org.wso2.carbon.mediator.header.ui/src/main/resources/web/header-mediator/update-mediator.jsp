@@ -22,6 +22,13 @@
 <%@ page import="org.wso2.carbon.sequences.ui.util.ns.XPathFactory" %>
 <%@ page import="javax.xml.namespace.QName" %>
 <%@ page import="org.wso2.carbon.mediator.service.ui.Mediator" %>
+<%@ page import="org.apache.axiom.om.OMFactory" %>
+<%@ page import="org.apache.axiom.om.impl.AbstractOMMetaFactory" %>
+<%@ page import="org.apache.axiom.om.OMAbstractFactory" %>
+<%@ page import="org.apache.axiom.om.util.AXIOMUtil" %>
+<%@ page import="org.apache.axiom.om.OMElement" %>
+<%@ page import="org.wso2.carbon.mediator.header.HeaderMediatorService" %>
+<%@ page import="org.wso2.carbon.mediator.header.HeaderMediatorHelper" %>
 
 <%
     Mediator mediator = SequenceEditorHelper.getEditingMediator(request, session);
@@ -48,21 +55,21 @@
     headerMediator.setValue(null);
 
     action = request.getParameter("mediator.header.action");
-    if (action != null && !action.equals("")) {
-        if (action.equals("set")) {
-            headerMediator.setAction(HeaderMediator.ACTION_SET);
-            String actionType = request.getParameter("mediator.header.actionType");
-            if (actionType != null && !actionType.equals("")) {
-                if (actionType.equals("expression")) {
-                    XPathFactory xPathFactory = XPathFactory.getInstance();
-                    headerMediator.setExpression(xPathFactory.createSynapseXPath("mediator.header.val_ex", request, session));
-                } else if (actionType.equals("value")) {
-                    headerMediator.setValue(request.getParameter("mediator.header.val_ex"));
-                }
-            }
-        } else if (action.equals("remove")) {
-            headerMediator.setAction(HeaderMediator.ACTION_REMOVE);
+    if ("set".equals(action)) {
+        headerMediator.setAction(HeaderMediator.ACTION_SET);
+        String actionType = request.getParameter("mediator.header.actionType");
+        if ("expression".equals(actionType)) {
+            XPathFactory xPathFactory = XPathFactory.getInstance();
+            headerMediator.setExpression(xPathFactory.createSynapseXPath("mediator.header.val_ex", request, session));
+        } else if ("value".equals(actionType)) {
+            headerMediator.setValue(request.getParameter("mediator.header.val_ex"));
+        } else if ("inlineXML".equals(actionType)) {
+            String xml = request.getParameter("mediator.header.inlinexmltext");
+            OMElement elem = SequenceEditorHelper.parseStringToElement(xml);
+            headerMediator.setXml(elem);
         }
+    } else if ("remove".equals(action)) {
+        headerMediator.setAction(HeaderMediator.ACTION_REMOVE);
     }
 %>
 

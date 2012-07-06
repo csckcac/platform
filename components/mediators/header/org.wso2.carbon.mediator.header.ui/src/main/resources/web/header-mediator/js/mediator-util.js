@@ -41,14 +41,16 @@ function displayElement(elementId, isDisplay) {
 
 function headerMediatorValidate() {
     var name = document.getElementById("mediator.header.name");
-    if (name && name.value == "") {
+    var xmlContent = document.getElementById("mediator.header.inlinexmltext");
+
+    if (name && name.value == "" && !(xmlContent && xmlContent != "")) {
         CARBON.showErrorDialog(headerMediatorJsi18n["header.name.required"]);
         return false;
     }
     var set = document.getElementById("set");
     if (set && set.checked) {
         var val = document.getElementById("mediator.header.val_ex");
-        if (val && val.value == "") {
+        if (val && val.value == "" && xmlContent && xmlContent.value == "") {
             CARBON.showErrorDialog(headerMediatorJsi18n["header.valueExp.required"]);
             return false;
         }

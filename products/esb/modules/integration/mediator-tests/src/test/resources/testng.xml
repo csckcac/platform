@@ -93,6 +93,17 @@
         </classes>
     </test>
 
+    <test name="Test - Mediator Payload Factory" preserve-order="true" verbose="2">
+        <classes>
+            <class name="org.wso2.carbon.mediator.tests.payload.factory.Sample17TestCase"/>
+            <class name="org.wso2.carbon.mediator.tests.payload.factory.TransformPayloadWhenNoArgsTestCase"/>
+            <class name="org.wso2.carbon.mediator.tests.payload.factory.TransformPayloadWhenArgsValueTestCase"/>
+            <class name="org.wso2.carbon.mediator.tests.payload.factory.TransformPayloadWhenArgsExpressionTestCase"/>
+            <class name="org.wso2.carbon.mediator.tests.payload.factory.TransformPayloadWhenArgsValueAndExpressionTestCase"/>
+
+        </classes>
+    </test>
+
     <test name="Test - Mediator Clone" preserve-order="true" verbose="2">
         <classes>
             <class name="org.wso2.carbon.mediator.tests.clone.CloneMediatorTestCase"/>

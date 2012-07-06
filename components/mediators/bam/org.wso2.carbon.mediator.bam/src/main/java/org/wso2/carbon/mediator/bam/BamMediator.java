@@ -53,6 +53,7 @@ import org.wso2.carbon.mediator.bam.config.stream.StreamEntry;
 import org.wso2.carbon.mediator.bam.util.BamMediatorConstants;
 import org.wso2.carbon.utils.CarbonUtils;
 
+import javax.servlet.http.HttpServletRequest;
 import javax.xml.namespace.QName;
 import java.io.File;
 import java.net.MalformedURLException;
@@ -285,26 +286,27 @@ public class BamMediator extends AbstractMediator {
     }
 
     private void defineEventStream() throws AgentException, MalformedStreamDefinitionException, StreamDefinitionException, DifferentStreamDefinitionAlreadyDefinedException{
+
         streamId = dataPublisher.defineStream("{" +
-                                                   "  'name':'" + this.streamName + "'," +
-                                                   "  'version':'"+ this.streamVersion + "'," +
-                                                   "  'nickName': '" + this.streamNickName + "'," +
-                                                   "  'description': '" + this.streamDescription + "'," +
-                                                   "  'correlationData':[" +
-                                                   "          {'name':'ActivityId','type':'STRING'}" +
-                                                   "  ]," +
-                                                   "  'metaData':[" +
-                                                   "          {'name':'TenantId','type':'INT'}" +
-                                                   "  ]," +
-                                                   "  'payloadData':[" +
-                                                   "          {'name':'Direction','type':'STRING'}," +
-                                                   "          {'name':'Service','type':'STRING'}," +
-                                                   "          {'name':'Operation','type':'STRING'}," +
-                                                   "          {'name':'MessageId','type':'STRING'}" +
-                                                   this.getPropertyStreamDefinitionString() +
-                                                   this.getEntityStreamDefinitionString() +
-                                                   "  ]" +
-                                                   "}");
+                                              "  'name':'" + this.streamName + "'," +
+                                              "  '" + BamMediatorConstants.VERSION + "':'" + this.streamVersion + "'," +
+                                              "  '" + BamMediatorConstants.NICK_NAME + "': '" + this.streamNickName + "'," +
+                                              "  '" + BamMediatorConstants.DESCRIPTION + "': '" + this.streamDescription + "'," +
+                                              "  'correlationData':[" +
+                                              "          {'name':'" + BamMediatorConstants.ACTIVITY_ID + "','type':'STRING'}" +
+                                              "  ]," +
+                                              "  'metaData':[" +
+                                              "          {'name':'tenantId','type':'INT'}" +
+                                              "  ]," +
+                                              "  'payloadData':[" +
+                                              "          {'name':'" + BamMediatorConstants.MSG_DIRECTION + "','type':'STRING'}," +
+                                              "          {'name':'" + BamMediatorConstants.SERVICE_NAME + "','type':'STRING'}," +
+                                              "          {'name':'" + BamMediatorConstants.OPERATION_NAME + "','type':'STRING'}," +
+                                              "          {'name':'" + BamMediatorConstants.MSG_ID + "','type':'STRING'}" +
+                                              this.getPropertyStreamDefinitionString() +
+                                              this.getEntityStreamDefinitionString() +
+                                              "  ]" +
+                                              "}");
         log.info("Event Stream Defined.");
     }
 
@@ -329,6 +331,15 @@ public class BamMediator extends AbstractMediator {
         }
 
         return payloadData;
+    }
+
+    private Object getHttpIp(MessageContext messageContext){
+        org.apache.axis2.context.MessageContext msgCtx = ((Axis2MessageContext) messageContext).getAxis2MessageContext();
+        HttpServletRequest obj = (HttpServletRequest)msgCtx.getProperty("transport.http.servletRequest");
+        System.out.println("Acceptable Encoding type: "+obj.getHeader("Accept-Encoding"));
+        System.out.println("Acceptable character set: " +obj.getHeader("Accept-Charset"));
+        System.out.println("Acceptable Media Type: "+obj.getHeader("Accept"));
+        return "";
     }
 
     private Object[] createMetadata(int tenantId){

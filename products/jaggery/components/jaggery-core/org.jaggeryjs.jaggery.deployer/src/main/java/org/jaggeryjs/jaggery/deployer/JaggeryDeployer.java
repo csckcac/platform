@@ -76,8 +76,7 @@ public class JaggeryDeployer extends WebappDeployer {
         tomcatWebappDeployer = new TomcatJaggeryWebappsDeployer(webContextPrefix,
                 tenantId,
                 tenantDomain,
-                webappsHolder,
-                configContext);
+                webappsHolder);
 
         configCtx.setProperty(CarbonConstants.TOMCAT_GENERIC_WEBAPP_DEPLOYER, tomcatWebappDeployer);
     }

@@ -100,10 +100,9 @@ public class BAMArtifactDeployerManager {
                 int tabID = dashboardClient.addTab(username, tabDTO.getTabName());
                 tabDTO.setTabId(tabID);
                 for (String aGadget : tabDTO.getGadgets()) {
+                    ServiceHolder.getGadgetRepoService().addGadgetEntryToRepo(aGadget.replaceAll(".xml", ""), "conf:/repository/gadget-server/gadgets/" + aGadget, "", null, null, null);
                     dashboardClient.addNewGadget(username, String.valueOf(tabID),
                             "/registry/resource/_system/config/repository/gadget-server/gadgets/" + aGadget);
-//                            "/registry/resource/_system/config/repository/dashboards/gadgets/" + aGadget);
-                    // ServiceHolder.getGadgetRepoService().addGadgetEntryToRepo("Test", "Test1", "Test2", null, null, null);
                 }
             }
         } catch (BAMComponentNotFoundException e) {
@@ -111,7 +110,6 @@ public class BAMArtifactDeployerManager {
         } catch (Exception e) {
             log.warn("Deploying gadget is not successful.. Skipping deploying script..");
         }
-
     }
 
 
@@ -353,9 +351,9 @@ public class BAMArtifactDeployerManager {
             registry.put(fileRegistryPath, fileResource);
 
             //adding anon role to the gadget
-             AuthorizationManager authorizationManager = ((UserRegistry)ServiceHolder.getRegistry(tenantId)).getUserRealm().getAuthorizationManager();
-             authorizationManager.authorizeRole(CarbonConstants.REGISTRY_ANONNYMOUS_ROLE_NAME,
-                        RegistryConstants.CONFIG_REGISTRY_BASE_PATH  + fileRegistryPath, ActionConstants.GET);
+            AuthorizationManager authorizationManager = ((UserRegistry) ServiceHolder.getRegistry(tenantId)).getUserRealm().getAuthorizationManager();
+            authorizationManager.authorizeRole(CarbonConstants.REGISTRY_ANONNYMOUS_ROLE_NAME,
+                    RegistryConstants.CONFIG_REGISTRY_BASE_PATH + fileRegistryPath, ActionConstants.GET);
             Registry reg = ServiceHolder.getGovernanceSystemRegistry(tenantId);
             Resource resource = reg.newResource();
             resource.setProperty("timestamp", Long.toString(System.currentTimeMillis()));

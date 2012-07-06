@@ -1,6 +1,5 @@
 package org.wso2.carbon.bam.toolbox.deployer.client;
 
-import org.apache.axis2.context.MessageContext;
 import org.apache.commons.logging.Log;
 import org.apache.commons.logging.LogFactory;
 import org.wso2.carbon.bam.toolbox.deployer.ServiceHolder;
@@ -66,7 +65,6 @@ public class DashboardClient {
 
     public void removeTab(String userId, int tabId) {
         try {
-            MessageContext.setCurrentMessageContext(new MessageContext());
             service.removeTab(userId, String.valueOf(tabId), null);
         } catch (Exception e) {
             log.error("Exception while deleting tab: " + tabId, e);

@@ -1,6 +1,5 @@
 package org.wso2.carbon.bam.toolbox.deployer.core;
 
-import org.apache.axiom.om.util.AXIOMUtil;
 import org.apache.axis2.context.ConfigurationContext;
 import org.apache.axis2.deployment.AbstractDeployer;
 import org.apache.axis2.deployment.DeploymentException;
@@ -36,10 +35,8 @@ import org.xml.sax.SAXException;
 import javax.xml.parsers.DocumentBuilder;
 import javax.xml.parsers.DocumentBuilderFactory;
 import javax.xml.parsers.ParserConfigurationException;
-import java.io.ByteArrayInputStream;
 import java.io.File;
 import java.io.FileInputStream;
-import java.io.FileNotFoundException;
 import java.io.IOException;
 import java.io.StringReader;
 import java.util.ArrayList;
@@ -78,25 +75,20 @@ public class BAMToolBoxDeployer extends AbstractDeployer {
         createHotDeployementFolderIfNotExists();
         CarbonContext.getCurrentContext().getTenantId();
 
-
-        String portOffset = CarbonUtils.getServerConfiguration().
-                getFirstProperty(BAMToolBoxDeployerConstants.PORT_OFF_SET);
-        port = CarbonUtils.getTransportPort(this.configurationContext, "https")+
-                Integer.parseInt(portOffset);
-        ServerStartUpInspector inspector = new ServerStartUpInspector();
-        inspector.setPort(port);
-        inspector.start();
-
         if (!ServerStartUpInspector.isServerStarted()) {
             if (getTenantId() == MultitenantConstants.SUPER_TENANT_ID) {
                 pausedDeployments = this;
+                String portOffset = CarbonUtils.getServerConfiguration().
+                        getFirstProperty(BAMToolBoxDeployerConstants.PORT_OFF_SET);
+                port = CarbonUtils.getTransportPort(this.configurationContext, "https") +
+                        Integer.parseInt(portOffset);
+                ServerStartUpInspector inspector = new ServerStartUpInspector();
+                inspector.setPort(port);
+                inspector.start();
             }
         } else {
-
             doInitialUnDeployments();
         }
-
-
     }
 
     public void doInitialUnDeployments() {
@@ -168,7 +160,7 @@ public class BAMToolBoxDeployer extends AbstractDeployer {
             } catch (ParserConfigurationException e) {
                 log.error("Error while deploying bam  artifact :" + deploymentFileData.getAbsolutePath(), e);
                 throw new BAMToolboxDeploymentException("Error while deploying bam  artifact :" + deploymentFileData.getAbsolutePath(), e);
-            }catch (SAXException e) {
+            } catch (SAXException e) {
                 log.error("Error while deploying bam  artifact :" + deploymentFileData.getAbsolutePath(), e);
                 throw new BAMToolboxDeploymentException("Error while deploying bam  artifact :" + deploymentFileData.getAbsolutePath(), e);
             }
@@ -184,13 +176,13 @@ public class BAMToolBoxDeployer extends AbstractDeployer {
     }
 
     private void createDataSource(ToolBoxDTO toolBox) throws DataSourceException,
-                                                             IOException,
-                                                             ParserConfigurationException,
-                                                             SAXException {
+            IOException,
+            ParserConfigurationException,
+            SAXException {
         String dataSource = toolBox.getDataSource();
         String dataSourceConfigurationFile = toolBox.getDataSourceConfiguration();
 
-        if (dataSource != null && dataSourceConfigurationFile != null) {
+        if ((dataSource != null || !"".equals(dataSource))&& (dataSourceConfigurationFile != null && !"".equals(dataSource))) {
             DataSourceService dataSourceService = ServiceHolder.getDataSourceService();
 
             String dsConfigXML = IOUtils.toString(new FileInputStream(
@@ -262,7 +254,7 @@ public class BAMToolBoxDeployer extends AbstractDeployer {
         ToolBoxDTO toolBoxDTO = manager.getToolBox(aToolName, getTenantId());
 
         BAMArtifactDeployerManager.getInstance().undeploy(toolBoxDTO, getTenantAdminName(tenantId),
-                                                          tenantId);
+                tenantId);
         manager.deleteToolBoxConfiguration(aToolName, getTenantId());
     }
 
@@ -319,7 +311,7 @@ public class BAMToolBoxDeployer extends AbstractDeployer {
             } catch (UserStoreException e) {
                 log.error(e.getMessage(), e);
                 throw new BAMToolboxDeploymentException("Error while obtaining " +
-                                                        "the admin username for tenant: " + tenantId, e);
+                        "the admin username for tenant: " + tenantId, e);
             }
         } else {
             TenantManager manager = ServiceHolder.getRealmService().getTenantManager();
@@ -329,7 +321,7 @@ public class BAMToolBoxDeployer extends AbstractDeployer {
             } catch (org.wso2.carbon.user.api.UserStoreException e) {
                 log.error(e.getMessage(), e);
                 throw new BAMToolboxDeploymentException("Error while obtaining " +
-                                                        "the admin username for tenant: " + tenantId, e);
+                        "the admin username for tenant: " + tenantId, e);
             }
         }
     }

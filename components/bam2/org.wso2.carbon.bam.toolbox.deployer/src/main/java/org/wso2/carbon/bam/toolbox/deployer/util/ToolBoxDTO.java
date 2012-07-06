@@ -164,6 +164,7 @@ public class ToolBoxDTO {
     }
 
     public String getDataSource() {
+        if(null == datasource) return "";
         return datasource;
     }
 
@@ -172,6 +173,7 @@ public class ToolBoxDTO {
     }
 
     public String getDataSourceConfiguration() {
+        if(null == dsConfiguration) return "";
         return dsConfiguration;
     }
 

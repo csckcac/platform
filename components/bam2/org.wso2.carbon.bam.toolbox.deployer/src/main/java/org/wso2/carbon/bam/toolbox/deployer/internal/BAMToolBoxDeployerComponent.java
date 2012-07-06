@@ -53,7 +53,7 @@ import org.wso2.carbon.utils.ConfigurationContextService;
  * unbind="unsetRealmService"
  * @scr.reference name="org.wso2.carbon.dashboard.DashboardDSService"
  * interface="org.wso2.carbon.dashboard.DashboardDSService"
- * cardinality="1..1" policy="dynamic" bind="setDashboardService"
+ * cardinality="0..1" policy="dynamic" bind="setDashboardService"
  * unbind="unsetDashboardService"
  * @scr.reference name="org.wso2.carbon.dashboard.mgt.gadgetrepo.GadgetRepoService"
  * interface="org.wso2.carbon.dashboard.mgt.gadgetrepo.GadgetRepoService"

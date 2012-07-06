@@ -1,0 +1,70 @@
+ <%
+     include('includes/template_header.jag');
+ %>
+ <form method='post' action='create_datasource_submit.jag' class='well'>
+            <table class="table table-bordered table-striped"  id="datasourceInputTbl">
+                <thead>
+                <tr>
+                    <th colspan="2">Please enter the following information.</th>
+                </tr>
+                </thead>
+                <tr>
+                    <td >Datasource  Name:</td>
+                    <td class="formRow"><input type='text' name='datasourceName' size='50'/></td>
+                    <input type="hidden" name='applicationKey' value='<%=request.getParameter("applicationKey")%>'
+                </tr>
+
+                <tr>
+                                    <td>DataSource Description:</td>
+
+                                    <td><textarea name='datasourceDescription' rows=5 cols=50></textarea></td>
+                 </tr>
+
+                                             <%
+                                               include('config_reader.jag');
+                                             var stages = getProperties('ApplicationDeployment.DeploymentStage');
+                                             for(var i=0; i<stages.length;i++){
+                                                 var stage = stages[i];
+                                             %>
+                                                <table class="table table-bordered table-stripe">
+                                                 <thead>
+                                                                 <tr>
+                                                                     <th colspan="2">Create datasource for <%=stage%>.</th>
+                                                                 </tr>
+                                                                 </thead>
+                                                                 <tr>
+                                                                     <td >Data base URL:</td>
+                                                                     <td class="formRow"><input type='text' name='<%='url'+stage%>' size='50'/></td>
+                                                                 </tr>
+ <tr>
+                                                                      <td >Database Driver:</td>
+                                                                      <td class="formRow"><input type='text' name='<%='driverClass'+stage%>' size='50'/></td>
+                                                                  </tr>
+ <tr>
+                                                                      <td >Username:</td>
+                                                                      <td class="formRow"><input type='text' name='<%='username'+stage%>' size='50'/></td>
+                                                                  </tr>
+  <tr>
+                                                                       <td >Password:</td>
+                                                                       <td class="formRow"><input type='password' name='<%='password'+stage%>' size='50'/></td>
+                                                                  </tr>
+                                              </table>
+                                             <%
+                                             }
+
+                                             %>
+
+
+            </table>
+            <table class="styledLeft">
+                <tr>
+                    <td class="buttonRow">
+                        <input type='submit' name='Submit' value='Submit' class='btn btn-primary'/>
+                        <input type="button" onclick="location.href='index.jag?'" value='Cancel' class='btn btn-primary'/>
+                    </td>
+                </tr>
+            </table>
+        </form>
+  <%
+   include('includes/template_footer.jag');
+  %>

@@ -1,0 +1,35 @@
+<%
+    include('includes/template_header.jag');
+    include('process/web_service_util.jag');
+    include('constants.jag');
+    include('config_reader.jag');
+    var applicationKey = request.getParameter("applicationKey");
+    var datasourceName = request.getParameter("datasourceName");
+    var datasourceDescription = request.getParameter("datasourceDescription");
+
+%>
+<%
+print("Use the created datasource through jndi lookup with name "+"jdbc/"+datasourceName)
+ var stages = getProperties('ApplicationDeployment.DeploymentStage');
+                                             for(var i=0; i<stages.length;i++){
+                                                 var stage = stages[i];
+          var url= request.getParameter("url"+stage);
+          var driverName=request.getParameter("driverClass"+stage);
+           var dbUsername= request.getParameter("username"+stage);
+            var dbPassword= request.getParameter("password"+stage);
+log.error(url +' '+driverName+' '+dbUsername+' '+dbPassword+' '+applicationKey+' '+datasourceName+' '+datasourceDescription);
+            try {
+                createDataSource(applicationKey,stage,datasourceName,url,driverName,dbUsername,dbPassword,datasourceDescription);
+                print("</br> successfully created datasource in "+stage)
+
+            } catch (e) {
+                print(e.toString());
+            }
+
+        }
+        %>
+    </div>
+</div>
+<%
+    include('includes/template_footer.jag');
+%>

@@ -282,6 +282,15 @@
             <filtered>true</filtered>
             <fileMode>644</fileMode>
         </file>
+
+        <!-- Copy BAM Dashboard war -->
+	<file>
+            <source>../p2-profile-gen/target/wso2carbon-core-${carbon.version}/repository/deployment/server/webapps/dashboard.war</source>
+            <outputDirectory>${pom.artifactId}-${pom.version}/repository/deployment/server/webapps/</outputDirectory>
+            <filtered>true</filtered>
+            <fileMode>644</fileMode>
+        </file>
+
         <file>
             <source>../../LICENSE.txt</source>
             <outputDirectory>${pom.artifactId}-${pom.version}/</outputDirectory>

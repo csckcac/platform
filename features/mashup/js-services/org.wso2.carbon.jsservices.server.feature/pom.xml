@@ -384,10 +384,8 @@
                                 <importFeatureDef>
                                     org.wso2.carbon.service.mgt.server:${service.mgt.version}
                                 </importFeatureDef>
-                                <importFeatureDef>org.wso2.carbon.jsservices.common:${project.version}
-                                </importFeatureDef>
                                 <importFeatureDef>
-                                    org.wso2.carbon.task.server:${scheduled.task.feature.version}
+									org.wso2.carbon.jsservices.common:${project.version}
                                 </importFeatureDef>
                                 <importFeatureDef>
                                     org.wso2.carbon.core.common:${wso2carbon.core.version.mashup}

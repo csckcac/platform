@@ -160,7 +160,7 @@
             <a class="add-icon-link"
                href="#addNameLink"
                onclick="addArgument('<fmt:message key="mediator.payloadFactory.namespaces"/>')">
-                <fmt:message key="mediator.payloadFactory.add.property"/>
+                <fmt:message key="mediator.payloadFactory.add.argument"/>
             </a>
         </div>
     </td>

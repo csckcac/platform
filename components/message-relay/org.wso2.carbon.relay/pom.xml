@@ -38,6 +38,11 @@
             <groupId>org.apache.synapse</groupId>
             <artifactId>synapse-core</artifactId>            
         </dependency>
+        <dependency>
+            <groupId>org.apache.axis2</groupId>
+            <artifactId>axis2-json</artifactId>
+            <version>1.6.1-wso2v5</version>
+        </dependency>
     </dependencies>    
 
     <build>

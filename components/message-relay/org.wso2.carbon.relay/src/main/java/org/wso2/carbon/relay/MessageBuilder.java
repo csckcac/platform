@@ -17,6 +17,7 @@
 package org.wso2.carbon.relay;
 
 import org.apache.axis2.builder.*;
+import org.apache.axis2.json.*;
 import org.apache.axis2.context.MessageContext;
 import org.apache.axis2.AxisFault;
 import org.apache.axis2.transport.MessageFormatter;
@@ -53,6 +54,7 @@ public class MessageBuilder {
         builders.put("application/xml", new ApplicationXMLBuilder());
         builders.put("application/x-www-form-urlencoded",
                 new XFormURLEncodedBuilder());
+        builders.put("application/json", new JSONBuilder());
 
         // initialize the default formatters
         formatters.put("application/x-www-form-urlencoded", new XFormURLEncodedFormatter());
@@ -60,6 +62,7 @@ public class MessageBuilder {
         formatters.put("application/xml", new ApplicationXMLFormatter());
         formatters.put("text/xml", new SOAPMessageFormatter());
         formatters.put("application/soap+xml", new SOAPMessageFormatter());
+        formatters.put("application/json", new JSONFormatter());
     }
 
     public Map<String, Builder> getBuilders() {

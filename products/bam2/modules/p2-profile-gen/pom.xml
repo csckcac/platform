@@ -185,6 +185,9 @@
                                 <featureArtifactDef>
                                     org.wso2.carbon:org.wso2.carbon.bam2.presentation.server.feature:${carbon.version}
                                 </featureArtifactDef>
+                                <featureArtifactDef>
+                                    org.wso2.carbon:org.wso2.carbon.bam2.dashboard.feature:${carbon.version}
+                                </featureArtifactDef>
                                 <!-- end BAM features -->
 
                                 <!-- Data Bridge Features -->
@@ -456,7 +459,10 @@
                                     <id>org.wso2.carbon.databridge.streamdefn.cassandra.feature.group</id>
                                     <version>${carbon.version}</version>
                                 </feature>
-
+                               <feature>
+                                    <id>org.wso2.carbon.bam2.dashboard.feature.group</id>
+                                    <version>${carbon.version}</version>
+                                </feature>
 
                                 <!-- end BAM features -->
 

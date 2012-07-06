@@ -33,6 +33,7 @@ import org.apache.synapse.mediators.AbstractMediator;
 import org.apache.synapse.util.xpath.SynapseXPath;
 
 import javax.xml.namespace.QName;
+import java.util.ArrayList;
 import java.util.List;
 
 /**
@@ -53,6 +54,8 @@ public class HeaderMediator extends AbstractMediator {
     private String value = null;
     /** Set the header (ACTION_SET) or remove it (ACTION_REMOVE). Defaults to ACTION_SET */
     private int action = ACTION_SET;
+    /** Optional embedded XML content of the header element */
+    private List<OMElement> embeddedXmlContent = new ArrayList<OMElement>();
     /** An expression which should be evaluated, and the result set as the header value */
     private SynapseXPath expression = null;
 
@@ -83,7 +86,7 @@ public class HeaderMediator extends AbstractMediator {
                 synLog.traceOrDebug("Set SOAP header : " + qName + " to : " + value);
             }
 
-            if (qName.getNamespaceURI() == null || "".equals(qName.getNamespaceURI())) {
+            if (!isImplicit() && (qName.getNamespaceURI() == null || "".equals(qName.getNamespaceURI()))) {
 
                 // is this a "well known" Synapse header?
                 if (SynapseConstants.HEADER_TO.equals(qName.getLocalPart())) {
@@ -163,9 +166,18 @@ public class HeaderMediator extends AbstractMediator {
         if (header == null) {
             header = fac.createSOAPHeader(env);
         }
-        SOAPHeaderBlock hb = header.addHeaderBlock(qName.getLocalPart(),
-                fac.createOMNamespace(qName.getNamespaceURI(), qName.getPrefix()));
-        hb.setText(value);
+        if (!isImplicit()) {
+            SOAPHeaderBlock hb = header.addHeaderBlock(qName.getLocalPart(),
+                                                       fac.createOMNamespace(qName.getNamespaceURI(), qName.getPrefix()));
+            hb.setText(value);
+        } else if (hasEmbeddedXml()) {
+            for (OMElement e : embeddedXmlContent) {
+                header.addChild(e);
+            }
+        } else {
+            // header mediator has an implicit xml element but its content cannot be found.
+            handleException("Header mediator has an implicit xml element but its content cannot be found.", synCtx);
+        }
     }
 
     private void removeFromHeaderList(List headersList) {
@@ -213,6 +225,24 @@ public class HeaderMediator extends AbstractMediator {
 
     public SynapseXPath getExpression() {
         return expression;
+    }
+
+    public List<OMElement> getEmbeddedXml() {
+        return embeddedXmlContent;
+    }
+
+    public void addEmbeddedXml(OMElement element) {
+        if (element != null && !embeddedXmlContent.contains(element)) {
+            embeddedXmlContent.add(element);
+        }
+    }
+
+    public boolean hasEmbeddedXml() {
+        return !embeddedXmlContent.isEmpty();
+    }
+
+    public boolean isImplicit() {
+        return getQName() == null;
     }
 
     public void setExpression(SynapseXPath expression) {

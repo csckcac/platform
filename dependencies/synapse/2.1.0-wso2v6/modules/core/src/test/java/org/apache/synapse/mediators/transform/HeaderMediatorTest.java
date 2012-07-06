@@ -20,12 +20,16 @@
 package org.apache.synapse.mediators.transform;
 
 import junit.framework.TestCase;
+import org.apache.axiom.om.util.AXIOMUtil;
 import org.apache.synapse.MessageContext;
 import org.apache.synapse.SynapseConstants;
+import org.apache.synapse.config.xml.HeaderMediatorFactory;
 import org.apache.synapse.mediators.TestUtils;
 import org.apache.synapse.util.xpath.SynapseXPath;
 
 import javax.xml.namespace.QName;
+import javax.xml.stream.XMLStreamException;
+import java.util.Properties;
 
 public class HeaderMediatorTest extends TestCase {
 
@@ -84,6 +88,27 @@ public class HeaderMediatorTest extends TestCase {
             fail("HeaderMediator should not allow headers without namespace");
         } catch (Exception ex) {
             // This is expected
+        }
+    }
+
+    public void testEmbeddedXml() throws Exception {
+        String simpleHeader =  "<header name=\"m:simpleHeader\" value=\"Simple Header\" xmlns:m=\"http://org.synapse.example\"/>";
+        String complexHeader = "<header><m:complexHeader xmlns:m=\"http://org.synapse.example\"><property key=\"k1\" value=\"v1\"/><property key=\"k2\" value=\"v2\"/></m:complexHeader></header>";
+        String removeHeader = "<header name=\"m:complexHeader\" action=\"remove\" xmlns:m=\"http://org.synapse.example\"/>";
+
+        HeaderMediatorFactory fac = new HeaderMediatorFactory();
+        try {
+            // Adding headers.
+            MessageContext synCtx = TestUtils.getTestContext("<empty/>");
+            HeaderMediator headerMediator = (HeaderMediator) fac.createMediator(AXIOMUtil.stringToOM(simpleHeader), new Properties());
+            headerMediator.mediate(synCtx);
+            headerMediator = (HeaderMediator) fac.createMediator(AXIOMUtil.stringToOM(complexHeader), new Properties());
+            headerMediator.mediate(synCtx);
+            // Removing headers.
+            headerMediator = (HeaderMediator) fac.createMediator(AXIOMUtil.stringToOM(removeHeader), new Properties());
+            headerMediator.mediate(synCtx);
+        } catch (XMLStreamException e) {
+            fail("Error while parsing header mediator configuration: inline XML scenario. " + e.getMessage());
         }
     }
 }

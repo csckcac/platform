@@ -70,11 +70,15 @@ public class HeaderMediatorSerializer extends AbstractMediatorSerializer {
                 SynapseXPathSerializer.serializeXPath(
                     mediator.getExpression(), header, "expression");
 
-            } else {
+            } else if (!mediator.isImplicit()) {
                 handleException("Value or expression required for a set header mediator");
             }
         }
-
+        if (mediator.hasEmbeddedXml()) {
+            for (OMElement e : mediator.getEmbeddedXml()) {
+                header.addChild(e);
+            }
+        }
         return header;
     }
 

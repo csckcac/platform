@@ -81,6 +81,8 @@ public class BamMediator extends AbstractMediator {
     private String serverPort = "";
     private String userName = "";
     private String password = "";
+    private String ksLocation = "";
+    private String ksPassword = "";
     private List<Property> properties = new ArrayList<Property>();
     private List<StreamEntry> streamEntries = new ArrayList<StreamEntry>();
     private String streamId = null;
@@ -266,10 +268,12 @@ public class BamMediator extends AbstractMediator {
 
     private Agent createAgent(){
         AgentConfiguration agentConfiguration = new AgentConfiguration();
-        String keyStorePath = CarbonUtils.getCarbonHome() + File.separator + "repository" +
+        /*String keyStorePath = CarbonUtils.getCarbonHome() + File.separator + "repository" +
                               File.separator + "resources" + File.separator + "security" +
                               File.separator + "client-truststore.jks";
-        String keyStorePassword = "wso2carbon";
+        String keyStorePassword = "wso2carbon";*/
+        String keyStorePath = this.ksLocation;
+        String keyStorePassword = this.ksPassword;
         agentConfiguration.setTrustStore(keyStorePath);
         agentConfiguration.setTrustStorePassword(keyStorePassword);
         System.setProperty("javax.net.ssl.trustStore", keyStorePath);
@@ -468,6 +472,23 @@ public class BamMediator extends AbstractMediator {
 
     public String getServerPort() {
         return serverPort;
+    }
+
+
+    public String getKsLocation() {
+        return ksLocation;
+    }
+
+    public void setKsLocation(String ksLocation) {
+        this.ksLocation = ksLocation;
+    }
+
+    public String getKsPassword() {
+        return ksPassword;
+    }
+
+    public void setKsPassword(String ksPassword) {
+        this.ksPassword = ksPassword;
     }
 
     public void setProperties(List<Property> newValue){

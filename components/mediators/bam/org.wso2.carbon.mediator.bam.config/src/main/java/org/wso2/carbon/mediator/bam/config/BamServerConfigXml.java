@@ -37,11 +37,12 @@ public class BamServerConfigXml {
     private org.apache.axiom.om.OMNamespace nullNS;
     private OMElement serverProfileElement;
 
-    public OMElement buildServerProfile(String ip, String port, String userName, String password,
+    public OMElement buildServerProfile(String ip, String port, String userName, String password, String secure, String ksLocation, String ksPassword,
                                         List<StreamConfiguration> streamConfigurations){
         serverProfileElement = this.serializeServerProfile();
         serverProfileElement.addChild(this.serializeConnection(ip, port));
-        serverProfileElement.addChild(this.serializeCredential(userName, password));
+        serverProfileElement.addChild(this.serializeCredential(userName, password, secure));
+        serverProfileElement.addChild(this.serializeKeyStore(ksLocation, ksPassword));
         serverProfileElement.addChild(this.serializeStreams(streamConfigurations));
         return serverProfileElement;
     }
@@ -53,11 +54,19 @@ public class BamServerConfigXml {
         return credentialElement;
     }
 
-    private OMElement serializeCredential(String userName, String password){
+    private OMElement serializeCredential(String userName, String password, String secure){
         OMElement credentialElement = fac.createOMElement("credential", synNS);
         credentialElement.addAttribute("userName", userName, nullNS);
         credentialElement.addAttribute("password", password, nullNS);
+        credentialElement.addAttribute("secure", secure, nullNS);
         return credentialElement;
+    }
+
+    private OMElement serializeKeyStore(String location, String password){
+        OMElement keyStoreElement = fac.createOMElement("keyStore", synNS);
+        keyStoreElement.addAttribute("location", location, nullNS);
+        keyStoreElement.addAttribute("password", password, nullNS);
+        return keyStoreElement;
     }
 
     private OMElement serializeServerProfile(){

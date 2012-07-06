@@ -25,7 +25,13 @@ import java.util.List;
 
 public class BamServerConfig {
 
-    private String username, password, ip, port;
+    private String username;
+    private String password;
+    private String ip;
+    private String port;
+    private String keyStoreLocation;
+    private String keyStorePassword;
+    private boolean security = true;
     private List<StreamConfiguration> streamConfigurations = new ArrayList<StreamConfiguration>();
 
     public String getUsername(){
@@ -58,6 +64,30 @@ public class BamServerConfig {
 
     public void setPort(String port){
         this.port = port;
+    }
+
+    public boolean isSecurity() {
+        return security;
+    }
+
+    public void setSecurity(boolean security) {
+        this.security = security;
+    }
+
+    public String getKeyStoreLocation() {
+        return keyStoreLocation;
+    }
+
+    public void setKeyStoreLocation(String keyStoreLocation) {
+        this.keyStoreLocation = keyStoreLocation;
+    }
+
+    public String getKeyStorePassword() {
+        return keyStorePassword;
+    }
+
+    public void setKeyStorePassword(String keyStorePassword) {
+        this.keyStorePassword = keyStorePassword;
     }
 
     public List<StreamConfiguration> getStreamConfigurations(){

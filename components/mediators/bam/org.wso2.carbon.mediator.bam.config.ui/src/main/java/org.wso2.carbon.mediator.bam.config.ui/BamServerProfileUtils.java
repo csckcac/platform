@@ -28,9 +28,11 @@ import org.wso2.carbon.mediator.bam.config.BamServerConfigXml;
 import org.wso2.carbon.mediator.bam.config.stream.StreamConfiguration;
 import org.wso2.carbon.mediator.bam.config.stream.Property;
 import org.wso2.carbon.mediator.bam.config.stream.StreamEntry;
+import org.wso2.carbon.utils.CarbonUtils;
 
 import javax.xml.stream.XMLStreamException;
 import java.io.ByteArrayInputStream;
+import java.io.File;
 import java.rmi.RemoteException;
 import java.util.ArrayList;
 import java.util.List;
@@ -48,13 +50,22 @@ public class BamServerProfileUtils {
         }
     }
 
-    public void addResource(String ip, String port, String userName, String password, String streamConfigurationListString,
+    public void addResource(String ip, String port, String userName, String password, boolean isSecure,
+                            String ksLocation, String ksPassword, String streamConfigurationListString,
                             String bamServerProfileLocation){
+
+        String encryptedPassword = this.encryptPassword(password);
+        String encryptedKSPassword = this.encryptPassword(ksPassword);
+        String isSecureString = "";
+        if(isSecure){
+            isSecureString = "true";
+        } else {
+            isSecureString = "false";
+        }
 
         List<StreamConfiguration> streamConfigurations = this.getStreamConfigurationListFromString(streamConfigurationListString);
         BamServerConfigXml mediatorConfigurationXml = new BamServerConfigXml();
-        String encryptedPassword = this.encryptPassword(password);
-        OMElement storeXml = mediatorConfigurationXml.buildServerProfile(ip, port, userName, encryptedPassword, streamConfigurations);
+        OMElement storeXml = mediatorConfigurationXml.buildServerProfile(ip, port, userName, encryptedPassword, isSecureString, ksLocation, encryptedKSPassword, streamConfigurations);
         String stringStoreXml = storeXml.toString();
 
         try {
@@ -228,6 +239,36 @@ public class BamServerProfileUtils {
             return shortServerProfilePath;
         }
         return shortServerProfilePath;
+    }
+    
+    public String getKeyStoreLocation(BamServerConfig bamServerConfig){
+        String ksLocation = "";
+        ksLocation = bamServerConfig.getKeyStoreLocation();
+        if(this.isNotNullOrEmpty(ksLocation)){
+            return ksLocation;
+        } else {
+            return this.getDefaultKeyStoreLocation();
+        }
+    }
+
+    public String getKeyStorePassword(BamServerConfig bamServerConfig){
+        String ksPassword = "";
+        ksPassword = bamServerConfig.getKeyStorePassword();
+        if(this.isNotNullOrEmpty(ksPassword)){
+            return this.decryptPassword(ksPassword);
+        } else {
+            return this.getDefaultKeyStorePassword();
+        }
+    }
+    
+    private String getDefaultKeyStoreLocation(){
+        return CarbonUtils.getCarbonHome() + File.separator + "repository" +
+               File.separator + "resources" + File.separator + "security" +
+               File.separator + "client-truststore.jks";
+    }
+
+    private String getDefaultKeyStorePassword(){
+        return "wso2carbon";
     }
 
     public boolean isNotNullOrEmpty(String string){

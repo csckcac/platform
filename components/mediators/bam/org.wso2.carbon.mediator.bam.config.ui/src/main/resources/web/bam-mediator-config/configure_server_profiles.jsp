@@ -34,11 +34,14 @@
     String password = "";
     String ip = "";
     String port = "";
+    String security = "true";
     String serverProfileLocation = "";
     String serverProfileName = "";
     String action = "";
     String force = "false";
     String streamTable = "";
+    String ksLocation = "";
+    String ksPassword = "";
 
 
     BamServerConfig bamServerConfig = new BamServerConfig();
@@ -71,6 +74,21 @@
     String tmpPort = request.getParameter("txtPort");
     if(tmpPort != null && !tmpPort.equals("")){
         port = tmpPort;
+    }
+
+    String tmpSecurity = request.getParameter("security");
+    if(tmpSecurity !=null && !tmpSecurity.equals("")){
+        security = tmpSecurity;
+    }
+
+    String tmpKsLocation = request.getParameter("ksLocation");
+    if(tmpKsLocation !=null && !tmpKsLocation.equals("")){
+        ksLocation = tmpKsLocation;
+    }
+
+    String tmpKsPassword = request.getParameter("ksPassword");
+    if(tmpKsPassword !=null && !tmpKsPassword.equals("")){
+        ksPassword = tmpKsPassword;
     }
 
     String tmpStreamTable = request.getParameter("hfStreamTableData");
@@ -106,6 +124,10 @@
         </style>
         <script id="source" type="text/javascript">
 
+            function onSecurityChanged(isSecure){
+
+            }
+
             function loadServerProfiles(serverProfileLocationPath, serverProfilePath) {
                 jQuery.ajax({
                                 type:"GET",
@@ -137,6 +159,9 @@
                                                 + "txtPassword=" + "<%=request.getParameter("txtPassword")%>" + "&"
                                                 + "txtIp=" + "<%=request.getParameter("txtIp")%>" + "&"
                                                 + "txtPort=" + "<%=request.getParameter("txtPort")%>" + "&"
+                                                + "security=" + "<%=request.getParameter("security")%>" + "&"
+                                                + "ksLocation=" + "<%=request.getParameter("ksLocation")%>" + "&"
+                                                + "ksPassword=" + "<%=request.getParameter("ksPassword")%>" + "&"
                                                 + "hfStreamTableData=" + "<%=request.getParameter("hfStreamTableData")%>" + "&"
                                                 + "txtServerProfileLocation=" + "<%=request.getParameter("txtServerProfileLocation")%>";
 
@@ -171,18 +196,6 @@
             function addPropertyRow() {
                 propertyRowNum++;
                 var sId = "propertyTable_" + propertyRowNum;
-                <%--var tableContent = "<tr id=\"" + sId + "\">" +--%>
-                                   <%--"<td>\n" +--%>
-                                   <%--"                        <input type=\"text\" name=\"<%=PROPERTY_KEYS%>\" value=\"\">\n" +--%>
-                                   <%--"                    </td>\n" +--%>
-                                   <%--"                    <td>\n" +--%>
-                                   <%--"                        <input type=\"text\" name=\"<%=PROPERTY_VALUES%>\" value=\"\">\n" +--%>
-                                   <%--"                    </td>" +--%>
-                                   <%--"<td>\n" +--%>
-                                   <%--"                        <a onClick='javaScript:removePropertyColumn(\"" + sId + "\")'" +--%>
-                                   <%--"style='background-image: url(../admin/images/delete.gif);'class='icon-link addIcon'>Remove Property</a>\n" +--%>
-                                   <%--"                    </td>" +--%>
-                                   <%--"</tr>";--%>
 
                 var tableContent = "<tr id=\"" + sId + "\">" +
                                     "<td>\n" +
@@ -260,14 +273,6 @@
                 var tableData = "", inputs, numOfInputs;
                 inputs = document.getElementById("propertyTable").getElementsByTagName("input");
                 numOfInputs = inputs.length;
-                /*for(var i=0; i<numOfInputs; i=i+2){
-                    if(inputs[i].value != "" && inputs[i+1].value != ""){
-                        tableData = tableData + inputs[i].value + "::" + inputs[i+1].value + ";";
-                    }
-                }
-                document.getElementById("hfPropertyTableData").value = tableData;*/
-
-
                 for(var i=0; i<numOfInputs; i=i+4){
                     if(inputs[i].value != "" && inputs[i+3].value != ""){
                         tableData = tableData + inputs[i].value + "::" + inputs[i+3].value;
@@ -341,38 +346,6 @@
                     }
                 }
 
-
-
-
-
-                /*var inputNumber = jQuery("#propertyTable").find("input").length;
-                var inputColumn = "name";
-                //var j = 0;
-                var currentInput;
-                for(var i=0, j = 0; i<inputNumber && j<numOfProperties; i=i+1){
-                    currentInput = jQuery("#propertyTable").find("input")[i];
-                    if(currentInput.type !=  "radio" && inputColumn == "name"){
-                        currentInput.value = propertyDataArray[j].split("::")[0];
-                        inputColumn = "value";
-                    }
-                    if(currentInput.type == "radio"){
-                        if(propertyDataArray[j].split("::")[2] == "value"){
-
-                        }
-                    }
-                    if(currentInput.type !=  "radio" && inputColumn == "value"){
-                        currentInput.value = propertyDataArray[j].split("::")[1];
-                        inputColumn = "name";
-                        j++;
-                    }
-                }*/
-
-
-
-
-
-
-
                 for(var i=0; i<numOfProperties; i=i+1){
                     if(propertyDataArray[i].split("::").length == 3){
                         jQuery("#propertyTable").find("tr").find("input")[4*i].value = propertyDataArray[i].split("::")[0];
@@ -434,12 +407,6 @@
                     jQuery("#" + trArray[i]).remove();
                 }
 
-                /*if(tableRowNumber > 2){
-                    for(var i=2; i<tableRowNumber; i++){
-                        var currentRowId = jQuery("#propertyTable").find("tr")[2].id;
-                        jQuery("#" + currentRowId).remove();
-                    }
-                }*/
             }
 
             function cancelPropertyTableData(){
@@ -520,6 +487,13 @@
                 password = bamServerProfileUtils.decryptPassword(bamServerConfig.getPassword());
                 ip = bamServerConfig.getIp();
                 port = bamServerConfig.getPort();
+                if(bamServerConfig.isSecurity()){
+                    security = "true";
+                } else {
+                    security = "false";
+                }
+                ksLocation = bamServerProfileUtils.getKeyStoreLocation(bamServerConfig);
+                ksPassword = bamServerProfileUtils.getKeyStorePassword(bamServerConfig);
             }
             else {
                 %>
@@ -552,11 +526,13 @@
 
     else if("save".equals(action) && !"".equals(serverProfileLocation)){ // Saving a configuration
         if("true".equals(force)){
-            bamServerProfileUtils.addResource(ip, port, userName, password, streamTable, serverProfileLocation);
+            bamServerProfileUtils.addResource(ip, port, userName, password, "true".equals(security),
+                                              ksLocation, ksPassword, streamTable, serverProfileLocation);
         }
         else if (!"true".equals(force)){
             if(!bamServerProfileUtils.resourceAlreadyExists(serverProfileLocation)){
-                bamServerProfileUtils.addResource(ip, port, userName, password, streamTable, serverProfileLocation);
+                bamServerProfileUtils.addResource(ip, port, userName, password, "true".equals(security),
+                                                  ksLocation, ksPassword, streamTable, serverProfileLocation);
             }
             else {
                 %>
@@ -622,6 +598,13 @@
                 </td>
             </tr>
             <tr>
+                <td colspan="2">
+                    <h3>
+                        <fmt:message key="server.credential"/>
+                    </h3>
+                </td>
+            </tr>
+            <tr>
                 <td>
                     <fmt:message key="username"/>
                 </td>
@@ -635,6 +618,34 @@
                 </td>
                 <td>
                     <input type="password" name="txtPassword" id="txtPassword" value="<%=password%>"/>
+                </td>
+            </tr>
+            <tr>
+                <td colspan="2">
+                    <h3>
+                        <fmt:message key="server.transport"/>
+                    </h3>
+                </td>
+            </tr>
+            <tr>
+                <td>
+                    <fmt:message key="protocol"/>
+                </td>
+                <td>
+                    <select name="transportProtocol" id="transportProtocol" onchange="">
+                        <option>Thrift</option>
+                    </select>
+                    <script type="text/javascript">
+                        document.getElementById("transportProtocol").value = "Thrift";
+                    </script>
+                </td>
+            </tr>
+            <tr>
+                <td>
+                    <fmt:message key="enable.security"/>
+                </td>
+                <td>
+                    <input type="checkbox" id="security" name="security" checked="'<%=security%>' == 'true'" onchange="onSecurityChanged(this.checked)"/>
                 </td>
             </tr>
             <tr>
@@ -855,6 +866,29 @@
                             <td>
                                 <input type="button" value="Update" onclick="saveStreamData()"/>
                                 <input type="button" value="Cancel" onclick="cancelStreamData()"/>
+                            </td>
+                        </tr>
+                    </table>
+                </td>
+            </tr>
+
+            <tr>
+                <td colspan="2">
+                    <table>
+                        <tr>
+                            <td>
+                                <fmt:message key="key.store.location"/>
+                            </td>
+                            <td>
+                                <input type="text" name="ksLocation" id="ksLocation" value="<%=ksLocation%>"/>
+                            </td>
+                        </tr>
+                        <tr>
+                            <td>
+                                <fmt:message key="key.store.password"/>
+                            </td>
+                            <td>
+                                <input type="password" name="ksPassword" id="ksPassword" value="<%=ksPassword%>"/>
                             </td>
                         </tr>
                     </table>

@@ -37,8 +37,9 @@ public class BamServerConfigBuilder {
     public boolean createBamServerConfig(OMElement bamServerConfigElement){
         boolean credentialsOk = this.processCredentialElement(bamServerConfigElement);
         boolean connectionOk = this.processConnectionElement(bamServerConfigElement);
+        boolean keyStoreOk = this.processKeyStoreElement(bamServerConfigElement);
         boolean streamsOk = this.processStreamsElement(bamServerConfigElement);
-        return credentialsOk && connectionOk && streamsOk;
+        return credentialsOk && connectionOk && keyStoreOk && streamsOk;
     }
 
     private boolean processCredentialElement(OMElement bamServerConfig){
@@ -47,9 +48,19 @@ public class BamServerConfigBuilder {
         if(credentialElement != null){
             OMAttribute userNameAttr = credentialElement.getAttribute(new QName("userName"));
             OMAttribute passwordAttr = credentialElement.getAttribute(new QName("password"));
-            if(userNameAttr != null && passwordAttr != null && !userNameAttr.getAttributeValue().equals("") && !passwordAttr.getAttributeValue().equals("")){
+            OMAttribute secureAttr = credentialElement.getAttribute(new QName("secure"));
+            if(userNameAttr != null && passwordAttr != null && secureAttr != null &&
+               !userNameAttr.getAttributeValue().equals("") && !passwordAttr.getAttributeValue().equals("")
+               && !secureAttr.getAttributeValue().equals("")){
                 this.bamServerConfig.setUsername(userNameAttr.getAttributeValue());
                 this.bamServerConfig.setPassword(passwordAttr.getAttributeValue());
+                if("true".equals(secureAttr.getAttributeValue())){
+                    this.bamServerConfig.setSecurity(true);
+                } else if ("false".equals(secureAttr.getAttributeValue())) {
+                    this.bamServerConfig.setSecurity(false);
+                } else {
+                    return false; // Secure attribute should have a value
+                }
             }
             else {
                 return false;
@@ -67,6 +78,23 @@ public class BamServerConfigBuilder {
             if(ipAttr != null && portAttr != null && !ipAttr.getAttributeValue().equals("") && !portAttr.getAttributeValue().equals("")){
                 this.bamServerConfig.setIp(ipAttr.getAttributeValue());
                 this.bamServerConfig.setPort(portAttr.getAttributeValue());
+            }
+            else {
+                return false;
+            }
+        }
+        return true;
+    }
+
+    private boolean processKeyStoreElement(OMElement bamServerConfig){
+        OMElement keyStoreElement = bamServerConfig.getFirstChildWithName(
+                new QName(SynapseConstants.SYNAPSE_NAMESPACE, "keyStore"));
+        if(keyStoreElement != null){
+            OMAttribute locationAttr = keyStoreElement.getAttribute(new QName("location"));
+            OMAttribute passwordAttr = keyStoreElement.getAttribute(new QName("password"));
+            if(locationAttr != null && passwordAttr != null && !locationAttr.getAttributeValue().equals("") && !passwordAttr.getAttributeValue().equals("")){
+                this.bamServerConfig.setKeyStoreLocation(locationAttr.getAttributeValue());
+                this.bamServerConfig.setKeyStorePassword(passwordAttr.getAttributeValue());
             }
             else {
                 return false;

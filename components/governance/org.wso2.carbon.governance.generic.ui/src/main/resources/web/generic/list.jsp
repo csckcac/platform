@@ -117,7 +117,7 @@
 <div id="workArea">
  <%if(bean.getArtifacts() != null && bean.getArtifacts().length != 0){%>
  <p style="padding:5px">
- <a href="../generic/filter.jsp?list_region=<%=region%>&list_item=<%=item%>&dataNamespace=<%=dataNamespace%>&dataName=<%=dataName%>&singularLabel=<%=singularLabel%>&pluralLabel=<%=pluralLabel%>&key=<%=key%>&list_breadcrumb=<%=breadcrumb%>"><fmt:message key="filter.artifact.message"><fmt:param value="<%=singularLabel.toLowerCase()%>"/></fmt:message></a>
+ <a href="../generic/filter.jsp?list_region=<%=region%>&list_item=<%=item%>&dataNamespace=<%=dataNamespace%>&dataName=<%=dataName%>&singularLabel=<%=singularLabel%>&pluralLabel=<%=pluralLabel%>&key=<%=key%>&list_breadcrumb=<%=breadcrumb%>"><fmt:message key="filter.artifact.message"><fmt:param value="<%=singularLabel%>"/></fmt:message></a>
  </p>
  <%}%>
 <form id="profilesEditForm">
@@ -128,9 +128,9 @@
                         <%
                         if (filter) {
                         %>
-                        <th><fmt:message key="no.artifact.matches.filter"><fmt:param value="<%=singularLabel.toLowerCase()%>"/></fmt:message></th>
+                        <th><fmt:message key="no.artifact.matches.filter"><fmt:param value="<%=singularLabel%>"/></fmt:message></th>
                         <% } else { %>
-                        <th><fmt:message key="no.artifacts"><fmt:param value="<%=pluralLabel.toLowerCase()%>"/></fmt:message></th>
+                        <th><fmt:message key="no.artifacts"><fmt:param value="<%=singularLabel.concat("s")%>"/></fmt:message></th>
                         <% } %>
                     </tr>
                 </thead>

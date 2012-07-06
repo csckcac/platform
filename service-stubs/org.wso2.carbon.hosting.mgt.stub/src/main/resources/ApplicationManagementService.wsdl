@@ -8,7 +8,7 @@
                     <xs:element minOccurs="0" name="fileName" nillable="true" type="xs:string" />
                 </xs:sequence>
             </xs:complexType>
-            <xs:complexType name="PHPappsWrapper">
+            <xs:complexType name="PHPAppsWrapper">
                 <xs:sequence>
                     <xs:element minOccurs="0" name="hostName" nillable="true" type="xs:string" />
                     <xs:element minOccurs="0" name="httpPort" type="xs:int" />
@@ -37,6 +37,13 @@
                     </xs:sequence>
                 </xs:complexType>
             </xs:element>
+            <xs:element name="startInstance">
+                <xs:complexType>
+                    <xs:sequence>
+                        <xs:element minOccurs="0" name="image" nillable="true" type="xs:string" />
+                    </xs:sequence>
+                </xs:complexType>
+            </xs:element>
             <xs:element name="listPhpApplications">
                 <xs:complexType>
                     <xs:sequence />
@@ -60,7 +67,19 @@
             <xs:element name="getPagedPhpAppsSummaryResponse">
                 <xs:complexType>
                     <xs:sequence>
-                        <xs:element minOccurs="0" name="return" nillable="true" type="ax2127:PHPappsWrapper" />
+                        <xs:element minOccurs="0" name="return" nillable="true" type="ax2127:PHPAppsWrapper" />
+                    </xs:sequence>
+                </xs:complexType>
+            </xs:element>
+            <xs:element name="getImages">
+                <xs:complexType>
+                    <xs:sequence />
+                </xs:complexType>
+            </xs:element>
+            <xs:element name="getImagesResponse">
+                <xs:complexType>
+                    <xs:sequence>
+                        <xs:element maxOccurs="unbounded" minOccurs="0" name="return" nillable="true" type="xs:string" />
                     </xs:sequence>
                 </xs:complexType>
             </xs:element>
@@ -81,6 +100,12 @@
     <wsdl:message name="deletePhpAppsRequest">
         <wsdl:part name="parameters" element="ns1:deletePhpApps" />
     </wsdl:message>
+    <wsdl:message name="getImagesRequest">
+        <wsdl:part name="parameters" element="ns1:getImages" />
+    </wsdl:message>
+    <wsdl:message name="getImagesResponse">
+        <wsdl:part name="parameters" element="ns1:getImagesResponse" />
+    </wsdl:message>
     <wsdl:message name="getPagedPhpAppsSummaryRequest">
         <wsdl:part name="parameters" element="ns1:getPagedPhpAppsSummary" />
     </wsdl:message>
@@ -96,6 +121,9 @@
     <wsdl:message name="deleteAllPhpAppsRequest">
         <wsdl:part name="parameters" element="ns1:deleteAllPhpApps" />
     </wsdl:message>
+    <wsdl:message name="startInstanceRequest">
+        <wsdl:part name="parameters" element="ns1:startInstance" />
+    </wsdl:message>
     <wsdl:message name="uploadWebappRequest">
         <wsdl:part name="parameters" element="ns1:uploadWebapp" />
     </wsdl:message>
@@ -105,6 +133,10 @@
     <wsdl:portType name="ApplicationManagementServicePortType">
         <wsdl:operation name="deletePhpApps">
             <wsdl:input message="tns:deletePhpAppsRequest" wsaw:Action="urn:deletePhpApps" />
+        </wsdl:operation>
+        <wsdl:operation name="getImages">
+            <wsdl:input message="tns:getImagesRequest" wsaw:Action="urn:getImages" />
+            <wsdl:output message="tns:getImagesResponse" wsaw:Action="urn:getImagesResponse" />
         </wsdl:operation>
         <wsdl:operation name="getPagedPhpAppsSummary">
             <wsdl:input message="tns:getPagedPhpAppsSummaryRequest" wsaw:Action="urn:getPagedPhpAppsSummary" />
@@ -117,6 +149,9 @@
         <wsdl:operation name="deleteAllPhpApps">
             <wsdl:input message="tns:deleteAllPhpAppsRequest" wsaw:Action="urn:deleteAllPhpApps" />
         </wsdl:operation>
+        <wsdl:operation name="startInstance">
+            <wsdl:input message="tns:startInstanceRequest" wsaw:Action="urn:startInstance" />
+        </wsdl:operation>
         <wsdl:operation name="uploadWebapp">
             <wsdl:input message="tns:uploadWebappRequest" wsaw:Action="urn:uploadWebapp" />
             <wsdl:output message="tns:uploadWebappResponse" wsaw:Action="urn:uploadWebappResponse" />
@@ -124,6 +159,15 @@
     </wsdl:portType>
     <wsdl:binding name="ApplicationManagementServiceSoap11Binding" type="tns:ApplicationManagementServicePortType">
         <soap:binding transport="http://schemas.xmlsoap.org/soap/http" style="document" />
+        <wsdl:operation name="getImages">
+            <soap:operation soapAction="urn:getImages" style="document" />
+            <wsdl:input>
+                <soap:body use="literal" />
+            </wsdl:input>
+            <wsdl:output>
+                <soap:body use="literal" />
+            </wsdl:output>
+        </wsdl:operation>
         <wsdl:operation name="deletePhpApps">
             <soap:operation soapAction="urn:deletePhpApps" style="document" />
             <wsdl:input>
@@ -154,6 +198,12 @@
                 <soap:body use="literal" />
             </wsdl:input>
         </wsdl:operation>
+        <wsdl:operation name="startInstance">
+            <soap:operation soapAction="urn:startInstance" style="document" />
+            <wsdl:input>
+                <soap:body use="literal" />
+            </wsdl:input>
+        </wsdl:operation>
         <wsdl:operation name="uploadWebapp">
             <soap:operation soapAction="urn:uploadWebapp" style="document" />
             <wsdl:input>
@@ -166,6 +216,15 @@
     </wsdl:binding>
     <wsdl:binding name="ApplicationManagementServiceSoap12Binding" type="tns:ApplicationManagementServicePortType">
         <soap12:binding transport="http://schemas.xmlsoap.org/soap/http" style="document" />
+        <wsdl:operation name="getImages">
+            <soap12:operation soapAction="urn:getImages" style="document" />
+            <wsdl:input>
+                <soap12:body use="literal" />
+            </wsdl:input>
+            <wsdl:output>
+                <soap12:body use="literal" />
+            </wsdl:output>
+        </wsdl:operation>
         <wsdl:operation name="deletePhpApps">
             <soap12:operation soapAction="urn:deletePhpApps" style="document" />
             <wsdl:input>
@@ -196,6 +255,12 @@
                 <soap12:body use="literal" />
             </wsdl:input>
         </wsdl:operation>
+        <wsdl:operation name="startInstance">
+            <soap12:operation soapAction="urn:startInstance" style="document" />
+            <wsdl:input>
+                <soap12:body use="literal" />
+            </wsdl:input>
+        </wsdl:operation>
         <wsdl:operation name="uploadWebapp">
             <soap12:operation soapAction="urn:uploadWebapp" style="document" />
             <wsdl:input>
@@ -208,6 +273,15 @@
     </wsdl:binding>
     <wsdl:binding name="ApplicationManagementServiceHttpBinding" type="tns:ApplicationManagementServicePortType">
         <http:binding verb="POST" />
+        <wsdl:operation name="getImages">
+            <http:operation location="getImages" />
+            <wsdl:input>
+                <mime:content type="text/xml" part="parameters" />
+            </wsdl:input>
+            <wsdl:output>
+                <mime:content type="text/xml" part="parameters" />
+            </wsdl:output>
+        </wsdl:operation>
         <wsdl:operation name="deletePhpApps">
             <http:operation location="deletePhpApps" />
             <wsdl:input>
@@ -238,6 +312,12 @@
                 <mime:content type="text/xml" part="parameters" />
             </wsdl:input>
         </wsdl:operation>
+        <wsdl:operation name="startInstance">
+            <http:operation location="startInstance" />
+            <wsdl:input>
+                <mime:content type="text/xml" part="parameters" />
+            </wsdl:input>
+        </wsdl:operation>
         <wsdl:operation name="uploadWebapp">
             <http:operation location="uploadWebapp" />
             <wsdl:input>
@@ -250,13 +330,13 @@
     </wsdl:binding>
     <wsdl:service name="ApplicationManagementService">
         <wsdl:port name="ApplicationManagementServiceHttpsSoap11Endpoint" binding="tns:ApplicationManagementServiceSoap11Binding">
-            <soap:address location="https://111.223.173.221:9443/services/ApplicationManagementService.ApplicationManagementServiceHttpsSoap11Endpoint/" />
+            <soap:address location="https://10.100.3.137:9443/services/ApplicationManagementService.ApplicationManagementServiceHttpsSoap11Endpoint/" />
         </wsdl:port>
         <wsdl:port name="ApplicationManagementServiceHttpsSoap12Endpoint" binding="tns:ApplicationManagementServiceSoap12Binding">
-            <soap12:address location="https://111.223.173.221:9443/services/ApplicationManagementService.ApplicationManagementServiceHttpsSoap12Endpoint/" />
+            <soap12:address location="https://10.100.3.137:9443/services/ApplicationManagementService.ApplicationManagementServiceHttpsSoap12Endpoint/" />
         </wsdl:port>
         <wsdl:port name="ApplicationManagementServiceHttpsEndpoint" binding="tns:ApplicationManagementServiceHttpBinding">
-            <http:address location="https://111.223.173.221:9443/services/ApplicationManagementService.ApplicationManagementServiceHttpsEndpoint/" />
+            <http:address location="https://10.100.3.137:9443/services/ApplicationManagementService.ApplicationManagementServiceHttpsEndpoint/" />
         </wsdl:port>
     </wsdl:service>
 </wsdl:definitions>

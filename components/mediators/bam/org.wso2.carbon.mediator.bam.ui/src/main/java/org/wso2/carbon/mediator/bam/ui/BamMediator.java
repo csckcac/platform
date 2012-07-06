@@ -69,10 +69,11 @@ public class BamMediator extends AbstractMediator {
 
         if (parent != null) {
             parent.addChild(bamElement);
-        } else {
+        }
+        /*else {
             String msg = "The parent element is not specified";
             throw new MediatorException(msg);
-        }
+        }*/
         return bamElement;
     }
 

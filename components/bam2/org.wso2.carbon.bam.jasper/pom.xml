@@ -105,7 +105,7 @@
                                     <destFileName>dashboard.war</destFileName>
                                     <overWrite>true</overWrite>
                                     <outputDirectory>
-                                        ${basedir}/../../../features/bam2/org.wso2.carbon.bam.ui.feature/resources/app
+                                        ${basedir}/../../../features/bam2/org.wso2.carbon.bam.dashboard.ui.feature/resources/app
                                     </outputDirectory>
                                 </artifactItem>
                             </artifactItems>

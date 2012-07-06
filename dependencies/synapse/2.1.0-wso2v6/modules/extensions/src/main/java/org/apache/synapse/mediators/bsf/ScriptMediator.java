@@ -19,16 +19,20 @@
 
 package org.apache.synapse.mediators.bsf;
 
+import com.google.gson.JsonParser;
 import com.sun.phobos.script.javascript.RhinoScriptEngineFactory;
 import com.sun.script.groovy.GroovyScriptEngineFactory;
 import com.sun.script.jruby.JRubyScriptEngineFactory;
 import org.apache.axiom.om.OMElement;
 import org.apache.axiom.om.OMText;
+import org.apache.axis2.Constants;
 import org.apache.bsf.xml.XMLHelper;
+import org.apache.commons.io.IOUtils;
 import org.apache.synapse.MessageContext;
 import org.apache.synapse.SynapseException;
 import org.apache.synapse.SynapseLog;
 import org.apache.synapse.config.Entry;
+import org.apache.synapse.core.axis2.Axis2MessageContext;
 import org.apache.synapse.mediators.AbstractMediator;
 import org.apache.synapse.mediators.Value;
 
@@ -36,6 +40,7 @@ import javax.activation.DataHandler;
 import javax.script.*;
 import java.io.BufferedReader;
 import java.io.IOException;
+import java.io.InputStream;
 import java.io.InputStreamReader;
 import java.util.Map;
 import java.util.TreeMap;
@@ -112,6 +117,10 @@ public class ScriptMediator extends AbstractMediator {
      */
     private final Object resourceLock = new Object();
 
+    /**
+     * JSON parser used to parse JSON strings
+     */
+    private JsonParser jsonParser;
     /**
      * Create a script mediator for the given language and given script source
      *
@@ -234,6 +243,7 @@ public class ScriptMediator extends AbstractMediator {
             throws ScriptException, NoSuchMethodException {
         prepareExternalScript(synCtx);
         ScriptMessageContext scriptMC = new ScriptMessageContext(synCtx, xmlHelper);
+        processJSONPayload(synCtx, scriptMC);
         return invocableScript.invokeFunction(function, new Object[]{scriptMC});        
     }
 
@@ -245,9 +255,8 @@ public class ScriptMediator extends AbstractMediator {
      * @throws ScriptException For any errors , when compile , run the script
      */
     private Object mediateForInlineScript(MessageContext synCtx) throws ScriptException {
-
         ScriptMessageContext scriptMC = new ScriptMessageContext(synCtx, xmlHelper);
-
+        processJSONPayload(synCtx, scriptMC);
         Bindings bindings = scriptEngine.createBindings();
         bindings.put(MC_VAR_NAME, scriptMC);
 
@@ -260,6 +269,42 @@ public class ScriptMediator extends AbstractMediator {
 
         return response;
 
+    }
+
+    private void processJSONPayload(MessageContext synCtx, ScriptMessageContext scriptMC) throws ScriptException {
+        if (!(synCtx instanceof Axis2MessageContext)) {
+            return;
+        }
+        org.apache.axis2.context.MessageContext messageContext = ((Axis2MessageContext) synCtx).getAxis2MessageContext();
+        String contentType = (String) messageContext.getProperty(
+                Constants.Configuration.MESSAGE_TYPE);
+        if ("application/json".equals(contentType)) {
+            String jsonString = (String) messageContext.getProperty("JSON_STRING");
+            InputStream jsonStream = (InputStream) messageContext.getProperty("JSON_STREAM");
+            String jsonPayload = "{}";
+            prepareForJSON(scriptMC);
+            if (jsonString != null) {
+                jsonPayload = jsonParser.parse(jsonString).toString();
+            } else if (jsonStream != null) {
+                try {
+                    jsonString = IOUtils.toString(jsonStream, (String) messageContext.getProperty(
+                            Constants.Configuration.CHARACTER_SET_ENCODING));
+                    jsonPayload = jsonParser.parse(jsonString).toString();
+                } catch (IOException e) {
+                    handleException("Failed to get the JSON payload string from the input stream.");
+                }
+                messageContext.setProperty("JSON_STRING", jsonPayload);
+            }
+            Object jsonObject = scriptEngine.eval('(' + jsonPayload + ')');
+            synCtx.setProperty("JSON_OBJECT", jsonObject);
+        }
+    }
+
+    private void prepareForJSON(ScriptMessageContext scriptMC) {
+        if (jsonParser == null) {
+            jsonParser = new JsonParser();
+        }
+        scriptMC.setScriptEngine(scriptEngine);
     }
 
     /**

@@ -19,13 +19,18 @@
 
 package org.apache.synapse.mediators.bsf;
 
+import java.io.StringWriter;
+import java.math.BigDecimal;
+import java.math.BigInteger;
 import java.util.Iterator;
 import java.util.Set;
 import java.util.Stack;
 import java.util.Map;
 
+import javax.script.ScriptEngine;
 import javax.script.ScriptException;
 
+import com.google.gson.JsonParser;
 import org.apache.axiom.om.OMAttribute;
 import org.apache.axiom.om.OMElement;
 import org.apache.axiom.om.OMException;
@@ -44,9 +49,13 @@ import org.apache.synapse.Mediator;
 import org.apache.synapse.MessageContext;
 import org.apache.synapse.config.SynapseConfiguration;
 import org.apache.synapse.core.SynapseEnvironment;
+import org.apache.synapse.core.axis2.Axis2MessageContext;
 import org.apache.synapse.endpoints.Endpoint;
 import org.apache.commons.logging.Log;
 import org.apache.commons.logging.LogFactory;
+import org.mozilla.javascript.NativeArray;
+import org.mozilla.javascript.NativeObject;
+import org.mozilla.javascript.Wrapper;
 import org.mozilla.javascript.xml.XMLObject;
 
 /**
@@ -60,6 +69,8 @@ public class ScriptMessageContext implements MessageContext {
     private final MessageContext mc;
     /** The OMElement to scripting language object converter for the selected language */
     private final XMLHelper xmlHelper;
+
+    private ScriptEngine scriptEngine;
 
     public ScriptMessageContext(MessageContext mc, XMLHelper xmlHelper) {
         this.mc = mc;
@@ -96,6 +107,42 @@ public class ScriptMessageContext implements MessageContext {
             firstChild.insertSiblingAfter(omElement);
             firstChild.detach();
         }
+    }
+
+    /**
+     * Get the JSON object representation of the JSON message body of the request.
+     *
+     * @return JSON object of the message body
+     */
+    public Object getPayloadJSON() {
+        return mc.getProperty("JSON_OBJECT");
+    }
+
+    /**
+     * Set a JSON string to the message body
+     *
+     * @param jsonPayload Javascript native object to be set as the message body
+     * @throws ScriptException in case of creating a JSON object out of
+     *                         the javascript native object.
+     */
+    public void setPayloadJSON(Object jsonPayload) throws ScriptException {
+        org.apache.axis2.context.MessageContext messageContext;
+        messageContext = ((Axis2MessageContext) mc).getAxis2MessageContext();
+
+        String jsonString = serializeJSON(jsonPayload);
+        messageContext.setProperty("JSON_STRING", jsonString);
+
+        Object jsonObject = scriptEngine.eval('(' + jsonString + ')');
+        mc.setProperty("JSON_OBJECT", jsonObject);
+    }
+
+    /**
+     * Set a script engine
+     *
+     * @param scriptEngine a ScriptEngine instance
+     */
+    public void setScriptEngine(ScriptEngine scriptEngine) {
+        this.scriptEngine = scriptEngine;
     }
 
     /**
@@ -380,5 +427,72 @@ public class ScriptMessageContext implements MessageContext {
 
     public Mediator getSequenceTemplate(String key) {
         return mc.getSequenceTemplate(key);
+    }
+
+    private String serializeJSON(Object obj) {
+        StringWriter json = new StringWriter();
+        if(obj instanceof Wrapper) {
+            obj = ((Wrapper) obj).unwrap();
+        }
+
+        if (obj instanceof NativeObject) {
+            json.append("{");
+            NativeObject o = (NativeObject) obj;
+            Object[] ids = o.getIds();
+            boolean first = true;
+            for (Object id : ids) {
+                String key = (String) id;
+                Object value = o.get((String) id, o);
+                if (!first) {
+                    json.append(", ");
+                } else {
+                    first = false;
+                }
+                json.append("\"").append(key).append("\" : ").append(serializeJSON(value));
+            }
+            json.append("}");
+        } else if (obj instanceof NativeArray) {
+            json.append("[");
+            NativeArray o = (NativeArray) obj;
+            Object[] ids = o.getIds();
+            boolean first = true;
+            for (Object id : ids) {
+                Object value = o.get((Integer) id, o);
+                if (!first) {
+                    json.append(", ");
+                } else {
+                    first = false;
+                }
+                json.append(serializeJSON(value));
+            }
+            json.append("]");
+        } else if (obj instanceof Object[]) {
+            json.append("[");
+            boolean first = true;
+            for (Object value : (Object[]) obj) {
+                if (!first) {
+                    json.append(", ");
+                } else {
+                    first = false;
+                }
+                json.append(serializeJSON(value));
+            }
+            json.append("]");
+
+        } else if (obj instanceof String ||
+                obj instanceof Integer ||
+                obj instanceof Long ||
+                obj instanceof Float ||
+                obj instanceof Double ||
+                obj instanceof Short ||
+                obj instanceof BigInteger ||
+                obj instanceof BigDecimal ||
+                obj instanceof Boolean) {
+            json.append("\"").append(obj.toString()).append("\"");
+//            json.append(obj.toString());
+        } else {
+            json.append("{}");
+        }
+        return json.toString();
     }
 }

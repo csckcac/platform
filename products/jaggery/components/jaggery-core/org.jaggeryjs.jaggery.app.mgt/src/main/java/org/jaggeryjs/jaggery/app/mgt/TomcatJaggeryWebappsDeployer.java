@@ -16,43 +16,29 @@
 
 package org.jaggeryjs.jaggery.app.mgt;
 
-import org.apache.catalina.Context;
-import org.apache.catalina.Host;
-import org.apache.catalina.Lifecycle;
-import org.apache.catalina.LifecycleEvent;
-import org.apache.catalina.LifecycleListener;
-import org.apache.catalina.Wrapper;
+import org.apache.axis2.context.ConfigurationContext;
+import org.apache.catalina.*;
 import org.apache.catalina.core.StandardContext;
-import org.apache.catalina.deploy.ErrorPage;
-import org.apache.catalina.deploy.LoginConfig;
-import org.apache.catalina.deploy.SecurityCollection;
-import org.apache.catalina.deploy.SecurityConstraint;
+import org.apache.catalina.deploy.*;
 import org.apache.catalina.startup.Tomcat;
 import org.apache.commons.io.IOUtils;
 import org.apache.commons.logging.Log;
 import org.apache.commons.logging.LogFactory;
-import org.jaggeryjs.jaggery.core.manager.CommonManager;
 import org.json.simple.JSONArray;
 import org.json.simple.JSONObject;
 import org.json.simple.JSONValue;
 import org.wso2.carbon.CarbonException;
+import org.jaggeryjs.jaggery.core.manager.CommonManager;
 import org.wso2.carbon.utils.multitenancy.CarbonContextHolder;
-import org.wso2.carbon.webapp.mgt.CarbonTomcatSessionManager;
-import org.wso2.carbon.webapp.mgt.DataHolder;
-import org.wso2.carbon.webapp.mgt.TomcatGenericWebappsDeployer;
-import org.wso2.carbon.webapp.mgt.WebApplicationsHolder;
-import org.wso2.carbon.webapp.mgt.WebContextParameter;
+import org.wso2.carbon.webapp.mgt.*;
 
 import java.io.File;
 import java.io.FileInputStream;
 import java.io.FileNotFoundException;
 import java.io.IOException;
 import java.io.StringWriter;
-import java.util.ArrayList;
-import java.util.Arrays;
-import java.util.HashMap;
-import java.util.List;
-import java.util.Map;
+import java.lang.management.ManagementPermission;
+import java.util.*;
 
 /**
  * This deployer is responsible for deploying/undeploying/updating those Jaggery apps.
@@ -73,8 +59,9 @@ public class TomcatJaggeryWebappsDeployer extends TomcatGenericWebappsDeployer {
     public TomcatJaggeryWebappsDeployer(String webContextPrefix,
                                         int tenantId,
                                         String tenantDomain,
-                                        WebApplicationsHolder webappsHolder) {
-        super(webContextPrefix, tenantId, tenantDomain, webappsHolder);
+                                        WebApplicationsHolder webappsHolder,
+                                        ConfigurationContext configurationContext) {
+        super(webContextPrefix, tenantId, tenantDomain, webappsHolder, configurationContext);
     }
 
     /**

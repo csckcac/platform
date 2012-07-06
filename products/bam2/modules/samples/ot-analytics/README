@@ -8,5 +8,4 @@ How to Run OTAnalytics Sample
 5. Go to Main -> BAM Toolbox -> Add. Select 'OTAnalytics Toolbox' and click on install
 6. Go to Main -> BAM Toolbox -> List. And refresh the page until the 'OTAnalytics' toolbox status changes to deployed. 
 7. Go to Main -> Analytics -> List and click on Edit and Run the OT_script
-8. Go to Main -> View Portal. You will see the sample gadgets for Analyzed Data.
-
+8. Go to Main -> BA Dashboard see the sample reports for Analyzed Data.

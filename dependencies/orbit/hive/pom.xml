@@ -32,7 +32,7 @@
     <artifactId>hive</artifactId>
     <packaging>bundle</packaging>
     <name>hive.wso2</name>
-    <version>0.8.1-wso2v1</version>
+    <version>0.8.1-wso2v2</version>
     <description>
         This bundle will represent hive jars
     </description>
@@ -42,47 +42,47 @@
 	    <dependency>
 		<groupId>org.apache.hive</groupId>
 		<artifactId>hive-exec</artifactId>
-		<version>0.8.1-wso2v1</version>
+		<version>0.8.1-wso2v2</version>
 	    </dependency>
 	    <dependency>
 		<groupId>org.apache.hive</groupId>
 		<artifactId>hive-shims</artifactId>
-		<version>0.8.1-wso2v1</version>
+		<version>0.8.1-wso2v2</version>
 	    </dependency>
 	    <dependency>
 		<groupId>org.apache.hive</groupId>
 		<artifactId>hive-builtins</artifactId>
-		<version>0.8.1-wso2v1</version>
+		<version>0.8.1-wso2v2</version>
 	    </dependency>
 	    <dependency>
 		<groupId>org.apache.hive</groupId>
 		<artifactId>hive-service</artifactId>
-		<version>0.8.1-wso2v1</version>
+		<version>0.8.1-wso2v2</version>
 	    </dependency>
 	    <dependency>
 		<groupId>org.apache.hive</groupId>
 		<artifactId>hive-serde</artifactId>
-		<version>0.8.1-wso2v1</version>
+		<version>0.8.1-wso2v2</version>
 	    </dependency>
             <dependency>
 		<groupId>org.apache.hive</groupId>
 		<artifactId>hive-metastore</artifactId>
-		<version>0.8.1-wso2v1</version>
+		<version>0.8.1-wso2v2</version>
 	    </dependency>
 	    <dependency>
 		<groupId>org.apache.hive</groupId>
                 <artifactId>hive-cassandra</artifactId>
-                <version>0.8.1-wso2v1</version>
+                <version>0.8.1-wso2v2</version>
 	   </dependency>
 	    <dependency>
 		<groupId>org.apache.hive</groupId>
                 <artifactId>hive-jdbc</artifactId>
-                <version>0.8.1-wso2v1</version>
+                <version>0.8.1-wso2v2</version>
 	   </dependency>
            <dependency>
                 <groupId>org.wso2.carbon</groupId>
                 <artifactId>hive-jdbc-handler</artifactId>
-                <version>0.8.1-wso2v1</version>
+                <version>0.8.1-wso2v2</version>
            </dependency>
     </dependencies>
 

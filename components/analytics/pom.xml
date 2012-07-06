@@ -74,7 +74,7 @@
     </dependencyManagement>
 
     <properties>
-        <hive.orbit.version>0.8.1-wso2v1</hive.orbit.version>
+        <hive.orbit.version>0.8.1-wso2v2</hive.orbit.version>
 	<hadoop.orbit.version>0.20.203.1.wso2v1</hadoop.orbit.version>
     </properties>
 

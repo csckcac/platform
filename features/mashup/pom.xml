@@ -371,7 +371,7 @@
         <smack.version.mashup>3.0.4.wso2v1</smack.version.mashup>
         <socks.version.mashup>1.01.0.wso2v1</socks.version.mashup>
         <joscar.version.mashup>2007.11.10.wso2v1</joscar.version.mashup>
-        <axiom.e4x.version.mashup>2.0.0.SNAPSHOT</axiom.e4x.version.mashup>
+        <axiom.e4x.version.mashup>2.0.1.SNAPSHOT</axiom.e4x.version.mashup>
         <rhino.version.mashup>1.7.0.R1-wso2v2</rhino.version.mashup>
         <jdom.version.mashup>1.0.0.wso2v1</jdom.version.mashup>
         <rome.version.mashup>0.9.0.wso2v1</rome.version.mashup>

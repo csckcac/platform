@@ -145,7 +145,29 @@
         }
     }
 </script>
+<style type="text/css">
+    /*-- overriding carbon styles --*/
+    #toolBoxes tbody tr td{
+        padding: 8px 0;
+        vertical-align: top!important;
+    }
 
+
+    .toolBoxInfo{
+        background-attachment: scroll;
+        background-clip: border-box;
+        background-color: transparent;
+        background-image: url("images/more-info.gif");
+        background-origin: padding-box;
+        background-position: 16px 2px;
+        background-repeat: no-repeat;
+        background-size: 10px auto;
+        color: #8B8B8B;
+        font-style: italic;
+        padding: 0 0 2px 30px;
+        position: relative;
+    }
+</style>
 <div id="middle">
     <h2>Add Tool Box</h2>
 
@@ -153,7 +175,7 @@
         <form id="uploadBar" name="uploadBar" enctype="multipart/form-data"
               action="../../fileupload/bamToolboxDeploy" method="POST">
 
-            <table class="styledLeft">
+            <table id="toolBoxes" class="styledLeft">
                 <thead>
                 <tr>
                     <th colspan="4">
@@ -215,9 +237,9 @@
                     </td>
                     <td>
                         <%=aToolbox.getDisplayName()%> <fmt:message key="toolbox"/>
-                    </td>
-                    <td>
+                    <div class="toolBoxInfo">
                         <%=aToolbox.getDescription()%>
+                    </div>
                     </td>
                     <%
                         count++;

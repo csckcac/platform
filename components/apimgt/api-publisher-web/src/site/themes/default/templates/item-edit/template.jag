@@ -262,7 +262,10 @@ $(document).ready(function() {
                       }
                       $("#editAPIForm")[0].reset();
                   } else {
-                          jagg.message({content:responseText.message,type:"error"});
+                          jagg.message({content:responseText.message,type:"error",cbk:function(){
+                              $('#saveMessage').hide(); $('#saveButtons').show();
+                          }
+                          });
 
                                                                          }
                 }, dataType: 'json'

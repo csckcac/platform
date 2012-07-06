@@ -39,6 +39,11 @@
 	    <version>${hive.orbit.version}</version>
         </dependency>
         <dependency>
+            <groupId>org.wso2.carbon</groupId>
+            <artifactId>org.wso2.carbon.hive.data.source.access</artifactId>
+            <version>4.0.0-SNAPSHOT</version>
+        </dependency>
+        <dependency>
             <groupId>antlr.wso2</groupId>
             <artifactId>antlr</artifactId>
 	    <version>${antlr.orbit.version}</version>
@@ -268,6 +273,7 @@
 				<importBundleDef>libthrift.wso2:libthrift</importBundleDef>
                                 <importBundleDef>org.slf4j:slf4j-log4j12</importBundleDef>
                                 <importBundleDef>org.slf4j:slf4j-api</importBundleDef>
+                                <importBundleDef>org.wso2.carbon:org.wso2.carbon.hive.data.source.access</importBundleDef>
                             </importBundles>
                         </configuration>
                     </execution>

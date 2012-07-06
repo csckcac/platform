@@ -18,9 +18,11 @@
 
 package org.wso2.carbon.apimgt.mediators;
 
+import org.apache.axiom.util.base64.Base64Utils;
 import org.apache.commons.logging.Log;
 import org.apache.commons.logging.LogFactory;
 import org.apache.synapse.MessageContext;
+import org.apache.synapse.core.axis2.Axis2MessageContext;
 import org.apache.synapse.mediators.AbstractMediator;
 import org.wso2.carbon.apimgt.handlers.security.*;
 import org.apache.axiom.om.OMElement;
@@ -36,6 +38,9 @@ import org.apache.synapse.SynapseLog;
 import org.apache.synapse.mediators.AbstractMediator;
 import org.apache.synapse.util.xpath.SynapseXPath;
 
+import java.io.IOException;
+import java.util.Calendar;
+import java.util.Map;
 
 
 /**
@@ -44,30 +49,29 @@ import org.apache.synapse.util.xpath.SynapseXPath;
  */
 public class TokenPasser extends AbstractMediator {
     private static final Log log = LogFactory.getLog(TokenPasser.class);
+    private static final String JWT_HEADER = "{\"typ\":\"JWT\", \"alg\":\"NONE\"}";
+    private static String JWT_BODY = "{\"iss\":\"[1]\", \"exp\":1373100108854, \"http://wso2.org/claims/subscriber\":\"[2]\"}";
+    private static final String API_GATEWAY_ID = "wso2.org/products/am";
 
     public boolean mediate(MessageContext synCtx) {
         AuthenticationContext authContext = APISecurityUtils.getAuthenticationContext(synCtx);
-        if(log.isDebugEnabled()){
-            log.debug("Adding custom header with subscriber name");
-            log.debug(synCtx.getMessageID() + ": API Key : "+authContext.getApiKey());
-            log.debug(synCtx.getMessageID() + ": API Key : "+authContext.getUsername());
-        }
-        addCustomHeader(synCtx,authContext);
+        addHTTPHeader(synCtx,authContext);
         return true;
     }
 
-    private void addCustomHeader(MessageContext synCtx, AuthenticationContext authContext) {
-        SOAPEnvelope env = synCtx.getEnvelope();
-        if (env == null) {
-            return;
+    private void addHTTPHeader(MessageContext synCtx, AuthenticationContext authContext) {
+        String base64EncodedHeader = Base64Utils.encode(JWT_HEADER.getBytes());
+        String replacedBody = JWT_BODY.replaceAll("\\[1\\]",API_GATEWAY_ID).replaceAll("\\[2\\]",authContext.getUsername());
+        String base64EncodedBody = Base64Utils.encode(replacedBody.getBytes());
+        String assertion = base64EncodedHeader + "." + base64EncodedBody;
+
+        Map transportHeaders = (Map)((Axis2MessageContext) synCtx).getAxis2MessageContext()
+                .getProperty(org.apache.axis2.context.MessageContext.TRANSPORT_HEADERS);
+        transportHeaders.put("assertion",assertion);
+
+        if(log.isDebugEnabled()){
+            log.debug("Adding custom header with subscriber name");
+            log.debug(synCtx.getMessageID() + ": assertion value : "+assertion);
         }
-        SOAPFactory fac = (SOAPFactory) env.getOMFactory();
-        SOAPHeader header = env.getHeader();
-        if (header == null) {
-            header = fac.createSOAPHeader(env);
-        }
-        SOAPHeaderBlock hb = header.addHeaderBlock("subscriber",
-                fac.createOMNamespace("http://wso2.org/am/subscriber", "sub"));
-        hb.setText(authContext.getUsername());
     }
 }

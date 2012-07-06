@@ -48,6 +48,8 @@
 
     PHPAppsWrapper phpAppsWrapper;
     String[] phpApps;
+    
+    String[] endPoints;
 
     String phpappSearchString = request.getParameter("phpappSearchString");
 
@@ -60,6 +62,12 @@
                                                         Integer.parseInt(pageNumber));
          numberOfPages = phpAppsWrapper.getNumberOfPages();
          phpApps = phpAppsWrapper.getPhpapps();
+//       TODO endPoints = phpAppsWrapper.getEndPoints();
+
+        endPoints = new String[phpApps.length];
+        for (String endPoint : endPoints){
+            endPoint = "";
+        }
     } catch (Exception e) {
          response.setStatus(500);
          CarbonUIMessage uiMsg = new CarbonUIMessage(CarbonUIMessage.ERROR, e.getMessage(), e);
@@ -249,22 +257,26 @@
 <table class="styledLeft" id="webappsTable" width="100%">
     <thead>
     <tr>
-        <th>&nbsp;</th>
-        <th width="15%"><fmt:message key="name"/></th>
+        <th width="10px"></th>
+        <th><fmt:message key="name"/></th>
+        <th><fmt:message key="endpoint"/></th>
     </tr>
     </thead>
     <tbody>
     <%
-        for (String phpApp : phpApps) {
+        for (int i=0; i<phpApps.length; i++) {
     %>
     <tr>
         <td width="10px" style="text-align:center; !important">
                         <input type="checkbox" name="phpappFileName"
-                               value="<%=phpApp%>"
+                               value="<%=phpApps[i]%>"
                                onclick="resetVars()" class="chkBox"/>
         </td>
         <td>
-            <%=phpApp.substring(0, phpApp.indexOf(".zip"))%>
+            <%=phpApps[i].substring(0, phpApps[i].indexOf(".zip"))%>
+        </td>
+        <td>
+            <%=endPoints[i]%>
         </td>
     </tr>
     <% } %>

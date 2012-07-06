@@ -23,7 +23,7 @@ import java.util.List;
 /**
  * This class holds summary information about all the webapps in the system
  */
-public final class PHPappsWrapper implements Pageable {
+public final class PHPAppsWrapper implements Pageable {
     private String[] phpapps;
     private int numberOfPhpapps;
     private int numberOfFaultyWebapps;
@@ -100,5 +100,6 @@ public final class PHPappsWrapper implements Pageable {
     public void setPhpapps(String[] webapps) {
         this.phpapps = CarbonUtils.arrayCopyOf(webapps);
     }
+
 }
 

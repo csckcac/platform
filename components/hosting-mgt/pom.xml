@@ -26,11 +26,25 @@
     </parent>
 
     <modelVersion>4.0.0</modelVersion>
+    <groupId>org.wso2.carbon</groupId>
     <artifactId>hosting-mgt</artifactId>
     <packaging>pom</packaging>
+    <version>1.0.0-SNAPSHOT</version>
     <name>WSO2 Carbon - Hosting Management Parent Module</name>
     <description>WSO2 Carbon Hosting Management</description>
     <url>http://wso2.org</url>
+
+    <licenses>
+        <license>
+            <name>Apache License Version 2.0</name>
+            <url>http://www.apache.org/licenses/LICENSE-2.0</url>
+        </license>
+    </licenses>
+
+    <organization>
+        <name>WSO2 Inc</name>
+        <url>http://wso2.com</url>
+    </organization>
 
     <modules>
         <module>org.wso2.carbon.hosting.mgt</module>
@@ -68,16 +82,6 @@
                 <groupId>org.wso2.carbon</groupId>
                 <artifactId>org.wso2.carbon.server</artifactId>
                 <version>${wso2carbon.version}</version>
-            </dependency>
-            
-            
-            
-            <dependency>
-              <groupId>junit</groupId>
-              <artifactId>junit</artifactId>
-              <!--version>${junit.version}</version-->
-              <version>4.10</version>
-              <scope>test</scope>
             </dependency>
             <dependency>
                 <groupId>commons-logging</groupId>

@@ -40,7 +40,7 @@ public class HostingAdminClient {
     private static final Log log = LogFactory.getLog(HostingAdminClient.class);
     private ResourceBundle bundle;
     public ApplicationManagementServiceStub stub;
-    private static boolean isInstanceUp = true;
+    private static boolean isInstanceUp = false;
 
     public HostingAdminClient(String cookie,
                              String backendServerURL,
@@ -108,9 +108,13 @@ public class HostingAdminClient {
         return isInstanceUp;
     }
 
-    public String[] getBaseImages(){
+    public String[] getBaseImages() throws AxisFault {
         //TODO get base images from autoscaler
-        return stub.getImages();
+        try {
+            return stub.getImages();
+        } catch (RemoteException e) {
+            handleException("cannot.get.images", e);
+        }
 //        String images[] = new String[5];
 //        images[0] = "image1";
 //        images[1] = "image2";
@@ -118,10 +122,15 @@ public class HostingAdminClient {
 //        images[3] = "image4";
 //        images[4] = "image5";
 //        return images;
+        return null;
     }
     
-    public void startInstance(String image){
-        stub.startInstance(image);
+    public void startInstance(String image) throws AxisFault {
+        try {
+            stub.startInstance(image);
+        } catch (RemoteException e) {
+            handleException("cannot.start.instance" , e);
+        }
     }
 
 }

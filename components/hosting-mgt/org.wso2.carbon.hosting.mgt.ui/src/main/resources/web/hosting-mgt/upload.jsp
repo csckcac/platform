@@ -47,14 +47,13 @@
         return;
     }
 
-        boolean noPHPAppsDeployed = client.getIsInstanceUpFromLb() ;  //TODO need to set tenant correctly
+        boolean noPHPAppsDeployed = !client.getIsInstanceUpFromLb() ;  //TODO need to set tenant correctly
 %>
 
 <fmt:bundle basename="org.wso2.carbon.hosting.mgt.ui.i18n.Resources">
     <carbon:breadcrumb label="add.webapp"
                        resourceBundle="org.wso2.carbon.hosting.mgt.ui.i18n.Resources"
                        topPage="true" request="<%=request%>"/>
-
     <script type="text/javascript">
         function validate() {
         <%
@@ -88,7 +87,6 @@
                         validFileNames = false; break;
                     }
                 }
-
                 if(validFileNames) {
                     document.webappUploadForm.submit();
                 } else {
@@ -96,7 +94,6 @@
                 }
             }
         }
-
         var rows = 1;
         //add a new row to the table
         function addRow() {

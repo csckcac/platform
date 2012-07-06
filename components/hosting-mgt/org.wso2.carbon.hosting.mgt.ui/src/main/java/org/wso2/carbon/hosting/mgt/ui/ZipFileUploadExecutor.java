@@ -68,8 +68,8 @@ public class ZipFileUploadExecutor extends AbstractFileUploadExecutor {
                 if(images.size() == 1){
                     selectedImage = images.get(0);
                     log.info(selectedImage);
+                    client.startInstance(selectedImage);
                 }
-                client.startInstance(selectedImage);
             }
         }
         try {

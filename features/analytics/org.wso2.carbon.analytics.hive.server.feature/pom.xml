@@ -171,7 +171,7 @@
     </dependencies>
 
     <properties>
-        <hive.orbit.version>0.8.1-wso2v1</hive.orbit.version>
+        <hive.orbit.version>0.8.1-wso2v2</hive.orbit.version>
         <antlr.orbit.version>3.0.1.wso2v1</antlr.orbit.version>
         <zookeeper.orbit.version>3.3.5.wso2v1</zookeeper.orbit.version>
         <asm.orbit.version>3.1.wso2v1</asm.orbit.version>

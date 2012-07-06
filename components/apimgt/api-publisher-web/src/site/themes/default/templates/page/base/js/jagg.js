@@ -199,7 +199,9 @@ var jagg = jagg || {};
             }
 
             jagg.showLogin(params);
-        }
+        }else if(params.callback != undefined && typeof params.callback == "function"){
+             params.callback();
+         }
     }
 
 }());

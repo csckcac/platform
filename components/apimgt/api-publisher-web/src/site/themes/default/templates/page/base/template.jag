@@ -102,9 +102,9 @@ var editUrl="info";
                         <button type="button" class="close" data-dismiss="alert">×</button>
                         <div id="loginErrorMsg"></div>
                     </div>
-                    <label>Username:</label>
-                    <input type="text" id="username" name="name" class="span3" placeholder="Enter your user name."/>
-                    <label>Password:</label>
+                    <label for="username">Username:</label>
+                    <input type="text" id="username" name="name" class="span3" placeholder="Enter your user name." autofocus="autofocus" />
+                    <label for="password">Password:</label>
                     <input type="password" id="password" name="pass" class="span3"/>
 
                 </div>

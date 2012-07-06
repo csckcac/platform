@@ -21,6 +21,7 @@ import org.apache.axis2.AxisFault;
 import org.apache.axis2.client.Options;
 import org.apache.axis2.client.ServiceClient;
 import org.apache.axis2.context.ConfigurationContext;
+import org.apache.axis2.transport.http.HTTPConstants;
 import org.apache.commons.logging.Log;
 import org.apache.commons.logging.LogFactory;
 import org.wso2.carbon.analytics.hive.stub.HiveExecutionServiceHiveExecutionException;
@@ -41,9 +42,22 @@ public class HiveExecutionClient {
         String serviceURL = backEndServerURL + "HiveExecutionService";
         stub = new HiveExecutionServiceStub(configCtx, serviceURL);
         ServiceClient client = stub._getServiceClient();
+
+
+        int timeout = 10 * 60 * 1000; // 10 minutes
+        stub._getServiceClient().getOptions().setTimeOutInMilliSeconds(timeout);
+
+//or
+
+        stub._getServiceClient().getOptions().setProperty(
+                         HTTPConstants.SO_TIMEOUT, timeout);
+        stub._getServiceClient().getOptions().setProperty(
+                         HTTPConstants.CONNECTION_TIMEOUT, timeout);
+
+
         Options option = client.getOptions();
         option.setManageSession(true);
-        option.setTimeOutInMilliSeconds(5*60000);
+        option.setTimeOutInMilliSeconds(timeout);
         option.setProperty(org.apache.axis2.transport.http.HTTPConstants.COOKIE_STRING, cookie);
     }
 

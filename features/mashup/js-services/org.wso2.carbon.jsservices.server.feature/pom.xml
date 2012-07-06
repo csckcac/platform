@@ -392,6 +392,9 @@
                                 <importFeatureDef>
                                     org.wso2.carbon.core.common:${wso2carbon.core.version.mashup}
                                 </importFeatureDef>
+                                <importFeatureDef>
+									org.wso2.carbon.ntask.core:${wso2carbon.version}
+								</importFeatureDef>
                             </importFeatures>
                         </configuration>
                     </execution>

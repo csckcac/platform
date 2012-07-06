@@ -166,7 +166,7 @@
                                 <featureArtifactDef>org.wso2.carbon:org.wso2.carbon.reporting.server.feature:${carbon.version}</featureArtifactDef>
                                 <featureArtifactDef>org.wso2.carbon:org.wso2.carbon.reporting.ui.feature:${carbon.version}</featureArtifactDef>
                                 <featureArtifactDef>org.wso2.carbon:org.wso2.carbon.transaction.manager.feature:${carbon.version}</featureArtifactDef>
-				<featureArtifactDef>org.wso2.carbon:org.wso2.carbon.cloud.csg.agent.feature:${carbon.version}</featureArtifactDef>
+								<!--<featureArtifactDef>org.wso2.carbon:org.wso2.carbon.cloud.csg.agent.feature:${carbon.version}</featureArtifactDef>-->
 
                             </featureArtifacts>
                         </configuration>
@@ -185,10 +185,10 @@
                             <destination>${basedir}/target/wso2carbon-core-${carbon.version}/repository/components</destination>
                             <deleteOldProfileFiles>true</deleteOldProfileFiles>
                             <features>
-				<feature>
+							<!--<feature>
                                     <id>org.wso2.carbon.cloud.csg.agent.feature.group</id>
                                     <version>${carbon.version}</version>
-                                </feature>
+								</feature>-->
                                 <feature>
                                     <id>org.wso2.carbon.stratos.common.feature.group</id>
                                     <version>${stratos.version}</version>

@@ -442,10 +442,6 @@ public class CSGPollingTransportTaskManager {
 
                         InputStream gzipInputStream =
                                 HTTPTransportUtils.handleGZip(msgContext, inputStream);
-                        // FIXME - just for debugging remove later
-                        if (log.isDebugEnabled()) {
-                            CSGUtils.dumpInputStreamAsString(gzipInputStream);
-                        }
                         msgContext.setEnvelope(
                                 TransportUtils.createSOAPMessage(
                                         msgContext,

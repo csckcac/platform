@@ -1,11 +1,11 @@
 package org.wso2.carbon.bam.statAgent;
 
-import org.wso2.carbon.eventbridge.agent.thrift.Agent;
-import org.wso2.carbon.eventbridge.agent.thrift.DataPublisher;
-import org.wso2.carbon.eventbridge.agent.thrift.conf.AgentConfiguration;
-import org.wso2.carbon.eventbridge.agent.thrift.exception.AgentException;
-import org.wso2.carbon.eventbridge.commons.Event;
-import org.wso2.carbon.eventbridge.commons.exception.*;
+import org.wso2.carbon.databridge.agent.thrift.Agent;
+import org.wso2.carbon.databridge.agent.thrift.DataPublisher;
+import org.wso2.carbon.databridge.agent.thrift.conf.AgentConfiguration;
+import org.wso2.carbon.databridge.agent.thrift.exception.AgentException;
+import org.wso2.carbon.databridge.commons.Event;
+import org.wso2.carbon.databridge.commons.exception.*;
 
 import javax.security.sasl.AuthenticationException;
 import java.net.*;
@@ -19,7 +19,7 @@ import java.util.Random;
 import java.util.UUID;
 
 public class StatAgent {
-    public static final String STREAM_NAME1 = "org.wso2.bam.stats.FERRERE";
+    public static final String STREAM_NAME1 = "org.wso2.bam.stats.dsf";
     public static final String VERSION1 = "1.0.0";
 
     public static String[] hosts = {"esb.foo.org", "dss.foo.org", "as.it.foo.org", "as.mkt.foo.com",
@@ -81,7 +81,7 @@ public class StatAgent {
                    StreamDefinitionException, DifferentStreamDefinitionAlreadyDefinedException,
                    MalformedURLException,
                    AuthenticationException, NoStreamDefinitionExistException,
-                   org.wso2.carbon.eventbridge.commons.exception.AuthenticationException,
+                   org.wso2.carbon.databridge.commons.exception.AuthenticationException,
                    TransportException, SocketException {
         System.out.println("Starting BAM Statistics Agent");
         AgentConfiguration agentConfiguration = new AgentConfiguration();
@@ -99,11 +99,11 @@ public class StatAgent {
 
 
         try {
-            streamId1 = dataPublisher.findEventStream(STREAM_NAME1, VERSION1);
+            streamId1 = dataPublisher.findStream(STREAM_NAME1, VERSION1);
             System.out.println("Stream already defined");
 
         } catch (NoStreamDefinitionExistException e) {
-            streamId1 = dataPublisher.defineEventStream("{" +
+            streamId1 = dataPublisher.defineStream("{" +
                                                         "  'name':'" + STREAM_NAME1 + "'," +
                                                         "  'version':'" + VERSION1 + "'," +
                                                         "  'nickName': 'Statistics'," +
@@ -163,6 +163,10 @@ public class StatAgent {
 
                 Iterator<String> serviceIterator = services.keySet().iterator();
 
+                System.out.println("############ Services size: " + services.keySet().size());
+
+                System.out.println("########  Service Index : " + serviceIndex);
+
                 int k = 0;
                 String service = null;
                 while (serviceIterator.hasNext() && k < serviceIndex) {
@@ -210,7 +214,7 @@ public class StatAgent {
                 };
 
                 Event statisticsEvent = new Event(streamId, System.currentTimeMillis(),
-                                                  meta, correlation, payload);
+                                                  meta, correlation,payload);
                 dataPublisher.publish(statisticsEvent);
             }
         }
@@ -233,5 +237,4 @@ public class StatAgent {
         return null;
     }
 }
-
 

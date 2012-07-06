@@ -27,7 +27,7 @@ include("/jagg/jagg.jag");
          result = mod.addDocumentation(apiData, docData);
          }
 
-         if(result.error) {
+         if(result.error=="true") {
             obj = {
                 error:result.error,
                 message:result.message

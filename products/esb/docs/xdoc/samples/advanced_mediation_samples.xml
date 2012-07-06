@@ -1694,16 +1694,14 @@ is sent back to the client. </p>
     &lt;proxy name=&quot;JSONProxy&quot; transports=&quot;http https&quot;&gt;
         &lt;target&gt;
             &lt;endpoint&gt;
-                &lt;address uri=&quot;http://localhost:9000/services/SimpleStockQuoteService&quot;/&gt;
+                &lt;address uri=&quot;http://localhost:9000/services/SimpleStockQuoteService&quot; format=&quot;soap11&quot;/&gt;
             &lt;/endpoint&gt;
             &lt;inSequence&gt;
                 &lt;log level=&quot;full&quot;/&gt;
                 &lt;xslt key=&quot;in_transform&quot;/&gt;
-                &lt;property name=&quot;messageType&quot; scope=&quot;axis2&quot; value=&quot;text/xml&quot;/&gt;
             &lt;/inSequence&gt;
             &lt;outSequence&gt;
                 &lt;log level=&quot;full&quot;/&gt;
-                &lt;xslt key=&quot;out_transform&quot;/&gt;
                 &lt;property name=&quot;messageType&quot; scope=&quot;axis2&quot; value=&quot;application/json&quot;/&gt;
                 &lt;send/&gt;
             &lt;/outSequence&gt;
@@ -1724,16 +1722,6 @@ is sent back to the client. </p>
         &lt;/xsl:stylesheet&gt;
     &lt;/localEntry&gt;
 
-    &lt;localEntry key=&quot;out_transform&quot;&gt;
-        &lt;xsl:stylesheet xmlns:xsl=&quot;http://www.w3.org/1999/XSL/Transform&quot; version=&quot;1.0&quot;&gt;
-            &lt;xsl:output method=&quot;xml&quot; version=&quot;1.0&quot; encoding=&quot;UTF-8&quot;/&gt;
-            &lt;xsl:template match=&quot;*&quot;&gt;
-                &lt;xsl:element name=&quot;{local-name()}&quot;&gt;
-                    &lt;xsl:apply-templates/&gt;
-                &lt;/xsl:element&gt;
-            &lt;/xsl:template&gt;
-        &lt;/xsl:stylesheet&gt;
-    &lt;/localEntry&gt;
 
 &lt;/definitions&gt;</pre>
 

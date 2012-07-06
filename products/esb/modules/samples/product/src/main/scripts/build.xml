@@ -351,6 +351,18 @@
         </java>
     </target>
 
+    <target name="newjsonclient" depends="compile">
+        <java classname="samples.userguide.NewJSONClient"
+              classpathref="javac.classpath" fork="true">
+            <sysproperty key="symbol" value="${symbol}"/>
+            <sysproperty key="addurl" value="${addurl}"/>
+            <sysproperty key="trpurl" value="${trpurl}"/>
+            <sysproperty key="prxurl" value="${prxurl}"/>
+            <sysproperty key="repository" value="${repository}"/>
+	    <sysproperty key="carbon.home" value="./../.."/>
+        </java>
+    </target>
+
     <target name="eventsender" depends="compile">
         <java classname="samples.userguide.EventSender"
              classpathref="javac.classpath" fork="true">

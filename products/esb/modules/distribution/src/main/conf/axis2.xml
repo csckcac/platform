@@ -166,6 +166,8 @@
                          class="org.apache.axis2.format.PlainTextFormatter"/>
 
         <!--JSON Message Formatters-->
+        <!--messageFormatter contentType="application/json"
+                          class="org.apache.axis2.json.JSONFormatter"/-->
         <messageFormatter contentType="application/json"
                           class="org.apache.axis2.json.JSONMessageFormatter"/>
         <messageFormatter contentType="application/json/badgerfish"
@@ -211,6 +213,8 @@
                         class="org.apache.axis2.format.PlainTextBuilder"/>
 
         <!--JSON Message Builders-->
+        <!--messageBuilder contentType="application/json"
+                        class="org.apache.axis2.json.JSONBuilder"/-->
         <messageBuilder contentType="application/json"
                         class="org.apache.axis2.json.JSONOMBuilder"/>
         <messageBuilder contentType="application/json/badgerfish"

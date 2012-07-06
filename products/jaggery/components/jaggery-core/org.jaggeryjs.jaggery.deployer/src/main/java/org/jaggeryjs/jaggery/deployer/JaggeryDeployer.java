@@ -16,28 +16,21 @@
 package org.jaggeryjs.jaggery.deployer;
 
 import org.apache.axis2.context.ConfigurationContext;
-import org.apache.axis2.deployment.AbstractDeployer;
 import org.apache.axis2.deployment.DeploymentException;
 import org.apache.axis2.deployment.repository.util.DeploymentFileData;
-import org.apache.catalina.deploy.SecurityCollection;
-import org.apache.catalina.deploy.SecurityConstraint;
 import org.apache.commons.logging.Log;
 import org.apache.commons.logging.LogFactory;
+import org.jaggeryjs.jaggery.app.mgt.JaggeryConstants;
+import org.jaggeryjs.jaggery.app.mgt.TomcatJaggeryWebappsDeployer;
 import org.wso2.carbon.CarbonConstants;
-import org.wso2.carbon.CarbonException;
-import org.wso2.carbon.base.ServerConfiguration;
 import org.wso2.carbon.core.multitenancy.SuperTenantCarbonContext;
-import org.jaggeryjs.jaggery.app.mgt.*;
-import org.wso2.carbon.utils.CarbonUtils;
 import org.wso2.carbon.utils.multitenancy.MultitenantConstants;
 import org.wso2.carbon.webapp.deployer.WebappDeployer;
-import org.wso2.carbon.webapp.mgt.*;
-import org.jaggeryjs.jaggery.app.mgt.TomcatJaggeryWebappsDeployer;
+import org.wso2.carbon.webapp.mgt.WebApplication;
+import org.wso2.carbon.webapp.mgt.WebApplicationsHolder;
+import org.wso2.carbon.webapp.mgt.WebappsConstants;
 
 import java.io.File;
-import java.util.ArrayList;
-import java.util.HashMap;
-import java.util.List;
 
 /**
  * Axis2 deployer for deploying Web applications
@@ -76,7 +69,8 @@ public class JaggeryDeployer extends WebappDeployer {
         tomcatWebappDeployer = new TomcatJaggeryWebappsDeployer(webContextPrefix,
                 tenantId,
                 tenantDomain,
-                webappsHolder);
+                webappsHolder,
+                configContext);
 
         configCtx.setProperty(CarbonConstants.TOMCAT_GENERIC_WEBAPP_DEPLOYER, tomcatWebappDeployer);
     }

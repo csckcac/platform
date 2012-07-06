@@ -632,14 +632,14 @@
 <span style="color: #009900;">          <span style="color: #000066;">endpointReference</span>=<span style="color: #ff0000;">&quot;conf:/uep.epr&quot;</span><span style="color: #000000; font-weight: bold;">/&gt;</span></span></pre>
 
         <p>If you are interested in other supported constructs by UEPs, please refer this
-            <a href="https://svn.wso2.org/repos/wso2/trunk/graphite/components/unified-endpoint/org.wso2.carbon.unifiedendpoint.core/src/main/resources/schema/uep_schema.xsd">
+            <a href="http://svn.wso2.org/repos/wso2/carbon/platform/trunk/components/unified-endpoint/org.wso2.carbon.unifiedendpoint.core/src/main/resources/schema/uep_schema.xsd">
                 xml schema
             </a>
             which provides the current supported&nbsp;functionality&nbsp;like setting ?
             <a href="http://www.w3.org/Submission/ws-addressing/#_Toc77464314">ReplyTo</a>
             ? header.
             Please take a look at
-            <a href="https://svn.wso2.org/repos/wso2/trunk/graphite/products/bps/modules/samples/product/src/main/resources/bpel/2.0/SampleAsynchronousProcess/Async-Server.zip">
+            <a href="http://svn.wso2.org/repos/wso2/carbon/platform/trunk/products/bps/modules/samples/product/src/main/resources/bpel/2.0/SampleAsynchronousProcess/Async-Server.zip">
                 Async-Server sample
             </a>
             which is a sample BPEL process which uses an UEP to configure the target endpoint of a

@@ -427,8 +427,8 @@
             </li>
         </ol>
         <p>[1] -
-            <a href="https://svn.wso2.org/repos/wso2/trunk/carbon/products/bps/modules/samples/product/src/main/resources/bpel/2.0/SecurePartnerBPEL.zip">
-                https://svn.wso2.org/repos/wso2/trunk/carbon/products/bps/modules/samples/product/src/main/resources/bpel/2.0/SecurePartnerBPEL.zip
+            <a href="http://svn.wso2.org/repos/wso2/carbon/platform/trunk/products/bps/modules/samples/product/src/main/resources/bpel/2.0/SecurePartnerBPEL/">
+                http://svn.wso2.org/repos/wso2/carbon/platform/trunk/products/bps/modules/samples/product/src/main/resources/bpel/2.0/SecurePartnerBPEL/
             </a>
         </p>
 

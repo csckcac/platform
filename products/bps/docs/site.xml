@@ -113,7 +113,7 @@
 	    <item name="FAQ" href="faq.html"/>
             <item name="External Articles" href="external_articles.html"/>
             <item name="Library" href="http://www.wso2.org/library/bps"/>
-            <item name="Source Code" href="https://svn.wso2.org/repos/wso2/trunk/carbon/products/bps/"/>
+            <item name="Source Code" href="https://svn.wso2.org/repos/wso2/carbon/platform/trunk/products/bps/"/>
         </menu>
         <menu name="Community">
             <item name="Forum" href="http://www.wso2.org/forum/886"/>

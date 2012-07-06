@@ -17,6 +17,7 @@
  -->
 <resource xmlns="http://ws.apache.org/ns/synapse" url-mapping="[1]" methods="[2]">
     <inSequence>
+        <class name="org.wso2.carbon.apimgt.mediators.TokenPasser"/>
         <filter source="$ctx:AM_KEY_TYPE" regex="PRODUCTION">
             <then>
                 <send>

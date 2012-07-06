@@ -34,6 +34,7 @@
             <modules>
                 <module>org.wso2.carbon.application.deployer.synapse.feature</module>
                 <module>org.wso2.carbon.application.deployer.bpel.feature</module>
+				<module>org.wso2.carbon.application.deployer.humantask.feature</module>
                 <module>org.wso2.carbon.application.deployer.webapp.feature</module>
                 <module>org.wso2.carbon.application.deployer.gadget.feature</module>
                 <module>org.wso2.carbon.application.deployer.mashup.feature</module>

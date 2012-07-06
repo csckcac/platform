@@ -119,6 +119,8 @@
                                 <featureArtifactDef>org.wso2.carbon:org.wso2.carbon.application.mgt.feature:${carbon.version}</featureArtifactDef>
                                 <featureArtifactDef>org.wso2.carbon:org.wso2.carbon.application.mgt.bpel.feature:${carbon.version}</featureArtifactDef>
                                 <featureArtifactDef>org.wso2.carbon:org.wso2.carbon.application.deployer.bpel.feature:${carbon.version}</featureArtifactDef>
+                                <featureArtifactDef>org.wso2.carbon:org.wso2.carbon.application.mgt.humantask.feature:${carbon.version}</featureArtifactDef>
+                                <featureArtifactDef>org.wso2.carbon:org.wso2.carbon.application.deployer.humantask.feature:${carbon.version}</featureArtifactDef>
                                 <featureArtifactDef>org.wso2.carbon:org.wso2.carbon.unifiedendpoint.server.feature:${carbon.version}</featureArtifactDef>
 
                                 <featureArtifactDef>org.wso2.carbon:org.wso2.carbon.discovery.core.feature:${carbon.version}</featureArtifactDef>
@@ -376,9 +378,17 @@
                                     <id>org.wso2.carbon.application.mgt.bpel.feature.group</id>
                                     <version>${carbon.version}</version>
                                 </feature>
+                                <feature>
+                                    <id>org.wso2.carbon.application.mgt.humantask.feature.group</id>
+                                    <version>${carbon.version}</version>
+                                </feature>
 
                                 <feature>
                                     <id>org.wso2.carbon.application.deployer.bpel.feature.group</id>
+                                    <version>${carbon.version}</version>
+                                </feature>
+                                <feature>
+                                    <id>org.wso2.carbon.application.deployer.humantask.feature.group</id>
                                     <version>${carbon.version}</version>
                                 </feature>
                                 <feature>

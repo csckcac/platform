@@ -49,6 +49,7 @@
                 <module>org.wso2.carbon.application.deployer.gadget</module>
                 <module>org.wso2.carbon.application.deployer.mashup</module>
                 <module>org.wso2.carbon.application.deployer.brs</module>
+                <module>org.wso2.carbon.application.deployer.humantask</module>
             </modules>
 </project>
 

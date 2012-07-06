@@ -1,0 +1,5 @@
+<featureSets>
+    <featureSet artifactType="humantask/artifact">
+        <feature id="org.wso2.carbon.humantask.server.feature.group" version="[4.0.0, 4.1.0)"/>
+    </featureSet>
+</featureSets>

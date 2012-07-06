@@ -39,6 +39,7 @@
 				<module>org.wso2.carbon.account.mgt.stub</module>
 				<module>org.wso2.carbon.admin.mgt.stub</module>
 				<module>org.wso2.carbon.application.mgt.bpel.stub</module>
+				<module>org.wso2.carbon.application.mgt.humantask.stub</module>
 				<module>org.wso2.carbon.application.mgt.stub</module>
 				<module>org.wso2.carbon.application.mgt.synapse.stub</module>
 				<module>org.wso2.carbon.application.mgt.webapp.stub</module>

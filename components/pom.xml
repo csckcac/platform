@@ -495,6 +495,11 @@
         </dependency>
         <dependency>
             <groupId>org.wso2.carbon</groupId>
+            <artifactId>org.wso2.carbon.application.deployer.humantask</artifactId>
+       	    <version>${carbon.platform.version}</version>
+        </dependency>
+        <dependency>
+            <groupId>org.wso2.carbon</groupId>
             <artifactId>org.wso2.carbon.application.deployer.synapse</artifactId>
        	    <version>${carbon.platform.version}</version>
         </dependency>
@@ -503,6 +508,7 @@
             <artifactId>org.wso2.carbon.application.deployer.webapp</artifactId>
        	    <version>${carbon.platform.version}</version>
         </dependency>
+
 
 	<!-- Mediation dependencies -->
         <dependency>
@@ -795,6 +801,11 @@
             <dependency>
                 <groupId>org.wso2.carbon</groupId>
                 <artifactId>org.wso2.carbon.application.mgt.bpel.stub</artifactId>
+                <version>${carbon.platform.version}</version>
+            </dependency>
+            <dependency>
+                <groupId>org.wso2.carbon</groupId>
+                <artifactId>org.wso2.carbon.application.mgt.humantask.stub</artifactId>
                 <version>${carbon.platform.version}</version>
             </dependency>
             <dependency>

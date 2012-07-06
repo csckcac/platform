@@ -335,6 +335,12 @@
                 <jsp:include page="../bpel-apps/index.jsp"/>
                 <%
                     }
+
+                    if (CarbonUIUtil.isContextRegistered(config, "/humantask-apps/")) {
+                %>
+                <jsp:include page="../humantask-apps/index.jsp"/>
+                <%
+                    }
                 %>
             </form>
         </div>

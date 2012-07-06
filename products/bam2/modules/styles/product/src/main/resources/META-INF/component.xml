@@ -19,15 +19,16 @@
 <component xmlns="http://products.wso2.org/carbon">
     <menus>
         <menu>
-            <id>dashboard_menu</id>
-            <i18n-key>bam.dashboard.menu</i18n-key>
+           <id>manage_gs</id>
+            <i18n-key>component.bam.dashboard</i18n-key>
             <i18n-bundle>org.wso2.bam.styles.i18n.Resources</i18n-bundle>
-            <parent-menu>dashboard_main_menu</parent-menu>
-            <link>../dashboard/index.jsp</link>
-            <url-params>name=bam</url-params>
+            <parent-menu></parent-menu>
+            <link>#</link>
             <region>region1</region>
-            <order>1</order>
-            <style-class>manage</style-class>
+             <order>2</order>
+            <style-class>home</style-class>
+            <icon>../menugeneral/images/chart_organisation.gif</icon>
+            <skip-authentication>false</skip-authentication>
             <icon>../dashboard/images/dashboard.gif</icon>
         </menu>
     </menus>

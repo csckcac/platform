@@ -114,35 +114,37 @@ public class EventServiceImpl implements EventService<ActivityStatusType> {
         ActivityInfoWithEventsType[] activities =
                 scope.getActivitiesWithEvents().getActivityInfoWithEvents();
 
-        //Fill event info from activities
-        for (ActivityInfoWithEventsType activity : activities) {
-            EventInfo[] eventInfos = activity.getActivityEventsList().getEventInfo();
-            for (EventInfo eventInfo : eventInfos) {
+        if (activities != null) {
+            //Fill event info from activities
+            for (ActivityInfoWithEventsType activity : activities) {
+                EventInfo[] eventInfos = activity.getActivityEventsList().getEventInfo();
+                for (EventInfo eventInfo : eventInfos) {
 
-                ActivityStatusType status = null;
+                    ActivityStatusType status = null;
 
-                // There's probably a better way to do this
-                if (eventInfo.getName().toLowerCase().contains("activityenabledevent")) {
-                    status = ActivityStatusType.ENABLED;
-                } else if (eventInfo.getName().toLowerCase().contains("activityexecstartevent")) {
-                    status = ActivityStatusType.STARTED;
-                } else if (eventInfo.getName().toLowerCase().contains("activityexecendevent")) {
-                    status = ActivityStatusType.COMPLETED;
-                } else if (eventInfo.getName().toLowerCase().contains("activityfailureevent")) {
-                    status = ActivityStatusType.FAILURE;
-                }
+                    // There's probably a better way to do this
+                    if (eventInfo.getName().toLowerCase().contains("activityenabledevent")) {
+                        status = ActivityStatusType.ENABLED;
+                    } else if (eventInfo.getName().toLowerCase().contains("activityexecstartevent")) {
+                        status = ActivityStatusType.STARTED;
+                    } else if (eventInfo.getName().toLowerCase().contains("activityexecendevent")) {
+                        status = ActivityStatusType.COMPLETED;
+                    } else if (eventInfo.getName().toLowerCase().contains("activityfailureevent")) {
+                        status = ActivityStatusType.FAILURE;
+                    }
 
-                /*
-                 * Create an ActivityExecEvent and add it to the list of activities if the event
-                 * was an ActivityEvent (status != null)
-                 */
-                if (status != null) {
-                    ActivityExecEvent instanceEvent = new ActivityExecEvent(
-                            activity.getActivityInfo().getName(), activity.getActivityInfo().getAiid(),
-                            mapToStatus(status),
-                            eventInfo.getTimestamp(),
-                            processInstance);
-                    activityEvents.add(instanceEvent);
+                    /*
+                    * Create an ActivityExecEvent and add it to the list of activities if the event
+                    * was an ActivityEvent (status != null)
+                    */
+                    if (status != null) {
+                        ActivityExecEvent instanceEvent = new ActivityExecEvent(
+                                activity.getActivityInfo().getName(), activity.getActivityInfo().getAiid(),
+                                mapToStatus(status),
+                                eventInfo.getTimestamp(),
+                                processInstance);
+                        activityEvents.add(instanceEvent);
+                    }
                 }
             }
         }

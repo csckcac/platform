@@ -56,14 +56,14 @@ var editUrl="info";
         <footer>
              <div class="container-fluid">
                 <div class="row">
-                    <div class="span6">&copy; Copyright 2011–2012 All Rights Reserved.</div>
+                    <div class="span6">&copy; Copyright 2011 &ndash; 2012 All Rights Reserved.</div>
                     <div class="pull-right"><a class="powered-by-logo"></a></div>
                 </div>
              </div>
         </footer>
         <div class="modal" id="apiModal" style="display:none;">
             <div class="modal-header">
-                <button class="close" data-dismiss="modal">×</button>
+                <button class="close" data-dismiss="modal">x</button>
                 <h3 class="modal-title">Modal header</h3>
             </div>
             <div class="modal-body">
@@ -77,7 +77,7 @@ var editUrl="info";
         <div class="modal fade" id="messageModal" style="display:none"></div>
          <div id="confirmation-data" style="display:none;">
             <div class="modal-header">
-                <button class="close" data-dismiss="modal">×</button>
+                <button class="close" data-dismiss="modal">x</button>
                 <h3 class="modal-title">Modal header</h3>
             </div>
             <div class="modal-body">
@@ -94,12 +94,12 @@ var editUrl="info";
 
              <form id="mainLoginForm">
                 <div class="modal-header">
-                    <button class="close" data-dismiss="modal">×</button>
+                    <button class="close" data-dismiss="modal">x</button>
                     <h3>Login</h3>
                 </div>
                 <div class="modal-body">
                     <div class="alert alert-error" id="loginErrorBox" style="display:none;">
-                        <button type="button" class="close" data-dismiss="alert">×</button>
+                        <button type="button" class="close" data-dismiss="alert">x</button>
                         <div id="loginErrorMsg"></div>
                     </div>
                     <label for="username">Username:</label>

@@ -1,0 +1,23 @@
+<%
+include("/jagg/jagg.jag");
+
+(function () {
+    var action = request.getParameter("action");
+    if (action === "sessionCheck") {
+         var log = new Log();
+         log.info(jagg.getUser());
+
+         if(jagg.getUser() == null){
+            print({
+                error:true,
+                message:'timeout'
+            });
+        }
+    } else {
+        print({
+            error:true,
+            message:msg.error.invalidAction(action)
+        });
+    }
+}());
+%>

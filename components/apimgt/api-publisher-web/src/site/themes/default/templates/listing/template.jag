@@ -34,7 +34,7 @@
         %>
         <li>
             <%if(outputs.isCreatePermitted){%>
-            <button title="Delete API" type="button" class="close btn-api-del" onClick="removeAPI('<%=api.name%>','<%=api.version%>','<%=api.provider%>')">×</button>
+            <button title="Delete API" type="button" class="close btn-api-del" onClick="removeAPI('<%=api.name%>','<%=api.version%>','<%=api.provider%>')">x</button>
             <%}%>
             <div class="thumbnail">
                 <a href="<%=path%>">
@@ -67,7 +67,7 @@
     %>
     <div class="alert alert-info">
         <div style="padding-bottom:10px">No APIs created yet. Click the button below to get started.</div>
-        <div><button class="btn btn-primary" onclick="jagg.sessionAwareJS({redirect:'<%=jagg.getMappedUrl("/site/pages/add.jag")%>'})" >New API...</button></div>
+        <div><a class="btn btn-primary" href="<%=jagg.getMappedUrl("/site/pages/add.jag")%>" onclick="jagg.sessionAwareJS({redirect:'<%=jagg.getMappedUrl("/site/pages/add.jag")%>',e:event})" >New API...</a></div>
     </div>
     <%
     }

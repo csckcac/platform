@@ -24,13 +24,13 @@
 <div class="sidebar-nav well">
     <ul class="nav nav-list">
        <li class="nav-header">APIs</li>
-        <li <%if(reqUrl.equals(site.context)||reqUrl.equals(site.context+"/")||reqUrl.indexOf(listUrl)>=0 || reqUrl.indexOf(listMappedUrl)>=0||reqUrl.indexOf(infoUrl)>=0 || reqUrl.indexOf(infoMappedUrl)>=0|| reqUrl.indexOf(userUrl)>=0||reqUrl.indexOf(userMappedUrl)>=0){%>class="active"<% } %>><a href="<%=listMappedUrl%>?page=1">Browse</a></li>
-        <%if(isPermitted){%><li <% if(reqUrl.indexOf(addUrl)>=0 || reqUrl.indexOf(addMappedUrl)>=0){%>class="active"<% } %>><a href="<%=addMappedUrl%>">Add</a></li><%}%>
-        <li <% if(reqUrl.indexOf(allStatsUrl)>=0 || reqUrl.indexOf(allStatsMappedUrl)>=0){%>class="active"<% } %>><a href="<%=allStatsMappedUrl%>">All Statistics</a></li>
+        <li <%if(reqUrl.equals(site.context)||reqUrl.equals(site.context+"/")||reqUrl.indexOf(listUrl)>=0 || reqUrl.indexOf(listMappedUrl)>=0||reqUrl.indexOf(infoUrl)>=0 || reqUrl.indexOf(infoMappedUrl)>=0|| reqUrl.indexOf(userUrl)>=0||reqUrl.indexOf(userMappedUrl)>=0){%>class="active"<% } %>><a href="<%=listMappedUrl%>?page=1"  onclick="jagg.sessionAwareJS({redirect:'<%=listMappedUrl%>?page=1',e:event})">Browse</a></li>
+        <%if(isPermitted){%><li <% if(reqUrl.indexOf(addUrl)>=0 || reqUrl.indexOf(addMappedUrl)>=0){%>class="active"<% } %>><a href="<%=addMappedUrl%>" onclick="jagg.sessionAwareJS({redirect:'<%=addMappedUrl%>',e:event})">Add</a></li><%}%>
+        <li <% if(reqUrl.indexOf(allStatsUrl)>=0 || reqUrl.indexOf(allStatsMappedUrl)>=0){%>class="active"<% } %>><a href="<%=allStatsMappedUrl%>" onclick="jagg.sessionAwareJS({redirect:'<%=allStatsMappedUrl%>',e:event})">All Statistics</a></li>
         <%if(isPermitted){%>
         <li class="nav-header">My APIs</li>
-        <li <% if(reqUrl.indexOf(subsUrl)>=0||reqUrl.indexOf(subsMappedUrl)>=0){%>class="active"<% } %>><a href="<%=subsMappedUrl%>">Users/Keys</a></li>
-        <li <% if(reqUrl.indexOf(statsUrl)>=0||reqUrl.indexOf(statsMappedUrl)>=0){%>class="active"<% } %>><a href="<%=statsMappedUrl%>">Statistics</a></li>
+        <li <% if(reqUrl.indexOf(subsUrl)>=0||reqUrl.indexOf(subsMappedUrl)>=0){%>class="active"<% } %>><a href="<%=subsMappedUrl%>" onclick="jagg.sessionAwareJS({redirect:'<%=subsMappedUrl%>',e:event})">Users/Keys</a></li>
+        <li <% if(reqUrl.indexOf(statsUrl)>=0||reqUrl.indexOf(statsMappedUrl)>=0){%>class="active"<% } %>><a href="<%=statsMappedUrl%>" onclick="jagg.sessionAwareJS({redirect:'<%=statsMappedUrl%>',e:event})">Statistics</a></li>
         <%}%>
      </ul>
 </div>

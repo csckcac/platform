@@ -6,8 +6,7 @@ include("/jagg/jagg.jag");
             action = request.getParameter("action"),
             site = require("/site/conf/site.json"),
             msg = require("/site/conf/ui-messages.jag");
-        var log = new Log();
-log.info(jagg.getUser());
+
     if(jagg.getUser() == null){
         print({
             error:true,

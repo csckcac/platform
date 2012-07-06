@@ -50,7 +50,7 @@ var isURLValid = function (url) {
     try {
         result = provider.isURLValid(url);
         if (log.isDebugEnabled()) {
-            log.debug("Invoke method isURLValid");
+            log.debug("Invoke isURLValid" );
         }
         return {
             error:false,

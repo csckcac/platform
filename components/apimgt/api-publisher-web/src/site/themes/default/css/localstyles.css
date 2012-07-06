@@ -214,3 +214,6 @@ a.powered-by-logo {
 .nav-list > li > a.noHover:hover{
     background:#fff;
 }
+#left li a,.breadcrumb a {
+    cursor:pointer;
+}

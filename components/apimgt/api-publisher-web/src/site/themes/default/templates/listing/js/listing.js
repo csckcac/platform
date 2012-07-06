@@ -3,11 +3,11 @@ var removeAPI = function(name, version, provider) {
         content:"Are you sure you want to delete the API - " + name + " - " + version ,
         type:"confirm",
         title:"Confirm Delete",
+        anotherDialog:true,
         okCallback:function(){
 
             jagg.post("/site/blocks/item-add/ajax/remove.jag", { action:"removeAPI",name:name, version:version,provider:provider },
               function (result) {
-                  debugger;
                   if (result.message == "timeout") {
                       jagg.showLogin();
                   } else {
@@ -21,4 +21,12 @@ var removeAPI = function(name, version, provider) {
     }});
 
 };
+$(document).ready(
+         function() {
+             if (($.cookie("selectedTab") != null)) {
+                 $.cookie("selectedTab", null);
+             }
+
+         }
+);
 

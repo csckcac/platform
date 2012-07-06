@@ -14,8 +14,9 @@ var login = login || {};
                              window.location.reload();
                          }
                      } else {
-                         $('#messageModal').modal('show');
-                         jagg.message({content:result.message,type:"error"});
+                         $('#loginErrorMsg').show();
+                         $('#password').val('');
+                         $('#loginErrorMsg div.theMsg').html(result.message);
                      }
                  }, "json");
     };
@@ -71,7 +72,7 @@ $(document).ready(function () {
 
          registerEventsForLogin();
     };
-
+    login.loginbox.showLoginForm = showLoginForm;
 
 
     $("#logout-link").click(function () {

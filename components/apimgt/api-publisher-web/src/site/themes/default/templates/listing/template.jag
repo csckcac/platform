@@ -45,13 +45,13 @@
                     <% } %>
                 </a>
                 <h5>
-                    <a href="<%=path%>" class="label label-info" title="<%=api.name%>-v<%=api.version%>">
+                    <a href="<%=path%>" onclick="jagg.sessionAwareJS({redirect:'<%=path%>'})" class="label label-info" title="<%=api.name%>-<%=api.version%>">
                         <%=nameSubstring%> - <span class="versionTxt"><%=api.version%></span>
                     </a>
                     <div>(<%=api.provider%>)</div>
                 </h5>
                 <div>
-                    <a href="<%=path%>">
+                    <a href="<%=path%>" onclick="jagg.sessionAwareJS({redirect:'<%=path%>'})" >
                         <span id="noOfUsers">
                             <% if (api.subs == "1") { %><%=api.subs%> User<% } else { %><%=api.subs%> Users<% } %>
                         </span>
@@ -67,7 +67,7 @@
     %>
     <div class="alert alert-info">
         <div style="padding-bottom:10px">No APIs created yet. Click the button below to get started.</div>
-        <div><button class="btn btn-primary" onclick="javascript:location.href='<%=jagg.getMappedUrl("/site/pages/add.jag")%>'">New API...</button></div>
+        <div><button class="btn btn-primary" onclick="jagg.sessionAwareJS({redirect:'<%=jagg.getMappedUrl("/site/pages/add.jag")%>'})" >New API...</button></div>
     </div>
     <%
     }

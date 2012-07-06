@@ -72,10 +72,14 @@ var jagg = jagg || {};
 
                 }},
                 {name:"Yes",cssClass:"btn btn-primary",cbk:function() {
-                    $('#messageModal').modal('hide');
+                    if(!params.anotherDialog){
+                        console.info('hiding');
+                        $('#messageModal').modal('hide');
+                    }
                     if (typeof params.okCallback == "function") {
                         params.okCallback()
                     }
+
 
                 }}
             ]
@@ -121,7 +125,9 @@ var jagg = jagg || {};
 
     jagg.showLogin = function(params){
         $('#messageModal').html($('#login-data').html());
-        $('#messageModal').modal('show');
+        if(!$('#messageModal').is(":visible")){
+            $('#messageModal').modal('show');
+        }
          $('#mainLoginForm input').die();
          $('#mainLoginForm input').keydown(function(event) {
          if (event.which == 13) {
@@ -164,5 +170,36 @@ var jagg = jagg || {};
                      }
                  }, "json");
     };
+
+    jagg.sessionExpired = function (){
+        var sessionExpired = false;
+        jagg.syncPost("/site/blocks/user/login/ajax/sessionCheck.jag", { action:"sessionCheck" },
+                 function (result) {
+                     if(result!=null){
+                         if (result.message == "timeout") {
+                             sessionExpired = true;
+                         }
+                     }
+                 }, "json");
+        return sessionExpired;
+    };
+
+    jagg.sessionAwareJS = function(params){
+
+
+        if(jagg.sessionExpired()){
+            if(params.e != undefined){  //Canceling the href call
+                if ( params.e.preventDefault ) {
+                    params.e.preventDefault();
+
+                // otherwise set the returnValue property of the original event to false (IE)
+                } else {
+                    params.e.returnValue = false;
+                }
+            }
+
+            jagg.showLogin(params);
+        }
+    }
 
 }());

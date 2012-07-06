@@ -47,17 +47,26 @@ var getResponseTime = function(name) {
 
 
 $(document).ready(function() {
-
-    if (($.cookie("tab") != null)) {
-        var tabLink = $.cookie("tab");
-        $('#' + tabLink).tab('show');
-        $.cookie("tab", null);
+    if (($.cookie("selectedTab") != null)) {
+        var tabLink = $.cookie("selectedTab");
+        $('#' + tabLink + "Link").tab('show');
+        //$.cookie("selectedTab", null);
+        pushDataForTabs(tabLink);
     }
 
     $('a[data-toggle="tab"]').on('shown', function (e) {
-        var clickedTab = e.target.href.split('#')[1];
-        ////////////// edit tab
-        if (clickedTab == "versions") {
+        jagg.sessionAwareJS({callback:function(){
+            var clickedTab = e.target.href.split('#')[1];
+            ////////////// edit tab
+            pushDataForTabs(clickedTab);
+            $.cookie("selectedTab",clickedTab);
+        }});
+
+    });
+});
+
+function pushDataForTabs(clickedTab){
+     if (clickedTab == "versions") {
 
             jagg.fillProgress('versionChart');jagg.fillProgress('versionUserChart');
             var api=$("#item-info h2")[0].innerHTML;
@@ -262,8 +271,7 @@ $(document).ready(function() {
             }
 
         }
-    });
-});
+}
 
 Object.size = function(obj) {
     var size = 0, key;

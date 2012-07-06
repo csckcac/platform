@@ -1,7 +1,7 @@
 <% jagg.template("users-keys", function(inputs, outputs, jagg) { %>
 
         <div id="userKey"><h2>Users/Keys</h2>
-        <div class="row">
+        <div class="row-fluid">
         <div class="span12">
         <table class="table table-bordered">
         <thead>
@@ -40,7 +40,7 @@
         version=api[1];
         apiPath=jagg.getMappedUrl("/site/pages/item-info.jag") + "?name=" + apiName + "&version=" + version + "&provider=" + jagg.getUser().username;
         %>
-        <a href="<%= apiPath%>"><%=apis[n]%></a>
+        <a href="<%= apiPath%>" onclick="jagg.sessionAwareJS({redirect:'<%= apiPath%>',e:event})"><%=apis[n]%></a>
 
 
         <% if(n!=apis.length-1){%> , <%}}}else{
@@ -49,7 +49,7 @@
         version = api[1];
         apiPath=jagg.getMappedUrl("/site/pages/item-info.jag") + "?name=" + apiName + "&version=" + version + "&provider=" + jagg.getUser().username;
         %>
-        <a href="<%= apiPath%>"><%=apiList%></a>
+        <a href="<%= apiPath%>" onclick="jagg.sessionAwareJS({redirect:'<%= apiPath%>',e:event})"><%=apiList%></a>
         <%}%>
     </td>
     </tr>

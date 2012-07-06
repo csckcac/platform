@@ -74,7 +74,7 @@ var editUrl="info";
                 <a href="#" class="btn btn-other" data-dismiss="modal">Close</a>
             </div>
         </div>
-        <div class="modal fade" id="messageModal"></div>
+        <div class="modal fade" id="messageModal" style="display:none"></div>
          <div id="confirmation-data" style="display:none;">
             <div class="modal-header">
                 <button class="close" data-dismiss="modal">×</button>

@@ -22,7 +22,7 @@
                     APIs <span class="divider">/</span>
                     </li>
                     <li>
-                        <a href="<%=listMappedUrl%>">All</a>
+                        <a href="<%=listMappedUrl%>" onclick="jagg.sessionAwareJS({redirect:'<%=listMappedUrl%>',e:event})">All</a>
                     </li>
                 <% } %>
                 <% if(reqUrl.indexOf(infoUrl)>=0||reqUrl.indexOf(infoMappedUrl)>=0){%>
@@ -30,13 +30,16 @@
                     APIs <span class="divider">/</span>
                 </li>
                 <li>
-                    <a href="<%=listMappedUrl%>">All</a>
+                    <a href="<%=listMappedUrl%>" onclick="jagg.sessionAwareJS({redirect:'<%=listMappedUrl%>',e:event})">All</a>
                 </li>
                 <li>
                     <span class="divider">/</span>
                 </li>
                 <li>
-                    <a href="<%=infoMappedUrl%>?name=<%=request.getParameter("name")%>&version=<%=request.getParameter("version")%>&provider=<%=request.getParameter("provider")%>"><%=request.getParameter("name")%>-<%=request.getParameter("version")%></a>
+                    <%
+                        var apiUrl = infoMappedUrl + "?name=" + request.getParameter("name") + "&version=" + request.getParameter("version")+ "&provider=" + request.getParameter("provider");
+                    %>
+                    <a href="<%=apiUrl%>" onclick="jagg.sessionAwareJS({redirect:'<%=apiUrl%>',e:event})"><%=request.getParameter("name")%>-<%=request.getParameter("version")%></a>
                 </li>
                 <% } %>
 
@@ -49,7 +52,7 @@
                     <span class="divider">/</span>
                 </li>
                 <li>
-                    <a href="<%=addMappedUrl%>">Add New API</a>
+                    <a href="<%=addMappedUrl%>" onclick="jagg.sessionAwareJS({redirect:'<%=addMappedUrl%>',e:event})">Add New API</a>
                 </li>
                 <% } %>
 
@@ -61,7 +64,7 @@
                     <span class="divider">/</span>
                 </li>
                 <li>
-                    <a href="<%=allStatsMappedUrl%>">All Statistics</a>
+                    <a href="<%=allStatsMappedUrl%>" onclick="jagg.sessionAwareJS({redirect:'<%=allStatsMappedUrl%>',e:event})">All Statistics</a>
                 </li>
                 <% } %>
 
@@ -73,13 +76,16 @@
                     APIs <span class="divider">/</span>
                 </li>
                 <li>
-                    <a href="<%=listMappedUrl%>">All</a>
+                    <a href="<%=listMappedUrl%>" onclick="jagg.sessionAwareJS({redirect:'<%=listMappedUrl%>',e:event})">All</a>
                 </li>
                 <li>
                     <span class="divider">/</span>
                 </li>
                 <li>
-                    <a href="<%=userMappedUrl%>?uname=<%=request.getParameter("uname")%>">User - <%=request.getParameter("uname")%></a>
+                    <%
+                    var userTmpUrl = userMappedUrl + "?uname=" + request.getParameter("uname");
+                    %>
+                    <a href="<%=userTmpUrl%>" onclick="jagg.sessionAwareJS({redirect:'<%=userTmpUrl%>',e:event})">User - <%=request.getParameter("uname")%></a>
                 </li>
                 <% } %>
 
@@ -89,7 +95,7 @@
                     My APIs <span class="divider">/</span>
                 </li>
                 <li>
-                    <a href="<%=subsMappedUrl%>">Users-Keys</a>
+                    <a href="<%=subsMappedUrl%>" onclick="jagg.sessionAwareJS({redirect:'<%=subsMappedUrl%>',e:event})">Users-Keys</a>
                 </li>
                 <% } %>
 
@@ -99,7 +105,7 @@
                     My APIs<span class="divider">/</span>
                 </li>
                 <li>
-                    <a href="<%=statsMappedUrl%>">Statistics</a>
+                    <a href="<%=statsMappedUrl%>" onclick="jagg.sessionAwareJS({redirect:'<%=statsMappedUrl%>',e:event})">Statistics</a>
                 </li>
                 <% } %>
             </ul>

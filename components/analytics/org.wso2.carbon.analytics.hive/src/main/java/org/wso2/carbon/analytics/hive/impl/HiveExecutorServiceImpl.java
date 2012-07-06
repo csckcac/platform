@@ -17,6 +17,9 @@ package org.wso2.carbon.analytics.hive.impl;
 
 import org.apache.commons.logging.Log;
 import org.apache.commons.logging.LogFactory;
+import org.w3c.dom.Document;
+import org.w3c.dom.Element;
+import org.wso2.carbon.analytics.hive.HiveConstants;
 import org.apache.hadoop.hive.service.Utils;
 import org.wso2.carbon.analytics.hive.ServiceHolder;
 import org.wso2.carbon.analytics.hive.conf.HiveConnectionManager;
@@ -25,8 +28,23 @@ import org.wso2.carbon.analytics.hive.dto.QueryResultRow;
 import org.wso2.carbon.analytics.hive.exception.HiveConnectionException;
 import org.wso2.carbon.analytics.hive.exception.HiveExecutionException;
 import org.wso2.carbon.analytics.hive.service.HiveExecutorService;
+import org.wso2.carbon.ndatasource.common.DataSourceException;
+import org.wso2.carbon.ndatasource.core.CarbonDataSource;
+import org.wso2.carbon.ndatasource.core.DataSourceMetaInfo;
+import org.wso2.carbon.ndatasource.core.DataSourceService;
+import org.wso2.carbon.ndatasource.rdbms.RDBMSConfiguration;
+import org.wso2.carbon.ndatasource.rdbms.RDBMSDataSourceReader;
+import org.xml.sax.InputSource;
+import org.xml.sax.SAXException;
 import org.wso2.carbon.utils.multitenancy.CarbonContextHolder;
 
+import javax.sql.DataSource;
+import javax.xml.parsers.DocumentBuilder;
+import javax.xml.parsers.DocumentBuilderFactory;
+import javax.xml.parsers.ParserConfigurationException;
+import java.io.FileInputStream;
+import java.io.IOException;
+import java.io.StringReader;
 import java.sql.Connection;
 import java.sql.DriverManager;
 import java.sql.ResultSet;
@@ -42,20 +60,6 @@ public class HiveExecutorServiceImpl implements HiveExecutorService {
 
     private static final Log log = LogFactory.getLog(HiveExecutorServiceImpl.class);
 
-    private boolean initialized;
-
-    // TODO: Use datasource component instead of explicitly creating connections
-    public void initialize(String driverName) {
-        try {
-            Class.forName(driverName);
-        } catch (ClassNotFoundException e) {
-            log.error("Error during initialization of Hive driver", e);
-        }
-
-        this.initialized = true;
-
-    }
-
     /**
      * @param script
      * @return The Resultset of all executed queries in the script
@@ -69,19 +73,53 @@ public class HiveExecutorServiceImpl implements HiveExecutorService {
                 initialize(confManager.getConfValue(HiveConstants.HIVE_DRIVER_KEY));
             }*/
 
+            Connection con = null;
+            try {
+                CarbonDataSource dataSource = ServiceHolder.getCarbonDataSourceService().
+                        getDataSource(HiveConstants.DEFAULT_HIVE_DATASOURCE);
+
+                if (dataSource == null) {
+                    createDataSource();
+                    dataSource = ServiceHolder.getCarbonDataSourceService().
+                        getDataSource(HiveConstants.DEFAULT_HIVE_DATASOURCE);
+
+                    if (dataSource != null) {
+                        con = ((DataSource)dataSource.getDSObject()).getConnection();
+                    }
+                } else {
+                    con = ((DataSource)dataSource.getDSObject()).getConnection();
+                }
+            } catch (DataSourceException e) {
+                log.error("Error while connecting to Hive service..", e);
+                throw new HiveExecutionException("Error while connecting to Hive service..", e);
+            }  catch (IOException e) {
+                log.error("Error while connecting to Hive service..", e);
+                throw new HiveExecutionException("Error while connecting to Hive service..", e);
+            }  catch (SAXException e) {
+                log.error("Error while connecting to Hive service..", e);
+                throw new HiveExecutionException("Error while connecting to Hive service..", e);
+            }  catch (ParserConfigurationException e) {
+                log.error("Error while connecting to Hive service..", e);
+                throw new HiveExecutionException("Error while connecting to Hive service..", e);
+            } catch (SQLException e) {
+                log.error("Error while connecting to Hive service..", e);
+                throw new HiveExecutionException("Error while connecting to Hive service..", e);
+            }
+
+            // TODO : create handle exception method
+
+/*
+
             Connection con;
             try {
                 con = ServiceHolder.getConnectionManager().getHiveConnection();
             } catch (HiveConnectionException e) {
                 throw new HiveExecutionException("Error while connecting to Hive service..", e);
             }
+*/
 
             try {
-/*                con = DriverManager.getConnection(confManager.
-                        getConfValue(HiveConstants.HIVE_URL_KEY), confManager.
-                        getConfValue(HiveConstants.HIVE_USERNAME_KEY), confManager.
-                        getConfValue(HiveConstants.HIVE_PASSWORD_KEY));*/
-                Statement stmt = con.createStatement(); // TODO: Use datasource
+                Statement stmt = con.createStatement(); 
 
                 Pattern regex = Pattern.compile("[^\\s\"']+|\"([^\"]*)\"|'([^']*)'");
                 Matcher regexMatcher = regex.matcher(script);
@@ -208,4 +246,31 @@ public class HiveExecutorServiceImpl implements HiveExecutorService {
         }
 
     }
+
+    private void createDataSource()
+            throws DataSourceException, IOException, SAXException, ParserConfigurationException {
+
+        DataSourceService dataSourceService = ServiceHolder.getCarbonDataSourceService();
+
+        DocumentBuilderFactory factory = DocumentBuilderFactory.newInstance();
+
+        factory.setNamespaceAware(true);
+        DocumentBuilder builder = factory.newDocumentBuilder();
+
+        Document document = builder.parse(new InputSource(new StringReader(
+                HiveConstants.DEFAULT_HIVE_DATASOURCE_CONFIGURATION)));
+
+        Element configElement = document.getDocumentElement();
+
+        DataSourceMetaInfo.DataSourceDefinition dsDef = new DataSourceMetaInfo.
+                DataSourceDefinition();
+        dsDef.setDsXMLConfiguration(configElement);
+        dsDef.setType("RDBMS");
+
+        DataSourceMetaInfo metaInfo = new DataSourceMetaInfo();
+        metaInfo.setName(HiveConstants.DEFAULT_HIVE_DATASOURCE);
+        metaInfo.setDefinition(dsDef);
+        dataSourceService.addDataSource(metaInfo);
+    }
+
 }

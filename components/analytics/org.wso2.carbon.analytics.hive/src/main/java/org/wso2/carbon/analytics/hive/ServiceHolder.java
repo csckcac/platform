@@ -19,6 +19,7 @@ import org.wso2.carbon.analytics.hive.conf.HiveConnectionManager;
 import org.wso2.carbon.analytics.hive.service.HiveExecutorService;
 import org.wso2.carbon.base.ServerConfiguration;
 import org.wso2.carbon.datasource.DataSourceInformationRepositoryService;
+import org.wso2.carbon.ndatasource.core.DataSourceService;
 import org.wso2.carbon.ntask.core.TaskManager;
 import org.wso2.carbon.ntask.core.service.TaskService;
 import org.wso2.carbon.registry.core.service.RegistryService;
@@ -34,6 +35,7 @@ public class ServiceHolder {
     private static TaskManager taskManager;
     private static DataSourceInformationRepositoryService dataSourceInfoService;
     private static HiveConnectionManager connectionManager;
+    private static DataSourceService dataSourceService;
 
     public static void setHiveExecutorService(HiveExecutorService service) {
         hiveExecutorService = service;
@@ -99,6 +101,14 @@ public class ServiceHolder {
 
     public static ServerConfiguration getCarbonConfiguration() {
         return serverConfiguration;
+    }
+
+    public static void setCarbonDataSourceService(DataSourceService dataSourceService) {
+        ServiceHolder.dataSourceService = dataSourceService;
+    }
+
+    public static DataSourceService getCarbonDataSourceService() {
+        return dataSourceService;
     }
 
 }

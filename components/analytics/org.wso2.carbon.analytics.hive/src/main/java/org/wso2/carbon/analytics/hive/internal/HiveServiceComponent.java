@@ -38,6 +38,7 @@ import org.wso2.carbon.analytics.hive.impl.HiveExecutorServiceImpl;
 import org.wso2.carbon.analytics.hive.service.HiveExecutorService;
 import org.wso2.carbon.base.ServerConfiguration;
 import org.wso2.carbon.datasource.DataSourceInformationRepositoryService;
+import org.wso2.carbon.ndatasource.core.DataSourceService;
 import org.wso2.carbon.ntask.common.TaskException;
 import org.wso2.carbon.ntask.core.TaskManager;
 import org.wso2.carbon.ntask.core.service.TaskService;
@@ -65,6 +66,8 @@ import java.util.concurrent.Executors;
  * cardinality="1..1" policy="dynamic" bind="setTaskService" unbind="unsetTaskService"
  * @scr.reference name="datasource.component" interface="org.wso2.carbon.datasource.DataSourceInformationRepositoryService"
  * cardinality="1..1" policy="dynamic" bind="setDataSourceInformationRepositoryService" unbind="unsetDataSourceInformationRepositoryService"
+ * @scr.reference name="datasources.service" interface="org.wso2.carbon.ndatasource.core.DataSourceService"
+ * cardinality="1..1" policy="dynamic" bind="setDataSourceService" unbind="unsetDataSourceService"
  */
 
 public class HiveServiceComponent {
@@ -131,14 +134,14 @@ public class HiveServiceComponent {
                       " work properly..", e);
         }
 
-        DataSourceInformationRepositoryService dataSourceInfoService = ServiceHolder.
+/*        DataSourceInformationRepositoryService dataSourceInfoService = ServiceHolder.
                 getDataSourceInformationRepositoryService();
         DataSourceInformationRepository repository = dataSourceInfoService.
-                getDataSourceInformationRepository();
+                getDataSourceInformationRepository();*/
 
         // Registers HIVE DataSource used to connect to Hive service at component startup if not
         // already existing
-        DataSourceInformation info = repository.
+/*        DataSourceInformation info = repository.
                 getDataSourceInformation(HiveConstants.DEFAULT_HIVE_DATASOURCE);
         if (info == null) {
             info = new DataSourceInformation();
@@ -169,7 +172,7 @@ public class HiveServiceComponent {
         HiveConnectionManager connectionManager = HiveConnectionManager.getInstance();
         connectionManager.initialize(dataSource);
 
-        ServiceHolder.setHiveConnectionManager(connectionManager);
+        ServiceHolder.setHiveConnectionManager(connectionManager);*/
 
     }
 
@@ -204,6 +207,21 @@ public class HiveServiceComponent {
 
     protected void unsetConfigurationContextService(ConfigurationContextService contextService) {
         ServiceHolder.setConfigurationContextService(null);
+    }
+
+    protected void setDataSourceService(DataSourceService dataSourceService) {
+        if (log.isDebugEnabled()) {
+            log.debug("Setting the Carbon Data Sources Service");
+        }
+        ServiceHolder.setCarbonDataSourceService(dataSourceService);
+    }
+
+    protected void unsetDataSourceService(
+            DataSourceService dataSourceService) {
+        if (log.isDebugEnabled()) {
+            log.debug("Unsetting the Carbon Data Sources Service");
+        }
+        ServiceHolder.setCarbonDataSourceService(null);
     }
 
     protected void setDataSourceInformationRepositoryService(
@@ -274,7 +292,7 @@ public class HiveServiceComponent {
                 TServer server = new TThreadPoolServer(sargs);
 
                 String msg = "Started Hive Thrift server on port " + (HIVE_SERVER_DEFAULT_PORT +
-                                                                       carbonPortOffset) + "..";
+                                                                      carbonPortOffset) + "..";
 
                 HiveServer.HiveServerHandler.LOG.info(msg);
 

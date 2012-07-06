@@ -44,4 +44,17 @@ public class HiveConstants {
 
     public static final String TASK_TENANT_ID_KEY = "__TENANT_ID_PROP__";
 
+    public static final String DEFAULT_HIVE_DATASOURCE_CONFIGURATION =
+            "<configuration>\n" +
+            "   <url>" + HIVE_DEFAULT_URL + "</url>\n" +
+            "   <username>" + HIVE_DEFAULT_USER + "</username>\n" +
+            "   <password>" + HIVE_DEFAULT_PASSWORD + "</password>\n" +
+            "   <driverClassName>" + HIVE_DRIVER + "</driverClassName>\n" +
+            "   <maxActive>50</maxActive>\n" +
+            "   <maxWait>60000</maxWait>\n" +
+            "   <testOnBorrow>true</testOnBorrow>\n" +
+            "   <validationQuery>SELECT 1</validationQuery>\n" +
+            "   <validationInterval>30000</validationInterval>\n" +
+            "</configuration>";
+
 }

@@ -112,6 +112,7 @@
             <outputDirectory>${pom.artifactId}-${build.version}/repository/conf</outputDirectory>
             <includes>
                 <include>**/humantask.xml</include>
+                <include>**/attach-mgt-conf.properties</include>
             </includes>
         </fileSet>
         <fileSet>

@@ -57,7 +57,7 @@ import org.wso2.carbon.utils.ConfigurationContextService;
  * unbind="unsetDashboardService"
  * @scr.reference name="org.wso2.carbon.dashboard.mgt.gadgetrepo.GadgetRepoService"
  * interface="org.wso2.carbon.dashboard.mgt.gadgetrepo.GadgetRepoService"
- * cardinality="1..1" policy="dynamic" bind="setGadgetRepoService"
+ * cardinality="0..1" policy="dynamic" bind="setGadgetRepoService"
  * unbind="unsetGadgetRepoService"
  * @scr.reference name="datasources.service" interface="org.wso2.carbon.ndatasource.core.DataSourceService"
  * cardinality="1..1" policy="dynamic" bind="setDataSourceService" unbind="unsetDataSourceService"

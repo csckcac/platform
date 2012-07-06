@@ -712,7 +712,7 @@
                     <%
                         } else {
                     %>
-                    <p><fmt:message key="cannot.display.when.events.disabled"/></p>
+                    <p><fmt:message key="cannot.display.when.events.disabled"/><a href="deployment_descriptor_editor.jsp?Pid=<%=instanceInfo.getPid()%>">&nbsp;here.</a></p>
                     <%
                         }
                     %>

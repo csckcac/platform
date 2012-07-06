@@ -129,7 +129,7 @@
 				<featureArtifactDef>org.wso2.carbon:org.wso2.carbon.discovery.admin.ui.feature:${carbon.version}</featureArtifactDef>
                                 				
 				<!--Cloud Services Gateway Agent feature-->
-				<featureArtifactDef>org.wso2.carbon:org.wso2.carbon.cloud.csg.agent.feature:${carbon.version}</featureArtifactDef>
+				<!--<featureArtifactDef>org.wso2.carbon:org.wso2.carbon.cloud.csg.agent.feature:${carbon.version}</featureArtifactDef>-->
 
 		            </featureArtifacts>
                         </configuration>
@@ -307,10 +307,10 @@
                                     <version>${stratos.version}</version>
                                 </feature>
 				<!--Cloud Services Gateway Agent -->
-                                <feature>
+				<!--<feature>
                                     <id>org.wso2.carbon.cloud.csg.agent.feature.group</id>
                                     <version>${carbon.platform.version}</version>
-                                </feature>
+								</feature>-->
                             </features>
                         </configuration>
                     </execution>

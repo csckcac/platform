@@ -1218,7 +1218,7 @@
 
   <property>
     <name>hive.jar.path</name>
-    <value>${CARBON_HOME}/repository/components/plugins/hive_0.8.1.wso2v1.jar</value>
+    <value>${CARBON_HOME}/repository/components/plugins/hive_0.8.1.wso2v2.jar</value>
   </property>
 
   <property>

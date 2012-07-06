@@ -1,4 +1,4 @@
 instructions.configure = \
 org.eclipse.equinox.p2.touchpoint.natives.mkdir(path:${installFolder}/../deployment/server/webapps/);\
-org.eclipse.equinox.p2.touchpoint.natives.copy(source:${installFolder}/features/org.wso2.carbon.bam.dashboard.ui_${feature.version}/conf/dashboard.war,target:${installFolder}/../deployment/server/webapps/dashboard.war,overwrite:true);\
+org.eclipse.equinox.p2.touchpoint.natives.copy(source:${installFolder}/features/org.wso2.carbon.bam.dashboard.ui_${feature.version}/app/dashboard.war,target:${installFolder}/../deployment/server/webapps/dashboard.war,overwrite:true);\
 org.eclipse.equinox.p2.touchpoint.natives.remove(path:${installFolder}/dashboard.war);\

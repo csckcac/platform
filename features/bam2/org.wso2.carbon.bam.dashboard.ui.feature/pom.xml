@@ -9,7 +9,7 @@
     </parent>
 
     <modelVersion>4.0.0</modelVersion>
-       <artifactId>org.wso2.carbon.bam2.dashboard.feature</artifactId>
+       <artifactId>org.wso2.carbon.bam.dashboard.ui.feature</artifactId>
        <packaging>pom</packaging>
        <name>WSO2 Carbon - BAM Dashboard UI Feature</name>
        <url>http://wso2.org</url>

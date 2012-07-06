@@ -38,7 +38,7 @@
         <module>org.wso2.carbon.bam.receiver.server.feature</module>
         <module>org.wso2.carbon.bam.presentation.server.feature</module>
         <module>org.wso2.carbon.bam.feature</module>
-        <module>org.wso2.carbon.bam.ui.feature</module>
+        <module>org.wso2.carbon.bam.dashboard.ui.feature</module>
         <module>org.wso2.carbon.bam.clustermonitor.ui.feature</module>
         <module>org.wso2.carbon.bam.toolbox.deployer.feature</module>
         <module>org.wso2.carbon.bam.toolbox.deployer.server.feature</module>

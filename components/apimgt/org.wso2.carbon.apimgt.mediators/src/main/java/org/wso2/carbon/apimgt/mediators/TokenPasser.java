@@ -50,7 +50,7 @@ import java.util.Map;
 public class TokenPasser extends AbstractMediator {
     private static final Log log = LogFactory.getLog(TokenPasser.class);
     private static final String JWT_HEADER = "{\"typ\":\"JWT\", \"alg\":\"NONE\"}";
-    private static String JWT_BODY = "{\"iss\":\"[1]\", \"exp\":1373100108854, \"http://wso2.org/claims/subscriber\":\"[2]\"}";
+    private static String JWT_BODY = "{\"iss\":\"[1]\", \"exp\":[2], \"http://wso2.org/claims/subscriber\":\"[3]\"}";
     private static final String API_GATEWAY_ID = "wso2.org/products/am";
 
     public boolean mediate(MessageContext synCtx) {
@@ -60,10 +60,19 @@ public class TokenPasser extends AbstractMediator {
     }
 
     private void addHTTPHeader(MessageContext synCtx, AuthenticationContext authContext) {
+        //generating expiring timestamp
+        long currentTime = Calendar.getInstance().getTimeInMillis();
+        //expire the token in 60s after generation
+        long expireIn = currentTime + 1000 * 60;
+
         String base64EncodedHeader = Base64Utils.encode(JWT_HEADER.getBytes());
-        String replacedBody = JWT_BODY.replaceAll("\\[1\\]",API_GATEWAY_ID).replaceAll("\\[2\\]",authContext.getUsername());
+        String replacedBody = JWT_BODY.replaceAll("\\[1\\]",API_GATEWAY_ID)
+                .replaceAll("\\[3\\]",authContext.getUsername())
+                .replaceAll("\\[2\\]",String.valueOf(expireIn));
+
         String base64EncodedBody = Base64Utils.encode(replacedBody.getBytes());
         String assertion = base64EncodedHeader + "." + base64EncodedBody;
+
 
         Map transportHeaders = (Map)((Axis2MessageContext) synCtx).getAxis2MessageContext()
                 .getProperty(org.apache.axis2.context.MessageContext.TRANSPORT_HEADERS);

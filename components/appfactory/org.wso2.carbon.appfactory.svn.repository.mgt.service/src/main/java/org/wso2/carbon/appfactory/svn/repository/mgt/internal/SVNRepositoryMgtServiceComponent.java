@@ -24,6 +24,7 @@ import org.wso2.carbon.appfactory.common.AppFactoryConfiguration;
 import org.wso2.carbon.appfactory.core.ArtifactStorage;
 import org.wso2.carbon.appfactory.core.RevisionControlDriver;
 import org.wso2.carbon.appfactory.svn.repository.mgt.RepositoryManager;
+import org.wso2.carbon.appfactory.svn.repository.mgt.impl.FileArtifactStorage;
 import org.wso2.carbon.appfactory.svn.repository.mgt.impl.SCMManagerBasedRepositoryManager;
 import org.wso2.carbon.appfactory.svn.repository.mgt.impl.SVNArtifactStorage;
 import org.wso2.carbon.appfactory.svn.repository.mgt.impl.SVNManager;
@@ -59,8 +60,12 @@ public class SVNRepositoryMgtServiceComponent {
             SVNManager repositoryManager = new SVNManager();
             bundleContext.registerService(RevisionControlDriver.class.getName(), repositoryManager, null);
 
-            SVNArtifactStorage svnArtifactStorage = new SVNArtifactStorage();
-            bundleContext.registerService(ArtifactStorage.class.getName(), svnArtifactStorage, null);
+            //SVNArtifactStorage svnArtifactStorage = new SVNArtifactStorage();
+            //bundleContext.registerService(ArtifactStorage.class.getName(), svnArtifactStorage, null);
+
+            // Registering File artifact storage
+            FileArtifactStorage fileArtifactStorage = new FileArtifactStorage();
+            bundleContext.registerService(ArtifactStorage.class.getName(), fileArtifactStorage, null);
 
         } catch (Throwable e) {
             log.error("Error in registering Repository Management Service  ", e);

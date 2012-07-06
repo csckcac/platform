@@ -23,6 +23,8 @@ import org.apache.synapse.mediators.AbstractMediator;
 import org.apache.synapse.MessageContext;
 import org.apache.axis2.addressing.EndpointReference;
 
+import java.net.MalformedURLException;
+import java.net.URL;
 import java.util.List;
 import java.util.ArrayList;
 import java.net.URI;
@@ -45,6 +47,11 @@ public class URLRewriteMediator extends AbstractMediator {
         URIFragments fragments;
         URI inputURI = getInputAddress(messageContext);
         if (inputURI != null) {
+            try {
+                URL url = new URL(inputURI.toString());
+            } catch (MalformedURLException e) {
+                handleException("Malformed URL when processing " + inputURI, e, messageContext);
+            }
             fragments = new URIFragments(inputURI);
         } else {
             fragments = new URIFragments();

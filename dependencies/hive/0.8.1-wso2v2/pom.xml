@@ -30,7 +30,7 @@
     </modules>
 
     <properties>
-        <hive.build.version>0.8.1-wso2v1</hive.build.version>
+        <hive.build.version>0.8.1-wso2v2</hive.build.version>
         <hive.version>${hive.build.version}</hive.version>
     </properties>
 

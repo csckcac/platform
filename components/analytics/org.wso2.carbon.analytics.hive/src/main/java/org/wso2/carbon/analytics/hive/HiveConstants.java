@@ -46,7 +46,8 @@ public class HiveConstants {
 
     public static final String DEFAULT_HIVE_DATASOURCE_CONFIGURATION =
             "<configuration>\n" +
-            "   <url>" + HIVE_DEFAULT_URL + "</url>\n" +
+            "   <url>" + "jdbc:hive://" + "localhost:" + (Utils.HIVE_SERVER_DEFAULT_PORT +
+                                                          Utils.getPortOffset()) +"/default</url>\n" +
             "   <username>" + HIVE_DEFAULT_USER + "</username>\n" +
             "   <password>" + HIVE_DEFAULT_PASSWORD + "</password>\n" +
             "   <driverClassName>" + HIVE_DRIVER + "</driverClassName>\n" +

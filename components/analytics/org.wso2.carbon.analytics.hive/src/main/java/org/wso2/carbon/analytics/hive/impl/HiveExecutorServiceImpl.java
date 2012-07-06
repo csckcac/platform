@@ -32,6 +32,7 @@ import org.wso2.carbon.ndatasource.common.DataSourceException;
 import org.wso2.carbon.ndatasource.core.CarbonDataSource;
 import org.wso2.carbon.ndatasource.core.DataSourceMetaInfo;
 import org.wso2.carbon.ndatasource.core.DataSourceService;
+import org.wso2.carbon.ndatasource.core.utils.DataSourceUtils;
 import org.wso2.carbon.ndatasource.rdbms.RDBMSConfiguration;
 import org.wso2.carbon.ndatasource.rdbms.RDBMSDataSourceReader;
 import org.xml.sax.InputSource;
@@ -45,6 +46,7 @@ import javax.xml.parsers.ParserConfigurationException;
 import java.io.FileInputStream;
 import java.io.IOException;
 import java.io.StringReader;
+import java.net.URL;
 import java.sql.Connection;
 import java.sql.DriverManager;
 import java.sql.ResultSet;
@@ -81,24 +83,50 @@ public class HiveExecutorServiceImpl implements HiveExecutorService {
                 if (dataSource == null) {
                     createDataSource();
                     dataSource = ServiceHolder.getCarbonDataSourceService().
-                        getDataSource(HiveConstants.DEFAULT_HIVE_DATASOURCE);
+                            getDataSource(HiveConstants.DEFAULT_HIVE_DATASOURCE);
 
                     if (dataSource != null) {
-                        con = ((DataSource)dataSource.getDSObject()).getConnection();
+                        con = ((DataSource) dataSource.getDSObject()).getConnection();
                     }
                 } else {
-                    con = ((DataSource)dataSource.getDSObject()).getConnection();
+
+                    Element element = (Element) dataSource.getDSMInfo().getDefinition().
+                            getDsXMLConfiguration();
+                    RDBMSConfiguration rdbmsConfiguration = RDBMSDataSourceReader.loadConfig(
+                            DataSourceUtils.elementToString(element));
+
+                    // Remove jdbc: part and append http: so that URL will recognize it
+                    String urlStr = "http:" + rdbmsConfiguration.getUrl().substring(10);
+                    
+                    URL url = new URL(urlStr);
+
+                    int port = url.getPort();
+
+                    int hiveServerPort =
+                            org.wso2.carbon.analytics.hive.Utils.HIVE_SERVER_DEFAULT_PORT +
+                            org.wso2.carbon.analytics.hive.Utils.getPortOffset();
+
+                    if (port != hiveServerPort) { // Handle port change after a restart
+                        createDataSource();
+
+                        dataSource = ServiceHolder.getCarbonDataSourceService().
+                                getDataSource(HiveConstants.DEFAULT_HIVE_DATASOURCE);
+                    }
+
+                    if (dataSource != null) {
+                        con = ((DataSource) dataSource.getDSObject()).getConnection();
+                    }
                 }
             } catch (DataSourceException e) {
                 log.error("Error while connecting to Hive service..", e);
                 throw new HiveExecutionException("Error while connecting to Hive service..", e);
-            }  catch (IOException e) {
+            } catch (IOException e) {
                 log.error("Error while connecting to Hive service..", e);
                 throw new HiveExecutionException("Error while connecting to Hive service..", e);
-            }  catch (SAXException e) {
+            } catch (SAXException e) {
                 log.error("Error while connecting to Hive service..", e);
                 throw new HiveExecutionException("Error while connecting to Hive service..", e);
-            }  catch (ParserConfigurationException e) {
+            } catch (ParserConfigurationException e) {
                 log.error("Error while connecting to Hive service..", e);
                 throw new HiveExecutionException("Error while connecting to Hive service..", e);
             } catch (SQLException e) {
@@ -108,18 +136,9 @@ public class HiveExecutorServiceImpl implements HiveExecutorService {
 
             // TODO : create handle exception method
 
-/*
-
-            Connection con;
-            try {
-                con = ServiceHolder.getConnectionManager().getHiveConnection();
-            } catch (HiveConnectionException e) {
-                throw new HiveExecutionException("Error while connecting to Hive service..", e);
-            }
-*/
 
             try {
-                Statement stmt = con.createStatement(); 
+                Statement stmt = con.createStatement();
 
                 Pattern regex = Pattern.compile("[^\\s\"']+|\"([^\"]*)\"|'([^']*)'");
                 Matcher regexMatcher = regex.matcher(script);

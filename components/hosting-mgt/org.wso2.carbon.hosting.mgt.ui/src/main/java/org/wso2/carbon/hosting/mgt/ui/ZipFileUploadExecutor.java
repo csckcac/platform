@@ -59,7 +59,19 @@ public class ZipFileUploadExecutor extends AbstractFileUploadExecutor {
 
         List<FileItemData> tempDataList = fileItemsMap.get("warFileName");
         List<FileUploadData> fileUploadDataList = new ArrayList<FileUploadData>();
-
+        String selectedImage = "";
+        if (!client.isInstanceUp()) {
+            List<String> images = getFormFieldValue("images");
+            if(images.isEmpty()){
+                log.error("Image empty" );
+            } else{
+                if(images.size() == 1){
+                    selectedImage = images.get(0);
+                    log.info(selectedImage);
+                }
+                client.startInstance(selectedImage);
+            }
+        }
         try {
             for (FileItemData filedata : tempDataList) {
                 FileUploadData tempData = new FileUploadData();

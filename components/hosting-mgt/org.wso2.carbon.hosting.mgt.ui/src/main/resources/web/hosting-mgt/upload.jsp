@@ -1,3 +1,9 @@
+<%@ page import="org.wso2.carbon.hosting.mgt.ui.HostingAdminClient" %>
+<%@ page import="org.wso2.carbon.ui.CarbonUIUtil" %>
+<%@ page import="org.apache.axis2.context.ConfigurationContext" %>
+<%@ page import="org.wso2.carbon.CarbonConstants" %>
+<%@ page import="org.wso2.carbon.utils.ServerConstants" %>
+<%@ page import="org.wso2.carbon.ui.CarbonUIMessage" %>
 <!--
  ~ Copyright (c) 2005-2010, WSO2 Inc. (http://www.wso2.org) All Rights Reserved.
  ~
@@ -18,6 +24,32 @@
 <%@ taglib prefix="fmt" uri="http://java.sun.com/jsp/jstl/fmt" %>
 <%@ taglib uri="http://wso2.org/projects/carbon/taglibs/carbontags.jar" prefix="carbon" %>
 
+<%
+    String serverURL = CarbonUIUtil.getServerURL(config.getServletContext(), session);
+    ConfigurationContext configContext =
+            (ConfigurationContext) config.getServletContext().getAttribute(CarbonConstants.CONFIGURATION_CONTEXT);
+
+    String cookie = (String) session.getAttribute(ServerConstants.ADMIN_SERVICE_COOKIE);
+
+    HostingAdminClient client;
+
+    try {
+             client = new HostingAdminClient(cookie, serverURL, configContext , request.getLocale());
+    }catch (Exception e) {
+             response.setStatus(500);
+             CarbonUIMessage uiMsg = new CarbonUIMessage(CarbonUIMessage.ERROR, e.getMessage(), e);
+                session.setAttribute(CarbonUIMessage.ID, uiMsg);
+    %>
+        <script type="text/javascript">
+               location.href = "../admin/error.jsp";
+        </script>
+    <%
+        return;
+    }
+
+        boolean noPHPAppsDeployed = client.getIsInstanceUpFromLb() ;  //TODO need to set tenant correctly
+%>
+
 <fmt:bundle basename="org.wso2.carbon.hosting.mgt.ui.i18n.Resources">
     <carbon:breadcrumb label="add.webapp"
                        resourceBundle="org.wso2.carbon.hosting.mgt.ui.i18n.Resources"
@@ -25,7 +57,15 @@
 
     <script type="text/javascript">
         function validate() {
-
+        <%
+            if(noPHPAppsDeployed){ //when three are no PHP apps for this tenant, we should create instance
+        %>
+        var imageSelect = document.getElementById("images");
+        if(imageSelect.options[imageSelect.selectedIndex].text == '<fmt:message key="select.image"/>'){
+            CARBON.showWarningDialog('<fmt:message key="no.selected.image"/>');
+            return;
+        }
+        <%}%>
             if (document.webappUploadForm.warFileName.value != null) {
                 var jarinput = document.webappUploadForm.warFileName.value;
                 if (jarinput == '') {
@@ -54,9 +94,7 @@
                 } else {
                     return;
                 }
-
             }
-
         }
 
         var rows = 1;
@@ -69,7 +107,7 @@
             newRow.id = 'file' + rows;
 
             var oCell = newRow.insertCell(-1);
-            oCell.innerHTML = '<label><fmt:message key="webapp.archive"/> (.zip)<font color="red">*</font></label>';
+            oCell.innerHTML = '<label><fmt:message key="phpapp.archive"/> (.zip)<font color="red">*</font></label>';
             oCell.className = "formRow";
 
             oCell = newRow.insertCell(-1);
@@ -84,14 +122,6 @@
             tableRow.parentNode.deleteRow(tableRow.rowIndex);
             alternateTableRows('webappTbl', 'tableEvenRow', 'tableOddRow');
         }
-
-
-        function listImages() {
-            var tableRow = document.getElementById(rowId);
-            tableRow.parentNode.deleteRow(tableRow.rowIndex);
-            alternateTableRows('webappTbl', 'tableEvenRow', 'tableOddRow');
-        }
-        
 
     </script>
 
@@ -109,7 +139,7 @@
                 <table class="styledLeft" id="webappTbl">
                     <tr>
                         <td class="formRow">
-                            <label><fmt:message key="webapp.archive"/> (.zip)<font color="red">*</font></label>
+                            <label><fmt:message key="phpapp.archive"/> (.zip)<font color="red">*</font></label>
                         </td>
                         <td class="formRow">
                             <input type="file" name="warFileName" size="50"/>&nbsp;
@@ -117,22 +147,21 @@
                         </td>
                     </tr>
                 </table>
-                <%  boolean noPHPAppdDeployed = true;
-                    String images[] = new String[5];
-                    images[0] = "image1";
-                    images[1] = "image2";
-                    images[2] = "image3";
-                    images[3] = "image4";
-                    images[4] = "image5";
-                    if(noPHPAppdDeployed){ //when three are no PHP apps for this tenant, we should create instance
+                <%
+                    String images[] = client.getBaseImages();
+                    if(noPHPAppsDeployed){ //when three are no PHP apps for this tenant, we should create instance
                         %>
                         <table class="styledLeft">
                             <tr>
-                                <td class="buttonRow">
+                                <td class="imageRow">
                                     <nobr>
                                         <fmt:message key="image"/>
                                         <label><font color="red">*</font></label>
-                                        <select name="images">
+                                    </nobr>
+                                </td>
+                                <td class="imageRow">
+                                    <nobr>
+                                        <select name="images" id="images">
                                             <option value="selectAImage" selected="selected">
                                                 <fmt:message key="select.image"/>
                                             </option>

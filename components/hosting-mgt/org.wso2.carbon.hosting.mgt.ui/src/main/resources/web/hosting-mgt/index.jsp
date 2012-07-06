@@ -24,7 +24,7 @@
 <%@ taglib uri="http://wso2.org/projects/carbon/taglibs/carbontags.jar" prefix="carbon" %>
 <%@ page import="java.util.ResourceBundle" %>
 <%@ page import="org.wso2.carbon.hosting.mgt.ui.HostingAdminClient" %>
-<%@ page import="org.wso2.carbon.hosting.mgt.stub.types.carbon.PHPappsWrapper" %>
+<%@ page import="org.wso2.carbon.hosting.mgt.stub.types.carbon.PHPAppsWrapper" %>
 
 <%
     response.setHeader("Cache-Control", "no-cache");
@@ -46,7 +46,7 @@
     } catch (NumberFormatException ignored) {
     }
 
-    PHPappsWrapper phpAppsWrapper;
+    PHPAppsWrapper phpAppsWrapper;
     String[] phpApps;
 
     String phpappSearchString = request.getParameter("phpappSearchString");

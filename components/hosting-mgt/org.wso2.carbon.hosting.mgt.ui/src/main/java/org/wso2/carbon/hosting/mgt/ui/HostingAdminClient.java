@@ -24,8 +24,7 @@ import org.apache.commons.logging.Log;
 import org.apache.commons.logging.LogFactory;
 import org.wso2.carbon.hosting.mgt.stub.ApplicationManagementServiceStub;
 import org.wso2.carbon.hosting.mgt.stub.types.carbon.FileUploadData;
-import org.wso2.carbon.hosting.mgt.stub.types.carbon.PHPappsWrapper;
-//import org.wso2.carbon.hosting.mgt.stub.types.carbon.PHPappsWrapper;
+import org.wso2.carbon.hosting.mgt.stub.types.carbon.PHPAppsWrapper;
 
 
 import java.rmi.RemoteException;
@@ -41,6 +40,7 @@ public class HostingAdminClient {
     private static final Log log = LogFactory.getLog(HostingAdminClient.class);
     private ResourceBundle bundle;
     public ApplicationManagementServiceStub stub;
+    private static boolean isInstanceUp = true;
 
     public HostingAdminClient(String cookie,
                              String backendServerURL,
@@ -71,7 +71,7 @@ public class HostingAdminClient {
         throw new AxisFault(msg, e);
     }
 
-    public PHPappsWrapper getPagedPhpAppsSummary(String phpappSearchString, int pageNumber)
+    public PHPAppsWrapper getPagedPhpAppsSummary(String phpappSearchString, int pageNumber)
             throws AxisFault {
         try {
             return stub.getPagedPhpAppsSummary(phpappSearchString , pageNumber);
@@ -93,12 +93,35 @@ public class HostingAdminClient {
     public void deletePhpApps(String[] phpAppFileNames) throws AxisFault {
         try {
             stub.deletePhpApps(phpAppFileNames) ;
-            log.info("success");
         } catch (RemoteException e) {
             handleException("cannot.delete.webapps", e);
         }
     }
 
+    public boolean isInstanceUp(){
+         return isInstanceUp;
+    }
 
+
+    public boolean getIsInstanceUpFromLb(){
+        //TODO get state from LB service  and set
+        return isInstanceUp;
+    }
+
+    public String[] getBaseImages(){
+        //TODO get base images from autoscaler
+        return stub.getImages();
+//        String images[] = new String[5];
+//        images[0] = "image1";
+//        images[1] = "image2";
+//        images[2] = "image3";
+//        images[3] = "image4";
+//        images[4] = "image5";
+//        return images;
+    }
+    
+    public void startInstance(String image){
+        stub.startInstance(image);
+    }
 
 }

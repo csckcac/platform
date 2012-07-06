@@ -21,22 +21,11 @@ import org.wso2.carbon.bam.toolbox.deployer.exception.BAMComponentNotFoundExcept
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-//public class HiveScriptStoreClient extends AbstractAdminClient {
  public class HiveScriptStoreClient{
 
     private static Log log = LogFactory.getLog(HiveScriptStoreClient.class);
     private static HiveScriptStoreClient instance;
     private static HiveScriptStoreService service;
-//    public HiveScriptStoreClient(String backendServerURL,
-//                                        ConfigurationContext configCtx) throws BAMToolboxDeploymentException {
-//        try {
-//            String serviceURL = getBackendEPR(backendServerURL, BAMToolBoxDeployerConstants.HIVE_SCRIPT_STORE_SERVICE);
-//            stub = new HiveScriptStoreServiceStub(configCtx, serviceURL);
-//        } catch (Exception e) {
-//            log.error(e.getMessage(), e);
-//            throw new BAMToolboxDeploymentException(e.getMessage(), e);
-//        }
-//    }
 
     private HiveScriptStoreClient() throws BAMComponentNotFoundException{
         try{
@@ -53,23 +42,7 @@ import org.wso2.carbon.bam.toolbox.deployer.exception.BAMComponentNotFoundExcept
         }
         return instance;
     }
-//    public HiveScriptStoreClient(String serverURL) throws BAMToolboxDeploymentException {
-//
-//        String serviceURL = generateURL(new String[]{serverURL, BAMToolBoxDeployerConstants.SERVICES_SUFFIX,
-//                BAMToolBoxDeployerConstants.HIVE_SCRIPT_STORE_SERVICE});
-//        try{
-//        stub = new HiveScriptStoreServiceStub(ServiceHolder.getConfigurationContextService().getClientConfigContext(), serviceURL);
-//        stub._getServiceClient().getOptions().setManageSession(true);
-//        } catch (AxisFault axisFault) {
-//            log.error("Error while initializing hive script store client", axisFault);
-//            throw new BAMToolboxDeploymentException("Error while initializing hive script store client", axisFault);
-//        }
-//    }
 
-//    public HiveScriptStoreClient(String serverURL, String sessionCookie) throws BAMToolboxDeploymentException {
-//        this(serverURL);
-//        setSessionCookie(sessionCookie);
-//    }
 
     public void saveHiveScript(String scriptName, String scriptContent, String cron) {
         try {

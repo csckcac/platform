@@ -18,7 +18,7 @@ package org.wso2.carbon.hostobjects.svnclient;
 import org.apache.commons.logging.Log;
 import org.apache.commons.logging.LogFactory;
 import org.mozilla.javascript.*;
-import org.tigris.subversion.javahl.ClientException;
+
 import org.tigris.subversion.svnclientadapter.*;
 import org.tigris.subversion.svnclientadapter.commandline.CmdLineClientAdapterFactory;
 import org.tigris.subversion.svnclientadapter.javahl.JhlClientAdapterFactory;
@@ -211,7 +211,7 @@ public class SVNClientHostObject extends ScriptableObject {
     }
 
 
-    public String[] jsFunction_getRepositoryInfo() throws MalformedURLException, ClientException, ScriptException {
+    public String[] jsFunction_getRepositoryInfo() throws MalformedURLException, ScriptException {
         getRepositoryInformation();
         if (log.isDebugEnabled()) {
             log.debug("Last modified on: " + svnRepoInfo[0]);
@@ -221,7 +221,7 @@ public class SVNClientHostObject extends ScriptableObject {
         return svnRepoInfo;
     }
 
-    private String[] getRepositoryInformation() throws MalformedURLException, ClientException, ScriptException {
+    private String[] getRepositoryInformation() throws MalformedURLException, ScriptException {
         ISVNInfo svnInfo;
         try {
             svnInfo = svnClient.getInfo(svnUrl);
@@ -241,7 +241,7 @@ public class SVNClientHostObject extends ScriptableObject {
         return svnRepoInfo;
     }
 
-    private ISVNLogMessage[] getCommitMessages() throws ClientException, MalformedURLException, ScriptException {
+    private ISVNLogMessage[] getCommitMessages() throws  MalformedURLException, ScriptException {
         getRepositoryInformation();
 
         SVNRevision endRevision;

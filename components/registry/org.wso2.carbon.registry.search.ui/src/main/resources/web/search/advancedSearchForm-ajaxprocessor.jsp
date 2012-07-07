@@ -495,19 +495,30 @@
                         <input type="text" name="content" value="" id="#_content" onkeypress="handletextBoxKeyPress(event)"/>
                     </td>
                 </tr>--%>
+
+                <%
+                    String isFilter = "0";
+                    String filterMediaType = "";
+                    if (request.getParameter("filterName") != null && mediaType != null && mediaType.length() != 0) {
+                        isFilter = "1";
+                        filterMediaType = mediaType;
+                    }
+                %>
+
                 <tr>
                     <td style="vertical-align:center !important"><fmt:message key="media.type"/></td>
                     <td style="vertical-align:top !important">
-                        <div class="yui-skin-sam">
+                        <div class="yui-skin-sam" style="width:200px;margin-left:0px;float:left">
 
 
                             <div id="mediaTypeAutoComplete">
-                                <input id="#_mediaType" name="mediaType" type="text" value="<%=mediaType%>" style="width:auto !important;" /> &nbsp;
-                                <input name="mediaTypeNegate" type="checkbox" /> not
+                                <input id="#_mediaType" name="mediaType" type="text" value="<%=mediaType%>" style="width:auto" onblur='adjustMediaTypeNegate("<%=isFilter%>", "<%=filterMediaType%>")' />
+
+
                                                                                                                          
                                 <div id="customUIButtonDiv">
                                     <%
-                                        if (request.getParameter("filterName") != null && mediaType != null && mediaType.length() != 0) {
+                                        if (isFilter.equals("1")) {
                                     %><a href="javascript:collapseCustomUI()" class="loadMediaTypeButton"><fmt:message key="fewer"/> <img src="../search/images/arrow-up.png" /></a><%
                                         }
                                     %>
@@ -517,7 +528,22 @@
                             </div>
 
                         </div>
-					</td>	
+
+                        <div id="mediaTypeNegateDiv" style="float:left;margin-left:20px" >
+                            <script type="text/javascript">
+
+                                   var mediaTypeNegateObj = document.getElementById('mediaTypeNegateDiv');
+
+                                   if(isCustomUIDivEmpty()) {
+                                          mediaTypeNegateObj.style.marginLeft = "160px";
+                                   }
+                            </script>
+
+                            <input name="mediaTypeNegate" id="mediaTypeNegate" type="checkbox" /> not
+
+                        </div>
+					</td>
+
                         <%--<input type="text" name="mediaType" value="<%= mediaType%>" id="#_mediaType" onkeypress="handleMediaTypeKeypress(event)"></td>
                         --%>
                 </tr>

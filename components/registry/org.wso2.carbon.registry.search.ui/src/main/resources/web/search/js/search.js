@@ -199,6 +199,32 @@ function isNumberKey(evt) {
    return true;
 }	
 
+function adjustMediaTypeNegate(isFilter, oldMediaType) {
+
+       if (isFilter == "1") {
+
+          if(oldMediaType != null && oldMediaType != "") {
+            var mediaTypeNegateObj = document.getElementById('mediaTypeNegateDiv');
+            var currentMediaType = document.getElementById('#_mediaType').value;
+
+            if(oldMediaType != currentMediaType || (oldMediaType == currentMediaType && !isCustomUIDivEmpty())) {
+                mediaTypeNegateObj.style.cssFloat = "left";
+                mediaTypeNegateObj.style.marginLeft = "160px";
+            }
+          }
+    }
+}
+
+function isCustomUIDivEmpty() {
+    var htmlString = document.getElementById('customUIButtonDiv').innerHTML;
+    htmlString = (htmlString.trim) ? htmlString.trim() : htmlString.replace(/^\s+/, '');
+
+    if (htmlString == '')
+        return true;
+
+    return false;
+}
+
 function submitAdvSearchForm(pageNumber) {		
     sessionAwareFunction(function() {
         document.getElementById('advancedSearchFormDiv').style.display = "none";

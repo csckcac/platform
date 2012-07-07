@@ -156,7 +156,7 @@ public class ReportingAdminService extends RegistryAbstractAdmin implements
     public ReportConfigurationBean getSavedReport(String name)
             throws RegistryException, CryptoException, TaskException {
         return getConfigurationBean(
-                REPORTING_CONFIG_PATH + RegistryConstants.PATH_SEPARATOR + name);
+                REPORTING_CONFIG_PATH + name);
     }
 
     public void deleteSavedReport(String name)

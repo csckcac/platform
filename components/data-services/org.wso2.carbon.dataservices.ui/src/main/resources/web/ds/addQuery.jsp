@@ -419,8 +419,7 @@
         </td>
     </tr>--%>
 <tr id="addQueryProperties" style="<%=(datasourceType.equals("RDBMS") ||
-                            datasourceType.equals("JNDI") || datasourceType.equals("CARBON_DATASOURCE") ||
-                            datasourceType.equals("Cassandra"))?"":"display:none"%>">
+                            datasourceType.equals("JNDI") || datasourceType.equals("CARBON_DATASOURCE"))?"":"display:none"%>">
         <%--<td colspan="2"><h3 class="mediator"><fmt:message key="dataservices.query.properties"/></h3></td>--%>
     <td class="middle-header" colspan="2"><a class="icon-link"
                                              style="background-image:url(images/plus.gif);"

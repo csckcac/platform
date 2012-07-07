@@ -100,7 +100,7 @@ public class ReportingAdminService extends RegistryAbstractAdmin implements
             resource.setProperty("class", "");
         }
         if (configuration.getReportClass() != null) {
-            resource.setProperty("resourcePath", configuration.getReportClass());
+            resource.setProperty("resourcePath", configuration.getResourcePath());
         } else {
             resource.setProperty("resourcePath", "");
         }

@@ -76,9 +76,9 @@
                                 <importFeatureDef>
                                     org.wso2.carbon.service.mgt.ui:${service.mgt.version}
                                 </importFeatureDef>
-                                <importFeatureDef>
+                                <!--importFeatureDef>
                                     org.wso2.carbon.task.ui:${scheduled.task.feature.version}
-                                </importFeatureDef>
+                                </importFeatureDef-->
                                 <importFeatureDef>org.wso2.carbon.jsservices.common:${project.version}
                                 </importFeatureDef>
                             </importFeatures>

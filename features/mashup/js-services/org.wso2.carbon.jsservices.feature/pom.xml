@@ -74,7 +74,7 @@
                                     org.wso2.carbon.service.mgt:${service.mgt.version}
                                 </importFeatureDef>
                                 <importFeatureDef>
-                                    org.wso2.carbon.task:${scheduled.task.feature.version}
+                                    org.wso2.carbon.ntask.core:${wso2carbon.version}
                                 </importFeatureDef>
                             </importFeatures>
                             <includedFeatures>

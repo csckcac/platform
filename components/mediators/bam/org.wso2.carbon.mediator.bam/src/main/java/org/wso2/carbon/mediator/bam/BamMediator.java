@@ -283,8 +283,9 @@ public class BamMediator extends AbstractMediator {
 
     private void createDataPublisher(Agent agent) throws MalformedURLException, AgentException, AuthenticationException, TransportException{
 
-        dataPublisher = new DataPublisher("tcp://" + this.serverIp + ":" + this.serverPort,
-                                              this.userName, this.password, agent);
+        //dataPublisher = new DataPublisher("tcp://" + this.serverIp + ":" + this.serverPort, this.userName, this.password, agent);
+
+        dataPublisher = new DataPublisher("ssl://" + this.serverIp + ":" + "7711", "tcp://" + this.serverIp + ":" + this.serverPort, this.userName, this.password, agent);
 
         log.info("Data Publisher Created.");
     }

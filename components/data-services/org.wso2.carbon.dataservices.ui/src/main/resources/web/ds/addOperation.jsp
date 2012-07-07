@@ -103,12 +103,15 @@
                     //operation
                     selectedQueryId = callQuery.getHref();
                 }
-                Query query = dataService.getQuery(callQuery.getHref());
-                if (query != null && query.getResult() == null) {
-                	showReturnRequestStatus = true;
-                }
             }
         }
+        if (selectedQueryId != null) {
+            Query query = dataService.getQuery(selectedQueryId);
+            if (query != null && query.getResult() == null) {
+                showReturnRequestStatus = true;
+            }
+        }
+
     }
     flag = (flag == null) ? "" : flag;
     param = (param == null) ? "" : param;

@@ -73,6 +73,8 @@ public class ReportingAdminService extends RegistryAbstractAdmin implements
         taskManager.registerTask(new TaskInfo(configuration.getName(), clazz, propertyMap,
                 new TaskInfo.TriggerInfo(configuration.getCronExpression())));
         taskManager.rescheduleTask(configuration.getName());
+        // Re-adding full configuration properties to report path -REGISTRY-1017
+        saveReport(configuration);
     }
 
     public void stopScheduledReport(String name) throws Exception {

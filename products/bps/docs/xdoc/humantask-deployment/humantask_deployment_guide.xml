@@ -28,6 +28,14 @@
     <body>
         <h1>Human Task Artifact Deployment</h1>
 
+
+        <h3>Table of Content</h3>
+        <ul>
+            <li><a href="#HumanTask-Deployment">Deploying a HumanTask artifact</a></li>
+            <li><a href="#Listing-HumanTask-Artifacts">Listing HumanTask Artifacts</a></li>
+            <li><a href="#HumanTask-Artifact-UnDeployment">UpDeploying a HumanTask Artifact</a></li>
+        </ul>
+
         <h2 id="HumanTask-Deployment">Human Task Deployment</h2>
 
         <p>
@@ -72,5 +80,30 @@
             </p>
             </li>
         </ol>
+
+        <h2 id="Listing-HumanTask-Artifacts">Listing HumanTask Artifacts</h2>
+
+        <p>
+            Once you have uploaded a human task artifact, it will be listed under the human task package listing page. Go to
+            <b>Manage &gt; HumanTasks &gt; List </b>   from the management console. (Refer the image below:)
+        </p>
+
+        <p><img src="../images/humantask-deployment-guide/humantask_deployed_tasks.png" alt="List Human Task packages"/></p>
+
+
+        <h2 id="HumanTask-Artifact-UnDeployment">UpDeploying a HumanTask Artifact</h2>
+
+        <p>
+            You can un-deloy a Human Task artifact using the <b>Undeploy</b> link in the package details page. You can navigate to the package
+            details by clicking on the package name on the the package listing page.
+        </p>
+
+        <p>
+            <b>
+                NOTE: Once you un deploy a human task package, all the task instances related to that package will be sent to Obsolete state.
+            </b>
+        </p>
+
+        <p><img src="../images/humantask-deployment-guide/humantask_undeploying_task_config.png" alt="List Human Task packages"/></p>
     </body>
 </html>

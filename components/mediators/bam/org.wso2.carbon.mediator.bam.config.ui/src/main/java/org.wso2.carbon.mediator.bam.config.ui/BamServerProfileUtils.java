@@ -261,13 +261,13 @@ public class BamServerProfileUtils {
         }
     }
     
-    private String getDefaultKeyStoreLocation(){
+    public String getDefaultKeyStoreLocation(){
         return CarbonUtils.getCarbonHome() + File.separator + "repository" +
                File.separator + "resources" + File.separator + "security" +
                File.separator + "client-truststore.jks";
     }
 
-    private String getDefaultKeyStorePassword(){
+    public String getDefaultKeyStorePassword(){
         return "wso2carbon";
     }
 

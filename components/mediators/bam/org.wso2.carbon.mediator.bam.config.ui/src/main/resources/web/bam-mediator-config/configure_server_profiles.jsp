@@ -90,11 +90,15 @@
     String tmpKsLocation = request.getParameter("ksLocation");
     if(tmpKsLocation !=null && !tmpKsLocation.equals("")){
         ksLocation = tmpKsLocation;
+    } else {
+        ksLocation = bamServerProfileUtils.getDefaultKeyStoreLocation();
     }
 
     String tmpKsPassword = request.getParameter("ksPassword");
     if(tmpKsPassword !=null && !tmpKsPassword.equals("")){
         ksPassword = tmpKsPassword;
+    } else {
+        ksPassword = bamServerProfileUtils.getDefaultKeyStorePassword();
     }
 
     String tmpStreamTable = request.getParameter("hfStreamTableData");
@@ -130,12 +134,23 @@
         </style>
         <script id="source" type="text/javascript">
 
-            function onSecurityChanged(isSecure){
+            function onSecurityChanged(){
                 var securityEnabled = document.getElementById("security");
+                var receiverPortTr = document.getElementById("receiverPortTr");
                 if(document.getElementById("isSecured").checked){
                     securityEnabled.value = "true";
+                    receiverPortTr.style.display = "none";
                 } else {
                     securityEnabled.value = "false";
+                    receiverPortTr.style.display = "";
+                }
+            }
+
+            function onReceiverPortBlur(){
+                var receiverPortInput = document.getElementById("receiverPort");
+                var authPortInput = document.getElementById("authPort");
+                if(authPortInput.value == ""){
+                    authPortInput.value = (parseInt(receiverPortInput.value) + 100).toString();
                 }
             }
 
@@ -578,6 +593,13 @@
         <form action="configure_server_profiles.jsp" method="post">
         <table>
             <tr>
+                <td colspan="2">
+                    <h3>
+                        <fmt:message key="server.profile"/>
+                    </h3>
+                </td>
+            </tr>
+            <tr>
                 <td>
                     <fmt:message key="profile.location"/><span class="required">*</span>
                 </td>
@@ -619,7 +641,7 @@
             </tr>
             <tr>
                 <td>
-                    <fmt:message key="username"/>
+                    <fmt:message key="username"/><span class="required">*</span>
                 </td>
                 <td>
                     <input type="text" name="txtUsername" id="txtUsername" value="<%=userName%>"/>
@@ -627,7 +649,7 @@
             </tr>
             <tr>
                 <td>
-                    <fmt:message key="password"/>
+                    <fmt:message key="password"/><span class="required">*</span>
                 </td>
                 <td>
                     <input type="password" name="txtPassword" id="txtPassword" value="<%=password%>"/>
@@ -642,7 +664,7 @@
             </tr>
             <tr>
                 <td>
-                    <fmt:message key="protocol"/>
+                    <fmt:message key="protocol"/><span class="required">*</span>
                 </td>
                 <td>
                     <select name="transportProtocol" id="transportProtocol" onchange="">
@@ -658,7 +680,7 @@
                     <fmt:message key="enable.security"/>
                 </td>
                 <td>
-                    <input type="checkbox" id="isSecured" name="isSecured" checked="checked" onchange="onSecurityChanged(this.checked)"/>
+                    <input type="checkbox" id="isSecured" name="isSecured" checked="checked" onchange="onSecurityChanged()"/>
                     <input type="hidden" id="security" name="security" value="<%=security%>"/>
                     <script type="text/javascript">
                         if(document.getElementById("security").value == "false"){
@@ -669,26 +691,26 @@
             </tr>
             <tr>
                 <td>
-                    <fmt:message key="ip"/>
+                    <fmt:message key="ip"/><span class="required">*</span>
                 </td>
                 <td>
                     <input type="text" name="txtIp" id="txtIp" value="<%=ip%>"/>
                 </td>
             </tr>
-            <tr>
+            <tr id="receiverPortTr" style="display: none;">
                 <td>
-                    <fmt:message key="authentication.port"/>
+                    <fmt:message key="receiver.port"/><span class="required">*</span>
                 </td>
                 <td>
-                    <input type="text" name="authPort" id="authPort" value="<%=authenticationPort%>"/>
+                    <input type="text" name="receiverPort" id="receiverPort" value="<%=receiverPort%>" onblur="onReceiverPortBlur()"/>
                 </td>
             </tr>
             <tr>
                 <td>
-                    <fmt:message key="receiver.port"/>
+                    <fmt:message key="authentication.port"/><span class="required">*</span>
                 </td>
                 <td>
-                    <input type="text" name="receiverPort" id="receiverPort" value="<%=receiverPort%>"/>
+                    <input type="text" name="authPort" id="authPort" value="<%=authenticationPort%>"/>
                 </td>
             </tr>
             <tr>
@@ -897,13 +919,19 @@
                     </table>
                 </td>
             </tr>
-
+            <tr>
+                <td colspan="2">
+                    <h3>
+                        <fmt:message key="advanced"/>
+                    </h3>
+                </td>
+            </tr>
             <tr>
                 <td colspan="2">
                     <table>
                         <tr>
                             <td>
-                                <fmt:message key="key.store.location"/>
+                                <fmt:message key="key.store.location"/><span class="required">*</span>
                             </td>
                             <td>
                                 <input type="text" name="ksLocation" id="ksLocation" value="<%=ksLocation%>"/>
@@ -911,7 +939,7 @@
                         </tr>
                         <tr>
                             <td>
-                                <fmt:message key="key.store.password"/>
+                                <fmt:message key="key.store.password"/><span class="required">*</span>
                             </td>
                             <td>
                                 <input type="password" name="ksPassword" id="ksPassword" value="<%=ksPassword%>"/>

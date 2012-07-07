@@ -125,7 +125,12 @@
         <script id="source" type="text/javascript">
 
             function onSecurityChanged(isSecure){
-
+                var securityEnabled = document.getElementById("security");
+                if(document.getElementById("isSecured").checked){
+                    securityEnabled.value = "true";
+                } else {
+                    securityEnabled.value = "false";
+                }
             }
 
             function loadServerProfiles(serverProfileLocationPath, serverProfilePath) {
@@ -645,7 +650,13 @@
                     <fmt:message key="enable.security"/>
                 </td>
                 <td>
-                    <input type="checkbox" id="security" name="security" checked="'<%=security%>' == 'true'" onchange="onSecurityChanged(this.checked)"/>
+                    <input type="checkbox" id="isSecured" name="isSecured" checked="checked" onchange="onSecurityChanged(this.checked)"/>
+                    <input type="hidden" id="security" name="security" value="<%=security%>"/>
+                    <script type="text/javascript">
+                        if(document.getElementById("security").value == "false"){
+                            document.getElementById("isSecured").checked = "";
+                        }
+                    </script>
                 </td>
             </tr>
             <tr>

@@ -33,7 +33,8 @@
     String userName = "";
     String password = "";
     String ip = "";
-    String port = "";
+    String authenticationPort = "";
+    String receiverPort = "";
     String security = "true";
     String serverProfileLocation = "";
     String serverProfileName = "";
@@ -71,9 +72,14 @@
         ip = tmpIp;
     }
 
-    String tmpPort = request.getParameter("txtPort");
-    if(tmpPort != null && !tmpPort.equals("")){
-        port = tmpPort;
+    String tmpAuthPort = request.getParameter("authPort");
+    if(tmpAuthPort != null && !tmpAuthPort.equals("")){
+        authenticationPort = tmpAuthPort;
+    }
+
+    String tmpReceiverPort = request.getParameter("receiverPort");
+    if(tmpReceiverPort != null && !tmpReceiverPort.equals("")){
+        receiverPort = tmpReceiverPort;
     }
 
     String tmpSecurity = request.getParameter("security");
@@ -163,7 +169,8 @@
             var commonParameterString = "txtUsername=" + "<%=request.getParameter("txtUsername")%>" + "&"
                                                 + "txtPassword=" + "<%=request.getParameter("txtPassword")%>" + "&"
                                                 + "txtIp=" + "<%=request.getParameter("txtIp")%>" + "&"
-                                                + "txtPort=" + "<%=request.getParameter("txtPort")%>" + "&"
+                                                + "authPort=" + "<%=request.getParameter("authPort")%>" + "&"
+                                                + "receiverPort=" + "<%=request.getParameter("receiverPort")%>" + "&"
                                                 + "security=" + "<%=request.getParameter("security")%>" + "&"
                                                 + "ksLocation=" + "<%=request.getParameter("ksLocation")%>" + "&"
                                                 + "ksPassword=" + "<%=request.getParameter("ksPassword")%>" + "&"
@@ -491,8 +498,9 @@
                 userName = bamServerConfig.getUsername();
                 password = bamServerProfileUtils.decryptPassword(bamServerConfig.getPassword());
                 ip = bamServerConfig.getIp();
-                port = bamServerConfig.getPort();
-                if(bamServerConfig.isSecurity()){
+                authenticationPort = bamServerConfig.getAuthenticationPort();
+                receiverPort = bamServerConfig.getReceiverPort();
+                if(bamServerConfig.isSecure()){
                     security = "true";
                 } else {
                     security = "false";
@@ -531,12 +539,12 @@
 
     else if("save".equals(action) && !"".equals(serverProfileLocation)){ // Saving a configuration
         if("true".equals(force)){
-            bamServerProfileUtils.addResource(ip, port, userName, password, "true".equals(security),
+            bamServerProfileUtils.addResource(ip, authenticationPort, receiverPort, userName, password, "true".equals(security),
                                               ksLocation, ksPassword, streamTable, serverProfileLocation);
         }
         else if (!"true".equals(force)){
             if(!bamServerProfileUtils.resourceAlreadyExists(serverProfileLocation)){
-                bamServerProfileUtils.addResource(ip, port, userName, password, "true".equals(security),
+                bamServerProfileUtils.addResource(ip, authenticationPort, receiverPort, userName, password, "true".equals(security),
                                                   ksLocation, ksPassword, streamTable, serverProfileLocation);
             }
             else {
@@ -669,13 +677,20 @@
             </tr>
             <tr>
                 <td>
-                    <fmt:message key="port"/>
+                    <fmt:message key="authentication.port"/>
                 </td>
                 <td>
-                    <input type="text" name="txtPort" id="txtPort" value="<%=port%>"/>
+                    <input type="text" name="authPort" id="authPort" value="<%=authenticationPort%>"/>
                 </td>
             </tr>
-
+            <tr>
+                <td>
+                    <fmt:message key="receiver.port"/>
+                </td>
+                <td>
+                    <input type="text" name="receiverPort" id="receiverPort" value="<%=receiverPort%>"/>
+                </td>
+            </tr>
             <tr>
                 <td colspan="2">
                     <h3>

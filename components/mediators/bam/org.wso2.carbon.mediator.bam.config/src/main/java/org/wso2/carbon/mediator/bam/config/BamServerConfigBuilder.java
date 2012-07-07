@@ -48,19 +48,19 @@ public class BamServerConfigBuilder {
         if(credentialElement != null){
             OMAttribute userNameAttr = credentialElement.getAttribute(new QName("userName"));
             OMAttribute passwordAttr = credentialElement.getAttribute(new QName("password"));
-            OMAttribute secureAttr = credentialElement.getAttribute(new QName("secure"));
-            if(userNameAttr != null && passwordAttr != null && secureAttr != null &&
+            //OMAttribute secureAttr = credentialElement.getAttribute(new QName("secure"));
+            if(userNameAttr != null && passwordAttr != null && /*secureAttr != null &&*/
                !userNameAttr.getAttributeValue().equals("") && !passwordAttr.getAttributeValue().equals("")
-               && !secureAttr.getAttributeValue().equals("")){
+               /*&& !secureAttr.getAttributeValue().equals("")*/){
                 this.bamServerConfig.setUsername(userNameAttr.getAttributeValue());
                 this.bamServerConfig.setPassword(passwordAttr.getAttributeValue());
-                if("true".equals(secureAttr.getAttributeValue())){
+                /*if("true".equals(secureAttr.getAttributeValue())){
                     this.bamServerConfig.setSecurity(true);
                 } else if ("false".equals(secureAttr.getAttributeValue())) {
                     this.bamServerConfig.setSecurity(false);
                 } else {
                     return false; // Secure attribute should have a value
-                }
+                }*/
             }
             else {
                 return false;
@@ -73,11 +73,21 @@ public class BamServerConfigBuilder {
         OMElement connectionElement = bamServerConfig.getFirstChildWithName(
                 new QName(SynapseConstants.SYNAPSE_NAMESPACE, "connection"));
         if(connectionElement != null){
+            OMAttribute secureAttr = connectionElement.getAttribute(new QName("secure"));
             OMAttribute ipAttr = connectionElement.getAttribute(new QName("ip"));
-            OMAttribute portAttr = connectionElement.getAttribute(new QName("port"));
-            if(ipAttr != null && portAttr != null && !ipAttr.getAttributeValue().equals("") && !portAttr.getAttributeValue().equals("")){
+            OMAttribute authenticationPortAttr = connectionElement.getAttribute(new QName("authPort"));
+            OMAttribute receiverPortAttr = connectionElement.getAttribute(new QName("receiverPort"));
+            if(ipAttr != null && secureAttr != null && authenticationPortAttr != null && receiverPortAttr != null && !ipAttr.getAttributeValue().equals("") && !secureAttr.getAttributeValue().equals("") && !authenticationPortAttr.getAttributeValue().equals("") && !receiverPortAttr.getAttributeValue().equals("")){
                 this.bamServerConfig.setIp(ipAttr.getAttributeValue());
-                this.bamServerConfig.setPort(portAttr.getAttributeValue());
+                if("true".equals(secureAttr.getAttributeValue())){
+                    this.bamServerConfig.setSecurity(true);
+                } else if ("false".equals(secureAttr.getAttributeValue())) {
+                    this.bamServerConfig.setSecurity(false);
+                } else {
+                    return false; // Secure attribute should have a value
+                }
+                this.bamServerConfig.setAuthenticationPort(authenticationPortAttr.getAttributeValue());
+                this.bamServerConfig.setReceiverPort(receiverPortAttr.getAttributeValue());
             }
             else {
                 return false;

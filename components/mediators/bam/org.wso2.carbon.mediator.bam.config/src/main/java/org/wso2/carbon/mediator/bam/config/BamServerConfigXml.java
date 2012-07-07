@@ -37,28 +37,29 @@ public class BamServerConfigXml {
     private org.apache.axiom.om.OMNamespace nullNS;
     private OMElement serverProfileElement;
 
-    public OMElement buildServerProfile(String ip, String port, String userName, String password, String secure, String ksLocation, String ksPassword,
+    public OMElement buildServerProfile(String ip, String authenticationPort, String receiverPort, String userName, String password, String secure, String ksLocation, String ksPassword,
                                         List<StreamConfiguration> streamConfigurations){
         serverProfileElement = this.serializeServerProfile();
-        serverProfileElement.addChild(this.serializeConnection(ip, port));
-        serverProfileElement.addChild(this.serializeCredential(userName, password, secure));
+        serverProfileElement.addChild(this.serializeConnection(secure, ip, authenticationPort, receiverPort));
+        serverProfileElement.addChild(this.serializeCredential(userName, password));
         serverProfileElement.addChild(this.serializeKeyStore(ksLocation, ksPassword));
         serverProfileElement.addChild(this.serializeStreams(streamConfigurations));
         return serverProfileElement;
     }
 
-    private OMElement serializeConnection(String ip, String port){
+    private OMElement serializeConnection(String secure, String ip, String authenticationPort, String receiverPort){
         OMElement credentialElement = fac.createOMElement("connection", synNS);
+        credentialElement.addAttribute("secure", secure, nullNS);
         credentialElement.addAttribute("ip", ip, nullNS);
-        credentialElement.addAttribute("port", port, nullNS);
+        credentialElement.addAttribute("authPort", authenticationPort, nullNS);
+        credentialElement.addAttribute("receiverPort", receiverPort, nullNS);
         return credentialElement;
     }
 
-    private OMElement serializeCredential(String userName, String password, String secure){
+    private OMElement serializeCredential(String userName, String password){
         OMElement credentialElement = fac.createOMElement("credential", synNS);
         credentialElement.addAttribute("userName", userName, nullNS);
         credentialElement.addAttribute("password", password, nullNS);
-        credentialElement.addAttribute("secure", secure, nullNS);
         return credentialElement;
     }
 
@@ -86,7 +87,6 @@ public class BamServerConfigXml {
 
     private OMElement serializeStream(StreamConfiguration streamConfiguration){
         OMElement streamElement = fac.createOMElement("stream", synNS);
-
         streamElement.addAttribute("name", streamConfiguration.getName(), nullNS);
         streamElement.addAttribute("version", streamConfiguration.getVersion(), nullNS);
         streamElement.addAttribute("nickName", streamConfiguration.getNickname(), nullNS);

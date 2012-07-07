@@ -28,7 +28,8 @@ public class BamServerConfig {
     private String username;
     private String password;
     private String ip;
-    private String port;
+    private String authenticationPort;
+    private String receiverPort;
     private String keyStoreLocation;
     private String keyStorePassword;
     private boolean security = true;
@@ -58,15 +59,23 @@ public class BamServerConfig {
         this.ip = ip;
     }
 
-    public String getPort(){
-        return this.port;
+    public String getAuthenticationPort(){
+        return this.authenticationPort;
     }
 
-    public void setPort(String port){
-        this.port = port;
+    public void setAuthenticationPort(String authenticationPort){
+        this.authenticationPort = authenticationPort;
     }
 
-    public boolean isSecurity() {
+    public String getReceiverPort() {
+        return receiverPort;
+    }
+
+    public void setReceiverPort(String receiverPort) {
+        this.receiverPort = receiverPort;
+    }
+
+    public boolean isSecure() {
         return security;
     }
 

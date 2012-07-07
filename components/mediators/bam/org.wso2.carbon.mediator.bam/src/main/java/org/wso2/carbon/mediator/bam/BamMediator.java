@@ -51,11 +51,9 @@ import org.wso2.carbon.databridge.commons.thrift.exception.ThriftAuthenticationE
 import org.wso2.carbon.mediator.bam.config.stream.Property;
 import org.wso2.carbon.mediator.bam.config.stream.StreamEntry;
 import org.wso2.carbon.mediator.bam.util.BamMediatorConstants;
-import org.wso2.carbon.utils.CarbonUtils;
 
 import javax.servlet.http.HttpServletRequest;
 import javax.xml.namespace.QName;
-import java.io.File;
 import java.net.MalformedURLException;
 import java.util.ArrayList;
 import java.util.Iterator;
@@ -78,9 +76,11 @@ public class BamMediator extends AbstractMediator {
     private String streamNickName = "";
     private String streamDescription = "";
     private String serverIp = "";
-    private String serverPort = "";
+    private String authenticationPort = "";
+    private String receiverPort = "";
     private String userName = "";
     private String password = "";
+    private boolean security = true;
     private String ksLocation = "";
     private String ksPassword = "";
     private List<Property> properties = new ArrayList<Property>();
@@ -283,9 +283,17 @@ public class BamMediator extends AbstractMediator {
 
     private void createDataPublisher(Agent agent) throws MalformedURLException, AgentException, AuthenticationException, TransportException{
 
-        //dataPublisher = new DataPublisher("tcp://" + this.serverIp + ":" + this.serverPort, this.userName, this.password, agent);
+        //dataPublisher = new DataPublisher("tcp://" + this.serverIp + ":" + this.authenticationPort, this.userName, this.password, agent);
 
-        dataPublisher = new DataPublisher("ssl://" + this.serverIp + ":" + "7711", "tcp://" + this.serverIp + ":" + this.serverPort, this.userName, this.password, agent);
+        //dataPublisher = new DataPublisher("ssl://" + this.serverIp + ":" + "7711", "tcp://" + this.serverIp + ":" + this.authenticationPort, this.userName, this.password, agent);
+
+        //dataPublisher = new DataPublisher("ssl://" + this.serverIp + ":" + "7711", "ssl://" + this.serverIp + ":" + "7711", this.userName, this.password, agent);
+
+        if(this.security){
+            dataPublisher = new DataPublisher("ssl://" + this.serverIp + ":" + this.authenticationPort, "ssl://" + this.serverIp + ":" + this.authenticationPort, this.userName, this.password, agent);
+        } else {
+            dataPublisher = new DataPublisher("ssl://" + this.serverIp + ":" + this.authenticationPort, "tcp://" + this.serverIp + ":" + this.receiverPort, this.userName, this.password, agent);
+        }
 
         log.info("Data Publisher Created.");
     }
@@ -435,6 +443,14 @@ public class BamMediator extends AbstractMediator {
         return serverProfile;
     }
 
+    public boolean isSecurity() {
+        return security;
+    }
+
+    public void setSecurity(boolean security) {
+        this.security = security;
+    }
+
     public void setStreamName(String newValue){
         this.streamName = newValue;
     }
@@ -467,14 +483,21 @@ public class BamMediator extends AbstractMediator {
         this.streamDescription = streamDescription;
     }
 
-    public void setServerPort(String newValue) {
-        serverPort = newValue;
+    public void setAuthenticationPort(String newValue) {
+        authenticationPort = newValue;
     }
 
-    public String getServerPort() {
-        return serverPort;
+    public String getAuthenticationPort() {
+        return authenticationPort;
     }
 
+    public String getReceiverPort() {
+        return receiverPort;
+    }
+
+    public void setReceiverPort(String receiverPort) {
+        this.receiverPort = receiverPort;
+    }
 
     public String getKsLocation() {
         return ksLocation;

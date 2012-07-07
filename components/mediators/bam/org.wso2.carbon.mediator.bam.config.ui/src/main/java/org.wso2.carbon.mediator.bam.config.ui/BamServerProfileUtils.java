@@ -50,7 +50,7 @@ public class BamServerProfileUtils {
         }
     }
 
-    public void addResource(String ip, String port, String userName, String password, boolean isSecure,
+    public void addResource(String ip, String authenticationPort, String receiverPort, String userName, String password, boolean isSecure,
                             String ksLocation, String ksPassword, String streamConfigurationListString,
                             String bamServerProfileLocation){
 
@@ -65,7 +65,7 @@ public class BamServerProfileUtils {
 
         List<StreamConfiguration> streamConfigurations = this.getStreamConfigurationListFromString(streamConfigurationListString);
         BamServerConfigXml mediatorConfigurationXml = new BamServerConfigXml();
-        OMElement storeXml = mediatorConfigurationXml.buildServerProfile(ip, port, userName, encryptedPassword, isSecureString, ksLocation, encryptedKSPassword, streamConfigurations);
+        OMElement storeXml = mediatorConfigurationXml.buildServerProfile(ip, authenticationPort, receiverPort, userName, encryptedPassword, isSecureString, ksLocation, encryptedKSPassword, streamConfigurations);
         String stringStoreXml = storeXml.toString();
 
         try {

@@ -1,0 +1,7 @@
+To create an instance execute
+
+init.sh
+
+then modify and execute
+
+create_instance.sh

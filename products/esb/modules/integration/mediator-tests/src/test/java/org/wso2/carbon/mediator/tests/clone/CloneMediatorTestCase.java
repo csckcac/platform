@@ -18,18 +18,19 @@ package org.wso2.carbon.mediator.tests.clone;
 */
 
 
-import org.apache.axiom.om.OMElement;
-import org.testng.annotations.Test;
-import org.wso2.carbon.logging.view.stub.LogViewerStub;
-import org.wso2.carbon.logging.view.stub.types.carbon.LogMessage;
-import org.wso2.esb.integration.ESBIntegrationTestCase;
-import org.wso2.esb.integration.axis2.SampleAxis2Server;
-import org.wso2.esb.integration.axis2.StockQuoteClient;
+import static org.testng.Assert.assertFalse;
+import static org.testng.Assert.assertTrue;
 
 import java.rmi.RemoteException;
 
-import static org.testng.Assert.assertFalse;
-import static org.testng.Assert.assertTrue;
+import org.apache.axiom.om.OMElement;
+import org.jboss.logging.LogMessage;
+import org.testng.annotations.Test;
+import org.wso2.carbon.logging.view.stub.LogViewerStub;
+import org.wso2.carbon.logging.view.stub.types.carbon.LogEvent;
+import org.wso2.esb.integration.ESBIntegrationTestCase;
+import org.wso2.esb.integration.axis2.SampleAxis2Server;
+import org.wso2.esb.integration.axis2.StockQuoteClient;
 
 public class CloneMediatorTestCase extends ESBIntegrationTestCase {
     private StockQuoteClient axis2Client;
@@ -61,11 +62,11 @@ public class CloneMediatorTestCase extends ESBIntegrationTestCase {
                 null, getMainSequenceURL(), "IBM");
         assertTrue(response.toString().contains("IBM"));
 
-        LogMessage[] logs = logViewerStub.getLogs("INFO", "LogMediator");
+        LogEvent [] logs = logViewerStub.getLogs("INFO", "LogMediator");
         assertTrue(logs != null && logs.length > 0 && logs[0] != null);
 
-        for (LogMessage l : logs) {
-            if (l.getLogMessage().contains("*****PARENT MESSAGE******")) {
+        for (LogEvent l : logs) {
+            if (l.getMessage().contains("*****PARENT MESSAGE******")) {
                 isParentMsgFound = true;
             }
         }
@@ -85,11 +86,11 @@ public class CloneMediatorTestCase extends ESBIntegrationTestCase {
         LogViewerStub logViewerStub = new LogViewerStub(getAdminServiceURL("LogViewer"));
         authenticate(logViewerStub);
 
-        LogMessage[] logs = logViewerStub.getLogs("INFO", "LogMediator");
+        LogEvent [] logs = logViewerStub.getLogs("INFO", "LogMediator");
         assertTrue(logs != null && logs.length > 0 && logs[0] != null);
 
-        for (LogMessage l : logs) {
-            if (l.getLogMessage().contains("*****ORIGINAL PARENT MESSAGE ******")) {
+        for (LogEvent l : logs) {
+            if (l.getMessage().contains("*****ORIGINAL PARENT MESSAGE ******")) {
                 isParentMsgFound = true;
             }
         }

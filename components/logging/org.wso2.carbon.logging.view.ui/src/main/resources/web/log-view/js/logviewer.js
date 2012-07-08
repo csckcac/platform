@@ -1,6 +1,57 @@
 /*
 log.js contains scripts need to handle log information.
 */
+function viewSingleLogLevels() {
+	  var loglevel = document.getElementById("logLevelID");
+	    var loglevel_index = null;
+	    var loglevel_value = null;
+	    if (loglevel != null)
+	    {
+	        loglevel_index = loglevel.selectedIndex;
+	        if (loglevel_index != null) {
+	            loglevel_value = loglevel.options[loglevel_index].value;
+	        }
+	    }
+	    if (loglevel_value != null && loglevel_value != "") {
+	        location.href = "index.jsp?type=" + loglevel_value;
+	    } else {
+	        return;
+	    }
+}
+
+function viewApplicationLogs() {
+	  var loglevel = document.getElementById("logLevelID");
+	  var appName = document.getElementById("appName");
+	    var loglevel_index = null;
+	    var loglevel_value = null;
+	    var appName_index = null;
+	    var appName_value = null;
+	    if (loglevel != null)
+	    {
+	        loglevel_index = loglevel.selectedIndex;
+	        if (loglevel_index != null) {
+	            loglevel_value = loglevel.options[loglevel_index].value;
+	        }
+	    }
+	    
+	    if (appName != null)
+	    {
+	    	appName_index = appName.selectedIndex;
+	        if (appName_index != null) {
+	        	appName_value = appName.options[appName_index].value;
+	        }
+	    }
+	    if (loglevel_value == "Custom") {
+			loglevel_value = "ALL";
+		}
+	    if (loglevel_value != null && loglevel_value != "") {
+	        location.href = "application_log_viewer.jsp?type=" + loglevel_value +"&appName="+appName_value;
+	    } else if (appName_value != null && appName_value != "") {
+	    	  location.href = "application_log_viewer.jsp?type=" + loglevel_value +"&appName="+appName_value;
+	    } else {
+	    	return;
+	    }
+}
 
 function viewSingleLogLevel() {
     var loglevel = document.getElementById("logLevelID");
@@ -36,23 +87,19 @@ function getProductTenantSpecificIndex() {
 	location.href = "syslog_index.jsp?tenantDomain="+tenantDomain+"&serviceName="+serviceName;
 }
 
-function submitenter(e)
-{
-    var keycode;
-    if (window.event) {
-        keycode = window.event.keyCode;
-    }
-    else if (e) {
-        keycode = e.which;
-    }
-    if (keycode == 13)
-    {
-    	searchTenantLog();
-        return true;
-    }
-    else {
-        return true;
-    }
+function submitenter(e) {
+	var keycode;
+	if (window.event) {
+		keycode = window.event.keyCode;
+	} else if (e) {
+		keycode = e.which;
+	}
+	if (keycode == 13) {
+		searchLogs();
+		return true;
+	} else {
+		return true;
+	}
 }
 
 function submitenterbottomUp(e)
@@ -134,6 +181,79 @@ function searchLogBottomLogs() {
 	} else {
 		return;
 	}
+}
+function searchLogs() {
+    var loglevel = document.getElementById("logLevelID");
+    var loglevel_index = null;
+    var loglevel_value = null;
+    if (loglevel != null)
+    {
+        loglevel_index = loglevel.selectedIndex;
+        if (loglevel_index != null) {
+            loglevel_value = loglevel.options[loglevel_index].value;
+        } 
+        if (loglevel_value == "Custom") {
+			loglevel_value = "ALL";
+		}
+    }
+    var keyword = document.getElementById("logkeyword");
+    if (keyword != null && keyword != undefined && keyword.value != null && keyword.value != undefined) {
+        if (keyword.value == "") {
+            location.href = "index.jsp?type=ALL";
+        } else {
+            location.href = "index.jsp?type=" + loglevel_value + "&keyword=" + keyword.value;
+        }
+    } else {
+        return;
+    }
+}
+
+function showQueryProperties() {
+    var propertyTab = document.getElementById('propertyTable');
+    var propertySymbolMax =  document.getElementById('propertySymbolMax');
+    if(propertyTab.style.display == 'none') {
+        propertyTab.style.display = '';
+        propertySymbolMax.setAttribute('style','background-image:url(images/minus.gif);');
+    } else {
+        propertyTab.style.display = 'none';
+        propertySymbolMax.setAttribute('style','background-image:url(images/plus.gif);');
+    }
+}
+
+function searchAppLogs() {
+    var loglevel = document.getElementById("logLevelID");
+    var appName = document.getElementById("appName");
+    var loglevel_index = null;
+    var loglevel_value = null;
+    var appName_index = null;
+    var appName_value = null;
+    if (loglevel != null)
+    {
+        loglevel_index = loglevel.selectedIndex;
+        if (loglevel_index != null) {
+            loglevel_value = loglevel.options[loglevel_index].value;
+        }
+    }
+    if (loglevel_value == "Custom") {
+		loglevel_value = "ALL";
+	}
+    if (appName != null)
+    {
+    	appName_index = appName.selectedIndex;
+        if (appName_index != null) {
+        	appName_value = appName.options[appName_index].value;
+        }
+    }
+    var keyword = document.getElementById("logkeyword");
+    if (keyword != null && keyword != undefined && keyword.value != null && keyword.value != undefined) {
+        if (keyword.value == "") {
+            location.href = "application_log_viewer.jsp?type=ALL&appName="+appName_value;;
+        } else {
+            location.href = "application_log_viewer.jsp?type=" + loglevel_value + "&keyword=" + keyword.value+"&appName="+appName_value;
+        }
+    } else {
+        return;
+    }
 }
 
 function searchLog() {
@@ -229,7 +349,6 @@ function getFilteredLogs() {
 	var loglevel = document.getElementById("logLevelID");
 	var log_index = document.getElementById("logIndex").value;
 	var appName = document.getElementById("appName");
-	alert(appName);
 	var start = document.getElementById("start").value;
 	var end = document.getElementById("end").value;
 	if (document.getElementById("NowradioDate").checked) {
@@ -294,17 +413,8 @@ function getFilteredLogs() {
 	
 }
 
-function showQueryProperties() {
-    var propertyTab = document.getElementById('propertyTable');
-    var propertySymbolMax =  document.getElementById('propertySymbolMax');
-    if(propertyTab.style.display == 'none') {
-        propertyTab.style.display = '';
-        propertySymbolMax.setAttribute('style','background-image:url(images/minus.gif);');
-    } else {
-        propertyTab.style.display = 'none';
-        propertySymbolMax.setAttribute('style','background-image:url(images/plus.gif);');
-    }
-}
+
+
 function showTrace(obj) {
     var traceTab = document.getElementById('traceTable'+obj);
     var traceSymbolMax =  document.getElementById('traceSymbolMax'+obj);

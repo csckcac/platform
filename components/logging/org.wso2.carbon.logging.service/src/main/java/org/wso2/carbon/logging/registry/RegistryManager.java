@@ -16,22 +16,11 @@
 
 package org.wso2.carbon.logging.registry;
 
-import org.wso2.carbon.registry.core.Registry;
-import org.wso2.carbon.registry.core.Resource;
-import org.wso2.carbon.registry.core.Collection;
-import org.wso2.carbon.registry.core.exceptions.RegistryException;
-import org.wso2.carbon.logging.config.SyslogConfigManager;
-import org.wso2.carbon.logging.config.SyslogConfiguration;
-import org.wso2.carbon.logging.service.data.CassandraConfig;
-import org.wso2.carbon.logging.service.data.SyslogData;
-import org.wso2.carbon.logging.util.LoggingConstants;
-import org.wso2.carbon.utils.ServerConstants;
-import org.wso2.carbon.logging.appender.CassandraAppender;
-import org.wso2.carbon.logging.appenders.MemoryAppender;
-import org.wso2.carbon.logging.appenders.CircularBuffer;
-import org.wso2.carbon.core.RegistryResources;
-import org.wso2.carbon.core.util.CryptoException;
-import org.wso2.carbon.core.util.CryptoUtil;
+import java.io.File;
+import java.io.IOException;
+
+import org.apache.commons.logging.Log;
+import org.apache.commons.logging.LogFactory;
 import org.apache.log4j.Appender;
 import org.apache.log4j.AppenderSkeleton;
 import org.apache.log4j.FileAppender;
@@ -39,11 +28,22 @@ import org.apache.log4j.Layout;
 import org.apache.log4j.Logger;
 import org.apache.log4j.PatternLayout;
 import org.apache.log4j.net.SyslogAppender;
-import org.apache.commons.logging.Log;
-import org.apache.commons.logging.LogFactory;
-
-import java.io.File;
-import java.io.IOException;
+import org.wso2.carbon.base.ServerConfiguration;
+import org.wso2.carbon.context.CarbonContext;
+import org.wso2.carbon.core.RegistryResources;
+import org.wso2.carbon.core.util.CryptoException;
+import org.wso2.carbon.core.util.CryptoUtil;
+import org.wso2.carbon.logging.appender.CarbonMemoryAppender;
+import org.wso2.carbon.logging.appenders.CircularBuffer;
+import org.wso2.carbon.logging.config.SyslogConfigManager;
+import org.wso2.carbon.logging.config.SyslogConfiguration;
+import org.wso2.carbon.logging.service.data.SyslogData;
+import org.wso2.carbon.logging.util.LoggingConstants;
+import org.wso2.carbon.registry.core.Collection;
+import org.wso2.carbon.registry.core.Registry;
+import org.wso2.carbon.registry.core.Resource;
+import org.wso2.carbon.registry.core.exceptions.RegistryException;
+import org.wso2.carbon.utils.ServerConstants;
 
 public class RegistryManager {
 	private static Log log = LogFactory.getLog(RegistryManager.class);
@@ -183,34 +183,7 @@ public class RegistryManager {
 				.base64DecodeAndDecrypt(encriptedPassword));
 	}
 
-	public void addCassandraConfig(CassandraConfig cassandraconfig)
-			throws Exception {
-		try {
-			registry.beginTransaction();
-			Resource cassandraResource = registry.newResource();
-			cassandraResource.addProperty(
-					LoggingConstants.CassandraProperties.URL,
-					cassandraconfig.getUrl());
-			cassandraResource.addProperty(
-					LoggingConstants.CassandraProperties.KEYSPACE,
-					cassandraconfig.getKeyspace());
-			cassandraResource.addProperty(
-					LoggingConstants.CassandraProperties.COLUMN_FAMILY,
-					cassandraconfig.getColFamily());
-			cassandraResource.addProperty(
-					LoggingConstants.CassandraProperties.USER_NAME,
-					cassandraconfig.getUser());
-			cassandraResource.addProperty(
-					LoggingConstants.CassandraProperties.PASSWORD,
-					encriptSyslogPassword(cassandraconfig.getPassword()));
-			registry.put(LoggingConstants.SYSLOG, cassandraResource);
-			registry.commitTransaction();
-		} catch (RegistryException e) {
-			registry.rollbackTransaction();
-			log.error("Cannot add cassandra properties ", e);
-		}
 
-	}
 
 	public void addSyslogConfig(SyslogData syslogData) throws Exception {
 		try {
@@ -282,8 +255,8 @@ public class RegistryManager {
 						Boolean.toString(false));
 			}
 
-			if (appender instanceof MemoryAppender) {
-				MemoryAppender memoryAppender = (MemoryAppender) appender;
+			if (appender instanceof CarbonMemoryAppender) {
+				CarbonMemoryAppender memoryAppender = (CarbonMemoryAppender) appender;
 				memoryAppender.setCircularBuffer(new CircularBuffer(
 						LoggingConstants.MEMORY_APPENDER_BUFFER_SZ));
 				memoryAppender.activateOptions();
@@ -365,9 +338,7 @@ public class RegistryManager {
 					throw e;
 				}
 			} else {
-				CassandraConfig cassandraConfig = new CassandraConfig(keyspace,
-						userName, password, columnFamily, url);
-				addCassandraConfig(cassandraConfig);
+				
 			}
 		} catch (RegistryException e) {
 			log.error("Unable to update the appender", e);
@@ -435,65 +406,6 @@ public class RegistryManager {
 
 	}
 	
-	private CassandraConfig loadCassandraFromLog4j() {
-		  Logger rootLogger = Logger.getRootLogger();
-	        CassandraAppender logger = (CassandraAppender) rootLogger.getAppender("CASSANDRA");
-	        if (logger != null) {
-	        	CassandraConfig cassandraConfig = new CassandraConfig();
-	        	cassandraConfig.setCassandraServerAvailable(true);
-	        	cassandraConfig.setColFamily(logger.getColFamily());
-	        	cassandraConfig.setKeyspace(logger.getKeyspace());
-	        	cassandraConfig.setPassword(logger.getPassword());
-	        	cassandraConfig.setUrl(logger.getUrl());
-	        	cassandraConfig.setUser(logger.getUser());
-	        	return cassandraConfig;
-	        } else {
-	        	return null;
-	        }
-	}
-
-	public CassandraConfig getCassandraConfigData() throws Exception {
-		Resource cassandraConfigResource;
-		try {
-			cassandraConfigResource = getCassandraConfig();
-			String keyspace = "";
-			String colFamily = "";
-			String url = "";
-			String userName = "";
-			String password = "";
-			if (cassandraConfigResource != null) { // Check if the properties
-													// are
-				// coming from the registry.
-				url = cassandraConfigResource
-						.getProperty(LoggingConstants.CassandraProperties.URL);
-				keyspace = cassandraConfigResource
-						.getProperty(LoggingConstants.CassandraProperties.KEYSPACE);
-				colFamily = cassandraConfigResource
-						.getProperty(LoggingConstants.CassandraProperties.COLUMN_FAMILY);
-				userName = cassandraConfigResource
-						.getProperty(LoggingConstants.CassandraProperties.USER_NAME);
-				password = decriptPassword(cassandraConfigResource
-						.getProperty(LoggingConstants.CassandraProperties.PASSWORD));
-			} else { // read cassandra properties from the cassandra-config.xml
-				CassandraConfig config = loadCassandraFromLog4j();
-				url = config.getUrl();
-				keyspace = config.getKeyspace();
-				colFamily = config.getColFamily();
-				userName = config.getUser();
-				userName = (userName == null) ? "":userName;
-				password = config.getPassword();
-				password = (password == null) ? "":password;
-			}
-
-			return new CassandraConfig(keyspace, userName, password, colFamily,
-					url);
-		} catch (Exception e) {
-			log.error("Unable get SyslogData ", e);
-			throw e;
-		}
-
-	}
-
 	public SyslogData getSyslogData() throws Exception {
 		Resource syslogConfigResource;
 		try {

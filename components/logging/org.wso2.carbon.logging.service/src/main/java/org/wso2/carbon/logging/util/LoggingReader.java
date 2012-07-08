@@ -35,9 +35,6 @@ import java.util.regex.Pattern;
 
 import javax.activation.DataHandler;
 import javax.mail.util.ByteArrayDataSource;
-
-import me.prettyprint.cassandra.serializers.StringSerializer;
-
 import org.apache.commons.httpclient.HttpClient;
 import org.apache.commons.httpclient.HttpException;
 import org.apache.commons.httpclient.UsernamePasswordCredentials;
@@ -68,8 +65,6 @@ import org.wso2.carbon.utils.multitenancy.MultitenantConstants;
 public class LoggingReader {
 
 	private static Log log = LogFactory.getLog(LoggingReader.class);
-
-	private final static StringSerializer stringSerializer = StringSerializer.get();
 
 	private static final LogMessage[] NO_LOGS_MESSAGE = new LogMessage[] { new LogMessage(
 			"NO_LOGS", "INFO") };
@@ -141,6 +136,7 @@ public class LoggingReader {
 						tenantId, serviceName);
 			}
 		}
+		
 	}
 
 	/**
@@ -197,7 +193,6 @@ public class LoggingReader {
 			}
 		}
 	}
-
 	public String[] getLogLinesFromFile(String logFile, int maxLogs, int start, int end,
 			String tenantDomain, String serviceName) throws LogViewerException {
 		int tenantId = getTenantIdForDomain(tenantDomain);
@@ -792,7 +787,7 @@ public class LoggingReader {
 	/*
 	 * get logs from the local file system.
 	 */
-	private LogInfo[] getLocalLogInfo() {
+	public LogInfo[] getLocalLogInfo() {
 		String folderPath = CarbonUtils.getCarbonLogsPath();
 		LogInfo log = null;
 		ArrayList<LogInfo> logs = new ArrayList<LogInfo>();
@@ -985,7 +980,7 @@ public class LoggingReader {
 		int tenantId;
 		TenantManager tenantManager = LoggingServiceComponent.getTenantManager();
 		if (tenantDomain == null || tenantDomain.equals("")) {
-			tenantId =  MultitenantConstants.SUPER_TENANT_ID;
+			tenantId = MultitenantConstants.SUPER_TENANT_ID;
 		} else {
 
 			try {

@@ -34,14 +34,12 @@ import org.apache.log4j.Logger;
 import org.apache.log4j.PatternLayout;
 import org.apache.log4j.net.SyslogAppender;
 import org.springframework.util.Log4jConfigurer;
+import org.wso2.carbon.logging.appender.CarbonMemoryAppender;
 import org.wso2.carbon.logging.appenders.CircularBuffer;
-import org.wso2.carbon.logging.appenders.MemoryAppender;
 import org.wso2.carbon.logging.registry.RegistryManager;
 import org.wso2.carbon.logging.service.LogViewerException;
-import org.wso2.carbon.logging.service.data.CassandraConfig;
 import org.wso2.carbon.logging.service.data.LogEvent;
 import org.wso2.carbon.logging.service.data.LogInfo;
-import org.wso2.carbon.logging.service.data.LogMessage;
 import org.wso2.carbon.logging.service.data.SyslogData;
 import org.wso2.carbon.registry.core.Collection;
 import org.wso2.carbon.registry.core.Resource;
@@ -52,59 +50,55 @@ public class LoggingUtil {
 
 	private static RegistryManager registryManager = new RegistryManager();
 	private static LoggingReader loggingReader = new LoggingReader();
-	private static CassandraLogReader cassendraLogReader = new CassandraLogReader();
+	private static TenantAwareLogReader tenantAwareLogReader = new TenantAwareLogReader();
 
 	public static final String SYSTEM_LOG_PATTERN = "[%d] %5p - %x %m {%c}%n";
 	private static final int MAX_LOG_MESSAGES = 200;
 
+	public static LogEvent[] getLogs(String appName) {
+		return tenantAwareLogReader.getLogs(appName);
+	}
+
+	public static LogEvent[] searchLog(String type, String keyword, String appName) {
+		return tenantAwareLogReader.searchLog(type, keyword, appName);
+
+	}
+
+	public static LogEvent[] getLogsForKey(String keyword, String appName) {
+		return tenantAwareLogReader.getLogsForKey(keyword,appName);
+	}
+
+	public static LogEvent[] getLogsForType(String type, String appName) {
+		return tenantAwareLogReader.getLogsForType(type, appName);
+	}
+
+	public static boolean isStratosService() throws Exception {
+		return loggingReader.isStratosService();
+	}
+	
+	public static String[] getApplicationNames() {
+		return tenantAwareLogReader.getApplicationNames();
+	}
+	
 	public static void setSystemLoggingParameters(String logLevel, String logPattern)
 			throws Exception {
 		registryManager.updateConfigurationProperty(LoggingConstants.SYSTEM_LOG_LEVEL, logLevel);
 		registryManager
 				.updateConfigurationProperty(LoggingConstants.SYSTEM_LOG_PATTERN, logPattern);
 	}
-
-	public static LogEvent[] getSystemLogs(String start, String end, String logger,
-			String priority, String keyword, String serviceName, String tenantDomain, int logIndex)
-			throws LogViewerException {
-		return cassendraLogReader.getSystemLogs(start, end, logger, priority, keyword, serviceName,
-				tenantDomain, logIndex);
-	}
 	
-	public static String[] getTenantApplicationNames() throws LogViewerException {
-		return cassendraLogReader.getTenantApplicationNames();
-	}
-	
-	public static LogEvent[] getApplicationLogs(String appName, String start, String end, String logger,
-			String priority, String keyword, int logIndex) throws LogViewerException {
-		return cassendraLogReader.getApplicationLogs(appName, start, end, logger, priority, keyword, logIndex);
-	}
-
 	public static SyslogData getSyslogData() throws Exception {
 		return registryManager.getSyslogData();
 	}
 
-	public static CassandraConfig getCassandraConfig() throws Exception {
-		return registryManager.getCassandraConfigData();
-	}
+
 
 	public static LogInfo[] getLogsIndex(String tenantDomain, String serviceName) throws Exception {
 		return loggingReader.getLogsIndex(tenantDomain, serviceName);
 	}
-
-	public static LogMessage[] getTenantLogs(String type, String keyword, String logFile,
-			String logIndex, int maxLines, int start, int end, String tenantDomain,
-			String serviceName) throws Exception {
-		return loggingReader.getTenantLogs(type, keyword, logFile, logIndex, maxLines, start, end,
-				tenantDomain, serviceName);
-
-	}
-
-	public static LogMessage[] getBottomUpTenantLogs(String type, String keyword, String logFile,
-			int maxLines, int start, int end, String tenantDomain, String serviceName)
-			throws LogViewerException {
-		return loggingReader.getBottomUpTenantLogs(type, keyword, logFile, maxLines, start, end,
-				tenantDomain, serviceName);
+	
+	public static LogInfo[] getLocalLogInfo() {
+		return loggingReader.getLocalLogInfo();
 	}
 
 	public static String getSystemLogLevel() throws Exception {
@@ -238,8 +232,8 @@ public class LoggingUtil {
 						fileAppender.activateOptions();
 					}
 
-					if (appender instanceof MemoryAppender) {
-						MemoryAppender memoryAppender = (MemoryAppender) appender;
+					if (appender instanceof CarbonMemoryAppender) {
+						CarbonMemoryAppender memoryAppender = (CarbonMemoryAppender) appender;
 						memoryAppender.setCircularBuffer(new CircularBuffer(200));
 						memoryAppender.activateOptions();
 					}
@@ -304,27 +298,10 @@ public class LoggingUtil {
 			return true;
 		}
 	}
-	
-	
-	public static boolean isSTSyslogConfig(String tenantDomain) throws Exception {
-		return loggingReader.isSuperTenantUser();
-	}
 
-	public static boolean isStratosService() throws Exception {
-		return loggingReader.isStratosService();
-	}
-	
 	public static int getLineNumbers(String logFile, String tenantDomain, String serviceName)
 			throws Exception {
 		return loggingReader.getLineNumbers(logFile, tenantDomain, serviceName);
-	}
-
-	public static boolean isLogsConfigured(String tenantDomain) throws Exception {
-		if (loggingReader.isSuperTenantUser()) {
-			return true;
-		} else {
-			return isSysLogAppender(tenantDomain);
-		}
 	}
 
 	public static String[] getLogLinesFromFile(String logFile, int maxLogs, int start, int end,

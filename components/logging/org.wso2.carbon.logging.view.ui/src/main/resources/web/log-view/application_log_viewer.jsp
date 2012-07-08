@@ -25,9 +25,10 @@
 <!-- 	import="org.wso2.carbon.logging.view.stub.types.carbon.LogEvent"%> -->
 <%@ page import="org.wso2.carbon.utils.ServerConstants"%>
 <%@ page import="org.wso2.carbon.ui.CarbonUIUtil"%>
-
+<%@ page import="org.wso2.carbon.logging.view.stub.types.carbon.PaginatedLogEvent"%>
 <%@ page import="org.wso2.carbon.ui.CarbonUIMessage"%>
 <%@ page import="org.wso2.carbon.ui.CarbonUIUtil"%>
+<%@ page import="org.wso2.carbon.ui.util.CharacterEncoder" %>
 <%@ page import="org.wso2.carbon.logging.view.stub.types.carbon.LogEvent"%>
 <script type="text/javascript" src="js/logviewer.js"></script>
 <script type="text/javascript" src="../admin/dialog/js/dialog.js"></script>
@@ -47,62 +48,37 @@
 				.getAttribute(CarbonConstants.CONFIGURATION_CONTEXT);
 		String cookie = (String) session.getAttribute(ServerConstants.ADMIN_SERVICE_COOKIE);
 		LogViewerClient logViewerClient;
-		LogEvent[] events;
-		String tenantDomain = "";
-		String serviceName = "WSO2 Stratos Manager";
-		boolean isLogsFromSyslog;
-		boolean isSTSyslog = false;
-		String serviceNames[];
-		boolean isManager = false;
-		boolean showManager = false;
-		String logIndex = request.getParameter("logIndex");
-		String start = request.getParameter("start");
-		String appName = request.getParameter("appName");
-		String end = request.getParameter("end");
-		boolean showTenantDomain = false;
-		boolean isStratosService = false;
-		tenantDomain = request.getParameter("tenantDomain");
-		serviceName = request.getParameter("serviceName");
-		Boolean isDateGiven=false;
-		String priority = request.getParameter("priority");
-		String logger = request.getParameter("logger");
-		String keyWord = request.getParameter("keyword");
-		String[] applicationNames;
-// 		LogEvent logs[];
-		if (start != null && !start.equals("null")&& !start.equals("")) {
-			isDateGiven=true;
-		}
-		int returnRows;
-		logIndex = (logIndex == null) ? "20" : logIndex;
-		tenantDomain = (tenantDomain == null) ? "" : tenantDomain;
-		appName = (appName == null) ? "" : appName;
-		start = (start == null) ? "" : start;
-		end = (end == null) ? "" : end;
-		priority = (priority == null) ? "ALL" : priority;
-		keyWord = (keyWord == null) ? "" : keyWord;
-		logger = (logger == null) ? "" : logger;
+		LogEvent[] events = null;
+		String type;
+		String keyword;
+		String action;
+		String pageNumberStr = request.getParameter("pageNumber");
+		int pageNumber = 0;
+		int numberOfPages = 0;
+		PaginatedLogEvent paginatedLogEvents;
+		String parameter = "";
+		String appName;
+		String applicationNames[];
 		try {
-			
-			returnRows = (logIndex == null) ? 20 : Integer.parseInt(logIndex);
+			type = CharacterEncoder.getSafeText(request.getParameter("type"));
+			keyword = CharacterEncoder.getSafeText(request.getParameter("keyword"));
+			action = CharacterEncoder.getSafeText(request.getParameter("action"));
+			appName = CharacterEncoder.getSafeText(request.getParameter("appName"));
 			logViewerClient = new LogViewerClient(cookie, backendServerURL, configContext);
-			applicationNames = logViewerClient.getTenantApplicationNames();
-			isLogsFromSyslog = logViewerClient.isDataFromSysLog(tenantDomain);
-			isSTSyslog = logViewerClient.isSTSyslogConfig(tenantDomain);
-			isManager = logViewerClient.isManager();
-			serviceNames = logViewerClient.getServiceNames();;
-			serviceName = (serviceName == null) ? "WSO2 Stratos Manager" : serviceName;
-			tenantDomain = (tenantDomain == null) ? "" : tenantDomain;
-			isStratosService = logViewerClient.isStratosService();
-			showTenantDomain = (isSTSyslog && isLogsFromSyslog && isStratosService);
-			showManager = (isManager && isLogsFromSyslog);
-			events = logViewerClient.getApplicationLogs(appName, start, end, logger, priority, "",  Integer.parseInt(logIndex));
+			applicationNames = logViewerClient.getApplicationNames();
 			
-			
-		
-			System.out.println();
-			System.out.println();
-			
-			//	logs = logViewerClient.getAllLogs();
+			if (appName == null && applicationNames !=null  && applicationNames.length > 1) {
+				appName = applicationNames[0];
+			}
+			if (applicationNames == null) {
+				applicationNames = new String[]{"No applications"};
+			}
+			paginatedLogEvents = logViewerClient.getPaginatedApplicationLogEvents(pageNumber,type,keyword,appName);
+			if (paginatedLogEvents != null) {
+				events = paginatedLogEvents.getLogInfo();
+				numberOfPages = paginatedLogEvents.getNumberOfPages();
+			}
+			parameter = "type=" + type + "&keyword=" + keyword;
 		} catch (Exception e) {
 			CarbonUIMessage.sendCarbonUIMessage(e.getMessage(), CarbonUIMessage.ERROR, request,
 					e);
@@ -127,78 +103,44 @@
 			
 			
 			
-				<table border="0" class="styledLeft">
+		      <table border="0" class="styledLeft">
+                        <tbody>
+                        <tr>
+                            <td>
+                            <table class="normal">
+                            <tr>
+                            <td><fmt:message key="view"/></td>
+                            <td><select class="log-select" id="logLevelID"
+                                        onchange="javascript:viewApplicationLogs(); return false;">
+                                <%
+                                	String[] logLevels = logViewerClient.getLogLevels();
+                                	if (keyword != null && !keyword.equals("")) {
+                                			type = "Custom";
+                                %>
 
-					<tbody>
-						<tr>
-							<td class="middle-header" colspan="2"><fmt:message key="filter.system.logs" />
-							</td>
-						</tr>
-						<tr>
-							<td>
-								<table class="normal-nopadding" width="100%">
-									<tr>
-										<td>
-											<table width="50%">
-												<tr>
-													<td><fmt:message key="return.rows" />
-													</td>
-													<td><select class="log-select" id="logIndex"
-														size="3">
+                                <option value="<%=type%>" selected="true"><%=type%></option>
 
-															<%
-													for (int i = 1; i < 201; i++) {
-													if (returnRows == i) {
-												%>
-															<option value="<%=i%>" selected="true"><%=i%></option>
-															<%
-													} else {
-												%>
-															<option value="<%=i%>"><%=i%></option>
-															<%
-													}
-														}
-												%>
-													</select>
-													</br></td>
-												</tr>
-												<tr>
+                                <%
+                                	}
+                                		for (String logLevel : logLevels) {
+                                			if (logLevel.equals(type)) {
+                                %>
 
-													<td><nobr>
-															<fmt:message key="show.at.or.before" />
-														</nobr></td>
-													<td style="padding-right: 2px !important;">
-											<%
-												if (!isDateGiven) {
-											%> <input type="radio" id="NowradioDate" name="radioDate" value="Now" checked>Now<br>
-											 <nobr>  <input type="radio" name="radioDate" id="NotNowradioDate"
-														value="<%=start+"_"+end%>"><input type="text"
-														id="start" name="start" value="<%=start%>" size="8" /> - <input
-														type="text" id=end name="end" value="<%=end%>"
-														size="8" /><fmt:message key="date.format" /> <br> <fmt:message key="date.example" /></nobr> <br>  <%
- 										} else {
- 										
-										 %> <input type="radio" id="NowradioDate"  name="radioDate" value="Now"> Now<br>
-										<nobr>	<input type="radio" name="radioDate"  id="NotNowradioDate"
-														value="<%=start+"_"+end%>" checked><input type="text"
-														id="start" name="start" value="<%=start%>" size="8" /> - <input
-														type="text" id="end" name="end" value="<%=end%>"
-														size="8" /><fmt:message key="date.format" />  <br> <fmt:message key="date.example" /></nobr> <br><%
-									
-												}
-											%>
-													</td>
+                                <option value="<%=logLevel%>" selected="true"><%=logLevel%></option>
 
+                                <%
+                                	} else {
+                                %>
 
-												</tr>
-												<tr>
-												<td><nobr>
-											<fmt:message key="application.name" />
-										</nobr>
-									</td>
-									
-									<td ><select
-										name="appName" id="appName">
+                                <option value="<%=logLevel%>"><%=logLevel%></option>
+
+                                <%
+                                	}
+                                		}
+                                %>
+                            </select></td>
+                            	<td ><select
+										name="appName" id="appName"  onchange="javascript:viewApplicationLogs(); return false;">
 											<%
 												for (String name : applicationNames) {
 											%>
@@ -222,82 +164,28 @@
 											%>
 
 									</select></td>
-												</tr>
+                            <td style="width: 100%;"></td>
+                            <td>
+                                <nobr><fmt:message key="search.logs"/></nobr>
+                            </td>
+                                <td style="padding-right: 2px !important;">
+                                    <input onkeypress="submitenter(event)" value="" class="log-select"
+                                        size="40" id="logkeyword" type="text"></td>
+                                <td style="padding-left: 0px !important;"><input type="button"
+                                                                                 value="Search"
+                                                                                 onclick="javascript:searchAppLogs(); return false;"
+                                                                                 class="button">
+                                </td>
+                            </tr>
+                        </table>
+                        </td>
+                        </tr>
+                        </tbody>
+                    </table>
 
-											</table>
-										</td>
-									</tr>
-									<tr>
-										<td class="middle-header" colspan="2"><a
-											class="icon-link"
-											style="background-image: url(images/plus.gif);"
-											href="javascript:showQueryProperties()"
-											id="propertySymbolMax"></a> <fmt:message
-												key="advanced.properties" /></td>
-									</tr>
-									<tr id="propertyTable" style="display: none">
-										<td>
-											<table width="50%">
-												<tr>
-													<td><fmt:message key="logger" /></td>
-													<td><input type="text" size="30" id="logger"
-														name="logger" value="<%=logger%>" /></td>
-												</tr>
-												<tr>
-													<td><fmt:message key="priority" /></td>
-													<td><select class="log-select" id="logLevelID"
-														onchange="javascript:viewSingleSysLogLevel(); return false;">
 
-															<%
-															String[] logLevels = logViewerClient.getLogLevels();
-																	for (String logLevel : logLevels) {
-																		if (logLevel.equals(priority)) {
-															%>
-															<option value="<%=logLevel%>" selected="true"><%=logLevel%></option>
-															<%
-																} else {
-															%>
-															<option value="<%=logLevel%>"><%=logLevel%></option>
-															<%
-																}
-																	}
-															%>
-													</select></td>
-												</tr>
-												<tr>
-													<td><fmt:message key="keyword" /></td>
-													<td><input type="text" id="keyword" name="keyword"
-														value="<%=keyWord%>" /></td>
-												</tr>
-
-											</table>
-										</td>
-									</tr>
-									<tr>
-										<td style="padding-left: 0px !important;"><input
-											type="button" value="Search"
-											onclick="javascript:getFilteredLogs(); return false;"
-											class="button">
-										</td>
-									</tr>
-								</table></td>
-									<br />
-
-				<%
-				if (!isDateGiven) {
-			%>
-			<font color="blue"><fmt:message
-					key="view.logs.within.the.past.thirty.mins" />
-			</font>
-			<%
-				} else {
-			%>
-			<font color="blue"><fmt:message
-					key="view.logs.between" /><%=start%> and <%=end%>
-			</font>
-			<%
-				}
-			%><br/>
+                   <br/>
+                   
 			<table border="1" class="styledLeft">
 		
 				<tbody>
@@ -320,14 +208,16 @@
 									</tr>
 								</thead>
 							<%
-								if (events == null || events.length==0 || events[0] == null) {%>
+								if (events == null || events.length == 0 || events[0] == null) {
+							%>
 								 <fmt:message key="no.logs" /> 
-							<%} else {
-								int index=0;
-								for (LogEvent logMessage : events) {
-									index++;
-							    if (index % 2 != 0) {
-								%>
+							<%
+ 								} else {
+ 										int index = 0;
+ 										for (LogEvent logMessage : events) {
+ 											index++;
+ 											if (index % 2 != 0) {
+ 							%>
 								<tr>
 									<%
 										} else {
@@ -335,14 +225,17 @@
 								
 								<tr bgcolor="#eeeffb">
 									<%
-										}%>
+										}
+									%>
 								   <td border-bottom="gray" width="2%"><img
 										style="margin-right: 10px;"
 										src="<%=logViewerClient.getImageName(logMessage.getPriority().trim())%>">
 									</td>
 									<td><nobr><%=logMessage.getLogTime()%></nobr></td>
 									<td><%=logMessage.getMessage()%></td>
-										<%String imgId = "traceSymbolMax"+index; %>
+										<%
+											String imgId = "traceSymbolMax" + index;
+										%>
 									<td><a
 											class="icon-link"
 											style="background-image: url(images/plus.gif);"
@@ -351,8 +244,10 @@
 												key="view.stack.trace" /></td>
 								</tr>
 								
-							<%String id = "traceTable"+index;   if (index % 2 != 0) {
-								%>
+							<%
+																String id = "traceTable" + index;
+																			if (index % 2 != 0) {
+															%>
 									<tr id="<%=id%>" style="display: none" >
 									<%
 										} else {
@@ -360,19 +255,24 @@
 								
 									<tr id="<%=id%>" style="display: none" bgcolor="#eeeffb">
 									<%
-									}%>
+										}
+									%>
 								
-									<td colspan="4" width="100%">[<%=logMessage.getServerName()%>] [<%=logMessage.getLogTime()%>] <%=logMessage.getPriority().trim()%> {<%=logMessage.getLogger()%>} - <%=logMessage.getMessage()%> 
+									<td colspan="4" width="100%">TID[<%=logMessage.getTenantId()%>] [<%=logMessage.getServerName()%>] [<%=logMessage.getLogTime()%>] <%=logMessage.getPriority().trim()%> {<%=logMessage.getLogger()%>} - <%=logMessage.getMessage()%> 
 										<%=logMessage.getStacktrace()%><br/>
 									</td>
 									</tr>
-							<%}
+							<%
 								}
+									}
 							%>
 							
 							</table>
+							 <carbon:paginator pageNumber="<%=pageNumber%>" numberOfPages="<%=numberOfPages%>"
+                      page="index.jsp" pageNumberParameterName="pageNumber"
+                      prevKey="prev" nextKey="next"
+                      parameters="<%= parameter%>"/>
 					</tr>
-
 					
 				</tbody>
 			</table>

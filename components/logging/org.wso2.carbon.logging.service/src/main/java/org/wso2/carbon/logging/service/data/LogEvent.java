@@ -31,6 +31,29 @@ public class LogEvent {
 	public LogEvent() {
 	}
 
+	
+	public LogEvent( String tenantId, String serverName, String appName, String logTime,
+			String logger, String priority, String message, String ip, String stacktrace,
+			String instance) {
+		super();
+		this.tenantId = tenantId;
+		this.serverName = serverName;
+		this.appName = appName;
+		this.logTime = logTime;
+		this.logger = logger;
+		this.priority = priority;
+		this.message = message;
+		this.ip = ip;
+		this.stacktrace = stacktrace;
+		this.instance = instance;
+	}
+
+
+	public LogEvent (String message, String priority) {
+		this.message = message;
+		this.priority = priority;
+	}
+	
 	public String getKey() {
 		return key;
 	}

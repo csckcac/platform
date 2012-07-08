@@ -89,45 +89,7 @@
 			<artifactId>org.wso2.carbon.logging</artifactId>
 		</dependency>
 
-		<!--Cassandra -->
-
-		<dependency>
-			<groupId>org.apache.cassandra.wso2</groupId>
-			<artifactId>apache-cassandra</artifactId>
-			<version>${cassandra.version}</version>
-		</dependency>
-
-		<!--Hector -->
-		<dependency>
-			<groupId>org.hectorclient</groupId>
-			<artifactId>hector-core</artifactId>
-			<version>${hector-core.version}</version>
-		</dependency>
-		<dependency>
-			<groupId>libthrift.wso2</groupId>
-			<artifactId>libthrift</artifactId>
-			<version>${libthrift.version}</version>
-		</dependency>
-		<dependency>
-			<groupId>org.perf4j.wso2</groupId>
-			<artifactId>perf4j</artifactId>
-			<version>${perf4j.version}</version>
-		</dependency>
-		<dependency>
-			<groupId>org.cliffc.high_scale_lib.wso2</groupId>
-			<artifactId>high-scale-lib</artifactId>
-			<version>${highscale.version}</version>
-		</dependency>
-		<dependency>
-			<groupId>org.slf4j</groupId>
-			<artifactId>slf4j-api</artifactId>
-			<version>${slf4j.version}</version>
-		</dependency>
-		<dependency>
-			<groupId>org.slf4j</groupId>
-			<artifactId>slf4j-log4j12</artifactId>
-			<version>${slf4j.version}</version>
-		</dependency>
+		
 		<!--Agent -->
 
 		<!--dependency>
@@ -151,13 +113,6 @@
 			<artifactId>spring.framework</artifactId>
 		</dependency>
 	</dependencies>
-	<properties>
-		<slf4j.version>1.6.1</slf4j.version>
-		<cassandra.version>1.1.0.wso2v1</cassandra.version>
-		<libthrift.version>0.7.wso2v1</libthrift.version>
-		<hector-core.version>1.1-0</hector-core.version>
-		<perf4j.version>0.9.12.wso2v1</perf4j.version>
-		<highscale.version>1.0.wso2v1</highscale.version>
-	</properties>
+	
 </project>
 

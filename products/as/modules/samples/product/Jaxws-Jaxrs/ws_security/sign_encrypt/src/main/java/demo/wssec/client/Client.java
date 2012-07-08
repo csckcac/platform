@@ -20,6 +20,8 @@ import java.lang.reflect.UndeclaredThrowableException;
 import java.net.URL;
 import java.util.HashMap;
 import java.util.Map;
+import java.io.File;
+import java.net.URL;
 
 import org.apache.cxf.Bus;
 import org.apache.cxf.BusFactory;
@@ -90,7 +92,22 @@ public final class Client {
 
             bus.getInInterceptors().add(new WSS4JInInterceptor(inProps));
 
-            GreeterService service = new GreeterService();
+            GreeterService service = null;
+	    if (args.length != 0 && args[0].length() != 0) {
+		    File wsdlFile = new File(args[0]);
+		    URL wsdlURL;
+            if (wsdlFile.exists()) {
+            	    wsdlURL = wsdlFile.toURL();
+            } else {
+                    wsdlURL = new URL(args[0]);
+            }
+                    // Create the service client with specified wsdlurl
+                    service = new GreeterService(wsdlURL);
+            } else {
+                    // Create the service client with its default wsdlurl
+                    service = new GreeterService();
+            }
+
             Greeter port = service.getGreeterPort();
 
             String[] names = new String[] {"Anne", "Bill", "Chris", "Sachin Tendulkar"};

@@ -767,11 +767,11 @@
                         if (returnGeneratedKeys) {
                     %>
                     <input type="checkbox" id="returnGeneratedKeys" name="returnGeneratedKeys"
-                           checked="checked" onclick="document.dataForm.action='queryProcessor.jsp?setReturnGeneratedKeys=true&flag=ReturnRowChanged';document.dataForm.submit();" value=<%=returnGeneratedKeys%> />
+                           checked="checked" value="<%=returnGeneratedKeys%>" onclick="var validated=validateClickOnReturnGeneratedKeys();if(validated){document.dataForm.action='queryProcessor.jsp?setReturnGeneratedKeys=true&flag=ReturnRowChanged';document.dataForm.submit();} return validated;"  />
                     <% } else {
                     %>
-                    <input type="checkbox" id="returnGeneratedKeys" name="returnGeneratedKeys"
-                           onclick="document.dataForm.action='queryProcessor.jsp?setReturnGeneratedKeys=true&flag=ReturnRowChanged';document.dataForm.submit();" value=<%=returnGeneratedKeys%>/>
+                    <input type="checkbox" id="returnGeneratedKeys" name="returnGeneratedKeys" value="<%=returnGeneratedKeys%>"
+                           onclick="var validated=validateClickOnReturnGeneratedKeys();if(validated){document.dataForm.action='queryProcessor.jsp?setReturnGeneratedKeys=true&flag=ReturnRowChanged';document.dataForm.submit();} return validated;" />
                     <% } %>
                     <label for="returnGeneratedKeys"><fmt:message
                         key="datasources.return.generated.keys"/></label>                    

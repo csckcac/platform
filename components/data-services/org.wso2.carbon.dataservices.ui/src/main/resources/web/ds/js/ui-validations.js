@@ -258,6 +258,21 @@ function validateQueryId(obj){
     
   }
 
+function validateClickOnReturnGeneratedKeys() {
+    var query = document.getElementById('sql').value;
+    if (query != '') {
+        var startingKeyword = query.trim().toUpperCase().toString().split(" ");
+        if (startingKeyword[0] != "INSERT") {
+            CARBON.showWarningDialog("Return Generated Keys cannot be used with the given query");
+            return false;
+        }
+    } else {
+        CARBON.showWarningDialog("Query cannot be empty");
+        return false;
+    }
+    return true;
+}
+
 function validateAddQueryFormSave(obj) {
     if(document.getElementById('queryId').value == ''){
         CARBON.showWarningDialog('Query Id is mandatory');

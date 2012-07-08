@@ -40,45 +40,7 @@
     <dependencyManagement>
         <dependencies>
  	   
- 	 <!--Cassandra -->
-
-            <dependency>
-                <groupId>org.apache.cassandra.wso2</groupId>
-                <artifactId>apache-cassandra</artifactId>
-                <version>${cassandra.version}</version>
-            </dependency>
-
-            <!--Hector-->
-            <dependency>
-                <groupId>org.hectorclient</groupId>
-                <artifactId>hector-core</artifactId>
-                <version>${hector-core.version}</version>
-            </dependency>
-            <dependency>
-                <groupId>libthrift.wso2</groupId>
-                <artifactId>libthrift</artifactId>
-                <version>${libthrift.version}</version>
-            </dependency>
-            <dependency>
-                <groupId>org.perf4j.wso2</groupId>
-                <artifactId>perf4j</artifactId>
-                <version>${perf4j.version}</version>
-            </dependency>
-            <dependency>
-                <groupId>org.cliffc.high_scale_lib.wso2</groupId>
-                <artifactId>high-scale-lib</artifactId>
-                <version>${highscale.version}</version>
-            </dependency>
-            <dependency>
-                <groupId>org.slf4j</groupId>
-                <artifactId>slf4j-api</artifactId>
-                <version>${slf4j.version}</version>
-            </dependency>
-            <dependency>
-                <groupId>org.slf4j</groupId>
-                <artifactId>slf4j-log4j12</artifactId>
-                <version>${slf4j.version}</version>
-            </dependency>
+ 	
             <dependency>
                 <groupId>org.wso2.carbon</groupId>
                 <artifactId>org.wso2.carbon.logging.service</artifactId>
@@ -117,12 +79,7 @@
     <properties>
         <wso2carbon.version.logging.mgt>${wso2carbon.version}</wso2carbon.version.logging.mgt>
         <spring.framework.wso2.version>${orbit.version.spring}</spring.framework.wso2.version>
-        <cassandra.version>1.1.0.wso2v1</cassandra.version>
-        <hector-core.version>1.1-0</hector-core.version>
-        <libthrift.version>0.7.wso2v1</libthrift.version>
-        <perf4j.version>0.9.12.wso2v1</perf4j.version>
-        <highscale.version>1.1.2.wso2v1</highscale.version>
-        <slf4j.version>1.6.1</slf4j.version>
+      
 	 <guava.version>${google.guava.wso2.version}</guava.version>
     </properties>
 

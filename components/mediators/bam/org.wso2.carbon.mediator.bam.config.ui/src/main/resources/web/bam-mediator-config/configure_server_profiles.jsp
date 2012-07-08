@@ -601,7 +601,7 @@
             </tr>
             <tr>
                 <td>
-                    <fmt:message key="profile.location"/><span class="required">*</span>
+                    <fmt:message key="profile.name"/><span class="required">*</span>
                 </td>
                 <td>
                     <table>

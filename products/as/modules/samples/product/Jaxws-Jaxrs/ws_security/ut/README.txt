@@ -42,5 +42,20 @@ Using either UNIX or Windows:
 
 On startup, the client makes a sequence of 4 two-way invocations.
 
-To remove the code generated from the WSDL file and the .class
-files, run "mvn clean".
+NOTE :
+  * To remove the code generated from the WSDL file and the .class files, run "mvn clean".
+
+
+Building and running the demo using Ant
+---------------------------------------
+The base directory of this sample (i.e., where this README file is located) has the build.xml file
+which is used to build the necessary webapp and deploy it in WSO2 App Server.
+
+To build and deploy the sample,type :
+  * ant
+
+To run the sample demo :
+  * Start the App Server and access the Management Console at https://localhost:9443/carbon. Go to the Jaxws-Jaxrs service listing
+    page. You will see the deployed service.
+  * You have to run the run-client.sh or run-client.bat script. It has all the arguments and classpaths configured to run the sample.
+

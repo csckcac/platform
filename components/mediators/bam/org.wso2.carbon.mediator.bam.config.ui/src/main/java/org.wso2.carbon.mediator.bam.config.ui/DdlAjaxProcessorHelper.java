@@ -20,19 +20,24 @@ package org.wso2.carbon.mediator.bam.config.ui;
 
 import org.apache.axis2.AxisFault;
 import org.apache.axis2.context.ConfigurationContext;
+import org.apache.commons.logging.Log;
+import org.apache.commons.logging.LogFactory;
+
 import java.rmi.RemoteException;
 import java.util.Locale;
 
 public class DdlAjaxProcessorHelper {
-    
+
+    private static final Log log = LogFactory.getLog(DdlAjaxProcessorHelper.class);
     private BamServerProfileConfigAdminClient client;
 
     public DdlAjaxProcessorHelper(String cookie, String backendServerURL,
                                   ConfigurationContext configContext, Locale locale){
         try {
             client = new BamServerProfileConfigAdminClient(cookie, backendServerURL, configContext, locale);
-        } catch (AxisFault axisFault) {
-            axisFault.printStackTrace();  //To change body of catch statement use File | Settings | File Templates.
+        } catch (AxisFault e) {
+            String errorMsg = "Error while creating the BamServerProfileConfigAdminClient. " + e.getMessage();
+            log.error(errorMsg, e);
         }
     }
 
@@ -50,7 +55,8 @@ public class DdlAjaxProcessorHelper {
                                            "</option>";
             }
         } catch (RemoteException e) {
-            e.printStackTrace();  //To change body of catch statement use File | Settings | File Templates.
+            String errorMsg = "Error while getting Server Profile Path List. " + e.getMessage();
+            log.error(errorMsg, e);
         }
         return serverProfileNamesString;
     }

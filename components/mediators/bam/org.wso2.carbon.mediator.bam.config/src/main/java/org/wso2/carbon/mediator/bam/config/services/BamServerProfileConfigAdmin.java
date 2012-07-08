@@ -19,6 +19,8 @@ package org.wso2.carbon.mediator.bam.config.services;
 
 import org.apache.axiom.om.OMElement;
 import org.apache.axiom.om.impl.builder.StAXOMBuilder;
+import org.apache.commons.logging.Log;
+import org.apache.commons.logging.LogFactory;
 import org.wso2.carbon.core.AbstractAdmin;
 import org.wso2.carbon.mediator.bam.config.BamServerConfig;
 import org.wso2.carbon.mediator.bam.config.BamServerConfigBuilder;
@@ -32,7 +34,7 @@ import java.io.ByteArrayInputStream;
  * Admin service class to access Registry
  */
 public class BamServerProfileConfigAdmin extends AbstractAdmin {
-
+    private static final Log log = LogFactory.getLog(BamServerProfileConfigAdmin.class);
     private RegistryManager registryManager;
     private CryptographyManager cryptographyManager;
 
@@ -66,7 +68,8 @@ public class BamServerProfileConfigAdmin extends AbstractAdmin {
             bamServerConfigBuilder.createBamServerConfig(resourceElement);
             return bamServerConfigBuilder.getBamServerConfig();
         } catch (XMLStreamException e) {
-            e.printStackTrace();  //To change body of catch statement use File | Settings | File Templates.
+            String errorMsg = "Failed to create XML OMElement from the String. " + e.getMessage();
+            log.error(errorMsg, e);
         }
         return null;
     }

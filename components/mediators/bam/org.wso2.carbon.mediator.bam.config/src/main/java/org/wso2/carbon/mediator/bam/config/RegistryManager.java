@@ -33,22 +33,23 @@ public class RegistryManager extends RegistryAbstractAdmin {
         registry = getConfigSystemRegistry();
     }
 
-    public void saveResourceString(String resourceString, String gadgetResourcePath) {
+    public void saveResourceString(String resourceString, String gadgetResourcePath){
         try {
             resource = registry.newResource();
             resource.setContent(resourceString);
             registry.put(gadgetResourcePath, resource);
         } catch (RegistryException e) {
-            e.printStackTrace();  //To change body of catch statement use File | Settings | File Templates.
+            String errorMsg = "Error while saving resource string from Registry. " + e.getMessage();
+            log.error(errorMsg, e);
         }
-
     }
     
     public boolean resourceAlreadyExists(String bamServerProfileLocation){
         try {
             return registry.resourceExists(bamServerProfileLocation);
         } catch (RegistryException e) {
-            e.printStackTrace();  //To change body of catch statement use File | Settings | File Templates.
+            String errorMsg = "Error while checking resource string from Registry. " + e.getMessage();
+            log.error(errorMsg, e);
         }
         return true;
     }
@@ -58,7 +59,8 @@ public class RegistryManager extends RegistryAbstractAdmin {
             registry.delete(path);
             return true;
         } catch (RegistryException e) {
-            e.printStackTrace();  //To change body of catch statement use File | Settings | File Templates.
+            String errorMsg = "Error while removing the resource from Registry. " + e.getMessage();
+            log.error(errorMsg, e);
         }
         return false;
     }
@@ -68,7 +70,8 @@ public class RegistryManager extends RegistryAbstractAdmin {
             resource = registry.get(bamServerProfileLocation);
             return new String((byte[])resource.getContent());
         } catch (RegistryException e) {
-            e.printStackTrace();  //To change body of catch statement use File | Settings | File Templates.
+            String errorMsg = "Error while getting the resource from Registry. " + e.getMessage();
+            log.error(errorMsg, e);
         }
         return null;
     }
@@ -79,7 +82,8 @@ public class RegistryManager extends RegistryAbstractAdmin {
             registry.put(bamServerProfileCollectionLocation, resource);
             return true;
         } catch (RegistryException e) {
-            e.printStackTrace();  //To change body of catch statement use File | Settings | File Templates.
+            String errorMsg = "Error while adding the collection to the Registry. " + e.getMessage();
+            log.error(errorMsg, e);
         }
         return false;
     }
@@ -88,7 +92,8 @@ public class RegistryManager extends RegistryAbstractAdmin {
         try {
             return ((String[])registry.get(bamServerProfileCollectionLocation).getContent());
         } catch (RegistryException e) {
-            e.printStackTrace();  //To change body of catch statement use File | Settings | File Templates.
+            String errorMsg = "Error while getting the Server Profile Name List from the Registry. " + e.getMessage();
+            log.error(errorMsg, e);
         }
         return new String[0];
     }

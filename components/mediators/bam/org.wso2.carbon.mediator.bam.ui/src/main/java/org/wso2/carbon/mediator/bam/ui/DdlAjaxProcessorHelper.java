@@ -22,6 +22,8 @@ import org.apache.axiom.om.OMElement;
 import org.apache.axiom.om.impl.builder.StAXOMBuilder;
 import org.apache.axis2.AxisFault;
 import org.apache.axis2.context.ConfigurationContext;
+import org.apache.commons.logging.Log;
+import org.apache.commons.logging.LogFactory;
 import org.wso2.carbon.mediator.bam.config.BamServerConfig;
 import org.wso2.carbon.mediator.bam.config.BamServerConfigBuilder;
 import org.wso2.carbon.mediator.bam.config.stream.StreamConfiguration;
@@ -34,15 +36,17 @@ import java.util.List;
 import java.util.Locale;
 
 public class DdlAjaxProcessorHelper {
-    
+
+    private static final Log log = LogFactory.getLog(DdlAjaxProcessorHelper.class);
     private BamServerProfileConfigAdminClient client;
 
     public DdlAjaxProcessorHelper(String cookie, String backendServerURL,
                                   ConfigurationContext configContext, Locale locale){
         try {
             client = new BamServerProfileConfigAdminClient(cookie, backendServerURL, configContext, locale);
-        } catch (AxisFault axisFault) {
-            axisFault.printStackTrace();  //To change body of catch statement use File | Settings | File Templates.
+        } catch (AxisFault e) {
+            String errorMsg = "Error while creating the BamServerProfileConfigAdminClient. " + e.getMessage();
+            log.error(errorMsg, e);
         }
     }
 
@@ -53,12 +57,13 @@ public class DdlAjaxProcessorHelper {
 
             BamServerConfigBuilder bamServerConfigBuilder = new BamServerConfigBuilder();
             bamServerConfigBuilder.createBamServerConfig(resourceElement);
-            BamServerConfig bamServerConfig = bamServerConfigBuilder.getBamServerConfig();
-            return bamServerConfig;
+            return bamServerConfigBuilder.getBamServerConfig();
         } catch (RemoteException e) {
-            e.printStackTrace();  //To change body of catch statement use File | Settings | File Templates.
+            String errorMsg = "Error while getting the resource. " + e.getMessage();
+            log.error(errorMsg, e);
         } catch (XMLStreamException e) {
-            e.printStackTrace();  //To change body of catch statement use File | Settings | File Templates.
+            String errorMsg = "Error while creating OMElement from a string. " + e.getMessage();
+            log.error(errorMsg, e);
         }
         return null;
     }
@@ -67,16 +72,14 @@ public class DdlAjaxProcessorHelper {
         try {
             return client.resourceAlreadyExists(bamServerProfileLocation);
         } catch (RemoteException e) {
-            e.printStackTrace();  //To change body of catch statement use File | Settings | File Templates.
+            String errorMsg = "Error while checking the resource. " + e.getMessage();
+            log.error(errorMsg, e);
         }
         return true;
     }
 
     public boolean isNotNullOrEmpty(String string){
-        if(string != null && !string.equals("")){
-            return true;
-        }
-        return false;
+        return string != null && !string.equals("");
     }
 
     public String getServerProfileNames(String serverProfilePath){
@@ -89,7 +92,8 @@ public class DdlAjaxProcessorHelper {
                                            "</option>";
             }
         } catch (RemoteException e) {
-            e.printStackTrace();  //To change body of catch statement use File | Settings | File Templates.
+            String errorMsg = "Error while getting Server Profile Names. " + e.getMessage();
+            log.error(errorMsg, e);
         }
         return serverProfileNamesString;
     }

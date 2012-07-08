@@ -48,6 +48,7 @@ import org.wso2.carbon.databridge.commons.exception.MalformedStreamDefinitionExc
 import org.wso2.carbon.databridge.commons.exception.StreamDefinitionException;
 import org.wso2.carbon.databridge.commons.exception.TransportException;
 import org.wso2.carbon.databridge.commons.thrift.exception.ThriftAuthenticationException;
+import org.wso2.carbon.mediator.bam.config.BamMediatorException;
 import org.wso2.carbon.mediator.bam.config.stream.Property;
 import org.wso2.carbon.mediator.bam.config.stream.StreamEntry;
 import org.wso2.carbon.mediator.bam.util.BamMediatorConstants;
@@ -117,22 +118,9 @@ public class BamMediator extends AbstractMediator {
 
         try {
             logMessage(messageContext);
-        } catch (AgentException e) {
-            e.printStackTrace();  //To change body of catch statement use File | Settings | File Templates.
-        } catch (MalformedStreamDefinitionException e) {
-            e.printStackTrace();  //To change body of catch statement use File | Settings | File Templates.
-        } catch (StreamDefinitionException e) {
-            e.printStackTrace();  //To change body of catch statement use File | Settings | File Templates.
-        } catch (DifferentStreamDefinitionAlreadyDefinedException e) {
-            e.printStackTrace();  //To change body of catch statement use File | Settings | File Templates.
-        } catch (MalformedURLException e) {
-            e.printStackTrace();  //To change body of catch statement use File | Settings | File Templates.
-        } catch (AuthenticationException e) {
-            e.printStackTrace();  //To change body of catch statement use File | Settings | File Templates.
-        } catch (TransportException e) {
-            e.printStackTrace();  //To change body of catch statement use File | Settings | File Templates.
-        } catch (ThriftAuthenticationException e) {
-            e.printStackTrace();  //To change body of catch statement use File | Settings | File Templates.
+        } catch (BamMediatorException e) {
+            String errorMsg = "Problem occurred while logging in the BAM Mediator. " + e.getMessage();
+            log.error(errorMsg, e);
         }
 
         if (synLog.isTraceOrDebugEnabled()) {
@@ -147,9 +135,7 @@ public class BamMediator extends AbstractMediator {
     }
 
     private void logMessage(MessageContext messageContext)
-            throws AgentException, MalformedStreamDefinitionException, StreamDefinitionException,
-                   DifferentStreamDefinitionAlreadyDefinedException,
-                   MalformedURLException, AuthenticationException, TransportException, ThriftAuthenticationException {
+            throws BamMediatorException {
 
         org.apache.axis2.context.MessageContext msgCtx = ((Axis2MessageContext) messageContext).getAxis2MessageContext();
         AxisConfiguration axisConfiguration = msgCtx.getConfigurationContext().getAxisConfiguration();
@@ -173,7 +159,13 @@ public class BamMediator extends AbstractMediator {
                                            this.createCorrelationData(messageContext),
                                            this.createPayloadData(messageContext, direction, service, operation)
             );
-            dataPublisher.publish(event);
+            try {
+                dataPublisher.publish(event);
+            } catch (AgentException e) {
+                String errorMsg = "Problem with Agent while publishing. " + e.getMessage();
+                log.error(errorMsg, e);
+                throw new BamMediatorException(errorMsg, e);
+            }
         } else {
             log.info("streamId is empty.");
         }
@@ -195,7 +187,7 @@ public class BamMediator extends AbstractMediator {
             SOAPEnvelope soapEnvelope = axis2MessageContext.getEnvelope();
             String soapNamespaceURI = soapEnvelope.getNamespace().getNamespaceURI();
             SOAPFactory soapFactory = null;
-            SOAPHeaderBlock soapHeaderBlock = null;
+            SOAPHeaderBlock soapHeaderBlock;
 
             if (soapNamespaceURI.equals(SOAP11Constants.SOAP_ENVELOPE_NAMESPACE_URI)) {
                 soapFactory = OMAbstractFactory.getSOAP11Factory();
@@ -268,10 +260,6 @@ public class BamMediator extends AbstractMediator {
 
     private Agent createAgent(){
         AgentConfiguration agentConfiguration = new AgentConfiguration();
-        /*String keyStorePath = CarbonUtils.getCarbonHome() + File.separator + "repository" +
-                              File.separator + "resources" + File.separator + "security" +
-                              File.separator + "client-truststore.jks";
-        String keyStorePassword = "wso2carbon";*/
         String keyStorePath = this.ksLocation;
         String keyStorePassword = this.ksPassword;
         agentConfiguration.setTrustStore(keyStorePath);
@@ -281,50 +269,79 @@ public class BamMediator extends AbstractMediator {
         return new Agent(agentConfiguration);
     }
 
-    private void createDataPublisher(Agent agent) throws MalformedURLException, AgentException, AuthenticationException, TransportException{
-
-        //dataPublisher = new DataPublisher("tcp://" + this.serverIp + ":" + this.authenticationPort, this.userName, this.password, agent);
-
-        //dataPublisher = new DataPublisher("ssl://" + this.serverIp + ":" + "7711", "tcp://" + this.serverIp + ":" + this.authenticationPort, this.userName, this.password, agent);
-
-        //dataPublisher = new DataPublisher("ssl://" + this.serverIp + ":" + "7711", "ssl://" + this.serverIp + ":" + "7711", this.userName, this.password, agent);
-
-        if(this.security){
-            dataPublisher = new DataPublisher("ssl://" + this.serverIp + ":" + this.authenticationPort, "ssl://" + this.serverIp + ":" + this.authenticationPort, this.userName, this.password, agent);
-        } else {
-            dataPublisher = new DataPublisher("ssl://" + this.serverIp + ":" + this.authenticationPort, "tcp://" + this.serverIp + ":" + this.receiverPort, this.userName, this.password, agent);
+    private void createDataPublisher(Agent agent) throws BamMediatorException{
+        try {
+            if(this.security){
+                dataPublisher = new DataPublisher("ssl://" + this.serverIp + ":" + this.authenticationPort, "ssl://" + this.serverIp + ":" + this.authenticationPort, this.userName, this.password, agent);
+            } else {
+                dataPublisher = new DataPublisher("ssl://" + this.serverIp + ":" + this.authenticationPort, "tcp://" + this.serverIp + ":" + this.receiverPort, this.userName, this.password, agent);
+            }
+        } catch (MalformedURLException e) {
+            String errorMsg = "Given URLs are incorrect. " + e.getMessage();
+            log.error(errorMsg, e);
+            throw new BamMediatorException(errorMsg, e);
+        } catch (AgentException e) {
+            String errorMsg = "Problem while creating the Agent. " + e.getMessage();
+            log.error(errorMsg, e);
+            throw new BamMediatorException(errorMsg, e);
+        } catch (AuthenticationException e) {
+            String errorMsg = "Authentication failed. " + e.getMessage();
+            log.error(errorMsg, e);
+            throw new BamMediatorException(errorMsg, e);
+        } catch (TransportException e) {
+            String errorMsg = "Transport layer problem. " + e.getMessage();
+            log.error(errorMsg, e);
+            throw new BamMediatorException(errorMsg, e);
         }
 
         log.info("Data Publisher Created.");
     }
 
-    private void defineEventStream() throws AgentException, MalformedStreamDefinitionException, StreamDefinitionException, DifferentStreamDefinitionAlreadyDefinedException{
+    private void defineEventStream() throws BamMediatorException{
 
-        streamId = dataPublisher.defineStream("{" +
-                                              "  'name':'" + this.streamName + "'," +
-                                              "  '" + BamMediatorConstants.VERSION + "':'" + this.streamVersion + "'," +
-                                              "  '" + BamMediatorConstants.NICK_NAME + "': '" + this.streamNickName + "'," +
-                                              "  '" + BamMediatorConstants.DESCRIPTION + "': '" + this.streamDescription + "'," +
-                                              "  'correlationData':[" +
-                                              "          {'name':'" + BamMediatorConstants.ACTIVITY_ID + "','type':'STRING'}" +
-                                              "  ]," +
-                                              "  'metaData':[" +
-                                              "          {'name':'tenantId','type':'INT'}" +
-                                              "  ]," +
-                                              "  'payloadData':[" +
-                                              "          {'name':'" + BamMediatorConstants.MSG_DIRECTION + "','type':'STRING'}," +
-                                              "          {'name':'" + BamMediatorConstants.SERVICE_NAME + "','type':'STRING'}," +
-                                              "          {'name':'" + BamMediatorConstants.OPERATION_NAME + "','type':'STRING'}," +
-                                              "          {'name':'" + BamMediatorConstants.MSG_ID + "','type':'STRING'}" +
-                                              this.getPropertyStreamDefinitionString() +
-                                              this.getEntityStreamDefinitionString() +
-                                              "  ]" +
-                                              "}");
+        try {
+            streamId = dataPublisher.defineStream("{" +
+                                                  "  'name':'" + this.streamName + "'," +
+                                                  "  '" + BamMediatorConstants.VERSION + "':'" + this.streamVersion + "'," +
+                                                  "  '" + BamMediatorConstants.NICK_NAME + "': '" + this.streamNickName + "'," +
+                                                  "  '" + BamMediatorConstants.DESCRIPTION + "': '" + this.streamDescription + "'," +
+                                                  "  'correlationData':[" +
+                                                  "          {'name':'" + BamMediatorConstants.ACTIVITY_ID + "','type':'STRING'}" +
+                                                  "  ]," +
+                                                  "  'metaData':[" +
+                                                  "          {'name':'tenantId','type':'INT'}" +
+                                                  "  ]," +
+                                                  "  'payloadData':[" +
+                                                  "          {'name':'" + BamMediatorConstants.MSG_DIRECTION + "','type':'STRING'}," +
+                                                  "          {'name':'" + BamMediatorConstants.SERVICE_NAME + "','type':'STRING'}," +
+                                                  "          {'name':'" + BamMediatorConstants.OPERATION_NAME + "','type':'STRING'}," +
+                                                  "          {'name':'" + BamMediatorConstants.MSG_ID + "','type':'STRING'}" +
+                                                  this.getPropertyStreamDefinitionString() +
+                                                  this.getEntityStreamDefinitionString() +
+                                                  "  ]" +
+                                                  "}");
+        } catch (AgentException e) {
+            String errorMsg = "Problem while creating the Agent. " + e.getMessage();
+            log.error(errorMsg, e);
+            throw new BamMediatorException(errorMsg, e);
+        } catch (MalformedStreamDefinitionException e) {
+            String errorMsg = "Stream definition is incorrect. " + e.getMessage();
+            log.error(errorMsg, e);
+            throw new BamMediatorException(errorMsg, e);
+        } catch (StreamDefinitionException e) {
+            String errorMsg = "Problem with Stream Definition. " + e.getMessage();
+            log.error(errorMsg, e);
+            throw new BamMediatorException(errorMsg, e);
+        } catch (DifferentStreamDefinitionAlreadyDefinedException e) {
+            String errorMsg = "Already there is a different Stream Definition exists for the Name and Version. " + e.getMessage();
+            log.error(errorMsg, e);
+            throw new BamMediatorException(errorMsg, e);
+        }
         log.info("Event Stream Defined.");
     }
 
     private Object[] createPayloadData(MessageContext messageContext,
-                                       boolean direction, String service, String operation){
+                                       boolean direction, String service, String operation) throws BamMediatorException{
         int numOfProperties = properties.size();
         int numOfEntities = streamEntries.size();
 
@@ -392,7 +409,9 @@ public class BamMediator extends AbstractMediator {
                 return property.getValue();
             }
         } catch (JaxenException e) {
-            e.printStackTrace();  //To change body of catch statement use File | Settings | File Templates.
+            String errorMsg = "SynapseXPath cannot be created for the Stream Property. " + e.getMessage();
+            log.error(errorMsg, e);
+            //throw new BamMediatorException(errorMsg, e);
         }
         return "";
     }

@@ -18,7 +18,6 @@
 
 package org.wso2.carbon.mediator.bam.config;
 
-
 import org.apache.axiom.om.OMAbstractFactory;
 import org.apache.axiom.om.OMElement;
 import org.apache.synapse.SynapseConstants;
@@ -35,11 +34,10 @@ public class BamServerConfigXml {
     private org.apache.axiom.om.OMFactory fac = OMAbstractFactory.getOMFactory();
     private org.apache.axiom.om.OMNamespace synNS = SynapseConstants.SYNAPSE_OMNAMESPACE;
     private org.apache.axiom.om.OMNamespace nullNS;
-    private OMElement serverProfileElement;
 
     public OMElement buildServerProfile(String ip, String authenticationPort, String receiverPort, String userName, String password, String secure, String ksLocation, String ksPassword,
                                         List<StreamConfiguration> streamConfigurations){
-        serverProfileElement = this.serializeServerProfile();
+        OMElement serverProfileElement = this.serializeServerProfile();
         serverProfileElement.addChild(this.serializeConnection(secure, ip, authenticationPort, receiverPort));
         serverProfileElement.addChild(this.serializeCredential(userName, password));
         serverProfileElement.addChild(this.serializeKeyStore(ksLocation, ksPassword));
@@ -71,8 +69,7 @@ public class BamServerConfigXml {
     }
 
     private OMElement serializeServerProfile(){
-        OMElement profileElement = fac.createOMElement("serverProfile", synNS);
-        return profileElement;
+        return fac.createOMElement("serverProfile", synNS);
     }
 
     private OMElement serializeStreams(List<StreamConfiguration> streamConfigurations){

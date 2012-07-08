@@ -10,8 +10,6 @@
 <%@ page import="java.util.List" %>
 <%@ page contentType="text/html;charset=UTF-8" language="java" %>
 
-<jsp:include page="../resources/resources-i18n-ajaxprocessor.jsp"/>
-
 <fmt:bundle basename="org.wso2.carbon.mediator.bam.config.ui.i18n.Resources">
 
 <carbon:breadcrumb

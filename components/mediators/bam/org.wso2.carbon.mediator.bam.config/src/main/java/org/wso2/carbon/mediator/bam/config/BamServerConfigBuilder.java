@@ -48,19 +48,10 @@ public class BamServerConfigBuilder {
         if(credentialElement != null){
             OMAttribute userNameAttr = credentialElement.getAttribute(new QName("userName"));
             OMAttribute passwordAttr = credentialElement.getAttribute(new QName("password"));
-            //OMAttribute secureAttr = credentialElement.getAttribute(new QName("secure"));
-            if(userNameAttr != null && passwordAttr != null && /*secureAttr != null &&*/
-               !userNameAttr.getAttributeValue().equals("") && !passwordAttr.getAttributeValue().equals("")
-               /*&& !secureAttr.getAttributeValue().equals("")*/){
+            if(userNameAttr != null && passwordAttr != null && !userNameAttr.getAttributeValue().equals("")
+               && !passwordAttr.getAttributeValue().equals("")){
                 this.bamServerConfig.setUsername(userNameAttr.getAttributeValue());
                 this.bamServerConfig.setPassword(passwordAttr.getAttributeValue());
-                /*if("true".equals(secureAttr.getAttributeValue())){
-                    this.bamServerConfig.setSecurity(true);
-                } else if ("false".equals(secureAttr.getAttributeValue())) {
-                    this.bamServerConfig.setSecurity(false);
-                } else {
-                    return false; // Secure attribute should have a value
-                }*/
             }
             else {
                 return false;
@@ -116,12 +107,7 @@ public class BamServerConfigBuilder {
     private boolean processStreamsElement(OMElement bamServerConfigElement){
         OMElement streamsElement = bamServerConfigElement.getFirstChildWithName(
                 new QName(SynapseConstants.SYNAPSE_NAMESPACE, "streams"));
-        if(streamsElement != null){
-            return this.processStreamElements(streamsElement);
-        }
-        else {
-            return false;
-        }
+        return streamsElement != null && this.processStreamElements(streamsElement);
     }
 
     private boolean processStreamElements(OMElement streamsElement){
@@ -164,10 +150,7 @@ public class BamServerConfigBuilder {
     private boolean processPayloadElement(OMElement streamElement, StreamConfiguration streamConfiguration){
         OMElement payloadElement = streamElement.getFirstChildWithName(
                 new QName(SynapseConstants.SYNAPSE_NAMESPACE, "payload"));
-        if(payloadElement != null){
-            return this.processEntryElements(payloadElement, streamConfiguration);
-        }
-        return  false;
+        return payloadElement != null && this.processEntryElements(payloadElement, streamConfiguration);
     }
     
     private boolean processEntryElements(OMElement payloadElement, StreamConfiguration streamConfiguration){
@@ -200,10 +183,7 @@ public class BamServerConfigBuilder {
     private boolean processPropertiesElement(OMElement streamElement, StreamConfiguration streamConfiguration){
         OMElement propertiesElement = streamElement.getFirstChildWithName(
                 new QName(SynapseConstants.SYNAPSE_NAMESPACE, "properties"));
-        if(propertiesElement != null){
-            return this.processPropertyElements(propertiesElement, streamConfiguration);
-        }
-        return true; // Properties are not mandatory
+        return propertiesElement == null || this.processPropertyElements(propertiesElement, streamConfiguration);
     }
     
     private boolean processPropertyElements(OMElement propertiesElement, StreamConfiguration streamConfiguration){
@@ -238,9 +218,9 @@ public class BamServerConfigBuilder {
         OMElement serverProfileElement = omElement.getFirstChildWithName(
                 new QName(SynapseConstants.SYNAPSE_NAMESPACE, "serverProfile"));
 
-        if(serverProfileElement != null && !serverProfileElement.equals("")){
+        if(serverProfileElement != null){
             OMAttribute serverProfileAttr = serverProfileElement.getAttribute(new QName("path"));
-            if(serverProfileAttr != null && !serverProfileAttr.equals("")){
+            if(serverProfileAttr != null && !serverProfileAttr.getAttributeValue().equals("")){
                 return serverProfileAttr.getAttributeValue();
             }
             return null;

@@ -18,12 +18,15 @@
 package org.wso2.carbon.mediator.bam.xml;
 
 import org.apache.axiom.om.impl.builder.StAXOMBuilder;
+import org.apache.commons.logging.Log;
+import org.apache.commons.logging.LogFactory;
 import org.apache.synapse.config.xml.AbstractMediatorFactory;
 import org.apache.synapse.Mediator;
 import org.apache.synapse.SynapseConstants;
 import org.apache.axiom.om.OMElement;
 import org.apache.axiom.om.OMAttribute;
 import org.wso2.carbon.mediator.bam.BamMediator;
+import org.wso2.carbon.mediator.bam.config.BamMediatorException;
 import org.wso2.carbon.mediator.bam.config.BamServerConfig;
 import org.wso2.carbon.mediator.bam.config.BamServerConfigBuilder;
 import org.wso2.carbon.mediator.bam.config.CryptographyManager;
@@ -35,8 +38,8 @@ import java.io.ByteArrayInputStream;
 import java.util.Properties;
 
 public class BamMediatorFactory extends AbstractMediatorFactory {
-    public static final QName BAM_Q = new QName(
-            SynapseConstants.SYNAPSE_NAMESPACE, "bam");
+    private static final Log log = LogFactory.getLog(BamMediatorFactory.class);
+    public static final QName BAM_Q = new QName(SynapseConstants.SYNAPSE_NAMESPACE, "bam");
 
     public static final String SERVER_PROFILE_LOCATION = "bamServerProfiles";
 
@@ -65,7 +68,8 @@ public class BamMediatorFactory extends AbstractMediatorFactory {
                     this.updateBamMediator(bamServerConfigBuilder, bam, streamName, streamVersion);
                 }
             } catch (XMLStreamException e) {
-                e.printStackTrace();  //To change body of catch statement use File | Settings | File Templates.
+                String errorMsg = "Failed to create XML OMElement from the String. " + e.getMessage();
+                log.error(errorMsg, e);
             }
         }
         return bam;
@@ -141,9 +145,6 @@ public class BamMediatorFactory extends AbstractMediatorFactory {
     }
 
     private boolean isNotNullOrEmpty(String string){
-        if(string != null && !string.equals("")){
-            return true;
-        }
-        return false;
+        return string != null && !string.equals("");
     }
 }

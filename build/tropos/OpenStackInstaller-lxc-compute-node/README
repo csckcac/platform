@@ -1,0 +1,6 @@
+To install a new compute node modify wso2osinstall.sh and execute
+
+To uninstall a compute node modify wso2osuninstall.sh and execute
+
+To restart services in the compute node execute wso2restartservices.sh
+

@@ -1,8 +1,8 @@
 This folder contain the tools and scripts needed to manage the Stratos infrastructure which uses new Autoscaler
 component and Elastic Load Balancer.
 
-OpenStackInstaller-lxc-controller contain instructions and scripts on how to install openstack controller
+openstack/OpenStackInstaller-lxc-controller contain instructions and scripts on how to install openstack controller
 
-OpenStackInstaller-lxc-compute-node contain instructions and scripts on how to install an openstack compute node
+openstack/OpenStackInstaller-lxc-compute-node contain instructions and scripts on how to install an openstack compute node
 
 php_cartridge contain php cartridge related instructions and management scripts

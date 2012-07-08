@@ -16,14 +16,14 @@
 
 package org.wso2.carbon.admin.service;
 
+import java.rmi.RemoteException;
+
 import org.apache.axis2.AxisFault;
 import org.apache.commons.logging.Log;
 import org.apache.commons.logging.LogFactory;
 import org.wso2.carbon.admin.service.utils.AuthenticateStub;
 import org.wso2.carbon.logging.view.stub.LogViewerStub;
-import org.wso2.carbon.logging.view.stub.types.carbon.LogMessage;
-
-import java.rmi.RemoteException;
+import org.wso2.carbon.logging.view.stub.types.carbon.LogEvent;
 
 /**
  * This class can use to get system logs information
@@ -50,7 +50,7 @@ public class AdminServiceLogViewer {
      * @return logMessage array
      * @throws RemoteException Exception
      */
-    public LogMessage[] getLogs(String logType, String searchKey) throws RemoteException {
+    public LogEvent[] getLogs(String logType, String searchKey) throws RemoteException {
         return logViewerStub.getLogs(logType, searchKey);
     }
 }

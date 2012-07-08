@@ -120,21 +120,6 @@
 
 
     <repositories>
-        <repository>
-            <releases>
-                <enabled>true</enabled>
-                <updatePolicy>always</updatePolicy>
-                <checksumPolicy>warn</checksumPolicy>
-            </releases>
-            <snapshots>
-                <enabled>true</enabled>
-                <updatePolicy>never</updatePolicy>
-                <checksumPolicy>warn</checksumPolicy>
-            </snapshots>
-            <id>open-saml</id>
-            <name>OpenSAML</name>
-            <url>http://shibboleth.internet2.edu/downloads/maven2/</url>
-        </repository>
 	<repository>
             <id>wso2-maven2-repository</id>
             <name>WSO2 Maven2 Repository</name>

@@ -8,6 +8,8 @@ public class OperationsConstants {
     public final static String ADD = "add";
     public final static String UPDATE = "update";
     public final static String DELETE = "delete";
+    public final static String DEPENDENCIES = "Dependencies";
+    public final static String ARTIFACT_IDS = "ArtifactIDs";
     public final static String IN = "In";
     public final static String OUT = "Out";
     public final static String REQUEST = "Request";

@@ -286,6 +286,10 @@ public class GovernanceMgtUIListMetadataServiceComponent {
                     param3.setLocked(true);
                     service.addParameter(param3);
 
+                    Parameter param4 = new Parameter("enableMTOM", "true");
+                    param4.setLocked(true);
+                    service.addParameter(param4);
+
                     XmlSchemaCollection schemaCol = new XmlSchemaCollection();
                     List<XmlSchema> schemaList = new ArrayList<XmlSchema>();
 
@@ -344,6 +348,38 @@ public class GovernanceMgtUIListMetadataServiceComponent {
 
                     service.addOperation(delete);
                     schemaList.addAll(Arrays.asList(delete.getSchemas(schemaCol)));
+
+                    AbstractOperation getAllArtifactIds = new GetAllArtifactIDsOperation(
+                            new QName(OperationsConstants.GET + singularLabel + OperationsConstants.ARTIFACT_IDS),
+                            governanceSystemRegistry, mediaType,
+                            OperationsConstants.NAMESPACE_PART1 +
+                            OperationsConstants.GET + "." + key + "." +
+                                    OperationsConstants.ARTIFACT_IDS.toLowerCase() + OperationsConstants.NAMESPACE_PART2).
+                            init(key, receiver);
+
+                    Parameter authorizationActionGetArtifactIDs = new Parameter("AuthorizationAction",
+                            "/permission/admin/manage/resources/govern/"+ pluralLabel +"/list");
+                    authorizationActionGetArtifactIDs.setLocked(true);
+                    getAllArtifactIds.addParameter(authorizationActionGetArtifactIDs);
+
+                    service.addOperation(getAllArtifactIds);
+                    schemaList.addAll(Arrays.asList(getAllArtifactIds.getSchemas(schemaCol)));
+
+                    AbstractOperation getDependencies = new GetDependenciesOperation(
+                            new QName(OperationsConstants.GET  + singularLabel + OperationsConstants.DEPENDENCIES),
+                            governanceSystemRegistry, mediaType,
+                            OperationsConstants.NAMESPACE_PART1 +
+                            OperationsConstants.GET + "." + key + "." +
+                                    OperationsConstants.DEPENDENCIES.toLowerCase() + OperationsConstants.NAMESPACE_PART2).
+                            init(key, receiver);
+
+                    Parameter authorizationActionGetDependencies = new Parameter("AuthorizationAction",
+                            "/permission/admin/manage/resources/govern/"+ pluralLabel +"/list");
+                    authorizationActionGetDependencies.setLocked(true);
+                    getDependencies.addParameter(authorizationActionGetDependencies);
+
+                    service.addOperation(getDependencies);
+                    schemaList.addAll(Arrays.asList(getDependencies.getSchemas(schemaCol)));
 
                     axisConfig.addService(service);
 

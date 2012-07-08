@@ -140,11 +140,19 @@ public abstract class AbstractOperation extends InOutAxisOperation implements Me
 
             OMElement element2 = elements.get(1);
             element2.addAttribute("name", name, null);
-            expression = new AXIOMXPath("xs:complexType/xs:sequence/xs:element");
-            expression.addNamespace("xs", OperationsConstants.XSD_NAMESPACE);
-            OMElement ep2 = (OMElement)expression.selectNodes(element2).get(0);
-            ep2.addAttribute("type", requestName, null);
-            ep2.addAttribute("name", requestType, null);
+
+            if(!requestType.equals("")) {
+                expression = new AXIOMXPath("xs:complexType/xs:sequence/xs:element");
+                expression.addNamespace("xs", OperationsConstants.XSD_NAMESPACE);
+                OMElement ep2 = (OMElement)expression.selectNodes(element2).get(0);
+                ep2.addAttribute("type", requestName, null);
+                ep2.addAttribute("name", requestType, null);
+            } else {
+                expression = new AXIOMXPath("xs:complexType");
+                expression.addNamespace("xs", OperationsConstants.XSD_NAMESPACE);
+                OMElement ep2 = (OMElement)expression.selectNodes(element2).get(0);
+                ep2.detach();
+            }
 
 
             OMElement element3 = elements.get(2);

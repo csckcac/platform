@@ -29,7 +29,6 @@
 <fmt:bundle basename="org.wso2.carbon.bam.toolbox.deployer.ui.i18n.Resources">
 <script src="../editarea/edit_area_full.js" type="text/javascript"></script>
 <script type="text/javascript" src="../ajax/js/prototype.js"></script>
-<link rel="stylesheet" type="text/css" href="css/toolbox-styles.css" />
 
 <carbon:breadcrumb label="available.bam.tools"
                    resourceBundle="org.wso2.carbon.bam.toolbox.deployer.ui.i18n.Resources"
@@ -111,12 +110,24 @@
             }
         }
         document.getElementById('selectedToolType').value = selected;
-        var toolbox = document.getElementById('toolbox').value;
+
         if (selected == 0) {
+            var toolbox = document.getElementById('toolbox').value;
             if ('' == toolbox) {
                 CARBON.showErrorDialog('No ToolBox has been selected!');
             } else if (toolbox.indexOf('.bar') == -1) {
                 CARBON.showErrorDialog('The ToolBox should be \'bar\' artifact');
+            } else {
+                document.getElementById('uploadBar').submit();
+            }
+        } else if (selected == -1) {
+            var urltoolbox = document.getElementById('urltoolbox').value;
+            if ('' == urltoolbox) {
+                CARBON.showErrorDialog('No ToolBox has been selected!');
+            } else if (urltoolbox.indexOf('.bar') == -1) {
+                CARBON.showErrorDialog('The ToolBox should be \'bar\' artifact');
+            } else if (!isValidURL(urltoolbox, document.getElementById('urltoolbox'))) {
+                CARBON.showErrorDialog('The URL is not valid! Please enter a valid url!');
             } else {
                 document.getElementById('uploadBar').submit();
             }
@@ -125,8 +136,18 @@
         }
     }
 
+    function isValidURL(url, element) {
+        // if user has not entered http:// https:// or ftp:// assume they mean http://
+        if (!/^(http|https|ftp):\/\//i.test(url)) {
+            url = 'http://' + url; // set both the value
+            $(element).val(url);
+        }
+        // now check if valid url
+        return /^(http|https|ftp):\/\/(((([a-z]|\d|-|\.|_|~|[\u00A0-\uD7FF\uF900-\uFDCF\uFDF0-\uFFEF])|(%[\da-f]{2})|[!\$&amp;'\(\)\*\+,;=]|:)*@)?(((\d|[1-9]\d|1\d\d|2[0-4]\d|25[0-5])\.(\d|[1-9]\d|1\d\d|2[0-4]\d|25[0-5])\.(\d|[1-9]\d|1\d\d|2[0-4]\d|25[0-5])\.(\d|[1-9]\d|1\d\d|2[0-4]\d|25[0-5]))|((([a-z]|\d|[\u00A0-\uD7FF\uF900-\uFDCF\uFDF0-\uFFEF])|(([a-z]|\d|[\u00A0-\uD7FF\uF900-\uFDCF\uFDF0-\uFFEF])([a-z]|\d|-|\.|_|~|[\u00A0-\uD7FF\uF900-\uFDCF\uFDF0-\uFFEF])*([a-z]|\d|[\u00A0-\uD7FF\uF900-\uFDCF\uFDF0-\uFFEF])))\.)+(([a-z]|[\u00A0-\uD7FF\uF900-\uFDCF\uFDF0-\uFFEF])|(([a-z]|[\u00A0-\uD7FF\uF900-\uFDCF\uFDF0-\uFFEF])([a-z]|\d|-|\.|_|~|[\u00A0-\uD7FF\uF900-\uFDCF\uFDF0-\uFFEF])*([a-z]|[\u00A0-\uD7FF\uF900-\uFDCF\uFDF0-\uFFEF])))\.?)(:\d*)?)(\/((([a-z]|\d|-|\.|_|~|[\u00A0-\uD7FF\uF900-\uFDCF\uFDF0-\uFFEF])|(%[\da-f]{2})|[!\$&amp;'\(\)\*\+,;=]|:|@)+(\/(([a-z]|\d|-|\.|_|~|[\u00A0-\uD7FF\uF900-\uFDCF\uFDF0-\uFFEF])|(%[\da-f]{2})|[!\$&amp;'\(\)\*\+,;=]|:|@)*)*)?)?(\?((([a-z]|\d|-|\.|_|~|[\u00A0-\uD7FF\uF900-\uFDCF\uFDF0-\uFFEF])|(%[\da-f]{2})|[!\$&amp;'\(\)\*\+,;=]|:|@)|[\uE000-\uF8FF]|\/|\?)*)?(\#((([a-z]|\d|-|\.|_|~|[\u00A0-\uD7FF\uF900-\uFDCF\uFDF0-\uFFEF])|(%[\da-f]{2})|[!\$&amp;'\(\)\*\+,;=]|:|@)|\/|\?)*)?$/i.test(url);
+    }
+
     function cancelDeploy() {
-        location.href = "listbar.jsp?region=region1&item=list_toolbox_menu";
+        location.href = "../bam-toolbox/list.bar";
     }
 
     function enableCustomToolBox() {
@@ -139,35 +160,18 @@
         }
         if (selected == '0' || selected == '') {
             document.getElementById('toolbox').disabled = false;
+            document.getElementById('urltoolbox').disabled = true;
         }
-        else {
+        else if (selected == '-1') {
             document.getElementById('toolbox').disabled = true;
+            document.getElementById('urltoolbox').disabled = false;
+        } else {
+            document.getElementById('toolbox').disabled = true;
+            document.getElementById('urltoolbox').disabled = false;
         }
     }
 </script>
-<style type="text/css">
-    /*-- overriding carbon styles --*/
-    #toolBoxes tbody tr td{
-        padding: 8px 0;
-        vertical-align: top!important;
-    }
 
-
-    .toolBoxInfo{
-        background-attachment: scroll;
-        background-clip: border-box;
-        background-color: transparent;
-        background-image: url("images/more-info.gif");
-        background-origin: padding-box;
-        background-position: 16px 2px;
-        background-repeat: no-repeat;
-        background-size: 10px auto;
-        color: #8B8B8B;
-        font-style: italic;
-        padding: 0 0 2px 30px;
-        position: relative;
-    }
-</style>
 <div id="middle">
     <h2>Add Tool Box</h2>
 
@@ -175,7 +179,7 @@
         <form id="uploadBar" name="uploadBar" enctype="multipart/form-data"
               action="../../fileupload/bamToolboxDeploy" method="POST">
 
-            <table id="toolBoxes" class="styledLeft">
+            <table class="styledLeft">
                 <thead>
                 <tr>
                     <th colspan="4">
@@ -184,23 +188,6 @@
                 </tr>
                 </thead>
                 <tbody>
-
-                    <%--<tr>--%>
-                    <%--<td width="10px">--%>
-                    <%--1.--%>
-                    <%--</td>--%>
-                    <%--<td width="10px">--%>
-                    <%--<input type="radio" name="typeToolbox" value="1" checked="true"--%>
-                    <%--onclick="enableCustomToolBox();"/>--%>
-                    <%--</td>--%>
-                    <%--<td>--%>
-                    <%--Message Tracing--%>
-                    <%--</td>--%>
-                    <%--<td>--%>
-                    <%--This toolbox setup the model to trace the messages which are fired from a set of--%>
-                    <%--servers to WSO2 BAM by deploying respective Hive scripts and default gadgets.--%>
-                    <%--</td>--%>
-                    <%--</tr>--%>
 
 
                 <% int count = 1;
@@ -235,11 +222,11 @@
                             }
                         %>
                     </td>
-                    <td>
+                    <td width="200px">
                         <%=aToolbox.getDisplayName()%> <fmt:message key="toolbox"/>
-                    <div class="toolBoxInfo">
+                    </td>
+                    <td>
                         <%=aToolbox.getDescription()%>
-                    </div>
                     </td>
                     <%
                         count++;
@@ -251,42 +238,15 @@
                     }
                 %>
 
-                    <%--<tr>--%>
-                    <%--<td width="10px">--%>
-                    <%--3.--%>
-                    <%--</td>--%>
-                    <%--<td width="10px">--%>
-                    <%--<input type="radio" name="typeToolbox" value="3"--%>
-                    <%--onclick="enableCustomToolBox();"/>--%>
-                    <%--</td>--%>
-                    <%--<td>--%>
-                    <%--Service Data Monitoring--%>
-                    <%--</td>--%>
-                    <%--<td>--%>
-                    <%--This Toolbox enable monitor  message activity from Service Hosting WSO2 Servers such as WSO2 AS, DSS, BPS, CEP, BRS and any other WSO2 Carbon server.--%>
-                    <%--</td>--%>
-                    <%--</tr>--%>
 
-                    <%--<tr>--%>
-                    <%--<td width="10px">--%>
-                    <%--4.--%>
-                    <%--</td>--%>
-                    <%--<td width="10px">--%>
-                    <%--<input type="radio" name="typeToolbox" value="4"--%>
-                    <%--onclick="enableCustomToolBox();"/>--%>
-                    <%--</td>--%>
-                    <%--<td>--%>
-                    <%--Mediation Data Monitoring--%>
-                    <%--</td>--%>
-                    <%--<td>--%>
-                    <%--This Toolbox enable monitor message activity using Message Activity Mediators from the WSO2 ESB--%>
-                    <%--</td>--%>
-                    <%--</tr>--%>
+                <tr>
+                    <td colspan="4"></td>
+                </tr>
                 </tbody>
             </table>
-            <br />
 
-            <table class="styledLeft tool-box-table-view">
+
+            <table class="styledLeft">
                 <thead>
                 <tr>
                     <th colspan="4">
@@ -314,46 +274,86 @@
                             }
                         %>
                     </td>
-                    <td>
-                        <%
-                            if (!checked) {
-                        %>
-                        <nobr><fmt:message key="bar.artifact"/> <span
+
+                    <%
+                        if (!checked) {
+                    %>
+                    <td width="200px">
+                        <nobr><fmt:message key="toolbox.path.from.file.system"/> <span
                                 class="required">*</span>&nbsp;&nbsp;&nbsp;
+                        </nobr>
+                    </td>
+                    <td>
+                        <nobr>
                             <input type="file" name="toolbox"
                                    id="toolbox" size="80px"/>
                         </nobr>
-                        <%
-                        } else {
-                        %>
-                        <nobr><fmt:message key="bar.artifact"/> <span
+                    </td>
+
+                    <%
+                    } else {
+                    %>
+                    <td width="200px">
+                        <nobr><fmt:message key="toolbox.path.from.file.system"/> <span
                                 class="required">*</span>&nbsp;&nbsp;&nbsp;
+                        </nobr>
+                    </td>
+                    <td>
+                        <nobr>
                             <input type="file" name="toolbox"
                                    id="toolbox" size="80px" disabled="true"/>
                         </nobr>
-                        <%
-                            }
-                        %>
                     </td>
+                    <%
+                        }
+                    %>
+
                 </tr>
-            </tbody>
-        </table>
-            <br />
-        <table class="styledLeft">
-            <tbody>
+
                 <tr>
-                    <td class="buttonRow" colspan="3">
+                    <td width="10px">
+                    </td>
+                    <td width="10px">
+                        <input type="radio" name="typeToolbox" value="-1"
+                               onclick="enableCustomToolBox();"/>
+                    </td>
+                    <td width="200px">
+
+                        <nobr><fmt:message key="toolbox.path.from.url"/> <span
+                                class="required">*</span>&nbsp;&nbsp;&nbsp;
+                        </nobr>
+                    </td>
+                    <td>
+                        <nobr>
+                            <input name="urltoolbox"
+                                   id="urltoolbox" size="80px" value="http://" disabled="true"/>
+                        </nobr>
+                    </td>
+
+                </tr>
+
+                <tr>
+                    <td colspan="4">
+                        <table class="normal-nopadding">
+                            <tbody>
+
+                            <tr>
+                                <td class="buttonRow" colspan="2">
                                     <input type="button" value="<fmt:message key="deploy"/>"
                                            class="button" name="deploy"
                                            onclick="javascript:deployToolBox();"/>
                                     <input type="button" value="<fmt:message key="cancel"/>"
                                            name="cancel" class="button"
                                            onclick="javascript:cancelDeploy();"/>
+                                </td>
+                            </tr>
+                            </tbody>
+                        </table>
                     </td>
                 </tr>
                 <input type="hidden" id="selectedToolType" name="selectedToolType"/>
                 </tbody>
-        </table>
+            </table>
         </form>
     </div>
 </div>

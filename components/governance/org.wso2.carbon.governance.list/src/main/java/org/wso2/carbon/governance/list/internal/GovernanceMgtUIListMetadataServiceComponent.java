@@ -263,8 +263,8 @@ public class GovernanceMgtUIListMetadataServiceComponent {
             if (axisConfig != null) {
                 try {
 
-                    String singularLabel = configuration.getSingularLabel();
-                    String pluralLabel = configuration.getPluralLabel();
+                    String singularLabel = configuration.getSingularLabel().replaceAll("\\s", "");
+                    String pluralLabel = configuration.getPluralLabel().replaceAll("\\s", "");
                     String key = configuration.getKey();
                     String mediaType = configuration.getMediaType();
 
@@ -292,7 +292,7 @@ public class GovernanceMgtUIListMetadataServiceComponent {
                     AbstractOperation create = new CreateOperation(new QName(OperationsConstants.ADD + singularLabel),
                             governanceSystemRegistry, mediaType,
                             OperationsConstants.NAMESPACE_PART1 +
-                                    OperationsConstants.ADD + singularLabel + OperationsConstants.NAMESPACE_PART2).
+                                    OperationsConstants.ADD + "." + key + OperationsConstants.NAMESPACE_PART2).
                             init(key, receiver);
 
                     Parameter authorizationActionCreate = new Parameter("AuthorizationAction",
@@ -306,7 +306,7 @@ public class GovernanceMgtUIListMetadataServiceComponent {
                     AbstractOperation read = new ReadOperation(new QName(OperationsConstants.GET + singularLabel),
                             governanceSystemRegistry, mediaType,
                             OperationsConstants.NAMESPACE_PART1 +
-                                    OperationsConstants.GET + singularLabel + OperationsConstants.NAMESPACE_PART2).
+                                    OperationsConstants.GET + "." + key + OperationsConstants.NAMESPACE_PART2).
                             init(key, receiver);
 
                     Parameter authorizationActionRead = new Parameter("AuthorizationAction",
@@ -320,7 +320,7 @@ public class GovernanceMgtUIListMetadataServiceComponent {
                     AbstractOperation update = new UpdateOperation(new QName(OperationsConstants.UPDATE + singularLabel),
                             governanceSystemRegistry, mediaType,
                             OperationsConstants.NAMESPACE_PART1 +
-                                    OperationsConstants.UPDATE + singularLabel + OperationsConstants.NAMESPACE_PART2).
+                                    OperationsConstants.UPDATE + "." + key + OperationsConstants.NAMESPACE_PART2).
                             init(key, receiver);
 
                     Parameter authorizationActionUpdate = new Parameter("AuthorizationAction",
@@ -334,7 +334,7 @@ public class GovernanceMgtUIListMetadataServiceComponent {
                     AbstractOperation delete = new DeleteOperation(new QName(OperationsConstants.DELETE + singularLabel),
                             governanceSystemRegistry, mediaType,
                             OperationsConstants.NAMESPACE_PART1 +
-                                    OperationsConstants.DELETE + singularLabel + OperationsConstants.NAMESPACE_PART2).
+                                    OperationsConstants.DELETE + "." + key + OperationsConstants.NAMESPACE_PART2).
                             init(key, receiver);
 
                     Parameter authorizationActionDelete = new Parameter("AuthorizationAction",

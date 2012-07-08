@@ -1,0 +1,127 @@
+<?xml version="1.0" encoding="ISO-8859-1"?>
+<!--
+ ~ Copyright (c) WSO2 Inc. (http://www.wso2.org) All Rights Reserved.
+ ~
+ ~ WSO2 Inc. licenses this file to you under the Apache License,
+ ~ Version 2.0 (the "License"); you may not use this file except
+ ~ in compliance with the License.
+ ~ You may obtain a copy of the License at
+ ~
+ ~    http://www.apache.org/licenses/LICENSE-2.0
+ ~
+ ~ Unless required by applicable law or agreed to in writing,
+ ~ software distributed under the License is distributed on an
+ ~ "AS IS" BASIS, WITHOUT WARRANTIES OR CONDITIONS OF ANY
+ ~ KIND, either express or implied.  See the License for the
+ ~ specific language governing permissions and limitations
+ ~ under the License.
+ -->
+<!DOCTYPE html
+        PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN"
+        "http://www.w3.org/TR/xhtml1/DTD/xhtml1-strict.dtd">
+<html xmlns="http://www.w3.org/1999/xhtml" xml:lang="en" lang="en">
+    <head>
+        <title>@product.name@ - Human Task Quick Start Guide </title>
+        <link href="../css/bps-docs.css" rel="stylesheet"/>
+        <link href="styles/dist-docs.css" rel="stylesheet" type="text/css" media="all"/>
+    </head>
+    <body>
+
+        <h1>Human Task Quick Start Guide</h1>
+
+        <p>
+            This quick start guide will list the basic steps to deploy, create and manage Human
+            Tasks in WSO2 BPS @product.version@
+        </p>
+
+        <h3>Table of Content</h3>
+        <ul>
+            <li><a href="#Deploying-A-Task-Artifact">Deploying a Human Task Artifact</a></li>
+            <li><a href="#Creating-Roles-Users">Creating User Roles and Users</a></li>
+            <li><a href="#Creating-Tasks">Creating Tasks</a></li>
+            <li><a href="#Listing-Tasks">Listing Human Tasks Instances</a></li>
+        </ul>
+
+        <h2 id="Deploying-A-Task-Artifact">Human Task Artifact Deployment</h2>
+
+        <p>
+            Once you have developed your task artifact you can deploy it following the steps given in the
+            <a href="../humantask-deployment/humantask_deployment_guide.html">Human Task deployment guide</a>.
+        </p>
+
+        <p>
+            You can use the sample task configuration packed with the WSO2 BPS @product.version@ which could be found in
+            <b>BPS_HOME/repository/samples/humantask/ClaimsApprovalTask.zip</b>
+        </p>
+
+        <h2 id="Creating-Roles-Users">Creating User Roles and Users</h2>
+
+        <p>
+            Before you can create tasks, you need to create users and roles associated with your task definition. The logical people groups
+            will be associated with the Carbon roles. Hence you need to create Carbon roles for each logical people group provided in your
+            task configuration.  Once the roles are created users who are intended to be associated with those roles should be added.
+        </p>
+
+        <ol>
+            <li><b>Adding Roles</b>
+                <p>In the management console go to <b>Configure &gt; Users and Roles</b>. You can add roles by clicking on <b>Roles</b> link. The add new
+                    role screen would take you to a simple wizard to create a new role in BPS.
+                </p>
+                <p><img src="../images/humantask-quick-start-guide/add_role.png" alt="Add User Roles Screen"/></p>
+
+                <p>
+                    Once you have provided the matching role names in the task configuration you should associate minimum permissions
+                    for the particular role. If the role being added is intended only to work with task items it should be associated only with
+                    <b>Login</b> and <b>View Task List</b> permissions only. Refer the image below for more details.
+                </p>
+
+                <p><img src="../images/humantask-quick-start-guide/permissions.png" alt="Add User Roles Screen"/></p>
+
+
+            </li>
+
+            <li><b>Adding Users</b>
+                <p>In the management console go to <b>Configure &gt; Users and Roles</b>. You can add users by clicking on <b>Users</b> link. The add new
+                    user screen would take you to a simple wizard to create a new user in BPS.
+                </p>
+                <p><img src="../images/humantask-quick-start-guide/add_user.png" alt="Add User Screen"/></p>
+
+                <p>
+                    Once you have provided the user name and the password you should associate the user with the particular role
+                    he should be added to. Refer the image below for more details.
+                </p>
+
+                <p><img src="../images/humantask-quick-start-guide/role_association.png" alt="Role Association"/></p>
+
+            </li>
+        </ol>
+
+
+        <h2 id="Creating-Tasks">Creating Tasks</h2>
+
+        <p>
+            Once the task is deployed and the related roles and users are created, it is ready to relieve task
+            creation messages. Task instances could be created in two methods.
+        </p>
+
+        <ol>
+            <li>
+                Invoking a BPEL process referring to the human task as a people activity construct.
+            </li>
+
+            <li>
+                Invoking the Human Task web service directly.
+            </li>
+        </ol>
+
+        <h2 id="Listing-Tasks">Viewing tasks and task life cycle</h2>
+
+        <p>The list of tasks related to a particular user can be viewed by visiting the task list page</p>
+
+        <p><img src="../images/humantask-task-lc/view_task_list_link.png" alt="Role Association"/></p>
+
+        <p>Refer <a href="../humantask-instance-management/managing_tasks.html">Managing Human Tasks</a> guide
+        for more information about task operations and management.</p>
+
+    </body>
+</html>

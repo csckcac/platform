@@ -56,7 +56,7 @@
             <item name="Management API" href="user_guide.html#Using-Management-API"/>
         </menu>
         <menu name="Human Task Guide" ref="">
-            <item name="Human Tasks Quick Start Guide" href="humantask-quick-start-guide/index.html" />
+            <item name="Human Tasks Quick Start Guide" href="humantask-quick-start-guide/humantask_quickstart_guide.html" />
             <item name="Deploying HumanTasks" href="humantask-deployment/humantask_deployment_guide.html" />
             <item name="Managing Tasks" href="humantask-instance-management/managing_tasks.html" />
             <item name="Developing a Human Task Artifact" href="humantask-developing-a-task-artifact/index.html" />

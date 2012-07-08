@@ -526,13 +526,13 @@
 				<!-- BAM data agent features -->
 
 				<featureArtifactDef>
-				    org.wso2.carbon:org.wso2.carbon.eventbridge.agent.thrift.feature:${carbon.version}
+				    org.wso2.carbon:org.wso2.carbon.databridge.agent.thrift.server.feature:${carbon.version}
 				</featureArtifactDef>
 				<featureArtifactDef>
-				    org.wso2.carbon:org.wso2.carbon.eventbridge.commons.feature:${carbon.version}
+				    org.wso2.carbon:org.wso2.carbon.databridge.commons.server.feature:${carbon.version}
 				</featureArtifactDef>
 				<featureArtifactDef>
-				    org.wso2.carbon:org.wso2.carbon.eventbridge.thrift.commons.feature:${carbon.version}
+				    org.wso2.carbon:org.wso2.carbon.databridge.commons.thrift.server.feature:${carbon.version}
 				</featureArtifactDef>
                                 <featureArtifactDef>
                                     org.wso2.carbon:org.wso2.carbon.system.statistics.feature:${carbon.version}
@@ -543,12 +543,18 @@
                                 <featureArtifactDef>
                                     org.wso2.carbon:org.wso2.carbon.bam.mediation.agent.feature:${carbon.version}
                                 </featureArtifactDef>
-				<featureArtifactDef>
-                                    org.wso2.carbon:org.wso2.carbon.ndatasource.feature:${carbon.version}
+                                <featureArtifactDef>
+                                    org.wso2.carbon:org.wso2.carbon.mediator.bam.feature:${carbon.version}
                                 </featureArtifactDef>
+
+				<!-- End of BAM data agent features -->
+
 
                                 <featureArtifactDef>
                                     org.wso2.carbon:org.wso2.carbon.cassandra.explorer.feature:${carbon.version}
+                                </featureArtifactDef>
+                               <featureArtifactDef>
+                                    org.wso2.carbon:org.wso2.carbon.ndatasource.feature:${carbon.version}
                                 </featureArtifactDef>
 <!--
   <featureArtifactDef>

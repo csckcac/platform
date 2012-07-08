@@ -54,7 +54,8 @@ public class ZipFileUploadExecutor extends AbstractFileUploadExecutor {
         }
 
         HostingAdminClient client =
-                new HostingAdminClient(cookie, serverURL, configurationContext, request.getLocale());
+                new HostingAdminClient(request.getLocale());
+        client.initApplicationManagementService(cookie, configurationContext, serverURL);
         String msg;
 
         List<FileItemData> tempDataList = fileItemsMap.get("warFileName");

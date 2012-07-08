@@ -34,7 +34,7 @@
     HostingAdminClient client;
 
     try {
-             client = new HostingAdminClient(cookie, serverURL, configContext , request.getLocale());
+             client = new HostingAdminClient(request.getLocale());
     }catch (Exception e) {
              response.setStatus(500);
              CarbonUIMessage uiMsg = new CarbonUIMessage(CarbonUIMessage.ERROR, e.getMessage(), e);
@@ -145,6 +145,7 @@
                     </tr>
                 </table>
                 <%
+                    client.initApplicationManagementService(cookie, configContext, serverURL);
                     String images[] = client.getBaseImages();
                     if(noPHPAppsDeployed){ //when three are no PHP apps for this tenant, we should create instance
                         %>

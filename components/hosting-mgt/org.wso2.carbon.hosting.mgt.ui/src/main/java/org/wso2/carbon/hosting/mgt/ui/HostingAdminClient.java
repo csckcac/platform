@@ -42,21 +42,25 @@ public class HostingAdminClient {
     public ApplicationManagementServiceStub stub;
     private static boolean isInstanceUp = false;
 
-    public HostingAdminClient(String cookie,
-                             String backendServerURL,
-                             ConfigurationContext configCtx,
+    public HostingAdminClient(
                              Locale locale) throws AxisFault {
-        String serviceURL = backendServerURL + "ApplicationManagementService";
         bundle = ResourceBundle.getBundle(BUNDLE, locale);
 
+    }
+
+    public void initApplicationManagementService( String cookie, ConfigurationContext configCtx,
+                                                  String backendServerURL) throws AxisFault {
+
+        String serviceURL = backendServerURL + "ApplicationManagementService";
         stub = new ApplicationManagementServiceStub(configCtx, serviceURL);
         ServiceClient client = stub._getServiceClient();
         Options option = client.getOptions();
         option.setManageSession(true);
         option.setProperty(org.apache.axis2.transport.http.HTTPConstants.COOKIE_STRING, cookie);
         option.setProperty(Constants.Configuration.ENABLE_MTOM, Constants.VALUE_TRUE);
-    }
 
+        stub._getServiceClient().getOptions().setTimeOutInMilliSeconds(90000);
+    }
 
     public void uploadWebapp(FileUploadData[] fileUploadDataList) throws AxisFault {
         try {

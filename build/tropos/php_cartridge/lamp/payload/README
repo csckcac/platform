@@ -1,0 +1,42 @@
+This is the sample payload sent to a php instance when it is created.
+
+
+Generate a key pair
+shh-keygen
+name it as wso2-key
+
+Copy the wso2-key and wso2-key.pub to this folder.
+Put the  wso2-key.pub into /root/.ssh folder of the openstack controller.
+Now ssh to that machine using the wso2-key private key. Copy the entry added to 
+the ~/.ssh/known_hosts in the machine from which you accessed the openstack controller.
+Create a file called known_hosts here and copy that entry.
+
+Now pack this payload as payload.tar.gz and pass this when creating PHP instances.
+Note that in debian_cron_script.sh following entries are replaced by information available
+at the time of creating the instance.
+
+tenant="TENANT"
+controller_ip="CONTROLLERIP"
+app_path="APPPATH"
+docroot="DOCUMENTROOT"
+
+
+Following is the /etc/rc.local file of the php instance
+
+#!/bin/sh -e
+cp -f /var/lib/cloud/instance/user-data.txt /opt/payload.tar.gz
+pushd /opt
+tar -zxf ./payload.tar.gz
+chmod -R 755 ./payload
+chmod -R 0600 ./payload/wso2-key
+rm -f ./payload.tar.gz
+cat ./payload/known_hosts >> ~/.ssh/known_hosts
+/opt/payload/debian_cron_script.sh
+popd
+crontab /opt/payload/debian_cron.sh > /dev/null &2>1
+exit 0
+
+You can see that how the scripts contained in this folder are used to run a cron job
+there, to periodically update the php source code of the tenant.
+
+

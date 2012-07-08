@@ -1,0 +1,79 @@
+#!/bin/bash
+
+# References:
+# http://www.ibm.com/developerworks/linux/library/l-lxc-containers/
+# http://blog.system42.net/2010/05/18/ubuntu-1004-lxc-container-script/
+# https://github.com/phbaer/lxc-tools/blob/master/lxc-ubuntu
+# http://blog.bodhizazen.net/linux/lxc-configure-ubuntu-lucid-containers/
+# http://blog.henyo.com/2011/01/lxclinux-containers-on-ubuntu-1004.html
+# ...plus various forums and mailing lists.
+# 
+# The support for ./init scripts in /etc/init is commented out.  We use /etc/rc.local for now.
+# You can try the scripts from: https://github.com/nigelmcnie/lxc-simple
+#   wget --no-check-certificate https://github.com/nigelmcnie/lxc-simple/raw/master/upstart/lxc-autostart.conf
+#   wget --no-check-certificate https://github.com/nigelmcnie/lxc-simple/raw/master/upstart/lxc-stopall.conf
+#
+
+configure_container() {
+	$CONFDIR/hooks.d/configure_software $1 $2 $3 $4 $5
+}
+
+
+
+HOST=$1
+ROOTFS=$2
+TEMPLATE=$3
+CONTAINER_IP=$4
+HM_IP=$5
+
+
+# Die on any error:
+set -e
+
+# Make sure the user is running as root.
+
+if [ "$UID" -ne "0" ]; then
+	echo ; echo "  You must be root to run $0.  (Try running 'sudo bash' first.)" ; echo 
+	exit 69
+fi
+
+export CONFDIR="."
+if [ -d /etc/lxc-ubuntu-x/hooks.d ] && [ -f /etc/lxc-ubuntu-x/lxc-ubuntu-x.conf ]; then
+	# Use the system-wide config in /etc/lxc-ubuntu-x:
+	export CONFDIR="/etc/lxc-ubuntu-x"
+fi
+source $CONFDIR/lxc-ubuntu-x.conf
+# Export theses config vars so they are visible to the hooks:
+export BASEDIR INSTALL_USERNAME INSTALL_PASSWORD AUTHORIZED_KEYS_TO_COPY SVN_URL SVN_WORK_DIRECTORY CARBON_SERVER_DIR
+
+
+if [ -z "$ROOTFS" ]; then
+	ROOTFS="$BASEDIR/$HOST"
+fi
+
+
+if [ -z "$TEMPLATE" ]; then
+	TEMPLATE="default"
+fi
+
+# Also: since we allow any rootfs to also be a template, we need
+# to watch for the corner case that the $HOST and $TEMPLATE are the 
+# same name (to prevent the new HOST from overwriting the TEMPLATE).
+if [ "$HOST" == "$TEMPLATE" ]; then
+	echo "ERROR: A new LXC host cannot be its own template; you have $TEMPLATE for both."
+	exit 43
+fi
+
+
+export CLONE="true"
+if [ ! -d "$BASEDIR/$TEMPLATE" ]; then
+    export CLONE="false"
+fi
+
+###############################################################
+
+
+# Finally, configure and create the container:
+configure_container $HOST $ROOTFS $TEMPLATE $CONTAINER_IP $HM_IP
+
+

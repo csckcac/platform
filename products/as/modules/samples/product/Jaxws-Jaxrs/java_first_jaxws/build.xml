@@ -1,0 +1,125 @@
+<!--
+  ~ Copyright 2005-2007 WSO2, Inc. (http://wso2.com)
+  ~
+  ~ Licensed under the Apache License, Version 2.0 (the "License");
+  ~ you may not use this file except in compliance with the License.
+  ~ You may obtain a copy of the License at
+  ~
+  ~ http://www.apache.org/licenses/LICENSE-2.0
+  ~
+  ~ Unless required by applicable law or agreed to in writing, software
+  ~ distributed under the License is distributed on an "AS IS" BASIS,
+  ~ WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+  ~ See the License for the specific language governing permissions and
+  ~ limitations under the License.
+  -->
+
+<project default="build-all" xmlns:ivy="antlib:org.apache.ivy.ant">
+
+    <property name="wso2appserver.home" value="../../../"/>
+    <property name="carbon.home" value="../../../"/>
+    <property name="repo.location" value="${wso2appserver.home}/repository/deployment/server"/>
+    <property name="temp.dir" value="temp"/>
+    <property name="classes" value="${temp.dir}/classes"/>
+    <property name="dependencies" value="${temp.dir}/dependencies"/>
+    <property name="webapps" value="webapps"/>
+    <property name="warName" value="java_first_jaxws.war"/>    
+    <property name="src" value="src"/>
+    <property name="repo.jaxwebapps" value="jaxwebapps"/>
+    <property name="ivy.install.version" value="2.0.0-beta1" />
+    <property name="ivy.jar.dir" value="${basedir}/ivy" />
+    <property name="ivy.jar.file" value="${ivy.jar.dir}/ivy.jar" />
+
+    <ant antfile="${wso2appserver.home}/bin/build.xml"/>
+
+    <path id="axis2.class.path">
+        <pathelement path="${java.class.path}"/>
+        <fileset dir="${wso2appserver.home}">
+            <include name="repository/lib/*.jar"/>
+	    <include name="repository/components/plugins/*.jar"/>
+        </fileset>
+	<fileset dir="${dependencies}">
+            <include name="**"/>
+	</fileset>
+    </path>
+    
+    <target name="clean">
+        <delete dir="${temp.dir}"/>
+	<delete dir="${webapps}"/>
+    </target>	
+
+    <target name="init" depends="clean">
+        <mkdir dir="${temp.dir}"/>
+        <mkdir dir="${classes}"/>
+	<mkdir dir="${webapps}"/>
+
+	<unzip src="${wso2appserver.home}/repository/components/plugins/cxf-bundle_2.6.1.wso2v1.jar" dest="${dependencies}">
+        <patternset>
+        	<include name="xmlsec-1.5.2.jar"/>
+		<include name="xmlschema-core-2.0.2.jar"/>
+		<include name="xml-resolver-1.2.jar"/>
+		<include name="neethi-3.0.2.jar"/>
+		<include name="jaxb-impl-2.2.5.jar"/>
+		<include name="ehcache-core-2.5.1.jar"/>
+        </patternset>
+        </unzip>
+	<copy toDir="${dependencies}">
+            <fileset dir="${wso2appserver.home}/repository/components/plugins/">
+                <include name="cxf-bundle_2.6.1.wso2v1.jar"/>
+		<include name="wsdl4j_1.6.2.wso2v3.jar"/>
+            </fileset>
+        </copy>
+
+    </target>
+
+    <target name="download-ivy" unless="skip.download" depends="init">
+    	<mkdir dir="${ivy.jar.dir}"/>
+    	<get src="http://repo1.maven.org/maven2/org/apache/ivy/ivy/${ivy.install.version}/ivy-${ivy.install.version}.jar"
+    		 dest="${ivy.jar.file}" usetimestamp="true"/>
+    </target>
+    
+    <target name="install-ivy" depends="download-ivy" description="--> install ivy">
+    	<path id="ivy.lib.path">
+    	    <fileset dir="${ivy.jar.dir}" includes="*.jar"/>
+    	</path>
+    	<taskdef resource="org/apache/ivy/ant/antlib.xml"
+    	          uri="antlib:org.apache.ivy.ant" classpathref="ivy.lib.path"/>
+    </target>    
+	
+    <target name="getDependency" depends="install-ivy">
+	<ivy:retrieve />
+	<copy toDir="${dependencies}">
+		<fileset dir="./lib">
+			<include name="**"/>
+		</fileset>
+	</copy>
+    </target> 
+ 
+
+    <target name="compile-all" depends="getDependency">
+        <javac debug="on" destdir="${classes}">
+            <src path="${src}"/>
+            <classpath refid="axis2.class.path"/>
+        </javac>
+    </target>
+    
+	
+    <target name="war" depends="compile-all">
+        <echo message="Creating webapp ${warName}."/>
+        <war destfile="${webapps}/${warName}" webxml="${wso2appserver.home}/samples/Jaxws-Jaxrs/web.xml">
+             <fileset dir="../css"/>
+             <classes dir="${classes}"/>
+	     <webinf dir="${src}/main/webapp/WEB-INF"/>
+        </war>
+    </target>
+	
+    <target name="build-all" depends="war">
+        <echo message="Copying the created war and war files in to the repository"/>
+        <copy toDir="${repo.location}/${repo.jaxwebapps}">
+            <fileset dir="${webapps}">
+                <include name="**/*.war"/>
+            </fileset>
+        </copy>
+    </target>
+
+</project>

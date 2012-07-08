@@ -72,10 +72,9 @@
                             <importFeatures>
                                 <importFeatureDef>org.apache.synapse.wso2:${synapse.version}</importFeatureDef>
                                 <importFeatureDef>org.wso2.carbon.mediation.initializer.server:${mediation.initializer.feature.version}</importFeatureDef>
-
-                                <importFeatureDef>org.wso2.carbon.databridge.agent.thrift:${wso2carbon.version}</importFeatureDef>
-                                <importFeatureDef>org.wso2.carbon.databridge.commons.thrift:${wso2carbon.version}</importFeatureDef>
-                                <importFeatureDef>org.wso2.carbon.databridge.commons:${wso2carbon.version}</importFeatureDef>
+                                <importFeatureDef>org.wso2.carbon.databridge.agent.thrift.server:${wso2carbon.version}</importFeatureDef>
+                                <importFeatureDef>org.wso2.carbon.databridge.commons.thrift.server:${wso2carbon.version}</importFeatureDef>
+                                <importFeatureDef>org.wso2.carbon.databridge.commons.server:${wso2carbon.version}</importFeatureDef>
                             </importFeatures>
                         </configuration>
                     </execution>

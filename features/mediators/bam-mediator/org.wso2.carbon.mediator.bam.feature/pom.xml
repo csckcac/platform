@@ -77,9 +77,9 @@
                             <propertiesFile>../../etc/feature.properties</propertiesFile>
                             <importFeatures>
                                 <importFeatureDef>org.wso2.carbon.mediation.initializer:${mediation.initializer.feature.version}</importFeatureDef>
-                                <importFeatureDef>org.wso2.carbon.eventbridge.agent.thrift:${wso2carbon.version}</importFeatureDef>
-                                <importFeatureDef>org.wso2.carbon.eventbridge.thrift.commons:${wso2carbon.version}</importFeatureDef>
-                                <importFeatureDef>org.wso2.carbon.eventbridge.commons:${wso2carbon.version}</importFeatureDef>
+                                <importFeatureDef>org.wso2.carbon.databridge.agent.thrift.server:${wso2carbon.version}</importFeatureDef>
+                                <importFeatureDef>org.wso2.carbon.databridge.commons.thrift.server:${wso2carbon.version}</importFeatureDef>
+                                <importFeatureDef>org.wso2.carbon.databridge.commons.server:${wso2carbon.version}</importFeatureDef>
                             </importFeatures>
                             <includedFeatures>
                                 <includedFeatureDef>org.wso2.carbon:org.wso2.carbon.mediator.bam.server.feature</includedFeatureDef>

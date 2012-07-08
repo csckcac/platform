@@ -220,71 +220,110 @@
             var streamRowNum = 1;
             var propertyRowNum = 1;
 
+            function validatePropertyTable(){
+                var propertyRowInputs = document.getElementById("propertyTable").getElementsByTagName("input");
+                var inputName = "";
+                for(var i=0; i<propertyRowInputs.length; i++){
+                    inputName = propertyRowInputs[i].name;
+                    if((inputName == "<%=PROPERTY_KEYS%>" || inputName == "<%=PROPERTY_VALUES%>") && propertyRowInputs[i].value == ""){
+                        return "Property Name or Property Value cannot be empty.";
+                    }
+                }
+                return "true";
+            }
+
+            function onAddPropertyClicked(){
+                var result = validatePropertyTable();
+                if(result == "true"){
+                    addPropertyRow();
+                } else {
+                    CARBON.showInfoDialog(result);
+                }
+            }
+
             function addPropertyRow() {
                 propertyRowNum++;
                 var sId = "propertyTable_" + propertyRowNum;
 
                 var tableContent = "<tr id=\"" + sId + "\">" +
-                                    "<td>\n" +
-                                    "                        <input type=\"text\" name=\"<%=PROPERTY_KEYS%>\" value=\"\">\n" +
-                                    "                    </td>\n" +
-                                    "                    <td>\n" +
-                                    "<table class=\"no-border-all\">" +
-                                    "         <tr> " +
-                                    "         <td> " +
-                                    "         <table> " +
-                                    "         <tr> " +
-                                    "         <td><input type=\"radio\" name=\"fieldType_" + sId + "\" value=\"value\" checked=\"checked\"/></td> " +
-                                    "          <td>Value</td> " +
-                                    "         <tr> " +
-                                    "         <tr> " +
-                                    "         <td><input type=\"radio\" name=\"fieldType_" + sId + "\" value=\"expression\"/></td> " +
-                                    "       <td>Expression</td> " +
-                                    "         <tr> " +
-                                    "       </table> " +
-                                    "       </td> " +
-                                    "         <td> " +
-                                    "<input type=\"text\" name=\"<%=PROPERTY_VALUES%>\" value=\"\"/>" +
-                                    "         </td> " +
-                                    "         </tr> " +
-                                    "         </table> " +
-                                    "         </td> " +
-                                    "<td> " +
-                                    "<a onClick='javaScript:removePropertyColumn(\"" + sId + "\")' style='background-image: url(../admin/images/delete.gif);'class='icon-link addIcon'>Remove Property</a> " +
-                                    "</td> " +
-                                    "</tr>;"
+                                   "<td>\n" +
+                                   "                        <input type=\"text\" name=\"<%=PROPERTY_KEYS%>\" value=\"\">\n" +
+                                   "                    </td>\n" +
+                                   "                    <td>\n" +
+                                   "<table class=\"no-border-all\">" +
+                                   "         <tr> " +
+                                   "         <td> " +
+                                   "         <table> " +
+                                   "         <tr> " +
+                                   "         <td><input type=\"radio\" name=\"fieldType_" + sId + "\" value=\"value\" checked=\"checked\"/></td> " +
+                                   "          <td>Value</td> " +
+                                   "         <tr> " +
+                                   "         <tr> " +
+                                   "         <td><input type=\"radio\" name=\"fieldType_" + sId + "\" value=\"expression\"/></td> " +
+                                   "       <td>Expression</td> " +
+                                   "         <tr> " +
+                                   "       </table> " +
+                                   "       </td> " +
+                                   "         <td> " +
+                                   "<input type=\"text\" name=\"<%=PROPERTY_VALUES%>\" value=\"\"/>" +
+                                   "         </td> " +
+                                   "         </tr> " +
+                                   "         </table> " +
+                                   "         </td> " +
+                                   "<td> " +
+                                   "<a onClick='javaScript:removePropertyColumn(\"" + sId + "\")' style='background-image: url(../admin/images/delete.gif);'class='icon-link addIcon'>Remove Property</a> " +
+                                   "</td> " +
+                                   "</tr>;"
 
                 jQuery("#propertyTable").append(tableContent);
                 updatePropertyTableData();
             }
 
-            function addStreamRow() {
-                streamRowNum++;
-                var sId = "streamsTable_" + streamRowNum;
-                var tableContent = "<tr id=\"" + sId + "\">" +
-                                   "<td>\n" +
-                                   "<input type=\"text\" name=\"<%=STREAM_NAMES%>\" value=\"\">\n" +
-                                   "</td>\n" +
-                                   "<td>\n" +
-                                   "<input type=\"text\" name=\"<%=STREAM_VERSIONS%>\" value=\"\">\n" +
-                                   "</td>" +
-                                   "<td>\n" +
-                                   "<input type=\"text\" name=\"<%=STREAM_NICKNAME%>\" value=\"\">\n" +
-                                   "</td>\n" +
-                                   "<td>\n" +
-                                   "<input type=\"text\" name=\"<%=STREAM_DESCRIPTION%>\" value=\"\">\n" +
-                                   "</td>" +
-                                   "<td>\n" +
-                                   "<span><a onClick='javaScript:removeStreamColumn(\"" + sId + "\")'" +
-                                   "style='background-image: url(../admin/images/delete.gif);'class='icon-link addIcon'>Remove Stream</a></span>\n" +
-                                   "<span><a onClick='javaScript:editStreamData(\"" + streamRowNum + "\")''" +
-                                   "style='background-image: url(../admin/images/edit.gif);'class='icon-link addIcon'>Edit Stream</a></span>\n" +
-                                   "<input type=\"hidden\" id=\"hfStreamsTable_" + streamRowNum + "\" value=\"\"/>"
-                                   "</td>" +
-                                   "</tr>";
+            function validateStreamsTable(){
+                var streamRowInputs = document.getElementById("streamTable").getElementsByTagName("input");
+                var inputName = "";
+                for(var i=0; i<streamRowInputs.length; i++){
+                    inputName = streamRowInputs[i].name;
+                    if((inputName == "<%=STREAM_NAMES%>" || inputName == "<%=STREAM_VERSIONS%>"
+                               || inputName == "<%=STREAM_NICKNAME%>" ||  inputName == "<%=STREAM_DESCRIPTION%>") && streamRowInputs[i].value == ""){
+                        return "Stream Name, Stream Version, Nick Name or Description cannot be empty.";
+                    }
+                }
+                return "true";
+            }
 
-                jQuery("#streamTable").append(tableContent);
-                updateStreamTableData();
+            function addStreamRow() {
+                var validationResult = validateStreamsTable();
+                if(validationResult == "true"){
+                    streamRowNum++;
+                    var sId = "streamsTable_" + streamRowNum;
+                    var tableContent = "<tr id=\"" + sId + "\">" +
+                                       "<td>\n" +
+                                       "<input type=\"text\" name=\"<%=STREAM_NAMES%>\" value=\"\">\n" +
+                                       "</td>\n" +
+                                       "<td>\n" +
+                                       "<input type=\"text\" name=\"<%=STREAM_VERSIONS%>\" value=\"\">\n" +
+                                       "</td>" +
+                                       "<td>\n" +
+                                       "<input type=\"text\" name=\"<%=STREAM_NICKNAME%>\" value=\"\">\n" +
+                                       "</td>\n" +
+                                       "<td>\n" +
+                                       "<input type=\"text\" name=\"<%=STREAM_DESCRIPTION%>\" value=\"\">\n" +
+                                       "</td>" +
+                                       "<td>\n" +
+                                       "<span><a onClick='javaScript:removeStreamColumn(\"" + sId + "\")'" +
+                                       "style='background-image: url(../admin/images/delete.gif);'class='icon-link addIcon'>Remove Stream</a></span>\n" +
+                                       "<span><a onClick='javaScript:editStreamData(\"" + streamRowNum + "\")''" +
+                                       "style='background-image: url(../admin/images/edit.gif);'class='icon-link addIcon'>Edit Stream</a></span>\n" +
+                                       "<input type=\"hidden\" id=\"hfStreamsTable_" + streamRowNum + "\" value=\"\"/>"
+                    "</td>" +
+                    "</tr>";
+
+                    jQuery("#streamTable").append(tableContent);
+                    updateStreamTableData();
+                } else {
+                    CARBON.showInfoDialog(validationResult);
+                }
             }
 
             function removeStreamColumn(id) {
@@ -312,15 +351,12 @@
                     }
                 }
                 document.getElementById("hfPropertyTableData").value = tableData;
-
-                //alert("hfPropertyTableData : " + document.getElementById("hfPropertyTableData").value);
             }
 
             function savePropertyTableData(){
                 updatePropertyTableData();
                 var streamRowNumber = document.getElementById("hfStreamTableRowNumber").value;
                 document.getElementById("hfStreamsTable_" + streamRowNumber).value = document.getElementById("hfPropertyTableData").value;
-                //alert("hfStreamsTable_ : " + document.getElementById("hfStreamsTable_" + streamRowNumber).value);
                 document.getElementById("propertiesTr").style.display = "none";
                 jQuery("#streamsTable_" + document.getElementById("hfStreamTableRowNumber").value).css("background-color","");
             }
@@ -344,13 +380,12 @@
                 document.getElementById("mBody").checked = "checked";
             }
 
-            function saveStreamData(){
+            function savePropertiesData(){
                 savePropertyTableData();
                 saveDumpData();
             }
 
             function editStreamData(rowNumber){
-                //alert("rowID : " + rowNumber);
                 jQuery("#streamsTable_" + document.getElementById("hfStreamTableRowNumber").value).css("background-color","");
                 jQuery("#streamsTable_" + rowNumber).css("background-color","rgb(234,234,255)");
                 document.getElementById("propertiesTr").style.display = "";
@@ -467,7 +502,6 @@
                     }
                 }
                 document.getElementById("hfStreamTableData").value = tableData;
-                //alert("hfStreamTableData : " + document.getElementById("hfStreamTableData").value);
             }
 
             function submitPage(){
@@ -527,7 +561,7 @@
                 %>
 
                 <script type="text/javascript">
-                    alert("Resource is not existing in the given location!");
+                    CARBON.showErrorDialog("Resource is not existing in the given location!");
                 </script>
 
                 <%
@@ -537,7 +571,7 @@
             %>
 
             <script type="text/javascript">
-                alert("Enter the Server Profile Location.");
+                CARBON.showInfoDialog("Enter the Server Profile Name.");
             </script>
 
             <%
@@ -566,7 +600,7 @@
                 %>
 
                     <script type="text/javascript">
-                        alert("Resource already exists!");
+                        CARBON.showErrorDialog("Resource already exists!");
                     </script>
 
                 <%
@@ -903,7 +937,7 @@
                                         </td>
 
                                         <td>
-                                            <a onClick='javaScript:addPropertyRow()' style='background-image: url(images/add.gif);'class='icon-link addIcon'>Add Property</a>
+                                            <a onClick='javaScript:onAddPropertyClicked()' style='background-image: url(images/add.gif);'class='icon-link addIcon'>Add Property</a>
                                         </td>
                                     </tr>
                                     </tbody>
@@ -912,7 +946,7 @@
                         </tr>
                         <tr>
                             <td>
-                                <input type="button" value="Update" onclick="saveStreamData()"/>
+                                <input type="button" value="Update" onclick="savePropertiesData()"/>
                                 <input type="button" value="Cancel" onclick="cancelStreamData()"/>
                             </td>
                         </tr>

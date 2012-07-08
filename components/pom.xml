@@ -1590,7 +1590,7 @@
         <siddhi.orbit.version>0.5.1-SNAPSHOT.wso2v1</siddhi.orbit.version>
         <cxf.orbit.version>2.6.1.wso2v1</cxf.orbit.version>
         <gson.version>2.1</gson.version>
-        <jclouds.version>1.5.0-beta.4</jclouds.version>
+        <jclouds.version>1.5.0-beta.5</jclouds.version>
     </properties>
 
 </project>

@@ -70,3 +70,21 @@ Using either UNIX or Windows:
   * mvn -Pclient (runs the client)
 
 Note : If you want to change the endpoint URL of the service, you can edit the WSDL and change it.
+
+Building and running the demo using Ant
+---------------------------------------
+The base directory of this sample (i.e., where this README file is located) has the build.xml file
+which is used to build the necessary webapp and deploy it in WSO2 App Server.
+
+To build and deploy the sample,type :
+  * ant
+
+To run the sample demo :
+  * Start the App Server and access the Management Console at https://localhost:9443/carbon. Go to the Jaxws-Jaxrs service listing
+    page. You will see the deployed service.
+  * You have to run the run-client.sh or run-client.bat script. It has all the arguments and classpaths configured to run the sample.
+
+NOTE :
+  * If you have a EPR location other than the http://localhost:9763/java_first_jaxws/services/hello_world please edit the run-client script.
+  * Prior to running the client (mvn -Pclient or using run-client script) good to confirm the generated WSDL
+    can be seen from a web browser at: http://{ip}:{port}/java_first_jaxws/services/hello_world?wsdl

@@ -54,6 +54,7 @@
                     <label class="control-label" for="endpoint">Endpoint URL:<span class="requiredAstrix">*</span></label>
                     <div class="controls">
                         <input type="text" class="input-xlarge required" id="endpoint" name="endpoint"/>
+                        <input type="button" value="Test URI" onclick="checkURLValid($('#endpoint').val())"/>
                         <p class="help-block">Ex:http://appserver/services/echo</p>
                     </div>
                 </div>
@@ -62,6 +63,7 @@
                     <label class="control-label" for="endpoint">Sandbox URL:</label>
                     <div class="controls">
                         <input type="text" class="input-xlarge" id="sandbox" name="sandbox"/>
+                        <input type="button" onclick="checkURLValid($('#sandbox').val())" value="Test URI"/>
                         <p class="help-block">Ex:http://test-appserver/services/echo</p>
                     </div>
                 </div>
@@ -70,6 +72,7 @@
                     <label class="control-label" for="wsdl">WSDL:</label>
                     <div class="controls">
                         <input type="text" class="input-xlarge" id="wsdl" name="wsdl"/>
+                        <input type="button" onclick="checkURLValid($('#wsdl').val())" value="Test URI"/>
                         <p class="help-block">Ex:http://appserver/services/echo?wsdl</p>
                     </div>
                 </div>
@@ -77,6 +80,7 @@
                     <label class="control-label" for="wadl">WADL:</label>
                     <div class="controls">
                         <input type="text" class="input-xlarge" id="wadl" name="wadl"/>
+                        <input type="button" onclick="checkURLValid($('#wadl').val())" value="Test URI"/>
                         <p class="help-block">Ex:http://example.com/service.wadl</p>
                     </div>
                 </div>

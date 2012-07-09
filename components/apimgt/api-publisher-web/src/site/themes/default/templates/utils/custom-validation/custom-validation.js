@@ -23,18 +23,5 @@ $(document).ready(function() {
         return !illegalChars.test(value);
     }, 'The Name contains one or more illegal characters (~ ! @ #  ; % ^ * + = { } | &lt; &gt;, \' / " \\ ) .');
 
-    $.validator.addMethod('urlValid', function(value, element) {
-        var urlValid = false;
-        jagg.syncPost("/site/blocks/item-add/ajax/add.jag", { action:"isURLValid", url:value },
-                      function (result) {
-                          if (!result.error) {
-                              if (result.response == "success") {
-                                  urlValid = true;
-                              }
-
-                          }
-                      });
-        return this.optional(element) || urlValid == true;
-    }, 'Invalid URL.');
 
 });

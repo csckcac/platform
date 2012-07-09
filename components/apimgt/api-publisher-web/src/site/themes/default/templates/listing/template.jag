@@ -63,7 +63,7 @@
         <% }}} %>
     </ul>
     <%
-    if (apis.length == 0) {
+    if (apis!=null&& apis.length == 0) {
     %>
     <div class="alert alert-info">
         <div style="padding-bottom:10px">No APIs created yet. Click the button below to get started.</div>

@@ -94,6 +94,7 @@
             <item name="XPath Extensions" href="bpel-extensions/bpel_extension_xpath_extensions.html"/>
             <item name="Iterable ForEach" href="bpel-extensions/bpel_extension_iterable_foreach.html"/>
             <item name="Flexible Assigns" href="bpel-extensions/bpel_extension_flexible_assign.html"/>
+            <item name="BPEL4People Extension" href="bpel-extensions/bpel4people_extension.html"/>
         </menu>
         <menu name="Samples">
             <item name="HelloWorld" href="bpel-samples/hello_world.html"/>

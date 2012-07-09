@@ -178,10 +178,10 @@ public class HiveExecutorServiceImpl implements HiveExecutorService {
                     if (!"".equals(trimmedCmdLine)) {
                         QueryResult queryResult = new QueryResult();
 
+                        queryResult.setQuery(trimmedCmdLine);
+
                         //Append the tenant ID to query
                         trimmedCmdLine += Utils.TENANT_ID_SEPARATOR_CHAR_SEQ + tenantId;
-
-                        queryResult.setQuery(trimmedCmdLine);
 
                         ResultSet rs = stmt.executeQuery(trimmedCmdLine);
                         ResultSetMetaData metaData = rs.getMetaData();

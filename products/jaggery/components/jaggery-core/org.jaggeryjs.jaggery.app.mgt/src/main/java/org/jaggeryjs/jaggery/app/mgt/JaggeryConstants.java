@@ -30,6 +30,7 @@ public final class JaggeryConstants {
     public static final String JSSP_NAME = "jssp";
     public static final String JSSP_CLASS = "org.apache.jasper.servlet.JspServlet";
     public static final String JAGGERY_CONF_FILE = "jaggery.conf";
+    public static final String JAGGERY_WEBAPP_FILTER_PROP = "jaggeryWebapp";
 
     public static final class JaggeryConfigParams {
 

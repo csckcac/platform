@@ -50,7 +50,6 @@
             <groupId>org.wso2.carbon</groupId>
             <artifactId>org.wso2.carbon.webapp.deployer</artifactId>
         </dependency>
-
     </dependencies>
     <build>
         <plugins>

@@ -39,8 +39,6 @@ public class JaggeryDeployer extends WebappDeployer {
 
     private static final Log log = LogFactory.getLog(JaggeryDeployer.class);
 
-    public static final String JAGGERY_WEBAPP_FILTER_PROP = "jaggeryWebapp";
-
     public void init(ConfigurationContext configCtx) {
         this.configContext = configCtx;
         this.axisConfig = configCtx.getAxisConfiguration();
@@ -88,7 +86,7 @@ public class JaggeryDeployer extends WebappDeployer {
                     .getStartedWebapps().get(deploymentFileData.getFile().getName());
             if (deployedWebapp != null) {
                 // if found, set the filter property to separately identify the Jaggery webapp
-                deployedWebapp.setProperty(WebappsConstants.WEBAPP_FILTER, JAGGERY_WEBAPP_FILTER_PROP);
+                deployedWebapp.setProperty(WebappsConstants.WEBAPP_FILTER, JaggeryConstants.JAGGERY_WEBAPP_FILTER_PROP);
             }
         }
     }

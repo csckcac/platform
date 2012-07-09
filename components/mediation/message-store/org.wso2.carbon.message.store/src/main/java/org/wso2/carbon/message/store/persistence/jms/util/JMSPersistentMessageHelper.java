@@ -269,6 +269,8 @@ public class JMSPersistentMessageHelper {
 
     private SOAPEnvelope getSoapEnvelope(String soapEnvelpe) {
         try {
+            //This is a temporary fix for ESBJAVA-1157 for Andes based(QPID) Client libraries
+            Thread.currentThread().setContextClassLoader(SynapseEnvironment.class.getClassLoader());
             XMLStreamReader xmlReader =
                     StAXUtils.createXMLStreamReader(new ByteArrayInputStream(getUTF8Bytes(soapEnvelpe)));
             StAXBuilder builder = new StAXSOAPModelBuilder(xmlReader);

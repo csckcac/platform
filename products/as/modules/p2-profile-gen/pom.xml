@@ -202,9 +202,9 @@
                                     org.wso2.carbon:org.wso2.carbon.ndatasource.ui.feature:${carbon.platform.version}
                                 </featureArtifactDef>
 
-                                <featureArtifactDef>
+								<!--<featureArtifactDef>
                                     org.wso2.carbon:org.wso2.carbon.cloud.csg.agent.feature:${carbon.platform.version}
-                                </featureArtifactDef>
+								</featureArtifactDef>-->
 
                                 <featureArtifactDef>
                                     org.wso2.carbon:org.wso2.carbon.deployment.synchronizer.feature:${carbon.platform.version}
@@ -513,10 +513,10 @@
                                     <version>${carbon.platform.version}</version>
                                 </feature>
                                
-                                <feature>
+								<!--<feature>
                                     <id>org.wso2.carbon.cloud.csg.agent.feature.group</id>
                                     <version>${carbon.platform.version}</version>
-                                </feature>
+								</feature>-->
 
                                 <feature>
                                     <id>org.wso2.carbon.deployment.synchronizer.feature.group</id>

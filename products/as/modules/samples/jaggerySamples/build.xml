@@ -18,8 +18,8 @@
 
     <property name="wso2appserver.home" value="../../"/>
     <property name="carbon.home" value="../../"/>
-	<property name="jaggerySamples" value="${wso2appserver.home}/samples/jaggerySamples"/>
-    <property name="repo.location" value="${wso2appserver.home}/repository/deployment/server"/>
+	<property name="jaggerySamples" value="${wso2appserver.home}samples/jaggerySamples"/>
+    <property name="repo.location" value="${wso2appserver.home}repository/deployment/server"/>
     <property name="temp.dir" value="temp"/>
     <property name="classes" value="${temp.dir}/classes"/>
     <property name="src" value="src"/>
@@ -27,17 +27,22 @@
     <property name="setup" value="ROOT"/>
     <property name="repo.services" value="jaggeryapps"/>
 
-
-
-
     <target name="build-all">
         <echo message="Copying the jaggery samples repository ${jaggerySamples}"/>
-   
-		<copydir src="${jaggerySamples}/sample"
-           dest="${repo.location}/${repo.services}/sample"
-  />
-  		<copydir src="${jaggerySamples}/taskmaster"
-           dest="${repo.location}/${repo.services}/taskmaster"
-  />
+		<copy toDir="${repo.location}/${repo.services}/sample">
+			<fileset dir="${jaggerySamples}/sample"/>
+		</copy>
+  		<copy toDir="${repo.location}/${repo.services}/taskmaster">
+			<fileset dir="${jaggerySamples}/taskmaster"/>
+		</copy>
+  		<copy toDir="${repo.location}/${repo.services}/freshometer">
+			<fileset dir="${jaggerySamples}/freshometer"/>
+		</copy>
+  		<copy toDir="${repo.location}/${repo.services}/coffeeshop">
+			<fileset dir="${jaggerySamples}/coffeeshop"/>
+		</copy>
+  		<copy toDir="${repo.location}/${repo.services}/shout">
+			<fileset dir="${jaggerySamples}/shout"/>
+		</copy>
     </target>
 </project>

@@ -91,12 +91,27 @@
             <outputDirectory>${pom.artifactId}-${pom.version}/samples/jaggerySamples/taskmaster</outputDirectory>
         </fileSet>
 		<fileSet>
+            <directory>../samples/jaggerySamples/coffeeshop</directory>
+            <outputDirectory>${pom.artifactId}-${pom.version}/samples/jaggerySamples/coffeeshop</outputDirectory>
+        </fileSet>
+		<fileSet>
+            <directory>../samples/jaggerySamples/shout</directory>
+            <outputDirectory>${pom.artifactId}-${pom.version}/samples/jaggerySamples/shout</outputDirectory>
+        </fileSet>
+		<fileSet>
+            <directory>../samples/jaggerySamples/freshometer</directory>
+            <outputDirectory>${pom.artifactId}-${pom.version}/samples/jaggerySamples/freshometer</outputDirectory>
+        </fileSet>
+		<fileSet>
             <directory>../samples/jaggerySamples</directory>
             <outputDirectory>${pom.artifactId}-${pom.version}/samples/jaggerySamples</outputDirectory>
 			<excludes>
 			 <exclude>**/taskmaster/**</exclude>
 			 <exclude>**/sample/**</exclude>
 			 <exclude>**/docs/**</exclude>
+			 <exclude>**/coffeeshop/**</exclude>
+			 <exclude>**/shout/**</exclude>
+			 <exclude>**/freshometer/**</exclude>
 			 </excludes>
         </fileSet>
 		

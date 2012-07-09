@@ -32,9 +32,7 @@
         <ul>
             <li><a href="#Implementing-A-People-Query-Evaluator">Writing Your Own PeopleQueryEvaluator</a></li>
             <li><a href="#Task-Instance-Cleanup">Task Instance Cleanup</a></li>
-            <li><a href="#Task-Privileges">Task Privileges</a></li>
-            <li><a href="#Task-Life-Cycle">Task Life Cycle</a></li>
-            <li><a href="#Task-Event-History">Task Event History</a></li>
+            <li><a href="#Task-Event-Listener">Task Event Listeners</a></li>
         </ul>
 
         <h2 id="Implementing-A-People-Query-Evaluator">Writing Your Own PeopleQueryEvaluator</h2>
@@ -179,6 +177,71 @@
             <li><b>statuses</b> : A list of statuses to be removed. Only statuses at the end of task
             life cycle should be put here. (eg: COMPLETED or OBSOLETE)</li>
         </ul>
+
+         <h2 id="Task-Event-Listener">Task Event Listeners</h2>
+
+        <p>
+            You can write custom task event listeners to be triggered on task events. For this you need to implement
+            the interface <b>org.wso2.carbon.humantask.core.api.event.HumanTaskEventListener</b>. You can find the relevant JARs
+            having this interface in the <b>BPS_HOME/repository/component/plugins</b> folder.
+        </p>
+
+        <pre class="java5" style="font-family:monospace;"><span style="color: #000000; font-weight: bold;">public</span> <span style="color: #000000; font-weight: bold;">interface</span> HumanTaskEventListener <span style="color: #009900;">&#123;</span>
+
+    <span style="color: #008000; font-style: italic; font-weight: bold;">/**
+     * This method will be called by the human task engine when a new event is generated.
+     * The listener logic should be implemented in the method body.
+     *
+     * @param taskEventInfo : A final object containing the context information related to the
+     * task event and the task itself.
+     */</span>
+    <span style="color: #000000; font-weight: bold;">public</span> <span style="color: #006600; font-weight: bold;">void</span> onEvent<span style="color: #009900;">&#40;</span>TaskEventInfo taskEventInfo<span style="color: #009900;">&#41;</span><span style="color: #339933;">;</span>
+<span style="color: #009900;">&#125;</span></pre>
+
+        <p>
+            The onEvent method will be called with <b>org.wso2.carbon.humantask.core.api.event.TaskEventInfo</b> object
+            which holds the following information about the task.
+        </p>
+
+        <ul>
+            <li><a href="#task-info-list" >Task Information</a> of the related task</li>
+            <li>Event Initiator : The user who initiated this task event</li>
+            <li>The time stamp of the event</li>
+            <li>The event type : This would be the task action (org.wso2.carbon.humantask.core.dao.TaskEventType)</li>
+            <li>Event Details : The details of the task event in applicable</li>
+            <li>Old State : The task state before this event occurred</li>
+            <li>New State : The task state after this event occurred</li>
+        </ul>
+
+        <p>
+            The <b>org.wso2.carbon.humantask.core.api.event.TaskInfo</b> object would holde the following information
+            regarding a task.
+        </p>
+
+
+        <ul id="task-info-list">
+            <li>Task Id</li>
+            <li>Task Name</li>
+            <li>Task Description</li>
+            <li>Task Presentation Subject</li>
+            <li>Task Type</li>
+            <li>Task State</li>
+            <li>Task State Before Suspension</li>
+            <li>Task Owner</li>
+            <li>Task Created Date</li>
+        </ul>
+
+        <p>
+            Once the custom event listener implementation is packed as a JAR file it should be placed in
+            <b>$BPS_HOME/repository/components/lib</b> folder. A fully qualified class name entry
+            should be added for the task event listeners section in the humantask.xml configuration file
+            (<b>BPS_HOME/repository/conf/humantask.xml</b>)
+        </p>
+
+        <pre class="xml" style="font-family:monospace;">    <span style="color: #009900;"><span style="color: #000000; font-weight: bold;">&lt;TaskEventListeners<span style="color: #000000; font-weight: bold;">&gt;</span></span></span>
+        <span style="color: #009900;"><span style="color: #000000; font-weight: bold;">&lt;ClassName<span style="color: #000000; font-weight: bold;">&gt;</span></span></span>org.foo.bar.EventListener1<span style="color: #009900;"><span style="color: #000000; font-weight: bold;">&lt;/ClassName<span style="color: #000000; font-weight: bold;">&gt;</span></span></span>
+        <span style="color: #009900;"><span style="color: #000000; font-weight: bold;">&lt;ClassName<span style="color: #000000; font-weight: bold;">&gt;</span></span></span>org.foo.bar.EventListener2<span style="color: #009900;"><span style="color: #000000; font-weight: bold;">&lt;/ClassName<span style="color: #000000; font-weight: bold;">&gt;</span></span></span>
+    <span style="color: #009900;"><span style="color: #000000; font-weight: bold;">&lt;/TaskEventListeners<span style="color: #000000; font-weight: bold;">&gt;</span></span></span></pre>
 
     </body>
 </html>

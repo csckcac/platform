@@ -57,7 +57,8 @@
     <li><a href="#processes">Processes</a>
         <ul>
             <li>Difference between Active and Retired Processes</li>
-            <li>Detail View of Deployed Business Process</li>
+            <li>Detailed View of Deployed Business Process</li>
+            <li>Deployment Descriptor Editor</li>
         </ul>
     </li>
     <li><a href="#instances">Instances</a>
@@ -66,26 +67,26 @@
             <li>Instance Detail Page</li>
         </ul>
     </li>
-    <li><a href="#packages">Deployed Packages</a></li>
-    <li><a href="#addBPEL">Add BPEL</a>
+    <li><a href="#manageBPEL">Managing BPEL Processes</a>
         <ul>
             <li>BPEL Package Format</li>
             <li>Folder structure of BPEL Package</li>
             <li>Deploying BPEL packages through the management console</li>
+            <li>Undeploying BPEL packages</li>
         </ul>
     </li>
 </ul>
 
 <h2><a name="processes">Processes</a></h2>
 
-<p>In the management console, under Business Processes click Processes. The
+<p>In the management console, under <strong>Processes</strong> click <strong>List</strong>. The
     <strong>Processes</strong> page will
     appear.</p>
 <img src="img/Processes.png" alt="Deployed Processes"/>
 
-<p>Process list will display IDs of the deployed processes with their version, status and deployed
-    date. With this list you can retire and activate processes. You can view detailed description
-    about the process, when you click the process id link.</p>
+<p>Process list will display IDs of the deployed processes with their version, status, deployed
+    date and the package they are contained in. With this list you can retire and activate processes. You can view detailed description
+    about the process, when you click the process id link. By clicking the Package Name, you can view details, undeploy or download the package.</p>
 
 <h3>Difference between Active and Retired Processes</h3>
 
@@ -93,10 +94,10 @@
     created. When a process is retired all the running instances of that particular process will
     behave normally. But no new instances will be created from retired processes.</p>
 
-<h3>Detail View of Deployed Business Process</h3>
+<h3>Detailed View of Deployed Business Process</h3>
 <img src="img/ProcessPage.png" alt="Process Details"/>
 
-<p>In the management console, click <strong>Processes</strong> under Business processes. Then click
+<p>In the management console, click <strong>List</strong> under <strong>Processes</strong>. Then click
     on any of the
     process ID links. It will display a detailed description about the process including version,
     status, deployed date, container package of that process, total instance, instance summary,
@@ -116,6 +117,16 @@
     their WSDLs.</p>
 <img src="img/WSDL Info.png" alt="WSDL Details"/>
 
+<h3>Deployment Descriptor Editor</h3>
+
+<p>You can go to Deployment Descriptor Editor by clicking the link <strong>View or Edit Deployment Descriptor</strong>
+   on any of the detailed process description pages. </p>
+<img src="img/DeployEditorLink.png" alt="Link to Deployment Descriptor Editor"/>
+
+<p>This editor allows BPEL process administrators to configure process/instance/scope event generation, instance cleanup at run-time.
+   Also it provides the other configuration details like MEX interceptors, process properties, provided services (inbound interfaces)
+   and invoked partner services (outbound interfaces). </p>
+<img src="img/DeployEditor.png" alt="Deployment Descriptor Editor"/>
 <h2><a name="instances">Instances</a></h2>
 <img src="img/Instances.png" alt="Instance List"/>
 
@@ -143,34 +154,20 @@
     all the available instances user can use either 'All' shortcut link or 'Reset Filter' link.</p>
 
 <p>Advance Filter link will expand the filter form and user can use it to narrow down the instance
-    list.<img src="img/AdvancedFilter.png" alt="Advanced Filter"/></p>
+    list.</p>
+<img src="img/AdvancedFilter.png" alt="Advanced Filter"/>
 
-<h3>Instance Detail Page</h3>
+<h3>Instance Details Page</h3>
 
 <p>When a user clicks on instance id link at the 'Instances Created' page, instance details page for
-    the instance represented by that ID will appear.<img src="img/InstanceDetails.png"
-                                                         alt="Instance Details"/></p>
+    the instance represented by that ID will appear.</p>
+<img src="img/InstanceDetails.png" alt="Instance Details"/>
 
 <p>Instance details page will display information like process id of that instance, status, last
     active date and event information, scope information, variable values and activity-event
-    information of that instance.</p>
+    information of that instance. It will also include process instance details visualization with different abstraction levels</p>
 
-<h2><a name="packages">Deployed Packages</a></h2>
-
-<p>Click Deployed Packages under Business Processes in the navigation menu. The <strong>Deployed
-    Packages</strong>
-    page will appear.<img src="img/Packages.png" alt="Deployed Packages"/></p>
-
-<p>This list contains all the BPEL packages deployed in the system and will display business
-    processes in those packages.By clicking <strong>Undeploy</strong> link, users can undeploy the
-    packages available
-    in the system.</p>
-
-<p>If user tries to undeploy a package which contains business processes with running process
-    instances, management console will warn the user that there are running process instances. If
-    user really wants, he can undeploy BPEL packages with running process instances.</p>
-
-<h2><a name="addBPEL">Add BPEL</a></h2>
+<h2><a name="manageBPEL">Managing BPEL Processes</a></h2>
 
 <h3>BPEL Package Format</h3>
 
@@ -181,7 +178,7 @@
     %CARBON_HOME%/repository/deployment/server/bpel directory. If you are using a URL repository
     copy the package to 'bpel' directory in that repository.</p>
 
-<h3>Folder structure of BPEL Package</h3>
+<h3>Folder structure of a BPEL Package</h3>
 <img src="img/BPELPackageFormat.png" alt="Package Format"/>
 
 <h3>Deploying BPEL packages through the management console</h3>
@@ -194,6 +191,7 @@
         appear.
     </li>
     <li>Click <strong>Browse</strong> to locate the file you want to upload.</li>
+    <li>You can upload multiple files by clicking on the <strong>+</strong> sign</li>
     <li>Click <strong>Upload</strong>. If the BPEL package contains valid processes and adheres to
         the format, a
         message will appear saying the deployment was successful. If there are compilation failures
@@ -203,6 +201,20 @@
     </li>
 </ol>
 </p>
-<img src="img/SuccessDeploy.png" alt="After succesful deployment"/>
+<img src="img/SuccessDeploy.png" alt="After successful deployment"/>
+<h3>Undeploying BPEL packages</h3>
+<img src="img/Undploy.png" alt="Undploying BPEL"/>
+
+<p>
+<ol>
+    <li>In the management console, under Processes click List. The <strong>Deployed Process List</strong> page will
+        appear.
+    </li>
+    <li>Click the <strong>Package Name</strong> of the package you want to undeploy</li>
+    <li>Click <strong>Undeploy</strong> from the <strong>Actions</strong> list.</li>
+    <li>Make sure you click <strong>Yes</strong> in the <strong>Confirmation</strong> dialog.</li>
+</ol>
+<img src="img/UndployConfirm.png" alt="Confirm Undeploying"/>
+</p>
 </body>
 </html>

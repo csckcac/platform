@@ -54,7 +54,7 @@ public class HiveConstants {
             "   <maxActive>50</maxActive>\n" +
             "   <maxWait>60000</maxWait>\n" +
             "   <testOnBorrow>true</testOnBorrow>\n" +
-            "   <validationQuery>SELECT 1</validationQuery>\n" +
+            "   <validationQuery>SHOW TABLES</validationQuery>\n" +
             "   <validationInterval>30000</validationInterval>\n" +
             "</configuration>";
 

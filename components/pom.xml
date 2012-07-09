@@ -141,7 +141,6 @@
                 <module>ntask</module>
                 <module>transaction-manager</module>
                 <module>rest-api</module>
-                <module>hostobjects</module>
                 <module>apimgt</module>
 		<module>andes</module>
 		<module>bam2</module>

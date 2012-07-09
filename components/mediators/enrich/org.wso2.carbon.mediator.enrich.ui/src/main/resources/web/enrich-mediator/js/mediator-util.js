@@ -64,7 +64,7 @@ function enrichMediatorValidate() {
         } else {
             var parser = new DOMParser();
             var dom = parser.parseFromString(sourceInlineXML, "text/xml");
-            if (dom.documentElement.nodeName == "parsererror") {
+            if (dom.documentElement.nodeName == "parsererror" || dom.getElementsByTagName("parsererror").length > 0 ) {
                 CARBON.showErrorDialog(enrichMediatorJsi18n["invalid.inline.xml"]);
                 form.Value.focus();
                 return false;

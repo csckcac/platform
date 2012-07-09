@@ -210,6 +210,29 @@
         }
     }
 
+    function validateCombinations(currElem){
+                    var elm = document.getElementById('mediator.enrich.target.type');
+                    var selectedElmValueForType = elm.options[elm.selectedIndex].value;
+
+                    var elemAction = document.getElementById('mediator.enrich.target.action');
+                    var selectedElmValueForAction = elemAction.options[elemAction.selectedIndex].value;
+
+                    var thisElemValue = currElem.options[currElem.selectedIndex].value;
+                    <%--alert("on validate : type :" + selectedElmValueForType + "  action : " + selectedElmValueForAction--%>
+                        <%--+ "  this : " + thisElemValue);--%>
+
+
+                    if(selectedElmValueForAction == "sibling" && selectedElmValueForType == "envelope" ){
+                        if(thisElemValue == "sibling"){
+                            //force option to 'replace'
+                            elm.value = 'body';
+                        } else if (thisElemValue == "envelope"){
+                            //force option to 'body'
+                            elemAction.value = 'replace';
+                        }
+                    }
+        }
+
 
 </script>
 
@@ -360,14 +383,14 @@
     </td>
     <td>
         <select id="mediator.enrich.target.action" name="mediator.enrich.target.action"
-                style="width:150px;">
+                style="width:150px;" onchange="validateCombinations(this)">
             <option value="replace" <%=enrichMediator.getTargetAction() != null && enrichMediator.getTargetAction().equals("replace") ? "selected=\"selected\"" : ""%>>
                 <fmt:message key="mediator.enrich.target.action.replace"/>
             </option>
             <option value="child" <%=enrichMediator.getTargetAction() != null && enrichMediator.getTargetAction().equals("child") ? "selected=\"selected\"" : ""%>>
                 <fmt:message key="mediator.enrich.target.action.child"/>
             </option>
-            <option value="sibling" <%=enrichMediator.getTargetAction() != null && enrichMediator.getTargetAction().equals("sibling") ? "selected=\"selected\"" : ""%>>
+            <option id="mediator.enrich.action.sibling" value="sibling" <%=enrichMediator.getTargetAction() != null && enrichMediator.getTargetAction().equals("sibling") ? "selected=\"selected\"" : ""%>>
                 <fmt:message key="mediator.enrich.target.action.sibling"/>
             </option>
         </select>
@@ -379,11 +402,11 @@
     </td>
     <td>
         <select id="mediator.enrich.target.type" name="mediator.enrich.target.type"
-                style="width:150px;" onchange="changeTargetElements(this)">
+                style="width:150px;" onchange="changeTargetElements(this);validateCombinations(this);">
             <option value="custom" <%=enrichMediator.getTargetType() != null && enrichMediator.getTargetType().equals("custom") ? "selected=\"selected\"" : ""%>>
                 <fmt:message key="mediator.enrich.type.custom"/>
             </option>
-            <option value="envelope" <%=enrichMediator.getTargetType() != null && enrichMediator.getTargetType().equals("envelope") ? "selected=\"selected\"" : ""%>>
+            <option id="mediator.enrich.type.envelope" value="envelope" <%=enrichMediator.getTargetType() != null && enrichMediator.getTargetType().equals("envelope") ? "selected=\"selected\"" : ""%>>
                 <fmt:message key="mediator.enrich.type.envelope"/>
             </option>
             <option value="body" <%=enrichMediator.getTargetType() != null && enrichMediator.getTargetType().equals("body") ? "selected=\"selected\"" : ""%>>

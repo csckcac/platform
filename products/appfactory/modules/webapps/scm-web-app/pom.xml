@@ -60,7 +60,7 @@
                         <artifactItem>
                             <groupId>sonia.scm</groupId>
                             <artifactId>scm-webapp</artifactId>
-                            <version>1.6</version>
+                            <version>${sonia.scm.version}</version>
                             <type>war</type>
                             <overWrite>true</overWrite>
                             <outputDirectory>temp</outputDirectory>
@@ -92,8 +92,8 @@
                             <fileset
                                     dir="temp/scm-webapp-${sonia.scm.version}">
                                 <exclude
-                                        name="**/WEB-INF/lib/log4j-over-slf4j-1.6.1.jar"/>
-                                <exclude name="**/WEB-INF/lib/slf4j-api-1.6.1.jar"/>
+                                        name="**/WEB-INF/lib/log4j-over-slf4j-1.6.4.jar"/>
+                                <exclude name="**/WEB-INF/lib/slf4j-api-1.6.4.jar"/>
                             </fileset>
                         </copy>
                         <copy todir="temp/scm-webapp-refactored-${sonia.scm.version}/WEB-INF/lib"

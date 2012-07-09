@@ -372,7 +372,7 @@ function resetInputVisibility() {
     $('subscriptionDataUserProfile').style.display = "none";
     $('subscriptionDataRoleProfile').style.display = "none";
     $('subscriptionDataWorkList').style.display = "none";
-    $('subscriptionDataJMX').style.display = "";
+    $('subscriptionDataJMX').style.display = "none";
     $('subscriptionDigestType').style.display = "none";
     $('subscriptionDigestTypeInput').value = 0;
     $('subscriptionDigestTypeInput').disabled = false;

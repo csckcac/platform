@@ -1,3 +1,5 @@
- instructions.configure = \
- org.eclipse.equinox.p2.touchpoint.natives.copy(source:${installFolder}/features/org.wso2.carbon.logging.mgt.server_${feature.version}/conf/syslog-config.xml,target:${installFolder}/../conf/etc/syslog-config.xml,overwrite:true);\
- org.eclipse.equinox.p2.touchpoint.natives.remove(path:${installFolder}/features/org.wso2.carbon.logging.mgt.server_${feature.version}/conf);
+instructions.configure = \
+org.eclipse.equinox.p2.touchpoint.natives.copy(source:${installFolder}/features/org.wso2.carbon.logging.mgt.server_${feature.version}/conf/syslog-config.xml,target:${installFolder}/../conf/etc/syslog-config.xml,overwrite:true);\
+org.eclipse.equinox.p2.touchpoint.natives.copy(source:${installFolder}/features/org.wso2.carbon.logging.mgt.server_${feature.version}/conf/log4j.properties,target:${installFolder}/../conf/log4j.properties,overwrite:true);\
+org.eclipse.equinox.p2.touchpoint.natives.remove(path:${installFolder}/features/org.wso2.carbon.logging.mgt.server_${feature.version}/conf);
+

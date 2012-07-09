@@ -144,7 +144,7 @@ public class AddressEndpoint extends Endpoint {
     }
 
     public void setTimeoutAction(String timeoutAction) {
-        if (timeoutAction.equals("101")) {                  // TODO: check why this magic number
+        if (timeoutAction.equals("101")) {
             this.timeoutAction = "discard";
         } else if (timeoutAction.equals("102")) {
             this.timeoutAction = "fault";

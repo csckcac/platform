@@ -276,7 +276,7 @@
                         <input type="button" value="<fmt:message key="save"/>"
                                class="button"
                                name="save"
-                               onclick="submitEndpointData('Recipientlist','<%=isAnonymous%>','false');"/>
+                               onclick="submitEndpointData('Recipientlist','<%=isAnonymous%>','true');"/>
                         <%
                             if (!isAnonymous) {
                         %>
@@ -337,7 +337,7 @@
                         <td class="buttonRow">
                             <input type="button" class="button" value="<fmt:message key="save"/>"
                                    id="saveSynRegButton"
-                                   onclick="javascript:submitDynamicEndpointData('Recipientlist','false'); return false;"/>
+                                   onclick="javascript:submitDynamicEndpointData('Recipientlist','true'); return false;"/>
                             <input type="button" class="button" value="<fmt:message key="cancel"/>"
                                    id="cancelSynRegButton"
                                    onclick="javascript:showSaveAsForm(false,false); return false;">

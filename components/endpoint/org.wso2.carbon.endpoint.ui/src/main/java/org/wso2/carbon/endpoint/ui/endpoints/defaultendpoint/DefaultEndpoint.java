@@ -145,7 +145,7 @@ public class DefaultEndpoint extends Endpoint {
     }
 
     public void setTimeoutAct(String timeoutAct) {
-        if (timeoutAct.equals("101")) {                  // TODO: check why this magic number
+        if (timeoutAct.equals("101")) {
             this.timeoutAct = "discard";
         } else if (timeoutAct.equals("102")) {
             this.timeoutAct = "fault";

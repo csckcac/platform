@@ -30,7 +30,7 @@
     <groupId>org.apache.amber.wso2</groupId>
     <artifactId>amber</artifactId>
     <packaging>bundle</packaging>
-    <name>amber.wso2</name>
+    <name>Orbit - Apache Amber</name>
     <version>${orbit.version.amber}</version>
     <description>
         This orbit bundle wraps the Apache Amber modules required for OAuth support.

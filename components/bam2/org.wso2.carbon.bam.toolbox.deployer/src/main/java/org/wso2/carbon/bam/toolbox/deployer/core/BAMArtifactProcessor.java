@@ -104,6 +104,7 @@ public class BAMArtifactProcessor {
         setScriptsNames(toolBoxDTO, barDir);
         setGadgetNames(toolBoxDTO, barDir);
         setJaggeryAppNames(toolBoxDTO, barDir);
+        setStreamDefnNames(toolBoxDTO, barDir);
 
         String jasperDirectory = barDir + File.separator +
                                  BAMToolBoxDeployerConstants.DASHBOARD_DIR +
@@ -126,39 +127,22 @@ public class BAMArtifactProcessor {
         }
     }
 
+    private void setStreamDefnNames(ToolBoxDTO toolBoxDTO, String barDir)
+            throws BAMToolboxDeploymentException {
+        toolBoxDTO.setStreamDefnParentDirectory(barDir + File.separator + BAMToolBoxDeployerConstants.STREAM_DEFN_DIR);
+        ArrayList<String> streamDefNames = getFilesInDirectory(barDir + File.separator + BAMToolBoxDeployerConstants.STREAM_DEFN_DIR);
+        if (streamDefNames.size() == 0) {
+           log.warn("No event streams found in the specified directory");
+        } else {
+            toolBoxDTO.setEvenStreamDefs(streamDefNames);
+        }
+    }
+
 
     private void setJaggeryAppNames(ToolBoxDTO toolBoxDTO, String barDir)
             throws BAMToolboxDeploymentException {
         toolBoxDTO.setJaggeryAppParentDirectory(barDir + File.separator + BAMToolBoxDeployerConstants.DASHBOARD_DIR
                                                 + File.separator + BAMToolBoxDeployerConstants.JAGGERY_DIR);
-//        Properties properties = new Properties();
-//        try {
-//            properties.load(new FileInputStream(barDir + File.separator + BAMToolBoxDeployerConstants.DASHBOARD_DIR +
-//                    File.separator + BAMToolBoxDeployerConstants.GADGET_META_FILE));
-//            setTabNames(toolBoxDTO, properties);
-//            String value = properties.getProperty(BAMToolBoxDeployerConstants.JAGGERY_APP_FILES);
-//            if (null != value && !value.equals("")) {
-//                String[] allFiles = value.split(",");
-//                ArrayList<String> jagApps = new ArrayList<String>();
-//                for (String aFile : allFiles) {
-//                    String temp = aFile.trim();
-//                    if(null != temp && !temp.equals("")){
-//                        jagApps.add(temp);
-//                    }
-//                }
-//                toolBoxDTO.setJaggeryApps(jagApps);
-//            } else {
-//                log.warn("No Jaggery Files found for toolbox " + toolBoxDTO.getName());
-//            }
-//        } catch (FileNotFoundException e) {
-//            log.error("No " + BAMToolBoxDeployerConstants.GADGET_META_FILE +
-//                    " found in dir:" + barDir + File.separator + BAMToolBoxDeployerConstants.GADGETS_DIR, e);
-//            throw new BAMToolboxDeploymentException("No " + BAMToolBoxDeployerConstants.GADGET_META_FILE +
-//                    " found in dir:" + barDir + File.separator + BAMToolBoxDeployerConstants.GADGETS_DIR, e);
-//        } catch (IOException e) {
-//            log.error(e.getMessage(), e);
-//            throw new BAMToolboxDeploymentException(e.getMessage(), e);
-//        }
     }
 
     private void setGadgetNames(ToolBoxDTO toolBoxDTO, String barDir)
@@ -219,7 +203,8 @@ public class BAMArtifactProcessor {
             log.error("No " + BAMToolBoxDeployerConstants.JASPER_META_FILE +
                       " found in dir:" + barDir + File.separator + BAMToolBoxDeployerConstants.DASHBOARD_DIR, e);
             throw new BAMToolboxDeploymentException("No " + BAMToolBoxDeployerConstants.JASPER_META_FILE +
-                                                    " found in dir:" + barDir + File.separator + BAMToolBoxDeployerConstants.DASHBOARD_DIR, e);
+                                                    " found in dir:" + barDir + File.separator
+                    + BAMToolBoxDeployerConstants.DASHBOARD_DIR, e);
         } catch (IOException e) {
             log.error(e.getMessage(), e);
             throw new BAMToolboxDeploymentException(e.getMessage(), e);

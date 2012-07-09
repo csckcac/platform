@@ -25,11 +25,12 @@ public class ToolBoxDTO {
     private ArrayList<String> scriptNames;
     private ArrayList<DashBoardTabDTO> dashboardTabs;
     private ArrayList<JasperTabDTO> jasperTabs;
-    private String evenStreamDef;
+    private ArrayList<String> evenStreamDefs;
     private String scriptsParentDirectory;
     private String gagetsParentDirectory;
     private String jasperParentDirectory;
     private String jaggeryAppParentDirectory;
+    private String streamDefnParentDirectory;
     private String hotDeploymentRootDir;
     private String datasource;
     private String dsConfiguration;
@@ -39,7 +40,7 @@ public class ToolBoxDTO {
         scriptNames = new ArrayList<String>();
         dashboardTabs = new ArrayList<DashBoardTabDTO>();
         jasperTabs = new ArrayList<JasperTabDTO>();
-        evenStreamDef = "";
+        evenStreamDefs = new ArrayList<String>();
         datasource = "";
     }
 
@@ -72,14 +73,6 @@ public class ToolBoxDTO {
         this.scriptNames.add(scriptName);
     }
 
-
-    public String getEvenStreamDef() {
-        return evenStreamDef;
-    }
-
-    public void setEvenStreamDef(String evenStreamDef) {
-        this.evenStreamDef = evenStreamDef;
-    }
 
     public void setScriptNames(ArrayList<String> scriptNames) {
         this.scriptNames = scriptNames;
@@ -177,4 +170,19 @@ public class ToolBoxDTO {
         return dsConfiguration;
     }
 
+    public ArrayList<String> getEvenStreamDefs() {
+        return evenStreamDefs;
+    }
+
+    public void setEvenStreamDefs(ArrayList<String> evenStreamDefs) {
+        this.evenStreamDefs = evenStreamDefs;
+    }
+
+    public String getStreamDefnParentDirectory() {
+        return streamDefnParentDirectory;
+    }
+
+    public void setStreamDefnParentDirectory(String streamDefnParentDirectory) {
+        this.streamDefnParentDirectory = streamDefnParentDirectory;
+    }
 }

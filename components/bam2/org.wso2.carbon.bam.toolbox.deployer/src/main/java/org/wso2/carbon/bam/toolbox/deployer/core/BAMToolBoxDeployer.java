@@ -19,6 +19,8 @@ import org.wso2.carbon.bam.toolbox.deployer.internal.ServerStartUpInspector;
 import org.wso2.carbon.bam.toolbox.deployer.util.ToolBoxDTO;
 import org.wso2.carbon.context.CarbonContext;
 import org.wso2.carbon.core.multitenancy.SuperTenantCarbonContext;
+import org.wso2.carbon.core.util.CryptoException;
+import org.wso2.carbon.core.util.CryptoUtil;
 import org.wso2.carbon.ndatasource.common.DataSourceException;
 import org.wso2.carbon.ndatasource.core.DataSourceMetaInfo;
 import org.wso2.carbon.ndatasource.core.DataSourceService;
@@ -138,7 +140,8 @@ public class BAMToolBoxDeployer extends AbstractDeployer {
                     aTool.setHotDeploymentRootDir(this.configurationContext.getAxisConfiguration().getRepository().getPath());
 
                     int tenantId = getTenantId();
-                    BAMArtifactDeployerManager.getInstance().deploy(aTool, tenantId, getTenantAdminName(tenantId));
+                    BAMArtifactDeployerManager.getInstance().deploy(aTool, tenantId, getTenantAdminName(tenantId),
+                            getTenantAdminPassword(tenantId));
 
                     manager.addNewToolBoxConfiguration(aTool, getTenantId());
 
@@ -167,7 +170,6 @@ public class BAMToolBoxDeployer extends AbstractDeployer {
         } else {
             this.pausedDeploymentFileDatas.add(deploymentFileData);
         }
-
     }
 
     private int getTenantId() {
@@ -322,6 +324,31 @@ public class BAMToolBoxDeployer extends AbstractDeployer {
                 log.error(e.getMessage(), e);
                 throw new BAMToolboxDeploymentException("Error while obtaining " +
                         "the admin username for tenant: " + tenantId, e);
+            }
+        }
+    }
+
+    private String getTenantAdminPassword(int tenantId) throws BAMToolboxDeploymentException {
+        if (tenantId == MultitenantConstants.SUPER_TENANT_ID) {
+            try {
+                return ServiceHolder.getUserRealm().getRealmConfiguration().getAdminPassword();
+            } catch (UserStoreException e) {
+                log.error(e.getMessage(), e);
+                throw new BAMToolboxDeploymentException("Error while obtaining " +
+                        "the admin username for tenant: " + tenantId, e);
+            }
+        } else {
+            TenantManager manager = ServiceHolder.getRealmService().getTenantManager();
+            try {
+                return new String(CryptoUtil.getDefaultCryptoUtil().decrypt(manager.getTenant(tenantId).getRealmConfig().
+                        getAdminPassword().getBytes()));
+            } catch (org.wso2.carbon.user.api.UserStoreException e) {
+                log.error(e.getMessage(), e);
+                throw new BAMToolboxDeploymentException("Error while obtaining " +
+                        "the admin username for tenant: " + tenantId, e);
+            } catch (CryptoException e) {
+                log.error(e.getMessage(), e);
+                return "";
             }
         }
     }

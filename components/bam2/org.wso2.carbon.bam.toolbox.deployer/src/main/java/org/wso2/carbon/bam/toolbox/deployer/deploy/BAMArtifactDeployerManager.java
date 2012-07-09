@@ -22,6 +22,7 @@ import org.wso2.carbon.CarbonConstants;
 import org.wso2.carbon.bam.toolbox.deployer.BAMToolBoxDeployerConstants;
 import org.wso2.carbon.bam.toolbox.deployer.ServiceHolder;
 import org.wso2.carbon.bam.toolbox.deployer.client.DashboardClient;
+import org.wso2.carbon.bam.toolbox.deployer.client.DataPublisher;
 import org.wso2.carbon.bam.toolbox.deployer.client.HiveScriptStoreClient;
 import org.wso2.carbon.bam.toolbox.deployer.exception.BAMComponentNotFoundException;
 import org.wso2.carbon.bam.toolbox.deployer.exception.BAMToolboxDeploymentException;
@@ -45,8 +46,6 @@ public class BAMArtifactDeployerManager {
     private static BAMArtifactDeployerManager instance;
 
     private static final Log log = LogFactory.getLog(BAMArtifactDeployerManager.class);
-
-    // private static final String gadgetsPath = "/repository/dashboards/gadgets";
 
     private static final String gadgetsPath = "/repository/gadget-server/gadgets";
 
@@ -77,7 +76,7 @@ public class BAMArtifactDeployerManager {
             scriptNameWithId.add(scriptName);
             try {
                 HiveScriptStoreClient scriptStoreClient = HiveScriptStoreClient.getInstance();
-                scriptStoreClient.saveHiveScript(scriptName, content, null);
+                scriptStoreClient.saveHiveScript(scriptName, content, BAMToolBoxDeployerConstants.DEFAULT_CRON);
             } catch (BAMComponentNotFoundException e) {
                 log.error(e.getMessage() + "Skipping deploying Hive scripts..");
             } catch (Exception e) {
@@ -151,8 +150,12 @@ public class BAMArtifactDeployerManager {
 
     }
 
-    public void deploy(ToolBoxDTO toolBoxDTO, int tenantId, String username)
+    public void deploy(ToolBoxDTO toolBoxDTO, int tenantId, String username, String password)
             throws BAMToolboxDeploymentException {
+        if (canDeployDataStreamDefn()) {
+            deployStreamDefn(toolBoxDTO, username, password);
+        }
+
         if (canDeployScripts()) {
             deployScripts(toolBoxDTO);
         }
@@ -166,6 +169,24 @@ public class BAMArtifactDeployerManager {
                 transferJRXMLFilesToRegistry(new File(toolBoxDTO.getJasperParentDirectory()),
                         tenantId);
             }
+        }
+    }
+
+    private boolean canDeployDataStreamDefn() {
+        if (null == ServiceHolder.getDataBridgeReceiverService()) {
+            log.warn("No DataReceiverService Found! Skipping deploying DataStream Definitions..");
+            return false;
+        }
+        else return true;
+    }
+
+    private void deployStreamDefn(ToolBoxDTO toolBoxDTO, String username, String password)
+            throws BAMToolboxDeploymentException {
+        DataPublisher client = DataPublisher.getInstance();
+        for (String defn : toolBoxDTO.getEvenStreamDefs()) {
+            String defnPath = toolBoxDTO.getStreamDefnParentDirectory() + File.separator + defn;
+            String streamDefn = getStreamDefinition(defnPath);
+            client.createEventDefn(streamDefn, username, password);
         }
     }
 
@@ -417,5 +438,29 @@ public class BAMArtifactDeployerManager {
         } else {
             return "";
         }
+    }
+
+
+    private String getStreamDefinition(String filePath) throws BAMToolboxDeploymentException {
+        try {
+            FileInputStream fstream = null;
+            fstream = new FileInputStream(filePath);
+            DataInputStream in = new DataInputStream(fstream);
+            BufferedReader br = new BufferedReader(new InputStreamReader(in));
+            String strLine;
+            String streamDefn = "";
+            while ((strLine = br.readLine()) != null) {
+                streamDefn += strLine;
+            }
+            in.close();
+            return streamDefn;
+        } catch (FileNotFoundException e) {
+            log.error(e.getMessage(), e);
+            throw new BAMToolboxDeploymentException(e.getMessage(), e);
+        } catch (IOException e) {
+            log.error(e.getMessage(), e);
+            throw new BAMToolboxDeploymentException(e.getMessage(), e);
+        }
+
     }
 }

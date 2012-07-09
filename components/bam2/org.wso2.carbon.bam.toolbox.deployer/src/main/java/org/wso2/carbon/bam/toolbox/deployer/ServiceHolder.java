@@ -19,6 +19,7 @@ package org.wso2.carbon.bam.toolbox.deployer;
 import org.wso2.carbon.base.api.ServerConfigurationService;
 import org.wso2.carbon.dashboard.DashboardDSService;
 import org.wso2.carbon.dashboard.mgt.gadgetrepo.GadgetRepoService;
+import org.wso2.carbon.databridge.core.DataBridgeReceiverService;
 import org.wso2.carbon.ndatasource.core.DataSourceService;
 import org.wso2.carbon.registry.core.Registry;
 import org.wso2.carbon.registry.core.exceptions.RegistryException;
@@ -40,6 +41,7 @@ public class ServiceHolder {
     private static ServerConfigurationService serverConfiguration;
     private static GadgetRepoService gadgetRepoService;
     private static DataSourceService dataSourceService;
+    private static DataBridgeReceiverService dataBridgeReceiverService;
 
     public static ConfigurationContextService getConfigurationContextService() {
         return configurationContextService;
@@ -110,7 +112,13 @@ public class ServiceHolder {
         return ServiceHolder.dataSourceService;
     }
 
+    public static DataBridgeReceiverService getDataBridgeReceiverService() {
+        return dataBridgeReceiverService;
+    }
 
+    public static void setDataBridgeReceiverService(DataBridgeReceiverService dataBridgeReceiverService) {
+        ServiceHolder.dataBridgeReceiverService = dataBridgeReceiverService;
+    }
 }
 
 

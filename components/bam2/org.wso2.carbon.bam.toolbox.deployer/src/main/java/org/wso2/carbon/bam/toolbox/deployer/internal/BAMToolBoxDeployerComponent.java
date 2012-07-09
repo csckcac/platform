@@ -24,6 +24,7 @@ import org.wso2.carbon.bam.toolbox.deployer.ServiceHolder;
 import org.wso2.carbon.base.api.ServerConfigurationService;
 import org.wso2.carbon.dashboard.DashboardDSService;
 import org.wso2.carbon.dashboard.mgt.gadgetrepo.GadgetRepoService;
+import org.wso2.carbon.databridge.core.DataBridgeReceiverService;
 import org.wso2.carbon.ndatasource.core.DataSourceService;
 import org.wso2.carbon.registry.core.service.RegistryService;
 import org.wso2.carbon.user.core.UserRealm;
@@ -61,6 +62,8 @@ import org.wso2.carbon.utils.ConfigurationContextService;
  * unbind="unsetGadgetRepoService"
  * @scr.reference name="datasources.service" interface="org.wso2.carbon.ndatasource.core.DataSourceService"
  * cardinality="1..1" policy="dynamic" bind="setDataSourceService" unbind="unsetDataSourceService"
+ * @scr.reference name="databridge.reciever" interface="org.wso2.carbon.databridge.core.DataBridgeReceiverService"
+ * cardinality="0..1" policy="dynamic" bind="setDataBridgeReceiverService" unbind="unsetDataBridgeReceiverService"
  */
 
 public class BAMToolBoxDeployerComponent {
@@ -142,5 +145,13 @@ public class BAMToolBoxDeployerComponent {
         }
         ServiceHolder.setDataSourceService(null);
     }
+
+   protected void setDataBridgeReceiverService(DataBridgeReceiverService dataBridgeReceiverService){
+        ServiceHolder.setDataBridgeReceiverService(dataBridgeReceiverService);
+   }
+
+   protected void unsetDataBridgeReceiverService(DataBridgeReceiverService dataBridgeReceiverService){
+        ServiceHolder.setDataBridgeReceiverService(null);
+   }
 
 }

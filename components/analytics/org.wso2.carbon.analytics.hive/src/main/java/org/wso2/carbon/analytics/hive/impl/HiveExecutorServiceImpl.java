@@ -17,15 +17,14 @@ package org.wso2.carbon.analytics.hive.impl;
 
 import org.apache.commons.logging.Log;
 import org.apache.commons.logging.LogFactory;
+import org.apache.hadoop.hive.service.Utils;
 import org.w3c.dom.Document;
 import org.w3c.dom.Element;
 import org.wso2.carbon.analytics.hive.HiveConstants;
-import org.apache.hadoop.hive.service.Utils;
 import org.wso2.carbon.analytics.hive.ServiceHolder;
 import org.wso2.carbon.analytics.hive.conf.HiveConnectionManager;
 import org.wso2.carbon.analytics.hive.dto.QueryResult;
 import org.wso2.carbon.analytics.hive.dto.QueryResultRow;
-import org.wso2.carbon.analytics.hive.exception.HiveConnectionException;
 import org.wso2.carbon.analytics.hive.exception.HiveExecutionException;
 import org.wso2.carbon.analytics.hive.service.HiveExecutorService;
 import org.wso2.carbon.ndatasource.common.DataSourceException;
@@ -35,24 +34,18 @@ import org.wso2.carbon.ndatasource.core.DataSourceService;
 import org.wso2.carbon.ndatasource.core.utils.DataSourceUtils;
 import org.wso2.carbon.ndatasource.rdbms.RDBMSConfiguration;
 import org.wso2.carbon.ndatasource.rdbms.RDBMSDataSourceReader;
+import org.wso2.carbon.utils.multitenancy.CarbonContextHolder;
 import org.xml.sax.InputSource;
 import org.xml.sax.SAXException;
-import org.wso2.carbon.utils.multitenancy.CarbonContextHolder;
 
 import javax.sql.DataSource;
 import javax.xml.parsers.DocumentBuilder;
 import javax.xml.parsers.DocumentBuilderFactory;
 import javax.xml.parsers.ParserConfigurationException;
-import java.io.FileInputStream;
 import java.io.IOException;
 import java.io.StringReader;
 import java.net.URL;
-import java.sql.Connection;
-import java.sql.DriverManager;
-import java.sql.ResultSet;
-import java.sql.ResultSetMetaData;
-import java.sql.SQLException;
-import java.sql.Statement;
+import java.sql.*;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.regex.Matcher;
@@ -148,10 +141,18 @@ public class HiveExecutorServiceImpl implements HiveExecutorService {
                     if (regexMatcher.group(1) != null) {
                         // Add double-quoted string without the quotes
                         temp = regexMatcher.group(1).replaceAll(";", "%%");
+                         if (temp.contains("%%")) {
+                            temp = temp.replaceAll(" ", "");
+                            temp = temp.replaceAll("\n", "");
+                        }
                         temp = "\"" + temp + "\"";
                     } else if (regexMatcher.group(2) != null) {
                         // Add single-quoted string without the quotes
                         temp = regexMatcher.group(2).replaceAll(";", "%%");
+                         if (temp.contains("%%")) {
+                            temp = temp.replaceAll(" ", "");
+                            temp = temp.replaceAll("\n", "");
+                        }
                         temp = "\'" + temp + "\'";
                     } else {
                         temp = regexMatcher.group();

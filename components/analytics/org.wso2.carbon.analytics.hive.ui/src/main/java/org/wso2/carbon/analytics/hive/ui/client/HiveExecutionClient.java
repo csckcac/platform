@@ -78,7 +78,6 @@ public class HiveExecutionClient {
         try {
             QueryResult[] res = stub.executeHiveScript(script);
             return res;
-           // return generateDisplayString(res);
         } catch (RemoteException e) {
             log.error(e.getMessage(), e);
             throw e;

@@ -40,6 +40,7 @@
                 <exclude>**/axis2/axis2.xml</exclude>
                 <exclude>**/resources/clientRepository/modules/rampart*</exclude>
                 <exclude>**/ciphertool.bat</exclude>
+                <exclude>**/log4j.properties</exclude>
             </excludes>
         </fileSet>
         <fileSet>
@@ -439,6 +440,14 @@
             <source>../p2-profile-gen/target/wso2carbon-core-${carbon.version}/repository/conf/etc/syslog-config.xml</source>
             <outputDirectory>${pom.artifactId}-${pom.version}/repository/conf/etc</outputDirectory>
         </file>
+	<!-- Including log4j.properties file -->
+        <file>
+            <source>
+                ../p2-profile-gen/target/wso2carbon-core-${carbon.version}/repository/conf/log4j.properties
+            </source>
+            <outputDirectory>${pom.artifactId}-${pom.version}/repository/conf/
+            </outputDirectory>
+        </file>      
         <file>
             <source>../p2-profile-gen/target/wso2carbon-core-${wso2carbon.version}/repository/conf/identity.xml</source>
             <outputDirectory>${pom.artifactId}-${build.version}/repository/conf</outputDirectory>

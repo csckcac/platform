@@ -143,6 +143,10 @@
 	<!-- If product is using an external LDAP as the user store in read/write mode, use following user manager -->
 	<UserStoreManager class="org.wso2.carbon.user.core.ldap.ReadWriteLDAPUserStoreManager">
             <Property name="ConnectionURL">ldap://localhost:10389</Property>
+            <Property name="UsernameJavaRegEx">^[^~!#$;%^*+={}\\|\\\\&lt;&gt;,\'\"]{3,30}$</Property>
+            <Property name="UsernameJavaScriptRegEx">[\\S]{3,30}</Property>
+     	    <Property name="RolenameJavaRegEx">^[^~!@#$;%^*+={}\\|\\\\&lt;&gt;,\'\"]{3,30}$</Property>
+	    <Property name="RolenameJavaScriptRegEx">[\\S]{3,30}</Property>
             <Property name="ConnectionName">uid=admin,ou=system</Property>
             <Property name="ConnectionPassword">admin</Property>
             <Property name="passwordHashMethod">SHA</Property>

@@ -3,14 +3,68 @@ tenant=$1
 controller_ip=$2
 app_path=$3
 docroot=$4
+duration=$5
+work=/opt/payload/work
 
-rm -rf $docroot/*
-echo $controller_ip >> /tmp/y
-echo $app_path >> /tmp/y
-echo $tenant >> /tmp/y
-echo $docroot >> /tmp/y
-scp -i ./wso2-key root@$controller_ip:$app_path/$tenant/* $docroot/
-pushd $docroot
-for f in *.tar.gz; do tar -zxf $f;rm -f $f; done
+if [ ! -d $work ]; then
+	mkdir $work
+fi
+
+
+pushd $work
+ssh -i ../wso2-key root@$controller_ip "cd $app_path/$tenant; ls ./" | grep "tar.gz" > ./app_list
+if [ ! -e ./app_list.prev ]; then
+    scp -i ../wso2-key root@$controller_ip:$app_path/$tenant/*.tar.gz ./
+    for a in *.tar.gz;
+    do
+        if [ -e $a ]; then
+            tar -zxf $a;rm -f $a;
+        fi
+    	b=${a%".tar.gz"}
+        if [ -d $docroot/$b ]; then
+    	    rm -rf $docroot/$b
+        fi
+    	mv $b $docroot/
+        echo "added $docroot/$b"
+    done
+else
+    x=`cat ./app_list.prev`
+    y=`cat ./app_list`
+    z=0
+    for f in $x;
+    do
+        for g in $y;
+        do
+            if [ $g == $f ]; then
+                z=1; break;
+
+            fi
+        done
+        if [ $z == 0 ]; then
+            h=${f%".tar.gz"}
+            if [ -d $docroot/$h ]; then
+                rm -rf $docroot/$h
+                echo "deleted $docroot/$h"
+            fi
+        fi
+        z=0
+    done
+fi
+
+cp -f ./app_list ./app_list.prev
+
+ssh -i ../wso2-key root@$controller_ip "cd $app_path/$tenant;find ./ -mmin $duration" | grep "tar.gz" > ./updated_app_list
+w=`cat ./updated_app_list`
+for i in $w; 
+do 
+    scp -i ../wso2-key root@$controller_ip:$app_path/$tenant/$i ./
+    tar -zxf $i;rm -f $i;
+    j=${i%".tar.gz"}
+    if [ -d $docroot/$j ]; then
+    	rm -rf $docroot/$j
+    fi
+    mv $j $docroot/
+    echo "added $docroot/$j"
+done
 popd
 

@@ -1,27 +1,30 @@
-var i18n = {
-    localeResourcesBasePath:'',
-    localizations:{},
+var i18n = new function () {
+    this.localeResourcesBasePath = '';
 
-    init:function (req) {
-        locale = req.getLocale();
-        this.localizations = require(this.localeResourcesBasePath + 'locale_' + locale + '.json');
-    },
+    this.init() = function (req) {
+        var locale = req.getLocale();
+        try {
+            var localizations = require(localeResourcesBasePath + 'locale_' + locale + '.json');
+        } catch (e) {
+            localizations = {};
+        }
+    };
 
-    getLocalString:function (key, fallback) {
-        if (this.localizations[key]) {
-            return this.localizations[key]
+    var getLocalString = function (key, fallback) {
+        if (localizations[key]) {
+            return localizations[key]
         } else {
             return  key;
         }
 
-    },
+    };
 
-    localize:function (key, fallback) {
-        var localized = this.getLocalString(key);
+    this.localize = function (key, fallback) {
+        var localized = getLocalString(key);
         if (localized !== key) {
             return localized;
         } else {
             return fallback;
         }
-    }
-}
+    };
+};

@@ -1,5 +1,6 @@
 package org.jaggeryjs.hostobjects.web;
 
+import com.google.gson.Gson;
 import org.apache.commons.logging.Log;
 import org.apache.commons.logging.LogFactory;
 import org.mozilla.javascript.Context;
@@ -8,7 +9,9 @@ import org.mozilla.javascript.Scriptable;
 import org.mozilla.javascript.ScriptableObject;
 import org.jaggeryjs.scriptengine.util.HostObjectUtil;
 import org.jaggeryjs.scriptengine.exceptions.ScriptException;
+import org.mozilla.javascript.NativeObject;
 
+import javax.servlet.http.Cookie;
 import javax.servlet.http.HttpServletResponse;
 import java.io.IOException;
 
@@ -153,5 +156,25 @@ public class ResponseHostObject extends ScriptableObject {
             log.warn(msg, e);
             throw new ScriptException(msg, e);
         }
+    }
+
+    public static void jsFunction_addCookie(Context cx, Scriptable thisObj, Object[] args, Function funObj)
+            throws ScriptException {
+        String functionName = "addCookie";
+        int argsCount = args.length;
+        if (argsCount != 1) {
+            HostObjectUtil.invalidNumberOfArgs(hostObjectName, functionName, argsCount, false);
+        }
+        if (!(args[0] instanceof NativeObject)) {
+            HostObjectUtil.invalidArgsError(hostObjectName, functionName, "1", "string", args[0], false);
+        }
+
+        NativeObject jcookie = (NativeObject) args[0];
+        Gson gson = new Gson();
+        Cookie cookie = gson.fromJson(HostObjectUtil.serializeJSON(jcookie), Cookie.class);
+
+
+        ResponseHostObject rho = (ResponseHostObject) thisObj;
+        rho.response.addCookie(cookie);
     }
 }

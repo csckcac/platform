@@ -11,8 +11,10 @@ import org.mozilla.javascript.*;
 import org.jaggeryjs.scriptengine.exceptions.ScriptException;
 import org.jaggeryjs.scriptengine.util.HostObjectUtil;
 
+import javax.servlet.http.Cookie;
 import javax.servlet.http.HttpServletRequest;
 import java.io.IOException;
+import java.net.CookieStore;
 import java.util.*;
 
 public class RequestHostObject extends ScriptableObject {
@@ -391,6 +393,17 @@ public class RequestHostObject extends ScriptableObject {
 
         rho.parameterFields = rho.context.newArray(rho, paramsNames.toArray());
         rho.isParsed = true;
+    }
+
+    public static Cookie[] jsFunction_getCookies(Context cx, Scriptable thisObj, Object[] args, Function funObj) throws ScriptException {
+        String functionName = "getCookies";
+        int argsCount = args.length;
+        if (argsCount != 0) {
+            HostObjectUtil.invalidNumberOfArgs(hostObjectName, functionName, argsCount, false);
+        }
+
+        RequestHostObject rho = (RequestHostObject) thisObj;
+        return rho.request.getCookies();
     }
 
 

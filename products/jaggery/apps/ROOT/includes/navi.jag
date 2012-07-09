@@ -58,9 +58,9 @@
     <li id="urimatcher">
         <a href="<%=context%>/apidocs/urimatcher.jag">URIMatcher</a>
     </li>
-	<li id="jaggeryparser">
+	<!--li id="jaggeryparser">
         <a href="<%=context%>/apidocs/jaggeryparser.jag">JaggeryParser</a>
-    </li>
+    </li-->
     <li id="include">
         <a href="<%=context%>/apidocs/include.jag">include()</a>
     </li>
@@ -139,6 +139,12 @@
 <ul>
     <li id="oauth">
         <a href="<%=context%>/apidocs/oauth.jag">OAuth</a>
+    </li>
+</ul>
+<h6>Internationalization</h6>
+<ul>
+    <li id="i18n">
+        <a href="<%=context%>/apidocs/i18n.jag">i18n</a>
     </li>
 </ul>
 <h5>Configuration File</h5>

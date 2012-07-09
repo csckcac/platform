@@ -22,6 +22,7 @@ public final class AutoscalerConstant {
     /**
      * elastic-scaler-config XML file's elements
      */
+    public static final String SERIALIZATION_DIR_ELEMENT = "serializationDir";
     public static final String IAAS_PROVIDER_ELEMENT = "iaasProvider";
     public static final String IAAS_PROVIDER_TYPE_ATTR = "type";
     public static final String IAAS_PROVIDER_NAME_ATTR = "name";
@@ -45,4 +46,10 @@ public final class AutoscalerConstant {
     public static final String EC2_CREDENTIAL_ALIAS = "elastic.scaler.ec2.credential";
     public static final String OPENSTACK_IDENTITY_ALIAS = "elastic.scaler.openstack.identity";
     public static final String OPENSTACK_CREDENTIAL_ALIAS = "elastic.scaler.openstack.credential";
+    
+    /**
+     * Serializer related constants
+     */
+    public static final String IAAS_CONTEXT_LIST_SERIALIZING_FILE = "iaas-context-list.txt";
+    public static final String DOMAIN_TO_LASTLY_USED_IAAS_MAP_SERIALIZING_FILE = "domain-to-lastly-used-iaas.txt";
 }

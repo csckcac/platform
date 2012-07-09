@@ -145,6 +145,29 @@ public class ElasticScalerConfigFileReader {
     }
 	
 	/**
+	 * Returns the serialization directory specified in the configuration file.
+	 * @return the path to the directory or an empty string if element cannot be found.
+	 */
+	public String getSerializationDir() {
+        
+	    docEle = dom.getDocumentElement();
+	    NodeList nl = docEle.getElementsByTagName(AutoscalerConstant.SERIALIZATION_DIR_ELEMENT);
+
+        // there should be only one serializationDir element, we neglect all the others
+        if (nl != null && nl.getLength() > 0) {
+            
+            if (nl.item(0).getNodeType() == Node.ELEMENT_NODE) {
+                Element prop = (Element) nl.item(0);
+
+                return prop.getTextContent();
+
+            }
+        }
+        
+        return "";
+    }
+	
+	/**
 	 * Load all IaasProviders from the configuration file and returns a list.
 	 * @return a list of IaasProvider instances.
 	 */

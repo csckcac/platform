@@ -22,7 +22,7 @@ import java.util.Arrays;
 
 import org.jclouds.compute.domain.NodeMetadata;
 import org.jclouds.compute.domain.NodeMetadataBuilder;
-import org.wso2.carbon.autoscaler.service.impl.AutoscalerServiceImpl.iaases;
+import org.wso2.carbon.autoscaler.service.impl.AutoscalerServiceImpl.Iaases;
 
 import junit.framework.TestCase;
 
@@ -52,27 +52,35 @@ public class IaasContextTest extends TestCase {
                                          .status(org.jclouds.compute.domain.NodeMetadata.Status.RUNNING)
                                          .build();
 
-        ctx = new IaasContext(iaases.ec2, null);
-        ctx.addNode(node1, "wso2.a");
-        ctx.addNode(node2, "wso2.b");
-        ctx.addNode(node3, "wso2.a");
-        ctx.addNode(node4, "wso2.c");
+        ctx = new IaasContext(Iaases.ec2, null);
+        ctx.addNodeIdToDomainMap(node1.getId(), "wso2.a");
+        ctx.addPublicIpToDomainMap("192.168.1.2", "wso2.a");
+        ctx.addPublicIpToNodeIdMap("192.168.1.2", node1.getId());
+        ctx.addNodeIdToDomainMap(node2.getId(), "wso2.b");
+        ctx.addNodeIdToDomainMap(node3.getId(), "wso2.a");
+        ctx.addPublicIpToDomainMap("192.168.1.3", "wso2.a");
+        ctx.addPublicIpToNodeIdMap("192.168.1.3", node3.getId());
+        ctx.addNodeIdToDomainMap(node4.getId(), "wso2.c");
     }
 
     public final void testGetLastMatchingNode() {
 
-        assertEquals(node3, ctx.getLastMatchingNode("wso2.a"));
-        ctx.removeNode(node3);
-        assertEquals(node1, ctx.getLastMatchingNode("wso2.a"));
-        ctx.addNode(node3, "wso2.a");
+        assertEquals(node3.getId(), ctx.getLastMatchingNode("wso2.a"));
+        ctx.removeNodeId(node3.getId());
+        assertEquals(node1.getId(), ctx.getLastMatchingNode("wso2.a"));
+        ctx.addNodeIdToDomainMap(node3.getId(), "wso2.a");
     }
 
     public final void testGetFirstMatchingNode() {
-        assertEquals(node1, ctx.getFirstMatchingNode("wso2.a"));
+        assertEquals(node1.getId(), ctx.getFirstMatchingNode("wso2.a"));
+    }
+    
+    public final void testGetFirstMatchingPublicIp() {
+        assertEquals("192.168.1.3", ctx.getLastMatchingPublicIp("wso2.a"));
     }
 
     public final void testGetNodeWithPublicIp() {
-        assertEquals(node1, ctx.getNodeWithPublicIp("192.168.1.2"));
+        assertEquals(node1.getId(), ctx.getNodeWithPublicIp("192.168.1.2"));
     }
 
     public final void testGetNodeIds() {

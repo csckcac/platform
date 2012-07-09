@@ -29,9 +29,8 @@ import java.util.Map.Entry;
 import org.apache.commons.lang.builder.EqualsBuilder;
 import org.apache.commons.lang.builder.HashCodeBuilder;
 import org.jclouds.compute.ComputeService;
-import org.jclouds.compute.domain.NodeMetadata;
 import org.jclouds.compute.domain.Template;
-import org.wso2.carbon.autoscaler.service.impl.AutoscalerServiceImpl.iaases;
+import org.wso2.carbon.autoscaler.service.impl.AutoscalerServiceImpl.Iaases;
 
 /**
  * This object holds all IaaS related runtime data.
@@ -41,18 +40,24 @@ public class IaasContext implements Serializable{
     private static final long serialVersionUID = -922284976926131383L;
     
     // name of the IaaS
-    private Enum<iaases> name;
-    private Map<String, Template> domainToTemplateMap = new HashMap<String, Template>();
-    private ComputeService computeService;
-    private Map<NodeMetadata, String> nodeToDomainMap = new LinkedHashMap<NodeMetadata, String>();
+    private Enum<Iaases> name;
+    private transient Map<String, Template> domainToTemplateMap;
+    private transient ComputeService computeService;
+    
+    // Since Jclouds' NodeMetadata object contains unserializable objects, I had to use 3 maps.
+    private Map<String, String> nodeIdToDomainMap = new LinkedHashMap<String, String>();
+    private Map<String, String> publicIpToDomainMap = new LinkedHashMap<String, String>();
+    private Map<String, String> publicIpToNodeIdMap = new LinkedHashMap<String, String>();
+    
     private int scaleUpOrder, scaleDownOrder;
 
-    public IaasContext(Enum<iaases> name, ComputeService computeService) {
+    public IaasContext(Enum<Iaases> name, ComputeService computeService) {
         this.name = name;
         this.computeService = computeService;
+        domainToTemplateMap = new HashMap<String, Template>();
     }
 
-    public Enum<iaases> getName() {
+    public Enum<Iaases> getName() {
         return name;
     }
 
@@ -67,25 +72,60 @@ public class IaasContext implements Serializable{
     public ComputeService getComputeService() {
         return computeService;
     }
+    
+    public void setComputeService(ComputeService computeService) {
+        this.computeService = computeService;
+    }
 
-    public void addNode(NodeMetadata node, String domain) {
-        nodeToDomainMap.put(node, domain);
+    public void addNodeIdToDomainMap(String nodeId, String domain) {
+        nodeIdToDomainMap.put(nodeId, domain);
+    }
+    
+    public void addPublicIpToDomainMap(String ip, String domain) {
+        publicIpToDomainMap.put(ip, domain);
+    }
+    
+    public void addPublicIpToNodeIdMap(String ip, String nodeId) {
+        publicIpToNodeIdMap.put(ip, nodeId);
     }
 
     /**
-     * This will return the <code>NodeMetadata</code> object which is belong to the
+     * This will return the node id of the node which is belong to the
      * requesting domain and which is the most recently created. If it cannot find a
-     * matching <code>NodeMetadata</code> object, this will return <code>null</code>.
+     * matching node id, this will return <code>null</code>.
      * @param domain service domain. 
-     * @return <code>NodeMetadata</code> instance
+     * @return the node Id of the node
      */
-    public NodeMetadata getLastMatchingNode(String domain) {
-        ListIterator<Map.Entry<NodeMetadata, String>> iter =
-            new ArrayList<Entry<NodeMetadata, String>>(nodeToDomainMap.entrySet()).
-                                listIterator(nodeToDomainMap.size());
+    public String getLastMatchingNode(String domain) {
+        ListIterator<Map.Entry<String, String>> iter =
+            new ArrayList<Entry<String, String>>(nodeIdToDomainMap.entrySet()).
+                                listIterator(nodeIdToDomainMap.size());
 
         while (iter.hasPrevious()) {
-            Map.Entry<NodeMetadata, String> entry = iter.previous();
+            Map.Entry<String, String> entry = iter.previous();
+            if (entry.getValue().equals(domain)) {
+                return entry.getKey();
+            }
+        }
+        
+        return null;
+    }
+    
+    /**
+     * This will return the public IP of the node which is belong to the
+     * requesting domain and which is the most recently created. If it cannot find a
+     * matching public IP, this will return <code>null</code>.
+     * @param domain service domain. 
+     * @return the public IP of the node
+     */
+    public String getLastMatchingPublicIp(String domain) {
+        // traverse from the last entry of the map
+        ListIterator<Map.Entry<String, String>> iter =
+            new ArrayList<Entry<String, String>>(publicIpToDomainMap.entrySet()).
+                                listIterator(publicIpToDomainMap.size());
+
+        while (iter.hasPrevious()) {
+            Map.Entry<String, String> entry = iter.previous();
             if (entry.getValue().equals(domain)) {
                 return entry.getKey();
             }
@@ -95,14 +135,14 @@ public class IaasContext implements Serializable{
     }
 
     /**
-     * This will return the <code>NodeMetadata</code> object which is belong to the
+     * This will return the node id of the node which is belong to the
      * requesting domain and which is created at first. If it cannot find a
-     * matching <code>NodeMetadata</code> object, this will return <code>null</code>.
+     * matching node id, this will return <code>null</code>.
      * @param domain service domain.
-     * @return <code>NodeMetadata</code> instance
+     * @return node id of the node
      */
-    public NodeMetadata getFirstMatchingNode(String domain) {
-        for (Entry<NodeMetadata, String> entry : nodeToDomainMap.entrySet()) {
+    public String getFirstMatchingNode(String domain) {
+        for (Entry<String, String> entry : nodeIdToDomainMap.entrySet()) {
             if (entry.getValue().equals(domain)) {
                 return entry.getKey();
             }
@@ -111,16 +151,16 @@ public class IaasContext implements Serializable{
     }
 
     /**
-     * This will return the <code>NodeMetadata</code> object which has the given public IP. 
-     * If it cannot find a matching <code>NodeMetadata</code> object, this will return 
+     * This will return the node id of the node which has the given public IP. 
+     * If it cannot find a matching node id, this will return 
      * <code>null</code>.
      * @param publicIp public IP of a node.
-     * @return <code>NodeMetadata</code> instance
+     * @return node id of the matching node.
      */
-    public NodeMetadata getNodeWithPublicIp(String publicIp) {
-        for (NodeMetadata node : nodeToDomainMap.keySet()) {
-            if (node.getPublicAddresses().iterator().next().equals(publicIp)) {
-                return node;
+    public String getNodeWithPublicIp(String publicIp) {
+        for (String node : publicIpToNodeIdMap.keySet()) {
+            if (node.equals(publicIp)) {
+                return publicIpToNodeIdMap.get(node);
             }
         }
 
@@ -137,9 +177,9 @@ public class IaasContext implements Serializable{
 
         List<String> nodeIds = new ArrayList<String>();
 
-        for (Entry<NodeMetadata, String> entry : nodeToDomainMap.entrySet()) {
+        for (Entry<String, String> entry : nodeIdToDomainMap.entrySet()) {
             if (entry.getValue().equals(domain)) {
-                nodeIds.add(entry.getKey().getId());
+                nodeIds.add(entry.getKey());
             }
         }
 
@@ -147,11 +187,11 @@ public class IaasContext implements Serializable{
     }
 
     /**
-     * Removes a specific node from the {@link #nodeToDomainMap}.
-     * @param node <code>NodeMetadata</code> instance to be removed.
+     * Removes a specific node id from the {@link #nodeIdToDomainMap}.
+     * @param node id of the node to be removed.
      */
-    public void removeNode(NodeMetadata node) {
-        nodeToDomainMap.remove(node);
+    public void removeNodeId(String nodeId) {
+        nodeIdToDomainMap.remove(nodeId);
     }
 
     public boolean equals(Object obj) {
@@ -183,6 +223,14 @@ public class IaasContext implements Serializable{
 
     public void setScaleUpOrder(int scaleUpOrder) {
         this.scaleUpOrder = scaleUpOrder;
+    }
+    
+    public void setDomainToTemplateMap(Map<String, Template> map) {
+        domainToTemplateMap = map;
+    }
+    
+    public Map<String, Template> getDomainToTemplateMap() {
+        return domainToTemplateMap;
     }
 
 }

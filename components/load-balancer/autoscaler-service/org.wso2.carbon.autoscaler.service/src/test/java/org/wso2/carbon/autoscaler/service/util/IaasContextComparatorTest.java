@@ -22,7 +22,7 @@ import java.util.Collections;
 import java.util.List;
 
 import org.wso2.carbon.autoscaler.service.impl.AutoscalerServiceImpl.IaasContextComparator;
-import org.wso2.carbon.autoscaler.service.impl.AutoscalerServiceImpl.iaases;
+import org.wso2.carbon.autoscaler.service.impl.AutoscalerServiceImpl.Iaases;
 
 import junit.framework.TestCase;
 
@@ -32,11 +32,11 @@ public class IaasContextComparatorTest extends TestCase {
     
     @Override
     protected void setUp() throws Exception {
-        IaasContext a = new IaasContext(iaases.ec2, null);
+        IaasContext a = new IaasContext(Iaases.ec2, null);
         a.setScaleUpOrder(1);
         a.setScaleDownOrder(5);
         
-        IaasContext b = new IaasContext(iaases.openstack, null);
+        IaasContext b = new IaasContext(Iaases.openstack, null);
         b.setScaleUpOrder(3);
         b.setScaleDownOrder(0);
         
@@ -67,7 +67,7 @@ public class IaasContextComparatorTest extends TestCase {
         assertEquals("ec2", iaasContexts.get(1).getName().toString());
         
         
-        IaasContext c = new IaasContext(iaases.ec2, null);
+        IaasContext c = new IaasContext(Iaases.ec2, null);
         c.setScaleUpOrder(0);
         c.setScaleDownOrder(4);
         

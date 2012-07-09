@@ -184,7 +184,7 @@
                         }
                 %>
                 <% String LCState = "";
-                    if(!artifact.getLCName().equals("")){
+                    if(artifact.getLCName() !=null && !artifact.getLCName().equals("")){
                         LCState = artifact.getLCName() + " / " + artifact.getLCState();
                     }
                 %>

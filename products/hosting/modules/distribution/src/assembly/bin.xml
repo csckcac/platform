@@ -42,6 +42,7 @@
                 <exclude>**/carbon.xml</exclude>
                 <exclude>**/axis2/axis2.xml</exclude>
                 <exclude>**/wrapper.conf</exclude>
+                <exclude>**/log4j.properties</exclude>
             </excludes>
         </fileSet>
         <fileSet>
@@ -180,7 +181,15 @@
             </source>
             <outputDirectory>${pom.artifactId}-${pom.version}/repository/conf/etc
             </outputDirectory>
-        </file>       
+        </file>   
+         <!-- Including log4j.properties file -->
+        <file>
+            <source>
+                ../p2-profile-gen/target/wso2carbon-core-${carbon.version}/repository/conf/log4j.properties
+            </source>
+            <outputDirectory>${pom.artifactId}-${pom.version}/repository/conf/
+            </outputDirectory>
+        </file>          
         <file>
             <source>INSTALL.txt</source>
             <outputDirectory>${pom.artifactId}-${pom.version}</outputDirectory>

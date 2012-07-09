@@ -76,7 +76,6 @@
                                     if(serverProfilePath != null && serverProfilePath != ""){
                                         document.getElementById("serverProfileList").value = serverProfilePath;
                                     }
-                                    document.getElementById('streamNameList').disabled = "";
                                 }
                             })
             }
@@ -117,6 +116,7 @@
 
             function onServerProfileSelected(parentPath){
                 loadStreamNames(parentPath + "/" + document.getElementById('serverProfileList').value, "");
+                document.getElementById('streamNameList').disabled = "";
             }
 
             function selectStreamVersionList(parentPath){

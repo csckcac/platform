@@ -144,7 +144,7 @@
             logical people groups and the pre and post state transition of the task.
         </p>
 
-        <table>
+        <table id="Task-Actions-Table">
             <tbody>
                 <tr>
                     <th>Action</th>
@@ -247,12 +247,25 @@
                 <p><img src="../images/humantask-task-lc/task_after_starting.png" alt="Task Response"/></p>
             </li>
 
+            <li><b>Completing a Task</b>
 
+                <p>
+                    The task completion happens with the task owner performs the completion action provided with the
+                    output rendering form.
+                </p>
+                <p><img src="../images/humantask-task-lc/task_completion.png" alt="Task Completion"/></p>
 
+                <p>
+                    Once the task is completed, the particular task would be moved out from the
+                    <b>My Tasks</b> list of the particular user.
+                </p>
+            </li>
 
+            <li><b>Other Actions</b>
 
+            Refer the list of actions in <a href="#Task-Actions-Table">Task Actions Table</a>
 
-
+            </li>
 
         </ul>
 

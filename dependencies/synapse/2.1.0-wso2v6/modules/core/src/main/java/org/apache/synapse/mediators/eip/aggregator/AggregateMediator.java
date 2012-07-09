@@ -38,6 +38,7 @@ import org.jaxen.JaxenException;
 
 import java.util.Collections;
 import java.util.HashMap;
+import java.util.List;
 import java.util.Map;
 
 /**
@@ -140,8 +141,16 @@ public class AggregateMediator extends AbstractMediator implements ManagedLifecy
                     EIPConstants.AGGREGATE_CORRELATION);
             // if a correlateExpression is provided and there is a coresponding
             // element in the current message prepare to correlate the messages on that
-            if (correlateExpression != null
-                    && correlateExpression.evaluate(synCtx) != null) {
+            Object result = null;
+            if (correlateExpression != null) {
+                result = correlateExpression.evaluate(synCtx);
+                if (result instanceof List) {
+                    if (((List) result).isEmpty()) {
+                        handleException("Failed to evaluate correlate expression: " + correlateExpression.toString(), synCtx);
+                    }
+                }
+            }
+            if (result != null) {
 
                 while (aggregate == null) {
 

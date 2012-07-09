@@ -2,13 +2,16 @@
 <AppFactory xmlns="http://www.wso2.org/appfactory/">
 <AdminUserName>admin</AdminUserName><AdminPassword>admin</AdminPassword>
     <ApplicationMgt>
-         <DefaultApplicationUserRole name="appFactoryUsers"><Permission>/permission/admin/login</Permission></DefaultApplicationUserRole>
+         <DefaultApplicationUserRole name="appFactoryUsers">
+             <Permission>/permission/admin/login</Permission>
+         </DefaultApplicationUserRole>
     </ApplicationMgt>
 
     <DefaultRoles>
         <Role name="developer"><Permission>/permission/admin/login</Permission></Role>
         <Role name="devOps"><Permission>/permission/admin/login</Permission></Role>
         <Role name="qa"><Permission>/permission/admin/login</Permission></Role>
+        <Role name="appOwner"><Permission>/permission/admin/login</Permission></Role>
         <Role name="appOwner"><Permission>/permission/admin/login</Permission></Role>
     </DefaultRoles>
 

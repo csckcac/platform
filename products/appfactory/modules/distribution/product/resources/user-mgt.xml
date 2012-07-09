@@ -30,7 +30,7 @@
             <Property name="maxActive">50</Property>
             <Property name="maxWait">60000</Property>
             <Property name="minIdle">5</Property>
-            <Property name="MultiTenantRealmConfigBuilder">org.wso2.carbon.user.core.config.multitenancy.SimpleRealmConfigBuilder</Property>
+            <Property name="MultiTenantRealmConfigBuilder">org.wso2.carbon.appfactory.userstore.AppFactoryRealmConfigBuilder</Property>
         </Configuration>
 	<!-- Following is the default user store manager. This user store manager is based on embedded-apacheds LDAP. It reads/writes users and roles into the 		     default apacheds LDAP user store. Descriptions about each of the following properties can be found in user management documentation of the respective 
 	     product.

@@ -21,11 +21,164 @@
         "http://www.w3.org/TR/xhtml1/DTD/xhtml1-strict.dtd">
 <html xmlns="http://www.w3.org/1999/xhtml" xml:lang="en" lang="en">
     <head>
-        <title>@product.name@ - Administration Guide For Human Tasks - TODO </title>
+        <title>@product.name@ - Administration and Configuration Guide For Human Tasks</title>
         <link href="../css/bps-docs.css" rel="stylesheet"/>
         <link href="styles/dist-docs.css" rel="stylesheet" type="text/css" media="all"/>
     </head>
     <body>
-        <h1>Administration Guide For Human Tasks - TODO</h1>
+        <h1>Administration and Configuration Guide For Human Tasks</h1>
+
+        <h3>Table of Content</h3>
+        <ul>
+            <li><a href="#Implementing-A-People-Query-Evaluator">Writing Your Own PeopleQueryEvaluator</a></li>
+            <li><a href="#Task-Instance-Cleanup">Task Instance Cleanup</a></li>
+            <li><a href="#Task-Privileges">Task Privileges</a></li>
+            <li><a href="#Task-Life-Cycle">Task Life Cycle</a></li>
+            <li><a href="#Task-Event-History">Task Event History</a></li>
+        </ul>
+
+        <h2 id="Implementing-A-People-Query-Evaluator">Writing Your Own PeopleQueryEvaluator</h2>
+
+        <p>
+            The default people query evaluator class in WSO2 BPS @product.version@ is based on the Carbon
+            User Manager API. But if you wish you use a different people query evaluator mechanism, it is possible
+            to plug in a different class which implements an interface in the human task core package.
+            In order to write your people query evaluator you'll need to write a Java class implementing
+            <b>org.wso2.carbon.humantask.core.engine.PeopleQueryEvaluator</b>. You can find the relevant JARs
+            having this interface in the <b>BPS_HOME/repository/component/plugins</b> folder.
+        </p>
+
+        <p>
+            An outline of the methods to be implemented is given below.
+        </p>
+
+
+        <pre class="java5" style="font-family:monospace;"><span style="color: #000000; font-weight: bold;">public</span> <span style="color: #000000; font-weight: bold;">interface</span> PeopleQueryEvaluator <span style="color: #009900;">&#123;</span>
+    <span style="color: #008000; font-style: italic; font-weight: bold;">/**
+     * Check whether if the given username exist in the user store.
+     *
+     * @param userName : The user name to be checked.
+     * @return : true if the user exist.
+     */</span>
+    <span style="color: #006600; font-weight: bold;">boolean</span> isExistingUser<span style="color: #009900;">&#40;</span><span style="color: #003399; font-weight: bold;">String</span> userName<span style="color: #009900;">&#41;</span><span style="color: #339933;">;</span>
+
+    <span style="color: #008000; font-style: italic; font-weight: bold;">/**
+     * Check whether if the given roleName exists in the user store.
+     *
+     * @param roleName : The roleName to be checked.
+     * @return : true if the roleName exists in the user store.
+     */</span>
+    <span style="color: #006600; font-weight: bold;">boolean</span> isExistingRole<span style="color: #009900;">&#40;</span><span style="color: #003399; font-weight: bold;">String</span> roleName<span style="color: #009900;">&#41;</span><span style="color: #339933;">;</span>
+
+    <span style="color: #008000; font-style: italic; font-weight: bold;">/**
+     * Checks whether the are users for the given roleName.
+     *
+     * @param roleName : The role name.
+     * @return : True if there are users for the given roleName. false otherwise.
+     */</span>
+    <span style="color: #006600; font-weight: bold;">boolean</span> hasUsersForRole<span style="color: #009900;">&#40;</span><span style="color: #003399; font-weight: bold;">String</span> roleName<span style="color: #009900;">&#41;</span><span style="color: #339933;">;</span>
+
+    <span style="color: #008000; font-style: italic; font-weight: bold;">/**
+     * Returns the list of user names in the user store for the given role name.
+     *
+     * @param roleName : The role name.
+     * @return : The list of user names for the given role name.
+     */</span>
+    List<span style="color: #339933;">&lt;</span>String<span style="color: #339933;">&gt;</span> getUserNameListForRole<span style="color: #009900;">&#40;</span><span style="color: #003399; font-weight: bold;">String</span> roleName<span style="color: #009900;">&#41;</span><span style="color: #339933;">;</span>
+
+    <span style="color: #008000; font-style: italic; font-weight: bold;">/**
+     * Returns the list of matching roles for a given user name.
+     *
+     * @param userName : The user name to get the list of roles.
+     * @return : The list of matching role names.
+     */</span>
+    List<span style="color: #339933;">&lt;</span>String<span style="color: #339933;">&gt;</span> getRoleNameListForUser<span style="color: #009900;">&#40;</span><span style="color: #003399; font-weight: bold;">String</span> userName<span style="color: #009900;">&#41;</span><span style="color: #339933;">;</span>
+
+    <span style="color: #008000; font-style: italic; font-weight: bold;">/**
+     * Creates a new org entity object for the given roleName
+     *
+     * @param roleName : The name of the role.
+     * @return : the created object.
+     */</span>
+    OrganizationalEntityDAO createGroupOrgEntityForRole<span style="color: #009900;">&#40;</span><span style="color: #003399; font-weight: bold;">String</span> roleName<span style="color: #009900;">&#41;</span><span style="color: #339933;">;</span>
+
+    <span style="color: #008000; font-style: italic; font-weight: bold;">/**
+     * Creates a new org entity object for the given user name
+     *
+     * @param userName : The name of the user.
+     * @return : the created object.
+     */</span>
+    OrganizationalEntityDAO createUserOrgEntityForName<span style="color: #009900;">&#40;</span><span style="color: #003399; font-weight: bold;">String</span> userName<span style="color: #009900;">&#41;</span><span style="color: #339933;">;</span>
+
+    <span style="color: #008000; font-style: italic; font-weight: bold;">/**
+     * Creates the GenericHumanRoleDAO object for the given role and the role type.
+     *
+     * @param roleName : the name of the human role.
+     * @param type     : The type of the human role.
+     * @return : the created GenericHumanRoleDAO object.
+     */</span>
+    GenericHumanRoleDAO createGHRForRoleName<span style="color: #009900;">&#40;</span><span style="color: #003399; font-weight: bold;">String</span> roleName,
+                                             GenericHumanRoleDAO.<span style="color: #006633;">GenericHumanRoleType</span> type<span style="color: #009900;">&#41;</span><span style="color: #339933;">;</span>
+
+    <span style="color: #008000; font-style: italic; font-weight: bold;">/**
+     * checks if the given list of orgEntities exists in the user store.
+     *
+     * @param orgEntities : The list of orgEntities to be checked.
+     */</span>
+    <span style="color: #006600; font-weight: bold;">void</span> checkOrgEntitiesExist<span style="color: #009900;">&#40;</span>List<span style="color: #339933;">&lt;</span>OrganizationalEntityDAO<span style="color: #339933;">&gt;</span> orgEntities<span style="color: #009900;">&#41;</span><span style="color: #339933;">;</span>
+
+    <span style="color: #008000; font-style: italic; font-weight: bold;">/**
+     * checks if the given list orgEntity exists in the user store.
+     *
+     * @param orgEntity : The orgEntity to be checked.
+     * @throws : @see: HumanTaskRuntimeException if the org entities does not exist.
+     */</span>
+    <span style="color: #006600; font-weight: bold;">void</span> checkOrgEntityExists<span style="color: #009900;">&#40;</span>OrganizationalEntityDAO orgEntity<span style="color: #009900;">&#41;</span><span style="color: #339933;">;</span>
+
+    <br/>
+    <span style="color: #006600; font-weight: bold;">boolean</span> isOrgEntityInRole<span style="color: #009900;">&#40;</span>OrganizationalEntityDAO entity,
+                                     GenericHumanRoleDAO role<span style="color: #009900;">&#41;</span><span style="color: #339933;">;</span>
+    <br/>
+    <span style="color: #008000; font-style: italic; font-weight: bold;">/**
+     * Returns the currently logged in user's user name.
+     *
+     * @return : The user name of the logged in user.
+     */</span>
+    <span style="color: #003399; font-weight: bold;">String</span> getLoggedInUser<span style="color: #009900;">&#40;</span><span style="color: #009900;">&#41;</span><span style="color: #339933;">;</span>
+<span style="color: #009900;">&#125;</span>
+        </pre>
+
+        <p>
+            Once the custom people query evaluator class is bungled as a JAR file, it should be copied to
+            <b>BPS_HOME/repository/component/lib</b> folder and restart the server for the new implementation
+            to be used.You also need to give the fully qualified class name of the new implementation in the
+            human task configuration file (<b>BPS_HOME/repository/conf/humantask.xml</b>)
+        </p>
+
+        <pre class="xml" style="font-family:monospace;">    <span style="color: #009900;"><span style="color: #000000; font-weight: bold;">&lt;PeopleQueryEvaluatorConfig<span style="color: #000000; font-weight: bold;">&gt;</span></span></span>
+        <span style="color: #009900;"><span style="color: #000000; font-weight: bold;">&lt;PeopleQueryEvaluatorClass<span style="color: #000000; font-weight: bold;">&gt;</span></span></span>org.wso2.carbon.humantask.core.integration.CarbonUserManagerBasedPeopleQueryEvaluator<span style="color: #009900;"><span style="color: #000000; font-weight: bold;">&lt;/PeopleQueryEvaluatorClass<span style="color: #000000; font-weight: bold;">&gt;</span></span></span>
+    <span style="color: #009900;"><span style="color: #000000; font-weight: bold;">&lt;/PeopleQueryEvaluatorConfig<span style="color: #000000; font-weight: bold;">&gt;</span></span></span></pre>
+
+
+        <h2 id="Task-Instance-Cleanup">Task Instance Cleanup</h2>
+
+        <p>
+            With the amount of tasks growing in the database, the completed tasks could be removed using the
+            task instance clean up configuration element in the <b>BPS_HOME/repository/conf/humantask.xml</b> file.
+            A scheduled task will remove the tasks from the database for the given interval and the task statuses.
+            The configuration element is as follows.
+        </p>
+
+        <pre class="xml" style="font-family:monospace;">    <span style="color: #009900;"><span style="color: #000000; font-weight: bold;">&lt;TaskCleanupConfig<span style="color: #000000; font-weight: bold;">&gt;</span></span></span>
+        <span style="color: #009900;"><span style="color: #000000; font-weight: bold;">&lt;cronExpression<span style="color: #000000; font-weight: bold;">&gt;</span></span></span>0 0 0/4 * * ?<span style="color: #009900;"><span style="color: #000000; font-weight: bold;">&lt;/cronExpression<span style="color: #000000; font-weight: bold;">&gt;</span></span></span>
+        <span style="color: #009900;"><span style="color: #000000; font-weight: bold;">&lt;statuses<span style="color: #000000; font-weight: bold;">&gt;</span></span></span>COMPLETED,OBSOLETE<span style="color: #009900;"><span style="color: #000000; font-weight: bold;">&lt;/statuses<span style="color: #000000; font-weight: bold;">&gt;</span></span></span>
+    <span style="color: #009900;"><span style="color: #000000; font-weight: bold;">&lt;/TaskCleanupConfig<span style="color: #000000; font-weight: bold;">&gt;</span></span></span></pre>
+
+        <ul>
+            <li><b>cronExpression</b> : A valid cron expression as the scheduler interval.</li>
+            <li><b>statuses</b> : A list of statuses to be removed. Only statuses at the end of task
+            life cycle should be put here. (eg: COMPLETED or OBSOLETE)</li>
+        </ul>
+
     </body>
 </html>

@@ -39,6 +39,7 @@
                 <exclude>**/carbon.xml</exclude>
                 <exclude>**/FastMovingStockQuoteReceiver.aar</exclude>
                 <exclude>**/qpidClientLibs.zip</exclude>
+                <exclude>**/log4j.properties</exclude>
             </excludes>
         </fileSet>
         <fileSet>
@@ -144,6 +145,14 @@
             <outputDirectory>wso2cep-${pom.version}/repository/conf/etc
             </outputDirectory>
         </file>
+        <!-- Including log4j.properties file -->
+        <file>
+            <source>
+                ../p2-profile-gen/target/wso2carbon-core-${carbon.version}/repository/conf/log4j.properties
+            </source>
+            <outputDirectory>${pom.artifactId}-${pom.version}/repository/conf/
+            </outputDirectory>
+        </file>   
         <!-- <file>
             <source>../../p2-profile/service/target/wso2carbon-core-${carbon.version}/repository/conf/multitenancy-packages.xml</source>
             <outputDirectory>wso2stratos-cep-${pom.version}/repository/conf</outputDirectory>

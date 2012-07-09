@@ -98,9 +98,9 @@ public class DdlAjaxProcessorHelper {
         return serverProfileNamesString;
     }
 
-    public String getStreamConfigurationNames(String serverProfilePath){
+    public String getStreamConfigurationNames(String serverProfilesLocation){
         String streamNames = "";
-        BamServerConfig bamServerConfig = this.getResource(serverProfilePath);
+        BamServerConfig bamServerConfig = this.getResource(serverProfilesLocation);
         List<StreamConfiguration> streamConfigurations = bamServerConfig.getStreamConfigurations();
         List<String> foundStreamNames = new ArrayList<String>();
         for (StreamConfiguration configuration : streamConfigurations) {

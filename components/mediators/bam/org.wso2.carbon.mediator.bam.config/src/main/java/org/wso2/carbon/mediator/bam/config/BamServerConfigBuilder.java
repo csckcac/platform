@@ -68,7 +68,7 @@ public class BamServerConfigBuilder {
             OMAttribute ipAttr = connectionElement.getAttribute(new QName("ip"));
             OMAttribute authenticationPortAttr = connectionElement.getAttribute(new QName("authPort"));
             OMAttribute receiverPortAttr = connectionElement.getAttribute(new QName("receiverPort"));
-            if(ipAttr != null && secureAttr != null && authenticationPortAttr != null && receiverPortAttr != null && !ipAttr.getAttributeValue().equals("") && !secureAttr.getAttributeValue().equals("") && !authenticationPortAttr.getAttributeValue().equals("") && !receiverPortAttr.getAttributeValue().equals("")){
+            if(ipAttr != null && secureAttr != null && authenticationPortAttr != null && !ipAttr.getAttributeValue().equals("") && !secureAttr.getAttributeValue().equals("") && !authenticationPortAttr.getAttributeValue().equals("")){
                 this.bamServerConfig.setIp(ipAttr.getAttributeValue());
                 if("true".equals(secureAttr.getAttributeValue())){
                     this.bamServerConfig.setSecurity(true);
@@ -78,7 +78,12 @@ public class BamServerConfigBuilder {
                     return false; // Secure attribute should have a value
                 }
                 this.bamServerConfig.setAuthenticationPort(authenticationPortAttr.getAttributeValue());
-                this.bamServerConfig.setReceiverPort(receiverPortAttr.getAttributeValue());
+                if(receiverPortAttr.getAttributeValue() != null && !receiverPortAttr.getAttributeValue().equals("")){
+                    this.bamServerConfig.setReceiverPort(receiverPortAttr.getAttributeValue());
+                } else {
+                    this.bamServerConfig.setReceiverPort("");
+                }
+
             }
             else {
                 return false;

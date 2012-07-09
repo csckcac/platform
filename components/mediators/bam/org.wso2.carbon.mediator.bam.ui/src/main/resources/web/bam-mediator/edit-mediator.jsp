@@ -177,7 +177,9 @@
                         <option>- Select Stream Name -</option>
                     </select>
                     <script type="text/javascript">
-                        loadStreamNames("<%=SERVER_PROFILE_LOCATION + "/" + serverProfilePath%>", "<%=streamName%>");
+                        if("" != "<%=serverProfilePath%>"){
+                            loadStreamNames("<%=SERVER_PROFILE_LOCATION%>" + "/" + "<%=serverProfilePath%>", "<%=streamName%>");
+                        }
                     </script>
                 </td>
             </tr>
@@ -188,7 +190,9 @@
                         <option>- Select Stream Version -</option>
                     </select>
                     <script type="text/javascript">
-                        loadStreamVersions("<%=SERVER_PROFILE_LOCATION + "/" + serverProfilePath%>", "<%=streamName%>", "<%=streamVersion%>");
+                        if("" != "<%=serverProfilePath%>"){
+                            loadStreamVersions("<%=SERVER_PROFILE_LOCATION%>" + "/" + "<%=serverProfilePath%>", "<%=streamName%>", "<%=streamVersion%>");
+                        }
                     </script>
                 </td>
             </tr>

@@ -349,7 +349,8 @@ function calltemplateMediatorValidate() {
         return false;
     }
 //    alert('true : target = ' + target);
-    return true;
+    return isValidProperties(xsltjsi18n["nameemptyerror"],
+                             xsltjsi18n["valueemptyerror"]);
 
 }
 

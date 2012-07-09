@@ -84,6 +84,10 @@
 			<span style="color: #009900;"><span style="color: #000000; font-weight: bold;">&lt;service</span> <span style="color: #000066;">name</span>=<span style="color: #ff0000;">&quot;apprv:ClaimService&quot;</span> <span style="color: #000066;">port</span>=<span style="color: #ff0000;">&quot;ClaimPort&quot;</span><span style="color: #000000; font-weight: bold;">/&gt;</span></span>
 		<span style="color: #009900;"><span style="color: #000000; font-weight: bold;">&lt;/invoke<span style="color: #000000; font-weight: bold;">&gt;</span></span></span></pre>
 
+        <p>
+            Note: The <b>correlationFilter</b> property has to be set to <b>b4p:b4pFilter</b> for the responses to be correlated to the
+            process instance.
+        </p>
 
     </body>
 </html>

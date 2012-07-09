@@ -41,7 +41,7 @@
                         <Bundle-SymbolicName>${project.artifactId}</Bundle-SymbolicName>
                         <Bundle-Name>${project.artifactId}</Bundle-Name>
                         <Export-Package>
-                            org.wso2.carbon.appfactory.svn.repository.mgt.service.*,
+                            org.wso2.carbon.appfactory.svn.repository.mgt.*,
                         </Export-Package>
                         <DynamicImport-Package>*</DynamicImport-Package>
                         <Embed-Transitive>true</Embed-Transitive>

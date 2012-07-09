@@ -99,5 +99,9 @@ public class RepositoryManagementService extends AbstractAdmin {
     public String getAdminUsername(String applicationId) {
         return repositoryManager.getAdminUsername(applicationId);
     }
+    public boolean hasAccess(String username,String password,String applicationId)
+            throws RepositoryMgtException {
+        return repositoryManager.hasAccess(username,password,applicationId);
+    }
 
 }

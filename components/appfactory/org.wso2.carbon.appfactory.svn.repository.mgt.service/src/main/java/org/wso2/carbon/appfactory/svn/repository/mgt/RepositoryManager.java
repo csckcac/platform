@@ -40,6 +40,8 @@ public interface RepositoryManager {
      */
     public String getURL(String applicationKey) throws RepositoryMgtException;
 
+    public boolean hasAccess(String username,String password,String applicationId);
+
     public void setConfig(AppFactoryConfiguration configuration);
 
     public AppFactoryConfiguration getConfig();

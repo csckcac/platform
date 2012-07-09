@@ -17,6 +17,7 @@
 package org.wso2.carbon.appfactory.svn.repository.mgt.util;
 
 import org.wso2.carbon.appfactory.common.AppFactoryConfiguration;
+import org.wso2.carbon.user.core.service.RealmService;
 
 /**
  *
@@ -24,6 +25,7 @@ import org.wso2.carbon.appfactory.common.AppFactoryConfiguration;
  */
 public class Util {
     private static AppFactoryConfiguration  configuration=null;
+    private  static RealmService realmService;
 
     public static AppFactoryConfiguration getConfiguration() {
         return configuration;
@@ -31,5 +33,12 @@ public class Util {
 
     public static void setConfiguration(AppFactoryConfiguration configuration) {
         Util.configuration = configuration;
+    }
+
+    public static void setRealmService(RealmService realmService) {
+        Util.realmService=realmService;
+    }
+    public static RealmService getRealmService(){
+        return Util.realmService;
     }
 }

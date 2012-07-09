@@ -65,7 +65,7 @@ import java.util.List;
 public class SCMManagerBasedRepositoryManager extends AbstractRepositoryManager {
     private static final Log log = LogFactory.getLog(SCMManagerBasedRepositoryManager.class);
     //rest URIs
-    private static final String REST_BASE_URI = "/scm/api/rest";
+    private static final String REST_BASE_URI = "/api/rest";
     private static final String REST_CREATE_REPOSITORY_URI = "/repositories";
     private static final String REST_GET_REPOSITORY_URI = "/repositories/svn/";
 

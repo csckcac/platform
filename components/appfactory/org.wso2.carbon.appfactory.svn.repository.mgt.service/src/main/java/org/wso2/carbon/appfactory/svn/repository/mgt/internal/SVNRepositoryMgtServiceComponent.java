@@ -24,11 +24,13 @@ import org.wso2.carbon.appfactory.common.AppFactoryConfiguration;
 import org.wso2.carbon.appfactory.core.ArtifactStorage;
 import org.wso2.carbon.appfactory.core.RevisionControlDriver;
 import org.wso2.carbon.appfactory.svn.repository.mgt.RepositoryManager;
+import org.wso2.carbon.appfactory.svn.repository.mgt.builder.RepositoryManagerHolder;
 import org.wso2.carbon.appfactory.svn.repository.mgt.impl.FileArtifactStorage;
 import org.wso2.carbon.appfactory.svn.repository.mgt.impl.SCMManagerBasedRepositoryManager;
 import org.wso2.carbon.appfactory.svn.repository.mgt.impl.SVNArtifactStorage;
 import org.wso2.carbon.appfactory.svn.repository.mgt.impl.SVNManager;
 import org.wso2.carbon.appfactory.svn.repository.mgt.util.Util;
+import org.wso2.carbon.user.core.service.RealmService;
 
 /**
  * @scr.component name="org.wso2.carbon.appfactory.svn.repository.mgt" immediate="true"
@@ -37,6 +39,10 @@ import org.wso2.carbon.appfactory.svn.repository.mgt.util.Util;
  * cardinality="1..1" policy="dynamic"
  * bind="setAppFactoryConfiguration"
  * unbind="unsetAppFactoryConfiguration"
+ * @scr.reference name="user.realmservice.default"
+ *                interface="org.wso2.carbon.user.core.service.RealmService"
+ *                cardinality="1..1" policy="dynamic" bind="setRealmService"
+ *                unbind="unsetRealmService"
  */
 public class SVNRepositoryMgtServiceComponent {
     Log log = LogFactory.getLog(SVNRepositoryMgtServiceComponent.class);
@@ -47,6 +53,14 @@ public class SVNRepositoryMgtServiceComponent {
 
     protected void setAppFactoryConfiguration(AppFactoryConfiguration appFactoryConfiguration) {
         Util.setConfiguration(appFactoryConfiguration);
+    }
+    protected void setRealmService(RealmService realmService) {
+
+        Util.setRealmService(realmService);
+    }
+
+    protected void unsetRealmService(RealmService realmService) {
+        Util.setRealmService(null);
     }
 
     protected void activate(ComponentContext context) {
@@ -66,6 +80,10 @@ public class SVNRepositoryMgtServiceComponent {
             // Registering File artifact storage
             FileArtifactStorage fileArtifactStorage = new FileArtifactStorage();
             bundleContext.registerService(ArtifactStorage.class.getName(), fileArtifactStorage, null);
+
+            RepositoryManagerHolder holder = RepositoryManagerHolder.getInstance();
+            RepositoryManager repositoryManagerOld = holder.getRepositoryManager();
+            bundleContext.registerService(RepositoryManager.class.getName(),repositoryManagerOld,null);
 
         } catch (Throwable e) {
             log.error("Error in registering Repository Management Service  ", e);

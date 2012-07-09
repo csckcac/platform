@@ -19,16 +19,24 @@ package org.wso2.carbon.appfactory.svn.repository.mgt.impl;
 import org.apache.commons.httpclient.HttpClient;
 import org.apache.commons.httpclient.UsernamePasswordCredentials;
 import org.apache.commons.httpclient.auth.AuthScope;
+import org.apache.commons.logging.Log;
+import org.apache.commons.logging.LogFactory;
 import org.wso2.carbon.appfactory.common.AppFactoryConfiguration;
 import org.wso2.carbon.appfactory.common.AppFactoryConstants;
 import org.wso2.carbon.appfactory.svn.repository.mgt.RepositoryManager;
+import org.wso2.carbon.appfactory.svn.repository.mgt.RepositoryMgtException;
+import org.wso2.carbon.appfactory.svn.repository.mgt.util.Util;
+import org.wso2.carbon.user.api.UserStoreException;
+import org.wso2.carbon.user.api.UserStoreManager;
+
+import java.util.Arrays;
 
 /**
  *
  *
  */
 public abstract class AbstractRepositoryManager implements RepositoryManager {
-   // private static final Log log = LogFactory.getLog(AbstractRepositoryManager.class);
+    private static final Log log = LogFactory.getLog(AbstractRepositoryManager.class);
 
 
     protected HttpClient getClient( AppFactoryConfiguration config) {
@@ -49,8 +57,27 @@ public abstract class AbstractRepositoryManager implements RepositoryManager {
 
     protected String getServerURL( AppFactoryConfiguration config) {
         //TODO:create a field backend url instead of ip+port
-        return "http://" + config.getFirstProperty(AppFactoryConstants.SCM_SERVER_IP) + ":" 
-            + config.getFirstProperty(AppFactoryConstants.SCM_SERVER_PORT);
+        return  config.getFirstProperty(AppFactoryConstants.SCM_SERVER_URL);
     }
+   public boolean hasAccess(String username,String password,String applicationId)
+            {
+       Integer tID= null;
+       try {
+           tID = Util.getRealmService().getTenantManager().getTenantId(applicationId);
+           UserStoreManager userStoreManager= Util.getRealmService().getTenantUserRealm(tID).getUserStoreManager();
+           if(userStoreManager.authenticate(username,password)){
+               if(Arrays.asList(userStoreManager.getRoleListOfUser(username)).contains(Util.getConfiguration().getFirstProperty(
+                       AppFactoryConstants.SCM_READ_WRITE_ROLE)
+               )){
+                   return true;
+               }
+           }
+       } catch (UserStoreException e) {
+           String msg = "Error while checking permission for accessing svn repository of "+applicationId+" by "+username;
+           log.error(msg, e);
+       }
 
+
+       return false;
+   }
 }

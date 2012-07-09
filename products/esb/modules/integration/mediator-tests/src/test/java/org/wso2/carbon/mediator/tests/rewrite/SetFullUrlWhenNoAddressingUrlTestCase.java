@@ -27,20 +27,20 @@ import org.wso2.esb.integration.axis2.StockQuoteClient;
 
 import static org.testng.Assert.assertTrue;
 
-public class SetFullUrlTestCase extends ESBIntegrationTestCase {
+public class SetFullUrlWhenNoAddressingUrlTestCase extends ESBIntegrationTestCase {
     private StockQuoteClient axis2Client;
 
     public void init() throws Exception {
         axis2Client = new StockQuoteClient();
-        String filePath = "/mediators/rewrite/full_url_set_synapse.xml";
+        String filePath = "/mediators/rewrite/full_url_set_when_no_url_synapse.xml";
         loadESBConfigurationFromClasspath(filePath);
         launchBackendAxis2Service(SampleAxis2Server.SIMPLE_STOCK_QUOTE_SERVICE);
 
     }
 
-    @Test(priority = 1, groups = {"wso2.esb"}, description = "Setting full url",
+    @Test(priority = 1, groups = {"wso2.esb"}, description = "Setting full url when there is no addressing url",
           dataProvider = "addressingUrl")
-    public void setFulUrl(String addUrl) throws AxisFault {
+    public void setFulUrlWhenNoAddressingUrl(String addUrl) throws AxisFault {
         OMElement response;
 
         response = axis2Client.sendSimpleStockQuoteRequest(
@@ -61,10 +61,8 @@ public class SetFullUrlTestCase extends ESBIntegrationTestCase {
     @DataProvider(name = "addressingUrl")
     public Object[][] addressingUrl() {
         return new Object[][]{
-                {"http://test.com:9000/services/SimpleStockQuoteService"},
-                {"https://test.com"},
-                {"http://localhost:9020/services/SimpleStockQuoteService"},
-                {"http://localhost:9020"},
+                {""},
+                {null}
 
         };
 

@@ -15,59 +15,43 @@
 *specific language governing permissions and limitations
 *under the License.
 */
-package org.wso2.carbon.mediator.tests.rewrite;
+package org.wso2.carbon.mediator.tests.header;
 
 import org.apache.axiom.om.OMElement;
 import org.apache.axis2.AxisFault;
-import org.testng.annotations.DataProvider;
 import org.testng.annotations.Test;
 import org.wso2.esb.integration.ESBIntegrationTestCase;
 import org.wso2.esb.integration.axis2.SampleAxis2Server;
 import org.wso2.esb.integration.axis2.StockQuoteClient;
 
+import java.io.File;
+
 import static org.testng.Assert.assertTrue;
 
-public class SetFullUrlTestCase extends ESBIntegrationTestCase {
+public class Sample100TestCase extends ESBIntegrationTestCase {
     private StockQuoteClient axis2Client;
 
     public void init() throws Exception {
         axis2Client = new StockQuoteClient();
-        String filePath = "/mediators/rewrite/full_url_set_synapse.xml";
-        loadESBConfigurationFromClasspath(filePath);
-        launchBackendAxis2Service(SampleAxis2Server.SIMPLE_STOCK_QUOTE_SERVICE);
-
+        loadSampleESBConfiguration(100);
+        launchBackendAxis2Service(SampleAxis2Server.SECURE_STOCK_QUOTE_SERVICE);
     }
 
-    @Test(priority = 1, groups = {"wso2.esb"}, description = "Setting full url",
-          dataProvider = "addressingUrl")
-    public void setFulUrl(String addUrl) throws AxisFault {
+    @Test(groups = {"wso2.esb"}, description = "Sample 100: Using WS-Security for outgoing messages")
+    public void ManipulatingSoupHeaderInOutgoingMessage() throws Exception {
         OMElement response;
-
         response = axis2Client.sendSimpleStockQuoteRequest(
-                getProxyServiceURL("urlRewriteProxy", false),
-                addUrl,
+                getMainSequenceURL(),
+                null,
                 "IBM");
         assertTrue(response.toString().contains("IBM"));
 
     }
-
 
     @Override
     protected void cleanup() {
         super.cleanup();
         axis2Client.destroy();
     }
-
-    @DataProvider(name = "addressingUrl")
-    public Object[][] addressingUrl() {
-        return new Object[][]{
-                {"http://test.com:9000/services/SimpleStockQuoteService"},
-                {"https://test.com"},
-                {"http://localhost:9020/services/SimpleStockQuoteService"},
-                {"http://localhost:9020"},
-
-        };
-
-    }
-
 }
+

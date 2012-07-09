@@ -98,14 +98,19 @@
             <type>aar</type>
         </dependency>
         <dependency>
-        <groupId>org.wso2.carbon</groupId>
-        <artifactId>org.wso2.carbon.mediation.configadmin.stub</artifactId>
-        <version>${carbon.version}</version>
+            <groupId>org.wso2.carbon</groupId>
+            <artifactId>org.wso2.carbon.mediation.configadmin.stub</artifactId>
+            <version>${carbon.version}</version>
         </dependency>
         <dependency>
             <groupId>org.wso2.carbon</groupId>
             <artifactId>org.wso2.carbon.logging.view.stub</artifactId>
             <version>${carbon.version}</version>
+        </dependency>
+        <dependency>
+            <groupId>org.wso2.esb</groupId>
+            <artifactId>org.wso2.esb.samples</artifactId>
+            <version>${project.version}</version>
         </dependency>
     </dependencies>
 

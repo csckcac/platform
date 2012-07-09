@@ -12,6 +12,7 @@
                 <exclude>**/services/echo/**</exclude>
                 <exclude>**/repository/services/version/**</exclude>
                 <exclude>**/pom.xml</exclude>
+                <exclude>**/log4j.properties</exclude>
                 <exclude>**/carbon.xml</exclude>
                 <exclude>**/*.sh</exclude>
                 <exclude>**/version.txt</exclude>
@@ -100,6 +101,7 @@
                 <include>**/identity.xml</include>
             </includes>
         </fileSet>
+        
 	<!-- Multitenancy related files -->
 	<fileSet>
             <directory>
@@ -127,7 +129,7 @@
                 <include>**/**.png</include>
             </includes>
         </fileSet>
-
+	
         	<!--Files for GS portal-->
  	<fileSet>
            <directory>src/main/resources/carbon-home/resources/gadget-repo</directory>
@@ -226,6 +228,14 @@
             <source>../p2-profile-gen/target/wso2carbon-core-${carbon.version}/repository/conf/etc/cassandra-auth.xml</source>
             <outputDirectory>${pom.artifactId}-${pom.version}/repository/conf/etc</outputDirectory>
         </file>
+         <!-- Including log4j.properties file -->
+        <file>
+            <source>
+                ../p2-profile-gen/target/wso2carbon-core-${carbon.version}/repository/conf/log4j.properties
+            </source>
+            <outputDirectory>${pom.artifactId}-${pom.version}/repository/conf/
+            </outputDirectory>
+        </file>    
         <file>
             <source>../../README.txt</source>
             <outputDirectory>${pom.artifactId}-${pom.version}/</outputDirectory>

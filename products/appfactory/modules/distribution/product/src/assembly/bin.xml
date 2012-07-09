@@ -89,14 +89,13 @@
         </fileSet>
 
         <!--  copying samples -->
-        <!--fileSet>
-            <directory>../samples</directory>
+        <fileSet>
+            <directory>../../samples</directory>
             <outputDirectory>wso2appfactory-${pom.version}/samples</outputDirectory>
             <excludes>
                 <exclude>**/**.sh</exclude>
-                <exclude>**/pom.xml</exclude>
             </excludes>
-        </fileSet-->
+        </fileSet>
 
         <!-- copy documentation -->
         <!--<fileSet>

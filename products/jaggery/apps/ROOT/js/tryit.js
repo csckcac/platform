@@ -1,5 +1,5 @@
 Tryit = new function () {
-    var viewurl = "/tryit/tryit.jag";
+    var viewurl = "tryit/tryit.jag";
     var pathArray = window.location.pathname.split( '/' );
     var secondLevelLocation = pathArray[1];
    console.log('xx'+secondLevelLocation);

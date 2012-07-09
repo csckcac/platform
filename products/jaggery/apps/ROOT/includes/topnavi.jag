@@ -5,7 +5,7 @@ var context = request.getContextPath();
 <div class="topbar">
     <div class="fill">
         <div class="container">
-            <a class="brand" href="/index.jag"><img src="<%=context%>/images/topbar_logo.png" alt=""/></a>
+            <a class="brand" href="<%=context%>/index.jag"><img src="<%=context%>/images/topbar_logo.png" alt=""/></a>
             <ul class="nav">
                 <li id="about"><a href="<%=context%>/about.jag">About</a></li>
                 <li id="howto"><a href="<%=context%>/howto.jag">Quick Start</a></li>

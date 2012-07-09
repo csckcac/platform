@@ -66,8 +66,8 @@ var blogURL = "http://madhukaudantha.blogspot.com/feeds/posts/default";
 
 var feed= new Feed(blogURL);
 
-print("Feed Title : " + feed.title);
-print("Feed author is : " + feed.authors[0]);
+print("Feed Title : " + feed.title + "&lt;br/&gt");
+print("Feed author is : " + feed.authors[0] + "&lt;br/&gt");
 
 print("First five entries are :");
 var entries = feed.entries;

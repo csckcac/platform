@@ -13,13 +13,13 @@
     </ui>
     <content>
         <table name="Overview">
-	    <field type="text" required="true" url="true">
+	    <field type="text" required="true" url="true" readonly="true">
                 <name>URI</name>
             </field>
-            <field type="text" required="true">
+            <field type="text" required="true" readonly="true">
                 <name>Name</name>
             </field>
-	    <field type="options">
+	    <field type="options" readonly="true">
 		<name label="Type">Type</name>
 		<values>
             <value>Generic</value>

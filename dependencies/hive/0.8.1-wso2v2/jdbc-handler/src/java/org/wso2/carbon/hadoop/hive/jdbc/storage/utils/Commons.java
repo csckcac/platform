@@ -105,7 +105,9 @@ public class Commons {
                             while (iterator.hasNext()) {
                                 String nextString = iterator.next();
                                 if (!nextString.equalsIgnoreCase("")) {
-                                    tableName = nextString;
+                                    //create table foo(bar varchar(100)); split("\\(") needed for fixing
+                                    // the issue If we get a create query like this.
+                                    tableName = nextString.split("\\(")[0];
                                     return tableName;
                                 }
                             }

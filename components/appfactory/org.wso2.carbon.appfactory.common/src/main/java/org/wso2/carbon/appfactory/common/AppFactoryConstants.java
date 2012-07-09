@@ -31,8 +31,9 @@ public class AppFactoryConstants {
     
     public static final String SCM_ADMIN_NAME = "RepositoryMGTConfig.SCMServerAdminUserName";
     public static final String SCM_ADMIN_PASSWORD = "RepositoryMGTConfig.SCMServerAdminPassword";
-    public static final String SCM_SERVER_IP = "RepositoryMGTConfig.SCMServerIp";
-    public static final String SCM_SERVER_PORT = "RepositoryMGTConfig.SCMServerPort";
+    public static final String SCM_SERVER_URL = "RepositoryMGTConfig.SCMServerURL";
+    public static final String SCM_READ_WRITE_ROLE="RepositoryMGTConfig.ReadWriteRole";
+
 
     public static final String DEFAULT_APPLICATION_USER_ROLE = "ApplicationMgt.DefaultApplicationUserRole";
     public static final String PERMISSION = "Permission";

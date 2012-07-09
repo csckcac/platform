@@ -26,6 +26,7 @@
             <item name="WSO2 Carbon" href="http://wso2.org/projects/carbon"/>
             <item name="Apache ODE" href="http://ode.apache.org/"/>
             <item name="WS-BPEL 2.0" href="http://docs.oasis-open.org/wsbpel/2.0/wsbpel-v2.0.html"/>
+            <item name="WS-HumanTask 1.1" href="http://docs.oasis-open.org/bpel4people/ws-humantask-1.1-spec-cs-01.html"/>
         </links>
         <menu name="Overview">
             <item name="Home" href="index.html"/>

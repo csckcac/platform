@@ -261,12 +261,12 @@
                 </thead>
                 <tbody>
                 <tr>
-                    <td>Process ID</td>
+                    <td><fmt:message key="process.id"/></td>
                     <td><%=processID%>
                     </td>
                 </tr>
                 <tr>
-                    <td> Process Status</td>
+                    <td><fmt:message key="process.status"/></td>
                     <td colspan="2">
                         <input type="radio" name="processstate" value="active"
                                 <%= BpelUIUtil.isProcessStateChecked(deployDescriptorUpdater, "active")%>
@@ -285,7 +285,7 @@
 
                 </tr>
                 <tr>
-                    <td> InMemory</td>
+                    <td><fmt:message key="is.inmemory"/></td>
                     <td>
                         <input type="radio" name="inmemorystatus" value="true"
                                 <%= BpelUIUtil.isInMemoryTypeChecked(deployDescriptorUpdater, "true")%>
@@ -312,9 +312,9 @@
                 <tbody>
 
                 <tr>
-                    <td><i>PartnerLink</i></td>
-                    <td><i>Related Service</i></td>
-                    <td><i>Associated Port</i></td>
+                    <td><i><fmt:message key="partner.link"/></i></td>
+                    <td><i><fmt:message key="related.service"/></i></td>
+                    <td><i><fmt:message key="associated.port"/></i></td>
                 </tr>
 
 
@@ -354,9 +354,9 @@
 
                 <tbody>
                 <tr>
-                    <td><i>PartnerLink</i></td>
-                    <td><i>Related Service</i></td>
-                    <td><i>Associated Port</i></td>
+                    <td><i><fmt:message key="partner.link"/></i></td>
+                    <td><i><fmt:message key="related.service"/></i></td>
+                    <td><i><fmt:message key="associated.port"/></i></td>
                 </tr>
                         <% InvokeServiceListType invokeList = deployDescriptorUpdater.getInvokedServiceList();
                     if (invokeList != null) {
@@ -378,7 +378,7 @@
             %>
                 <tbody>
                 <tr>
-                    <td colspan="3"><i>No Invoked Services</i></td>
+                    <td colspan="3"><i><fmt:message key="no.invoked.services"/></i></td>
                 </tr>
                 </tbody>
                         <%
@@ -418,7 +418,7 @@
     %>
     <tbody>
     <tr>
-        <td><i>None</i></td>
+        <td><i><fmt:message key="none"/></i></td>
     </tr>
     </tbody>
     <%
@@ -430,7 +430,7 @@
        width="100%" border="0">
     <thead>
     <tr>
-        <th colspan="2"><fmt:message key="process.level.enabled.events"/></th>
+        <th colspan="2"><fmt:message key="process.level.monitoring.events"/></th>
     </tr>
     </thead>
     <tbody>
@@ -442,17 +442,17 @@
                    onclick="clearAll(document.deployInfoForm.events)"
                     <%= BpelUIUtil.isGenerateTypeChecked(deployDescriptorUpdater, "none")%>
                     <%= BpelUIUtil.isElementDisabled(isAuthorizedToManageProcesses)%>
-                    <%= deployDescriptorUpdater.isTypeNoneSelected()%>>None<br/>
+                    <%= deployDescriptorUpdater.isTypeNoneSelected()%>><fmt:message key="none"/><br/>
             <input type="radio" name="gentype" value="all"
                    onclick="checkAll(document.deployInfoForm.events)"
                     <%= BpelUIUtil.isGenerateTypeChecked(deployDescriptorUpdater, "all")%>
                     <%= BpelUIUtil.isElementDisabled(isAuthorizedToManageProcesses)%>
-                    <%= deployDescriptorUpdater.isTypeAllSelected()%>>All<br/>
+                    <%= deployDescriptorUpdater.isTypeAllSelected()%>><fmt:message key="all"/><br/>
             <input type="radio" name="gentype" value="selected"
 
                     <%= BpelUIUtil.isGenerateTypeChecked(deployDescriptorUpdater, "selected")%>
                     <%= BpelUIUtil.isElementDisabled(isAuthorizedToManageProcesses)%>
-                    <%= deployDescriptorUpdater.isTypeSelectedSelected()%>>Selected<br/>
+                    <%= deployDescriptorUpdater.isTypeSelectedSelected()%>><fmt:message key="selected"/><br/>
         </td>
         <td>
             <%
@@ -491,7 +491,7 @@
        width="100%" border="0">
     <thead>
     <tr>
-        <th colspan="6"><fmt:message key="scope.level.enabled.events"/></th>
+        <th colspan="6"><fmt:message key="scope.level.monitoring.events"/></th>
     </tr>
     </thead>
 
@@ -503,11 +503,11 @@
     <tbody>
     <tr>
         <td/>
-        <td> Instance Life Cycle</td>
-        <td> Activity Life Cycle</td>
-        <td> Data Handling</td>
-        <td> Scope Handling</td>
-        <td> Correlation</td>
+        <td><fmt:message key="instance.life.cycle"/></td>
+        <td><fmt:message key="activity.life.cycle"/></td>
+        <td><fmt:message key="data.handling"/></td>
+        <td><fmt:message key="scope.handling"/></td>
+        <td><fmt:message key="correlation"/></td>
 
     </tr>
     <tr>
@@ -558,7 +558,7 @@
     %>
     <tbody>
     <tr>
-        <td><i>No Scope Level Events</i></td>
+        <td><i><fmt:message key="no.scope.level.events"/></i></td>
     </tr>
     </tbody>
     <%
@@ -605,7 +605,7 @@
     <tbody>
     <tr>
 
-        <td colspan="2"><i>No Given Properties</i></td>
+        <td colspan="2"><i><fmt:message key="no.given.properties"/></i></td>
     </tr>
     </tbody>
     <%
@@ -619,23 +619,23 @@
        width="100%" border="0">
     <thead>
     <tr>
-        <th colspan="6"><fmt:message key="process.cleanup.details"/></th>
+        <th colspan="6"><fmt:message key="process.instance.cleanup.details"/></th>
     </tr>
     </thead>
 
     <tbody>
     <tr>
         <td/>
-        <td>instance</td>
-        <td>variable</td>
-        <td>messages</td>
-        <td>correlations</td>
-        <td>events</td>
+        <td><fmt:message key="instance"/></td>
+        <td><fmt:message key="variable"/></td>
+        <td><fmt:message key="messages"/></td>
+        <td><fmt:message key="correlations"/></td>
+        <td><fmt:message key="events"/></td>
 
     </tr>
 
     <tr>
-        <td>Success</td>
+        <td><fmt:message key="success"/></td>
         <%
             String[] successCategoryList = deployDescriptorUpdater.getSuccesstypecleanups();
             deployDescriptorUpdater.setSuccesstypecleanups(new String[0]);
@@ -677,7 +677,7 @@
     </tr>
 
     <tr>
-        <td>Failure</td>
+        <td><fmt:message key="failure"/></td>
         <%
             String[] failureCategoryList = deployDescriptorUpdater.getFailuretypecleanups();
             deployDescriptorUpdater.setFailuretypecleanups(new String[0]);

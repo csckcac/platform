@@ -147,6 +147,9 @@
                                 </featureArtifactDef>
 
                                 <featureArtifactDef>
+                                    org.wso2.carbon:org.wso2.carbon.jaxws.webapp.mgt.server.feature:${carbon.version}
+                                </featureArtifactDef>
+                                <featureArtifactDef>
                                     org.wso2.carbon:org.wso2.carbon.transport.mgt.feature:${carbon.version}
                                 </featureArtifactDef>
 
@@ -339,7 +342,7 @@
                                     <id>org.jaggeryjs.feature.group</id>
                                     <version>${jaggery.feature.version}</version>
                                 </feature>
-  
+
                                 <!--Dashboard-->
                                 <feature>
                                     <id>org.wso2.carbon.dashboard.dashboardpopulator.server.feature.group</id>
@@ -406,6 +409,10 @@
                                     <version>${carbon.version}</version>
                                 </feature-->
 
+                               <feature>
+                                    <id>org.wso2.carbon.jaxws.webapp.mgt.server.feature.group</id>
+                                    <version>${carbon.version}</version>
+                                </feature>
                                <feature>
                                     <id>org.wso2.carbon.webapp.mgt.feature.group</id>
                                     <version>${carbon.version}</version>

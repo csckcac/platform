@@ -32,7 +32,7 @@ function submitActivityForm(page, pageNumber) {
             return true;
         }
 
-        if(fromDateValue=="" && toDateValue=="" && userNameValue =="" && pathValue =="" ){
+        if(fromDateValue=="" && toDateValue=="" && userNameValue =="" && pathValue =="" && filter == "all"){
             $('activityList').innerHTML="";
             CARBON.showWarningDialog(org_wso2_carbon_registry_activities_ui_jsi18n["please.fill.at.least.one"]);
             return true;

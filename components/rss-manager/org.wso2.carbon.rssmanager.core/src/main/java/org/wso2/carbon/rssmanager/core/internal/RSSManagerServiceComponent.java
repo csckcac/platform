@@ -30,6 +30,7 @@ import org.wso2.carbon.rssmanager.core.dao.RSSDAOFactory;
 import org.wso2.carbon.rssmanager.core.description.RSSInstance;
 import org.wso2.carbon.rssmanager.core.multitenancy.RSSManagerAxis2ConfigObserver;
 import org.wso2.carbon.datasource.DataSourceInformationRepositoryService;
+import org.wso2.carbon.rssmanager.core.service.RSSManagerService;
 import org.wso2.carbon.user.api.RealmConfiguration;
 import org.wso2.carbon.user.core.service.RealmService;
 import org.wso2.carbon.user.core.tenant.TenantManager;
@@ -76,6 +77,9 @@ public class RSSManagerServiceComponent {
             /* Loading tenant specific data */
             bundleContext.registerService(AbstractAxis2ConfigurationContextObserver.class.getName(),
                     new RSSManagerAxis2ConfigObserver(), null);
+            /* Registers RSSManager service */
+            bundleContext.registerService(RSSManagerService.class.getName(),
+                    new RSSManagerService(), null);
 
         } catch (Throwable e) {
             String msg = "Failed To Register Admin Console Bundle As An OSGi Service";

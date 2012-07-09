@@ -219,6 +219,43 @@
             </tbody>
         </table>
 
+        <h4>Basic Flow of a Task</h4>
+
+        <ul>
+            <li><b>Claiming a Task</b>
+
+                <p>
+                    When a task is created it would be in <b>Ready</b> state. Ready state means that the task
+                    is ready to be claimed by a user in the <b>Potential Owner</b> logical people group. A user
+                    having the Potential Owner role can claim the task by clicking on the <b>Claim</b> button
+                    in the task details page. When a user claims the task the, it would go to the <b>Reserved</b> state
+                    which means that the task is now owned by the user who claimed the particular task.
+                </p>
+
+            </li>
+
+            <li><b>Starting a Task</b>
+
+                <p>
+                    A task could be started by either of the following logical people groups. First group being
+                    the <b>Actual Owner</b> group which has already claimed the task. Otherwise <b>Potential Owner</b>s
+                    can directly start a task which would automatically be claimed to the user starting the task. Once a task is started
+                    you would see the input form rendered to capture the task output. The output form
+                    would depend on the output form uploaded with the task definition. Refer the image below for a
+                    sample output form rendering.
+                </p>
+                <p><img src="../images/humantask-task-lc/task_after_starting.png" alt="Task Response"/></p>
+            </li>
+
+
+
+
+
+
+
+
+        </ul>
+
         <h2 id="Task-Comments-Attachments">Task Comments and Attachments</h2>
 
         <h2 id="Task-Event-History">Task Event History</h2>

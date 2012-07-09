@@ -16,7 +16,6 @@
 package org.wso2.carbon.endpoint.ui.endpoints.wsdl;
 
 import org.apache.axiom.om.OMElement;
-import org.apache.axiom.om.util.AXIOMUtil;
 import org.apache.synapse.config.xml.endpoints.DefinitionFactory;
 import org.apache.synapse.config.xml.endpoints.EndpointFactory;
 import org.apache.synapse.config.xml.endpoints.WSDLEndpointFactory;
@@ -24,13 +23,11 @@ import org.apache.synapse.endpoints.Template;
 import org.wso2.carbon.endpoint.ui.endpoints.Endpoint;
 import org.wso2.carbon.endpoint.ui.util.EndpointConfigurationHelper;
 
-import javax.xml.stream.XMLStreamException;
 import java.util.Properties;
 
 public class WsdlEndpoint extends Endpoint {
 
     private String epName;
-    private String inLineWSDL;
     private String service;
     private String uri;
     private String port;
@@ -65,13 +62,6 @@ public class WsdlEndpoint extends Endpoint {
         this.epName = as1;
     }
 
-    private boolean isInlineWsdl() {
-        if (inLineWSDL != null && !inLineWSDL.trim().equals("")) {
-            return true;
-        }
-        return false;
-    }
-
     public String getService() {
         return service;
     }
@@ -86,14 +76,6 @@ public class WsdlEndpoint extends Endpoint {
 
     public void setUri(String uri) {
         this.uri = uri;
-    }
-
-    public String getInLineWSDL() {
-        return inLineWSDL;
-    }
-
-    public void setInLineWSDL(String inLineWSDL) {
-        this.inLineWSDL = inLineWSDL;
     }
 
     public String getSuspendDurationOnFailure() {
@@ -265,31 +247,14 @@ public class WsdlEndpoint extends Endpoint {
         }
 
         OMElement wsdl = fac.createOMElement("wsdl", synNS);
-        if (!isInlineWsdl()) {
             if (getUri() != null) {
                 wsdl.addAttribute(fac.createOMAttribute("uri", nullNS, uri));
-            }
         }
         if (service != null) {
             wsdl.addAttribute(fac.createOMAttribute("service", nullNS, service));
         }
         if (port != null) {
             wsdl.addAttribute(fac.createOMAttribute("port", nullNS, port));
-        }
-        if (isInlineWsdl()) {
-            if (inLineWSDL != null && !"".equals(inLineWSDL)) {
-                if (inLineWSDL.startsWith("<?xml ")) {
-                    String declaration = inLineWSDL.substring(0, inLineWSDL.indexOf('>') + 1);
-                    //TODO: write xml declaration
-                    inLineWSDL = inLineWSDL.substring(inLineWSDL.indexOf(">") + 1);
-                }
-                try {
-                    OMElement inLineWSDLElement = AXIOMUtil.stringToOM(inLineWSDL);
-                    wsdl.addChild(inLineWSDLElement);
-                } catch (XMLStreamException e) {
-                    // TODO: handle error
-                }
-            }
         }
 
         //Suspend configuration
@@ -459,9 +424,6 @@ public class WsdlEndpoint extends Endpoint {
         setUri(wsdlEndpoint.getWsdlURI());
         setService(wsdlEndpoint.getServiceName());
         setPort(wsdlEndpoint.getPortName());
-        if (wsdlEndpoint.getWsdlDoc() != null) {
-            setInLineWSDL(wsdlEndpoint.getWsdlDoc().toString());
-        }
         setDescription(wsdlEndpoint.getDescription());
         if (wsdlEndpoint.getDefinition().getInitialSuspendDuration() != -1) {
             setSuspendDurationOnFailure(String.valueOf(wsdlEndpoint.getDefinition().getInitialSuspendDuration()));

@@ -232,11 +232,10 @@ function isValidXml(docStr) {
 function isValidWSDLURL(url) {
     var isValid = false;
     jQuery.ajax({
-                    url : "ajaxprocessors/testConnection-ajaxprocessor.jsp?type=wsdl&",
+                    url : "ajaxprocessors/testConnection-ajaxprocessor.jsp",
                     data : {'type': 'wsdl', 'url': url},
                     success : function(data, status) {
                         if (data.replace(/^\s+|\s+$/g, '') == 'success') {
-                            //CARBON.showWarningDialog(jsi18n['invalid.address.cannot.proceed']);
                             isValid = true;
                         }
                     },

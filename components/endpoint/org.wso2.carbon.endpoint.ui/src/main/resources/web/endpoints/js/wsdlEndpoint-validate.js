@@ -25,26 +25,6 @@ function validateWSDLEndpoint(isAnonymous, isFromTemplateEditor) {
 
     if (!isFromTemplateEditor) {
 
-        var inlineWSDL = document.getElementById('inlineWSDL');
-        if (inlineWSDL != null && inlineWSDL != undefined) {
-            if (inlineWSDL.checked) {
-                // not empty
-                var inlineWSDLVal = document.getElementById('inlineWSDLVal').value;
-                if (inlineWSDLVal != null && inlineWSDLVal != undefined) {
-                    // is empty ?
-                    if (trim(inlineWSDLVal) == '' || ltrim(inlineWSDLVal) == ''
-                            || rtrim(inlineWSDLVal) == '') {
-                        CARBON.showWarningDialog(jsi18n['inline.wsdl.cannot.be.empty']);
-                        return false;
-                    }
-                    // is a valid xml doc ?
-                    // the WSDL should not contain the xml delecraion
-                    if (!isValidWSDL(inlineWSDLVal)) {
-                        return false;
-                    }
-                }
-            }
-        }
         var uri = document.getElementById('uriWSDL');
         if (uri != null && uri != undefined) {
             if (uri.checked) {

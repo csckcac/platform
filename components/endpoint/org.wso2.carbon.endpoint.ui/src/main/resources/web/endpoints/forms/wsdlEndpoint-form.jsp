@@ -167,7 +167,6 @@
         endpoint = (WsdlEndpoint) ListEndpointDesignerHelper.getEditingEndpoint(request, session);
     }
 
-
     String[] actionOptions = {"neverTimeout", "discardMessage", "executeFaultSequence"};
     String name = "";
     String errorCode = "";
@@ -189,9 +188,7 @@
     String description = "";
     String properties = "";
     String port = "";
-    boolean isInlineWSDL = false;
     String wsdlURI = "";
-    String inlineWSDl = "";
     String service = "";
 
     if (endpoint != null) {
@@ -200,16 +197,10 @@
             name = endpoint.getEpName();
         }
         // Inline WSDL
-        if (endpoint.getInLineWSDL() != null &&
-            !"".equals(endpoint.getInLineWSDL())) {
-            isInlineWSDL = true;
-            inlineWSDl = endpoint.getInLineWSDL();
-        } else {
-            isInlineWSDL = false;
-            if (endpoint.getUri() != null) {
-                wsdlURI = endpoint.getUri();
-            }
+        if (endpoint.getUri() != null) {
+            wsdlURI = endpoint.getUri();
         }
+
         // Service
         if (endpoint.getService() != null) {
             service = endpoint.getService();
@@ -344,27 +335,6 @@
         return validateWSDLEndpoint(false, false);
     }
 
-    function displayWSDLURI() {
-        var inlineRaw = document.getElementById('inLineWSDLID');
-        var wsdlURIRaw = document.getElementById('wsdlURIID');
-        if (inlineRaw != null && inlineRaw != undefined) {
-            inlineRaw.style.display = "none";
-        }
-        if (wsdlURIRaw != null && wsdlURIRaw != undefined) {
-            wsdlURIRaw.style.display = "";
-        }
-    }
-
-    function displayinLineWSDLArea() {
-        var inlineRaw = document.getElementById('inLineWSDLID');
-        var wsdlURIRaw = document.getElementById('wsdlURIID');
-        if (inlineRaw != null && inlineRaw != undefined) {
-            inlineRaw.style.display = "";
-        }
-        if (wsdlURIRaw != null && wsdlURIRaw != undefined) {
-            wsdlURIRaw.style.display = "none";
-        }
-    }
 </script>
 
 <table class="normal-nopadding">
@@ -407,32 +377,16 @@
             <input type="hidden" name="endpointName" value="<%=name%>"/>
         </td>
     </tr>
-    <tr>
-        <td class="leftCol-small"><fmt:message key="specify.as"/></td>
-        <td><input type="radio" id="inlineWSDL" name="inlineWSDL" value="inlineWSDL"
-                   onclick="displayinLineWSDLArea()" <%=isInlineWSDL ? "checked=\"checked\"" : ""%>/>
-            <fmt:message key="in.lined.wsdl"/>
-            <input type="radio" id="uriWSDL" name="inlineWSDL" value="uriWSDL"
-                   onclick="displayWSDLURI()" <%=!isInlineWSDL ? "checked=\"checked\"" : ""%> />
-            <fmt:message key="uri"/>
-        </td>
-    </tr>
-    <tr id="inLineWSDLID" style="<%=isInlineWSDL?"":"display:none;"%>">
-        <td class="leftCol-small"></td>
-        <td><textarea id="inlineWSDLVal" name="inlineWSDLVal" rows="10"
-                      cols="50"><%=isInlineWSDL ? inlineWSDl : ""%>
-        </textarea>
-        </td>
-    </tr>
-    <tr id="wsdlURIID" style="<%=!isInlineWSDL?"":"display:none;"%>">
+
+    <tr id="wsdlURIID">
         <td class="leftCol-small">
             <fmt:message key="wsdl.uri"/> <span class="required">*</span>
         </td>
         <td>
             <input type="text" id="uriWSDLVal" name="uriWSDLVal"
-                   value="<%=!isInlineWSDL?wsdlURI:""%>" size="50"/>
+                   value="<%=wsdlURI%>" size="50"/>
             <input id="testAddress" name="testAddress" type="button" class="button"
-                   onclick="testWSDLURL(document.getElementById('uriWSDLVal').value)"
+                   onclick="isValidWSDLURL(document.getElementById('uriWSDLVal').value)"
                    value="Test URI"/>
         </td>
     </tr>

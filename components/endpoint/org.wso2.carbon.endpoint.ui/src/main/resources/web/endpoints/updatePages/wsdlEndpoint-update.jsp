@@ -24,7 +24,6 @@
     boolean isFromTemplateEditor = session.getAttribute("endpointTemplate") != null ? true : false;
 
     String endpointName = request.getParameter("endpointName");
-    String inlineWsdl = request.getParameter("inlineWSDLVal");
     String uriWsdl = request.getParameter("uriWSDLVal");
     String service = request.getParameter("wsdlendpointService");
     String port = request.getParameter("wsdlendpointPort");
@@ -69,9 +68,6 @@
     }
     if (description != null && !"".equals(description)) {
         wsdlEndpoint.setDescription(description);
-    }
-    if (inlineWsdl != null && !"".equals(inlineWsdl)) {
-        wsdlEndpoint.setInLineWSDL(inlineWsdl);
     }
     if (uriWsdl != null && !"".equals(uriWsdl)) {
         wsdlEndpoint.setUri(uriWsdl);

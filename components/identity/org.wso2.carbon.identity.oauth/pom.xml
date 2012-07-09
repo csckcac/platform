@@ -80,7 +80,7 @@
         <dependency>
             <groupId>org.apache.amber.wso2</groupId>
             <artifactId>amber</artifactId>
-            <version>0.22.0.incubating-SNAPSHOT</version>
+            <version>${orbit.version.amber}</version>
         </dependency>
 	</dependencies>
 

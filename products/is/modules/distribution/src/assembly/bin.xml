@@ -42,6 +42,7 @@
                 <exclude>**/claim-config.xml</exclude>
                 <exclude>**/userRP.jks</exclude>
                 <exclude>**/wso2is-user-certs.jks</exclude>
+                <exclude>**/log4j.properties</exclude>
             </excludes>
         </fileSet>
         <fileSet>
@@ -294,6 +295,14 @@
             <outputDirectory>${pom.artifactId}-${pom.version}/repository/conf/etc/
             </outputDirectory>
         </file>
+	 <!-- Including log4j.properties file -->
+        <file>
+            <source>
+                ../p2-profile-gen/target/wso2carbon-core-${carbon.version}/repository/conf/log4j.properties
+            </source>
+            <outputDirectory>${pom.artifactId}-${pom.version}/repository/conf/
+            </outputDirectory>
+        </file>      
 
         <file>
             <source>

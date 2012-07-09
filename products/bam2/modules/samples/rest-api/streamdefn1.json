@@ -1,5 +1,5 @@
 {
-    "name":"org.wso2.bam.restapi",
+    "name":"stockquote.stream",
     "version": "1.0.2",
     "nickName": "Stock Quote Information",
     "description": "Some Desc",

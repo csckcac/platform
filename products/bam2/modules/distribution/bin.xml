@@ -51,7 +51,7 @@
                <include>**/carbon.xml</include>
             </includes>
         </fileSet-->
-	
+
 	<!--<fileSet>
             <directory>../../p2-profile-gen/product/target/wso2carbon-core-${carbon.version}/repository/deployment/server/dataservices</directory>
             <outputDirectory>${pom.artifactId}-${pom.version}/repository/deployment/server/dataservices</outputDirectory>
@@ -158,7 +158,7 @@
                 <include>**/*</include>
             </includes>
 	</fileSet>-->
-        <!-- 
+        <!--
         copying BAM specific datasources.properties into conf.
         This datasource configuration is used by BAM data services.
         -->
@@ -217,9 +217,9 @@
 		</includes>
 	</dependencySet>
 	</dependencySets>
-    
+
     <files>
-	
+
 	<file>
             <source>../p2-profile-gen/target/wso2carbon-core-${carbon.version}/repository/conf/event-broker.xml</source>
             <outputDirectory>${pom.artifactId}-${pom.version}/repository/conf</outputDirectory>
@@ -297,6 +297,15 @@
 	<file>
             <source>../p2-profile-gen/target/wso2carbon-core-${carbon.version}/repository/deployment/server/webapps/dashboard.war</source>
             <outputDirectory>${pom.artifactId}-${pom.version}/repository/deployment/server/webapps/</outputDirectory>
+            <filtered>true</filtered>
+            <fileMode>644</fileMode>
+        </file>
+
+        <!-- Copy BAM JAXRS RESt API war -->
+
+	    <file>
+            <source>../p2-profile-gen/target/wso2carbon-core-${carbon.version}/repository/deployment/server/jaxwebapps/datareceiver.war</source>
+            <outputDirectory>${pom.artifactId}-${pom.version}/repository/deployment/server/jaxwebapps/</outputDirectory>
             <filtered>true</filtered>
             <fileMode>644</fileMode>
         </file>

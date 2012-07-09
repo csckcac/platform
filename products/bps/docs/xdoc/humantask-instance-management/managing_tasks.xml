@@ -27,5 +27,207 @@
     </head>
     <body>
         <h1>Managing a Human Task Instance - TODO</h1>
+
+
+        <h3>Table of Content</h3>
+        <ul>
+            <li><a href="#Task-Listing">Task Listing</a></li>
+            <li><a href="#Task-View">Task Details View</a></li>
+            <li><a href="#Task-Privileges">Task Privileges</a></li>
+            <li><a href="#Task-Life-Cycle">Task Life Cycle</a></li>
+            <li><a href="#Task-Comments-Attachments">Comments and Attachments</a></li>
+            <li><a href="#Task-Event-History">Task Event History</a></li>
+        </ul>
+
+        <h2 id="Task-Listing">Task Listing</h2>
+
+        <p>
+            Once you log in the the WSO2 BPS the list of tasks could be viewed by clicking on the Task List link on the manage menu.
+
+        </p>
+
+        <p><img src="../images/humantask-task-lc/view_task_list_link.png" alt="Task Listing"/></p>
+
+        <p>
+            The task list page would show you the available tasks.
+        </p>
+
+        <p><img src="../images/humantask-task-lc/task_list_my_tasks.png" alt="Task Listing"/></p>
+
+        <p>
+            The following basic filtering options are present in the task list page.
+        </p>
+
+        <ul>
+            <li>
+                <b>My Tasks</b>
+
+                <p>
+                    The list of tasks currently assigned to you and are in progress
+                </p>
+
+            </li>
+
+            <li>
+                <b>Claimable</b>
+
+                <p>
+                    The claimable tasks are the list of tasks which the user can claim and reserve. Any tasks would
+                    become claimable for a particular user if he has the role of <b>Potential Owners</b> of the task definition.
+                </p>
+
+            </li>
+
+            <li>
+                <b>Admin Tasks</b>
+
+                <p>
+                    A list of tasks which the current logged in user have the administration rights.
+                    The user can perform the administration actions like reassignment on these tasks.
+                </p>
+
+            </li>
+
+            <li>
+                <b>Notifications</b>
+
+                <p>
+                    A list of notifications which are accessible to the current logged in user.
+                </p>
+
+            </li>
+
+            <li>
+                <b>All Tasks</b>
+
+                <p>
+                    A list of all tasks that the logged in user can view. This would also include all the
+                    tasks which are already completed.
+                </p>
+
+            </li>
+
+
+        </ul>
+
+        <h2 id="Task-View">Task Details View</h2>
+
+        <p>
+            The task details could be viewed when you click on the particular task id on the task list page. The task view would depend
+            on the current status of the task and the particular user's privileges on that task.
+        </p>
+
+        <p><img src="../images/humantask-task-lc/task_view.png" alt="Task Details View"/></p>
+
+        <h2 id="Task-Privileges">Task Privileges</h2>
+
+        <p>
+            The actions a particular user can perform on a task would depend on the privileges
+            granted to that user and the current status of the task. These privileges will be based
+            on the logical people group the user belongs to. For an example only the <b>Actual Owner</b>
+            of the task would be able to release a task already assigned to him.
+        </p>
+
+
+        <h2 id="Task-Life-Cycle">Task Life Cycle</h2>
+
+        <p>The following transition diagram shows how the task propagates from each stated based on the
+            action performed.
+        </p>
+
+
+
+        <p><img src="../images/humantask-task-lc/task_lc.gif" alt="Task Life Cycle"/></p>
+
+        <p>
+            The following table lists some important task actions along with the authorised
+            logical people groups and the pre and post state transition of the task.
+        </p>
+
+        <table>
+            <tbody>
+                <tr>
+                    <th>Action</th>
+                    <th>Description</th>
+                    <th>Authorised Roles</th>
+                    <th>Pre-State(s)</th>
+                    <th>Post-State</th>
+                </tr>
+                <tr>
+                    <td>Claim</td>
+                    <td>Claim responsibility for a task, i.e. set the task to status Reserved </td>
+                    <td>Potential Owners</td>
+                    <td>Ready</td>
+                    <td>Reserved</td>
+                </tr>
+                <tr>
+                    <td>Start</td>
+                    <td>Start the execution of the task </td>
+                    <td>Actual Owner <br/>Potential Owners</td>
+                    <td>Ready <br/>Reserved</td>
+                    <td>InProgress</td>
+                </tr>
+                <tr>
+                    <td>Stop</td>
+                    <td>Cancel/stop the processing of the task. The task returns to the Reserved state. </td>
+                    <td>Actual Owner</td>
+                    <td>InProgress</td>
+                    <td>Reserved</td>
+                </tr>
+                <tr>
+                    <td>Suspend</td>
+                    <td>Suspend the task </td>
+                    <td>Task Stakeholders <br/> Business Administrator</td>
+                    <td>Ready<br/>Reserved<br/>InProgress</td>
+                    <td>Suspended</td>
+                </tr>
+                <tr>
+                    <td>Resume</td>
+                    <td>Resume a suspended task. </td>
+                    <td>Task Stakeholders <br/> Business Administrator</td>
+                    <td>Ready<br/>Reserved<br/>InProgress</td>
+                    <td>Suspended</td>
+                </tr>
+                <tr>
+                    <td>Skip</td>
+                    <td>Skips the task</td>
+                    <td>Task Initiator<br/>Task Stakeholders<br/>Business Administrator</td>
+                    <td>Suspended</td>
+                    <td>Ready<br/>Reserved<br/>InProgress</td>
+                </tr>
+                <tr>
+                    <td>Release</td>
+                    <td>Release the task, i.e. set the task back to status Ready.</td>
+                    <td>Actual Owner</td>
+                    <td>InProgress<br/>Reserved</td>
+                    <td>Ready</td>
+                </tr>
+                <tr>
+                    <td>Fail</td>
+                    <td>Execution of the task fails.</td>
+                    <td>Actual Owner</td>
+                    <td>InProgress</td>
+                    <td>Failed</td>
+                </tr>
+                <tr>
+                    <td>Add Comment </td>
+                    <td>Add a comment to a task. </td>
+                    <td>Task Stakeholders<br/>Potential Owners<br/>Actual Owner<br/>Business Administrator</td>
+                    <td>(any state)</td>
+                    <td>(no state transition)</td>
+                </tr>
+            </tbody>
+        </table>
+
+        <h2 id="Task-Comments-Attachments">Task Comments and Attachments</h2>
+
+        <h2 id="Task-Event-History">Task Event History</h2>
+
+
+
+
+
     </body>
+
+
 </html>

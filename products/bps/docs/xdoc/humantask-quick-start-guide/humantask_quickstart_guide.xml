@@ -118,7 +118,7 @@
 
         <p>The list of tasks related to a particular user can be viewed by visiting the task list page</p>
 
-        <p><img src="../images/humantask-task-lc/view_task_list_link.png" alt="Role Association"/></p>
+        <p><img src="../images/humantask-task-lc/view_task_list_link.png" alt="Task Listing"/></p>
 
         <p>Refer <a href="../humantask-instance-management/managing_tasks.html">Managing Human Tasks</a> guide
         for more information about task operations and management.</p>

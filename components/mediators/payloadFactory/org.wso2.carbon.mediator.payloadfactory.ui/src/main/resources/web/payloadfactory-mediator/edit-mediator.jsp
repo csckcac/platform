@@ -65,7 +65,7 @@
             <tr>
                 <td><fmt:message key="mediator.payloadFactory.format"/></td>
                 <td>
-                    <textarea name="payloadFactory.format" cols="50" rows="8" spellcheck="false"><%=format != null ? Utils.prettyPrint(format) : "" %></textarea>
+                    <textarea id="payloadFactory.format" name="payloadFactory.format" cols="50" rows="8" spellcheck="false"><%=format != null ? Utils.prettyPrint(format) : "" %></textarea>
                 </td>
             </tr>
         </table>

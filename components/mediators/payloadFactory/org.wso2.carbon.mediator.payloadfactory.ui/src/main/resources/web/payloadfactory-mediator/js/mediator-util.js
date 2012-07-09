@@ -58,8 +58,40 @@ function isValidArguments() {
             }
         }
     }
+    return formatXMLValidate();
+}
+
+function formatXMLValidate() {
+    //XML Validation
+    var payloadFormatXML = document.getElementById("payloadFactory.format").value;
+
+    if (window.ActiveXObject) {
+        try {
+            var doc = new ActiveXObject("Microsoft.XMLDOM");
+            doc.async = "false";
+            var hasParse = doc.loadXML(payloadFormatXML);
+            if (!hasParse) {
+                CARBON.showErrorDialog(payloadfactory_i18n["invalid.inline.xml"]);
+                form.Value.focus();
+                return false;
+            }
+        } catch (e) {
+            CARBON.showErrorDialog(payloadfactory_i18n["invalid.inline.xml"]);
+            form.Value.focus();
+            return false;
+        }
+    } else {
+        var parser = new DOMParser();
+        var dom = parser.parseFromString(payloadFormatXML, "text/xml");
+        if (dom.documentElement.nodeName == "parsererror" || dom.getElementsByTagName("parsererror").length > 0) {
+            CARBON.showErrorDialog(payloadfactory_i18n["invalid.inline.xml"]);
+            form.Value.focus();
+            return false;
+        }
+    }
     return true;
 }
+
 
 function createArgTypeCombo(id, i, name) {
     var combo_box = document.createElement('select');
@@ -115,6 +147,6 @@ function refreshIndexLabels() {
     }
 }
 
-function logMediatorValidate() {
-    return isValidArguments(logi18n["mediator.log.property.name.empty"], logi18n["mediator.log.property.value.empty"]);
+function payloadfactoryMediatorValidate() {
+    return isValidArguments();
 }

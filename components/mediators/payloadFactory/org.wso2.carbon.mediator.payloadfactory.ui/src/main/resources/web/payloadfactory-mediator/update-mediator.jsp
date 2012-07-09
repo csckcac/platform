@@ -23,6 +23,7 @@
 <%@ page import="org.wso2.carbon.ui.CarbonUIMessage" %>
 
 <%
+    System.out.println("in plf update");
     Mediator mediator = SequenceEditorHelper.getEditingMediator(request, session);
     if (!(mediator instanceof PayloadFactoryMediator)) {
         CarbonUIMessage.sendCarbonUIMessage(

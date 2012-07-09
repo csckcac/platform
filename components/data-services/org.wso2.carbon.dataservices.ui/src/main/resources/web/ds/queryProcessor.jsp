@@ -469,6 +469,7 @@
                             param.setName(name);
                             param.setParamType("SCALAR");
                             param.setSqlType("STRING");
+                            param.setType("IN");
                             q.addParam(param);
                         }
                     }

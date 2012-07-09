@@ -1,21 +1,21 @@
 <?xml version="1.0"?>
 <artifactType type="application/vnd.wso2-wadlresource+xml" shortName="wadlresource" singularLabel="WADL Resource" pluralLabel="WADL Resources" hasNamespace="false" iconSet="8">
-	<storagePath>/wadls/resources/@{overview_name}</storagePath>
-	<nameAttribute>overview_name</nameAttribute>
+	<storagePath>/wadls/resources/@{overview_path}</storagePath>
+	<nameAttribute>overview_path</nameAttribute>
 	<ui>
 		<list>
 			<column name="Base">
 				<data type="path" value="overview_base" href="@{storagePath}"/>
 			</column>
 			<column name="Resource">
-				<data type="path" value="overview_name" href="@{storagePath}"/>
+				<data type="path" value="overview_path" href="@{storagePath}"/>
 			</column>
 		</list>
 	</ui>
 	<content>
 		<table name="Overview">	
 			<field type="text" required="true">                
-				<name>Name</name>
+				<name>Path</name>
 			</field>
 			<field type="text" required="true">                
 				<name>Base</name>

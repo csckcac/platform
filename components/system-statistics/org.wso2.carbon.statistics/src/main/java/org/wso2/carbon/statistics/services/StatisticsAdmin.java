@@ -19,6 +19,7 @@ import org.apache.axis2.AxisFault;
 import org.apache.axis2.context.ConfigurationContext;
 import org.apache.axis2.description.AxisOperation;
 import org.apache.axis2.description.AxisService;
+import org.apache.axis2.engine.AxisConfiguration;
 import org.apache.commons.logging.Log;
 import org.apache.commons.logging.LogFactory;
 import org.wso2.carbon.core.AbstractAdmin;
@@ -145,15 +146,18 @@ public class StatisticsAdmin extends AbstractAdmin implements StatisticsAdminMBe
     }
 
     private AxisService getAxisService(String serviceName) {
-        AxisService axisService = getAxisConfig().getServiceForActivation(serviceName);
-        if (axisService == null) {
-            try {
+        AxisConfiguration axisConfiguration = getAxisConfig();
+        AxisService axisService = axisConfiguration.getServiceForActivation(serviceName);
+        // Check if the service in in ghost list
+        try {
+            if (axisService == null && GhostDeployerUtils.
+                    getTransitGhostServicesMap(axisConfiguration).containsKey(serviceName)) {
                 GhostDeployerUtils.waitForServiceToLeaveTransit(serviceName, getAxisConfig());
-                return getAxisService(serviceName);
-            } catch (AxisFault axisFault) {
-                log.error("Error occurred while service : " +serviceName+ " is " +
-                          "trying to leave transit", axisFault);
+                axisService = axisConfiguration.getServiceForActivation(serviceName);
             }
+        } catch (AxisFault axisFault) {
+            log.error("Error occurred while service : " + serviceName + " is " +
+                      "trying to leave transit", axisFault);
         }
         return axisService;
     }

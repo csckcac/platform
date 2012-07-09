@@ -34,7 +34,8 @@ public class SVNManager implements RevisionControlDriver {
 
         SCMManagerBasedRepositoryManager scm = new SCMManagerBasedRepositoryManager();
         try {
-            scm.checkoutApplication(getApplicationUrl(), applicationId, revision);
+            String checkoutUrl = getApplicationUrl() + applicationId;
+            scm.checkoutApplication(checkoutUrl, applicationId, revision);
             listener.onGetSourceCompleted(applicationId, version, revision);
         } catch (SCMManagerExceptions scmManagerExceptions) {
             log.error("Error in checkout" + scmManagerExceptions);
@@ -43,6 +44,9 @@ public class SVNManager implements RevisionControlDriver {
     }
 
     public String getApplicationUrl() {
-        return appFactoryConfiguration.getFirstProperty(AppFactoryConstants.DEPLOYMENT_URL);
+        //TODO: Add the svn url to appfactory.xml
+        return "http://0.0.0.0:8080/scm/svn/";      // return the svn base url
     }
+
+
 }

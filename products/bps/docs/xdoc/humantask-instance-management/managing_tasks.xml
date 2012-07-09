@@ -271,7 +271,7 @@
         <h2 id="Task-Event-History">Task Event History</h2>
 
         <p>
-            Users can view the events occurred on a particular task by clicking on the <b>Event</b> tab
+            Users can view the events occurred on a particular task by clicking on the <b>History</b> tab
             of the task details page. The task history details would contain information about the
             action, user who performed that operation, time stamp of the event and any state transitions
             due to the event. Refer the below image for a sample list of events.

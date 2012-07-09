@@ -39,12 +39,10 @@
 
     <!--Application repository related configurations-->
     <RepositoryMGTConfig>
-        <SCMServerIp>0.0.0.0</SCMServerIp>
-        <SCMServerPort>8080</SCMServerPort>
-        <SCMServerRealmName>SONIA :: SCM Manager</SCMServerRealmName>
+        <SCMServerURL>http://localhost:9763/scm-webapp-1.14</SCMServerURL>
         <SCMServerAdminUserName>scmadmin</SCMServerAdminUserName>
         <SCMServerAdminPassword>scmadmin</SCMServerAdminPassword>
-        <ReadWritePermissionName>RW</ReadWritePermissionName>
+        <ReadWriteRole>developer</ReadWriteRole>
     </RepositoryMGTConfig>
 
     <!--This element defines the set of staging servers, where the application applications are deployed. -->
@@ -52,17 +50,13 @@
         <DeploymentStage name="Development">
             <ProcesEndPoint>https://localhost:9443/services/DeployApplicationToDev</ProcesEndPoint>
             <DeploymentServerURL>https://localhost:9443/services/</DeploymentServerURL>
-            <databaseUrl>dev.mysql</databaseUrl>
-            <databaseUsername>root</databaseUsername>
-            <databasePassword>root</databasePassword>
+
         </DeploymentStage>
         <DeploymentStage name="QA">
             <ProcesEndPoint>https://localhost:9443/services/DeployApplicationToQA</ProcesEndPoint>
             <DeploymentServerURL>https://localhost:9445/services/</DeploymentServerURL>
             <DeploymentServerURL>https://localhost:9447/services/</DeploymentServerURL>
-            <databaseUrl>qa.mysql</databaseUrl>
-            <databaseUsername>root</databaseUsername>
-            <databasePassword>root</databasePassword>
+
         </DeploymentStage>
     </ApplicationDeployment>
 </AppFactory>

@@ -24,7 +24,7 @@ import com.wso2.analytics.utils.*;
 public class DailyReportBAMEventGenerator {
 	
 	private DataPublisher dataPublisher;
-	public static final String STREAM_NAME = "org_wso2_analytics_data";
+	public static final String STREAM_NAME = "org.wso2.analytics.data";
     	public static final String VERSION = "1.3.0";
 	private static String currentDir;
 	

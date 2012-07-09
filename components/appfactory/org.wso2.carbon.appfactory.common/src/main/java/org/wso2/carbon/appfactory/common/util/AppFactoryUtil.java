@@ -51,14 +51,14 @@ public class AppFactoryUtil {
     private static SecretResolver secretResolver;
     private static Map<String, List<String>> configuration = new HashMap<String, List<String>>();
 
-    
-	public static File getApplicationWorkDirectory(String applicationId, String version, String revision)
-	                                                                                              throws AppFactoryException {
-		File tempDir = new File(CarbonUtils.getTmpDir() + File.separator + applicationId +
-		                        File.separator + version + File.separator + revision);
-		return tempDir;
-	}
-    
+
+    public static File getApplicationWorkDirectory(String applicationId, String version, String revision)
+            throws AppFactoryException {
+
+        File tempDir = new File(CarbonUtils.getTmpDir() + File.separator + applicationId);
+        return tempDir;
+    }
+
     public static AppFactoryConfiguration loadAppFactoryConfiguration() throws AppFactoryException {
         OMElement appFactoryElement = loadAppFactoryXML();
 
@@ -69,20 +69,20 @@ public class AppFactoryUtil {
 
         if (!AppFactoryConstants.CONFIG_NAMESPACE.equals(appFactoryElement.getNamespace()
                 .getNamespaceURI())) {
-            String message = "AppFactory namespace is invalid. Expected [" 
-                + AppFactoryConstants.CONFIG_NAMESPACE + "], received ["
-                + appFactoryElement.getNamespace() + "]";
+            String message = "AppFactory namespace is invalid. Expected ["
+                    + AppFactoryConstants.CONFIG_NAMESPACE + "], received ["
+                    + appFactoryElement.getNamespace() + "]";
             log.error(message);
             throw new AppFactoryException(message);
         }
-        
+
         Stack<String> nameStack = new Stack<String>();
         readChildElements(appFactoryElement, nameStack);
 
         AppFactoryConfiguration appFactoryConfig = new AppFactoryConfiguration(configuration);
         return appFactoryConfig;
     }
-        
+
     private static OMElement loadAppFactoryXML() throws AppFactoryException {
         String fileLocation =
                 new StringBuilder().append(CarbonUtils.getCarbonConfigDirPath())
@@ -120,27 +120,27 @@ public class AppFactoryUtil {
         }
         return configXMLFile;
     }
-    
+
     private static void readChildElements(OMElement serverConfig, Stack<String> nameStack) {
-        for (Iterator childElements = serverConfig.getChildElements(); childElements.hasNext();) {
+        for (Iterator childElements = serverConfig.getChildElements(); childElements.hasNext(); ) {
             OMElement element = (OMElement) childElements.next();
             nameStack.push(element.getLocalName());
-            
+
             String nameAttribute = element.getAttributeValue(new QName("name"));
-            if (nameAttribute != null && nameAttribute.trim().length() != 0){
+            if (nameAttribute != null && nameAttribute.trim().length() != 0) {
                 //We have some name attribute 
                 String key = getKey(nameStack);
                 addToConfiguration(key, nameAttribute.trim());
-                
+
                 //all child element will be having this attribute as part of their name
                 nameStack.push(nameAttribute.trim());
             }
-            
+
             String text = element.getText();
             if (text != null && text.trim().length() != 0) {
                 String key = getKey(nameStack);
                 String value = replaceSystemProperty(text.trim());
-                
+
                 //Check wither the value is secured using secure valut
                 if (isProtectedToken(key)) {
                     value = getProtectedValue(key);
@@ -148,15 +148,15 @@ public class AppFactoryUtil {
                 addToConfiguration(key, value);
             }
             readChildElements(element, nameStack);
-            
+
             //If we had a named attribute, we have to pop that out
-            if (nameAttribute != null && nameAttribute.trim().length() != 0){
+            if (nameAttribute != null && nameAttribute.trim().length() != 0) {
                 nameStack.pop();
             }
             nameStack.pop();
         }
     }
-    
+
     private static String getKey(Stack<String> nameStack) {
         StringBuffer key = new StringBuffer();
         for (int i = 0; i < nameStack.size(); i++) {
@@ -167,7 +167,7 @@ public class AppFactoryUtil {
 
         return key.toString();
     }
-    
+
     private static String replaceSystemProperty(String text) {
         int indexOfStartingChars = -1;
         int indexOfClosingBrace;
@@ -178,31 +178,31 @@ public class AppFactoryUtil {
         while (indexOfStartingChars < text.indexOf("${")
                 && (indexOfStartingChars = text.indexOf("${")) != -1
                 && (indexOfClosingBrace = text.indexOf('}')) != -1) { // Is a property used?
-            
+
             //Get the system property name
             String sysProp = text.substring(indexOfStartingChars + 2,
                     indexOfClosingBrace);
-            
+
             //Resolve the system property name to a value
             String propValue = System.getProperty(sysProp);
-            
+
             //If the system property is carbon home and is relative path, 
             //we have to resolve it to absolute path
             if (sysProp.equals("carbon.home") && propValue != null
                     && propValue.equals(".")) {
                 propValue = new File(".").getAbsolutePath() + File.separator;
             }
-            
+
             //Replace the system property with valid value
             if (propValue != null) {
                 text = text.substring(0, indexOfStartingChars) + propValue
                         + text.substring(indexOfClosingBrace + 1);
             }
-            
+
         }
         return text;
     }
-    
+
     private static boolean isProtectedToken(String key) {
         return secretResolver != null && secretResolver.isInitialized()
                 && secretResolver.isTokenProtected("Carbon." + key);
@@ -211,7 +211,7 @@ public class AppFactoryUtil {
     private static String getProtectedValue(String key) {
         return secretResolver.resolve("Carbon." + key);
     }
-    
+
     private static void addToConfiguration(String key, String value) {
         List<String> list = configuration.get(key);
         if (list == null) {

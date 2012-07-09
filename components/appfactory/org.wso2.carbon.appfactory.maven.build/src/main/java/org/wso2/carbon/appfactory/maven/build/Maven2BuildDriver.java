@@ -22,7 +22,7 @@ import org.wso2.carbon.appfactory.core.BuildDriverListener;
 public class Maven2BuildDriver implements BuildDriver {
 
 	private static final Log log = LogFactory.getLog(Maven2BuildDriver.class);
-	
+
 	@Override
 	public void buildArtifact(String applicationId, String version, String revision,
 	                          BuildDriverListener listener) throws AppFactoryException {
@@ -58,6 +58,7 @@ public class Maven2BuildDriver implements BuildDriver {
 		Invoker invoker = new DefaultInvoker();
 		InvocationOutputHandler outputHandler = new SystemOutHandler();
 		invoker.setErrorHandler(outputHandler);
+        invoker.setMavenHome(new File(System.getenv("M3_HOME")));
 
 		try {
 			InvocationResult result = invoker.execute(request);

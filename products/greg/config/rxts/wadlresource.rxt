@@ -27,7 +27,7 @@
 				<heading>ID</heading>
 			</subheading>            
 			<field type="option-text" maxoccurs="unbounded">                
-				<name>Test</name>                
+				<name>Method</name>                
 				<values>
 					<value>GET</value>
 					<value>POST</value>

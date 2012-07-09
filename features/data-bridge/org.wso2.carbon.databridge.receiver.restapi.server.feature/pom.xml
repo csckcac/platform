@@ -1,7 +1,7 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <project xmlns="http://maven.apache.org/POM/4.0.0"
-         xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
-         xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/xsd/maven-4.0.0.xsd">
+    xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+    xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/xsd/maven-4.0.0.xsd">
 
     <parent>
         <groupId>org.wso2.carbon</groupId>
@@ -9,7 +9,7 @@
         <version>4.0.0-SNAPSHOT</version>
     </parent>
 
-	<modelVersion>4.0.0</modelVersion>
+    <modelVersion>4.0.0</modelVersion>
     <artifactId>org.wso2.carbon.databridge.receiver.restapi.server.feature</artifactId>
     <packaging>pom</packaging>
     <name>WSO2 Carbon - Data Bridge - REST API Server Feature</name>
@@ -18,68 +18,113 @@
         This feature contains the bundles required for the REST API of the data bridge
     </description>
 
-    <dependencies>
-        <dependency>
-            <groupId>org.wso2.carbon</groupId>
-            <artifactId>org.wso2.carbon.databridge.restapi</artifactId>
-        </dependency>
-        <dependency>
-           <groupId>org.apache.cxf.wso2</groupId>
-            <artifactId>cxf-bundle</artifactId>
-        </dependency>
-        <dependency>
-            <groupId>org.apache.servicemix.specs</groupId>
-            <artifactId>org.apache.servicemix.specs.jsr311-api-1.1.1</artifactId>
-        </dependency>
-    </dependencies>
+    <!--<dependencies>-->
+        <!--<dependency>-->
+            <!--<groupId>org.wso2.carbon</groupId>-->
+            <!--<artifactId>org.wso2.carbon.databridge.receiver.restapi</artifactId>-->
+        <!--</dependency>-->
+    <!--</dependencies>-->
 
-	<build>
-		<plugins>
-			<plugin>
-				<groupId>org.apache.maven.plugins</groupId>
-				<artifactId>maven-compiler-plugin</artifactId>
-				<!-- inherited version -->
-				<configuration>
-					<encoding>UTF-8</encoding>
-					<source>1.6</source>
-					<target>1.6</target>
-				</configuration>
-			</plugin>
-			<plugin>
-				<groupId>org.wso2.maven</groupId>
-				<artifactId>carbon-p2-plugin</artifactId>
-				<version>${carbon.p2.plugin.version}</version>
-				<executions>
-					<execution>
-						<id>p2-feature-generation</id>
-						<phase>package</phase>
-						<goals>
-							<goal>p2-feature-gen</goal>
-						</goals>
-						<configuration>
+    <build>
+        <plugins>
+            <plugin>
+                <groupId>org.apache.maven.plugins</groupId>
+                <artifactId>maven-compiler-plugin</artifactId>
+                <!-- inherited version -->
+                <configuration>
+                    <encoding>UTF-8</encoding>
+                    <source>1.6</source>
+                    <target>1.6</target>
+                </configuration>
+            </plugin>
+            <plugin>
+                <groupId>org.apache.maven.plugins</groupId>
+                <artifactId>maven-dependency-plugin</artifactId>
+                <version>2.4</version>
+                <executions>
+                    <execution>
+                        <id>copy</id>
+                        <phase>package</phase>
+                        <goals>
+                            <goal>copy</goal>
+                        </goals>
+                        <configuration>
+                            <artifactItems>
+                                <artifactItem>
+                                    <groupId>org.wso2.carbon</groupId>
+                                    <artifactId>org.wso2.carbon.databridge.receiver.restapi</artifactId>
+                                    <version>${wso2carbon.version}</version>
+                                    <type>war</type>
+                                    <overWrite>true</overWrite>
+                                    <outputDirectory>${basedir}/resources/</outputDirectory>
+                                    <destFileName>datareceiver.war</destFileName>
+                                </artifactItem>
+                            </artifactItems>
+                            <!-- other configurations here -->
+                        </configuration>
+                    </execution>
+                </executions>
+            </plugin>
+
+            <plugin>
+                <artifactId>maven-resources-plugin</artifactId>
+                <executions>
+                    <execution>
+                        <id>copy-resources</id>
+                        <phase>generate-resources</phase>
+                        <goals>
+                            <goal>copy-resources</goal>
+                        </goals>
+                        <configuration>
+                            <outputDirectory>src/main/resources</outputDirectory>
+                            <resources>
+                                <resource>
+                                    <directory>resources</directory>
+                                    <includes>
+                                        <include>datareceiver.war</include>
+                                        <include>p2.inf</include>
+                                        <include>build.properties</include>
+                                    </includes>
+                                </resource>
+                            </resources>
+                        </configuration>
+                    </execution>
+                </executions>
+            </plugin>
+            <plugin>
+                <groupId>org.wso2.maven</groupId>
+                <artifactId>carbon-p2-plugin</artifactId>
+                <version>${carbon.p2.plugin.version}</version>
+                <executions>
+                    <execution>
+                        <id>p2-feature-generation</id>
+                        <phase>package</phase>
+                        <goals>
+                            <goal>p2-feature-gen</goal>
+                        </goals>
+                        <configuration>
                             <id>org.wso2.carbon.databridge.receiver.restapi.server</id>
-							<propertiesFile>../feature.properties</propertiesFile>
+                            <propertiesFile>../feature.properties</propertiesFile>
                             <adviceFile>
                                 <properties>
-									<propertyDef>org.wso2.carbon.p2.category.type:server</propertyDef>
-									<propertyDef>org.eclipse.equinox.p2.type.group:false</propertyDef>
-								</properties>
-							</adviceFile>
-							<bundles>
-                                <bundleDef>org.wso2.carbon:org.wso2.carbon.databridge.restapi</bundleDef>
-                                <bundleDef>org.apache.cxf.wso2:cxf-bundle</bundleDef>
-                                <bundleDef>org.apache.servicemix.specs:org.apache.servicemix.specs.jsr311-api-1.1.1</bundleDef>
-                            </bundles>
-							<importFeatures>
-							    <importFeatureDef>org.wso2.carbon.core.server:${wso2carbon.version}</importFeatureDef>
+                                    <propertyDef>org.wso2.carbon.p2.category.type:server</propertyDef>
+                                    <propertyDef>org.eclipse.equinox.p2.type.group:false</propertyDef>
+                                </properties>
+                            </adviceFile>
+                            <!--<bundles>-->
+                                <!--<bundleDef>org.wso2.carbon:org.wso2.carbon.databridge.receiver.restapi</bundleDef>-->
+                            <!--</bundles>-->
+                            <importFeatures>
+                                <importFeatureDef>org.wso2.carbon.core.server:${wso2carbon.version}</importFeatureDef>
                                 <importFeatureDef>org.wso2.carbon.databridge.core.server:${wso2carbon.version.databridge}</importFeatureDef>
-							</importFeatures>
-						</configuration>
-					</execution>
-				</executions>
-			</plugin>
-		</plugins>
-	</build>
+                                <importFeatureDef>org.wso2.carbon.jaxws.webapp.mgt.server:${wso2carbon.version.databridge}</importFeatureDef>
+                            </importFeatures>
+                        </configuration>
+                    </execution>
+                </executions>
+            </plugin>
+        </plugins>
+    </build>
 
-    
+
 </project>

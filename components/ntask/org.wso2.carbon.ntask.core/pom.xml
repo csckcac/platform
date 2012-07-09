@@ -72,13 +72,14 @@
                     <instructions>
                         <Bundle-SymbolicName>${project.artifactId}</Bundle-SymbolicName>
                         <Bundle-Name>${project.artifactId}</Bundle-Name>
+                        <DynamicImport-Package>*</DynamicImport-Package>
                         <Import-Package>
-                            org.quartz.*;version="2.1.1"
+                            org.quartz.*;version="2.1.1",
+		            *;resolution:=optional
                         </Import-Package>
                         <Export-Package>
                             org.wso2.carbon.ntask.core.*
                         </Export-Package>
-                        <DynamicImport-Package>*</DynamicImport-Package>
                     </instructions>
                 </configuration>
             </plugin>

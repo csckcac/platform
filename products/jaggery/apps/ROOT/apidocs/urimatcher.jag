@@ -59,24 +59,36 @@ include('/includes/topnavi.jag');
         <div class="span12">
             <div class="content" id="xhr" name="xhr">
                 <h3>URIMatcher</h3>
+<%
+var context = request.getContextPath(),
+	parts = context.split("/"),
+	length = parts.length,
+	i = 0, j = 0, part, matcher = "/";
+for(i = 0; i < length; i++) {
+	part = parts[i];
 
+	if(part != "") {
+		matcher += "{dir" + j++ + "}/";
+	}
+}
+matcher += "{dir" + j + "}/{page}";
+%>
                 <pre class="prettyprint linenums">
 &lt%
 var uriMatcher = new URIMatcher(request.getRequestURI());
 
 //Provide a pattern to be matched against the URL
-if(uriMatcher.match('/{dir}/{page}')) {
+if(uriMatcher.match('<%=matcher%>')) {
     //If pattern matches, elements can be accessed from their keys
-	print("Directory element is : " + uriMatcher.elements().dir)
+    print("dir<%=String(j)%> element is : " + uriMatcher.elements().dir<%=String(j)%>)
 }
 %&gt
 </pre>
                 <%
-
                 var xhrCode = '&lt%'
                 + '\n var uriMatcher = new URIMatcher(request.getRequestURI());\n'
-                + '\n if(uriMatcher.match("/{dir}/{page}")) {'
-                + '\n       print("Directory element is : " + uriMatcher.elements().dir);'
+                + '\n if(uriMatcher.match("' + matcher + '")) {'
+                + '\n       print("dir' + j + ' element is : " + uriMatcher.elements().dir' + j + ');'
                 + '\n }'
                 + '\n %&gt';
 

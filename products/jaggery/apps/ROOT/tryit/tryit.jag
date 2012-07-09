@@ -26,8 +26,12 @@ var F = File;
     inputStream = new JaggeryParser().parse(inputStream).toString();
 	
     //over riding the print funtion
-    print = function (text) {       
+    print = function (text) {
+        if(typeof text === "object") {
             htmlResult += stringify(text);
+        } else {
+            htmlResult += text;
+        }
     };
 
     File = function (path) {

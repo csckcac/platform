@@ -80,7 +80,7 @@ body {
 	<!-- /container -->
 	<script src="js/google-code-prettify/prettify.js"></script>
     <script src="js/jquery-1.7.1.min.js"></script>
-    <script src="js/tryit.js"></script>
+    <script src="js/tryit.jag"></script>
     <script src="js/util.js"></script>
     <%
         include('/includes/editarea_popup.jag');

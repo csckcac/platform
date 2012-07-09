@@ -39,26 +39,8 @@ registerGeneralConfigPanel({
                                },{
                                    xtype : 'textfield',
 
-                                   fieldLabel : 'Tenant Domain Extension',
-                                   name : 'tenantDomainExtension',
-                                   allowBlank : true
-                               },{
-                                   xtype : 'textfield',
-
                                    fieldLabel : 'Role of SVN User',
                                    name : 'roleOfSVNRW',
-                                   allowBlank : false
-                               },{
-                                   xtype : 'textfield',
-
-                                   fieldLabel : 'KeyStore Location',
-                                   name : 'keyStoreLocation',
-                                   allowBlank : false
-                               },{
-                                   xtype : 'textfield',
-                                   inputType: 'password',
-                                   fieldLabel : 'KeyStore Password',
-                                   name : 'keyStorePassword',
                                    allowBlank : false
                                }],
 

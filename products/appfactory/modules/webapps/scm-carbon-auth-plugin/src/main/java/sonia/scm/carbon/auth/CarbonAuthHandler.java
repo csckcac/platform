@@ -19,10 +19,15 @@ package sonia.scm.carbon.auth;
 
 import com.google.inject.Inject;
 import com.google.inject.Singleton;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
+import org.wso2.carbon.appfactory.svn.repository.mgt.RepositoryManager;
+import org.wso2.carbon.appfactory.svn.repository.mgt.RepositoryMgtException;
+import org.wso2.carbon.core.multitenancy.SuperTenantCarbonContext;
 import sonia.scm.SCMContextProvider;
 import sonia.scm.plugin.ext.Extension;
-import sonia.scm.store.Store;
 import sonia.scm.store.StoreFactory;
+import sonia.scm.user.User;
 import sonia.scm.util.AssertUtil;
 import sonia.scm.web.security.AuthenticationHandler;
 import sonia.scm.web.security.AuthenticationResult;
@@ -30,6 +35,8 @@ import sonia.scm.web.security.AuthenticationResult;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 import java.io.IOException;
+import java.util.HashSet;
+import java.util.Set;
 
 /**
  *
@@ -37,25 +44,16 @@ import java.io.IOException;
 @Singleton
 @Extension
 public class CarbonAuthHandler implements AuthenticationHandler {
+    private static final Logger logger =
+            LoggerFactory.getLogger(CarbonAuthHandler.class);
 
-    /**
-     * Field description
-     */
-    public static final String STORE_NAME = "carbon-auth";
 
     /**
      * Field description
      */
     public static final String TYPE = "carbon";
 
-    //~--- constructors ---------------------------------------------------------
 
-
-    @Inject
-    public CarbonAuthHandler(StoreFactory storeFactory) {
-        store = storeFactory.getStore(CarbonAuthConfig.class, STORE_NAME);
-
-    }
 
     //~--- methods --------------------------------------------------------------
 
@@ -72,13 +70,22 @@ public class CarbonAuthHandler implements AuthenticationHandler {
     public AuthenticationResult authenticate(HttpServletRequest request,
                                              HttpServletResponse response, String username,
                                              String password) {
-
+        String applicationName = request.getRequestURI().split("/")[3];
         AssertUtil.assertIsNotEmpty(username);
         AssertUtil.assertIsNotEmpty(password);
+        AssertUtil.assertIsNotEmpty(applicationName);
+        RepositoryManager repositoryManager = (RepositoryManager) SuperTenantCarbonContext.
+                getCurrentContext().getOSGiService(RepositoryManager.class);
 
-        if (client.authenticateUser(username, password, request.getRemoteAddr())) {
-            return client.authorizeUser(request, username);
-        }
+            if (repositoryManager != null) {
+                if (repositoryManager.hasAccess(username, password, applicationName)) {
+                    return new AuthenticationResult(getUser(username),
+                                                    getGroups(applicationName));
+                }
+            } else {
+                logger.error("Could not get Repository manager from appfactory");
+            }
+
         return AuthenticationResult.FAILED;
     }
 
@@ -93,41 +100,6 @@ public class CarbonAuthHandler implements AuthenticationHandler {
         // nothing todo
     }
 
-    /**
-     * Method description
-     *
-     * @param context
-     */
-    @Override
-    public void init(SCMContextProvider context) {
-        config = store.get();
-
-        if (config == null) {
-            config = new CarbonAuthConfig();
-        }
-
-
-        client = new CarbonAuthClient(context.getBaseDirectory().getAbsolutePath());
-        client.setConfig(config);
-        client.init();
-
-
-    }
-
-    public void storeConfig() {
-        store.set(config);
-    }
-
-    //~--- get methods ----------------------------------------------------------
-
-    /**
-     * Method description
-     *
-     * @return
-     */
-    public CarbonAuthConfig getConfig() {
-        return config;
-    }
 
     /**
      * Method description
@@ -139,45 +111,27 @@ public class CarbonAuthHandler implements AuthenticationHandler {
         return TYPE;
     }
 
-    //~--- set methods ----------------------------------------------------------
-
-    /**
-     * Method description
-     *
-     * @param config
-     */
-    public void setConfig(CarbonAuthConfig config) {
-        this.config = config;
-        client.setConfig(config);
-
-        client.init();
-
-    }
 
     //~--- methods --------------------------------------------------------------
 
+    private User getUser(String userName) {
+        User user = new User();
+        user.setName(userName);
+        user.setType(CarbonAuthHandler.TYPE);
+        user.setDisplayName(userName);
+        user.setMail("dummy@example.com"); //we have to just pass an email to get this passed.
+        return user;
+    }
 
-    /**
-     * Method description
-     *
-     *
-     * @param username
-     * @param password
-     *
-     * @return
-     */
+    private Set<String> getGroups(String projectKey) {
+        Set<String> groups = new HashSet<String>();
+        groups.add(projectKey);
+        return groups;
+    }
 
-    //~--- fields ---------------------------------------------------------------
 
-    /**
-     * Field description
-     */
-    private CarbonAuthConfig config;
-
-    /**
-     * Field description
-     */
-    private Store<CarbonAuthConfig> store;
-
-    private CarbonAuthClient client;
+    @Override
+    public void init(SCMContextProvider scmContextProvider) {
+        logger.info("initializing  Carbon Auth Handler");
+    }
 }

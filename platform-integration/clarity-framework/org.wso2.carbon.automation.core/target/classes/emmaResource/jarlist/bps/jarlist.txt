@@ -1,5 +1,0 @@
-org.wso2.carbon.bpel_4.0.0.SNAPSHOT.jar
-org.wso2.carbon.bpel.common_4.0.0.SNAPSHOT.jar
-org.wso2.carbon.bpel.deployer_4.0.0.SNAPSHOT.jar
-org.wso2.carbon.bpel.skeleton_4.0.0.SNAPSHOT.jar
-org.wso2.carbon.bpel.stub_4.0.0.SNAPSHOT.jar

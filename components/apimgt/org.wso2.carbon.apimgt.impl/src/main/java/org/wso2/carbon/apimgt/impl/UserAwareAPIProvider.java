@@ -19,6 +19,7 @@ package org.wso2.carbon.apimgt.impl;
 import org.wso2.carbon.apimgt.api.APIManagementException;
 import org.wso2.carbon.apimgt.api.model.*;
 import org.wso2.carbon.apimgt.impl.utils.APIUtil;
+import org.wso2.carbon.registry.core.exceptions.RegistryException;
 
 /**
  * User aware APIProvider implementation which ensures that the invoking user has the
@@ -40,7 +41,7 @@ public class UserAwareAPIProvider extends APIProviderImpl {
     }
 
     @Override
-    public void addAPI(API api) throws APIManagementException {
+    public void addAPI(API api) throws APIManagementException, RegistryException {
         checkCreatePermission();
         super.addAPI(api);
     }

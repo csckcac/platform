@@ -40,7 +40,7 @@ import java.util.Collection;
  * security to this class.
  */
 class APIProviderImpl extends AbstractAPIManager implements APIProvider {
-    
+
     public APIProviderImpl(String username) throws APIManagementException {
         super(username);
     }
@@ -275,7 +275,7 @@ class APIProviderImpl extends AbstractAPIManager implements APIProvider {
     public void updateTier(Tier tier) throws APIManagementException {
         addOrUpdateTier(tier, true);
     }
-    
+
     private void addOrUpdateTier(Tier tier, boolean update) throws APIManagementException {
         if (APIConstants.UNLIMITED_TIER.equals(tier.getName())) {
             throw new APIManagementException("Changes on the '" + APIConstants.UNLIMITED_TIER + "' " +
@@ -286,18 +286,18 @@ class APIProviderImpl extends AbstractAPIManager implements APIProvider {
         if (update && !tiers.contains(tier)) {
             throw new APIManagementException("No tier exists by the name: " + tier.getName());
         }
-        
+
         Set<Tier> finalTiers = new HashSet<Tier>();
         for (Tier t : tiers) {
             if (!t.getName().equals(tier.getName())) {
-                finalTiers.add(t);    
+                finalTiers.add(t);
             }
         }
         finalTiers.add(tier);
         saveTiers(finalTiers);
     }
-    
-    private void saveTiers(Collection<Tier> tiers) throws APIManagementException {        
+
+    private void saveTiers(Collection<Tier> tiers) throws APIManagementException {
         OMFactory fac = OMAbstractFactory.getOMFactory();
         OMElement root = fac.createOMElement(APIConstants.POLICY_ELEMENT);
         OMElement assertion = fac.createOMElement(APIConstants.ASSERTION_ELEMENT);
@@ -313,7 +313,7 @@ class APIProviderImpl extends AbstractAPIManager implements APIProvider {
             }
             resource.setProperty(APIConstants.TIER_DESCRIPTION_PREFIX + APIConstants.UNLIMITED_TIER,
                     APIConstants.UNLIMITED_TIER_DESC);
-            root.addChild(assertion);            
+            root.addChild(assertion);
             resource.setContent(root.toString());
             registry.put(APIConstants.API_TIER_LOCATION, resource);
         } catch (XMLStreamException e) {
@@ -598,9 +598,19 @@ class APIProviderImpl extends AbstractAPIManager implements APIProvider {
             if (!status.equals(APIConstants.CREATED)) {
                 artifact.setAttribute(APIConstants.API_OVERVIEW_STATUS, APIConstants.CREATED);
             }
+            //Check whether the existing api has its own thumbnail resource and if yes,added that image
+            //thumb to new api's thumbnail path as well.
+            String thumbUrl = APIConstants.API_LOCATION + RegistryConstants.PATH_SEPARATOR + api.getId().getProviderName() + RegistryConstants.PATH_SEPARATOR
+                              + api.getId().getApiName() + RegistryConstants.PATH_SEPARATOR + api.getId().getVersion() + RegistryConstants.PATH_SEPARATOR + APIConstants.API_ICON_IMAGE;
+            if (registry.resourceExists(thumbUrl)) {
+                Resource oldImage = registry.get(thumbUrl);
+                apiSourceArtifact.getContentStream();
+                APIIdentifier newApiId = new APIIdentifier(api.getId().getProviderName(), api.getId().getApiName(), newVersion);
+                artifact.setAttribute(APIConstants.API_OVERVIEW_THUMBNAIL_URL, addIcon(newApiId, oldImage.getContentStream(), oldImage.getMediaType()));
+            }
             artifactManager.addGenericArtifact(artifact);
             registry.addAssociation(APIUtil.getAPIProviderPath(api.getId()), targetPath,
-                    APIConstants.PROVIDER_ASSOCIATION);
+                                    APIConstants.PROVIDER_ASSOCIATION);
 
             // Retain the tags
             org.wso2.carbon.registry.core.Tag[] tags = registry.getTags(apiSourcePath);

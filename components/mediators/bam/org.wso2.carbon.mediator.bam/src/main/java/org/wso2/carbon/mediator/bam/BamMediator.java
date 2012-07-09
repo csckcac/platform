@@ -315,7 +315,15 @@ public class BamMediator extends AbstractMediator {
                                                   "          {'name':'" + BamMediatorConstants.MSG_DIRECTION + "','type':'STRING'}," +
                                                   "          {'name':'" + BamMediatorConstants.SERVICE_NAME + "','type':'STRING'}," +
                                                   "          {'name':'" + BamMediatorConstants.OPERATION_NAME + "','type':'STRING'}," +
-                                                  "          {'name':'" + BamMediatorConstants.MSG_ID + "','type':'STRING'}" +
+                                                  "          {'name':'" + BamMediatorConstants.MSG_ID + "','type':'STRING'}," +
+                                                  "          {'name':'request_received_time','type':'STRING'}," +
+                                                  "          {'name':'http_method','type':'STRING'}," +
+                                                  "          {'name':'character_set_encoding','type':'STRING'}," +
+                                                  "          {'name':'remote_address','type':'STRING'}," +
+                                                  "          {'name':'transport_in_url','type':'STRING'}," +
+                                                  "          {'name':'message_type','type':'STRING'}," +
+                                                  "          {'name':'remote_host','type':'STRING'}," +
+                                                  "          {'name':'service_prefix','type':'STRING'}" +
                                                   this.getPropertyStreamDefinitionString() +
                                                   this.getEntityStreamDefinitionString() +
                                                   "  ]" +
@@ -345,31 +353,40 @@ public class BamMediator extends AbstractMediator {
         int numOfProperties = properties.size();
         int numOfEntities = streamEntries.size();
 
-        Object[] payloadData = new Object[numOfProperties + numOfEntities + 4];
+        Object[] payloadData = new Object[numOfProperties + numOfEntities + 12];
         payloadData[0] = direction ?
                          BamMediatorConstants.DIRECTION_IN : BamMediatorConstants.DIRECTION_OUT;
         payloadData[1] = service;
         payloadData[2] = operation;
         payloadData[3] = messageContext.getMessageID();
+        payloadData[4] = this.getHttpIp(messageContext, "wso2statistics.request.received.time");
+        payloadData[5] = this.getHttpIp(messageContext, "HTTP_METHOD");
+        payloadData[6] = this.getHttpIp(messageContext, "CHARACTER_SET_ENCODING");
+        payloadData[7] = this.getHttpIp(messageContext, "REMOTE_ADDR");
+        payloadData[8] = this.getHttpIp(messageContext, "TransportInURL");
+        payloadData[9] = this.getHttpIp(messageContext, "messageType");
+        payloadData[10] = this.getHttpIp(messageContext, "REMOTE_HOST");
+        payloadData[11] = this.getHttpIp(messageContext, "SERVICE_PREFIX");
 
         for (int i=0; i<numOfProperties; i++) {
-            payloadData[4 + i] = this.producePropertyValue(properties.get(i), messageContext);
+            payloadData[12 + i] = this.producePropertyValue(properties.get(i), messageContext);
         }
         
         for (int i=0; i<numOfEntities; i++) {
-            payloadData[4 + numOfProperties + i] = this.produceEntityValue(streamEntries.get(i).getValue(), messageContext);
+            payloadData[12 + numOfProperties + i] = this.produceEntityValue(streamEntries.get(i).getValue(), messageContext);
         }
 
         return payloadData;
     }
 
-    private Object getHttpIp(MessageContext messageContext){
+    private Object getHttpIp(MessageContext messageContext, String propertyName){
         org.apache.axis2.context.MessageContext msgCtx = ((Axis2MessageContext) messageContext).getAxis2MessageContext();
-        HttpServletRequest obj = (HttpServletRequest)msgCtx.getProperty("transport.http.servletRequest");
-        System.out.println("Acceptable Encoding type: "+obj.getHeader("Accept-Encoding"));
-        System.out.println("Acceptable character set: " +obj.getHeader("Accept-Charset"));
-        System.out.println("Acceptable Media Type: "+obj.getHeader("Accept"));
-        return "";
+        String output = (String)msgCtx.getLocalProperty(propertyName);
+        if(output != null && !output.equals("")){
+            return output;
+        } else {
+            return "";
+        }
     }
 
     private Object[] createMetadata(int tenantId){

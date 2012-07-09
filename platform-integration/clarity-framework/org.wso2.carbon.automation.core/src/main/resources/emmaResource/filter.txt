@@ -1,0 +1,10 @@
+.stub
+.stub_
+.stub_4.0.0
+.stub-
+org.eclipse.
+.equinox.
+.governance.api
+.governance.api_
+.governance.api-
+org.wso2.carbon.user.core.

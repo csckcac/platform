@@ -106,6 +106,8 @@ function setRating(path, rating) {
 
 var subscribeConfirms = 0;
 function subscribe(path) {
+    sessionAwareFunction(function() {
+
     if(subscribeConfirms != 0){
         return;
     }
@@ -357,6 +359,7 @@ function subscribe(path) {
         CARBON.showWarningDialog(reason);
         subscribeConfirms = 0;
     }
+    }, org_wso2_carbon_registry_info_ui_jsi18n["session.timed.out"]);
 }
 
 function subscriptionConfirmationAlert(email_id) {

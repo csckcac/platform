@@ -273,6 +273,16 @@ public class ApplicationDeploymentService extends AbstractAdmin {
         InvocationOutputHandler outputHandler = new SystemOutHandler();
         invoker.setErrorHandler(outputHandler);
 
+        String mavenHome=System.getenv("M2_HOME");
+        //maven version check
+        if(mavenHome==null ){
+            if((mavenHome=System.getenv("M3_HOME"))==null){
+                String msg="Environment variable either M2_HOME or M3_HOME is not defined";
+                log.error(msg);
+                throw new ApplicationDeploymentExceptions(msg);
+            }
+        }
+        invoker.setMavenHome(new File(mavenHome));
         try {
             InvocationResult result = invoker.execute(request);
             //Todo: need to get the build error, exception back to the user.

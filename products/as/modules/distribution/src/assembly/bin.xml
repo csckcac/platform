@@ -30,6 +30,7 @@
                 <exclude>**/*.sh</exclude>
                 <exclude>**/wso2server.bat</exclude>
                 <exclude>**/axis2services/sample01.aar</exclude>
+		<exclude>**/log4j.properties</exclude>
                 <exclude>**/axis2services/echo/**</exclude>
                 <exclude>**/axis2services/version/**</exclude>
                 <exclude>**/pom.xml</exclude>
@@ -385,9 +386,17 @@
             <source>
                 ../p2-profile-gen/target/wso2carbon-core-${carbon.version}/repository/conf/etc/syslog-config.xml
             </source>
-            <outputDirectory>${pom.artifactId}-${pom.version}/repository/conf/etc
+            <outputDirectory>${pom.artifactId}-${pom.version}/repository/conf/etc/
             </outputDirectory>
-        </file>       
+        </file>  
+        <!-- Including log4j.properties file -->
+        <file>
+            <source>
+                ../p2-profile-gen/target/wso2carbon-core-${carbon.version}/repository/conf/log4j.properties
+            </source>
+            <outputDirectory>${pom.artifactId}-${pom.version}/repository/conf/
+            </outputDirectory>
+        </file>           
         <file>
             <source>INSTALL.txt</source>
             <outputDirectory>${pom.artifactId}-${pom.version}</outputDirectory>

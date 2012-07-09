@@ -49,7 +49,7 @@
 
     <properties>
         <wso2carbon.version.activities>${wso2carbon.version}</wso2carbon.version.activities>
-        <wso2carbon.version.event-bridge>${wso2carbon.version}</wso2carbon.version.event-bridge>
+        <wso2carbon.version.data-bridge>${wso2carbon.version}</wso2carbon.version.data-bridge>
         <wso2carbon.version.bam-data-publishers>${wso2carbon.version}</wso2carbon.version.bam-data-publishers>
     </properties>
 

@@ -33,7 +33,7 @@ import org.wso2.carbon.context.CarbonContext;
 import org.wso2.carbon.core.RegistryResources;
 import org.wso2.carbon.core.util.CryptoException;
 import org.wso2.carbon.core.util.CryptoUtil;
-import org.wso2.carbon.utils.logging.CarbonMemoryAppender;
+import org.wso2.carbon.logging.appender.CarbonMemoryAppender;
 import org.wso2.carbon.logging.appenders.CircularBuffer;
 import org.wso2.carbon.logging.config.SyslogConfigManager;
 import org.wso2.carbon.logging.config.SyslogConfiguration;

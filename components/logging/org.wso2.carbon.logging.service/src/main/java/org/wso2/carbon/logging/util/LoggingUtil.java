@@ -34,7 +34,7 @@ import org.apache.log4j.Logger;
 import org.apache.log4j.PatternLayout;
 import org.apache.log4j.net.SyslogAppender;
 import org.springframework.util.Log4jConfigurer;
-import org.wso2.carbon.utils.logging.CarbonMemoryAppender;
+import org.wso2.carbon.logging.appender.CarbonMemoryAppender;
 import org.wso2.carbon.logging.appenders.CircularBuffer;
 import org.wso2.carbon.logging.registry.RegistryManager;
 import org.wso2.carbon.logging.service.LogViewerException;

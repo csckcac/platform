@@ -11,7 +11,7 @@ import org.apache.log4j.Appender;
 import org.apache.log4j.Logger;
 import org.wso2.carbon.base.ServerConfiguration;
 import org.wso2.carbon.context.CarbonContext;
-import org.wso2.carbon.utils.logging.CarbonMemoryAppender;
+import org.wso2.carbon.logging.appender.CarbonMemoryAppender;
 import org.wso2.carbon.logging.service.data.LogEvent;
 import org.wso2.carbon.utils.logging.TenantAwareLoggingEvent;
 import org.wso2.carbon.utils.logging.TenantAwarePatternLayout;
@@ -19,9 +19,6 @@ import org.wso2.carbon.utils.logging.TenantAwarePatternLayout;
 public class TenantAwareLogReader {
 
 	private static Log log = LogFactory.getLog(TenantAwareLogReader.class);
-
-//	private static final LogEvent[] NO_LOG_EVENTS_MESSAGE = new LogEvent[] { new LogEvent(
-//			"NO_LOGS", "INFO") };
 
 	private boolean isCurrentTenantId(String tenantId) {
 		String currTenantId = String.valueOf(CarbonContext.getCurrentContext().getTenantId());

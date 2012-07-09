@@ -115,21 +115,6 @@ public class DefaultRolesCreatorForTenant implements TenantMgtListener {
         // Do nothing
     }
 
-    @Override
-    public void addTenant(TenantInfoBean tenantInfoBean) throws org.wso2.carbon.user.core.UserStoreException {
-        // Do nothing
-    }
-
-    @Override
-    public void updateTenant(TenantInfoBean tenantInfoBean) throws org.wso2.carbon.user.core.UserStoreException {
-        // Do nothing
-    }
-
-    @Override
-    public void renameTenant(int i, String s, String s1) throws org.wso2.carbon.user.core.UserStoreException {
-        // Do nothing
-    }
-
     public int getListenerOrder() {
         return EXEC_ORDER;
     }

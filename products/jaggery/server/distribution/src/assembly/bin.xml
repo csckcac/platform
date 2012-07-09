@@ -182,13 +182,13 @@
             <fileMode>644</fileMode>
         </file>
         <file>
-            <source>src/resources/bin/jagshell.bat</source>
+            <source>src/resources/bin/jaggery.bat</source>
             <outputDirectory>jaggery-${carbon.product.version}/bin</outputDirectory>
             <filtered>true</filtered>
             <fileMode>644</fileMode>
         </file>
         <file>
-            <source>src/resources/bin/jagshell.sh</source>
+            <source>src/resources/bin/jaggery.sh</source>
             <outputDirectory>jaggery-${carbon.product.version}/bin</outputDirectory>
             <filtered>true</filtered>
             <fileMode>644</fileMode>

@@ -34,7 +34,7 @@ import org.apache.log4j.Logger;
 import org.apache.log4j.PatternLayout;
 import org.apache.log4j.net.SyslogAppender;
 import org.springframework.util.Log4jConfigurer;
-import org.wso2.carbon.logging.appender.CarbonMemoryAppender;
+import org.wso2.carbon.utils.logging.CarbonMemoryAppender;
 import org.wso2.carbon.logging.appenders.CircularBuffer;
 import org.wso2.carbon.logging.registry.RegistryManager;
 import org.wso2.carbon.logging.service.LogViewerException;
@@ -54,7 +54,7 @@ public class LoggingUtil {
 
 	public static final String SYSTEM_LOG_PATTERN = "[%d] %5p - %x %m {%c}%n";
 	private static final int MAX_LOG_MESSAGES = 200;
-
+	
 	public static LogEvent[] getLogs(String appName) {
 		return tenantAwareLogReader.getLogs(appName);
 	}

@@ -20,13 +20,11 @@ import java.util.List;
 
 import javax.activation.DataHandler;
 
-import org.apache.axis2.AxisFault;
 import org.apache.log4j.Appender;
 import org.apache.log4j.DailyRollingFileAppender;
 import org.apache.log4j.Logger;
 import org.wso2.carbon.base.MultitenantConstants;
 import org.wso2.carbon.context.CarbonContext;
-import org.wso2.carbon.logging.appender.CarbonMemoryAppender;
 import org.wso2.carbon.logging.appender.LogEventAppender;
 import org.wso2.carbon.logging.config.ServiceConfigManager;
 import org.wso2.carbon.logging.service.data.LogEvent;
@@ -37,17 +35,18 @@ import org.wso2.carbon.logging.service.data.PaginatedLogInfo;
 import org.wso2.carbon.logging.util.LoggingConstants;
 import org.wso2.carbon.logging.util.LoggingUtil;
 import org.wso2.carbon.utils.DataPaginator;
+import org.wso2.carbon.utils.logging.CarbonMemoryAppender;
 
 /**
  * This is the Log Viewer service used for obtaining Log messages from locally
  * and from a remote configured syslog server.
  */
 public class LogViewer {
-
+	
 	private static final LogMessage[] NO_LOGS_MESSAGE = new LogMessage[] { new LogMessage(
 			"NO_LOGS", "INFO") };
 
-
+	
 	public PaginatedLogInfo getPaginatedLogInfo(int pageNumber, String tenantDomain,
 			String serviceName) throws Exception {
 		LogInfo[] logs = LoggingUtil.getLogsIndex(tenantDomain, serviceName);

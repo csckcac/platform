@@ -35,7 +35,6 @@
             <li><a href="#Task-View">Task Details View</a></li>
             <li><a href="#Task-Privileges">Task Privileges</a></li>
             <li><a href="#Task-Life-Cycle">Task Life Cycle</a></li>
-            <li><a href="#Task-Comments-Attachments">Comments and Attachments</a></li>
             <li><a href="#Task-Event-History">Task Event History</a></li>
         </ul>
 
@@ -269,12 +268,16 @@
 
         </ul>
 
-        <h2 id="Task-Comments-Attachments">Task Comments and Attachments</h2>
-
         <h2 id="Task-Event-History">Task Event History</h2>
 
+        <p>
+            Users can view the events occurred on a particular task by clicking on the <b>Event</b> tab
+            of the task details page. The task history details would contain information about the
+            action, user who performed that operation, time stamp of the event and any state transitions
+            due to the event. Refer the below image for a sample list of events.
+        </p>
 
-
+        <p><img src="../images/humantask-task-lc/task_history.png" alt="Task Event History"/></p>
 
 
     </body>

@@ -148,7 +148,9 @@
                                      }
                                      if (ordinalStr != null && ordinalStr.trim().length() > 0) {
                                        param.setOrdinal(Integer.parseInt(ordinalStr));
-                                     };
+                                     } else {
+                                         param.setOrdinal(0);
+                                     }
                             	 }
                             }
                          }else{

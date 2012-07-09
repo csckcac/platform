@@ -16,7 +16,6 @@
 package org.wso2.carbon.application.upload;
 
 import org.apache.axis2.AxisFault;
-import org.apache.axis2.engine.AxisConfiguration;
 import org.apache.commons.logging.Log;
 import org.apache.commons.logging.LogFactory;
 import org.wso2.carbon.core.AbstractAdmin;
@@ -38,15 +37,15 @@ public class CarbonAppUploader extends AbstractAdmin {
 
     public void uploadApp(UploadedFileItem[] fileItems) throws AxisFault {
         try {
+            // get carbon home
+            String carbonHome = CarbonUtils.getCarbonHome();
 
-            AxisConfiguration axisConfig = getAxisConfig();
-            String repo = axisConfig.getRepository().getPath();
-
-            //Writting the artifacts to the proper location
-            String carbonAppDir = repo + File.separator + "carbonapps";
+            // create carbonapps dir if it doesn't already exists
+            String carbonAppDir = carbonHome + File.separator + "repository" +
+                    File.separator  + "carbonapps";
             createDir(carbonAppDir);
 
-            String carbonHomeTmp = CarbonUtils.getCarbonHome() + File.separator + "tmp";
+            String carbonHomeTmp = carbonHome + File.separator + "tmp";
             createDir(carbonHomeTmp);
             String carbonAppDirTemp = carbonHomeTmp + File.separator + "carbonappsuploads";
             createDir(carbonAppDirTemp);

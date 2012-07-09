@@ -350,8 +350,14 @@ public class SynapseXMLConfigurationFactory implements ConfigurationFactory {
     }
 
     public static API defineAPI(SynapseConfiguration config, OMElement elem) {
-        API api = APIFactory.createAPI(elem);
-        config.addAPI(api.getName(), api);
+        API api = null;
+        try {
+            api = APIFactory.createAPI(elem);
+            config.addAPI(api.getName(), api);
+        } catch (Exception e) {
+            String msg = "API configuration cannot be built";
+            handleConfigurationError(SynapseConstants.FAIL_SAFE_MODE_API, msg, e);
+        }
         return api;
     }
 

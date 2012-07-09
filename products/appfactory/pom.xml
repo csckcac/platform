@@ -274,7 +274,7 @@
         <eclipse.version>3.2.0</eclipse.version>
         <servlet-api.version>2.4</servlet-api.version>
         <spring.version>2.5.1.wso2v1</spring.version>
-        <sonia.scm.version>1.6</sonia.scm.version>
+        <sonia.scm.version>1.14</sonia.scm.version>
     </properties>
 
     <mailingLists>

@@ -59,6 +59,8 @@ public class CachingConfigAdminService extends AbstractAdmin {
      */
     private static final Log log = LogFactory.getLog(CachingConfigAdminService.class);
 
+    private static final String defaultCachingPolicyId = "WSO2CachingPolicy";
+
     private PersistenceFactory persistenceFactory;
 
     private ServicePersistenceManager servicePM;
@@ -440,9 +442,13 @@ public class CachingConfigAdminService extends AbstractAdmin {
         String serviceGroupId = axisService.getAxisServiceGroup().getServiceGroupName();
 
         String serviceXPath = PersistenceUtils.getResourcePath(axisService);
+        boolean isProxyService = PersistenceUtils.isProxyService(axisService);
+        String registryCachingPolicyPath =
+                PersistenceUtils.getRegistryResourcePath(axisService) + RegistryResources.POLICIES +
+                defaultCachingPolicyId ;
 
         try {
-            this.disableCaching(serviceGroupId, axisService, serviceXPath);
+            this.disableCaching(serviceGroupId, axisService, serviceXPath, isProxyService, registryCachingPolicyPath);
         } catch (AxisFault af) {
             throw new CachingComponentException("errorDisablingCaching",
                     new String[]{serviceName}, af, log);
@@ -471,6 +477,10 @@ public class CachingConfigAdminService extends AbstractAdmin {
         // Retrieves the AxisService instance corresponding to the serviceName.
         AxisService axisService = retrieveAxisService(serviceName);
         String serviceGroupId = axisService.getAxisServiceGroup().getServiceGroupName();
+        boolean isProxyService = PersistenceUtils.isProxyService(axisService);
+        String registryCachingPolicyPath =
+                PersistenceUtils.getRegistryResourcePath(axisService) + RegistryResources.POLICIES +
+                        defaultCachingPolicyId ;
 
         // Retrieves caching module.
         AxisModule cachingModule = axisConfig.getModule(CachingComponentConstants.CACHING_MODULE);
@@ -484,7 +494,7 @@ public class CachingConfigAdminService extends AbstractAdmin {
         String operationXPath = PersistenceUtils.getResourcePath(operation);
 
         try {
-            this.disableCaching(serviceGroupId, operation, operationXPath);
+            this.disableCaching(serviceGroupId, operation, operationXPath, isProxyService, registryCachingPolicyPath);
         } catch (AxisFault af) {
             throw new CachingComponentException("errorDisablingCaching",
                     new String[]{serviceName + "operation : " + operationName}, af, log);
@@ -506,7 +516,8 @@ public class CachingConfigAdminService extends AbstractAdmin {
      * @throws CachingComponentException - error
      * @throws AxisFault                 - error on AxisDescription
      */
-    private void disableCaching(String serviceGroupId, AxisDescription description, String engagementPath)
+    private void disableCaching(String serviceGroupId, AxisDescription description, String engagementPath,
+                                boolean isProxyService, String registryCachingPolicyPath)
             throws CachingComponentException, AxisFault {
         // Removes caching from both the configRegistry and the description
         try {
@@ -524,11 +535,31 @@ public class CachingConfigAdminService extends AbstractAdmin {
                             Resources.Associations.ENGAGED_MODULES));
             // Disengage from description
             description.disengageModule(cachingModule);
+
+            if (isProxyService) {
+                boolean registryTransactionStarted = Transaction.isStarted();
+                if (!registryTransactionStarted) {
+                    configRegistry.beginTransaction();
+                }
+
+                if (configRegistry.resourceExists(registryCachingPolicyPath)) {
+                    configRegistry.delete(registryCachingPolicyPath);
+                } else {
+                    log.warn("Could not delete the Caching policy because it " +
+                            "does not exist at " + registryCachingPolicyPath);
+                }
+
+                if (!registryTransactionStarted) {
+                    configRegistry.commitTransaction();
+                }
+            }
+
             if (!isTransactionStarted) {
                 serviceGroupFilePM.commitTransaction(serviceGroupId);
             }
         } catch (Exception e) {
             serviceGroupFilePM.rollbackTransaction(serviceGroupId);
+            log.error("errorDisablingAtRegistry", e);
             throw new CachingComponentException("errorDisablingAtRegistry", e, log);
         }
     }

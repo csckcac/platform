@@ -19,7 +19,6 @@ package org.wso2.carbon.apimgt.impl;
 import org.wso2.carbon.apimgt.api.APIManagementException;
 import org.wso2.carbon.apimgt.api.model.*;
 import org.wso2.carbon.apimgt.impl.utils.APIUtil;
-import org.wso2.carbon.registry.core.exceptions.RegistryException;
 
 /**
  * User aware APIProvider implementation which ensures that the invoking user has the
@@ -32,16 +31,16 @@ import org.wso2.carbon.registry.core.exceptions.RegistryException;
  * when the object had been created in the anonymous mode, an exception will be thrown.
  */
 public class UserAwareAPIProvider extends APIProviderImpl {
-    
+
     private String username;
-    
+
     UserAwareAPIProvider(String username) throws APIManagementException {
         super(username);
         this.username = username;
     }
 
     @Override
-    public void addAPI(API api) throws APIManagementException, RegistryException {
+    public void addAPI(API api) throws APIManagementException {
         checkCreatePermission();
         super.addAPI(api);
     }

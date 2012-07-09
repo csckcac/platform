@@ -5,7 +5,7 @@ import org.apache.axiom.om.impl.builder.StAXOMBuilder;
 import org.apache.commons.logging.Log;
 import org.apache.commons.logging.LogFactory;
 import org.wso2.carbon.identity.authentication.SharedKeyAccessService;
-import org.wso2.carbon.utils.ServerConstants;
+import org.wso2.carbon.utils.CarbonUtils;
 
 import javax.xml.stream.XMLInputFactory;
 import javax.xml.stream.XMLStreamException;
@@ -88,7 +88,8 @@ public class DataAccessComponentManager {
      */
     private OMElement loadConfigXML() {
 
-        String carbonHome = System.getProperty(ServerConstants.CARBON_HOME);
+        String carbonHome = CarbonUtils.getCarbonHome();
+//                System.getProperty(ServerConstants.CARBON_HOME);
         String path = carbonHome + CASSANDRA_COMPONENT_CONF;
         BufferedInputStream inputStream = null;
         try {

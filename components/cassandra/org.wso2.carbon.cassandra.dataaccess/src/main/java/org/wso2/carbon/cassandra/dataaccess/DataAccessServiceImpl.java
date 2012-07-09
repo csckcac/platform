@@ -20,14 +20,12 @@ package org.wso2.carbon.cassandra.dataaccess;
 
 import me.prettyprint.cassandra.service.CassandraHostConfigurator;
 import me.prettyprint.hector.api.Cluster;
-import me.prettyprint.hector.api.Keyspace;
 import me.prettyprint.hector.api.factory.HFactory;
 import org.apache.commons.logging.Log;
 import org.apache.commons.logging.LogFactory;
 import org.wso2.carbon.context.CarbonContext;
 
 import java.util.HashMap;
-import java.util.List;
 import java.util.Map;
 
 /**
@@ -40,7 +38,7 @@ public class DataAccessServiceImpl implements DataAccessService {
 
     private static final String USERNAME_KEY = "username";
     private static final String PASSWORD_KEY = "password";
-    private static final String DEFAULT_HOST = "localhost:9160";
+//    private static final String DEFAULT_HOST = "localhost:" + CassandraHost.DEFAULT_PORT;
     private static final String LOCAL_HOST_NAME = "localhost";
 
     private final DataAccessComponentManager dataAccessComponentManager = DataAccessComponentManager.getInstance();
@@ -227,24 +225,23 @@ public class DataAccessServiceImpl implements DataAccessService {
         String cassandraHosts;
         int cassandraDefaultPort = 0;
 
-        if (carbonCassandraRPCPort != null) {
+        cassandraHosts = configuration.getNodesString();
+
+        // if configuration is not available on file
+        if (cassandraHosts == null || "".equals(cassandraHosts)) {
             cassandraHosts = LOCAL_HOST_NAME + ":" + carbonCassandraRPCPort;
             cassandraDefaultPort = Integer.parseInt(carbonCassandraRPCPort);
-        } else {
-            cassandraHosts = configuration.getNodesString();
-        }
-        if (cassandraHosts == null || "".equals(cassandraHosts)) {
-            cassandraHosts = DEFAULT_HOST;
         }
 
         CassandraHostConfigurator configurator = new CassandraHostConfigurator(cassandraHosts);
         configurator.setAutoDiscoverHosts(configuration.isAutoDiscovery());
         configurator.setAutoDiscoveryDelayInSeconds(configuration.getAutoDiscoveryDelay());
 
-        if (cassandraDefaultPort > 0 && cassandraDefaultPort < 65536) {
+        if (cassandraDefaultPort > 0) {
             configurator.setPort(cassandraDefaultPort);
         } else {
-            configurator.setPort(configuration.getDefaultPort());
+            int configurationDefaultPort = configuration.getDefaultPort();
+            configurator.setPort(configurationDefaultPort);
         }
         return configurator;
     }

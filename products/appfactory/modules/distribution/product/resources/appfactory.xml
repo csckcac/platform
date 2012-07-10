@@ -27,7 +27,6 @@
     <!-- Web service end points including BPEL services-->
     <WebServiceEndPoints>
         <GetRolesOfUserForApplication>https://localhost:9443/services/ApplicationManagementService</GetRolesOfUserForApplication>
-        <CreateRepo>http://localhost:9763/services/IDTMESVNService/createRepository</CreateRepo>
         <GetUsersOfApplication>https://localhost:9443/services/ApplicationManagementService/getUsersOfApplication</GetUsersOfApplication>
         <GetUsersInfoOfApplication>https://localhost:9443/services/ApplicationManagementService/getUserInfo</GetUsersInfoOfApplication>
         <EmailVerificationService>https://localhost:9443/services/EmailVerificationService</EmailVerificationService>
@@ -36,6 +35,8 @@
         <CreateApplication>http://localhost:9763/services/CreateApplication</CreateApplication>
         <CreateUser>http://localhost:9763/services/UserCreationProcess</CreateUser>
         <ActivateUser>http://localhost:9763/services/UserActivationProcess/process</ActivateUser>
+	<DeployToStage>http://localhost/services/DeployToStage</DeployToStage>
+	<ArtifactCreateCallback>http://localhost:9763/services/ArtifactCreateCallbackService</ArtifactCreateCallback>
         <GetAllApps>https://localhost:9443/services/ApplicationManagementService</GetAllApps>
         <GetAuthCookie>https://localhost:9443/services/AuthenticationAdmin</GetAuthCookie>
     </WebServiceEndPoints>

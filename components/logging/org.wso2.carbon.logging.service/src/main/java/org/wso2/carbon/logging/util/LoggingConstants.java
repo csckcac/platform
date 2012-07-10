@@ -25,7 +25,7 @@ public final class LoggingConstants {
     public static final String SYSLOG = RegistryResources.LOGGERS + "syslog/SYSLOG_PROPERTIES";
     public static final String CASSANDRA = RegistryResources.LOGGERS + "cassandra/CASSANDRA_PROPERTIES";
     public static final String URL_SEPARATOR ="/";
-    public static final String SYSLOG_CONF_FILE ="syslog-config.xml";
+    public static final String SYSLOG_CONF_FILE ="logging-config.xml";
     public static final String CASSANDRA_CONF_FILE ="cassandra-config.xml";
     public static final String ETC_DIR = "etc";
     public static final String USERNAME_KEY = "username";

@@ -41,11 +41,13 @@ public class TestRule extends TestCase{
         rule.setResourceType(resourceType);
         rule.setSourceType(sourceType);
         rule.setValue(value);
+        rule.setDescription("test description");
 
         Rule resultRule = RuleHelper.getRule(rule.toOM());
         assertEquals(rule.getResourceType(), resultRule.getResourceType());
         assertEquals(rule.getSourceType(), resultRule.getSourceType());
         assertEquals(rule.getValue(), resultRule.getValue());
+        assertEquals(rule.getDescription(), resultRule.getDescription());
 
     }
 }

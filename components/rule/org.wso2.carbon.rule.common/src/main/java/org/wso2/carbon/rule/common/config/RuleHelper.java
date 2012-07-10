@@ -28,6 +28,8 @@ public class RuleHelper {
                  ruleElement, Constants.RULE_CONF_ATTR_RESOURCE_TYPE));
         rule.setSourceType(HelperUtil.getAttributeValue(
                  ruleElement, Constants.RULE_CONF_ATTR_SOURCE_TYPE));
+        rule.setDescription(HelperUtil.getAttributeValue(
+                 ruleElement, Constants.RULE_CONF_ATTR_DESCRIPTION));
         rule.setValue(ruleElement.getText());
         return rule;
     }

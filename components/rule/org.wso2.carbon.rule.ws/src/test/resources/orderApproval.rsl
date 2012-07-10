@@ -1,8 +1,7 @@
 <ruleService
         name="OrderApprovalService"
-        xmlns="http://wso2.org/carbon/rules"
-        targetNamespace="http://com.test/orderApproval"
-        backendRuntimeFactory="org.wso2.carbon.rule.backend.drools.DroolsBackendRuntimeFactory">
+        xmlns="http://wso2.org/carbon/rules"   
+        targetNamespace="http://com.test/orderApproval">
     <ruleSet>
         <rule resourceType="drl" sourceType="inline">
             <![CDATA[

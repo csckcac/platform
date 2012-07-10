@@ -28,6 +28,7 @@
     private String sourceType;
     private String resourceType;
     private String value;
+    private String description;
 
     public OMElement toOM(){
         OMFactory omFactory = OMAbstractFactory.getOMFactory();
@@ -52,6 +53,11 @@
                 ruleOMElement.setText(value);
             }
 
+        }
+
+        if ((this.description != null) && (!this.description.trim().equals(""))) {
+            ruleOMElement.addAttribute(Constants.RULE_CONF_ATTR_DESCRIPTION,
+                    this.description, null);
         }
 
         return ruleOMElement;
@@ -80,4 +86,12 @@
     public void setValue(String value) {
         this.value = value;
     }
-}
+
+     public String getDescription() {
+         return description;
+     }
+
+     public void setDescription(String description) {
+         this.description = description;
+     }
+ }

@@ -163,6 +163,9 @@
                                 <featureArtifactDef>
                                     org.wso2.carbon:org.wso2.carbon.logging.mgt.feature:${carbon.version}
                                 </featureArtifactDef>
+  				<featureArtifactDef>
+                                    org.wso2.carbon:org.wso2.carbon.url.mapper.feature:${carbon.version}
+                                </featureArtifactDef>
                                 <featureArtifactDef>
                                     org.wso2.carbon:org.wso2.carbon.docrequestprocessor.feature:${carbon.version}
                                 </featureArtifactDef>

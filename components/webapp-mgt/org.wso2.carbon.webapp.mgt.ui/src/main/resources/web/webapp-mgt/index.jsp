@@ -507,10 +507,12 @@
             </td>
             <% } %>
             <td>
+                <%if (webapp.getWebappFile().endsWith(".war")) {%>
                 <a href="download-ajaxprocessor.jsp?name=<%= webapp.getWebappFile()%>" target="_self"
                         style='background-image:url(images/download.gif)' class="icon-link">
                     <fmt:message key="download"/>
                 </a>
+                <% } %>
             </td>
         </tr>
         <% } %>

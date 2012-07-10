@@ -35,7 +35,7 @@ import java.util.GregorianCalendar;
 public abstract class AbstractTracingHandler extends AbstractHandler {
 
     /**
-     * Appends SOAP message metadats to a message buffer
+     * Appends SOAP message metadata to a message buffer
      *
      * @param configCtx  The server ConfigurationContext
      * @param serviceName  The service name

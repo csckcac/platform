@@ -36,6 +36,6 @@ public class DefaultTraceFilter implements TraceFilter{
     }
 
     public boolean isFilteredOut(MessageContext msgContext) {
-        return false;
+        return msgContext.isDoingMTOM();
     }
 }

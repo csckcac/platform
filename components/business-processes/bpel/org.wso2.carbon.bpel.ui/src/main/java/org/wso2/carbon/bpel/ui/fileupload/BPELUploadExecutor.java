@@ -111,7 +111,7 @@ public class BPELUploadExecutor extends AbstractFileUploadExecutor {
 
             return true;
         } catch (Exception e) {
-            errMsg = "File upload failed.";
+            errMsg = "File upload failed :" + e.getMessage();
             log.error(errMsg, e);
             CarbonUIMessage.sendCarbonUIMessage(errMsg, CarbonUIMessage.ERROR, request,
                     response, getContextRoot(request) + "/" + webContext + "/bpel/upload_bpel.jsp");
@@ -183,7 +183,8 @@ public class BPELUploadExecutor extends AbstractFileUploadExecutor {
 
             }
 
-            throw new Exception("BPEL Archive format error.");
+            throw new Exception("BPEL Archive format error.Please confirm that the file being uploaded is a " +
+                                "valid BPEL archive.");
         }
 
         return new SaveExtractReturn(uploadedFile.getAbsolutePath(), destinationDir);

@@ -45,6 +45,7 @@ import org.wso2.carbon.automation.api.clients.webapp.mgt.JAXWSWebappAdminClient;
 import org.wso2.carbon.automation.api.clients.webapp.mgt.WebAppAdminClient;
 import org.wso2.carbon.automation.core.ProductConstant;
 import org.wso2.carbon.authenticator.stub.LoginAuthenticationExceptionException;
+import org.wso2.carbon.automation.core.utils.coreutils.PlatformUtil;
 import org.wso2.carbon.bpel.stub.mgt.PackageManagementException;
 import org.wso2.carbon.endpoint.stub.types.EndpointAdminEndpointAdminException;
 import org.wso2.carbon.localentry.stub.types.LocalEntryAdminException;
@@ -392,9 +393,19 @@ public class ArtifactDeployerUtil {
 
     private void copyExtenders(String scenarioConfigDir, String aConfigDir, String productName)
             throws IOException {
+        EnvironmentBuilder environmentBuilder = new EnvironmentBuilder();
+        boolean builderEnabled =
+                environmentBuilder.getFrameworkSettings().getEnvironmentSettings().is_builderEnabled();
+
         if (aConfigDir.equalsIgnoreCase(JAR_DIR)) {
             File jarDir = new File(scenarioConfigDir + File.separator + aConfigDir);
-            String productHome = ProductConstant.getCarbonHome(productName);
+            String productHome;
+
+            if (!builderEnabled) {
+                productHome = ProductConstant.getCarbonHome(productName);
+            } else {
+                productHome = System.getProperty(ServerConstants.CARBON_HOME);
+            }
 
             assert new File(productHome).exists() : productName + " must be local a installation. Framework " +
                                                     "cannot copy config files " + "to remote servers";
@@ -402,7 +413,7 @@ public class ArtifactDeployerUtil {
             File componentLib = new File(productHome + File.separator + "repository" + File.separator +
                                          "components" + File.separator + "lib");
 
-            File dropinsLib = new File(File.separator + "repository" + File.separator + "components" +
+            File dropinsLib = new File(productHome + File.separator + "repository" + File.separator + "components" +
                                        File.separator + "dropins");
 
             FolderTraversar traversar = new FolderTraversar(jarDir);
@@ -416,9 +427,9 @@ public class ArtifactDeployerUtil {
                 }
 
                 if (folderName.contains("dropins")) {
-                    File dropins = new File(jarDir + File.separator + "dropins");
-                    if (dropins.list().length != 0) {
-                        FileManipulator.copyDir(dropins, dropinsLib);
+                    File dropinsFileDir = new File(jarDir + File.separator + "dropins");
+                    if (dropinsFileDir.list().length != 0) {
+                        FileManipulator.copyDir(dropinsFileDir, dropinsLib);
                     }
                 }
             }
@@ -427,29 +438,54 @@ public class ArtifactDeployerUtil {
 
     private void copyConfigurationDir(String scenarioConfigDir, String aConfigDir,
                                       String productName) throws IOException {
+
+        EnvironmentBuilder environmentBuilder = new EnvironmentBuilder();
+        boolean builderEnabled =
+                environmentBuilder.getFrameworkSettings().getEnvironmentSettings().is_builderEnabled();
+
         if (aConfigDir.equalsIgnoreCase(CONFIG_DIR)) {
             File configDir = new File(scenarioConfigDir + File.separator + aConfigDir);
-            File productHomeDir = new File(ProductConstant.getCarbonHome(productName) + File.separator +
-                                           "repository" + File.separator + "conf");
+            File productHomeDir;
+
+            if (builderEnabled) {
+                productHomeDir = new File(System.getProperty(ServerConstants.CARBON_HOME) + File.separator +
+                                          "repository" + File.separator + "conf");
+            } else {
+                productHomeDir = new File(ProductConstant.getCarbonHome(productName) + File.separator +
+                                          "repository" + File.separator + "conf");
+            }
             assert productHomeDir.exists() : productName + " must be local installation, framework " +
                                              "cannot copy config files " + "to remote servers";
             String[] configList = configDir.list();
             if (configDir.exists() && configList.length != 0 && productHomeDir.exists()) {
-
                 FileManipulator.copyDir(configDir, productHomeDir);
             }
         }
     }
 
-    private void copyClassesDir(String scenarioConfigDir, String aConfigDir,
-                                String productName)
+    private void copyClassesDir(String scenarioConfigDir, String aConfigDir, String productName)
             throws IOException {
+        EnvironmentBuilder environmentBuilder = new EnvironmentBuilder();
+
+        boolean builderEnabled =
+                environmentBuilder.getFrameworkSettings().getEnvironmentSettings().is_builderEnabled();
 
         if (aConfigDir.equalsIgnoreCase(CLASSES_DIR)) {
             File classesDir = new File(scenarioConfigDir + File.separator + aConfigDir);
-            File productConfigDir = new File(ProductConstant.getCarbonHome(productName) +
-                                             File.separator + "lib" + File.separator + "core" +
-                                             File.separator + "WEB-INF" + File.separator + "classes");
+            File productConfigDir;
+
+            if (builderEnabled) {
+                productConfigDir = new File(System.getProperty(ServerConstants.CARBON_HOME) +
+                                            File.separator + "lib" + File.separator + "core" +
+                                            File.separator + "WEB-INF" + File.separator + "classes");
+
+
+            } else {
+                productConfigDir = new File(ProductConstant.getCarbonHome(productName) +
+                                            File.separator + "lib" + File.separator + "core" +
+                                            File.separator + "WEB-INF" + File.separator + "classes");
+            }
+
             assert productConfigDir.exists() : productName + " must be started locally, framework " +
                                                "cannot copy config files " + "to remote servers";
             String[] classesFileList = classesDir.list();

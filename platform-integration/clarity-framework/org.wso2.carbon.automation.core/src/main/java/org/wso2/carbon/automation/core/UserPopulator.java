@@ -60,7 +60,7 @@ public class UserPopulator {
                 TenantMgtAdminServiceClient tenantStub =
                         new TenantMgtAdminServiceClient(manProperties.getProductVariables().
                                 getBackendUrl());
-                UserInfo superTenantDetails = UserListCsvReader.getUserInfo(0);
+                UserInfo superTenantDetails = UserListCsvReader.getUserInfo(ProductConstant.ADMIN_USER_ID);
                 int userCount = UserListCsvReader.getUserCount();
                 createStratosUsers(tenantStub, superTenantDetails, userCount);
                 log.info("Users Populated");

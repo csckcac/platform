@@ -166,7 +166,11 @@
                 }
             } else if (!notificationMethod.equals("jmx") && !notificationMethod.equals("work")) {
                 address = subscription.getAddress();
-                notificationMethod = "url";
+                if(notificationMethod.equals("html.plain.text")) {
+                    notificationMethod = "rest";
+                } else if(notificationMethod.equals("soap")) {
+                    notificationMethod = "soap";
+                }
             }
             String notificationMethodPrompt = "enter." + notificationMethod + ".prompt";
             String eventName = subscription.getEventName();

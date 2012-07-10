@@ -222,7 +222,7 @@ public class GovernanceEventingHandler extends Handler {
         String path = requestContext.getResourcePath().getPath();
         String relativePath = RegistryUtils.getRelativePath(requestContext.getRegistryContext(),
                 path);
-        resource = requestContext.getRepository().get(path);
+        resource = requestContext.getRegistry().get(path);
 
         if(resource.getProperty(GovernanceConstants.REGISTRY_IS_ENVIRONMENT_CHANGE)!=null &&
                 !resource.getProperty(GovernanceConstants.REGISTRY_IS_ENVIRONMENT_CHANGE).isEmpty()){

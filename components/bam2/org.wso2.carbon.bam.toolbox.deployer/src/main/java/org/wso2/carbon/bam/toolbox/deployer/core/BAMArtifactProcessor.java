@@ -147,6 +147,7 @@ public class BAMArtifactProcessor {
 
     private void setGadgetNames(ToolBoxDTO toolBoxDTO, String barDir)
             throws BAMToolboxDeploymentException {
+        if(new File(barDir + File.separator + BAMToolBoxDeployerConstants.DASHBOARD_DIR).exists()){
         toolBoxDTO.setGagetsParentDirectory(barDir + File.separator + BAMToolBoxDeployerConstants.DASHBOARD_DIR
                                             + File.separator + BAMToolBoxDeployerConstants.GADGETS_DIR);
         Properties properties = new Properties();
@@ -168,6 +169,11 @@ public class BAMArtifactProcessor {
         } catch (IOException e) {
             log.error(e.getMessage(), e);
             throw new BAMToolboxDeploymentException(e.getMessage(), e);
+        }
+        }
+        else {
+            toolBoxDTO.setGagetsParentDirectory(null);
+            toolBoxDTO.setDashboardTabs(new ArrayList<DashBoardTabDTO>());
         }
     }
 

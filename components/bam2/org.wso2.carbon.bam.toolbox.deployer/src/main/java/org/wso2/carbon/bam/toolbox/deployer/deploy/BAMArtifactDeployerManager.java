@@ -161,9 +161,11 @@ public class BAMArtifactDeployerManager {
         }
 
         if (canDeployGadgets()) {
-            transferGadgetsFilesToRegistry(new File(toolBoxDTO.getGagetsParentDirectory()), tenantId);
-            deployGadget(toolBoxDTO, username);
-            deployJaggeryApps(toolBoxDTO);
+            if (null != toolBoxDTO.getGagetsParentDirectory()) {
+                transferGadgetsFilesToRegistry(new File(toolBoxDTO.getGagetsParentDirectory()), tenantId);
+                deployGadget(toolBoxDTO, username);
+                deployJaggeryApps(toolBoxDTO);
+            }
 
             if (toolBoxDTO.getJasperParentDirectory() != null) { // Jasper is optional for the moment
                 transferJRXMLFilesToRegistry(new File(toolBoxDTO.getJasperParentDirectory()),
@@ -176,8 +178,7 @@ public class BAMArtifactDeployerManager {
         if (null == ServiceHolder.getDataBridgeReceiverService()) {
             log.warn("No DataReceiverService Found! Skipping deploying DataStream Definitions..");
             return false;
-        }
-        else return true;
+        } else return true;
     }
 
     private void deployStreamDefn(ToolBoxDTO toolBoxDTO, String username, String password)

@@ -24,7 +24,7 @@
     <fileSets>
       <!-- Copying p2 profile and osgi bundles-->
         <fileSet>
-             <directory>../p2-profile-gen/target/wso2carbon-core-${carbon.platform.version}/repository/components</directory>
+             <directory>../p2-profile-gen/target/wso2carbon-core-${carbon.core.version}/repository/components</directory>
             <outputDirectory>jaggery-${pom.version}/carbon/repository/components</outputDirectory>
             <excludes>
                 <exclude>**/eclipse.ini</exclude>

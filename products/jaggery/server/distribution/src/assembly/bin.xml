@@ -24,7 +24,7 @@
 
     <fileSets>
         <fileSet>
-            <directory>target/wso2carbon-core-${carbon.platform.version}</directory>
+            <directory>target/wso2carbon-core-${carbon.core.version}</directory>
             <outputDirectory>jaggery-${pom.version}/carbon</outputDirectory>
             <excludes>
                 <exclude>**/*.sh</exclude>
@@ -45,8 +45,8 @@
             </excludes>
         </fileSet>
         <fileSet>
-            <directory>target/wso2carbon-core-${carbon.platform.version}</directory>
-            <outputDirectory>jaggery-${carbon.product.version}/carbon</outputDirectory>
+            <directory>target/wso2carbon-core-${carbon.core.version}</directory>
+            <outputDirectory>jaggery-${pom.version}/carbon</outputDirectory>
             <includes>
                 <include>**/*.sh</include>
             </includes>
@@ -59,7 +59,7 @@
 	 <!--  copying samples -->
         <!--fileSet>
             <directory>../apps</directory>
-            <outputDirectory>jaggery-${carbon.product.version}/samples</outputDirectory>
+            <outputDirectory>jaggery-${pom.version}/samples</outputDirectory>
             <excludes>
                 <exclude>**/**.sh</exclude>
                 <exclude>**/pom.xml</exclude>
@@ -68,15 +68,15 @@
         </fileSet-->
  		<!--  copying modules xml -->
         <fileSet>
-            <directory>../p2-profile-gen/target/wso2carbon-core-${carbon.platform.version}/modules</directory>
-            <outputDirectory>jaggery-${carbon.product.version}/modules/</outputDirectory>
+            <directory>../p2-profile-gen/target/wso2carbon-core-${carbon.core.version}/modules</directory>
+            <outputDirectory>jaggery-${pom.version}/modules/</outputDirectory>
 	    	<includes>
                 <include>*/**</include>
             </includes>
         </fileSet>
         <fileSet>
             <directory>../../apps/</directory>
-            <outputDirectory>jaggery-${carbon.product.version}/apps/
+            <outputDirectory>jaggery-${pom.version}/apps/
             </outputDirectory>
             <includes>
                 <include>*/**</include>
@@ -85,7 +85,7 @@
     </fileSets>
     <dependencySets>
         <dependencySet>
-            <outputDirectory>jaggery-${carbon.product.version}/carbon/lib/endorsed</outputDirectory>
+            <outputDirectory>jaggery-${pom.version}/carbon/lib/endorsed</outputDirectory>
             <includes>
                 <include>net.sf.saxon.wso2:saxon.bps:jar</include>
             </includes>
@@ -96,100 +96,100 @@
     <files>
         <file>
             <source>INSTALL.txt</source>
-            <outputDirectory>jaggery-${carbon.product.version}</outputDirectory>
+            <outputDirectory>jaggery-${pom.version}</outputDirectory>
             <filtered>true</filtered>
             <fileMode>644</fileMode>
         </file>
         <file>
             <source>README.txt</source>
-            <outputDirectory>jaggery-${carbon.product.version}</outputDirectory>
+            <outputDirectory>jaggery-${pom.version}</outputDirectory>
             <filtered>true</filtered>
             <fileMode>644</fileMode>
         </file>
         <file>
             <source>LICENSE.txt</source>
-            <outputDirectory>jaggery-${carbon.product.version}</outputDirectory>
+            <outputDirectory>jaggery-${pom.version}</outputDirectory>
             <filtered>true</filtered>
             <fileMode>644</fileMode>
         </file>
         <file>
             <source>release-notes.html</source>
-            <outputDirectory>jaggery-${carbon.product.version}</outputDirectory>
+            <outputDirectory>jaggery-${pom.version}</outputDirectory>
             <filtered>true</filtered>
             <fileMode>644</fileMode>
         </file>
         <file>
-            <source>target/wso2carbon-core-${carbon.platform.version}/bin/README.txt</source>
-            <outputDirectory>jaggery-${carbon.product.version}/carbon/bin/</outputDirectory>
+            <source>target/wso2carbon-core-${carbon.core.version}/bin/README.txt</source>
+            <outputDirectory>jaggery-${pom.version}/carbon/bin/</outputDirectory>
             <filtered>true</filtered>
             <fileMode>644</fileMode>
         </file>
         <file>
-            <source>target/wso2carbon-core-${carbon.platform.version}/bin/version.txt</source>
-            <outputDirectory>jaggery-${carbon.product.version}/carbon/bin/</outputDirectory>
+            <source>target/wso2carbon-core-${carbon.core.version}/bin/version.txt</source>
+            <outputDirectory>jaggery-${pom.version}/carbon/bin/</outputDirectory>
             <filtered>true</filtered>
             <fileMode>644</fileMode>
         </file>
         <file>
             <source>src/resources/conf/carbon.xml</source>
-            <outputDirectory>jaggery-${carbon.product.version}/carbon/repository/conf/</outputDirectory>
+            <outputDirectory>jaggery-${pom.version}/carbon/repository/conf/</outputDirectory>
             <filtered>true</filtered>
         </file>
         <!--file>
             <source>src/resources/conf/axis2.xml</source>
-            <outputDirectory>jaggery-${carbon.product.version}/carbon/repository/conf/axis2/</outputDirectory>
+            <outputDirectory>jaggery-${pom.version}/carbon/repository/conf/axis2/</outputDirectory>
             <filtered>true</filtered>
         </file-->
         <file>
-            <source>target/wso2carbon-core-${carbon.platform.version}/repository/conf/axis2/axis2.xml</source>
-            <outputDirectory>jaggery-${carbon.product.version}/carbon/repository/conf/axis2/</outputDirectory>
+            <source>target/wso2carbon-core-${carbon.core.version}/repository/conf/axis2/axis2.xml</source>
+            <outputDirectory>jaggery-${pom.version}/carbon/repository/conf/axis2/</outputDirectory>
             <filtered>true</filtered>
             <fileMode>644</fileMode>
         </file>
         <file>
             <source>src/resources/db/demo.h2.db</source>
-            <outputDirectory>jaggery-${carbon.product.version}/carbon/tmp/</outputDirectory>
+            <outputDirectory>jaggery-${pom.version}/carbon/tmp/</outputDirectory>
             <filtered>true</filtered>
         </file>
         <file>
-            <source>target/wso2carbon-core-${carbon.platform.version}/repository/conf/README</source>
-            <outputDirectory>jaggery-${carbon.product.version}/carbon/repository/conf/</outputDirectory>
+            <source>target/wso2carbon-core-${carbon.core.version}/repository/conf/README</source>
+            <outputDirectory>jaggery-${pom.version}/carbon/repository/conf/</outputDirectory>
             <filtered>true</filtered>
             <fileMode>644</fileMode>
         </file>
         <file>
             <source>src/resources/bin/wso2server.bat</source>
-            <outputDirectory>jaggery-${carbon.product.version}/carbon/bin/</outputDirectory>
+            <outputDirectory>jaggery-${pom.version}/carbon/bin/</outputDirectory>
             <filtered>true</filtered>
             <fileMode>644</fileMode>
         </file>
         <file>
             <source>src/resources/bin/wso2server.sh</source>
-            <outputDirectory>jaggery-${carbon.product.version}/carbon/bin/</outputDirectory>
+            <outputDirectory>jaggery-${pom.version}/carbon/bin/</outputDirectory>
             <filtered>true</filtered>
             <fileMode>644</fileMode>
         </file>
         <file>
             <source>src/resources/bin/server.sh</source>
-            <outputDirectory>jaggery-${carbon.product.version}/bin/</outputDirectory>
+            <outputDirectory>jaggery-${pom.version}/bin/</outputDirectory>
             <filtered>true</filtered>
             <fileMode>644</fileMode>
         </file>
         <file>
             <source>src/resources/bin/server.bat</source>
-            <outputDirectory>jaggery-${carbon.product.version}/bin/</outputDirectory>
+            <outputDirectory>jaggery-${pom.version}/bin/</outputDirectory>
             <filtered>true</filtered>
             <fileMode>644</fileMode>
         </file>
         <file>
             <source>src/resources/bin/jaggery.bat</source>
-            <outputDirectory>jaggery-${carbon.product.version}/bin</outputDirectory>
+            <outputDirectory>jaggery-${pom.version}/bin</outputDirectory>
             <filtered>true</filtered>
             <fileMode>644</fileMode>
         </file>
         <file>
             <source>src/resources/bin/jaggery.sh</source>
-            <outputDirectory>jaggery-${carbon.product.version}/bin</outputDirectory>
+            <outputDirectory>jaggery-${pom.version}/bin</outputDirectory>
             <filtered>true</filtered>
             <fileMode>644</fileMode>
         </file>

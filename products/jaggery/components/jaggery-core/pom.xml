@@ -21,7 +21,7 @@
 
     <parent>
         <groupId>org.jaggeryjs</groupId>
-        <artifactId>jaggery-components</artifactId>
+        <artifactId>components</artifactId>
         <version>0.9.0-SNAPSHOT</version>
     </parent>
 
@@ -32,12 +32,37 @@
     <url>http://wso2.org</url>
 
     <modules>
-      <module>org.jaggeryjs.jaggery.core</module>
+        <module>org.jaggeryjs.jaggery.core</module>
         <module>org.jaggeryjs.jaggery.app.mgt</module>
         <module>org.jaggeryjs.jaggery.deployer</module>
         <module>org.jaggeryjs.jaggery.tools</module>
         <module>org.jaggeryjs.jaggery.app.mgt.stub</module>
         <module>org.jaggeryjs.jaggery.app.mgt.ui</module>
     </modules>
+
+    <dependencyManagement>
+        <dependencies>
+            <dependency>
+                <groupId>org.jaggeryjs</groupId>
+                <artifactId>org.jaggeryjs.scriptengine</artifactId>
+                <version>${jaggery.component.version}</version>
+            </dependency>
+            <dependency>
+                <groupId>org.jaggeryjs</groupId>
+                <artifactId>org.jaggeryjs.hostobjects.file</artifactId>
+                <version>${jaggery.component.version}</version>
+            </dependency>
+            <dependency>
+                <groupId>org.jaggeryjs</groupId>
+                <artifactId>org.jaggeryjs.hostobjects.stream</artifactId>
+                <version>${jaggery.component.version}</version>
+            </dependency>
+            <dependency>
+                <groupId>org.jaggeryjs</groupId>
+                <artifactId>org.jaggeryjs.hostobjects.jaggeryparser</artifactId>
+                <version>${jaggery.component.version}</version>
+            </dependency>
+        </dependencies>
+    </dependencyManagement>
 
 </project>

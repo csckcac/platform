@@ -37,6 +37,7 @@
         <dependency>
             <groupId>org.jaggeryjs</groupId>
             <artifactId>org.jaggeryjs.jaggery.core</artifactId>
+            <version>${pom.version}</version>
         </dependency>
         <dependency>
             <groupId>javax.servlet</groupId>
@@ -45,6 +46,7 @@
         <dependency>
             <groupId>org.jaggeryjs</groupId>
             <artifactId>org.jaggeryjs.jaggery.app.mgt</artifactId>
+            <version>${pom.version}</version>
         </dependency>
         <dependency>
             <groupId>org.wso2.carbon</groupId>

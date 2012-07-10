@@ -33,6 +33,7 @@
         <dependency>
             <groupId>org.jaggeryjs</groupId>
             <artifactId>org.jaggeryjs.jaggery.core</artifactId>
+            <version>${jaggery.component.version}</version>
         </dependency>
     </dependencies>
 

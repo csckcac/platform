@@ -21,12 +21,12 @@
 
     <parent>
         <groupId>org.jaggeryjs</groupId>
-        <artifactId>jaggery-components</artifactId>
+        <artifactId>components</artifactId>
         <version>0.9.0-SNAPSHOT</version>
     </parent>
 
     <modelVersion>4.0.0</modelVersion>
-    <artifactId>scriptengine</artifactId>
+    <artifactId>script-engine</artifactId>
     <packaging>pom</packaging>
     <name>WSO2 Carbon - Script engine Aggregator Module</name>
     <url>http://wso2.org</url>

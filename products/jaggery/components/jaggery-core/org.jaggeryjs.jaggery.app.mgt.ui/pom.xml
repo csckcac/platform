@@ -51,6 +51,7 @@
         <dependency>
             <groupId>org.jaggeryjs</groupId>
             <artifactId>org.jaggeryjs.jaggery.app.mgt.stub</artifactId>
+            <version>${pom.version}</version>
         </dependency>
     </dependencies>
 
@@ -66,7 +67,7 @@
                         <Bundle-Name>${project.artifactId}</Bundle-Name>
                         <Export-Package>
                             !org.jaggeryjs.jaggery.app.mgt.ui.internal,
-                            org.jaggeryjs.jaggery.app.mgt.ui.*;version="${jaggery.components.version}"
+                            org.jaggeryjs.jaggery.app.mgt.ui.*;version="${jaggery.component.version}"
                         </Export-Package>
                         <Bundle-Activator>
                             org.jaggeryjs.jaggery.app.mgt.ui.internal.JaggeryManagementUIActivator
@@ -75,8 +76,8 @@
                         <Carbon-Component>UIBundle</Carbon-Component>
                         <Import-Package>
                             !org.jaggeryjs.jaggery.app.mgt.ui.*,
-                            org.jaggeryjs.jaggery.app.mgt.stub.*;version="${jaggery.components.version}",
-                            org.apache.axis2.*; version="${axis2.wso2.version}",
+                            org.jaggeryjs.jaggery.app.mgt.stub.*;version="${pom.version}",
+                            org.apache.axis2.*; version="${axis2.osgi.version}",
                             org.apache.axiom.*; version="${axiom.e4x.version}",
                             *;resolution:=optional
                         </Import-Package>

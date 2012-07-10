@@ -21,7 +21,7 @@
 
     <parent>
         <groupId>org.jaggeryjs</groupId>
-        <artifactId>jaggery-components-admin</artifactId>
+        <artifactId>jaggery-admin</artifactId>
         <version>0.9.0-SNAPSHOT</version>
     </parent>
 

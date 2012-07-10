@@ -21,7 +21,7 @@
 
     <parent>
         <groupId>org.jaggeryjs</groupId>
-        <artifactId>jaggery-components</artifactId>
+        <artifactId>components</artifactId>
         <version>0.9.0-SNAPSHOT</version>
         <relativePath>../pom.xml</relativePath>
     </parent>
@@ -44,10 +44,19 @@
         <module>org.jaggeryjs.hostobjects.xslt</module>
         <module>org.jaggeryjs.hostobjects.oauth</module>
         <module>org.jaggeryjs.hostobjects.feed</module>
-        <module>org.jaggeryjs.hostobjects.scripts</module>
         <module>org.jaggeryjs.hostobjects.uri</module>
         <module>org.jaggeryjs.hostobjects.stream</module>
         <module>org.jaggeryjs.hostobjects.log</module>
         <module>org.jaggeryjs.hostobjects.jaggeryparser</module>
     </modules>
+
+    <dependencyManagement>
+        <dependencies>
+            <dependency>
+                <groupId>org.jaggeryjs</groupId>
+                <artifactId>org.jaggeryjs.scriptengine</artifactId>
+                <version>${jaggery.component.version}</version>
+            </dependency>
+        </dependencies>
+    </dependencyManagement>
 </project>

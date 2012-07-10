@@ -25,7 +25,6 @@ import org.apache.abdera.parser.stax.util.FOMHelper;
 import org.apache.commons.logging.Log;
 import org.apache.commons.logging.LogFactory;
 import org.mozilla.javascript.*;
-import org.jaggeryjs.jaggery.core.manager.CommonManager;
 import org.jaggeryjs.scriptengine.exceptions.ScriptException;
 import org.wso2.javascript.xmlimpl.XML;
 
@@ -331,7 +330,7 @@ public class EntryHostObject extends ScriptableObject {
 
     public Scriptable jsGet_published() {
         if (entry != null) {
-            Scriptable js = context.newObject(CommonManager.getJaggeryContext().getScope(), "Date", new Object[]{entry.getPublished().getTime()});
+            Scriptable js = context.newObject(this, "Date", new Object[]{entry.getPublished().getTime()});
             return js;
         }
         return null;
@@ -401,7 +400,7 @@ public class EntryHostObject extends ScriptableObject {
 
     public Scriptable jsGet_updated() {
     	  if (entry != null) {
-              Scriptable js = context.newObject(CommonManager.getJaggeryContext().getScope(), "Date", new Object[]{entry.getUpdated().getTime()});
+              Scriptable js = context.newObject(this, "Date", new Object[]{entry.getUpdated().getTime()});
               return js;
           }
           return null;
@@ -428,7 +427,7 @@ public class EntryHostObject extends ScriptableObject {
     	
          if (entry != null) {
              Object[] objects = { entry };
-             Scriptable xmlHostObject = context.newObject(CommonManager.getJaggeryContext().getScope(), "XML", objects);
+             Scriptable xmlHostObject = context.newObject(this, "XML", objects);
              return xmlHostObject;
          }
          return null;

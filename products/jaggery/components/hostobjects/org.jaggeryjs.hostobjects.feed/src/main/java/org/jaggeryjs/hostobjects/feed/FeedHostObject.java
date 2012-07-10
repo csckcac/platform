@@ -25,7 +25,6 @@ import org.mozilla.javascript.NativeObject;
 import org.mozilla.javascript.Scriptable;
 import org.mozilla.javascript.ScriptableObject;
 import org.mozilla.javascript.NativeArray;
-import org.jaggeryjs.jaggery.core.manager.CommonManager;
 import org.jaggeryjs.scriptengine.exceptions.ScriptException;
 import org.jaggeryjs.scriptengine.util.HostObjectUtil;
 import org.wso2.javascript.xmlimpl.XML;
@@ -249,9 +248,7 @@ public class FeedHostObject extends ScriptableObject {
 
 	public Scriptable jsGet_updated() {
 		if (feed != null) {
-			Scriptable js = ctx.newObject(CommonManager.getJaggeryContext()
-					.getScope(), "Date", new Object[] { feed.getUpdated()
-					.getTime() });
+			Scriptable js = ctx.newObject(this, "Date", new Object[] { feed.getUpdated().getTime() });
 			return js;
 		}
 		return null;

@@ -36,6 +36,7 @@
         <dependency>
             <groupId>org.jaggeryjs</groupId>
             <artifactId>org.jaggeryjs.jaggery.core</artifactId>
+            <version>${pom.version}</version>
         </dependency>
         <dependency>
             <groupId>org.wso2.carbon</groupId>
@@ -94,7 +95,7 @@
                         </Bundle-Activator>
                         <Private-Package>org.jaggeryjs.jaggery.app.mgt.internal</Private-Package>
                         <Import-Package>
-                            org.apache.axis2.*; version="${axis2.wso2.version}",
+                            org.apache.axis2.*; version="${axis2.osgi.version}",
                             org.apache.axiom.*,
                             org.apache.neethi.*; version="${neethi.osgi.version.range.service-mgt}",
                             javax.xml.stream.*; version="1.0.1",

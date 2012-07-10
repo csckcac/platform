@@ -83,6 +83,11 @@
         -->
         <Enabled>false</Enabled>
 
+	<!--
+            API Usage Data Publisher.
+        -->
+        <PublisherClass>org.wso2.carbon.apimgt.usage.publisher.APIMgtUsageDataBridgeDataPublisher</PublisherClass>
+
         <!--
             Thrift port of the remote BAM server.
         -->
@@ -103,6 +108,26 @@
             Administrator password to login to the remote BAM server.
         -->
         <BAMPassword>admin</BAMPassword>
+
+	<!--
+            JDBC Driver .
+        -->
+        <JDBCDriver>org.h2.Driver</JDBCDriver>
+
+	<!--
+            JDBC URL to query remote JDBC database 
+        -->
+        <JDBCUrl>jdbc:h2:<!-- Full path to JDBC database -->;AUTO_SERVER=TRUE</JDBCUrl>
+
+	<!--
+            Username to query remote JDBC database.
+        -->
+        <JDBCUserName>wso2carbon</JDBCUserName>
+
+	<!--
+            Password to query remote JDBC database.
+        -->
+        <JDBCPassword>wso2carbon</JDBCPassword>
     </APIUsageTracking>
 
     <!--

@@ -33,12 +33,6 @@ import org.wso2.carbon.base.ServerConfiguration;
  * policy="dynamic"
  * bind="setHttpService"
  * unbind="unsetHttpService"
- * @scr.reference name="server.configuration"
- * interface="org.wso2.carbon.base.ServerConfiguration"
- * cardinality="1..1"
- * policy="dynamic"
- * bind="setServerConfiguration"
- * unbind="unsetServerConfiguration"
  * @scr.reference name="config.context.service"
  * interface="org.wso2.carbon.utils.ConfigurationContextService"
  * cardinality="1..1"
@@ -58,6 +52,7 @@ public class GadgetServerUserManagementUiServiceComponent {
             DashboardServlet dashboardServlet = new DashboardServlet();
             httpServiceInstance.registerServlet("/portal", dashboardServlet, null, null);
 
+            GadgetServerUserManagementUiServiceContext.setServerConfiguration(ServerConfiguration.getInstance());
             log.debug(
                     "******* Dashboard User Management UI Component bundle is activated ******* ");
 
@@ -70,6 +65,7 @@ public class GadgetServerUserManagementUiServiceComponent {
     protected void deactivate(ComponentContext context) {
 
         log.debug("******* Dashboard User Management UI Component bundle is deactivated ******* ");
+          GadgetServerUserManagementUiServiceContext.setServerConfiguration(null);
     }
 
     protected void setHttpService(HttpService httpService) {
@@ -78,14 +74,6 @@ public class GadgetServerUserManagementUiServiceComponent {
 
     protected void unsetHttpService(HttpService httpService) {
         this.httpServiceInstance = null;
-    }
-
-    protected void setServerConfiguration(ServerConfiguration serverConfiguration) {
-        GadgetServerUserManagementUiServiceContext.setServerConfiguration(serverConfiguration);
-    }
-
-    protected void unsetServerConfiguration(ServerConfiguration serverConfiguration) {
-        GadgetServerUserManagementUiServiceContext.setServerConfiguration(null);
     }
 
         protected void setConfigurationContextService(ConfigurationContextService configCtx) {

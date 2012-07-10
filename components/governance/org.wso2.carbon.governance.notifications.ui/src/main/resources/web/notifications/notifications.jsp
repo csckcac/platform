@@ -145,6 +145,7 @@
             <th><fmt:message key="event"/></th>
             <th><fmt:message key="owner"/></th>
             <th><fmt:message key="notification"/></th>
+            <th><fmt:message key="subscriber"/></th>
             <th><fmt:message key="actions"/></th>
         </tr>
     </thead>
@@ -234,7 +235,16 @@
             </td>
 <%
                 }
-                if (canUnsubscribe) {
+    if(notificationMethod.equals("soap") || notificationMethod.equals("rest"))  {
+%>
+            <td><a href="<%=address %>"><%=notificationMethod + "_endpoint"%></a></td>
+
+<%} else { %>
+            <td><%=address == null? "      -  " :address%></td>
+
+<%
+    }
+    if (canUnsubscribe) {
 
 %>
             <td>

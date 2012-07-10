@@ -60,7 +60,7 @@ public class MediationLibUploadExecutor extends AbstractFileUploadExecutor {
 
         //Creating the stub to call the back-end service
         MediationLibraryUploadClient uploaderClient= new MediationLibraryUploadClient(
-                configurationContext, serverURL + "CarbonAppUploader", cookie);
+                configurationContext, serverURL + "MediationLibraryUploader", cookie);
 
         try {
             for (Object o : fileItemsMap.keySet()) {

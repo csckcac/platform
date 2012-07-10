@@ -19,37 +19,46 @@
 <%@ page import="org.apache.axis2.context.ConfigurationContext" %>
 <%@ page import="org.wso2.carbon.CarbonConstants" %>
 <%@ page import="org.wso2.carbon.utils.ServerConstants" %>
-<%@ page import="org.wso2.carbon.application.mgt.ui.ApplicationAdminClient" %>
+<%@ page import="org.wso2.carbon.mediation.library.ui.LibraryAdminClient" %>
+<%@ page import="org.wso2.carbon.mediation.library.stub.types.carbon.LibraryInfo" %>
 <%@ page import="org.wso2.carbon.ui.CarbonUIMessage" %>
 <%@ page import="java.util.ResourceBundle" %>
 <%@ taglib prefix="fmt" uri="http://java.sun.com/jsp/jstl/fmt" %>
 <%@ taglib uri="http://wso2.org/projects/carbon/taglibs/carbontags.jar" prefix="carbon" %>
 
+<link type="text/css" href="../dialog/js/jqueryui/tabs/ui.all.css" rel="stylesheet"/>
+<script type="text/javascript" src="../dialog/js/jqueryui/tabs/jquery-1.2.6.min.js"></script>
+<script type="text/javascript"
+        src="../dialog/js/jqueryui/tabs/jquery-ui-1.6.custom.min.js"></script>
+<script type="text/javascript" src="../dialog/js/jqueryui/tabs/jquery.cookie.js"></script>
 <!-- This page is included to display messages which are set to request scope or session scope -->
 <jsp:include page="../dialog/display_messages.jsp"/>
 
 <%
-    String backendServerURL = CarbonUIUtil.getServerURL(config.getServletContext(), session);
-    ConfigurationContext configContext =
-            (ConfigurationContext) config.getServletContext().getAttribute(CarbonConstants.CONFIGURATION_CONTEXT);
+            String backendServerURL = CarbonUIUtil.getServerURL(config.getServletContext(), session);
+            ConfigurationContext configContext =
+                    (ConfigurationContext) config.getServletContext().getAttribute(CarbonConstants.CONFIGURATION_CONTEXT);
 
-    String cookie = (String) session.getAttribute(ServerConstants.ADMIN_SERVICE_COOKIE);
+            String cookie = (String) session.getAttribute(ServerConstants.ADMIN_SERVICE_COOKIE);
 
-    String BUNDLE = "org.wso2.carbon.mediation.library.ui.i18n.Resources";
-    ResourceBundle bundle = ResourceBundle.getBundle(BUNDLE, request.getLocale());
+            String BUNDLE = "org.wso2.carbon.mediation.library.ui.i18n.Resources";
+            ResourceBundle bundle = ResourceBundle.getBundle(BUNDLE, request.getLocale());
 
-    String[] appList = null;
-    ApplicationAdminClient client = null;
+            LibraryInfo[] libsList = null;
+            String[] importList = null;
+            LibraryAdminClient client = null;
 
-    try {
-        client = new ApplicationAdminClient(cookie,
-                                            backendServerURL, configContext, request.getLocale());
-        appList = client.getAllApps();
-    } catch (Exception e) {
-        response.setStatus(500);
-        CarbonUIMessage uiMsg = new CarbonUIMessage(CarbonUIMessage.ERROR, e.getMessage(), e);
-        session.setAttribute(CarbonUIMessage.ID, uiMsg);
-    }
+            try {
+                client = new LibraryAdminClient(cookie,
+                                                backendServerURL, configContext, request.getLocale());
+                libsList = client.getAllLibraryInfo();
+                importList = client.getAllImports();
+            } catch (Exception e) {
+                response.setStatus(500);
+                CarbonUIMessage uiMsg = new CarbonUIMessage(CarbonUIMessage.ERROR, e.getMessage(), e);
+                session.setAttribute(CarbonUIMessage.ID, uiMsg);
+            }
+
 
 %>
 
@@ -63,7 +72,41 @@
 
 <script type="text/javascript">
 
+    // script for tab handling
+$(function() {
+    $("#tabs").tabs();
+});
+
+$(document).ready(function() {
+    var $tabs = $('#tabs > ul').tabs({ cookie: { expires: 30 } });
+    $('a', $tabs).click(function() {
+        if ($(this).parent().hasClass('ui-tabs-selected')) {
+            $tabs.tabs('load', $('a', $tabs).index(this));
+        }
+    });
+    <%
+String tabs = request.getParameter("tabs");
+if(tabs!=null && tabs.equals("0")) {
+    %>$tabs.tabs('option', 'selected', 0);
+    <%
+}else if(tabs!=null && tabs.equals("1")){
+    %>$tabs.tabs('option', 'selected', 1);
+    <%
+    }
+    %>
+    if (!isDefinedSequenceFound && !isDynamicSequenceFound) {
+        $tabs.tabs('option', 'selected', 2);
+    }
+});
+
     function deleteApplication(appName) {
+        CARBON.showConfirmationDialog("<fmt:message key="confirm.delete.app"/>" , function(){
+            document.applicationsForm.action = "delete_artifact.jsp?appName=" + appName;
+            document.applicationsForm.submit();
+        });
+    }
+
+    function deleteImport(appName) {
         CARBON.showConfirmationDialog("<fmt:message key="confirm.delete.app"/>" , function(){
             document.applicationsForm.action = "delete_artifact.jsp?appName=" + appName;
             document.applicationsForm.submit();
@@ -94,41 +137,60 @@
 
 </script>
 
+
     <div id="middle">
+
+
+         <div id="tabs">
+            <li><a href="#tabs-1"><fmt:message key="libs.tabs.libraries"/></a></li>
+            <li><a href="#tabs-2"><fmt:message key="libs.tabs.imports"/></a></li>
+
+         <div id="tabs-1">
         <h2><fmt:message key="libs.list.headertext"/></h2>
 
         <div id="workArea">
             <form action="" name="applicationsForm" method="post">
                 <%
-                    if (appList != null && appList.length > 0) {
-                            String appVersion = null;
+                   if (libsList != null && libsList.length > 0) {
                 %>
                 <table class="styledLeft" id="appTable" width="100%">
                     <thead>
                     <tr>
-                        <th><fmt:message key="libs.applications"/></th>
-                        <th><fmt:message key="libs.version"/></th>
+                        <th><fmt:message key="libs.application"/></th>
+                        <th><fmt:message key="libs.package"/></th>
+                        <th><fmt:message key="libs.description"/></th>
                         <th colspan="2"><fmt:message key="libs.actions"/></th>
                     </tr>
                     </thead>
                     <tbody>
                     <%
-                        for (String appName : appList) {
-                            appVersion = client.getAppData(appName).getAppVersion();
+                         for (LibraryInfo libraryInfo : libsList) {
+                             String libName = libraryInfo.getLibName();
+                             String pkgName = libraryInfo.getPackageName();
+                             String libDesc = libraryInfo.getDescription();
                     %>
                     <tr>
-                        <td><a href="./application_info.jsp?appName=<%= appName%>"><%= appName%></a></td>
+                        <td><a href="./application_info.jsp?appName=<%= libName%>"><%= libName%></a></td>
                         <%
-                            if (appVersion != null) {
+                            if (pkgName != null) {
                         %>
                         <td>
-                            <%=appVersion%>
+                            <%=pkgName%>
                         </td>
                         <%
                             }
                         %>
-                        <td><a href="#" class="icon-link-nofloat" style="background-image:url(images/delete.gif);" onclick="deleteApplication('<%= appName%>');" title="<%= bundle.getString("libs.delete.this.row")%>"><%= bundle.getString("libs.delete")%></a></td>
-                        <td><a href="download-ajaxprocessor.jsp?cappName=<%= appName%>" class="icon-link-nofloat" style="background-image:url(images/download.gif);" title="<%= bundle.getString("download.capp")%>"><%= bundle.getString("download")%></a></td>
+                        <%
+                            if (libDesc != null) {
+                        %>
+                        <td>
+                            <%=libDesc%>
+                        </td>
+                        <%
+                            }
+                        %>
+                        <td><a href="#" class="icon-link-nofloat" style="background-image:url(images/delete.gif);" onclick="deleteApplication('<%= libName%>');" title="<%= bundle.getString("libs.delete.this.row")%>"><%= bundle.getString("libs.delete")%></a></td>
+                        <td><a href="download-ajaxprocessor.jsp?cappName=<%= libName%>" class="icon-link-nofloat" style="background-image:url(images/download.gif);" title="<%= bundle.getString("download.capp")%>"><%= bundle.getString("download")%></a></td>
                     </tr>
                     <%
                         }
@@ -145,6 +207,46 @@
             </form>
         </div>
     </div>
+        <div id="tabs-2">
+            <h2><fmt:message key="libs.list.headertext.import"/></h2>
+             <div id="workArea2">
+            <form action="" name="importsForm" method="post">
+                <%
+                  if (importList != null && importList.length > 0) {
+                %>
+                <table class="styledLeft" id="importTable" width="100%">
+                    <thead>
+                    <tr>
+                        <th><fmt:message key="libs.imports"/></th>
+                        <th colspan="2"><fmt:message key="libs.actions"/></th>
+                    </tr>
+                    </thead>
+                    <tbody>
+                    <%
+                         for (String imprt : importList) {
+
+                    %>
+                    <tr>
+                        <td><a href="./application_info.jsp?appName=<%= imprt%>"><%= imprt%></a></td>
+                        <td><a href="#" class="icon-link-nofloat" style="background-image:url(images/delete.gif);" onclick="deleteImport('<%= imprt%>');" title="<%= bundle.getString("libs.delete.this.row")%>"><%= bundle.getString("libs.delete")%></a></td>
+                    </tr>
+                    <%
+                        }
+                    %>
+                    </tbody>
+                </table>
+                <%
+                } else {
+                %>
+                <label><fmt:message key="libs.no.imports"/></label>
+                <%
+                    }
+                %>
+            </form>
+        </div>
+        </div>
+   </div>
+ </div>
 
     <%--<%--%>
         <%--if (request.getParameter("restart") != null && request.getParameter("restart").equals("true")) {--%>

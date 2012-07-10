@@ -31,7 +31,7 @@
             var fileName = document.appsUpload.filename.value;
             if (fileName == '') {
                 CARBON.showWarningDialog('<fmt:message key="select.car.file"/>');
-            } else if (fileName.lastIndexOf(".car") != -1) {
+            } else if (fileName.lastIndexOf(".zip") != -1) {
                 document.appsUpload.submit();
             } else {
                 CARBON.showWarningDialog('<fmt:message key="select.car.file"/>');
@@ -45,7 +45,7 @@
         <h2><fmt:message key="libs.headertext"/></h2>
 
         <div id="workArea">
-            <form method="post" name="appsUpload" action="../../fileupload/carbonapp"
+.            <form method="post" name="appsUpload" action="../../fileupload/mediationlib"
                   enctype="multipart/form-data" target="_self">
                 <table class="styledLeft">
                     <thead>

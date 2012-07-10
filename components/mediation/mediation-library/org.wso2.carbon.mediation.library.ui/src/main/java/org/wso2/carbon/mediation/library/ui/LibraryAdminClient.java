@@ -77,6 +77,31 @@ public class LibraryAdminClient {
         }
     }
 
+    public void addImport(String libName, String packageName) throws AxisFault {
+        try {
+            stub.addImport(libName, packageName);
+        } catch (java.lang.Exception e) {
+            handleException(bundle.getString("cannot.delete.artifact"), e);
+        }
+    }
+
+    public String getImport(String qualifiedName) throws AxisFault  {
+        try {
+            return stub.getImport(qualifiedName);
+        } catch (java.lang.Exception e) {
+            handleException(bundle.getString("cannot.delete.artifact"), e);
+        }
+        return null;
+    }
+
+    public void deleteLibrary(String libQualifiedName) throws Exception{
+        try {
+            stub.deleteLibrary(libQualifiedName);
+        } catch (java.lang.Exception e) {
+            handleException(bundle.getString("cannot.delete.artifact"), e);
+        }
+    }
+
 //    public void deleteServiceGroup(String sgName) throws AxisFault {
 //        try {
 //            stub.deleteServiceGroup(sgName);

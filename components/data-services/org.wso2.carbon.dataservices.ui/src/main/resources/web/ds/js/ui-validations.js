@@ -234,8 +234,12 @@ function validateAddQueryForm(obj){
             CARBON.showWarningDialog('Enter numeric values to Start reading from');
             return false;
         }
-        if (!document.getElementById('txtExcelStartingRow').value.match(/^\s*\d+\s*$/)) {
-            CARBON.showWarningDialog('Enter positive numeric value to Start reading from');
+        if (!document.getElementById('txtExcelStartingRow').value.match(/^\s*[1-9]\d*\s*$/)) {
+            CARBON.showWarningDialog('Enter positive numeric value greater than zero to Start reading from');
+            return false;
+        }
+        if ( document.getElementById('txtExcelStartingRow').value > 2147483647) {
+        	CARBON.showWarningDialog('Entered Start reading from value exceeds the allowed maximum value');
             return false;
         }
         if (document.getElementById('txtExcelMaxRowCount').value.match(/^[a-zA-Z]+$/)) {

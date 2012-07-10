@@ -33,6 +33,7 @@
     <modules>
         <module>org.wso2.carbon.mediation.library.connectors.linked-in</module>
         <module>org.wso2.carbon.mediation.library.connectors.twitter</module>
+        <module>org.wso2.carbon.mediation.library.connectors.core</module>
     </modules>
 
     <dependencyManagement>

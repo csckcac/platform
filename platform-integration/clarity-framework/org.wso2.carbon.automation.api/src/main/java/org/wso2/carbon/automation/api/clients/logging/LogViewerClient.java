@@ -21,7 +21,7 @@ import org.apache.commons.logging.Log;
 import org.apache.commons.logging.LogFactory;
 import org.wso2.carbon.automation.api.clients.utils.AuthenticateStub;
 import org.wso2.carbon.logging.view.stub.LogViewerStub;
-import org.wso2.carbon.logging.view.stub.types.carbon.LogMessage;
+import org.wso2.carbon.logging.view.stub.types.carbon.LogEvent;
 
 import java.rmi.RemoteException;
 
@@ -50,7 +50,7 @@ public class LogViewerClient {
      * @return logMessage array
      * @throws RemoteException Exception
      */
-    public LogMessage[] getLogs(String logType, String searchKey) throws RemoteException {
+    public LogEvent[] getLogs(String logType, String searchKey) throws RemoteException {
         return logViewerStub.getLogs(logType, searchKey);
     }
 }

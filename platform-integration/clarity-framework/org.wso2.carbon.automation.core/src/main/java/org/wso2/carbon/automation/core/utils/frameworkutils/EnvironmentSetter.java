@@ -10,7 +10,16 @@ import org.wso2.carbon.automation.core.utils.frameworkutils.productvariables.Env
 import org.wso2.carbon.automation.core.utils.frameworkutils.productvariables.Ravana;
 import org.wso2.carbon.automation.core.utils.frameworkutils.productvariables.Selenium;
 
+import java.io.BufferedReader;
+import java.io.BufferedWriter;
 import java.io.File;
+import java.io.FileOutputStream;
+import java.io.FileWriter;
+import java.io.IOException;
+import java.io.InputStream;
+import java.io.InputStreamReader;
+import java.io.OutputStream;
+import java.io.StringWriter;
 import java.util.Arrays;
 import java.util.HashMap;
 import java.util.List;
@@ -170,4 +179,50 @@ public class EnvironmentSetter implements Framework {
         coverageSettings.setCoverage(coverageEnable, coverageHome);
         return coverageSettings;
     }
+
+
+    private void printInputStream(InputStream in) {
+        BufferedReader ina = new BufferedReader(new InputStreamReader(in));
+        String inputLine;
+        try {
+            while ((inputLine = ina.readLine()) != null) {
+                System.out.println(inputLine);
+            }
+
+            in.close();
+        } catch (IOException e) {
+            e.printStackTrace();  //To change body of catch statement use File | Settings | File Templates.
+        }
+    }
+
+    private File createTempFile(InputStream inputStream, String fileName, String suffix) {
+        File temp = null;
+        try {
+            // Create temp file.
+            temp = File.createTempFile(fileName, suffix);
+
+            // Delete temp file when program exits.
+            temp.deleteOnExit();
+
+
+            FileOutputStream out = new FileOutputStream(temp.getAbsolutePath());
+
+            int read = 0;
+            byte[] bytes = new byte[1024];
+
+            while ((read = inputStream.read(bytes)) != -1) {
+                out.write(bytes, 0, read);
+            }
+
+
+            inputStream.close();
+            out.flush();
+            out.close();
+
+
+        } catch (IOException ignored) {
+        }
+        return temp;
+    }
+
 }

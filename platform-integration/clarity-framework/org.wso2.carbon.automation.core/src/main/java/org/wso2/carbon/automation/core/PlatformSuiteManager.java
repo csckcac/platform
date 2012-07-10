@@ -77,7 +77,7 @@ public class PlatformSuiteManager implements ISuiteListener {
                 log.info("Ignored - handled by PlatformExecution manager");
             } else {
                 log.info("Server startup criterias do not match");
-                assert false : "Invalid framework configuration, please update framework.properties file";
+                assert false : "Invalid framework configuration, please update clarity.properties file";
             }
 
         } catch (Exception e) {  /*cannot throw the exception */

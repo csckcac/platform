@@ -68,8 +68,8 @@ public class DefaultBuildDriverListener implements BuildDriverListener {
     }
 
     private static OMElement getPayload(String applicationId, String version, String revision) throws XMLStreamException, javax.xml.stream.XMLStreamException {
-        String payload = "<p:sendCreateArtifactMessage xmlns:p=\"http://www.example.org/CreateArtifactCallback/\"><applicationId>" + applicationId +
-                "</applicationId><revision>" + revision + "</revision><version>" + version + "</version></p:sendCreateArtifactMessage>";
+        String payload = "<p:callbackMessgae xmlns:p=\"http://localhost:9763/services/ArtifactCreateCallbackService/\"><applicationId>" + applicationId +
+                "</applicationId><revision>" + revision + "</revision><version>" + version + "</version></p:callbackMessgae>";
 
         return new StAXOMBuilder(new ByteArrayInputStream(payload.getBytes())).getDocumentElement();
     }

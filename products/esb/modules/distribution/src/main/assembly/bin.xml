@@ -39,7 +39,15 @@
                 <exclude>**/INSTALL.txt</exclude>
                 <exclude>**/release-notes.html</exclude>
                 <exclude>**/carbon.xml</exclude>
+                <exclude>**/repository/components/plugins/saxon*.jar</exclude>
             </excludes>
+        </fileSet>
+        <fileSet>
+            <directory>./src/main/resources</directory>
+            <outputDirectory>wso2esb-${pom.version}/lib/endorsed</outputDirectory>
+            <includes>
+                <include>**/saxon9he.jar</include>
+            </includes>
         </fileSet>
         <fileSet>
             <directory>target/wso2carbon-core-${carbon.version}</directory>

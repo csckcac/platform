@@ -86,7 +86,7 @@ public class Util {
     public static void transform(Source xmlIn, Source xslIn, Result result, Map paramMap)
             throws TransformerException {
         try {
-            TransformerFactory transformerFactory = TransformerFactory.newInstance();
+            TransformerFactory transformerFactory = new org.apache.xalan.processor.TransformerFactoryImpl();
             Transformer transformer = transformerFactory.newTransformer(xslIn);
             if (paramMap != null) {
                 Set set = paramMap.keySet();
@@ -108,7 +108,7 @@ public class Util {
     public static void transform(Source xmlIn, Source xslIn, Result result, Map paramMap,
                                  URIResolver uriResolver) throws TransformerException {
         try {
-            TransformerFactory transformerFactory = TransformerFactory.newInstance();
+            TransformerFactory transformerFactory = new org.apache.xalan.processor.TransformerFactoryImpl();
             transformerFactory.setURIResolver(uriResolver);
             Transformer transformer = transformerFactory.newTransformer(xslIn);
             if (paramMap != null) {

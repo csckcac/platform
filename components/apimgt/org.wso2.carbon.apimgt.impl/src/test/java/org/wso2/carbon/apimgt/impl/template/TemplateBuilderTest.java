@@ -62,7 +62,7 @@ public class TemplateBuilderTest extends TestCase {
         String output = builder.getConfigStringForTemplate();
         String expected = "<api xmlns=\"http://ws.apache.org/ns/synapse\" name=\"TestAPI\" context=\"/test\" " +
                 "version=\"1.0.0\" version-type=\"url\"><resource url-mapping=\"/*\" methods=\"GET\"><inSequence>" +
-                "<filter source=\"$ctx:AM_KEY_TYPE\" regex=\"PRODUCTION\"><then><send><endpoint name=\"TestAPI_APIEndpoint_0\">" +
+                "<class name=\"org.wso2.carbon.apimgt.mediators.TokenPasser\"/><filter source=\"$ctx:AM_KEY_TYPE\" regex=\"PRODUCTION\"><then><send><endpoint name=\"TestAPI_APIEndpoint_0\">" +
                 "<address uri=\"http://wso2.org\"/></endpoint></send></then><else><sequence key=\"_sandbox_key_error_\"/>" +
                 "</else></filter></inSequence><outSequence><send/></outSequence></resource><handlers>" +
                 "<handler class=\"org.wso2.carbon.apimgt.usage.publisher.APIMgtUsageHandler\"/>" +
@@ -110,7 +110,7 @@ public class TemplateBuilderTest extends TestCase {
         String output = builder.getConfigStringForTemplate();
         String expected = "<api xmlns=\"http://ws.apache.org/ns/synapse\" name=\"TestAPI\" context=\"/test\" " +
                 "version=\"1.0.0\" version-type=\"url\"><resource url-mapping=\"/*\" methods=\"GET\"><inSequence>" +
-                "<filter source=\"$ctx:AM_KEY_TYPE\" regex=\"PRODUCTION\"><then><send><endpoint name=\"TestAPI_APIEndpoint_0\">" +
+                "<class name=\"org.wso2.carbon.apimgt.mediators.TokenPasser\"/><filter source=\"$ctx:AM_KEY_TYPE\" regex=\"PRODUCTION\"><then><send><endpoint name=\"TestAPI_APIEndpoint_0\">" +
                 "<address uri=\"http://search.wso2.com/search.json?q=blue%20angels&amp;rpp=5&amp;include_entities=true&amp;result_type=mixed\"/></endpoint></send></then><else><sequence key=\"_sandbox_key_error_\"/>" +
                 "</else></filter></inSequence><outSequence><send/></outSequence></resource><handlers>" +
                 "<handler class=\"org.wso2.carbon.apimgt.usage.publisher.APIMgtUsageHandler\"/>" +
@@ -158,7 +158,7 @@ public class TemplateBuilderTest extends TestCase {
         String output = builder.getConfigStringForTemplate();
         String expected = "<api xmlns=\"http://ws.apache.org/ns/synapse\" name=\"TestAPI\" context=\"/test\" " +
                 "version=\"1.0.0\" version-type=\"url\"><resource url-mapping=\"/*\" methods=\"GET\"><inSequence>" +
-                "<filter source=\"$ctx:AM_KEY_TYPE\" regex=\"PRODUCTION\"><then><send><endpoint name=\"TestAPI_APIEndpoint_0\">" +
+                "<class name=\"org.wso2.carbon.apimgt.mediators.TokenPasser\"/><filter source=\"$ctx:AM_KEY_TYPE\" regex=\"PRODUCTION\"><then><send><endpoint name=\"TestAPI_APIEndpoint_0\">" +
                 "<address uri=\"http://wso2.org\"/></endpoint></send></then><else><send><endpoint " +
                 "name=\"TestAPI_APISandboxEndpoint_0\"><address uri=\"http://staging.wso2.org\"/></endpoint>" +
                 "</send></else></filter></inSequence><outSequence><send/></outSequence></resource><handlers>" +

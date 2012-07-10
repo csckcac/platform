@@ -25,7 +25,6 @@ import org.apache.commons.logging.LogFactory;
 import org.wso2.carbon.CarbonConstants;
 import org.wso2.carbon.CarbonException;
 import org.wso2.carbon.core.AbstractAdmin;
-import org.wso2.carbon.tomcat.api.CarbonTomcatService;
 import org.wso2.carbon.utils.CarbonUtils;
 import org.wso2.carbon.utils.DataPaginator;
 import org.wso2.carbon.utils.NetworkUtils;
@@ -301,6 +300,10 @@ public class WebappAdmin extends AbstractAdmin {
      * @return - true if relevant
      */
     protected boolean isWebappRelevant(WebApplication webapp) {
+        // skip the Stratos landing page webapp 
+        if (webapp.getContextName().contains("STRATOS_ROOT")) {
+            return false;
+        }
         String filterProp = (String) webapp.getProperty(WebappsConstants.WEBAPP_FILTER);
         // If non of the filters are set, this is a generic webapp, so return true
         if (filterProp == null) {

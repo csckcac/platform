@@ -133,6 +133,13 @@
             <version>${carbon.version}</version>
         </dependency>
         <dependency>
+            <groupId>org.wso2.esb</groupId>
+            <artifactId>org.wso2.esb.integration.core</artifactId>
+            <version>${project.version}</version>
+            <type>test-jar</type>
+            <scope>test</scope>
+        </dependency>
+        <dependency>
             <groupId>org.wso2.carbon</groupId>
             <artifactId>org.wso2.carbon.integration.core</artifactId>
             <version>${carbon.version}</version>

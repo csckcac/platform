@@ -756,9 +756,8 @@ public class AutoscalerServiceImpl implements IAutoscalerService {
 
             String instanceType;
 
-            // set instance type eg: 1. Openstack expects instance type to be a positive integer
-            if (((instanceType = temp.getProperty("instanceType." + Iaases.openstack.toString())) != null) && (Pattern.matches("[0-9]+",
-                                                                                                                               instanceType))) {
+            // set instance type 
+            if (((instanceType = temp.getProperty("instanceType." + Iaases.openstack.toString())) != null) ) {
 
                 templateBuilder.hardwareId(instanceType);
             }

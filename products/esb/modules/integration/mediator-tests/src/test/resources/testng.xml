@@ -130,6 +130,9 @@
             <class name="org.wso2.carbon.mediator.tests.cache.PerHostTestCase"/>
             <class name="org.wso2.carbon.mediator.tests.cache.MessageSizeTestCase"/>
             <class name="org.wso2.carbon.mediator.tests.cache.MessageSizeNullTestCase"/>
+            <class name="org.wso2.carbon.mediator.tests.cache.NegativeCacheTimeOutTestCase"/>
+            <class name="org.wso2.carbon.mediator.tests.cache.NegativeMaxMsgSizeTestCase"/>
+            <class name="org.wso2.carbon.mediator.tests.cache.NegativeMaxSizeTestCase"/>
         </classes>
     </test>
 </suite>

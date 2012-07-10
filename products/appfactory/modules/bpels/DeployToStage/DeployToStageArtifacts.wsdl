@@ -30,9 +30,10 @@
             <element name="DeployToStageRequest">
                 <complexType>
                     <sequence>
-                    	<element name="applicationId" type="string"/>
-                    	<element name="revision" type="string"/>
-                    	<element name="version" type="string"/>
+                    	<element name="applicationId" type="string" />
+                    	<element name="revision" type="string" />
+                    	<element name="version" type="string" />
+                    	<element name="stage" type="string"></element>
                     </sequence>
                 </complexType>
             </element>

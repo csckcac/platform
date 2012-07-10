@@ -215,7 +215,11 @@
                 		<module>org.wso2.carbon.cassandra.explorer.stub</module>
 				<module>org.wso2.carbon.bam.toolbox.deployer.stub</module>
 				<module>org.wso2.carbon.ndatasource.stub</module>
-                                <module>org.wso2.carbon.hosting.mgt.stub</module>
+                <module>org.wso2.carbon.hosting.mgt.stub</module>
+                <module>org.wso2.carbon.bpel.bam.publisher.stub</module>
+				<module>org.wso2.carbon.bpel.bam.publisher.skeleton</module>
+
+				
 			</modules>
 
     <build>

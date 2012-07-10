@@ -18,6 +18,7 @@
 package org.wso2.carbon.appfactory.svn.repository.mgt.impl;
 
 
+import org.apache.commons.io.FileUtils;
 import org.apache.commons.logging.Log;
 import org.apache.commons.logging.LogFactory;
 import org.wso2.carbon.appfactory.common.AppFactoryException;
@@ -25,6 +26,7 @@ import org.wso2.carbon.appfactory.common.util.AppFactoryUtil;
 import org.wso2.carbon.appfactory.core.ArtifactStorage;
 
 import java.io.File;
+import java.util.List;
 
 public class FileArtifactStorage implements ArtifactStorage {
     private static final Log log = LogFactory.getLog(FileArtifactStorage.class);
@@ -32,14 +34,17 @@ public class FileArtifactStorage implements ArtifactStorage {
     @Override
     public File retrieveArtifact(String applicationId, String version, String revision) {
         File targetDir = null;
+        List<File> artifactFiles = null;
         try {
             File workDir = AppFactoryUtil.getApplicationWorkDirectory(applicationId, version, revision);
-            String targetDirPath = workDir.getAbsolutePath() + File.separator + "target";
-            targetDir = new File(targetDirPath);
+            File targetDirPath = new File(workDir.getAbsolutePath() + File.separator + "target");
+            String[] fileExtension = {"car"};
+            artifactFiles = (List<File>) FileUtils.listFiles(targetDirPath, fileExtension, false);
 
         } catch (AppFactoryException e) {
             log.error("Error in retrieving the artifact" + e);
         }
+        targetDir= artifactFiles.get(0);
         return targetDir;
     }
 

@@ -271,10 +271,8 @@ public class APIProviderHostObject extends ScriptableObject {
                 //Checking whether duplicate api resources have been added or not
                 for (URITemplate uri : uriTemplates) {
                     String[] uriMethodsArr = uri.getMethods().toArray(new String[uri.getMethods().size()]);
-                    Arrays.sort(uriMethodsArr);
-                    Arrays.sort(uriMethodArray);
-                    if (uri.getUriTemplate().equals(uriTemp) && Arrays.equals(uriMethodsArr, uriMethodArray)) {
-                        throw new APIManagementException("Duplicate API resources with same URI Template and HTTP Methods.");
+                    if (uri.getUriTemplate().equals(uriTemp) && ((APIProviderHostObject) thisObj).resourceMethodMatches(uriMethodsArr, uriMethodArray)) {
+                        throw new APIManagementException("Duplicate API resources with same URI pattern.");
                     }
                 }
 
@@ -396,10 +394,8 @@ public class APIProviderHostObject extends ScriptableObject {
                 //Checking whether duplicate api resources have been added or not
                 for (URITemplate uri : uriTemplates) {
                     String[] uriMethodsArr = uri.getMethods().toArray(new String[uri.getMethods().size()]);
-                    Arrays.sort(uriMethodsArr);
-                    Arrays.sort(uriMethodArray);
-                    if (uri.getUriTemplate().equals(template) && Arrays.equals(uriMethodsArr, uriMethodArray)) {
-                        throw new APIManagementException("Duplicate API resources with same URL patterns and HTTP methods.");
+                    if (uri.getUriTemplate().equals(template) && ((APIProviderHostObject) thisObj).resourceMethodMatches(uriMethodsArr, uriMethodArray)) {
+                        throw new APIManagementException("Duplicate API resources with same URL pattern.");
                     }
                 }
                 uriTemplates.add(templates);
@@ -1767,6 +1763,18 @@ public class APIProviderHostObject extends ScriptableObject {
         }
         return response;
 
+    }
+
+    private boolean resourceMethodMatches(String[] resourceMethod1,
+                                          String[] resourceMethod2) {
+        for (String m1 : resourceMethod1) {
+            for (String m2 : resourceMethod2) {
+                if (m1.equals(m2)) {
+                    return true;
+                }
+            }
+        }
+        return false;
     }
 }
 

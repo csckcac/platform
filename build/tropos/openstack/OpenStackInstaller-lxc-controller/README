@@ -1,0 +1,8 @@
+To install a new controller modify wso2osinstall.sh and execute
+
+To uninstall a controller modify wso2osuninstall.sh and execute
+
+To restart services in the controller execute wso2restartservices.sh
+
+To upload an image to glance serve
+Copy the image to /root/upload folder, modify wso2uploadimage.sh and execute

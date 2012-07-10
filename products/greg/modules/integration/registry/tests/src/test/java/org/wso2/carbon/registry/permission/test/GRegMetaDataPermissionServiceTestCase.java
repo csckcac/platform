@@ -19,16 +19,15 @@ import org.apache.commons.logging.Log;
 import org.apache.commons.logging.LogFactory;
 import org.testng.annotations.BeforeClass;
 import org.testng.annotations.Test;
-import org.wso2.carbon.admin.service.AdminServiceAuthentication;
-import org.wso2.carbon.admin.service.AdminServiceResourceAdmin;
-import org.wso2.carbon.admin.service.AdminServiceUserMgtService;
 import org.wso2.carbon.authenticator.stub.LoginAuthenticationExceptionException;
 import org.wso2.carbon.authenticator.stub.LogoutAuthenticationExceptionException;
+import org.wso2.carbon.automation.api.clients.authenticators.AuthenticatorClient;
+import org.wso2.carbon.automation.api.clients.registry.ResourceAdminServiceClient;
+import org.wso2.carbon.automation.api.clients.user.mgt.UserManagementClient;
 import org.wso2.carbon.integration.framework.ClientConnectionUtil;
 import org.wso2.carbon.integration.framework.LoginLogoutUtil;
 import org.wso2.carbon.integration.framework.utils.FrameworkSettings;
 import org.wso2.carbon.registry.resource.stub.ResourceAdminServiceExceptionException;
-import org.wso2.carbon.user.mgt.common.UserAdminException;
 
 import java.rmi.RemoteException;
 
@@ -38,9 +37,9 @@ import static org.testng.Assert.assertTrue;
 public class GRegMetaDataPermissionServiceTestCase {
 
     private static final Log log = LogFactory.getLog(GRegMetaDataPermissionServiceTestCase.class);
-    private AdminServiceUserMgtService userAdminStub;
-    private static AdminServiceAuthentication userAuthenticationStub;
-    private static AdminServiceResourceAdmin admin_service_resource_admin;
+    private UserManagementClient userAdminStub;
+    private static AuthenticatorClient userAuthenticationStub;
+    private static ResourceAdminServiceClient admin_service_resource_admin ;
     private String gregHostName;
     private String sessionCookie;
     private String roleName;
@@ -56,9 +55,9 @@ public class GRegMetaDataPermissionServiceTestCase {
         SERVER_URL = "https://" + FrameworkSettings.HOST_NAME +
                             ":" + FrameworkSettings.HTTPS_PORT + "/services/";
         gregHostName = FrameworkSettings.HOST_NAME;
-        userAdminStub = new AdminServiceUserMgtService(SERVER_URL);
-        userAuthenticationStub = new AdminServiceAuthentication(SERVER_URL);
-        admin_service_resource_admin = new AdminServiceResourceAdmin(SERVER_URL);
+        userAdminStub = new UserManagementClient(SERVER_URL);
+        userAuthenticationStub = new AuthenticatorClient(SERVER_URL);
+        admin_service_resource_admin = new ResourceAdminServiceClient(SERVER_URL);
         roleName = "meta_role";
         userName = "greg_meta_user";
 
@@ -75,7 +74,7 @@ public class GRegMetaDataPermissionServiceTestCase {
     @Test(groups = {"wso2.greg"}, description = "test add a role with login permission",
           priority = 1)
     public void testAddMetaDataPermissionUser()
-            throws UserAdminException, RemoteException, ResourceAdminServiceExceptionException,
+            throws Exception, RemoteException, ResourceAdminServiceExceptionException,
                    LoginAuthenticationExceptionException, LogoutAuthenticationExceptionException {
 
         userPassword = "welcome";
@@ -88,7 +87,7 @@ public class GRegMetaDataPermissionServiceTestCase {
         String resourceName = "echo.wsdl";
         String fetchUrl = "http://people.wso2.com/~evanthika/wsdls/echo.wsdl";
         addRolewithUser(permission1);
-        sessionCookieUser = new AdminServiceAuthentication(SERVER_URL).login(userName, userPassword, gregHostName);
+        sessionCookieUser = new AuthenticatorClient(SERVER_URL).login(userName, userPassword, gregHostName);
         log.info("Newly Created User Loged in :" + userName);
 
 
@@ -122,7 +121,7 @@ public class GRegMetaDataPermissionServiceTestCase {
     }
 
     private void addRolewithUser(String[] permission) throws
-                                                      UserAdminException {
+                                                      Exception {
         userAdminStub.addRole(roleName, null, permission, sessionCookie);
         log.info("Successfully added Role :" + roleName);
         String roles[] = {roleName};
@@ -131,7 +130,7 @@ public class GRegMetaDataPermissionServiceTestCase {
     }
 
 
-    private void deleteRoleAndUsers(String roleName, String userName) {
+    private void deleteRoleAndUsers(String roleName, String userName) throws Exception {
         userAdminStub.deleteRole(sessionCookie, roleName);
         log.info("Role " + roleName + " deleted successfully");
         userAdminStub.deleteUser(sessionCookie, userName);

@@ -328,8 +328,18 @@
             <type>aar</type>
         </dependency>
         <dependency>
-            <groupId>org.wso2.automation</groupId>
-            <artifactId>org.wso2.automation.test.api</artifactId>
+            <groupId>org.wso2.carbon.automation</groupId>
+            <artifactId>org.wso2.carbon.automation.api</artifactId>
+            <version>${carbon.version}</version>
+        </dependency>
+        <dependency>
+            <groupId>org.wso2.carbon.automation</groupId>
+            <artifactId>org.wso2.carbon.automation.core</artifactId>
+            <version>${carbon.version}</version>
+        </dependency>
+        <dependency>
+            <groupId>org.wso2.carbon.automation</groupId>
+            <artifactId>org.wso2.carbon.automation.utils</artifactId>
             <version>${carbon.version}</version>
         </dependency>
     </dependencies>

@@ -17,8 +17,8 @@ package org.wso2.carbon.registry.permission.test;
 
 import org.apache.commons.logging.Log;
 import org.apache.commons.logging.LogFactory;
-import org.wso2.carbon.admin.service.AdminServiceResourceAdmin;
 import org.wso2.carbon.authenticator.stub.LoginAuthenticationExceptionException;
+import org.wso2.carbon.automation.api.clients.registry.ResourceAdminServiceClient;
 import org.wso2.carbon.integration.framework.ClientConnectionUtil;
 import org.wso2.carbon.integration.framework.LoginLogoutUtil;
 import org.wso2.carbon.integration.framework.utils.FrameworkSettings;
@@ -32,7 +32,7 @@ import java.rmi.RemoteException;
 
 public class SymbolicServiceTestCase {
     private static final Log log = LogFactory.getLog(SymbolicServiceTestCase.class);
-    private static AdminServiceResourceAdmin admin_service_resource_admin;
+    private static ResourceAdminServiceClient admin_service_resource_admin;
     private String sessionCookie;
     private LoginLogoutUtil util = new LoginLogoutUtil();
 
@@ -43,7 +43,7 @@ public class SymbolicServiceTestCase {
         sessionCookie = util.login();
         String SERVER_URL = "https://" + FrameworkSettings.HOST_NAME +
                             ":" + FrameworkSettings.HTTPS_PORT + "/services/";
-        admin_service_resource_admin = new AdminServiceResourceAdmin(SERVER_URL);
+        admin_service_resource_admin = new ResourceAdminServiceClient(SERVER_URL);
     }
 
     @Test(groups = {"wso2.greg"}, description = "test add a symbolink to a collection @ root level",
@@ -59,7 +59,7 @@ public class SymbolicServiceTestCase {
                                                        "default", "");
             log.info("***Collection successfully Created***");
 
-            admin_service_resource_admin.addSymbolink(sessionCookie, parentPath, symbolinkName,
+            admin_service_resource_admin.addSymbolicLink(sessionCookie, parentPath, symbolinkName,
                                                       targetPath);
             log.info("***Symbolink successfully Created***");
 
@@ -103,7 +103,7 @@ public class SymbolicServiceTestCase {
                                                          "", "", "");
             log.info("Successfully resource.txt created :");
 
-            admin_service_resource_admin.addSymbolink(sessionCookie, parentPath, symbolinkName,
+            admin_service_resource_admin.addSymbolicLink(sessionCookie, parentPath, symbolinkName,
                                                       targetPath);
             log.info("Successfully symb_resource symbolink created");
 
@@ -148,7 +148,7 @@ public class SymbolicServiceTestCase {
                                                        "default", "");
             log.info("***Collection successfully Created***");
 
-            admin_service_resource_admin.addSymbolink(sessionCookie, parentPath, symbolinkName,
+            admin_service_resource_admin.addSymbolicLink(sessionCookie, parentPath, symbolinkName,
                                                       targetPath);
             log.info("***Symbolink successfully Created***");
 
@@ -192,7 +192,7 @@ public class SymbolicServiceTestCase {
                                                          "", "", "");
             log.info("Successfully resource.txt created :");
 
-            admin_service_resource_admin.addSymbolink(sessionCookie, parentPath, symbolinkName,
+            admin_service_resource_admin.addSymbolicLink(sessionCookie, parentPath, symbolinkName,
                                                       targetPath);
             log.info("Successfully symb_resource symbolink created");
 

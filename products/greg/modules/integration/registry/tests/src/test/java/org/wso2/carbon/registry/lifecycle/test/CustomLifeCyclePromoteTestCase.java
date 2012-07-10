@@ -21,10 +21,10 @@ import org.testng.Assert;
 import org.testng.annotations.AfterClass;
 import org.testng.annotations.BeforeClass;
 import org.testng.annotations.Test;
-import org.wso2.carbon.admin.service.ActivitySearchAdminService;
-import org.wso2.carbon.admin.service.AdminServiceUserMgtService;
-import org.wso2.carbon.admin.service.LifeCycleAdminService;
-import org.wso2.carbon.admin.service.LifeCycleManagerAdminService;
+import org.wso2.carbon.automation.api.clients.governance.LifeCycleAdminServiceClient;
+import org.wso2.carbon.automation.api.clients.governance.LifeCycleManagementClient;
+import org.wso2.carbon.automation.api.clients.registry.ActivityAdminServiceClient;
+import org.wso2.carbon.automation.api.clients.user.mgt.UserManagementClient;
 import org.wso2.carbon.governance.custom.lifecycles.checklist.stub.CustomLifecyclesChecklistAdminServiceExceptionException;
 import org.wso2.carbon.governance.custom.lifecycles.checklist.stub.beans.xsd.LifecycleBean;
 import org.wso2.carbon.governance.custom.lifecycles.checklist.stub.services.ArrayOfString;
@@ -42,6 +42,7 @@ import org.wso2.carbon.registry.lifecycle.test.utils.Utils;
 import org.wso2.carbon.registry.search.metadata.test.utils.GregTestUtils;
 import org.wso2.carbon.registry.ws.client.registry.WSRegistryServiceClient;
 import org.wso2.carbon.user.mgt.common.UserAdminException;
+import org.wso2.carbon.user.mgt.stub.GetAllRolesNamesUserAdminExceptionException;
 
 import java.rmi.RemoteException;
 import java.util.Calendar;
@@ -50,10 +51,10 @@ public class CustomLifeCyclePromoteTestCase {
     private String sessionCookie;
 
     private WSRegistryServiceClient registry;
-    private LifeCycleAdminService lifeCycleAdminService;
-    private LifeCycleManagerAdminService lifeCycleManagerAdminService;
-    private ActivitySearchAdminService activitySearch;
-    private AdminServiceUserMgtService userManger;
+    private LifeCycleAdminServiceClient lifeCycleAdminService;
+    private LifeCycleManagementClient lifeCycleManagerAdminService;
+    private ActivityAdminServiceClient activitySearch;
+    private UserManagementClient userManger;
     private String userName;
     private String serviceName = "CustomLCTestService";
     private final String ASPECT_NAME = "CustomServiceLC";
@@ -70,10 +71,10 @@ public class CustomLifeCyclePromoteTestCase {
         sessionCookie = new LoginLogoutUtil().login();
         final String SERVER_URL = GregTestUtils.getServerUrl();
         userName = FrameworkSettings.USER_NAME;
-        lifeCycleAdminService = new LifeCycleAdminService(SERVER_URL);
-        activitySearch = new ActivitySearchAdminService(SERVER_URL);
-        lifeCycleManagerAdminService = new LifeCycleManagerAdminService(SERVER_URL);
-        userManger = new AdminServiceUserMgtService(SERVER_URL);
+        lifeCycleAdminService = new LifeCycleAdminServiceClient(SERVER_URL);
+        activitySearch = new ActivityAdminServiceClient(SERVER_URL);
+        lifeCycleManagerAdminService = new LifeCycleManagementClient(SERVER_URL);
+        userManger = new UserManagementClient(SERVER_URL);
         registry = GregTestUtils.getRegistry();
         Registry governance = GregTestUtils.getGovernanceRegistry(registry);
 
@@ -120,7 +121,7 @@ public class CustomLifeCyclePromoteTestCase {
         Thread.sleep(1000 * 10);
         ActivityBean activityObj = activitySearch.getActivities(sessionCookie, userName
                 , servicePathTrunk, Utils.formatDate(Calendar.getInstance().getTime())
-                , "", ActivitySearchAdminService.FILTER_ASSOCIATE_ASPECT, 1);
+                , "", ActivityAdminServiceClient.FILTER_ASSOCIATE_ASPECT, 1);
         Assert.assertNotNull(activityObj, "Activity object null for Associate Aspect");
         Assert.assertNotNull(activityObj.getActivity(), "Activity list object null for Associate Aspect");
         Assert.assertTrue((activityObj.getActivity().length > 0), "Activity list object null");
@@ -133,7 +134,7 @@ public class CustomLifeCyclePromoteTestCase {
 
     @Test(description = "Click Check List Item", dependsOnMethods = {"addLifeCycleToService"})
     public void clickCommencementCheckList()
-            throws CustomLifecyclesChecklistAdminServiceExceptionException, RemoteException,
+            throws Exception, RemoteException,
                    UserAdminException {
         LifecycleBean lifeCycle = lifeCycleAdminService.getLifecycleBean(sessionCookie, servicePathTrunk);
         String[] actions;
@@ -215,7 +216,7 @@ public class CustomLifeCyclePromoteTestCase {
         Thread.sleep(1000 * 10);
         ActivityBean activityObjTrunk = activitySearch.getActivities(sessionCookie, userName
                 , servicePathTrunk, Utils.formatDate(Calendar.getInstance().getTime())
-                , "", ActivitySearchAdminService.FILTER_RESOURCE_UPDATE, 1);
+                , "", ActivityAdminServiceClient.FILTER_RESOURCE_UPDATE, 1);
         Assert.assertNotNull(activityObjTrunk, "Activity object null in trunk");
         Assert.assertNotNull(activityObjTrunk.getActivity(), "Activity list object null");
         Assert.assertTrue((activityObjTrunk.getActivity().length > 0), "Activity list object null");
@@ -311,7 +312,7 @@ public class CustomLifeCyclePromoteTestCase {
         Thread.sleep(1000 * 10);
         ActivityBean activityObjTrunk = activitySearch.getActivities(sessionCookie, userName
                 , servicePathTrunk, Utils.formatDate(Calendar.getInstance().getTime())
-                , "", ActivitySearchAdminService.FILTER_RESOURCE_UPDATE, 1);
+                , "", ActivityAdminServiceClient.FILTER_RESOURCE_UPDATE, 1);
         Assert.assertNotNull(activityObjTrunk, "Activity object null in trunk");
         Assert.assertNotNull(activityObjTrunk.getActivity(), "Activity list object null");
         Assert.assertTrue((activityObjTrunk.getActivity().length > 0), "Activity list object null");
@@ -325,7 +326,7 @@ public class CustomLifeCyclePromoteTestCase {
         Thread.sleep(1000 * 10);
         activityObjTrunk = activitySearch.getActivities(sessionCookie, userName
                 , servicePathBranchDev, Utils.formatDate(Calendar.getInstance().getTime())
-                , "", ActivitySearchAdminService.FILTER_ALL, 1);
+                , "", ActivityAdminServiceClient.FILTER_ALL, 1);
         Assert.assertNotNull(activityObjTrunk, "Activity object null in trunk");
         Assert.assertNotNull(activityObjTrunk.getActivity(), "Activity list object null");
         Assert.assertTrue((activityObjTrunk.getActivity().length > 0), "Activity list object null");
@@ -340,7 +341,7 @@ public class CustomLifeCyclePromoteTestCase {
 
     @Test(description = "click check list in creation stage", dependsOnMethods = {"promoteServiceToDevelopment"})
     public void clickDevelopmentCheckList()
-            throws CustomLifecyclesChecklistAdminServiceExceptionException, RemoteException,
+            throws Exception, RemoteException,
                    UserAdminException, InterruptedException {
         LifecycleBean lifeCycle = lifeCycleAdminService.getLifecycleBean(sessionCookie, servicePathBranchDev);
         String[] actions;
@@ -412,7 +413,7 @@ public class CustomLifeCyclePromoteTestCase {
         Thread.sleep(1000 * 10);
         ActivityBean activityObjTrunk = activitySearch.getActivities(sessionCookie, userName
                 , servicePathBranchDev, Utils.formatDate(Calendar.getInstance().getTime())
-                , "", ActivitySearchAdminService.FILTER_RESOURCE_UPDATE, 1);
+                , "", ActivityAdminServiceClient.FILTER_RESOURCE_UPDATE, 1);
         Assert.assertNotNull(activityObjTrunk, "Activity object null in trunk");
         Assert.assertNotNull(activityObjTrunk.getActivity(), "Activity list object null");
         Assert.assertTrue((activityObjTrunk.getActivity().length > 0), "Activity list object null");
@@ -426,7 +427,7 @@ public class CustomLifeCyclePromoteTestCase {
         Thread.sleep(1000 * 10);
         activityObjTrunk = activitySearch.getActivities(sessionCookie, userName
                 , servicePathBranchQA, Utils.formatDate(Calendar.getInstance().getTime())
-                , "", ActivitySearchAdminService.FILTER_ALL, 1);
+                , "", ActivityAdminServiceClient.FILTER_ALL, 1);
         Assert.assertNotNull(activityObjTrunk, "Activity object null in trunk");
         Assert.assertNotNull(activityObjTrunk.getActivity(), "Activity list object null");
         Assert.assertTrue((activityObjTrunk.getActivity().length > 0), "Activity list object null");
@@ -442,7 +443,7 @@ public class CustomLifeCyclePromoteTestCase {
 
     @Test(description = "click check list in creation stage", dependsOnMethods = {"promoteServiceToQA"})
     public void clickQACheckList()
-            throws CustomLifecyclesChecklistAdminServiceExceptionException, RemoteException,
+            throws Exception, RemoteException,
                    UserAdminException, InterruptedException {
         LifecycleBean lifeCycle = lifeCycleAdminService.getLifecycleBean(sessionCookie, servicePathBranchQA);
         String[] actions;
@@ -524,7 +525,7 @@ public class CustomLifeCyclePromoteTestCase {
         Thread.sleep(1000 * 10);
         ActivityBean activityObjTrunk = activitySearch.getActivities(sessionCookie, userName
                 , servicePathBranchQA, Utils.formatDate(Calendar.getInstance().getTime())
-                , "", ActivitySearchAdminService.FILTER_RESOURCE_UPDATE, 1);
+                , "", ActivityAdminServiceClient.FILTER_RESOURCE_UPDATE, 1);
         Assert.assertNotNull(activityObjTrunk, "Activity object null in trunk");
         Assert.assertNotNull(activityObjTrunk.getActivity(), "Activity list object null");
         Assert.assertTrue((activityObjTrunk.getActivity().length > 0), "Activity list object null");
@@ -538,7 +539,7 @@ public class CustomLifeCyclePromoteTestCase {
         Thread.sleep(1000 * 10);
         activityObjTrunk = activitySearch.getActivities(sessionCookie, userName
                 , servicePathBranchProd, Utils.formatDate(Calendar.getInstance().getTime())
-                , "", ActivitySearchAdminService.FILTER_ALL, 1);
+                , "", ActivityAdminServiceClient.FILTER_ALL, 1);
         Assert.assertNotNull(activityObjTrunk, "Activity object null in trunk");
         Assert.assertNotNull(activityObjTrunk.getActivity(), "Activity list object null");
         Assert.assertTrue((activityObjTrunk.getActivity().length > 0), "Activity list object null");
@@ -611,7 +612,7 @@ public class CustomLifeCyclePromoteTestCase {
         Thread.sleep(1000 * 10);
         ActivityBean activityObjTrunk = activitySearch.getActivities(sessionCookie, userName
                 , servicePathBranchProd, Utils.formatDate(Calendar.getInstance().getTime())
-                , "", ActivitySearchAdminService.FILTER_RESOURCE_UPDATE, 1);
+                , "", ActivityAdminServiceClient.FILTER_RESOURCE_UPDATE, 1);
         Assert.assertNotNull(activityObjTrunk, "Activity object null in trunk");
         Assert.assertNotNull(activityObjTrunk.getActivity(), "Activity list object null");
         Assert.assertTrue((activityObjTrunk.getActivity().length > 0), "Activity list object null");
@@ -651,7 +652,8 @@ public class CustomLifeCyclePromoteTestCase {
         lifeCycleAdminService = null;
     }
 
-    private void deleteRolesIfExist() {
+    private void deleteRolesIfExist()
+            throws Exception, RemoteException {
 
         if (userManger.roleNameExists("archrole", sessionCookie)) {
             userManger.deleteRole(sessionCookie, "archrole");
@@ -673,7 +675,7 @@ public class CustomLifeCyclePromoteTestCase {
         }
     }
 
-    private void addRole(String roleName) throws UserAdminException {
+    private void addRole(String roleName) throws Exception {
         String[] permissions = {"/permission/"};
         userManger.addRole(roleName, new String[]{userName}, permissions, sessionCookie);
     }

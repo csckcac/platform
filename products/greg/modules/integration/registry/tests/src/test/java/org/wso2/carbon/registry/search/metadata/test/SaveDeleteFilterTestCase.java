@@ -20,7 +20,7 @@ package org.wso2.carbon.registry.search.metadata.test;
 import org.testng.Assert;
 import org.testng.annotations.BeforeClass;
 import org.testng.annotations.Test;
-import org.wso2.carbon.admin.service.RegistrySearchAdminService;
+import org.wso2.carbon.automation.api.clients.registry.SearchAdminServiceClient;
 import org.wso2.carbon.integration.framework.ClientConnectionUtil;
 import org.wso2.carbon.integration.framework.LoginLogoutUtil;
 import org.wso2.carbon.integration.framework.utils.FrameworkSettings;
@@ -39,7 +39,7 @@ public class SaveDeleteFilterTestCase {
 
     private String sessionCookie;
 
-    private RegistrySearchAdminService searchAdminService;
+    private SearchAdminServiceClient searchAdminService;
     private final String filterName = "testFilter";
 
     @BeforeClass
@@ -48,7 +48,7 @@ public class SaveDeleteFilterTestCase {
         ClientConnectionUtil.waitForPort(Integer.parseInt(FrameworkSettings.HTTP_PORT));
         sessionCookie = new LoginLogoutUtil().login();
 
-        searchAdminService = new RegistrySearchAdminService(SERVER_URL);
+        searchAdminService = new SearchAdminServiceClient(SERVER_URL);
 
     }
 

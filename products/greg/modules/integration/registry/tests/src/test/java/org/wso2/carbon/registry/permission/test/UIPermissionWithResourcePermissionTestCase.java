@@ -23,11 +23,11 @@ import org.apache.commons.logging.LogFactory;
 import org.testng.Assert;
 import org.testng.annotations.BeforeClass;
 import org.testng.annotations.Test;
-import org.wso2.carbon.admin.service.AdminServiceAuthentication;
-import org.wso2.carbon.admin.service.AdminServiceResourceAdmin;
-import org.wso2.carbon.admin.service.AdminServiceUserMgtService;
 import org.wso2.carbon.authenticator.stub.LoginAuthenticationExceptionException;
 import org.wso2.carbon.authenticator.stub.LogoutAuthenticationExceptionException;
+import org.wso2.carbon.automation.api.clients.authenticators.AuthenticatorClient;
+import org.wso2.carbon.automation.api.clients.registry.ResourceAdminServiceClient;
+import org.wso2.carbon.automation.api.clients.user.mgt.UserManagementClient;
 import org.wso2.carbon.integration.framework.ClientConnectionUtil;
 import org.wso2.carbon.integration.framework.LoginLogoutUtil;
 import org.wso2.carbon.integration.framework.utils.FrameworkSettings;
@@ -38,7 +38,6 @@ import org.wso2.carbon.registry.resource.stub.ResourceAdminServiceStub;
 import org.wso2.carbon.registry.resource.test.TestUtils;
 import org.wso2.carbon.registry.search.metadata.test.utils.GregTestUtils;
 import org.wso2.carbon.registry.ws.client.registry.WSRegistryServiceClient;
-import org.wso2.carbon.user.mgt.common.UserAdminException;
 
 import java.rmi.RemoteException;
 
@@ -49,9 +48,9 @@ public class UIPermissionWithResourcePermissionTestCase {
 
     private static final Log log =
             LogFactory.getLog(UIPermissionWithResourcePermissionTestCase.class);
-    private AdminServiceUserMgtService userAdminStub;
-    private static AdminServiceAuthentication userAuthenticationStub;
-    private static AdminServiceResourceAdmin admin_service_resource_admin;
+    private UserManagementClient userAdminStub;
+    private static AuthenticatorClient userAuthenticationStub;
+    private static ResourceAdminServiceClient admin_service_resource_admin;
     private String gregHostName;
     private String sessionCookie;
     private String roleName;
@@ -69,9 +68,9 @@ public class UIPermissionWithResourcePermissionTestCase {
         SERVER_URL = "https://" + FrameworkSettings.HOST_NAME +
                 ":" + FrameworkSettings.HTTPS_PORT + "/services/";
         gregHostName = FrameworkSettings.HOST_NAME;
-        userAdminStub = new AdminServiceUserMgtService(SERVER_URL);
-        userAuthenticationStub = new AdminServiceAuthentication(SERVER_URL);
-        admin_service_resource_admin = new AdminServiceResourceAdmin(SERVER_URL);
+        userAdminStub = new UserManagementClient(SERVER_URL);
+        userAuthenticationStub = new AuthenticatorClient(SERVER_URL);
+        admin_service_resource_admin = new ResourceAdminServiceClient(SERVER_URL);
         registry = GregTestUtils.getRegistry();
         roleName = "manager";
         userName = "ajith";
@@ -87,11 +86,13 @@ public class UIPermissionWithResourcePermissionTestCase {
     }
 
     @Test(groups = {"wso2.greg"}, description = "Add a wsdl file by Admin user", priority = 1)
-    public void testAddMetaDataByAdmin() throws RemoteException, LoginAuthenticationExceptionException, RegistryException {
+    public void testAddMetaDataByAdmin()
+            throws RemoteException, LoginAuthenticationExceptionException, RegistryException,
+                   ResourceAdminServiceExceptionException {
         String resourceName = "echo.wsdl";
         String fetchUrl = "http://people.wso2.com/~evanthika/wsdls/echo.wsdl";
 
-        String sessionCookieAdmin = new AdminServiceAuthentication(SERVER_URL).
+        String sessionCookieAdmin = new AuthenticatorClient(SERVER_URL).
                 login("admin", "admin", gregHostName);
         log.info("***********Admin user logged********************");
         admin_service_resource_admin.addWSDL(sessionCookieAdmin, resourceName, "", fetchUrl);
@@ -105,9 +106,9 @@ public class UIPermissionWithResourcePermissionTestCase {
     @Test(groups = {"wso2.greg"}, description = "Create a role manager and user" +
             " ajith and trying to delete wsdl without granting the resource permission", priority = 1)
     public void testDeleteMetaDataPermissionUser()
-            throws UserAdminException, RemoteException, LoginAuthenticationExceptionException,
-            LogoutAuthenticationExceptionException, RegistryException,
-            ResourceAdminServiceResourceServiceExceptionException {
+            throws Exception, RemoteException, LoginAuthenticationExceptionException,
+                   LogoutAuthenticationExceptionException, RegistryException,
+                   ResourceAdminServiceResourceServiceExceptionException {
 
         String permission1[] = {"/permission/admin/login",
                 "/permission/admin/manage/resources/browse",
@@ -115,7 +116,7 @@ public class UIPermissionWithResourcePermissionTestCase {
 
         String sessionCookieUser;
         addRoleWithUser(permission1);
-        sessionCookieUser = new AdminServiceAuthentication(SERVER_URL).
+        sessionCookieUser = new AuthenticatorClient(SERVER_URL).
                 login(userName, userPassword, gregHostName);
         log.info("Newly Created User Loged in :" + userName);
 
@@ -142,7 +143,7 @@ public class UIPermissionWithResourcePermissionTestCase {
         String path1ToAuth = "/_system/governance/trunk";
         String path2ToAuth = "/_system/governance/branches";
 
-        String sessionCookieAdmin = new AdminServiceAuthentication(SERVER_URL).
+        String sessionCookieAdmin = new AuthenticatorClient(SERVER_URL).
                 login("admin", "admin", gregHostName);
         ResourceAdminServiceStub resourceAdminServiceStub = TestUtils.getResourceAdminServiceStub(sessionCookieAdmin);
 
@@ -151,7 +152,7 @@ public class UIPermissionWithResourcePermissionTestCase {
         resourceAdminServiceStub.addRolePermission(path2ToAuth, roleName, "4", "2");
 
         try {
-            String sessionCookieUser = new AdminServiceAuthentication(SERVER_URL).
+            String sessionCookieUser = new AuthenticatorClient(SERVER_URL).
                     login(userName, userPassword, gregHostName);
             admin_service_resource_admin.deleteResource(sessionCookieUser, path);
         } catch (AxisFault e) {
@@ -165,15 +166,16 @@ public class UIPermissionWithResourcePermissionTestCase {
 
     @Test(groups = {"wso2.greg"}, description = "allow delete for /_system/governance/branches /_system/governance/trunk" +
             "and try to delete wsdl", priority = 1)
-    public void testDeleteWithResourcePermission() throws RemoteException, LoginAuthenticationExceptionException,
-            ResourceAdminServiceResourceServiceExceptionException, RegistryException,
-            LogoutAuthenticationExceptionException {
+    public void testDeleteWithResourcePermission()
+            throws Exception, LoginAuthenticationExceptionException,
+                   ResourceAdminServiceResourceServiceExceptionException, RegistryException,
+                   LogoutAuthenticationExceptionException {
 
         String path = "/_system/governance/trunk/services/org/wso2/carbon/core/services/echo/";
         String path1ToAuth = "/_system/governance/trunk";
         String path2ToAuth = "/_system/governance/branches";
 
-        String sessionCookieAdmin = new AdminServiceAuthentication(SERVER_URL).
+        String sessionCookieAdmin = new AuthenticatorClient(SERVER_URL).
                 login("admin", "admin", gregHostName);
         ResourceAdminServiceStub resourceAdminServiceStub = TestUtils.getResourceAdminServiceStub(sessionCookieAdmin);
 
@@ -182,7 +184,7 @@ public class UIPermissionWithResourcePermissionTestCase {
         resourceAdminServiceStub.addRolePermission(path2ToAuth, roleName, "4", "1");
 
         try {
-            String sessionCookieUser = new AdminServiceAuthentication(SERVER_URL).
+            String sessionCookieUser = new AuthenticatorClient(SERVER_URL).
                     login(userName, userPassword, gregHostName);
             admin_service_resource_admin.deleteResource(sessionCookieUser, path);
         } catch (AxisFault e) {
@@ -197,7 +199,7 @@ public class UIPermissionWithResourcePermissionTestCase {
     }
 
     private void addRoleWithUser(String[] permission) throws
-            UserAdminException {
+                                                      Exception {
         userAdminStub.addRole(roleName, null, permission, sessionCookie);
         log.info("Successfully added Role :" + roleName);
         String roles[] = {roleName};
@@ -206,7 +208,7 @@ public class UIPermissionWithResourcePermissionTestCase {
     }
 
 
-    private void deleteRoleAndUsers(String roleName, String userName) {
+    private void deleteRoleAndUsers(String roleName, String userName) throws Exception {
         userAdminStub.deleteRole(sessionCookie, roleName);
         log.info("Role " + roleName + " deleted successfully");
         userAdminStub.deleteUser(sessionCookie, userName);

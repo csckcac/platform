@@ -21,7 +21,7 @@ import org.testng.Assert;
 import org.testng.annotations.BeforeClass;
 import org.testng.annotations.DataProvider;
 import org.testng.annotations.Test;
-import org.wso2.carbon.admin.service.RegistrySearchAdminService;
+import org.wso2.carbon.automation.api.clients.registry.SearchAdminServiceClient;
 import org.wso2.carbon.governance.api.policies.PolicyManager;
 import org.wso2.carbon.governance.api.policies.dataobjects.Policy;
 import org.wso2.carbon.governance.api.schema.SchemaManager;
@@ -57,7 +57,7 @@ public class RegistrySearchByCommentsTestCase {
 
     private String sessionCookie;
 
-    private RegistrySearchAdminService searchAdminService;
+    private SearchAdminServiceClient searchAdminService;
     private WSRegistryServiceClient registry;
     private Registry governance;
 
@@ -66,7 +66,7 @@ public class RegistrySearchByCommentsTestCase {
         final String SERVER_URL = GregTestUtils.getServerUrl();
         ClientConnectionUtil.waitForPort(Integer.parseInt(FrameworkSettings.HTTP_PORT));
         sessionCookie = new LoginLogoutUtil().login();
-        searchAdminService = new RegistrySearchAdminService(SERVER_URL);
+        searchAdminService = new SearchAdminServiceClient(SERVER_URL);
         registry = GregTestUtils.getRegistry();
         governance = GregTestUtils.getGovernanceRegistry(registry);
 

@@ -23,7 +23,7 @@ import org.testng.Assert;
 import org.testng.annotations.BeforeClass;
 import org.testng.annotations.DataProvider;
 import org.testng.annotations.Test;
-import org.wso2.carbon.admin.service.RegistrySearchAdminService;
+import org.wso2.carbon.automation.api.clients.registry.SearchAdminServiceClient;
 import org.wso2.carbon.integration.framework.ClientConnectionUtil;
 import org.wso2.carbon.integration.framework.LoginLogoutUtil;
 import org.wso2.carbon.integration.framework.utils.FrameworkSettings;
@@ -52,7 +52,7 @@ public class RegistrySearchByUpdatedDataTestCase {
 
     private String sessionCookie;
 
-    private RegistrySearchAdminService searchAdminService;
+    private SearchAdminServiceClient searchAdminService;
     private WSRegistryServiceClient registry;
     private String userName;
 
@@ -61,7 +61,7 @@ public class RegistrySearchByUpdatedDataTestCase {
         final String SERVER_URL = GregTestUtils.getServerUrl();
         ClientConnectionUtil.waitForPort(Integer.parseInt(FrameworkSettings.HTTP_PORT));
         sessionCookie = new LoginLogoutUtil().login();
-        searchAdminService = new RegistrySearchAdminService(SERVER_URL);
+        searchAdminService = new SearchAdminServiceClient(SERVER_URL);
         registry = GregTestUtils.getRegistry();
         userName = FrameworkSettings.USER_NAME;
 

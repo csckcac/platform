@@ -22,16 +22,15 @@ import org.apache.commons.logging.LogFactory;
 import org.testng.annotations.AfterClass;
 import org.testng.annotations.BeforeClass;
 import org.testng.annotations.Test;
-import org.wso2.carbon.admin.service.AdminServiceAuthentication;
-import org.wso2.carbon.admin.service.AdminServiceResourceAdmin;
-import org.wso2.carbon.admin.service.AdminServiceUserMgtService;
+import org.wso2.carbon.automation.api.clients.user.mgt.UserManagementClient;
+import org.wso2.carbon.automation.api.clients.authenticators.AuthenticatorClient;
+import org.wso2.carbon.automation.api.clients.registry.ResourceAdminServiceClient;
 import org.wso2.carbon.authenticator.stub.LoginAuthenticationExceptionException;
 import org.wso2.carbon.authenticator.stub.LogoutAuthenticationExceptionException;
 import org.wso2.carbon.integration.framework.ClientConnectionUtil;
 import org.wso2.carbon.integration.framework.LoginLogoutUtil;
 import org.wso2.carbon.integration.framework.utils.FrameworkSettings;
 import org.wso2.carbon.registry.resource.stub.ResourceAdminServiceExceptionException;
-import org.wso2.carbon.user.mgt.common.UserAdminException;
 
 import java.rmi.RemoteException;
 
@@ -41,9 +40,9 @@ import static org.testng.Assert.assertTrue;
 public class GRegLoginPermissionServiceTestCase{
 
     private static final Log log = LogFactory.getLog(GRegLoginPermissionServiceTestCase.class);
-    private AdminServiceUserMgtService userAdminStub;
-    private static AdminServiceAuthentication userAuthenticationStub;
-    private static AdminServiceResourceAdmin admin_service_resource_admin;
+    private UserManagementClient userAdminStub;
+    private static AuthenticatorClient userAuthenticationStub;
+    private static ResourceAdminServiceClient admin_service_resource_admin;
     private String sessionCookie;
     private String roleName;
     private String userName;
@@ -57,9 +56,9 @@ public class GRegLoginPermissionServiceTestCase{
         String SERVER_URL = "https://" + FrameworkSettings.HOST_NAME +
                             ":" + FrameworkSettings.HTTPS_PORT + "/services/";
 
-        userAdminStub = new AdminServiceUserMgtService(SERVER_URL);
-        userAuthenticationStub = new AdminServiceAuthentication(SERVER_URL);
-        admin_service_resource_admin = new AdminServiceResourceAdmin(SERVER_URL);
+        userAdminStub = new UserManagementClient(SERVER_URL);
+        userAuthenticationStub = new AuthenticatorClient(SERVER_URL);
+        admin_service_resource_admin = new ResourceAdminServiceClient(SERVER_URL);
         roleName = "login_role";
         userName = "greg_login_user";
         userPassword = "welcome";
@@ -77,7 +76,7 @@ public class GRegLoginPermissionServiceTestCase{
     @Test(groups = {"wso2.greg"}, description = "test add a role with login permission",
           priority = 1)
     public void testAddLoginPermissionUser()
-            throws UserAdminException, RemoteException, ResourceAdminServiceExceptionException,
+            throws Exception, ResourceAdminServiceExceptionException,
                    LoginAuthenticationExceptionException, LogoutAuthenticationExceptionException {
 
 
@@ -108,7 +107,7 @@ public class GRegLoginPermissionServiceTestCase{
         log.info("*************Login Permission Only Test Scenario-Passed ******************");
     }
 
-    private void addRoleWithUser(String[] permission, String[] userList) throws UserAdminException {
+    private void addRoleWithUser(String[] permission, String[] userList) throws Exception {
         userAdminStub.addRole(roleName, null, permission, sessionCookie);
         log.info("Successfully added Role :" + roleName);
         String roles[] = {roleName};
@@ -117,7 +116,7 @@ public class GRegLoginPermissionServiceTestCase{
     }
 
     @AfterClass(alwaysRun = true)
-    public void deleteRoleAndUsers() {
+    public void deleteRoleAndUsers() throws Exception {
         userAdminStub.deleteRole(sessionCookie, roleName);
         log.info("Role " + roleName + " deleted successfully");
         userAdminStub.deleteUser(sessionCookie, userName);

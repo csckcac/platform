@@ -21,8 +21,9 @@ import org.testng.Assert;
 import org.testng.annotations.AfterClass;
 import org.testng.annotations.BeforeClass;
 import org.testng.annotations.Test;
-import org.wso2.carbon.admin.service.ActivitySearchAdminService;
-import org.wso2.carbon.admin.service.LifeCycleAdminService;
+import org.wso2.carbon.automation.api.clients.governance.LifeCycleAdminServiceClient;
+import org.wso2.carbon.automation.api.clients.governance.LifeCycleManagementClient;
+import org.wso2.carbon.automation.api.clients.registry.ActivityAdminServiceClient;
 import org.wso2.carbon.governance.custom.lifecycles.checklist.stub.CustomLifecyclesChecklistAdminServiceExceptionException;
 import org.wso2.carbon.governance.custom.lifecycles.checklist.stub.beans.xsd.LifecycleBean;
 import org.wso2.carbon.governance.custom.lifecycles.checklist.stub.services.ArrayOfString;
@@ -45,8 +46,8 @@ public class DefaultServiceLifeCycleTestCase {
     private String sessionCookie;
 
     private WSRegistryServiceClient registry;
-    private LifeCycleAdminService lifeCycleAdminService;
-    private ActivitySearchAdminService activitySearch;
+    private LifeCycleAdminServiceClient lifeCycleAdminService;
+    private ActivityAdminServiceClient activitySearch;
     private String userName;
 
     private final String serviceName = "serviceForLifeCycleTest";
@@ -65,8 +66,8 @@ public class DefaultServiceLifeCycleTestCase {
         sessionCookie = new LoginLogoutUtil().login();
         final String SERVER_URL = GregTestUtils.getServerUrl();;
         userName = FrameworkSettings.USER_NAME;
-        lifeCycleAdminService = new LifeCycleAdminService(SERVER_URL);
-        activitySearch = new ActivitySearchAdminService(SERVER_URL);
+        lifeCycleAdminService = new LifeCycleAdminServiceClient(SERVER_URL);
+        activitySearch = new ActivityAdminServiceClient(SERVER_URL);
         registry = GregTestUtils.getRegistry();
         Registry governance = GregTestUtils.getGovernanceRegistry(registry);
 
@@ -99,7 +100,7 @@ public class DefaultServiceLifeCycleTestCase {
         Thread.sleep(1000 * 10);
         ActivityBean activityObj = activitySearch.getActivities(sessionCookie, userName
                 , servicePathDev, Utils.formatDate(Calendar.getInstance().getTime())
-                , "", ActivitySearchAdminService.FILTER_ASSOCIATE_ASPECT, 1);
+                , "", ActivityAdminServiceClient.FILTER_ASSOCIATE_ASPECT, 1);
         Assert.assertNotNull(activityObj, "Activity object null for Associate Aspect");
         Assert.assertNotNull(activityObj.getActivity(), "Activity list object null for Associate Aspect");
         Assert.assertTrue((activityObj.getActivity().length > 0), "Activity list object null");
@@ -142,7 +143,7 @@ public class DefaultServiceLifeCycleTestCase {
         Thread.sleep(1000 * 10);
         ActivityBean activityObjTrunk = activitySearch.getActivities(sessionCookie, userName
                 , servicePathDev, Utils.formatDate(Calendar.getInstance().getTime())
-                , "", ActivitySearchAdminService.FILTER_RESOURCE_UPDATE, 1);
+                , "", ActivityAdminServiceClient.FILTER_RESOURCE_UPDATE, 1);
         Assert.assertNotNull(activityObjTrunk, "Activity object null in trunk");
         Assert.assertNotNull(activityObjTrunk.getActivity(), "Activity list object null");
         Assert.assertTrue((activityObjTrunk.getActivity().length > 0), "Activity list object null");
@@ -156,7 +157,7 @@ public class DefaultServiceLifeCycleTestCase {
         //activity search for test branch
         ActivityBean activityObjTest = activitySearch.getActivities(sessionCookie, userName
                 , servicePathTest, Utils.formatDate(Calendar.getInstance().getTime())
-                , "", ActivitySearchAdminService.FILTER_ALL, 1);
+                , "", ActivityAdminServiceClient.FILTER_ALL, 1);
         Assert.assertNotNull(activityObjTest, "Activity object null");
         Assert.assertNotNull(activityObjTest.getActivity(), "Activity list object null");
         Assert.assertTrue((activityObjTest.getActivity().length > 0), "Activity list object null");
@@ -194,7 +195,7 @@ public class DefaultServiceLifeCycleTestCase {
         Thread.sleep(1000 * 10);
         ActivityBean activityObjTest = activitySearch.getActivities(sessionCookie, userName
                 , servicePathTest, Utils.formatDate(Calendar.getInstance().getTime())
-                , "", ActivitySearchAdminService.FILTER_RESOURCE_UPDATE, 1);
+                , "", ActivityAdminServiceClient.FILTER_RESOURCE_UPDATE, 1);
         Assert.assertNotNull(activityObjTest, "Activity object null");
         Assert.assertNotNull(activityObjTest.getActivity(), "Activity list object null");
         Assert.assertTrue((activityObjTest.getActivity().length > 0), "Activity list object null");
@@ -208,7 +209,7 @@ public class DefaultServiceLifeCycleTestCase {
         //activity search for production branch
         ActivityBean activityObjProd = activitySearch.getActivities(sessionCookie, userName
                 , servicePathProd, Utils.formatDate(Calendar.getInstance().getTime())
-                , "", ActivitySearchAdminService.FILTER_ALL, 1);
+                , "", ActivityAdminServiceClient.FILTER_ALL, 1);
         Assert.assertNotNull(activityObjProd, "Activity object null");
         Assert.assertNotNull(activityObjProd.getActivity(), "Activity list object null");
         Assert.assertTrue((activityObjProd.getActivity().length > 0), "Activity list object null");
@@ -249,7 +250,7 @@ public class DefaultServiceLifeCycleTestCase {
         Thread.sleep(1000 * 10);
         ActivityBean activityObjTrunk = activitySearch.getActivities(sessionCookie, userName
                 , servicePathProd, Utils.formatDate(Calendar.getInstance().getTime())
-                , "", ActivitySearchAdminService.FILTER_RESOURCE_UPDATE, 1);
+                , "", ActivityAdminServiceClient.FILTER_RESOURCE_UPDATE, 1);
         Assert.assertNotNull(activityObjTrunk, "Activity object null in trunk");
         Assert.assertNotNull(activityObjTrunk.getActivity(), "Activity list object null");
         Assert.assertTrue((activityObjTrunk.getActivity().length > 0), "Activity list object null");
@@ -263,7 +264,7 @@ public class DefaultServiceLifeCycleTestCase {
         //activity search for test branch
         ActivityBean activityObjTest = activitySearch.getActivities(sessionCookie, userName
                 , servicePathTest, Utils.formatDate(Calendar.getInstance().getTime())
-                , "", ActivitySearchAdminService.FILTER_ALL, 1);
+                , "", ActivityAdminServiceClient.FILTER_ALL, 1);
         Assert.assertNotNull(activityObjTest, "Activity object null");
         Assert.assertNotNull(activityObjTest.getActivity(), "Activity list object null");
         Assert.assertTrue((activityObjTest.getActivity().length > 0), "Activity list object null");
@@ -304,7 +305,7 @@ public class DefaultServiceLifeCycleTestCase {
         Thread.sleep(1000 * 10);
         ActivityBean activityObjTrunk = activitySearch.getActivities(sessionCookie, userName
                 , servicePathDev, Utils.formatDate(Calendar.getInstance().getTime())
-                , "", ActivitySearchAdminService.FILTER_RESOURCE_UPDATE, 1);
+                , "", ActivityAdminServiceClient.FILTER_RESOURCE_UPDATE, 1);
         Assert.assertNotNull(activityObjTrunk, "Activity object null in trunk");
         Assert.assertNotNull(activityObjTrunk.getActivity(), "Activity list object null");
         Assert.assertTrue((activityObjTrunk.getActivity().length > 0), "Activity list object null");
@@ -317,7 +318,7 @@ public class DefaultServiceLifeCycleTestCase {
         //activity search for test branch
         ActivityBean activityObjTest = activitySearch.getActivities(sessionCookie, userName
                 , testBranch, Utils.formatDate(Calendar.getInstance().getTime())
-                , "", ActivitySearchAdminService.FILTER_ALL, 1);
+                , "", ActivityAdminServiceClient.FILTER_ALL, 1);
         Assert.assertNotNull(activityObjTest, "Activity object null");
         Assert.assertNotNull(activityObjTest.getActivity(), "Activity list object null");
         Assert.assertTrue((activityObjTest.getActivity().length > 0), "Activity list object null");
@@ -361,7 +362,7 @@ public class DefaultServiceLifeCycleTestCase {
         Thread.sleep(1000 * 10);
         ActivityBean activityObjTest = activitySearch.getActivities(sessionCookie, userName
                 , testBranch, Utils.formatDate(Calendar.getInstance().getTime())
-                , "", ActivitySearchAdminService.FILTER_RESOURCE_UPDATE, 1);
+                , "", ActivityAdminServiceClient.FILTER_RESOURCE_UPDATE, 1);
         Assert.assertNotNull(activityObjTest, "Activity object null");
         Assert.assertNotNull(activityObjTest.getActivity(), "Activity list object null");
         Assert.assertTrue((activityObjTest.getActivity().length > 0), "Activity list object null");
@@ -376,7 +377,7 @@ public class DefaultServiceLifeCycleTestCase {
         //activity search for production branch
         ActivityBean activityObjProd = activitySearch.getActivities(sessionCookie, userName
                 , prodBranch, Utils.formatDate(Calendar.getInstance().getTime())
-                , "", ActivitySearchAdminService.FILTER_ALL, 1);
+                , "", ActivityAdminServiceClient.FILTER_ALL, 1);
         Assert.assertNotNull(activityObjProd, "Activity object null");
         Assert.assertNotNull(activityObjProd.getActivity(), "Activity list object null");
         Assert.assertTrue((activityObjProd.getActivity().length > 0), "Activity list object null");

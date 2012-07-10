@@ -19,9 +19,9 @@ package org.wso2.carbon.registry.search.metadata.test;
 
 import org.testng.Assert;
 import org.testng.annotations.BeforeClass;
+import org.wso2.carbon.automation.api.clients.registry.SearchAdminServiceClient;
 import org.testng.annotations.DataProvider;
 import org.testng.annotations.Test;
-import org.wso2.carbon.admin.service.RegistrySearchAdminService;
 import org.wso2.carbon.integration.framework.ClientConnectionUtil;
 import org.wso2.carbon.integration.framework.LoginLogoutUtil;
 import org.wso2.carbon.integration.framework.utils.FrameworkSettings;
@@ -42,14 +42,14 @@ public class RegistrySearchByResourceNameTestCase {
 
     private String sessionCookie;
 
-    private RegistrySearchAdminService searchAdminService;
+    private SearchAdminServiceClient searchAdminService;
 
     @BeforeClass
     public void init() throws Exception {
         final String SERVER_URL = GregTestUtils.getServerUrl();
         ClientConnectionUtil.waitForPort(Integer.parseInt(FrameworkSettings.HTTP_PORT));
         sessionCookie = new LoginLogoutUtil().login();
-        searchAdminService = new RegistrySearchAdminService(SERVER_URL);
+        searchAdminService = new SearchAdminServiceClient(SERVER_URL);
 
     }
 

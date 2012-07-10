@@ -22,7 +22,7 @@ import org.testng.Assert;
 import org.testng.annotations.AfterClass;
 import org.testng.annotations.BeforeClass;
 import org.testng.annotations.Test;
-import org.wso2.carbon.admin.service.LifeCycleManagerAdminService;
+import org.wso2.carbon.automation.api.clients.governance.LifeCycleManagementClient;
 import org.wso2.carbon.governance.lcm.stub.LifeCycleManagementServiceExceptionException;
 import org.wso2.carbon.integration.framework.ClientConnectionUtil;
 import org.wso2.carbon.integration.framework.LoginLogoutUtil;
@@ -36,7 +36,7 @@ import java.rmi.RemoteException;
 public class LifeCycleErrorHandlingTestCase {
     private String sessionCookie;
 
-    private LifeCycleManagerAdminService lifeCycleManagerAdminService;
+    private LifeCycleManagementClient lifeCycleManagerAdminService;
 
     private final String ASPECT_NAME = "LifeCycleSyntaxTest";
     private String lifeCycleConfiguration;
@@ -46,7 +46,7 @@ public class LifeCycleErrorHandlingTestCase {
         ClientConnectionUtil.waitForPort(Integer.parseInt(FrameworkSettings.HTTP_PORT));
         sessionCookie = new LoginLogoutUtil().login();
         final String SERVER_URL = GregTestUtils.getServerUrl();
-        lifeCycleManagerAdminService = new LifeCycleManagerAdminService(SERVER_URL);
+        lifeCycleManagerAdminService = new LifeCycleManagementClient(SERVER_URL);
         String filePath = GregTestUtils.getResourcePath()
                           + File.separator + "lifecycle" + File.separator + "customLifeCycle.xml";
         lifeCycleConfiguration = GregTestUtils.readFile(filePath);

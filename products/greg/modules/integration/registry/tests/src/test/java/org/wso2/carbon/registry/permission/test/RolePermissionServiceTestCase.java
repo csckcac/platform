@@ -20,16 +20,16 @@ import org.apache.commons.logging.Log;
 import org.apache.commons.logging.LogFactory;
 import org.testng.annotations.BeforeClass;
 import org.testng.annotations.Test;
-import org.wso2.carbon.admin.service.AdminServiceUserMgtService;
-import org.wso2.carbon.authenticator.stub.LoginAuthenticationExceptionException;
+import org.wso2.carbon.automation.api.clients.user.mgt.UserManagementClient;
 import org.wso2.carbon.integration.framework.ClientConnectionUtil;
 import org.wso2.carbon.integration.framework.LoginLogoutUtil;
 import org.wso2.carbon.integration.framework.utils.FrameworkSettings;
 import org.wso2.carbon.user.mgt.common.UserAdminException;
 
+
 public class RolePermissionServiceTestCase {
     private static final Log log = LogFactory.getLog(RolePermissionServiceTestCase.class);
-    private AdminServiceUserMgtService userAdminStub;
+    private UserManagementClient userAdminStub;
     private String sessionCookie;
     private String roleName;
     private String userName;
@@ -38,17 +38,17 @@ public class RolePermissionServiceTestCase {
 
 
     @BeforeClass(alwaysRun = true)
-    public void init() throws Exception, LoginAuthenticationExceptionException {
+    public void init() throws Exception {
         ClientConnectionUtil.waitForPort(Integer.parseInt(FrameworkSettings.HTTP_PORT));
         sessionCookie = util.login();
         String SERVER_URL = "https://" + FrameworkSettings.HOST_NAME +
                             ":" + FrameworkSettings.HTTPS_PORT + "/services/";
-        userAdminStub = new AdminServiceUserMgtService(SERVER_URL);
+        userAdminStub = new UserManagementClient(SERVER_URL);
     }
 
     @Test(groups = {"wso2.greg"}, description = "test add a role with login permission",
           priority = 1)
-    public void testAddLoginPermission() throws UserAdminException {
+    public void testAddLoginPermission() throws Exception {
         roleName = "login";
         userName = "greguser1";
         userPassword = "greguser1";
@@ -71,7 +71,7 @@ public class RolePermissionServiceTestCase {
 
     @Test(groups = {"wso2.greg"}, description = "test add a role with configure permission",
           priority = 2)
-    public void testAddConfigurePermission() throws UserAdminException {
+    public void testAddConfigurePermission() throws Exception {
         roleName = "configure";
         userName = "greguser2";
         userPassword = "greguser2";
@@ -95,7 +95,7 @@ public class RolePermissionServiceTestCase {
 
     @Test(groups = {"wso2.greg"}, description = "test add a role with manage permission",
           priority = 3)
-    public void testAddManagePermission() throws UserAdminException {
+    public void testAddManagePermission() throws Exception {
         roleName = "manage";
         userName = "greguser3";
         userPassword = "greguser3";
@@ -120,7 +120,7 @@ public class RolePermissionServiceTestCase {
 
     @Test(groups = {"wso2.greg"}, description = "test add a role with monitor permission",
           priority = 4)
-    public void testAddMonitorPermission() throws UserAdminException {
+    public void testAddMonitorPermission() throws Exception {
         roleName = "monitor";
         userName = "greguser4";
         userPassword = "greguser4";
@@ -142,7 +142,8 @@ public class RolePermissionServiceTestCase {
         }
     }
 
-    private void deleteRolesIfExists() {
+    private void deleteRolesIfExists()
+            throws Exception {
         if (userAdminStub.roleNameExists(roleName, sessionCookie)) {  //delete the role if exists
             userAdminStub.deleteRole(sessionCookie, roleName);
         }
@@ -154,7 +155,7 @@ public class RolePermissionServiceTestCase {
 
     @Test(groups = {"wso2.greg"}, description = "test add a role with multiple permission",
           priority = 5)
-    public void testAddMultiplePermissions() throws UserAdminException {
+    public void testAddMultiplePermissions() throws Exception {
         roleName = "mulitpermission";
         userName = "greguser5";
         userPassword = "greguser5";
@@ -178,7 +179,7 @@ public class RolePermissionServiceTestCase {
 
     @Test(groups = {"wso2.greg"}, description = "test add a role with super admin permission",
           priority = 6)
-    public void testAddSuperAdminPermission() throws UserAdminException {
+    public void testAddSuperAdminPermission() throws Exception {
         roleName = "superadmin";
         userName = "greguser6";
         userPassword = "greguser6";
@@ -200,7 +201,7 @@ public class RolePermissionServiceTestCase {
 
     }
 
-    public void addRolewithUser(String[] permission) throws UserAdminException {
+    public void addRolewithUser(String[] permission) throws Exception {
         userAdminStub.addRole(roleName, null , permission, sessionCookie);
         log.info("Successfully added Role :" + roleName);
 
@@ -210,7 +211,7 @@ public class RolePermissionServiceTestCase {
     }
 
 
-    private void deleteRoleAndUsers(String roleName, String userName) {
+    private void deleteRoleAndUsers(String roleName, String userName) throws Exception {
         userAdminStub.deleteRole(sessionCookie, roleName);
         log.info("Role " + roleName + " deleted successfully");
         userAdminStub.deleteUser(sessionCookie, userName);

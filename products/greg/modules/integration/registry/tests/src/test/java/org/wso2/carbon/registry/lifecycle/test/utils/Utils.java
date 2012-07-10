@@ -18,7 +18,7 @@
 package org.wso2.carbon.registry.lifecycle.test.utils;
 
 import org.testng.Assert;
-import org.wso2.carbon.admin.service.LifeCycleManagerAdminService;
+import org.wso2.carbon.automation.api.clients.governance.LifeCycleManagementClient;
 import org.wso2.carbon.governance.api.policies.PolicyManager;
 import org.wso2.carbon.governance.api.policies.dataobjects.Policy;
 import org.wso2.carbon.governance.api.schema.SchemaManager;
@@ -145,7 +145,7 @@ public class Utils {
     }
 
     public static void createNewLifeCycle(String sessionCookie, String lifeCycleName
-            , LifeCycleManagerAdminService lifeCycleManagerAdminService)
+            , LifeCycleManagementClient lifeCycleManagerAdminService)
             throws IOException, LifeCycleManagementServiceExceptionException, InterruptedException {
         String filePath = GregTestUtils.getResourcePath()
                           + File.separator + "lifecycle" + File.separator + "customLifeCycle.xml";
@@ -171,7 +171,7 @@ public class Utils {
     }
 
     public static void deleteLifeCycleIfExist(String sessionCookie, String lifeCycleName
-            , LifeCycleManagerAdminService lifeCycleManagerAdminService)
+            , LifeCycleManagementClient lifeCycleManagerAdminService)
             throws LifeCycleManagementServiceExceptionException, RemoteException {
         String[] lifeCycleList = lifeCycleManagerAdminService.getLifecycleList(sessionCookie);
         if (lifeCycleList != null && lifeCycleList.length > 0) {

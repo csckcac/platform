@@ -21,10 +21,10 @@ import org.testng.Assert;
 import org.testng.annotations.AfterClass;
 import org.testng.annotations.BeforeClass;
 import org.testng.annotations.Test;
-import org.wso2.carbon.admin.service.ActivitySearchAdminService;
-import org.wso2.carbon.admin.service.AdminServiceUserMgtService;
-import org.wso2.carbon.admin.service.LifeCycleAdminService;
-import org.wso2.carbon.admin.service.LifeCycleManagerAdminService;
+import org.wso2.carbon.automation.api.clients.governance.LifeCycleAdminServiceClient;
+import org.wso2.carbon.automation.api.clients.governance.LifeCycleManagementClient;
+import org.wso2.carbon.automation.api.clients.registry.ActivityAdminServiceClient;
+import org.wso2.carbon.automation.api.clients.user.mgt.UserManagementClient;
 import org.wso2.carbon.governance.custom.lifecycles.checklist.stub.CustomLifecyclesChecklistAdminServiceExceptionException;
 import org.wso2.carbon.governance.custom.lifecycles.checklist.stub.beans.xsd.LifecycleBean;
 import org.wso2.carbon.governance.custom.lifecycles.checklist.stub.services.ArrayOfString;
@@ -51,10 +51,10 @@ public class CustomLifeCycleDemoteForWSDLTestCase {
     private String sessionCookie;
 
     private WSRegistryServiceClient registry;
-    private LifeCycleAdminService lifeCycleAdminService;
-    private LifeCycleManagerAdminService lifeCycleManagerAdminService;
-    private ActivitySearchAdminService activitySearch;
-    private AdminServiceUserMgtService userManger;
+    private LifeCycleAdminServiceClient lifeCycleAdminService;
+    private LifeCycleManagementClient lifeCycleManagerAdminService;
+    private ActivityAdminServiceClient activitySearch;
+    private UserManagementClient userManger;
     private String userName;
     private String serviceName = "echoServiceForDemote.wsdl";
     private final String ASPECT_NAME = "CustomServiceLifeCycle";
@@ -73,10 +73,10 @@ public class CustomLifeCycleDemoteForWSDLTestCase {
         sessionCookie = new LoginLogoutUtil().login();
         final String SERVER_URL = GregTestUtils.getServerUrl();
         userName = FrameworkSettings.USER_NAME;
-        lifeCycleAdminService = new LifeCycleAdminService(SERVER_URL);
-        activitySearch = new ActivitySearchAdminService(SERVER_URL);
-        lifeCycleManagerAdminService = new LifeCycleManagerAdminService(SERVER_URL);
-        userManger = new AdminServiceUserMgtService(SERVER_URL);
+        lifeCycleAdminService = new LifeCycleAdminServiceClient(SERVER_URL);
+        activitySearch = new ActivityAdminServiceClient(SERVER_URL);
+        lifeCycleManagerAdminService = new LifeCycleManagementClient(SERVER_URL);
+        userManger = new UserManagementClient(SERVER_URL);
         registry = GregTestUtils.getRegistry();
         Registry governance = GregTestUtils.getGovernanceRegistry(registry);
 
@@ -129,7 +129,7 @@ public class CustomLifeCycleDemoteForWSDLTestCase {
 
     @Test(description = "Click Check List Item", dependsOnMethods = {"addLifecycle"})
     public void clickCommencementCheckList()
-            throws CustomLifecyclesChecklistAdminServiceExceptionException, RemoteException,
+            throws Exception, RemoteException,
                    UserAdminException {
         LifecycleBean lifeCycle = lifeCycleAdminService.getLifecycleBean(sessionCookie, servicePathTrunk);
         String[] actions;
@@ -215,7 +215,7 @@ public class CustomLifeCycleDemoteForWSDLTestCase {
         Thread.sleep(1000 * 10);
         ActivityBean activityObjTrunk = activitySearch.getActivities(sessionCookie, userName
                 , servicePathTrunk, Utils.formatDate(Calendar.getInstance().getTime())
-                , "", ActivitySearchAdminService.FILTER_RESOURCE_UPDATE, 1);
+                , "", ActivityAdminServiceClient.FILTER_RESOURCE_UPDATE, 1);
         Assert.assertNotNull(activityObjTrunk, "Activity object null in trunk");
         Assert.assertNotNull(activityObjTrunk.getActivity(), "Activity list object null");
         Assert.assertTrue((activityObjTrunk.getActivity().length > 0), "Activity list object null");
@@ -314,7 +314,7 @@ public class CustomLifeCycleDemoteForWSDLTestCase {
         Thread.sleep(1000 * 10);
         ActivityBean activityObjTrunk = activitySearch.getActivities(sessionCookie, userName
                 , servicePathTrunk, Utils.formatDate(Calendar.getInstance().getTime())
-                , "", ActivitySearchAdminService.FILTER_RESOURCE_UPDATE, 1);
+                , "", ActivityAdminServiceClient.FILTER_RESOURCE_UPDATE, 1);
         Assert.assertNotNull(activityObjTrunk, "Activity object null in trunk");
         Assert.assertNotNull(activityObjTrunk.getActivity(), "Activity list object null");
         Assert.assertTrue((activityObjTrunk.getActivity().length > 0), "Activity list object null");
@@ -369,7 +369,7 @@ public class CustomLifeCycleDemoteForWSDLTestCase {
         Thread.sleep(1000 * 10);
         ActivityBean activityObjTrunk = activitySearch.getActivities(sessionCookie, userName
                 , servicePathTrunk, Utils.formatDate(Calendar.getInstance().getTime())
-                , "", ActivitySearchAdminService.FILTER_RESOURCE_UPDATE, 1);
+                , "", ActivityAdminServiceClient.FILTER_RESOURCE_UPDATE, 1);
         Assert.assertNotNull(activityObjTrunk, "Activity object null in trunk");
         Assert.assertNotNull(activityObjTrunk.getActivity(), "Activity list object null");
         Assert.assertTrue((activityObjTrunk.getActivity().length > 0), "Activity list object null");
@@ -475,7 +475,7 @@ public class CustomLifeCycleDemoteForWSDLTestCase {
         Thread.sleep(1000 * 10);
         ActivityBean activityObjTrunk = activitySearch.getActivities(sessionCookie, userName
                 , servicePathTrunk, Utils.formatDate(Calendar.getInstance().getTime())
-                , "", ActivitySearchAdminService.FILTER_RESOURCE_UPDATE, 1);
+                , "", ActivityAdminServiceClient.FILTER_RESOURCE_UPDATE, 1);
         Assert.assertNotNull(activityObjTrunk, "Activity object null in trunk");
         Assert.assertNotNull(activityObjTrunk.getActivity(), "Activity list object null");
         Assert.assertTrue((activityObjTrunk.getActivity().length > 0), "Activity list object null");
@@ -489,7 +489,7 @@ public class CustomLifeCycleDemoteForWSDLTestCase {
         Thread.sleep(1000 * 10);
         activityObjTrunk = activitySearch.getActivities(sessionCookie, userName
                 , servicePathBranchDev, Utils.formatDate(Calendar.getInstance().getTime())
-                , "", ActivitySearchAdminService.FILTER_ALL, 1);
+                , "", ActivityAdminServiceClient.FILTER_ALL, 1);
         Assert.assertNotNull(activityObjTrunk, "Activity object null in trunk");
         Assert.assertNotNull(activityObjTrunk.getActivity(), "Activity list object null");
         Assert.assertTrue((activityObjTrunk.getActivity().length > 0), "Activity list object null");
@@ -503,7 +503,7 @@ public class CustomLifeCycleDemoteForWSDLTestCase {
 
     @Test(description = "Demote Service Creation", dependsOnMethods = {"promoteServiceToDevelopment"})
     public void demoteServiceToCommencementFromDevelopment()
-            throws CustomLifecyclesChecklistAdminServiceExceptionException, RemoteException,
+            throws Exception, RemoteException,
                    UserAdminException, InterruptedException, RegistryException,
                    RegistryExceptionException {
         addRole("devrole");
@@ -593,7 +593,7 @@ public class CustomLifeCycleDemoteForWSDLTestCase {
         Thread.sleep(1000 * 10);
         ActivityBean activityObjTrunk = activitySearch.getActivities(sessionCookie, userName
                 , servicePathTrunkDemote, Utils.formatDate(Calendar.getInstance().getTime())
-                , "", ActivitySearchAdminService.FILTER_RESOURCE_UPDATE, 1);
+                , "", ActivityAdminServiceClient.FILTER_RESOURCE_UPDATE, 1);
         Assert.assertNotNull(activityObjTrunk, "Activity object null in trunk");
         Assert.assertNotNull(activityObjTrunk.getActivity(), "Activity list object null");
         Assert.assertTrue((activityObjTrunk.getActivity().length > 0), "Activity list object null");
@@ -628,7 +628,8 @@ public class CustomLifeCycleDemoteForWSDLTestCase {
         lifeCycleAdminService = null;
     }
 
-    private void deleteRolesIfExist() {
+    private void deleteRolesIfExist()
+            throws Exception, RemoteException {
 
         if (userManger.roleNameExists("archrole", sessionCookie)) {
             userManger.deleteRole(sessionCookie, "archrole");
@@ -650,7 +651,7 @@ public class CustomLifeCycleDemoteForWSDLTestCase {
         }
     }
 
-    private void addRole(String roleName) throws UserAdminException {
+    private void addRole(String roleName) throws Exception {
         String[] permissions = {"/permission/"};
         userManger.addRole(roleName, new String[]{userName}, permissions, sessionCookie);
     }

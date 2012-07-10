@@ -20,7 +20,7 @@ package org.wso2.carbon.registry.search.metadata.test;
 import org.testng.Assert;
 import org.testng.annotations.BeforeClass;
 import org.testng.annotations.Test;
-import org.wso2.carbon.admin.service.RegistrySearchAdminService;
+import org.wso2.carbon.automation.api.clients.registry.SearchAdminServiceClient;
 import org.wso2.carbon.governance.api.exception.GovernanceException;
 import org.wso2.carbon.governance.api.policies.PolicyManager;
 import org.wso2.carbon.governance.api.policies.dataobjects.Policy;
@@ -61,7 +61,7 @@ public class RegistrySearchByAllTestCase {
     private String userName;
     private String destinationPath;
 
-    private RegistrySearchAdminService searchAdminService;
+    private SearchAdminServiceClient searchAdminService;
     private Registry governance;
     
     private final String wsdlName = "echo1.wsdl";
@@ -76,7 +76,7 @@ public class RegistrySearchByAllTestCase {
         String SERVER_URL = GregTestUtils.getServerUrl();
 
         userName = FrameworkSettings.USER_NAME;
-        searchAdminService = new RegistrySearchAdminService(SERVER_URL);
+        searchAdminService = new SearchAdminServiceClient(SERVER_URL);
         governance = GregTestUtils.getGovernanceRegistry(GregTestUtils.getRegistry());
 
         addResources();

@@ -21,7 +21,7 @@ import org.testng.Assert;
 import org.testng.annotations.AfterClass;
 import org.testng.annotations.BeforeClass;
 import org.testng.annotations.Test;
-import org.wso2.carbon.admin.service.LifeCycleAdminService;
+import org.wso2.carbon.automation.api.clients.governance.LifeCycleAdminServiceClient;
 import org.wso2.carbon.governance.custom.lifecycles.checklist.stub.CustomLifecyclesChecklistAdminServiceExceptionException;
 import org.wso2.carbon.governance.custom.lifecycles.checklist.stub.beans.xsd.LifecycleBean;
 import org.wso2.carbon.integration.framework.ClientConnectionUtil;
@@ -41,7 +41,7 @@ public class LifeCycleStateWhenUpdatingResourceTestCase {
     private String sessionCookie;
 
     private WSRegistryServiceClient registry;
-    private LifeCycleAdminService lifeCycleAdminService;
+    private LifeCycleAdminServiceClient lifeCycleAdminService;
     Registry governance;
 
     private final String ASPECT_NAME = "ServiceLifeCycle";
@@ -57,7 +57,7 @@ public class LifeCycleStateWhenUpdatingResourceTestCase {
         ClientConnectionUtil.waitForPort(Integer.parseInt(FrameworkSettings.HTTP_PORT));
         sessionCookie = new LoginLogoutUtil().login();
         final String SERVER_URL = GregTestUtils.getServerUrl();
-        lifeCycleAdminService = new LifeCycleAdminService(SERVER_URL);
+        lifeCycleAdminService = new LifeCycleAdminServiceClient(SERVER_URL);
         registry = GregTestUtils.getRegistry();
         governance = GregTestUtils.getGovernanceRegistry(registry);
 

@@ -20,8 +20,8 @@ package org.wso2.carbon.registry.lifecycle.test;
 import org.testng.Assert;
 import org.testng.annotations.BeforeClass;
 import org.testng.annotations.Test;
-import org.wso2.carbon.admin.service.LifeCycleManagerAdminService;
-import org.wso2.carbon.admin.service.RegistrySearchAdminService;
+import org.wso2.carbon.automation.api.clients.governance.LifeCycleManagementClient;
+import org.wso2.carbon.automation.api.clients.registry.SearchAdminServiceClient;
 import org.wso2.carbon.governance.lcm.stub.LifeCycleManagementServiceExceptionException;
 import org.wso2.carbon.integration.framework.ClientConnectionUtil;
 import org.wso2.carbon.integration.framework.LoginLogoutUtil;
@@ -40,8 +40,8 @@ import java.rmi.RemoteException;
 public class EditLifeCycleNameTestCase {
     private String sessionCookie;
 
-    private LifeCycleManagerAdminService lifeCycleManagerAdminService;
-    private RegistrySearchAdminService searchAdminService;
+    private LifeCycleManagementClient lifeCycleManagerAdminService;
+    private SearchAdminServiceClient searchAdminService;
 
     private final String ASPECT_NAME = "NewServiceLifeCycle";
     private final String NEW_ASPECT_NAME = "EditedServiceLC";
@@ -51,8 +51,8 @@ public class EditLifeCycleNameTestCase {
         ClientConnectionUtil.waitForPort(Integer.parseInt(FrameworkSettings.HTTP_PORT));
         sessionCookie = new LoginLogoutUtil().login();
         final String SERVER_URL = GregTestUtils.getServerUrl();
-        lifeCycleManagerAdminService = new LifeCycleManagerAdminService(SERVER_URL);
-        searchAdminService = new RegistrySearchAdminService(SERVER_URL);
+        lifeCycleManagerAdminService = new LifeCycleManagementClient(SERVER_URL);
+        searchAdminService = new SearchAdminServiceClient(SERVER_URL);
 
         Utils.deleteLifeCycleIfExist(sessionCookie, ASPECT_NAME, lifeCycleManagerAdminService);
         Utils.deleteLifeCycleIfExist(sessionCookie, NEW_ASPECT_NAME, lifeCycleManagerAdminService);

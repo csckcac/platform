@@ -21,9 +21,9 @@ import org.testng.Assert;
 import org.testng.annotations.AfterClass;
 import org.testng.annotations.BeforeClass;
 import org.testng.annotations.Test;
-import org.wso2.carbon.admin.service.AdminServiceApplicationAdmin;
-import org.wso2.carbon.admin.service.AdminServiceCarbonAppUploader;
 import org.wso2.carbon.application.mgt.stub.ApplicationAdminExceptionException;
+import org.wso2.carbon.automation.api.clients.application.mgt.ApplicationAdminClient;
+import org.wso2.carbon.automation.api.clients.application.mgt.CarbonAppUploaderClient;
 import org.wso2.carbon.integration.framework.ClientConnectionUtil;
 import org.wso2.carbon.integration.framework.LoginLogoutUtil;
 import org.wso2.carbon.integration.framework.utils.FrameworkSettings;
@@ -40,8 +40,8 @@ import java.rmi.RemoteException;
 public class UploadIncompatibleCarFileTestCase {
     private String sessionCookie;
     private WSRegistryServiceClient registry;
-    private AdminServiceCarbonAppUploader cAppUploader;
-    private AdminServiceApplicationAdmin adminServiceApplicationAdmin;
+    private CarbonAppUploaderClient cAppUploader;
+    private ApplicationAdminClient adminServiceApplicationAdmin;
 
     @BeforeClass
     public void init() throws Exception {
@@ -49,8 +49,8 @@ public class UploadIncompatibleCarFileTestCase {
         sessionCookie = new LoginLogoutUtil().login();
         final String SERVER_URL = GregTestUtils.getServerUrl();
         registry = GregTestUtils.getRegistry();
-        cAppUploader = new AdminServiceCarbonAppUploader(SERVER_URL);
-        adminServiceApplicationAdmin = new AdminServiceApplicationAdmin(SERVER_URL);
+        cAppUploader = new CarbonAppUploaderClient(SERVER_URL);
+        adminServiceApplicationAdmin = new ApplicationAdminClient(SERVER_URL);
 
     }
 

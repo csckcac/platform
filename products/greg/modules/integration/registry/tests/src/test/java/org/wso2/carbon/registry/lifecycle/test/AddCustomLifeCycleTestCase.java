@@ -22,10 +22,10 @@ import org.testng.Assert;
 import org.testng.annotations.AfterClass;
 import org.testng.annotations.BeforeClass;
 import org.testng.annotations.Test;
-import org.wso2.carbon.admin.service.ActivitySearchAdminService;
-import org.wso2.carbon.admin.service.LifeCycleAdminService;
-import org.wso2.carbon.admin.service.LifeCycleManagerAdminService;
-import org.wso2.carbon.admin.service.RegistrySearchAdminService;
+import org.wso2.carbon.automation.api.clients.governance.LifeCycleAdminServiceClient;
+import org.wso2.carbon.automation.api.clients.registry.SearchAdminServiceClient;
+import org.wso2.carbon.automation.api.clients.governance.LifeCycleManagementClient;
+import org.wso2.carbon.automation.api.clients.registry.ActivityAdminServiceClient;
 import org.wso2.carbon.governance.custom.lifecycles.checklist.stub.CustomLifecyclesChecklistAdminServiceExceptionException;
 import org.wso2.carbon.governance.custom.lifecycles.checklist.stub.beans.xsd.LifecycleBean;
 import org.wso2.carbon.governance.custom.lifecycles.checklist.stub.util.xsd.Property;
@@ -57,10 +57,10 @@ public class AddCustomLifeCycleTestCase {
     private String sessionCookie;
 
     private WSRegistryServiceClient registry;
-    private LifeCycleAdminService lifeCycleAdminService;
-    private LifeCycleManagerAdminService lifeCycleManagerAdminService;
-    private ActivitySearchAdminService activitySearch;
-    private RegistrySearchAdminService searchAdminService;
+    private LifeCycleAdminServiceClient lifeCycleAdminService;
+    private LifeCycleManagementClient lifeCycleManagerAdminService;
+    private ActivityAdminServiceClient activitySearch;
+    private SearchAdminServiceClient searchAdminService;
     private String userName;
 
     private final String ASPECT_NAME = "IntergalacticServiceLC";
@@ -72,10 +72,10 @@ public class AddCustomLifeCycleTestCase {
         sessionCookie = new LoginLogoutUtil().login();
         final String SERVER_URL = GregTestUtils.getServerUrl();
         userName = FrameworkSettings.USER_NAME;
-        lifeCycleAdminService = new LifeCycleAdminService(SERVER_URL);
-        activitySearch = new ActivitySearchAdminService(SERVER_URL);
-        lifeCycleManagerAdminService = new LifeCycleManagerAdminService(SERVER_URL);
-        searchAdminService = new RegistrySearchAdminService(SERVER_URL);
+        lifeCycleAdminService = new LifeCycleAdminServiceClient(SERVER_URL);
+        activitySearch = new ActivityAdminServiceClient(SERVER_URL);
+        lifeCycleManagerAdminService = new LifeCycleManagementClient(SERVER_URL);
+        searchAdminService = new SearchAdminServiceClient(SERVER_URL);
         registry = GregTestUtils.getRegistry();
         Registry governance = GregTestUtils.getGovernanceRegistry(registry);
 
@@ -162,7 +162,7 @@ public class AddCustomLifeCycleTestCase {
         Thread.sleep(1000 * 10);
         ActivityBean activityObj = activitySearch.getActivities(sessionCookie, userName
                 , servicePathDev, Utils.formatDate(Calendar.getInstance().getTime())
-                , "", ActivitySearchAdminService.FILTER_ASSOCIATE_ASPECT, 1);
+                , "", ActivityAdminServiceClient.FILTER_ASSOCIATE_ASPECT, 1);
         Assert.assertNotNull(activityObj, "Activity object null for Associate Aspect");
         Assert.assertNotNull(activityObj.getActivity(), "Activity list object null for Associate Aspect");
         Assert.assertTrue((activityObj.getActivity().length > 0), "Activity list object null");

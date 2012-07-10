@@ -21,8 +21,8 @@ import org.testng.Assert;
 import org.testng.annotations.AfterClass;
 import org.testng.annotations.BeforeClass;
 import org.testng.annotations.Test;
-import org.wso2.carbon.admin.service.LifeCycleAdminService;
-import org.wso2.carbon.admin.service.LifeCycleManagerAdminService;
+import org.wso2.carbon.automation.api.clients.governance.LifeCycleAdminServiceClient;
+import org.wso2.carbon.automation.api.clients.governance.LifeCycleManagementClient;
 import org.wso2.carbon.governance.custom.lifecycles.checklist.stub.CustomLifecyclesChecklistAdminServiceExceptionException;
 import org.wso2.carbon.governance.custom.lifecycles.checklist.stub.beans.xsd.LifecycleBean;
 import org.wso2.carbon.governance.lcm.stub.LifeCycleManagementServiceExceptionException;
@@ -43,8 +43,8 @@ public class EditLifeCycleCheckListItemTestCase {
     private String sessionCookie;
 
     private WSRegistryServiceClient registry;
-    private LifeCycleAdminService lifeCycleAdminService;
-    private LifeCycleManagerAdminService lifeCycleManagerAdminService;
+    private LifeCycleAdminServiceClient lifeCycleAdminService;
+    private LifeCycleManagementClient lifeCycleManagerAdminService;
 
     private final String ASPECT_NAME = "EditedCheckListServiceLC";
     private String servicePathDev;
@@ -54,8 +54,8 @@ public class EditLifeCycleCheckListItemTestCase {
         ClientConnectionUtil.waitForPort(Integer.parseInt(FrameworkSettings.HTTP_PORT));
         sessionCookie = new LoginLogoutUtil().login();
         final String SERVER_URL = GregTestUtils.getServerUrl();
-        lifeCycleAdminService = new LifeCycleAdminService(SERVER_URL);
-        lifeCycleManagerAdminService = new LifeCycleManagerAdminService(SERVER_URL);
+        lifeCycleAdminService = new LifeCycleAdminServiceClient(SERVER_URL);
+        lifeCycleManagerAdminService = new LifeCycleManagementClient(SERVER_URL);
         registry = GregTestUtils.getRegistry();
         Registry governance = GregTestUtils.getGovernanceRegistry(registry);
 

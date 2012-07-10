@@ -22,10 +22,10 @@ import org.testng.Assert;
 import org.testng.annotations.AfterClass;
 import org.testng.annotations.BeforeClass;
 import org.testng.annotations.Test;
-import org.wso2.carbon.admin.service.ActivitySearchAdminService;
-import org.wso2.carbon.admin.service.LifeCycleAdminService;
-import org.wso2.carbon.admin.service.LifeCycleManagerAdminService;
-import org.wso2.carbon.admin.service.RegistrySearchAdminService;
+import org.wso2.carbon.automation.api.clients.governance.LifeCycleAdminServiceClient;
+import org.wso2.carbon.automation.api.clients.registry.SearchAdminServiceClient;
+import org.wso2.carbon.automation.api.clients.governance.LifeCycleManagementClient;
+import org.wso2.carbon.automation.api.clients.registry.ActivityAdminServiceClient;
 import org.wso2.carbon.governance.custom.lifecycles.checklist.stub.CustomLifecyclesChecklistAdminServiceExceptionException;
 import org.wso2.carbon.governance.custom.lifecycles.checklist.stub.beans.xsd.LifecycleBean;
 import org.wso2.carbon.governance.custom.lifecycles.checklist.stub.util.xsd.Property;
@@ -56,10 +56,10 @@ public class LifeCycleWithScriptTestCase extends TestSetup {
     private String sessionCookie;
 
     private WSRegistryServiceClient registry;
-    private LifeCycleAdminService lifeCycleAdminService;
-    private LifeCycleManagerAdminService lifeCycleManagerAdminService;
-    private ActivitySearchAdminService activitySearch;
-    private RegistrySearchAdminService searchAdminService;
+    private LifeCycleAdminServiceClient lifeCycleAdminService;
+    private LifeCycleManagementClient lifeCycleManagerAdminService;
+    private ActivityAdminServiceClient activitySearch;
+    private  SearchAdminServiceClient searchAdminService;
     private final String ASPECT_NAME = "LCwithScript";
     private String servicePathDev;
    private final String ACTION_PROMOTE = "Promote";
@@ -76,10 +76,10 @@ public class LifeCycleWithScriptTestCase extends TestSetup {
         super.init();
 
         Thread.sleep(1000);
-        lifeCycleAdminService = new LifeCycleAdminService(FrameworkSettings.SERVICE_URL);
-        activitySearch = new ActivitySearchAdminService(FrameworkSettings.SERVICE_URL);
-        lifeCycleManagerAdminService = new LifeCycleManagerAdminService(FrameworkSettings.SERVICE_URL);
-        searchAdminService = new RegistrySearchAdminService(FrameworkSettings.SERVICE_URL);
+        lifeCycleAdminService = new LifeCycleAdminServiceClient(FrameworkSettings.SERVICE_URL);
+        activitySearch = new ActivityAdminServiceClient(FrameworkSettings.SERVICE_URL);
+        lifeCycleManagerAdminService = new LifeCycleManagementClient(FrameworkSettings.SERVICE_URL);
+        searchAdminService = new SearchAdminServiceClient(FrameworkSettings.SERVICE_URL);
         LoginLogoutUtil util = new LoginLogoutUtil();
         ClientConnectionUtil.waitForPort(Integer.parseInt(FrameworkSettings.HTTP_PORT));
         sessionCookie = util.login();

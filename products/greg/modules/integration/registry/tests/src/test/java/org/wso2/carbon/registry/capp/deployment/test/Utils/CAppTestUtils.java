@@ -17,8 +17,8 @@
 */
 package org.wso2.carbon.registry.capp.deployment.test.Utils;
 
-import org.wso2.carbon.admin.service.AdminServiceApplicationAdmin;
 import org.wso2.carbon.application.mgt.stub.ApplicationAdminExceptionException;
+import org.wso2.carbon.automation.api.clients.application.mgt.ApplicationAdminClient;
 
 import java.rmi.RemoteException;
 import java.util.Calendar;
@@ -26,7 +26,7 @@ import java.util.Calendar;
 public class CAppTestUtils {
 
     public static boolean isCAppDeployed(String sessionCookie, String cAppName,
-                                         AdminServiceApplicationAdmin adminServiceApplicationAdmin)
+                                         ApplicationAdminClient adminServiceApplicationAdmin)
             throws ApplicationAdminExceptionException, RemoteException, InterruptedException {
         String[] appList;
         boolean isFound = false;
@@ -53,7 +53,7 @@ public class CAppTestUtils {
     }
 
     public static boolean isCAppDeleted(String sessionCookie, String cAppName,
-                                        AdminServiceApplicationAdmin adminServiceApplicationAdmin)
+                                        ApplicationAdminClient adminServiceApplicationAdmin)
             throws ApplicationAdminExceptionException, RemoteException, InterruptedException {
         String[] appList;
         boolean isDeleted = true;

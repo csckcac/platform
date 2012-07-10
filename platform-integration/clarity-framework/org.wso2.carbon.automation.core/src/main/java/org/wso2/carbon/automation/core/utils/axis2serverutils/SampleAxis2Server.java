@@ -28,9 +28,11 @@ import org.apache.axis2.engine.ListenerManager;
 import org.apache.commons.io.FileUtils;
 import org.apache.commons.logging.Log;
 import org.apache.commons.logging.LogFactory;
+import org.wso2.carbon.automation.core.ProductConstant;
 import org.wso2.carbon.utils.ServerConstants;
 
 import java.io.File;
+import java.io.FileInputStream;
 import java.io.IOException;
 import java.io.InputStream;
 import java.io.OutputStream;
@@ -122,7 +124,43 @@ public class SampleAxis2Server implements BackendServer {
 
         FileUtils.touch(file);
         OutputStream os = FileUtils.openOutputStream(file);
-        InputStream is = getClass().getResourceAsStream("/" + resourceName);
+        InputStream is;
+        if (resourceName.contains(".aar")) {
+            is = new FileInputStream(ProductConstant.SYSTEM_TEST_RESOURCE_LOCATION +
+                                     File.separator + "artifacts" + File.separator + "AXIS2" + File.separator + "aar" +
+                                     File.separator + resourceName);
+        } else {
+            is = new FileInputStream(ProductConstant.SYSTEM_TEST_RESOURCE_LOCATION +
+                                     File.separator + "artifacts" + File.separator + "AXIS2" + File.separator + "config" +
+                                     File.separator + resourceName);
+        }
+
+        if (is != null) {
+            byte[] data = new byte[1024];
+            int len;
+            while ((len = is.read(data)) != -1) {
+                os.write(data, 0, len);
+            }
+            os.flush();
+            os.close();
+            is.close();
+        }
+        return file;
+    }
+
+    private File copyServiceToFileSystem(String resourceName, String fileName) throws IOException {
+        File file = new File(System.getProperty("basedir") + File.separator + "target" +
+                             File.separator + fileName);
+        if (file.exists()) {
+            FileUtils.deleteQuietly(file);
+        }
+
+        FileUtils.touch(file);
+        OutputStream os = FileUtils.openOutputStream(file);
+
+        InputStream is = new FileInputStream(ProductConstant.SYSTEM_TEST_RESOURCE_LOCATION +
+                                             File.separator + "artifacts" + File.separator + "AXIS2" + File.separator + "config" +
+                                             File.separator + resourceName);
         if (is != null) {
             byte[] data = new byte[1024];
             int len;

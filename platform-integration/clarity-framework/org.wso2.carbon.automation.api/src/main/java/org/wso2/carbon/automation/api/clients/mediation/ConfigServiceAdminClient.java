@@ -60,5 +60,13 @@ public class ConfigServiceAdminClient {
         StAXOMBuilder builder = new StAXOMBuilder(parser);
         OMElement configSourceElem = builder.getDocumentElement();
         configServiceAdminStub.addExistingConfiguration(configSourceElem.toString());
+
+    }
+
+    public void updateConfiguration(OMElement omElement)
+            throws IOException, LocalEntryAdminException, XMLStreamException {
+        configServiceAdminStub = this.setMessageStoreStubStub();
+        configServiceAdminStub.updateConfiguration(omElement);
+
     }
 }

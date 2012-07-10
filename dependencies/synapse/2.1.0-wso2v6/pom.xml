@@ -917,6 +917,7 @@
         <jline.version>0.9.94</jline.version>
 
         <!-- dependencies of Synapse extensions module -->
+        <saxon-HE.version>9.4</saxon-HE.version>
         <wso2commons.version>1.2</wso2commons.version>
         <wso2caching.version>3.5.0</wso2caching.version>
         <wso2throttle.version>3.2.0</wso2throttle.version>

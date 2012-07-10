@@ -18,7 +18,7 @@
  */
 package org.apache.synapse.mediators.xquery;
 
-import net.sf.saxon.javax.xml.xquery.XQItemType;
+import javax.xml.xquery.XQItemType;
 import org.apache.axiom.om.OMElement;
 import org.apache.axiom.om.OMNode;
 import org.apache.axiom.om.OMText;

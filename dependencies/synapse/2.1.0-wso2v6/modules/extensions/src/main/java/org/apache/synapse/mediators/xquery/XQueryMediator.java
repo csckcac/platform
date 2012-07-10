@@ -18,7 +18,7 @@
  */
 package org.apache.synapse.mediators.xquery;
 
-import net.sf.saxon.javax.xml.xquery.*;
+import javax.xml.xquery.*;
 import net.sf.saxon.xqj.SaxonXQDataSource;
 import org.apache.axiom.om.OMElement;
 import org.apache.axiom.om.OMNode;
@@ -338,7 +338,7 @@ public class XQueryMediator extends AbstractMediator {
                 int itemKind = itemType.getItemKind();
                 int baseType = itemType.getBaseType();
                 if (synLog.isTraceOrDebugEnabled()) {
-                    synLog.traceOrDebug("The XQuery Result " + xqItem.getItemAsString());
+                    synLog.traceOrDebug("The XQuery Result " + xqItem.getItemAsString(null));
                 }
 
                 //The target node that is going to modify
@@ -354,7 +354,7 @@ public class XQueryMediator extends AbstractMediator {
                             XQItemType.XQITEMKIND_DOCUMENT == itemKind) {
                         StAXOMBuilder builder = new StAXOMBuilder(
                                 XMLInputFactory.newInstance().createXMLStreamReader(
-                                        new StringReader(xqItem.getItemAsString())));
+                                        new StringReader(xqItem.getItemAsString(null))));
                         OMElement resultOM = builder.getDocumentElement();
                         if (resultOM != null) {
                             //replace the target node from the result
@@ -380,7 +380,7 @@ public class XQueryMediator extends AbstractMediator {
                         ((OMElement) destination).setText(String.valueOf(xqItem.getByte()));
                     } else if (XQItemType.XQBASETYPE_STRING == baseType) {
                         ((OMElement) destination).setText(
-                                String.valueOf(xqItem.getItemAsString()));
+                                String.valueOf(xqItem.getItemAsString(null)));
                     }
                 }
                 else if(null == target.getXPath() && null == destination){
@@ -398,7 +398,7 @@ public class XQueryMediator extends AbstractMediator {
                             XQItemType.XQITEMKIND_DOCUMENT == itemKind) {
                         StAXOMBuilder builder = new StAXOMBuilder(
                                 XMLInputFactory.newInstance().createXMLStreamReader(
-                                        new StringReader(xqItem.getItemAsString())));
+                                        new StringReader(xqItem.getItemAsString(null))));
                         OMElement resultOM = builder.getDocumentElement();
                         if (resultOM != null) {
                            ((OMElement)destination).addChild(resultOM);
@@ -639,9 +639,7 @@ public class XQueryMediator extends AbstractMediator {
                                                 DOOMAbstractFactory.getOMFactory())).
                                         getOwnerDocument()), null);
             } else {
-                xqDynamicContext.bindDocument(name,
-                        new InputSource(SynapseConfigUtils.getInputStream(
-                                variableValue)));
+                xqDynamicContext.bindDocument(name,SynapseConfigUtils.getInputStream(variableValue),null,null);
             }
         }
     }

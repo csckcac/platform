@@ -27,7 +27,7 @@ import javax.xml.namespace.QName;
 import java.util.List;
 import java.util.ArrayList;
 
-import net.sf.saxon.javax.xml.xquery.XQItemType;
+import javax.xml.xquery.XQItemType;
 
 /**
  *
@@ -150,7 +150,7 @@ public class XQueryMediatorTest extends TestCase {
         mediator.addAllVariables(list);
         assertTrue(mediator.mediate(mc));
         assertEquals("10", mc.getEnvelope().getBody().getFirstElement().
-                getFirstElement().getText());
+                getFirstElement().getText().trim());
         assertEquals("true", mc.getEnvelope().getBody().getFirstElement().
                 getFirstElement().getFirstElement().getText());
     }

@@ -294,6 +294,12 @@
             <version>2.1</version>
         </dependency>
 
+        <dependency>
+            <groupId>net.sf.saxon</groupId>
+            <artifactId>Saxon-HE</artifactId>
+            <version>${saxon-HE.version}</version>
+        </dependency>
+
         <!--For Axiom/E4X -->
         <!--<dependency>
             <groupId>org.wso2.javascript.rhino</groupId>

@@ -71,7 +71,7 @@
                                 <resource>
                                     <directory>resources</directory>
                                     <includes>
-                                        <include>conf/syslog-config.xml</include>
+                                        <include>conf/logging-config.xml</include>
                                         <include>conf/log4j.properties</include>
                                         <include>p2.inf</include>
                                         <include>build.properties</include>  

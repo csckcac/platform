@@ -38,7 +38,7 @@ lamp() {
 	 php5-imap php5-ldap \
 	 openssl ssl-cert ldap-utils \
 	 php5-mcrypt mcrypt ufw fail2ban
-	
+
 	# Be sure to have a new SSL cert for this new LXC host:
 	#rm -f $ROOTFS/etc/ssl/private/ssl-cert-snakeoil.key
 	#chroot $ROOTFS dpkg-reconfigure ssl-cert
@@ -66,17 +66,17 @@ server-id = 1
 	popd
 
 pushd $ROOTFS/etc
-    echo "#!/bin/sh -e
-cp -f /var/lib/cloud/instance/user-data.txt /opt/payload.zip
+    echo "#!/bin/bash -e
+sudo cp -f /var/lib/cloud/instance/user-data.txt /opt/payload.zip
 pushd /opt
-unzip -q ./payload.zip
-chmod -R 755 ./payload
-chmod -R 0600 ./payload/wso2-key
-rm -f ./payload.zip
-cat ./payload/known_hosts >> ~/.ssh/known_hosts
-/opt/payload/debian_cron_script.sh
+sudo unzip -q ./payload.zip
+sudo chmod -R 755 ./payload
+sudo chmod -R 0600 ./payload/wso2-key
+sudo rm -f ./payload.zip
+sudo cat ./payload/known_hosts >> ~/.ssh/known_hosts
+sudo /opt/payload/debian_cron_script.sh
 popd
-crontab /opt/payload/debian_cron.sh > /dev/null &2>1
+sudo crontab /opt/payload/debian_cron.sh > /dev/null &2>1
 exit 0
     " > rc.local
     popd

@@ -152,8 +152,6 @@ sed -i "s/temp_password/$image_password/" ./lxc-ubuntu-x.conf
 sed -i "s/temp_ip1/$ip1/" ./lxc-ubuntu-x.conf
 sed -i "s#temp_keys#$image_keys_file#" ./lxc-ubuntu-x.conf
 
-sed -i "s/temp_ip/$ip2/" ./hooks.d/configure_network
-
 ./lxc-ubuntu-x $image_id $work_dir/$image_id $image_template $ip1 $ip2
 cd ..
 echo

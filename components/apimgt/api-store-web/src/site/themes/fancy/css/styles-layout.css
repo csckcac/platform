@@ -171,6 +171,7 @@ div.navbar-inner {
 }
 .header-section div.row{
     padding-bottom:20px;
+    margin-left:0;
 }
 .searchAPIs-title{
     color:#317a91;
@@ -190,6 +191,9 @@ div.navbar-inner {
     border-bottom:solid 1px #bcbec0;
     min-height:500px;
 
+}
+#tag-cloud{
+    margin-top:-33px;
 }
 #tag-cloud div.tag-content{
     background:#f6f6f6;
@@ -504,7 +508,7 @@ footer{
     background-image: linear-gradient(top, #ffffff, #e7eff5);
     background-repeat: repeat-x;
     filter: progid:DXImageTransform.Microsoft.gradient(startColorstr = '#ffffff', endColorstr = '#e7eff5', GradientType = 0);
-    margin:0;
+    padding:0 0 0 20px;
     /*background: transparent url(../images/searchBack.png) no-repeat center top;*/
 }
 .navbar .brand{

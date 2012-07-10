@@ -13,20 +13,24 @@
 <div class="api-info">
     <div class="row-fluid">
     <div class="span12">
-        <div class="span2">
-            <div class="thumbnail">
-                <img src="<%=thumbURL%>" width="100" />
-            </div>
+        <div class="thumbnail span2">
+            <img src="<%=thumbURL%>" width="100" />
         </div>
         <div class="span6">
             <table cellspacing="0" cellpadding="0" class="table">
                 <tbody>
                 <tr>
                     <th>Rating:</th>
+                    <%
+                    var colspan=2;
+                    if(user && api.rating!=0) {
+                        colspan=1;
+                    %>
                     <td>
-                        <% if(user && api.rating!=0) { %><div class="average-rating"><%=String(api.rating)%></div><% } %>
+                        <div class="average-rating"><%=String(api.rating)%></div>
                     </td>
-                    <td>
+                    <% } %>
+                    <td colspan="<%=colspan%>">
                         <div class="star-ratings">
                              <% if(user) { %><%=stars.getDynamicStars(api.userRate)%>
                             <% } else { %><%=stars.getStaticStars(site.context, api.userRate,jagg.getUserTheme())%><% } %>
@@ -50,7 +54,7 @@
             </table>
         </div>
         <%if(subsPermitted){%>
-        <div class="span4">
+        <div class="span4 appStyleFix">
             <% if(api.status =="PUBLISHED") { %>
                     <%
                      if(user && apps) {

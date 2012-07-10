@@ -268,6 +268,9 @@ width: 32.9%;
 .navbar .navbar-inner .nav.actions li.settingsSection a.dropdown-toggle{
     margin-left:0px;
 }
+.orderFix{
+    z-index:100;
+}
 label.error{
     color:#d10000 !important;
     padding:5px;
@@ -309,4 +312,29 @@ input.error{
 #comment-add .exceeded{color:#e00;}
 .application-add div.help-block{
     padding-left: 0px; margin-left: 0px;
+}
+ul.more-from-provider li.list-header{
+    height:auto;
+    line-height:21px;
+}
+.appStyleFix{
+    border-top:solid 1px #ccc;
+}
+.appStyleFix label{
+    padding-top:10px;
+}
+@media all and (max-width: 800px) {
+    .section-shifter-left div.tab-content{
+        min-height:0 !important;
+    }
+    #tag-cloud div.tag-content{
+        min-height:0 !important;
+    }
+    .application-add div.span6{
+        float:left;
+    }
+    .application-add div.help-block{
+        clear:left;
+        display:block;
+    }
 }

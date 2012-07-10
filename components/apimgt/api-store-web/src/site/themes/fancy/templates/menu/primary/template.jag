@@ -12,7 +12,7 @@
             <% jagg.includeBlock("user/login", null); %>
           </div>
           <div class="nav-collapse offset3">
-            <ul class="nav">
+            <ul class="nav orderFix">
                 <%
                 var i, link, links = outputs.links, length = links.length;
                 for(i = 0; i < length; i++) {

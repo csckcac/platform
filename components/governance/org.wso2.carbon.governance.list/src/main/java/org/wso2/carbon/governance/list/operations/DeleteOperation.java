@@ -17,7 +17,7 @@
 package org.wso2.carbon.governance.list.operations;
 
 import org.apache.axiom.om.OMElement;
-import org.apache.axiom.om.util.AXIOMUtil;
+import org.apache.axiom.om.OMFactory;
 import org.apache.axiom.om.xpath.AXIOMXPath;
 import org.apache.axis2.AxisFault;
 import org.apache.axis2.context.MessageContext;
@@ -42,8 +42,11 @@ public class DeleteOperation extends AbstractOperation{
     }
 
     @Override
-    public void setPayload(OMElement bodyContent, String namespace) throws XMLStreamException {
-        bodyContent.addChild(AXIOMUtil.stringToOM("<return>" + succeed + "</return>"));
+    public void setPayload(OMElement bodyContent) throws XMLStreamException {
+        OMFactory factory = bodyContent.getOMFactory();
+        OMElement returnElement = factory.createOMElement(new QName(bodyContent.getNamespace().getPrefix() + ":return"));
+        returnElement.setText(String.valueOf(succeed));
+        bodyContent.addChild(returnElement);
     }
 
     @Override
@@ -58,7 +61,12 @@ public class DeleteOperation extends AbstractOperation{
 
     @Override
     public String getResponseType() {
-        return "boolean";
+        return "xs:boolean";
+    }
+
+    @Override
+    public String getResponseMaxOccurs() {
+        return "1";
     }
 
     public MessageContext process(MessageContext requestMessageContext) throws AxisFault {

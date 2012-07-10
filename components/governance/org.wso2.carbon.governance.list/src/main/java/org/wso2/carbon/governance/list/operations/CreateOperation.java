@@ -17,23 +17,21 @@
 package org.wso2.carbon.governance.list.operations;
 
 import org.apache.axiom.om.OMElement;
+import org.apache.axiom.om.OMFactory;
 import org.apache.axiom.om.util.AXIOMUtil;
 import org.apache.axiom.om.xpath.AXIOMXPath;
 import org.apache.axis2.AxisFault;
 import org.apache.axis2.context.MessageContext;
 import org.apache.commons.logging.Log;
 import org.apache.commons.logging.LogFactory;
-import org.jaxen.JaxenException;
 import org.wso2.carbon.governance.api.generic.GenericArtifactManager;
 import org.wso2.carbon.governance.api.generic.dataobjects.GenericArtifact;
 import org.wso2.carbon.governance.list.operations.util.OperationUtil;
-import org.wso2.carbon.governance.list.operations.util.OperationsConstants;
 import org.wso2.carbon.registry.core.Registry;
 import org.wso2.carbon.registry.core.exceptions.RegistryException;
 
 import javax.xml.namespace.QName;
 import javax.xml.stream.XMLStreamException;
-import java.util.List;
 
 public class CreateOperation extends AbstractOperation {
     private Log log = LogFactory.getLog(CreateOperation.class);
@@ -44,8 +42,11 @@ public class CreateOperation extends AbstractOperation {
     }
 
     @Override
-    public void setPayload(OMElement bodyContent, String namespace) throws XMLStreamException {
-        bodyContent.addChild(AXIOMUtil.stringToOM("<return>" + artifactId + "</return>"));
+    public void setPayload(OMElement bodyContent) throws XMLStreamException {
+        OMFactory factory = bodyContent.getOMFactory();
+        OMElement returnElement = factory.createOMElement(new QName(bodyContent.getNamespace().getPrefix() + ":return"));
+        returnElement.setText(artifactId);
+        bodyContent.addChild(returnElement);
     }
 
     @Override
@@ -60,27 +61,28 @@ public class CreateOperation extends AbstractOperation {
 
     @Override
     public String getResponseType() {
-        return "string";
+        return "xs:string";
+    }
+
+    @Override
+    public String getResponseMaxOccurs() {
+        return "1";
     }
 
     public MessageContext process(MessageContext requestMessageContext) throws AxisFault {
         OMElement content = null;
         AXIOMXPath expression;
         try {
-            String operation = requestMessageContext.getOperationContext().getAxisOperation().getName().getLocalPart();
-            expression = new AXIOMXPath("//ns1:" + operation + "/ns1:info/ns2:metadata");
-            expression.addNamespace("ns1", namespace);
-            expression.addNamespace("ns2", OperationsConstants.METADATA_NAMESPACE);
+            content = AXIOMUtil.stringToOM(
+                    requestMessageContext.getEnvelope().getBody().getFirstElement().getFirstChildWithName(
+                            new QName(namespace, "info")).getText());
 
-
-            List elements = expression.selectNodes(requestMessageContext.getEnvelope().getBody());
-            if(elements.isEmpty()){
+            if(content == null){
                 String msg = "Content of the resource should be in correct format";
                 log.error(msg);
                 OperationUtil.handleException(msg);
             }
-            content = (OMElement) elements.get(0);
-        } catch (JaxenException e) {
+        } catch (XMLStreamException e) {
             String msg = "Error occured while reading the content of the SOAP message";
             log.error(msg);
             OperationUtil.handleException(msg, e);

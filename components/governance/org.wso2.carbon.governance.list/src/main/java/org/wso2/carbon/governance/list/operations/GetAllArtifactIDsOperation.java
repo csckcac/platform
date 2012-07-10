@@ -1,7 +1,7 @@
 package org.wso2.carbon.governance.list.operations;
 
 import org.apache.axiom.om.OMElement;
-import org.apache.axiom.om.util.AXIOMUtil;
+import org.apache.axiom.om.OMFactory;
 import org.apache.axis2.AxisFault;
 import org.apache.axis2.context.MessageContext;
 import org.apache.commons.logging.Log;
@@ -12,20 +12,23 @@ import org.wso2.carbon.registry.core.exceptions.RegistryException;
 
 import javax.xml.namespace.QName;
 import javax.xml.stream.XMLStreamException;
-import java.util.Arrays;
-import java.util.List;
 
 public class GetAllArtifactIDsOperation extends AbstractOperation{
     private Log log = LogFactory.getLog(GetAllArtifactIDsOperation.class);
-    private List<String> artifactIDs;
+    private String[] artifactIDs;
 
     public GetAllArtifactIDsOperation(QName name, Registry governanceSystemRegistry, String mediatype, String namespace) {
         super(name, governanceSystemRegistry, mediatype, namespace);
     }
 
     @Override
-    public void setPayload(OMElement bodyContent, String namespace) throws XMLStreamException {
-        bodyContent.addChild(AXIOMUtil.stringToOM("<return>" + artifactIDs + "</return>"));
+    public void setPayload(OMElement bodyContent) throws XMLStreamException {
+        OMFactory factory = bodyContent.getOMFactory();
+        for(String artifactId : artifactIDs){
+            OMElement returnElement = factory.createOMElement(new QName(bodyContent.getNamespace().getPrefix() + ":return"));
+            returnElement.setText(artifactId);
+            bodyContent.addChild(returnElement);
+        }
     }
 
     @Override
@@ -40,13 +43,18 @@ public class GetAllArtifactIDsOperation extends AbstractOperation{
 
     @Override
     public String getResponseType() {
-        return "string";
+        return "xs:string";
+    }
+
+    @Override
+    public String getResponseMaxOccurs() {
+        return "unbounded";
     }
 
     public MessageContext process(MessageContext requestMessageContext) throws AxisFault {
         try {
             GenericArtifactManager artifactManager = new GenericArtifactManager(governanceSystemRegistry, rxtKey);
-            artifactIDs = Arrays.asList(artifactManager.getAllGenericArtifactIds());
+            artifactIDs = artifactManager.getAllGenericArtifactIds();
         } catch (RegistryException e) {
             String msg = "Error occured while retrieving artifacts";
             log.error(msg);

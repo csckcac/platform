@@ -1,7 +1,7 @@
 package org.wso2.carbon.governance.list.operations;
 
 import org.apache.axiom.om.OMElement;
-import org.apache.axiom.om.util.AXIOMUtil;
+import org.apache.axiom.om.OMFactory;
 import org.apache.axiom.om.xpath.AXIOMXPath;
 import org.apache.axis2.AxisFault;
 import org.apache.axis2.context.MessageContext;
@@ -27,8 +27,13 @@ public class GetDependenciesOperation extends AbstractOperation{
     }
 
     @Override
-    public void setPayload(OMElement bodyContent, String namespace) throws XMLStreamException {
-        bodyContent.addChild(AXIOMUtil.stringToOM("<return>" + dependencies + "</return>"));
+    public void setPayload(OMElement bodyContent) throws XMLStreamException {
+        OMFactory factory = bodyContent.getOMFactory();
+        for(String dependency :dependencies){
+            OMElement returnElement = factory.createOMElement(new QName(bodyContent.getNamespace().getPrefix() + ":return"));
+            returnElement.setText(dependency);
+            bodyContent.addChild(returnElement);
+        }
     }
 
     @Override
@@ -43,7 +48,12 @@ public class GetDependenciesOperation extends AbstractOperation{
 
     @Override
     public String getResponseType() {
-        return "string";
+        return "xs:string";
+    }
+
+    @Override
+    public String getResponseMaxOccurs() {
+        return "unbounded";
     }
 
     public MessageContext process(MessageContext requestMessageContext) throws AxisFault {

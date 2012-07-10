@@ -51,14 +51,15 @@ public abstract class AbstractOperation extends InOutAxisOperation implements Me
     protected String rxtKey;
     protected Registry governanceSystemRegistry;
     protected String name;
-    protected String mediatype;
+    protected String mediaType;
     protected String namespace;
+    protected String singlularName;
 
-    protected AbstractOperation(QName name, Registry governanceSystemRegistry, String mediatype, String namespace) {
+    protected AbstractOperation(QName name, Registry governanceSystemRegistry, String mediaType, String namespace) {
         super(name);
         this.governanceSystemRegistry = governanceSystemRegistry;
         this.name = name.getLocalPart();
-        this.mediatype = mediatype;
+        this.mediaType = mediaType;
         this.namespace = namespace;
     }
 
@@ -66,13 +67,12 @@ public abstract class AbstractOperation extends InOutAxisOperation implements Me
         this.rxtKey = rxtKey;
         receiver.setMessageProcessor(name, this);
         setMessageReceiver(receiver);
-        String namespace = OperationsConstants.NAMESPACE_PART1 + name + OperationsConstants.NAMESPACE_PART2 ;
         AxisMessage in = getMessage(OperationsConstants.IN);
         in.setName(name + OperationsConstants.REQUEST);
         in.setElementQName(new QName(namespace, name));
         AxisMessage out = getMessage(OperationsConstants.OUT);
         out.setName(name + OperationsConstants.RESPONSE);
-        out.setElementQName(new QName(namespace, name));
+        out.setElementQName(new QName(namespace, name + OperationsConstants.RESPONSE));
         AxisMessage fault = new AxisMessage();
         fault.setName(name + "ServiceGovernanceException");
         fault.setElementQName(new QName(namespace, name + "ServiceGovernanceException"));
@@ -81,7 +81,7 @@ public abstract class AbstractOperation extends InOutAxisOperation implements Me
     }
 
     public XmlSchema[] getSchemas(XmlSchemaCollection collection) {
-        String str = getCustomSchema(name, namespace, getResponseType(), getRequestName(), getRequestType());
+        String str = getCustomSchema();
         return Arrays.asList(collection.read(new StreamSource(new ByteArrayInputStream(str.getBytes())), null)).toArray(
                 new XmlSchema[1]);
     }
@@ -97,10 +97,10 @@ public abstract class AbstractOperation extends InOutAxisOperation implements Me
         AxisMessage outMessage = operation.getMessage(OperationsConstants.OUT);
 
         bodyContent = factory.createOMElement(outMessage.getName(),
-                factory.createOMNamespace(service.getTargetNamespace(),
+                factory.createOMNamespace(namespace,
                         service.getSchemaTargetNamespacePrefix()));
         try {
-            setPayload(bodyContent, service.getSchemaTargetNamespace());
+            setPayload(bodyContent);
         } catch (XMLStreamException e) {
             String msg = "Error in adding the payload to the response message";
             log.error(msg);
@@ -124,11 +124,11 @@ public abstract class AbstractOperation extends InOutAxisOperation implements Me
         }
     }
 
-    private String getCustomSchema(String name, String targetNamespace, String responseType, String requestName, String requestType) {
+    private String getCustomSchema() {
         OMElement omElement = null;
         try {
             omElement = AXIOMUtil.stringToOM(OperationsConstants.CUSTOM_XSD);
-            omElement.addAttribute("targetNamespace", targetNamespace, null);
+            omElement.addAttribute("targetNamespace", namespace, null);
 
             AXIOMXPath expression = new AXIOMXPath("xs:element");
             expression.addNamespace("xs", OperationsConstants.XSD_NAMESPACE);
@@ -141,16 +141,14 @@ public abstract class AbstractOperation extends InOutAxisOperation implements Me
             OMElement element2 = elements.get(1);
             element2.addAttribute("name", name, null);
 
-            if(!requestType.equals("")) {
-                expression = new AXIOMXPath("xs:complexType/xs:sequence/xs:element");
-                expression.addNamespace("xs", OperationsConstants.XSD_NAMESPACE);
-                OMElement ep2 = (OMElement)expression.selectNodes(element2).get(0);
-                ep2.addAttribute("type", requestName, null);
-                ep2.addAttribute("name", requestType, null);
+            String requestType;
+            expression = new AXIOMXPath("xs:complexType/xs:sequence/xs:element");
+            expression.addNamespace("xs", OperationsConstants.XSD_NAMESPACE);
+            OMElement ep2 = (OMElement)expression.selectNodes(element2).get(0);
+            if(!(requestType = getRequestType()).equals("")) {
+                ep2.addAttribute("name", getRequestName(), null);
+                ep2.addAttribute("type", requestType, null);
             } else {
-                expression = new AXIOMXPath("xs:complexType");
-                expression.addNamespace("xs", OperationsConstants.XSD_NAMESPACE);
-                OMElement ep2 = (OMElement)expression.selectNodes(element2).get(0);
                 ep2.detach();
             }
 
@@ -160,7 +158,8 @@ public abstract class AbstractOperation extends InOutAxisOperation implements Me
             expression = new AXIOMXPath("xs:complexType/xs:sequence/xs:element");
             expression.addNamespace("xs", OperationsConstants.XSD_NAMESPACE);
             OMElement ep3 = (OMElement)expression.selectNodes(element3).get(0);
-            ep3.addAttribute("type", responseType, null);
+            ep3.addAttribute("type", getResponseType(), null);
+            ep3.addAttribute("maxOccurs", getResponseMaxOccurs(), null);
         } catch (Exception e) {
             //Should not throw outside
             log.error("Error while creating the custom Schema");
@@ -169,11 +168,13 @@ public abstract class AbstractOperation extends InOutAxisOperation implements Me
         return omElement.toString();
     }
 
-    public abstract void setPayload(OMElement bodyContent, String namespace) throws XMLStreamException;
+    public abstract void setPayload(OMElement bodyContent) throws XMLStreamException;
 
     public abstract String getRequestName();
 
     public abstract String getRequestType();
 
     public abstract String getResponseType();
+
+    public abstract String getResponseMaxOccurs();
 }

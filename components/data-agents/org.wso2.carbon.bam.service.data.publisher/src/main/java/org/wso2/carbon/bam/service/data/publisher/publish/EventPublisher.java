@@ -30,9 +30,9 @@ import java.util.List;
 public class EventPublisher {
 
 
-    private static StreamDefinition streamDefForActivity;
-    private static StreamDefinition streamDefForServiceStats;
-    private static StreamDefinition streamDefForActivityServiceStats;
+    private StreamDefinition streamDefForActivity;
+    private StreamDefinition streamDefForServiceStats;
+    private StreamDefinition streamDefForActivityServiceStats;
 
     private boolean isStreamDefinitionAlreadyExist = false;
 

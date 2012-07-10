@@ -118,7 +118,8 @@ public class FaultUtil {
         faultMediator.getFaultDetailElements().clear();
         faultMediator.setFaultDetailExpr(null);
         if (!faultDetail.equals("")) {
-            faultDetail = "<detail>" + faultDetail.trim() + "</detail>";
+            //faultDetail = "<detail>" + faultDetail.trim() + "</detail>";
+        	  faultDetail = faultDetail.trim();
             try {
                 // first try to create an OMElement
                 OMElement element = AXIOMUtil.stringToOM(faultDetail);

@@ -36,6 +36,7 @@
           <module>template-editor</module>
           <module>message-store</module>    
           <module>message-processor</module>
+          <module>mediation-library</module>
    </modules>
 
     <dependencyManagement>

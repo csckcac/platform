@@ -54,7 +54,7 @@ under the License.
                         <li class="notificationCell3"><%=workItem.getCreatedTime().getTime()%></li>
                     </ul>
                     <div style="clear:both"></div>
-                    <div class="notificationDescription">
+                    <div class="notificationDescription" style="overflow-x:auto">
                         <% if (workItem.getPresentationSubject() != null && workItem.getPresentationSubject().getTPresentationSubject() != null) {%>
                         <%=workItem.getPresentationSubject().getTPresentationSubject()%>
                         <% } else if (workItem.getPresentationName() != null && workItem.getPresentationName().getTPresentationName() != null) {%>

@@ -11,10 +11,14 @@
       <service name="ArtifactCreateCallbackService:ArtifactCreateCallbackService" port="ArtifactCreateCallbackBinding"/>
     </provide>
     <invoke partnerLink="deployPL">
-      <service name="deploy.core.appfactory.carbon.wso2.org:ApplicationDeployer" port="ApplicationDeployerHttpsSoap11Endpoint"/>
+      <service name="deploy.core.appfactory.carbon.wso2.org:ApplicationDeployer" port="ApplicationDeployerHttpsSoap11Endpoint">
+	<endpoint xmlns="http://wso2.org/bps/bpel/endpoint/config" endpointReference="./../../../../repository/conf/appfactory/endpoints/ApplicationDeployer.epr"/>
+      <service/>     	
     </invoke>
     <invoke partnerLink="createPL">
-      <service name="build.core.appfactory.carbon.wso2.org:ArtifactCreator" port="ArtifactCreatorHttpsSoap11Endpoint"/>
+      <service name="build.core.appfactory.carbon.wso2.org:ArtifactCreator" port="ArtifactCreatorHttpsSoap11Endpoint">
+	<endpoint xmlns="http://wso2.org/bps/bpel/endpoint/config" endpointReference="./../../../../repository/conf/appfactory/endpoints/ArtifactCreator.epr">
+      <service/>
     </invoke>
   </process>
 </deploy>

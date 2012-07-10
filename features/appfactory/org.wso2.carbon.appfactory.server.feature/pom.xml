@@ -171,6 +171,10 @@
                                 </properties>
                             </adviceFile>
                             <bundles>
+                                <bundleDef>org.wso2.carbon:org.wso2.carbon.appfactory.common
+                                </bundleDef>
+                                <bundleDef> org.wso2.carbon:org.wso2.carbon.appfactory.core
+                                </bundleDef>
                                 <bundleDef>org.wso2.carbon:org.wso2.carbon.hostobjects.sysprop
                                 </bundleDef>
                                 <bundleDef>org.wso2.carbon:org.wso2.carbon.hostobjects.sso
@@ -194,14 +198,12 @@
                                 </bundleDef>
                                 <bundleDef>maven-invoker.wso2:maven-invoker</bundleDef>
                                 <bundleDef>plexus-utils.wso2:plexus-utils</bundleDef>
-                                <bundleDef>org.wso2.carbon:org.wso2.carbon.appfactory.common
-                                </bundleDef>
                                 <bundleDef>
                                     org.wso2.carbon:org.wso2.carbon.appfactory.hostobjects.configuration
                                 </bundleDef>
                                 <bundleDef> org.wso2.carbon:org.wso2.carbon.appfactory.login.ui</bundleDef>
                                 <bundleDef> org.wso2.carbon:org.wso2.carbon.appfactory.userstore</bundleDef>
-                                <bundleDef> org.wso2.carbon:org.wso2.carbon.appfactory.core</bundleDef>
+                                <bundleDef> org.wso2.carbon:org.wso2.carbon.appfactory.maven.build</bundleDef> 
                             </bundles>
                             <importBundles>
                             </importBundles>

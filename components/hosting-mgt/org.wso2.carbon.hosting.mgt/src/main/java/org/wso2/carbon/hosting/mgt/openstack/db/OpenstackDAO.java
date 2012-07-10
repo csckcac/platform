@@ -41,11 +41,11 @@ public class OpenstackDAO {
 						System.getProperty(PHPCartridgeConstants.OPENSTACK_DB_USERNAME),
 						System.getProperty(PHPCartridgeConstants.OPENSTACK_DB_PASSWORD));
 			
-			String ips = "SELECT address FROM floating_ips f where f.fixed_ip_id in " +
-						"(SELECT id FROM fixed_ips f where instance_id in " +
+			String ips =
+						"SELECT address FROM fixed_ips f where instance_id in " +
 						"(SELECT id FROM instances where datediff(curdate(), created_at) > "+ 
 						System.getProperty(PHPCartridgeConstants.OPENSTACK_FREE_ACCOUNT_MAX_DAYS) +
-						" and deleted = '0' and hostname like '%wso2-php-domain%') )";
+						" and deleted = '0' and hostname like '%wso2-php-domain%')";
 			
 			pst = con.prepareStatement(ips);
 			rs = pst.executeQuery();

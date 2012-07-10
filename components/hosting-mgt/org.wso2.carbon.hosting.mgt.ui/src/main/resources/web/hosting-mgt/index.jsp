@@ -57,19 +57,14 @@
         phpappSearchString = "";
     }
     try {
-         client = new HostingAdminClient( request.getLocale());
+         client = new HostingAdminClient(request.getLocale(),cookie, configContext, serverURL );
 
-        client.initApplicationManagementService(cookie, configContext, serverURL);
          phpAppsWrapper = client.getPagedPhpAppsSummary(phpappSearchString,
                                                         Integer.parseInt(pageNumber));
          numberOfPages = phpAppsWrapper.getNumberOfPages();
          phpApps = phpAppsWrapper.getPhpapps();
-//       TODO endPoints = phpAppsWrapper.getEndPoints();
+        endPoints = phpAppsWrapper.getEndPoints();
 
-        endPoints = new String[phpApps.length];
-        for (String endPoint : endPoints){
-            endPoint = "";
-        }
     } catch (Exception e) {
          response.setStatus(500);
          CarbonUIMessage uiMsg = new CarbonUIMessage(CarbonUIMessage.ERROR, e.getMessage(), e);
@@ -181,7 +176,6 @@
 <script type="text/javascript">
     function searchPhpapps() {
         document.searchForm.submit();
-Per Deep's recommendation I'm going to install Ubuntu 12.04 Client 64bit on it. The machine has a Core i7 at 3.4GHz and has 8G
     }
 </script>
 

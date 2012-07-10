@@ -54,8 +54,7 @@ public class ZipFileUploadExecutor extends AbstractFileUploadExecutor {
         }
 
         HostingAdminClient client =
-                new HostingAdminClient(request.getLocale());
-        client.initApplicationManagementService(cookie, configurationContext, serverURL);
+                new HostingAdminClient(request.getLocale(), cookie, configurationContext, serverURL);
         String msg;
 
         List<FileItemData> tempDataList = fileItemsMap.get("warFileName");
@@ -69,7 +68,8 @@ public class ZipFileUploadExecutor extends AbstractFileUploadExecutor {
                 if(images.size() == 1){
                     selectedImage = images.get(0);
                     log.info(selectedImage);
-                    client.startInstance(selectedImage);
+                    StringBuffer requestUrl = request.getRequestURL();
+                    client.startInstance(selectedImage, requestUrl.toString());
                 }
             }
         }

@@ -25,6 +25,7 @@ import java.util.List;
  */
 public final class PHPAppsWrapper implements Pageable {
     private String[] phpapps;
+    private String[] endPoints;
     private int numberOfPhpapps;
     private int numberOfFaultyWebapps;
     private int numberOfPages;
@@ -101,5 +102,12 @@ public final class PHPAppsWrapper implements Pageable {
         this.phpapps = CarbonUtils.arrayCopyOf(webapps);
     }
 
+    public String[] getEndPoints() {
+        return endPoints;
+    }
+
+    public void setEndPoints(String[] endPoints) {
+        this.endPoints = endPoints;
+    }
 }
 

@@ -3,18 +3,23 @@
  */
 package org.wso2.carbon.hosting.mgt.service;
 
+
+import org.apache.axis2.AxisFault;
+import org.wso2.carbon.hosting.mgt.utils.FileUploadData;
+import org.apache.commons.logging.Log;
+import org.apache.commons.logging.LogFactory;
+
 import java.io.File;
 import java.io.FileOutputStream;
 import java.io.FilenameFilter;
 import java.io.IOException;
+import java.util.ArrayList;
 import java.util.HashMap;
+import java.util.List;
+import java.util.Map;
 
-import org.apache.axis2.AxisFault;
-import org.apache.commons.logging.Log;
-import org.apache.commons.logging.LogFactory;
 import org.wso2.carbon.core.AbstractAdmin;
 import org.wso2.carbon.hosting.mgt.clients.AutoscaleServiceClient;
-import org.wso2.carbon.hosting.mgt.utils.FileUploadData;
 import org.wso2.carbon.hosting.mgt.utils.PHPAppsWrapper;
 import org.wso2.carbon.hosting.mgt.utils.PHPCartridgeConstants;
 
@@ -27,32 +32,25 @@ public class ApplicationManagementService extends AbstractAdmin{
 
     private static final Log log = LogFactory.getLog(ApplicationManagementService.class);
     public static final String FILE_DEPLOYMENT_FOLDER = "phpapps";
-    public static final String PHP_APP_DOMAIN = "phpdomain";
     AutoscaleServiceClient client;
     HashMap<String, String> imageIdtoNameMap;
-    
-    public ApplicationManagementService() throws AxisFault {
+
+    public ApplicationManagementService() throws Exception {
         client = new AutoscaleServiceClient(System.getProperty(PHPCartridgeConstants.AUTOSCALER_SERVICE_URL));
-        try {
-            client.init(true);
-        } catch (Exception e) {
-            String msg = "Error while initiating autoscaler stub";
-            log.error(msg);
-        }
         imageIdtoNameMap = new HashMap<String, String>();
+        log.info("Initialized Autoscaler service");
+        client.init(true);
+        log.info("Called INIT of Autoscaler service and Image id is");
     }
-    
-    
-    
-	/**
+    /**
          * Upload a File
          *
          * @param fileUploadDataList Array of data representing the PHP apps(.zip) that are to be uploaded
          * @return true - if upload was successful
          * @throws org.apache.axis2.AxisFault If an error occurs while uploading
          */
-    public boolean uploadWebapp(FileUploadData[] fileUploadDataList
-    ) throws AxisFault {
+    public boolean uploadWebapp(FileUploadData[] fileUploadDataList ) throws AxisFault {
+
         File phpAppsDir = new File(getWebappDeploymentDirPath());
 
         if (!phpAppsDir.exists() && !phpAppsDir.mkdirs()) {
@@ -78,6 +76,8 @@ public class ApplicationManagementService extends AbstractAdmin{
                     log.warn("Could not close file " + destFile.getAbsolutePath());
                 }
             }
+
+            log.info("Uploaded files" );
         }
         return true;
     }
@@ -98,6 +98,7 @@ public class ApplicationManagementService extends AbstractAdmin{
      */
     public String[] listPhpApplications() {
 
+        log.info("Listing php apps");
         String phpAppPath = getWebappDeploymentDirPath();
         File phpAppDirectory = new File(phpAppPath);
         String[] children;
@@ -117,9 +118,21 @@ public class ApplicationManagementService extends AbstractAdmin{
     public PHPAppsWrapper getPagedPhpAppsSummary(String phpAppSearchString, int pageNumber){
          PHPAppsWrapper phpAppsWrapper = new PHPAppsWrapper();
         phpAppsWrapper.setPhpapps(listPhpApplications());
+        String[] phpApps= listPhpApplications();
+        phpAppsWrapper.setPhpapps(phpApps);
+        phpAppsWrapper.setEndPoints(getEndPoints(phpApps));
         phpAppsWrapper.setNumberOfPages(1);
         return phpAppsWrapper;
     }
+
+    private String[] getEndPoints(String[] phpApps) {
+        String[] endPoints = new String[phpApps.length];
+        for(int i = 0; i < endPoints.length; i++){
+            endPoints[i] = "https://" + "<tenant_ip>" + "/t/" + "tenant_name/" + phpApps[i];
+        }
+        return endPoints;
+    }
+
 
     public void deleteAllPhpApps(){
         deleteApps(listPhpApplications());
@@ -137,13 +150,17 @@ public class ApplicationManagementService extends AbstractAdmin{
         }
     }
 
-    public void startInstance(String image)  {
+    public void startInstance(String image, String tenant){
+//                                public String startInstance(String image, String tenant)  {
+//        String ip = null;
         try{
-        client.startInstance(PHP_APP_DOMAIN, image);
+            String ip = client.startInstance(System.getProperty("php.domain"), imageIdtoNameMap.get(image));
+            log.info("Started Instance ip is " + ip);
         }catch (Exception e){
             String msg = "Error while calling auto scaler to start instance";
             log.error(msg);
         }
+//        return ip;
     }
 
     private void addPHPClusterDomain(){
@@ -156,10 +173,13 @@ public class ApplicationManagementService extends AbstractAdmin{
     }
 
     public String[] getImages(){
-        String images[] = new String[1];
-        images[0] = "nova/2d2a7f3f-da54-4d25-85a4-4278bc2b306c";
-//        images[0] = "us-east-1/ami-52409a3b";
-        return images;
+        String imageIdsString = System.getProperty(PHPCartridgeConstants.OPENSTACK_INSTANCE_IMAGE_IDS);
+        String[] images = imageIdsString.split(",");
+        for (String image : images) {
+            String imageArray[] = image.split(":");
+            imageIdtoNameMap.put(imageArray[0], imageArray[1]);
+        }
+        return imageIdtoNameMap.keySet().toArray(new String[imageIdtoNameMap.size()]);
     }
 
 }

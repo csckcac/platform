@@ -36,9 +36,12 @@ public class AutoscaleServiceClient {
     public AutoscaleServiceClient(String epr) throws AxisFault {
 
         try {
-            
+            long timeOut = 90000;
+            if(!(System.getProperty("autoscaler.time.out") == null)){
+                timeOut = Long.parseLong(System.getProperty("autoscaler.time.out"));
+            }
             stub = new AutoscalerServiceStub(epr);
-            stub._getServiceClient().getOptions().setTimeOutInMilliSeconds(90000);
+            stub._getServiceClient().getOptions().setTimeOutInMilliSeconds(timeOut);
 
         } catch (AxisFault axisFault) {
             String msg =

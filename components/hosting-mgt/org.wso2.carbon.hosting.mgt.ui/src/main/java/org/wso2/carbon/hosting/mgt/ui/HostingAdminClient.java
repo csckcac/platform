@@ -42,15 +42,9 @@ public class HostingAdminClient {
     public ApplicationManagementServiceStub stub;
     private static boolean isInstanceUp = false;
 
-    public HostingAdminClient(
-                             Locale locale) throws AxisFault {
+    public HostingAdminClient( Locale locale, String cookie, ConfigurationContext configCtx,
+                               String backendServerURL) throws AxisFault {
         bundle = ResourceBundle.getBundle(BUNDLE, locale);
-
-    }
-
-    public void initApplicationManagementService( String cookie, ConfigurationContext configCtx,
-                                                  String backendServerURL) throws AxisFault {
-
         String serviceURL = backendServerURL + "ApplicationManagementService";
         stub = new ApplicationManagementServiceStub(configCtx, serviceURL);
         ServiceClient client = stub._getServiceClient();
@@ -60,6 +54,7 @@ public class HostingAdminClient {
         option.setProperty(Constants.Configuration.ENABLE_MTOM, Constants.VALUE_TRUE);
 
         stub._getServiceClient().getOptions().setTimeOutInMilliSeconds(90000);
+
     }
 
     public void uploadWebapp(FileUploadData[] fileUploadDataList) throws AxisFault {
@@ -129,9 +124,9 @@ public class HostingAdminClient {
         return null;
     }
     
-    public void startInstance(String image) throws AxisFault {
+    public void startInstance(String image, String tenant) throws AxisFault {
         try {
-            stub.startInstance(image);
+            stub.startInstance(image, tenant);
         } catch (RemoteException e) {
             handleException("cannot.start.instance" , e);
         }

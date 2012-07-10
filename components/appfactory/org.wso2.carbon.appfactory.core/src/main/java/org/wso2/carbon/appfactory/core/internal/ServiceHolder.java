@@ -16,6 +16,7 @@
 
 package org.wso2.carbon.appfactory.core.internal;
 
+import org.wso2.carbon.appfactory.common.AppFactoryConfiguration;
 import org.wso2.carbon.appfactory.core.ArtifactStorage;
 import org.wso2.carbon.appfactory.core.BuildDriver;
 import org.wso2.carbon.appfactory.core.ContinuousIntegrationSystemDriver;
@@ -26,7 +27,7 @@ public class ServiceHolder {
     public static BuildDriver buildDriver;
     public static ArtifactStorage artifactStorage;
     public static ContinuousIntegrationSystemDriver continuousIntegrationSystemDriver;
-
+    public static AppFactoryConfiguration appFactoryConfiguration;
 
     public static BuildDriver getBuildDriver() {
         return buildDriver;
@@ -61,6 +62,14 @@ public class ServiceHolder {
 
     public static void setArtifactStorage(ArtifactStorage artifactStorage) {
         ServiceHolder.artifactStorage = artifactStorage;
+    }
+
+    public static AppFactoryConfiguration getAppFactoryConfiguration() {
+        return appFactoryConfiguration;
+    }
+
+    public static void setAppFactoryConfiguration(AppFactoryConfiguration appFactoryConfiguration) {
+        ServiceHolder.appFactoryConfiguration = appFactoryConfiguration;
     }
 
 }

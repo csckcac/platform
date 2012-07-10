@@ -108,13 +108,13 @@
     </wsdl:binding>
     <wsdl:service name="ApplicationDeployer">
         <wsdl:port name="ApplicationDeployerHttpsSoap11Endpoint" binding="ns:ApplicationDeployerSoap11Binding">
-            <soap:address location="https://10.100.3.145:9443/services/ApplicationDeployer.ApplicationDeployerHttpsSoap11Endpoint/" />
+            <soap:address location="https://localhost:9443/services/ApplicationDeployer.ApplicationDeployerHttpsSoap11Endpoint/" />
         </wsdl:port>
         <wsdl:port name="ApplicationDeployerHttpsSoap12Endpoint" binding="ns:ApplicationDeployerSoap12Binding">
-            <soap12:address location="https://10.100.3.145:9443/services/ApplicationDeployer.ApplicationDeployerHttpsSoap12Endpoint/" />
+            <soap12:address location="https://localhost:9443/services/ApplicationDeployer.ApplicationDeployerHttpsSoap12Endpoint/" />
         </wsdl:port>
         <wsdl:port name="ApplicationDeployerHttpsEndpoint" binding="ns:ApplicationDeployerHttpBinding">
-            <http:address location="https://10.100.3.145:9443/services/ApplicationDeployer.ApplicationDeployerHttpsEndpoint/" />
+            <http:address location="https://localhost:9443/services/ApplicationDeployer.ApplicationDeployerHttpsEndpoint/" />
         </wsdl:port>
     </wsdl:service>
 </wsdl:definitions>

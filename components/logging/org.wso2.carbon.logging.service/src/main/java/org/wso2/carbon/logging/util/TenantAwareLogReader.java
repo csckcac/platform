@@ -152,12 +152,14 @@ public class TenantAwareLogReader {
 					TenantAwarePatternLayout tenantIdPattern = new TenantAwarePatternLayout("%T");
 					TenantAwarePatternLayout productPattern = new TenantAwarePatternLayout("%S");
 					TenantAwarePatternLayout messagePattern = new TenantAwarePatternLayout("%m");
+					TenantAwarePatternLayout loggerPattern = new TenantAwarePatternLayout("%c");
 					String productName = productPattern.format(logEvt);
 					String tenantId = tenantIdPattern.format(logEvt);
 					String result = messagePattern.format(logEvt);
-					if (isCurrentTenantId(tenantId) && isCurrentProduct(productName)
-							&& result != null
-							&& result.toLowerCase().indexOf(keyword.toLowerCase()) > -1) {
+					String logger = loggerPattern.format(logEvt);
+					boolean isInLogMessage = result != null && (result.toLowerCase().indexOf(keyword.toLowerCase()) > -1 );
+					boolean isInLogger = logger != null && (result.toLowerCase().indexOf(keyword.toLowerCase()) > -1);
+					if (isCurrentTenantId(tenantId) && isCurrentProduct(productName) && (isInLogMessage || isInLogger)) {
 						if (appName == null || appName.equals("")) {
 							resultList.add(createLogEvent(logEvt));
 						} else {
@@ -223,13 +225,10 @@ public class TenantAwareLogReader {
 				if (logEvt != null) {
 					TenantAwarePatternLayout tenantIdPattern = new TenantAwarePatternLayout("%T");
 					TenantAwarePatternLayout productPattern = new TenantAwarePatternLayout("%S");
-					TenantAwarePatternLayout messagePattern = new TenantAwarePatternLayout("%m");
-					TenantAwarePatternLayout loggerPattern = new TenantAwarePatternLayout("%c");
+					String priority = logEvt.getLevel().toString();
 					String productName = productPattern.format(logEvt);
 					String tenantId = tenantIdPattern.format(logEvt);
-					if ((messagePattern.toString().equals(type) && isCurrentTenantId(tenantId)
-							&& isCurrentProduct(productName)) || (loggerPattern.toString().equals(type) && isCurrentTenantId(tenantId)
-									&& isCurrentProduct(productName))) {
+					if ((priority.toString().equals(type) && isCurrentTenantId(tenantId) && isCurrentProduct(productName))) {
 						if (appName == null || appName.equals("")) {
 							resultList.add(createLogEvent(logEvt));
 						} else {

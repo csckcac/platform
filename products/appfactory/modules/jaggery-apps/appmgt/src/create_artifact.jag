@@ -1,0 +1,20 @@
+<%
+        include('includes/template_header.jag');
+        include('process/web_service_util.jag');
+        include('config_reader.jag');
+
+
+        var applicationId = request.getParameter("applicationId");
+        var ver = request.getParameter("revision");
+        var revision = request.getParameter("revision");
+
+
+        try{
+            var createArtifact = invokeCreateArtifact(applicationId,version,revision);
+            print("Artifact created successfully");
+	    }catch(e){
+	        print(e.message);
+	    }
+        include('includes/template_footer.jag');
+
+%>

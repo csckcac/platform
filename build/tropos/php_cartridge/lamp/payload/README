@@ -11,7 +11,7 @@ Now ssh to that machine using the wso2-key private key. Copy the entry added to
 the ~/.ssh/known_hosts in the machine from which you accessed the openstack controller.
 Create a file called known_hosts here and copy that entry.
 
-Now pack this payload as payload.tar.gz and pass this when creating PHP instances.
+Now pack this payload as payload.zip and pass this when creating PHP instances.
 Note that in debian_cron_script.sh following entries are replaced by information available
 at the time of creating the instance.
 
@@ -24,12 +24,12 @@ docroot="DOCUMENTROOT"
 Following is the /etc/rc.local file of the php instance
 
 #!/bin/sh -e
-cp -f /var/lib/cloud/instance/user-data.txt /opt/payload.tar.gz
+cp -f /var/lib/cloud/instance/user-data.txt /opt/payload.zip
 pushd /opt
-tar -zxf ./payload.tar.gz
+unzip -q ./payload.zip
 chmod -R 755 ./payload
 chmod -R 0600 ./payload/wso2-key
-rm -f ./payload.tar.gz
+rm -f ./payload.zip
 cat ./payload/known_hosts >> ~/.ssh/known_hosts
 /opt/payload/debian_cron_script.sh
 popd

@@ -12,15 +12,15 @@ fi
 
 
 pushd $work
-ssh -i ../wso2-key root@$controller_ip "cd $app_path/$tenant; ls ./" | grep "tar.gz" > ./app_list
+ssh -i ../wso2-key root@$controller_ip "cd $app_path/$tenant; ls ./" | grep "zip" > ./app_list
 if [ ! -e ./app_list.prev ]; then
-    scp -i ../wso2-key root@$controller_ip:$app_path/$tenant/*.tar.gz ./
-    for a in *.tar.gz;
+    scp -i ../wso2-key root@$controller_ip:$app_path/$tenant/*.zip ./
+    for a in *.zip;
     do
         if [ -e $a ]; then
-            tar -zxf $a;rm -f $a;
+            unzip -q $a;rm -f $a;
         fi
-    	b=${a%".tar.gz"}
+    	b=${a%".zip"}
         if [ -d $docroot/$b ]; then
     	    rm -rf $docroot/$b
         fi
@@ -41,7 +41,7 @@ else
             fi
         done
         if [ $z == 0 ]; then
-            h=${f%".tar.gz"}
+            h=${f%".zip"}
             if [ -d $docroot/$h ]; then
                 rm -rf $docroot/$h
                 echo "deleted $docroot/$h"
@@ -53,13 +53,13 @@ fi
 
 cp -f ./app_list ./app_list.prev
 
-ssh -i ../wso2-key root@$controller_ip "cd $app_path/$tenant;find ./ -mmin $duration" | grep "tar.gz" > ./updated_app_list
+ssh -i ../wso2-key root@$controller_ip "cd $app_path/$tenant;find ./ -mmin $duration" | grep "zip" > ./updated_app_list
 w=`cat ./updated_app_list`
 for i in $w; 
 do 
     scp -i ../wso2-key root@$controller_ip:$app_path/$tenant/$i ./
-    tar -zxf $i;rm -f $i;
-    j=${i%".tar.gz"}
+    unzip -q $i;rm -f $i;
+    j=${i%".zip"}
     if [ -d $docroot/$j ]; then
     	rm -rf $docroot/$j
     fi

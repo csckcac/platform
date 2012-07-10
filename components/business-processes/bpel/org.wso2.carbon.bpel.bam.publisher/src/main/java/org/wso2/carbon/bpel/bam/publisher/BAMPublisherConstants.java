@@ -17,14 +17,13 @@
 package org.wso2.carbon.bpel.bam.publisher;
 
 
+import javax.xml.namespace.QName;
 import java.lang.String;
 
-public class BamPublisherConstants {
+public class BAMPublisherConstants {
     public static final String BAM_PUBLISHER_NS = "http://wso2.org/bps/monitoring/publisher";
 
-    public static final String PROCESS_NAME = "ProcessName";
     public static final String SERVER = "Server";
-    public static final String TENANT_ID = "TenantId";
     public static final String DEFAULT_SERVER_NAME = "WSO2BPS";
 
     public static final String BAM_KEY = "key";
@@ -40,9 +39,13 @@ public class BamPublisherConstants {
     public static final String EVENT_VALUE_TYPE_CORRELATION ="correlationData";
 
     public static final String STREAM_NAME_ATTR = "streamName";
-    public static final String STREAM_VERSION_ATTR = "version";
-    public static final String STREAM_NICK_NAME_ATTR = "nickName";
-    public static final String STREAM_DESCRIPTION_ATTR = "description";
+    public static final String STREAM_VERSION = "version";
+    public static final String STREAM_NICK_NAME = "nickName";
+    public static final String STREAM_DESCRIPTION = "description";
+
+    public static final String NON_RECOVERABLE_ERROR = "nonRecoverableError";
+    public static final QName BAM_FAULT = new QName(BAMPublisherConstants.BAM_PUBLISHER_NS,
+            BAMPublisherConstants.NON_RECOVERABLE_ERROR);
 
 
 
@@ -61,4 +64,8 @@ public class BamPublisherConstants {
     public static final String BAM_SERVER_PASSWORD = "BAM_SERVER_PASSWORD";
     public static final String BAM_SERVER_ENABLE_SOCKET_TRANSPORT = "ENABLE_SOCKET_TRANSPORT";
     public static final String BAM_SERVER_ENABLE_HTTP_TRANSPORT = "ENABLE_HTTP_TRANSPORT";
+
+    public static final String INSTANCE_ID = "instanceId";
+    public static final String TENANT_ID = "tenantId";
+    public static final String PROCESS_ID = "processId";
 }

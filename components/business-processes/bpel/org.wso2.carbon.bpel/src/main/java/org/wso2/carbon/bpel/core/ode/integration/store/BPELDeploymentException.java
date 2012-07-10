@@ -19,7 +19,7 @@ package org.wso2.carbon.bpel.core.ode.integration.store;
 /**
  * This exception is thrown when the deployment of a BPEL process fails
  */
-public class BPELDeploymentException extends RuntimeException{
+public class BPELDeploymentException extends RuntimeException {
     public BPELDeploymentException() {
         super();
     }
@@ -29,6 +29,6 @@ public class BPELDeploymentException extends RuntimeException{
     }
 
     public BPELDeploymentException(String message, Throwable cause) {
-        super(message, cause);    
+        super(message, cause);
     }
 }

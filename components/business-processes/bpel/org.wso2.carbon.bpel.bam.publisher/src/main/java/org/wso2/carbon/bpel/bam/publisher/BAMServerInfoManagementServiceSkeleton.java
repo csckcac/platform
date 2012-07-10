@@ -1,24 +1,21 @@
 package org.wso2.carbon.bpel.bam.publisher;
 
 import org.apache.commons.logging.Log;
-
 import org.apache.commons.logging.LogFactory;
-
-import org.wso2.carbon.agent.DataPublisher;
-import org.wso2.carbon.bpel.bam.publisher.internal.BamPublisherServiceComponent;
+import org.wso2.carbon.bpel.bam.publisher.internal.BAMPublisherServiceComponent;
 import org.wso2.carbon.bpel.bam.publisher.skeleton.BAMServerInfoManagementServiceSkeletonInterface;
 import org.wso2.carbon.bpel.bam.publisher.skeleton.BamServerInformation;
 import org.wso2.carbon.bpel.bam.publisher.skeleton.Fault;
 import org.wso2.carbon.bpel.bam.publisher.util.BamPublisherUtils;
 import org.wso2.carbon.core.AbstractAdmin;
 import org.wso2.carbon.core.multitenancy.SuperTenantCarbonContext;
-import org.wso2.carbon.core.util.CryptoException;
+import org.wso2.carbon.databridge.agent.thrift.DataPublisher;
 import org.wso2.carbon.registry.core.exceptions.RegistryException;
 import org.wso2.carbon.registry.core.session.UserRegistry;
 
-public class BamServerInfoManagementServiceSkeleton extends AbstractAdmin implements
+public class BAMServerInfoManagementServiceSkeleton extends AbstractAdmin implements
                                   BAMServerInfoManagementServiceSkeletonInterface{
-    Log log = LogFactory.getLog(BamServerInfoManagementServiceSkeleton.class);
+    Log log = LogFactory.getLog(BAMServerInfoManagementServiceSkeleton.class);
 
     public BamServerInformation getBamServerInformation() throws Fault {
 
@@ -27,7 +24,7 @@ public class BamServerInfoManagementServiceSkeleton extends AbstractAdmin implem
         int tenantId = SuperTenantCarbonContext.getCurrentContext().getTenantId();
         UserRegistry configSystemRegistry = null;
         try {
-            configSystemRegistry = BamPublisherServiceComponent.getRegistryService().
+            configSystemRegistry = BAMPublisherServiceComponent.getRegistryService().
                        getConfigSystemRegistry(tenantId);
         } catch (RegistryException e) {
             String msg = "Obtaining registry failed for tenant id " + tenantId;
@@ -44,7 +41,7 @@ public class BamServerInfoManagementServiceSkeleton extends AbstractAdmin implem
         int tenantId = SuperTenantCarbonContext.getCurrentContext().getTenantId();
         UserRegistry configSystemRegistry = null;
         try {
-            configSystemRegistry = BamPublisherServiceComponent.getRegistryService().
+            configSystemRegistry = BAMPublisherServiceComponent.getRegistryService().
                        getConfigSystemRegistry(tenantId);
         } catch (RegistryException e) {
             String msg = "Obtaining registry failed for tenant id " + tenantId;

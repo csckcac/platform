@@ -18,6 +18,7 @@ package org.wso2.carbon.bpel.core.ode.integration.store;
 
 import org.apache.ode.bpel.iapi.ProcessConf;
 import org.apache.ode.bpel.iapi.ProcessState;
+import org.wso2.carbon.bpel.core.ode.integration.config.bam.BAMServerProfile;
 
 import javax.xml.namespace.QName;
 import java.io.File;
@@ -98,4 +99,11 @@ public interface TenantProcessStore {
     void handleBPELProcessStateChangedNotification(QName pid, ProcessState processState);
 
     ProcessConf removeProcessConfiguration(QName pid);
+
+    /**
+     * Retrieve the BAM server profile with the provided name
+     * @param name BAM server profile name
+     * @return BAM server profile
+     */
+    public BAMServerProfile getBAMServerProfile(String name);
 }

@@ -20,11 +20,7 @@ import org.apache.axis2.context.ConfigurationContext;
 import org.apache.commons.logging.Log;
 import org.apache.commons.logging.LogFactory;
 import org.apache.ode.bpel.compiler.api.CompilationException;
-import org.apache.ode.bpel.dd.DeployDocument;
-import org.apache.ode.bpel.dd.TCleanup;
-import org.apache.ode.bpel.dd.TDeployment;
-import org.apache.ode.bpel.dd.TProcessEvents;
-import org.apache.ode.bpel.dd.TProvide;
+import org.apache.ode.bpel.dd.*;
 import org.apache.ode.bpel.iapi.ContextException;
 import org.apache.ode.bpel.iapi.ProcessConf;
 import org.apache.ode.bpel.iapi.ProcessState;
@@ -34,24 +30,21 @@ import org.apache.ode.store.ProcessConfDAO;
 import org.wso2.carbon.application.deployer.AppDeployerUtils;
 import org.wso2.carbon.bpel.core.BPELConstants;
 import org.wso2.carbon.bpel.core.internal.BPELServiceComponent;
+import org.wso2.carbon.bpel.core.ode.integration.config.EndpointConfiguration;
+import org.wso2.carbon.bpel.core.ode.integration.config.bam.BAMServerProfile;
+import org.wso2.carbon.bpel.core.ode.integration.config.bam.BAMServerProfileBuilder;
 import org.wso2.carbon.bpel.core.ode.integration.store.clustering.BPELProcessStateChangedCommand;
 import org.wso2.carbon.bpel.core.ode.integration.store.repository.BPELPackageInfo;
 import org.wso2.carbon.bpel.core.ode.integration.store.repository.BPELPackageRepository;
 import org.wso2.carbon.bpel.core.ode.integration.store.repository.BPELPackageRepositoryUtils;
-import org.wso2.carbon.bpel.skeleton.ode.integration.mgt.services.types.CleanUpListType;
-import org.wso2.carbon.bpel.skeleton.ode.integration.mgt.services.types.CleanUpType;
-import org.wso2.carbon.bpel.skeleton.ode.integration.mgt.services.types.EnableEventListType;
-import org.wso2.carbon.bpel.skeleton.ode.integration.mgt.services.types.Generate_type1;
-import org.wso2.carbon.bpel.skeleton.ode.integration.mgt.services.types.ProcessEventsListType;
-import org.wso2.carbon.bpel.skeleton.ode.integration.mgt.services.types.ScopeEventListType;
-import org.wso2.carbon.bpel.skeleton.ode.integration.mgt.services.types.ScopeEventType;
-import org.wso2.carbon.core.multitenancy.SuperTenantCarbonContext;
 import org.wso2.carbon.bpel.skeleton.ode.integration.mgt.services.ProcessManagementException;
+import org.wso2.carbon.core.multitenancy.SuperTenantCarbonContext;
 import org.wso2.carbon.registry.core.Registry;
 import org.wso2.carbon.registry.core.RegistryConstants;
 import org.wso2.carbon.registry.core.config.RegistryContext;
 import org.wso2.carbon.registry.core.exceptions.RegistryException;
 import org.wso2.carbon.registry.core.utils.RegistryClientUtils;
+import org.wso2.carbon.unifiedendpoint.core.UnifiedEndpointConstants;
 import org.wso2.carbon.utils.FileManipulator;
 import org.wso2.carbon.utils.multitenancy.MultitenantUtils;
 
@@ -104,6 +97,9 @@ public class TenantProcessStoreImpl implements TenantProcessStore {
     // Axis2 bpel deployment repository where we put BPEL archive artifacts
     private File bpelArchiveRepo;
 
+    // Holds the BAM server profiles
+    private final Map<String, BAMServerProfile> bamProfiles =
+            new ConcurrentHashMap<String, BAMServerProfile>();
 
     public TenantProcessStoreImpl(ConfigurationContext configContext, ProcessStoreImpl parent)
             throws RegistryException {
@@ -518,6 +514,7 @@ public class TenantProcessStoreImpl implements TenantProcessStore {
      * @param deploymentContext information about current deployment
      * @throws RegistryException on error loading resources from registry.
      * @throws org.wso2.carbon.bpel.skeleton.ode.integration.mgt.services.ProcessManagementException
+     *
      */
     private void reloadExistingVersionsOfBPELPackage(BPELDeploymentContext deploymentContext)
             throws RegistryException, ProcessManagementException {
@@ -710,6 +707,29 @@ public class TenantProcessStoreImpl implements TenantProcessStore {
 
             readModifiedDDFromFile(pConf);
 
+            TBAMServerProfiles bamServerProfiles = processDD.getBamServerProfiles();
+            if (bamServerProfiles != null) {
+                for (TBAMServerProfiles.Profile bamServerProfile :
+                        bamServerProfiles.getProfileList()) {
+                    String location = bamServerProfile.getLocation();
+                    if ((!location.startsWith(UnifiedEndpointConstants.VIRTUAL_CONF_REG) ||
+                            !location.startsWith(UnifiedEndpointConstants.VIRTUAL_GOV_REG) ||
+                            !location.startsWith(UnifiedEndpointConstants.VIRTUAL_REG)) &&
+                            location.startsWith(UnifiedEndpointConstants.VIRTUAL_FILE)) {
+                        if (EndpointConfiguration.isAbsoutePath(location)) {
+                            location = UnifiedEndpointConstants.VIRTUAL_FILE + location;
+                        } else {
+                            location = EndpointConfiguration.getAbsolutePath(
+                                    du.getDeployDir().getAbsolutePath(), location);
+                        }
+                    }
+                    BAMServerProfileBuilder builder =
+                            new BAMServerProfileBuilder(location);
+                    BAMServerProfile profile = builder.build();
+                    addBAMServerProfile(profile.getName(), profile);
+                }
+            }
+
             processConfigMap.put(pConf.getProcessId(), pConf);
             loaded.add(pConf);
         }
@@ -721,7 +741,7 @@ public class TenantProcessStoreImpl implements TenantProcessStore {
 
     private void readModifiedDDFromFile(ProcessConfigurationImpl pConf) {
         String bpelMetafilesLocation = tenantConfigContext.getAxisConfiguration().getRepository().getPath()
-                                       + BPELConstants.BPEL_METAFILES_DIRECTORY;
+                + BPELConstants.BPEL_METAFILES_DIRECTORY;
 
         DeployDocument _dd = null;
         String encodedPath = null;
@@ -729,7 +749,7 @@ public class TenantProcessStoreImpl implements TenantProcessStore {
             encodedPath = URLEncoder.encode(pConf.getProcessId().toString(), "UTF-8");
         } catch (UnsupportedEncodingException e) {
             throw new ContextException("Couldn't encode path for file: "
-                                       + pConf.getProcessId().toString(), e);
+                    + pConf.getProcessId().toString(), e);
         }
         String ddFilePath = bpelMetafilesLocation + File.separator + encodedPath + ".xml";
         File deployDescDest = new File(ddFilePath);
@@ -737,10 +757,10 @@ public class TenantProcessStoreImpl implements TenantProcessStore {
 
             _dd = DeployDocument.Factory.parse(deployDescDest);
         } catch (FileNotFoundException e) {
-            log.debug("Deployment Descriptor for "+encodedPath+" not updated at runtime.");
+            log.debug("Deployment Descriptor for " + encodedPath + " not updated at runtime.");
         } catch (Exception e) {
             throw new ContextException("Couldn't read deployment descriptor at location "
-                                       + deployDescDest.getAbsolutePath(), e);
+                    + deployDescDest.getAbsolutePath(), e);
         }
 
 
@@ -923,4 +943,11 @@ public class TenantProcessStoreImpl implements TenantProcessStore {
         return parentProcessStore.getServicesPublishedByTenant(tenantId);
     }
 
+    public void addBAMServerProfile(String name, BAMServerProfile profile) {
+        bamProfiles.put(name, profile);
+    }
+
+    public BAMServerProfile getBAMServerProfile(String name) {
+        return bamProfiles.get(name);
+    }
 }

@@ -32,6 +32,23 @@
     <url>http://wso2.org</url>
     <description>This feature contains bpel bam publisher components required to monitor BPEL process with BAM2</description>
     <dependencies>
+	<dependency>
+                <groupId>org.wso2.carbon</groupId>
+                <artifactId>org.wso2.carbon.bpel.bam.publisher</artifactId>
+            </dependency>
+            <!--dependency>
+                <groupId>org.wso2.carbon</groupId>
+                <artifactId>org.wso2.carbon.bpel.bam.publisher.ui</artifactId>
+            </dependency-->
+            <dependency>
+                <groupId>org.wso2.carbon</groupId>
+                <artifactId>org.wso2.carbon.bpel.bam.publisher.skeleton</artifactId>
+            </dependency>
+            <!--dependency>
+                <groupId>org.wso2.carbon</groupId>
+                <artifactId>org.wso2.carbon.bpel.bam.publisher.stub</artifactId>
+            </dependency-->
+
     </dependencies>
     <build>
         <plugins>
@@ -57,9 +74,11 @@
                             </adviceFile>
                             <bundles>
                                 <bundleDef>org.wso2.carbon:org.wso2.carbon.bpel.bam.publisher</bundleDef>
-                                <bundleDef>org.wso2.carbon:org.wso2.carbon.bpel.bam.publisher.ui</bundleDef>
+                                <bundleDef>org.wso2.carbon:org.wso2.carbon.bpel.bam.publisher.skeleton</bundleDef>
+                                <!--bundleDef>org.wso2.carbon:org.wso2.carbon.bpel.bam.publisher.stub</bundleDef>
+                                <bundleDef>org.wso2.carbon:org.wso2.carbon.bpel.bam.publisher.ui</bundleDef-->
                             </bundles>
-                            <importBundles>
+                            <!--importBundles>
                                 <importBundleDef>org.apache.ode.wso2:ode</importBundleDef>
                                 <importBundleDef>asm.wso2:asm</importBundleDef>
                                 <importBundleDef>cglib.wso2:cglib</importBundleDef>
@@ -77,16 +96,19 @@
                                 <importBundleDef>geronimo-spec.wso2:geronimo-spec-javamail</importBundleDef>
                                 <importBundleDef>geronimo-spec.wso2:geronimo-spec-jms</importBundleDef>
                                 <importBundleDef>org.apache.geronimo.components.wso2:geronimo-transaction</importBundleDef>
-                                <importBundleDef>org.apache.openjpa:openjpa-osgi</importBundleDef>
+                                <importBundleDef>org.apache.openjpa:openjpa</importBundleDef>
                                 <importBundleDef>org.apache.geronimo.specs:geronimo-jpa_2.0_spec</importBundleDef>
                                 <importBundleDef>net.sf.saxon.wso2:saxon.bps</importBundleDef>
                                 <importBundleDef>net.sourceforge.serp.wso2:serp</importBundleDef>
                                 <importBundleDef>tranql.wso2:tranql-connector</importBundleDef>
                                 <importBundleDef>antlr.wso2:antlr</importBundleDef>
                                 <importBundleDef>rhino.wso2:js</importBundleDef>
-                            </importBundles>
+                            </importBundles-->
                             <importFeatures>
-                                <importFeatureDef>org.wso2.carbon.bpel:${datasources.feature.version}</importFeatureDef>
+                                <importFeatureDef>org.wso2.carbon.bpel:${wso2carbon.version}</importFeatureDef>
+				<importFeatureDef>org.wso2.carbon.databridge.agent.thrift.server:${wso2carbon.version}</importFeatureDef>
+                                <importFeatureDef>org.wso2.carbon.databridge.commons.thrift.server:${wso2carbon.version}</importFeatureDef>
+                                <importFeatureDef>org.wso2.carbon.databridge.commons.server:${wso2carbon.version}</importFeatureDef>
                             </importFeatures>
                         </configuration>
                     </execution>

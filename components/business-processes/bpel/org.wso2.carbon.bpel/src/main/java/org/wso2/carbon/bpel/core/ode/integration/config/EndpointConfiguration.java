@@ -143,7 +143,7 @@ public class EndpointConfiguration {
         return unifiedEndpoint;
     }
 
-    private String getAbsolutePath(String basePath, String filePath) {
+    public static String getAbsolutePath(String basePath, String filePath) {
         return UnifiedEndpointConstants.VIRTUAL_FILE + basePath + File.separator + filePath;
     }
 

@@ -16,16 +16,15 @@
 
 package org.wso2.carbon.bpel.bam.publisher.internal;
 
-import org.apache.commons.logging.*;
+import org.apache.commons.logging.Log;
 import org.apache.commons.logging.LogFactory;
 import org.osgi.framework.BundleContext;
+import org.osgi.service.component.ComponentContext;
 import org.wso2.carbon.bpel.bam.publisher.ConfigurationContextObserverImpl;
 import org.wso2.carbon.bpel.bam.publisher.TenantBamAgentHolder;
-import org.wso2.carbon.bpel.core.Axis2ConfigurationContextObserverImpl;
 import org.wso2.carbon.bpel.core.BPELEngineService;
 import org.wso2.carbon.bpel.core.ode.integration.BPELServer;
 import org.wso2.carbon.registry.core.service.RegistryService;
-import org.osgi.service.component.ComponentContext;
 import org.wso2.carbon.utils.Axis2ConfigurationContextObserver;
 
 /**
@@ -36,11 +35,9 @@ import org.wso2.carbon.utils.Axis2ConfigurationContextObserver;
  * @scr.reference name="registry.service" interface="org.wso2.carbon.registry.core.service.RegistryService"
  * cardinality="1..1" policy="dynamic"  bind="setRegistryService" unbind="unsetRegistryService"
  */
-public class BamPublisherServiceComponent {
+public class BAMPublisherServiceComponent {
 
-    private static Log log = LogFactory.getLog(BamPublisherServiceComponent.class);
-
-    private BPELBamPublisherContentHolder contentHolder;
+    private static Log log = LogFactory.getLog(BAMPublisherServiceComponent.class);
 
     private BundleContext bundleContext;
 

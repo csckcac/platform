@@ -23,15 +23,15 @@ import org.apache.ode.bpel.runtime.extension.AbstractExtensionBundle;
  */
 
 
-public class BamPublisherExtensionBundle extends AbstractExtensionBundle {
+public class BAMPublisherExtensionBundle extends AbstractExtensionBundle {
 
     @Override
     public String getNamespaceURI() {
-        return BamPublisherConstants.BAM_PUBLISHER_NS;
+        return BAMPublisherConstants.BAM_PUBLISHER_NS;
     }
 
     @Override
     public void registerExtensionActivities() {
-        registerExtensionOperation("publish", BamPublisherExtensionOperation.class);
+        registerExtensionOperation("publish", BAMPublisherExtensionOperation.class);
     }
 }

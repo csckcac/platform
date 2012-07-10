@@ -19,11 +19,11 @@ package org.wso2.carbon.bpel.bam.publisher;
 import org.apache.axis2.context.ConfigurationContext;
 import org.apache.commons.logging.Log;
 import org.apache.commons.logging.LogFactory;
-import org.wso2.carbon.agent.DataPublisher;
-import org.wso2.carbon.bpel.bam.publisher.internal.BamPublisherServiceComponent;
+import org.wso2.carbon.bpel.bam.publisher.internal.BAMPublisherServiceComponent;
 import org.wso2.carbon.bpel.bam.publisher.skeleton.BamServerInformation;
 import org.wso2.carbon.bpel.bam.publisher.util.BamPublisherUtils;
 import org.wso2.carbon.core.multitenancy.SuperTenantCarbonContext;
+import org.wso2.carbon.databridge.agent.thrift.DataPublisher;
 import org.wso2.carbon.registry.core.exceptions.RegistryException;
 import org.wso2.carbon.registry.core.session.UserRegistry;
 import org.wso2.carbon.utils.AbstractAxis2ConfigurationContextObserver;
@@ -50,7 +50,7 @@ public class ConfigurationContextObserverImpl extends AbstractAxis2Configuration
         int tenantId = SuperTenantCarbonContext.getCurrentContext().getTenantId();
         try {
 
-            UserRegistry configSystemRegistry = BamPublisherServiceComponent.getRegistryService().
+            UserRegistry configSystemRegistry = BAMPublisherServiceComponent.getRegistryService().
                     getConfigSystemRegistry(tenantId);
             BamServerInformation bamServerDataFromRegistry = BamPublisherUtils.
                     getBamServerDataFromRegistry(configSystemRegistry, tenantId);

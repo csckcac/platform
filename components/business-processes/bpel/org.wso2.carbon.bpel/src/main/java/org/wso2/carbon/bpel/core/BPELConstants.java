@@ -281,4 +281,6 @@ public final class BPELConstants {
     public static final String PORTS_OFFSET = "Ports.Offset";
 
     public static final String DAFAULT_BPEL_CLIENT = "AnonymousBPELClient";
+
+    public static final String BAM_SERVER_PROFILE_NS = "http://wso2.org/bam/2.0";
 }

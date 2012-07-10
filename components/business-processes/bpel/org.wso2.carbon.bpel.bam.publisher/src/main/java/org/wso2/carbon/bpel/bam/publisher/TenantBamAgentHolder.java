@@ -16,9 +16,9 @@
 
 package org.wso2.carbon.bpel.bam.publisher;
 
-import org.wso2.carbon.agent.DataPublisher;
-import org.wso2.carbon.agent.conf.AgentConfiguration;
-import org.wso2.carbon.agent.Agent;
+import org.wso2.carbon.databridge.agent.thrift.DataPublisher;
+import org.wso2.carbon.databridge.agent.thrift.conf.AgentConfiguration;
+import org.wso2.carbon.databridge.agent.thrift.Agent;
 
 
 

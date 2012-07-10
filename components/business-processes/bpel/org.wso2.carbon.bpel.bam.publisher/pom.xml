@@ -10,7 +10,7 @@
     <modelVersion>4.0.0</modelVersion>
     <artifactId>org.wso2.carbon.bpel.bam.publisher</artifactId>
     <packaging>bundle</packaging>
-    <name>WSO2 Carbon - BAM publishing Extension</name>
+    <name>WSO2 Carbon - BPEL BAM publishing Extension</name>
     <url>http://wso2.org</url>
     <description>BPEL BAM Publishing Extension for BPEL Monitoring using BAM2</description>
 
@@ -28,46 +28,56 @@
             <groupId>org.apache.ode.wso2</groupId>
             <artifactId>ode</artifactId>
         </dependency>
-        <dependency>
+        <!--dependency>
             <groupId>org.wso2.carbon</groupId>
             <artifactId>org.wso2.carbon.security.mgt</artifactId>
-        </dependency>
+        </dependency-->
         <dependency>
             <groupId>org.wso2.carbon</groupId>
             <artifactId>org.wso2.carbon.utils</artifactId>
         </dependency>
-        <dependency>
+        <!--dependency>
             <groupId>org.wso2.carbon</groupId>
             <artifactId>org.wso2.carbon.datasource</artifactId>
-        </dependency>
+        </dependency-->
         <dependency>
             <groupId>org.wso2.carbon</groupId>
             <artifactId>org.wso2.carbon.logging</artifactId>
         </dependency>
-        <dependency>
+        <!--dependency>
             <groupId>org.wso2.carbon</groupId>
             <artifactId>org.wso2.carbon.agent</artifactId>
             <version>${carbon.platform.version}</version>
-        </dependency>
-        <dependency>
+        </dependency-->
+        <!--dependency>
             <groupId>org.wso2.carbon</groupId>
             <artifactId>org.wso2.carbon.bpel.bam.publisher.stub</artifactId>
             <version>${carbon.platform.version}</version>
-        </dependency>
+        </dependency-->
         <dependency>
             <groupId>org.wso2.carbon</groupId>
             <artifactId>org.wso2.carbon.bpel.bam.publisher.skeleton</artifactId>
             <version>${carbon.platform.version}</version>
         </dependency>
-        <dependency>
+        <!--dependency>
             <groupId>org.wso2.carbon</groupId>
             <artifactId>org.wso2.carbon.bam.eventreceiver</artifactId>
             <version>${carbon.platform.version}</version>
-        </dependency>
-        <dependency>
+        </dependency-->
+        <!--dependency>
             <groupId>com.google.code.gson</groupId>
             <artifactId>gson</artifactId>
             <version>2.1</version>
+        </dependency-->
+	<dependency>
+            <groupId>org.wso2.carbon</groupId>
+            <artifactId>org.wso2.carbon.databridge.commons</artifactId>
+            <version>${carbon.platform.version}</version>
+        </dependency>
+        <dependency>
+            <groupId>org.wso2.carbon</groupId>
+            <artifactId>org.wso2.carbon.databridge.agent.thrift</artifactId>
+            <version>${carbon.platform.version}</version>
         </dependency>
     </dependencies>
 

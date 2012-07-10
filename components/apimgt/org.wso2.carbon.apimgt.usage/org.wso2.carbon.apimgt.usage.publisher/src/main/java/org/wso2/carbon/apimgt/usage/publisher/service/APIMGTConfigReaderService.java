@@ -28,6 +28,7 @@ public class APIMGTConfigReaderService {
     private String bamServerUser;
     private String bamServerPassword;
     private boolean enabled;
+    private String publisherClass;
 
     public APIMGTConfigReaderService(APIManagerConfiguration config) {
         String enabledStr = config.getFirstProperty(APIMgtUsagePublisherConstants.API_USAGE_ENABLED);
@@ -36,6 +37,7 @@ public class APIMGTConfigReaderService {
         bamServerURL = config.getFirstProperty(APIMgtUsagePublisherConstants.API_USAGE_BAM_SERVER_URL);
         bamServerUser = config.getFirstProperty(APIMgtUsagePublisherConstants.API_USAGE_BAM_SERVER_USER);
         bamServerPassword = config.getFirstProperty(APIMgtUsagePublisherConstants.API_USAGE_BAM_SERVER_PASSWORD);
+        publisherClass = config.getFirstProperty(APIMgtUsagePublisherConstants.API_USAGE_PUBLISHER_CLASS);
     }
 
     public String getBamServerThriftPort() {
@@ -57,4 +59,9 @@ public class APIMGTConfigReaderService {
     public boolean isEnabled() {
         return enabled;
     }
+
+     public String getPublisherClass() {
+        return publisherClass;
+    }
+
 }

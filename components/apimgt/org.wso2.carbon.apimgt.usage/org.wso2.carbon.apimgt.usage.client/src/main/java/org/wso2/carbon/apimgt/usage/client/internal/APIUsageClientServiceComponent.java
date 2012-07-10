@@ -35,28 +35,20 @@ public class APIUsageClientServiceComponent {
     private static APIManagerConfiguration configuration = null;
 
     protected void activate(ComponentContext componentContext) {
-        if (log.isDebugEnabled()){
-            log.debug("API usage client component activated");
-        }
+        log.debug("API usage client component activated");
     }
 
     protected void deactivate(ComponentContext componentContext) {
-        if (log.isDebugEnabled()){
-            log.debug("API usage client component deactivated");
-        }
+        log.debug("API usage client component deactivated");
     }
 
     protected void setAPIManagerConfigurationService(APIManagerConfigurationService amcService) {
-        if (log.isDebugEnabled()) {
-            log.debug("API manager configuration service bound to the API usage client component");
-        }
+        log.debug("API manager configuration service bound to the API usage client component");
         configuration = amcService.getAPIManagerConfiguration();
     }
 
     protected void unsetAPIManagerConfigurationService(APIManagerConfigurationService amcService) {
-        if (log.isDebugEnabled()) {
-            log.debug("API manager configuration service unbound from the API usage client component");
-        }
+        log.debug("API manager configuration service unbound from the API usage client component");
         configuration = null;
     }
 

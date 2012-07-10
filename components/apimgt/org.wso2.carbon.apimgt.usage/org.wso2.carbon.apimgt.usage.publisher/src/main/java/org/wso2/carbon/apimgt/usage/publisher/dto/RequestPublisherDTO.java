@@ -17,15 +17,15 @@
 */
 package org.wso2.carbon.apimgt.usage.publisher.dto;
 
-import java.nio.ByteBuffer;
-import java.util.HashMap;
-import java.util.Map;
-
 public class RequestPublisherDTO extends PublisherDTO {
 
     private String request = "1";
 
     private String requestTime;
+
+    public String getRequest(){
+        return request;
+    }
 
     public void setRequestTime(String requestTime){
         this.requestTime = requestTime;
@@ -35,18 +35,4 @@ public class RequestPublisherDTO extends PublisherDTO {
         return requestTime;
     }
 
-    public Map<String, ByteBuffer> createEventDataMap() {
-        Map<String, ByteBuffer> eventMap = new HashMap<String, ByteBuffer>();
-        eventMap.put("consumerKey", ByteBuffer.wrap(getConsumerKey().getBytes()));
-        eventMap.put("context", ByteBuffer.wrap(getContext().getBytes()));
-        eventMap.put("api_version", ByteBuffer.wrap(getApi_version().getBytes()));
-        eventMap.put("api", ByteBuffer.wrap(getApi().getBytes()));
-        eventMap.put("resource", ByteBuffer.wrap(getResource().getBytes()));
-        eventMap.put("method", ByteBuffer.wrap(getMethod().getBytes()));
-        eventMap.put("version", ByteBuffer.wrap(getVersion().getBytes()));
-        eventMap.put("request", ByteBuffer.wrap(request.getBytes()));
-        eventMap.put("requestTime", ByteBuffer.wrap(getRequestTime().getBytes()));
-        eventMap.put("userId", ByteBuffer.wrap(getUsername().getBytes()));
-        return eventMap;
-    }
 }

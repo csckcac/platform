@@ -55,16 +55,12 @@ public class UsageComponent {
     }
 
     protected void setAPIManagerConfigurationService(APIManagerConfigurationService service) {
-        if (log.isDebugEnabled()) {
-            log.debug("API manager configuration service bound to the API usage handler");
-        }
+        log.debug("API manager configuration service bound to the API usage handler");
         amConfigService = service;
     }
 
     protected void unsetAPIManagerConfigurationService(APIManagerConfigurationService service) {
-        if (log.isDebugEnabled()) {
-            log.debug("API manager configuration service unbound from the API usage handler");
-        }
+        log.debug("API manager configuration service unbound from the API usage handler");
         amConfigService = null;
     }
 

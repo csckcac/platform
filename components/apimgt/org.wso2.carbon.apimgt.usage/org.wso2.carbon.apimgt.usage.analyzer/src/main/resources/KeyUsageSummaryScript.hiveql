@@ -1,0 +1,37 @@
+DROP TABLE KeyUsageTable;
+DROP TABLE KeyUsageSummaryTable;
+CREATE EXTERNAL TABLE IF NOT EXISTS KeyUsageTable (key STRING,
+	context STRING,consumerKey 
+	STRING,userId STRING,
+	version STRING,request STRING) STORED BY 
+	'org.apache.hadoop.hive.cassandra.CassandraStorageHandler' WITH SERDEPROPERTIES ( "cassandra.host" = 
+	"127.0.0.1",
+	"cassandra.port" = "9160","cassandra.ks.name" = "EVENT_KS",
+	"cassandra.ks.username" 
+	= "admin","cassandra.ks.password" = "admin",
+	"cassandra.cf.name" = 
+	"org_wso2_apimgt_statistics_request",
+	"cassandra.columns.mapping" = 
+	":key,payload_context,
+	payload_consumerKey,payload_userId,payload_version,
+	payload_request" );
+CREATE EXTERNAL TABLE IF NOT EXISTS KeyUsageSummaryTable(context STRING,
+	consumerKey STRING,userId 
+	STRING,version STRING,
+	request INT) STORED BY 
+	'org.apache.hadoop.hive.jdbc.storage.JDBCStorageHandler' TBLPROPERTIES ( 'mapred.jdbc.driver.class' 
+	= 'org.h2.Driver',
+	'mapred.jdbc.url' = 
+	'jdbc:h2:repository/database/APIMGTSTATS_DB;AUTO_SERVER=TRUE',
+	'mapred.jdbc.username' = 
+	'wso2carbon','mapred.jdbc.password' = 'wso2carbon',
+	'hive.jdbc.update.on.duplicate' = 'true',
+	'hive.jdbc.table.create.query' = 'CREATE TABLE KeyUsageSummaryTable (context 
+	VARCHAR(100),
+	consumerKey VARCHAR(100),userId VARCHAR(100),
+	version VARCHAR(100),request INT)' );
+insert overwrite table KeyUsageSummaryTable select context,
+	consumerKey,userId,version,sum(cast(request as INT)) from KeyUsageTable group by context,
+	consumerKey,userId,version;
+
+                                    

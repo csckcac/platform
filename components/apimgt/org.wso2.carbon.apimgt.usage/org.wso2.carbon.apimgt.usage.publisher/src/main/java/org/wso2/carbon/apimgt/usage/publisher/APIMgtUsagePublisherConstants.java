@@ -31,6 +31,7 @@ public final class APIMgtUsagePublisherConstants {
     public static final String API_USAGE_BAM_SERVER_URL = API_USAGE_TRACKING + "BAMServerURL";
     public static final String API_USAGE_BAM_SERVER_USER = API_USAGE_TRACKING + "BAMUsername";
     public static final String API_USAGE_BAM_SERVER_PASSWORD = API_USAGE_TRACKING + "BAMPassword";
+    public static final String API_USAGE_PUBLISHER_CLASS = API_USAGE_TRACKING + "PublisherClass";
 
     public static final String CONSUMER_KEY = "api.ut.consumerKey";
     public static final String USER_ID = "api.ut.userId";
@@ -41,5 +42,10 @@ public final class APIMgtUsagePublisherConstants {
     public static final String REQUEST_TIME = "api.ut.requestTime";
     public static final String RESOURCE = "api.ut.resource";
     public static final String HTTP_METHOD = "api.ut.HTTP_METHOD";
+
+    public static final String  API_MANAGER_REQUEST_STREAM_NAME = "org.wso2.apimgt.statistics.request";
+    public static final String  API_MANAGER_REQUEST_STREAM_VERSION = "1.0.0";
+    public static final String  API_MANAGER_RESPONSE_STREAM_NAME = "org.wso2.apimgt.statistics.response";
+    public static final String  API_MANAGER_RESPONSE_STREAM_VERSION = "1.0.0";
 
 }

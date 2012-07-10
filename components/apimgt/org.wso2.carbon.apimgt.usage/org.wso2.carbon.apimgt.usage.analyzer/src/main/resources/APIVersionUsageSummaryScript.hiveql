@@ -1,0 +1,35 @@
+DROP TABLE APIVersionUsageTable;
+DROP TABLE APIVersionUsageSummaryTable;
+CREATE EXTERNAL TABLE IF NOT EXISTS APIVersionUsageTable (key STRING,
+	api STRING,version 
+	STRING,context STRING,
+	request STRING) STORED BY 
+	'org.apache.hadoop.hive.cassandra.CassandraStorageHandler' WITH SERDEPROPERTIES ( "cassandra.host" = 
+	"127.0.0.1",
+	"cassandra.port" = "9160","cassandra.ks.name" = "EVENT_KS",
+	"cassandra.ks.username" 
+	= "admin","cassandra.ks.password" = "admin",
+	"cassandra.cf.name" = 
+	"org_wso2_apimgt_statistics_request",
+	"cassandra.columns.mapping" = 
+	":key,payload_api,
+	payload_version,payload_context,payload_request" );
+CREATE EXTERNAL TABLE IF NOT EXISTS APIVersionUsageSummaryTable(api STRING,
+	version STRING,context 
+	STRING,request INT) STORED BY 'org.apache.hadoop.hive.jdbc.storage.JDBCStorageHandler' TBLPROPERTIES 
+	( 'mapred.jdbc.driver.class' = 'org.h2.Driver',
+	'mapred.jdbc.url' = 
+	'jdbc:h2:repository/database/APIMGTSTATS_DB;AUTO_SERVER=TRUE',
+	'mapred.jdbc.username' = 
+	'wso2carbon','mapred.jdbc.password' = 'wso2carbon',
+	'hive.jdbc.update.on.duplicate' = 'true',
+	'hive.jdbc.table.create.query' = 'CREATE TABLE APIVersionUsageSummaryTable (api 
+		VARCHAR(100),
+	version VARCHAR(100),context VARCHAR(100),
+	request INT)' );
+insert overwrite table APIVersionUsageSummaryTable select api,
+	version,context,sum(cast(request as 
+	INT)) from APIVersionUsageTable group by api,
+	version,context;
+
+                                    

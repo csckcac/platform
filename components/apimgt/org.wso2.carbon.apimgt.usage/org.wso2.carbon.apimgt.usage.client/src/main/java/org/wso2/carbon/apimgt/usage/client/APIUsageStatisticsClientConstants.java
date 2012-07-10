@@ -44,27 +44,37 @@ public final class APIUsageStatisticsClientConstants {
 
     public static final String ROW = "row";
 
-    public static final String REQUEST = "request";
+    public static final String REQUEST = "REQUEST";
 
-    public static final String API = "api";
+    public static final String API = "API";
 
-    public static final String API_VERSION = "api_version";
+    public static final String API_VERSION = "API_VERSION";
 
-    public static final String SERVICE_TIME = "serviceTime";
+    public static final String SERVICE_TIME = "SERVICETIME";
 
-    public static final String VERSION = "version";
+    public static final String VERSION = "VERSION";
     
-    public static final String CONTEXT= "context";
+    public static final String CONTEXT= "CONTEXT";
 
-    public static final String RESPONSE = "response";
+    public static final String RESPONSE = "RESPONSE";
 
-    public static final String REQUEST_TIME = "requestTime";
+    public static final String REQUEST_TIME = "REQUESTTIME";
 
-    public static final String CONSUMER_KEY = "consumerKey";
+    public static final String CONSUMER_KEY = "CONSUMERKEY";
     
-    public static final String USER_ID = "userId";
+    public static final String USER_ID = "USERID";
     
     
     public static final String ALL_PROVIDERS = "__all_providers__";
+
+    public static final String API_USAGE_TRACKING = "APIUsageTracking.";
+
+    public static final String API_USAGE_JDBC_DRIVER =  API_USAGE_TRACKING + "JDBCDriver";
+
+    public static final String API_USAGE_JDBC_URL =  API_USAGE_TRACKING + "JDBCUrl";
+
+    public static final String API_USAGE_JDBC_UserName =  API_USAGE_TRACKING + "JDBCUserName";
+
+    public static final String API_USAGE_JDBC_Password =  API_USAGE_TRACKING + "JDBCPassword";
 
 }

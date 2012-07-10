@@ -38,10 +38,11 @@ public class APIMgtUsageHandler extends AbstractHandler {
 
     private static final Log log   = LogFactory.getLog(APIMgtUsageHandler.class);
 
-    private APIMgtUsageConfigHolder configHolder = new APIMgtUsageConfigHolder();
-    private volatile APIMgtUsageBAMDataPublisher publisher;
+    private volatile APIMgtUsageDataPublisher publisher;
 
     private boolean enabled = UsageComponent.getApiMgtConfigReaderService().isEnabled();
+
+    private String publisherClass = UsageComponent.getApiMgtConfigReaderService().getPublisherClass();
 
     public boolean handleRequest(MessageContext mc) {
         String currentTime = String.valueOf(System.currentTimeMillis());
@@ -53,8 +54,17 @@ public class APIMgtUsageHandler extends AbstractHandler {
         if (publisher == null) {
             synchronized (this){
                 if (publisher == null) {
-                    log.debug("Initializing BAM data publisher");
-                    publisher = new APIMgtUsageBAMDataPublisher(configHolder);
+                    try {
+                        log.debug("Instantiating Data Publisher");
+                        publisher = (APIMgtUsageDataPublisher)Class.forName(publisherClass).newInstance();
+                        publisher.init();
+                    } catch (ClassNotFoundException e) {
+                        log.error("Class not found " + publisherClass);
+                    } catch (InstantiationException e) {
+                        log.error("Error instantiating " + publisherClass);
+                    } catch (IllegalAccessException e) {
+                        log.error("Illegal access to " + publisherClass);
+                    }
                 }
             }
         }
@@ -93,7 +103,11 @@ public class APIMgtUsageHandler extends AbstractHandler {
         requestPublisherDTO.setMethod(method);
         requestPublisherDTO.setRequestTime(currentTime);
         requestPublisherDTO.setUsername(username);
-        publisher.publishEvent(requestPublisherDTO);
+        try {
+            publisher.publishEvent(requestPublisherDTO);
+        } catch (Exception e) {
+            e.printStackTrace();  //To change body of catch statement use File | Settings | File Templates.
+        }
 
         mc.setProperty(APIMgtUsagePublisherConstants.CONSUMER_KEY, consumerKey);
         mc.setProperty(APIMgtUsagePublisherConstants.USER_ID, username);
@@ -129,7 +143,11 @@ public class APIMgtUsageHandler extends AbstractHandler {
         responsePublisherDTO.setMethod((String)mc.getProperty(APIMgtUsagePublisherConstants.HTTP_METHOD));
         responsePublisherDTO.setResponseTime(String.valueOf(currentTime));
         responsePublisherDTO.setServiceTime(String.valueOf(serviceTime));
-        publisher.publishEvent(responsePublisherDTO);
+        try{
+            publisher.publishEvent(responsePublisherDTO);
+        } catch (Exception e) {
+            e.printStackTrace();  //To change body of catch statement use File | Settings | File Templates.
+        }
 
         return true; // Should never stop the message flow
     }

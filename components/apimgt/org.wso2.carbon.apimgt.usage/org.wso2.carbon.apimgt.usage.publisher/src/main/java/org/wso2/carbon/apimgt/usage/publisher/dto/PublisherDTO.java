@@ -17,11 +17,7 @@
 */
 package org.wso2.carbon.apimgt.usage.publisher.dto;
 
-import java.nio.ByteBuffer;
-import java.util.HashMap;
-import java.util.Map;
-
-public class PublisherDTO {
+public abstract class PublisherDTO {
 
     private String consumerKey;
     
@@ -101,23 +97,6 @@ public class PublisherDTO {
 
     public String getVersion() {
         return version;
-    }
-
-     /**
-     * creates event data structure
-     * @return <code>Map</code> of event data
-     */
-    public Map<String, ByteBuffer> createEventDataMap() {
-        Map<String, ByteBuffer> eventMap = new HashMap<String, ByteBuffer>();
-        eventMap.put("consumerKey", ByteBuffer.wrap(getConsumerKey().getBytes()));
-        eventMap.put("context", ByteBuffer.wrap(getContext().getBytes()));
-        eventMap.put("api_version", ByteBuffer.wrap(getApi_version().getBytes()));
-        eventMap.put("api", ByteBuffer.wrap(getApi().getBytes()));
-        eventMap.put("resource", ByteBuffer.wrap(getResource().getBytes()));
-        eventMap.put("method", ByteBuffer.wrap(getMethod().getBytes()));
-        eventMap.put("version", ByteBuffer.wrap(getVersion().getBytes()));
-        eventMap.put("userId", ByteBuffer.wrap(getUsername().getBytes()));
-        return eventMap;
     }
 
 }

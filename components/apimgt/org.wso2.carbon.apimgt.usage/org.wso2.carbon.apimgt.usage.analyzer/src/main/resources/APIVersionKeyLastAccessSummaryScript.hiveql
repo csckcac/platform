@@ -1,0 +1,39 @@
+DROP TABLE APIVersionKeyLastAccessTable;
+DROP TABLE APIVersionKeyLastAccessSummaryTable;
+CREATE EXTERNAL TABLE IF NOT EXISTS APIVersionKeyLastAccessTable (key STRING,
+	api_version 
+	STRING,consumerKey STRING,userId STRING,
+	context STRING,requestTime STRING) STORED BY 
+	'org.apache.hadoop.hive.cassandra.CassandraStorageHandler' WITH SERDEPROPERTIES ( "cassandra.host" = 
+	"127.0.0.1",
+	"cassandra.port" = "9160","cassandra.ks.name" = "EVENT_KS",
+	"cassandra.ks.username" 
+	= "admin","cassandra.ks.password" = "admin",
+	"cassandra.cf.name" = 
+	"org_wso2_apimgt_statistics_request",
+	"cassandra.columns.mapping" = 
+	":key,payload_api_version,
+	payload_consumerKey,payload_userId,payload_context,
+	payload_requestTime" 
+	);
+CREATE EXTERNAL TABLE IF NOT EXISTS APIVersionKeyLastAccessSummaryTable(api_version STRING,
+	consumerKey STRING,userId STRING,context STRING,
+	requestTime DOUBLE) STORED BY 
+	'org.apache.hadoop.hive.jdbc.storage.JDBCStorageHandler' TBLPROPERTIES ( 'mapred.jdbc.driver.class' 
+	= 'org.h2.Driver',
+	'mapred.jdbc.url' = 
+	'jdbc:h2:repository/database/APIMGTSTATS_DB;AUTO_SERVER=TRUE',
+	'mapred.jdbc.username' = 
+	'wso2carbon','mapred.jdbc.password' = 'wso2carbon',
+	'hive.jdbc.update.on.duplicate' = 'true',
+	'hive.jdbc.table.create.query' = 'CREATE TABLE APIVersionKeyLastAccessSummaryTable (api_version 
+		VARCHAR(100),
+	consumerKey VARCHAR(100),userId VARCHAR(100),
+	context VARCHAR(100),requestTime 
+	DOUBLE)' );
+insert overwrite table APIVersionKeyLastAccessSummaryTable select api_version,
+	consumerKey,userId,context,max(cast(requestTime as DOUBLE)) from APIVersionKeyLastAccessTable group 
+	by api_version,
+	consumerKey,userId,context;
+
+                                    

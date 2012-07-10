@@ -17,7 +17,13 @@
 */
 package org.wso2.carbon.apimgt.usage.publisher;
 
-import org.wso2.carbon.apimgt.usage.publisher.dto.PublisherDTO;
+import org.apache.commons.logging.Log;
+import org.apache.commons.logging.LogFactory;
+import org.wso2.carbon.apimgt.usage.publisher.dto.BAMRequestPublisherDTO;
+import org.wso2.carbon.apimgt.usage.publisher.dto.BAMResponsePublisherDTO;
+import org.wso2.carbon.apimgt.usage.publisher.dto.RequestPublisherDTO;
+import org.wso2.carbon.apimgt.usage.publisher.dto.ResponsePublisherDTO;
+import org.wso2.carbon.apimgt.usage.publisher.internal.UsageComponent;
 import org.wso2.carbon.apimgt.usage.publisher.service.APIMGTConfigReaderService;
 import org.wso2.carbon.bam.agent.conf.AgentConfiguration;
 import org.wso2.carbon.bam.agent.core.Agent;
@@ -33,46 +39,57 @@ import java.util.Map;
 /**
  * APIMgtUsageBAMDataPublisher that publish data to bam server
  */
+public class APIMgtUsageBAMDataPublisher implements APIMgtUsageDataPublisher {
 
-public class APIMgtUsageBAMDataPublisher {
-
-    /**
+  /**
      * EventReceiver instance that holds config of the receiver in BAM server
      */
+
+    private static final Log log   = LogFactory.getLog(APIMgtUsageBAMDataPublisher.class);
+
     private EventReceiver eventReceiver;
 
     private Agent agent;
 
-    public APIMgtUsageBAMDataPublisher(APIMgtUsageConfigHolder configHolder){
-        this.eventReceiver = configHolder.createEventReceiver();
+    @Override
+    public void init() {
+        log.debug("Initializing APIMgtUsageDataBridgeDataPublisher");
+        this.eventReceiver = getEventReceiver();
         AgentConfiguration configuration = new AgentConfiguration();
         agent = new Agent(configuration);
     }
 
-    public APIMgtUsageBAMDataPublisher(APIMgtUsageConfigHolder configHolder,
-                                       APIMGTConfigReaderService apimgtConfigReaderService){
-        this.eventReceiver = configHolder.createEventReceiver(apimgtConfigReaderService);
-        AgentConfiguration configuration = new AgentConfiguration();
-        agent = new Agent(configuration);
-    }
-
-    /**
+  /**
      * publishes even to BAM server by creating an event
-     * @param publisherDTO  <code>PublisherDTO</code> that is needed to be published
+     * @param requestPublisherDTO  <code>RequestPublisherDTO</code> that is needed to be published
      */
-    public void publishEvent(PublisherDTO publisherDTO) {
+    @Override
+    public void publishEvent(RequestPublisherDTO requestPublisherDTO) {
+        BAMRequestPublisherDTO bamRequestPublisherDTO = new BAMRequestPublisherDTO(requestPublisherDTO);
         Event event = new Event();
         event.setCorrelation(createCorrelationMap());
-        event.setEvent(publisherDTO.createEventDataMap());
+        event.setEvent(bamRequestPublisherDTO.createEventDataMap());
         event.setMeta(createMetaDataMap());
-
         List<Event> events = new ArrayList<Event>();
         events.add(event);
-
+        log.debug("Publishing request event to BAM");
         agent.publish(events, eventReceiver);
     }
 
-    private  Map<String, ByteBuffer> createMetaDataMap() {
+    @Override
+    public void publishEvent(ResponsePublisherDTO responsePublisherDTO) {
+        BAMResponsePublisherDTO bamResponsePublisherDTO = new BAMResponsePublisherDTO(responsePublisherDTO);
+        Event event = new Event();
+        event.setCorrelation(createCorrelationMap());
+        event.setEvent(bamResponsePublisherDTO.createEventDataMap());
+        event.setMeta(createMetaDataMap());
+        List<Event> events = new ArrayList<Event>();
+        events.add(event);
+        log.debug("Publishing response event to BAM");
+        agent.publish(events, eventReceiver);
+    }
+
+    private Map<String, ByteBuffer> createMetaDataMap() {
         Map<String, ByteBuffer> metaDataMap = new HashMap<String, ByteBuffer>();
         // not used, but need as it is not sure how BAM will work.
         metaDataMap.put("metaKey", ByteBuffer.wrap("metaValue".getBytes()));
@@ -84,5 +101,18 @@ public class APIMgtUsageBAMDataPublisher {
         // not used, but need as it is not sure how BAM will work.
         correlationMap.put("correlationKey", ByteBuffer.wrap("correlationValue".getBytes()));
         return correlationMap;
-    }    
+    }
+
+    private EventReceiver getEventReceiver() {
+        APIMGTConfigReaderService apimgtConfigReaderService = UsageComponent.getApiMgtConfigReaderService();
+        EventReceiver eventReceiver = new EventReceiver();
+        eventReceiver.setUrl(apimgtConfigReaderService.getBamServerURL());
+        eventReceiver.setUserName(apimgtConfigReaderService.getBamServerUser());
+        eventReceiver.setPassword(apimgtConfigReaderService.getBamServerPassword());
+        eventReceiver.setPort(Integer.parseInt(
+                apimgtConfigReaderService.getBamServerThriftPort()));
+        eventReceiver.setSocketTransportEnabled(true);
+        return eventReceiver;
+    }
+
 }

@@ -15,24 +15,17 @@
 * specific language governing permissions and limitations
 * under the License.
 */
-package org.wso2.carbon.apimgt.usage.analyzer;
+package org.wso2.carbon.apimgt.usage.publisher;
 
-import org.apache.axiom.om.OMElement;
-import org.wso2.carbon.bam.analyzer.analyzers.AnalyzerBuilder;
-import org.wso2.carbon.bam.analyzer.analyzers.AnalyzerConfig;
-import org.wso2.carbon.bam.analyzer.engine.Analyzer;
-import org.wso2.carbon.bam.analyzer.engine.AnalyzerException;
+import org.wso2.carbon.apimgt.usage.publisher.dto.RequestPublisherDTO;
+import org.wso2.carbon.apimgt.usage.publisher.dto.ResponsePublisherDTO;
 
-public class APIMgtUsageAnalyzerClassBuilder extends AnalyzerBuilder {
+public interface APIMgtUsageDataPublisher {
 
-    @Override
-    protected AnalyzerConfig buildConfig(OMElement analyzerXML) throws AnalyzerException {
-        return null;
-    }
+    public void init();
 
-    @Override
-    public Analyzer buildAnalyzer(OMElement analyzerXML) throws AnalyzerException {
-        return null;
-    }
+    public void publishEvent(RequestPublisherDTO requestPublisherDTO);
+
+    public void publishEvent(ResponsePublisherDTO responsePublisherDTO);
 
 }

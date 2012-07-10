@@ -19,7 +19,10 @@
 package org.wso2.carbon.apimgt.usage.client;
 
 import org.apache.axiom.om.OMElement;
+import org.apache.axiom.om.impl.llom.OMElementImpl;
+import org.apache.axiom.om.util.AXIOMUtil;
 import org.apache.axis2.AxisFault;
+import org.apache.regexp.RE;
 import org.wso2.carbon.apimgt.api.APIManagementException;
 import org.wso2.carbon.apimgt.api.APIProvider;
 import org.wso2.carbon.apimgt.api.model.*;
@@ -34,7 +37,13 @@ import org.wso2.carbon.bam.presentation.stub.QueryServiceStoreException;
 import org.wso2.carbon.bam.presentation.stub.QueryServiceStub;
 
 import javax.xml.namespace.QName;
+import javax.xml.stream.XMLStreamException;
 import java.rmi.RemoteException;
+import java.sql.Connection;
+import java.sql.DriverManager;
+import java.sql.ResultSet;
+import java.sql.SQLException;
+import java.sql.Statement;
 import java.text.DateFormat;
 import java.text.DecimalFormat;
 import java.text.SimpleDateFormat;
@@ -43,12 +52,22 @@ import java.util.*;
 public class APIUsageStatisticsClient {
 
     private QueryServiceStub qss;
+    Connection connection;
 
     private APIProvider apiProviderImpl;
+
+    private String jdbcDriver;
+    private String jdbcURL;
+    private String jdbcUserName;
+    private String jdbcPassword;
 
     public APIUsageStatisticsClient(String username) throws APIMgtUsageQueryServiceClientException {
         APIManagerConfiguration config = APIUsageClientServiceComponent.getAPIManagerConfiguration();
         String targetEndpoint = config.getFirstProperty(APIMgtUsagePublisherConstants.API_USAGE_BAM_SERVER_URL);
+        jdbcDriver = config.getFirstProperty(APIUsageStatisticsClientConstants.API_USAGE_JDBC_DRIVER);
+        jdbcURL = config.getFirstProperty(APIUsageStatisticsClientConstants.API_USAGE_JDBC_URL);
+        jdbcUserName = config.getFirstProperty(APIUsageStatisticsClientConstants.API_USAGE_JDBC_UserName);
+        jdbcPassword = config.getFirstProperty(APIUsageStatisticsClientConstants.API_USAGE_JDBC_Password);
         if (targetEndpoint == null || targetEndpoint.equals("")) {
             throw new APIMgtUsageQueryServiceClientException("Required BAM server URL parameter unspecified");
         }
@@ -60,6 +79,15 @@ public class APIUsageStatisticsClient {
             throw new APIMgtUsageQueryServiceClientException("Error while instantiating QueryServiceStub", e);
         } catch (APIManagementException e) {
             throw new APIMgtUsageQueryServiceClientException("Exception while instantiating API manager core objects", e);
+        }
+
+        try {
+            Class.forName(jdbcDriver) ;
+            connection = DriverManager.getConnection(jdbcURL, jdbcUserName, jdbcPassword);
+        } catch (SQLException e) {
+            throw new APIMgtUsageQueryServiceClientException("Error while creating JDBC connection", e);
+        } catch (ClassNotFoundException e) {
+            throw new APIMgtUsageQueryServiceClientException("JDBC Driver class not found", e);
         }
     }
 
@@ -102,7 +130,6 @@ public class APIUsageStatisticsClient {
                 }
             }
         }
-        
         return new ArrayList<APIUsageDTO>(usageByAPIs.values());
     }
 
@@ -198,6 +225,7 @@ public class APIUsageStatisticsClient {
             responseTimeDTO.setServiceTime(Double.parseDouble(format.format(responseTime)));
             result.add(responseTimeDTO);
         }
+
         return result;
     }
 
@@ -247,6 +275,7 @@ public class APIUsageStatisticsClient {
             accessTimeDTO.setUser(lastAccessTime.username);
             accessTimeDTOs.add(accessTimeDTO);
         }
+
         return accessTimeDTOs;
     }
 
@@ -288,6 +317,7 @@ public class APIUsageStatisticsClient {
                 }
             }                        
         }
+
         return getTopEntries(new ArrayList<PerUserAPIUsageDTO>(usageByUsername.values()), limit);
     }
 
@@ -321,7 +351,7 @@ public class APIUsageStatisticsClient {
                 }
             }
         }
-        
+
         return getTopEntries(new ArrayList<PerUserAPIUsageDTO>(usageByUsername.values()), limit);
     }
     
@@ -344,6 +374,7 @@ public class APIUsageStatisticsClient {
             }
             usageData.add(other);
         }
+
         return usageData;
     }
 
@@ -358,17 +389,46 @@ public class APIUsageStatisticsClient {
         return new String(bytes);
     }
 
+    // code quickly hacked to work with BAM post M2
     private OMElement queryColumnFamily(String columnFamily, String index,
-                                        QueryServiceStub.CompositeIndex[] compositeIndex) throws APIMgtUsageQueryServiceClientException{
-        try {
-            return qss.queryColumnFamily(columnFamily,index,compositeIndex);
-        } catch (RemoteException e) {
-            throw new APIMgtUsageQueryServiceClientException("Error while querying BAM server " +
-                    "column family: " + columnFamily, e);
-        } catch (QueryServiceStoreException e) {
-            throw new APIMgtUsageQueryServiceClientException("Error while querying BAM server " +
-                    "column family: " + columnFamily, e);
+                                        QueryServiceStub.CompositeIndex[] compositeIndex)
+            throws APIMgtUsageQueryServiceClientException {
+
+        OMElement returnElement = null;
+        String selectRowsByColumnName = null;
+        String selectRowsByColumnValue = null;
+        if(compositeIndex != null){
+            selectRowsByColumnName = compositeIndex[0].getIndexName();
+            selectRowsByColumnValue = compositeIndex[0].getRangeFirst();
         }
+        try {
+
+            Statement statement = connection.createStatement();
+            String query;
+            if(selectRowsByColumnName != null){
+                query = "SELECT * FROM  " + columnFamily + " WHERE " + selectRowsByColumnName + "=\'" + selectRowsByColumnValue + "\'";
+            }else{
+                query = "SELECT * FROM  " + columnFamily;
+            }
+            ResultSet rs = statement.executeQuery(query);
+            StringBuilder returnStringBuilder = new StringBuilder("<omElement><rows>");
+            int columnCount = rs.getMetaData().getColumnCount();
+            while (rs.next()){
+                returnStringBuilder.append("<row>");
+                for(int i = 1; i <= columnCount ; i++){
+                    String columnName = rs.getMetaData().getColumnName(i);
+                    String columnValue = rs.getString(columnName);
+                    returnStringBuilder.append("<" + columnName + ">" + columnValue + "</" + columnName + ">");
+                }
+                returnStringBuilder.append("</row>");
+            }
+            returnStringBuilder.append("</rows></omElement>");
+            String returnString = returnStringBuilder.toString();
+            returnElement =  AXIOMUtil.stringToOM(returnString);
+        } catch (Exception e){
+            throw new APIMgtUsageQueryServiceClientException("Error occurred while querying from JDBC database", e);
+        }
+        return returnElement;
     }
 
     private List<API> getAPIsByProvider(String providerId) throws APIMgtUsageQueryServiceClientException{
@@ -384,56 +444,66 @@ public class APIUsageStatisticsClient {
     }
 
     private Collection<APIUsage> getUsageData(OMElement data) {
-        OMElement rowsElement = data.getFirstChildWithName(new QName(
-                APIUsageStatisticsClientConstants.ROWS));
-        Iterator rowIterator = rowsElement.getChildrenWithName(new QName(
-                APIUsageStatisticsClientConstants.ROW));
         List<APIUsage> usageData = new ArrayList<APIUsage>();
-        while (rowIterator.hasNext()) {
-            OMElement rowElement = (OMElement) rowIterator.next();
-            usageData.add(new APIUsage(rowElement));
+        OMElement rowsElement = data.getFirstChildWithName(new QName(
+                    APIUsageStatisticsClientConstants.ROWS));
+        Iterator rowIterator = rowsElement.getChildrenWithName(new QName(
+                    APIUsageStatisticsClientConstants.ROW));
+        if(rowIterator != null){
+            while (rowIterator.hasNext()) {
+                OMElement rowElement = (OMElement) rowIterator.next();
+                usageData.add(new APIUsage(rowElement));
+            }
         }
         return usageData;
     }
 
     private Collection<APIResponseTime> getResponseTimeData(OMElement data) {
+        List<APIResponseTime> responseTimeData = new ArrayList<APIResponseTime>();
+
         OMElement rowsElement = data.getFirstChildWithName(new QName(
                 APIUsageStatisticsClientConstants.ROWS));
+
         Iterator rowIterator = rowsElement.getChildrenWithName(new QName(
-                APIUsageStatisticsClientConstants.ROW));
-        List<APIResponseTime> responseTimeData = new ArrayList<APIResponseTime>();
-        while (rowIterator.hasNext()) {
-            OMElement rowElement = (OMElement) rowIterator.next();
-            if (rowElement.getFirstChildWithName(new QName(
-                    APIUsageStatisticsClientConstants.SERVICE_TIME)) != null) {
-                responseTimeData.add(new APIResponseTime(rowElement));
+                    APIUsageStatisticsClientConstants.ROW));
+        if(rowIterator != null){
+            while (rowIterator.hasNext()) {
+                OMElement rowElement = (OMElement) rowIterator.next();
+                if (rowElement.getFirstChildWithName(new QName(
+                        APIUsageStatisticsClientConstants.SERVICE_TIME)) != null) {
+                    responseTimeData.add(new APIResponseTime(rowElement));
+                }
             }
         }
         return responseTimeData;
     }
 
     private Collection<APIAccessTime> getAccessTimeData(OMElement data) {
-        OMElement rowsElement = data.getFirstChildWithName(new QName(
-                APIUsageStatisticsClientConstants.ROWS));
-        Iterator rowIterator = rowsElement.getChildrenWithName(new QName(
-                APIUsageStatisticsClientConstants.ROW));
         List<APIAccessTime> accessTimeData = new ArrayList<APIAccessTime>();
-        while (rowIterator.hasNext()) {
-            OMElement rowElement = (OMElement) rowIterator.next();
-            accessTimeData.add(new APIAccessTime(rowElement));
+        OMElement rowsElement = data.getFirstChildWithName(new QName(
+                    APIUsageStatisticsClientConstants.ROWS));
+        Iterator rowIterator = rowsElement.getChildrenWithName(new QName(
+                    APIUsageStatisticsClientConstants.ROW));
+        if(rowIterator != null){
+            while (rowIterator.hasNext()) {
+                OMElement rowElement = (OMElement) rowIterator.next();
+                accessTimeData.add(new APIAccessTime(rowElement));
+            }
         }
         return accessTimeData;
     }
     
     private Collection<APIUsageByUser> getUsageBySubscriber(OMElement data) {
-        OMElement rowsElement = data.getFirstChildWithName(new QName(
-                APIUsageStatisticsClientConstants.ROWS));
-        Iterator rowIterator = rowsElement.getChildrenWithName(new QName(
-                APIUsageStatisticsClientConstants.ROW));
         List<APIUsageByUser> usageData = new ArrayList<APIUsageByUser>();
-        while (rowIterator.hasNext()) {
-            OMElement rowElement = (OMElement) rowIterator.next();
-            usageData.add(new APIUsageByUser(rowElement));
+        OMElement rowsElement = data.getFirstChildWithName(new QName(
+                    APIUsageStatisticsClientConstants.ROWS));
+        Iterator rowIterator = rowsElement.getChildrenWithName(new QName(
+                    APIUsageStatisticsClientConstants.ROW));
+        if(rowIterator != null){
+            while (rowIterator.hasNext()) {
+                OMElement rowElement = (OMElement) rowIterator.next();
+                usageData.add(new APIUsageByUser(rowElement));
+            }
         }
         return usageData;
     }

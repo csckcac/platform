@@ -391,10 +391,10 @@
             <outputDirectory>${pom.artifactId}-${pom.version}/repository/conf</outputDirectory>
             <fileMode>644</fileMode>
         </file>
-        <!-- Including syslog-config.xml file -->
+        <!-- Including logging-config.xml file -->
         <file>
             <source>
-                ../p2-profile-gen/target/wso2carbon-core-${carbon.version}/repository/conf/etc/syslog-config.xml
+                ../p2-profile-gen/target/wso2carbon-core-${carbon.version}/repository/conf/etc/logging-config.xml
             </source>
             <outputDirectory>${pom.artifactId}-${pom.version}/repository/conf/etc
             </outputDirectory>

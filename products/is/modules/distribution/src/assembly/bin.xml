@@ -290,7 +290,7 @@
         <!-- Stratos specific files -->
         <file>
             <source>
-                ../p2-profile-gen/target/wso2carbon-core-${carbon.version}/repository/conf/etc/syslog-config.xml
+                ../p2-profile-gen/target/wso2carbon-core-${carbon.version}/repository/conf/etc/logging-config.xml
             </source>
             <outputDirectory>${pom.artifactId}-${pom.version}/repository/conf/etc/
             </outputDirectory>

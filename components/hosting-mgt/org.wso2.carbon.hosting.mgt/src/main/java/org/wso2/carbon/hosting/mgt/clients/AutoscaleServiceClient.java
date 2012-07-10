@@ -68,6 +68,11 @@ public class AutoscaleServiceClient {
         return stub.terminateLastlySpawnedInstance(domainName);
     }
     
+    public boolean terminateSpiInstance(String ip) throws Exception {
+        
+        return stub.terminateSpiInstance(ip);
+    }
+    
     public int getPendingInstanceCount(String domainName) throws Exception{
         
         return stub.getPendingInstanceCount(domainName);

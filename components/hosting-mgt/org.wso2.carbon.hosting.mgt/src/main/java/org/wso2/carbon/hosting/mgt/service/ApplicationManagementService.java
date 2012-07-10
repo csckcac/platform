@@ -3,21 +3,20 @@
  */
 package org.wso2.carbon.hosting.mgt.service;
 
-
-import org.apache.axis2.AxisFault;
-import org.wso2.carbon.hosting.mgt.utils.FileUploadData;
-import org.apache.commons.logging.Log;
-import org.apache.commons.logging.LogFactory;
-
 import java.io.File;
 import java.io.FileOutputStream;
 import java.io.FilenameFilter;
 import java.io.IOException;
 import java.util.HashMap;
 
+import org.apache.axis2.AxisFault;
+import org.apache.commons.logging.Log;
+import org.apache.commons.logging.LogFactory;
 import org.wso2.carbon.core.AbstractAdmin;
 import org.wso2.carbon.hosting.mgt.clients.AutoscaleServiceClient;
+import org.wso2.carbon.hosting.mgt.utils.FileUploadData;
 import org.wso2.carbon.hosting.mgt.utils.PHPAppsWrapper;
+import org.wso2.carbon.hosting.mgt.utils.PHPCartridgeConstants;
 
 
 /**
@@ -31,9 +30,9 @@ public class ApplicationManagementService extends AbstractAdmin{
     public static final String PHP_APP_DOMAIN = "phpdomain";
     AutoscaleServiceClient client;
     HashMap<String, String> imageIdtoNameMap;
-
+    
     public ApplicationManagementService() throws AxisFault {
-        client = new AutoscaleServiceClient("https://123.231.125.177:9444/services/AutoscalerService/");
+        client = new AutoscaleServiceClient(System.getProperty(PHPCartridgeConstants.AUTOSCALER_SERVICE_URL));
         try {
             client.init(true);
         } catch (Exception e) {
@@ -42,7 +41,10 @@ public class ApplicationManagementService extends AbstractAdmin{
         }
         imageIdtoNameMap = new HashMap<String, String>();
     }
-    /**
+    
+    
+    
+	/**
          * Upload a File
          *
          * @param fileUploadDataList Array of data representing the PHP apps(.zip) that are to be uploaded
@@ -155,7 +157,7 @@ public class ApplicationManagementService extends AbstractAdmin{
 
     public String[] getImages(){
         String images[] = new String[1];
-        images[0] = "nova/d1e1c317-5ed2-45ed-aa73-fec6d05b7fdc";
+        images[0] = "nova/2d2a7f3f-da54-4d25-85a4-4278bc2b306c";
 //        images[0] = "us-east-1/ami-52409a3b";
         return images;
     }

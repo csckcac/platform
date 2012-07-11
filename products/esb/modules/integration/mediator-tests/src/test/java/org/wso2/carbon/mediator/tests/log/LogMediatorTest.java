@@ -25,7 +25,7 @@ import org.testng.annotations.Test;
 import org.wso2.carbon.integration.framework.LoginLogoutUtil;
 import org.wso2.carbon.logging.view.stub.LogViewerStub;
 import org.wso2.carbon.logging.view.stub.types.axis2.GetLogs;
-import org.wso2.carbon.logging.view.stub.types.carbon.LogMessage;
+import org.wso2.carbon.logging.view.stub.types.carbon.LogEvent;
 import org.wso2.esb.integration.ESBIntegrationTestCase;
 import org.wso2.esb.integration.axis2.SampleAxis2Server;
 import org.wso2.esb.integration.axis2.StockQuoteClient;
@@ -54,7 +54,7 @@ public class LogMediatorTest extends ESBIntegrationTestCase {
 
     }
 
-    @Test(groups = "wso2.esb", description = "Tests Full level log")
+    @Test(groups = "wso2.esb", description = "Tests Full level log",enabled = false)
     public void testSendingToDefinedEndpoint() throws IOException, InterruptedException {
 
         OMElement response = axis2Client.sendSimpleStockQuoteRequest(getMainSequenceURL(),
@@ -65,9 +65,9 @@ public class LogMediatorTest extends ESBIntegrationTestCase {
         System.out.println(response);
         GetLogs getLogs = new GetLogs();
         getLogs.setKeyword("mediator");
-        LogMessage[] getLogsTrace = logViewerStub.getLogs("TRACE", "LogMediator");
-        LogMessage[] getLogsInfo = logViewerStub.getLogs("INFO", "LogMediator");
-        LogMessage[] getLogsDebug = logViewerStub.getLogs("DEBUG", "LogMediator");
+        LogEvent[] getLogsTrace = logViewerStub.getLogs("TRACE", "LogMediator");
+        LogEvent[] getLogsInfo = logViewerStub.getLogs("INFO", "LogMediator");
+        LogEvent[] getLogsDebug = logViewerStub.getLogs("DEBUG", "LogMediator");
         assertTraceLogs(getLogsTrace);
         assertDebugLogs(getLogsDebug);
         assertErrorLogs(logViewerStub);
@@ -83,40 +83,40 @@ public class LogMediatorTest extends ESBIntegrationTestCase {
         axis2Client.destroy();
     }
 
-    private boolean assertTraceLogs(LogMessage[] getLogsTrace) throws IOException {
+    private boolean assertTraceLogs(LogEvent[] getLogsTrace) throws IOException {
         File file = new File((getClass().getResource("/mediators/log/loglist_trace.txt").getPath()));
         return traverseLog(getLogsTrace, file);
     }
 
-    private boolean assertInfoLogs( LogMessage[] getLogsInfo) throws IOException {
+    private boolean assertInfoLogs( LogEvent[] getLogsInfo) throws IOException {
         File file = new File((getClass().getResource("/mediators/log/loglist_trace.txt").getPath()));
         return traverseLog(getLogsInfo, file);
     }
 
-    private boolean assertDebugLogs(LogMessage[] getLogsDebug) throws IOException {
+    private boolean assertDebugLogs(LogEvent[] getLogsDebug) throws IOException {
         File file = new File((getClass().getResource("/mediators/log/loglist_trace.txt").getPath()));
         return traverseLog(getLogsDebug, file);
     }
 
     private boolean assertWarnLogs(LogViewerStub logViewer) throws IOException {
-        LogMessage[] getLogsWarn = logViewer.getLogs("WARN", "LogMediator");
+        LogEvent[] getLogsWarn = logViewer.getLogs("WARN", "LogMediator");
         File file = new File((getClass().getResource("/mediators/log/loglist_trace.txt").getPath()));
         return traverseLog(getLogsWarn, file);
     }
 
     private boolean assertErrorLogs(LogViewerStub logViewer) throws IOException {
-        LogMessage[] getLogsError = logViewer.getLogs("ERROR", "LogMediator");
+        LogEvent[] getLogsError = logViewer.getLogs("ERROR", "LogMediator");
         File file = new File((getClass().getResource("/mediators/log/loglist_trace.txt").getPath()));
         return traverseLog(getLogsError, file);
     }
 
     private boolean assertFatelLogs(LogViewerStub logViewer) throws IOException {
-        LogMessage[] getLogsFatal = logViewer.getLogs("FATAL", "LogMediator");
+        LogEvent[] getLogsFatal = logViewer.getLogs("FATAL", "LogMediator");
         File file = new File((getClass().getResource("/mediators/log/loglist_trace.txt").getPath()));
         return traverseLog(getLogsFatal, file);
     }
 
-    private boolean traverseLog(LogMessage[] getLogsTrace, File file) throws IOException {
+    private boolean traverseLog(LogEvent[] getLogsTrace, File file) throws IOException {
         boolean logFound = true;
         String messageLog = null;
 
@@ -129,10 +129,10 @@ public class LogMediatorTest extends ESBIntegrationTestCase {
         }
 
         List<String> resultLines=lines;
-        for (LogMessage tlog : getLogsTrace) {
+        for (LogEvent tlog : getLogsTrace) {
             for (String logLine : lines) {
                 messageLog = logLine;
-                if (tlog.getLogMessage().contains(messageLog)) {
+                if (tlog.getMessage().contains(messageLog)) {
                     resultLines.remove(resultLines.indexOf(line));
                 }
             }

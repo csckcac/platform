@@ -55,7 +55,7 @@ public final class CodeCoverageUtils {
         try {
             if (System.getProperty("emma.properties") == null) {
                 for (File file : new File(emmaHome).listFiles()) {
-                    if (file.getName().startsWith("org.wso2.carbon.integration.framework")) {
+                    if (file.getName().startsWith("org.wso2.carbon.automation.core")) {
                         ArchiveManipulator archiveManipulator = new ArchiveManipulator();
                         archiveManipulator.extract(file.getAbsolutePath(), emmaHome);
                     }

@@ -52,8 +52,6 @@ public class PlatformExecutionManager implements IExecutionListener {
         PlatformUtil.setKeyStoreProperties(); //set keyStore properties
         builderEnabled =
                 environmentBuilder.getFrameworkSettings().getEnvironmentSettings().is_builderEnabled();
-
-
         if (builderEnabled) {
             serverList = getServerList();
             assert serverList != null : "server list not provided, cannot start servers";

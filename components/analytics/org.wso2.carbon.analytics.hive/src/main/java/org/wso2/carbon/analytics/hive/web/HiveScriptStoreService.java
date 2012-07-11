@@ -72,6 +72,7 @@ public class HiveScriptStoreService {
 
             Map<String, String> properties = new HashMap<String, String>();
             properties.put(HiveConstants.HIVE_SCRIPT_NAME, scriptName);
+            properties.put(HiveConstants.TASK_TENANT_ID_KEY, String.valueOf(CarbonContext.getCurrentContext().getTenantId()));
 
             info.setProperties(properties);
 

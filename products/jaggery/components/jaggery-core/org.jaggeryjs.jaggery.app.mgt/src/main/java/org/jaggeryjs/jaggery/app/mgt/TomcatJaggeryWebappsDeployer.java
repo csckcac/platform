@@ -338,16 +338,14 @@ public class TomcatJaggeryWebappsDeployer extends TomcatGenericWebappsDeployer {
     }
 
     private static void addErrorPages(Context context, JSONObject obj) {
-        JSONArray arr = (JSONArray) obj.get(JaggeryConstants.JaggeryConfigParams.ERROR_PAGES);
-        if (arr != null) {
-            for (Object anArr : arr) {
-                ErrorPage errPage = new ErrorPage();
-                JSONObject o = (JSONObject) anArr;
-                errPage.setErrorCode((String) o.get(JaggeryConstants.JaggeryConfigParams.ERROR_CODE));
-                errPage.setLocation((String) o.get(JaggeryConstants.JaggeryConfigParams.LOCATION));
-
-                context.addErrorPage(errPage);
-            }
+    	JSONObject arr = (JSONObject) obj.get(JaggeryConstants.JaggeryConfigParams.ERROR_PAGES);        
+        if (arr != null) {        	
+                for (Object keys : arr.keySet() ) {
+                	  ErrorPage errPage = new ErrorPage();
+                	  errPage.setErrorCode((String) keys);
+                      errPage.setLocation((String) arr.get(keys));
+                      context.addErrorPage(errPage);
+                }
         }
     }
 

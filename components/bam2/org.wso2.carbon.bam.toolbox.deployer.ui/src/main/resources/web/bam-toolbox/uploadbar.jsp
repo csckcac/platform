@@ -29,6 +29,7 @@
 <fmt:bundle basename="org.wso2.carbon.bam.toolbox.deployer.ui.i18n.Resources">
 <script src="../editarea/edit_area_full.js" type="text/javascript"></script>
 <script type="text/javascript" src="../ajax/js/prototype.js"></script>
+<link rel="stylesheet" type="text/css" href="css/toolbox-styles.css" />
 
 <carbon:breadcrumb label="available.bam.tools"
                    resourceBundle="org.wso2.carbon.bam.toolbox.deployer.ui.i18n.Resources"
@@ -147,7 +148,7 @@
     }
 
     function cancelDeploy() {
-        location.href = "../bam-toolbox/list.bar";
+        location.href = "listbar.jsp?region=region1&item=list_toolbox_menu";
     }
 
     function enableCustomToolBox() {
@@ -222,11 +223,11 @@
                             }
                         %>
                     </td>
-                    <td width="200px">
-                        <%=aToolbox.getDisplayName()%> <fmt:message key="toolbox"/>
-                    </td>
                     <td>
+                        <%=aToolbox.getDisplayName()%> <fmt:message key="toolbox"/>
+                    <div class="toolBoxInfo">
                         <%=aToolbox.getDescription()%>
+                    </div>
                     </td>
                     <%
                         count++;
@@ -239,14 +240,13 @@
                 %>
 
 
-                <tr>
-                    <td colspan="4"></td>
-                </tr>
+
                 </tbody>
             </table>
+            <br />
 
 
-            <table class="styledLeft">
+            <table class="styledLeft tool-box-table-view">
                 <thead>
                 <tr>
                     <th colspan="4">
@@ -278,7 +278,7 @@
                     <%
                         if (!checked) {
                     %>
-                    <td width="200px">
+                    <td>
                         <nobr><fmt:message key="toolbox.path.from.file.system"/> <span
                                 class="required">*</span>&nbsp;&nbsp;&nbsp;
                         </nobr>
@@ -293,7 +293,7 @@
                     <%
                     } else {
                     %>
-                    <td width="200px">
+                    <td>
                         <nobr><fmt:message key="toolbox.path.from.file.system"/> <span
                                 class="required">*</span>&nbsp;&nbsp;&nbsp;
                         </nobr>
@@ -317,7 +317,7 @@
                         <input type="radio" name="typeToolbox" value="-1"
                                onclick="enableCustomToolBox();"/>
                     </td>
-                    <td width="200px">
+                    <td>
 
                         <nobr><fmt:message key="toolbox.path.from.url"/> <span
                                 class="required">*</span>&nbsp;&nbsp;&nbsp;
@@ -331,29 +331,24 @@
                     </td>
 
                 </tr>
-
+                </tbody>
+                </table>
+            <br />
+        <table class="styledLeft">
+            <tbody>
                 <tr>
-                    <td colspan="4">
-                        <table class="normal-nopadding">
-                            <tbody>
-
-                            <tr>
-                                <td class="buttonRow" colspan="2">
+                    <td class="buttonRow" colspan="3">
                                     <input type="button" value="<fmt:message key="deploy"/>"
                                            class="button" name="deploy"
                                            onclick="javascript:deployToolBox();"/>
                                     <input type="button" value="<fmt:message key="cancel"/>"
                                            name="cancel" class="button"
                                            onclick="javascript:cancelDeploy();"/>
-                                </td>
-                            </tr>
-                            </tbody>
-                        </table>
                     </td>
                 </tr>
                 <input type="hidden" id="selectedToolType" name="selectedToolType"/>
                 </tbody>
-            </table>
+        </table>
         </form>
     </div>
 </div>

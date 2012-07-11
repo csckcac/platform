@@ -258,7 +258,7 @@
             <dependency>
                 <groupId>com.sun.xml.bind.wso2</groupId>
                 <artifactId>jaxb</artifactId>
-                <version>2.1.6.wso2v1</version>
+                <version>2.2.5.wso2v1</version>
             </dependency>
 
             <dependency>

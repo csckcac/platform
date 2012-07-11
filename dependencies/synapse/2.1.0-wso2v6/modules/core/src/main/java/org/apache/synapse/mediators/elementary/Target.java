@@ -21,6 +21,8 @@ package org.apache.synapse.mediators.elementary;
 import org.apache.axiom.om.OMElement;
 import org.apache.axiom.om.OMNode;
 import org.apache.axiom.om.OMText;
+import org.apache.axiom.om.impl.builder.StAXOMBuilder;
+import org.apache.axiom.om.util.AXIOMUtil;
 import org.apache.axiom.soap.SOAPBody;
 import org.apache.axiom.soap.SOAPEnvelope;
 import org.apache.axis2.AxisFault;
@@ -31,6 +33,8 @@ import org.apache.synapse.util.xpath.SynapseXPath;
 import org.jaxen.JaxenException;
 
 import java.util.ArrayList;
+
+import javax.xml.stream.XMLStreamException;
 
 /**
  * Inset an Axiom element to the current message. The target to insert the OMElement can be
@@ -136,7 +140,26 @@ public class Target {
             }
         } else if (targetType == EnrichMediator.PROPERTY) {
             assert property != null : "Property cannot be null for PROPERTY type";
-            synContext.setProperty(property, sourceNodeList);  
+			if (action != null && property != null) {
+				Object propertyObj =synContext.getProperty(property);
+				OMElement documentElement = null;
+				try {
+	                 documentElement = AXIOMUtil.stringToOM((String)propertyObj);
+                } catch (Exception e1) {
+	                //just ignoring the phaser error 
+                }
+				if(documentElement != null && action.equals(ACTION_ADD_CHILD)){
+					//logic should valid only when adding child elements, and other cases
+					//such as sibling and replacement using the else condition
+					insertElement(sourceNodeList, documentElement, synLog);
+					synContext.setProperty(property, documentElement);  
+				}else{
+					synContext.setProperty(property, sourceNodeList);  
+				}
+				
+			}else{
+			synContext.setProperty(property, sourceNodeList);  
+			}
         }
     }
 

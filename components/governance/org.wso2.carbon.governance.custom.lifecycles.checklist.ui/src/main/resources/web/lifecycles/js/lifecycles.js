@@ -157,43 +157,22 @@ function invokeAspect(path, aspect, action, callBack, parameterString,customUIAc
                 if (action != "itemClick") {
                     document.getElementById(action).disabled = false;
                 }
-                if (action.toUpperCase() == org_wso2_carbon_governance_custom_lifecycles_checklist_ui_jsi18n[action.toLowerCase()]) {
-                    var message = org_wso2_carbon_governance_custom_lifecycles_checklist_ui_jsi18n["successfully." + action.toLowerCase() + "d"];
-                    if (callBack && typeof callBack == "function") {
-                        CARBON.showInfoDialog(message, function() {
-                            callBack();
-                            refreshLifecyclesSection(path, action);
-                        }, function() {
-                            callBack();
-                            refreshLifecyclesSection(path, action);
-                        });
-                    } else {
-                        CARBON.showInfoDialog(message, function() {
-                            refreshLifecyclesSection(path, action);
-                        }, function() {
-                            refreshLifecyclesSection(path, action);
-                        });
-                    }
-                } else if (action != org_wso2_carbon_governance_custom_lifecycles_checklist_ui_jsi18n["item.click"]) {
-                    var message = org_wso2_carbon_governance_custom_lifecycles_checklist_ui_jsi18n["lifecycle.operation.successful"];
-                    if (callBack && typeof callBack == "function") {
-                        CARBON.showInfoDialog(message, function() {
-                            callBack();
-                            refreshLifecyclesSection(path, action);
-                        }, function() {
-                            callBack();
-                            refreshLifecyclesSection(path, action);
-                        });
-                    } else {
-                        CARBON.showInfoDialog(message, function() {
-                            refreshLifecyclesSection(path, action);
-                        }, function() {
-                            refreshLifecyclesSection(path, action);
-                        });
-                    }
-                }
-                else {
-                    refreshLifecyclesSection(path, action);
+                var message = org_wso2_carbon_governance_custom_lifecycles_checklist_ui_jsi18n["lifecycle.operation.successful"]
+                     + " : " + action;
+                if (callBack && typeof callBack == "function") {
+                    CARBON.showInfoDialog(message, function () {
+                        callBack();
+                        refreshLifecyclesSection(path, action);
+                    }, function () {
+                        callBack();
+                        refreshLifecyclesSection(path, action);
+                    });
+                } else {
+                    CARBON.showInfoDialog(message, function () {
+                        refreshLifecyclesSection(path, action);
+                    }, function () {
+                        refreshLifecyclesSection(path, action);
+                    });
                 }
             },
             onFailure : function(transport) {

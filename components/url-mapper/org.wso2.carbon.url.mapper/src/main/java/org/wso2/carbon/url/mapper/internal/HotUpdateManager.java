@@ -39,4 +39,15 @@ public class HotUpdateManager implements HotUpdateService {
         }
         return null;
     }
+
+    public void deleteHost(String webappName) {
+        try {
+            List<String> hostNames = HostUtil.getMappingsPerWebApp(webappName);
+            for (String hostName : hostNames) {
+                HostUtil.removeHost(hostName);
+            }
+        } catch (UrlMapperException e) {
+            log.error("error while removing host for " + webappName, e);
+        }
+    }
 }

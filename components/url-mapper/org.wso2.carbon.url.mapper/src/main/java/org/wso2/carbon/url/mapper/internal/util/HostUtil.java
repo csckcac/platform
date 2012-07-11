@@ -20,6 +20,7 @@ import org.apache.catalina.core.StandardHost;
 import org.apache.commons.logging.Log;
 import org.apache.commons.logging.LogFactory;
 import org.wso2.carbon.tomcat.api.CarbonTomcatService;
+import org.wso2.carbon.tomcat.ext.valves.CarbonContextCreatorValve;
 import org.wso2.carbon.tomcat.ext.valves.CompositeValve;
 import org.wso2.carbon.url.mapper.data.MappingData;
 import org.wso2.carbon.url.mapper.internal.exception.UrlMapperException;
@@ -192,7 +193,7 @@ public class HostUtil {
     public static void addWebAppToHost(String hostName, String uri) throws UrlMapperException {
         int tenantId;
         String tenantDomain;
-        String webAppFile;
+        String webAppsDir;
         String webAppPath;
         // if the request if from tenant
         {
@@ -208,16 +209,18 @@ public class HostUtil {
                             "error in getting tenant id when adding host to tomcat engine");
                 }
                 // getting the web app .war file name from the uri
-                webAppFile = getContextFromUri(uri) + UrlMapperConstants.HostProperties.WAR;
+                
                 // path of web app for the tenant in the server
-                webAppPath = CarbonUtils.getCarbonTenantsDirPath() + "/" + tenantId + "/"
-                        + UrlMapperConstants.HostProperties.WEB_APPS + "/" + webAppFile;
+                webAppsDir = CarbonUtils.getCarbonTenantsDirPath() + "/" + tenantId + "/"
+                        + UrlMapperConstants.HostProperties.WEB_APPS + "/";
+                webAppPath = getWebappPath(webAppsDir, uri);
 
             } else {
                 tenantDomain = "super-tenant";
-                webAppFile = getContextFromUri(uri) + UrlMapperConstants.HostProperties.WAR;
-                webAppPath = CarbonUtils.getCarbonRepository()
-                        + UrlMapperConstants.HostProperties.WEB_APPS + "/" + webAppFile;
+                webAppsDir = CarbonUtils.getCarbonRepository()
+                        + UrlMapperConstants.HostProperties.WEB_APPS + "/";
+                webAppPath = getWebappPath(webAppsDir, uri);
+
             }
         }
         Host host = addHostToEngine(hostName);
@@ -232,6 +235,21 @@ public class HostUtil {
         } catch (Exception e) {
             log.error("error in adding the virtual host to tomcat engine", e);
             throw new UrlMapperException("error in adding the virtual host to tomcat engine");
+        }
+    }
+    
+    public static String getWebappPath(String webappsDir, String uri) {
+        String webAppFile;
+        String webAppPath;
+        webAppFile = getContextFromUri(uri) + UrlMapperConstants.HostProperties.WAR;
+        webAppPath = webappsDir + webAppFile;
+        File warFile = new File(webAppPath);
+        if(warFile.exists()) {
+            //it is war
+            return webAppPath;
+        } else {
+            webAppPath = webappsDir + getContextFromUri(uri);
+            return webAppPath;
         }
     }
 
@@ -251,6 +269,7 @@ public class HostUtil {
         host.setAppBase(hostBaseDir);
         host.setName(hostName);
         host.setUnpackWARs(false);
+        host.addValve(new CarbonContextCreatorValve());
         host.addValve(new CompositeValve());
         engine.addChild(host);
         log.info("host added to the tomcat: " + host);
@@ -272,7 +291,6 @@ public class HostUtil {
                 file.delete();
             }
         }
-
     }
 
     /**
@@ -307,7 +325,7 @@ public class HostUtil {
                 try {
                     Context context = (Context) host.findChild("/");
                     if (host.getState().isAvailable()) {
-                        if (context.getAvailable()) {
+                        if (context != null && context.getAvailable()) {
                             context.setRealm(null);
                             context.stop();
                             context.destroy();

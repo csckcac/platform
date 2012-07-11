@@ -20,4 +20,6 @@ import java.util.List;
 public interface HotUpdateService {
 
     public List<String> getMappigsPerWebapp(String webAppName);
+    
+    public void deleteHost(String webappName);
 }

@@ -265,7 +265,6 @@
 		    	if(applicationInfo == undefined) {
 		    		continue;	
 		    	}
-		    	log.error("VERSION ARRAY +++++++++++++++++++ " + applicationInfo.versions.length);
 		    	versionCount += applicationInfo.versions.length;
 	    	}
 			

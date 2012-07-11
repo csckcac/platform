@@ -152,7 +152,7 @@ public class Target {
 					//logic should valid only when adding child elements, and other cases
 					//such as sibling and replacement using the else condition
 					insertElement(sourceNodeList, documentElement, synLog);
-					synContext.setProperty(property, documentElement);  
+					synContext.setProperty(property, documentElement.getText());  
 				}else{
 					synContext.setProperty(property, sourceNodeList);  
 				}

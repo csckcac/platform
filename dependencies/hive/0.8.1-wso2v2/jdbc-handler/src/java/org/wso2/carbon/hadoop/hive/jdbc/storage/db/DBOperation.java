@@ -2,6 +2,8 @@ package org.wso2.carbon.hadoop.hive.jdbc.storage.db;
 
 
 import org.apache.commons.dbcp.BasicDataSource;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 import org.wso2.carbon.hadoop.hive.jdbc.storage.datasource.CarbonDataSourceFetcher;
 import org.wso2.carbon.hadoop.hive.jdbc.storage.utils.Commons;
 import org.wso2.carbon.hadoop.hive.jdbc.storage.utils.ConfigurationUtils;
@@ -22,10 +24,12 @@ import java.util.Map;
 
 public class DBOperation {
 
+    private static final Logger log = LoggerFactory.getLogger(DBOperation.class);
+
     DatabaseProperties dbProperties;
     List<String> fieldNames;
     List<Object> values;
-    Map<String,Object> fieldNamesAndValuesMap = new HashMap<String,Object>();
+    Map<String, Object> fieldNamesAndValuesMap = new HashMap<String, Object>();
     Connection connection = null;
 
     public DBOperation(DatabaseProperties databaseProperties, Connection con) {
@@ -43,9 +47,15 @@ public class DBOperation {
         PreparedStatement statement = null;
         try {
             if (!dbProperties.isUpdateOnDuplicate()) { //Insert every record
+                if (log.isDebugEnabled()) {
+                    log.debug("Inserting all data");
+                }
                 statement = insertData(statement);
             } else { //upsert
                 if (dbProperties.getDbSpecificUpsertQuery() == null) {   //User haven't given the db specific upsert query
+                    if (log.isDebugEnabled()) {
+                        log.debug("Do the insert and update in DB independent manner.");
+                    }
                     ResultSet resultSet = selectData(statement);
                     if (resultSet.next()) {     // If result is zero, then update
                         statement = updateData(statement);
@@ -53,6 +63,9 @@ public class DBOperation {
                         statement = insertData(statement);
                     }
                 } else {
+                    if (log.isDebugEnabled()) {
+                        log.debug("Do the insert and update using DB specific query.");
+                    }
                     String upsertQuery = dbProperties.getDbSpecificUpsertQuery();
                     statement = connection.prepareStatement(upsertQuery);
                     statement = setValuesForUpsertStatement(statement);
@@ -60,7 +73,7 @@ public class DBOperation {
                 }
             }
         } catch (SQLException e) {
-            e.printStackTrace();
+            log.error("Failed to write data to database", e);
         } finally {
             statement.close();
         }
@@ -118,14 +131,14 @@ public class DBOperation {
 
     private PreparedStatement setValuesForUpsertStatement(PreparedStatement statement) {
         String[] valuesOrder = dbProperties.getUpsertQueryValuesOrder();
-        if(valuesOrder==null){
+        if (valuesOrder == null) {
             throw new IllegalArgumentException("You must supply both " +
                                                ConfigurationUtils.HIVE_JDBC_UPSERT_QUERY_VALUES_ORDER +
                                                " and " + ConfigurationUtils.HIVE_JDBC_OUTPUT_UPSERT_QUERY);
         }
 
         for (int valuesOrderCount = 0; valuesOrderCount < valuesOrder.length; valuesOrderCount++) {
-            Object value=fieldNamesAndValuesMap.get(valuesOrder[valuesOrderCount].toLowerCase()); //Hive use lower case
+            Object value = fieldNamesAndValuesMap.get(valuesOrder[valuesOrderCount].toLowerCase()); //Hive use lower case
             statement = Commons.assignCorrectObjectType(value, valuesOrderCount + 1, statement);
         }
         return statement;
@@ -183,9 +196,9 @@ public class DBOperation {
     public boolean isTableExist(String tableName, Connection connection) throws SQLException {
         //This return all tables, we use this because it is not db specific, Passing table name doesn't
         //work with every database
-        ResultSet tables = connection.getMetaData().getTables(null, null, "%" , null);
+        ResultSet tables = connection.getMetaData().getTables(null, null, "%", null);
         while (tables.next()) {
-            if(tables.getString(3).equalsIgnoreCase(tableName)){
+            if (tables.getString(3).equalsIgnoreCase(tableName)) {
                 return true;
             }
         }
@@ -200,7 +213,7 @@ public class DBOperation {
         /*If inputTable=null, then most probably it should be a output table.
          In input table table must already exist.
           */
-        if(inputTable==null && (outputTable !=null || createTableQuery!=null)){
+        if (inputTable == null && (outputTable != null || createTableQuery != null)) {
             DatabaseProperties dbProperties = new DatabaseProperties();
             dbProperties.setTableName(outputTable);
             dbProperties.setUserName(tableParameters.get(DBConfiguration.USERNAME_PROPERTY));
@@ -210,10 +223,13 @@ public class DBOperation {
             dbProperties.setDataSourceName(tableParameters.get(ConfigurationUtils.HIVE_PROP_CARBON_DS_NAME));
 
             if (dbProperties.getTableName() == null) {
+                if (log.isDebugEnabled()) {
+                    log.debug("Extracting Table name from sql query");
+                }
                 dbProperties.setTableName(Commons.extractingTableNameFromQuery(createTableQuery));
             }
 
-            if(dbProperties.getConnectionUrl()==null && dbProperties.getDataSourceName()!=null){
+            if (dbProperties.getConnectionUrl() == null && dbProperties.getDataSourceName() != null) {
                 CarbonDataSourceFetcher carbonDataSourceFetcher = new CarbonDataSourceFetcher();
                 Map<String, String> dataSource = carbonDataSourceFetcher.getCarbonDataSource(
                         dbProperties.getDataSourceName());
@@ -233,26 +249,29 @@ public class DBOperation {
             try {
                 connection = dbManager.getConnection();
                 if (!isTableExist(dbProperties.getTableName(), connection)) {
+                    if (log.isDebugEnabled()) {
+                        log.debug("Creating table " + dbProperties.getTableName());
+                    }
                     statement = connection.createStatement();
                     statement.executeUpdate(createTableQuery);
                 }
             } catch (ClassNotFoundException e) {
-                e.printStackTrace();
+                log.error("Failed to get connection", e);
             } catch (SQLException e) {
-                e.printStackTrace();
-            }finally {
+                log.error("Failed to create the table " + dbProperties.getTableName(), e);
+            } finally {
                 if (statement != null) {
                     try {
                         statement.close();
                     } catch (SQLException e) {
-                        e.printStackTrace();
+                        log.error("Failed to close to statement", e);
                     }
                 }
                 if (connection != null) {
                     try {
                         connection.close();
                     } catch (SQLException e) {
-                        e.printStackTrace();
+                        log.error("Failed to close the connection", e);
                     }
                 }
             }
@@ -272,7 +291,7 @@ public class DBOperation {
     public int getTotalCount(String sql, Connection connection) throws SQLException {
         ResultSet resultSet = null;
         PreparedStatement statement = null;
-        int noOfRows=0;
+        int noOfRows = 0;
         try {
             statement = connection.prepareStatement(sql);
             resultSet = statement.executeQuery();
@@ -282,8 +301,8 @@ public class DBOperation {
                 throw new SQLException("Can't get total rows count using sql " + sql);
             }
         } catch (SQLException e) {
-            e.printStackTrace();
-        }finally {
+            log.error("Failed to get total row count");
+        } finally {
             resultSet.close();
             statement.close();
             connection.close();

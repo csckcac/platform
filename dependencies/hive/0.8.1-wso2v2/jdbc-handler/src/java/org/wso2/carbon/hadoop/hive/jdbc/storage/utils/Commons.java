@@ -13,6 +13,8 @@ import org.apache.hadoop.io.NullWritable;
 import org.apache.hadoop.io.Writable;
 import org.apache.hadoop.mapred.JobConf;
 import org.apache.hadoop.mapred.lib.db.DBConfiguration;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 
 import java.sql.PreparedStatement;
 import java.sql.SQLException;
@@ -22,6 +24,7 @@ import java.util.List;
 
 public class Commons {
 
+    private static final Logger log = LoggerFactory.getLogger(Commons.class);
 
     public static Object getObjectFromWritable(Writable w) {
         if (w instanceof IntWritable) {
@@ -85,7 +88,7 @@ public class Commons {
                 statement.setString(position, value.toString());
             }
         } catch (SQLException e) {
-            e.printStackTrace();
+            log.error("Failed to assign value to statement for position: " + position, e);
         }
 
         return statement;
@@ -146,7 +149,7 @@ public class Commons {
     public static BasicDataSource configureBasicDataSource(JobConf conf) {
         BasicDataSource basicDataSource = new BasicDataSource();
         String connectionUrl = ConfigurationUtils.getConnectionUrl(conf);
-        connectionUrl=  connectionUrl.replaceAll(" ", "");
+        connectionUrl = connectionUrl.replaceAll(" ", "");
         basicDataSource.setUrl(connectionUrl);
         basicDataSource.setDriverClassName(ConfigurationUtils.getDriverClass(conf));
         basicDataSource.setUsername(ConfigurationUtils.getDatabaseUserName(conf));

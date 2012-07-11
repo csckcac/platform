@@ -2,6 +2,8 @@ package org.wso2.carbon.hadoop.hive.jdbc.storage;
 
 import org.apache.hadoop.fs.FileSystem;
 import org.apache.hadoop.fs.Path;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 import org.wso2.carbon.hadoop.hive.jdbc.storage.db.DBManager;
 import org.wso2.carbon.hadoop.hive.jdbc.storage.db.DBRecordWriter;
 import org.wso2.carbon.hadoop.hive.jdbc.storage.db.DatabaseProperties;
@@ -23,6 +25,9 @@ import java.util.Properties;
 
 public class JDBCDataOutputFormat implements OutputFormat<NullWritable, MapWritable>,
                                              HiveOutputFormat<NullWritable, MapWritable> {
+
+    private static final Logger log = LoggerFactory.getLogger(JDBCDataOutputFormat.class);
+
     public FileSinkOperator.RecordWriter getHiveRecordWriter(JobConf conf, Path path,
                                                              Class<? extends Writable> aClass,
                                                              boolean b, Properties properties,
@@ -45,9 +50,9 @@ public class JDBCDataOutputFormat implements OutputFormat<NullWritable, MapWrita
             return new DBRecordWriter(dbProperties, dbManager);
 
         } catch (ClassNotFoundException e) {
-            e.printStackTrace();
+            log.error("Failed to get connection", e);
         } catch (SQLException e) {
-            e.printStackTrace();
+            log.error("Failed to get connection", e);
         }
         return null;
     }

@@ -4,12 +4,16 @@ package org.wso2.carbon.hadoop.hive.jdbc.storage.db;
 import org.apache.hadoop.hive.ql.exec.FileSinkOperator.RecordWriter;
 import org.apache.hadoop.io.MapWritable;
 import org.apache.hadoop.io.Writable;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 
 import java.io.IOException;
 import java.sql.Connection;
 import java.sql.SQLException;
 
 public class DBRecordWriter implements RecordWriter {
+
+    private static final Logger log = LoggerFactory.getLogger(DBRecordWriter.class);
 
     Connection connection = null;
     DatabaseProperties dbProperties;
@@ -27,10 +31,10 @@ public class DBRecordWriter implements RecordWriter {
 
         DBOperation operation = null;
         try {
-            operation = new DBOperation(dbProperties,connection);
+            operation = new DBOperation(dbProperties, connection);
             operation.writeToDB(map);
         } catch (SQLException e) {
-            e.printStackTrace();
+            log.error("Failed to write data to the table: " + dbProperties.getTableName(), e);
         }
     }
 
@@ -39,7 +43,7 @@ public class DBRecordWriter implements RecordWriter {
             try {
                 connection.close();
             } catch (SQLException e) {
-                e.printStackTrace();
+                log.error("Failed to close the connection", e);
             }
         }
     }

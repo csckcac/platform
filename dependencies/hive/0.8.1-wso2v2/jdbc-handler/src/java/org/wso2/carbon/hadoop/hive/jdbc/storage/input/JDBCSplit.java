@@ -6,6 +6,8 @@ import org.apache.hadoop.mapred.FileInputFormat;
 import org.apache.hadoop.mapred.FileSplit;
 import org.apache.hadoop.mapred.InputSplit;
 import org.apache.hadoop.mapred.JobConf;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 import org.wso2.carbon.hadoop.hive.jdbc.storage.db.DBManager;
 import org.wso2.carbon.hadoop.hive.jdbc.storage.db.DBOperation;
 import org.wso2.carbon.hadoop.hive.jdbc.storage.db.DatabaseProperties;
@@ -20,15 +22,17 @@ import java.sql.SQLException;
 
 public class JDBCSplit extends FileSplit implements InputSplit {
 
-    private static final String[] EMPTY_ARRAY = new String[] {};
-    private long start, end;
-    private boolean isLastSplit =false;
+    private static final Logger log = LoggerFactory.getLogger(JDBCSplit.class);
 
-    public JDBCSplit(){
-        super((Path)null,0,0,EMPTY_ARRAY);
+    private static final String[] EMPTY_ARRAY = new String[]{};
+    private long start, end;
+    private boolean isLastSplit = false;
+
+    public JDBCSplit() {
+        super((Path) null, 0, 0, EMPTY_ARRAY);
     }
 
-    public JDBCSplit( long start, long end, Path dummyPath) {
+    public JDBCSplit(long start, long end, Path dummyPath) {
         super(dummyPath, 0, 0, EMPTY_ARRAY);
         this.start = start;
         this.end = end;
@@ -62,7 +66,7 @@ public class JDBCSplit extends FileSplit implements InputSplit {
         return end;
     }
 
-    public boolean isLastSplit(){
+    public boolean isLastSplit() {
         return this.isLastSplit;
     }
 
@@ -99,7 +103,7 @@ public class JDBCSplit extends FileSplit implements InputSplit {
         try {
             Connection connection = dbManager.getConnection();
             DBOperation operation = new DBOperation();
-            long total = operation.getTotalCount(sql,connection);
+            long total = operation.getTotalCount(sql, connection);
             final long splitSize = total / numSplits;
             splits = new JDBCSplit[numSplits];
             final Path[] tablePaths = FileInputFormat.getInputPaths(conf);
@@ -112,9 +116,9 @@ public class JDBCSplit extends FileSplit implements InputSplit {
                 }
             }
         } catch (ClassNotFoundException e) {
-            e.printStackTrace();
+            log.error("Failed to get sql connection", e);
         } catch (SQLException e) {
-            e.printStackTrace();
+            log.error("Failed to get total rows count", e);
         }
 
 

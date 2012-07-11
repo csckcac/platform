@@ -1,6 +1,8 @@
 package org.wso2.carbon.hadoop.hive.jdbc.storage.db;
 
 
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 import org.wso2.carbon.hadoop.hive.jdbc.storage.exception.UnsupportedDatabaseException;
 import org.wso2.carbon.hadoop.hive.jdbc.storage.input.JDBCSplit;
 import org.apache.hadoop.io.BooleanWritable;
@@ -26,6 +28,8 @@ import java.util.List;
 
 public class DBRecordReader implements RecordReader<LongWritable, MapWritable> {
 
+    private static final Logger log = LoggerFactory.getLogger(DBRecordReader.class);
+
     private Connection connection;
     private Statement statement;
     private ResultSet results;
@@ -35,27 +39,28 @@ public class DBRecordReader implements RecordReader<LongWritable, MapWritable> {
     public DBRecordReader(JDBCSplit split, DatabaseProperties dbProperties,
                           DBManager dbManager) {
         DatabaseType databaseType = null;
+        String sqlQuery = null;
         try {
             this.split = split;
             connection = dbManager.getConnection();
             connection.setAutoCommit(false);
             statement = connection.createStatement(ResultSet.TYPE_FORWARD_ONLY, ResultSet.CONCUR_READ_ONLY);
-            if(dbProperties.getConnectionUrl()!=null){
+            if (dbProperties.getConnectionUrl() != null) {
                 String databaseName = dbProperties.getConnectionUrl().split(":")[1];
-                databaseType =  dbManager.getDatabaseType(databaseName);
-            }else {
+                databaseType = dbManager.getDatabaseType(databaseName);
+            } else {
                 databaseType = dbManager.getDatabaseName(connection);
             }
-            results = statement.executeQuery(
-                    new QueryConstructor().constructSelectQueryForReading(dbProperties,split,
-                                                                          databaseType));
+            sqlQuery = new QueryConstructor().constructSelectQueryForReading(dbProperties, split,
+                                                                             databaseType);
+            results = statement.executeQuery(sqlQuery);
 
         } catch (ClassNotFoundException e) {
-            e.printStackTrace();
+            log.error("Failed to get connection", e);
         } catch (SQLException e) {
-            e.printStackTrace();
+            log.error("Failed to fetch data from database using query: " + sqlQuery, e);
         } catch (UnsupportedDatabaseException e) {
-            e.printStackTrace();
+            log.error("This database doesn't support by hive-jdbc-handler", e);
         }
     }
 
@@ -135,7 +140,7 @@ public class DBRecordReader implements RecordReader<LongWritable, MapWritable> {
             //Others treated as string data type
             return new Text(results.getString(columnNo));
         } catch (SQLException e) {
-            e.printStackTrace();
+            log.error("Failed to get value for column no: " + columnNo, e);
         }
         return null;
     }
@@ -158,7 +163,7 @@ public class DBRecordReader implements RecordReader<LongWritable, MapWritable> {
             results.close();
             statement.close();
         } catch (SQLException e) {
-            e.printStackTrace();
+            log.error("Failed to close", e);
         }
     }
 

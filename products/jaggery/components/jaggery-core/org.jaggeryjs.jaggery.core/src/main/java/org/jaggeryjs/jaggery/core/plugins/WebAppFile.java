@@ -29,8 +29,8 @@ public class WebAppFile implements JavaScriptFile {
     private boolean readable = false;
     private boolean writable = false;
 
-    public WebAppFile(String path, ServletContext context) {
-        this.path = path;
+    public WebAppFile(String path, ServletContext context) throws ScriptException {
+        this.path = context.getRealPath(getFilePath(path));
         this.context = context;
     }
 
@@ -55,7 +55,6 @@ public class WebAppFile implements JavaScriptFile {
 
     @Override
     public void open(String mode) throws ScriptException {
-        path = context.getRealPath(getFilePath(path));
         if ("r".equals(mode)) {
             try {
                 file = new RandomAccessFile(path, "r");

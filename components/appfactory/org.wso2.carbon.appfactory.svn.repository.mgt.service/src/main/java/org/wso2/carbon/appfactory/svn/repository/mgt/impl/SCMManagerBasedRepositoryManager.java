@@ -62,7 +62,7 @@ import java.util.List;
 /**
  * SCM-manager specific repository manager implementation
  */
-public class SCMManagerBasedRepositoryManager extends AbstractRepositoryManager {
+public class SCMManagerBasedRepositoryManager extends AbstractRepositoryManager{
     private static final Log log = LogFactory.getLog(SCMManagerBasedRepositoryManager.class);
     //rest URIs
     private static final String REST_BASE_URI = "/api/rest";
@@ -405,8 +405,8 @@ public class SCMManagerBasedRepositoryManager extends AbstractRepositoryManager 
 
         try {
             if (svnRevision != null && !"".equals(svnRevision)) {
-                SVNRevision revision = SVNRevision.getRevision(svnRevision);
-
+                //SVNRevision revision = SVNRevision.getRevision(svnRevision);
+                SVNRevision revision = SVNRevision.HEAD;
                 if (svnClient instanceof CmdLineClientAdapter) {
                     // CmdLineClientAdapter does not support all the options
                     svnClient.checkout(svnUrl, checkoutDirectory, revision, true);
@@ -419,8 +419,6 @@ public class SCMManagerBasedRepositoryManager extends AbstractRepositoryManager 
             }
         } catch (SVNClientException e) {
             handleException("Failed to checkout code from SVN URL:" + svnUrl, e);
-        } catch (ParseException e) {
-            handleException("SVN revision: " + svnRevision + " is not valid ", e);
         }
         return checkoutDirectory.getAbsolutePath();
     }

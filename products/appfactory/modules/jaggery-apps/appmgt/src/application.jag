@@ -159,6 +159,11 @@
                                 <td class="buttonRow">
                                     <input type="button" onclick="location.href='invite_user.jag?applicationName=<%=applicationName%>&applicationKey=<%=applicationKey%>'" value='Invite User' class='btn btn-primary'/>
                                 </td>
+                                </tr>
+                                <tr>
+                                <td class="buttonRow">
+                                <input type="button" onclick="location.href='create_datasource.jag?applicationKey=<%=applicationKey%>'" value='Create Data Sources' class='btn btn-primary'/>
+                               </td>
                             </tr>
                         </table>
                     </div>

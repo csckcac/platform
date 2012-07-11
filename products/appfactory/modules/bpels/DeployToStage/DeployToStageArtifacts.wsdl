@@ -15,12 +15,12 @@
     <plnk:role name="createCallbackRole" portType="wsdl2:ArtifactCreateCallback"/>
   </plnk:partnerLinkType>
     <vprop:property name="appId" type="xsd:string"/>
-    <vprop:propertyAlias messageType="wsdl1:createArtifactRequest" part="parameters" propertyName="tns:appId">
-    <vprop:query><![CDATA[/tns:applicationId]]></vprop:query>
-  </vprop:propertyAlias>
+    <vprop:propertyAlias messageType="tns:DeployToStageRequestMessage" part="payload" propertyName="tns:appId">
+        <vprop:query><![CDATA[/tns:applicationId]]></vprop:query>
+    </vprop:propertyAlias>
     <vprop:propertyAlias messageType="wsdl2:callbackMessgaeRequest" part="parameters" propertyName="tns:appId">
-    <vprop:query><![CDATA[/applicationId]]></vprop:query>
-  </vprop:propertyAlias>
+        <vprop:query><![CDATA[/applicationId]]></vprop:query>
+    </vprop:propertyAlias>
     <import location="ApplicationDeployer.wsdl" namespace="http://deploy.core.appfactory.carbon.wso2.org"/>
     <import location="CreateArtifact.wsdl" namespace="http://build.core.appfactory.carbon.wso2.org"/>
     <import location="ArtifactCreateCallback.wsdl" namespace="http://localhost:9763/services/ArtifactCreateCallbackService"/>
@@ -30,10 +30,10 @@
             <element name="DeployToStageRequest">
                 <complexType>
                     <sequence>
-                    	<element name="applicationId" type="string" />
-                    	<element name="revision" type="string" />
-                    	<element name="version" type="string" />
-                    	<element name="stage" type="string"></element>
+                    	<element name="applicationId" type="string"/>
+                    	<element name="revision" type="string"/>
+                    	<element name="version" type="string"/>
+                    	<element name="stage" type="string"/>
                     </sequence>
                 </complexType>
             </element>

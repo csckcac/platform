@@ -64,7 +64,11 @@
         <bpel:receive name="receiveInput" partnerLink="client"
                  portType="tns:DeployToStage"
                  operation="process" variable="input"
-                 createInstance="yes"/>
+                 createInstance="yes">
+            <bpel:correlations>
+                <bpel:correlation set="ApplicationIdCorrelation" initiate="yes"></bpel:correlation>
+            </bpel:correlations>
+        </bpel:receive>
         
         <!-- Generate reply to synchronous request -->
         <bpel:assign validate="no" name="init-create-artifact-params">
@@ -110,7 +114,7 @@
         </bpel:assign>
         <bpel:sequence name="create-artifact">
             <bpel:invoke name="InvokeCreateArtifact" partnerLink="createPL" operation="createArtifact" portType="ns0:ArtifactCreatorPortType" inputVariable="createPLRequest"></bpel:invoke>
-            <bpel:receive name="Receive" partnerLink="createPL" operation="callbackMessgae" portType="ns1:ArtifactCreateCallback" variable="createPLRequest1">
+            <bpel:receive name="ReceiveCallbackMessage" partnerLink="createPL" operation="callbackMessgae" portType="ns1:ArtifactCreateCallback" variable="createPLRequest1">
                 <bpel:correlations>
                     <bpel:correlation set="ApplicationIdCorrelation" initiate="no"></bpel:correlation>
                 </bpel:correlations>

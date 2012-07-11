@@ -35,7 +35,8 @@
         <CreateApplication>http://localhost:9763/services/CreateApplication</CreateApplication>
         <CreateUser>http://localhost:9763/services/UserCreationProcess</CreateUser>
         <ActivateUser>http://localhost:9763/services/UserActivationProcess/process</ActivateUser>
-	<DeployToStage>http://localhost:9763/services/DeployToStage</DeployToStage>
+	<CreateArtifact>http://localhost:9763/services/DeployToStage</CreateArtifact>
+	<DeployToStageProcess>http://localhost:9763/services/DeployToStageProcess</DeployToStageProcess>
 	<ArtifactCreateCallback>http://localhost:9763/services/ArtifactCreateCallbackService</ArtifactCreateCallback>
         <GetAllApps>https://localhost:9443/services/ApplicationManagementService</GetAllApps>
         <GetAuthCookie>https://localhost:9443/services/AuthenticationAdmin</GetAuthCookie>

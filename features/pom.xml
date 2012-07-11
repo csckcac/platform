@@ -146,6 +146,7 @@
 <module>data-bridge</module>
 	<module>ndatasource</module>
 	<module>jaggery</module>
+	<module>bam</module>
         <!-- Add new features above. You should also include your newly-added-feature/s in features/repository/pom.xml  -->
     </modules>
     <build>

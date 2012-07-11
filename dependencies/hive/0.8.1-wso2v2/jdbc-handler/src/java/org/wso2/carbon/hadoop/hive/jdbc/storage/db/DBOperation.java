@@ -69,6 +69,9 @@ public class DBOperation {
                     String upsertQuery = dbProperties.getDbSpecificUpsertQuery();
                     statement = connection.prepareStatement(upsertQuery);
                     statement = setValuesForUpsertStatement(statement);
+                    if (log.isDebugEnabled()) {
+                        log.debug("Executing query: " + upsertQuery);
+                    }
                     statement.executeUpdate();
                 }
             }
@@ -103,27 +106,39 @@ public class DBOperation {
 
     private PreparedStatement updateData(PreparedStatement statement) throws SQLException {
         QueryConstructor queryConstructor = new QueryConstructor();
-        statement = connection.prepareStatement(queryConstructor.constructUpdateQuery(dbProperties.getTableName(),
-                                                                                      fieldNames, dbProperties.getPrimaryFields()));
+        String sqlQuery = queryConstructor.constructUpdateQuery(dbProperties.getTableName(),
+                                                                fieldNames, dbProperties.getPrimaryFields());
+        statement = connection.prepareStatement(sqlQuery);
         statement = setValuesForUpdateStatement(statement);
+        if(log.isDebugEnabled()){
+            log.debug("Executing query: " + sqlQuery);
+        }
         statement.executeUpdate();
         return statement;
     }
 
     private ResultSet selectData(PreparedStatement statement) throws SQLException {
         QueryConstructor queryConstructor = new QueryConstructor();
-        statement = connection.prepareStatement(queryConstructor.constructSelectQuery(dbProperties.getTableName(),
-                                                                                      fieldNames, dbProperties.getPrimaryFields()));
+        String sqlQuery =queryConstructor.constructSelectQuery(dbProperties.getTableName(),
+                                                               fieldNames, dbProperties.getPrimaryFields());
+        statement = connection.prepareStatement(sqlQuery);
         statement = setValuesForWhereClause(statement);
+        if(log.isDebugEnabled()){
+            log.debug("Executing query: " + sqlQuery);
+        }
         ResultSet resultSet = statement.executeQuery();
         return resultSet;
     }
 
     private PreparedStatement insertData(PreparedStatement statement) throws SQLException {
         QueryConstructor queryConstructor = new QueryConstructor();
-        statement = connection.prepareStatement(queryConstructor.constructInsertQuery(dbProperties.getTableName(),
-                                                                                      fieldNames.toArray(new String[fieldNames.size()])));
+        String sqlQuery = queryConstructor.constructInsertQuery(dbProperties.getTableName(),
+                                                                fieldNames.toArray(new String[fieldNames.size()]));
+        statement = connection.prepareStatement(sqlQuery);
         statement = setValues(statement);
+        if(log.isDebugEnabled()){
+            log.debug("Executing query: " + sqlQuery);
+        }
         statement.executeUpdate();
         return statement;
     }

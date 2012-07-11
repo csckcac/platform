@@ -1,0 +1,34 @@
+<script type="text/javascript" charset="utf-8">
+	$(document).ready(function() {
+		var oTable = $('#allprojects').dataTable( {
+			"bProcessing": true,
+			"sAjaxSource": "jsonfeed/allapplicationfeed.jag"
+		} );
+	} );
+</script>
+
+<div>
+<div id="dynamic" class="datatable">
+	<table cellpadding="0" cellspacing="0" border="0" class="display" id="allprojects">
+		<thead>
+			<tr>
+				<th width="30%">Application Name</th>
+				<th width="30%">Role</th>
+				<th width="30%">SVN URL</th>
+				<th width="10%">Revision Number</th>
+			</tr>
+		</thead>
+		<tbody>
+			
+		</tbody>
+		<tfoot>
+			<tr>
+				<th>Application Name</th>
+				<th>Role</th>
+				<th>SVN URL</th>
+				<th>Revision Number</th>
+			</tr>
+		</tfoot>
+	</table>
+</div>
+</div>

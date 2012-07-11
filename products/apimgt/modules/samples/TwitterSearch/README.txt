@@ -38,8 +38,8 @@ populate-user-database:
       [sql] 10 of 10 SQL statements executed successfully
       
       
-6. Start WSO2AM again & now you can login to API Provider's console
-URL - http://localhost:9763/apiprovider/
+6. Start WSO2AM again & now you can login to API Publisher's console
+URL - http://localhost:9763/publisher/
 Username/password - provider1/provider1
 
 Take a note of the fact that there are no APIs published. Next step adds an API & publishes it to API store.

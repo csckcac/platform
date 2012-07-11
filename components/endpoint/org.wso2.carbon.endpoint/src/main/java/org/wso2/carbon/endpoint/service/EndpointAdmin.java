@@ -61,7 +61,7 @@ import java.util.concurrent.locks.Lock;
 public class EndpointAdmin extends AbstractServiceBusAdmin {
 
     private static final Log log = LogFactory.getLog(EndpointAdmin.class);
-    public static final String WSO2_ENDPOINT_MEDIA_TYPE = "application/vnd.wso2.endpoint";
+    public static final String WSO2_ENDPOINT_MEDIA_TYPE = "application/vnd.wso2.esb.endpoint";
 
     /**
      * Set Endpoint status to Active

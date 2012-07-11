@@ -594,19 +594,21 @@ public class DBDeployer extends AbstractDeployer {
                         WSDLConstants.MESSAGE_LABEL_OUT_VALUE, false);
 			}
 		}
-
-		AxisMessage faultMessage = new AxisMessage();
-		faultMessage.setName(DBConstants.DS_FAULT_ELEMENT);
-		faultMessage.setElementQName(new QName(DBConstants.WSO2_DS_NAMESPACE,
-                DBConstants.DS_FAULT_ELEMENT));
-		axisOperation.setFaultMessages(faultMessage);
-
-		createAxisBindingMessage(soap11BindingOperation, faultMessage,
-                WSDLConstants.MESSAGE_LABEL_FAULT_VALUE, true);
-		createAxisBindingMessage(soap12BindingOperation, faultMessage,
-                WSDLConstants.MESSAGE_LABEL_FAULT_VALUE, true);
-		createAxisBindingMessage(httpBindingOperation, faultMessage,
-                WSDLConstants.MESSAGE_LABEL_FAULT_VALUE, true);
+		
+		if (hasResult) {
+			AxisMessage faultMessage = new AxisMessage();
+			faultMessage.setName(DBConstants.DS_FAULT_ELEMENT);
+			faultMessage.setElementQName(new QName(DBConstants.WSO2_DS_NAMESPACE,
+	                DBConstants.DS_FAULT_ELEMENT));
+			axisOperation.setFaultMessages(faultMessage);
+	
+			createAxisBindingMessage(soap11BindingOperation, faultMessage,
+	                WSDLConstants.MESSAGE_LABEL_FAULT_VALUE, true);
+			createAxisBindingMessage(soap12BindingOperation, faultMessage,
+	                WSDLConstants.MESSAGE_LABEL_FAULT_VALUE, true);
+			createAxisBindingMessage(httpBindingOperation, faultMessage,
+	                WSDLConstants.MESSAGE_LABEL_FAULT_VALUE, true);
+		}
 
 		axisOperation.setDocumentation(description);
 		return axisOperation;

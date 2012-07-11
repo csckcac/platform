@@ -3466,7 +3466,7 @@ input[type="submit"].btn.btn-mini {
 }
 
 .tab-content {
-  overflow: auto;
+  overflow: hidden;
 }
 
 .tabs-below > .nav-tabs,
@@ -4576,7 +4576,11 @@ a.badge:hover {
 
 .label-info[href],
 .badge-info[href] {
-  background-color: #2d6987;
+  background-color: #2daa87;
+}
+
+.badge-info-green {
+  background-color: #2daa87;
 }
 
 .label-inverse,

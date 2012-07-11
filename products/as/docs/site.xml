@@ -59,7 +59,7 @@
             <item name="Chad" href="chad_guide.html"/>
             <item name="Client API" href="clientapi_sample_guide.html"/>
             <item name="Commodity Quote" href="commodity_quote_guide.html"/>
-            <item name="EJB Services" href="ejbservices_sample_guide.html"/>
+            <!--item name="EJB Services" href="ejbservices_sample_guide.html"/-->
             <item name="Flickr" href="flickr_client_guide.html"/>
             <item name="JAXWS" href="jaxws_sample_guide.html" />
             <item name="JiBX" href="jibx_guide.html"/>

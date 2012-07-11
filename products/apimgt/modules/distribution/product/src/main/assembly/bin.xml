@@ -75,6 +75,15 @@
             </includes>
         </fileSet>
         <fileSet>
+            <directory>
+                ../resources/sql/
+            </directory>
+            <outputDirectory>wso2am-${pom.version}/dbscripts/apimgt</outputDirectory>
+            <includes>
+                <include>**/**.sql</include>
+            </includes>
+        </fileSet>
+        <fileSet>
             <directory>../../jaggery-apps/api-publisher-web/src</directory>
             <outputDirectory>wso2am-${pom.version}/repository/deployment/server/jaggeryapps/publisher</outputDirectory>
         </fileSet>

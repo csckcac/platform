@@ -231,11 +231,6 @@
 				<!--end BAM ToolBox Features -->
 
 
-                                <!-- Gadget IDE feature -->
-                                <featureArtifactDef>org.wso2.carbon:org.wso2.carbon.gadget.ide.feature:${carbon.version}
-                                </featureArtifactDef>
-                                <!-- end Gadget IDE feature -->
-
 			        <!-- ntask features -->
 				<featureArtifactDef>
                                     org.wso2.carbon:org.wso2.carbon.ntask.feature:${carbon.version}
@@ -370,10 +365,6 @@
                                     <version>${carbon.version}</version>
                                 </feature>
 
-                                <feature>
-                                    <id>org.wso2.carbon.gadget.ide.feature.group</id>
-                                    <version>${carbon.version}</version>
-                                </feature>
                                 <!--feature>
 -                                    <id>org.wso2.carbon.gauges.ui.feature.group</id>
 -                                    <version>${carbon.version}</version>

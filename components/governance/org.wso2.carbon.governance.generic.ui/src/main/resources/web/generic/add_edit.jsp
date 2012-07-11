@@ -242,7 +242,7 @@
                 <input type="hidden" name="add_edit_operation" value="add"/>
                 <input type="hidden" name="dataName" value="<%=dataName%>"/>
                 <input type="hidden" name="dataNamespace" value="<%=dataNamespace%>"/>
-                <input type="hidden" name="breadcrumb" value="<%=breadcrumb%>%>"/>
+                <input type="hidden" name="breadcrumb" value="<%=breadcrumb%>"/>
                 <input type="hidden" name="region" value="<%=request.getParameter("region")%>"/>
                 <input type="hidden" name="item" value="<%=request.getParameter("item")%>"/>
                 <input type="hidden" name="key" value="<%=request.getParameter("key")%>"/>

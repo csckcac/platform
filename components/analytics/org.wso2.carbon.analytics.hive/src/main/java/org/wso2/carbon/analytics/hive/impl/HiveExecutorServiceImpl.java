@@ -176,6 +176,10 @@ public class HiveExecutorServiceImpl implements HiveExecutorService {
                     String trimmedCmdLine = cmdLine.trim();
                     trimmedCmdLine = trimmedCmdLine.replaceAll(";", "");
                     trimmedCmdLine = trimmedCmdLine.replaceAll("%%", ";");
+                    //Fixing some issues in the hive query due to /n/t
+                    trimmedCmdLine = trimmedCmdLine.replaceAll("\n"," ");
+                    trimmedCmdLine = trimmedCmdLine.replaceAll("\t"," ");
+
                     if (!"".equals(trimmedCmdLine)) {
                         QueryResult queryResult = new QueryResult();
 

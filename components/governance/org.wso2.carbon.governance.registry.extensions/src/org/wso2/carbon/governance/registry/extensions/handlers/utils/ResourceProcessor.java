@@ -37,9 +37,13 @@ public class ResourceProcessor {
         Iterator<OMElement> methods = resourceElement.getChildrenWithLocalName("method");
         while(methods.hasNext()){
             OMElement method = methods.next();
-            resourceArtifact.addAttribute("methods_entry",
-                    method.getAttribute(new QName("name")).getAttributeValue() + ":" +
-                            method.getAttribute(new QName("id")).getAttributeValue());
+            if(method.getAttribute(new QName("name"))!=null && method.getAttribute(new QName("id"))!=null){
+                resourceArtifact.addAttribute("methods_entry",
+                        method.getAttribute(new QName("name")).getAttributeValue() + ":" +
+                                method.getAttribute(new QName("id")).getAttributeValue());
+
+            }
+
         }
 
         genericArtifactManager.addGenericArtifact(resourceArtifact);

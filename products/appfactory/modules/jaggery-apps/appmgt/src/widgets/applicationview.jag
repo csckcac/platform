@@ -17,7 +17,7 @@
 				<th width="14%">Build Status</th>
 				<th width="25%">SVN URL</th>
 				<th width="14%">Revision</th>
-				<th width="14%">Time In Stage</th>
+				<th width="14%">Time In Lifecycle</th>
 			</tr>
 		</thead>
 		<tbody>
@@ -30,7 +30,7 @@
 				<th>Build Status</th>
 				<th>SVN URL</th>
 				<th>Revision</th>
-				<th>Time In Stage</th>
+				<th>Time In Lifecycle</th>
 			</tr>
 		</tfoot>
 	</table>

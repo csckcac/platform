@@ -12,13 +12,13 @@
 	<table cellpadding="0" cellspacing="0" border="0" class="display" id="allprojectversions">
 		<thead>
 			<tr>
-				<th width="25%">Application</th>
+				<th width="23%">Application Name</th>
 				<th width="11%">Version</th>
 				<th width="11%">Lifecycle</th>
 				<th width="11%">Build Status</th>
 				<th width="20%">SVN URL</th>
 				<th width="11%">Revision</th>
-				<th width="11%">Time In Stage</th>
+				<th width="13%">Time In Lifecycle</th>
 			</tr>
 		</thead>
 		<tbody>
@@ -26,13 +26,13 @@
 		</tbody>
 		<tfoot>
 			<tr>
-				<th>Application</th>
+				<th>Application Name</th>
 				<th>Version</th>
 				<th>Lifecycle</th>
 				<th>Build Status</th>
 				<th>SVN URL</th>
 				<th>Revision</th>
-				<th>Time In Stage</th>
+				<th>Time In Lifecycle</th>
 			</tr>
 		</tfoot>
 	</table>

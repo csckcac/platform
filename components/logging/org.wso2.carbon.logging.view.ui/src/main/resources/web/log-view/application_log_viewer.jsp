@@ -57,11 +57,18 @@
 		int numberOfPages = 0;
 		PaginatedLogEvent paginatedLogEvents;
 		String parameter = "";
+		try {
+			pageNumber = Integer.parseInt(pageNumberStr);
+		} catch (NumberFormatException ignored) {
+			// page number format exception
+		}
 		String appName;
 		String applicationNames[];
 		try {
 			type = CharacterEncoder.getSafeText(request.getParameter("type"));
+			type = (type == null) ? "":type;
 			keyword = CharacterEncoder.getSafeText(request.getParameter("keyword"));
+			keyword = (keyword == null )? "":keyword;
 			action = CharacterEncoder.getSafeText(request.getParameter("action"));
 			appName = CharacterEncoder.getSafeText(request.getParameter("appName"));
 			logViewerClient = new LogViewerClient(cookie, backendServerURL, configContext);
@@ -78,7 +85,7 @@
 				events = paginatedLogEvents.getLogInfo();
 				numberOfPages = paginatedLogEvents.getNumberOfPages();
 			}
-			parameter = "type=" + type + "&keyword=" + keyword;
+			parameter = "type=" + type + "&keyword=" + keyword+ "&appName="+appName;
 		} catch (Exception e) {
 			CarbonUIMessage.sendCarbonUIMessage(e.getMessage(), CarbonUIMessage.ERROR, request,
 					e);
@@ -269,7 +276,7 @@
 							
 							</table>
 							 <carbon:paginator pageNumber="<%=pageNumber%>" numberOfPages="<%=numberOfPages%>"
-                      page="index.jsp" pageNumberParameterName="pageNumber"
+                      page="application_log_viewer.jsp" pageNumberParameterName="pageNumber"
                       prevKey="prev" nextKey="next"
                       parameters="<%= parameter%>"/>
 					</tr>

@@ -194,9 +194,6 @@
 
                             %>
                             <tr>
-                                <td class="buttonRow">
-                                    <input type="button" onclick="location.href='create_artifact.jag?applicationId=<%=applicationKey%>'" value='Create Artifact' class='btn btn-primary'/>
-                                </td>
                             </tr>
                         </table>
                     </div>

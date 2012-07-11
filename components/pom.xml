@@ -111,7 +111,6 @@
 		<module>unified-endpoint</module>
                 <module>wsdl2form</module>
                 <module>tryit</module>
-		<module>mashup</module>
                 <module>view-flows</module>
                 <module>ws-discovery</module>
                 <module>wsdl2code</module>
@@ -125,6 +124,8 @@
                 <module>remote-usermgt</module>
                 <module>gadgets</module>
                 <module>webapp-mgt</module>
+				<module>jaggery</module>
+				<module>mashup</module>
                 <module>messagebox</module>
 		<module>qpid</module>
 		<module>directory-server-manager</module>

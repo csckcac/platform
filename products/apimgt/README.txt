@@ -67,8 +67,8 @@ Installation & Running
 
 1. Extract the wso2am-1.0.0-M6.zip and go to the 'bin' directory
 2. Run the wso2server.sh or wso2server.bat as appropriate
-3. API Provider web application is running @ http://localhost:9763/apiprovider
-4. API Store web application is running @ http://localhost:9763/apistore
+3. API Provider web application is running @ http://localhost:9763/publisher
+4. API Store web application is running @ http://localhost:9763/store
 
 Support
 ==================================

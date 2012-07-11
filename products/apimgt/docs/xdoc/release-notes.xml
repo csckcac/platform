@@ -71,7 +71,7 @@
                 <li>Extract the downloaded zip</li>
                 <li>Go to the bin directory in the extracted folder</li>
                 <li>Run the wso2server.sh or wso2server.bat as appropriate</li>
-                <li>Launch a web browser and navigate to http://localhost:9763/apiprovider
+                <li>Launch a web browser and navigate to http://localhost:9763/publisher
                     to access the API provider webapp
                 </li>
                 <li>Navigate to http://localhost:9763/apistore to access the API store</li>                

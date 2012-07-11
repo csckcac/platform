@@ -195,7 +195,7 @@ public class DefaultClusteringEnabledSubscriptionManager implements ClusteringEn
          */
 
         CassandraMessageStore messageStore = ClusterResourceHolder.getInstance().getCassandraMessageStore();
-        messageStore.removeUserQueueFromQpidQueue(userQueue);
+        messageStore.removeUserQueueFromQpidQueue(globalQueue);
 
         List<CassandraQueueMessage> messages = messageStore.getMessagesFromUserQueue(userQueue,globalQueue,40);
 
@@ -241,8 +241,12 @@ public class DefaultClusteringEnabledSubscriptionManager implements ClusteringEn
 
     }
 
-
-
+    public void stopAllMessageFlushers() {
+        Collection<CassandraMessageFlusher> workers = workMap.values();
+        for (CassandraMessageFlusher flusher : workers) {
+            flusher.stopFlusher();
+        }
+    }
 
     public Map<String, CassandraMessageFlusher> getWorkMap() {
         return workMap;

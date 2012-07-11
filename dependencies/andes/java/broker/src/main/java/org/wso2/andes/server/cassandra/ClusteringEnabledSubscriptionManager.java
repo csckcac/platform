@@ -64,4 +64,9 @@ public interface ClusteringEnabledSubscriptionManager {
 
 
     public Map<AMQChannel,QueueSubscriptionAcknowledgementHandler> getAcknowledgementHandlerMap();
+
+    /**
+     * Stop all the queue workers running at the moment
+     * */
+    public void stopAllMessageFlushers();
 }

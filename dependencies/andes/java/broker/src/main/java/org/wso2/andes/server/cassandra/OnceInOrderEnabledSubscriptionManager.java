@@ -100,6 +100,10 @@ public class OnceInOrderEnabledSubscriptionManager implements ClusteringEnabledS
         throw new UnsupportedOperationException("Not yet supported for Once In order impl");
     }
 
+    public void stopAllMessageFlushers() {
+        throw new UnsupportedOperationException("Not yet supported for Once In order impl");
+    }
+
     private void start() {
         active = true;
         executor.submit(new CassandraReliableMessageFlusherManagerTask());

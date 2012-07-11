@@ -1594,6 +1594,21 @@ public void addMessageBatchToUserQueues(CassandraQueueMessage[] messages) throws
 
     @Override
     public void close() throws Exception {
+        //Stop all user queues
+        List<String> globalQueues = getGlobalQueues();
+        if (globalQueues != null) {
+            for (String globalQueue : globalQueues) {
+                removeUserQueueFromQpidQueue(globalQueue);
+            }
+        }
+
+        // Stopping message all message flushers when closing down
+        if (!ClusterResourceHolder.getInstance().getClusterConfiguration().isOnceInOrderSupportEnabled()) {
+            ClusteringEnabledSubscriptionManager subscriptionManager =
+                    new DefaultClusteringEnabledSubscriptionManager();
+            ClusterResourceHolder.getInstance().setSubscriptionManager(subscriptionManager);
+            subscriptionManager.stopAllMessageFlushers();
+        }
 
         deleteNodeData(""+ClusterResourceHolder.getInstance().getClusterManager().getNodeId());
 

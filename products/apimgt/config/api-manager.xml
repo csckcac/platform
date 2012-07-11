@@ -91,13 +91,13 @@
         <!--
             Thrift port of the remote BAM server.
         -->
-        <ThriftPort>7612</ThriftPort>
+        <ThriftPort>7611</ThriftPort>
 
         <!--
             Server URL of the remote BAM server used to collect statistics. Must
             be specified in protocol://hostname:port/ format.
         -->
-        <BAMServerURL>https://localhost:9444/</BAMServerURL>
+        <BAMServerURL>tcp://localhost:7611/</BAMServerURL>
 
         <!--
             Administrator username to login to the remote BAM server.

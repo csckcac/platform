@@ -1,0 +1,102 @@
+<?xml version="1.0" encoding="UTF-8" standalone="no"?>
+<definitions xmlns="http://schemas.xmlsoap.org/wsdl/" xmlns:plnk="http://docs.oasis-open.org/wsbpel/2.0/plnktype" xmlns:soap="http://schemas.xmlsoap.org/wsdl/soap/" xmlns:tns="http://wso2.org" xmlns:vprop="http://docs.oasis-open.org/wsbpel/2.0/varprop" xmlns:wsdl="http://deploy.core.appfactory.carbon.wso2.org" xmlns:wsdl1="http://build.core.appfactory.carbon.wso2.org" xmlns:wsdl2="http://localhost:9763/services/ArtifactCreateCallbackService" xmlns:xsd="http://www.w3.org/2001/XMLSchema" name="DeployToStage" targetNamespace="http://wso2.org">
+
+	<!-- ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~ 
+		TYPE DEFINITION - List of types participating in this BPEL process The BPEL 
+		Designer will generate default request and response types but you can define 
+		or import any XML Schema type and use them as part of the message types. 
+		~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~ -->
+	<plnk:partnerLinkType name="deployPLT">
+		<plnk:role name="deployRole" portType="wsdl:ApplicationDeployerPortType"/>
+	</plnk:partnerLinkType>
+	<plnk:partnerLinkType name="createPLT">
+		<plnk:role name="createRole" portType="wsdl1:ArtifactCreatorPortType"/>
+		<plnk:role name="createCallbackRole" portType="wsdl2:ArtifactCreateCallback"/>
+	</plnk:partnerLinkType>
+	<vprop:property name="appId" type="xsd:string"/>
+	<vprop:propertyAlias messageType="tns:DeployToStageRequestMessage" part="payload" propertyName="tns:appId">
+        <vprop:query><![CDATA[/tns:applicationId]]></vprop:query>
+    </vprop:propertyAlias>
+	<vprop:propertyAlias messageType="wsdl2:callbackMessgaeRequest" part="parameters" propertyName="tns:appId">
+        <vprop:query><![CDATA[/wsdl2:applicationId]]></vprop:query>
+    </vprop:propertyAlias>
+    <import location="ApplicationDeployer.wsdl" namespace="http://deploy.core.appfactory.carbon.wso2.org"/>
+    <import location="CreateArtifact.wsdl" namespace="http://build.core.appfactory.carbon.wso2.org"/>
+    <import location="ArtifactCreateCallback.wsdl" namespace="http://localhost:9763/services/ArtifactCreateCallbackService"/>
+    <types>
+		<schema xmlns="http://www.w3.org/2001/XMLSchema" attributeFormDefault="unqualified" elementFormDefault="qualified" targetNamespace="http://wso2.org">
+
+			<element name="DeployToStageRequest">
+				<complexType>
+					<sequence>
+						<element name="applicationId" type="string"/>
+						<element name="revision" type="string"/>
+						<element name="version" type="string"/>
+                    </sequence>
+				</complexType>
+			</element>
+
+			<element name="DeployToStageResponse">
+				<complexType>
+					<sequence>
+						<element name="result" type="string"/>
+					</sequence>
+				</complexType>
+			</element>
+		</schema>
+	</types>
+
+
+	<!-- ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~ 
+		MESSAGE TYPE DEFINITION - Definition of the message types used as part of 
+		the port type defintions ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~ -->
+	<message name="DeployToStageRequestMessage">
+		<part element="tns:DeployToStageRequest" name="payload"/>
+	</message>
+	<message name="DeployToStageResponseMessage">
+		<part element="tns:DeployToStageResponse" name="payload"/>
+	</message>
+
+	<!-- ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~ 
+		PORT TYPE DEFINITION - A port type groups a set of operations into a logical 
+		service unit. ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~ -->
+
+	<!-- portType implemented by the DeployToStage BPEL process -->
+	<portType name="DeployToStage">
+		<operation name="process">
+			<input message="tns:DeployToStageRequestMessage"/>
+			<output message="tns:DeployToStageResponseMessage"/>
+		</operation>
+	</portType>
+	<!-- ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~ 
+		PARTNER LINK TYPE DEFINITION ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~ -->
+	<plnk:partnerLinkType name="DeployToStage">
+		<plnk:role name="DeployToStageProvider" portType="tns:DeployToStage"/>
+	</plnk:partnerLinkType>
+
+
+	<!-- ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~ 
+		BINDING DEFINITION - Defines the message format and protocol details for 
+		a web service. ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~ -->
+	<binding name="DeployToStageBinding" type="tns:DeployToStage">
+		<soap:binding style="document" transport="http://schemas.xmlsoap.org/soap/http"/>
+		<operation name="process">
+			<soap:operation soapAction="http://wso2.org/process"/>
+			<input>
+				<soap:body use="literal"/>
+			</input>
+			<output>
+				<soap:body use="literal"/>
+			</output>
+		</operation>
+	</binding>
+
+	<!-- ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~ 
+		SERVICE DEFINITION - A service groups a set of ports into a service unit. 
+		~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~ -->
+	<service name="DeployToStage">
+		<port binding="tns:DeployToStageBinding" name="DeployToStagePort">
+			<soap:address location="http://localhost:8080/DeployToStage"/>
+		</port>
+	</service>
+</definitions>

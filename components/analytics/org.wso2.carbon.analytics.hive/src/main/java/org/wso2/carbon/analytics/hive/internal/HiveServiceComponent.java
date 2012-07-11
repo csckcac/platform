@@ -28,16 +28,13 @@ import org.apache.thrift.transport.TServerTransport;
 import org.apache.thrift.transport.TTransportFactory;
 import org.osgi.framework.ServiceRegistration;
 import org.osgi.service.component.ComponentContext;
-import org.wso2.carbon.analytics.hive.HiveConstants;
-import org.wso2.carbon.analytics.hive.Utils;
 import org.wso2.carbon.analytics.hive.ServiceHolder;
+import org.wso2.carbon.analytics.hive.Utils;
 import org.wso2.carbon.analytics.hive.impl.HiveExecutorServiceImpl;
 import org.wso2.carbon.analytics.hive.service.HiveExecutorService;
 import org.wso2.carbon.base.ServerConfiguration;
 import org.wso2.carbon.datasource.DataSourceInformationRepositoryService;
 import org.wso2.carbon.ndatasource.core.DataSourceService;
-import org.wso2.carbon.ntask.common.TaskException;
-import org.wso2.carbon.ntask.core.TaskManager;
 import org.wso2.carbon.ntask.core.service.TaskService;
 import org.wso2.carbon.registry.core.exceptions.RegistryException;
 import org.wso2.carbon.registry.core.service.RegistryService;
@@ -115,19 +112,7 @@ public class HiveServiceComponent {
 /*        HiveConnectionManager connectionManager = HiveConnectionManager.getInstance();
         connectionManager.loadHiveConnectionConfiguration(ctx.getBundleContext());*/
 
-        TaskService taskService = ServiceHolder.getTaskService();
-
-        try {
-            taskService.registerTaskType(HiveConstants.HIVE_TASK);
-            TaskManager taskManager =
-                    taskService.getTaskManager(HiveConstants.HIVE_TASK);
-            ServiceHolder.setTaskManager(taskManager);
-        } catch (TaskException e) {
-            log.error("Error while initializing TaskManager. Script scheduling may not" +
-                      " work properly..", e);
-        }
-
-/*        DataSourceInformationRepositoryService dataSourceInfoService = ServiceHolder.
+       /*        DataSourceInformationRepositoryService dataSourceInfoService = ServiceHolder.
                 getDataSourceInformationRepositoryService();
         DataSourceInformationRepository repository = dataSourceInfoService.
                 getDataSourceInformationRepository();*/

@@ -15,11 +15,14 @@
  */
 package org.wso2.carbon.analytics.hive;
 
+import org.apache.commons.logging.Log;
+import org.apache.commons.logging.LogFactory;
 import org.wso2.carbon.analytics.hive.conf.HiveConnectionManager;
 import org.wso2.carbon.analytics.hive.service.HiveExecutorService;
 import org.wso2.carbon.base.ServerConfiguration;
 import org.wso2.carbon.datasource.DataSourceInformationRepositoryService;
 import org.wso2.carbon.ndatasource.core.DataSourceService;
+import org.wso2.carbon.ntask.common.TaskException;
 import org.wso2.carbon.ntask.core.TaskManager;
 import org.wso2.carbon.ntask.core.service.TaskService;
 import org.wso2.carbon.registry.core.service.RegistryService;
@@ -27,12 +30,13 @@ import org.wso2.carbon.utils.ConfigurationContextService;
 
 public class ServiceHolder {
 
+    private static final Log log = LogFactory.getLog(ServiceHolder.class);
+
     private static HiveExecutorService hiveExecutorService;
     private static RegistryService registryService;
     private static ConfigurationContextService configurationContextService;
     private static ServerConfiguration serverConfiguration;
     private static TaskService taskService;
-    private static TaskManager taskManager;
     private static DataSourceInformationRepositoryService dataSourceInfoService;
     private static HiveConnectionManager connectionManager;
     private static DataSourceService dataSourceService;
@@ -80,11 +84,16 @@ public class ServiceHolder {
     }
 
     public static TaskManager getTaskManager() {
-        return taskManager;
-    }
+        TaskService taskService = ServiceHolder.getTaskService();
+        try {
+            taskService.registerTaskType(HiveConstants.HIVE_TASK);
+            return taskService.getTaskManager(HiveConstants.HIVE_TASK);
+        } catch (TaskException e) {
+            log.error("Error while initializing TaskManager. Script scheduling may not" +
+                    " work properly..", e);
+            return null;
+        }
 
-    public static void setTaskManager(TaskManager taskManager) {
-        ServiceHolder.taskManager = taskManager;
     }
 
     public static void setHiveConnectionManager(HiveConnectionManager connectionManager) {

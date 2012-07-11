@@ -5,8 +5,9 @@
 
 
         var applicationId = request.getParameter("applicationId");
-        var ver = request.getParameter("revision");
-        var revision = request.getParameter("revision");
+        // TODO - Get the version and revision from the UI
+        var version = '1.0';
+        var revision = '1';
 
 
         try{

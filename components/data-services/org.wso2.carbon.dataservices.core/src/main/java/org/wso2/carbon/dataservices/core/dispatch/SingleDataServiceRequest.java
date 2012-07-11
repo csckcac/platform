@@ -85,7 +85,7 @@ public class SingleDataServiceRequest extends DataServiceRequest {
 			}
 			return result;
 		} catch (DataServiceFault e) {
-			if (inTx) {
+			if (inTx && dataService.getDSSTxManager().hasNoActiveTransaction()) {
 			    dataService.rollbackTransaction();
 			}
 			throw e;

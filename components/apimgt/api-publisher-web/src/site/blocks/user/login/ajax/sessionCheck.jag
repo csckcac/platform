@@ -4,9 +4,9 @@ include("/jagg/jagg.jag");
 (function () {
     var action = request.getParameter("action");
     if (action === "sessionCheck") {
-         var log = new Log();
-         log.info(jagg.getUser());
-
+         if (log.isDebugEnabled()) {
+            log.debug("session check for" + jagg.getUser());
+         }
          if(jagg.getUser() == null){
             print({
                 error:true,

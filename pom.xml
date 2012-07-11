@@ -52,7 +52,7 @@
                 <!--module>dependencies</module-->
                 <module>service-stubs</module>
                 <module>components</module>
-                <module>platform-integration/system-test-framework</module>
+                <module>platform-integration/clarity-framework</module>
 		<module>features</module>
 		<module>samples/shopping-cart</module>               
 		<module>samples/shopping-cart-global</module>               

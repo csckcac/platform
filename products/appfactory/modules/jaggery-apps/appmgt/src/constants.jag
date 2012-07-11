@@ -25,7 +25,6 @@
     var WS_CREATE_USER = "WebServiceEndPoints.CreateUser";
     var WS_ACTIVATE_USER = "WebServiceEndPoints.ActivateUser";
     var WS_DEPLOY_STAGE = "WebServiceEndPoints.DeployToStage";
-    var WS_ARTIFACT_CREATE = "WebServiceEndPoints.CreateArtifact";
     var WS_ARTIFACT_CREATE_CALLBACK = "WebServiceEndPoints.ArtifactCreateCallback";
     var WS_GET_ALL_APPS = "WebServiceEndPoints.GetAllApps";
     var WS_EMAIL_VERIFICATION = "WebServiceEndPoints.EmailVerificationService";

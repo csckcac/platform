@@ -305,17 +305,17 @@
         }
     }
 
-    function invokeDeployToStage(applicationSvnLocation,applicationKey,stageName){
+    function invokeDeployToStage(applicationKey,revision,version,stageName){
         var ws = require('ws');
         var deployApplicationToStageProcess = new ws.WSRequest();
         var options = new Array();
         options.useSOAP = 1.1;
         options.action = "urn:process";
-        var payload = '<p:DeployApplicationTo'+stageName+'Request xmlns:p="http://wso2.org/carbon/appfactory/applicaiton/deployment"><p:applicationSvnLocation>'+applicationSvnLocation+'</p:applicationSvnLocation><p:applicationId>'+applicationKey+'</p:applicationId></p:DeployApplicationTo'+stageName+'Request>';
+        var payload = '<p:DeployToStageRequest xmlns:p="http://wso2.org"><applicationId>'+applicationKey+'</applicationId><revision>'+revision+'</revision><version>'+version+'</version><stage>'+stageName+'</stage></p:DeployToStageRequest>';
         var result;
 
         try {
-            var endPoint =getProperty('ApplicationDeployment.DeploymentStage.'+stageName+'.ProcesEndPoint');
+            var endPoint =getProperty('ApplicationDeployment.DeploymentStage.'+stageName+'.DeploymentServerURL');
             deployApplicationToStageProcess.open(options,endPoint, false);
             deployApplicationToStageProcess.send(payload);
             result = deployApplicationToStageProcess.responseE4X;

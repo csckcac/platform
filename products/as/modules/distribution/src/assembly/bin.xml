@@ -73,6 +73,8 @@
                 <exclude>**/target/**</exclude>
                 <exclude>**/Jaxws-Jaxrs/**</exclude>
                 <exclude>**/Axis2Module/**</exclude>
+		<!--Excluding EJB Sample-->
+                <exclude>EJBLibrary/**</exclude>
             </excludes>
         </fileSet>
 		

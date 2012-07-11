@@ -15,47 +15,48 @@
 *specific language governing permissions and limitations
 *under the License.
 */
-package org.wso2.carbon.mediator.tests.xquery;
+package org.wso2.carbon.mediator.tests.xslt;
 
 import org.apache.axiom.om.OMElement;
 import org.apache.axis2.AxisFault;
 import org.testng.annotations.Test;
-import org.wso2.carbon.mediator.tests.xquery.util.RequestUtil;
 import org.wso2.esb.integration.ESBIntegrationTestCase;
 import org.wso2.esb.integration.axis2.SampleAxis2Server;
+import org.wso2.esb.integration.axis2.StockQuoteClient;
 
-import javax.xml.namespace.QName;
-
-import static org.testng.Assert.assertEquals;
 import static org.testng.Assert.assertNotNull;
+import static org.testng.Assert.assertTrue;
 
-public class XQueryCustomVariableAsString extends ESBIntegrationTestCase {
+public class FileSystemLocalEntryXsltTransformationTestCase extends ESBIntegrationTestCase {
+    private StockQuoteClient axis2Client;
 
     public void init() throws Exception {
-        String filePath = "/mediators/xquery/xquery_variable_type_string_synapse101.xml";
+        axis2Client = new StockQuoteClient();
+        String filePath = "/mediators/xslt/xslt_in_file_system_local_entry_synapse.xml";
         loadESBConfigurationFromClasspath(filePath);
 
         launchBackendAxis2Service(SampleAxis2Server.SIMPLE_STOCK_QUOTE_SERVICE);
     }
 
     @Test(groups = {"wso2.esb"},
-          description = "Do XQuery transformation with target attribute specified as XPath value and variable as String")
-    public void testXQueryTransformationWithStringValue() throws AxisFault {
+          description = "Do XSLT transformation  by selecting the xslt file from file system")
+    public void xsltTransformationFromFileSystem() throws AxisFault {
         OMElement response;
-        RequestUtil getQuoteCustomRequest = new RequestUtil();
-        response = getQuoteCustomRequest.sendReceive(
-                getProxyServiceURL("StockQuoteProxy", false),
-                "WSO2");
+
+        response = axis2Client.sendCustomQuoteRequest(
+                getMainSequenceURL(),
+                null,
+                "IBM");
         assertNotNull(response, "Response message null");
-        assertEquals(response.getFirstElement().getFirstChildWithName(
-                new QName("http://services.samples/xsd", "symbol", "ax21")).getText(), "IBM", "Symbol name mismatched");
+        assertTrue(response.toString().contains("Code"));
+        assertTrue(response.toString().contains("IBM"));
 
     }
 
     @Override
     protected void cleanup() {
         super.cleanup();
+        axis2Client.destroy();
     }
-
 
 }

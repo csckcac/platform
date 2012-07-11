@@ -117,6 +117,17 @@
         </classes>
     </test>
 
+    <test name="Test - Mediator xslt" preserve-order="true" verbose="2">
+        <classes>
+            <class name="org.wso2.carbon.mediator.tests.xslt.InLineLocalEntryXsltTransformationTestCase"/>
+            <class name="org.wso2.carbon.mediator.tests.xslt.FileSystemLocalEntryXsltTransformationTestCase"/>
+            <class name="org.wso2.carbon.mediator.tests.xslt.RegistryEntryXsltTransformationTestCase"/>
+            <class name="org.wso2.carbon.mediator.tests.xslt.XsltTransformationWithPropertyTestCase"/>
+            <class name="org.wso2.carbon.mediator.tests.xslt.XsltTransformationFromUrlTestCase"/>
+
+        </classes>
+    </test>
+
     <test name="Test - Mediator Clone" preserve-order="true" verbose="2">
         <classes>
             <class name="org.wso2.carbon.mediator.tests.clone.CloneMediatorTestCase"/>

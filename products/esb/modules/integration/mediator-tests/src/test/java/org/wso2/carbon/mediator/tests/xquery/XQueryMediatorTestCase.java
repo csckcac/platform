@@ -25,7 +25,6 @@ import org.wso2.esb.integration.axis2.SampleAxis2Server;
 import org.wso2.esb.integration.axis2.StockQuoteClient;
 
 import static org.testng.Assert.assertTrue;
-import static org.testng.Assert.fail;
 
 public class XQueryMediatorTestCase extends ESBIntegrationTestCase {
     private StockQuoteClient axis2Client;

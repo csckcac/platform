@@ -23,7 +23,6 @@ import org.testng.annotations.Test;
 import org.wso2.carbon.mediator.tests.xquery.util.RequestUtil;
 import org.wso2.esb.integration.ESBIntegrationTestCase;
 import org.wso2.esb.integration.axis2.SampleAxis2Server;
-import org.wso2.esb.integration.axis2.StockQuoteClient;
 
 import javax.xml.namespace.QName;
 
@@ -31,10 +30,8 @@ import static org.testng.Assert.assertEquals;
 import static org.testng.Assert.assertNotNull;
 
 public class XQueryCustomVariableAsFloat extends ESBIntegrationTestCase {
-    private StockQuoteClient axis2Client;
 
     public void init() throws Exception {
-        axis2Client = new StockQuoteClient();
         String filePath = "/mediators/xquery/xquery_variable_type_float_synapse101.xml";
         loadESBConfigurationFromClasspath(filePath);
 
@@ -57,7 +54,6 @@ public class XQueryCustomVariableAsFloat extends ESBIntegrationTestCase {
     @Override
     protected void cleanup() {
         super.cleanup();
-        axis2Client.destroy();
     }
 
 

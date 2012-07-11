@@ -25,7 +25,6 @@ import org.apache.axis2.client.ServiceClient;
 import org.testng.annotations.Test;
 import org.wso2.esb.integration.ESBIntegrationTestCase;
 import org.wso2.esb.integration.axis2.SampleAxis2Server;
-import org.wso2.esb.integration.axis2.StockQuoteClient;
 
 import javax.xml.namespace.QName;
 
@@ -33,10 +32,8 @@ import static org.testng.Assert.assertEquals;
 import static org.testng.Assert.assertNotNull;
 
 public class XQueryReplaceEmptyMessageBody extends ESBIntegrationTestCase {
-    private StockQuoteClient axis2Client;
 
     public void init() throws Exception {
-        axis2Client = new StockQuoteClient();
         String filePath = "/mediators/xquery/xquery_replace_body_synapse101.xml";
         loadESBConfigurationFromClasspath(filePath);
 
@@ -59,7 +56,6 @@ public class XQueryReplaceEmptyMessageBody extends ESBIntegrationTestCase {
     @Override
     protected void cleanup() {
         super.cleanup();
-        axis2Client.destroy();
     }
 
     private OMElement sendReceive(String endPointReference)

@@ -272,7 +272,7 @@ public class APIProviderHostObject extends ScriptableObject {
                 for (URITemplate uri : uriTemplates) {
                     String[] uriMethodsArr = uri.getMethods().toArray(new String[uri.getMethods().size()]);
                     if (uri.getUriTemplate().equals(uriTemp) && ((APIProviderHostObject) thisObj).resourceMethodMatches(uriMethodsArr, uriMethodArray)) {
-                        throw new APIManagementException("Duplicate API resources with same URI pattern.");
+                        throw new APIManagementException("Duplicate API resources with same URI pattern and same HTTP method.");
                     }
                 }
 

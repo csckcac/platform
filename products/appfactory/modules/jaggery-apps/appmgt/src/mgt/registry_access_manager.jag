@@ -136,17 +136,149 @@
             return getResource(path).getProperty(APPLICATION_REPO_LINK);
         }
     }
-   function getAppInfo(applicationKey){
-           path = APPLICATIONS + applicationKey;
-           if(resourceExists(path)) {
-               var resource= getResource(path);
-               var application={};
-                     application.key= resource.getProperty(APPLICATION_KEY);
-                      application.name= resource.getProperty(APPLICATION_NAME);
-                      application.description= resource.getProperty(APPLICATION_DESC);
-                      application.repoLink= resource.getProperty(APPLICATION_REPO_LINK);
-                      return application;
+    
+   	function getAppInfo(applicationKey){
+       path = APPLICATIONS + applicationKey;
+       if(resourceExists(path)) {
+           var resource= getResource(path);
+           if(resource.getProperty(APPLICATION_KEY) != undefined) {
+           	   var application={};
+	           application.key= resource.getProperty(APPLICATION_KEY);
+	           application.name= resource.getProperty(APPLICATION_NAME);
+	           application.description= resource.getProperty(APPLICATION_DESC);
+	           application.repoLink= resource.getProperty(APPLICATION_REPO_LINK);
+	           
+	           return application;
            }
        }
+       
+       return null;
+	}
 
+	function getAllAppVersionsInStage(stageName) {
+		
+		getAppVersionsInStage(stageName, null);
+	}
+	
+	function getAppVersionsInStage(stageName, applicationKey) {
+		
+	    var path = APPLICATIONS + APPLICATION_STAGES + stageName;
+	    var appVersions = new Array();
+	    
+	    if(resourceExists(path)) {
+	    	var resource = getResource(path);
+			
+			if(resource instanceof Collection){
+				for(var i = 0; i < resource.childCount; i++) {				
+					var versionPath = resource.getChildren()[i];
+
+					if(resourceExists(versionPath)) {
+						var applicationInfo = getAppInfo(versionPath.replace('/' + path + '/', ''));
+						if(applicationInfo != undefined && applicationInfo != null) {
+							
+							if(applicationKey != null) {
+								if(applicationInfo.key != applicationKey) {
+									continue;
+								}
+							}
+
+							var versions = getResource(versionPath);						
+							var arrVersions = new Array();
+							
+							if(versions instanceof Collection) {
+								for(var j = 0; j < versions.childCount; j++) {		
+									arrVersions[j] = versions.getChildren()[j].replace('/' + path 
+										+ '/' + applicationInfo.key + '/', '');
+								}
+							}
+							
+							applicationInfo.stage = stageName;
+							applicationInfo.versions = arrVersions;
+							
+							appVersions[i] = applicationInfo;
+						}
+					}
+				}
+			}
+		}
+		
+		//log.error("appVersions >>>>>>>>>>>>> "+ appVersions.toSource());
+		return appVersions;
+	}
+	
+	function getAllStages() {
+		
+		var path = APPLICATIONS + APPLICATION_STAGES;
+		var stageArray = new Array();
+		if(resourceExists(path)) {
+			var resource = getResource(path);
+			
+			if(resource instanceof Collection){
+				for(var i = 0; i < resource.childCount; i++) {				
+					var versionPath = resource.getChildren()[i];
+					stageArray[i] = versionPath.replace('/' + path, '');
+				}
+			}
+		}
+
+		return stageArray;
+	}
+	
+	function getAllAppVersionsInStages() {
+		var allAppVersionArray = new Array();
+		var allStages = getAllStages();
+		
+		for(var i = 0; i < allStages.length; i++) {				
+			var stage = allStages[i];
+			allAppVersionArray = allAppVersionArray.concat(getAppVersionsInStage(stage));
+		}
+		
+		return allAppVersionArray;
+	}
+	
+	function getAppVersionsInStages(applicationKey) {
+		
+		var allAppVersionArray = new Array();
+		var allStages = getAllStages();
+		
+		for(var i = 0; i < allStages.length; i++) {				
+			var stage = allStages[i];
+			allAppVersionArray = allAppVersionArray.concat(getAppVersionsInStage(stage, applicationKey));
+		}
+		
+		return allAppVersionArray;
+	}
+	
+	function getAppCountInStage(applicationKey) {
+		var versionArray = new Array();
+		var allStages = getAllStages();
+		
+		for(var i = 0; i < allStages.length; i++) {				
+			var stage = allStages[i];
+			var versionEntry = {};
+			versionEntry.stage = stage;
+			var applicationList = getAppVersionsInStage(stage, applicationKey);
+			
+			var versionCount = 0;
+			for (var j = 0; j < applicationList.length; j++) {
+		    	var applicationInfo = applicationList[j];
+		    	if(applicationInfo == undefined) {
+		    		continue;	
+		    	}
+		    	log.error("VERSION ARRAY +++++++++++++++++++ " + applicationInfo.versions.length);
+		    	versionCount += applicationInfo.versions.length;
+	    	}
+			
+			versionEntry.count = versionCount;
+			versionArray[i] = versionEntry;
+		}
+		
+		return versionArray;
+	}
 %>
+
+
+
+
+
+

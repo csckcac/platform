@@ -53,7 +53,7 @@
             resourcePath = null, author = null, updater = null, tags = null, content = null, commentWords = null,
             propertyName = null, rightPropertyValue = null, leftPropertyValue = null, mediaType = null, associationType = null, associationDest = null,
             createdRangeNegate = null, updatedRangeNegate = null, authorNameNegate = null, updaterNameNegate = null,
-            rightOp = null, leftOp = null, mediaTypeNegate = null;
+            rightOp = null, leftOp = null, mediaTypeNegate = null, lblPropName = null;
 
     String filterName = request.getParameter("filterName");
     boolean hasParameters = false;
@@ -132,8 +132,10 @@
                             }
                         } else if ("propertyName".equals(array[0])) {
                             propertyName = array[1];
+                            lblPropName = array[1];
                             if(propertyName==null){
                                 propertyName = "";
+                                lblPropName = "-";
                             }
                         } else if ("leftPropertyValue".equals(array[0])) {
                             leftPropertyValue = array[1];
@@ -171,13 +173,13 @@
                                 updaterNameNegate = "";
                             }
                         } else if ("rightOp".equals(array[0])) {
-                        	rightOp = array[1];
-                            if(rightOp==null){
+                            rightOp = array[1];
+                            if(rightOp == null) {
                                 rightOp = "";
                             }
                         } else if ("leftOp".equals(array[0])) {
-                        	leftOp = array[1];
-                            if(leftOp==null){
+                            leftOp = array[1];
+                        	if (leftOp == null) {
                                 leftOp = "";
                             }
                         } else if ("mediaTypeNegate".equals(array[0])) {
@@ -275,18 +277,19 @@
         propertyName = request.getParameter("propertyName");
         if (propertyName == null) {
             propertyName = "";
+            lblPropName = "-";
         } else {
             hasParameters = true;
+            lblPropName = propertyName;
         }
         leftPropertyValue = request.getParameter("leftPropertyValue");
         rightPropertyValue = request.getParameter("rightPropertyValue");
         if (leftPropertyValue == null) {
             leftPropertyValue = "";
-        } else {
-            hasParameters = true;
         }
-        if (rightPropertyValue == null)
+        if (rightPropertyValue == null) {
             rightPropertyValue = "";
+        }
         
         authorNameNegate = request.getParameter("authorNameNegate"); 
         updaterNameNegate = request.getParameter("updaterNameNegate"); 
@@ -311,12 +314,16 @@
         leftOp = request.getParameter("leftOp");
         rightOp = request.getParameter("rightOp");
         if(rightOp == null) rightOp = "";
-    }    
+        if(leftOp == null) leftOp = "";
+    }
 %>
 
 <form id="advancedSearchForm" name="advancedSearch" onsubmit="return submitAdvSearchForm()"
       action="advancedSearch-ajaxprocessor.jsp" method="get"
-        <%=hasParameters ? "style=\"display:none\"" : ""%>>  
+        <%=hasParameters ? "style=\"display:none\"" : ""%>>
+         <input type="hidden" value="<%=leftOp%>" id="hiddenOpLeft"/>
+         <input type="hidden" value="<%=rightOp%>" id="hiddenOpRight"/>
+
             <div class="search-subtitle" style="padding-left:10px;"><fmt:message key="search.for.resources"/></div>
             <table class="normal" id="customTable" style="width:100%;">
                 <tr>
@@ -358,8 +365,12 @@
                                     <input type="text" name="createdBefore" value="<%=createdBefore%>"
                                            id="ctoDate"
                                            style="width:140px;" onkeypress="handletextBoxKeyPress(event)"/>
-                                    <input type="checkbox" name="createdRangeNegate" /> not
 
+                                    <% if (filterName != null && !createdRangeNegate.equals("")) { %>
+                                        <input type="checkbox" name="createdRangeNegate" checked="checked" /> not
+                                    <% } else {%>
+                                        <input type="checkbox" name="createdRangeNegate" /> not
+                                    <% } %>
                                 </td>
                             </tr>
                             <tr>
@@ -398,7 +409,12 @@
                                     <input type="text" name="updatedBefore" value="<%=updatedBefore%>"
                                            id="utoDate"
                                            style="width:140px;" onkeypress="handletextBoxKeyPress(event)"/>
-                                    <input type="checkbox" name="updatedRangeNegate" /> not
+
+                                    <% if (filterName != null && !updatedRangeNegate.equals("")) { %>
+                                        <input type="checkbox" name="updatedRangeNegate" checked="checked" /> not
+                                    <% } else { %>
+                                        <input type="checkbox" name="updatedRangeNegate" /> not
+                                    <% } %>
                                 </td>
                             </tr>
                             <tr>
@@ -419,7 +435,13 @@
                     <td><fmt:message key="created.by"/></td>
                     <td>
                         <input type="text" name="author" value="<%=author%>" id="#_author" onkeypress="handletextBoxKeyPress(event)"/>
-                        <input type="checkbox" name="authorNameNegate" /> not
+
+                        <% if (filterName != null && !authorNameNegate.equals("")) { %>
+                            <input type="checkbox" name="authorNameNegate" checked="checked" /> not
+                        <% } else { %>
+                            <input type="checkbox" name="authorNameNegate" /> not
+                        <% } %>
+
                     </td>
 
                 </tr>
@@ -427,7 +449,12 @@
                     <td><fmt:message key="updated.by"/></td>
                     <td>
                         <input type="text" name="updater" value="<%=updater%>" id="#_updater" onkeypress="handletextBoxKeyPress(event)"/>
-                        <input type="checkbox" name="updaterNameNegate" /> not
+
+                        <% if (filterName != null && !updaterNameNegate.equals("")) { %>
+                            <input type="checkbox" name="updaterNameNegate" checked="checked" /> not
+                        <% } else { %>
+                            <input type="checkbox" name="updaterNameNegate" /> not
+                        <% } %>
                     </td>
 
                 </tr>
@@ -470,23 +497,34 @@
                     <td>
                        <%-- <input type="text" name="propertyValue" value="<%=propertyValue%>"
                                id="#_propertyValue" onkeypress="handletextBoxKeyPress(event)"/> --%>
-						<input type="text" onkeypress="return isNumberKey(event)" id="valueLeft" name="leftPropertyValue" value="<%=leftPropertyValue%>">
+						<input type="text" onkeypress="return isNumberKey(event)" id="valueLeft" name="leftPropertyValue" value="<%=leftPropertyValue%>"/>
 
-						<select id="opLeft" name="leftOp">
+						<select id="opLeft" name="leftOp" >
+						    <option value="na"></option>
                           	<option value="gt">&#60;</option>
                           	<option value="ge">&#8804;</option>
                         </select>
 
                         <label>&#123;</label>
-                        <label id="lblPropName">-</label>
+                        <label id="lblPropName"><%=lblPropName%></label>
                         <label>&#125;</label>
 
-						<select onChange="adjustPropertyOp();" id="opRight" name="rightOp">
+						<select onChange="adjustAllOpInput();" id="opRight" name="rightOp">
+						    <option value="na"></option>
   							<option value="lt">&#60;</option>
   							<option value="le">&#8804;</option>
   							<option value="eq">&#61;</option>
 						</select>
-						<input type="text" onkeypress="return isNumberKey(event)" id="valueRight" name="rightPropertyValue" value="<%=rightPropertyValue%>">                               
+						<input type="text" onkeypress="return isNumberKey(event)" id="valueRight" name="rightPropertyValue" value="<%=rightPropertyValue%>"/>
+
+                        <% if (filterName == null) { %>
+
+                        <script type="text/javascript">
+                            setIndexForOp("opLeft", "<%=leftOp%>");
+                            setIndexForOp("opRight", "<%=rightOp%>");
+                            adjustPropertyInput();
+                        </script>
+                        <% } %>
                     </td>
                 </tr>
                <%-- <tr>
@@ -539,8 +577,11 @@
                                    }
                             </script>
 
-                            <input name="mediaTypeNegate" id="mediaTypeNegate" type="checkbox" /> not
-
+                            <% if (filterName != null && !mediaTypeNegate.equals("")) { %>
+                                <input name="mediaTypeNegate" id="mediaTypeNegate" type="checkbox" checked="checked" /> not
+                            <% } else { %>
+                                <input name="mediaTypeNegate" id="mediaTypeNegate" type="checkbox" /> not
+                            <% } %>
                         </div>
 					</td>
 
@@ -561,7 +602,8 @@
                         %>
                     </td>
                 </tr>
-                 <tr>
+
+                <tr>
                     <td class="buttonRow" colspan="2">
                         <input type="button" id="#_0" value="<fmt:message key="search"/>" class="button"
                                onclick="submitAdvSearchForm()"/>

@@ -140,11 +140,14 @@
     }
     String leftPropertyValue = request.getParameter("leftPropertyValue");
     String rightPropertyValue = request.getParameter("rightPropertyValue");
+
     if (leftPropertyValue == null) {
         leftPropertyValue = "";
-        rightPropertyValue = "";
     } else {
         hasParameters = true;
+    }
+    if (rightPropertyValue == null) {
+        rightPropertyValue = "";
     }
     String associationType = request.getParameter("associationType");
     if (associationType == null) {
@@ -186,7 +189,8 @@
     
     String leftOp = request.getParameter("leftOp");
     String rightOp = request.getParameter("rightOp");
-    if(rightOp == null) rightOp = "";  
+    if(rightOp == null) rightOp = "";
+    if(leftOp == null) leftOp = "";
     
     
     //this was added so that the custom parameters are also checked.

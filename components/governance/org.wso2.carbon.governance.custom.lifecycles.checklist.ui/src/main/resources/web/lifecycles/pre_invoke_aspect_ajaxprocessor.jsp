@@ -167,7 +167,7 @@
 
         }
 
-        invokeAspect(path, aspect, action, callBack, versionString);
+        invokeAspect(path, aspect, action, callBack, versionString,org_wso2_carbon_governance_custom_lifecycles_checklist_ui_jsi18n["proceed"]);
     }
     cancelVersionBox = function (path) {
         refreshLifecyclesSection(path);

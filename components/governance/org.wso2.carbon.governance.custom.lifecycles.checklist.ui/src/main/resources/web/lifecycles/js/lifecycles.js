@@ -133,8 +133,12 @@ function loadCustomUI(path, aspect, action, mediaType, customUI, callBack) {
     }, org_wso2_carbon_governance_custom_lifecycles_checklist_ui_jsi18n["session.timed.out"]);
 }
 
-function invokeAspect(path, aspect, action, callBack, parameterString) {
+function invokeAspect(path, aspect, action, callBack, parameterString,customUIAction) {
     //            We are passing an empty array with the default call
+    if(customUIAction == null){
+        customUIAction = "";
+    }
+
     if (parameterString == null || parameterString == "") {
         parameterString = new Array();
     }
@@ -194,6 +198,7 @@ function invokeAspect(path, aspect, action, callBack, parameterString) {
             },
             onFailure : function(transport) {
                 document.getElementById(action).disabled = false;
+                document.getElementById(customUIAction).disabled = false;
                 showRegistryError(org_wso2_carbon_governance_custom_lifecycles_checklist_ui_jsi18n["failed.to.invoke.aspect"] + ' ' + transport.responseText);
                 lifecyleOperationStarted = false;
             }

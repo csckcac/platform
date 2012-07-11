@@ -138,7 +138,7 @@
             <dependency>
                 <groupId>net.sf.saxon.wso2</groupId>
                 <artifactId>saxon.bps</artifactId>
-                <version>9.0.0.x-wso2v1</version>
+                <version>${saxon-bps.wso2.version}</version>
             </dependency>
             <dependency>
                 <groupId>org.apache.geronimo.specs.wso2</groupId>

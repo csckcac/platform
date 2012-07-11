@@ -45,49 +45,49 @@
             <dependency>
                 <groupId>org.wso2.carbon</groupId>
                 <artifactId>org.wso2.carbon.wsdl2form</artifactId>
-                <version>${wso2carbon.version.humantask}</version>
+                <version>${wso2carbon.version}</version>
             </dependency>
             <dependency>
                 <groupId>org.wso2.carbon</groupId>
                 <artifactId>org.wso2.carbon.bpel.common</artifactId>
-                <version>${wso2carbon.version.humantask}</version>
+                <version>${wso2carbon.version}</version>
             </dependency>
             <dependency>
                 <groupId>org.wso2.carbon</groupId>
                 <artifactId>org.wso2.carbon.logging</artifactId>
-                <version>${wso2carbon.version.humantask}</version>
+                <version>${wso2carbon.version}</version>
             </dependency>
             <dependency>
                 <groupId>org.wso2.carbon</groupId>
                 <artifactId>org.wso2.carbon.unifiedendpoint.core</artifactId>
-                <version>${wso2carbon.version.humantask}</version>
+                <version>${wso2carbon.version}</version>
             </dependency>
 
             <dependency>
                 <groupId>net.sf.saxon.wso2</groupId>
                 <artifactId>saxon.bps</artifactId>
-                <version>${saxon-bps.wso2.version.humantask}</version>
+                <version>${saxon-bps.wso2.version}</version>
             </dependency>
 
             <dependency>
                 <groupId>org.apache.axis2.wso2</groupId>
                 <artifactId>axis2</artifactId>
-                <version>${axis2.wso2.version.humantask}</version>
+                <version>${axis2.wso2.version}</version>
             </dependency>
             <dependency>
                 <groupId>org.wso2.carbon</groupId>
                 <artifactId>org.wso2.carbon.core</artifactId>
-                <version>${wso2carbon.version.humantask}</version>
+                <version>${wso2carbon.version}</version>
             </dependency>
             <dependency>
                 <groupId>org.wso2.carbon</groupId>
                 <artifactId>org.wso2.carbon.utils</artifactId>
-                <version>${wso2carbon.version.humantask}</version>
+                <version>${wso2carbon.version}</version>
             </dependency>
             <dependency>
                 <groupId>org.wso2.carbon</groupId>
                 <artifactId>org.wso2.carbon.ui</artifactId>
-                <version>${wso2carbon.version.humantask}</version>
+                <version>${wso2carbon.version}</version>
             </dependency>
             <dependency>
                 <groupId>org.apache.xmlbeans.wso2</groupId>
@@ -107,7 +107,7 @@
             <dependency>
                 <groupId>org.wso2.carbon</groupId>
                 <artifactId>org.wso2.carbon.datasource</artifactId>
-                <version>${wso2carbon.version.humantask}</version>
+                <version>${wso2carbon.version}</version>
             </dependency>
             <dependency>
                 <groupId>org.apache.ws.commons.axiom.wso2</groupId>
@@ -117,7 +117,7 @@
             <dependency>
                 <groupId>org.wso2.carbon</groupId>
                 <artifactId>org.wso2.carbon.registry.extensions</artifactId>
-                <version>${wso2carbon.version.humantask}</version>
+                <version>${wso2carbon.version}</version>
             </dependency>
             <dependency>
                 <groupId>commons-dbcp.wso2</groupId>
@@ -155,24 +155,21 @@
             <dependency>
                 <groupId>org.wso2.carbon</groupId>
                 <artifactId>org.wso2.carbon.service.mgt.ui</artifactId>
-                <version>${wso2carbon.version.humantask}</version>
+                <version>${wso2carbon.version}</version>
             </dependency>
             <dependency>
                 <groupId>org.wso2.carbon</groupId>
                 <artifactId>org.wso2.carbon.statistics.ui</artifactId>
-                <version>${wso2carbon.version.humantask}</version>
+                <version>${wso2carbon.version}</version>
             </dependency>
             <dependency>
                 <groupId>org.wso2.carbon</groupId>
                 <artifactId>org.wso2.carbon.ntask.core</artifactId>
-                <version>${wso2carbon.version.humantask}</version>
+                <version>${wso2carbon.version}</version>
             </dependency>
         </dependencies>
     </dependencyManagement>
     <properties>
-        <axis2.wso2.version.humantask>${axis2.wso2.version}</axis2.wso2.version.humantask>
-        <saxon-bps.wso2.version.humantask>${saxon-bps.wso2.version.human-task}</saxon-bps.wso2.version.humantask>
-        <wso2carbon.version.humantask>${wso2carbon.version}</wso2carbon.version.humantask>
         <simple-json.version>1.1.wso2v1</simple-json.version>
     </properties>
 </project>

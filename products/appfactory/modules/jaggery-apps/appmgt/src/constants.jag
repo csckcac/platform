@@ -2,6 +2,7 @@
     // collection names
     var APPLICATIONS = "applications/";
     var USER_APPLICATIONS_MAPPING = "userApplicationMapping/";
+	var APPLICATION_STAGES = "stages/";
 
     // property keys of registry 'application' resource
     var APPLICATION_KEY = "applicationKey";

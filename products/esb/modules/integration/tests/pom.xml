@@ -39,7 +39,7 @@
                         <property>
                             <name>framework.resource.location</name>
                             <value>
-                                ${basedir}/../core/src/test/resources/
+                                ${basedir}/src/test/resources/
                             </value>
                         </property>
                         <property>

@@ -24,8 +24,8 @@
     var WS_CREATE_APP = "WebServiceEndPoints.CreateApplication";
     var WS_CREATE_USER = "WebServiceEndPoints.CreateUser";
     var WS_ACTIVATE_USER = "WebServiceEndPoints.ActivateUser";
-    var WS_ACTIVATE_USER = "WebServiceEndPoints.DeployToStage";
-    var WS_ACTIVATE_USER = "WebServiceEndPoints.ArtifactCreateCallback";
+    var WS_DEPLOY_STAGE = "WebServiceEndPoints.DeployToStage";
+    var WS_ARTIFACT_CREATE = "WebServiceEndPoints.ArtifactCreateCallback";
     var WS_GET_ALL_APPS = "WebServiceEndPoints.GetAllApps";
     var WS_EMAIL_VERIFICATION = "WebServiceEndPoints.EmailVerificationService";
     var WS_USERS_OF_APP = "WebServiceEndPoints.GetUsersOfApplication";

@@ -91,19 +91,6 @@
             <directory>../../jaggery-apps/api-store-web/src</directory>
             <outputDirectory>wso2am-${pom.version}/repository/deployment/server/jaggeryapps/store</outputDirectory>
         </fileSet>
-         <!--Below are temporary apps in-order to enable redirections on apiprovider/apipublisher ->publisher and apistore->store -->
-         <fileSet>
-            <directory>../../jaggery-apps/api-store/src</directory>
-            <outputDirectory>wso2am-${pom.version}/repository/deployment/server/jaggeryapps/apistore</outputDirectory>
-        </fileSet>
-         <fileSet>
-            <directory>../../jaggery-apps/api-publisher/src</directory>
-            <outputDirectory>wso2am-${pom.version}/repository/deployment/server/jaggeryapps/apipublisher</outputDirectory>
-        </fileSet>
-         <fileSet>
-            <directory>../../jaggery-apps/api-provider/src</directory>
-            <outputDirectory>wso2am-${pom.version}/repository/deployment/server/jaggeryapps/apiprovider</outputDirectory>
-        </fileSet>
   
         <!-- Copying BAM client -->
         <fileSet>

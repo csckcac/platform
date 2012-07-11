@@ -330,31 +330,6 @@
         }
     }
 
-    function invokeCreateArtifact(applicationId,version,revision){
-        var ws = require('ws');
-        var createArtifactProcess = new ws.WSRequest();
-        var options = new Array();
-        options.useSOAP = 1.1;
-        options.action = "urn:process";
-        var payload = '<p:createArtifact xmlns:p="http://build.core.appfactory.carbon.wso2.org"><p:applicationId>'+applicationId+'</p:applicationId><p:version>'+version+'</p:version><p:revision>'+revision+'</p:revision></p:createArtifact>';
-        var result;
-
-        try {
-            var endPoint =getProperty('WebServiceEndPoints.CreateArtifact');
-            createArtifactProcess.open(options,endPoint, false);
-            createArtifactProcess.send(payload);
-            result = createArtifactProcess.responseE4X;
-
-            if(log.isDebugEnabled()){
-                log.debug("Invoking service endpoint:"+endPoint+" returned result:"+result);
-            }
-            return result;
-        } catch (e) {
-            log.error("Error while creating artifact"+e.message);
-            throw "Error while creating artifact";
-        }
-    }
-
     function getAdminCookie(){
         var xhr = new XMLHttpRequest();
         var endPoint = getProperty(WS_GET_AUTH_COOKIE);

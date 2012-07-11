@@ -34,7 +34,7 @@
     <url>http://wso2.org</url>
 
     <modules>
-        <module>org.wso2.carbon.hostobjects.svnclient</module>
+        <!--module>org.wso2.carbon.hostobjects.svnclient</module-->
         <module>org.wso2.carbon.hostobjects.sso</module>
     </modules>
 

@@ -295,7 +295,7 @@
                                     </includes>
                                 </resource>
                                 <resource>
-                                    <directory>../../</directory>
+                                    <directory>resources</directory>
                                     <includes>
                                         <include>modules/**</include>
                                     </includes>

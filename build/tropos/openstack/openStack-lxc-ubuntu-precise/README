@@ -20,3 +20,9 @@ To restart services in the controller/compute node execute restartservices.sh
 
 To upload an image to glance serve
 Copy the image to /root/upload folder, modify uploadimage.sh and execute
+
+IMPORTANT:
+When installing the compute node OSinstall.sh script should be changed as following
+
+       #nova-manage network create ${VMNET} ${NUM_NETWORKS} ${NETWORK_SIZE}
+       nova-manage network create vmnet --fixed_range_v4=${VMNET} --network_size=${NETWORK_SIZE} --bridge_interface=${PRIVATE_INTERFACE}

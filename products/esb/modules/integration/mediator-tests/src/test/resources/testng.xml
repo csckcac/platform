@@ -124,6 +124,7 @@
             <class name="org.wso2.carbon.mediator.tests.xslt.RegistryEntryXsltTransformationTestCase"/>
             <class name="org.wso2.carbon.mediator.tests.xslt.XsltTransformationWithPropertyTestCase"/>
             <class name="org.wso2.carbon.mediator.tests.xslt.XsltTransformationFromUrlTestCase"/>
+            <class name="org.wso2.carbon.mediator.tests.xslt.DynamicKeyXsltTransformationTestCase"/>
 
         </classes>
     </test>

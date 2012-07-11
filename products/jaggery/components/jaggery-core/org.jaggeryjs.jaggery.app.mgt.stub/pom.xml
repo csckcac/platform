@@ -56,7 +56,7 @@
                                     <pathelement
                                             location="${settings.localRepository}/commons-logging/commons-logging/${version.commons.logging}/commons-logging-${version.commons.logging}.jar"/>
                                     <pathelement
-                                            location="${settings.localRepository}/org/apache/neethi/neethi/${neethi.osgi.versionn}/neethi-${neethi.osgi.version}.jar"/>
+                                            location="${settings.localRepository}/org/apache/neethi/neethi/${neethi.osgi.version}/neethi-${neethi.osgi.version}.jar"/>
                                     <pathelement
                                             location="${settings.localRepository}/org/apache/ws/commons/axiom/wso2/axiom/${axiom.osgi.version}/axiom-${axiom.osgi.version}.jar"/>
                                     <pathelement

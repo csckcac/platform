@@ -28,9 +28,9 @@
         <parameter name="ServiceClass">
             org.wso2.carbon.analytics.hive.web.HiveExecutionService
         </parameter>
-        <!--<parameter name="adminService" locked="true">true</parameter>-->
+        <parameter name="adminService" locked="true">true</parameter>
         <parameter name="AuthorizationAction" locked="true">/permission/admin/manage</parameter>
-        <parameter name="hiddenService" locked="true">false</parameter>
+        <parameter name="hiddenService" locked="true">true</parameter>
     </service>
 
     <service name="HiveScriptStoreService" scope="transportsession">
@@ -45,9 +45,9 @@
         <parameter name="ServiceClass">
            org.wso2.carbon.analytics.hive.web.HiveScriptStoreService
         </parameter>
-        <!--<parameter name="adminService" locked="true">true</parameter>-->
+        <parameter name="adminService" locked="true">true</parameter>
         <parameter name="AuthorizationAction" locked="true">/permission/admin/manage</parameter>
-        <parameter name="hiddenService" locked="true">false</parameter>
+        <parameter name="hiddenService" locked="true">true</parameter>
     </service>
 
 </serviceGroup>

@@ -27,7 +27,7 @@ public class DefaultBuildDriverListener implements BuildDriverListener {
     @Override
     public void onBuildSuccessful(String applicationId, String version, String revision, File file) {
         ArtifactStorage storage = ServiceHolder.getArtifactStorage();
-        storage.storeArtifact(applicationId, version, revision, file);
+        //storage.storeArtifact(applicationId, version, revision, file);
 
         // call the bpel back
         sendMessageToCreateArtifactCallback(applicationId, version, revision);
@@ -68,9 +68,11 @@ public class DefaultBuildDriverListener implements BuildDriverListener {
     }
 
     private static OMElement getPayload(String applicationId, String version, String revision) throws XMLStreamException, javax.xml.stream.XMLStreamException {
-        String payload = "<p:callbackMessgae xmlns:p=\"http://localhost:9763/services/ArtifactCreateCallbackService/\"><applicationId>" + applicationId +
+        String payload = "<p:callbackMessgae xmlns:p=\"http://localhost:9763/services/ArtifactCreateCallbackService\"><applicationId>" + applicationId +
                 "</applicationId><revision>" + revision + "</revision><version>" + version + "</version></p:callbackMessgae>";
 
         return new StAXOMBuilder(new ByteArrayInputStream(payload.getBytes())).getDocumentElement();
     }
+
+
 }

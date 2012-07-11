@@ -1,85 +1,65 @@
-<%
-include('includes/template_header.jag');
-%>
+    <%
+		include('includes/template_header.jag');
+	%>
 
+    <script type="text/javascript">
+      // This is the code for definining the dashboard
+      $(document).ready(function() {
 
-            <div class="container-fluid">
-                <div class="row-fluid">
-                    <div class="span12">
-                        <h2>Applications</h2>
-                        <table class="table table-bordered table-striped">
-                            <colgroup>
-                                <col class="span1">
-                                <col class="span7">
-                            </colgroup>
-                            <thead>
-                            <tr>
-                                <th>Application Name</th>
-                                <th>Role</th>
-                                <th>SVN URL</th>
-                                <th>Revision number</th>
-                            </tr>
-                            </thead>
-                            <tbody>
-                             <%
-                                        include('mgt/application_manager.jag');
-                                        include('constants.jag');
-                                        try{
-                                            var applicationList = getAllAppsOfUser(userName);
-                                            if(applicationList==undefined || applicationList.value=="" || applicationList.length()==0){
-                                                print("No Applications are created.");
-                                            }
+        // load the templates
+        $('body').append('<div id="templates"></div>');
+        $("#templates").hide();
+        $("#templates").load("templates.html", initDashboard);
 
-                                            for (var s in applicationList) {
-                                                var applicationKey = applicationList[s];
+        // call for the themeswitcher
+        //$('#switcher').themeswitcher();
 
-                                                var app= getAppShortInfo(applicationKey,userName);
-                              %>
-                     <tr>
-                                <td><a href="application.jag?applicationName=<%=app.name%>&applicationKey=<%=app.key%>"><%=app.name%></a></td>
-                                <td>
-                                <%
-                                for (userRole in app.roles){
-                                %>
-                                    <span class="label label-info"><%=app.roles[userRole]%></span>
-                                   <%
-                                   }
-                                   %>
-                                </td>
-                                <td>
-                                    <span class="label label-info"><%=app.repoLink%></span>
-                                </td>
-                                <td>
-                                    <span class="label label-info">r<%=app.lastRevisionNo%></span>
-                                </td>
-                            </tr>
-                                        <%
-                                            }
-                                        }catch(e){
-                                         print(e.toString());
-                                        }
-                                    %>
+        function initDashboard() {
 
-                            </tbody>
-                        </table>
-                        <!--div class="pagination pagination-centered">
-                            <ul>
-                                <li class="active"><a href="#">1</a></li>
-                                <li><a href="#">2</a></li>
-                                <li><a href="#">3</a></li>
-                                <li><a href="#">4</a></li>
-                                <li><a href="#">5</a></li>
-                            </ul>
-                        </div-->
+          // to make it possible to add widgets more than once, we create clientside unique id's
+          // this is for demo purposes: normally this would be an id generated serverside
+          var startId = 100;
 
-                    </div>
-                </div>
-            </div>
+          var dashboard = $('#dashboard').dashboard({
+            // layout class is used to make it possible to switch layouts
+            layoutClass:'layout',
+            // feed for the widgets which are on the dashboard when opened
+            json_data : {
+              url: "jsonfeed/overalldashboardwidgets.json"
+            },
+            // json feed; the widgets whcih you can add to your dashboard
+            addWidgetSettings: {
+              widgetDirectoryUrl:"jsonfeed/widgetcategories.json"
+            }
+          }); // end dashboard call
 
+          // binding for a widgets is added to the dashboard
+          dashboard.element.live('dashboardAddWidget',function(e, obj){
+            var widget = obj.widget;
 
+            dashboard.addWidget({
+              "id":startId++,
+              "title":widget.title,
+              "url":widget.url,
+              "metadata":widget.metadata
+              }, dashboard.element.find('.column:first'));
+          });
 
+          // the init builds the dashboard. This makes it possible to first unbind events before the dashboars is built.
+          dashboard.init();
+        }
+      });
 
+    </script>
 
+    <div id="dashboard" class="dashboard">
+	    <!-- this HTML covers all layouts. The 5 different layouts are handled by setting another layout classname -->
+	    <div class="layout">
+	      <div class="column first column-first"></div>
+	    </div>
+    </div>
 <%
     include('includes/template_footer.jag');
 %>
+
+

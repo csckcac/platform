@@ -1,12 +1,65 @@
 <%
     include('includes/template_header.jag');
     include('constants.jag');
-%>
-
-<%
+    
     var log = new Log();
     var applicationName = request.getParameter("applicationName");
     var applicationKey = request.getParameter("applicationKey");
+    
+    session.put("applicationKey", applicationKey);
+%>
+
+    <script type="text/javascript">
+      // This is the code for definining the dashboard
+      $(document).ready(function() {
+
+        // load the templates
+        $('body').append('<div id="templates"></div>');
+        $("#templates").hide();
+        $("#templates").load("templates.html", initDashboard);
+
+        // call for the themeswitcher
+        //$('#switcher').themeswitcher();
+
+        function initDashboard() {
+
+          // to make it possible to add widgets more than once, we create clientside unique id's
+          // this is for demo purposes: normally this would be an id generated serverside
+          var startId = 100;
+
+          var dashboard = $('#dashboard').dashboard({
+            // layout class is used to make it possible to switch layouts
+            layoutClass:'layout',
+            // feed for the widgets which are on the dashboard when opened
+            json_data : {
+              url: "jsonfeed/applicationdashboardwidgets.json"
+            },
+            // json feed; the widgets whcih you can add to your dashboard
+            addWidgetSettings: {
+              widgetDirectoryUrl:"jsonfeed/widgetcategories.json"
+            }
+          }); // end dashboard call
+
+          // binding for a widgets is added to the dashboard
+          dashboard.element.live('dashboardAddWidget',function(e, obj){
+            var widget = obj.widget;
+
+            dashboard.addWidget({
+              "id":startId++,
+              "title":widget.title,
+              "url":widget.url,
+              "metadata":widget.metadata
+              }, dashboard.element.find('.column:first'));
+          });
+
+          // the init builds the dashboard. This makes it possible to first unbind events before the dashboars is built.
+          dashboard.init();
+        }
+      });
+
+    </script>
+
+<%
 
     include('mgt/application_manager.jag');
     var userHasAccess = false;
@@ -77,16 +130,20 @@
                         <div>
                             <table class='table table-bordered table-striped'>
                                 <tr>
-                                    <td>Description:</td>
+                                    <td style="width:30%;">Description:</td>
                                     <td><%=appInfo.description%></td>
-                                </tr>
-                                <tr>
-                                    <td>SVN URL:</td>
-                                    <td><a href="<%=appInfo.repoLink%>"><%=appInfo.repoLink%></a></td>
                                 </tr>
                             </table>
                         </div>
+                        
+                        <div id="dashboard" class="dashboard">
+					    	<!-- this HTML covers all layouts. The 5 different layouts are handled by setting another layout classname -->
+					    	<div class="layout">
+					      	<div class="column first column-first"></div>
+					    </div>
+				    </div>
                     </div>
+                    
                     <!-- end of user information -->
         
                     <!-- admin content -->
@@ -102,11 +159,6 @@
                                 <td class="buttonRow">
                                     <input type="button" onclick="location.href='invite_user.jag?applicationName=<%=applicationName%>&applicationKey=<%=applicationKey%>'" value='Invite User' class='btn btn-primary'/>
                                 </td>
-                                </tr>
-                                <tr>
-                                <td class="buttonRow">
-                                                                    <input type="button" onclick="location.href='create_datasource.jag?applicationKey=<%=applicationKey%>'" value='Create Data Sources' class='btn btn-primary'/>
-                                                                </td>
                             </tr>
                         </table>
                     </div>
@@ -131,9 +183,6 @@
                                 <td class="buttonRow">
                                     <input type="button" onclick="location.href='deploy_to_stage.jag?applicationKey=<%=applicationKey%>&applicationSvnLocation=<%=appInfo.repoLink%>&stageName=<%=stage%>'" value='Deploy to <%=stage%>' class='btn btn-primary'/>
                                 </td>
-                        <td class="buttonRow">
-                        <input type="button" onclick="location.href='create_artifact.jag?applicationName=<%=app.name%>&applicationKey=<%=applicationKey%>&revision=<%=app.lastRevisionNo%>'" value='Build' class='btn btn-primary'/>
-                    </td>
                             </tr>
                             <%
                             }

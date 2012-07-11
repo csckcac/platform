@@ -594,7 +594,7 @@ public class DBDeployer extends AbstractDeployer {
                         WSDLConstants.MESSAGE_LABEL_OUT_VALUE, false);
 			}
 		}
-		
+		/* Set the fault message, only if operation returns a result*/
 		if (hasResult) {
 			AxisMessage faultMessage = new AxisMessage();
 			faultMessage.setName(DBConstants.DS_FAULT_ELEMENT);

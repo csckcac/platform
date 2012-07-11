@@ -26,6 +26,7 @@ import org.apache.commons.logging.Log;
 import org.apache.commons.logging.LogFactory;
 import org.apache.hadoop.conf.Configuration;
 import org.apache.hadoop.fs.Path;
+import org.apache.hadoop.mapred.Counters;
 import org.json.JSONException;
 import org.json.JSONObject;
 
@@ -107,6 +108,9 @@ public class HadoopJobRunner extends AbstractAdmin {
 		if (key == null)
 			return null;
 		CarbonJobReporter reporter = getJobReporter(key);
+		if (reporter == null){
+			return null;
+		}
 		if (reporter != null && reporter.isJobComplete()) {
 			removeJobReporter(key);
 		}
@@ -345,7 +349,7 @@ public class HadoopJobRunner extends AbstractAdmin {
 		conf.set("mapred.local.dir", "");
 		conf.set("hadoop.log.dir", "");
 		conf.set("mapred.tasktracker.carbon.proxy.user", "");
-		conf.set("hadoop.job.history.user.location", "");
+		//conf.set("hadoop.job.history.user.location", "");
 	}
 	
 	private Object deSerialize(byte[] serializedObj) throws IOException, ClassNotFoundException {

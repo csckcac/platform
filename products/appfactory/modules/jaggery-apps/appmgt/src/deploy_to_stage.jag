@@ -5,11 +5,12 @@
 
 
         var applicationKey = request.getParameter("applicationKey");
-        var applicationSvnLocation = request.getParameter("applicationSvnLocation");
         var stageName = request.getParameter("stageName");
+        var version = '1.0';
+        var revision = '0';
 
         try{
-            var deployedArtifact = invokeDeployToStage(applicationSvnLocation,applicationKey,stageName);
+            var deployedArtifact = invokeDeployToStage(applicationKey,revision,version,stageName);
             print(deployedArtifact +" was successfully deployed");
 	    }catch(e){
 	        print(e.message);

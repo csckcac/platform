@@ -73,6 +73,7 @@ body {
     border-bottom: solid 1px #bababa;
     min-height: 500px;
     padding-top:10px;
+    padding-bottom:30px;
 }
 .page-content h2 {
     padding:0 0 5px 5px;

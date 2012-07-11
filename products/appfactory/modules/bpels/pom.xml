@@ -21,7 +21,6 @@
 		<module>DeployApplicationToDev</module>
 		<module>DeployApplicationToLive</module>
 		<module>AddUserToApplication</module>
-		<module>CreateArtifactProcess</module>
-		<module>DeployToStageProcess</module>
+		<module>DeployToStage</module>
 	</modules>
 </project>

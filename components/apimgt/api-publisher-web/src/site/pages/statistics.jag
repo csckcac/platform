@@ -8,8 +8,7 @@ var site = require("/site/conf/site.json");
         response.sendRedirect(jagg.getAbsoluteUrl("/site/pages/login.jag"));
         return;
     }
-    mod = jagg.module("api");
-    isCreatePermitted = mod.hasCreatePermission().permitted;
+    isCreatePermitted = jagg.getCreatePermitted().permitted;
     if(!isCreatePermitted){
     response.sendRedirect(jagg.getAbsoluteUrl("/site/pages/index.jag"));
     return;

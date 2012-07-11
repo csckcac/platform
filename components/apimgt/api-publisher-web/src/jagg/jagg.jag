@@ -49,6 +49,19 @@ var jagg = jagg || (function () {
         session.put("logged.user", user);
     };
 
+    var getCreatePermitted = function () {
+        return session.get("createPermitted");
+    };
+    var setCreatePermitted = function (permission) {
+        return session.put("createPermitted",permission);
+    };
+    var setPublishPermitted = function (permission) {
+        return session.put("publishPermitted",permission);
+    };
+    var getPublishPermitted  = function () {
+        return session.get("publishPermitted");
+    };
+
     var getThemeFile = function (path) {
         var prefix = getThemePath();
         //var def = getDefaultThemePath();
@@ -508,6 +521,10 @@ var jagg = jagg || (function () {
     return {
         setUser:setUser,
         getUser:getUser,
+        setCreatePermitted:setCreatePermitted,
+        getCreatePermitted:getCreatePermitted,
+        setPublishPermitted:setPublishPermitted,
+        getPublishPermitted:getPublishPermitted,
         block:block,
         module:module,
         initializer:initializer,

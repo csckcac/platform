@@ -15,10 +15,8 @@
     var allStatsUrl=jagg.getAbsoluteUrl("/site/pages/all-statistics.jag");
     var allStatsMappedUrl=jagg.getMappedUrl("/site/pages/all-statistics.jag");
 
-    var  mod,result,isPermitted;
-    mod = jagg.module("api");
-    result = mod.hasCreatePermission();
-    isPermitted=result.permitted;
+    var  mod,isPermitted;
+    isPermitted=jagg.getCreatePermitted().permitted;
 %>
 
 <div class="sidebar-nav well">

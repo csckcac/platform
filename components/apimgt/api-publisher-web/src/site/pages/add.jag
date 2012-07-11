@@ -4,9 +4,7 @@ var site = require("/site/conf/site.json");
 
 (function () {
     var  mod,result,isPermitted,user = jagg.getUser();
-    mod = jagg.module("api");
-    result = mod.hasCreatePermission();
-    isPermitted=result.permitted;
+    isPermitted= jagg.getCreatePermitted().permitted;
     if (!user) {
         response.sendRedirect(jagg.getAbsoluteUrl("/site/pages/login.jag"));
         return;

@@ -85,13 +85,31 @@ public class RewriteAction {
                 currentValue = "";
             }
 
-            switch (actionType) {
-                case ACTION_PREPEND : str = result.concat(currentValue); break;
-                case ACTION_APPEND  : str = currentValue.concat(result); break;
-                case ACTION_REPLACE : str = currentValue.replaceAll(regex, result); break;
-                case ACTION_REMOVE  : str = null; break;
-                default             : str = result;
-            }
+			switch (actionType) {
+				case ACTION_PREPEND:
+					str = result.concat(currentValue);
+					break;
+				case ACTION_APPEND:
+					if (result != null) {
+						str = currentValue.concat(result);
+					} else {
+						str = "";
+					}
+					break;
+				case ACTION_REPLACE:
+					if (result != null) {
+						str = currentValue.replaceAll(regex, result);
+					} else {
+						str = "";
+					}
+					break;
+				case ACTION_REMOVE:
+					str = null;
+					break;
+				default:
+					str = result;
+			}
+			
             fragments.setStringFragment(fragmentIndex, str);
         }
     }

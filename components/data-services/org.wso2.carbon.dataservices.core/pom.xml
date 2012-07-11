@@ -153,6 +153,11 @@
             <version>${htmlcleaner.version.data-services}</version>
         </dependency>
         <dependency>
+             <groupId>org.wso2.carbon</groupId>
+            <artifactId>org.wso2.carbon.datasource</artifactId>
+            <version>${wso2carbon.version.data-services}</version>
+        </dependency>
+        <dependency>
             <groupId>ojdbc</groupId>
             <artifactId>ojdbc6</artifactId>
             <scope>system</scope>

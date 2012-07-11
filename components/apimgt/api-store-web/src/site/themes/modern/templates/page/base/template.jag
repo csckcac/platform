@@ -30,6 +30,7 @@
     <link rel="stylesheet" type="text/css" href="<%=jagg.getAbsoluteUrl("/site/themes/"+jagg.getUserTheme()+"/css/styles-layout.css")%>" media="all"/>
     <link rel="stylesheet" type="text/css" href="<%=jagg.getAbsoluteUrl("/site/themes/"+jagg.getUserTheme()+"/css/styles-application.css")%>" media="all"/>
     <!--[if IE 7]><link rel="stylesheet" type="text/css" href="<%=jagg.getAbsoluteUrl("/site/themes/"+jagg.getUserTheme()+"/css/style-ie7.css")%>" media="all"/><![endif]-->
+    <!--[if lt IE 9]><link rel="stylesheet" type="text/css" href="<%=jagg.getAbsoluteUrl("/site/themes/"+jagg.getUserTheme()+"/css/style-ie7-8.css")%>" media="all"/><![endif]-->
     <%
     var data = jagg.data();
     if(data.header) {

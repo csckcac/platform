@@ -2,7 +2,7 @@
 <%
         if(request.isSecure()){
 %>
-<div class="container content-section">
+<div class="container content-section login-container">
     <div class="row">
         <div class="span4 offset4">
             <div class="alert alert-error" id="loginError" style="display:none">

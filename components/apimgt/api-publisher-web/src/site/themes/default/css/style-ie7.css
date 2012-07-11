@@ -1,0 +1,10 @@
+ul.breadcrumb {
+    height:20px;
+}
+ul.breadcrumb li{
+    float:left;
+    display:block;
+}
+button.btn-api-del{
+    padding:0 5px;
+}

@@ -1,0 +1,10 @@
+<% jagg.template("footer", function(inputs, outputs, jagg) { %>
+        <footer>
+         <div class="container-fluid">
+            <div class="row">
+                <div class="span6">&copy; Copyright 2011 &ndash; 2012 All Rights Reserved.</div>
+                <div class="pull-right"><a class="powered-by-logo"></a></div>
+            </div>
+         </div>
+    </footer>
+<% }); %>

@@ -30,6 +30,10 @@ var site = require("/site/conf/site.json");
                         }
                     }
                 }
+            ],"footer":[
+                {
+                    "name":"footer"
+                }
             ]
         }
     });

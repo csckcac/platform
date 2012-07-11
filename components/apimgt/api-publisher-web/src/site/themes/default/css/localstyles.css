@@ -217,3 +217,50 @@ a.powered-by-logo {
 #left li a,.breadcrumb a {
     cursor:pointer;
 }
+#userInfoMenu{
+    padding-bottom:0px;
+}
+#userInfoMenu a{
+    color:#444 !important;
+    margin-left:5px;
+}
+.themeSelection,.userInfoSection{
+    padding:20px;
+}
+.themeSelection{
+    width:400px;
+}
+.navbar .navbar-inner .nav.actions a.themeSelectionLink {
+    margin:5px;
+    color:#444;
+}
+.themeSelection a{
+    color:#000;
+}
+#login-link{
+    margin-left:0;
+}
+.logout-link-special{
+    background:#999;
+    padding:10px;
+}
+@media all and (max-width: 850px) {
+    #left{
+        display:block;
+        width:100%;
+    }
+}
+@media all and (max-width: 900px) {
+    div.login-container div.row{
+        padding:0 10px;
+    }
+    div.login-container div.span4{
+        width:94%;
+        margin:0;
+        display:block;
+        float:none;
+    }
+    #layout-base {
+        min-height:0;
+    }
+}

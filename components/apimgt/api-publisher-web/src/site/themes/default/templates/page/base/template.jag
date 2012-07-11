@@ -17,6 +17,12 @@
 
     <!--Loca styles-->
     <link href="<%=jagg.getAbsoluteUrl("/site/themes/default/css/localstyles.css")%>" rel="stylesheet">
+    <!--[if IE 7]><link rel="stylesheet" type="text/css" href="<%=jagg.getAbsoluteUrl("/site/themes/default/css/style-ie7.css")%>" media="all"/><![endif]-->
+    <!--[if lt IE 9]><link rel="stylesheet" type="text/css" href="<%=jagg.getAbsoluteUrl("/site/themes/default/css/style-ie7-8.css")%>" media="all"/><![endif]-->
+
+    <!-- Le HTML5 shim, for IE6-8 support of HTML5 elements -->
+    <!--[if lt IE 9]><script src="<%=jagg.getAbsoluteUrl("/site/themes/default/lib/html5/html5.js")%>"></script><![endif]-->
+
     <script type="text/javascript" src="<%=jagg.getAbsoluteUrl("/site/themes/default/lib/jquery-1.7.1.min.js")%>"></script>
 
     <%
@@ -43,6 +49,7 @@ var editUrl="info";
     <div id="header"><% jagg.includeBlocks(outputs.header); %></div>
     <div id="body"><% jagg.includeBlocks(outputs.body); %></div>
     <div id="footer"><% jagg.includeBlocks(outputs.footer); %></div>
+    <% jagg.includeBlock("dialogs", null); %>
     <%
     if(data.footer) {
         jagg.printData(data.footer.js);
@@ -53,71 +60,8 @@ var editUrl="info";
     <script>
         var siteRoot = '<%=jagg.getAbsoluteUrl("/site/themes/default")%>';
     </script>
-        <footer>
-             <div class="container-fluid">
-                <div class="row">
-                    <div class="span6">&copy; Copyright 2011 &ndash; 2012 All Rights Reserved.</div>
-                    <div class="pull-right"><a class="powered-by-logo"></a></div>
-                </div>
-             </div>
-        </footer>
-        <div class="modal" id="apiModal" style="display:none;">
-            <div class="modal-header">
-                <button class="close" data-dismiss="modal">x</button>
-                <h3 class="modal-title">Modal header</h3>
-            </div>
-            <div class="modal-body">
-                <p>One fine body…</p>
-            </div>
-            <div class="modal-footer">
-                <a href="#" class="btn btn-primary">Save changes</a>
-                <a href="#" class="btn btn-other" data-dismiss="modal">Close</a>
-            </div>
-        </div>
-        <div class="modal fade" id="messageModal" style="display:none"></div>
-         <div id="confirmation-data" style="display:none;">
-            <div class="modal-header">
-                <button class="close" data-dismiss="modal">x</button>
-                <h3 class="modal-title">Modal header</h3>
-            </div>
-            <div class="modal-body">
-                <p>One fine body…</p>
-            </div>
-            <div class="modal-footer">
-                <a href="#" class="btn btn-other" data-dismiss="modal">Close</a>
-                <a href="#" class="btn btn-primary">Save changes</a>
-            </div>
-         </div>
-         <div id="login-data" style="display:none;">
 
 
-
-             <form id="mainLoginForm">
-                <div class="modal-header">
-                    <button class="close" data-dismiss="modal">x</button>
-                    <h3>Login</h3>
-                </div>
-                <div class="modal-body">
-                    <div class="alert alert-error" id="loginErrorBox" style="display:none;">
-                        <button type="button" class="close" data-dismiss="alert">x</button>
-                        <div id="loginErrorMsg"></div>
-                    </div>
-                    <label for="username">Username:</label>
-                    <input type="text" id="username" name="name" class="span3" placeholder="Enter your user name." autofocus="autofocus" />
-                    <label for="password">Password:</label>
-                    <input type="password" id="password" name="pass" class="span3"/>
-
-                </div>
-                <div class="modal-footer">
-                    <a href="#" class="btn" data-dismiss="modal">Cancel</a>
-                    <a href="#" class="btn btn-primary" id="loginBtn">Login</a>
-                </div>
-            </form>
-
-
-
-
-         </div>
     <script type="text/javascript" src="<%=jagg.getAbsoluteUrl("/site/themes/default/lib/jquery.cookie.js")%>"></script>
     <script type="text/javascript" src="<%=jagg.getAbsoluteUrl("/site/themes/default/lib/jquery.validate.min.js")%>"></script>
     <script type="text/javascript" src="<%=jagg.getAbsoluteUrl("/site/themes/default/lib/jquery.form.js")%>"></script>

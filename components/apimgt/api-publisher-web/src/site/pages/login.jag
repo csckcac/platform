@@ -23,6 +23,10 @@ var site = require("/site/conf/site.json");
                         "bottom":null
                     }
                 }
+            ],"footer":[
+                {
+                    "name":"footer"
+                }
             ]
         }
     });

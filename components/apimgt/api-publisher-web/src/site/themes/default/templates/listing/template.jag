@@ -34,7 +34,7 @@
         %>
         <li>
             <%if(outputs.isCreatePermitted){%>
-            <button title="Delete API" type="button" class="close btn-api-del" onClick="removeAPI('<%=api.name%>','<%=api.version%>','<%=api.provider%>')">x</button>
+            <button title="Delete API" type="button" class="close btn-api-del" onClick="removeAPI('<%=api.name%>','<%=api.version%>','<%=api.provider%>')">&times;</button>
             <%}%>
             <div class="thumbnail">
                 <a href="<%=path%>">

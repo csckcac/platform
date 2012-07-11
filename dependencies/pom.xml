@@ -99,7 +99,6 @@
 		<module>orbit/twitter</module>
 		<module>orbit/linkedin</module>
 		<!--module>orbit/hadoop-core</module-->
-		<module>jaggery</module>
 	     </modules>
    <dependencyManagement>
 	<dependencies>

@@ -340,9 +340,7 @@
         var result;
 
         try {
-            // var endPoint =getProperty('ApplicationDeployment.DeploymentStage.'+stageName+'.ProcesEndPoint');
-            var endPoint =getProperty('WebServiceEndPoints.DeployToStage');
-            //WebServiceEndPoints.DeployToStage
+            var endPoint =getProperty('WebServiceEndPoints.ARTIFACT_CREATE');
             createArtifactProcess.open(options,endPoint, false);
             createArtifactProcess.send(payload);
             result = createArtifactProcess.responseE4X;

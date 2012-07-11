@@ -129,8 +129,7 @@ $(document).ready(function() {
                       }
                       $("#editStatusAPIForm")[0].reset();
                   }else{
-                        $('#statusAPIError').show('fast');
-                        $('#statusErrorSpan').html('<strong>Sorry. The API status cannot be updated.</strong><br />'+responseText.message);
+                        jagg.message({content:responseText.message,type:"error"});
                   }
                 }, dataType: 'json'
             });

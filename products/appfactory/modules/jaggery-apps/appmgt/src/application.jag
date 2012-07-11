@@ -131,6 +131,9 @@
                                 <td class="buttonRow">
                                     <input type="button" onclick="location.href='deploy_to_stage.jag?applicationKey=<%=applicationKey%>&applicationSvnLocation=<%=appInfo.repoLink%>&stageName=<%=stage%>'" value='Deploy to <%=stage%>' class='btn btn-primary'/>
                                 </td>
+                        <td class="buttonRow">
+                        <input type="button" onclick="location.href='create_artifact.jag?applicationName=<%=app.name%>&applicationKey=<%=applicationKey%>&revision=<%=app.lastRevisionNo%>'" value='Build' class='btn btn-primary'/>
+                    </td>
                             </tr>
                             <%
                             }

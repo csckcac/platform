@@ -240,7 +240,7 @@
             <td><a href="<%=address %>"><%=notificationMethod + "_endpoint"%></a></td>
 
 <%} else { %>
-            <td><%=address == null? "      -  " :address%></td>
+            <td><%=address == null? notificationMethod :address%></td>
 
 <%
     }

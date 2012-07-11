@@ -51,7 +51,7 @@
     </dependencyManagement>
 
     <properties>
-	<wso2carbon.version.juddi>3.0.3.wso2v1</wso2carbon.version.juddi>
+	<wso2carbon.version.juddi>3.0.3.wso2v2</wso2carbon.version.juddi>
     </properties>
 
 </project>

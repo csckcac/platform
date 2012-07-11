@@ -1562,7 +1562,7 @@
         <jxl.wso2.version>2.6.8.wso2v1</jxl.wso2.version>
 	<wso2.h2.orbit.version>1.2.140.wso2v2</wso2.h2.orbit.version>
 	<commons-io.wso2.version>2.0.0.wso2v1</commons-io.wso2.version>
-	<juddi.wso2.version>3.0.3.wso2v1</juddi.wso2.version>
+	<juddi.wso2.version>3.0.3.wso2v2</juddi.wso2.version>
 	<smack.wso2.version>3.0.4.wso2v1</smack.wso2.version>
 	<smackx.wso2.version>3.0.4.wso2v1</smackx.wso2.version>
 	<sun-xacml.wso2.version>2.0.1.wso2v1</sun-xacml.wso2.version>

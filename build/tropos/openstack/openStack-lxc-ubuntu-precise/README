@@ -1,4 +1,4 @@
-This folder contain some scripts to invoke nova scripts to install and manage openstack controller installation
+This folder contain some scripts to invoke nova scripts to install and manage openstack installation
 Scripts are only tested for Ubnutu Precise 12.04 LTS.
 Steps:
 Download openstack installer scripts from git
@@ -10,11 +10,13 @@ git checkout essex
 
 Copy all scripts from this folder into the newly created OpenStackInstaller folder
 
-To install a new controller modify osinstall.sh and execute
+To install a new controller modify oscontrollerinstall.sh and execute
 
-To uninstall a controller modify osuninstall.sh and execute
+To install a new compute node modify oscomputeinstall.sh and execute
 
-To restart services in the controller execute restartservices.sh
+To uninstall a controller/compute node modify osuninstall.sh and execute
+
+To restart services in the controller/compute node execute restartservices.sh
 
 To upload an image to glance serve
 Copy the image to /root/upload folder, modify uploadimage.sh and execute

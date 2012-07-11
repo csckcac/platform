@@ -340,7 +340,7 @@
         var result;
 
         try {
-            var endPoint =getProperty('WebServiceEndPoints.ARTIFACT_CREATE');
+            var endPoint =getProperty('WebServiceEndPoints.CreateArtifact');
             createArtifactProcess.open(options,endPoint, false);
             createArtifactProcess.send(payload);
             result = createArtifactProcess.responseE4X;

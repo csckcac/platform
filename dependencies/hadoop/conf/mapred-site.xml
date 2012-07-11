@@ -52,6 +52,10 @@
   <name>mapred.task.tracker.http.address</name>
   <value>localhost:50060</value>
 </property>
+<property>
+  <name>mapred.task.tracker.report.address</name>
+  <value>127.0.0.1:0</value>
+</property>
 
 <!-- TaskController settings -->
 <property>
@@ -60,22 +64,21 @@
 </property>
 <property>
   <name>mapreduce.tasktracker.group</name>
-  <value>foo</value>
+  <value>wathsala</value>
 </property>
 <property>
   <name>mapred.local.dir</name>
-  <value>/tmp/hadoop/mapred/local</value>
+  <value>repository/data/hadoop/mapred/local</value>
 </property>
 <property>
   <name>hadoop.log.dir</name>
-  <value>/tmp/hadoop/tasktracker</value>
+  <value>repository/data/hadoop/mapred</value>
 </property>
 
 <!-- Carbon taskcontroller user -->
 <property>
   <name>mapred.tasktracker.carbon.proxy.user</name>
-  <value>foo</value>
-
+  <value>wathsala</value>
   <description>The task-controller will run as this user overiding the 
   provided carbon user. Reason is that carbon users are not real Unix/Win32 users.</description>
 </property>

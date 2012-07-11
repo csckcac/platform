@@ -7,7 +7,7 @@
 
 <property>
   <name>hadoop.tmp.dir</name>
-  <value>tmp/hadoop</value>
+  <value>repository/data/hadoop</value>
   <description>A base for other temporary directories.</description>
 </property>
 
@@ -83,5 +83,15 @@
   <name>hadoop.security.admin.password</name>
   <value>admin</value>
   <description>WSO2 carbon admin password</description>
+</property>
+<property>
+  <name>hadoop.mapred.reporter</name>
+  <value>org.wso2.carbon.mapred.reporting.CarbonJobCoreReporter</value>
+  <description>The class that implements the reporting mechanism of Hadoop MR</description>
+</property>
+<property>
+  <name>hadoop.mapred.reporter.service.url</name>
+  <value>https://127.0.0.1:9443/services/</value>
+  <description>The URL where reporting object shoud be stored</description>
 </property>
 </configuration>

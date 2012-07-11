@@ -181,6 +181,27 @@ public class HostUtil {
         }
     }
 
+    public static int getTenantIdForHost(String hostName) throws UrlMapperException {
+        int tenantId;
+        try {
+            tenantId = MultitenantConstants.SUPER_TENANT_ID;
+            String tenantDomain = registryManager.getTenantDomainForHost(hostName);
+            TenantManager tenantManager = DataHolder.getInstance().getRealmService()
+                    .getTenantManager();
+                try {
+                    tenantId = tenantManager.getTenantId(tenantDomain);
+                } catch (UserStoreException e) {
+                    log.error("error in getting tenant id when adding host to tomcat engine", e);
+                    throw new UrlMapperException(
+                            "error in getting tenant id when adding host to tomcat engine");
+                }
+        } catch (Exception e) {
+            log.error("Failed to retrieve the tenant domain from the host " + hostName, e);
+            throw new UrlMapperException("Failed to retrieve the tenant domain from the host "
+                    + hostName, e);
+        }
+        return tenantId;
+    }
     /**
      * It is taken the webApp which is already deployed in
      * /repository/../webapps and redeploy it within added virtual host.
@@ -216,14 +237,14 @@ public class HostUtil {
                 webAppPath = getWebappPath(webAppsDir, uri);
 
             } else {
-                tenantDomain = "super-tenant";
+                tenantDomain = MultitenantConstants.SUPER_TENANT_DOMAIN_NAME;
                 webAppsDir = CarbonUtils.getCarbonRepository()
                         + UrlMapperConstants.HostProperties.WEB_APPS + "/";
                 webAppPath = getWebappPath(webAppsDir, uri);
 
             }
         }
-        Host host = addHostToEngine(hostName);
+        Host host = addHostToEngine(hostName, webAppsDir);
         try {
 
             // deploying the copied webapp as the root in our own host directory
@@ -259,9 +280,8 @@ public class HostUtil {
      * @param hostName name of the host
      * @return will return the added host of Engine
      */
-    public static Host addHostToEngine(String hostName) {
-        String hostBaseDir = CarbonUtils.getCarbonRepository()
-                + UrlMapperConstants.HostProperties.WEB_APPS;
+    public static Host addHostToEngine(String hostName, String appBase) {
+        String hostBaseDir = appBase;
         CarbonTomcatService carbonTomcatService = DataHolder.getInstance().getCarbonTomcatService();
         // adding virtual host to tomcat engine
         Engine engine = carbonTomcatService.getTomcat().getEngine();

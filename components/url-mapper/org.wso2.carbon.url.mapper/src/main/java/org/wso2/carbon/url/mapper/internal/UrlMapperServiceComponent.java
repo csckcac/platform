@@ -36,12 +36,14 @@ import org.wso2.carbon.url.mapper.internal.util.HostUtil;
 import org.wso2.carbon.url.mapper.internal.util.UrlMapperConstants;
 import org.wso2.carbon.user.core.service.RealmService;
 import org.wso2.carbon.utils.CarbonUtils;
+import org.wso2.carbon.utils.multitenancy.MultitenantConstants;
 
 import java.util.ArrayList;
 import java.util.List;
 
 import static org.wso2.carbon.url.mapper.internal.util.HostUtil.addHostToEngine;
 import static org.wso2.carbon.url.mapper.internal.util.HostUtil.getAllHostsFromRegistry;
+import static org.wso2.carbon.url.mapper.internal.util.HostUtil.getTenantIdForHost;
 
 /**
  * This is urlmapper component which retrieve virtual host from
@@ -147,12 +149,22 @@ public class UrlMapperServiceComponent {
      */
     public void addHostToTomcat() throws Exception {
         List<String> hosts = getAllHostsFromRegistry();
+        int tenantId;
+        String appBase;
         if (hosts != null) {
             for (String hostName : hosts) {
                 //getting hostname by removing the path
               //  hostName = hostName.substring(UrlMapperConstants.HostProperties.HOSTINFO_DIR.length());
                 //add webapp to host and adding them to tomcat
-                addHostToEngine(hostName);
+                tenantId = getTenantIdForHost(hostName);
+                if(tenantId == MultitenantConstants.SUPER_TENANT_ID) {
+                    appBase = CarbonUtils.getCarbonRepository()
+                            + UrlMapperConstants.HostProperties.WEB_APPS + "/";
+                } else {
+                    appBase = CarbonUtils.getCarbonTenantsDirPath() + "/" + tenantId + "/"
+                            + UrlMapperConstants.HostProperties.WEB_APPS + "/";
+                }
+                addHostToEngine(hostName, appBase);
             }
         }
     }

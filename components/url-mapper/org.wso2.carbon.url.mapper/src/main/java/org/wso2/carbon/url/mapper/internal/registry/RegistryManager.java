@@ -15,9 +15,6 @@
  */
 package org.wso2.carbon.url.mapper.internal.registry;
 
-import java.util.ArrayList;
-import java.util.List;
-
 import org.apache.catalina.Host;
 import org.apache.commons.logging.Log;
 import org.apache.commons.logging.LogFactory;
@@ -27,6 +24,9 @@ import org.wso2.carbon.registry.core.Resource;
 import org.wso2.carbon.url.mapper.data.MappingData;
 import org.wso2.carbon.url.mapper.internal.util.DataHolder;
 import org.wso2.carbon.url.mapper.internal.util.UrlMapperConstants;
+
+import java.util.ArrayList;
+import java.util.List;
 
 /**
  * Registry manager to store and retrieve properties to registry.
@@ -183,6 +183,15 @@ public class RegistryManager {
 		return null;
 
 	}
+
+    public String getTenantDomainForHost(String hostName) throws Exception {
+        Resource resource = getMappingFromRegistry(hostName);
+        if (resource != null) {
+            return resource.getProperty(UrlMapperConstants.HostProperties.TENANT_DOMAIN);
+        }
+        return null;
+
+    }
 
 	public MappingData[] getAllMappingsFromRegistry() throws Exception {
 		Collection mappings = getHostsFromRegistry();

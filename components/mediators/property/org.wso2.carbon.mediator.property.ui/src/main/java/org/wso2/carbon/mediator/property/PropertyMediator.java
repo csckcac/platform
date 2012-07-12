@@ -19,6 +19,9 @@ package org.wso2.carbon.mediator.property;
 
 import org.apache.axiom.om.OMAttribute;
 import org.apache.axiom.om.OMElement;
+import org.apache.axis2.util.JavaUtils;
+import org.apache.synapse.SynapseException;
+import org.apache.synapse.config.SynapseConfigUtils;
 import org.apache.synapse.config.xml.SynapseXPathFactory;
 import org.apache.synapse.config.xml.SynapseXPathSerializer;
 import org.apache.synapse.config.xml.XMLConfigConstants;
@@ -248,9 +251,38 @@ public class PropertyMediator extends AbstractMediator {
                 group = Integer.parseInt(groupAttr.getAttributeValue());
             }
         }
+        
+        if(value != null  &&  type != null){
+        	convertValue(value, type); // checking property type validation
+        }
 
         // after successfully creating the mediator
         // set its common attributes such as tracing etc
         processAuditStatus(this, elem);
+    }
+    
+    private Object convertValue(String value, String type) {
+        if (type == null) {
+            // If no type is set we simply return the string value
+            return value;
+        }
+
+        try {
+            XMLConfigConstants.DATA_TYPES dataType = XMLConfigConstants.DATA_TYPES.valueOf(type);
+            switch (dataType) {
+                case BOOLEAN    : return JavaUtils.isTrueExplicitly(value);
+                case DOUBLE     : return Double.parseDouble(value);
+                case FLOAT      : return Float.parseFloat(value);
+                case INTEGER    : return Integer.parseInt(value);
+                case LONG       : return Long.parseLong(value);
+                case OM         : return SynapseConfigUtils.stringToOM(value);
+                case SHORT      : return Short.parseShort(value);
+                default         : return value;
+            }
+        } catch (IllegalArgumentException e) {
+            String msg = "For value [" +value+ " ] unknown type : [" + type + "] for the property mediator or the " +
+                    "property value cannot be converted into the specified type.";
+           throw new SynapseException(msg, e);
+        }
     }
 }

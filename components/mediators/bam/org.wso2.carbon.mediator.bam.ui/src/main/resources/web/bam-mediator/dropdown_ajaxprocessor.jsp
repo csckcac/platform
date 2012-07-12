@@ -36,7 +36,7 @@
     String action = request.getParameter("action");
     String serverProfilePath = request.getParameter("serverProfilePath");
     String streamName = request.getParameter("streamName");
-    String responseText = "";
+    String responseText;
 
     if(ddlAjaxProcessorHelper.isNotNullOrEmpty(action)){
         if(action.equals("getServerProfiles") && ddlAjaxProcessorHelper.isNotNullOrEmpty(serverProfilePath)){

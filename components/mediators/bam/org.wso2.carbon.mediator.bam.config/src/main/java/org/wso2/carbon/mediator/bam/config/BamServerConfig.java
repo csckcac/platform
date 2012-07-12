@@ -103,20 +103,6 @@ public class BamServerConfig {
         return this.streamConfigurations;
     }
 
-    public void setStreamConfigurations(List<StreamConfiguration> streamConfigurations){
-        this.streamConfigurations = streamConfigurations;
-    }
-
-    public List<StreamConfiguration> getStreamConfigurationsForStreamName(String streamName){
-        List<StreamConfiguration> outputStreamConfigurations = new ArrayList<StreamConfiguration>();
-        for (StreamConfiguration streamConfiguration : streamConfigurations) {
-            if(streamConfiguration.getName().equals(streamName)){
-                outputStreamConfigurations.add(streamConfiguration);
-            }
-        }
-        return outputStreamConfigurations;
-    }
-
     public StreamConfiguration getAUniqueStreamConfiguration(String streamName, String streamVersion){
         StreamConfiguration outputStreamConfiguration = new StreamConfiguration();
         for (StreamConfiguration streamConfiguration : streamConfigurations) {

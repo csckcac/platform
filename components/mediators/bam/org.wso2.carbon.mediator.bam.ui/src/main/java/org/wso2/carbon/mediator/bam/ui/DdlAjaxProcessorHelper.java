@@ -68,16 +68,6 @@ public class DdlAjaxProcessorHelper {
         return null;
     }
 
-    public boolean resourceAlreadyExists(String bamServerProfileLocation){
-        try {
-            return client.resourceAlreadyExists(bamServerProfileLocation);
-        } catch (RemoteException e) {
-            String errorMsg = "Error while checking the resource. " + e.getMessage();
-            log.error(errorMsg, e);
-        }
-        return true;
-    }
-
     public boolean isNotNullOrEmpty(String string){
         return string != null && !string.equals("");
     }

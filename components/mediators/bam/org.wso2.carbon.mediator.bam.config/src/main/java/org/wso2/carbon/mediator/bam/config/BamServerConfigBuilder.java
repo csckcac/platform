@@ -26,9 +26,7 @@ import org.wso2.carbon.mediator.bam.config.stream.StreamConfiguration;
 import org.wso2.carbon.mediator.bam.config.stream.StreamEntry;
 
 import javax.xml.namespace.QName;
-import java.util.ArrayList;
 import java.util.Iterator;
-import java.util.List;
 
 public class BamServerConfigBuilder {
 
@@ -217,44 +215,6 @@ public class BamServerConfigBuilder {
             return true;
         }
         return false; // Empty Property elements and incomplete Property parameters are not accepted
-    }
-
-    public String getServerProfilePathFromXml(OMElement omElement){
-        OMElement serverProfileElement = omElement.getFirstChildWithName(
-                new QName(SynapseConstants.SYNAPSE_NAMESPACE, "serverProfile"));
-
-        if(serverProfileElement != null){
-            OMAttribute serverProfileAttr = serverProfileElement.getAttribute(new QName("path"));
-            if(serverProfileAttr != null && !serverProfileAttr.getAttributeValue().equals("")){
-                return serverProfileAttr.getAttributeValue();
-            }
-            return null;
-        }
-        return null;
-    }
-
-    private List<Property> getStreamProperties(OMElement omElement){
-        OMElement propertiesElement = omElement.getFirstChildWithName(
-                new QName(SynapseConstants.SYNAPSE_NAMESPACE, "properties"));
-
-        if(propertiesElement != null){
-            Iterator itr = propertiesElement.getChildrenWithName(new QName("property"));
-            List<Property> propertyList = new ArrayList<Property>();
-            Property property;
-            while (itr.hasNext()){
-                OMElement propertyElement = (OMElement)itr.next();
-                property = new Property();
-                property.setKey(propertyElement.getAttributeValue(new QName("name")));
-                property.setValue(propertyElement.getAttributeValue(new QName("value")));
-                propertyList.add(property);
-            }
-            return propertyList;
-        }
-        return null;
-    }
-
-    public void setBamServerConfig(BamServerConfig bamServerConfig){
-        this.bamServerConfig = bamServerConfig;
     }
 
     public BamServerConfig getBamServerConfig(){

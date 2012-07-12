@@ -23,6 +23,10 @@ import org.apache.synapse.Mediator;
 import org.apache.axiom.om.OMElement;
 import org.wso2.carbon.mediator.bam.BamMediator;
 
+/**
+ * Extracts the current message payload/header data according to the given configuration.
+ * Extracted information is sent as an event.
+ */
 public class BamMediatorSerializer extends AbstractMediatorSerializer {
 
     public OMElement serializeSpecificMediator(Mediator mediator) {

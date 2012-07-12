@@ -25,17 +25,9 @@ public class BamMediatorException extends Exception {
         this.message = s;
     }
 
-    public BamMediatorException(String s) {
-        super(s);
-        this.message = s;
-    }
-
     @Override
     public String getMessage() {
         return this.message;
     }
 
-    public String getErrorMessage() {
-        return this.message;
-    }
 }

@@ -26,7 +26,6 @@ import org.apache.synapse.SynapseConstants;
 import org.apache.axiom.om.OMElement;
 import org.apache.axiom.om.OMAttribute;
 import org.wso2.carbon.mediator.bam.BamMediator;
-import org.wso2.carbon.mediator.bam.config.BamMediatorException;
 import org.wso2.carbon.mediator.bam.config.BamServerConfig;
 import org.wso2.carbon.mediator.bam.config.BamServerConfigBuilder;
 import org.wso2.carbon.mediator.bam.config.CryptographyManager;
@@ -37,6 +36,9 @@ import javax.xml.stream.XMLStreamException;
 import java.io.ByteArrayInputStream;
 import java.util.Properties;
 
+/**
+ * Creates the BAM mediator with given configuration XML taken from the registry which is mentioned in the sequence.
+ */
 public class BamMediatorFactory extends AbstractMediatorFactory {
     private static final Log log = LogFactory.getLog(BamMediatorFactory.class);
     public static final QName BAM_Q = new QName(SynapseConstants.SYNAPSE_NAMESPACE, "bam");

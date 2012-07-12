@@ -48,14 +48,6 @@ public class BamServerProfileConfigAdminClient {
         option.setProperty(org.apache.axis2.transport.http.HTTPConstants.COOKIE_STRING, cookie);
     }
 
-    public void saveResourceString(String resourceString, String bamServerProfileLocation) throws RemoteException {
-        try {
-            stub.saveResourceString(resourceString, bamServerProfileLocation);
-        } catch (RemoteException e) {
-            handleException(bundle.getString("cannot.save.resource.string"), e);
-        }
-    }
-
     public String getResourceString(String bamServerProfileLocation) throws RemoteException {
         try {
             return stub.getResourceString(bamServerProfileLocation);

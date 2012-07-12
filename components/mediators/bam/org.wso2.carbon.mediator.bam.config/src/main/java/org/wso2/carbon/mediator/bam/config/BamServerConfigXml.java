@@ -33,7 +33,6 @@ public class BamServerConfigXml {
 
     private org.apache.axiom.om.OMFactory fac = OMAbstractFactory.getOMFactory();
     private org.apache.axiom.om.OMNamespace synNS = SynapseConstants.SYNAPSE_OMNAMESPACE;
-    private org.apache.axiom.om.OMNamespace nullNS;
 
     public OMElement buildServerProfile(String ip, String authenticationPort, String receiverPort, String userName, String password, String secure, String ksLocation, String ksPassword,
                                         List<StreamConfiguration> streamConfigurations){
@@ -47,24 +46,24 @@ public class BamServerConfigXml {
 
     private OMElement serializeConnection(String secure, String ip, String authenticationPort, String receiverPort){
         OMElement credentialElement = fac.createOMElement("connection", synNS);
-        credentialElement.addAttribute("secure", secure, nullNS);
-        credentialElement.addAttribute("ip", ip, nullNS);
-        credentialElement.addAttribute("authPort", authenticationPort, nullNS);
-        credentialElement.addAttribute("receiverPort", receiverPort, nullNS);
+        credentialElement.addAttribute("secure", secure, null);
+        credentialElement.addAttribute("ip", ip, null);
+        credentialElement.addAttribute("authPort", authenticationPort, null);
+        credentialElement.addAttribute("receiverPort", receiverPort, null);
         return credentialElement;
     }
 
     private OMElement serializeCredential(String userName, String password){
         OMElement credentialElement = fac.createOMElement("credential", synNS);
-        credentialElement.addAttribute("userName", userName, nullNS);
-        credentialElement.addAttribute("password", password, nullNS);
+        credentialElement.addAttribute("userName", userName, null);
+        credentialElement.addAttribute("password", password, null);
         return credentialElement;
     }
 
     private OMElement serializeKeyStore(String location, String password){
         OMElement keyStoreElement = fac.createOMElement("keyStore", synNS);
-        keyStoreElement.addAttribute("location", location, nullNS);
-        keyStoreElement.addAttribute("password", password, nullNS);
+        keyStoreElement.addAttribute("location", location, null);
+        keyStoreElement.addAttribute("password", password, null);
         return keyStoreElement;
     }
 
@@ -84,10 +83,10 @@ public class BamServerConfigXml {
 
     private OMElement serializeStream(StreamConfiguration streamConfiguration){
         OMElement streamElement = fac.createOMElement("stream", synNS);
-        streamElement.addAttribute("name", streamConfiguration.getName(), nullNS);
-        streamElement.addAttribute("version", streamConfiguration.getVersion(), nullNS);
-        streamElement.addAttribute("nickName", streamConfiguration.getNickname(), nullNS);
-        streamElement.addAttribute("description", streamConfiguration.getDescription(), nullNS);
+        streamElement.addAttribute("name", streamConfiguration.getName(), null);
+        streamElement.addAttribute("version", streamConfiguration.getVersion(), null);
+        streamElement.addAttribute("nickName", streamConfiguration.getNickname(), null);
+        streamElement.addAttribute("description", streamConfiguration.getDescription(), null);
 
         OMElement payloadElement = streamElement.getFirstChildWithName(
                 new QName(SynapseConstants.SYNAPSE_NAMESPACE, "payload"));
@@ -143,9 +142,9 @@ public class BamServerConfigXml {
 
     private OMElement serializeEntry(String name, String value, String type){
         OMElement entryElement = fac.createOMElement("entry", synNS);
-        entryElement.addAttribute("name", name, nullNS);
-        entryElement.addAttribute("value", value, nullNS);
-        entryElement.addAttribute("type", type, nullNS);
+        entryElement.addAttribute("name", name, null);
+        entryElement.addAttribute("value", value, null);
+        entryElement.addAttribute("type", type, null);
         return entryElement;
     }
 
@@ -155,12 +154,12 @@ public class BamServerConfigXml {
 
     private OMElement serializeProperty(String name, String value, boolean isExpression){
         OMElement propertyElement = fac.createOMElement("property", synNS);
-        propertyElement.addAttribute("name", name, nullNS);
-        propertyElement.addAttribute("value", value, nullNS);
+        propertyElement.addAttribute("name", name, null);
+        propertyElement.addAttribute("value", value, null);
         if(isExpression){
-            propertyElement.addAttribute("isExpression", "true", nullNS);
+            propertyElement.addAttribute("isExpression", "true", null);
         } else {
-            propertyElement.addAttribute("isExpression", "false", nullNS);
+            propertyElement.addAttribute("isExpression", "false", null);
         }
         return propertyElement;
     }

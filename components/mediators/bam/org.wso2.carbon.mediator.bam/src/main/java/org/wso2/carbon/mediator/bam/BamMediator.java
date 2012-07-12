@@ -47,13 +47,11 @@ import org.wso2.carbon.databridge.commons.exception.DifferentStreamDefinitionAlr
 import org.wso2.carbon.databridge.commons.exception.MalformedStreamDefinitionException;
 import org.wso2.carbon.databridge.commons.exception.StreamDefinitionException;
 import org.wso2.carbon.databridge.commons.exception.TransportException;
-import org.wso2.carbon.databridge.commons.thrift.exception.ThriftAuthenticationException;
 import org.wso2.carbon.mediator.bam.config.BamMediatorException;
 import org.wso2.carbon.mediator.bam.config.stream.Property;
 import org.wso2.carbon.mediator.bam.config.stream.StreamEntry;
 import org.wso2.carbon.mediator.bam.util.BamMediatorConstants;
 
-import javax.servlet.http.HttpServletRequest;
 import javax.xml.namespace.QName;
 import java.net.MalformedURLException;
 import java.util.ArrayList;
@@ -62,8 +60,8 @@ import java.util.List;
 import java.util.UUID;
 
 /**
- * Transforms the current message payload using the given BAM configuration.
- * The current message context is replaced with the result as XML.
+ * Extracts the current message payload/header data according to the given configuration.
+ * Extracted information is sent as an event.
  */
 public class BamMediator extends AbstractMediator {
 
@@ -177,7 +175,7 @@ public class BamMediator extends AbstractMediator {
             // Property name would be "Parent_uuid"
             // Property Value would be "Parent_uuid_messageid"
             UUID uuid = UUID.randomUUID();
-            String uuid_string = uuid.toString();
+            String uuidString = uuid.toString();
 
             Axis2MessageContext axis2smc = (Axis2MessageContext) synapseContext;
             org.apache.axis2.context.MessageContext axis2MessageContext = axis2smc.getAxis2MessageContext();
@@ -209,8 +207,8 @@ public class BamMediator extends AbstractMediator {
                         // condition we add
                         // to track failure messages coming from DS.That is a new message. So, doesn't have activityID.Getting activityID
                         // from the synapseContext.property
-                        soapHeaderBlock.addAttribute(BamMediatorConstants.ACTIVITY_ID, uuid_string, null);
-                        synapseContext.setProperty(BamMediatorConstants.MSG_ACTIVITY_ID, uuid_string);
+                        soapHeaderBlock.addAttribute(BamMediatorConstants.ACTIVITY_ID, uuidString, null);
+                        synapseContext.setProperty(BamMediatorConstants.MSG_ACTIVITY_ID, uuidString);
                     } else {
                         soapHeaderBlock.addAttribute(BamMediatorConstants.ACTIVITY_ID, (String) synapseContext
                                 .getProperty(BamMediatorConstants.MSG_ACTIVITY_ID), null);
@@ -228,8 +226,8 @@ public class BamMediator extends AbstractMediator {
                         synapseContext.setProperty(BamMediatorConstants.MSG_ACTIVITY_ID,
                                                    activityId);
                     } else {
-                        bamHeader.addAttribute(BamMediatorConstants.ACTIVITY_ID, uuid_string, null);
-                        synapseContext.setProperty(BamMediatorConstants.MSG_ACTIVITY_ID, uuid_string);
+                        bamHeader.addAttribute(BamMediatorConstants.ACTIVITY_ID, uuidString, null);
+                        synapseContext.setProperty(BamMediatorConstants.MSG_ACTIVITY_ID, uuidString);
                     }
                 }
             } else {
@@ -243,8 +241,8 @@ public class BamMediator extends AbstractMediator {
                         // to track failure messages coming from
                         // DS.That is a new message. So, doesn't have activityID.Getting activityID
                         // from the synapseContext.property
-                        soapHeaderBlock.addAttribute(BamMediatorConstants.ACTIVITY_ID, uuid_string, null);
-                        synapseContext.setProperty(BamMediatorConstants.MSG_ACTIVITY_ID, uuid_string);
+                        soapHeaderBlock.addAttribute(BamMediatorConstants.ACTIVITY_ID, uuidString, null);
+                        synapseContext.setProperty(BamMediatorConstants.MSG_ACTIVITY_ID, uuidString);
                     } else {
                         soapHeaderBlock.addAttribute(BamMediatorConstants.ACTIVITY_ID, (String) synapseContext
                                 .getProperty(BamMediatorConstants.MSG_ACTIVITY_ID), null);
@@ -312,7 +310,7 @@ public class BamMediator extends AbstractMediator {
                                                   "          {'name':'tenantId','type':'INT'}" +
                                                   "  ]," +
                                                   "  'payloadData':[" +
-                                                  "          {'name':'" + BamMediatorConstants.MSG_DIRECTION + "','type':'STRING'}," +
+                                                  /*"          {'name':'" + BamMediatorConstants.MSG_DIRECTION + "','type':'STRING'}," +
                                                   "          {'name':'" + BamMediatorConstants.SERVICE_NAME + "','type':'STRING'}," +
                                                   "          {'name':'" + BamMediatorConstants.OPERATION_NAME + "','type':'STRING'}," +
                                                   "          {'name':'" + BamMediatorConstants.MSG_ID + "','type':'STRING'}," +
@@ -323,7 +321,8 @@ public class BamMediator extends AbstractMediator {
                                                   "          {'name':'transport_in_url','type':'STRING'}," +
                                                   "          {'name':'message_type','type':'STRING'}," +
                                                   "          {'name':'remote_host','type':'STRING'}," +
-                                                  "          {'name':'service_prefix','type':'STRING'}" +
+                                                  "          {'name':'service_prefix','type':'STRING'}" +*/
+                                                  this.getConstantStreamDefinitionString() +
                                                   this.getPropertyStreamDefinitionString() +
                                                   this.getEntityStreamDefinitionString() +
                                                   "  ]" +
@@ -404,7 +403,8 @@ public class BamMediator extends AbstractMediator {
     private String getPropertyStreamDefinitionString(){
         String propertyString = "";
         for (Property property : properties) {
-            propertyString = propertyString + ",        {'name':'" + property.getKey() + "','type':'STRING'}";
+            //propertyString = propertyString + ",        {'name':'" + property.getKey() + "','type':'STRING'}";
+            propertyString = propertyString + "," + this.getStreamDefinitionEntryString(property.getKey(), BamMediatorConstants.STRING);
         }
         return propertyString;
     }
@@ -412,9 +412,38 @@ public class BamMediator extends AbstractMediator {
     private String getEntityStreamDefinitionString(){
         String entityString = "";
         for (StreamEntry streamEntry : streamEntries) {
-            entityString = entityString + ",        {'name':'" + streamEntry.getName() + "','type':'" + streamEntry.getType() +"'}";
+            //entityString = entityString + ",        {'name':'" + streamEntry.getName() + "','type':'" + streamEntry.getType() +"'}";
+            entityString = entityString + "," + this.getStreamDefinitionEntryString(streamEntry.getName(), streamEntry.getType());
         }
         return entityString;
+    }
+    
+    private String getConstantStreamDefinitionString(){
+        String[] nameStrings = new String[11];
+        nameStrings[0] = BamMediatorConstants.SERVICE_NAME;
+        nameStrings[1] = BamMediatorConstants.OPERATION_NAME;
+        nameStrings[2] = BamMediatorConstants.MSG_ID;
+        nameStrings[3] = BamMediatorConstants.REQUEST_RECEIVED_TIME;
+        nameStrings[4] = BamMediatorConstants.HTTP_METHOD;
+        nameStrings[5] = BamMediatorConstants.CHARACTER_SET_ENCODING;
+        nameStrings[6] = BamMediatorConstants.REMOTE_ADDRESS;
+        nameStrings[7] = BamMediatorConstants.TRANSPORT_IN_URL;
+        nameStrings[8] = BamMediatorConstants.MESSAGE_TYPE;
+        nameStrings[9] = BamMediatorConstants.REMOTE_HOST;
+        nameStrings[10] = BamMediatorConstants.SERVICE_PREFIX;
+
+        String outputString = "          {'name':'" + BamMediatorConstants.MSG_DIRECTION + "','type':'STRING'}";
+
+        for (String nameString : nameStrings) {
+            //outputString = outputString + ",        {'name':'" + nameStrings[i] + "','type':'STRING'}";
+            outputString = outputString + "," + this.getStreamDefinitionEntryString(nameString, BamMediatorConstants.STRING);
+        }
+
+        return outputString;
+    }
+    
+    private String getStreamDefinitionEntryString(String name, String type){
+        return  "        {'name':'" + name + "','type':'" + type +"'}";
     }
     
     private Object producePropertyValue(Property property, MessageContext messageContext){
@@ -451,24 +480,12 @@ public class BamMediator extends AbstractMediator {
         serverIp = newValue;
     }
 
-    public String getServerIP() {
-        return serverIp;
-    }
-
     public void setUserName(String newValue){
         userName = newValue;
     }
 
-    public String getUserName(){
-        return password;
-    }
-
     public void setPassword(String newValue){
         password = newValue;
-    }
-
-    public String getPassword(){
-        return password;
     }
 
     public void setServerProfile(String newValue){
@@ -477,10 +494,6 @@ public class BamMediator extends AbstractMediator {
 
     public String getServerProfile(){
         return serverProfile;
-    }
-
-    public boolean isSecurity() {
-        return security;
     }
 
     public void setSecurity(boolean security) {
@@ -503,16 +516,8 @@ public class BamMediator extends AbstractMediator {
         return this.streamVersion;
     }
 
-    public String getStreamNickName() {
-        return streamNickName;
-    }
-
     public void setStreamNickName(String streamNickName) {
         this.streamNickName = streamNickName;
-    }
-
-    public String getStreamDescription() {
-        return streamDescription;
     }
 
     public void setStreamDescription(String streamDescription) {
@@ -523,28 +528,12 @@ public class BamMediator extends AbstractMediator {
         authenticationPort = newValue;
     }
 
-    public String getAuthenticationPort() {
-        return authenticationPort;
-    }
-
-    public String getReceiverPort() {
-        return receiverPort;
-    }
-
     public void setReceiverPort(String receiverPort) {
         this.receiverPort = receiverPort;
     }
 
-    public String getKsLocation() {
-        return ksLocation;
-    }
-
     public void setKsLocation(String ksLocation) {
         this.ksLocation = ksLocation;
-    }
-
-    public String getKsPassword() {
-        return ksPassword;
     }
 
     public void setKsPassword(String ksPassword) {
@@ -553,14 +542,6 @@ public class BamMediator extends AbstractMediator {
 
     public void setProperties(List<Property> newValue){
         properties = newValue;
-    }
-
-    public List<Property> getProperties(){
-        return properties;
-    }
-
-    public List<StreamEntry> getStreamEntries() {
-        return streamEntries;
     }
 
     public void setStreamEntries(List<StreamEntry> streamEntries) {

@@ -321,6 +321,8 @@
 	<orbit.version.amber>0.22.1358727.wso2v1</orbit.version.amber>
 	<exp.pkg.version.amber>0.22.1358727.wso2v1</exp.pkg.version.amber>
     <imp.pkg.version.amber>[0.22.1358727.wso2v1,1.0.0)</imp.pkg.version.amber>
+
+        <jboss-transaction-api.version>1.0.0.Final</jboss-transaction-api.version>
 	
     </properties>
 </project>

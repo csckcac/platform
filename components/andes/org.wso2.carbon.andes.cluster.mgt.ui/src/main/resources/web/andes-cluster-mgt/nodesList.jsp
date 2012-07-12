@@ -145,9 +145,8 @@
         <table class="styledLeft">
             <thead>
             <tr>
-                <th rowspan="2"><fmt:message key='node.id'/></th>
-                <th rowspan="2"><fmt:message key='node.host'/></th>
-                <th colspan="3" align="middle"><fmt:message key='node.queue.workers'/></th>
+                <th align="middle" width=50%><fmt:message key='node.id'/></th>
+                <th align="middle" width=50%><fmt:message key='node.queue.workers'/></th>
             </tr>
             </thead>
             <tbody>
@@ -166,9 +165,6 @@
             <tr>
                 <td>
                     <%=zookeeperID%>
-                </td>
-                <td>
-                    <%=ipAddress %>
                 </td>
                 <td align="right">
                     <a href="queue_List.jsp?hostName=<%=hostName%>&IPAddress=<%=ipAddress%>"><abbr

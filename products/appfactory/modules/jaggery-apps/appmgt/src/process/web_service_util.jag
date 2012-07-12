@@ -315,7 +315,7 @@
         var result;
 
         try {
-            var endPoint =getProperty('ApplicationDeployment.DeploymentStage.'+stageName+'.DeploymentServerURL');
+            var endPoint =getProperty('ApplicationDeployment.DeploymentStage.'+stageName+'.ProcesEndPoint');
             deployApplicationToStageProcess.open(options,endPoint, false);
             deployApplicationToStageProcess.send(payload);
             result = deployApplicationToStageProcess.responseE4X;

@@ -243,6 +243,7 @@ public class TomcatJaggeryWebappsDeployer extends TomcatGenericWebappsDeployer {
             StandardContext context = new StandardContext();
             context.setName(webappFile.getName());
             JaggeryApplication webapp = new JaggeryApplication(context, webappFile);
+            webapp.setProperty(WebappsConstants.WEBAPP_FILTER, JaggeryConstants.JAGGERY_WEBAPP_FILTER_PROP);
             String msg = "Error while deploying webapp: " + webapp;
             log.error(msg, e);
             webapp.setFaultReason(new Exception(msg, e));

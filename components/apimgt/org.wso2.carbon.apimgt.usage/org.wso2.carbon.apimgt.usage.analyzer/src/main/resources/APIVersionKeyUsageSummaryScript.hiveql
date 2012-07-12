@@ -6,7 +6,7 @@ CREATE EXTERNAL TABLE IF NOT EXISTS APIVersionKeyUsageTable (key STRING,
 	userId STRING,request STRING) STORED BY 
 	'org.apache.hadoop.hive.cassandra.CassandraStorageHandler' WITH SERDEPROPERTIES ( "cassandra.host" = 
 	"127.0.0.1",
-	"cassandra.port" = "9160","cassandra.ks.name" = "EVENT_KS",
+	"cassandra.port" = "9161","cassandra.ks.name" = "EVENT_KS",
 	"cassandra.ks.username" 
 	= "admin","cassandra.ks.password" = "admin",
 	"cassandra.cf.name" = 
@@ -19,7 +19,7 @@ CREATE EXTERNAL TABLE IF NOT EXISTS APIVersionKeyUsageSummaryTable(api STRING,
 	version 
 	STRING,consumerKey STRING,userId STRING,
 	request DOUBLE) STORED BY 
-	'org.apache.hadoop.hive.jdbc.storage.JDBCStorageHandler' TBLPROPERTIES ( 'mapred.jdbc.driver.class' 
+	'org.wso2.carbon.hadoop.hive.jdbc.storage.JDBCStorageHandler' TBLPROPERTIES ( 'mapred.jdbc.driver.class' 
 	= 'org.h2.Driver',
 	'mapred.jdbc.url' = 
 	'jdbc:h2:repository/database/APIMGTSTATS_DB;AUTO_SERVER=TRUE',

@@ -311,7 +311,7 @@
         var options = new Array();
         options.useSOAP = 1.1;
         options.action = "urn:process";
-        var payload = '<p:DeployToStageRequest xmlns:p="http://wso2.org"><applicationId>'+applicationKey+'</applicationId><revision>'+revision+'</revision><version>'+version+'</version><stage>'+stageName+'</stage></p:DeployToStageRequest>';
+        var payload = '<p:DeployToStageRequest xmlns:p="http://wso2.org"><p:applicationId>'+applicationKey+'</p:applicationId><p:revision>'+revision+'</p:revision><p:version>'+version+'</p:version><p:stage>'+stageName+'</p:stage></p:DeployToStageRequest>';
         var result;
 
         try {

@@ -66,8 +66,13 @@
     if (apis!=null&& apis.length == 0) {
     %>
     <div class="alert alert-info">
+        <%if(outputs.isCreatePermitted){ %>
         <div style="padding-bottom:10px">No APIs created yet. Click the button below to get started.</div>
         <div><a class="btn btn-primary" href="<%=jagg.getMappedUrl("/site/pages/add.jag")%>" onclick="jagg.sessionAwareJS({redirect:'<%=jagg.getMappedUrl("/site/pages/add.jag")%>',e:event})" >New API...</a></div>
+        <%}else{%>
+        <div style="padding-bottom:10px">No APIs created yet and You don't have enough permissions to create a new API.</div>
+        <div><a class="btn btn-primary" disabled="disabled" >New API...</a></div>
+        <%}%>
     </div>
     <%
     }

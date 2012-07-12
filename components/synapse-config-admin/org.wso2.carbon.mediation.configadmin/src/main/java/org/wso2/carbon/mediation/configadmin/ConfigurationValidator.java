@@ -50,6 +50,8 @@ public class ConfigurationValidator {
 
     public ValidationError[] validate(OMElement element) {
         List<ValidationError> errors = new ArrayList<ValidationError>();
+        
+        List<String> configSequenceList = new ArrayList<String>();
 
         if (!element.getQName().equals(XMLConfigConstants.DEFINITIONS_ELT)) {
 
@@ -65,9 +67,15 @@ public class ConfigurationValidator {
                     validateProxyService(child, errors);
                 } else if (XMLConfigConstants.ENDPOINT_ELT.equals(child.getQName())) {
                     validateEndpoint(child, errors);
-                }else if(XMLConfigConstants.SEQUENCE_ELT.equals(child.getQName())){
-                	validateSequence(child,errors);
-                }
+				} else if (XMLConfigConstants.SEQUENCE_ELT.equals(child.getQName())) {
+					String name = child.getAttributeValue((new QName("", "name")));
+					if (configSequenceList.contains(name)) {
+						errors.add(newValidationError(child, "Sequence ["+name+"] name already existing"));
+					} else {
+						validateSequence(child, errors);
+						configSequenceList.add(name);
+					}
+				}
             }
         }
 

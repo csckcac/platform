@@ -310,18 +310,6 @@ public class BamMediator extends AbstractMediator {
                                                   "          {'name':'tenantId','type':'INT'}" +
                                                   "  ]," +
                                                   "  'payloadData':[" +
-                                                  /*"          {'name':'" + BamMediatorConstants.MSG_DIRECTION + "','type':'STRING'}," +
-                                                  "          {'name':'" + BamMediatorConstants.SERVICE_NAME + "','type':'STRING'}," +
-                                                  "          {'name':'" + BamMediatorConstants.OPERATION_NAME + "','type':'STRING'}," +
-                                                  "          {'name':'" + BamMediatorConstants.MSG_ID + "','type':'STRING'}," +
-                                                  "          {'name':'request_received_time','type':'STRING'}," +
-                                                  "          {'name':'http_method','type':'STRING'}," +
-                                                  "          {'name':'character_set_encoding','type':'STRING'}," +
-                                                  "          {'name':'remote_address','type':'STRING'}," +
-                                                  "          {'name':'transport_in_url','type':'STRING'}," +
-                                                  "          {'name':'message_type','type':'STRING'}," +
-                                                  "          {'name':'remote_host','type':'STRING'}," +
-                                                  "          {'name':'service_prefix','type':'STRING'}" +*/
                                                   this.getConstantStreamDefinitionString() +
                                                   this.getPropertyStreamDefinitionString() +
                                                   this.getEntityStreamDefinitionString() +

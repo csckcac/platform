@@ -15,10 +15,21 @@
  */
 package org.wso2.carbon.url.mapper.internal.util;
 
-import org.apache.catalina.*;
+import java.io.File;
+import java.util.ArrayList;
+import java.util.List;
+import java.util.regex.Matcher;
+import java.util.regex.Pattern;
+
+import org.apache.catalina.Container;
+import org.apache.catalina.Context;
+import org.apache.catalina.Engine;
+import org.apache.catalina.Host;
+import org.apache.catalina.LifecycleException;
 import org.apache.catalina.core.StandardHost;
 import org.apache.commons.logging.Log;
 import org.apache.commons.logging.LogFactory;
+import org.wso2.carbon.context.ApplicationContext;
 import org.wso2.carbon.tomcat.api.CarbonTomcatService;
 import org.wso2.carbon.tomcat.ext.valves.CarbonContextCreatorValve;
 import org.wso2.carbon.tomcat.ext.valves.CompositeValve;
@@ -30,12 +41,6 @@ import org.wso2.carbon.user.core.tenant.TenantManager;
 import org.wso2.carbon.utils.CarbonUtils;
 import org.wso2.carbon.utils.multitenancy.MultitenantConstants;
 import org.wso2.carbon.utils.multitenancy.MultitenantUtils;
-
-import java.io.File;
-import java.util.ArrayList;
-import java.util.List;
-import java.util.regex.Matcher;
-import java.util.regex.Pattern;
 
 /**
  * util class which is doing add host to engine and getting resources from the
@@ -66,6 +71,7 @@ public class HostUtil {
                 }
             }
             return hostNames;
+            
         } catch (Exception e) {
             log.error("Failed to get url mappings for the webapp ", e);
             throw new UrlMapperException("Failed to get url mappings for the webapp " + webAppName,
@@ -126,6 +132,7 @@ public class HostUtil {
     public static MappingData[] getAllMappingsFromRegistry() throws UrlMapperException {
         try {
             // get all URL mapping information.
+            ApplicationContext.getCurrentApplicationContext().getUrlMappingOfApplication();
             return registryManager.getAllMappingsFromRegistry();
         } catch (Exception e) {
             log.error("Failed to get all hosts ", e);
@@ -252,7 +259,7 @@ public class HostUtil {
             DataHolder.getInstance().getCarbonTomcatService().addWebApp(host, "/", webAppPath);
             // add entry to registry with the tenant domain if exist in the uri if adding virtual host is successful.
             registryManager.addHostToRegistry(hostName, uri, tenantDomain);
-
+            ApplicationContext.getCurrentApplicationContext().putUrlMappingForApplication(hostName,uri);
         } catch (Exception e) {
             log.error("error in adding the virtual host to tomcat engine", e);
             throw new UrlMapperException("error in adding the virtual host to tomcat engine");
@@ -357,6 +364,7 @@ public class HostUtil {
                         host.destroy();
                         engine.removeChild(host);
                         deleteResourceToRegistry(host.getName());
+                        ApplicationContext.getCurrentApplicationContext().removeUrlMappingMap(host.getName()) ;
                         log.info("Unloaded host from the engine: " + host);
                         break;
                     }
@@ -399,12 +407,12 @@ public class HostUtil {
         try {
             // add entry to registry with the tenant domain if exist in the uri
             registryManager.addEprToRegistry(hostName, url, tenantDomain);
+            ApplicationContext.getCurrentApplicationContext().putUrlMappingForApplication(hostName,url);
         } catch (Exception e) {
             log.error("error in adding the domain to the resitry", e);
             throw new UrlMapperException("error in adding the domain to the resitry");
         }
     }
-
     /**
      * update endpoint in the registry for host
      *
@@ -423,7 +431,8 @@ public class HostUtil {
             throw new UrlMapperException("error in updating the domain to the resitry");
         }
     }
-
+    
+   
     /**
      * deleting resource in registry when deleting host
      *
@@ -433,6 +442,7 @@ public class HostUtil {
     public static void deleteResourceToRegistry(String host) throws UrlMapperException {
         try {
             registryManager.removeFromRegistry(host);
+            ApplicationContext.getCurrentApplicationContext().removeUrlMappingMap(host) ;
         } catch (Exception e) {
             log.error("error in removing the domain to the resitry", e);
             throw new UrlMapperException("error in updating the domain to the resitry");

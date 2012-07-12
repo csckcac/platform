@@ -57,15 +57,6 @@ public class BamServerProfileConfigAdminClient {
         return null;
     }
 
-    public boolean resourceAlreadyExists(String bamServerProfileLocation) throws RemoteException {
-        try {
-            return stub.resourceAlreadyExists(bamServerProfileLocation);
-        } catch (RemoteException e) {
-            handleException(bundle.getString("cannot.get.bam.server.location"), e);
-        }
-        return true;
-    }
-
     public String[] getServerProfilePathList(String bamServerProfileLocation) throws RemoteException {
         return stub.getServerProfileNameList(bamServerProfileLocation);
     }

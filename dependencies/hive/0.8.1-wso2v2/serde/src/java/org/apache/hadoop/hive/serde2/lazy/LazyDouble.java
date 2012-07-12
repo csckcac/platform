@@ -17,13 +17,14 @@
  */
 package org.apache.hadoop.hive.serde2.lazy;
 
-import java.nio.charset.CharacterCodingException;
-
 import org.apache.commons.logging.Log;
 import org.apache.commons.logging.LogFactory;
 import org.apache.hadoop.hive.serde2.io.DoubleWritable;
 import org.apache.hadoop.hive.serde2.lazy.objectinspector.primitive.LazyDoubleObjectInspector;
 import org.apache.hadoop.io.Text;
+
+import java.nio.ByteBuffer;
+import java.nio.charset.CharacterCodingException;
 
 /**
  * LazyObject for storing a value of Double.
@@ -51,9 +52,9 @@ public class LazyDouble extends
       data.set(Double.parseDouble(byteData));
       isNull = false;
     } catch (NumberFormatException e) {
-      isNull = true;
-      LOG.debug("Data not in the Double data type range so converted to null. Given data is :"
-          + byteData, e);
+      double value = ByteBuffer.wrap(bytes.getData(), start, length).asDoubleBuffer().get();
+      data.set(value);
+      isNull = false;
     } catch (CharacterCodingException e) {
       isNull = true;
       LOG.debug("Data not in the Double data type range so converted to null.", e);

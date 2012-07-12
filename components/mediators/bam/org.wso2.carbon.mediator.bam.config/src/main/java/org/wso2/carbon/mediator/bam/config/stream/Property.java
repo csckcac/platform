@@ -18,6 +18,9 @@
 
 package org.wso2.carbon.mediator.bam.config.stream;
 
+/**
+ * Property of a Stream Definition
+ */
 public class Property {
 
     private String key = "";

@@ -28,7 +28,9 @@ import org.wso2.carbon.mediator.bam.config.stream.StreamEntry;
 import javax.xml.namespace.QName;
 import java.util.List;
 
-
+/**
+ * Creates the XML string to be stored in the Registry
+ */
 public class BamServerConfigXml {
 
     private org.apache.axiom.om.OMFactory fac = OMAbstractFactory.getOMFactory();

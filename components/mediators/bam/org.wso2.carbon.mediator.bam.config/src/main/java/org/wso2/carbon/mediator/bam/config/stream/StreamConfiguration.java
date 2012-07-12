@@ -21,6 +21,9 @@ package org.wso2.carbon.mediator.bam.config.stream;
 import java.util.ArrayList;
 import java.util.List;
 
+/**
+ * Stream Configuration Definition of an Event
+ */
 public class StreamConfiguration {
 
     private String name = "";

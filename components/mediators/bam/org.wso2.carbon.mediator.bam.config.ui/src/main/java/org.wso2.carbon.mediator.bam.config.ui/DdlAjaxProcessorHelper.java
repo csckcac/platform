@@ -26,6 +26,9 @@ import org.apache.commons.logging.LogFactory;
 import java.rmi.RemoteException;
 import java.util.Locale;
 
+/**
+ * Helper class for the dropdown_ajaxprocessor.jsp
+ */
 public class DdlAjaxProcessorHelper {
 
     private static final Log log = LogFactory.getLog(DdlAjaxProcessorHelper.class);

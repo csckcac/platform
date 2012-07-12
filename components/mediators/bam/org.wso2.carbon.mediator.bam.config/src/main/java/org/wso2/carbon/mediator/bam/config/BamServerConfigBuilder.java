@@ -28,6 +28,9 @@ import org.wso2.carbon.mediator.bam.config.stream.StreamEntry;
 import javax.xml.namespace.QName;
 import java.util.Iterator;
 
+/**
+ * Builder of BamServerConfig from OMElements from the string fetched from Registry
+ */
 public class BamServerConfigBuilder {
 
     private BamServerConfig bamServerConfig = new BamServerConfig();

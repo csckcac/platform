@@ -28,6 +28,9 @@ import java.rmi.RemoteException;
 import java.util.Locale;
 import java.util.ResourceBundle;
 
+/**
+ * Admin client uses the services from org.wso2.carbon.mediator.bam.config package
+ */
 public class BamServerProfileConfigAdminClient {
 
     private static final Log log = LogFactory.getLog(BamServerProfileConfigAdminClient.class);

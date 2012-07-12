@@ -23,6 +23,9 @@ import org.wso2.carbon.mediator.bam.config.stream.StreamConfiguration;
 import java.util.ArrayList;
 import java.util.List;
 
+/**
+ * A specific BAM server configuration stored in Registry
+ */
 public class BamServerConfig {
 
     private String username;

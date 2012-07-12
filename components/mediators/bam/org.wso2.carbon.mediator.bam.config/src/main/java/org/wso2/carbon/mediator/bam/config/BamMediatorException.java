@@ -16,6 +16,9 @@
 
 package org.wso2.carbon.mediator.bam.config;
 
+/**
+ * The type of exceptions used in the BAM Mediator
+ */
 public class BamMediatorException extends Exception {
 
     private String message;

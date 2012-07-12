@@ -20,6 +20,9 @@ package org.wso2.carbon.mediator.bam.ui;
 import org.wso2.carbon.mediator.service.AbstractMediatorService;
 import org.wso2.carbon.mediator.service.ui.Mediator;
 
+/**
+ * Class that interfaces the mediator service
+ */
 public class BamMediatorService extends AbstractMediatorService {
 
     public String getTagLocalName() {

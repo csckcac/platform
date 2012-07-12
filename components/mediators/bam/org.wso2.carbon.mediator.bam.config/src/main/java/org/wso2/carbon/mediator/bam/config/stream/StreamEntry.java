@@ -18,6 +18,9 @@
 
 package org.wso2.carbon.mediator.bam.config.stream;
 
+/**
+ * Stream Configuration Entry is a special set of properties non-configurable
+ */
 public class StreamEntry {
 
     private String name = "";

@@ -35,6 +35,9 @@ import java.util.ArrayList;
 import java.util.List;
 import java.util.Locale;
 
+/**
+ * Helper class of the dropdown_ajaxprocessor.jsp
+ */
 public class DdlAjaxProcessorHelper {
 
     private static final Log log = LogFactory.getLog(DdlAjaxProcessorHelper.class);

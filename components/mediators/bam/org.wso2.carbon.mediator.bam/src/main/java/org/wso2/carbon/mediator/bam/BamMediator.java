@@ -391,7 +391,6 @@ public class BamMediator extends AbstractMediator {
     private String getPropertyStreamDefinitionString(){
         String propertyString = "";
         for (Property property : properties) {
-            //propertyString = propertyString + ",        {'name':'" + property.getKey() + "','type':'STRING'}";
             propertyString = propertyString + "," + this.getStreamDefinitionEntryString(property.getKey(), BamMediatorConstants.STRING);
         }
         return propertyString;
@@ -400,7 +399,6 @@ public class BamMediator extends AbstractMediator {
     private String getEntityStreamDefinitionString(){
         String entityString = "";
         for (StreamEntry streamEntry : streamEntries) {
-            //entityString = entityString + ",        {'name':'" + streamEntry.getName() + "','type':'" + streamEntry.getType() +"'}";
             entityString = entityString + "," + this.getStreamDefinitionEntryString(streamEntry.getName(), streamEntry.getType());
         }
         return entityString;
@@ -423,7 +421,6 @@ public class BamMediator extends AbstractMediator {
         String outputString = "          {'name':'" + BamMediatorConstants.MSG_DIRECTION + "','type':'STRING'}";
 
         for (String nameString : nameStrings) {
-            //outputString = outputString + ",        {'name':'" + nameStrings[i] + "','type':'STRING'}";
             outputString = outputString + "," + this.getStreamDefinitionEntryString(nameString, BamMediatorConstants.STRING);
         }
 
@@ -445,7 +442,6 @@ public class BamMediator extends AbstractMediator {
         } catch (JaxenException e) {
             String errorMsg = "SynapseXPath cannot be created for the Stream Property. " + e.getMessage();
             log.error(errorMsg, e);
-            //throw new BamMediatorException(errorMsg, e);
         }
         return "";
     }

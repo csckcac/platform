@@ -25,7 +25,9 @@ import org.wso2.carbon.mediator.service.ui.AbstractMediator;
 
 import javax.xml.namespace.QName;
 
-
+/**
+ * Object used to store mediator sequence information in UI side
+ */
 public class BamMediator extends AbstractMediator {
 
     private String serverProfile = "";

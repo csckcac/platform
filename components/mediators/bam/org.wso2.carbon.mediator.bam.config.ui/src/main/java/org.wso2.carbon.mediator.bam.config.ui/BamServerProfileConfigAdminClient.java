@@ -27,6 +27,9 @@ import java.rmi.RemoteException;
 import java.util.Locale;
 import java.util.ResourceBundle;
 
+/**
+ * Admin client that uses the backend persistence and cryptographic facilities
+ */
 public class BamServerProfileConfigAdminClient {
 
     private static final Log log = LogFactory.getLog(BamServerProfileConfigAdminClient.class);

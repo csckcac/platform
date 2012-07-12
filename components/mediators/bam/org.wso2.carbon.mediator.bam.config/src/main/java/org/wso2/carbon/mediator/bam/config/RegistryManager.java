@@ -23,6 +23,9 @@ import org.wso2.carbon.registry.core.Registry;
 import org.wso2.carbon.registry.core.Resource;
 import org.wso2.carbon.registry.core.exceptions.RegistryException;
 
+/**
+ * Does Configuration Registry operations required to store/fetch BAM server configurations
+ */
 public class RegistryManager extends RegistryAbstractAdmin {
 
     private static final Log log = LogFactory.getLog(RegistryManager.class);

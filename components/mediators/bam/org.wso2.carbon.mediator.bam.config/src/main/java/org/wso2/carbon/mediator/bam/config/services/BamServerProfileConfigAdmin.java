@@ -31,7 +31,7 @@ import javax.xml.stream.XMLStreamException;
 import java.io.ByteArrayInputStream;
 
 /**
- * Admin service class to access Registry
+ * Admin service class to expose all web services
  */
 public class BamServerProfileConfigAdmin extends AbstractAdmin {
     private static final Log log = LogFactory.getLog(BamServerProfileConfigAdmin.class);

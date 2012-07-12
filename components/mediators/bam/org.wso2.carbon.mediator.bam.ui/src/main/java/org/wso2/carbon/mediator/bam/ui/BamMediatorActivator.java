@@ -25,6 +25,9 @@ import org.wso2.carbon.mediator.service.MediatorService;
 
 import java.util.Properties;
 
+/**
+ * Activator class for BAM Mediator
+ */
 public class BamMediatorActivator implements BundleActivator {
 
     private static final Log log = LogFactory.getLog(BamMediatorActivator.class);

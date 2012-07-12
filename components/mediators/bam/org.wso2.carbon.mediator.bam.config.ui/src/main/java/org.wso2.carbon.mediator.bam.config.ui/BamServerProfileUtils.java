@@ -40,6 +40,9 @@ import java.util.ArrayList;
 import java.util.List;
 import java.util.Locale;
 
+/**
+ * Helper class for the configure_server_profiles.jsp
+ */
 public class BamServerProfileUtils {
 
     private static final Log log = LogFactory.getLog(BamServerProfileUtils.class);

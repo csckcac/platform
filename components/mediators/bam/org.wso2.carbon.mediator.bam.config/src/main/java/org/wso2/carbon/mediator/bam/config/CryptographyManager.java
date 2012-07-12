@@ -21,6 +21,9 @@ import org.apache.commons.logging.LogFactory;
 import org.wso2.carbon.core.util.CryptoException;
 import org.wso2.carbon.core.util.CryptoUtil;
 
+/**
+ * Encrypts and decrypts passwords. These operations are Base64 encoded to assure printable characters
+ */
 public class CryptographyManager {
 
     private static final Log log = LogFactory.getLog(CryptographyManager.class);

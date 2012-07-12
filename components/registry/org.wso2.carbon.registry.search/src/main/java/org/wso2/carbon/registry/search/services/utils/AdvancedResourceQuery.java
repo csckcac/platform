@@ -939,7 +939,7 @@ public class AdvancedResourceQuery {
 				}
 			}
 		}
-        if (bool || (leftPropertyValue != null && leftOp.equals("=")) || propertyName != null) {
+        if (bool || (rightPropertyValue != null && rightOp.equals("=")) || propertyName != null) {
             tables.add(", REG_PROPERTY PP");
             tables.add(", REG_RESOURCE_PROPERTY RP");
             if (StaticConfiguration.isVersioningProperties()) {
@@ -971,7 +971,7 @@ public class AdvancedResourceQuery {
             } else if(rightPropertyValue != null){
                 conditions.add(" PP.REG_VALUE " + rightOp + " ? ");
             }
-        } else if(leftPropertyValue != null && leftOp.equals("=")){
+        } else if(rightPropertyValue != null && rightOp.equals("=")){
             conditions.add(" PP.REG_VALUE LIKE ? ");
         }
 

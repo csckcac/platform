@@ -70,6 +70,9 @@
 		<RequestTokenUrl>https://localhost:9443/oauth/request-token</RequestTokenUrl>
 		<AccessTokenUrl>https://localhost:9443/oauth/access-token</AccessTokenUrl>
 		<AuthorizeUrl>https://localhost:9443/oauth/authorize-url</AuthorizeUrl>
+		<AuthorizationCallbackHandlers>		
+				<AuthorizationCallbackHandler Class="org.wso2.identity.oauth.DefaultOAuthCallbackHandler"/>
+		</AuthorizationCallbackHandlers>
 	</OAuth>
 
 	<MultifactorAuthentication>

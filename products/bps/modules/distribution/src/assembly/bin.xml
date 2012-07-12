@@ -367,35 +367,34 @@
             <fileMode>644</fileMode>
         </file>
         <file>
-            <source>conf/attach-mgt-conf.properties</source>
+            <source>../p2-profile-gen/target/wso2carbon-core-${carbon.version}/repository/conf/attach-mgt-conf.properties</source>
             <outputDirectory>${pom.artifactId}-${pom.version}/repository/conf</outputDirectory>
             <fileMode>644</fileMode>
         </file>
         <file>
-            <source>conf/bps.xml</source>
+            <source>../p2-profile-gen/target/wso2carbon-core-${carbon.version}/repository/conf/bps.xml</source>
             <outputDirectory>${pom.artifactId}-${pom.version}/repository/conf</outputDirectory>
             <fileMode>644</fileMode>
         </file>
         <file>
-            <source>conf/humantask.xml</source>
+            <source>../p2-profile-gen/target/wso2carbon-core-${carbon.version}/repository/conf/humantask.xml</source>
             <outputDirectory>${pom.artifactId}-${pom.version}/repository/conf</outputDirectory>
             <fileMode>644</fileMode>
         </file>
         <file>
-            <source>conf/datasources.properties</source>
+            <source>../p2-profile-gen/target/wso2carbon-core-${carbon.version}/repository/conf/datasources.properties</source>
             <outputDirectory>${pom.artifactId}-${pom.version}/repository/conf</outputDirectory>
             <fileMode>644</fileMode>
         </file>
         <file>
-            <source>conf/log4j.properties</source>
+            <source>../p2-profile-gen/target/wso2carbon-core-${carbon.version}/repository/conf/log4j.properties</source>
             <outputDirectory>${pom.artifactId}-${pom.version}/repository/conf</outputDirectory>
             <fileMode>644</fileMode>
         </file>
         <!-- Including logging-config.xml file -->
         <file>
             <source>
-                ../p2-profile-gen/target/wso2carbon-core-${carbon.version}/repository/conf/etc/logging-config.xml
-            </source>
+                ../p2-profile-gen/target/wso2carbon-core-${carbon.version}/repository/conf/etc/logging-config.xml</source>
             <outputDirectory>${pom.artifactId}-${pom.version}/repository/conf/etc
             </outputDirectory>
         </file>

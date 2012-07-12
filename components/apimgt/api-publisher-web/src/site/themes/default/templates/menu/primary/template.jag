@@ -25,10 +25,10 @@
                    <div class="pull-right">
                         <ul class="nav actions login-sign-up">
                             <li class="dropdown">
-                              <a data-toggle="dropdown" class="dropdown-toggle">admin <b class="caret"></b></a>
+                              <a data-toggle="dropdown" class="dropdown-toggle"><%=outputs.user.username%><b class="caret"></b></a>
                               <ul id="userInfoMenu" class="dropdown-menu">
                                 <li class="userInfoSection">
-                                    Logged in as <h4>admin</h4>
+                                    Logged in as <h4><%=outputs.user.username%></h4>
                                 </li>
                                 <li class="logout-link-special"><button class="btn btn-danger" onclick="logout()">Logout</button></li>
                               </ul>

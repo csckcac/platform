@@ -62,13 +62,15 @@ public class SessionObjectTestCase {
         
     }
     
-    public void testSessionPut() {
+    @Test(groups = {"jaggery"},
+            description = "Test session object operation")
+    public void testSessionOperation() {
         ClientConnectionUtil.waitForPort(9763);
         
         String finalOutput = null;
         
         try {
-        	URL jaggeryURL = new URL("http://localhost:9763/testapp/session.jag");
+        	URL jaggeryURL = new URL("http://localhost:9763/testapp/session.jag?action=operation");
         	URLConnection jaggeryServerConnection = jaggeryURL.openConnection();
         	BufferedReader in = new BufferedReader(new InputStreamReader(
         			jaggeryServerConnection.getInputStream()));
@@ -82,7 +84,61 @@ public class SessionObjectTestCase {
 		} catch (IOException e) {
 			e.printStackTrace();
 		} finally {
-			assertEquals(finalOutput, "test session value");
+			assertEquals(finalOutput, "session value : test session valuesession new work : success");
+		}
+        
+    }
+    
+    @Test(groups = {"jaggery"},
+            description = "Test session object time operation")
+    public void testSessionTimeOperation() {
+        ClientConnectionUtil.waitForPort(9763);
+        
+        String finalOutput = null;
+        
+        try {
+        	URL jaggeryURL = new URL("http://localhost:9763/testapp/session.jag?action=timeoperation");
+        	URLConnection jaggeryServerConnection = jaggeryURL.openConnection();
+        	BufferedReader in = new BufferedReader(new InputStreamReader(
+        			jaggeryServerConnection.getInputStream()));
+        
+          	String inputLine;
+  			while ((inputLine = in.readLine()) != null) {
+  				finalOutput = inputLine;
+  			}
+			    
+			in.close();
+		} catch (IOException e) {
+			e.printStackTrace();
+		} finally {
+			assertEquals(finalOutput, "sucess");
+		}
+        
+    }
+    
+    @Test(groups = {"jaggery"},
+            description = "Test session object members")
+    public void testSessionMembers() {
+        ClientConnectionUtil.waitForPort(9763);
+        
+        String finalOutput = null;
+        
+        try {
+        	URL jaggeryURL = new URL("http://localhost:9763/testapp/session.jag?action=members");
+        	URLConnection jaggeryServerConnection = jaggeryURL.openConnection();
+        	BufferedReader in = new BufferedReader(new InputStreamReader(
+        			jaggeryServerConnection.getInputStream()));
+        
+          	String inputLine;
+  			while ((inputLine = in.readLine()) != null) {
+  				finalOutput = inputLine;
+  			}
+			    
+			in.close();
+		} catch (IOException e) {
+			e.printStackTrace();
+		} finally {
+			assertEquals(finalOutput, "max inactive : 1800");
 		}
         
     }

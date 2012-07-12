@@ -62,13 +62,15 @@ public class ResponseObjectTestCase {
         
     }
     
+    @Test(groups = {"jaggery"},
+            description = "Test response object member")
     public void testReadResponse() {
         ClientConnectionUtil.waitForPort(9763);
         
         String finalOutput = null;
         
         try {
-        	URL jaggeryURL = new URL("http://localhost:9763/testapp/response.jag");
+        	URL jaggeryURL = new URL("http://localhost:9763/testapp/response.jag?action=member");
         	URLConnection jaggeryServerConnection = jaggeryURL.openConnection();
         	BufferedReader in = new BufferedReader(new InputStreamReader(
         			jaggeryServerConnection.getInputStream()));
@@ -82,7 +84,61 @@ public class ResponseObjectTestCase {
 		} catch (IOException e) {
 			e.printStackTrace();
 		} finally {
-			assertEquals(finalOutput, "200");
+			assertEquals(finalOutput, "My response content, status : 0, contentType : text/html");
+		}
+        
+    }
+    
+    @Test(groups = {"jaggery"},
+            description = "Test response object operation")
+    public void testReadResponseOperation() {
+        ClientConnectionUtil.waitForPort(9763);
+        
+        String finalOutput = null;
+        
+        try {
+        	URL jaggeryURL = new URL("http://localhost:9763/testapp/response.jag?action=operation");
+        	URLConnection jaggeryServerConnection = jaggeryURL.openConnection();
+        	BufferedReader in = new BufferedReader(new InputStreamReader(
+        			jaggeryServerConnection.getInputStream()));
+        
+          	String inputLine;
+  			while ((inputLine = in.readLine()) != null) {
+  				finalOutput = inputLine;
+  			}
+			    
+			in.close();
+		} catch (IOException e) {
+			e.printStackTrace();
+		} finally {
+			assertEquals(finalOutput, null);
+		}
+        
+    }
+    
+    @Test(groups = {"jaggery"},
+            description = "Test response object redirect operation")
+    public void testReadResponseRedirect() {
+        ClientConnectionUtil.waitForPort(9763);
+        
+        String finalOutput = null;
+        
+        try {
+        	URL jaggeryURL = new URL("http://localhost:9763/testapp/response.jag?action=redirect");
+        	URLConnection jaggeryServerConnection = jaggeryURL.openConnection();
+        	BufferedReader in = new BufferedReader(new InputStreamReader(
+        			jaggeryServerConnection.getInputStream()));
+        
+          	String inputLine;
+  			while ((inputLine = in.readLine()) != null) {
+  				finalOutput = inputLine;
+  			}
+			    
+			in.close();
+		} catch (IOException e) {
+			e.printStackTrace();
+		} finally {
+			assertEquals(finalOutput, "0");
 		}
         
     }

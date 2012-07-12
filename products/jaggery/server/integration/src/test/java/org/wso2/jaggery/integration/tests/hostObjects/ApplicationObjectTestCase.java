@@ -62,7 +62,9 @@ public class ApplicationObjectTestCase {
         
     }
     
-    public void testApplicationPut() {
+    @Test(groups = {"jaggery"},
+            description = "Test application operations")
+    public void testApplicationOperations() {
         ClientConnectionUtil.waitForPort(9763);
         
         String finalOutput = null;
@@ -82,7 +84,7 @@ public class ApplicationObjectTestCase {
 		} catch (IOException e) {
 			e.printStackTrace();
 		} finally {
-			assertEquals(finalOutput, "test application value");
+			assertEquals(finalOutput, "test jaggery application value");
 		}
         
     }

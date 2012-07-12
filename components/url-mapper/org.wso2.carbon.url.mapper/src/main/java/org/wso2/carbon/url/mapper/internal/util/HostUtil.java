@@ -132,7 +132,6 @@ public class HostUtil {
     public static MappingData[] getAllMappingsFromRegistry() throws UrlMapperException {
         try {
             // get all URL mapping information.
-            ApplicationContext.getCurrentApplicationContext().getUrlMappingOfApplication();
             return registryManager.getAllMappingsFromRegistry();
         } catch (Exception e) {
             log.error("Failed to get all hosts ", e);

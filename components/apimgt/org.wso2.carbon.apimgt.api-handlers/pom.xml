@@ -25,10 +25,10 @@
     </parent>
 
     <modelVersion>4.0.0</modelVersion>
-    <artifactId>org.wso2.carbon.apimgt.handlers</artifactId>
+    <artifactId>org.wso2.carbon.apimgt.gateway</artifactId>
     <packaging>bundle</packaging>
     <version>1.0.0-SNAPSHOT</version>
-	<name>WSO2 Carbon - QoS Handlers for REST APIs</name>
+	<name>WSO2 Carbon - API Gateway</name>
     <url>http://wso2.org</url>
 
     <dependencies>
@@ -102,13 +102,13 @@
                         <Bundle-SymbolicName>${project.artifactId}</Bundle-SymbolicName>
                         <Bundle-Name>${project.artifactId}</Bundle-Name>
                         <Private-Package>
-                            org.wso2.carbon.apimgt.handlers.internal
+                            org.wso2.carbon.apimgt.gateway.internal
                         </Private-Package>
                         <Export-Package>
                             !javax.servlet,
                             !javax.servlet.http,
-                            !org.wso2.carbon.apimgt.handlers.internal,
-                            org.wso2.carbon.apimgt.handlers.*,
+                            !org.wso2.carbon.apimgt.gateway.internal,
+                            org.wso2.carbon.apimgt.gateway.*,
                             org.wso2.throttle.*
                         </Export-Package>
                         <Import-Package>

@@ -62,7 +62,7 @@
             <item name="Managing Tasks" href="humantask-instance-management/managing_tasks.html" />
             <item name="Developing a Human Task Artifact" href="humantask-developing-a-task-artifact/index.html" />
             <item name="Human Task Management and Configuration" href="humantask-admin-guide/administrator_guide.html" />
-            <item name="Human Task Concepts" href="humantask-concepts/index.html" />
+            <item name="Human Task Concepts" href="humantask-concepts/humantask_concepts.html" />
         </menu>
         <menu name="Administrator Guide" ref="">
 	        <item name="External data sources Configuration" href="bpel-admin-guide/administrator_guide.html#Configure-WSO2-BPS-with-external-data-sources"/>

@@ -1,0 +1,206 @@
+<?xml version="1.0" encoding="ISO-8859-1"?>
+<!--
+ ~ Copyright (c) WSO2 Inc. (http://www.wso2.org) All Rights Reserved.
+ ~
+ ~ WSO2 Inc. licenses this file to you under the Apache License,
+ ~ Version 2.0 (the "License"); you may not use this file except
+ ~ in compliance with the License.
+ ~ You may obtain a copy of the License at
+ ~
+ ~    http://www.apache.org/licenses/LICENSE-2.0
+ ~
+ ~ Unless required by applicable law or agreed to in writing,
+ ~ software distributed under the License is distributed on an
+ ~ "AS IS" BASIS, WITHOUT WARRANTIES OR CONDITIONS OF ANY
+ ~ KIND, either express or implied.  See the License for the
+ ~ specific language governing permissions and limitations
+ ~ under the License.
+ -->
+<!DOCTYPE html
+        PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN"
+        "http://www.w3.org/TR/xhtml1/DTD/xhtml1-strict.dtd">
+<html xmlns="http://www.w3.org/1999/xhtml" xml:lang="en" lang="en">
+    <head>
+        <title>@product.name@ - Human Task Concepts - TODO </title>
+        <link href="../css/bps-docs.css" rel="stylesheet"/>
+        <link href="styles/dist-docs.css" rel="stylesheet" type="text/css" media="all"/>
+    </head>
+    <body>
+        <h1>Concepts - TODO</h1>
+
+        <h3>Table of Content</h3>
+        <ul>
+            <li><a href="#Generic-Human-Roles">Generic Human Roles</a></li>
+            <li><a href="#Logical-People-Groups">Logical People Groups</a></li>
+            <li><a href="#Task-Presentation-Elements">Presentation Elements</a></li>
+        </ul>
+
+        <h2 id="Generic-Human-Roles">Generic Human Roles</h2>
+
+        <p>
+            Generic human roles define what a person or a group of people resulting from a people
+            query can do with tasks and notifications. The permissions on task operations are
+            based on the generic human role(s) a specific individual belongs to.
+            The following generic human roles are taken into in Human Task specification:
+        </p>
+
+        <ul>
+
+            <li>
+                <b>Task initiator:</b> <br/>
+
+                <p>
+                    A task initiator is the person who creates the task instance.
+                </p>
+
+            </li>
+
+            <li>
+                <b>Task Stakeholders:</b> <br/>
+
+                <p>
+                    The task stakeholders are the people ultimately responsible for the oversight
+                    and outcome of the task instance.  A task stakeholder can influence the progress
+                    of a task, for example, by adding ad-hoc attachments, forwarding the task, or
+                    simply observing the state changes of the task.
+                </p>
+
+            </li>
+
+            <li>
+                <b>Potential owners:</b> <br/>
+                <p>
+                    Potential owners of a task are persons who receive the task so that
+                    they can claim and complete it. A potential owner becomes the actual
+                    owner of a task by explicitly claiming it. Before the task has been claimed,
+                    potential owners can influence the progress of the task, for example by changing
+                    the priority of the task, adding ad-hoc attachments or comments
+                </p>
+            </li>
+
+            <li>
+                <b>Actual Owner</b> <br/>
+                <p>
+                    An actual owner of a task is the person actually performing the task.
+                    When task is performed, the actual owner can execute actions,
+                    such as revoking the claim, forwarding the task, suspending and resuming
+                    the task execution or changing the priority of the task.
+                </p>
+            </li>
+
+             <li>
+                 <b>Business administrators</b> <br/>
+                 <p>
+                     Business administrators play the same role as task stakeholders but at
+                     task definition level. Therefore, business administrators can perform the
+                     exact same operations as task stakeholders. Business administrators can also
+                     observe the progress of notifications.
+                 </p>
+             </li>
+
+             <li>
+                 <b>Notification recipient</b> <br/>
+                 <p>
+                     Notification recipients are persons who receive the notification, such as happens
+                     when a deadline is missed or when a milestone is reached. This role is similar
+                     to the roles potential owners and actual owner but has different repercussions
+                     because a notification recipient does not have to perform any action and hence
+                     it is more of informational nature than participation.
+                     A notification has one or more recipients
+                 </p>
+
+             </li>
+        </ul>
+
+
+        <h2 id="Logical-People-Groups">Logical People Groups</h2>
+
+        <p>
+            The WSO2 BPS @product.version@ supports people assignments for generic human roles via
+            the concept of logical people groups with role names. A logical people groups can be defined
+            as a top level element in a human task definition. In WSO2 BPS @product.version@ , Carbon role
+            name is used to resolve people query for a particular role. For an example a logical people group
+            could be defined as follows:
+        </p>
+
+        <pre class="xml" style="font-family:monospace;">    <span style="color: #009900;"><span style="color: #000000; font-weight: bold;">&lt;htd:logicalPeopleGroups<span style="color: #000000; font-weight: bold;">&gt;</span></span></span>
+        <span style="color: #009900;"><span style="color: #000000; font-weight: bold;">&lt;htd:logicalPeopleGroup</span> <span style="color: #000066;">name</span>=<span style="color: #ff0000;">&quot;regionalClerks&quot;</span><span style="color: #000000; font-weight: bold;">&gt;</span></span>
+            <span style="color: #009900;"><span style="color: #000000; font-weight: bold;">&lt;htd:documentation</span> <span style="color: #000066;">xml:lang</span>=<span style="color: #ff0000;">&quot;en-US&quot;</span><span style="color: #000000; font-weight: bold;">&gt;</span></span>
+                The group of clerks responsible for the region specified.
+            <span style="color: #009900;"><span style="color: #000000; font-weight: bold;">&lt;/htd:documentation<span style="color: #000000; font-weight: bold;">&gt;</span></span></span>
+            <span style="color: #009900;"><span style="color: #000000; font-weight: bold;">&lt;htd:parameter</span> <span style="color: #000066;">name</span>=<span style="color: #ff0000;">&quot;role&quot;</span> <span style="color: #000066;">type</span>=<span style="color: #ff0000;">&quot;xsd:string&quot;</span><span style="color: #000000; font-weight: bold;">/&gt;</span></span>
+        <span style="color: #009900;"><span style="color: #000000; font-weight: bold;">&lt;/htd:logicalPeopleGroup<span style="color: #000000; font-weight: bold;">&gt;</span></span></span>
+    <span style="color: #009900;"><span style="color: #000000; font-weight: bold;">&lt;/htd:logicalPeopleGroups<span style="color: #000000; font-weight: bold;">&gt;</span></span></span></pre>
+
+        <p> The parameter <b>role</b> will be used to assign the role name inside the task definition </p>
+
+        <p> Once the logical people groups are defined, we can use that particular logical people group
+            for people assignments in the task definition. Refer the following segment for an example :
+        </p>
+
+        <pre class="xml" style="font-family:monospace;">            <span style="color: #009900;"><span style="color: #000000; font-weight: bold;">&lt;htd:peopleAssignments<span style="color: #000000; font-weight: bold;">&gt;</span></span></span>
+                <span style="color: #009900;"><span style="color: #000000; font-weight: bold;">&lt;htd:potentialOwners<span style="color: #000000; font-weight: bold;">&gt;</span></span></span>
+                    <span style="color: #009900;"><span style="color: #000000; font-weight: bold;">&lt;htd:from</span> <span style="color: #000066;">logicalPeopleGroup</span>=<span style="color: #ff0000;">&quot;regionalClerks&quot;</span><span style="color: #000000; font-weight: bold;">&gt;</span></span>
+                        <span style="color: #009900;"><span style="color: #000000; font-weight: bold;">&lt;htd:argument</span> <span style="color: #000066;">name</span>=<span style="color: #ff0000;">&quot;role&quot;</span><span style="color: #000000; font-weight: bold;">&gt;</span></span>
+                            regionalClerksRole
+                        <span style="color: #009900;"><span style="color: #000000; font-weight: bold;">&lt;/htd:argument<span style="color: #000000; font-weight: bold;">&gt;</span></span></span>
+                    <span style="color: #009900;"><span style="color: #000000; font-weight: bold;">&lt;/htd:from<span style="color: #000000; font-weight: bold;">&gt;</span></span></span>
+                <span style="color: #009900;"><span style="color: #000000; font-weight: bold;">&lt;/htd:potentialOwners<span style="color: #000000; font-weight: bold;">&gt;</span></span></span>
+            <span style="color: #009900;"><span style="color: #000000; font-weight: bold;">&lt;/htd:peopleAssignments<span style="color: #000000; font-weight: bold;">&gt;</span></span></span></pre>
+
+
+        <p>The above example shows how people assignment is done for the <b>Potential Owners</b> role in the
+            task definition. For the argument <b>role</b> we provide the value <b>regionalClerksRole</b>. In
+            the HumanTask runtime we would evaluate this role for it's people and the people associated
+            to that role at evaluation time would be qualified to act as potential owners of the particular task.
+        </p>
+
+
+        <h2 id="Task-Presentation-Elements">Presentation Elements</h2>
+
+        <p>
+            Presentation elements define the human readable information about a task. For example,
+            a user queries for her tasks, getting a list of tasks she could work on, displaying a
+            short description of each task. Upon selection of one of the tasks, more complete information
+            about the task is displayed by the user interface.
+        </p>
+
+
+        <p> <b>Types of presentation elements</b>:</p>
+
+        <ul>
+            <li>Presentation Name :  <br/>
+
+                This element is the short title of a task.
+            </li>
+
+            <li>Presentation Subject : <br/>
+
+                This element is a longer text that describes the task.
+            </li>
+
+            <li>Presentation Description : <br/>
+
+                This element is a long description of the task.
+            </li>
+        </ul>
+
+
+        <p>
+            <b> Presentation Parameters </b><br/>
+
+            Presentation Parameters are a special set of parameters used in presentation elements subject and description.
+            When a presentationParameter is used within subject and description, the syntax is <b>{$parameterName}</b>.
+            The Human Task runtime will automatically evaluate the presentation parameter and replace
+            the occurrences with the actual value(s).
+        </p>
+
+
+        <h3 id="References">References</h3>
+
+        <p><a href="http://docs.oasis-open.org/bpel4people/ws-humantask-1.1-spec-cs-01.html">(WS-HumanTask) Specification Version 1.1</a></p>
+
+    </body>
+
+
+</html>

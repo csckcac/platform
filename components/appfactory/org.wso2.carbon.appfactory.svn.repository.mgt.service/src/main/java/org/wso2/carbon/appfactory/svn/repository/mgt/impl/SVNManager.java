@@ -24,6 +24,8 @@ import org.wso2.carbon.appfactory.core.RevisionControlDriver;
 import org.wso2.carbon.appfactory.core.RevisionControlDriverListener;
 import org.wso2.carbon.appfactory.svn.repository.mgt.util.Util;
 
+import java.io.File;
+
 
 public class SVNManager implements RevisionControlDriver {
     private static final org.apache.commons.logging.Log log = LogFactory.getLog(SCMManagerBasedRepositoryManager.class);
@@ -34,7 +36,7 @@ public class SVNManager implements RevisionControlDriver {
 
         SCMManagerBasedRepositoryManager scm = new SCMManagerBasedRepositoryManager();
         try {
-            String checkoutUrl = getApplicationUrl() + applicationId;
+            String checkoutUrl = getApplicationUrl()+File.separator+"svn"+ File.separator+ applicationId;
             scm.checkoutApplication(checkoutUrl, applicationId, revision);
             listener.onGetSourceCompleted(applicationId, version, revision);
         } catch (SCMManagerExceptions scmManagerExceptions) {
@@ -44,8 +46,8 @@ public class SVNManager implements RevisionControlDriver {
     }
 
     public String getApplicationUrl() {
-        //TODO: Add the svn url to appfactory.xml
-        return "http://0.0.0.0:8080/scm/svn/";      // return the svn base url
+        return (appFactoryConfiguration.getFirstProperty(
+                    AppFactoryConstants.SCM_SERVER_URL));
     }
 
 

@@ -533,8 +533,6 @@ public class CachingConfigAdminService extends AbstractAdmin {
                     PersistenceUtils.getXPathAttrPredicate(Resources.NAME, cachingModule.getName()) +
                     PersistenceUtils.getXPathAttrPredicate(Resources.ModuleProperties.TYPE,
                             Resources.Associations.ENGAGED_MODULES));
-            // Disengage from description
-            description.disengageModule(cachingModule);
 
             if (isProxyService) {
                 boolean registryTransactionStarted = Transaction.isStarted();
@@ -553,6 +551,9 @@ public class CachingConfigAdminService extends AbstractAdmin {
                     configRegistry.commitTransaction();
                 }
             }
+
+            // Disengage from description
+            description.disengageModule(cachingModule);
 
             if (!isTransactionStarted) {
                 serviceGroupFilePM.commitTransaction(serviceGroupId);

@@ -67,6 +67,7 @@
             <item name="File App Sample" href="samples/file_service_app_sample.html"/>  
             <item name="XSLT Transformation Sample" href="samples/xslt_transformation_sample.html"/>
             <item name="Distributed Transactions Sample" href="samples/distributed_transactions_sample.html"/>
+	    <item name="Resources Sample" href="samples/resources_sample.html"/>
         </menu>
 
         <menu name="Getting Help" ref="overview.html">

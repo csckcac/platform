@@ -220,7 +220,7 @@
         <file>
             <source>../../jaggery-apps/appmgt/target/appmgt.zip</source>
             <outputDirectory>wso2appfactory-${pom.version}/repository/deployment/server/jaggeryapps</outputDirectory>
-            <filtered>true</filtered>
+            <filtered>false</filtered>
             <fileMode>644</fileMode>
         </file>
 

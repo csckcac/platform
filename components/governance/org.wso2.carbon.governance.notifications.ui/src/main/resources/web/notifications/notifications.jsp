@@ -160,7 +160,7 @@
                     !subscription.getDigestType().equals("");
             String notificationMethod = subscription.getNotificationMethod();
             if (notificationMethod.equals("email") || notificationMethod.equals("username") ||
-                    notificationMethod.equals("role")) {
+                    notificationMethod.equals("role") || notificationMethod.equals("work")) {
                 address = subscription.getAddress().substring(7);
                 if (isDigest) {
                     address = address.substring(11);

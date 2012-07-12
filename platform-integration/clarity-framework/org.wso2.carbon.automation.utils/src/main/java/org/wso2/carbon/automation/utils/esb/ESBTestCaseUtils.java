@@ -27,8 +27,10 @@ import org.testng.annotations.AfterMethod;
 import org.testng.annotations.BeforeMethod;
 import org.wso2.carbon.automation.api.clients.mediation.ConfigServiceAdminClient;
 import org.wso2.carbon.automation.api.clients.mediation.SynapseConfigAdminClient;
+import org.wso2.carbon.automation.core.ProductConstant;
 import org.wso2.carbon.mediation.configadmin.stub.ConfigServiceAdminStub;
 import org.wso2.carbon.utils.CarbonUtils;
+import org.wso2.carbon.utils.ServerConstants;
 
 import javax.servlet.ServletException;
 import javax.xml.stream.XMLInputFactory;
@@ -41,7 +43,7 @@ import java.io.IOException;
 import java.rmi.RemoteException;
 
 public class ESBTestCaseUtils {
-    
+
     private static final int ESB_HTTP_PORT = 8280;
     private static final int ESB_HTTPS_PORT = 8243;
     private static final int ESB_SERVLET_HTTP_PORT = 9763;
@@ -57,7 +59,7 @@ public class ESBTestCaseUtils {
      */
     public OMElement loadClasspathResource(String path) {
         OMElement documentElement = null;
-        FileInputStream inputStream;         
+        FileInputStream inputStream;
         File file = new File((getClass().getResource(path).getPath()));
         if (file.exists()) {
             try {
@@ -82,7 +84,8 @@ public class ESBTestCaseUtils {
      * @param filePath A relative path to the configuration file
      * @throws java.rmi.RemoteException If an error occurs while loading the specified configuration
      */
-    public void loadESBConfigurationFromClasspath(String filePath, String backendURL, String sessionCookie)
+    public void loadESBConfigurationFromClasspath(String filePath, String backendURL,
+                                                  String sessionCookie)
             throws RemoteException, XMLStreamException, ServletException {
         OMElement configElement = loadClasspathResource(filePath);
         updateESBConfiguration(configElement, backendURL, sessionCookie);
@@ -91,13 +94,14 @@ public class ESBTestCaseUtils {
     /**
      * Loads the configuration of the specified sample into the ESB.
      *
-     * @param number Sample number
-     * @param backendURL  backend ULR of the server admin services
+     * @param number     Sample number
+     * @param backendURL backend ULR of the server admin services
      * @throws Exception If an error occurs while loading the sample configuration
      */
-    public void loadSampleESBConfiguration(int number, String backendURL, String sessionCookie) throws Exception {
-        String filePath = "repository" + File.separator + "samples" + File.separator +
-                          "synapse_sample_" + number + ".xml";
+    public void loadSampleESBConfiguration(int number, String backendURL, String sessionCookie)
+            throws Exception {
+        String filePath = System.getProperty(ServerConstants.CARBON_HOME) + File.separator + "repository" +
+                          File.separator + "samples" + File.separator + "synapse_sample_" + number + ".xml";
         File configFile = new File(filePath);
         FileInputStream inputStream = new FileInputStream(configFile.getAbsolutePath());
         XMLStreamReader parser = XMLInputFactory.newInstance().createXMLStreamReader(inputStream);
@@ -107,11 +111,10 @@ public class ESBTestCaseUtils {
     }
 
 
-
     private void updateESBConfiguration(OMElement config, String backendURL, String sessionCookie)
             throws RemoteException, XMLStreamException, ServletException {
         SynapseConfigAdminClient synapseConfigAdminClient =
                 new SynapseConfigAdminClient(backendURL, sessionCookie);
-        synapseConfigAdminClient.updateConfiguration(config.toString());        
+        synapseConfigAdminClient.updateConfiguration(config.toString());
     }
 }

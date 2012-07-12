@@ -174,7 +174,7 @@
 
     <properties>
         <appserver.axis2.version>1.6.1.wso2v5</appserver.axis2.version>
-        <appserver.axiom.version>1.2.11.wso2v1</appserver.axiom.version>
+        <appserver.axiom.version>1.2.11.wso2v2</appserver.axiom.version>
         <appserver.wss4j.version>1.5.11.wso2v1</appserver.wss4j.version>
         <appserver.rampart.version>1.6.1.wso2v1</appserver.rampart.version>
         <appserver.hibernate.version>3.2.5.ga-wso2v1</appserver.hibernate.version>

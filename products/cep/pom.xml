@@ -204,7 +204,7 @@
         <poi.version>3.0-FINAL</poi.version>
         <carbon.version>4.0.0-SNAPSHOT</carbon.version>
         <axis2.wso2.version>1.6.1.wso2v5</axis2.wso2.version>
-	<axiom.wso2.version>1.2.11.wso2v1</axiom.wso2.version>
+	<axiom.wso2.version>1.2.11.wso2v2</axiom.wso2.version>
 	<servlet-api.version>2.4</servlet-api.version>
     </properties>
 

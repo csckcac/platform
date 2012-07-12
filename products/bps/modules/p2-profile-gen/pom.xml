@@ -84,8 +84,8 @@
 
                                 <featureArtifactDef>org.wso2.carbon:org.wso2.carbon.bpel.bam.publisher.feature:${carbon.version}</featureArtifactDef>
                                 <featureArtifactDef>org.wso2.carbon:org.wso2.carbon.databridge.agent.thrift.server.feature:${carbon.version}</featureArtifactDef>
-                +				<featureArtifactDef>org.wso2.carbon:org.wso2.carbon.databridge.commons.thrift.server.feature:${carbon.version}</featureArtifactDef>
-                +				<featureArtifactDef>org.wso2.carbon:org.wso2.carbon.databridge.commons.server.feature:${carbon.version}</featureArtifactDef>
+                				<featureArtifactDef>org.wso2.carbon:org.wso2.carbon.databridge.commons.thrift.server.feature:${carbon.version}</featureArtifactDef>
+                				<featureArtifactDef>org.wso2.carbon:org.wso2.carbon.databridge.commons.server.feature:${carbon.version}</featureArtifactDef>
 
                                 <!--featureArtifactDef>org.wso2.carbon:org.wso2.carbon.bpel.b4p.feature:${carbon.version}</featureArtifactDef-->
                                 <featureArtifactDef>org.wso2.carbon:org.wso2.carbon.humantask.feature:${carbon.version}</featureArtifactDef>

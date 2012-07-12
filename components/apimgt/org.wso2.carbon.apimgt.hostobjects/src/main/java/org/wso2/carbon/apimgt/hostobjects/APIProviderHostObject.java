@@ -24,6 +24,8 @@ import org.apache.axis2.context.ServiceContext;
 import org.apache.axis2.transport.http.HTTPConstants;
 import org.apache.commons.logging.Log;
 import org.apache.commons.logging.LogFactory;
+import org.jaggeryjs.hostobjects.file.FileHostObject;
+import org.jaggeryjs.scriptengine.exceptions.ScriptException;
 import org.mozilla.javascript.Context;
 import org.mozilla.javascript.Function;
 import org.mozilla.javascript.NativeArray;
@@ -59,17 +61,25 @@ import org.wso2.carbon.apimgt.usage.client.dto.APIVersionUsageDTO;
 import org.wso2.carbon.apimgt.usage.client.dto.PerUserAPIUsageDTO;
 import org.wso2.carbon.apimgt.usage.client.exception.APIMgtUsageQueryServiceClientException;
 import org.wso2.carbon.authenticator.stub.AuthenticationAdminStub;
-import org.jaggeryjs.hostobjects.file.FileHostObject;
-import org.jaggeryjs.scriptengine.exceptions.ScriptException;
 
 import javax.net.ssl.SSLHandshakeException;
 import java.net.ConnectException;
 import java.net.MalformedURLException;
-import java.net.URI;
-import java.net.URISyntaxException;
 import java.net.URL;
+import java.net.URLConnection;
 import java.net.UnknownHostException;
-import java.util.*;
+import java.util.ArrayList;
+import java.util.Arrays;
+import java.util.Collections;
+import java.util.Comparator;
+import java.util.Date;
+import java.util.HashSet;
+import java.util.Iterator;
+import java.util.LinkedHashSet;
+import java.util.List;
+import java.util.Map;
+import java.util.Set;
+import java.util.TreeMap;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 
@@ -1739,16 +1749,15 @@ public class APIProviderHostObject extends ScriptableObject {
 
     }
 
-    public static String jsFunction_isURLValid(String uri)
+    public static String jsFunction_isURLValid(String urlVal)
             throws APIManagementException {
         String response = "";
-        if (uri != null && !uri.equals("")) {
+        if (urlVal != null && !urlVal.equals("")) {
             try {
-                URI validUri = new URI(uri);
-                validUri.toURL().getContent();
+                URL url = new URL(urlVal);
+                URLConnection conn = url.openConnection();
+                conn.connect();
                 response = "success";
-            } catch (URISyntaxException e) {
-                response = "malformed";
             } catch (MalformedURLException e) {
                 response = "malformed";
             } catch (UnknownHostException e) {

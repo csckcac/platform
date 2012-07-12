@@ -532,7 +532,7 @@ class APIProviderImpl extends AbstractAPIManager implements APIProvider {
 
         Map<String, String> testHandlerMappings_1 = new HashMap<String, String>();
         testHandlerMappings_1.put(APITemplateBuilder.KEY_FOR_HANDLER,
-                "org.wso2.carbon.apimgt.handlers.security.APIAuthenticationHandler");
+                "org.wso2.carbon.apimgt.gateway.handlers.security.APIAuthenticationHandler");
 
         Map<String, String> testHandlerMappings_2 = new HashMap<String, String>();
         testHandlerMappings_2.put(APITemplateBuilder.KEY_FOR_HANDLER,
@@ -540,13 +540,13 @@ class APIProviderImpl extends AbstractAPIManager implements APIProvider {
 
         Map<String, String> testHandlerMappings_3 = new HashMap<String, String>();
         testHandlerMappings_3.put(APITemplateBuilder.KEY_FOR_HANDLER,
-                "org.wso2.carbon.apimgt.handlers.throttling.APIThrottleHandler");
+                "org.wso2.carbon.apimgt.gateway.handlers.throttling.APIThrottleHandler");
         testHandlerMappings_3.put(APITemplateBuilder.KEY_FOR_HANDLER_POLICY_KEY,
                 "gov:" + APIConstants.API_TIER_LOCATION);
 
         Map<String, String> testHandlerMappings_4 = new HashMap<String, String>();
         testHandlerMappings_4.put(APITemplateBuilder.KEY_FOR_HANDLER,
-                "org.wso2.carbon.apimgt.handlers.ext.APIManagerExtensionHandler");
+                "org.wso2.carbon.apimgt.gateway.handlers.ext.APIManagerExtensionHandler");
 
         List<Map<String, String>> handlerMappings = new ArrayList<Map<String, String>>();
         handlerMappings.add(testHandlerMappings_1);

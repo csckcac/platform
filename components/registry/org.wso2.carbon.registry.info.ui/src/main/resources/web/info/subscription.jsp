@@ -32,27 +32,30 @@
 <script type="text/javascript" src="../ajax/js/prototype.js"></script>
 
 <%
-    SubscriptionInstance[] subscriptions = null;
+    SubscriptionInstance[] subscriptions = new SubscriptionInstance[0];
     String cookie = (String) session.getAttribute(ServerConstants.ADMIN_SERVICE_COOKIE);
     InfoServiceClient client = new InfoServiceClient(cookie, config, session);
 %>
 <fmt:bundle basename="org.wso2.carbon.registry.info.ui.i18n.Resources">
 
 <%
-if (request.getParameter("path") != null) {
-    try{
-        SubscriptionBean subscriptionBean = client.getSubscriptions(request);
-        subscriptions = subscriptionBean.getSubscriptionInstances();
+    if (request.getParameter("path") != null) {
+        try {
+            String url = client.getRemoteURL(request);
+            if (url == null) {
+                SubscriptionBean subscriptionBean = client.getSubscriptions(request);
+                subscriptions = subscriptionBean.getSubscriptionInstances();
+            }
 
-}catch(Exception e){
-    response.setStatus(500);
-    CarbonUIMessage uiMsg = new CarbonUIMessage(CarbonUIMessage.ERROR, e.getMessage(), e);
-    session.setAttribute(CarbonUIMessage.ID, uiMsg);
+        } catch (Exception e) {
+            response.setStatus(500);
+            CarbonUIMessage uiMsg = new CarbonUIMessage(CarbonUIMessage.ERROR, e.getMessage(), e);
+            session.setAttribute(CarbonUIMessage.ID, uiMsg);
 %>
     <jsp:include page="../admin/error.jsp?<%=e.getMessage()%>"/>
     <%
-                return;
-    }
+            return;
+        }
 %>
     <div class="box1-head" style="height:auto;">
 	    <table cellspacing="0" cellpadding="0" border="0" style="width:100%">

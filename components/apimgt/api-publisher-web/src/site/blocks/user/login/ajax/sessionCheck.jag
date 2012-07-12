@@ -2,6 +2,7 @@
 include("/jagg/jagg.jag");
 
 (function () {
+    var log=new Log();
     var action = request.getParameter("action");
     if (action === "sessionCheck") {
          if (log.isDebugEnabled()) {

@@ -20,7 +20,7 @@
     <modelVersion>4.0.0</modelVersion>
     <artifactId>org.wso2.carbon.apimgt.impl</artifactId>
     <packaging>bundle</packaging>
-    <name>WSO2 Carbon - API management Implementation </name>
+    <name>WSO2 Carbon - API Management Implementation </name>
     <repositories>
         <repository>
             <id>wso2-nexus</id>

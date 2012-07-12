@@ -24,12 +24,14 @@ import org.apache.commons.logging.LogFactory;
 import org.osgi.framework.BundleContext;
 import org.osgi.framework.ServiceRegistration;
 import org.osgi.service.component.ComponentContext;
+import org.wso2.carbon.context.ApplicationContext;
 import org.wso2.carbon.registry.core.service.RegistryService;
 import org.wso2.carbon.tomcat.api.CarbonTomcatService;
 import org.wso2.carbon.tomcat.ext.valves.CarbonTomcatValve;
 import org.wso2.carbon.tomcat.ext.valves.TomcatValveContainer;
 import org.wso2.carbon.url.mapper.HotUpdateService;
 import org.wso2.carbon.url.mapper.UrlMapperValve;
+import org.wso2.carbon.url.mapper.data.MappingData;
 import org.wso2.carbon.url.mapper.internal.exception.UrlMapperException;
 import org.wso2.carbon.url.mapper.internal.util.DataHolder;
 import org.wso2.carbon.url.mapper.internal.util.HostUtil;
@@ -41,9 +43,7 @@ import org.wso2.carbon.utils.multitenancy.MultitenantConstants;
 import java.util.ArrayList;
 import java.util.List;
 
-import static org.wso2.carbon.url.mapper.internal.util.HostUtil.addHostToEngine;
-import static org.wso2.carbon.url.mapper.internal.util.HostUtil.getAllHostsFromRegistry;
-import static org.wso2.carbon.url.mapper.internal.util.HostUtil.getTenantIdForHost;
+import static org.wso2.carbon.url.mapper.internal.util.HostUtil.*;
 
 /**
  * This is urlmapper component which retrieve virtual host from
@@ -97,6 +97,7 @@ public class UrlMapperServiceComponent {
         try {
             //adding the all existing virtual hosts to the tomcat engine in the server startup
             addHostToTomcat();
+            addMappingToApplicationContext();
         } catch (Exception e) {
             log.warn("Error occurred while activating the UrlMapperServiceComponent", e);
         }
@@ -167,6 +168,23 @@ public class UrlMapperServiceComponent {
                 addHostToEngine(hostName, appBase);
             }
         }
+    }
+
+    /**
+     * Method to add all the url mappings to Map in Application Context.
+     */
+    public void addMappingToApplicationContext() {
+        MappingData[] urlmappings = new MappingData[0];
+        try {
+            urlmappings = getAllMappingsFromRegistry();
+        } catch (UrlMapperException e) {
+            log.error("error while getting all mappings from registry");
+        }
+        for(MappingData mapping: urlmappings) {
+            ApplicationContext.getCurrentApplicationContext().
+                    putUrlMappingForApplication(mapping.getMappingName(), mapping.getUrl());
+        }
+        
     }
 
     /**

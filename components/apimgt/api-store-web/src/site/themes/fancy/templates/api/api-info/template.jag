@@ -3,7 +3,7 @@
 <% var i, length, app, thumbURL, api = outputs.api, apps = outputs.applications, user = outputs.user;
    thumbURL = api.thumbURL;
    if(thumbURL && thumbURL.indexOf("images/") == 0) {
-        thumbURL = jagg.getAbsoluteFile(jagg.getThemeFile("thumbURL"));
+        thumbURL = jagg.getAbsoluteUrl(jagg.getThemeFile("thumbURL"));
    }
    var subsPermitted = jagg.module("subscription").hasSubscribePermission().permitted;
    session.put("apiPath",request.getQueryString());

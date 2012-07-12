@@ -16,7 +16,7 @@ var site = require("/site/conf/site.json");
                         "left":null,
                         "right":null,
                          "middle":{
-                            "name":"error"
+                            "name":"errors"
                         },
                         "bottom":null
                     }

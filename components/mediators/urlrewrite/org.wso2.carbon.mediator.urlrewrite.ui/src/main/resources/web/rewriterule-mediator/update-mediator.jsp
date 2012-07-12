@@ -49,10 +49,18 @@
 	            urlRulesMediator.setEvaluator(EvaluatorFactoryFinder.getInstance().getEvaluator(evaluatorElem));
 	        
 	        } catch (XMLStreamException xse) {
-	            throw new RuntimeException("Cannot Evaluate : Non xml content");
+	        	%>
+		            <script type="text/javascript">
+		          	  CARBON.showErrorDialog('<%=xse.getMessage()%>');
+		            </script>
+		        <%
 
 	        } catch (EvaluatorException ee) {
-	            throw new RuntimeException("Cannot Evaluate : Evaluator Exception");
+	            %>
+	          	  <script type="text/javascript">
+	          		  CARBON.showErrorDialog('<%=ee.getMessage()%>');
+	          	  </script>
+	       		 <%	        
 	        }
 		} else {
 			urlRulesMediator.setEvaluator();

@@ -208,7 +208,7 @@
                 </td>
             </tr>
 
-            <tr id="mediator.script.key.dynamic" style="display:none;" <%=!isKeyDynamic | "display:none".equals(keyTypeStyle) ? "style=\"display:none\";" : ""%>>
+            <tr id="mediator.script.key.dynamic" <%=!isKeyDynamic | "display:none".equals(keyTypeStyle) ? "style=\"display:none\";" : ""%>>
                 <td><fmt:message key="mediator.script.key"/><span class="required">*</span></td>
                 <td><input class="longInput" type="text" name="mediator.script.key.dynamic_val"
                            id="mediator.script.key.dynamic_val"

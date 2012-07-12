@@ -1,7 +1,7 @@
 <?xml version="1.0" encoding="UTF-8" standalone="no"?>
 <wsdl:definitions xmlns:soap="http://schemas.xmlsoap.org/wsdl/soap/" xmlns:tns="http://localhost:9763/services/ArtifactCreateCallbackService" xmlns:wsdl="http://schemas.xmlsoap.org/wsdl/" xmlns:xsd="http://www.w3.org/2001/XMLSchema" name="ArtifactCreateCallback" targetNamespace="http://localhost:9763/services/ArtifactCreateCallbackService">
   <wsdl:types>
-    <xsd:schema targetNamespace="http://localhost:9763/services/ArtifactCreateCallbackService">
+    <xsd:schema targetNamespace="http://localhost:9763/services/ArtifactCreateCallbackService" elementFormDefault="qualified">
       <xsd:element name="callbackMessgae">
         <xsd:complexType>
           <xsd:sequence>

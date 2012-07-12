@@ -9,6 +9,22 @@
     <extensionObject xsi:type="org.eclipse.bpel.ui.uiextensionmodel:VariableExtension"/>
   </extensions>
   <extensions>
+    <extendedObject href="DeployToStage.bpel#//@variables/@children.2"/>
+    <extensionObject xsi:type="org.eclipse.bpel.ui.uiextensionmodel:VariableExtension"/>
+  </extensions>
+  <extensions>
+    <extendedObject href="DeployToStage.bpel#//@variables/@children.3"/>
+    <extensionObject xsi:type="org.eclipse.bpel.ui.uiextensionmodel:VariableExtension"/>
+  </extensions>
+  <extensions>
+    <extendedObject href="DeployToStage.bpel#//@variables/@children.4"/>
+    <extensionObject xsi:type="org.eclipse.bpel.ui.uiextensionmodel:VariableExtension"/>
+  </extensions>
+  <extensions>
+    <extendedObject href="DeployToStage.bpel#//@variables/@children.5"/>
+    <extensionObject xsi:type="org.eclipse.bpel.ui.uiextensionmodel:VariableExtension"/>
+  </extensions>
+  <extensions>
     <extendedObject href="DeployToStage.bpel#//@activity"/>
     <extensionObject xsi:type="org.eclipse.bpel.ui.uiextensionmodel:ActivityExtension"/>
   </extensions>
@@ -17,16 +33,24 @@
     <extensionObject xsi:type="org.eclipse.bpel.ui.uiextensionmodel:ActivityExtension"/>
   </extensions>
   <extensions>
-    <extendedObject href="DeployToStage.bpel#//@activity/@activities.5"/>
-    <extensionObject xsi:type="org.eclipse.bpel.ui.uiextensionmodel:ActivityExtension"/>
-  </extensions>
-  <extensions>
-    <extendedObject href="DeployToStage.bpel#/"/>
-    <extensionObject xsi:type="org.eclipse.bpel.ui.uiextensionmodel:ProcessExtension" modificationStamp="1341891398000"/>
-  </extensions>
-  <extensions>
     <extendedObject href="DeployToStage.bpel#//@activity/@activities.1"/>
     <extensionObject xsi:type="org.eclipse.bpel.ui.uiextensionmodel:ActivityExtension"/>
+  </extensions>
+  <extensions>
+    <extendedObject href="DeployToStage.bpel#//@activity/@activities.1/@copy.0"/>
+    <extensionObject xsi:type="org.eclipse.bpel.ui.uiextensionmodel:CopyExtension"/>
+  </extensions>
+  <extensions>
+    <extendedObject href="DeployToStage.bpel#//@activity/@activities.1/@copy.1"/>
+    <extensionObject xsi:type="org.eclipse.bpel.ui.uiextensionmodel:CopyExtension"/>
+  </extensions>
+  <extensions>
+    <extendedObject href="DeployToStage.bpel#//@activity/@activities.1/@copy.2"/>
+    <extensionObject xsi:type="org.eclipse.bpel.ui.uiextensionmodel:CopyExtension"/>
+  </extensions>
+  <extensions>
+    <extendedObject href="DeployToStage.bpel#//@activity/@activities.1/@copy.3"/>
+    <extensionObject xsi:type="org.eclipse.bpel.ui.uiextensionmodel:CopyExtension"/>
   </extensions>
   <extensions>
     <extendedObject href="DeployToStage.bpel#//@activity/@activities.2"/>
@@ -45,51 +69,31 @@
     <extensionObject xsi:type="org.eclipse.bpel.ui.uiextensionmodel:ActivityExtension"/>
   </extensions>
   <extensions>
-    <extendedObject href="DeployToStage.bpel#//@activity/@activities.3/@activities.0"/>
-    <extensionObject xsi:type="org.eclipse.bpel.ui.uiextensionmodel:ActivityExtension"/>
+    <extendedObject href="DeployToStage.bpel#//@activity/@activities.3/@copy.0"/>
+    <extensionObject xsi:type="org.eclipse.bpel.ui.uiextensionmodel:CopyExtension"/>
+  </extensions>
+  <extensions>
+    <extendedObject href="DeployToStage.bpel#//@activity/@activities.3/@copy.1"/>
+    <extensionObject xsi:type="org.eclipse.bpel.ui.uiextensionmodel:CopyExtension"/>
+  </extensions>
+  <extensions>
+    <extendedObject href="DeployToStage.bpel#//@activity/@activities.3/@copy.2"/>
+    <extensionObject xsi:type="org.eclipse.bpel.ui.uiextensionmodel:CopyExtension"/>
+  </extensions>
+  <extensions>
+    <extendedObject href="DeployToStage.bpel#//@activity/@activities.3/@copy.3"/>
+    <extensionObject xsi:type="org.eclipse.bpel.ui.uiextensionmodel:CopyExtension"/>
+  </extensions>
+  <extensions>
+    <extendedObject href="DeployToStage.bpel#//@activity/@activities.3/@copy.4"/>
+    <extensionObject xsi:type="org.eclipse.bpel.ui.uiextensionmodel:CopyExtension"/>
   </extensions>
   <extensions>
     <extendedObject href="DeployToStage.bpel#//@activity/@activities.4"/>
     <extensionObject xsi:type="org.eclipse.bpel.ui.uiextensionmodel:ActivityExtension"/>
   </extensions>
   <extensions>
-    <extendedObject href="DeployToStage.bpel#//@variables/@children.2"/>
-    <extensionObject xsi:type="org.eclipse.bpel.ui.uiextensionmodel:VariableExtension"/>
-  </extensions>
-  <extensions>
-    <extendedObject href="DeployToStage.bpel#//@variables/@children.3"/>
-    <extensionObject xsi:type="org.eclipse.bpel.ui.uiextensionmodel:VariableExtension"/>
-  </extensions>
-  <extensions>
-    <extendedObject href="DeployToStage.bpel#//@variables/@children.4"/>
-    <extensionObject xsi:type="org.eclipse.bpel.ui.uiextensionmodel:VariableExtension"/>
-  </extensions>
-  <extensions>
-    <extendedObject href="DeployToStage.bpel#//@variables/@children.5"/>
-    <extensionObject xsi:type="org.eclipse.bpel.ui.uiextensionmodel:VariableExtension"/>
-  </extensions>
-  <extensions>
-    <extendedObject href="DeployToStage.bpel#//@activity/@activities.1/@copy.1"/>
-    <extensionObject xsi:type="org.eclipse.bpel.ui.uiextensionmodel:CopyExtension"/>
-  </extensions>
-  <extensions>
-    <extendedObject href="DeployToStage.bpel#//@activity/@activities.1/@copy.0"/>
-    <extensionObject xsi:type="org.eclipse.bpel.ui.uiextensionmodel:CopyExtension"/>
-  </extensions>
-  <extensions>
-    <extendedObject href="DeployToStage.bpel#//@activity/@activities.1/@copy.2"/>
-    <extensionObject xsi:type="org.eclipse.bpel.ui.uiextensionmodel:CopyExtension"/>
-  </extensions>
-  <extensions>
-    <extendedObject href="DeployToStage.bpel#//@activity/@activities.1/@copy.3"/>
-    <extensionObject xsi:type="org.eclipse.bpel.ui.uiextensionmodel:CopyExtension"/>
-  </extensions>
-  <extensions>
-    <extendedObject href="DeployToStage.bpel#//@activity/@activities.4/@copy.1"/>
-    <extensionObject xsi:type="org.eclipse.bpel.ui.uiextensionmodel:CopyExtension"/>
-  </extensions>
-  <extensions>
-    <extendedObject href="DeployToStage.bpel#//@activity/@activities.4/@copy.0"/>
-    <extensionObject xsi:type="org.eclipse.bpel.ui.uiextensionmodel:CopyExtension"/>
+    <extendedObject href="DeployToStage.bpel#/"/>
+    <extensionObject xsi:type="org.eclipse.bpel.ui.uiextensionmodel:ProcessExtension" modificationStamp="1342050706000"/>
   </extensions>
 </extensionmodel:ExtensionMap>

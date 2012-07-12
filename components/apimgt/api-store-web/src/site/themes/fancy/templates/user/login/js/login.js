@@ -90,7 +90,8 @@ $(document).ready(function () {
 });
 //Theme Selection Logic
 function applyTheme(elm){
-    $('#themeToApply').val(elm.title);
+    $('#themeToApply').val($(elm).attr("data-theme"));
+    $('#subthemeToApply').val($(elm).attr("data-subtheme"));
     $('#themeSelectForm').submit();
 }
 

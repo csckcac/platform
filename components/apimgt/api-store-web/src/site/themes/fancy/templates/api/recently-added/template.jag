@@ -10,7 +10,7 @@
             api = apis[i];
             thumbURL = api.thumbURL;
             if(thumbURL && thumbURL.indexOf("images/") == 0) {
-                thumbURL = site.context + "/site/themes/"+jagg.getUserTheme()+"/" + thumbURL;
+                thumbURL = jagg.getThemeFile(thumbURL);
             }
             path = jagg.getMappedUrl("/site/pages/item-info.jag") + "?name=" + api.name + "&version=" + api.version + "&provider=" + api.provider;
         %>

@@ -1,5 +1,7 @@
 {
-    "theme" : "fancy",
+    "theme" : {
+        "base" : "fancy"
+    },
     "context" : "/store",
     "recentAPIsCount" : 5,
     "topRatedCount" : 5,

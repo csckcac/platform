@@ -1,9 +1,9 @@
 <% jagg.template("api/api-info", function(inputs, outputs, jagg) { %>
-<% var stars = require("/site/themes/"+jagg.getUserTheme()+"/utils/ratings/star-generator.js"); %>
+<% var stars = require(jagg.getThemeFile("utils/ratings/star-generator.js")); %>
 <% var i, length, app, thumbURL, api = outputs.api, apps = outputs.applications, user = outputs.user;
    thumbURL = api.thumbURL;
    if(thumbURL && thumbURL.indexOf("images/") == 0) {
-        thumbURL = site.context + "/site/themes/"+jagg.getUserTheme()+"/" + thumbURL;
+        thumbURL = jagg.getAbsoluteFile(jagg.getThemeFile("thumbURL"));
    }
    var subsPermitted = jagg.module("subscription").hasSubscribePermission().permitted;
    session.put("apiPath",request.getQueryString());
@@ -33,7 +33,7 @@
                     <td colspan="<%=colspan%>">
                         <div class="star-ratings">
                              <% if(user) { %><%=stars.getDynamicStars(api.userRate)%>
-                            <% } else { %><%=stars.getStaticStars(site.context, api.userRate,jagg.getUserTheme())%><% } %>
+                            <% } else { %><%=stars.getStaticStars(site.context, api.userRate,jagg.getUserTheme().base)%><% } %>
                         </div>
                     </td>
 

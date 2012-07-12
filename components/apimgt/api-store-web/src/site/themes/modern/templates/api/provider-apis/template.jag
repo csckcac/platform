@@ -1,5 +1,5 @@
 <% jagg.template("api/provider-apis", function(inputs, outputs, jagg) {%>
-<% var stars = require("/site/themes/"+jagg.getUserTheme()+"/utils/ratings/star-generator.js"); %>
+<% var stars = require(jagg.getAbsoluteUrl(jagg.getThemeFile("utils/ratings/star-generator.js"))); %>
         <div class="corner-maker-left"></div>
 <ul class="list-main more-from-provider">
            <li class="list-header">
@@ -11,7 +11,7 @@
         api = apis[i];
         thumbURL = api.thumbURL;
         if(thumbURL && thumbURL.indexOf("images/") == 0) {
-            thumbURL = site.context + "/site/themes/"+jagg.getUserTheme()+"/" + thumbURL;
+            thumbURL = jagg.getAbsoluteUrl(jagg.getThemeFile(thumbURL));
         }
         path = jagg.getMappedUrl("/site/pages/item-info.jag") + "?name=" + api.name + "&version=" + api.version + "&provider=" + api.provider;
     %>
@@ -22,7 +22,7 @@
            </div>
            <div class="span8">
                <a href="<%=path%>" class="title" title="<%=api.name%>"><%=api.name%></a>
-               <div class="star-ratings"><%=stars.getStaticStars(site.context, api.rating, jagg.getUserTheme())%></div>
+               <div class="star-ratings"><%=stars.getStaticStars(site.context, api.rating, jagg.getUserTheme().base)%></div>
            </div>
        </div>
    </li>

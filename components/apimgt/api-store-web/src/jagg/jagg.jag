@@ -50,13 +50,15 @@ var jagg = jagg || (function () {
     };
 
     var getThemeFile = function (path) {
-        var prefix = getThemePath();
-        //var def = getDefaultThemePath();
-        //var tmpPath = prefix + path;
-        //var file = new File(tmpPath);
-        //TODO : update to isExists() method of FO
-        //return file.exists ? tmpPath : def + path;
-        return prefix + path;
+        var p, index, theme = getUserTheme();
+        if(theme.subtheme) {
+            p = getThemePath() + "subthemes/" + theme.subtheme + "/" + path;
+            index = p.indexOf("?");
+            if(new File(p.substring(0, index == -1 ? p.length : index)).isExists()) {
+                return p;
+            }
+        }
+        return getThemePath() + path;
     };
 
     var getThemesPath = function () {
@@ -64,8 +66,7 @@ var jagg = jagg || (function () {
     };
 
     var getThemePath = function () {
-        var site = require("/site/conf/site.json");
-        return getThemesPath() + getTheme() + "/";
+        return getThemesPath() + getUserTheme().base + "/";
     };
 
     var getBlockFile = function (name) {
@@ -73,11 +74,15 @@ var jagg = jagg || (function () {
     };
 
     var getInitializerFile = function (name) {
-        return getThemesDir() + getTheme() + "/templates/" + name + "/initializer.jag";
+        return getThemeFile("templates/" + name + "/initializer.jag");
     };
 
     var getTemplateFile = function (name) {
-        return getThemesDir() + getUserTheme() + "/templates/" + name + "/template.jag";
+        return getThemeFile("templates/" + name + "/template.jag");
+    };
+
+    var getTemplatePath = function(themeDir, name) {
+        return themeDir + "templates/" + name + "/template.jag";
     };
 
     var getModuleFile = function (name) {
@@ -98,20 +103,17 @@ var jagg = jagg || (function () {
 
     var getTheme = function () {
         //TODO : remove following lines if theme switching need to be avoided
-        var site, theme = request.getParameter("theme");
-        if (theme) {
-            return theme;
-        }
-        site = require("/site/conf/site.json");
-        return site.theme;
+        var site = require("/site/conf/site.json"),
+                theme = request.getParameter("theme"),
+                subtheme = request.getParameter("subtheme");
+        return {
+            base : theme ? theme : site.theme.base,
+            subtheme : subtheme ? subtheme : site.theme.subtheme
+        };
     };
 
     var getUserTheme = function () {
-        var currentTheme = getTheme();
-        if(session.get("theme")!=null){
-            currentTheme = session.get("theme");
-        }
-        return currentTheme;
+        return session.get("theme") ? session.get("theme") : getTheme();
     };
 
     var mergeParams = function (extInputs, defInputs) {
@@ -391,7 +393,7 @@ var jagg = jagg || (function () {
     };
 
     var initializer = function (name, init) {
-        var blok, parent, init;
+        var blok, parent;
         if (init) {
             return initializers[name] = init;
         }
@@ -528,6 +530,7 @@ var jagg = jagg || (function () {
         getMappedUrl:getMappedUrl,
         printData:printData,
         getUserTheme:getUserTheme,
+        getThemeFile:getThemeFile,
         getModulesDir:getModulesDir,
         data:getData,
         addHeaderCSS:addHeaderCSS,

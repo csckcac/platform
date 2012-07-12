@@ -48,7 +48,7 @@ import java.util.Map;
  *  to request message being forwarded to actual endpoint.
  */
 public class TokenPasser extends AbstractMediator {
-    private static final Log log = LogFactory.getLog(TokenPasser.class);
+
     private static final String JWT_HEADER = "{\"typ\":\"JWT\", \"alg\":\"NONE\"}";
     private static String JWT_BODY = "{\"iss\":\"[1]\", \"exp\":[2], \"http://wso2.org/claims/subscriber\":\"[3]\"}";
     private static final String API_GATEWAY_ID = "wso2.org/products/am";
@@ -73,12 +73,11 @@ public class TokenPasser extends AbstractMediator {
         String base64EncodedBody = Base64Utils.encode(replacedBody.getBytes());
         String assertion = base64EncodedHeader + "." + base64EncodedBody;
 
-
         Map transportHeaders = (Map)((Axis2MessageContext) synCtx).getAxis2MessageContext()
                 .getProperty(org.apache.axis2.context.MessageContext.TRANSPORT_HEADERS);
-        transportHeaders.put("assertion",assertion);
+        transportHeaders.put("assertion", assertion);
 
-        if(log.isDebugEnabled()){
+        if (log.isDebugEnabled()) {
             log.debug("Adding custom header with subscriber name");
             log.debug(synCtx.getMessageID() + ": assertion value : "+assertion);
         }

@@ -82,7 +82,7 @@
                         <th width="10%"><fmt:message key="mediator.payloadFactory.arg.index"/></th>
                         <th width="10%"><fmt:message key="mediator.payloadFactory.arg.type"/></th>
                         <th width="15%"><fmt:message key="mediator.payloadFactory.arg.value"/></th>
-                        <th id="ns-edior-th" width="15%"><fmt:message
+                        <th id="ns-edior-th" style="display:none;" width="15%"><fmt:message
                                 key="mediator.payloadFactory.ns.editor"/></th>
                         <th><fmt:message key="mediator.payloadFactory.action"/></th>
                     </tr>
@@ -120,7 +120,7 @@
                                        value="<%= isXPath ? arg.getExpression().toString() : arg.getValue()%>"
                                         class="esb-edit"/>
                             </td>
-                            <td id="nsEditorButtonTD<%=i%>" <%--=!isXPath ? "style =\"display:none\"" : "" --%>>
+                            <td id="nsEditorButtonTD<%=i%>" style="<%=isXPath? "display:none;" : ""%>">
                                 <% if (isXPath) { %>
                                     <script type="text/javascript">
                                         document.getElementById("ns-edior-th").style.display = "";
@@ -144,9 +144,9 @@
                     %>
                     <input type="hidden" name="argCount" id="argCount" value="<%=i%>"/>
                     <script type="text/javascript">
-                       // if (isRemainPropertyExpressions()) {
-                            //resetDisplayStyle("");
-                       // }
+                        if (isRemainPropertyExpressions()) {
+                            resetDisplayStyle("");
+                        }
                     </script>
                     </tbody>
             </table>

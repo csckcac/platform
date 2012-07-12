@@ -121,12 +121,16 @@ function deleteArg(i) {
         tblArguments.style.display = "none";
     }
     refreshIndexLabels();
+    if (!isRemainPropertyExpressions()) {
+        resetDisplayStyle("none");
+    }
 }
 
 function onArgTypeChange(i) {
     var argType = document.getElementById('argType' + i).value;
     var nsEditorButtonTD = document.getElementById("nsEditorButtonTD" + i);
     if ('expression' == argType) {
+        resetDisplayStyle("");
         nsEditorButtonTD.innerHTML = "<a href='#nsEditorLink' class='nseditor-icon-link' style='padding-left:40px' onclick=\"showNameSpaceEditor('payloadFactory.argValue" + i + "')\">" +
                 payloadfactory_i18n["mediator.payloadFactory.namespaces"] + "</a>";
         nsEditorButtonTD.style.display = "";
@@ -134,6 +138,9 @@ function onArgTypeChange(i) {
     } else {
         nsEditorButtonTD.innerHTML = "";
         nsEditorButtonTD.style.display = document.getElementById('ns-edior-th').style.display;
+        if (!isRemainPropertyExpressions()) {
+            resetDisplayStyle("none");
+        }
     }
 }
 
@@ -149,4 +156,48 @@ function refreshIndexLabels() {
 
 function payloadfactoryMediatorValidate() {
     return isValidArguments();
+}
+
+function isRemainPropertyExpressions() {
+    var nsCount = document.getElementById("argCount");
+    var i = nsCount.value;
+    var currentCount = parseInt(i);
+    if (currentCount >= 1) {
+        for (var k = 0; k < currentCount; k++) {
+            var propertyType = getSelectedValue('argType' + k);
+            if ("expression" == propertyType) {
+                return true;
+            }
+        }
+    }
+    return false;
+}
+
+
+function resetDisplayStyle(displayStyle) {
+    document.getElementById('ns-edior-th').style.display = displayStyle;
+    var nsCount = document.getElementById("argCount");
+    var i = nsCount.value;
+    var currentCount = parseInt(i);
+    if (currentCount >= 1) {
+        for (var k = 0; k < currentCount; k++) {
+            var nsEditorButtonTD = document.getElementById("nsEditorButtonTD" + k);
+            if (nsEditorButtonTD != undefined && nsEditorButtonTD != null) {
+                nsEditorButtonTD.style.display = displayStyle;
+            }
+        }
+    }
+}
+
+function getSelectedValue(id) {
+    var propertyType = document.getElementById(id);
+    var propertyType_indexstr = null;
+    var propertyType_value = null;
+    if (propertyType != null) {
+        propertyType_indexstr = propertyType.selectedIndex;
+        if (propertyType_indexstr != null) {
+            propertyType_value = propertyType.options[propertyType_indexstr].value;
+        }
+    }
+    return propertyType_value;
 }

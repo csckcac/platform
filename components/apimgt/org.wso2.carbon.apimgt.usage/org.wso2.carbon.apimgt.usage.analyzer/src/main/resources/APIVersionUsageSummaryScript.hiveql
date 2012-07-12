@@ -1,5 +1,3 @@
-DROP TABLE APIVersionUsageTable;
-DROP TABLE APIVersionUsageSummaryTable;
 CREATE EXTERNAL TABLE IF NOT EXISTS APIVersionUsageTable (key STRING,
 	api STRING,version 
 	STRING,context STRING,

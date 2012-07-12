@@ -1,5 +1,3 @@
-DROP TABLE APIVersionKeyLastAccessTable;
-DROP TABLE APIVersionKeyLastAccessSummaryTable;
 CREATE EXTERNAL TABLE IF NOT EXISTS APIVersionKeyLastAccessTable (key STRING,
 	api_version 
 	STRING,consumerKey STRING,userId STRING,

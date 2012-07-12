@@ -1,5 +1,3 @@
-DROP TABLE APIVersionServiceTimeTable;
-DROP TABLE APIVersionServiceTimeSummaryTable;
 CREATE EXTERNAL TABLE IF NOT EXISTS APIVersionServiceTimeTable (key STRING,
 	api_version 
 	STRING,context STRING,serviceTime STRING,

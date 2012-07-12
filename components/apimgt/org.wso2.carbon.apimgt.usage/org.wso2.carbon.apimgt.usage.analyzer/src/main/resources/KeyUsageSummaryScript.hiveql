@@ -1,5 +1,3 @@
-DROP TABLE KeyUsageTable;
-DROP TABLE KeyUsageSummaryTable;
 CREATE EXTERNAL TABLE IF NOT EXISTS KeyUsageTable (key STRING,
 	context STRING,consumerKey 
 	STRING,userId STRING,

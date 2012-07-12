@@ -150,7 +150,8 @@ public  class QueueManagementBeans {
             MBeanServer mBeanServer = ManagementFactory.getPlatformMBeanServer();
 
             ObjectName bindingMBeanObjectName =
-                    new ObjectName("org.wso2.andes:type=VirtualHost.Exchange,VirtualHost=\"carbon\",name=\"carbon.direct\",ExchangeType=direct");
+                    new ObjectName("org.wso2.andes:type=VirtualHost.Exchange,VirtualHost=\"carbon\",name=\"" +
+                            DIRECT_EXCHANGE+"\",ExchangeType=direct");
             String bindingOperationName = "removeBinding";
 
             Object[] bindingParams = new Object[]{queueName, queueName};
@@ -175,13 +176,13 @@ public  class QueueManagementBeans {
                     signature);
 
         } catch (MalformedObjectNameException e) {
-            throw new QueueManagerException(e);
+            throw new QueueManagerException("Cannot delete Queue : "+queueName,e);
         } catch (InstanceNotFoundException e) {
-            throw new QueueManagerException(e);
+            throw new QueueManagerException("Cannot delete Queue : "+queueName,e);
         } catch (MBeanException e) {
-            throw new QueueManagerException(e);
+            throw new QueueManagerException("Cannot delete Queue : "+queueName,e);
         } catch (JMException e) {
-            throw new QueueManagerException(e);
+            throw new QueueManagerException("Cannot delete Queue : "+queueName,e);
         }
     }
 

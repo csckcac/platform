@@ -1,6 +1,7 @@
 <% jagg.template("application/application-list", function(inputs, outputs, jagg) { %>
 <div id="application-list">
     <%
+
     var i, classes, path, app, apps = outputs.applications, length = apps.length;
     if(length > 0) {
 
@@ -14,6 +15,14 @@
 
     if (request.getParameter('currentPage') != null) {
        currentPage = parseInt(request.getParameter('currentPage'));
+       if((currentPage-1)*itemsPerPage == length){
+            currentPage = currentPage - 1;
+            %>
+            <script>
+                window.location.href = "<%=jagg.getAbsoluteUrl("/site/pages/applications.jag")%>" +"?currentPage="+"<%=currentPage%>";
+            </script>
+            <%
+        }
     }
     var from = (currentPage - 1)*itemsPerPage;
     var to = currentPage*itemsPerPage;

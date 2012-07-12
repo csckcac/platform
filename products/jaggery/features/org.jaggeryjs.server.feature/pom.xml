@@ -97,6 +97,30 @@
             <artifactId>org.jaggeryjs.hostobjects.log</artifactId>
         </dependency>
         <dependency>
+            <groupId>org.jaggeryjs</groupId>
+            <artifactId>org.jaggeryjs.hostobjects.xhr</artifactId>
+        </dependency>
+        <dependency>
+            <groupId>org.jaggeryjs</groupId>
+            <artifactId>org.jaggeryjs.hostobjects.db</artifactId>
+        </dependency>
+        <dependency>
+            <groupId>org.jaggeryjs</groupId>
+            <artifactId>org.jaggeryjs.hostobjects.ws</artifactId>
+        </dependency>
+        <dependency>
+            <groupId>org.jaggeryjs</groupId>
+            <artifactId>org.jaggeryjs.hostobjects.feed</artifactId>
+        </dependency>
+        <dependency>
+            <groupId>org.jaggeryjs</groupId>
+            <artifactId>org.jaggeryjs.hostobjects.email</artifactId>
+        </dependency>
+        <dependency>
+            <groupId>org.jaggeryjs</groupId>
+            <artifactId>org.jaggeryjs.hostobjects.jaggeryparser</artifactId>
+        </dependency>
+        <dependency>
             <groupId>commons-logging</groupId>
             <artifactId>commons-logging</artifactId>
         </dependency>
@@ -147,30 +171,6 @@
         <dependency>
             <groupId>org.json</groupId>
             <artifactId>json</artifactId>
-        </dependency>
-        <dependency>
-            <groupId>org.jaggeryjs</groupId>
-            <artifactId>org.jaggeryjs.hostobjects.xhr</artifactId>
-        </dependency>
-        <dependency>
-            <groupId>org.jaggeryjs</groupId>
-            <artifactId>org.jaggeryjs.hostobjects.db</artifactId>
-        </dependency>
-        <dependency>
-            <groupId>org.jaggeryjs</groupId>
-            <artifactId>org.jaggeryjs.hostobjects.ws</artifactId>
-        </dependency>
-        <dependency>
-            <groupId>org.jaggeryjs</groupId>
-            <artifactId>org.jaggeryjs.hostobjects.feed</artifactId>
-        </dependency>
-        <dependency>
-            <groupId>org.jaggeryjs</groupId>
-            <artifactId>org.jaggeryjs.hostobjects.email</artifactId>
-        </dependency>
-        <dependency>
-            <groupId>org.jaggeryjs</groupId>
-            <artifactId>org.jaggeryjs.hostobjects.jaggeryparser</artifactId>
         </dependency>
         <dependency>
             <groupId>org.apache.abdera.wso2</groupId>
@@ -228,25 +228,6 @@
             <groupId>org.wso2.uri.template</groupId>
             <artifactId>wso2-uri-templates</artifactId>
         </dependency>
-
-<!--        <dependency>
-            <groupId>net.sf.saxon</groupId>
-            <artifactId>saxon</artifactId>
-        </dependency>
-
-        <dependency>
-            <groupId>net.sf.saxon</groupId>
-            <artifactId>saxon-dom</artifactId>
-        </dependency>
-
-        <dependency>
-            <groupId>net.sf.saxon</groupId>
-            <artifactId>saxon-xpath</artifactId>
-        </dependency>
-        <dependency>
-            <groupId>net.sf.saxon</groupId>
-            <artifactId>saxon-xqj</artifactId>
-        </dependency>-->
         <dependency>
             <groupId>org.wso2.carbon</groupId>
             <artifactId>javax.servlet</artifactId>
@@ -342,8 +323,8 @@
 
                             </bundles>
                             <importBundles>
-								<importBundleDef>org.wso2.carbon:org.wso2.carbon.webapp.mgt</importBundleDef>
-								<importBundleDef>org.wso2.carbon:org.wso2.carbon.webapp.deployer</importBundleDef>
+                                <importBundleDef>org.wso2.carbon:org.wso2.carbon.webapp.mgt</importBundleDef>
+                                <importBundleDef>org.wso2.carbon:org.wso2.carbon.webapp.deployer</importBundleDef>
                                 <importBundleDef>org.codehaus.jettison.wso2:jettison</importBundleDef>
                                 <importBundleDef>org.wso2.wsf.javascript:axiom-e4x</importBundleDef>
                                 <importBundleDef>org.apache.rampart.wso2:rampart-core</importBundleDef>
@@ -375,8 +356,8 @@
                                 <importBundleDef>com.googlecode.json-simple.wso2:json-simple</importBundleDef>
                                 <importBundleDef>com.google.code.gson:gson</importBundleDef>
                             </importBundles>
-							<importFeatures>
-                                <importFeatureDef>org.wso2.carbon.ntask.core:${wso2carbon.version}</importFeatureDef>
+                            <importFeatures>
+                                <importFeatureDef>org.wso2.carbon.ntask.core:${ntask.feature.version}</importFeatureDef>
                             </importFeatures>
                         </configuration>
                     </execution>

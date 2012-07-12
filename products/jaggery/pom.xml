@@ -19,7 +19,6 @@
          xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
          xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/maven-v4_0_0.xsd">
 
-
     <modelVersion>4.0.0</modelVersion>
     <groupId>org.jaggeryjs</groupId>
     <artifactId>jaggery-parent</artifactId>
@@ -275,14 +274,23 @@
 
     <properties>
         <project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>
+
+        <!-- jaggery versions -->
         <jaggery.component.version>0.9.0-SNAPSHOT</jaggery.component.version>
         <jaggery.feature.version>0.9.0-SNAPSHOT</jaggery.feature.version>
         <jaggery.deployer.osgi.version>0.9.0.SNAPSHOT</jaggery.deployer.osgi.version>
-        <carbon.core.version>4.0.0-SNAPSHOT</carbon.core.version>
-        <webapp.mgt.version>4.0.0-SNAPSHOT</webapp.mgt.version>
-        <ntask.version>4.0.0-SNAPSHOT</ntask.version>
+
+        <!-- carbon versions -->
+        <carbon.kernal.version>4.0.0-SNAPSHOT</carbon.kernal.version>
+        <carbon.platform.version>4.0.0-SNAPSHOT</carbon.platform.version>
+
+        <!-- feature versions -->
+        <ntask.feature.version>4.0.0-SNAPSHOT</ntask.feature.version>
+
+        <!-- non-osgi bundle versions -->
         <emma.version>2.1.5320</emma.version>
 
+        <!-- maven plugin versions -->
         <build-helper-maven-plugin.version>1.7</build-helper-maven-plugin.version>
         <maven-compiler-plugin.version>2.3.1</maven-compiler-plugin.version>
         <maven-resources-plugin.version>2.5</maven-resources-plugin.version>
@@ -303,6 +311,7 @@
         <maven-buildnumber-plugin.version>1.1</maven-buildnumber-plugin.version>
         <maven-dependency-plugin.version>2.4</maven-dependency-plugin.version>
     </properties>
+
     <distributionManagement>
         <repository>
             <id>wso2-maven2-repository</id>
@@ -315,6 +324,5 @@
             <url>scp://dist.wso2.org/home/httpd/dist.wso2.org/snapshots/maven2/</url>
         </snapshotRepository>
     </distributionManagement>
-
 
 </project>

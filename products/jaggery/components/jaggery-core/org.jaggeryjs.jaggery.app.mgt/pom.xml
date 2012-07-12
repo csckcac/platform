@@ -97,7 +97,7 @@
                         <Import-Package>
                             org.apache.axis2.*; version="${axis2.osgi.version}",
                             org.apache.axiom.*,
-                            org.apache.neethi.*; version="${neethi.osgi.version.range.service-mgt}",
+                            org.apache.neethi.*; version="${neethi.osgi.version}",
                             javax.xml.stream.*; version="1.0.1",
                             javax.wsdl.*; version="1.6.2",
                             org.osgi.framework.*,

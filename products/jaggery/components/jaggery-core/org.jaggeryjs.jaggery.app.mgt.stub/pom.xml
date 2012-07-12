@@ -48,19 +48,19 @@
                             <tasks>
                                 <path id="wsdl2java.classpath">
                                     <pathelement
-                                            location="${settings.localRepository}/org/apache/axis2/wso2/axis2-client/${orbit.version.axis2}/axis2-client-${orbit.version.axis2}.jar"/>
+                                            location="${settings.localRepository}/org/apache/axis2/wso2/axis2-client/${axis2.osgi.version}/axis2-client-${axis2.osgi.version}.jar"/>
                                     <pathelement
-                                            location="${settings.localRepository}/org/apache/axis2/wso2/axis2/${orbit.version.axis2}/axis2-${orbit.version.axis2}.jar"/>
+                                            location="${settings.localRepository}/org/apache/axis2/wso2/axis2/${axis2.osgi.version}/axis2-${axis2.osgi.version}.jar"/>
                                     <pathelement
-                                            location="${settings.localRepository}/wsdl4j/wso2/wsdl4j/${orbit.version.wss4j}/wsdl4j-${orbit.version.wss4j}.jar"/>
+                                            location="${settings.localRepository}/wsdl4j/wso2/wsdl4j/${wss4j.osgi.version}/wsdl4j-${wss4j.osgi.version}.jar"/>
                                     <pathelement
-                                            location="${settings.localRepository}/commons-logging/commons-logging/${version.commons.logging}/commons-logging-${version.commons.logging}.jar"/>
+                                            location="${settings.localRepository}/commons-logging/commons-logging/${commons-logging.version}/commons-logging-${commons-logging.version}.jar"/>
                                     <pathelement
                                             location="${settings.localRepository}/org/apache/neethi/neethi/${neethi.osgi.version}/neethi-${neethi.osgi.version}.jar"/>
                                     <pathelement
                                             location="${settings.localRepository}/org/apache/ws/commons/axiom/wso2/axiom/${axiom.osgi.version}/axiom-${axiom.osgi.version}.jar"/>
                                     <pathelement
-                                            location="${settings.localRepository}/org/apache/ws/commons/schema/wso2/XmlSchema/${xmlschema.version}/XmlSchema-${xmlschema.version}.jar"/>
+                                            location="${settings.localRepository}/org/apache/ws/commons/schema/wso2/XmlSchema/${xmlschema.osgi.version}/XmlSchema-${xmlschema.osgi.version}.jar"/>
                                 </path>
                                 <java classname="org.apache.axis2.wsdl.WSDL2Java" fork="true">
                                     <arg line="-uri src/main/resources/JaggeryAppAdmin.wsdl -u -uw

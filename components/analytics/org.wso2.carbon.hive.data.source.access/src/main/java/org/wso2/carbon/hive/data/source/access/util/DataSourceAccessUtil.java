@@ -1,7 +1,6 @@
 package org.wso2.carbon.hive.data.source.access.util;
 
 
-import org.wso2.carbon.hadoop.hive.jdbc.storage.datasource.BasicDataSourceConstants;
 import org.apache.hadoop.hive.service.CarbonContextThreadLocal;
 import org.apache.hadoop.mapred.lib.db.DBConfiguration;
 import org.w3c.dom.Element;
@@ -64,64 +63,6 @@ public class DataSourceAccessUtil {
                                  rdbmsConfiguration.getUsername(), dataSourceProperties);
         setProperties(DBConfiguration.PASSWORD_PROPERTY,
                                  rdbmsConfiguration.getPassword(), dataSourceProperties);
-        setProperties(BasicDataSourceConstants.PROP_ACCESS_TO_UNDERLYING_CONNECTION_ALLOWED,
-                                 rdbmsConfiguration.isAccessToUnderlyingConnectionAllowed(),
-                                 dataSourceProperties);
-        setProperties(BasicDataSourceConstants.PROP_DEFAULT_AUTO_COMMIT,
-                                 rdbmsConfiguration.isDefaultAutoCommit(),
-                                 dataSourceProperties);
-        setProperties(BasicDataSourceConstants.PROP_DEFAULT_CATALOG,
-                                 rdbmsConfiguration.getDefaultCatalog(), dataSourceProperties);
-        setProperties(BasicDataSourceConstants.PROP_DEFAULT_READ_ONLY,
-                                 rdbmsConfiguration.isDefaultReadOnly(),
-                                 dataSourceProperties);
-        setProperties(BasicDataSourceConstants.PROP_DEFAULT_TRANSACTION_ISOLATION,
-                                 rdbmsConfiguration.getDefaultTransactionIsolation(),
-                                 dataSourceProperties);
-        setProperties(BasicDataSourceConstants.PROP_INITIAL_SIZE,
-                                 rdbmsConfiguration.getInitialSize(),
-                                 dataSourceProperties);
-        setProperties(BasicDataSourceConstants.PROP_LOG_ABANDONED,
-                                 rdbmsConfiguration.isLogAbandoned(),
-                                 dataSourceProperties);
-        setProperties(BasicDataSourceConstants.PROP_MAX_ACTIVE,
-                                 rdbmsConfiguration.getMaxActive(),
-                                 dataSourceProperties);
-        setProperties(BasicDataSourceConstants.PROP_MAX_IDLE,
-                                 rdbmsConfiguration.getMaxIdle(),
-                                 dataSourceProperties);
-        setProperties(BasicDataSourceConstants.PROP_MAX_WAIT,
-                                 rdbmsConfiguration.getMaxWait(),
-                                 dataSourceProperties);
-        setProperties(BasicDataSourceConstants.PROP_MIN_EVICTABLE_IDLE_TIME_MILLIS,
-                                 rdbmsConfiguration.getMinEvictableIdleTimeMillis(),
-                                 dataSourceProperties);
-        setProperties(BasicDataSourceConstants.PROP_MIN_IDLE,
-                                 rdbmsConfiguration.getMinIdle(),
-                                 dataSourceProperties);
-        setProperties(BasicDataSourceConstants.PROP_NUM_TESTS_PER_EVICTION_RUN,
-                                 rdbmsConfiguration.getNumTestsPerEvictionRun(),
-                                 dataSourceProperties);
-        setProperties(BasicDataSourceConstants.PROP_REMOVE_ABANDONED,
-                                 rdbmsConfiguration.isRemoveAbandoned(),
-                                 dataSourceProperties);
-        setProperties(BasicDataSourceConstants.PROP_REMOVE_ABANDONED_TIMEOUT,
-                                 rdbmsConfiguration.getRemoveAbandonedTimeout(),
-                                 dataSourceProperties);
-        setProperties(BasicDataSourceConstants.PROP_TEST_ON_BORROW,
-                                 rdbmsConfiguration.isTestOnBorrow(),
-                                 dataSourceProperties);
-        setProperties(BasicDataSourceConstants.PROP_TEST_ON_RETURN,
-                                 rdbmsConfiguration.isTestOnReturn(),
-                                 dataSourceProperties);
-        setProperties(BasicDataSourceConstants.PROP_TEST_WHILE_IDLE,
-                                 rdbmsConfiguration.isTestWhileIdle(),
-                                 dataSourceProperties);
-        setProperties(BasicDataSourceConstants.PROP_TIME_BETWEEN_EVICTION_RUNS_MILLIS,
-                                 rdbmsConfiguration.getTimeBetweenEvictionRunsMillis(),
-                                 dataSourceProperties);
-        setProperties(BasicDataSourceConstants.PROP_VALIDATION_QUERY,
-                                 rdbmsConfiguration.getValidationQuery(), dataSourceProperties);
         return  dataSourceProperties;
     }
 

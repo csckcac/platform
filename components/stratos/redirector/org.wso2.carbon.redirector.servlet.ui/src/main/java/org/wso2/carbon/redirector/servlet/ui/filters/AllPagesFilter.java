@@ -49,7 +49,12 @@ public class AllPagesFilter implements Filter {
         HttpServletRequest request = (HttpServletRequest) servletRequest;
         String requestedURI = request.getRequestURI();
 
-        StringTokenizer tokenizer = new StringTokenizer(requestedURI.substring(1), "/");
+        String contextPath = request.getContextPath();
+        if (contextPath == null || contextPath.equals("/")) {
+        	contextPath = "";
+        }
+        
+        StringTokenizer tokenizer = new StringTokenizer(requestedURI.substring(contextPath.length() + 1), "/");
         String[] firstUriTokens = new String[2];
         int i = 0;
         while (tokenizer.hasMoreElements()) {
@@ -63,7 +68,7 @@ public class AllPagesFilter implements Filter {
             if (requestedURI.startsWith("//")) {
                 requestedURI = requestedURI.replaceFirst("//", "/");
             }
-            String path = requestedURI.substring(firstUriTokens[0].length() +
+            String path = requestedURI.substring(contextPath.length() + firstUriTokens[0].length() +
                     firstUriTokens[1].length() + 2);
 
             // need to validate the tenant exists
@@ -102,10 +107,6 @@ public class AllPagesFilter implements Filter {
                     // we put this to hash only if the original tenant domain exist
                     tenantExistMap.put(tenantDomain, true);
                 } else {
-                    String contextPath = request.getContextPath();
-                    if (contextPath == null || contextPath.equals("/")) {
-                        contextPath = "";
-                    }
                     String errorPage = contextPath +
                             "/carbon/admin/error.jsp?The Requested tenant domain: " +
                             tenantDomain + " is inactive.";
@@ -115,10 +116,6 @@ public class AllPagesFilter implements Filter {
                     return;
                 }
             } else {
-                String contextPath = request.getContextPath();
-                if (contextPath == null || contextPath.equals("/")) {
-                    contextPath = "";
-                }
                 String errorPage = contextPath +
                         "/carbon/admin/error.jsp?The Requested tenant domain: " +
                         tenantDomain + " doesn't exist.";
@@ -150,12 +147,12 @@ public class AllPagesFilter implements Filter {
                     "/carbon/".equals(path) || "/carbon/admin".equals(path) ||
                     "/carbon/admin/".equals(path)) {
                 // we have to redirect the root to the login page directly
-                path = "/t/" + tenantDomain + "/carbon/admin/login.jsp";
-                ((HttpServletResponse) servletResponse).sendRedirect(path);
+                path = contextPath + "/carbon/admin/login.jsp";             
+            	((HttpServletResponse) servletResponse).sendRedirect(path);
                 return;
             }
             RequestDispatcher requestDispatcher =
-                    request.getRequestDispatcher(path);
+                    request.getRequestDispatcher(path);            
             requestDispatcher.forward(request, servletResponse);
             return;
         }

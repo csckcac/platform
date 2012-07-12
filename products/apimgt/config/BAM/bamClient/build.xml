@@ -26,7 +26,7 @@
     <target name="initialize_column_family_datastore" depends="compile_client">
         <java classname="org.wso2.carbon.bam.client.Client"
               classpathref="javac.bam.client.classpath" fork="true">
-            <sysproperty key="bamUrl" value="https://localhost:9443/services/"/>
+            <sysproperty key="bamUrl" value="https://localhost:9444/services/"/>
             <sysproperty key="carbon.home" value="./.."/>
             <sysproperty key="configFilePath" value="./org.wso2.carbon.bam.client/src/main/resources/"/>
         </java>

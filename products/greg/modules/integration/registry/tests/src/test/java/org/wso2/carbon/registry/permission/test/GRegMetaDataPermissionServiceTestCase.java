@@ -55,18 +55,18 @@ public class GRegMetaDataPermissionServiceTestCase {
         SERVER_URL = "https://" + FrameworkSettings.HOST_NAME +
                             ":" + FrameworkSettings.HTTPS_PORT + "/services/";
         gregHostName = FrameworkSettings.HOST_NAME;
-        userAdminStub = new UserManagementClient(SERVER_URL);
+        userAdminStub = new UserManagementClient(SERVER_URL, sessionCookie);
         userAuthenticationStub = new AuthenticatorClient(SERVER_URL);
-        admin_service_resource_admin = new ResourceAdminServiceClient(SERVER_URL);
+
         roleName = "meta_role";
         userName = "greg_meta_user";
 
-        if (userAdminStub.roleNameExists(roleName, sessionCookie)) {  //delete the role if exists
-            userAdminStub.deleteRole(sessionCookie, roleName);
+        if (userAdminStub.roleNameExists(roleName)) {  //delete the role if exists
+            userAdminStub.deleteRole(roleName);
         }
 
-        if (userAdminStub.userNameExists(roleName, sessionCookie, userName)) { //delete user if exists
-            userAdminStub.deleteUser(sessionCookie, userName);
+        if (userAdminStub.userNameExists(roleName, userName)) { //delete user if exists
+            userAdminStub.deleteUser(userName);
         }
     }
 
@@ -93,8 +93,9 @@ public class GRegMetaDataPermissionServiceTestCase {
 
         try {
             status = false;
+            admin_service_resource_admin = new ResourceAdminServiceClient(SERVER_URL, sessionCookieUser);
             // greg_meta_user does not have permission to add a Text resource
-            admin_service_resource_admin.addTextResource(sessionCookieUser, "/", "resource.txt",
+            admin_service_resource_admin.addTextResource( "/", "resource.txt",
                                                          "", "", "");
         } catch (RemoteException e) {
             status = true;
@@ -107,12 +108,13 @@ public class GRegMetaDataPermissionServiceTestCase {
         deleteRoleAndUsers(roleName, userName);
         addRolewithUser(permission2);
         sessionCookieUser = userAuthenticationStub.login(userName, userPassword, gregHostName);
+        admin_service_resource_admin = new ResourceAdminServiceClient(SERVER_URL, sessionCookieUser);
         log.info("Newly Created User Loged in :" + userName);
-        admin_service_resource_admin.addWSDL(sessionCookieUser, resourceName, "", fetchUrl);
-        admin_service_resource_admin.deleteResource(sessionCookieUser,
+        admin_service_resource_admin.addWSDL(resourceName, "", fetchUrl);
+        admin_service_resource_admin.deleteResource(
                                                     "/_system/governance/trunk/services/" +
                                                     "org/wso2/carbon/core/services/echo/");
-        admin_service_resource_admin.deleteResource(sessionCookieUser,
+        admin_service_resource_admin.deleteResource(
                                                     "/_system/governance/trunk/wsdls/org/" +
                                                     "wso2/carbon/core/services/echo/");
         userAuthenticationStub.logOut();
@@ -122,17 +124,17 @@ public class GRegMetaDataPermissionServiceTestCase {
 
     private void addRolewithUser(String[] permission) throws
                                                       Exception {
-        userAdminStub.addRole(roleName, null, permission, sessionCookie);
+        userAdminStub.addRole(roleName, null, permission);
         log.info("Successfully added Role :" + roleName);
         String roles[] = {roleName};
-        userAdminStub.addUser(sessionCookie, userName, userPassword, roles, null);
+        userAdminStub.addUser(userName, userPassword, roles, null);
         log.info("Successfully User Crated :" + userName);
     }
 
 
     private void deleteRoleAndUsers(String roleName, String userName) throws Exception {
-        userAdminStub.deleteRole(sessionCookie, roleName);
+        userAdminStub.deleteRole(roleName);
         log.info("Role " + roleName + " deleted successfully");
-        userAdminStub.deleteUser(sessionCookie, userName);
+        userAdminStub.deleteUser(userName);
     }
 }

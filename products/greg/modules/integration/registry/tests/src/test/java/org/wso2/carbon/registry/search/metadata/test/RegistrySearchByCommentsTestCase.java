@@ -66,7 +66,7 @@ public class RegistrySearchByCommentsTestCase {
         final String SERVER_URL = GregTestUtils.getServerUrl();
         ClientConnectionUtil.waitForPort(Integer.parseInt(FrameworkSettings.HTTP_PORT));
         sessionCookie = new LoginLogoutUtil().login();
-        searchAdminService = new SearchAdminServiceClient(SERVER_URL);
+        searchAdminService = new SearchAdminServiceClient(SERVER_URL, sessionCookie);
         registry = GregTestUtils.getRegistry();
         governance = GregTestUtils.getGovernanceRegistry(registry);
 
@@ -86,7 +86,7 @@ public class RegistrySearchByCommentsTestCase {
         ArrayOfString[] paramList = paramBean.getParameterList();
 
         searchQuery.setParameterValues(paramList);
-        AdvancedSearchResultsBean result = searchAdminService.getAdvancedSearchResults(sessionCookie, searchQuery);
+        AdvancedSearchResultsBean result = searchAdminService.getAdvancedSearchResults(searchQuery);
         Assert.assertNotNull(result.getResourceDataList(), "No Record Found");
         Assert.assertTrue((result.getResourceDataList().length > 0), "No Record Found. set valid Comment");
 
@@ -143,7 +143,7 @@ public class RegistrySearchByCommentsTestCase {
         ArrayOfString[] paramList = paramBean.getParameterList();
 
         searchQuery.setParameterValues(paramList);
-        AdvancedSearchResultsBean result = searchAdminService.getAdvancedSearchResults(sessionCookie, searchQuery);
+        AdvancedSearchResultsBean result = searchAdminService.getAdvancedSearchResults(searchQuery);
         Assert.assertNotNull(result.getResourceDataList(), "No Record Found");
         Assert.assertTrue((result.getResourceDataList().length > 0), "No Record Found. set valid Comment pattern");
         for (ResourceData resource : result.getResourceDataList()) {
@@ -171,7 +171,7 @@ public class RegistrySearchByCommentsTestCase {
         ArrayOfString[] paramList = paramBean.getParameterList();
 
         searchQuery.setParameterValues(paramList);
-        AdvancedSearchResultsBean result = searchAdminService.getAdvancedSearchResults(sessionCookie, searchQuery);
+        AdvancedSearchResultsBean result = searchAdminService.getAdvancedSearchResults(searchQuery);
         Assert.assertNull(result.getResourceDataList(), "Result Object found");
 
 
@@ -187,7 +187,7 @@ public class RegistrySearchByCommentsTestCase {
         paramBean.setCommentWords(invalidInput);
         ArrayOfString[] paramList = paramBean.getParameterList();
         searchQuery.setParameterValues(paramList);
-        AdvancedSearchResultsBean result = searchAdminService.getAdvancedSearchResults(sessionCookie, searchQuery);
+        AdvancedSearchResultsBean result = searchAdminService.getAdvancedSearchResults(searchQuery);
         Assert.assertNull(result.getResourceDataList(), "Result Object found.");
 
 

@@ -62,7 +62,7 @@ public class WSDLDefaultServiceLifeCycleTestCase {
         sessionCookie = new LoginLogoutUtil().login();
         final String SERVER_URL = GregTestUtils.getServerUrl();
         userName = FrameworkSettings.USER_NAME;
-        lifeCycleAdminService = new LifeCycleAdminServiceClient(SERVER_URL);
+        lifeCycleAdminService = new LifeCycleAdminServiceClient(SERVER_URL, sessionCookie);
         activitySearch = new ActivityAdminServiceClient(SERVER_URL);
         registry = GregTestUtils.getRegistry();
         Registry governance = GregTestUtils.getGovernanceRegistry(registry);
@@ -76,9 +76,9 @@ public class WSDLDefaultServiceLifeCycleTestCase {
     public void addLifecycle()
             throws RegistryException, CustomLifecyclesChecklistAdminServiceExceptionException,
                    RemoteException, InterruptedException, RegistryExceptionException {
-        lifeCycleAdminService.addAspect(sessionCookie, wsdlPathDev, ASPECT_NAME);
+        lifeCycleAdminService.addAspect(wsdlPathDev, ASPECT_NAME);
         Thread.sleep(500);
-        LifecycleBean lifeCycle = lifeCycleAdminService.getLifecycleBean(sessionCookie, wsdlPathDev);
+        LifecycleBean lifeCycle = lifeCycleAdminService.getLifecycleBean(wsdlPathDev);
         Resource service = registry.get(wsdlPathDev);
         Assert.assertNotNull(service, "Service Not found on registry path " + wsdlPathDev);
         Assert.assertEquals(service.getPath(), wsdlPathDev, "Service path changed after adding life cycle. " + wsdlPathDev);
@@ -109,7 +109,7 @@ public class WSDLDefaultServiceLifeCycleTestCase {
             throws CustomLifecyclesChecklistAdminServiceExceptionException, RemoteException,
                    InterruptedException, RegistryException, RegistryExceptionException {
 
-        lifeCycleAdminService.invokeAspect(sessionCookie, wsdlPathDev, ASPECT_NAME,
+        lifeCycleAdminService.invokeAspect(wsdlPathDev, ASPECT_NAME,
                                            ACTION_PROMOTE, null);
         Thread.sleep(2000);
 
@@ -139,7 +139,7 @@ public class WSDLDefaultServiceLifeCycleTestCase {
             throws CustomLifecyclesChecklistAdminServiceExceptionException, RemoteException,
                    InterruptedException, RegistryException, RegistryExceptionException {
 
-        lifeCycleAdminService.invokeAspect(sessionCookie, wsdlPathDev, ASPECT_NAME,
+        lifeCycleAdminService.invokeAspect(wsdlPathDev, ASPECT_NAME,
                                            ACTION_PROMOTE, null);
         Thread.sleep(2000);
 
@@ -178,7 +178,7 @@ public class WSDLDefaultServiceLifeCycleTestCase {
             throws InterruptedException, CustomLifecyclesChecklistAdminServiceExceptionException,
                    RemoteException, RegistryException {
         Thread.sleep(500);
-        LifecycleBean lifeCycle = lifeCycleAdminService.getLifecycleBean(sessionCookie, servicePath);
+        LifecycleBean lifeCycle = lifeCycleAdminService.getLifecycleBean(servicePath);
         Resource service = registry.get(servicePath);
         Assert.assertNotNull(service, "Service Not found on registry path " + servicePath);
 
@@ -191,7 +191,7 @@ public class WSDLDefaultServiceLifeCycleTestCase {
             throws InterruptedException, CustomLifecyclesChecklistAdminServiceExceptionException,
                    RemoteException, RegistryException {
         Thread.sleep(500);
-        LifecycleBean lifeCycle = lifeCycleAdminService.getLifecycleBean(sessionCookie, servicePath);
+        LifecycleBean lifeCycle = lifeCycleAdminService.getLifecycleBean(servicePath);
         Resource service = registry.get(servicePath);
         Assert.assertNotNull(service, "Service Not found on registry path " + servicePath);
 

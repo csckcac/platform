@@ -73,10 +73,10 @@ public class CustomLifeCycleDemoteForWSDLTestCase {
         sessionCookie = new LoginLogoutUtil().login();
         final String SERVER_URL = GregTestUtils.getServerUrl();
         userName = FrameworkSettings.USER_NAME;
-        lifeCycleAdminService = new LifeCycleAdminServiceClient(SERVER_URL);
+        lifeCycleAdminService = new LifeCycleAdminServiceClient(SERVER_URL, sessionCookie);
         activitySearch = new ActivityAdminServiceClient(SERVER_URL);
-        lifeCycleManagerAdminService = new LifeCycleManagementClient(SERVER_URL);
-        userManger = new UserManagementClient(SERVER_URL);
+        lifeCycleManagerAdminService = new LifeCycleManagementClient(SERVER_URL, sessionCookie);
+        userManger = new UserManagementClient(SERVER_URL, sessionCookie);
         registry = GregTestUtils.getRegistry();
         Registry governance = GregTestUtils.getGovernanceRegistry(registry);
 
@@ -93,7 +93,7 @@ public class CustomLifeCycleDemoteForWSDLTestCase {
         }
         Thread.sleep(1000);
 
-        Utils.createNewLifeCycle(sessionCookie, ASPECT_NAME, lifeCycleManagerAdminService);
+        Utils.createNewLifeCycle(ASPECT_NAME, lifeCycleManagerAdminService);
 
         Assert.assertNotNull(servicePathTrunk, "Service Not Found associate with WSDL");
 
@@ -113,7 +113,7 @@ public class CustomLifeCycleDemoteForWSDLTestCase {
                    RemoteException, InterruptedException {
         registry.associateAspect(servicePathTrunk, ASPECT_NAME);
         Thread.sleep(500);
-        LifecycleBean lifeCycle = lifeCycleAdminService.getLifecycleBean(sessionCookie, servicePathTrunk);
+        LifecycleBean lifeCycle = lifeCycleAdminService.getLifecycleBean(servicePathTrunk);
         Resource service = registry.get(servicePathTrunk);
         Assert.assertNotNull(service, "Service Not found on registry path " + servicePathTrunk);
         Assert.assertTrue(service.getPath().contains("trunk"), "Service not in trunk. " + servicePathTrunk);
@@ -121,7 +121,7 @@ public class CustomLifeCycleDemoteForWSDLTestCase {
         Assert.assertEquals(Utils.getLifeCycleProperty(lifeCycle.getLifecycleProperties()
                 , "registry.lifecycle.CustomServiceLifeCycle.state")[0], "Commencement",
                             "LifeCycle State Mismatched");
-        dependencyList = lifeCycleAdminService.getAllDependencies(sessionCookie, servicePathTrunk);
+        dependencyList = lifeCycleAdminService.getAllDependencies(servicePathTrunk);
         Assert.assertNotNull(dependencyList, "Dependency List Not Found");
         Assert.assertEquals(dependencyList.length, 8, "Dependency Count mismatched");
 
@@ -131,7 +131,7 @@ public class CustomLifeCycleDemoteForWSDLTestCase {
     public void clickCommencementCheckList()
             throws Exception, RemoteException,
                    UserAdminException {
-        LifecycleBean lifeCycle = lifeCycleAdminService.getLifecycleBean(sessionCookie, servicePathTrunk);
+        LifecycleBean lifeCycle = lifeCycleAdminService.getLifecycleBean(servicePathTrunk);
         String[] actions;
         LifecycleActions[] availableActions = lifeCycle.getAvailableActions();
         Assert.assertEquals(availableActions.length, 1, "Available Action count mismatched");
@@ -139,17 +139,17 @@ public class CustomLifeCycleDemoteForWSDLTestCase {
         Assert.assertNull(actions, "Available Action found");
 
         addRole("archrole");
-        lifeCycleAdminService.invokeAspect(sessionCookie, servicePathTrunk, ASPECT_NAME, ACTION_ITEM_CLICK,
+        lifeCycleAdminService.invokeAspect(servicePathTrunk, ASPECT_NAME, ACTION_ITEM_CLICK,
                                            new String[]{"true", "false", "false", "false", "false"});
-        lifeCycle = lifeCycleAdminService.getLifecycleBean(sessionCookie, servicePathTrunk);
+        lifeCycle = lifeCycleAdminService.getLifecycleBean(servicePathTrunk);
         Assert.assertEquals(availableActions.length, 1, "Available Action count mismatched");
         availableActions = lifeCycle.getAvailableActions();
         actions = availableActions[0].getActions();
         Assert.assertNull(actions, "Available Action found");
 
-        lifeCycleAdminService.invokeAspect(sessionCookie, servicePathTrunk, ASPECT_NAME, ACTION_ITEM_CLICK,
+        lifeCycleAdminService.invokeAspect(servicePathTrunk, ASPECT_NAME, ACTION_ITEM_CLICK,
                                            new String[]{"true", "true", "true", "true", "true", "true"});
-        lifeCycle = lifeCycleAdminService.getLifecycleBean(sessionCookie, servicePathTrunk);
+        lifeCycle = lifeCycleAdminService.getLifecycleBean(servicePathTrunk);
         availableActions = lifeCycle.getAvailableActions();
         actions = availableActions[0].getActions();
         Assert.assertNotNull(actions, "Available Action Not found");
@@ -157,7 +157,7 @@ public class CustomLifeCycleDemoteForWSDLTestCase {
         Assert.assertEquals(actions[0], "Abort", "Abort Action not found");
 
         addRole("managerrole");
-        lifeCycle = lifeCycleAdminService.getLifecycleBean(sessionCookie, servicePathTrunk);
+        lifeCycle = lifeCycleAdminService.getLifecycleBean(servicePathTrunk);
         availableActions = lifeCycle.getAvailableActions();
         actions = availableActions[0].getActions();
         Assert.assertNotNull(actions, "Available Action Not found");
@@ -183,11 +183,11 @@ public class CustomLifeCycleDemoteForWSDLTestCase {
         parameters[7] = new ArrayOfString();
         parameters[7].setArray(new String[]{"preserveOriginal", "true"});
 
-        lifeCycleAdminService.invokeAspectWithParams(sessionCookie, servicePathTrunk, ASPECT_NAME,
+        lifeCycleAdminService.invokeAspectWithParams(servicePathTrunk, ASPECT_NAME,
                                                      ACTION_PROMOTE, null, parameters);
 
         Thread.sleep(500);
-        LifecycleBean lifeCycle = lifeCycleAdminService.getLifecycleBean(sessionCookie, servicePathTrunk);
+        LifecycleBean lifeCycle = lifeCycleAdminService.getLifecycleBean(servicePathTrunk);
         Resource service = registry.get(servicePathTrunk);
         Assert.assertNotNull(service, "Service Not found on registry path " + servicePathTrunk);
         Assert.assertEquals(service.getPath(), servicePathTrunk, "Service not in branches/testing. " + servicePathTrunk);
@@ -232,25 +232,25 @@ public class CustomLifeCycleDemoteForWSDLTestCase {
     public void clickCreationCheckListToEnableDemote()
             throws CustomLifecyclesChecklistAdminServiceExceptionException, RemoteException,
                    UserAdminException {
-        LifecycleBean lifeCycle = lifeCycleAdminService.getLifecycleBean(sessionCookie, servicePathTrunk);
+        LifecycleBean lifeCycle = lifeCycleAdminService.getLifecycleBean(servicePathTrunk);
         String[] actions;
         LifecycleActions[] availableActions = lifeCycle.getAvailableActions();
         Assert.assertEquals(availableActions.length, 1, "Available Action count mismatched");
         actions = availableActions[0].getActions();
         Assert.assertNull(actions, "Available Action found");
 
-        lifeCycleAdminService.invokeAspect(sessionCookie, servicePathTrunk, ASPECT_NAME, ACTION_ITEM_CLICK,
+        lifeCycleAdminService.invokeAspect(servicePathTrunk, ASPECT_NAME, ACTION_ITEM_CLICK,
                                            new String[]{"true", "false", "false", "false", "false"});
-        lifeCycle = lifeCycleAdminService.getLifecycleBean(sessionCookie, servicePathTrunk);
+        lifeCycle = lifeCycleAdminService.getLifecycleBean(servicePathTrunk);
         Assert.assertEquals(availableActions.length, 1, "Available Action count mismatched");
         availableActions = lifeCycle.getAvailableActions();
         actions = availableActions[0].getActions();
         Assert.assertNull(actions, "Available Action found");
 
         //check demote action
-        lifeCycleAdminService.invokeAspect(sessionCookie, servicePathTrunk, ASPECT_NAME, ACTION_ITEM_CLICK,
+        lifeCycleAdminService.invokeAspect(servicePathTrunk, ASPECT_NAME, ACTION_ITEM_CLICK,
                                            new String[]{"true", "true", "true", "true", "true", "false"});
-        lifeCycle = lifeCycleAdminService.getLifecycleBean(sessionCookie, servicePathTrunk);
+        lifeCycle = lifeCycleAdminService.getLifecycleBean(servicePathTrunk);
         availableActions = lifeCycle.getAvailableActions();
         actions = availableActions[0].getActions();
         Assert.assertNotNull(actions, "Available Action Not found");
@@ -264,9 +264,9 @@ public class CustomLifeCycleDemoteForWSDLTestCase {
                    RemoteException, RegistryException, RegistryExceptionException {
         Thread.sleep(1000);
 
-        lifeCycleAdminService.invokeAspect(sessionCookie, servicePathTrunk, ASPECT_NAME,
+        lifeCycleAdminService.invokeAspect(servicePathTrunk, ASPECT_NAME,
                                            ACTION_DEMOTE, null);
-        LifecycleBean lifeCycle = lifeCycleAdminService.getLifecycleBean(sessionCookie, servicePathTrunk);
+        LifecycleBean lifeCycle = lifeCycleAdminService.getLifecycleBean(servicePathTrunk);
         Resource service = registry.get(servicePathTrunk);
         Assert.assertNotNull(service, "Service Not found on registry path " + servicePathTrunk);
         Assert.assertTrue(service.getPath().contains("trunk"), "Service not in trunk. " + servicePathTrunk);
@@ -275,7 +275,7 @@ public class CustomLifeCycleDemoteForWSDLTestCase {
                 , "registry.lifecycle.CustomServiceLifeCycle.state")[0], "Commencement",
                             "LifeCycle State Mismatched");
 
-        dependencyList = lifeCycleAdminService.getAllDependencies(sessionCookie, servicePathTrunk);
+        dependencyList = lifeCycleAdminService.getAllDependencies(servicePathTrunk);
         Assert.assertNotNull(dependencyList, "Dependency List Not Found");
         Assert.assertEquals(dependencyList.length, 8, "Dependency Count mismatched");
 
@@ -330,14 +330,14 @@ public class CustomLifeCycleDemoteForWSDLTestCase {
             throws InterruptedException, CustomLifecyclesChecklistAdminServiceExceptionException,
                    RemoteException, RegistryException, RegistryExceptionException {
         Thread.sleep(1000);
-        lifeCycleAdminService.invokeAspect(sessionCookie, servicePathTrunk, ASPECT_NAME, ACTION_ITEM_CLICK,
+        lifeCycleAdminService.invokeAspect(servicePathTrunk, ASPECT_NAME, ACTION_ITEM_CLICK,
                                            new String[]{"true", "true", "true", "true", "true", "true"});
         Thread.sleep(1000);
-        lifeCycleAdminService.invokeAspect(sessionCookie, servicePathTrunk, ASPECT_NAME,
+        lifeCycleAdminService.invokeAspect(servicePathTrunk, ASPECT_NAME,
                                            ACTION_PROMOTE, null);
 
         Thread.sleep(500);
-        LifecycleBean lifeCycle = lifeCycleAdminService.getLifecycleBean(sessionCookie, servicePathTrunk);
+        LifecycleBean lifeCycle = lifeCycleAdminService.getLifecycleBean(servicePathTrunk);
         Resource service = registry.get(servicePathTrunk);
         Assert.assertNotNull(service, "Service Not found on registry path " + servicePathTrunk);
         Assert.assertEquals(service.getPath(), servicePathTrunk, "Service not in branches/testing. " + servicePathTrunk);
@@ -345,7 +345,7 @@ public class CustomLifeCycleDemoteForWSDLTestCase {
         Assert.assertEquals(Utils.getLifeCycleProperty(lifeCycle.getLifecycleProperties(), "registry.lifecycle.CustomServiceLifeCycle.state")[0]
                 , "Creation", "LifeCycle State Mismatched");
 
-        dependencyList = lifeCycleAdminService.getAllDependencies(sessionCookie, servicePathTrunk);
+        dependencyList = lifeCycleAdminService.getAllDependencies(servicePathTrunk);
         Assert.assertNotNull(dependencyList, "Dependency List Not Found");
         Assert.assertEquals(dependencyList.length, 8, "Dependency Count mismatched");
 
@@ -387,35 +387,35 @@ public class CustomLifeCycleDemoteForWSDLTestCase {
     public void promoteServiceToDevelopment()
             throws InterruptedException, CustomLifecyclesChecklistAdminServiceExceptionException,
                    RemoteException, RegistryException, RegistryExceptionException {
-        LifecycleBean lifeCycle = lifeCycleAdminService.getLifecycleBean(sessionCookie, servicePathTrunk);
+        LifecycleBean lifeCycle = lifeCycleAdminService.getLifecycleBean(servicePathTrunk);
         String[] actions;
         LifecycleActions[] availableActions = lifeCycle.getAvailableActions();
         Assert.assertEquals(availableActions.length, 1, "Available Action count mismatched");
         actions = availableActions[0].getActions();
         Assert.assertNull(actions, "Available Action found");
 
-        lifeCycleAdminService.invokeAspect(sessionCookie, servicePathTrunk, ASPECT_NAME, ACTION_ITEM_CLICK,
+        lifeCycleAdminService.invokeAspect(servicePathTrunk, ASPECT_NAME, ACTION_ITEM_CLICK,
                                            new String[]{"true", "false", "false", "false", "false"});
-        lifeCycle = lifeCycleAdminService.getLifecycleBean(sessionCookie, servicePathTrunk);
+        lifeCycle = lifeCycleAdminService.getLifecycleBean(servicePathTrunk);
         Assert.assertEquals(availableActions.length, 1, "Available Action count mismatched");
         availableActions = lifeCycle.getAvailableActions();
         actions = availableActions[0].getActions();
         Assert.assertNull(actions, "Available Action found");
 
         //check demote action
-        lifeCycleAdminService.invokeAspect(sessionCookie, servicePathTrunk, ASPECT_NAME, ACTION_ITEM_CLICK,
+        lifeCycleAdminService.invokeAspect(servicePathTrunk, ASPECT_NAME, ACTION_ITEM_CLICK,
                                            new String[]{"true", "true", "true", "true", "true", "false"});
-        lifeCycle = lifeCycleAdminService.getLifecycleBean(sessionCookie, servicePathTrunk);
+        lifeCycle = lifeCycleAdminService.getLifecycleBean(servicePathTrunk);
         availableActions = lifeCycle.getAvailableActions();
         actions = availableActions[0].getActions();
         Assert.assertNotNull(actions, "Available Action Not found");
         Assert.assertEquals(actions.length, 1, "Action not found");
         Assert.assertEquals(actions[0], "Demote", "Demote Action not found");
 
-        lifeCycleAdminService.invokeAspect(sessionCookie, servicePathTrunk, ASPECT_NAME, ACTION_ITEM_CLICK,
+        lifeCycleAdminService.invokeAspect(servicePathTrunk, ASPECT_NAME, ACTION_ITEM_CLICK,
                                            new String[]{"true", "true", "true", "true", "true", "true"});
 
-        lifeCycle = lifeCycleAdminService.getLifecycleBean(sessionCookie, servicePathTrunk);
+        lifeCycle = lifeCycleAdminService.getLifecycleBean(servicePathTrunk);
         availableActions = lifeCycle.getAvailableActions();
         actions = availableActions[0].getActions();
         Assert.assertNotNull(actions, "Available Action Not found");
@@ -424,7 +424,7 @@ public class CustomLifeCycleDemoteForWSDLTestCase {
         Assert.assertEquals(actions[1], "Demote", "Demote Action not found");
         Assert.assertEquals(actions[2], "Abort", "Abort Action not found");
 
-        dependencyList = lifeCycleAdminService.getAllDependencies(sessionCookie, servicePathTrunk);
+        dependencyList = lifeCycleAdminService.getAllDependencies(servicePathTrunk);
         Assert.assertNotNull(dependencyList, "Dependency List Not Found");
         Assert.assertEquals(dependencyList.length, 8, "Dependency Count mismatched");
 
@@ -440,13 +440,13 @@ public class CustomLifeCycleDemoteForWSDLTestCase {
         parameters[7] = new ArrayOfString();
         parameters[7].setArray(new String[]{"preserveOriginal", "true"});
 
-        lifeCycleAdminService.invokeAspectWithParams(sessionCookie, servicePathTrunk, ASPECT_NAME,
+        lifeCycleAdminService.invokeAspectWithParams(servicePathTrunk, ASPECT_NAME,
                                                      ACTION_PROMOTE, null, parameters);
 
         Thread.sleep(500);
         servicePathBranchDev = "/_system/governance/branches/development/org/wso2/carbon/core/services/echo/1.0.0/" + serviceName;
 
-        lifeCycle = lifeCycleAdminService.getLifecycleBean(sessionCookie, servicePathBranchDev);
+        lifeCycle = lifeCycleAdminService.getLifecycleBean(servicePathBranchDev);
         Resource service = registry.get(servicePathBranchDev);
         Assert.assertNotNull(service, "Service Not found on registry path " + servicePathBranchDev);
         Assert.assertEquals(service.getPath(), servicePathBranchDev, "Service not in branches/testing. " + servicePathBranchDev);
@@ -454,7 +454,7 @@ public class CustomLifeCycleDemoteForWSDLTestCase {
         Assert.assertEquals(Utils.getLifeCycleProperty(lifeCycle.getLifecycleProperties(), "registry.lifecycle.CustomServiceLifeCycle.state")[0]
                 , "Development", "LifeCycle State Mismatched");
 
-        dependencyList = lifeCycleAdminService.getAllDependencies(sessionCookie, servicePathBranchDev);
+        dependencyList = lifeCycleAdminService.getAllDependencies(servicePathBranchDev);
         Assert.assertNotNull(dependencyList, "Dependency List Not Found");
         Assert.assertEquals(dependencyList.length, 8, "Dependency Count mismatched");
         for (String dependencyPath : dependencyList) {
@@ -508,10 +508,10 @@ public class CustomLifeCycleDemoteForWSDLTestCase {
                    RegistryExceptionException {
         addRole("devrole");
         Thread.sleep(500);
-        lifeCycleAdminService.invokeAspect(sessionCookie, servicePathBranchDev, ASPECT_NAME, ACTION_ITEM_CLICK,
+        lifeCycleAdminService.invokeAspect(servicePathBranchDev, ASPECT_NAME, ACTION_ITEM_CLICK,
                                            new String[]{"true", "true", "true"});
 
-        LifecycleBean lifeCycle = lifeCycleAdminService.getLifecycleBean(sessionCookie, servicePathBranchDev);
+        LifecycleBean lifeCycle = lifeCycleAdminService.getLifecycleBean(servicePathBranchDev);
         String[] actions;
         LifecycleActions[] availableActions = lifeCycle.getAvailableActions();
         actions = availableActions[0].getActions();
@@ -521,7 +521,7 @@ public class CustomLifeCycleDemoteForWSDLTestCase {
         Assert.assertEquals(actions[1], "Demote", "Demote Action not found");
         Assert.assertEquals(actions[2], "Abort", "Abort Action not found");
 
-        dependencyList = lifeCycleAdminService.getAllDependencies(sessionCookie, servicePathBranchDev);
+        dependencyList = lifeCycleAdminService.getAllDependencies(servicePathBranchDev);
         Assert.assertNotNull(dependencyList, "Dependency List Not Found");
         Assert.assertEquals(dependencyList.length, 8, "Dependency Count mismatched");
 
@@ -536,12 +536,12 @@ public class CustomLifeCycleDemoteForWSDLTestCase {
         parameters[7] = new ArrayOfString();
         parameters[7].setArray(new String[]{"preserveOriginal", "true"});
 
-        lifeCycleAdminService.invokeAspectWithParams(sessionCookie, servicePathBranchDev, ASPECT_NAME,
+        lifeCycleAdminService.invokeAspectWithParams(servicePathBranchDev, ASPECT_NAME,
                                                      ACTION_DEMOTE, null, parameters);
 
         servicePathTrunkDemote = "/_system/governance/trunk/services/org/wso2/carbon/core/services/echo/1.0.0/" + serviceName;
 
-        lifeCycle = lifeCycleAdminService.getLifecycleBean(sessionCookie, servicePathTrunkDemote);
+        lifeCycle = lifeCycleAdminService.getLifecycleBean(servicePathTrunkDemote);
         Resource service = registry.get(servicePathTrunkDemote);
         Assert.assertNotNull(service, "Service Not found on registry path " + servicePathTrunkDemote);
         Assert.assertTrue(service.getPath().contains("trunk"), "Service not in trunk. " + servicePathTrunkDemote);
@@ -550,7 +550,7 @@ public class CustomLifeCycleDemoteForWSDLTestCase {
                 , "registry.lifecycle.CustomServiceLifeCycle.state")[0], "Commencement",
                             "LifeCycle State Mismatched");
 
-        dependencyList = lifeCycleAdminService.getAllDependencies(sessionCookie, servicePathTrunkDemote);
+        dependencyList = lifeCycleAdminService.getAllDependencies(servicePathTrunkDemote);
         Assert.assertNotNull(dependencyList, "Dependency List Not Found");
         Assert.assertEquals(dependencyList.length, 8, "Dependency Count mismatched");
         for (String dependencyPath : dependencyList) {
@@ -621,7 +621,7 @@ public class CustomLifeCycleDemoteForWSDLTestCase {
             registry.delete(servicePathTrunkDemote);
         }
 
-        Assert.assertTrue(lifeCycleManagerAdminService.deleteLifeCycle(sessionCookie, ASPECT_NAME),
+        Assert.assertTrue(lifeCycleManagerAdminService.deleteLifeCycle(ASPECT_NAME),
                           "Life Cycle Deleted failed");
         registry = null;
         activitySearch = null;
@@ -631,28 +631,28 @@ public class CustomLifeCycleDemoteForWSDLTestCase {
     private void deleteRolesIfExist()
             throws Exception, RemoteException {
 
-        if (userManger.roleNameExists("archrole", sessionCookie)) {
-            userManger.deleteRole(sessionCookie, "archrole");
+        if (userManger.roleNameExists("archrole")) {
+            userManger.deleteRole("archrole");
         }
 
-        if (userManger.roleNameExists("managerrole", sessionCookie)) {
-            userManger.deleteRole(sessionCookie, "managerrole");
+        if (userManger.roleNameExists("managerrole")) {
+            userManger.deleteRole("managerrole");
         }
 
-        if (userManger.roleNameExists("devrole", sessionCookie)) {
-            userManger.deleteRole(sessionCookie, "devrole");
+        if (userManger.roleNameExists("devrole")) {
+            userManger.deleteRole("devrole");
         }
 
-        if (userManger.roleNameExists("qarole", sessionCookie)) {
-            userManger.deleteRole(sessionCookie, "qarole");
+        if (userManger.roleNameExists("qarole")) {
+            userManger.deleteRole("qarole");
         }
-        if (userManger.roleNameExists("techoprole", sessionCookie)) {
-            userManger.deleteRole(sessionCookie, "techoprole");
+        if (userManger.roleNameExists("techoprole")) {
+            userManger.deleteRole("techoprole");
         }
     }
 
     private void addRole(String roleName) throws Exception {
         String[] permissions = {"/permission/"};
-        userManger.addRole(roleName, new String[]{userName}, permissions, sessionCookie);
+        userManger.addRole(roleName, new String[]{userName}, permissions);
     }
 }

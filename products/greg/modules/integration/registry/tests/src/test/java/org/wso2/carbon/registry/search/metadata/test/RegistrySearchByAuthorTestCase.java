@@ -50,7 +50,7 @@ public class RegistrySearchByAuthorTestCase {
         ClientConnectionUtil.waitForPort(Integer.parseInt(FrameworkSettings.HTTP_PORT));
         userName = FrameworkSettings.USER_NAME;
         sessionCookie = new LoginLogoutUtil().login();
-        searchAdminService = new SearchAdminServiceClient(SERVER_URL);
+        searchAdminService = new SearchAdminServiceClient(SERVER_URL, sessionCookie);
 
     }
 
@@ -63,7 +63,7 @@ public class RegistrySearchByAuthorTestCase {
         ArrayOfString[] paramList = paramBean.getParameterList();
 
         searchQuery.setParameterValues(paramList);
-        AdvancedSearchResultsBean result = searchAdminService.getAdvancedSearchResults(sessionCookie, searchQuery);
+        AdvancedSearchResultsBean result = searchAdminService.getAdvancedSearchResults(searchQuery);
         Assert.assertNotNull(result.getResourceDataList(), "No Record Found");
         Assert.assertTrue((result.getResourceDataList().length > 0), "No Record Found. set valid Author name");
         for (ResourceData resource : result.getResourceDataList()) {
@@ -90,7 +90,7 @@ public class RegistrySearchByAuthorTestCase {
 
         searchQuery.addParameterValues(authorNameNegate);
 
-        AdvancedSearchResultsBean result = searchAdminService.getAdvancedSearchResults(sessionCookie, searchQuery);
+        AdvancedSearchResultsBean result = searchAdminService.getAdvancedSearchResults(searchQuery);
         Assert.assertNotNull(result.getResourceDataList(), "No Record Found");
         Assert.assertTrue((result.getResourceDataList().length > 0), "No Record Found. set valid Author name");
         for (ResourceData resource : result.getResourceDataList()) {
@@ -110,7 +110,7 @@ public class RegistrySearchByAuthorTestCase {
         ArrayOfString[] paramList = paramBean.getParameterList();
 
         searchQuery.setParameterValues(paramList);
-        AdvancedSearchResultsBean result = searchAdminService.getAdvancedSearchResults(sessionCookie, searchQuery);
+        AdvancedSearchResultsBean result = searchAdminService.getAdvancedSearchResults(searchQuery);
         Assert.assertNotNull(result.getResourceDataList(), "No Record Found");
         Assert.assertTrue((result.getResourceDataList().length > 0), "No Record Found. set valid Author name pattern");
         for (ResourceData resource : result.getResourceDataList()) {
@@ -131,7 +131,7 @@ public class RegistrySearchByAuthorTestCase {
         ArrayOfString[] paramList = paramBean.getParameterList();
 
         searchQuery.setParameterValues(paramList);
-        AdvancedSearchResultsBean result = searchAdminService.getAdvancedSearchResults(sessionCookie, searchQuery);
+        AdvancedSearchResultsBean result = searchAdminService.getAdvancedSearchResults(searchQuery);
         Assert.assertNull(result.getResourceDataList(), "Result Object found");
 
 
@@ -147,7 +147,7 @@ public class RegistrySearchByAuthorTestCase {
         paramBean.setAuthor(invalidInput);
         ArrayOfString[] paramList = paramBean.getParameterList();
         searchQuery.setParameterValues(paramList);
-        AdvancedSearchResultsBean result = searchAdminService.getAdvancedSearchResults(sessionCookie, searchQuery);
+        AdvancedSearchResultsBean result = searchAdminService.getAdvancedSearchResults(searchQuery);
         Assert.assertNull(result.getResourceDataList(), "Result Object found.");
 
 

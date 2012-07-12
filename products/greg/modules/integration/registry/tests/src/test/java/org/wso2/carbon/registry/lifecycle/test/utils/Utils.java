@@ -144,20 +144,20 @@ public class Utils {
         return state;
     }
 
-    public static void createNewLifeCycle(String sessionCookie, String lifeCycleName
+    public static void createNewLifeCycle(String lifeCycleName
             , LifeCycleManagementClient lifeCycleManagerAdminService)
             throws IOException, LifeCycleManagementServiceExceptionException, InterruptedException {
         String filePath = GregTestUtils.getResourcePath()
                           + File.separator + "lifecycle" + File.separator + "customLifeCycle.xml";
         String lifeCycleConfiguration = GregTestUtils.readFile(filePath).replace("IntergalacticServiceLC", lifeCycleName);
-        Assert.assertTrue(lifeCycleManagerAdminService.addLifeCycle(sessionCookie, lifeCycleConfiguration)
+        Assert.assertTrue(lifeCycleManagerAdminService.addLifeCycle(lifeCycleConfiguration)
                 , "Adding New LifeCycle Failed");
         Thread.sleep(2000);
-        lifeCycleConfiguration = lifeCycleManagerAdminService.getLifecycleConfiguration(sessionCookie, lifeCycleName);
+        lifeCycleConfiguration = lifeCycleManagerAdminService.getLifecycleConfiguration(lifeCycleName);
         Assert.assertTrue(lifeCycleConfiguration.contains("aspect name=\"" + lifeCycleName + "\""),
                           "LifeCycleName Not Found in lifecycle configuration");
 
-        String[] lifeCycleList = lifeCycleManagerAdminService.getLifecycleList(sessionCookie);
+        String[] lifeCycleList = lifeCycleManagerAdminService.getLifecycleList();
         Assert.assertNotNull(lifeCycleList);
         Assert.assertTrue(lifeCycleList.length > 0, "Life Cycle List length zero");
         boolean found = false;
@@ -173,11 +173,11 @@ public class Utils {
     public static void deleteLifeCycleIfExist(String sessionCookie, String lifeCycleName
             , LifeCycleManagementClient lifeCycleManagerAdminService)
             throws LifeCycleManagementServiceExceptionException, RemoteException {
-        String[] lifeCycleList = lifeCycleManagerAdminService.getLifecycleList(sessionCookie);
+        String[] lifeCycleList = lifeCycleManagerAdminService.getLifecycleList();
         if (lifeCycleList != null && lifeCycleList.length > 0) {
             for (String lc : lifeCycleList) {
                 if (lifeCycleName.equalsIgnoreCase(lc)) {
-                    lifeCycleManagerAdminService.deleteLifeCycle(sessionCookie, lifeCycleName);
+                    lifeCycleManagerAdminService.deleteLifeCycle(lifeCycleName);
                 }
             }
         }

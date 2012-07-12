@@ -61,7 +61,7 @@ public class RegistrySearchByUpdatedDataTestCase {
         final String SERVER_URL = GregTestUtils.getServerUrl();
         ClientConnectionUtil.waitForPort(Integer.parseInt(FrameworkSettings.HTTP_PORT));
         sessionCookie = new LoginLogoutUtil().login();
-        searchAdminService = new SearchAdminServiceClient(SERVER_URL);
+        searchAdminService = new SearchAdminServiceClient(SERVER_URL, sessionCookie);
         registry = GregTestUtils.getRegistry();
         userName = FrameworkSettings.USER_NAME;
 
@@ -82,7 +82,7 @@ public class RegistrySearchByUpdatedDataTestCase {
 
 
         searchQuery.setParameterValues(paramList);
-        AdvancedSearchResultsBean result = searchAdminService.getAdvancedSearchResults(sessionCookie, searchQuery);
+        AdvancedSearchResultsBean result = searchAdminService.getAdvancedSearchResults(searchQuery);
         Assert.assertNotNull(result.getResourceDataList(), "No Record Found");
         Assert.assertTrue((result.getResourceDataList().length > 0), "No Record Found. set valid from date");
         log.info(result.getResourceDataList().length + " Records found");
@@ -110,7 +110,7 @@ public class RegistrySearchByUpdatedDataTestCase {
         ArrayOfString[] paramList = paramBean.getParameterList();
 
         searchQuery.setParameterValues(paramList);
-        AdvancedSearchResultsBean result = searchAdminService.getAdvancedSearchResults(sessionCookie, searchQuery);
+        AdvancedSearchResultsBean result = searchAdminService.getAdvancedSearchResults(searchQuery);
         Assert.assertNotNull(result.getResourceDataList(), "No Record Found");
         Assert.assertTrue((result.getResourceDataList().length > 0), "No Record Found. set valid to date");
         log.info(result.getResourceDataList().length + " Records found");
@@ -145,7 +145,7 @@ public class RegistrySearchByUpdatedDataTestCase {
         ArrayOfString[] paramList = paramBean.getParameterList();
 
         searchQuery.setParameterValues(paramList);
-        AdvancedSearchResultsBean result = searchAdminService.getAdvancedSearchResults(sessionCookie, searchQuery);
+        AdvancedSearchResultsBean result = searchAdminService.getAdvancedSearchResults(searchQuery);
         Assert.assertNotNull(result.getResourceDataList(), "No Record Found");
         Assert.assertTrue((result.getResourceDataList().length > 0), "No Record Found. set valid data range");
         log.info(result.getResourceDataList().length + " Records found");
@@ -176,7 +176,7 @@ public class RegistrySearchByUpdatedDataTestCase {
         ArrayOfString[] paramList = paramBean.getParameterList();
 
         searchQuery.setParameterValues(paramList);
-        AdvancedSearchResultsBean result = searchAdminService.getAdvancedSearchResults(sessionCookie, searchQuery);
+        AdvancedSearchResultsBean result = searchAdminService.getAdvancedSearchResults(searchQuery);
         Assert.assertNull(result.getResourceDataList(), "Record Found for invalid data format");
     }
 
@@ -205,7 +205,7 @@ public class RegistrySearchByUpdatedDataTestCase {
 
         searchQuery.addParameterValues(updatedRangeNegate);
 
-        AdvancedSearchResultsBean result = searchAdminService.getAdvancedSearchResults(sessionCookie, searchQuery);
+        AdvancedSearchResultsBean result = searchAdminService.getAdvancedSearchResults(searchQuery);
         Assert.assertNotNull(result.getResourceDataList(), "No Record Found");
         Assert.assertTrue((result.getResourceDataList().length > 0), "No Record Found. set valid data range");
         log.info(result.getResourceDataList().length + " Records found");
@@ -237,7 +237,7 @@ public class RegistrySearchByUpdatedDataTestCase {
         ArrayOfString[] paramList = paramBean.getParameterList();
 
         searchQuery.setParameterValues(paramList);
-        AdvancedSearchResultsBean result = searchAdminService.getAdvancedSearchResults(sessionCookie, searchQuery);
+        AdvancedSearchResultsBean result = searchAdminService.getAdvancedSearchResults(searchQuery);
         Assert.assertNull(result.getResourceDataList(), "Record Found");
     }
 
@@ -258,7 +258,7 @@ public class RegistrySearchByUpdatedDataTestCase {
         ArrayOfString[] paramList = paramBean.getParameterList();
 
         searchQuery.setParameterValues(paramList);
-        AdvancedSearchResultsBean result = searchAdminService.getAdvancedSearchResults(sessionCookie, searchQuery);
+        AdvancedSearchResultsBean result = searchAdminService.getAdvancedSearchResults(searchQuery);
         Assert.assertNull(result.getResourceDataList(), "Record Found");
     }
 
@@ -272,7 +272,7 @@ public class RegistrySearchByUpdatedDataTestCase {
         ArrayOfString[] paramList = paramBean.getParameterList();
 
         searchQuery.setParameterValues(paramList);
-        AdvancedSearchResultsBean result = searchAdminService.getAdvancedSearchResults(sessionCookie, searchQuery);
+        AdvancedSearchResultsBean result = searchAdminService.getAdvancedSearchResults(searchQuery);
         Assert.assertNull(result.getResourceDataList(), "Result Object found.");
 
     }

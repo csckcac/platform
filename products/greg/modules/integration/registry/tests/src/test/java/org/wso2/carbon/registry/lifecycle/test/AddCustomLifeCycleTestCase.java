@@ -72,10 +72,10 @@ public class AddCustomLifeCycleTestCase {
         sessionCookie = new LoginLogoutUtil().login();
         final String SERVER_URL = GregTestUtils.getServerUrl();
         userName = FrameworkSettings.USER_NAME;
-        lifeCycleAdminService = new LifeCycleAdminServiceClient(SERVER_URL);
+        lifeCycleAdminService = new LifeCycleAdminServiceClient(SERVER_URL, sessionCookie);
         activitySearch = new ActivityAdminServiceClient(SERVER_URL);
-        lifeCycleManagerAdminService = new LifeCycleManagementClient(SERVER_URL);
-        searchAdminService = new SearchAdminServiceClient(SERVER_URL);
+        lifeCycleManagerAdminService = new LifeCycleManagementClient(SERVER_URL, sessionCookie);
+        searchAdminService = new SearchAdminServiceClient(SERVER_URL, sessionCookie);
         registry = GregTestUtils.getRegistry();
         Registry governance = GregTestUtils.getGovernanceRegistry(registry);
 
@@ -93,14 +93,14 @@ public class AddCustomLifeCycleTestCase {
         String filePath = GregTestUtils.getResourcePath()
                           + File.separator + "lifecycle" + File.separator + "customLifeCycle.xml";
         String lifeCycleConfiguration = GregTestUtils.readFile(filePath);
-        Assert.assertTrue(lifeCycleManagerAdminService.addLifeCycle(sessionCookie, lifeCycleConfiguration)
+        Assert.assertTrue(lifeCycleManagerAdminService.addLifeCycle(lifeCycleConfiguration)
                 , "Adding New LifeCycle Failed");
         Thread.sleep(2000);
-        lifeCycleConfiguration = lifeCycleManagerAdminService.getLifecycleConfiguration(sessionCookie, ASPECT_NAME);
+        lifeCycleConfiguration = lifeCycleManagerAdminService.getLifecycleConfiguration(ASPECT_NAME);
         Assert.assertTrue(lifeCycleConfiguration.contains("aspect name=\"IntergalacticServiceLC\""),
                           "LifeCycleName Not Found in lifecycle configuration");
 
-        String[] lifeCycleList = lifeCycleManagerAdminService.getLifecycleList(sessionCookie);
+        String[] lifeCycleList = lifeCycleManagerAdminService.getLifecycleList();
         Assert.assertNotNull(lifeCycleList);
         Assert.assertTrue(lifeCycleList.length > 0, "Life Cycle List length zero");
         boolean found = false;
@@ -118,7 +118,7 @@ public class AddCustomLifeCycleTestCase {
         ArrayOfString[] paramList = paramBean.getParameterList();
 
         searchQuery.setParameterValues(paramList);
-        AdvancedSearchResultsBean result = searchAdminService.getAdvancedSearchResults(sessionCookie, searchQuery);
+        AdvancedSearchResultsBean result = searchAdminService.getAdvancedSearchResults(searchQuery);
         Assert.assertNotNull(result.getResourceDataList(), "No Record Found");
         Assert.assertTrue((result.getResourceDataList().length == 1), "No Record Found for Life Cycle " +
                                                                       "Name or more record found");
@@ -137,7 +137,7 @@ public class AddCustomLifeCycleTestCase {
                    RegistryExceptionException {
         registry.associateAspect(servicePathDev, ASPECT_NAME);
         Thread.sleep(500);
-        LifecycleBean lifeCycle = lifeCycleAdminService.getLifecycleBean(sessionCookie, servicePathDev);
+        LifecycleBean lifeCycle = lifeCycleAdminService.getLifecycleBean(servicePathDev);
         Resource service = registry.get(servicePathDev);
         Assert.assertNotNull(service, "Service Not found on registry path " + servicePathDev);
         Assert.assertEquals(service.getPath(), servicePathDev, "Service path changed after adding life cycle. " + servicePathDev);
@@ -176,10 +176,10 @@ public class AddCustomLifeCycleTestCase {
     @Test(priority = 3, description = "delete LifeCycle when there is usage", dependsOnMethods = {"addLifeCycleToService"})
     public void deleteLifeCycleWhenHavingUsage()
             throws LifeCycleManagementServiceExceptionException, RemoteException {
-        Assert.assertTrue(lifeCycleManagerAdminService.isLifecycleNameInUse(sessionCookie, ASPECT_NAME),
+        Assert.assertTrue(lifeCycleManagerAdminService.isLifecycleNameInUse(ASPECT_NAME),
                           "No Usage Found for Life Cycle");
         try {
-            Assert.assertFalse(lifeCycleManagerAdminService.deleteLifeCycle(sessionCookie, ASPECT_NAME),
+            Assert.assertFalse(lifeCycleManagerAdminService.deleteLifeCycle(ASPECT_NAME),
                                "Life Cycle Deleted even if there is a usage");
             Assert.fail("Life Cycle Deleted even if there is a usage");
         } catch (AxisFault e) {
@@ -197,7 +197,7 @@ public class AddCustomLifeCycleTestCase {
         if (servicePathDev != null) {
             registry.delete(servicePathDev);
         }
-        Assert.assertTrue(lifeCycleManagerAdminService.deleteLifeCycle(sessionCookie, ASPECT_NAME),
+        Assert.assertTrue(lifeCycleManagerAdminService.deleteLifeCycle(ASPECT_NAME),
                           "Life Cycle Deleted failed");
         Thread.sleep(2000);
         CustomSearchParameterBean searchQuery = new CustomSearchParameterBean();
@@ -206,7 +206,7 @@ public class AddCustomLifeCycleTestCase {
         ArrayOfString[] paramList = paramBean.getParameterList();
 
         searchQuery.setParameterValues(paramList);
-        AdvancedSearchResultsBean result = searchAdminService.getAdvancedSearchResults(sessionCookie, searchQuery);
+        AdvancedSearchResultsBean result = searchAdminService.getAdvancedSearchResults(searchQuery);
         Assert.assertNull(result.getResourceDataList(), "Life Cycle Record Found even if it is deleted");
 
 

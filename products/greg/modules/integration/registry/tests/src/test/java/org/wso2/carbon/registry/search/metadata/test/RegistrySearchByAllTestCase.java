@@ -76,7 +76,7 @@ public class RegistrySearchByAllTestCase {
         String SERVER_URL = GregTestUtils.getServerUrl();
 
         userName = FrameworkSettings.USER_NAME;
-        searchAdminService = new SearchAdminServiceClient(SERVER_URL);
+        searchAdminService = new SearchAdminServiceClient(SERVER_URL, sessionCookie);
         governance = GregTestUtils.getGovernanceRegistry(GregTestUtils.getRegistry());
 
         addResources();
@@ -185,7 +185,7 @@ public class RegistrySearchByAllTestCase {
         ArrayOfString[] paramList = paramBean.getParameterList();
 
         searchQuery.setParameterValues(paramList);
-        AdvancedSearchResultsBean result = searchAdminService.getAdvancedSearchResults(sessionCookie, searchQuery);
+        AdvancedSearchResultsBean result = searchAdminService.getAdvancedSearchResults(searchQuery);
         Assert.assertNull(result.getResourceDataList(), "No Record Found");
 
     }
@@ -300,7 +300,7 @@ public class RegistrySearchByAllTestCase {
         ArrayOfString[] paramList = paramBean.getParameterList();
 
         searchQuery.setParameterValues(paramList);
-        AdvancedSearchResultsBean result = searchAdminService.getAdvancedSearchResults(sessionCookie, searchQuery);
+        AdvancedSearchResultsBean result = searchAdminService.getAdvancedSearchResults(searchQuery);
         Assert.assertNotNull(result.getResourceDataList(), "No Record Found");
         Assert.assertTrue((result.getResourceDataList().length == 1), "No Record Found.");
         for (ResourceData resource : result.getResourceDataList()) {
@@ -338,7 +338,7 @@ public class RegistrySearchByAllTestCase {
         ArrayOfString[] paramList = paramBean.getParameterList();
 
         searchQuery.setParameterValues(paramList);
-        AdvancedSearchResultsBean result = searchAdminService.getAdvancedSearchResults(sessionCookie, searchQuery);
+        AdvancedSearchResultsBean result = searchAdminService.getAdvancedSearchResults(searchQuery);
         Assert.assertNotNull(result.getResourceDataList(), "No Record Found");
         Assert.assertTrue((result.getResourceDataList().length == 1), "No Record Found.");
         for (ResourceData resource : result.getResourceDataList()) {
@@ -375,7 +375,7 @@ public class RegistrySearchByAllTestCase {
         ArrayOfString[] paramList = paramBean.getParameterList();
 
         searchQuery.setParameterValues(paramList);
-        AdvancedSearchResultsBean result = searchAdminService.getAdvancedSearchResults(sessionCookie, searchQuery);
+        AdvancedSearchResultsBean result = searchAdminService.getAdvancedSearchResults(searchQuery);
         Assert.assertNotNull(result.getResourceDataList(), "No Record Found");
         Assert.assertTrue((result.getResourceDataList().length == 1), "No Record Found.");
         for (ResourceData resource : result.getResourceDataList()) {

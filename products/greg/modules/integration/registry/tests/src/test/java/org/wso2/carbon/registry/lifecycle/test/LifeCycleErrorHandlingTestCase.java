@@ -46,7 +46,7 @@ public class LifeCycleErrorHandlingTestCase {
         ClientConnectionUtil.waitForPort(Integer.parseInt(FrameworkSettings.HTTP_PORT));
         sessionCookie = new LoginLogoutUtil().login();
         final String SERVER_URL = GregTestUtils.getServerUrl();
-        lifeCycleManagerAdminService = new LifeCycleManagementClient(SERVER_URL);
+        lifeCycleManagerAdminService = new LifeCycleManagementClient(SERVER_URL, sessionCookie);
         String filePath = GregTestUtils.getResourcePath()
                           + File.separator + "lifecycle" + File.separator + "customLifeCycle.xml";
         lifeCycleConfiguration = GregTestUtils.readFile(filePath);
@@ -62,7 +62,7 @@ public class LifeCycleErrorHandlingTestCase {
                    InterruptedException {
         String invalidLifeCycleConfiguration = lifeCycleConfiguration.replaceFirst("id=\"Commencement\">", "id=\"Commencement\"");
         try {
-            Assert.assertFalse(lifeCycleManagerAdminService.addLifeCycle(sessionCookie, invalidLifeCycleConfiguration),
+            Assert.assertFalse(lifeCycleManagerAdminService.addLifeCycle(invalidLifeCycleConfiguration),
                                "Life Cycle Added with invalid Syntax");
 
         } catch (AxisFault e) {
@@ -80,7 +80,7 @@ public class LifeCycleErrorHandlingTestCase {
         String invalidLifeCycleConfiguration = lifeCycleConfiguration.replaceFirst("<configuration", "<config");
         invalidLifeCycleConfiguration = invalidLifeCycleConfiguration.replaceFirst("</configuration>", "</config>");
         try {
-            Assert.assertFalse(lifeCycleManagerAdminService.addLifeCycle(sessionCookie, invalidLifeCycleConfiguration),
+            Assert.assertFalse(lifeCycleManagerAdminService.addLifeCycle(invalidLifeCycleConfiguration),
                                "Life Cycle Added with invalid tag");
 
         } catch (AxisFault e) {
@@ -93,9 +93,9 @@ public class LifeCycleErrorHandlingTestCase {
     @Test(priority = 3)
     public void addLifeCycleHavingExistingName()
             throws LifeCycleManagementServiceExceptionException, RemoteException {
-        Assert.assertTrue(lifeCycleManagerAdminService.addLifeCycle(sessionCookie, lifeCycleConfiguration)
+        Assert.assertTrue(lifeCycleManagerAdminService.addLifeCycle(lifeCycleConfiguration)
                 , "Adding New LifeCycle Failed first time");
-        Assert.assertFalse(lifeCycleManagerAdminService.addLifeCycle(sessionCookie, lifeCycleConfiguration)
+        Assert.assertFalse(lifeCycleManagerAdminService.addLifeCycle(lifeCycleConfiguration)
                 , "Adding New LifeCycle again having same name success");
     }
 

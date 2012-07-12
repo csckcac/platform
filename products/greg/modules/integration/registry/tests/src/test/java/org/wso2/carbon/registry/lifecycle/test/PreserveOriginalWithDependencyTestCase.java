@@ -66,7 +66,7 @@ public class PreserveOriginalWithDependencyTestCase {
         ClientConnectionUtil.waitForPort(Integer.parseInt(FrameworkSettings.HTTP_PORT));
         sessionCookie = new LoginLogoutUtil().login();
         final String SERVER_URL = GregTestUtils.getServerUrl();
-        lifeCycleAdminService = new LifeCycleAdminServiceClient(SERVER_URL);
+        lifeCycleAdminService = new LifeCycleAdminServiceClient(SERVER_URL, sessionCookie);
         registry = GregTestUtils.getRegistry();
         Registry governance = GregTestUtils.getGovernanceRegistry(registry);
 
@@ -104,7 +104,7 @@ public class PreserveOriginalWithDependencyTestCase {
         parameters[2] = new ArrayOfString();
         parameters[2].setArray(new String[]{"preserveOriginal", "false"});
 
-        lifeCycleAdminService.invokeAspectWithParams(sessionCookie, servicePathDev, aspectName,
+        lifeCycleAdminService.invokeAspectWithParams(servicePathDev, aspectName,
                                                      ACTION_PROMOTE, null, parameters);
         servicePathTest = "/_system/governance/branches/testing/services/sns/1.0.0/" + serviceName;
         policyPathTest = "/_system/governance/branches/testing/policies/1.0.0/" + serviceDependencyName;
@@ -140,7 +140,7 @@ public class PreserveOriginalWithDependencyTestCase {
         parameters[2] = new ArrayOfString();
         parameters[2].setArray(new String[]{"preserveOriginal", "false"});
 
-        lifeCycleAdminService.invokeAspectWithParams(sessionCookie, servicePathTest, aspectName,
+        lifeCycleAdminService.invokeAspectWithParams(servicePathTest, aspectName,
                                                      ACTION_PROMOTE, null, parameters);
 
         String servicePathProd = "/_system/governance/branches/production/services/sns/1.0.0/" + serviceName;
@@ -173,7 +173,7 @@ public class PreserveOriginalWithDependencyTestCase {
         parameters[2] = new ArrayOfString();
         parameters[2].setArray(new String[]{"preserveOriginal", "true"});
 
-        lifeCycleAdminService.invokeAspectWithParams(sessionCookie, servicePathDevPreserve, aspectName,
+        lifeCycleAdminService.invokeAspectWithParams(servicePathDevPreserve, aspectName,
                                                      ACTION_PROMOTE, null, parameters);
         servicePathTest = "/_system/governance/branches/testing/services/sns/1.0.0/" + serviceNamePreserve;
         policyPathTest = "/_system/governance/branches/testing/policies/1.0.0/" + serviceDependencyNamePreserve;
@@ -201,7 +201,7 @@ public class PreserveOriginalWithDependencyTestCase {
         parameters[2] = new ArrayOfString();
         parameters[2].setArray(new String[]{"preserveOriginal", "true"});
 
-        lifeCycleAdminService.invokeAspectWithParams(sessionCookie, servicePathTest, aspectName,
+        lifeCycleAdminService.invokeAspectWithParams(servicePathTest, aspectName,
                                                      ACTION_PROMOTE, null, parameters);
         String proBranch = "/_system/governance/branches/production/services/sns/1.0.0/" + serviceNamePreserve;
         String policyPathProd = "/_system/governance/branches/production/policies/1.0.0/" + serviceDependencyNamePreserve;
@@ -225,7 +225,7 @@ public class PreserveOriginalWithDependencyTestCase {
                    RemoteException, InterruptedException {
         registry.associateAspect(servicePtah, aspectName);
         Thread.sleep(500);
-        LifecycleBean lifeCycle = lifeCycleAdminService.getLifecycleBean(sessionCookie, servicePtah);
+        LifecycleBean lifeCycle = lifeCycleAdminService.getLifecycleBean(servicePtah);
         Resource service = registry.get(servicePtah);
         Assert.assertNotNull(service, "Service Not found on registry path " + servicePtah);
         Assert.assertTrue(service.getPath().contains("trunk"), "Service not in trunk. " + servicePtah);
@@ -237,7 +237,7 @@ public class PreserveOriginalWithDependencyTestCase {
         Assert.assertEquals(lifeCycle.getLifecycleProperties()[4].getValues()[0], "Development",
                             "LifeCycle State Mismatched");
 
-        Assert.assertTrue((lifeCycleAdminService.getAllDependencies(sessionCookie, servicePtah).length == 2),
+        Assert.assertTrue((lifeCycleAdminService.getAllDependencies(servicePtah).length == 2),
                           "Dependency Count mismatched");
 
 
@@ -247,7 +247,7 @@ public class PreserveOriginalWithDependencyTestCase {
             throws InterruptedException, CustomLifecyclesChecklistAdminServiceExceptionException,
                    RemoteException, RegistryException {
         Thread.sleep(500);
-        LifecycleBean lifeCycle = lifeCycleAdminService.getLifecycleBean(sessionCookie, servicePath);
+        LifecycleBean lifeCycle = lifeCycleAdminService.getLifecycleBean(servicePath);
         Resource service = registry.get(servicePath);
         Assert.assertNotNull(service, "Service Not found on registry path " + servicePath);
         Assert.assertTrue(service.getPath().contains("branches/testing"), "Service not in branches/testing. " + servicePath);
@@ -260,7 +260,7 @@ public class PreserveOriginalWithDependencyTestCase {
 
         Assert.assertEquals(dependency[0].getDestinationPath(), dependencyPath, "Dependency Name mismatched");
 
-        Assert.assertTrue((lifeCycleAdminService.getAllDependencies(sessionCookie, servicePath).length == 2),
+        Assert.assertTrue((lifeCycleAdminService.getAllDependencies(servicePath).length == 2),
                           "Dependency Count mismatched");
     }
 
@@ -268,7 +268,7 @@ public class PreserveOriginalWithDependencyTestCase {
             throws InterruptedException, CustomLifecyclesChecklistAdminServiceExceptionException,
                    RemoteException, RegistryException {
         Thread.sleep(500);
-        LifecycleBean lifeCycle = lifeCycleAdminService.getLifecycleBean(sessionCookie, servicePath);
+        LifecycleBean lifeCycle = lifeCycleAdminService.getLifecycleBean(servicePath);
         Resource service = registry.get(servicePath);
         Assert.assertNotNull(service, "Service Not found on registry path " + servicePath);
         Assert.assertTrue(service.getPath().contains("branches/production"), "Service not in branches/production. " + servicePath);
@@ -281,7 +281,7 @@ public class PreserveOriginalWithDependencyTestCase {
 
         Assert.assertEquals(dependency[0].getDestinationPath(), dependencyPath, "Dependency Name mismatched");
 
-        Assert.assertTrue((lifeCycleAdminService.getAllDependencies(sessionCookie, servicePath).length == 2),
+        Assert.assertTrue((lifeCycleAdminService.getAllDependencies(servicePath).length == 2),
                           "Dependency Count mismatched");
     }
 

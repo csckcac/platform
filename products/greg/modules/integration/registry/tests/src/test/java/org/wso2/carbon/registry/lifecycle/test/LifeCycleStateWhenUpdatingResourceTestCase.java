@@ -57,7 +57,7 @@ public class LifeCycleStateWhenUpdatingResourceTestCase {
         ClientConnectionUtil.waitForPort(Integer.parseInt(FrameworkSettings.HTTP_PORT));
         sessionCookie = new LoginLogoutUtil().login();
         final String SERVER_URL = GregTestUtils.getServerUrl();
-        lifeCycleAdminService = new LifeCycleAdminServiceClient(SERVER_URL);
+        lifeCycleAdminService = new LifeCycleAdminServiceClient(SERVER_URL, sessionCookie);
         registry = GregTestUtils.getRegistry();
         governance = GregTestUtils.getGovernanceRegistry(registry);
 
@@ -68,9 +68,9 @@ public class LifeCycleStateWhenUpdatingResourceTestCase {
             throws RegistryException, CustomLifecyclesChecklistAdminServiceExceptionException,
                    IOException, InterruptedException, RegistryExceptionException {
         schemaPathDev = "/_system/governance" + Utils.addSchema("LifeCycleState.xsd", governance);
-        lifeCycleAdminService.addAspect(sessionCookie, schemaPathDev, ASPECT_NAME);
+        lifeCycleAdminService.addAspect(schemaPathDev, ASPECT_NAME);
         Thread.sleep(500);
-        LifecycleBean lifeCycle = lifeCycleAdminService.getLifecycleBean(sessionCookie, schemaPathDev);
+        LifecycleBean lifeCycle = lifeCycleAdminService.getLifecycleBean(schemaPathDev);
         Resource service = registry.get(schemaPathDev);
         Assert.assertNotNull(service, "Service Not found on registry path " + schemaPathDev);
         Assert.assertEquals(service.getPath(), schemaPathDev, "Service path changed after adding life cycle. " + schemaPathDev);
@@ -80,7 +80,7 @@ public class LifeCycleStateWhenUpdatingResourceTestCase {
         schemaPathDev = "/_system/governance" + Utils.addSchema("LifeCycleState.xsd", governance);
         Thread.sleep(500);
 
-        lifeCycle = lifeCycleAdminService.getLifecycleBean(sessionCookie, schemaPathDev);
+        lifeCycle = lifeCycleAdminService.getLifecycleBean(schemaPathDev);
         service = registry.get(schemaPathDev);
         Assert.assertNotNull(service, "Service Not found on registry path " + schemaPathDev);
         Assert.assertEquals(service.getPath(), schemaPathDev, "Service path changed after adding life cycle. " + schemaPathDev);
@@ -97,9 +97,9 @@ public class LifeCycleStateWhenUpdatingResourceTestCase {
             throws RegistryException, CustomLifecyclesChecklistAdminServiceExceptionException,
                    IOException, InterruptedException, RegistryExceptionException {
         policyPathDev = "/_system/governance" + Utils.addPolicy("PolicyLifeCycleState.xml", governance);
-        lifeCycleAdminService.addAspect(sessionCookie, policyPathDev, ASPECT_NAME);
+        lifeCycleAdminService.addAspect(policyPathDev, ASPECT_NAME);
         Thread.sleep(500);
-        LifecycleBean lifeCycle = lifeCycleAdminService.getLifecycleBean(sessionCookie, policyPathDev);
+        LifecycleBean lifeCycle = lifeCycleAdminService.getLifecycleBean(policyPathDev);
         Resource service = registry.get(policyPathDev);
         Assert.assertNotNull(service, "Service Not found on registry path " + policyPathDev);
         Assert.assertEquals(service.getPath(), policyPathDev, "Service path changed after adding life cycle. " + policyPathDev);
@@ -109,7 +109,7 @@ public class LifeCycleStateWhenUpdatingResourceTestCase {
         policyPathDev = "/_system/governance" + Utils.addPolicy("PolicyLifeCycleState.xml", governance);
         Thread.sleep(500);
 
-        lifeCycle = lifeCycleAdminService.getLifecycleBean(sessionCookie, policyPathDev);
+        lifeCycle = lifeCycleAdminService.getLifecycleBean(policyPathDev);
         service = registry.get(policyPathDev);
         Assert.assertNotNull(service, "Service Not found on registry path " + policyPathDev);
         Assert.assertEquals(service.getPath(), policyPathDev, "Service path changed after adding life cycle. " + policyPathDev);
@@ -125,9 +125,9 @@ public class LifeCycleStateWhenUpdatingResourceTestCase {
             throws RegistryException, CustomLifecyclesChecklistAdminServiceExceptionException,
                    IOException, InterruptedException, RegistryExceptionException {
         wsdlPathDev = "/_system/governance" + Utils.addWSDL("echoWsdlLifeCycleState.wsdl", governance);
-        lifeCycleAdminService.addAspect(sessionCookie, wsdlPathDev, ASPECT_NAME);
+        lifeCycleAdminService.addAspect(wsdlPathDev, ASPECT_NAME);
         Thread.sleep(500);
-        LifecycleBean lifeCycle = lifeCycleAdminService.getLifecycleBean(sessionCookie, wsdlPathDev);
+        LifecycleBean lifeCycle = lifeCycleAdminService.getLifecycleBean(wsdlPathDev);
         Resource service = registry.get(wsdlPathDev);
         Assert.assertNotNull(service, "Service Not found on registry path " + wsdlPathDev);
         Assert.assertEquals(service.getPath(), wsdlPathDev, "Service path changed after adding life cycle. " + wsdlPathDev);
@@ -137,7 +137,7 @@ public class LifeCycleStateWhenUpdatingResourceTestCase {
         wsdlPathDev = "/_system/governance" + Utils.addWSDL("echoWsdlLifeCycleState.wsdl", governance);
         Thread.sleep(500);
 
-        lifeCycle = lifeCycleAdminService.getLifecycleBean(sessionCookie, wsdlPathDev);
+        lifeCycle = lifeCycleAdminService.getLifecycleBean(wsdlPathDev);
         service = registry.get(wsdlPathDev);
         Assert.assertNotNull(service, "Service Not found on registry path " + wsdlPathDev);
         Assert.assertEquals(service.getPath(), wsdlPathDev, "Service path changed after adding life cycle. " + wsdlPathDev);
@@ -152,9 +152,9 @@ public class LifeCycleStateWhenUpdatingResourceTestCase {
     public void serviceAddLifecycleAndUpdateResource()
             throws Exception {
         servicePathDev = "/_system/governance" + Utils.addService("sns", "ServiceLifeCycleState", governance);
-        lifeCycleAdminService.addAspect(sessionCookie, servicePathDev, ASPECT_NAME);
+        lifeCycleAdminService.addAspect(servicePathDev, ASPECT_NAME);
         Thread.sleep(500);
-        LifecycleBean lifeCycle = lifeCycleAdminService.getLifecycleBean(sessionCookie, servicePathDev);
+        LifecycleBean lifeCycle = lifeCycleAdminService.getLifecycleBean(servicePathDev);
         Resource service = registry.get(servicePathDev);
         Assert.assertNotNull(service, "Service Not found on registry path " + servicePathDev);
         Assert.assertEquals(service.getPath(), servicePathDev, "Service path changed after adding life cycle. " + servicePathDev);
@@ -164,7 +164,7 @@ public class LifeCycleStateWhenUpdatingResourceTestCase {
         servicePathDev = "/_system/governance" + Utils.addService("sns", "ServiceLifeCycleState", governance);
         Thread.sleep(500);
 
-        lifeCycle = lifeCycleAdminService.getLifecycleBean(sessionCookie, servicePathDev);
+        lifeCycle = lifeCycleAdminService.getLifecycleBean(servicePathDev);
         service = registry.get(servicePathDev);
         Assert.assertNotNull(service, "Service Not found on registry path " + servicePathDev);
         Assert.assertEquals(service.getPath(), servicePathDev, "Service path changed after adding life cycle. " + servicePathDev);

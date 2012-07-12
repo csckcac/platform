@@ -49,8 +49,8 @@ public class UploadIncompatibleCarFileTestCase {
         sessionCookie = new LoginLogoutUtil().login();
         final String SERVER_URL = GregTestUtils.getServerUrl();
         registry = GregTestUtils.getRegistry();
-        cAppUploader = new CarbonAppUploaderClient(SERVER_URL);
-        adminServiceApplicationAdmin = new ApplicationAdminClient(SERVER_URL);
+        cAppUploader = new CarbonAppUploaderClient(SERVER_URL, sessionCookie);
+        adminServiceApplicationAdmin = new ApplicationAdminClient(SERVER_URL, sessionCookie);
 
     }
 
@@ -61,7 +61,7 @@ public class UploadIncompatibleCarFileTestCase {
         final String cAppName = "erro_content-1.0.0.car";
         String filePath = GregTestUtils.getResourcePath() + File.separator +
                           "car" + File.separator + cAppName;
-        cAppUploader.uploadCarbonAppArtifact(sessionCookie, cAppName,
+        cAppUploader.uploadCarbonAppArtifact(cAppName,
                                              new DataHandler(new URL("file://" + filePath)));
         Thread.sleep(20000);
         Assert.assertFalse(registry.resourceExists("/_system/config/repository/applications/erro_content"),
@@ -99,7 +99,7 @@ public class UploadIncompatibleCarFileTestCase {
         final String cAppName = "serverRole-incorrect_1.0.0.car";
         String filePath = GregTestUtils.getResourcePath() + File.separator +
                           "car" + File.separator + cAppName;
-        cAppUploader.uploadCarbonAppArtifact(sessionCookie, cAppName,
+        cAppUploader.uploadCarbonAppArtifact(cAppName,
                                              new DataHandler(new URL("file://" + filePath)));
         Thread.sleep(20000);
         Assert.assertFalse(registry.resourceExists("/_system/config/repository/applications/incorrectServerRole"),

@@ -43,7 +43,7 @@ public class RolePermissionServiceTestCase {
         sessionCookie = util.login();
         String SERVER_URL = "https://" + FrameworkSettings.HOST_NAME +
                             ":" + FrameworkSettings.HTTPS_PORT + "/services/";
-        userAdminStub = new UserManagementClient(SERVER_URL);
+        userAdminStub = new UserManagementClient(SERVER_URL, sessionCookie);
     }
 
     @Test(groups = {"wso2.greg"}, description = "test add a role with login permission",
@@ -144,12 +144,12 @@ public class RolePermissionServiceTestCase {
 
     private void deleteRolesIfExists()
             throws Exception {
-        if (userAdminStub.roleNameExists(roleName, sessionCookie)) {  //delete the role if exists
-            userAdminStub.deleteRole(sessionCookie, roleName);
+        if (userAdminStub.roleNameExists(roleName)) {  //delete the role if exists
+            userAdminStub.deleteRole( roleName);
         }
 
-        if (userAdminStub.userNameExists(roleName, sessionCookie, userName)) { //delete user if exists
-            userAdminStub.deleteUser(sessionCookie, userName);
+        if (userAdminStub.userNameExists(roleName, userName)) { //delete user if exists
+            userAdminStub.deleteUser(userName);
         }
     }
 
@@ -202,19 +202,19 @@ public class RolePermissionServiceTestCase {
     }
 
     public void addRolewithUser(String[] permission) throws Exception {
-        userAdminStub.addRole(roleName, null , permission, sessionCookie);
+        userAdminStub.addRole(roleName, null , permission);
         log.info("Successfully added Role :" + roleName);
 
         String roles[] = {roleName};
-        userAdminStub.addUser(sessionCookie, userName, userPassword, roles, null);
+        userAdminStub.addUser(userName, userPassword, roles, null);
         log.info("Successfully User Crated :" + userName);
     }
 
 
     private void deleteRoleAndUsers(String roleName, String userName) throws Exception {
-        userAdminStub.deleteRole(sessionCookie, roleName);
+        userAdminStub.deleteRole(roleName);
         log.info("Role " + roleName + " deleted successfully");
-        userAdminStub.deleteUser(sessionCookie, userName);
+        userAdminStub.deleteUser(userName);
     }
 
 

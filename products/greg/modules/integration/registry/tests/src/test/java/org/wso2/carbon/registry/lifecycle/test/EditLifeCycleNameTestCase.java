@@ -51,13 +51,13 @@ public class EditLifeCycleNameTestCase {
         ClientConnectionUtil.waitForPort(Integer.parseInt(FrameworkSettings.HTTP_PORT));
         sessionCookie = new LoginLogoutUtil().login();
         final String SERVER_URL = GregTestUtils.getServerUrl();
-        lifeCycleManagerAdminService = new LifeCycleManagementClient(SERVER_URL);
-        searchAdminService = new SearchAdminServiceClient(SERVER_URL);
+        lifeCycleManagerAdminService = new LifeCycleManagementClient(SERVER_URL, sessionCookie);
+        searchAdminService = new SearchAdminServiceClient(SERVER_URL, sessionCookie);
 
         Utils.deleteLifeCycleIfExist(sessionCookie, ASPECT_NAME, lifeCycleManagerAdminService);
         Utils.deleteLifeCycleIfExist(sessionCookie, NEW_ASPECT_NAME, lifeCycleManagerAdminService);
         Thread.sleep(1000);
-        Utils.createNewLifeCycle(sessionCookie, ASPECT_NAME, lifeCycleManagerAdminService);
+        Utils.createNewLifeCycle(ASPECT_NAME, lifeCycleManagerAdminService);
         Thread.sleep(1000);
 
     }
@@ -66,19 +66,19 @@ public class EditLifeCycleNameTestCase {
     public void editLifeCycleName()
             throws LifeCycleManagementServiceExceptionException, RemoteException,
                    InterruptedException {
-        String config = lifeCycleManagerAdminService.getLifecycleConfiguration(sessionCookie, ASPECT_NAME);
+        String config = lifeCycleManagerAdminService.getLifecycleConfiguration(ASPECT_NAME);
         Assert.assertTrue(config.contains("aspect name=\"" + ASPECT_NAME + "\""),
                           "LifeCycleName Not Found in lifecycle configuration");
         String newLifeCycleConfiguration = config.replace(ASPECT_NAME, NEW_ASPECT_NAME);
-        Assert.assertTrue(lifeCycleManagerAdminService.editLifeCycle(sessionCookie, ASPECT_NAME, newLifeCycleConfiguration)
+        Assert.assertTrue(lifeCycleManagerAdminService.editLifeCycle(ASPECT_NAME, newLifeCycleConfiguration)
                 , "Editing LifeCycle Name Failed");
         Thread.sleep(1000);
 
-        newLifeCycleConfiguration = lifeCycleManagerAdminService.getLifecycleConfiguration(sessionCookie, NEW_ASPECT_NAME);
+        newLifeCycleConfiguration = lifeCycleManagerAdminService.getLifecycleConfiguration(NEW_ASPECT_NAME);
         Assert.assertTrue(newLifeCycleConfiguration.contains("aspect name=\"" + NEW_ASPECT_NAME + "\""),
                           "New LifeCycleName Not Found in lifecycle configuration");
 
-        String[] lifeCycleList = lifeCycleManagerAdminService.getLifecycleList(sessionCookie);
+        String[] lifeCycleList = lifeCycleManagerAdminService.getLifecycleList();
         Assert.assertNotNull(lifeCycleList);
         Assert.assertTrue(lifeCycleList.length > 0, "Life Cycle List length zero");
         boolean found = false;
@@ -108,7 +108,7 @@ public class EditLifeCycleNameTestCase {
         ArrayOfString[] paramList = paramBean.getParameterList();
 
         searchQuery.setParameterValues(paramList);
-        AdvancedSearchResultsBean result = searchAdminService.getAdvancedSearchResults(sessionCookie, searchQuery);
+        AdvancedSearchResultsBean result = searchAdminService.getAdvancedSearchResults(searchQuery);
         Assert.assertNotNull(result.getResourceDataList(), "No Record Found");
         Assert.assertTrue((result.getResourceDataList().length == 1), "No Record Found for Life Cycle " +
                                                                       "Name or more record found");
@@ -129,7 +129,7 @@ public class EditLifeCycleNameTestCase {
         ArrayOfString[] paramList = paramBean.getParameterList();
 
         searchQuery.setParameterValues(paramList);
-        AdvancedSearchResultsBean result = searchAdminService.getAdvancedSearchResults(sessionCookie, searchQuery);
+        AdvancedSearchResultsBean result = searchAdminService.getAdvancedSearchResults(searchQuery);
         Assert.assertNull(result.getResourceDataList(), "Life Cycle Record Found even if it is deleted");
 
     }

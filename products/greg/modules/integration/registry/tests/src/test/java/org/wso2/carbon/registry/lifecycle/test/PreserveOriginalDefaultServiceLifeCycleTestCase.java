@@ -59,7 +59,7 @@ public class PreserveOriginalDefaultServiceLifeCycleTestCase {
         ClientConnectionUtil.waitForPort(Integer.parseInt(FrameworkSettings.HTTP_PORT));
         sessionCookie = new LoginLogoutUtil().login();
         final String SERVER_URL = GregTestUtils.getServerUrl();
-        lifeCycleAdminService = new LifeCycleAdminServiceClient(SERVER_URL);
+        lifeCycleAdminService = new LifeCycleAdminServiceClient(SERVER_URL, sessionCookie);
         registry = GregTestUtils.getRegistry();
         Registry governance = GregTestUtils.getGovernanceRegistry(registry);
 
@@ -82,11 +82,11 @@ public class PreserveOriginalDefaultServiceLifeCycleTestCase {
         parameters[1] = new ArrayOfString();
         parameters[1].setArray(new String[]{"preserveOriginal", "false"});
 
-        lifeCycleAdminService.invokeAspectWithParams(sessionCookie, trunk, aspectName,
+        lifeCycleAdminService.invokeAspectWithParams(trunk, aspectName,
                                                      ACTION_PROMOTE, null, parameters);
         testBranch = "/_system/governance/branches/testing/services/sns/1.0.0/" + serviceNamePreserveFalse;
         Thread.sleep(500);
-        LifecycleBean lifeCycle = lifeCycleAdminService.getLifecycleBean(sessionCookie, testBranch);
+        LifecycleBean lifeCycle = lifeCycleAdminService.getLifecycleBean(testBranch);
         Resource service = registry.get(testBranch);
         Assert.assertNotNull(service, "Service Not found on registry path " + testBranch);
         Assert.assertEquals(service.getPath(), testBranch, "Service not in branches/testing. " + testBranch);
@@ -115,11 +115,11 @@ public class PreserveOriginalDefaultServiceLifeCycleTestCase {
         parameters[1] = new ArrayOfString();
         parameters[1].setArray(new String[]{"preserveOriginal", "false"});
 
-        lifeCycleAdminService.invokeAspectWithParams(sessionCookie, testBranch, aspectName,
+        lifeCycleAdminService.invokeAspectWithParams(testBranch, aspectName,
                                                      ACTION_PROMOTE, null, parameters);
         proBranch = "/_system/governance/branches/production/services/sns/1.0.0/" + serviceNamePreserveFalse;
         Thread.sleep(500);
-        LifecycleBean lifeCycle = lifeCycleAdminService.getLifecycleBean(sessionCookie, proBranch);
+        LifecycleBean lifeCycle = lifeCycleAdminService.getLifecycleBean(proBranch);
 
         Resource service = registry.get(proBranch);
         Assert.assertNotNull(service, "Service Not found on registry path " + proBranch);
@@ -147,11 +147,11 @@ public class PreserveOriginalDefaultServiceLifeCycleTestCase {
         parameters[1] = new ArrayOfString();
         parameters[1].setArray(new String[]{"preserveOriginal", "true"});
 
-        lifeCycleAdminService.invokeAspectWithParams(sessionCookie, trunkPreserve, aspectName,
+        lifeCycleAdminService.invokeAspectWithParams(trunkPreserve, aspectName,
                                                      ACTION_PROMOTE, null, parameters);
         testBranch = "/_system/governance/branches/testing/services/sns/1.0.0/" + serviceNamePreserveTrue;
         Thread.sleep(500);
-        LifecycleBean lifeCycle = lifeCycleAdminService.getLifecycleBean(sessionCookie, testBranch);
+        LifecycleBean lifeCycle = lifeCycleAdminService.getLifecycleBean(testBranch);
         Resource service = registry.get(testBranch);
         Assert.assertNotNull(service, "Service Not found on registry path " + testBranch);
         Assert.assertEquals(service.getPath(), testBranch, "Service not in branches/testing. " + testBranch);
@@ -176,11 +176,11 @@ public class PreserveOriginalDefaultServiceLifeCycleTestCase {
         parameters[1] = new ArrayOfString();
         parameters[1].setArray(new String[]{"preserveOriginal", "true"});
 
-        lifeCycleAdminService.invokeAspectWithParams(sessionCookie, testBranch, aspectName,
+        lifeCycleAdminService.invokeAspectWithParams(testBranch, aspectName,
                                                      ACTION_PROMOTE, null, parameters);
         proBranch = "/_system/governance/branches/production/services/sns/1.0.0/" + serviceNamePreserveTrue;
         Thread.sleep(500);
-        LifecycleBean lifeCycle = lifeCycleAdminService.getLifecycleBean(sessionCookie, proBranch);
+        LifecycleBean lifeCycle = lifeCycleAdminService.getLifecycleBean(proBranch);
 
         Resource service = registry.get(proBranch);
         Assert.assertNotNull(service, "Service Not found on registry path " + proBranch);

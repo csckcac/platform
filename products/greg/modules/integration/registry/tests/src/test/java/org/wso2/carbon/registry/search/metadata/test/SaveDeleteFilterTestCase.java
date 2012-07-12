@@ -48,7 +48,7 @@ public class SaveDeleteFilterTestCase {
         ClientConnectionUtil.waitForPort(Integer.parseInt(FrameworkSettings.HTTP_PORT));
         sessionCookie = new LoginLogoutUtil().login();
 
-        searchAdminService = new SearchAdminServiceClient(SERVER_URL);
+        searchAdminService = new SearchAdminServiceClient(SERVER_URL, sessionCookie);
 
     }
 
@@ -60,8 +60,8 @@ public class SaveDeleteFilterTestCase {
         ArrayOfString[] paramList = bean.getParameterList();
 
         queryBean.setParameterValues(paramList);
-        searchAdminService.saveAdvancedSearchFilter(sessionCookie, queryBean, filterName);
-        String[] filters = searchAdminService.getSavedFilters(sessionCookie);
+        searchAdminService.saveAdvancedSearchFilter(queryBean, filterName);
+        String[] filters = searchAdminService.getSavedFilters();
         boolean isFilterFound = false;
         for (String filter : filters) {
             if (filterName.equalsIgnoreCase(filter)) {
@@ -70,7 +70,7 @@ public class SaveDeleteFilterTestCase {
             }
         }
         Assert.assertTrue(isFilterFound, "Filter saved failed");
-        CustomSearchParameterBean filterBean = searchAdminService.getAdvancedSearchFilter(sessionCookie, filterName);
+        CustomSearchParameterBean filterBean = searchAdminService.getAdvancedSearchFilter(filterName);
         ArrayOfString[] criteria = filterBean.getParameterValues();
         String resourcePath = "";
         for (ArrayOfString array : criteria) {
@@ -91,8 +91,8 @@ public class SaveDeleteFilterTestCase {
         ArrayOfString[] paramList = bean.getParameterList();
 
         queryBean.setParameterValues(paramList);
-        searchAdminService.saveAdvancedSearchFilter(sessionCookie, queryBean, filterName);
-        String[] filters = searchAdminService.getSavedFilters(sessionCookie);
+        searchAdminService.saveAdvancedSearchFilter(queryBean, filterName);
+        String[] filters = searchAdminService.getSavedFilters();
         boolean isFilterFound = false;
         for (String filter : filters) {
             if (filterName.equalsIgnoreCase(filter)) {
@@ -101,7 +101,7 @@ public class SaveDeleteFilterTestCase {
             }
         }
         Assert.assertTrue(isFilterFound, "Filter saved failed");
-        CustomSearchParameterBean filterBean = searchAdminService.getAdvancedSearchFilter(sessionCookie, filterName);
+        CustomSearchParameterBean filterBean = searchAdminService.getAdvancedSearchFilter(filterName);
         ArrayOfString[] criteria = filterBean.getParameterValues();
         String resourcePath = "";
         for (ArrayOfString array : criteria) {
@@ -118,8 +118,8 @@ public class SaveDeleteFilterTestCase {
     public void deleteFilter()
             throws SearchAdminServiceRegistryExceptionException, RemoteException {
         boolean isFilterFound = false;
-        searchAdminService.deleteFilter(sessionCookie, filterName);
-        String[] filters = searchAdminService.getSavedFilters(sessionCookie);
+        searchAdminService.deleteFilter(filterName);
+        String[] filters = searchAdminService.getSavedFilters();
         if (filters != null && filters.length > 0) {
             for (String filter : filters) {
                 if (filterName.equalsIgnoreCase(filter)) {

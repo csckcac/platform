@@ -48,27 +48,28 @@ public class GRegLoginPermissionServiceTestCase{
     private String userName;
     private String userPassword;
     private LoginLogoutUtil util = new LoginLogoutUtil();
+    private String SERVER_URL ;
 
     @BeforeClass(alwaysRun = true)
     public void init() throws Exception {
         ClientConnectionUtil.waitForPort(Integer.parseInt(FrameworkSettings.HTTP_PORT));
         sessionCookie = util.login();
-        String SERVER_URL = "https://" + FrameworkSettings.HOST_NAME +
+        SERVER_URL = "https://" + FrameworkSettings.HOST_NAME +
                             ":" + FrameworkSettings.HTTPS_PORT + "/services/";
 
-        userAdminStub = new UserManagementClient(SERVER_URL);
+        userAdminStub = new UserManagementClient(SERVER_URL, sessionCookie);
         userAuthenticationStub = new AuthenticatorClient(SERVER_URL);
-        admin_service_resource_admin = new ResourceAdminServiceClient(SERVER_URL);
+
         roleName = "login_role";
         userName = "greg_login_user";
         userPassword = "welcome";
 
-        if (userAdminStub.roleNameExists(roleName, sessionCookie)) {  //delete the role if exists
-            userAdminStub.deleteRole(sessionCookie, roleName);
+        if (userAdminStub.roleNameExists(roleName)) {  //delete the role if exists
+            userAdminStub.deleteRole(roleName);
         }
 
-        if (userAdminStub.userNameExists(roleName, sessionCookie, userName)) { //delete user if exists
-            userAdminStub.deleteUser(sessionCookie, userName);
+        if (userAdminStub.userNameExists(roleName, userName)) { //delete user if exists
+            userAdminStub.deleteUser(userName);
         }
     }
 
@@ -92,8 +93,9 @@ public class GRegLoginPermissionServiceTestCase{
 
         try {
             status = false;
+            admin_service_resource_admin = new ResourceAdminServiceClient(SERVER_URL, sessionCookieUser);
             // greg_login_user does not have permission to add a Text resource
-            admin_service_resource_admin.addTextResource(sessionCookieUser, "/", "login.txt",
+            admin_service_resource_admin.addTextResource("/", "login.txt",
                                                          "", "", "");
         } catch (RemoteException e) {
             status = true;
@@ -108,18 +110,18 @@ public class GRegLoginPermissionServiceTestCase{
     }
 
     private void addRoleWithUser(String[] permission, String[] userList) throws Exception {
-        userAdminStub.addRole(roleName, null, permission, sessionCookie);
+        userAdminStub.addRole(roleName, null, permission);
         log.info("Successfully added Role :" + roleName);
         String roles[] = {roleName};
-        userAdminStub.addUser(sessionCookie, userName, userPassword, roles, null);
+        userAdminStub.addUser(userName, userPassword, roles, null);
         log.info("Successfully User Crated :" + userName);
     }
 
     @AfterClass(alwaysRun = true)
     public void deleteRoleAndUsers() throws Exception {
-        userAdminStub.deleteRole(sessionCookie, roleName);
+        userAdminStub.deleteRole(roleName);
         log.info("Role " + roleName + " deleted successfully");
-        userAdminStub.deleteUser(sessionCookie, userName);
+        userAdminStub.deleteUser(userName);
     }
 
 }

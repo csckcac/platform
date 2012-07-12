@@ -68,20 +68,20 @@ public class UIPermissionWithResourcePermissionTestCase {
         SERVER_URL = "https://" + FrameworkSettings.HOST_NAME +
                 ":" + FrameworkSettings.HTTPS_PORT + "/services/";
         gregHostName = FrameworkSettings.HOST_NAME;
-        userAdminStub = new UserManagementClient(SERVER_URL);
+        userAdminStub = new UserManagementClient(SERVER_URL, sessionCookie);
         userAuthenticationStub = new AuthenticatorClient(SERVER_URL);
-        admin_service_resource_admin = new ResourceAdminServiceClient(SERVER_URL);
+
         registry = GregTestUtils.getRegistry();
         roleName = "manager";
         userName = "ajith";
         userPassword = "ajith123";
 
-        if (userAdminStub.roleNameExists(roleName, sessionCookie)) {  //delete the role if exists
-            userAdminStub.deleteRole(sessionCookie, roleName);
+        if (userAdminStub.roleNameExists(roleName)) {  //delete the role if exists
+            userAdminStub.deleteRole(roleName);
         }
 
-        if (userAdminStub.userNameExists(roleName, sessionCookie, userName)) { //delete user if exists
-            userAdminStub.deleteUser(sessionCookie, userName);
+        if (userAdminStub.userNameExists(roleName, userName)) { //delete user if exists
+            userAdminStub.deleteUser(userName);
         }
     }
 
@@ -94,8 +94,9 @@ public class UIPermissionWithResourcePermissionTestCase {
 
         String sessionCookieAdmin = new AuthenticatorClient(SERVER_URL).
                 login("admin", "admin", gregHostName);
+        admin_service_resource_admin = new ResourceAdminServiceClient(SERVER_URL, sessionCookieAdmin);
         log.info("***********Admin user logged********************");
-        admin_service_resource_admin.addWSDL(sessionCookieAdmin, resourceName, "", fetchUrl);
+        admin_service_resource_admin.addWSDL(resourceName, "", fetchUrl);
         log.info("***********echo.wsdl file Added********************");
         String adminWSDLPath = "/_system/governance/trunk/wsdls/org/wso2/carbon/core/services/echo/echo.wsdl";
         Assert.assertTrue(registry.resourceExists(adminWSDLPath),
@@ -121,9 +122,9 @@ public class UIPermissionWithResourcePermissionTestCase {
         log.info("Newly Created User Loged in :" + userName);
 
         String path = "/_system/governance/trunk/services/org/wso2/carbon/core/services/echo/";
-
+        admin_service_resource_admin = new ResourceAdminServiceClient(SERVER_URL, sessionCookieUser);
         try {
-            admin_service_resource_admin.deleteResource(sessionCookieUser, path);
+            admin_service_resource_admin.deleteResource(path);
         } catch (AxisFault e) {
             log.info("********Failed to delete without resource delete permissions***********");
         } catch (ResourceAdminServiceExceptionException e) {
@@ -154,7 +155,8 @@ public class UIPermissionWithResourcePermissionTestCase {
         try {
             String sessionCookieUser = new AuthenticatorClient(SERVER_URL).
                     login(userName, userPassword, gregHostName);
-            admin_service_resource_admin.deleteResource(sessionCookieUser, path);
+            admin_service_resource_admin = new ResourceAdminServiceClient(SERVER_URL, sessionCookieUser);
+            admin_service_resource_admin.deleteResource(path);
         } catch (AxisFault e) {
             log.info("********Failed to delete without resource delete  permissions***********");
 
@@ -186,7 +188,8 @@ public class UIPermissionWithResourcePermissionTestCase {
         try {
             String sessionCookieUser = new AuthenticatorClient(SERVER_URL).
                     login(userName, userPassword, gregHostName);
-            admin_service_resource_admin.deleteResource(sessionCookieUser, path);
+            admin_service_resource_admin = new ResourceAdminServiceClient(SERVER_URL, sessionCookieUser);
+            admin_service_resource_admin.deleteResource(path);
         } catch (AxisFault e) {
             log.info("******Failed to delete having resource delete permissions******");
 
@@ -200,17 +203,17 @@ public class UIPermissionWithResourcePermissionTestCase {
 
     private void addRoleWithUser(String[] permission) throws
                                                       Exception {
-        userAdminStub.addRole(roleName, null, permission, sessionCookie);
+        userAdminStub.addRole(roleName, null, permission);
         log.info("Successfully added Role :" + roleName);
         String roles[] = {roleName};
-        userAdminStub.addUser(sessionCookie, userName, userPassword, roles, null);
+        userAdminStub.addUser(userName, userPassword, roles, null);
         log.info("Successfully User Crated :" + userName);
     }
 
 
     private void deleteRoleAndUsers(String roleName, String userName) throws Exception {
-        userAdminStub.deleteRole(sessionCookie, roleName);
+        userAdminStub.deleteRole(roleName);
         log.info("Role " + roleName + " deleted successfully");
-        userAdminStub.deleteUser(sessionCookie, userName);
+        userAdminStub.deleteUser(userName);
     }
 }

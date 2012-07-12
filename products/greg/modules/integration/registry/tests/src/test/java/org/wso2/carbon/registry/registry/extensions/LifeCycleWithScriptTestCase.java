@@ -59,10 +59,10 @@ public class LifeCycleWithScriptTestCase extends TestSetup {
     private LifeCycleAdminServiceClient lifeCycleAdminService;
     private LifeCycleManagementClient lifeCycleManagerAdminService;
     private ActivityAdminServiceClient activitySearch;
-    private  SearchAdminServiceClient searchAdminService;
+    private SearchAdminServiceClient searchAdminService;
     private final String ASPECT_NAME = "LCwithScript";
     private String servicePathDev;
-   private final String ACTION_PROMOTE = "Promote";
+    private final String ACTION_PROMOTE = "Promote";
     private final String ASS_TYPE_DEPENDS = "depends";
     private String resourcePath = FrameworkSettings.getFrameworkPath() + File.separator + ".." + File.separator + ".." + File.separator + ".."
                                   + File.separator + "src" + File.separator + "test" + File.separator + "java" + File.separator
@@ -76,13 +76,14 @@ public class LifeCycleWithScriptTestCase extends TestSetup {
         super.init();
 
         Thread.sleep(1000);
-        lifeCycleAdminService = new LifeCycleAdminServiceClient(FrameworkSettings.SERVICE_URL);
-        activitySearch = new ActivityAdminServiceClient(FrameworkSettings.SERVICE_URL);
-        lifeCycleManagerAdminService = new LifeCycleManagementClient(FrameworkSettings.SERVICE_URL);
-        searchAdminService = new SearchAdminServiceClient(FrameworkSettings.SERVICE_URL);
         LoginLogoutUtil util = new LoginLogoutUtil();
         ClientConnectionUtil.waitForPort(Integer.parseInt(FrameworkSettings.HTTP_PORT));
         sessionCookie = util.login();
+        lifeCycleAdminService = new LifeCycleAdminServiceClient(FrameworkSettings.SERVICE_URL, sessionCookie);
+        activitySearch = new ActivityAdminServiceClient(FrameworkSettings.SERVICE_URL);
+        lifeCycleManagerAdminService = new LifeCycleManagementClient(FrameworkSettings.SERVICE_URL, sessionCookie);
+        searchAdminService = new SearchAdminServiceClient(FrameworkSettings.SERVICE_URL, sessionCookie);
+
 
         String serviceName = "CustomLifeCycleTestService2";
         servicePathDev = "/_system/governance" + Utils.addService("sns", serviceName, registry);
@@ -96,14 +97,14 @@ public class LifeCycleWithScriptTestCase extends TestSetup {
                    SearchAdminServiceRegistryExceptionException {
         String filePath = resourcePath + File.separator + "lifecycle" + File.separator + "lcWithScript.xml";
         String lifeCycleConfiguration = FileManagerUtil.readFile(filePath);
-        Assert.assertTrue(lifeCycleManagerAdminService.addLifeCycle(sessionCookie, lifeCycleConfiguration)
+        Assert.assertTrue(lifeCycleManagerAdminService.addLifeCycle(lifeCycleConfiguration)
                 , "Adding New LifeCycle Failed");
         Thread.sleep(2000);
-        lifeCycleConfiguration = lifeCycleManagerAdminService.getLifecycleConfiguration(sessionCookie, ASPECT_NAME);
+        lifeCycleConfiguration = lifeCycleManagerAdminService.getLifecycleConfiguration(ASPECT_NAME);
         Assert.assertTrue(lifeCycleConfiguration.contains("aspect name=\"LCwithScript\""),
                           "LifeCycleName Not Found in lifecycle configuration");
 
-        String[] lifeCycleList = lifeCycleManagerAdminService.getLifecycleList(sessionCookie);
+        String[] lifeCycleList = lifeCycleManagerAdminService.getLifecycleList();
         Assert.assertNotNull(lifeCycleList);
         Assert.assertTrue(lifeCycleList.length > 0, "Life Cycle List length zero");
         boolean found = false;
@@ -121,7 +122,7 @@ public class LifeCycleWithScriptTestCase extends TestSetup {
         ArrayOfString[] paramList = paramBean.getParameterList();
 
         searchQuery.setParameterValues(paramList);
-        AdvancedSearchResultsBean result = searchAdminService.getAdvancedSearchResults(sessionCookie, searchQuery);
+        AdvancedSearchResultsBean result = searchAdminService.getAdvancedSearchResults(searchQuery);
         Assert.assertNotNull(result.getResourceDataList(), "No Record Found");
         Assert.assertTrue((result.getResourceDataList().length == 1), "No Record Found for Life Cycle " +
                                                                       "Name or more record found");
@@ -140,7 +141,7 @@ public class LifeCycleWithScriptTestCase extends TestSetup {
                    RegistryExceptionException {
         registry.associateAspect(servicePathDev, ASPECT_NAME);
         Thread.sleep(500);
-        LifecycleBean lifeCycle = lifeCycleAdminService.getLifecycleBean(sessionCookie, servicePathDev);
+        LifecycleBean lifeCycle = lifeCycleAdminService.getLifecycleBean(servicePathDev);
         Resource service = registry.get(servicePathDev);
         Assert.assertNotNull(service, "Service Not found on registry path " + servicePathDev);
         Assert.assertEquals(service.getPath(), servicePathDev, "Service path changed after adding life cycle. " + servicePathDev);
@@ -155,7 +156,7 @@ public class LifeCycleWithScriptTestCase extends TestSetup {
         org.wso2.carbon.governance.custom.lifecycles.checklist.stub.services.ArrayOfString[] parameters = new org.wso2.carbon.governance.custom.lifecycles.checklist.stub.services.ArrayOfString[2];
         servicePathTest = "/_system/governance/Phidiax/NonApproved/services/sns/CustomLifeCycleTestService";
 
-        lifeCycleAdminService.invokeAspect(sessionCookie, servicePathDev, ASPECT_NAME,
+        lifeCycleAdminService.invokeAspect(servicePathDev, ASPECT_NAME,
                                            ACTION_PROMOTE, null);
         Thread.sleep(2000);
 
@@ -185,7 +186,7 @@ public class LifeCycleWithScriptTestCase extends TestSetup {
         ArrayOfString[] paramList = paramBean.getParameterList();
 
         searchQuery.setParameterValues(paramList);
-        AdvancedSearchResultsBean result = searchAdminService.getAdvancedSearchResults(sessionCookie, searchQuery);
+        AdvancedSearchResultsBean result = searchAdminService.getAdvancedSearchResults(searchQuery);
         Assert.assertNull(result.getResourceDataList(), "Life Cycle Record Found even if it is deleted");
 
 

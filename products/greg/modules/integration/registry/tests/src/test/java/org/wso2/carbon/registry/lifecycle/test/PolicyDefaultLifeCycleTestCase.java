@@ -60,7 +60,7 @@ public class PolicyDefaultLifeCycleTestCase {
         sessionCookie = new LoginLogoutUtil().login();
         final String SERVER_URL = GregTestUtils.getServerUrl();
         userName = FrameworkSettings.USER_NAME;
-        lifeCycleAdminService = new LifeCycleAdminServiceClient(SERVER_URL);
+        lifeCycleAdminService = new LifeCycleAdminServiceClient(SERVER_URL, sessionCookie);
         activitySearch = new ActivityAdminServiceClient(SERVER_URL);
         registry = GregTestUtils.getRegistry();
         Registry governance = GregTestUtils.getGovernanceRegistry(registry);
@@ -75,9 +75,9 @@ public class PolicyDefaultLifeCycleTestCase {
     public void addLifecycle()
             throws RegistryException, CustomLifecyclesChecklistAdminServiceExceptionException,
                    RemoteException, InterruptedException, RegistryExceptionException {
-        lifeCycleAdminService.addAspect(sessionCookie, policyPathDev, ASPECT_NAME);
+        lifeCycleAdminService.addAspect(policyPathDev, ASPECT_NAME);
         Thread.sleep(500);
-        LifecycleBean lifeCycle = lifeCycleAdminService.getLifecycleBean(sessionCookie, policyPathDev);
+        LifecycleBean lifeCycle = lifeCycleAdminService.getLifecycleBean(policyPathDev);
         Resource service = registry.get(policyPathDev);
         Assert.assertNotNull(service, "Service Not found on registry path " + policyPathDev);
         Assert.assertEquals(service.getPath(), policyPathDev, "Service path changed after adding life cycle. " + policyPathDev);
@@ -106,11 +106,11 @@ public class PolicyDefaultLifeCycleTestCase {
             throws CustomLifecyclesChecklistAdminServiceExceptionException, RemoteException,
                    InterruptedException, RegistryException, RegistryExceptionException {
 
-        lifeCycleAdminService.invokeAspect(sessionCookie, policyPathDev, ASPECT_NAME,
+        lifeCycleAdminService.invokeAspect(policyPathDev, ASPECT_NAME,
                                            ACTION_PROMOTE, null);
         Thread.sleep(2000);
 
-        LifecycleBean lifeCycle = lifeCycleAdminService.getLifecycleBean(sessionCookie, policyPathDev);
+        LifecycleBean lifeCycle = lifeCycleAdminService.getLifecycleBean(policyPathDev);
         Resource service = registry.get(policyPathDev);
         Assert.assertNotNull(service, "Service Not found on registry path " + policyPathDev);
 
@@ -139,7 +139,7 @@ public class PolicyDefaultLifeCycleTestCase {
             throws CustomLifecyclesChecklistAdminServiceExceptionException, RemoteException,
                    InterruptedException, RegistryException, RegistryExceptionException {
 
-        lifeCycleAdminService.invokeAspect(sessionCookie, policyPathDev, ASPECT_NAME,
+        lifeCycleAdminService.invokeAspect(policyPathDev, ASPECT_NAME,
                                            ACTION_PROMOTE, null);
         Thread.sleep(2000);
 

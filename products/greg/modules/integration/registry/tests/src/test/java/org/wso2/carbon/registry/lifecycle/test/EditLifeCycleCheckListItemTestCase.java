@@ -54,8 +54,8 @@ public class EditLifeCycleCheckListItemTestCase {
         ClientConnectionUtil.waitForPort(Integer.parseInt(FrameworkSettings.HTTP_PORT));
         sessionCookie = new LoginLogoutUtil().login();
         final String SERVER_URL = GregTestUtils.getServerUrl();
-        lifeCycleAdminService = new LifeCycleAdminServiceClient(SERVER_URL);
-        lifeCycleManagerAdminService = new LifeCycleManagementClient(SERVER_URL);
+        lifeCycleAdminService = new LifeCycleAdminServiceClient(SERVER_URL, sessionCookie);
+        lifeCycleManagerAdminService = new LifeCycleManagementClient(SERVER_URL, sessionCookie);
         registry = GregTestUtils.getRegistry();
         Registry governance = GregTestUtils.getGovernanceRegistry(registry);
 
@@ -65,7 +65,7 @@ public class EditLifeCycleCheckListItemTestCase {
         Thread.sleep(1000);
         servicePathDev = "/_system/governance" + Utils.addService("sns", serviceName, governance);
         Thread.sleep(1000);
-        Utils.createNewLifeCycle(sessionCookie, ASPECT_NAME, lifeCycleManagerAdminService);
+        Utils.createNewLifeCycle(ASPECT_NAME, lifeCycleManagerAdminService);
         Thread.sleep(1000);
 
     }
@@ -78,7 +78,7 @@ public class EditLifeCycleCheckListItemTestCase {
                    RegistryExceptionException {
         registry.associateAspect(servicePathDev, ASPECT_NAME);
         Thread.sleep(500);
-        LifecycleBean lifeCycle = lifeCycleAdminService.getLifecycleBean(sessionCookie, servicePathDev);
+        LifecycleBean lifeCycle = lifeCycleAdminService.getLifecycleBean(servicePathDev);
         Resource service = registry.get(servicePathDev);
         Assert.assertNotNull(service, "Service Not found on registry path " + servicePathDev);
         Assert.assertEquals(service.getPath(), servicePathDev, "Service path changed after adding life cycle. " + servicePathDev);
@@ -86,7 +86,7 @@ public class EditLifeCycleCheckListItemTestCase {
                 , "Commencement",
                             "LifeCycle State Mismatched");
 
-        lifeCycle = lifeCycleAdminService.getLifecycleBean(sessionCookie, servicePathDev);
+        lifeCycle = lifeCycleAdminService.getLifecycleBean(servicePathDev);
 
         //life cycle check list
         Assert.assertEquals(Utils.getLifeCycleProperty(lifeCycle.getLifecycleProperties(), "registry.custom_lifecycle.checklist.option.0.item")[1],
@@ -108,7 +108,7 @@ public class EditLifeCycleCheckListItemTestCase {
     @Test(description = "Find LifeCycle Usage", dependsOnMethods = {"addLifeCycleToService"})
     public void findLifeCycleUsage()
             throws LifeCycleManagementServiceExceptionException, RemoteException {
-        Assert.assertTrue(lifeCycleManagerAdminService.isLifecycleNameInUse(sessionCookie, ASPECT_NAME)
+        Assert.assertTrue(lifeCycleManagerAdminService.isLifecycleNameInUse(ASPECT_NAME)
                 , "Life Cycle Usage Not Found");
 
     }
@@ -118,8 +118,8 @@ public class EditLifeCycleCheckListItemTestCase {
     public void removeLifeCycleFromService()
             throws CustomLifecyclesChecklistAdminServiceExceptionException, RemoteException {
 
-        lifeCycleAdminService.removeAspect(sessionCookie, servicePathDev, ASPECT_NAME);
-        LifecycleBean lifeCycle = lifeCycleAdminService.getLifecycleBean(sessionCookie, servicePathDev);
+        lifeCycleAdminService.removeAspect(servicePathDev, ASPECT_NAME);
+        LifecycleBean lifeCycle = lifeCycleAdminService.getLifecycleBean(servicePathDev);
         Assert.assertNull(lifeCycle.getLifecycleProperties(), "Life Cycle property Object Found");
 
     }
@@ -128,7 +128,7 @@ public class EditLifeCycleCheckListItemTestCase {
             , dependsOnMethods = {"removeLifeCycleFromService"})
     public void findLifeCycleUsageAfterRemovingLifeCycle()
             throws LifeCycleManagementServiceExceptionException, RemoteException {
-        Assert.assertFalse(lifeCycleManagerAdminService.isLifecycleNameInUse(sessionCookie, ASPECT_NAME)
+        Assert.assertFalse(lifeCycleManagerAdminService.isLifecycleNameInUse(ASPECT_NAME)
                 , "Life Cycle Usage Found");
 
     }
@@ -138,18 +138,18 @@ public class EditLifeCycleCheckListItemTestCase {
     public void editLifeCycleCheckList()
             throws LifeCycleManagementServiceExceptionException, RemoteException,
                    InterruptedException {
-        String config = lifeCycleManagerAdminService.getLifecycleConfiguration(sessionCookie, ASPECT_NAME);
+        String config = lifeCycleManagerAdminService.getLifecycleConfiguration(ASPECT_NAME);
         Assert.assertTrue(config.contains("aspect name=\"" + ASPECT_NAME + "\""),
                           "LifeCycleName Not Found in lifecycle configuration");
         String newLifeCycleConfiguration = config.replace("item name=\"Requirements Gathered\"", "item name=\"Requirements Gathered New\"");
         newLifeCycleConfiguration = newLifeCycleConfiguration.replace("item name=\"Document Requirements\"", "item name=\"Document Requirements New\"");
         newLifeCycleConfiguration = newLifeCycleConfiguration.replace("item name=\"Design UML Diagrams\"", "item name=\"Design UML Diagrams New\"");
-        Assert.assertTrue(lifeCycleManagerAdminService.editLifeCycle(sessionCookie, ASPECT_NAME, newLifeCycleConfiguration)
+        Assert.assertTrue(lifeCycleManagerAdminService.editLifeCycle(ASPECT_NAME, newLifeCycleConfiguration)
                 , "Editing LifeCycle Name Failed");
         Thread.sleep(1000);
 
 
-        String[] lifeCycleList = lifeCycleManagerAdminService.getLifecycleList(sessionCookie);
+        String[] lifeCycleList = lifeCycleManagerAdminService.getLifecycleList();
         Assert.assertNotNull(lifeCycleList);
         Assert.assertTrue(lifeCycleList.length > 0, "Life Cycle List length zero");
         boolean found = false;
@@ -167,7 +167,7 @@ public class EditLifeCycleCheckListItemTestCase {
                    RemoteException, InterruptedException {
         registry.associateAspect(servicePathDev, ASPECT_NAME);
         Thread.sleep(500);
-        LifecycleBean lifeCycle = lifeCycleAdminService.getLifecycleBean(sessionCookie, servicePathDev);
+        LifecycleBean lifeCycle = lifeCycleAdminService.getLifecycleBean(servicePathDev);
         Resource service = registry.get(servicePathDev);
         Assert.assertNotNull(service, "Service Not found on registry path " + servicePathDev);
         Assert.assertEquals(service.getPath(), servicePathDev, "Service path changed after adding life cycle. " + servicePathDev);
@@ -175,7 +175,7 @@ public class EditLifeCycleCheckListItemTestCase {
                 , "Commencement",
                             "LifeCycle State Mismatched");
 
-        lifeCycle = lifeCycleAdminService.getLifecycleBean(sessionCookie, servicePathDev);
+        lifeCycle = lifeCycleAdminService.getLifecycleBean(servicePathDev);
 
         //life cycle check list new value
         Assert.assertEquals(Utils.getLifeCycleProperty(lifeCycle.getLifecycleProperties(), "registry.custom_lifecycle.checklist.option.0.item")[1],

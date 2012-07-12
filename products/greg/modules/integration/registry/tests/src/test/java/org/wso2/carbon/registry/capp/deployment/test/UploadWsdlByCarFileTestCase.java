@@ -55,8 +55,8 @@ public class UploadWsdlByCarFileTestCase {
         sessionCookie = new LoginLogoutUtil().login();
         final String SERVER_URL = GregTestUtils.getServerUrl();
         registry = GregTestUtils.getRegistry();
-        cAppUploader = new CarbonAppUploaderClient(SERVER_URL);
-        adminServiceApplicationAdmin = new ApplicationAdminClient(SERVER_URL);
+        cAppUploader = new CarbonAppUploaderClient(SERVER_URL, sessionCookie);
+        adminServiceApplicationAdmin = new ApplicationAdminClient(SERVER_URL, sessionCookie);
 
     }
 
@@ -66,7 +66,7 @@ public class UploadWsdlByCarFileTestCase {
                    ApplicationAdminExceptionException {
         String filePath = GregTestUtils.getResourcePath() + File.separator +
                           "car" + File.separator + "wsdl_1.0.0.car";
-        cAppUploader.uploadCarbonAppArtifact(sessionCookie, "wsdl_1.0.0.car",
+        cAppUploader.uploadCarbonAppArtifact("wsdl_1.0.0.car",
                                              new DataHandler(new URL("file://" + filePath)));
 
         Assert.assertTrue(CAppTestUtils.isCAppDeployed(sessionCookie, cAppName, adminServiceApplicationAdmin)
@@ -91,7 +91,7 @@ public class UploadWsdlByCarFileTestCase {
     public void deleteCApplication()
             throws ApplicationAdminExceptionException, RemoteException, InterruptedException,
                    RegistryException {
-        adminServiceApplicationAdmin.deleteApplication(sessionCookie, cAppName);
+        adminServiceApplicationAdmin.deleteApplication(cAppName);
 
         Assert.assertTrue(CAppTestUtils.isCAppDeleted(sessionCookie, cAppName, adminServiceApplicationAdmin)
                 , "Deployed CApplication still in CApp List");

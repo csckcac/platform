@@ -58,8 +58,8 @@ public class UploadCarFileHavingMixResourcesTestCase {
         sessionCookie = new LoginLogoutUtil().login();
         final String SERVER_URL = GregTestUtils.getServerUrl();
         registry = GregTestUtils.getRegistry();
-        cAppUploader = new CarbonAppUploaderClient(SERVER_URL);
-        adminServiceApplicationAdmin = new ApplicationAdminClient(SERVER_URL);
+        cAppUploader = new CarbonAppUploaderClient(SERVER_URL, sessionCookie);
+        adminServiceApplicationAdmin = new ApplicationAdminClient(SERVER_URL, sessionCookie);
 
     }
 
@@ -69,7 +69,7 @@ public class UploadCarFileHavingMixResourcesTestCase {
                    ApplicationAdminExceptionException {
         String filePath = GregTestUtils.getResourcePath() + File.separator +
                           "car" + File.separator + "mix_1.0.0.car";
-        cAppUploader.uploadCarbonAppArtifact(sessionCookie, "mix_1.0.0.car",
+        cAppUploader.uploadCarbonAppArtifact("mix_1.0.0.car",
                                              new DataHandler(new URL("file://" + filePath)));
 
         Assert.assertTrue(CAppTestUtils.isCAppDeployed(sessionCookie, cAppName, adminServiceApplicationAdmin)
@@ -92,7 +92,7 @@ public class UploadCarFileHavingMixResourcesTestCase {
     @Test(description = "Delete Carbon Application ", dependsOnMethods = {"isResourcesExist"})
     public void deleteCApplication()
             throws ApplicationAdminExceptionException, RemoteException, InterruptedException {
-        adminServiceApplicationAdmin.deleteApplication(sessionCookie, cAppName);
+        adminServiceApplicationAdmin.deleteApplication(cAppName);
 
         Assert.assertTrue(CAppTestUtils.isCAppDeleted(sessionCookie, cAppName, adminServiceApplicationAdmin)
                 , "Deployed CApplication still in CApp List");

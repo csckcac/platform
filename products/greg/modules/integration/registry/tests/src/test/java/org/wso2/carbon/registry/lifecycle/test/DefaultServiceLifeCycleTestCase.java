@@ -66,7 +66,7 @@ public class DefaultServiceLifeCycleTestCase {
         sessionCookie = new LoginLogoutUtil().login();
         final String SERVER_URL = GregTestUtils.getServerUrl();;
         userName = FrameworkSettings.USER_NAME;
-        lifeCycleAdminService = new LifeCycleAdminServiceClient(SERVER_URL);
+        lifeCycleAdminService = new LifeCycleAdminServiceClient(SERVER_URL, sessionCookie);
         activitySearch = new ActivityAdminServiceClient(SERVER_URL);
         registry = GregTestUtils.getRegistry();
         Registry governance = GregTestUtils.getGovernanceRegistry(registry);
@@ -82,7 +82,7 @@ public class DefaultServiceLifeCycleTestCase {
                    RemoteException, InterruptedException, RegistryExceptionException {
         registry.associateAspect(servicePathDev, aspectName);
         Thread.sleep(500);
-        LifecycleBean lifeCycle = lifeCycleAdminService.getLifecycleBean(sessionCookie, servicePathDev);
+        LifecycleBean lifeCycle = lifeCycleAdminService.getLifecycleBean(servicePathDev);
         Resource service = registry.get(servicePathDev);
         Assert.assertNotNull(service, "Service Not found on registry path " + servicePathDev);
         Assert.assertEquals(service.getPath(), servicePathDev, "Service path changed after adding life cycle. " + servicePathDev);
@@ -118,10 +118,10 @@ public class DefaultServiceLifeCycleTestCase {
             throws CustomLifecyclesChecklistAdminServiceExceptionException, RemoteException,
                    InterruptedException, RegistryException, RegistryExceptionException {
         Thread.sleep(1000);
-        lifeCycleAdminService.invokeAspect(sessionCookie, servicePathDev, aspectName, ACTION_PROMOTE, null);
+        lifeCycleAdminService.invokeAspect(servicePathDev, aspectName, ACTION_PROMOTE, null);
         servicePathTest = "/_system/governance/branches/testing/services/sns/1.0.0-SNAPSHOT/" + serviceName;
         Thread.sleep(500);
-        LifecycleBean lifeCycle = lifeCycleAdminService.getLifecycleBean(sessionCookie, servicePathTest);
+        LifecycleBean lifeCycle = lifeCycleAdminService.getLifecycleBean(servicePathTest);
         Resource service = registry.get(servicePathTest);
         Assert.assertNotNull(service, "Service Not found on registry path " + servicePathTest);
         Assert.assertEquals(service.getPath(), servicePathTest, "Service not in branches/testing. " + servicePathTest);
@@ -176,10 +176,10 @@ public class DefaultServiceLifeCycleTestCase {
             throws CustomLifecyclesChecklistAdminServiceExceptionException, RemoteException,
                    InterruptedException, RegistryException, RegistryExceptionException {
         Thread.sleep(1000);
-        lifeCycleAdminService.invokeAspect(sessionCookie, servicePathTest, aspectName, ACTION_PROMOTE, null);
+        lifeCycleAdminService.invokeAspect(servicePathTest, aspectName, ACTION_PROMOTE, null);
         servicePathProd = "/_system/governance/branches/production/services/sns/1.0.0-SNAPSHOT/" + serviceName;
         Thread.sleep(500);
-        LifecycleBean lifeCycle = lifeCycleAdminService.getLifecycleBean(sessionCookie, servicePathProd);
+        LifecycleBean lifeCycle = lifeCycleAdminService.getLifecycleBean(servicePathProd);
 
         Resource service = registry.get(servicePathProd);
         Assert.assertNotNull(service, "Service Not found on registry path " + servicePathProd);
@@ -226,10 +226,10 @@ public class DefaultServiceLifeCycleTestCase {
             throws CustomLifecyclesChecklistAdminServiceExceptionException, RemoteException,
                    InterruptedException, RegistryException, RegistryExceptionException {
         Thread.sleep(1000);
-        lifeCycleAdminService.invokeAspect(sessionCookie, servicePathProd, aspectName, ACTION_DEMOTE, null);
+        lifeCycleAdminService.invokeAspect(servicePathProd, aspectName, ACTION_DEMOTE, null);
         servicePathTest = "/_system/governance/branches/testing/services/sns/1.0.0-SNAPSHOT/" + serviceName;
         Thread.sleep(500);
-        LifecycleBean lifeCycle = lifeCycleAdminService.getLifecycleBean(sessionCookie, servicePathTest);
+        LifecycleBean lifeCycle = lifeCycleAdminService.getLifecycleBean(servicePathTest);
         Resource service = registry.get(servicePathTest);
         Assert.assertNotNull(service, "Service Not found on registry path " + servicePathTest);
         Assert.assertEquals(service.getPath(), servicePathTest, "Service not in branches/testing. " + servicePathTest);
@@ -287,11 +287,11 @@ public class DefaultServiceLifeCycleTestCase {
         parameters[0] = new ArrayOfString();
         parameters[0].setArray(new String[]{servicePathDev, "1.0.0"});
 
-        lifeCycleAdminService.invokeAspectWithParams(sessionCookie, servicePathDev, aspectName,
+        lifeCycleAdminService.invokeAspectWithParams(servicePathDev, aspectName,
                                                      ACTION_PROMOTE, null, parameters);
         testBranch = "/_system/governance/branches/testing/services/sns/1.0.0/" + serviceName;
         Thread.sleep(500);
-        LifecycleBean lifeCycle = lifeCycleAdminService.getLifecycleBean(sessionCookie, testBranch);
+        LifecycleBean lifeCycle = lifeCycleAdminService.getLifecycleBean(testBranch);
         Resource service = registry.get(testBranch);
         Assert.assertNotNull(service, "Service Not found on registry path " + testBranch);
         Assert.assertEquals(service.getPath(), testBranch, "Service not in branches/testing. " + testBranch);
@@ -343,11 +343,11 @@ public class DefaultServiceLifeCycleTestCase {
         parameters[0] = new ArrayOfString();
         parameters[0].setArray(new String[]{testBranch, "1.0.0"});
 
-        lifeCycleAdminService.invokeAspectWithParams(sessionCookie, testBranch, aspectName, ACTION_PROMOTE
+        lifeCycleAdminService.invokeAspectWithParams(testBranch, aspectName, ACTION_PROMOTE
                 , null, parameters);
         String prodBranch = "/_system/governance/branches/production/services/sns/1.0.0/" + serviceName;
         Thread.sleep(500);
-        LifecycleBean lifeCycle = lifeCycleAdminService.getLifecycleBean(sessionCookie, prodBranch);
+        LifecycleBean lifeCycle = lifeCycleAdminService.getLifecycleBean(prodBranch);
 
         Resource service = registry.get(prodBranch);
         Assert.assertNotNull(service, "Service Not found on registry path " + prodBranch);

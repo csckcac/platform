@@ -43,7 +43,7 @@ public class SymbolicServiceTestCase {
         sessionCookie = util.login();
         String SERVER_URL = "https://" + FrameworkSettings.HOST_NAME +
                             ":" + FrameworkSettings.HTTPS_PORT + "/services/";
-        admin_service_resource_admin = new ResourceAdminServiceClient(SERVER_URL);
+        admin_service_resource_admin = new ResourceAdminServiceClient(SERVER_URL, sessionCookie);
     }
 
     @Test(groups = {"wso2.greg"}, description = "test add a symbolink to a collection @ root level",
@@ -55,16 +55,16 @@ public class SymbolicServiceTestCase {
         String symbolinkName = "symb_" + collectionName;
         String targetPath = parentPath + collectionName;
         try {
-            admin_service_resource_admin.addCollection(sessionCookie, parentPath, collectionName,
+            admin_service_resource_admin.addCollection(parentPath, collectionName,
                                                        "default", "");
             log.info("***Collection successfully Created***");
 
-            admin_service_resource_admin.addSymbolicLink(sessionCookie, parentPath, symbolinkName,
+            admin_service_resource_admin.addSymbolicLink(parentPath, symbolinkName,
                                                       targetPath);
             log.info("***Symbolink successfully Created***");
 
             CollectionContentBean collectionContentBean = admin_service_resource_admin.
-                    getCollectionContent(sessionCookie, "/");
+                    getCollectionContent("/");
 
             if (collectionContentBean.getChildCount() > 0) {
                 String[] childPath = collectionContentBean.getChildPaths();
@@ -76,7 +76,7 @@ public class SymbolicServiceTestCase {
                     }
                 }
             }
-            admin_service_resource_admin.deleteResource(sessionCookie, targetPath);
+            admin_service_resource_admin.deleteResource(targetPath);
             log.info("*************Add Symbolink to Root Level Collection test - Passed **********");
         } catch (RemoteException e) {
             log.info("Add Symbolink to Root Level Collection test - Failed :" + e);
@@ -99,16 +99,16 @@ public class SymbolicServiceTestCase {
         String symbolinkName = "symb_" + resource_name;
         String targetPath = parentPath + resource_name;
         try {
-            admin_service_resource_admin.addTextResource(sessionCookie, parentPath, resource_name,
+            admin_service_resource_admin.addTextResource(parentPath, resource_name,
                                                          "", "", "");
             log.info("Successfully resource.txt created :");
 
-            admin_service_resource_admin.addSymbolicLink(sessionCookie, parentPath, symbolinkName,
+            admin_service_resource_admin.addSymbolicLink(parentPath, symbolinkName,
                                                       targetPath);
             log.info("Successfully symb_resource symbolink created");
 
             CollectionContentBean collectionContentBean = admin_service_resource_admin.
-                    getCollectionContent(sessionCookie, "/");
+                    getCollectionContent("/");
 
             if (collectionContentBean.getChildCount() > 0) {
                 String[] childPath = collectionContentBean.getChildPaths();
@@ -120,7 +120,7 @@ public class SymbolicServiceTestCase {
                     }
                 }
             }
-            admin_service_resource_admin.deleteResource(sessionCookie, targetPath);
+            admin_service_resource_admin.deleteResource(targetPath);
             log.info("*************Add Symbolink to Root Level Resource test - Passed **********");
         } catch (RemoteException e) {
             log.info("Add Symbolink to Root Level Resource test - Failed :" + e);
@@ -144,16 +144,16 @@ public class SymbolicServiceTestCase {
         String symbolinkName = "symb_" + "test";
         String targetPath = parentPath + collectionName;
         try {
-            admin_service_resource_admin.addCollection(sessionCookie, parentPath, collectionName,
+            admin_service_resource_admin.addCollection(parentPath, collectionName,
                                                        "default", "");
             log.info("***Collection successfully Created***");
 
-            admin_service_resource_admin.addSymbolicLink(sessionCookie, parentPath, symbolinkName,
+            admin_service_resource_admin.addSymbolicLink(parentPath, symbolinkName,
                                                       targetPath);
             log.info("***Symbolink successfully Created***");
 
             CollectionContentBean collectionContentBean = admin_service_resource_admin.
-                    getCollectionContent(sessionCookie, "/");
+                    getCollectionContent("/");
 
             if (collectionContentBean.getChildCount() > 0) {
                 String[] childPath = collectionContentBean.getChildPaths();
@@ -165,7 +165,7 @@ public class SymbolicServiceTestCase {
                     }
                 }
             }
-            admin_service_resource_admin.deleteResource(sessionCookie, "/collection");
+            admin_service_resource_admin.deleteResource("/collection");
             log.info("*********Add Symbolink to Collection at General level test - Passed ********");
         } catch (RemoteException e) {
             log.info("Add Symbolink to Collection at General level test - Failed :" + e);
@@ -188,16 +188,16 @@ public class SymbolicServiceTestCase {
         String symbolinkName = "symb_" + "test123.txt";
         String targetPath = parentPath + resource_name;
         try {
-            admin_service_resource_admin.addTextResource(sessionCookie, parentPath, resource_name,
+            admin_service_resource_admin.addTextResource(parentPath, resource_name,
                                                          "", "", "");
             log.info("Successfully resource.txt created :");
 
-            admin_service_resource_admin.addSymbolicLink(sessionCookie, parentPath, symbolinkName,
+            admin_service_resource_admin.addSymbolicLink(parentPath, symbolinkName,
                                                       targetPath);
             log.info("Successfully symb_resource symbolink created");
 
             CollectionContentBean collectionContentBean = admin_service_resource_admin.
-                    getCollectionContent(sessionCookie, "/");
+                    getCollectionContent("/");
 
             if (collectionContentBean.getChildCount() > 0) {
                 String[] childPath = collectionContentBean.getChildPaths();
@@ -209,7 +209,7 @@ public class SymbolicServiceTestCase {
                     }
                 }
             }
-            admin_service_resource_admin.deleteResource(sessionCookie, "/resource");
+            admin_service_resource_admin.deleteResource("/resource");
             log.info("******Add Symbolink to Resource at General Level test - Passed ********");
         } catch (RemoteException e) {
             log.info("Add Symbolink to Resource at General Level test - Failed :" + e);

@@ -62,7 +62,7 @@ public class GregLifeCycleTestWithServicePathTestCase {
         ClientConnectionUtil.waitForPort(Integer.parseInt(FrameworkSettings.HTTP_PORT));
         sessionCookie = new LoginLogoutUtil().login();
         final String SERVER_URL = GregTestUtils.getServerUrl();
-        lifeCycleAdminService = new LifeCycleAdminServiceClient(SERVER_URL);
+        lifeCycleAdminService = new LifeCycleAdminServiceClient(SERVER_URL, sessionCookie);
         registry = GregTestUtils.getRegistry();
         governance = GregTestUtils.getGovernanceRegistry(registry);
 
@@ -79,9 +79,9 @@ public class GregLifeCycleTestWithServicePathTestCase {
             }
         }
 
-        lifeCycleAdminService.addAspect(sessionCookie, servicePathTrunk, ASPECT_NAME);
+        lifeCycleAdminService.addAspect(servicePathTrunk, ASPECT_NAME);
         Thread.sleep(500);
-        LifecycleBean lifeCycle = lifeCycleAdminService.getLifecycleBean(sessionCookie, servicePathTrunk);
+        LifecycleBean lifeCycle = lifeCycleAdminService.getLifecycleBean(servicePathTrunk);
         Resource service = registry.get(servicePathTrunk);
         Assert.assertNotNull(service, "Service Not found on registry path " + servicePathTrunk);
         Assert.assertEquals(service.getPath(), servicePathTrunk, "Service path changed after adding life cycle. " + servicePathTrunk);
@@ -97,7 +97,7 @@ public class GregLifeCycleTestWithServicePathTestCase {
                    RegistryException, InterruptedException {
         servicePathTest = "/_system/governance/branches/testing/services/org/wso2/carbon/core/services/echo/2.0.0/echoyuSer1";
 
-        lifeCycleAdminService.invokeAspect(sessionCookie, servicePathTrunk, ASPECT_NAME,
+        lifeCycleAdminService.invokeAspect(servicePathTrunk, ASPECT_NAME,
                                            ACTION_PROMOTE, null);
         Thread.sleep(2000);
 
@@ -115,12 +115,12 @@ public class GregLifeCycleTestWithServicePathTestCase {
         parameters[0].setArray(new String[]{"/_system/governance/branches/testing/services/org/wso2/carbon/core/services/echo/1.0.0-SNAPSHOT/echoyuSer1", "1.0.0"});
 
         String servicePathProd = "/_system/governance/branches/production/services/org/wso2/carbon/core/services/echo/1.0.0/echoyuSer1";
-        lifeCycleAdminService.invokeAspectWithParams(sessionCookie, "/_system/governance/branches/testing/services/org/wso2/carbon/core/services/echo/1.0.0-SNAPSHOT/echoyuSer1", ASPECT_NAME,
+        lifeCycleAdminService.invokeAspectWithParams("/_system/governance/branches/testing/services/org/wso2/carbon/core/services/echo/1.0.0-SNAPSHOT/echoyuSer1", ASPECT_NAME,
                                                      ACTION_PROMOTE, null, parameters);
         Thread.sleep(2000);
 
         Thread.sleep(500);
-        LifecycleBean lifeCycle = lifeCycleAdminService.getLifecycleBean(sessionCookie, servicePathProd);
+        LifecycleBean lifeCycle = lifeCycleAdminService.getLifecycleBean(servicePathProd);
         Resource service = registry.get(servicePathProd);
         Assert.assertEquals(Utils.getLifeCycleState(lifeCycle), "Production", "LifeCycle State Mismatched");
         Assert.assertNotNull(service, "Service Not found on registry path " + servicePathProd);

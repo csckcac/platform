@@ -10,10 +10,8 @@ var removeAPI = function(name, version, provider) {
               function (result) {
                   if (result.message == "timeout") {
                       jagg.showLogin();
-                  } else {
-                      jagg.message({content:result.message,type:"error"});
                   }
-                  if (!result.error) {
+                  else if (!result.error) {
                       window.location.reload();
                   }
               }, "json");

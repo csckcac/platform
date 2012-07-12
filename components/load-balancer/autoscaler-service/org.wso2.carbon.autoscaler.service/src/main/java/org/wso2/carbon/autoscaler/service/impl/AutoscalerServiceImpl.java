@@ -17,10 +17,17 @@
  */
 package org.wso2.carbon.autoscaler.service.impl;
 
+import java.io.BufferedInputStream;
+import java.io.BufferedOutputStream;
+import java.io.BufferedReader;
+import java.io.BufferedWriter;
 import java.io.File;
 import java.io.FileInputStream;
+import java.io.FileOutputStream;
+import java.io.FileWriter;
 import java.io.IOException;
 import java.io.InputStream;
+import java.io.InputStreamReader;
 import java.util.ArrayList;
 import java.util.Collections;
 import java.util.Comparator;
@@ -29,7 +36,9 @@ import java.util.Iterator;
 import java.util.List;
 import java.util.Map;
 import java.util.Set;
-import java.util.regex.Pattern;
+import java.util.zip.ZipEntry;
+import java.util.zip.ZipInputStream;
+import java.util.zip.ZipOutputStream;
 
 import org.apache.commons.logging.Log;
 import org.apache.commons.logging.LogFactory;
@@ -39,24 +48,24 @@ import org.jclouds.compute.ComputeService;
 import org.jclouds.compute.RunNodesException;
 import org.jclouds.compute.domain.ComputeMetadata;
 import org.jclouds.compute.domain.NodeMetadata;
+import org.jclouds.compute.domain.NodeMetadata.Status;
 import org.jclouds.compute.domain.Template;
 import org.jclouds.compute.domain.TemplateBuilder;
-import org.jclouds.compute.domain.NodeMetadata.Status;
 import org.jclouds.compute.domain.internal.NodeMetadataImpl;
 import org.jclouds.compute.options.TemplateOptions;
 import org.jclouds.openstack.nova.v2_0.compute.options.NovaTemplateOptions;
 import org.wso2.carbon.autoscaler.service.IAutoscalerService;
+import org.wso2.carbon.autoscaler.service.exception.AutoscalerServiceException;
+import org.wso2.carbon.autoscaler.service.exception.DeserializationException;
+import org.wso2.carbon.autoscaler.service.exception.SerializationException;
+import org.wso2.carbon.autoscaler.service.io.Deserializer;
+import org.wso2.carbon.autoscaler.service.io.Serializer;
 import org.wso2.carbon.autoscaler.service.jcloud.ComputeServiceBuilder;
 import org.wso2.carbon.autoscaler.service.util.AutoscalerConstant;
 import org.wso2.carbon.autoscaler.service.util.IaasContext;
 import org.wso2.carbon.autoscaler.service.util.IaasProvider;
 import org.wso2.carbon.autoscaler.service.util.ServiceTemplate;
 import org.wso2.carbon.autoscaler.service.xml.ElasticScalerConfigFileReader;
-import org.wso2.carbon.autoscaler.service.exception.AutoscalerServiceException;
-import org.wso2.carbon.autoscaler.service.exception.DeserializationException;
-import org.wso2.carbon.autoscaler.service.exception.SerializationException;
-import org.wso2.carbon.autoscaler.service.io.Deserializer;
-import org.wso2.carbon.autoscaler.service.io.Serializer;
 import org.wso2.carbon.utils.CarbonUtils;
 
 /**
@@ -77,6 +86,11 @@ public class AutoscalerServiceImpl implements IAutoscalerService {
      * pointer to Carbon Temp directory.
      */
     private static final String CARBON_TEMP = CarbonUtils.getTmpDir();
+
+    /**
+     * Tenant id Delimiter
+     */
+	private static final String TENANT_ID_DELIMITER = "/t/";
 
     /**
      * This directory will be used to store serialized objects.
@@ -185,7 +199,7 @@ public class AutoscalerServiceImpl implements IAutoscalerService {
                 // we should build the templates only if this is not SPI stuff
                 if (!isSpi) {
                     // Build the Template
-                    buildLXCTemplates(entity, iaas.getTemplate(), isSpi);
+                    buildLXCTemplates(entity, iaas.getTemplate(), isSpi, null);
 
                 } else {
                     // add to data structure
@@ -308,10 +322,20 @@ public class AutoscalerServiceImpl implements IAutoscalerService {
     public String startSpiInstance(String domainName, String imageId) {
 
         log.debug("Starting an SPI instance ... | domain: " + domainName + " | ImageId: " + imageId);
-
+        
         // initialize the service, if it's not already initialized.
         initialize(true);
-
+        
+        String tenantId = null;
+        String spiDomainName = null;       
+        
+        if(domainName != null) {
+        	// domainName will have the pattern <domainName>/t/<tenantId>
+        	String[] arr = domainName.split(TENANT_ID_DELIMITER);
+        	spiDomainName = arr[0];
+        	tenantId = arr[1];
+        }
+        
         IaasContext entry;
 
         // FIXME: Build the Templates, for now we're doing a hack here. I don't know whether
@@ -319,7 +343,7 @@ public class AutoscalerServiceImpl implements IAutoscalerService {
         // handle openstack case
         if (imageId.startsWith("nova") && ((entry = findIaasContext(Iaases.openstack)) != null)) {
 
-            buildLXCTemplates(entry, imageId, true);
+            buildLXCTemplates(entry, imageId, true, tenantId);
 
         } else if (((entry = findIaasContext(Iaases.ec2)) != null)) {
 
@@ -332,12 +356,12 @@ public class AutoscalerServiceImpl implements IAutoscalerService {
         }
 
         // let's start the instance
-        if (startInstance(domainName)) {
+        if (startInstance(spiDomainName)) {
 
             // if it's successful, get the public IP of the started instance.
             // FIXME remove --> String publicIP =
             // findIaasContext(iaas).getLastMatchingPublicIp(domainName);
-            String publicIP = entry.getLastMatchingPublicIp(domainName);
+            String publicIP = entry.getLastMatchingPublicIp(spiDomainName);
 
             // if public IP is null, return an empty string, else return public IP.
             return (publicIP == null) ? "" : publicIP;
@@ -348,7 +372,10 @@ public class AutoscalerServiceImpl implements IAutoscalerService {
 
     }
 
-    @Override
+    
+
+
+	@Override
     public boolean terminateInstance(String domainName) {
 
         // initialize the service, if it's not already initialized.
@@ -550,7 +577,7 @@ public class AutoscalerServiceImpl implements IAutoscalerService {
 
         for (IaasContext entry : iaasContextList) {
             if (entry.getName().toString().equals(iaasType)) {
-                return entry;
+                return entry;	
             }
         }
 
@@ -577,9 +604,9 @@ public class AutoscalerServiceImpl implements IAutoscalerService {
 
     }
 
-    private byte[] getUserData(String payloadFileName) {
-
-        byte[] bytes = null;
+    private byte[] getUserData(String payloadFileName, String tenantId) {
+ 
+    	byte[] bytes = null;
         try {
             File file = new File(payloadFileName);
             if (!file.exists()) {
@@ -587,6 +614,10 @@ public class AutoscalerServiceImpl implements IAutoscalerService {
             }
             if (!file.canRead()) {
                 handleException("Payload file " + payloadFileName + " does cannot be read");
+            }
+            if(tenantId != null) {
+            	// Tenant Id is available. This is an spi scenario. Edit the payload content
+            	editPayloadContent(tenantId,file);
             }
             bytes = getBytesFromFile(file);
 
@@ -596,7 +627,171 @@ public class AutoscalerServiceImpl implements IAutoscalerService {
         return bytes;
     }
 
+    
+    private void editPayloadContent(String tenantName, File file) {
+		
+    	unzipFile(file);
+    	editContent(tenantName, file);
+    	zipPayloadFile();    	
+	}
+
+    
     /**
+	 * unzips the payload file
+	 * 
+	 * @param file
+	 */
+	private void unzipFile(File file) {
+		
+		int buffer = 2048;
+
+		try {
+			BufferedOutputStream dest = null;
+			FileInputStream fis = new FileInputStream(file);
+			ZipInputStream zis = new ZipInputStream(new BufferedInputStream(fis));
+			ZipEntry entry;
+			
+			while ((entry = zis.getNextEntry()) != null) {
+
+				log.debug("Extracting: " + entry);
+				
+				int count;
+				byte data[] = new byte[buffer];
+				String outputFilename = "tmpPayload" + File.separator + entry.getName();
+				createDirIfNeeded("tmpPayload", entry);
+
+				// write the files to the disk
+				if (!entry.isDirectory()) {
+					FileOutputStream fos = new FileOutputStream(outputFilename);
+					dest = new BufferedOutputStream(fos, buffer);
+					while ((count = zis.read(data, 0, buffer)) != -1) {
+						dest.write(data, 0, count);
+					}
+					dest.flush();
+					dest.close();
+				}
+			}
+			zis.close();
+		} catch (Exception e) {
+			throw new RuntimeException(e);
+		}
+	}
+
+	/**
+	 * 
+	 * Modify contents (tenantName) of the debian_cron_script.sh file
+	 * 
+	 * @param tenantName
+	 * @param file
+	 */
+	private void editContent(String tenantName, File file) {
+
+		File f = new File(CARBON_HOME + File.separator + "tmpPayload"
+				+ File.separator + "payload" + File.separator
+				+ "debian_cron_script.sh");
+
+		FileInputStream fs = null;
+		InputStreamReader in = null;
+		BufferedReader br = null;
+
+		StringBuffer sb = new StringBuffer();
+
+		String textinLine;
+
+		try {
+			fs = new FileInputStream(f);
+			in = new InputStreamReader(fs);
+			br = new BufferedReader(in);
+
+			while (true) {
+				textinLine = br.readLine();
+				
+				if (textinLine == null)
+					break;				
+				if(textinLine.contains("tenant=")){
+					sb.append("tenant=\"" + tenantName + "\""+"\n");
+					continue;
+				}				
+				sb.append(textinLine + "\n");
+			}
+			fs.close();
+			in.close();
+			br.close();
+
+		} catch (Exception e) {
+			throw new RuntimeException(e);
+		}
+
+		try {
+			FileWriter fstream = new FileWriter(f);
+			BufferedWriter outobj = new BufferedWriter(fstream);
+			outobj.write(sb.toString());
+			outobj.close();
+
+		} catch (Exception e) {
+			throw new RuntimeException(e);
+		}
+	}
+	
+	/**
+	 * 
+	 * Compress the modified files back into payload.zip
+	 * 
+	 */
+	private void zipPayloadFile() {
+		
+		int buffer = 2048;
+		try {
+	         BufferedInputStream origin = null;
+	         FileOutputStream dest = new 
+	           FileOutputStream(CARBON_HOME + File.separator + "resources" + File.separator + "payload.zip");
+	         ZipOutputStream out = new ZipOutputStream(new BufferedOutputStream(dest));
+	         byte data[] = new byte[buffer];
+	         
+	         File f = new File(CARBON_HOME + File.separator + "tmpPayload" + File.separator + "payload");
+	         String files[] = f.list();
+
+	         for (int i=0; i<files.length; i++) {
+	            FileInputStream fi = new FileInputStream(CARBON_HOME + File.separator + "tmpPayload"
+		 				+ File.separator + "payload" + File.separator + files[i]);
+	            origin = new BufferedInputStream(fi, buffer);
+	            ZipEntry entry = new ZipEntry("payload" + File.separator + files[i]);
+	            out.putNextEntry(entry);
+	            
+	            int count;
+	            while((count = origin.read(data, 0, buffer)) != -1) {
+	               out.write(data, 0, count);
+	            }
+	            origin.close();
+	         }
+	         out.close();
+	      } catch(Exception e) {
+	        throw new RuntimeException(e);
+	      } 
+	}	
+
+
+	private void createDirIfNeeded(String destDirectory, ZipEntry entry) {
+		
+		String name = entry.getName();
+
+        if(name.contains("/"))
+        {
+            log.debug("directory will need to be created");
+
+            int index = name.lastIndexOf("/");
+            String dirSequence = name.substring(0, index);
+
+            File newDirs = new File(destDirectory + File.separator + dirSequence);
+
+            //create the directory
+            newDirs.mkdirs();
+        }
+		
+	}
+
+
+	/**
      * Returns the contents of the file in a byte array
      * 
      * @param file
@@ -735,7 +930,7 @@ public class AutoscalerServiceImpl implements IAutoscalerService {
     /**
      * Builds the LXC Template object.
      */
-    private void buildLXCTemplates(IaasContext entity, String imageId, boolean blockUntilRunning) {
+    private void buildLXCTemplates(IaasContext entity, String imageId, boolean blockUntilRunning, String tenantId) {
 
         if (entity.getComputeService() == null) {
             throw new AutoscalerServiceException("Compute service is null for IaaS provider: " + entity.getName());
@@ -774,7 +969,7 @@ public class AutoscalerServiceImpl implements IAutoscalerService {
                 template.getOptions()
                         .as(NovaTemplateOptions.class)
                         .userData(getUserData(CARBON_HOME + File.separator +
-                                              temp.getProperty("payload")));
+                                              temp.getProperty("payload"), tenantId));
             }
 
             template.getOptions()
@@ -839,7 +1034,7 @@ public class AutoscalerServiceImpl implements IAutoscalerService {
                 template.getOptions()
                         .as(AWSEC2TemplateOptions.class)
                         .userData(getUserData(CARBON_HOME + File.separator +
-                                              temp.getProperty("payload")));
+                                              temp.getProperty("payload"), null));
             }
 
             template.getOptions()

@@ -546,10 +546,6 @@
                                 <featureArtifactDef>
                                     org.wso2.carbon:org.wso2.carbon.bam.mediation.agent.feature:${carbon.version}
                                 </featureArtifactDef>
-                                <featureArtifactDef>
-                                    org.wso2.carbon:org.wso2.carbon.mediator.bam.feature:${carbon.version}
-                                </featureArtifactDef>
-
 				<!-- End of BAM data agent features -->
 
 

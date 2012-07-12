@@ -54,7 +54,7 @@
         cacheMediator.setId(cacheid);
     }
     if(notNullChecker(cacheScope)){
-        cacheMediator.setScope(cacheScope);
+        cacheMediator.setScope(cacheScope.toLowerCase());
     }
     if(notNullChecker(cacheType)){
         if(cacheType.equalsIgnoreCase("Collector")){

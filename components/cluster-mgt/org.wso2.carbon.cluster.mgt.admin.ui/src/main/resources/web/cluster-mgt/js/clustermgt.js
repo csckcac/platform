@@ -58,7 +58,7 @@ function restartGroupGracefullyCallback() {
     var url = "proxy_ajaxprocessor.jsp?action=restartGracefully&groupName=" + groupName;
     jQuery.noConflict();
     jQuery("#output").load(url, null, function (responseText, status, XMLHttpRequest) {
-        if (jQuery.trim(responseText) != '') {
+        if (jQuery(responseText).text().replace(/ /g,'') != '') {
             CARBON.showWarningDialog(responseText);
             return;
         }
@@ -80,7 +80,7 @@ function restartGroupCallback() {
     var url = "proxy_ajaxprocessor.jsp?action=restart&groupName=" + groupName;
     jQuery.noConflict();
     jQuery("#output").load(url, null, function (responseText, status, XMLHttpRequest) {
-        if (jQuery.trim(responseText) != '') {
+        if (jQuery(responseText).text().replace(/ /g,'') != '') {
             CARBON.showWarningDialog(responseText);
             return;
         }
@@ -135,7 +135,7 @@ function restartClusterGracefullyCallback() {
     var url = "proxy_ajaxprocessor.jsp?action=restartGracefully";
     jQuery.noConflict();
     jQuery("#output").load(url, null, function (responseText, status, XMLHttpRequest) {
-        if (jQuery.trim(responseText) != '') {
+        if (jQuery(responseText).text().replace(/ /g,'') != '') {
             CARBON.showWarningDialog(responseText);
             return;
         }
@@ -156,7 +156,7 @@ function restartClusterCallback() {
     var url = "proxy_ajaxprocessor.jsp?action=restart";
     jQuery.noConflict();
     jQuery("#output").load(url, null, function (responseText, status, XMLHttpRequest) {
-        if (jQuery.trim(responseText) != '') {
+        if (jQuery(responseText).text().replace(/ /g,'') != '') {
             CARBON.showWarningDialog(responseText);
             return;
         }
@@ -177,7 +177,7 @@ function startClusterMaintenanceCallback(){
     var url = "proxy_ajaxprocessor.jsp?action=startMaintenance";
     jQuery.noConflict();
     jQuery("#output").load(url, null, function (responseText, status, XMLHttpRequest) {
-        if (jQuery.trim(responseText) != '') {
+        if (jQuery(responseText).text().replace(/ /g,'') != '') {
             CARBON.showWarningDialog(responseText);
             return;
         }
@@ -198,7 +198,7 @@ function endClusterMaintenanceCallback(){
     var url = "proxy_ajaxprocessor.jsp?action=endMaintenance";
     jQuery.noConflict();
     jQuery("#output").load(url, null, function (responseText, status, XMLHttpRequest) {
-        if (jQuery.trim(responseText) != '') {
+        if (jQuery(responseText).text().replace(/ /g,'') != '') {
             CARBON.showWarningDialog(responseText);
             return;
         }
@@ -220,7 +220,7 @@ function startGroupMaintenanceCallback(){
     var url = "proxy_ajaxprocessor.jsp?action=startMaintenance&groupName=" + groupName;
     jQuery.noConflict();
     jQuery("#output").load(url, null, function (responseText, status, XMLHttpRequest) {
-        if (jQuery.trim(responseText) != '') {
+        if (jQuery(responseText).text().replace(/ /g,'') != '') {
             CARBON.showWarningDialog(responseText);
             return;
         }
@@ -242,7 +242,7 @@ function endGroupMaintenanceCallback(){
     var url = "proxy_ajaxprocessor.jsp?action=endMaintenance&groupName=" + groupName;
     jQuery.noConflict();
     jQuery("#output").load(url, null, function (responseText, status, XMLHttpRequest) {
-        if (jQuery.trim(responseText) != '') {
+        if (jQuery(responseText).text().replace(/ /g,'') != '') {
             CARBON.showWarningDialog(responseText);
             return;
         }

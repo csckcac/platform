@@ -329,7 +329,7 @@ public class PropertyMediator extends AbstractMediator {
     /**
      * Apply the Regular expression on to the String value and choose the matching group.
      * If a matching not found same string passed in to this method will be returned.
-     * If a pattern is not specified same String passed to this method will be retured.
+     * If a pattern is not specified same String passed to this method will be returned.
      *
      * @param value String value against the regular expression is matched
      * @param synLog log
@@ -359,6 +359,7 @@ public class PropertyMediator extends AbstractMediator {
                         pattern.toString() + " with the property value :" + value;
                 synLog.traceOrDebug(msg);
             }
+            return ""; //if not matched ideally should return empty string
         }
         
         return matchedValue;

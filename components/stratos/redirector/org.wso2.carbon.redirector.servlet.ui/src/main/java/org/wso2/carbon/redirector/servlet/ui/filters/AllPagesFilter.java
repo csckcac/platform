@@ -50,7 +50,7 @@ public class AllPagesFilter implements Filter {
         String requestedURI = request.getRequestURI();
 
         String contextPath = request.getContextPath();
-        if (contextPath == null || contextPath.equals("/")) {
+        if (contextPath == null || ("/").equals(contextPath)) {
         	contextPath = "";
         }
         

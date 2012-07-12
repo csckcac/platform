@@ -27,6 +27,9 @@ import org.apache.synapse.config.xml.endpoints.EndpointFactory;
 import org.apache.synapse.core.axis2.ProxyService;
 import org.apache.synapse.endpoints.Endpoint;
 import org.apache.synapse.endpoints.WSDLEndpoint;
+import org.wso2.carbon.mediator.service.MediatorService;
+import org.wso2.carbon.mediator.service.MediatorStore;
+import org.wso2.carbon.mediator.service.builtin.SequenceMediator;
 
 import javax.xml.namespace.QName;
 import java.io.IOException;
@@ -62,6 +65,8 @@ public class ConfigurationValidator {
                     validateProxyService(child, errors);
                 } else if (XMLConfigConstants.ENDPOINT_ELT.equals(child.getQName())) {
                     validateEndpoint(child, errors);
+                }else if(XMLConfigConstants.SEQUENCE_ELT.equals(child.getQName())){
+                	validateSequence(child,errors);
                 }
             }
         }
@@ -70,6 +75,16 @@ public class ConfigurationValidator {
             return errors.toArray(new ValidationError[errors.size()]);
         }
         return null;
+    }
+
+	private void validateSequence(OMElement sequenceElement,List<ValidationError> errors) {
+	    try{ 
+	     MediatorService service = MediatorStore.getInstance().getMediatorService(sequenceElement);
+	     SequenceMediator sequence = (SequenceMediator) service.getMediator();
+	     sequence.build(sequenceElement);
+	    }catch (Exception e) {
+	       errors.add(newValidationError(sequenceElement, e.getMessage()));
+	    }
     }
 
     private void validateProxyService(OMElement proxyElement, List<ValidationError> errors) {

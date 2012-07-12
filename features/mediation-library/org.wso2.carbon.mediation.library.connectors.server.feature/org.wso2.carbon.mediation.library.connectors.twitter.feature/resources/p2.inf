@@ -1,0 +1,4 @@
+instructions.configure = \
+org.eclipse.equinox.p2.touchpoint.natives.mkdir(path:${installFolder}/../deployment/server/synapse-libs);\
+org.eclipse.equinox.p2.touchpoint.natives.copy(source:${installFolder}/features/org.wso2.carbon.mediation.library.connectors.twitter_${feature.version}/lib/org.wso2.carbon.mediation.library.connectors.twitter.zip,target:${installFolder}/../deployment/server/synapse-libs/org.wso2.carbon.mediation.library.connectors.twitter.zip,overwrite:true);\
+org.eclipse.equinox.p2.touchpoint.natives.remove(path:${installFolder}/features/org.wso2.carbon.mediation.library.connectors.twitter_${feature.version}/lib)

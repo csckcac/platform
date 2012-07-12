@@ -2,11 +2,10 @@ package org.wso2.carbon.hadoop.hive.jdbc.storage.utils;
 
 
 import org.apache.hadoop.conf.Configuration;
-import org.wso2.carbon.hadoop.hive.jdbc.storage.datasource.BasicDataSourceConstants;
-import org.wso2.carbon.hadoop.hive.jdbc.storage.datasource.CarbonDataSourceFetcher;
 import org.apache.hadoop.hive.metastore.api.Constants;
 import org.apache.hadoop.mapred.JobConf;
 import org.apache.hadoop.mapred.lib.db.DBConfiguration;
+import org.wso2.carbon.hadoop.hive.jdbc.storage.datasource.CarbonDataSourceFetcher;
 
 import java.util.Map;
 import java.util.Properties;
@@ -178,87 +177,6 @@ public class ConfigurationUtils {
 
     public static String getWso2CarbonDataSourceName(JobConf conf){
         return conf.get(ConfigurationUtils.HIVE_PROP_CARBON_DS_NAME);
-    }
-
-    //For getting connection pool properties
-    public static String isDefaultAutoCommit(JobConf conf) {
-        return conf.get(BasicDataSourceConstants.PROP_DEFAULT_AUTO_COMMIT);
-    }
-
-    public static String isDefaultReadOnly(JobConf conf) {
-        return conf.get(BasicDataSourceConstants.PROP_DEFAULT_READ_ONLY);
-    }
-
-    public static String getDefaultCatalog(JobConf conf) {
-        return conf.get(BasicDataSourceConstants.PROP_DEFAULT_CATALOG);
-    }
-
-    public static String getDefaultTransactionIsolation(JobConf conf) {
-        return conf.get(BasicDataSourceConstants.PROP_DEFAULT_TRANSACTION_ISOLATION);
-    }
-
-    public static String isTestOnBorrow(JobConf conf) {
-        return conf.get(BasicDataSourceConstants.PROP_TEST_ON_BORROW);
-    }
-
-    public static String isTestOnReturn(JobConf conf) {
-        return conf.get(BasicDataSourceConstants.PROP_TEST_ON_RETURN);
-    }
-
-    public static String getTimeBetweenEvictionRunsMillis(JobConf conf) {
-        return conf.get(BasicDataSourceConstants.PROP_TIME_BETWEEN_EVICTION_RUNS_MILLIS);
-    }
-
-    public static String getNumTestsPerEvictionRun(JobConf conf) {
-        return conf.get(BasicDataSourceConstants.PROP_NUM_TESTS_PER_EVICTION_RUN);
-    }
-
-    public static String getMinEvictableIdleTimeMillis(JobConf conf) {
-        return conf.get(BasicDataSourceConstants.PROP_MIN_EVICTABLE_IDLE_TIME_MILLIS);
-    }
-
-    public static String isTestWhileIdle(JobConf conf) {
-        return conf.get(BasicDataSourceConstants.PROP_TEST_WHILE_IDLE);
-    }
-
-    public static String getValidationQuery(JobConf conf) {
-        return conf.get(BasicDataSourceConstants.PROP_VALIDATION_QUERY);
-    }
-
-    public static String getMaxActive(JobConf conf) {
-        return conf.get(BasicDataSourceConstants.PROP_MAX_ACTIVE);
-    }
-
-    public static String getMaxIdle(JobConf conf) {
-        return conf.get(BasicDataSourceConstants.PROP_MAX_IDLE);
-    }
-
-    public static String getMaxWait(JobConf conf) {
-        return conf.get(BasicDataSourceConstants.PROP_MAX_WAIT);
-    }
-
-    public static String getMinIdle(JobConf conf) {
-        return conf.get(BasicDataSourceConstants.PROP_MIN_IDLE);
-    }
-
-    public static String getInitialSize(JobConf conf) {
-        return conf.get(BasicDataSourceConstants.PROP_INITIAL_SIZE);
-    }
-
-    public static String isAccessToUnderlyingConnectionAllowed(JobConf conf) {
-        return conf.get(BasicDataSourceConstants.PROP_ACCESS_TO_UNDERLYING_CONNECTION_ALLOWED);
-    }
-
-    public static String isRemoveAbandoned(JobConf conf) {
-        return conf.get(BasicDataSourceConstants.PROP_REMOVE_ABANDONED);
-    }
-
-    public static String getRemoveAbandonedTimeout(JobConf conf) {
-        return conf.get(BasicDataSourceConstants.PROP_REMOVE_ABANDONED_TIMEOUT);
-    }
-
-    public static String isLogAbandoned(JobConf conf) {
-        return conf.get(BasicDataSourceConstants.PROP_LOG_ABANDONED);
     }
 
 }

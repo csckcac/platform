@@ -8,7 +8,6 @@ import java.util.List;
 public class QueryConstructor {
 
 
-
     //When constructing the query we try to preserve the order
     public String constructUpdateQuery(String tableName, List<String> fieldNames,
                                        String[] primaryFields) {

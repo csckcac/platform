@@ -27,7 +27,7 @@ public class JDBCDataInputFormat extends HiveInputFormat<LongWritable, MapWritab
         dbProperties.setDataSourceName(ConfigurationUtils.getWso2CarbonDataSourceName(conf));
 
         DBManager dbManager = new DBManager();
-        dbManager.configureDB(conf);
+        dbManager.createConnection(conf);
 
         return new DBRecordReader((JDBCSplit)split,dbProperties, dbManager);
     }

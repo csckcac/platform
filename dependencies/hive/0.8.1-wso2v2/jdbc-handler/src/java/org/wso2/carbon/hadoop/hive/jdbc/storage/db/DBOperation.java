@@ -1,15 +1,14 @@
 package org.wso2.carbon.hadoop.hive.jdbc.storage.db;
 
 
-import org.apache.commons.dbcp.BasicDataSource;
+import org.apache.hadoop.io.MapWritable;
+import org.apache.hadoop.io.Writable;
+import org.apache.hadoop.mapred.lib.db.DBConfiguration;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.wso2.carbon.hadoop.hive.jdbc.storage.datasource.CarbonDataSourceFetcher;
 import org.wso2.carbon.hadoop.hive.jdbc.storage.utils.Commons;
 import org.wso2.carbon.hadoop.hive.jdbc.storage.utils.ConfigurationUtils;
-import org.apache.hadoop.io.MapWritable;
-import org.apache.hadoop.io.Writable;
-import org.apache.hadoop.mapred.lib.db.DBConfiguration;
 
 import java.sql.Connection;
 import java.sql.PreparedStatement;
@@ -257,8 +256,7 @@ public class DBOperation {
             }
 
             DBManager dbManager = new DBManager();
-            BasicDataSource basicDataSource = createBasicDataSource(dbProperties);
-            dbManager.setDataSource(basicDataSource);
+            dbManager.createConnection(dbProperties);
             Connection connection = null;
             Statement statement = null;
             try {
@@ -292,16 +290,6 @@ public class DBOperation {
             }
         }
     }
-
-    private BasicDataSource createBasicDataSource(DatabaseProperties dbProperties) {
-        BasicDataSource basicDataSource = new BasicDataSource();
-        basicDataSource.setUrl(dbProperties.getConnectionUrl());
-        basicDataSource.setDriverClassName(dbProperties.getDriverClass());
-        basicDataSource.setUsername(dbProperties.getUserName());
-        basicDataSource.setPassword(dbProperties.getPassword());
-        return basicDataSource;
-    }
-
 
     public int getTotalCount(String sql, Connection connection) throws SQLException {
         ResultSet resultSet = null;

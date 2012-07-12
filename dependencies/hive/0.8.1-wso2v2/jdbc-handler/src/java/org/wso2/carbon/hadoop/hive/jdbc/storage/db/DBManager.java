@@ -1,31 +1,29 @@
 package org.wso2.carbon.hadoop.hive.jdbc.storage.db;
 
 
-import org.apache.commons.dbcp.BasicDataSource;
+import org.apache.hadoop.mapred.JobConf;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.wso2.carbon.hadoop.hive.jdbc.storage.exception.UnsupportedDatabaseException;
 import org.wso2.carbon.hadoop.hive.jdbc.storage.utils.Commons;
-import org.apache.hadoop.mapred.JobConf;
 
-import javax.sql.DataSource;
 import java.sql.Connection;
 import java.sql.DatabaseMetaData;
+import java.sql.DriverManager;
 import java.sql.SQLException;
 
 public class DBManager {
 
     private static final Logger log = LoggerFactory.getLogger(DBManager.class);
 
-    private DataSource dataSource;
+    private Connection connection;
 
-    public void setDataSource(DataSource dSource) {
-        dataSource = dSource;
+    public void setConnection(Connection con) {
+        connection = con;
     }
 
     public Connection getConnection() throws ClassNotFoundException, SQLException {
-
-        return dataSource.getConnection();
+        return connection;
     }
 
     public DatabaseType getDatabaseName(Connection connection) throws UnsupportedDatabaseException {
@@ -58,10 +56,21 @@ public class DBManager {
         return databaseType;
     }
 
-    public void configureDB(JobConf conf) {
-        //Configure BasicDataSource
-        BasicDataSource basicDataSource = Commons.configureBasicDataSource(conf);
-        setDataSource(basicDataSource);
+    public void createConnection(DatabaseProperties dbProperties) {
+        try {
+            Class.forName(dbProperties.getDriverClass());
+            setConnection(DriverManager.getConnection(dbProperties.getConnectionUrl(),
+                                                      dbProperties.getUserName(),
+                                                      dbProperties.getPassword()));
+        } catch (ClassNotFoundException e) {
+            log.error("Failed to load driver class: " + dbProperties.getDriverClass(), e);
+        } catch (SQLException e) {
+            log.error("Failed to get connection", e);
+        }
+    }
 
+    public void createConnection(JobConf conf) {
+        DatabaseProperties dbProperties = Commons.getDbPropertiesObj(conf);
+        createConnection(dbProperties);
     }
 }

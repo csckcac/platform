@@ -45,7 +45,7 @@ public class JDBCDataOutputFormat implements OutputFormat<NullWritable, MapWrita
             dbProperties.setUpsertQueryValuesOrder(ConfigurationUtils.getUpsertQueryValuesOrder(conf));
 
             DBManager dbManager = new DBManager();
-            dbManager.configureDB(conf);
+            dbManager.createConnection(conf);
 
             return new DBRecordWriter(dbProperties, dbManager);
 

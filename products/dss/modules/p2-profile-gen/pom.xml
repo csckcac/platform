@@ -151,9 +151,9 @@
                                 <featureArtifactDef>org.wso2.carbon:org.wso2.carbon.load.balance.agent.server.feature:${stratos.version}</featureArtifactDef>
 
                                 <!-- Cassandra Feature -->
-                                <featureArtifactDef>org.wso2.carbon:org.wso2.carbon.cassandra.mgt.feature:${carbon.version}</featureArtifactDef>
+                                <!--<featureArtifactDef>org.wso2.carbon:org.wso2.carbon.cassandra.mgt.feature:${carbon.version}</featureArtifactDef>
                                 <featureArtifactDef>org.wso2.carbon:org.wso2.carbon.cassandra.mgt.ui.feature:${carbon.version}</featureArtifactDef>
-                                <featureArtifactDef>org.wso2.carbon:org.wso2.carbon.cassandra.dataaccess.feature:${carbon.version}</featureArtifactDef>
+                                <featureArtifactDef>org.wso2.carbon:org.wso2.carbon.cassandra.dataaccess.feature:${carbon.version}</featureArtifactDef> -->
 
                                 <!-- RSS Manager Feature -->
                                 <featureArtifactDef>org.wso2.carbon:org.wso2.carbon.rssmanager.feature:${carbon.version}</featureArtifactDef>
@@ -415,7 +415,7 @@
                                     <version>${stratos.version}</version>
                                 </feature>
 
-                                <feature>
+                                <!--<feature>
                                     <id>org.wso2.carbon.cassandra.mgt.feature.group</id>
                                     <version>${carbon.version}</version>
                                 </feature>
@@ -428,7 +428,7 @@
                                 <feature>
                                     <id>org.wso2.carbon.cassandra.dataaccess.feature.group</id>
                                     <version>${carbon.version}</version>
-                                </feature>
+                                </feature> -->
                                 <feature>
                                     <id>org.wso2.carbon.rssmanager.feature.group</id>
                                     <version>${carbon.version}</version>

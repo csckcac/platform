@@ -315,10 +315,10 @@
             <source>../../p2-profile-gen/target/wso2carbon-core-${carbon.version}/repository/conf/advanced/cassandra-component.xml</source>
             <outputDirectory>wso2dataservices-${pom.version}/repository/conf/advanced</outputDirectory>
         </file-->
-        <file>
+        <!--<file>
             <source>../p2-profile-gen/target/wso2carbon-core-${carbon.version}/repository/conf/etc/cassandra-auth.xml</source>
             <outputDirectory>${pom.artifactId}-${pom.version}/repository/conf/advanced</outputDirectory>
-        </file>
+        </file> -->
         <!--<file>
             <source>target/sources/wso2-carbon-components-${carbon.version}-src/org.wso2.carbon.transport.jms-sources-java-source/src/main/resources/jms-transports.xml</source>
             <outputDirectory>wso2dataservices-${pom.version}/conf/</outputDirectory>

@@ -28,7 +28,6 @@ import org.wso2.carbon.tracer.stub.types.carbon.MessagePayload;
 import org.wso2.carbon.tracer.stub.types.carbon.TracerServiceInfo;
 
 import java.rmi.RemoteException;
-import java.text.MessageFormat;
 
 /*
 Client class for TracerAdminStub, which implement public methods for tests.
@@ -38,61 +37,54 @@ public class TracerAdminClient {
     private final Log log = LogFactory.getLog(TracerAdminClient.class);
 
     private TracerAdminStub tracerAdminStub;
+    private final String serviceName = "TracerAdmin";
 
     public TracerAdminClient(String backendServerURL, String sessionCookie) throws AxisFault {
-        String serviceName = "TracerAdmin";
+
         String serviceURL = backendServerURL + serviceName;
-        try {
-            tracerAdminStub = new TracerAdminStub(serviceURL);
-            AuthenticateStub.authenticateStub(sessionCookie, tracerAdminStub);
-        } catch (AxisFault axisFault) {
-            log.error("TracerAdminStub initialization fail: " + axisFault.getMessage());
-            throw new AxisFault("TracerAdminStub initialization fail: " + axisFault.getMessage());
-        }
+        tracerAdminStub = new TracerAdminStub(serviceURL);
+        AuthenticateStub.authenticateStub(sessionCookie, tracerAdminStub);
+
     }
 
-    public TracerServiceInfo getMessages(int numberOfMessages, String filter) {
-        try {
-            TracerServiceInfo tracerServiceInfo = tracerAdminStub.getMessages(numberOfMessages, filter);
-            MessagePayload message = tracerServiceInfo.getLastMessage();
-            escapeHtml(message);
-            return tracerServiceInfo;
-        } catch (Exception e) {
-            handleException("Cannot get list of tracer messages", e);
-        }
-        return null;
+    public TracerAdminClient(String backendServerURL, String userName, String password)
+            throws AxisFault {
+
+        String serviceURL = backendServerURL + serviceName;
+        tracerAdminStub = new TracerAdminStub(serviceURL);
+        AuthenticateStub.authenticateStub(userName, password, tracerAdminStub);
+
     }
 
-    public TracerServiceInfo setMonitoring(String flag) {
-        try {
-            return tracerAdminStub.setMonitoring(flag);
-        } catch (Exception e) {
-            handleException(MessageFormat.format("Cannot set tracer monitoring status",
-                                                 flag), e);
-        }
-        return null;
+    public TracerServiceInfo getMessages(int numberOfMessages, String filter)
+            throws RemoteException {
+
+        TracerServiceInfo tracerServiceInfo = tracerAdminStub.getMessages(numberOfMessages, filter);
+        MessagePayload message = tracerServiceInfo.getLastMessage();
+        escapeHtml(message);
+        return tracerServiceInfo;
+
     }
 
-    public void clearAllSoapMessages() {
-        try {
-            tracerAdminStub.clearAllSoapMessages();
-        } catch (RemoteException e) {
-            handleException("Cannot clear all soap messages", e);
-        }
+    public TracerServiceInfo setMonitoring(String flag) throws RemoteException {
+
+        return tracerAdminStub.setMonitoring(flag);
+
+    }
+
+    public void clearAllSoapMessages() throws RemoteException {
+
+        tracerAdminStub.clearAllSoapMessages();
+
     }
 
     public MessagePayload getMessage(String serviceName,
                                      String operationName,
-                                     long messageSequence) {
-        try {
-            MessagePayload message = tracerAdminStub.getMessage(serviceName, operationName, messageSequence);
-            escapeHtml(message);
-            return message;
-        } catch (Exception e) {
-            handleException(MessageFormat.format("Cannot get tracer messages",
-                                                 messageSequence, serviceName, operationName), e);
-        }
-        return null;
+                                     long messageSequence) throws RemoteException {
+        MessagePayload message = tracerAdminStub.getMessage(serviceName, operationName, messageSequence);
+        escapeHtml(message);
+        return message;
+
     }
 
     private void escapeHtml(MessagePayload message) {
@@ -116,7 +108,4 @@ public class TracerAdminClient {
         return xml;
     }
 
-    private void handleException(String msg, Exception e) {
-        log.error(msg, e);
-    }
 }

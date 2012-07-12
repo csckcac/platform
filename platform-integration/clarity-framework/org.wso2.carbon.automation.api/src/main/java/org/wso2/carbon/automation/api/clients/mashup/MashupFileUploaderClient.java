@@ -31,21 +31,26 @@ import java.rmi.RemoteException;
 
 public class MashupFileUploaderClient {
     private static final Log log = LogFactory.getLog(MashupFileUploaderClient.class);
-
+    private final String serviceName = "JSServiceUploader";
     private JSServiceUploaderStub jSServiceUploaderStub;
 
-    public MashupFileUploaderClient(String backEndUrl) throws AxisFault {
-        String serviceName = "JSServiceUploader";
+    public MashupFileUploaderClient(String backEndUrl, String sessionCookie) throws AxisFault {
         String endPoint = backEndUrl + serviceName;
         jSServiceUploaderStub = new JSServiceUploaderStub(endPoint);
+        AuthenticateStub.authenticateStub(sessionCookie, jSServiceUploaderStub);
     }
 
-    public void uploadMashUpFile(String sessionCookie, String fileName, DataHandler dh)
+    public MashupFileUploaderClient(String backEndUrl, String userName, String password)
+            throws AxisFault {
+        String endPoint = backEndUrl + serviceName;
+        jSServiceUploaderStub = new JSServiceUploaderStub(endPoint);
+        AuthenticateStub.authenticateStub(userName, password, jSServiceUploaderStub);
+    }
+
+    public void uploadMashUpFile(String fileName, DataHandler dh)
             throws ExceptionException, RemoteException {
 
         JSServiceUploadData jSSFile;
-
-        AuthenticateStub.authenticateStub(sessionCookie, jSServiceUploaderStub);
 
         jSSFile = new JSServiceUploadData();
         jSSFile.setDataHandler(dh);

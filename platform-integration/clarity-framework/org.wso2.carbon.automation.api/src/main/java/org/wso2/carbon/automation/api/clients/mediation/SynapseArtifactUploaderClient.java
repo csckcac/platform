@@ -32,25 +32,28 @@ public class SynapseArtifactUploaderClient {
 
     private final String serviceName = "SynapseArtifactUploaderAdmin";
     private SynapseArtifactUploaderAdminStub synapseArtifactUploaderAdminStub;
-    private String endPoint;
 
-    public SynapseArtifactUploaderClient(String backEndUrl) throws AxisFault {
-        this.endPoint = backEndUrl + serviceName;
+    public SynapseArtifactUploaderClient(String backEndUrl, String sessionCookie) throws AxisFault {
+        String endPoint = backEndUrl + serviceName;
         synapseArtifactUploaderAdminStub = new SynapseArtifactUploaderAdminStub(endPoint);
+        AuthenticateStub.authenticateStub(sessionCookie, synapseArtifactUploaderAdminStub);
     }
 
+    public SynapseArtifactUploaderClient(String backEndUrl, String userName, String password)
+            throws AxisFault {
+        String endPoint = backEndUrl + serviceName;
+        synapseArtifactUploaderAdminStub = new SynapseArtifactUploaderAdminStub(endPoint);
+        AuthenticateStub.authenticateStub(userName, password, synapseArtifactUploaderAdminStub);
+    }
 
-    public void uploadFile(String sessionCookie, String fileName, DataHandler dh)
-            throws RemoteException {
-        AuthenticateStub.authenticateStub(sessionCookie, synapseArtifactUploaderAdminStub);
+    public void uploadFile(String fileName, DataHandler dh) throws RemoteException {
 
         synapseArtifactUploaderAdminStub.uploadArtifact(fileName, dh);
         log.info("Artifact uploaded");
 
     }
 
-    public void deleteFile(String sessionCookie, String fileName) throws RemoteException {
-        AuthenticateStub.authenticateStub(sessionCookie, synapseArtifactUploaderAdminStub);
+    public void deleteFile(String fileName) throws RemoteException {
 
         synapseArtifactUploaderAdminStub.removeArtifact(fileName);
         log.info("Artifact Deleted");

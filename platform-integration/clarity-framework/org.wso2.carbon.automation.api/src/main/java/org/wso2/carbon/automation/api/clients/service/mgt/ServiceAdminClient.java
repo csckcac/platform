@@ -21,7 +21,8 @@ import org.apache.axis2.AxisFault;
 import org.apache.commons.logging.Log;
 import org.apache.commons.logging.LogFactory;
 import org.wso2.carbon.automation.api.clients.utils.AuthenticateStub;
-import org.wso2.carbon.service.mgt.stub.*;
+import org.wso2.carbon.service.mgt.stub.ServiceAdminException;
+import org.wso2.carbon.service.mgt.stub.ServiceAdminStub;
 import org.wso2.carbon.service.mgt.stub.types.carbon.FaultyService;
 import org.wso2.carbon.service.mgt.stub.types.carbon.FaultyServicesWrapper;
 import org.wso2.carbon.service.mgt.stub.types.carbon.ServiceMetaData;
@@ -31,42 +32,44 @@ import java.rmi.RemoteException;
 
 public class ServiceAdminClient {
     private static final Log log = LogFactory.getLog(ServiceAdminClient.class);
-
+    private final String serviceName = "ServiceAdmin";
     private ServiceAdminStub serviceAdminStub;
 
-    public ServiceAdminClient(String backEndUrl) throws AxisFault {
-        String serviceName = "ServiceAdmin";
+    public ServiceAdminClient(String backEndUrl, String sessionCookie) throws AxisFault {
+
         String endPoint = backEndUrl + serviceName;
         serviceAdminStub = new ServiceAdminStub(endPoint);
+        AuthenticateStub.authenticateStub(sessionCookie, serviceAdminStub);
     }
 
-    public void deleteService(String sessionCookie, String[] serviceGroup) throws RemoteException {
-        AuthenticateStub.authenticateStub(sessionCookie, serviceAdminStub);
+    public ServiceAdminClient(String backEndUrl, String userName, String password)
+            throws AxisFault {
+
+        String endPoint = backEndUrl + serviceName;
+        serviceAdminStub = new ServiceAdminStub(endPoint);
+        AuthenticateStub.authenticateStub(userName, password, serviceAdminStub);
+    }
+
+    public void deleteService(String[] serviceGroup) throws RemoteException {
 
         serviceAdminStub.deleteServiceGroups(serviceGroup);
-
     }
 
-    public void deleteFaultyService(String sessionCookie, String artifactPath)
+    public void deleteFaultyService(String artifactPath)
             throws RemoteException {
-        AuthenticateStub.authenticateStub(sessionCookie, serviceAdminStub);
-
         serviceAdminStub.deleteFaultyServiceGroup(artifactPath);
 
 
     }
 
-    public void deleteAllNonAdminServiceGroups(String sessionCookie) throws RemoteException {
-        AuthenticateStub.authenticateStub(sessionCookie, serviceAdminStub);
+    public void deleteAllNonAdminServiceGroups() throws RemoteException {
 
         serviceAdminStub.deleteAllNonAdminServiceGroups();
 
-
     }
 
-    public ServiceMetaDataWrapper listServices(String sessionCookie, String serviceName)
+    public ServiceMetaDataWrapper listServices(String serviceName)
             throws RemoteException {
-        AuthenticateStub.authenticateStub(sessionCookie, serviceAdminStub);
         ServiceMetaDataWrapper serviceMetaDataWrapper;
 
         serviceMetaDataWrapper = serviceAdminStub.listServices("ALL", serviceName, 0);
@@ -75,8 +78,7 @@ public class ServiceAdminClient {
     }
 
 
-    public FaultyServicesWrapper listFaultyServices(String sessionCookie) throws RemoteException {
-        AuthenticateStub.authenticateStub(sessionCookie, serviceAdminStub);
+    public FaultyServicesWrapper listFaultyServices() throws RemoteException {
         FaultyServicesWrapper faultyServicesWrapper;
 
         faultyServicesWrapper = serviceAdminStub.getFaultyServiceArchives(0);
@@ -85,12 +87,12 @@ public class ServiceAdminClient {
     }
 
 
-    public boolean isServiceExists(String sessionCookie, String serviceName)
+    public boolean isServiceExists(String serviceName)
             throws RemoteException {
         boolean serviceState = false;
         ServiceMetaDataWrapper serviceMetaDataWrapper;
         ServiceMetaData[] serviceMetaDataList;
-        serviceMetaDataWrapper = listServices(sessionCookie, serviceName);
+        serviceMetaDataWrapper = listServices(serviceName);
         serviceMetaDataList = serviceMetaDataWrapper.getServices();
         if (serviceMetaDataList == null || serviceMetaDataList.length == 0) {
             serviceState = false;
@@ -104,12 +106,11 @@ public class ServiceAdminClient {
         return serviceState;
     }
 
-    public void deleteMatchingServiceByGroup(String sessionCookie, String serviceFileName)
+    public void deleteMatchingServiceByGroup(String serviceFileName)
             throws RemoteException {
-        AuthenticateStub.authenticateStub(sessionCookie, serviceAdminStub);
-        String matchingServiceName = getMatchingServiceName(sessionCookie, serviceFileName);
+        String matchingServiceName = getMatchingServiceName(serviceFileName);
         if (matchingServiceName != null) {
-            String serviceGroup[] = {getServiceGroup(sessionCookie, matchingServiceName)};
+            String serviceGroup[] = {getServiceGroup(matchingServiceName)};
             log.info("Service group name " + serviceGroup[0]);
 
             serviceAdminStub.deleteServiceGroups(serviceGroup);
@@ -119,9 +120,8 @@ public class ServiceAdminClient {
         }
     }
 
-    public String deleteAllServicesByType(String sessionCookie, String type)
+    public String deleteAllServicesByType(String type)
             throws RemoteException {
-        AuthenticateStub.authenticateStub(sessionCookie, serviceAdminStub);
         ServiceMetaDataWrapper serviceMetaDataWrapper;
 
         serviceMetaDataWrapper = serviceAdminStub.listServices("ALL", null, 0);
@@ -136,7 +136,7 @@ public class ServiceAdminClient {
                 for (ServiceMetaData serviceData : serviceMetaDataList) {
                     if (serviceData.getServiceType().equalsIgnoreCase(type)) {
                         serviceGroup = new String[]{serviceData.getServiceGroupName()};
-                        deleteService(sessionCookie, serviceGroup);
+                        deleteService(serviceGroup);
                     }
                 }
             }
@@ -145,10 +145,9 @@ public class ServiceAdminClient {
 
     }
 
-    public String getMatchingServiceName(String sessionCookie, String serviceFileName)
+    public String getMatchingServiceName(String serviceFileName)
             throws RemoteException {
 
-        AuthenticateStub.authenticateStub(sessionCookie, serviceAdminStub);
         ServiceMetaDataWrapper serviceMetaDataWrapper;
         serviceMetaDataWrapper = serviceAdminStub.listServices("ALL", serviceFileName, 0);
 
@@ -168,10 +167,10 @@ public class ServiceAdminClient {
         return null;
     }
 
-    public String getServiceGroup(String sessionCookie, String serviceName) throws RemoteException {
+    public String getServiceGroup(String serviceName) throws RemoteException {
         ServiceMetaDataWrapper serviceMetaDataWrapper;
         ServiceMetaData[] serviceMetaDataList;
-        serviceMetaDataWrapper = listServices(sessionCookie, serviceName);
+        serviceMetaDataWrapper = listServices(serviceName);
         serviceMetaDataList = serviceMetaDataWrapper.getServices();
         if (serviceMetaDataList != null && serviceMetaDataList.length > 0) {
 
@@ -184,12 +183,11 @@ public class ServiceAdminClient {
         return null;
     }
 
-    public boolean isServiceFaulty(String sessionCookie, String serviceName)
-            throws RemoteException {
+    public boolean isServiceFaulty(String serviceName) throws RemoteException {
         boolean serviceState = false;
         FaultyServicesWrapper faultyServicesWrapper;
         FaultyService[] faultyServiceList;
-        faultyServicesWrapper = listFaultyServices(sessionCookie);
+        faultyServicesWrapper = listFaultyServices();
         if (faultyServicesWrapper != null) {
             faultyServiceList = faultyServicesWrapper.getFaultyServices();
             if (faultyServiceList == null || faultyServiceList.length == 0) {
@@ -205,12 +203,11 @@ public class ServiceAdminClient {
         return serviceState;
     }
 
-    public FaultyService getFaultyData(String sessionCookie, String serviceName)
-            throws RemoteException {
+    public FaultyService getFaultyData(String serviceName) throws RemoteException {
         FaultyService faultyService = null;
         FaultyServicesWrapper faultyServicesWrapper;
         FaultyService[] faultyServiceList;
-        faultyServicesWrapper = listFaultyServices(sessionCookie);
+        faultyServicesWrapper = listFaultyServices();
         if (faultyServicesWrapper != null) {
             faultyServiceList = faultyServicesWrapper.getFaultyServices();
             if (faultyServiceList == null || faultyServiceList.length == 0) {
@@ -229,26 +226,21 @@ public class ServiceAdminClient {
         return faultyService;
     }
 
-    public ServiceMetaData getServicesData(String sessionCookie, String serviceName)
+    public ServiceMetaData getServicesData(String serviceName)
             throws ServiceAdminException, RemoteException {
-        AuthenticateStub.authenticateStub(sessionCookie, serviceAdminStub);
 
         return serviceAdminStub.getServiceData(serviceName);
 
     }
 
-    public void startService(String sessionCookie, String serviceName)
-            throws ServiceAdminException, RemoteException {
-        AuthenticateStub.authenticateStub(sessionCookie, serviceAdminStub);
+    public void startService(String serviceName) throws ServiceAdminException, RemoteException {
 
         serviceAdminStub.startService(serviceName);
         log.info("Service Started");
 
     }
 
-    public void stopService(String sessionCookie, String serviceName)
-            throws ServiceAdminException, RemoteException {
-        AuthenticateStub.authenticateStub(sessionCookie, serviceAdminStub);
+    public void stopService(String serviceName) throws ServiceAdminException, RemoteException {
 
         serviceAdminStub.stopService(serviceName);
         log.info("Service Stopped");

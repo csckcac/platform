@@ -38,17 +38,24 @@ public class SequenceAdminServiceClient {
 
     private final String serviceName = "SequenceAdminService";
     private SequenceAdminServiceStub sequenceAdminServiceStub;
-    private String endPoint;
 
-    public SequenceAdminServiceClient(String backEndUrl) throws AxisFault {
-        this.endPoint = backEndUrl + serviceName;
+    public SequenceAdminServiceClient(String backEndUrl, String sessionCookie) throws AxisFault {
+        String endPoint = backEndUrl + serviceName;
         sequenceAdminServiceStub = new SequenceAdminServiceStub(endPoint);
+        AuthenticateStub.authenticateStub(sessionCookie, sequenceAdminServiceStub);
+    }
+
+    public SequenceAdminServiceClient(String backEndUrl, String userName, String password)
+            throws AxisFault {
+        String endPoint = backEndUrl + serviceName;
+        sequenceAdminServiceStub = new SequenceAdminServiceStub(endPoint);
+        AuthenticateStub.authenticateStub(userName, password, sequenceAdminServiceStub);
     }
 
 
-    public void addSequence(String sessionCookie, DataHandler dh)
+    public void addSequence(DataHandler dh)
             throws SequenceEditorException, IOException, XMLStreamException {
-        AuthenticateStub.authenticateStub(sessionCookie, sequenceAdminServiceStub);
+
         XMLStreamReader parser = XMLInputFactory.newInstance().createXMLStreamReader(dh.getInputStream());
         //create the builder
         StAXOMBuilder builder = new StAXOMBuilder(parser);
@@ -56,42 +63,36 @@ public class SequenceAdminServiceClient {
         sequenceAdminServiceStub.addSequence(sequenceElem);
     }
 
-    public void addDynamicSequence(String sessionCookie, String key, OMElement omElement)
+    public void addDynamicSequence(String key, OMElement omElement)
             throws SequenceEditorException, RemoteException {
-        AuthenticateStub.authenticateStub(sessionCookie, sequenceAdminServiceStub);
         sequenceAdminServiceStub.addDynamicSequence(key, omElement);
 
     }
 
-    public OMElement getSequence(String sessionCookie, String sequenceName)
+    public OMElement getSequence(String sequenceName)
             throws SequenceEditorException, RemoteException {
-        AuthenticateStub.authenticateStub(sessionCookie, sequenceAdminServiceStub);
         return sequenceAdminServiceStub.getSequence(sequenceName);
 
     }
 
-    public void deleteSequence(String sessionCookie, String sequenceName)
+    public void deleteSequence(String sequenceName)
             throws SequenceEditorException, RemoteException {
-        AuthenticateStub.authenticateStub(sessionCookie, sequenceAdminServiceStub);
         sequenceAdminServiceStub.deleteSequence(sequenceName);
 
     }
 
-    public void updateDynamicSequence(String sessionCookies, String key, OMElement OmSequence)
+    public void updateDynamicSequence(String key, OMElement OmSequence)
             throws SequenceEditorException, RemoteException {
-        AuthenticateStub.authenticateStub(sessionCookies, sequenceAdminServiceStub);
         sequenceAdminServiceStub.updateDynamicSequence(key, OmSequence);
     }
 
-    public int getDynamicSequenceCount(String sessionCookies)
+    public int getDynamicSequenceCount()
             throws SequenceEditorException, RemoteException {
-        AuthenticateStub.authenticateStub(sessionCookies, sequenceAdminServiceStub);
         return sequenceAdminServiceStub.getDynamicSequenceCount();
     }
 
-    public void deleteDynamicSequence(String sessionCookies, String key)
+    public void deleteDynamicSequence(String key)
             throws SequenceEditorException, RemoteException {
-        AuthenticateStub.authenticateStub(sessionCookies, sequenceAdminServiceStub);
         sequenceAdminServiceStub.deleteDynamicSequence(key);
     }
 }

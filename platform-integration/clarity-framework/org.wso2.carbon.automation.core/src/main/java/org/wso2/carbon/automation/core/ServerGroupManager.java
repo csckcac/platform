@@ -247,8 +247,8 @@ public class ServerGroupManager {
                 String hostName = properties.getProductVariables().getHostName();
                 String backEndUrl = properties.getProductVariables().getBackendUrl();
                 String sessionCookieUser = login(adminDetails.getUserName(), adminDetails.getPassword(), backEndUrl, hostName);
-                adminServiceCarbonServerAdmin = new ServerAdminClient(backEndUrl);
-                adminServiceCarbonServerAdmin.shutdownGracefully(sessionCookieUser);
+                adminServiceCarbonServerAdmin = new ServerAdminClient(backEndUrl, sessionCookieUser);
+                adminServiceCarbonServerAdmin.shutdownGracefully();
                 servers.get(product).isServerHalt();
                 waitForServerShutDown(Integer.parseInt(properties.getProductVariables().
                         getHttpsPort()), properties.getProductVariables().getHostName());

@@ -32,17 +32,24 @@ public class DataServiceFileUploaderClient {
 
     private final String serviceName = "DataServiceFileUploader";
     private DataServiceFileUploaderStub dataServiceFileUploaderStub;
-    private String endPoint;
 
-    public DataServiceFileUploaderClient(String backEndUrl) throws AxisFault {
-        this.endPoint = backEndUrl + serviceName;
+    public DataServiceFileUploaderClient(String backEndUrl, String sessionCookie) throws AxisFault {
+        String endPoint = backEndUrl + serviceName;
         dataServiceFileUploaderStub = new DataServiceFileUploaderStub(endPoint);
+        AuthenticateStub.authenticateStub(sessionCookie, dataServiceFileUploaderStub);
+    }
+
+    public DataServiceFileUploaderClient(String backEndUrl, String userName, String password)
+            throws AxisFault {
+        String endPoint = backEndUrl + serviceName;
+        dataServiceFileUploaderStub = new DataServiceFileUploaderStub(endPoint);
+        AuthenticateStub.authenticateStub(userName, password, dataServiceFileUploaderStub);
     }
 
 
-    public boolean uploadDataServiceFile(String sessionCookie, String fileName, DataHandler dh)
+    public boolean uploadDataServiceFile(String fileName, DataHandler dh)
             throws ExceptionException, RemoteException {
-        AuthenticateStub.authenticateStub(sessionCookie, dataServiceFileUploaderStub);
+
         if (log.isDebugEnabled()) {
             log.debug("path to file :" + dh.getName());
         }

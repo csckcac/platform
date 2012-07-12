@@ -27,7 +27,6 @@ import org.wso2.carbon.account.mgt.stub.services.beans.xsd.Customer;
 import org.wso2.carbon.account.mgt.stub.services.beans.xsd.Subscription;
 import org.wso2.carbon.automation.api.clients.utils.AuthenticateStub;
 
-
 import java.rmi.RemoteException;
 
 public class BillingDataAccessServiceClient {
@@ -35,86 +34,77 @@ public class BillingDataAccessServiceClient {
     private static final Log log = LogFactory.getLog(BillingDataAccessServiceClient.class);
 
     private BillingDataAccessServiceStub billingDataAccessServiceStub;
+    private final String serviceName = "BillingDataAccessService";
 
-    public BillingDataAccessServiceClient(String backendServerURL) throws AxisFault {
-        String serviceName = "BillingDataAccessService";
+    public BillingDataAccessServiceClient(String backendServerURL, String sessionCookie)
+            throws AxisFault {
+
         String endPoint = backendServerURL + serviceName;
-        try {
-            billingDataAccessServiceStub = new BillingDataAccessServiceStub(endPoint);
-        } catch (AxisFault axisFault) {
-            log.error("Failed to initialized billingDataAccessServiceStub : " + axisFault.getMessage());
-            throw new AxisFault("Failed to initialized billingDataAccessServiceStub : " + axisFault.getMessage());
-        }
+        billingDataAccessServiceStub = new BillingDataAccessServiceStub(endPoint);
+        AuthenticateStub.authenticateStub(sessionCookie, billingDataAccessServiceStub);
     }
 
-    public boolean updateUsagePlan(String sessionCookie, String tenantDomainName,
-                                   String usagePlanName)
+    public BillingDataAccessServiceClient(String backendServerURL, String userName, String password)
+            throws AxisFault {
+
+        String endPoint = backendServerURL + serviceName;
+        billingDataAccessServiceStub = new BillingDataAccessServiceStub(endPoint);
+        AuthenticateStub.authenticateStub(userName, password, billingDataAccessServiceStub);
+    }
+
+    public boolean updateUsagePlan(String usagePlanName)
             throws Exception {
-        Customer customer;
-        Boolean updateStatus;
-        AuthenticateStub.authenticateStub(sessionCookie, billingDataAccessServiceStub);
-        try {
-            updateStatus = billingDataAccessServiceStub.changeSubscriptionByTenant(usagePlanName);
-        } catch (Exception e) {
-            updateStatus = false;
-            log.error("Unable to update usage plan : " + e);
-            throw new Exception("Unable to update usage plan : " + e);
-        }
-        return updateStatus;
+
+        return billingDataAccessServiceStub.changeSubscriptionByTenant(usagePlanName);
+
     }
 
-    public void getActiveSubscriptionOfCustomer(String sessionCookie, int customerId)
+    public void getActiveSubscriptionOfCustomer()
             throws RemoteException, BillingDataAccessServiceExceptionException {
-        AuthenticateStub.authenticateStub(sessionCookie, billingDataAccessServiceStub);
         try {
             billingDataAccessServiceStub.getActiveSubscriptionOfCustomerByTenant();
         } catch (RemoteException e) {
-            log.error("Subscription update failed:" + e);
-            throw new RemoteException("Subscription update failed:" + e);
+            log.error("Subscription update failed:", e);
+            throw new RemoteException("Subscription update failed:", e);
         } catch (BillingDataAccessServiceExceptionException e) {
-            log.error("Subscription update failed :" + e);
-            throw new BillingDataAccessServiceExceptionException("Subscription update failed :" +
-                                                                 e);
+            log.error("Subscription update failed :", e);
+            throw new BillingDataAccessServiceExceptionException("Subscription update failed :", e);
         }
     }
 
-    public Customer getCustomerWithName(String sessionCookie, String customerName)
+    public Customer getCustomerWithName(String customerName)
             throws RemoteException, BillingDataAccessServiceExceptionException {
-        AuthenticateStub.authenticateStub(sessionCookie, billingDataAccessServiceStub);
-        Customer customer = null;
+        Customer customer;
         try {
             customer = billingDataAccessServiceStub.getCustomerWithName(customerName);
         } catch (RemoteException e) {
-            log.error("Subscription update failed:" + e);
-            throw new RemoteException("Subscription update failed:" + e);
+            log.error("Subscription update failed:", e);
+            throw new RemoteException("Subscription update failed:", e);
         } catch (BillingDataAccessServiceExceptionException e) {
-            log.error("Subscription update failed :" + e);
-            throw new BillingDataAccessServiceExceptionException("Subscription update failed :" + e);
+            log.error("Subscription update failed :", e);
+            throw new BillingDataAccessServiceExceptionException("Subscription update failed :", e);
         }
         return customer;
     }
 
-    public Subscription getSubscription(String sessionCookie, int subscriptionId)
+    public Subscription getSubscription(int subscriptionId)
             throws RemoteException, BillingDataAccessServiceExceptionException {
-        AuthenticateStub.authenticateStub(sessionCookie, billingDataAccessServiceStub);
-        Subscription subscription = null;
+        Subscription subscription;
         try {
             subscription = billingDataAccessServiceStub.getSubscription(subscriptionId);
         } catch (RemoteException e) {
-            log.error("Subscription update failed:" + e);
-            throw new RemoteException("Subscription update failed:" + e);
+            log.error("Subscription update failed:", e);
+            throw new RemoteException("Subscription update failed:", e);
         } catch (BillingDataAccessServiceExceptionException e) {
-            log.error("Subscription update failed :" + e);
-            throw new BillingDataAccessServiceExceptionException("Subscription update failed :"
-                                                                 + e);
+            log.error("Subscription update failed :", e);
+            throw new BillingDataAccessServiceExceptionException("Subscription update failed :", e);
         }
         return subscription;
     }
 
-    public String getUsagePlanName(String sessionCookie, String tenantName) throws Exception {
+    public String getUsagePlanName(String tenantName) throws Exception {
         Customer customer;
         Subscription subscription;
-        AuthenticateStub.authenticateStub(sessionCookie, billingDataAccessServiceStub);
 
         try {
             customer = billingDataAccessServiceStub.getCustomerWithName(tenantName);
@@ -129,7 +119,7 @@ public class BillingDataAccessServiceClient {
         } catch (Exception e) {
             String msg = "Error occurred while getting the usage place for tenant: " + tenantName;
             log.error(msg, e);
-            throw new Exception(msg + e);
+            throw new Exception(msg, e);
         }
         return null;
     }

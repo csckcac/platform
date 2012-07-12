@@ -41,17 +41,23 @@ public class JAXWSWebappAdminClient {
     private final Log log = LogFactory.getLog(JAXWSWebappAdminClient.class);
     public static final int MILLISECONDS_PER_MINUTE = 60 * 1000;
     private WebappAdminStub webappAdminStub;
+    private final String serviceName = "JaxwsWebappAdmin";
 
     public JAXWSWebappAdminClient(String backendServerURL, String sessionCookie) throws AxisFault {
-        String serviceName = "JaxwsWebappAdmin";
-        String serviceURL = backendServerURL + serviceName;
-        try {
-            webappAdminStub = new WebappAdminStub(serviceURL);
 
-            AuthenticateStub.authenticateStub(sessionCookie, webappAdminStub);
-        } catch (AxisFault axisFault) {
-            handleException("webappAdminStub initialization error", axisFault);
-        }
+        String serviceURL = backendServerURL + serviceName;
+        webappAdminStub = new WebappAdminStub(serviceURL);
+
+        AuthenticateStub.authenticateStub(sessionCookie, webappAdminStub);
+    }
+
+    public JAXWSWebappAdminClient(String backendServerURL, String userName, String password)
+            throws AxisFault {
+
+        String serviceURL = backendServerURL + serviceName;
+        webappAdminStub = new WebappAdminStub(serviceURL);
+
+        AuthenticateStub.authenticateStub(userName, password, webappAdminStub);
     }
 
     public WebappsWrapper getPagedWebappsSummary(String webappSearchString,

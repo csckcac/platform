@@ -22,8 +22,8 @@ import org.apache.axis2.AxisFault;
 import org.apache.commons.logging.Log;
 import org.apache.commons.logging.LogFactory;
 import org.wso2.carbon.automation.api.clients.utils.AuthenticateStub;
-import org.wso2.carbon.server.admin.stub.ServerAdminStub;
 import org.wso2.carbon.server.admin.stub.Exception;
+import org.wso2.carbon.server.admin.stub.ServerAdminStub;
 
 import java.rmi.RemoteException;
 
@@ -32,33 +32,38 @@ public class ServerAdminClient {
     private static final Log log = LogFactory.getLog(ServerAdminClient.class);
 
     private ServerAdminStub serverAdminStub;
+    private final String serviceName = "ServerAdmin";
 
-    public ServerAdminClient(String backEndUrl) throws AxisFault {
-        String serviceName = "ServerAdmin";
+    public ServerAdminClient(String backEndUrl, String sessionCookie) throws AxisFault {
+
         String endPoint = backEndUrl + serviceName;
         serverAdminStub = new ServerAdminStub(endPoint);
+        AuthenticateStub.authenticateStub(sessionCookie, serverAdminStub);
     }
 
-    public void restartGracefully(String sessionCookie) throws Exception, RemoteException {
-        AuthenticateStub.authenticateStub(sessionCookie, serverAdminStub);
+    public ServerAdminClient(String backEndUrl, String userName, String password) throws AxisFault {
+
+        String endPoint = backEndUrl + serviceName;
+        serverAdminStub = new ServerAdminStub(endPoint);
+        AuthenticateStub.authenticateStub(userName, password, serverAdminStub);
+    }
+
+    public void restartGracefully() throws Exception, RemoteException {
         serverAdminStub.restartGracefully();
 
     }
 
-    public void restart(String sessionCookie) throws Exception, RemoteException {
-        AuthenticateStub.authenticateStub(sessionCookie, serverAdminStub);
+    public void restart() throws Exception, RemoteException {
         serverAdminStub.restart();
 
     }
 
-    public void shutdown(String sessionCookie) throws Exception, RemoteException {
-        AuthenticateStub.authenticateStub(sessionCookie, serverAdminStub);
+    public void shutdown() throws Exception, RemoteException {
         serverAdminStub.shutdown();
 
     }
 
-    public void shutdownGracefully(String sessionCookie) throws Exception, RemoteException {
-        AuthenticateStub.authenticateStub(sessionCookie, serverAdminStub);
+    public void shutdownGracefully() throws Exception, RemoteException {
         serverAdminStub.shutdownGracefully();
 
     }

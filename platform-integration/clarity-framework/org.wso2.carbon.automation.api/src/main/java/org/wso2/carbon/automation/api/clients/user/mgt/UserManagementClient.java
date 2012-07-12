@@ -21,8 +21,13 @@ import org.apache.axis2.AxisFault;
 import org.apache.commons.logging.Log;
 import org.apache.commons.logging.LogFactory;
 import org.wso2.carbon.automation.api.clients.utils.AuthenticateStub;
-import org.wso2.carbon.user.mgt.stub.*;
 import org.wso2.carbon.user.mgt.common.ClaimValue;
+import org.wso2.carbon.user.mgt.stub.DeleteUserUserAdminExceptionException;
+import org.wso2.carbon.user.mgt.stub.GetAllRolesNamesUserAdminExceptionException;
+import org.wso2.carbon.user.mgt.stub.GetUsersOfRoleUserAdminExceptionException;
+import org.wso2.carbon.user.mgt.stub.ListUsersUserAdminExceptionException;
+import org.wso2.carbon.user.mgt.stub.UpdateUsersOfRoleUserAdminExceptionException;
+import org.wso2.carbon.user.mgt.stub.UserAdminStub;
 import org.wso2.carbon.user.mgt.stub.types.carbon.FlaggedName;
 
 import java.rmi.RemoteException;
@@ -33,37 +38,35 @@ public class UserManagementClient {
     private final Log log = LogFactory.getLog(UserManagementClient.class);
 
     private UserAdminStub userAdminStub;
+    private final String serviceName = "UserAdmin";
 
-    public UserManagementClient(String backendURL) throws AxisFault {
-        String serviceName = "UserAdmin";
+    public UserManagementClient(String backendURL, String sessionCookie) throws AxisFault {
+
         String endPoint = backendURL + serviceName;
-        try {
-            userAdminStub = new UserAdminStub(endPoint);
-        } catch (AxisFault axisFault) {
-            log.error("Fail to initialize userAdminStub: " + axisFault.getMessage());
-            throw new AxisFault("Fail to initialize userAdminStub: " + axisFault.getMessage());
-        }
+        userAdminStub = new UserAdminStub(endPoint);
+        AuthenticateStub.authenticateStub(sessionCookie, userAdminStub);
     }
 
-    public void addRole(String roleName, String[] userList, String[] permissions,
-                        String sessionCookie)
+    public UserManagementClient(String backendURL, String userName, String password)
+            throws AxisFault {
+
+        String endPoint = backendURL + serviceName;
+        userAdminStub = new UserAdminStub(endPoint);
+        AuthenticateStub.authenticateStub(userName, password, userAdminStub);
+    }
+
+    public void addRole(String roleName, String[] userList, String[] permissions)
             throws Exception {
-        AuthenticateStub.authenticateStub(sessionCookie, userAdminStub);
-        try {
-            userAdminStub.addRole(roleName, userList, permissions);
-        } catch (Exception e) {
-            handleException("Failed to add new role", e);
-        }
+
+        userAdminStub.addRole(roleName, userList, permissions);
+
     }
 
-    public void addUser(String sessionCookie, String userName, String password, String[] roles,
+    public void addUser(String userName, String password, String[] roles,
                         String profileName) throws Exception {
-        AuthenticateStub.authenticateStub(sessionCookie, userAdminStub);
-        try {
-            userAdminStub.addUser(userName, password, roles, null, profileName);
-        } catch (Exception e) {
-            handleException("Failed to add new user", e);
-        }
+
+        userAdminStub.addUser(userName, password, roles, null, profileName);
+
     }
 
     public static ClaimValue[] toADBClaimValues(
@@ -80,8 +83,7 @@ public class UserManagementClient {
         return values;
     }
 
-    public void deleteRole(String sessionCookie, String roleName) throws Exception {
-        AuthenticateStub.authenticateStub(sessionCookie, userAdminStub);
+    public void deleteRole(String roleName) throws Exception {
         FlaggedName[] existingRoles;
         try {
             userAdminStub.deleteRole(roleName);
@@ -101,8 +103,7 @@ public class UserManagementClient {
         }
     }
 
-    public void deleteUser(String sessionCookie, String userName) throws Exception {
-        AuthenticateStub.authenticateStub(sessionCookie, userAdminStub);
+    public void deleteUser(String userName) throws Exception {
 
         String[] userList;
         try {
@@ -121,9 +122,8 @@ public class UserManagementClient {
         }
     }
 
-    private void addRoleWithUser(String sessionCookie, String roleName, String userName)
+    private void addRoleWithUser(String roleName, String userName)
             throws Exception {
-        new AuthenticateStub().authenticateStub(sessionCookie, userAdminStub);
         userAdminStub.addRole(roleName, new String[]{userName}, null);
         FlaggedName[] roles = userAdminStub.getAllRolesNames();
         for (FlaggedName role : roles) {
@@ -194,9 +194,8 @@ public class UserManagementClient {
         }
     }
 
-    public boolean roleNameExists(String roleName, String sessionCookie)
+    public boolean roleNameExists(String roleName)
             throws RemoteException, GetAllRolesNamesUserAdminExceptionException {
-        AuthenticateStub.authenticateStub(sessionCookie, userAdminStub);
         FlaggedName[] roles = new FlaggedName[0];
         try {
             roles = userAdminStub.getAllRolesNames();
@@ -217,9 +216,8 @@ public class UserManagementClient {
         return false;
     }
 
-    public boolean userNameExists(String roleName, String sessionCookie, String userName)
+    public boolean userNameExists(String roleName, String userName)
             throws RemoteException, GetAllRolesNamesUserAdminExceptionException {
-        AuthenticateStub.authenticateStub(sessionCookie, userAdminStub);
         FlaggedName[] users = new FlaggedName[0];
         try {
             users = userAdminStub.getUsersOfRole(roleName, "*");

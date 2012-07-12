@@ -20,7 +20,6 @@ package org.wso2.carbon.automation.api.clients.application.mgt;
 import org.apache.axis2.AxisFault;
 import org.apache.commons.logging.Log;
 import org.apache.commons.logging.LogFactory;
-import org.wso2.carbon.automation.api.clients.utils.AuthenticateStub;
 import org.wso2.carbon.application.mgt.stub.ApplicationAdminExceptionException;
 import org.wso2.carbon.application.mgt.stub.ApplicationAdminStub;
 import org.wso2.carbon.application.mgt.stub.types.carbon.ApplicationMetadata;
@@ -32,17 +31,23 @@ public class ApplicationAdminClient {
     private static final Log log = LogFactory.getLog(ApplicationAdminClient.class);
 
     private ApplicationAdminStub applicationAdminStub;
+    private final String serviceName = "ApplicationAdmin";
 
-    public ApplicationAdminClient(String backEndUrl) throws AxisFault {
-        String serviceName = "ApplicationAdmin";
+    public ApplicationAdminClient(String backEndUrl, String sessionCookie) throws AxisFault {
         String endPoint = backEndUrl + serviceName;
         applicationAdminStub = new ApplicationAdminStub(endPoint);
+        AuthenticateStub.authenticateStub(sessionCookie, applicationAdminStub);
     }
 
+    public ApplicationAdminClient(String backEndUrl, String userName, String password) throws AxisFault {
+        String endPoint = backEndUrl + serviceName;
+        applicationAdminStub = new ApplicationAdminStub(endPoint);
+        AuthenticateStub.authenticateStub(userName, password, applicationAdminStub);
+    }
 
-    public void deleteApplication(String sessionCookie, String appName)
+    public void deleteApplication(String appName)
             throws ApplicationAdminExceptionException, RemoteException {
-        AuthenticateStub.authenticateStub(sessionCookie, applicationAdminStub);
+
 
         applicationAdminStub.deleteApplication(appName);
         log.info("Application Deleted");

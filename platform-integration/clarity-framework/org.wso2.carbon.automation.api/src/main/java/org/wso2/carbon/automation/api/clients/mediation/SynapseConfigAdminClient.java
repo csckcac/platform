@@ -43,17 +43,24 @@ import java.rmi.RemoteException;
  */
 public class SynapseConfigAdminClient {
 
-
     private static final Log log = LogFactory.getLog(SynapseConfigAdminClient.class);
 
     private ConfigServiceAdminStub configServiceAdminStub;
+    private final String serviceName = "ConfigServiceAdmin";
 
-    public SynapseConfigAdminClient(String sessionCookie, String backEndUrl)
-            throws AxisFault {
-        String serviceName = "ConfigServiceAdmin";
+    public SynapseConfigAdminClient(String backEndUrl, String sessionCookie) throws AxisFault {
+
         String endPoint = backEndUrl + serviceName;
         configServiceAdminStub = new ConfigServiceAdminStub(endPoint);
         AuthenticateStub.authenticateStub(sessionCookie, configServiceAdminStub);
+    }
+
+    public SynapseConfigAdminClient(String backEndUrl, String userName, String password)
+            throws AxisFault {
+
+        String endPoint = backEndUrl + serviceName;
+        configServiceAdminStub = new ConfigServiceAdminStub(endPoint);
+        AuthenticateStub.authenticateStub(userName, password, configServiceAdminStub);
     }
 
     /**

@@ -37,18 +37,17 @@ public class ModuleAdminServiceClient {
     private final String serviceName = "ModuleAdminService";
     private ModuleAdminServiceStub moduleAdminServiceStub;
     private ServerAdminClient adminServiceCarbonServerAdmin;
-    private String endPoint;
 
-    public ModuleAdminServiceClient(String backEndUrl) throws AxisFault {
-        this.endPoint = backEndUrl + serviceName;
+    public ModuleAdminServiceClient(String backEndUrl, String sessionCookie) throws AxisFault {
+        String endPoint = backEndUrl + serviceName;
         moduleAdminServiceStub = new ModuleAdminServiceStub(endPoint);
-        adminServiceCarbonServerAdmin = new ServerAdminClient(backEndUrl);
+        AuthenticateStub.authenticateStub(sessionCookie, moduleAdminServiceStub);
+        adminServiceCarbonServerAdmin = new ServerAdminClient(backEndUrl, sessionCookie);
     }
 
-    public void uploadModule(String sessionCookie, DataHandler dh)
+    public void uploadModule(DataHandler dh)
             throws RemoteException, Exception {
 
-        AuthenticateStub.authenticateStub(sessionCookie, moduleAdminServiceStub);
         ModuleUploadData moduleUploadData = new ModuleUploadData();
         moduleUploadData.setFileName(dh.getName().substring(dh.getName().lastIndexOf('/') + 1));
         moduleUploadData.setDataHandler(dh);
@@ -57,7 +56,7 @@ public class ModuleAdminServiceClient {
             Thread.sleep(1000);
         } catch (InterruptedException ignored) {
         }
-        adminServiceCarbonServerAdmin.restartGracefully(sessionCookie);
+        adminServiceCarbonServerAdmin.restartGracefully();
         try {
             Thread.sleep(40000);
         } catch (InterruptedException ignored) {
@@ -65,9 +64,8 @@ public class ModuleAdminServiceClient {
 
     }
 
-    public void deleteModule(String sessionCookie, String moduleId)
+    public void deleteModule(String moduleId)
             throws ModuleAdminServiceModuleMgtExceptionException, RemoteException {
-        AuthenticateStub.authenticateStub(sessionCookie, moduleAdminServiceStub);
         log.info(moduleAdminServiceStub.removeModule(moduleId));
 
     }

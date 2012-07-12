@@ -33,17 +33,26 @@ public class SpringServiceUploaderClient {
     private static final Log log = LogFactory.getLog(SpringServiceUploaderClient.class);
 
     private ServiceUploaderStub serviceUploaderStub;
+    private String serviceName = "ServiceUploader";
 
-    public SpringServiceUploaderClient(String backEndUrl) throws AxisFault {
-        String serviceName = "ServiceUploader";
+    public SpringServiceUploaderClient(String backEndUrl, String sessionCookie) throws AxisFault {
+
         String endPoint = backEndUrl + serviceName;
         serviceUploaderStub = new ServiceUploaderStub(endPoint);
+        AuthenticateStub.authenticateStub(sessionCookie, serviceUploaderStub);
     }
 
-    public void uploadSpringServiceFile(String sessionCookie, String fileName, DataHandler dh)
+    public SpringServiceUploaderClient(String backEndUrl, String userName, String password) throws AxisFault {
+
+        String endPoint = backEndUrl + serviceName;
+        serviceUploaderStub = new ServiceUploaderStub(endPoint);
+        AuthenticateStub.authenticateStub(userName, password, serviceUploaderStub);
+    }
+
+    public void uploadSpringServiceFile(String fileName, DataHandler dh)
             throws ExceptionException, RemoteException {
         AARServiceData aarServiceData;
-        AuthenticateStub.authenticateStub(sessionCookie, serviceUploaderStub);
+
         aarServiceData = new AARServiceData();
         aarServiceData.setFileName(fileName);
         aarServiceData.setDataHandler(dh);

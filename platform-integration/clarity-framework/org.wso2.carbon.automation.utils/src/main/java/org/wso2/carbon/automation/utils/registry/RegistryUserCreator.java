@@ -39,7 +39,7 @@ public class RegistryUserCreator {
 
     public void deleteUsers(int userId, String userID) throws Exception {
         setInfoRolesAndUsers(userId);
-        userAdminStub.deleteUser(sessionCookie, userID);
+        userAdminStub.deleteUser(userID);
     }
 
     public void addUser(int userId, String userID, String userPassword, String roleName)
@@ -47,7 +47,7 @@ public class RegistryUserCreator {
         setInfoRolesAndUsers(userId);
         try {
             String roles[] = {roleName};
-            userAdminStub.addUser(sessionCookie, userID, userPassword, roles, null);
+            userAdminStub.addUser(userID, userPassword, roles, null);
         } catch (UserAdminException e) {
             log.error("Add user fail" + e);
             throw new UserAdminException("Add user fail" + e);
@@ -57,10 +57,12 @@ public class RegistryUserCreator {
     public void setInfoRolesAndUsers(int userId)
             throws LoginAuthenticationExceptionException, RemoteException {
         FrameworkProperties isProperties = FrameworkFactory.getFrameworkProperties(ProductConstant.IS_SERVER_NAME);
-        userAdminStub = new UserManagementClient(isProperties.getProductVariables().getBackendUrl());
         UserInfo userAdminDetails = UserListCsvReader.getUserInfo(userId);
         sessionCookie = login(userAdminDetails.getUserName(), userAdminDetails.getPassword(),
                               isProperties.getProductVariables().getBackendUrl());
+        userAdminStub = new UserManagementClient(isProperties.getProductVariables().getBackendUrl(), sessionCookie);
+
+
     }
 
 }

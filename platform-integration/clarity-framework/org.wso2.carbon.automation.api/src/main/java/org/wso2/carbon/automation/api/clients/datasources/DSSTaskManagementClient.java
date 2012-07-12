@@ -31,42 +31,41 @@ public class DSSTaskManagementClient {
 
     private final String serviceName = "DSTaskAdmin";
     private DSTaskAdminStub taskManagementAdminServiceStub;
-    private String endPoint;
 
-    public DSSTaskManagementClient(String backEndUrl) throws AxisFault {
-        this.endPoint = backEndUrl + serviceName;
+    public DSSTaskManagementClient(String backEndUrl, String sessionCookie) throws AxisFault {
+        String endPoint = backEndUrl + serviceName;
         taskManagementAdminServiceStub = new DSTaskAdminStub(endPoint);
-    }
-
-    public void scheduleTask(String sessionCookie, DSTaskInfo dSTaskInfo) throws RemoteException {
         AuthenticateStub.authenticateStub(sessionCookie, taskManagementAdminServiceStub);
+    }
+    
+    public DSSTaskManagementClient(String backEndUrl, String userName, String password) throws AxisFault {
+            String endPoint = backEndUrl + serviceName;
+            taskManagementAdminServiceStub = new DSTaskAdminStub(endPoint);
+            AuthenticateStub.authenticateStub(userName, password, taskManagementAdminServiceStub);
+        }
+
+    public void scheduleTask(DSTaskInfo dSTaskInfo) throws RemoteException {
         taskManagementAdminServiceStub.scheduleTask(dSTaskInfo);
         log.info("ScheduleTask added");
     }
 
-    public void rescheduleTask(String sessionCookie, DSTaskInfo dSTaskInfo) throws RemoteException {
-        AuthenticateStub.authenticateStub(sessionCookie, taskManagementAdminServiceStub);
-
+    public void rescheduleTask(DSTaskInfo dSTaskInfo) throws RemoteException {
         taskManagementAdminServiceStub.rescheduleTask(dSTaskInfo);
         log.info("Task rescheduled");
     }
 
-    public void deleteTask(String sessionCookie, String taskName) throws RemoteException {
-        AuthenticateStub.authenticateStub(sessionCookie, taskManagementAdminServiceStub);
+    public void deleteTask(String taskName) throws RemoteException {
 
         taskManagementAdminServiceStub.deleteTask(taskName);
         log.info("ScheduleTask deleted");
     }
 
-    public boolean isTaskScheduled(String sessionCookie, String taskName) throws RemoteException {
-        AuthenticateStub.authenticateStub(sessionCookie, taskManagementAdminServiceStub);
+    public boolean isTaskScheduled(String taskName) throws RemoteException {
 
         return taskManagementAdminServiceStub.isTaskScheduled(taskName);
     }
 
-    public String[] getAllTaskNames(String sessionCookie) throws RemoteException {
-        AuthenticateStub.authenticateStub(sessionCookie, taskManagementAdminServiceStub);
-
+    public String[] getAllTaskNames() throws RemoteException {
         return taskManagementAdminServiceStub.getAllTaskNames();
     }
 }

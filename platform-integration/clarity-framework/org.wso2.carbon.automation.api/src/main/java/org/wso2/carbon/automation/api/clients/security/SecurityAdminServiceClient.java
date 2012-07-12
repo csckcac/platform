@@ -32,17 +32,24 @@ public class SecurityAdminServiceClient {
     private SecurityAdminServiceStub securityAdminServiceStub;
     private String endPoint;
 
-    public SecurityAdminServiceClient(String backEndUrl) throws AxisFault {
+    public SecurityAdminServiceClient(String backEndUrl, String sessionCookie) throws AxisFault {
         this.endPoint = backEndUrl + securityServiceName;
         securityAdminServiceStub = new SecurityAdminServiceStub(endPoint);
+        AuthenticateStub.authenticateStub(sessionCookie, securityAdminServiceStub);
     }
+    
+    public SecurityAdminServiceClient(String backEndUrl, String userName, String password) throws AxisFault {
+            this.endPoint = backEndUrl + securityServiceName;
+            securityAdminServiceStub = new SecurityAdminServiceStub(endPoint);
+            AuthenticateStub.authenticateStub(userName, password, securityAdminServiceStub);
+        }
 
-    public void applySecurity(String sessionCookie, String serviceName, String policyId,
+    public void applySecurity(String serviceName, String policyId,
                               String[] userGroups, String[] trustedKeyStoreArray,
                               String privateStore)
             throws SecurityAdminServiceSecurityConfigExceptionException, RemoteException {
 
-        AuthenticateStub.authenticateStub(sessionCookie, securityAdminServiceStub);
+        
         ApplySecurity applySecurity;
         applySecurity = new ApplySecurity();
         applySecurity.setServiceName(serviceName);
@@ -57,12 +64,11 @@ public class SecurityAdminServiceClient {
 
     }
 
-    public void applyKerberosSecurityPolicy(String sessionCookie, String serviceName,
+    public void applyKerberosSecurityPolicy(String serviceName,
                                             String policyId, String ServicePrincipalName,
                                             String ServicePrincipalPassword)
             throws SecurityAdminServiceSecurityConfigExceptionException, RemoteException {
 
-        AuthenticateStub.authenticateStub(sessionCookie, securityAdminServiceStub);
         ApplyKerberosSecurityPolicy applySecurity;
         applySecurity = new ApplyKerberosSecurityPolicy();
         applySecurity.setServiceName(serviceName);
@@ -77,14 +83,11 @@ public class SecurityAdminServiceClient {
 
     }
 
-    public void disableSecurity(String sessionCookie, String serviceName)
+    public void disableSecurity(String serviceName)
             throws SecurityAdminServiceSecurityConfigExceptionException, RemoteException {
 
         DisableSecurityOnService disableRequest = new DisableSecurityOnService();
         disableRequest.setServiceName(serviceName);
-
-        AuthenticateStub.authenticateStub(sessionCookie, securityAdminServiceStub);
-
 
         securityAdminServiceStub.disableSecurityOnService(disableRequest);
         log.info("Security Disabled");

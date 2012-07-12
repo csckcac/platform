@@ -31,47 +31,49 @@ public class LifeCycleManagementClient {
 
     private final String serviceName = "LifeCycleManagementService";
     private LifeCycleManagementServiceStub lifeCycleManagementServiceStub;
-    private String endPoint;
 
-    public LifeCycleManagementClient(String backEndUrl) throws AxisFault {
-        this.endPoint = backEndUrl + serviceName;
+    public LifeCycleManagementClient(String backEndUrl, String sessionCookie) throws AxisFault {
+        String endPoint = backEndUrl + serviceName;
         lifeCycleManagementServiceStub = new LifeCycleManagementServiceStub(endPoint);
+        AuthenticateStub.authenticateStub(sessionCookie, lifeCycleManagementServiceStub);
     }
 
-    public boolean addLifeCycle(String sessionCookie, String lifeCycleConfiguration)
+    public LifeCycleManagementClient(String backEndUrl, String userName, String password)
+            throws AxisFault {
+        String endPoint = backEndUrl + serviceName;
+        lifeCycleManagementServiceStub = new LifeCycleManagementServiceStub(endPoint);
+        AuthenticateStub.authenticateStub(userName, password, lifeCycleManagementServiceStub);
+    }
+
+    public boolean addLifeCycle(String lifeCycleConfiguration)
             throws LifeCycleManagementServiceExceptionException, RemoteException {
-        AuthenticateStub.authenticateStub(sessionCookie, lifeCycleManagementServiceStub);
+
         return lifeCycleManagementServiceStub.createLifecycle(lifeCycleConfiguration);
     }
 
-    public boolean editLifeCycle(String sessionCookie, String oldLifeCycleName,
+    public boolean editLifeCycle(String oldLifeCycleName,
                                  String lifeCycleConfiguration)
             throws LifeCycleManagementServiceExceptionException, RemoteException {
-        AuthenticateStub.authenticateStub(sessionCookie, lifeCycleManagementServiceStub);
         return lifeCycleManagementServiceStub.updateLifecycle(oldLifeCycleName, lifeCycleConfiguration);
     }
 
-    public boolean deleteLifeCycle(String sessionCookie, String lifeCycleName)
+    public boolean deleteLifeCycle(String lifeCycleName)
             throws LifeCycleManagementServiceExceptionException, RemoteException {
-        AuthenticateStub.authenticateStub(sessionCookie, lifeCycleManagementServiceStub);
         return lifeCycleManagementServiceStub.deleteLifecycle(lifeCycleName);
     }
 
-    public String[] getLifecycleList(String sessionCookie)
+    public String[] getLifecycleList()
             throws LifeCycleManagementServiceExceptionException, RemoteException {
-        AuthenticateStub.authenticateStub(sessionCookie, lifeCycleManagementServiceStub);
         return lifeCycleManagementServiceStub.getLifecycleList();
     }
 
-    public String getLifecycleConfiguration(String sessionCookie, String lifeCycleName)
+    public String getLifecycleConfiguration(String lifeCycleName)
             throws LifeCycleManagementServiceExceptionException, RemoteException {
-        AuthenticateStub.authenticateStub(sessionCookie, lifeCycleManagementServiceStub);
         return lifeCycleManagementServiceStub.getLifecycleConfiguration(lifeCycleName);
     }
 
-    public boolean isLifecycleNameInUse(String sessionCookie, String lifeCycleName)
+    public boolean isLifecycleNameInUse(String lifeCycleName)
             throws LifeCycleManagementServiceExceptionException, RemoteException {
-        AuthenticateStub.authenticateStub(sessionCookie, lifeCycleManagementServiceStub);
         return lifeCycleManagementServiceStub.isLifecycleNameInUse(lifeCycleName);
     }
 }

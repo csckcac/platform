@@ -42,17 +42,24 @@ public class DataSourceAdminServiceClient {
 
     private final String serviceName = "DataSourceAdmin";
     private DataSourceAdminStub dataSourceAdminStub;
-    private String endPoint;
 
-    public DataSourceAdminServiceClient(String backEndUrl) throws AxisFault {
-        this.endPoint = backEndUrl + serviceName;
+    public DataSourceAdminServiceClient(String backEndUrl, String sessionCookie) throws AxisFault {
+        String endPoint = backEndUrl + serviceName;
         dataSourceAdminStub = new DataSourceAdminStub(endPoint);
+        AuthenticateStub.authenticateStub(sessionCookie, dataSourceAdminStub);
     }
 
-    public void addDataSourceInformation(String sessionCookie, String dataSourceName,
+    public DataSourceAdminServiceClient(String backEndUrl, String userName, String password)
+            throws AxisFault {
+        String endPoint = backEndUrl + serviceName;
+        dataSourceAdminStub = new DataSourceAdminStub(endPoint);
+        AuthenticateStub.authenticateStub(userName, password, dataSourceAdminStub);
+    }
+
+    public void addDataSourceInformation(String dataSourceName,
                                          DataSourceInformation dataSourceInfo)
             throws DataSourceManagementException, RemoteException {
-        AuthenticateStub.authenticateStub(sessionCookie, dataSourceAdminStub);
+
         OMElement dataSourceInfoElement;
 
         Properties properties = DataSourceInformationSerializer.serialize(dataSourceInfo);
@@ -63,10 +70,9 @@ public class DataSourceAdminServiceClient {
         dataSourceAdminStub.addDataSourceInformation(dataSourceName, dataSourceInfoElement);
     }
 
-    public void editCarbonDataSources(String sessionCookie, String name,
+    public void editCarbonDataSources(String name,
                                       DataSourceInformation dataSourceInformation)
             throws DataSourceManagementException, RemoteException {
-        AuthenticateStub.authenticateStub(sessionCookie, dataSourceAdminStub);
 
         Properties properties = DataSourceInformationSerializer.serialize(dataSourceInformation);
         if (properties.isEmpty()) {
@@ -78,9 +84,8 @@ public class DataSourceAdminServiceClient {
 
     }
 
-    public DataSourceInformation getCarbonDataSources(String sessionCookie, String name)
+    public DataSourceInformation getCarbonDataSources(String name)
             throws DataSourceManagementException, RemoteException {
-        AuthenticateStub.authenticateStub(sessionCookie, dataSourceAdminStub);
         OMElement dataSource;
         DataSourceInformation dataSourceInformation;
 
@@ -91,9 +96,8 @@ public class DataSourceAdminServiceClient {
         return dataSourceInformation;
     }
 
-    public void removeCarbonDataSources(String sessionCookie, String name)
+    public void removeCarbonDataSources(String name)
             throws DataSourceManagementException, RemoteException {
-        AuthenticateStub.authenticateStub(sessionCookie, dataSourceAdminStub);
 
         dataSourceAdminStub.removeDataSourceInformation(name);
 

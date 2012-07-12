@@ -33,14 +33,14 @@ import javax.xml.stream.XMLStreamReader;
 import java.io.IOException;
 import java.rmi.RemoteException;
 
-public class AdminServiceLocalEntryAdminService {
-    private static final Log log = LogFactory.getLog(AdminServiceLocalEntryAdminService.class);
+public class LocalEntryAdminService {
+    private static final Log log = LogFactory.getLog(LocalEntryAdminService.class);
 
     private final String serviceName = "LocalEntryAdmin";
     private LocalEntryAdminServiceStub localEntryAdminServiceStub;
     private String endPoint;
 
-    public AdminServiceLocalEntryAdminService(String backEndUrl) throws AxisFault {
+    public LocalEntryAdminService(String backEndUrl) throws AxisFault {
         this.endPoint = backEndUrl + serviceName;
         localEntryAdminServiceStub = new LocalEntryAdminServiceStub(endPoint);
     }

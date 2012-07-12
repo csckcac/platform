@@ -33,17 +33,23 @@ public class StatisticsAdminClient {
     private final Log log = LogFactory.getLog(StatisticsAdminClient.class);
 
     private StatisticsAdminStub statisticsAdminStub;
+    private final String serviceName = "StatisticsAdmin";
 
     public StatisticsAdminClient(String backendServerURL, String sessionCookie) throws AxisFault {
-        String serviceName = "StatisticsAdmin";
+
         String endPoint = backendServerURL + serviceName;
-        try {
-            statisticsAdminStub = new StatisticsAdminStub(endPoint);
-            AuthenticateStub.authenticateStub(sessionCookie, statisticsAdminStub);
-        } catch (AxisFault axisFault) {
-            log.error("Statistics Admin initialization fail: " + axisFault.getMessage());
-            throw new AxisFault("Statistics Admin initialization fail: " + axisFault.getMessage());
-        }
+        statisticsAdminStub = new StatisticsAdminStub(endPoint);
+        AuthenticateStub.authenticateStub(sessionCookie, statisticsAdminStub);
+
+    }
+
+    public StatisticsAdminClient(String backendServerURL, String userName, String password)
+            throws AxisFault {
+
+        String endPoint = backendServerURL + serviceName;
+        statisticsAdminStub = new StatisticsAdminStub(endPoint);
+        AuthenticateStub.authenticateStub(userName, password, statisticsAdminStub);
+
     }
 
     public SystemStatistics getSystemStatistics() throws RemoteException {

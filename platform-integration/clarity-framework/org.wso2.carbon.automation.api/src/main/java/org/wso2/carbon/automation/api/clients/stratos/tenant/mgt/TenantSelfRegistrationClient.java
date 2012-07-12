@@ -43,17 +43,17 @@ public class TenantSelfRegistrationClient {
     private static final Log log = LogFactory.getLog(TenantSelfRegistrationClient.class);
 
     private TenantMgtServiceStub stub;
-    private String epr;
+    private final String serviceName = "TenantMgtService";
+    private String backEndUrl;
 
-    public TenantSelfRegistrationClient(
-            String cookie, String backendServerURL)
+    public TenantSelfRegistrationClient(String backendServerURL, String sessionCookie)
             throws RegistryException {
 
-        epr = backendServerURL + "TenantMgtService";
+        this.backEndUrl = backendServerURL + "TenantMgtService";
 
         try {
-            stub = new TenantMgtServiceStub(epr);
-            AuthenticateStub.authenticateStub(cookie, stub);
+            stub = new TenantMgtServiceStub(backEndUrl);
+            AuthenticateStub.authenticateStub(sessionCookie, stub);
 
         } catch (AxisFault axisFault) {
             String msg = "Failed to initiate AddServices service client. " + axisFault.getMessage();
@@ -69,10 +69,10 @@ public class TenantSelfRegistrationClient {
         String backendServerURL = CarbonUIUtil.getServerURL(config.getServletContext(), session);
         ConfigurationContext configContext = (ConfigurationContext) config.
                 getServletContext().getAttribute(CarbonConstants.CONFIGURATION_CONTEXT);
-        epr = backendServerURL + "TenantMgtService";
+
 
         try {
-            stub = new TenantMgtServiceStub(configContext, epr);
+            stub = new TenantMgtServiceStub(configContext, backEndUrl);
 
             ServiceClient client = stub._getServiceClient();
             Options option = client.getOptions();

@@ -57,12 +57,10 @@ public class UserPopulator {
 
         if (!isUsersPopulated) {
             if (framework.getEnvironmentSettings().is_runningOnStratos()) {
-                TenantMgtAdminServiceClient tenantStub =
-                        new TenantMgtAdminServiceClient(manProperties.getProductVariables().
-                                getBackendUrl());
+
                 UserInfo superTenantDetails = UserListCsvReader.getUserInfo(ProductConstant.ADMIN_USER_ID);
                 int userCount = UserListCsvReader.getUserCount();
-                createStratosUsers(tenantStub, superTenantDetails, userCount);
+                createStratosUsers(superTenantDetails, userCount);
                 log.info("Users Populated");
             } else {
                 int adminUserId = 0;
@@ -77,9 +75,10 @@ public class UserPopulator {
                             FrameworkProperties properties = FrameworkFactory.getClusterProperties(id);
                             String backendURL = properties.getProductVariables().getBackendUrl();
                             String hostName = properties.getProductVariables().getHostName();
-                            userMgtAdmin = new UserManagementClient(backendURL);
+                            String sessionCookieUser = login(adminDetails.getUserName(), adminDetails.getPassword(), backendURL, hostName);
+                            userMgtAdmin = new UserManagementClient(backendURL, sessionCookieUser);
                             log.info("Populate users to " + id + " server");
-                            createProductUsers(adminDetails, permissions, userList, backendURL, hostName);
+                            createProductUsers(permissions, userList, backendURL, sessionCookieUser);
                         }
                     }
                 } else {
@@ -87,9 +86,10 @@ public class UserPopulator {
                         FrameworkProperties properties = FrameworkFactory.getFrameworkProperties(product);
                         String backendURL = properties.getProductVariables().getBackendUrl();
                         String hostName = properties.getProductVariables().getHostName();
-                        userMgtAdmin = new UserManagementClient(backendURL);
+                        String sessionCookieUser = login(adminDetails.getUserName(), adminDetails.getPassword(), backendURL, hostName);
+                        userMgtAdmin = new UserManagementClient(backendURL, sessionCookieUser);
                         log.info("Populate user to " + product + " server");
-                        createProductUsers(adminDetails, permissions, userList, backendURL, hostName);
+                        createProductUsers(permissions, userList, backendURL, sessionCookieUser);
                     }
                 }
             }
@@ -99,26 +99,26 @@ public class UserPopulator {
         }
     }
 
-    private void createProductUsers(UserInfo adminDetails, String[] permissions, String[] userList,
-                                    String backendUrl, String hostName) throws Exception {
-        String sessionCookieUser = login(adminDetails.getUserName(), adminDetails.getPassword(), backendUrl, hostName);
-        ResourceAdminServiceClient resourceAdmin = new ResourceAdminServiceClient(backendUrl);
+    private void createProductUsers(String[] permissions, String[] userList,
+                                    String backendUrl, String sessionCookieUser) throws Exception {
+        
+        ResourceAdminServiceClient resourceAdmin = new ResourceAdminServiceClient(backendUrl, sessionCookieUser);
         String[] roleName = {"testRole"};
         int roleNameIndex = 0;
 
         try {
-            if (!userMgtAdmin.roleNameExists(roleName[roleNameIndex], sessionCookieUser)) {
-                userMgtAdmin.addRole(roleName[roleNameIndex], userList, permissions, sessionCookieUser);
-                resourceAdmin.addResourcePermission(sessionCookieUser, "/", "testRole", "3", "1");
-                resourceAdmin.addResourcePermission(sessionCookieUser, "/", "testRole", "2", "1");
-                resourceAdmin.addResourcePermission(sessionCookieUser, "/", "testRole", "4", "1");
-                resourceAdmin.addResourcePermission(sessionCookieUser, "/", "testRole", "5", "1");
+            if (!userMgtAdmin.roleNameExists(roleName[roleNameIndex])) {
+                userMgtAdmin.addRole(roleName[roleNameIndex], userList, permissions);
+                resourceAdmin.addResourcePermission("/", "testRole", "3", "1");
+                resourceAdmin.addResourcePermission("/", "testRole", "2", "1");
+                resourceAdmin.addResourcePermission("/", "testRole", "4", "1");
+                resourceAdmin.addResourcePermission("/", "testRole", "5", "1");
                 log.info("Role " + roleName[roleNameIndex] + " was created successfully");
                 log.info("Role " + roleName[roleNameIndex] + " was created successfully");
             }
         } catch (UserAdminException e) {
-            log.error("Unable to add Role :" + e);
-            throw new UserAdminException("Unable to add Role :" + e);
+            log.error("Unable to add Role :" , e);
+            throw new UserAdminException("Unable to add Role :" , e);
         } catch (AxisFault axisFault) {
             log.error("Unable assign registry permission to the role :", axisFault);
             throw new AxisFault("Unable assign registry permission to the role :", axisFault);
@@ -131,21 +131,20 @@ public class UserPopulator {
                 UserInfo userDetails = UserListCsvReader.getUserInfo(userIdValue);
                 try {
                     if (!userMgtAdmin.userNameExists(roleName[roleNameIndex],
-                                                     sessionCookieUser, userDetails.getUserName())) {
-                        userMgtAdmin.addUser(sessionCookieUser, userDetails.getUserName(),
+                                                      userDetails.getUserName())) {
+                        userMgtAdmin.addUser(userDetails.getUserName(),
                                              userDetails.getUserName(), roleName, null);
                         log.info("User " + userDetails.getUserName() + " was created successfully");
                     }
                 } catch (UserAdminException e) {
-                    log.error("Unable to add users :" + e);
-                    throw new UserAdminException("Unable to add role :" + e);
+                    log.error("Unable to add users :" , e);
+                    throw new UserAdminException("Unable to add role :" , e);
                 }
             }
         }
     }
 
-    private void createStratosUsers(TenantMgtAdminServiceClient tenantStub,
-                                    UserInfo superTenantDetails, int userCount)
+    private void createStratosUsers(UserInfo superTenantDetails, int userCount)
             throws LoginAuthenticationExceptionException, RemoteException,
                    TenantMgtAdminServiceExceptionException {
         FrameworkProperties manProperties =
@@ -154,13 +153,16 @@ public class UserPopulator {
                 login(superTenantDetails.getUserName(), superTenantDetails.getPassword(),
                       manProperties.getProductVariables().getBackendUrl(),
                       manProperties.getProductVariables().getHostName());
+        TenantMgtAdminServiceClient tenantStub =
+                                new TenantMgtAdminServiceClient(manProperties.getProductVariables().
+                                        getBackendUrl(), sessionCookie);
 
         for (int userId = 0; userId < userCount; userId++) {
             if (userId != 0) {
                 String userId_str = Integer.toString(userId);
                 int tenantId = UserListCsvReader.getUserId(userId_str);
                 UserInfo tenantDetails = UserListCsvReader.getUserInfo(tenantId);
-                tenantStub.addTenant(sessionCookie, tenantDetails.getDomain(),
+                tenantStub.addTenant(tenantDetails.getDomain(),
                                      tenantDetails.getPassword(), "admin123", "free");
             }
         }

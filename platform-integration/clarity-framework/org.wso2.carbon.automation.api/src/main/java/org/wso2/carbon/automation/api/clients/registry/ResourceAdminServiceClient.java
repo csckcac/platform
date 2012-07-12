@@ -38,23 +38,29 @@ public class ResourceAdminServiceClient {
 
     private final String serviceName = "ResourceAdminService";
     private ResourceAdminServiceStub resourceAdminServiceStub;
-    private String endPoint;
 
     private static final String MEDIA_TYPE_WSDL = "application/wsdl+xml";
     private static final String MEDIA_TYPE_SCHEMA = "application/x-xsd+xml";
     private static final String MEDIA_TYPE_POLICY = "application/policy+xml";
     private static final String MEDIA_TYPE_GOVERNANCE_ARCHIVE = "application/vnd.wso2.governance-archive";
 
-    public ResourceAdminServiceClient(String backEndUrl) throws AxisFault {
-        this.endPoint = backEndUrl + serviceName;
+    public ResourceAdminServiceClient(String backEndUrl, String sessionCookie) throws AxisFault {
+        String endPoint = backEndUrl + serviceName;
         resourceAdminServiceStub = new ResourceAdminServiceStub(endPoint);
+        AuthenticateStub.authenticateStub(sessionCookie, resourceAdminServiceStub);
     }
 
-    public boolean addResource(String sessionCookie, String destinationPath, String mediaType,
+    public ResourceAdminServiceClient(String backEndUrl, String userName, String password)
+            throws AxisFault {
+        String endPoint = backEndUrl + serviceName;
+        resourceAdminServiceStub = new ResourceAdminServiceStub(endPoint);
+        AuthenticateStub.authenticateStub(userName, password, resourceAdminServiceStub);
+    }
+
+    public boolean addResource(String destinationPath, String mediaType,
                                String description, DataHandler dh)
             throws ResourceAdminServiceExceptionException, RemoteException {
 
-        AuthenticateStub.authenticateStub(sessionCookie, resourceAdminServiceStub);
         if (log.isDebugEnabled()) {
             log.debug("Destination Path :" + destinationPath);
             log.debug("Media Type :" + mediaType);
@@ -64,172 +70,154 @@ public class ResourceAdminServiceClient {
 
     }
 
-    public ResourceData[] getResource(String sessionCookie, String destinationPath)
+    public ResourceData[] getResource(String destinationPath)
             throws ResourceAdminServiceExceptionException, RemoteException {
         ResourceData[] rs;
-        AuthenticateStub.authenticateStub(sessionCookie, resourceAdminServiceStub);
+
 
         rs = resourceAdminServiceStub.getResourceData(new String[]{destinationPath});
 
         return rs;
     }
 
-    public CollectionContentBean getCollectionContent(String sessionCookie, String destinationPath)
+    public CollectionContentBean getCollectionContent(String destinationPath)
             throws RemoteException, ResourceAdminServiceExceptionException {
         CollectionContentBean collectionContentBean;
-        AuthenticateStub.authenticateStub(sessionCookie, resourceAdminServiceStub);
 
         try {
             collectionContentBean = resourceAdminServiceStub.getCollectionContent(destinationPath);
         } catch (RemoteException e) {
             log.error("Resource getting failed due to RemoteException : " + e);
-            throw new RemoteException("Resource getting failed due to RemoteException :" +
+            throw new RemoteException("Resource getting failed due to RemoteException :",
                                       e);
         } catch (ResourceAdminServiceExceptionException e) {
-            log.error("Resource getting failed due to ResourceAdminServiceExceptionException : " +
+            log.error("Resource getting failed due to ResourceAdminServiceExceptionException : ",
                       e);
             throw new ResourceAdminServiceExceptionException(
-                    "Resource getting failed due to ResourceAdminServiceExceptionException:" +
+                    "Resource getting failed due to ResourceAdminServiceExceptionException:",
                     e);
         }
 
         return collectionContentBean;
     }
 
-    public boolean deleteResource(String sessionCookie, String destinationPath)
+    public boolean deleteResource(String destinationPath)
             throws ResourceAdminServiceExceptionException, RemoteException {
 
-        AuthenticateStub.authenticateStub(sessionCookie, resourceAdminServiceStub);
         return resourceAdminServiceStub.delete(destinationPath);
     }
 
-    public void addWSDL(String sessionCookie, String description, DataHandler dh)
+    public void addWSDL(String description, DataHandler dh)
             throws ResourceAdminServiceExceptionException, RemoteException {
 
         String fileName;
-        AuthenticateStub.authenticateStub(sessionCookie, resourceAdminServiceStub);
         fileName = dh.getName().substring(dh.getName().lastIndexOf('/') + 1);
         log.debug(fileName);
         resourceAdminServiceStub.addResource("/" + fileName, MEDIA_TYPE_WSDL, description, dh, null);
     }
 
-    public void addWSDL(String sessionCookie, String resourceName, String description,
+    public void addWSDL(String resourceName, String description,
                         String fetchURL)
             throws ResourceAdminServiceExceptionException, RemoteException {
 
-        AuthenticateStub.authenticateStub(sessionCookie, resourceAdminServiceStub);
         resourceAdminServiceStub.importResource("/", resourceName, MEDIA_TYPE_WSDL, description, fetchURL, null);
     }
 
-    public void addSchema(String sessionCookie, String description, DataHandler dh)
+    public void addSchema(String description, DataHandler dh)
             throws ResourceAdminServiceExceptionException, RemoteException {
         String fileName;
-        AuthenticateStub.authenticateStub(sessionCookie, resourceAdminServiceStub);
         fileName = dh.getName().substring(dh.getName().lastIndexOf('/') + 1);
         resourceAdminServiceStub.addResource("/" + fileName, MEDIA_TYPE_SCHEMA, description, dh, null);
     }
 
-    public void addSchema(String sessionCookie, String resourceName, String description,
+    public void addSchema(String resourceName, String description,
                           String fetchURL) throws ResourceAdminServiceExceptionException,
                                                   RemoteException {
 
-        AuthenticateStub.authenticateStub(sessionCookie, resourceAdminServiceStub);
         resourceAdminServiceStub.importResource("/", resourceName, MEDIA_TYPE_SCHEMA, description, fetchURL, null);
 
     }
 
-    public void addPolicy(String sessionCookie, String description, DataHandler dh)
+    public void addPolicy(String description, DataHandler dh)
             throws ResourceAdminServiceExceptionException, RemoteException {
         String fileName;
-        AuthenticateStub.authenticateStub(sessionCookie, resourceAdminServiceStub);
         fileName = dh.getName().substring(dh.getName().lastIndexOf('/') + 1);
         resourceAdminServiceStub.addResource("/" + fileName, MEDIA_TYPE_POLICY, description, dh, null);
     }
 
-    public void addPolicy(String sessionCookie, String resourceName, String description,
+    public void addPolicy(String resourceName, String description,
                           String fetchURL)
             throws ResourceAdminServiceExceptionException, RemoteException {
 
-        AuthenticateStub.authenticateStub(sessionCookie, resourceAdminServiceStub);
         resourceAdminServiceStub.importResource("/", resourceName, MEDIA_TYPE_POLICY, description, fetchURL, null);
     }
 
-    public void uploadArtifact(String sessionCookie, String description, DataHandler dh)
+    public void uploadArtifact(String description, DataHandler dh)
             throws ResourceAdminServiceExceptionException, RemoteException {
         String fileName;
-        AuthenticateStub.authenticateStub(sessionCookie, resourceAdminServiceStub);
         fileName = dh.getName().substring(dh.getName().lastIndexOf('/') + 1);
         resourceAdminServiceStub.addResource("/" + fileName, MEDIA_TYPE_GOVERNANCE_ARCHIVE, description, dh, null);
     }
 
-    public void addCollection(String sessionCookie, String parentPath, String collectionName,
+    public void addCollection(String parentPath, String collectionName,
                               String mediaType, String description)
             throws ResourceAdminServiceExceptionException, RemoteException {
-        AuthenticateStub.authenticateStub(sessionCookie, resourceAdminServiceStub);
         resourceAdminServiceStub.addCollection(parentPath, collectionName, mediaType, description);
     }
 
 
-    public void addSymbolicLink(String sessionCookie, String parentPath, String name,
+    public void addSymbolicLink(String parentPath, String name,
                                 String targetPath)
             throws ResourceAdminServiceExceptionException, RemoteException {
 
-        AuthenticateStub.authenticateStub(sessionCookie, resourceAdminServiceStub);
         resourceAdminServiceStub.addSymbolicLink(parentPath, name, targetPath);
     }
 
-    public void addTextResource(String sessionCookie, String parentPath, String fileName,
+    public void addTextResource(String parentPath, String fileName,
                                 String mediaType, String description, String content)
             throws RemoteException, ResourceAdminServiceExceptionException {
 
-        AuthenticateStub.authenticateStub(sessionCookie, resourceAdminServiceStub);
         resourceAdminServiceStub.addTextResource(parentPath, fileName, mediaType, description, content);
     }
 
-    public void addResourcePermission(String sessionCookie, String pathToAuthorize,
+    public void addResourcePermission(String pathToAuthorize,
                                       String roleToAuthorize,
                                       String actionToAuthorize, String permissionType)
             throws RemoteException, ResourceAdminServiceResourceServiceExceptionException {
-        AuthenticateStub.authenticateStub(sessionCookie, resourceAdminServiceStub);
 
         resourceAdminServiceStub.addRolePermission(pathToAuthorize, roleToAuthorize, actionToAuthorize, permissionType);
 
     }
 
-    public String getProperty(String sessionCookie, String resourcePath, String key)
+    public String getProperty(String resourcePath, String key)
             throws RemoteException, ResourceAdminServiceExceptionException {
-        AuthenticateStub.authenticateStub(sessionCookie, resourceAdminServiceStub);
 
         return resourceAdminServiceStub.getProperty(resourcePath, key);
 
     }
 
-    public MetadataBean getMetadata(String sessionCookie, String resourcePath)
+    public MetadataBean getMetadata(String resourcePath)
             throws RemoteException, ResourceAdminServiceExceptionException {
-        AuthenticateStub.authenticateStub(sessionCookie, resourceAdminServiceStub);
 
         return resourceAdminServiceStub.getMetadata(resourcePath);
     }
 
-    public ContentBean getResourceContent(String sessionCookie, String resourcePath)
+    public ContentBean getResourceContent(String resourcePath)
             throws RemoteException, ResourceAdminServiceExceptionException {
-        AuthenticateStub.authenticateStub(sessionCookie, resourceAdminServiceStub);
 
         return resourceAdminServiceStub.getContentBean(resourcePath);
     }
 
-    public ResourceData[] getResourceData(String sessionCookie, String resourcePath)
+    public ResourceData[] getResourceData(String resourcePath)
             throws RemoteException, ResourceAdminServiceExceptionException {
-        AuthenticateStub.authenticateStub(sessionCookie, resourceAdminServiceStub);
         String[] resourceArray = {resourcePath};
 
         return resourceAdminServiceStub.getResourceData(resourceArray);
 
     }
 
-    public String getHumanReadableMediaTypes(String sessionCookie, String resourcePath)
+    public String getHumanReadableMediaTypes(String resourcePath)
             throws RemoteException, ResourceAdminServiceExceptionException {
-        AuthenticateStub.authenticateStub(sessionCookie, resourceAdminServiceStub);
 
         return resourceAdminServiceStub.getHumanReadableMediaTypes();
 

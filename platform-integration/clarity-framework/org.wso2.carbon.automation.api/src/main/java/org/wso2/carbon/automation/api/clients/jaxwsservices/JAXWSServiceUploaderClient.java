@@ -32,20 +32,24 @@ public class JAXWSServiceUploaderClient {
 
     private final String serviceName = "JAXWSServiceUploader";
     private JAXWSServiceUploaderStub jAXWSServiceUploaderStub;
-    private String endPoint;
 
-    public JAXWSServiceUploaderClient(String backEndUrl) throws AxisFault {
-        this.endPoint = backEndUrl + serviceName;
+    public JAXWSServiceUploaderClient(String backEndUrl, String sessionCookie) throws AxisFault {
+        String endPoint = backEndUrl + serviceName;
         jAXWSServiceUploaderStub = new JAXWSServiceUploaderStub(endPoint);
+        AuthenticateStub.authenticateStub(sessionCookie, jAXWSServiceUploaderStub);
     }
 
-    public void uploadJAXWSFile(String sessionCookie, String fileName, DataHandler dh)
+    public JAXWSServiceUploaderClient(String backEndUrl, String userName, String password)
+            throws AxisFault {
+        String endPoint = backEndUrl + serviceName;
+        jAXWSServiceUploaderStub = new JAXWSServiceUploaderStub(endPoint);
+        AuthenticateStub.authenticateStub(userName, password, jAXWSServiceUploaderStub);
+    }
+
+    public void uploadJAXWSFile(String fileName, DataHandler dh)
             throws RemoteException {
 
         JAXServiceData jAXServiceData;
-
-        AuthenticateStub.authenticateStub(sessionCookie, jAXWSServiceUploaderStub);
-
         jAXServiceData = new JAXServiceData();
         jAXServiceData.setFileName(fileName);
         jAXServiceData.setDataHandler(dh);

@@ -25,7 +25,6 @@ import org.wso2.carbon.automation.api.clients.utils.AuthenticateStub;
 import org.wso2.carbon.governance.services.stub.AddServicesServiceRegistryExceptionException;
 import org.wso2.carbon.governance.services.stub.AddServicesServiceStub;
 
-
 import javax.xml.stream.XMLStreamException;
 import java.io.IOException;
 
@@ -36,14 +35,23 @@ public class GovernanceServiceClient {
     private AddServicesServiceStub addServicesServiceStub;
     private String endPoint;
 
-    public GovernanceServiceClient(String backEndUrl) throws AxisFault {
+    public GovernanceServiceClient(String backEndUrl, String sessionCookie) throws AxisFault {
         this.endPoint = backEndUrl + serviceName;
         addServicesServiceStub = new AddServicesServiceStub(endPoint);
+        AuthenticateStub.authenticateStub(sessionCookie, addServicesServiceStub);
     }
 
-    public void addService(String sessionCookie, OMElement service)
+    public GovernanceServiceClient(String backEndUrl, String userName, String password)
+            throws AxisFault {
+        this.endPoint = backEndUrl + serviceName;
+        addServicesServiceStub = new AddServicesServiceStub(endPoint);
+        AuthenticateStub.authenticateStub(userName, password, addServicesServiceStub);
+    }
+
+
+    public void addService(OMElement service)
             throws IOException, XMLStreamException, AddServicesServiceRegistryExceptionException {
-        AuthenticateStub.authenticateStub(sessionCookie, addServicesServiceStub);
+
         addServicesServiceStub.addService(service.toString());
         log.info("Service Added");
 

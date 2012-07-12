@@ -32,15 +32,21 @@ public class DataServiceAdminClient {
 
     private final String serviceName = "DataServiceAdmin";
     private DataServiceAdminStub dataServiceAdminStub;
-    private String endPoint;
 
-    public DataServiceAdminClient(String backEndUrl) throws AxisFault {
-        this.endPoint = backEndUrl + serviceName;
+    public DataServiceAdminClient(String backEndUrl, String sessionCookie) throws AxisFault {
+        String endPoint = backEndUrl + serviceName;
         dataServiceAdminStub = new DataServiceAdminStub(endPoint);
+        AuthenticateStub.authenticateStub(sessionCookie, dataServiceAdminStub);
     }
 
-    public String[] getCarbonDataSources(String sessionCookie) throws RemoteException {
-        AuthenticateStub.authenticateStub(sessionCookie, dataServiceAdminStub);
+    public DataServiceAdminClient(String backEndUrl, String userName, String password) throws AxisFault {
+        String endPoint = backEndUrl + serviceName;
+        dataServiceAdminStub = new DataServiceAdminStub(endPoint);
+        AuthenticateStub.authenticateStub(userName, password, dataServiceAdminStub);
+    }
+
+    public String[] getCarbonDataSources() throws RemoteException {
+
         String[] dataSourceList;
 
         dataSourceList = dataServiceAdminStub.getCarbonDataSourceNames();
@@ -48,21 +54,17 @@ public class DataServiceAdminClient {
         return dataSourceList;
     }
 
-    public void editDataService(String sessionCookie, String serviceName, String serviceHierachy,
+    public void editDataService(String serviceName, String serviceHierachy,
                                 String dataServiceContent)
             throws RemoteException {
-        AuthenticateStub.authenticateStub(sessionCookie, dataServiceAdminStub);
 
         dataServiceAdminStub.saveDataService(serviceName, serviceHierachy, dataServiceContent);
 
-
     }
 
-    public String getDataServiceContent(String sessionCookie, String serviceName)
+    public String getDataServiceContent(String serviceName)
             throws RemoteException {
-        AuthenticateStub.authenticateStub(sessionCookie, dataServiceAdminStub);
         String content;
-
         content = dataServiceAdminStub.getDataServiceContentAsString(serviceName);
         return content;
     }

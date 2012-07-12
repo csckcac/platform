@@ -37,19 +37,16 @@ public class WebAppAdminClient {
     private final Log log = LogFactory.getLog(WebAppAdminClient.class);
 
     private WebappAdminStub webappAdminStub;
+    private final String serviceName = "WebappAdmin";
 
-    public WebAppAdminClient(String backendUrl) throws AxisFault {
-        String serviceName = "WebappAdmin";
+    public WebAppAdminClient(String backendUrl, String sessionCookie) throws AxisFault {
+
         String endPoint = backendUrl + serviceName;
-        try {
-            webappAdminStub = new WebappAdminStub(endPoint);
-        } catch (AxisFault axisFault) {
-            log.error("Fail to initialize WebappAdminStub : " + axisFault.getMessage());
-            throw new AxisFault("Fail to initialize WebappAdminStub : " + axisFault.getMessage());
-        }
+        webappAdminStub = new WebappAdminStub(endPoint);
+        AuthenticateStub.authenticateStub(sessionCookie, webappAdminStub);
     }
 
-    public void warFileUplaoder(String sessionCookie, String filePath) throws RemoteException {
+    public void warFileUplaoder(String filePath) throws RemoteException {
         File file = new File(filePath);
         String fileName = file.getName();
         URL url = null;
@@ -63,7 +60,7 @@ public class WebAppAdminClient {
         webApp = new WebappUploadData();
         webApp.setFileName(fileName);
         webApp.setDataHandler(dh);
-        AuthenticateStub.authenticateStub(sessionCookie, webappAdminStub);
+
         try {
             assert webappAdminStub.uploadWebapp(new WebappUploadData[]{webApp}) : "webapp upload unsuccessful";
         } catch (RemoteException e) {
@@ -72,49 +69,26 @@ public class WebAppAdminClient {
         }
     }
 
-    public void deleteWebAppFile(String sessionCookie, String fileName) throws RemoteException {
-        AuthenticateStub.authenticateStub(sessionCookie, webappAdminStub);
-        try {
-            webappAdminStub.deleteStartedWebapps(new String[]{fileName});
-        } catch (RemoteException e) {
-            log.error("Webapp deletion error:" + e);
-            throw new RemoteException("Webapp deletion error:" + e);
-        }
+    public void deleteWebAppFile(String fileName) throws RemoteException {
+        webappAdminStub.deleteStartedWebapps(new String[]{fileName});
     }
 
-    public void deleteStoppedWebapps(String sessionCookie, String fileName) throws RemoteException {
-        AuthenticateStub.authenticateStub(sessionCookie, webappAdminStub);
+    public void deleteStoppedWebapps(String fileName) throws RemoteException {
 
-        try {
-            webappAdminStub.deleteStoppedWebapps(new String[]{fileName});
-        } catch (RemoteException e) {
-            log.info("Cannot delete all stopped webapps", e);
-            throw new RemoteException("Cannot delete all stopped webapps", e);
-        }
+        webappAdminStub.deleteStoppedWebapps(new String[]{fileName});
     }
 
-    public void stopWebapps(String sessionCookie, String fileName) throws RemoteException {
-        AuthenticateStub.authenticateStub(sessionCookie, webappAdminStub);
-        try {
-            webappAdminStub.stopAllWebapps();
-            WebappMetadata webappMetadata = webappAdminStub.getStoppedWebapp(fileName);
-        } catch (RemoteException e) {
-            log.info("can not stop webapp", e);
-            throw new RemoteException("Cannot stop webapp", e);
-        }
+    public void stopWebapps(String fileName) throws RemoteException {
+        webappAdminStub.stopAllWebapps();
+        WebappMetadata webappMetadata = webappAdminStub.getStoppedWebapp(fileName);
+
     }
 
-    public boolean stopWebApp(String sessionCookie, String fileName) throws RemoteException {
-        AuthenticateStub.authenticateStub(sessionCookie, webappAdminStub);
-        try {
-            webappAdminStub.stopWebapps(new String[]{fileName});
-            WebappMetadata webappMetadata = webappAdminStub.getStoppedWebapp(fileName);
-            if (webappMetadata.getWebappFile().equals(fileName)) {
-                return true;
-            }
-        } catch (RemoteException e) {
-            log.error("Cannot stop webapp", e);
-            throw new RemoteException("Cannot stop webapp", e);
+    public boolean stopWebApp(String fileName) throws RemoteException {
+        webappAdminStub.stopWebapps(new String[]{fileName});
+        WebappMetadata webappMetadata = webappAdminStub.getStoppedWebapp(fileName);
+        if (webappMetadata.getWebappFile().equals(fileName)) {
+            return true;
         }
         return false;
     }

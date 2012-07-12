@@ -38,17 +38,16 @@ public class EndPointAdminClient {
 
     private final String serviceName = "EndpointAdmin";
     private EndpointAdminStub endpointAdminStub;
-    private String endPoint;
 
     public EndPointAdminClient(String backEndUrl, String sessionCookie) throws AxisFault {
-        this.endPoint = backEndUrl + serviceName;
+        String endPoint = backEndUrl + serviceName;
         endpointAdminStub = new EndpointAdminStub(endPoint);
         AuthenticateStub.authenticateStub(sessionCookie, endpointAdminStub);
     }
 
     public EndPointAdminClient(String backEndURL, String userName, String password)
             throws AxisFault {
-        this.endPoint = backEndURL + serviceName;
+        String endPoint = backEndURL + serviceName;
         endpointAdminStub = new EndpointAdminStub(endPoint);
         AuthenticateStub.authenticateStub(userName, password, endpointAdminStub);
     }

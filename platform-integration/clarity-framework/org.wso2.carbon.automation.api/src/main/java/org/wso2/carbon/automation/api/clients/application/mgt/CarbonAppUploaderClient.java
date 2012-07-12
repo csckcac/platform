@@ -32,20 +32,25 @@ import java.rmi.RemoteException;
 public class CarbonAppUploaderClient {
     private static final Log log = LogFactory.getLog(CarbonAppUploader.class);
     private CarbonAppUploaderStub carbonAppUploaderStub;
+    private final String serviceName = "CarbonAppUploader";
 
-    public CarbonAppUploaderClient(String backendUrl) throws AxisFault {
-        String serviceName = "CarbonAppUploader";
+    public CarbonAppUploaderClient(String backendUrl, String sessionCookie) throws AxisFault {
         String endPoint = backendUrl + serviceName;
         carbonAppUploaderStub = new CarbonAppUploaderStub(endPoint);
+        AuthenticateStub.authenticateStub(sessionCookie, carbonAppUploaderStub);
     }
 
+    public CarbonAppUploaderClient(String backendUrl, String userName, String password) throws AxisFault {
+        String endPoint = backendUrl + serviceName;
+        carbonAppUploaderStub = new CarbonAppUploaderStub(endPoint);
+        AuthenticateStub.authenticateStub(userName, password, carbonAppUploaderStub);
+    }
 
-    public void uploadCarbonAppArtifact(String sessionCookie, String fileName, DataHandler dh)
+    public void uploadCarbonAppArtifact(String fileName, DataHandler dh)
             throws RemoteException {
         UploadedFileItem[] carbonAppArray = new UploadedFileItem[1];
         UploadedFileItem carbonApp = new UploadedFileItem();
 
-        AuthenticateStub.authenticateStub(sessionCookie, carbonAppUploaderStub);
         carbonApp.setFileName(fileName);
         carbonApp.setDataHandler(dh);
         carbonApp.setFileType("jar");

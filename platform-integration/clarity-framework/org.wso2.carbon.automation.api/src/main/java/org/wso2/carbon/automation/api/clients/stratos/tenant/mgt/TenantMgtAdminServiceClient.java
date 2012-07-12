@@ -20,7 +20,8 @@ import org.apache.axis2.AxisFault;
 import org.apache.commons.logging.Log;
 import org.apache.commons.logging.LogFactory;
 import org.wso2.carbon.automation.api.clients.utils.AuthenticateStub;
-import org.wso2.carbon.tenant.mgt.stub.*;
+import org.wso2.carbon.tenant.mgt.stub.TenantMgtAdminServiceExceptionException;
+import org.wso2.carbon.tenant.mgt.stub.TenantMgtAdminServiceStub;
 import org.wso2.carbon.tenant.mgt.stub.beans.xsd.TenantInfoBean;
 
 import java.rmi.RemoteException;
@@ -33,23 +34,26 @@ public class TenantMgtAdminServiceClient {
     private static final Log log = LogFactory.getLog(TenantMgtAdminServiceClient.class);
 
     private TenantMgtAdminServiceStub tenantMgtAdminServiceStub;
+    private final String serviceName = "TenantMgtAdminService";
 
-    public TenantMgtAdminServiceClient(String backEndUrl) throws AxisFault {
-        String serviceName = "TenantMgtAdminService";
+    public TenantMgtAdminServiceClient(String backEndUrl, String sessionCookie) throws AxisFault {
+
         String endPoint = backEndUrl + serviceName;
-        try {
-            tenantMgtAdminServiceStub = new TenantMgtAdminServiceStub(endPoint);
-        } catch (AxisFault axisFault) {
-            log.error("Initializing tenantMgtAdminServiceStub failed : " + axisFault.getMessage());
-            throw new AxisFault("Initializing tenantMgtAdminServiceStub failed : " + axisFault.getMessage());
-        }
+        tenantMgtAdminServiceStub = new TenantMgtAdminServiceStub(endPoint);
+        AuthenticateStub.authenticateStub(sessionCookie, tenantMgtAdminServiceStub);
     }
 
-    public void addTenant(String sessionCookie, String domainName, String password,
+    public TenantMgtAdminServiceClient(String backEndUrl, String userName, String password)
+            throws AxisFault {
+
+        String endPoint = backEndUrl + serviceName;
+        tenantMgtAdminServiceStub = new TenantMgtAdminServiceStub(endPoint);
+        AuthenticateStub.authenticateStub(userName, password, tenantMgtAdminServiceStub);
+    }
+
+    public void addTenant(String domainName, String password,
                           String firstName, String usagePlan)
             throws TenantMgtAdminServiceExceptionException, RemoteException {
-
-        AuthenticateStub.authenticateStub(sessionCookie, tenantMgtAdminServiceStub);
 
         Date date = new Date();
         Calendar calendar = new GregorianCalendar();
@@ -83,44 +87,41 @@ public class TenantMgtAdminServiceClient {
                 log.info("Tenant domain " + domainName + " already registered");
             }
         } catch (RemoteException e) {
-            log.error("RemoteException thrown while adding user/tenants : " + e);
-            throw new RemoteException("RemoteException thrown while adding user/tenants : " + e);
+            log.error("RemoteException thrown while adding user/tenants : ", e);
+            throw new RemoteException("RemoteException thrown while adding user/tenants : ", e);
         }
     }
 
-    public TenantInfoBean getTenant(String sessionCookie, String tenantDomain)
+    public TenantInfoBean getTenant(String tenantDomain)
             throws TenantMgtAdminServiceExceptionException, RemoteException {
-        AuthenticateStub.authenticateStub(sessionCookie, tenantMgtAdminServiceStub);
         TenantInfoBean getTenantBean = null;
         try {
             getTenantBean = tenantMgtAdminServiceStub.getTenant(tenantDomain);
             assert getTenantBean == null : "Domain Name not found";
         } catch (RemoteException e) {
-            log.error("RemoteException thrown while retrieving user/tenants : " + e);
-            throw new RemoteException("RemoteException thrown while retrieving user/tenants : " + e);
+            log.error("RemoteException thrown while retrieving user/tenants : ", e);
+            throw new RemoteException("RemoteException thrown while retrieving user/tenants : ", e);
         }
         return getTenantBean;
     }
 
-    public void updateTenant(String sessionCookie, TenantInfoBean infoBean)
+    public void updateTenant(TenantInfoBean infoBean)
             throws TenantMgtAdminServiceExceptionException, RemoteException {
-        AuthenticateStub.authenticateStub(sessionCookie, tenantMgtAdminServiceStub);
         try {
             tenantMgtAdminServiceStub.updateTenant(infoBean);
         } catch (RemoteException e) {
-            log.error("RemoteException thrown while retrieving user/tenants : " + e);
-            throw new RemoteException("RemoteException thrown while retrieving user/tenants : " + e);
+            log.error("RemoteException thrown while retrieving user/tenants : ", e);
+            throw new RemoteException("RemoteException thrown while retrieving user/tenants : ", e);
         }
     }
 
-    public void activateTenant(String sessionCookie, String domainName)
+    public void activateTenant(String domainName)
             throws TenantMgtAdminServiceExceptionException, RemoteException {
-        AuthenticateStub.authenticateStub(sessionCookie, tenantMgtAdminServiceStub);
         try {
             tenantMgtAdminServiceStub.activateTenant(domainName);
         } catch (RemoteException e) {
-            log.error("RemoteException thrown while retrieving user/tenants : " + e);
-            throw new RemoteException("RemoteException thrown while retrieving user/tenants : " + e);
+            log.error("RemoteException thrown while retrieving user/tenants : ", e);
+            throw new RemoteException("RemoteException thrown while retrieving user/tenants : ", e);
         }
     }
 }

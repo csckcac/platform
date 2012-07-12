@@ -35,57 +35,55 @@ public class SearchAdminServiceClient {
 
     private final String serviceName = "SearchAdminService";
     private SearchAdminServiceStub searchAdminServiceStub;
-    private String endPoint;
 
-    public SearchAdminServiceClient(String backEndUrl) throws AxisFault {
-        this.endPoint = backEndUrl + serviceName;
+    public SearchAdminServiceClient(String backEndUrl, String sessionCookie) throws AxisFault {
+        String endPoint = backEndUrl + serviceName;
         searchAdminServiceStub = new SearchAdminServiceStub(endPoint);
+        AuthenticateStub.authenticateStub(sessionCookie, searchAdminServiceStub);
     }
 
-    public void deleteFilter(String sessionCookie, String filterName)
+    public SearchAdminServiceClient(String backEndUrl, String username, String password)
+            throws AxisFault {
+        String endPoint = backEndUrl + serviceName;
+        searchAdminServiceStub = new SearchAdminServiceStub(endPoint);
+        AuthenticateStub.authenticateStub(username, password, searchAdminServiceStub);
+    }
+
+    public void deleteFilter(String filterName)
             throws SearchAdminServiceRegistryExceptionException, RemoteException {
-        AuthenticateStub.authenticateStub(sessionCookie, searchAdminServiceStub);
+
         searchAdminServiceStub.deleteFilter(filterName);
     }
 
-    public CustomSearchParameterBean getAdvancedSearchFilter(String sessionCookie,
-                                                             String filterName)
+    public CustomSearchParameterBean getAdvancedSearchFilter(String filterName)
             throws SearchAdminServiceRegistryExceptionException, RemoteException {
-        AuthenticateStub.authenticateStub(sessionCookie, searchAdminServiceStub);
         return searchAdminServiceStub.getAdvancedSearchFilter(filterName);
     }
 
-    public MediaTypeValueList getMediaTypeSearch(String sessionCookie, String mediaType)
+    public MediaTypeValueList getMediaTypeSearch(String mediaType)
             throws SearchAdminServiceRegistryExceptionException, RemoteException {
-        AuthenticateStub.authenticateStub(sessionCookie, searchAdminServiceStub);
         return searchAdminServiceStub.getMediaTypeSearch(mediaType);
     }
 
-    public AdvancedSearchResultsBean getAdvancedSearchResults(String sessionCookie,
-                                                              CustomSearchParameterBean searchParams)
+    public AdvancedSearchResultsBean getAdvancedSearchResults(
+            CustomSearchParameterBean searchParams)
             throws SearchAdminServiceRegistryExceptionException, RemoteException {
-        AuthenticateStub.authenticateStub(sessionCookie, searchAdminServiceStub);
         return searchAdminServiceStub.getAdvancedSearchResults(searchParams);
     }
 
-    public String[] getSavedFilters(String sessionCookie)
+    public String[] getSavedFilters()
             throws SearchAdminServiceRegistryExceptionException, RemoteException {
-        AuthenticateStub.authenticateStub(sessionCookie, searchAdminServiceStub);
         return searchAdminServiceStub.getSavedFilters();
     }
 
-    public SearchResultsBean getSearchResults(String sessionCookie, String searchType,
-                                              String criteria)
+    public SearchResultsBean getSearchResults(String searchType, String criteria)
             throws SearchAdminServiceRegistryExceptionException, RemoteException {
-        AuthenticateStub.authenticateStub(sessionCookie, searchAdminServiceStub);
         return searchAdminServiceStub.getSearchResults(searchType, criteria);
 
     }
 
-    public void saveAdvancedSearchFilter(String sessionCookie, CustomSearchParameterBean queryBean,
-                                         String filterName)
+    public void saveAdvancedSearchFilter(CustomSearchParameterBean queryBean, String filterName)
             throws SearchAdminServiceRegistryExceptionException, RemoteException {
-        AuthenticateStub.authenticateStub(sessionCookie, searchAdminServiceStub);
         searchAdminServiceStub.saveAdvancedSearchFilter(queryBean, filterName);
 
     }

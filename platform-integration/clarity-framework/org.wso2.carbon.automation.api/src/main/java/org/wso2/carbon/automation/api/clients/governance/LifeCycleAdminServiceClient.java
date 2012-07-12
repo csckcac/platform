@@ -33,49 +33,52 @@ public class LifeCycleAdminServiceClient {
 
     private final String serviceName = "CustomLifecyclesChecklistAdminService";
     private CustomLifecyclesChecklistAdminServiceStub customLifecyclesChecklistAdminServiceStub;
-    private String endPoint;
 
-    public LifeCycleAdminServiceClient(String backEndUrl) throws AxisFault {
-        this.endPoint = backEndUrl + serviceName;
+    public LifeCycleAdminServiceClient(String backEndUrl, String sessionCookie) throws AxisFault {
+        String endPoint = backEndUrl + serviceName;
         customLifecyclesChecklistAdminServiceStub = new CustomLifecyclesChecklistAdminServiceStub(endPoint);
+        AuthenticateStub.authenticateStub(sessionCookie, customLifecyclesChecklistAdminServiceStub);
     }
 
-    public void addAspect(String sessionCookie, String resourcePath, String aspectName)
+    public LifeCycleAdminServiceClient(String backEndUrl, String userName, String password)
+            throws AxisFault {
+        String endPoint = backEndUrl + serviceName;
+        customLifecyclesChecklistAdminServiceStub = new CustomLifecyclesChecklistAdminServiceStub(endPoint);
+        AuthenticateStub.authenticateStub(userName, password, customLifecyclesChecklistAdminServiceStub);
+    }
+
+
+    public void addAspect(String resourcePath, String aspectName)
             throws CustomLifecyclesChecklistAdminServiceExceptionException, RemoteException {
-        AuthenticateStub.authenticateStub(sessionCookie, customLifecyclesChecklistAdminServiceStub);
+
         customLifecyclesChecklistAdminServiceStub.addAspect(resourcePath, aspectName);
     }
 
-    public void invokeAspect(String sessionCookie, String resourcePath, String aspectName,
+    public void invokeAspect(String resourcePath, String aspectName,
                              String action, String[] items)
             throws CustomLifecyclesChecklistAdminServiceExceptionException, RemoteException {
-        AuthenticateStub.authenticateStub(sessionCookie, customLifecyclesChecklistAdminServiceStub);
         customLifecyclesChecklistAdminServiceStub.invokeAspect(resourcePath, aspectName, action, items);
     }
 
-    public void invokeAspectWithParams(String sessionCookie, String resourcePath, String aspectName,
+    public void invokeAspectWithParams(String resourcePath, String aspectName,
                                        String action, String[] items, ArrayOfString[] parameters)
             throws CustomLifecyclesChecklistAdminServiceExceptionException, RemoteException {
-        AuthenticateStub.authenticateStub(sessionCookie, customLifecyclesChecklistAdminServiceStub);
         customLifecyclesChecklistAdminServiceStub.invokeAspectWithParams(resourcePath, aspectName,
                                                                          action, items, parameters);
     }
 
-    public void removeAspect(String sessionCookie, String resourcePath, String aspectName)
+    public void removeAspect(String resourcePath, String aspectName)
             throws CustomLifecyclesChecklistAdminServiceExceptionException, RemoteException {
-        AuthenticateStub.authenticateStub(sessionCookie, customLifecyclesChecklistAdminServiceStub);
         customLifecyclesChecklistAdminServiceStub.removeAspect(resourcePath, aspectName);
     }
 
-    public LifecycleBean getLifecycleBean(String sessionCookie, String resourcePath)
+    public LifecycleBean getLifecycleBean(String resourcePath)
             throws CustomLifecyclesChecklistAdminServiceExceptionException, RemoteException {
-        AuthenticateStub.authenticateStub(sessionCookie, customLifecyclesChecklistAdminServiceStub);
         return customLifecyclesChecklistAdminServiceStub.getLifecycleBean(resourcePath);
     }
 
-    public String[] getAllDependencies(String sessionCookie, String resourcePath)
+    public String[] getAllDependencies(String resourcePath)
             throws CustomLifecyclesChecklistAdminServiceExceptionException, RemoteException {
-        AuthenticateStub.authenticateStub(sessionCookie, customLifecyclesChecklistAdminServiceStub);
         return customLifecyclesChecklistAdminServiceStub.getAllDependencies(resourcePath);
     }
 

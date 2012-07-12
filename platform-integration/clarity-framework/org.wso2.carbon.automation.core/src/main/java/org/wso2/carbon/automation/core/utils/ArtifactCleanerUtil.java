@@ -67,7 +67,7 @@ public class ArtifactCleanerUtil {
         String carAppList[] = getAllCarArtifactList(sessionCookie, serviceURL);
         ApplicationAdminClient adminServiceApplicationAdmin;
         try {
-            adminServiceApplicationAdmin = new ApplicationAdminClient(serviceURL);
+            adminServiceApplicationAdmin = new ApplicationAdminClient(serviceURL, sessionCookie);
         } catch (AxisFault axisFault) {
             log.error("AxisFault " + axisFault.getMessage());
             throw new AxisFault("AxisFault :" + axisFault.getMessage());
@@ -76,7 +76,7 @@ public class ArtifactCleanerUtil {
         if (carAppList != null) {
             for (String aCarAppList : carAppList) {
                 try {
-                    adminServiceApplicationAdmin.deleteApplication(sessionCookie, aCarAppList);
+                    adminServiceApplicationAdmin.deleteApplication(aCarAppList);
                 } catch (ApplicationAdminExceptionException e) {
                     log.error("CApp deployment error " + e);
                     throw new ApplicationAdminExceptionException("CApp deployment error :" + e);
@@ -94,7 +94,7 @@ public class ArtifactCleanerUtil {
         String[] appList;
         ApplicationAdminClient adminServiceApplicationAdmin;
         try {
-            adminServiceApplicationAdmin = new ApplicationAdminClient(serviceURL);
+            adminServiceApplicationAdmin = new ApplicationAdminClient(serviceURL, sessionCookie);
             appList = adminServiceApplicationAdmin.listAllApplications(sessionCookie);
 
         } catch (ApplicationAdminExceptionException e) {
@@ -111,8 +111,8 @@ public class ArtifactCleanerUtil {
             throws RemoteException {
         String[] appList = null;
         ServiceAdminClient adminServiceService;
-        adminServiceService = new ServiceAdminClient(serviceURL);
-        adminServiceService.deleteAllNonAdminServiceGroups(sessionCookie);
+        adminServiceService = new ServiceAdminClient(serviceURL, sessionCookie);
+        adminServiceService.deleteAllNonAdminServiceGroups();
 
         return appList;
 
@@ -138,14 +138,14 @@ public class ArtifactCleanerUtil {
 
     public void deleteMatchingCarArtifact(String sessionCookie, String backendURL, String appName)
             throws RemoteException, ApplicationAdminExceptionException {
-        ApplicationAdminClient carMgtAdmin = new ApplicationAdminClient(backendURL);
+        ApplicationAdminClient carMgtAdmin = new ApplicationAdminClient(backendURL, sessionCookie);
         carMgtAdmin.deleteMatchingApplication(sessionCookie, appName);
     }
 
     public void deleteWebApp(String sessionCookie, String fileName, String backendURL)
             throws RemoteException {
-        WebAppAdminClient adminServiceWebAppAdmin = new WebAppAdminClient(backendURL);
-        adminServiceWebAppAdmin.deleteWebAppFile(sessionCookie, fileName);
+        WebAppAdminClient adminServiceWebAppAdmin = new WebAppAdminClient(backendURL, sessionCookie);
+        adminServiceWebAppAdmin.deleteWebAppFile(fileName);
     }
 
     /**
@@ -186,19 +186,19 @@ public class ArtifactCleanerUtil {
             artifactFile.delete();
 
         } else {
-            ServiceAdminClient serviceAdmin = new ServiceAdminClient(backendURL);
+            ServiceAdminClient serviceAdmin = new ServiceAdminClient(backendURL, sessionCookie);
             String serviceFileName = getServiceName(artifactName);
             log.info("Service Name " + serviceFileName);
-            serviceAdmin.deleteMatchingServiceByGroup(sessionCookie, serviceFileName);
+            serviceAdmin.deleteMatchingServiceByGroup(serviceFileName);
         }
     }
 
     public void deleteDataService(String sessionCookie, String backEndUrl, String artifactName,
                                   List<ArtifactDependency> artifactDependencyList)
             throws RemoteException, ServiceAdminException, ResourceAdminServiceExceptionException {
-        ServiceAdminClient serviceAdmin = new ServiceAdminClient(backEndUrl);
-        ServiceMetaData serviceInfo = serviceAdmin.getServicesData(sessionCookie, artifactName.substring(0, artifactName.indexOf(".dbs")));
-        serviceAdmin.deleteService(sessionCookie, new String[]{serviceInfo.getServiceGroupName()});
+        ServiceAdminClient serviceAdmin = new ServiceAdminClient(backEndUrl, sessionCookie);
+        ServiceMetaData serviceInfo = serviceAdmin.getServicesData(artifactName.substring(0, artifactName.indexOf(".dbs")));
+        serviceAdmin.deleteService(new String[]{serviceInfo.getServiceGroupName()});
 
         Iterator iterator = artifactDependencyList.iterator();
         while (iterator.hasNext()) {
@@ -207,9 +207,8 @@ public class ArtifactCleanerUtil {
                 if (ArtifactType.sql == dependency.getDepArtifactType()) {
                     //TODO - drop database
                 } else {
-                    ResourceAdminServiceClient adminServiceResourceAdmin = new ResourceAdminServiceClient(backEndUrl);
-                    if (!adminServiceResourceAdmin.deleteResource(sessionCookie,
-                                                                  "/_system/governance/automation/resources/"
+                    ResourceAdminServiceClient adminServiceResourceAdmin = new ResourceAdminServiceClient(backEndUrl, sessionCookie);
+                    if (!adminServiceResourceAdmin.deleteResource("/_system/governance/automation/resources/"
                                                                   + dependency.getDepArtifactName())) {
                         log.error(dependency.getDepArtifactName() + " Deletion failed");
 
@@ -221,8 +220,8 @@ public class ArtifactCleanerUtil {
 
     public void deleteAllServicesByType(String sessionCookie, String type, String backendURL)
             throws RemoteException {
-        ServiceAdminClient serviceAdmin = new ServiceAdminClient(backendURL);
-        serviceAdmin.deleteAllServicesByType(sessionCookie, type);
+        ServiceAdminClient serviceAdmin = new ServiceAdminClient(backendURL, sessionCookie);
+        serviceAdmin.deleteAllServicesByType(type);
     }
 
     public String getServiceName(String artifactName) {

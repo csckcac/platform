@@ -28,8 +28,13 @@ import org.apache.commons.logging.LogFactory;
 import org.wso2.carbon.automation.api.clients.utils.AuthenticateStub;
 import org.wso2.carbon.rssmanager.ui.stub.RSSAdminRSSDAOExceptionException;
 import org.wso2.carbon.rssmanager.ui.stub.RSSAdminStub;
-import org.wso2.carbon.rssmanager.ui.stub.types.*;
-
+import org.wso2.carbon.rssmanager.ui.stub.types.DatabaseInstanceEntry;
+import org.wso2.carbon.rssmanager.ui.stub.types.DatabasePrivilege;
+import org.wso2.carbon.rssmanager.ui.stub.types.DatabaseUser;
+import org.wso2.carbon.rssmanager.ui.stub.types.DatabaseUserEntry;
+import org.wso2.carbon.rssmanager.ui.stub.types.PrivilegeGroup;
+import org.wso2.carbon.rssmanager.ui.stub.types.RSSInstance;
+import org.wso2.carbon.rssmanager.ui.stub.types.RSSInstanceEntry;
 
 import java.rmi.RemoteException;
 
@@ -38,7 +43,6 @@ public class RSSManagerAdminServiceClient {
 
     private final String serviceName = "RSSManagerAdminService";
     private RSSAdminStub consoleAdminStub;
-    private String endPoint;
 
     private static final String ADMIN_CONSOLE_EXTENSION_NS = "http://www.wso2.org/products/wso2commons/adminconsole";
     private static final OMNamespace ADMIN_CONSOLE_OM_NAMESPACE = OMAbstractFactory.getOMFactory().createOMNamespace(ADMIN_CONSOLE_EXTENSION_NS, "instance");
@@ -46,14 +50,22 @@ public class RSSManagerAdminServiceClient {
     private static final String NULL_NAMESPACE = "";
     private static final OMNamespace NULL_OMNS = omFactory.createOMNamespace(NULL_NAMESPACE, "");
 
-    public RSSManagerAdminServiceClient(String backEndUrl) throws AxisFault {
-        this.endPoint = backEndUrl + serviceName;
+    public RSSManagerAdminServiceClient(String backEndUrl, String sessionCookie) throws AxisFault {
+        String endPoint = backEndUrl + serviceName;
         consoleAdminStub = new RSSAdminStub(endPoint);
+        AuthenticateStub.authenticateStub(sessionCookie, consoleAdminStub);
     }
 
-    public void createDatabase(String sessionCookie, String databaseName, int rssInstanceId)
+    public RSSManagerAdminServiceClient(String backEndUrl, String userName, String password)
+            throws AxisFault {
+        String endPoint = backEndUrl + serviceName;
+        consoleAdminStub = new RSSAdminStub(endPoint);
+        AuthenticateStub.authenticateStub(userName, password, consoleAdminStub);
+    }
+
+    public void createDatabase(String databaseName, int rssInstanceId)
             throws RSSAdminRSSDAOExceptionException, RemoteException {
-        AuthenticateStub.authenticateStub(sessionCookie, consoleAdminStub);
+
         if (log.isDebugEnabled()) {
             log.debug("Database Name :" + databaseName);
             log.debug("RSSInstanceId :" + rssInstanceId);
@@ -64,9 +76,8 @@ public class RSSManagerAdminServiceClient {
 
     }
 
-    public void dropDatabase(String sessionCookie, int databaseId)
+    public void dropDatabase(int databaseId)
             throws RSSAdminRSSDAOExceptionException, RemoteException {
-        AuthenticateStub.authenticateStub(sessionCookie, consoleAdminStub);
         if (log.isDebugEnabled()) {
             log.debug("Database InstanceId :" + databaseId);
         }
@@ -76,9 +87,8 @@ public class RSSManagerAdminServiceClient {
 
     }
 
-    public DatabaseInstanceEntry[] getDatabaseInstanceList(String sessionCookie)
+    public DatabaseInstanceEntry[] getDatabaseInstanceList()
             throws RSSAdminRSSDAOExceptionException, RemoteException {
-        AuthenticateStub.authenticateStub(sessionCookie, consoleAdminStub);
         DatabaseInstanceEntry[] databaseList;
         databaseList = consoleAdminStub.getDatabaseInstanceList();
         if (log.isDebugEnabled()) {
@@ -89,9 +99,9 @@ public class RSSManagerAdminServiceClient {
         return databaseList;
     }
 
-    public DatabaseInstanceEntry getDatabaseInstance(String sessionCookie, String databaseName)
+    public DatabaseInstanceEntry getDatabaseInstance(String databaseName)
             throws RSSAdminRSSDAOExceptionException, RemoteException {
-        DatabaseInstanceEntry[] databaseList = getDatabaseInstanceList(sessionCookie);
+        DatabaseInstanceEntry[] databaseList = getDatabaseInstanceList();
         DatabaseInstanceEntry dbInstance = null;
         if (databaseList == null) {
             return null;
@@ -106,14 +116,13 @@ public class RSSManagerAdminServiceClient {
 
     }
 
-    public void createPrivilegeGroup(String sessionCookie, String privilegeGroupName)
+    public void createPrivilegeGroup(String privilegeGroupName)
             throws RSSAdminRSSDAOExceptionException, RemoteException {
         PrivilegeGroup privilegeGroup = new PrivilegeGroup();
 
         privilegeGroup.setPrivGroupName(privilegeGroupName);
         privilegeGroup.setPrivs(getAllDatabasePermission());
 
-        AuthenticateStub.authenticateStub(sessionCookie, consoleAdminStub);
         if (log.isDebugEnabled()) {
             log.debug("Privilege Group Name: " + privilegeGroupName);
         }
@@ -124,9 +133,9 @@ public class RSSManagerAdminServiceClient {
 
     }
 
-    public PrivilegeGroup getPrivilegeGroup(String sessionCookie, String privilegeGroupName)
+    public PrivilegeGroup getPrivilegeGroup(String privilegeGroupName)
             throws RSSAdminRSSDAOExceptionException, RemoteException {
-        PrivilegeGroup[] privilegeGroups = getUserPrivilegeGroups(sessionCookie);
+        PrivilegeGroup[] privilegeGroups = getUserPrivilegeGroups();
         PrivilegeGroup userPrivilegeGroup = null;
         if (privilegeGroups == null) {
             return null;
@@ -146,9 +155,8 @@ public class RSSManagerAdminServiceClient {
 
     }
 
-    public void deletePrivilegeGroup(String sessionCookie, int privilegeGroupId)
+    public void deletePrivilegeGroup(int privilegeGroupId)
             throws RSSAdminRSSDAOExceptionException, RemoteException {
-        AuthenticateStub.authenticateStub(sessionCookie, consoleAdminStub);
         if (log.isDebugEnabled()) {
             log.debug("privilege group id :" + privilegeGroupId);
         }
@@ -158,9 +166,8 @@ public class RSSManagerAdminServiceClient {
 
     }
 
-    public PrivilegeGroup[] getUserPrivilegeGroups(String sessionCookie)
+    public PrivilegeGroup[] getUserPrivilegeGroups()
             throws RSSAdminRSSDAOExceptionException, RemoteException {
-        AuthenticateStub.authenticateStub(sessionCookie, consoleAdminStub);
         PrivilegeGroup[] privilegeGroup;
         privilegeGroup = consoleAdminStub.getPrivilegeGroups();
 
@@ -169,10 +176,10 @@ public class RSSManagerAdminServiceClient {
     }
 
 
-    public DatabaseUserEntry getDatabaseUser(String sessionCookie, String userName,
+    public DatabaseUserEntry getDatabaseUser(String userName,
                                              int databaseInstanceId)
             throws RSSAdminRSSDAOExceptionException, RemoteException {
-        DatabaseUserEntry[] databaseUsers = getUsersByDatabaseInstanceId(sessionCookie, databaseInstanceId);
+        DatabaseUserEntry[] databaseUsers = getUsersByDatabaseInstanceId(databaseInstanceId);
         DatabaseUserEntry dbUser = null;
         if (databaseUsers == null) {
             return null;
@@ -190,18 +197,16 @@ public class RSSManagerAdminServiceClient {
         return dbUser;
     }
 
-    public DatabaseInstanceEntry getDatabaseInstanceById(String sessionCookie, int rssInstanceId,
+    public DatabaseInstanceEntry getDatabaseInstanceById(int rssInstanceId,
                                                          int databaseInstanceId)
             throws RSSAdminRSSDAOExceptionException, RemoteException {
-        AuthenticateStub.authenticateStub(sessionCookie, consoleAdminStub);
         DatabaseInstanceEntry databaseInstanceEntry;
         databaseInstanceEntry = consoleAdminStub.getDatabaseInstanceById(databaseInstanceId);
         return databaseInstanceEntry;
     }
 
-    public RSSInstanceEntry[] getRSSInstanceList(String sessionCookie)
+    public RSSInstanceEntry[] getRSSInstanceList()
             throws RSSAdminRSSDAOExceptionException, RemoteException {
-        AuthenticateStub.authenticateStub(sessionCookie, consoleAdminStub);
         RSSInstanceEntry[] rssInstance;
 
         rssInstance = consoleAdminStub.getRSSInstanceList();
@@ -210,9 +215,8 @@ public class RSSManagerAdminServiceClient {
         return rssInstance;
     }
 
-    public RSSInstance getRSSInstanceById(String sessionCookie, int rssInstanceId)
+    public RSSInstance getRSSInstanceById(int rssInstanceId)
             throws RSSAdminRSSDAOExceptionException, RemoteException {
-        AuthenticateStub.authenticateStub(sessionCookie, consoleAdminStub);
         RSSInstance rssInstance;
 
         rssInstance = consoleAdminStub.getRSSInstanceDataById(rssInstanceId);
@@ -221,9 +225,8 @@ public class RSSManagerAdminServiceClient {
         return rssInstance;
     }
 
-    public RSSInstanceEntry getRoundRobinAssignedRSSInstance(String sessionCookie)
+    public RSSInstanceEntry getRoundRobinAssignedRSSInstance()
             throws RSSAdminRSSDAOExceptionException, RemoteException {
-        AuthenticateStub.authenticateStub(sessionCookie, consoleAdminStub);
         RSSInstanceEntry rssInstance;
 
         rssInstance = consoleAdminStub.getRoundRobinAssignedRSSInstance();
@@ -232,10 +235,9 @@ public class RSSManagerAdminServiceClient {
         return rssInstance;
     }
 
-    public void createUser(String sessionCookie, String userName, String password,
+    public void createUser(String userName, String password,
                            int databaseInstanceId, int privilegeGroupId)
             throws RSSAdminRSSDAOExceptionException, RemoteException {
-        AuthenticateStub.authenticateStub(sessionCookie, consoleAdminStub);
         DatabaseUser user = new DatabaseUser();
         user.setUsername(userName);
         user.setPassword(password);
@@ -248,9 +250,8 @@ public class RSSManagerAdminServiceClient {
         log.info("User Created");
     }
 
-    public void deleteUser(String sessionCookie, int userId, int databaseInstanceId)
+    public void deleteUser(int userId, int databaseInstanceId)
             throws RSSAdminRSSDAOExceptionException, RemoteException {
-        AuthenticateStub.authenticateStub(sessionCookie, consoleAdminStub);
         if (log.isDebugEnabled()) {
             log.debug("UserId " + userId);
         }
@@ -260,10 +261,8 @@ public class RSSManagerAdminServiceClient {
 
     }
 
-    public DatabaseUserEntry[] getUsersByDatabaseInstanceId(String sessionCookie,
-                                                            int databaseInstanceId)
+    public DatabaseUserEntry[] getUsersByDatabaseInstanceId(int databaseInstanceId)
             throws RSSAdminRSSDAOExceptionException, RemoteException {
-        AuthenticateStub.authenticateStub(sessionCookie, consoleAdminStub);
         DatabaseUserEntry[] userList;
         if (log.isDebugEnabled()) {
             log.debug("databaseInstanceId " + databaseInstanceId);
@@ -275,10 +274,9 @@ public class RSSManagerAdminServiceClient {
         return userList;
     }
 
-    public String createCarbonDSFromDatabaseUserEntry(String sessionCookie, int databaseInstanceId,
+    public String createCarbonDSFromDatabaseUserEntry(int databaseInstanceId,
                                                       int dbUserId)
             throws RSSAdminRSSDAOExceptionException, RemoteException {
-        AuthenticateStub.authenticateStub(sessionCookie, consoleAdminStub);
         String carbonDataSource;
         if (log.isDebugEnabled()) {
             log.debug("databaseInstanceId " + databaseInstanceId);

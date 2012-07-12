@@ -37,14 +37,23 @@ public class JARServiceUploaderClient {
     private static final Log log = LogFactory.getLog(JARServiceUploaderClient.class);
 
     private JarServiceCreatorAdminStub jarServiceCreatorAdminStub;
+    private final String serviceName = "JarServiceCreatorAdmin";
 
-    public JARServiceUploaderClient(String backEndUrl) throws AxisFault {
-        String serviceName = "JarServiceCreatorAdmin";
+    public JARServiceUploaderClient(String backEndUrl, String sessionCookie) throws AxisFault {
+
         String endPoint = backEndUrl + serviceName;
         jarServiceCreatorAdminStub = new JarServiceCreatorAdminStub(endPoint);
+        AuthenticateStub.authenticateStub(sessionCookie, jarServiceCreatorAdminStub);
     }
 
-    public void uploadJARServiceFile(String sessionCookie, String serviceGroup,
+    public JARServiceUploaderClient(String backEndUrl, String userName, String password) throws AxisFault {
+
+        String endPoint = backEndUrl + serviceName;
+        jarServiceCreatorAdminStub = new JarServiceCreatorAdminStub(endPoint);
+        AuthenticateStub.authenticateStub(userName, password, jarServiceCreatorAdminStub);
+    }
+
+    public void uploadJARServiceFile(String serviceGroup,
                                      List<DataHandler> dhJarList, DataHandler dhWsdl)
             throws JarUploadExceptionException, RemoteException,
                    DuplicateServiceGroupExceptionException,
@@ -54,7 +63,7 @@ public class JARServiceUploaderClient {
         Resource resourceDataWsdl;
         UploadArtifactsResponse uploadArtifactsResponse;
 
-        AuthenticateStub.authenticateStub(sessionCookie, jarServiceCreatorAdminStub);
+
         Resource[] resourceDataArray = new Resource[dhJarList.size()];
 
         assert dhJarList.size() != 0;

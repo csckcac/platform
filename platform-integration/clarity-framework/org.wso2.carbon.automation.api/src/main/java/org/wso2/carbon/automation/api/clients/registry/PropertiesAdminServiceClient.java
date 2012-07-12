@@ -33,12 +33,20 @@ public class PropertiesAdminServiceClient {
     private static final Log log = LogFactory.getLog(PropertiesAdminServiceClient.class);
 
     private PropertiesAdminServiceStub propertiesAdminServiceStub;
+    private final String serviceName = "PropertiesAdminService";
 
     public PropertiesAdminServiceClient(String backendURL, String sessionCookie) throws AxisFault {
-        String serviceName = "PropertiesAdminService";
+
         String endPoint = backendURL + serviceName;
         propertiesAdminServiceStub = new PropertiesAdminServiceStub(endPoint);
         AuthenticateStub.authenticateStub(sessionCookie, propertiesAdminServiceStub);
+    }
+
+    public PropertiesAdminServiceClient(String backendURL, String userName, String password) throws AxisFault {
+
+        String endPoint = backendURL + serviceName;
+        propertiesAdminServiceStub = new PropertiesAdminServiceStub(endPoint);
+        AuthenticateStub.authenticateStub(userName, password, propertiesAdminServiceStub);
     }
 
     public void setRetentionProperties(String path, String mode, String fromDate, String toDate)

@@ -24,17 +24,17 @@ import org.apache.commons.logging.Log;
 import org.apache.commons.logging.LogFactory;
 import org.testng.Assert;
 import org.wso2.carbon.automation.api.clients.rssmanager.RSSManagerAdminServiceClient;
-import org.wso2.carbon.rssmanager.ui.stub.RSSAdminRSSDAOExceptionException;
-import org.wso2.carbon.rssmanager.ui.stub.types.DatabaseInstanceEntry;
-import org.wso2.carbon.rssmanager.ui.stub.types.DatabaseUserEntry;
-import org.wso2.carbon.rssmanager.ui.stub.types.PrivilegeGroup;
-import org.wso2.carbon.rssmanager.ui.stub.types.RSSInstanceEntry;
 import org.wso2.carbon.automation.core.utils.UserInfo;
 import org.wso2.carbon.automation.core.utils.UserListCsvReader;
 import org.wso2.carbon.automation.core.utils.dbutils.DatabaseFactory;
 import org.wso2.carbon.automation.core.utils.dbutils.DatabaseManager;
 import org.wso2.carbon.automation.core.utils.fileutils.FileManager;
 import org.wso2.carbon.automation.core.utils.frameworkutils.FrameworkProperties;
+import org.wso2.carbon.rssmanager.ui.stub.RSSAdminRSSDAOExceptionException;
+import org.wso2.carbon.rssmanager.ui.stub.types.DatabaseInstanceEntry;
+import org.wso2.carbon.rssmanager.ui.stub.types.DatabaseUserEntry;
+import org.wso2.carbon.rssmanager.ui.stub.types.PrivilegeGroup;
+import org.wso2.carbon.rssmanager.ui.stub.types.RSSInstanceEntry;
 
 import javax.activation.DataHandler;
 import javax.xml.namespace.QName;
@@ -140,7 +140,7 @@ public class SqlDataSourceUtil {
                    SQLException {
         databaseName = frameworkProperties.getDataSource().getDbName();
         if (frameworkProperties.getEnvironmentSettings().is_runningOnStratos()) {
-            rSSAdminConsoleService = new RSSManagerAdminServiceClient(dssBackEndUrl);
+            rSSAdminConsoleService = new RSSManagerAdminServiceClient(dssBackEndUrl, sessionCookie);
             databaseUser = frameworkProperties.getDataSource().getRssDbUser();
             databasePassword = frameworkProperties.getDataSource().getRssDbPassword();
             setPriConditions();
@@ -165,7 +165,7 @@ public class SqlDataSourceUtil {
         databaseName = dbName;
 
         if (frameworkProperties.getEnvironmentSettings().is_runningOnStratos()) {
-            rSSAdminConsoleService = new RSSManagerAdminServiceClient(dssBackEndUrl);
+            rSSAdminConsoleService = new RSSManagerAdminServiceClient(dssBackEndUrl, sessionCookie);
             databaseUser = dbUser;
             databasePassword = dbPassword;
             setPriConditions();
@@ -186,12 +186,12 @@ public class SqlDataSourceUtil {
     private void createDataBase() throws RSSAdminRSSDAOExceptionException, RemoteException {
         RSSInstanceEntry rssInstance;
 
-        rssInstance = rSSAdminConsoleService.getRoundRobinAssignedRSSInstance(sessionCookie);
+        rssInstance = rSSAdminConsoleService.getRoundRobinAssignedRSSInstance();
         rssInstanceId = rssInstance.getRssInstanceId();
         log.info("RSS Instance Id :" + rssInstanceId);
 
         //creating database
-        rSSAdminConsoleService.createDatabase(sessionCookie, databaseName, rssInstanceId);
+        rSSAdminConsoleService.createDatabase(databaseName, rssInstanceId);
         log.info("Database created");
         //set database full name
         databaseName = databaseName + "_" + userInfo.getDomain().replace(".", "_");
@@ -200,7 +200,7 @@ public class SqlDataSourceUtil {
         jdbcUrl = rssInstance.getServerUrl() + "/" + databaseName;
         log.info("JDBC URL :" + jdbcUrl);
 
-        dbInstanceId = rSSAdminConsoleService.getDatabaseInstance(sessionCookie, databaseName).getDbInstanceId();
+        dbInstanceId = rSSAdminConsoleService.getDatabaseInstance(databaseName).getDbInstanceId();
         log.debug("Database instance id :" + dbInstanceId);
 
     }
@@ -225,8 +225,8 @@ public class SqlDataSourceUtil {
     }
 
     private void createPrivilegeGroup() throws RSSAdminRSSDAOExceptionException, RemoteException {
-        rSSAdminConsoleService.createPrivilegeGroup(sessionCookie, userPrivilegeGroup);
-        userPrivilegeGroupId = rSSAdminConsoleService.getPrivilegeGroup(sessionCookie, userPrivilegeGroup).getPrivGroupId();
+        rSSAdminConsoleService.createPrivilegeGroup(userPrivilegeGroup);
+        userPrivilegeGroupId = rSSAdminConsoleService.getPrivilegeGroup(userPrivilegeGroup).getPrivGroupId();
         log.info("privilege Group Created");
         log.debug("Privilege Group Id :" + userPrivilegeGroupId);
         Assert.assertNotSame(-1, userPrivilegeGroupId, "Privilege Group Not Found");
@@ -234,10 +234,10 @@ public class SqlDataSourceUtil {
 
     private void createUser() throws RSSAdminRSSDAOExceptionException, RemoteException {
         DatabaseUserEntry dbUser;
-        rSSAdminConsoleService.createUser(sessionCookie, databaseUser, databasePassword, dbInstanceId, userPrivilegeGroupId);
+        rSSAdminConsoleService.createUser(databaseUser, databasePassword, dbInstanceId, userPrivilegeGroupId);
         log.info("Database User Created");
 
-        dbUser = rSSAdminConsoleService.getDatabaseUser(sessionCookie, databaseUser, dbInstanceId);
+        dbUser = rSSAdminConsoleService.getDatabaseUser(databaseUser, dbInstanceId);
         databaseUserId = dbUser.getUserId();
         log.debug("Database UserId :" + databaseUserId);
 
@@ -255,27 +255,27 @@ public class SqlDataSourceUtil {
 
         log.info("Setting pre conditions");
 
-        dbInstance = rSSAdminConsoleService.getDatabaseInstance(sessionCookie, databaseName + "_" + userInfo.getDomain().replace(".", "_"));
+        dbInstance = rSSAdminConsoleService.getDatabaseInstance(databaseName + "_" + userInfo.getDomain().replace(".", "_"));
         if (dbInstance != null) {
             log.info("Database name already in server");
             userEntry =
-                    rSSAdminConsoleService.getDatabaseUser(sessionCookie, rSSAdminConsoleService.getFullyQualifiedUsername(databaseUser, userInfo.getDomain()),
+                    rSSAdminConsoleService.getDatabaseUser(rSSAdminConsoleService.getFullyQualifiedUsername(databaseUser, userInfo.getDomain()),
                                                            dbInstance.getDbInstanceId());
             if (userEntry != null) {
 
                 log.info("User already in Database. deleting user");
-                rSSAdminConsoleService.deleteUser(sessionCookie, userEntry.getUserId(), dbInstance.getDbInstanceId());
+                rSSAdminConsoleService.deleteUser(userEntry.getUserId(), dbInstance.getDbInstanceId());
                 log.info("User Deleted");
             }
             log.info("Dropping database");
-            rSSAdminConsoleService.dropDatabase(sessionCookie, dbInstance.getDbInstanceId());
+            rSSAdminConsoleService.dropDatabase(dbInstance.getDbInstanceId());
             log.info("database Dropped");
         }
 
-        privGroup = rSSAdminConsoleService.getPrivilegeGroup(sessionCookie, userPrivilegeGroup);
+        privGroup = rSSAdminConsoleService.getPrivilegeGroup(userPrivilegeGroup);
         if (privGroup != null) {
             log.info("Privilege Group name already in server");
-            rSSAdminConsoleService.deletePrivilegeGroup(sessionCookie, privGroup.getPrivGroupId());
+            rSSAdminConsoleService.deletePrivilegeGroup(privGroup.getPrivGroupId());
             log.info("Privilege Group Deleted");
         }
         log.info("pre conditions created");

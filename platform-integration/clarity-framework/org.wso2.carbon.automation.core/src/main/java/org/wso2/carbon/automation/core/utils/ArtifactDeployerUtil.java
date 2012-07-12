@@ -114,8 +114,8 @@ public class ArtifactDeployerUtil {
                                 Artifact artifact) throws RemoteException {
         DataHandler dh = new DataHandler(url);
         CarbonAppUploaderClient adminServiceCarbonAppUploader =
-                new CarbonAppUploaderClient(hostName);
-        adminServiceCarbonAppUploader.uploadCarbonAppArtifact(sessionCookie, artifact.getArtifactName(), dh);
+                new CarbonAppUploaderClient(hostName, sessionCookie);
+        adminServiceCarbonAppUploader.uploadCarbonAppArtifact(artifact.getArtifactName(), dh);
     }
 
     public String login(String userName, String password, String hostName)
@@ -126,8 +126,8 @@ public class ArtifactDeployerUtil {
 
     public void warFileUploder(String sessionCookie, String backendURL, String filePath)
             throws RemoteException {
-        WebAppAdminClient AdminServiceWebAppAdmin = new WebAppAdminClient(backendURL);
-        AdminServiceWebAppAdmin.warFileUplaoder(sessionCookie, filePath);
+        WebAppAdminClient AdminServiceWebAppAdmin = new WebAppAdminClient(backendURL, sessionCookie);
+        AdminServiceWebAppAdmin.warFileUplaoder(filePath);
     }
 
     public void aarFileUploader(String sessionCookie, String backEndUrl, String artifactName,
@@ -150,8 +150,8 @@ public class ArtifactDeployerUtil {
             FileManipulator.copyFileToDir(artifactFile, axisServiceRepoFile);
         } else {
             AARServiceUploaderClient adminServiceAARServiceUploader =
-                    new AARServiceUploaderClient(backEndUrl);
-            adminServiceAARServiceUploader.uploadAARFile(sessionCookie, artifactName, filePath, "");
+                    new AARServiceUploaderClient(backEndUrl, sessionCookie);
+            adminServiceAARServiceUploader.uploadAARFile(artifactName, filePath, "");
         }
     }
 
@@ -168,7 +168,7 @@ public class ArtifactDeployerUtil {
 
         String serviceGroupName = getJarServiceGroup(artifact.getArtifactName());
         JARServiceUploaderClient jarServiceUploader =
-                new JARServiceUploaderClient(backEndUrl);
+                new JARServiceUploaderClient(backEndUrl, sessionCookie);
         List<DataHandler> dhJarList = new ArrayList<DataHandler>();
         List<ArtifactDependency> artifactDependencyList = artifact.getDependencyArtifactList();
         List<ArtifactAssociation> artifactAssociationList = artifact.getAssociationList();
@@ -205,7 +205,7 @@ public class ArtifactDeployerUtil {
                 }
             }
         }
-        jarServiceUploader.uploadJARServiceFile(sessionCookie, serviceGroupName, dhJarList, wsdlDataHandler);
+        jarServiceUploader.uploadJARServiceFile(serviceGroupName, dhJarList, wsdlDataHandler);
     }
 
     public void brsFileUploader(String sessionCookie, String artifactName, String artifactLocation,
@@ -213,8 +213,8 @@ public class ArtifactDeployerUtil {
                                                           ExceptionException {
         URL artifactURL = new URL("file:///" + artifactLocation);
         DataHandler brsdh = new DataHandler(artifactURL);
-        RuleServiceFileUploadAdminClient brsUploader = new RuleServiceFileUploadAdminClient(backendURL);
-        brsUploader.uploadRuleFile(sessionCookie, artifactName, brsdh);
+        RuleServiceFileUploadAdminClient brsUploader = new RuleServiceFileUploadAdminClient(backendURL, sessionCookie);
+        brsUploader.uploadRuleFile(artifactName, brsdh);
     }
 
     public void javaScriptServiceUploader(String sessionCookie, String artifactName,
@@ -223,17 +223,16 @@ public class ArtifactDeployerUtil {
                    org.wso2.carbon.mashup.jsservices.stub.fileupload.ExceptionException {
         URL artifactURL = new URL("file:///" + artifactLocation);
         DataHandler msDataHandler = new DataHandler(artifactURL);
-        MashupFileUploaderClient jsUploader = new MashupFileUploaderClient(backendURL);
-        jsUploader.uploadMashUpFile(sessionCookie, artifactName, msDataHandler);
+        MashupFileUploaderClient jsUploader = new MashupFileUploaderClient(backendURL, sessionCookie);
+        jsUploader.uploadMashUpFile(artifactName, msDataHandler);
     }
 
 
     public void bpelFileUploader(String sessionCookie, String backEndUrl, String artifactLocation,
                                  String artifactName)
             throws InterruptedException, RemoteException, PackageManagementException {
-        BpelUploaderClient bpelUploader = new BpelUploaderClient(backEndUrl, ProductConstant.SYSTEM_TEST_RESOURCE_LOCATION);
-        bpelUploader.deployBPEL(artifactName.substring(0, artifactName.indexOf(".")), artifactLocation,
-                                sessionCookie);
+        BpelUploaderClient bpelUploader = new BpelUploaderClient(backEndUrl, ProductConstant.SYSTEM_TEST_RESOURCE_LOCATION, sessionCookie);
+        bpelUploader.deployBPEL(artifactName.substring(0, artifactName.indexOf(".")), artifactLocation);
     }
 
     public void dbsFileUploader(String sessionCookie, String backEndUrl, Artifact artifact,
@@ -247,7 +246,7 @@ public class ArtifactDeployerUtil {
         List<File> sqlFileLis = null;
         DataHandler dbs;
         DataServiceFileUploaderClient adminServiceDataServiceFileUploader =
-                new DataServiceFileUploaderClient(backEndUrl);
+                new DataServiceFileUploaderClient(backEndUrl, sessionCookie);
 
         dbsFilePath = artifactLocation + File.separator + "dbs" + File.separator +
                       getPath(artifact.getArtifactLocation()) + File.separator + artifact.getArtifactName();
@@ -263,9 +262,8 @@ public class ArtifactDeployerUtil {
                     sqlFileLis.add(new File(dependencyFilePath));
                 } else {
                     ResourceAdminServiceClient adminServiceResourceAdmin =
-                            new ResourceAdminServiceClient(backEndUrl);
-                    if (!adminServiceResourceAdmin.addResource(sessionCookie,
-                                                               "/_system/governance/automation/resources/"
+                            new ResourceAdminServiceClient(backEndUrl, sessionCookie);
+                    if (!adminServiceResourceAdmin.addResource("/_system/governance/automation/resources/"
                                                                + dependency.getDepArtifactName(),
                                                                getMediaType(dependency.getDepArtifactType()), "",
                                                                new DataHandler(new URL("file://" + dependencyFilePath)))) {
@@ -282,7 +280,7 @@ public class ArtifactDeployerUtil {
         } else {
             dbs = new DataHandler(new URL("file://" + dbsFilePath));
         }
-        adminServiceDataServiceFileUploader.uploadDataServiceFile(sessionCookie, artifact.getArtifactName(), dbs);
+        adminServiceDataServiceFileUploader.uploadDataServiceFile(artifact.getArtifactName(), dbs);
     }
 
     public void springServiceUpload(String sessionCookie, Artifact artifact,
@@ -644,13 +642,13 @@ public class ArtifactDeployerUtil {
             for (String tasksFile : tasksFiles) {
                 log.info("Deploying Tasks configuration in " + tasksFile);
                 TaskAdminClient taskAdmin =
-                        new TaskAdminClient(backendURL);
+                        new TaskAdminClient(backendURL, sessionCookie);
                 URL endpoint = new URL("file:///" + scenarioConfigDir + File.separator +
                                        TASKS_DIR + File.separator + tasksFile);
                 DataHandler taskDh = new DataHandler(endpoint);
 
 
-                taskAdmin.addTask(sessionCookie, taskDh);
+                taskAdmin.addTask(taskDh);
             }
         }
     }
@@ -684,12 +682,12 @@ public class ArtifactDeployerUtil {
                     (new File(scenarioConfigDir + File.separator + PROXY_SERVICES_DIR));
             for (String aProxyServiceFiles : proxyServiceFiles) {
                 log.info("Deploying proxy configuration in " + aProxyServiceFiles);
-                ProxyServiceAdminClient proxyAdmin = new ProxyServiceAdminClient(backendURL);
+                ProxyServiceAdminClient proxyAdmin = new ProxyServiceAdminClient(backendURL, sessionCookie);
                 URL proxy = new URL("file:///" + scenarioConfigDir + File.separator +
                                     PROXY_SERVICES_DIR + File.separator + aProxyServiceFiles);
                 DataHandler proxyDh = new DataHandler(proxy);
                 EsbEndpointSetter endpointSetter = new EsbEndpointSetter();
-                proxyAdmin.addProxyService(sessionCookie, endpointSetter.setEndpointURL(proxyDh));
+                proxyAdmin.addProxyService(endpointSetter.setEndpointURL(proxyDh));
             }
         }
     }
@@ -705,7 +703,7 @@ public class ArtifactDeployerUtil {
 
             for (String aSequenceConfigFiles : sequenceConfigFiles) {
                 log.info("Deploying sequence in " + aSequenceConfigFiles);
-                SequenceAdminServiceClient adminServiceSequenceAdmin = new SequenceAdminServiceClient(backendURL);
+                SequenceAdminServiceClient adminServiceSequenceAdmin = new SequenceAdminServiceClient(backendURL, sessionCookie);
                 URL sequence = new URL("file:///" + scenarioConfigDir + File.separator +
                                        SEQUENCES_DIR + File.separator + aSequenceConfigFiles);
                 String sequenceConfig = convertXMLFileToString(scenarioConfigDir + File.separator +
@@ -714,14 +712,14 @@ public class ArtifactDeployerUtil {
                 DataHandler sequenceDh = new DataHandler(sequence);
 
                 if (sequenceConfig.contains("name=\"main\"")) {
-                    adminServiceSequenceAdmin.updateDynamicSequence(sessionCookie, "main",
+                    adminServiceSequenceAdmin.updateDynamicSequence("main",
                                                                     AXIOMUtil.stringToOM(sequenceConfig));
                 }
                 if (sequenceConfig.contains("name=\"fault\"")) {
-                    adminServiceSequenceAdmin.updateDynamicSequence(sessionCookie, "fault",
+                    adminServiceSequenceAdmin.updateDynamicSequence("fault",
                                                                     AXIOMUtil.stringToOM(sequenceConfig));
                 }
-                adminServiceSequenceAdmin.addSequence(sessionCookie, sequenceDh);
+                adminServiceSequenceAdmin.addSequence(sequenceDh);
             }
         }
     }

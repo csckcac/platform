@@ -32,16 +32,26 @@ public class RuleServiceFileUploadAdminClient {
     private static final Log log = LogFactory.getLog(RuleServiceFileUploadAdminClient.class);
 
     private RuleServiceFileUploadAdminStub ruleServiceFileUploadAdminStub;
+    private final String serviceName = "RuleServiceFileUploadAdmin";
 
-    public RuleServiceFileUploadAdminClient(String backEndUrl) throws AxisFault {
-        String serviceName = "RuleServiceFileUploadAdmin";
+    public RuleServiceFileUploadAdminClient(String backEndUrl, String sessionCookie)
+            throws AxisFault {
+
         String endPoint = backEndUrl + serviceName;
         ruleServiceFileUploadAdminStub = new RuleServiceFileUploadAdminStub(endPoint);
+        AuthenticateStub.authenticateStub(sessionCookie, ruleServiceFileUploadAdminStub);
     }
 
-    public void uploadRuleFile(String sessionCookie, String fileName, DataHandler dh)
+    public RuleServiceFileUploadAdminClient(String backEndUrl, String userName, String password)
+            throws AxisFault {
+
+        String endPoint = backEndUrl + serviceName;
+        ruleServiceFileUploadAdminStub = new RuleServiceFileUploadAdminStub(endPoint);
+        AuthenticateStub.authenticateStub(userName, password, ruleServiceFileUploadAdminStub);
+    }
+
+    public void uploadRuleFile(String fileName, DataHandler dh)
             throws ExceptionException, RemoteException {
-        AuthenticateStub.authenticateStub(sessionCookie, ruleServiceFileUploadAdminStub);
 
         ruleServiceFileUploadAdminStub.uploadService(fileName, dh);
         log.info("Artifact uploaded");

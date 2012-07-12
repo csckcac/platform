@@ -35,16 +35,18 @@ import java.rmi.RemoteException;
 public class BpelUploaderClient {
     String ServiceEndPoint = null;
     String resourcePath = null;
+    String sessionCookie = null;
     private static final Log log = LogFactory.getLog(BpelUploaderClient.class);
     BPELPackageManagementServiceStub bpelPackageManagementServiceStub;
 
-    public BpelUploaderClient(String serviceEndPoint, String resourceLocation) {
+    public BpelUploaderClient(String serviceEndPoint, String resourceLocation, String sessionCookie) {
         this.ServiceEndPoint = serviceEndPoint;
         this.resourcePath = resourceLocation;
+        this.sessionCookie = sessionCookie;
     }
 
 
-    public boolean deployBPEL(String packageName, String sessionCookie)
+    public boolean deployBPEL(String packageName)
             throws RemoteException, MalformedURLException, InterruptedException,
                    PackageManagementException {
 
@@ -60,7 +62,7 @@ public class BpelUploaderClient {
         return success;
     }
 
-    public boolean deployBPEL(String packageName, String dirPath, String sessionCookie)
+    public boolean deployBPEL(String packageName, String dirPath)
             throws RemoteException, InterruptedException, PackageManagementException {
 
         final String uploaderServiceURL = ServiceEndPoint + "BPELUploader";

@@ -185,8 +185,8 @@ public class SpringServiceMaker {
 
         try {
             SpringServiceUploaderClient uploaderClient =
-                    new SpringServiceUploaderClient(backendURL);
-            uploaderClient.uploadSpringServiceFile(sessionCookie, archiveFileName + ".aar", dataHandler);
+                    new SpringServiceUploaderClient(backendURL, sessionCookie);
+            uploaderClient.uploadSpringServiceFile(archiveFileName + ".aar", dataHandler);
         } catch (Exception e) {
             String msg = "spring.unable.to.upload";
             handleException(msg, e);

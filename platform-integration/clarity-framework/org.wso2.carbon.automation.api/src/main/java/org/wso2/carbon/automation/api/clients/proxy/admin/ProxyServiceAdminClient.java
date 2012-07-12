@@ -29,11 +29,11 @@ import org.apache.commons.logging.LogFactory;
 import org.apache.synapse.config.xml.XMLConfigConstants;
 import org.apache.synapse.core.axis2.ProxyService;
 import org.testng.Assert;
+import org.wso2.carbon.automation.api.clients.utils.AuthenticateStub;
 import org.wso2.carbon.proxyadmin.stub.ProxyServiceAdminProxyAdminException;
 import org.wso2.carbon.proxyadmin.stub.ProxyServiceAdminStub;
 import org.wso2.carbon.proxyadmin.stub.types.carbon.Entry;
 import org.wso2.carbon.proxyadmin.stub.types.carbon.ProxyData;
-import org.wso2.carbon.automation.api.clients.utils.AuthenticateStub;
 
 import javax.activation.DataHandler;
 import javax.xml.namespace.QName;
@@ -56,6 +56,7 @@ public class ProxyServiceAdminClient {
     private static final Log log = LogFactory.getLog(ProxyServiceAdminClient.class);
 
     private ProxyServiceAdminStub proxyServiceAdminStub;
+    private final String serviceName = "ProxyServiceAdmin";
 
     /**
      * Authenticate stub
@@ -63,16 +64,24 @@ public class ProxyServiceAdminClient {
      * @param backEndUrl server backend URL
      * @throws org.apache.axis2.AxisFault
      */
-    public ProxyServiceAdminClient(String backEndUrl) throws AxisFault {
-        String serviceName = "ProxyServiceAdmin";
+    public ProxyServiceAdminClient(String backEndUrl, String sessionCookie) throws AxisFault {
+
         String endPoint = backEndUrl + serviceName;
         proxyServiceAdminStub = new ProxyServiceAdminStub(endPoint);
+        AuthenticateStub.authenticateStub(sessionCookie, proxyServiceAdminStub);
+    }
+
+    public ProxyServiceAdminClient(String backEndUrl, String userName, String password)
+            throws AxisFault {
+
+        String endPoint = backEndUrl + serviceName;
+        proxyServiceAdminStub = new ProxyServiceAdminStub(endPoint);
+        AuthenticateStub.authenticateStub(userName, password, proxyServiceAdminStub);
     }
 
     /**
      * Adding proxy service
      *
-     * @param sessionCookie   Authenticated session cookie
      * @param proxyName       Name of the proxy service
      * @param wsdlURI         WSDL URI
      * @param serviceEndPoint Service endpoint location
@@ -80,10 +89,10 @@ public class ProxyServiceAdminClient {
      *                         proxyAdmin Service exception
      * @throws RemoteException Remote Exception
      */
-    public void addProxyService(String sessionCookie, String proxyName, String wsdlURI,
+    public void addProxyService(String proxyName, String wsdlURI,
                                 String serviceEndPoint)
             throws ProxyServiceAdminProxyAdminException, RemoteException {
-        AuthenticateStub.authenticateStub(sessionCookie, proxyServiceAdminStub);
+
 
         String[] transport = {"http", "https"};
         ProxyData data = new ProxyData();
@@ -101,18 +110,16 @@ public class ProxyServiceAdminClient {
     /**
      * Adding proxy service
      *
-     * @param sessionCookie Authenticated session cookie
-     * @param dh            Data Handler
+     * @param dh Data Handler
      * @throws ProxyServiceAdminProxyAdminException
      *                         Proxy service admin exception
      * @throws RemoteException Remote exception
      * @throws javax.xml.stream.XMLStreamException
      *                         Exception
      */
-    public void addProxyService(String sessionCookie, DataHandler dh)
+    public void addProxyService(DataHandler dh)
             throws ProxyServiceAdminProxyAdminException, IOException, XMLStreamException {
 
-        AuthenticateStub.authenticateStub(sessionCookie, proxyServiceAdminStub);
         XMLStreamReader parser = XMLInputFactory.newInstance().createXMLStreamReader(dh.getInputStream());
         //create the builder
         StAXOMBuilder builder = new StAXOMBuilder(parser);
@@ -125,17 +132,15 @@ public class ProxyServiceAdminClient {
     }
 
     /**
-     * @param sessionCookie
      * @param data
      * @throws ProxyServiceAdminProxyAdminException
      *
      * @throws IOException
      * @throws XMLStreamException
      */
-    public void addProxyService(String sessionCookie, OMElement data)
+    public void addProxyService(OMElement data)
             throws ProxyServiceAdminProxyAdminException, IOException, XMLStreamException {
 
-        AuthenticateStub.authenticateStub(sessionCookie, proxyServiceAdminStub);
         ProxyData proxyData = getProxyData(data.toString());
         proxyServiceAdminStub.addProxy(proxyData);
         log.info("Proxy Added");
@@ -144,16 +149,14 @@ public class ProxyServiceAdminClient {
     /**
      * Delete proxy service
      *
-     * @param sessionCookie authenticated session cookie
-     * @param proxyName     Name of the proxy service to be deleted
+     * @param proxyName Name of the proxy service to be deleted
      * @throws ProxyServiceAdminProxyAdminException
      *                         proxy admin exception
      * @throws RemoteException remote exception
      */
-    public void deleteProxy(String sessionCookie, String proxyName)
+    public void deleteProxy(String proxyName)
             throws ProxyServiceAdminProxyAdminException, RemoteException {
         AuthenticateStub auth = new AuthenticateStub();
-        auth.authenticateStub(sessionCookie, proxyServiceAdminStub);
 
         proxyServiceAdminStub.deleteProxyService(proxyName);
         log.info("Proxy Deleted");
@@ -162,16 +165,13 @@ public class ProxyServiceAdminClient {
     /**
      * Stop proxy service
      *
-     * @param sessionCookie authenticated session cookie
-     * @param proxyName     name of the proxy
+     * @param proxyName name of the proxy
      * @throws ProxyServiceAdminProxyAdminException
      *                         proxy admin exception
      * @throws RemoteException remote exception
      */
-    public void stopProxyService(String sessionCookie, String proxyName)
+    public void stopProxyService(String proxyName)
             throws ProxyServiceAdminProxyAdminException, RemoteException {
-        AuthenticateStub auth = new AuthenticateStub();
-        auth.authenticateStub(sessionCookie, proxyServiceAdminStub);
 
         proxyServiceAdminStub.stopProxyService(proxyName);
         log.info("Proxy Deactivated");
@@ -180,16 +180,13 @@ public class ProxyServiceAdminClient {
     /**
      * Redeploy proxy service
      *
-     * @param sessionCookie authenticated session cookie
-     * @param proxyName     name of the proxy
+     * @param proxyName name of the proxy
      * @throws ProxyServiceAdminProxyAdminException
      *                         proxy admin exception
      * @throws RemoteException Remote Exception
      */
-    public void reloadProxyService(String sessionCookie, String proxyName)
+    public void reloadProxyService(String proxyName)
             throws ProxyServiceAdminProxyAdminException, RemoteException {
-        AuthenticateStub.authenticateStub(sessionCookie, proxyServiceAdminStub);
-
         proxyServiceAdminStub.redeployProxyService(proxyName);
         log.info("Proxy Redeployed");
     }
@@ -198,17 +195,14 @@ public class ProxyServiceAdminClient {
     /**
      * Get proxy service details
      *
-     * @param sessionCookie authenticated session cookie
-     * @param proxyName     proxy service name
+     * @param proxyName proxy service name
      * @return proxy data
      * @throws ProxyServiceAdminProxyAdminException
      *                         Admin stub exception
      * @throws RemoteException Remote Exception
      */
-    public ProxyData getProxyDetails(String sessionCookie, String proxyName)
+    public ProxyData getProxyDetails(String proxyName)
             throws ProxyServiceAdminProxyAdminException, RemoteException {
-        AuthenticateStub.authenticateStub(sessionCookie, proxyServiceAdminStub);
-
         return proxyServiceAdminStub.getProxy(proxyName);
     }
 

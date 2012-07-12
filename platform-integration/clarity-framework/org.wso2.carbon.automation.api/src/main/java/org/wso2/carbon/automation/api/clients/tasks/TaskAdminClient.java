@@ -38,16 +38,22 @@ public class TaskAdminClient {
 
     private final String serviceName = "TaskAdmin";
     private TaskAdminStub taskAdminStub;
-    private String endPoint;
 
-    public TaskAdminClient(String backEndUrl) throws AxisFault {
-        this.endPoint = backEndUrl + serviceName;
+    public TaskAdminClient(String backEndUrl, String sessionCookie) throws AxisFault {
+        String endPoint = backEndUrl + serviceName;
         taskAdminStub = new TaskAdminStub(endPoint);
+        AuthenticateStub.authenticateStub(sessionCookie, taskAdminStub);
     }
 
-    public void addTask(String sessionCookie, DataHandler dh)
+    public TaskAdminClient(String backEndUrl, String userName, String password) throws AxisFault {
+        String endPoint = backEndUrl + serviceName;
+        taskAdminStub = new TaskAdminStub(endPoint);
+        AuthenticateStub.authenticateStub(userName, password, taskAdminStub);
+    }
+
+    public void addTask(DataHandler dh)
             throws TaskManagementException, IOException, XMLStreamException {
-        AuthenticateStub.authenticateStub(sessionCookie, taskAdminStub);
+
         XMLStreamReader parser = XMLInputFactory.newInstance().createXMLStreamReader(dh.getInputStream());
         //create the builder
         StAXOMBuilder builder = new StAXOMBuilder(parser);
@@ -56,16 +62,14 @@ public class TaskAdminClient {
         taskAdminStub.addTaskDescription(scheduleTaskElem);
     }
 
-    public void deleteTask(String sessionCookie, String name, String group)
+    public void deleteTask(String name, String group)
             throws TaskManagementException, RemoteException {
-        AuthenticateStub.authenticateStub(sessionCookie, taskAdminStub);
         taskAdminStub.deleteTaskDescription(name, group);
 
     }
 
-    public OMElement getScheduleTask(String sessionCookie, String name, String group)
+    public OMElement getScheduleTask(String name, String group)
             throws TaskManagementException, RemoteException {
-        AuthenticateStub.authenticateStub(sessionCookie, taskAdminStub);
         return taskAdminStub.getTaskDescription(name, group);
 
     }

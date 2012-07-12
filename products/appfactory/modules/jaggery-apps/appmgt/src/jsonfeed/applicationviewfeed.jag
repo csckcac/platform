@@ -46,8 +46,8 @@
 
  		print(stringify(outerArray));
     }catch(e){
-    	log.error("applicationList  #################### " + e.toString());
-    	print(e.toString());
+    	outerArray.aaData = contentArray;
+ 		print(stringify(outerArray));
     }
 %>
 

@@ -44,7 +44,8 @@
 
  		print(stringify(outerArray));
     }catch(e){
-    	print(e.toString());
+    	outerArray.aaData = contentArray;
+ 		print(stringify(outerArray));
     }
 %>
 

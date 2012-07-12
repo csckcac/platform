@@ -76,7 +76,12 @@
                                 </li-->
                             </ul>
                         </li>
-                        <li><a href="#Managing-BPEL-processes">Managing BPEL processes</a></li>
+                        <li><a href="#Managing-BPEL-processes">Managing BPEL processes</a>
+                            <ul>
+                                <li><a href="#DeploymentDescriptorEditor">Deployment Descriptor Editor</a></li>
+                            </ul>
+                        </li>
+
                         <li><a href="#Managing-BPEL-process-instances">Managing BPEL process instances</a></li>
                         <li><a href="#QoS-for-BPEL-processes">QoS for BPEL processes</a></li>
                         <li><a href="#Securing-BPEL-processes">Securing BPEL processes</a></li>
@@ -338,6 +343,21 @@
                     <li>Process Definition - BPEL code for the process</li>
                     <li>Process Visualization - Graphical workflow of the process</li>
                 </ul>
+        <h4 id="DeploymentDescriptorEditor">Deployment Descriptor Editor</h4>
+
+
+        <p>You can go to Deployment Descriptor Editor by clicking the link
+            <b>View or Edit Deployment Descriptor</b>
+            on any of the detailed process description pages.
+        </p>
+          <p>This editor allows BPEL process administrators to configure process/instance/scope event
+            generation, instance cleanup at run-time. Also it provides the other configuration
+            details like MEX interceptors, process properties, provided services (inbound interfaces
+            and invoked partner services (outbound interfaces). This will modify the runtime process
+            configuration without affecting the uploaded deployment artifact.
+        </p>
+        <p><img src="images/bpel-user-guide/DeployEditor.png"
+             alt="Link to Deployment Descriptor Editor"/></p>
 
                 <!-- Managing BPEL process instances  -->
                 <p><br /></p>
@@ -387,9 +407,9 @@
 
                 <br />
                 <h5>QoS for the partner links which interact with the BPEL process</h5>
-                <p>The partner links can be QoS configured via <b>Process Information</b> page (See Figure 9) for the deployed process under <b>Manage/Processes/List</b> in the navigator. You can select a partner link from <b>Partner Links</b> drop down list and configure QoS for each of them specifically.</p>
+                <p>The partner links can be QoS configured via <b>QoS Section</b> of the <b>Process Information</b> page (See Figure 9) for the deployed process under <b>Manage/Processes/List</b> in the navigator. You can select a partner link from <b>Partner Links</b> drop down list and configure QoS for each of them specifically.</p>
                 <br />
-                <p><img src="images/bpel-user-guide/process_information.png" alt="Process Information Page"/><br/>Figure 9<br/></p>
+                <p><img src="images/bpel-user-guide/QoS.png" alt="QoS Section"/><br/>Figure 9<br/></p>
                 <p>Configuring security for partner links is elaborated <a href="#Securing-partner-links">here</a>.</p>
 
 
@@ -408,8 +428,8 @@
                 <p><img src="images/bpel-user-guide/service_dashboard.png" alt="Service dashboard"/><br/>Figure 10</p>
                 <br />
                 <h4 id="Securing-partner-links">Securing for the partner links which interact with the BPEL process</h4>
-                <p>The partner links' security can be configured via <b>Process Information</b> page (See Figure 11) for the deployed process under <b>Manage/Processes/List</b> in the navigator. You can select a partner link from <b>Partner Links</b> drop down list and configure security for each of them specifically. Refer "<a href="../securityconfig/docs/userguide.html">Adding Security Features</a>" for more information on available security features.<br /></p>
-                <p><img src="images/bpel-user-guide/process_information.png" alt="Process Information Page"/><br/>Figure 11<br /></p>
+                <p>The partner links' security can be configured via <b>QoS Section</b> of the <b>Process Information</b> page (See Figure 11) for the deployed process under <b>Manage/Processes/List</b> in the navigator. You can select a partner link from <b>Partner Links</b> drop down list and configure security for each of them specifically. Refer "<a href="../securityconfig/docs/userguide.html">Adding Security Features</a>" for more information on available security features.<br /></p>
+                <p><img src="images/bpel-user-guide/QoS.png" alt="QoS Section"/><br/>Figure 11<br /></p>
 
 
                 <!-- Invoking secured partner services  -->

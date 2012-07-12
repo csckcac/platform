@@ -367,7 +367,7 @@
         <juddi.wso2.version>3.0.3.wso2v2</juddi.wso2.version>
         <xerces.wso2.version>2.8.1.wso2v2</xerces.wso2.version>
         <rhino.js.wso2.version>1.7.0.R1-wso2v2</rhino.js.wso2.version>
-        <xml.api.wso2.version>1.3.04.wso2v1</xml.api.wso2.version>
+        <xml.api.wso2.version>1.3.04.wso2v2</xml.api.wso2.version>
         <xmlschema.wso2.version>1.4.7.wso2v1</xmlschema.wso2.version>
         <wsdl.validator.wso2.version>1.2.0-SNAPSHOT.wso2v1</wsdl.validator.wso2.version>
         <commons.digester.version>1.8.1</commons.digester.version>

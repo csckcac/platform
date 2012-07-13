@@ -80,10 +80,6 @@ public class AtomFeedTestCase {
 
 
         registry = new RegistryProviderUtil().getRemoteRegistry(userId, ProductConstant.GREG_SERVER_NAME);
-//        InitializeAPI initializeAPI = new InitializeAPI();
-//        registry = initializeAPI.getRegistry(FrameworkSettings.CARBON_HOME, FrameworkSettings.HTTPS_PORT,
-//                FrameworkSettings.HTTP_PORT);
-
         populateData();
     }
 

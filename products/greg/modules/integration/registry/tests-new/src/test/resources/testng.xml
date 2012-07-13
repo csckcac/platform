@@ -10,6 +10,7 @@
     </listeners>
     <test name="Test - GREG">
         <classes>
+            <class name="org.wso2.carbon.registry.resource.test.ResourceTestCase"/>
             <class name="org.wso2.carbon.registry.app.test.AtomFeedTestCase"/>
         </classes>
     </test>

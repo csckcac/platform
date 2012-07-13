@@ -383,6 +383,12 @@
             <fileMode>644</fileMode>
         </file>
         <file>
+            <source>../samples/jaxr/README.txt</source>
+            <outputDirectory>${pom.artifactId}-${build.version}/samples/jaxr/</outputDirectory>
+            <filtered>true</filtered>
+            <fileMode>644</fileMode>
+        </file>
+        <file>
             <source>../../release-notes.html</source>
             <outputDirectory>${pom.artifactId}-${build.version}/</outputDirectory>
             <filtered>true</filtered>

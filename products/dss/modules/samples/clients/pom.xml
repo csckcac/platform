@@ -136,6 +136,14 @@
                                       <classpath refid="maven.compile.classpath"/>
                                       <classpath refid="maven.runtime.classpath"/>
                                 </java>
+                                <java classname="org.apache.axis2.wsdl.WSDL2Java" fork="true">
+                                    <arg line="-uri wsdl/FaultDBService.wsdl -u -uw
+                                      -o target/generated -p org.wso2.carbon.dataservices.samples.fault_dataservice
+                                      -ns2p http://ws.wso2.org/dataservice/fault_dataservice=org.wso2.carbon.dataservices.samples.types.fault_dataservice"/>
+                                    <classpath refid="maven.dependency.classpath"/>
+                                    <classpath refid="maven.compile.classpath"/>
+                                    <classpath refid="maven.runtime.classpath"/>
+                                </java>
                               </tasks>
                         </configuration>
                     </execution>

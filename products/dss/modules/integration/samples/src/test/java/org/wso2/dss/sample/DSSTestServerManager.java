@@ -98,6 +98,9 @@ public class DSSTestServerManager extends TestServerManager {
         /* File service sample */
         copySampleFile(computeSourcePath("rdbms", "FileService.dbs"), deploymentDir);
 
+
+        copySampleFile("../src/test/resources/dbs/FaultDBService.dbs", deploymentDir);
+
         /* GSpread service sample */
         if (this.isOnlineTestsEnabled()) {
             copySampleFile(computeSourcePath("gspread", "GSpreadSample.dbs"), deploymentDir);

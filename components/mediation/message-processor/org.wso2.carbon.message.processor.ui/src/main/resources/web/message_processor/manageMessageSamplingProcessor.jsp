@@ -32,6 +32,17 @@
 <script src="../editarea/edit_area_full.js" type="text/javascript"></script>
 <script type="text/javascript" src="localentrycommons.js"></script>
 
+<script type="text/javascript" src="../ajax/js/prototype.js"></script>
+<jsp:include page="../resources/resources-i18n-ajaxprocessor.jsp"/>
+<script type="text/javascript" src="../yui/build/yahoo-dom-event/yahoo-dom-event.js"></script>
+<script type="text/javascript" src="../yui/build/container/container_core-min.js"></script>
+<script type="text/javascript" src="../yui/build/yahoo/yahoo-min.js"></script>
+<script type="text/javascript" src="../yui/build/event/event-min.js"></script>
+<script type="text/javascript" src="../yui/build/connection/connection-min.js"></script>
+<script type="text/javascript" src="../yui/build/menu/menu-min.js"></script>
+<script type="text/javascript" src="../resources/js/resource_util.js"></script>
+<script type="text/javascript" src="../message_processor/js/registry-browser.js"></script>
+
 <carbon:breadcrumb
         label="Message Processor"
         resourceBundle="org.wso2.carbon.message.processor.ui.i18n.Resources"
@@ -307,6 +318,10 @@
                     <td><input type="text" size="60" id="Sequence" name="Sequence"
                                value="<%=((null!=processorData)&& processorData.getParams() != null
                                         && !processorData.getParams().isEmpty()&&(processorData.getParams().get("sequence")!=null))?processorData.getParams().get("sequence"):""%>"/>
+                    </td>
+                    <td>
+                       <a href="#" class="registry-picker-icon-link"  onclick="showRegistryBrowser('Sequence','/_system/config')"><fmt:message key="processor.conf.registry.browser"/></a>
+                       <a href="#" class="registry-picker-icon-link"  onclick="showRegistryBrowser('Sequence','/_system/governance')"><fmt:message key="processor.gov.registry.browser"/></a>
                     </td>
                 </tr>
                 <tr>

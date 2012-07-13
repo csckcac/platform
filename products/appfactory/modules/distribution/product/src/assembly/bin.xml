@@ -158,6 +158,26 @@
             <directory>resources/appfactory</directory>
             <outputDirectory>wso2appfactory-${pom.version}/repository/conf/appfactory</outputDirectory>
         </fileSet>
+
+ 	<!-- Coping RXTs -->
+        <fileSet>
+            <directory>resources/rxts</directory>
+            <outputDirectory>wso2appfactory-${pom.version}/repository/resources/rxts</outputDirectory>
+            <includes>
+                <include>**/**.rxt</include>
+            </includes>
+        </fileSet>
+
+	<!-- Coping default lifcycles -->
+        <fileSet>
+            <directory>resources/lifecycles</directory>
+            <outputDirectory>wso2appfactory-${pom.version}/repository/resources/lifecycles</outputDirectory>
+            <includes>
+                <include>**/**.xml</include>
+            </includes>
+
+        </fileSet>
+
 	
     </fileSets>
 
@@ -339,7 +359,10 @@
             <source>resources/user-mgt.xml</source>
             <outputDirectory>wso2appfactory-${pom.version}/repository/conf</outputDirectory>
         </file>
-
+       <file>
+            <source>resources/event-broker.xml</source>
+            <outputDirectory>wso2appfactory-${pom.version}/repository/conf</outputDirectory>
+        </file>
 	   
     </files>
 

@@ -1,7 +1,7 @@
 ---------------------------------------------------------------------------------
 	Requirements
 ---------------------------------------------------------------------------------
-1. WSO2 BAM-2.0.0 ALPHA2 
+1. WSO2 BAM-2.0.0 ALPHA3 
 2. Apache Ant
 3. Java Runtime Environment
 
@@ -19,12 +19,13 @@ Configuring BAM
    <!--
 	Enable/Disable the API usage tracker.
    -->
-	<Enabled>false</Enabled>
+	<Enabled>true</Enabled>
 
    <!--
 	JDBC URL to query remote JDBC database 
+	E.g. jdbc:h2:/home/wso2/wso2bam-2.0.0-SNAPSHOT/repository/database/APIMGTSTATS_DB;AUTO_SERVER=TRUE
    -->
-	<JDBCUrl>jdbc:h2:<!-- Full path to JDBC database -->;AUTO_SERVER=TRUE</JDBCUrl>
+	<JDBCUrl>jdbc:h2:<!-- Full path to WSO2BAM home directory -->/repository/database/APIMGTSTATS_DB;AUTO_SERVER=TRUE</JDBCUrl>
 
 
 7.Now start deploying samples & invoking them. Your invocation statistics should be visible under,

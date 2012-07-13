@@ -1,30 +1,38 @@
 <APIManager>
+     <!--
+      In master-datasources.xml [ conf/datasources directory],we have defined the datasource which is related to API
+      Manager which need to be created at server start-up.Below entry is to define the JNDI look-up datasource name
+      in-order to access that created data-source.
+    -->
+
+    <DatasourceName>jdbc/WSO2AM_DB</DatasourceName>
     <!--
         Database configuration used by API publisher, API store and API key manager.
         When these components are deployed separately, each of them should have
         separate database configurations pointing to the same physical database.
     -->
-    <Database>
+   <!--Database-->
         <!--
             JDBC connection string for the database.
         -->
-        <URL>jdbc:h2:repository/database/WSO2AM_DB</URL>
+        <!--<URL>jdbc:h2:repository/database/WSO2AM_DB</URL> -->
 
         <!--
             JDBC username for the database.
         -->
-        <Username>wso2carbon</Username>
+        <!--<Username>wso2carbon</Username>-->
 
         <!--
             JDBC password for the database.
         -->
-        <Password>wso2carbon</Password>
+        <!--<Password>wso2carbon</Password>
 
-        <!--
+
             JDBC driver for the database.
         -->
-        <Driver>org.h2.Driver</Driver>
-    </Database>
+        <!--<Driver>org.h2.Driver</Driver>
+    </Database>-->
+
 
     <!--
         Authentication manager configuration for API publisher and API store. This is

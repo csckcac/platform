@@ -7,3 +7,9 @@
 footer{
     width:990px;margin:20px auto 5px !important;
 }
+div#newDoc div.name-column{
+    padding-right:20px;
+}
+div#newDoc div.ieFix{
+    width:10px;
+}

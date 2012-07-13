@@ -28,7 +28,7 @@
         <schema schemaNamespace="http://org.wso2.wsf/tools"/>
         <transports>
             <transport>https</transport>
-            <transport>http</transport>
+            <!--<transport>http</transport>-->
         </transports>
         <messageReceivers>
             <messageReceiver mep="http://www.w3.org/2004/08/wsdl/in-out"

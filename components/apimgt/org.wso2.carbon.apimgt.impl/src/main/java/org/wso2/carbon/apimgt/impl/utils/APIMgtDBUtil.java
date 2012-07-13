@@ -25,6 +25,10 @@ import org.wso2.carbon.apimgt.impl.APIManagerConfiguration;
 import org.wso2.carbon.apimgt.impl.DBConfiguration;
 import org.wso2.carbon.apimgt.impl.internal.ServiceReferenceHolder;
 
+import javax.naming.Context;
+import javax.naming.InitialContext;
+import javax.naming.NamingException;
+import javax.sql.DataSource;
 import java.sql.Connection;
 import java.sql.PreparedStatement;
 import java.sql.ResultSet;
@@ -34,13 +38,15 @@ public final class APIMgtDBUtil {
 
     private static final Log log = LogFactory.getLog(APIMgtDBUtil.class);
 
-    private static volatile BasicDataSource dataSource = null;
-    
+    private static volatile DataSource dataSource = null;
+
     private static final String DB_CONFIG = "Database.";
     private static final String DB_DRIVER = DB_CONFIG + "Driver";
     private static final String DB_URL = DB_CONFIG + "URL";
     private static final String DB_USER = DB_CONFIG + "Username";
     private static final String DB_PASSWORD = DB_CONFIG + "Password";
+
+    private static final String DATASOURCE_NAME = "DatasourceName";
 
     /**
      * Initializes the data source
@@ -57,19 +63,37 @@ public final class APIMgtDBUtil {
                 if (log.isDebugEnabled()) {
                     log.debug("Initializing data source");
                 }
-                DBConfiguration configuration = getDBConfig();
-                String dbUrl = configuration.getDbUrl();
-                String driver = configuration.getDriverName();
-                String username = configuration.getUserName();
-                String password = configuration.getPassword();
-                if (dbUrl == null || driver == null || username == null || password == null) {
-                    throw new APIManagementException("Required DB configuration parameters unspecified");
+                APIManagerConfiguration config = ServiceReferenceHolder.getInstance().
+                        getAPIManagerConfigurationService().getAPIManagerConfiguration();
+                String dataSourceName = config.getFirstProperty(DATASOURCE_NAME);
+
+                if (dataSourceName != null) {
+                    Context ctx;
+                    try {
+                        ctx = new InitialContext();
+                        dataSource = (DataSource) ctx.lookup(dataSourceName);
+                    } catch (NamingException e) {
+                        throw new APIManagementException("Error while creating the datasource by reading" +
+                                                         "configurations from master-datasource.xml");
+                    }
+                } else {
+                    DBConfiguration configuration = getDBConfig();
+                    String dbUrl = configuration.getDbUrl();
+                    String driver = configuration.getDriverName();
+                    String username = configuration.getUserName();
+                    String password = configuration.getPassword();
+                    if (dbUrl == null || driver == null || username == null || password == null) {
+                        throw new APIManagementException("Required DB configuration parameters unspecified");
+                    }
+
+                    BasicDataSource bDSource = new BasicDataSource();
+                    bDSource.setDriverClassName(driver);
+                    bDSource.setUrl(dbUrl);
+                    bDSource.setUsername(username);
+                    bDSource.setPassword(password);
+                    dataSource = bDSource;
                 }
-                dataSource = new BasicDataSource();
-                dataSource.setDriverClassName(driver);
-                dataSource.setUrl(dbUrl);
-                dataSource.setUsername(username);
-                dataSource.setPassword(password);
+
             }
         }
     }
@@ -90,7 +114,7 @@ public final class APIMgtDBUtil {
      * @throws java.sql.SQLException if failed to get Connection
      */
     public static Connection getConnection() throws SQLException {
-        if (dataSource != null && !dataSource.isClosed()) {
+        if (dataSource != null) {
             return dataSource.getConnection();
         }
         throw new SQLException("Data source is not configured properly.");

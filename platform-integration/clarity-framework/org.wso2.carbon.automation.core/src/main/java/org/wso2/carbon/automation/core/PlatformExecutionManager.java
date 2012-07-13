@@ -65,12 +65,12 @@ public class PlatformExecutionManager implements IExecutionListener {
                         startSimpleAxis2Server();
                     }
                 } catch (IOException e) {
-                    log.error("Unable to start servers " + e);
+                    log.error("Unable to start servers " , e);
                 }
                 try {
                     new UserPopulator().populateUsers(serverList);
                 } catch (Exception e) {
-                    log.error("Unable to populate users in to servers " + e);
+                    log.error("Unable to populate users in to servers " , e);
                 }
             }
         }
@@ -90,7 +90,7 @@ public class PlatformExecutionManager implements IExecutionListener {
                         stopSimpleAxis2Server();
                     }
                 } catch (Exception e) {
-                    log.error("Unable to stop servers " + e);
+                    log.error("Unable to stop servers " , e);
                 }
             }
         }

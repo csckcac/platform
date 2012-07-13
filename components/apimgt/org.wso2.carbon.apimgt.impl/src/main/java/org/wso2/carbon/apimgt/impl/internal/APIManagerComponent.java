@@ -26,15 +26,10 @@ import org.osgi.framework.ServiceRegistration;
 import org.osgi.service.component.ComponentContext;
 import org.wso2.carbon.CarbonConstants;
 import org.wso2.carbon.apimgt.api.APIManagementException;
-import org.wso2.carbon.apimgt.impl.APIConstants;
-import org.wso2.carbon.apimgt.impl.APIManagerConfiguration;
-import org.wso2.carbon.apimgt.impl.APIManagerConfigurationService;
-import org.wso2.carbon.apimgt.impl.APIManagerConfigurationServiceImpl;
-import org.wso2.carbon.apimgt.impl.APIManagerFactory;
+import org.wso2.carbon.apimgt.impl.*;
 import org.wso2.carbon.apimgt.impl.utils.APIMgtDBUtil;
 import org.wso2.carbon.apimgt.impl.utils.RemoteAuthorizationManager;
 import org.wso2.carbon.governance.api.util.GovernanceConstants;
-import org.wso2.carbon.registry.core.Registry;
 import org.wso2.carbon.registry.core.RegistryConstants;
 import org.wso2.carbon.registry.core.Resource;
 import org.wso2.carbon.registry.core.config.RegistryContext;
@@ -183,10 +178,8 @@ public class APIManagerComponent {
         String[] rxtFilePaths = file.list(filenameFilter);
         RegistryService registryService = ServiceReferenceHolder.getInstance().getRegistryService();
         UserRegistry systemRegistry;
-        Registry registry;
         try {
             systemRegistry = registryService.getRegistry(CarbonConstants.REGISTRY_SYSTEM_USERNAME);
-            registry = registryService.getRegistry();
         } catch (RegistryException e) {
             throw new APIManagementException("Failed to get registry", e);
         }
@@ -195,11 +188,11 @@ public class APIManagerComponent {
             String resourcePath = GovernanceConstants.RXT_CONFIGS_PATH +
                     RegistryConstants.PATH_SEPARATOR + rxtPath;
             try {
-                if (registry.resourceExists(resourcePath)) {
+                if (systemRegistry.resourceExists(resourcePath)) {
                     continue;
                 }
                 String rxt = FileUtil.readFileToString(rxtDir + File.separator + rxtPath);
-                Resource resource = registry.newResource();
+                Resource resource = systemRegistry.newResource();
                 resource.setContent(rxt.getBytes());
                 resource.setMediaType(APIConstants.RXT_MEDIA_TYPE);
                 systemRegistry.put(resourcePath, resource);

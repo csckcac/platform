@@ -1,6 +1,10 @@
 <% jagg.template("user/login", function(inputs, outputs, jagg) { %>
 <%
         if(request.isSecure()){
+
+            if(jagg.getUser() != null){
+                response.sendRedirect('index.jag');
+            }
 %>
 <div class="container content-section login-container">
     <div class="row">

@@ -13,4 +13,40 @@
             <class name="org.wso2.carbon.endpoint.test.DefaultEndpointTestCase"/>
         </classes>
     </test>
+
+    <test name="Test - Mediator fault" preserve-order="true" verbose="2">
+        <classes>
+            <class name="org.wso2.carbon.mediator.test.fault.CustomErrorMessageTestCase"/>
+            <class name="org.wso2.carbon.mediator.test.fault.MakeFaultMediatorTest"/>
+            <class name="org.wso2.carbon.mediator.test.fault.Soap11FaultStringValueTestCase"/>
+            <class name="org.wso2.carbon.mediator.test.fault.Soap11FaultStringExpressionTestCase"/>
+            <class name="org.wso2.carbon.mediator.test.fault.Soap11FaultCodeVersionMismatchedTestCase"/>
+            <class name="org.wso2.carbon.mediator.test.fault.Soap11FaultCodeMustUnderstandTestCase"/>
+            <class name="org.wso2.carbon.mediator.test.fault.Soap11FaultCodeClientTestCase"/>
+            <class name="org.wso2.carbon.mediator.test.fault.Soap11FaultCodeServerTestCase"/>
+            <class name="org.wso2.carbon.mediator.test.fault.Soap11FaultActorTestCase"/>
+            <class name="org.wso2.carbon.mediator.test.fault.Soap11FaultDetailsTestCase"/>
+            <class name="org.wso2.carbon.mediator.test.fault.Soap11FaultDetailAsElementTestCase"/>
+            <class name="org.wso2.carbon.mediator.test.fault.Soap11FaultFullTestCase"/>
+            <class name="org.wso2.carbon.mediator.test.fault.Soap11FaultOutSequenceTestCase"/>
+            <class name="org.wso2.carbon.mediator.test.fault.Soap11FaultWithAttributeResponseTrueTestCase"/>
+            <class name="org.wso2.carbon.mediator.test.fault.Soap11FaultWithAttributeResponseFalseTestCase"/>
+            <class name="org.wso2.carbon.mediator.test.fault.Soap12FaultStringValueTestCase"/>
+            <class name="org.wso2.carbon.mediator.test.fault.Soap12FaultStringExpressionTestCase"/>
+            <class name="org.wso2.carbon.mediator.test.fault.Soap12FaultCodeVersionMismatchedTestCase"/>
+            <class name="org.wso2.carbon.mediator.test.fault.Soap12FaultCodeMustUnderstandTestCase"/>
+            <class name="org.wso2.carbon.mediator.test.fault.Soap12FaultCodeDataEncodingUnknownTestCase"/>
+            <class name="org.wso2.carbon.mediator.test.fault.Soap12FaultCodeReceiverTestCase"/>
+            <class name="org.wso2.carbon.mediator.test.fault.Soap12FaultCodeSenderTestCase"/>
+            <class name="org.wso2.carbon.mediator.test.fault.Soap12FaultActorTestCase"/>
+            <class name="org.wso2.carbon.mediator.test.fault.Soap12FaultDetailsTestCase"/>
+            <class name="org.wso2.carbon.mediator.test.fault.Soap12FaultDetailAsElementTestCase"/>
+            <class name="org.wso2.carbon.mediator.test.fault.Soap12FaultNodeTestCase"/>
+            <class name="org.wso2.carbon.mediator.test.fault.Soap12FaultFullTestCase"/>
+            <class name="org.wso2.carbon.mediator.test.fault.Soap12FaultWithAttributeResponseTrueTestCase"/>
+            <class name="org.wso2.carbon.mediator.test.fault.Soap12FaultWithAttributeResponseFalseTestCase"/>
+            <class name="org.wso2.carbon.mediator.test.fault.Soap12FaultOutSequenceTestCase"/>
+
+        </classes>
+    </test>
 </suite>

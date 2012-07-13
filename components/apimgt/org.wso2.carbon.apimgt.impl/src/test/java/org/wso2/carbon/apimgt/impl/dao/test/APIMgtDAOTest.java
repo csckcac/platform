@@ -28,6 +28,7 @@ import org.wso2.carbon.apimgt.impl.dto.APIInfoDTO;
 import org.wso2.carbon.apimgt.impl.dto.APIKeyInfoDTO;
 import org.wso2.carbon.apimgt.impl.dto.APIKeyValidationInfoDTO;
 import org.wso2.carbon.apimgt.impl.internal.ServiceReferenceHolder;
+import org.wso2.carbon.apimgt.impl.utils.APIMgtDBUtil;
 import org.wso2.carbon.base.MultitenantConstants;
 import org.wso2.carbon.identity.core.util.IdentityTenantUtil;
 
@@ -46,6 +47,7 @@ public class APIMgtDAOTest extends TestCase {
         config.load(dbConfigPath);
         ServiceReferenceHolder.getInstance().setAPIManagerConfigurationService(
                 new APIManagerConfigurationServiceImpl(config));
+        APIMgtDBUtil.initialize();
         apiMgtDAO = new ApiMgtDAO();
         IdentityTenantUtil.setRealmService(new TestRealmService());
     }

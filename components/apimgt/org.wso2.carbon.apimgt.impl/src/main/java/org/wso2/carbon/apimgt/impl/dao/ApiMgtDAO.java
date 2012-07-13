@@ -51,14 +51,6 @@ public class ApiMgtDAO {
     private static final Log log = LogFactory.getLog(ApiMgtDAO.class);
 
     /**
-     * @throws org.wso2.carbon.apimgt.api.APIManagementException
-     *          if failed to initialize the db config
-     */
-    public ApiMgtDAO() throws APIManagementException {
-        APIMgtDBUtil.initialize();
-    }
-
-    /**
      * Get access token key for given userId and API Identifier
      *
      * @param userId     id of the user

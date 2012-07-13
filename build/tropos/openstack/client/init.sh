@@ -1,7 +1,7 @@
 #!/bin/bash
 rm ./demorc
 rm ./demo.pem
-cp -f ../OpenStackInstaller-lxc-controller/demorc ./
+cp -f ../OpenStackInstaller/demorc ./
 source ./demorc
 euca-add-keypair demo > demo.pem
 chmod 0600 demo.pem

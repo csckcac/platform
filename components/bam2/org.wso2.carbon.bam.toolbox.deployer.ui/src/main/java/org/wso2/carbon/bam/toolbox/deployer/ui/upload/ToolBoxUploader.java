@@ -11,14 +11,11 @@ import org.wso2.carbon.ui.transports.fileupload.AbstractFileUploadExecutor;
 import org.wso2.carbon.utils.FileItemData;
 import org.wso2.carbon.utils.ServerConstants;
 
-import javax.activation.DataHandler;
-import javax.activation.FileDataSource;
-import javax.mail.util.ByteArrayDataSource;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 import javax.servlet.http.HttpSession;
-import java.io.*;
-import java.net.URL;
+import java.io.File;
+import java.io.IOException;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Map;
@@ -86,20 +83,17 @@ public class ToolBoxUploader extends AbstractFileUploadExecutor {
             List<String> toolBoxURL = formFields.get("urltoolbox");
             String url = toolBoxURL.get(0);
             int slashIndex = url.lastIndexOf('/');
-            DataHandler toolBoxData = getDataHandler(url, url.substring(slashIndex + 1));
+            String toolName = url.substring(slashIndex + 1);
 
             ToolBoxStatusDTO statusDTO = null;
             try {
                 statusDTO = client.getToolBoxStatus("1", null);
-                String msg = checkInRepo(toolBoxData.getName(), statusDTO);
+                String msg = checkInRepo(toolName, statusDTO);
                 if (msg.equals("")) {
-                    if (client.uploadToolBox(toolBoxData, toolBoxData.getName())) {
-                        response.sendRedirect("../" + webContext + "/bam-toolbox/listbar.jsp?success=true");
-                        new File("tmp/"+url.substring(slashIndex + 1)).delete();
-                    } else {
-                        response.sendRedirect("../" + webContext + "/bam-toolbox/uploadbar.jsp?success=false&message=" +
-                                "Error while deploying toolbox!");
-                    }
+                    client.installToolBoxFromURL(url);
+                    response.sendRedirect("../" + webContext + "/bam-toolbox/listbar.jsp?success=true");
+                    new File("tmp/" + url.substring(slashIndex + 1)).delete();
+
                     return true;
                 } else {
                     response.sendRedirect("../" + webContext + "/bam-toolbox/uploadbar.jsp?success=false&message="
@@ -156,28 +150,6 @@ public class ToolBoxUploader extends AbstractFileUploadExecutor {
             return false;
         }
     }
-
-
-    private DataHandler getDataHandler(String toolboxURL, String toolName) throws IOException {
-        URL url = new URL(toolboxURL);
-        InputStream is = url.openStream();
-        DataHandler handler = new DataHandler(new ByteArrayDataSource(is, "application/octet-stream"));
-        is.close();
-
-        //writing to temp location
-        File file = new File("tmp/" + toolName);
-        FileOutputStream fileOutputStream = new FileOutputStream(file);
-        handler.writeTo(fileOutputStream);
-        fileOutputStream.flush();
-        fileOutputStream.close();
-
-		FileDataSource fDataSource = new FileDataSource(new File("tmp/" + toolName));
-		DataHandler dataHandler = new DataHandler(fDataSource);
-
-        return dataHandler;
-    }
-
-
 
 
 }

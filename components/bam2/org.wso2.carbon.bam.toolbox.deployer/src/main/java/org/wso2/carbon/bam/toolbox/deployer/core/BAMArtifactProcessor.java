@@ -90,7 +90,6 @@ public class BAMArtifactProcessor {
 
 
     public ToolBoxDTO getToolBoxDTO(String barDir) throws BAMToolboxDeploymentException {
-//        String toolConfFilePath = barDir + File.separator + BAMToolBoxDeployerConstants.BAR_TOOLBOX_CONFIG_FILE;
         return createDTO(barDir);
     }
 

@@ -15,7 +15,9 @@ import org.wso2.carbon.utils.multitenancy.MultitenantConstants;
 
 import javax.activation.DataHandler;
 import javax.activation.FileDataSource;
+import javax.mail.util.ByteArrayDataSource;
 import java.io.*;
+import java.net.URL;
 import java.util.ArrayList;
 
 /**
@@ -258,9 +260,9 @@ public class BAMToolBoxUploaderService extends AbstractAdmin {
 
             String[] toolsInDir = hotDeploymentDir.list(filter);
 
-            if(null != toolsInDir){
-                for (String tool: toolsInDir){
-                    if(null != tool && tool.equals(toolName)){
+            if (null != toolsInDir) {
+                for (String tool : toolsInDir) {
+                    if (null != tool && tool.equals(toolName)) {
                         throw new BAMToolboxDeploymentException("The selected Tool already deployed..");
                     }
                 }
@@ -291,8 +293,45 @@ public class BAMToolBoxUploaderService extends AbstractAdmin {
         }
     }
 
-    public BasicToolBox[] getBasicToolBoxes(){
-         return BasicToolBox.values();
+    public BasicToolBox[] getBasicToolBoxes() {
+        return BasicToolBox.values();
+    }
+
+    public void deployToolBoxFromURL(String url) throws BAMToolboxDeploymentException {
+        int slashIndex = url.lastIndexOf('/');
+        try {
+            String toolName = url.substring(slashIndex + 1);
+
+            URL toolUrl = new URL(url);
+            InputStream is = toolUrl.openStream();
+            DataHandler handler = new DataHandler(new ByteArrayDataSource(is, "application/octet-stream"));
+            is.close();
+
+            int tenantId = CarbonContext.getCurrentContext().getTenantId();
+            String repoPath = "";
+            if (tenantId == MultitenantConstants.SUPER_TENANT_ID) {
+                repoPath = ServiceHolder.getConfigurationContextService()
+                        .getServerConfigContext().getAxisConfiguration().getRepository().getPath();
+            } else {
+                String tenantRepoPath = "/repository/tenants/" + tenantId;
+                repoPath = CarbonUtils.getCarbonHome() + tenantRepoPath;
+            }
+            File hotDeploymentDir = new File(repoPath + File.separator + BAMToolBoxDeployerConstants.BAM_DEPLOYMET_FOLDER);
+            if (hotDeploymentDir.exists()) {
+                File file = new File(hotDeploymentDir + File.separator + toolName);
+                FileOutputStream fileOutputStream = new FileOutputStream(file);
+                handler.writeTo(fileOutputStream);
+                fileOutputStream.flush();
+                fileOutputStream.close();
+            } else {
+                throw new BAMToolboxDeploymentException("No deployment folder found for tenant id:" + tenantId);
+            }
+        } catch (IOException e) {
+            log.error(e);
+            throw new BAMToolboxDeploymentException(e.getMessage(), e);
+        }
+
+
     }
 
 }

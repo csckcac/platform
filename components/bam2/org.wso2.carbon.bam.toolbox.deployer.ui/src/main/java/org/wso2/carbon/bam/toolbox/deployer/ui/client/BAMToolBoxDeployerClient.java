@@ -140,7 +140,20 @@ public class BAMToolBoxDeployerClient {
             return stub.getBasicToolBoxes();
         } catch (RemoteException e) {
             log.error(e.getMessage(), e);
-             throw new BAMToolboxDepolyerServiceBAMToolboxDeploymentExceptionException(e);
+            throw new BAMToolboxDepolyerServiceBAMToolboxDeploymentExceptionException(e);
+        }
+    }
+
+    public void installToolBoxFromURL(String url)
+            throws BAMToolboxDepolyerServiceBAMToolboxDeploymentExceptionException {
+        try {
+            stub.deployToolBoxFromURL(url);
+        } catch (RemoteException e) {
+            log.error(e.getMessage(), e);
+            throw new BAMToolboxDepolyerServiceBAMToolboxDeploymentExceptionException(e);
+        } catch (BAMToolboxDepolyerServiceBAMToolboxDeploymentExceptionException e) {
+            log.error(e.getFaultMessage().getBAMToolboxDeploymentException().getMessage(), e);
+            throw e;
         }
     }
 

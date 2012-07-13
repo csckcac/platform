@@ -5,6 +5,8 @@ package org.wso2.carbon.hosting.mgt.service;
 
 
 import org.apache.axis2.AxisFault;
+import org.wso2.carbon.core.multitenancy.transports.TenantTransportInDescription;
+import org.wso2.carbon.hosting.mgt.openstack.db.OpenstackDAO;
 import org.wso2.carbon.hosting.mgt.utils.FileUploadData;
 import org.apache.commons.logging.Log;
 import org.apache.commons.logging.LogFactory;
@@ -17,6 +19,8 @@ import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
+
+import org.wso2.carbon.core.multitenancy.TenantAxisConfiguration;
 
 import org.wso2.carbon.core.AbstractAdmin;
 import org.wso2.carbon.hosting.mgt.clients.AutoscaleServiceClient;
@@ -34,13 +38,17 @@ public class ApplicationManagementService extends AbstractAdmin{
     public static final String FILE_DEPLOYMENT_FOLDER = "phpapps";
     AutoscaleServiceClient client;
     HashMap<String, String> imageIdtoNameMap;
+    OpenstackDAO openstackDAO;
 
-    public ApplicationManagementService() throws Exception {
-        client = new AutoscaleServiceClient(System.getProperty(PHPCartridgeConstants.AUTOSCALER_SERVICE_URL));
+    public ApplicationManagementService(){
         imageIdtoNameMap = new HashMap<String, String>();
+    }
+    public void initAutoscaler() throws Exception {
+        client = new AutoscaleServiceClient(System.getProperty(PHPCartridgeConstants.AUTOSCALER_SERVICE_URL));
         log.info("Initialized Autoscaler service");
         client.init(true);
         log.info("Called INIT of Autoscaler service and Image id is");
+
     }
     /**
          * Upload a File
@@ -103,14 +111,17 @@ public class ApplicationManagementService extends AbstractAdmin{
         File phpAppDirectory = new File(phpAppPath);
         String[] children;
 
-        // This return any files that ends with '.zip'.
-        FilenameFilter filter = new FilenameFilter() {
-            public boolean accept(File dir, String name) {
-                return name.endsWith(".zip");
-            }
-        };
-        children = phpAppDirectory.list(filter);
-
+        if(!phpAppDirectory.exists()){
+            // This return any files that ends with '.zip'.
+            FilenameFilter filter = new FilenameFilter() {
+                public boolean accept(File dir, String name) {
+                    return name.endsWith(".zip");
+                }
+            };
+            children = phpAppDirectory.list(filter);
+        }else {
+            children = null;
+        }
         return children;
 
     }
@@ -126,9 +137,14 @@ public class ApplicationManagementService extends AbstractAdmin{
     }
 
     private String[] getEndPoints(String[] phpApps) {
-        String[] endPoints = new String[phpApps.length];
-        for(int i = 0; i < endPoints.length; i++){
-            endPoints[i] = "https://" + "<tenant_ip>" + "/t/" + "tenant_name/" + phpApps[i];
+        String[] endPoints;
+        if(phpApps != null){
+            endPoints = new String[phpApps.length];
+            for(int i = 0; i < endPoints.length; i++){
+                endPoints[i] = "https://" + "<tenant_ip>" + "/t/" + "tenant_name/" + phpApps[i];
+            }
+        }   else {
+            endPoints = null;
         }
         return endPoints;
     }
@@ -150,36 +166,46 @@ public class ApplicationManagementService extends AbstractAdmin{
         }
     }
 
-    public void startInstance(String image, String tenant){
-//                                public String startInstance(String image, String tenant)  {
-//        String ip = null;
+    public String startInstance(String image, String tenant){
+        try {
+            initAutoscaler();
+        } catch (Exception e) {
+            String msg = "Error while initializing Autoscaler";
+            log.error(msg, e);
+        }
+        String publicIp = "";
+        openstackDAO = new OpenstackDAO();
         try{
-            String ip = client.startInstance(System.getProperty("php.domain"), imageIdtoNameMap.get(image));
-            log.info("Started Instance ip is " + ip);
+            String privateIp = client.startInstance(System.getProperty("php.domain"), imageIdtoNameMap.get(image));
+            log.info("Started Instance private ip is " + privateIp);
+            publicIp = openstackDAO.getPublicIp(privateIp);
         }catch (Exception e){
             String msg = "Error while calling auto scaler to start instance";
             log.error(msg);
         }
-//        return ip;
-    }
 
-    private void addPHPClusterDomain(){
-
-
+        return publicIp;
     }
 
     private boolean isInstanceUp(String tenant){
-        return true;
+        return false;
     }
 
     public String[] getImages(){
-        String imageIdsString = System.getProperty(PHPCartridgeConstants.OPENSTACK_INSTANCE_IMAGE_IDS);
-        String[] images = imageIdsString.split(",");
-        for (String image : images) {
-            String imageArray[] = image.split(":");
-            imageIdtoNameMap.put(imageArray[0], imageArray[1]);
+        String imageNames[];
+        String[] apps = listPhpApplications();
+        if(apps == null || apps.length == 0 || !isInstanceUp("tenant")){
+            String imageIdsString = System.getProperty(PHPCartridgeConstants.OPENSTACK_INSTANCE_IMAGE_IDS);
+            String[] imagesToNameArray = imageIdsString.split(",");
+            for (String image : imagesToNameArray) {
+                String imageArray[] = image.split(":");
+                imageIdtoNameMap.put(imageArray[0], imageArray[1]);
+            }
+            imageNames = imageIdtoNameMap.keySet().toArray(new String[imageIdtoNameMap.size()]);
+        } else {
+            imageNames = null;
         }
-        return imageIdtoNameMap.keySet().toArray(new String[imageIdtoNameMap.size()]);
+        return imageNames;
     }
 
 }

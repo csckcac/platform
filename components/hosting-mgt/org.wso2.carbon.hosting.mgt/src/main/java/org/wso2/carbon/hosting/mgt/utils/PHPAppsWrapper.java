@@ -95,11 +95,11 @@ public final class PHPAppsWrapper implements Pageable {
     }
 
     public String[] getPhpapps() {
-        return CarbonUtils.arrayCopyOf(phpapps);
+        return this.phpapps;
     }
 
     public void setPhpapps(String[] webapps) {
-        this.phpapps = CarbonUtils.arrayCopyOf(webapps);
+        this.phpapps = webapps;
     }
 
     public String[] getEndPoints() {

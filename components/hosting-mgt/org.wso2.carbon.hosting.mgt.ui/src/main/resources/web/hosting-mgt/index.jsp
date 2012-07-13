@@ -25,6 +25,7 @@
 <%@ page import="java.util.ResourceBundle" %>
 <%@ page import="org.wso2.carbon.hosting.mgt.ui.HostingAdminClient" %>
 <%@ page import="org.wso2.carbon.hosting.mgt.stub.types.carbon.PHPAppsWrapper" %>
+<jsp:include page="../dialog/display_messages.jsp"/>
 
 <%
     response.setHeader("Cache-Control", "no-cache");
@@ -34,8 +35,8 @@
 
     String cookie = (String) session.getAttribute(ServerConstants.ADMIN_SERVICE_COOKIE);
     HostingAdminClient client;
-    int numberOfPages;
 
+    int numberOfPages;
     String pageNumber = request.getParameter("pageNumber");
     if (pageNumber == null) {
         pageNumber = "0";
@@ -48,31 +49,26 @@
 
     PHPAppsWrapper phpAppsWrapper;
     String[] phpApps;
-    
     String[] endPoints;
 
     String phpappSearchString = request.getParameter("phpappSearchString");
-
     if (phpappSearchString == null) {
         phpappSearchString = "";
     }
     try {
          client = new HostingAdminClient(request.getLocale(),cookie, configContext, serverURL );
-
          phpAppsWrapper = client.getPagedPhpAppsSummary(phpappSearchString,
                                                         Integer.parseInt(pageNumber));
          numberOfPages = phpAppsWrapper.getNumberOfPages();
+        //get the php app list and endpoints list
          phpApps = phpAppsWrapper.getPhpapps();
-        endPoints = phpAppsWrapper.getEndPoints();
-
+         endPoints = phpAppsWrapper.getEndPoints();
     } catch (Exception e) {
          response.setStatus(500);
          CarbonUIMessage uiMsg = new CarbonUIMessage(CarbonUIMessage.ERROR, e.getMessage(), e);
          session.setAttribute(CarbonUIMessage.ID, uiMsg);
     %>
-        <script type="text/javascript">
-               location.href = "../admin/error.jsp";
-        </script>
+<jsp:include page="../admin/error.jsp"/>
     <%
         return;
     }
@@ -225,7 +221,7 @@
 
 <p>&nbsp;</p>
    <%
-       if (phpApps != null) {
+       if (phpApps[0] != null) {
            String parameters = "phpappSearchString=" + phpappSearchString;
 
 

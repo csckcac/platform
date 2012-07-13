@@ -123,13 +123,22 @@ public class HostingAdminClient {
 //        return images;
         return null;
     }
-    
-    public void startInstance(String image, String tenant) throws AxisFault {
+
+    public String startInstance(String image, String tenantUrl) throws AxisFault {
+        String ip = null;
         try {
-            stub.startInstance(image, tenant);
+            String tenant = null; 
+            if(tenantUrl.indexOf("/t/") != -1){
+                tenant = tenantUrl.substring(3 + tenantUrl.indexOf("/t/"));
+                tenant = tenant.substring(0, tenant.indexOf('/'));
+            }
+            ip =  stub.startInstance(image, tenant);
+            log.info("ip " + ip);
+            
         } catch (RemoteException e) {
             handleException("cannot.start.instance" , e);
         }
+        return ip;
     }
 
 }

@@ -60,6 +60,7 @@ public class ZipFileUploadExecutor extends AbstractFileUploadExecutor {
         List<FileItemData> tempDataList = fileItemsMap.get("warFileName");
         List<FileUploadData> fileUploadDataList = new ArrayList<FileUploadData>();
         String selectedImage = "";
+        String publicIp = "";
         if (!client.isInstanceUp()) {
             List<String> images = getFormFieldValue("images");
             if(images.isEmpty()){
@@ -69,7 +70,10 @@ public class ZipFileUploadExecutor extends AbstractFileUploadExecutor {
                     selectedImage = images.get(0);
                     log.info(selectedImage);
                     StringBuffer requestUrl = request.getRequestURL();
-                    client.startInstance(selectedImage, requestUrl.toString());
+                    msg = "it will take some time to start the instance";
+                    CarbonUIMessage.sendCarbonUIMessage(msg, CarbonUIMessage.INFO, request, response,
+                                                                    "../" + webContext + "/hosting-mgt/upload.jsp");
+                    publicIp = client.startInstance(selectedImage, requestUrl.toString());
                 }
             }
         }
@@ -85,9 +89,14 @@ public class ZipFileUploadExecutor extends AbstractFileUploadExecutor {
             client.uploadWebapp(fileUploadDataList.toArray(new FileUploadData[fileUploadDataList.size()]));
 
             response.setContentType("text/html; charset=utf-8");
-            msg = "Web application has been uploaded "
-                  + "successfully. Please refresh this page in a while to see "
-                  + "the status of the running webapps.";
+            if(publicIp != null){
+                msg = "PHP application has been uploaded successfully. Instance is spawned and " +
+                      "public ip of the instance is: " + publicIp;
+            }   else{
+                msg = "PHP application has been uploaded successfully.";
+            }
+
+
             CarbonUIMessage.sendCarbonUIMessage(msg, CarbonUIMessage.INFO, request, response,
                                                 "../" + webContext + "/hosting-mgt/index.jsp");
 

@@ -40,6 +40,7 @@
                 <exclude>**/release-notes.html</exclude>
                 <exclude>**/carbon.xml</exclude>
                 <exclude>**/registry.xml</exclude>
+                <exclude>**/master-datasources.xml</exclude>
             </excludes>
         </fileSet>
         <fileSet>
@@ -181,6 +182,11 @@
             <source>src/main/conf/axis2.xml</source>
             <outputDirectory>wso2am-${pom.version}/repository/conf/axis2</outputDirectory>
             <destName>axis2.xml</destName>
+        </file>
+        <file>
+            <source>src/main/conf/master-datasources.xml</source>
+            <outputDirectory>wso2am-${pom.version}/repository/conf/datasources</outputDirectory>
+            <destName>master-datasources.xml</destName>
         </file>
         <file>
             <source>src/main/conf/registry.xml</source>

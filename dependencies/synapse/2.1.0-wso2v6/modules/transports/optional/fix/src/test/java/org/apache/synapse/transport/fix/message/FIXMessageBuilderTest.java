@@ -44,7 +44,7 @@ public class FIXMessageBuilderTest extends TestCase {
 		try {
 			OMElement element = builder.processDocument(new ByteArrayInputStream(input.getBytes()), "fix/j", msgCtx);
 			Assert.assertNotNull(element);
-			System.out.println(element);
+
 		} catch (AxisFault e) {
 			// TODO Auto-generated catch block
 			e.printStackTrace();

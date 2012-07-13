@@ -12,6 +12,24 @@ var logout = function () {
         }
     }, "json");
 };
+$(document).ready(function(){
+    $('#userInfoMenu').prev().click(function(){
+        if($('#userInfoMenu').is(':visible')){
+            $('#userInfoMenu').hide();
+        }else{
+            $('#userInfoMenu').show();
+        }
+    });
+    $('html').click(function() {
+        if($('#userInfoMenu').is(':visible')){
+            $('#userInfoMenu').hide();
+        }
+    });
+
+    $('#userMenu').click(function(event) {
+        event.stopPropagation();
+    });
+});
 
 
 

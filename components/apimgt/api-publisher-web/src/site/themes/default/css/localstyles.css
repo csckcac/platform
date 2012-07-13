@@ -244,6 +244,22 @@ a.powered-by-logo {
     background:#999;
     padding:10px;
 }
+#resourceTable td label.inline, #resourceTable td label.inline{
+    margin-left:10px;
+    width:40px;
+    padding:0 5px 5px;
+}
+#userInfoMenu{
+    margin-left:-100px;
+    position:absolute;
+    background:white;
+}
+#userMenu{
+    cursor:pointer;
+}
+#userMenu:hover{
+    background:transparent;
+}
 @media all and (max-width: 850px) {
     #left{
         display:block;

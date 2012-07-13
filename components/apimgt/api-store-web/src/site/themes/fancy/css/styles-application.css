@@ -330,6 +330,11 @@ ul.more-from-provider li.list-header{
 .msg-table td{
     padding:10px;
 }
+.closeBtn{
+    width:15px;
+    height:15px;
+    cursor:pointer;
+}
 @media all and (max-width: 800px) {
     .section-shifter-left div.tab-content{
         min-height:0 !important;

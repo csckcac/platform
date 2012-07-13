@@ -73,6 +73,7 @@
 				<module>uiless</module>
 				<module>enqueue</module>
 			  	<module>smooks</module>
+                <module>bam</module>
 			  	<module>enrich</module>
 			  	<module>urlrewrite</module>
 			  	<module>conditionalrouter</module>

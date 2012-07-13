@@ -46,7 +46,7 @@ public final class APIMgtDBUtil {
     private static final String DB_USER = DB_CONFIG + "Username";
     private static final String DB_PASSWORD = DB_CONFIG + "Password";
 
-    private static final String DATASOURCE_NAME = "DatasourceName";
+    private static final String DATASOURCE_NAME = "DataSourceName";
 
     /**
      * Initializes the data source

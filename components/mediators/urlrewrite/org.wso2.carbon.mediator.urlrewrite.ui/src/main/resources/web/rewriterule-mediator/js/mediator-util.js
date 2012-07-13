@@ -225,6 +225,7 @@ function settype(type, i) {
 		regexTD.innerHTML = "";			
 		resetValueDisplayStyle(type, "");	        
 		resetRegexDisplayStyle(type, "none");
+		resetOptionDisplayStyle(type, "");	
 	}
 
 	if('replace' == type){
@@ -236,6 +237,7 @@ function settype(type, i) {
 
 		resetValueDisplayStyle(type, "");
 		resetRegexDisplayStyle(type, "");
+		resetOptionDisplayStyle(type, "");	
 	}
 	
 	if('remove' == type) {

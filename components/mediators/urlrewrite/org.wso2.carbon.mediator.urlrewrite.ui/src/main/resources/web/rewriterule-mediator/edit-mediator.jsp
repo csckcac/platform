@@ -263,7 +263,7 @@
 								type="text" value="<%=expr.toString()%>"
 								class="esb-edit" /> <%
  							} else {
- 							%>	<input	id="mediator.urlrewrite.valuetxt<%=i%>" name="mediator.urlrewrite.valuetxt<%=i%>" type="text"
+ 							%>	<input	style="width: 300px; <%="display:none;"%>" id="mediator.urlrewrite.valuetxt<%=i%>" name="mediator.urlrewrite.valuetxt<%=i%>" type="text"
  								 class="esb-edit" />	
  							<%} %>
  							

@@ -32,12 +32,7 @@ public class JDBCAPIKeyDataStore implements APIKeyDataStore {
     private ApiMgtDAO dao;
 
     public JDBCAPIKeyDataStore() throws APISecurityException {
-        try {
-            dao = new ApiMgtDAO();
-        } catch (APIManagementException e) {
-            throw new APISecurityException(APISecurityConstants.API_AUTH_GENERAL_ERROR,
-                    "Error while connecting to the API manager database", e);
-        }
+        dao = new ApiMgtDAO();
     }
 
     public APIKeyValidationInfoDTO getAPIKeyData(String context, String apiVersion,

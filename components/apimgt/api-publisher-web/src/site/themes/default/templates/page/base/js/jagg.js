@@ -22,7 +22,7 @@ var jagg = jagg || {};
     jagg.messageDisplay = function (params) {
         $('#messageModal').html($('#confirmation-data').html());
         if (params.title == undefined) {
-            $('#messageModal h3.modal-title').html('API Store');
+            $('#messageModal h3.modal-title').html('API Publisher');
         } else {
             $('#messageModal h3.modal-title').html(params.title);
         }
@@ -61,7 +61,7 @@ var jagg = jagg || {};
         }
         if (params.type == "confirm") {
             if (params.title == undefined) {
-                params.title = "API Store"
+                params.title = "API Publisher"
             }
             jagg.messageDisplay({content:params.content,title:params.title ,buttons:[
                 {name:"No",cssClass:"btn",cbk:function() {
@@ -99,7 +99,7 @@ var jagg = jagg || {};
                 type = "Error"
             }
         }
-        jagg.messageDisplay({content:params.content,title:"API Store - " + type,buttons:[
+        jagg.messageDisplay({content:params.content,title:"API Publisher - " + type,buttons:[
             {name:"OK",cssClass:"btn btn-primary",cbk:function() {
                 $('#messageModal').modal('hide');
                 if (params.cbk && typeof params.cbk == "function")

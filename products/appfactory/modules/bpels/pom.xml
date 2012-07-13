@@ -18,8 +18,6 @@
 		<module>UserCreation</module>
 		<module>UserActivation</module>
 		<module>ApplicationCreation</module>
-		<module>DeployApplicationToDev</module>
-		<module>DeployApplicationToLive</module>
 		<module>AddUserToApplication</module>
 		<module>DeployToStage</module>
 	</modules>

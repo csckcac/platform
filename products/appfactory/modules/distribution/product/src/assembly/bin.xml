@@ -187,13 +187,7 @@
             <fileMode>644</fileMode>
         </file>
         <file>
-            <source>../../bpels/DeployApplicationToDev/target/DeployApplicationToDev.zip</source>
-            <outputDirectory>wso2appfactory-${pom.version}/repository/deployment/server/bpel</outputDirectory>
-            <filtered>true</filtered>
-            <fileMode>644</fileMode>
-        </file>
-        <file>
-            <source>../../bpels/DeployApplicationToLive/target/DeployApplicationToLive.zip</source>
+            <source>../../bpels/DeployToStage/target/DeployToStage.zip</source>
             <outputDirectory>wso2appfactory-${pom.version}/repository/deployment/server/bpel</outputDirectory>
             <filtered>true</filtered>
             <fileMode>644</fileMode>

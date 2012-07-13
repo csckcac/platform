@@ -92,7 +92,7 @@ public class Stream {
 
     private void setActivityIdInSOAPHeader(MessageContext synapseContext) {
 
-        try {
+
             // Property name would be "Parent_uuid"
             // Property Value would be "Parent_uuid_messageid"
             UUID uuid = UUID.randomUUID();
@@ -106,7 +106,7 @@ public class Stream {
             SOAPEnvelope soapEnvelope = axis2MessageContext.getEnvelope();
             String soapNamespaceURI = soapEnvelope.getNamespace().getNamespaceURI();
             SOAPFactory soapFactory = null;
-            SOAPHeaderBlock soapHeaderBlock;
+
 
             if (soapNamespaceURI.equals(SOAP11Constants.SOAP_ENVELOPE_NAMESPACE_URI)) {
                 soapFactory = OMAbstractFactory.getSOAP11Factory();
@@ -115,6 +115,17 @@ public class Stream {
             } else {
                 log.error("Not a standard soap message");
             }
+
+            this.setActivityIDInSOAPHeaderWithConditioning(soapEnvelope, omNs, synapseContext, uuidString, soapFactory);
+
+
+    }
+
+    private void setActivityIDInSOAPHeaderWithConditioning(SOAPEnvelope soapEnvelope,
+                                                           OMNamespace omNs, MessageContext synapseContext,
+                                                           String uuidString, SOAPFactory soapFactory){
+        try {
+            SOAPHeaderBlock soapHeaderBlock;
 
             // If header is not null check for  BAM headers
             if (soapEnvelope.getHeader() != null) {
@@ -153,7 +164,7 @@ public class Stream {
                 }
             } else {
                 if (soapFactory != null) {
-                    (soapFactory).createSOAPHeader(soapEnvelope); // TODO
+                    (soapFactory).createSOAPHeader(soapEnvelope); // TO DO
                 }
                 if (soapEnvelope.getHeader() != null) {
                     soapHeaderBlock = soapEnvelope.getHeader().addHeaderBlock(BamMediatorConstants.BAM_EVENT, omNs);
@@ -174,7 +185,6 @@ public class Stream {
         } catch (Exception e) {
             log.error("Error while processing MessageHeaderMediator...", e);
         }
-
     }
 
     private void logMessage(MessageContext messageContext)

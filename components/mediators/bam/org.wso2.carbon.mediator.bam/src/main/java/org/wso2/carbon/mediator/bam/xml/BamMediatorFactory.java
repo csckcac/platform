@@ -56,8 +56,8 @@ public class BamMediatorFactory extends AbstractMediatorFactory {
         String streamVersion = this.getStreamVersion(omElement);
         if(isNotNullOrEmpty(serverProfilePath) && isNotNullOrEmpty(streamName) && isNotNullOrEmpty(streamVersion)){
             bam.setServerProfile(serverProfilePath);
-            bam.setStreamName(streamName);
-            bam.setStreamVersion(streamVersion);
+            bam.getStream().setStreamName(streamName);
+            bam.getStream().setStreamVersion(streamVersion);
         }
 
         RegistryManager registryManager = new RegistryManager();
@@ -132,18 +132,18 @@ public class BamMediatorFactory extends AbstractMediatorFactory {
     private void updateBamMediator(BamServerConfigBuilder bamServerConfigBuilder, BamMediator bamMediator, String streamName, String streamVersion){
         BamServerConfig bamServerConfig=  bamServerConfigBuilder.getBamServerConfig();
         CryptographyManager cryptographyManager = new CryptographyManager();
-        bamMediator.setStreamNickName(bamServerConfig.getAUniqueStreamConfiguration(streamName, streamVersion).getNickname());
-        bamMediator.setStreamDescription(bamServerConfig.getAUniqueStreamConfiguration(streamName, streamVersion).getDescription());
-        bamMediator.setUserName(bamServerConfig.getUsername());
-        bamMediator.setPassword(cryptographyManager.base64DecodeAndDecrypt(bamServerConfig.getPassword()));
-        bamMediator.setServerIP(bamServerConfig.getIp());
-        bamMediator.setSecurity(bamServerConfig.isSecure());
-        bamMediator.setAuthenticationPort(bamServerConfig.getAuthenticationPort());
-        bamMediator.setReceiverPort(bamServerConfig.getReceiverPort());
-        bamMediator.setKsLocation(bamServerConfig.getKeyStoreLocation());
-        bamMediator.setKsPassword(cryptographyManager.base64DecodeAndDecrypt(bamServerConfig.getKeyStorePassword()));
-        bamMediator.setProperties(bamServerConfig.getAUniqueStreamConfiguration(streamName, streamVersion).getProperties());
-        bamMediator.setStreamEntries(bamServerConfig.getAUniqueStreamConfiguration(streamName, streamVersion).getEntries());
+        bamMediator.getStream().setStreamNickName(bamServerConfig.getAUniqueStreamConfiguration(streamName, streamVersion).getNickname());
+        bamMediator.getStream().setStreamDescription(bamServerConfig.getAUniqueStreamConfiguration(streamName, streamVersion).getDescription());
+        bamMediator.getStream().setUserName(bamServerConfig.getUsername());
+        bamMediator.getStream().setPassword(cryptographyManager.base64DecodeAndDecrypt(bamServerConfig.getPassword()));
+        bamMediator.getStream().setServerIp(bamServerConfig.getIp());
+        bamMediator.getStream().setSecurity(bamServerConfig.isSecure());
+        bamMediator.getStream().setAuthenticationPort(bamServerConfig.getAuthenticationPort());
+        bamMediator.getStream().setReceiverPort(bamServerConfig.getReceiverPort());
+        bamMediator.getStream().setKsLocation(bamServerConfig.getKeyStoreLocation());
+        bamMediator.getStream().setKsPassword(cryptographyManager.base64DecodeAndDecrypt(bamServerConfig.getKeyStorePassword()));
+        bamMediator.getStream().setProperties(bamServerConfig.getAUniqueStreamConfiguration(streamName, streamVersion).getProperties());
+        bamMediator.getStream().setStreamEntries(bamServerConfig.getAUniqueStreamConfiguration(streamName, streamVersion).getEntries());
     }
 
     private boolean isNotNullOrEmpty(String string){

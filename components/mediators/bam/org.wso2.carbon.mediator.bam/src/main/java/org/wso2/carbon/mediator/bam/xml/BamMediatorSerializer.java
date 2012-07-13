@@ -40,8 +40,8 @@ public class BamMediatorSerializer extends AbstractMediatorSerializer {
         bam.addChild(serverProfileElement);
 
         OMElement streamConfigElement = fac.createOMElement("streamConfig", synNS);
-        streamConfigElement.addAttribute(fac.createOMAttribute("name", nullNS, bamMediator.getStreamName()));
-        streamConfigElement.addAttribute(fac.createOMAttribute("version", nullNS, bamMediator.getStreamVersion()));
+        streamConfigElement.addAttribute(fac.createOMAttribute("name", nullNS, bamMediator.getStream().getStreamName()));
+        streamConfigElement.addAttribute(fac.createOMAttribute("version", nullNS, bamMediator.getStream().getStreamVersion()));
         bam.addChild(streamConfigElement);
 
         return bam;

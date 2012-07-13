@@ -6,9 +6,11 @@ import org.apache.axis2.context.ConfigurationContext;
 import org.apache.axis2.context.ConfigurationContextFactory;
 import org.apache.commons.logging.Log;
 import org.apache.commons.logging.LogFactory;
-import org.testng.annotations.BeforeMethod;
+import org.testng.annotations.AfterClass;
+import org.testng.annotations.BeforeClass;
 import org.testng.annotations.Test;
 import org.wso2.carbon.bam.toolbox.deployer.stub.BAMToolboxDepolyerServiceStub;
+import org.wso2.carbon.integration.framework.ClientConnectionUtil;
 import org.wso2.carbon.integration.framework.LoginLogoutUtil;
 import org.wso2.carbon.integration.framework.utils.FrameworkSettings;
 
@@ -42,7 +44,7 @@ public class DefaultToolBoxTestCase {
 
     private String deployedToolBox = "";
 
-    @BeforeMethod(groups = {"wso2.bam"})
+    @BeforeClass(groups = {"wso2.bam"})
     public void init() throws Exception {
         ConfigurationContext configContext = ConfigurationContextFactory.
                 createConfigurationContextFromFileSystem(null);
@@ -62,6 +64,7 @@ public class DefaultToolBoxTestCase {
         deployedToolBox = getToolBoxName();
 
         toolboxStub.deployBasicToolBox(1);
+        log.info("Installing toolbox...");
         Thread.sleep(15000);
 
         //get List of deployed toolboxes
@@ -90,6 +93,7 @@ public class DefaultToolBoxTestCase {
         String toolBoxname = deployedToolBox.replaceAll(".bar", "");
         toolboxStub.undeployToolBox(new String[]{toolBoxname});
 
+        log.info("Un installing toolbox...");
         Thread.sleep(15000);
 
         BAMToolboxDepolyerServiceStub.ToolBoxStatusDTO statusDTO = toolboxStub.getDeployedToolBoxes("1", "");
@@ -129,5 +133,12 @@ public class DefaultToolBoxTestCase {
                 File.separator + "toolbox" + File.separator + toolBoxes[0].getToolboxName();
 
         return toolBoxes[0].getToolboxName();
+    }
+
+
+     @AfterClass(groups = {"wso2.bam"})
+     public void logout() throws Exception {
+        ClientConnectionUtil.waitForPort(9443);
+        util.logout();
     }
 }

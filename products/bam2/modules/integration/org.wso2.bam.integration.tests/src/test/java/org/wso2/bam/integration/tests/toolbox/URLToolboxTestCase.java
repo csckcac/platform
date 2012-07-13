@@ -23,9 +23,11 @@ import org.apache.axis2.context.ConfigurationContext;
 import org.apache.axis2.context.ConfigurationContextFactory;
 import org.apache.commons.logging.Log;
 import org.apache.commons.logging.LogFactory;
-import org.testng.annotations.BeforeMethod;
+import org.testng.annotations.AfterClass;
+import org.testng.annotations.BeforeClass;
 import org.testng.annotations.Test;
 import org.wso2.carbon.bam.toolbox.deployer.stub.BAMToolboxDepolyerServiceStub;
+import org.wso2.carbon.integration.framework.ClientConnectionUtil;
 import org.wso2.carbon.integration.framework.LoginLogoutUtil;
 import org.wso2.carbon.integration.framework.utils.FrameworkSettings;
 
@@ -33,7 +35,7 @@ import static org.testng.Assert.assertTrue;
 
 
 public class URLToolboxTestCase {
-    private static final Log log = LogFactory.getLog(DefaultToolBoxTestCase.class);
+    private static final Log log = LogFactory.getLog(URLToolboxTestCase.class);
 
     private LoginLogoutUtil util = new LoginLogoutUtil();
 
@@ -46,7 +48,7 @@ public class URLToolboxTestCase {
 
     private String deployedToolBox = "";
 
-    @BeforeMethod(groups = {"wso2.bam"})
+    @BeforeClass(groups = {"wso2.bam"})
     public void init() throws Exception {
         ConfigurationContext configContext = ConfigurationContextFactory.
                 createConfigurationContextFromFileSystem(null);
@@ -64,6 +66,8 @@ public class URLToolboxTestCase {
     @Test(groups = {"wso2.bam"})
     public void urlToolBoxDeployment() throws Exception {
         toolboxStub.deployToolBoxFromURL(TOOLBOX_URL);
+        log.info("Installing toolbox...");
+
         int slashIndex = TOOLBOX_URL.lastIndexOf('/');
         deployedToolBox = TOOLBOX_URL.substring(slashIndex + 1);
 
@@ -88,11 +92,12 @@ public class URLToolboxTestCase {
         assertTrue(installed, "URL installation of toolbox :" + toolBoxname + " failed!!");
     }
 
-     @Test(groups = {"wso2.bam"}, dependsOnMethods = "urlToolBoxDeployment")
+    @Test(groups = {"wso2.bam"}, dependsOnMethods = "urlToolBoxDeployment")
     public void undeployURlToolBox() throws Exception {
-         String toolBoxname = deployedToolBox.replaceAll(".bar", "");
+        String toolBoxname = deployedToolBox.replaceAll(".bar", "");
         toolboxStub.undeployToolBox(new String[]{toolBoxname});
 
+        log.info("Un installing toolbox...");
         Thread.sleep(20000);
 
         BAMToolboxDepolyerServiceStub.ToolBoxStatusDTO statusDTO = toolboxStub.getDeployedToolBoxes("1", "");
@@ -118,7 +123,14 @@ public class URLToolboxTestCase {
                 }
             }
         }
-        assertTrue(unInstalled, "Uninstalling url toolbox" + deployedToolBox + " is not successful");
+        assertTrue(unInstalled, "Un installing url toolbox" + deployedToolBox + " is not successful");
+    }
+
+
+     @AfterClass(groups = {"wso2.bam"})
+     public void logout() throws Exception {
+        ClientConnectionUtil.waitForPort(9443);
+        util.logout();
     }
 
 }

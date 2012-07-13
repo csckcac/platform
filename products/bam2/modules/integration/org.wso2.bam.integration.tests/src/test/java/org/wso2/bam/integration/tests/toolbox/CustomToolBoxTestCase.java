@@ -6,9 +6,11 @@ import org.apache.axis2.context.ConfigurationContext;
 import org.apache.axis2.context.ConfigurationContextFactory;
 import org.apache.commons.logging.Log;
 import org.apache.commons.logging.LogFactory;
-import org.testng.annotations.BeforeMethod;
+import org.testng.annotations.AfterClass;
+import org.testng.annotations.BeforeClass;
 import org.testng.annotations.Test;
 import org.wso2.carbon.bam.toolbox.deployer.stub.BAMToolboxDepolyerServiceStub;
+import org.wso2.carbon.integration.framework.ClientConnectionUtil;
 import org.wso2.carbon.integration.framework.LoginLogoutUtil;
 import org.wso2.carbon.integration.framework.utils.FrameworkSettings;
 
@@ -44,7 +46,7 @@ public class CustomToolBoxTestCase {
 
     private String deployedToolBox = "";
 
-    @BeforeMethod(groups = {"wso2.bam"})
+    @BeforeClass(groups = {"wso2.bam"})
     public void init() throws Exception {
         ConfigurationContext configContext = ConfigurationContextFactory.
                 createConfigurationContextFromFileSystem(null);
@@ -68,6 +70,7 @@ public class CustomToolBoxTestCase {
         deployedToolBox = toolDetails[1].toString();
 
         toolboxStub.uploadBAMToolBox(toolData, deployedToolBox);
+        log.info("Installing toolbox...");
         Thread.sleep(15000);
 
         //get List of deployed toolboxes
@@ -93,9 +96,10 @@ public class CustomToolBoxTestCase {
 
     @Test(groups = {"wso2.bam"}, dependsOnMethods = "customToolBoxDeployment")
     public void undeployCustomToolbox() throws Exception {
-         String toolBoxname = deployedToolBox.replaceAll(".bar", "");
+        String toolBoxname = deployedToolBox.replaceAll(".bar", "");
         toolboxStub.undeployToolBox(new String[]{toolBoxname});
 
+        log.info("Un installing toolbox...");
         Thread.sleep(15000);
 
         BAMToolboxDepolyerServiceStub.ToolBoxStatusDTO statusDTO = toolboxStub.getDeployedToolBoxes("1", "");
@@ -141,6 +145,12 @@ public class CustomToolBoxTestCase {
         result[0] = new DataHandler(dataSource);
         result[1] = toolBoxes[0].getToolboxName();
         return result;
+    }
+
+    @AfterClass(groups = {"wso2.bam"})
+     public void logout() throws Exception {
+        ClientConnectionUtil.waitForPort(9443);
+        util.logout();
     }
 
 

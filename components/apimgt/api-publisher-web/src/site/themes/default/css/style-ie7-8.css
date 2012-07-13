@@ -13,3 +13,6 @@ div#newDoc div.name-column{
 div#newDoc div.ieFix{
     width:10px;
 }
+div#header  div.container-fluid{
+    width:970px;margin:0 auto !important;
+}

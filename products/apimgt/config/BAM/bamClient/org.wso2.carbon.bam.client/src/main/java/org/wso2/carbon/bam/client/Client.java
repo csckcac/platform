@@ -69,6 +69,7 @@ public class Client {
             hiveScriptStoreServiceStub.saveHiveScript("APIVersionKeyLastAccessSummaryScript",apiVersionKeyLastAccessSummaryContent,"1 * * * * ? *");
             hiveScriptStoreServiceStub.saveHiveScript("APIVersionServiceTimeSummaryScript",apiVersionServiceTimeSummaryContent,"1 * * * * ? *");
             hiveScriptStoreServiceStub.saveHiveScript("KeyUsageSummaryScript",keyUsageSummaryContent,"1 * * * * ? *");
+	    System.out.println("BAM configured successfully for collecting API stats");
             return;
 
         }  catch (HiveScriptStoreServiceHiveScriptStoreException e) {

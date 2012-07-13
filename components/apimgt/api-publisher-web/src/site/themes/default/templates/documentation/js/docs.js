@@ -120,6 +120,16 @@ var getRadioValue = function (radioButton) {
     }
 };
 
+var disableInline = function(type) {
+    if (type == 'forum') {
+        document.getElementById("optionsRadios7").disabled = true;
+        document.getElementById("optionsRadios8").checked = true;
+    } else {
+        document.getElementById("optionsRadios7").disabled = false;
+        document.getElementById("optionsRadios7").checked = true;
+    }
+};
+
 
 
 

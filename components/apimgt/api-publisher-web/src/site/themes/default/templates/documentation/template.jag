@@ -54,22 +54,22 @@
                         <label class="control-label">Type</label>
                         <div class="controls">
                             <label class="radio">
-                                <input type="radio" name="optionsRadios" id="optionsRadios1" value="how to" checked=""/>How To
+                                <input type="radio" name="optionsRadios" id="optionsRadios1" value="how to" checked="" onChange="disableInline()"/>How To
                             </label>
                             <label class="radio">
-                                <input type="radio" name="optionsRadios" id="optionsRadios2" value="samples"/>Samples & SDK
+                                <input type="radio" name="optionsRadios" id="optionsRadios2" value="samples" onChange="disableInline()"/>Samples & SDK
                             </label>
                             <label class="radio">
-                                <input type="radio" name="optionsRadios" id="optionsRadios3" value="public forum"/>Public Forum
+                                <input type="radio" name="optionsRadios" id="optionsRadios3" value="public forum" onChange="disableInline('forum')"/>Public Forum
                             </label>
                             <label class="radio">
-                                <input type="radio" name="optionsRadios" id="optionsRadios4" value="support forum"/>Support Forum
+                                <input type="radio" name="optionsRadios" id="optionsRadios4" value="support forum" onChange="disableInline('forum')"/>Support Forum
                             </label>
                             <label class="radio">
-                                <input type="radio" name="optionsRadios" id="optionsRadios5" value="API message format"/>API Message Formats
+                                <input type="radio" name="optionsRadios" id="optionsRadios5" value="API message format" onChange="disableInline()"/>API Message Formats
                             </label>
                             <label class="radio">
-                                <input type="radio" name="optionsRadios" id="optionsRadios6" value="other" onclick="javascript:$('#specifyBox').toggle()"/>Other (specify)
+                                <input type="radio" name="optionsRadios" id="optionsRadios6" value="other" onChange="disableInline()" onclick="javascript:$('#specifyBox').toggle()"/>Other (specify)
                             </label>
                             <input type="text" id="specifyBox" style="display:none;"/>
                         </div>
@@ -132,7 +132,9 @@
                     <%if(createPermitted){%>
                     <td><% if(doc.sourceType == "INLINE") { %>
                         <a href="javascript:editInlineContent('<%=api.provider%>','<%=api.name%>','<%=api.version%>','<%=doc.name%>','edit')"><i class="icon-edit"></i> Edit Content</a> |
-                        <% }%>
+                        <% }else{%>
+                         <a href="<%=doc.sourceUrl%>" target="_blank" ><i class="icon-check"></i> View</a> |
+                        <%}%>
                         <a href="javascript:updateDocumentation('<%=doc.name%>','<%=doc.type%>','<%=doc.summary%>','<%=doc.sourceType%>','<%=doc.sourceUrl%>')"><i class="icon-retweet"></i> Update</a> |
                         <a href="javascript:removeDocumentation('<%=api.provider%>','<%=api.name%>','<%=api.version%>','<%=doc.name%>','<%=doc.type%>')"><i class="icon-trash"></i> Delete</a>
                     </td>

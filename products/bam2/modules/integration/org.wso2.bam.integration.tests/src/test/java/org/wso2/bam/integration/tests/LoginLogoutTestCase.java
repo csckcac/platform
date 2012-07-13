@@ -26,7 +26,7 @@ public class LoginLogoutTestCase {
     @BeforeClass(groups = {"wso2.bam"})
     public void login() throws Exception {
         ClientConnectionUtil.waitForPort(9763);
-        util.login();
+        util.loginWithBasicAuth();
     }
 
     @AfterClass(groups = {"wso2.bam"})

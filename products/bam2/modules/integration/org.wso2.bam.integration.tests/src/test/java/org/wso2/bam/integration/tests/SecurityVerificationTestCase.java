@@ -16,8 +16,12 @@ package org.wso2.bam.integration.tests;
  * limitations under the License.
  *
  */
+
 import org.wso2.carbon.integration.framework.SecurityVerificationTest;
 
+/*
+To ensure the WSO2 BAM is properly secured
+*/
 public class SecurityVerificationTestCase extends SecurityVerificationTest {
 
 }

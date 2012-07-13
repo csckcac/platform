@@ -24,6 +24,7 @@ import java.io.IOException;
  * limitations under the License.
  */
 public class BAMTestServerManager extends TestServerManager {
+
     private static final Log log = LogFactory.getLog(BAMTestServerManager.class);
 
     @Override

@@ -549,6 +549,7 @@ public abstract class AbstractEndpoint extends FaultHandler implements Endpoint,
         synCtx.setProperty(SynapseConstants.ERROR_CODE, errorCode);
         synCtx.setProperty(SynapseConstants.ERROR_MESSAGE, errorMsg);
         synCtx.setProperty(SynapseConstants.ERROR_DETAIL, errorMsg);
+        synCtx.setProperty(SynapseConstants.ERROR_EXCEPTION, errorMsg);
     }
 
     private void invokeNextFaultHandler(MessageContext synCtx) {

@@ -1,16 +1,20 @@
-var checkURLValid = function(url) {
+var checkURLValid = function(url,btn) {
+    if($(btn).next().get(0).nodeName == "SPAN"){
+        $(btn).next().remove();
+    }
     if (url == '') {
-        jagg.message({content:"Enter a value for URI to check the connectivity.",type:"info"});
+        $(btn).after(' <span class="label label-important"><i class="icon-remove icon-white"></i> Invalid</span>');
         return;
     }
+
     jagg.post("/site/blocks/item-add/ajax/add.jag", { action:"isURLValid", url:url },
               function (result) {
                   if (!result.error) {
                       if (result.response == "success") {
-                          jagg.message({content:"Successfully connected to the URI.",type:"info"});
+                          $(btn).after(' <span class="label label-success"><i class="icon-ok icon-white"></i> Valid</span>');
 
                       } else {
-                          jagg.message({content:"Unable to establish a connection to the URI.",type:"info"});
+                          $(btn).after(' <span class="label label-important"><i class="icon-remove icon-white"></i> Invalid</span>');
                       }
 
                   }

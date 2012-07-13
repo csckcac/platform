@@ -73,7 +73,7 @@ $(document).ready(function() {
                 <label class="control-label" for="editEndpoint">Endpoint URL:<span class="requiredAstrix">*</span></label>
                 <div class="controls">
                     <input type="text" class="input-xlarge required" id="editEndpoint" name="endpoint" value="<%=api.endpoint%>"/>
-                     <input type="button" onclick="checkURLValid($('#editEndpoint').val())" value="Test URI"/>
+                     <input type="button" onclick="checkURLValid($('#editEndpoint').val(),this)" value="Test URI"/>
                     <p class="help-block">Ex:http://appserver/services/echo</p>
                 </div>
             </div>
@@ -82,7 +82,7 @@ $(document).ready(function() {
                 <label class="control-label" for="editEndpoint">Sandbox URL:</label>
                 <div class="controls">
                     <input type="text" class="input-xlarge" id="editSandbox" name="sandbox" value="<%=api.sandbox%>"/>
-                     <input type="button" onclick="checkURLValid($('#editSandbox').val())" value="Test URI"/>
+                     <input type="button" onclick="checkURLValid($('#editSandbox').val(),this)" value="Test URI"/>
                     <p class="help-block">Ex:http://test-appserver/services/echo</p>
                 </div>
             </div>
@@ -91,7 +91,7 @@ $(document).ready(function() {
                 <label class="control-label" for="editWsdl">WSDL:</label>
                 <div class="controls">
                     <input type="text" class="input-xlarge " id="editWsdl" name="wsdl" value="<%=api.wsdl%>">
-                     <input type="button" onclick="checkURLValid($('#editWsdl').val())" value="Test URI"/>
+                     <input type="button" onclick="checkURLValid($('#editWsdl').val(),this)" value="Test URI"/>
                     <p class="help-block">Ex:http://appserver/services/echo?wsdl</p>
                 </div>
             </div>
@@ -99,7 +99,7 @@ $(document).ready(function() {
                 <label class="control-label" for="editWadl">WADL:</label>
                 <div class="controls">
                     <input type="text" class="input-xlarge " id="editWadl" name="wadl" value="<%=api.wadl%>">
-                    <input type="button" onclick="checkURLValid($('#editWadl').val())" value="Test URI"/>
+                    <input type="button" onclick="checkURLValid($('#editWadl').val(),this)" value="Test URI"/>
                     <p class="help-block">Ex:http://example.com/service.wadl</p>
                 </div>
             </div>

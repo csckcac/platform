@@ -53,7 +53,7 @@ You will see an output similar to following on the console. Refresh above page &
 
 
 8. Now let's try to access Twitter's search function through our newly deployed API. First you need to login
-to the API Store and obtain an API key. Launch a web browser and enter the URL http://localhost:9763/apistore
+to the API Store and obtain an API key. Launch a web browser and enter the URL http://localhost:9763/store
 
 9. Login as the user "subscriber1" with password "subscriber1". Click on the "Applications" tab at
 the top of the page, and create a new application. Provide any name you prefer.

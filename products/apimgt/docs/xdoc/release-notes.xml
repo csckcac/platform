@@ -74,7 +74,7 @@
                 <li>Launch a web browser and navigate to http://localhost:9763/publisher
                     to access the API provider webapp
                 </li>
-                <li>Navigate to http://localhost:9763/apistore to access the API store</li>                
+                <li>Navigate to http://localhost:9763/store to access the API store</li>
                 <li>Use "admin", "admin" as the username and password to login as an admin</li>
                 <li>If you need to start the OSGi console with the server use the property
                     -DosgiConsole when starting the server. The INSTALL.txt file found on the

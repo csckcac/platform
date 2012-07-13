@@ -129,11 +129,6 @@
 	    <version>${hadoop.orbit.version}</version>
         </dependency>
         <dependency>
-            <groupId>org.codehaus.jackson.wso2</groupId>
-            <artifactId>jackson</artifactId>
-	    <version>${jackson.orbit.version}</version>
-        </dependency>
-        <dependency>
             <groupId>com.googlecode.javaewah.wso2</groupId>
             <artifactId>JavaEWAH</artifactId>
 	    <version>${javaewah.orbit.version}</version>
@@ -186,7 +181,6 @@
 	<!--guava.orbit.version>11.0.1.wso2v1</guava.orbit.version>
   -->
 	<hadoop.orbit.version>0.20.203.1.wso2v1</hadoop.orbit.version>
-	<jackson.orbit.version>1.0.1.wso2v1</jackson.orbit.version>
 	<javaewah.orbit.version>0.3.2.wso2v1</javaewah.orbit.version>
 	<jdo2.orbit.version>2.3-ec.wso2v1</jdo2.orbit.version>
 	<json.orbit.version>2.0.0.wso2v1</json.orbit.version>
@@ -265,7 +259,6 @@
                                 <importBundleDef>org.datanucleus.wso2:datanucleus-rdbms</importBundleDef>
 				<importBundleDef>com.google.guava.wso2:guava</importBundleDef>
 				<importBundleDef>org.apache.hadoop.wso2:hadoop-core</importBundleDef>
-                                <importBundleDef>org.codehaus.jackson.wso2:jackson</importBundleDef>
 				<importBundleDef>com.googlecode.javaewah.wso2:JavaEWAH</importBundleDef>
 				<importBundleDef>javax.jdo.wso2:jdo2-api</importBundleDef>
                                 <importBundleDef>org.json.wso2:json</importBundleDef>

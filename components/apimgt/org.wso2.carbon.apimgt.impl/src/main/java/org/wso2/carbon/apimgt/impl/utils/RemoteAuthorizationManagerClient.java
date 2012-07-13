@@ -50,12 +50,12 @@ class RemoteAuthorizationManagerClient {
     public RemoteAuthorizationManagerClient() throws APIManagementException {
         APIManagerConfiguration config = ServiceReferenceHolder.getInstance().
                 getAPIManagerConfigurationService().getAPIManagerConfiguration();
-        String serviceURL = config.getFirstProperty(APIConstants.API_KEY_MANAGER_URL);
-        username = config.getFirstProperty(APIConstants.API_KEY_MANAGER_USERNAME);
-        password = config.getFirstProperty(APIConstants.API_KEY_MANAGER_PASSWORD);
+        String serviceURL = config.getFirstProperty(APIConstants.AUTH_MANAGER_URL);
+        username = config.getFirstProperty(APIConstants.AUTH_MANAGER_USERNAME);
+        password = config.getFirstProperty(APIConstants.AUTH_MANAGER_PASSWORD);
         if (serviceURL == null || username == null || password == null) {
-            throw new APIManagementException("Required connection details for the key management " +
-                    "server not provided");
+            throw new APIManagementException("Required connection details for authentication " +
+                    "manager not provided");
         }
 
         try {

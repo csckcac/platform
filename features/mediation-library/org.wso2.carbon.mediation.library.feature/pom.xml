@@ -46,6 +46,18 @@
 	    </dependency>
         <dependency>
             <groupId>org.wso2.carbon</groupId>
+            <artifactId>org.wso2.carbon.mediation.library.connectors.linkedin.feature</artifactId>
+            <version>${project.version}</version>
+            <type>zip</type>
+	    </dependency>
+        <dependency>
+            <groupId>org.wso2.carbon</groupId>
+            <artifactId>org.wso2.carbon.mediation.library.connectors.twitter.feature</artifactId>
+            <version>${project.version}</version>
+            <type>zip</type>
+	    </dependency>
+        <dependency>
+            <groupId>org.wso2.carbon</groupId>
             <artifactId>org.wso2.carbon.mediation.library.connectors.server.feature</artifactId>
             <version>${project.version}</version>
             <type>pom</type>
@@ -70,7 +82,7 @@
                             <propertiesFile>../../etc/feature.properties</propertiesFile>
                             <adviceFile>
                                 <properties>
-                                    <propertyDef>org.eclipse.equinox.p2.type.group:false</propertyDef>
+                                    <propertyDef>org.eclipse.equinox.p2.type.group:true</propertyDef>
                                 </properties>
                             </adviceFile>
                             <importFeatures>
@@ -79,6 +91,8 @@
                             <includedFeatures>
                                 <includedFeatureDef>org.wso2.carbon:org.wso2.carbon.mediation.library.server.feature</includedFeatureDef>
                                 <includedFeatureDef>org.wso2.carbon:org.wso2.carbon.mediation.library.ui.feature</includedFeatureDef>
+                                <includedFeatureDef>org.wso2.carbon:org.wso2.carbon.mediation.library.connectors.twitter.feature</includedFeatureDef>
+                                <includedFeatureDef>org.wso2.carbon:org.wso2.carbon.mediation.library.connectors.linkedin.feature</includedFeatureDef>
                             </includedFeatures>
                         </configuration>
                     </execution>

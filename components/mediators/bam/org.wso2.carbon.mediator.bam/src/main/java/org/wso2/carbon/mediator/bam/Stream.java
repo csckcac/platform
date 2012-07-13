@@ -79,7 +79,7 @@ public class Stream {
     private String receiverPort = "";
     private String userName = "";
     private String password = "";
-    
+
     public void sendEvents(MessageContext messageContext){
         this.setActivityIdInSOAPHeader(messageContext);
         try {
@@ -253,25 +253,11 @@ public class Stream {
     }
 
     private void defineEventStream() throws BamMediatorException{
-
+        StreamIDBuilder streamIDBuilder = new StreamIDBuilder();
         try {
-            streamId = dataPublisher.defineStream("{" +
-                                                  "  'name':'" + this.streamName + "'," +
-                                                  "  '" + BamMediatorConstants.VERSION + "':'" + this.streamVersion + "'," +
-                                                  "  '" + BamMediatorConstants.NICK_NAME + "': '" + this.streamNickName + "'," +
-                                                  "  '" + BamMediatorConstants.DESCRIPTION + "': '" + this.streamDescription + "'," +
-                                                  "  'correlationData':[" +
-                                                  "          {'name':'" + BamMediatorConstants.ACTIVITY_ID + "','type':'STRING'}" +
-                                                  "  ]," +
-                                                  "  'metaData':[" +
-                                                  "          {'name':'tenantId','type':'INT'}" +
-                                                  "  ]," +
-                                                  "  'payloadData':[" +
-                                                  this.getConstantStreamDefinitionString() +
-                                                  this.getPropertyStreamDefinitionString() +
-                                                  this.getEntityStreamDefinitionString() +
-                                                  "  ]" +
-                                                  "}");
+            streamId = dataPublisher.defineStream(streamIDBuilder.createStreamID
+                    (this.streamName, this.streamVersion, this.streamNickName, this.streamDescription,
+                     this.properties, this.streamEntries));
         } catch (AgentException e) {
             String errorMsg = "Problem while creating the Agent. " + e.getMessage();
             log.error(errorMsg, e);
@@ -355,49 +341,6 @@ public class Stream {
         Object[] correlationData = new Object[1];
         correlationData[0] = messageContext.getProperty(BamMediatorConstants.MSG_ACTIVITY_ID);
         return correlationData;
-    }
-
-    private String getPropertyStreamDefinitionString(){
-        String propertyString = "";
-        for (Property property : properties) {
-            propertyString = propertyString + "," + this.getStreamDefinitionEntryString(property.getKey(), BamMediatorConstants.STRING);
-        }
-        return propertyString;
-    }
-
-    private String getEntityStreamDefinitionString(){
-        String entityString = "";
-        for (StreamEntry streamEntry : streamEntries) {
-            entityString = entityString + "," + this.getStreamDefinitionEntryString(streamEntry.getName(), streamEntry.getType());
-        }
-        return entityString;
-    }
-
-    private String getConstantStreamDefinitionString(){
-        String[] nameStrings = new String[11];
-        nameStrings[0] = BamMediatorConstants.SERVICE_NAME;
-        nameStrings[1] = BamMediatorConstants.OPERATION_NAME;
-        nameStrings[2] = BamMediatorConstants.MSG_ID;
-        nameStrings[3] = BamMediatorConstants.REQUEST_RECEIVED_TIME;
-        nameStrings[4] = BamMediatorConstants.HTTP_METHOD;
-        nameStrings[5] = BamMediatorConstants.CHARACTER_SET_ENCODING;
-        nameStrings[6] = BamMediatorConstants.REMOTE_ADDRESS;
-        nameStrings[7] = BamMediatorConstants.TRANSPORT_IN_URL;
-        nameStrings[8] = BamMediatorConstants.MESSAGE_TYPE;
-        nameStrings[9] = BamMediatorConstants.REMOTE_HOST;
-        nameStrings[10] = BamMediatorConstants.SERVICE_PREFIX;
-
-        String outputString = "          {'name':'" + BamMediatorConstants.MSG_DIRECTION + "','type':'STRING'}";
-
-        for (String nameString : nameStrings) {
-            outputString = outputString + "," + this.getStreamDefinitionEntryString(nameString, BamMediatorConstants.STRING);
-        }
-
-        return outputString;
-    }
-
-    private String getStreamDefinitionEntryString(String name, String type){
-        return  "        {'name':'" + name + "','type':'" + type +"'}";
     }
 
     private Object producePropertyValue(Property property, MessageContext messageContext){

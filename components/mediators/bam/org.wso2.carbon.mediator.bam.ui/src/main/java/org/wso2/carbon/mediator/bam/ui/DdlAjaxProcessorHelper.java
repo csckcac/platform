@@ -40,7 +40,7 @@ import java.util.Locale;
  */
 public class DdlAjaxProcessorHelper {
 
-    private static final Log log = LogFactory.getLog(DdlAjaxProcessorHelper.class);
+    private static final Log LOG = LogFactory.getLog(DdlAjaxProcessorHelper.class);
     private BamServerProfileConfigAdminClient client;
 
     public DdlAjaxProcessorHelper(String cookie, String backendServerURL,
@@ -49,7 +49,7 @@ public class DdlAjaxProcessorHelper {
             client = new BamServerProfileConfigAdminClient(cookie, backendServerURL, configContext, locale);
         } catch (AxisFault e) {
             String errorMsg = "Error while creating the BamServerProfileConfigAdminClient. " + e.getMessage();
-            log.error(errorMsg, e);
+            LOG.error(errorMsg, e);
         }
     }
 
@@ -63,10 +63,10 @@ public class DdlAjaxProcessorHelper {
             return bamServerConfigBuilder.getBamServerConfig();
         } catch (RemoteException e) {
             String errorMsg = "Error while getting the resource. " + e.getMessage();
-            log.error(errorMsg, e);
+            LOG.error(errorMsg, e);
         } catch (XMLStreamException e) {
             String errorMsg = "Error while creating OMElement from a string. " + e.getMessage();
-            log.error(errorMsg, e);
+            LOG.error(errorMsg, e);
         }
         return null;
     }
@@ -86,7 +86,7 @@ public class DdlAjaxProcessorHelper {
             }
         } catch (RemoteException e) {
             String errorMsg = "Error while getting Server Profile Names. " + e.getMessage();
-            log.error(errorMsg, e);
+            LOG.error(errorMsg, e);
         }
         return serverProfileNamesString;
     }

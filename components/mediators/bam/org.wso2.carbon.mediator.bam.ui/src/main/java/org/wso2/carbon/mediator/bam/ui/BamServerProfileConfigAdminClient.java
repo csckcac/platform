@@ -33,7 +33,7 @@ import java.util.ResourceBundle;
  */
 public class BamServerProfileConfigAdminClient {
 
-    private static final Log log = LogFactory.getLog(BamServerProfileConfigAdminClient.class);
+    private static final Log LOG = LogFactory.getLog(BamServerProfileConfigAdminClient.class);
 	private static final String BUNDLE = "org.wso2.carbon.mediator.bam.ui.i18n.Resources";
 	private BAMMediatorConfigAdminStub stub;
 	private ResourceBundle bundle;
@@ -65,7 +65,7 @@ public class BamServerProfileConfigAdminClient {
     }
 
     private void handleException(String msg, Exception e) throws RemoteException {
-        log.error(msg, e);
+        LOG.error(msg, e);
         throw new RemoteException(msg, e);
     }
 

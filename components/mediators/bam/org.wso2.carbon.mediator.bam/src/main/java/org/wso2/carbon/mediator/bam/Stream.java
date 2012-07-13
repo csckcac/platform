@@ -61,7 +61,7 @@ import java.util.UUID;
  * This is the main class of the Event Stream that extract data from mediator and send events.
  */
 public class Stream {
-    private static final Log log = LogFactory.getLog(Stream.class);
+    private static final Log LOG = LogFactory.getLog(Stream.class);
 
     private String streamName = "";
     private String streamVersion = "";
@@ -86,7 +86,7 @@ public class Stream {
             logMessage(messageContext);
         } catch (BamMediatorException e) {
             String errorMsg = "Problem occurred while logging in the BAM Mediator. " + e.getMessage();
-            log.error(errorMsg, e);
+            LOG.error(errorMsg, e);
         }
     }
 
@@ -113,7 +113,7 @@ public class Stream {
             } else if (soapNamespaceURI.equals(SOAP12Constants.SOAP_ENVELOPE_NAMESPACE_URI)) {
                 soapFactory = OMAbstractFactory.getSOAP12Factory();
             } else {
-                log.error("Not a standard soap message");
+                LOG.error("Not a standard soap message");
             }
 
             this.setActivityIDInSOAPHeaderWithConditioning(soapEnvelope, omNs, synapseContext, uuidString, soapFactory);
@@ -183,7 +183,7 @@ public class Stream {
             }
 
         } catch (Exception e) {
-            log.error("Error while processing MessageHeaderMediator...", e);
+            LOG.error("Error while processing MessageHeaderMediator...", e);
         }
     }
 
@@ -205,7 +205,7 @@ public class Stream {
 
         //Publish event for a valid stream
         if (streamId != null && !streamId.isEmpty()) {
-            log.info("Stream ID: " + streamId);
+            LOG.info("Stream ID: " + streamId);
             // Event for each message
             Event event = new Event(streamId, System.currentTimeMillis(),
                                     this.createMetadata(tenantId),
@@ -216,11 +216,11 @@ public class Stream {
                 dataPublisher.publish(event);
             } catch (AgentException e) {
                 String errorMsg = "Problem with Agent while publishing. " + e.getMessage();
-                log.error(errorMsg, e);
+                LOG.error(errorMsg, e);
                 throw new BamMediatorException(errorMsg, e);
             }
         } else {
-            log.info("streamId is empty.");
+            LOG.info("streamId is empty.");
         }
     }
 
@@ -233,23 +233,23 @@ public class Stream {
             }
         } catch (MalformedURLException e) {
             String errorMsg = "Given URLs are incorrect. " + e.getMessage();
-            log.error(errorMsg, e);
+            LOG.error(errorMsg, e);
             throw new BamMediatorException(errorMsg, e);
         } catch (AgentException e) {
             String errorMsg = "Problem while creating the Agent. " + e.getMessage();
-            log.error(errorMsg, e);
+            LOG.error(errorMsg, e);
             throw new BamMediatorException(errorMsg, e);
         } catch (AuthenticationException e) {
             String errorMsg = "Authentication failed. " + e.getMessage();
-            log.error(errorMsg, e);
+            LOG.error(errorMsg, e);
             throw new BamMediatorException(errorMsg, e);
         } catch (TransportException e) {
             String errorMsg = "Transport layer problem. " + e.getMessage();
-            log.error(errorMsg, e);
+            LOG.error(errorMsg, e);
             throw new BamMediatorException(errorMsg, e);
         }
 
-        log.info("Data Publisher Created.");
+        LOG.info("Data Publisher Created.");
     }
 
     private void defineEventStream() throws BamMediatorException{
@@ -260,22 +260,22 @@ public class Stream {
                      this.properties, this.streamEntries));
         } catch (AgentException e) {
             String errorMsg = "Problem while creating the Agent. " + e.getMessage();
-            log.error(errorMsg, e);
+            LOG.error(errorMsg, e);
             throw new BamMediatorException(errorMsg, e);
         } catch (MalformedStreamDefinitionException e) {
             String errorMsg = "Stream definition is incorrect. " + e.getMessage();
-            log.error(errorMsg, e);
+            LOG.error(errorMsg, e);
             throw new BamMediatorException(errorMsg, e);
         } catch (StreamDefinitionException e) {
             String errorMsg = "Problem with Stream Definition. " + e.getMessage();
-            log.error(errorMsg, e);
+            LOG.error(errorMsg, e);
             throw new BamMediatorException(errorMsg, e);
         } catch (DifferentStreamDefinitionAlreadyDefinedException e) {
             String errorMsg = "Already there is a different Stream Definition exists for the Name and Version. " + e.getMessage();
-            log.error(errorMsg, e);
+            LOG.error(errorMsg, e);
             throw new BamMediatorException(errorMsg, e);
         }
-        log.info("Event Stream Defined.");
+        LOG.info("Event Stream Defined.");
     }
 
     private Object[] createPayloadData(MessageContext messageContext,
@@ -353,7 +353,7 @@ public class Stream {
             }
         } catch (JaxenException e) {
             String errorMsg = "SynapseXPath cannot be created for the Stream Property. " + e.getMessage();
-            log.error(errorMsg, e);
+            LOG.error(errorMsg, e);
         }
         return "";
     }

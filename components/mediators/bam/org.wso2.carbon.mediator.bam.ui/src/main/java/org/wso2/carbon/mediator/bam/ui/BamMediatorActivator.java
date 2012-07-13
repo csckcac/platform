@@ -30,26 +30,26 @@ import java.util.Properties;
  */
 public class BamMediatorActivator implements BundleActivator {
 
-    private static final Log log = LogFactory.getLog(BamMediatorActivator.class);
+    private static final Log LOG = LogFactory.getLog(BamMediatorActivator.class);
 
     public void start(BundleContext bundleContext) throws Exception {
 
-        if (log.isDebugEnabled()) {
-            log.debug("Starting the bam mediator component ...");
+        if (LOG.isDebugEnabled()) {
+            LOG.debug("Starting the bam mediator component ...");
         }
 
         Properties props = new Properties();
         bundleContext.registerService(
                 MediatorService.class.getName(), new BamMediatorService(), props);
 
-        if (log.isDebugEnabled()) {
-            log.debug("Successfully registered the bam mediator service");
+        if (LOG.isDebugEnabled()) {
+            LOG.debug("Successfully registered the bam mediator service");
         }
     }
 
     public void stop(BundleContext bundleContext) throws Exception {
-        if (log.isDebugEnabled()) {
-            log.debug("Stopped the bam mediator component ...");
+        if (LOG.isDebugEnabled()) {
+            LOG.debug("Stopped the bam mediator component ...");
         }
     }
 }

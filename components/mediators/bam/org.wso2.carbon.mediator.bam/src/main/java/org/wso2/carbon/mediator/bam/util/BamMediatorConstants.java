@@ -52,5 +52,4 @@ public final class BamMediatorConstants {
     public static final String SERVICE_PREFIX = "service_prefix";
     public static final String STRING = "STRING";
 
-
 }

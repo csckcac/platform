@@ -22,7 +22,6 @@ import org.apache.axiom.om.OMElement;
 import org.apache.synapse.SynapseConstants;
 import org.wso2.carbon.mediator.service.MediatorException;
 import org.wso2.carbon.mediator.service.ui.AbstractMediator;
-
 import javax.xml.namespace.QName;
 
 /**
@@ -30,6 +29,7 @@ import javax.xml.namespace.QName;
  */
 public class BamMediator extends AbstractMediator {
 
+    public static final QName NAME_Q = new QName("name");
     private String serverProfile = "";
     private String streamName = "";
     private String streamVersion = "";
@@ -103,7 +103,7 @@ public class BamMediator extends AbstractMediator {
     }
 
     private void processProfile(OMElement profile){
-        OMAttribute pathAttr = profile.getAttribute(new QName("name"));
+        OMAttribute pathAttr = profile.getAttribute(NAME_Q);
         if(pathAttr != null){
             String pathValue = pathAttr.getAttributeValue();
             this.setServerProfile(pathValue);
@@ -114,7 +114,7 @@ public class BamMediator extends AbstractMediator {
     }
 
     private void processStreamConfiguration(OMElement streamConfig){
-        OMAttribute streamNameAttr = streamConfig.getAttribute(new QName("name"));
+        OMAttribute streamNameAttr = streamConfig.getAttribute(NAME_Q);
         OMAttribute streamVersionAttr = streamConfig.getAttribute(new QName("version"));
         if(streamNameAttr != null && streamVersionAttr != null){
             String nameValue = streamNameAttr.getAttributeValue();

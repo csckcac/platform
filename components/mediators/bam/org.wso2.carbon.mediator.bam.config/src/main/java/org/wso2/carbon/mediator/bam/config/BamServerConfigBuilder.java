@@ -49,8 +49,7 @@ public class BamServerConfigBuilder {
         if(credentialElement != null){
             OMAttribute userNameAttr = credentialElement.getAttribute(new QName("userName"));
             OMAttribute passwordAttr = credentialElement.getAttribute(new QName("password"));
-            if(userNameAttr != null && passwordAttr != null && !userNameAttr.getAttributeValue().equals("")
-               && !passwordAttr.getAttributeValue().equals("")){
+            if(this.isNotNullOrEmpty(userNameAttr) && this.isNotNullOrEmpty(passwordAttr)){
                 this.bamServerConfig.setUsername(userNameAttr.getAttributeValue());
                 this.bamServerConfig.setPassword(passwordAttr.getAttributeValue());
             }
@@ -69,7 +68,7 @@ public class BamServerConfigBuilder {
             OMAttribute ipAttr = connectionElement.getAttribute(new QName("ip"));
             OMAttribute authenticationPortAttr = connectionElement.getAttribute(new QName("authPort"));
             OMAttribute receiverPortAttr = connectionElement.getAttribute(new QName("receiverPort"));
-            if(ipAttr != null && secureAttr != null && authenticationPortAttr != null && !ipAttr.getAttributeValue().equals("") && !secureAttr.getAttributeValue().equals("") && !authenticationPortAttr.getAttributeValue().equals("")){
+            if(this.isNotNullOrEmpty(ipAttr) && this.isNotNullOrEmpty(secureAttr) && this.isNotNullOrEmpty(authenticationPortAttr)){
                 this.bamServerConfig.setIp(ipAttr.getAttributeValue());
                 if("true".equals(secureAttr.getAttributeValue())){
                     this.bamServerConfig.setSecurity(true);
@@ -99,7 +98,7 @@ public class BamServerConfigBuilder {
         if(keyStoreElement != null){
             OMAttribute locationAttr = keyStoreElement.getAttribute(new QName("location"));
             OMAttribute passwordAttr = keyStoreElement.getAttribute(new QName("password"));
-            if(locationAttr != null && passwordAttr != null && !locationAttr.getAttributeValue().equals("") && !passwordAttr.getAttributeValue().equals("")){
+            if(this.isNotNullOrEmpty(locationAttr) && this.isNotNullOrEmpty(passwordAttr)){
                 this.bamServerConfig.setKeyStoreLocation(locationAttr.getAttributeValue());
                 this.bamServerConfig.setKeyStorePassword(passwordAttr.getAttributeValue());
             }
@@ -138,7 +137,7 @@ public class BamServerConfigBuilder {
         OMAttribute versionAttr = streamElement.getAttribute(new QName("version"));
         OMAttribute nickNameAttr = streamElement.getAttribute(new QName("nickName"));
         OMAttribute descriptionAttr = streamElement.getAttribute(new QName("description"));
-        if(nameAttr != null && nickNameAttr != null && descriptionAttr != null && !nameAttr.getAttributeValue().equals("") && !nickNameAttr.getAttributeValue().equals("") && !descriptionAttr.getAttributeValue().equals("")){
+        if(this.isNotNullOrEmpty(nameAttr) && this.isNotNullOrEmpty(nickNameAttr) && this.isNotNullOrEmpty(descriptionAttr)){
             streamConfiguration.setName(nameAttr.getAttributeValue());
             streamConfiguration.setVersion(versionAttr.getAttributeValue());
             streamConfiguration.setNickname(nickNameAttr.getAttributeValue());
@@ -175,7 +174,7 @@ public class BamServerConfigBuilder {
         OMAttribute nameAttr = entryElement.getAttribute(new QName("name"));
         OMAttribute valueAttr = entryElement.getAttribute(new QName("value"));
         OMAttribute typeAttr = entryElement.getAttribute(new QName("type"));
-        if(nameAttr != null && valueAttr != null && typeAttr != null && !nameAttr.getAttributeValue().equals("") && !valueAttr.getAttributeValue().equals("") && !typeAttr.getAttributeValue().equals("")){
+        if(this.isNotNullOrEmpty(nameAttr) && this.isNotNullOrEmpty(valueAttr) && this.isNotNullOrEmpty(typeAttr)){
             StreamEntry streamEntry = new StreamEntry();
             streamEntry.setName(nameAttr.getAttributeValue());
             streamEntry.setValue(valueAttr.getAttributeValue());
@@ -208,8 +207,7 @@ public class BamServerConfigBuilder {
         OMAttribute nameAttr = propertyElement.getAttribute(new QName("name"));
         OMAttribute valueAttr = propertyElement.getAttribute(new QName("value"));
         OMAttribute isExpressionAttr = propertyElement.getAttribute(new QName("isExpression"));
-        if(nameAttr != null && valueAttr != null && isExpressionAttr != null && !nameAttr.getAttributeValue().equals("") &&
-           !valueAttr.getAttributeValue().equals("") && !isExpressionAttr.getAttributeValue().equals("")){
+        if(this.isNotNullOrEmpty(nameAttr) && this.isNotNullOrEmpty(valueAttr) && this.isNotNullOrEmpty(isExpressionAttr)){
             Property property = new Property();
             property.setKey(nameAttr.getAttributeValue());
             property.setValue(valueAttr.getAttributeValue());
@@ -218,6 +216,10 @@ public class BamServerConfigBuilder {
             return true;
         }
         return false; // Empty Property elements and incomplete Property parameters are not accepted
+    }
+
+    private boolean isNotNullOrEmpty(OMAttribute omAttribute){
+        return omAttribute != null && !omAttribute.getAttributeValue().equals("");
     }
 
     public BamServerConfig getBamServerConfig(){

@@ -49,15 +49,6 @@ public class StreamConfiguration {
         this.version = version;
     }
 
-    public void setEntries(List<StreamEntry> entries){
-        this.entries = entries;
-    }
-
-    public void setProperties(List<Property> properties){
-        this.properties = properties;
-    }
-
-
     public String getName(){
         return this.name;
     }

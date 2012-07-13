@@ -86,19 +86,16 @@
             <groupId>org.wso2.carbon</groupId>
             <artifactId>org.wso2.carbon.jaxwsservices.stub</artifactId>
             <version>${stub.version}</version>
-
         </dependency>
         <dependency>
             <groupId>org.wso2.carbon</groupId>
             <artifactId>org.wso2.carbon.jarservices.stub</artifactId>
             <version>${stub.version}</version>
-
         </dependency>
         <dependency>
             <groupId>org.wso2.carbon</groupId>
             <artifactId>org.wso2.carbon.springservices.stub</artifactId>
             <version>${stub.version}</version>
-
         </dependency>
         <dependency>
             <groupId>org.wso2.carbon</groupId>
@@ -198,7 +195,7 @@
         <dependency>
             <groupId>opensaml.wso2</groupId>
             <artifactId>opensaml2</artifactId>
-            <version>2.4.1.wso2v1</version>
+            <version>${opensaml.versoin}</version>
             <exclusions>
                 <exclusion>
                     <groupId>org.slf4j</groupId>
@@ -217,7 +214,7 @@
         <dependency>
             <groupId>org.apache.rampart.wso2</groupId>
             <artifactId>rampart-core</artifactId>
-            <version>1.6.1.wso2v2</version>
+            <version>${rampart.version}</version>
             <exclusions>
                 <exclusion>
                     <groupId>javax.servlet</groupId>
@@ -232,7 +229,7 @@
         <dependency>
             <groupId>org.apache.rampart.wso2</groupId>
             <artifactId>rampart-trust</artifactId>
-            <version>1.6.1.wso2v2</version>
+            <version>${rampart.version}</version>
             <exclusions>
                 <exclusion>
                     <groupId>org.slf4j</groupId>
@@ -243,7 +240,7 @@
         <dependency>
             <groupId>org.apache.rampart.wso2</groupId>
             <artifactId>rampart-policy</artifactId>
-            <version>1.6.1.wso2v2</version>
+            <version>${rampart.version}</version>
             <exclusions>
                 <exclusion>
                     <groupId>org.slf4j</groupId>
@@ -254,7 +251,7 @@
         <dependency>
             <groupId>org.apache.ws.security.wso2</groupId>
             <artifactId>wss4j</artifactId>
-            <version>1.5.11.wso2v1</version>
+            <version>${wss4j.version}</version>
             <exclusions>
                 <exclusion>
                     <groupId>org.slf4j</groupId>
@@ -274,12 +271,12 @@
         <dependency>
             <groupId>org.apache.qpid</groupId>
             <artifactId>qpid-client</artifactId>
-            <version>0.12-wso2v1</version>
+            <version>${qpid.version}</version>
         </dependency>
         <dependency>
             <groupId>org.apache.axis2</groupId>
             <artifactId>axis2-json</artifactId>
-            <version>1.6.1-wso2v4</version>
+            <version>${version.axis2.json}</version>
         </dependency>
         <dependency>
             <groupId>org.wso2.carbon</groupId>
@@ -349,12 +346,12 @@
         <dependency>
             <groupId>org.seleniumhq.selenium</groupId>
             <artifactId>selenium-java</artifactId>
-            <version>2.15.0</version>
+            <version>${selenium.version}</version>
         </dependency>
         <dependency>
             <groupId>com.opera</groupId>
             <artifactId>operadriver</artifactId>
-            <version>0.8.1</version>
+            <version>${operadriver.version}</version>
         </dependency>
         <dependency>
             <groupId>org.wso2.carbon</groupId>
@@ -369,7 +366,7 @@
         <dependency>
             <groupId>org.testng</groupId>
             <artifactId>testng</artifactId>
-            <version>6.1.1</version>
+            <version>${testng.version}</version>
         </dependency>
         <dependency>
             <groupId>org.wso2.carbon</groupId>
@@ -418,8 +415,16 @@
         </dependency>
     </dependencies>
 
- <properties>
-        <axis2.version>1.6.1-wso2v5</axis2.version>
+    <properties>
         <orbit.version.axiom>1.2.11.wso2v2</orbit.version.axiom>
+        <opensaml.versoin>2.4.1.wso2v1</opensaml.versoin>
+        <rampart.version>1.6.1.wso2v4</rampart.version>
+        <wss4j.version>1.5.11.wso2v4</wss4j.version>
+        <qpid.build.version>0.12</qpid.build.version>
+        <qpid.version>0.12-wso2v1</qpid.version>
+        <version.axis2.json>1.6.1-wso2v5</version.axis2.json>
+        <operadriver.version>0.8.1</operadriver.version>
+        <selenium.version>2.15.0</selenium.version>
+        <testng.version>6.1.1</testng.version>
     </properties>
 </project>

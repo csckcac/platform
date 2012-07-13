@@ -57,6 +57,7 @@ public final class JaggeryConstants {
         public static final String URL_MAPPINGS = "urlMappings";
         public static final String URL_MAPPINGS_URL = "url";
         public static final String URL_MAPPINGS_PATH = "path";
+        public static final String DISTRIBUTABLE = "distributable";
     }
 
     public static final class WebappState {

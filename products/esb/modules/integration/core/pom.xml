@@ -24,8 +24,19 @@
                         <goals>
                             <goal>test-jar</goal>
                         </goals>
-                    </execution>
+                        <configuration>
+                       	    <skip>false</skip>
+                        </configuration>
+		    </execution>
                 </executions>
+            </plugin>
+	    <plugin>
+                <artifactId>maven-compiler-plugin</artifactId>
+                <version>2.5.1</version>
+                <inherited>false</inherited>
+                <configuration>
+                    <skip>false</skip>
+                </configuration>
             </plugin>
         </plugins>
     </build>

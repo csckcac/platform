@@ -173,7 +173,7 @@
                                 <importBundleDef>org.wso2.carbon:org.wso2.carbon.bpel.common</importBundleDef>
                                 <importBundleDef>org.wso2.carbon:org.wso2.carbon.unifiedendpoint.core</importBundleDef>
                                 <importBundleDef>org.apache.ode.wso2:ode</importBundleDef>
-                                <importBundleDef>net.sf.saxon.wso2:saxon.bps</importBundleDef>
+                                <importBundleDef>net.sf.saxon.wso2:saxon.he</importBundleDef>
                                 <importBundleDef>org.apache.geronimo.specs.wso2:geronimo-j2ee-connector_1.5_spec</importBundleDef>
                                 <importBundleDef>net.sourceforge.serp.wso2:serp</importBundleDef>
                                 <!--importBundleDef>commons-dbcp.wso2:commons-dbcp</importBundleDef-->

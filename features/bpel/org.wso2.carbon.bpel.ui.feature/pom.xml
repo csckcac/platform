@@ -106,7 +106,7 @@
                                 </importBundleDef>
                                 <importBundleDef>org.apache.openjpa:openjpa</importBundleDef>
                                 <importBundleDef>org.apache.geronimo.specs:geronimo-jpa_2.0_spec</importBundleDef>
-                                <importBundleDef>net.sf.saxon.wso2:saxon.bps</importBundleDef>
+                                <importBundleDef>net.sf.saxon.wso2:saxon.he</importBundleDef>
                                 <importBundleDef>net.sourceforge.serp.wso2:serp</importBundleDef>
                                 <importBundleDef>tranql.wso2:tranql-connector</importBundleDef>
                                 <importBundleDef>antlr.wso2:antlr</importBundleDef>

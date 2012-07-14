@@ -16,9 +16,9 @@
 
 package org.wso2.carbon.humantask.core.engine.runtime.xpath;
 
-import net.sf.saxon.om.NamespaceConstant;
 import net.sf.saxon.value.DurationValue;
 import net.sf.saxon.xpath.XPathEvaluator;
+import net.sf.saxon.xpath.XPathFactoryImpl;
 import org.apache.commons.logging.Log;
 import org.apache.commons.logging.LogFactory;
 import org.w3c.dom.*;
@@ -124,18 +124,7 @@ public class XPathExpressionRuntime implements ExpressionLanguageRuntime {
 
     private Object evaluate(String exp, EvaluationContext evalCtx, QName type) {
         try {
-            System.setProperty(JAVAX_XML_XPATH_XPATH_FACTORY + NamespaceConstant.OBJECT_MODEL_SAXON,
-                    NET_SF_SAXON_XPATH_XPATH_FACTORY_IMPL);
-            // JAXP based XPath 1.0 runtime does not work anymore after a XPath 2.0 has been evaluated if this is set.
-            // System.setProperty("javax.xml.xpath.XPathFactory:"+XPathConstants.DOM_OBJECT_MODEL,
-            //        "net.sf.saxon.xpath.XPathFactoryImpl");
-            System.setProperty(JAVAX_XML_XPATH_XPATH_FACTORY + NamespaceConstant.OBJECT_MODEL_JDOM,
-                    NET_SF_SAXON_XPATH_XPATH_FACTORY_IMPL);
-            System.setProperty(JAVAX_XML_XPATH_XPATH_FACTORY + NamespaceConstant.OBJECT_MODEL_XOM,
-                    NET_SF_SAXON_XPATH_XPATH_FACTORY_IMPL);
-            System.setProperty(JAVAX_XML_XPATH_XPATH_FACTORY + NamespaceConstant.OBJECT_MODEL_DOM4J,
-                    NET_SF_SAXON_XPATH_XPATH_FACTORY_IMPL);
-            XPathFactory xpf = XPathFactory.newInstance(NamespaceConstant.OBJECT_MODEL_SAXON);
+            XPathFactory xpf = new XPathFactoryImpl();
             JaxpFunctionResolver funcResolve = new JaxpFunctionResolver(evalCtx);
             xpf.setXPathFunctionResolver(funcResolve);
             XPathEvaluator xpe = (XPathEvaluator) xpf.newXPath();

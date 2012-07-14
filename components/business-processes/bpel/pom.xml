@@ -87,6 +87,20 @@
             <dependency>
                 <groupId>org.wso2.carbon</groupId>
                 <artifactId>org.wso2.carbon.datasource</artifactId>
+                <exclusions>
+                    <exclusion>
+                        <groupId>net.sf.saxon</groupId>
+                        <artifactId>saxon</artifactId>
+                    </exclusion>
+                    <exclusion>
+                        <groupId>net.sf.saxon</groupId>
+                        <artifactId>saxon-dom</artifactId>
+                    </exclusion>
+                    <exclusion>
+                        <groupId>net.sf.saxon</groupId>
+                        <artifactId>saxon-xqj</artifactId>
+                    </exclusion>
+                </exclusions>
                 <version>${wso2carbon.version.bpel}</version>
             </dependency>
             <dependency>
@@ -112,11 +126,6 @@
                 <version>1.7.0.wso2v1</version>
             </dependency>
             <dependency>
-                <groupId>org.apache.synapse</groupId>
-                <artifactId>synapse-commons</artifactId>
-                <version>${synapse.version.bpel}</version>
-            </dependency>
-            <dependency>
                 <groupId>commons-collections.wso2</groupId>
                 <artifactId>commons-collections</artifactId>
                 <version>3.2.0.wso2v1</version>
@@ -134,6 +143,20 @@
             <dependency>
                 <groupId>org.wso2.carbon</groupId>
                 <artifactId>org.wso2.carbon.unifiedendpoint.core</artifactId>
+                <exclusions>
+                    <exclusion>
+                        <groupId>net.sf.saxon</groupId>
+                        <artifactId>saxon</artifactId>
+                    </exclusion>
+                    <exclusion>
+                        <groupId>net.sf.saxon</groupId>
+                        <artifactId>saxon-dom</artifactId>
+                    </exclusion>
+                    <exclusion>
+                        <groupId>net.sf.saxon</groupId>
+                        <artifactId>saxon-xqj</artifactId>
+                    </exclusion>
+                </exclusions>
                 <version>${wso2carbon.version.bpel}</version>
             </dependency>
             <dependency>
@@ -164,7 +187,6 @@
         <wso2carbon.version.bpel>${wso2carbon.version}</wso2carbon.version.bpel>
         <axis2.wso2.version.bpel>${axis2.wso2.version}</axis2.wso2.version.bpel>
         <axis2.osgi.version.range.bpel>${axis2.osgi.version.range}</axis2.osgi.version.range.bpel>
-        <synapse.version.bpel>${synapse.version}</synapse.version.bpel>
         <wso2carbon.version.module-mgt>${wso2carbon.version}</wso2carbon.version.module-mgt>
         <axis2.wso2.version.module-mgt>${axis2.wso2.version}</axis2.wso2.version.module-mgt>
         <axis2.osgi.version.range.module-mgt>${axis2.osgi.version.range}

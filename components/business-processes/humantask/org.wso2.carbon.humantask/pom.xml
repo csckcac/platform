@@ -92,7 +92,7 @@
         </dependency>
         <dependency>
             <groupId>net.sf.saxon.wso2</groupId>
-            <artifactId>saxon.bps</artifactId>
+            <artifactId>saxon.he</artifactId>
         </dependency>
         <dependency>
             <groupId>com.h2database.wso2</groupId>

@@ -58,6 +58,20 @@
             <dependency>
                 <groupId>org.wso2.carbon</groupId>
                 <artifactId>org.wso2.carbon.datasource</artifactId>
+                <exclusions>
+                    <exclusion>
+                        <groupId>net.sf.saxon</groupId>
+                        <artifactId>saxon</artifactId>
+                    </exclusion>
+                    <exclusion>
+                        <groupId>net.sf.saxon</groupId>
+                        <artifactId>saxon-dom</artifactId>
+                    </exclusion>
+                    <exclusion>
+                        <groupId>net.sf.saxon</groupId>
+                        <artifactId>saxon-xqj</artifactId>
+                    </exclusion>
+                </exclusions>
                 <version>${wso2carbon.version}</version>
             </dependency>
             <dependency>

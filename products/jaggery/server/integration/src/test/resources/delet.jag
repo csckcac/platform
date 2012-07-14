@@ -1,0 +1,10 @@
+<%
+var param = request.getParameter('action');
+if(param == "parameters"){
+var testJson = del("http://localhost:9763/tmp/jsonTest.jag?action=stringify",null,"json");
+print(testJson);
+}else{
+var testJson = del("http://localhost:9763/tmp/jsonTest.jag");
+print(testJson);
+}
+%>

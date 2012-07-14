@@ -2,7 +2,7 @@
 	Requirements
 ---------------------------------------------------------------------------------
 
-1. WSO2 BAM-2.0.0-ALPHA3
+1. WSO2 BAM-2.0.0-ALPHA2
 2. Apache Ant
 3. Java Runtime Environment
 
@@ -13,16 +13,15 @@ Configuring API Manager
 To enable API statistics collection you need to configure the following properties in the api-manager.xml
 file of API Manager.
 
-   <!--
-	Enable/Disable the API usage tracker.
-   -->
+    <!--
+	    Enable/Disable the API usage tracker.
+    -->
 	<Enabled>true</Enabled>
 
-   <!--
-	JDBC URL to query remote JDBC database 
-	E.g. jdbc:h2:/home/wso2/wso2bam-2.0.0-SNAPSHOT/repository/database/APIMGTSTATS_DB;AUTO_SERVER=TRUE
-   -->
-	<JDBCUrl>jdbc:h2:<!-- Full path to WSO2BAM home directory -->/repository/database/APIMGTSTATS_DB;AUTO_SERVER=TRUE</JDBCUrl>
+    <!--
+	    JDBC URL to query remote JDBC database
+    -->
+	<JDBCUrl>jdbc:h2:<!-- Full path to JDBC database -->;AUTO_SERVER=TRUE</JDBCUrl>
 
 ---------------------------------------------------------------------------------
 Configuring BAM
@@ -36,6 +35,6 @@ Configuring BAM
 5.Finally you can see the message - "BAM configured successfully for collecting API stats"
 6.Now start deploying samples & invoking them. Your invocation statistics should be visible under,
 - APIs -> All Statistics
-- My APIs -> Statistics 
+- My APIs -> Statistics
 - APIs -> All -> [YOUR API SAMPLE NAME] -> 'Versions' tab
 - APIs -> All -> [YOUR API SAMPLE NAME] -> 'Users' tab

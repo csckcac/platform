@@ -28,7 +28,7 @@ Running WSO2 API Manager in standalone mode
                 --dump		    Print a thread dump of the AM Unix daemon
                 --restart	    Restart the AM Unix daemon
                 --version	    What version of the AM server are you running
-		--n 		    Start Multiple Instances of the same server after you 
+		--n 		    Start Multiple Instances of the same server after you
 				    have successfully installed the Multiple-instances features
 				    from a feature repo.
             options:
@@ -41,9 +41,9 @@ Running WSO2 API Manager in standalone mode
 
             system-properties:
                 -DhttpPort	Overrides the HTTP port defined in the
-                                transports.xml file
+                                repository/conf/tomcat/catalina-server.xml file
                 -DhttpsPort	Overrides the HTTPS port defined in the
-                                transports.xml file
+                                repository/conf/tomcat/catalina-server.xml file
                 -DSynapseServerName=[server-name]
                                 Server name of the synapse server
                 -DosgiConsole=[port]
@@ -59,7 +59,7 @@ Running WSO2 API Manager in standalone mode
                                 configuration, and start Carbon
                 -Dcarbon.registry.root
                                 The root of the Registry used by
-                                this Carbon instance             
+                                this Carbon instance
                 -Dweb.location	The directory into which UI artifacts
                                 included in an Axis2 AAR file are extracted to
 
@@ -72,15 +72,10 @@ System Requirements
    with MS IE 7. In addition to JavaScript, ActiveX should also be enabled
    with IE. This can be achieved by setting your security level to
    medium or lower.
-   NOTE:
-     On Windows Server 2003, it is not allowed to go below the medium security
-     level in Internet Explorer 6.x and the default medium security setting with
-     IE does not allow sufficient level of JS or ActiveX enablement for the
-     management console to run.
 5. To compile and run the sample clients, an Ant version is required. Ant 1.7.0
    version is recommended
 6. To build WSO2 AM from the Source distribution, it is necessary that you have
-   JDK 1.6.x version and Maven 2.1.0 or later
+   JDK 1.6.x version and Maven 3.0.0 or later
 
 For more details see
     http://wso2.org/wiki/display/carbon/System+Requirements

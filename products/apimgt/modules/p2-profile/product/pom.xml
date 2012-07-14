@@ -83,8 +83,6 @@
 
                                 <featureArtifactDef>org.wso2.carbon:org.wso2.carbon.system.statistics.feature:${carbon.version}</featureArtifactDef>
 
-                                <featureArtifactDef>org.wso2.carbon:org.wso2.carbon.bam.agent.feature:${carbon.version}</featureArtifactDef>
-
                                 <featureArtifactDef>org.wso2.carbon:org.wso2.carbon.soaptracer.feature:${carbon.version}</featureArtifactDef>
 
                                 <featureArtifactDef>org.wso2.carbon:org.wso2.carbon.security.mgt.feature:${carbon.version}</featureArtifactDef>
@@ -214,10 +212,6 @@
                                 </feature>
                                 <feature>
                                     <id>org.wso2.carbon.throttle.server.feature.group</id>
-                                    <version>${carbon.version}</version>
-                                </feature>
-                                <feature>
-                                    <id>org.wso2.carbon.bam.agent.feature.group</id>
                                     <version>${carbon.version}</version>
                                 </feature>
                                 <feature>
@@ -440,10 +434,10 @@
                                     <id>org.wso2.carbon.registry.ws.feature.group</id>
                                     <version>${carbon.version}</version>
                                 </feature>
-				<feature>
-				    <id>org.wso2.carbon.databridge.datapublisher.feature.group</id>
-				    <version>${carbon.version}</version>
-				</feature>
+                                <feature>
+                                    <id>org.wso2.carbon.databridge.datapublisher.feature.group</id>
+                                    <version>${carbon.version}</version>
+                                </feature>
 
                                 <!--API Management related feature-->
                                 <feature>

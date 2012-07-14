@@ -1,38 +1,37 @@
 <APIManager>
-     <!--
-      In master-datasources.xml [ conf/datasources directory],we have defined the datasource which is related to API
-      Manager which need to be created at server start-up.Below entry is to define the JNDI look-up datasource name
-      in-order to access that created data-source.
+    <!--
+        JNDI name of the data source to be used by the API publisher, API store and API
+        key manager. This data source should be defined in the master-datasources.xml file
+        in conf/datasources directory.
     -->
+    <DataSourceName>jdbc/WSO2AM_DB</DataSourceName>
 
-    <DatasourceName>jdbc/WSO2AM_DB</DatasourceName>
     <!--
         Database configuration used by API publisher, API store and API key manager.
         When these components are deployed separately, each of them should have
         separate database configurations pointing to the same physical database.
     -->
-   <!--Database-->
-        <!--
-            JDBC connection string for the database.
-        -->
-        <!--<URL>jdbc:h2:repository/database/WSO2AM_DB</URL> -->
+    <!--Database-->
+    <!--
+        JDBC connection string for the database.
+    -->
+    <!--<URL>jdbc:h2:repository/database/WSO2AM_DB</URL> -->
 
-        <!--
-            JDBC username for the database.
-        -->
-        <!--<Username>wso2carbon</Username>-->
+    <!--
+        JDBC username for the database.
+    -->
+    <!--<Username>wso2carbon</Username>-->
 
-        <!--
-            JDBC password for the database.
-        -->
-        <!--<Password>wso2carbon</Password>
+    <!--
+        JDBC password for the database.
+    -->
+    <!--<Password>wso2carbon</Password>
 
 
-            JDBC driver for the database.
-        -->
-        <!--<Driver>org.h2.Driver</Driver>
+        JDBC driver for the database.
+    -->
+    <!--<Driver>org.h2.Driver</Driver>
     </Database>-->
-
 
     <!--
         Authentication manager configuration for API publisher and API store. This is
@@ -48,7 +47,7 @@
             Admin username for the Authentication manager.
         -->
         <Username>admin</Username>
-         <!--
+        <!--
             Admin password for the Authentication manager.
         -->
         <Password>admin</Password>
@@ -91,7 +90,7 @@
         -->
         <Enabled>false</Enabled>
 
-	<!--
+        <!--
             API Usage Data Publisher.
         -->
         <PublisherClass>org.wso2.carbon.apimgt.usage.publisher.APIMgtUsageDataBridgeDataPublisher</PublisherClass>
@@ -117,22 +116,22 @@
         -->
         <BAMPassword>admin</BAMPassword>
 
-	<!--
-            JDBC Driver .
+        <!--
+            JDBC Driver to use with the BAM analytics database.
         -->
         <JDBCDriver>org.h2.Driver</JDBCDriver>
 
-	<!--
-            JDBC URL to query remote JDBC database 
+        <!--
+            JDBC URL to query remote JDBC database for BAM analytics.
         -->
         <JDBCUrl>jdbc:h2:<!-- Full path to JDBC database -->;AUTO_SERVER=TRUE</JDBCUrl>
 
-	<!--
+        <!--
             Username to query remote JDBC database.
         -->
         <JDBCUserName>wso2carbon</JDBCUserName>
 
-	<!--
+        <!--
             Password to query remote JDBC database.
         -->
         <JDBCPassword>wso2carbon</JDBCPassword>

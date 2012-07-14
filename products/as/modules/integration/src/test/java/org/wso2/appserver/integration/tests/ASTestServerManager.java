@@ -214,6 +214,51 @@ public class ASTestServerManager extends TestServerManager {
     	sourcePath = computeJaggerySourcePath(fileName);
     	destinationPath = computeJaggeryDestPath(carbonHome, fileName);
         copySampleFile(sourcePath, destinationPath);
+        
+        //require object
+    	fileName = "require.jag";
+    	sourcePath = computeJaggerySourcePath(fileName);
+    	destinationPath = computeJaggeryDestPath(carbonHome, fileName);
+        copySampleFile(sourcePath, destinationPath);
+        
+        //syntax object
+    	fileName = "syntax.jag";
+    	sourcePath = computeJaggerySourcePath(fileName);
+    	destinationPath = computeJaggeryDestPath(carbonHome, fileName);
+        copySampleFile(sourcePath, destinationPath);
+        
+        //resources for test 
+    	fileName = "testhtml.html";
+    	sourcePath = computeJaggerySourcePath(fileName);
+    	destinationPath = computeJaggeryDestPath(carbonHome, fileName);
+        copySampleFile(sourcePath, destinationPath);
+        
+        //jsonTest
+    	fileName = "jsonTest.jag";
+    	sourcePath = computeJaggerySourcePath(fileName);
+    	destinationPath = computeJaggeryDestPath(carbonHome, fileName);
+        copySampleFile(sourcePath, destinationPath);
+        
+        //http client object tests
+    	fileName = "get.jag";
+    	sourcePath = computeJaggerySourcePath(fileName);
+    	destinationPath = computeJaggeryDestPath(carbonHome, fileName);
+        copySampleFile(sourcePath, destinationPath);
+        
+    	fileName = "post.jag";
+    	sourcePath = computeJaggerySourcePath(fileName);
+    	destinationPath = computeJaggeryDestPath(carbonHome, fileName);
+        copySampleFile(sourcePath, destinationPath);
+        
+    	fileName = "put.jag";
+    	sourcePath = computeJaggerySourcePath(fileName);
+    	destinationPath = computeJaggeryDestPath(carbonHome, fileName);
+        copySampleFile(sourcePath, destinationPath);
+        
+    	fileName = "delet.jag";
+    	sourcePath = computeJaggerySourcePath(fileName);
+    	destinationPath = computeJaggeryDestPath(carbonHome, fileName);
+        copySampleFile(sourcePath, destinationPath);
 		
     }
 

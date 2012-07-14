@@ -12,25 +12,25 @@
         separate database configurations pointing to the same physical database.
     -->
     <!--Database-->
-    <!--
-        JDBC connection string for the database.
-    -->
-    <!--<URL>jdbc:h2:repository/database/WSO2AM_DB</URL> -->
+        <!--
+            JDBC connection string for the database.
+        -->
+        <!--<URL>jdbc:h2:repository/database/WSO2AM_DB</URL> -->
 
-    <!--
-        JDBC username for the database.
-    -->
-    <!--<Username>wso2carbon</Username>-->
+        <!--
+            JDBC username for the database.
+        -->
+        <!--<Username>wso2carbon</Username>-->
 
-    <!--
-        JDBC password for the database.
-    -->
-    <!--<Password>wso2carbon</Password>
+        <!--
+            JDBC password for the database.
+        -->
+        <!--<Password>wso2carbon</Password>
 
 
-        JDBC driver for the database.
-    -->
-    <!--<Driver>org.h2.Driver</Driver>
+            JDBC driver for the database.
+        -->
+        <!--<Driver>org.h2.Driver</Driver>
     </Database>-->
 
     <!--

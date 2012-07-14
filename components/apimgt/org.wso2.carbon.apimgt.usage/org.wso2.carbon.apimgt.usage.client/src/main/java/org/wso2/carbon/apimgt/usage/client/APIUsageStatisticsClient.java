@@ -19,10 +19,7 @@
 package org.wso2.carbon.apimgt.usage.client;
 
 import org.apache.axiom.om.OMElement;
-import org.apache.axiom.om.impl.llom.OMElementImpl;
 import org.apache.axiom.om.util.AXIOMUtil;
-import org.apache.axis2.AxisFault;
-import org.apache.regexp.RE;
 import org.wso2.carbon.apimgt.api.APIManagementException;
 import org.wso2.carbon.apimgt.api.APIProvider;
 import org.wso2.carbon.apimgt.api.model.*;
@@ -33,12 +30,9 @@ import org.wso2.carbon.apimgt.usage.client.dto.APIUsageDTO;
 import org.wso2.carbon.apimgt.usage.client.exception.APIMgtUsageQueryServiceClientException;
 import org.wso2.carbon.apimgt.usage.client.internal.APIUsageClientServiceComponent;
 import org.wso2.carbon.apimgt.usage.publisher.APIMgtUsagePublisherConstants;
-import org.wso2.carbon.bam.presentation.stub.QueryServiceStoreException;
 import org.wso2.carbon.bam.presentation.stub.QueryServiceStub;
 
 import javax.xml.namespace.QName;
-import javax.xml.stream.XMLStreamException;
-import java.rmi.RemoteException;
 import java.sql.Connection;
 import java.sql.DriverManager;
 import java.sql.ResultSet;
@@ -51,32 +45,22 @@ import java.util.*;
 
 public class APIUsageStatisticsClient {
 
-    private QueryServiceStub qss;
-    Connection connection;
-
+    private Connection connection;
     private APIProvider apiProviderImpl;
-
-    private String jdbcDriver;
-    private String jdbcURL;
-    private String jdbcUserName;
-    private String jdbcPassword;
 
     public APIUsageStatisticsClient(String username) throws APIMgtUsageQueryServiceClientException {
         APIManagerConfiguration config = APIUsageClientServiceComponent.getAPIManagerConfiguration();
         String targetEndpoint = config.getFirstProperty(APIMgtUsagePublisherConstants.API_USAGE_BAM_SERVER_URL);
-        jdbcDriver = config.getFirstProperty(APIUsageStatisticsClientConstants.API_USAGE_JDBC_DRIVER);
-        jdbcURL = config.getFirstProperty(APIUsageStatisticsClientConstants.API_USAGE_JDBC_URL);
-        jdbcUserName = config.getFirstProperty(APIUsageStatisticsClientConstants.API_USAGE_JDBC_UserName);
-        jdbcPassword = config.getFirstProperty(APIUsageStatisticsClientConstants.API_USAGE_JDBC_Password);
+        String jdbcDriver = config.getFirstProperty(APIUsageStatisticsClientConstants.API_USAGE_JDBC_DRIVER);
+        String jdbcURL = config.getFirstProperty(APIUsageStatisticsClientConstants.API_USAGE_JDBC_URL);
+        String jdbcUserName = config.getFirstProperty(APIUsageStatisticsClientConstants.API_USAGE_JDBC_UserName);
+        String jdbcPassword = config.getFirstProperty(APIUsageStatisticsClientConstants.API_USAGE_JDBC_Password);
         if (targetEndpoint == null || targetEndpoint.equals("")) {
             throw new APIMgtUsageQueryServiceClientException("Required BAM server URL parameter unspecified");
         }
 
-        try {
-            qss = new QueryServiceStub(targetEndpoint + "services/QueryService");
+        try {            
             apiProviderImpl = APIManagerFactory.getInstance().getAPIProvider(username);
-        } catch (AxisFault e) {
-            throw new APIMgtUsageQueryServiceClientException("Error while instantiating QueryServiceStub", e);
         } catch (APIManagementException e) {
             throw new APIMgtUsageQueryServiceClientException("Exception while instantiating API manager core objects", e);
         }
@@ -394,20 +378,19 @@ public class APIUsageStatisticsClient {
                                         QueryServiceStub.CompositeIndex[] compositeIndex)
             throws APIMgtUsageQueryServiceClientException {
 
-        OMElement returnElement = null;
         String selectRowsByColumnName = null;
         String selectRowsByColumnValue = null;
-        if(compositeIndex != null){
+        if (compositeIndex != null) {
             selectRowsByColumnName = compositeIndex[0].getIndexName();
             selectRowsByColumnValue = compositeIndex[0].getRangeFirst();
         }
         try {
-
             Statement statement = connection.createStatement();
             String query;
-            if(selectRowsByColumnName != null){
-                query = "SELECT * FROM  " + columnFamily + " WHERE " + selectRowsByColumnName + "=\'" + selectRowsByColumnValue + "\'";
-            }else{
+            if (selectRowsByColumnName != null) {
+                query = "SELECT * FROM  " + columnFamily + " WHERE " + selectRowsByColumnName + 
+                        "=\'" + selectRowsByColumnValue + "\'";
+            } else {
                 query = "SELECT * FROM  " + columnFamily;
             }
             ResultSet rs = statement.executeQuery(query);
@@ -415,7 +398,7 @@ public class APIUsageStatisticsClient {
             int columnCount = rs.getMetaData().getColumnCount();
             while (rs.next()){
                 returnStringBuilder.append("<row>");
-                for(int i = 1; i <= columnCount ; i++){
+                for (int i = 1; i <= columnCount ; i++) {
                     String columnName = rs.getMetaData().getColumnName(i);
                     String columnValue = rs.getString(columnName);
                     returnStringBuilder.append("<" + columnName + ">" + columnValue + "</" + columnName + ">");
@@ -424,11 +407,10 @@ public class APIUsageStatisticsClient {
             }
             returnStringBuilder.append("</rows></omElement>");
             String returnString = returnStringBuilder.toString();
-            returnElement =  AXIOMUtil.stringToOM(returnString);
+            return AXIOMUtil.stringToOM(returnString);
         } catch (Exception e){
             throw new APIMgtUsageQueryServiceClientException("Error occurred while querying from JDBC database", e);
         }
-        return returnElement;
     }
 
     private List<API> getAPIsByProvider(String providerId) throws APIMgtUsageQueryServiceClientException{

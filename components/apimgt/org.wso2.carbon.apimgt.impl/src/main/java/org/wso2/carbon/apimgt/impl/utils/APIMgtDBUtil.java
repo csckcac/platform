@@ -15,6 +15,7 @@
 * specific language governing permissions and limitations
 * under the License.
 */
+
 package org.wso2.carbon.apimgt.impl.utils;
 
 import org.apache.commons.dbcp.BasicDataSource;
@@ -46,7 +47,7 @@ public final class APIMgtDBUtil {
     private static final String DB_USER = DB_CONFIG + "Username";
     private static final String DB_PASSWORD = DB_CONFIG + "Password";
 
-    private static final String DATASOURCE_NAME = "DataSourceName";
+    private static final String DATA_SOURCE_NAME = "DataSourceName";
 
     /**
      * Initializes the data source
@@ -65,19 +66,18 @@ public final class APIMgtDBUtil {
                 }
                 APIManagerConfiguration config = ServiceReferenceHolder.getInstance().
                         getAPIManagerConfigurationService().getAPIManagerConfiguration();
-                String dataSourceName = config.getFirstProperty(DATASOURCE_NAME);
+                String dataSourceName = config.getFirstProperty(DATA_SOURCE_NAME);
 
                 if (dataSourceName != null) {
-                    Context ctx;
                     try {
-                        ctx = new InitialContext();
+                        Context ctx = new InitialContext();
                         dataSource = (DataSource) ctx.lookup(dataSourceName);
                     } catch (NamingException e) {
-                        throw new APIManagementException("Error while creating the datasource by reading" +
-                                                         "configurations from master-datasource.xml");
+                        throw new APIManagementException("Error while looking up the data " +
+                                "source: " + dataSourceName);
                     }
                 } else {
-                    DBConfiguration configuration = getDBConfig();
+                    DBConfiguration configuration = getDBConfig(config);
                     String dbUrl = configuration.getDbUrl();
                     String driver = configuration.getDriverName();
                     String username = configuration.getUserName();
@@ -86,25 +86,15 @@ public final class APIMgtDBUtil {
                         throw new APIManagementException("Required DB configuration parameters unspecified");
                     }
 
-                    BasicDataSource bDSource = new BasicDataSource();
-                    bDSource.setDriverClassName(driver);
-                    bDSource.setUrl(dbUrl);
-                    bDSource.setUsername(username);
-                    bDSource.setPassword(password);
-                    dataSource = bDSource;
+                    BasicDataSource basicDataSource = new BasicDataSource();
+                    basicDataSource.setDriverClassName(driver);
+                    basicDataSource.setUrl(dbUrl);
+                    basicDataSource.setUsername(username);
+                    basicDataSource.setPassword(password);
+                    dataSource = basicDataSource;
                 }
-
             }
         }
-    }
-
-    public static boolean checkDBConfiguration() {
-        DBConfiguration configuration = getDBConfig();
-        String dbUrl = configuration.getDbUrl();
-        String driver = configuration.getDriverName();
-        String username = configuration.getUserName();
-        String password = configuration.getPassword();
-        return dbUrl != null && driver != null && username != null && password != null;
     }
 
     /**
@@ -182,12 +172,11 @@ public final class APIMgtDBUtil {
     /**
      * Return the DBConfiguration
      *
+     * @param config APIManagerConfiguration containing the JDBC settings
      * @return DBConfiguration
      */
-    private static DBConfiguration getDBConfig() {
+    private static DBConfiguration getDBConfig(APIManagerConfiguration config) {
         DBConfiguration dbConfiguration = new DBConfiguration();
-        APIManagerConfiguration config = ServiceReferenceHolder.getInstance().
-                getAPIManagerConfigurationService().getAPIManagerConfiguration();
         dbConfiguration.setDbUrl(config.getFirstProperty(DB_URL));
         dbConfiguration.setDriverName(config.getFirstProperty(DB_DRIVER));
         dbConfiguration.setUserName(config.getFirstProperty(DB_USER));

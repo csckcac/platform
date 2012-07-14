@@ -247,8 +247,13 @@ function initMiscFields() {
 
     // Set the media type negate styles in case there's no values in the filter for it
     var mediaTypeNegateObj = document.getElementById('mediaTypeNegateDiv');
+    var mediaTypeIn = document.getElementById('#_mediaType');
     mediaTypeNegateObj.style.cssFloat = "left";
-    mediaTypeNegateObj.style.marginLeft = "160px";
+    if(mediaTypeIn.value != "") {
+        mediaTypeNegateObj.style.marginLeft = "20px";
+    } else {
+        mediaTypeNegateObj.style.marginLeft = "160px";
+    }
 }
 
 function submitAdvSearchForm(pageNumber) {		

@@ -28,9 +28,9 @@ Running WSO2 API Manager in standalone mode
                 --dump		    Print a thread dump of the AM Unix daemon
                 --restart	    Restart the AM Unix daemon
                 --version	    What version of the AM server are you running
-		--n 		    Start Multiple Instances of the same server after you
-				    have successfully installed the Multiple-instances features
-				    from a feature repo.
+                --n 		    Start Multiple Instances of the same server after you
+                                have successfully installed the Multiple-instances features
+                                from a feature repo.
             options:
                 --debug <port> 	Start the server in remote debugging mode.
                                 port: The remote debugging port.

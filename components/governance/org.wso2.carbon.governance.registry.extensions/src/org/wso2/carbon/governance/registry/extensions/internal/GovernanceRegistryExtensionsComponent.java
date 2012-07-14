@@ -24,6 +24,7 @@ import org.apache.commons.logging.LogFactory;
 import org.osgi.service.component.ComponentContext;
 import org.wso2.carbon.CarbonConstants;
 import org.wso2.carbon.governance.api.exception.GovernanceException;
+import org.wso2.carbon.governance.api.util.GovernanceConstants;
 import org.wso2.carbon.registry.core.Registry;
 import org.wso2.carbon.registry.core.RegistryConstants;
 import org.wso2.carbon.registry.core.Resource;
@@ -35,6 +36,7 @@ import org.wso2.carbon.utils.CarbonUtils;
 import org.wso2.carbon.utils.FileUtil;
 
 import java.io.File;
+import java.io.FilenameFilter;
 import java.io.IOException;
 
 /**
@@ -59,7 +61,7 @@ public class GovernanceRegistryExtensionsComponent {
        }
         try {
             addRxtConfigs();
-        } catch (GovernanceException e) {
+        } catch (RegistryException e) {
             log.error("Failed to add rxt files to registry",e);
         }
     }
@@ -79,36 +81,44 @@ public class GovernanceRegistryExtensionsComponent {
         return registryService;
     }
 
-    private void addRxtConfigs() throws GovernanceException {
-        String path = CarbonUtils.getCarbonHome() + File.separator + "repository" + File.separator +
+    private void addRxtConfigs() throws RegistryException {
+        String rxtDir = CarbonUtils.getCarbonHome() + File.separator + "repository" + File.separator +
                 "resources" + File.separator + "rxts";
-        File file = new File(path);
-        String[] rxtFilePaths = file.list();
-
-        for (String rxtPath : rxtFilePaths) {
-            try {
-                if (!rxtPath.contains(".rxt")) {
-                    continue;
-                }
-                String rxt = FileUtil.readFileToString(path + File.separator + rxtPath);
-                Registry registry = registryService.getRegistry();
-                UserRegistry systemRegistry = registryService.getRegistry(CarbonConstants.REGISTRY_SYSTEM_USERNAME);
-                Resource resource = registry.newResource();
-                resource.setContent(RegistryUtils.encodeString(rxt));
-                resource.setMediaType(RXT_MEDIA_TYPE);
-                String resourcePath = RXT_PATH + RegistryConstants.PATH_SEPARATOR + rxtPath;
-                if (!registry.resourceExists(resourcePath)) {
-                    systemRegistry.put(resourcePath, resource);
-                }
-            } catch (IOException e) {
-                String msg = "Failed to read rxt files";
-                throw new GovernanceException(msg, e);
-            } catch (RegistryException e) {
-                String msg = "Failed to add rxt to registry ";
-                throw new GovernanceException(msg, e);
+        File file = new File(rxtDir);
+        //create a FilenameFilter
+        FilenameFilter filenameFilter = new FilenameFilter() {
+            public boolean accept(File dir, String name) {
+                //if the file extension is .rxt return true, else false
+                return name.endsWith(".rxt");
             }
+        };
+        String[] rxtFilePaths = file.list(filenameFilter);
+        UserRegistry systemRegistry;
+        try {
+            systemRegistry = registryService.getRegistry(CarbonConstants.REGISTRY_SYSTEM_USERNAME);
+        } catch (RegistryException e) {
+            throw new RegistryException("Failed to get registry", e);
         }
 
+        for (String rxtPath : rxtFilePaths) {
+            String resourcePath = GovernanceConstants.RXT_CONFIGS_PATH +
+                    RegistryConstants.PATH_SEPARATOR + rxtPath;
+            try {
+                if (systemRegistry.resourceExists(resourcePath)) {
+                    continue;
+                }
+                String rxt = FileUtil.readFileToString(rxtDir + File.separator + rxtPath);
+                Resource resource = systemRegistry.newResource();
+                resource.setContent(rxt.getBytes());
+                resource.setMediaType(RXT_MEDIA_TYPE);
+                systemRegistry.put(resourcePath, resource);
+            } catch (IOException e) {
+                String msg = "Failed to read rxt files";
+                throw new RegistryException(msg, e);
+            } catch (RegistryException e) {
+                String msg = "Failed to add rxt to registry ";
+                throw new RegistryException(msg, e);
+            }
+        }
     }
-
 }

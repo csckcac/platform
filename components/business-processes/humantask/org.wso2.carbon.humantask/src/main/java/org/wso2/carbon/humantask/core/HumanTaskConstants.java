@@ -85,4 +85,5 @@ public final class HumanTaskConstants {
 
     public static final String SOAP_ENV_NS = "http://schemas.xmlsoap.org/soap/envelope/";
 
+    public static final String JAVAX_WSDL_VERBOSE_MODE_KEY = "javax.wsdl.verbose";
 }

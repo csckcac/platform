@@ -16,14 +16,19 @@
 
 package org.wso2.carbon.humantask.core.store;
 
+import org.apache.axiom.om.OMElement;
 import org.apache.axis2.engine.AxisConfiguration;
 import org.apache.commons.logging.Log;
 import org.apache.commons.logging.LogFactory;
 import org.w3c.dom.Element;
 import org.w3c.dom.Node;
+import org.wso2.carbon.bpel.common.config.EndpointConfiguration;
 import org.wso2.carbon.humantask.*;
+import org.wso2.carbon.humantask.core.deployment.HumanTaskDeploymentException;
 import org.wso2.carbon.humantask.core.deployment.config.THTDeploymentConfig;
+import org.wso2.carbon.humantask.core.deployment.config.TPublish;
 import org.wso2.carbon.humantask.core.utils.HumanTaskNamespaceContext;
+import org.wso2.carbon.humantask.core.utils.HumanTaskStoreUtils;
 
 import javax.wsdl.Definition;
 import javax.xml.namespace.QName;
@@ -45,7 +50,10 @@ public class NotificationConfiguration extends HumanTaskBaseConfiguration {
                                      List<Definition> wsdls,
                                      String targetNamespace,
                                      String humanTaskArtifactName,
-                                     AxisConfiguration tenantAxisConfig, String packageName, File humanTaskDefinitionFile) {
+                                     AxisConfiguration tenantAxisConfig,
+                                     String packageName,
+                                     File humanTaskDefinitionFile)
+            throws HumanTaskDeploymentException {
         super(humanInteractionsDocument, targetNamespace, humanTaskArtifactName, tenantAxisConfig,
                 false, packageName,humanTaskDefinitionFile);
 
@@ -62,6 +70,23 @@ public class NotificationConfiguration extends HumanTaskBaseConfiguration {
         populateNamespace(notification.getDomNode().getNodeType() == Node.ELEMENT_NODE ?
                 (Element) notification.getDomNode() : null, nsContext);
         setNamespaceContext(nsContext);
+
+        initEndpointConfigs();
+    }
+
+    private void initEndpointConfigs() throws HumanTaskDeploymentException {
+        TPublish.Service service = notificationDeploymentConfiguration.getPublish().getService();
+        OMElement serviceEle;
+        serviceEle = HumanTaskStoreUtils.getOMElement(service.toString());
+        EndpointConfiguration endpointConfig = HumanTaskStoreUtils.getEndpointConfig(serviceEle);
+        if (endpointConfig != null) {
+            endpointConfig.setServiceName(service.getName().getLocalPart());
+            endpointConfig.setServicePort(service.getPort());
+            endpointConfig.setServiceNS(service.getName().getNamespaceURI());
+            endpointConfig.setBasePath(getHumanTaskDefinitionFile().getParentFile().getAbsolutePath());
+
+            addEndpointConfiguration(endpointConfig);
+        }
     }
 
     public TNotification getNotificationDefinition() {

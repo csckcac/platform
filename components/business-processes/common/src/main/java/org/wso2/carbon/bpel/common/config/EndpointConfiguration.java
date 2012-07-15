@@ -13,7 +13,7 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-package org.wso2.carbon.bpel.core.ode.integration.config;
+package org.wso2.carbon.bpel.common.config;
 
 import org.apache.axiom.om.OMElement;
 import org.apache.axis2.AxisFault;
@@ -47,6 +47,10 @@ public class EndpointConfiguration {
 
     //Cache the unified endpoint
     private UnifiedEndpoint unifiedEndpoint = null;
+
+    private boolean serviceDescriptionAvailable;
+
+    private String serviceDescriptionLocation;
 
     public void setUnifiedEndPointReference(String unifiedEndPointReference) {
         this.unifiedEndPointReference = unifiedEndPointReference;
@@ -90,6 +94,10 @@ public class EndpointConfiguration {
 
     public void setMexTimeout(String mexTimeout) {
         this.mexTimeout = mexTimeout;
+    }
+
+    public String getBasePath() {
+        return basePath;
     }
 
     public UnifiedEndpoint getUnifiedEndpoint() throws AxisFault {
@@ -150,5 +158,21 @@ public class EndpointConfiguration {
     public static boolean isAbsoutePath(String filePath) {
         return filePath.startsWith("/") ||
                 (filePath.length() > 1 && filePath.charAt(1) == ':');
+    }
+
+    public boolean isServiceDescriptionAvailable() {
+        return serviceDescriptionAvailable;
+    }
+
+    public void setServiceDescriptionAvailable(boolean serviceDescriptionAvailable) {
+        this.serviceDescriptionAvailable = serviceDescriptionAvailable;
+    }
+
+    public String getServiceDescriptionLocation() {
+        return serviceDescriptionLocation;
+    }
+
+    public void setServiceDescriptionLocation(String serviceDescriptionLocation) {
+        this.serviceDescriptionLocation = serviceDescriptionLocation;
     }
 }

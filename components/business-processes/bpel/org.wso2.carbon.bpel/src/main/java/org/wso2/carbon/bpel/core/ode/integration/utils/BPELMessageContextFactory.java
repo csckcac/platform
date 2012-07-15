@@ -24,7 +24,7 @@ import org.apache.axis2.context.MessageContext;
 import org.apache.axis2.description.*;
 import org.apache.axis2.util.MessageContextBuilder;
 import org.apache.axis2.wsdl.WSDLConstants;
-import org.wso2.carbon.bpel.core.ode.integration.BPELConstants;
+import org.wso2.carbon.bpel.core.BPELConstants;
 import org.wso2.carbon.bpel.core.ode.integration.BPELMessageContext;
 import org.wso2.carbon.bpel.core.ode.integration.BPELProcessProxy;
 import org.wso2.carbon.bpel.core.ode.integration.PartnerService;

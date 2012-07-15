@@ -28,7 +28,7 @@
     <artifactId>attachment-mgt</artifactId>
     <groupId>org.wso2.carbon</groupId>
     <packaging>pom</packaging>
-    <name>WSO2 Carbon - Attachment Management Server - attachment-mgt</name>
+    <name>WSO2 Carbon - Attachment Management Aggregator Module</name>
     <description>A custom wso2 products or solution</description>
     <url>http://wso2.org</url>
 

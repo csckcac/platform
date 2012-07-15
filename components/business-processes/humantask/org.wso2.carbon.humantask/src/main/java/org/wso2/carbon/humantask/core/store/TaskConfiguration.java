@@ -16,13 +16,21 @@
 
 package org.wso2.carbon.humantask.core.store;
 
+import org.apache.axiom.om.OMElement;
 import org.apache.axis2.engine.AxisConfiguration;
+import org.apache.commons.logging.Log;
+import org.apache.commons.logging.LogFactory;
 import org.w3c.dom.Element;
 import org.w3c.dom.Node;
+import org.wso2.carbon.bpel.common.config.EndpointConfiguration;
 import org.wso2.carbon.humantask.*;
 import org.wso2.carbon.humantask.core.CallBackService;
+import org.wso2.carbon.humantask.core.deployment.HumanTaskDeploymentException;
+import org.wso2.carbon.humantask.core.deployment.config.TCallback;
 import org.wso2.carbon.humantask.core.deployment.config.THTDeploymentConfig;
+import org.wso2.carbon.humantask.core.deployment.config.TPublish;
 import org.wso2.carbon.humantask.core.utils.HumanTaskNamespaceContext;
+import org.wso2.carbon.humantask.core.utils.HumanTaskStoreUtils;
 
 import javax.wsdl.Definition;
 import javax.wsdl.PortType;
@@ -35,6 +43,7 @@ import java.util.List;
  * related properties such as deadlines, presentation parameters, etc.
  */
 public class TaskConfiguration extends HumanTaskBaseConfiguration {
+    private static Log log = LogFactory.getLog(TaskConfiguration.class);
     // Task definition
     private TTask task;
 
@@ -61,9 +70,11 @@ public class TaskConfiguration extends HumanTaskBaseConfiguration {
                              List<Definition> wsdls,
                              String targetNamespace,
                              String humanTaskArtifactName,
-                             AxisConfiguration tenatAxisConf, String packageName, File humanTaskDefinitionFile) {
+                             AxisConfiguration tenatAxisConf,
+                             String packageName,
+                             File humanTaskDefinitionFile) throws HumanTaskDeploymentException {
         super(humanInteractionsDocument, targetNamespace, humanTaskArtifactName, tenatAxisConf,
-              true, packageName, humanTaskDefinitionFile);
+                true, packageName, humanTaskDefinitionFile);
 
         this.task = task;
         this.taskDeploymentConfiguration = taskDeploymentConfiguration;
@@ -86,6 +97,34 @@ public class TaskConfiguration extends HumanTaskBaseConfiguration {
 
         if (!useOneWSDL) {
             responseWSDL = findWSDLDefinition(wsdls, getResponsePortType(), getResponseOperation());
+        }
+
+        initEndpointConfigs();
+    }
+
+    private void initEndpointConfigs() throws HumanTaskDeploymentException {
+        TPublish.Service service = taskDeploymentConfiguration.getPublish().getService();
+        OMElement serviceEle;
+        serviceEle = HumanTaskStoreUtils.getOMElement(service.toString());
+        EndpointConfiguration endpointConfig = HumanTaskStoreUtils.getEndpointConfig(serviceEle);
+        if (endpointConfig != null) {
+            endpointConfig.setServiceName(service.getName().getLocalPart());
+            endpointConfig.setServicePort(service.getPort());
+            endpointConfig.setServiceNS(service.getName().getNamespaceURI());
+            endpointConfig.setBasePath(getHumanTaskDefinitionFile().getParentFile().getAbsolutePath());
+
+            addEndpointConfiguration(endpointConfig);
+        }
+        TCallback.Service cbService = taskDeploymentConfiguration.getCallback().getService();
+        serviceEle = HumanTaskStoreUtils.getOMElement(cbService.toString());
+        endpointConfig = HumanTaskStoreUtils.getEndpointConfig(serviceEle);
+        if (endpointConfig != null) {
+            endpointConfig.setServiceName(cbService.getName().getLocalPart());
+            endpointConfig.setServicePort(cbService.getPort());
+            endpointConfig.setServiceNS(cbService.getName().getNamespaceURI());
+            endpointConfig.setBasePath(getHumanTaskDefinitionFile().getParentFile().getAbsolutePath());
+
+            addEndpointConfiguration(endpointConfig);
         }
     }
 

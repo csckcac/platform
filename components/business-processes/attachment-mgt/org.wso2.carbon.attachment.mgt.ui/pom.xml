@@ -30,7 +30,7 @@
     <modelVersion>4.0.0</modelVersion>
     <artifactId>org.wso2.carbon.attachment.mgt.ui</artifactId>
     <packaging>bundle</packaging>
-    <name>WSO2 Carbon Component - Attachment Management Server - UI</name>
+    <name>WSO2 Carbon - Attachment Management UI Component</name>
     <description>org.wso2.carbon.attachment.mgt.ui represent the UI aspects of
         org.wso2.carbon.attachment.mgt bundle
     </description>

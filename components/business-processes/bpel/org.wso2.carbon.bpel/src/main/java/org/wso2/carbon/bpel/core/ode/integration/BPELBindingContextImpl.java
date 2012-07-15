@@ -27,10 +27,18 @@ import org.apache.commons.collections.map.MultiKeyMap;
 import org.apache.commons.logging.Log;
 import org.apache.commons.logging.LogFactory;
 import org.apache.ode.agents.memory.SizingAgent;
+import org.apache.ode.bpel.epr.WSDL11Endpoint;
 import org.apache.ode.bpel.iapi.*;
 import org.wso2.carbon.CarbonConstants;
-import org.wso2.carbon.bpel.core.ode.integration.store.*;
+import org.wso2.carbon.bpel.common.BusinessProcessConstants;
+import org.wso2.carbon.bpel.common.ServiceConfigurationUtil;
+import org.wso2.carbon.bpel.common.config.EndpointConfiguration;
+import org.wso2.carbon.bpel.core.ode.integration.store.MultiTenantProcessConfiguration;
+import org.wso2.carbon.bpel.core.ode.integration.store.ProcessConfigurationImpl;
+import org.wso2.carbon.bpel.core.ode.integration.store.TenantProcessStore;
 import org.wso2.carbon.bpel.core.ode.integration.utils.AxisServiceUtils;
+import org.wso2.carbon.context.CarbonContext;
+import org.wso2.carbon.utils.multitenancy.CarbonContextHolder;
 import org.wso2.carbon.utils.multitenancy.MultitenantUtils;
 
 import javax.wsdl.Definition;
@@ -188,6 +196,13 @@ public class BPELBindingContextImpl implements BindingContext {
         try {
             axisService = AxisServiceUtils.createAxisService(tenantConfigCtx.getAxisConfiguration(),
                     processProxy);
+
+            EndpointConfiguration endpointConfig =
+                ((ProcessConfigurationImpl) processConfiguration).getEndpointConfiguration(
+                        new WSDL11Endpoint(serviceName, portName));
+
+            ServiceConfigurationUtil.configureService(axisService, endpointConfig, tenantConfigCtx);
+
         } catch (AxisFault e) {
             log.error("Error occurred creating the axis service " + serviceName.toString());
             throw new DeploymentException("BPEL Package deployment failed.", e);
@@ -196,6 +211,11 @@ public class BPELBindingContextImpl implements BindingContext {
         processProxy.setAxisService(axisService);
         removeBPELProcessProxyAndAxisService(processConfiguration.getDeployer(), serviceName, portName);
         services.put(processConfiguration.getDeployer(), serviceName, portName, processProxy);
+
+        CarbonContextHolder.getThreadLocalCarbonContextHolder().setTenantDomain("carbon.super");
+        log.info("TenantID: " + CarbonContext.getCurrentContext().getTenantId() + " Domain: " +
+        CarbonContext.getCurrentContext().getTenantDomain() +  " Username" +
+                CarbonContext.getCurrentContext().getUsername());
 
         tenantConfigCtx.getAxisConfiguration().addServiceGroup(
                 createServiceGroupForService(axisService));
@@ -216,7 +236,7 @@ public class BPELBindingContextImpl implements BindingContext {
         // Checking configured using files param is not a good solution. We must figure out a way to handle this
         // at Carbon persistence manager layer.
         if (svc.getParameter(CarbonConstants.PRESERVE_SERVICE_HISTORY_PARAM) != null &&
-                svc.getParameter(BPELConstants.CONFIGURED_USING_BPEL_PKG_CONFIG_FILES) == null) {
+                svc.getParameter(BusinessProcessConstants.CONFIGURED_USING_BPEL_PKG_CONFIG_FILES) == null) {
             svcGroup.addParameter(new Parameter(CarbonConstants.PRESERVE_SERVICE_HISTORY_PARAM, "true"));
         }
 

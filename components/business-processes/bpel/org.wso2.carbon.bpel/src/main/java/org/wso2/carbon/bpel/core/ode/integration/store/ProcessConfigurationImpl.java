@@ -33,13 +33,14 @@ import org.apache.ode.utils.CronExpression;
 import org.apache.ode.utils.DOMUtils;
 import org.w3c.dom.Element;
 import org.w3c.dom.Node;
+import org.wso2.carbon.bpel.common.BusinessProcessConstants;
+import org.wso2.carbon.bpel.common.config.EndpointConfiguration;
 import org.wso2.carbon.bpel.core.BPELConstants;
 import org.wso2.carbon.bpel.core.ode.integration.config.EndpointConfigBuilder;
-import org.wso2.carbon.bpel.core.ode.integration.config.EndpointConfiguration;
 import org.wso2.carbon.bpel.core.ode.integration.config.PackageConfiguration;
+import org.wso2.carbon.bpel.skeleton.ode.integration.mgt.services.types.*;
 import org.wso2.carbon.unifiedendpoint.core.UnifiedEndpoint;
 import org.wso2.carbon.unifiedendpoint.core.UnifiedEndpointConstants;
-import org.wso2.carbon.bpel.skeleton.ode.integration.mgt.services.types.*;
 import org.wso2.carbon.utils.multitenancy.MultitenantUtils;
 
 import javax.wsdl.Definition;
@@ -539,8 +540,8 @@ public class ProcessConfigurationImpl implements ProcessConf, MultiTenantProcess
                     serviceEle = AXIOMUtil.stringToOM(tInvoke.getService().toString());
                     OMElement endpointEle = serviceEle.getFirstElement();
                     if (endpointEle == null || !endpointEle.getQName().equals(
-                            new QName(BPELConstants.BPEL_PKG_ENDPOINT_CONFIG_NS,
-                                    BPELConstants.ENDPOINT))) {
+                            new QName(BusinessProcessConstants.BPEL_PKG_ENDPOINT_CONFIG_NS,
+                                    BusinessProcessConstants.ENDPOINT))) {
                         continue;
                     }
 
@@ -568,8 +569,8 @@ public class ProcessConfigurationImpl implements ProcessConf, MultiTenantProcess
                     serviceEle = AXIOMUtil.stringToOM(tProvide.getService().toString());
                     OMElement endpointEle = serviceEle.getFirstElement();
                     if (endpointEle == null || !endpointEle.getQName().equals(
-                            new QName(BPELConstants.BPEL_PKG_ENDPOINT_CONFIG_NS,
-                                    BPELConstants.ENDPOINT))) {
+                            new QName(BusinessProcessConstants.BPEL_PKG_ENDPOINT_CONFIG_NS,
+                                    BusinessProcessConstants.ENDPOINT))) {
                         continue;
                     }
 

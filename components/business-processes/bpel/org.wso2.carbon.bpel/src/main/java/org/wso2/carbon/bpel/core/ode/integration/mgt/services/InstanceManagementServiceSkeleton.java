@@ -37,7 +37,7 @@ import org.apache.axiom.om.OMFactory;
 import org.apache.axiom.om.OMAbstractFactory;
 import org.apache.axiom.om.OMElement;
 import org.wso2.carbon.bpel.core.ode.integration.BPELServerImpl;
-import org.wso2.carbon.bpel.core.ode.integration.BPELConstants;
+import org.wso2.carbon.bpel.core.BPELConstants;
 import org.wso2.carbon.bpel.core.ode.integration.store.ProcessConfigurationImpl;
 import org.wso2.carbon.bpel.skeleton.ode.integration.mgt.services.InstanceManagementException;
 import org.wso2.carbon.bpel.skeleton.ode.integration.mgt.services.InstanceManagementServiceSkeletonInterface;

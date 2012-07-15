@@ -21,6 +21,7 @@ import org.w3c.dom.Attr;
 import org.w3c.dom.Element;
 import org.w3c.dom.NamedNodeMap;
 import org.w3c.dom.Node;
+import org.wso2.carbon.bpel.common.config.EndpointConfiguration;
 import org.wso2.carbon.humantask.HumanInteractionsDocument;
 import org.wso2.carbon.humantask.TDeadlines;
 import org.wso2.carbon.humantask.TPresentationElements;
@@ -32,6 +33,7 @@ import javax.wsdl.Definition;
 import javax.wsdl.PortType;
 import javax.xml.namespace.QName;
 import java.io.File;
+import java.util.ArrayList;
 import java.util.List;
 
 /**
@@ -74,6 +76,7 @@ public abstract class HumanTaskBaseConfiguration {
     /** The human task definition file containing this task configuration. */
     private File humanTaskDefinitionFile;
 
+    private List<EndpointConfiguration> endpointConfigs = new ArrayList<EndpointConfiguration>();
 
     public HumanTaskBaseConfiguration() {
     }
@@ -247,5 +250,20 @@ public abstract class HumanTaskBaseConfiguration {
      */
     public void setHumanTaskDefinitionFile(File humanTaskDefinitionFile) {
         this.humanTaskDefinitionFile = humanTaskDefinitionFile;
+    }
+
+    public EndpointConfiguration getEndpointConfiguration(String serviceName, String portName) {
+        for (EndpointConfiguration endpointConfig : endpointConfigs) {
+            if (serviceName.equals(endpointConfig.getServiceName()) &&
+                    portName.equals(endpointConfig.getServicePort())) {
+                return endpointConfig;
+            }
+        }
+
+        return null;
+    }
+
+    public void addEndpointConfiguration(EndpointConfiguration endpointConfig) {
+        endpointConfigs.add(endpointConfig);
     }
 }

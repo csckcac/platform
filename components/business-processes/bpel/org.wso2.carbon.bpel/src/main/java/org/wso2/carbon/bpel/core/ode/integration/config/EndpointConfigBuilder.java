@@ -15,11 +15,14 @@
  */
 package org.wso2.carbon.bpel.core.ode.integration.config;
 
+import org.apache.axiom.om.OMAttribute;
+import org.apache.axiom.om.OMElement;
+import org.apache.commons.lang.StringUtils;
 import org.apache.commons.logging.Log;
 import org.apache.commons.logging.LogFactory;
-import org.apache.axiom.om.OMElement;
-import org.apache.axiom.om.OMAttribute;
-import org.wso2.carbon.bpel.core.ode.integration.BPELConstants;
+import org.wso2.carbon.bpel.common.BusinessProcessConstants;
+import org.wso2.carbon.bpel.common.config.EndpointConfiguration;
+import org.wso2.carbon.bpel.core.BPELConstants;
 import org.wso2.carbon.bpel.core.ode.integration.utils.Messages;
 import org.wso2.carbon.unifiedendpoint.core.UnifiedEndpointConstants;
 
@@ -40,10 +43,11 @@ public final class EndpointConfigBuilder {
         EndpointConfiguration endPointConfig = new EndpointConfiguration();
         endPointConfig.setBasePath(basePath);
 
-        String endpointRef = ele.getAttributeValue(new QName(null, BPELConstants.ENDPOINTREF));
-
-        endPointConfig.setUnifiedEndPointReference(endpointRef);
-        log.info("Endpoint reference file:" + endpointRef);
+        String endpointRef = ele.getAttributeValue(new QName(null, BusinessProcessConstants.ENDPOINTREF));
+        if (StringUtils.isNotEmpty(endpointRef)) {
+            endPointConfig.setUnifiedEndPointReference(endpointRef);
+            log.info("Endpoint reference file:" + endpointRef);
+        }
 
         if (ele.getFirstChildWithName(
                 new QName(UnifiedEndpointConstants.WSA_NS, UnifiedEndpointConstants.UNIFIED_EPR)) !=
@@ -51,6 +55,15 @@ public final class EndpointConfigBuilder {
             log.info("Found in-line unified endpoint. This will take precedence over the reference");
             endPointConfig.setUepOM(ele.getFirstChildWithName(
                     new QName(UnifiedEndpointConstants.WSA_NS, UnifiedEndpointConstants.UNIFIED_EPR)));
+        }
+
+        String serviceDescLocation = ele.getAttributeValue(new QName(null,
+                BusinessProcessConstants.SERVICE_DESC_LOCATION));
+
+        if (StringUtils.isNotEmpty(serviceDescLocation)) {
+            endPointConfig.setServiceDescriptionAvailable(true);
+            endPointConfig.setServiceDescriptionLocation(serviceDescLocation.trim());
+            log.info("Service descriptor reference file:" + serviceDescLocation);
         }
 
         String mexTimeout = getElementAttributeValue(BPELConstants.MEX_TIMEOUT,
@@ -74,7 +87,7 @@ public final class EndpointConfigBuilder {
     private static String getElementAttributeValue(String elementName, String attributeName,
                                                    OMElement parentEle) {
         OMElement ele = parentEle.getFirstChildWithName(
-                new QName(BPELConstants.BPEL_PKG_ENDPOINT_CONFIG_NS, elementName));
+                new QName(BusinessProcessConstants.BPEL_PKG_ENDPOINT_CONFIG_NS, elementName));
         if (ele != null) {
             Iterator attributes = ele.getAllAttributes();
             while (attributes.hasNext()) {

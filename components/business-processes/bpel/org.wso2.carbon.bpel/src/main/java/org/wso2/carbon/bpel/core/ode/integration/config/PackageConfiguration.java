@@ -16,6 +16,7 @@
 package org.wso2.carbon.bpel.core.ode.integration.config;
 
 import org.apache.commons.collections.map.MultiKeyMap;
+import org.wso2.carbon.bpel.common.config.EndpointConfiguration;
 
 /**
  * Package Configuration

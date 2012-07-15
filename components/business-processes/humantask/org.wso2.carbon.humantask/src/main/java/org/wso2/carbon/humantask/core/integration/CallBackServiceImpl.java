@@ -23,7 +23,10 @@ import org.apache.axiom.soap.SOAPFactory;
 import org.apache.axiom.soap.SOAPHeaderBlock;
 import org.apache.axis2.AxisFault;
 import org.apache.axis2.context.MessageContext;
+import org.apache.commons.logging.Log;
+import org.apache.commons.logging.LogFactory;
 import org.wso2.carbon.bpel.common.SOAPHelper;
+import org.wso2.carbon.bpel.common.config.EndpointConfiguration;
 import org.wso2.carbon.humantask.core.CallBackService;
 import org.wso2.carbon.humantask.core.HumanTaskConstants;
 import org.wso2.carbon.humantask.core.deployment.HumanTaskDeploymentException;
@@ -47,6 +50,8 @@ import javax.xml.namespace.QName;
  * Axis based implementation of CallBackService interface
  */
 public class CallBackServiceImpl implements CallBackService {
+    private static Log log = LogFactory.getLog(CallBackServiceImpl.class);
+
     private UnifiedEndpoint uep;
 
     private int tenantId;
@@ -62,7 +67,8 @@ public class CallBackServiceImpl implements CallBackService {
     private String operation;
 
     public CallBackServiceImpl(int tenantId, QName serviceName, String portName, QName taskName,
-                               Definition wsdl, String operation)
+                               Definition wsdl, String operation,
+                               EndpointConfiguration endpointConfig)
             throws HumanTaskDeploymentException {
         this.tenantId = tenantId;
         this.serviceName = serviceName;
@@ -72,13 +78,22 @@ public class CallBackServiceImpl implements CallBackService {
 
         inferBindingInformation(wsdl);
 
-        //TODO read the uep from config
-        uep = new UnifiedEndpoint();
-        uep.setUepId(this.serviceName.getLocalPart());
-        uep.setAddressingEnabled(true);
-        uep.setAddressingVersion(UnifiedEndpointConstants.ADDRESSING_VERSION_FINAL);
-
-        uep.setAddress(AxisServiceUtils.getEPRfromWSDL(wsdl, serviceName, portName));
+        if (endpointConfig != null) {
+            try {
+                uep = endpointConfig.getUnifiedEndpoint();
+            } catch (AxisFault axisFault) {
+                String errMsg = "Error occurred while reading unified endpoint for callback " +
+                        "service: " + serviceName + " of port: " + portName;
+                log.error(errMsg, axisFault);
+                throw new HumanTaskDeploymentException(errMsg, axisFault);
+            }
+        } else {
+            uep = new UnifiedEndpoint();
+            uep.setUepId(this.serviceName.getLocalPart());
+            uep.setAddressingEnabled(true);
+            uep.setAddressingVersion(UnifiedEndpointConstants.ADDRESSING_VERSION_FINAL);
+            uep.setAddress(AxisServiceUtils.getEPRfromWSDL(wsdl, serviceName, portName));
+        }
     }
 
     @Override

@@ -18,7 +18,7 @@ package org.wso2.carbon.bpel.core.ode.integration.mgt.services;
 import org.apache.axis2.context.ConfigurationContext;
 import org.apache.commons.logging.Log;
 import org.apache.commons.logging.LogFactory;
-import org.wso2.carbon.bpel.core.ode.integration.BPELConstants;
+import org.wso2.carbon.bpel.core.BPELConstants;
 import org.wso2.carbon.bpel.core.ode.integration.BPELServerImpl;
 import org.wso2.carbon.bpel.core.ode.integration.store.TenantProcessStoreImpl;
 import org.wso2.carbon.bpel.core.ode.integration.store.repository.BPELPackageInfo;

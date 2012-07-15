@@ -48,8 +48,6 @@ import java.util.zip.ZipInputStream;
 public class ArchiveBasedHumanTaskDeploymentUnitBuilder extends HumanTaskDeploymentUnitBuilder {
     private static Log log = LogFactory.getLog(ArchiveBasedHumanTaskDeploymentUnitBuilder.class);
 
-    private static final String JAVAX_WSDL_VERBOSE_MODE_KEY = "javax.wsdl.verbose";
-
     private File humantaskDir;
 
     private String fileName;
@@ -207,8 +205,6 @@ public class ArchiveBasedHumanTaskDeploymentUnitBuilder extends HumanTaskDeploym
         return fileName;
     }
 
-
-
     public List<Definition> getWsdlDefinitions() throws HumanTaskDeploymentException {
         if (wsdlDefinitions.size() == 0) {
             for (Map.Entry<String, InputStream> wsdl : wsdlsMap.entrySet()) {
@@ -242,7 +238,7 @@ public class ArchiveBasedHumanTaskDeploymentUnitBuilder extends HumanTaskDeploym
         WSDLReader reader = WSDLFactory.newInstance().newWSDLReader();
 
         // switch off the verbose mode for all usecases
-        reader.setFeature(JAVAX_WSDL_VERBOSE_MODE_KEY, false);
+        reader.setFeature(HumanTaskConstants.JAVAX_WSDL_VERBOSE_MODE_KEY, false);
         reader.setFeature("javax.wsdl.importDocuments", true);
 
         Definition def;

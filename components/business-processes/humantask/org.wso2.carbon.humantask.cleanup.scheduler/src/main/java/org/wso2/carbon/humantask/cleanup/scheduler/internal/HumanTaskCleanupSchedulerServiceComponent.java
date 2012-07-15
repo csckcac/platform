@@ -44,12 +44,9 @@ public class HumanTaskCleanupSchedulerServiceComponent {
         try {
             log.info("Starting HumanTaskCleanupSchedulerServiceComponent");
             TaskCleanupSchedulerUtil.initTaskCleanupJob();
-            log.info("Started HumanTaskCleanupSchedulerServiceComponent");
+            log.debug("Started HumanTaskCleanupSchedulerServiceComponent");
         } catch (Throwable t) {
             log.error("Failed to activate the HumanTaskCleanupSchedulerServiceComponent", t);
-        }
-        if (log.isDebugEnabled()) {
-            log.debug("HumanTaskCleanupSchedulerServiceComponent bundle is activated.");
         }
     }
 

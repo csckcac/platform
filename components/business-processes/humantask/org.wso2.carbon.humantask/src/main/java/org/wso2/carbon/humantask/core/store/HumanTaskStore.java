@@ -29,6 +29,8 @@ import org.apache.commons.lang.StringUtils;
 import org.apache.commons.logging.Log;
 import org.apache.commons.logging.LogFactory;
 import org.wso2.carbon.CarbonConstants;
+import org.wso2.carbon.bpel.common.ServiceConfigurationUtil;
+import org.wso2.carbon.bpel.common.config.EndpointConfiguration;
 import org.wso2.carbon.humantask.TNotification;
 import org.wso2.carbon.humantask.TTask;
 import org.wso2.carbon.humantask.core.HumanTaskConstants;
@@ -134,9 +136,13 @@ public class HumanTaskStore {
 
     private void createCallBackService(TaskConfiguration taskConf)
             throws HumanTaskDeploymentException {
+        EndpointConfiguration endpointConfig =
+                taskConf.getEndpointConfiguration(taskConf.getCallbackServiceName().getLocalPart(),
+                        taskConf.getCallbackPortName());
         CallBackServiceImpl callbackService = new CallBackServiceImpl(tenantId,
                 taskConf.getCallbackServiceName(), taskConf.getCallbackPortName(),
-                taskConf.getName(), taskConf.getResponseWSDL(), taskConf.getResponseOperation());
+                taskConf.getName(), taskConf.getResponseWSDL(), taskConf.getResponseOperation(),
+                endpointConfig);
         taskConf.setCallBackService(callbackService);
     }
 
@@ -163,6 +169,10 @@ public class HumanTaskStore {
 
         try {
             axisService = createAxisService(serviceBuilder);
+            ServiceConfigurationUtil.configureService(axisService,
+                    taskConfig.getEndpointConfiguration(taskConfig.getServiceName().getLocalPart(),
+                            taskConfig.getPortName()),
+                    getConfigContext());
             getTenantAxisConfig().addServiceGroup(createServiceGroupForService(axisService));
         } catch (AxisFault axisFault) {
             //Do not print stacktrace here since it will be printed in another level

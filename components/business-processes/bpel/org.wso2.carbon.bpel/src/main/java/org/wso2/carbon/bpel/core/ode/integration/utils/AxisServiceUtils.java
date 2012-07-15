@@ -37,7 +37,7 @@ import org.apache.ws.commons.schema.XmlSchema;
 import org.apache.ws.commons.schema.XmlSchemaCollection;
 import org.w3c.dom.Element;
 import org.wso2.carbon.CarbonConstants;
-import org.wso2.carbon.bpel.core.ode.integration.BPELConstants;
+import org.wso2.carbon.bpel.core.BPELConstants;
 import org.wso2.carbon.bpel.core.ode.integration.BPELMessageContext;
 import org.wso2.carbon.bpel.core.ode.integration.BPELProcessProxy;
 import org.wso2.carbon.bpel.core.ode.integration.axis2.Axis2UriResolver;

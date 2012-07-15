@@ -26,7 +26,7 @@ import org.apache.commons.logging.LogFactory;
 import org.wso2.carbon.attachment.mgt.skeleton.AttachmentMgtException;
 import org.wso2.carbon.attachment.mgt.skeleton.types.TAttachment;
 import org.wso2.carbon.bpel.core.internal.BPELServerHolder;
-import org.wso2.carbon.bpel.core.ode.integration.BPELConstants;
+import org.wso2.carbon.bpel.core.BPELConstants;
 import org.wso2.carbon.bpel.core.ode.integration.BPELMessageContext;
 import org.wso2.carbon.bpel.core.ode.integration.BPELProcessProxy;
 import org.wso2.carbon.bpel.core.ode.integration.utils.BPELMessageContextFactory;

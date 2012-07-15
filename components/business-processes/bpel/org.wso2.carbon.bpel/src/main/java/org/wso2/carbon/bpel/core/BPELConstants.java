@@ -26,15 +26,11 @@ public final class BPELConstants {
 
     public static final String BPEL_PKG_CONFIG_NS = "http://wso2.org/bps/bpel/package/config";
 
-    public static final String BPEL_PKG_ENDPOINT_CONFIG_NS = "http://wso2.org/bps/bpel/endpoint/config";
-
     public static final String BPS_CONFIG_NS = "http://wso2.org/bps/config";
 
     public static final String ENDPOINTREF = "endpointReference";
 
     public static final String ENDPOINTS = "endpoints";
-
-    public static final String ENDPOINT = "endpoint";
 
     public static final String SERVICE_DESCRIPTION = "serviceDescription";
 
@@ -283,4 +279,13 @@ public final class BPELConstants {
     public static final String DAFAULT_BPEL_CLIENT = "AnonymousBPELClient";
 
     public static final String BAM_SERVER_PROFILE_NS = "http://wso2.org/bam/2.0";
+
+     public static final String MESSAGE_TRACE = "org.wso2.carbon.bpel.messagetrace";
+
+    public static final String MESSAGE_RECEIVER_INVOKE_ON_SEPARATE_THREAD =
+            "messageReceiver.invokeOnSeparateThread";
+
+    public static final String WS_ADDRESSING_NS2 = "http://www.w3.org/2006/05/addressing/wsdl";
+    public static final String WS_ADDRESSING_NS3 = "http://www.w3.org/2006/02/addressing/wsdl";
+    public static final String WS_ADDRESSING_NS4 = "http://schemas.xmlsoap.org/ws/2004/08/addressing";
 }

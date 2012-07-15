@@ -93,7 +93,7 @@ public class Event {
                EBCommonsConstants.STREAM_ID + "='" + streamId + '\'' +
                 ", " + EBCommonsConstants.TIME_STAMP + "=" + timeStamp +
                ", " + EBCommonsConstants.META_DATA + "=" + (metaData == null ? null : Arrays.asList(metaData)) +
-               ", " + EBCommonsConstants.META_DATA + "=" + (correlationData == null ? null : Arrays.asList(correlationData)) +
+               ", " + EBCommonsConstants.CORRELATION_DATA + "=" + (correlationData == null ? null : Arrays.asList(correlationData)) +
                ", " +  EBCommonsConstants.PAYLOAD_DATA  + "=" + (payloadData == null ? null : Arrays.asList(payloadData)) +
                '}';
     }

@@ -27,4 +27,6 @@ When installing the compute node OSinstall.sh script should be changed as follow
        #nova-manage network create ${VMNET} ${NUM_NETWORKS} ${NETWORK_SIZE}
        nova-manage network create vmnet --fixed_range_v4=${VMNET} --network_size=${NETWORK_SIZE} --bridge_interface=${PRIVATE_INTERFACE}
 
+Also replace nova-compute-kvm with nova-compute-lxc(This is to specifically install lxc support instead of default kvm)
+
 If you use a single machine to install openstack you need to install controller. Then in the same machine a compute node is installed as well. To add new compute nodes to the system you need to install compute nodes in to newly added machines.

@@ -327,5 +327,6 @@
 	<!--WSO2 Charon-->
 	<version.charon>1.0.0-SNAPSHOT</version.charon>
 	<orbit.version.charon>1.0.0-wso2v1</orbit.version.charon>
+	<exp.pkg.version.charon>1.0.0-wso2v1</exp.pkg.version.charon>
     </properties>
 </project>

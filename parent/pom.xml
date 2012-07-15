@@ -324,5 +324,8 @@
 
         <jboss-transaction-api.version>1.0.0.Final</jboss-transaction-api.version>
 	
+	<!--WSO2 Charon-->
+	<version.charon>1.0.0-SNAPSHOT</version.charon>
+	<orbit.version.charon>1.0.0-wso2v1</orbit.version.charon>
     </properties>
 </project>

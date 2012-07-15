@@ -293,6 +293,15 @@ public class JaggeryAppAdmin extends WebappAdmin {
         return JaggeryConstants.JAGGERY_WEBAPP_FILTER_PROP.equals(filterProp);
     }
 
+    protected String getWebappDeploymentDirPath() {
+        String directory = JaggeryConstants.WEBAPP_DEPLOYMENT_FOLDER;
+        if (System.getProperty("jaggery.home") != null) {
+            directory = JaggeryConstants.WEBAPP_DEPLOYMENT_FOLDER_IN_JAGGERY;
+        }
+        return getAxisConfig().getRepository().getPath() + File.separator + directory;
+    }
+
+
     /**
      * Upload a webapp
      *
@@ -304,15 +313,7 @@ public class JaggeryAppAdmin extends WebappAdmin {
 
         AxisConfiguration axisConfig = getAxisConfig();
         String repoPath = axisConfig.getRepository().getPath();
-
-        repoPath = (repoPath.endsWith(File.separator)) ? repoPath.substring(0, repoPath.length() - 1) : repoPath;
-
-        String jaggeryAppsPath = repoPath + File.separator +
-                JaggeryConstants.WEBAPP_DEPLOYMENT_FOLDER;
-        if (!repoPath.endsWith("/deployment/server")) {
-            jaggeryAppsPath = repoPath + File.separator +
-                    JaggeryConstants.WEBAPP_DEPLOYMENT_FOLDER_IN_JAGGERY;
-        }
+        String jaggeryAppsPath = getWebappDeploymentDirPath();
 
         for (WebappUploadData uploadData : webappUploadDataList) {
             String fName = uploadData.getFileName();
@@ -357,12 +358,7 @@ public class JaggeryAppAdmin extends WebappAdmin {
     public DataHandler downloadWarFileHandler(String fileName) {
 
         String repoPath = getAxisConfig().getRepository().getPath();
-        String jaggeryAppsPath = repoPath + File.separator +
-                JaggeryConstants.WEBAPP_DEPLOYMENT_FOLDER + File.separator + fileName;
-        if (!repoPath.endsWith("/deployment/server/")) {
-            jaggeryAppsPath = repoPath + File.separator +
-                    JaggeryConstants.WEBAPP_DEPLOYMENT_FOLDER_IN_JAGGERY + File.separator + fileName;
-        }
+        String jaggeryAppsPath = getWebappDeploymentDirPath() + File.separator + fileName;
 
         File webAppFile = new File(jaggeryAppsPath);
         DataHandler handler = null;

@@ -47,6 +47,9 @@ public class MashupAdmin extends AbstractAdmin {
             if (axisService == null) {
                 // New service
                 String axis2RepoDirectory = getAxisConfig().getRepository().getPath();
+                if(!axis2RepoDirectory.endsWith(File.separator)) {
+                    axis2RepoDirectory += File.separator;
+                }
 
                 String[] nameParts = serviceName.split("/");
                 String jsServiceDirectory =

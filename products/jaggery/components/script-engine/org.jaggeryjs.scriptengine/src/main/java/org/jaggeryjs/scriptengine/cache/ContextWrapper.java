@@ -6,17 +6,11 @@ import java.util.Map;
 public class ContextWrapper {
     private Map<String, PackageWrapper> packages = new HashMap<String, PackageWrapper>();
 
-    private CompilationContext compilationContext = null;
+    private String context = null;
 
-    public CompilationContext getCompilationContext() {
-        return compilationContext;
-    }
 
-    public void setCompilationContext(CompilationContext compilationContext) {
-        this.compilationContext = compilationContext;
-    }
-
-    public ContextWrapper() {
+    public ContextWrapper(String context) {
+        this.context = context;
     }
 
     public int getPathCount() {
@@ -28,11 +22,11 @@ public class ContextWrapper {
     }
 
     public PackageWrapper getPackage(String path) {
-        return packages.get(CacheManager.getPackage(path));
+        return packages.get(CacheManager.getPackage(context, path));
     }
 
     public void removePackage(String path) {
-        packages.remove(CacheManager.getPackage(path));
+        packages.remove(CacheManager.getPackage(context, path));
     }
 
     public void removeCachingContext(String path, String cacheKey) {
@@ -47,7 +41,7 @@ public class ContextWrapper {
     }
 
     public void setPackage(String path, PackageWrapper packageWrapper) {
-        packages.put(CacheManager.getPackage(path), packageWrapper);
+        packages.put(CacheManager.getPackage(context, path), packageWrapper);
     }
 
     public void setCachingContext(String path, String cacheKey, CachingContext ctx) {

@@ -14,8 +14,6 @@ public class CachingContext {
     private long sourceModifiedTime = 0L;
     private String className = null;
     private Script script = null;
-    private String classFilePath = null;
-    private CompilationContext compilationContext = null;
 
     public CachingContext(String context, String path, String cacheKey) {
         this.context = context;
@@ -96,29 +94,10 @@ public class CachingContext {
     }
 
     public Script getScript() throws ScriptException {
-        if(script != null) {
-            return script;
-        }
-        return CacheManager.loadScript(compilationContext.getClassLoader(), className);
+        return script;
     }
 
     public void setScript(Script script) {
         this.script = script;
-    }
-
-    public String getClassFilePath() {
-        return classFilePath;
-    }
-
-    public void setClassFilePath(String classFilePath) {
-        this.classFilePath = classFilePath;
-    }
-
-    public CompilationContext getCompilationContext() {
-        return compilationContext;
-    }
-
-    public void setCompilationContext(CompilationContext compilationContext) {
-        this.compilationContext = compilationContext;
     }
 }

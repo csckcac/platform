@@ -112,32 +112,8 @@ public class TenantWrapper {
         setCachingContext(ctx.getContext(), ctx.getPath(), ctx.getCacheKey(), ctx);
     }
 
-    public CompilationContext getCompilationContext(String context) {
-        ContextWrapper ctxWrapper = getContext(context);
-        if (ctxWrapper == null) {
-            return null;
-        }
-        return ctxWrapper.getCompilationContext();
-    }
-
-    public CompilationContext getCompilationContext(ScriptCachingContext sctx) {
-        return getCompilationContext(sctx.getContext());
-    }
-
-    public void setCompilationContext(String context, CompilationContext cCtx) {
-        ContextWrapper ctxWrapper = getContext(context);
-        if (ctxWrapper == null) {
-            ctxWrapper = createContext(context);
-        }
-        ctxWrapper.setCompilationContext(cCtx);
-    }
-
-    public void setCompilationContext(ScriptCachingContext sctx, CompilationContext cCtx) {
-        setCompilationContext(sctx.getContext(), cCtx);
-    }
-
     private ContextWrapper createContext(String context) {
-        ContextWrapper ctxWrapper = new ContextWrapper();
+        ContextWrapper ctxWrapper = new ContextWrapper(context);
         setContext(context, ctxWrapper);
         return ctxWrapper;
     }

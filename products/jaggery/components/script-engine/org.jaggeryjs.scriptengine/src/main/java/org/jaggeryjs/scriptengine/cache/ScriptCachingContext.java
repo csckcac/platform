@@ -27,7 +27,7 @@ public class ScriptCachingContext {
     }
 
     public String getFilteredPath() {
-       return CacheManager.getPackage(path);
+       return CacheManager.getPackage(context, path);
     }
 
     public String getCacheKey() {

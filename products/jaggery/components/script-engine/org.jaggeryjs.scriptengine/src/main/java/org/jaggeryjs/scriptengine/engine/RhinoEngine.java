@@ -208,7 +208,7 @@ public class RhinoEngine {
      * @param funcName Name of the function to be invoked
      * @param args Arguments for the functions as an array of objects
      * @param sctx Script caching context which contains caching data. When null is passed for this, caching will be disabled.
-     * @return  Returns the resulting object after invoking the function
+     * @return Returns the resulting object after invoking the function
      * @throws ScriptException If error occurred while invoking the function
      */
     public Object call(Reader scriptReader, String funcName, Object[] args, ScriptCachingContext sctx)
@@ -223,7 +223,7 @@ public class RhinoEngine {
      * @param args Arguments for the functions as an array of objects
      * @param thiz {@code this} object for the function
      * @param sctx Script caching context which contains caching data. When null is passed for this, caching will be disabled.
-     * @return  Returns the resulting object after invoking the function
+     * @return Returns the resulting object after invoking the function
      * @throws ScriptException If error occurred while invoking the function
      */
     public Object call(Reader scriptReader, String funcName, Object[] args, ScriptableObject thiz,
@@ -236,7 +236,6 @@ public class RhinoEngine {
         return execFunc(scriptReader, funcName, args, thiz, getRuntimeScope(), sctx);
     }
 
-
     /**
      * Executes a particular JavaScript function from a script on the specified scope and returns the result.
      * @param scriptReader Reader object to read the script when ever needed
@@ -245,7 +244,7 @@ public class RhinoEngine {
      * @param thiz {@code this} object for the function
      * @param scope The scope where function will be executed
      * @param sctx Script caching context which contains caching data. When null is passed for this, caching will be disabled.
-     * @return  Returns the resulting object after invoking the function
+     * @return Returns the resulting object after invoking the function
      * @throws ScriptException If error occurred while invoking the function
      */
     public Object call(Reader scriptReader, String funcName, Object[] args, ScriptableObject thiz,
@@ -271,7 +270,7 @@ public class RhinoEngine {
         Context cx = enterContext();
         ScriptableObject scope = removeUnsafeObjects(new CarbonTopLevel(cx, false));
         exposeModule(scope, globalModule);
-        for(JavaScriptModule module : modules) {
+        for (JavaScriptModule module : modules) {
             String name = module.getName();
             ScriptableObject object = (ScriptableObject) newObject(scope);
             exposeModule(object, module);
@@ -284,37 +283,8 @@ public class RhinoEngine {
         return scope;
     }
 
-    private void defineClass(ScriptableObject scope, Class clazz) {
-        try {
-            ScriptableObject.defineClass(scope, clazz);
-        } catch (IllegalAccessException e) {
-            log.error(e.getMessage(), e);
-        } catch (InstantiationException e) {
-            log.error(e.getMessage(), e);
-        } catch (InvocationTargetException e) {
-            log.error(e.getMessage(), e);
-        }
-    }
-
-    private void defineMethod(ScriptableObject scope, String name, Method method, int attribute) {
-        FunctionObject f = new FunctionObject(name, method, scope);
-        scope.defineProperty(name, f, attribute);
-    }
-    
-    private void exposeModule(ScriptableObject scope, JavaScriptModule module) throws ScriptException {
-        Context cx = enterContext();
-        for (JavaScriptHostObject hostObject : module.getHostObjects()) {
-            defineClass(scope, hostObject.getClazz());
-        }
-
-        for (JavaScriptMethod method : module.getMethods()) {
-            defineMethod(scope, method.getName(), method.getMethod(), method.getAttribute());
-        }
-
-        for (JavaScriptScript script : module.getScripts()) {
-            script.getScript().exec(cx, scope);
-        }
-        exitContext();
+    public void unloadTenant(String tenantId) {
+        this.cacheManager.unloadTenant(tenantId);
     }
 
     public static Scriptable newObject(String constructor, ScriptableObject scope, Object[] args) {
@@ -359,6 +329,39 @@ public class RhinoEngine {
 
     public static void exitContext() {
         Context.exit();
+    }
+
+    private void defineClass(ScriptableObject scope, Class clazz) {
+        try {
+            ScriptableObject.defineClass(scope, clazz);
+        } catch (IllegalAccessException e) {
+            log.error(e.getMessage(), e);
+        } catch (InstantiationException e) {
+            log.error(e.getMessage(), e);
+        } catch (InvocationTargetException e) {
+            log.error(e.getMessage(), e);
+        }
+    }
+
+    private void defineMethod(ScriptableObject scope, String name, Method method, int attribute) {
+        FunctionObject f = new FunctionObject(name, method, scope);
+        scope.defineProperty(name, f, attribute);
+    }
+
+    private void exposeModule(ScriptableObject scope, JavaScriptModule module) throws ScriptException {
+        Context cx = enterContext();
+        for (JavaScriptHostObject hostObject : module.getHostObjects()) {
+            defineClass(scope, hostObject.getClazz());
+        }
+
+        for (JavaScriptMethod method : module.getMethods()) {
+            defineMethod(scope, method.getName(), method.getMethod(), method.getAttribute());
+        }
+
+        for (JavaScriptScript script : module.getScripts()) {
+            script.getScript().exec(cx, scope);
+        }
+        exitContext();
     }
 
     private CacheManager getCacheManager() {
@@ -459,7 +462,7 @@ public class RhinoEngine {
          * ReferenceError, RegExp, With, Function, InternalError, NaN, Number, escape, XMLList, Math, JavaException,
          * parseFloat, Error, undefined, parseInt, Object, Continuation, decodeURIComponent, StopIteration, log,
          * Namespace, isXMLName, global, eval
-        */
+         */
         scope.delete("JavaAdapter");
         scope.delete("org");
         scope.delete("java");
@@ -479,7 +482,7 @@ public class RhinoEngine {
 
     private static void copyEngineScope(ScriptableObject engineScope, ScriptableObject scope) {
         Object[] objs = engineScope.getAllIds();
-        for(Object obj : objs) {
+        for (Object obj : objs) {
             String id = (String) obj;
             scope.put(id, scope, engineScope.get(id, engineScope));
         }

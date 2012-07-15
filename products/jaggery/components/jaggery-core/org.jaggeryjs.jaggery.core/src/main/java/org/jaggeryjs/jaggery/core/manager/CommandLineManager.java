@@ -6,22 +6,23 @@ import org.apache.commons.io.FilenameUtils;
 import org.apache.commons.logging.Log;
 import org.apache.commons.logging.LogFactory;
 import org.jaggeryjs.jaggery.core.ScriptReader;
-import org.mozilla.javascript.Context;
-import org.mozilla.javascript.Function;
-import org.mozilla.javascript.Scriptable;
-import org.mozilla.javascript.ScriptableObject;
 import org.jaggeryjs.scriptengine.cache.CacheManager;
 import org.jaggeryjs.scriptengine.engine.JavaScriptHostObject;
 import org.jaggeryjs.scriptengine.engine.JavaScriptMethod;
 import org.jaggeryjs.scriptengine.engine.RhinoEngine;
 import org.jaggeryjs.scriptengine.exceptions.ScriptException;
 import org.jaggeryjs.scriptengine.util.HostObjectUtil;
+import org.mozilla.javascript.Context;
+import org.mozilla.javascript.Function;
+import org.mozilla.javascript.Scriptable;
+import org.mozilla.javascript.ScriptableObject;
 
-import javax.servlet.ServletContext;
 import javax.xml.namespace.QName;
 import javax.xml.stream.XMLStreamException;
-import java.io.*;
-
+import java.io.FileInputStream;
+import java.io.FileNotFoundException;
+import java.io.InputStream;
+import java.io.PrintWriter;
 import java.util.Iterator;
 import java.util.Map;
 import java.util.Stack;
@@ -43,15 +44,8 @@ public final class CommandLineManager extends CommonManager {
     }
 
     static {
-        String dir = System.getProperty("java.io.tmpdir");
-        if (dir != null) {
-            RHINO_ENGINE = new RhinoEngine(new CacheManager("jaggery", dir));
-            initEngine();
-        } else {
-            RHINO_ENGINE = null;
-            String msg = "Please specify java.io.tmpdir system property";
-            log.error(msg);
-        }
+        RHINO_ENGINE = new RhinoEngine(new CacheManager(null));
+        initEngine();
     }
 
     public static RhinoEngine getCommandLineEngine() {

@@ -15,6 +15,7 @@ import org.jaggeryjs.scriptengine.engine.JavaScriptProperty;
 import org.jaggeryjs.scriptengine.engine.RhinoEngine;
 import org.jaggeryjs.scriptengine.exceptions.ScriptException;
 import org.jaggeryjs.scriptengine.util.HostObjectUtil;
+import org.wso2.carbon.context.CarbonContext;
 
 import javax.servlet.ServletContext;
 import javax.servlet.http.HttpServletRequest;
@@ -300,7 +301,7 @@ public class WebAppManager extends CommonManager {
                                             HttpServletRequest request, HttpServletResponse response) {
         WebAppContext context = new WebAppContext();
         context.setEnvironment(ENV_WEBAPP);
-        context.setTenantId("0");
+        context.setTenantId(Integer.toString(CarbonContext.getCurrentContext().getTenantId()));
         context.setOutputStream(out);
         context.setServletRequest(request);
         context.setServletResponse(response);
@@ -336,14 +337,13 @@ public class WebAppManager extends CommonManager {
     public static String[] getKeys(String context, String parent, String scriptPath) {
         String path;
         String normalizedScriptPath;
-        if (scriptPath.startsWith("/")) {
-            normalizedScriptPath = FilenameUtils.normalize(scriptPath, true);
-        } else {
-            normalizedScriptPath = FilenameUtils.normalize(FilenameUtils.getFullPath(parent) + scriptPath, true);
-        }
+        context = context.equals("") ? "/" : context;
+        normalizedScriptPath = scriptPath.startsWith("/") ?
+                FilenameUtils.normalize(scriptPath, true) :
+                FilenameUtils.normalize(FilenameUtils.getFullPath(parent) + scriptPath, true);
         path = FilenameUtils.getFullPath(normalizedScriptPath);
         //remove trailing "/"
-        path = path.substring(0, path.length() - 1);
+        path = path.equals("/") ? path : path.substring(0, path.length() - 1);
         normalizedScriptPath = "/" + FilenameUtils.getName(normalizedScriptPath);
         return new String[]{
                 context,

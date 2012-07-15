@@ -30,6 +30,10 @@
             <artifactId>org.jaggeryjs.scriptengine</artifactId>
         </dependency>
         <dependency>
+            <groupId>org.wso2.carbon</groupId>
+            <artifactId>org.wso2.carbon.core</artifactId>
+        </dependency>
+        <dependency>
             <groupId>org.jaggeryjs</groupId>
             <artifactId>org.jaggeryjs.hostobjects.file</artifactId>
         </dependency>
@@ -85,7 +89,7 @@
                         </Export-Package>
                         <Private-Package>org.jaggeryjs.jaggery.core.internal</Private-Package>
                         <Import-Package>
-                        	org.jaggeryjs.jaggery.core.*,
+                            org.jaggeryjs.jaggery.core.*,
                             javax.servlet; version=2.4.0,
                             javax.servlet.http; version=2.4.0,
                             *;resolution:=optional

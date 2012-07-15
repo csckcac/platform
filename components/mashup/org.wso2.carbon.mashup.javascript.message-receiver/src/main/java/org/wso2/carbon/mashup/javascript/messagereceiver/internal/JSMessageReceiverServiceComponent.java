@@ -47,7 +47,7 @@ public class JSMessageReceiverServiceComponent {
             JavaScriptEngineUtils.setHostObjectService(hostObjectService);
             String dir = System.getProperty("java.io.tmpdir");
             if (dir != null) {
-                JavaScriptEngineUtils.setEngine(new RhinoEngine(new CacheManager("mashup", dir)));
+                JavaScriptEngineUtils.setEngine(new RhinoEngine(new CacheManager(null)));
             } else {
                 String msg = "Please specify java.io.tmpdir system property";
                 log.error(msg);

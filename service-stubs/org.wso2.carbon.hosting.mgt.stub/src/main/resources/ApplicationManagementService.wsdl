@@ -42,7 +42,13 @@
                 <xs:complexType>
                     <xs:sequence>
                         <xs:element minOccurs="0" name="image" nillable="true" type="xs:string" />
-                        <xs:element minOccurs="0" name="tenant" nillable="true" type="xs:string" />
+                    </xs:sequence>
+                </xs:complexType>
+            </xs:element>
+            <xs:element name="startInstanceResponse">
+                <xs:complexType>
+                    <xs:sequence>
+                        <xs:element minOccurs="0" name="return" nillable="true" type="xs:string" />
                     </xs:sequence>
                 </xs:complexType>
             </xs:element>
@@ -134,6 +140,9 @@
     <wsdl:message name="startInstanceRequest">
         <wsdl:part name="parameters" element="ns1:startInstance" />
     </wsdl:message>
+    <wsdl:message name="startInstanceResponse">
+        <wsdl:part name="parameters" element="ns1:startInstanceResponse" />
+    </wsdl:message>
     <wsdl:message name="uploadWebappRequest">
         <wsdl:part name="parameters" element="ns1:uploadWebapp" />
     </wsdl:message>
@@ -164,6 +173,7 @@
         </wsdl:operation>
         <wsdl:operation name="startInstance">
             <wsdl:input message="tns:startInstanceRequest" wsaw:Action="urn:startInstance" />
+            <wsdl:output message="tns:startInstanceResponse" wsaw:Action="urn:startInstanceResponse" />
         </wsdl:operation>
         <wsdl:operation name="uploadWebapp">
             <wsdl:input message="tns:uploadWebappRequest" wsaw:Action="urn:uploadWebapp" />
@@ -222,6 +232,9 @@
             <wsdl:input>
                 <soap:body use="literal" />
             </wsdl:input>
+            <wsdl:output>
+                <soap:body use="literal" />
+            </wsdl:output>
         </wsdl:operation>
         <wsdl:operation name="uploadWebapp">
             <soap:operation soapAction="urn:uploadWebapp" style="document" />
@@ -285,6 +298,9 @@
             <wsdl:input>
                 <soap12:body use="literal" />
             </wsdl:input>
+            <wsdl:output>
+                <soap12:body use="literal" />
+            </wsdl:output>
         </wsdl:operation>
         <wsdl:operation name="uploadWebapp">
             <soap12:operation soapAction="urn:uploadWebapp" style="document" />
@@ -348,6 +364,9 @@
             <wsdl:input>
                 <mime:content type="text/xml" part="parameters" />
             </wsdl:input>
+            <wsdl:output>
+                <mime:content type="text/xml" part="parameters" />
+            </wsdl:output>
         </wsdl:operation>
         <wsdl:operation name="uploadWebapp">
             <http:operation location="uploadWebapp" />
@@ -361,13 +380,13 @@
     </wsdl:binding>
     <wsdl:service name="ApplicationManagementService">
         <wsdl:port name="ApplicationManagementServiceHttpsSoap11Endpoint" binding="tns:ApplicationManagementServiceSoap11Binding">
-            <soap:address location="https://12.0.0.1:9444/services/ApplicationManagementService.ApplicationManagementServiceHttpsSoap11Endpoint/" />
+            <soap:address location="https://175.157.180.215:9444/services/ApplicationManagementService.ApplicationManagementServiceHttpsSoap11Endpoint/" />
         </wsdl:port>
         <wsdl:port name="ApplicationManagementServiceHttpsSoap12Endpoint" binding="tns:ApplicationManagementServiceSoap12Binding">
-            <soap12:address location="https://12.0.0.1:9444/services/ApplicationManagementService.ApplicationManagementServiceHttpsSoap12Endpoint/" />
+            <soap12:address location="https://175.157.180.215:9444/services/ApplicationManagementService.ApplicationManagementServiceHttpsSoap12Endpoint/" />
         </wsdl:port>
         <wsdl:port name="ApplicationManagementServiceHttpsEndpoint" binding="tns:ApplicationManagementServiceHttpBinding">
-            <http:address location="https://12.0.0.1:9444/services/ApplicationManagementService.ApplicationManagementServiceHttpsEndpoint/" />
+            <http:address location="https://175.157.180.215:9444/services/ApplicationManagementService.ApplicationManagementServiceHttpsEndpoint/" />
         </wsdl:port>
     </wsdl:service>
 </wsdl:definitions>

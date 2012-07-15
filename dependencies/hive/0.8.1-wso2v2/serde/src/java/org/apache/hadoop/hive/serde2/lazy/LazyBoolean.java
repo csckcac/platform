@@ -62,7 +62,11 @@ public class LazyBoolean extends
         && Character.toUpperCase(bytes.getData()[start + 4]) == 'E') {
       data.set(false);
       isNull = false;
-    } else {
+    } else if(bytes.getData().length==1){
+      data.set((bytes.getData() == null || bytes.getData().length == 0) ? false : bytes.getData()[0] != 0x00);
+      isNull = false;
+    }
+    else {
       isNull = true;
       logExceptionMessage(bytes, start, length, "BOOLEAN");
     }

@@ -55,6 +55,7 @@ public class LazyDouble extends
       double value = ByteBuffer.wrap(bytes.getData(), start, length).asDoubleBuffer().get();
       data.set(value);
       isNull = false;
+      LOG.debug("Handling number format exception", e);
     } catch (CharacterCodingException e) {
       isNull = true;
       LOG.debug("Data not in the Double data type range so converted to null.", e);

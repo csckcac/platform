@@ -17,13 +17,14 @@
  */
 package org.apache.hadoop.hive.serde2.lazy;
 
-import java.nio.charset.CharacterCodingException;
-
 import org.apache.commons.logging.Log;
 import org.apache.commons.logging.LogFactory;
 import org.apache.hadoop.hive.serde2.lazy.objectinspector.primitive.LazyFloatObjectInspector;
 import org.apache.hadoop.io.FloatWritable;
 import org.apache.hadoop.io.Text;
+
+import java.nio.ByteBuffer;
+import java.nio.charset.CharacterCodingException;
 
 /**
  * LazyObject for storing a value of Double.
@@ -51,9 +52,10 @@ public class LazyFloat extends
       data.set(Float.parseFloat(byteData));
       isNull = false;
     } catch (NumberFormatException e) {
-      isNull = true;
-      LOG.debug("Data not in the Float data type range so converted to null. Given data is :"
-          + byteData, e);
+      float value = ByteBuffer.wrap(bytes.getData(), start, length).asFloatBuffer().get();
+      data.set(value);
+      isNull = false;
+      LOG.debug("Handling number format exception", e);
     } catch (CharacterCodingException e) {
       isNull = true;
       LOG.debug("Data not in the Float data type range so converted to null.", e);

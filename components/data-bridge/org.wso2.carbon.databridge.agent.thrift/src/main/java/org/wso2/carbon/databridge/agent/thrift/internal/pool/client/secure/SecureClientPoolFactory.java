@@ -24,13 +24,19 @@ package org.wso2.carbon.databridge.agent.thrift.internal.pool.client.secure;
 
 import org.apache.commons.pool.BaseKeyedPoolableObjectFactory;
 import org.apache.thrift.protocol.TBinaryProtocol;
+import org.apache.thrift.protocol.TCompactProtocol;
 import org.apache.thrift.protocol.TProtocol;
+import org.apache.thrift.transport.THttpClient;
 import org.apache.thrift.transport.TSSLTransportFactory;
 import org.apache.thrift.transport.TTransport;
 import org.apache.thrift.transport.TTransportException;
+import org.wso2.carbon.databridge.agent.thrift.conf.ReceiverConfiguration;
 import org.wso2.carbon.databridge.commons.thrift.service.secure.ThriftSecureEventTransmissionService;
 import org.wso2.carbon.databridge.agent.thrift.exception.AgentSecurityException;
 import org.wso2.carbon.databridge.agent.thrift.internal.utils.AgentConstants;
+import org.wso2.carbon.databridge.commons.thrift.utils.HostAddressFinder;
+
+import java.net.SocketException;
 
 public class SecureClientPoolFactory extends BaseKeyedPoolableObjectFactory {
 
@@ -46,35 +52,49 @@ public class SecureClientPoolFactory extends BaseKeyedPoolableObjectFactory {
     @Override
     public ThriftSecureEventTransmissionService.Client makeObject(Object key)
             throws AgentSecurityException, TTransportException {
-
-        if (params == null) {
-            if (trustStore == null) {
-                trustStore = System.getProperty("javax.net.ssl.trustStore");
+        String[] keyElements = key.toString().split(AgentConstants.SEPARATOR);
+        if (keyElements[2].equals(ReceiverConfiguration.Protocol.TCP.toString())) {
+            if (params == null) {
                 if (trustStore == null) {
-                    throw new AgentSecurityException("No trustStore found");
+                    trustStore = System.getProperty("javax.net.ssl.trustStore");
+                    if (trustStore == null) {
+                        throw new AgentSecurityException("No trustStore found");
+                    }
+                    // trustStore = "/home/suho/projects/wso2/trunk/carbon/distribution/product/modules/distribution/target/wso2carbon-4.0.0-SNAPSHOT/repository/resources/security/client-truststore.jks";
                 }
-                // trustStore = "/home/suho/projects/wso2/trunk/carbon/distribution/product/modules/distribution/target/wso2carbon-4.0.0-SNAPSHOT/repository/resources/security/client-truststore.jks";
-            }
 
-            if (trustStorePassword == null) {
-                trustStorePassword = System.getProperty("javax.net.ssl.trustStorePassword");
                 if (trustStorePassword == null) {
-                    throw new AgentSecurityException("No trustStore password found");
+                    trustStorePassword = System.getProperty("javax.net.ssl.trustStorePassword");
+                    if (trustStorePassword == null) {
+                        throw new AgentSecurityException("No trustStore password found");
+                    }
+                    //trustStorePassword = "wso2carbon";
                 }
-                //trustStorePassword = "wso2carbon";
+
+                params = new TSSLTransportFactory.TSSLTransportParameters();
+                params.setTrustStore(trustStore, trustStorePassword);
             }
 
-            params = new TSSLTransportFactory.TSSLTransportParameters();
-            params.setTrustStore(trustStore, trustStorePassword);
+
+            String[] hostNameAndPort = keyElements[3].split(AgentConstants.HOSTNAME_AND_PORT_SEPARATOR);
+
+            TTransport receiverTransport = null;
+            try {
+                receiverTransport = TSSLTransportFactory.
+                        getClientSocket(HostAddressFinder.findAddress(hostNameAndPort[0]), Integer.parseInt(hostNameAndPort[1]), 0, params);
+            } catch (SocketException ignored) {
+                //already checked
+            }
+
+            TProtocol protocol = new TBinaryProtocol(receiverTransport);
+            return new ThriftSecureEventTransmissionService.Client(protocol);
+        } else {
+            THttpClient client = new THttpClient("https://" + keyElements[3] + "/thriftAuthenticator");
+            TProtocol protocol = new TCompactProtocol(client);
+            ThriftSecureEventTransmissionService.Client authClient = new ThriftSecureEventTransmissionService.Client(protocol);
+            client.open();
+            return authClient;
         }
-
-        String[] hostNameAndPort = key.toString().split(AgentConstants.ENDPOINT_SEPARATOR)[1].split(AgentConstants.HOSTNAME_AND_PORT_SEPARATOR);
-
-        TTransport receiverTransport = TSSLTransportFactory.
-                getClientSocket(hostNameAndPort[0], Integer.parseInt(hostNameAndPort[1]), 0, params);
-
-        TProtocol protocol = new TBinaryProtocol(receiverTransport);
-        return new ThriftSecureEventTransmissionService.Client(protocol);
     }
 
     @Override

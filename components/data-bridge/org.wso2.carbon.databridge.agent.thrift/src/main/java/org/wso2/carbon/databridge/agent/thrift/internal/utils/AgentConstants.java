@@ -30,7 +30,7 @@ public final class AgentConstants {
     private AgentConstants() { }
 
     public static final String HOSTNAME_AND_PORT_SEPARATOR = ":";
-    public static final String ENDPOINT_SEPARATOR = ",";
+    public static final String SEPARATOR = ",";
 
     public static final String AGENT_CONF = "thrift-agent-config.xml";
     public static final String AGENT_CONF_NAMESPACE = "http://wso2.org/carbon/databridge/agent/thrift";

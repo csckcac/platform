@@ -18,19 +18,28 @@ package org.wso2.carbon.databridge.receiver.thrift.internal;
 
 import org.apache.commons.logging.Log;
 import org.apache.commons.logging.LogFactory;
+import org.apache.thrift.protocol.TCompactProtocol;
 import org.osgi.service.component.ComponentContext;
+import org.osgi.service.http.HttpService;
 import org.wso2.carbon.base.api.ServerConfigurationService;
+import org.wso2.carbon.databridge.commons.thrift.service.general.ThriftEventTransmissionService;
+import org.wso2.carbon.databridge.commons.thrift.service.secure.ThriftSecureEventTransmissionService;
 import org.wso2.carbon.databridge.commons.thrift.utils.CommonThriftConstants;
 import org.wso2.carbon.databridge.core.DataBridgeReceiverService;
 import org.wso2.carbon.databridge.core.exception.DataBridgeException;
 import org.wso2.carbon.databridge.receiver.thrift.ThriftDataReceiverFactory;
 import org.wso2.carbon.databridge.receiver.thrift.conf.ThriftDataReceiverConfiguration;
 import org.wso2.carbon.databridge.receiver.thrift.internal.utils.ThriftDataReceiverBuilder;
+import org.wso2.carbon.databridge.receiver.thrift.service.ThriftSecureEventTransmissionServlet;
+import org.wso2.carbon.databridge.receiver.thrift.service.ThriftEventTransmissionServlet;
+import org.wso2.carbon.databridge.receiver.thrift.service.ThriftEventTransmissionServiceImpl;
+import org.wso2.carbon.databridge.receiver.thrift.service.ThriftSecureEventTransmissionServiceImpl;
 import org.wso2.carbon.utils.CarbonUtils;
 import org.wso2.carbon.utils.ConfigurationContextService;
 
 import java.net.MalformedURLException;
 import java.net.URL;
+import java.util.Hashtable;
 
 /**
  * @scr.component name="thriftdatareceiver.component" immediate="true"
@@ -43,7 +52,9 @@ import java.net.URL;
  * @scr.reference name="databridge.core"
  * interface="org.wso2.carbon.databridge.core.DataBridgeReceiverService"
  * cardinality="1..1" policy="dynamic" bind="setDataBridgeReceiverService" unbind="unsetDatabridgeReceiverService"
- *
+ * @scr.reference name="http.service"
+ * interface="org.osgi.service.http.HttpService"
+ * cardinality="1..1" policy="dynamic"  bind="setHttpService" unbind="unsetHttpService"
  */
 public class ThriftDataReceiverDS {
     private static final Log log = LogFactory.getLog(ThriftDataReceiverDS.class);
@@ -51,6 +62,8 @@ public class ThriftDataReceiverDS {
     private ServerConfigurationService serverConfiguration;
     private ConfigurationContextService configurationContext;
     private ThriftDataReceiver dataReceiver;
+    private HttpService httpServiceInstance;
+
 
     /**
      * initialize the agent server here.
@@ -77,6 +90,27 @@ public class ThriftDataReceiverDS {
                 }
                 dataReceiver.start(hostName);
                 log.info("Successfully deployed Agent Server ");
+
+
+                ThriftEventTransmissionService.Processor<ThriftEventTransmissionServiceImpl> processor = new ThriftEventTransmissionService.Processor<ThriftEventTransmissionServiceImpl>(
+                        new ThriftEventTransmissionServiceImpl(dataBridgeReceiverService));
+                TCompactProtocol.Factory inProtFactory = new TCompactProtocol.Factory();
+                TCompactProtocol.Factory outProtFactory = new TCompactProtocol.Factory();
+
+                httpServiceInstance.registerServlet("/thriftReceiver",
+                                                    new ThriftEventTransmissionServlet(processor, inProtFactory,
+                                                                        outProtFactory),
+                                                    new Hashtable(),
+                                                    httpServiceInstance.createDefaultHttpContext());
+
+                ThriftSecureEventTransmissionService.Processor<ThriftSecureEventTransmissionServiceImpl> authProcessor = new ThriftSecureEventTransmissionService.Processor<ThriftSecureEventTransmissionServiceImpl>(
+                        new ThriftSecureEventTransmissionServiceImpl(dataBridgeReceiverService));
+                httpServiceInstance.registerServlet("/thriftAuthenticator",
+                                                    new ThriftSecureEventTransmissionServlet(authProcessor, inProtFactory,
+                                                                             outProtFactory),
+                                                    new Hashtable(),
+                                                    httpServiceInstance.createDefaultHttpContext());
+
             }
         } catch (DataBridgeException e) {
             log.error("Can not create and start Agent Server ", e);
@@ -111,12 +145,22 @@ public class ThriftDataReceiverDS {
         this.configurationContext = null;
     }
 
-    protected void setDataBridgeReceiverService(DataBridgeReceiverService dataBridgeReceiverService) {
+    protected void setDataBridgeReceiverService(
+            DataBridgeReceiverService dataBridgeReceiverService) {
         this.dataBridgeReceiverService = dataBridgeReceiverService;
     }
 
-    protected void unsetDatabridgeReceiverService(DataBridgeReceiverService dataBridgeReceiverService) {
-        this.dataBridgeReceiverService =null;
+    protected void unsetDatabridgeReceiverService(
+            DataBridgeReceiverService dataBridgeReceiverService) {
+        this.dataBridgeReceiverService = null;
+    }
+
+    protected void setHttpService(HttpService httpService) {
+        httpServiceInstance = httpService;
+    }
+
+    protected void unsetHttpService(HttpService httpService) {
+        httpServiceInstance = null;
     }
 
 }

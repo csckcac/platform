@@ -26,17 +26,27 @@ package org.wso2.carbon.databridge.agent.thrift.conf;
  */
 public class ReceiverConfiguration {
 
+    public enum Protocol {
+        TCP, HTTP
+    }
+
     private String userName;
     private String password;
     private String dataReceiverIp;
     private int dataReceiverPort;
     private String secureDataReceiverIp;
     private int secureDataReceiverPort;
-    private boolean dataTransferSecured=false;
+    private boolean dataTransferSecured = false;
+    private Protocol dataReceiverProtocol = Protocol.TCP;
+    private Protocol secureDataReceiverProtocol = Protocol.TCP;
 
-    public ReceiverConfiguration(String userName, String password, String dataReceiverIp,
-                                 int dataReceiverPort, String secureDataReceiverIp,
+    public ReceiverConfiguration(String userName, String password, Protocol dataReceiverProtocol,
+                                 String dataReceiverIp,
+                                 int dataReceiverPort, Protocol secureDataReceiverProtocol,
+                                 String secureDataReceiverIp,
                                  int secureDataReceiverPort, boolean secured) {
+        this.dataReceiverProtocol = dataReceiverProtocol;
+        this.secureDataReceiverProtocol = secureDataReceiverProtocol;
         this.userName = userName;
         this.password = password;
         this.dataReceiverIp = dataReceiverIp;
@@ -100,5 +110,22 @@ public class ReceiverConfiguration {
 
     public void setDataTransferSecured(boolean dataTransferSecured) {
         this.dataTransferSecured = dataTransferSecured;
+    }
+
+    public Protocol getDataReceiverProtocol() {
+        return dataReceiverProtocol;
+    }
+
+    public void setDataReceiverProtocol(Protocol dataReceiverProtocol) {
+        this.dataReceiverProtocol = dataReceiverProtocol;
+    }
+
+    public Protocol getSecureDataReceiverProtocol() {
+        return secureDataReceiverProtocol;
+    }
+
+    public void setSecureDataReceiverProtocol(
+            Protocol secureDataReceiverProtocol) {
+        this.secureDataReceiverProtocol = secureDataReceiverProtocol;
     }
 }

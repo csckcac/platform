@@ -63,12 +63,16 @@ public class DataPublisher {
 
     /**
      * To create the Data Publisher and the respective agent to publish events
+     * For TCP protocol
      * For secure data transfer the Authenticator URL will be the same as the Receiver URL and
-     * for normal data transfer the Authenticator ip will be the same as receiver ip but its port will be 100+<receiver port>
+     * for normal data transfer the Authenticator ip will be the same as receiver ip but its port will be 100+<receiver port> for tcp
+     * For HTTP protocol
+     * For secure data transfer the Authenticator URL will be the same as the Receiver URL and
+     * normal data transfer NOT supported via this constructor
      *
      * @param receiverUrl the event receiver url
-     *                    use tcp://<HOST>:<PORT> for normal data transfer and
-     *                    use ssl://<HOST>:<PORT> for secure data transfer
+     *                    use <tcp>://<HOST>:<PORT> for normal data transfer and
+     *                    use <ssl/https>://<HOST>:<PORT> for secure data transfer
      * @param userName    user name
      * @param password    password
      * @throws java.net.MalformedURLException
@@ -88,10 +92,10 @@ public class DataPublisher {
     /**
      * To create the Data Publisher and the respective agent to publish events
      *
-     * @param authenticationUrl the secure authentication url, use ssl://<HOST>:<PORT>
+     * @param authenticationUrl the secure authentication url, use <ssl/https>://<HOST>:<PORT>
      * @param receiverUrl       the event receiver url
-     *                          use tcp://<HOST>:<PORT> for normal data transfer and
-     *                          use ssl://<HOST>:<PORT> for secure data transfer
+     *                          use <tcp/http></tcp/http>://<HOST>:<PORT> for normal data transfer and
+     *                          use <ssl/https></ssl/https>://<HOST>:<PORT> for secure data transfer
      * @param userName          user name
      * @param password          password
      * @throws java.net.MalformedURLException
@@ -111,12 +115,16 @@ public class DataPublisher {
 
     /**
      * To create the Data Publisher to publish events
+     * For TCP protocol
      * For secure data transfer the Authenticator URL will be the same as the Receiver URL and
-     * for normal data transfer the Authenticator ip will be the same as receiver ip but its port will be 100+<receiver port>
+     * for normal data transfer the Authenticator ip will be the same as receiver ip but its port will be 100+<receiver port> for tcp
+     * For HTTP protocol
+     * For secure data transfer the Authenticator URL will be the same as the Receiver URL and
+     * normal data transfer NOT supported via this constructor
      *
      * @param receiverUrl the event receiver url
-     *                    use tcp://<HOST>:<PORT> for normal data transfer and
-     *                    use ssl://<HOST>:<PORT> for secure data transfer
+     *                    use <tcp>://<HOST>:<PORT> for normal data transfer and
+     *                    use <ssl/https>://<HOST>:<PORT> for secure data transfer
      * @param userName    user name
      * @param password    password
      * @param agent       the underlining agent
@@ -133,16 +141,21 @@ public class DataPublisher {
             throws MalformedURLException, AgentException, AuthenticationException,
                    TransportException {
         AgentServerURL receiverURL = new AgentServerURL(receiverUrl);
+        checkHostAddress(receiverURL.getHost());
         if (receiverURL.isSecured()) {
-            this.start(new ReceiverConfiguration(userName, password,
-                                                 findHostAddress(receiverURL.getHost()), receiverURL.getPort(),
-                                                 findHostAddress(receiverURL.getHost()), receiverURL.getPort(), receiverURL.isSecured()),
+            this.start(new ReceiverConfiguration(userName, password, receiverURL.getProtocol(),
+                                                 (receiverURL.getHost()), receiverURL.getPort(),
+                                                 receiverURL.getProtocol(),
+                                                 (receiverURL.getHost()), receiverURL.getPort(), receiverURL.isSecured()),
+                       agent);
+        } else if(receiverURL.getProtocol()== ReceiverConfiguration.Protocol.TCP){
+            this.start(new ReceiverConfiguration(userName, password, receiverURL.getProtocol(),
+                                                 (receiverURL.getHost()), receiverURL.getPort(),
+                                                 receiverURL.getProtocol(),
+                                                 (receiverURL.getHost()), receiverURL.getPort() + CommonThriftConstants.SECURE_EVENT_RECEIVER_PORT_OFFSET, receiverURL.isSecured()),
                        agent);
         } else {
-            this.start(new ReceiverConfiguration(userName, password,
-                                                 findHostAddress(receiverURL.getHost()), receiverURL.getPort(),
-                                                 findHostAddress(receiverURL.getHost()), receiverURL.getPort() + CommonThriftConstants.SECURE_EVENT_RECEIVER_PORT_OFFSET, receiverURL.isSecured()),
-                       agent);
+            throw new AgentException("http not supported via this constructor use https, ssl or tcp ");
         }
 
     }
@@ -150,10 +163,10 @@ public class DataPublisher {
     /**
      * To create the Data Publisher and the respective agent to publish events
      *
-     * @param authenticationUrl the secure authentication url, use ssl://<HOST>:<PORT>
+     * @param authenticationUrl the secure authentication url, use <ssl/https>://<HOST>:<PORT>
      * @param receiverUrl       the event receiver url
-     *                          use tcp://<HOST>:<PORT> for normal data transfer and
-     *                          use ssl://<HOST>:<PORT> for secure data transfer
+     *                          use <tcp/http></tcp/http>://<HOST>:<PORT> for normal data transfer and
+     *                          use <ssl/https></ssl/https>://<HOST>:<PORT> for secure data transfer
      * @param userName          user name
      * @param password          password
      * @param agent             the underlining agent
@@ -171,22 +184,24 @@ public class DataPublisher {
                    TransportException {
         AgentServerURL authenticationURL = new AgentServerURL(authenticationUrl);
         if (!authenticationURL.isSecured()) {
-            throw new MalformedURLException("Authentication url protocol is not ssl, expected = ssl://<HOST>:<PORT> but actual = " + authenticationUrl);
+            throw new MalformedURLException("Authentication url protocol is not ssl/https, expected = <ssl/https>://<HOST>:<PORT> but actual = " + authenticationUrl);
         }
         AgentServerURL receiverURL = new AgentServerURL(receiverUrl);
-        this.start(new ReceiverConfiguration(userName, password,
-                                             findHostAddress(receiverURL.getHost()), receiverURL.getPort(),
-                                             findHostAddress(authenticationURL.getHost()), authenticationURL.getPort(), receiverURL.isSecured()),
+        checkHostAddress(receiverURL.getHost());
+        checkHostAddress(authenticationURL.getHost());
+        this.start(new ReceiverConfiguration(userName, password, receiverURL.getProtocol(),
+                                             receiverURL.getHost(), receiverURL.getPort(),
+                                             authenticationURL.getProtocol(),
+                                             authenticationURL.getHost(), authenticationURL.getPort(), receiverURL.isSecured()),
                    agent);
 
     }
 
-    private String findHostAddress(String hostAddress) {
+    private void checkHostAddress(String hostAddress) throws AgentException {
         try {
-            return HostAddressFinder.findAddress(hostAddress);
+            HostAddressFinder.findAddress(hostAddress);
         } catch (SocketException e) {
-            log.warn("Cannot find the appropriate server host address hence using " + hostAddress + " due to SocketException: " + e.getMessage());
-            return hostAddress;
+            throw new AgentException(hostAddress + " is malformed ", e);
         }
     }
 

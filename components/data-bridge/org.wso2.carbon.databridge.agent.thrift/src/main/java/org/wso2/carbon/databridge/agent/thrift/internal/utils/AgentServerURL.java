@@ -17,6 +17,8 @@
 */
 package org.wso2.carbon.databridge.agent.thrift.internal.utils;
 
+import org.wso2.carbon.databridge.agent.thrift.conf.ReceiverConfiguration;
+
 import java.net.MalformedURLException;
 import java.net.URL;
 
@@ -24,32 +26,41 @@ import java.net.URL;
  * The Agent server endpoint url
  */
 public class AgentServerURL {
-    private String protocol;
+    private ReceiverConfiguration.Protocol protocol;
     private String host;
     private int port;
     private boolean isSecured = false;
 
     public AgentServerURL(String url) throws MalformedURLException {
         URL theUrl;
-        if (url.startsWith("tcp")) {
-            theUrl = new URL(url.replaceFirst("tcp", "http"));
+        if (url.startsWith("http:")) {
+            this.protocol= ReceiverConfiguration.Protocol.HTTP;
+            theUrl = new URL(url);
             isSecured=false;
-        } else if (url.startsWith("ssl")) {
+        } else  if (url.startsWith("https:")) {
+            this.protocol= ReceiverConfiguration.Protocol.HTTP;
+            theUrl = new URL(url);
+            isSecured=true;
+        } else  if (url.startsWith("tcp:")) {
+            theUrl = new URL(url.replaceFirst("tcp", "http"));
+            this.protocol= ReceiverConfiguration.Protocol.TCP;
+            isSecured=false;
+        } else if (url.startsWith("ssl:")) {
+            this.protocol= ReceiverConfiguration.Protocol.TCP;
             theUrl = new URL(url.replaceFirst("ssl", "http"));
             isSecured=true;
         } else {
             throw new MalformedURLException("The url protocol is not tcp or ssl " + url);
         }
-        this.protocol = theUrl.getProtocol();
         this.host = theUrl.getHost();
         this.port = theUrl.getPort();
     }
 
-    public String getProtocol() {
+    public ReceiverConfiguration.Protocol getProtocol() {
         return protocol;
     }
 
-    public void setProtocol(String protocol) {
+    public void setProtocol(ReceiverConfiguration.Protocol protocol) {
         this.protocol = protocol;
     }
 

@@ -24,26 +24,47 @@ package org.wso2.carbon.databridge.agent.thrift.internal.pool.client.general;
 
 import org.apache.commons.pool.BaseKeyedPoolableObjectFactory;
 import org.apache.thrift.protocol.TBinaryProtocol;
+import org.apache.thrift.protocol.TCompactProtocol;
 import org.apache.thrift.protocol.TProtocol;
+import org.apache.thrift.transport.THttpClient;
 import org.apache.thrift.transport.TSocket;
 import org.apache.thrift.transport.TTransport;
 import org.apache.thrift.transport.TTransportException;
-import org.wso2.carbon.databridge.commons.thrift.service.general.ThriftEventTransmissionService;
+import org.wso2.carbon.databridge.agent.thrift.conf.ReceiverConfiguration;
 import org.wso2.carbon.databridge.agent.thrift.internal.utils.AgentConstants;
+import org.wso2.carbon.databridge.commons.thrift.service.general.ThriftEventTransmissionService;
+import org.wso2.carbon.databridge.commons.thrift.utils.HostAddressFinder;
+
+import java.net.SocketException;
 
 public class ClientPoolFactory extends BaseKeyedPoolableObjectFactory {
 
     @Override
     public ThriftEventTransmissionService.Client makeObject(Object key) throws TTransportException {
-        String[] hostNameAndPort = key.toString().split(AgentConstants.ENDPOINT_SEPARATOR)[0].split(AgentConstants.HOSTNAME_AND_PORT_SEPARATOR);
+        String[] keyElements = key.toString().split(AgentConstants.SEPARATOR);
+        if (keyElements[0].equals(ReceiverConfiguration.Protocol.TCP.toString())) {
 
-        TTransport receiverTransport = new TSocket(hostNameAndPort[0],
-                                                   Integer.parseInt(hostNameAndPort[1]));
-        TProtocol protocol = new TBinaryProtocol(receiverTransport);
-        ThriftEventTransmissionService.Client client = new ThriftEventTransmissionService.Client(protocol);
-        receiverTransport.open();
+            String[] hostNameAndPort = keyElements[1].split(AgentConstants.HOSTNAME_AND_PORT_SEPARATOR);
 
-        return client;
+            TTransport receiverTransport = null;
+            try {
+                receiverTransport = new TSocket(HostAddressFinder.findAddress(hostNameAndPort[0]),
+                                                           Integer.parseInt(hostNameAndPort[1]));
+            } catch (SocketException ignored) {
+                //already checked
+            }
+            TProtocol protocol = new TBinaryProtocol(receiverTransport);
+            ThriftEventTransmissionService.Client client = new ThriftEventTransmissionService.Client(protocol);
+            receiverTransport.open();
+
+            return client;
+        } else {
+            THttpClient client = new THttpClient("http://" + keyElements[1] + "/thriftReceiver");
+            TProtocol protocol = new TCompactProtocol(client);
+            ThriftEventTransmissionService.Client publisherClient = new ThriftEventTransmissionService.Client(protocol);
+            client.open();
+            return publisherClient;
+        }
     }
 
     @Override

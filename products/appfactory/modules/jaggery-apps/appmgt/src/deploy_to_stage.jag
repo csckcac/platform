@@ -8,9 +8,10 @@
         var stageName = request.getParameter("stageName");
         var version = '1.0';
         var revision = '0';
+        var build = 'true';
 
         try{
-            var deployedArtifact = invokeDeployToStage(applicationKey,revision,version,stageName);
+            var deployedArtifact = invokeDeployToStage(applicationKey,revision,version,stageName,build);
             print(deployedArtifact +" was successfully deployed");
 	    }catch(e){
 	        print(e.message);

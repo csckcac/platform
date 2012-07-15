@@ -44,6 +44,7 @@
 						<element name="revision" type="string" />
 						<element name="version" type="string" />
 						<element name="stage" type="string" />
+						<element name="build" type="string"></element>
 					</sequence>
 				</complexType>
 			</element>

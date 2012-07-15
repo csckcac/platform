@@ -33,7 +33,7 @@
                                                                  </tr>
                                                                  </thead>
                                                                  <tr>
-                                                                     <td >Data base URL:</td>
+                                                                     <td >Database URL:</td>
                                                                      <td class="formRow"><input type='text' name='<%='url'+stage%>' size='50'/></td>
                                                                  </tr>
  <tr>

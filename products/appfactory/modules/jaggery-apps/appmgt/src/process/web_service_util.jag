@@ -305,13 +305,13 @@
         }
     }
 
-    function invokeDeployToStage(applicationKey,revision,version,stageName){
+    function invokeDeployToStage(applicationKey,revision,version,stageName,build){
         var ws = require('ws');
         var deployApplicationToStageProcess = new ws.WSRequest();
         var options = new Array();
         options.useSOAP = 1.1;
         options.action = "urn:process";
-        var payload = '<p:DeployToStageRequest xmlns:p="http://wso2.org"><p:applicationId>'+applicationKey+'</p:applicationId><p:revision>'+revision+'</p:revision><p:version>'+version+'</p:version><p:stage>'+stageName+'</p:stage></p:DeployToStageRequest>';
+        var payload = '<p:DeployToStageRequest xmlns:p="http://wso2.org"><p:applicationId>'+applicationKey+'</p:applicationId><p:revision>'+revision+'</p:revision><p:version>'+version+'</p:version><p:stage>'+stageName+'</p:stage><p:build>'+build+'</p:build></p:DeployToStageRequest>';
         var result;
 
         try {

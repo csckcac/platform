@@ -73,7 +73,7 @@ public class ZipFileUploadExecutor extends AbstractFileUploadExecutor {
                     msg = "it will take some time to start the instance";
                     CarbonUIMessage.sendCarbonUIMessage(msg, CarbonUIMessage.INFO, request, response,
                                                                     "../" + webContext + "/hosting-mgt/upload.jsp");
-                    publicIp = client.startInstance(selectedImage, requestUrl.toString());
+                    publicIp = client.startInstance(selectedImage);
                 }
             }
         }

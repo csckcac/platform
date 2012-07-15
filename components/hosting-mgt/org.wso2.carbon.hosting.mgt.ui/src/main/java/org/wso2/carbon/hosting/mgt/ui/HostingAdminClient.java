@@ -103,38 +103,23 @@ public class HostingAdminClient {
 
 
     public boolean getIsInstanceUpFromLb(){
-        //TODO get state from LB service  and set
+        //TODO get state from
         return isInstanceUp;
     }
 
     public String[] getBaseImages() throws AxisFault {
-        //TODO get base images from autoscaler
         try {
             return stub.getImages();
         } catch (RemoteException e) {
             handleException("cannot.get.images", e);
         }
-//        String images[] = new String[5];
-//        images[0] = "image1";
-//        images[1] = "image2";
-//        images[2] = "image3";
-//        images[3] = "image4";
-//        images[4] = "image5";
-//        return images;
         return null;
     }
 
-    public String startInstance(String image, String tenantUrl) throws AxisFault {
+    public String startInstance(String image) throws AxisFault {
         String ip = null;
         try {
-            String tenant = null; 
-            if(tenantUrl.indexOf("/t/") != -1){
-                tenant = tenantUrl.substring(3 + tenantUrl.indexOf("/t/"));
-                tenant = tenant.substring(0, tenant.indexOf('/'));
-            }
-            ip =  stub.startInstance(image, tenant);
-            log.info("ip " + ip);
-            
+            ip =  stub.startInstance(image);
         } catch (RemoteException e) {
             handleException("cannot.start.instance" , e);
         }

@@ -23,6 +23,8 @@ import org.apache.commons.logging.Log;
 import org.apache.commons.logging.LogFactory;
 import org.wso2.carbon.load.balance.autoscaler.service.stub.AutoscalerServiceStub;
 
+import java.rmi.RemoteException;
+
 /**
  * This is the client class this calls Autoscaler service.
  */
@@ -51,9 +53,14 @@ public class AutoscaleServiceClient {
         }
     }
     
-    public boolean init(boolean isSpi) throws Exception {
-        
-        return stub.initAutoscaler(isSpi);
+    public boolean init(boolean isSpi) throws AxisFault {
+
+        try {
+            return stub.initAutoscaler(isSpi);
+        } catch (RemoteException e) {
+            String msg = "Error while calling init() from autoscaler client";
+            throw new AxisFault(msg);
+        }
     }
     
     public String startInstance(String domainName, String imageId) throws Exception{

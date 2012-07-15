@@ -26,6 +26,7 @@ import org.wso2.carbon.core.AbstractAdmin;
 import org.wso2.carbon.hosting.mgt.clients.AutoscaleServiceClient;
 import org.wso2.carbon.hosting.mgt.utils.PHPAppsWrapper;
 import org.wso2.carbon.hosting.mgt.utils.PHPCartridgeConstants;
+import org.wso2.carbon.utils.multitenancy.MultitenantUtils;
 
 
 /**
@@ -38,17 +39,16 @@ public class ApplicationManagementService extends AbstractAdmin{
     public static final String FILE_DEPLOYMENT_FOLDER = "phpapps";
     AutoscaleServiceClient client;
     HashMap<String, String> imageIdtoNameMap;
+    HashMap<Integer, String> tenantToPublicIpMap;
     OpenstackDAO openstackDAO;
 
     public ApplicationManagementService(){
         imageIdtoNameMap = new HashMap<String, String>();
     }
-    public void initAutoscaler() throws Exception {
-        client = new AutoscaleServiceClient(System.getProperty(PHPCartridgeConstants.AUTOSCALER_SERVICE_URL));
-        log.info("Initialized Autoscaler service");
-        client.init(true);
-        log.info("Called INIT of Autoscaler service and Image id is");
 
+    public void initAutoscaler() throws AxisFault {
+        client = new AutoscaleServiceClient(System.getProperty(PHPCartridgeConstants.AUTOSCALER_SERVICE_URL));
+        client.init(true);
     }
     /**
          * Upload a File
@@ -141,7 +141,7 @@ public class ApplicationManagementService extends AbstractAdmin{
         if(phpApps != null){
             endPoints = new String[phpApps.length];
             for(int i = 0; i < endPoints.length; i++){
-                endPoints[i] = "https://" + "<tenant_ip>" + "/t/" + "tenant_name/" + phpApps[i];
+                endPoints[i] = "https://" + "<tenant_ip>" + "/t/" + "tenant_id/" + phpApps[i];
             }
         }   else {
             endPoints = null;
@@ -166,7 +166,8 @@ public class ApplicationManagementService extends AbstractAdmin{
         }
     }
 
-    public String startInstance(String image, String tenant){
+    public String startInstance(String image){
+        int tenantId = MultitenantUtils.getTenantId(getConfigContext());
         try {
             initAutoscaler();
         } catch (Exception e) {

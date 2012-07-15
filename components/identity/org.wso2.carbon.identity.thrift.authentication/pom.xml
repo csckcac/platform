@@ -38,7 +38,7 @@
                         </Export-Package>
                         <Import-Package>
                             !org.wso2.carbon.identity.authentication.*,
-                            org.slf4j.*;version="0.0.0",
+                            org.slf4j.*;version="${slf4j.wso2.version}",
                             org.apache.thrift.*,
                             *;resolution:=optional,
                         </Import-Package>

@@ -6,8 +6,8 @@ import org.apache.commons.logging.LogFactory;
 import org.apache.xml.security.utils.Base64;
 import org.wso2.carbon.base.ServerConfigurationException;
 import org.wso2.carbon.identity.core.util.IdentityConfigParser;
-import org.wso2.carbon.identity.oauth.authz.OAuthAuthorizationCallbackHandlerMetaData;
-import org.wso2.carbon.identity.oauth.authz.OAuthCallbackHandlerRegistry;
+import org.wso2.carbon.identity.oauth.callback.OAuthCallbackHandlerMetaData;
+import org.wso2.carbon.identity.oauth.callback.OAuthCallbackHandlerRegistry;
 import org.wso2.carbon.registry.core.utils.UUIDGenerator;
 
 import javax.crypto.Mac;
@@ -81,7 +81,7 @@ public final class OAuthUtil {
             int callbackHandlerCount = 0;
             if (callbackHandlers != null) {
                 for (; callbackHandlers.hasNext(); ) {
-                    OAuthAuthorizationCallbackHandlerMetaData cbHandlerMetadata =
+                    OAuthCallbackHandlerMetaData cbHandlerMetadata =
                             buildAuthzCallbackHandlerMetadata((OMElement) callbackHandlers.next());
                     if (cbHandlerMetadata != null) {
                         OAuthCallbackHandlerRegistry.getInstance().
@@ -98,9 +98,9 @@ public final class OAuthUtil {
             }
 
         } catch (ServerConfigurationException e) {
-            log.error("Error when reading the OAuthAuthorizationHandler Configurations.", e);
+            log.error("Error when reading the OAuthCallbackManager Configurations.", e);
             throw new IdentityOAuthAdminException(
-                    "Error when reading the OAuthAuthorizationHandler Configurations.", e);
+                    "Error when reading the OAuthCallbackManager Configurations.", e);
         }
     }
 
@@ -108,7 +108,7 @@ public final class OAuthUtil {
         log.warn("Error in OAuth Configuration. " + logMsg);
     }
 
-    private static OAuthAuthorizationCallbackHandlerMetaData buildAuthzCallbackHandlerMetadata(
+    private static OAuthCallbackHandlerMetaData buildAuthzCallbackHandlerMetadata(
             OMElement omElement) {
         // read the class attribute which is mandatory
         String className = omElement.getAttributeValue(new QName(CONFIG_ATTR_CLASS));
@@ -153,6 +153,6 @@ public final class OAuthUtil {
                 }
             }
         }
-        return new OAuthAuthorizationCallbackHandlerMetaData(className, properties, priority);
+        return new OAuthCallbackHandlerMetaData(className, properties, priority);
     }
 }

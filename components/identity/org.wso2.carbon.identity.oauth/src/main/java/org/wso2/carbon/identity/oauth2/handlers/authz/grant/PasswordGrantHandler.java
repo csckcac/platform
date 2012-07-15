@@ -16,7 +16,7 @@
 *under the License.
 */
 
-package org.wso2.carbon.identity.oauth2;
+package org.wso2.carbon.identity.oauth2.handlers.authz.grant;
 
 import org.apache.commons.logging.Log;
 import org.apache.commons.logging.LogFactory;

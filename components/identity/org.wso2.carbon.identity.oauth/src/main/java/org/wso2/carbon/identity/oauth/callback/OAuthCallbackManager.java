@@ -16,7 +16,7 @@
 *under the License.
 */
 
-package org.wso2.carbon.identity.oauth.authz;
+package org.wso2.carbon.identity.oauth.callback;
 
 import org.apache.commons.logging.Log;
 import org.apache.commons.logging.LogFactory;
@@ -24,25 +24,25 @@ import org.wso2.carbon.identity.oauth2.IdentityOAuth2Exception;
 
 import javax.security.auth.callback.Callback;
 
-public class OAuthAuthorizationHandler {
+public class OAuthCallbackManager {
 
-    private static Log log = LogFactory.getLog(OAuthAuthorizationHandler.class);
+    private static Log log = LogFactory.getLog(OAuthCallbackManager.class);
     private OAuthCallbackHandlerRegistry callbackHandlerRegistry;
 
-    public OAuthAuthorizationHandler()
+    public OAuthCallbackManager()
             throws IdentityOAuth2Exception {
-        init();
         callbackHandlerRegistry = OAuthCallbackHandlerRegistry.getInstance();
+        init();
     }
 
     private void init() throws IdentityOAuth2Exception {
         callbackHandlerRegistry.initAuthzCallbackHandlers();
     }
 
-    public void handleAuthorization(OAuthAuthorizationCallback authzCallback)
+    public void handleCallback(OAuthCallback authzCallback)
             throws IdentityOAuth2Exception {
         try {
-            OAuthAuthorizationCallbackHandler authzCbHandler =
+            OAuthCallbackHandler authzCbHandler =
                     callbackHandlerRegistry.getOAuthAuthzHandler(authzCallback);
             if (authzCbHandler != null) {
                 authzCbHandler.handle(new Callback[]{authzCallback});

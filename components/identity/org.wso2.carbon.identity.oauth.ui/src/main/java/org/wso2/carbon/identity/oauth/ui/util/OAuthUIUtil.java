@@ -38,7 +38,7 @@ public class OAuthUIUtil {
 
     /**
      * Returns the corresponding absolute endpoint URL. e.g. https://localhost:9443/oauth2/access-token
-     * @param endpointType It could be request-token endpoint, authz-token endpoint or access-token endpoint
+     * @param endpointType It could be request-token endpoint, callback-token endpoint or access-token endpoint
      * @param oauthVersion OAuth version whether it is 1.0a or 2.0
      * @param request HttpServletRequest coming to the FE jsp
      * @return Absolute endpoint URL.

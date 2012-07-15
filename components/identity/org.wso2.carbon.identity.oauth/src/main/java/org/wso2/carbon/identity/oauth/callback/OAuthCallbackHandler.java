@@ -16,7 +16,7 @@
 *under the License.
 */
 
-package org.wso2.carbon.identity.oauth.authz;
+package org.wso2.carbon.identity.oauth.callback;
 
 import org.wso2.carbon.identity.oauth2.IdentityOAuth2Exception;
 
@@ -28,7 +28,7 @@ import java.util.Properties;
 
 /**
  * An extension point provided to verify whether the authenticated user is the rightful owner of
- * the resource. There can be multiple active <code>OAuthAuthorizationCallbackHandler</code>
+ * the resource. There can be multiple active <code>OAuthCallbackHandler</code>
  * implementations at a given time. There are registered through the identity.xml. It has the
  * following configuration.
  * {@code
@@ -44,7 +44,7 @@ import java.util.Properties;
  *
  * After handling the callback, it can set whether the given callback is authorized or not.
  */
-public interface OAuthAuthorizationCallbackHandler extends CallbackHandler {
+public interface OAuthCallbackHandler extends CallbackHandler {
 
     /**
      * Returns the priority of the callback handler
@@ -55,7 +55,7 @@ public interface OAuthAuthorizationCallbackHandler extends CallbackHandler {
 
     /**
      * Whether the given callback can be handled or not.
-     * @param callbacks An array of <Code>OAuthAuthorizationCallback</Code>
+     * @param callbacks An array of <Code>OAuthCallback</Code>
      * @return <code>true</code> if it can handle the callback.
      * @throws IdentityOAuth2Exception Error while checking the possibility of handling the callback.
      */

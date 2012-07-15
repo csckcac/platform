@@ -16,7 +16,7 @@
 *under the License.
 */
 
-package org.wso2.carbon.identity.oauth2;
+package org.wso2.carbon.identity.oauth2.handlers.authz.grant;
 
 import org.wso2.carbon.identity.base.IdentityException;
 import org.wso2.carbon.identity.oauth2.dto.OAuth2AccessTokenRespDTO;
@@ -29,7 +29,7 @@ public interface AuthorizationGrantHandler {
     /**
      * Validate the Authorization Grant
      * @return <Code>true</Code>|<Code>false</Code> if the grant_type is valid or not.
-     * @throws IdentityOAuth2Exception Error when validating the authorization grant.
+     * @throws org.wso2.carbon.identity.oauth2.IdentityOAuth2Exception Error when validating the authorization grant.
      */
     public boolean validate() throws IdentityException;
 

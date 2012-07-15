@@ -26,6 +26,7 @@ public class OAuth2AuthorizeRespDTO {
     private String errorCode;
     private String errorMsg;
     private long validityPeriod;
+    private String[] scope;
 
     public String getAuthorizationCode() {
         return authorizationCode;
@@ -81,5 +82,13 @@ public class OAuth2AuthorizeRespDTO {
 
     public void setValidityPeriod(long validityPeriod) {
         this.validityPeriod = validityPeriod;
+    }
+
+    public String[] getScope() {
+        return scope;
+    }
+
+    public void setScope(String[] scope) {
+        this.scope = scope;
     }
 }

@@ -18,33 +18,31 @@
 
 package org.wso2.carbon.identity.oauth2;
 
-import com.google.gdata.client.authn.oauth.OAuthException;
-import org.apache.amber.oauth2.as.issuer.MD5Generator;
-import org.apache.amber.oauth2.as.issuer.OAuthIssuerImpl;
 import org.apache.amber.oauth2.common.error.OAuthError;
 import org.apache.amber.oauth2.common.message.types.GrantType;
-import org.apache.amber.oauth2.common.message.types.ResponseType;
 import org.apache.commons.logging.Log;
 import org.apache.commons.logging.LogFactory;
 import org.wso2.carbon.core.AbstractAdmin;
 import org.wso2.carbon.identity.core.model.OAuthAppDO;
 import org.wso2.carbon.identity.oauth.IdentityOAuthAdminException;
-import org.wso2.carbon.identity.oauth.authz.OAuthAuthorizationCallback;
-import org.wso2.carbon.identity.oauth.authz.OAuthAuthorizationHandler;
+import org.wso2.carbon.identity.oauth.callback.OAuthCallback;
+import org.wso2.carbon.identity.oauth.callback.OAuthCallbackManager;
 import org.wso2.carbon.identity.oauth.common.OAuth2ErrorCodes;
 import org.wso2.carbon.identity.oauth.dao.OAuthAppDAO;
-import org.wso2.carbon.identity.oauth2.dao.TokenMgtDAO;
 import org.wso2.carbon.identity.oauth2.dto.*;
-import org.wso2.carbon.identity.oauth2.util.OAuth2Constants;
+import org.wso2.carbon.identity.oauth2.handlers.authz.AuthorizationHandlerManager;
+import org.wso2.carbon.identity.oauth2.handlers.authz.grant.AuthorizationCodeHandler;
+import org.wso2.carbon.identity.oauth2.handlers.authz.grant.AuthorizationGrantHandler;
+import org.wso2.carbon.identity.oauth2.handlers.authz.grant.PasswordGrantHandler;
 import org.wso2.carbon.identity.oauth2.util.OAuth2Util;
 
-import java.sql.Timestamp;
-import java.util.Date;
+import javax.jws.WebService;
 
 /**
  * OAuth2 Service which is used to issue authorization codes or access tokens upon authorizing by the
  * user and issue/validate access tokens.
  */
+@WebService
 @SuppressWarnings("unused")
 public class OAuth2Service extends AbstractAdmin {
 
@@ -54,138 +52,35 @@ public class OAuth2Service extends AbstractAdmin {
      * Process the authorization request and issue an authorization code or access token depending
      * on the Response Type available in the request.
      *
-     * @param authorizeDTO <code>OAuth2AuthorizeReqDTO</code> containing information about the authorization
-     *                     request.
+     * @param oAuth2AuthorizeReqDTO <code>OAuth2AuthorizeReqDTO</code> containing information about the authorization
+     *                              request.
      * @return <code>OAuth2AuthorizeRespDTO</code> instance containing the access token/authorization code
      *         or an error code.
      */
-    public OAuth2AuthorizeRespDTO authorize(OAuth2AuthorizeReqDTO authorizeDTO) {
+    public OAuth2AuthorizeRespDTO authorize(OAuth2AuthorizeReqDTO oAuth2AuthorizeReqDTO) {
 
         if (log.isDebugEnabled()) {
-            log.debug("Authorization Request received for user : " + authorizeDTO.getUsername() +
-                    ", Client ID : " + authorizeDTO.getConsumerKey() +
-                    ", Authorization Response Type : " + authorizeDTO.getResponseType() +
-                    ", Requested callback URI : " + authorizeDTO.getCallbackUrl() +
-                    ", Requested Scope : " + OAuth2Util.buildScopeString(authorizeDTO.getScopes()));
+            log.debug("Authorization Request received for user : " + oAuth2AuthorizeReqDTO.getUsername() +
+                    ", Client ID : " + oAuth2AuthorizeReqDTO.getConsumerKey() +
+                    ", Authorization Response Type : " + oAuth2AuthorizeReqDTO.getResponseType() +
+                    ", Requested callback URI : " + oAuth2AuthorizeReqDTO.getCallbackUrl() +
+                    ", Requested Scope : " + OAuth2Util.buildScopeString(oAuth2AuthorizeReqDTO.getScopes()));
         }
-
-        OAuth2AuthorizeRespDTO respDTO = new OAuth2AuthorizeRespDTO();
-        boolean isAuthenticated;
-
-        // authenticate user
-        try {
-            isAuthenticated = OAuth2Util.authenticateUser(authorizeDTO.getUsername(),
-                    authorizeDTO.getPassword());
-        } catch (OAuthException e) {
-            log.error("Error occurred when authenticating the user.");
-            handleErrorRequest(respDTO, OAuth2ErrorCodes.SERVER_ERROR,
-                    "Error occurred when authenticating the user.");
-            return respDTO;
-        }
-
-        // if authentication failed, return the error back to the FE.
-        if (!isAuthenticated) {
-            log.info("User Authentication failed for user : " + authorizeDTO.getUsername());
-            handleErrorRequest(respDTO, OAuth2ErrorCodes.ACCESS_DENIED,
-                    "Authentication Failure, Invalid Credentials!");
-            return respDTO;
-        }
-
-        // handle authorization
-        OAuthAuthorizationCallback authzCallback = new OAuthAuthorizationCallback(authorizeDTO.getUsername(),
-                authorizeDTO.getConsumerKey(),
-                authorizeDTO.getScopes());
-        try {
-            OAuthAuthorizationHandler authzHandler = new OAuthAuthorizationHandler();
-            authzHandler.handleAuthorization(authzCallback);
-        } catch (IdentityOAuth2Exception e) {
-            handleErrorRequest(respDTO, OAuth2ErrorCodes.SERVER_ERROR,
-                    "Error occurred when authorizing the user.");
-            return respDTO;
-        }
-
-        if(!authzCallback.isAuthorized() || authzCallback.isInvalidScope()){
-            if(authzCallback.isInvalidScope()){
-                if (log.isDebugEnabled()) {
-                    log.debug("Invalid scope. :" +
-                            " Username : " + authorizeDTO.getUsername() +
-                            " Scope : " + OAuth2Util.buildScopeString(authorizeDTO.getScopes()));
-                }
-                handleErrorRequest(respDTO, OAuth2ErrorCodes.INVALID_SCOPE,
-                        "Invalid Scope.");
-            } else {
-                if (log.isDebugEnabled()) {
-                    log.debug("User does not have right permissions to grant access to the resource :" +
-                            " Username : " + authorizeDTO.getUsername() +
-                            " Scope : " + OAuth2Util.buildScopeString(authorizeDTO.getScopes()));
-                }
-                handleErrorRequest(respDTO, OAuth2ErrorCodes.UNAUTHORIZED_CLIENT,
-                        "Resource Owner does not have enough permissions to grant access.");
-            }
-            return respDTO;
-        }
-
-
-        OAuthIssuerImpl oauthIssuerImpl = new OAuthIssuerImpl(new MD5Generator());
-        TokenMgtDAO tokenMgtDAO = new TokenMgtDAO();
-        // Need to get the scope available in the authz callback. Scope might be different than the
-        // scope that was present in the request.
-        String scopeString = OAuth2Util.buildScopeString(authzCallback.getScope());
 
         try {
-            if (ResponseType.CODE.toString().equals(authorizeDTO.getResponseType())) { // generate code
-
-                String authorizationCode = oauthIssuerImpl.authorizationCode();
-
-                tokenMgtDAO.storeAuthorizationCode(authorizationCode, authorizeDTO.getConsumerKey(),
-                        scopeString, authorizeDTO.getUsername());
-
-                if (log.isDebugEnabled()) {
-                    log.debug("Issued Authorization Code to user : " +
-                            authorizeDTO.getUsername() + ". Using the redirect url : " +
-                            authorizeDTO.getCallbackUrl());
-                }
-
-                respDTO.setAuthorized(true);
-                respDTO.setAuthorizationCode(authorizationCode);
-                respDTO.setCallbackURI(authorizeDTO.getCallbackUrl());
-                return respDTO;
-
-            } else if (ResponseType.TOKEN.toString().equals(authorizeDTO.getResponseType())){   // generate token
-                String accessToken = oauthIssuerImpl.accessToken();
-                Timestamp timestamp = new Timestamp(new Date().getTime());
-                // Default Validity Period
-                long validityPeriod = 60 * 60;
-
-                tokenMgtDAO.storeAccessToken(accessToken, null, authorizeDTO.getConsumerKey(),
-                        authorizeDTO.getUsername(), timestamp, validityPeriod, scopeString,
-                        OAuth2Constants.TokenStates.TOKEN_STATE_ACTIVE);
-
-                if (log.isDebugEnabled()) {
-                    log.debug("Issued AccessToken Code to user : " +
-                            authorizeDTO.getUsername() + ". Using the redirect url : " +
-                            authorizeDTO.getCallbackUrl());
-                }
-
-                respDTO.setAuthorized(true);
-                respDTO.setAccessToken(accessToken);
-                respDTO.setValidityPeriod(validityPeriod);
-                respDTO.setCallbackURI(authorizeDTO.getCallbackUrl());
-                return respDTO;
-
-            } else {
-                if (log.isDebugEnabled()) {
-                    log.debug("Unsupported Response Type." + authorizeDTO.getResponseType());
-                }
-                handleErrorRequest(respDTO, OAuth2ErrorCodes.UNSUPPORTED_RESP_TYPE,
-                        "Unsupported Response Type.");
-                return respDTO;
-            }
+            AuthorizationHandlerManager authzHandlerManager =
+                    new AuthorizationHandlerManager(oAuth2AuthorizeReqDTO);
+            return authzHandlerManager.handleAuthorization();
         } catch (Exception e) {
-            log.error("Error occurred when processing the authorization request. Returning an error back to client.", e);
-            handleErrorRequest(respDTO, OAuth2ErrorCodes.SERVER_ERROR,
-                    "Error occurred when processing the authorization request. Returning an error back to client.");
-            return respDTO;
+            log.error("Error occurred when processing the authorization request. " +
+                    "Returning an error back to client.", e);
+            OAuth2AuthorizeRespDTO authorizeRespDTO = new OAuth2AuthorizeRespDTO();
+            authorizeRespDTO.setAuthorized(false);
+            authorizeRespDTO.setErrorCode(OAuth2ErrorCodes.SERVER_ERROR);
+            authorizeRespDTO.setErrorMsg("Error occurred when processing the authorization request. " +
+                    "Returning an error back to client.");
+            authorizeRespDTO.setCallbackURI(oAuth2AuthorizeReqDTO.getCallbackUrl());
+            return authorizeRespDTO;
         }
     }
 
@@ -255,8 +150,9 @@ public class OAuth2Service extends AbstractAdmin {
 
     /**
      * Issue access token in exchange to an Authorization Grant.
+     *
      * @param tokenReqDTO <Code>OAuth2AccessTokenReqDTO</Code> representing the Access Token request
-     * @return  <Code>OAuth2AccessTokenRespDTO</Code> representing the Access Token response
+     * @return <Code>OAuth2AccessTokenRespDTO</Code> representing the Access Token response
      */
     public OAuth2AccessTokenRespDTO issueAccessToken(OAuth2AccessTokenReqDTO tokenReqDTO) {
 
@@ -290,20 +186,26 @@ public class OAuth2Service extends AbstractAdmin {
         }
     }
 
-    private AuthorizationGrantHandler getAuthzGrantHandler(OAuth2AccessTokenReqDTO reqDTO){
-        if(GrantType.AUTHORIZATION_CODE.toString().equals(reqDTO.getGrantType())){
-            return new AuthorizationCodeValidator(reqDTO);
-        } else if (GrantType.PASSWORD.toString().equals(reqDTO.getGrantType())){
+    private AuthorizationGrantHandler getAuthzGrantHandler(OAuth2AccessTokenReqDTO reqDTO) {
+        if (GrantType.AUTHORIZATION_CODE.toString().equals(reqDTO.getGrantType())) {
+            return new AuthorizationCodeHandler(reqDTO);
+        } else if (GrantType.PASSWORD.toString().equals(reqDTO.getGrantType())) {
             return new PasswordGrantHandler(reqDTO);
         }
         return null;
     }
 
-    private void handleErrorRequest(OAuth2AuthorizeRespDTO respDTO, String errorCode,
-                                    String errorMsg) {
-        respDTO.setAuthorized(false);
-        respDTO.setErrorCode(errorCode);
-        respDTO.setErrorMsg(errorMsg);
+    private OAuthCallback authorizeAccessDelegation(OAuth2AuthorizeReqDTO authorizeDTO)
+            throws IdentityOAuth2Exception {
+        OAuthCallback authzCallback = new OAuthCallback(
+                authorizeDTO.getUsername(),
+                authorizeDTO.getConsumerKey(),
+                OAuthCallback.OAuthCallbackType.ACCESS_DELEGATION);
+        authzCallback.setRequestedScope(authorizeDTO.getScopes());
+        OAuthCallbackManager callbackManager = new OAuthCallbackManager();
+        callbackManager.handleCallback(authzCallback);
+
+        return authzCallback;
     }
 
 }

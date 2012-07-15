@@ -18,12 +18,12 @@
 
 package org.wso2.carbon.identity.oauth2.util;
 
-import com.google.gdata.client.authn.oauth.OAuthException;
 import org.apache.commons.logging.Log;
 import org.apache.commons.logging.LogFactory;
 import org.wso2.carbon.identity.core.util.IdentityTenantUtil;
 import org.wso2.carbon.identity.oauth.IdentityOAuthAdminException;
 import org.wso2.carbon.identity.oauth.dao.OAuthConsumerDAO;
+import org.wso2.carbon.identity.oauth2.IdentityOAuth2Exception;
 import org.wso2.carbon.utils.multitenancy.MultitenantUtils;
 
 /**
@@ -49,7 +49,8 @@ public class OAuth2Util {
         return scopeString.toString();
     }
 
-    public static boolean authenticateUser(String username, String password) throws OAuthException {
+    public static boolean authenticateUser(String username, String password) throws
+            IdentityOAuth2Exception {
         try {
             String tenantUser = MultitenantUtils.getTenantAwareUsername(username);
             String domainName = MultitenantUtils.getTenantDomain(username);
@@ -57,7 +58,8 @@ public class OAuth2Util {
                     .authenticate(tenantUser, password);
         } catch (Exception e) {
             log.error("Error when authenticating the user for OAuth Authorization.", e);
-            throw new OAuthException("Error when authenticating the user for OAuth Authorization.", e);
+            throw new IdentityOAuth2Exception("Error when authenticating the user " +
+                    "for OAuth Authorization.", e);
         }
     }
 

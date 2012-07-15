@@ -16,7 +16,7 @@
 *under the License.
 */
 
-package org.wso2.carbon.identity.oauth2;
+package org.wso2.carbon.identity.oauth2.handlers.authz.grant;
 
 import org.apache.commons.logging.Log;
 import org.apache.commons.logging.LogFactory;
@@ -25,13 +25,13 @@ import org.wso2.carbon.identity.oauth2.dto.OAuth2AccessTokenReqDTO;
 import org.wso2.carbon.identity.oauth2.dto.OAuth2AccessTokenRespDTO;
 
 /**
- * Implements the AuthorizationGrantValidator for the Authorization Code type.
+ * Implements the AuthorizationGrantHandler for the Authorization Code type.
  */
-public class AuthorizationCodeValidator extends AbstractAuthorizationGrantHandler {
+public class AuthorizationCodeHandler extends AbstractAuthorizationGrantHandler {
 
-    private static Log log = LogFactory.getLog(AuthorizationCodeValidator.class);
+    private static Log log = LogFactory.getLog(AuthorizationCodeHandler.class);
 
-    public AuthorizationCodeValidator(OAuth2AccessTokenReqDTO reqDTO) {
+    public AuthorizationCodeHandler(OAuth2AccessTokenReqDTO reqDTO) {
         super(reqDTO);
     }
 
@@ -67,7 +67,7 @@ public class AuthorizationCodeValidator extends AbstractAuthorizationGrantHandle
     @Override
     public OAuth2AccessTokenRespDTO issue() throws IdentityException {
         OAuth2AccessTokenRespDTO tokenRespDTO = super.issue();
-        // remove the authz code
+        // remove the callback code
         tokenMgtDAO.cleanUpAuthzCode(oAuth2AccessTokenReqDTO.getAuthorizationCode());
 
         if (log.isDebugEnabled()) {

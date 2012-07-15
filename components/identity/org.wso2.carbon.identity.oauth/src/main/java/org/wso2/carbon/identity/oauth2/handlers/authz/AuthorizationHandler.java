@@ -16,29 +16,19 @@
 *under the License.
 */
 
-package org.wso2.carbon.identity.oauth.authz;
+package org.wso2.carbon.identity.oauth2.handlers.authz;
 
-import java.util.Properties;
+import org.wso2.carbon.identity.oauth2.IdentityOAuth2Exception;
+import org.wso2.carbon.identity.oauth2.dto.OAuth2AuthorizeRespDTO;
 
-/**
- * An abstract implementations of the <Code>OAuthAuthorizationCallbackHandler</Code>
- * with the implementations for the basic methods.
- */
-public abstract class AbstractOAuthAuthorizationCallbackHandler
-        implements OAuthAuthorizationCallbackHandler {
+public interface AuthorizationHandler {
 
-    protected int priority = 5;
-    protected Properties properties;
+    public boolean authenticateResourceOwner() throws IdentityOAuth2Exception;
 
-    public int getPriority() {
-        return priority;
-    }
+    public boolean validateAccessDelegation() throws IdentityOAuth2Exception;
 
-    public void setPriority(int priority) {
-        this.priority = priority;
-    }
+    public boolean validateScope() throws IdentityOAuth2Exception;
 
-    public void setProperties(Properties props) {
-        properties = props;
-    }
+    public OAuth2AuthorizeRespDTO issue() throws IdentityOAuth2Exception;
 }
+

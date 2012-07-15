@@ -16,11 +16,11 @@
 *under the License.
 */
 
-package org.wso2.carbon.identity.oauth.authz;
+package org.wso2.carbon.identity.oauth.callback;
 
 import java.util.Properties;
 
-public class OAuthAuthorizationCallbackHandlerMetaData {
+public class OAuthCallbackHandlerMetaData {
 
     private int priority;
 
@@ -28,7 +28,7 @@ public class OAuthAuthorizationCallbackHandlerMetaData {
 
     private String className;
 
-    public OAuthAuthorizationCallbackHandlerMetaData(String className, Properties properties, int priority) {
+    public OAuthCallbackHandlerMetaData(String className, Properties properties, int priority) {
         this.priority = priority;
         this.properties = properties;
         this.className = className;

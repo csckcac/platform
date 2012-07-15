@@ -197,7 +197,8 @@ public class OAuth2AuthzEndpoint extends HttpServlet {
                         authzRespDTO.getErrorCode(), authzRespDTO.getErrorMsg());
                 response = OAuthASResponse.errorResponse(HttpServletResponse.SC_FOUND)
                         .error(oauthException)
-                        .location(authzRespDTO.getCallbackURI()).buildQueryMessage();
+                        .location(authzRespDTO.getCallbackURI()).setState(oauth2Params.getState())
+                        .buildQueryMessage();
             }
             resp.setStatus(HttpServletResponse.SC_FOUND);
             return response.getLocationUri();

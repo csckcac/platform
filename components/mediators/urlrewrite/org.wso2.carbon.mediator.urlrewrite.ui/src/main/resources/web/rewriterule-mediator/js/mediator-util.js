@@ -44,14 +44,14 @@ function addAction(emptyAction,emptyFragment) {
 
 
 	var fragment_selectTD = document.createElement("td");
-	fragment_selectTD.appendChild(createFragmentOption("fragment_select" + i));
+	fragment_selectTD.appendChild(createFragmentOption("fragment_select" + i,i));
 
 
 	var action_selectTD = document.createElement("td");
 	action_selectTD.appendChild(createActionOption("action_select" + i, i));	
 
 	 var typeTD = document.createElement("td");
-	 typeTD.appendChild(createOptionTypeCombobox('optionTypeSelection' + i, i, name))	
+	 typeTD.appendChild(createOptionTypeCombobox('optionTypeSelection' + i, i, name));
 	
 	var value_selectTD = document.createElement("td");
 
@@ -76,7 +76,7 @@ function addAction(emptyAction,emptyFragment) {
 
 	actionRow.appendChild(action_selectTD);
 	actionRow.appendChild(fragment_selectTD);
-	actionRow.appendChild(typeTD)
+	actionRow.appendChild(typeTD);
 	actionRow.appendChild(value_selectTD);	
 	actionRow.appendChild(nsTD);
 	actionRow.appendChild(regex_selectTD);
@@ -92,12 +92,15 @@ function addAction(emptyAction,emptyFragment) {
  * @param id
  * @return
  */
-function createFragmentOption(id) {
+function createFragmentOption(id, i) {
 
 	var combo_box = document.createElement('select');
 	combo_box.name = id;
 	combo_box.setAttribute("id", id);
-	combo_box.style.paddingRight = '5px';
+	combo_box.style.width = '150px';
+    combo_box.onchange = function () {
+		onFragmentTypeSelectionChange(id, i)
+	};
 	
 	var choice = document.createElement('option');
 	choice.value = 'protocol';
@@ -149,17 +152,18 @@ function createFragmentOption(id) {
  * @return
  */
 function createActionOption(id, i) {
-
 	var combo_box = document.createElement('select');
 	combo_box.name = id;
 	combo_box.setAttribute("id", id);
-	combo_box.style.paddingRight = '5px';
+	combo_box.style.width = '150px';
 	combo_box.onchange = function () {
 		onActionTypeSelectionChange(id, i)
 	};
 
 	var choice = document.createElement('option');
 	choice.value = 'replace';
+    choice.setAttribute("id","actionReplace"+i);
+    choice.setAttribute("name","actionReplace"+i);
 	choice.appendChild(document.createTextNode(urlrewritejsi18n['mediator.urlrewrite.Replace']));
 	combo_box.appendChild(choice);
 
@@ -168,21 +172,26 @@ function createActionOption(id, i) {
 	choice.appendChild(document.createTextNode(urlrewritejsi18n['mediator.urlrewrite.Remove']));
 	combo_box.appendChild(choice);
 
-
 	choice = document.createElement('option');
 	choice.value = 'append';
+    choice.setAttribute("id","actionAppend"+i);
+    choice.setAttribute("name","actionAppend"+i);
 	choice.appendChild(document.createTextNode(urlrewritejsi18n['mediator.urlrewrite.Append']));
 	combo_box.appendChild(choice);
 
 
 	choice = document.createElement('option');
 	choice.value = 'prepend';
+    choice.setAttribute("id","actionPrepend"+i);
+    choice.setAttribute("name","actionPrepend"+i);
 	choice.appendChild(document.createTextNode(urlrewritejsi18n['mediator.urlrewrite.Prepend']));
 	combo_box.appendChild(choice);
 
 
 	choice = document.createElement('option');
 	choice.value = 'set';
+    choice.setAttribute("id","actionSet"+i);
+    choice.setAttribute("name","actionSet"+i);
 	choice.appendChild(document.createTextNode(urlrewritejsi18n['mediator.urlrewrite.Set']));
 	combo_box.appendChild(choice);
 
@@ -539,4 +548,31 @@ function isRemainPropertyExpressions() {
         }
     }
     return false;
+}
+
+function onFragmentTypeSelectionChange(id, i) {
+    var fragmentType = getSelectedValue(id);
+    if (fragmentType != null) {
+        if (fragmentType == 'full') {
+            var actionItem = document.getElementById('actionAppend' + i);
+            actionItem.style.display = "none";
+            actionItem = document.getElementById('actionPrepend' + i);
+            actionItem.style.display = "none";
+            actionItem = document.getElementById('actionReplace' + i);
+            actionItem.style.display = "none";
+
+            var selectedAction = getSelectedValue('action_select' + i);
+            if (selectedAction != null && (selectedAction != 'remove' | selectedAction != 'set')) {
+                document.getElementById('action_select' + i).value = 'set';
+            }
+
+        } else {
+            var actionItem = document.getElementById('actionAppend' + i);
+            actionItem.style.display = "";
+            actionItem = document.getElementById('actionPrepend' + i);
+            actionItem.style.display = "";
+            actionItem = document.getElementById('actionReplace' + i);
+            actionItem.style.display = "";
+        }
+    }
 }

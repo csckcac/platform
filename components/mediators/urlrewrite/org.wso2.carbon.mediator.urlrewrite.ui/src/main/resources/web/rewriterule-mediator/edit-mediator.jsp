@@ -126,7 +126,7 @@
 
 							<td><select id="action_select<%=i%>"
 								name="action_select<%=i%>" style="width: 150px;" onchange="onActionTypeSelectionChange('action_select<%=i%>',<%=i %>);">
-								<option value="set"
+								<option value="set" id="actionSet<%=i%>" name="actionSet<%=i%>"
 									<%=urlRewriteAction.getAction() != null &&
 					          urlRewriteAction.getAction().equals("set") ? "selected=\"selected\""
 					                                                    : ""%>>
@@ -139,31 +139,30 @@
 					                                                       : ""%>>
 								<fmt:message key="mediator.urlrewrite.remove" /></option>
 
-								<option value="append"
+								<option value="append" id="actionAppend<%=i%>" name="actionAppend<%=i%>"
 									<%=urlRewriteAction.getAction() != null &&
 					          urlRewriteAction.getAction().equals("append")
 					                                                       ? "selected=\"selected\""
 					                                                       : ""%>>
 								<fmt:message key="mediator.urlrewrite.append" /></option>
 
-								<option value="prepend"
+								<option value="prepend" id="actionPrepend<%=i%>" name="actionPrepend<%=i%>"
 									<%=urlRewriteAction.getAction() != null &&
 					          urlRewriteAction.getAction().equals("prepend")
 					                                                        ? "selected=\"selected\""
 					                                                        : ""%>>
 								<fmt:message key="mediator.urlrewrite.prepend" /></option>
 
-								<option value="replace"
+								<option value="replace" id="actionReplace<%=i%>" name="actionReplace<%=i%>"
 									<%=urlRewriteAction.getAction() != null &&
 					          urlRewriteAction.getAction().equals("replace")
 					                                                        ? "selected=\"selected\""
 					                                                        : ""%>>
 								<fmt:message key="mediator.urlrewrite.replace" /></option>
-
 							</select></td>
 
 							<td><select  id="fragment_select<%=i%>"
-								name="fragment_select<%=i%>" style="width: 150px;">
+								name="fragment_select<%=i%>" style="width: 150px;" onchange="onFragmentTypeSelectionChange('fragment_select<%=i%>',<%=i %>);" >
 								<option value="protocol"
 									<%=urlRewriteAction.getFragment() != null &&
 					          urlRewriteAction.getFragment().equals("protocol")
@@ -219,7 +218,11 @@
 					                                                       ? "selected=\"selected\""
 					                                                       : ""%>>
 								<fmt:message key="full" /></option>
-							</select></td>
+							</select>
+                            <script type="text/javascript">
+                                    onFragmentTypeSelectionChange('fragment_select<%=i%>', <%=i%>)
+                                </script>
+                            </td>
 
 							<td><select class="esb-edit small_textbox"
 								name="optionTypeSelection<%=i%>"

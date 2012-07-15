@@ -324,16 +324,24 @@ public class CassandraConnector {
         UUID uuid = UUID.randomUUID();
         String rowKey = CassandraSDSUtils.createRowKey(timestamp, uuid);
 
+        String streamDefDescription = streamDef.getDescription();
+        String streamDefNickName = streamDef.getNickName();
+
         mutator.addInsertion(rowKey, streamColumnFamily,
                 HFactory.createStringColumn(STREAM_ID_KEY, streamDef.getStreamId()));
         mutator.addInsertion(rowKey, streamColumnFamily,
                 HFactory.createStringColumn(STREAM_NAME_KEY, streamDef.getName()));
         mutator.addInsertion(rowKey, streamColumnFamily,
                 HFactory.createStringColumn(STREAM_VERSION_KEY, streamDef.getVersion()));
-        mutator.addInsertion(rowKey, streamColumnFamily,
-                HFactory.createStringColumn(STREAM_DESCRIPTION_KEY, streamDef.getDescription()));
-        mutator.addInsertion(rowKey, streamColumnFamily,
-                HFactory.createStringColumn(STREAM_NICK_NAME_KEY, streamDef.getNickName()));
+
+        if (streamDefDescription != null) {
+            mutator.addInsertion(rowKey, streamColumnFamily,
+                                 HFactory.createStringColumn(STREAM_DESCRIPTION_KEY, streamDefDescription));
+        }
+        if (streamDefNickName != null) {
+            mutator.addInsertion(rowKey, streamColumnFamily,
+                                 HFactory.createStringColumn(STREAM_NICK_NAME_KEY, streamDefNickName));
+        }
 
         mutator.addInsertion(rowKey, streamColumnFamily,
                 HFactory.createColumn(STREAM_TIMESTAMP_KEY, timestamp, stringSerializer,

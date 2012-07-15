@@ -21,6 +21,7 @@ import java.io.BufferedInputStream;
 import java.io.BufferedOutputStream;
 import java.io.BufferedReader;
 import java.io.BufferedWriter;
+import java.io.Closeable;
 import java.io.File;
 import java.io.FileInputStream;
 import java.io.FileOutputStream;
@@ -28,6 +29,8 @@ import java.io.FileWriter;
 import java.io.IOException;
 import java.io.InputStream;
 import java.io.InputStreamReader;
+import java.io.OutputStream;
+import java.io.Reader;
 import java.util.ArrayList;
 import java.util.Collections;
 import java.util.Comparator;
@@ -284,6 +287,10 @@ public class AutoscalerServiceImpl implements IAutoscalerService {
                     String publicIp = node.getPublicAddresses().iterator().next();
                     iaasCtxt.addPublicIpToDomainMap(publicIp, domainName);
                     iaasCtxt.addPublicIpToNodeIdMap(publicIp, node.getId());
+                } else if(node.getPrivateAddresses().size() > 0) { // set private IPs if no public IP s are returned
+                	String privateIp = node.getPrivateAddresses().iterator().next();
+                    iaasCtxt.addPublicIpToDomainMap(privateIp, domainName);
+                    iaasCtxt.addPublicIpToNodeIdMap(privateIp, node.getId());
                 }
 
                 // since we modified the IaasContext instance, let's replace it.
@@ -332,6 +339,11 @@ public class AutoscalerServiceImpl implements IAutoscalerService {
         if(domainName != null) {
         	// domainName will have the pattern <domainName>/t/<tenantId>
         	String[] arr = domainName.split(TENANT_ID_DELIMITER);
+        	if(arr.length != 2) {
+        		String msg = "Domain name does not match with the expected pattern";
+        		log.error(msg);
+        		throw new AutoscalerServiceException(msg);
+        	}
         	spiDomainName = arr[0];
         	tenantId = arr[1];
         }
@@ -644,11 +656,12 @@ public class AutoscalerServiceImpl implements IAutoscalerService {
 	private void unzipFile(File file) {
 		
 		int buffer = 2048;
-
+		BufferedOutputStream dest = null;
+		ZipInputStream zis = null;
+		
 		try {
-			BufferedOutputStream dest = null;
 			FileInputStream fis = new FileInputStream(file);
-			ZipInputStream zis = new ZipInputStream(new BufferedInputStream(fis));
+			zis = new ZipInputStream(new BufferedInputStream(fis));
 			ZipEntry entry;
 			
 			while ((entry = zis.getNextEntry()) != null) {
@@ -671,9 +684,24 @@ public class AutoscalerServiceImpl implements IAutoscalerService {
 					dest.close();
 				}
 			}
-			zis.close();
+			
 		} catch (Exception e) {
-			throw new RuntimeException(e);
+			log.error("Exception is occurred in unzipping payload file. Reason:" + e.getMessage());
+			throw new AutoscalerServiceException(e.getMessage(), e);
+		} finally {
+			closeStream(zis);			
+			closeStream(dest);
+		}
+	}
+
+
+	private void closeStream(Closeable stream) {
+		if (stream != null) {
+			try {
+				stream.close();
+			} catch (IOException e) {
+				log.error(" Exception is occurred when closing stream. Reason :" + e.getMessage());
+			}
 		}
 	}
 
@@ -714,22 +742,31 @@ public class AutoscalerServiceImpl implements IAutoscalerService {
 				}				
 				sb.append(textinLine + "\n");
 			}
-			fs.close();
-			in.close();
-			br.close();
-
 		} catch (Exception e) {
-			throw new RuntimeException(e);
+			log.error("Exception is occurred in editing payload content. Reason: "+e.getMessage());
+			throw new AutoscalerServiceException(e.getMessage(), e);
+		} finally {
+			closeStream(fs);
+			closeStream(in);
+			closeStream(br);
 		}
 
-		try {
-			FileWriter fstream = new FileWriter(f);
-			BufferedWriter outobj = new BufferedWriter(fstream);
-			outobj.write(sb.toString());
-			outobj.close();
+		writeChangesBackToFile(f, sb);
+	}
 
+
+	private void writeChangesBackToFile(File f, StringBuffer sb) {
+		FileWriter fstream = null;
+		BufferedWriter outobj = null;
+		
+		try {
+			fstream = new FileWriter(f);
+			outobj = new BufferedWriter(fstream);
+			outobj.write(sb.toString());
 		} catch (Exception e) {
 			throw new RuntimeException(e);
+		} finally {
+			closeStream(outobj);
 		}
 	}
 	
@@ -741,11 +778,14 @@ public class AutoscalerServiceImpl implements IAutoscalerService {
 	private void zipPayloadFile() {
 		
 		int buffer = 2048;
+		BufferedInputStream origin = null;
+		ZipOutputStream out = null;
+		
 		try {
-	         BufferedInputStream origin = null;
+	         
 	         FileOutputStream dest = new 
 	           FileOutputStream(CARBON_HOME + File.separator + "resources" + File.separator + "payload.zip");
-	         ZipOutputStream out = new ZipOutputStream(new BufferedOutputStream(dest));
+	         out = new ZipOutputStream(new BufferedOutputStream(dest));
 	         byte data[] = new byte[buffer];
 	         
 	         File f = new File(CARBON_HOME + File.separator + "tmpPayload" + File.separator + "payload");
@@ -764,10 +804,13 @@ public class AutoscalerServiceImpl implements IAutoscalerService {
 	            }
 	            origin.close();
 	         }
-	         out.close();
 	      } catch(Exception e) {
-	        throw new RuntimeException(e);
-	      } 
+	    	  log.error("Exception is occurred in zipping payload file after modification. Reason:" + e.getMessage());
+	    	  throw new AutoscalerServiceException(e.getMessage(),e);
+	      } finally {
+	    	  closeStream(origin);	    	  
+	    	  closeStream(out);
+	      }
 	}	
 
 

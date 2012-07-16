@@ -60,8 +60,15 @@ public class ResourceImpactAdminClient {
 
     }
 
-    public AssociationBean[] getResourceAssociations(String path,
-                                                     boolean reverse) throws Exception {
-    	return stub.getAssociations(path, reverse);
+    public AssociationBean[] getResourceAssociations(String path, boolean reverse){
+
+        AssociationBean[] associationBeans = new AssociationBean[0];
+        try {
+            associationBeans = stub.getAssociations(path, reverse);
+        } catch (Exception e) {
+            String msg = "Failed to get associations for " + path;
+            log.error(msg, e);
+        }
+        return associationBeans;
     }
 }

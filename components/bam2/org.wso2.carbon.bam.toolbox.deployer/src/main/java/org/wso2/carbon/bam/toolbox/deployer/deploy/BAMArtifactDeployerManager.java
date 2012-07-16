@@ -153,18 +153,24 @@ public class BAMArtifactDeployerManager {
     public void deploy(ToolBoxDTO toolBoxDTO, int tenantId, String username, String password)
             throws BAMToolboxDeploymentException {
         if (canDeployDataStreamDefn()) {
-            deployStreamDefn(toolBoxDTO, username, password);
+            if (null != toolBoxDTO.getStreamDefnParentDirectory()) {
+                deployStreamDefn(toolBoxDTO, username, password);
+            }
         }
 
         if (canDeployScripts()) {
-            deployScripts(toolBoxDTO);
+            if (null != toolBoxDTO.getScriptsParentDirectory()) {
+                deployScripts(toolBoxDTO);
+            }
         }
 
         if (canDeployGadgets()) {
             if (null != toolBoxDTO.getGagetsParentDirectory()) {
                 transferGadgetsFilesToRegistry(new File(toolBoxDTO.getGagetsParentDirectory()), tenantId);
                 deployGadget(toolBoxDTO, username);
-                deployJaggeryApps(toolBoxDTO);
+                if (null != toolBoxDTO.getJaggeryAppParentDirectory()) {
+                    deployJaggeryApps(toolBoxDTO);
+                }
             }
 
             if (toolBoxDTO.getJasperParentDirectory() != null) { // Jasper is optional for the moment

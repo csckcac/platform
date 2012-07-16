@@ -95,12 +95,6 @@ public class ToolBoxConfiguration {
 
         OMElement dashboard = fac.createOMElement(new QName(DASHBOARD));
         config.addChild(dashboard);
-
-//        OMElement gadgets = fac.createOMElement(new QName(GADGETS));
-//        dashboard.addChild(gadgets);
-//
-//        OMElement tab = fac.createOMElement(new QName(TAB_ID));
-//        gadgets.addChild(tab);
     }
 
     private void addGadget(String gadgetName, OMElement element)
@@ -202,12 +196,11 @@ public class ToolBoxConfiguration {
                     }
                     return scripts;
                 } else {
-                    log.error("No scripts are found for tool box:" + this.toolboxName);
-                    throw new BAMToolboxDeploymentException("No scripts are found for tool box:" + this.toolboxName);
+                    return scripts;
                 }
             } else {
-                log.error("No scripts are found for tool box:" + this.toolboxName);
-                throw new BAMToolboxDeploymentException("No scripts are found for tool box:" + this.toolboxName);
+                log.warn("No scripts are found for tool box:" + this.toolboxName);
+                return scripts;
             }
         } else {
             log.error("Configuration has not been set for the tool box:" + this.toolboxName);
@@ -222,49 +215,6 @@ public class ToolBoxConfiguration {
     public String getDataSourceConfiguration() {
         return config.getAttribute(new QName(CONFIGURATION)).getAttributeValue();
     }
-
-//    public ArrayList<String> getGadgetNames() throws BAMToolboxDeploymentException {
-//        if (null != config) {
-//            ArrayList<String> gadgets = new ArrayList<String>();
-//            Iterator iterator = config.getChildrenWithName(new QName(GADGETS));
-//            if (iterator != null && iterator.hasNext()) {
-//                Iterator gadgetIterator = ((OMElement) iterator.next()).getChildrenWithName(new QName(GADGET));
-//                if (gadgetIterator != null && gadgetIterator.hasNext()) {
-//                    while (gadgetIterator.hasNext()) {
-//                        OMElement gadget = (OMElement) gadgetIterator.next();
-//                        String gadgetName = gadget.getText();
-//                        gadgets.add(gadgetName);
-//                    }
-//                    return gadgets;
-//                } else {
-//                    log.error("No gadgets are found for tool box:" + this.toolboxName);
-//                    throw new BAMToolboxDeploymentException("No gadgets are found for tool box:" + this.toolboxName);
-//                }
-//            } else {
-//                log.error("No gadgets are found for tool box:" + this.toolboxName);
-//                throw new BAMToolboxDeploymentException("No gadgets are found for tool box:" + this.toolboxName);
-//            }
-//        } else {
-//            log.error("Configuration has not been set for the tool box:" + this.toolboxName);
-//            throw new BAMToolboxDeploymentException("Configuration has not been set for the tool box:" + this.toolboxName);
-//        }
-//    }
-
-//    public int getTabId() throws BAMToolboxDeploymentException {
-//        if (null != config) {
-//            Iterator iterator = config.getChildrenWithName(new QName(TAB_ID));
-//            if (iterator != null && iterator.hasNext()) {
-//                OMElement tab = (OMElement) iterator.next();
-//                return Integer.parseInt(tab.getText());
-//            } else {
-//                throw new BAMToolboxDeploymentException("Cannot find " + TAB_ID +
-//                        "node in the configuration file for tool box:" + toolboxName);
-//            }
-//        } else {
-//            log.error("Configuration has not been set for the tool box:" + this.toolboxName);
-//            throw new BAMToolboxDeploymentException("Configuration has not been set for the tool box:" + this.toolboxName);
-//        }
-//    }
 
     public ArrayList<DashBoardTabDTO> getDashboardTabs() throws BAMToolboxDeploymentException {
         if (null != config) {
@@ -291,10 +241,9 @@ public class ToolBoxConfiguration {
                 }
                 return tabs;
             } else {
-                log.error("No dashboard configuration is found for" +
+                log.warn("No dashboard configuration is found for" +
                           " tool box:" + this.toolboxName);
-                throw new BAMToolboxDeploymentException("No dashboard configuration " +
-                                                        "is found for tool box:" + this.toolboxName);
+                return tabs;
             }
         } else {
             log.error("Configuration has not been set for the tool " +
@@ -331,10 +280,9 @@ public class ToolBoxConfiguration {
                 }
                 return tabs;
             } else {
-                log.error("No dashboard configuration is found for" +
+                log.warn("No dashboard configuration is found for" +
                           " tool box:" + this.toolboxName);
-                throw new BAMToolboxDeploymentException("No dashboard configuration " +
-                                                        "is found for tool box:" + this.toolboxName);
+                return tabs;
             }
         } else {
             log.error("Configuration has not been set for the tool " +

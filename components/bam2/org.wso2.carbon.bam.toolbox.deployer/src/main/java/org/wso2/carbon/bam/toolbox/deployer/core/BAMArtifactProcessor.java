@@ -106,8 +106,8 @@ public class BAMArtifactProcessor {
         setStreamDefnNames(toolBoxDTO, barDir);
 
         String jasperDirectory = barDir + File.separator +
-                                 BAMToolBoxDeployerConstants.DASHBOARD_DIR +
-                                 File.separator + BAMToolBoxDeployerConstants.JASPER_DIR;
+                BAMToolBoxDeployerConstants.DASHBOARD_DIR +
+                File.separator + BAMToolBoxDeployerConstants.JASPER_DIR;
 
         if (new File(jasperDirectory).exists()) {
             setJasperResourceNames(toolBoxDTO, barDir);
@@ -117,22 +117,25 @@ public class BAMArtifactProcessor {
 
     private void setScriptsNames(ToolBoxDTO toolBoxDTO, String barDir)
             throws BAMToolboxDeploymentException {
-        toolBoxDTO.setScriptsParentDirectory(barDir + File.separator + BAMToolBoxDeployerConstants.SCRIPTS_DIR);
+
         ArrayList<String> scriptNames = getFilesInDirectory(barDir + File.separator + BAMToolBoxDeployerConstants.SCRIPTS_DIR);
         if (scriptNames.size() == 0) {
-            throw new BAMToolboxDeploymentException("No scripts available in the specified directory");
+            toolBoxDTO.setScriptsParentDirectory(null);
+            log.warn("No scripts available in the specified directory");
         } else {
+            toolBoxDTO.setScriptsParentDirectory(barDir + File.separator + BAMToolBoxDeployerConstants.SCRIPTS_DIR);
             toolBoxDTO.setScriptNames(scriptNames);
         }
     }
 
     private void setStreamDefnNames(ToolBoxDTO toolBoxDTO, String barDir)
             throws BAMToolboxDeploymentException {
-        toolBoxDTO.setStreamDefnParentDirectory(barDir + File.separator + BAMToolBoxDeployerConstants.STREAM_DEFN_DIR);
         ArrayList<String> streamDefNames = getFilesInDirectory(barDir + File.separator + BAMToolBoxDeployerConstants.STREAM_DEFN_DIR);
         if (streamDefNames.size() == 0) {
-           log.warn("No event streams found in the specified directory");
+            toolBoxDTO.setStreamDefnParentDirectory(null);
+            log.warn("No event streams found in the specified directory");
         } else {
+            toolBoxDTO.setStreamDefnParentDirectory(barDir + File.separator + BAMToolBoxDeployerConstants.STREAM_DEFN_DIR);
             toolBoxDTO.setEvenStreamDefs(streamDefNames);
         }
     }
@@ -140,37 +143,47 @@ public class BAMArtifactProcessor {
 
     private void setJaggeryAppNames(ToolBoxDTO toolBoxDTO, String barDir)
             throws BAMToolboxDeploymentException {
-        toolBoxDTO.setJaggeryAppParentDirectory(barDir + File.separator + BAMToolBoxDeployerConstants.DASHBOARD_DIR
-                                                + File.separator + BAMToolBoxDeployerConstants.JAGGERY_DIR);
+        if (null != toolBoxDTO.getGagetsParentDirectory()) {
+            File jaggeryDir = new File(barDir);
+            if (jaggeryDir.exists()) {
+                toolBoxDTO.setJaggeryAppParentDirectory(barDir + File.separator + BAMToolBoxDeployerConstants.DASHBOARD_DIR
+                        + File.separator + BAMToolBoxDeployerConstants.JAGGERY_DIR);
+            } else {
+                log.warn("No jaggery artifacts found..");
+                toolBoxDTO.setJaggeryAppParentDirectory(null);
+            }
+        } else {
+            log.warn("No gadgets dir found, and skipping jaggery artifacts");
+            toolBoxDTO.setJaggeryAppParentDirectory(null);
+        }
     }
 
     private void setGadgetNames(ToolBoxDTO toolBoxDTO, String barDir)
             throws BAMToolboxDeploymentException {
-        if(new File(barDir + File.separator + BAMToolBoxDeployerConstants.DASHBOARD_DIR).exists()){
-        toolBoxDTO.setGagetsParentDirectory(barDir + File.separator + BAMToolBoxDeployerConstants.DASHBOARD_DIR
-                                            + File.separator + BAMToolBoxDeployerConstants.GADGETS_DIR);
-        Properties properties = new Properties();
-        try {
-            properties.load(new FileInputStream(barDir + File.separator + BAMToolBoxDeployerConstants.DASHBOARD_DIR +
-                                                File.separator + BAMToolBoxDeployerConstants.GADGET_META_FILE));
-            setTabNames(toolBoxDTO, properties);
-            int tabIndex = 1;
-            for (DashBoardTabDTO aTab : toolBoxDTO.getDashboardTabs()) {
-                String value = properties.getProperty(BAMToolBoxDeployerConstants.GADGET_XMLS_PREFIX + tabIndex + "." + BAMToolBoxDeployerConstants.GADGET_XMLS_SUFFIX);
-                setGadgetNamesForTab(aTab, value);
-                tabIndex++;
+        if (new File(barDir + File.separator + BAMToolBoxDeployerConstants.DASHBOARD_DIR).exists()) {
+            toolBoxDTO.setGagetsParentDirectory(barDir + File.separator + BAMToolBoxDeployerConstants.DASHBOARD_DIR
+                    + File.separator + BAMToolBoxDeployerConstants.GADGETS_DIR);
+            Properties properties = new Properties();
+            try {
+                properties.load(new FileInputStream(barDir + File.separator + BAMToolBoxDeployerConstants.DASHBOARD_DIR +
+                        File.separator + BAMToolBoxDeployerConstants.GADGET_META_FILE));
+                setTabNames(toolBoxDTO, properties);
+                int tabIndex = 1;
+                for (DashBoardTabDTO aTab : toolBoxDTO.getDashboardTabs()) {
+                    String value = properties.getProperty(BAMToolBoxDeployerConstants.GADGET_XMLS_PREFIX + tabIndex + "." + BAMToolBoxDeployerConstants.GADGET_XMLS_SUFFIX);
+                    setGadgetNamesForTab(aTab, value);
+                    tabIndex++;
+                }
+            } catch (FileNotFoundException e) {
+                log.warn("No " + BAMToolBoxDeployerConstants.GADGET_META_FILE +
+                        " found in dir:" + barDir + File.separator + BAMToolBoxDeployerConstants.DASHBOARD_DIR, e);
+                throw new BAMToolboxDeploymentException("No " + BAMToolBoxDeployerConstants.GADGET_META_FILE +
+                        " found in dir:" + barDir + File.separator + BAMToolBoxDeployerConstants.DASHBOARD_DIR, e);
+            } catch (IOException e) {
+                log.error(e.getMessage(), e);
+                throw new BAMToolboxDeploymentException(e.getMessage(), e);
             }
-        } catch (FileNotFoundException e) {
-            log.error("No " + BAMToolBoxDeployerConstants.GADGET_META_FILE +
-                      " found in dir:" + barDir + File.separator + BAMToolBoxDeployerConstants.DASHBOARD_DIR, e);
-            throw new BAMToolboxDeploymentException("No " + BAMToolBoxDeployerConstants.GADGET_META_FILE +
-                                                    " found in dir:" + barDir + File.separator + BAMToolBoxDeployerConstants.DASHBOARD_DIR, e);
-        } catch (IOException e) {
-            log.error(e.getMessage(), e);
-            throw new BAMToolboxDeploymentException(e.getMessage(), e);
-        }
-        }
-        else {
+        } else {
             toolBoxDTO.setGagetsParentDirectory(null);
             toolBoxDTO.setDashboardTabs(new ArrayList<DashBoardTabDTO>());
         }
@@ -179,20 +192,20 @@ public class BAMArtifactProcessor {
     private void setJasperResourceNames(ToolBoxDTO toolBoxDTO, String barDir)
             throws BAMToolboxDeploymentException {
         toolBoxDTO.setJasperParentDirectory(barDir + File.separator +
-                                            BAMToolBoxDeployerConstants.DASHBOARD_DIR +
-                                            File.separator + BAMToolBoxDeployerConstants.JASPER_DIR);
+                BAMToolBoxDeployerConstants.DASHBOARD_DIR +
+                File.separator + BAMToolBoxDeployerConstants.JASPER_DIR);
         Properties properties = new Properties();
         try {
             properties.load(new FileInputStream(barDir + File.separator +
-                                                BAMToolBoxDeployerConstants.DASHBOARD_DIR +
-                                                File.separator +
-                                                BAMToolBoxDeployerConstants.JASPER_META_FILE));
+                    BAMToolBoxDeployerConstants.DASHBOARD_DIR +
+                    File.separator +
+                    BAMToolBoxDeployerConstants.JASPER_META_FILE));
             setJasperTabNames(toolBoxDTO, properties);
             int tabIndex = 1;
             for (JasperTabDTO aTab : toolBoxDTO.getJasperTabs()) {
                 String value = properties.getProperty(
                         BAMToolBoxDeployerConstants.GADGET_XMLS_PREFIX + tabIndex + "." +
-                        BAMToolBoxDeployerConstants.JRXML_SUFFIX);
+                                BAMToolBoxDeployerConstants.JRXML_SUFFIX);
                 aTab.setTabId(tabIndex);
                 setJRXMLForTab(aTab, value);
                 tabIndex++;
@@ -200,15 +213,15 @@ public class BAMArtifactProcessor {
 
             toolBoxDTO.setDataSource(properties.getProperty(BAMToolBoxDeployerConstants.DATASOURCE));
             toolBoxDTO.setDataSourceConfiguration(barDir + File.separator +
-                                                BAMToolBoxDeployerConstants.DASHBOARD_DIR +
-                                                File.separator +
-                                                properties.getProperty(BAMToolBoxDeployerConstants.
-                                                        DATASOURCE_CONFIGURATION));
+                    BAMToolBoxDeployerConstants.DASHBOARD_DIR +
+                    File.separator +
+                    properties.getProperty(BAMToolBoxDeployerConstants.
+                            DATASOURCE_CONFIGURATION));
         } catch (FileNotFoundException e) {
             log.error("No " + BAMToolBoxDeployerConstants.JASPER_META_FILE +
-                      " found in dir:" + barDir + File.separator + BAMToolBoxDeployerConstants.DASHBOARD_DIR, e);
+                    " found in dir:" + barDir + File.separator + BAMToolBoxDeployerConstants.DASHBOARD_DIR, e);
             throw new BAMToolboxDeploymentException("No " + BAMToolBoxDeployerConstants.JASPER_META_FILE +
-                                                    " found in dir:" + barDir + File.separator
+                    " found in dir:" + barDir + File.separator
                     + BAMToolBoxDeployerConstants.DASHBOARD_DIR, e);
         } catch (IOException e) {
             log.error(e.getMessage(), e);
@@ -234,7 +247,7 @@ public class BAMArtifactProcessor {
             }
             if (!valid) {
                 throw new BAMToolboxDeploymentException("Invalid bar artifact. No tab names " +
-                                                        "found in dashboard.properties");
+                        "found in dashboard.properties");
             }
         }
     }
@@ -257,7 +270,7 @@ public class BAMArtifactProcessor {
             }
             if (!valid) {
                 throw new BAMToolboxDeploymentException("Invalid bar artifact. No tab names " +
-                                                        "found in dashboard.properties");
+                        "found in dashboard.properties");
             }
         }
     }
@@ -268,7 +281,7 @@ public class BAMArtifactProcessor {
             String[] gadgets = gagetXmlsNames.split(",");
             if (gadgets == null || gadgets.length == 0) {
                 throw new BAMToolboxDeploymentException("Invalid bar artifact. No gadget names found for tab :"
-                                                        + dashBoardTabDTO + " in dashboard.properties");
+                        + dashBoardTabDTO + " in dashboard.properties");
             } else {
                 boolean valid = false;
                 for (String aGadget : gadgets) {
@@ -279,7 +292,7 @@ public class BAMArtifactProcessor {
                 }
                 if (!valid) {
                     throw new BAMToolboxDeploymentException("Invalid bar artifact. No gadget names found for tab :"
-                                                            + dashBoardTabDTO + " in dashboard.properties");
+                            + dashBoardTabDTO + " in dashboard.properties");
                 }
             }
         } else {
@@ -294,7 +307,7 @@ public class BAMArtifactProcessor {
             jasperTabDTO.setJrxmlFileName(jrxmlFile);
         } else {
             throw new BAMToolboxDeploymentException("No jrxml file specified for tab :" +
-                                                    jasperTabDTO.getTabName());
+                    jasperTabDTO.getTabName());
         }
     }
 
@@ -304,14 +317,13 @@ public class BAMArtifactProcessor {
         File dir = new File(dirPath);
         ArrayList<String> files = new ArrayList<String>();
 
-        String[] children = dir.list();
-        if (children == null) {
-            throw new BAMToolboxDeploymentException("No files exists in the directory:" + dirPath
-                                                    + " BAM artifacts expects files in the directory");
-        } else {
-            for (String aChildren : children) {
-                if (!new File(aChildren).isDirectory()) {
-                    files.add(aChildren);
+        if (dir.exists()) {
+            String[] children = dir.list();
+            if (null != children) {
+                for (String aChildren : children) {
+                    if (!new File(aChildren).isDirectory()) {
+                        files.add(aChildren);
+                    }
                 }
             }
         }

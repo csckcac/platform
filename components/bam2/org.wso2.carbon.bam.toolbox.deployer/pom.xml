@@ -106,13 +106,12 @@
                         <Bundle-SymbolicName>${project.artifactId}</Bundle-SymbolicName>
                         <Bundle-Name>${project.artifactId}</Bundle-Name>
                         <Private-Package>
-                            org.wso2.carbon.bam.toolbox.deployer.internal,
-                            org.wso2.carbon.bam.toolbox.deployer.internal.*
+                            org.wso2.carbon.bam.toolbox.deployer.internal
                         </Private-Package>
                         <Export-Package>
                             !org.wso2.carbon.bam.toolbox.deployer.internal,
-                            !org.wso2.carbon.bam.toolbox.deployer.internal.*,
                             org.wso2.carbon.bam.toolbox.deployer.core.*,
+                            org.wso2.carbon.bam.toolbox.deployer.config.*,
                             org.wso2.carbon.bam.toolbox.deployer.exception.*,
                             org.wso2.carbon.bam.toolbox.deployer.util.*,
                             org.wso2.carbon.bam.toolbox.deployer.*

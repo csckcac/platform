@@ -185,44 +185,37 @@
                     %>
                     <div class="tab-pane" id="tab3">
                         <form name="deployDataForm" method='get' action='deploy_to_stage.jag' class='well'>
+                        <input type="hidden" name="stageName" value=""/>
                         <input type="hidden" name="applicationKey" value="<%=applicationKey%>"/>
                         <input type="hidden" name="applicationSvnLocation" value="<%=appInfo.repoLink%>"/>
                         <h3>devOps operations</h3>
                         <table class="table table-bordered table-stripe">
-                            <tr>
-                            <td>
-                            <%
-                            var versions = getUniqueAppVersions(applicationKey);
-                            for(var i=0; i<versions.length;i++){
-                                var version = versions[i];
-                                %>
-                                <input type="radio" name="version" value="<%=version%>"><%=version%></input><br/>
-                                <%
-                            }
-                            %>
-                            </td>
-                            </tr>
-                            <tr>
-                            <td class="buttonRow">
                             <%
                             var stages = getProperties('ApplicationDeployment.DeploymentStage');
                             for(var i=0; i<stages.length;i++){
                                 var stage = stages[i];
-                                if ( i == 0 ) {
-                                	%>
-                                	<input type="hidden" name="stageName" value="<%=stage%>"/>
-                                	<%
-                                }
+                            	%>
+                          <tr><td><h3><%=stage%></h3></td></tr>
+                          <tr><td>
+                            	<%
+                            	var appInfos = getAppVersionsInStage(stage, applicationKey);
+                            	var versions = appInfos[0].versions;
+                            	for(var j = 0; j < versions.length; j++){
+                            	    var version = versions[j];
+                            		%>
+                            		    <input type="radio" name="<%=stage%>" value="<%=version%>"><%=version%></input><br/>    
+                            		<%
+                            	}
                             %>
-
-                                    <input type="button" onclick="doSubmit('<%=stage%>')" value='Deploy to <%=stage%>' class='btn btn-primary'/>
+                            </td></tr>
+                            <tr>
+                                <td class="buttonRow">
+                                    <input type="button" onclick=doSubmit('<%=stage%>') value='Promote' class='btn btn-primary'/>
+                                </td>
+                            <tr>
                             <%
                             }
                             %>
-                                </td>
-                            </tr>
-                            <tr>
-                            </tr>
                         </table>
                         </form>
                     </div>

@@ -156,7 +156,11 @@ public class JSDeployer extends AbstractDeployer {
         of the file being deployed. Only the JS files within the js services/foo directory
         will be deployed by the Mashup Server while others are skipped by the deployer
         */
-        String jsRepository = axisConfig.getRepository().getPath() + repoDir;
+        String jsRepository = axisConfig.getRepository().getPath();
+        if(!jsRepository.endsWith(File.separator)) {
+            jsRepository += File.separator;
+        }
+        jsRepository += repoDir;
         // path of the *.js file relative to the repository i.e. foo/bar.js
         String jsPathRelative = getJSPathRelative(jsFilePath, jsRepository);
 
@@ -347,7 +351,7 @@ public class JSDeployer extends AbstractDeployer {
      * @param extension the file extension associated with this Deployer
      */
     public void setExtension(String extension) {
-        this.extension = "." + extension;
+        this.extension = extension;
     }
 
     /**

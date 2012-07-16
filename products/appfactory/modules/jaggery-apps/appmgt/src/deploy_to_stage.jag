@@ -2,11 +2,12 @@
         include('includes/template_header.jag');
         include('process/web_service_util.jag');
         include('config_reader.jag');
-
+        
+        var log = new Log();
 
         var applicationKey = request.getParameter("applicationKey");
         var stageName = request.getParameter("stageName");
-        var version = '1.0';
+        var version = request.getParameter("version");
         var revision = '0';
         var build = 'true';
 

@@ -10,6 +10,13 @@
 %>
 
     <script type="text/javascript">
+    
+    
+    function doSubmit(stage) {
+    	document.deployDataForm.elements["stageName"].value = stage; 
+        document.deployDataForm.submit();
+    }
+    
       // This is the code for definining the dashboard
       $(document).ready(function() {
 
@@ -177,25 +184,47 @@
                         if (devOpsPrivilege) {
                     %>
                     <div class="tab-pane" id="tab3">
+                        <form name="deployDataForm" method='get' action='deploy_to_stage.jag' class='well'>
+                        <input type="hidden" name="applicationKey" value="<%=applicationKey%>"/>
+                        <input type="hidden" name="applicationSvnLocation" value="<%=appInfo.repoLink%>"/>
                         <h3>devOps operations</h3>
                         <table class="table table-bordered table-stripe">
+                            <tr>
+                            <td>
+                            <%
+                            var versions = getUniqueAppVersions(applicationKey);
+                            for(var i=0; i<versions.length;i++){
+                                var version = versions[i];
+                                %>
+                                <input type="radio" name="version" value="<%=version%>"><%=version%></input><br/>
+                                <%
+                            }
+                            %>
+                            </td>
+                            </tr>
+                            <tr>
+                            <td class="buttonRow">
                             <%
                             var stages = getProperties('ApplicationDeployment.DeploymentStage');
                             for(var i=0; i<stages.length;i++){
                                 var stage = stages[i];
+                                if ( i == 0 ) {
+                                	%>
+                                	<input type="hidden" name="stageName" value="<%=stage%>"/>
+                                	<%
+                                }
                             %>
-                               <tr>
-                                <td class="buttonRow">
-                                    <input type="button" onclick="location.href='deploy_to_stage.jag?applicationKey=<%=applicationKey%>&applicationSvnLocation=<%=appInfo.repoLink%>&stageName=<%=stage%>'" value='Deploy to <%=stage%>' class='btn btn-primary'/>
-                                </td>
-                            </tr>
+
+                                    <input type="button" onclick="doSubmit('<%=stage%>')" value='Deploy to <%=stage%>' class='btn btn-primary'/>
                             <%
                             }
-
                             %>
+                                </td>
+                            </tr>
                             <tr>
                             </tr>
                         </table>
+                        </form>
                     </div>
                     </div>
                     <%
@@ -216,3 +245,4 @@
 <%
     include('includes/template_footer.jag');
 %>
+

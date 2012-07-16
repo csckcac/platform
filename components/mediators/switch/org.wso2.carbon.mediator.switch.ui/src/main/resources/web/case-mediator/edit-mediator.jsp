@@ -59,7 +59,7 @@
                                 <fmt:message key="case.value"/> <span class="required">*</span>
                             </td>
                             <td>
-                                <input type="text" value="<%=caseValueString%>" id="caseValue" name="caseValue" size="40"/>
+                                <input type="text" value='<%=caseValueString%>' id="caseValue" name="caseValue" size="40"/>
                             </td>
                         </tr>
                     </table>

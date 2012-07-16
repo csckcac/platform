@@ -20,6 +20,7 @@
 <%@ page import="org.wso2.carbon.mediator.switchm.SwitchCaseMediator" %>
 <%@ page import="org.wso2.carbon.sequences.ui.util.SequenceEditorHelper" %>
 <%@ page import="java.util.regex.Pattern" %>
+<%@ page import="org.apache.commons.lang.StringEscapeUtils" %>
 <%
     Mediator mediator = SequenceEditorHelper.getEditingMediator(request, session);
     if (!(mediator instanceof SwitchCaseMediator)) {
@@ -30,6 +31,7 @@
     SwitchCaseMediator switchCaseMediator = (SwitchCaseMediator) mediator;
 
     String caseValue = request.getParameter("caseValue");
+    caseValue = StringEscapeUtils.escapeXml(caseValue);
     switchCaseMediator.setRegex(Pattern.compile(caseValue));
 %>
 <script type="text/javascript">

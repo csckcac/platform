@@ -20,25 +20,25 @@ package org.wso2.carbon.apimgt.usage.client;
 public final class APIUsageStatisticsClientConstants {
 
 
-    public static final String API_VERSION_SERVICE_TIME_SUMMARY_TABLE = "APIVersionServiceTimeSummaryTable";
+    public static final String API_VERSION_SERVICE_TIME_SUMMARY = "APIVersionServiceTimeSummary";
 
-    public static final String API_VERSION_SERVICE_TIME_SUMMARY_TABLE_INDEX = "APIVersionServiceTimeSummaryTableIndex";
+    public static final String API_VERSION_SERVICE_TIME_SUMMARY_INDEX = "APIVersionServiceTimeSummaryIndex";
 
-    public static final String API_VERSION_USAGE_SUMMARY_TABLE = "APIVersionUsageSummaryTable";
+    public static final String API_VERSION_USAGE_SUMMARY = "APIVersionUsageSummary";
 
-    public static final String API_VERSION_USAGE_SUMMARY_TABLE_INDEX = "APIVersionUsageSummaryTableIndex";
+    public static final String API_VERSION_USAGE_SUMMARY_INDEX = "APIVersionUsageSummaryIndex";
 
-    public static final String API_VERSION_KEY_USAGE_SUMMARY_TABLE = "APIVersionKeyUsageSummaryTable";
+    public static final String API_VERSION_KEY_USAGE_SUMMARY = "APIVersionKeyUsageSummary";
 
-    public static final String API_VERSION_KEY_USAGE_SUMMARY_TABLE_INDEX = "APIVersionKeyUsageSummaryTableIndex";
+    public static final String API_VERSION_KEY_USAGE_SUMMARY_INDEX = "APIVersionKeyUsageSummaryIndex";
 
-    public static final String API_VERSION_KEY_LAST_ACCESS_SUMMARY_TABLE = "APIVersionKeyLastAccessSummaryTable";
+    public static final String API_VERSION_KEY_LAST_ACCESS_SUMMARY = "APIVersionKeyLastAccessSummary";
 
-    public static final String API_VERSION_KEY_LAST_ACCESS_SUMMARY_TABLE_INDEX = "APIVersionKeyLastAccessSummaryTableIndex";
+    public static final String API_VERSION_KEY_LAST_ACCESS_SUMMARY_INDEX = "APIVersionKeyLastAccessSummaryIndex";
 
-    public static final String KEY_USAGE_SUMMARY_TABLE = "KeyUsageSummaryTable";
+    public static final String KEY_USAGE_SUMMARY = "KeyUsageSummary";
 
-    public static final String KEY_USAGE_SUMMARY_TABLE_INDEX = "KeyUsageSummaryTableIndex";
+    public static final String KEY_USAGE_SUMMARY_INDEX = "KeyUsageSummaryIndex";
 
     public static final String ROWS = "rows";
 

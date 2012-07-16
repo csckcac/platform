@@ -1,4 +1,4 @@
-CREATE EXTERNAL TABLE IF NOT EXISTS APIVersionUsageTable (key STRING,
+CREATE EXTERNAL TABLE IF NOT EXISTS APIVersionUsage (key STRING,
 	api STRING,version 
 	STRING,context STRING,
 	request STRING) STORED BY 
@@ -12,22 +12,22 @@ CREATE EXTERNAL TABLE IF NOT EXISTS APIVersionUsageTable (key STRING,
 	"cassandra.columns.mapping" = 
 	":key,payload_api,
 	payload_version,payload_context,payload_request" );
-CREATE EXTERNAL TABLE IF NOT EXISTS APIVersionUsageSummaryTable(api STRING,
+CREATE EXTERNAL TABLE IF NOT EXISTS APIVersionUsageSummary (api STRING,
 	version STRING,context 
 	STRING,request INT) STORED BY 'org.wso2.carbon.hadoop.hive.jdbc.storage.JDBCStorageHandler' TBLPROPERTIES 
 	( 'mapred.jdbc.driver.class' = 'org.h2.Driver',
 	'mapred.jdbc.url' = 
-	'jdbc:h2:repository/database/APIMGTSTATS_DB;AUTO_SERVER=TRUE',
+	'jdbc:h2:repository/database/apimgtstats;AUTO_SERVER=TRUE',
 	'mapred.jdbc.username' = 
 	'wso2carbon','mapred.jdbc.password' = 'wso2carbon',
 	'hive.jdbc.update.on.duplicate' = 'true',
-	'hive.jdbc.table.create.query' = 'CREATE TABLE APIVersionUsageSummaryTable (api 
+	'hive.jdbc.table.create.query' = 'CREATE TABLE APIVersionUsageSummary (api 
 		VARCHAR(100),
 	version VARCHAR(100),context VARCHAR(100),
 	request INT)' );
-insert overwrite table APIVersionUsageSummaryTable select api,
+insert overwrite table APIVersionUsageSummary select api,
 	version,context,sum(cast(request as 
-	INT)) from APIVersionUsageTable group by api,
+	INT)) from APIVersionUsage group by api,
 	version,context;
 
                                     

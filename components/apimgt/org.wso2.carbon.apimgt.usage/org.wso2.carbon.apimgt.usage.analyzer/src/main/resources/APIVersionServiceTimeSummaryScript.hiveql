@@ -1,4 +1,4 @@
-CREATE EXTERNAL TABLE IF NOT EXISTS APIVersionServiceTimeTable (key STRING,
+CREATE EXTERNAL TABLE IF NOT EXISTS APIVersionServiceTime (key STRING,
 	api_version 
 	STRING,context STRING,serviceTime STRING,
 	response STRING) STORED BY 
@@ -12,21 +12,21 @@ CREATE EXTERNAL TABLE IF NOT EXISTS APIVersionServiceTimeTable (key STRING,
 	"cassandra.columns.mapping" = 
 	":key,payload_api_version,
 	payload_context,payload_serviceTime,payload_response" );
-CREATE EXTERNAL TABLE IF NOT EXISTS APIVersionServiceTimeSummaryTable(api_version STRING,
+CREATE EXTERNAL TABLE IF NOT EXISTS APIVersionServiceTimeSummary (api_version STRING,
 	context 
 	STRING,serviceTime INT,response INT) STORED BY 
 	'org.wso2.carbon.hadoop.hive.jdbc.storage.JDBCStorageHandler' TBLPROPERTIES ( 'mapred.jdbc.driver.class' 
 	= 'org.h2.Driver',
 	'mapred.jdbc.url' = 
-	'jdbc:h2:repository/database/APIMGTSTATS_DB;AUTO_SERVER=TRUE',
+	'jdbc:h2:repository/database/apimgtstats;AUTO_SERVER=TRUE',
 	'mapred.jdbc.username' = 
 	'wso2carbon','mapred.jdbc.password' = 'wso2carbon',
 	'hive.jdbc.update.on.duplicate' = 'true',
-	'hive.jdbc.table.create.query' = 'CREATE TABLE APIVersionServiceTimeSummaryTable (api_version 
+	'hive.jdbc.table.create.query' = 'CREATE TABLE APIVersionServiceTimeSummary (api_version 
 		VARCHAR(100),
 	context VARCHAR(100),serviceTime INT,response INT)' );
-insert overwrite table APIVersionServiceTimeSummaryTable select api_version,
-	context,avg(cast(serviceTime as INT)),sum(cast(response as INT)) from APIVersionServiceTimeTable 
+insert overwrite table APIVersionServiceTimeSummary select api_version,
+	context,avg(cast(serviceTime as INT)),sum(cast(response as INT)) from APIVersionServiceTime 
 	group by api_version,
 	context;
 

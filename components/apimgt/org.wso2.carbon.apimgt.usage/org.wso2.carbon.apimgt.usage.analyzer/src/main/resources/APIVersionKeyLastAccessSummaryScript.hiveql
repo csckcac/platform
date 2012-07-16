@@ -1,4 +1,4 @@
-CREATE EXTERNAL TABLE IF NOT EXISTS APIVersionKeyLastAccessTable (key STRING,
+CREATE EXTERNAL TABLE IF NOT EXISTS APIVersionKeyLastAccess (key STRING,
 	api_version 
 	STRING,consumerKey STRING,userId STRING,
 	context STRING,requestTime STRING) STORED BY 
@@ -14,23 +14,23 @@ CREATE EXTERNAL TABLE IF NOT EXISTS APIVersionKeyLastAccessTable (key STRING,
 	payload_consumerKey,payload_userId,payload_context,
 	payload_requestTime" 
 	);
-CREATE EXTERNAL TABLE IF NOT EXISTS APIVersionKeyLastAccessSummaryTable(api_version STRING,
+CREATE EXTERNAL TABLE IF NOT EXISTS APIVersionKeyLastAccessSummary (api_version STRING,
 	consumerKey STRING,userId STRING,context STRING,
 	requestTime DOUBLE) STORED BY 
 	'org.wso2.carbon.hadoop.hive.jdbc.storage.JDBCStorageHandler' TBLPROPERTIES ( 'mapred.jdbc.driver.class' 
 	= 'org.h2.Driver',
 	'mapred.jdbc.url' = 
-	'jdbc:h2:repository/database/APIMGTSTATS_DB;AUTO_SERVER=TRUE',
+	'jdbc:h2:repository/database/apimgtstats;AUTO_SERVER=TRUE',
 	'mapred.jdbc.username' = 
 	'wso2carbon','mapred.jdbc.password' = 'wso2carbon',
 	'hive.jdbc.update.on.duplicate' = 'true',
-	'hive.jdbc.table.create.query' = 'CREATE TABLE APIVersionKeyLastAccessSummaryTable (api_version 
+	'hive.jdbc.table.create.query' = 'CREATE TABLE APIVersionKeyLastAccessSummary (api_version 
 		VARCHAR(100),
 	consumerKey VARCHAR(100),userId VARCHAR(100),
 	context VARCHAR(100),requestTime 
 	DOUBLE)' );
-insert overwrite table APIVersionKeyLastAccessSummaryTable select api_version,
-	consumerKey,userId,context,max(cast(requestTime as DOUBLE)) from APIVersionKeyLastAccessTable group 
+insert overwrite table APIVersionKeyLastAccessSummary select api_version,
+	consumerKey,userId,context,max(cast(requestTime as DOUBLE)) from APIVersionKeyLastAccess group 
 	by api_version,
 	consumerKey,userId,context;
 

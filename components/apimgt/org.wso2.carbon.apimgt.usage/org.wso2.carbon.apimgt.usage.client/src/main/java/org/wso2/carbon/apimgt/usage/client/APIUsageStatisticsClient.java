@@ -90,8 +90,8 @@ public class APIUsageStatisticsClient {
             throws APIMgtUsageQueryServiceClientException {
         
         OMElement omElement = this.queryColumnFamily(
-                APIUsageStatisticsClientConstants.API_VERSION_USAGE_SUMMARY_TABLE,
-                APIUsageStatisticsClientConstants.API_VERSION_USAGE_SUMMARY_TABLE_INDEX,
+                APIUsageStatisticsClientConstants.API_VERSION_USAGE_SUMMARY,
+                APIUsageStatisticsClientConstants.API_VERSION_USAGE_SUMMARY_INDEX,
                 null);
         Collection<APIUsage> usageData = getUsageData(omElement);
         List<API> providerAPIs = getAPIsByProvider(providerName);
@@ -136,8 +136,8 @@ public class APIUsageStatisticsClient {
         compositeIndex[0].setRangeFirst(apiName);
         compositeIndex[0].setRangeLast(getNextStringInLexicalOrder(apiName));
         OMElement omElement = this.queryColumnFamily(
-                APIUsageStatisticsClientConstants.API_VERSION_USAGE_SUMMARY_TABLE,
-                APIUsageStatisticsClientConstants.API_VERSION_USAGE_SUMMARY_TABLE_INDEX,
+                APIUsageStatisticsClientConstants.API_VERSION_USAGE_SUMMARY,
+                APIUsageStatisticsClientConstants.API_VERSION_USAGE_SUMMARY_INDEX,
                 compositeIndex);
         Collection<APIUsage> usageData = getUsageData(omElement);
         List<API> providerAPIs = getAPIsByProvider(providerName);
@@ -172,8 +172,8 @@ public class APIUsageStatisticsClient {
             throws APIMgtUsageQueryServiceClientException {
 
         OMElement omElement = this.queryColumnFamily(
-                APIUsageStatisticsClientConstants.API_VERSION_SERVICE_TIME_SUMMARY_TABLE,
-                APIUsageStatisticsClientConstants.API_VERSION_SERVICE_TIME_SUMMARY_TABLE_INDEX,
+                APIUsageStatisticsClientConstants.API_VERSION_SERVICE_TIME_SUMMARY,
+                APIUsageStatisticsClientConstants.API_VERSION_SERVICE_TIME_SUMMARY_INDEX,
                 null);
         Collection<APIResponseTime> responseTimes = getResponseTimeData(omElement);
         List<API> providerAPIs = getAPIsByProvider(providerName);
@@ -226,8 +226,8 @@ public class APIUsageStatisticsClient {
             throws APIMgtUsageQueryServiceClientException {
 
         OMElement omElement = this.queryColumnFamily(
-                APIUsageStatisticsClientConstants.API_VERSION_KEY_LAST_ACCESS_SUMMARY_TABLE,
-                APIUsageStatisticsClientConstants.API_VERSION_KEY_LAST_ACCESS_SUMMARY_TABLE_INDEX,
+                APIUsageStatisticsClientConstants.API_VERSION_KEY_LAST_ACCESS_SUMMARY,
+                APIUsageStatisticsClientConstants.API_VERSION_KEY_LAST_ACCESS_SUMMARY_INDEX,
                 null);
         Collection<APIAccessTime> accessTimes = getAccessTimeData(omElement);
         List<API> providerAPIs = getAPIsByProvider(providerName);
@@ -278,8 +278,8 @@ public class APIUsageStatisticsClient {
             throws APIMgtUsageQueryServiceClientException {
 
         OMElement omElement = this.queryColumnFamily(
-                APIUsageStatisticsClientConstants.KEY_USAGE_SUMMARY_TABLE,
-                APIUsageStatisticsClientConstants.KEY_USAGE_SUMMARY_TABLE_INDEX,
+                APIUsageStatisticsClientConstants.KEY_USAGE_SUMMARY,
+                APIUsageStatisticsClientConstants.KEY_USAGE_SUMMARY_INDEX,
                 null);
         Collection<APIUsageByUser> usageData = getUsageBySubscriber(omElement);
         Map<String,PerUserAPIUsageDTO> usageByUsername = new TreeMap<String, PerUserAPIUsageDTO>();
@@ -309,8 +309,8 @@ public class APIUsageStatisticsClient {
                                                           String apiVersion, int limit) throws APIMgtUsageQueryServiceClientException {
 
         OMElement omElement = this.queryColumnFamily(
-                APIUsageStatisticsClientConstants.KEY_USAGE_SUMMARY_TABLE,
-                APIUsageStatisticsClientConstants.KEY_USAGE_SUMMARY_TABLE_INDEX,
+                APIUsageStatisticsClientConstants.KEY_USAGE_SUMMARY,
+                APIUsageStatisticsClientConstants.KEY_USAGE_SUMMARY_INDEX,
                 null);
 
         Collection<APIUsageByUser> usageData = getUsageBySubscriber(omElement);

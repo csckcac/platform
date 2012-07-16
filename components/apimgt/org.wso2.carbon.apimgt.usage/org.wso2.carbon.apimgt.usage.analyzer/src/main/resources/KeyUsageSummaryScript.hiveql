@@ -1,4 +1,4 @@
-CREATE EXTERNAL TABLE IF NOT EXISTS KeyUsageTable (key STRING,
+CREATE EXTERNAL TABLE IF NOT EXISTS KeyUsage (key STRING,
 	context STRING,consumerKey 
 	STRING,userId STRING,
 	version STRING,request STRING) STORED BY 
@@ -13,23 +13,23 @@ CREATE EXTERNAL TABLE IF NOT EXISTS KeyUsageTable (key STRING,
 	":key,payload_context,
 	payload_consumerKey,payload_userId,payload_version,
 	payload_request" );
-CREATE EXTERNAL TABLE IF NOT EXISTS KeyUsageSummaryTable(context STRING,
+CREATE EXTERNAL TABLE IF NOT EXISTS KeyUsageSummary (context STRING,
 	consumerKey STRING,userId 
 	STRING,version STRING,
 	request INT) STORED BY 
 	'org.wso2.carbon.hadoop.hive.jdbc.storage.JDBCStorageHandler' TBLPROPERTIES ( 'mapred.jdbc.driver.class' 
 	= 'org.h2.Driver',
 	'mapred.jdbc.url' = 
-	'jdbc:h2:repository/database/APIMGTSTATS_DB;AUTO_SERVER=TRUE',
+	'jdbc:h2:repository/database/apimgtstats;AUTO_SERVER=TRUE',
 	'mapred.jdbc.username' = 
 	'wso2carbon','mapred.jdbc.password' = 'wso2carbon',
 	'hive.jdbc.update.on.duplicate' = 'true',
-	'hive.jdbc.table.create.query' = 'CREATE TABLE KeyUsageSummaryTable (context 
+	'hive.jdbc.table.create.query' = 'CREATE TABLE KeyUsageSummary (context 
 	VARCHAR(100),
 	consumerKey VARCHAR(100),userId VARCHAR(100),
 	version VARCHAR(100),request INT)' );
-insert overwrite table KeyUsageSummaryTable select context,
-	consumerKey,userId,version,sum(cast(request as INT)) from KeyUsageTable group by context,
+insert overwrite table KeyUsageSummary select context,
+	consumerKey,userId,version,sum(cast(request as INT)) from KeyUsage group by context,
 	consumerKey,userId,version;
 
                                     

@@ -108,7 +108,13 @@
                 <artifactId>wss4j</artifactId>
                 <version>${wss4j.version.wso2.identity}</version>
             </dependency>
-
+		
+	    <!--Charon dependencies-->
+	    <dependency>
+		<groupId>org.wso2.charon</groupId>
+		<artifactId>org.wso2.charon.core</artifactId>
+		<version>${version.charon}</version>
+	    </dependency>
             <!-- Other External dependencies -->
             <dependency>
                 <groupId>org.openid4java.wso2</groupId>

@@ -221,7 +221,7 @@
 
 <p>&nbsp;</p>
    <%
-       if (phpApps[0] != null) {
+       if (phpApps != null) {
            String parameters = "phpappSearchString=" + phpappSearchString;
 
 

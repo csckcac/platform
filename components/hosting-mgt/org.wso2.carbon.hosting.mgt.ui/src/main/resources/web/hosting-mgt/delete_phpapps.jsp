@@ -44,8 +44,7 @@
     String cookie = (String) session.getAttribute(ServerConstants.ADMIN_SERVICE_COOKIE);
     HostingAdminClient client;
     try {
-        client = new HostingAdminClient(request.getLocale());
-        client.initApplicationManagementService(cookie,configContext, backendServerURL);
+        client = new HostingAdminClient( request.getLocale(),cookie,configContext, backendServerURL);
     } catch (Exception e) {
         CarbonUIMessage uiMsg = new CarbonUIMessage(CarbonUIMessage.ERROR, e.getMessage(), e);
         session.setAttribute(CarbonUIMessage.ID, uiMsg);

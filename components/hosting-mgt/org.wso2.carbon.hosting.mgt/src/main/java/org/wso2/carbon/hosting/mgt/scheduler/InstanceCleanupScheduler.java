@@ -18,7 +18,7 @@ public class InstanceCleanupScheduler {
 		scheduler.scheduleWithFixedDelay(new InstanceCleanupJob(), 
 										Long.valueOf(System.getProperty(PHPCartridgeConstants.OPENSTACK_INSTANCE_CHECK_INITIAL_DELAY)),
 										Long.valueOf(System.getProperty(PHPCartridgeConstants.OPENSTACK_INSTANCE_CHECK_DELAY)),
-										TimeUnit.HOURS);
+										TimeUnit.SECONDS);
 		if (log.isInfoEnabled()) {
 			log.info("Instance Clean up task successfully scheduled");
 		}		

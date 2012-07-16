@@ -5,7 +5,7 @@ package org.wso2.carbon.hosting.mgt.service;
 
 
 import org.apache.axis2.AxisFault;
-import org.wso2.carbon.core.multitenancy.transports.TenantTransportInDescription;
+import org.wso2.carbon.hosting.mgt.internal.Store;
 import org.wso2.carbon.hosting.mgt.openstack.db.OpenstackDAO;
 import org.wso2.carbon.hosting.mgt.utils.FileUploadData;
 import org.apache.commons.logging.Log;
@@ -15,12 +15,7 @@ import java.io.File;
 import java.io.FileOutputStream;
 import java.io.FilenameFilter;
 import java.io.IOException;
-import java.util.ArrayList;
 import java.util.HashMap;
-import java.util.List;
-import java.util.Map;
-
-import org.wso2.carbon.core.multitenancy.TenantAxisConfiguration;
 
 import org.wso2.carbon.core.AbstractAdmin;
 import org.wso2.carbon.hosting.mgt.clients.AutoscaleServiceClient;
@@ -39,16 +34,20 @@ public class ApplicationManagementService extends AbstractAdmin{
     public static final String FILE_DEPLOYMENT_FOLDER = "phpapps";
     AutoscaleServiceClient client;
     HashMap<String, String> imageIdtoNameMap;
-    HashMap<Integer, String> tenantToPublicIpMap;
     OpenstackDAO openstackDAO;
 
-    public ApplicationManagementService(){
+    public ApplicationManagementService() throws AxisFault{
         imageIdtoNameMap = new HashMap<String, String>();
+        initAutoscaler();
     }
 
     public void initAutoscaler() throws AxisFault {
         client = new AutoscaleServiceClient(System.getProperty(PHPCartridgeConstants.AUTOSCALER_SERVICE_URL));
-        client.init(true);
+        try {
+			client.init(true);
+		} catch (Exception e) {
+			throw new AxisFault(e.getMessage(), e);
+		}
     }
     /**
          * Upload a File
@@ -58,7 +57,6 @@ public class ApplicationManagementService extends AbstractAdmin{
          * @throws org.apache.axis2.AxisFault If an error occurs while uploading
          */
     public boolean uploadWebapp(FileUploadData[] fileUploadDataList ) throws AxisFault {
-
         File phpAppsDir = new File(getWebappDeploymentDirPath());
 
         if (!phpAppsDir.exists() && !phpAppsDir.mkdirs()) {
@@ -84,8 +82,7 @@ public class ApplicationManagementService extends AbstractAdmin{
                     log.warn("Could not close file " + destFile.getAbsolutePath());
                 }
             }
-
-            log.info("Uploaded files" );
+            log.info("Files are successfully uploaded !" );
         }
         return true;
     }
@@ -110,8 +107,7 @@ public class ApplicationManagementService extends AbstractAdmin{
         String phpAppPath = getWebappDeploymentDirPath();
         File phpAppDirectory = new File(phpAppPath);
         String[] children;
-
-        if(!phpAppDirectory.exists()){
+        if(phpAppDirectory.exists()){
             // This return any files that ends with '.zip'.
             FilenameFilter filter = new FilenameFilter() {
                 public boolean accept(File dir, String name) {
@@ -161,15 +157,18 @@ public class ApplicationManagementService extends AbstractAdmin{
     private void deleteApps(String phpApps[]){
         File phpAppFile;
         for (String phpApp : phpApps) {
-            phpAppFile = new File(getWebappDeploymentDirPath() + File.separator + phpApp);
+            phpAppFile = new File(getWebappDeploymentDirPath() +  File.separator + phpApp);
             phpAppFile.delete();
         }
     }
 
     public String startInstance(String image){
-        int tenantId = MultitenantUtils.getTenantId(getConfigContext());
+        Integer tenantId = MultitenantUtils.getTenantId(getConfigContext());
+        log.info("tenant id : " + tenantId);
         try {
-            initAutoscaler();
+			if (client == null) {
+				initAutoscaler();
+			}
         } catch (Exception e) {
             String msg = "Error while initializing Autoscaler";
             log.error(msg, e);
@@ -180,6 +179,7 @@ public class ApplicationManagementService extends AbstractAdmin{
             String privateIp = client.startInstance(System.getProperty("php.domain"), imageIdtoNameMap.get(image));
             log.info("Started Instance private ip is " + privateIp);
             publicIp = openstackDAO.getPublicIp(privateIp);
+            Store.publicIpToTenantMap.put(publicIp, tenantId);
         }catch (Exception e){
             String msg = "Error while calling auto scaler to start instance";
             log.error(msg);
@@ -188,14 +188,18 @@ public class ApplicationManagementService extends AbstractAdmin{
         return publicIp;
     }
 
-    private boolean isInstanceUp(String tenant){
+    public boolean isInstanceForTenantUp(){
+        Integer tenantId = MultitenantUtils.getTenantId(getConfigContext());
+        if(Store.publicIpToTenantMap.containsValue(tenantId)){
+            return true;
+        }
         return false;
     }
 
     public String[] getImages(){
         String imageNames[];
         String[] apps = listPhpApplications();
-        if(apps == null || apps.length == 0 || !isInstanceUp("tenant")){
+        if(!isInstanceForTenantUp()){
             String imageIdsString = System.getProperty(PHPCartridgeConstants.OPENSTACK_INSTANCE_IMAGE_IDS);
             String[] imagesToNameArray = imageIdsString.split(",");
             for (String image : imagesToNameArray) {

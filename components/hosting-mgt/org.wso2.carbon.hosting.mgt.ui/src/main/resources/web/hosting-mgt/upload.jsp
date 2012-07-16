@@ -33,7 +33,6 @@
     String cookie = (String) session.getAttribute(ServerConstants.ADMIN_SERVICE_COOKIE);
 
     HostingAdminClient client;
-
     try {
              client = new HostingAdminClient(request.getLocale(),cookie, configContext, serverURL);
     }catch (Exception e) {
@@ -48,7 +47,7 @@
         return;
     }
 
-        boolean noPHPAppsDeployed = !client.getIsInstanceUpFromLb() ;  //TODO need to set tenant correctly
+        boolean instancesUpForTenant = true;
 %>
 
 <fmt:bundle basename="org.wso2.carbon.hosting.mgt.ui.i18n.Resources">
@@ -58,14 +57,15 @@
     <script type="text/javascript">
         function validate() {
         <%
-            if(noPHPAppsDeployed){ //when three are no PHP apps for this tenant, we should create instance
+         if(!instancesUpForTenant){ //when three are no PHP apps for this tenant, we should create instance
         %>
-        var imageSelect = document.getElementById("images");
-        if(imageSelect.options[imageSelect.selectedIndex].text == '<fmt:message key="select.image"/>'){
-            CARBON.showWarningDialog('<fmt:message key="no.selected.image"/>');
-            return;
-        }
-        <%}%>
+            var imageSelect = document.getElementById("images");
+            if(imageSelect.options[imageSelect.selectedIndex].text == '<fmt:message key="select.image"/>'){
+                CARBON.showWarningDialog('<fmt:message key="no.selected.image"/>');
+                return;
+            }
+            <%}%>
+
             if (document.webappUploadForm.warFileName.value != null) {
                 var jarinput = document.webappUploadForm.warFileName.value;
                 if (jarinput == '') {
@@ -147,7 +147,8 @@
                 </table>
                 <%
                     String images[] = client.getBaseImages();
-                    if(noPHPAppsDeployed){ //when three are no PHP apps for this tenant, we should create instance
+                     instancesUpForTenant = client.isInstanceUp();
+                    if(!instancesUpForTenant){ //when three are no PHP apps for this tenant, we should create instance
                         %>
                         <table class="styledLeft">
                             <tr>

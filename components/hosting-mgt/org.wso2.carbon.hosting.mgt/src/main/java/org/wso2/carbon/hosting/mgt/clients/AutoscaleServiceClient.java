@@ -38,7 +38,7 @@ public class AutoscaleServiceClient {
     public AutoscaleServiceClient(String epr) throws AxisFault {
 
         try {
-            long timeOut = 90000;
+            long timeOut = 270000;
             if(!(System.getProperty("autoscaler.time.out") == null)){
                 timeOut = Long.parseLong(System.getProperty("autoscaler.time.out"));
             }
@@ -64,7 +64,6 @@ public class AutoscaleServiceClient {
     }
     
     public String startInstance(String domainName, String imageId) throws Exception{
-
         return stub.startSpiInstance(domainName, imageId);
     }
 

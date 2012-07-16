@@ -46,15 +46,8 @@ public class HostingAdminClient {
                                String backendServerURL) throws AxisFault {
         bundle = ResourceBundle.getBundle(BUNDLE, locale);
         String serviceURL = backendServerURL + "ApplicationManagementService";
-        stub = new ApplicationManagementServiceStub(configCtx, serviceURL);
-        ServiceClient client = stub._getServiceClient();
-        Options option = client.getOptions();
-        option.setManageSession(true);
-        option.setProperty(org.apache.axis2.transport.http.HTTPConstants.COOKIE_STRING, cookie);
-        option.setProperty(Constants.Configuration.ENABLE_MTOM, Constants.VALUE_TRUE);
-
-        stub._getServiceClient().getOptions().setTimeOutInMilliSeconds(90000);
-
+        stub = new ApplicationManagementServiceStub(/*configCtx,*/serviceURL);
+        stub._getServiceClient().getOptions().setTimeOutInMilliSeconds(270000);
     }
 
     public void uploadWebapp(FileUploadData[] fileUploadDataList) throws AxisFault {
@@ -97,19 +90,20 @@ public class HostingAdminClient {
         }
     }
 
-    public boolean isInstanceUp(){
-         return isInstanceUp;
-    }
-
-
-    public boolean getIsInstanceUpFromLb(){
-        //TODO get state from
+    public boolean isInstanceUp() throws AxisFault {
+        try {
+            isInstanceUp = stub.isInstanceForTenantUp();
+        } catch (RemoteException e) {
+            String msg = "Error while calling isInstanceUp";
+            throw new AxisFault(msg);
+        }
         return isInstanceUp;
     }
 
     public String[] getBaseImages() throws AxisFault {
         try {
-            return stub.getImages();
+            String images[] =  stub.getImages();
+            return images;
         } catch (RemoteException e) {
             handleException("cannot.get.images", e);
         }

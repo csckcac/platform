@@ -5,6 +5,7 @@ import java.util.List;
 import org.apache.commons.logging.Log;
 import org.apache.commons.logging.LogFactory;
 import org.wso2.carbon.hosting.mgt.clients.AutoscaleServiceClient;
+import org.wso2.carbon.hosting.mgt.internal.Store;
 import org.wso2.carbon.hosting.mgt.openstack.db.OpenstackDAO;
 import org.wso2.carbon.hosting.mgt.utils.PHPCartridgeConstants;
 
@@ -23,13 +24,12 @@ public class InstanceCleanupJob implements Runnable{
 		List<String> instanceIps = openstackDAO.readInstancesToDelete();
 		
 		if (instanceIps != null && !instanceIps.isEmpty()) {
-			//if (log.isDebugEnabled()) {
-				log.info(" Terminating instances, having IP s " + instanceIps);
-			//}
-
-				log.info(" AutoscalerService url :" + System.getProperty(PHPCartridgeConstants.AUTOSCALER_SERVICE_URL));
+			if (log.isDebugEnabled()) {
+				log.debug(" Terminating instances, having IP s " + instanceIps);
+				log.debug(" AutoscalerService url :" + System.getProperty(PHPCartridgeConstants.AUTOSCALER_SERVICE_URL));
+			}				
 				
-			try {
+			try {				
 				AutoscaleServiceClient autoscaleServiceClient = new AutoscaleServiceClient(
 						System.getProperty(PHPCartridgeConstants.AUTOSCALER_SERVICE_URL));
 				autoscaleServiceClient.init(true);
@@ -40,6 +40,9 @@ public class InstanceCleanupJob implements Runnable{
 						log.debug(" Terminating instance. IP :" + instanceIp);
 					}
 					autoscaleServiceClient.terminateSpiInstance(instanceIp);
+                    if(Store.publicIpToTenantMap.containsKey(instanceIp)){
+                        Store.publicIpToTenantMap.remove(instanceIp);
+                    }
 				}
 
 			} catch (Exception e) {

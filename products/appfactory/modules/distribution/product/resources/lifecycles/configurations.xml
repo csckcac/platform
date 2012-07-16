@@ -15,7 +15,7 @@
  ~ specific language governing permissions and limitations
  ~ under the License.
  -->
-<aspect name="ServiceLifeCycle" class="org.wso2.carbon.governance.registry.extensions.aspects.DefaultLifeCycle">
+<aspect name="ESBConfigLifecycle" class="org.wso2.carbon.governance.registry.extensions.aspects.DefaultLifeCycle">
     <configuration type="literal">
         <lifecycle>
             <scxml xmlns="http://www.w3.org/2005/07/scxml"
@@ -24,15 +24,7 @@
                 <state id="Development">
                     <datamodel>
                         <data name="checkItems">
-                            <item name="Code Completed" forEvent="">
-                                <!--<permissions>
-                                    <permission roles=""/>
-                                </permissions>
-                                <validations>
-                                    <validation forEvent="" class="">
-                                        <parameter name="" value=""/>
-                                    </validation>
-                                </validations>-->
+                            <item name="Code Completed" forEvent="">                                
                             </item>
                             <item name="WSDL, Schema Created" forEvent="">
                             </item>
@@ -40,36 +32,22 @@
                             </item>
                         </data>
 			<data name="transitionExecution">
-                            <execution forEvent="Promote" class="org.wso2.carbon.governance.registry.extensions.executors.ServiceVersionExecutor">
-                                <parameter name="currentEnvironment" value="/_system/governance/trunk/{@resourcePath}/{@resourceName}"/>
-                                <parameter name="targetEnvironment" value="/_system/governance/branches/testing/{@resourcePath}/{@version}/{@resourceName}"/>
-                                <parameter name="service.mediatype" value="application/vnd.wso2-service+xml"/>
-                                <parameter name="wsdl.mediatype" value="application/wsdl+xml"/>
-                                <parameter name="endpoint.mediatype" value="application/vnd.wso2.endpoint"/>
+                            <execution forEvent="Promote" class="org.wso2.carbon.appfactory.governance.lifecycle.AppFactoryLCExecutor">
+                                <parameter name="currentEnvironment" value="/_system/governance/repository/applications/Development"/>
+                                <parameter name="targetEnvironment" value="/_system/governance/repository/applications/Testing"/>                                
                             </execution>			
                         </data>
-			<data name="transitionUI">
-                            <ui forEvent="Promote" href="../lifecycles/pre_invoke_aspect_ajaxprocessor.jsp?currentEnvironment=/_system/governance/trunk/"/>
-                        </data>
-                        <!--<data name="transitionValidation">
-                            <validation forEvent="" class="">
-                                <parameter name="" value=""/>
-                            </validation>
-                        </data>
-                        <data name="transitionPermission">
-                            <permission forEvent="" roles=""/>
-                        </data>
-                        <data name="transitionScripts">
-                            <js forEvent="">
-                                <console function="">
-                                    <script type="text/javascript">
-                                    </script>
-                                </console>
-                                <server function="">
-                                    <script type="text/javascript"></script>
-                                </server>
+			<data name="transitionScripts">
+                            <js forEvent="Promote">
+                                <console function="doPromote">
+                                <script type="text/javascript">
+                                    doPromote = function() {
+                                        window.location = unescape("../resources/resource.jsp?region=region3%26item=resource_browser_menu%26path=/_system/governance/repository/applications/Testing");
+                                    }
+                                </script>
+                            </console>
                             </js>
-                        </data>-->
+                        </data>			
                     </datamodel>
                     <transition event="Promote" target="Testing"/>                  
                 </state>
@@ -84,45 +62,33 @@
                             </item>
                         </data>
                         <data name="transitionExecution">
-                            <execution forEvent="Promote" class="org.wso2.carbon.governance.registry.extensions.executors.ServiceVersionExecutor">
-                                <parameter name="currentEnvironment" value="/_system/governance/branches/testing/{@resourcePath}/{@version}/{@resourceName}"/>
-                                <parameter name="targetEnvironment" value="/_system/governance/branches/production/{@resourcePath}/{@version}/{@resourceName}"/>
-                                <parameter name="service.mediatype" value="application/vnd.wso2-service+xml"/>
-                                <parameter name="wsdl.mediatype" value="application/wsdl+xml"/>
-                                <parameter name="endpoint.mediatype" value="application/vnd.wso2.endpoint"/>
-                            </execution>
-			    <execution forEvent="Demote" class="org.wso2.carbon.governance.registry.extensions.executors.DemoteActionExecutor">
-                            </execution>
-                        </data>
-			<data name="transitionUI">
-                            <ui forEvent="Promote" href="../lifecycles/pre_invoke_aspect_ajaxprocessor.jsp?currentEnvironment=/_system/governance/branches/testing/"/>
-                        </data>
+                            <execution forEvent="Promote" class="org.wso2.carbon.governance.registry.extensions.executors.CopyExecutor">
+                                <parameter name="currentEnvironment" value="/_system/governance/repository/applications/Testing"/>
+                                <parameter name="targetEnvironment" value="/_system/governance/repository/applications/Production"/>
+                            </execution>			    
+                        </data>			
+			<data name="transitionScripts">
+                            <js forEvent="Promote">
+                                <console function="doPromote">
+                                <script type="text/javascript">
+                                    doPromote = function() {
+                                        window.location = unescape("../resources/resource.jsp?region=region3%26item=resource_browser_menu%26path=/_system/governance/repository/applications/Production");
+                                    }
+                                </script>
+                            </console>                          
+                            </js>
+                        </data>			
                     </datamodel>
                     <transition event="Promote" target="Production"/>
                     <transition event="Demote" target="Development"/>
                 </state>
-                <state id="Production">
-                    <datamodel>
-                        <data name="transitionExecution">
-                            <execution forEvent="Demote" class="org.wso2.carbon.governance.registry.extensions.executors.DemoteActionExecutor">
-                            </execution>
-                            <execution forEvent="Publish" class="org.wso2.carbon.governance.registry.extensions.executors.apistore.ApiStoreExecutor">
-                            </execution>
-                        </data>
+                <state id="Production">  
+		    <datamodel>			
                     </datamodel>
-                    <transition event="Publish" target="Published.to.APIStore"/>
                     <transition event="Demote" target="Testing"/>
-                </state>
-                <state id="Published.to.APIStore">
                 </state>                
             </scxml>
         </lifecycle>
     </configuration>
 </aspect>
-
-
-
-
-
-
 

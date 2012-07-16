@@ -446,7 +446,11 @@ public class XMLHttpRequestHostObject extends ScriptableObject {
 
     private static void updateReadyState(XMLHttpRequestHostObject xhr, short readyState) {
         xhr.readyState = readyState;
-        if (xhr.async) {
+        if (xhr.async && xhr.onreadystatechange != null) {
+        	if(!(xhr.onreadystatechange instanceof Function)) {
+        		log.warn("A function must be specified for the XMLHttpRequest callback");
+        		return;
+        	}
             try {
                 RhinoEngine.enterContext();
                 xhr.onreadystatechange.call(xhr.context, xhr, xhr, new Object[0]);

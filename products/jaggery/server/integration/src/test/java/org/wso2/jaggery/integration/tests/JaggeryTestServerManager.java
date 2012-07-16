@@ -205,6 +205,31 @@ public class JaggeryTestServerManager extends TestServerManager {
 		sourcePath = computeSourcePath(fileName);
 		destinationPath = computeDestPath(carbonHome, fileName);
 		copySampleFile(sourcePath, destinationPath);
+		
+		//uri object 
+		fileName = "uri.jag";
+		sourcePath = computeSourcePath(fileName);
+		destinationPath = computeDestPath(carbonHome, fileName);
+		copySampleFile(sourcePath, destinationPath);
+
+		//inculde object
+		fileName = "inculde.jag";
+		sourcePath = computeSourcePath(fileName);
+		destinationPath = computeDestPath(carbonHome, fileName);
+		copySampleFile(sourcePath, destinationPath);
+		
+		//entry object
+		fileName = "entry.jag";
+		sourcePath = computeSourcePath(fileName);
+		destinationPath = computeDestPath(carbonHome, fileName);
+		copySampleFile(sourcePath, destinationPath);
+		
+		//wsstub object
+		fileName = "wsstub.jag";
+		sourcePath = computeSourcePath(fileName);
+		destinationPath = computeDestPath(carbonHome, fileName);
+		copySampleFile(sourcePath, destinationPath);
+
 
 	}
 

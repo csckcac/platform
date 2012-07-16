@@ -616,7 +616,9 @@ public class ApiMgtDAO {
             ps.close();
 
             if (apiId == -1) {
-                throw new APIManagementException("Unable to get the API ID for: " + identifier);
+                String msg = "Unable to get the API ID for: " + identifier;
+                log.error(msg);
+                throw new APIManagementException(msg);
             }
 
             //This query to update the AM_SUBSCRIPTION table
@@ -1365,7 +1367,9 @@ public class ApiMgtDAO {
             try {
                 tenantId = IdentityUtil.getTenantIdOFUser(userId);
             } catch (IdentityException e) {
-                throw new APIManagementException("Failed to get tenant id of user : " + userId, e);
+                String msg = "Failed to get tenant id of user : " + userId;
+                log.error(msg, e);
+                throw new APIManagementException(msg, e);
             }
             ps.setInt(5, tenantId);
 
@@ -1579,8 +1583,10 @@ public class ApiMgtDAO {
             }
             //Get subscriber Id
             Subscriber subscriber = getSubscriber(userId,tenantId);
-            if(subscriber == null){
-                throw new APIManagementException("Could not load Subscriber record for : "+userId);
+            if (subscriber == null) {
+                String msg = "Could not load Subscriber records for: " + userId;
+                log.error(msg);
+                throw new APIManagementException(msg);
             }
             //This query to update the AM_APPLICATION table
             String sqlQuery = "INSERT " +
@@ -1851,9 +1857,13 @@ public class ApiMgtDAO {
         }
         
         if (oldStatus == null && !newStatus.equals(APIStatus.CREATED)) {
-            throw new APIManagementException("Invalid old and new state combination");
+            String msg = "Invalid old and new state combination";
+            log.error(msg);
+            throw new APIManagementException(msg);
         } else if (oldStatus != null && oldStatus.equals(newStatus)) {
-            throw new APIManagementException("No measurable differences in API state");
+            String msg = "No measurable differences in API state";
+            log.error(msg);
+            throw new APIManagementException(msg);
         }
 
         String getAPIQuery = "SELECT " +
@@ -1880,7 +1890,9 @@ public class ApiMgtDAO {
             resultSet.close();
             ps.close();
             if (apiId == -1) {
-                throw new APIManagementException("Unable to find the API: " + identifier);
+                String msg = "Unable to find the API: " + identifier + " in the database";
+                log.error(msg);
+                throw new APIManagementException(msg);
             }
             
             ps = conn.prepareStatement(sqlQuery);
@@ -2046,8 +2058,10 @@ public class ApiMgtDAO {
                     apiId.setTier(info.tierId);
                     int subscriptionId = addSubscription(apiId, context, info.applicationId);
                     if (subscriptionId == -1) {
-                        throw new APIManagementException("Unable to add a new subscription for " +
-                                "the API: " + apiName + ":v" + newVersion);
+                        String msg = "Unable to add a new subscription for the API: " + apiName + 
+                                ":v" + newVersion;
+                        log.error(msg);
+                        throw new APIManagementException(msg);
                     }
                     subscriptionIdMap.put(info.subscriptionId, subscriptionId);
                 }
@@ -2169,7 +2183,9 @@ public class ApiMgtDAO {
             rs.close();
             prepStmt.close();
             if (id == -1) {
-                throw new APIManagementException("Unable to find the API: " + apiId);
+                String msg = "Unable to find the API: " + apiId + " in the database";
+                log.error(msg);
+                throw new APIManagementException(msg);
             }
             prepStmt = connection.prepareStatement(deleteSubscriptionQuery);
             prepStmt.setInt(1, id);

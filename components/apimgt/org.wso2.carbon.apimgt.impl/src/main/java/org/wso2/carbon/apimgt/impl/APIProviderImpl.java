@@ -350,14 +350,22 @@ class APIProviderImpl extends AbstractAPIManager implements APIProvider {
             createAPI(api);
             apiMgtDAO.addAPI(api);
             registry.commitTransaction();
-        } catch (Exception e) {
+        } catch (RegistryException e) {
             try {
                 registry.rollbackTransaction();
-            } catch (RegistryException regE) {
-                handleException("Error occurred while rolling back the transaction for API: " +
-                        api.getId().getApiName(), regE);
+            } catch (RegistryException re) {
+                handleException("Error while rolling back the transaction for API: " +
+                        api.getId().getApiName(), re);
             }
-            handleException("Error occurred while adding the API: " + api.getId().getApiName(), e);
+            handleException("Error while performing registry transaction operation", e);
+        } catch (APIManagementException e) {
+            try {
+                registry.rollbackTransaction();
+            } catch (RegistryException re) {
+                handleException("Error while rolling back the transaction for API: " +
+                        api.getId().getApiName(), re);
+            }
+            throw e;
         }
     }
 
@@ -371,13 +379,32 @@ class APIProviderImpl extends AbstractAPIManager implements APIProvider {
     public void updateAPI(API api) throws APIManagementException {
         API oldApi = getAPI(api.getId());
         if (oldApi.getStatus().equals(api.getStatus())) {
-            updateApiArtifact(api, true);
-            if (!oldApi.getContext().equals(api.getContext())) {
-                apiMgtDAO.updateAPI(api);
-            }
-
-            if (isAPIPublished(api)) {
-                publishToGateway(api);
+            try {
+                registry.beginTransaction();
+                updateApiArtifact(api, true);
+                if (!oldApi.getContext().equals(api.getContext())) {
+                    apiMgtDAO.updateAPI(api);
+                }
+                if (isAPIPublished(api)) {
+                    publishToGateway(api);
+                }
+                registry.commitTransaction();
+            } catch (RegistryException e) {
+                try {
+                    registry.rollbackTransaction();
+                } catch (RegistryException re) {
+                    handleException("Error while rolling back the transaction for API: " +
+                            api.getId().getApiName(), re);
+                }
+                handleException("Error while performing registry transaction operation", e);
+            } catch (APIManagementException e) {
+                try {
+                    registry.rollbackTransaction();
+                } catch (RegistryException re) {
+                    handleException("Error while rolling back the transaction for API: " +
+                            api.getId().getApiName(), re);
+                }
+                throw e;
             }
         } else {
             // We don't allow API status updates via this method.
@@ -436,17 +463,36 @@ class APIProviderImpl extends AbstractAPIManager implements APIProvider {
         APIStatus currentStatus = api.getStatus();
         if (!currentStatus.equals(status)) {
             api.setStatus(status);
-            updateApiArtifact(api, false);
-            if (updateGatewayConfig) {
-                if (status.equals(APIStatus.PUBLISHED) || status.equals(APIStatus.DEPRECATED) ||
-                        status.equals(APIStatus.BLOCKED)) {
-                    publishToGateway(api);
-                } else {
-                    removeFromGateway(api);
+            try {
+                registry.beginTransaction();
+                updateApiArtifact(api, false);
+                apiMgtDAO.recordAPILifeCycleEvent(api.getId(), currentStatus, status, userId);
+                if (updateGatewayConfig) {
+                    if (status.equals(APIStatus.PUBLISHED) || status.equals(APIStatus.DEPRECATED) ||
+                            status.equals(APIStatus.BLOCKED)) {
+                        publishToGateway(api);
+                    } else {
+                        removeFromGateway(api);
+                    }
                 }
+                registry.commitTransaction();
+            } catch (RegistryException e) {
+                try {
+                    registry.rollbackTransaction();
+                } catch (RegistryException re) {
+                    handleException("Error while rolling back the transaction for API: " +
+                            api.getId().getApiName(), re);
+                }
+                handleException("Error while performing registry transaction operation", e);
+            } catch (APIManagementException e) {
+                try {
+                    registry.rollbackTransaction();
+                } catch (RegistryException re) {
+                    handleException("Error while rolling back the transaction for API: " +
+                            api.getId().getApiName(), re);
+                }
+                throw e;
             }
-
-            apiMgtDAO.recordAPILifeCycleEvent(api.getId(), currentStatus, status, userId);
         }        
     }
 
@@ -469,12 +515,12 @@ class APIProviderImpl extends AbstractAPIManager implements APIProvider {
             RESTAPIAdminClient client = new RESTAPIAdminClient(api.getId());
             APITemplateBuilder builder;
             if (api.getStatus().equals(APIStatus.BLOCKED)) {
-                Map<String, String> testAPIMappings = new HashMap<String, String>();
-                testAPIMappings.put(APITemplateBuilder.KEY_FOR_API_NAME, api.getId().getProviderName() +
+                Map<String, String> apiMappings = new HashMap<String, String>();
+                apiMappings.put(APITemplateBuilder.KEY_FOR_API_NAME, api.getId().getProviderName() +
                         "--" + api.getId().getApiName());
-                testAPIMappings.put(APITemplateBuilder.KEY_FOR_API_CONTEXT, api.getContext());
-                testAPIMappings.put(APITemplateBuilder.KEY_FOR_API_VERSION, api.getId().getVersion());
-                builder = new BasicTemplateBuilder(testAPIMappings);
+                apiMappings.put(APITemplateBuilder.KEY_FOR_API_CONTEXT, api.getContext());
+                apiMappings.put(APITemplateBuilder.KEY_FOR_API_VERSION, api.getId().getVersion());
+                builder = new BasicTemplateBuilder(apiMappings);
             } else {
                 builder = getTemplateBuilder(api);
             }
@@ -510,13 +556,17 @@ class APIProviderImpl extends AbstractAPIManager implements APIProvider {
         return false;
     }
     
-    private APITemplateBuilder getTemplateBuilder(API api) {
+    private APITemplateBuilder getTemplateBuilder(API api) throws APIManagementException {
         Map<String, String> testAPIMappings = new HashMap<String, String>();
 
         testAPIMappings.put(APITemplateBuilder.KEY_FOR_API_NAME, api.getId().getProviderName() +
                 "--" + api.getId().getApiName());
         testAPIMappings.put(APITemplateBuilder.KEY_FOR_API_CONTEXT, api.getContext());
         testAPIMappings.put(APITemplateBuilder.KEY_FOR_API_VERSION, api.getId().getVersion());
+
+        if (api.getUriTemplates() == null || api.getUriTemplates().size() == 0) {
+            throw new APIManagementException("At least one resource is required");
+        }
 
         Iterator it = api.getUriTemplates().iterator();
         List<Map<String, String>> resourceMappings = new ArrayList<Map<String, String>>();

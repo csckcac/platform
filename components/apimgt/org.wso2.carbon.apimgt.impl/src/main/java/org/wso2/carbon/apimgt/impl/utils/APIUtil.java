@@ -386,22 +386,19 @@ public final class APIUtil {
      * @param wsdlUrl  wsdl url
      * @param registry Registry space to save the WSDL
      * @return Path of the created resource
+     * @throws APIManagementException If an error occurs while adding the WSDL
      */
-    public  static String  createWSDL(String wsdlUrl, Registry registry) {
-        String path = null;
+    public  static String  createWSDL(String wsdlUrl, Registry registry) throws APIManagementException {
         try {
             WsdlManager wsdlManager = new WsdlManager(registry);
             Wsdl wsdl = wsdlManager.newWsdl(wsdlUrl);
             wsdlManager.addWsdl(wsdl);
-            path =  GovernanceUtils.getArtifactPath(registry,wsdl.getId());
-        } catch (GovernanceException e) {
-            String msg = "Failed to add wsdl " + wsdlUrl + " to registry ";
-            log.error(msg, e);
+            return  GovernanceUtils.getArtifactPath(registry,wsdl.getId());
         } catch (RegistryException e) {
-            String msg = "Failed to initialize gov registry for wsdl import";
+            String msg = "Failed to add WSDL " + wsdlUrl + " to the registry";
             log.error(msg, e);
+            throw new APIManagementException(msg, e);
         }
-        return path;
     }
 
     /**
@@ -410,19 +407,19 @@ public final class APIUtil {
      * @param endpointUrl Endpoint url
      * @param registry Registry space to save the endpoint
      * @return Path of the created resource
+     * @throws APIManagementException If an error occurs while adding the endpoint
      */
-    public static String createEndpoint(String endpointUrl, Registry registry) {
-        String path = null;
+    public static String createEndpoint(String endpointUrl, Registry registry) throws APIManagementException {
         try {
             EndpointManager endpointManager = new EndpointManager(registry);
             Endpoint endpoint = endpointManager.newEndpoint(endpointUrl);
             endpointManager.addEndpoint(endpoint);
-            path = GovernanceUtils.getArtifactPath(registry,endpoint.getId());
+            return GovernanceUtils.getArtifactPath(registry,endpoint.getId());
         } catch (RegistryException e) {
             String msg = "Failed to import endpoint "+ endpointUrl +" to registry ";
             log.error(msg ,e);
+            throw new APIManagementException(msg, e);
         }
-        return path;
     }
 
     /**

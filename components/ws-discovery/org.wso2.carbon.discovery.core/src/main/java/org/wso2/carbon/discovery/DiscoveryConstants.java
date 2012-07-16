@@ -86,9 +86,9 @@ public class DiscoveryConstants {
 
     // Constants used by the persistence manager
     public static final String ATTR_METADATA_VERSION = "metadataVersion";
-    public static final String ATTR_TYPES = "types";
-    public static final String ATTR_SCOPES = "scopes";
-    public static final String ATTR_XADDRESSES = "xAddresses";
+    public static final String ATTR_TYPES = "overview_types";
+    public static final String ATTR_ENDPOINTS = "endpoints_entry";
+    public static final String ATTR_SCOPES = "overview_scopes";
     public static final String ATTR_EPR = "endpoint";
 
     public static final String SERVICE_NAME_PREFIX = "DiscoveredService_";

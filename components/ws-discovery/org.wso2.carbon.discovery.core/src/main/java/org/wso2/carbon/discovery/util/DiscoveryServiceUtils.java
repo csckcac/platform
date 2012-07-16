@@ -19,31 +19,30 @@
 
 package org.wso2.carbon.discovery.util;
 
-import org.apache.axis2.context.MessageContext;
-import org.wso2.carbon.registry.core.Registry;
-import org.wso2.carbon.discovery.DiscoveryException;
+import org.apache.axis2.addressing.EndpointReference;
+import org.apache.axis2.addressing.EndpointReferenceHelper;
+import org.apache.axis2.context.ConfigurationContext;
+import org.apache.axis2.description.Parameter;
+import org.apache.axis2.engine.AxisConfiguration;
+import org.wso2.carbon.context.RegistryType;
+import org.wso2.carbon.core.multitenancy.SuperTenantCarbonContext;
+import org.wso2.carbon.core.multitenancy.utils.TenantAxisUtils;
 import org.wso2.carbon.discovery.DiscoveryConstants;
-import org.wso2.carbon.discovery.search.DiscoveryServiceFilter;
-import org.wso2.carbon.discovery.messages.TargetService;
+import org.wso2.carbon.discovery.DiscoveryException;
 import org.wso2.carbon.discovery.messages.Probe;
+import org.wso2.carbon.discovery.messages.TargetService;
+import org.wso2.carbon.discovery.search.DiscoveryServiceFilter;
 import org.wso2.carbon.governance.api.services.ServiceManager;
 import org.wso2.carbon.governance.api.services.dataobjects.Service;
-import org.wso2.carbon.core.multitenancy.utils.TenantAxisUtils;
-import org.wso2.carbon.core.multitenancy.SuperTenantCarbonContext;
-import org.wso2.carbon.context.RegistryType;
-import org.apache.axiom.om.OMElement;
-import org.apache.axiom.om.OMAbstractFactory;
-import org.apache.axis2.addressing.EndpointReferenceHelper;
-import org.apache.axis2.addressing.AddressingConstants;
-import org.apache.axis2.addressing.EndpointReference;
-import org.apache.axis2.engine.AxisConfiguration;
-import org.apache.axis2.description.Parameter;
-import org.apache.axis2.context.ConfigurationContext;
+import org.wso2.carbon.registry.core.Registry;
 import org.wso2.carbon.utils.multitenancy.CarbonContextHolder;
+import org.wso2.carbon.utils.multitenancy.MultitenantConstants;
 
 import javax.xml.namespace.QName;
 import java.net.URI;
-import java.util.*;
+import java.util.ArrayList;
+import java.util.GregorianCalendar;
+import java.util.List;
 
 /**
  * Utility class for adding, updating and removing service artifacts stored in the
@@ -54,7 +53,7 @@ public class DiscoveryServiceUtils {
 
     private static Registry getRegistry() throws DiscoveryException {
         String domain = CarbonContextHolder.getThreadLocalCarbonContextHolder().getTenantDomain();
-        if (domain != null) {
+        if (domain != MultitenantConstants.SUPER_TENANT_DOMAIN_NAME) {
             AxisConfiguration axisConfig = TenantAxisUtils.getTenantAxisConfiguration(domain,
                     ConfigHolder.getInstance().getServerConfigurationContext());
             return (Registry) SuperTenantCarbonContext.getCurrentContext(axisConfig).
@@ -97,13 +96,6 @@ public class DiscoveryServiceUtils {
                 DiscoveryConstants.WS_DISCOVERY_NAMESPACE, serviceName));
         newService.setId(serviceId);
 
-        // Save the endpoint reference element as an attribute
-        OMElement epr = EndpointReferenceHelper.toOM(OMAbstractFactory.getSOAP11Factory(),
-                service.getEpr(),
-                AddressingConstants.Final.WSA_ENDPOINT_REFERENCE,
-                AddressingConstants.Final.WSA_NAMESPACE);
-        newService.addAttribute(DiscoveryConstants.ATTR_EPR, epr.toString());
-
         // Set the version if provided
         if (service.getMetadataVersion() != -1) {
             newService.addAttribute(DiscoveryConstants.ATTR_METADATA_VERSION,
@@ -112,20 +104,37 @@ public class DiscoveryServiceUtils {
 
          // Store other service metadata (scopes, types, x-addresses)
         QName[] types = service.getTypes();
+        String typeList = "";
         if (types != null && types.length > 0) {
-            newService.setAttributes(DiscoveryConstants.ATTR_TYPES, Util.toStringArray(types));
+            for(int i=0;i<types.length;i++){
+                typeList =typeList.concat(types[i].toString());
+                if(i != types.length-1){
+                    typeList = typeList.concat(",");
+                }
+            }
         }
+        newService.setAttribute(DiscoveryConstants.ATTR_TYPES, typeList);
 
         URI[] scopes = service.getScopes();
+        String scopeList = "";
         if (scopes != null && scopes.length > 0) {
-            newService.setAttributes(DiscoveryConstants.ATTR_SCOPES, Util.toStringArray(scopes));
+            for(int i=0;i<scopes.length;i++){
+                scopeList = scopeList.concat(scopes[i].toString());
+                if(i != scopes.length-1){
+                    scopeList = scopeList.concat(",");
+                }
+            }
         }
+        newService.setAttribute(DiscoveryConstants.ATTR_SCOPES, scopeList);
 
-        URI[] xAddresses = service.getXAddresses();
+        URI[] uris = service.getXAddresses();
+        String[] endpoints = new String[uris.length];
+        for(int i=0;i<uris.length;i++){
+            endpoints[i] = ":" + uris[i].toString();
+        }
         boolean activate = false;
-        if (xAddresses != null && xAddresses.length > 0) {
-            newService.setAttributes(DiscoveryConstants.ATTR_XADDRESSES,
-                    Util.toStringArray(xAddresses));
+        if (uris != null && uris.length > 0) {
+            newService.setAttributes(DiscoveryConstants.ATTR_ENDPOINTS, endpoints);
             activate = true;
         }
 
@@ -222,7 +231,7 @@ public class DiscoveryServiceUtils {
         AxisConfiguration axisConfig;
         String tenantDomain = SuperTenantCarbonContext.getCurrentContext().getTenantDomain(true);
         ConfigurationContext mainCfgCtx = ConfigHolder.getInstance().getServerConfigurationContext();
-        if (tenantDomain != null) {
+        if (tenantDomain != MultitenantConstants.SUPER_TENANT_DOMAIN_NAME) {
             axisConfig = TenantAxisUtils.getTenantAxisConfiguration(tenantDomain, mainCfgCtx);
         } else {
             axisConfig = mainCfgCtx.getAxisConfiguration();
@@ -255,19 +264,23 @@ public class DiscoveryServiceUtils {
         }
 
         TargetService targetService = new TargetService(epr);
-        String[] types = service.getAttributes(DiscoveryConstants.ATTR_TYPES);
+        String types = service.getAttribute(DiscoveryConstants.ATTR_TYPES);
         if (types != null) {
-            targetService.setTypes(Util.toQNameArray(types));
+            targetService.setTypes(Util.toQNameArray(types.split(",")));
         }
 
-        String[] scopes = service.getAttributes(DiscoveryConstants.ATTR_SCOPES);
+        String scopes = service.getAttribute(DiscoveryConstants.ATTR_SCOPES);
         if (scopes != null) {
-            targetService.setScopes(Util.toURIArray(scopes));
+            targetService.setScopes(Util.toURIArray(scopes.split(",")));
         }
 
-        String[] xAddresses = service.getAttributes(DiscoveryConstants.ATTR_XADDRESSES);
-        if (xAddresses != null) {
-            targetService.setXAddresses(Util.toURIArray(xAddresses));
+        String[] endpoints = service.getAttributes(DiscoveryConstants.ATTR_ENDPOINTS);
+        URI[] uris = new URI[endpoints.length];
+        for(int i=0;i<endpoints.length;i++){
+            uris[i] = URI.create(endpoints[i].substring(1));
+        }
+        if (endpoints != null) {
+            targetService.setXAddresses(uris);
         }
 
         String mdv = service.getAttribute(DiscoveryConstants.ATTR_METADATA_VERSION);

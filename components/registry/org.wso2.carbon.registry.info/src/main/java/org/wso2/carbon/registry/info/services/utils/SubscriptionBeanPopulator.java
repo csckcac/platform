@@ -194,9 +194,14 @@ public class SubscriptionBeanPopulator {
                         continue;
                     }
                     if(testPath.contains("#")||testPath.contains("*")){
-                        testPath = (testPath.substring(RegistryEventingConstants.TOPIC_PREFIX.length()+1,
-                                testPath.lastIndexOf(RegistryConstants.PATH_SEPARATOR)))
-                                .split(RegistryConstants.PATH_SEPARATOR,2)[1];
+                        String tempTestPath = testPath.substring(RegistryEventingConstants.TOPIC_PREFIX.length()+1,
+                                testPath.lastIndexOf(RegistryConstants.PATH_SEPARATOR));
+                        if(tempTestPath.contains(RegistryConstants.PATH_SEPARATOR)){
+                            testPath =tempTestPath.split(RegistryConstants.PATH_SEPARATOR,2)[1];
+                        }else{
+                            testPath="/"; //only when the resource is ROOT the tempTestPath would not contain any "/"
+                        }
+
                     }else{
                         testPath = (testPath.substring(RegistryEventingConstants.TOPIC_PREFIX.length()+1,testPath.length()))
                                 .split(RegistryConstants.PATH_SEPARATOR,2)[1];

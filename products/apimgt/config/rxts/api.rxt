@@ -35,14 +35,14 @@
         <field type="text" url="true">
             <name>Endpoint URL</name>
         </field>
+        <field type="text" url="true">
+            <name>Sandbox URL</name>
+        </field>
         <field type="text">
             <name>WSDL</name>
         </field>
         <field type="text">
             <name>WADL</name>
-        </field> 
-        <field type="text">
-            <name>Tags</name>
         </field>
         <field type="text">
             <name>Thumbnail</name>
@@ -66,7 +66,6 @@
             <name label="Status">Status</name>
             <values>
                 <value>CREATED</value>
-                <value>DEPLOYED</value>
                 <value>PUBLISHED</value>
                 <value>RETIRED</value>
                 <value>DEPRECATED</value>
@@ -88,16 +87,16 @@
     </table>
     <table name="UriTemplates">            
         <subheading>                
-	    <heading>Method</heading>
-	    <heading>Template</heading>
-	</subheading>            
-	<field type="option-text" maxoccurs="unbounded">                
-	    <name>Template</name>                
-	    <values>
-		<value>GET</value>
-		<value>PUT</value>
-		<value>POST</value>
-		<value>DELETE</value>
+            <heading>Method</heading>
+            <heading>Template</heading>
+        </subheading>
+        <field type="option-text" maxoccurs="unbounded">
+            <name>Template</name>
+            <values>
+                <value>GET</value>
+                <value>PUT</value>
+                <value>POST</value>
+                <value>DELETE</value>
                 <value>HEAD</value>
             </values>
         </field>

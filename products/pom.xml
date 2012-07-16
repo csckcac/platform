@@ -231,6 +231,20 @@
            </modules>
         </profile>
 		
+        <!--WSO2 Appfactory profile -->
+        <profile>
+            <id>product-appfactory</id>
+            <activation>
+                <property>
+                    <name>product</name>
+                    <value>appfactory</value>
+                </property>
+            </activation>
+            <modules>
+                <module>integration/security-verifier</module>
+                <module>appfactory</module>
+           </modules>
+        </profile>
 
 
         <!-- WSO2 All products  -->
@@ -257,6 +271,7 @@
             <module>csg</module>
             <module>apimgt</module>
             <module>gs</module>
+    	    <module>appfactory</module>
         </modules>
 	    <build>
 	        <plugins>

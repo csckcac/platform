@@ -1,4 +1,6 @@
 <%
+var param = request.getParameter('action');
+
 	 function invokeGetVersion(){
 		 var ws = require("ws");
 		
@@ -8,7 +10,22 @@
 		 options.action = "urn:getVersion";
 		 var payload = null;
 		 var result;
-	
+if(param == "state"){
+		print(version.readyState);
+		try {		
+ 		version.open(options,"http://stratoslive.wso2.com/services/Version", false);
+ 		print(version.readyState);
+		version.send(payload);	
+		version.responseText;	
+ 		result = " success";
+		print(version.readyState);
+ 	} catch (e) {
+ 		log.error(e.toString());
+ 		return e.toString();
+	}
+ 	return result;
+ }
+	else {
 		 try {
 			 version.open(options,"http://stratoslive.wso2.com/services/Version", false);
 			 version.send(payload);
@@ -20,6 +37,7 @@
 	 	
 		 return result;
 	 }
+	}
+	print(invokeGetVersion());
 	
-	 print(invokeGetVersion());
  %>

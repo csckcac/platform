@@ -21,8 +21,10 @@ import org.quartz.Job;
 import org.quartz.JobDataMap;
 import org.quartz.JobExecutionContext;
 import org.quartz.JobExecutionException;
+import org.wso2.carbon.core.multitenancy.SuperTenantCarbonContext;
 import org.wso2.carbon.ntask.common.TaskConstants;
 import org.wso2.carbon.ntask.core.Task;
+import org.wso2.carbon.ntask.core.TaskInfo;
 
 /**
  * This class represents an adapter class used to wrap a Task in a Quartz Job.
@@ -30,6 +32,8 @@ import org.wso2.carbon.ntask.core.Task;
 public class TaskQuartzJobAdapter implements Job {
 
 	private Task task;
+	
+	private int tenantId;
 		
 	public TaskQuartzJobAdapter() {		
 	}
@@ -45,15 +49,27 @@ public class TaskQuartzJobAdapter implements Job {
 			}
 			try {
 				this.task = (Task) Class.forName(taskClassName).newInstance();
-				Map<String, String> properties = (Map<String, String>) dataMap.get(TaskConstants.TASK_PROPERTIES);
+				Map<String, String> properties = (Map<String, String>) dataMap.get(
+						TaskConstants.TASK_PROPERTIES);
 				this.task.setProperties(properties);
 				this.task.init();
+				this.tenantId = Integer.parseInt(properties.get(TaskInfo.TENANT_ID_PROP));
 			} catch (Exception e) {
 				throw new JobExecutionException("Error in creating an object of task class: "
 						+ taskClassName, e);
 			}
 		}
-		this.getTask().execute();
+		try {
+			SuperTenantCarbonContext.startTenantFlow();
+			SuperTenantCarbonContext.getCurrentContext().setTenantId(this.getTenantId());
+		    this.getTask().execute();
+		} finally {
+			SuperTenantCarbonContext.endTenantFlow();
+		}
+	}
+	
+	public int getTenantId() {
+		return tenantId;
 	}
 	
 	public Task getTask() {

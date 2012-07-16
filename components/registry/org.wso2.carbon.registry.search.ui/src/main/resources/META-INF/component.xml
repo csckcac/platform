@@ -24,11 +24,12 @@
             <i18n-key>search</i18n-key>
             <i18n-bundle>org.wso2.carbon.registry.search.ui.i18n.Resources</i18n-bundle>
             <parent-menu>registry_menu</parent-menu>
-            <link>#</link>
+            <link>../search/advancedSearch.jsp</link>
             <region>region3</region>
             <order>20</order>
             <style-class>manage</style-class>
             <icon>../search/images/search-top.png</icon>
+            <require-permission>/permission/admin/manage/search/advanced-search</require-permission>
         </menu>
 
 
@@ -45,7 +46,7 @@
             <require-permission>/permission/admin/manage/search/advanced-search</require-permission>
         </menu-->
 
-        <menu>
+       <!-- <menu>
             <id>metadata_search_menu</id>
             <i18n-key>metadata.search</i18n-key>
             <i18n-bundle>org.wso2.carbon.registry.search.ui.i18n.Resources</i18n-bundle>
@@ -56,7 +57,7 @@
             <style-class>manage</style-class>
             <icon>../search/images/search-resources.gif</icon>
             <require-permission>/permission/admin/manage/search/advanced-search</require-permission>
-        </menu>
+        </menu> -->
 
 
 

@@ -125,7 +125,7 @@ public class Stream {
                                                            OMNamespace omNs, MessageContext synapseContext,
                                                            String uuidString, SOAPFactory soapFactory){
         try {
-            SOAPHeaderBlock soapHeaderBlock;
+            SOAPHeaderBlock soapHeaderBlock = null;
 
             // If header is not null check for  BAM headers
             if (soapEnvelope.getHeader() != null) {
@@ -133,18 +133,7 @@ public class Stream {
                         new QName(BamMediatorConstants.BAM_HEADER_NAMESPACE_URI,
                                   BamMediatorConstants.BAM_EVENT));
                 if (!itr.hasNext()) {
-                    soapHeaderBlock = soapEnvelope.getHeader().addHeaderBlock(
-                            BamMediatorConstants.BAM_EVENT, omNs);
-                    if (synapseContext.getProperty(BamMediatorConstants.MSG_ACTIVITY_ID) == null) { // this if
-                        // condition we add
-                        // to track failure messages coming from DS.That is a new message. So, doesn't have activityID.Getting activityID
-                        // from the synapseContext.property
-                        soapHeaderBlock.addAttribute(BamMediatorConstants.ACTIVITY_ID, uuidString, null);
-                        synapseContext.setProperty(BamMediatorConstants.MSG_ACTIVITY_ID, uuidString);
-                    } else {
-                        soapHeaderBlock.addAttribute(BamMediatorConstants.ACTIVITY_ID, (String) synapseContext
-                                .getProperty(BamMediatorConstants.MSG_ACTIVITY_ID), null);
-                    }
+                    this.processActivityIDWhenSOAPHeaderIsNull(soapHeaderBlock, omNs, soapEnvelope, synapseContext, uuidString);
                 } else {// If header is not null check for  BAM headers
 
                     // If the BAM header already present
@@ -167,23 +156,29 @@ public class Stream {
                     (soapFactory).createSOAPHeader(soapEnvelope); // TO DO
                 }
                 if (soapEnvelope.getHeader() != null) {
-                    soapHeaderBlock = soapEnvelope.getHeader().addHeaderBlock(BamMediatorConstants.BAM_EVENT, omNs);
-                    if (synapseContext.getProperty(BamMediatorConstants.MSG_ACTIVITY_ID) == null) { // this if
-                        // condition we add
-                        // to track failure messages coming from
-                        // DS.That is a new message. So, doesn't have activityID.Getting activityID
-                        // from the synapseContext.property
-                        soapHeaderBlock.addAttribute(BamMediatorConstants.ACTIVITY_ID, uuidString, null);
-                        synapseContext.setProperty(BamMediatorConstants.MSG_ACTIVITY_ID, uuidString);
-                    } else {
-                        soapHeaderBlock.addAttribute(BamMediatorConstants.ACTIVITY_ID, (String) synapseContext
-                                .getProperty(BamMediatorConstants.MSG_ACTIVITY_ID), null);
-                    }
+                    this.processActivityIDWhenSOAPHeaderIsNull(soapHeaderBlock, omNs, soapEnvelope, synapseContext, uuidString);
                 }
             }
 
         } catch (Exception e) {
             LOG.error("Error while processing MessageHeaderMediator...", e);
+        }
+    }
+
+    private void processActivityIDWhenSOAPHeaderIsNull(SOAPHeaderBlock soapHeaderBlock, OMNamespace omNs,
+                                                       SOAPEnvelope soapEnvelope, MessageContext synapseContext,
+                                                       String uuidString){
+        soapHeaderBlock = soapEnvelope.getHeader().addHeaderBlock(BamMediatorConstants.BAM_EVENT, omNs);
+        if (synapseContext.getProperty(BamMediatorConstants.MSG_ACTIVITY_ID) == null) { // this if
+            // condition we add
+            // to track failure messages coming from
+            // DS.That is a new message. So, doesn't have activityID.Getting activityID
+            // from the synapseContext.property
+            soapHeaderBlock.addAttribute(BamMediatorConstants.ACTIVITY_ID, uuidString, null);
+            synapseContext.setProperty(BamMediatorConstants.MSG_ACTIVITY_ID, uuidString);
+        } else {
+            soapHeaderBlock.addAttribute(BamMediatorConstants.ACTIVITY_ID, (String) synapseContext
+                    .getProperty(BamMediatorConstants.MSG_ACTIVITY_ID), null);
         }
     }
 
@@ -205,7 +200,9 @@ public class Stream {
 
         //Publish event for a valid stream
         if (streamId != null && !streamId.isEmpty()) {
-            LOG.info("Stream ID: " + streamId);
+            if(LOG.isDebugEnabled()){
+                LOG.debug("Stream ID: " + streamId);
+            }
             // Event for each message
             Event event = new Event(streamId, System.currentTimeMillis(),
                                     this.createMetadata(tenantId),
@@ -220,7 +217,9 @@ public class Stream {
                 throw new BamMediatorException(errorMsg, e);
             }
         } else {
-            LOG.info("streamId is empty.");
+            if(LOG.isDebugEnabled()){
+                LOG.debug("streamId is empty.");
+            }
         }
     }
 
@@ -282,28 +281,31 @@ public class Stream {
                                        boolean direction, String service, String operation) throws BamMediatorException{
         int numOfProperties = properties.size();
         int numOfEntities = streamEntries.size();
+        int i = 0;
 
-        Object[] payloadData = new Object[numOfProperties + numOfEntities + 12];
-        payloadData[0] = direction ?
+        Object[] payloadData = new Object[numOfProperties + numOfEntities + BamMediatorConstants.NUM_OF_CONST_EVENT_PARAMS];
+        payloadData[i++] = direction ?
                          BamMediatorConstants.DIRECTION_IN : BamMediatorConstants.DIRECTION_OUT;
-        payloadData[1] = service;
-        payloadData[2] = operation;
-        payloadData[3] = messageContext.getMessageID();
-        payloadData[4] = this.getHttpIp(messageContext, "wso2statistics.request.received.time");
-        payloadData[5] = this.getHttpIp(messageContext, "HTTP_METHOD");
-        payloadData[6] = this.getHttpIp(messageContext, "CHARACTER_SET_ENCODING");
-        payloadData[7] = this.getHttpIp(messageContext, "REMOTE_ADDR");
-        payloadData[8] = this.getHttpIp(messageContext, "TransportInURL");
-        payloadData[9] = this.getHttpIp(messageContext, "messageType");
-        payloadData[10] = this.getHttpIp(messageContext, "REMOTE_HOST");
-        payloadData[11] = this.getHttpIp(messageContext, "SERVICE_PREFIX");
+        payloadData[i++] = service;
+        payloadData[i++] = operation;
+        payloadData[i++] = messageContext.getMessageID();
+        payloadData[i++] = this.getHttpIp(messageContext, "wso2statistics.request.received.time");
+        payloadData[i++] = this.getHttpIp(messageContext, "HTTP_METHOD");
+        payloadData[i++] = this.getHttpIp(messageContext, "CHARACTER_SET_ENCODING");
+        payloadData[i++] = this.getHttpIp(messageContext, "REMOTE_ADDR");
+        payloadData[i++] = this.getHttpIp(messageContext, "TransportInURL");
+        payloadData[i++] = this.getHttpIp(messageContext, "messageType");
+        payloadData[i++] = this.getHttpIp(messageContext, "REMOTE_HOST");
+        payloadData[i] = this.getHttpIp(messageContext, "SERVICE_PREFIX");
 
-        for (int i=0; i<numOfProperties; i++) {
-            payloadData[12 + i] = this.producePropertyValue(properties.get(i), messageContext);
+        for (i=0; i<numOfProperties; i++) {
+            payloadData[BamMediatorConstants.NUM_OF_CONST_EVENT_PARAMS + i] =
+                    this.producePropertyValue(properties.get(i), messageContext);
         }
 
-        for (int i=0; i<numOfEntities; i++) {
-            payloadData[12 + numOfProperties + i] = this.produceEntityValue(streamEntries.get(i).getValue(), messageContext);
+        for (i=0; i<numOfEntities; i++) {
+            payloadData[BamMediatorConstants.NUM_OF_CONST_EVENT_PARAMS + numOfProperties + i] =
+                    this.produceEntityValue(streamEntries.get(i).getValue(), messageContext);
         }
 
         return payloadData;
@@ -322,7 +324,8 @@ public class Stream {
 
 
     private Object getHttpIp(MessageContext messageContext, String propertyName){
-        org.apache.axis2.context.MessageContext msgCtx = ((Axis2MessageContext) messageContext).getAxis2MessageContext();
+        org.apache.axis2.context.MessageContext msgCtx =
+                ((Axis2MessageContext) messageContext).getAxis2MessageContext();
         String output = (String)msgCtx.getLocalProperty(propertyName);
         if(output != null && !output.equals("")){
             return output;

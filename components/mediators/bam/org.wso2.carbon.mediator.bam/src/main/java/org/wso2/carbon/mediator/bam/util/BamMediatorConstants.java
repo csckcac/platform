@@ -42,6 +42,7 @@ public final class BamMediatorConstants {
     public static final String VERSION = "version";
     public static final String NICK_NAME = "nickName";
     public static final String DESCRIPTION = "description";
+    public static final String TENANT_ID = "tenantId";
 
     public static final String REQUEST_RECEIVED_TIME = "request_received_time";
     public static final String HTTP_METHOD = "http_method";
@@ -51,5 +52,13 @@ public final class BamMediatorConstants {
     public static final String REMOTE_HOST = "remote_host";
     public static final String SERVICE_PREFIX = "service_prefix";
     public static final String STRING = "STRING";
+    public static final String INT = "INT";
+    public static final String NAME = "name";
+    public static final String TYPE = "type";
+    public static final String CORRELATION_DATA = "correlationData";
+    public static final String META_DATA = "metaData";
+    public static final String PAYLOAD_DATA = "payloadData";
+
+    public static final int NUM_OF_CONST_EVENT_PARAMS = 12;
 
 }

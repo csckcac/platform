@@ -30,57 +30,68 @@ public class StreamIDBuilder {
     private List<Property> properties;
     private List<StreamEntry> streamEntries;
 
-    public String createStreamID(String streamName, String streamVersion, String streamNickName, String streamDescription, List<Property> properties, List<StreamEntry> streamEntries){
+    public String createStreamID(String streamName, String streamVersion, String streamNickName,
+                                 String streamDescription, List<Property> properties,
+                                 List<StreamEntry> streamEntries){
         this.properties = properties;
         this.streamEntries = streamEntries;
 
         return "{" +
-               "  'name':'" + streamName + "'," +
-               "  '" + BamMediatorConstants.VERSION + "':'" + streamVersion + "'," +
-               "  '" + BamMediatorConstants.NICK_NAME + "': '" + streamNickName + "'," +
-               "  '" + BamMediatorConstants.DESCRIPTION + "': '" + streamDescription + "'," +
-               "  'correlationData':[" +
-               "          {'name':'" + BamMediatorConstants.ACTIVITY_ID + "','type':'STRING'}" +
-               "  ]," +
-               "  'metaData':[" +
-               "          {'name':'tenantId','type':'INT'}" +
-               "  ]," +
-               "  'payloadData':[" +
+               "'" + BamMediatorConstants.NAME + "':'" + streamName + "'," +
+               "'" + BamMediatorConstants.VERSION + "':'" + streamVersion + "'," +
+               "'" + BamMediatorConstants.NICK_NAME + "':'" + streamNickName + "'," +
+               "'" + BamMediatorConstants.DESCRIPTION + "':'" + streamDescription + "'," +
+               "'" + BamMediatorConstants.CORRELATION_DATA + "':[" +
+               "{'" + BamMediatorConstants.NAME + "':'" + BamMediatorConstants.ACTIVITY_ID + "','" +
+               BamMediatorConstants.TYPE + "':'" + BamMediatorConstants.STRING + "'}" +
+               "]," +
+               "'" + BamMediatorConstants.META_DATA + "':[" +
+               "{'" + BamMediatorConstants.NAME +"':'" + BamMediatorConstants.TENANT_ID + "','" +
+               BamMediatorConstants.TYPE + "':'" + BamMediatorConstants.INT + "'}" +
+               "]," +
+               "'" + BamMediatorConstants.PAYLOAD_DATA + "':[" +
                this.getConstantStreamDefinitionString() +
                this.getPropertyStreamDefinitionString() +
                this.getEntityStreamDefinitionString() +
-               "  ]" +
+               "]" +
                "}";
     }
 
     private String getConstantStreamDefinitionString(){
-        String[] nameStrings = new String[11];
-        nameStrings[0] = BamMediatorConstants.SERVICE_NAME;
-        nameStrings[1] = BamMediatorConstants.OPERATION_NAME;
-        nameStrings[2] = BamMediatorConstants.MSG_ID;
-        nameStrings[3] = BamMediatorConstants.REQUEST_RECEIVED_TIME;
-        nameStrings[4] = BamMediatorConstants.HTTP_METHOD;
-        nameStrings[5] = BamMediatorConstants.CHARACTER_SET_ENCODING;
-        nameStrings[6] = BamMediatorConstants.REMOTE_ADDRESS;
-        nameStrings[7] = BamMediatorConstants.TRANSPORT_IN_URL;
-        nameStrings[8] = BamMediatorConstants.MESSAGE_TYPE;
-        nameStrings[9] = BamMediatorConstants.REMOTE_HOST;
-        nameStrings[10] = BamMediatorConstants.SERVICE_PREFIX;
+        String[] nameStrings = new String[BamMediatorConstants.NUM_OF_CONST_EVENT_PARAMS-1];
+        int i = 0;
+        nameStrings[i++] = BamMediatorConstants.SERVICE_NAME;
+        nameStrings[i++] = BamMediatorConstants.OPERATION_NAME;
+        nameStrings[i++] = BamMediatorConstants.MSG_ID;
+        nameStrings[i++] = BamMediatorConstants.REQUEST_RECEIVED_TIME;
+        nameStrings[i++] = BamMediatorConstants.HTTP_METHOD;
+        nameStrings[i++] = BamMediatorConstants.CHARACTER_SET_ENCODING;
+        nameStrings[i++] = BamMediatorConstants.REMOTE_ADDRESS;
+        nameStrings[i++] = BamMediatorConstants.TRANSPORT_IN_URL;
+        nameStrings[i++] = BamMediatorConstants.MESSAGE_TYPE;
+        nameStrings[i++] = BamMediatorConstants.REMOTE_HOST;
+        nameStrings[i] = BamMediatorConstants.SERVICE_PREFIX;
 
-        String outputString = "          {'name':'" + BamMediatorConstants.MSG_DIRECTION + "','type':'STRING'}";
+        String outputString = "{'" + BamMediatorConstants.NAME + "':'" +
+                              BamMediatorConstants.MSG_DIRECTION + "','" +
+                              BamMediatorConstants.TYPE + "':'" +
+                              BamMediatorConstants.STRING + "'}";
 
         for (String nameString : nameStrings) {
-            outputString = outputString + "," + this.getStreamDefinitionEntryString(nameString, BamMediatorConstants.STRING);
+            outputString = outputString + ","
+                           + this.getStreamDefinitionEntryString(nameString,
+                                                                 BamMediatorConstants.STRING);
         }
 
         return outputString;
     }
 
-
     private String getPropertyStreamDefinitionString(){
         String propertyString = "";
         for (Property property : properties) {
-            propertyString = propertyString + "," + this.getStreamDefinitionEntryString(property.getKey(), BamMediatorConstants.STRING);
+            propertyString = propertyString + "," +
+                             this.getStreamDefinitionEntryString(property.getKey(),
+                                                                 BamMediatorConstants.STRING);
         }
         return propertyString;
     }
@@ -88,13 +99,16 @@ public class StreamIDBuilder {
     private String getEntityStreamDefinitionString(){
         String entityString = "";
         for (StreamEntry streamEntry : streamEntries) {
-            entityString = entityString + "," + this.getStreamDefinitionEntryString(streamEntry.getName(), streamEntry.getType());
+            entityString = entityString + "," +
+                           this.getStreamDefinitionEntryString(streamEntry.getName(),
+                                                               streamEntry.getType());
         }
         return entityString;
     }
 
     private String getStreamDefinitionEntryString(String name, String type){
-        return  "        {'name':'" + name + "','type':'" + type +"'}";
+        return  "{'" + BamMediatorConstants.NAME + "':'" + name + "','" +
+                BamMediatorConstants.TYPE + "':'" + type +"'}";
     }
 
 }

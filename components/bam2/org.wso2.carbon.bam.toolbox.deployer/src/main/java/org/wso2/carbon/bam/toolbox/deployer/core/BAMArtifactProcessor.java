@@ -158,7 +158,7 @@ public class BAMArtifactProcessor {
                             String cron = props.getProperty(BAMToolBoxDeployerConstants.ANALYZER_SCRIPT_PREFIX + "."
                                     + aScriptVarName.trim() + "." + BAMToolBoxDeployerConstants.ANALYZER_SCRIPT_CRON_SUFFIX);
                             if (null != cron && !cron.trim().equals("")) {
-                                toolBoxDTO.setCronForScript(scriptFileName, cron);
+                                toolBoxDTO.setCronForScript(scriptFileName, cron.trim());
                             } else {
                                 log.warn("No cron are specified for script: " + scriptFileName);
                             }

@@ -31,19 +31,19 @@ import org.testng.annotations.Test;
 import org.wso2.carbon.integration.framework.ClientConnectionUtil;
 
 /**
- * Test cases for Database Host Object
+ * Test cases for inculde Object
  */
-public class WSRequestHostObjectTestCase {
+public class InculdeObjectTestCase {
 
     @Test(groups = {"jaggery"},
-          description = "Test for WSRequest host object")
-    public void testWSRequestExist() {
+          description = "Test inculde object")
+    public void testInculde() {
         ClientConnectionUtil.waitForPort(9763);
         
         String finalOutput = null;
         
         try {
-        	URL jaggeryURL = new URL("http://localhost:9763/testapp/wsrequest.jag");
+        	URL jaggeryURL = new URL("http://localhost:9763/testapp/inculde.jag");
         	URLConnection jaggeryServerConnection = jaggeryURL.openConnection();
         	BufferedReader in = new BufferedReader(new InputStreamReader(
         			jaggeryServerConnection.getInputStream()));
@@ -63,46 +63,14 @@ public class WSRequestHostObjectTestCase {
     }
     
     @Test(groups = {"jaggery"},
-            description = "Test for WSRequest host object")
-      public void testWSRequest() {
-          ClientConnectionUtil.waitForPort(9763);
-          
-          String finalOutput = null;
-          
-          try {
-          	URL jaggeryURL = new URL("http://localhost:9763/testapp/wsrequest.jag");
-          	URLConnection jaggeryServerConnection = jaggeryURL.openConnection();
-          	BufferedReader in = new BufferedReader(new InputStreamReader(
-          			jaggeryServerConnection.getInputStream()));
-          
-          	String inputLine;
-  			while ((inputLine = in.readLine()) != null) {
-  				finalOutput = inputLine;
-  			}
-  
-  			in.close();
-  		} catch (IOException e) {
-  			e.printStackTrace();
-  		} finally {
-  			boolean textContains = false;
-  			if(finalOutput != null && finalOutput.contains(
-  					"<ns:getVersionResponse xmlns:ns=\"http://version.services.core.carbon.wso2.org\"><return>")) {
-  				textContains = true;
-  			}
-  	        assertEquals(textContains, true);
-  		}
-          
-      }
-    
-    @Test(groups = {"jaggery"},
-            description = "Test WSRequest status")
-    public void testWSRequestOperations() {
+            description = "Test inculde and inculde_once operations")
+    public void testInculdeOperations() {
         ClientConnectionUtil.waitForPort(9763);
         
         String finalOutput = null;
         
         try {
-        	URL jaggeryURL = new URL("http://localhost:9763/testapp/wsrequest.jag?action=state");
+        	URL jaggeryURL = new URL("http://localhost:9763/testapp/inculde.jag");
         	URLConnection jaggeryServerConnection = jaggeryURL.openConnection();
         	BufferedReader in = new BufferedReader(new InputStreamReader(
         			jaggeryServerConnection.getInputStream()));
@@ -116,7 +84,7 @@ public class WSRequestHostObjectTestCase {
 		} catch (IOException e) {
 			e.printStackTrace();
 		} finally {
-			assertEquals(finalOutput, "014 success");
+			assertEquals(finalOutput, "syntax testsyntax testThis is an INFO level log");
 		}
         
     }

@@ -31,19 +31,19 @@ import org.testng.annotations.Test;
 import org.wso2.carbon.integration.framework.ClientConnectionUtil;
 
 /**
- * Test cases for Database Host Object
+ * Test cases for WSstub Host Object
  */
-public class WSRequestHostObjectTestCase {
+public class WSStubHostObjectTestCase {
 
     @Test(groups = {"jaggery"},
-          description = "Test for WSRequest host object")
-    public void testWSRequestExist() {
+          description = "Test for WSRequest host object existing")
+    public void testWSStubExist() {
         ClientConnectionUtil.waitForPort(9763);
         
         String finalOutput = null;
         
         try {
-        	URL jaggeryURL = new URL("http://localhost:9763/testapp/wsrequest.jag");
+        	URL jaggeryURL = new URL("http://localhost:9763/testapp/wsstub.jag");
         	URLConnection jaggeryServerConnection = jaggeryURL.openConnection();
         	BufferedReader in = new BufferedReader(new InputStreamReader(
         			jaggeryServerConnection.getInputStream()));
@@ -63,14 +63,14 @@ public class WSRequestHostObjectTestCase {
     }
     
     @Test(groups = {"jaggery"},
-            description = "Test for WSRequest host object")
-      public void testWSRequest() {
+            description = "Test for WSstub host object")
+      public void testWSStub() {
           ClientConnectionUtil.waitForPort(9763);
           
           String finalOutput = null;
           
           try {
-          	URL jaggeryURL = new URL("http://localhost:9763/testapp/wsrequest.jag");
+          	URL jaggeryURL = new URL("http://localhost:9763/testapp/wsstub.jag");
           	URLConnection jaggeryServerConnection = jaggeryURL.openConnection();
           	BufferedReader in = new BufferedReader(new InputStreamReader(
           			jaggeryServerConnection.getInputStream()));
@@ -93,32 +93,6 @@ public class WSRequestHostObjectTestCase {
   		}
           
       }
-    
-    @Test(groups = {"jaggery"},
-            description = "Test WSRequest status")
-    public void testWSRequestOperations() {
-        ClientConnectionUtil.waitForPort(9763);
-        
-        String finalOutput = null;
-        
-        try {
-        	URL jaggeryURL = new URL("http://localhost:9763/testapp/wsrequest.jag?action=state");
-        	URLConnection jaggeryServerConnection = jaggeryURL.openConnection();
-        	BufferedReader in = new BufferedReader(new InputStreamReader(
-        			jaggeryServerConnection.getInputStream()));
-        
-          	String inputLine;
-  			while ((inputLine = in.readLine()) != null) {
-  				finalOutput = inputLine;
-  			}
-			    
-			in.close();
-		} catch (IOException e) {
-			e.printStackTrace();
-		} finally {
-			assertEquals(finalOutput, "014 success");
-		}
-        
-    }
+
 
 }

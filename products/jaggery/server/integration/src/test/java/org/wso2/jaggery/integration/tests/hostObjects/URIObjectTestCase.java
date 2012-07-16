@@ -31,19 +31,19 @@ import org.testng.annotations.Test;
 import org.wso2.carbon.integration.framework.ClientConnectionUtil;
 
 /**
- * Test cases for Database Host Object
+ * Test cases for URI matcher Object
  */
-public class WSRequestHostObjectTestCase {
+public class URIObjectTestCase {
 
     @Test(groups = {"jaggery"},
-          description = "Test for WSRequest host object")
-    public void testWSRequestExist() {
+          description = "Test URI object")
+    public void testURI() {
         ClientConnectionUtil.waitForPort(9763);
         
         String finalOutput = null;
         
         try {
-        	URL jaggeryURL = new URL("http://localhost:9763/testapp/wsrequest.jag");
+        	URL jaggeryURL = new URL("http://localhost:9763/testapp/uri.jag");
         	URLConnection jaggeryServerConnection = jaggeryURL.openConnection();
         	BufferedReader in = new BufferedReader(new InputStreamReader(
         			jaggeryServerConnection.getInputStream()));
@@ -63,46 +63,42 @@ public class WSRequestHostObjectTestCase {
     }
     
     @Test(groups = {"jaggery"},
-            description = "Test for WSRequest host object")
-      public void testWSRequest() {
+            description = "Test urlMappings config")
+      public void testURIurlMappingsConfig() {
           ClientConnectionUtil.waitForPort(9763);
           
           String finalOutput = null;
           
           try {
-          	URL jaggeryURL = new URL("http://localhost:9763/testapp/wsrequest.jag");
+          	URL jaggeryURL = new URL("http://localhost:9763/testapp/uri/");
           	URLConnection jaggeryServerConnection = jaggeryURL.openConnection();
           	BufferedReader in = new BufferedReader(new InputStreamReader(
           			jaggeryServerConnection.getInputStream()));
           
-          	String inputLine;
-  			while ((inputLine = in.readLine()) != null) {
-  				finalOutput = inputLine;
-  			}
-  
+            	String inputLine;
+    			while ((inputLine = in.readLine()) != null) {
+    				finalOutput = inputLine;
+    			}
+  			    
   			in.close();
   		} catch (IOException e) {
   			e.printStackTrace();
   		} finally {
-  			boolean textContains = false;
-  			if(finalOutput != null && finalOutput.contains(
-  					"<ns:getVersionResponse xmlns:ns=\"http://version.services.core.carbon.wso2.org\"><return>")) {
-  				textContains = true;
-  			}
-  	        assertEquals(textContains, true);
+  	        assertNotNull(finalOutput, "Result cannot be null");
   		}
           
       }
     
+    
     @Test(groups = {"jaggery"},
-            description = "Test WSRequest status")
-    public void testWSRequestOperations() {
+            description = "Test URI operations")
+    public void testURIOperations() {
         ClientConnectionUtil.waitForPort(9763);
         
         String finalOutput = null;
         
         try {
-        	URL jaggeryURL = new URL("http://localhost:9763/testapp/wsrequest.jag?action=state");
+        	URL jaggeryURL = new URL("http://localhost:9763/testapp/uri.jag");
         	URLConnection jaggeryServerConnection = jaggeryURL.openConnection();
         	BufferedReader in = new BufferedReader(new InputStreamReader(
         			jaggeryServerConnection.getInputStream()));
@@ -116,7 +112,63 @@ public class WSRequestHostObjectTestCase {
 		} catch (IOException e) {
 			e.printStackTrace();
 		} finally {
-			assertEquals(finalOutput, "014 success");
+			assertEquals(finalOutput, "dir0 element is : testapp ,page element is : uri.jag");
+		}
+        
+    }
+    
+    @Test(groups = {"jaggery"},
+            description = "Test URI operations for dir 4")
+    public void testURIOperationsDir() {
+        ClientConnectionUtil.waitForPort(9763);
+        
+        String finalOutput = null;
+        
+        try {
+        	URL jaggeryURL = new URL("http://localhost:9763/testapp/uri/aa/bb/");
+        	URLConnection jaggeryServerConnection = jaggeryURL.openConnection();
+        	BufferedReader in = new BufferedReader(new InputStreamReader(
+        			jaggeryServerConnection.getInputStream()));
+        
+          	String inputLine;
+  			while ((inputLine = in.readLine()) != null) {
+  				finalOutput = inputLine;
+  			}
+			    
+			in.close();
+		} catch (IOException e) {
+			e.printStackTrace();
+		} finally {
+			assertEquals(finalOutput, "dir0 element is : testapp "
+					+",dir1 element is : uri ,dir2 element is : aa "
+					+",dir3 element is : bb");
+		}
+        
+    }
+    
+    @Test(groups = {"jaggery"},
+            description = "Test URI operations for PathInfor in request")
+    public void testURIOperationsPathInfor() {
+        ClientConnectionUtil.waitForPort(9763);
+        
+        String finalOutput = null;
+        
+        try {
+        	URL jaggeryURL = new URL("http://localhost:9763/testapp/uri/test");
+        	URLConnection jaggeryServerConnection = jaggeryURL.openConnection();
+        	BufferedReader in = new BufferedReader(new InputStreamReader(
+        			jaggeryServerConnection.getInputStream()));
+        
+          	String inputLine;
+  			while ((inputLine = in.readLine()) != null) {
+  				finalOutput = inputLine;
+  			}
+			    
+			in.close();
+		} catch (IOException e) {
+			e.printStackTrace();
+		} finally {
+			assertEquals(finalOutput, "request getPathInfo : /test");
 		}
         
     }

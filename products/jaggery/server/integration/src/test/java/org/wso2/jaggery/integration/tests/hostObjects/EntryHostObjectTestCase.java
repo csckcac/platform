@@ -18,8 +18,8 @@
 
 package org.wso2.jaggery.integration.tests.hostObjects;
 
-import static org.testng.Assert.assertNotNull;
 import static org.testng.Assert.assertEquals;
+import static org.testng.Assert.assertNotNull;
 
 import java.io.BufferedReader;
 import java.io.IOException;
@@ -33,24 +33,24 @@ import org.testng.annotations.Test;
 import org.wso2.carbon.integration.framework.ClientConnectionUtil;
 
 /**
- * Test cases for Feed Host Object
+ * Test cases for Entry Host Object
  */
-public class FeedHostObjectTestCase {
+public class EntryHostObjectTestCase {
 
 	
-	 private static final Log log = LogFactory.getLog(FeedHostObjectTestCase.class);
+	 private static final Log log = LogFactory.getLog(EntryHostObjectTestCase.class);
 	 
 	 
     @Test(groups = {"jaggery"},
-          description = "Test feed hostobject")
+          description = "Test entry hostobject")
     public void testFeed() {
-    	  log.info("*****Inside Feed object test in jaggery Test*****");
+    	  log.info("*****Inside Entry object test in jaggery Test*****");
         ClientConnectionUtil.waitForPort(9763);
         
         String finalOutput = null;
         
         try {
-        	URL jaggeryURL = new URL("http://localhost:9763/testapp/feed.jag");
+        	URL jaggeryURL = new URL("http://localhost:9763/testapp/entry.jag");
         	URLConnection jaggeryServerConnection = jaggeryURL.openConnection();
         	BufferedReader in = new BufferedReader(new InputStreamReader(
         			jaggeryServerConnection.getInputStream()));
@@ -69,15 +69,16 @@ public class FeedHostObjectTestCase {
         
     }
     
+  
     @Test(groups = {"jaggery"},
-            description = "Test feed hostobject members")
-      public void testFeedMembers() {
+            description = "Test feed hostobject toString")
+      public void testFeedString() {
           ClientConnectionUtil.waitForPort(9763);
           
           String finalOutput = null;
           
           try {
-          	URL jaggeryURL = new URL("http://localhost:9763/testapp/feed.jag?action=members");
+          	URL jaggeryURL = new URL("http://localhost:9763/testapp/entry.jag");
           	URLConnection jaggeryServerConnection = jaggeryURL.openConnection();
           	BufferedReader in = new BufferedReader(new InputStreamReader(
           			jaggeryServerConnection.getInputStream()));
@@ -91,10 +92,15 @@ public class FeedHostObjectTestCase {
   		} catch (IOException e) {
   			e.printStackTrace();
   		} finally {
-  			assertEquals(finalOutput, "Feed author : Madhuka, Testing feed members success");
-  		}
+  			assertEquals(finalOutput, "String : <feed xmlns=\"http://www.w3.org/2005/Atom\"><entry><id>1</id><title type=\"text\">Jaggery Sample Entry</title><content type=\"text\">This is content for a sample atom entry"
+  					+"</content><author><name>madhuka</name></author><author><name>nuwan</name></author><category term=\"js\" /><category term=\"jaggery\" /><link href=\"http://jaggeryjs.org/\" />"
+  					+"<link href=\"madhukaudantha.blogspot.com\" /><summary type=\"text\">summary test</summary><rights type=\"text\">rights list test</rights><contributor><name>madhuka</name></contributor><contributor>"
+  					+"<name>nuwan</name></contributor><contributor><name>ruchira</name></contributor></entry></feed>");
           
       }
+    
+    }
+    
     
     @Test(groups = {"jaggery"},
             description = "Test feed hostobject toXML")
@@ -104,7 +110,7 @@ public class FeedHostObjectTestCase {
           String finalOutput = null;
           
           try {
-          	URL jaggeryURL = new URL("http://localhost:9763/testapp/feed.jag?action=xml");
+          	URL jaggeryURL = new URL("http://localhost:9763/testapp/entry.jag?action=xml");
           	URLConnection jaggeryServerConnection = jaggeryURL.openConnection();
           	BufferedReader in = new BufferedReader(new InputStreamReader(
           			jaggeryServerConnection.getInputStream()));
@@ -118,36 +124,13 @@ public class FeedHostObjectTestCase {
   		} catch (IOException e) {
   			e.printStackTrace();
   		} finally {
-  			assertEquals(finalOutput, "Feed to XML success");
-  		}
+  			assertEquals(finalOutput, "XML : <feed xmlns=\"http://www.w3.org/2005/Atom\"><entry><id>1</id><title type=\"text\">Jaggery Sample Entry</title><content type=\"text\">This is content for a sample atom entry"
+  					+"</content><author><name>madhuka</name></author><author><name>nuwan</name></author><category term=\"js\" /><category term=\"jaggery\" /><link href=\"http://jaggeryjs.org/\" />"
+  					+"<link href=\"madhukaudantha.blogspot.com\" /><summary type=\"text\">summary test</summary><rights type=\"text\">rights list test</rights><contributor><name>madhuka</name></contributor><contributor>"
+  					+"<name>nuwan</name></contributor><contributor><name>ruchira</name></contributor></entry></feed>");
           
       }
     
-    @Test(groups = {"jaggery"},
-            description = "Test feed hostobject toString")
-      public void testFeedToString() {
-          ClientConnectionUtil.waitForPort(9763);
-          
-          String finalOutput = null;
-          
-          try {
-          	URL jaggeryURL = new URL("http://localhost:9763/testapp/feed.jag?action=string");
-          	URLConnection jaggeryServerConnection = jaggeryURL.openConnection();
-          	BufferedReader in = new BufferedReader(new InputStreamReader(
-          			jaggeryServerConnection.getInputStream()));
-          
-            	String inputLine;
-    			while ((inputLine = in.readLine()) != null) {
-    				finalOutput = inputLine;
-    			}
-  			    
-  			in.close();
-  		} catch (IOException e) {
-  			e.printStackTrace();
-  		} finally {
-  			assertEquals(finalOutput, "Feed to String success");
-  		}
-          
-      }
+    }
 
 }

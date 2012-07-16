@@ -147,8 +147,8 @@ public class XMLHTTPRequestObjectTestCase {
       }
 	
 	@Test(groups = {"jaggery"},
-            description = "Test for XMLHTTPRequest host object Async Operations")
-      public void testXMLHTTPRequestAsyncOperations() {
+            description = "Test for XMLHTTPRequest host object asyncoperations")   
+     public void testXMLHTTPRequestAsyncOperations() {
           ClientConnectionUtil.waitForPort(9763);
           
           String finalOutput = null;

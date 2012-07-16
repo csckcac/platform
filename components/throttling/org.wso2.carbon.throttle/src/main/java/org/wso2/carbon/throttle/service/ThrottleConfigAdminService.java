@@ -31,6 +31,7 @@ import org.apache.neethi.Policy;
 import org.apache.neethi.PolicyEngine;
 import org.apache.neethi.builders.xml.XmlPrimtiveAssertion;
 import org.wso2.carbon.core.AbstractAdmin;
+import org.wso2.carbon.core.RegistryResources;
 import org.wso2.carbon.core.Resources;
 import org.wso2.carbon.core.persistence.PersistenceException;
 import org.wso2.carbon.core.persistence.PersistenceFactory;
@@ -85,6 +86,11 @@ public class ThrottleConfigAdminService extends AbstractAdmin {
     private static final String GLOBALLY_ENGAGED_CUSTOM = "globallyEngagedCustom";
 
     private static final Log log = LogFactory.getLog(ThrottleConfigAdminService.class);
+
+    private String wSO2ServiceThrottlingPolicyId = "WSO2ServiceThrottlingPolicy";
+    private String wSO2OperationThrottlingPolicyId = "WSO2OperationThrottlingPolicy";
+    private String wSO2ModuleThrottlingPolicyId = "WSO2ModuleThrottlingPolicy";
+    private String wSO2MediatorThrottlingPolicyId = "WSO2MediatorThrottlingPolicy";
 
     /**
      * Constructor. Retrieves the registry from the axis configuration
@@ -585,6 +591,10 @@ public class ThrottleConfigAdminService extends AbstractAdmin {
             AxisService axisService = this.getAxisService(serviceName);
             String serviceGroupId = axisService.getAxisServiceGroup().getServiceGroupName();
 
+            boolean isProxyService = PersistenceUtils.isProxyService(axisService);
+            String registryPolicyPath =
+                    PersistenceUtils.getRegistryResourcePath(axisService) + RegistryResources.POLICIES;
+
             //get the throttle module from the current axis config
             AxisModule module = axisService.getAxisConfiguration().getModule(
                     ThrottleComponentConstants.THROTTLE_MODULE);
@@ -623,11 +633,34 @@ public class ThrottleConfigAdminService extends AbstractAdmin {
                     sfpm.commitTransaction(serviceGroupId);
                 }
 
+                if (isProxyService) {
+                    boolean registryTransactionStarted = Transaction.isStarted();
+                    if (!registryTransactionStarted) {
+                        registry.beginTransaction();
+                    }
+
+                    if (registry.resourceExists(registryPolicyPath + wSO2OperationThrottlingPolicyId)) {
+                        registry.delete(registryPolicyPath + wSO2OperationThrottlingPolicyId);
+                    } else {
+                        log.warn("Could not delete the Operation Throttling policy because it " +
+                                "does not exist at " + registryPolicyPath + wSO2OperationThrottlingPolicyId);
+                    }
+
+                    if (!registryTransactionStarted) {
+                        registry.commitTransaction();
+                    }
+                }
+
                 // disengage at Axis
                 operation.disengageModule(module);
 
             } catch (PersistenceException e) {
                 log.error("Error occured while removing assertion from file system", e);
+                sfpm.rollbackTransaction(serviceGroupId);
+                throw new ThrottleComponentException("errorDisablingAtRegistry");
+            } catch (RegistryException e) {
+                log.error("Error while deleting throttling policy from registry path : " +
+                        registryPolicyPath + wSO2OperationThrottlingPolicyId, e);
                 sfpm.rollbackTransaction(serviceGroupId);
                 throw new ThrottleComponentException("errorDisablingAtRegistry");
             }
@@ -656,6 +689,10 @@ public class ThrottleConfigAdminService extends AbstractAdmin {
 
             String serviceXPath = PersistenceUtils.getResourcePath(axisService);
 
+            boolean isProxyService = PersistenceUtils.isProxyService(axisService);
+            String registryPolicyPath =
+                    PersistenceUtils.getRegistryResourcePath(axisService) + RegistryResources.POLICIES;
+
             //disengage the throttling module
             try {
                 //get the throttle module from the current axis config
@@ -676,11 +713,34 @@ public class ThrottleConfigAdminService extends AbstractAdmin {
                     sfpm.commitTransaction(serviceGroupId);
                 }
 
+                if (isProxyService) {
+                    boolean registryTransactionStarted = Transaction.isStarted();
+                    if (!registryTransactionStarted) {
+                        registry.beginTransaction();
+                    }
+
+                    if (registry.resourceExists(registryPolicyPath + wSO2ServiceThrottlingPolicyId)) {
+                        registry.delete(registryPolicyPath + wSO2ServiceThrottlingPolicyId);
+                    } else {
+                        log.warn("Could not delete the Service Throttling policy because it " +
+                                "does not exist at " + registryPolicyPath + wSO2ServiceThrottlingPolicyId);
+                    }
+
+                    if (!registryTransactionStarted) {
+                        registry.commitTransaction();
+                    }
+                }
+
                 // disengage at Axis
                 axisService.disengageModule(module);
 
             } catch (PersistenceException e) {
                 log.error("Error occured while removing assertion from registry", e);
+                sfpm.rollbackTransaction(serviceGroupId);
+                throw new ThrottleComponentException("errorDisablingAtRegistry");
+            } catch (RegistryException e) {
+                log.error("Error while deleting throttling policy from registry path : "+
+                        registryPolicyPath + wSO2ServiceThrottlingPolicyId , e);
                 sfpm.rollbackTransaction(serviceGroupId);
                 throw new ThrottleComponentException("errorDisablingAtRegistry");
             }

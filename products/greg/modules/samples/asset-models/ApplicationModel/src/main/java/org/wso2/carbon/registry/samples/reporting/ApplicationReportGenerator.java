@@ -71,7 +71,7 @@ public class ApplicationReportGenerator extends AbstractReportGenerator{
     }
 
     @SuppressWarnings("unused")
-    private class ApplicationReportBean {
+    public static class ApplicationReportBean {
         private String overview_name;
         private String overview_version;
         private String overview_description;

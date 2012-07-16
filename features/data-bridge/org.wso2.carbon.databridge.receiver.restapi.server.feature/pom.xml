@@ -57,7 +57,7 @@
                                     <version>${wso2carbon.version}</version>
                                     <type>war</type>
                                     <overWrite>true</overWrite>
-                                    <outputDirectory>${basedir}/resources/</outputDirectory>
+                                    <outputDirectory>${basedir}/src/main/resources/</outputDirectory>
                                     <destFileName>datareceiver.war</destFileName>
                                 </artifactItem>
                             </artifactItems>

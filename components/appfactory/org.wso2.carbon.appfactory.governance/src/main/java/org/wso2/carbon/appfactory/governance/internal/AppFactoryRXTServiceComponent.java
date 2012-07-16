@@ -14,7 +14,7 @@
  *    limitations under the License.
  */
 
-package org.wso2.carbon.appfactory.rxt.internal;
+package org.wso2.carbon.appfactory.governance.internal;
 
 import org.apache.commons.logging.Log;
 import org.apache.commons.logging.LogFactory;
@@ -47,7 +47,7 @@ import java.io.IOException;
  */
 public class AppFactoryRXTServiceComponent {
 
-    private static final Log log = LogFactory.getLog(org.wso2.carbon.appfactory.rxt.internal.AppFactoryRXTServiceComponent.class);
+    private static final Log log = LogFactory.getLog(AppFactoryRXTServiceComponent.class);
 
     protected void activate(ComponentContext context) {
         log.info("AppFactoryRXTServiceComponent activating...");

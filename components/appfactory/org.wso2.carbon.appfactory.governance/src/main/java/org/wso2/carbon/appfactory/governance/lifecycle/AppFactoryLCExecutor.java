@@ -1,4 +1,4 @@
-package org.wso2.carbon.appfactory.rxt.lifecycle;
+package org.wso2.carbon.appfactory.governance.lifecycle;
 
 import org.apache.commons.logging.Log;
 import org.apache.commons.logging.LogFactory;

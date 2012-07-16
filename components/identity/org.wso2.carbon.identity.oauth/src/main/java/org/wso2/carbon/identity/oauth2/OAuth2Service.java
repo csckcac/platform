@@ -18,29 +18,22 @@
 
 package org.wso2.carbon.identity.oauth2;
 
-import org.apache.amber.oauth2.common.error.OAuthError;
-import org.apache.amber.oauth2.common.message.types.GrantType;
 import org.apache.commons.logging.Log;
 import org.apache.commons.logging.LogFactory;
 import org.wso2.carbon.core.AbstractAdmin;
 import org.wso2.carbon.identity.core.model.OAuthAppDO;
 import org.wso2.carbon.identity.oauth.IdentityOAuthAdminException;
-import org.wso2.carbon.identity.oauth.callback.OAuthCallback;
-import org.wso2.carbon.identity.oauth.callback.OAuthCallbackManager;
 import org.wso2.carbon.identity.oauth.common.OAuth2ErrorCodes;
 import org.wso2.carbon.identity.oauth.dao.OAuthAppDAO;
 import org.wso2.carbon.identity.oauth2.dto.*;
 import org.wso2.carbon.identity.oauth2.handlers.authz.AuthorizationHandlerManager;
-import org.wso2.carbon.identity.oauth2.handlers.authz.grant.AuthorizationCodeHandler;
-import org.wso2.carbon.identity.oauth2.handlers.authz.grant.AuthorizationGrantHandler;
-import org.wso2.carbon.identity.oauth2.handlers.authz.grant.PasswordGrantHandler;
 import org.wso2.carbon.identity.oauth2.util.OAuth2Util;
 
 import javax.jws.WebService;
 
 /**
  * OAuth2 Service which is used to issue authorization codes or access tokens upon authorizing by the
- * user and issue/validate access tokens.
+ * user and issue/validateGrant access tokens.
  */
 @WebService
 @SuppressWarnings("unused")
@@ -64,21 +57,22 @@ public class OAuth2Service extends AbstractAdmin {
                     ", Client ID : " + oAuth2AuthorizeReqDTO.getConsumerKey() +
                     ", Authorization Response Type : " + oAuth2AuthorizeReqDTO.getResponseType() +
                     ", Requested callback URI : " + oAuth2AuthorizeReqDTO.getCallbackUrl() +
-                    ", Requested Scope : " + OAuth2Util.buildScopeString(oAuth2AuthorizeReqDTO.getScopes()));
+                    ", Requested Scope : " + OAuth2Util.buildScopeString(
+                    oAuth2AuthorizeReqDTO.getScopes()));
         }
 
         try {
             AuthorizationHandlerManager authzHandlerManager =
-                    new AuthorizationHandlerManager(oAuth2AuthorizeReqDTO);
-            return authzHandlerManager.handleAuthorization();
+                    AuthorizationHandlerManager.getInstance();
+            return authzHandlerManager.handleAuthorization(oAuth2AuthorizeReqDTO);
         } catch (Exception e) {
             log.error("Error occurred when processing the authorization request. " +
                     "Returning an error back to client.", e);
             OAuth2AuthorizeRespDTO authorizeRespDTO = new OAuth2AuthorizeRespDTO();
             authorizeRespDTO.setAuthorized(false);
             authorizeRespDTO.setErrorCode(OAuth2ErrorCodes.SERVER_ERROR);
-            authorizeRespDTO.setErrorMsg("Error occurred when processing the authorization request. " +
-                    "Returning an error back to client.");
+            authorizeRespDTO.setErrorMsg("Error occurred when processing the authorization " +
+                    "request. Returning an error back to client.");
             authorizeRespDTO.setCallbackURI(oAuth2AuthorizeReqDTO.getCallbackUrl());
             return authorizeRespDTO;
         }
@@ -93,7 +87,8 @@ public class OAuth2Service extends AbstractAdmin {
      *         callback, App Name, Error Code and Error Message when appropriate.
      */
     public OAuth2ClientValidationResponseDTO validateClientInfo(String clientId, String callbackURI) {
-        OAuth2ClientValidationResponseDTO validationResponseDTO = new OAuth2ClientValidationResponseDTO();
+        OAuth2ClientValidationResponseDTO validationResponseDTO =
+                new OAuth2ClientValidationResponseDTO();
 
         if (log.isDebugEnabled()) {
             log.debug("Validate Client information request for client_id : " + clientId +
@@ -122,8 +117,9 @@ public class OAuth2Service extends AbstractAdmin {
             }
 
             if (log.isDebugEnabled()) {
-                log.debug("Registered App found for the given Client Id : " + clientId + " ,App Name : " +
-                        appDO.getApplicationName() + ", Callback URL : " + appDO.getCallbackUrl());
+                log.debug("Registered App found for the given Client Id : " + clientId +
+                        " ,App Name : " + appDO.getApplicationName() +
+                        ", Callback URL : " + appDO.getCallbackUrl());
             }
 
             // Valid Client with a callback url in the request. Check whether they are equal.
@@ -161,51 +157,17 @@ public class OAuth2Service extends AbstractAdmin {
                     ", Grant Type : " + tokenReqDTO.getGrantType());
         }
 
-        OAuth2AccessTokenRespDTO tokenRespDTO = new OAuth2AccessTokenRespDTO();
-        // Authenticate the client.
         try {
-            boolean authenticateClient = OAuth2Util.authenticateClient(
-                    tokenReqDTO.getClientId(), tokenReqDTO.getClientSecret());
-            if (!authenticateClient) {  // if client auth. fails
-                tokenRespDTO.setError(true);
-                tokenRespDTO.setErrorCode(OAuthError.TokenResponse.INVALID_CLIENT);
-                tokenRespDTO.setErrorMsg("Client Authentication Failed. " +
-                        "Provided client id or client secret is incorrect.");
-                return tokenRespDTO;
-            }
-            // Issue the token
-            AccessTokenIssuer tokenIssuer = new AccessTokenIssuer(getAuthzGrantHandler(tokenReqDTO));
+            AccessTokenIssuer tokenIssuer = AccessTokenIssuer.getInstance();
             return tokenIssuer.issue(tokenReqDTO);
 
         } catch (Exception e) { // in case of an error, consider it as a system error
             log.error("Error when issuing the access token. ", e);
+            OAuth2AccessTokenRespDTO tokenRespDTO = new OAuth2AccessTokenRespDTO();
             tokenRespDTO.setError(true);
             tokenRespDTO.setErrorCode(OAuth2ErrorCodes.SERVER_ERROR);
             tokenRespDTO.setErrorMsg("Error when issuing the access token");
             return tokenRespDTO;
         }
     }
-
-    private AuthorizationGrantHandler getAuthzGrantHandler(OAuth2AccessTokenReqDTO reqDTO) {
-        if (GrantType.AUTHORIZATION_CODE.toString().equals(reqDTO.getGrantType())) {
-            return new AuthorizationCodeHandler(reqDTO);
-        } else if (GrantType.PASSWORD.toString().equals(reqDTO.getGrantType())) {
-            return new PasswordGrantHandler(reqDTO);
-        }
-        return null;
-    }
-
-    private OAuthCallback authorizeAccessDelegation(OAuth2AuthorizeReqDTO authorizeDTO)
-            throws IdentityOAuth2Exception {
-        OAuthCallback authzCallback = new OAuthCallback(
-                authorizeDTO.getUsername(),
-                authorizeDTO.getConsumerKey(),
-                OAuthCallback.OAuthCallbackType.ACCESS_DELEGATION);
-        authzCallback.setRequestedScope(authorizeDTO.getScopes());
-        OAuthCallbackManager callbackManager = new OAuthCallbackManager();
-        callbackManager.handleCallback(authzCallback);
-
-        return authzCallback;
-    }
-
 }

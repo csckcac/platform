@@ -42,11 +42,16 @@ public class OAuth2Util {
         StringBuffer scopeString = new StringBuffer("");
         if (scopes != null) {
             for(String scope : scopes){
-                scopeString.append(scope);
-                scopeString.append(',');
+                scopeString.append(scope.trim());
+                scopeString.append(" ");
             }
         }
         return scopeString.toString();
+    }
+
+    public static String[] buildScopeArray(String scopeStr){
+        scopeStr = scopeStr.trim();
+        return scopeStr.split("\\s");
     }
 
     public static boolean authenticateUser(String username, String password) throws
@@ -70,7 +75,8 @@ public class OAuth2Util {
      * @return true, if the authentication is successful, false otherwise.
      * @throws IdentityOAuthAdminException Error when looking up the credentials from the database
      */
-    public static boolean authenticateClient(String clientId, String clientSecretProvided) throws IdentityOAuthAdminException {
+    public static boolean authenticateClient(String clientId, String clientSecretProvided)
+                                                                throws IdentityOAuthAdminException {
         OAuthConsumerDAO oAuthConsumerDAO = new OAuthConsumerDAO();
         String clientSecret = oAuthConsumerDAO.getOAuthConsumerSecret(clientId);
 

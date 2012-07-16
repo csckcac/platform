@@ -20,9 +20,11 @@ package org.wso2.carbon.identity.oauth2.handlers.authz.grant;
 
 import org.apache.commons.logging.Log;
 import org.apache.commons.logging.LogFactory;
-import org.wso2.carbon.identity.base.IdentityException;
+import org.wso2.carbon.identity.oauth2.IdentityOAuth2Exception;
 import org.wso2.carbon.identity.oauth2.dto.OAuth2AccessTokenReqDTO;
 import org.wso2.carbon.identity.oauth2.dto.OAuth2AccessTokenRespDTO;
+import org.wso2.carbon.identity.oauth2.handlers.authz.OAuthTokenReqMessageContext;
+import org.wso2.carbon.identity.oauth2.util.OAuth2Util;
 
 /**
  * Implements the AuthorizationGrantHandler for the Authorization Code type.
@@ -31,12 +33,13 @@ public class AuthorizationCodeHandler extends AbstractAuthorizationGrantHandler 
 
     private static Log log = LogFactory.getLog(AuthorizationCodeHandler.class);
 
-    public AuthorizationCodeHandler(OAuth2AccessTokenReqDTO reqDTO) {
-        super(reqDTO);
+    public AuthorizationCodeHandler() throws IdentityOAuth2Exception {
+        super();
     }
 
     @Override
-    public boolean validate() throws IdentityException {
+    public boolean validateGrant(OAuthTokenReqMessageContext tokReqMsgCtx) throws IdentityOAuth2Exception {
+        OAuth2AccessTokenReqDTO oAuth2AccessTokenReqDTO = tokReqMsgCtx.getOauth2AccessTokenReqDTO();
         String authorizationCode = oAuth2AccessTokenReqDTO.getAuthorizationCode();
         String[] authzData = tokenMgtDAO.validateAuthorizationCode(
                                                             oAuth2AccessTokenReqDTO.getClientId(),
@@ -59,22 +62,38 @@ public class AuthorizationCodeHandler extends AbstractAuthorizationGrantHandler 
                     ", scope : " + authzData[1]);
         }
 
-        authorizedUser = authzData[0];
-        scope = authzData[1];
+        tokReqMsgCtx.setAuthorizedUser(authzData[0]);
+        tokReqMsgCtx.setScope(OAuth2Util.buildScopeArray(authzData[1]));
         return true;
     }
 
     @Override
-    public OAuth2AccessTokenRespDTO issue() throws IdentityException {
-        OAuth2AccessTokenRespDTO tokenRespDTO = super.issue();
+    public OAuth2AccessTokenRespDTO issue(OAuthTokenReqMessageContext tokReqMsgCtx)
+            throws IdentityOAuth2Exception {
+        OAuth2AccessTokenRespDTO tokenRespDTO = super.issue(tokReqMsgCtx);
         // remove the callback code
-        tokenMgtDAO.cleanUpAuthzCode(oAuth2AccessTokenReqDTO.getAuthorizationCode());
+        tokenMgtDAO.cleanUpAuthzCode(
+                tokReqMsgCtx.getOauth2AccessTokenReqDTO().getAuthorizationCode());
 
         if (log.isDebugEnabled()) {
-            log.debug("Authorization Code clean up completed for : " +
-                    oAuth2AccessTokenReqDTO.getAuthorizationCode());
+            log.debug("Authorization Code clean up completed for request from the Client, " +
+                    "Client Id: " + tokReqMsgCtx.getOauth2AccessTokenReqDTO().getAuthorizationCode());
         }
 
         return tokenRespDTO;
+    }
+
+    @Override
+    public boolean authorizeAccessDelegation(OAuthTokenReqMessageContext tokReqMsgCtx)
+            throws IdentityOAuth2Exception {
+        // authorization is handled when the authorization code was issued.
+        return true;
+    }
+
+    @Override
+    public boolean validateScope(OAuthTokenReqMessageContext tokReqMsgCtx)
+            throws IdentityOAuth2Exception {
+        // scope was validated when the authorization code was issued.
+        return true;
     }
 }

@@ -23,12 +23,16 @@ import org.wso2.carbon.identity.oauth2.dto.OAuth2AuthorizeRespDTO;
 
 public interface AuthorizationHandler {
 
-    public boolean authenticateResourceOwner() throws IdentityOAuth2Exception;
+    public boolean authenticateResourceOwner(OAuthAuthzReqMessageContext oauthAuthzMsgCtx)
+            throws IdentityOAuth2Exception;
 
-    public boolean validateAccessDelegation() throws IdentityOAuth2Exception;
+    public boolean validateAccessDelegation(OAuthAuthzReqMessageContext oauthAuthzMsgCtx)
+            throws IdentityOAuth2Exception;
 
-    public boolean validateScope() throws IdentityOAuth2Exception;
+    public boolean validateScope(OAuthAuthzReqMessageContext oauthAuthzMsgCtx)
+            throws IdentityOAuth2Exception;
 
-    public OAuth2AuthorizeRespDTO issue() throws IdentityOAuth2Exception;
+    public OAuth2AuthorizeRespDTO issue(OAuthAuthzReqMessageContext oauthAuthzMsgCtx)
+            throws IdentityOAuth2Exception;
 }
 

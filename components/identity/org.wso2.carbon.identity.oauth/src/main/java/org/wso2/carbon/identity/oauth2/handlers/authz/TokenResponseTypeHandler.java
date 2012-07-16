@@ -19,13 +19,13 @@
 package org.wso2.carbon.identity.oauth2.handlers.authz;
 
 import org.apache.amber.oauth2.common.exception.OAuthSystemException;
-import org.apache.amber.oauth2.common.message.types.ResponseType;
 import org.apache.commons.logging.Log;
 import org.apache.commons.logging.LogFactory;
 import org.wso2.carbon.identity.oauth2.IdentityOAuth2Exception;
 import org.wso2.carbon.identity.oauth2.dto.OAuth2AuthorizeReqDTO;
 import org.wso2.carbon.identity.oauth2.dto.OAuth2AuthorizeRespDTO;
 import org.wso2.carbon.identity.oauth2.util.OAuth2Constants;
+import org.wso2.carbon.identity.oauth2.util.OAuth2Util;
 
 import java.sql.Timestamp;
 import java.util.Date;
@@ -34,14 +34,15 @@ public class TokenResponseTypeHandler extends AbstractAuthorizationHandler {
 
     private static Log log = LogFactory.getLog(TokenResponseTypeHandler.class);
 
-    public TokenResponseTypeHandler(OAuth2AuthorizeReqDTO authorizationReqDTO) throws IdentityOAuth2Exception {
-        super(authorizationReqDTO);
-        responseType = ResponseType.TOKEN;
+    public TokenResponseTypeHandler() throws IdentityOAuth2Exception {
+        super();
     }
 
     @Override
-    public OAuth2AuthorizeRespDTO issue() throws IdentityOAuth2Exception {
+    public OAuth2AuthorizeRespDTO issue(OAuthAuthzReqMessageContext oauthAuthzMsgCtx)
+            throws IdentityOAuth2Exception {
         OAuth2AuthorizeRespDTO respDTO = new OAuth2AuthorizeRespDTO();
+        OAuth2AuthorizeReqDTO authorizationReqDTO = oauthAuthzMsgCtx.getAuthorizationReqDTO();
         respDTO.setCallbackURI(authorizationReqDTO.getCallbackUrl());
         String accessToken;
         try {
@@ -53,8 +54,13 @@ public class TokenResponseTypeHandler extends AbstractAuthorizationHandler {
         // Default Validity Period
         long validityPeriod = 60 * 60;
 
-        tokenMgtDAO.storeAccessToken(accessToken, null, authorizationReqDTO.getConsumerKey(),
-                authorizationReqDTO.getUsername(), timestamp, validityPeriod, getScopeString(),
+        tokenMgtDAO.storeAccessToken(accessToken,
+                null,
+                authorizationReqDTO.getConsumerKey(),
+                authorizationReqDTO.getUsername(),
+                timestamp,
+                validityPeriod,
+                OAuth2Util.buildScopeString(oauthAuthzMsgCtx.getApprovedScope()),
                 OAuth2Constants.TokenStates.TOKEN_STATE_ACTIVE);
 
         if (log.isDebugEnabled()) {

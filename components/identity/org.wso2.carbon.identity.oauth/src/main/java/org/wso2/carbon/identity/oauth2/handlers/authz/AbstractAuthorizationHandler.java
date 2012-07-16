@@ -31,58 +31,52 @@ import org.wso2.carbon.identity.oauth2.util.OAuth2Util;
 
 public abstract class AbstractAuthorizationHandler implements AuthorizationHandler {
     private OAuthCallbackManager callbackManager;
-    protected OAuth2AuthorizeReqDTO authorizationReqDTO;
-    protected ResponseType responseType;
-    protected String[] approvedScope;
     protected OAuthIssuerImpl oauthIssuerImpl;
     protected TokenMgtDAO tokenMgtDAO;
 
-    public AbstractAuthorizationHandler(OAuth2AuthorizeReqDTO authorizationReqDTO)
+    public AbstractAuthorizationHandler()
             throws IdentityOAuth2Exception {
-        this.authorizationReqDTO = authorizationReqDTO;
         callbackManager = new OAuthCallbackManager();
         oauthIssuerImpl = new OAuthIssuerImpl(new MD5Generator());
         tokenMgtDAO = new TokenMgtDAO();
     }
 
-    public boolean authenticateResourceOwner() throws IdentityOAuth2Exception {
+    public boolean authenticateResourceOwner(OAuthAuthzReqMessageContext oauthAuthzMsgCtx)
+            throws IdentityOAuth2Exception {
+        OAuth2AuthorizeReqDTO authorizationReqDTO = oauthAuthzMsgCtx.getAuthorizationReqDTO();
         return OAuth2Util.authenticateUser(authorizationReqDTO.getUsername(),
                 authorizationReqDTO.getPassword());
     }
 
-    public boolean validateAccessDelegation() throws IdentityOAuth2Exception {
+    public boolean validateAccessDelegation(OAuthAuthzReqMessageContext oauthAuthzMsgCtx)
+            throws IdentityOAuth2Exception {
+        OAuth2AuthorizeReqDTO authorizationReqDTO = oauthAuthzMsgCtx.getAuthorizationReqDTO();
         OAuthCallback authzCallback = new OAuthCallback(
                 authorizationReqDTO.getUsername(),
                 authorizationReqDTO.getConsumerKey(),
                 OAuthCallback.OAuthCallbackType.ACCESS_DELEGATION);
         authzCallback.setRequestedScope(authorizationReqDTO.getScopes());
-        authzCallback.setResponseType(responseType);
+        authzCallback.setResponseType(ResponseType.valueOf(authorizationReqDTO.getResponseType()));
 
         callbackManager.handleCallback(authzCallback);
 
         return authzCallback.isAuthorized();
     }
 
-    public String getScopeString() {
-        String scopeString;
-        if (approvedScope != null) {
-            scopeString = OAuth2Util.buildScopeString(approvedScope);
-        } else {
-            scopeString = OAuth2Util.buildScopeString(authorizationReqDTO.getScopes());
-        }
-        return scopeString;
-    }
 
-    public boolean validateScope() throws IdentityOAuth2Exception {
+    public boolean validateScope(OAuthAuthzReqMessageContext oauthAuthzMsgCtx)
+            throws IdentityOAuth2Exception {
+        OAuth2AuthorizeReqDTO authorizationReqDTO = oauthAuthzMsgCtx.getAuthorizationReqDTO();
         OAuthCallback scopeValidationCallback = new OAuthCallback(
                 authorizationReqDTO.getUsername(),
                 authorizationReqDTO.getConsumerKey(),
                 OAuthCallback.OAuthCallbackType.SCOPE_VALIDATION);
         scopeValidationCallback.setRequestedScope(authorizationReqDTO.getScopes());
         callbackManager.handleCallback(scopeValidationCallback);
-        approvedScope = scopeValidationCallback.getApprovedScope();
-        return scopeValidationCallback.isInvalidScope();
+        oauthAuthzMsgCtx.setApprovedScope(scopeValidationCallback.getApprovedScope());
+        return scopeValidationCallback.isValidScope();
     }
 
-    public abstract OAuth2AuthorizeRespDTO issue() throws IdentityOAuth2Exception;
+    public abstract OAuth2AuthorizeRespDTO issue(OAuthAuthzReqMessageContext oauthAuthzMsgCtx)
+            throws IdentityOAuth2Exception;
 }

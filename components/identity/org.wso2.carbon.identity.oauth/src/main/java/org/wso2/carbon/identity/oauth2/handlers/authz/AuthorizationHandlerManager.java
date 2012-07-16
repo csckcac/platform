@@ -27,25 +27,39 @@ import org.wso2.carbon.identity.oauth2.dto.OAuth2AuthorizeReqDTO;
 import org.wso2.carbon.identity.oauth2.dto.OAuth2AuthorizeRespDTO;
 import org.wso2.carbon.identity.oauth2.util.OAuth2Util;
 
+import java.util.Hashtable;
+import java.util.Map;
+
 public class AuthorizationHandlerManager {
 
-    private AuthorizationHandler authzHandler;
-    private OAuth2AuthorizeReqDTO authzReqDTO;
+    private Map<String, AuthorizationHandler> authzHandlers = new Hashtable<String, AuthorizationHandler>();
     private static Log log = LogFactory.getLog(AuthorizationHandlerManager.class);
+    private static AuthorizationHandlerManager instance;
 
-    public AuthorizationHandlerManager(OAuth2AuthorizeReqDTO authzReqDTO)
-            throws IdentityOAuth2Exception {
-        if (ResponseType.CODE.toString().equals(authzReqDTO.getResponseType())) {
-            authzHandler = new CodeResponseTypeHandler(authzReqDTO);
-        } else if (ResponseType.TOKEN.toString().equals(authzReqDTO.getResponseType())) {
-            authzHandler = new TokenResponseTypeHandler(authzReqDTO);
+    public static AuthorizationHandlerManager getInstance() throws IdentityOAuth2Exception {
+        if(instance == null){
+            synchronized (AuthorizationHandlerManager.class){
+                if(instance == null){
+                    instance = new AuthorizationHandlerManager();
+                }
+            }
         }
+        return instance;
     }
 
-    public OAuth2AuthorizeRespDTO handleAuthorization() throws IdentityOAuth2Exception {
+    private AuthorizationHandlerManager()
+            throws IdentityOAuth2Exception {
+        authzHandlers.put(ResponseType.CODE.toString(), new CodeResponseTypeHandler());
+        authzHandlers.put(ResponseType.TOKEN.toString(), new TokenResponseTypeHandler());
+    }
+
+    public OAuth2AuthorizeRespDTO handleAuthorization(OAuth2AuthorizeReqDTO authzReqDTO)
+            throws IdentityOAuth2Exception {
+        AuthorizationHandler authzHandler = authzHandlers.get(authzReqDTO.getResponseType());
+        OAuthAuthzReqMessageContext authzReqMsgCtx = new OAuthAuthzReqMessageContext(authzReqDTO);
         OAuth2AuthorizeRespDTO authorizeRespDTO = new OAuth2AuthorizeRespDTO();
 
-        boolean authStatus = authzHandler.authenticateResourceOwner();
+        boolean authStatus = authzHandler.authenticateResourceOwner(authzReqMsgCtx);
         if (!authStatus) {
             log.warn("User Authentication failed for user : " + authzReqDTO.getUsername());
             handleErrorRequest(authorizeRespDTO, OAuth2ErrorCodes.ACCESS_DENIED,
@@ -54,9 +68,9 @@ public class AuthorizationHandlerManager {
             return authorizeRespDTO;
         }
 
-        boolean accessDelegationAuthzStatus = authzHandler.validateAccessDelegation();
+        boolean accessDelegationAuthzStatus = authzHandler.validateAccessDelegation(authzReqMsgCtx);
         if(!accessDelegationAuthzStatus){
-            log.warn("User : " +  authzReqDTO.getUsername() +
+            log.warn("User : " + authzReqDTO.getUsername() +
                     " doesn't have necessary rights to grant access to the resource(s) " +
                     OAuth2Util.buildScopeString(authzReqDTO.getScopes()));
             handleErrorRequest(authorizeRespDTO, OAuth2ErrorCodes.UNAUTHORIZED_CLIENT,
@@ -65,7 +79,7 @@ public class AuthorizationHandlerManager {
             return authorizeRespDTO;
         }
 
-        boolean scopeValidationStatus = authzHandler.validateScope();
+        boolean scopeValidationStatus = authzHandler.validateScope(authzReqMsgCtx);
         if(!scopeValidationStatus){
             log.warn("Scope validation failed for user : " + authzReqDTO.getUsername() +
                     ", for the scope : " +
@@ -76,7 +90,7 @@ public class AuthorizationHandlerManager {
             return authorizeRespDTO;
         }
 
-        authorizeRespDTO = authzHandler.issue();
+        authorizeRespDTO = authzHandler.issue(authzReqMsgCtx);
         return authorizeRespDTO;
     }
 

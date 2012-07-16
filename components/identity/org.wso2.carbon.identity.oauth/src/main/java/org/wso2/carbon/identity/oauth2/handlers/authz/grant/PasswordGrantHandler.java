@@ -23,8 +23,10 @@ import org.apache.commons.logging.LogFactory;
 import org.wso2.carbon.identity.base.IdentityException;
 import org.wso2.carbon.identity.core.util.IdentityUtil;
 import org.wso2.carbon.identity.oauth.internal.OAuthComponentServiceHolder;
+import org.wso2.carbon.identity.oauth2.IdentityOAuth2Exception;
 import org.wso2.carbon.identity.oauth2.dto.OAuth2AccessTokenReqDTO;
-import org.wso2.carbon.identity.oauth2.dto.OAuth2AccessTokenRespDTO;
+import org.wso2.carbon.identity.oauth2.handlers.authz.OAuthTokenReqMessageContext;
+import org.wso2.carbon.identity.oauth2.util.OAuth2Util;
 import org.wso2.carbon.user.api.UserStoreException;
 import org.wso2.carbon.user.api.UserStoreManager;
 import org.wso2.carbon.user.core.service.RealmService;
@@ -38,14 +40,21 @@ public class PasswordGrantHandler extends AbstractAuthorizationGrantHandler {
 
     private static Log log = LogFactory.getLog(PasswordGrantHandler.class);
 
-    public PasswordGrantHandler(OAuth2AccessTokenReqDTO reqDTO) {
-        super(reqDTO);
+    public PasswordGrantHandler() throws IdentityOAuth2Exception {
+        super();
     }
 
     @Override
-    public boolean validate() throws IdentityException {
+    public boolean validateGrant(OAuthTokenReqMessageContext tokReqMsgCtx)
+            throws IdentityOAuth2Exception {
+        OAuth2AccessTokenReqDTO oAuth2AccessTokenReqDTO = tokReqMsgCtx.getOauth2AccessTokenReqDTO();
         String username = oAuth2AccessTokenReqDTO.getResourceOwnerUsername();
-        int tenantId = IdentityUtil.getTenantIdOFUser(username);
+        int tenantId;
+        try {
+            tenantId = IdentityUtil.getTenantIdOFUser(username);
+        } catch (IdentityException e) {
+            throw new IdentityOAuth2Exception(e.getMessage(), e);
+        }
 
         // tenantId < 0, means an invalid tenant.
         if(tenantId < 0){
@@ -66,21 +75,16 @@ public class PasswordGrantHandler extends AbstractAuthorizationGrantHandler {
             if(log.isDebugEnabled()){
                 log.debug("Token request with Password Grant Type received. " +
                         "Username : " + username +
-                        "Scope : " + oAuth2AccessTokenReqDTO.getScope() +
+                        "Scope : " + OAuth2Util.buildScopeString(oAuth2AccessTokenReqDTO.getScope()) +
                         ", Authentication State : " + authStatus);
             }
 
         } catch (UserStoreException e) {
-            throw new IdentityException("Error when authenticating the user credentials.", e);
+            throw new IdentityOAuth2Exception("Error when authenticating the user credentials.", e);
         }
 
-        authorizedUser = oAuth2AccessTokenReqDTO.getResourceOwnerUsername();
-        //scope = oAuth2AccessTokenReqDTO.getScope();
+        tokReqMsgCtx.setAuthorizedUser(oAuth2AccessTokenReqDTO.getResourceOwnerUsername());
         return authStatus;
     }
 
-    @Override
-    public OAuth2AccessTokenRespDTO issue() throws IdentityException {
-        return super.issue();
-    }
 }

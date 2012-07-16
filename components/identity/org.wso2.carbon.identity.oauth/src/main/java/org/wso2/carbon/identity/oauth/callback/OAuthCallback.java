@@ -74,7 +74,7 @@ public class OAuthCallback implements Callback {
     /**
      * Requested scope is invalid.
      */
-    private boolean invalidScope;
+    private boolean validScope;
 
     /**
      * Creates an instance of the OAuthCallback
@@ -150,8 +150,8 @@ public class OAuthCallback implements Callback {
      * Whether the requested scope is invalid.
      * @return <Code>true</Code> if scope is invalid, <code>false</code> otherwise.
      */
-    public boolean isInvalidScope() {
-        return invalidScope;
+    public boolean isValidScope() {
+        return validScope;
     }
 
     /**
@@ -166,8 +166,8 @@ public class OAuthCallback implements Callback {
      * set whether the scope is invalid or not
      * @param invalidScope <code>true</code> if scope is invalid.
      */
-    public void setInvalidScope(boolean invalidScope) {
-        this.invalidScope = invalidScope;
+    public void setValidScope(boolean invalidScope) {
+        this.validScope = invalidScope;
     }
 
     /**

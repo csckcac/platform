@@ -19,24 +19,46 @@
 package org.wso2.carbon.identity.oauth2.handlers.authz.grant;
 
 import org.wso2.carbon.identity.base.IdentityException;
+import org.wso2.carbon.identity.oauth2.IdentityOAuth2Exception;
 import org.wso2.carbon.identity.oauth2.dto.OAuth2AccessTokenRespDTO;
+import org.wso2.carbon.identity.oauth2.handlers.authz.OAuthTokenReqMessageContext;
 
 /**
  * The interface needs to be implemented by all the authorization grant validators.
  */
 public interface AuthorizationGrantHandler {
 
+    public boolean authenticateClient(OAuthTokenReqMessageContext tokReqMsgCtx) throws IdentityOAuth2Exception;
     /**
      * Validate the Authorization Grant
      * @return <Code>true</Code>|<Code>false</Code> if the grant_type is valid or not.
-     * @throws org.wso2.carbon.identity.oauth2.IdentityOAuth2Exception Error when validating the authorization grant.
+     * @throws org.wso2.carbon.identity.oauth2.IdentityOAuth2Exception Error when validating
+     * the authorization grant.
      */
-    public boolean validate() throws IdentityException;
+    public boolean validateGrant(OAuthTokenReqMessageContext tokReqMsgCtx)
+            throws IdentityOAuth2Exception;
+
+    /**
+     * Validate whether the claimed user is the rightful resource owner
+     * @return <Code>true</Code>|<Code>false</Code> if it's the rightful resource owner
+     * @throws IdentityOAuth2Exception Error when performing the callback
+     */
+    public boolean authorizeAccessDelegation(OAuthTokenReqMessageContext tokReqMsgCtx)
+            throws IdentityOAuth2Exception;
+
+    /**
+     * Validate whether scope requested by the access token is valid
+     * @return <Code>true</Code>|<Code>false</Code> if the scope is correct.
+     * @throws IdentityOAuth2Exception Error when performing the callback
+     */
+    public boolean validateScope(OAuthTokenReqMessageContext tokReqMsgCtx)
+            throws IdentityOAuth2Exception;
 
     /**
      * Issue the Access token
      * @return <Code>OAuth2AccessTokenRespDTO</Code> representing the Access Token
      * @throws IdentityException Error when generating or persisting the access token
      */
-    public OAuth2AccessTokenRespDTO issue() throws IdentityException;
+    public OAuth2AccessTokenRespDTO issue(OAuthTokenReqMessageContext tokReqMsgCtx)
+            throws IdentityOAuth2Exception;
 }

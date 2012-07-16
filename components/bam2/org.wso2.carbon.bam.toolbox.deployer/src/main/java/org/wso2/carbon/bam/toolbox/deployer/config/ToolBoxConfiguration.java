@@ -79,7 +79,7 @@ public class ToolBoxConfiguration {
             scripts.addChild(script);
         } else {
             throw new BAMToolboxDeploymentException("Cannot find " + SCRIPTS + "node in the " +
-                                                    "configuration file when adding script name: " + scriptName + " for tool box :" + toolboxName);
+                    "configuration file when adding script name: " + scriptName + " for tool box :" + toolboxName);
         }
     }
 
@@ -134,7 +134,7 @@ public class ToolBoxConfiguration {
             addGadget(gadgetName, tabElement);
         } else {
             throw new BAMToolboxDeploymentException("Cannot find " + GADGETS + "node in the " +
-                                                    "configuration file when adding gadget name: " + gadgetName + " for tool box :" + toolboxName);
+                    "configuration file when adding gadget name: " + gadgetName + " for tool box :" + toolboxName);
         }
     }
 
@@ -173,8 +173,8 @@ public class ToolBoxConfiguration {
 
         } else {
             throw new BAMToolboxDeploymentException("Cannot find " + JRXML + "node in the " +
-                                                    "configuration file when adding jrxml name: " +
-                                                    jrxmlName + " for tool box :" + toolboxName);
+                    "configuration file when adding jrxml name: " +
+                    jrxmlName + " for tool box :" + toolboxName);
         }
     }
 
@@ -209,7 +209,7 @@ public class ToolBoxConfiguration {
     }
 
     public String getDataSource() {
-       return config.getAttribute(new QName(DATASOURCE)).getAttributeValue();
+        return config.getAttribute(new QName(DATASOURCE)).getAttributeValue();
     }
 
     public String getDataSourceConfiguration() {
@@ -242,14 +242,14 @@ public class ToolBoxConfiguration {
                 return tabs;
             } else {
                 log.warn("No dashboard configuration is found for" +
-                          " tool box:" + this.toolboxName);
+                        " tool box:" + this.toolboxName);
                 return tabs;
             }
         } else {
             log.error("Configuration has not been set for the tool " +
-                      "box:" + this.toolboxName);
+                    "box:" + this.toolboxName);
             throw new BAMToolboxDeploymentException("Configuration has not been set " +
-                                                    "for the tool box:" + this.toolboxName);
+                    "for the tool box:" + this.toolboxName);
         }
     }
 
@@ -281,14 +281,14 @@ public class ToolBoxConfiguration {
                 return tabs;
             } else {
                 log.warn("No dashboard configuration is found for" +
-                          " tool box:" + this.toolboxName);
+                        " tool box:" + this.toolboxName);
                 return tabs;
             }
         } else {
             log.error("Configuration has not been set for the tool " +
-                      "box:" + this.toolboxName);
+                    "box:" + this.toolboxName);
             throw new BAMToolboxDeploymentException("Configuration has not been set " +
-                                                    "for the tool box:" + this.toolboxName);
+                    "for the tool box:" + this.toolboxName);
         }
     }
 

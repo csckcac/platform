@@ -26,6 +26,7 @@ import org.wso2.carbon.bam.toolbox.deployer.client.DataPublisher;
 import org.wso2.carbon.bam.toolbox.deployer.client.HiveScriptStoreClient;
 import org.wso2.carbon.bam.toolbox.deployer.exception.BAMComponentNotFoundException;
 import org.wso2.carbon.bam.toolbox.deployer.exception.BAMToolboxDeploymentException;
+import org.wso2.carbon.bam.toolbox.deployer.util.AnalyzerScriptDTO;
 import org.wso2.carbon.bam.toolbox.deployer.util.DashBoardTabDTO;
 import org.wso2.carbon.bam.toolbox.deployer.util.JasperTabDTO;
 import org.wso2.carbon.bam.toolbox.deployer.util.ToolBoxDTO;
@@ -65,7 +66,8 @@ public class BAMArtifactDeployerManager {
     private void deployScripts(ToolBoxDTO toolBoxDTO) throws BAMToolboxDeploymentException {
         String scriptParent = toolBoxDTO.getScriptsParentDirectory();
         ArrayList<String> scriptNameWithId = new ArrayList<String>();
-        for (String aScript : toolBoxDTO.getScriptNames()) {
+        for (AnalyzerScriptDTO scriptDTO : toolBoxDTO.getAnaltytics()) {
+            String aScript = scriptDTO.getName();
             String path = scriptParent + File.separator + aScript;
             File scriptFile = new File(path);
 
@@ -76,7 +78,10 @@ public class BAMArtifactDeployerManager {
             scriptNameWithId.add(scriptName);
             try {
                 HiveScriptStoreClient scriptStoreClient = HiveScriptStoreClient.getInstance();
-                scriptStoreClient.saveHiveScript(scriptName, content, BAMToolBoxDeployerConstants.DEFAULT_CRON);
+                String cron = scriptDTO.getCron();
+                if (null != cron && cron.equals("")) cron = null;
+                scriptStoreClient.saveHiveScript(scriptName, content, cron);
+
             } catch (BAMComponentNotFoundException e) {
                 log.error(e.getMessage() + "Skipping deploying Hive scripts..");
             } catch (Exception e) {

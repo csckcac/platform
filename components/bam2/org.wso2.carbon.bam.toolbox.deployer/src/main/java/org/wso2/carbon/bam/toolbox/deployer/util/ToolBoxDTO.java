@@ -17,12 +17,14 @@
 
 package org.wso2.carbon.bam.toolbox.deployer.util;
 
+import org.wso2.carbon.bam.toolbox.deployer.exception.BAMComponentNotFoundException;
+
 import java.util.ArrayList;
 
 
 public class ToolBoxDTO {
     private String name;
-    private ArrayList<String> scriptNames;
+    private ArrayList<AnalyzerScriptDTO> analtytics;
     private ArrayList<DashBoardTabDTO> dashboardTabs;
     private ArrayList<JasperTabDTO> jasperTabs;
     private ArrayList<String> evenStreamDefs;
@@ -37,7 +39,7 @@ public class ToolBoxDTO {
 
     public ToolBoxDTO(String name) {
         this.name = name;
-        scriptNames = new ArrayList<String>();
+        analtytics = new ArrayList<AnalyzerScriptDTO>();
         dashboardTabs = new ArrayList<DashBoardTabDTO>();
         jasperTabs = new ArrayList<JasperTabDTO>();
         evenStreamDefs = new ArrayList<String>();
@@ -64,20 +66,17 @@ public class ToolBoxDTO {
         this.jasperTabs = jasperTabs;
     }
 
-    public ArrayList<String> getScriptNames() {
-        return scriptNames;
+    public void setScriptNames(ArrayList<String> scriptNames){
+        this.analtytics = new ArrayList<AnalyzerScriptDTO>();
+       for (String aScript:scriptNames){
+            this.analtytics.add(new AnalyzerScriptDTO(aScript));
+       }
     }
 
 
-    public void addScriptName(String scriptName) {
-        this.scriptNames.add(scriptName);
+    public ArrayList<AnalyzerScriptDTO> getAnaltytics() {
+        return analtytics;
     }
-
-
-    public void setScriptNames(ArrayList<String> scriptNames) {
-        this.scriptNames = scriptNames;
-    }
-
 
     public String getScriptsParentDirectory() {
         return scriptsParentDirectory;
@@ -95,37 +94,12 @@ public class ToolBoxDTO {
         this.gagetsParentDirectory = gagetsParentDirectory;
     }
 
-    public void addGadgets(int tabId, String gadgetName) {
-        for (DashBoardTabDTO aTab : dashboardTabs) {
-            if (aTab.getTabId() == tabId) {
-                aTab.addGadget(gadgetName);
-            }
-        }
-    }
-
     public void addDashboradTab(DashBoardTabDTO dashBoardTabDTO) {
         this.dashboardTabs.add(dashBoardTabDTO);
     }
 
     public void addJasperTab(JasperTabDTO jasperTabDTO) {
         this.jasperTabs.add(jasperTabDTO);
-    }
-
-    public void addGadgetsInTabIndex(int index, String gadgetName) {
-        dashboardTabs.get(index).addGadget(gadgetName);
-    }
-
-    public void replaceGadgetName(String oldName, String newName) {
-        for (DashBoardTabDTO tabDTO : this.dashboardTabs) {
-            ArrayList<String> newGadgetNames = new ArrayList<String>();
-            for (String aGadget : tabDTO.getGadgets()) {
-                if (aGadget.equals(oldName)) {
-                    newGadgetNames.add(newName);
-                } else {
-                    newGadgetNames.add(oldName);
-                }
-            }
-        }
     }
 
     public String getJaggeryAppParentDirectory() {
@@ -157,7 +131,7 @@ public class ToolBoxDTO {
     }
 
     public String getDataSource() {
-        if(null == datasource) return "";
+        if (null == datasource) return "";
         return datasource;
     }
 
@@ -166,7 +140,7 @@ public class ToolBoxDTO {
     }
 
     public String getDataSourceConfiguration() {
-        if(null == dsConfiguration) return "";
+        if (null == dsConfiguration) return "";
         return dsConfiguration;
     }
 
@@ -184,5 +158,30 @@ public class ToolBoxDTO {
 
     public void setStreamDefnParentDirectory(String streamDefnParentDirectory) {
         this.streamDefnParentDirectory = streamDefnParentDirectory;
+    }
+
+    public ArrayList<String> getScriptNames(){
+        ArrayList<String> scripts = new ArrayList<String>();
+        for (AnalyzerScriptDTO scriptDTO : analtytics){
+            scripts.add(scriptDTO.getName());
+        }
+        return scripts;
+    }
+
+    public void setCronForScript(String scriptName, String cron) throws BAMComponentNotFoundException {
+       boolean found = false;
+       for (AnalyzerScriptDTO scriptDTO : analtytics){
+           String aScript = scriptDTO.getName();
+           if(null != aScript && !aScript.equals("")){
+               if(aScript.equalsIgnoreCase(scriptName)){
+                   scriptDTO.setCron(cron);
+                   found = true;
+                   break;
+               }
+           }
+       }
+       if(!found) {
+           throw new BAMComponentNotFoundException("Specified analytics script: "+scriptName+" is not found!!");
+       }
     }
 }

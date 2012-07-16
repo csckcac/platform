@@ -110,14 +110,83 @@ public class BAMArtifactProcessor {
 
     private void setScriptsNames(ToolBoxDTO toolBoxDTO, String barDir)
             throws BAMToolboxDeploymentException {
-        ArrayList<String> scriptNames = getFilesInDirectory(barDir + File.separator + BAMToolBoxDeployerConstants.SCRIPTS_DIR);
-        if (scriptNames.size() == 0) {
-            toolBoxDTO.setScriptsParentDirectory(null);
-            log.warn("No scripts available in the specified directory");
+        String analyticsDir = barDir + File.separator + BAMToolBoxDeployerConstants.SCRIPTS_DIR;
+        if (new File(analyticsDir).exists()) {
+            ArrayList<String> scriptNames = getFilesInDirectory(analyticsDir);
+            int i = 0;
+            for (String aFile : scriptNames) {
+                if (aFile.equalsIgnoreCase(BAMToolBoxDeployerConstants.ANALYZERS_PROPERTIES_FILE)) {
+                    scriptNames.remove(i);
+                    break;
+                }
+                i++;
+            }
+            if (scriptNames.size() == 0) {
+                toolBoxDTO.setScriptsParentDirectory(null);
+                log.warn("No scripts available in the specified directory");
+            } else {
+                toolBoxDTO.setScriptsParentDirectory(analyticsDir);
+                toolBoxDTO.setScriptNames(scriptNames);
+                setCronForAnalyticScripts(toolBoxDTO, analyticsDir);
+            }
         } else {
-            toolBoxDTO.setScriptsParentDirectory(barDir + File.separator + BAMToolBoxDeployerConstants.SCRIPTS_DIR);
-            toolBoxDTO.setScriptNames(scriptNames);
+            log.warn("No Analytics found for toolbox :" + toolBoxDTO.getName());
         }
+    }
+
+    private void setCronForAnalyticScripts(ToolBoxDTO toolBoxDTO, String analyticDir) {
+        String analyticsPropPath = analyticDir + File.separator + BAMToolBoxDeployerConstants.ANALYZERS_PROPERTIES_FILE;
+        File analyticsProps = new File(analyticsPropPath);
+        Properties props = new Properties();
+        try {
+            props.load(new FileInputStream(analyticsProps));
+            String scripts = props.getProperty(BAMToolBoxDeployerConstants.ANALYZER_SCRIPTS_VAR_NAME).trim();
+            if (null != scripts && !scripts.equals("")) {
+                String[] scriptNames = scripts.split(",");
+                if (scriptNames == null || scriptNames.length == 0) {
+                    throw new BAMToolboxDeploymentException("Invalid tbox artifact. No scripts found in analyzers.properties");
+                } else {
+                    boolean valid = false;
+                    for (String aScriptVarName : scriptNames) {
+                        if (!aScriptVarName.trim().equals("")) {
+                            valid = true;
+                            String scriptFileName = props.getProperty(BAMToolBoxDeployerConstants.ANALYZER_SCRIPT_PREFIX + "."
+                                    + aScriptVarName.trim() + "." + BAMToolBoxDeployerConstants.ANALYZER_SCRIPT_FILE_NAME_SUFFIX);
+                            if (null == scriptFileName || scriptFileName.equals("")) {
+                                scriptFileName = aScriptVarName;
+                            }
+                            String cron = props.getProperty(BAMToolBoxDeployerConstants.ANALYZER_SCRIPT_PREFIX + "."
+                                    + aScriptVarName.trim() + "." + BAMToolBoxDeployerConstants.ANALYZER_SCRIPT_CRON_SUFFIX);
+                            if (null != cron && !cron.trim().equals("")) {
+                                toolBoxDTO.setCronForScript(scriptFileName, cron);
+                            } else {
+                                log.warn("No cron are specified for script: " + scriptFileName);
+                            }
+                        }
+                    }
+                    if (!valid) {
+                        toolBoxDTO.setGagetsParentDirectory(null);
+                        log.error("Invalid tbox artifact. No tab names " +
+                                "found in dashboard.properties");
+                        throw new BAMToolboxDeploymentException("Invalid tbox artifact. No tab names " +
+                                "found in dashboard.properties");
+
+                    }
+                }
+            } else {
+                toolBoxDTO.setGagetsParentDirectory(null);
+                log.error("Invalid tbox artifact. No property " + BAMToolBoxDeployerConstants.DASHBOARD_TABS_VAR_NAME +
+                        "found in dashboard.properties");
+                throw new BAMToolboxDeploymentException("Invalid tbox artifact. No property " + BAMToolBoxDeployerConstants.DASHBOARD_TABS_VAR_NAME +
+                        "found in dashboard.properties");
+            }
+        } catch (IOException e) {
+            if (log.isDebugEnabled()) {
+                log.debug("No " + BAMToolBoxDeployerConstants.ANALYZERS_PROPERTIES_FILE + " file found. and all scripts won't be scheduled");
+            }
+        }
+
+
     }
 
 

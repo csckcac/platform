@@ -20,13 +20,14 @@ public class BAMToolBoxDeployerConstants {
     public static final String BAM_BASE_PATH = "/repository/conf/org.wso2.carbon.bam";
     public static final String TOOL_BOX_CONF = "/toolbox";
     public static final String FILE_SEPERATOR = "/";
-    public static final String SCRIPTS_DIR = "scripts";
+    public static final String SCRIPTS_DIR = "analytics";
     public static final String DASHBOARD_DIR = "dashboard";
     public static final String GADGETS_DIR = "gadgets";
     public static final String JASPER_DIR = "jasper";
     public static final String JAGGERY_DIR = "jaggery";
     public static final String STREAM_DEFN_DIR = "streamDefn";
     public static final String GADGET_META_FILE = "dashboard.properties";
+    public static final String ANALYZERS_PROPERTIES_FILE = "analyzers.properties";
     public static final String JASPER_META_FILE = "jasper.properties";
     public static final String DATASOURCE = "datasource";
     public static final String DATASOURCE_CONFIGURATION = "datasource.configuration";
@@ -36,6 +37,11 @@ public class BAMToolBoxDeployerConstants {
     public static final String TAB_NAME_SUFFIX = "name";
     public static final String GADGET_NAME_SUFFIX = "gadgets";
 
+    public static final String ANALYZER_SCRIPTS_VAR_NAME = "analyzers.scripts";
+    public static final String ANALYZER_SCRIPT_PREFIX = "analyzers.scripts";
+    public static final String ANALYZER_SCRIPT_FILE_NAME_SUFFIX = "filename";
+    public static final String ANALYZER_SCRIPT_DESCRIPTION_SUFFIX = "description";
+    public static final String ANALYZER_SCRIPT_CRON_SUFFIX = "cron";
 
     public static final String JASPER_TABS_VAR_NAME = "jasper.tabs";
     public static final String JASPER_TAB_PREFIX = "jasper.tabs";

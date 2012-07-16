@@ -155,6 +155,7 @@
         <module>event-bridge</module>
         <module>data-bridge</module>
 		<module>ndatasource</module>
+		<module>appfactory</module>
             </modules>
 	    <build>
 	        <plugins>

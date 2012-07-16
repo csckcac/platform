@@ -26,7 +26,7 @@ import org.wso2.carbon.core.util.CryptoUtil;
  */
 public class CryptographyManager {
 
-    private static final Log LOG = LogFactory.getLog(CryptographyManager.class);
+    private static final Log log = LogFactory.getLog(CryptographyManager.class);
     private CryptoUtil cryptoUtil;
 
     public CryptographyManager(){
@@ -38,7 +38,7 @@ public class CryptographyManager {
             return cryptoUtil.encryptAndBase64Encode(plainText.getBytes());
         } catch (CryptoException e) {
             String errorMsg = "Encryption and Base64 encoding error. " + e.getMessage();
-            LOG.error(errorMsg, e);
+            log.error(errorMsg, e);
         }
         return null;
     }
@@ -48,7 +48,7 @@ public class CryptographyManager {
             return new String(cryptoUtil.base64DecodeAndDecrypt(cipherText));
         } catch (CryptoException e) {
             String errorMsg = "Base64 decoding and decryption error. " + e.getMessage();
-            LOG.error(errorMsg, e);
+            log.error(errorMsg, e);
         }
         return null;
     }

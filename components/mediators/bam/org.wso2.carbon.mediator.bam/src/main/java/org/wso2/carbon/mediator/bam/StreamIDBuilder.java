@@ -58,7 +58,7 @@ public class StreamIDBuilder {
     }
 
     private String getConstantStreamDefinitionString(){
-        String[] nameStrings = new String[BamMediatorConstants.NUM_OF_CONST_EVENT_PARAMS-1];
+        String[] nameStrings = new String[BamMediatorConstants.NUM_OF_CONST_PAYLOAD_PARAMS -1];
         int i = 0;
         nameStrings[i++] = BamMediatorConstants.SERVICE_NAME;
         nameStrings[i++] = BamMediatorConstants.OPERATION_NAME;

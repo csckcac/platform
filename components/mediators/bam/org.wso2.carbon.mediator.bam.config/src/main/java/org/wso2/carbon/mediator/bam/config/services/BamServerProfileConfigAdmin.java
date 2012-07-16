@@ -34,7 +34,7 @@ import java.io.ByteArrayInputStream;
  * Admin service class to expose all web services
  */
 public class BamServerProfileConfigAdmin extends AbstractAdmin {
-    private static final Log LOG = LogFactory.getLog(BamServerProfileConfigAdmin.class);
+    private static final Log log = LogFactory.getLog(BamServerProfileConfigAdmin.class);
     private RegistryManager registryManager;
     private CryptographyManager cryptographyManager;
 
@@ -69,7 +69,7 @@ public class BamServerProfileConfigAdmin extends AbstractAdmin {
             return bamServerConfigBuilder.getBamServerConfig();
         } catch (XMLStreamException e) {
             String errorMsg = "Failed to create XML OMElement from the String. " + e.getMessage();
-            LOG.error(errorMsg, e);
+            log.error(errorMsg, e);
         }
         return null;
     }

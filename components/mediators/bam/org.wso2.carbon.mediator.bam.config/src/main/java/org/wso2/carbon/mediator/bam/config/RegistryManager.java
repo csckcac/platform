@@ -28,7 +28,7 @@ import org.wso2.carbon.registry.core.exceptions.RegistryException;
  */
 public class RegistryManager extends RegistryAbstractAdmin {
 
-    private static final Log LOG = LogFactory.getLog(RegistryManager.class);
+    private static final Log log = LogFactory.getLog(RegistryManager.class);
     private Registry registry;
     private Resource resource;
 
@@ -43,7 +43,7 @@ public class RegistryManager extends RegistryAbstractAdmin {
             registry.put(gadgetResourcePath, resource);
         } catch (RegistryException e) {
             String errorMsg = "Error while saving resource string from Registry. " + e.getMessage();
-            LOG.error(errorMsg, e);
+            log.error(errorMsg, e);
         }
     }
     
@@ -52,7 +52,7 @@ public class RegistryManager extends RegistryAbstractAdmin {
             return registry.resourceExists(bamServerProfileLocation);
         } catch (RegistryException e) {
             String errorMsg = "Error while checking resource string from Registry. " + e.getMessage();
-            LOG.error(errorMsg, e);
+            log.error(errorMsg, e);
         }
         return true;
     }
@@ -63,7 +63,7 @@ public class RegistryManager extends RegistryAbstractAdmin {
             return true;
         } catch (RegistryException e) {
             String errorMsg = "Error while removing the resource from Registry. " + e.getMessage();
-            LOG.error(errorMsg, e);
+            log.error(errorMsg, e);
         }
         return false;
     }
@@ -74,7 +74,7 @@ public class RegistryManager extends RegistryAbstractAdmin {
             return new String((byte[])resource.getContent());
         } catch (RegistryException e) {
             String errorMsg = "Error while getting the resource from Registry. " + e.getMessage();
-            LOG.error(errorMsg, e);
+            log.error(errorMsg, e);
         }
         return null;
     }
@@ -86,7 +86,7 @@ public class RegistryManager extends RegistryAbstractAdmin {
             return true;
         } catch (RegistryException e) {
             String errorMsg = "Error while adding the collection to the Registry. " + e.getMessage();
-            LOG.error(errorMsg, e);
+            log.error(errorMsg, e);
         }
         return false;
     }
@@ -96,7 +96,7 @@ public class RegistryManager extends RegistryAbstractAdmin {
             return ((String[])registry.get(bamServerProfileCollectionLocation).getContent());
         } catch (RegistryException e) {
             String errorMsg = "Error while getting the Server Profile Name List from the Registry. " + e.getMessage();
-            LOG.error(errorMsg, e);
+            log.error(errorMsg, e);
         }
         return new String[0];
     }

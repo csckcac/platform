@@ -59,6 +59,8 @@ public final class BamMediatorConstants {
     public static final String META_DATA = "metaData";
     public static final String PAYLOAD_DATA = "payloadData";
 
-    public static final int NUM_OF_CONST_EVENT_PARAMS = 12;
+    public static final int NUM_OF_CONST_CORRELATION_PARAMS = 1;
+    public static final int NUM_OF_CONST_META_PARAMS = 1;
+    public static final int NUM_OF_CONST_PAYLOAD_PARAMS = 12;
 
 }

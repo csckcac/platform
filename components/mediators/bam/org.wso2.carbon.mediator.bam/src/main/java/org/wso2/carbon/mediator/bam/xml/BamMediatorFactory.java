@@ -40,7 +40,7 @@ import java.util.Properties;
  * Creates the BAM mediator with given configuration XML taken from the registry which is mentioned in the sequence.
  */
 public class BamMediatorFactory extends AbstractMediatorFactory {
-    private static final Log LOG = LogFactory.getLog(BamMediatorFactory.class);
+    private static final Log log = LogFactory.getLog(BamMediatorFactory.class);
     public static final QName BAM_Q = new QName(SynapseConstants.SYNAPSE_NAMESPACE, "bam");
 
     public static final String SERVER_PROFILE_LOCATION = "bamServerProfiles";
@@ -71,7 +71,7 @@ public class BamMediatorFactory extends AbstractMediatorFactory {
                 }
             } catch (XMLStreamException e) {
                 String errorMsg = "Failed to create XML OMElement from the String. " + e.getMessage();
-                LOG.error(errorMsg, e);
+                log.error(errorMsg, e);
             }
         }
         return bam;

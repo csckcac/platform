@@ -64,6 +64,18 @@
                     </xs:sequence>
                 </xs:complexType>
             </xs:element>
+            <xs:element name="isInstanceForTenantUp">
+                <xs:complexType>
+                    <xs:sequence />
+                </xs:complexType>
+            </xs:element>
+            <xs:element name="isInstanceForTenantUpResponse">
+                <xs:complexType>
+                    <xs:sequence>
+                        <xs:element minOccurs="0" name="return" type="xs:boolean" />
+                    </xs:sequence>
+                </xs:complexType>
+            </xs:element>
             <xs:element name="initAutoscaler">
                 <xs:complexType>
                     <xs:sequence />
@@ -113,6 +125,12 @@
     <wsdl:message name="deletePhpAppsRequest">
         <wsdl:part name="parameters" element="ns1:deletePhpApps" />
     </wsdl:message>
+    <wsdl:message name="isInstanceForTenantUpRequest">
+        <wsdl:part name="parameters" element="ns1:isInstanceForTenantUp" />
+    </wsdl:message>
+    <wsdl:message name="isInstanceForTenantUpResponse">
+        <wsdl:part name="parameters" element="ns1:isInstanceForTenantUpResponse" />
+    </wsdl:message>
     <wsdl:message name="getImagesRequest">
         <wsdl:part name="parameters" element="ns1:getImages" />
     </wsdl:message>
@@ -153,6 +171,10 @@
         <wsdl:operation name="deletePhpApps">
             <wsdl:input message="tns:deletePhpAppsRequest" wsaw:Action="urn:deletePhpApps" />
         </wsdl:operation>
+        <wsdl:operation name="isInstanceForTenantUp">
+            <wsdl:input message="tns:isInstanceForTenantUpRequest" wsaw:Action="urn:isInstanceForTenantUp" />
+            <wsdl:output message="tns:isInstanceForTenantUpResponse" wsaw:Action="urn:isInstanceForTenantUpResponse" />
+        </wsdl:operation>
         <wsdl:operation name="getImages">
             <wsdl:input message="tns:getImagesRequest" wsaw:Action="urn:getImages" />
             <wsdl:output message="tns:getImagesResponse" wsaw:Action="urn:getImagesResponse" />
@@ -182,8 +204,8 @@
     </wsdl:portType>
     <wsdl:binding name="ApplicationManagementServiceSoap11Binding" type="tns:ApplicationManagementServicePortType">
         <soap:binding transport="http://schemas.xmlsoap.org/soap/http" style="document" />
-        <wsdl:operation name="getImages">
-            <soap:operation soapAction="urn:getImages" style="document" />
+        <wsdl:operation name="isInstanceForTenantUp">
+            <soap:operation soapAction="urn:isInstanceForTenantUp" style="document" />
             <wsdl:input>
                 <soap:body use="literal" />
             </wsdl:input>
@@ -196,6 +218,15 @@
             <wsdl:input>
                 <soap:body use="literal" />
             </wsdl:input>
+        </wsdl:operation>
+        <wsdl:operation name="getImages">
+            <soap:operation soapAction="urn:getImages" style="document" />
+            <wsdl:input>
+                <soap:body use="literal" />
+            </wsdl:input>
+            <wsdl:output>
+                <soap:body use="literal" />
+            </wsdl:output>
         </wsdl:operation>
         <wsdl:operation name="getPagedPhpAppsSummary">
             <soap:operation soapAction="urn:getPagedPhpAppsSummary" style="document" />
@@ -248,8 +279,8 @@
     </wsdl:binding>
     <wsdl:binding name="ApplicationManagementServiceSoap12Binding" type="tns:ApplicationManagementServicePortType">
         <soap12:binding transport="http://schemas.xmlsoap.org/soap/http" style="document" />
-        <wsdl:operation name="getImages">
-            <soap12:operation soapAction="urn:getImages" style="document" />
+        <wsdl:operation name="isInstanceForTenantUp">
+            <soap12:operation soapAction="urn:isInstanceForTenantUp" style="document" />
             <wsdl:input>
                 <soap12:body use="literal" />
             </wsdl:input>
@@ -262,6 +293,15 @@
             <wsdl:input>
                 <soap12:body use="literal" />
             </wsdl:input>
+        </wsdl:operation>
+        <wsdl:operation name="getImages">
+            <soap12:operation soapAction="urn:getImages" style="document" />
+            <wsdl:input>
+                <soap12:body use="literal" />
+            </wsdl:input>
+            <wsdl:output>
+                <soap12:body use="literal" />
+            </wsdl:output>
         </wsdl:operation>
         <wsdl:operation name="getPagedPhpAppsSummary">
             <soap12:operation soapAction="urn:getPagedPhpAppsSummary" style="document" />
@@ -314,8 +354,8 @@
     </wsdl:binding>
     <wsdl:binding name="ApplicationManagementServiceHttpBinding" type="tns:ApplicationManagementServicePortType">
         <http:binding verb="POST" />
-        <wsdl:operation name="getImages">
-            <http:operation location="getImages" />
+        <wsdl:operation name="isInstanceForTenantUp">
+            <http:operation location="isInstanceForTenantUp" />
             <wsdl:input>
                 <mime:content type="text/xml" part="parameters" />
             </wsdl:input>
@@ -328,6 +368,15 @@
             <wsdl:input>
                 <mime:content type="text/xml" part="parameters" />
             </wsdl:input>
+        </wsdl:operation>
+        <wsdl:operation name="getImages">
+            <http:operation location="getImages" />
+            <wsdl:input>
+                <mime:content type="text/xml" part="parameters" />
+            </wsdl:input>
+            <wsdl:output>
+                <mime:content type="text/xml" part="parameters" />
+            </wsdl:output>
         </wsdl:operation>
         <wsdl:operation name="getPagedPhpAppsSummary">
             <http:operation location="getPagedPhpAppsSummary" />
@@ -380,13 +429,13 @@
     </wsdl:binding>
     <wsdl:service name="ApplicationManagementService">
         <wsdl:port name="ApplicationManagementServiceHttpsSoap11Endpoint" binding="tns:ApplicationManagementServiceSoap11Binding">
-            <soap:address location="https://175.157.180.215:9444/services/ApplicationManagementService.ApplicationManagementServiceHttpsSoap11Endpoint/" />
+            <soap:address location="https://12.0.0.1:9444/services/ApplicationManagementService.ApplicationManagementServiceHttpsSoap11Endpoint/" />
         </wsdl:port>
         <wsdl:port name="ApplicationManagementServiceHttpsSoap12Endpoint" binding="tns:ApplicationManagementServiceSoap12Binding">
-            <soap12:address location="https://175.157.180.215:9444/services/ApplicationManagementService.ApplicationManagementServiceHttpsSoap12Endpoint/" />
+            <soap12:address location="https://12.0.0.1:9444/services/ApplicationManagementService.ApplicationManagementServiceHttpsSoap12Endpoint/" />
         </wsdl:port>
         <wsdl:port name="ApplicationManagementServiceHttpsEndpoint" binding="tns:ApplicationManagementServiceHttpBinding">
-            <http:address location="https://175.157.180.215:9444/services/ApplicationManagementService.ApplicationManagementServiceHttpsEndpoint/" />
+            <http:address location="https://12.0.0.1:9444/services/ApplicationManagementService.ApplicationManagementServiceHttpsEndpoint/" />
         </wsdl:port>
     </wsdl:service>
 </wsdl:definitions>

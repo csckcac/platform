@@ -45,15 +45,23 @@ import javax.xml.parsers.ParserConfigurationException;
 import java.io.IOException;
 import java.io.StringReader;
 import java.net.URL;
-import java.sql.*;
+import java.sql.Connection;
+import java.sql.DriverManager;
+import java.sql.ResultSet;
+import java.sql.ResultSetMetaData;
+import java.sql.SQLException;
+import java.sql.Statement;
 import java.util.ArrayList;
 import java.util.List;
+import java.util.Random;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 
 public class HiveExecutorServiceImpl implements HiveExecutorService {
 
     private static final Log log = LogFactory.getLog(HiveExecutorServiceImpl.class);
+
+    private CarbonDataSource dataSource = null;
 
     /**
      * @param script
@@ -68,18 +76,21 @@ public class HiveExecutorServiceImpl implements HiveExecutorService {
                 initialize(confManager.getConfValue(HiveConstants.HIVE_DRIVER_KEY));
             }*/
 
-            Connection con = null;
+            Connection connection = null;
             try {
-                CarbonDataSource dataSource = ServiceHolder.getCarbonDataSourceService().
+                dataSource = ServiceHolder.getCarbonDataSourceService().
                         getDataSource(HiveConstants.DEFAULT_HIVE_DATASOURCE);
 
                 if (dataSource == null) {
-                    createDataSource();
-                    dataSource = ServiceHolder.getCarbonDataSourceService().
-                            getDataSource(HiveConstants.DEFAULT_HIVE_DATASOURCE);
-
-                    if (dataSource != null) {
-                        con = ((DataSource) dataSource.getDSObject()).getConnection();
+                    synchronized (this) {
+                        if (dataSource == null) {
+                            createDataSource();
+                            dataSource = ServiceHolder.getCarbonDataSourceService().
+                                    getDataSource(HiveConstants.DEFAULT_HIVE_DATASOURCE);
+                        }
+                        if (dataSource != null) {
+                            connection = ((DataSource) dataSource.getDSObject()).getConnection();
+                        }
                     }
                 } else {
 
@@ -107,7 +118,7 @@ public class HiveExecutorServiceImpl implements HiveExecutorService {
                     }
 
                     if (dataSource != null) {
-                        con = ((DataSource) dataSource.getDSObject()).getConnection();
+                        connection = ((DataSource) dataSource.getDSObject()).getConnection();
                     }
                 }
             } catch (DataSourceException e) {
@@ -131,7 +142,7 @@ public class HiveExecutorServiceImpl implements HiveExecutorService {
 
 
             try {
-                Statement stmt = con.createStatement();
+                Statement stmt = connection.createStatement();
 
                 Pattern regex = Pattern.compile("[^\\s\"']+|\"([^\"]*)\"|'([^']*)'");
                 Matcher regexMatcher = regex.matcher(script);
@@ -188,7 +199,7 @@ public class HiveExecutorServiceImpl implements HiveExecutorService {
                         //Append the tenant ID to query
                         trimmedCmdLine += Utils.TENANT_ID_SEPARATOR_CHAR_SEQ + tenantId;
 
-                        ResultSet rs = stmt.executeQuery(trimmedCmdLine);
+                        ResultSet rs= stmt.executeQuery(trimmedCmdLine);
                         ResultSetMetaData metaData = rs.getMetaData();
 
                         int columnCount = metaData.getColumnCount();
@@ -230,9 +241,9 @@ public class HiveExecutorServiceImpl implements HiveExecutorService {
             } catch (SQLException e) {
                 throw new HiveExecutionException("Error while executing Hive script.\n" + e.getMessage(), e);
             } finally {
-                if (null != con) {
+                if (null != connection) {
                     try {
-                        con.close();
+                        connection.close();
                     } catch (SQLException e) {
                     }
                 }

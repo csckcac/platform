@@ -97,8 +97,8 @@ public class BAMToolBoxDeployerClient {
             DataHandler downloadData = stub.downloadToolBox(toolName);
             if (downloadData != null) {
                 String fileName = "";
-                if (!toolName.endsWith(".bar")) {
-                    fileName = toolName + ".bar";
+                if (!toolName.endsWith(".tbox")) {
+                    fileName = toolName + ".tbox";
                 } else fileName = toolName;
                 response.setHeader("Content-Disposition", "fileName=" + fileName);
                 response.setContentType(downloadData.getContentType());

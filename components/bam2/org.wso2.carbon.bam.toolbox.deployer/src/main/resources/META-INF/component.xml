@@ -20,7 +20,7 @@
     <deployers>
         <deployer>
             <directory>bam-toolbox</directory>
-            <extension>bar</extension>
+            <extension>tbox</extension>
             <class>org.wso2.carbon.bam.toolbox.deployer.core.BAMToolBoxDeployer</class>
         </deployer>
     </deployers>

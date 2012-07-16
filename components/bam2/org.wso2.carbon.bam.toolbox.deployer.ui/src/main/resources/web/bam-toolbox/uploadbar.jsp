@@ -85,7 +85,7 @@
 
 
     private boolean isInList(String name, String[] searchList) {
-        name = name.replaceAll(".bar", "");
+        name = name.replaceAll(".tbox", "");
         if (null != searchList) {
             for (String aName : searchList) {
                 if (name.equalsIgnoreCase(aName)) {
@@ -116,8 +116,8 @@
             var toolbox = document.getElementById('toolbox').value;
             if ('' == toolbox) {
                 CARBON.showErrorDialog('No ToolBox has been selected!');
-            } else if (toolbox.indexOf('.bar') == -1) {
-                CARBON.showErrorDialog('The ToolBox should be \'bar\' artifact');
+            } else if (toolbox.indexOf('.tbox') == -1) {
+                CARBON.showErrorDialog('The ToolBox should be \'tbox\' artifact');
             } else {
                 document.getElementById('uploadBar').submit();
             }
@@ -125,8 +125,8 @@
             var urltoolbox = document.getElementById('urltoolbox').value;
             if ('' == urltoolbox) {
                 CARBON.showErrorDialog('No ToolBox has been selected!');
-            } else if (urltoolbox.indexOf('.bar') == -1) {
-                CARBON.showErrorDialog('The ToolBox should be \'bar\' artifact');
+            } else if (urltoolbox.indexOf('.tbox') == -1) {
+                CARBON.showErrorDialog('The ToolBox should be \'tbox\' artifact');
             } else if (!isValidURL(urltoolbox, document.getElementById('urltoolbox'))) {
                 CARBON.showErrorDialog('The URL is not valid! Please enter a valid url!');
             } else {

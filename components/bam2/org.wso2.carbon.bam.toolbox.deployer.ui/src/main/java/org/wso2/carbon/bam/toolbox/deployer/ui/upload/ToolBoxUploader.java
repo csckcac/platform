@@ -121,7 +121,7 @@ public class ToolBoxUploader extends AbstractFileUploadExecutor {
 
 
     private String checkInRepo(String toolName, ToolBoxStatusDTO statusDTO) {
-        toolName = toolName.replaceAll(".bar", "");
+        toolName = toolName.replaceAll(".tbox", "");
         String msg = "";
         if (isInList(toolName, statusDTO.getDeployedTools())) {
             msg = "The uploaded toolbox is already Installed. \nPlease upload a different toolbox.";

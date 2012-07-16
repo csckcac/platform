@@ -88,7 +88,7 @@ public class BAMToolBoxUploaderService extends AbstractAdmin {
 
         FilenameFilter filter = new FilenameFilter() {
             public boolean accept(File dir, String name) {
-                return name.endsWith(".bar");
+                return name.endsWith(".tbox");
             }
         };
 
@@ -119,8 +119,8 @@ public class BAMToolBoxUploaderService extends AbstractAdmin {
         ArrayList<String> deployedTools = new ArrayList<String>();
         if (null != toolsInDir) {
             for (String tool : toolsInDir) {
-                if (tool.endsWith(".bar")) {
-                    tool = tool.replaceAll(".bar", "");
+                if (tool.endsWith(".tbox")) {
+                    tool = tool.replaceAll(".tbox", "");
                 }
                 if ((searchKey.equals("") || searchKey.equals("*") || tool.equalsIgnoreCase(searchKey)) && toolsInConf.contains(tool)) {
                     deployedTools.add(tool);
@@ -134,8 +134,8 @@ public class BAMToolBoxUploaderService extends AbstractAdmin {
         ArrayList<String> toBedeployedTools = new ArrayList<String>();
         if (null != toolsInDir) {
             for (String tool : toolsInDir) {
-                if (tool.endsWith(".bar")) {
-                    tool = tool.replaceAll(".bar", "");
+                if (tool.endsWith(".tbox")) {
+                    tool = tool.replaceAll(".tbox", "");
                 }
                 if ((searchKey.equals("") || searchKey.equals("*") || tool.equalsIgnoreCase(searchKey)) && !toolsInConf.contains(tool)) {
                     toBedeployedTools.add(tool);
@@ -151,7 +151,7 @@ public class BAMToolBoxUploaderService extends AbstractAdmin {
         if (null != toolsInConf) {
             for (String tool : toolsInConf) {
                 String toolName = tool;
-                tool += ".bar";
+                tool += ".tbox";
                 if (null != toolsInDir) {
                     boolean exists = false;
                     for (String toolDir : toolsInDir) {
@@ -193,7 +193,7 @@ public class BAMToolBoxUploaderService extends AbstractAdmin {
             for (String toolboxName : toolboxNames) {
                 if (null != toolboxName && !toolboxName.trim().equals("")) {
                     File toolbox = new File(repoPath + File.separator + BAMToolBoxDeployerConstants.BAM_DEPLOYMET_FOLDER +
-                            File.separator + toolboxName.trim() + ".bar");
+                            File.separator + toolboxName.trim() + ".tbox");
                     if (toolbox.exists()) {
                         toolbox.delete();
                     } else {
@@ -221,7 +221,7 @@ public class BAMToolBoxUploaderService extends AbstractAdmin {
             repoPath = CarbonUtils.getCarbonHome() + tenantRepoPath;
         }
         File toolbox = new File(repoPath + File.separator + BAMToolBoxDeployerConstants.BAM_DEPLOYMET_FOLDER +
-                File.separator + toolboxName + ".bar");
+                File.separator + toolboxName + ".tbox");
         FileDataSource datasource = new FileDataSource(toolbox);
         return new DataHandler(datasource);
     }
@@ -254,7 +254,7 @@ public class BAMToolBoxUploaderService extends AbstractAdmin {
             InputStream in = null;
             FilenameFilter filter = new FilenameFilter() {
                 public boolean accept(File dir, String name) {
-                    return name.endsWith(".bar");
+                    return name.endsWith(".tbox");
                 }
             };
 

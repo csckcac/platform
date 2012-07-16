@@ -118,9 +118,9 @@ public class BAMToolBoxDeployer extends AbstractDeployer {
     }
 
     /**
-     * Unzip the bar artifact and calls the necessary admin services to deploy the artifacts
+     * Unzip the tbox artifact and calls the necessary admin services to deploy the artifacts
      *
-     * @param deploymentFileData .bar artifact
+     * @param deploymentFileData .tbox artifact
      * @throws DeploymentException
      */
     public void deploy(DeploymentFileData deploymentFileData) throws DeploymentException {

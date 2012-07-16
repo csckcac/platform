@@ -39,7 +39,7 @@ public class BAMToolBoxDeployerConstants {
     public static final String JAGGERY_APP_FILES = "jaggery.app.files";
     public static final String JAGGERY_DEPLOYMENT_DIR = "jaggeryapps/gadgetgen";
 
-    public static final String BAM_ARTIFACT_EXT = "bar";
+    public static final String BAM_ARTIFACT_EXT = "tbox";
 
     public static final String DEFAULT_CRON = "1 * * * * ? *";
 

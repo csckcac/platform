@@ -234,7 +234,7 @@ public class BAMArtifactProcessor {
         String tabs = props.getProperty(BAMToolBoxDeployerConstants.TAB_NAMES).trim();
         String[] tabNames = tabs.split(",");
         if (tabNames == null || tabNames.length == 0) {
-            throw new BAMToolboxDeploymentException("Invalid bar artifact. No tab names found in dashboard.properties");
+            throw new BAMToolboxDeploymentException("Invalid tbox artifact. No tab names found in dashboard.properties");
         } else {
             boolean valid = false;
             for (String aTabName : tabNames) {
@@ -246,7 +246,7 @@ public class BAMArtifactProcessor {
                 }
             }
             if (!valid) {
-                throw new BAMToolboxDeploymentException("Invalid bar artifact. No tab names " +
+                throw new BAMToolboxDeploymentException("Invalid tbox artifact. No tab names " +
                         "found in dashboard.properties");
             }
         }
@@ -257,7 +257,7 @@ public class BAMArtifactProcessor {
         String tabs = props.getProperty(BAMToolBoxDeployerConstants.TAB_NAMES).trim();
         String[] tabNames = tabs.split(",");
         if (tabNames == null || tabNames.length == 0) {
-            throw new BAMToolboxDeploymentException("Invalid bar artifact. No tab names found in dashboard.properties");
+            throw new BAMToolboxDeploymentException("Invalid tbox artifact. No tab names found in dashboard.properties");
         } else {
             boolean valid = false;
             for (String aTabName : tabNames) {
@@ -269,7 +269,7 @@ public class BAMArtifactProcessor {
                 }
             }
             if (!valid) {
-                throw new BAMToolboxDeploymentException("Invalid bar artifact. No tab names " +
+                throw new BAMToolboxDeploymentException("Invalid tbox artifact. No tab names " +
                         "found in dashboard.properties");
             }
         }
@@ -280,7 +280,7 @@ public class BAMArtifactProcessor {
         if (gagetXmlsNames != null && !gagetXmlsNames.trim().equals("")) {
             String[] gadgets = gagetXmlsNames.split(",");
             if (gadgets == null || gadgets.length == 0) {
-                throw new BAMToolboxDeploymentException("Invalid bar artifact. No gadget names found for tab :"
+                throw new BAMToolboxDeploymentException("Invalid tbox artifact. No gadget names found for tab :"
                         + dashBoardTabDTO + " in dashboard.properties");
             } else {
                 boolean valid = false;
@@ -291,7 +291,7 @@ public class BAMArtifactProcessor {
                     }
                 }
                 if (!valid) {
-                    throw new BAMToolboxDeploymentException("Invalid bar artifact. No gadget names found for tab :"
+                    throw new BAMToolboxDeploymentException("Invalid tbox artifact. No gadget names found for tab :"
                             + dashBoardTabDTO + " in dashboard.properties");
                 }
             }

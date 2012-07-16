@@ -108,6 +108,12 @@
             </dependency>
             <dependency>
                 <groupId>org.wso2.carbon</groupId>
+                <artifactId>org.wso2.carbon.databridge.receiver.restapi</artifactId>
+                <type>war</type>
+                <version>${wso2carbon.version.databridge}</version>
+            </dependency>
+            <dependency>
+                <groupId>org.wso2.carbon</groupId>
                 <artifactId>org.wso2.carbon.databridge.restapi</artifactId>
                 <version>${wso2carbon.version.databridge}</version>
             </dependency>

@@ -16,11 +16,12 @@
 *under the License.
 */
 
-package org.wso2.carbon.identity.oauth2.handlers.authz;
+package org.wso2.carbon.identity.oauth2.authz.handlers;
 
 import org.apache.amber.oauth2.as.issuer.MD5Generator;
 import org.apache.amber.oauth2.as.issuer.OAuthIssuerImpl;
 import org.apache.amber.oauth2.common.message.types.ResponseType;
+import org.wso2.carbon.identity.oauth2.authz.OAuthAuthzReqMessageContext;
 import org.wso2.carbon.identity.oauth.callback.OAuthCallback;
 import org.wso2.carbon.identity.oauth.callback.OAuthCallbackManager;
 import org.wso2.carbon.identity.oauth2.IdentityOAuth2Exception;

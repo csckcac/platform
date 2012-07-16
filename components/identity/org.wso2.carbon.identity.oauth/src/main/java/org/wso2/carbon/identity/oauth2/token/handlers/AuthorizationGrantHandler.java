@@ -16,12 +16,12 @@
 *under the License.
 */
 
-package org.wso2.carbon.identity.oauth2.handlers.authz.grant;
+package org.wso2.carbon.identity.oauth2.token.handlers;
 
 import org.wso2.carbon.identity.base.IdentityException;
 import org.wso2.carbon.identity.oauth2.IdentityOAuth2Exception;
 import org.wso2.carbon.identity.oauth2.dto.OAuth2AccessTokenRespDTO;
-import org.wso2.carbon.identity.oauth2.handlers.authz.OAuthTokenReqMessageContext;
+import org.wso2.carbon.identity.oauth2.token.OAuthTokenReqMessageContext;
 
 /**
  * The interface needs to be implemented by all the authorization grant validators.

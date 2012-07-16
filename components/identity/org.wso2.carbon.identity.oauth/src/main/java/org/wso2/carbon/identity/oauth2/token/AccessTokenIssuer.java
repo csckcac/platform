@@ -16,7 +16,7 @@
 *under the License.
 */
 
-package org.wso2.carbon.identity.oauth2;
+package org.wso2.carbon.identity.oauth2.token;
 
 import org.apache.amber.oauth2.common.error.OAuthError;
 import org.apache.amber.oauth2.common.message.types.GrantType;
@@ -25,12 +25,13 @@ import org.apache.commons.logging.LogFactory;
 import org.wso2.carbon.identity.base.IdentityException;
 import org.wso2.carbon.identity.core.model.OAuthAppDO;
 import org.wso2.carbon.identity.oauth.dao.OAuthAppDAO;
+import org.wso2.carbon.identity.oauth2.IdentityOAuth2Exception;
 import org.wso2.carbon.identity.oauth2.dto.OAuth2AccessTokenReqDTO;
 import org.wso2.carbon.identity.oauth2.dto.OAuth2AccessTokenRespDTO;
-import org.wso2.carbon.identity.oauth2.handlers.authz.OAuthTokenReqMessageContext;
-import org.wso2.carbon.identity.oauth2.handlers.authz.grant.AuthorizationCodeHandler;
-import org.wso2.carbon.identity.oauth2.handlers.authz.grant.AuthorizationGrantHandler;
-import org.wso2.carbon.identity.oauth2.handlers.authz.grant.PasswordGrantHandler;
+import org.wso2.carbon.identity.oauth2.token.OAuthTokenReqMessageContext;
+import org.wso2.carbon.identity.oauth2.token.handlers.AuthorizationCodeHandler;
+import org.wso2.carbon.identity.oauth2.token.handlers.AuthorizationGrantHandler;
+import org.wso2.carbon.identity.oauth2.token.handlers.PasswordGrantHandler;
 import org.wso2.carbon.identity.oauth2.util.OAuth2Util;
 
 import java.util.Hashtable;

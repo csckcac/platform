@@ -16,11 +16,14 @@
 *under the License.
 */
 
-package org.wso2.carbon.identity.oauth2.handlers.authz;
+package org.wso2.carbon.identity.oauth2.authz;
 
 import org.apache.amber.oauth2.common.message.types.ResponseType;
 import org.apache.commons.logging.Log;
 import org.apache.commons.logging.LogFactory;
+import org.wso2.carbon.identity.oauth2.authz.handlers.AuthorizationHandler;
+import org.wso2.carbon.identity.oauth2.authz.handlers.CodeResponseTypeHandler;
+import org.wso2.carbon.identity.oauth2.authz.handlers.TokenResponseTypeHandler;
 import org.wso2.carbon.identity.oauth.common.OAuth2ErrorCodes;
 import org.wso2.carbon.identity.oauth2.IdentityOAuth2Exception;
 import org.wso2.carbon.identity.oauth2.dto.OAuth2AuthorizeReqDTO;

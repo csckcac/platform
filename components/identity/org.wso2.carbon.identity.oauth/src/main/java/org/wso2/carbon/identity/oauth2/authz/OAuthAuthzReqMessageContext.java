@@ -16,7 +16,7 @@
 *under the License.
 */
 
-package org.wso2.carbon.identity.oauth2.handlers.authz;
+package org.wso2.carbon.identity.oauth2.authz;
 
 import org.apache.amber.oauth2.common.message.types.ResponseType;
 import org.wso2.carbon.identity.oauth2.dto.OAuth2AuthorizeReqDTO;

@@ -16,8 +16,9 @@
 *under the License.
 */
 
-package org.wso2.carbon.identity.oauth2.handlers.authz;
+package org.wso2.carbon.identity.oauth2.authz.handlers;
 
+import org.wso2.carbon.identity.oauth2.authz.OAuthAuthzReqMessageContext;
 import org.wso2.carbon.identity.oauth2.IdentityOAuth2Exception;
 import org.wso2.carbon.identity.oauth2.dto.OAuth2AuthorizeRespDTO;
 

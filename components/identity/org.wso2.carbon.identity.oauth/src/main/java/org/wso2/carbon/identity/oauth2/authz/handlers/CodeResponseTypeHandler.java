@@ -16,25 +16,23 @@
 *under the License.
 */
 
-package org.wso2.carbon.identity.oauth2.handlers.authz;
+package org.wso2.carbon.identity.oauth2.authz.handlers;
 
 import org.apache.amber.oauth2.common.exception.OAuthSystemException;
 import org.apache.commons.logging.Log;
 import org.apache.commons.logging.LogFactory;
+import org.wso2.carbon.identity.oauth2.authz.OAuthAuthzReqMessageContext;
 import org.wso2.carbon.identity.oauth2.IdentityOAuth2Exception;
 import org.wso2.carbon.identity.oauth2.dto.OAuth2AuthorizeReqDTO;
 import org.wso2.carbon.identity.oauth2.dto.OAuth2AuthorizeRespDTO;
-import org.wso2.carbon.identity.oauth2.util.OAuth2Constants;
 import org.wso2.carbon.identity.oauth2.util.OAuth2Util;
 
-import java.sql.Timestamp;
-import java.util.Date;
+public class CodeResponseTypeHandler extends AbstractAuthorizationHandler {
 
-public class TokenResponseTypeHandler extends AbstractAuthorizationHandler {
+    private static Log log = LogFactory.getLog(CodeResponseTypeHandler.class);
 
-    private static Log log = LogFactory.getLog(TokenResponseTypeHandler.class);
-
-    public TokenResponseTypeHandler() throws IdentityOAuth2Exception {
+    public CodeResponseTypeHandler()
+            throws IdentityOAuth2Exception {
         super();
     }
 
@@ -42,36 +40,31 @@ public class TokenResponseTypeHandler extends AbstractAuthorizationHandler {
     public OAuth2AuthorizeRespDTO issue(OAuthAuthzReqMessageContext oauthAuthzMsgCtx)
             throws IdentityOAuth2Exception {
         OAuth2AuthorizeRespDTO respDTO = new OAuth2AuthorizeRespDTO();
+        String authorizationCode;
+
         OAuth2AuthorizeReqDTO authorizationReqDTO = oauthAuthzMsgCtx.getAuthorizationReqDTO();
-        respDTO.setCallbackURI(authorizationReqDTO.getCallbackUrl());
-        String accessToken;
+
         try {
-            accessToken = oauthIssuerImpl.accessToken();
+            authorizationCode = oauthIssuerImpl.authorizationCode();
         } catch (OAuthSystemException e) {
             throw new IdentityOAuth2Exception(e.getMessage(), e);
         }
-        Timestamp timestamp = new Timestamp(new Date().getTime());
-        // Default Validity Period
-        long validityPeriod = 60 * 60;
 
-        tokenMgtDAO.storeAccessToken(accessToken,
-                null,
+        tokenMgtDAO.storeAuthorizationCode(authorizationCode,
                 authorizationReqDTO.getConsumerKey(),
-                authorizationReqDTO.getUsername(),
-                timestamp,
-                validityPeriod,
                 OAuth2Util.buildScopeString(oauthAuthzMsgCtx.getApprovedScope()),
-                OAuth2Constants.TokenStates.TOKEN_STATE_ACTIVE);
+                authorizationReqDTO.getUsername());
 
         if (log.isDebugEnabled()) {
-            log.debug("Issued AccessToken Code to user : " +
+            log.debug("Issued Authorization Code to user : " +
                     authorizationReqDTO.getUsername() + ". Using the redirect url : " +
                     authorizationReqDTO.getCallbackUrl());
         }
-
+        respDTO.setCallbackURI(authorizationReqDTO.getCallbackUrl());
         respDTO.setAuthorized(true);
-        respDTO.setAccessToken(accessToken);
-        respDTO.setValidityPeriod(validityPeriod);
+        respDTO.setAuthorizationCode(authorizationCode);
         return respDTO;
     }
+
+
 }

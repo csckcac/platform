@@ -16,7 +16,7 @@
 *under the License.
 */
 
-package org.wso2.carbon.identity.oauth2.handlers.authz;
+package org.wso2.carbon.identity.oauth2.token;
 
 import org.wso2.carbon.identity.oauth2.dto.OAuth2AccessTokenReqDTO;
 

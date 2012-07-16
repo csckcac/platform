@@ -46,7 +46,7 @@ public class WebAppFile implements JavaScriptFile {
         String parent = includesCallstack.lastElement();
         try {
             String keys[] = WebAppManager.getKeys(context.getContextPath(), parent, fileURL);
-            fileURL = keys[1] + keys[2];
+            fileURL = "/".equals(keys[1]) ? keys[2] : keys[1] + keys[2];
         } catch (NullPointerException ne) {
             throw new ScriptException("Invalid file path : " + fileURL, ne);
         }

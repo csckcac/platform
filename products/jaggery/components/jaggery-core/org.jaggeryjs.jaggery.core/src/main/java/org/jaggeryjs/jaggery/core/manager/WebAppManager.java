@@ -109,7 +109,7 @@ public class WebAppManager extends CommonManager {
         String parent = includesCallstack.lastElement();
 
         String keys[] = WebAppManager.getKeys(context.getContextPath(), parent, fileURL);
-        fileURL = keys[1] + keys[2];
+        fileURL = "/".equals(keys[1]) ? keys[2] : keys[1] + keys[2];
         if(includesCallstack.search(fileURL) != -1) {
             return scope;
         }

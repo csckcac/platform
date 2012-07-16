@@ -32,41 +32,13 @@
         var path = APPLICATIONS + applicationKey;
         try {
             putResource(path, resource);
-            initAppVersion(applicationKey);
+
         } catch (e) {
             log.error("Error while storing resource \n"+e.message);
             throw new Error("Error while storing registry resource");
         }
     }
-    //add stage & version details to registry
-    function initAppVersion(applicationKey){
-    var versionNo=0;
 
-    var stages = getProperties('ApplicationDeployment.DeploymentStage');
-    for(var i=0; i<stages.length;i++){
-        var stage = stages[i];
-          for(var j=0; j<3;j++){
-          try {
-                     var resource = createResource();
-                 } catch (e) {
-                     log.error("Error while creating registry resource \n"+e.message);
-                     throw new Error("Error while creating registry resource");
-                 }
-                 var version='Version '+versionNo;
-                 var path = APPLICATIONS+APPLICATION_STAGES +stage+'/'+ applicationKey+'/'+version;
-                         try {
-
-                         if( resourceExists(path)!='true'){
-                             putResource(path, resource);
-                             versionNo=versionNo+1;
-                             }
-                         } catch (e) {
-                             log.error("Error while storing resource \n"+e.message);
-                             throw new Error("Error while storing registry resource");
-                         }
-                         }
-       }
-    }
     // add the application key to the users' applications list in registry
     function addApplicationToUser(newUser, applicationKey) {
 

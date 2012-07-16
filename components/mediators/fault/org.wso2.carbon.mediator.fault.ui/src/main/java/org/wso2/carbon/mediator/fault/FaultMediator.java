@@ -233,8 +233,9 @@ public class FaultMediator extends AbstractMediator {
             }
         }
 
-        OMElement code = fac.createOMElement("code", synNS, fault);
-        if (faultCodeValue != null) {
+        OMElement code = soapVersion != POX ?fac.createOMElement("code", synNS, fault):null;
+   
+        if (faultCodeValue != null && code != null) {
             OMNamespace ns = code.declareNamespace(faultCodeValue.getNamespaceURI(),
                     faultCodeValue.getPrefix());
             code.addAttribute(fac.createOMAttribute(
@@ -265,12 +266,12 @@ public class FaultMediator extends AbstractMediator {
         }
 
 
-        if (faultNode != null && soapVersion != SOAP11) {
+        if (faultNode != null && (soapVersion != SOAP11 && soapVersion != POX)) {
             OMElement node = fac.createOMElement("node", synNS, fault);
             node.setText(faultNode.toString());
         }
 
-        if (faultRole != null) {
+        if (faultRole != null && soapVersion != POX) {
             OMElement role = fac.createOMElement("role", synNS, fault);
             role.setText(faultRole.toString());
         }

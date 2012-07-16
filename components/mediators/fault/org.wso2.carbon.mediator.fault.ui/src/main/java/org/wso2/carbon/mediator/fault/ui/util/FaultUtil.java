@@ -48,6 +48,9 @@ public class FaultUtil {
             populateRole(request, faultMediator);
             populateNode(request, faultMediator);
             populateFaultDetail(request, faultMediator);
+        }else if(FaultMediator.POX == faultMediator.getSoapVersion()){
+        	populateFaultReason(request, session, faultMediator);
+        	populateFaultDetail(request, faultMediator);
         }
     }
 
@@ -69,7 +72,9 @@ public class FaultUtil {
             faultCode = request.getParameter("fault_code1");
             prefix = "soap11Env";
         }
-        faultMediator.setFaultCodeValue(new QName(namespace, faultCode, prefix));
+        if(faultMediator.getSoapVersion() != FaultMediator.POX){
+        	faultMediator.setFaultCodeValue(new QName(namespace, faultCode, prefix));
+        }
     }
 
     private static void populateFaultString(HttpServletRequest request, javax.servlet.http.HttpSession session, FaultMediator faultMediator) {

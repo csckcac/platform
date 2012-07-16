@@ -66,15 +66,15 @@ public class FaultMediatorSerializer extends AbstractMediatorSerializer {
             }
         }
 
-        OMElement code = fac.createOMElement("code", synNS, fault);
-        if (mediator.getFaultCodeValue() != null) {
+        OMElement code = mediator.getSoapVersion()!=FaultMediator.POX?fac.createOMElement("code", synNS, fault): null;
+        if (mediator.getFaultCodeValue() != null && code != null) {
             OMNamespace ns = code.declareNamespace(mediator.getFaultCodeValue().getNamespaceURI(),
                     mediator.getFaultCodeValue().getPrefix());
             code.addAttribute(fac.createOMAttribute(
                     "value", nullNS, ns.getPrefix() + ":"
                     + mediator.getFaultCodeValue().getLocalPart()));
 
-        } else if (mediator.getFaultCodeExpr() != null) {
+        } else if (mediator.getFaultCodeExpr() != null && code != null) {
             SynapseXPathSerializer.serializeXPath(mediator.getFaultCodeExpr(), code, "expression");
 
         } else if (mediator.getSoapVersion() != FaultMediator.POX) {

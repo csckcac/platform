@@ -27,6 +27,9 @@ function loadFaultCode(soap){
         document.getElementById('fault_code_11').style.display = 'none';
         document.getElementById('fault_string_row').style.display = 'none';
         document.getElementById('fault_actor_row').style.display = 'none';
+
+        document.getElementById('fault_actor_table_row').style.display = '';
+
         }
     if(soap == '1'){
         document.getElementById('fault_code_12').style.display = 'none';
@@ -37,6 +40,17 @@ function loadFaultCode(soap){
         document.getElementById('fault_code_11').style.display = '';
         document.getElementById('fault_string_row').style.display = '';
         document.getElementById('fault_actor_row').style.display = '';
+      
+        document.getElementById('fault_actor_table_row').style.display = '';
+    }
+    
+    if(soap == '3'){
+    	document.getElementById('fault_code_11').style.display = 'none';
+        document.getElementById('fault_code_12').style.display = 'none';
+ 	    document.getElementById('fault_actor_table_row').style.display = 'none';
+         
+        document.getElementById('node_row').style.display = 'none';
+        document.getElementById('role_row').style.display = 'none';
     }
    }
 

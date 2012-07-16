@@ -74,6 +74,8 @@
                value="1" onclick="loadFaultCode('1');">SOAP 1.1
         <input type="radio" id="soap_version" name="soap_version" value="2"
                onclick="loadFaultCode('2');">SOAP 1.2
+        <input type="radio" id="soap_version" name="soap_version" value="3"
+               onclick="loadFaultCode('3');">POX     
         <%
         } else if (faultMediator.getSoapVersion() == 2) {
 
@@ -82,12 +84,21 @@
                onclick="loadFaultCode('1');">SOAP 1.1
         <input type="radio" id="soap_version" name="soap_version" checked="true"
                value="2" onclick="loadFaultCode('2');">SOAP 1.2
+        <input type="radio" id="soap_version" name="soap_version" value="3"
+               onclick="loadFaultCode('3');">POX       
         <%
-            }
+        } else if (faultMediator.getSoapVersion() == 3){
         %>
+        <input type="radio" id="soap_version" name="soap_version" value="1"
+               onclick="loadFaultCode('1');">SOAP 1.1
+        <input type="radio" id="soap_version" name="soap_version" value="2" 
+               onclick="loadFaultCode('2');">SOAP 1.2
+        <input type="radio" id="soap_version" name="soap_version" value="3" checked="true"
+               onclick="loadFaultCode('3');">POX
+        <%}%>
     </td>
 </tr>
-<tr id="fault_code_11" <% if (faultMediator.getSoapVersion() == 2) { %> style="display:none; "<% } %>>
+<tr id="fault_code_11" <% if (faultMediator.getSoapVersion() == 2 || faultMediator.getSoapVersion() == 3) { %> style="display:none; "<% } %>>
     <td>
         <fmt:message key="mediator.fault.faultcode"/><span class="required">*</span>
     </td>
@@ -199,7 +210,7 @@
         <div id="nsEditor" style="display:none;"/>
     </td>
 </tr>
-<tr>
+<tr id ="fault_actor_table_row" <% if (faultMediator.getSoapVersion() == 3) { %> style="display:none;" <% } %> >
     <td id="fault_actor_row"><fmt:message key="mediator.fault.actor"/></td>
     <td id="role_row" style="display:none;"><fmt:message
             key="mediator.fault.role"/></td>

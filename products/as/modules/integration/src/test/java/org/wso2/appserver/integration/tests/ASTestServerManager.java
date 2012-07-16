@@ -259,6 +259,26 @@ public class ASTestServerManager extends TestServerManager {
     	sourcePath = computeJaggerySourcePath(fileName);
     	destinationPath = computeJaggeryDestPath(carbonHome, fileName);
         copySampleFile(sourcePath, destinationPath);
+        
+    	fileName = "uri.jag";
+    	sourcePath = computeJaggerySourcePath(fileName);
+    	destinationPath = computeJaggeryDestPath(carbonHome, fileName);
+        copySampleFile(sourcePath, destinationPath);
+        
+    	fileName = "inculde.jag";
+    	sourcePath = computeJaggerySourcePath(fileName);
+    	destinationPath = computeJaggeryDestPath(carbonHome, fileName);
+        copySampleFile(sourcePath, destinationPath);
+        
+    	fileName = "entry.jag";
+    	sourcePath = computeJaggerySourcePath(fileName);
+    	destinationPath = computeJaggeryDestPath(carbonHome, fileName);
+        copySampleFile(sourcePath, destinationPath);
+        
+    	fileName = "wsstub.jag";
+    	sourcePath = computeJaggerySourcePath(fileName);
+    	destinationPath = computeJaggeryDestPath(carbonHome, fileName);
+        copySampleFile(sourcePath, destinationPath);
 		
     }
 
@@ -335,7 +355,6 @@ public class ASTestServerManager extends TestServerManager {
 
 	    private String computeJaggerySourcePath(String fileName) {
 	        String samplesDir = System.getProperty("jaggery.samples.dir");
-	        log.info("compute Jaggery Source Path samplesDir : " + samplesDir+fileName);
 	        return samplesDir + File.separator + fileName;
 	        
 	    }

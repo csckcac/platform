@@ -115,7 +115,7 @@
 
         <h2>@product.name@ - Documentation</h2>
 
-        <p>See the <a href="docs_index.html">full list of documents</a> with instructions on
+        <p>See the <a href="http://docs.wso2.org/wiki/display/Governance450">Wiki docs of v@product.version@</a>for instructions on
             installation, administration and running samples with @product.name@, v@product.version@</p>
 
     </body>

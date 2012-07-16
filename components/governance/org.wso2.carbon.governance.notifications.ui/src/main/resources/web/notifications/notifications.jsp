@@ -178,7 +178,12 @@
             String owner = subscription.getOwner();
             String path = subscription.getTopic();
             if(path.contains("#")||path.contains("*")){
-                path = (path.substring(RegistryEvent.TOPIC_PREFIX.length()+1, path.lastIndexOf("/"))).split("/",2)[1];
+                String tempPath=path.substring(RegistryEvent.TOPIC_PREFIX.length()+1, path.lastIndexOf("/"));
+                if(tempPath.contains("/")){
+                    path = tempPath.split("/",2)[1];
+                }else{
+                    path="/";
+                }
             }else{
                 path = (path.substring(RegistryEvent.TOPIC_PREFIX.length()+1, path.length())).split("/",2)[1];
             }

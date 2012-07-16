@@ -215,6 +215,7 @@
                                 <bundleDef> org.wso2.carbon:org.wso2.carbon.appfactory.login.ui</bundleDef>
                                 <bundleDef> org.wso2.carbon:org.wso2.carbon.appfactory.userstore</bundleDef>
                                 <bundleDef> org.wso2.carbon:org.wso2.carbon.appfactory.maven.build</bundleDef> 
+				<bundleDef> org.wso2.carbon:org.wso2.carbon.appfactory.governance</bundleDef> 
                             </bundles>
                             <importBundles>
                             </importBundles>

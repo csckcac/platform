@@ -1,6 +1,6 @@
 <?xml version="1.0"?>
 <artifactType type="application/vnd.wso2-application+xml" shortName="application" singularLabel="application" pluralLabel="applications" hasNamespace="false" iconSet="7">
-	<storagePath>/application/@{application_version}/@{application_name}</storagePath>
+	<storagePath>/repository/applications/Development/@{application_name}/trunk</storagePath>
 	<nameAttribute>application_name</nameAttribute>
 	<ui>
 		<list>

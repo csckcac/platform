@@ -68,8 +68,8 @@ public final class APIConstants {
     public static final String API_OVERVIEW_DESCRIPTION = "overview_description";
     public static final String API_OVERVIEW_ENDPOINT_URL = "overview_endpointURL";
     public static final String API_OVERVIEW_SANDBOX_URL = "overview_sandboxURL";
-    public static final String API_OVERVIEW_WSDL = "overview_WSDL";
-    public static final String API_OVERVIEW_WADL = "overview_WADL";
+    public static final String API_OVERVIEW_WSDL = "overview_wsdl";
+    public static final String API_OVERVIEW_WADL = "overview_wadl";
     public static final String API_OVERVIEW_PROVIDER = "overview_provider";
     public static final String API_OVERVIEW_THUMBNAIL_URL="overview_thumbnail";
     public static final String API_OVERVIEW_STATUS="overview_status";
@@ -79,9 +79,7 @@ public final class APIConstants {
     public static final String API_OVERVIEW_TEC_OWNER ="overview_technicalOwner";
     public static final String API_OVERVIEW_TEC_OWNER_EMAIL ="overview_technicalOwnerEmail";
     public static final String API_OVERVIEW_BUSS_OWNER ="overview_businessOwner";
-    public static final String API_OVERVIEW_BUSS_OWNER_EMAIL ="overview_BusinessOwnerEmail";
-
-
+    public static final String API_OVERVIEW_BUSS_OWNER_EMAIL ="overview_businessOwnerEmail";
 
 
     //Those constance are used in Provider artifact.

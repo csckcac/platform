@@ -373,7 +373,7 @@ public final class APIUtil {
         try {
             artifactManager = new GenericArtifactManager(registry, key);
         } catch (RegistryException e) {
-            String msg = "Failed to initialized GenericArtifactManager";
+            String msg = "Failed to initialize GenericArtifactManager";
             log.error(msg, e);
             throw new APIManagementException(msg, e);
         }

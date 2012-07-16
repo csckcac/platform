@@ -604,14 +604,16 @@ public class APIProviderHostObject extends ScriptableObject {
                 }
 
                 myn.put(12, myn, uriTempArr);
-                myn.put(13, myn, checkValue(api.getSandboxUrl()));
-                myn.put(14, myn, checkValue(tiersDescSet.toString()));
-                myn.put(15, myn, checkValue(api.getBusinessOwner()));
-                myn.put(16, myn, checkValue(api.getBusinessOwnerEmail()));
-                myn.put(17, myn, checkValue(api.getTechnicalOwner()));
-                myn.put(18, myn, checkValue(api.getTechnicalOwnerEmail()));
-                myn.put(19, myn, checkValue(api.getWadlUrl()));
             }
+
+            myn.put(13, myn, checkValue(api.getSandboxUrl()));
+            myn.put(14, myn, checkValue(tiersDescSet.toString()));
+            myn.put(15, myn, checkValue(api.getBusinessOwner()));
+            myn.put(16, myn, checkValue(api.getBusinessOwnerEmail()));
+            myn.put(17, myn, checkValue(api.getTechnicalOwner()));
+            myn.put(18, myn, checkValue(api.getTechnicalOwnerEmail()));
+            myn.put(19, myn, checkValue(api.getWadlUrl()));
+
         } catch (APIManagementException e) {
             throw new APIManagementException("Error occurred while getting API information of the api- " + apiName + "-" + version, e);
         } catch (Exception e) {

@@ -145,6 +145,21 @@ public class SynapseConfigAdminClient {
     }
 
     /**
+     * update synapse configuration
+     *
+     * @param configuration synapse configuration
+     * @return configuration update status
+     * @throws java.rmi.RemoteException       throwable exception
+     * @throws javax.servlet.ServletException throwable exception
+     * @throws javax.xml.stream.XMLStreamException
+     *                                        throwable exception
+     */
+    public boolean updateConfiguration(OMElement configuration)
+            throws XMLStreamException, ServletException, RemoteException {
+        return configServiceAdminStub.updateConfiguration(configuration);
+    }
+
+    /**
      * Validate configuration
      *
      * @param configuration ynapse configuration

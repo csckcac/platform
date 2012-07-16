@@ -115,6 +115,6 @@ public class ESBTestCaseUtils {
             throws RemoteException, XMLStreamException, ServletException {
         SynapseConfigAdminClient synapseConfigAdminClient =
                 new SynapseConfigAdminClient(backendURL, sessionCookie);
-        synapseConfigAdminClient.updateConfiguration(config.toString());
+        synapseConfigAdminClient.updateConfiguration(config);
     }
 }

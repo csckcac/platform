@@ -168,7 +168,7 @@
             document.getElementById('urltoolbox').disabled = false;
         } else {
             document.getElementById('toolbox').disabled = true;
-            document.getElementById('urltoolbox').disabled = false;
+            document.getElementById('urltoolbox').disabled = true;
         }
     }
 </script>

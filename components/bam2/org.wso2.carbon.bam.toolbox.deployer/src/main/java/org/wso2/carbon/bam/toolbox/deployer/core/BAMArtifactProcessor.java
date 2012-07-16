@@ -104,20 +104,12 @@ public class BAMArtifactProcessor {
         setGadgetNames(toolBoxDTO, barDir);
         setJaggeryAppNames(toolBoxDTO, barDir);
         setStreamDefnNames(toolBoxDTO, barDir);
-
-        String jasperDirectory = barDir + File.separator +
-                BAMToolBoxDeployerConstants.DASHBOARD_DIR +
-                File.separator + BAMToolBoxDeployerConstants.JASPER_DIR;
-
-        if (new File(jasperDirectory).exists()) {
-            setJasperResourceNames(toolBoxDTO, barDir);
-        }
+        setJasperResourceNames(toolBoxDTO, barDir);
         return toolBoxDTO;
     }
 
     private void setScriptsNames(ToolBoxDTO toolBoxDTO, String barDir)
             throws BAMToolboxDeploymentException {
-
         ArrayList<String> scriptNames = getFilesInDirectory(barDir + File.separator + BAMToolBoxDeployerConstants.SCRIPTS_DIR);
         if (scriptNames.size() == 0) {
             toolBoxDTO.setScriptsParentDirectory(null);
@@ -127,6 +119,7 @@ public class BAMArtifactProcessor {
             toolBoxDTO.setScriptNames(scriptNames);
         }
     }
+
 
     private void setStreamDefnNames(ToolBoxDTO toolBoxDTO, String barDir)
             throws BAMToolboxDeploymentException {
@@ -160,25 +153,23 @@ public class BAMArtifactProcessor {
 
     private void setGadgetNames(ToolBoxDTO toolBoxDTO, String barDir)
             throws BAMToolboxDeploymentException {
-        if (new File(barDir + File.separator + BAMToolBoxDeployerConstants.DASHBOARD_DIR).exists()) {
+        if (new File(barDir + File.separator + BAMToolBoxDeployerConstants.DASHBOARD_DIR
+                + File.separator + BAMToolBoxDeployerConstants.GADGETS_DIR).exists()) {
+
             toolBoxDTO.setGagetsParentDirectory(barDir + File.separator + BAMToolBoxDeployerConstants.DASHBOARD_DIR
                     + File.separator + BAMToolBoxDeployerConstants.GADGETS_DIR);
             Properties properties = new Properties();
             try {
                 properties.load(new FileInputStream(barDir + File.separator + BAMToolBoxDeployerConstants.DASHBOARD_DIR +
                         File.separator + BAMToolBoxDeployerConstants.GADGET_META_FILE));
-                setTabNames(toolBoxDTO, properties);
-                int tabIndex = 1;
-                for (DashBoardTabDTO aTab : toolBoxDTO.getDashboardTabs()) {
-                    String value = properties.getProperty(BAMToolBoxDeployerConstants.GADGET_XMLS_PREFIX + tabIndex + "." + BAMToolBoxDeployerConstants.GADGET_XMLS_SUFFIX);
-                    setGadgetNamesForTab(aTab, value);
-                    tabIndex++;
-                }
+                setTabAndGadgetNames(toolBoxDTO, properties);
+
             } catch (FileNotFoundException e) {
                 log.warn("No " + BAMToolBoxDeployerConstants.GADGET_META_FILE +
-                        " found in dir:" + barDir + File.separator + BAMToolBoxDeployerConstants.DASHBOARD_DIR, e);
-                throw new BAMToolboxDeploymentException("No " + BAMToolBoxDeployerConstants.GADGET_META_FILE +
-                        " found in dir:" + barDir + File.separator + BAMToolBoxDeployerConstants.DASHBOARD_DIR, e);
+                        " found in dir:" + barDir + File.separator + BAMToolBoxDeployerConstants.DASHBOARD_DIR);
+                log.error("Skipping installing dashboard artifacts..");
+                toolBoxDTO.setGagetsParentDirectory(null);
+                toolBoxDTO.setDashboardTabs(new ArrayList<DashBoardTabDTO>());
             } catch (IOException e) {
                 log.error(e.getMessage(), e);
                 throw new BAMToolboxDeploymentException(e.getMessage(), e);
@@ -191,87 +182,147 @@ public class BAMArtifactProcessor {
 
     private void setJasperResourceNames(ToolBoxDTO toolBoxDTO, String barDir)
             throws BAMToolboxDeploymentException {
-        toolBoxDTO.setJasperParentDirectory(barDir + File.separator +
+        String jasperDirectory = barDir + File.separator +
                 BAMToolBoxDeployerConstants.DASHBOARD_DIR +
-                File.separator + BAMToolBoxDeployerConstants.JASPER_DIR);
-        Properties properties = new Properties();
-        try {
-            properties.load(new FileInputStream(barDir + File.separator +
+                File.separator + BAMToolBoxDeployerConstants.JASPER_DIR;
+        if (new File(jasperDirectory).exists()) {
+            toolBoxDTO.setJasperParentDirectory(barDir + File.separator +
                     BAMToolBoxDeployerConstants.DASHBOARD_DIR +
-                    File.separator +
-                    BAMToolBoxDeployerConstants.JASPER_META_FILE));
-            setJasperTabNames(toolBoxDTO, properties);
-            int tabIndex = 1;
-            for (JasperTabDTO aTab : toolBoxDTO.getJasperTabs()) {
-                String value = properties.getProperty(
-                        BAMToolBoxDeployerConstants.GADGET_XMLS_PREFIX + tabIndex + "." +
-                                BAMToolBoxDeployerConstants.JRXML_SUFFIX);
-                aTab.setTabId(tabIndex);
-                setJRXMLForTab(aTab, value);
-                tabIndex++;
-            }
+                    File.separator + BAMToolBoxDeployerConstants.JASPER_DIR);
+            Properties properties = new Properties();
+            try {
+                properties.load(new FileInputStream(barDir + File.separator +
+                        BAMToolBoxDeployerConstants.DASHBOARD_DIR +
+                        File.separator +
+                        BAMToolBoxDeployerConstants.JASPER_META_FILE));
 
-            toolBoxDTO.setDataSource(properties.getProperty(BAMToolBoxDeployerConstants.DATASOURCE));
-            toolBoxDTO.setDataSourceConfiguration(barDir + File.separator +
-                    BAMToolBoxDeployerConstants.DASHBOARD_DIR +
-                    File.separator +
-                    properties.getProperty(BAMToolBoxDeployerConstants.
-                            DATASOURCE_CONFIGURATION));
-        } catch (FileNotFoundException e) {
-            log.error("No " + BAMToolBoxDeployerConstants.JASPER_META_FILE +
-                    " found in dir:" + barDir + File.separator + BAMToolBoxDeployerConstants.DASHBOARD_DIR, e);
-            throw new BAMToolboxDeploymentException("No " + BAMToolBoxDeployerConstants.JASPER_META_FILE +
-                    " found in dir:" + barDir + File.separator
-                    + BAMToolBoxDeployerConstants.DASHBOARD_DIR, e);
-        } catch (IOException e) {
-            log.error(e.getMessage(), e);
-            throw new BAMToolboxDeploymentException(e.getMessage(), e);
+                setJasperTabAndJrxmlNames(toolBoxDTO, properties);
+
+                toolBoxDTO.setDataSource(properties.getProperty(BAMToolBoxDeployerConstants.DATASOURCE));
+                toolBoxDTO.setDataSourceConfiguration(barDir + File.separator +
+                        BAMToolBoxDeployerConstants.DASHBOARD_DIR +
+                        File.separator +
+                        properties.getProperty(BAMToolBoxDeployerConstants.
+                                DATASOURCE_CONFIGURATION));
+            } catch (FileNotFoundException e) {
+                log.error("No " + BAMToolBoxDeployerConstants.JASPER_META_FILE +
+                        " found in dir:" + barDir + File.separator + BAMToolBoxDeployerConstants.DASHBOARD_DIR, e);
+                throw new BAMToolboxDeploymentException("No " + BAMToolBoxDeployerConstants.JASPER_META_FILE +
+                        " found in dir:" + barDir + File.separator
+                        + BAMToolBoxDeployerConstants.DASHBOARD_DIR, e);
+            } catch (IOException e) {
+                log.error(e.getMessage(), e);
+                throw new BAMToolboxDeploymentException(e.getMessage(), e);
+            }
+        } else {
+            toolBoxDTO.setJasperParentDirectory(null);
+            toolBoxDTO.setJasperTabs(new ArrayList<JasperTabDTO>());
         }
     }
 
-    private void setJasperTabNames(ToolBoxDTO toolBoxDTO, Properties props)
+    private void setJasperTabAndJrxmlNames(ToolBoxDTO toolBoxDTO, Properties props)
             throws BAMToolboxDeploymentException {
-        String tabs = props.getProperty(BAMToolBoxDeployerConstants.TAB_NAMES).trim();
-        String[] tabNames = tabs.split(",");
-        if (tabNames == null || tabNames.length == 0) {
-            throw new BAMToolboxDeploymentException("Invalid tbox artifact. No tab names found in dashboard.properties");
-        } else {
-            boolean valid = false;
-            for (String aTabName : tabNames) {
-                if (!aTabName.trim().equals("")) {
-                    valid = true;
-                    JasperTabDTO tabDTO = new JasperTabDTO();
-                    tabDTO.setTabName(aTabName.trim());
-                    toolBoxDTO.addJasperTab(tabDTO);
+        String tabs = props.getProperty(BAMToolBoxDeployerConstants.JASPER_TABS_VAR_NAME).trim();
+        if (null != tabs && !tabs.equals("")) {
+            String[] tabVarNames = tabs.split(",");
+            if (tabVarNames == null || tabVarNames.length == 0) {
+                throw new BAMToolboxDeploymentException("Invalid tbox artifact. No tabs found in jasper.properties");
+            } else {
+                boolean valid = false;
+                int tabId = 1;
+                for (String aTabVarName : tabVarNames) {
+                    if (!aTabVarName.trim().equals("")) {
+                        valid = true;
+                        JasperTabDTO tabDTO = new JasperTabDTO();
+                        String tabName = props.getProperty(BAMToolBoxDeployerConstants.JASPER_TAB_PREFIX + "."
+                                + aTabVarName.trim() + "." + BAMToolBoxDeployerConstants.TAB_NAME_SUFFIX);
+                        if (null == tabName || tabName.equals("")) {
+                            tabName = aTabVarName;
+                        }
+                        tabDTO.setTabName(tabName);
+                        toolBoxDTO.addJasperTab(tabDTO);
+
+                        String jrxml = props.getProperty(BAMToolBoxDeployerConstants.JASPER_TAB_PREFIX + "."
+                                + aTabVarName.trim() + "." + BAMToolBoxDeployerConstants.JRXML_NAME_SUFFIX);
+                        if (null != jrxml && !jrxml.trim().equals("")) {
+                            tabDTO.setTabId(tabId);
+                            tabDTO.setJrxmlFileName(jrxml.trim());
+                        } else {
+                            log.warn("No gadgets are specified for tab: " + tabName);
+                        }
+                        tabId++;
+                    }
+                }
+                if (!valid) {
+                    toolBoxDTO.setJasperParentDirectory(null);
+                    log.error("Invalid tbox artifact. No tab names " +
+                            "found in jasper.properties");
+                    throw new BAMToolboxDeploymentException("Invalid tbox artifact. No tab names " +
+                            "found in jasper.properties");
+
                 }
             }
-            if (!valid) {
-                throw new BAMToolboxDeploymentException("Invalid tbox artifact. No tab names " +
-                        "found in dashboard.properties");
-            }
+        } else {
+            toolBoxDTO.setJasperParentDirectory(null);
+            log.error("Invalid tbox artifact. No property " + BAMToolBoxDeployerConstants.DASHBOARD_TABS_VAR_NAME +
+                    "found in jasper.properties");
+            throw new BAMToolboxDeploymentException("Invalid tbox artifact. No property " + BAMToolBoxDeployerConstants.DASHBOARD_TABS_VAR_NAME +
+                    "found in jasper.properties");
         }
     }
 
-    private void setTabNames(ToolBoxDTO toolBoxDTO, Properties props)
+    private void setTabAndGadgetNames(ToolBoxDTO toolBoxDTO, Properties props)
             throws BAMToolboxDeploymentException {
-        String tabs = props.getProperty(BAMToolBoxDeployerConstants.TAB_NAMES).trim();
-        String[] tabNames = tabs.split(",");
-        if (tabNames == null || tabNames.length == 0) {
-            throw new BAMToolboxDeploymentException("Invalid tbox artifact. No tab names found in dashboard.properties");
-        } else {
-            boolean valid = false;
-            for (String aTabName : tabNames) {
-                if (!aTabName.trim().equals("")) {
-                    valid = true;
-                    DashBoardTabDTO tabDTO = new DashBoardTabDTO();
-                    tabDTO.setTabName(aTabName.trim());
-                    toolBoxDTO.addDashboradTab(tabDTO);
+        String tabs = props.getProperty(BAMToolBoxDeployerConstants.DASHBOARD_TABS_VAR_NAME).trim();
+        if (null != tabs && !tabs.equals("")) {
+            String[] tabVarNames = tabs.split(",");
+            if (tabVarNames == null || tabVarNames.length == 0) {
+                throw new BAMToolboxDeploymentException("Invalid tbox artifact. No tabs found in dashboard.properties");
+            } else {
+                boolean valid = false;
+                for (String aTabVarName : tabVarNames) {
+                    if (!aTabVarName.trim().equals("")) {
+                        valid = true;
+                        DashBoardTabDTO tabDTO = new DashBoardTabDTO();
+                        String tabName = props.getProperty(BAMToolBoxDeployerConstants.DASHBOARD_TAB_PREFIX + "."
+                                + aTabVarName.trim() + "." + BAMToolBoxDeployerConstants.TAB_NAME_SUFFIX);
+                        if (null == tabName || tabName.equals("")) {
+                            tabName = aTabVarName;
+                        }
+                        tabDTO.setTabName(tabName);
+                        toolBoxDTO.addDashboradTab(tabDTO);
+
+                        String gadgets = props.getProperty(BAMToolBoxDeployerConstants.DASHBOARD_TAB_PREFIX + "."
+                                + aTabVarName.trim() + "." + BAMToolBoxDeployerConstants.GADGET_NAME_SUFFIX);
+                        if (null != gadgets && !gadgets.trim().equals("")) {
+                            String[] gadgetNames = gadgets.trim().split(",");
+                            for (String aGadget : gadgetNames) {
+                                if (null != aGadget && !aGadget.trim().equals("")) {
+                                    tabDTO.addGadget(aGadget.trim());
+                                } else {
+                                    log.warn("Empty gadget name found for tab: " + tabName);
+                                }
+                            }
+                        } else {
+                            log.warn("No gadgets are specified for tab: " + tabName);
+                        }
+                    }
+                }
+                if (!valid) {
+                    toolBoxDTO.setGagetsParentDirectory(null);
+                    log.error("Invalid tbox artifact. No tab names " +
+                            "found in dashboard.properties");
+                    throw new BAMToolboxDeploymentException("Invalid tbox artifact. No tab names " +
+                            "found in dashboard.properties");
+
                 }
             }
-            if (!valid) {
-                throw new BAMToolboxDeploymentException("Invalid tbox artifact. No tab names " +
-                        "found in dashboard.properties");
-            }
+        } else {
+            toolBoxDTO.setGagetsParentDirectory(null);
+            log.error("Invalid tbox artifact. No property " + BAMToolBoxDeployerConstants.DASHBOARD_TABS_VAR_NAME +
+                    "found in dashboard.properties");
+            throw new BAMToolboxDeploymentException("Invalid tbox artifact. No property " + BAMToolBoxDeployerConstants.DASHBOARD_TABS_VAR_NAME +
+                    "found in dashboard.properties");
         }
     }
 

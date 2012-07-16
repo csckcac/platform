@@ -31,24 +31,22 @@ public class BAMToolBoxDeployerConstants {
     public static final String DATASOURCE = "datasource";
     public static final String DATASOURCE_CONFIGURATION = "datasource.configuration";
 
-    public static final String TAB_NAMES = "tab.names";
-    public static final String GADGET_XMLS_PREFIX = "tab.name";
-    public static final String GADGET_XMLS_SUFFIX = "gadget.xmls";
-    public static final String JRXML_SUFFIX = "jrxml";
+    public static final String DASHBOARD_TABS_VAR_NAME = "dashboard.tabs";
+    public static final String DASHBOARD_TAB_PREFIX = "dashboard.tabs";
+    public static final String TAB_NAME_SUFFIX = "name";
+    public static final String GADGET_NAME_SUFFIX = "gadgets";
 
-    public static final String JAGGERY_APP_FILES = "jaggery.app.files";
+
+    public static final String JASPER_TABS_VAR_NAME = "jasper.tabs";
+    public static final String JASPER_TAB_PREFIX = "jasper.tabs";
+    public static final String JRXML_NAME_SUFFIX = "jrxml";
+
+
     public static final String JAGGERY_DEPLOYMENT_DIR = "jaggeryapps/gadgetgen";
 
     public static final String BAM_ARTIFACT_EXT = "tbox";
 
     public static final String DEFAULT_CRON = "1 * * * * ? *";
-
-    public static final String SERVICES_SUFFIX = "services";
-    public static final String AUTHENTICATION_ADMIN_SERVICE = "AuthenticationAdmin";
-    public static final String HIVE_SCRIPT_STORE_SERVICE = "HiveScriptStoreService";
-    public static final String DASHBOARD_ADMIN_SERVICE = "DashboardService";
-    public static final String REGISTRY_RESOURCE_ADMIN_SERVICE = "ResourceAdminService";
-    public static final String LOCAL_TRANSPORT = "local:/";
 
     public static String BAM_DEPLOYMET_FOLDER = "bam-toolbox";
     public static String PORT_OFF_SET = "Ports.Offset";

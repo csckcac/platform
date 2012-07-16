@@ -383,4 +383,14 @@ public class DataPublisher {
     }
 
 
+
+    /**
+     * Disconnecting from the server
+     */
+    public void stopNow() {
+        agent.getAgentAuthenticator().disconnect(dataPublisherConfiguration);
+        agent.shutdownNow(this);
+    }
+
+
 }

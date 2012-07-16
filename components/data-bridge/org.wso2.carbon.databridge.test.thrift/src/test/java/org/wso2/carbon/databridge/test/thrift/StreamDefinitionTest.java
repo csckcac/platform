@@ -86,7 +86,6 @@ public class StreamDefinitionTest extends TestCase {
         Assert.assertEquals(id1, id2);
         //In this case correlation data is null
         dataPublisher.publish(id1, new Object[]{"127.0.0.1"}, null, new Object[]{"IBM", 96.8, 300, 120.6, 70.4});
-        Thread.sleep(3000);
         dataPublisher.stop();
         testServer.stop();
     }
@@ -143,7 +142,6 @@ public class StreamDefinitionTest extends TestCase {
 
         //In this case correlation data is null
         dataPublisher.publish(streamDef, new Object[]{"127.0.0.1"}, null, new Object[]{"IBM", 96.8, 300, 120.6, 70.4});
-        Thread.sleep(3000);
         dataPublisher.stop();
         testServer.stop();
     }
@@ -200,7 +198,6 @@ public class StreamDefinitionTest extends TestCase {
 
         //In this case correlation data is null
         dataPublisher.publish(streamDef, new Object[]{"127.0.0.1"}, null, new Object[]{"IBM", 96.8, 300, 120.6, 70.4});
-        Thread.sleep(3000);
         dataPublisher.stop();
         testServer.stop();
     }
@@ -262,7 +259,6 @@ public class StreamDefinitionTest extends TestCase {
         }
         Assert.assertTrue(exceptionOccurred);
 
-        Thread.sleep(3000);
         dataPublisher.stop();
         testServer.stop();
     }

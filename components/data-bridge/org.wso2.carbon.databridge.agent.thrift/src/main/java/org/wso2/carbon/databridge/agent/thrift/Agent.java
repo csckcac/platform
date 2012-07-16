@@ -104,12 +104,38 @@ public class Agent {
      */
     public void shutdown() {
         try {
-            transportPool.close();
+            while (threadPool.getActiveCount() > 0) {
+                Thread.sleep(500);
+            }
             threadPool.shutdown();
+            transportPool.close();
         } catch (Exception e) {
             log.warn("Agent shutdown failed");
         }
     }
+
+    /**
+     * To shutdown Agent and DataPublishers immediately
+     */
+    synchronized void shutdownNow(DataPublisher dataPublisher) {
+        removeDataPublisher(dataPublisher);
+        if (dataPublisherList.size() == 0) {
+            shutdownNow();
+        }
+    }
+
+    /**
+     * To shutdown Agent immediately
+     */
+    public void shutdownNow() {
+        try {
+            threadPool.shutdown();
+            transportPool.close();
+        } catch (Exception e) {
+            log.warn("Agent forceful shutdown failed",e);
+        }
+    }
+
 
     public AgentConfiguration getAgentConfiguration() {
         return agentConfiguration;

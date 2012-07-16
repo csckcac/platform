@@ -160,7 +160,6 @@ public class EventTest extends TestCase {
         dataPublisher.publish(streamId, System.currentTimeMillis(), new Object[]{"127.0.0.2"}, null, new Object[]{"WSO2", 100.8, 200, 110.4, 74.7});
         //else the user can publish event it self 
         dataPublisher.publish(new Event(streamId, System.currentTimeMillis(), new Object[]{"127.0.0.3"}, null, new Object[]{"WSO2", 100.8, 200, 110.4, 74.7}));
-        Thread.sleep(3000);
 
         dataPublisher.stop();
         testServer.stop();
@@ -219,7 +218,6 @@ public class EventTest extends TestCase {
         dataPublisher.publish(shortStreamId, System.currentTimeMillis(), new Object[]{"127.0.0.2"}, null, new Object[]{"WSO2", 100.8, 200});
         //else the user can publish event it self
         dataPublisher.publish(new Event(streamId, System.currentTimeMillis(), new Object[]{"127.0.0.3"}, null, new Object[]{"WSO2", 100.8, 200, 110.4, 74.7}));
-        Thread.sleep(3000);
         dataPublisher.stop();
         testServer.stop();
     }
@@ -301,7 +299,6 @@ public class EventTest extends TestCase {
         dataPublisher.publish(receivedStreamId, System.currentTimeMillis(), new Object[]{"127.0.0.2"}, null, new Object[]{"WSO2", 100.8, 200, 110.4, 74.7});
 //        else the user can publish event it self
         dataPublisher.publish(new Event(receivedStreamId, System.currentTimeMillis(), new Object[]{"127.0.0.3"}, null, new Object[]{"WSO2", 100.8, 200, 110.4, 74.7}));
-        Thread.sleep(3000);
 
         dataPublisher.stop();
         testServer.stop();
@@ -345,7 +342,6 @@ public class EventTest extends TestCase {
         dataPublisher.publish(streamId, System.currentTimeMillis(), new Object[]{"127.0.0.2"}, null, new Object[]{"WSO2", 100.8, 200, 110.4, 74.7});
         //else the user can publish event it self
         dataPublisher.publish(new Event(streamId, System.currentTimeMillis(), new Object[]{"127.0.0.3"}, null, new Object[]{"WSO2", 100.8, 200, 110.4, 74.7}));
-        Thread.sleep(3000);
 
         dataPublisher.stop();
         testServer.stop();
@@ -388,7 +384,6 @@ public class EventTest extends TestCase {
         dataPublisher.publish(streamId, System.currentTimeMillis(), new Object[]{"127.0.0.2"}, null, new Object[]{"WSO2", 100.8, 200, 110.4, 74.7});
         //else the user can publish event it self
         dataPublisher.publish(new Event(streamId, System.currentTimeMillis(), new Object[]{"127.0.0.3"}, null, new Object[]{"WSO2", 100.8, 200, 110.4, 74.7}));
-        Thread.sleep(3000);
 
         dataPublisher.stop();
         testServer.stop();
@@ -428,9 +423,9 @@ public class EventTest extends TestCase {
                                                      "}");
         //In this case correlation data is null
         dataPublisher.publish(streamId, new Object[]{"127.0.0.1"}, null, new Object[]{"IBM", 96.8, 300, 120.6, 70.4});
-        Thread.sleep(1000);
+        Thread.sleep(3000);
         testServer.stop();
-        Thread.sleep(10000);
+        Thread.sleep(12000);
         testServer.start(7631);
         Thread.sleep(3000);
         //Stream is again defined here because we are using inmMemoryDataStore at the server and it wont persist data
@@ -450,7 +445,8 @@ public class EventTest extends TestCase {
                                    "          {'name':'max','type':'DOUBLE'}," +
                                    "          {'name':'min','type':'Double'}" +
                                    "  ]" +
-                                   "}");   Thread.sleep(1000);
+                                   "}");
+        Thread.sleep(1000);
         dataPublisher.publish(streamId, new Object[]{"127.0.0.1"}, null, new Object[]{"IBM", 96.8, 300, 120.6, 70.4});
         dataPublisher.stop();
         testServer.stop();

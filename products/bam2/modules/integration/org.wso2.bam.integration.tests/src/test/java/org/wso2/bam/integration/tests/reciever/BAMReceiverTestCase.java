@@ -6,7 +6,6 @@ import org.apache.axis2.context.ConfigurationContext;
 import org.apache.axis2.context.ConfigurationContextFactory;
 import org.apache.commons.logging.Log;
 import org.apache.commons.logging.LogFactory;
-import org.testng.annotations.Test;
 import org.wso2.carbon.analytics.hive.stub.HiveExecutionServiceStub;
 import org.wso2.carbon.databridge.agent.thrift.Agent;
 import org.wso2.carbon.databridge.agent.thrift.DataPublisher;
@@ -62,7 +61,7 @@ public class BAMReceiverTestCase {
                 KEEP_ALIVE_TIME, TimeUnit.SECONDS, new LinkedBlockingQueue<Runnable>());
     }
 
-    @Test(groups = {"wso2.bam"})
+//    @Test(groups = {"wso2.bam"})
     public void publishConcurrentEvents() throws
             Exception {
         init();

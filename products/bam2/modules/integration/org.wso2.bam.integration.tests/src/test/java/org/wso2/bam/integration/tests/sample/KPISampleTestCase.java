@@ -95,10 +95,10 @@ public class KPISampleTestCase {
 
         assertTrue(deployed != null, "Status of Toolbox is null");
 
-        String toolBoxname = deployedToolBox.replaceAll(".bar", "");
+        String toolBoxname = deployedToolBox.replaceAll(".tbox", "");
 
         for (String aTool : deployed) {
-            aTool = aTool.replaceAll(".bar", "");
+            aTool = aTool.replaceAll(".tbox", "");
             if (aTool.equalsIgnoreCase(toolBoxname)) {
                 installed = true;
                 break;
@@ -146,7 +146,7 @@ public class KPISampleTestCase {
 
 
     public void undeployDefaultToolbox() throws Exception {
-        String toolBoxname = deployedToolBox.replaceAll(".bar", "");
+        String toolBoxname = deployedToolBox.replaceAll(".tbox", "");
         toolboxStub.undeployToolBox(new String[]{toolBoxname});
 
         Thread.sleep(15000);

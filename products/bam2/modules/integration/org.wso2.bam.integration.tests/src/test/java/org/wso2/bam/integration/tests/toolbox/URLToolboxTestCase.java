@@ -44,7 +44,7 @@ public class URLToolboxTestCase {
     private static final String SERVER_URL = "https://localhost:9443/";
     private BAMToolboxDepolyerServiceStub toolboxStub;
     private static String TOOLBOX_URL = "https://svn.wso2.org/repos/wso2/carbon/platform/trunk/products/" +
-            "bam2/modules/samples/toolboxes/KPI_Phone_Retail_Store.bar";
+            "bam2/modules/samples/toolboxes/KPI_Phone_Retail_Store.tbox";
 
     private String deployedToolBox = "";
 
@@ -79,11 +79,11 @@ public class URLToolboxTestCase {
 
         assertTrue(deployed != null, "Status of Toolbox is null");
 
-        String toolBoxname = deployedToolBox.replaceAll(".bar", "");
+        String toolBoxname = deployedToolBox.replaceAll(".tbox", "");
         boolean installed = false;
 
         for (String aTool : deployed) {
-            aTool = aTool.replaceAll(".bar", "");
+            aTool = aTool.replaceAll(".tbox", "");
             if (aTool.equalsIgnoreCase(toolBoxname)) {
                 installed = true;
                 break;
@@ -94,7 +94,7 @@ public class URLToolboxTestCase {
 
     @Test(groups = {"wso2.bam"}, dependsOnMethods = "urlToolBoxDeployment")
     public void undeployURlToolBox() throws Exception {
-        String toolBoxname = deployedToolBox.replaceAll(".bar", "");
+        String toolBoxname = deployedToolBox.replaceAll(".tbox", "");
         toolboxStub.undeployToolBox(new String[]{toolBoxname});
 
         log.info("Un installing toolbox...");

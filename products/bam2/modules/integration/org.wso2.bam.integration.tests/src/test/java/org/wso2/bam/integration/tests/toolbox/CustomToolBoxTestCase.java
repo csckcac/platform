@@ -79,11 +79,11 @@ public class CustomToolBoxTestCase {
 
         assertTrue(deployed != null, "Status of Toolbox is null");
 
-        String toolBoxname = deployedToolBox.replaceAll(".bar", "");
+        String toolBoxname = deployedToolBox.replaceAll(".tbox", "");
         boolean installed = false;
 
         for (String aTool : deployed) {
-            aTool = aTool.replaceAll(".bar", "");
+            aTool = aTool.replaceAll(".tbox", "");
             if (aTool.equalsIgnoreCase(toolBoxname)) {
                 installed = true;
                 break;
@@ -96,7 +96,7 @@ public class CustomToolBoxTestCase {
 
     @Test(groups = {"wso2.bam"}, dependsOnMethods = "customToolBoxDeployment")
     public void undeployCustomToolbox() throws Exception {
-        String toolBoxname = deployedToolBox.replaceAll(".bar", "");
+        String toolBoxname = deployedToolBox.replaceAll(".tbox", "");
         toolboxStub.undeployToolBox(new String[]{toolBoxname});
 
         log.info("Un installing toolbox...");

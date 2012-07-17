@@ -279,6 +279,21 @@ public class ASTestServerManager extends TestServerManager {
     	sourcePath = computeJaggerySourcePath(fileName);
     	destinationPath = computeJaggeryDestPath(carbonHome, fileName);
         copySampleFile(sourcePath, destinationPath);
+        
+    	fileName = "metadata.jag";
+    	sourcePath = computeJaggerySourcePath(fileName);
+    	destinationPath = computeJaggeryDestPath(carbonHome, fileName);
+        copySampleFile(sourcePath, destinationPath);
+        
+    	fileName = "resources.jag";
+    	sourcePath = computeJaggerySourcePath(fileName);
+    	destinationPath = computeJaggeryDestPath(carbonHome, fileName);
+        copySampleFile(sourcePath, destinationPath);
+        
+    	fileName = "collection.jag";
+    	sourcePath = computeJaggerySourcePath(fileName);
+    	destinationPath = computeJaggeryDestPath(carbonHome, fileName);
+        copySampleFile(sourcePath, destinationPath);
 		
     }
 

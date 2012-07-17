@@ -80,8 +80,10 @@ public class GetDependenciesOperation extends AbstractOperation{
             String path = GovernanceUtils.getArtifactPath(governanceSystemRegistry, artifactId);
             Association[] associations = governanceSystemRegistry.getAssociations(path, "depends");
             for(Association association : associations){
-                String destinationPath = association.getDestinationPath();
-                dependencies.add(governanceSystemRegistry.get(destinationPath).getUUID());
+                if(association.getSourcePath().equals(path)){
+                    String destinationPath = association.getDestinationPath();
+                    dependencies.add(governanceSystemRegistry.get(destinationPath).getUUID());
+                }
             }
 
         } catch (RegistryException e) {

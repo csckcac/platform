@@ -78,11 +78,6 @@
                 <version>${junit.version}</version>
             </dependency>
             <dependency>
-                <groupId>org.mvel.wso2</groupId>
-                <artifactId>mvel2</artifactId>
-                <version>${mvel2.orbit.version}</version>
-            </dependency>
-            <dependency>
                 <groupId>org.antlr.wso2</groupId>
                 <artifactId>antlr-runtime</artifactId>
                 <version>${antlr-runtime.orbit.version}</version>

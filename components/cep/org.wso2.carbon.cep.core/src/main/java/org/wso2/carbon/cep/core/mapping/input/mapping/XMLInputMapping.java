@@ -21,11 +21,11 @@ import org.apache.axiom.om.xpath.AXIOMXPath;
 import org.apache.axis2.AxisFault;
 import org.apache.axis2.databinding.utils.BeanUtil;
 import org.jaxen.JaxenException;
-import org.wso2.carbon.agent.commons.Event;
-import org.wso2.carbon.cep.core.mapping.property.XMLProperty;
 import org.wso2.carbon.cep.core.XpathDefinition;
 import org.wso2.carbon.cep.core.exception.CEPEventProcessingException;
 import org.wso2.carbon.cep.core.internal.process.ReflectionBasedObjectSupplier;
+import org.wso2.carbon.cep.core.mapping.property.XMLProperty;
+import org.wso2.carbon.databridge.commons.Event;
 
 import java.lang.reflect.Method;
 import java.util.ArrayList;

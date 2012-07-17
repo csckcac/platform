@@ -20,19 +20,21 @@ package org.wso2.carbon.cep.core.internal.config.input.mapping;
 import org.apache.axiom.om.OMElement;
 import org.apache.commons.logging.Log;
 import org.apache.commons.logging.LogFactory;
-import org.wso2.carbon.agent.commons.Event;
 import org.wso2.carbon.cep.core.exception.CEPConfigurationException;
+import org.wso2.carbon.cep.core.internal.util.CEPConstants;
 import org.wso2.carbon.cep.core.mapping.input.mapping.InputMapping;
 import org.wso2.carbon.cep.core.mapping.input.mapping.TupleInputMapping;
 import org.wso2.carbon.cep.core.mapping.property.TupleProperty;
-import org.wso2.carbon.cep.core.internal.util.CEPConstants;
+import org.wso2.carbon.databridge.commons.Event;
 import org.wso2.carbon.registry.core.Collection;
 import org.wso2.carbon.registry.core.Registry;
 import org.wso2.carbon.registry.core.Resource;
 import org.wso2.carbon.registry.core.exceptions.RegistryException;
 
 import javax.xml.namespace.QName;
+import java.util.Arrays;
 import java.util.Iterator;
+import java.util.List;
 import java.util.Map;
 
 /**
@@ -87,11 +89,14 @@ public class TupleInputMappingHelper {
     static void addMappingToRegistry(Registry registry, TupleInputMapping tupleInputMapping,
                                      String mappingPath) throws RegistryException {
         if (tupleInputMapping.getProperties() != null) {
-            for (TupleProperty property : tupleInputMapping.getProperties()) {
+            List<TupleProperty> properties = tupleInputMapping.getProperties();
+            for (int i = 0, propertiesSize = properties.size(); i < propertiesSize; i++) {
+                TupleProperty property = properties.get(i);
                 Resource propertyResource = registry.newResource();
                 propertyResource.addProperty(CEPConstants.CEP_REGISTRY_NAME, property.getName());
                 propertyResource.addProperty(CEPConstants.CEP_REGISTRY_DATA_TYPE, property.getDataType());
                 propertyResource.addProperty(CEPConstants.CEP_REGISTRY_TYPE, property.getType());
+                propertyResource.addProperty(CEPConstants.CEP_REGISTRY_POSITION, i+"");
                 registry.put(mappingPath + CEPConstants.CEP_REGISTRY_PROPERTIES + CEPConstants.CEP_REGISTRY_BS + property.getName(), propertyResource);
             }
         }
@@ -106,17 +111,19 @@ public class TupleInputMappingHelper {
                 if (
                         (CEPConstants.CEP_REGISTRY_BS + CEPConstants.CEP_REGISTRY_PROPERTIES)
                                 .equals(mappingChild.substring(mappingChild.lastIndexOf(CEPConstants.CEP_REGISTRY_BS)))) {
+                    TupleProperty[] tupleProperties= new TupleProperty[mapCollection.getChildCount()];
                     for (String defs : mapCollection.getChildren()) {
                         Resource propertyResource = registry.get(defs);
                         TupleProperty property = new TupleProperty();
                         property.setName(propertyResource.getProperty(CEPConstants.CEP_REGISTRY_NAME));
                         property.setDataType(propertyResource.getProperty(CEPConstants.CEP_REGISTRY_DATA_TYPE));
                         property.setType(propertyResource.getProperty(CEPConstants.CEP_REGISTRY_TYPE));
-                        inputMapping.addProperty(property);
+                        tupleProperties[Integer.parseInt(propertyResource.getProperty(CEPConstants.CEP_REGISTRY_POSITION))]=property;
                         if (inputMapping.getMappingClass() != Map.class && inputMapping.getMappingClass() != Event.class) {
                             inputMapping.putWriteMethod(property.getName(), InputMappingHelper.getMethod(inputMapping.getMappingClass(), property.getName()));
                         }
                     }
+                    inputMapping.setProperties(Arrays.asList(tupleProperties));
                 }
             }
         }

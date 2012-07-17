@@ -17,9 +17,9 @@
 package org.wso2.carbon.cep.siddhi.backend;
 
 import org.wso2.carbon.cep.core.listener.CEPEventListener;
-import org.wso2.siddhi.api.eventstream.EventStream;
 import org.wso2.siddhi.core.event.Event;
-import org.wso2.siddhi.core.node.CallbackHandler;
+import org.wso2.siddhi.core.stream.output.Callback;
+import org.wso2.siddhi.query.api.definition.StreamDefinition;
 
 import java.util.ArrayList;
 import java.util.HashMap;
@@ -29,33 +29,37 @@ import java.util.List;
  * This class receives events from the siddhi cep framework and
  * send the messages through QueryResultListner
  */
-public class SiddhiEventListner extends CallbackHandler {
+public class SiddhiEventListner extends Callback {
 
     private CEPEventListener cepEventListener;
-    private EventStream eventStream;
     private String[] names;
 
-    public SiddhiEventListner(EventStream eventStream, CEPEventListener cepEventListener) {
-        super(eventStream.getStreamId());
+    public SiddhiEventListner(StreamDefinition streamDefinition,
+                              CEPEventListener cepEventListener) {
+//        super(eventStream.getStreamId());
         this.cepEventListener = cepEventListener;
-        this.eventStream = eventStream;
-        this.names = eventStream.getNames();
+        this.names = streamDefinition.getAttributeNameArray();
     }
 
+
+    private List<HashMap<String, Object>> toMap(Event[] events) {
+        List<HashMap<String, Object>> list = new ArrayList<HashMap<String, Object>>(events.length);
+        for (Event event : events) {
+            HashMap<String, Object> map = new HashMap<String, Object>();
+            Object[] values = event.getData();
+            for (int i = 0; i < names.length; i++) {
+                map.put(names[i], values[i]);
+            }
+            list.add(map);
+        }
+        return list;
+    }
 
     @Override
-    public void callBack(Event event) {
-        cepEventListener.onComplexEvent(toMap(event));
-    }
-
-    private List<HashMap<String, Object>> toMap(Event event) {
-        HashMap<String, Object> map = new HashMap<String, Object>();
-        Object[] values = event.getValues();
-        for (int i = 0; i < names.length; i++) {
-            map.put(names[i], values[i]);
+    public void receive(long timestamp, Event[] inEvents, Event[] removeEvents,
+                        Event[] faultEvents) {
+        if (inEvents != null) {
+            cepEventListener.onComplexEvent(toMap(inEvents));
         }
-        List<HashMap<String, Object>> list = new ArrayList<HashMap<String, Object>>(1);
-        list.add(map);
-        return list;
     }
 }

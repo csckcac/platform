@@ -35,17 +35,21 @@ public class SiddhiBackendRuntimeDS {
 
     private static final Log log = LogFactory.getLog(SiddhiBackendRuntimeDS.class);
 
-    protected void activate(ComponentContext context) {
-        // registers with the cep service
-        CEPEngineProvider esperCEPEngineProvider = new CEPEngineProvider();
-        esperCEPEngineProvider.setName("SiddhiCEPRuntime");
-        esperCEPEngineProvider.setProviderClass(SiddhiBackEndRuntimeFactory.class);
+    private CEPEngineProvider cepEngineProvider=null;
 
-        try {
-            SiddhiBackendRuntimeValueHolder.getInstance().getCEPService()
-                    .registerCEPEngineProvider(esperCEPEngineProvider);
-        } catch (CEPConfigurationException e) {
-            log.error("Can not register Fusion back end runtime with the cep service ");
+    protected void activate(ComponentContext context) {
+        if (cepEngineProvider == null) {
+            // registers with the cep service
+            cepEngineProvider = new CEPEngineProvider();
+            cepEngineProvider.setName("SiddhiCEPRuntime");
+            cepEngineProvider.setProviderClass(SiddhiBackEndRuntimeFactory.class);
+
+            try {
+                SiddhiBackendRuntimeValueHolder.getInstance().getCEPService()
+                        .registerCEPEngineProvider(cepEngineProvider);
+            } catch (CEPConfigurationException e) {
+                log.error("Can not register Fusion back end runtime with the cep service ");
+            }
         }
 
     }

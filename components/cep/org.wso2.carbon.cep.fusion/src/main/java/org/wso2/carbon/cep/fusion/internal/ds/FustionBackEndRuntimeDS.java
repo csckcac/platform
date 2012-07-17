@@ -27,6 +27,7 @@ import org.osgi.service.component.ComponentContext;
 /**
  * this class is used to get the CEPServiceInterface service. it is used to
  * register this compoent with the cep service
+ *
  * @scr.component name="fusionbackend.component" immediate="true"
  * @scr.reference name="cep.service"
  * interface="org.wso2.carbon.cep.core.CEPServiceInterface" cardinality="1..1"
@@ -36,18 +37,21 @@ import org.osgi.service.component.ComponentContext;
 public class FustionBackEndRuntimeDS {
 
     private static final Log log = LogFactory.getLog(FustionBackEndRuntimeDS.class);
+    private CEPEngineProvider droolsFusionCEPEngineProvider = null;
 
     protected void activate(ComponentContext context) {
-        // registers with the cep service
-        CEPEngineProvider droolsFusionCEPEngineProvider = new CEPEngineProvider();
-        droolsFusionCEPEngineProvider.setName("DroolsFusionCEPRuntime");
-        droolsFusionCEPEngineProvider.setProviderClass(FusionBackEndRuntimeFactory.class);
+        if (droolsFusionCEPEngineProvider == null) {
+            // registers with the cep service
+            droolsFusionCEPEngineProvider = new CEPEngineProvider();
+            droolsFusionCEPEngineProvider.setName("DroolsFusionCEPRuntime");
+            droolsFusionCEPEngineProvider.setProviderClass(FusionBackEndRuntimeFactory.class);
 
-        try {
-            FusionBackEndRuntimeValueHolder.getInstance().getCEPService()
-                .registerCEPEngineProvider(droolsFusionCEPEngineProvider);
-        } catch (CEPConfigurationException e) {
-            log.error("Can not register Fusion back end runtime with the cep service ",e);
+            try {
+                FusionBackEndRuntimeValueHolder.getInstance().getCEPService()
+                        .registerCEPEngineProvider(droolsFusionCEPEngineProvider);
+            } catch (CEPConfigurationException e) {
+                log.error("Can not register Fusion back end runtime with the cep service ", e);
+            }
         }
 
     }

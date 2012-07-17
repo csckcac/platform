@@ -20,16 +20,16 @@ import junit.framework.Assert;
 import junit.framework.TestCase;
 import org.apache.axiom.om.OMElement;
 import org.apache.axiom.om.impl.builder.StAXOMBuilder;
-import org.wso2.carbon.agent.commons.Attribute;
-import org.wso2.carbon.agent.commons.AttributeType;
-import org.wso2.carbon.agent.commons.Event;
-import org.wso2.carbon.agent.commons.EventStreamDefinition;
 import org.wso2.carbon.cep.core.XpathDefinition;
 import org.wso2.carbon.cep.core.exception.CEPEventProcessingException;
 import org.wso2.carbon.cep.core.internal.util.CEPConstants;
 import org.wso2.carbon.cep.core.mapping.input.mapping.TupleInputMapping;
 import org.wso2.carbon.cep.core.mapping.input.mapping.XMLInputMapping;
 import org.wso2.carbon.cep.core.mapping.property.TupleProperty;
+import org.wso2.carbon.databridge.commons.Attribute;
+import org.wso2.carbon.databridge.commons.AttributeType;
+import org.wso2.carbon.databridge.commons.Event;
+import org.wso2.carbon.databridge.commons.StreamDefinition;
 
 import javax.xml.stream.XMLStreamException;
 import java.io.ByteArrayInputStream;
@@ -79,7 +79,7 @@ public class TestInputMapping extends TestCase {
         event.setPayloadData(new Object[]{"IBM", 145.4, 500});
 
         //TypeDef
-        EventStreamDefinition eventStreamDefinition = new EventStreamDefinition("TestStream");
+        StreamDefinition eventStreamDefinition = new StreamDefinition("TestStream");
         List<Attribute> metaDataList = new ArrayList<Attribute>();
         metaDataList.add(new Attribute("ipAdd", AttributeType.STRING));
         eventStreamDefinition.setMetaData(metaDataList);
@@ -120,7 +120,7 @@ public class TestInputMapping extends TestCase {
         event.setPayloadData(new Object[]{"IBM", 145.4, 500});
 
         //TypeDef
-        EventStreamDefinition eventStreamDefinition = new EventStreamDefinition("TestStream");
+        StreamDefinition eventStreamDefinition = new StreamDefinition("TestStream");
         List<Attribute> metaDataList = new ArrayList<Attribute>();
         metaDataList.add(new Attribute("ipAdd", AttributeType.STRING));
         eventStreamDefinition.setMetaData(metaDataList);

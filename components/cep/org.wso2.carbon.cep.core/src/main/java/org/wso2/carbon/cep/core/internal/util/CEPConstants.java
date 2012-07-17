@@ -95,6 +95,7 @@ public interface CEPConstants {
     String CEP_REGISTRY_STREAM = "stream";
     String CEP_REGISTRY_NAME = "name";
     String CEP_REGISTRY_TYPE = "type";
+    String CEP_REGISTRY_POSITION = "position";
     String CEP_REGISTRY_LISTENER_NAME = "listenerName";
     String CEP_REGISTRY_XPATH = "xpath";
     String CEP_REGISTRY_XPATH_DEFS = "xpathDefinitions";

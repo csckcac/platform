@@ -18,8 +18,8 @@ package org.wso2.carbon.cep.core.mapping.output.mapping;
 
 import org.apache.commons.logging.Log;
 import org.apache.commons.logging.LogFactory;
-import org.wso2.carbon.agent.commons.Event;
 import org.wso2.carbon.cep.core.exception.CEPEventProcessingException;
+import org.wso2.carbon.databridge.commons.Event;
 
 import java.util.List;
 

@@ -17,7 +17,6 @@
 package org.wso2.carbon.cep.siddhi;
 
 import junit.framework.TestCase;
-import org.wso2.carbon.agent.commons.Event;
 import org.wso2.carbon.cep.core.Expression;
 import org.wso2.carbon.cep.core.backend.CEPBackEndRuntime;
 import org.wso2.carbon.cep.core.exception.CEPConfigurationException;
@@ -26,6 +25,7 @@ import org.wso2.carbon.cep.core.mapping.input.mapping.InputMapping;
 import org.wso2.carbon.cep.core.mapping.input.mapping.TupleInputMapping;
 import org.wso2.carbon.cep.core.mapping.property.TupleProperty;
 import org.wso2.carbon.cep.siddhi.backend.SiddhiBackEndRuntimeFactory;
+import org.wso2.carbon.databridge.commons.Event;
 
 import java.util.ArrayList;
 import java.util.List;

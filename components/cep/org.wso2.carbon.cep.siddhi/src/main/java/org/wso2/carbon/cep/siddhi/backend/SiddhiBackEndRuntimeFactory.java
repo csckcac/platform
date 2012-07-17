@@ -23,10 +23,10 @@ import org.wso2.carbon.cep.core.mapping.input.mapping.InputMapping;
 import org.wso2.carbon.cep.core.mapping.input.mapping.TupleInputMapping;
 import org.wso2.carbon.cep.core.mapping.input.mapping.XMLInputMapping;
 import org.wso2.carbon.cep.core.mapping.property.Property;
-import org.wso2.siddhi.api.eventstream.InputEventStream;
 import org.wso2.siddhi.core.SiddhiManager;
-import org.wso2.siddhi.core.exception.SiddhiException;
-import org.wso2.siddhi.core.node.InputHandler;
+import org.wso2.siddhi.core.config.SiddhiConfiguration;
+import org.wso2.siddhi.core.stream.input.InputHandler;
+import org.wso2.siddhi.query.api.definition.StreamDefinition;
 
 import java.util.HashMap;
 import java.util.List;
@@ -40,11 +40,17 @@ public class SiddhiBackEndRuntimeFactory implements CEPBackEndRuntimeFactory {
                                                      int tenantId)
             throws CEPConfigurationException {
 
-        SiddhiManager siddhiManager = new SiddhiManager();
+        SiddhiConfiguration siddhiConfig=new SiddhiConfiguration();
+        siddhiConfig.setSingleThreading(false);
+        SiddhiManager siddhiManager = new SiddhiManager(siddhiConfig);
 
         Map<String, InputHandler> siddhiInputHandlerMap = new HashMap<String, InputHandler>();
 
         for (InputMapping mapping : mappings) {
+
+            StreamDefinition streamDefinition = new StreamDefinition();
+            streamDefinition.name(mapping.getStream());
+
             List properties;
             if (mapping instanceof TupleInputMapping) {
                 TupleInputMapping tupleInputMapping = (TupleInputMapping) mapping;
@@ -53,33 +59,28 @@ public class SiddhiBackEndRuntimeFactory implements CEPBackEndRuntimeFactory {
                 XMLInputMapping xmlInputMapping = (XMLInputMapping) mapping;
                 properties = xmlInputMapping.getProperties();
             }
-            String[] attributeNames = new String[properties.size()];
-            Class[] attributeTypes = new Class[properties.size()];
+//            String[] attributeNames = new String[properties.size()];
+//            Class[] attributeTypes = new Class[properties.size()];
 
-            for (int i = 0, propertiesSize = properties.size(); i < propertiesSize; i++) {
-                Property property = (Property) properties.get(i);
-                attributeNames[i] = property.getName();
-                attributeTypes[i] = SiddhiBackEndRuntime.javaTypeToClass.get(property.getType());
+            for (Object property1 : properties) {
+                Property property = (Property) property1;
+                streamDefinition.attribute(property.getName(), SiddhiBackEndRuntime.javaToSiddhiType.get(property.getType()));
             }
 
 
-            try {
-                siddhiInputHandlerMap.put(mapping.getStream(),
-                                          siddhiManager.addInputEventStream(
-                                                  new InputEventStream(mapping.getStream(),
-                                                                       attributeNames,
-                                                                       attributeTypes)));
-            } catch (SiddhiException e) {
-                throw new CEPConfigurationException("Invalid input stream configuration for " +
-                                                    mapping.getStream(), e);
-            }
+//            try {
+            siddhiInputHandlerMap.put(mapping.getStream(), siddhiManager.defineStream(streamDefinition));
+//            } catch (SiddhiException e) {
+//                throw new CEPConfigurationException("Invalid input stream configuration for " +
+//                                                    mapping.getStream(), e);
+//            }
         }
 
-        try {
-            siddhiManager.init();
-        } catch (SiddhiException e) {
-            throw new CEPConfigurationException("Cannot init Siddhi Backend", e);
-        }
+//        try {
+//            siddhiManager.init();
+//        } catch (SiddhiException e) {
+//            throw new CEPConfigurationException("Cannot init Siddhi Backend", e);
+//        }
         return new SiddhiBackEndRuntime(bucketName, siddhiManager, siddhiInputHandlerMap, tenantId);
     }
 }

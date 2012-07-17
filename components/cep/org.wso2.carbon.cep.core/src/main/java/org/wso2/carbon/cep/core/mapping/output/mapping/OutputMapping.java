@@ -16,10 +16,9 @@
 
 package org.wso2.carbon.cep.core.mapping.output.mapping;
 
-import org.wso2.carbon.agent.commons.Attribute;
-import org.wso2.carbon.agent.commons.Event;
-import org.wso2.carbon.agent.commons.EventStreamDefinition;
 import org.wso2.carbon.cep.core.exception.CEPEventProcessingException;
+import org.wso2.carbon.databridge.commons.Event;
+import org.wso2.carbon.databridge.commons.StreamDefinition;
 
 import java.beans.BeanInfo;
 import java.beans.IntrospectionException;
@@ -36,11 +35,11 @@ public abstract class OutputMapping {
     protected Map<Class, Map<String, Method>> methodCache;
 
     //For tuple Events
-    protected Map<String, EventStreamDefinition> typeDefMap;
+    protected Map<String, StreamDefinition> typeDefMap;
     protected Map<String, Map<String, Integer>> typeDefCache;
 
     protected OutputMapping() {
-        typeDefMap = new HashMap<String, EventStreamDefinition>();
+        typeDefMap = new HashMap<String, StreamDefinition>();
         methodCache = new HashMap<Class, Map<String, Method>>();
         typeDefCache = new HashMap<String, Map<String, Integer>>();
     }
@@ -56,7 +55,7 @@ public abstract class OutputMapping {
         } else if (event instanceof Event) {
             Map<String, Integer> positions = typeDefCache.get(((Event) event).getStreamId());
             if (positions == null) {
-                List<Attribute> attributes = typeDefMap.get(((Event) event).getStreamId()).getPayloadData();
+                List<org.wso2.carbon.databridge.commons.Attribute> attributes = typeDefMap.get(((Event) event).getStreamId()).getPayloadData();
                 positions = new HashMap<String, Integer>();
                 for (int i = 0, attributesSize = attributes.size(); i < attributesSize; i++) {
                     positions.put(attributes.get(i).getName(), i);
@@ -113,7 +112,7 @@ public abstract class OutputMapping {
         this.methodCache = methodCache;
     }
 
-    public void defineStream(EventStreamDefinition eventStreamDefinition) {
+    public void defineStream(StreamDefinition eventStreamDefinition) {
         typeDefMap.put(eventStreamDefinition.getName(), eventStreamDefinition);
     }
 

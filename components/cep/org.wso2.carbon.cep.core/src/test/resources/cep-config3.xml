@@ -1,0 +1,126 @@
+<cepConfiguration xmlns="http://wso2.org/carbon/cep">
+    <!-- details of the Back end runtime provider can be esper or fusion -->
+    <cepEngineProviders>
+        <cepEngineProvider name="esperEngineProvider" default="true"
+                           class="org.wso2.carbon.cep.esper.EsperBackendRuntimeFactory"/>
+    </cepEngineProviders>
+
+    <!-- set of buckets to process the cep events -->
+    <buckets>
+        <!-- Bucket in the user guide Fusion / Local Broker-->
+        <bucket name="StockQuoteAnalyzerFusionLocal" engineProvider="DroolsFusionCEPRuntime" owner="admin" overWriteRegistryStoredBucket="true">
+            <description>This bucket analyzes stock quotes and trigger
+                an event if the last traded amount is greater than 100.
+            </description>
+            <input topic="AllStockQuotes"  brokerName="localBroker">
+                <xmlMapping stream="allStockQuotes">
+                    <xpathDefinition prefix="quotedata"
+                                     namespace="http://ws.cdyne.com/"/>
+                    <property name="symbol" xpath="//quotedata:StockQuoteEvent/quotedata:StockSymbol"
+                              type="java.lang.String"/>
+                    <property name="price" xpath="//quotedata:StockQuoteEvent/quotedata:LastTradeAmount"
+                              type="java.lang.Double"/>
+                </xmlMapping>
+            </input>
+
+            <query name="ConditionalStocksDetector">
+                <expression type="inline">package org.wso2.carbon.cep.fusion;
+                    import java.util.HashMap;
+                    global org.wso2.carbon.cep.fusion.listener.FusionEventListener fusionListener;
+                    declare HashMap
+                    @role( event )
+                    end
+                    rule Invoke_Stock_Quotes
+                    when
+                    $stockQuote : HashMap($symbol : this["symbol"], $stockPrice : this["price"], this["picked"] != "true") over
+                    window:time(2m) from entry-point "allStockQuotes";
+                    eval((Double)$stockPrice > 100);
+                    then
+                    $stockQuote.put("picked","true");
+                    update($stockQuote);
+                    HashMap $fastMovingStock = new HashMap();
+                    $fastMovingStock.put("price",$stockPrice);
+                    $fastMovingStock.put("symbol",$symbol);
+                    fusionListener.onEvent($fastMovingStock);
+                    end
+
+
+                </expression>
+                <output topic="ConditionSatisfyingStockQuotes" brokerName="localBroker" >
+                    <xmlMapping>
+                        <quotedata:StockQuoteDataEvent xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+                                                       xmlns:xsd="http://www.w3.org/2001/XMLSchema"
+                                                       xmlns:quotedata="http://ws.cdyne.com/">
+                            <quotedata:StockSymbol>{symbol}</quotedata:StockSymbol>
+                            <quotedata:LastTradeAmount>{price}</quotedata:LastTradeAmount>
+                        </quotedata:StockQuoteDataEvent>
+                    </xmlMapping>
+                </output>
+            </query>
+        </bucket>
+
+        <bucket name="addStatistics" engineProvider="SiddhiCEPRuntime" overWriteRegistryStoredBucket="true">
+
+            <description>BAMServiceStatisticsDataCEPServiceBucket</description>
+            <input topic="inputTopic" brokerName="agentBroker" >
+                <tupleMapping stream="cseStream" eventClass="Tuple">
+                    <property name="symbol"
+                              dataType="payloadData"
+                              type="java.lang.String"/>
+                    <property name="price"
+                              dataType="payloadData"
+                              type="java.lang.Double"/>
+                    <property name="volume"
+                              dataType="payloadData"
+                              type="java.lang.Integer"/>
+                </tupleMapping>
+                <!--<xmlMapping stream="ServiceStatisticsDataEvent">-->
+                    <!--<xpathDefinition prefix="statdata"-->
+                                     <!--namespace="http://wso2.org/ns/2009/09/bam/service/statistics/data"/>-->
+                    <!--<property name="requestCount"-->
+                              <!--xpath="//statdata:ServiceStatisticsData/statdata:RequestCount"-->
+                              <!--type="java.lang.Integer"/>-->
+                    <!--<property name="responseCount"-->
+                              <!--xpath="//statdata:ServiceStatisticsData/statdata:ResponseCount"-->
+                              <!--type="java.lang.Integer"/>-->
+                    <!--<property name="serviceName"-->
+                              <!--xpath="//statdata:ServiceStatisticsData/statdata:ServiceName"-->
+                              <!--type="java.lang.String"/>-->
+                    <!--<property name="faultCount"-->
+                              <!--xpath="//statdata:ServiceStatisticsData/statdata:FaultCount"-->
+                              <!--type="java.lang.Integer"/>-->
+                <!--</xmlMapping>-->
+            </input>
+
+            <query name="SiddhiTestQuery">
+                <expression type="inline" ><![CDATA[
+                        from cseStream [price >= 20]
+                        insert into OutStream symbol, price;
+                ]]></expression>
+                <output topic="ConditionSatisfyingStockQuotes" brokerName="localBroker">
+                    <xmlMapping >
+                        <x:ServiceStatisticsData
+                                xmlns:x="http://wso2.org/ns/2009/09/bam/service/statistics/data"
+                                responseCount="{symbol}">
+                            <x:RequestCount>{symbol}</x:RequestCount>
+                            <x:MaximumResponseTime serviceName="{price}">
+                                <x:FaultCount>{price}</x:FaultCount>
+                            </x:MaximumResponseTime>
+                        </x:ServiceStatisticsData>
+                    </xmlMapping>
+                    <!--<tupleMapping>-->
+                        <!--<metaData>-->
+                            <!--<property name="symbol"/>-->
+                        <!--</metaData>-->
+                        <!--<correlationData></correlationData>-->
+                        <!--<payloadData>-->
+                            <!--<property name="price"/>-->
+                            <!--<property name="volume"/>-->
+                        <!--</payloadData>-->
+                    <!--</tupleMapping>-->
+                </output>
+            </query>
+        </bucket>
+
+    </buckets>
+</cepConfiguration>

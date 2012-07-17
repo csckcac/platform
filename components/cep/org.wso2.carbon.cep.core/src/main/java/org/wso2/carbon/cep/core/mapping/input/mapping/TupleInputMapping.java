@@ -16,11 +16,11 @@
 
 package org.wso2.carbon.cep.core.mapping.input.mapping;
 
-import org.wso2.carbon.agent.commons.Attribute;
-import org.wso2.carbon.agent.commons.Event;
 import org.wso2.carbon.cep.core.exception.CEPEventProcessingException;
-import org.wso2.carbon.cep.core.mapping.property.TupleProperty;
 import org.wso2.carbon.cep.core.internal.util.CEPConstants;
+import org.wso2.carbon.cep.core.mapping.property.TupleProperty;
+import org.wso2.carbon.databridge.commons.Attribute;
+import org.wso2.carbon.databridge.commons.Event;
 
 import java.lang.reflect.Method;
 import java.util.ArrayList;

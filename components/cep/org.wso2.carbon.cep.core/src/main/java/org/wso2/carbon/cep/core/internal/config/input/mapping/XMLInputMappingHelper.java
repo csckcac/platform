@@ -1,35 +1,26 @@
 package org.wso2.carbon.cep.core.internal.config.input.mapping;
 
+import org.apache.axiom.om.OMAbstractFactory;
 import org.apache.axiom.om.OMElement;
+import org.apache.axiom.om.OMFactory;
 import org.apache.commons.logging.Log;
 import org.apache.commons.logging.LogFactory;
-import org.wso2.carbon.agent.commons.Event;
 import org.wso2.carbon.cep.core.XpathDefinition;
 import org.wso2.carbon.cep.core.exception.CEPConfigurationException;
+import org.wso2.carbon.cep.core.internal.util.CEPConstants;
 import org.wso2.carbon.cep.core.mapping.input.mapping.InputMapping;
 import org.wso2.carbon.cep.core.mapping.input.mapping.XMLInputMapping;
 import org.wso2.carbon.cep.core.mapping.property.XMLProperty;
-import org.wso2.carbon.cep.core.internal.util.CEPConstants;
+import org.wso2.carbon.databridge.commons.Event;
 import org.wso2.carbon.registry.core.Collection;
 import org.wso2.carbon.registry.core.Registry;
 import org.wso2.carbon.registry.core.Resource;
 import org.wso2.carbon.registry.core.exceptions.RegistryException;
-import java.util.ArrayList;
+
 import javax.xml.namespace.QName;
 import java.util.Iterator;
 import java.util.List;
 import java.util.Map;
-
-import javax.xml.stream.XMLInputFactory;
-import javax.xml.stream.XMLOutputFactory;
-import javax.xml.stream.XMLStreamException;
-import javax.xml.stream.XMLStreamReader;
-import javax.xml.stream.XMLStreamWriter;
-
-import org.apache.axiom.om.OMAbstractFactory;
-import org.apache.axiom.om.OMElement;
-import org.apache.axiom.om.OMFactory;
-import org.apache.axiom.om.OMNamespace;
 
 /**
  * This Class will help to build XMLMapping object from a given OMElement

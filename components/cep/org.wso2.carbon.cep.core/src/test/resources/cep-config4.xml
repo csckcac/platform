@@ -1,0 +1,78 @@
+<cepConfiguration xmlns="http://wso2.org/carbon/cep">
+    <!-- details of the Back end runtime provider can be esper or fusion -->
+    <cepEngineProviders>
+        <cepEngineProvider name="esperEngineProvider" default="true"
+                           class="org.wso2.carbon.cep.esper.EsperBackendRuntimeFactory"/>
+    </cepEngineProviders>
+
+    <!-- set of buckets to process the cep events -->
+    <buckets>
+
+        <bucket name="kpi-definition" engineProvider="SiddhiCEPRuntime"
+                overWriteRegistryStoredBucket="true">
+
+            <description>BAMServiceStatisticsDataCEPServiceBucket</description>
+            <input topic="org.wso2.bam.phone.retail.store.kpi" brokerName="agentBroker">
+                <tupleMapping stream="retailStoreStream" eventClass="Tuple">
+                    <property name="brand"
+                              dataType="payloadData"
+                              type="java.lang.String"/>
+                    <property name="quantity"
+                              dataType="payloadData"
+                              type="java.lang.Integer"/>
+                    <property name="total"
+                              dataType="payloadData"
+                              type="java.lang.Integer"/>
+                    <property name="user"
+                              dataType="payloadData"
+                              type="java.lang.String"/>
+                </tupleMapping>
+                <!--<xmlMapping stream="ServiceStatisticsDataEvent">-->
+                <!--<xpathDefinition prefix="statdata"-->
+                <!--namespace="http://wso2.org/ns/2009/09/bam/service/statistics/data"/>-->
+                <!--<property name="requestCount"-->
+                <!--xpath="//statdata:ServiceStatisticsData/statdata:RequestCount"-->
+                <!--type="java.lang.Integer"/>-->
+                <!--<property name="responseCount"-->
+                <!--xpath="//statdata:ServiceStatisticsData/statdata:ResponseCount"-->
+                <!--type="java.lang.Integer"/>-->
+                <!--<property name="serviceName"-->
+                <!--xpath="//statdata:ServiceStatisticsData/statdata:ServiceName"-->
+                <!--type="java.lang.String"/>-->
+                <!--<property name="faultCount"-->
+                <!--xpath="//statdata:ServiceStatisticsData/statdata:FaultCount"-->
+                <!--type="java.lang.Integer"/>-->
+                <!--</xmlMapping>-->
+            </input>
+
+            <query name="HigherPurchaseQuery">
+                <expression type="inline"><![CDATA[
+                        from retailStoreStream [quantity >= 4 and total > 400000]
+                        insert into OutStream brand, user, quantity, total;
+                ]]></expression>
+                <output topic="HigherPurchases" brokerName="localBroker">
+                    <xmlMapping>
+                        <x:HigherPurchaseAlert
+                                xmlns:x="http://wso2.org/ns/2009/09/bam/service/statistics/data">
+                            <x:brand>{brand}</x:brand>
+                            <x:user>{user}</x:user>
+                            <x:quantity>{quantity}</x:quantity>
+                            <x:total>{total}</x:total>
+                        </x:HigherPurchaseAlert>
+                    </xmlMapping>
+                    <!--<tupleMapping>-->
+                    <!--<metaData>-->
+                    <!--<property name="symbol"/>-->
+                    <!--</metaData>-->
+                    <!--<correlationData></correlationData>-->
+                    <!--<payloadData>-->
+                    <!--<property name="price"/>-->
+                    <!--<property name="volume"/>-->
+                    <!--</payloadData>-->
+                    <!--</tupleMapping>-->
+                </output>
+            </query>
+        </bucket>
+
+    </buckets>
+</cepConfiguration>

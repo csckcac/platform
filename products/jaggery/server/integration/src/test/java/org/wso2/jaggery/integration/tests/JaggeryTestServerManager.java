@@ -229,6 +229,24 @@ public class JaggeryTestServerManager extends TestServerManager {
 		sourcePath = computeSourcePath(fileName);
 		destinationPath = computeDestPath(carbonHome, fileName);
 		copySampleFile(sourcePath, destinationPath);
+		
+		//metadata object
+		fileName = "metadata.jag";
+		sourcePath = computeSourcePath(fileName);
+		destinationPath = computeDestPath(carbonHome, fileName);
+		copySampleFile(sourcePath, destinationPath);
+		
+		//resources object
+		fileName = "resources.jag";
+		sourcePath = computeSourcePath(fileName);
+		destinationPath = computeDestPath(carbonHome, fileName);
+		copySampleFile(sourcePath, destinationPath);
+		
+		//collection object
+		fileName = "collection.jag";
+		sourcePath = computeSourcePath(fileName);
+		destinationPath = computeDestPath(carbonHome, fileName);
+		copySampleFile(sourcePath, destinationPath);
 
 
 	}

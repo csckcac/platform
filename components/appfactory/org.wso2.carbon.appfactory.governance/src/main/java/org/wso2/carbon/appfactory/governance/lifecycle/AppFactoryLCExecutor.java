@@ -73,6 +73,24 @@ public class AppFactoryLCExecutor implements Execution {
 
         if(resourcePath.startsWith(currentEnvironment)){
             newPath = resourcePath.substring(currentEnvironment.length());
+
+            // If first stage of application, then need to change new resource name to a version (i.e. 1.0.0)
+            if(newPath.endsWith("trunk")){
+                newPath = newPath.substring(0, newPath.length()-5);
+                log.info(newPath);
+
+                String appVersion = currentParameterMap.get("version");
+                // Append version from here
+                if( appVersion != null){
+                    newPath = newPath + appVersion;
+                }
+                else{
+                    log.error("Can not find application version");
+                    return false;
+                }
+
+
+            }
             newPath = targetEnvironment + newPath;
         }else{
             log.warn("Resource is not in the given environment");

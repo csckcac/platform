@@ -374,7 +374,6 @@ function updateResource(v) {
             }
         }
     }
-
     if (methods == "") {
         CARBON.showWarningDialog('<fmt:message key="resource.methods.required"/>');
         return false;
@@ -426,6 +425,7 @@ function updateResource(v) {
                         }
                     }
                 });
+    return true;
 }
 
 function saveApi(apiNameValue, apiContextValue) {

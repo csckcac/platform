@@ -205,9 +205,10 @@
     }
 
     function anonSeqAddEdit(sequence) {
-        updateResource('true');
-        location.href = "designToData.jsp?return=anonSequenceHandler.jsp"
-                                + "&originator=manageAPI.jsp&sequence=" + sequence + "&index=-1";
+        if (updateResource('true') != false) {
+            location.href = "designToData.jsp?return=anonSequenceHandler.jsp"
+                                    + "&originator=manageAPI.jsp&sequence=" + sequence + "&index=-1";
+        }
     }
 
     function anonSeqClear(sequence) {

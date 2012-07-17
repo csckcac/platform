@@ -18,20 +18,6 @@
 
 package org.wso2.carbon.mediation.configadmin;
 
-import org.apache.axiom.om.OMElement;
-import org.apache.synapse.SynapseConstants;
-import org.apache.synapse.config.SynapsePropertiesLoader;
-import org.apache.synapse.config.xml.ProxyServiceFactory;
-import org.apache.synapse.config.xml.XMLConfigConstants;
-import org.apache.synapse.config.xml.endpoints.EndpointFactory;
-import org.apache.synapse.core.axis2.ProxyService;
-import org.apache.synapse.endpoints.Endpoint;
-import org.apache.synapse.endpoints.WSDLEndpoint;
-import org.wso2.carbon.mediator.service.MediatorService;
-import org.wso2.carbon.mediator.service.MediatorStore;
-import org.wso2.carbon.mediator.service.builtin.SequenceMediator;
-
-import javax.xml.namespace.QName;
 import java.io.IOException;
 import java.net.MalformedURLException;
 import java.net.URI;
@@ -40,6 +26,17 @@ import java.util.ArrayList;
 import java.util.Iterator;
 import java.util.List;
 import java.util.Properties;
+
+import javax.xml.namespace.QName;
+
+import org.apache.axiom.om.OMElement;
+import org.apache.synapse.SynapseConstants;
+import org.apache.synapse.config.SynapsePropertiesLoader;
+import org.apache.synapse.config.xml.ProxyServiceFactory;
+import org.apache.synapse.config.xml.SequenceMediatorFactory;
+import org.apache.synapse.config.xml.XMLConfigConstants;
+import org.apache.synapse.config.xml.endpoints.EndpointFactory;
+import org.apache.synapse.core.axis2.ProxyService;
 
 /**
  * This class validates Synapse configuration elements without actually building the
@@ -85,15 +82,13 @@ public class ConfigurationValidator {
         return null;
     }
 
-	private void validateSequence(OMElement sequenceElement,List<ValidationError> errors) {
-	    try{ 
-	     MediatorService service = MediatorStore.getInstance().getMediatorService(sequenceElement);
-	     SequenceMediator sequence = (SequenceMediator) service.getMediator();
-	     sequence.build(sequenceElement);
-	    }catch (Exception e) {
-	       errors.add(newValidationError(sequenceElement, e.getMessage()));
-	    }
-    }
+	private void validateSequence(OMElement sequenceElement, List<ValidationError> errors) {
+		try {
+			new SequenceMediatorFactory().createMediator(sequenceElement, new Properties());
+		} catch (Exception e) {
+			errors.add(newValidationError(sequenceElement, e.getMessage()));
+		}
+	}
 
     private void validateProxyService(OMElement proxyElement, List<ValidationError> errors) {
         try {

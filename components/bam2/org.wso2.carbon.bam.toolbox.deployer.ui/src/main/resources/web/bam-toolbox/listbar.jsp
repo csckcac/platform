@@ -37,6 +37,17 @@
     }
 </script>
 
+<script type="text/javascript">
+    window.onload = setupRefresh;
+
+    function setupRefresh() {
+        setTimeout("refreshPage();", 5000); // milliseconds
+    }
+    function refreshPage() {
+        window.location = location.href;
+    }
+</script>
+
 <carbon:breadcrumb label="available.bam.tools"
                    resourceBundle="org.wso2.carbon.bam.toolbox.deployer.ui.i18n.Resources"
                    topPage="false" request="<%=request%>"/>

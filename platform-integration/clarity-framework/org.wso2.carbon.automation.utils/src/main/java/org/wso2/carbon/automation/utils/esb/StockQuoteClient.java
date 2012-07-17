@@ -81,6 +81,13 @@ public class StockQuoteClient {
         return serviceClient.sendReceive(createStandardRequest(symbol));
     }
 
+    public OMElement sendSimpleStockQuoteRequest(String trpUrl, String addUrl, OMElement payload) throws AxisFault {
+
+            Options options = getOptions(trpUrl, addUrl);
+            serviceClient.setOptions(options);
+            return serviceClient.sendReceive(payload);
+        }
+
     public OMElement sendSecuredSimpleStockQuoteRequest(String trpUrl, String addUrl,
                                                         String symbol, String policyPath)
             throws Exception {

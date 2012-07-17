@@ -3,6 +3,7 @@ package org.wso2.carbon.appfactory.hostobjects.configuration;
 
 import org.mozilla.javascript.Context;
 import org.mozilla.javascript.Function;
+import org.mozilla.javascript.NativeArray;
 import org.mozilla.javascript.Scriptable;
 import org.mozilla.javascript.ScriptableObject;
 import org.wso2.carbon.appfactory.common.AppFactoryConfiguration;
@@ -20,7 +21,7 @@ public class AppFactoryConfigurationReader extends ScriptableObject {
         return hostObjectName;
     }
 
- public static Scriptable jsConstructor(Context cx, Object[] args, Function ctorObj, 
+    public static Scriptable jsConstructor(Context cx, Object[] args, Function ctorObj, 
                                         boolean inNewExpr) throws Exception {
         return new AppFactoryConfigurationReader();
     }
@@ -28,7 +29,7 @@ public class AppFactoryConfigurationReader extends ScriptableObject {
     public String jsFunction_getFirstProperty(String key) throws Exception {
         return appFactoryConfiguration.getFirstProperty(key);
     }
-    public String[] jsFunction_getProperties(String key) throws Exception {
+    public NativeArray jsFunction_getProperties(String key) throws Exception {
         return appFactoryConfiguration.getProperties(key);
     }
 }

@@ -28,7 +28,6 @@ import org.opensaml.xml.validation.ValidationException;
 import org.osgi.framework.BundleContext;
 import org.osgi.util.tracker.ServiceTracker;
 import org.wso2.carbon.CarbonConstants;
-import org.wso2.carbon.core.AbstractAdmin;
 import org.wso2.carbon.core.common.AuthenticationException;
 import org.wso2.carbon.core.security.AuthenticatorsConfiguration;
 import org.wso2.carbon.core.services.authentication.CarbonServerAuthenticator;
@@ -41,7 +40,6 @@ import org.wso2.carbon.identity.authenticator.saml2.sso.util.Util;
 import org.wso2.carbon.registry.core.service.RegistryService;
 import org.wso2.carbon.user.core.UserRealm;
 import org.wso2.carbon.user.core.service.RealmService;
-import org.wso2.carbon.user.core.util.UserCoreUtil;
 import org.wso2.carbon.utils.AuthenticationObserver;
 import org.wso2.carbon.utils.ServerConstants;
 import org.wso2.carbon.utils.multitenancy.MultitenantUtils;
@@ -53,7 +51,7 @@ import java.util.Calendar;
 import java.util.Date;
 import java.util.List;
 
-public class SAML2SSOAuthenticator extends AbstractAdmin implements CarbonServerAuthenticator {
+public class SAML2SSOAuthenticator implements CarbonServerAuthenticator {
 
     private static final int DEFAULT_PRIORITY_LEVEL = 3;
     private static final String AUTHENTICATOR_NAME = SAML2SSOAuthenticatorBEConstants.SAML2_SSO_AUTHENTICATOR_NAME;
@@ -255,6 +253,17 @@ public class SAML2SSOAuthenticator extends AbstractAdmin implements CarbonServer
             return assertion.getSubject().getNameID().getValue();
         }
         return null;
+    }
+
+    private HttpSession getHttpSession() {
+        MessageContext msgCtx = MessageContext.getCurrentMessageContext();
+        HttpSession httpSession = null;
+        if (msgCtx != null) {
+            HttpServletRequest request =
+                    (HttpServletRequest) msgCtx.getProperty(HTTPConstants.MC_HTTP_SERVLETREQUEST);
+            httpSession = request.getSession();
+        }
+        return httpSession;
     }
 
 }

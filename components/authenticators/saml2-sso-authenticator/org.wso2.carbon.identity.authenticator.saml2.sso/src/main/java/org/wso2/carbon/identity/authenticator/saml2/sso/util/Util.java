@@ -30,6 +30,7 @@ import org.opensaml.xml.io.UnmarshallingException;
 import org.w3c.dom.Document;
 import org.w3c.dom.Element;
 import org.w3c.dom.NodeList;
+import org.wso2.carbon.base.MultitenantConstants;
 import org.wso2.carbon.core.util.KeyStoreManager;
 import org.wso2.carbon.identity.authenticator.saml2.sso.SAML2SSOAuthenticatorException;
 import org.wso2.carbon.identity.authenticator.saml2.sso.internal.SAML2SSOAuthBEDataHolder;
@@ -118,12 +119,12 @@ public class Util {
     public static X509CredentialImpl getX509CredentialImplForTenant(String domainName)
             throws SAML2SSOAuthenticatorException {
 
-        int tenantID = 0;
+        int tenantID = MultitenantConstants.SUPER_TENANT_ID;
         RegistryService registryService = SAML2SSOAuthBEDataHolder.getInstance().getRegistryService();
         RealmService realmService = SAML2SSOAuthBEDataHolder.getInstance().getRealmService();
 
         // get the tenantID
-        if (domainName != null) {
+        if (!domainName.equals(MultitenantConstants.SUPER_TENANT_DOMAIN_NAME)) {
             try {
                 tenantID = realmService.getTenantManager().getTenantId(domainName);
             } catch (org.wso2.carbon.user.api.UserStoreException e) {
@@ -139,7 +140,7 @@ public class Util {
 
         X509CredentialImpl credentialImpl = null;
         try {
-            if (tenantID != 0) {    // for non zero tenants, load private key from their generated key store
+            if (tenantID != MultitenantConstants.SUPER_TENANT_ID) {    // for non zero tenants, load private key from their generated key store
                 KeyStore keystore = keyStoreManager.getKeyStore(generateKSNameFromDomainName(domainName));
                 java.security.cert.X509Certificate cert = (java.security.cert.X509Certificate) keystore.getCertificate(domainName);
                 credentialImpl = new X509CredentialImpl(cert);

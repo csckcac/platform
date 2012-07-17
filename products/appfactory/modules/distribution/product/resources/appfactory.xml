@@ -12,7 +12,6 @@
         <Role name="devOps"><Permission>/permission/admin/login</Permission></Role>
         <Role name="qa"><Permission>/permission/admin/login</Permission></Role>
         <Role name="appOwner"><Permission>/permission/admin/login</Permission></Role>
-        <Role name="appOwner"><Permission>/permission/admin/login</Permission></Role>
     </DefaultRoles>
 
     <!--SSO relying party configuration.-->

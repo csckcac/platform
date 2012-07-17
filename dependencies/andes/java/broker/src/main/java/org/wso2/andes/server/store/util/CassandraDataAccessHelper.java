@@ -490,6 +490,28 @@ public class CassandraDataAccessHelper {
         }
     }
 
+    public static void addIntegerByteArrayContentToRaw(String columnFamily,String row,int key,
+                                                       byte[] value,Mutator<String> mutator,boolean execute)
+            throws CassandraDataAccessException {
+
+        if (mutator == null) {
+            throw new CassandraDataAccessException("Can't add Data , no Mutator provided ");
+        }
+
+        if (columnFamily == null || row == null || value == null) {
+            throw new CassandraDataAccessException("Can't add data with columnFamily = " + columnFamily +
+                    " and row=" + row + " key  = " + key + " value = " + value);
+        }
+
+        mutator.addInsertion(
+                    row,
+                    columnFamily,
+                    HFactory.createColumn(key, value, integerSerializer, bytesArraySerializer));
+        if(execute) {
+            mutator.execute();
+        }
+    }
+
 
     /**
      * Add new Column<long,long> to a given row in a given cassandra column family
@@ -587,6 +609,23 @@ public class CassandraDataAccessHelper {
         } catch (Exception e) {
             throw new CassandraDataAccessException("Error while adding a Mapping to row ", e);
         }
+    }
+
+    public static void addMappingToRow(String columnFamily, String row, String cKey, String cValue,
+                                       Mutator<String> mutator, boolean execute) throws CassandraDataAccessException {
+
+        if (mutator == null) {
+            throw new CassandraDataAccessException("Can't add Data , no mutator provided ");
+        }
+
+
+        mutator.addInsertion(row, columnFamily,
+                HFactory.createColumn(cKey, cValue.trim(), stringSerializer, stringSerializer));
+
+        if (execute) {
+            mutator.execute();
+        }
+
     }
 
 

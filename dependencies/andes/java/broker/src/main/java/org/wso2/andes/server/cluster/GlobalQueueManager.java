@@ -65,7 +65,9 @@ public class GlobalQueueManager {
 
 
     private void scheduleWork(String queueName) {
-        GlobalQueueWorker worker = new GlobalQueueWorker(queueName,cassandraMessageStore,20);
+        int batchSize = ClusterResourceHolder.getInstance().getClusterConfiguration().
+                getGlobalQueueWorkerMessageBatchSize();
+        GlobalQueueWorker worker = new GlobalQueueWorker(queueName,cassandraMessageStore,batchSize);
         worker.setRunning(true);
         queueWorkerMap.put(queueName, worker);
         log.debug("Starting Global Queue worker for queue : " + queueName);

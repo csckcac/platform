@@ -120,4 +120,16 @@ public class ClusterConfiguration {
     public void setBindIpAddress(String bindIpAddress) {
         this.bindIpAddress = bindIpAddress;
     }
+
+    public int getGlobalQueueWorkerMessageBatchSize() {
+        return serverConfig.getGlobalQueueWorkerMessageBatchSize();
+    }
+
+    public int getContentPublisherMessageBatchSize() {
+        return serverConfig.getContentPublisherMessageBatchSize();
+    }
+
+    public int getMetadataPublisherMessageBatchSize() {
+        return serverConfig.getMetadataPublisherMessageBatchSize();
+    }
 }

@@ -134,7 +134,6 @@ public class ProtocolOutputConverterImpl implements ProtocolOutputConverter
                     compositeBlock = new CompositeAMQBodyBlock(channelId, deliverBody, contentHeaderBody, firstContentBody);
             writeFrame(compositeBlock);
 
-
             while(writtenSize < bodySize)
             {
 

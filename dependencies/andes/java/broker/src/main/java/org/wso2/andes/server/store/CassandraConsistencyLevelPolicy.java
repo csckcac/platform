@@ -35,6 +35,13 @@ public class CassandraConsistencyLevelPolicy implements ConsistencyLevelPolicy {
     }
 
     public HConsistencyLevel get(OperationType operationType, String s) {
-        return HConsistencyLevel.QUORUM;
+        switch (operationType) {
+            case READ:
+                return HConsistencyLevel.QUORUM;
+            case WRITE:
+                return HConsistencyLevel.QUORUM;
+            default:
+                return HConsistencyLevel.QUORUM; //Just in Case
+        }
     }
 }

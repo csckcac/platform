@@ -28,77 +28,119 @@ import java.util.Calendar;
  * <code>DataCollector</code> is a class that can be used inside broker to
  * Collect statistics.
  */
-@SuppressWarnings( "unused" )
+@SuppressWarnings("unused")
 public class DataCollector {
 
     public static final String DATE_FORMAT_NOW = "yyyy-MM-dd-HH:mm:ss";
 
-	static{
-		try {
 
-            long currentTimeMills = System.currentTimeMillis();
-            SimpleDateFormat sdf = new SimpleDateFormat(DATE_FORMAT_NOW);
-            Calendar cal = Calendar.getInstance();
+    public static final boolean enable = false;
 
-            OUT = new BufferedWriter(new FileWriter("perfdata_broker" +System.currentTimeMillis()+ "_" +
-                    sdf.format(cal.getTime()) + ".log"));
+    public static final String PUBLISHER_WRITE_LATENCY = "PbWL";
+    public static final String TRANSFER_READ_LATENCY = "TrRL";
+    public static final String TRANSFER_MOVE_LATENCY = "TrML";
+    public static final String DELIVERY_SEND_LATENCY = "DlSL";
+    public static final String DELIVERY_READ_LATENCY = "DlRL";
+    public static final String DELIVERY_ACK_LATENCY = "DAckL";
+
+    public static final String ADD_MESSAGE_CONTENT = "AddCNT";
+    public static final String READ_MESSAGE_CONTENT = "ReadCNT";
+
+
+    public static final String TRANSFER_QUEUE_WORKER_UTILISATION = "TrQWU";
+    public static final String DELIVERY_QUEUE_WORKER_UTILISATION = "DlQWU";
+
+
+
+
+
+    static {
+        try {
+            if (enable) {
+
+                long currentTimeMills = System.currentTimeMillis();
+                SimpleDateFormat sdf = new SimpleDateFormat(DATE_FORMAT_NOW);
+                Calendar cal = Calendar.getInstance();
+                OUT = new BufferedWriter(new FileWriter("perfdata_broker" + System.currentTimeMillis() + "_" +
+                        sdf.format(cal.getTime()) + ".log"));
+            }
+
         } catch (Exception e) {
 
-	        e.printStackTrace();
+            e.printStackTrace();
         }
-	}
+    }
 
-	private static Writer OUT;
+    private static Writer OUT;
 
 
     /**
      * Write the give values as a new line to the file
-     * @param value  value to write
+     *
+     * @param value value to write
      */
-	public static void write(String value){
+    public static void write(String value) {
 
-		try {
-	        OUT.write(value);
-	        OUT.write("\n");
+        try {
+            if (!enable) {
+                return;
+            }
+            if (OUT != null) {
+                OUT.write(value);
+                OUT.write("\n");
+            }
         } catch (IOException e) {
 
-	        e.printStackTrace();
+            e.printStackTrace();
         }
-	}
+    }
 
     /**
      * Log the time of an event with a interested value
-     * @param key  key to identify event
-     * @param time time of the event
+     *
+     * @param key   key to identify event
+     * @param time  time of the event
      * @param value values associated with the event
      */
-	public static void write(Object key, long time, long value){
-		DataCollector.write(new StringBuffer().append("(").append(key.toString()).append(",")
-	     		.append(time).append(",").append(value).append(")").toString());
-	}
+    public static void write(Object key, double time, double value) {
+        if (!enable) {
+            return;
+        }
+        DataCollector.write(new StringBuffer().append("(").append(key.toString()).append(",")
+                .append(time).append(",").append(value).append(")").toString());
+    }
 
 
     /**
      * Long an event with the time difference between current time and the given time
-     * @param key event key
-     * @param time  given time
+     *
+     * @param key  event key
+     * @param time given time
      */
-	public static void write(Object key, long time){
-		DataCollector.write(new StringBuffer().append("(").append(key.toString()).append(",")
-	     		.append(time).append(",").append(",").append((System.currentTimeMillis() - time)).append(")").toString());
-	}
+    public static void write(Object key, double time) {
+        if (!enable) {
+            return;
+        }
+        DataCollector.write(new StringBuffer().append("(").append(key.toString()).append(",")
+                .append(time).append(",").append(")").toString());
+    }
 
     /**
      * Flush data to the file
      */
-	public static void flush(){
-		try {
-	        OUT.flush();
+    public static void flush() {
+        if (!enable) {
+            return;
+        }
+        try {
+            if(OUT != null) {
+                OUT.flush();
+            }
         } catch (IOException e) {
 
-	        e.printStackTrace();
+            e.printStackTrace();
         }
-	}
+    }
 
 
 }

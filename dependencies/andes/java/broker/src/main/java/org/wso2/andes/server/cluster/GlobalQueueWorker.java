@@ -19,10 +19,12 @@ package org.wso2.andes.server.cluster;
 
 import org.apache.commons.logging.Log;
 import org.apache.commons.logging.LogFactory;
+import org.python.antlr.ast.Str;
 import org.wso2.andes.server.ClusterResourceHolder;
 import org.wso2.andes.server.cassandra.CassandraQueueMessage;
 import org.wso2.andes.server.cassandra.DefaultClusteringEnabledSubscriptionManager;
 import org.wso2.andes.server.store.CassandraMessageStore;
+import org.wso2.andes.tools.utils.DataCollector;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -73,9 +75,10 @@ public class GlobalQueueWorker implements Runnable{
                 Queue<CassandraQueueMessage> cassandraMessages =
                         cassandraMessageStore.getMessagesFromGlobalQueue(globalQueueName, messageCount);
                 int size = cassandraMessages.size();
+                DataCollector.write(DataCollector.TRANSFER_QUEUE_WORKER_UTILISATION,size);
+                DataCollector.flush();
                 List<String> subscriptions =
                         cassandraSubscriptionManager.getUserQueues(globalQueueName);
-                Random jRandom = new Random();
                 if (subscriptions != null && subscriptions.size() > 0) {
                      List<Long> addedMsgs = new ArrayList<Long>();
 
@@ -84,8 +87,9 @@ public class GlobalQueueWorker implements Runnable{
 
                         CassandraQueueMessage msg = cassandraMessages.poll();
 
-                        int random = jRandom.nextInt(subscriptions.size());
-                        msg.setQueue(subscriptions.get(random));
+                        int index = i % subscriptions.size();
+                        String s  = subscriptions.get(index);
+                        msg.setQueue(s);
 
                         addedMsgs.add(msg.getMessageId());
                         cassandraMessages.add(msg);
@@ -98,6 +102,7 @@ public class GlobalQueueWorker implements Runnable{
 
                       if (size == 0) {
                         try {
+
                             Thread.sleep(ClusterResourceHolder.getInstance().getClusterConfiguration().getQueueWorkerInterval());
                         } catch (InterruptedException e) {
                             //ignore

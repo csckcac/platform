@@ -420,7 +420,6 @@ public class ClusterManager {
                     }
                 }
 
-
             }
 
             for (String member : pmc) {
@@ -452,6 +451,7 @@ public class ClusterManager {
                     }
                 }
 
+                //TODO review this
                 if (parts.length == 2) {
 
                     newDataStr = dataStr + ":" + newPart;

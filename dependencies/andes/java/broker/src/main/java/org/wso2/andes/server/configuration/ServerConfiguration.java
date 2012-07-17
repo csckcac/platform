@@ -563,6 +563,19 @@ public class ServerConfiguration extends ConfigurationPlugin implements SignalHa
     }
 
 
+    public int getGlobalQueueWorkerMessageBatchSize() {
+        return getIntValue("clustering.tuning.messageBatchSizes.globalQueueWorkerMessageBatchSize", 500);
+    }
+
+    public int getContentPublisherMessageBatchSize() {
+        return getIntValue("clustering.tuning.messageBatchSizes.contentPublisherMessageBatchSize", 100);
+    }
+
+    public int getMetadataPublisherMessageBatchSize() {
+        return getIntValue("clustering.tuning.messageBatchSizes.medataDatePublisherMessageBatchSize", 100);
+    }
+
+
     public int getMessageBatchSizeForSubscribersQueues() {
         return getIntValue("clustering.tuning.messageBatchSizes.messageBatchSizeForSubscribersQueues", 20);
     }
@@ -606,7 +619,7 @@ public class ServerConfiguration extends ConfigurationPlugin implements SignalHa
     }
 
     public int getVirtualHostSyncTaskInterval() {
-        return getIntValue("clustering.tuning.waitTimes.virtualHostSyncTaskInterval",10);
+        return getIntValue("clustering.tuning.waitTimes.virtualHostSyncTaskInterval",3600);
     }
 
     public boolean getManagementEnabled()

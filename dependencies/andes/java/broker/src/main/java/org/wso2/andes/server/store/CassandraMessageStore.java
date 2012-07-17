@@ -56,13 +56,13 @@ import org.wso2.andes.server.queue.*;
 import org.wso2.andes.server.store.util.CassandraDataAccessException;
 import org.wso2.andes.server.store.util.CassandraDataAccessHelper;
 import org.wso2.andes.server.virtualhost.VirtualHostConfigSynchronizer;
+import org.wso2.andes.tools.utils.DataCollector;
 
 import java.io.ByteArrayOutputStream;
 import java.lang.ref.SoftReference;
 import java.nio.ByteBuffer;
 import java.util.*;
-import java.util.concurrent.ConcurrentHashMap;
-import java.util.concurrent.ConcurrentSkipListMap;
+import java.util.concurrent.*;
 import java.util.concurrent.atomic.AtomicLong;
 /**
  * Class <code>CassandraMessageStore</code> is the Message Store implemented for cassandra
@@ -146,6 +146,9 @@ public class CassandraMessageStore implements MessageStore {
     private static IntegerSerializer integerSerializer = IntegerSerializer.get();
     private static ByteBufferSerializer byteBufferSerializer = ByteBufferSerializer.get();
 
+
+    private PublishMessageWriter publishMessageWriter;
+    private PublishMessageContentWriter publishMessageContentWriter;
 
 
     private static Log log =
@@ -702,7 +705,7 @@ public void addMessageBatchToUserQueues(CassandraQueueMessage[] messages) throws
 
    public void clearBrowserQueue(List<QueueEntry> messages,String queueName) throws CassandraDataAccessException {
        for (QueueEntry message: messages) {
-           CassandraDataAccessHelper.deleteLongColumnFromRaw(BROWSER_QUEUE_COLUMN_FAMILY,queueName,message.getMessage().getMessageNumber(),keyspace);
+           CassandraDataAccessHelper.deleteStringColumnFromRaw(BROWSER_QUEUE_COLUMN_FAMILY,queueName,message.getMessage().getMessageNumber()+"",keyspace);
        }
    }
 
@@ -716,22 +719,7 @@ public void addMessageBatchToUserQueues(CassandraQueueMessage[] messages) throws
         if (log.isDebugEnabled()) {
             log.debug("Adding Message with id " + messageId + " to Queue " + queue);
         }
-
-        ClusterManager clusterManager = ClusterResourceHolder.getInstance().getClusterManager();
-
-        try {
-
-            CassandraDataAccessHelper.addMessageToQueue(GLOBAL_QUEUES_COLUMN_FAMILY, queue, messageId, message, keyspace);
-
-            CassandraDataAccessHelper.addMappingToRaw(GLOBAL_QUEUE_LIST_COLUMN_FAMILY, GLOBAL_QUEUE_LIST_ROW, queue,
-                    queue, keyspace);
-
-            clusterManager.handleQueueAddition(queue);
-
-        } catch (Exception e) {
-           log.error("Error in adding message to global queue", e);
-           throw new Exception("Error in adding message to global queue", e);
-        }
+        publishMessageWriter.addMessage(queue,messageId,message);
     }
 
 
@@ -743,8 +731,7 @@ public void addMessageBatchToUserQueues(CassandraQueueMessage[] messages) throws
             byte[] chunkData = new byte[src.limit()];
 
             src.duplicate().get(chunkData);
-            CassandraDataAccessHelper.addIntegerByteArrayContentToRaw(MESSAGE_CONTENT_COLUMN_FAMILY,rowKey.trim(),
-                    offset,chunkData,keyspace);
+            publishMessageContentWriter.addMessage(rowKey.trim(), offset, chunkData);
 
         } catch (Exception e) {
             throw new AMQStoreException("Error in adding message content" ,e);
@@ -1539,6 +1526,19 @@ public void addMessageBatchToUserQueues(CassandraQueueMessage[] messages) throws
         th.start();
 
 
+        publishMessageWriter = new PublishMessageWriter();
+        publishMessageWriter.start();
+        Thread messageWriter= new Thread(publishMessageWriter);
+        messageWriter.setName(PublishMessageWriter.class.getName());
+        messageWriter.start();
+
+        publishMessageContentWriter = new PublishMessageContentWriter();
+        publishMessageContentWriter.start();
+        Thread contentWriter = new Thread(publishMessageContentWriter);
+        contentWriter.setName(PublishMessageContentWriter.class.getName());
+        contentWriter.start();
+
+
         AndesConsistantLevelPolicy consistencyLevel = new AndesConsistantLevelPolicy();
 
         keyspace.setConsistencyLevelPolicy(consistencyLevel);
@@ -1594,21 +1594,6 @@ public void addMessageBatchToUserQueues(CassandraQueueMessage[] messages) throws
 
     @Override
     public void close() throws Exception {
-        //Stop all user queues
-        List<String> globalQueues = getGlobalQueues();
-        if (globalQueues != null) {
-            for (String globalQueue : globalQueues) {
-                removeUserQueueFromQpidQueue(globalQueue);
-            }
-        }
-
-        // Stopping message all message flushers when closing down
-        if (!ClusterResourceHolder.getInstance().getClusterConfiguration().isOnceInOrderSupportEnabled()) {
-            ClusteringEnabledSubscriptionManager subscriptionManager =
-                    new DefaultClusteringEnabledSubscriptionManager();
-            ClusterResourceHolder.getInstance().setSubscriptionManager(subscriptionManager);
-            subscriptionManager.stopAllMessageFlushers();
-        }
 
         deleteNodeData(""+ClusterResourceHolder.getInstance().getClusterManager().getNodeId());
 
@@ -2163,6 +2148,309 @@ public void addMessageBatchToUserQueues(CassandraQueueMessage[] messages) throws
 
     public void addContentDeletionTask(long messageId) {
         contentDeletionTasks.put(System.currentTimeMillis(),messageId);
+    }
+
+
+    public class PublishMessageWriter implements Runnable {
+
+
+        private boolean start = false;
+
+        private int writeCount = 200;
+
+        private BlockingQueue<PublishMessageWriterMessage> messageQueue =
+                new LinkedBlockingQueue<PublishMessageWriterMessage>();
+
+        private List<PublishMessageWriterMessage> writtenMessages =
+                new ArrayList<PublishMessageWriterMessage>();
+
+        public PublishMessageWriter() {
+            writeCount = ClusterResourceHolder.getInstance().getClusterConfiguration().
+                    getMetadataPublisherMessageBatchSize();
+        }
+        @Override
+        public void run() {
+            Mutator<String> messageMutator = HFactory.createMutator(keyspace, stringSerializer);
+            Mutator<String> mappingMutator = HFactory.createMutator(keyspace, stringSerializer);
+            while (start) {
+
+
+                int count = 0;
+
+                PublishMessageWriterMessage msg = null;
+                try {
+
+                    msg = messageQueue.peek();
+
+                    if (msg == null) {
+                        /**
+                         * If Queue is empty we flush all the current messages
+                         * Notify all the waiting threads
+                         * reset counters
+                         */
+                        messageMutator.execute();
+                        mappingMutator.execute();
+                        count = 0;
+                        for (PublishMessageWriterMessage m : writtenMessages) {
+                            m.release();
+                        }
+                        writtenMessages.clear();
+
+                        msg = messageQueue.take();
+
+                        // We need to add this message too
+                        bufferMessageToCassandra(msg, messageMutator, mappingMutator);
+                        count++;
+
+                    } else {
+                        //add to mutators
+                        msg = messageQueue.take();
+                        bufferMessageToCassandra(msg, messageMutator, mappingMutator);
+
+                        count++;
+
+                        if (count >= writeCount) {
+                            messageMutator.execute();
+                            mappingMutator.execute();
+                            count = 0;
+                            for (PublishMessageWriterMessage m : writtenMessages) {
+                                m.release();
+                            }
+                            writtenMessages.clear();
+                        }
+                    }
+
+                } catch (InterruptedException e) {
+                    log.error("Error while writing incoming messages", e);
+                    continue;
+                }
+
+
+                if (log.isDebugEnabled()) {
+                    log.debug("Adding Message with id " + msg.messageId + " to Queue " + msg.queue);
+                }
+
+
+            }
+
+        }
+
+
+        private void bufferMessageToCassandra(PublishMessageWriterMessage msg, Mutator<String> messageMutator,
+                                              Mutator<String> mappingMutator) {
+            ClusterManager clusterManager = ClusterResourceHolder.getInstance().getClusterManager();
+
+            try {
+                long sTime = System.nanoTime();
+                CassandraDataAccessHelper.addMessageToQueue(CassandraMessageStore.GLOBAL_QUEUES_COLUMN_FAMILY,
+                        msg.queue, msg.messageId, msg.message, messageMutator, false);
+
+                CassandraDataAccessHelper.addMappingToRaw(CassandraMessageStore.GLOBAL_QUEUE_LIST_COLUMN_FAMILY,
+                        CassandraMessageStore.GLOBAL_QUEUE_LIST_ROW, msg.queue,
+                        msg.queue, mappingMutator, false);
+                writtenMessages.add(msg);
+
+                long eTime = System.nanoTime();
+                DataCollector.write(DataCollector.PUBLISHER_WRITE_LATENCY, (eTime - sTime));
+                DataCollector.flush();
+                // clusterManager.handleQueueAddition(msg.queue);
+
+            } catch (Exception e) {
+                log.error("Error in adding message to global queue", e);
+            }
+        }
+
+        public void addMessage(String queue, long messageId, byte[] message) {
+            try {
+                PublishMessageWriterMessage msg = new PublishMessageWriterMessage(queue, messageId, message);
+                messageQueue.add(msg);
+                msg.waitForToBeWritten();
+
+            } catch (InterruptedException e) {
+                throw new RuntimeException("Error while adding Incomming message", e);
+            }
+        }
+
+        public void start() {
+            start = true;
+        }
+
+        public void stop() {
+            start = false;
+        }
+
+
+        private class PublishMessageWriterMessage {
+            private Semaphore messageCallBack;
+
+            private String queue;
+            private long messageId;
+            private byte[] message;
+
+            public PublishMessageWriterMessage(String queue, long messageId, byte[] message)
+                    throws InterruptedException {
+                this.queue = queue;
+                this.messageId = messageId;
+                this.message = message;
+                this.messageCallBack = new Semaphore(1);
+                messageCallBack.acquire();
+            }
+
+            public void release() {
+                messageCallBack.release();
+            }
+
+            public void waitForToBeWritten() throws InterruptedException {
+                messageCallBack.acquire();
+            }
+
+        }
+    }
+
+    public class PublishMessageContentWriter implements Runnable {
+
+
+        private boolean start = false;
+
+        private int writeCount = 200;
+
+        private BlockingQueue<PublishMessageContentWriterMessage> messageQueue =
+                new LinkedBlockingQueue<PublishMessageContentWriterMessage>();
+
+        private List<PublishMessageContentWriterMessage> writtenMessages =
+                new ArrayList<PublishMessageContentWriterMessage>();
+
+        public PublishMessageContentWriter() {
+            writeCount = ClusterResourceHolder.getInstance().getClusterConfiguration().
+                    getContentPublisherMessageBatchSize();
+        }
+
+        @Override
+        public void run() {
+            Mutator<String> messageMutator = HFactory.createMutator(keyspace, stringSerializer);
+            while (start) {
+
+                int count = 0;
+
+                PublishMessageContentWriterMessage msg = null;
+                try {
+
+                    msg = messageQueue.peek();
+
+                    if (msg == null) {
+                        /**
+                         * If Queue is empty we flush all the current messages
+                         * Notify all the waiting threads
+                         * reset counters
+                         */
+                        messageMutator.execute();
+                        count = 0;
+                        for (PublishMessageContentWriterMessage m : writtenMessages) {
+                            m.release();
+                        }
+                        writtenMessages.clear();
+
+                        msg = messageQueue.take();
+
+                        // We need to add this message too
+                        bufferMessageToCassandra(msg, messageMutator);
+                        count++;
+
+                    } else {
+                        //add to mutators
+                        msg = messageQueue.take();
+
+                        bufferMessageToCassandra(msg, messageMutator);
+
+                        count++;
+
+                        if (count >= writeCount) {
+                            messageMutator.execute();
+                            count = 0;
+                            for (PublishMessageContentWriterMessage m : writtenMessages) {
+                                m.release();
+                            }
+                            writtenMessages.clear();
+                        }
+                    }
+
+                } catch (InterruptedException e) {
+                    log.error("Error while writing incoming messages content", e);
+                    continue;
+                }
+
+
+            }
+
+        }
+
+
+        private void bufferMessageToCassandra(PublishMessageContentWriterMessage msg, Mutator<String> messageMutator
+        ) {
+
+
+            try {
+                long sTime = System.nanoTime();
+                CassandraDataAccessHelper.addIntegerByteArrayContentToRaw(MESSAGE_CONTENT_COLUMN_FAMILY, msg.rowKey,
+                        msg.offset, msg.message, messageMutator, false);
+
+                writtenMessages.add(msg);
+                long eTime = System.nanoTime();
+
+                DataCollector.write(DataCollector.ADD_MESSAGE_CONTENT, (eTime - sTime));
+                DataCollector.flush();
+
+            } catch (Exception e) {
+                log.error("Error in adding message to global queue", e);
+            }
+        }
+
+        public void addMessage(String rowKey, int offset, byte[] message) {
+            try {
+                PublishMessageContentWriterMessage msg =
+                        new PublishMessageContentWriterMessage(rowKey, offset, message);
+                messageQueue.add(msg);
+                msg.waitForToBeWritten();
+
+            } catch (InterruptedException e) {
+                throw new RuntimeException("Error while adding Incomming message", e);
+            }
+        }
+
+        public void start() {
+            start = true;
+        }
+
+        public void stop() {
+            start = false;
+        }
+
+
+        private class PublishMessageContentWriterMessage {
+            private Semaphore messageCallBack;
+
+            private String rowKey;
+            private int offset;
+            private byte[] message;
+
+            public PublishMessageContentWriterMessage(String rowKey, int offset, byte[] message)
+                    throws InterruptedException {
+                this.rowKey = rowKey;
+                this.offset = offset;
+                this.message = message;
+                this.messageCallBack = new Semaphore(1);
+                messageCallBack.acquire();
+            }
+
+            public void release() {
+                messageCallBack.release();
+            }
+
+            public void waitForToBeWritten() throws InterruptedException {
+                messageCallBack.acquire();
+            }
+
+        }
     }
 
 }

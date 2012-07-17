@@ -260,7 +260,6 @@ public abstract class SubscriptionImpl implements Subscription, FlowCreditManage
             // The send may of course still fail, in which case, as
             // the message is unacked, it will be lost.
             long deliveryTag = 0;
-            synchronized (getChannel()) {
                 deliveryTag = getChannel().getNextDeliveryTag();
 
             try {
@@ -285,9 +284,7 @@ public abstract class SubscriptionImpl implements Subscription, FlowCreditManage
                     if (ackHandler.checkAndRegisterSent(deliveryTag, entry.getMessage().getMessageNumber(),
                             entry.getQueue().getResourceName() + "_" + ClusterResourceHolder.getInstance().
                                     getClusterManager().getNodeId())) {
-
                         sendToClient(entry, deliveryTag);
-
                     } else {
                         if (log.isDebugEnabled()) {
                             log.debug("Message Send attempt stopped. This can be an already delivered message");
@@ -298,7 +295,6 @@ public abstract class SubscriptionImpl implements Subscription, FlowCreditManage
             } catch (Exception e) {
                 throw new AMQException(e.toString());
             }
-        }
 
         }
 

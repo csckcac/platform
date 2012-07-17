@@ -78,6 +78,7 @@ public class DefaultClusteringEnabledSubscriptionManager implements ClusteringEn
             @Override
             public void subscriptionsChanged() {
                 try {
+                    Thread.sleep(5000);
                     syncUserQueues();
                 } catch (Exception e) {
                     log.error("Error while Syncing Subscriptions " ,e);
@@ -195,6 +196,9 @@ public class DefaultClusteringEnabledSubscriptionManager implements ClusteringEn
          */
 
         CassandraMessageStore messageStore = ClusterResourceHolder.getInstance().getCassandraMessageStore();
+        if(userQueuesMap.get(globalQueue) != null && userQueuesMap.containsKey(globalQueue)) {
+            userQueuesMap.get(globalQueue).remove(userQueue);
+        }
         messageStore.removeUserQueueFromQpidQueue(globalQueue);
 
         List<CassandraQueueMessage> messages = messageStore.getMessagesFromUserQueue(userQueue,globalQueue,40);

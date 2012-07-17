@@ -21,6 +21,7 @@ import org.apache.commons.logging.Log;
 import org.apache.commons.logging.LogFactory;
 import org.wso2.andes.AMQStoreException;
 import org.wso2.andes.server.store.CassandraMessageStore;
+import org.wso2.andes.tools.utils.DataCollector;
 
 import java.util.Map;
 import java.util.SortedMap;
@@ -44,6 +45,7 @@ public class QueueSubscriptionAcknowledgementHandler {
 
     private QueueMessageTagCleanupJob cleanupJob;
 
+    private Map<Long,Long> messageDeliveryTimeRecorderMap = new ConcurrentHashMap<Long,Long>();
 
     private long timeOutInMills = 10000;
 
@@ -61,12 +63,14 @@ public class QueueSubscriptionAcknowledgementHandler {
 
         if (!sentMessagesMap.containsKey(messageId) && !timeStampAckedMessageIdMap.containsValue(messageId)) {
 
-               sentMessagesMap.put(messageId, new QueueMessageTag(queue, deliveryTag, messageId));
-                deliveryTagMessageMap.put(deliveryTag, new QueueMessageTag(queue, deliveryTag, messageId));
-                timeStampMessageIdMap.put(System.currentTimeMillis(), messageId);
+            sentMessagesMap.put(messageId, new QueueMessageTag(queue, deliveryTag, messageId));
+            deliveryTagMessageMap.put(deliveryTag, new QueueMessageTag(queue, deliveryTag, messageId));
 
+            if (DataCollector.enable) {
+                messageDeliveryTimeRecorderMap.put(deliveryTag, System.nanoTime());
+            }
 
-
+            timeStampMessageIdMap.put(System.currentTimeMillis(), messageId);
 
 
             if (cleanupJob == null) {
@@ -90,6 +94,13 @@ public class QueueSubscriptionAcknowledgementHandler {
 
         if (deliveryTagMessageMap.containsKey(deliveryTag)) {
             QueueMessageTag tag = deliveryTagMessageMap.get(deliveryTag);
+            if (DataCollector.enable) {
+                long currentTime = System.nanoTime();
+                long sentTime = messageDeliveryTimeRecorderMap.remove(deliveryTag);
+                DataCollector.write(DataCollector.DELIVERY_ACK_LATENCY, (currentTime - sentTime));
+                DataCollector.flush();
+            }
+
             try {
                 if (tag != null) {
                     cassandraMessageStore.removeMessageFromUserQueue(tag.getQueue(), tag.getMessageId());

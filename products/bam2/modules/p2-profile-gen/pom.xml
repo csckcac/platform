@@ -143,7 +143,7 @@
                                 </featureArtifactDef>
 
                                 <featureArtifactDef>
-                                    org.wso2.carbon:org.wso2.carbon.webapp.mgt.feature:${carbon.version}
+                                    org.wso2.carbon:org.wso2.carbon.webapp.mgt.server.feature:${carbon.version}
                                 </featureArtifactDef>
 
                                 <featureArtifactDef>
@@ -405,7 +405,7 @@
                                     <version>${carbon.version}</version>
                                 </feature>
                                <feature>
-                                    <id>org.wso2.carbon.webapp.mgt.feature.group</id>
+                                    <id>org.wso2.carbon.webapp.mgt.server.feature.group</id>
                                     <version>${carbon.version}</version>
                                 </feature>
 

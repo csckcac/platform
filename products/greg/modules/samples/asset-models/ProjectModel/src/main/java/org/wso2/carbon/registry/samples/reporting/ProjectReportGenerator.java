@@ -17,6 +17,7 @@ import org.wso2.carbon.reporting.api.ReportingException;
 import org.wso2.carbon.reporting.util.JasperPrintProvider;
 import org.wso2.carbon.reporting.util.ReportParamMap;
 import org.wso2.carbon.reporting.util.ReportStream;
+import org.wso2.carbon.registry.core.session.CurrentSession;
 
 import java.io.ByteArrayOutputStream;
 import java.io.IOException;
@@ -43,7 +44,7 @@ public class ProjectReportGenerator extends AbstractReportGenerator {
         Registry governanceRegistry;
         try {
             Registry registry = getRegistry();
-            governanceRegistry = GovernanceUtils.getGovernanceSystemRegistry(registry);
+            governanceRegistry = GovernanceUtils.getGovernanceUserRegistry(registry,CurrentSession.getUser());
             GenericArtifactManager manager = new GenericArtifactManager(governanceRegistry, "projects");
             GenericArtifact[] genericArtifacts = manager.getAllGenericArtifacts();
 

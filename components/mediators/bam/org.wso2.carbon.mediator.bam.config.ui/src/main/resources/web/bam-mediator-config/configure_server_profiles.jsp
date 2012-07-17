@@ -1,3 +1,21 @@
+<!--
+~ Copyright (c) 2005-2010, WSO2 Inc. (http://www.wso2.org) All Rights Reserved.
+~
+~ WSO2 Inc. licenses this file to you under the Apache License,
+~ Version 2.0 (the "License"); you may not use this file except
+~ in compliance with the License.
+~ You may obtain a copy of the License at
+~
+~ http://www.apache.org/licenses/LICENSE-2.0
+~
+~ Unless required by applicable law or agreed to in writing,
+~ software distributed under the License is distributed on an
+~ "AS IS" BASIS, WITHOUT WARRANTIES OR CONDITIONS OF ANY
+~ KIND, either express or implied. See the License for the
+~ specific language governing permissions and limitations
+~ under the License.
+-->
+
 <%@ taglib prefix="fmt" uri="http://java.sun.com/jsp/jstl/fmt" %>
 <%@ taglib uri="http://wso2.org/projects/carbon/taglibs/carbontags.jar" prefix="carbon" %>
 <%@ page import="org.wso2.carbon.mediator.bam.config.ui.BamServerProfileUtils" %>
@@ -12,8 +30,11 @@
 
 <fmt:bundle basename="org.wso2.carbon.mediator.bam.config.ui.i18n.Resources">
 
+<carbon:jsi18n
+        resourceBundle="org.wso2.carbon.mediator.bam.config.ui.i18n.Resources"
+        request="<%=request%>" i18nObjectName="bamjsi18n"/>
 <carbon:breadcrumb
-        label="system.statistics"
+        label="<%=request.getParameter("txtServerProfileLocation")%>"
         resourceBundle="org.wso2.carbon.mediator.bam.config.ui.i18n.Resources"
         topPage="true"
         request="<%=request%>"/>
@@ -644,7 +665,7 @@
                                        value="<%=serverProfileName%>"
                                        id="txtServerProfileLocation" name="txtServerProfileLocation"/>
                             </td>
-                            <td>
+                            <td style="display: none;">
                                 <select name="serverProfileList" id="serverProfileList" onchange="onServerProfileSelected('<%=SERVER_PROFILE_LOCATION%>')">
                                     <option>- Select Server Profile -</option>
                                 </select>
@@ -659,8 +680,8 @@
             <tr>
                 <td></td>
                 <td>
-                    <input type="submit" value="Load Profile" onclick="document.getElementById('hfAction').value='load';"/>
-                    <input type="submit" value="Remove Profile" onclick="document.getElementById('hfAction').value='remove';"/>
+                    <input type="submit" value="Load Profile" onclick="document.getElementById('hfAction').value='load';" style="display: none;"/>
+                    <input type="submit" value="Remove Profile" onclick="document.getElementById('hfAction').value='remove';" style="display: none;"/>
                     <input type="hidden" name="hfAction" id="hfAction" value=""/>
                 </td>
             </tr>
@@ -974,8 +995,6 @@
                                         </td>
                                     </tr>
                                 </table>
-                                <%--<input type="button" value="Update" onclick="savePropertiesData()"/>
-                                <input type="button" value="Cancel" onclick="cancelStreamData()"/>--%>
                             </td>
                         </tr>
                     </table>

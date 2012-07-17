@@ -26,16 +26,13 @@ import org.apache.commons.logging.LogFactory;
 import java.rmi.RemoteException;
 import java.util.Locale;
 
-/**
- * Helper class for the dropdown_ajaxprocessor.jsp
- */
-public class DdlAjaxProcessorHelper {
+public class BamServerProfilesHelper {
 
-    private static final Log log = LogFactory.getLog(DdlAjaxProcessorHelper.class);
+    private static final Log log = LogFactory.getLog(BamServerProfilesHelper.class);
     private BamServerProfileConfigAdminClient client;
 
-    public DdlAjaxProcessorHelper(String cookie, String backendServerURL,
-                                  ConfigurationContext configContext, Locale locale){
+    public BamServerProfilesHelper(String cookie, String backendServerURL,
+                                   ConfigurationContext configContext, Locale locale){
         try {
             client = new BamServerProfileConfigAdminClient(cookie, backendServerURL, configContext, locale);
         } catch (AxisFault e) {
@@ -44,24 +41,31 @@ public class DdlAjaxProcessorHelper {
         }
     }
 
-    public boolean isNotNullOrEmpty(String string){
-        return string != null && !string.equals("");
-    }
-
-    public String getServerProfileNames(String serverProfilePath){
-        String serverProfileNamesString = "";
+    public String[] getServerProfileList(String serverProfilePath){
         try {
-            String[] serverProfileNames = client.getServerProfilePathList(serverProfilePath);
-            for (String serverProfileName : serverProfileNames) {
-                serverProfileNamesString = serverProfileNamesString + "<option>" +
-                                           serverProfileName.split("/")[serverProfileName.split("/").length-1] +
-                                           "</option>";
+            String[] profiles = client.getServerProfilePathList(serverProfilePath);
+            for (int i=0; i<profiles.length; i++) {
+                profiles[i] = profiles[i].split("/")[profiles[i].split("/").length-1];
             }
+            return profiles;
         } catch (RemoteException e) {
             String errorMsg = "Error while getting Server Profile Name List. " + e.getMessage();
             log.error(errorMsg, e);
         }
-        return serverProfileNamesString;
+        return new String[0];
     }
 
+    public boolean removeResource(String path){
+        try {
+            return client.removeResource(path);
+        } catch (RemoteException e) {
+            String errorMsg = "Error while removing the resource. " + e.getMessage();
+            log.error(errorMsg, e);
+        }
+        return false;
+    }
+
+    public boolean isNotNullOrEmpty(String string){
+        return string != null && !string.equals("");
+    }
 }

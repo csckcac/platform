@@ -230,12 +230,7 @@
             <filtered>true</filtered>
             <fileMode>644</fileMode>
         </file>
-        <file>
-            <source>../../bpels/DeployToStage/target/DeployToStage.zip</source>
-            <outputDirectory>wso2appfactory-${pom.version}/repository/deployment/server/bpel</outputDirectory>
-            <filtered>true</filtered>
-            <fileMode>644</fileMode>
-        </file>
+
         <!-- Deploy the project management tool-->
         <file>
             <source>../../jaggery-apps/appmgt/target/appmgt.zip</source>

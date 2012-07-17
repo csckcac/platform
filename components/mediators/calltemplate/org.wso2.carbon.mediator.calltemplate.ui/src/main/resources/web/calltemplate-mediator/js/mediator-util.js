@@ -64,14 +64,14 @@ function isValidProperties(nameemptymsg, valueemptymsg) {
         for (var k = 0; k < currentCount; k++) {
             var prefix = document.getElementById("propertyName" + k);
             if (prefix != null && prefix != undefined) {
-                if (prefix.value == "") {
+                if (prefix.value == "" && nameemptymsg != "") {
                     CARBON.showWarningDialog(nameemptymsg)
                     return false;
                 }
             }
             var uri = document.getElementById("propertyValue" + k);
             if (uri != null && uri != undefined) {
-                if (uri.value == "") {
+                if (uri.value == "" && valueemptymsg !="") {
                     CARBON.showWarningDialog(valueemptymsg)
                     return false;
                 }

@@ -15,7 +15,7 @@
  ~ specific language governing permissions and limitations
  ~ under the License.
  -->
-<aspect name="ESBConfigLifecycle" class="org.wso2.carbon.governance.registry.extensions.aspects.DefaultLifeCycle">
+<aspect name="ApplicationLifecycle" class="org.wso2.carbon.governance.registry.extensions.aspects.DefaultLifeCycle">
     <configuration type="literal">
         <lifecycle>
             <scxml xmlns="http://www.w3.org/2005/07/scxml"

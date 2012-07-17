@@ -30,10 +30,10 @@
                        topPage="false" request="<%=request%>"/>
     <script type="text/javascript">
         function deleteRow(name, msg) {
-    CARBON.showConfirmationDialog(msg + "' " + name + " ' ?", function() {
-        document.location.href = "deleteScript.jsp?" + "scriptName=" + name;
-    });
-}
+            CARBON.showConfirmationDialog(msg + "' " + name + " ' ?", function() {
+                document.location.href = "deleteScript.jsp?" + "scriptName=" + name;
+            });
+        }
     </script>
     <%
         String serverURL = CarbonUIUtil.getServerURL(config.getServletContext(), session);
@@ -71,36 +71,40 @@
                     </thead>
                     <tbody>
 
-                    <%  if(null != scriptNames){
+                    <% if (null != scriptNames) {
                         for (String aName : scriptNames) {
                     %>
                     <tr>
-                        <td> <label>
+                        <td><label>
                             <%=aName%>
-                            </label>
+                        </label>
                         </td>
                         <td>
                             <a class="icon-link" style="background: url('../hive-explorer/images/edit.gif') no-repeat;"
                                href="../hive-explorer/hiveexplorer.jsp?mode=edit&scriptName=<%=aName%>">Edit</a>
-                        <a class="icon-link" href="../hive-explorer/execute.jsp?scriptName=<%=aName%>"
-                           style="background: url('../hive-explorer/images/execute.gif') no-repeat;">
-                            Execute</a>
-                        <a onclick="deleteRow('<%=aName%>','Do you want to delete')"
+                            <a class="icon-link" href="../hive-explorer/execute.jsp?scriptName=<%=aName%>"
+                               style="background: url('../hive-explorer/images/execute.gif') no-repeat;">
+                                Execute</a>
+                            <a class="icon-link" style="background: url('images/tasks-icon.gif') no-repeat;"
+                               href="../hive-explorer/scheduleAndSave.jsp?scriptName=<%=aName%>"><label>Schedule
+                                Script</label></a>
+
+                            <a onclick="deleteRow('<%=aName%>','Do you want to delete')"
                                class="delete-icon-link" href="#">Delete</a>
                         </td>
 
                     </tr>
                     <%
                         }
-                        }else { %>
+                    } else { %>
                     <tr>
                         <td colspan="2">No scripts found.</td>
                     </tr>
 
-                       <% }
+                    <% }
                     %>
                     </tbody>
-                     <input type="hidden" id="driver" name="driver" value="">
+                    <input type="hidden" id="driver" name="driver" value="">
                 </table>
             </form>
         </div>

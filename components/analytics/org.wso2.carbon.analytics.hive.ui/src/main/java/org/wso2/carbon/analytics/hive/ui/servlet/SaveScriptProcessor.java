@@ -54,21 +54,24 @@ public class SaveScriptProcessor extends HttpServlet {
         PrintWriter out = null;
         try {
             out = response.getWriter();
-        try {
-            HiveScriptStoreClient client = new HiveScriptStoreClient(cookie, serverURL, configContext);
-            client.saveScript(scriptName, scriptContent, cron);
-            out.println("Successfully updated the Hive script "+ scriptName);
-        } catch (AxisFault axisFault) {
-            out.println("Error while updating the script");
-        } catch (RemoteException e) {
-            out.println("Error while updating the script");
-        } catch (HiveScriptStoreServiceHiveScriptStoreException e) {
-            out.println("Error while updating the script");
+            try {
+                HiveScriptStoreClient client = new HiveScriptStoreClient(cookie, serverURL, configContext);
+                if (null == scriptContent) {
+                    scriptContent = client.getScript(scriptName);
+                }
+                client.saveScript(scriptName, scriptContent, cron);
+                out.println("Successfully updated the Hive script " + scriptName);
+            } catch (AxisFault axisFault) {
+                out.println("Error while updating the script");
+            } catch (RemoteException e) {
+                out.println("Error while updating the script");
+            } catch (HiveScriptStoreServiceHiveScriptStoreException e) {
+                out.println("Error while updating the script");
+            } catch (IOException e) {
+                out.println("Error while updating the script");
+            }
         } catch (IOException e) {
-             out.println("Error while updating the script");
-        }
-        } catch (IOException e) {
-          log.error("Error while writing to the response..", e);
+            log.error("Error while writing to the response..", e);
         }
     }
 

@@ -105,7 +105,7 @@ public class RegistryVersionManager implements VersionManager {
                 CollectionImpl vnode = ((CollectionImpl) ((RegistrySession) session).getUserRegistry().get(s));
                 vnode.setProperty("jcr:checkedOut", "false");
                 vnode.setProperty("jcr:isCheckedOut", "false");
-                ((RegistrySession) session).getUserRegistry().put(s, vnode);
+                ((RegistrySession)session).getUserRegistry().put(s, vnode);
                 version = createVersionOnNode(s);
 //                latestVersionPath = createVersionOnNodeAndGetVersionPath(s);
 //                if (((RegistrySession) session).getUserRegistry().get(s) instanceof CollectionImpl) {

@@ -223,10 +223,13 @@ public class RegistrySession implements Session {
 
 
     public Item getItem(String s) throws PathNotFoundException, RepositoryException {
-        // TODO : RMOVE THIS AFTER TCK TEST, A DUMMY FOR NODE DEF test
-        if (s.equals("/testroot")) {
-            return getRootNode().getNode("testroot");
+        if(!s.contains(getWorkspaceRootPath())){
+            s = getWorkspaceRootPath().substring(0,getWorkspaceRootPath().length()-1) +s;
         }
+//        // TODO : RMOVE THIS AFTER TCK TEST, A DUMMY FOR NODE DEF test
+//        if (s.equals("/testroot")) {
+//            return getRootNode().getNode("testroot");
+//        }
 
         Item anItem = null;
         CollectionImpl collection = null;

@@ -265,23 +265,23 @@ public class RegistryNode implements Node {
         ntName = s1;
         CollectionImpl subCollection = null;
 
-        if(ntName.startsWith("mix")) {
-         throw new ConstraintViolationException("Cannot add mixin type nodes, instead do addmixin for " + s1);
-        }
+//        if(ntName.startsWith("mix")) {
+//         throw new ConstraintViolationException("Cannot add mixin type nodes, instead do addmixin for " + s1);
+//        }
 
         try {
             subCollection = (CollectionImpl) registrySession.getUserRegistry().newCollection();
             subCollection.setDescription(ntName);   // sets the node type
             subCollection.setProperty("jcr:uuid", absPath);  //Here we use node's path as its identifier
 
-//            if (ntName.equals("mix:simpleVersionable") || ntName.equals("mix:versionable")) {
-//                subCollection.setProperty("jcr:checkedOut", "true");
-//                subCollection.setProperty("jcr:isCheckedOut", "true");
-//                subCollection.setProperty("jcr:frozenPrimaryType",ntName);
-//            }
-//            if (ntName.startsWith("mix")) {
-//                addMixin(s1);
-//            }
+            if (ntName.equals("mix:simpleVersionable") || ntName.equals("mix:versionable")) {
+                subCollection.setProperty("jcr:checkedOut", "true");
+                subCollection.setProperty("jcr:isCheckedOut", "true");
+                subCollection.setProperty("jcr:frozenPrimaryType",ntName);
+            }
+            if (ntName.startsWith("mix")) {
+                addMixin(s1);
+            }
 
             registrySession.getUserRegistry().put(absPath, subCollection);
             subNode.setCollection(absPath);
@@ -1212,9 +1212,9 @@ public class RegistryNode implements Node {
         // Check if node type already exists
         registrySession.getWorkspace().getNodeTypeManager().getNodeType(s);
 
-        if(s!= null && s.startsWith("mix")) {
-         throw  new ConstraintViolationException("Cannpot set mixin as primary types");
-        }
+//        if(s!= null && s.startsWith("mix")) {
+//         throw  new ConstraintViolationException("Cannpot set mixin as primary types");
+//        }
         try {
 
             Resource resource = registrySession.getUserRegistry().get(nodePath);

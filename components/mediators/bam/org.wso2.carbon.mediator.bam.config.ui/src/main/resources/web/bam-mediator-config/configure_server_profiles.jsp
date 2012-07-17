@@ -737,6 +737,11 @@
                     <input type="text" name="receiverPort" id="receiverPort" value="<%=receiverPort%>" onblur="onReceiverPortBlur()"/>
                 </td>
             </tr>
+            <script type="text/javascript">
+                if(document.getElementById("security").value == "false"){
+                    document.getElementById("receiverPortTr").style.display = "";
+                }
+            </script>
             <tr>
                 <td>
                     <fmt:message key="authentication.port"/><span class="required">*</span>
@@ -958,7 +963,7 @@
                     </h3>
                 </td>
             </tr>
-            <tr>
+            <tr style="display: none;">
                 <td colspan="2">
                     <table>
                         <tr>

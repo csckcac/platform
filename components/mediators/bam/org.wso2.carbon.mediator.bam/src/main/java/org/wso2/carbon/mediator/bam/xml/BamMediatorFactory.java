@@ -140,8 +140,6 @@ public class BamMediatorFactory extends AbstractMediatorFactory {
         bamMediator.getStream().setSecurity(bamServerConfig.isSecure());
         bamMediator.getStream().setAuthenticationPort(bamServerConfig.getAuthenticationPort());
         bamMediator.getStream().setReceiverPort(bamServerConfig.getReceiverPort());
-        bamMediator.getStream().setKsLocation(bamServerConfig.getKeyStoreLocation());
-        bamMediator.getStream().setKsPassword(cryptographyManager.base64DecodeAndDecrypt(bamServerConfig.getKeyStorePassword()));
         bamMediator.getStream().setProperties(bamServerConfig.getAUniqueStreamConfiguration(streamName, streamVersion).getProperties());
         bamMediator.getStream().setStreamEntries(bamServerConfig.getAUniqueStreamConfiguration(streamName, streamVersion).getEntries());
     }

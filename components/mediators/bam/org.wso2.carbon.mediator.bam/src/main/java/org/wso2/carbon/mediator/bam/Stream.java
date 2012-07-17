@@ -58,8 +58,6 @@ public class Stream {
     private String streamId;
     private DataPublisher dataPublisher;
     private boolean security;
-    private String ksLocation;
-    private String ksPassword;
     private String serverIp;
     private String authenticationPort;
     private String receiverPort;
@@ -77,8 +75,6 @@ public class Stream {
         streamId = null;
         dataPublisher = null;
         security = true;
-        ksLocation = "";
-        ksPassword = "";
         serverIp = "";
         authenticationPort = "";
         receiverPort = "";
@@ -228,12 +224,12 @@ public class Stream {
 
     private Agent createAgent(){
         AgentConfiguration agentConfiguration = new AgentConfiguration();
-        String keyStorePath = this.ksLocation;
+        /*String keyStorePath = this.ksLocation;
         String keyStorePassword = this.ksPassword;
         agentConfiguration.setTrustStore(keyStorePath);
         agentConfiguration.setTrustStorePassword(keyStorePassword);
         System.setProperty("javax.net.ssl.trustStore", keyStorePath);
-        System.setProperty("javax.net.ssl.trustStorePassword", keyStorePassword);
+        System.setProperty("javax.net.ssl.trustStorePassword", keyStorePassword);*/
         return new Agent(agentConfiguration);
     }
 
@@ -326,14 +322,6 @@ public class Stream {
 
     public void setSecurity(boolean security) {
         this.security = security;
-    }
-
-    public void setKsLocation(String ksLocation) {
-        this.ksLocation = ksLocation;
-    }
-
-    public void setKsPassword(String ksPassword) {
-        this.ksPassword = ksPassword;
     }
 
     public void setAuthenticationPort(String authenticationPort) {

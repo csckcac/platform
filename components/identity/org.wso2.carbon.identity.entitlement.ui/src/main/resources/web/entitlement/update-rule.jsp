@@ -16,438 +16,99 @@
 */
 -->
 <%@ page import="org.wso2.carbon.ui.util.CharacterEncoder" %>
-<%@ page import="java.util.List" %>
-<%@ page import="java.util.ArrayList" %>
 <%@ page import="org.wso2.carbon.identity.entitlement.ui.dto.*" %>
 <jsp:useBean id="entitlementPolicyBean" type="org.wso2.carbon.identity.entitlement.ui.EntitlementPolicyBean"
              class="org.wso2.carbon.identity.entitlement.ui.EntitlementPolicyBean" scope="session"/>
 <jsp:setProperty name="entitlementPolicyBean" property="*" />
 
 <%
-//    BasicRuleElementDTO basicRuleElementDTO = new BasicRuleElementDTO();
-    RuleDTO ruleDTO = new RuleDTO();
-    TargetDTO targetDTO = new TargetDTO();
-    entitlementPolicyBean.setRuleElementOrder(null);
-
-
-    //////////////////////// New Set ////////////////////////////////////////////
     int rowNumber = 0;
-
-    List<String> targetCategories = new ArrayList<String>();
-    List<String> targetPreFunctions = new ArrayList<String>();
-    List<String> targetFunctions = new ArrayList<String>();
-    List<String> targetAttributeValues = new ArrayList<String>();
-    List<String> targetAttributeIds = new ArrayList<String>();
-    List<String> targetAttributeTypes = new ArrayList<String>();
-    List<String> targetCombineFunctions = new ArrayList<String>();
+    int targetRowIndex = -1;
+    int ruleRowIndex = -1;
+    int targetRuleRowIndex = -1;
+    String categoryType = null;
+    RuleDTO ruleDTO = new RuleDTO();
+    BasicTargetDTO targetDTO = new BasicTargetDTO();
+    entitlementPolicyBean.setRuleElementOrder(null);
+    
+    String targetRowIndexString = CharacterEncoder.getSafeText(request.getParameter("targetRowIndex"));
+    String ruleRowIndexString = CharacterEncoder.getSafeText(request.getParameter("ruleRowIndex"));
+    String targetRuleRowIndexString = CharacterEncoder.getSafeText(request.getParameter("targetRuleRowIndex"));
+    if(targetRowIndexString != null && targetRowIndexString.trim().length() > 0){
+        targetRowIndex = Integer.parseInt(targetRowIndexString);
+    }
+    if(ruleRowIndexString != null && ruleRowIndexString.trim().length() > 0){
+        ruleRowIndex = Integer.parseInt(ruleRowIndexString);
+    }
+    if(targetRuleRowIndexString != null && targetRuleRowIndexString.trim().length() > 0){
+        targetRuleRowIndex = Integer.parseInt(targetRuleRowIndexString);
+    }
 
     while(true){
+
+        RowDTO  rowDTO = new RowDTO();
         String targetCategory = CharacterEncoder.getSafeText(request.
                 getParameter("targetCategory_" + rowNumber));
         if(targetCategory != null){
-            targetCategories.add(targetCategory);
+            rowDTO.setCategory(targetCategory);
         } else {
             break;
         }
-        System.out.println(targetCategory);
 
         String targetPreFunction = CharacterEncoder.getSafeText(request.
                 getParameter("targetPreFunction_" + rowNumber));
         if(targetPreFunction != null){
-            targetPreFunctions.add(targetPreFunction);
+            rowDTO.setPreFunction(targetPreFunction);
         }
-
-        System.out.println(targetPreFunction);
 
         String targetFunction = CharacterEncoder.getSafeText(request.
                 getParameter("targetFunction_" + rowNumber));
         if(targetFunction != null){
-            targetFunctions.add(targetFunction);
+            rowDTO.setFunction(targetFunction);
         }
-
-        System.out.println(targetFunction);
-
 
         String targetAttributeValue = CharacterEncoder.getSafeText(request.
                 getParameter("targetAttributeValue_" + rowNumber));
-        if(targetAttributeValue != null){
-            targetAttributeValues.add(targetAttributeValue);
+        if(targetAttributeValue != null && targetAttributeValue.trim().length() > 0){
+            rowDTO.setAttributeValue(targetAttributeValue);
         }
-
-
-        System.out.println(targetAttributeValue);
 
         String targetAttributeId = CharacterEncoder.getSafeText(request.
                 getParameter("targetAttributeId_" + rowNumber));
         if(targetAttributeId != null){
-            targetAttributeIds.add(targetAttributeId);
+            rowDTO.setAttributeId(targetAttributeId);
         }
-
-        System.out.println(targetAttributeId);
-
-
-
 
         String targetAttributeType = CharacterEncoder.getSafeText(request.
                 getParameter("targetAttributeTypes_" + rowNumber));
         if(targetAttributeType != null){
-            targetAttributeTypes.add(targetAttributeType);
+            rowDTO.setAttributeDataType(targetAttributeType);
         }
-
-
-        System.out.println(targetAttributeType);
 
         String targetCombineFunction = CharacterEncoder.getSafeText(request.
                 getParameter("targetCombineFunctions_" + rowNumber));
         if(targetCombineFunction != null){
-            targetCombineFunctions.add(targetCombineFunction);
+            rowDTO.setCombineFunction(targetCombineFunction);
         }
 
+        if(targetRowIndex == rowNumber){
+            categoryType = targetCategory;
+            rowDTO.setNotCompleted(true);
+        }
 
-        System.out.println(targetCombineFunction);
-
+        targetDTO.addRowDTO(rowDTO);
         rowNumber ++;
     }
 
-    for(int i = 0; i < rowNumber; i++){
-        
-        RowDTO  rowDTO = new RowDTO();
-        if(targetCategories.size() != 0 && targetCategories.size() > i){
-            rowDTO.setCategory(targetCategories.get(i));
-        }
-
-        System.out.println("111111111111111");
-
-        if(targetCategories.size() != 0 && targetPreFunctions.size() > i){
-            rowDTO.setPreFunction(targetPreFunctions.get(i));
-        }
-
-        System.out.println("22222222222222222222");
-
-        if(targetCategories.size() != 0 && targetFunctions.size() > i){
-            rowDTO.setFunction(targetFunctions.get(i));
-        }
-
-        System.out.println("333333333333333333333");
-
-        if(targetCategories.size() != 0 && targetAttributeValues.size() > i){
-            rowDTO.setAttributeValue(targetAttributeValues.get(i));
-        }
-
-        System.out.println("4444444444444444444444");
-
-        if(targetCategories.size() != 0 && targetAttributeIds.size() > i){
-            rowDTO.setAttributeId(targetAttributeIds.get(i));
-        }
-
-        System.out.println("55555555555555555555555");
-        
-        if(targetCategories.size() != 0 && targetAttributeTypes.size() > i){
-            rowDTO.setAttributeDataType(targetAttributeTypes.get(i));
-        }
-
-        System.out.println("666666666666666666666");
-
-        if(targetCategories.size() != 0 && targetCombineFunctions.size() > i){
-            rowDTO.setCombineFunction(targetCombineFunctions.get(i));    
-        }
-
-        System.out.println("7777777777777777");                  
-
-        targetDTO.addRowDTO(rowDTO);
-
-    }
-
+    // set target element to entitlement bean
     entitlementPolicyBean.setTargetDTO(targetDTO);
 
-System.out.println("Target is SET for TargetDTO");
-
-
-    ///RULE target
-
-    rowNumber = 0;
-    targetDTO = new TargetDTO();
-
-    targetCategories = new ArrayList<String>();
-    targetPreFunctions = new ArrayList<String>();
-    targetFunctions = new ArrayList<String>();
-    targetAttributeValues = new ArrayList<String>();
-    targetAttributeIds = new ArrayList<String>();
-    targetAttributeTypes = new ArrayList<String>();
-    targetCombineFunctions = new ArrayList<String>();
-
-    while(true){
-        String targetCategory = CharacterEncoder.getSafeText(request.
-                getParameter("ruleTargetCategory_" + rowNumber));
-        if(targetCategory != null){
-            targetCategories.add(targetCategory);
-        } else {
-            break;
-        }
-
-        System.out.println(targetCategory);
-
-        String targetPreFunction = CharacterEncoder.getSafeText(request.
-                getParameter("ruleTargetPreFunction_" + rowNumber));
-        if(targetPreFunction != null){
-            targetPreFunctions.add(targetPreFunction);
-        }
-
-         System.out.println(targetPreFunction);
-
-        String targetFunction = CharacterEncoder.getSafeText(request.
-                getParameter("ruleTargetFunction_" + rowNumber));
-        if(targetFunction != null){
-            targetFunctions.add(targetFunction);
-        }
-
-
-        System.out.println(targetFunction);
-
-
-
-        String targetAttributeValue = CharacterEncoder.getSafeText(request.
-                getParameter("ruleTargetAttributeValue_" + rowNumber));
-        if(targetAttributeValue != null){
-            targetAttributeValues.add(targetAttributeValue);
-        }
-
-
-
-         System.out.println(targetAttributeValue);
-
-
-        String targetAttributeId = CharacterEncoder.getSafeText(request.
-                getParameter("ruleTargetAttributeId_" + rowNumber));
-        if(targetAttributeId != null){
-            targetAttributeIds.add(targetAttributeId);
-        }
-
-
-
-         System.out.println(targetAttributeId);
-
-
-
-        String targetAttributeType = CharacterEncoder.getSafeText(request.
-                getParameter("ruleTargetAttributeTypes_" + rowNumber));
-        if(targetAttributeType != null){
-            targetAttributeTypes.add(targetAttributeType);
-        }
-
-
-
-        System.out.println(targetAttributeType);
-
-
-
-        String targetCombineFunction = CharacterEncoder.getSafeText(request.
-                getParameter("ruleTargetCombineFunctions_" + rowNumber));
-        if(targetCombineFunction != null){
-            targetCombineFunctions.add(targetCombineFunction);
-        }
-        System.out.println(targetCombineFunction);
-        rowNumber ++;
-    }
-
-    for(int i = 0; i < rowNumber; i++){
-        RowDTO  rowDTO = new RowDTO();
-        if(targetCategories.size() != 0 && targetCategories.size() > i){
-            rowDTO.setCategory(targetCategories.get(i));
-        }
-
-        System.out.println("111111111111111");
-
-        if(targetCategories.size() != 0 && targetPreFunctions.size() > i){
-            rowDTO.setPreFunction(targetPreFunctions.get(i));
-        }
-
-        System.out.println("22222222222222222222");
-
-        if(targetCategories.size() != 0 && targetFunctions.size() > i){
-            rowDTO.setFunction(targetFunctions.get(i));
-        }
-
-        System.out.println("333333333333333333333");
-
-        if(targetCategories.size() != 0 && targetAttributeValues.size() > i){
-            rowDTO.setAttributeValue(targetAttributeValues.get(i));
-        }
-
-        System.out.println("4444444444444444444444");
-
-        if(targetCategories.size() != 0 && targetAttributeIds.size() > i){
-            rowDTO.setAttributeId(targetAttributeIds.get(i));
-        }
-
-        System.out.println("55555555555555555555555");
-
-        if(targetCategories.size() != 0 && targetAttributeTypes.size() > i){
-            rowDTO.setAttributeDataType(targetAttributeTypes.get(i));
-        }
-
-        System.out.println("666666666666666666666");
-
-        if(targetCategories.size() != 0 && targetCombineFunctions.size() > i){
-            rowDTO.setCombineFunction(targetCombineFunctions.get(i));
-        }
-
-        System.out.println("7777777777777777");
-
-        targetDTO.addRowDTO(rowDTO);
-    }
-
-
-    ruleDTO.setTargetDTO(targetDTO);    
-    System.out.println("Target is SET for RULE");
-     // Rule condition
-
-    rowNumber = 0;
-    targetCategories = new ArrayList<String>();
-    targetPreFunctions = new ArrayList<String>();
-    targetFunctions = new ArrayList<String>();
-    targetAttributeValues = new ArrayList<String>();
-    targetAttributeIds = new ArrayList<String>();
-    targetAttributeTypes = new ArrayList<String>();
-    targetCombineFunctions = new ArrayList<String>();
-
-    while(true){
-        String targetCategory = CharacterEncoder.getSafeText(request.
-                getParameter("ruleCategory_" + rowNumber));
-        if(targetCategory != null){
-            targetCategories.add(targetCategory);
-        } else {
-            break;
-        }
-
-         System.out.println(targetCategory);        
-
-        String targetPreFunction = CharacterEncoder.getSafeText(request.
-                getParameter("rulePreFunction_" + rowNumber));
-        if(targetPreFunction != null){
-            targetPreFunctions.add(targetPreFunction);
-        }
-
-
-                 System.out.println(targetPreFunction);
-
-
-        String targetFunction = CharacterEncoder.getSafeText(request.
-                getParameter("ruleFunction_" + rowNumber));
-        if(targetFunction != null){
-            targetFunctions.add(targetFunction);
-        }
-
-          System.out.println(targetFunction);
-
-        String targetAttributeValue = CharacterEncoder.getSafeText(request.
-                getParameter("ruleAttributeValue_" + rowNumber));
-        if(targetAttributeValue != null){
-            targetAttributeValues.add(targetAttributeValue);
-        }
-
-               System.out.println(targetAttributeValue);
-
-
-        String targetAttributeId = CharacterEncoder.getSafeText(request.
-                getParameter("ruleAttributeId_" + rowNumber));
-        if(targetAttributeId != null){
-            targetAttributeIds.add(targetAttributeId);
-        }
-
-
-              System.out.println(targetAttributeId);
-
-        String targetAttributeType = CharacterEncoder.getSafeText(request.
-                getParameter("ruleAttributeTypes_" + rowNumber));
-        if(targetAttributeType != null){
-            targetAttributeTypes.add(targetAttributeType);
-        }
-
-
-
-                 System.out.println(targetAttributeType);
-
-        String targetCombineFunction = CharacterEncoder.getSafeText(request.
-                getParameter("ruleCombineFunctions_" + rowNumber));
-        if(targetCombineFunction != null){
-            targetCombineFunctions.add(targetCombineFunction);
-        }
-
-
-
-                 System.out.println(targetCombineFunction);
-
-        rowNumber ++;
-    }
-
-    for(int i = 0; i < rowNumber; i++){
-        RowDTO  rowDTO = new RowDTO();
-        if(targetCategories.size() != 0 && targetCategories.size() > i){
-            rowDTO.setCategory(targetCategories.get(i));
-        }
-
-        System.out.println("111111111111111");
-
-        if(targetCategories.size() != 0 && targetPreFunctions.size() > i){
-            rowDTO.setPreFunction(targetPreFunctions.get(i));
-        }
-
-        System.out.println("22222222222222222222");
-
-        if(targetCategories.size() != 0 && targetFunctions.size() > i){
-            rowDTO.setFunction(targetFunctions.get(i));
-        }
-
-        System.out.println("333333333333333333333");
-
-        if(targetCategories.size() != 0 && targetAttributeValues.size() > i){
-            rowDTO.setAttributeValue(targetAttributeValues.get(i));
-        }
-
-        System.out.println("4444444444444444444444");
-
-        if(targetCategories.size() != 0 && targetAttributeIds.size() > i){
-            rowDTO.setAttributeId(targetAttributeIds.get(i));
-        }
-
-        System.out.println("55555555555555555555555");
-
-        if(targetCategories.size() != 0 && targetAttributeTypes.size() > i){
-            rowDTO.setAttributeDataType(targetAttributeTypes.get(i));
-        }
-
-        System.out.println("666666666666666666666");
-
-        if(targetCategories.size() != 0 && targetCombineFunctions.size() > i){
-            rowDTO.setCombineFunction(targetCombineFunctions.get(i));
-        }
-
-        System.out.println("7777777777777777");
-
-        ruleDTO.addRowDTO(rowDTO);
-    }
-
-System.out.println("Condition is SET for RULE");
-
-
-    ////////////////////////////////////////////////////////////////////////////
-
-
-
-
-
-    
-    
     String ruleElementOrder = request.getParameter("ruleElementOrder");
     String updateRule = request.getParameter("updateRule");
     String nextPage = request.getParameter("nextPage");
     String ruleId = request.getParameter("ruleId");
     String ruleEffect = request.getParameter("ruleEffect");
     String ruleDescription = request.getParameter("ruleDescription");
-
-    String categoryType = request.getParameter("attributeType");
-
 
     String completedRule = request.getParameter("completedRule");
     String editRule = request.getParameter("editRule");
@@ -456,22 +117,139 @@ System.out.println("Condition is SET for RULE");
 
         ruleDTO.setRuleId(ruleId);
         ruleDTO.setRuleEffect(ruleEffect);
-
         if(ruleDescription != null && ruleDescription.trim().length() > 0 ){
             ruleDTO.setRuleDescription(ruleDescription);
         }
-
-
         if(completedRule != null && completedRule.equals("true")){
             ruleDTO.setCompletedRule(true);
         }
 
+        BasicTargetDTO ruleTargetDTO = new BasicTargetDTO();
+        rowNumber = 0;
+
+        while(true){
+
+            RowDTO  rowDTO = new RowDTO();
+
+            String targetCategory = CharacterEncoder.getSafeText(request.
+                    getParameter("ruleTargetCategory_" + rowNumber));
+            if(targetCategory != null){
+                rowDTO.setCategory(targetCategory);
+            } else {
+                break;
+            }
+
+            String targetPreFunction = CharacterEncoder.getSafeText(request.
+                    getParameter("ruleTargetPreFunction_" + rowNumber));
+            if(targetPreFunction != null){
+                rowDTO.setPreFunction(targetPreFunction);
+            }
+
+            String targetFunction = CharacterEncoder.getSafeText(request.
+                    getParameter("ruleTargetFunction_" + rowNumber));
+            if(targetFunction != null){
+                rowDTO.setFunction(targetFunction);
+            }
+
+            String targetAttributeValue = CharacterEncoder.getSafeText(request.
+                    getParameter("ruleTargetAttributeValue_" + rowNumber));
+            if(targetAttributeValue != null && targetAttributeValue.trim ().length() > 0){
+                rowDTO.setAttributeValue(targetAttributeValue);
+            }
+
+            String targetAttributeId = CharacterEncoder.getSafeText(request.
+                    getParameter("ruleTargetAttributeId_" + rowNumber));
+            if(targetAttributeId != null){
+                rowDTO.setAttributeId(targetAttributeId);
+            }
+
+            String targetAttributeType = CharacterEncoder.getSafeText(request.
+                    getParameter("ruleTargetAttributeTypes_" + rowNumber));
+            if(targetAttributeType != null){
+                rowDTO.setAttributeDataType(targetAttributeType);
+            }
+
+            String targetCombineFunction = CharacterEncoder.getSafeText(request.
+                    getParameter("ruleTargetCombineFunctions_" + rowNumber));
+            if(targetCombineFunction != null){
+                rowDTO.setCombineFunction(targetCombineFunction);
+            }
+
+            if(targetRuleRowIndex == rowNumber){
+                categoryType = targetCategory;
+                rowDTO.setNotCompleted(true);
+            }
+
+            ruleTargetDTO.addRowDTO(rowDTO);
+            rowNumber ++;
+        }
+
+        rowNumber = 0;
+
+        while(true){
+
+            RowDTO rowDTO = new RowDTO();
+
+            String ruleCategory = CharacterEncoder.getSafeText(request.
+                    getParameter("ruleCategory_" + rowNumber));
+            if(ruleCategory != null){
+                rowDTO.setCategory(ruleCategory);
+            } else {
+                break;
+            }
+
+            String rulePreFunction = CharacterEncoder.getSafeText(request.
+                    getParameter("rulePreFunction_" + rowNumber));
+            if(rulePreFunction != null){
+                rowDTO.setPreFunction(rulePreFunction);
+            }
+
+            String ruleFunction = CharacterEncoder.getSafeText(request.
+                    getParameter("ruleFunction_" + rowNumber));
+            if(ruleFunction != null){
+                rowDTO.setFunction(ruleFunction);
+            }
+
+            String ruleAttributeValue = CharacterEncoder.getSafeText(request.
+                    getParameter("ruleAttributeValue_" + rowNumber));
+            if(ruleAttributeValue != null  && ruleAttributeValue.trim().length() > 0){
+                rowDTO.setAttributeValue(ruleAttributeValue);
+            }
+
+            String ruleAttributeId = CharacterEncoder.getSafeText(request.
+                    getParameter("ruleAttributeId_" + rowNumber));
+            if(ruleAttributeId != null){
+                rowDTO.setAttributeId(ruleAttributeId);
+            }
+
+            String ruleAttributeType = CharacterEncoder.getSafeText(request.
+                    getParameter("ruleAttributeTypes_" + rowNumber));
+            if(ruleAttributeType != null){
+                rowDTO.setAttributeDataType(ruleAttributeType);
+            }
+
+            String ruleCombineFunction = CharacterEncoder.getSafeText(request.
+                    getParameter("ruleCombineFunctions_" + rowNumber));
+            if(ruleCombineFunction != null){
+                rowDTO.setCombineFunction(ruleCombineFunction);
+            }
+
+            if(ruleRowIndex == rowNumber){
+                categoryType = ruleCategory;
+                rowDTO.setNotCompleted(true);
+            }
+
+            ruleDTO.addRowDTO(rowDTO);
+            rowNumber ++;
+        }
+
+        ruleDTO.setTargetDTO(ruleTargetDTO);
         entitlementPolicyBean.setRuleDTO(ruleDTO);
     }
 
     String forwardTo;
 
-    if(ruleElementOrder != null && !ruleElementOrder.equals("")){
+    if(ruleElementOrder != null && ruleElementOrder.trim().length() > 0){
         if(ruleDTO.isCompletedRule() && !"true".equals(updateRule)){
             entitlementPolicyBean.setRuleElementOrder(ruleElementOrder.trim() + ", " +
                                                       ruleDTO.getRuleId());

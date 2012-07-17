@@ -39,6 +39,8 @@ public class RowDTO {
 
     private String combineFunction;
 
+    private boolean notCompleted;
+
     public RowDTO() {
     }
 
@@ -102,7 +104,7 @@ public class RowDTO {
     }
 
     public String getPreFunction() {
-        return preFunction;
+        return preFunction;       
     }
 
     public void setPreFunction(String preFunction) {
@@ -115,5 +117,13 @@ public class RowDTO {
 
     public void setUserAttribute(String userAttribute) {
         this.userAttribute = userAttribute;
+    }
+
+    public boolean isNotCompleted() {
+        return notCompleted;
+    }
+
+    public void setNotCompleted(boolean notCompleted) {
+        this.notCompleted = notCompleted;
     }
 }

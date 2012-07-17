@@ -62,7 +62,7 @@
 
     //new
     List<RuleDTO> ruleDTOs = entitlementPolicyBean.getRuleDTOs();
-    TargetDTO targetDTO = entitlementPolicyBean.getTargetDTO();
+    BasicTargetDTO targetDTO = entitlementPolicyBean.getTargetDTO();
 
     ///
 
@@ -81,25 +81,21 @@
     }
 
     try {
+        if (ruleDTOs != null && ruleDTOs.size() > 0 || targetDTO != null){
+            PolicyEditorUtil.processPolicyData(targetDTO, ruleDTOs, entitlementPolicyBean);
+            policy = policyCreator.createBasicPolicy(policyElement, ruleDTOs, targetDTO);
 
-        if(basicRuleElementDTOs != null && basicRuleElementDTOs.size() > 0 ||
-                                        basicTargetElementDTO != null) {
-            policy = policyCreator.createBasicPolicy(policyElement, basicRuleElementDTOs,
-                                                     basicTargetElementDTO);
             //create policy meta data that helps to edit the policy using basic editor
-            policyMetaData = PolicyCreatorUtil.createPolicyMetaData(basicTargetElementDTO,
-                                                                    basicRuleElementDTOs, ruleElementOrder);
-            policyDTO.setPolicyEditor(EntitlementPolicyConstants.BASIC_POLICY_EDITOR);
-            if(policyMetaData != null){
-                policyDTO.setBasicPolicyEditorMetaData(policyMetaData);
-            }
-        } else  if (ruleDTOs != null && ruleDTOs.size() > 0 || targetDTO != null){
-
-            PolicyCreatorUtil.processPolicyData(targetDTO, ruleDTOs, entitlementPolicyBean);
-            policyCreator.createXACML3Policy(policyElement, ruleDTOs, targetDTO);
+//            policyMetaData = PolicyCreatorUtil.createPolicyMetaData(basicTargetElementDTO,
+//                                                                    basicRuleElementDTOs, ruleElementOrder);
+//            policyDTO.setPolicyEditor(EntitlementPolicyConstants.BASIC_POLICY_EDITOR);
+//            if(policyMetaData != null){
+//                policyDTO.setBasicPolicyEditorMetaData(policyMetaData);
+//            }
         } else {
             policy = policyCreator.createPolicy(policyElement, subElementDTOs, ruleElementDTOs);
-        }       
+        }
+
         policyDTO.setPolicyId(policyName);
         policyDTO.setPolicy(policy);
 

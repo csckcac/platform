@@ -22,14 +22,12 @@ import org.w3c.dom.Document;
 import org.w3c.dom.Element;
 import org.wso2.carbon.identity.entitlement.ui.dto.*;
 import org.wso2.carbon.identity.entitlement.ui.util.PolicyCreatorUtil;
-import org.wso2.carbon.identity.entitlement.ui.util.PolicyEditorUIUtil;
 import org.wso2.carbon.identity.entitlement.ui.util.PolicyEditorUtil;
 
 import javax.xml.parsers.DocumentBuilder;
 import javax.xml.parsers.DocumentBuilderFactory;
 import javax.xml.parsers.ParserConfigurationException;
 import java.lang.*;
-import java.util.ArrayList;
 import java.util.List;
 
 /**
@@ -98,65 +96,6 @@ public class EntitlementPolicyCreator {
         return null;
     }
 
-    /**
-     * Create XACML policy using the data received from basic policy wizard
-     * @param policyElementDTO  policy element
-     * @param basicRuleElementDTOs  rule elements
-     * @param basicTargetElementDTO  target element
-     * @return  String object of the XACML policy
-     * @throws EntitlementPolicyCreationException throws
-     */
-    public String createBasicPolicy(PolicyElementDTO policyElementDTO, List<BasicRuleElementDTO>
-            basicRuleElementDTOs, BasicTargetElementDTO basicTargetElementDTO) throws EntitlementPolicyCreationException {
-
-        Element policyElement = null;
-        String ruleElementOrder = null;
-        try {
-            Document doc = createNewDocument();
-            if(doc != null) {
-                if (policyElementDTO != null) {
-                    policyElement = PolicyCreatorUtil.createPolicyElement(policyElementDTO, doc);
-                    doc.appendChild(policyElement);
-                    ruleElementOrder = policyElementDTO.getRuleElementOrder();
-                }
-                if(policyElement != null) {
-                    if(basicRuleElementDTOs != null && basicRuleElementDTOs.size() > 0) {
-                        if(ruleElementOrder != null && ruleElementOrder.trim().length() > 0){
-                            String[] ruleIds = ruleElementOrder.
-                                    split(EntitlementPolicyConstants.ATTRIBUTE_SEPARATOR);
-                            for(String ruleId : ruleIds){
-                                for(BasicRuleElementDTO basicRuleElementDTO : basicRuleElementDTOs) {
-                                    if(ruleId.trim().equals(basicRuleElementDTO.getRuleId())){
-                                        policyElement.appendChild(PolicyCreatorUtil.
-                                                    createBasicRuleElementDTO(basicRuleElementDTO, doc));
-                                    }
-                                }
-                            }
-                        } else {
-                            for(BasicRuleElementDTO basicRuleElementDTO : basicRuleElementDTOs) {
-                                policyElement.appendChild(PolicyCreatorUtil.
-                                            createBasicRuleElementDTO(basicRuleElementDTO, doc));
-                            }
-                        }
-                    }
-
-                    if(basicTargetElementDTO != null){
-                        policyElement.appendChild(PolicyCreatorUtil.
-                                createBasicTargetElementDTO(basicTargetElementDTO, doc));
-                    } else if(basicRuleElementDTOs != null && basicRuleElementDTOs.size() > 0){
-                        policyElement.appendChild(doc.createElement(EntitlementPolicyConstants.
-                                TARGET_ELEMENT));
-                    }
-                }
-                return PolicyCreatorUtil.getStringFromDocument(doc);
-            }
-        } catch (EntitlementPolicyCreationException e) {
-            throw new EntitlementPolicyCreationException("Error While Creating XACML Policy", e);
-        }
-        return null;
-    }
-
-
 
     /**
      * Create XACML policy using the data received from basic policy wizard
@@ -166,8 +105,8 @@ public class EntitlementPolicyCreator {
      * @return  String object of the XACML policy
      * @throws EntitlementPolicyCreationException throws
      */
-    public String createXACML3Policy(PolicyElementDTO policyElementDTO, List<RuleDTO> ruleDTOs,
-                                    TargetDTO targetDTO) throws EntitlementPolicyCreationException {
+    public String createBasicPolicy(PolicyElementDTO policyElementDTO, List<RuleDTO> ruleDTOs,
+                                    BasicTargetDTO targetDTO) throws EntitlementPolicyCreationException {
 
         Element policyElement = null;
         String ruleElementOrder = null;
@@ -179,7 +118,16 @@ public class EntitlementPolicyCreator {
                     doc.appendChild(policyElement);
                     ruleElementOrder = policyElementDTO.getRuleElementOrder();
                 }
+
                 if(policyElement != null) {
+
+                    if(targetDTO != null){
+                        policyElement.appendChild(PolicyEditorUtil.createTarget(targetDTO, doc));
+                    } else if(ruleDTOs != null && ruleDTOs.size() > 0){
+                        policyElement.appendChild(doc.createElement(EntitlementPolicyConstants.
+                                TARGET_ELEMENT));
+                    }
+                    
                     if(ruleDTOs != null && ruleDTOs.size() > 0) {
                         if(ruleElementOrder != null && ruleElementOrder.trim().length() > 0){
                             String[] ruleIds = ruleElementOrder.
@@ -197,14 +145,8 @@ public class EntitlementPolicyCreator {
                             }
                         }
                     }
-
-                    if(targetDTO != null){
-                        policyElement.appendChild(PolicyEditorUtil.createTarget(targetDTO, doc));
-                    } else if(ruleDTOs != null && ruleDTOs.size() > 0){
-                        policyElement.appendChild(doc.createElement(EntitlementPolicyConstants.
-                                TARGET_ELEMENT));
-                    }
                 }
+                
                 return PolicyCreatorUtil.getStringFromDocument(doc);
             }
         } catch (EntitlementPolicyCreationException e) {

@@ -15,23 +15,14 @@
 * limitations under the License.
 */
 -->
-<%@ page import="java.util.ResourceBundle" %>
+
 <%@ page import="org.wso2.carbon.ui.util.CharacterEncoder" %>
 <%@ page import="org.wso2.carbon.identity.entitlement.ui.EntitlementPolicyConstants" %>
-<%@ page import="org.wso2.carbon.ui.CarbonUIUtil" %>
-<%@ page import="org.apache.axis2.context.ConfigurationContext" %>
-<%@ page import="org.wso2.carbon.CarbonConstants" %>
-<%@ page import="org.wso2.carbon.utils.ServerConstants" %>
-<%@ page
-        import="org.wso2.carbon.identity.entitlement.ui.client.EntitlementPolicyAdminServiceClient" %>
-<%@ page import="org.wso2.carbon.ui.CarbonUIMessage" %>
-<%@ page import="java.util.List" %>
-<%@ page import="org.wso2.carbon.claim.mgt.ui.client.ClaimAdminClient" %>
-<%@ page import="org.wso2.carbon.claim.mgt.stub.dto.ClaimDialectDTO" %>
 <%@ page import="java.util.ArrayList" %>
-<%@ page import="org.wso2.carbon.identity.entitlement.ui.util.PolicyEditorUIUtil" %>
 <%@ page import="java.util.Set" %>
 <%@ page import="org.wso2.carbon.identity.entitlement.ui.dto.*" %>
+<%@ page import="org.wso2.carbon.identity.entitlement.ui.PolicyEditorConstants" %>
+<%@ page import="java.util.List" %>
 <%@ taglib prefix="fmt" uri="http://java.sun.com/jsp/jstl/fmt" %>
 <%@ taglib uri="http://wso2.org/projects/carbon/taglibs/carbontags.jar" prefix="carbon" %>
 <jsp:useBean id="entitlementPolicyBean"
@@ -41,24 +32,58 @@
 
 
 <%
-//    BasicRuleElementDTO basicRuleElementDTO = null;
-    String BUNDLE = "org.wso2.carbon.identity.entitlement.ui.i18n.Resources";
-    ResourceBundle resourceBundle = ResourceBundle.getBundle(BUNDLE, request.getLocale());
+    String ruleId;
+    RuleDTO ruleDTO = null;
+    String currentCategory = null;
+    String currentPreFunction = null;
+    String currentFunction = null;
+    String currentAttributeValue =  null;
+    String currentAttributeId =  null;
+    String currentAttributeDataType = null;
+    String currentCombineFunction = null;
 
-    // TODO
-    List<BasicRuleElementDTO> basicRuleElementDTOs = entitlementPolicyBean.getBasicRuleElementDTOs();
-    //
-    BasicTargetElementDTO basicTargetElementDTO = entitlementPolicyBean.getBasicTargetElementDTO();
+    String currentRuleCategory = null;
+    String currentRulePreFunction = null;
+    String currentRuleFunction = null;
+    String currentRuleAttributeValue =  null;
+    String currentRuleAttributeId =  null;
+    String currentRuleAttributeDataType = null;
+    String currentRuleCombineFunction = null;
 
-    String selectedAttributeDataType = (String) request.getParameter("selectedAttributeDataType");
-    String selectedAttributeId = (String) request.getParameter("selectedAttributeId");
-    String attributeType = (String) request.getParameter("attributeType");
+    String currentRuleTargetCategory = null;
+    String currentRuleTargetPreFunction = null;
+    String currentRuleTargetFunction = null;
+    String currentRuleTargetAttributeValue =  null;
+    String currentRuleTargetAttributeId =  null;
+    String currentRuleTargetAttributeDataType = null;
+    String currentRuleTargetCombineFunction = null;
 
-    String ruleId = CharacterEncoder.getSafeText(request.getParameter("ruleId"));
-//    if (ruleId != null && ruleId.trim().length() > 0 && !ruleId.trim().equals("null")) {
-//        basicRuleElementDTO = entitlementPolicyBean.getBasicRuleElement(ruleId);
-//    }
+    String selectedAttributeNames = "";
+    String ruleEffect = "";
 
+    String[] ruleEffects = new String[]{PolicyEditorConstants.RULE_EFFECT_PERMIT,
+            PolicyEditorConstants.RULE_EFFECT_DENY};
+
+    String[] combineFunctions = new String[] {PolicyEditorConstants.COMBINE_FUNCTION_END,
+            PolicyEditorConstants.COMBINE_FUNCTION_AND, PolicyEditorConstants.COMBINE_FUNCTION_OR};
+
+    String[] ruleCombingAlgorithm = new String[]{PolicyEditorConstants.RULE_COMBINING_DENY_OVERRIDE,
+                                        PolicyEditorConstants.RULE_COMBINING_PERMIT_OVERRIDE, 
+                                        PolicyEditorConstants.RULE_COMBINING_FIRST_APPLICABLE,
+                                        PolicyEditorConstants.RULE_COMBINING_PERMIT_UNLESS_DENY,
+                                        PolicyEditorConstants.RULE_COMBINING_DENY_UNLESS_PERMIT,
+                                        PolicyEditorConstants.RULE_COMBINING_ORDER_PERMIT_OVERRIDE,
+                                        PolicyEditorConstants.RULE_COMBINING_ORDER_DENY_OVERRIDE };
+
+    ruleId = CharacterEncoder.getSafeText(request.getParameter("ruleId"));
+    if (ruleId != null && ruleId.trim().length() > 0 && !ruleId.trim().equals("null")) {
+        ruleDTO = entitlementPolicyBean.getRuleDTO(ruleId);
+    }
+
+    String selectedAttributeDataType = request.getParameter("selectedAttributeDataType");
+    String selectedAttributeId = request.getParameter("selectedAttributeId");
+
+    // These are pass as hidden values. So can contain null value ...
     if ("null".equals(selectedAttributeId)) {
         selectedAttributeId = null;
     }
@@ -67,77 +92,8 @@
         selectedAttributeDataType = null;
     }
 
-    String selectedSubjectType = CharacterEncoder.getSafeText(request.getParameter("selectedSubjectType"));
-    if (selectedSubjectType != null && !"".equals(selectedSubjectType)) {
-        if (ruleId != null && !ruleId.equals("")) {
-            entitlementPolicyBean.subjectTypeMap.put(ruleId, selectedSubjectType);
-        } else {
-            entitlementPolicyBean.subjectTypeMap.put("Target", selectedSubjectType);
-        }
-    }
-
-    String selectedAttributeNames = "";
-    String selectedSubjectNames = "";
-    String selectedResourceNames = "";
-    String selectedActionNames = "";
-    String selectedEnvironmentNames = "";
-    String selectedResourceId = "";
-    String selectedResourceDataType = "";
-    String selectedSubjectId = "";
-    String selectedSubjectDataType = "";
-    String selectedActionId = "";
-    String selectedActionDataType = "";
-    String selectedEnvironmentId = "";
-    String selectedEnvironmentDataType = "";
-    String resourceNames = "";
-    String environmentNames = "";
-    String userAttributeValue = "";
-    String functionOnResources = "";
-    String subjectNames = "";
-    String functionOnSubjects = "";
-    String actionNames = "";
-    String functionOnActions = "";
-    String functionOnEnvironment = "";
-    String functionOnAttributes = "";
-    String ruleDescription = "";
-    String ruleEffect = "";
-    String resourceDataType = "";
-    String subjectDataType = "";
-    String actionDataType = "";
-    String environmentDataType = "";
-    String userAttributeValueDataType = "";
-    String resourceId = "";
-    String subjectId = "";
-    String actionId = "";
-    String environmentId = "";
-    String attributeId = "";
-
-    String resourceNamesTarget = "";
-    String environmentNamesTarget = "";
-    String userAttributeValueTarget = "";
-    String functionOnResourcesTarget = "";
-    String subjectNamesTarget = "";
-    String functionOnSubjectsTarget = "";
-    String actionNamesTarget = "";
-    String functionOnActionsTarget = "";
-    String functionOnEnvironmentTarget = "";
-    String functionOnAttributesTarget = "";
-    String resourceDataTypeTarget = "";
-    String subjectDataTypeTarget = "";
-    String actionDataTypeTarget = "";
-    String environmentDataTypeTarget = "";
-    String userAttributeValueDataTypeTarget = "";
-    String resourceIdTarget = "";
-    String subjectIdTarget = "";
-    String actionIdTarget = "";
-    String environmentIdTarget = "";
-    String attributeIdTarget = "";
+     //Get posted resources from jsp pages and put then in to a String object
     int noOfSelectedAttributes = 1;
-
-
-    /**
-     *  Get posted resources from jsp pages and put then in to a String object
-     */
     while (true) {
         String attributeName = request.getParameter("resourceName" + noOfSelectedAttributes);
         if (attributeName == null || attributeName.trim().length() < 1) {
@@ -151,433 +107,147 @@
         noOfSelectedAttributes++;
     }
 
-    if (attributeType != null) {
-        if (EntitlementPolicyConstants.RESOURCE_ELEMENT.equals(attributeType)) {
-            selectedResourceNames = selectedAttributeNames;
-            selectedResourceId = selectedAttributeId;
-            selectedResourceDataType = selectedAttributeDataType;
-        } else if (EntitlementPolicyConstants.SUBJECT_ELEMENT.equals(attributeType)) {
-            selectedSubjectNames = selectedAttributeNames;
-            selectedSubjectId = selectedAttributeId;
-            selectedSubjectDataType = selectedAttributeDataType;
-        } else if (EntitlementPolicyConstants.ACTION_ELEMENT.equals(attributeType)) {
-            selectedActionNames = selectedAttributeNames;
-            selectedActionId = selectedAttributeId;
-            selectedActionDataType = selectedAttributeDataType;
-        } else if (EntitlementPolicyConstants.ENVIRONMENT_ELEMENT.equals(attributeType)) {
-            selectedEnvironmentNames = selectedAttributeNames;
-            selectedEnvironmentId = selectedAttributeId;
-            selectedEnvironmentDataType = selectedAttributeDataType;
-        }
-    }
-
-
-    /**
-     * Get posted subjects from jsp pages and put then in to a String object
-     */
-    String[] subjects = request.getParameterValues("subjects");
-    if (subjects != null) {
-        for (String subject : subjects) {
-            if (subject == null || subject.trim().equals("")) {
-                break;
-            }
-            if (selectedSubjectNames.equals("")) {
-                selectedSubjectNames = subject.trim();
-            } else {
-                selectedSubjectNames = selectedSubjectNames + "," + subject.trim();
-            }
-        }
-    }
-
-    // following function ids should be retrieve from registry.  TODO
-    String[] functionIds = new String[]{EntitlementPolicyConstants.EQUAL_TO,
-            EntitlementPolicyConstants.IS_IN, EntitlementPolicyConstants.AT_LEAST,
-            EntitlementPolicyConstants.SUBSET_OF, EntitlementPolicyConstants.REGEXP_MATCH,
-            EntitlementPolicyConstants.SET_OF};
-
-
-    String[] targetFunctionIds = new String[]{EntitlementPolicyConstants.EQUAL_TO,
-            EntitlementPolicyConstants.AT_LEAST_ONE_MATCH,
-            EntitlementPolicyConstants.AT_LEAST_ONE_MATCH_REGEXP, EntitlementPolicyConstants.REGEXP_MATCH,
-            EntitlementPolicyConstants.SET_OF, EntitlementPolicyConstants.MATCH_REGEXP_SET_OF};
-
-    String[] ruleEffects = new String[]{EntitlementPolicyConstants.RULE_EFFECT_PERMIT,
-            EntitlementPolicyConstants.RULE_EFFECT_DENY};
-
-    String[] dataTypes = new String[]{EntitlementPolicyConstants.RULE_EFFECT_PERMIT};
-
-    /**
-     * Assign current BasicRule Object Values to variables to show on UI
-     */
-//    if (basicRuleElementDTO != null) {
-//
-//        ruleEffect = basicRuleElementDTO.getRuleEffect();
-//        ruleId = basicRuleElementDTO.getRuleId();
-//        ruleDescription = basicRuleElementDTO.getRuleDescription();
-//
-//        resourceNames = basicRuleElementDTO.getResourceList();
-//        subjectNames = basicRuleElementDTO.getSubjectList();
-//        actionNames = basicRuleElementDTO.getActionList();
-//        environmentNames = basicRuleElementDTO.getEnvironmentList();
-//        userAttributeValue = basicRuleElementDTO.getUserAttributeValue();
-//
-//        functionOnActions = basicRuleElementDTO.getFunctionOnActions();
-//        functionOnResources = basicRuleElementDTO.getFunctionOnResources();
-//        functionOnSubjects = basicRuleElementDTO.getFunctionOnSubjects();
-//        functionOnEnvironment = basicRuleElementDTO.getFunctionOnEnvironment();
-//        functionOnAttributes = basicRuleElementDTO.getFunctionOnAttributes();
-//
-//        if (selectedResourceDataType != null && selectedResourceDataType.trim().length() > 0) {
-//            resourceDataType = selectedResourceDataType;
-//        } else {
-//            resourceDataType = basicRuleElementDTO.getResourceDataType();
-//        }
-//
-//        if (selectedSubjectDataType != null && selectedSubjectDataType.trim().length() > 0) {
-//            subjectDataType = selectedSubjectDataType;
-//        } else {
-//            subjectDataType = basicRuleElementDTO.getSubjectDataType();
-//        }
-//
-//        if (selectedActionDataType != null && selectedActionDataType.trim().length() > 0) {
-//            actionDataType = selectedActionDataType;
-//        } else {
-//            actionDataType = basicRuleElementDTO.getActionDataType();
-//        }
-//
-//        if (selectedEnvironmentDataType != null && selectedEnvironmentDataType.trim().length() > 0) {
-//            environmentDataType = selectedEnvironmentDataType;
-//        } else {
-//            environmentDataType = basicRuleElementDTO.getEnvironmentDataType();
-//        }
-//
-//        userAttributeValueDataType = basicRuleElementDTO.getUserAttributeValueDataType();
-//
-//        if (selectedResourceId != null && selectedResourceId.trim().length() > 0) {
-//            resourceId = selectedResourceId;
-//        } else {
-//            resourceId = basicRuleElementDTO.getResourceId();
-//        }
-//
-//        if (selectedSubjectId != null && selectedSubjectId.trim().length() > 0) {
-//            subjectId = selectedSubjectId;
-//        } else {
-//            subjectId = basicRuleElementDTO.getSubjectId();
-//        }
-//
-//        if (selectedActionId != null && selectedActionId.trim().length() > 0) {
-//            actionId = selectedActionId;
-//        } else {
-//            actionId = basicRuleElementDTO.getActionId();
-//        }
-//
-//        if (selectedEnvironmentId != null && selectedEnvironmentId.trim().length() > 0) {
-//            environmentId = selectedEnvironmentId;
-//        } else {
-//            environmentId = basicRuleElementDTO.getEnvironmentId();
-//        }
-//
-//        attributeId = basicRuleElementDTO.getAttributeId();
-//
-//        if (!entitlementPolicyBean.subjectTypeMap.containsKey(ruleId)) {
-//            entitlementPolicyBean.subjectTypeMap.put(ruleId, basicRuleElementDTO.getSubjectType());
-//        }
-//
-//        if (selectedResourceNames != null && selectedResourceNames.trim().length() > 0) {
-//            if (resourceNames != null && resourceNames.trim().length() > 0) {
-//                resourceNames = resourceNames + "," + selectedResourceNames;
-//            } else {
-//                resourceNames = selectedResourceNames;
-//            }
-//        }
-//
-//        if (selectedSubjectNames != null && selectedSubjectNames.trim().length() > 0) {
-//            if (subjectNames != null && subjectNames.trim().length() > 0) {
-//                subjectNames = subjectNames + "," + selectedSubjectNames;
-//            } else {
-//                subjectNames = selectedSubjectNames;
-//            }
-//        }
-//
-//        if (selectedActionNames != null && selectedActionNames.trim().length() > 0) {
-//            if (actionNames != null && actionNames.trim().length() > 0) {
-//                actionNames = actionNames + "," + selectedActionNames;
-//            } else {
-//                actionNames = selectedActionNames;
-//            }
-//        }
-//
-//        if (selectedEnvironmentNames != null && selectedEnvironmentNames.trim().length() > 0) {
-//            if (environmentNames != null && environmentNames.trim().length() > 0) {
-//                environmentNames = environmentNames + "," + selectedEnvironmentNames;
-//            } else {
-//                environmentNames = selectedEnvironmentNames;
-//            }
-//        }
-//
-//    }
-
-    /**
-     * Assign current BasicTarget Object Values to variables to show on UI.
-     */
-    if (basicTargetElementDTO != null) {
-
-        resourceNamesTarget = basicTargetElementDTO.getResourceList();
-        subjectNamesTarget = basicTargetElementDTO.getSubjectList();
-        actionNamesTarget = basicTargetElementDTO.getActionList();
-        environmentNamesTarget = basicTargetElementDTO.getEnvironmentList();
-        userAttributeValueTarget = basicTargetElementDTO.getUserAttributeValue();
-
-        functionOnActionsTarget = basicTargetElementDTO.getFunctionOnActions();
-        functionOnResourcesTarget = basicTargetElementDTO.getFunctionOnResources();
-        functionOnSubjectsTarget = basicTargetElementDTO.getFunctionOnSubjects();
-        functionOnEnvironmentTarget = basicTargetElementDTO.getFunctionOnEnvironment();
-        functionOnAttributesTarget = basicTargetElementDTO.getFunctionOnAttributes();
-        userAttributeValueDataTypeTarget = basicTargetElementDTO.getUserAttributeValueDataType();
-        attributeIdTarget = basicTargetElementDTO.getAttributeId();
-
-        resourceDataTypeTarget = basicTargetElementDTO.getResourceDataType();
-        subjectDataTypeTarget = basicTargetElementDTO.getSubjectDataType();
-        actionDataTypeTarget = basicTargetElementDTO.getActionDataType();
-        environmentDataTypeTarget = basicTargetElementDTO.getEnvironmentDataType();
-
-        resourceIdTarget = basicTargetElementDTO.getResourceId();
-        subjectIdTarget = basicTargetElementDTO.getSubjectId();
-        actionIdTarget = basicTargetElementDTO.getActionId();
-        environmentIdTarget = basicTargetElementDTO.getEnvironmentId();
-
-        if (!entitlementPolicyBean.subjectTypeMap.containsKey("Target")) {
-            entitlementPolicyBean.subjectTypeMap.put("Target", basicTargetElementDTO.getSubjectType());
-        }
-
-//        if (basicRuleElementDTO == null) {
-//            if (selectedResourceNames != null && selectedResourceNames.trim().length() > 0) {
-//                if (resourceNamesTarget != null && resourceNamesTarget.trim().length() > 0) {
-//                    resourceNamesTarget = resourceNamesTarget + "," + selectedResourceNames;
-//                } else {
-//                    resourceNamesTarget = selectedResourceNames;
-//                }
-//            }
-//
-//            if (selectedSubjectNames != null && selectedSubjectNames.trim().length() > 0) {
-//                if (subjectNamesTarget != null && subjectNamesTarget.trim().length() > 0) {
-//                    subjectNamesTarget = subjectNamesTarget + "," + selectedSubjectNames;
-//                } else {
-//                    subjectNamesTarget = selectedSubjectNames;
-//                }
-//            }
-//
-//            if (selectedActionNames != null && selectedActionNames.trim().length() > 0) {
-//                if (actionNamesTarget != null && actionNamesTarget.trim().length() > 0) {
-//                    actionNamesTarget = actionNamesTarget + "," + selectedActionNames;
-//                } else {
-//                    actionNamesTarget = selectedActionNames;
-//                }
-//            }
-//
-//            if (selectedEnvironmentNames != null && selectedEnvironmentNames.trim().length() > 0) {
-//                if (environmentNamesTarget != null && environmentNamesTarget.trim().length() > 0) {
-//                    environmentNamesTarget = environmentNamesTarget + "," + selectedEnvironmentNames;
-//                } else {
-//                    environmentNamesTarget = selectedEnvironmentNames;
-//                }
-//            }
-//
-//            if (selectedResourceDataType != null && selectedResourceDataType.trim().length() > 0) {
-//                resourceDataTypeTarget = selectedResourceDataType;
-//            }
-//
-//            if (selectedSubjectDataType != null && selectedSubjectDataType.trim().length() > 0) {
-//                subjectDataTypeTarget = selectedSubjectDataType;
-//            }
-//
-//            if (selectedActionDataType != null && selectedActionDataType.trim().length() > 0) {
-//                actionDataTypeTarget = selectedActionDataType;
-//            }
-//
-//            if (selectedEnvironmentDataType != null && selectedEnvironmentDataType.trim().length() > 0) {
-//                environmentDataTypeTarget = selectedEnvironmentDataType;
-//            }
-//
-//            if (selectedResourceId != null && selectedResourceId.trim().length() > 0) {
-//                resourceIdTarget = selectedResourceId;
-//            }
-//
-//            if (selectedSubjectId != null && selectedSubjectId.trim().length() > 0) {
-//                subjectIdTarget = selectedSubjectId;
-//            }
-//
-//            if (selectedActionId != null && selectedActionId.trim().length() > 0) {
-//                actionIdTarget = selectedActionId;
-//            }
-//
-//            if (selectedEnvironmentId != null && selectedEnvironmentId.trim().length() > 0) {
-//                environmentIdTarget = selectedEnvironmentId;
-//            }
-//        }
-    }
-
-
-    /////////////////////////////////// New Imple ////////////////////////////
-
-    String currentCategory = null;
-    String currentPreFunction = null;
-    String currentFunction = null;
-    String currentAttributeValue =  null;
-    String currentAttributeId =  null;
-    String currentAttributeDataType = null;
-    String currentCombineFunction = null;
 
     Set<String> categories = entitlementPolicyBean.getCategorySet();
     List<String> rulePreFunctions = entitlementPolicyBean.getPreFunctions();
     List<String> targetPreFunctions = entitlementPolicyBean.getPreFunctions();
     Set<String>  targetFunctions = entitlementPolicyBean.getTargetFunctionMap().keySet();
     Set<String>  ruleFunctions = entitlementPolicyBean.getRuleFunctionMap().keySet();
-    String[] combineFunctions = new String[] {"END", "AND", "OR"};
-
 
     List<RuleDTO> ruleDTOs = entitlementPolicyBean.getRuleDTOs();
-    TargetDTO targetDTO = entitlementPolicyBean.getTargetDTO();
-
-
-    RuleDTO ruleDTO = null;
-
-    ruleId = CharacterEncoder.getSafeText(request.getParameter("ruleId"));
-    if (ruleId != null && ruleId.trim().length() > 0 && !ruleId.trim().equals("null")) {
-        ruleDTO = entitlementPolicyBean.getRuleDTO(ruleId);
-    }
-
+    BasicTargetDTO targetDTO = entitlementPolicyBean.getTargetDTO();
 %>
-
-
 
 <script type="text/javascript">
 
-function createNewTargetRow(value) {
-    if (value == "AND" || value == "OR" || value == "NEW"){
-        var index = jQuery('#multipleTargetTable tr').length;
-        jQuery('#multipleTargetTable > tbody:last').append('<tr><td style="padding-left:0px !important;padding-right:0px !important"><select id="targetCategory_'  + index + '" name="targetCategory_'  + index + '" class="leftCol-small"> <%for (String category : categories) { if(currentCategory != null && category.equals(currentCategory)){%> <option value="<%=currentCategory%>" selected="selected"><%=currentCategory%> </option> <%} else {%> <option value="<%=category%>"><%=category%> </option> <%} }%></select></td>' +
-                '<td style="padding-left:0px !important;padding-right:0px !important"><select id="targetPreFunction_'  + index + '" name="targetPreFunction_'  + index + '" class="leftCol-small"><%for (String targetPreFunction : targetPreFunctions) {if (currentPreFunction != null && targetPreFunction.equals(currentPreFunction)) {%><option value="<%=targetPreFunction%>" selected="selected"><%=targetPreFunction%></option><%} else {%><option value="<%=targetPreFunction%>"><%=targetPreFunction%></option><%}}%></select></td>' +
-                '<td style="padding-left:0px !important;padding-right:0px !important"><select id="targetFunction_'  + index + '" name="targetFunction_'  + index + '" class="leftCol-small"><%for (String targetFunction : targetFunctions) {if (currentFunction != null && targetFunction.equals(currentFunction)) {%><option value="<%=targetFunction%>" selected="selected"><%=targetFunction%></option><%} else {%><option value="<%=targetFunction%>"><%=targetFunction%></option><%}}%></select></td>' +
-                '<td style="padding-left:0px !important;padding-right:0px !important"><%if (currentAttributeValue != null && !"".equals(currentAttributeValue)) {%><input type="text" size="60" name="targetAttributeValue_'  + index + '" id="targetAttributeValue_'  + index + '" value="<%=currentAttributeValue%>" class="text-box-big"/><%} else {%><input type="text" size="60" name="targetAttributeValue_'  + index + '" id="targetAttributeValue_'  + index + '" class="text-box-big"/><%}%></td>' +
-                '<a title="Select Resources Names" class="icon-link" onclick="selectAttributesForTarget("<%=currentCategory%>");" style="background-image:url(images/registry.gif);"></a>' +
-                '<td><input type="hidden" name="targetAttributeId_'  + index +  '" id="targetAttributeId_'  + index + '" value="<%=currentAttributeId%>"/></td>' +
-                '<td><input type="hidden" name="targetAttributeTypes_'  + index + '" id="targetAttributeTypes_'  + index +  '" value="<%=currentAttributeDataType%>"/></td>' +
-                '<td style="padding-left:0px !important;padding-right:0px !important"><select id="targetCombineFunctions_'  + index + '" name="targetCombineFunctions_'  + index + '" class="leftCol-small" onchange="createNewTargetRow(this.options[this.selectedIndex].value)"><%for (String combineFunction : combineFunctions) {if (currentCombineFunction != null && combineFunction.equals(currentCombineFunction)) {%><option value="<%=combineFunction%>" selected="selected"><%=combineFunction%></option><%} else {%><option value="<%=combineFunction%>"><%=combineFunction%></option><%}}%></select></td>' +
-                '</tr>');
+    function removeRow(link){
+        link.parentNode.parentNode.removeChild(link.parentNode);
     }
-}
 
-
-function createNewRuleRow(value) {
-    if (value == "AND" || value == "OR" || value == "NEW"){
-        var index = jQuery('#multipleRuleTable tr').length;
-        jQuery('#multipleRuleTable > tbody:last').append('<tr><td style="padding-left:0px !important;padding-right:0px !important"><select id="ruleCategory_'  + index + '" name="ruleCategory_'  + index + '" class="leftCol-small"> <%for (String category : categories) { if(currentCategory != null && category.equals(currentCategory)){%> <option value="<%=currentCategory%>" selected="selected"><%=currentCategory%> </option> <%} else {%> <option value="<%=category%>"><%=category%> </option> <%} }%></select></td>' +
-                '<td style="padding-left:0px !important;padding-right:0px !important"><select id="rulePreFunction_'  + index + '" name="rulePreFunction_'  + index + '" class="leftCol-small"><%for (String rulePreFunction : rulePreFunctions) {if (currentPreFunction != null && rulePreFunction.equals(currentPreFunction)) {%><option value="<%=rulePreFunction%>" selected="selected"><%=rulePreFunction%></option><%} else {%><option value="<%=rulePreFunction%>"><%=rulePreFunction%></option><%}}%></select></td>' +
-                '<td style="padding-left:0px !important;padding-right:0px !important"><select id="ruleFunction_'  + index + '" name="ruleFunction_'  + index + '" class="leftCol-small"><%for (String ruleFunction : ruleFunctions) {if (currentFunction != null && ruleFunction.equals(currentFunction)) {%><option value="<%=ruleFunction%>" selected="selected"><%=ruleFunction%></option><%} else {%><option value="<%=ruleFunction%>"><%=ruleFunction%></option><%}}%></select></td>' +
-                '<td style="padding-left:0px !important;padding-right:0px !important"><%if (currentAttributeValue != null && !"".equals(currentAttributeValue)) {%><input type="text" size="60" name="ruleAttributeValue_'  + index + '" id="ruleAttributeValue_'  + index + '" value="<%=currentAttributeValue%>" class="text-box-big"/><%} else {%><input type="text" size="60" name="ruleAttributeValue_'  + index + '" id="ruleAttributeValue_'  + index + '" class="text-box-big"/><%}%></td>' +
-                '<a title="Select Resources Names" class="icon-link" onclick="selectAttributesForRule("<%=currentCategory%>");" style="background-image:url(images/registry.gif);"></a>' +
-                '<td><input type="hidden" name="ruleAttributeId_'  + index +  '" id="ruleAttributeId_'  + index + '" value="<%=currentAttributeId%>"/></td>' +
-                '<td><input type="hidden" name="ruleAttributeTypes_'  + index + '" id="ruleAttributeTypes_'  + index +  '" value="<%=currentAttributeDataType%>"/></td>' +
-                '<td style="padding-left:0px !important;padding-right:0px !important"><select id="ruleCombineFunctions_'  + index + '" name="ruleCombineFunctions_'  + index + '" class="leftCol-small" onchange="createNewRuleRow(this.options[this.selectedIndex].value)"><%for (String combineFunction : combineFunctions) {if (currentCombineFunction != null && combineFunction.equals(currentCombineFunction)) {%><option value="<%=combineFunction%>" selected="selected"><%=combineFunction%></option><%} else {%><option value="<%=combineFunction%>"><%=combineFunction%></option><%}}%></select></td>' +
-                '</tr>');
+    function createNewTargetRow(value) {
+        if (value == "AND" || value == "OR"){
+            var index = jQuery('#multipleTargetTable tr').length;
+            jQuery('#multipleTargetTable > tbody:last').append('<tr><td style="padding-left:0px !important;padding-right:0px !important"><select id="targetCategory_'  + index + '" name="targetCategory_'  + index + '" class="leftCol-small"> <%for (String category : categories) { if(currentCategory != null && category.equals(currentCategory)){%> <option value="<%=category%>" selected="selected"><%=currentCategory%> </option> <%} else {%> <option value="<%=category%>"><%=category%> </option> <%} }%></select></td>' +
+                    '<td style="padding-left:0px !important;padding-right:0px !important"><select id="targetPreFunction_'  + index + '" name="targetPreFunction_'  + index + '" class="leftCol-small"><%for (String targetPreFunction : targetPreFunctions) {if (currentPreFunction != null && targetPreFunction.equals(currentPreFunction)) {%><option value="<%=targetPreFunction%>" selected="selected"><%=targetPreFunction%></option><%} else {%><option value="<%=targetPreFunction%>"><%=targetPreFunction%></option><%}}%></select></td>' +
+                    '<td style="padding-left:0px !important;padding-right:0px !important"><select id="targetFunction_'  + index + '" name="targetFunction_'  + index + '" class="leftCol-small"><%for (String targetFunction : targetFunctions) {if (currentFunction != null && targetFunction.equals(currentFunction)) {%><option value="<%=targetFunction%>" selected="selected"><%=targetFunction%></option><%} else {%><option value="<%=targetFunction%>"><%=targetFunction%></option><%}}%></select></td>' +
+                    '<td style="padding-left:0px !important;padding-right:0px !important"><%if (currentAttributeValue != null && !"".equals(currentAttributeValue)) {%><input type="text" size="60" name="targetAttributeValue_'  + index + '" id="targetAttributeValue_'  + index + '" value="<%=currentAttributeValue%>" class="text-box-big"/><%} else {%><input type="text" size="60" name="targetAttributeValue_'  + index + '" id="targetAttributeValue_'  + index + '" class="text-box-big"/><%}%></td>' +
+                    '<a title="Select Resources Names" class="icon-link" onclick="selectAttributesForTarget(' + index + ');" style="background-image:url(images/registry.gif);"></a>' +
+                    '<td><input type="hidden" name="targetAttributeId_'  + index +  '" id="targetAttributeId_'  + index + '" value="<%=currentAttributeId%>"/></td>' +
+                    '<td><input type="hidden" name="targetAttributeTypes_'  + index + '" id="targetAttributeTypes_'  + index +  '" value="<%=currentAttributeDataType%>"/></td>' +
+                    '<td style="padding-left:0px !important;padding-right:0px !important"><select id="targetCombineFunctions_'  + index + '" name="targetCombineFunctions_'  + index + '" class="leftCol-small" onchange="createNewTargetRow(this.options[this.selectedIndex].value)"><%for (String combineFunction : combineFunctions) {if (currentCombineFunction != null && combineFunction.equals(currentCombineFunction)) {%><option value="<%=combineFunction%>" selected="selected"><%=combineFunction%></option><%} else {%><option value="<%=combineFunction%>"><%=combineFunction%></option><%}}%></select></td><a onclick="removeRow(this)" style="background-image:url(images/delete.gif);" type="button" class="icon-link"></a>' +
+                    '</tr>');
+        }
     }
-}
+
+    function createNewRuleTargetRow(value) {
+        if (value == "AND" || value == "OR"){
+            var index = jQuery('#multipleRuleTargetTable tr').length;
+            jQuery('#multipleRuleTargetTable > tbody:last').append('<tr><td style="padding-left:0px !important;padding-right:0px !important"><select id="ruleTargetCategory_'  + index + '" name="ruleTargetCategory_'  + index + '" class="leftCol-small"> <%for (String category : categories) { if(currentRuleTargetCategory != null && category.equals(currentRuleTargetCategory)){%> <option value="<%=category%>" selected="selected"><%=currentCategory%> </option> <%} else {%> <option value="<%=category%>"><%=category%> </option> <%} }%></select></td>' +
+                    '<td style="padding-left:0px !important;padding-right:0px !important"><select id="ruleTargetPreFunction_'  + index + '" name="ruleTargetPreFunction_'  + index + '" class="leftCol-small"><%for (String targetPreFunction : targetPreFunctions) {if (currentRuleTargetPreFunction != null && targetPreFunction.equals(currentRuleTargetPreFunction)) {%><option value="<%=targetPreFunction%>" selected="selected"><%=targetPreFunction%></option><%} else {%><option value="<%=targetPreFunction%>"><%=targetPreFunction%></option><%}}%></select></td>' +
+                    '<td style="padding-left:0px !important;padding-right:0px !important"><select id="ruleTargetFunction_'  + index + '" name="ruleTargetFunction_'  + index + '" class="leftCol-small"><%for (String targetFunction : targetFunctions) {if (currentRuleTargetFunction != null && targetFunction.equals(currentRuleTargetFunction)) {%><option value="<%=targetFunction%>" selected="selected"><%=targetFunction%></option><%} else {%><option value="<%=targetFunction%>"><%=targetFunction%></option><%}}%></select></td>' +
+                    '<td style="padding-left:0px !important;padding-right:0px !important"><%if (currentRuleTargetAttributeValue != null && !"".equals(currentRuleTargetAttributeValue)) {%><input type="text" size="60" name="ruleTargetAttributeValue_'  + index + '" id="ruleTargetAttributeValue_'  + index + '" value="<%=currentAttributeValue%>" class="text-box-big"/><%} else {%><input type="text" size="60" name="ruleTargetAttributeValue_'  + index + '" id="ruleTargetAttributeValue_'  + index + '" class="text-box-big"/><%}%></td>' +
+                    '<a title="Select Resources Names" class="icon-link" onclick="selectAttributesForRuleTarget(' + index + ');" style="background-image:url(images/registry.gif);"></a>' +
+                    '<td><input type="hidden" name="ruleTargetAttributeId_'  + index +  '" id="ruleTargetAttributeId_'  + index + '" value="<%=currentRuleTargetAttributeId%>"/></td>' +
+                    '<td><input type="hidden" name="ruleTargetAttributeTypes_'  + index + '" id="ruleTargetAttributeTypes_'  + index +  '" value="<%=currentRuleTargetAttributeDataType%>"/></td>' +
+                    '<td style="padding-left:0px !important;padding-right:0px !important"><select id="ruleTargetCombineFunctions_'  + index + '" name="ruleTargetCombineFunctions_'  + index + '" class="leftCol-small" onchange="createNewRuleTargetRow(this.options[this.selectedIndex].value)"><%for (String combineFunction : combineFunctions) {if (currentRuleTargetCombineFunction != null && combineFunction.equals(currentRuleTargetCombineFunction)) {%><option value="<%=combineFunction%>" selected="selected"><%=combineFunction%></option><%} else {%><option value="<%=combineFunction%>"><%=combineFunction%></option><%}}%></select></td><a onclick="removeRow(this)" style="background-image:url(images/delete.gif);" type="button" class="icon-link"></a>' +
+                    '</tr>');
+        }
+    }
 
 
+    function createNewRuleRow(value) {
+        if (value == "AND" || value == "OR"){
+            var index = jQuery('#multipleRuleTable tr').length;
+            jQuery('#multipleRuleTable > tbody:last').append('<tr><td style="padding-left:0px !important;padding-right:0px !important"><select id="ruleCategory_'  + index + '" name="ruleCategory_'  + index + '" class="leftCol-small"> <%for (String category : categories) { if(currentRuleCategory != null && category.equals(currentRuleCategory)){%> <option value="<%=category%>" selected="selected"><%=category%> </option> <%} else {%> <option value="<%=category%>"><%=category%> </option> <%} }%></select></td>' +
+                    '<td style="padding-left:0px !important;padding-right:0px !important"><select id="rulePreFunction_'  + index + '" name="rulePreFunction_'  + index + '" class="leftCol-small"><%for (String rulePreFunction : rulePreFunctions) {if (currentRulePreFunction != null && rulePreFunction.equals(currentPreFunction)) {%><option value="<%=rulePreFunction%>" selected="selected"><%=rulePreFunction%></option><%} else {%><option value="<%=rulePreFunction%>"><%=rulePreFunction%></option><%}}%></select></td>' +
+                    '<td style="padding-left:0px !important;padding-right:0px !important"><select id="ruleFunction_'  + index + '" name="ruleFunction_'  + index + '" class="leftCol-small"><%for (String ruleFunction : ruleFunctions) {if (currentRuleFunction != null && ruleFunction.equals(currentRuleFunction)) {%><option value="<%=ruleFunction%>" selected="selected"><%=ruleFunction%></option><%} else {%><option value="<%=ruleFunction%>"><%=ruleFunction%></option><%}}%></select></td>' +
+                    '<td style="padding-left:0px !important;padding-right:0px !important"><%if (currentRuleAttributeValue != null && !"".equals(currentRuleAttributeValue)) {%><input type="text" size="60" name="ruleAttributeValue_'  + index + '" id="ruleAttributeValue_'  + index + '" value="<%=currentRuleAttributeValue%>" class="text-box-big"/><%} else {%><input type="text" size="60" name="ruleAttributeValue_'  + index + '" id="ruleAttributeValue_'  + index + '" class="text-box-big"/><%}%></td>' +
+                    '<a title="Select Resources Names" class="icon-link" onclick="selectAttributesForRule(' + index + ');" style="background-image:url(images/registry.gif);"></a>' +
+                    '<td><input type="hidden" name="ruleAttributeId_'  + index +  '" id="ruleAttributeId_'  + index + '" value="<%=currentRuleAttributeId%>"/></td>' +
+                    '<td><input type="hidden" name="ruleAttributeTypes_'  + index + '" id="ruleAttributeTypes_'  + index +  '" value="<%=currentRuleAttributeDataType%>"/></td>' +
+                    '<td style="padding-left:0px !important;padding-right:0px !important"><select id="ruleCombineFunctions_'  + index + '" name="ruleCombineFunctions_'  + index + '" class="leftCol-small" onchange="createNewRuleRow(this.options[this.selectedIndex].value)"><%for (String combineFunction : combineFunctions) {if (currentCombineFunction != null && combineFunction.equals(currentRuleCombineFunction)) {%><option value="<%=combineFunction%>" selected="selected"><%=combineFunction%></option><%} else {%><option value="<%=combineFunction%>"><%=combineFunction%></option><%}}%></select></td><a onclick="removeRow(this)" style="background-image:url(images/delete.gif);" type="button" class="icon-link"></a>' +
+                    '</tr>');
+        }
+    }
 
 </script>
 
 
-
-
-
-
-
 <%
-
     if(targetDTO != null){
-
         ArrayList<RowDTO> rowDTOs = targetDTO.getRowDTOList();
-
-        for(RowDTO rowDTO : rowDTOs){
+        if(rowDTOs != null  && rowDTOs.size() > 0){
+            RowDTO rowDTO = rowDTOs.get(0);
             currentCategory = rowDTO.getCategory();
             currentPreFunction = rowDTO.getPreFunction();
             currentFunction = rowDTO.getFunction();
-            currentAttributeValue =  rowDTO.getAttributeValue();
-            currentAttributeId =  rowDTO.getAttributeId();
-            currentAttributeDataType = rowDTO.getAttributeDataType();
+            if(rowDTO.isNotCompleted()){
+                if(rowDTO.getAttributeValue() != null && rowDTO.getAttributeValue().trim().length() > 0){
+                    currentAttributeValue = rowDTO.getAttributeValue() + "," + selectedAttributeNames;
+                } else {
+                    currentAttributeValue = selectedAttributeNames;                    
+                }
+                currentAttributeId = selectedAttributeId;
+                currentAttributeDataType = selectedAttributeDataType;
+            } else {
+                currentAttributeValue =  rowDTO.getAttributeValue();
+                currentAttributeId =  rowDTO.getAttributeId();
+                currentAttributeDataType = rowDTO.getAttributeDataType();
+            }
             currentCombineFunction =  rowDTO.getCombineFunction();
-        %>
-            <script type="text/javascript">
-                createNewTargetRow("NEW");
-            </script>
-        <%
         }
-    } else {
-        System.out.println("Target is NULL ");
     }
 
     if(ruleDTO != null){
-        ArrayList<RowDTO> ruleRowDTOs = ruleDTO.getRowDTOList();
-
-        for(RowDTO rowDTO : ruleRowDTOs){
-            currentCategory = rowDTO.getCategory();
-            currentPreFunction = rowDTO.getPreFunction();
-            currentFunction = rowDTO.getFunction();
-            currentAttributeValue =  rowDTO.getAttributeValue();
-            currentAttributeId =  rowDTO.getAttributeId();
-            currentAttributeDataType = rowDTO.getAttributeDataType();
-            currentCombineFunction =  rowDTO.getCombineFunction();
-        %>
-            <script type="text/javascript">
-                createNewRuleRow("NEW");
-            </script>
-        <%
+        ruleId = ruleDTO.getRuleId();
+        ruleEffect = ruleDTO.getRuleEffect();
+        ArrayList<RowDTO> rowDTOs = ruleDTO.getRowDTOList();
+        if(rowDTOs != null  && rowDTOs.size() > 0){
+            RowDTO rowDTO = rowDTOs.get(0);
+            currentRuleCategory = rowDTO.getCategory();
+            currentRulePreFunction = rowDTO.getPreFunction();
+            currentRuleFunction = rowDTO.getFunction();
+            if(rowDTO.isNotCompleted()){
+                if(rowDTO.getAttributeValue() != null && rowDTO.getAttributeValue().trim().length() > 0){
+                    currentRuleAttributeValue = rowDTO.getAttributeValue() + "," + selectedAttributeNames;
+                } else {
+                    currentRuleAttributeValue = selectedAttributeNames;
+                }
+                currentRuleAttributeId = selectedAttributeId;
+                currentRuleAttributeDataType = selectedAttributeDataType;
+            } else {
+                currentRuleAttributeValue =  rowDTO.getAttributeValue();
+                currentRuleAttributeId =  rowDTO.getAttributeId();
+                currentRuleAttributeDataType = rowDTO.getAttributeDataType();
+            }
+            currentRuleCombineFunction =  rowDTO.getCombineFunction();
         }
-    } else {
-        System.out.println("Rule is NULL ");            
-    }
 
-    ////////////////////////////////////////////////////////////////////////////
-
-
-    String serverURL = CarbonUIUtil.getServerURL(config.getServletContext(), session);
-    ConfigurationContext configContext =
-            (ConfigurationContext) config.getServletContext().getAttribute(CarbonConstants.
-                    CONFIGURATION_CONTEXT);
-    String cookie = (String) session.getAttribute(ServerConstants.ADMIN_SERVICE_COOKIE);
-    String backEndServerURL = CarbonUIUtil.getServerURL(config.getServletContext(), session);
-    String forwardTo = null;
-    String[] algorithmNames = null;
-
-    try {
-        EntitlementPolicyAdminServiceClient client = new EntitlementPolicyAdminServiceClient(cookie,
-                serverURL, configContext);
-        algorithmNames = client.getEntitlementPolicyDataFromRegistry("ruleCombiningAlgorithms");
-        ClaimAdminClient claimAdminClient = new ClaimAdminClient(cookie, backEndServerURL,
-                configContext);
-        claimAdminClient.getAllClaimMappingsByDialectWithRole(EntitlementPolicyConstants.DEFAULT_CARBON_DIALECT);
-
-    } catch (Exception e) {
-        String message = resourceBundle.getString("error.while.loading.policy.resource");
-        CarbonUIMessage.sendCarbonUIMessage(message, CarbonUIMessage.ERROR, request);
-        forwardTo = "../admin/error.jsp";
-
-%>
-<script type="text/javascript">
-    function forward() {
-        location.href = "<%=forwardTo%>";
-    }
-</script>
-
-<script type="text/javascript">
-    forward();
-</script>
-<%
+        BasicTargetDTO targetRuleDTO = ruleDTO.getTargetDTO();
+        
+        if(targetRuleDTO != null  && targetRuleDTO.getRowDTOList() != null &&
+                                                targetRuleDTO.getRowDTOList().size() > 0){            
+            RowDTO rowDTO = targetRuleDTO.getRowDTOList().get(0);
+            currentRuleTargetCategory = rowDTO.getCategory();
+            currentRuleTargetPreFunction = rowDTO.getPreFunction();
+            currentRuleTargetFunction = rowDTO.getFunction();
+            if(rowDTO.isNotCompleted()){
+                if(rowDTO.getAttributeValue() != null && rowDTO.getAttributeValue().trim().length() > 0){
+                    currentRuleTargetAttributeValue = rowDTO.getAttributeValue() + "," + selectedAttributeNames;
+                } else {
+                    currentRuleTargetAttributeValue = selectedAttributeNames;
+                }                 
+                currentRuleTargetAttributeId = selectedAttributeId;
+                currentRuleTargetAttributeDataType = selectedAttributeDataType;
+            } else {
+                currentRuleTargetAttributeValue =  rowDTO.getAttributeValue();
+                currentRuleTargetAttributeId =  rowDTO.getAttributeId();
+                currentRuleTargetAttributeDataType = rowDTO.getAttributeDataType();
+            }
+            currentRuleCombineFunction =  rowDTO.getCombineFunction();
+        }
     }
 %>
-
 
 <fmt:bundle basename="org.wso2.carbon.identity.entitlement.ui.i18n.Resources">
 <carbon:breadcrumb
@@ -676,60 +346,27 @@ function doAdd() {
     }
 }
 
-function selectSubjects() {
-    if (doValidation()) {
-        document.dataForm.action = "update-rule.jsp?nextPage=select-subjects&ruleElementOrder=" + orderRuleElement();
-        document.dataForm.submit();
-    }
-}
-
-function selectRegistryResources() {
-    if (doValidation()) {
-        document.dataForm.action = "update-rule.jsp?nextPage=select-registry-resources&ruleElementOrder=" + orderRuleElement();
-        document.dataForm.submit();
-    }
-}
-
-function selectAttributes(attributeType) {
+function selectAttributesForRule(index) {
     if (doValidationPolicyNameOnly()) {
-        document.dataForm.action = "update-rule.jsp?nextPage=select_attribute_values&updateRule=true&attributeType="
-                + attributeType + "&ruleElementOrder=" + orderRuleElement();
+        document.dataForm.action = "update-rule.jsp?nextPage=select_attribute_values&updateRule=true&ruleRowIndex="
+                + index + "&ruleElementOrder=" + orderRuleElement();
         document.dataForm.submit();
     }
 }
 
-function selectDiscoveryResources() {
-    if (doValidation()) {
-        document.dataForm.action = "update-rule.jsp?nextPage=select-discovery-resources&ruleElementOrder=" + orderRuleElement();
-        document.dataForm.submit();
-    }
-}
-
-function selectSubjectsForTarget() {
+function selectAttributesForRuleTarget(index) {
     if (doValidationPolicyNameOnly()) {
-        document.dataForm.action = "update-rule.jsp?nextPage=select-subjects&ruleId=&ruleElementOrder=" + orderRuleElement();
+        document.dataForm.action = "update-rule.jsp?nextPage=select_attribute_values&updateRule=true&targetRuleRowIndex="
+                + index + "&ruleElementOrder=" + orderRuleElement();
         document.dataForm.submit();
     }
 }
 
-function selectRegistryResourcesForTarget() {
-    if (doValidationPolicyNameOnly()) {
-        document.dataForm.action = "update-rule.jsp?nextPage=select-registry-resources&ruleId=&ruleElementOrder=" + orderRuleElement();
-        document.dataForm.submit();
-    }
-}
+function selectAttributesForTarget(index) {
 
-function selectAttributesForTarget(category) {
     if (doValidationPolicyNameOnly()) {
-        document.dataForm.action = "update-rule.jsp?nextPage=select_attribute_values&ruleId=&attributeType="
-                + category + "&ruleElementOrder=" + orderRuleElement();
-        document.dataForm.submit();
-    }
-}
-
-function selectDiscoveryResourcesForTarget() {
-    if (doValidationPolicyNameOnly()) {
-        document.dataForm.action = "update-rule.jsp?nextPage=select-discovery-resources&ruleId=&ruleElementOrder=" + orderRuleElement();
+        document.dataForm.action = "update-rule.jsp?nextPage=select_attribute_values&ruleId=&targetRowIndex="
+                + index + "&ruleElementOrder=" + orderRuleElement();
         document.dataForm.submit();
     }
 }
@@ -760,31 +397,6 @@ function updownthis(thislink, updown) {
         otherRow.cells[i].innerHTML = rowdata_clicked[i];
     }
 }
-
-
-<%--function selectRightList(serviceUri) {--%>
-    <%--var rightList = "";--%>
-    <%--var operationNameElement = document.getElementById('userAttribute');--%>
-    <%--if ('<%=selectUserAttributes%>' == serviceUri) {--%>
-        <%--for (var i = 0; i < operationList.length; i++) {--%>
-
-            <%--rightList = operationList[i];--%>
-            <%--operationNameElement.innerHTML += "<option value='" + rightList + "'>" + rightList + "</option>";--%>
-        <%--}--%>
-    <%--}--%>
-<%--}--%>
-
-
-//jQuery(document).ready(function() {
-//    jQuery('#multipleTargetTable tr td select[name^=targetCombineFunctions]').change(function() {
-//        console.info(jQuery(this).val());
-//        if (jQuery(this).val() == "AND" || jQuery(this).val() == "OR") {
-//            createNewTargetRow();
-//        }
-//    });
-//});
-
-
 </script>
 
 
@@ -798,7 +410,7 @@ function updownthis(thislink, updown) {
             key="use.advance.view"/></a>
 </div>
 <form id="dataForm" name="dataForm" method="post" action="">
-<table class="styledLeft noBorders">
+<table id="mainTable" class="styledLeft noBorders">
 <tr>
     <td class="leftCol-med"><fmt:message key='policy.name'/><span class="required">*</span></td>
     <%
@@ -820,8 +432,8 @@ function updownthis(thislink, updown) {
     <td>
         <select id="algorithmName" name="algorithmName" class="text-box-big">
             <%
-                if (algorithmNames != null && algorithmNames.length > 0) {
-                    for (String algorithmName : algorithmNames) {
+                if (ruleCombingAlgorithm != null && ruleCombingAlgorithm.length > 0) {
+                    for (String algorithmName : ruleCombingAlgorithm) {
                         if (algorithmName.equals(entitlementPolicyBean.getAlgorithmName())) {
             %>
             <option value="<%=algorithmName%>"
@@ -981,7 +593,7 @@ function updownthis(thislink, updown) {
                                     %>
                                     <input type="text" size="60" name="targetAttributeValue_0"
                                            id="targetAttributeValue_0"
-                                           class="text-box-big" <%--onFocus="handleFocus(this,'Pick resource name')" onBlur="handleBlur(this,'Pick resource name');" class="defaultText text-box-big" --%>/>
+                                           class="text-box-big"  onBlur="handleBlur(this,'Pick resource name');" class="defaultText text-box-big" --%>/>
 
                                     <%
                                         }
@@ -989,7 +601,7 @@ function updownthis(thislink, updown) {
                                 </td>
                                 <td>
                                     <a title="Select Resources Names" class='icon-link'
-                                       onclick='selectAttributesForTarget("Resource");'
+                                       onclick='selectAttributesForTarget(0);'
                                        style='background-image:url(images/registry.gif);'></a>
                                 </td>
 
@@ -1032,6 +644,54 @@ function updownthis(thislink, updown) {
                     </td>
                 </tr>
             </table>
+<%
+
+    if(targetDTO != null){
+        ArrayList<RowDTO> rowDTOs = targetDTO.getRowDTOList();
+        if(rowDTOs != null && rowDTOs.size() > 0){
+            rowDTOs.remove(0);
+            for(RowDTO rowDTO : rowDTOs){
+                currentCategory = rowDTO.getCategory();
+                currentPreFunction = rowDTO.getPreFunction();
+                currentFunction = rowDTO.getFunction();
+                if(rowDTO.isNotCompleted()){
+                    if(rowDTO.getAttributeValue() != null && rowDTO.getAttributeValue().trim().length() > 0){
+                        currentAttributeValue = rowDTO.getAttributeValue() + "," + selectedAttributeNames;
+                    } else {
+                        currentAttributeValue = selectedAttributeNames;
+                    }
+                    currentAttributeId = selectedAttributeId;
+                    currentAttributeDataType = selectedAttributeDataType;
+                } else {
+                    currentAttributeValue =  rowDTO.getAttributeValue();
+                    currentAttributeId =  rowDTO.getAttributeId();
+                    currentAttributeDataType = rowDTO.getAttributeDataType();
+                }
+                currentCombineFunction =  rowDTO.getCombineFunction();
+
+            %>
+                <script type="text/javascript">
+                    function createNextTargetRow() {
+                        var index = jQuery('#multipleTargetTable tr').length;
+                        jQuery('#multipleTargetTable > tbody:last').append('<tr><td style="padding-left:0px !important;padding-right:0px !important"><select id="targetCategory_'  + index + '" name="targetCategory_'  + index + '" class="leftCol-small"> <%for (String category : categories) { if(currentCategory != null && category.equals(currentCategory)){%> <option value="<%=category%>" selected="selected"><%=currentCategory%> </option> <%} else {%> <option value="<%=category%>"><%=category%> </option> <%} }%></select></td>' +
+                                '<td style="padding-left:0px !important;padding-right:0px !important"><select id="targetPreFunction_'  + index + '" name="targetPreFunction_'  + index + '" class="leftCol-small"><%for (String targetPreFunction : targetPreFunctions) {if (currentPreFunction != null && targetPreFunction.equals(currentPreFunction)) {%><option value="<%=targetPreFunction%>" selected="selected"><%=targetPreFunction%></option><%} else {%><option value="<%=targetPreFunction%>"><%=targetPreFunction%></option><%}}%></select></td>' +
+                                '<td style="padding-left:0px !important;padding-right:0px !important"><select id="targetFunction_'  + index + '" name="targetFunction_'  + index + '" class="leftCol-small"><%for (String targetFunction : targetFunctions) {if (currentFunction != null && targetFunction.equals(currentFunction)) {%><option value="<%=targetFunction%>" selected="selected"><%=targetFunction%></option><%} else {%><option value="<%=targetFunction%>"><%=targetFunction%></option><%}}%></select></td>' +
+                                '<td style="padding-left:0px !important;padding-right:0px !important"><%if (currentAttributeValue != null && !"".equals(currentAttributeValue)) {%><input type="text" size="60" name="targetAttributeValue_'  + index + '" id="targetAttributeValue_'  + index + '" value="<%=currentAttributeValue%>" class="text-box-big"/><%} else {%><input type="text" size="60" name="targetAttributeValue_'  + index + '" id="targetAttributeValue_'  + index + '" class="text-box-big"/><%}%></td>' +
+                                '<a title="Select Resources Names" class="icon-link" onclick="selectAttributesForTarget(' + index + ');" style="background-image:url(images/registry.gif);"></a>' +
+                                '<td><input type="hidden" name="targetAttributeId_'  + index +  '" id="targetAttributeId_'  + index + '" value="<%=currentAttributeId%>"/></td>' +
+                                '<td><input type="hidden" name="targetAttributeTypes_'  + index + '" id="targetAttributeTypes_'  + index +  '" value="<%=currentAttributeDataType%>"/></td>' +
+                                '<td style="padding-left:0px !important;padding-right:0px !important"><select id="targetCombineFunctions_'  + index + '" name="targetCombineFunctions_'  + index + '" class="leftCol-small" onchange="createNewTargetRow(this.options[this.selectedIndex].value)"><%for (String combineFunction : combineFunctions) {if (currentCombineFunction != null && combineFunction.equals(currentCombineFunction)) {%><option value="<%=combineFunction%>" selected="selected"><%=combineFunction%></option><%} else {%><option value="<%=combineFunction%>"><%=combineFunction%></option><%}}%></select></td><a onclick="removeRow(this)" style="background-image:url(images/delete.gif);" type="button" class="icon-link"></a>' +
+                                '</tr>');
+
+                    }
+                    createNextTargetRow();
+                </script>
+            <%
+            }
+        }
+    }
+%>
+
         </div>
 
     </td>
@@ -1098,16 +758,21 @@ function updownthis(thislink, updown) {
                     </tr>
                     <tr>
                         <td>
-                        <table id="multipleRuleTable" name="multipleRuleTable" class="normal"
+                            Rule's Condition element would be evaluated if this target is match....
+                        </td>
+                    </tr>
+                    <tr>
+                        <td  colspan="5">
+                        <table id="multipleRuleTargetTable" name="multipleRuleTargetTable" class="normal"
                                style="padding-left:0px !important">
                             <tr>
 
                                 <td style="padding-left:0px !important;padding-right:0px !important">
-                                    <select id="ruleCategory_0" name="ruleCategory_0"
+                                    <select id="ruleTargetCategory_0" name="ruleTargetCategory_0"
                                             class="leftCol-small">
                                         <%
                                             for (String category : categories) {
-                                                if (functionOnResourcesTarget != null && category.equals(functionOnResourcesTarget)) {
+                                                if (currentRuleTargetCategory != null && category.equals(currentRuleTargetCategory)) {
                                         %>
                                         <option value="<%=category%>"
                                                 selected="selected"><%=category%>
@@ -1124,21 +789,198 @@ function updownthis(thislink, updown) {
                                     </select>
                                 </td>
 
+                                <td style="padding-left:0px !important;padding-right:0px !important">
+                                    <select id="ruleTargetPreFunction_0" name="ruleTargetPreFunction_0"
+                                            class="leftCol-small">
+                                        <%
+                                            for (String targetPreFunction : targetPreFunctions) {
+                                                if (currentRuleTargetPreFunction != null && targetPreFunction.equals(currentRuleTargetPreFunction)) {
+                                        %>
+                                        <option value="<%=targetPreFunction%>"
+                                                selected="selected"><%=targetPreFunction%>
+                                        </option>
+                                        <%
+                                        } else {
+                                        %>
+                                        <option value="<%=targetPreFunction%>"><%=targetPreFunction%>
+                                        </option>
+                                        <%
+                                                }
+                                            }
+                                        %>
+                                    </select>
+                                </td>
 
-                                <%--<td style="padding-left:0px !important;padding-right:0px !important">--%>
-                                    <%--<select id="userAttribute" name="userAttribute">--%>
-                                      <%--onchange="selectRightList(this.options[this.selectedIndex].value)"--%>
+                                <td style="padding-left:0px !important;padding-right:0px !important">
+                                    <select id="ruleTargetFunction_0" name="ruleTargetFunction_0"
+                                            class="leftCol-small">
+                                        <%
+                                            for (String targetFunction : targetFunctions) {
+                                                if (currentRuleTargetFunction != null && targetFunction.equals(currentRuleTargetFunction)) {
+                                        %>
+                                        <option value="<%=targetFunction%>" selected="selected"><%=targetFunction%></option>
+                                        <%
+                                        } else {
+                                        %>
+                                        <option value="<%=targetFunction%>"><%=targetFunction%></option>
+                                        <%
+                                                }
+                                            }
+                                        %>
+                                    </select>
+                                </td>
 
-                                    <%--</select>--%>
-                                <%--</td>--%>
+                                <td style="padding-left:0px !important;padding-right:0px !important">
+                                    <%
+                                        if (currentRuleTargetAttributeValue != null && currentRuleTargetAttributeValue.trim().length() > 0) {
 
+                                    %>
+                                    <input type="text" size="60" name="ruleTargetAttributeValue_0"
+                                           id="ruleTargetAttributeValue_0"
+                                           value="<%=currentRuleTargetAttributeValue%>" class="text-box-big"/>
+                                    <%
+                                    } else {
+                                    %>
+                                    <input type="text" size="60" name="ruleTargetAttributeValue_0"
+                                           id="ruleTargetAttributeValue_0"
+                                           class="text-box-big" />
+
+                                    <%
+                                        }
+                                    %>
+                                </td>
+                                <td>
+                                    <a title="Select Resources Names" class='icon-link'
+                                       onclick='selectAttributesForRuleTarget(0);'
+                                       style='background-image:url(images/registry.gif);'></a>
+                                </td>
+
+
+                                <td>
+                                    <input type="hidden" name="ruleTargetAttributeId_0"
+                                           id="ruleTargetAttributeId_0" value="<%=currentRuleTargetAttributeId%>"/>
+                                </td>
+
+                                <td>
+                                    <input type="hidden" name="ruleTargetAttributeTypes_0"
+                                           id="ruleTargetAttributeTypes_0"
+                                           value="<%=currentRuleTargetAttributeDataType%>"/>
+                                </td>
+
+                                <td style="padding-left:0px !important;padding-right:0px !important">
+                                    <select id="ruleTargetCombineFunctions_0" name="ruleTargetCombineFunctions_0"
+                                            class="leftCol-small" onchange="createNewRuleTargetRow(this.options[this.selectedIndex].value)">
+                                        <%
+                                            for (String combineFunction : combineFunctions) {
+                                                if (currentRuleTargetCombineFunction != null && combineFunction.equals(currentRuleTargetCombineFunction)) {
+                                        %>
+                                        <option value="<%=combineFunction%>"
+                                                selected="selected"><%=combineFunction%>
+                                        </option>
+                                        <%
+                                        } else {
+                                        %>
+                                        <option value="<%=combineFunction%>"><%=combineFunction%>
+                                        </option>
+                                        <%
+                                                }
+                                            }
+                                        %>
+                                    </select>
+                                </td>
+                            </tr>
+                        </table>
+<%
+
+    if(ruleDTO != null){
+        BasicTargetDTO ruleTargetDTO = ruleDTO.getTargetDTO();
+        if(ruleTargetDTO != null && ruleTargetDTO.getRowDTOList() != null && ruleTargetDTO.getRowDTOList().size() > 0){
+            List<RowDTO> rowDTOs = ruleTargetDTO.getRowDTOList();
+            rowDTOs.remove(0);
+            for(RowDTO rowDTO : rowDTOs){
+                currentRuleTargetCategory = rowDTO.getCategory();
+                currentRuleTargetPreFunction = rowDTO.getPreFunction();
+                currentRuleTargetFunction = rowDTO.getFunction();
+                if(rowDTO.isNotCompleted()){
+                    if(rowDTO.getAttributeValue() != null &&
+                                                rowDTO.getAttributeValue().trim().length() > 0){
+                        currentRuleTargetAttributeValue = rowDTO.getAttributeValue() + "," +
+                                                                        selectedAttributeNames;
+                    } else {
+                        currentRuleTargetAttributeValue = selectedAttributeNames;
+                    }                    
+                    currentRuleTargetAttributeId = selectedAttributeId;
+                    currentRuleTargetAttributeDataType = selectedAttributeDataType;
+                } else {
+                    currentRuleTargetAttributeValue =  rowDTO.getAttributeValue();
+                    currentRuleTargetAttributeId =  rowDTO.getAttributeId();
+                    currentRuleTargetAttributeDataType = rowDTO.getAttributeDataType();
+                }
+                currentRuleTargetCombineFunction =  rowDTO.getCombineFunction();
+
+            %>
+                <script type="text/javascript">
+                    function createNextRuleTargetRow() {
+                        var index = jQuery('#multipleRuleTargetTable tr').length;
+                        jQuery('#multipleRuleTargetTable > tbody:last').append('<tr><td style="padding-left:0px !important;padding-right:0px !important"><select id="ruleTargetCategory_'  + index + '" name="ruleTargetCategory_'  + index + '" class="leftCol-small"> <%for (String category : categories) { if(currentRuleTargetCategory != null && category.equals(currentRuleTargetCategory)){%> <option value="<%=category%>" selected="selected"><%=category%> </option> <%} else {%> <option value="<%=category%>"><%=category%> </option> <%} }%></select></td>' +
+                                '<td style="padding-left:0px !important;padding-right:0px !important"><select id="ruleTargetPreFunction_'  + index + '" name="ruleTargetPreFunction_'  + index + '" class="leftCol-small"><%for (String targetPreFunction : targetPreFunctions) {if (currentRuleTargetPreFunction != null && targetPreFunction.equals(currentRuleTargetPreFunction)) {%><option value="<%=targetPreFunction%>" selected="selected"><%=targetPreFunction%></option><%} else {%><option value="<%=targetPreFunction%>"><%=targetPreFunction%></option><%}}%></select></td>' +
+                                '<td style="padding-left:0px !important;padding-right:0px !important"><select id="ruleTargetFunction_'  + index + '" name="ruleTargetFunction_'  + index + '" class="leftCol-small"><%for (String targetFunction : targetFunctions) {if (currentRuleTargetFunction != null && targetFunction.equals(currentRuleTargetFunction)) {%><option value="<%=targetFunction%>" selected="selected"><%=targetFunction%></option><%} else {%><option value="<%=targetFunction%>"><%=targetFunction%></option><%}}%></select></td>' +
+                                '<td style="padding-left:0px !important;padding-right:0px !important"><%if (currentRuleTargetAttributeValue != null && !"".equals(currentRuleTargetAttributeValue)) {%><input type="text" size="60" name="ruleTargetAttributeValue_'  + index + '" id="ruleTargetAttributeValue_'  + index + '" value="<%=currentRuleTargetAttributeValue%>" class="text-box-big"/><%} else {%><input type="text" size="60" name="ruleTargetAttributeValue_'  + index + '" id="ruleTargetAttributeValue_'  + index + '" class="text-box-big"/><%}%></td>' +
+                                '<a title="Select Resources Names" class="icon-link" onclick="selectAttributesForRuleTarget(' + index + ');" style="background-image:url(images/registry.gif);"></a>' +
+                                '<td><input type="hidden" name="ruleTargetAttributeId_'  + index +  '" id="ruleTargetAttributeId_'  + index + '" value="<%=currentRuleTargetAttributeId%>"/></td>' +
+                                '<td><input type="hidden" name="ruleTargetAttributeTypes_'  + index + '" id="ruleTargetAttributeTypes_'  + index +  '" value="<%=currentRuleTargetAttributeDataType%>"/></td>' +
+                                '<td style="padding-left:0px !important;padding-right:0px !important"><select id="ruleTargetCombineFunctions_'  + index + '" name="ruleTargetCombineFunctions_'  + index + '" class="leftCol-small" onchange="createNewTargetRow(this.options[this.selectedIndex].value)"><%for (String combineFunction : combineFunctions) {if (currentRuleTargetCombineFunction != null && combineFunction.equals(currentRuleTargetCombineFunction)) {%><option value="<%=combineFunction%>" selected="selected"><%=combineFunction%></option><%} else {%><option value="<%=combineFunction%>"><%=combineFunction%></option><%}}%></select></td><a onclick="removeRow(this)" style="background-image:url(images/delete.gif);" type="button" class="icon-link"></a>' +
+                                '</tr>');
+                    }
+                    createNextRuleTargetRow()
+                </script>
+            <%
+            }
+        }
+    }
+
+%>
+                        </td>
+                    </tr>
+                    <tr>
+                        <td>
+                            Define your condition element logic......
+                        </td>
+                    </tr>
+                    <tr>
+                        <td  colspan="5">
+                        <table id="multipleRuleTable" name="multipleRuleTable" class="normal"
+                               style="padding-left:0px !important">
+                            <tr>
+
+                                <td style="padding-left:0px !important;padding-right:0px !important">
+                                    <select id="ruleCategory_0" name="ruleCategory_0"
+                                            class="leftCol-small">
+                                        <%
+                                            for (String category : categories) {
+                                                if (currentRuleCategory != null && category.equals(currentRuleCategory)) {
+                                        %>
+                                        <option value="<%=category%>"
+                                                selected="selected"><%=category%>
+                                        </option>
+                                        <%
+                                        } else {
+                                        %>
+                                        <option value="<%=category%>"><%=category%>
+                                        </option>
+                                        <%
+                                                }
+                                            }
+                                        %>
+                                    </select>
+                                </td>
 
                                 <td style="padding-left:0px !important;padding-right:0px !important">
                                     <select id="rulePreFunction_0" name="rulePreFunction_0"
                                             class="leftCol-small">
                                         <%
                                             for (String rulePreFunction : rulePreFunctions) {
-                                                if (functionOnResourcesTarget != null && rulePreFunction.equals(functionOnResourcesTarget)) {
+                                                if (currentRulePreFunction != null && rulePreFunction.equals(currentRulePreFunction)) {
                                         %>
                                         <option value="<%=rulePreFunction%>"
                                                 selected="selected"><%=rulePreFunction%>
@@ -1155,22 +997,18 @@ function updownthis(thislink, updown) {
                                     </select>
                                 </td>
 
-
                                 <td style="padding-left:0px !important;padding-right:0px !important">
                                     <select id="ruleFunction_0" name="ruleFunction_0"
                                             class="leftCol-small">
                                         <%
                                             for (String ruleFunction : ruleFunctions) {
-                                                if (functionOnResourcesTarget != null && ruleFunction.equals(functionOnResourcesTarget)) {
+                                                if (currentRuleFunction != null && ruleFunction.equals(currentRuleFunction)) {
                                         %>
-                                        <option value="<%=ruleFunction%>"
-                                                selected="selected"><%=ruleFunction%>
-                                        </option>
+                                        <option value="<%=ruleFunction%>" selected="selected"><%=ruleFunction%></option>
                                         <%
                                         } else {
                                         %>
-                                        <option value="<%=ruleFunction%>"><%=ruleFunction%>
-                                        </option>
+                                        <option value="<%=ruleFunction%>"><%=ruleFunction%></option>
                                         <%
                                                 }
                                             }
@@ -1178,21 +1016,20 @@ function updownthis(thislink, updown) {
                                     </select>
                                 </td>
 
-
                                 <td style="padding-left:0px !important;padding-right:0px !important">
                                     <%
-                                        if (resourceNamesTarget != null && !resourceNamesTarget.equals("")) {
+                                        if (currentRuleAttributeValue != null && currentRuleAttributeValue.trim().length() > 0) {
 
                                     %>
                                     <input type="text" size="60" name="ruleAttributeValue_0"
                                            id="ruleAttributeValue_0"
-                                           value="<%=resourceNamesTarget%>" class="text-box-big"/>
+                                           value="<%=currentRuleAttributeValue%>" class="text-box-big"/>
                                     <%
                                     } else {
                                     %>
                                     <input type="text" size="60" name="ruleAttributeValue_0"
                                            id="ruleAttributeValue_0"
-                                           class="text-box-big" <%--onFocus="handleFocus(this,'Pick resource name')" onBlur="handleBlur(this,'Pick resource name');" class="defaultText text-box-big" --%>/>
+                                           class="text-box-big" />
 
                                     <%
                                         }
@@ -1200,20 +1037,20 @@ function updownthis(thislink, updown) {
                                 </td>
                                 <td>
                                     <a title="Select Resources Names" class='icon-link'
-                                       onclick='selectAttributesForTarget("Resource");'
+                                       onclick='selectAttributesForRule(0);'
                                        style='background-image:url(images/registry.gif);'></a>
                                 </td>
 
 
                                 <td>
                                     <input type="hidden" name="ruleAttributeId_0"
-                                           id="ruleAttributeId_0" value="<%=resourceIdTarget%>"/>
+                                           id="ruleAttributeId_0" value="<%=currentRuleAttributeId%>"/>
                                 </td>
 
                                 <td>
                                     <input type="hidden" name="ruleAttributeTypes_0"
                                            id="ruleAttributeTypes_0"
-                                           value="<%=resourceDataTypeTarget%>"/>
+                                           value="<%=currentRuleAttributeDataType%>"/>
                                 </td>
 
                                 <td style="padding-left:0px !important;padding-right:0px !important">
@@ -1221,7 +1058,7 @@ function updownthis(thislink, updown) {
                                             class="leftCol-small" onchange="createNewRuleRow(this.options[this.selectedIndex].value)">
                                         <%
                                             for (String combineFunction : combineFunctions) {
-                                                if (functionOnResourcesTarget != null && combineFunction.equals(functionOnResourcesTarget)) {
+                                                if (currentRuleCombineFunction != null && combineFunction.equals(currentRuleCombineFunction)) {
                                         %>
                                         <option value="<%=combineFunction%>"
                                                 selected="selected"><%=combineFunction%>
@@ -1237,15 +1074,62 @@ function updownthis(thislink, updown) {
                                         %>
                                     </select>
                                 </td>
-
                             </tr>
                         </table>
-
                         </td>
                     </tr>
                 </table>
             </td>
         </tr>
+
+<%
+
+    if(ruleDTO != null){
+        ArrayList<RowDTO> rowDTOs = ruleDTO.getRowDTOList();
+        if(rowDTOs != null && rowDTOs.size() > 0){
+            rowDTOs.remove(0);
+            for(RowDTO rowDTO : rowDTOs){
+                currentRuleCategory = rowDTO.getCategory();
+                currentRulePreFunction = rowDTO.getPreFunction();
+                currentRuleFunction = rowDTO.getFunction();
+                if(rowDTO.isNotCompleted()){
+                    if(rowDTO.getAttributeValue() != null && rowDTO.getAttributeValue().trim().length() > 0){
+                        currentRuleAttributeValue = rowDTO.getAttributeValue() + "," + selectedAttributeNames;
+                    } else {
+                        currentRuleAttributeValue = selectedAttributeNames;
+                    }
+                    currentRuleAttributeId = selectedAttributeId;
+                    currentRuleAttributeDataType = selectedAttributeDataType;
+                } else {
+                    currentRuleAttributeValue =  rowDTO.getAttributeValue();
+                    currentRuleAttributeId =  rowDTO.getAttributeId();
+                    currentRuleAttributeDataType = rowDTO.getAttributeDataType();
+                }
+                currentRuleCombineFunction =  rowDTO.getCombineFunction();
+
+            %>
+                <script type="text/javascript">
+                    function createNextRuleRow() {
+                        var index = jQuery('#multipleRuleTable tr').length;
+                        jQuery('#multipleRuleTable > tbody:last').append('<tr><td style="padding-left:0px !important;padding-right:0px !important"><select id="ruleCategory_'  + index + '" name="ruleCategory_'  + index + '" class="leftCol-small"> <%for (String category : categories) { if(currentRuleCategory != null && category.equals(currentRuleCategory)){%> <option value="<%=category%>" selected="selected"><%=category%> </option> <%} else {%> <option value="<%=category%>"><%=category%> </option> <%} }%></select></td>' +
+                                '<td style="padding-left:0px !important;padding-right:0px !important"><select id="rulePreFunction_'  + index + '" name="rulePreFunction_'  + index + '" class="leftCol-small"><%for (String rulePreFunction : rulePreFunctions) {if (currentRulePreFunction != null && rulePreFunction.equals(currentRulePreFunction)) {%><option value="<%=rulePreFunction%>" selected="selected"><%=rulePreFunction%></option><%} else {%><option value="<%=rulePreFunction%>"><%=rulePreFunction%></option><%}}%></select></td>' +
+                                '<td style="padding-left:0px !important;padding-right:0px !important"><select id="ruleFunction_'  + index + '" name="ruleFunction_'  + index + '" class="leftCol-small"><%for (String ruleFunction : ruleFunctions) {if (currentRuleFunction != null && ruleFunction.equals(currentRuleFunction)) {%><option value="<%=ruleFunction%>" selected="selected"><%=ruleFunction%></option><%} else {%><option value="<%=ruleFunction%>"><%=ruleFunction%></option><%}}%></select></td>' +
+                                '<td style="padding-left:0px !important;padding-right:0px !important"><%if (currentRuleAttributeValue != null && !"".equals(currentRuleAttributeValue)) {%><input type="text" size="60" name="ruleAttributeValue_'  + index + '" id="ruleAttributeValue_'  + index + '" value="<%=currentRuleAttributeValue%>" class="text-box-big"/><%} else {%><input type="text" size="60" name="ruleAttributeValue_'  + index + '" id="ruleAttributeValue_'  + index + '" class="text-box-big"/><%}%></td>' +
+                                '<a title="Select Resources Names" class="icon-link" onclick="selectAttributesForRule(' + index + ');" style="background-image:url(images/registry.gif);"></a>' +
+                                '<td><input type="hidden" name="ruleAttributeId_'  + index +  '" id="ruleAttributeId_'  + index + '" value="<%=currentRuleAttributeId%>"/></td>' +
+                                '<td><input type="hidden" name="ruleAttributeTypes_'  + index + '" id="ruleAttributeTypes_'  + index +  '" value="<%=currentRuleAttributeDataType%>"/></td>' +
+                                '<td style="padding-left:0px !important;padding-right:0px !important"><select id="ruleCombineFunctions_'  + index + '" name="ruleCombineFunctions_'  + index + '" class="leftCol-small" onchange="createNewRuleRow(this.options[this.selectedIndex].value)"><%for (String combineFunction : combineFunctions) {if (currentCombineFunction != null && combineFunction.equals(currentRuleCombineFunction)) {%><option value="<%=combineFunction%>" selected="selected"><%=combineFunction%></option><%} else {%><option value="<%=combineFunction%>"><%=combineFunction%></option><%}}%></select></td><a onclick="removeRow(this)" style="background-image:url(images/delete.gif);" type="button" class="icon-link"></a>' +
+                                '</tr>');
+
+                    }
+                    createNextRuleRow();
+                </script>
+            <%
+            }
+        }
+    }
+
+%>
         <tr>
             <td colspan="2" class="buttonRow">
                 <%

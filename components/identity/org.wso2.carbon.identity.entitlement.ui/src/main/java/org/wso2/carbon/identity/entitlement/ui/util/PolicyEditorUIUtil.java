@@ -18,11 +18,6 @@
 
 package org.wso2.carbon.identity.entitlement.ui.util;
 
-import org.wso2.carbon.identity.entitlement.ui.dto.RuleDTO;
-import org.wso2.carbon.identity.entitlement.ui.dto.TargetDTO;
-
-import java.util.List;
-
 /**
  *
  */

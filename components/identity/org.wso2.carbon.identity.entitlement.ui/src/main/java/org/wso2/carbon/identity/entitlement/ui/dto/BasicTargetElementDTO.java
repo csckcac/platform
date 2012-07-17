@@ -21,10 +21,10 @@ package org.wso2.carbon.identity.entitlement.ui.dto;
 import java.util.Arrays;
 
 /**
- * 
+ *
  */
 public class BasicTargetElementDTO {
-    
+
     private String resourceList;
 
     private String actionList;

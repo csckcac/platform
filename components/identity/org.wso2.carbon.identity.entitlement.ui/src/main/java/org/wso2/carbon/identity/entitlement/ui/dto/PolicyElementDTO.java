@@ -31,6 +31,8 @@ public class PolicyElementDTO {
 
     private String ruleElementOrder;
 
+    private String version;
+
     public String getPolicyName() {
         return policyName;
     }
@@ -61,5 +63,13 @@ public class PolicyElementDTO {
 
     public void setRuleElementOrder(String ruleElementOrder) {
         this.ruleElementOrder = ruleElementOrder;
+    }
+
+    public String getVersion() {
+        return version;
+    }
+
+    public void setVersion(String version) {
+        this.version = version;
     }
 }

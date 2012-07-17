@@ -35,6 +35,8 @@ public class PolicyEditorConstants {
 
     public static final String COMBINE_FUNCTION_OR = "OR";
 
+    public static final String COMBINE_FUNCTION_END = "END";
+
     public static final String MATCH_ELEMENT = "Match";
 
     public static final String  MATCH_ID = "MatchId";
@@ -65,6 +67,12 @@ public class PolicyEditorConstants {
 
     public static final String FUNCTION_LESS = "less-than";
 
+    public static final String FUNCTION_AT_LEAST_ONE = "at-least-one-member-of";
+
+    public static final String FUNCTION_IS_IN = "is-in";
+
+    public static final String FUNCTION_SET_EQUALS = "set-equals";
+
     public static final String FUNCTION_LESS_EQUAL = "less-than-or-equal";
 
     public static final String FUNCTION_ADD = "add";
@@ -80,5 +88,34 @@ public class PolicyEditorConstants {
     public static final String PRE_FUNCTION_IS = "is";
 
     public static final String PRE_FUNCTION_ARE = "are";
+
+    public static final String RULE_EFFECT_PERMIT = "Permit";
+
+    public static final String RULE_EFFECT_DENY = "Deny";
+
+    public static final String  DAY_TIME_DURATION  = "http://www.w3.org/2001/XMLSchema#dayTimeDuration";
+    
+    public static final String  YEAR_MONTH_DURATION  = "http://www.w3.org/2001/XMLSchema#yearMonthDuration";
+
+    public static final String RULE_COMBINING_DENY_OVERRIDE = "deny-overrides";
+    
+    public static final String RULE_COMBINING_PERMIT_OVERRIDE = "permit-overrides";
+
+    public static final String RULE_COMBINING_FIRST_APPLICABLE = "first-applicable";
+    
+    public static final String RULE_COMBINING_ORDER_PERMIT_OVERRIDE = "ordered-permit-overrides";
+
+    public static final String RULE_COMBINING_ORDER_DENY_OVERRIDE = "ordered-deny-overrides";
+    
+    public static final String RULE_COMBINING_DENY_UNLESS_PERMIT = "deny-unless-permit";
+
+    public static final String RULE_COMBINING_PERMIT_UNLESS_DENY = "permit-unless-deny";
+
+    public static final String RULE_ALGORITHM_IDENTIFIER_10 = "urn:oasis:names:tc:xacml:1.0:" +
+                                                                        "rule-combining-algorithm:";
+
+    public static final String RULE_ALGORITHM_IDENTIFIER_30 = "urn:oasis:names:tc:xacml:1.0:" +
+                                                                        "rule-combining-algorithm:";
+
 
 }

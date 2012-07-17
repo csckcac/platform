@@ -32,7 +32,7 @@ public class RuleDTO {
 
     private String ruleDescription;
 
-    private TargetDTO targetDTO;
+    private BasicTargetDTO targetDTO;
 
     private ArrayList<RowDTO> rowDTOList = new ArrayList<RowDTO>();
 
@@ -74,11 +74,11 @@ public class RuleDTO {
         this.rowDTOList.add(rowDTO);
     }
 
-    public TargetDTO getTargetDTO() {
+    public BasicTargetDTO getTargetDTO() {
         return targetDTO;
     }
 
-    public void setTargetDTO(TargetDTO targetDTO) {
+    public void setTargetDTO(BasicTargetDTO targetDTO) {
         this.targetDTO = targetDTO;
     }
 

@@ -23,7 +23,7 @@ import java.util.ArrayList;
 /**
  *
  */
-public class TargetDTO {
+public class BasicTargetDTO {
 
     private ArrayList<RowDTO> rowDTOList = new ArrayList<RowDTO>();
 

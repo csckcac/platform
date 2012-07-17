@@ -163,13 +163,13 @@
                 createInputs(paths[i].name);
             }
         }
-        document.attributeValueForm.action = "create-basic-policy.jsp?attributeType="
+        document.attributeValueForm.action = "policy-editor.jsp?attributeType="
                 + '<%=attributeType%>' +"&ruleId=" + '<%=ruleId%>' ;
         document.attributeValueForm.submit();
     }
 
     function doCancel(){
-        document.attributeValueForm.action = "create-basic-policy.jsp?ruleId=" + '<%=ruleId%>';
+        document.attributeValueForm.action = "policy-editor.jsp?ruleId=" + '<%=ruleId%>';
         document.attributeValueForm.submit();
     }
 
@@ -197,7 +197,7 @@
 <div id="middle">
     <h2><fmt:message key="select.attribute.values"/></h2>
     <div id="workArea">
-        <form id="attributeValueForm" name="attributeValueForm" method="post" action="create-basic-policy.jsp">
+        <form id="attributeValueForm" name="attributeValueForm" method="post" action="policy-editor.jsp">
 
 
         <table width="60%" id="userAdd" class="styledLeft">
@@ -355,7 +355,7 @@
                          <%
                         if(selectedTree != null){
                         %>
-                            <input type="button" onclick="submitForm(<%=selectedTree.getFullPathSupported()%>)" value="<fmt:message key="add"/>"  class="button"/>
+                            <input type="button" onclick="submitForm('<%=selectedTree.getFullPathSupported()%>')" value="<fmt:message key="add"/>"  class="button"/>
                         <%
                             }
                         %>

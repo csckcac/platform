@@ -25,6 +25,9 @@ public class EntitlementPolicyConstants {
 
     public static final String POLICY_NAMESPACE = "urn:oasis:names:tc:xacml:2.0:policy:schema:os";
 
+    public static final String XACML3_POLICY_NAMESPACE = "urn:oasis:names:tc:xacml:3.0:core:schema:wd-17";
+
+
     public static final String ATTRIBUTE_NAMESPACE = "urn:oasis:names:tc:xacml:2.0:example:attribute:";
 
     public static final String DATA_TYPE_NAMESPACE1 = "http://www.w3.org/2001/XMLSchema#";
@@ -37,7 +40,7 @@ public class EntitlementPolicyConstants {
 
     public static final String FUNCTION_NAMESPACE_STRING = "urn:oasis:names:tc:xacml:1.0:function:string-";
 
-    public static final String RULE_ALGORITHM_IDENTIFIER = "urn:oasis:names:tc:xacml:1.0:rule-combining-algorithm:"; 
+    public static final String RULE_ALGORITHM_IDENTIFIER = "urn:oasis:names:tc:xacml:1.0:rule-combining-algorithm:";
 
     public static final String POLICY_ALGORITHM_IDENTIFIER = "urn:oasis:names:tc:xacml:1.0:policy-combining-algorithm:";
     
@@ -58,7 +61,9 @@ public class EntitlementPolicyConstants {
     public static final String POLICY_ID = "PolicyId";
 
     public static final String RULE_ALGORITHM = "RuleCombiningAlgId";
-    
+
+    public static final String POLICY_VERSION = "Version";
+
     public static final String DESCRIPTION_ELEMENT = "Description";
 
     public static final String TARGET_ELEMENT = "Target";
@@ -80,6 +85,8 @@ public class EntitlementPolicyConstants {
     public static final String ATTRIBUTE_DESIGNATOR = "AttributeDesignator";
 
     public static final String  ATTRIBUTE_ID = "AttributeId";
+
+    public static final String  CATEGORY = "Category";
 
     public static final String  ATTRIBUTE = "Attribute";
 

@@ -26,6 +26,7 @@ import org.w3c.dom.NodeList;
 import org.wso2.carbon.identity.entitlement.ui.EntitlementPolicyBean;
 import org.wso2.carbon.identity.entitlement.ui.EntitlementPolicyConstants;
 import org.wso2.carbon.identity.entitlement.ui.EntitlementPolicyCreationException;
+import org.wso2.carbon.identity.entitlement.ui.PolicyEditorConstants;
 import org.wso2.carbon.identity.entitlement.ui.dto.*;
 
 import javax.xml.namespace.QName;
@@ -54,18 +55,38 @@ public class PolicyCreatorUtil {
 
         Element policyElement = doc.createElement(EntitlementPolicyConstants.POLICY_ELEMENT);
 
-        policyElement.setAttribute("xmlns", EntitlementPolicyConstants.POLICY_NAMESPACE);
+        policyElement.setAttribute("xmlns", EntitlementPolicyConstants.XACML3_POLICY_NAMESPACE);
 
         if(policyElementDTO.getPolicyName() != null && policyElementDTO.getPolicyName().trim().length() > 0) {
             policyElement.setAttribute(EntitlementPolicyConstants.POLICY_ID, policyElementDTO.
                     getPolicyName());
+        } else {
+            return null;
         }
 
         if(policyElementDTO.getRuleCombiningAlgorithms() != null && policyElementDTO.
                 getRuleCombiningAlgorithms().trim().length() > 0) {
-            policyElement.setAttribute(EntitlementPolicyConstants.RULE_ALGORITHM,
-                    EntitlementPolicyConstants.RULE_ALGORITHM_IDENTIFIER + policyElementDTO.
-                            getRuleCombiningAlgorithms());
+            if(PolicyEditorConstants.RULE_COMBINING_FIRST_APPLICABLE.equals(policyElementDTO.
+                    getRuleCombiningAlgorithms().trim())){
+                policyElement.setAttribute(EntitlementPolicyConstants.RULE_ALGORITHM,
+                        PolicyEditorConstants.RULE_ALGORITHM_IDENTIFIER_10 + policyElementDTO.
+                                getRuleCombiningAlgorithms());
+            } else {
+                policyElement.setAttribute(EntitlementPolicyConstants.RULE_ALGORITHM,
+                        PolicyEditorConstants.RULE_ALGORITHM_IDENTIFIER_30 + policyElementDTO.
+                                getRuleCombiningAlgorithms());
+            }
+        } else {
+            return null;
+        }
+
+        if(policyElementDTO.getVersion() != null && policyElementDTO.getVersion().trim().length() > 0){
+            policyElement.setAttribute(EntitlementPolicyConstants.POLICY_VERSION,
+                                                                    policyElementDTO.getVersion());
+        } else {
+            // policy version is handled by wso2 registry.  therefore we can ignore it, although it
+            // is a required attribute
+            policyElement.setAttribute(EntitlementPolicyConstants.POLICY_VERSION, "1.0");            
         }
 
         if(policyElementDTO.getPolicyDescription() != null && policyElementDTO.
@@ -306,7 +327,7 @@ public class PolicyCreatorUtil {
             attributeDesignatorElement.setAttribute(EntitlementPolicyConstants.ATTRIBUTE_ID,
                     attributeDesignatorDTO.getAttributeId());
 
-            attributeDesignatorElement.setAttribute("Category",
+            attributeDesignatorElement.setAttribute(EntitlementPolicyConstants.CATEGORY,
                     attributeDesignatorDTO.getCategory());
 
             if(attributeDesignatorDTO.getDataType() != null && attributeDesignatorDTO.
@@ -437,7 +458,7 @@ public class PolicyCreatorUtil {
 
     public static Element createRuleElement(RuleElementDTO ruleElementDTO, Document doc) {
 
-        TargetElementDTO targetElementDTO = ruleElementDTO.getTargetElementDTO();
+        NewTargetElementDTO targetElementDTO = ruleElementDTO.getNewTargetElementDTO();
         ConditionElementDT0 conditionElementDT0 = ruleElementDTO.getConditionElementDT0();
 
         Element ruleElement = doc.createElement(EntitlementPolicyConstants.RULE_ELEMENT);
@@ -459,8 +480,8 @@ public class PolicyCreatorUtil {
             ruleElement.appendChild(descriptionElement);
         }
 
-        if(targetElementDTO != null && targetElementDTO.getSubElementDTOs() != null){
-            Element targetElement = createTargetElement(targetElementDTO.getSubElementDTOs(), doc);
+        if(targetElementDTO != null ){
+            Element targetElement = PolicyEditorUtil.createTargetElement(targetElementDTO, doc);
             ruleElement.appendChild(targetElement);
         }
 
@@ -2300,7 +2321,7 @@ public class PolicyCreatorUtil {
 
         Element policySetElement = doc.createElement(EntitlementPolicyConstants.POLICY_SET_ELEMENT);
         Element targetElement = null;
-        policySetElement.setAttribute("xmlns", EntitlementPolicyConstants.POLICY_NAMESPACE);
+        policySetElement.setAttribute("xmlns", EntitlementPolicyConstants.XACML3_POLICY_NAMESPACE);
 
         if(policySetDTO.getPolicySetId() != null && policySetDTO.getPolicySetId().trim().length() > 0) {
             policySetElement.setAttribute(EntitlementPolicyConstants.POLICY_SET_ID, policySetDTO.
@@ -2410,77 +2431,4 @@ public class PolicyCreatorUtil {
 
         return functionId;
     }
-
-
-    public static void processPolicyData(TargetDTO targetDTO,  List<RuleDTO> ruleDTOs,
-                                                                EntitlementPolicyBean policyBean){
-
-        //List<RowDTO> rowDTOList = new ArrayList<RowDTO>();
-
-        Map<String, Set<String>> defaultDataTypeMap = policyBean.getDefaultDataTypeMap();
-        Map<String, Set<String>> defaultAttributeIdMap = policyBean.getDefaultAttributeIdMap();
-	    Map<String, String> targetFunctionMap = policyBean.getTargetFunctionMap();
-	    Map<String, String> ruleFunctionMap = policyBean.getRuleFunctionMap();
-
-        if(targetDTO != null && targetDTO.getRowDTOList() != null){
-            for (RowDTO rowDTO : targetDTO.getRowDTOList()){
-
-                if(rowDTO.getCategory() == null){
-                    continue;
-                }
-
-                if(rowDTO.getAttributeDataType() == null ||
-                        rowDTO.getAttributeDataType().trim().length() < 1 ||
-                        rowDTO.getAttributeDataType().trim().equals("null")) {
-                    
-                    if(defaultDataTypeMap.get(rowDTO.getCategory()) != null){
-                        rowDTO.setAttributeDataType((defaultDataTypeMap.
-                                            get(rowDTO.getCategory()).iterator().next()));
-                    }
-                }
-
-                if(rowDTO.getAttributeId() == null ||
-                        rowDTO.getAttributeId().trim().length() < 1 ||
-                        rowDTO.getAttributeId().trim().equals("null")) {
-                    if(defaultAttributeIdMap.get(rowDTO.getCategory()) != null){
-                        rowDTO.setAttributeId((defaultAttributeIdMap.
-                                            get(rowDTO.getCategory()).iterator().next()));
-                    }
-                }
-
-                if(rowDTO.getFunction() != null && ruleFunctionMap.get(rowDTO.getFunction()) != null){
-                    rowDTO.setFunction(ruleFunctionMap.get(rowDTO.getFunction()));
-                }
-            }
-        }
-
-        if(ruleDTOs != null){
-            for(RuleDTO ruleDTO : ruleDTOs){
-                for(RowDTO rowDTO : ruleDTO.getRowDTOList()){
-                    if(rowDTO.getCategory() == null){
-                        continue;
-                    }
-
-                    if(rowDTO.getAttributeDataType() == null || rowDTO.getAttributeDataType().length() < 1){
-                        if(defaultDataTypeMap.get(rowDTO.getCategory()) != null){
-                            rowDTO.setAttributeDataType((defaultDataTypeMap.
-                                                get(rowDTO.getCategory()).iterator().next()));
-                        }
-                    }
-
-                    if(rowDTO.getAttributeId() == null || rowDTO.getAttributeId().length() < 1){
-                        if(defaultAttributeIdMap.get(rowDTO.getCategory()) != null){
-                            rowDTO.setAttributeId((defaultAttributeIdMap.
-                                                get(rowDTO.getCategory()).iterator().next()));
-                        }
-                    }
-
-                    if(rowDTO.getFunction() != null && targetFunctionMap.get(rowDTO.getFunction()) != null){
-                        rowDTO.setFunction(targetFunctionMap.get(rowDTO.getFunction()));
-                    }
-                }
-            }
-        }
-    }
-
 }

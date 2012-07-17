@@ -57,13 +57,13 @@ public class EntitlementPolicyBean {
 
 	private String subjectType;
 
-	public Map<String, String> subjectTypeMap = new HashMap<String, String>();
+	private Map<String, String> subjectTypeMap = new HashMap<String, String>();
 
-	public Map<String, String> categoryMap = new HashMap<String, String>();
+	private Map<String, String> categoryMap = new HashMap<String, String>();
 
-	public Map<String, String> targetFunctionMap = new HashMap<String, String>();
+	private Map<String, String> targetFunctionMap = new HashMap<String, String>();
 
-	public Map<String, String> ruleFunctionMap = new HashMap<String, String>();
+	private Map<String, String> ruleFunctionMap = new HashMap<String, String>();
 
 	private boolean editPolicy;
 
@@ -87,7 +87,7 @@ public class EntitlementPolicyBean {
 
 	private BasicTargetElementDTO basicTargetElementDTO = null;
 
-    private TargetDTO targetDTO = null;
+    private BasicTargetDTO targetDTO = null;
 
     private PolicySetDTO policySetDTO = null;
 
@@ -189,11 +189,13 @@ public class EntitlementPolicyBean {
 
 		subjectTypeMap.clear();
 
-        preFunctions.clear();
-
         ruleEffect = null;
 
         ruleDescription = null;
+
+        targetDTO = null;
+
+        ruleDTOs.clear();
 	}
 
 	public String[] getRuleCombiningAlgorithms() {
@@ -1155,15 +1157,15 @@ public class EntitlementPolicyBean {
         }
     }
 
-    public TargetDTO getTargetDTO() {
+    public BasicTargetDTO getTargetDTO() {
         return targetDTO;
     }
 
-    public void setTargetDTO(TargetDTO targetDTO) {
+    public void setTargetDTO(BasicTargetDTO targetDTO) {
         this.targetDTO = targetDTO;
     }
 
-    public void removeTargetDTO(TargetDTO targetDTO) {
+    public void removeTargetDTO(BasicTargetDTO targetDTO) {
         this.targetDTO = null;
     }
 

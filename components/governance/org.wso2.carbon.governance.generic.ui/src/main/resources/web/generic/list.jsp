@@ -40,11 +40,6 @@
 <script type="text/javascript" src="../resources/js/resource_util.js"></script>
 <jsp:include page="../list/list-i18n-ajaxprocessor.jsp"/>
 <script type="text/javascript" src="../generic/js/genericpagi.js"/>
-
-<carbon:breadcrumb
-            label="<%=request.getParameter("breadcrumb")%>"
-            topPage="true"
-            request="<%=request%>" />
 <script type="text/javascript" src="../list/js/list.js"></script>
 <%
     String key = request.getParameter("key");
@@ -111,6 +106,10 @@
     }
 %>
 <fmt:bundle basename="org.wso2.carbon.governance.generic.ui.i18n.Resources">
+    <carbon:breadcrumb
+            label="<%=request.getParameter("breadcrumb")%>"
+            topPage="true"
+            request="<%=request%>" />
 <br/>
 <div id="middle">
 <h2><fmt:message key="artifact.list"><fmt:param value="<%=singularLabel%>"/><</fmt:message></h2>

@@ -7,7 +7,7 @@
     var serverEndpoints = api.serverURL.split(",");
     for (i = 0; i < serverEndpoints.length; i++) {
     %>
-    <li><%=serverEndpoints[i]%><%=api.context%>/<%=api.version%>/</li>
+    <li><%=serverEndpoints[i]%><%=api.context%>/<%=api.version%></li>
     <%
     }
     %>

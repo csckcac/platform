@@ -109,7 +109,11 @@ public class CassandraMessageFlusher extends Thread{
                                 cassandraSubscription = subs.next();
                             } else {
                                 subs = cassandraSubscriptions.values().iterator();
-                                cassandraSubscription = subs.next();
+                                if (subs.hasNext()) {
+                                    cassandraSubscription = subs.next();
+                                }else{
+                                    break;
+                                }
 
                             }
 

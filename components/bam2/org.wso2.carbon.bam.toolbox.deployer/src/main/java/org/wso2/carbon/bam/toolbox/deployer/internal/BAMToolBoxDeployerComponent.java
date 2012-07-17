@@ -20,6 +20,8 @@ package org.wso2.carbon.bam.toolbox.deployer.internal;
 import org.apache.commons.logging.Log;
 import org.apache.commons.logging.LogFactory;
 import org.osgi.service.component.ComponentContext;
+import org.wso2.carbon.bam.toolbox.deployer.BAMToolBoxDeployerConstants;
+import org.wso2.carbon.bam.toolbox.deployer.BasicToolBox;
 import org.wso2.carbon.bam.toolbox.deployer.ServiceHolder;
 import org.wso2.carbon.base.api.ServerConfigurationService;
 import org.wso2.carbon.dashboard.DashboardDSService;
@@ -29,7 +31,13 @@ import org.wso2.carbon.ndatasource.core.DataSourceService;
 import org.wso2.carbon.registry.core.service.RegistryService;
 import org.wso2.carbon.user.core.UserRealm;
 import org.wso2.carbon.user.core.service.RealmService;
+import org.wso2.carbon.utils.CarbonUtils;
 import org.wso2.carbon.utils.ConfigurationContextService;
+
+import java.io.File;
+import java.io.FileInputStream;
+import java.io.IOException;
+import java.util.Properties;
 
 /**
  * @scr.component name="org.wso2.carbon.bam.toolbox.deployer" immediate="true"
@@ -93,7 +101,56 @@ public class BAMToolBoxDeployerComponent {
     private static final Log log = LogFactory.getLog(BAMToolBoxDeployerComponent.class);
 
     protected void activate(ComponentContext context) {
+        loadAvailableToolBoxes();
         log.info("Successfully Started BAM Toolbox Deployer");
+    }
+
+
+    private void loadAvailableToolBoxes() {
+        String toolboxPropLocation = CarbonUtils.getCarbonHome() + File.separator +
+                BAMToolBoxDeployerConstants.BAM_TOOLBOX_HOME + File.separator + BAMToolBoxDeployerConstants.BAM_DEFAULT_TOOLBOX_PROP_FILE;
+        Properties props = new Properties();
+        try {
+            props.load(new FileInputStream(toolboxPropLocation));
+            String varNames = props.getProperty(BAMToolBoxDeployerConstants.TOOLBOXES_VAR_NAME);
+            if (null != varNames && !varNames.trim().equals("")) {
+                int toolBoxId = 1;
+                String[] varNameList = varNames.trim().split(",");
+                for (String aToolVar : varNameList) {
+                    aToolVar = aToolVar.trim();
+                    String defaultProp = props.getProperty(BAMToolBoxDeployerConstants.TOOLBOXES_PREFIX +
+                            "." + aToolVar + "." + BAMToolBoxDeployerConstants.TOOLBOXES_DEFAULT_SUFFIX);
+                    if (null != defaultProp && defaultProp.equalsIgnoreCase("true")) {
+                        String displayName = props.getProperty(BAMToolBoxDeployerConstants.TOOLBOXES_PREFIX +
+                                "." + aToolVar + "." + BAMToolBoxDeployerConstants.TOOLBOXES_NAME_SUFFIX);
+                        String location = props.getProperty(BAMToolBoxDeployerConstants.TOOLBOXES_PREFIX + "." +
+                                aToolVar + "." + BAMToolBoxDeployerConstants.TOOLBOXES_LOCATION_SUFFIX);
+                        String desc = props.getProperty(BAMToolBoxDeployerConstants.TOOLBOXES_PREFIX + "." +
+                                aToolVar + "." + BAMToolBoxDeployerConstants.TOOLBOXES_DESC_SUFFIX);
+                        if (((null != location && !location.equals("")) && (null != displayName && !displayName.equals("")))){
+                            if(location.indexOf(BAMToolBoxDeployerConstants.CARBON_HOME) == 0){
+                                 location = location.substring(BAMToolBoxDeployerConstants.CARBON_HOME.length());
+                                 location = CarbonUtils.getCarbonHome() + location;
+                            }
+                            BasicToolBox toolBox = new BasicToolBox(toolBoxId, location, displayName, desc);
+                            BasicToolBox.addToAvailableToolBox(toolBox);
+                            toolBoxId++;
+                        } else {
+                            log.warn("Location | Name of toolbox is not specified for " + aToolVar);
+                        }
+                    } else {
+                        log.warn("Toolbox for reference " + aToolVar + " is not marked as default");
+                    }
+                }
+            } else {
+                log.warn("No references found for property " + BAMToolBoxDeployerConstants.TOOLBOXES_VAR_NAME + ".\n " +
+                        "No default toolboxes will be populated");
+            }
+        } catch (IOException e) {
+            log.warn("No " + BAMToolBoxDeployerConstants.BAM_DEFAULT_TOOLBOX_PROP_FILE
+                    + " file found! There won't be default toolboxes..");
+        }
+
     }
 
     protected void setConfigurationContextService(ConfigurationContextService contextService) {
@@ -169,12 +226,12 @@ public class BAMToolBoxDeployerComponent {
         ServiceHolder.setDataSourceService(null);
     }
 
-   protected void setDataBridgeReceiverService(DataBridgeReceiverService dataBridgeReceiverService){
+    protected void setDataBridgeReceiverService(DataBridgeReceiverService dataBridgeReceiverService) {
         ServiceHolder.setDataBridgeReceiverService(dataBridgeReceiverService);
-   }
+    }
 
-   protected void unsetDataBridgeReceiverService(DataBridgeReceiverService dataBridgeReceiverService){
+    protected void unsetDataBridgeReceiverService(DataBridgeReceiverService dataBridgeReceiverService) {
         ServiceHolder.setDataBridgeReceiverService(null);
-   }
+    }
 
 }

@@ -196,7 +196,7 @@
                     if (null != toolBoxes) {
                         for (BasicToolBox aToolbox : toolBoxes) {
                             String isDisabled = "";
-                            if (isToolInRepo(aToolbox.getToolboxName(), toolsInRepo)) {
+                            if (isToolInRepo(aToolbox.getTBoxFileName(), toolsInRepo)) {
                                 isDisabled = "disabled=\"true\"";
                             } else {
                                 isDisabled = "";

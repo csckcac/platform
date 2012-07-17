@@ -52,9 +52,19 @@ public class BAMToolBoxDeployerConstants {
 
     public static final String BAM_ARTIFACT_EXT = "tbox";
 
-    public static final String DEFAULT_CRON = "1 * * * * ? *";
-
     public static String BAM_DEPLOYMET_FOLDER = "bam-toolbox";
     public static String PORT_OFF_SET = "Ports.Offset";
+
+    public static String BAM_TOOLBOX_HOME = "samples/toolboxes";
+    public static String BAM_DEFAULT_TOOLBOX_PROP_FILE = "toolbox.properties";
+
+    public static String TOOLBOXES_VAR_NAME = "toolboxes.name";
+    public static String TOOLBOXES_PREFIX = "toolboxes";
+    public static String TOOLBOXES_NAME_SUFFIX="name";
+    public static String TOOLBOXES_DESC_SUFFIX = "description";
+    public static String TOOLBOXES_LOCATION_SUFFIX="location";
+    public static String TOOLBOXES_DEFAULT_SUFFIX = "default";
+
+    public static String CARBON_HOME= "${CARBON_HOME}";
 
 }

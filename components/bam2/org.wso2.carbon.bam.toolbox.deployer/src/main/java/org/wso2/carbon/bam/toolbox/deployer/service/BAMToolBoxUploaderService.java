@@ -36,7 +36,6 @@ import java.util.ArrayList;
  * limitations under the License.
  */
 public class BAMToolBoxUploaderService extends AbstractAdmin {
-    private static final String BASIC_TOOLBOX_PATH = "/samples/toolboxes";
 
     private static final Log log = LogFactory.getLog(BAMToolBoxUploaderService.class);
 
@@ -228,12 +227,10 @@ public class BAMToolBoxUploaderService extends AbstractAdmin {
 
 
     public void deployBasicToolBox(int sample_id) throws BAMToolboxDeploymentException {
-        for (BasicToolBox basicToolBox : BasicToolBox.values()) {
+        for (BasicToolBox basicToolBox : BasicToolBox.getAvailableToolBoxes()) {
             if (basicToolBox.getSampleId() == sample_id) {
-
-                String toolboxPath = CarbonUtils.getCarbonHome() + BASIC_TOOLBOX_PATH +
-                        File.separator + basicToolBox.getToolboxName();
-                copyArtifact(toolboxPath, basicToolBox.getToolboxName());
+                String toolboxPath = basicToolBox.getLocation();
+                copyArtifact(toolboxPath, basicToolBox.getTBoxFileName());
             }
         }
     }
@@ -294,7 +291,7 @@ public class BAMToolBoxUploaderService extends AbstractAdmin {
     }
 
     public BasicToolBox[] getBasicToolBoxes() {
-        return BasicToolBox.values();
+      return BasicToolBox.getAvailableToolBoxes();
     }
 
     public void deployToolBoxFromURL(String url) throws BAMToolboxDeploymentException {

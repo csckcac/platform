@@ -24,17 +24,17 @@
                 <state id="Development">
                     <datamodel>
                         <data name="checkItems">
-                            <item name="Code Completed" forEvent="">                                
+                            <!--item name="Code Completed" forEvent="">                                
                             </item>
                             <item name="WSDL, Schema Created" forEvent="">
                             </item>
                             <item name="QoS Created" forEvent="">
-                            </item>
+                            </item-->
                         </data>
 			<data name="transitionExecution">
                             <execution forEvent="Promote" class="org.wso2.carbon.appfactory.governance.lifecycle.AppFactoryLCExecutor">
-                                <parameter name="currentEnvironment" value="/_system/governance/repository/applications/Development"/>
-                                <parameter name="targetEnvironment" value="/_system/governance/repository/applications/Testing"/>                                
+                                <parameter name="currentEnvironment" value="/_system/governance/repository/applications"/>
+                                <parameter name="targetEnvironment" value="/_system/governance/repository/applications"/>                                
                             </execution>			
                         </data>
 			<data name="transitionScripts">
@@ -54,17 +54,17 @@
                 <state id="Testing">
                     <datamodel>
                         <data name="checkItems">
-                            <item name="Effective Inspection Completed" forEvent="">
+                            <!--item name="Effective Inspection Completed" forEvent="">
                             </item>
                             <item name="Test Cases Passed" forEvent="">
                             </item>
                             <item name="Smoke Test Passed" forEvent="">
-                            </item>
+                            </item-->
                         </data>
                         <data name="transitionExecution">
                             <execution forEvent="Promote" class="org.wso2.carbon.governance.registry.extensions.executors.CopyExecutor">
-                                <parameter name="currentEnvironment" value="/_system/governance/repository/applications/Testing"/>
-                                <parameter name="targetEnvironment" value="/_system/governance/repository/applications/Production"/>
+                                <parameter name="currentEnvironment" value="/_system/governance/repository/applications"/>
+                                <parameter name="targetEnvironment" value="/_system/governance/repository/applications"/>
                             </execution>			    
                         </data>			
 			<data name="transitionScripts">

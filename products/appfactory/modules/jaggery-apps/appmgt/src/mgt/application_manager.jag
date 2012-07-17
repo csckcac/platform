@@ -211,9 +211,13 @@
     }
     
     function getAppShortInfo(applicationKey,userName){
-
             var application={};
-        application.roles= getUserRolesForApplication(applicationKey, userName);
+            var url = getProperty(SCM_SERVER_URL)+'/svn/'+applicationKey;
+            application.repoLink=url;
+            var repository = require("svnClient");
+            var svnClient = new repository.SVNClient(url,getProperty(SCM_ADMIN_USER_NAME),getProperty(SCM_ADMIN_PASSWORD));
+            application.lastRevisionNo=svnClient.getRepositoryInfo()[2];
+            application.roles= getUserRolesForApplication(applicationKey, userName);
 
         return application;
     }

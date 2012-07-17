@@ -40,6 +40,7 @@
     var ADMIN_PASSWORD = "AdminPassword";
     var SCM_ADMIN_USER_NAME="RepositoryMGTConfig.SCMServerAdminUserName";
     var SCM_ADMIN_PASSWORD="RepositoryMGTConfig.SCMServerAdminPassword";
+    var SCM_SERVER_URL="RepositoryMGTConfig.SCMServerURL";
     
     
     var ROLE_ADMIN = "admin";
@@ -48,6 +49,6 @@
     var ROLE_DEVOPS = "devOps";
     var ROLE_DEV = "dev";
     
-    
+    var LIFE_CYCLE_NAME="ApplicationLifecycle";
 
 %>

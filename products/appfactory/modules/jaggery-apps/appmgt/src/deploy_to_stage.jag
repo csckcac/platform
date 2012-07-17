@@ -2,6 +2,7 @@
         include('includes/template_header.jag');
         include('process/web_service_util.jag');
         include('config_reader.jag');
+        include('constants.jag');
         
         var log = new Log();
 
@@ -10,9 +11,14 @@
         var version = request.getParameter("version");
         var revision = '0';
         var build = 'true';
-
+        var path='/_system/governance'+'/repository/applications/'+applicationKey+'/'+stageName+'/'+'trunk';
+        aspect=LIFE_CYCLE_NAME;
+        var  action='Promote';
+        var parameters=new Array();
+        parameters[0]='version';
+        parameters[1]=version;
         try{
-            var deployedArtifact = invokeDeployToStage(applicationKey,revision,version,stageName,build);
+            var deployedArtifact = invokeAspectWithParameter(path,aspect,action,parameters);
             print(deployedArtifact +" was successfully deployed");
 	    }catch(e){
 	        print(e.message);

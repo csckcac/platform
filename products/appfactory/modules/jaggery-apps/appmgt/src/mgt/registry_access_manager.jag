@@ -16,27 +16,26 @@
     }
 
     //add application details to registry
-    function addApplicationToApp(applicationKey, applicationName,applicationVersion, applicationDescription, repoLink) {
-      try {
-      var key='application';
-      var content=   '<![CDATA[<metadata xmlns="http://www.wso2.org/governance/metadata">'+
-                        '<application>'+
-                         	'<description>'+applicationDescription+'</description>'+
-                         	'<name>'+applicationName+'</name>'+
-                            '<version>'+'trunk'+'</version>'+
-                            '<key>'+applicationKey+'</key>'+
-                            '<repositoryPath>'+repoLink+'</repositoryPath>'+
-                        '</application>'+
-                        '<serviceLifecycle><lifecycleName>ServiceLifeCycle</lifecycleName></serviceLifecycle>'+
-                     '</metadata>]]>';
-      var lifecycleAttribute='serviceLifecycle_lifecycleName';      
-           addGenericArtifact(key,content,lifecycleAttribute);
+     function addApplicationToApp(applicationKey, applicationName, applicationDescription) {
+          try {
+          var key='application';
+          var content=   '<![CDATA[<metadata xmlns="http://www.wso2.org/governance/metadata">'+
+                            '<application>'+
+                             	'<description>'+applicationDescription+'</description>'+
+                             	'<name>'+applicationName+'</name>'+
+                                '<key>'+applicationKey+'</key>'+
+                            '</application>'+
+                            '<serviceLifecycle><lifecycleName>'+LIFE_CYCLE_NAME+'</lifecycleName></serviceLifecycle>'+
+                         '</metadata>]]>';
+          var lifecycleAttribute='serviceLifecycle_lifecycleName';
+               addGenericArtifact(key,content,lifecycleAttribute);
 
-        } catch (e) {
-            log.error("Error while storing resource \n"+e.message);
-            throw new Error("Error while storing registry resource");
+            } catch (e) {
+                log.error("Error while storing resource \n"+e.message);
+                throw new Error("Error while storing registry resource");
+            }
         }
-    }
+
     
     //get all app versions
     function getUniqueAppVersions(applicationKey){

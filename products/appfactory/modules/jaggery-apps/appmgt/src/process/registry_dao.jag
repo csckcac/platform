@@ -31,7 +31,7 @@
         try {
             return registry.get(path);
         } catch (e) {
-            log.error("Error while retrieving registry resource \n"+e.message);
+            log.error("Error while retrieving registry resource \n"+path);
             throw "Error while retrieving registry resource";
         }
     }

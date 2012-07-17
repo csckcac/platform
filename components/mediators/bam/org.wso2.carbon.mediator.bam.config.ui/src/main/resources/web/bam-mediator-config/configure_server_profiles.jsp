@@ -956,7 +956,7 @@
                     </table>
                 </td>
             </tr>
-            <tr>
+            <tr style="display: none;">
                 <td colspan="2">
                     <h3>
                         <fmt:message key="advanced"/>

@@ -93,8 +93,16 @@
         <a href="<%=context%>/apidocs/rdb.jag">Database</a>
     </li>
     <li id="reg">
-        <a href="<%=context%>/apidocs/metadatastore.jag">MetadataStore</a>
+        <a href="<%=context%>/apidocs/metadatastore.jag">MetadataStore</a>        
     </li>
+    <ul><ul>
+    <li id="col">
+        <a href="<%=context%>/apidocs/collection.jag">Collection</a>
+    </li>
+        <li id="ress">
+        <a href="<%=context%>/apidocs/resource.jag">Resource</a>
+    </li>
+     </ul></ul>
 </ul>
 
 <h6>Dataformats</h6>

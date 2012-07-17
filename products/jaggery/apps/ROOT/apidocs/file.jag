@@ -176,26 +176,6 @@ file.close();
                     </tr>
                     <tr>
                         <td>
-                            <code>writeLine(Object object)</code>
-                        </td>
-                        <td>None</td>
-                        <td><pre class="prettyprint" >var file = new File("readme.txt");
-file.open("w");
-file.writeLine("Hello World!");
-file.close();</pre>
-                            Writes the String representation of the
-                            object to the file together with a line separator at the end. Users are
-                            required to open the file for writing or for appending before writing
-                            to the file.
-                            <br><br>
-                            If the file is not open for either reading or writing or appending,
-                            then calling this will automatically open the file for writing
-                            (overwriting the current content of the file).
-                          
-                        </td>
-                    </tr>
-                    <tr>
-                        <td>
                             <code>read(int numberOfCharacters)</code>
                         </td>
                         <td>String</td>
@@ -312,7 +292,7 @@ file.close();</pre>
                                 </tr>
                                 <tr>
                                     <td>
-                                        <code>exists()</code>
+                                        <code>isExists()</code>
                                     </td>
                                     <td>Boolean</td>
                                     <td>Checks whether this file actually exists. Returns True if the file exists.</td>

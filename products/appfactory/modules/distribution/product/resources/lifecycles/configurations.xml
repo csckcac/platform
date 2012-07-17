@@ -42,7 +42,7 @@
                                 <console function="doPromote">
                                 <script type="text/javascript">
                                     doPromote = function() {
-                                        window.location = unescape("../resources/resource.jsp?region=region3%26item=resource_browser_menu%26path=/_system/governance/repository/applications/Testing");
+                                        window.location = unescape("../resources/resource.jsp?region=region3%26item=resource_browser_menu%26path=/_system/governance/repository/applications");
                                     }
                                 </script>
                             </console>
@@ -62,7 +62,7 @@
                             </item-->
                         </data>
                         <data name="transitionExecution">
-                            <execution forEvent="Promote" class="org.wso2.carbon.governance.registry.extensions.executors.CopyExecutor">
+                            <execution forEvent="Promote" class="org.wso2.carbon.appfactory.governance.lifecycle.AppFactoryLCExecutor">
                                 <parameter name="currentEnvironment" value="/_system/governance/repository/applications"/>
                                 <parameter name="targetEnvironment" value="/_system/governance/repository/applications"/>
                             </execution>			    
@@ -72,7 +72,7 @@
                                 <console function="doPromote">
                                 <script type="text/javascript">
                                     doPromote = function() {
-                                        window.location = unescape("../resources/resource.jsp?region=region3%26item=resource_browser_menu%26path=/_system/governance/repository/applications/Production");
+                                        window.location = unescape("../resources/resource.jsp?region=region3%26item=resource_browser_menu%26path=/_system/governance/repository/applications");
                                     }
                                 </script>
                             </console>                          

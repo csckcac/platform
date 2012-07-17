@@ -83,7 +83,8 @@ public final class APIMgtDBUtil {
                     String username = configuration.getUserName();
                     String password = configuration.getPassword();
                     if (dbUrl == null || driver == null || username == null || password == null) {
-                        throw new APIManagementException("Required DB configuration parameters unspecified");
+                        log.warn("Required DB configuration parameters unspecified. So API Store and API Publisher " +
+                                 "will not work as expected.");
                     }
 
                     BasicDataSource basicDataSource = new BasicDataSource();

@@ -12,8 +12,8 @@
  
 	try{
 		
-		var applicationList = getAllAppVersionsInStages();
-		
+		var applicationList = getAllAppVersionsInStages(userName);
+
 	    if(applicationList == undefined || applicationList.length == 0){
 			log.info("No Applications are created.");
 	    }

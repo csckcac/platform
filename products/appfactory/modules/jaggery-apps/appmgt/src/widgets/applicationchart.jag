@@ -11,7 +11,7 @@
 		var version = versionArray[i];
 		var dataEntry = {};
 		dataEntry.data = [[0, version.count]];
-		dataEntry.label = version.stage;
+		dataEntry.label = version.stage + '';
 		dataArray[i] = dataEntry;
 	}
 

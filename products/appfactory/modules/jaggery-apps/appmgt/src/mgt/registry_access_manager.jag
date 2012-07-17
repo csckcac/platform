@@ -2,7 +2,6 @@
     var log = new Log();
     include('../constants.jag');
     include('../process/registry_dao.jag');
-      include('../process/web_service_util.jag');
 
     //check whether the key given for the new application already exist
     function isApplicationKeyAlreadyTaken(newKey) {
@@ -16,26 +15,29 @@
     }
 
     //add application details to registry
-     function addApplicationToApp(applicationKey, applicationName, applicationDescription) {
-          try {
-          var key='application';
-          var content=   '<![CDATA[<metadata xmlns="http://www.wso2.org/governance/metadata">'+
-                            '<application>'+
-                             	'<description>'+applicationDescription+'</description>'+
-                             	'<name>'+applicationName+'</name>'+
-                                '<key>'+applicationKey+'</key>'+
-                            '</application>'+
-                            '<serviceLifecycle><lifecycleName>'+LIFE_CYCLE_NAME+'</lifecycleName></serviceLifecycle>'+
-                         '</metadata>]]>';
-          var lifecycleAttribute='serviceLifecycle_lifecycleName';
-               addGenericArtifact(key,content,lifecycleAttribute);
-
-            } catch (e) {
-                log.error("Error while storing resource \n"+e.message);
-                throw new Error("Error while storing registry resource");
-            }
+    function addApplicationToApp(applicationKey, applicationName, applicationDescription, repoLink) {
+        try {
+            var resource = createResource();
+        } catch (e) {
+            log.error("Error while creating registry resource \n"+e.message);
+            throw new Error("Error while creating registry resource");
         }
 
+        resource.addProperty(APPLICATION_KEY, applicationKey);
+        resource.addProperty(APPLICATION_NAME, applicationName);
+        resource.addProperty(APPLICATION_DESC, applicationDescription);
+        resource.addProperty(APPLICATION_REPO_LINK, repoLink);
+
+
+        var path = APPLICATIONS + applicationKey;
+        try {
+            putResource(path, resource);
+            initAppVersion(applicationKey);
+        } catch (e) {
+            log.error("Error while storing resource \n"+e.message);
+            throw new Error("Error while storing registry resource");
+        }
+    }
     
     //get all app versions
     function getUniqueAppVersions(applicationKey){
@@ -61,13 +63,13 @@
     
     //add stage & version details to registry
     function initAppVersion(applicationKey){
-    var versionNo=0;
+    	var versionNo=0;
 
-    var stages = getProperties('ApplicationDeployment.DeploymentStage');
-    for(var i=0; i<stages.length;i++){
-        var stage = stages[i];
-          for(var j=0; j<3;j++){
-          try {
+    	var stages = getProperties('ApplicationDeployment.DeploymentStage');
+    	for(var i=0; i<stages.length;i++){
+        	var stage = stages[i];
+          	for(var j=0; j<3;j++){
+          		try {
                      var resource = createResource();
                  } catch (e) {
                      log.error("Error while creating registry resource \n"+e.message);
@@ -75,17 +77,17 @@
                  }
                  var version='Version '+versionNo;
                  var path = APPLICATIONS+APPLICATION_STAGES +stage+'/'+ applicationKey+'/'+version;
-                         try {
+                 try {
 
-                         if( resourceExists(path)!='true'){
-                             putResource(path, resource);
-                             versionNo=versionNo+1;
-                             }
-                         } catch (e) {
-                             log.error("Error while storing resource \n"+e.message);
-                             throw new Error("Error while storing registry resource");
-                         }
-                         }
+                 if( resourceExists(path)!='true'){
+                     putResource(path, resource);
+                     versionNo=versionNo+1;
+                     }
+                 } catch (e) {
+                     log.error("Error while storing resource \n"+e.message);
+                     throw new Error("Error while storing registry resource");
+                 }
+            }
        }
     }
     // add the application key to the users' applications list in registry
@@ -205,84 +207,79 @@
        return null;
 	}
 
-	function getAllAppVersionsInStage(stageName) {
-		getAppVersionsInStage(stageName, null);
+	function getAllAppVersionsInStage(userName, stageName) {
+		
+		var allAppVersionArray = new Array();
+		var applicationList = getAllAppsOfUser(userName);
+		
+		for (var applicationName in applicationList) {
+	    	var applicationKey = applicationList[applicationName];
+	    
+			allAppVersionArray = allAppVersionArray.concat(getAppVersionsInStage(stageName, applicationKey));
+	    }
+
+		return allAppVersionArray;
 	}
 	
 	function getAppVersionsInStage(stageName, applicationKey) {
 		
-	    var path = APPLICATIONS + APPLICATION_STAGES + stageName;
+		var applicatoinPath = APPLICATIONS + applicationKey;
+	    var path = applicatoinPath+ "/" + stageName;
 	    var appVersions = new Array();
-	    
+
 	    if(resourceExists(path)) {
+	    	
 	    	var resource = getResource(path);
-			
-			if(resource instanceof Collection){
-				for(var i = 0; i < resource.childCount; i++) {				
-					var versionPath = resource.getChildren()[i];
-
-					if(resourceExists(versionPath)) {
-						var applicationInfo = getAppInfo(versionPath.replace('/' + path + '/', ''));
-						if(applicationInfo != undefined && applicationInfo != null) {
-							
-							if(applicationKey != null) {
-								if(applicationInfo.key != applicationKey) {
-									continue;
-								}
-							}
-
-							var versions = getResource(versionPath);						
-							var arrVersions = new Array();
-							
-							if(versions instanceof Collection) {
-								for(var j = 0; j < versions.childCount; j++) {		
-									arrVersions[j] = versions.getChildren()[j].replace('/' + path 
-										+ '/' + applicationInfo.key + '/', '');
-								}
-							}
-							
-							applicationInfo.stage = stageName;
-							applicationInfo.versions = arrVersions;
-							
-							appVersions[i] = applicationInfo;
-						}
-					}
-				}
+	    	var applicationInfo = getAppInfo(applicationKey);
+	    	var arrVersions = new Array();	
+	    	
+	    	for(var i = 0; i < resource.childCount; i++) {				
+				var versionPath = resource.getChildren()[i];
+				var versions = getResource(versionPath);		
+				arrVersions[i]= versionPath.replace('/' + path + '/', '');	
 			}
+			applicationInfo.stage = stageName + '';
+			applicationInfo.versions = arrVersions;
+			appVersions[0] = applicationInfo;
 		}
 		
-		//log.error("appVersions >>>>>>>>>>>>> "+ appVersions.toSource());
+		
 		return appVersions;
 	}
 	
 	function getAllStages() {
 		
-		var path = APPLICATIONS + APPLICATION_STAGES;
-		var stageArray = new Array();
-		if(resourceExists(path)) {
-			var resource = getResource(path);
-			
-			if(resource instanceof Collection){
-				for(var i = 0; i < resource.childCount; i++) {				
-					var versionPath = resource.getChildren()[i];
-					stageArray[i] = versionPath.replace('/' + path, '');
-				}
-			}
+		var stages = getProperties('ApplicationDeployment.DeploymentStage');
+		if(stages == null) {
+			return null;
 		}
 
+		var stageArray = new Array();
+		
+		var counter = 0;
+		while(stages[counter] != null) {
+			stageArray[counter] = stages[counter];
+			counter++;
+		}
+		
 		return stageArray;
 	}
 	
-	function getAllAppVersionsInStages() {
+	function getAllAppVersionsInStages(userName) {
 		var allAppVersionArray = new Array();
-		var allStages = getAllStages();
+		var applicationList = getAllAppsOfUser(userName);
 		
-		for(var i = 0; i < allStages.length; i++) {				
-			var stage = allStages[i];
-			allAppVersionArray = allAppVersionArray.concat(getAppVersionsInStage(stage));
-		}
+		for (var applicationName in applicationList) {
+	    	var applicationKey = applicationList[applicationName];
+	    
+	    	var allStages = getAllStages();
 		
-		return allAppVersionArray;
+			for(var i = 0; i < allStages.length; i++) {				
+				var stage = allStages[i];
+				allAppVersionArray = allAppVersionArray.concat(getAppVersionsInStage(stage, applicationKey));
+			}	
+	    }
+	    return allAppVersionArray;
 	}
 	
 	function getAppVersionsInStages(applicationKey) {
@@ -323,9 +320,9 @@
 		
 		return versionArray;
 	}
-
-
 %>
+
+
 
 
 

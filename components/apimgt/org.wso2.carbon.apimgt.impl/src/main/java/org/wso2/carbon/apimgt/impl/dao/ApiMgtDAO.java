@@ -1716,6 +1716,11 @@ public class ApiMgtDAO {
                 application.setId(rs.getInt("APPLICATION_ID"));
                 applicationsList.add(application);
             }
+            Collections.sort(applicationsList, new Comparator<Application>() {
+                public int compare(Application o1, Application o2) {
+                    return o1.getName().compareToIgnoreCase(o2.getName());
+                }
+            });
             applications = applicationsList.toArray(new Application[applicationsList.size()]);
             return applications;
 

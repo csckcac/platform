@@ -257,7 +257,6 @@ class APIConsumerImpl extends AbstractAPIManager implements APIConsumer {
         return rating;
     }
 
-    @Override
     public Set<API> getPublishedAPIsByProvider(String providerId) throws APIManagementException {
         SortedSet<API> apiSortedSet = new TreeSet<API>(new APINameComparator());
         try {

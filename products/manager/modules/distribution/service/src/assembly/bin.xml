@@ -223,6 +223,7 @@
                 <include>**/eula.xml</include>
                 <include>**/usage-throttling-agent-config.xml</include>
 		<include>**/cloud-services-desc.xml</include>
+		<include>**/tenant-mgt.xml</include>
            </includes>
         </fileSet>
 

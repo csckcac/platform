@@ -21,6 +21,7 @@ import org.apache.synapse.MessageContext;
 import org.apache.synapse.SynapseLog;
 import org.apache.synapse.core.axis2.Axis2MessageContext;
 import org.apache.synapse.mediators.AbstractMediator;
+import org.wso2.carbon.mediator.bam.config.BamMediatorException;
 
 
 /**
@@ -60,7 +61,11 @@ public class BamMediator extends AbstractMediator {
             return true;
         }
 
-        stream.sendEvents(messageContext);
+        try {
+            stream.sendEvents(messageContext);
+        } catch (BamMediatorException e) {
+            return true;
+        }
 
         if (synLog.isTraceOrDebugEnabled()) {
             synLog.traceOrDebug("End : BAM mediator");

@@ -83,13 +83,14 @@ public class Stream {
         activityIDSetter = new ActivityIDSetter();
     }
 
-    public void sendEvents(MessageContext messageContext){
+    public void sendEvents(MessageContext messageContext) throws BamMediatorException{
         this.activityIDSetter.setActivityIdInSOAPHeader(messageContext);
         try {
             logMessage(messageContext);
         } catch (BamMediatorException e) {
-            String errorMsg = "Problem occurred while logging in the BAM Mediator. " + e.getMessage();
+            String errorMsg = "Problem occurred while logging events in the BAM Mediator. " + e.getMessage();
             log.error(errorMsg, e);
+            throw new BamMediatorException(errorMsg, e);
         }
     }
 

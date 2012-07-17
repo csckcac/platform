@@ -1,53 +1,56 @@
 <?xml version="1.0"?>
-<artifactType type="application/vnd.wso2-application+xml" shortName="application" singularLabel="application" pluralLabel="applications" hasNamespace="false" iconSet="7">
-	<storagePath>/repository/applications/Development/@{application_name}/trunk</storagePath>
-	<nameAttribute>application_name</nameAttribute>
-	<ui>
-		<list>
-			<column name="Name">
-				<data type="path" value="application_name" href="@{storagePath}"/>
-			</column>
-			<column name="Key">
-            				<data type="path" value="application_key" href="@{storagePath}"/>
-            			</column>
-			<column name="Description">
-				<data type="path" value="application_description" href="@{storagePath}"/>
-			</column>
-			<column name="Version">
-				<data type="path" value="application_version" href="@{storagePath}"/>
-			</column>
-			<column name="repositoryPath">
-            				<data type="path" value="repository_path" href="@{storagePath}"/>
-            			</column>
-		</list>
-	</ui>
-	<content>
-    <table name="Application">
-        <field type="text" required="true">
-            <name>Name</name>
-        </field>
-        <field type="text" required="true">
-            <name>Version</name>
-        </field>
-        <field type="text" required="true">
-                    <name>Key</name>
-                </field>
-                 <field type="text" required="true">
-                                    <name>repositoryPath</name>
-                                </field>
-        <field type="text-area" required="true">
-            <name>Description</name>
-        </field>   
-        
-    </table>
+<artifactType type="application/vnd.wso2-application+xml" shortName="application" singularLabel="application"
+              pluralLabel="applications" hasNamespace="false" iconSet="7">
+    <storagePath>/repository/applications/@{application_key}/Development/trunk</storagePath>
+    <nameAttribute>application_name</nameAttribute>
+    <ui>
+        <list>
+            <column name="Name">
+                <data type="path" value="application_name" href="@{storagePath}"/>
+            </column>
+            <column name="Key">
+                <data type="path" value="application_key" href="@{storagePath}"/>
+            </column>
+            <column name="Description">
+                <data type="path" value="application_description" href="@{storagePath}"/>
+            </column>
+            <column name="Version">
+                <data type="path" value="application_version" href="@{storagePath}"/>
+            </column>
+            <column name="repositoryPath">
+                <data type="path" value="repository_path" href="@{storagePath}"/>
+            </column>
+        </list>
+    </ui>
+    <content>
+        <table name="Application">
+            <field type="text" required="true">
+                <name>Name</name>
+            </field>
+            <field type="text" required="true">
+                <name>Version</name>
+            </field>
+            <field type="text" required="true">
+                <name>Key</name>
+            </field>
+            <field type="text" required="true">
+                <name>repositoryPath</name>
+            </field>
+            <field type="text-area" required="true">
+                <name>Description</name>
+            </field>
 
-            <table name="Service Lifecycle">
-                <field type="options">
-                    <name label="Lifecycle Name">Lifecycle Name</name>
-                    <values class="org.wso2.carbon.governance.services.ui.utils.LifecycleListPopulator">
-                </values></field>
-            </table>
-</content>
-	
+        </table>
+
+        <table name="Service Lifecycle">
+            <field type="options">
+                <name label="Lifecycle Name">Lifecycle Name</name>
+                <values class="org.wso2.carbon.governance.services.ui.utils.LifecycleListPopulator">
+                </values>
+            </field>
+        </table>
+    </content>
+
 </artifactType>
+
 

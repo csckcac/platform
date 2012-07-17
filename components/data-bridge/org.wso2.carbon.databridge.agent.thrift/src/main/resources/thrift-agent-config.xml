@@ -34,9 +34,9 @@
 
     <maxMessageBundleSize>100</maxMessageBundleSize>
 
-    <trustStore>
+    <!--<trustStore>
         .../wso2cep-1.0.0-SNAPSHOT/repository/resources/security/client-truststore.jks
     </trustStore>
-    <trustStorePassword>wso2carbon</trustStorePassword>
+    <trustStorePassword>wso2carbon</trustStorePassword>-->
 
 </thriftAgentConfiguration>

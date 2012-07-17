@@ -178,11 +178,13 @@ public class UrlMapperServiceComponent {
         try {
             urlmappings = getAllMappingsFromRegistry();
         } catch (UrlMapperException e) {
-            log.error("error while getting all mappings from registry");
+            log.error("error while getting all mappings from registry", e);
         }
-        for(MappingData mapping: urlmappings) {
-            ApplicationContext.getCurrentApplicationContext().
-                    putUrlMappingForApplication(mapping.getMappingName(), mapping.getUrl());
+        if(urlmappings != null) {
+            for(MappingData mapping: urlmappings) {
+                ApplicationContext.getCurrentApplicationContext().
+                        putUrlMappingForApplication(mapping.getMappingName(), mapping.getUrl());
+            }
         }
         
     }

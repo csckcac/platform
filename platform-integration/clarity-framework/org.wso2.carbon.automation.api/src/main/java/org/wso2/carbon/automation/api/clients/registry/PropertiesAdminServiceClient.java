@@ -82,5 +82,10 @@ public class PropertiesAdminServiceClient {
         }
         return retentionBean;
     }
+    
+    public void setProperty(String path, String propertyName, String propertyValue)
+            throws PropertiesAdminServiceRegistryExceptionException, RemoteException {
+        propertiesAdminServiceStub.setProperty(path, propertyName, propertyValue);
+    }
 
 }

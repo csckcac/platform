@@ -177,6 +177,8 @@
                         class="org.wso2.carbon.relay.ExpandingMessageFormatter"/>
         <messageFormatter contentType="text/html"
                         class="org.wso2.carbon.relay.ExpandingMessageFormatter"/>
+        <messageFormatter contentType="text/plain"
+                          class="org.wso2.carbon.relay.ExpandingMessageFormatter"/>
         <messageFormatter contentType="application/soap+xml"
                         class="org.wso2.carbon.relay.ExpandingMessageFormatter"/>
         <messageFormatter contentType="text/xml"
@@ -229,6 +231,8 @@
                        class="org.wso2.carbon.relay.BinaryRelayBuilder"/>
         <messageBuilder contentType="text/plain"
                        class="org.wso2.carbon.relay.BinaryRelayBuilder"/>
+        <messageBuilder contentType="text/html"
+                        class="org.wso2.carbon.relay.BinaryRelayBuilder"/>
         <messageBuilder contentType="text/xml"
                        class="org.wso2.carbon.relay.BinaryRelayBuilder"/>
         <messageBuilder contentType="application/json"

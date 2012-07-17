@@ -479,8 +479,9 @@ public class ScriptMessageContext implements MessageContext {
             }
             json.append("]");
 
-        } else if (obj instanceof String ||
-                obj instanceof Integer ||
+        } else if (obj instanceof String) {
+            json.append("\"").append(obj.toString()).append("\"");
+        } else if (obj instanceof Integer ||
                 obj instanceof Long ||
                 obj instanceof Float ||
                 obj instanceof Double ||
@@ -488,8 +489,7 @@ public class ScriptMessageContext implements MessageContext {
                 obj instanceof BigInteger ||
                 obj instanceof BigDecimal ||
                 obj instanceof Boolean) {
-            json.append("\"").append(obj.toString()).append("\"");
-//            json.append(obj.toString());
+            json.append(obj.toString());
         } else {
             json.append("{}");
         }

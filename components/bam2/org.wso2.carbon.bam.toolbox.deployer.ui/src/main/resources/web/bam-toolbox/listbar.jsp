@@ -160,15 +160,17 @@
                         if (null == toolBoxType || toolBoxType.equals("") || toolBoxType.equals("1")) {
                     %>
                     <a href="listbar.jsp?toolType=2"><%=deployedTools != null ? deployedTools.length : 0%> <fmt:message
-                        key="deployed.toolboxes"/></a>.&nbsp;
-                    <a href="listbar.jsp?toolType=3"><%=toBeDeployedTools != null ? toBeDeployedTools.length : 0%> <fmt:message
-                        key="awaiting.to.deploy.toolboxes"/></a>.&nbsp;
-                    <a href="listbar.jsp?toolType=4"><%=toBeUndeployedTools != null ? toBeUndeployedTools.length : 0%> <fmt:message
-                        key="awaiting.to.undeploy.toolboxes"/></a>
+                            key="deployed.toolboxes"/></a>.&nbsp;
+                    <a href="listbar.jsp?toolType=3"><%=toBeDeployedTools != null ? toBeDeployedTools.length : 0%>
+                        <fmt:message
+                                key="awaiting.to.deploy.toolboxes"/></a>.&nbsp;
+                    <a href="listbar.jsp?toolType=4"><%=toBeUndeployedTools != null ? toBeUndeployedTools.length : 0%>
+                        <fmt:message
+                                key="awaiting.to.undeploy.toolboxes"/></a>
                     <%
                     } else if (toolBoxType.equals("2")) {
                     %>
-                   <%=deployedTools != null ? deployedTools.length : 0%> <fmt:message
+                    <%=deployedTools != null ? deployedTools.length : 0%> <fmt:message
                         key="deployed.toolboxes"/>&nbsp;
                     <%
                     } else if (toolBoxType.equals("3")) {
@@ -211,7 +213,7 @@
                                         <fmt:message key="bam.tool.status.tobedeployed"/>
                                     </option>
                                     <option value="4" <%= (null != toolBoxType && toolBoxType.equals("4")) ? "selected=\'selected\'" : ""%>>
-                                       <fmt:message key="bam.tool.status.tobeundeployed"/>
+                                        <fmt:message key="bam.tool.status.tobeundeployed"/>
                                     </option>
                                 </select>
                                 &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
@@ -374,6 +376,18 @@
         </tbody>
     </table>
 </form>
+
+<table>
+    <tbody>
+    <tr>
+        <td></td>
+    </tr>
+    <tr>
+        <td><a class="icon-link" style="background-image:url(images/add.gif);" href="uploadbar.jsp"><fmt:message
+                key="add.new.toolbox"/></a></td>
+    </tr>
+    </tbody>
+</table>
 
 </div>
 </div>

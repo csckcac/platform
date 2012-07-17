@@ -84,11 +84,14 @@ public class HadoopJobTrackerContorller implements BundleActivator{
         jconf.addResource(new Path(HADOOP_CONFIG_DIR+File.separator+CAPACITY_SCHED));
         jconf.addResource(new Path(HADOOP_CONFIG_DIR+File.separator+MAPRED_QUEUE_ACLS));
         jconf.addResource(new Path(HADOOP_CONFIG_DIR+File.pathSeparator+METRICS2_CONF));
+        String alterdJobTrackerKeyTabPath = HADOOP_CONFIG_DIR+File.separator+jconf.get("mapreduce.jobtracker.keytab.file");
+        jconf.set("mapreduce.jobtracker.keytab.file", alterdJobTrackerKeyTabPath);
+        String alterdJobNameNodeKeyTabPath = HADOOP_CONFIG_DIR+File.separator+jconf.get("dfs.namenode.keytab.file");
+        jconf.set("dfs.namenode.keytab.file", alterdJobNameNodeKeyTabPath);
     }
 
     public void start (BundleContext context) throws Exception{
         log.info("Starting JobTracker");
-        //org.wso2.carbon.core.services.
         jobTrackerThread = new  Thread(new Runnable() {
             public void run() {
                 try {

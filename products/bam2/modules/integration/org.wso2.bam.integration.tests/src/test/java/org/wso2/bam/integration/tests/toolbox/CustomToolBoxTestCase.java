@@ -135,15 +135,14 @@ public class CustomToolBoxTestCase {
         if (null == toolBoxes || toolBoxes.length == 0) {
             throw new Exception("No default toolboxes available..");
         }
-        String toolBoxLocation = System.getProperty("carbon.home") + File.separator + "samples" +
-                File.separator + "toolboxes" + File.separator + toolBoxes[0].getToolboxName();
+        String toolBoxLocation = toolBoxes[0].getLocation();
 
         File toolBox = new File(toolBoxLocation);
         FileDataSource dataSource = new FileDataSource(toolBox);
         Object[] result = new Object[2];
 
         result[0] = new DataHandler(dataSource);
-        result[1] = toolBoxes[0].getToolboxName();
+        result[1] = toolBoxes[0].getTBoxFileName();
         return result;
     }
 

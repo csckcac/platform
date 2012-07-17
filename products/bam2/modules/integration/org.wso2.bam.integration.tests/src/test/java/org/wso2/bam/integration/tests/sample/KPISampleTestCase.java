@@ -192,7 +192,7 @@ public class KPISampleTestCase {
             throw new Exception("No default toolboxes available..");
         }
 
-        return toolBoxes[0].getToolboxName();
+        return toolBoxes[0].getTBoxFileName();
     }
 
 

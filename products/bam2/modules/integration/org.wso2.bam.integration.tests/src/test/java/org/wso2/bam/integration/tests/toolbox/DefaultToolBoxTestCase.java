@@ -14,8 +14,6 @@ import org.wso2.carbon.integration.framework.ClientConnectionUtil;
 import org.wso2.carbon.integration.framework.LoginLogoutUtil;
 import org.wso2.carbon.integration.framework.utils.FrameworkSettings;
 
-import java.io.File;
-
 import static org.testng.Assert.assertTrue;
 
 /**
@@ -129,10 +127,7 @@ public class DefaultToolBoxTestCase {
         if (null == toolBoxes || toolBoxes.length == 0) {
             throw new Exception("No default toolboxes available..");
         }
-        String toolBoxLocation = System.getProperty("carbon.home") + File.separator + "samples" +
-                File.separator + "toolbox" + File.separator + toolBoxes[0].getToolboxName();
-
-        return toolBoxes[0].getToolboxName();
+        return toolBoxes[0].getTBoxFileName();
     }
 
 

@@ -218,7 +218,7 @@
     alternateTableRows('customTable','tableEvenRow','tableOddRow');
 
     function loadPagedList(page) {
-        window.location = '<%="../generic/list.jsp?region=" + request.getParameter("region") + "&item=" + request.getParameter("item") + "&dataName=" + request.getParameter("dataName") + "&singularLabel=" + request.getParameter("singularLabel") + "&pluralLabel=" + request.getParameter("pluralLabel") + "&dataNamespace=" + request.getParameter("dataNamespace") + "&key=" + request.getParameter("key") + "&breadcrumb=" + request.getParameter("breadcrumb") + (filter ? "&filter=filter" : "")%>';
+        window.location = '<%="../generic/list.jsp?region=" + request.getParameter("region") + "&item=" + request.getParameter("item") + "&dataName=" + request.getParameter("dataName") + "&singularLabel=" + request.getParameter("singularLabel") + "&pluralLabel=" + request.getParameter("pluralLabel") + "&dataNamespace=" + request.getParameter("dataNamespace") + "&key=" + request.getParameter("key") + "&breadcrumb=" + request.getParameter("breadcrumb") + (filter ? "&filter=filter" : "") + "&page=" %>' + page;
     }
 </script>
 </fmt:bundle>

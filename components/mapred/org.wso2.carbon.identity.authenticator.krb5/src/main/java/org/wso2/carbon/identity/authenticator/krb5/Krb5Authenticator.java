@@ -70,6 +70,7 @@ public class Krb5Authenticator extends AbstractAdmin implements CarbonServerAuth
     		KRB5_CONFIG = "/etc/krb5.conf";
     	env.put("KRB5_CONFIG", KRB5_CONFIG);
     	log.info(env.get("KRB5_CONFIG"));
+    	HttpSession session = getHttpSession();
         try {
             Process proc = procBldr.start();
             InputStream procErr = proc.getErrorStream();
@@ -107,6 +108,7 @@ public class Krb5Authenticator extends AbstractAdmin implements CarbonServerAuth
             	boolean loggedIn = authAdmin.login(username, password, remoteAddress);
             	if (loggedIn) {
             		nameToUuidMap.put(username, uuid);
+            		session.setAttribute(Krb5AuthenticatorConstants.USER_TICKET_CACHE, tgtCachePrefix+uuid);
             	}
             	return loggedIn;
             }

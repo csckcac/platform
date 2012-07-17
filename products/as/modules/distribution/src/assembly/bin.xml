@@ -244,6 +244,14 @@
             </includes>
         </fileSet>
         <fileSet>
+            <directory>../samples/product/Jaxws-Jaxrs/jaxrs_basic/target</directory>
+            <outputDirectory>${pom.artifactId}-${pom.version}/repository/deployment/server/jaxwebapps
+            </outputDirectory>
+            <includes>
+                <include>**/**.war</include>
+            </includes>
+        </fileSet>
+        <fileSet>
             <directory>../samples/product/HelloWorldWebapp/target</directory>
             <outputDirectory>${pom.artifactId}-${pom.version}/samples/HelloWorldWebapp</outputDirectory>
             <includes>

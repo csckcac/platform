@@ -53,12 +53,13 @@
         <dependency>
             <groupId>org.wso2.carbon</groupId>
             <artifactId>org.wso2.carbon.identity.authenticator.krb5.stub</artifactId>
-	    <version>${wso2carbon.version}</version>
+	    	<version>${wso2carbon.version}</version>
         </dependency>
-	<!--<dependency>
+		<dependency>
             <groupId>org.wso2.carbon</groupId>
-            <artifactId>org.wso2.carbon.authenticator.stub</artifactId>
-        </dependency>-->
+            <artifactId>org.wso2.carbon.identity.authenticator.krb5</artifactId>
+            <version>${wso2carbon.version}</version>
+        </dependency>
     </dependencies>
 
     <build>

@@ -28,7 +28,10 @@ import org.apache.commons.logging.Log;
 import org.apache.commons.logging.LogFactory;
 import org.wso2.carbon.core.common.AuthenticationException;
 import org.wso2.carbon.utils.ServerConstants;
+import org.wso2.carbon.identity.authenticator.krb5.stub.types.Krb5Authenticator;
 import org.wso2.carbon.identity.authenticator.krb5.stub.types.Krb5AuthenticatorStub;
+import org.wso2.carbon.identity.authenticator.krb5.Krb5AuthenticatorConstants;
+
 
 public class Krb5AuthenticatorClient {
 
@@ -70,8 +73,10 @@ public class Krb5AuthenticatorClient {
     
     private void setAdminCookie() throws AxisFault {
     	String cookie = (String) stub._getServiceClient().getServiceContext().getProperty(HTTPConstants.COOKIE_STRING);
+    	String ticketCache = (String) stub._getServiceClient().getServiceContext().getProperty(Krb5AuthenticatorConstants.USER_TICKET_CACHE);
     	if (session != null) {
     		session.setAttribute(ServerConstants.ADMIN_SERVICE_AUTH_TOKEN, cookie);
+    		session.setAttribute(Krb5AuthenticatorConstants.USER_TICKET_CACHE, ticketCache);
     	}
     }
 }

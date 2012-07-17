@@ -12,11 +12,17 @@ import org.apache.axis2.client.Options;
 import org.apache.axis2.client.ServiceClient;
 import org.apache.axis2.context.ConfigurationContext;
 import org.apache.axis2.context.ConfigurationContextFactory;
+import org.apache.axis2.deployment.FileSystemConfigurator;
 import org.apache.axis2.transport.http.HTTPConstants;
 import org.apache.commons.logging.Log;
 import org.apache.commons.logging.LogFactory;
 import org.apache.hadoop.conf.Configuration;
+import org.apache.hadoop.mapred.Counters;
+import org.apache.hadoop.mapred.JobInProgress;
+import org.apache.hadoop.mapred.Task;
 import org.apache.hadoop.mapred.JobCoreReporter;
+import org.apache.hadoop.mapred.Task.Counter;
+import org.apache.tools.ant.types.resources.comparators.FileSystem;
 import org.json.JSONException;
 import org.json.JSONObject;
 
@@ -94,6 +100,8 @@ public class CarbonJobCoreReporter extends JobCoreReporter {
 
 	private String JSONEncode() {
 		JSONObject jsonObj = new JSONObject();
+		Counters counters = getCounters();
+		Counters.Counter counter = null;
 		try {
 			jsonObj.put("JobID", getJobId());
 			jsonObj.put("JobName", getJobName());
@@ -104,6 +112,29 @@ public class CarbonJobCoreReporter extends JobCoreReporter {
 			jsonObj.put("StartTime", getStartTime());
 			jsonObj.put("ScheduleInfo", getSchedInfo());
 			jsonObj.put("FailureInfo", getFailureInfo());
+			String[] taskCounterNames = { "MAP_INPUT_RECORDS", "MAP_OUTPUT_RECORDS", "MAP_SKIPPED_RECORDS",
+					"MAP_INPUT_BYTES", "MAP_OUTPUT_BYTES", "COMBINE_INPUT_RECORDS", "COMBINE_OUTPUT_RECORDS",
+					"REDUCE_INPUT_GROUPS", "REDUCE_SHUFFLE_BYTES", "REDUCE_INPUT_RECORDS", "REDUCE_OUTPUT_RECORDS",
+					"REDUCE_SKIPPED_GROUPS", "REDUCE_SKIPPED_RECORDS", "SPILLED_RECORDS" };
+
+			for (String c : taskCounterNames) {
+				counter = counters.findCounter("org.apache.hadoop.mapred.Task$Counter", c);
+				jsonObj.put(counter.getDisplayName(), counter.getCounter());
+			}
+			String[] jobCounterNames = { "TOTAL_LAUNCHED_MAPS", "RACK_LOCAL_MAPS", "DATA_LOCAL_MAPS",
+					"TOTAL_LAUNCHED_REDUCES" };
+
+			for (String c : jobCounterNames) {
+				counter = counters.findCounter("org.apache.hadoop.mapred.JobInProgress$Counter", c);
+				jsonObj.put(counter.getDisplayName(), counter.getCounter());
+			}
+			String[] fsCounterNames = { "FILE_BYTES_READ", "HDFS_BYTES_READ", "FILE_BYTES_WRITTEN",
+					"HDFS_BYTES_WRITTEN" };
+
+			for (String c : fsCounterNames) {
+				counter = counters.findCounter("FileSystemCounters", c);
+				jsonObj.put(counter.getDisplayName(), counter.getCounter());
+			}
 		} catch (JSONException e) {
 			log.warn(e.getMessage());
 		}

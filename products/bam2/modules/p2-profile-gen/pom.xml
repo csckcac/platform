@@ -93,7 +93,7 @@
                                 <!-- Jaggery Features -->
 
                                 <featureArtifactDef>
-                                    org.jaggeryjs:org.jaggeryjs.feature:${jaggery.feature.version}
+                                    org.jaggeryjs:org.jaggeryjs.server.feature:${jaggery.feature.version}
                                 </featureArtifactDef>
 
                                 <!--Dashboard Features-->
@@ -334,7 +334,7 @@
                                 <!-- Jaggery -->
 
                                 <feature>
-                                    <id>org.jaggeryjs.feature.group</id>
+                                    <id>org.jaggeryjs.server.feature.group</id>
                                     <version>${jaggery.feature.version}</version>
                                 </feature>
 

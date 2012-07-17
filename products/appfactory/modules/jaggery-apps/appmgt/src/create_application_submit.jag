@@ -4,6 +4,7 @@
 
     var applicationKey = request.getParameter("applicationKey");
     var applicationName = request.getParameter("applicationName");
+    var applicationVersion=request.getParameter("applicationVersion");
     var applicationDescription = request.getParameter("applicationDescription");
 
 %>
@@ -19,7 +20,7 @@
                         var repositoryPath = createNewApplication(applicationKey,userName);
                        if(repositoryPath!=undefined){
                             repositoryPath=repositoryPath.toString();
-                            addApplicationToApp(applicationKey, applicationName, applicationDescription, repositoryPath);
+                            addApplicationToApp(applicationKey, applicationName,applicationVersion, applicationDescription, repositoryPath);
                             print('Application is created with svn repository path:<br><a href="'+repositoryPath+'">'+repositoryPath+'</a>');
                        }
                     }
@@ -33,5 +34,4 @@
 <%
     include('includes/template_footer.jag');
 %>
-
 

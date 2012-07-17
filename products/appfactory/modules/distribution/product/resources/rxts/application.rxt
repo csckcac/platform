@@ -7,12 +7,18 @@
 			<column name="Name">
 				<data type="path" value="application_name" href="@{storagePath}"/>
 			</column>
+			<column name="Key">
+            				<data type="path" value="application_key" href="@{storagePath}"/>
+            			</column>
 			<column name="Description">
 				<data type="path" value="application_description" href="@{storagePath}"/>
 			</column>
 			<column name="Version">
 				<data type="path" value="application_version" href="@{storagePath}"/>
 			</column>
+			<column name="repositoryPath">
+            				<data type="path" value="repository_path" href="@{storagePath}"/>
+            			</column>
 		</list>
 	</ui>
 	<content>
@@ -23,6 +29,12 @@
         <field type="text" required="true">
             <name>Version</name>
         </field>
+        <field type="text" required="true">
+                    <name>Key</name>
+                </field>
+                 <field type="text" required="true">
+                                    <name>repositoryPath</name>
+                                </field>
         <field type="text-area" required="true">
             <name>Description</name>
         </field>   

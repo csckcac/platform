@@ -2,6 +2,7 @@
     var log = new Log();
     include('../constants.jag');
     include('../process/registry_dao.jag');
+      include('../process/web_service_util.jag');
 
     //check whether the key given for the new application already exist
     function isApplicationKeyAlreadyTaken(newKey) {
@@ -15,24 +16,22 @@
     }
 
     //add application details to registry
-    function addApplicationToApp(applicationKey, applicationName, applicationDescription, repoLink) {
-        try {
-            var resource = createResource();
-        } catch (e) {
-            log.error("Error while creating registry resource \n"+e.message);
-            throw new Error("Error while creating registry resource");
-        }
+    function addApplicationToApp(applicationKey, applicationName,applicationVersion, applicationDescription, repoLink) {
+      try {
+      var key='application';
+      var content=   '<![CDATA[<metadata xmlns="http://www.wso2.org/governance/metadata">'+
+                        '<application>'+
+                         	'<description>'+applicationDescription+'</description>'+
+                         	'<name>'+applicationName+'</name>'+
+                            '<version>'+'trunk'+'</version>'+
+                            '<key>'+applicationKey+'</key>'+
+                            '<repositoryPath>'+repoLink+'</repositoryPath>'+
+                        '</application>'+
+                        '<serviceLifecycle><lifecycleName>ServiceLifeCycle</lifecycleName></serviceLifecycle>'+
+                     '</metadata>]]>';
+      var lifecycleAttribute='serviceLifecycle_lifecycleName';      
+           addGenericArtifact(key,content,lifecycleAttribute);
 
-        resource.addProperty(APPLICATION_KEY, applicationKey);
-        resource.addProperty(APPLICATION_NAME, applicationName);
-        resource.addProperty(APPLICATION_DESC, applicationDescription);
-        resource.addProperty(APPLICATION_REPO_LINK, repoLink);
-
-
-        var path = APPLICATIONS + applicationKey;
-        try {
-            putResource(path, resource);
-            initAppVersion(applicationKey);
         } catch (e) {
             log.error("Error while storing resource \n"+e.message);
             throw new Error("Error while storing registry resource");
@@ -325,9 +324,9 @@
 		
 		return versionArray;
 	}
+
+
 %>
-
-
 
 
 

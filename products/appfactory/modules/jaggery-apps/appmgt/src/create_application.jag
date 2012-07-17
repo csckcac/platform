@@ -17,6 +17,11 @@
                                     <td>Application Key:</td>
                                     <td><input type='text' name='applicationKey' size='50'/></td>
                 </tr>
+<tr>
+                                    <td>Application Version:</td>
+                                    <td><input type='text' name='applicationVersion' size='50'/></td>
+                </tr>
+
                 <tr>
                                     <td>Application Description:</td>
                                     <!--td><input type='text' name='applicationDescription' size='50'/></td-->

@@ -39,6 +39,8 @@
 	<ArtifactCreateCallback>http://localhost:9763/services/ArtifactCreateCallbackService</ArtifactCreateCallback>
         <GetAllApps>https://localhost:9443/services/ApplicationManagementService</GetAllApps>
         <GetAuthCookie>https://localhost:9443/services/AuthenticationAdmin</GetAuthCookie>
+        <AddGenericArtifact>https://localhost:9443/services/ManageGenericArtifactService</AddGenericArtifact>
+        <InvokeAspect>https://localhost:9443/services/CustomLifecyclesChecklistAdminService</InvokeAspect>
     </WebServiceEndPoints>
 
     <!--Application repository related configurations-->

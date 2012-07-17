@@ -20,6 +20,8 @@ import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
+import org.mozilla.javascript.NativeArray;
+
 /**
  * Model to represent the appfactory.xml
  */
@@ -32,12 +34,19 @@ public class AppFactoryConfiguration {
         configuration.putAll(config);
     }
     
-    public String[] getProperties(String key) {
+    public NativeArray getProperties(String key) {
         List<String> values = configuration.get(key);
+        NativeArray nativeArray = new NativeArray(0);
         if (values == null) {
-            return new String[0];
+            return nativeArray;
         }
-        return values.toArray(new String[values.size()]);
+
+		for (int i = 0; i < values.size(); i++) {
+			String element = (String) values.get(i);
+			nativeArray.put(i, nativeArray, element);
+		}
+        
+        return nativeArray;
     }
     
     public String getFirstProperty(String key) {

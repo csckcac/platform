@@ -42,7 +42,11 @@
             <artifactId>org.wso2.carbon.core</artifactId>
             <version>${wso2carbon.version}</version>
         </dependency>
-
+        <dependency>
+            <groupId>org.jaggeryjs</groupId>
+            <artifactId>org.jaggeryjs.scriptengine</artifactId>
+			<version>0.9.0-SNAPSHOT</version>
+        </dependency>
     </dependencies>
 
     <build>

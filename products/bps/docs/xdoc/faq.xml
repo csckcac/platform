@@ -260,7 +260,7 @@
                     How can I get a message trace for a particular BPEL invocation?
                 </h3>
                 <p>
-		    Add <code>log4j.logger.org.wso2.carbon.bpel.messagetrace=TRACE</code> to log4j.properties file and set the Carbon log file threshold to trace. i.e. <code>log4j.appender.CARBON_LOGFILE.threshold=TRACE</code> Now re-start the BPS server and send a single request to the BPEL process and find the log file: BPS_HOME/repository/logs/wso2carbon.log	
+		    Add <code>log4j.logger.org.wso2.carbon.bpel.messagetrace=TRACE</code> to log4j.properties file (located at @product.name@-@product.version@/repository/conf/log4j.properties) and set the Carbon log file threshold to trace. i.e. <code>log4j.appender.CARBON_LOGFILE.threshold=TRACE</code> Now re-start the BPS server and send a single request to the BPEL process and find the log file: BPS_HOME/repository/logs/wso2carbon.log
                 </p>
             </li>
             <li>

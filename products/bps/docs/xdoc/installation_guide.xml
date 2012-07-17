@@ -369,7 +369,7 @@
             Enabling logging for various components in @product.name@
         </h2>
         <ol>
-            <li>Add the following entries to the @product.name@-@product.version@/lib/log4j.properties 
+            <li>Add the following entries to the @product.name@-@product.version@/repository/conf/log4j.properties
                 <ul>
                     <li>log4j.logger.org.apache.ode.bpel.messagetrace=TRACE</li>
                     <li>log4j.logger.org.wso2.carbon.bpel.messagetrace=TRACE</li>

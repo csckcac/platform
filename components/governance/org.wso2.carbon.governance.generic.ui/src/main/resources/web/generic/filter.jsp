@@ -117,7 +117,7 @@
 <h2><fmt:message key="filter.artifacts"><fmt:param value="<%=request.getParameter("pluralLabel")%>"/></fmt:message></h2>
 <div id="workArea">
             <p style="padding:5px">
-                <fmt:message key="filter.artifacts.description"><fmt:param value="<%=request.getParameter("singularLabel").toLowerCase()%>"/></fmt:message>
+                <fmt:message key="filter.artifacts.description"><fmt:param value="<%=request.getParameter("singularLabel")%>"/></fmt:message>
             </p>
             <div id="activityReason" style="display: none;"></div>
             <form id="filterForm" action="filter_ajaxprocessor.jsp"

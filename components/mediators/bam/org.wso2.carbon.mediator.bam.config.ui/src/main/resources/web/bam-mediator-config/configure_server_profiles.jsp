@@ -802,8 +802,8 @@
                                     <input id="streamDescription" type="text" name="<%=STREAM_DESCRIPTION%>" value="<%=streamConfiguration.getDescription()%>"/>
                                 </td>
                                 <% if (i == 1) { %>
-                                <td><span><a onClick='javaScript:addStreamRow()' style='background-image:
-                                        url(images/add.gif);'class='icon-link addIcon'>Add Stream</a></span>
+                                <td><span><a onClick='javaScript:removeStreamColumn("streamsTable_<%=i%>")' style='background-image:
+                                        url(../admin/images/delete.gif);'class='icon-link addIcon'>Remove Stream</a></span>
                                     <span><a onClick='javaScript:editStreamData("<%=i%>")' style='background-image:
                                         url(../admin/images/edit.gif);'class='icon-link addIcon'>Edit Stream</a></span>
                                     <input type="hidden" id="hfStreamsTable_<%=i%>" value="<%=bamServerProfileUtils.getStreamConfigurationListString(streamConfiguration)%>"/>
@@ -840,7 +840,7 @@
                                 </td>
 
                                 <td>
-                                    <span><a onClick='javaScript:addStreamRow()' style='background-image: url(images/add.gif);'class='icon-link addIcon'>Add Stream</a></span>
+                                    <span><a onClick='javaScript:removeStreamColumn("streamsTable_1")' style='background-image: url(../admin/images/delete.gif);'class='icon-link addIcon'>Remove Stream</a></span>
                                     <span><a onClick='javaScript:editStreamData("1")' style='background-image: url(../admin/images/edit.gif);'class='icon-link addIcon'>Edit Stream</a></span>
                                     <input type="hidden" id="hfStreamsTable_1" value=""/>
                                 </td>
@@ -849,6 +849,12 @@
 
                         <% } %>
                     </table>
+                </td>
+            </tr>
+            <tr>
+                <td>
+                    <span><a onClick='javaScript:addStreamRow()' style='background-image:
+                                        url(../admin/images/add.gif);'class='icon-link addIcon'>Add Stream</a></span>
                 </td>
             </tr>
 
@@ -940,7 +946,7 @@
                                         </td>
 
                                         <td>
-                                            <a onClick='javaScript:onAddPropertyClicked()' style='background-image: url(images/add.gif);'class='icon-link addIcon'>Add Property</a>
+                                            <a onClick='javaScript:removePropertyColumn("propertyTable_1")' style='background-image: url(../admin/images/delete.gif);'class='icon-link addIcon'>Remove Property</a>
                                         </td>
                                     </tr>
                                     </tbody>
@@ -949,8 +955,27 @@
                         </tr>
                         <tr>
                             <td>
-                                <input type="button" value="Update" onclick="savePropertiesData()"/>
-                                <input type="button" value="Cancel" onclick="cancelStreamData()"/>
+                                <table>
+                                    <tr>
+                                        <td>
+                                            <span>
+                                                <a onClick='javaScript:onAddPropertyClicked()' style='background-image: url(../admin/images/add.gif);'class='icon-link addIcon'>Add</a>
+                                            </span>
+                                        </td>
+                                        <td>
+                                            <span>
+                                                <a onClick='javaScript:savePropertiesData()' style='background-image: url(images/save-button.gif);'class='icon-link addIcon'>Update</a>
+                                            </span>
+                                        </td>
+                                        <td>
+                                            <span>
+                                                <a onClick='javaScript:cancelStreamData()' style='background-image: url(../admin/images/cancel.gif);'class='icon-link addIcon'>Cancel</a>
+                                            </span>
+                                        </td>
+                                    </tr>
+                                </table>
+                                <%--<input type="button" value="Update" onclick="savePropertiesData()"/>
+                                <input type="button" value="Cancel" onclick="cancelStreamData()"/>--%>
                             </td>
                         </tr>
                     </table>

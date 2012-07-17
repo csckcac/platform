@@ -20,30 +20,7 @@ public class Krb5TicketCacheFinderImpl implements Krb5TicketCacheFinder {
     private Configuration conf;
 	@Override
 	public String getTenantTicketCache() {
-		String ticketCachePath = null;
-		try {
-			HadoopCarbonMessageContext msgCtx = HadoopCarbonMessageContext.get();
-			if (msgCtx == null)
-				return null;
-			String cookie = msgCtx.getCookie();
-			ConfigurationContext configCtx = msgCtx.getConfigurationContext();
-			String serviceEPR = "https://localhost:9443/services/" + "Krb5Authenticator";
-			Krb5AuthenticatorStub stub = new Krb5AuthenticatorStub(configCtx, serviceEPR);
-			ServiceClient client = stub._getServiceClient();
-			Options options = client.getOptions();
-			options.setManageSession(true);
-			if (cookie != null) {
-				options.setProperty(HTTPConstants.COOKIE_STRING, cookie);
-			}
-			ticketCachePath = stub.getTicketCache();
-		} catch (AxisFault e) {
-			log.warn("AxisFault: "+e.getMessage());
-		} catch (RemoteException e) { 
-			log.warn("RemoteException: "+e.getMessage());
-		} catch (Exception e) {
-			log.warn("Exception: "+e.getMessage());
-			e.printStackTrace();
-		}
-		return ticketCachePath;
+		HadoopCarbonMessageContext msgCtx = HadoopCarbonMessageContext.get();
+		return msgCtx.getKrb5TicketCache();
 	}
 }

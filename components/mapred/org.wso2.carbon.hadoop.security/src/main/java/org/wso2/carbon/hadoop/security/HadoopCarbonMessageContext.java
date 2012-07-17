@@ -5,11 +5,20 @@ import org.apache.axis2.context.ConfigurationContext;
 public class HadoopCarbonMessageContext {
 	private ConfigurationContext cfgCtx;
 	private String cookie;
-	
+	private String krb5TicketCache;
 	public HadoopCarbonMessageContext(ConfigurationContext cfgCtx, String cookie) {
 		this.cfgCtx = cfgCtx;
 		this.cookie = cookie;
 	}
+	
+	public void setKrb5TicketCache(String ticketCache) {
+		this.krb5TicketCache = ticketCache;
+	}
+	
+	public String getKrb5TicketCache() {
+		return this.krb5TicketCache;
+	}
+	
 	private static ThreadLocal<HadoopCarbonMessageContext> currentMessageContext = new InheritableThreadLocal<HadoopCarbonMessageContext>();
 	
 	public static HadoopCarbonMessageContext get() {

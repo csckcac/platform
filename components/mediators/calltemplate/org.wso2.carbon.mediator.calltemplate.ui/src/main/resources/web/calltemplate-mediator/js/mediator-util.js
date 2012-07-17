@@ -238,8 +238,10 @@ function onPropertyTypeSelectionChange(i, name) {
 function onTemplateSelectionChange() {
     var templateSelected = getSelectedValue('templateSelector');
     if (templateSelected != null && "default" != templateSelected) {
-        var targetEl = document.getElementById("mediator.call.target");
+    	var targetEl = document.getElementById("mediator.call.target");
+    	var targetElVisible = document.getElementById("mediator.call.target.visible");
         targetEl.value = templateSelected;
+     	targetElVisible.value = templateSelected;
         handleParamGet(templateSelected);
 //        settype(templateSelected, i, name);
     }

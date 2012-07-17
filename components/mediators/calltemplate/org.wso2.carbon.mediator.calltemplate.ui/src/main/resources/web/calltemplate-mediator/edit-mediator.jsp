@@ -79,7 +79,9 @@
                     <fmt:message key="mediator.call.target"/><span class="required">*</span>
                 </td>
                 <td>
-                    <input class="longInput" type="text" id="mediator.call.target" name="mediator.call.target"
+ 		    <input type="hidden" id="mediator.call.target" name="mediator.call.target"
+                           value="<%=target%>" disabled="true"/>
+                    <input class="longInput" type="text" id="mediator.call.target.visible" name="mediator.call.target.visble"
                            value="<%=target%>" disabled="true"/>
                 </td>
             </tr>

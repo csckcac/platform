@@ -46,7 +46,6 @@
                  <module>admin-mgt</module>
                  <module>application-mgt</module>
                  <module>application-deployers</module>
-                 <module>agent</module>
                  <module>bam</module>
                  <module>bam-data-publishers</module>
                  <module>business-processes</module>
@@ -152,7 +151,6 @@
 		<module>url-mapper</module>
 		<module>load-balancer</module>
         <module>cassandra-explorer</module>
-        <module>event-bridge</module>
         <module>data-bridge</module>
 		<module>ndatasource</module>
 		<module>appfactory</module>

@@ -34,16 +34,16 @@ public class AppFactoryLCExecutor implements Execution {
     public void init(Map map) {
         parameterMap = map;
 
-        if(parameterMap.get(ExecutorConstants.COPY_COMMENTS) != null){
+        if (parameterMap.get(ExecutorConstants.COPY_COMMENTS) != null) {
             copyComments = Boolean.parseBoolean((String) parameterMap.get(ExecutorConstants.COPY_COMMENTS));
         }
-        if(parameterMap.get(ExecutorConstants.COPY_TAGS) != null){
+        if (parameterMap.get(ExecutorConstants.COPY_TAGS) != null) {
             copyTags = Boolean.parseBoolean((String) parameterMap.get(ExecutorConstants.COPY_TAGS));
         }
-        if(parameterMap.get(ExecutorConstants.COPY_RATINGS) != null){
+        if (parameterMap.get(ExecutorConstants.COPY_RATINGS) != null) {
             copyRatings = Boolean.parseBoolean((String) parameterMap.get(ExecutorConstants.COPY_RATINGS));
         }
-        if(parameterMap.get(ExecutorConstants.COPY_ASSOCIATIONS) != null){
+        if (parameterMap.get(ExecutorConstants.COPY_ASSOCIATIONS) != null) {
             copyAllAssociations = Boolean.parseBoolean((String) parameterMap.get(ExecutorConstants.COPY_ASSOCIATIONS));
         }
     }
@@ -71,37 +71,70 @@ public class AppFactoryLCExecutor implements Execution {
         String targetEnvironment = getReformattedPath((String) parameterMap.get(ExecutorConstants.TARGET_ENVIRONMENT),
                 KEY, currentParameterMap.get(resourcePath));
 
-        if(resourcePath.startsWith(currentEnvironment)){
+        if (resourcePath.startsWith(currentEnvironment)) {
+
             newPath = resourcePath.substring(currentEnvironment.length());
 
-            // If first stage of application, then need to change new resource name to a version (i.e. 1.0.0)
-            if(newPath.endsWith("trunk")){
-                newPath = newPath.substring(0, newPath.length()-5);
-                log.info(newPath);
+            // 1st element is "", 2st element is app name , 3rd element is $Stage , 4th element $Version
+            String newPathArray[] = newPath.split("/");
+            String appName = newPathArray[1];
+            //String appVersion = currentParameterMap.get("version");
+            String appVersion = "1.0.0";
 
-                String appVersion = currentParameterMap.get("version");
+
+            // if the app is trunk then we need version.
+            if ("trunk".equals(newPathArray[3])) {
+
                 // Append version from here
-                if( appVersion != null){
-                    newPath = newPath + appVersion;
-                }
-                else{
-                    log.error("Can not find application version");
+                if (appVersion != null) {
+                    newPath = "/" + appName + "/" + targetState + "/" + appVersion;
+                } else {
+                    log.error("Can not find application version. " +
+                            "Application version is required to perform lifecycle operation");
                     return false;
                 }
+            } else {
+                // Application is not a trunk version. So it can have version with it or user can define version
+                if (appVersion != null) {
+                    newPath = "/" + appName + "/" + targetState + "/" + appVersion;
 
+                } else {
+                    newPath = "/" + appName + "/" + targetState + "/" + newPathArray[3];
+                }
 
             }
+
+
+            // This is commented to use new path structure
+//            If first stage of application, then need to change new resource name to a version (i.e. 1.0.0)
+//            if(newPath.endsWith("trunk")){
+//                newPath = newPath.substring(0, newPath.length()-5);
+//                log.info(newPath);
+//
+//                String appVersion = currentParameterMap.get("version");
+//                // Append version from here
+//                if( appVersion != null){
+//                    newPath = newPath + appVersion;
+//                }
+//                else{
+//                    log.error("Can not find application version");
+//                    return false;
+//                }
+//
+//
+//            }
+
             newPath = targetEnvironment + newPath;
-        }else{
+        } else {
             log.warn("Resource is not in the given environment");
             return true;
         }
 
         try {
-            requestContext.getRegistry().copy(resourcePath,newPath);
+            requestContext.getRegistry().copy(resourcePath, newPath);
             Resource newResource = requestContext.getRegistry().get(newPath);
 
-            if(newResource.getUUID() != null){
+            if (newResource.getUUID() != null) {
                 addNewId(requestContext.getRegistry(), newResource, newPath);
             }
 
@@ -128,11 +161,12 @@ public class AppFactoryLCExecutor implements Execution {
         }
 
     }
-    public String getReformattedPath(String originalPath, String key, String value){
-        if(key == null || value == null){
+
+    public String getReformattedPath(String originalPath, String key, String value) {
+        if (key == null || value == null) {
             return originalPath;
         }
-        return originalPath.replace(key,value);
+        return originalPath.replace(key, value);
     }
 
     private void copyAllAssociations(Registry registry, String newPath, String path) throws RegistryException {

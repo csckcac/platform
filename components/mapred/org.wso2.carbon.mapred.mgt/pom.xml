@@ -94,11 +94,12 @@
         <!--<dependency>
             <groupId>org.wso2.carbon</groupId>
             <artifactId>org.wso2.carbon.hadoop.jobtracker</artifactId>
-        </dependency>
+        </dependency>-->
         <dependency>
             <groupId>org.wso2.carbon</groupId>
             <artifactId>org.wso2.carbon.identity.authenticator.krb5</artifactId>
-        </dependency>-->
+            <version>${wso2carbon.version}</version>
+        </dependency>
         <dependency>
             <groupId>org.apache.hadoop</groupId>
             <artifactId>hadoop-core</artifactId>

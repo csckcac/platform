@@ -3,7 +3,9 @@ package org.wso2.carbon.mapred.mgt;
 import java.io.ByteArrayInputStream;
 import java.io.ByteArrayOutputStream;
 import java.io.File;
+import java.io.FileNotFoundException;
 import java.io.FileOutputStream;
+import java.io.FileReader;
 import java.io.IOException;
 import java.io.InputStream;
 import java.io.ObjectInputStream;
@@ -12,6 +14,7 @@ import java.io.ObjectOutputStream;
 import java.util.HashMap;
 import java.util.Iterator;
 import java.util.Map;
+import java.util.Properties;
 import java.util.Set;
 import java.util.UUID;
 
@@ -45,9 +48,11 @@ import org.wso2.carbon.registry.core.session.UserRegistry;
 import org.wso2.carbon.user.api.Tenant;
 import org.wso2.carbon.utils.ServerConstants;
 import org.wso2.carbon.hadoop.security.HadoopCarbonMessageContext;
+import org.wso2.carbon.identity.authenticator.krb5.Krb5Authenticator;
+import org.wso2.carbon.identity.authenticator.krb5.Krb5AuthenticatorConstants;
 
 public class HadoopJobRunner extends AbstractAdmin {
-	private Log log = LogFactory.getLog(HadoopJobRunner.class);
+	private static Log log = LogFactory.getLog(HadoopJobRunner.class);
 	public static final String HADOOP_CONFIG = System.getProperty(ServerConstants.CARBON_HOME)+File.separator+"repository"+File.separator+"conf"+File.separator+"etc"+File.separator+"hadoop.properties";
 	public static final String REG_JAR_PATH = "/job/jar/";
 	public static final String REG_JOB_STATS_PATH = "/job/stats/";
@@ -64,14 +69,28 @@ public class HadoopJobRunner extends AbstractAdmin {
 	private static final String MAPRED_QUEUE_ACLS = "mapred-queue-acls.xml";
 	private static Configuration conf;
 
+	private static Properties hadoopCarbonConfig = new Properties();
+	private static String hadoopCarbonConfigDir;
 	static {
+		try {
+			hadoopCarbonConfig.load(new FileReader(HADOOP_CONFIG));
+		} catch (FileNotFoundException e) {
+			log.error(e.getMessage());
+		} catch (IOException e) {
+			log.error(e.getMessage());
+		}
+		hadoopCarbonConfigDir = hadoopCarbonConfig.getProperty("hadoop.config.dir");
 		conf = new Configuration();
-		conf.addResource(new Path(HADOOP_CONFIG+File.separator+CORE_SITE));
-        conf.addResource(new Path(HADOOP_CONFIG+File.separator+MAPRED_SITE));
-        conf.addResource(new Path(HADOOP_CONFIG+File.separator+HDFS_SITE));
-        conf.addResource(new Path(HADOOP_CONFIG+File.separator+HADOOP_POLICY));
-        conf.addResource(new Path(HADOOP_CONFIG+File.separator+CAPACITY_SCHED));
-        conf.addResource(new Path(HADOOP_CONFIG+File.separator+MAPRED_QUEUE_ACLS));
+		conf.addResource(new Path(hadoopCarbonConfigDir+File.separator+CORE_SITE));
+        conf.addResource(new Path(hadoopCarbonConfigDir+File.separator+MAPRED_SITE));
+        conf.addResource(new Path(hadoopCarbonConfigDir+File.separator+HDFS_SITE));
+        conf.addResource(new Path(hadoopCarbonConfigDir+File.separator+HADOOP_POLICY));
+        conf.addResource(new Path(hadoopCarbonConfigDir+File.separator+CAPACITY_SCHED));
+        conf.addResource(new Path(hadoopCarbonConfigDir+File.separator+MAPRED_QUEUE_ACLS));
+        String alterdJobTrackerKeyTabPath = hadoopCarbonConfigDir+File.separator+conf.get("mapreduce.jobtracker.keytab.file");
+        conf.set("mapreduce.jobtracker.keytab.file", alterdJobTrackerKeyTabPath);
+        String alterdNameNodeKeyTabPath = hadoopCarbonConfigDir+File.separator+conf.get("dfs.namenode.keytab.file");
+        conf.set("dfs.namenode.keytab.file", alterdNameNodeKeyTabPath);
 	}
 	
 	public String runJob(String jarName, String className, String args) {
@@ -81,6 +100,7 @@ public class HadoopJobRunner extends AbstractAdmin {
 		ConfigurationContext cfgCtx = msgCtx.getConfigurationContext();
 		UUID threadUuid = UUID.randomUUID();
 		HadoopCarbonMessageContext hadoopMsgCtx = new HadoopCarbonMessageContext(cfgCtx, cookie);
+		hadoopMsgCtx.setKrb5TicketCache((String)request.getSession().getAttribute(Krb5AuthenticatorConstants.USER_TICKET_CACHE));
 		HadoopCarbonMessageContext.set(hadoopMsgCtx);
 		HadoopJobRunnerThread hadoopJobThread = new HadoopJobRunnerThread(jarName, className, args);
 		hadoopJobThread.start();

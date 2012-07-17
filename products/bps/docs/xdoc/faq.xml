@@ -498,7 +498,7 @@
                     @product.name@ ships with an embedded H2 database. However any database management system can be plugged
                     into the BPS via JDBC. Database for BPEL engine persistence storage can be configured via datasources.properties file
                     in repository/conf directory. Registry and user management related database configurations are available in
-                    repository/conf/registry.xml and repository/cong/user-mgt.xml files. @product.name@ has been tested
+                    repository/conf/registry.xml and repository/conf/user-mgt.xml files. @product.name@ has been tested
                     with MySQL, Oracle, MSSQL and PostgreSQL databases.
                 </p>
             </li>

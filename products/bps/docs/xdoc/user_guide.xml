@@ -352,7 +352,7 @@
         </p>
           <p>This editor allows BPEL process administrators to configure process/instance/scope event
             generation, instance cleanup at run-time. Also it provides the other configuration
-            details like MEX interceptors, process properties, provided services (inbound interfaces
+            details like MEX interceptors, process properties, provided services (inbound interfaces)
             and invoked partner services (outbound interfaces). This will modify the runtime process
             configuration without affecting the uploaded deployment artifact.
         </p>

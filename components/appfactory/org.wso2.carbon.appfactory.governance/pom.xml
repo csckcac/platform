@@ -87,11 +87,11 @@
                             ${project.artifactId}
                         </Bundle-SymbolicName>
                         <Export-Package>
-                            org.wso2.carbon.appfactory.rxt.*,
+                            org.wso2.carbon.appfactory.governance.*,
+                            org.wso2.carbon.appfactory.governance.lifecycle.*,
                         </Export-Package>
                         <Private-Package>
-                            org.wso2.carbon.appfactory.rxt.internal.*,
-                            org.wso2.carbon.appfactory.rxt.util.*,
+                            org.wso2.carbon.appfactory.governance.internal.*,
                         </Private-Package>
                         <Import-Package>
                             !javax.xml.namespace,

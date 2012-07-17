@@ -61,25 +61,19 @@ include('/includes/topnavi.jag');
                 <h3>Resource</h3>
         <pre class="prettyprint linenums">
 &lt%
-     var dataStore = new MetadataStore("admin", "admin");
-     var resource = dataStore.newResource();
-     resource.content = "&lt;a&gt;Hello Jaggery&lt/a&gt;";
-     resource.addProperty("url", "http://wso2.com");
-     resource.addProperty("company", "WSO2 Inc.");
-     dataStore.put("wso2products.xml", resource);
+ var dataStore = new MetadataStore("admin", "admin");
+ var resource = dataStore.newResource();
+ resource.content = "<a>Hello Jaggery</a>";
+ resource.addProperty("url", "http://wso2.com");
+ resource.addProperty("company", "WSO2 Inc.");
+ dataStore.put("wso2products.xml", resource);
+ 
+ //now we read the resource again
+ var res = dataStore.get("wso2products.xml");
 
-     //now we read the resource again
-     var res = dataStore.get("wso2products.xml");
-
-     //html to show the result
-     var resource = {};
-     resource.content = res.content.toXMLString();
-     resource.props = {};
-     resource.props.url = res.getProperty("url");
-     resource.props.company = res.getProperty("company");
-
-     print(resource);
-
+print("Company : "+res.getProperty("company"));
+print("&ltbr&gtURL : " +res.getProperty("url"));
+print("&ltbr&gtContent : "+res.content);
 %&gt
 </pre>
                 <%
@@ -94,14 +88,9 @@ include('/includes/topnavi.jag');
                 + '\n //now we read the resource again'
                 + '\n var res = dataStore.get("wso2products.xml");'
                 + '\n'
-                + '\n //html to show the result'
-                + '\n var resource = {};'
-                + '\n resource.content = res.content.toXMLString();'
-                + '\n resource.props = {};'
-                + '\n resource.props.url = res.getProperty("url");'
-                + '\n resource.props.company = res.getProperty("company");'
-                + '\n'
-                + '\n print(resource);'
+                + '\n print("Company : "+res.getProperty("company"));'
+                + '\n print("&ltbr&gtURL : " +res.getProperty("url"));'
+                + '\n print("&ltbr&gtContent : "+res.content);'
                 + '\n %&gt';
 
                 var codeSnip = encodeURIComponent(regCode);

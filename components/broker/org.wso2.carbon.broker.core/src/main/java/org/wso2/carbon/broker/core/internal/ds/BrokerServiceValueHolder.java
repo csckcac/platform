@@ -16,10 +16,10 @@
 
 package org.wso2.carbon.broker.core.internal.ds;
 
-import org.wso2.carbon.agent.Agent;
-import org.wso2.carbon.agent.server.AgentServer;
-import org.wso2.carbon.utils.ConfigurationContextService;
+import org.wso2.carbon.databridge.agent.thrift.Agent;
+import org.wso2.carbon.databridge.core.DataBridgeSubscriberService;
 import org.wso2.carbon.event.core.EventBroker;
+import org.wso2.carbon.utils.ConfigurationContextService;
 
 /**
  * common place to hold some OSGI bundle references.
@@ -28,7 +28,7 @@ public final class BrokerServiceValueHolder {
 
     private static ConfigurationContextService configurationContextService;
     private static EventBroker eventBroker;
-    private static AgentServer agentServer;
+    private static DataBridgeSubscriberService dataBridgeSubscriberService;
     private static Agent agent;
 
     private BrokerServiceValueHolder(){}
@@ -50,12 +50,12 @@ public final class BrokerServiceValueHolder {
         return BrokerServiceValueHolder.eventBroker;
     }
 
-    public static void registerAgentServer(AgentServer agentServer) {
-        BrokerServiceValueHolder.agentServer = agentServer;
+    public static void registerDataBridgeSubscriberService(DataBridgeSubscriberService agentServer) {
+        BrokerServiceValueHolder.dataBridgeSubscriberService = agentServer;
     }
 
-    public static AgentServer getAgentServer() {
-        return agentServer;
+    public static DataBridgeSubscriberService getDataBridgeSubscriberService() {
+        return dataBridgeSubscriberService;
     }
 
     public static void registerAgent(Agent agent) {

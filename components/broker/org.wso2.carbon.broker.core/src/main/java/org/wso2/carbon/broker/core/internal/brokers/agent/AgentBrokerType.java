@@ -21,16 +21,6 @@ import org.apache.axiom.om.OMElement;
 import org.apache.axis2.engine.AxisConfiguration;
 import org.apache.commons.logging.Log;
 import org.apache.commons.logging.LogFactory;
-import org.wso2.carbon.agent.Agent;
-import org.wso2.carbon.agent.DataPublisher;
-import org.wso2.carbon.agent.commons.Attribute;
-import org.wso2.carbon.agent.commons.AttributeType;
-import org.wso2.carbon.agent.commons.Event;
-import org.wso2.carbon.agent.commons.EventStreamDefinition;
-import org.wso2.carbon.agent.commons.exception.AuthenticationException;
-import org.wso2.carbon.agent.exception.AgentException;
-import org.wso2.carbon.agent.exception.TransportException;
-import org.wso2.carbon.agent.server.AgentCallback;
 import org.wso2.carbon.broker.core.BrokerConfiguration;
 import org.wso2.carbon.broker.core.BrokerListener;
 import org.wso2.carbon.broker.core.BrokerTypeDto;
@@ -39,6 +29,17 @@ import org.wso2.carbon.broker.core.exception.BrokerEventProcessingException;
 import org.wso2.carbon.broker.core.internal.BrokerType;
 import org.wso2.carbon.broker.core.internal.ds.BrokerServiceValueHolder;
 import org.wso2.carbon.broker.core.internal.util.BrokerConstants;
+import org.wso2.carbon.databridge.agent.thrift.Agent;
+import org.wso2.carbon.databridge.agent.thrift.DataPublisher;
+import org.wso2.carbon.databridge.agent.thrift.exception.AgentException;
+import org.wso2.carbon.databridge.commons.Attribute;
+import org.wso2.carbon.databridge.commons.AttributeType;
+import org.wso2.carbon.databridge.commons.Credentials;
+import org.wso2.carbon.databridge.commons.Event;
+import org.wso2.carbon.databridge.commons.StreamDefinition;
+import org.wso2.carbon.databridge.commons.exception.AuthenticationException;
+import org.wso2.carbon.databridge.commons.exception.TransportException;
+import org.wso2.carbon.databridge.core.AgentCallback;
 
 import java.net.MalformedURLException;
 import java.util.ArrayList;
@@ -59,8 +60,10 @@ public final class AgentBrokerType implements BrokerType {
 
     private Map<String, Map<BrokerConfiguration, BrokerListener>> brokerListenerMap =
             new ConcurrentHashMap<String, Map<BrokerConfiguration, BrokerListener>>();
-    private Map<String, EventStreamDefinition> inputTypeDefMap = new ConcurrentHashMap<String, EventStreamDefinition>();
-    private Map<String, EventStreamDefinition> outputTypeDefMap = new ConcurrentHashMap<String, EventStreamDefinition>();
+    private Map<String, Map<BrokerConfiguration, BrokerListener>> brokerListenerStreamIdMap =
+            new ConcurrentHashMap<String, Map<BrokerConfiguration, BrokerListener>>();
+//    private Map<String, StreamDefinition> inputTypeDefMap = new ConcurrentHashMap<String, StreamDefinition>();
+    private Map<String, StreamDefinition> outputTypeDefMap = new ConcurrentHashMap<String, StreamDefinition>();
     private Map<BrokerConfiguration, DataPublisher> dataPublisherMap = new ConcurrentHashMap<BrokerConfiguration, DataPublisher>();
     private Agent agent;
 
@@ -101,7 +104,7 @@ public final class AgentBrokerType implements BrokerType {
                 resourceBundle.getString(BrokerConstants.BROKER_CONF_AGENT_PROP_PASSWORD));
         this.brokerTypeDto.addProperty(passwordProperty);
 
-        BrokerServiceValueHolder.getAgentServer().subscribe(new AgentBrokerCallback());
+        BrokerServiceValueHolder.getDataBridgeSubscriberService().subscribe(new AgentBrokerCallback());
     }
 
     public static AgentBrokerType getInstance() {
@@ -112,39 +115,35 @@ public final class AgentBrokerType implements BrokerType {
 
 
         @Override
-        public void definedEventStream(EventStreamDefinition eventStreamDefinition,
-                                       String userName,
-                                       String password,
-                                       String domainName) {
-            Map<BrokerConfiguration, BrokerListener> brokerListeners = brokerListenerMap.get(eventStreamDefinition.getStreamId());
+        public void definedStream(StreamDefinition streamDefinition, Credentials credentials) {
+            Map<BrokerConfiguration, BrokerListener> brokerListeners = brokerListenerMap.get(streamDefinition.getName());
             if (brokerListeners == null) {
                 brokerListeners = new HashMap<BrokerConfiguration, BrokerListener>();
-                brokerListenerMap.put(eventStreamDefinition.getStreamId(), brokerListeners);
+                brokerListenerMap.put(streamDefinition.getName(), brokerListeners);
             }
-            inputTypeDefMap.put(eventStreamDefinition.getStreamId(), eventStreamDefinition);
+//            inputTypeDefMap.put(streamDefinition.getName(), streamDefinition);
             for (BrokerListener brokerListener : brokerListeners.values()) {
                 try {
-                    brokerListener.onEventDefinition(eventStreamDefinition);
+                    brokerListener.onEventDefinition(streamDefinition);
                 } catch (BrokerEventProcessingException e) {
                     log.error("Cannot send Stream Definition to a brokerListener subscribed to " +
-                              eventStreamDefinition.getStreamId(), e);
+                              streamDefinition.getStreamId(), e);
                 }
 
             }
+            brokerListenerStreamIdMap.put(streamDefinition.getStreamId(),brokerListenerMap.get(streamDefinition.getName()));
         }
 
         @Override
-        public void receive(List<Event> events, String userName, String password,
-                            String domainName) {
-            //Here all events are of same stream
-            Map<BrokerConfiguration, BrokerListener> brokerListeners = brokerListenerMap.get(events.get(0).getStreamId());
+        public void receive(List<Event> events, Credentials credentials) {
             for (Event event : events) {
+                Map<BrokerConfiguration, BrokerListener> brokerListeners = brokerListenerStreamIdMap.get(event.getStreamId());
                 for (BrokerListener brokerListener : brokerListeners.values()) {
                     try {
                         brokerListener.onEvent(event);
                     } catch (BrokerEventProcessingException e) {
                         log.error("Cannot send event to a brokerListener subscribed to " +
-                                  events.get(0).getStreamId(), e);
+                                  event.getStreamId(), e);
                     }
 
                 }
@@ -177,20 +176,20 @@ public final class AgentBrokerType implements BrokerType {
 
         //Building the Common Object model Event
         String streamId = ((OMElement) message).getLocalName();
-        EventStreamDefinition eventStreamDefinition = outputTypeDefMap.get(streamId);
+        StreamDefinition eventStreamDefinition = outputTypeDefMap.get(streamId);
         if (eventStreamDefinition == null) {
-            List<Attribute> attributes = new ArrayList<Attribute>();
+            List<org.wso2.carbon.databridge.commons.Attribute> attributes = new ArrayList<org.wso2.carbon.databridge.commons.Attribute>();
             List<String> values = new ArrayList<String>();
 
             buildPayLoadDataAndAttributes((OMElement) message, attributes, values);
 
-            eventStreamDefinition = new EventStreamDefinition(streamId);
+            eventStreamDefinition = new StreamDefinition(streamId);
             eventStreamDefinition.setPayloadData(attributes);
             outputTypeDefMap.put(streamId, eventStreamDefinition);
 
             String eventStreamDefinitionString = gson.toJson(eventStreamDefinition);
             try {
-                dataPublisher.defineEventStream(eventStreamDefinitionString);
+                dataPublisher.defineStream(eventStreamDefinitionString);
             } catch (Exception ex) {
                 throw new BrokerEventProcessingException(
                         "Cannot define type via DataPublisher for the broker configuration:" +
@@ -208,7 +207,7 @@ public final class AgentBrokerType implements BrokerType {
 
     }
 
-    private void buildPayLoadDataAndAttributes(OMElement message, List<Attribute> attributes,
+    private void buildPayLoadDataAndAttributes(OMElement message, List<org.wso2.carbon.databridge.commons.Attribute> attributes,
                                                List<String> values) {
         Iterator iterator = message.getChildElements();
         while (iterator.hasNext()) {
@@ -219,7 +218,7 @@ public final class AgentBrokerType implements BrokerType {
     }
 
     private Object[] buildPayloadData(OMElement message,
-                                      EventStreamDefinition eventStreamDefinition) {
+                                      StreamDefinition eventStreamDefinition) {
         Object[] data = new Object[eventStreamDefinition.getPayloadData().size()];
         List<Attribute> payloadAttributes = eventStreamDefinition.getPayloadData();
         for (int i = 0; i < eventStreamDefinition.getPayloadData().size(); i++) {

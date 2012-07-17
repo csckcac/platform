@@ -19,11 +19,11 @@ package org.wso2.carbon.broker.core.internal.ds;
 import org.apache.commons.logging.Log;
 import org.apache.commons.logging.LogFactory;
 import org.osgi.service.component.ComponentContext;
-import org.wso2.carbon.agent.Agent;
-import org.wso2.carbon.agent.server.AgentServer;
 import org.wso2.carbon.broker.core.BrokerService;
 import org.wso2.carbon.broker.core.exception.BrokerConfigException;
 import org.wso2.carbon.broker.core.internal.builder.BrokerServiceBuilder;
+import org.wso2.carbon.databridge.agent.thrift.Agent;
+import org.wso2.carbon.databridge.core.DataBridgeSubscriberService;
 import org.wso2.carbon.event.core.EventBroker;
 import org.wso2.carbon.utils.ConfigurationContextService;
 
@@ -33,10 +33,10 @@ import org.wso2.carbon.utils.ConfigurationContextService;
  * interface="org.wso2.carbon.utils.ConfigurationContextService" cardinality="1..1"
  * policy="dynamic" bind="setConfigurationContextService" unbind="unsetConfigurationContextService"
  * @scr.reference name="agentserverservice.service"
- * interface="org.wso2.carbon.agent.server.AgentServer" cardinality="1..1"
- * policy="dynamic" bind="setAgentServer" unbind="unSetAgentServer"
+ * interface="org.wso2.carbon.databridge.core.DataBridgeSubscriberService" cardinality="1..1"
+ * policy="dynamic" bind="setDataBridgeSubscriberService" unbind="unSetDataBridgeSubscriberService"
  * @scr.reference name="agentservice.service"
- * interface="org.wso2.carbon.agent.Agent" cardinality="1..1"
+ * interface="org.wso2.carbon.databridge.agent.thrift.Agent" cardinality="1..1"
  * policy="dynamic" bind="setAgent" unbind="unSetAgent"
  * @scr.reference name="eventbroker.service"
  * interface="org.wso2.carbon.event.core.EventBroker" cardinality="1..1"
@@ -83,11 +83,11 @@ public class BrokerServiceDS {
 
     }
 
-    protected void setAgentServer(AgentServer agentServer) {
-        BrokerServiceValueHolder.registerAgentServer(agentServer);
+    protected void setDataBridgeSubscriberService(DataBridgeSubscriberService dataBridgeSubscriberService) {
+        BrokerServiceValueHolder.registerDataBridgeSubscriberService(dataBridgeSubscriberService);
     }
 
-    protected void unSetAgentServer(AgentServer agentServer) {
+    protected void unSetDataBridgeSubscriberService(DataBridgeSubscriberService dataBridgeSubscriberService) {
 
     }
 

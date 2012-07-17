@@ -79,6 +79,10 @@ Here are some of the features provided by the registry interface. </p>
     hierarchy  </li>
   <li><a href="#Meta">Meta Data Panel</a>:- Shows meta data for the
     resource/collection </li>
+    <ul>
+        <li><a href="#viewVersion">View Version</a></li>
+        <li><a href="#detailsView">Details of version</a></li>
+    </ul>
   <li><a href="#Properties">Properties Panel</a>:- Shows properties for the
     resource/collection </li>
   <li><a href="#Content">Content Panel</a>:- Shows the contents of the
@@ -117,6 +121,34 @@ or the collection </p>
 
 <p>Figure 4 : The meta data panel </p>
 
+<h3><a name="viewVersion" id="viewVersion">View Version</a></h3>
+
+<p>Allows to view versions of a resource/collection. The importance of maintaining versions is to trace the changes made
+    to a resources and restore a resource back to that version if necessary. </p>
+
+<ul>
+    <li>Version - Shows the number of a resource/collection version.</li>
+    <li>Last Modified Date - Shows the last date of updating.</li>
+    <li>Last Modified By - Shows the author of alterations.</li>
+    <li>Actions</li>
+    <li>Details - Allows to get to the "Browse" page of a particular resource/collection version.</li>
+    <li>Restore - Allows to restore a resource/collection version.</li>
+</ul>
+
+<p><img src="images/version_view.png" width="900px"/></p>
+
+<p>Figure 5 : View version </p>
+
+<h3><a name="detailsView" id="detailsView">Details of version</a></h3>
+
+<p>When user clicks the Detail link from the View version of a resource the page get redirected to the Details page of that
+   version which illustrates the versioned components of a selected version of a resource. This would give a Browse view
+   of the versioned resource.</p>
+
+<p><img src="images/details_view.png" width="900px"/></p>
+
+<p>Figure 6 : Details view </p>
+
 <h3><a name="Properties" id="Properties">Properties Panel</a></h3>
 
 <p>This panel displays the properties of the currently selected resource
@@ -125,7 +157,7 @@ be edited or deleted.</p>
 
 <p><img src="images/properties.png" width="492px"/></p>
 
-<p>Figure 5 : The properties panel </p>
+<p>Figure 7 : The properties panel </p>
 
 <h3><a name="Content" id="Content">Content Panel</a></h3>
 
@@ -142,13 +174,13 @@ entry. An entry can be either another collection or a resource. </p>
 
 <p><img src="images/entries.png" width="492px"/></p>
 
-<p>Figure 6 : View of Directory Entries </p>
+<p>Figure 8 : View of Directory Entries </p>
 
 <p>If the currently selected entity is a resource, the Content panel
 provides a user interface through which you can display, edit upload, and
 download the content.</p>
 <p><img src="images/content.png" width="492px"/></p>
-<p>Figure 7 : View of the Content </p>
+<p>Figure 9 : View of the Content </p>
 <p></p>
 <a name="addResource"></a>
 <h2>Add Resources</h2>
@@ -159,14 +191,14 @@ get populated by the resource name. The media type would also get added if the r
 or else the user has to manually enter. </p>
 
 <p><img src="images/addResource.png" width="600px"/></p>
-<p>Figure 8 : Add Resource </p>
+<p>Figure 10 : Add Resource </p>
 <p></p>
 <a name="addCollections"></a>
 <h2>Add Collections</h2>
 <p>Add collection is used to add a new collection. User can give a prefered name and a media type for the new collection. </p>
 
 <p><img src="images/addCollection.png" width="600px"/></p>
-<p>Figure 9 : Add Collection </p>
+<p>Figure 11 : Add Collection </p>
 <p></p>
 <a name="symbolicRemoteLinks"></a>
 <h2>Symbolic Links and Remote Links</h2>
@@ -175,14 +207,14 @@ or else the user has to manually enter. </p>
 Add resource drop down list contains options to add symbolic and remote links.</p>
 
 <p><img src="images/add_symlink.png" width="492px"/></p>
-<p>Figure 10 : Add Symbolic Link </p>
+<p>Figure 12 : Add Symbolic Link </p>
 
 <p>When adding a symbolic link, you have to provide a name for the link and the path of an existing
 resource or collection which is being linked. It creates a link to the particular resource.
 The created symbolic link is shown by an icon with an arrow in the entries panel.</p>
 
 <p><img src="images/symlink.png" width="492px"/></p>
-<p>Figure 11 : Symbolic Link</p>
+<p>Figure 13 : Symbolic Link</p>
 
 <p>Adding a Remote link is much similar to adding a symbolic link. You can mount a collection in a
 remotely deployed registry instance to your registry instance by adding a remote link. You can
@@ -192,7 +224,7 @@ registry.xml). You can give the path of the remote collection which you need to 
 field, or else the root collection will be mounted. </p>
 
 <p><img src="images/add_remotelink.png" width="492px"/></p>
-<p>Figure 12 : Add Remote Link</p>
+<p>Figure 14 : Add Remote Link</p>
 
 <p>After mounting the remote collection you can access and work on that collection from your local
 instance.</p>
@@ -231,7 +263,7 @@ collections and custom user interfaces, you need to edit the properties of these
 </p>
 
 <p><img src="images/edit_mime_types.png" width="492px"/></p>
-<p>Figure 13 : Editing Media Types</p>
+<p>Figure 15 : Editing Media Types</p>
 <p></p>
 <a name="optionalPortlets"></a>
 <h2>Optional Portlets</h2>
@@ -251,7 +283,7 @@ collections and custom user interfaces, you need to edit the properties of these
 <p>The <strong>Search</strong> portlet allows the user to search resources by tags assigned to it.</p>
 
 <p><img src="images/tagSearch.png" width="340px" /></p>
-<p>Figure 14: Search</p>
+<p>Figure 16: Search</p>
 
 <a name="dependencies"></a>
 <h3>Dependencies</h3>
@@ -261,7 +293,7 @@ collections and custom user interfaces, you need to edit the properties of these
 table in the same portlet.</p>
 
 <p><img src="images/dependency.png" width="340px" /></p>
-<p>Figure 15: Add Dependencies</p>
+<p>Figure 17: Add Dependencies</p>
 
 <a name="associations"></a>
 <h3>Associations</h3>
@@ -271,7 +303,7 @@ The users are able to specify the type of the association and all the added asso
 same portlet.</p>
 
 <p><img src="images/associations.png" width="340px" /></p>
-<p>Figure 16: Add Associations</p>
+<p>Figure 18: Add Associations</p>
 
 <a name="lifeCycles"></a>
 <h3>Life Cycles</h3>
@@ -281,7 +313,7 @@ user will be prompted with all the available life cycles in a drop down list. Wh
 it will display the life cycle name,the current state and the check list items of the current state if any. </p>
 
 <p><img src="images/lifeCycles.png" width="340px" /></p>
-<p>Figure 16: Add Life Cycles</p>
+<p>Figure 19: Add Life Cycles</p>
 
 <a name="addSubscriptions"></a>
 <h3>Adding Subscriptions</h3>
@@ -293,7 +325,7 @@ displayed within this portlet.</p>
 
 <p><img src="images/add_subscription.png" width="340px" /></p>
 
-<p>Figure 17: Add Subscriptions to a Resource</p>
+<p>Figure 20: Add Subscriptions to a Resource</p>
 
 <p></p>
 <h3>Hierarchical Subscriptions</h3>
@@ -305,7 +337,7 @@ or to that collection and all of its child resources by selecting the option <st
 
 <p><img src="images/HierSubscriptions.png" width="340px" /></p>
 
-<p>Figure 18: Add Subscriptions to a Collection</p>
+<p>Figure 21: Add Subscriptions to a Collection</p>
 
 
 <p>Once a subscription has been added, you are also allowed to delete
@@ -313,7 +345,7 @@ subscriptions (or unsubscribe), by clicking on the relevant <strong>Delete</stro
 
 <p><img src="images/manage_notifications.png" width="340px" /></p>
 
-<p>Figure 19: Manage Notifications</p>
+<p>Figure 22: Manage Notifications</p>
 
 <p>Adding a subscription involves selecting the event type and the notification method. The event
 types supported by default are as follows:</p>
@@ -361,12 +393,12 @@ a subscription (see Figure above).</p>
 for resources respectively.</p>
 
 <p><img src="images/comments.png" width="340px" /></p>
-<p>Figure 20: Add Comments</p>
+<p>Figure 23: Add Comments</p>
 
 <p><img src="images/rating.png" width="340px" /></p>
-<p>Figure 21: Add Ratings</p>
+<p>Figure 24: Add Ratings</p>
 
 <p><img src="images/tags.png" width="340px" /></p>
-<p>Figure 22: Add Tags</p>
+<p>Figure 25: Add Tags</p>
 </body>
 </html>

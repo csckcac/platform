@@ -18,6 +18,7 @@
 package org.wso2.carbon.bam.toolbox.deployer.util;
 
 import org.wso2.carbon.bam.toolbox.deployer.exception.BAMComponentNotFoundException;
+import org.wso2.carbon.bam.toolbox.deployer.exception.BAMToolboxDeploymentException;
 
 import java.util.ArrayList;
 
@@ -66,11 +67,11 @@ public class ToolBoxDTO {
         this.jasperTabs = jasperTabs;
     }
 
-    public void setScriptNames(ArrayList<String> scriptNames){
+    public void setScriptNames(ArrayList<String> scriptNames) {
         this.analtytics = new ArrayList<AnalyzerScriptDTO>();
-       for (String aScript:scriptNames){
+        for (String aScript : scriptNames) {
             this.analtytics.add(new AnalyzerScriptDTO(aScript));
-       }
+        }
     }
 
 
@@ -160,28 +161,33 @@ public class ToolBoxDTO {
         this.streamDefnParentDirectory = streamDefnParentDirectory;
     }
 
-    public ArrayList<String> getScriptNames(){
+    public ArrayList<String> getScriptNames() {
         ArrayList<String> scripts = new ArrayList<String>();
-        for (AnalyzerScriptDTO scriptDTO : analtytics){
+        for (AnalyzerScriptDTO scriptDTO : analtytics) {
             scripts.add(scriptDTO.getName());
         }
         return scripts;
     }
 
-    public void setCronForScript(String scriptName, String cron) throws BAMComponentNotFoundException {
-       boolean found = false;
-       for (AnalyzerScriptDTO scriptDTO : analtytics){
-           String aScript = scriptDTO.getName();
-           if(null != aScript && !aScript.equals("")){
-               if(aScript.equalsIgnoreCase(scriptName)){
-                   scriptDTO.setCron(cron);
-                   found = true;
-                   break;
-               }
-           }
-       }
-       if(!found) {
-           throw new BAMComponentNotFoundException("Specified analytics script: "+scriptName+" is not found!!");
-       }
+    public void setCronForScript(String scriptName, String cron) throws
+            BAMComponentNotFoundException, BAMToolboxDeploymentException {
+        boolean found = false;
+        if (null != scriptName && !scriptName.trim().equals("")) {
+            for (AnalyzerScriptDTO scriptDTO : analtytics) {
+                String aScript = scriptDTO.getName();
+                if (null != aScript && !aScript.equals("")) {
+                    if (aScript.equalsIgnoreCase(scriptName)) {
+                        scriptDTO.setCron(cron);
+                        found = true;
+                        break;
+                    }
+                }
+            }
+        } else {
+            throw new BAMToolboxDeploymentException("Analytic script file name is not specified!!");
+        }
+        if (!found) {
+            throw new BAMComponentNotFoundException("Specified analytics script: " + scriptName + " is not found!!");
+        }
     }
 }

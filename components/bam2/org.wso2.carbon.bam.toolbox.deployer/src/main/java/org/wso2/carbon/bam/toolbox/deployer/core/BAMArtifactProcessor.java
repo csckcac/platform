@@ -140,8 +140,9 @@ public class BAMArtifactProcessor {
         Properties props = new Properties();
         try {
             props.load(new FileInputStream(analyticsProps));
-            String scripts = props.getProperty(BAMToolBoxDeployerConstants.ANALYZER_SCRIPTS_VAR_NAME).trim();
-            if (null != scripts && !scripts.equals("")) {
+            String scripts = props.getProperty(BAMToolBoxDeployerConstants.ANALYZER_SCRIPTS_VAR_NAME);
+            if (null != scripts && !scripts.trim().equals("")) {
+                scripts = scripts.trim();
                 String[] scriptNames = scripts.split(",");
                 if (scriptNames == null || scriptNames.length == 0) {
                     throw new BAMToolboxDeploymentException("Invalid tbox artifact. No scripts found in analyzers.properties");
@@ -152,8 +153,8 @@ public class BAMArtifactProcessor {
                             valid = true;
                             String scriptFileName = props.getProperty(BAMToolBoxDeployerConstants.ANALYZER_SCRIPT_PREFIX + "."
                                     + aScriptVarName.trim() + "." + BAMToolBoxDeployerConstants.ANALYZER_SCRIPT_FILE_NAME_SUFFIX);
-                            if (null == scriptFileName || scriptFileName.equals("")) {
-                                scriptFileName = aScriptVarName;
+                            if (null == scriptFileName || scriptFileName.trim().equals("")) {
+                                log.error("No script file name specified for script reference name: "+aScriptVarName);
                             }
                             String cron = props.getProperty(BAMToolBoxDeployerConstants.ANALYZER_SCRIPT_PREFIX + "."
                                     + aScriptVarName.trim() + "." + BAMToolBoxDeployerConstants.ANALYZER_SCRIPT_CRON_SUFFIX);
@@ -291,8 +292,9 @@ public class BAMArtifactProcessor {
 
     private void setJasperTabAndJrxmlNames(ToolBoxDTO toolBoxDTO, Properties props)
             throws BAMToolboxDeploymentException {
-        String tabs = props.getProperty(BAMToolBoxDeployerConstants.JASPER_TABS_VAR_NAME).trim();
-        if (null != tabs && !tabs.equals("")) {
+        String tabs = props.getProperty(BAMToolBoxDeployerConstants.JASPER_TABS_VAR_NAME);
+        if (null != tabs && !tabs.trim().equals("")) {
+            tabs = tabs.trim();
             String[] tabVarNames = tabs.split(",");
             if (tabVarNames == null || tabVarNames.length == 0) {
                 throw new BAMToolboxDeploymentException("Invalid tbox artifact. No tabs found in jasper.properties");
@@ -305,10 +307,10 @@ public class BAMArtifactProcessor {
                         JasperTabDTO tabDTO = new JasperTabDTO();
                         String tabName = props.getProperty(BAMToolBoxDeployerConstants.JASPER_TAB_PREFIX + "."
                                 + aTabVarName.trim() + "." + BAMToolBoxDeployerConstants.TAB_NAME_SUFFIX);
-                        if (null == tabName || tabName.equals("")) {
+                        if (null == tabName || tabName.trim().equals("")) {
                             tabName = aTabVarName;
                         }
-                        tabDTO.setTabName(tabName);
+                        tabDTO.setTabName(tabName.trim());
                         toolBoxDTO.addJasperTab(tabDTO);
 
                         String jrxml = props.getProperty(BAMToolBoxDeployerConstants.JASPER_TAB_PREFIX + "."
@@ -342,8 +344,9 @@ public class BAMArtifactProcessor {
 
     private void setTabAndGadgetNames(ToolBoxDTO toolBoxDTO, Properties props)
             throws BAMToolboxDeploymentException {
-        String tabs = props.getProperty(BAMToolBoxDeployerConstants.DASHBOARD_TABS_VAR_NAME).trim();
-        if (null != tabs && !tabs.equals("")) {
+        String tabs = props.getProperty(BAMToolBoxDeployerConstants.DASHBOARD_TABS_VAR_NAME);
+        if (null != tabs && !tabs.trim().equals("")) {
+            tabs = tabs.trim();
             String[] tabVarNames = tabs.split(",");
             if (tabVarNames == null || tabVarNames.length == 0) {
                 throw new BAMToolboxDeploymentException("Invalid tbox artifact. No tabs found in dashboard.properties");
@@ -355,7 +358,7 @@ public class BAMArtifactProcessor {
                         DashBoardTabDTO tabDTO = new DashBoardTabDTO();
                         String tabName = props.getProperty(BAMToolBoxDeployerConstants.DASHBOARD_TAB_PREFIX + "."
                                 + aTabVarName.trim() + "." + BAMToolBoxDeployerConstants.TAB_NAME_SUFFIX);
-                        if (null == tabName || tabName.equals("")) {
+                        if (null == tabName || tabName.trim().equals("")) {
                             tabName = aTabVarName;
                         }
                         tabDTO.setTabName(tabName);
@@ -392,42 +395,6 @@ public class BAMArtifactProcessor {
                     "found in dashboard.properties");
             throw new BAMToolboxDeploymentException("Invalid tbox artifact. No property " + BAMToolBoxDeployerConstants.DASHBOARD_TABS_VAR_NAME +
                     "found in dashboard.properties");
-        }
-    }
-
-    private void setGadgetNamesForTab(DashBoardTabDTO dashBoardTabDTO, String gagetXmlsNames)
-            throws BAMToolboxDeploymentException {
-        if (gagetXmlsNames != null && !gagetXmlsNames.trim().equals("")) {
-            String[] gadgets = gagetXmlsNames.split(",");
-            if (gadgets == null || gadgets.length == 0) {
-                throw new BAMToolboxDeploymentException("Invalid tbox artifact. No gadget names found for tab :"
-                        + dashBoardTabDTO + " in dashboard.properties");
-            } else {
-                boolean valid = false;
-                for (String aGadget : gadgets) {
-                    if (!aGadget.trim().equals("")) {
-                        valid = true;
-                        dashBoardTabDTO.addGadget(aGadget.trim());
-                    }
-                }
-                if (!valid) {
-                    throw new BAMToolboxDeploymentException("Invalid tbox artifact. No gadget names found for tab :"
-                            + dashBoardTabDTO + " in dashboard.properties");
-                }
-            }
-        } else {
-            throw new BAMToolboxDeploymentException("No jrxml files specified for tab :" + dashBoardTabDTO.getTabName());
-        }
-    }
-
-    private void setJRXMLForTab(JasperTabDTO jasperTabDTO, String jrxmlFileName)
-            throws BAMToolboxDeploymentException {
-        if (jrxmlFileName != null && !jrxmlFileName.trim().equals("")) {
-            String jrxmlFile = jrxmlFileName.trim();
-            jasperTabDTO.setJrxmlFileName(jrxmlFile);
-        } else {
-            throw new BAMToolboxDeploymentException("No jrxml file specified for tab :" +
-                    jasperTabDTO.getTabName());
         }
     }
 

@@ -43,6 +43,9 @@ import org.wso2.carbon.registry.core.Tag;
 import org.wso2.carbon.registry.core.exceptions.RegistryException;
 
 import javax.xml.stream.XMLStreamException;
+import java.math.BigDecimal;
+import java.math.RoundingMode;
+import java.text.DecimalFormat;
 import java.util.*;
 
 /**
@@ -72,7 +75,9 @@ public final class APIUtil {
             api = new API(new APIIdentifier(providerName, apiName, apiVersion));
             // set rating
             String artifactPath = GovernanceUtils.getArtifactPath(registry, artifact.getId());
-            api.setRating(registry.getAverageRating(artifactPath));
+            BigDecimal bigDecimal = new BigDecimal(registry.getAverageRating(artifactPath));
+            BigDecimal res = bigDecimal.setScale(1, RoundingMode.HALF_UP);
+            api.setRating(res.floatValue());
             //set description
             api.setDescription(artifact.getAttribute(APIConstants.API_OVERVIEW_DESCRIPTION));
             //set last access time

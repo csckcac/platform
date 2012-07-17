@@ -40,7 +40,7 @@
         </dependency>
         <dependency>
             <groupId>org.wso2.carbon</groupId>
-            <artifactId>org.wso2.carbon.agent.server.feature</artifactId>
+            <artifactId>org.wso2.carbon.databridge.datareceiver.feature</artifactId>
             <type>zip</type>
         </dependency>
     </dependencies>
@@ -75,7 +75,7 @@
                             <importFeatures>
                                 <importFeatureDef>org.wso2.carbon.core.server:${wso2carbon.version}</importFeatureDef>
                                 <importFeatureDef>org.wso2.carbon.event.server:${wso2carbon.version}</importFeatureDef>
-                                <importFeatureDef>org.wso2.carbon.agent.server:${wso2carbon.version}</importFeatureDef>
+                                <importFeatureDef>org.wso2.carbon.databridge.datareceiver:${wso2carbon.version}</importFeatureDef>
                             </importFeatures>
                         </configuration>
                     </execution>

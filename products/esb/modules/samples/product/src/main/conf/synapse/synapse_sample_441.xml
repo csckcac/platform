@@ -39,17 +39,18 @@
             <outSequence>
                 <script language="js"><![CDATA[
                     var symbol = mc.getPayloadXML()..*::symbol.toString();
-                    var price = mc.getPayloadXML()..*::last.toString();
+                    var price = parseFloat(mc.getPayloadXML()..*::last);
                     mc.setPayloadJSON(
                                    {
                                      "Quote" : {
                                         "Code" : symbol,
                                         "Price" : price,
                                         "Current" : {
-                                           "High" : mc.getPayloadXML()..*::high.toString(),
-                                           "Last" : mc.getPayloadXML()..*::last.toString()
+                                           "High" : parseFloat(mc.getPayloadXML()..*::high),
+                                           "Last" : parseFloat(mc.getPayloadXML()..*::last)
                                         } 
-                                     }
+                                     },
+                                     "Status" : (price >= 100 ? "OK" : "NOT-OK")
                                    });
                 ]]></script>
                 <property name="messageType" scope="axis2" value="application/json"/>

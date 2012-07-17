@@ -19,7 +19,6 @@
 <%@ page import="org.apache.axiom.om.OMFactory" %>
 <%@ page import="org.apache.axiom.om.impl.builder.StAXOMBuilder" %>
 <%@ page import="org.wso2.carbon.mediator.service.builtin.SequenceMediator" %>
-<%@ page import="org.wso2.carbon.proxyadmin.stub.types.carbon.ProxyData" %>
 <%@ page import="org.wso2.carbon.rest.api.stub.types.carbon.APIData" %>
 <%@ page import="org.wso2.carbon.rest.api.stub.types.carbon.ResourceData" %>
 <%@ page import="org.wso2.carbon.ui.CarbonUIMessage" %>

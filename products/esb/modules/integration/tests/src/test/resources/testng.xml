@@ -49,4 +49,47 @@
 
         </classes>
     </test>
+
+
+    <test name="Test - Mediator XQuery" preserve-order="true" verbose="2">
+        <classes>
+            <class name="org.wso2.carbon.mediator.test.xquery.XQueryMediatorTestCase"/>
+            <class name="org.wso2.carbon.mediator.test.xquery.XQuerySample391"/>
+            <class name="org.wso2.carbon.mediator.test.xquery.XQueryCustom"/>
+            <class name="org.wso2.carbon.mediator.test.xquery.XQueryCustomVariableAsString"/>
+            <class name="org.wso2.carbon.mediator.test.xquery.XQueryCustomVariableAsByte"/>
+            <class name="org.wso2.carbon.mediator.test.xquery.XQueryCustomVariableAsInteger"/>
+            <class name="org.wso2.carbon.mediator.test.xquery.XQueryCustomVariableAsInt"/>
+            <class name="org.wso2.carbon.mediator.test.xquery.XQueryCustomVariableAsBoolean"/>
+            <class name="org.wso2.carbon.mediator.test.xquery.XQueryCustomVariableAsFloat"/>
+            <class name="org.wso2.carbon.mediator.test.xquery.XQueryCustomVariableAsDouble"/>
+            <class name="org.wso2.carbon.mediator.test.xquery.XQueryCustomVariableAsLong"/>
+            <class name="org.wso2.carbon.mediator.test.xquery.XQueryReplaceEmptyMessageBody"/>
+
+        </classes>
+    </test>
+
+    <test name="Test - Mediator Payload Factory" preserve-order="true" verbose="2">
+        <classes>
+            <class name="org.wso2.carbon.mediator.test.payload.factory.Sample17TestCase"/>
+            <class name="org.wso2.carbon.mediator.test.payload.factory.TransformPayloadWhenNoArgsTestCase"/>
+            <class name="org.wso2.carbon.mediator.test.payload.factory.TransformPayloadWhenArgsValueTestCase"/>
+            <class name="org.wso2.carbon.mediator.test.payload.factory.TransformPayloadWhenArgsExpressionTestCase"/>
+            <class name="org.wso2.carbon.mediator.test.payload.factory.TransformPayloadWhenArgsValueAndExpressionTestCase"/>
+
+        </classes>
+    </test>
+
+    <test name="Test - Mediator xslt" preserve-order="true" verbose="2">
+        <classes>
+            <class name="org.wso2.carbon.mediator.test.xslt.InLineLocalEntryXsltTransformationTestCase"/>
+            <class name="org.wso2.carbon.mediator.test.xslt.FileSystemLocalEntryXsltTransformationTestCase"/>
+            <class name="org.wso2.carbon.mediator.test.xslt.RegistryEntryXsltTransformationTestCase"/>
+            <class name="org.wso2.carbon.mediator.test.xslt.XsltTransformationWithPropertyTestCase"/>
+            <class name="org.wso2.carbon.mediator.test.xslt.XsltTransformationFromUrlTestCase"/>
+            <class name="org.wso2.carbon.mediator.test.xslt.DynamicKeyXsltTransformationTestCase"/>
+
+        </classes>
+    </test>
+
 </suite>

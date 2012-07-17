@@ -21,12 +21,10 @@ import org.apache.commons.logging.Log;
 import org.apache.commons.logging.LogFactory;
 import org.testng.annotations.AfterClass;
 import org.testng.annotations.BeforeClass;
-import org.wso2.carbon.automation.core.ProductConstant;
+import org.wso2.carbon.automation.core.utils.UserInfo;
+import org.wso2.carbon.automation.core.utils.UserListCsvReader;
 import org.wso2.carbon.automation.core.utils.environmentutils.EnvironmentBuilder;
 import org.wso2.carbon.automation.core.utils.environmentutils.EnvironmentVariables;
-import org.wso2.carbon.automation.core.utils.frameworkutils.FrameworkFactory;
-import org.wso2.carbon.automation.core.utils.frameworkutils.FrameworkProperties;
-import org.wso2.carbon.automation.core.utils.frameworkutils.productvariables.ProductVariables;
 import org.wso2.carbon.automation.utils.esb.ESBTestCaseUtils;
 import org.wso2.carbon.automation.utils.esb.StockQuoteClient;
 
@@ -34,17 +32,19 @@ public abstract class ESBMediatorTest {
     protected Log log = LogFactory.getLog(getClass());
     protected StockQuoteClient axis2Client;
     protected EnvironmentVariables esbServer;
+    protected UserInfo userInfo;
 
-    @BeforeClass
+    @BeforeClass(alwaysRun = true)
     public void init() throws Exception {
         axis2Client = new StockQuoteClient();
+        userInfo = UserListCsvReader.getUserInfo(1);
         EnvironmentBuilder builder = new EnvironmentBuilder().esb(1);
 
         esbServer = builder.build().getEsb();
         uploadSynapseConfig();
     }
 
-    @AfterClass
+    @AfterClass(alwaysRun = true)
     public void cleanup() {
         axis2Client.destroy();
     }
@@ -54,6 +54,11 @@ public abstract class ESBMediatorTest {
     protected String getMainSequenceURL() {
         return "http://" + esbServer.getProductVariables().getHostName() + ":" +
                esbServer.getProductVariables().getNhttpPort();
+    }
+
+    protected String getProxyServiceURL(String proxyServiceName) {
+        return "http://" + esbServer.getProductVariables().getHostName() + ":" +
+               esbServer.getProductVariables().getNhttpPort() + "/services/" + proxyServiceName;
     }
 
     protected void loadSampleESBConfiguration(int sampleNo) throws Exception {

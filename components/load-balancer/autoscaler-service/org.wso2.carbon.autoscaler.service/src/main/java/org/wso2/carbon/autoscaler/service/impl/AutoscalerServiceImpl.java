@@ -737,9 +737,13 @@ public class AutoscalerServiceImpl implements IAutoscalerService {
 				if (textinLine == null)
 					break;				
 				if(textinLine.contains("tenant=")){
-					sb.append("tenant=\"" + tenantName + "\""+"\n");
+					sb.append("tenant=" + tenantName + "\n");
 					continue;
-				}				
+				}
+				if(textinLine.contains("app_path=")){
+					sb.append(textinLine + File.separator + tenantName);
+					continue;
+				}
 				sb.append(textinLine + "\n");
 			}
 		} catch (Exception e) {

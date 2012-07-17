@@ -62,8 +62,8 @@ public class HDFSNameNode {
         conf.addResource(new Path(hdfsCoreSiteConf));
         conf.addResource(new Path(hadoopPolicyConf));
         conf.addResource(new Path(mapredSiteConf));
-        //conf.addResource(new Path(hadoopMetrics2Properties));
-
+        String alterdJobNameNodeKeyTabPath = hadoopConf+File.separator+conf.get("dfs.namenode.keytab.file");
+        conf.set("dfs.namenode.keytab.file", alterdJobNameNodeKeyTabPath);
         try {
             DefaultMetricsSystem.initialize("namenode");
             NameNode namenode = new NameNode(conf);

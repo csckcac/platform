@@ -57,7 +57,6 @@
 
 <property>
   <name>dfs.namenode.keytab.file</name>
-  <!--<value>/home/wathsala/Downloads/hadoop-0.20.203.0/conf/carbon.keytab</value>-->
   <value>repository/conf/etc/hadoop/carbon.keytab</value>
 </property>
 <property>
@@ -86,7 +85,6 @@
 </property>
 <property>
   <name>dfs.secondary.namenode.keytab.file</name>
-  <!--<value>/home/wathsala/Downloads/hadoop-0.20.203.0/conf/carbon.keytab</value>-->
   <value>repository/conf/etc/hadoop/carbon.keytab</value>
 </property>
 <property>
@@ -126,7 +124,6 @@
 
 <property>
   <name>dfs.datanode.keytab.file</name>
-  <!--<value>/home/wathsala/Downloads/hadoop-0.20.203.0/conf/carbon.keytab</value>-->
   <value>repository/conf/etc/hadoop/carbon.keytab</value>
 </property>
 

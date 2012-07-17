@@ -15,17 +15,7 @@
  */
 package org.wso2.carbon.url.mapper.internal.util;
 
-import java.io.File;
-import java.util.ArrayList;
-import java.util.List;
-import java.util.regex.Matcher;
-import java.util.regex.Pattern;
-
-import org.apache.catalina.Container;
-import org.apache.catalina.Context;
-import org.apache.catalina.Engine;
-import org.apache.catalina.Host;
-import org.apache.catalina.LifecycleException;
+import org.apache.catalina.*;
 import org.apache.catalina.core.StandardHost;
 import org.apache.commons.logging.Log;
 import org.apache.commons.logging.LogFactory;
@@ -41,6 +31,12 @@ import org.wso2.carbon.user.core.tenant.TenantManager;
 import org.wso2.carbon.utils.CarbonUtils;
 import org.wso2.carbon.utils.multitenancy.MultitenantConstants;
 import org.wso2.carbon.utils.multitenancy.MultitenantUtils;
+
+import java.io.File;
+import java.util.ArrayList;
+import java.util.List;
+import java.util.regex.Matcher;
+import java.util.regex.Pattern;
 
 /**
  * util class which is doing add host to engine and getting resources from the
@@ -469,12 +465,8 @@ public class HostUtil {
      * @throws UrlMapperException
      */
     public static String getServiceEndpoint(String url) throws UrlMapperException {
-        String str[] = url.split(UrlMapperConstants.SERVICE_URL_PATTERN);
-        if (str.length > 1) {
-            return str[1];
-        } else {
-            throw new UrlMapperException("Invalid End point URL");
-        }
+        String uri = url.substring(url.indexOf(UrlMapperConstants.SERVICE_URL_PATTERN), url.length());
+        return uri;
     }
 
     /**

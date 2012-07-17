@@ -20,7 +20,7 @@ import org.wso2.carbon.utils.CarbonUtils;
 
 public final class UrlMapperConstants {
 
-	public final static String SERVICE_URL_PATTERN =  "\\/services";
+	public final static String SERVICE_URL_PATTERN =  "/services";
     public static final class HostProperties {
         public static final String HOST_NAME = "host.name";
         public static final String HOSTINFO = "hostinfo/";

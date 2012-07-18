@@ -60,10 +60,10 @@ public class ServiceRequestsInFlightAutoscaler implements Task, ManagedLifecycle
     /**
      * Server start up delay in milliseconds. 
      */
-    private static final int SERVER_START_UP_DELAY = 60000;
+    private int serverStartupDelay;
             
     /**
-     * We gonna check this value in order to wait for {@link #SERVER_START_UP_DELAY}.
+     * We gonna check this value in order to wait for {@link #serverStartupDelay}.
      */
     private int oldPendingInstanceCount;
 
@@ -96,6 +96,7 @@ public class ServiceRequestsInFlightAutoscaler implements Task, ManagedLifecycle
     public void init(SynapseEnvironment synEnv) {
         
         loadBalancerConfig = AutoscalerTaskDSHolder.getInstance().getLoadBalancerConfig();
+        serverStartupDelay = loadBalancerConfig.getLoadBalancerConfig().getServerStartupDelay();
         
         ConfigurationContext configCtx =
             (ConfigurationContext) synEnv.getServerContextInformation().getServerContext();
@@ -240,7 +241,7 @@ public class ServiceRequestsInFlightAutoscaler implements Task, ManagedLifecycle
                     
                     // we give some time for the server to be started
                     try {
-                        Thread.sleep(SERVER_START_UP_DELAY);
+                        Thread.sleep(serverStartupDelay);
                     } catch (InterruptedException ignore) {}
                     
                     // we recalculate number of agents, to check whether an instance spawned up

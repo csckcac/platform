@@ -946,10 +946,10 @@
     </build>
     <properties>
         <carbon.version>4.0.0-SNAPSHOT</carbon.version>
-        <stratos.version>1.1.0-SNAPSHOT</stratos.version>
+        <stratos.version>2.0.0-SNAPSHOT</stratos.version>
         <relay.transport.version>1.0.0-SNAPSHOT</relay.transport.version>
         <synapse.version>2.1.0-wso2v6</synapse.version>
-        <appserver.version>4.5.0-SNAPSHOT</appserver.version>
+        <appserver.version>5.0.0-SNAPSHOT</appserver.version>
         <esb.version>4.5.0-SNAPSHOT</esb.version>
         <governance.version>4.5.0-SNAPSHOT</governance.version>
         <identity.version>4.0.0-SNAPSHOT</identity.version>

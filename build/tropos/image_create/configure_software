@@ -24,6 +24,7 @@ DEBMIRROR="http://lk.archive.ubuntu.com/ubuntu/"
 
 lamp() {
     cp -f ./init_scripts/lamp/wso2-openstack-init.sh $ROOTFS/opt/
+    cp -f ./init_scripts/lamp/get-launch-params.rb $ROOTFS/opt/
 
     # Copy software
     arr=$(echo $SOFTWARE | tr ":" "\n")

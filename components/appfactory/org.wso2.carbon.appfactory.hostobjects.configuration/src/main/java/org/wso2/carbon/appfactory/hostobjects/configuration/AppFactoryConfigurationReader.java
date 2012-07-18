@@ -30,6 +30,6 @@ public class AppFactoryConfigurationReader extends ScriptableObject {
         return appFactoryConfiguration.getFirstProperty(key);
     }
     public NativeArray jsFunction_getProperties(String key) throws Exception {
-        return appFactoryConfiguration.getProperties(key);
+        return appFactoryConfiguration.getPropertiesAsNativeArray(key);
     }
 }

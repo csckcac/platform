@@ -3,4 +3,4 @@ component and Elastic Load Balancer.
 
 openstack/openStack-lxc-ubuntu-precise contain instructions and scripts on how to install openstack controller and compute nodes.
 
-php_cartridge contain php cartridge related instructions and management scripts
+image_create folder contain scripts to create images. Currently two kind of images can be created; lamp and wso2 carbon server.

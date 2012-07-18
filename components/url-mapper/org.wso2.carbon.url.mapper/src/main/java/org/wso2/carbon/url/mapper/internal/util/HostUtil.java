@@ -251,7 +251,8 @@ public class HostUtil {
 
             // deploying the copied webapp as the root in our own host directory
             /* TODO add listeners once integrate with webapp-mgt */
-            DataHolder.getInstance().getCarbonTomcatService().addWebApp(host, "/", webAppPath);
+            Context contextForHost = DataHolder.getInstance().getCarbonTomcatService().addWebApp(host, "/", webAppPath);
+            log.info("Deployed webapp on host: " + contextForHost);
             // add entry to registry with the tenant domain if exist in the uri if adding virtual host is successful.
             registryManager.addHostToRegistry(hostName, uri, tenantDomain);
             ApplicationContext.getCurrentApplicationContext().putUrlMappingForApplication(hostName,uri);

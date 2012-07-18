@@ -80,6 +80,7 @@ done
 # Copying the product from the controller
 echo "scp -i ${instance_path}/payload/wso2-key root@${CONTROLLER_IP}:/opt/${PRODUCT_NAME}.zip /opt/" >> $LOG
 scp -i ${instance_path}/payload/wso2-key root@${CONTROLLER_IP}:/opt/${PRODUCT_NAME}.zip /opt/
+unzip /opt/${PRODUCT_NAME}.zip -d /opt/
 
 if [ "$ADMIN_USERNAME" = "" ]; then
 	echo Launching with default admin username >> $LOG

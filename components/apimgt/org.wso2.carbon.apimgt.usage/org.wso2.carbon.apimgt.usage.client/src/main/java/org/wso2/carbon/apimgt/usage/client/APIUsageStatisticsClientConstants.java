@@ -20,11 +20,11 @@ package org.wso2.carbon.apimgt.usage.client;
 public final class APIUsageStatisticsClientConstants {
 
 
-    public static final String API_VERSION_SERVICE_TIME_SUMMARY = "APIVersionServiceTimeSummary";
+    public static final String API_VERSION_SERVICE_TIME_SUMMARY = "API_RESPONSE_SUMMARY";
 
     public static final String API_VERSION_SERVICE_TIME_SUMMARY_INDEX = "APIVersionServiceTimeSummaryIndex";
 
-    public static final String API_VERSION_USAGE_SUMMARY = "APIVersionUsageSummary";
+    public static final String API_VERSION_USAGE_SUMMARY = "API_VERSION_USAGE_SUMMARY";
 
     public static final String API_VERSION_USAGE_SUMMARY_INDEX = "APIVersionUsageSummaryIndex";
 
@@ -32,11 +32,11 @@ public final class APIUsageStatisticsClientConstants {
 
     public static final String API_VERSION_KEY_USAGE_SUMMARY_INDEX = "APIVersionKeyUsageSummaryIndex";
 
-    public static final String API_VERSION_KEY_LAST_ACCESS_SUMMARY = "APIVersionKeyLastAccessSummary";
+    public static final String API_VERSION_KEY_LAST_ACCESS_SUMMARY = "API_REQUEST_SUMMARY";
 
     public static final String API_VERSION_KEY_LAST_ACCESS_SUMMARY_INDEX = "APIVersionKeyLastAccessSummaryIndex";
 
-    public static final String KEY_USAGE_SUMMARY = "KeyUsageSummary";
+    public static final String KEY_USAGE_SUMMARY = "API_REQUEST_SUMMARY";
 
     public static final String KEY_USAGE_SUMMARY_INDEX = "KeyUsageSummaryIndex";
 
@@ -44,25 +44,25 @@ public final class APIUsageStatisticsClientConstants {
 
     public static final String ROW = "row";
 
-    public static final String REQUEST = "REQUEST";
+    public static final String REQUEST = "total_request_count";
 
-    public static final String API = "API";
+    public static final String API = "api";
 
-    public static final String API_VERSION = "API_VERSION";
+    public static final String API_VERSION = "api_version";
 
-    public static final String SERVICE_TIME = "SERVICETIME";
+    public static final String SERVICE_TIME = "servicetime";
 
-    public static final String VERSION = "VERSION";
+    public static final String VERSION = "version";
     
-    public static final String CONTEXT= "CONTEXT";
+    public static final String CONTEXT= "context";
 
-    public static final String RESPONSE = "RESPONSE";
+    public static final String RESPONSE = "total_response_count";
 
-    public static final String REQUEST_TIME = "REQUESTTIME";
+    public static final String REQUEST_TIME = "max_request_time";
 
     public static final String CONSUMER_KEY = "CONSUMERKEY";
     
-    public static final String USER_ID = "USERID";
+    public static final String USER_ID = "userid";
     
     
     public static final String ALL_PROVIDERS = "__all_providers__";

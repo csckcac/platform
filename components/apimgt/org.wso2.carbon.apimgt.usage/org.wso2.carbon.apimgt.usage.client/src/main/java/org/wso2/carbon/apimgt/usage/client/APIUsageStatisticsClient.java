@@ -90,9 +90,7 @@ public class APIUsageStatisticsClient {
             throws APIMgtUsageQueryServiceClientException {
         
         OMElement omElement = this.queryColumnFamily(
-                APIUsageStatisticsClientConstants.API_VERSION_USAGE_SUMMARY,
-                APIUsageStatisticsClientConstants.API_VERSION_USAGE_SUMMARY_INDEX,
-                null);
+                APIUsageStatisticsClientConstants.API_VERSION_USAGE_SUMMARY, null);
         Collection<APIUsage> usageData = getUsageData(omElement);
         List<API> providerAPIs = getAPIsByProvider(providerName);
         Map<String,APIUsageDTO> usageByAPIs = new TreeMap<String, APIUsageDTO>();
@@ -136,9 +134,7 @@ public class APIUsageStatisticsClient {
         compositeIndex[0].setRangeFirst(apiName);
         compositeIndex[0].setRangeLast(getNextStringInLexicalOrder(apiName));
         OMElement omElement = this.queryColumnFamily(
-                APIUsageStatisticsClientConstants.API_VERSION_USAGE_SUMMARY,
-                APIUsageStatisticsClientConstants.API_VERSION_USAGE_SUMMARY_INDEX,
-                compositeIndex);
+                APIUsageStatisticsClientConstants.API_VERSION_USAGE_SUMMARY, compositeIndex);
         Collection<APIUsage> usageData = getUsageData(omElement);
         List<API> providerAPIs = getAPIsByProvider(providerName);
         Map<String,APIVersionUsageDTO> usageByVersions = new TreeMap<String, APIVersionUsageDTO>();
@@ -172,9 +168,7 @@ public class APIUsageStatisticsClient {
             throws APIMgtUsageQueryServiceClientException {
 
         OMElement omElement = this.queryColumnFamily(
-                APIUsageStatisticsClientConstants.API_VERSION_SERVICE_TIME_SUMMARY,
-                APIUsageStatisticsClientConstants.API_VERSION_SERVICE_TIME_SUMMARY_INDEX,
-                null);
+                APIUsageStatisticsClientConstants.API_VERSION_SERVICE_TIME_SUMMARY, null);
         Collection<APIResponseTime> responseTimes = getResponseTimeData(omElement);
         List<API> providerAPIs = getAPIsByProvider(providerName);
         Map<String,Double> apiCumulativeServiceTimeMap = new HashMap<String,Double>();
@@ -226,9 +220,7 @@ public class APIUsageStatisticsClient {
             throws APIMgtUsageQueryServiceClientException {
 
         OMElement omElement = this.queryColumnFamily(
-                APIUsageStatisticsClientConstants.API_VERSION_KEY_LAST_ACCESS_SUMMARY,
-                APIUsageStatisticsClientConstants.API_VERSION_KEY_LAST_ACCESS_SUMMARY_INDEX,
-                null);
+                APIUsageStatisticsClientConstants.API_VERSION_KEY_LAST_ACCESS_SUMMARY, null);
         Collection<APIAccessTime> accessTimes = getAccessTimeData(omElement);
         List<API> providerAPIs = getAPIsByProvider(providerName);
         Map<String,APIAccessTime> lastAccessTimes = new TreeMap<String,APIAccessTime>();
@@ -278,9 +270,7 @@ public class APIUsageStatisticsClient {
             throws APIMgtUsageQueryServiceClientException {
 
         OMElement omElement = this.queryColumnFamily(
-                APIUsageStatisticsClientConstants.KEY_USAGE_SUMMARY,
-                APIUsageStatisticsClientConstants.KEY_USAGE_SUMMARY_INDEX,
-                null);
+                APIUsageStatisticsClientConstants.KEY_USAGE_SUMMARY, null);
         Collection<APIUsageByUser> usageData = getUsageBySubscriber(omElement);
         Map<String,PerUserAPIUsageDTO> usageByUsername = new TreeMap<String, PerUserAPIUsageDTO>();
         List<API> apiList = getAPIsByProvider(providerName);
@@ -309,9 +299,7 @@ public class APIUsageStatisticsClient {
                                                           String apiVersion, int limit) throws APIMgtUsageQueryServiceClientException {
 
         OMElement omElement = this.queryColumnFamily(
-                APIUsageStatisticsClientConstants.KEY_USAGE_SUMMARY,
-                APIUsageStatisticsClientConstants.KEY_USAGE_SUMMARY_INDEX,
-                null);
+                APIUsageStatisticsClientConstants.KEY_USAGE_SUMMARY, null);
 
         Collection<APIUsageByUser> usageData = getUsageBySubscriber(omElement);
         Map<String,PerUserAPIUsageDTO> usageByUsername = new TreeMap<String, PerUserAPIUsageDTO>();
@@ -374,8 +362,7 @@ public class APIUsageStatisticsClient {
     }
 
     // code quickly hacked to work with BAM post M2
-    private OMElement queryColumnFamily(String columnFamily, String index,
-                                        QueryServiceStub.CompositeIndex[] compositeIndex)
+    private OMElement queryColumnFamily(String columnFamily, QueryServiceStub.CompositeIndex[] compositeIndex)
             throws APIMgtUsageQueryServiceClientException {
 
         String selectRowsByColumnName = null;
@@ -401,7 +388,8 @@ public class APIUsageStatisticsClient {
                 for (int i = 1; i <= columnCount ; i++) {
                     String columnName = rs.getMetaData().getColumnName(i);
                     String columnValue = rs.getString(columnName);
-                    returnStringBuilder.append("<" + columnName + ">" + columnValue + "</" + columnName + ">");
+                    returnStringBuilder.append("<" + columnName.toLowerCase() + ">" + columnValue +
+                            "</" + columnName.toLowerCase() + ">");
                 }
                 returnStringBuilder.append("</row>");
             }

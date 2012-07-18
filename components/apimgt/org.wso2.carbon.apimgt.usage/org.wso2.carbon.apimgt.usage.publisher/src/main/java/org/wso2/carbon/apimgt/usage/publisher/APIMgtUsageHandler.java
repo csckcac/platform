@@ -129,8 +129,7 @@ public class APIMgtUsageHandler extends AbstractHandler {
             return true;
         }
 
-        Long serviceTime = currentTime - Long.parseLong((String)mc.getProperty(
-                APIMgtUsagePublisherConstants.REQUEST_TIME));
+        Long serviceTime = currentTime - (Long) mc.getProperty(APIMgtUsagePublisherConstants.REQUEST_TIME);
 
         ResponsePublisherDTO responsePublisherDTO = new ResponsePublisherDTO();
         responsePublisherDTO.setConsumerKey((String)mc.getProperty(APIMgtUsagePublisherConstants.CONSUMER_KEY));

@@ -36,7 +36,7 @@
             <xs:element name="authorize">
                 <xs:complexType>
                     <xs:sequence>
-                        <xs:element minOccurs="0" name="authorizeDTO" nillable="true" type="ax2263:OAuth2AuthorizeReqDTO" />
+                        <xs:element minOccurs="0" name="oAuth2AuthorizeReqDTO" nillable="true" type="ax2263:OAuth2AuthorizeReqDTO" />
                     </xs:sequence>
                 </xs:complexType>
             </xs:element>
@@ -99,6 +99,7 @@
                     <xs:element minOccurs="0" name="callbackURI" nillable="true" type="xs:string" />
                     <xs:element minOccurs="0" name="errorCode" nillable="true" type="xs:string" />
                     <xs:element minOccurs="0" name="errorMsg" nillable="true" type="xs:string" />
+                    <xs:element maxOccurs="unbounded" minOccurs="0" name="scope" nillable="true" type="xs:string" />
                     <xs:element minOccurs="0" name="validityPeriod" type="xs:long" />
                 </xs:sequence>
             </xs:complexType>

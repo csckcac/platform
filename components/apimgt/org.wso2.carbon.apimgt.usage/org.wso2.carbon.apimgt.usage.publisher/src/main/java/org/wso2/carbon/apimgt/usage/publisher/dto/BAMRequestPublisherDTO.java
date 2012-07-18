@@ -44,8 +44,8 @@ public class BAMRequestPublisherDTO extends RequestPublisherDTO{
         eventMap.put("resource", ByteBuffer.wrap(getResource().getBytes()));
         eventMap.put("method", ByteBuffer.wrap(getMethod().getBytes()));
         eventMap.put("version", ByteBuffer.wrap(getVersion().getBytes()));
-        eventMap.put("request", ByteBuffer.wrap(getRequest().getBytes()));
-        eventMap.put("requestTime", ByteBuffer.wrap(getRequestTime().getBytes()));
+        eventMap.put("request", ByteBuffer.wrap(String.valueOf(getRequestCount()).getBytes()));
+        eventMap.put("requestTime", ByteBuffer.wrap(String.valueOf(getRequestTime()).getBytes()));
         eventMap.put("userId", ByteBuffer.wrap(getUsername().getBytes()));
         return eventMap;
     }

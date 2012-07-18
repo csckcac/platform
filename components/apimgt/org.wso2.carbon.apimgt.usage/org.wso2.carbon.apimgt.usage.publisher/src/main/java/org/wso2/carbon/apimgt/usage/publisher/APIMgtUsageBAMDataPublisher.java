@@ -41,17 +41,16 @@ import java.util.Map;
  */
 public class APIMgtUsageBAMDataPublisher implements APIMgtUsageDataPublisher {
 
-  /**
+    /**
      * EventReceiver instance that holds config of the receiver in BAM server
      */
 
-    private static final Log log   = LogFactory.getLog(APIMgtUsageBAMDataPublisher.class);
+    private static final Log log = LogFactory.getLog(APIMgtUsageBAMDataPublisher.class);
 
     private EventReceiver eventReceiver;
 
     private Agent agent;
 
-    @Override
     public void init() {
         log.debug("Initializing APIMgtUsageDataBridgeDataPublisher");
         this.eventReceiver = getEventReceiver();
@@ -59,11 +58,11 @@ public class APIMgtUsageBAMDataPublisher implements APIMgtUsageDataPublisher {
         agent = new Agent(configuration);
     }
 
-  /**
+    /**
      * publishes even to BAM server by creating an event
-     * @param requestPublisherDTO  <code>RequestPublisherDTO</code> that is needed to be published
+     *
+     * @param requestPublisherDTO <code>RequestPublisherDTO</code> that is needed to be published
      */
-    @Override
     public void publishEvent(RequestPublisherDTO requestPublisherDTO) {
         BAMRequestPublisherDTO bamRequestPublisherDTO = new BAMRequestPublisherDTO(requestPublisherDTO);
         Event event = new Event();
@@ -76,7 +75,6 @@ public class APIMgtUsageBAMDataPublisher implements APIMgtUsageDataPublisher {
         agent.publish(events, eventReceiver);
     }
 
-    @Override
     public void publishEvent(ResponsePublisherDTO responsePublisherDTO) {
         BAMResponsePublisherDTO bamResponsePublisherDTO = new BAMResponsePublisherDTO(responsePublisherDTO);
         Event event = new Event();
@@ -96,7 +94,7 @@ public class APIMgtUsageBAMDataPublisher implements APIMgtUsageDataPublisher {
         return metaDataMap;
     }
 
-    private  Map<String, ByteBuffer> createCorrelationMap() {
+    private Map<String, ByteBuffer> createCorrelationMap() {
         Map<String, ByteBuffer> correlationMap = new HashMap<String, ByteBuffer>();
         // not used, but need as it is not sure how BAM will work.
         correlationMap.put("correlationKey", ByteBuffer.wrap("correlationValue".getBytes()));

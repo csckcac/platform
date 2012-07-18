@@ -65,8 +65,8 @@ public class DataBridgeRequestPublisherDTO extends RequestPublisherDTO {
                                        "          {'name':'resource','type':'STRING'}," +
                                        "          {'name':'method','type':'STRING'}," +
                                        "          {'name':'version','type':'STRING'}," +
-                                       "          {'name':'request','type':'STRING'}," +
-                                       "          {'name':'requestTime','type':'STRING'}," +
+                                       "          {'name':'request','type':'INT'}," +
+                                       "          {'name':'requestTime','type':'LONG'}," +
                                        "          {'name':'userId','type':'STRING'}" +
                                        "  ]" +
                                        "}");
@@ -78,7 +78,7 @@ public class DataBridgeRequestPublisherDTO extends RequestPublisherDTO {
 
     public Object createPayload(){
         return new Object[]{getConsumerKey(),getContext(),getApi_version(),getApi(),getResource(),getMethod(),
-                            getVersion(),getRequest(),getRequestTime(),getUsername()};
+                            getVersion(), getRequestCount(),getRequestTime(),getUsername()};
     }
 
 }

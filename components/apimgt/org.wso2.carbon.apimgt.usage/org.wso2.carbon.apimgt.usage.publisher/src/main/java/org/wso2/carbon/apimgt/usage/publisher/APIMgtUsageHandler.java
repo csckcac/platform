@@ -45,7 +45,7 @@ public class APIMgtUsageHandler extends AbstractHandler {
     private String publisherClass = UsageComponent.getApiMgtConfigReaderService().getPublisherClass();
 
     public boolean handleRequest(MessageContext mc) {
-        String currentTime = String.valueOf(System.currentTimeMillis());
+        long currentTime = System.currentTimeMillis();
 
         if (!enabled) {
             return true;
@@ -141,8 +141,8 @@ public class APIMgtUsageHandler extends AbstractHandler {
         responsePublisherDTO.setVersion((String) mc.getProperty(APIMgtUsagePublisherConstants.VERSION));
         responsePublisherDTO.setResource((String) mc.getProperty(APIMgtUsagePublisherConstants.RESOURCE));
         responsePublisherDTO.setMethod((String)mc.getProperty(APIMgtUsagePublisherConstants.HTTP_METHOD));
-        responsePublisherDTO.setResponseTime(String.valueOf(currentTime));
-        responsePublisherDTO.setServiceTime(String.valueOf(serviceTime));
+        responsePublisherDTO.setResponseTime(currentTime);
+        responsePublisherDTO.setServiceTime(serviceTime);
         try{
             publisher.publishEvent(responsePublisherDTO);
         } catch (Exception e) {

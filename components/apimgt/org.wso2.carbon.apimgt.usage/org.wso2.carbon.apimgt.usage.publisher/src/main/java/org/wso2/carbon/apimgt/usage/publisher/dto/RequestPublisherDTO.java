@@ -15,23 +15,24 @@
 * specific language governing permissions and limitations
 * under the License.
 */
+
 package org.wso2.carbon.apimgt.usage.publisher.dto;
 
 public class RequestPublisherDTO extends PublisherDTO {
 
-    private String request = "1";
+    private int requestCount = 1;
 
-    private String requestTime;
+    private long requestTime;
 
-    public String getRequest(){
-        return request;
+    public int getRequestCount(){
+        return requestCount;
     }
 
-    public void setRequestTime(String requestTime){
+    public void setRequestTime(long requestTime){
         this.requestTime = requestTime;
     }
 
-    public String getRequestTime(){
+    public long getRequestTime(){
         return requestTime;
     }
 

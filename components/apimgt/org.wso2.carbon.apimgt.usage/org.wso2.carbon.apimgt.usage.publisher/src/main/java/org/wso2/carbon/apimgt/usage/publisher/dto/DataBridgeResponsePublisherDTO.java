@@ -67,9 +67,9 @@ public class DataBridgeResponsePublisherDTO extends ResponsePublisherDTO {
                                        "          {'name':'resource','type':'STRING'}," +
                                        "          {'name':'method','type':'STRING'}," +
                                        "          {'name':'version','type':'STRING'}," +
-                                       "          {'name':'response','type':'STRING'}," +
-                                       "          {'name':'responseTime','type':'STRING'}," +
-                                       "          {'name':'serviceTime','type':'STRING'}," +
+                                       "          {'name':'response','type':'INT'}," +
+                                       "          {'name':'responseTime','type':'LONG'}," +
+                                       "          {'name':'serviceTime','type':'LONG'}," +
                                        "          {'name':'userId','type':'STRING'}" +
                                        "  ]" +
 

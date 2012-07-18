@@ -292,7 +292,7 @@ class APIConsumerImpl extends AbstractAPIManager implements APIConsumer {
 
     public Set<API> searchAPI(String searchTerm) throws APIManagementException {
         Set<API> apiSet = new HashSet<API>();
-        String regex = "(?i)[a-zA-Z0-9_.-|]*" + searchTerm + "(?i)[a-zA-Z0-9_.-|]*";
+        String regex = ".*" + searchTerm + "(?i).*";
         Pattern pattern;
         Matcher matcher;
         try {
@@ -302,12 +302,10 @@ class APIConsumerImpl extends AbstractAPIManager implements APIConsumer {
             if (genericArtifacts == null || genericArtifacts.length == 0) {
                 return apiSet;
             }
+            pattern = Pattern.compile(regex);
             for (GenericArtifact artifact : genericArtifacts) {
-                String status = artifact
-                        .getAttribute(APIConstants.API_OVERVIEW_STATUS);
-                String apiName = artifact
-                        .getAttribute(APIConstants.API_OVERVIEW_NAME);
-                pattern = Pattern.compile(regex);
+                String status = artifact.getAttribute(APIConstants.API_OVERVIEW_STATUS);
+                String apiName = artifact.getAttribute(APIConstants.API_OVERVIEW_NAME);
                 matcher = pattern.matcher(apiName);
                 if (matcher.matches() && status.equals(APIConstants.PUBLISHED)) {
                     apiSet.add(APIUtil.getAPI(artifact, registry));
@@ -321,7 +319,7 @@ class APIConsumerImpl extends AbstractAPIManager implements APIConsumer {
 
     public Set<API> searchAPI(String searchTerm, String searchType) throws APIManagementException {
         Set<API> apiSet = new HashSet<API>();
-        String regex = "[a-zA-Z0-9_.-|]*" + searchTerm + "[a-zA-Z0-9_.-|]*";
+        String regex = ".*" + searchTerm + ".*";
         Pattern pattern;
         Matcher matcher;
         try {
@@ -331,28 +329,20 @@ class APIConsumerImpl extends AbstractAPIManager implements APIConsumer {
             if (genericArtifacts == null || genericArtifacts.length == 0) {
                 return apiSet;
             }
+            pattern = Pattern.compile(regex);
             for (GenericArtifact artifact : genericArtifacts) {
-                String status = artifact
-                        .getAttribute(APIConstants.API_OVERVIEW_STATUS);
-
-                pattern = Pattern.compile(regex);
-
-
+                String status = artifact.getAttribute(APIConstants.API_OVERVIEW_STATUS);
                 if (searchType.equals("APIProvider")) {
-                    String api = artifact
-                            .getAttribute(APIConstants.API_OVERVIEW_PROVIDER);
+                    String api = artifact.getAttribute(APIConstants.API_OVERVIEW_PROVIDER);
                     matcher = pattern.matcher(api);
                 } else if (searchType.equals("APIVersion")) {
-                    String api = artifact
-                            .getAttribute(APIConstants.API_OVERVIEW_VERSION);
+                    String api = artifact.getAttribute(APIConstants.API_OVERVIEW_VERSION);
                     matcher = pattern.matcher(api);
                 } else if (searchType.equals("APIContext")) {
-                    String api = artifact
-                            .getAttribute(APIConstants.API_OVERVIEW_CONTEXT);
+                    String api = artifact.getAttribute(APIConstants.API_OVERVIEW_CONTEXT);
                     matcher = pattern.matcher(api);
                 } else {
-                    String apiName = artifact
-                            .getAttribute(APIConstants.API_OVERVIEW_NAME);
+                    String apiName = artifact.getAttribute(APIConstants.API_OVERVIEW_NAME);
                     matcher = pattern.matcher(apiName);
                 }
                 if (matcher.matches() && status.equals(APIConstants.PUBLISHED)) {

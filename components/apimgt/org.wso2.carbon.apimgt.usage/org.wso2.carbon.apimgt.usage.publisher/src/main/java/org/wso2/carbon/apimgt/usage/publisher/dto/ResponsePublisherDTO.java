@@ -19,29 +19,29 @@ package org.wso2.carbon.apimgt.usage.publisher.dto;
 
 public class ResponsePublisherDTO extends PublisherDTO {
 
-    private String response = "1";
+    private int response = 1;
 
-    private String responseTime;
+    private long responseTime;
 
-    private String serviceTime;
+    private long serviceTime;
 
-    public String getResponse(){
+    public int getResponse(){
         return response;
     }
 
-    public void setResponseTime(String responseTime) {
+    public void setResponseTime(long responseTime) {
         this.responseTime = responseTime;
     }
 
-    public String getResponseTime() {
+    public long getResponseTime() {
         return responseTime;
     }
 
-    public void setServiceTime(String serviceTime) {
+    public void setServiceTime(long serviceTime) {
         this.serviceTime = serviceTime;
     }
 
-    public String getServiceTime() {
+    public long getServiceTime() {
         return serviceTime;
     }
 

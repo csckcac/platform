@@ -45,9 +45,9 @@ public class BAMResponsePublisherDTO extends ResponsePublisherDTO {
         eventMap.put("resource", ByteBuffer.wrap(getResource().getBytes()));
         eventMap.put("method", ByteBuffer.wrap(getMethod().getBytes()));
         eventMap.put("version", ByteBuffer.wrap(getVersion().getBytes()));
-        eventMap.put("response", ByteBuffer.wrap(getResponse().getBytes()));
-        eventMap.put("responseTime", ByteBuffer.wrap(getResponseTime().getBytes()));
-        eventMap.put("serviceTime", ByteBuffer.wrap(getServiceTime().getBytes()));
+        eventMap.put("response", ByteBuffer.wrap(String.valueOf(getResponse()).getBytes()));
+        eventMap.put("responseTime", ByteBuffer.wrap(String.valueOf(getResponseTime()).getBytes()));
+        eventMap.put("serviceTime", ByteBuffer.wrap(String.valueOf(getServiceTime()).getBytes()));
         eventMap.put("userId", ByteBuffer.wrap(getUsername().getBytes()));
         return eventMap;
     }

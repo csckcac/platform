@@ -45,53 +45,53 @@ public class Test {
         //Only the properties needed for the test are set
         testRequestPublisherDTO.setApi("DeliciousAPI");
         testRequestPublisherDTO.setVersion("v1.0.0");
-        testRequestPublisherDTO.setRequestTime(((Long) System.currentTimeMillis()).toString());
+        testRequestPublisherDTO.setRequestTime(System.currentTimeMillis());
         testPublisher.publishEvent(testDataBridgeRequestPublisherDTO);
 
         testRequestPublisherDTO.setApi("DeliciousAPI");
         testRequestPublisherDTO.setVersion("v1.0.0");
-        testRequestPublisherDTO.setRequestTime(((Long) System.currentTimeMillis()).toString());
+        testRequestPublisherDTO.setRequestTime(System.currentTimeMillis());
         testPublisher.publishEvent(testDataBridgeRequestPublisherDTO);
 
         testRequestPublisherDTO.setApi("FacebookAPI");
         testRequestPublisherDTO.setVersion("v1.0.0");
-        testRequestPublisherDTO.setRequestTime(((Long) System.currentTimeMillis()).toString());
+        testRequestPublisherDTO.setRequestTime(System.currentTimeMillis());
         testPublisher.publishEvent(testDataBridgeRequestPublisherDTO);
 
         testRequestPublisherDTO.setApi("TwitterAPI");
         testRequestPublisherDTO.setVersion("v1.0.0");
-        testRequestPublisherDTO.setRequestTime(((Long) System.currentTimeMillis()).toString());
+        testRequestPublisherDTO.setRequestTime(System.currentTimeMillis());
         testPublisher.publishEvent(testDataBridgeRequestPublisherDTO);
 
         testRequestPublisherDTO.setApi("DeliciousAPI");
         testRequestPublisherDTO.setVersion("v1.1.0");
-        testRequestPublisherDTO.setRequestTime(((Long) System.currentTimeMillis()).toString());
+        testRequestPublisherDTO.setRequestTime(System.currentTimeMillis());
         testPublisher.publishEvent(testDataBridgeRequestPublisherDTO);
 
         testRequestPublisherDTO.setApi("TwitterAPI");
         testRequestPublisherDTO.setVersion("v1.1.0");
-        testRequestPublisherDTO.setRequestTime(((Long) System.currentTimeMillis()).toString());
+        testRequestPublisherDTO.setRequestTime(System.currentTimeMillis());
         testPublisher.publishEvent(testDataBridgeRequestPublisherDTO);
 
         testRequestPublisherDTO.setApi("DeliciousAPI");
         testRequestPublisherDTO.setVersion("v1.1.0");
-        testRequestPublisherDTO.setRequestTime(((Long) System.currentTimeMillis()).toString());
+        testRequestPublisherDTO.setRequestTime(System.currentTimeMillis());
         testPublisher.publishEvent(testDataBridgeRequestPublisherDTO);
 
         testRequestPublisherDTO.setApi("DeliciousAPI");
         testRequestPublisherDTO.setVersion("v1.2.0");
-        testRequestPublisherDTO.setRequestTime(((Long) System.currentTimeMillis()).toString());
+        testRequestPublisherDTO.setRequestTime(System.currentTimeMillis());
         testPublisher.publishEvent(testDataBridgeRequestPublisherDTO);
 
         testRequestPublisherDTO.setApi("FacebookAPI");
         testRequestPublisherDTO.setVersion("v1.2.0");
-        testRequestPublisherDTO.setRequestTime(((Long) System.currentTimeMillis()).toString());
+        testRequestPublisherDTO.setRequestTime(System.currentTimeMillis());
         testPublisher.publishEvent(testDataBridgeRequestPublisherDTO);
 
         testResponsePublisherDTO.setApi("DeliciousAPI");
         testResponsePublisherDTO.setVersion("v1.0.0");
-        testResponsePublisherDTO.setResponseTime(((Long) System.currentTimeMillis()).toString());
-        testResponsePublisherDTO.setServiceTime("5");
+        testResponsePublisherDTO.setResponseTime(System.currentTimeMillis());
+        testResponsePublisherDTO.setServiceTime(5L);
         testPublisher.publishEvent(testDataBridgeResponsePublisherDTO);
 
     }

@@ -42,7 +42,6 @@ public class APIMgtUsageDataBridgeDataPublisher implements APIMgtUsageDataPublis
     private String requestStreamId;
     private String responseStreamId;
 
-    @Override
     public void init(){
         try {
             log.debug("Initializing APIMgtUsageDataBridgeDataPublisher");
@@ -54,7 +53,6 @@ public class APIMgtUsageDataBridgeDataPublisher implements APIMgtUsageDataPublis
         }
     }
 
-    @Override
     public void publishEvent(RequestPublisherDTO requestPublisherDTO) {
         DataBridgeRequestPublisherDTO dataBridgeRequestPublisherDTO = new DataBridgeRequestPublisherDTO(requestPublisherDTO);
         Event event = new Event(requestStreamId, System.currentTimeMillis(), new Object[]{"external"}, null,
@@ -67,7 +65,6 @@ public class APIMgtUsageDataBridgeDataPublisher implements APIMgtUsageDataPublis
 
     }
 
-    @Override
     public void publishEvent(ResponsePublisherDTO responsePublisherDTO) {
         DataBridgeResponsePublisherDTO dataBridgeResponsePublisherDTO = new DataBridgeResponsePublisherDTO(responsePublisherDTO);
         Event event = new Event(responseStreamId, System.currentTimeMillis(), new Object[]{"external"}, null,

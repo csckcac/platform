@@ -131,7 +131,7 @@ wso2_carbon_server() {
 	chroot $ROOTFS apt-get install -y \
 	 nano zip \
 	 wget \
-	 openssl ssl-cert ldap-utils 
+	 openssl ssl-cert ldap-utils ruby
    
 	# Be sure to have a new SSL cert for this new LXC host:
 	#rm -f $ROOTFS/etc/ssl/private/ssl-cert-snakeoil.key

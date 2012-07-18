@@ -41,7 +41,7 @@
     window.onload = setupRefresh;
 
     function setupRefresh() {
-        setTimeout("refreshPage();", 5000); // milliseconds
+        setTimeout("refreshPage();", 10000); // milliseconds
     }
     function refreshPage() {
         window.location = location.href;
@@ -66,8 +66,13 @@
     String[] toBeDeployedTools = null;
     String[] toBeUndeployedTools = null;
 
+    String requestUrl = request.getHeader("Referer");
+    String success = null;
+    if (null != requestUrl && requestUrl.contains("undeploy.jsp")) {
+        success = request.getParameter("undeploysuccess");
+    }
     String message = request.getParameter("message");
-    String success = request.getParameter("undeploysuccess");
+
 
     try {
         ToolBoxStatusDTO statusDTO = client.getToolBoxStatus(toolBoxType, toolBoxSearchString);

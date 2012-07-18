@@ -46,10 +46,7 @@ public class DefaultClusteringEnabledSubscriptionManager implements ClusteringEn
     private Map<String,Map<String,CassandraSubscription>> subscriptionMap =
             new ConcurrentHashMap<String,Map<String,CassandraSubscription>>();
 
-    /**
-     * Map that Contain Global Queue to User Queue Mapping
-     */
-    private HashMap<String, List<String>> userQueuesMap = new HashMap<String,List<String>>();
+
 
     private ExecutorService executor =  null;
 
@@ -69,22 +66,7 @@ public class DefaultClusteringEnabledSubscriptionManager implements ClusteringEn
     public void init()  {
         executor =  Executors.newFixedThreadPool(ClusterResourceHolder.getInstance().getClusterConfiguration().
                 getSubscriptionPoolSize());
-        executor.submit(new CassandraSubscriptionsSynchronizer());
 
-        SubscriptionCoordinationManager subscriptionCoordinationManager =
-                ClusterResourceHolder.getInstance().getSubscriptionCoordinationManager();
-
-        subscriptionCoordinationManager.registerSubscriptionListener(new SubscriptionListener() {
-            @Override
-            public void subscriptionsChanged() {
-                try {
-                    Thread.sleep(5000);
-                    syncUserQueues();
-                } catch (Exception e) {
-                    log.error("Error while Syncing Subscriptions " ,e);
-                }
-            }
-        });
     }
 
     /**
@@ -102,7 +84,7 @@ public class DefaultClusteringEnabledSubscriptionManager implements ClusteringEn
                 ClusterResourceHolder.getInstance().getCassandraMessageStore()
                         .addUserQueueToGlobalQueue(queue.getResourceName());
             } catch (AMQStoreException e) {
-                e.printStackTrace();  //To change body of catch statement use File | Settings | File Templates.
+                log.error("error while adding subscription to queue  : " + queue.getName() ,e);
             }
             QueueBrowserFlusher flusher = new QueueBrowserFlusher(subscription.getSubscription(),queue,subscription.getSession());
             flusher.send();
@@ -196,9 +178,6 @@ public class DefaultClusteringEnabledSubscriptionManager implements ClusteringEn
          */
 
         CassandraMessageStore messageStore = ClusterResourceHolder.getInstance().getCassandraMessageStore();
-        if(userQueuesMap.get(globalQueue) != null && userQueuesMap.containsKey(globalQueue)) {
-            userQueuesMap.get(globalQueue).remove(userQueue);
-        }
         messageStore.removeUserQueueFromQpidQueue(globalQueue);
 
         List<CassandraQueueMessage> messages = messageStore.getMessagesFromUserQueue(userQueue,globalQueue,40);
@@ -258,9 +237,7 @@ public class DefaultClusteringEnabledSubscriptionManager implements ClusteringEn
 
 
 
-    public List<String> getUserQueues(String amqpQueueName){
-        return userQueuesMap.get(amqpQueueName);
-    }
+
 
 
     public Map<AMQChannel, Map<Long, Semaphore>> getUnAcknowledgedMessageLocks() {
@@ -271,38 +248,5 @@ public class DefaultClusteringEnabledSubscriptionManager implements ClusteringEn
     public Map<AMQChannel, QueueSubscriptionAcknowledgementHandler> getAcknowledgementHandlerMap() {
         return acknowledgementHandlerMap;
     }
-
-
-    private class CassandraSubscriptionsSynchronizer implements Runnable {
-        @Override
-        public void run() {
-            while (true) {
-
-                try {
-                    syncUserQueues();
-                    Thread.sleep(ClusterResourceHolder.getInstance().
-                            getClusterConfiguration().getVirtualHostSyncTaskInterval() * 1000);
-                } catch (Exception e) {
-                    log.error("Error while polling for data " ,e);
-                }
-            }
-        }
-    }
-
-
-    private void syncUserQueues() throws Exception {
-        CassandraMessageStore messageStore = ClusterResourceHolder.getInstance().
-                getCassandraMessageStore();
-        List<String> globalQueueList = messageStore.getGlobalQueues();
-        for (String globalQueue : globalQueueList) {
-            List<String> userQueueList = messageStore.getUserQueues(globalQueue);
-            userQueuesMap.put(globalQueue, userQueueList);
-
-        }
-    }
-
-
-
-
 
 }

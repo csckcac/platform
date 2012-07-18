@@ -77,8 +77,8 @@ public class GlobalQueueWorker implements Runnable{
                 int size = cassandraMessages.size();
                 DataCollector.write(DataCollector.TRANSFER_QUEUE_WORKER_UTILISATION,size);
                 DataCollector.flush();
-                List<String> subscriptions =
-                        cassandraSubscriptionManager.getUserQueues(globalQueueName);
+                List<String> subscriptions =  cassandraMessageStore.getUserQueues(globalQueueName);
+
                 if (subscriptions != null && subscriptions.size() > 0) {
                      List<Long> addedMsgs = new ArrayList<Long>();
 

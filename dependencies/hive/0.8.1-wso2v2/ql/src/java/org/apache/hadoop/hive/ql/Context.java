@@ -105,9 +105,15 @@ public class Context {
                executionId);
 
     // local tmp location is not configurable for now
-    localScratchDir = System.getProperty("java.io.tmpdir")
-      + Path.SEPARATOR + System.getProperty("user.name") + Path.SEPARATOR
-      + executionId;
+      if (System.getProperty("os.name").toLowerCase().contains("windows")) {
+          localScratchDir = "\\" + System.getProperty("java.io.tmpdir")
+              + Path.SEPARATOR + System.getProperty("user.name") + Path.SEPARATOR
+              + executionId;
+      } else {
+          localScratchDir = System.getProperty("java.io.tmpdir")
+              + Path.SEPARATOR + System.getProperty("user.name") + Path.SEPARATOR
+              + executionId;
+      }
   }
 
   /**

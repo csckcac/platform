@@ -70,10 +70,15 @@ public class HiveConf extends Configuration {
 
         if (hiveSiteURL == null && carbonHome != null) {
             try {
-                hiveSiteURL = new URL("file://" + carbonHome + File.separator + "repository" +
-                                      File.separator + "conf" + File.separator + "advanced" +
-                                      File.separator +
-                                      "hive-site.xml");
+                if (System.getProperty("os.name").toLowerCase().contains("windows")) {
+                    hiveSiteURL = new URL("file:/" + carbonHome + File.separator + "repository" +
+                                          File.separator + "conf" + File.separator + "advanced" +
+                                          File.separator + "hive-site.xml");
+                } else {
+                    hiveSiteURL = new URL("file://" + carbonHome + File.separator + "repository" +
+                                          File.separator + "conf" + File.separator + "advanced" +
+                                          File.separator + "hive-site.xml");
+                }
             } catch (MalformedURLException e) {
                 l4j.error("Incorrect URL for hive-site.xml. Given URL : " + hiveSiteURL, e);
             }

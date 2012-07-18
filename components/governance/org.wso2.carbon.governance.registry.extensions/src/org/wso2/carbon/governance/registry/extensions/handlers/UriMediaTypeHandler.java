@@ -21,11 +21,10 @@ import org.apache.axiom.om.util.AXIOMUtil;
 import org.apache.axiom.om.xpath.AXIOMXPath;
 import org.apache.commons.logging.Log;
 import org.jaxen.SimpleNamespaceContext;
-import org.wso2.carbon.governance.api.exception.GovernanceException;
 import org.wso2.carbon.governance.registry.extensions.handlers.utils.HandlerConstants;
-import org.wso2.carbon.registry.api.RegistryException;
 import org.wso2.carbon.registry.core.Registry;
 import org.wso2.carbon.registry.core.Resource;
+import org.wso2.carbon.registry.core.exceptions.RegistryException;
 import org.wso2.carbon.registry.core.jdbc.handlers.Handler;
 import org.wso2.carbon.registry.core.jdbc.handlers.RequestContext;
 import org.wso2.carbon.registry.core.utils.RegistryUtils;
@@ -37,7 +36,7 @@ public class UriMediaTypeHandler extends Handler {
     private static final Log log = org.apache.commons.logging.LogFactory.getLog(UriMediaTypeHandler.class);
 
     @Override
-    public void put(RequestContext requestContext) throws GovernanceException {
+    public void put(RequestContext requestContext) throws org.wso2.carbon.registry.core.exceptions.RegistryException {
         Registry registry = requestContext.getRegistry();
         Resource resource = requestContext.getResource();
         String resourcePath = requestContext.getResourcePath().getPath();
@@ -74,27 +73,21 @@ public class UriMediaTypeHandler extends Handler {
                 }
             }
 
-
         } catch (Exception e) {
-            String msg = "Failed to parse content of URI ";
+            String msg = "Failed to parse content of URI " + fileUri + ".";
             log.error(msg, e);
-            throw new GovernanceException(msg, e);
+            throw new RegistryException(msg, e);
         }
-        try {
-            if(HandlerConstants.WSDL.equals(type)){
-                WsdlUriHandler wsdlUriHandler = new WsdlUriHandler();
-                wsdlUriHandler.importResource(requestContext, fileUri);
-            } else if(HandlerConstants.XSD.equals(type)){
-                SchemaUriHandler schemaUriHandler = new SchemaUriHandler();
-                schemaUriHandler.importResource(requestContext, fileUri);
-            } else if(HandlerConstants.POLICY.equals(type)){
-                PolicyUriHandler policyUriHandler = new PolicyUriHandler();
-                policyUriHandler.importResource(requestContext, fileUri);
-            }
-        } catch (RegistryException e) {
-            String msg = "Failed to add " + type + " URI";
-            log.error(msg, e);
-            throw new GovernanceException(msg, e);
+
+        if(HandlerConstants.WSDL.equals(type)){
+            WsdlUriHandler wsdlUriHandler = new WsdlUriHandler();
+            wsdlUriHandler.importResource(requestContext, fileUri);
+        } else if(HandlerConstants.XSD.equals(type)){
+            SchemaUriHandler schemaUriHandler = new SchemaUriHandler();
+            schemaUriHandler.importResource(requestContext, fileUri);
+        } else if(HandlerConstants.POLICY.equals(type)){
+            PolicyUriHandler policyUriHandler = new PolicyUriHandler();
+            policyUriHandler.importResource(requestContext, fileUri);
         }
 
     }

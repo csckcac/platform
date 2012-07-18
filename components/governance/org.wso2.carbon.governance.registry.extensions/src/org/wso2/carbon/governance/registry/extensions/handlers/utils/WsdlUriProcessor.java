@@ -29,7 +29,6 @@ import org.w3c.dom.Element;
 import org.w3c.dom.NamedNodeMap;
 import org.w3c.dom.Node;
 import org.w3c.dom.NodeList;
-import org.wso2.carbon.governance.api.exception.GovernanceException;
 import org.wso2.carbon.governance.api.generic.GenericArtifactManager;
 import org.wso2.carbon.governance.api.generic.dataobjects.GenericArtifact;
 import org.wso2.carbon.registry.core.*;
@@ -328,7 +327,7 @@ public class WsdlUriProcessor {
                                 Resource resource = registry.get(policyPath);
                                 GenericArtifact artifact = genericArtifactManager.getGenericArtifact(resource.getUUID());
                                 if(!artifact.getAttribute("overview_uri").equals(policyURL)){
-                                    throw new GovernanceException("Policy URI already exists");
+                                    throw new RegistryException("Different policy URI already exists in " + policyPath + ".");
                                 }
                             }
                             registry.addAssociation(policyPath,

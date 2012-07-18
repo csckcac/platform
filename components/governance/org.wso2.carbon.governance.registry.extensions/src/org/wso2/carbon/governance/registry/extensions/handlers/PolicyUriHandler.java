@@ -59,7 +59,7 @@ public class PolicyUriHandler extends Handler {
             InputStream inputStream;
             try {
                 if (sourceURL != null && sourceURL.toLowerCase().startsWith("file:")) {
-                    String msg = "The source URL must not be file in the server's local file system";
+                    String msg = "The source URL must not be file in the server's local file system.";
                     throw new RegistryException(msg);
                 }
                 inputStream = new URL(sourceURL).openStream();
@@ -89,7 +89,7 @@ public class PolicyUriHandler extends Handler {
             }
             outputStream.flush();
         } catch (IOException e) {
-            throw new RegistryException("Exception occured while reading policy content", e);
+            throw new RegistryException("Exception occured while reading policy content.", e);
         }
         policyResource.setContent(outputStream.toByteArray());
 

@@ -25,7 +25,6 @@ import org.apache.ws.commons.schema.XmlSchemaCollection;
 import org.apache.ws.commons.schema.XmlSchemaExternal;
 import org.apache.ws.commons.schema.XmlSchemaObjectCollection;
 import org.wso2.carbon.CarbonException;
-import org.wso2.carbon.governance.api.exception.GovernanceException;
 import org.wso2.carbon.governance.api.generic.GenericArtifactManager;
 import org.wso2.carbon.governance.api.generic.dataobjects.GenericArtifact;
 import org.wso2.carbon.registry.core.*;
@@ -595,7 +594,7 @@ public class SchemaUriProcessor {
             Resource existResource = registry.get(path);
             GenericArtifact artifact = genericArtifactManager.getGenericArtifact(existResource.getUUID());
             if(!artifact.getAttribute("overview_uri").equals(url)){
-                throw new GovernanceException("Schema URI already exists");
+                throw new RegistryException("Different schema URI already exists in " + path + ".");
             }
         }
     }

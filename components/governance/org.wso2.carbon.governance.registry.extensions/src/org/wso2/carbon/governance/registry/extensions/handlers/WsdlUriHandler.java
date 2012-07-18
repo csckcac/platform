@@ -49,7 +49,7 @@ public class WsdlUriHandler {
             Resource metadata = requestContext.getResource();
             if (requestContext.getSourceURL() != null &&
                     requestContext.getSourceURL().toLowerCase().startsWith("file:")) {
-                String msg = "The source URL must not be file in the server's local file system";
+                String msg = "The source URL must not be file in the server's local file system.";
                 throw new RegistryException(msg);
             }
             try {

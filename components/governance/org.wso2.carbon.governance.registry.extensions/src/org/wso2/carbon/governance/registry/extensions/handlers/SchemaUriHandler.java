@@ -56,7 +56,7 @@ public class SchemaUriHandler extends Handler {
                             SchemaValidator.validate(new XMLInputSource(null, sourceURL, null));
                 }
             } catch (Exception e) {
-                throw new RegistryException("Exception occured while validating the schema", e);
+                throw new RegistryException("Exception occured while validating the schema.", e);
             }
 
             String savedName = processSchemaImport(requestContext, resourcePath, validationInfo, sourceURL);

@@ -118,6 +118,7 @@ s/\t  and runlevel \[2345\])/#\t  and runlevel \[2345\])/
 wso2_carbon_server() {
 
     cp -f ./init_scripts/carbon/wso2-openstack-init.sh $ROOTFS/opt/
+    cp -f ./init_scripts/carbon/get-launch-params.rb $ROOTFS/opt/
     # Copy software
     arr=$(echo $SOFTWARE | tr ":" "\n")
     for x in $arr

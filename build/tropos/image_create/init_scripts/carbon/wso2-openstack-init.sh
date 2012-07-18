@@ -78,6 +78,7 @@ do
 done
 
 # Copying the product from the controller
+echo "scp -i ${instance_path}/payload/wso2-key root@${CONTROLLER_IP}:/opt/${PRODUCT_NAME}.zip /opt/" >> $LOG
 scp -i ${instance_path}/payload/wso2-key root@${CONTROLLER_IP}:/opt/${PRODUCT_NAME}.zip /opt/
 
 if [ "$ADMIN_USERNAME" = "" ]; then
@@ -103,5 +104,6 @@ fi
         find . -name "axis2.xml" | xargs sed -i "s/local_member_host<\/parameter>/$PUBLIC_IP<\/parameter>/g"
         find . -name "axis2.xml" | xargs sed -i "s/local_member_bind_address<\/parameter>/$PRIVATE_IP<\/parameter>/g"
 
-
+echo "Starting carbon server ..." >> $LOG
 nohup /opt/${PRODUCT_NAME}/bin/wso2server.sh & >> $LOG
+echo "Carbon server started" >> $LOG

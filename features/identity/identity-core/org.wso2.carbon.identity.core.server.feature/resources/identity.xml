@@ -70,6 +70,12 @@
 		<RequestTokenUrl>https://localhost:9443/oauth/request-token</RequestTokenUrl>
 		<AccessTokenUrl>https://localhost:9443/oauth/access-token</AccessTokenUrl>
 		<AuthorizeUrl>https://localhost:9443/oauth/authorize-url</AuthorizeUrl>
+		<!-- Default validity period for Authorization Code in seconds -->
+		<AuthorizationCodeDefaultValidityPeriod>300</AuthorizationCodeDefaultValidityPeriod>
+		<!-- Default validity period for Access Token in seconds -->
+		<AccessTokenDefaultValidityPeriod>3600</AccessTokenDefaultValidityPeriod>
+		<!-- Timestamp skew in seconds -->
+		<TimestampSkew>120</TimestampSkew>
 		<AuthorizationCallbackHandlers>		
 				<AuthorizationCallbackHandler Class="org.wso2.identity.oauth.DefaultOAuthCallbackHandler"/>
 		</AuthorizationCallbackHandlers>

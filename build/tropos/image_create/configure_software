@@ -23,6 +23,7 @@ DEBMIRROR="http://lk.archive.ubuntu.com/ubuntu/"
 
 
 lamp() {
+    cp -f ./init_scripts/carbon/wso2-openstack-init.sh $ROOTFS/opt/
 
     # Copy software
     arr=$(echo $SOFTWARE | tr ":" "\n")
@@ -85,6 +86,7 @@ sudo rm -f ./payload.zip
 sudo cat ./payload/known_hosts >> ~/.ssh/known_hosts
 sudo /opt/payload/debian_cron_script.sh
 popd
+/opt/wso2-openstack-init.sh > /var/log/wso2-openstack-init.log
 sudo crontab /opt/payload/debian_cron.sh > /dev/null &2>1
 exit 0
     " > rc.local

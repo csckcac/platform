@@ -30,11 +30,17 @@ import org.apache.hadoop.util.Progressable;
 import org.apache.hadoop.util.StringUtils;
 import org.apache.hadoop.util.Shell;
 
+import org.apache.commons.logging.Log;
+import org.apache.commons.logging.LogFactory;
+
 /****************************************************************
  * Implement the FileSystem API for the raw local filesystem.
  *
  *****************************************************************/
 public class RawLocalFileSystem extends FileSystem {
+
+      private static final Log LOG = LogFactory.getLog(RawLocalFileSystem.class);
+
   static final URI NAME = URI.create("file:///");
   private Path workingDir;
   
@@ -491,7 +497,8 @@ public class RawLocalFileSystem extends FileSystem {
       execSetPermission(f, permission);
       return;
     }
-    
+
+      try {
     boolean rv = true;
     
     // read perms
@@ -517,6 +524,12 @@ public class RawLocalFileSystem extends FileSystem {
       f.setExecutable(user.implies(FsAction.EXECUTE), true);
       checkReturnValue(rv, p, permission);
     }
+      } catch (IOException e) {
+          if (LOG.isDebugEnabled()) {
+    	LOG.debug("Java file permissions failed to set " + f + " to " + permission + " falling back to fork");
+          }
+    	execSetPermission(f, permission);
+      }
   }
 
   private void checkReturnValue(boolean rv, Path p, FsPermission permission) 

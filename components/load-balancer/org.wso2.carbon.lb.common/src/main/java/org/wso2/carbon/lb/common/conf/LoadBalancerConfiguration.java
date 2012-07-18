@@ -98,6 +98,8 @@ public class LoadBalancerConfiguration implements Serializable{
      *  autoscaler_service_epr  https://10.100.3.81:9443/services/AutoscalerService/;
      *  # interval between two task executions in milliseconds
      *  autoscaler_task_interval 1000;
+     *  # after an instance booted up, task will wait till this much of time and let the server started up
+     *  server_startup_delay 15000;
      * }
      * 
      * services {
@@ -566,11 +568,14 @@ public class LoadBalancerConfiguration implements Serializable{
 
     @SuppressWarnings("unused")
     public class LBConfiguration extends Configuration implements Serializable{
+       
+        private static final long serialVersionUID = 1357143883932816418L;
         private String elasticIP ;//= LoadBalancerConfigUtil.replaceVariables("${ELASTIC_IP}");
         private int instances = 1;
         private boolean isAutoscaleEnabled;
         private int autoscalerTaskInterval=5000;
         private String autoscalerServiceEpr;
+        private int serverStartupDelay=60000;
 
         public String getElasticIP() {
             return elasticIP;
@@ -591,6 +596,10 @@ public class LoadBalancerConfiguration implements Serializable{
         public int getAutoscalerTaskInterval() {
             return autoscalerTaskInterval;
         }
+        
+        public int getServerStartupDelay() {
+            return serverStartupDelay;
+        }
 
         public void setElasticIP(String elasticIP) {
             this.elasticIP = LoadBalancerConfigUtil.replaceVariables(elasticIP);
@@ -610,6 +619,10 @@ public class LoadBalancerConfiguration implements Serializable{
         
         public void setAutoscaler_task_interval(String interval) {
             this.autoscalerTaskInterval = Integer.parseInt(interval);
+        }
+        
+        public void setServer_startup_delay(String delay) {
+            this.serverStartupDelay = Integer.parseInt(delay);
         }
     }
 

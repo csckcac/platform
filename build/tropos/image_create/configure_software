@@ -125,7 +125,7 @@ wso2_carbon_server() {
        cp -rf $x $ROOTFS/opt/
     done
 
-	chroot $ROOTFS apt-get update
+	#chroot $ROOTFS apt-get update
 	
 	chroot $ROOTFS apt-get install -y \
 	 nano zip \

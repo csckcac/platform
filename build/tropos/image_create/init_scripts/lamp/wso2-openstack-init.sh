@@ -36,11 +36,11 @@ echo ---------------------------- >> $LOG
 #  copy user-data.txt and rename as payload.zip file
 cp ${instance_path}/user-data.txt ${instance_path}/payload.zip
 
-# if wget error code is 0, there was no error
+# if error code is 0, there was no error
 if [ "$?" = "0" ]; then
 	echo retrieved data >> $LOG
 	rm -Rf ${instance_path}/payload
-	unzip ${instance_path}payload.zip -d ${instance_path}/
+	unzip ${instance_path}/payload.zip -d ${instance_path}/
 	# if unzip error code is 0, there was no error
 	if [ "$?" = "0" ]; then
 		echo Extracted payload >> $LOG

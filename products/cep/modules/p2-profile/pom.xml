@@ -194,6 +194,9 @@
                                 <featureArtifactDef>
                                     org.wso2.carbon:org.wso2.carbon.load.balance.agent.server.feature:${stratos.version}
                                 </featureArtifactDef>
+                                <featureArtifactDef>
+                                    org.wso2.carbon:org.wso2.carbon.databridge.datareceiver.feature:${carbon.version}
+                                </featureArtifactDef>
 
                             </featureArtifacts>
                         </configuration>
@@ -362,6 +365,10 @@
                                 <feature>
                                     <id>org.wso2.carbon.stratos.throttling.agent.feature.group</id>
                                     <version>${stratos.version}</version>
+                                </feature>
+                                <feature>
+                                    <id>org.wso2.carbon.databridge.datareceiver.feature.group</id>
+                                    <version>${carbon.version}</version>
                                 </feature>
                             </features>
                         </configuration>

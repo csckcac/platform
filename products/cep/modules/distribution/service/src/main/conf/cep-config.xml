@@ -1,7 +1,0 @@
-<cepConfiguration xmlns="http://wso2.org/carbon/cep">
-    <!-- details of the Back end runtime provider can be esper or fusion -->
-    <cepEngineProviders>
-        <cepEngineProvider name="fusionEngineProvider" default="true"
-                           class="org.wso2.carbon.cep.fusion.backend.FusionBackEndRuntimeFactory"/>
-    </cepEngineProviders>
-</cepConfiguration>

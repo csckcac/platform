@@ -71,6 +71,7 @@
                         <Import-Package>
                             !org.apache.amber.*;
 							org.codehaus.jettison.json;version="0.0.0",
+							org.slf4j;version="[1.5.10.wso2v1,2)",
                             *;resolution:=optional
                         </Import-Package>
                     </instructions>

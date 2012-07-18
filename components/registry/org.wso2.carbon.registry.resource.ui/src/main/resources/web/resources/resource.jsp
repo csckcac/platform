@@ -22,8 +22,6 @@
 <%@ page import="org.wso2.carbon.ui.CarbonUIUtil" %>
 <%@ page import="org.wso2.carbon.registry.resource.ui.clients.ResourceServiceClient" %>
 <%@ page import="org.wso2.carbon.registry.resource.stub.beans.xsd.ResourceTreeEntryBean" %>
-<%@ page import="org.wso2.carbon.registry.resource.stub.beans.xsd.MetadataBean" %>
-
 
 <jsp:include page="../dialog/display_messages.jsp"/>
 
@@ -69,10 +67,8 @@
     boolean isRoot = false;
     String location = "";
     ResourceTreeEntryBean resourceTreeEntryBean = null;
-    MetadataBean metadata = null;
     try {
         client = new ResourceServiceClient(config, session);
-        metadata = client.getMetadata(request);
         String path = request.getParameter("path");
         if (path == null || path.equals("")) {
             path = "/";
@@ -230,7 +226,7 @@
                         <jsp:include page="<%=relationsPath%>"/>
                         <% } %>
 
-                        <% if (retentionFound && !resourceTreeEntryBean.getCollection() && metadata.getPutAllowed()) {
+                        <% if (retentionFound && !resourceTreeEntryBean.getCollection()) {
                             String retentionPath = "../properties/retention_ajaxprocessor.jsp?path="
                                     + RegistryUtil.getPath(request).replaceAll("&","%26");
                         %>

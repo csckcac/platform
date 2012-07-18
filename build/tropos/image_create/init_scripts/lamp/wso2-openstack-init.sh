@@ -56,7 +56,7 @@ chmod -R 0600 ${instance_path}/payload/wso2-key
 cat ${instance_path}/payload/known_hosts >> ~/.ssh/known_hosts
 
 # Export the variables passed from the payload
-for i in `/usr/bin/ruby /opt/scripts/get-launch-params.rb`
+for i in `/usr/bin/ruby /opt/get-launch-params.rb`
 do
   export ${i}
   echo "export" ${i} >> /home/ubuntu/.bashrc

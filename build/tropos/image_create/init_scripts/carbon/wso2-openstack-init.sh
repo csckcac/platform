@@ -71,7 +71,7 @@ temp_private_ip=`ifconfig eth0 | grep inet | grep -v inet6 | cut -d ":" -f 2 | c
 PRIVATE_IP=$temp_private_ip
 
 
-for i in `/usr/bin/ruby /opt/scripts/get-launch-params.rb`
+for i in `/usr/bin/ruby /opt/get-launch-params.rb`
 do
   export ${i}
   echo "export" ${i} >> /home/ubuntu/.bashrc

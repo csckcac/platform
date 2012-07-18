@@ -30,8 +30,9 @@ echo ---------------------------- >> $LOG
 
 # copy user-data.txt and rename as payload.zip file
 cp ${instance_path}/user-data.txt ${instance_path}/payload.zip
+unzip ${instance_path}payload.zip -d ${instance_path}/
 
-# if wget error code is 0, there was no error
+# if error code is 0, there was no error
 if [ "$?" = "0" ]; then
 	echo retrieved data >> $LOG
 	rm -Rf ${instance_path}/payload
@@ -77,7 +78,7 @@ do
 done
 
 # Copying the product from the controller
-scp -i ${instance_path}/payload/wso2-key root@${CONTROLLER_IP}:/opt/${PRODUCT_NAME} /opt/
+scp -i ${instance_path}/payload/wso2-key root@${CONTROLLER_IP}:/opt/${PRODUCT_NAME}.zip /opt/
 
 if [ "$ADMIN_USERNAME" = "" ]; then
 	echo Launching with default admin username >> $LOG

@@ -28,6 +28,8 @@ public class AppFactoryConstants {
     public static final String SERVER_ADMIN_PASSWORD = "AdminPassword";
     public static final String DEPLOYMENT_STAGES = "ApplicationDeployment.DeploymentStage";
     public static final String DEPLOYMENT_URL = "DeploymentServerURL";
+
+    public static final String ENDPOINT_DEPLOY_TO_STAGE = "WebServiceEndPoints.DeployToStage";
     
     public static final String SCM_ADMIN_NAME = "RepositoryMGTConfig.SCMServerAdminUserName";
     public static final String SCM_ADMIN_PASSWORD = "RepositoryMGTConfig.SCMServerAdminPassword";

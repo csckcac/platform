@@ -15,6 +15,8 @@
  */
 package org.wso2.carbon.url.mapper;
 
+import org.apache.catalina.Host;
+
 import java.util.List;
 
 public interface HotUpdateService {
@@ -22,4 +24,7 @@ public interface HotUpdateService {
     public List<String> getMappigsPerWebapp(String webAppName);
     
     public void deleteHost(String webappName);
+    
+    public Host addHost(String hostName);
+
 }

@@ -15,6 +15,7 @@
  */
 package org.wso2.carbon.url.mapper.internal;
 
+import org.apache.catalina.Host;
 import org.apache.commons.logging.Log;
 import org.apache.commons.logging.LogFactory;
 import org.wso2.carbon.url.mapper.HotUpdateService;
@@ -49,5 +50,9 @@ public class HotUpdateManager implements HotUpdateService {
         } catch (UrlMapperException e) {
             log.error("error while removing host for " + webappName, e);
         }
+    }
+
+    public Host addHost(String hostName) {
+        return HostUtil.addHostToEngine(hostName);
     }
 }

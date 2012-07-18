@@ -246,7 +246,7 @@ public class HostUtil {
 
             }
         }
-        Host host = addHostToEngine(hostName, webAppsDir);
+        Host host = addHostToEngine(hostName);
         try {
 
             // deploying the copied webapp as the root in our own host directory
@@ -283,8 +283,8 @@ public class HostUtil {
      * @param hostName name of the host
      * @return will return the added host of Engine
      */
-    public static Host addHostToEngine(String hostName, String appBase) {
-        String hostBaseDir = appBase;
+    public static Host addHostToEngine(String hostName) {
+        String hostBaseDir = CarbonUtils.getCarbonRepository() + "/" + UrlMapperConstants.HostProperties.WEB_APPS + "/";
         CarbonTomcatService carbonTomcatService = DataHolder.getInstance().getCarbonTomcatService();
         // adding virtual host to tomcat engine
         Engine engine = carbonTomcatService.getTomcat().getEngine();

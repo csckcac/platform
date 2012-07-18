@@ -60,12 +60,6 @@ public class AppFactoryRXTServiceComponent {
             log.error("Can not add rxts", e);
         }
 
-        try {
-            //addAppFactoryLifecycles();
-        } catch (Exception e) {
-            log.error("Can not add AppFactory Lifecycles..", e);
-        }
-
         if (log.isDebugEnabled()) {
             log.debug("Appfactory common bundle is activated");
         }

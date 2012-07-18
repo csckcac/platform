@@ -27,6 +27,7 @@
 <%@ page import="java.util.ArrayList" %>
 <%@ page import="java.util.List" %>
 <%@ page import="java.util.Map" %>
+<%@ page import="org.apache.commons.lang.StringEscapeUtils" %>
 
 <script type="text/javascript" src="global-params.js"></script>
 <script type="text/javascript" src="../carbon/admin/js/breadcrumbs.js"></script>
@@ -83,6 +84,8 @@ for (String key : map.keySet()) {
     }
 
     paramValue = map.get(key)[0].trim();
+    //escaping values submitted by UI before creating xml configuration,
+    paramValue = StringEscapeUtils.escapeXml(paramValue);
     param = new TransportParameter();
     param.setName(key);
     param.setValue(paramValue);

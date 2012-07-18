@@ -44,7 +44,14 @@
             <groupId>org.wso2.carbon</groupId>
             <artifactId>org.wso2.carbon.transport.mgt.stub</artifactId>
         </dependency>
+        <dependency>
+            <groupId>commons-lang.wso2</groupId>
+            <artifactId>commons-lang</artifactId>
+            <version>${orbit.version.commons.lang}</version>
+        </dependency>
+
     </dependencies>
+
 
     <build>
         <plugins>

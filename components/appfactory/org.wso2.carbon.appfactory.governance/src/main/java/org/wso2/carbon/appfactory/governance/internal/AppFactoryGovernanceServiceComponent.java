@@ -45,12 +45,12 @@ import java.io.IOException;
  * interface="org.wso2.carbon.user.core.service.RealmService"
  * cardinality="1..1" policy="dynamic" bind="setRealmService" unbind="unsetRealmService"
  */
-public class AppFactoryRXTServiceComponent {
+public class AppFactoryGovernanceServiceComponent {
 
-    private static final Log log = LogFactory.getLog(AppFactoryRXTServiceComponent.class);
+    private static final Log log = LogFactory.getLog(AppFactoryGovernanceServiceComponent.class);
 
     protected void activate(ComponentContext context) {
-        log.info("AppFactoryRXTServiceComponent activating...");
+        log.info("AppFactoryGovernanceServiceComponent activating...");
         BundleContext bundleContext = context.getBundleContext();
         //AppFactoryConfiguration configuration;
 

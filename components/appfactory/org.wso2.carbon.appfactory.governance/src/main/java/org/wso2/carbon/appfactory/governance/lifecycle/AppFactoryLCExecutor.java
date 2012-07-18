@@ -1,7 +1,15 @@
 package org.wso2.carbon.appfactory.governance.lifecycle;
 
+import org.apache.axiom.om.OMElement;
+import org.apache.axiom.om.impl.builder.StAXOMBuilder;
+import org.apache.axis2.AxisFault;
+import org.apache.axis2.addressing.EndpointReference;
+import org.apache.axis2.client.ServiceClient;
 import org.apache.commons.logging.Log;
 import org.apache.commons.logging.LogFactory;
+import org.wso2.carbon.appfactory.common.AppFactoryConfiguration;
+import org.wso2.carbon.appfactory.common.AppFactoryConstants;
+import org.wso2.carbon.appfactory.svn.repository.mgt.util.Util;
 import org.wso2.carbon.governance.registry.extensions.executors.ServiceVersionExecutor;
 import org.wso2.carbon.governance.registry.extensions.executors.utils.ExecutorConstants;
 import org.wso2.carbon.governance.registry.extensions.executors.utils.Utils;
@@ -12,6 +20,8 @@ import org.wso2.carbon.registry.core.ResourcePath;
 import org.wso2.carbon.registry.core.exceptions.RegistryException;
 import org.wso2.carbon.registry.core.jdbc.handlers.RequestContext;
 
+import javax.xml.stream.XMLStreamException;
+import java.io.ByteArrayInputStream;
 import java.util.HashMap;
 import java.util.Map;
 
@@ -53,10 +63,10 @@ public class AppFactoryLCExecutor implements Execution {
         String resourcePath = requestContext.getResource().getPath();
         String newPath;
 
-//        Now we are going to get the list of parameters from the context and add it to a map
+        //        Now we are going to get the list of parameters from the context and add it to a map
         Map<String, String> currentParameterMap = new HashMap<String, String>();
 
-//        Here we are populating the parameter map that was given from the UI
+        //        Here we are populating the parameter map that was given from the UI
         if (!populateParameterMap(requestContext, currentParameterMap)) {
             log.error("Failed to populate the parameter map");
             return false;
@@ -154,6 +164,12 @@ public class AppFactoryLCExecutor implements Execution {
 //           We avoid copying dependencies here
             copyAllAssociations(requestContext.getRegistry(), newPath, resourcePath);
 
+
+            // Executing the bpel
+            executeBPEL();
+
+
+
             return true;
         } catch (RegistryException e) {
             e.printStackTrace();  //To change body of catch statement use File | Settings | File Templates.
@@ -191,6 +207,53 @@ public class AppFactoryLCExecutor implements Execution {
         if (copyComments) {
             Utils.copyComments(registry, newPath, path);
         }
+    }
+
+
+    //private void executeBPEL(final String applicationId, final String version, final String revision) {
+    private void executeBPEL() {
+
+
+        AppFactoryConfiguration configuration= Util.getConfiguration();
+        final String EPR2 = configuration.getFirstProperty(AppFactoryConstants.ENDPOINT_DEPLOY_TO_STAGE);
+        final String EPR = "https://10.100.2.101:9443/services/echo";
+
+        new Thread(new Runnable() {
+            public void run() {
+                try {
+                    Thread.sleep(5000);
+                } catch (InterruptedException ignored) {
+                }
+                try {
+                    //Create a service client
+                    ServiceClient client = new ServiceClient();
+
+                    //Set the endpoint address
+                    client.getOptions().setTo(new EndpointReference(EPR));
+                    client.getOptions().setAction("echoInt");
+
+                    //Make the request and get the response
+                    client.sendReceive(getPayload());
+                } catch (AxisFault e) {
+                    log.error(e);
+                    e.printStackTrace();
+                } catch (XMLStreamException e) {
+                    log.error(e);
+                }
+            }
+        }).start();
+    }
+
+    private static OMElement getPayload() throws XMLStreamException, javax.xml.stream.XMLStreamException {
+    //private static OMElement getPayload(String applicationId, String version, String revision) throws XMLStreamException, javax.xml.stream.XMLStreamException {
+        /*String payload = "<p:callbackMessgae xmlns:p=\"http://localhost:9763/services/ArtifactCreateCallbackService\"><applicationId>" + applicationId +
+                "</applicationId><revision>" + revision + "</revision><version>" + version + "</version></p:callbackMessgae>";*/
+
+        String payload = "   <p:echoInt xmlns:p=\"http://echo.services.core.carbon.wso2.org\">\n" +
+                "      <!--0 to 1 occurrence-->\n" +
+                "      <in>2</in>\n" +
+                "   </p:echoInt>";
+        return new StAXOMBuilder(new ByteArrayInputStream(payload.getBytes())).getDocumentElement();
     }
 
 

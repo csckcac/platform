@@ -1,5 +1,8 @@
 #!/bin/bash
 
+# Die on any error:
+set -e
+
 RELEASE="2012-02-25"
 SSHD_CONFIG="/etc/ssh/sshd_config"
 CONFIG_FILE="conf/stratos_scripting.conf"
@@ -15,8 +18,15 @@ work_dir=""
 image_root=""
 image_keys_file=""
 image_template=""
-svn_url=""
-svn_dir=""
+software=""
+
+# Make sure the user is running as root.
+
+if [ "$UID" -ne "0" ]; then
+	echo ; echo "  You must be root to run $0.  (Try running 'sudo bash' first.)" ; echo 
+	exit 69
+fi
+
 
 function image_validate {
     if [ -z $action ]; then
@@ -29,7 +39,7 @@ function image_validate {
         exit 1
     fi
 
-    if [[ (-n $action) && ($action == "create") && (-z $image_id || -z $image_user || -z $image_password || -z $ip1 || -z $ip2 || -z $image_root || -z $image_keys_file || -z $image_template ) ]]; then
+    if [[ (-n $action) && ($action == "create") && (-z $image_id || -z $image_user || -z $image_password || -z $image_root || -z $image_template ) ]]; then
         echo "usage: image_action.sh action=create image-id=<image id> image-user=<image_user> image-password=<password> ip1=<ip1> ip2=<ip2> image-mask=<mask> image-root=<image_root> image-keys-file=<image keys file> template=<template> "
         echo "usage example: image_action.sh action=create image-id=12345678 image-user=yang image-password=yang ip1=10.100.1.20 ip2=192.168.254.2 image-root=/opt/lxc template=lamp "
         exit 1
@@ -102,6 +112,11 @@ for var in $@; do
         image_image="$value"
         echo "image-image:" $image_image
     fi
+    
+    if [ $key = "software" ]; then
+        software="$value"
+        echo "software:" $software
+    fi
 
 done
 
@@ -138,26 +153,51 @@ if [[ (-n $action) && ($action == "mount") ]]; then
     exit 0
 fi
 
-#create image for the user
-if [ -d "$image_id" ]; then
-    echo "image setup directory already exists!!!"
-else
-    cp -rf ./image_setup_base "$image_id"
+# Where to create newly-created LXC container rootfs filesystems, fstabs, and confs:
+export BASEDIR=$work_dir
+
+# This user is added and given admin rights via sudo:
+export INSTALL_USERNAME=$image_user
+
+# This is the cleartext password for the above user.
+export INSTALL_PASSWORD=$image_password
+
+export LB_IP=$ip1
+
+export HOST_MACHINE_IP=$ip2
+
+# This file gets copied into /home/$INSTALL_USERNAME/.ssh/ in the new rootfs.
+export AUTHORIZED_KEYS_TO_COPY=$image_keys_file
+
+# This is a list of semi-colon separated files/directories that will be needed by templates.
+export SOFTWARE="$software"
+
+export HOST=$image_id
+export ROOTFS=$work_dir/$image_id
+export TEMPLATE=$image_template
+export LB_IP=$ip1
+export HM_IP=$ip2
+
+
+
+if [ -z "$ROOTFS" ]; then
+	ROOTFS="$BASEDIR/$HOST"
 fi
-cd "$image_id"
 
-sed -i "s#temp_base#$work_dir#" ./lxc-ubuntu-x.conf
-sed -i "s/temp_user/$image_user/" ./lxc-ubuntu-x.conf
-sed -i "s/temp_password/$image_password/" ./lxc-ubuntu-x.conf
-sed -i "s/temp_ip1/$ip1/" ./lxc-ubuntu-x.conf
-sed -i "s#temp_keys#$image_keys_file#" ./lxc-ubuntu-x.conf
 
-./lxc-ubuntu-x $image_id $work_dir/$image_id $image_template $ip1 $ip2
-cd ..
+if [ -z "$TEMPLATE" ]; then
+	TEMPLATE="default"
+fi
+
+# to watch for the corner case that the $HOST and $TEMPLATE are the 
+# same name (to prevent the new HOST from overwriting the TEMPLATE).
+if [ "$HOST" == "$TEMPLATE" ]; then
+	echo "ERROR: A new LXC host cannot be its own template; you have $TEMPLATE for both."
+	exit 43
+fi
+
+./configure_software $HOST $ROOTFS $TEMPLATE $LB_IP $HM_IP
 echo
-echo Release: $RELEASE
-echo
-
 
 exit
 

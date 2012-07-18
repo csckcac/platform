@@ -3,7 +3,7 @@
 HOST=$1
 ROOTFS=$2
 TEMPLATE=$3
-CONTAINER_IP=$4
+LB_IP=$4
 HM_IP=$5
 
 #
@@ -23,6 +23,15 @@ DEBMIRROR="http://lk.archive.ubuntu.com/ubuntu/"
 
 
 lamp() {
+
+    # Copy software
+    arr=$(echo $SOFTWARE | tr ":" "\n")
+    for x in $arr
+    do
+       cp -rf $x $ROOTFS/opt/
+    done
+
+
 	# MySQL still prompts.  Bug.
 	#DEBCONF_FRONTEND='noninteractive' 
 	
@@ -113,6 +122,37 @@ s/\t  and runlevel \[2345\])/#\t  and runlevel \[2345\])/
 	popd
 	
 }
+
+wso2_carbon_server() {
+
+    cp -f ./init_scripts/carbon/wso2-openstack-init.sh $ROOTFS/opt/
+    # Copy software
+    arr=$(echo $SOFTWARE | tr ":" "\n")
+    for x in $arr
+    do
+       cp -rf $x $ROOTFS/opt/
+    done
+
+	chroot $ROOTFS apt-get update
+	
+	chroot $ROOTFS apt-get install -y \
+	 nano zip \
+	 wget \
+	 openssl ssl-cert ldap-utils 
+   
+	# Be sure to have a new SSL cert for this new LXC host:
+	#rm -f $ROOTFS/etc/ssl/private/ssl-cert-snakeoil.key
+	#chroot $ROOTFS dpkg-reconfigure ssl-cert
+
+pushd $ROOTFS/etc
+    echo "#!/bin/bash -e
+/opt/wso2-openstack-init.sh > /var/log/wso2-openstack-init.log
+exit 0
+    " > rc.local
+    popd
+
+}
+
 
 # Don't prompt when running apt-get:
 # NOTE: Package "console-setup" still prompts unless installed w/debootstrap. (Why?)

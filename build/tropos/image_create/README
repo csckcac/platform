@@ -25,7 +25,8 @@ image-root - Put the downloaded image into <image_root>/original_image folder
 template - template to customize the image
 image-size - The original image will be resized to this size. (in Giga bytes)
 original-image - original image archive name(.tar.gz)
+software - Additional software to copy into the instances /opt folder
 
 This will resize the image to 3G and install lamp packages.
 
-You can provide your own template instead of lamp in the above command. To do that you need to implement your own template in image_setup_base/hooks.d/configure_software file. To do that you can learn how it is done for lamp template in the the same file. Copying the lamp() template function into a new funciton say myfunc() and customizing it, is the best approach.
+You can provide your own template instead of lamp in the above command. To do that you need to implement your own template in configure_software file. To do that you can learn how it is done for lamp template in the the same file. Copying the lamp() template function into a new funciton say myfunc() and customizing it, is the best approach.

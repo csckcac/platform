@@ -142,7 +142,7 @@ public class GovernanceArtifactManager {
                     pathExpression, artifact);
 
             if(registry.resourceExists(path)){
-                throw new GovernanceException("Governance artifact already exists");
+                throw new GovernanceException("Governance artifact already exists.");
             }
 
             String artifactId = artifact.getId();
@@ -324,7 +324,7 @@ public class GovernanceArtifactManager {
                     }
                 }
             } else {
-                throw new GovernanceException("No artifact found for the artifact id :" + artifact.getId());
+                throw new GovernanceException("No artifact found for the artifact id :" + artifact.getId() + ".");
             }
 
             String artifactId =  artifact.getId();

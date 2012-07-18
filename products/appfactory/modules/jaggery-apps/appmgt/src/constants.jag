@@ -1,6 +1,6 @@
 <%
     // collection names
-    var APPLICATIONS = "applications/";
+    var APPLICATIONS = "repository/applications/";
     var USER_APPLICATIONS_MAPPING = "userApplicationMapping/";
 	var APPLICATION_STAGES = "stages/";
 

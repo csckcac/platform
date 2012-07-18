@@ -98,11 +98,11 @@ public class TomcatGenericWebappsDeployer {
         try {
             currentCarbonContextHolder.setTenantId(tenantId);
             currentCarbonContextHolder.setTenantDomain(tenantDomain);
-            if(webappName.contains(".")) {
-                //removing extension to get app name
-                currentCarbonAppContextHolder.setApplicationName(webappName.substring(0, webappName.indexOf(".")));
-            } else {
+            if(webappFile.isDirectory()) {
                 currentCarbonAppContextHolder.setApplicationName(webappName);
+            } else if(webappName.contains(".war") || webappName.contains(".zip")) {
+                //removing extension to get app name for .war and .zip
+                currentCarbonAppContextHolder.setApplicationName(webappName.substring(0, webappName.indexOf(".war")));
             }
             long lastModifiedTime = webappFile.lastModified();
             WebApplication deployedWebapp =

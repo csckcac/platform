@@ -19,23 +19,23 @@
 
     <build>
         <plugins>
-            <plugin> 
-		<groupId>org.jvnet.maven.incrementalbuild</groupId> 
+            <plugin>
+		<groupId>org.jvnet.maven.incrementalbuild</groupId>
 		<artifactId>incremental-build-plugin</artifactId>
 		<version>1.3</version>
-		<executions> 
-		    <execution> 
-		        <goals> 
+		<executions>
+		    <execution>
+		        <goals>
 			    <goal>incremental-build</goal>
 			</goals>
-		    </execution> 
-		</executions> 
+		    </execution>
+		</executions>
 	    </plugin>
         </plugins>
     </build>
 
             <modules>
-                <!--module>cassandra</module-->
+                <module>cassandra</module>
                 <module>commons-vfs/2.0-wso2v3</module>
                 <module>commons/balana</module>
                 <module>commons/caching</module>
@@ -60,16 +60,16 @@
                 <module>svnclient</module>
 		<module>synapse/2.1.0-wso2v6</module>
 		<module>thrift</module>
-		<module>webharvest</module>	
+		<module>webharvest</module>
 		<module>andes</module>
 		<module>closure-js-plugin</module>
                 <module>snappy-java</module>
-		<!--module>hive</module-->
-		<!--module>hadoop</module-->
+                <module>hive/0.8.1-wso2v2</module>
+		<module>hadoop</module>
 		<module>datanucleus</module>
 		<module>amber</module>
 		<!-- orbit/modules -->
-                <!--module>orbit/cassandra</module-->
+                <module>orbit/cassandra</module>
                 <module>orbit/cassandra-jdbc</module>
                 <module>orbit/commons-vfs</module>
                 <!--module>orbit/hector</module-->
@@ -93,11 +93,11 @@
 		<module>orbit/andes</module>
 		<module>orbit/andes-client</module>
 		<module>orbit/snappy-java</module>
-		<!--module>orbit/hive</module-->
+		<module>orbit/hive</module>
 		<module>orbit/datanucleus-core</module>
 		<module>orbit/amber</module>
-		
-		<!--module>orbit/hadoop-core</module-->
+
+		<module>orbit/hadoop-core</module>
 	     </modules>
    <dependencyManagement>
 	<dependencies>

@@ -24,9 +24,6 @@ import org.wso2.carbon.bam.toolbox.deployer.BAMToolBoxDeployerConstants;
 import org.wso2.carbon.bam.toolbox.deployer.BasicToolBox;
 import org.wso2.carbon.bam.toolbox.deployer.ServiceHolder;
 import org.wso2.carbon.base.api.ServerConfigurationService;
-import org.wso2.carbon.dashboard.DashboardDSService;
-import org.wso2.carbon.dashboard.mgt.gadgetrepo.GadgetRepoService;
-import org.wso2.carbon.databridge.core.DataBridgeReceiverService;
 import org.wso2.carbon.ndatasource.core.DataSourceService;
 import org.wso2.carbon.registry.core.service.RegistryService;
 import org.wso2.carbon.user.core.UserRealm;
@@ -43,58 +40,40 @@ import java.util.Properties;
  * @scr.component name="org.wso2.carbon.bam.toolbox.deployer" immediate="true"
  * @scr.reference name="server.configuration"
  * interface="org.wso2.carbon.base.api.ServerConfigurationService"
- * cardinality="0..1"
+ * cardinality="1..1"
  * policy="dynamic"
  * bind="setServerConfiguration"
  * unbind="unsetServerConfiguration"
  * @scr.reference name="registry.service"
  * interface="org.wso2.carbon.registry.core.service.RegistryService"
- * cardinality="0..1"
+ * cardinality="1..1"
  * policy="dynamic"
  * bind="setRegistryService"
  * unbind="unsetRegistryService"
  * @scr.reference name="config.context.service"
  * interface="org.wso2.carbon.utils.ConfigurationContextService"
- * cardinality="0..1"
+ * cardinality="1..1"
  * policy="dynamic"
  * bind="setConfigurationContextService"
  * unbind="unsetConfigurationContextService"
  * @scr.reference name="user.realm.delegating"
  * interface="org.wso2.carbon.user.core.UserRealm"
- * cardinality="0..1"
+ * cardinality="1..1"
  * policy="dynamic"
  * bind="setUserRealm"
  * unbind="unsetUserRealm"
  * @scr.reference name="user.realmservice.default"
  * interface="org.wso2.carbon.user.core.service.RealmService"
- * cardinality="0..1"
+ * cardinality="1..1"
  * policy="dynamic"
  * bind="setRealmService"
  * unbind="unsetRealmService"
- * @scr.reference name="org.wso2.carbon.dashboard.DashboardDSService"
- * interface="org.wso2.carbon.dashboard.DashboardDSService"
- * cardinality="0..1"
- * policy="dynamic"
- * bind="setDashboardService"
- * unbind="unsetDashboardService"
- * @scr.reference name="org.wso2.carbon.dashboard.mgt.gadgetrepo.GadgetRepoService"
- * interface="org.wso2.carbon.dashboard.mgt.gadgetrepo.GadgetRepoService"
- * cardinality="0..1"
- * policy="dynamic"
- * bind="setGadgetRepoService"
- * unbind="unsetGadgetRepoService"
  * @scr.reference name="datasources.service"
  * interface="org.wso2.carbon.ndatasource.core.DataSourceService"
- * cardinality="0..1"
+ * cardinality="1..1"
  * policy="dynamic"
  * bind="setDataSourceService"
  * unbind="unsetDataSourceService"
- * @scr.reference name="databridge.reciever"
- * interface="org.wso2.carbon.databridge.core.DataBridgeReceiverService"
- * cardinality="0..1"
- * policy="dynamic"
- * bind="setDataBridgeReceiverService"
- * unbind="unsetDataBridgeReceiverService"
  */
 
 public class BAMToolBoxDeployerComponent {
@@ -127,10 +106,10 @@ public class BAMToolBoxDeployerComponent {
                                 aToolVar + "." + BAMToolBoxDeployerConstants.TOOLBOXES_LOCATION_SUFFIX);
                         String desc = props.getProperty(BAMToolBoxDeployerConstants.TOOLBOXES_PREFIX + "." +
                                 aToolVar + "." + BAMToolBoxDeployerConstants.TOOLBOXES_DESC_SUFFIX);
-                        if (((null != location && !location.equals("")) && (null != displayName && !displayName.equals("")))){
-                            if(location.indexOf(BAMToolBoxDeployerConstants.CARBON_HOME) == 0){
-                                 location = location.substring(BAMToolBoxDeployerConstants.CARBON_HOME.length());
-                                 location = CarbonUtils.getCarbonHome() + location;
+                        if (((null != location && !location.equals("")) && (null != displayName && !displayName.equals("")))) {
+                            if (location.indexOf(BAMToolBoxDeployerConstants.CARBON_HOME) == 0) {
+                                location = location.substring(BAMToolBoxDeployerConstants.CARBON_HOME.length());
+                                location = CarbonUtils.getCarbonHome() + location;
                             }
                             BasicToolBox toolBox = new BasicToolBox(toolBoxId, location, displayName, desc);
                             BasicToolBox.addToAvailableToolBox(toolBox);
@@ -186,13 +165,6 @@ public class BAMToolBoxDeployerComponent {
         ServiceHolder.setRealmService(null);
     }
 
-    protected void setDashboardService(DashboardDSService dashboardService) {
-        ServiceHolder.setDashboardService(dashboardService);
-    }
-
-    protected void unsetDashboardService(DashboardDSService dashboardService) {
-        ServiceHolder.setDashboardService(null);
-    }
 
     protected void setServerConfiguration(ServerConfigurationService serverConfiguration) {
         ServiceHolder.setServerConfiguration(serverConfiguration);
@@ -200,15 +172,6 @@ public class BAMToolBoxDeployerComponent {
 
     protected void unsetServerConfiguration(ServerConfigurationService serverConfiguration) {
         ServiceHolder.setConfigurationContextService(null);
-    }
-
-
-    protected void setGadgetRepoService(GadgetRepoService gadgetRepoService) {
-        ServiceHolder.setGadgetRepoService(gadgetRepoService);
-    }
-
-    protected void unsetGadgetRepoService(GadgetRepoService gadgetRepoService) {
-        ServiceHolder.setGadgetRepoService(null);
     }
 
     protected void setDataSourceService(DataSourceService dataSourceService) {
@@ -225,13 +188,4 @@ public class BAMToolBoxDeployerComponent {
         }
         ServiceHolder.setDataSourceService(null);
     }
-
-    protected void setDataBridgeReceiverService(DataBridgeReceiverService dataBridgeReceiverService) {
-        ServiceHolder.setDataBridgeReceiverService(dataBridgeReceiverService);
-    }
-
-    protected void unsetDataBridgeReceiverService(DataBridgeReceiverService dataBridgeReceiverService) {
-        ServiceHolder.setDataBridgeReceiverService(null);
-    }
-
 }

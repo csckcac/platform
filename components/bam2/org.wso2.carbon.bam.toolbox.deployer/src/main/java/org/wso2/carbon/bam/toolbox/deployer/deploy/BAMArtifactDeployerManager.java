@@ -187,7 +187,8 @@ public class BAMArtifactDeployerManager {
 
     private boolean canDeployDataStreamDefn() {
         if (null == ServiceHolder.getDataBridgeReceiverService()) {
-            log.warn("No DataReceiverService Found! Skipping deploying DataStream Definitions..");
+            if (log.isDebugEnabled())
+                log.debug("No DataReceiverService Found! Skipping deploying DataStream Definitions..");
             return false;
         } else return true;
     }
@@ -258,10 +259,11 @@ public class BAMArtifactDeployerManager {
     }
 
     private boolean canDeployGadgets() {
-        try {
-            Class serviceClass = Class.forName("org.wso2.carbon.dashboard.DashboardDSService");
+        if (null != ServiceHolder.getDashboardService() && null != ServiceHolder.getGadgetRepoService()) {
             return true;
-        } catch (ClassNotFoundException e) {
+        } else {
+            if (log.isDebugEnabled())
+                log.debug("Dashboard services are not found. Skipping deploying dashboard artifacts");
             return false;
         }
     }

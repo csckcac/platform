@@ -5,8 +5,8 @@ How to Run KPI Sample
 3. Type 'ant' with in the directory from the console
     (This publishes the events to BAM)
 4. Go to management console and login
-5. Go to Main -> BAM Toolbox -> Add. Select 'KPI sample Toolbox' and click on deploy
-6. Go to Main -> BAM Toolbox -> List. And refresh the page until the 'KPI_Sample' toolbox status changes to deployed. 
-7. Go to Main -> Analytics -> List and click on Edit and Run the kpi_script
-8. Go to Main -> BAM Dashboard. You will see the sample gadgets for Analyzed Data.
+5. Go to Main -> BAM Toolbox -> Add. Select 'Phone Retail Store' and click on Install button
+6. Go to Main -> BAM Toolbox -> List. Wait until the 'KPI_Phone_Retail_Store' toolbox status changes to Installed. 
+7. Wait for some time (approx 1min) until the scripts run on publish data.
+8. Click on Main -> Gadgets -> View portal to see the populated gadgets on the summarized data.
 

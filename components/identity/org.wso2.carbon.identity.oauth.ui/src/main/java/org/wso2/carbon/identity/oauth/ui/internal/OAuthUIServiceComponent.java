@@ -19,8 +19,10 @@ package org.wso2.carbon.identity.oauth.ui.internal;
 
 import org.apache.commons.logging.Log;
 import org.apache.commons.logging.LogFactory;
+import org.eclipse.equinox.http.helper.ContextPathServletAdaptor;
 import org.osgi.service.component.ComponentContext;
 import org.osgi.service.http.HttpService;
+import org.osgi.service.http.NamespaceException;
 import org.wso2.carbon.base.api.ServerConfigurationService;
 import org.wso2.carbon.identity.oauth.ui.OAuthServlet;
 import org.wso2.carbon.identity.oauth.ui.endpoints.authz.OAuth2AuthzEndpoint;
@@ -29,6 +31,7 @@ import org.wso2.carbon.identity.oauth.ui.endpoints.token.OAuth2TokenEndpointServ
 import org.wso2.carbon.utils.ConfigurationContextService;
 
 import javax.servlet.Servlet;
+import javax.servlet.ServletException;
 import javax.servlet.http.HttpServlet;
 import java.util.Dictionary;
 import java.util.Hashtable;
@@ -48,6 +51,8 @@ public class OAuthUIServiceComponent {
 
     private static final Log log = LogFactory.getLog(OAuthUIServiceComponent.class);
     private static final String PATH = "/oauth2/token";
+    private HttpService httpService;
+
 
     protected void activate(ComponentContext context) {
         log.debug("Activating Identity OAuth UI bundle.");
@@ -60,14 +65,22 @@ public class OAuthUIServiceComponent {
         context.getBundleContext().registerService(Servlet.class.getName(), oauthServlet, oauthServletParams);
         log.debug("Successfully registered an instance of OAuthServlet");
 
-        //Register a servlet to to act as the OAuth 2.0 Authorize Endpoint
-        HttpServlet oauth2AuthzEndpointServlet = new OAuth2AuthzEndpoint();
-        Dictionary oauth2AuthzEndpointParams = new Hashtable(2);
-        oauth2AuthzEndpointParams.put("url-pattern", "/oauth2/authorize");
-        oauth2AuthzEndpointParams.put("display-name", "OAuth 2.0 Authorize Endpoint.");
-        context.getBundleContext().registerService(Servlet.class.getName(),
-                oauth2AuthzEndpointServlet,
-                oauth2AuthzEndpointParams);
+//        //Register a servlet to to act as the OAuth 2.0 Authorize Endpoint
+//        HttpServlet oauth2AuthzEndpointServlet = new OAuth2AuthzEndpoint();
+//        Dictionary oauth2AuthzEndpointParams = new Hashtable(2);
+//        oauth2AuthzEndpointParams.put("url-pattern", "/oauth2/authorize");
+//        oauth2AuthzEndpointParams.put("display-name", "OAuth 2.0 Authorize Endpoint.");
+//        context.getBundleContext().registerService(Servlet.class.getName(),
+//                oauth2AuthzEndpointServlet,
+//                oauth2AuthzEndpointParams);
+        Servlet oauth2Servlet = new ContextPathServletAdaptor(new OAuth2AuthzEndpoint(), "/oauth2/authorize");
+        try {
+            httpService.registerServlet("/oauth2/authorize", oauth2Servlet, null, null);
+        } catch (ServletException e) {
+            e.printStackTrace();
+        } catch (NamespaceException e) {
+            e.printStackTrace();
+        }
         log.debug("Successfully registered an instance of OAuth2 Authorization Endpoint");
 
         log.debug("Successfully activated Identity OAuth UI bundle.");
@@ -79,6 +92,7 @@ public class OAuthUIServiceComponent {
     }
 
     protected void setHttpService(HttpService httpService){
+        this.httpService = httpService;
             Dictionary oauth2TokEndpointParams = new Hashtable();
             oauth2TokEndpointParams.put("javax.ws.rs.Application", OAuth2EndpointApp.class.getName());
             try {

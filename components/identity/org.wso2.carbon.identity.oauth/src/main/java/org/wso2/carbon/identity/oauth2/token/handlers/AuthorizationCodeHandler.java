@@ -24,7 +24,6 @@ import org.wso2.carbon.identity.oauth2.IdentityOAuth2Exception;
 import org.wso2.carbon.identity.oauth2.dto.OAuth2AccessTokenReqDTO;
 import org.wso2.carbon.identity.oauth2.dto.OAuth2AccessTokenRespDTO;
 import org.wso2.carbon.identity.oauth2.token.OAuthTokenReqMessageContext;
-import org.wso2.carbon.identity.oauth2.token.handlers.AbstractAuthorizationGrantHandler;
 import org.wso2.carbon.identity.oauth2.util.OAuth2Util;
 
 /**
@@ -91,10 +90,4 @@ public class AuthorizationCodeHandler extends AbstractAuthorizationGrantHandler 
         return true;
     }
 
-    @Override
-    public boolean validateScope(OAuthTokenReqMessageContext tokReqMsgCtx)
-            throws IdentityOAuth2Exception {
-        // scope was validated when the authorization code was issued.
-        return true;
-    }
 }

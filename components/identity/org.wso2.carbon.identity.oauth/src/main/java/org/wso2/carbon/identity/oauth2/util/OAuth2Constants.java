@@ -22,4 +22,5 @@ public class OAuth2Constants {
     public static class TokenStates {
         public final static String TOKEN_STATE_ACTIVE = "Active";
     }
+    public static long UNASSIGNED_VALIDITY_PERIOD = -1l;
 }

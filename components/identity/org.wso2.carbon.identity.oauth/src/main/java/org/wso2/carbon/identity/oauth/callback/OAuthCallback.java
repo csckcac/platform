@@ -20,6 +20,7 @@ package org.wso2.carbon.identity.oauth.callback;
 
 import org.apache.amber.oauth2.common.message.types.GrantType;
 import org.apache.amber.oauth2.common.message.types.ResponseType;
+import org.wso2.carbon.identity.oauth2.util.OAuth2Constants;
 
 import javax.security.auth.callback.Callback;
 
@@ -33,7 +34,12 @@ public class OAuthCallback implements Callback {
     /**
      * Used to evaluate the type of the callback
      */
-    public enum OAuthCallbackType { ACCESS_DELEGATION, SCOPE_VALIDATION }
+    public enum OAuthCallbackType {
+        ACCESS_DELEGATION_AUTHZ,
+        SCOPE_VALIDATION_AUTHZ,
+        ACCESS_DELEGATION_TOKEN,
+        SCOPE_VALIDATION_TOKEN
+    }
 
     /**
      * Callback Type
@@ -77,10 +83,16 @@ public class OAuthCallback implements Callback {
     private boolean validScope;
 
     /**
+     * validity period for
+     */
+    private long validityPeriod = OAuth2Constants.UNASSIGNED_VALIDITY_PERIOD;
+
+    /**
      * Creates an instance of the OAuthCallback
+     *
      * @param resourceOwner Claimed resource owner
-     * @param client    Client who will be accessing the resource
-     * @param callbackType the callback type
+     * @param client        Client who will be accessing the resource
+     * @param callbackType  the callback type
      */
     public OAuthCallback(String resourceOwner,
                          String client,
@@ -92,6 +104,7 @@ public class OAuthCallback implements Callback {
 
     /**
      * Get the resource owner
+     *
      * @return Identifier of the Resource Owner
      */
     public String getResourceOwner() {
@@ -100,6 +113,7 @@ public class OAuthCallback implements Callback {
 
     /**
      * Returns the Client
+     *
      * @return Identifier of the Resource Owner
      */
     public String getClient() {
@@ -108,6 +122,7 @@ public class OAuthCallback implements Callback {
 
     /**
      * Returns the callback type
+     *
      * @return <Code>OAuthCallbackType</Code> of the callback type
      */
     public OAuthCallbackType getCallbackType() {
@@ -116,6 +131,7 @@ public class OAuthCallback implements Callback {
 
     /**
      * Returns the Scope corresponding to the Authz Request
+     *
      * @return <Code>String</Code> array representing the scope
      */
     public String[] getRequestedScope() {
@@ -124,6 +140,7 @@ public class OAuthCallback implements Callback {
 
     /**
      * Returns the Scope corresponding to the token Request
+     *
      * @return <Code>String</Code> array representing the scope
      */
     public String[] getApprovedScope() {
@@ -132,6 +149,7 @@ public class OAuthCallback implements Callback {
 
     /**
      * Returns the OAuth2 Grant Type
+     *
      * @return
      */
     public ResponseType getResponseType() {
@@ -140,6 +158,7 @@ public class OAuthCallback implements Callback {
 
     /**
      * Whether the callback is authorized or not
+     *
      * @return <Code>true</Code> if the callback is authorized, <code>false</code> otherwise.
      */
     public boolean isAuthorized() {
@@ -148,6 +167,7 @@ public class OAuthCallback implements Callback {
 
     /**
      * Whether the requested scope is invalid.
+     *
      * @return <Code>true</Code> if scope is invalid, <code>false</code> otherwise.
      */
     public boolean isValidScope() {
@@ -156,6 +176,7 @@ public class OAuthCallback implements Callback {
 
     /**
      * Set whether the callback is authorized or not.
+     *
      * @param authorized <Code>true</Code> if callback is authorized, <code>false</code> otherwise.
      */
     public void setAuthorized(boolean authorized) {
@@ -164,6 +185,7 @@ public class OAuthCallback implements Callback {
 
     /**
      * set whether the scope is invalid or not
+     *
      * @param invalidScope <code>true</code> if scope is invalid.
      */
     public void setValidScope(boolean invalidScope) {
@@ -172,6 +194,7 @@ public class OAuthCallback implements Callback {
 
     /**
      * Set the scope for callback request
+     *
      * @param requestedScope <Code>String</Code> array representing the scope
      */
     public void setRequestedScope(String[] requestedScope) {
@@ -180,6 +203,7 @@ public class OAuthCallback implements Callback {
 
     /**
      * Set the scope for token request
+     *
      * @param approvedScope <Code>String</Code> array representing the scope
      */
     public void setApprovedScope(String[] approvedScope) {
@@ -188,6 +212,7 @@ public class OAuthCallback implements Callback {
 
     /**
      * Sets the response type
+     *
      * @param responseType
      */
     public void setResponseType(ResponseType responseType) {
@@ -196,6 +221,7 @@ public class OAuthCallback implements Callback {
 
     /**
      * Returns the grant type
+     *
      * @return Corresponding <Code>GrantType</Code> of the access token request
      */
     public GrantType getGrantType() {
@@ -204,9 +230,26 @@ public class OAuthCallback implements Callback {
 
     /**
      * Set the Grant Type
+     *
      * @param grantType Corresponding <Code>GrantType</Code> of the access token request
      */
     public void setGrantType(GrantType grantType) {
         this.grantType = grantType;
+    }
+
+    /**
+     * Get the validity period
+     * @return validity period of the next token when applicable
+     */
+    public long getValidityPeriod() {
+        return validityPeriod;
+    }
+
+    /**
+     * Set the validity period
+     * @return validity period of the next token when applicable
+     */
+    public void setValidityPeriod(long validityPeriod) {
+        this.validityPeriod = validityPeriod;
     }
 }

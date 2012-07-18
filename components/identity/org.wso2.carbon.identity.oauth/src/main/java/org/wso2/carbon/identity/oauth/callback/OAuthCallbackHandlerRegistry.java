@@ -20,6 +20,8 @@ package org.wso2.carbon.identity.oauth.callback;
 
 import org.apache.commons.logging.Log;
 import org.apache.commons.logging.LogFactory;
+import org.wso2.carbon.identity.oauth.config.OAuthCallbackHandlerMetaData;
+import org.wso2.carbon.identity.oauth.config.OAuthServerConfiguration;
 import org.wso2.carbon.identity.oauth2.IdentityOAuth2Exception;
 import org.wso2.carbon.identity.oauth2.util.OAuth2Util;
 
@@ -38,9 +40,6 @@ public class OAuthCallbackHandlerRegistry {
     private static OAuthCallbackHandlerRegistry instance = new OAuthCallbackHandlerRegistry();
 
     private transient boolean initAuthzHandlers = false;
-
-    private Set<OAuthCallbackHandlerMetaData> callbackHandlerMetaData =
-            new HashSet<OAuthCallbackHandlerMetaData>();
 
     private OAuthCallbackHandler[] authzCallbackHandlers;
 
@@ -64,10 +63,6 @@ public class OAuthCallbackHandlerRegistry {
         return instance;
     }
 
-    public void addOAuthAuthorizationCallbackHandlerMetadata(
-            OAuthCallbackHandlerMetaData metaData) {
-        callbackHandlerMetaData.add(metaData);
-    }
 
     /**
      * Initialize the OAuthAuthorizationCallbackHandlers. This is a one-time operation.
@@ -82,7 +77,8 @@ public class OAuthCallbackHandlerRegistry {
                     log.debug("initializing the OAuth Authorization Callback Handlers.");
                     List<OAuthCallbackHandler> oauthAuthzHandlers =
                             new ArrayList<OAuthCallbackHandler>();
-
+                    Set<OAuthCallbackHandlerMetaData> callbackHandlerMetaData =
+                            OAuthServerConfiguration.getInstance().getCallbackHandlerMetaData();
                     // create an object of each OAuthCallbackHandler registered.
                     for (OAuthCallbackHandlerMetaData metaData : callbackHandlerMetaData) {
 

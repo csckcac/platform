@@ -21,8 +21,8 @@ package org.wso2.carbon.identity.oauth2.dao;
 public class SQLQueries {
     public static final String STORE_AUTHORIZATION_CODE = "INSERT INTO " +
             "IDENTITY_OAUTH2_AUTHORIZATION_CODE " +
-            "(AUTHORIZATION_CODE, CONSUMER_KEY, SCOPE, AUTHZ_USER) " +
-            "VALUES (?,?,?,?)";
+            "(AUTHORIZATION_CODE, CONSUMER_KEY, SCOPE, AUTHZ_USER, TIME_CREATED, VALIDITY_PERIOD) " +
+            "VALUES (?,?,?,?,?,?)";
     
     public static final String STORE_ACCESS_TOKEN = "INSERT INTO " +
             "IDENTITY_OAUTH2_ACCESS_TOKEN " +

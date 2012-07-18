@@ -21,8 +21,9 @@ package org.wso2.carbon.identity.oauth2.authz.handlers;
 import org.apache.amber.oauth2.common.exception.OAuthSystemException;
 import org.apache.commons.logging.Log;
 import org.apache.commons.logging.LogFactory;
-import org.wso2.carbon.identity.oauth2.authz.OAuthAuthzReqMessageContext;
+import org.wso2.carbon.identity.oauth.config.OAuthServerConfiguration;
 import org.wso2.carbon.identity.oauth2.IdentityOAuth2Exception;
+import org.wso2.carbon.identity.oauth2.authz.OAuthAuthzReqMessageContext;
 import org.wso2.carbon.identity.oauth2.dto.OAuth2AuthorizeReqDTO;
 import org.wso2.carbon.identity.oauth2.dto.OAuth2AuthorizeRespDTO;
 import org.wso2.carbon.identity.oauth2.util.OAuth2Constants;
@@ -51,9 +52,19 @@ public class TokenResponseTypeHandler extends AbstractAuthorizationHandler {
         } catch (OAuthSystemException e) {
             throw new IdentityOAuth2Exception(e.getMessage(), e);
         }
+
         Timestamp timestamp = new Timestamp(new Date().getTime());
+
         // Default Validity Period
-        long validityPeriod = 60 * 60;
+        long validityPeriod = OAuthServerConfiguration.getInstance()
+                .getDefaultAccessTokenValidityPeriod();
+
+        // if a VALID validity period is set through the callback, then use it
+        long callbackValidityPeriod = oauthAuthzMsgCtx.getValidityPeriod();
+        if ((callbackValidityPeriod != OAuth2Constants.UNASSIGNED_VALIDITY_PERIOD)
+                && callbackValidityPeriod > 0) {
+            validityPeriod = callbackValidityPeriod;
+        }
 
         tokenMgtDAO.storeAccessToken(accessToken,
                 null,

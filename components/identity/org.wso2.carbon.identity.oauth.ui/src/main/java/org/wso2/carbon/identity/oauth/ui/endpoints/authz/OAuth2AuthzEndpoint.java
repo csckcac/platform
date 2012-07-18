@@ -32,6 +32,7 @@ import org.wso2.carbon.identity.oauth.common.OAuth2ErrorCodes;
 import org.wso2.carbon.identity.oauth.ui.OAuth2Parameters;
 import org.wso2.carbon.identity.oauth.ui.OAuthConstants;
 import org.wso2.carbon.identity.oauth.ui.client.OAuth2ServiceClient;
+import org.wso2.carbon.identity.oauth.ui.internal.OAuthUIServiceComponentHolder;
 import org.wso2.carbon.identity.oauth2.stub.dto.OAuth2AuthorizeReqDTO;
 import org.wso2.carbon.identity.oauth2.stub.dto.OAuth2AuthorizeRespDTO;
 import org.wso2.carbon.identity.oauth2.stub.dto.OAuth2ClientValidationResponseDTO;
@@ -242,8 +243,8 @@ public class OAuth2AuthzEndpoint extends HttpServlet {
                                                                String clientId,
                                                                String callbackURL) throws OAuthSystemException {
         // authenticate and issue the authorization code
-        String backendServerURL = CarbonUIUtil.getServerURL(req.getSession()
-                .getServletContext(), req.getSession());
+        String backendServerURL = CarbonUIUtil.getServerURL(
+                OAuthUIServiceComponentHolder.getInstance().getServerConfigurationService());
         ConfigurationContext configContext = (ConfigurationContext) req.getSession()
                 .getServletContext().getAttribute(CarbonConstants.CONFIGURATION_CONTEXT);
         try {

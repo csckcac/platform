@@ -55,12 +55,13 @@ public abstract class AbstractAuthorizationHandler implements AuthorizationHandl
         OAuthCallback authzCallback = new OAuthCallback(
                 authorizationReqDTO.getUsername(),
                 authorizationReqDTO.getConsumerKey(),
-                OAuthCallback.OAuthCallbackType.ACCESS_DELEGATION);
+                OAuthCallback.OAuthCallbackType.ACCESS_DELEGATION_AUTHZ);
         authzCallback.setRequestedScope(authorizationReqDTO.getScopes());
-        authzCallback.setResponseType(ResponseType.valueOf(authorizationReqDTO.getResponseType()));
-
+        authzCallback.setResponseType(ResponseType.valueOf(
+                authorizationReqDTO.getResponseType().toUpperCase()));
         callbackManager.handleCallback(authzCallback);
 
+        oauthAuthzMsgCtx.setValidityPeriod(authzCallback.getValidityPeriod());
         return authzCallback.isAuthorized();
     }
 
@@ -71,9 +72,14 @@ public abstract class AbstractAuthorizationHandler implements AuthorizationHandl
         OAuthCallback scopeValidationCallback = new OAuthCallback(
                 authorizationReqDTO.getUsername(),
                 authorizationReqDTO.getConsumerKey(),
-                OAuthCallback.OAuthCallbackType.SCOPE_VALIDATION);
+                OAuthCallback.OAuthCallbackType.SCOPE_VALIDATION_AUTHZ);
         scopeValidationCallback.setRequestedScope(authorizationReqDTO.getScopes());
+        scopeValidationCallback.setResponseType(ResponseType.valueOf(
+                authorizationReqDTO.getResponseType().toUpperCase()));
+
         callbackManager.handleCallback(scopeValidationCallback);
+
+        oauthAuthzMsgCtx.setValidityPeriod(scopeValidationCallback.getValidityPeriod());
         oauthAuthzMsgCtx.setApprovedScope(scopeValidationCallback.getApprovedScope());
         return scopeValidationCallback.isValidScope();
     }

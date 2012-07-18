@@ -32,16 +32,17 @@ import org.wso2.carbon.utils.multitenancy.MultitenantUtils;
 public class OAuth2Util {
 
     private static Log log = LogFactory.getLog(OAuth2Util.class);
-    
+
     /**
      * Build a comma separated list of scopes passed as a String set by Amber.
+     *
      * @param scopes set of scopes
      * @return Comma separated list of scopes
      */
-    public static String buildScopeString(String[] scopes){
+    public static String buildScopeString(String[] scopes) {
         StringBuffer scopeString = new StringBuffer("");
         if (scopes != null) {
-            for(String scope : scopes){
+            for (String scope : scopes) {
                 scopeString.append(scope.trim());
                 scopeString.append(" ");
             }
@@ -49,7 +50,7 @@ public class OAuth2Util {
         return scopeString.toString();
     }
 
-    public static String[] buildScopeArray(String scopeStr){
+    public static String[] buildScopeArray(String scopeStr) {
         scopeStr = scopeStr.trim();
         return scopeStr.split("\\s");
     }
@@ -70,13 +71,14 @@ public class OAuth2Util {
 
     /**
      * Authenticate the OAuth Consumer
-     * @param clientId Consumer Key/Id
+     *
+     * @param clientId             Consumer Key/Id
      * @param clientSecretProvided Consumer Secret issued during the time of registration
      * @return true, if the authentication is successful, false otherwise.
      * @throws IdentityOAuthAdminException Error when looking up the credentials from the database
      */
     public static boolean authenticateClient(String clientId, String clientSecretProvided)
-                                                                throws IdentityOAuthAdminException {
+            throws IdentityOAuthAdminException {
         OAuthConsumerDAO oAuthConsumerDAO = new OAuthConsumerDAO();
         String clientSecret = oAuthConsumerDAO.getOAuthConsumerSecret(clientId);
 
@@ -89,12 +91,12 @@ public class OAuth2Util {
 
         if (!clientSecret.equals(clientSecretProvided)) {
             if (log.isDebugEnabled()) {
-                log.debug("Provided the Client ID : " + clientId +" and Client Secret do not match with the issued credentials.");
+                log.debug("Provided the Client ID : " + clientId + " and Client Secret do not match with the issued credentials.");
             }
             return false;
         }
 
-        if(log.isDebugEnabled()){
+        if (log.isDebugEnabled()) {
             log.debug("Successfully authenticated the client with client id : " + clientId);
         }
 

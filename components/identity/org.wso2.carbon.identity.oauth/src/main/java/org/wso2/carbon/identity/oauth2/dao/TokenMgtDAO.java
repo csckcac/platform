@@ -26,6 +26,8 @@ import org.wso2.carbon.identity.core.util.IdentityDatabaseUtil;
 import org.wso2.carbon.identity.oauth2.IdentityOAuth2Exception;
 
 import java.sql.*;
+import java.util.Calendar;
+import java.util.TimeZone;
 
 /**
  * Data Access Layer functionality for Token management in OAuth 2.0 implementation. This includes
@@ -36,7 +38,8 @@ public class TokenMgtDAO {
     private static final Log log = LogFactory.getLog(TokenMgtDAO.class);
     
     public void storeAuthorizationCode(String authzCode, String consumerKey, String scopeString,
-                                       String authorizedUser) throws IdentityOAuth2Exception {
+                                       String authorizedUser, Timestamp timeStamp,
+                                       long validityPeriod) throws IdentityOAuth2Exception {
         Connection connection = null;
         PreparedStatement prepStmt = null;
         try {
@@ -46,6 +49,8 @@ public class TokenMgtDAO {
             prepStmt.setString(2, consumerKey);
             prepStmt.setString(3, scopeString);
             prepStmt.setString(4, authorizedUser);
+            prepStmt.setTimestamp(5, timeStamp, Calendar.getInstance(TimeZone.getTimeZone("UTC")));
+            prepStmt.setLong(6, validityPeriod);
             prepStmt.execute();
             connection.commit();
         } catch (IdentityException e) {
@@ -72,7 +77,7 @@ public class TokenMgtDAO {
             prepStmt.setString(2, refreshToken);
             prepStmt.setString(3, consumerKey);
             prepStmt.setString(4, authzUser);
-            prepStmt.setTimestamp(5, timeStamp);
+            prepStmt.setTimestamp(5, timeStamp, Calendar.getInstance(TimeZone.getTimeZone("UTC")));
             prepStmt.setLong(6, validityPeriod);
             prepStmt.setString(7, scopeString);
             prepStmt.setString(8, tokenState);

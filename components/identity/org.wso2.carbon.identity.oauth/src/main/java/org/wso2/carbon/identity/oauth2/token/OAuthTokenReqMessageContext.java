@@ -22,11 +22,13 @@ import org.wso2.carbon.identity.oauth2.dto.OAuth2AccessTokenReqDTO;
 
 public class OAuthTokenReqMessageContext {
 
-    protected OAuth2AccessTokenReqDTO oauth2AccessTokenReqDTO;
+    private OAuth2AccessTokenReqDTO oauth2AccessTokenReqDTO;
 
-    protected String authorizedUser;
+    private String authorizedUser;
 
-    protected String[] scope;
+    private String[] scope;
+
+    private long validityPeriod;
 
     public OAuthTokenReqMessageContext(OAuth2AccessTokenReqDTO oauth2AccessTokenReqDTO) {
         this.oauth2AccessTokenReqDTO = oauth2AccessTokenReqDTO;
@@ -50,5 +52,13 @@ public class OAuthTokenReqMessageContext {
 
     public void setScope(String[] scope) {
         this.scope = scope;
+    }
+
+    public long getValidityPeriod() {
+        return validityPeriod;
+    }
+
+    public void setValidityPeriod(long validityPeriod) {
+        this.validityPeriod = validityPeriod;
     }
 }

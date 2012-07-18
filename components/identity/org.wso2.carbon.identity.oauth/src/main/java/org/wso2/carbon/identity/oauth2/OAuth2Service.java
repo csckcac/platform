@@ -25,18 +25,15 @@ import org.wso2.carbon.identity.core.model.OAuthAppDO;
 import org.wso2.carbon.identity.oauth.IdentityOAuthAdminException;
 import org.wso2.carbon.identity.oauth.common.OAuth2ErrorCodes;
 import org.wso2.carbon.identity.oauth.dao.OAuthAppDAO;
-import org.wso2.carbon.identity.oauth2.dto.*;
 import org.wso2.carbon.identity.oauth2.authz.AuthorizationHandlerManager;
+import org.wso2.carbon.identity.oauth2.dto.*;
 import org.wso2.carbon.identity.oauth2.token.AccessTokenIssuer;
 import org.wso2.carbon.identity.oauth2.util.OAuth2Util;
-
-import javax.jws.WebService;
 
 /**
  * OAuth2 Service which is used to issue authorization codes or access tokens upon authorizing by the
  * user and issue/validateGrant access tokens.
  */
-@WebService
 @SuppressWarnings("unused")
 public class OAuth2Service extends AbstractAdmin {
 

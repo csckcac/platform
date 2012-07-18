@@ -19,8 +19,7 @@ package org.wso2.carbon.identity.oauth.internal;
 import org.apache.commons.logging.Log;
 import org.apache.commons.logging.LogFactory;
 import org.osgi.service.component.ComponentContext;
-import org.wso2.carbon.identity.oauth.IdentityOAuthAdminException;
-import org.wso2.carbon.identity.oauth.OAuthUtil;
+import org.wso2.carbon.identity.oauth.config.OAuthServerConfiguration;
 import org.wso2.carbon.registry.core.service.RegistryService;
 import org.wso2.carbon.user.core.service.RealmService;
 
@@ -38,12 +37,8 @@ public class OAuthServiceComponent {
 	private static Log log = LogFactory.getLog(OAuthServiceComponent.class);
 
 	protected void activate(ComponentContext context) {
-
-        try {
-            OAuthUtil.parseAuthzCallbackHandlersConfig();
-        } catch (IdentityOAuthAdminException ignore) {
-            // log and ignore the configuration parsing issue.
-        }
+        // initialize the OAuth Server configuration
+        OAuthServerConfiguration.getInstance();
 
         if (log.isDebugEnabled()) {
 			log.info("Identity OAuth bundle is activated");

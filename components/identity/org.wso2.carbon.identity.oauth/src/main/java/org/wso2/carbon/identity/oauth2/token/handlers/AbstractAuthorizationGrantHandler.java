@@ -28,12 +28,12 @@ import org.apache.commons.logging.LogFactory;
 import org.wso2.carbon.identity.oauth.IdentityOAuthAdminException;
 import org.wso2.carbon.identity.oauth.callback.OAuthCallback;
 import org.wso2.carbon.identity.oauth.callback.OAuthCallbackManager;
+import org.wso2.carbon.identity.oauth.config.OAuthServerConfiguration;
 import org.wso2.carbon.identity.oauth2.IdentityOAuth2Exception;
 import org.wso2.carbon.identity.oauth2.dao.TokenMgtDAO;
 import org.wso2.carbon.identity.oauth2.dto.OAuth2AccessTokenReqDTO;
 import org.wso2.carbon.identity.oauth2.dto.OAuth2AccessTokenRespDTO;
 import org.wso2.carbon.identity.oauth2.token.OAuthTokenReqMessageContext;
-import org.wso2.carbon.identity.oauth2.token.handlers.AuthorizationGrantHandler;
 import org.wso2.carbon.identity.oauth2.util.OAuth2Constants;
 import org.wso2.carbon.identity.oauth2.util.OAuth2Util;
 
@@ -52,7 +52,8 @@ public abstract class AbstractAuthorizationGrantHandler implements Authorization
         callbackManager = new OAuthCallbackManager();
     }
 
-    public boolean authenticateClient(OAuthTokenReqMessageContext tokReqMsgCtx) throws IdentityOAuth2Exception {
+    public boolean authenticateClient(OAuthTokenReqMessageContext tokReqMsgCtx)
+            throws IdentityOAuth2Exception {
         OAuth2AccessTokenReqDTO oAuth2AccessTokenReqDTO = tokReqMsgCtx.getOauth2AccessTokenReqDTO();
         try {
             return OAuth2Util.authenticateClient(
@@ -63,9 +64,11 @@ public abstract class AbstractAuthorizationGrantHandler implements Authorization
         }
     }
 
-    public abstract boolean validateGrant(OAuthTokenReqMessageContext tokReqMsgCtx) throws IdentityOAuth2Exception;
+    public abstract boolean validateGrant(OAuthTokenReqMessageContext tokReqMsgCtx)
+            throws IdentityOAuth2Exception;
 
-    public OAuth2AccessTokenRespDTO issue(OAuthTokenReqMessageContext tokReqMsgCtx) throws IdentityOAuth2Exception {
+    public OAuth2AccessTokenRespDTO issue(OAuthTokenReqMessageContext tokReqMsgCtx)
+            throws IdentityOAuth2Exception {
         OAuth2AccessTokenRespDTO tokenRespDTO = new OAuth2AccessTokenRespDTO();
         OAuth2AccessTokenReqDTO oAuth2AccessTokenReqDTO = tokReqMsgCtx.getOauth2AccessTokenReqDTO();
 
@@ -79,10 +82,18 @@ public abstract class AbstractAuthorizationGrantHandler implements Authorization
             throw new IdentityOAuth2Exception("Error when generating the tokens.", e);
         }
 
-        // TODO : Fix the timestamp and validity period properly.
         Timestamp timestamp = new Timestamp(new Date().getTime());
+
         // Default Validity Period
-        long validityPeriod = 60 * 60;
+        long validityPeriod = OAuthServerConfiguration.getInstance()
+                .getDefaultAccessTokenValidityPeriod();
+
+        // if a VALID validity period is set through the callback, then use it
+        long callbackValidityPeriod = tokReqMsgCtx.getValidityPeriod();
+        if ((callbackValidityPeriod != OAuth2Constants.UNASSIGNED_VALIDITY_PERIOD)
+                && callbackValidityPeriod > 0) {
+            validityPeriod = callbackValidityPeriod;
+        }
 
         String scopeString = OAuth2Util.buildScopeString(tokReqMsgCtx.getScope());
         // store the new token
@@ -110,11 +121,13 @@ public abstract class AbstractAuthorizationGrantHandler implements Authorization
         OAuthCallback authzCallback = new OAuthCallback(
                 tokReqMsgCtx.getAuthorizedUser(),
                 tokReqMsgCtx.getOauth2AccessTokenReqDTO().getClientId(),
-                OAuthCallback.OAuthCallbackType.ACCESS_DELEGATION);
+                OAuthCallback.OAuthCallbackType.ACCESS_DELEGATION_TOKEN);
         authzCallback.setRequestedScope(tokReqMsgCtx.getScope());
-        authzCallback.setGrantType(GrantType.valueOf(tokReqMsgCtx.getOauth2AccessTokenReqDTO().getGrantType()));
+        authzCallback.setGrantType(GrantType.valueOf(
+                tokReqMsgCtx.getOauth2AccessTokenReqDTO().getGrantType()));
 
         callbackManager.handleCallback(authzCallback);
+        tokReqMsgCtx.setValidityPeriod(authzCallback.getValidityPeriod());
         return authzCallback.isAuthorized();
     }
 
@@ -123,9 +136,13 @@ public abstract class AbstractAuthorizationGrantHandler implements Authorization
         OAuthCallback scopeValidationCallback = new OAuthCallback(
                 tokReqMsgCtx.getAuthorizedUser(),
                 tokReqMsgCtx.getOauth2AccessTokenReqDTO().getClientId(),
-                OAuthCallback.OAuthCallbackType.SCOPE_VALIDATION);
+                OAuthCallback.OAuthCallbackType.SCOPE_VALIDATION_TOKEN);
         scopeValidationCallback.setRequestedScope(tokReqMsgCtx.getScope());
+        scopeValidationCallback.setGrantType(GrantType.valueOf(
+                tokReqMsgCtx.getOauth2AccessTokenReqDTO().getGrantType()));
+
         callbackManager.handleCallback(scopeValidationCallback);
+        tokReqMsgCtx.setValidityPeriod(scopeValidationCallback.getValidityPeriod());
         tokReqMsgCtx.setScope(scopeValidationCallback.getApprovedScope());
         return scopeValidationCallback.isValidScope();
     }

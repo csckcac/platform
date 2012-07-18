@@ -16,7 +16,7 @@
 *under the License.
 */
 
-package org.wso2.carbon.identity.oauth.callback;
+package org.wso2.carbon.identity.oauth.config;
 
 import java.util.Properties;
 

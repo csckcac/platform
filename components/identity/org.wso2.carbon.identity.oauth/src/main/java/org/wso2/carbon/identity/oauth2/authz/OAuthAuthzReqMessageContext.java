@@ -29,6 +29,8 @@ public class OAuthAuthzReqMessageContext {
 
     private String[] approvedScope;
 
+    private long validityPeriod;
+
     public OAuthAuthzReqMessageContext(OAuth2AuthorizeReqDTO authorizationReqDTO) {
         this.authorizationReqDTO = authorizationReqDTO;
     }
@@ -55,5 +57,13 @@ public class OAuthAuthzReqMessageContext {
 
     public void setApprovedScope(String[] approvedScope) {
         this.approvedScope = approvedScope;
+    }
+
+    public long getValidityPeriod() {
+        return validityPeriod;
+    }
+
+    public void setValidityPeriod(long validityPeriod) {
+        this.validityPeriod = validityPeriod;
     }
 }

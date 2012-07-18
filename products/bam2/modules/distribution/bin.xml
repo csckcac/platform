@@ -284,6 +284,12 @@
             <filtered>true</filtered>
             <fileMode>644</fileMode>
         </file>
+        <file>
+            <source>../p2-profile-gen/target/wso2carbon-core-${carbon.version}/repository/conf/advanced/hive-site-win.xml</source>
+            <outputDirectory>${pom.artifactId}-${pom.version}/repository/conf/advanced</outputDirectory>
+            <filtered>true</filtered>
+            <fileMode>644</fileMode>
+        </file>
 
         <!-- data bridge config file -->
         <file>

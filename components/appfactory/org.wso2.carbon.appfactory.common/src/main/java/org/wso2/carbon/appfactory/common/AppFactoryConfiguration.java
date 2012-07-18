@@ -34,7 +34,15 @@ public class AppFactoryConfiguration {
         configuration.putAll(config);
     }
     
-    public NativeArray getProperties(String key) {
+    public String[] getProperties(String key) {
+        List<String> values = configuration.get(key);
+        if (values == null) {
+            return new String[0];
+        }
+        return values.toArray(new String[values.size()]);
+    }
+    
+    public NativeArray getPropertiesAsNativeArray(String key) {
         List<String> values = configuration.get(key);
         NativeArray nativeArray = new NativeArray(0);
         if (values == null) {

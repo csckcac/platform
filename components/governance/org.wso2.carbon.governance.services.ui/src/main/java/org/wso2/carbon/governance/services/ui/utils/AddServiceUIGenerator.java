@@ -706,12 +706,12 @@ public class AddServiceUIGenerator {
                     "org.wso2.carbon.governance.services.ui.i18n.Resources", request.getLocale()) + "\" onclick=\"showGovernanceResourceTree('" + id + "');\"/>";
         }
         String div = "<div id=\"" + id + "_link\"><a target=\"_blank\" href=\"" + (isPath ? "../resources/resource.jsp?region=region3&item=resource_browser_menu&path=" + RegistryConstants.GOVERNANCE_REGISTRY_BASE_PATH : "") + (urlTemplate != null ? urlTemplate.replace("@{value}", value) : value) + "\">" + value + "</a>" +
-                "&nbsp;<a onclick=\"$('" + id + "_link').style.display='none';$('" + id +
+                "&nbsp;" + (!isReadOnly ? "<a onclick=\"$('" + id + "_link').style.display='none';$('" + id +
                 "')." +
                 "style.display='';" + (isPath ? selectResourceButton : "") + "\" title=\"" + CarbonUIUtil.geti18nString("edit",
                 "org.wso2.carbon.governance.services.ui.i18n.Resources", request.getLocale()) +
                 "\" " +
-                "class=\"icon-link\" style=\"background-image: url('../admin/images/edit.gif');float: none\"></a></div>";
+                "class=\"icon-link\" style=\"background-image: url('../admin/images/edit.gif');float: none\"></a>" : "") + "</div>";
         //+ (hasValue ? "value=\"" + value + "\"" : "") +
         if ("true".equals(mandatory)) {
             element.append("<tr><td class=\"leftCol-big\">" + label + "<span class=\"required\">*</span></td>\n" +
@@ -886,12 +886,12 @@ public class AddServiceUIGenerator {
                         "org.wso2.carbon.governance.services.ui.i18n.Resources", request.getLocale()) + "\" onclick=\"showGovernanceResourceTree('" + id + "');\"/>";
             }
             String div = "<div id=\"" + id + "_link\"><a target=\"_blank\" href=\"" + (isPath ? "../resources/resource.jsp?region=region3&item=resource_browser_menu&path=" + RegistryConstants.GOVERNANCE_REGISTRY_BASE_PATH : "") + (urlTemplate != null ? urlTemplate.replace("@{value}", value) : value) + "\">" + value + "</a>" +
-                    "&nbsp;<a onclick=\"$('" + id + "_link').style.display='none';$('" + id +
+                    "&nbsp;" + (!isReadOnly ? "<a onclick=\"$('" + id + "_link').style.display='none';$('" + id +
                     "')." +
                     "style.display='';" + (isPath ? selectResourceButton : "") + "\" title=\"" + CarbonUIUtil.geti18nString("edit",
                     "org.wso2.carbon.governance.services.ui.i18n.Resources", request.getLocale()) +
                     "\" " +
-                    "class=\"icon-link\" style=\"background-image: url('../admin/images/edit.gif');float: none\"></a></div>";
+                    "class=\"icon-link\" style=\"background-image: url('../admin/images/edit.gif');float: none\"></a>" : "") + "</div>";
             element.append("<td>" + div + "<input style=\"display:none\" type=\"text\" name=\"" + widget.replaceAll(" ", "_") + "_" + name.replaceAll(" ", "-")
                     + "\"" + (hasValue ? "value=\"" + value + "\"" : "") + " id=\"" + id + "\"" + (isReadOnly ? " readonly" : "") + " />" + (isPath ? selectResource : "") + "</td>");
         } else {

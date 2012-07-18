@@ -1,6 +1,7 @@
 #!/usr/bin/env bash
 export LOG=/var/log/wso2-openstack.log
 export JAVA_HOME=/opt/jdk1.6.0_24/
+instance_path=/var/lib/cloud/instance
 
 # Variables taken from the payload passed to the instance
 export REPO_PATH_S3=""
@@ -24,18 +25,17 @@ fi
 
 echo ---------------------------- >> $LOG
 
-# payload will be copied into /var/lib/cloud/instance/user-data.txt file
+# payload will be copied into ${instance_path}/user-data.txt file
 # that file will be renamed as zip file and extract, 
 
-# back up user-data.txt and rename as payload.zip file
-cp /var/lib/cloud/instance/user-data.txt /var/lib/cloud/instance/user-data.txt.bak
-mv /var/lib/cloud/instance/user-data.txt /var/lib/cloud/instance/payload.zip
+# copy user-data.txt and rename as payload.zip file
+cp ${instance_path}/user-data.txt ${instance_path}/payload.zip
 
 # if wget error code is 0, there was no error
 if [ "$?" = "0" ]; then
 	echo retrieved data >> $LOG
-	rm -Rf /var/lib/cloud/instance/payload
-	unzip /var/lib/cloud/instance/payload.zip -d /var/lib/cloud/instance/
+	rm -Rf ${instance_path}/payload
+	unzip ${instance_path}/payload.zip -d ${instance_path}/
 	# if unzip error code is 0, there was no error
 	if [ "$?" = "0" ]; then
 		echo Extracted payload >> $LOG
@@ -47,11 +47,8 @@ else
 	echo rc.local : error retrieving user data >> $LOG
 fi
 
-chmod -R 0600 /var/lib/cloud/instance/payload/wso2-key
-cat /var/lib/cloud/instance/payload/known_hosts >> ~/.ssh/known_hosts
-
-# Copying the product from the controller
-scp -i /var/lib/cloud/instance/payload/wso2-key root@${CONTROLLER_IP}:/opt/${PRODUCT_NAME} /opt/
+chmod -R 0600 ${instance_path}/payload/wso2-key
+cat ${instance_path}/payload/known_hosts >> ~/.ssh/known_hosts
 
 #get the public and private ips
 wget http://169.254.169.254/latest/meta-data/public-ipv4
@@ -78,6 +75,9 @@ do
   export ${i}
   echo "export" ${i} >> /home/ubuntu/.bashrc
 done
+
+# Copying the product from the controller
+scp -i ${instance_path}/payload/wso2-key root@${CONTROLLER_IP}:/opt/${PRODUCT_NAME} /opt/
 
 if [ "$ADMIN_USERNAME" = "" ]; then
 	echo Launching with default admin username >> $LOG

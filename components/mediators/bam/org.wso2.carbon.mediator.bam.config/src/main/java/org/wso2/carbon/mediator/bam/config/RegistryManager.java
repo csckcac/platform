@@ -40,6 +40,7 @@ public class RegistryManager extends RegistryAbstractAdmin {
         try {
             resource = registry.newResource();
             resource.setContent(resourceString);
+            resource.setMediaType("application/xml");
             registry.put(gadgetResourcePath, resource);
         } catch (RegistryException e) {
             String errorMsg = "Error while saving resource string from Registry. " + e.getMessage();

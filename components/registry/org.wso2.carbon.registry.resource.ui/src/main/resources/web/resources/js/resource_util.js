@@ -1675,6 +1675,7 @@ function submitUploadContentForm() {
             document.getElementById('add-resource-div').style.display = "";
             document.getElementById('whileUpload').style.display = "none";
             CARBON.showWarningDialog(reason);
+            showHide('add-resource-div');
             return false;
         } else {
             if (("application/wsdl+xml" == rForm.mediaType.value) || ("application/x-xsd+xml" == rForm.mediaType.value) || ("application/policy+xml" == rForm.mediaType.value)) {

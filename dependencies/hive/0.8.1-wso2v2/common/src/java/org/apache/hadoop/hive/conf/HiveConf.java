@@ -73,7 +73,7 @@ public class HiveConf extends Configuration {
                 if (System.getProperty("os.name").toLowerCase().contains("windows")) {
                     hiveSiteURL = new URL("file:/" + carbonHome + File.separator + "repository" +
                                           File.separator + "conf" + File.separator + "advanced" +
-                                          File.separator + "hive-site.xml");
+                                          File.separator + "hive-site-win.xml");
                 } else {
                     hiveSiteURL = new URL("file://" + carbonHome + File.separator + "repository" +
                                           File.separator + "conf" + File.separator + "advanced" +

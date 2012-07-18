@@ -19,7 +19,7 @@
         <!-- sample menu configuration -->
     <menus>
         <menu>
-            <id>bam_data_publisher_mediation_statistics_menu</id>
+            <id>bam_mediation_data_agent</id>
             <i18n-key>config.menu.text</i18n-key>
             <i18n-bundle>org.wso2.carbon.mediator.bam.config.ui.i18n.Resources</i18n-bundle>
             <parent-menu>configure_menu</parent-menu>

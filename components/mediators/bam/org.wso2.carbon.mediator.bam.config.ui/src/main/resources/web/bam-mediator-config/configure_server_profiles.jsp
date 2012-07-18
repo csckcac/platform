@@ -28,15 +28,23 @@
 <%@ page import="java.util.List" %>
 <%@ page contentType="text/html;charset=UTF-8" language="java" %>
 
+<%
+    response.setHeader("Cache-Control", "no-cache");
+    String labelName = request.getParameter("txtServerProfileLocation");
+    if(!(labelName != null && !labelName.equals(""))){
+        labelName = "New Profile";
+    }
+%>
+
 <fmt:bundle basename="org.wso2.carbon.mediator.bam.config.ui.i18n.Resources">
 
 <carbon:jsi18n
         resourceBundle="org.wso2.carbon.mediator.bam.config.ui.i18n.Resources"
         request="<%=request%>" i18nObjectName="bamjsi18n"/>
 <carbon:breadcrumb
-        label="<%=request.getParameter("txtServerProfileLocation")%>"
+        label="<%=labelName%>"
         resourceBundle="org.wso2.carbon.mediator.bam.config.ui.i18n.Resources"
-        topPage="true"
+        topPage="false"
         request="<%=request%>"/>
 
 <%! public static final String PROPERTY_VALUES = "propertyValues";
@@ -332,7 +340,7 @@
                                        "<td>\n" +
                                        "<span><a onClick='javaScript:removeStreamColumn(\"" + sId + "\")'" +
                                        "style='background-image: url(../admin/images/delete.gif);'class='icon-link addIcon'>Remove Stream</a></span>\n" +
-                                       "<span><a onClick='javaScript:editStreamData(\"" + streamRowNum + "\")''" +
+                                       "<span><a onClick='javaScript:editStreamData(\"" + streamRowNum + "\")'" +
                                        "style='background-image: url(../admin/images/edit.gif);'class='icon-link addIcon'>Edit Stream</a></span>\n" +
                                        "<input type=\"hidden\" id=\"hfStreamsTable_" + streamRowNum + "\" value=\"\"/>"
                     "</td>" +

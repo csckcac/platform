@@ -29,6 +29,10 @@
 <%@ page import="org.wso2.carbon.mediator.bam.config.ui.BamServerProfilesHelper" %>
 <%@ page contentType="text/html;charset=UTF-8" language="java" %>
 
+<%
+    response.setHeader("Cache-Control", "no-cache");
+%>
+
 <fmt:bundle basename="org.wso2.carbon.mediator.bam.config.ui.i18n.Resources">
 
     <carbon:jsi18n
@@ -37,7 +41,7 @@
     <carbon:breadcrumb
             label="bam.server.profiles"
             resourceBundle="org.wso2.carbon.mediator.bam.config.ui.i18n.Resources"
-            topPage="true"
+            topPage="false"
             request="<%=request%>"/>
 
     <%!

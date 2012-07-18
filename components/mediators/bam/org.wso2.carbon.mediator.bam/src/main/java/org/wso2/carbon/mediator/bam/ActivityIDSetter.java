@@ -114,7 +114,7 @@ public class ActivityIDSetter {
             }
 
         } catch (Exception e) {
-            log.error("Error while processing MessageHeaderMediator...", e);
+            log.error("Error while setting Activity ID in SOAP Header", e);
         }
     }
 

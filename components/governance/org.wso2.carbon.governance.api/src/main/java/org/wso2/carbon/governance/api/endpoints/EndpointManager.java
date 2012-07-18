@@ -83,8 +83,10 @@ public class EndpointManager {
             setContent(endpoint, endpointResource);
             String tmpPath = "/" + GovernanceUtils.getNameFromUrl(endpoint.getUrl());
             endpointResource.setUUID(endpoint.getId());
-            Resource resource = registry.get(registry.put(tmpPath, endpointResource));
-            endpoint.setId(resource.getUUID());
+
+//            Resource resource = registry.get(registry.put(tmpPath, endpointResource));
+            registry.put(tmpPath, endpointResource);
+//            endpoint.setId(endpointResource.getUUID());
             endpoint.updatePath();
             succeeded = true;
         } catch (RegistryException e) {

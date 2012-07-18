@@ -115,6 +115,7 @@ public class WsdlManager {
 
             // setting the wsdl content
             setContent(wsdl, wsdlResource);
+            wsdlResource.setUUID(wsdl.getId());
 
             String tmpPath;
             if (wsdl.getQName() != null) {
@@ -128,13 +129,15 @@ public class WsdlManager {
             }
             // OK this is a hack to get the UUID of the newly added artifact. This needs to be fixed
             // properly with the fix for UUID support at Kernel-level - Janaka.
-            Resource resource;
+//            Resource resource;
             if (url == null || url.startsWith("name://")) {
-                resource = registry.get(registry.put("/" + tmpPath, wsdlResource));
+//                resource = registry.get(registry.put("/" + tmpPath, wsdlResource));
+                registry.put("/" + tmpPath, wsdlResource);
             } else {
-                resource = registry.get(registry.importResource(tmpPath, url, wsdlResource));
+//                resource = registry.get(registry.importResource(tmpPath, url, wsdlResource));
+                registry.importResource(tmpPath, url, wsdlResource);
             }
-            wsdl.setId(resource.getUUID());
+//            wsdl.setId(resource.getUUID());
             wsdl.updatePath();
             wsdl.loadWsdlDetails();
             succeeded = true;
@@ -207,7 +210,7 @@ public class WsdlManager {
             String tmpPath = oldWsdl.getPath();
             wsdlResource.setUUID(wsdl.getId());
             registry.put(tmpPath, wsdlResource);
-            wsdl.setId(wsdlResource.getUUID());
+//            wsdl.setId(wsdlResource.getUUID());
             wsdl.updatePath();
             wsdl.loadWsdlDetails();
             

@@ -109,6 +109,7 @@ public class PolicyManager {
             Resource policyResource = registry.newResource();
             policyResource.setMediaType(GovernanceConstants.POLICY_XML_MEDIA_TYPE);
 
+           policyResource.setUUID(policy.getId());
             // setting the policy content
             setContent(policy, policyResource);
             String tmpPath;
@@ -123,13 +124,15 @@ public class PolicyManager {
             }
             // OK this is a hack to get the UUID of the newly added artifact. This needs to be fixed
             // properly with the fix for UUID support at Kernel-level - Janaka.
-            Resource resource;
+//            Resource resource;
             if (url == null || url.startsWith("name://")) {
-                resource = registry.get(registry.put("/" + tmpPath, policyResource));
+//                resource = registry.get(registry.put("/" + tmpPath, policyResource));
+                registry.put("/" + tmpPath, policyResource);
             } else {
-                resource = registry.get(registry.importResource(tmpPath, url, policyResource));
+//                resource = registry.get(registry.importResource(tmpPath, url, policyResource));
+                registry.importResource(tmpPath, url, policyResource);
             }
-            policy.setId(resource.getUUID());
+//            policy.setId(policyResource.getUUID());
             policy.updatePath();
             policy.loadPolicyDetails();
             succeeded = true;
@@ -214,7 +217,7 @@ public class PolicyManager {
             }
             policyResource.setUUID(policy.getId());
             registry.put(tmpPath, policyResource);
-            policy.setId(policyResource.getUUID());
+//            policy.setId(policyResource.getUUID());
             policy.updatePath();
 
             succeeded = true;

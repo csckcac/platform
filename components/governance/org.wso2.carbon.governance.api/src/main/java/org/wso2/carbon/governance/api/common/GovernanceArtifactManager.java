@@ -148,7 +148,9 @@ public class GovernanceArtifactManager {
             String artifactId = artifact.getId();
             resource.setUUID(artifactId);
             registry.put(path, resource);
-            artifact.setId(resource.getUUID()); //This is done to get the UUID of a existing resource.
+
+            artifact.updatePath();
+//            artifact.setId(resource.getUUID()); //This is done to get the UUID of a existing resource.
             addRelationships(path, artifact);
 
             succeeded = true;
@@ -360,7 +362,7 @@ public class GovernanceArtifactManager {
 
             resource.setUUID(artifactId);
             registry.put(path, resource);
-            artifact.setId(resource.getUUID()); //This is done to get the UUID of a existing resource.
+//            artifact.setId(resource.getUUID()); //This is done to get the UUID of a existing resource.
             addRelationships(path, artifact);
             artifact.updatePath(artifactId);
             succeeded = true;

@@ -113,6 +113,7 @@ public class SchemaManager {
             String url = schema.getUrl();
             Resource schemaResource = registry.newResource();
             schemaResource.setMediaType(GovernanceConstants.SCHEMA_MEDIA_TYPE);
+            schemaResource.setUUID(schema.getId());
 
             // setting the schema content
             setContent(schema, schemaResource);
@@ -128,13 +129,15 @@ public class SchemaManager {
             }
             // OK this is a hack to get the UUID of the newly added artifact. This needs to be fixed
             // properly with the fix for UUID support at Kernel-level - Janaka.
-            Resource resource;
+//            Resource resource;
             if (url == null || url.startsWith("name://")) {
-                resource = registry.get(registry.put("/" + tmpPath, schemaResource));
+//                resource = registry.get(registry.put("/" + tmpPath, schemaResource));
+                registry.put("/" + tmpPath, schemaResource);
             } else {
-                resource = registry.get(registry.importResource(tmpPath, url, schemaResource));
+//                resource = registry.get(registry.importResource(tmpPath, url, schemaResource));
+                registry.importResource(tmpPath, url, schemaResource);
             }
-            schema.setId(resource.getUUID());
+//            schema.setId(schemaResource.getUUID());
             schema.updatePath();
             schema.loadSchemaDetails();
             succeeded = true;

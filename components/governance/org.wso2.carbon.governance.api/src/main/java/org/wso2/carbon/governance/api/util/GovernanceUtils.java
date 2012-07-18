@@ -508,7 +508,7 @@ public class GovernanceUtils {
             Map<String, String> parameter = new HashMap<String, String>();
             parameter.put("1", artifactId);
             parameter.put("query", sql);
-            result = (String[]) registry.executeQuery(null, parameter).getContent();
+            result = registry.executeQuery(null, parameter).getChildren();
 
             if (result != null && result.length == 1) {
                 return result[0];

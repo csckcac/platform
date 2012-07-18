@@ -82,11 +82,11 @@ public class WSRegistryClientUtils {
 
 	public static Collection transformWSCollectiontoCollection(WSRegistryServiceClient client, WSCollection wsCollection, Object content) throws RegistryException, IOException, ClassNotFoundException {
 		Collection collection = (Collection) transformWSResourcetoResource(client, wsCollection, content);
-        if (wsCollection.getChildCount() > 0) {
+//        if (wsCollection.getChildCount() > 0) {
             String[] children = wsCollection.getChildren();
             if (children != null) {
                 collection.setChildren(children);
-            }
+//            }
         }
 		return collection;
 

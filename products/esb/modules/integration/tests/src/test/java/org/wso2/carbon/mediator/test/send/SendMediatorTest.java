@@ -76,8 +76,8 @@ public class SendMediatorTest {
         axis2Client = new StockQuoteClient();
         synapseConfigAdminClient = new SynapseConfigAdminClient(backEndUrl, "admin", "admin");
 
-        String scenarioConfigDir = "/home/dharshana/wso2Trunk/carbon-2012-7/carbon/platform/trunk/products/esb/modules/integration/tests/src/test/resources/artifacts/ESB/synapseconfig/send_mediator";
-        String synapseXmlPath = scenarioConfigDir + File.separator + "synapse.xml";
+        String synapseXmlPath = getClass().getResource(File.separator+"artifacts"+File.separator+"ESB"+File.separator+"synapseconfig"+File.separator+"send_mediator"+File.separator+"synapse.xm").getPath();
+
         File synapseXmlFile = new File(synapseXmlPath);
         synapseConfigAdminClient.updateConfiguration(synapseXmlFile);
         System.out.println("sds");

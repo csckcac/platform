@@ -38,4 +38,11 @@ public class SQLQueries {
     public static final String REMOVE_AUTHZ_CODE = "DELETE " +
             "FROM IDENTITY_OAUTH2_AUTHORIZATION_CODE " +
             "WHERE AUTHORIZATION_CODE = ?";
+
+    public static final String VALIDATE_REFRESH_TOKEN = "SELECT ACCESS_TOKEN, AUTHZ_USER, " +
+            "TOKEN_SCOPE FROM IDENTITY_OAUTH2_ACCESS_TOKEN " +
+            "WHERE CONSUMER_KEY = ? AND REFRESH_TOKEN = ?";
+
+    public static final String REMOVE_ACCESS_TOKEN = "DELETE FROM " +
+            "IDENTITY_OAUTH2_ACCESS_TOKEN WHERE ACCESS_TOKEN = ? ";
 }

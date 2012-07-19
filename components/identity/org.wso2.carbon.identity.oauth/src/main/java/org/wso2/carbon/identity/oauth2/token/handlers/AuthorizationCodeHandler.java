@@ -29,7 +29,7 @@ import org.wso2.carbon.identity.oauth2.token.OAuthTokenReqMessageContext;
 import org.wso2.carbon.identity.oauth2.util.OAuth2Util;
 
 /**
- * Implements the AuthorizationGrantHandler for the Authorization Code type.
+ * Implements the AuthorizationGrantHandler for the Grant Type : authorization_code.
  */
 public class AuthorizationCodeHandler extends AbstractAuthorizationGrantHandler {
 

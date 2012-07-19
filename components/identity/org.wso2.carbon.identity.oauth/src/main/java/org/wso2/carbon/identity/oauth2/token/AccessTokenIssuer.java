@@ -28,10 +28,7 @@ import org.wso2.carbon.identity.oauth.dao.OAuthAppDAO;
 import org.wso2.carbon.identity.oauth2.IdentityOAuth2Exception;
 import org.wso2.carbon.identity.oauth2.dto.OAuth2AccessTokenReqDTO;
 import org.wso2.carbon.identity.oauth2.dto.OAuth2AccessTokenRespDTO;
-import org.wso2.carbon.identity.oauth2.token.OAuthTokenReqMessageContext;
-import org.wso2.carbon.identity.oauth2.token.handlers.AuthorizationCodeHandler;
-import org.wso2.carbon.identity.oauth2.token.handlers.AuthorizationGrantHandler;
-import org.wso2.carbon.identity.oauth2.token.handlers.PasswordGrantHandler;
+import org.wso2.carbon.identity.oauth2.token.handlers.*;
 import org.wso2.carbon.identity.oauth2.util.OAuth2Util;
 
 import java.util.Hashtable;
@@ -62,6 +59,10 @@ public class AccessTokenIssuer {
                 new AuthorizationCodeHandler());
         authzGrantHandlers.put(GrantType.PASSWORD.toString(),
                 new PasswordGrantHandler());
+        authzGrantHandlers.put(GrantType.CLIENT_CREDENTIALS.toString(),
+                new ClientCredentialsGrantHandler());
+        authzGrantHandlers.put(GrantType.REFRESH_TOKEN.toString(),
+                new RefreshGrantTypeHandler());
     }
 
     public OAuth2AccessTokenRespDTO issue(OAuth2AccessTokenReqDTO tokenReqDTO)

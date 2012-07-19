@@ -52,16 +52,20 @@ public class OAuth2TokenClient {
     public OAuth2AccessTokenRespDTO getAccessToken(OAuthTokenRequest oauthRequest)
                                                                     throws OAuthClientException {
         OAuth2AccessTokenReqDTO tokenReqDTO = new OAuth2AccessTokenReqDTO();
-        tokenReqDTO.setGrantType(oauthRequest.getGrantType());
+        String grantType = oauthRequest.getGrantType();
+
+        tokenReqDTO.setGrantType(grantType);
         tokenReqDTO.setClientId(oauthRequest.getClientId());
         tokenReqDTO.setClientSecret(oauthRequest.getClientSecret());
         tokenReqDTO.setScope(oauthRequest.getScopes().toArray(new String[oauthRequest.getScopes().size()]));
         // Check the grant type and set the corresponding parameters
-        if(GrantType.AUTHORIZATION_CODE.toString().equals(oauthRequest.getGrantType())){
+        if(GrantType.AUTHORIZATION_CODE.toString().equals(grantType)){
             tokenReqDTO.setAuthorizationCode(oauthRequest.getCode());
-        } else if(GrantType.PASSWORD.toString().equals(oauthRequest.getGrantType())){
+        } else if(GrantType.PASSWORD.toString().equals(grantType)){
             tokenReqDTO.setResourceOwnerUsername(oauthRequest.getUsername());
             tokenReqDTO.setResourceOwnerPassword(oauthRequest.getPassword());
+        } else if (GrantType.REFRESH_TOKEN.toString().equals(grantType)){
+            tokenReqDTO.setRefreshToken(oauthRequest.getRefreshToken());
         }
 
         try {

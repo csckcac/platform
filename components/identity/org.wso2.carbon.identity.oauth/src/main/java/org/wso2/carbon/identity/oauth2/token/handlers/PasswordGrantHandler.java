@@ -35,6 +35,7 @@ import org.wso2.carbon.utils.multitenancy.MultitenantUtils;
 /**
  * Handles the Password Grant Type of the OAuth 2.0 specification. Resource owner sends his
  * credentials in the token request which is validated against the corresponding user store.
+ * Grant Type : password
  */
 public class PasswordGrantHandler extends AbstractAuthorizationGrantHandler {
 
@@ -84,6 +85,7 @@ public class PasswordGrantHandler extends AbstractAuthorizationGrantHandler {
         }
 
         tokReqMsgCtx.setAuthorizedUser(oAuth2AccessTokenReqDTO.getResourceOwnerUsername());
+        tokReqMsgCtx.setScope(oAuth2AccessTokenReqDTO.getScope());
         return authStatus;
     }
 

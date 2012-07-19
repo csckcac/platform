@@ -25,6 +25,7 @@ import org.wso2.carbon.identity.core.persistence.JDBCPersistenceManager;
 import org.wso2.carbon.identity.core.util.IdentityDatabaseUtil;
 import org.wso2.carbon.identity.oauth2.IdentityOAuth2Exception;
 import org.wso2.carbon.identity.oauth2.model.AuthzCodeValidationDataDO;
+import org.wso2.carbon.identity.oauth2.model.RefreshTokenValidationDataDO;
 import org.wso2.carbon.identity.oauth2.util.OAuth2Util;
 
 import java.sql.*;
@@ -126,7 +127,7 @@ public class TokenMgtDAO {
         } catch (SQLException e) {
             log.error("Error when executing the SQL : " + SQLQueries.VALIDATE_AUTHZ_CODE);
             log.error(e.getMessage(), e);
-            throw new IdentityOAuth2Exception("Error when validating the authorization code", e);
+            throw new IdentityOAuth2Exception("Error when validating an authorization code", e);
         } finally {
             IdentityDatabaseUtil.closeAllConnections(connection, null, prepStmt);
         }
@@ -153,7 +154,68 @@ public class TokenMgtDAO {
         } catch (SQLException e) {
             log.error("Error when executing the SQL : " + SQLQueries.REMOVE_AUTHZ_CODE);
             log.error(e.getMessage(), e);
-            throw new IdentityOAuth2Exception("Error when cleaning up the authorization code", e);
+            throw new IdentityOAuth2Exception("Error when cleaning up an authorization code", e);
+        } finally {
+            IdentityDatabaseUtil.closeAllConnections(connection, null, prepStmt);
+        }
+    }
+
+    public RefreshTokenValidationDataDO validateRefreshToken(String consumerKey,
+                                                             String refreshToken)
+            throws IdentityOAuth2Exception {
+        RefreshTokenValidationDataDO validationDataDO = new RefreshTokenValidationDataDO();
+        Connection connection = null;
+        PreparedStatement prepStmt = null;
+        ResultSet resultSet;
+
+        try {
+            connection = JDBCPersistenceManager.getInstance().getDBConnection();
+            prepStmt = connection.prepareStatement(SQLQueries.VALIDATE_REFRESH_TOKEN);
+            prepStmt.setString(1, consumerKey);
+            prepStmt.setString(2, refreshToken);
+            resultSet = prepStmt.executeQuery();
+
+            if (resultSet.next()) {
+                validationDataDO.setAccessToken(resultSet.getString(1));
+                validationDataDO.setAuthorizedUser(resultSet.getString(2));
+                validationDataDO.setScope(OAuth2Util.buildScopeArray(resultSet.getString(2)));
+            }
+
+        } catch (IdentityException e) {
+            String errorMsg = "Error when getting an Identity Persistence Store instance.";
+            log.error(errorMsg, e);
+            throw new IdentityOAuth2Exception(errorMsg, e);
+        } catch (SQLException e) {
+            log.error("Error when executing the SQL : " + SQLQueries.VALIDATE_REFRESH_TOKEN);
+            log.error(e.getMessage(), e);
+            throw new IdentityOAuth2Exception("Error when validating a refresh token", e);
+        } finally {
+            IdentityDatabaseUtil.closeAllConnections(connection, null, prepStmt);
+        }
+
+        return validationDataDO;
+    }
+
+    public void cleanUpAccessToken(String accessToken) throws IdentityOAuth2Exception {
+        Connection connection = null;
+        PreparedStatement prepStmt = null;
+
+        try {
+            connection = JDBCPersistenceManager.getInstance().getDBConnection();
+            prepStmt = connection.prepareStatement(SQLQueries.REMOVE_ACCESS_TOKEN);
+            prepStmt.setString(1, accessToken);
+
+            prepStmt.execute();
+            connection.commit();
+
+        }  catch (IdentityException e) {
+            String errorMsg = "Error when getting an Identity Persistence Store instance.";
+            log.error(errorMsg, e);
+            throw new IdentityOAuth2Exception(errorMsg, e);
+        } catch (SQLException e) {
+            log.error("Error when executing the SQL : " + SQLQueries.REMOVE_ACCESS_TOKEN);
+            log.error(e.getMessage(), e);
+            throw new IdentityOAuth2Exception("Error when cleaning up an access token", e);
         } finally {
             IdentityDatabaseUtil.closeAllConnections(connection, null, prepStmt);
         }

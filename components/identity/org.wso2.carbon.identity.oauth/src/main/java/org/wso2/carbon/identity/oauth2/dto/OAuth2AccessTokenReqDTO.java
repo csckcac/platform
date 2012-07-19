@@ -27,6 +27,7 @@ public class OAuth2AccessTokenReqDTO {
     private String callbackURI;
     private String resourceOwnerUsername;
     private String resourceOwnerPassword;
+    private String refreshToken;
 
     public String getClientId() {
         return clientId;
@@ -90,5 +91,13 @@ public class OAuth2AccessTokenReqDTO {
 
     public void setScope(String[] scope) {
         this.scope = scope;
+    }
+
+    public String getRefreshToken() {
+        return refreshToken;
+    }
+
+    public void setRefreshToken(String refreshToken) {
+        this.refreshToken = refreshToken;
     }
 }

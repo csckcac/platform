@@ -16,30 +16,22 @@
 *under the License.
 */
 
-package org.wso2.carbon.identity.oauth2.token;
+package org.wso2.carbon.identity.oauth2.model;
 
-import org.wso2.carbon.identity.oauth2.dto.OAuth2AccessTokenReqDTO;
-
-import java.util.Properties;
-
-public class OAuthTokenReqMessageContext {
-
-    private OAuth2AccessTokenReqDTO oauth2AccessTokenReqDTO;
+public class RefreshTokenValidationDataDO {
+    
+    private String accessToken;
 
     private String authorizedUser;
 
     private String[] scope;
 
-    private long validityPeriod;
-    
-    private Properties properties = new Properties();
-
-    public OAuthTokenReqMessageContext(OAuth2AccessTokenReqDTO oauth2AccessTokenReqDTO) {
-        this.oauth2AccessTokenReqDTO = oauth2AccessTokenReqDTO;
+    public String getAccessToken() {
+        return accessToken;
     }
 
-    public OAuth2AccessTokenReqDTO getOauth2AccessTokenReqDTO() {
-        return oauth2AccessTokenReqDTO;
+    public void setAccessToken(String accessToken) {
+        this.accessToken = accessToken;
     }
 
     public String getAuthorizedUser() {
@@ -56,21 +48,5 @@ public class OAuthTokenReqMessageContext {
 
     public void setScope(String[] scope) {
         this.scope = scope;
-    }
-
-    public long getValidityPeriod() {
-        return validityPeriod;
-    }
-
-    public void setValidityPeriod(long validityPeriod) {
-        this.validityPeriod = validityPeriod;
-    }
-    
-    public void addProperty(String propName, String propValue){
-        properties.put(propName, propValue);
-    }
-    
-    public String getProperty(String propName){
-        return (String) properties.get(propName);
     }
 }

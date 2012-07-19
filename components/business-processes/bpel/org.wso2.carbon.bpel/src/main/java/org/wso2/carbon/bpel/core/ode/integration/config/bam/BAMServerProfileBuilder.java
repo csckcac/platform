@@ -25,6 +25,8 @@ import org.wso2.carbon.bpel.core.BPELConstants;
 import org.wso2.carbon.bpel.core.ode.integration.store.BPELDeploymentException;
 import org.wso2.carbon.context.CarbonContext;
 import org.wso2.carbon.context.RegistryType;
+import org.wso2.carbon.core.util.CryptoException;
+import org.wso2.carbon.core.util.CryptoUtil;
 import org.wso2.carbon.registry.api.Registry;
 import org.wso2.carbon.registry.api.RegistryException;
 import org.wso2.carbon.registry.api.Resource;
@@ -105,6 +107,10 @@ public class BAMServerProfileBuilder {
             String errMsg = "Error occurred while creating the OMElement out of BAM server " +
                     "profile: " + profileLocation;
             handleError(errMsg, e);
+        } catch (CryptoException e) {
+            String errMsg = "Error occurred while decrypting password in BAM server profile: " +
+                    profileLocation;
+            handleError(errMsg, e);
         }
     }
 
@@ -120,7 +126,7 @@ public class BAMServerProfileBuilder {
     }
 
     private void processCredentialElement(OMElement bamServerConfig,
-                                          BAMServerProfile bamServerProfile) {
+                                          BAMServerProfile bamServerProfile) throws CryptoException {
         OMElement credentialElement = bamServerConfig.getFirstChildWithName(
                 new QName(BPELConstants.BAM_SERVER_PROFILE_NS, "Credential"));
         if (credentialElement != null) {
@@ -132,7 +138,8 @@ public class BAMServerProfileBuilder {
                     !passwordAttr.getAttributeValue().equals("")
                 /*&& !secureAttr.getAttributeValue().equals("")*/) {
                 bamServerProfile.setUserName(userNameAttr.getAttributeValue());
-                bamServerProfile.setPassword(passwordAttr.getAttributeValue());
+                bamServerProfile.setPassword(new String(CryptoUtil.getDefaultCryptoUtil().
+                        base64DecodeAndDecrypt(passwordAttr.getAttributeValue())));
             } else {
                 String errMsg = "Username or Password not found for BAM server profile: " +
                         profileLocation;

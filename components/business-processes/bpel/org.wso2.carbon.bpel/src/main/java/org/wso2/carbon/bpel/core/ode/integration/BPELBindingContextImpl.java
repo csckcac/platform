@@ -18,6 +18,7 @@ package org.wso2.carbon.bpel.core.ode.integration;
 
 import org.apache.axis2.AxisFault;
 import org.apache.axis2.context.ConfigurationContext;
+import org.apache.axis2.deployment.DeploymentEngine;
 import org.apache.axis2.deployment.DeploymentException;
 import org.apache.axis2.description.AxisService;
 import org.apache.axis2.description.AxisServiceGroup;
@@ -37,13 +38,12 @@ import org.wso2.carbon.bpel.core.ode.integration.store.MultiTenantProcessConfigu
 import org.wso2.carbon.bpel.core.ode.integration.store.ProcessConfigurationImpl;
 import org.wso2.carbon.bpel.core.ode.integration.store.TenantProcessStore;
 import org.wso2.carbon.bpel.core.ode.integration.utils.AxisServiceUtils;
-import org.wso2.carbon.context.CarbonContext;
-import org.wso2.carbon.utils.multitenancy.CarbonContextHolder;
 import org.wso2.carbon.utils.multitenancy.MultitenantUtils;
 
 import javax.wsdl.Definition;
 import javax.wsdl.PortType;
 import javax.xml.namespace.QName;
+import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.Map;
 
@@ -212,14 +212,11 @@ public class BPELBindingContextImpl implements BindingContext {
         removeBPELProcessProxyAndAxisService(processConfiguration.getDeployer(), serviceName, portName);
         services.put(processConfiguration.getDeployer(), serviceName, portName, processProxy);
 
-        CarbonContextHolder.getThreadLocalCarbonContextHolder().setTenantDomain("carbon.super");
-        log.info("TenantID: " + CarbonContext.getCurrentContext().getTenantId() + " Domain: " +
-        CarbonContext.getCurrentContext().getTenantDomain() +  " Username" +
-                CarbonContext.getCurrentContext().getUsername());
-
-        tenantConfigCtx.getAxisConfiguration().addServiceGroup(
-                createServiceGroupForService(axisService));
-
+        ArrayList<AxisService> serviceList = new ArrayList<AxisService>();
+        serviceList.add(axisService);
+        DeploymentEngine.addServiceGroup(createServiceGroupForService(axisService), serviceList,
+                null, null, tenantConfigCtx.getAxisConfiguration());
+//
         if (log.isDebugEnabled()) {
             log.debug("BPELProcessProxy created for process " + processConfiguration.getProcessId());
             log.debug("AxisService " + serviceName + " created for BPEL process " +

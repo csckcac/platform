@@ -309,7 +309,7 @@ public class SecurityDeploymentInterceptor implements AxisObserver {
 
             SuperTenantCarbonContext carbonContext = SuperTenantCarbonContext.getCurrentContext(service);
             int tenantID = carbonContext.getTenantId();
-            String tenantDomain = carbonContext.getTenantDomain();
+            String tenantDomain = carbonContext.getTenantDomain(true);
             
             String registryServicePath = RegistryResources.SERVICE_GROUPS
                     + service.getAxisServiceGroup().getServiceGroupName()

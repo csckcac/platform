@@ -52,11 +52,11 @@ public class SecurityClientUtils implements CallbackHandler {
             throws Exception {
 
 
-        String trustStore = null;
-        String endpointHttpS = null;
-        String endpointHttp = null;
-        String securityPolicy = null;
-        String clientKey = null;
+        String trustStore;
+        String endpointHttpS;
+        String endpointHttp;
+        String securityPolicy;
+        String clientKey;
         OMElement result;
 
 
@@ -89,9 +89,11 @@ public class SecurityClientUtils implements CallbackHandler {
 
         if (scenarioNo != 0) {
             try {
-                String securityPolicyPath = securityPolicy + File.separator + "scenario" + scenarioNo + "-policy.xml";
+                String securityPolicyPath = securityPolicy + File.separator + "scenario" +
+                        scenarioNo + "-policy.xml";
                 log.info("SecurityPolicyPath " + securityPolicyPath);
-                opts.setProperty(RampartMessageData.KEY_RAMPART_POLICY, loadPolicy(securityPolicyPath, clientKey));
+                opts.setProperty(RampartMessageData.KEY_RAMPART_POLICY,
+                        loadPolicy(securityPolicyPath, clientKey, "admin"));
             } catch (Exception e) {
                 e.printStackTrace();
             }
@@ -100,18 +102,72 @@ public class SecurityClientUtils implements CallbackHandler {
         result = sc.sendReceive(AXIOMUtil.stringToOM(payload));
         log.info(result.getFirstElement().getText());
         Assert.assertFalse("Incorrect Test Result: " + result.toString(),
-                           !result.toString().contains(expectedString));
+                !result.toString().contains(expectedString));
         return result;
     }
 
-    private static Policy loadPolicy(String xmlPath, String clientKey) throws Exception {
+    public static OMElement sendReceiveSecurity(String serviceName, String soapAction,
+                                                String policyFileName, String payload,
+                                                String expected) throws Exception {
+        String trustStore;
+        String endpointHttpS;
+        String endpointHttp;
+        String securityPolicy;
+        String clientKey;
+        OMElement result;
+
+
+        String carbonHome = System.getProperty("user.dir");
+//        carbonHome = "/home/waruna/WSO2/projects/src/trunk/platform/products/bps/modules/integration/org.wso2.bps.integration.tests/target/carbontmp1342634770097/wso2bps-3.0.0-SNAPSHOT";
+        securityPolicy = BPSTestUtils.BPEL_TEST_RESOURCE_LOCATION + "policyFiles/";
+
+//        trustStore = carbonHome + File.separator + "repository" + File.separator + "resources" +
+// File.separator + "security" + File.separator + "wso2carbon.jks";
+        clientKey = carbonHome + File.separator + "repository" + File.separator + "resources" +
+                File.separator + "security" + File.separator + "wso2carbon.jks";
+//        endpointHttpS = "https://" + Framewsrc/test/resources/orkSettings.HOST_NAME + ":" +
+// FrameworkSettings.HTTPS_PORT + "/services/" + serviceName;
+        endpointHttp = "http://" + FrameworkSettings.HOST_NAME + ":" +
+                (FrameworkSettings.HTTP_PORT + 1) + "/services/" + serviceName;
+//        System.setProperty("javax.net.ssl.trustStore", trustStore);
+//        System.setProperty("javax.net.ssl.trustStorePassword", "wso2carbon");
+
+        ConfigurationContext ctx =
+                ConfigurationContextFactory.createConfigurationContextFromFileSystem(carbonHome +
+                        File.separator + "repository" + File.separator + "deployment" +
+                        File.separator + "client", null);
+        ServiceClient sc = new ServiceClient(ctx, null);
+        sc.engageModule("addressing");
+        sc.engageModule("rampart");
+
+        Options opts = new Options();
+
+        opts.setTo(new EndpointReference(endpointHttp));
+        log.info(endpointHttp);
+
+        opts.setAction(soapAction);
+
+        String securityPolicyPath = securityPolicy + policyFileName;
+        log.info("SecurityPolicyPath " + securityPolicyPath);
+        opts.setProperty(RampartMessageData.KEY_RAMPART_POLICY,
+                loadPolicy(securityPolicyPath, clientKey, "alice"));
+
+        sc.setOptions(opts);
+        result = sc.sendReceive(AXIOMUtil.stringToOM(payload));
+        log.info(result.getFirstElement().getText());
+        Assert.assertFalse("Incorrect Test Result: " + result.toString(),
+                !result.toString().contains(expected));
+        return result;
+    }
+
+    private static Policy loadPolicy(String xmlPath, String clientKey, String userName) throws Exception {
 
         StAXOMBuilder builder = new StAXOMBuilder(xmlPath);
         Policy policy = PolicyEngine.getPolicy(builder.getDocumentElement());
 
         RampartConfig rc = new RampartConfig();
 
-        rc.setUser("admin");
+        rc.setUser(userName);
         rc.setUserCertAlias("wso2carbon");
         rc.setEncryptionUser("wso2carbon");
         rc.setPwCbClass(SecurityClientUtils.class.getName());
@@ -152,6 +208,8 @@ public class SecurityClientUtils implements CallbackHandler {
 
             if ("admin".equals(id)) {
                 pwcb.setPassword("admin");
+            } else if ("alice".equals(id)) {
+                pwcb.setPassword("bobPW");
             }
 
         } else if (usage == WSPasswordCallback.SIGNATURE || usage == WSPasswordCallback.DECRYPT) {

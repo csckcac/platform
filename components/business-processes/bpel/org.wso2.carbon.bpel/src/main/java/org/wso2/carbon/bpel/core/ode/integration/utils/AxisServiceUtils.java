@@ -116,6 +116,7 @@ public final class AxisServiceUtils {
             // This is to fix the issue when build service configuration using services.xml(Always RPCMessageReceiver
             // is set to operations).
             operation.setMessageReceiver(messageRec);
+            axisConfiguration.getPhasesInfo().setOperationPhases(operation);
         }
 
         /**

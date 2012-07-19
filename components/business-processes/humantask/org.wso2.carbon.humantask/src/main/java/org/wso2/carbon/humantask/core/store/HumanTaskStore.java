@@ -18,6 +18,7 @@ package org.wso2.carbon.humantask.core.store;
 
 import org.apache.axis2.AxisFault;
 import org.apache.axis2.context.ConfigurationContext;
+import org.apache.axis2.deployment.DeploymentEngine;
 import org.apache.axis2.deployment.util.Utils;
 import org.apache.axis2.description.AxisOperation;
 import org.apache.axis2.description.AxisService;
@@ -65,7 +66,7 @@ public class HumanTaskStore {
     private static final Log log = LogFactory.getLog(HumanTaskStore.class);
 
     private int tenantId;
-    
+
     private ConfigurationContext configContext;
 
     private List<HumanTaskBaseConfiguration> taskConfigurations =
@@ -85,14 +86,14 @@ public class HumanTaskStore {
                 QName taskQName = new QName(humanTaskDU.getNamespace(), task.getName());
                 TaskConfiguration taskConf =
                         new TaskConfiguration(task,
-                                              humanTaskDU.getTaskServiceInfo(taskQName),
-                                              humanTaskDU.getHumanInteractionsDefinition(),
-                                              humanTaskDU.getWSDLs(),
-                                              humanTaskDU.getNamespace(),
-                                              humanTaskDU.getName(),
-                                              getTenantAxisConfig(),
-                                              humanTaskDU.getName(),
-                                              humanTaskDU.getHumanTaskDefinitionFile());
+                                humanTaskDU.getTaskServiceInfo(taskQName),
+                                humanTaskDU.getHumanInteractionsDefinition(),
+                                humanTaskDU.getWSDLs(),
+                                humanTaskDU.getNamespace(),
+                                humanTaskDU.getName(),
+                                getTenantAxisConfig(),
+                                humanTaskDU.getName(),
+                                humanTaskDU.getHumanTaskDefinitionFile());
                 taskConfigurations.add(taskConf);
                 deploy(taskConf);
                 createCallBackService(taskConf);
@@ -105,14 +106,14 @@ public class HumanTaskStore {
                 QName notificationQName = new QName(humanTaskDU.getNamespace(), notification.getName());
                 NotificationConfiguration notificationConf =
                         new NotificationConfiguration(notification,
-                                                      humanTaskDU.getNotificationServiceInfo(notificationQName),
-                                                      humanTaskDU.getHumanInteractionsDefinition(),
-                                                      humanTaskDU.getWSDLs(),
-                                                      humanTaskDU.getNamespace(),
-                                                      humanTaskDU.getName(),
-                                                      getTenantAxisConfig(),
-                                                      humanTaskDU.getName(),
-                                                      humanTaskDU.getHumanTaskDefinitionFile());
+                                humanTaskDU.getNotificationServiceInfo(notificationQName),
+                                humanTaskDU.getHumanInteractionsDefinition(),
+                                humanTaskDU.getWSDLs(),
+                                humanTaskDU.getNamespace(),
+                                humanTaskDU.getName(),
+                                getTenantAxisConfig(),
+                                humanTaskDU.getName(),
+                                humanTaskDU.getHumanTaskDefinitionFile());
                 taskConfigurations.add(notificationConf);
                 deploy(notificationConf);
             }
@@ -122,14 +123,14 @@ public class HumanTaskStore {
             QName notificationQName = new QName(humanTaskDU.getNamespace(), inlineNotification.getName());
             NotificationConfiguration notificationConf =
                     new NotificationConfiguration(inlineNotification,
-                                                  humanTaskDU.getNotificationServiceInfo(notificationQName),
-                                                  humanTaskDU.getHumanInteractionsDefinition(),
-                                                  humanTaskDU.getWSDLs(),
-                                                  humanTaskDU.getNamespace(),
-                                                  humanTaskDU.getName(),
-                                                  getTenantAxisConfig(),
-                                                  humanTaskDU.getName(),
-                                                  humanTaskDU.getHumanTaskDefinitionFile());
+                            humanTaskDU.getNotificationServiceInfo(notificationQName),
+                            humanTaskDU.getHumanInteractionsDefinition(),
+                            humanTaskDU.getWSDLs(),
+                            humanTaskDU.getNamespace(),
+                            humanTaskDU.getName(),
+                            getTenantAxisConfig(),
+                            humanTaskDU.getName(),
+                            humanTaskDU.getHumanTaskDefinitionFile());
             taskConfigurations.add(notificationConf);
         }
     }
@@ -173,7 +174,10 @@ public class HumanTaskStore {
                     taskConfig.getEndpointConfiguration(taskConfig.getServiceName().getLocalPart(),
                             taskConfig.getPortName()),
                     getConfigContext());
-            getTenantAxisConfig().addServiceGroup(createServiceGroupForService(axisService));
+            ArrayList<AxisService> serviceList = new ArrayList<AxisService>();
+            serviceList.add(axisService);
+            DeploymentEngine.addServiceGroup(createServiceGroupForService(axisService), serviceList,
+                    null, null, getTenantAxisConfig());
         } catch (AxisFault axisFault) {
             //Do not print stacktrace here since it will be printed in another level
             String errMsg = "Error populating the service";
@@ -191,7 +195,7 @@ public class HumanTaskStore {
             HumanTaskBaseConfiguration taskConfig, Definition wsdlDef) {
         WSDL11ToAxisServiceBuilder serviceBuilder =
                 new WSDL11ToAxisServiceBuilder(wsdlDef,
-                                               taskConfig.getServiceName(), taskConfig.getPortName());
+                        taskConfig.getServiceName(), taskConfig.getPortName());
         String wsdlBaseURI = wsdlDef.getDocumentBaseURI();
         serviceBuilder.setBaseUri(wsdlBaseURI);
         /*we don't need custom resolvers since registry takes care of it*/
@@ -219,7 +223,7 @@ public class HumanTaskStore {
 
         /* Fix for losing of security configuration  when updating human-task package*/
         axisService.addParameter(new Parameter(CarbonConstants.PRESERVE_SERVICE_HISTORY_PARAM,
-                                               "true"));
+                "true"));
 
         Iterator operations = axisService.getOperations();
         AxisHumanTaskMessageReceiver msgReceiver = new AxisHumanTaskMessageReceiver();
@@ -232,6 +236,7 @@ public class HumanTaskStore {
             // This is to fix the issue when build service configuration using services.xml(Always RPCMessageReceiver
             // is set to operations).
             operation.setMessageReceiver(msgReceiver);
+            getTenantAxisConfig().getPhasesInfo().setOperationPhases(operation);
         }
         return axisService;
     }
@@ -328,7 +333,7 @@ public class HumanTaskStore {
             deleteHumanTaskPackageFromRepo(packageName);
         } else {
             throw new HumanTaskRuntimeException("There are no matching " +
-                                                "packages in the repository with name " + packageName);
+                    "packages in the repository with name " + packageName);
         }
     }
 
@@ -336,13 +341,12 @@ public class HumanTaskStore {
      * Gets the HumanTaskBaseConfiguration object for the given task QName.
      *
      * @param taskName : The task name of which the task configuration is to be retrieved.
-     *
      * @return : The matching HumanTaskBaseConfiguration object.
      */
     public HumanTaskBaseConfiguration getTaskConfiguration(QName taskName) {
         HumanTaskBaseConfiguration matchingTaskConfiguration = null;
         for (HumanTaskBaseConfiguration taskConfig : taskConfigurations) {
-            if(taskConfig.getName().equals(taskName)) {
+            if (taskConfig.getName().equals(taskName)) {
                 matchingTaskConfiguration = taskConfig;
                 break;
             }
@@ -363,7 +367,7 @@ public class HumanTaskStore {
                     taskEngine.getScheduler().execTransaction(new Callable<Object>() {
                         public Object call() throws Exception {
                             taskEngine.getDaoConnectionFactory().getConnection().obsoleteTasks(
-                            configuration.getName().toString(), tId);
+                                    configuration.getName().toString(), tId);
                             return null;
                         }
                     });
@@ -396,7 +400,7 @@ public class HumanTaskStore {
         try {
             //If there are matching axis services we remove them.
             if (removableConfiguration.getServiceName() != null &&
-                StringUtils.isNotEmpty(removableConfiguration.getServiceName().getLocalPart())) {
+                    StringUtils.isNotEmpty(removableConfiguration.getServiceName().getLocalPart())) {
                 String axisServiceName = removableConfiguration.getServiceName().getLocalPart();
                 AxisService axisService = getTenantAxisConfig().getService(axisServiceName);
                 if (axisService != null) {
@@ -405,17 +409,17 @@ public class HumanTaskStore {
                     getTenantAxisConfig().removeServiceGroup(axisServiceName);
                 } else {
                     log.warn("Could not find matching AxisService in " +
-                             "Tenant AxisConfiguration for service name :" + axisServiceName);
+                            "Tenant AxisConfiguration for service name :" + axisServiceName);
                 }
             } else {
                 log.warn(String.format("Could not find a associated service name for " +
-                                       "[%s] configuration [%s]",
-                                       removableConfiguration.getConfigurationType(),
-                                       removableConfiguration.getName().toString()));
+                        "[%s] configuration [%s]",
+                        removableConfiguration.getConfigurationType(),
+                        removableConfiguration.getName().toString()));
             }
         } catch (AxisFault axisFault) {
             String error = "Error occurred while removing the axis service " +
-                           removableConfiguration.getServiceName();
+                    removableConfiguration.getServiceName();
 
             log.error(error);
             throw new HumanTaskRuntimeException(error, axisFault);
@@ -430,7 +434,7 @@ public class HumanTaskStore {
     public void deleteHumanTaskArchive(String packageName) {
         File humanTaskArchive = getHumanTaskArchiveLocation(packageName);
         log.info("UnDeploying HumanTask package " + packageName + ". Deleting HumanTask archive " +
-                 humanTaskArchive.getName() + "....");
+                humanTaskArchive.getName() + "....");
         if (humanTaskArchive.exists()) {
             if (!humanTaskArchive.delete()) {
                 //For windows
@@ -438,22 +442,21 @@ public class HumanTaskStore {
             }
         } else {
             log.warn("HumanTask archive [" + humanTaskArchive.getAbsolutePath() +
-                     "] not found. This can happen if you delete " +
-                     "the HumanTask archive from the file system.");
+                    "] not found. This can happen if you delete " +
+                    "the HumanTask archive from the file system.");
         }
     }
 
     /**
-     *Return the human task archive file for the given package name.
+     * Return the human task archive file for the given package name.
      *
      * @param packageName : The human task archive package name.
-     *
      * @return : The matching human task archive file.
      */
     public File getHumanTaskArchiveLocation(String packageName) {
         String humanTaskArciveLocation = getTenantAxisConfig().getRepository().
                 getPath() + HumanTaskConstants.HUMANTASK_REPO_DIRECTORY + File.separator +
-                                         packageName + "." + HumanTaskConstants.HUMANTASK_PACKAGE_EXTENSION;
+                packageName + "." + HumanTaskConstants.HUMANTASK_PACKAGE_EXTENSION;
         return new File(humanTaskArciveLocation);
     }
 
@@ -465,8 +468,8 @@ public class HumanTaskStore {
     private void deleteHumanTaskPackageFromRepo(String packageName) {
 
         String humanTaskPackageLocation = this.humanTaskDeploymentRepo.getAbsolutePath() +
-                                          File.separator + tenantId + File.separator +
-                                          packageName;
+                File.separator + tenantId + File.separator +
+                packageName;
         File humanTaskPackageDirectory = new File(humanTaskPackageLocation);
 
         log.info("UnDeploying HumanTask package. " + "Deleting " + humanTaskPackageDirectory + " HumanTask package");
@@ -475,8 +478,8 @@ public class HumanTaskStore {
             FileManipulator.deleteDir(humanTaskPackageDirectory);
         } else {
             log.warn("HumanTask package " + humanTaskPackageDirectory.getAbsolutePath() +
-                     " not found. This can happen if you delete " +
-                     "the HumanTask package from the file system.");
+                    " not found. This can happen if you delete " +
+                    "the HumanTask package from the file system.");
         }
     }
 }

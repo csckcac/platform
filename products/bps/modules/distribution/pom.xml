@@ -290,6 +290,8 @@
                                      basedir="${basedir}/../samples/product/src/main/resources/bpel/2.0/SampleAsynchronousProcess/Async-Server"/>
                                 <zip destfile="target/samples/bpel/Async-Client.zip"
                                      basedir="${basedir}/../samples/product/src/main/resources/bpel/2.0/SampleAsynchronousProcess/Async-Client"/>
+                                <zip destfile="target/samples/bpel/SecuredWithServiceDescriptorProcess.zip"
+                                     basedir="${basedir}/../samples/product/src/main/resources/bpel/2.0/SecuredWithServiceDescriptorProcess"/>
                                 <!--  Copying Human Tasks Sample -->
 
                                 <zip destfile="target/samples/humantask/ClaimsApprovalTask.zip"

@@ -42,7 +42,7 @@
      <wsdl:binding name="SWSDPSoapBinding" type="tns:SWSDPPortType">
         <soap:binding style="rpc" transport="http://schemas.xmlsoap.org/soap/http"/>
         <wsdl:operation name="swsdp">
-            <soap:operation soapAction="" style="rpc"/>
+            <soap:operation soapAction="urn:swsdp" style="rpc"/>
             <wsdl:input>
                 <soap:body
                     namespace="http://wso2.org/bpel/sample.wsdl"

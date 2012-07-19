@@ -68,6 +68,7 @@ public class BPSSecurityServerManager extends TestServerManager {
         copyClientJKS(carbonHome);
         copyServiceJKS(carbonHome);
         copySampleProcess(carbonHome, "HelloWorld2");
+        copySampleProcess(carbonHome, "SecuredWithServiceDescriptorProcess");
         copySampleProcess(carbonHome, "SecurePartnerBPEL");
 
 

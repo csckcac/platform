@@ -1,12 +1,14 @@
 package org.wso2.carbon.hadoop.hive.jdbc.storage.utils;
 
 
+import org.apache.commons.lang.ArrayUtils;
 import org.apache.hadoop.conf.Configuration;
 import org.apache.hadoop.hive.metastore.api.Constants;
 import org.apache.hadoop.mapred.JobConf;
 import org.apache.hadoop.mapred.lib.db.DBConfiguration;
 import org.wso2.carbon.hadoop.hive.jdbc.storage.datasource.CarbonDataSourceFetcher;
 
+import java.util.HashMap;
 import java.util.Map;
 import java.util.Properties;
 
@@ -14,7 +16,10 @@ public class ConfigurationUtils {
 
     public static final String HIVE_JDBC_UPDATE_ON_DUPLICATE = "hive.jdbc.update.on.duplicate";
     public static final String HIVE_JDBC_PRIMARY_KEY_FIELDS = "hive.jdbc.primary.key.fields";
-    public static final String HIVE_JDBC_COLUMNS_MAPPING = "hive.jdbc.columns.mapping";
+    public static final String HIVE_JDBC_INPUT_COLUMNS_MAPPING = "hive.jdbc.input.columns.mapping";
+    public static final String HIVE_JDBC_OUTPUT_COLUMNS_MAPPING = "hive.jdbc.output.columns.mapping";
+
+
 
     public static final String HIVE_JDBC_TABLE_CREATE_QUERY = "hive.jdbc.table.create.query";
     public static final String HIVE_JDBC_OUTPUT_UPSERT_QUERY = "hive.jdbc.output.upsert.query";
@@ -33,7 +38,8 @@ public class ConfigurationUtils {
             Constants.META_TABLE_NAME,
             HIVE_JDBC_UPDATE_ON_DUPLICATE,
             HIVE_JDBC_PRIMARY_KEY_FIELDS,
-            HIVE_JDBC_COLUMNS_MAPPING,
+            HIVE_JDBC_INPUT_COLUMNS_MAPPING,
+            HIVE_JDBC_OUTPUT_COLUMNS_MAPPING,
             HIVE_JDBC_TABLE_CREATE_QUERY,
             HIVE_JDBC_OUTPUT_UPSERT_QUERY,
             HIVE_JDBC_UPSERT_QUERY_VALUES_ORDER,
@@ -104,17 +110,50 @@ public class ConfigurationUtils {
         return conf.get(DBConfiguration.PASSWORD_PROPERTY);
     }
 
-    public final static String[] getInputFieldNames(Configuration conf) {
+    public final static Map<String,String> mapTableFieldNamesAgainstHiveFieldNames(
+            Configuration conf) {
+        Map<String,String> mapFields= new HashMap<String,String>();
         String[] fieldNames = null;
-        String inputFieldNames = conf.get(DBConfiguration.INPUT_FIELD_NAMES_PROPERTY);
-        if (inputFieldNames != null) {
-            fieldNames = inputFieldNames.split(",");
-        } else {
+        String[] dbTableFieldName = null;
+        String inputFieldNames = conf.get(HIVE_JDBC_INPUT_COLUMNS_MAPPING);
 
-            String selectQuery = conf.get("hive.query.string");
-            fieldNames = Commons.extractFieldNames(selectQuery).split(",");
+        //Field name getting from hive meta table
+        fieldNames = conf.get(org.apache.hadoop.hive.serde.Constants.LIST_COLUMNS).split(",");
+        fieldNames = (String[])ArrayUtils.removeElement(fieldNames,Commons.BLOCK_OFFSET_INSIDE_FILE);
+        fieldNames = (String[])ArrayUtils.removeElement(fieldNames, Commons.INPUT_FILE_NAME);
+        fieldNames = trim(fieldNames);
+
+        if (inputFieldNames != null) {
+            dbTableFieldName = inputFieldNames.split(",");
+            dbTableFieldName = trim(dbTableFieldName);
+            if(dbTableFieldName.length!=fieldNames.length){
+                throw new IllegalArgumentException("hive.jdbc.input.columns.mapping size " + dbTableFieldName.length
+                + " doesn't match with no of hive meta table columns, which is " + fieldNames.length);
+            }
+            for(int i=0;i<dbTableFieldName.length;i++){
+                  mapFields.put(dbTableFieldName[i],fieldNames[i]);
+            }
+        } else {
+            for(int i=0;i<fieldNames.length;i++){
+                mapFields.put(fieldNames[i],fieldNames[i]);
+            }
         }
-        return fieldNames;
+        return mapFields;
+    }
+
+
+    /**
+     * Trim the white spaces, new lines from the input array.
+     *
+     * @param input a input string array
+     * @return a trimmed string array
+     */
+    protected static String[] trim(String[] input) {
+        String[] trimmed = new String[input.length];
+        for (int i = 0; i < input.length; i++) {
+            trimmed[i] = input[i].trim();
+        }
+        return trimmed;
     }
 
     public final static String[] getOutputFieldNames(Configuration conf) {
@@ -151,7 +190,7 @@ public class ConfigurationUtils {
     }
 
     public final static String[] getColumnMappingFields(Configuration conf) {
-        String mappingFields = conf.get(HIVE_JDBC_COLUMNS_MAPPING);
+        String mappingFields = conf.get(HIVE_JDBC_OUTPUT_COLUMNS_MAPPING);
         if (mappingFields != null) {
             return mappingFields.split(",");
         }

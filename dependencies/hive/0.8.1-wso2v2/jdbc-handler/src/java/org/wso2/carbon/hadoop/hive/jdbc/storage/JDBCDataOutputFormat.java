@@ -2,12 +2,6 @@ package org.wso2.carbon.hadoop.hive.jdbc.storage;
 
 import org.apache.hadoop.fs.FileSystem;
 import org.apache.hadoop.fs.Path;
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
-import org.wso2.carbon.hadoop.hive.jdbc.storage.db.DBManager;
-import org.wso2.carbon.hadoop.hive.jdbc.storage.db.DBRecordWriter;
-import org.wso2.carbon.hadoop.hive.jdbc.storage.db.DatabaseProperties;
-import org.wso2.carbon.hadoop.hive.jdbc.storage.utils.ConfigurationUtils;
 import org.apache.hadoop.hive.ql.exec.FileSinkOperator;
 import org.apache.hadoop.hive.ql.io.HiveOutputFormat;
 import org.apache.hadoop.io.MapWritable;
@@ -17,6 +11,12 @@ import org.apache.hadoop.mapred.JobConf;
 import org.apache.hadoop.mapred.OutputFormat;
 import org.apache.hadoop.mapred.RecordWriter;
 import org.apache.hadoop.util.Progressable;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
+import org.wso2.carbon.hadoop.hive.jdbc.storage.db.DBManager;
+import org.wso2.carbon.hadoop.hive.jdbc.storage.db.DBRecordWriter;
+import org.wso2.carbon.hadoop.hive.jdbc.storage.db.DatabaseProperties;
+import org.wso2.carbon.hadoop.hive.jdbc.storage.utils.ConfigurationUtils;
 
 import java.io.IOException;
 import java.sql.SQLException;

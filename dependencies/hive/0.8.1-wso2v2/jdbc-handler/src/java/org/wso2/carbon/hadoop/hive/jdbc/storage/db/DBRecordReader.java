@@ -35,6 +35,8 @@ public class DBRecordReader implements RecordReader<LongWritable, MapWritable> {
     private ResultSet results;
     private JDBCSplit split;
     private long pos = 0;
+    private DatabaseProperties databaseProperties;
+
 
     public DBRecordReader(JDBCSplit split, DatabaseProperties dbProperties,
                           DBManager dbManager) {
@@ -42,6 +44,7 @@ public class DBRecordReader implements RecordReader<LongWritable, MapWritable> {
         String sqlQuery = null;
         try {
             this.split = split;
+            databaseProperties = dbProperties;
             connection = dbManager.getConnection();
             connection.setAutoCommit(false);
             statement = connection.createStatement(ResultSet.TYPE_FORWARD_ONLY, ResultSet.CONCUR_READ_ONLY);
@@ -80,7 +83,10 @@ public class DBRecordReader implements RecordReader<LongWritable, MapWritable> {
             List<Integer> types = new ArrayList<Integer>();
             // The column count starts from 1
             for (int i = 1; i <= columnCount; i++) {
-                String name = resultsMetaData.getColumnName(i);
+                //This is the column name in db table
+                String name = resultsMetaData.getColumnName(i).toLowerCase();
+                //Get the relevant metaTable name
+                name = databaseProperties.getInputColumnMappingFields().get(name);
                 int type = resultsMetaData.getColumnType(i);
                 //Hive keeps column names in lowercase
                 names.add(name.toLowerCase());

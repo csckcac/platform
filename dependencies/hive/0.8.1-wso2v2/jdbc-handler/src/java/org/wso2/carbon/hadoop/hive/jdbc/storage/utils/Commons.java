@@ -26,6 +26,9 @@ public class Commons {
 
     private static final Logger log = LoggerFactory.getLogger(Commons.class);
 
+    public static final String BLOCK_OFFSET_INSIDE_FILE="BLOCK__OFFSET__INSIDE__FILE";
+    public static final String INPUT_FILE_NAME ="INPUT__FILE__NAME";
+
     public static Object getObjectFromWritable(Writable w) {
         if (w instanceof IntWritable) {
             // int

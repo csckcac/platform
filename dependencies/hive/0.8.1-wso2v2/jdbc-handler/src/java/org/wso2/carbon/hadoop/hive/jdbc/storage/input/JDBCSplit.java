@@ -19,6 +19,7 @@ import java.io.DataOutput;
 import java.io.IOException;
 import java.sql.Connection;
 import java.sql.SQLException;
+import java.util.Map;
 
 public class JDBCSplit extends FileSplit implements InputSplit {
 
@@ -92,7 +93,9 @@ public class JDBCSplit extends FileSplit implements InputSplit {
         dbProperties.setPassword(ConfigurationUtils.getDatabasePassword(conf));
         dbProperties.setConnectionUrl(ConfigurationUtils.getConnectionUrl(conf));
         dbProperties.setDriverClass(ConfigurationUtils.getDriverClass(conf));
-        dbProperties.setFieldsNames(ConfigurationUtils.getInputFieldNames(conf));
+        Map<String,String> mapFieldNames = ConfigurationUtils.mapTableFieldNamesAgainstHiveFieldNames(conf);
+        dbProperties.setInputColumnMappingFields(mapFieldNames);
+        dbProperties.setFieldsNames(mapFieldNames.keySet().toArray(new String[mapFieldNames.size()]));
 
         QueryConstructor queryConstructor = new QueryConstructor();
         String sql = queryConstructor.constructCountQuery(dbProperties);

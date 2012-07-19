@@ -1,6 +1,8 @@
 package org.wso2.carbon.hadoop.hive.jdbc.storage.db;
 
 
+import java.util.Map;
+
 public class DatabaseProperties {
 
     private String connectionUrl;
@@ -13,9 +15,17 @@ public class DatabaseProperties {
     private String[] fieldsNames;
     private String[] primaryFields;
     private String[] columnMappingFields;
+    private Map<String,String> inputColumnMappingFields;
     private boolean updateOnDuplicate;
     private String dataSourceName;
 
+    public Map<String, String> getInputColumnMappingFields() {
+        return inputColumnMappingFields;
+    }
+
+    public void setInputColumnMappingFields(Map<String, String> inputColumnMappingFields) {
+        this.inputColumnMappingFields = inputColumnMappingFields;
+    }
 
     public String getDbSpecificUpsertQuery() {
         return dbSpecificUpsertQuery;

@@ -21,29 +21,32 @@
  -->
 <wso2-rss>
 
-  <rss-type>MYSQL</rss-type>
+ <rss-type>MYSQL</rss-type>
   <!-- RSS database used to store database servers, database instance information, users etc.. -->
-  <rss-database-config>
-      <dsName></dsName>
-
-      <!--driver>org.h2.Driver</driver>
-      <url>jdbc:h2:repository/database/RSS_DATABASE;DB_CLOSE_ON_EXIT=FALSE</url>
-      <username>wso2carbon</username>
-      <password>wso2carbon</password-->
-  </rss-database-config>
+  <rss-mgt-repository>
+      <datasource-config>
+        <driverClassName>org.h2.Driver</driverClassName>
+        <url>jdbc:h2:repository/database/RSS_DATABASE;DB_CLOSE_ON_EXIT=FALSE</url>
+        <username>wso2carbon</username>
+        <password>wso2carbon</password>
+      </datasource-config>
+  </rss-mgt-repository>
 
   <!-- WSO2 RSS instances are predefined constant server instances to be used by users,
        the other type is User Defined RSS instances, 
        which are defined by individual tenants -->
   <system-rss-instances>
-      <!--wso2-rss-instance>
-          <name>WSO2 RSS1</name>
-          <server-url>xxxxxx</server-url>
-          <server-category>RDS</server-category> 
+      <!--system-rss-instance>
+          <name>WSO2RSS1</name>
           <dbms-type>MYSQL</dbms-type>
-          <admin-username>xxxx</admin-username>
-          <admin-password>xxxx</admin-password>
-      </wso2-rss-instance-->
+          <server-category>LOCAL</server-category>
+          <admin-datasource-config>
+                <url>jdbc:mysql://localhost:3306</url>
+                <driverClassName>com.mysql.jdbc.Driver</driverClassName>
+                <username>root</username>
+                <password>root</password>
+          </admin-datasource-config>
+      </system-rss-instance-->
   </system-rss-instances>
 
 </wso2-rss>

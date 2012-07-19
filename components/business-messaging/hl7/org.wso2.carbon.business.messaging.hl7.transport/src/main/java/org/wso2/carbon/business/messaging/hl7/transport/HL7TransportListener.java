@@ -50,6 +50,7 @@ public class HL7TransportListener extends AbstractTransportListenerEx<HL7Endpoin
         		endpoint.getProcessingContext().getPipeParser());
         Application callback = new HL7MessageProcessor(endpoint);
         server.registerApplication("*", "*", callback);
+
         server.start();
         serverTable.put(endpoint, server);
 
@@ -61,6 +62,14 @@ public class HL7TransportListener extends AbstractTransportListenerEx<HL7Endpoin
         SimpleServer server = serverTable.remove(endpoint);
         if (server != null) {
             server.stop();
+        }
+
+        //Adding a delay to the server stop. This is to give some time for the socket to properly close.
+        //See https://wso2.org/jira/browse/ESBJAVA-955
+        try {
+            Thread.sleep(2000);
+        } catch (InterruptedException e) {
+            log.info("InterruptedException: SimpleServer stop delay interrupted");
         }
 
         log.info("Stopped HL7 endpoint on port: " + endpoint.getPort());

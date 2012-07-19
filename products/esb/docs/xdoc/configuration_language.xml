@@ -48,6 +48,7 @@
                 <li><a href="#MediatorConcept">Mediators and Mediation Sequences</a></li>
                 <li><a href="#EndpointConcept">Endpoints</a></li>
                 <li><a href="#ProxyConcept">Proxy Services</a></li>
+                <li><a href="#APIConcept">APIs</a></li>
                 <li><a href="#TaskConcept">Tasks</a></li>
                 <li><a href="#RegistryConcept">Remote Registry and Local Registry</a></li>
                 <li><a href="#EventConcept">Event Sources</a></li>
@@ -70,6 +71,7 @@
             </ul>
         </li>
         <li><a href="#proxy">Proxy Services</a></li>
+        <li><a href="#API">APIs</a></li>
         <li><a href="#eventSource">Event Sources</a></li>
         <li><a href="#priorityExecutor">Priority Executors</a></li>
         <li><a href="#mediator">Mediators</a>
@@ -239,7 +241,7 @@ Failover and Load-balance endpoints - which are defined over a group of
 endpoints. Endpoints may be defined within the synapse-config configuration or
 within the Registry. </p>
 
-<h3 id="ProxyConcept">Proxy Services</h3>
+<h3 id="ProxyConcept"><a href="#proxy">Proxy Services</a></h3>
 
 <p>A proxy service is a virtual services hosted in the ESB runtime. For a service client it
 appears to be a real Web Service which accepts service requests. The proxy service mediates
@@ -255,6 +257,35 @@ expose an unsecured service in a secured manner using WS-Security standards.</p>
 <p>Unlike sequences and endpoints which can be stored and loaded from the registry, proxy
 services cannot be loaded from the registry. However a proxy service can make references
 to sequences and endpoints stored in the registry.</p>
+
+<h3 id="APIConcept"><a href="#API">APIs</a></h3>
+<p>
+An API is similar to a web application deployed in Synapse. It provides a
+convenient approach for filtering and processing HTTP traffic (specially RESTful
+invocations) through the service bus. Each API is anchored at a user defined
+URL context (eg: /ws) and can handle all the HTTP requests that
+fall within that context. Each API is also comprised of one or more resources.
+Resources contain the mediation logic for processing requests and responses.
+Resources can also be associated with a set of HTTP methods and header values.
+For an example one may define an API with two resources, where one resources is
+used to handle GET requests and the other is used to handle POST requests.
+Similarly an API can be defined with separate resources for handling XML and JSON
+content (by looking at the Content-type HTTP header).
+</p>
+<p>
+Resources bare a strong resemblance to proxy services. Similar to proxy services,
+a resource can also define an 'in sequence', an 'out sequence' and a 'fault
+sequence'. Just like in the case of proxy services, the 'in sequence' is used
+to process incoming requests and the 'out sequence' is used to mediate responses.
+</p>
+<p>
+APIs provide a powerful framework using which comprehensive REST APIs can be
+constructed on existing systems. For an example a set of SOAP services can be
+hidden behind an API defined in Synapse. Clients can access the API in Synapse
+by making pure RESTful invocations over HTTP. Synapse takes care of transforming
+the requests and routing them to appropriate back-end services which may or may
+not be based on REST.
+</p>
 
 <h3 id="TaskConcept"><a href="#task">Tasks</a> </h3>
 
@@ -314,6 +345,7 @@ of WSO2 ESB contains several files and subdirectories. Usually the following set
 directories are available in the synapse-config directory.</p>
 
 <ul>
+    <li>api</li>
     <li>endpoints</li>
     <li>event-sources</li>
     <li>local-entries</li>
@@ -344,6 +376,7 @@ put it in the synapse-config/synapse.xml file.</p>
    &lt;<a href="#sequence">sequence</a> name="string"&gt;...&lt;/sequence&gt;?
    &lt;<a href="#endpoint">endpoint</a> name="string"&gt;...&lt;/endpoint&gt;?
    &lt;<a href="#proxy">proxy</a> name="string" ...&gt;...&lt;/proxy&gt;?
+   &lt;<a href="#api">api</a> name="string" ...&gt;...&lt;/api&gt;?
    &lt;<a href="#task">task</a> name="string" ...&gt;...&lt;/task&gt;?
    &lt;<a href="#task">eventSource</a> name="string" ...&gt;...&lt;/eventSource&gt;?
    &lt;<a href="#task">priorityExecutor</a> name="string" ...&gt;...&lt;/priorityExecutor&gt;? 
@@ -972,6 +1005,45 @@ file:////somehost/someshare/afile.txt
 jar:../lib/classes.jar!/META-INF/manifest.mf
 jar:zip:outer.zip!/nested.jar!/somedir
 ftp://myusername:mypassword@somehost/pub/downloads/somefile.tgz[?vfs.passive=true]</pre>
+
+<h2 id="API">API Configuration</h2>
+<p>
+APIs provide a flexible and powerful approach for defining full fledged REST APIs
+in Synapse. An API definition starts with the &lt;api&gt; element.
+</p>
+<pre xml:space="preserve"> &lt;api name="string" context="string" [hostname="string"][port="int"]&gt;
+   &lt;resource [methods="http-method-list"][inSequence="string"][outSequence="string"]
+       [faultSequence="string"][content-type="string"][user-agent="str"]&gt;
+     &lt;inSequence&gt;...&lt;/inSequence&gt;?
+     &lt;outSequence&gt;...&lt;/outSequence&gt;?
+     &lt;faultSequence&gt;...&lt;/faultSequence&gt;?
+   &lt;/resource&gt;+
+   &lt;handlers&gt;
+     &lt;handler class="name"/&gt;+
+   &lt;/handlers&gt;?
+ &lt;/api&gt;</pre>
+<p>
+Each API definition must be uniquely named using the 'name' attribute. The 'context'
+attribute is used to define the URL context at which the REST API will be anchored
+(eg: /ws, /foo/bar, /soap). The API will only receive requests that fall in the
+specified URL context. In addition to that an API could be bound to a particular
+host and a port using the 'hostname' and 'port' attributes.
+</p>
+<p>
+An API must also contain one or more resources. Resources define how messages
+are processed and mediated by the API. An API can be associated with a set of HTTP
+methods using the 'methods' attribute. This attribute can support a single method name
+(eg: GET) or a space separated list of methods (eg: GET PUT DELETE). A resource
+can also refer other sequences using the 'inSequence', 'outSequence' and 'faultSequence'
+attributes. Alternatively these mediation sequences can be defined inline with the
+resource using 'inSequence', 'outSequence' and 'faultSequence' tags.
+</p>
+<p>
+An API can also optionally define a set of handlers. These handlers are invoked
+for each incoming API request, before they are dispatched to the appropriate
+resources. The 'class' attribute on the 'handler' elements should contain the
+ful qualified names of the handler implementation classes.
+</p>
 
 <h2 id="task">Tasks</h2>
 

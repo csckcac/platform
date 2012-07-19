@@ -23,6 +23,7 @@
 <%@ page import="org.wso2.carbon.cassandra.explorer.stub.data.xsd.Row" %>
 <%@ page import="org.json.simple.JSONObject" %>
 <%@ page import="org.json.simple.JSONArray" %>
+<%@ page import="org.apache.commons.lang.StringEscapeUtils" %>
 <%@ taglib prefix="fmt" uri="http://java.sun.com/jsp/jstl/fmt" %>
 <%@ taglib uri="http://wso2.org/projects/carbon/taglibs/carbontags.jar" prefix="carbon" %>
 <%
@@ -85,10 +86,10 @@
         for (int i = 0; i < rows.length; i++) {
             if (rows[i] != null) {
                 JSONArray valueArray = new JSONArray();
-                valueArray.add(rows[i].getRowId());
+                valueArray.add(StringEscapeUtils.escapeXml(rows[i].getRowId()));
                 Column[] columns = rows[i].getColumns();
                 for (int j = 0; j < rows[i].getColumns().length; j++) {
-                    valueArray.add(columns[j].getValue());
+                    valueArray.add(StringEscapeUtils.escapeXml(columns[j].getValue()));
                 }
                 if (rows[i].getColumns().length < 3) {
                     for (int k = 0; k < 3 - rows[i].getColumns().length; k++) {

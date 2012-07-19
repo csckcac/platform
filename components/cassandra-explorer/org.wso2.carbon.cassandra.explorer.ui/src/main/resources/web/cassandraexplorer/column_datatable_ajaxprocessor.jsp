@@ -23,6 +23,7 @@
 <%@ page import="org.json.simple.JSONObject" %>
 <%@ page import="org.codehaus.jackson.JsonEncoding" %>
 <%@ page import="org.json.simple.JSONArray" %>
+<%@ page import="org.apache.commons.lang.StringEscapeUtils" %>
 <%@ taglib prefix="fmt" uri="http://java.sun.com/jsp/jstl/fmt" %>
 <%@ taglib uri="http://wso2.org/projects/carbon/taglibs/carbontags.jar" prefix="carbon" %>
 <%
@@ -76,8 +77,8 @@
         for (int i = 0; i < columns.length; i++) {
             if (columns[i] != null) {
                 JSONArray columnValueArray = new JSONArray();
-                columnValueArray.add( columns[i].getName());
-                columnValueArray.add(columns[i].getValue());
+                columnValueArray.add( StringEscapeUtils.escapeXml(columns[i].getName()));
+                columnValueArray.add(StringEscapeUtils.escapeXml(columns[i].getValue()));
                 columnValueArray.add((new Date(columns[i].getTimeStamp())).toString());
                 valuesArray.add(columnValueArray);
                 }

@@ -130,6 +130,11 @@ public class SCMManagerBasedRepositoryManager extends AbstractRepositoryManager{
             log.error(msg);
             throw new RepositoryMgtException(msg);
         }
+        //creating best practice svn structure
+        //--trunk
+        //--branch
+        createDirectory(url+"/trunk","creating trunk directory");
+        createDirectory(url+"/branch","creating branch directory");
         return url;
     }
 

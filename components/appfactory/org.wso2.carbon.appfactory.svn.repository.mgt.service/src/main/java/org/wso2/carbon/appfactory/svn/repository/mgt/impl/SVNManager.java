@@ -17,6 +17,7 @@
 package org.wso2.carbon.appfactory.svn.repository.mgt.impl;
 
 import org.apache.commons.logging.LogFactory;
+import org.tigris.subversion.svnclientadapter.SVNRevision;
 import org.wso2.carbon.appfactory.common.AppFactoryConfiguration;
 import org.wso2.carbon.appfactory.common.AppFactoryConstants;
 import org.wso2.carbon.appfactory.common.AppFactoryException;
@@ -25,6 +26,7 @@ import org.wso2.carbon.appfactory.core.RevisionControlDriverListener;
 import org.wso2.carbon.appfactory.svn.repository.mgt.util.Util;
 
 import java.io.File;
+import java.text.ParseException;
 
 
 public class SVNManager implements RevisionControlDriver {
@@ -35,9 +37,19 @@ public class SVNManager implements RevisionControlDriver {
     public void getSource(String applicationId, String version, String revision, RevisionControlDriverListener listener) throws AppFactoryException {
 
         SCMManagerBasedRepositoryManager scm = new SCMManagerBasedRepositoryManager();
+
         try {
-            String checkoutUrl = getApplicationUrl()+File.separator+"svn"+ File.separator+ applicationId;
-            scm.checkoutApplication(checkoutUrl, applicationId, revision);
+            //TODO:remove this temp logic after changing BPEL API
+            String baseURL = getApplicationUrl()+File.separator+"svn"+ File.separator+ applicationId;
+            String sourceURL=baseURL+"/trunk/";
+            String destinationURL =baseURL+"/branch/"+version;
+                try {
+                scm.svnCopy(sourceURL, destinationURL,
+                            "branching trunk to " + version, SVNRevision.getRevision(revision));
+            } catch (ParseException e) {
+                log.error("Error in branching" +e);
+            }
+            scm.checkoutApplication(destinationURL, applicationId, revision);
             listener.onGetSourceCompleted(applicationId, version, revision);
         } catch (SCMManagerExceptions scmManagerExceptions) {
             log.error("Error in checkout" + scmManagerExceptions);

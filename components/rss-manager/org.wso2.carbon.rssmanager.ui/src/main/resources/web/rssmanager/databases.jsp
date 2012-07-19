@@ -20,7 +20,8 @@
 <%@ page import="org.wso2.carbon.CarbonConstants" %>
 <%@ page import="org.wso2.carbon.rssmanager.common.RSSManagerConstants" %>
 <%@ page import="org.wso2.carbon.rssmanager.ui.RSSManagerClient" %>
-<%@ page import="org.wso2.carbon.rssmanager.ui.stub.types.DatabaseInstanceEntry" %>
+<%@ page import="org.wso2.carbon.rssmanager.ui.stub.types.DatabaseMetaData" %>
+<%@ page import="org.wso2.carbon.ui.CarbonUIMessage" %>
 <%@ page import="org.wso2.carbon.ui.CarbonUIUtil" %>
 <%@ page import="org.wso2.carbon.utils.ServerConstants" %>
 <%@ page import="java.util.List" %>
@@ -42,8 +43,10 @@
                 getAttribute(CarbonConstants.CONFIGURATION_CONTEXT);
         String cookie = (String) session.getAttribute(ServerConstants.ADMIN_SERVICE_COOKIE);
         try {
-            client = new RSSManagerClient(cookie, backendServerURL, configContext, request.getLocale());
+            client = new RSSManagerClient(cookie, backendServerURL, configContext,
+                    request.getLocale());
         } catch (Exception e) {
+            CarbonUIMessage.sendCarbonUIMessage(e.getMessage(), CarbonUIMessage.ERROR, request, e);
         }
     %>
 
@@ -51,13 +54,14 @@
         <h2><fmt:message key="rss.manager.databases"/></h2>
 
         <div id="workArea">
-            <form method="post" action="databases.jsp" name="dataForm">
+            <form method="post" action="#" name="dataForm">
+                <div id="connectionStatusDiv" style="display: none;"></div>
                 <table class="styledLeft" id="database_table">
                     <%
                         if (client != null) {
                             try {
-                                List<DatabaseInstanceEntry> dbs = client.getDatabaseInstanceList();
-                                if (dbs.size() > 0) {
+                                List<DatabaseMetaData> databases = client.getDatabaseList();
+                                if (databases.size() > 0) {
                     %>
                     <thead>
                     <tr>
@@ -70,30 +74,30 @@
                     </thead>
                     <tbody>
                     <%
-                        for (DatabaseInstanceEntry db : dbs) {
-                            if (db != null) {
+                        for (DatabaseMetaData database : databases) {
+                            if (database != null) {
                     %>
 
-                    <tr id="tr_<%=db.getRssInstanceId()%>_<%=db.getDbInstanceId()%>">
-                        <td><%=db.getDbName()%>
+                    <tr id="tr_<%=database.getRssInstanceName()%>_<%=database.getName()%>">
+                        <td><%=database.getName()%>
                         </td>
-                        <td><%=db.getRssName()%>
+                        <td><%=database.getRssInstanceName()%>
                         </td>
-                        <td><%=db.getRssTenantDomain()%>
+                        <td><%=database.getRssTenantDomain()%>
                         </td>
-                        <td><%=db.getDbUrl()%>
+                        <td><%=database.getUrl()%>
                         </td>
                         <%
-                            if (RSSManagerConstants.STRATOS_RSS.equals(db.getRssTenantDomain())) {
+                            if (RSSManagerConstants.STRATOS_RSS.equals(database.getRssTenantDomain())) {
                         %>
                         <td>
                             <a class="icon-link"
                                style="background-image:url(../admin/images/edit.gif);"
-                               onclick="submitManageForm('<%=db.getRssInstanceId()%>','<%=db.getDbInstanceId()%>')"><fmt:message
+                               onclick="submitManageForm('<%=database.getRssInstanceName()%>','<%=database.getName()%>')"><fmt:message
                                     key="rss.manager.manage.database"/></a>
                             <a class="icon-link"
                                style="background-image:url(../admin/images/delete.gif);"
-                               onclick="dropDatabase(this)"><fmt:message
+                               onclick="dropDatabase('<%=database.getRssInstanceName()%>', '<%=database.getName()%>')"><fmt:message
                                     key="rss.manager.delete.database"/></a>
                         </td>
                     </tr>
@@ -104,54 +108,59 @@
                     <td>
                         <a class="icon-link"
                            style="background-image:url(../admin/images/edit.gif);"
-                           onclick="submitManageForm('<%=db.getRssInstanceId()%>','<%=db.getDbInstanceId()%>')"><fmt:message
+                           onclick="submitManageForm('<%=database.getRssInstanceName()%>','<%=database.getName()%>')"><fmt:message
                                 key="rss.manager.manage.database"/></a>
                         <a class="icon-link"
                            style="background-image:url(../admin/images/delete.gif);"
-                           onclick="dropDatabase(this)"><fmt:message
+                           onclick="dropDatabase('<%=database.getRssInstanceName()%>', '<%=database.getName()%>')"><fmt:message
                                 key="rss.manager.delete.database"/></a>
                     </td>
                     <%
-                                                    //   }
-                                                }
-                                        }
-                                    }
+
+                                }
+                            }
+                        }
+                    } else {
+                    %>
+                    <tr>
+                        <td colspan="5">No databases created yet.</td>
+                    </tr>
+                    <%
                                 }
                             } catch (Exception e) {
+                                CarbonUIMessage.sendCarbonUIMessage(e.getMessage(),
+                                        CarbonUIMessage.ERROR, request, e);
                             }
                         }
                     %>
-                    <tr>
-                        <td class="addNewDatabase" colspan="5">
-                            <a class="icon-link"
-                               style="background-image:url(../admin/images/add.gif);"
-                               href="addDatabase.jsp"><fmt:message
-                                    key="rss.manager.add.new.database"/></a>
-                        </td>
-                    </tr>
+
                     </tbody>
                 </table>
+                <a class="icon-link"
+                   style="background-image:url(../admin/images/add.gif);"
+                   href="createDatabase.jsp"><fmt:message
+                        key="rss.manager.add.new.database"/></a>
+
+                <div style="clear:both"></div>
             </form>
             <script type="text/javascript">
-                function submitManageForm(rssInsId, dbInsId) {
-                    document.getElementById('rssInsId').value = rssInsId;
-                    document.getElementById('dbInsId').value = dbInsId;
+                function submitManageForm(rssInstanceName, databaseName) {
+                    document.getElementById('rssInstanceName').value = rssInstanceName;
+                    document.getElementById('databaseName').value = databaseName;
                     document.getElementById('manageForm').submit();
                 }
-                function submitDropForm(dbInsId) {
-                    //document.getElementById('rssInsId1').value = rssInsId;
-                    document.getElementById('dbInsId1').value = dbInsId;
+                function submitDropForm(databaseName) {
+                    document.getElementById('databaseName').value = databaseName;
                     document.getElementById('flag').value = 'drop';
                     document.getElementById('dropForm').submit();
                 }
             </script>
-            <form action="users.jsp" method="post" id="manageForm">
-                <input type="hidden" id="rssInsId" name="rssInsId"/>
-                <input type="hidden" id="dbInsId" name="dbInsId"/>
+            <form action="attachedDatabaseUsers.jsp" method="post" id="manageForm">
+                <input type="hidden" id="rssInstanceName" name="rssInstanceName"/>
+                <input type="hidden" id="databaseName" name="databaseName"/>
             </form>
-            <form action="databaseProcessor.jsp" method="post" id="dropForm">
-                <input type="hidden" id="rssInsId1" name="rssInsId"/>
-                <input type="hidden" id="dbInsId1" name="dbInsId"/>
+            <form action="databaseOps_ajaxprocessor.jsp" method="post" id="dropForm">
+                <input type="hidden" id="rssInstanceName1" name="rssInstanceName"/>
                 <input type="hidden" id="flag" name="flag"/>
             </form>
         </div>

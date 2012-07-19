@@ -80,4 +80,27 @@ public final class RSSManagerConstants {
     public static final String MAX_USER_CONNECTIONS = "max_user_connections";
     public static final String MAX_UPDATES = "max_updates";
 
+    public static final String RSS_INSTANCE_ID = "rssInsId";
+    public static final String DATABASE_INSTANCE_ID = "dbInsId";
+
+    public static final java.lang.String DATA_SOURCE = "dataSource";
+    public static final java.lang.String URL = "url";
+    public static final java.lang.String USER_NAME = "username";
+    public static final java.lang.String PASSWORD = "password";
+    public static final java.lang.String DRIVER_NAME = "driverClassName";
+    public static final java.lang.String MAX_ACTIVE = "maxActive";
+    public static final java.lang.String MAX_WAIT = "maxWait";
+    public static final java.lang.String MIN_IDLE = "minIdle";
+    public static final java.lang.String MAX_IDLE = "maxIdle";
+    public static final java.lang.String VALIDATION_QUERY = "validationQuery";
+    public static final java.lang.String DIALECT_FLAG = "dialectFlag";
+    public static final java.lang.String TEST_WHILE_IDLE = "testWhileIdle";
+    public static final java.lang.String TIME_BETWEEN_EVICTION_RUNS_MILLIS = "timeBetweenEvictionRunsMillis";
+    public static final java.lang.String MIN_EVIC_TABLE_IDLE_TIME_MILLIS = "minEvictableIdleTimeMillis";
+    public static final java.lang.String NUM_TESTS_PEREVICTION_RUN = "numTestsPerEvictionRun";
+    public static final int DEFAULT_MAX_ACTIVE = 40;
+    public static final int DEFAULT_MAX_WAIT = 1000 * 60;
+    public static final int DEFAULT_MIN_IDLE = 5;
+    public static final int DEFAULT_MAX_IDLE = 6;
+
 }

@@ -18,14 +18,14 @@
 <serviceGroup>
    <parameter name="adminService" locked="true">true</parameter>
 
-    <service name="RSSManagerAdminService" scope="transportsession">
-        <schema schemaNamespace="http://admin.core.rssmanager.carbon.wso2.org"
+    <service name="RSSAdmin" scope="transportsession">
+        <schema schemaNamespace="http://service.core.rssmanager.carbon.wso2.org"
                 elementFormDefaultQualified="true"/>
         <transports>
             <transport>https</transport>
         </transports>
         <description>
-            This service will provide the info related to Mars Admin Console
+            This service will expose the back-end admin service operations of RSS-Manager
         </description>
         <messageReceivers>
             <messageReceiver mep="http://www.w3.org/ns/wsdl/robust-in-only"

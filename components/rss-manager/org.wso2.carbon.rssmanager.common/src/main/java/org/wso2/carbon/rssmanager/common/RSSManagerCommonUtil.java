@@ -207,6 +207,11 @@ public class RSSManagerCommonUtil {
         return sb.toString();
     }
 
+    public static String constructConnectionUrl(String url) throws Exception {
+        return RSSManagerConstants.JDBC_PREFIX + ":" + RSSManagerCommonUtil.getDatabasePrefix(url) +
+                "://" + RSSManagerCommonUtil.validateRSSInstanceHostname(url);
+    }
+
     public static String getDatabasePrefix(String url) {
         if (url != null && !"".equals(url)) {
             return url.split(":")[1];
@@ -214,21 +219,34 @@ public class RSSManagerCommonUtil {
         return "";
     }
 
-    public static String validateRSSInstanceHostname(String url) throws URISyntaxException {
+    public static String validateRSSInstanceHostname(String url) throws Exception {
         if (url != null && !"".equals(url)) {
-            URI uri = new URI(url.split("jdbc:")[1]);
-            return uri.getHost() + ":" + ((uri.getPort() != -1) ? uri.getPort() : "");
+            URI uri;
+            try {
+                uri = new URI(url.split("jdbc:")[1]);
+                return uri.getHost() + ":" + uri.getPort();
+            } catch (URISyntaxException e) {
+                throw new Exception("JDBC URL '" + url + "' is invalid. Please enter a " +
+                        "valid JDBC URL.");
+            }
         }
         return "";
     }
 
-    public static String validateRSSInstanceUrl(String url) throws URISyntaxException {
+    public static String validateRSSInstanceUrl(String url) throws Exception {
         if (url != null && !"".equals(url)) {
-            URI uri = new URI(url.split("jdbc:")[1]);
-            return RSSManagerConstants.JDBC_PREFIX + ":" + uri.getScheme() + "://" + uri.getHost()
-                    + ":" + ((uri.getPort() != -1) ? uri.getPort() : "");
+            URI uri;
+            try {
+                uri = new URI(url.split("jdbc:")[1]);
+                return RSSManagerConstants.JDBC_PREFIX + ":" + uri.getScheme() + "://" +
+                        uri.getHost() + ":" + ((uri.getPort() != -1) ? uri.getPort() : "");
+            } catch (URISyntaxException e) {
+                throw new Exception("JDBC URL '" + url + "' is invalid. Please enter a " +
+                        "valid JDBC URL.");
+            }
         }
         return "";
     }
 
+    
 }

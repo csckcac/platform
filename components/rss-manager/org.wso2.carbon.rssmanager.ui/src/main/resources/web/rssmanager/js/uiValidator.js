@@ -1,6 +1,6 @@
-function validateInstanceProperties() {
-    var instanceName = trim(document.getElementById("instanceName").value);
-    var instanceUrl = trim(document.getElementById("instanceUrl").value);
+function validateRSSInstanceProperties(flag) {
+    var rssInstanceName = trim(document.getElementById("rssInstanceName").value);
+    var serverUrl = trim(document.getElementById("serverUrl").value);
     var serverCategories = document.getElementById("serverCategory");
     var serverCategory = trim(serverCategories[serverCategories.selectedIndex].value);
     var username = trim(document.getElementById("username").value);
@@ -9,7 +9,7 @@ function validateInstanceProperties() {
     var databaseEngine = document.getElementById("databaseEngine");
     var instanceType = trim(databaseEngine[databaseEngine.selectedIndex].value);
 
-    if (instanceName == '' || instanceName == null) {
+    if (rssInstanceName == '' || rssInstanceName == null) {
         CARBON.showWarningDialog("Database server instance name cannot be left blank");
         return false;
     }
@@ -22,14 +22,14 @@ function validateInstanceProperties() {
         return false;
     }
     var driverClass = '';
-    if (instanceUrl != null && instanceUrl != '') {
-        driverClass = trim(getJdbcDriver(instanceUrl));
+    if (serverUrl != null && serverUrl != '') {
+        driverClass = trim(getJdbcDriver(serverUrl));
         if (!(driverClass != null && driverClass != '')) {
-            CARBON.showErrorDialog("Invalid JDBC Url");
+            CARBON.showErrorDialog("JDBC URL '" + serverUrl + "' is invalid. Please enter a valid JDBC URL.");
             return false
         }
     } else {
-        CARBON.showWarningDialog("JDBC url field cannot be left blank");
+        CARBON.showWarningDialog("JDBC URL field cannot be left blank");
         return false;
     }
     if (username == '' || username == null) {
@@ -40,77 +40,13 @@ function validateInstanceProperties() {
         CARBON.showWarningDialog("Administrative password field cannot be left blank");
         return false;
     }
-    validateConnectionStatus();
+    dispatchRSSInstanceCreateRequest(flag);
 }
 
-function validateEditInstanceProperties() {
-    var instanceName = trim(document.getElementById("instanceName").value);
-    var instanceUrl = trim(document.getElementById("instanceUrl").value);
-    var serverCategories = document.getElementById("serverCategory");
-    var serverCategory = trim(serverCategories[serverCategories.selectedIndex].value);
-    var username = trim(document.getElementById("username").value);
-    var password = trim(document.getElementById("password").value);
-    //var driverClass = trim(document.getElementById("driverClass").value);
-    var databaseEngine = document.getElementById("databaseEngine");
-    var instanceType = trim(databaseEngine[databaseEngine.selectedIndex].value);
-
-    if (instanceName == '' || instanceName == null) {
-        CARBON.showWarningDialog("Database server instance name cannot be left blank");
-        return false;
-    }
-    if (serverCategory == '' || serverCategory == null) {
-        CARBON.showWarningDialog("Select a valid server category");
-        return false;
-    }
-    if (instanceType == '' || instanceType == null) {
-        CARBON.showWarningDialog("Select a valid instance type");
-        return false;
-    }
-    var driverClass = '';
-    if (instanceUrl != null && instanceUrl != '') {
-        driverClass = trim(getJdbcDriver(instanceUrl));
-        if (!(driverClass != null && driverClass != '')) {
-            CARBON.showErrorDialog("Invalid JDBC Url");
-            return false
-        }
-    } else {
-        CARBON.showWarningDialog("JDBC url field cannot be left blank");
-        return false;
-    }
-    if (username == '' || username == null) {
-        CARBON.showWarningDialog("Administrative username field cannot be left blank");
-        return false;
-    }
-    if (password == '' || password == null) {
-        CARBON.showWarningDialog("Administrative password field cannot be left blank");
-        return false;
-    }
-    redirectToInstanceProcessor();
-}
-
-function redirectToInstanceProcessor() {
-    var instanceName = document.getElementById("instanceName").value;
-    var instanceUrl = document.getElementById("instanceUrl").value;
-    var username = document.getElementById("username").value;
-    var password = document.getElementById("password").value;
-    var flag = document.getElementById("flag").value;
-    var rssInsId = document.getElementById("rssInsId").value;
-    var serverCategoryList = document.getElementById("serverCategory");
-    var serverCategory = serverCategoryList[serverCategoryList.selectedIndex].value;
-    var url = 'connection_status_ajaxprocessor.jsp?instanceName=' + encodeURIComponent(instanceName)
-            + '&instanceUrl=' + encodeURIComponent(instanceUrl) + '&username=' + encodeURIComponent(
-            username) + '&password=' + encodeURIComponent(password) + '&flag=' + encodeURIComponent(
-            flag) + '&serverCategory=' + encodeURIComponent(serverCategory) + '&rssInsId=' +
-            encodeURIComponent(rssInsId);
-    jQuery('#connectionStatusDiv').load(url, displayMessages);
-}
-
-function removeInstance(obj, rssInsId) {
+function dispatchDropRSSInstanceRequest(rssInstanceName) {
     function forwardToDel() {
-        var rowId = $(obj).parents('tr:eq(0)').attr('id');
-        var instanceName = rowId.substring("tr_".length, rowId.length);
-        var url = 'connection_status_ajaxprocessor.jsp?instanceName=' + encodeURIComponent(
-                instanceName) + '&flag=remove&rssInsId=' + encodeURIComponent(rssInsId);
+        var url = 'rssInstanceOps_ajaxprocessor.jsp?flag=drop&rssInstanceName=' +
+                encodeURIComponent(rssInstanceName);
         jQuery('#connectionStatusDiv').load(url, displayMessages);
     }
 
@@ -122,25 +58,23 @@ function deleteInstance(obj) {
         var delElement = document.getElementById(obj);
         var instanceTable = document.getElementById("instanceTable");
         instanceTable.removeChild(delElement);
-        document.location.href = "instances.jsp";
+        document.location.href = "rssInstances.jsp";
     }
 
     CARBON.showConfirmationDialog("Do you want to drop database server instance " + obj + "?",
             forwardToDel());
 }
 
-function validateConnectionStatus() {
-    var instanceName = document.getElementById("instanceName").value;
-    var instanceUrl = document.getElementById("instanceUrl").value;
+function dispatchRSSInstanceCreateRequest(flag) {
+    var rssInstanceName = document.getElementById("rssInstanceName").value;
+    var serverUrl = document.getElementById("serverUrl").value;
     var username = document.getElementById("username").value;
     var password = document.getElementById("password").value;
-    var flag = document.getElementById("flag").value;
     var serverCategoryList = document.getElementById("serverCategory");
     var serverCategory = serverCategoryList[serverCategoryList.selectedIndex].value;
-    var url = 'connection_status_ajaxprocessor.jsp?instanceName=' + encodeURIComponent(instanceName)
-            + '&instanceUrl=' + encodeURIComponent(instanceUrl) + '&username=' + encodeURIComponent(
-            username) + '&password=' + encodeURIComponent(password) + '&flag=' + encodeURIComponent(
-            flag) + '&serverCategory=' + encodeURIComponent(serverCategory);
+    var url = 'rssInstanceOps_ajaxprocessor.jsp?rssInstanceName=' + encodeURIComponent(rssInstanceName)
+            + '&serverUrl=' + encodeURIComponent(serverUrl) + '&username=' + encodeURIComponent(
+            username) + '&password=' + encodeURIComponent(password) + '&flag=' + flag + '&serverCategory=' + encodeURIComponent(serverCategory);
     jQuery('#connectionStatusDiv').load(url, displayMessages);
 }
 
@@ -154,44 +88,131 @@ function setRssInsId() {
     document.getElementById("rssInsId").value = rssInsList[rssInsList.selectedIndex].value;
 }
 
-function validateDatabaseProperties() {
-    var instanceNameBox = document.getElementById("instances");
-    var instanceName = trim(instanceNameBox[instanceNameBox.selectedIndex].value);
-    var dbName = trim(document.getElementById("dbName").value);
+function createDatabase() {
+    var rssInstances = document.getElementById("rssInstances");
+    var rssInstanceName = trim(rssInstances[rssInstances.selectedIndex].value);
+    var databaseName = trim(document.getElementById("databaseName").value);
 
-    if (instanceName == '' || instanceName == null) {
+    if (rssInstanceName == '' || rssInstanceName == null) {
         CARBON.showWarningDialog("Select a valid database instance");
         return false;
     }
-    if (dbName == '' || dbName == null) {
+    if (databaseName == '' || databaseName == null) {
         CARBON.showWarningDialog("Database name cannot be left blank");
         return false;
     }
     var validChar = new RegExp("^[a-zA-Z0-9_]+$");
-    if (!validChar.test(dbName)) {
+    if (!validChar.test(databaseName)) {
         CARBON.showWarningDialog("Alphanumeric characters and underscores are only allowed in database name");
         return false;
     }
-    redirectToDatabaseProcessor();
-
+    dispatchDatabaseActionRequest('create', rssInstanceName, databaseName);
 }
 
-function addDatabases() {
-    var instances = document.getElementById("instances").value;
-    var dbName = document.getElementById("dbName").value;
-    var url = 'database_ajaxprocessor.jsp?dbName=' + encodeURIComponent(dbName) + '&instances=' +
-            encodeURIComponent(instances);
-    jQuery('#connectionStatusDiv').load(url, displayMessages);
+function attachUserToDatabase() {
+    var rssInstanceName = document.getElementById('rssInstanceName').value;
+    var databaseName = document.getElementById('databaseName').value;
+    var templates = document.getElementById('privilegeTemplates');
+    var templateName = templates[templates.selectedIndex].value;
+    var databaseUsers = document.getElementById('databaseUsers');
+    var username = databaseUsers[databaseUsers.selectedIndex].value;
+
+    if (rssInstanceName == '' || rssInstanceName == null) {
+        CARBON.showWarningDialog("Select a valid database instance");
+        return false;
+    }
+    if (databaseName == '' || databaseName == null) {
+        CARBON.showWarningDialog("Database name cannot be left blank");
+        return false;
+    }
+    if (templateName == '' || templateName == null || templateName == 'SELECT') {
+        CARBON.showWarningDialog("Select a valid database privilege template");
+        return false;
+    }
+    if (username == '' || username == null || username == 'SELECT') {
+        CARBON.showWarningDialog("Select a valid database user");
+        return false;
+    }
+    dispatchDatabaseManageAction('attach', rssInstanceName, username, databaseName);
 }
 
-function validatePrivileges() {
+function dispatchDatabaseManageAction(flag, rssInstanceName, username, databaseName) {
+    var tmpPassword = document.getElementById('password');
+    var password = '';
+    if (tmpPassword != null) {
+        password = tmpPassword.value;
+    }
+    var privilegeTemplates = document.getElementById('privilegeTemplates');
+    var privilegeTemplate = '';
+    if (privilegeTemplates != null) {
+        privilegeTemplate = privilegeTemplates[privilegeTemplates.selectedIndex].value;
+    } else {
+        var tmpTemplate = document.getElementById('privilegeTemplateName');
+        if (tmpTemplate != null) {
+            privilegeTemplate = tmpTemplate.value;
+        }
+    }
+    var url = 'databaseUserOps_ajaxprocessor.jsp?rssInstanceName=' +
+            encodeURIComponent(rssInstanceName) + '&flag=' + encodeURIComponent(flag) +
+            '&username=' + encodeURIComponent(username) + '&password=' +
+            encodeURIComponent(password) + '&privilegeTemplateName=' +
+            encodeURIComponent(privilegeTemplate) + '&databaseName=' + databaseName;
+    jQuery('#connectionStatusDiv').load(url, displayDatabaseManageActionStatus);
+}
+
+function displayDatabaseManageActionStatus(msg) {
+    if (msg.search(/has been successfully attached/) != -1) {
+        jQuery(document).ready(function() {
+            function handleOK() {
+                window.location = 'attachedDatabaseUsers.jsp';
+            }
+
+            CARBON.showInfoDialog(msg, handleOK);
+        });
+
+    } else if (msg.search(/has been successfully detached/) != -1) {
+        jQuery(document).ready(function() {
+            function handleOK() {
+                window.location = 'attachedDatabaseUsers.jsp';
+            }
+
+            CARBON.showInfoDialog(msg, handleOK);
+        });
+    } else if (msg.search(/Failed to attach user/) != -1) {
+        jQuery(document).ready(function() {
+            function handleOK() {
+                window.location = 'attachedDatabaseUsers.jsp';
+            }
+
+            CARBON.showErrorDialog(msg, handleOK);
+        });
+    } else if (msg.search(/Failed to detach user/) != -1) {
+        jQuery(document).ready(function() {
+            function handleOK() {
+                window.location = 'attachedDatabaseUsers.jsp';
+            }
+
+            CARBON.showErrorDialog(msg, handleOK);
+        });
+    } else {
+        jQuery(document).ready(function() {
+            function handleOK() {
+                window.location = 'attachedDatabaseUsers.jsp';
+            }
+
+            CARBON.showErrorDialog(msg, handleOK());
+        });
+    }
+}
+
+
+function createDatabaseUser() {
     var username = trim(document.getElementById('username').value);
     var password = document.getElementById('password').value;
     var repeatPass = document.getElementById('repeatPassword').value;
-    var privGroupList = document.getElementById('privGroupList');
-    var privGroup = trim(privGroupList[privGroupList.selectedIndex].value);
-    var privGroupId = privGroupList[privGroupList.selectedIndex].id;
-    
+    var rssInstances = document.getElementById('rssInstances');
+    var rssInstanceName = rssInstances[rssInstances.selectedIndex].value;
+
     if (username == '' || username == null) {
         CARBON.showWarningDialog("Username field cannot be left blank");
         return false;
@@ -211,41 +232,37 @@ function validatePrivileges() {
         CARBON.showErrorDialog("Vlaues in Password and Repeat password fields do not match");
         return false;
     }
-    if (privGroup == '' || privGroup == null) {
-        CARBON.showWarningDialog("Select a valid privilege group");
-        return false;
-    }
-    redirectToUsers();
+    dispatchDatabaseUserActionRequest('create', rssInstanceName, username, '');
 }
 
-function validateEditUser() {
+function editDatabaseUser(rssInstanceName, username) {
     var password = document.getElementById('password').value;
     if (password == '' || password == null) {
         CARBON.showWarningDialog("Password field cannot be left blank");
         return false;
     }
-    redirectToUsers();
+    dispatchDatabaseUserActionRequest('edit', rssInstanceName, username, '');
     return true;
 }
 
 function setJDBCValues(obj, document) {
     var selectedValue = obj[obj.selectedIndex].value;
-    document.getElementById("instanceUrl").value = selectedValue.substring(
+    document.getElementById("serverUrl").value = selectedValue.substring(
             0, selectedValue.indexOf("#"));
 }
 
 function testConnection() {
-    var instanceName = trim(document.getElementById("instanceName").value);
+    var rssInstanceName = trim(document.getElementById("rssInstanceName").value);
     var serverCategories = document.getElementById("serverCategory");
     var serverCategory = trim(serverCategories[serverCategories.selectedIndex].value);
-    var instanceUrl = trim(document.getElementById("instanceUrl").value);
+    var serverUrl = trim(document.getElementById("serverUrl").value);
     var username = trim(document.getElementById("username").value);
     var password = trim(document.getElementById("password").value);
     //var driverClass = trim(document.getElementById("driverClass").value);
     var databaseEngine = document.getElementById("databaseEngine");
     var instanceType = trim(databaseEngine[databaseEngine.selectedIndex].value);
 
-    if (instanceName == '' || instanceName == null) {
+    if (rssInstanceName == '' || rssInstanceName == null) {
         CARBON.showWarningDialog("Database server instance name cannot be left blank");
         return false;
     }
@@ -257,7 +274,7 @@ function testConnection() {
         CARBON.showWarningDialog("Select a valid instance type");
         return false;
     }
-    if (instanceUrl == '' || instanceUrl == null) {
+    if (serverUrl == '' || serverUrl == null) {
         CARBON.showWarningDialog("JDBC url field cannot be left blank");
         return false;
     }
@@ -269,21 +286,20 @@ function testConnection() {
         CARBON.showWarningDialog("Administrative password field cannot be left blank");
         return false;
     }
-    var jdbcUrl = trim(document.getElementById('instanceUrl').value);
+    var jdbcUrl = trim(document.getElementById('serverUrl').value);
     var driverClass = '';
     if (jdbcUrl != null && jdbcUrl != '') {
         driverClass = trim(getJdbcDriver(jdbcUrl));
         if (driverClass != null && driverClass != '') {
-            var url = 'connection_test_ajaxprocessor.jsp?driverClass=' + encodeURIComponent(
-                    driverClass) + '&jdbcUrl=' + encodeURIComponent(retrieveValidatedUrl(jdbcUrl)) +
+            var url = 'rssInstanceOps_ajaxprocessor.jsp?flag=testCon&driverClass=' + encodeURIComponent(
+                    driverClass) + '&serverUrl=' + encodeURIComponent(retrieveValidatedUrl(jdbcUrl)) +
                     '&username=' + encodeURIComponent(username) + '&password=' + encodeURIComponent(
                     password);
             jQuery('#connectionStatusDiv').load(url, displayMsg);
         } else {
-            CARBON.showErrorDialog("Invalid JDBC Url");
+            CARBON.showErrorDialog("Invalid JDBC URL '" + jdbcUrl + "'. Please enter an appropriate JDBC URL.");
         }
     }
-
     return false;
 }
 
@@ -293,58 +309,59 @@ function retrieveValidatedUrl(url) {
     return 'jdbc:' + prefix + "://" + hostname;
 }
 
-function deleteDatabaseUser(userId, dbInsId, rssInsId) {
+function dropDatabaseUser(rssInstanceName, username) {
     function forwardToDel() {
-        document.location.href = 'userProcessor.jsp?flag=delete&userId=' +
-                encodeURIComponent(userId) + '&dbInsId=' + encodeURIComponent(dbInsId) +
-                '&rssInsId=' + encodeURIComponent(rssInsId);
+        dispatchDatabaseUserActionRequest('drop', rssInstanceName, username, '')
     }
 
     CARBON.showConfirmationDialog("Do you want to drop the user?", forwardToDel);
 }
 
-function dropDatabase(obj) {
+function dropDatabase(rssInstanceName, databaseName) {
     function forwardToDel() {
-        var rowId = $(obj).parents('tr:eq(0)').attr('id');
-        var temp = rowId.split('_');
-        var rssInsId = trim(temp[1]);
-        var dbInsId = trim(temp[2]);
-        document.location.href = "databaseProcessor.jsp?rssInsId=" + encodeURIComponent(rssInsId) +
-                "&dbInsId=" + encodeURIComponent(dbInsId) + "&flag=drop";
+        dispatchDatabaseActionRequest('drop', rssInstanceName, databaseName);
     }
 
     CARBON.showConfirmationDialog("Do you want to drop the database?", forwardToDel);
 }
 
-function manageDatabase(rssInsId, dbInsId) {
-    //document.location.href = 'users.jsp?rssInsId=' + encodeURIComponent(rssInsId) + '&dbInsId=' +
+function manageDatabase(rssInstanceName, databaseName) {
+    //document.location.href = 'databaseUsers.jsp?rssInsId=' + encodeURIComponent(rssInsId) + '&dbInsId=' +
     // encodeURIComponent(dbInsId);
-    document.location.href = 'users.jsp?rssInsId=' + encodeURIComponent(rssInsId) +
-            '&dbInsId=' + encodeURIComponent(dbInsId);
+    document.location.href = 'databaseUsers.jsp?rssInstanceName=' + encodeURIComponent(rssInstanceName) +
+            '&databaseName=' + encodeURIComponent(databaseName);
 }
 
 function redirectToEditPage(obj, rssInsId) {
     var rowId = $(obj).parents('tr:eq(0)').attr('id');
     var instanceName = rowId.substring("tr_".length, rowId.length);
-    document.location.href = "editInstance.jsp?instanceName=" + encodeURIComponent(instanceName) +
-            "&flag=edit&rssInsId=" + encodeURIComponent(rssInsId);
+    document.location.href = "editRSSInstance.jsp?instanceName=" +
+            encodeURIComponent(instanceName) + "&flag=edit&rssInsId=" +
+            encodeURIComponent(rssInsId);
 }
 
-function redirectToUsers() {
-    var flag = document.getElementById('flag').value;
-    var username = document.getElementById('username').value;
-    var password = document.getElementById('password').value;
-    var dbInsId = document.getElementById('dbInsId').value;
-    //var rssInsId = document.getElementById('rssInsId').value;
-    var privGroupList = document.getElementById('privGroupList');
-    var privGroupId = privGroupList[privGroupList.selectedIndex].id;
-    var url = 'user_ajaxprocessor.jsp?flag=' + encodeURIComponent(flag) + '&username=' +
-            encodeURIComponent(username) + '&password=' + encodeURIComponent(password) + '&dbInsId='
-            + encodeURIComponent(dbInsId) + '&privGroupId=' + encodeURIComponent(privGroupId);
+function dispatchDatabaseUserActionRequest(flag, rssInstanceName, username, databaseName) {
+    var tmpPassword = document.getElementById('password');
+    var password = '';
+    if (tmpPassword != null) {
+        password = tmpPassword.value;
+    }
+    var privilegeTemplates = document.getElementById('privilegeTemplates');
+    var privilegeTemplate = '';
+    if (privilegeTemplates != null) {
+        privilegeTemplate = privilegeTemplates[privilegeTemplates.selectedIndex].value;
+    } else {
+        var tmpTemplate = document.getElementById('privilegeTemplateName');
+        if (tmpTemplate != null) {
+            privilegeTemplate = tmpTemplate.value;
+        }
+    }
+    var url = 'databaseUserOps_ajaxprocessor.jsp?rssInstanceName=' +
+            encodeURIComponent(rssInstanceName) + '&flag=' + encodeURIComponent(flag) +
+            '&username=' + encodeURIComponent(username) + '&password=' +
+            encodeURIComponent(password) + '&privilegeTemplateName=' +
+            encodeURIComponent(privilegeTemplate) + '&databaseName=' + databaseName;
     jQuery('#connectionStatusDiv').load(url, displayMessagesForUser);
-}
-
-function redirectToDatabaseExplorer() {
 }
 
 function populateSelectedUsername() {
@@ -359,13 +376,11 @@ function forwardToRedirector(rssInstId, dbInstId) {
             selectedUsername);
 }
 
-function redirectToDatabaseProcessor() {
-    var instanceList = document.getElementById('instances');
-    var rssInsId = instanceList[instanceList.selectedIndex].id;
-    var dbName = document.getElementById('dbName').value;
-    var url = 'database_ajaxprocessor.jsp?flag=create&rssInsId=' + encodeURIComponent(rssInsId) +
-            '&dbName=' + encodeURIComponent(dbName);
-    jQuery('#connectionStatusDiv').load(url, displayMessagesForDB);
+function dispatchDatabaseActionRequest(flag, rssInstanceName, databaseName) {
+    var url = 'databaseOps_ajaxprocessor.jsp?flag=' + flag + '&rssInstanceName=' +
+            encodeURIComponent(rssInstanceName) + '&databaseName=' +
+            encodeURIComponent(databaseName);
+    jQuery('#connectionStatusDiv').load(url, displayDatabaseActionStatus);
 }
 
 function deleteUser(userId) {
@@ -390,13 +405,12 @@ function populateCheckBox(obj, val) {
 }
 
 function redirectToPrivilegeGroupsPage(rssInsId, dbInsId) {
-    document.location.href = 'privilegeGroups.jsp?dbInsId=' + encodeURIComponent(dbInsId) +
+    document.location.href = 'databasePrivilegeTemplates.jsp?dbInsId=' + encodeURIComponent(dbInsId) +
             '&rssInsId=' + encodeURIComponent(rssInsId);
 }
 
-function redirectToUsersPage(rssInsId, dbInsId) {
-    document.location.href = 'users.jsp?rssInsId=' + encodeURIComponent(rssInsId) + '&dbInsId=' +
-            encodeURIComponent(dbInsId);
+function redirectToUsersPage() {
+    document.location.href = 'databaseUsers.jsp';
 }
 
 function setPrivilegeGroup() {
@@ -436,19 +450,69 @@ function checkSelectedPrivileges() {
     }
 }
 
-function savePrivilegeGroup() {
-    var privGroupName = trim(document.getElementById('privGroupName').value);
-    var flag = trim(document.getElementById('flag').value);
-
-    if (privGroupName == '' || privGroupName == null) {
-        CARBON.showWarningDialog("Privilege group name field cannot be left blank");
+function createDatabasePrivilegeTemplate(flag) {
+    var templateName = trim(document.getElementById('privilegeTemplateName').value);
+    if (templateName == '' || templateName == null) {
+        CARBON.showWarningDialog("'Database privilege template name' field cannot be left blank");
         return false;
     }
-    var url = createPrivGroupAddUrl(flag, privGroupName);
-    jQuery('#connectionStatusDiv').load(url, displayMessagesForPrivGroups);
+    var url = composeCreateDatabasePrivilegeTemplateActionUrl(flag, templateName);
+    jQuery('#connectionStatusDiv').load(url, displayPrivilegeTemplateActionStatus);
 }
 
-function createPrivGroupAddUrl(flag, privGroupName) {
+function displayPrivilegeTemplateActionStatus(msg) {
+    if (msg.search(/has been successfully created/) != -1) {
+        jQuery(document).ready(function() {
+            function handleOK() {
+                window.location = 'databasePrivilegeTemplates.jsp';
+            }
+
+            CARBON.showInfoDialog(msg, handleOK);
+        });
+    } else if (msg.search(/has been successfully edited/) != -1) {
+        jQuery(document).ready(function() {
+            function handleOK() {
+                window.location = 'databasePrivilegeTemplates.jsp';
+            }
+
+            CARBON.showInfoDialog(msg, handleOK);
+        });
+    } else if (msg.search(/has been successfully dropped/) != -1) {
+        jQuery(document).ready(function() {
+            function handleOK() {
+                window.location = 'databasePrivilegeTemplates.jsp';
+            }
+
+            CARBON.showInfoDialog(msg, handleOK);
+        });
+    } else if (msg.search(/Failed to drop database privilege template/) != -1) {
+        jQuery(document).ready(function() {
+            function handleOK() {
+                window.location = 'databasePrivilegeTemplates.jsp';
+            }
+
+            CARBON.showErrorDialog(msg, handleOK);
+        });
+    } else if (msg.search(/Failed to create database privilege template/) != -1) {
+        jQuery(document).ready(function() {
+            function handleOK() {
+                window.location = 'databasePrivilegeTemplates.jsp';
+            }
+
+            CARBON.showErrorDialog(msg, handleOK);
+        });
+    } else {
+        jQuery(document).ready(function() {
+            function handleOK() {
+                window.location = 'databasePrivilegeTemplates.jsp';
+            }
+
+            CARBON.showErrorDialog(msg, handleOK);
+        });
+    }
+}
+
+function composeCreateDatabasePrivilegeTemplateActionUrl(flag, templateName) {
     var select_priv = document.getElementById("select_priv").value;
     var insert_priv = document.getElementById("insert_priv").value;
     var update_priv = document.getElementById("update_priv").value;
@@ -469,7 +533,7 @@ function createPrivGroupAddUrl(flag, privGroupName) {
     var event_priv = document.getElementById("event_priv").value;
     var trigger_priv = document.getElementById("trigger_priv").value;
 
-    return 'privgroup_ajaxprocessor.jsp?flag=' + flag + '&privGroupName=' + privGroupName +
+    return 'databasePrivilegeTemplateOps_ajaxprocessor.jsp?flag=' + flag + '&privilegeTemplateName=' + templateName +
             '&Select_priv=' + select_priv + '&Insert_priv=' + insert_priv + '&Update_priv=' +
             update_priv + '&Delete_priv=' + delete_priv + '&Create_priv=' + create_priv +
             '&Drop_priv=' + drop_priv + '&Grant_priv=' + grant_priv + '&References_priv=' +
@@ -481,7 +545,7 @@ function createPrivGroupAddUrl(flag, privGroupName) {
             '&Trigger_priv=' + trigger_priv;
 }
 
-function createPrivGroupEditUrl(flag, privGroupId) {
+function composeEditDatabasePrivilegeTemplateActionUrl(flag, templateName) {
     var select_priv = document.getElementById("select_priv").value;
     var insert_priv = document.getElementById("insert_priv").value;
     var update_priv = document.getElementById("update_priv").value;
@@ -502,7 +566,7 @@ function createPrivGroupEditUrl(flag, privGroupId) {
     var event_priv = document.getElementById("event_priv").value;
     var trigger_priv = document.getElementById("trigger_priv").value;
 
-    return 'privgroup_ajaxprocessor.jsp?flag=' + flag + '&privGroupId=' + privGroupId +
+    return 'databasePrivilegeTemplateOps_ajaxprocessor.jsp?flag=' + flag + '&privilegeTemplateName=' + templateName +
             '&Select_priv=' + select_priv + '&Insert_priv=' + insert_priv + '&Update_priv=' +
             update_priv + '&Delete_priv=' + delete_priv + '&Create_priv=' + create_priv +
             '&Drop_priv=' + drop_priv + '&Grant_priv=' + grant_priv + '&References_priv=' +
@@ -514,71 +578,66 @@ function createPrivGroupEditUrl(flag, privGroupId) {
             '&Execute_priv=' + execute_priv;
 }
 
-function editPrivGroup(obj, privGroupId) {
-    //    jQuery('#connectionStatusDiv').load(createPrivGroupEditUrl('edit', privGroupId),
-    //            displayMessagesForPrivGroups);
-    document.location.href = 'editPrivilegeGroup.jsp?privGroupId=' + privGroupId;
+function editDatabasePrivilegeTemplate(templateName) {
+    document.location.href = 'editDatabasePrivilegeTemplate.jsp?privGroupId=' + templateName;
 
 }
 
-function removePrivilegeGroup(obj, privGroupId) {
+function dispatchDropDatabasePrivilegeTemplateRequest(privilegeTemplateName) {
     function forwardToDel() {
-        var rowId = $(obj).parents('tr:eq(0)').attr('id');
-        var url = 'privgroup_ajaxprocessor.jsp?privGroupId=' + encodeURIComponent(privGroupId) +
-                '&flag=remove';
-        jQuery('#connectionStatusDiv').load(url, displayMessagesForPrivGroups);
+        var url = 'databasePrivilegeTemplateOps_ajaxprocessor.jsp?privilegeTemplateName=' +
+                encodeURIComponent(privilegeTemplateName) + '&flag=drop';
+        jQuery('#connectionStatusDiv').load(url, displayPrivilegeTemplateActionStatus);
     }
 
-    CARBON.showConfirmationDialog('Do you want to remove privilege group?', forwardToDel);
+    CARBON.showConfirmationDialog('Do you want to drop database privilege template?', forwardToDel);
 }
 
 function displayMessages(msg) {
-    if (msg.search(/Database server instance has been successfully added/) != -1) {
-        jQuery(document).init(function() {
+    if (msg.search(/has been successfully created/) != -1) {
+        jQuery(document).ready(function() {
             function handleOK() {
-                window.location = 'instances.jsp';
+                window.location = 'rssInstances.jsp';
             }
 
             CARBON.showInfoDialog(msg, handleOK);
         });
-    } else if (msg.search(/A database instance with the same name already exists/) != -1) {
-        CARBON.showErrorDialog(msg);
-    } else if (msg.search(/Database server instance has been successfully edited/) != -1) {
-        jQuery(document).init(function() {
+    } else if (msg.search(/has been successfully edited/) != -1) {
+        jQuery(document).ready(function() {
             function handleOK() {
-                window.location = 'instances.jsp';
+                window.location = 'rssInstances.jsp';
             }
 
             CARBON.showInfoDialog(msg, handleOK);
         });
-    } else if (msg.search(/Database Server Instance has been successfully removed/) != -1) {
-        jQuery(document).init(function() {
+    } else if (msg.search(/has been successfully dropped/) != -1) {
+        jQuery(document).ready(function() {
             function handleOK() {
-                window.location = 'instances.jsp';
+                window.location = 'rssInstances.jsp';
             }
 
             CARBON.showInfoDialog(msg, handleOK);
         });
-    } else if (msg.search(/Unable to remove database server instance/) != -1) {
-        jQuery(document).init(function() {
+    } else if (msg.search(/Failed to drop database server instance/) != -1) {
+        jQuery(document).ready(function() {
             function handleOK() {
-                window.location = 'instances.jsp';
+                window.location = 'rssInstances.jsp';
             }
 
             CARBON.showErrorDialog(msg, handleOK);
         });
-    } else if (msg.search(/Failed to add database server instance/) != -1) {
-        jQuery(document).init(function() {
+    } else if (msg.search(/Failed to create database server instance/) != -1) {
+        jQuery(document).ready(function() {
             function handleOK() {
-                window.location = 'instances.jsp';
+                window.location = 'rssInstances.jsp';
             }
 
             CARBON.showErrorDialog(msg, handleOK);
         });
     } else {
-        jQuery(document).init(function() {
+        jQuery(document).ready(function() {
             function handleOK() {
-                window.location = 'instances.jsp';
+                window.location = 'rssInstances.jsp';
             }
 
             CARBON.showErrorDialog(msg, handleOK);
@@ -586,17 +645,25 @@ function displayMessages(msg) {
     }
 }
 
-function displayMessagesForDB(msg) {
-    if (msg.search(/Database has been successfully created/) != -1) {
-        jQuery(document).init(function() {
+function displayDatabaseActionStatus(msg) {
+    if (msg.search(/has been successfully created/) != -1) {
+        jQuery(document).ready(function() {
             function handleOK() {
                 window.location = 'databases.jsp';
             }
 
             CARBON.showInfoDialog(msg, handleOK);
         });
-    } else if (msg.search(/A database with the same name already exists/) != -1) {
-        jQuery(document).init(function() {
+    } else if (msg.search(/has been successfully dropped/) != -1) {
+        jQuery(document).ready(function() {
+            function handleOK() {
+                window.location = 'databases.jsp';
+            }
+
+            CARBON.showInfoDialog(msg, handleOK);
+        });
+    } else if (msg.search(/Failed to drop database/) != -1) {
+        jQuery(document).ready(function() {
             function handleOK() {
                 window.location = 'databases.jsp';
             }
@@ -604,7 +671,7 @@ function displayMessagesForDB(msg) {
             CARBON.showErrorDialog(msg, handleOK);
         });
     } else if (msg.search(/Failed to create database/) != -1) {
-        jQuery(document).init(function() {
+        jQuery(document).ready(function() {
             function handleOK() {
                 window.location = 'databases.jsp';
             }
@@ -612,7 +679,7 @@ function displayMessagesForDB(msg) {
             CARBON.showErrorDialog(msg, handleOK);
         });
     } else {
-        jQuery(document).init(function() {
+        jQuery(document).ready(function() {
             function handleOK() {
                 window.location = 'databases.jsp';
             }
@@ -622,44 +689,53 @@ function displayMessagesForDB(msg) {
     }
 }
 
+
 function displayMessagesForUser(msg) {
-    if (msg.search(/User has been successfully created/) != -1) {
-        jQuery(document).init(function() {
+    if (msg.search(/has been successfully created/) != -1) {
+        jQuery(document).ready(function() {
             function handleOK() {
-                window.location = 'users.jsp';
+                window.location = 'databaseUsers.jsp';
             }
 
             CARBON.showInfoDialog(msg, handleOK);
         });
 
-    } else if (msg.search(/User has been successfully edited/) != -1) {
-        jQuery(document).init(function() {
+    } else if (msg.search(/has been successfully edited/) != -1) {
+        jQuery(document).ready(function() {
             function handleOK() {
-                window.location = 'users.jsp';
+                window.location = 'databaseUsers.jsp';
+            }
+
+            CARBON.showInfoDialog(msg, handleOK);
+        });
+    } else if (msg.search(/has been successfully dropped/) != -1) {
+        jQuery(document).ready(function() {
+            function handleOK() {
+                window.location = 'databaseUsers.jsp';
             }
 
             CARBON.showInfoDialog(msg, handleOK);
         });
     } else if (msg.search(/Failed to create user/) != -1) {
-        jQuery(document).init(function() {
+        jQuery(document).ready(function() {
             function handleOK() {
-                window.location = 'users.jsp';
+                window.location = 'databaseUsers.jsp';
             }
 
             CARBON.showErrorDialog(msg, handleOK);
         });
     } else if (msg.search(/Failed to edit user/) != -1) {
-        jQuery(document).init(function() {
+        jQuery(document).ready(function() {
             function handleOK() {
-                window.location = 'users.jsp';
+                window.location = 'databaseUsers.jsp';
             }
 
             CARBON.showErrorDialog(msg, handleOK);
         });
     } else {
-        jQuery(document).init(function() {
+        jQuery(document).ready(function() {
             function handleOK() {
-                window.location = 'users.jsp';
+                window.location = 'databaseUsers.jsp';
             }
 
             CARBON.showErrorDialog(msg, handleOK());
@@ -668,7 +744,7 @@ function displayMessagesForUser(msg) {
 }
 
 function displayMsg(msg) {
-    var successMsg = new RegExp("^Database connection is successful with driver class");
+    var successMsg = new RegExp("^Database connection is successful");
     if (msg.search(successMsg) == -1) //if match failed
     {
         CARBON.showErrorDialog(msg);
@@ -676,53 +752,6 @@ function displayMsg(msg) {
         CARBON.showInfoDialog(msg);
     }
 
-}
-
-function displayMessagesForPrivGroups(msg) {
-    if (msg.search(/Privilege group has been successfully created/) != -1) {
-        jQuery(document).init(function() {
-            function handleOK() {
-                window.location = 'privilegeGroups.jsp';
-            }
-
-            CARBON.showInfoDialog(msg, handleOK);
-        });
-
-    } else if (msg.search(/Privilege group has been successfully edited/) != -1) {
-        jQuery(document).init(function() {
-            function handleOK() {
-                window.location = 'privilegeGroups.jsp';
-            }
-
-            CARBON.showInfoDialog(msg, handleOK);
-        });
-    } else if (msg.search(/Privilege group has been successfully removed/) != -1) {
-        jQuery(document).init(function() {
-            function handleOK() {
-                window.location = 'privilegeGroups.jsp';
-            }
-
-            CARBON.showInfoDialog(msg, handleOK);
-        });
-    } else if (msg.search(/Failed to create privilege group/) != -1) {
-        jQuery(document).init(function() {
-            function handleOK() {
-                window.location = 'privilegeGroups.jsp';
-            }
-
-            CARBON.showErrorDialog(msg, handleOK);
-        });
-    } else if (msg.search(/Failed to remove privilege group/) != -1) {
-        jQuery(document).init(function() {
-            function handleOK() {
-                window.location = 'privilegeGroups.jsp';
-            }
-
-            CARBON.showErrorDialog(msg, handleOK);
-        });
-    } else {
-        CARBON.showErrorDialog('Failed to create privilege group');
-    }
 }
 
 function validateJdbcUrl(url) {
@@ -761,25 +790,25 @@ function getJdbcDriver(instanceUrl) {
     return '';
 }
 
-function createDataSource(dbInsId, userId) {
-    var url = 'user_ajaxprocessor.jsp?dbInsId=' + dbInsId + '&userId=' + userId +
-            '&flag=createDS';
+function createDataSource(databaseName, username) {
+    var url = 'databaseUserOps_ajaxprocessor.jsp?databaseName=' + databaseName + '&username=' +
+            username + '&flag=createDS';
     jQuery('#connectionStatusDiv').load(url, displayMessagesForCarbonDS);
 }
 
 function displayMessagesForCarbonDS(msg) {
     if (msg.search(/Carbon datasource has been successfully created/) != -1) {
-        jQuery(document).init(function() {
+        jQuery(document).ready(function() {
             function handleOK() {
-                window.location = 'users.jsp';
+                window.location = 'databaseUsers.jsp';
             }
 
             CARBON.showInfoDialog(msg, handleOK);
         });
     } else if (msg.search(/Unable to create carbon datasource/) != -1) {
-        jQuery(document).init(function() {
+        jQuery(document).ready(function() {
             function handleOK() {
-                window.location = 'users.jsp';
+                window.location = 'databaseUsers.jsp';
             }
 
             CARBON.showErrorDialog(msg);
@@ -794,30 +823,23 @@ function exploreDatabase(userId, url, driver) {
             '&url=' + url + '&driver=' + driver;
 }
 
-function editUser(dbInsId, rssInsId, username, userId, password) {
-    //jQuery('#connectionStatusDiv').load(url, displayMessagesForUser);
-
-    $(document.forms['dataForm']).submit(function(msg) {
-
-    });
-}
-
 function selectAllOptions() {
     var selectAll = document.getElementById('selectAll');
     var c = new Array();
     c = document.getElementsByTagName('input');
     if (selectAll.checked) {
-        for (var i = 0; i < c.length; i++){
-            if (c[i].type == 'checkbox'){
+        for (var i = 0; i < c.length; i++) {
+            if (c[i].type == 'checkbox') {
                 c[i].checked = true;
             }
         }
     } else {
-        for (var j = 0; j < c.length; j++){
-            if (c[j].type == 'checkbox'){
+        for (var j = 0; j < c.length; j++) {
+            if (c[j].type == 'checkbox') {
                 c[j].checked = false;
             }
         }
     }
 }
+
 

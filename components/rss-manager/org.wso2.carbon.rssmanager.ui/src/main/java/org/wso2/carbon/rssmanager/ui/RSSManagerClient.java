@@ -19,9 +19,7 @@
 package org.wso2.carbon.rssmanager.ui;
 
 import org.apache.axiom.om.OMAbstractFactory;
-import org.apache.axiom.om.OMElement;
 import org.apache.axiom.om.OMNamespace;
-import org.apache.axiom.om.util.AXIOMUtil;
 import org.apache.axis2.AxisFault;
 import org.apache.axis2.client.Options;
 import org.apache.axis2.client.ServiceClient;
@@ -30,8 +28,7 @@ import org.apache.axis2.transport.http.HTTPConstants;
 import org.apache.commons.logging.Log;
 import org.apache.commons.logging.LogFactory;
 import org.wso2.carbon.rssmanager.common.RSSManagerConstants;
-import org.wso2.carbon.rssmanager.ui.beans.DatabaseInstance;
-import org.wso2.carbon.rssmanager.ui.beans.DatabasePermissions;
+import org.wso2.carbon.rssmanager.ui.stub.RSSAdminRSSManagerExceptionException;
 import org.wso2.carbon.rssmanager.ui.stub.RSSAdminStub;
 import org.wso2.carbon.rssmanager.ui.stub.types.*;
 
@@ -56,7 +53,7 @@ public class RSSManagerClient {
 
     public RSSManagerClient(String cookie, String backendServerUrl,
                             ConfigurationContext configurationContext, Locale locale) {
-        String serviceEndpoint = backendServerUrl + "RSSManagerAdminService";
+        String serviceEndpoint = backendServerUrl + "RSSAdmin";
         bundle = java.util.ResourceBundle.getBundle(BUNDLE, locale);
         try {
             stub = new RSSAdminStub(configurationContext, serviceEndpoint);
@@ -69,124 +66,103 @@ public class RSSManagerClient {
         }
     }
 
-    public String removeUserPrivilegeGroup(int privGroupId) throws RemoteException {
+    public void dropDatabasePrivilegesTemplate(String templateName) throws AxisFault {
         try {
-            stub.removePrivilegeGroup(privGroupId);
-            return bundle.getString("rss.manager.priv.group.successfully.removed");
+            stub.dropDatabasePrivilegesTemplate(templateName);
         } catch (Exception e) {
-            handleException(bundle.getString("rss.manager.failed.to.remove.privilege.group"), e);
+            handleException(bundle.getString(
+                    "rss.manager.failed.to.drop.database.privilege.template") + " '" +
+                    templateName + "'", e);
         }
-        return bundle.getString("rss.manager.failed.to.remove.privilege.group");
     }
 
-    public String editUserPrivilegeGroup(PrivilegeGroup priGroup) throws RemoteException {
+    public void editDatabasePrivilegesTemplate(DatabasePrivilegeTemplate template) throws
+            AxisFault {
         try {
-            stub.editPrivilegeGroup(priGroup);
-            return bundle.getString("rss.manager.privilege.group.successfully.edited");
+            stub.editDatabasePrivilegesTemplate(template);
         } catch (Exception e) {
-            handleException(bundle.getString("rss.manager.failed.to.create.privilege.group"), e);
+            handleException(bundle.getString(
+                    "rss.manager.failed.to.edit.database.privilege.template") +
+                    " '" + template.getName() + "'", e);
         }
-        return bundle.getString("failed.to.create.privilege.group");
     }
 
-    public String createUserPrivilegeGroup(PrivilegeGroup privGroup) throws RemoteException {
+    public void createDatabasePrivilegesTemplate(DatabasePrivilegeTemplate template) throws
+            AxisFault {
         try {
-            stub.createPrivilegeGroup(privGroup);
-            return bundle.getString("rss.manager.privilege.group.successfully.created");
+            stub.createDatabasePrivilegesTemplate(template);
         } catch (Exception e) {
-            handleException(bundle.getString("rss.manager.failed.to.create.privilege.group") +
-                    ": " + privGroup.getPrivGroupName(), e);
+            handleException(bundle.getString(
+                    "rss.manager.failed.to.create.database.privilege.template") +
+                    " '" + template.getName() + "'", e);
         }
-        return bundle.getString("rss.manager.failed.to.create.privilege.group") + ": " +
-                privGroup.getPrivGroupName();
     }
 
-    public List<PrivilegeGroup> getAllPrivilegeGroups() throws RemoteException {
+    public List<DatabasePrivilegeTemplate> getDatabasePrivilegesTemplates() throws AxisFault {
+        List<DatabasePrivilegeTemplate> templates = new ArrayList<DatabasePrivilegeTemplate>();
         try {
-            PrivilegeGroup[] privGroup = stub.getPrivilegeGroups();
-            if (privGroup != null) {
-                return Arrays.asList(stub.getPrivilegeGroups());
-            } else {
-                return new ArrayList<PrivilegeGroup>();
+            DatabasePrivilegeTemplate[] tmp = stub.getDatabasePrivilegesTemplates();
+            if (tmp != null && tmp.length > 0) {
+                templates = Arrays.asList(stub.getDatabasePrivilegesTemplates());
             }
         } catch (Exception e) {
             handleException(bundle.getString(
-                    "rss.manager.failed.to.retrieve.privilege.group.list"), e);
+                    "rss.manager.failed.to.retrieve.database.privilege.template.list"), e);
         }
-        return new ArrayList<PrivilegeGroup>();
+        return templates;
     }
 
-    public String editUserPrivileges(DatabasePermissions permissions,
-                                     DatabaseUser user, int dbInsId) throws RemoteException {
+//    public void editUserPrivileges(DatabasePermissions permissions,
+//                                     DatabaseUser user, String databaseName) throws AxisFault {
+//        try {
+//            stub.editDatabaseUserPrivileges(
+//                    RSSManagerClientUtil.serializePermissionObject(
+//                            RSS_MANAGER_OM_NAMESPACE, permissions).toString(), user, databaseName);
+//        } catch (Exception e) {
+//            handleException(bundle.getString("rss.manager.failed.to.edit.user") + " : " +
+//                    user.getUsername(), e);
+//        }
+//    }
+//
+//    public DatabasePermissions getUserDatabasePermissions(String username,
+//                                                          String databaseName) throws AxisFault {
+//        OMElement permissionEl = null;
+//        try {
+//            permissionEl = AXIOMUtil.stringToOM(
+//                    stub.getUserDatabasePermissions(username, databaseName));
+//        } catch (Exception e) {
+//            handleException("Unable to retrieve user database permissions", e);
+//        }
+//        return RSSManagerClientUtil.getPermissionObject(permissionEl);
+//    }
+
+    public void createDatabase(Database database) throws AxisFault {
         try {
-            stub.editUserPrivileges(
-                    RSSManagerClientUtil.serializePermissionObject(
-                            RSS_MANAGER_OM_NAMESPACE, permissions).toString(), user, dbInsId);
-            return bundle.getString("rss.manager.user.successfully.edited");
+            stub.createDatabase(database);
         } catch (Exception e) {
-            handleException(bundle.getString("rss.manager.failed.to.edit.user") + ": " +
-                    user.getUsername(), e);
+            handleException(bundle.getString("rss.manager.failed.to.create.database") + " '" +
+                    database.getName() + "'", e);
         }
-        return bundle.getString("rss.manager.failed.to.edit.user") + ": " + user.getUsername();
     }
 
-    public DatabasePermissions getUserDatabasePermissions(int userId, int dbInsId) throws
-            RemoteException {
-        OMElement permissionEl = null;
+    public List<DatabaseMetaData> getDatabaseList() throws AxisFault {
+        List<DatabaseMetaData> databases = new ArrayList<DatabaseMetaData>();
         try {
-            permissionEl = AXIOMUtil.stringToOM(
-                    stub.getUserDatabasePermissions(userId, dbInsId));
-        } catch (Exception e) {
-            handleException("Unable to retrieve user database permissions", e);
-        }
-        return RSSManagerClientUtil.getPermissionObject(permissionEl);
-    }
-
-    public String createDatabase(DatabaseInstance db) throws RemoteException {
-        try {
-            stub.createDatabase(RSSManagerClientUtil.serializeDatabaseInstanceData(
-                    RSS_MANAGER_OM_NAMESPACE, db).toString());
-            return "Database has been successfully created";
-        } catch (RemoteException e) {
-            handleException(bundle.getString("rss.manager.failed.to.create.database") + ": " +
-                    db.getName(), e);
-        } catch (Exception e) {
-            handleException(bundle.getString("rss.manager.failed.to.create.database") + ": " +
-                    db.getName(), e);
-        }
-        return bundle.getString("failed.to.create.database") + db.getName();
-    }
-
-    public DatabaseUserEntry[] getUsersByDatabase(int dbInstId) throws RemoteException {
-        DatabaseUserEntry[] users = new DatabaseUserEntry[0];
-        try {
-            users = stub.getUsersByDatabaseInstanceId(dbInstId);
-            if (users != null) {
-                return users;
-            }
-            return users;
-        } catch (Exception e) {
-            handleException(bundle.getString("rss.manager.failed.to.retrieve.database.users"), e);
-        }
-        return users;
-    }
-
-    public List<DatabaseInstanceEntry> getDatabaseInstanceList() throws RemoteException {
-        try {
-            DatabaseInstanceEntry[] entries = stub.getDatabaseInstanceList();
-            if (entries != null) {
-                return Arrays.asList(entries);
+            DatabaseMetaData[] tmp = stub.getDatabases();
+            if (tmp != null && tmp.length > 0) {
+                databases = Arrays.asList(tmp);
             }
         } catch (Exception e) {
             handleException(bundle.getString(
                     "rss.manager.failed.to.retrieve.database.instance.list"), e);
         }
-        return new ArrayList<DatabaseInstanceEntry>();
+        return databases;
     }
 
-    public DatabaseInstanceEntry getDatabaseInstance(int dbInsId) throws RemoteException {
+    public DatabaseMetaData getDatabase(String rssInstanceName, String databaseName) throws
+            AxisFault {
         try {
-            return stub.getDatabaseInstanceById(dbInsId);
+            return stub.getDatabase(rssInstanceName, databaseName);
         } catch (Exception e) {
             handleException(bundle.getString(
                     "rss.manager.failed.to.retrieve.database.instance.data"), e);
@@ -194,171 +170,231 @@ public class RSSManagerClient {
         return null;
     }
 
-    public void dropDatabase(int dbInsId) throws RemoteException {
+    public void dropDatabase(String rssInstanceName, String databaseName) throws AxisFault {
         try {
-            stub.dropDatabase(dbInsId);
+            stub.dropDatabase(rssInstanceName, databaseName);
         } catch (Exception e) {
             handleException(bundle.getString("rss.manager.failed.to.drop.database"), e);
         }
     }
 
-    public List<RSSInstanceEntry> getRSSInstanceList(String tenantDomain) throws RemoteException {
+    public List<RSSInstanceMetaData> getRSSInstanceList(String tenantDomain) throws AxisFault {
+        List<RSSInstanceMetaData> rssIntances = new ArrayList<RSSInstanceMetaData>();
         try {
-            RSSInstanceEntry[] instances = stub.getRSSInstanceList();
-            if (tenantDomain != null && instances != null) {
-                return Arrays.asList(instances);
+            RSSInstanceMetaData[] tmp = stub.getRSSInstances();
+            if (tenantDomain != null && tmp != null && tmp.length > 0) {
+                rssIntances = Arrays.asList(tmp);
+                return rssIntances;
             }
-            List<RSSInstanceEntry> localInstances = new ArrayList<RSSInstanceEntry>();
-            if (instances != null) {
-                for (RSSInstanceEntry rssIns : instances) {
+            if (tmp != null && tmp.length > 0) {
+                for (RSSInstanceMetaData rssIns : tmp) {
                     if (!RSSManagerConstants.WSO2_RSS_INSTANCE_TYPE.equals(
                             rssIns.getInstanceType())) {
-                        localInstances.add(rssIns);
+                        rssIntances.add(rssIns);
                     }
                 }
             }
-            return localInstances;
         } catch (Exception e) {
             handleException(bundle.getString(
                     "rss.manager.failed.to.retrieve.RSS.instance.list"), e);
         }
-        return new ArrayList<RSSInstanceEntry>();
+        return rssIntances;
     }
 
-    public List<RSSInstanceEntry> getRSSInstanceList() throws RemoteException {
+    public List<RSSInstanceMetaData> getRSSInstanceList() throws AxisFault {
+        List<RSSInstanceMetaData> rssInstances = new ArrayList<RSSInstanceMetaData>();
         try {
-            RSSInstanceEntry[] instances = stub.getRSSInstanceList();
-            if (instances != null) {
-                return Arrays.asList(instances);
+            RSSInstanceMetaData[] tmp = stub.getRSSInstances();
+            if (tmp != null && tmp.length > 0) {
+                rssInstances = Arrays.asList(tmp);
             }
         } catch (Exception e) {
             handleException(bundle.getString(
                     "rss.manager.failed.to.retrieve.RSS.instance.list"), e);
         }
-        return new ArrayList<RSSInstanceEntry>();
+        return rssInstances;
     }
 
-    public String addRSSInstance(RSSInstance rssIns) throws RemoteException {
+    public void createRSSInstance(RSSInstance rssIns) throws AxisFault {
         try {
-            stub.addRSSInstance(rssIns);
-            return bundle.getString("rss.manager.database.server.instance.successfully.added");
+            stub.createRSSInstance(rssIns);
         } catch (Exception e) {
             handleException(bundle.getString("rss.manager.failed.to.add.database.server.instance") +
-                    ": " + rssIns.getName(), e);
+                    " : " + rssIns.getName(), e);
         }
-        return bundle.getString("rss.manager.failed.to.add.database.server.instance") + ": " +
-                rssIns.getName();
     }
 
-    public String testJDBCConnection(String driverClass, String jdbcUrl,
-                                     String username, String password) throws RemoteException {
-        String response;
+    public void testConnection(String driverClass, String jdbcUrl,
+                               String username, String password) throws AxisFault {
         try {
-            response = stub.testConnection(driverClass, jdbcUrl, username, password);
-            return response;
+            stub.testConnection(driverClass, jdbcUrl, username, password);
         } catch (Exception e) {
-            handleException("Error connecting to " + jdbcUrl, e);
+            handleException("Error occurred while connecting to '" + jdbcUrl +
+                    "' with the username '" + username + "' and the driver class '" +
+                    driverClass + "'", e);
         }
-        return "Error connecting to " + jdbcUrl;
     }
 
-    public String removeDatabaseInstance(int rssInsId) throws RemoteException {
-        try {
-            stub.removeRSSInstance(rssInsId);
-            return bundle.getString("rss.manager.database.server.instance.successfully.removed");
-        } catch (Exception e) {
-            handleException(bundle.getString(
-                    "rss.manager.failed.to.remove.database.server.instance"), e);
-        }
-        return null;
-    }
-
-    public String editRSSInstanceInfo(RSSInstance rssIns) throws RemoteException {
+    public void editRSSInstance(RSSInstance rssIns) throws AxisFault {
         try {
             stub.editRSSInstance(rssIns);
-            return bundle.getString("rss.manager.database.server.instance.successfully.edited");
         } catch (Exception e) {
             handleException(bundle.getString("rss.manager.failed.to.edit.database.server.instance")
-                    + ": " + rssIns.getName(), e);
+                    + " : " + rssIns.getName(), e);
         }
-        return bundle.getString("rss.manager.failed.to.edit.database.server.instance") + ": " +
-                rssIns.getName();
     }
 
-    public DatabaseUser getDatabaseUserById(int userId) throws RemoteException {
+    public DatabaseUserMetaData getDatabaseUser(String rssInstanceName, String username) throws
+            AxisFault {
+        DatabaseUserMetaData user = null;
         try {
-            return stub.getDatabaseUserById(userId);
+            user = stub.getDatabaseUser(rssInstanceName, username);
         } catch (Exception e) {
             handleException(bundle.getString(
                     "rss.manager.failed.to.retrieve.database.user.data"), e);
         }
-        return null;
+        return user;
     }
-    
-    public String deleteUser(int userId, int dbInsId) throws RemoteException {
+
+    public void dropDatabaseUser(String rssInstanceName, String username) throws AxisFault {
         try {
-            stub.dropUser(userId, dbInsId);
-            return bundle.getString("rss.manager.database.user.successfully.dropped");
+            stub.dropDatabaseUser(rssInstanceName, username);
         } catch (Exception e) {
             handleException(bundle.getString("rss.manager.failed.to.drop.database.user"), e);
         }
-        return null;
     }
 
-    public String createCarbonDataSource(int dbInsId, int userId) throws RemoteException {
+    public void createCarbonDataSource(String databaseName, String username) throws AxisFault {
         try {
-            stub.createCarbonDSFromDatabaseUserEntry(dbInsId, userId);
-            return bundle.getString("rss.manager.carbon.datasource.successfully.created");
+            stub.createCarbonDataSource(databaseName, username);
         } catch (Exception e) {
             handleException(bundle.getString("rss.manager.failed.to.create.carbon.datasource"), e);
         }
-        return bundle.getString("rss.manager.failed.to.create.carbon.datasource");
     }
 
-    public RSSInstanceEntry getRoundRobinAssignedInstance() throws RemoteException {
+    public void createDatabaseUser(DatabaseUser user) throws AxisFault {
         try {
-            return stub.getRoundRobinAssignedRSSInstance();
-        } catch (Exception e) {
-            handleException(bundle.getString(
-                    "rss.manager.failed.to.retrieve.round.robin.assigned.instance"), e);
-        }
-        return null;
-    }
-
-    public String createUser(DatabaseUser user, int privGroupId,
-                             int dbInsId) throws RemoteException {
-        try {
-            stub.createUser(user, privGroupId, dbInsId);
-            return bundle.getString("rss.manager.database.user.successfully.created");
+            stub.createDatabaseUser(user);
         } catch (Exception e) {
             handleException(bundle.getString("rss.manager.failed.to.create.database.user"), e);
         }
-        return bundle.getString("rss.manager.failed.to.create.database.user");
     }
 
-    public PrivilegeGroup getPrivilegeGroupById(int privGroupId) throws RemoteException {
+    public DatabasePrivilegeTemplate getDatabasePrivilegesTemplate(String templateName) throws
+            AxisFault {
+        DatabasePrivilegeTemplate tempalte = null;
         try {
-            return stub.getPrivilegeGroupById(privGroupId);
+            tempalte = stub.getDatabasePrivilegesTemplate(templateName);
         } catch (Exception e) {
             handleException(bundle.getString(
-                    "rss.manager.failed.to.retrieve.database.privilege.group.data"), e);
+                    "rss.manager.failed.to.retrieve.database.privilege.template.data"), e);
         }
-        return null;
+        return tempalte;
     }
 
-    private void handleException(String msg, Exception e) throws RemoteException {
-        log.error(msg, e);
-        throw new RemoteException(msg, e);
+    private void handleException(String msg, Exception e) throws AxisFault {
+        //log.error(msg, e);
+        throw new AxisFault(msg, e);
     }
 
-    public RSSInstance getRSSInstanceById(int rssInsId) throws RemoteException {
+    public RSSInstanceMetaData getRSSInstance(String rssInstanceName) throws AxisFault {
+        RSSInstanceMetaData rssIns = null;
         try {
-            return stub.getRSSInstanceDataById(rssInsId);
+            rssIns = stub.getRSSInstance(rssInstanceName);
         } catch (Exception e) {
-           handleException(bundle.getString(
-                   "rss.manager.failed.to.retrieve.database.server.instance.properties"), e);
+            handleException(bundle.getString(
+                    "rss.manager.failed.to.retrieve.database.server.instance.properties"), e);
         }
-        return null;
+        return rssIns;
     }
+
+    public DatabaseUserMetaData[] getDatabaseUsers() throws AxisFault {
+        DatabaseUserMetaData[] users = new DatabaseUserMetaData[0];
+        try {
+            users = stub.getDatabaseUsers();
+        } catch (RemoteException e) {
+            handleException(bundle.getString("rss.manager.failed.to.retrieve.database.users"), e);
+        } catch (RSSAdminRSSManagerExceptionException e) {
+            handleException(bundle.getString("rss.manager.failed.to.retrieve.database.users"), e);
+        }
+        return users;
+    }
+
+    public void dropRSSInstance(String rssInstanceName) throws AxisFault {
+        try {
+            stub.dropRSSInstance(rssInstanceName);
+        } catch (RemoteException e) {
+            handleException(bundle.getString(
+                    "rss.manager.failed.to.drop.database.server.instance") + " '" +
+                    rssInstanceName + "'", e);
+        } catch (RSSAdminRSSManagerExceptionException e) {
+            handleException(bundle.getString(
+                    "rss.manager.failed.to.drop.database.server.instance") + " '" +
+                    rssInstanceName + "'", e);
+        }
+    }
+
+    public int getSystemRSSInstanceCount() throws AxisFault {
+        int count = 0;
+        try {
+            count = stub.getSystemRSSInstanceCount();
+        } catch (RemoteException e) {
+            handleException(bundle.getString(
+                    "rss.manager.failed.to.retrieve.system.rss.instance.count"), e);
+        } catch (RSSAdminRSSManagerExceptionException e) {
+            handleException(bundle.getString(
+                    "rss.manager.failed.to.retrieve.system.rss.instance.count"), e);
+        }
+        return count;
+    }
+
+    public void attachUserToDatabase(String rssInstanceName, String databaseName, String username,
+                                     String templateName) throws AxisFault {
+        try {
+            stub.attachUserToDatabase(rssInstanceName, databaseName, username, templateName);
+        } catch (RemoteException e) {
+            handleException("", e);
+        } catch (RSSAdminRSSManagerExceptionException e) {
+            handleException("", e);
+        }
+    }
+
+    public void detachUserFromDatabase(String rssInstanceName, String databaseName,
+                                       String username) throws AxisFault {
+        try {
+            stub.detachUserFromDatabase(rssInstanceName, databaseName, username);
+        } catch (RemoteException e) {
+            handleException("", e);
+        } catch (RSSAdminRSSManagerExceptionException e) {
+            handleException("", e);
+        }
+    }
+
+    public String[] getUsersAttachedToDatabase(String rssInstanceName,
+                                                             String databaseName) throws AxisFault {
+        String[] users = new String[0];
+        try {
+            users = stub.getUsersAttachedToDatabase(rssInstanceName, databaseName);
+        } catch (RemoteException e) {
+            handleException("", e);
+        } catch (RSSAdminRSSManagerExceptionException e) {
+            handleException("", e);
+        }
+        return users;
+    }
+
+    public String[] getAvailableUsersToAttachToDatabase(
+            String rssInstanceName, String databaseName) throws AxisFault {
+        String[] users = new String[0];
+        try {
+            users = stub.getAvailableUsersToAttachToDatabase(rssInstanceName, databaseName);
+        } catch (RemoteException e) {
+            handleException("", e);
+        } catch (RSSAdminRSSManagerExceptionException e) {
+            handleException("", e);
+        }
+        return users;
+    }
+
     
 }

@@ -127,7 +127,7 @@
    			        <featureArtifactDef>org.wso2.carbon:org.wso2.carbon.deployment.synchronizer.server.feature:${carbon.version}</featureArtifactDef>
 				<featureArtifactDef>org.wso2.carbon:org.wso2.carbon.discovery.core.feature:${carbon.version}</featureArtifactDef>
 				<featureArtifactDef>org.wso2.carbon:org.wso2.carbon.discovery.admin.ui.feature:${carbon.version}</featureArtifactDef>
-                                				
+                                <featureArtifactDef>org.wso2.carbon:org.wso2.carbon.deployment.synchronizer.subversion.feature:${carbon.platform.version}</featureArtifactDef> 				
 				<!--Cloud Services Gateway Agent feature-->
 				<!--<featureArtifactDef>org.wso2.carbon:org.wso2.carbon.cloud.csg.agent.feature:${carbon.version}</featureArtifactDef>-->
 
@@ -229,7 +229,7 @@
                                     <version>${project.version}</version>
                                 </feature>
 
-				<!--Cloud service deployment feature -->
+				<!--Cloud service d>eployment feature -->
 				<feature>
                                     <id>org.wso2.carbon.stratos.deployment.feature.group</id>
                                     <version>${stratos.version}</version>
@@ -306,6 +306,10 @@
                                     <id>org.wso2.carbon.stratos.throttling.agent.feature.group</id>
                                     <version>${stratos.version}</version>
                                 </feature>
+                                <feature>
+                                        <id>org.wso2.carbon.deployment.synchronizer.subversion.feature.group</id>
+                                        <version>${carbon.platform.version}</version>
+                                 </feature>
 				<!--Cloud Services Gateway Agent -->
 				<!--<feature>
                                     <id>org.wso2.carbon.cloud.csg.agent.feature.group</id>

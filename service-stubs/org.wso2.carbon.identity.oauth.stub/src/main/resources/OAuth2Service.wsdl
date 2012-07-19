@@ -77,6 +77,7 @@
                     <xs:element minOccurs="0" name="error" type="xs:boolean" />
                     <xs:element minOccurs="0" name="errorCode" nillable="true" type="xs:string" />
                     <xs:element minOccurs="0" name="errorMsg" nillable="true" type="xs:string" />
+                    <xs:element minOccurs="0" name="expiresIn" type="xs:long" />
                     <xs:element minOccurs="0" name="refreshToken" nillable="true" type="xs:string" />
                     <xs:element minOccurs="0" name="tokenType" nillable="true" type="xs:string" />
                 </xs:sequence>

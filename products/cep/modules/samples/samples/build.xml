@@ -23,7 +23,8 @@
     <property name="src.dir" value="conf/"/>
     <property name="dest.dir" value="${cep.home}/repository/conf"/>
     <property name="class.dir" value="target/classes"/>
-    <property name="lib.dir" value="../lib"/>
+    <property name="lib.dir" value="../../repository/components/plugins"/>
+    <property name="lib.jms.dir" value="../lib"/>
     <property name="services" value="${cep.home}/repository/deployment/server/axis2services"/>
     <property name="temp.dir" value="temp"/>
     <property name="classes" value="${temp.dir}/classes"/>
@@ -35,13 +36,16 @@
             <include name="repository/components/plugins/*.jar"/>
         </fileset>
     </path>
-     <path id="javac.classpath">
-            <pathelement path="${class.dir}"/>
-            <fileset dir="${lib.dir}">
-                <include name="*.jar"/>
-            </fileset>
+    <path id="javac.classpath">
+        <pathelement path="${class.dir}"/>
+        <fileset dir="${lib.dir}">
+            <include name="*.jar"/>
+        </fileset>
+        <fileset dir="${lib.jms.dir}">
+            <include name="*.jar"/>
+        </fileset>
 
-     </path>
+    </path>
 
 
     <target name="clean">
@@ -60,7 +64,7 @@
     </target>
 
     <target name="build-events" depends="init">
-        <ant antfile="build.xml"  dir="../events/CustomEvent/">
+        <ant antfile="build.xml" dir="../events/CustomEvent/">
             <property name="src" value="src"/>
         </ant>
     </target>
@@ -73,12 +77,12 @@
     </target>
 
     <target name="compile-all">
-         <javac srcdir="src" destdir="${class.dir}">
+        <javac srcdir="src" destdir="${class.dir}">
             <classpath refid="javac.classpath"/>
         </javac>
     </target>
 
-     <target name="build-service" depends="compile-services">
+    <target name="build-service" depends="compile-services">
         <property name="FMSQ.dir" value="${temp.dir}/FastMovingStockQuote"/>
         <mkdir dir="${FMSQ.dir}"/>
 
@@ -134,12 +138,12 @@
               classpathref="javac.classpath" fork="true">
         </java>
     </target>
-     <target name="esperLocal" depends="compile-all">
+    <target name="esperLocal" depends="compile-all">
         <java classname="org.wso2.carbon.cep.sample.EsperLocalBrokerClient"
               classpathref="javac.classpath" fork="true">
         </java>
     </target>
-     <target name="esperJMS" depends="compile-all">
+    <target name="esperJMS" depends="compile-all">
         <java classname="org.wso2.carbon.cep.sample.EsperJMSBrokerClient"
               classpathref="javac.classpath" fork="true">
         </java>

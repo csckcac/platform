@@ -152,18 +152,26 @@
             <outputDirectory>wso2cep-${pom.version}/repository/conf/</outputDirectory>
         </file>
         <!-- copying agent broker config files -->
+        <!-- data bridge config file -->
         <file>
             <source>
-                ../p2-profile/target/wso2carbon-core-${carbon.version}/repository/conf/agent-config.xml
+                ../p2-profile/target/wso2carbon-core-${carbon.version}/repository/conf/data-bridge/data-bridge-config.xml
             </source>
-            <outputDirectory>wso2cep-${pom.version}/repository/conf/</outputDirectory>
+            <outputDirectory>${pom.artifactId}-${pom.version}/repository/conf/data-bridge
+            </outputDirectory>
+            <filtered>true</filtered>
+            <fileMode>644</fileMode>
         </file>
         <file>
             <source>
-                ../p2-profile/target/wso2carbon-core-${carbon.version}/repository/conf/agent-server-config.xml
+                ../p2-profile/target/wso2carbon-core-${carbon.version}/repository/conf/data-bridge/thrift-agent-config.xml
             </source>
-            <outputDirectory>wso2cep-${pom.version}/repository/conf/</outputDirectory>
+            <outputDirectory>${pom.artifactId}-${pom.version}/repository/conf/data-bridge
+            </outputDirectory>
+            <filtered>true</filtered>
+            <fileMode>644</fileMode>
         </file>
+
         <!-- Including logging-config.xml file -->
         <file>
             <source>

@@ -140,9 +140,6 @@
                                     org.wso2.carbon:org.wso2.carbon.event.feature:${carbon.version}
                                 </featureArtifactDef>
                                 <featureArtifactDef>
-                                    org.wso2.carbon:org.wso2.carbon.agent.feature:${carbon.version}
-                                </featureArtifactDef>
-                                <featureArtifactDef>
                                     org.wso2.carbon:org.wso2.carbon.cep.feature:${carbon.version}
                                 </featureArtifactDef>
                                 <featureArtifactDef>
@@ -160,6 +157,13 @@
                                 </featureArtifactDef>
                                 <featureArtifactDef>
                                     org.wso2.cep:org.wso2.stratos.cep.dashboard.ui.feature:${project.version}
+                                </featureArtifactDef>
+                                <!--DataBridge-->
+                                <featureArtifactDef>
+                                    org.wso2.carbon:org.wso2.carbon.databridge.datapublisher.feature:4.0.0-SNAPSHOT
+                                </featureArtifactDef>
+                                <featureArtifactDef>
+                                    org.wso2.carbon:org.wso2.carbon.databridge.datareceiver.feature:4.0.0-SNAPSHOT
                                 </featureArtifactDef>
 
                                 <!-- Features related to Cloud -->
@@ -288,10 +292,6 @@
                                     <version>${carbon.version}</version>
                                 </feature>
                                 <feature>
-                                    <id>org.wso2.carbon.agent.feature.group</id>
-                                    <version>${carbon.version}</version>
-                                </feature>
-                                <feature>
                                     <id>org.wso2.carbon.cep.feature.group</id>
                                     <version>${carbon.version}</version>
                                 </feature>
@@ -327,6 +327,16 @@
                                     <version>${stratos.version}</version>
                                 </feature>
 
+
+                                <!--DataBridge-->
+                                <feature>
+                                    <id>org.wso2.carbon.databridge.datapublisher.feature.group</id>
+                                    <version>${carbon.version}</version>
+                                </feature>
+                                <feature>
+                                    <id>org.wso2.carbon.databridge.datareceiver.feature.group</id>
+                                    <version>${carbon.version}</version>
+                                </feature>
 
                                 <feature>
                                     <id>org.wso2.carbon.load.balance.agent.server.feature.group</id>

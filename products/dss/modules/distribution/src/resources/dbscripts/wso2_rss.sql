@@ -1,6 +1,5 @@
 
 CREATE TABLE RSS_INSTANCE (
-  rss_instance_id INTEGER AUTO_INCREMENT,
   name VARCHAR(128) NOT NULL,
   server_url VARCHAR(1024) NOT NULL,
   dbms_type VARCHAR(128) NOT NULL,
@@ -10,72 +9,75 @@ CREATE TABLE RSS_INSTANCE (
   admin_password VARCHAR(128),
   tenant_id INTEGER NOT NULL,
   UNIQUE (name, tenant_id),
-  PRIMARY KEY (rss_instance_id)
+  PRIMARY KEY (name)
 );
 
-CREATE TABLE DATABASE_INSTANCE (
-  database_instance_id INTEGER AUTO_INCREMENT,
+CREATE TABLE RSS_DATABASE (
   name VARCHAR(128) NOT NULL,
-  rss_instance_id INTEGER,
+  rss_instance_name VARCHAR(128),
   tenant_id INTEGER,
-  UNIQUE (name, rss_instance_id),
-  PRIMARY KEY (database_instance_id),
-  FOREIGN KEY (rss_instance_id) REFERENCES RSS_INSTANCE (rss_instance_id)
+  UNIQUE (name, rss_instance_name),
+  PRIMARY KEY (name),
+  FOREIGN KEY (rss_instance_name) REFERENCES RSS_INSTANCE (name)
 );
 
-CREATE TABLE DATABASE_USER (
-  user_id INTEGER AUTO_INCREMENT,
-  db_username VARCHAR(128) NOT NULL,
-  rss_instance_id INTEGER,
-  user_tenant_id INTEGER,
-  UNIQUE (db_username, rss_instance_id, user_tenant_id),
-  PRIMARY KEY (user_id),
-  FOREIGN KEY (rss_instance_id) REFERENCES RSS_INSTANCE (rss_instance_id)
+CREATE TABLE RSS_DATABASE_USER (
+  username VARCHAR(16) NOT NULL,
+  rss_instance_name VARCHAR(128),
+  tenant_id INTEGER,
+  UNIQUE (username, rss_instance_name, tenant_id),
+  PRIMARY KEY (username),
+  FOREIGN KEY (rss_instance_name) REFERENCES RSS_INSTANCE (name)
 );
 
-CREATE TABLE DATABASE_INSTANCE_PROPERTY (
-  db_property_id INTEGER AUTO_INCREMENT,
-  prop_name VARCHAR(128) NOT NULL,
-  prop_value TEXT,
-  database_instance_id INTEGER,
-  UNIQUE (prop_name, database_instance_id),
-  PRIMARY KEY (db_property_id),
-  FOREIGN KEY (database_instance_id) REFERENCES DATABASE_INSTANCE (database_instance_id)
+CREATE TABLE RSS_DATABASE_PROPERTY (
+  name VARCHAR(128) NOT NULL,
+  value TEXT,
+  database_name VARCHAR(128),
+  rss_instance_name VARCHAR(128),
+  UNIQUE (name, database_name, rss_instance_name),
+  PRIMARY KEY (name),
+  FOREIGN KEY (database_name) REFERENCES RSS_DATABASE (name),
+  FOREIGN KEY (rss_instance_name) REFERENCES RSS_INSTANCE (name)
 );
 
-CREATE TABLE USER_DATABASE_ENTRY (
-  user_id INTEGER,
-  database_instance_id INTEGER,
-  PRIMARY KEY (user_id, database_instance_id),
-  FOREIGN KEY (user_id) REFERENCES DATABASE_USER (user_id),
-  FOREIGN KEY (database_instance_id) REFERENCES DATABASE_INSTANCE (database_instance_id)
+CREATE TABLE RSS_USER_DATABASE_ENTRY (
+  username VARCHAR(16),
+  database_name VARCHAR(128),
+  rss_instance_name VARCHAR(128),
+  PRIMARY KEY (username, database_name, rss_instance_name),
+  FOREIGN KEY (username) REFERENCES RSS_DATABASE_USER (username),
+  FOREIGN KEY (database_name) REFERENCES RSS_DATABASE (name),
+  FOREIGN KEY (rss_instance_name) REFERENCES RSS_INSTANCE (name)
 );
 
-CREATE TABLE USER_DATABASE_PERMISSION (
-  user_id INTEGER,
-  database_instance_id INTEGER,
+CREATE TABLE RSS_USER_DATABASE_PERMISSION (
+  username VARCHAR(16),
+  database_name VARCHAR(128),
+  rss_instance_name VARCHAR(128),
   perm_name VARCHAR(128) NOT NULL,
   perm_value VARCHAR(128),
-  PRIMARY KEY (user_id, database_instance_id, perm_name),
-  FOREIGN KEY (user_id) REFERENCES DATABASE_USER (user_id),
-  FOREIGN KEY (database_instance_id) REFERENCES DATABASE_INSTANCE (database_instance_id)
+  PRIMARY KEY (username, database_name, perm_name),
+  FOREIGN KEY (username) REFERENCES RSS_DATABASE_USER (username),
+  FOREIGN KEY (database_name) REFERENCES RSS_DATABASE_INSTANCE (name),
+  FOREIGN KEY (rss_instance_name) REFERENCES RSS_INSTANCE (name)
+  
 );
 
-CREATE TABLE WSO2_RSS_DATABASE_INSTANCE_COUNT (
-  instance_count INTEGER NOT NULL DEFAULT 0
+CREATE TABLE RSS_SYSTEM_DATABASE_COUNT (
+  count INTEGER NOT NULL DEFAULT 0
 );
 
-CREATE TABLE USER_PRIVILEGE_GROUP (
-  priv_group_id INTEGER AUTO_INCREMENT,
-  priv_group_name VARCHAR(128),
+CREATE TABLE RSS_DATABASE_PRIVILEGE_TEMPLATE (
+  name VARCHAR(128),
   tenant_id INTEGER,
-  PRIMARY KEY (priv_group_id, priv_group_name, tenant_id)
+  PRIMARY KEY (name, tenant_id)
 );
 
-CREATE TABLE USER_PRIVILEGE_GROUP_ENTRY (
-  priv_group_id INTEGER,
+CREATE TABLE RSS_DATABASE_PRIVILEGE_TEMPLATE_ENTRY (
+  template_name VARCHAR(128),
   perm_name VARCHAR(128),
   perm_value CHAR(1),
-  PRIMARY KEY (priv_group_id, perm_name),
-  FOREIGN KEY (priv_group_id) REFERENCES USER_PRIVILEGE_GROUP (priv_group_id)
+  PRIMARY KEY (template_name, perm_name),
+  FOREIGN KEY (template_name) REFERENCES RSS_DATABASE_PRIVILEGE_TEMPLATE (name)
 );

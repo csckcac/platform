@@ -12,9 +12,7 @@ import org.wso2.carbon.appfactory.common.AppFactoryConstants;
 import org.wso2.carbon.appfactory.svn.repository.mgt.util.Util;
 import org.wso2.carbon.governance.registry.extensions.executors.ServiceVersionExecutor;
 import org.wso2.carbon.governance.registry.extensions.executors.utils.ExecutorConstants;
-import org.wso2.carbon.governance.registry.extensions.executors.utils.Utils;
 import org.wso2.carbon.governance.registry.extensions.interfaces.Execution;
-import org.wso2.carbon.registry.core.Registry;
 import org.wso2.carbon.registry.core.Resource;
 import org.wso2.carbon.registry.core.ResourcePath;
 import org.wso2.carbon.registry.core.exceptions.RegistryException;
@@ -35,27 +33,8 @@ public class AppFactoryLCExecutor implements Execution {
     private static final String KEY = ExecutorConstants.RESOURCE_VERSION;
     private Map parameterMap;
 
-    //    To track whether we need to move comments,tags,ratings and all the associations.
-    private boolean copyComments = false;
-    private boolean copyTags = false;
-    private boolean copyRatings = false;
-    private boolean copyAllAssociations = false;
-
     public void init(Map map) {
         parameterMap = map;
-
-        if (parameterMap.get(ExecutorConstants.COPY_COMMENTS) != null) {
-            copyComments = Boolean.parseBoolean((String) parameterMap.get(ExecutorConstants.COPY_COMMENTS));
-        }
-        if (parameterMap.get(ExecutorConstants.COPY_TAGS) != null) {
-            copyTags = Boolean.parseBoolean((String) parameterMap.get(ExecutorConstants.COPY_TAGS));
-        }
-        if (parameterMap.get(ExecutorConstants.COPY_RATINGS) != null) {
-            copyRatings = Boolean.parseBoolean((String) parameterMap.get(ExecutorConstants.COPY_RATINGS));
-        }
-        if (parameterMap.get(ExecutorConstants.COPY_ASSOCIATIONS) != null) {
-            copyAllAssociations = Boolean.parseBoolean((String) parameterMap.get(ExecutorConstants.COPY_ASSOCIATIONS));
-        }
     }
 
     public boolean execute(RequestContext requestContext, String currentState, String targetState) {
@@ -120,25 +99,6 @@ public class AppFactoryLCExecutor implements Execution {
             }
 
 
-            // This is commented to use new path structure
-//            If first stage of application, then need to change new resource name to a version (i.e. 1.0.0)
-//            if(newPath.endsWith("trunk")){
-//                newPath = newPath.substring(0, newPath.length()-5);
-//                log.info(newPath);
-//
-//                String appVersion = currentParameterMap.get("version");
-//                // Append version from here
-//                if( appVersion != null){
-//                    newPath = newPath + appVersion;
-//                }
-//                else{
-//                    log.error("Can not find application version");
-//                    return false;
-//                }
-//
-//
-//            }
-
             newPath = targetEnvironment + newPath;
         } else {
             log.warn("Resource is not in the given environment");
@@ -156,24 +116,9 @@ public class AppFactoryLCExecutor implements Execution {
             requestContext.setResource(newResource);
             requestContext.setResourcePath(new ResourcePath(newPath));
 
-//            Copying comments
-            copyComments(requestContext.getRegistry(), newPath, resourcePath);
-
-//           Copying tags
-            copyTags(requestContext.getRegistry(), newPath, resourcePath);
-
-//           Copying ratings. We only copy the average ratings
-            copyRatings(requestContext.getSystemRegistry(), newPath, resourcePath);
-
-//           Copying all the associations.
-//           We avoid copying dependencies here
-            copyAllAssociations(requestContext.getRegistry(), newPath, resourcePath);
-
 
             // Executing the bpel
-           // executeBPEL(applicationId, revision, version, stage, build);
-
-
+            executeBPEL(applicationId, revision, version, stage, build);
 
             return true;
         } catch (RegistryException e) {
@@ -190,30 +135,6 @@ public class AppFactoryLCExecutor implements Execution {
         return originalPath.replace(key, value);
     }
 
-    private void copyAllAssociations(Registry registry, String newPath, String path) throws RegistryException {
-        if (copyAllAssociations) {
-            Utils.copyAssociations(registry, newPath, path);
-        }
-    }
-
-    private void copyRatings(Registry registry, String newPath, String path) throws RegistryException {
-        if (copyRatings) {
-            Utils.copyRatings(registry, newPath, path);
-        }
-    }
-
-    private void copyTags(Registry registry, String newPath, String path) throws RegistryException {
-        if (copyTags) {
-            Utils.copyTags(registry, newPath, path);
-        }
-    }
-
-    private void copyComments(Registry registry, String newPath, String path) throws RegistryException {
-        if (copyComments) {
-            Utils.copyComments(registry, newPath, path);
-        }
-    }
-
 
     //private void executeBPEL(final String applicationId, final String version, final String revision) {
     private void executeBPEL(final String applicationId, final String revision,
@@ -221,8 +142,8 @@ public class AppFactoryLCExecutor implements Execution {
 
 
         AppFactoryConfiguration configuration= Util.getConfiguration();
-        final String EPR2 = configuration.getFirstProperty(AppFactoryConstants.ENDPOINT_DEPLOY_TO_STAGE);
-        final String EPR = "https://10.100.2.101:9443/services/echo";
+        final String EPR = configuration.getFirstProperty(AppFactoryConstants.ENDPOINT_DEPLOY_TO_STAGE);
+        //final String EPR = "https://10.100.2.101:9443/services/echo";
 
         new Thread(new Runnable() {
             public void run() {
@@ -241,7 +162,8 @@ public class AppFactoryLCExecutor implements Execution {
 
 
                     //Make the request and get the response
-                    client.sendReceive(getPayload(applicationId, revision, version, stage, build));
+                    //client.sendRobust(getPayload(applicationId, revision, version, stage, build));
+                    client.fireAndForget(getPayload(applicationId, revision, version, stage, build));
                 } catch (AxisFault e) {
                     log.error(e);
                     e.printStackTrace();
@@ -252,17 +174,9 @@ public class AppFactoryLCExecutor implements Execution {
         }).start();
     }
 
-    private static OMElement getPayload(final String applicationId, final String revision,
-                                        final String version, final String stage, final String build) throws XMLStreamException, javax.xml.stream.XMLStreamException {
-    //private static OMElement getPayload(String applicationId, String version, String revision) throws XMLStreamException, javax.xml.stream.XMLStreamException {
-        /*String payload = "<p:callbackMessgae xmlns:p=\"http://localhost:9763/services/ArtifactCreateCallbackService\"><applicationId>" + applicationId +
-                "</applicationId><revision>" + revision + "</revision><version>" + version + "</version></p:callbackMessgae>";*/
-
-/*        String payload = "   <p:echoInt xmlns:p=\"http://echo.services.core.carbon.wso2.org\">\n" +
-                "      <!--0 to 1 occurrence-->\n" +
-                "      <in>2</in>\n" +
-                "   </p:echoInt>";*/
-
+    private static OMElement getPayload(
+            final String applicationId, final String revision, final String version, final String stage,
+            final String build) throws XMLStreamException, javax.xml.stream.XMLStreamException {
 
 
         String payload = "   <p:DeployToStageRequest xmlns:p=\"http://wso2.org\">\n" +

@@ -20,11 +20,12 @@
 <%@ page import="org.wso2.carbon.CarbonConstants" %>
 <%@ page import="org.wso2.carbon.rssmanager.common.RSSManagerCommonUtil" %>
 <%@ page import="org.wso2.carbon.rssmanager.ui.RSSManagerClient" %>
-<%@ page import="org.wso2.carbon.rssmanager.ui.beans.DatabasePermissions" %>
+<%@ page import="org.wso2.carbon.rssmanager.ui.DatabasePermissions" %>
 <%@ page import="org.wso2.carbon.rssmanager.ui.stub.types.DatabaseUser" %>
 <%@ page import="org.wso2.carbon.ui.CarbonUIUtil" %>
 <%@ page import="org.wso2.carbon.utils.ServerConstants" %>
 <%@ page import="java.io.PrintWriter" %>
+<%@ page import="org.wso2.carbon.rssmanager.ui.stub.types.UserDatabaseEntry" %>
 
 <%@ taglib prefix="fmt" uri="http://java.sun.com/jsp/jstl/fmt" %>
 <%@ taglib uri="http://wso2.org/projects/carbon/taglibs/carbontags.jar" prefix="carbon" %>
@@ -179,7 +180,11 @@
         username = (username != null) ? username : "";
 
         try {
-            client.createCarbonDataSource(databaseName, username);
+            UserDatabaseEntry entry = new UserDatabaseEntry();
+            entry.setRssInstanceName(rssInstanceName);
+            entry.setDatabaseName(databaseName);
+            entry.setUsername(username);
+            client.createCarbonDataSource(entry);
 
             response.setContentType("text/xml; charset=UTF-8");
             // Set standard HTTP/1.1 no-cache headers.

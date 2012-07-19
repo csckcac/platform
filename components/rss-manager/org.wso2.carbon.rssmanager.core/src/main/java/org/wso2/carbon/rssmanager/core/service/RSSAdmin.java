@@ -444,22 +444,16 @@ public class RSSAdmin extends AbstractAdmin {
         return config.getRssManager();
     }
 
-
-    public void createCarbonDataSource(String databaseName) throws RSSManagerException {
-        DataSourceMetaInfo metaInfo = new DataSourceMetaInfo();
-        metaInfo.setName(databaseName);
-
-        DataSourceMetaInfo.DataSourceDefinition defn =
-                new DataSourceMetaInfo.DataSourceDefinition();
-        defn.setType(null);
-        defn.setDsXMLConfiguration(null);
-        metaInfo.setDefinition(defn);
-
+    public void createCarbonDataSource(UserDatabaseEntry entry) throws RSSManagerException {
+        Database database = RSSConfig.getInstance().getRssManager().getDatabase(
+                entry.getRssInstanceName(), entry.getDatabaseName());
+        DataSourceMetaInfo metaInfo =
+                RSSManagerUtil.createDSMetaInfo(database, entry.getUsername());
         try {
             RSSManagerServiceComponent.getDataSourceService().addDataSource(metaInfo);
         } catch (DataSourceException e) {
             String msg = "Error occurred while creating carbon datasource for the database '" +
-                    databaseName + "'";
+                    entry.getDatabaseName() + "'";
             handleException(msg, e);
         }
     }

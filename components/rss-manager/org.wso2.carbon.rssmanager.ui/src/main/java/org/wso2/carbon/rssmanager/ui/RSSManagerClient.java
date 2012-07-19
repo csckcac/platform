@@ -178,29 +178,6 @@ public class RSSManagerClient {
         }
     }
 
-    public List<RSSInstanceMetaData> getRSSInstanceList(String tenantDomain) throws AxisFault {
-        List<RSSInstanceMetaData> rssIntances = new ArrayList<RSSInstanceMetaData>();
-        try {
-            RSSInstanceMetaData[] tmp = stub.getRSSInstances();
-            if (tenantDomain != null && tmp != null && tmp.length > 0) {
-                rssIntances = Arrays.asList(tmp);
-                return rssIntances;
-            }
-            if (tmp != null && tmp.length > 0) {
-                for (RSSInstanceMetaData rssIns : tmp) {
-                    if (!RSSManagerConstants.WSO2_RSS_INSTANCE_TYPE.equals(
-                            rssIns.getInstanceType())) {
-                        rssIntances.add(rssIns);
-                    }
-                }
-            }
-        } catch (Exception e) {
-            handleException(bundle.getString(
-                    "rss.manager.failed.to.retrieve.RSS.instance.list"), e);
-        }
-        return rssIntances;
-    }
-
     public List<RSSInstanceMetaData> getRSSInstanceList() throws AxisFault {
         List<RSSInstanceMetaData> rssInstances = new ArrayList<RSSInstanceMetaData>();
         try {
@@ -264,9 +241,9 @@ public class RSSManagerClient {
         }
     }
 
-    public void createCarbonDataSource(String databaseName, String username) throws AxisFault {
+    public void createCarbonDataSource(UserDatabaseEntry entry) throws AxisFault {
         try {
-            stub.createCarbonDataSource(databaseName, username);
+            stub.createCarbonDataSource(entry);
         } catch (Exception e) {
             handleException(bundle.getString("rss.manager.failed.to.create.carbon.datasource"), e);
         }

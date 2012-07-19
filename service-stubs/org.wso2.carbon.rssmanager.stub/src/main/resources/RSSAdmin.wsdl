@@ -1,7 +1,7 @@
 <?xml version="1.0" encoding="UTF-8"?>
-<wsdl:definitions xmlns:wsdl="http://schemas.xmlsoap.org/wsdl/" xmlns:ns1="http://org.apache.axis2/xsd" xmlns:ns="http://service.core.rssmanager.carbon.wso2.org" xmlns:wsaw="http://www.w3.org/2006/05/addressing/wsdl" xmlns:http="http://schemas.xmlsoap.org/wsdl/http/" xmlns:ax23="http://entity.internal.core.rssmanager.carbon.wso2.org/xsd" xmlns:ax21="http://core.rssmanager.carbon.wso2.org/xsd" xmlns:xs="http://www.w3.org/2001/XMLSchema" xmlns:mime="http://schemas.xmlsoap.org/wsdl/mime/" xmlns:soap="http://schemas.xmlsoap.org/wsdl/soap/" xmlns:soap12="http://schemas.xmlsoap.org/wsdl/soap12/" targetNamespace="http://service.core.rssmanager.carbon.wso2.org">
+<wsdl:definitions xmlns:wsdl="http://schemas.xmlsoap.org/wsdl/" xmlns:ns1="http://org.apache.axis2/xsd" xmlns:ns="http://service.core.rssmanager.carbon.wso2.org" xmlns:wsaw="http://www.w3.org/2006/05/addressing/wsdl" xmlns:http="http://schemas.xmlsoap.org/wsdl/http/" xmlns:ax23="http://entity.dao.internal.core.rssmanager.carbon.wso2.org/xsd" xmlns:ax21="http://core.rssmanager.carbon.wso2.org/xsd" xmlns:xs="http://www.w3.org/2001/XMLSchema" xmlns:mime="http://schemas.xmlsoap.org/wsdl/mime/" xmlns:soap="http://schemas.xmlsoap.org/wsdl/soap/" xmlns:soap12="http://schemas.xmlsoap.org/wsdl/soap12/" targetNamespace="http://service.core.rssmanager.carbon.wso2.org">
     <wsdl:types>
-        <xs:schema attributeFormDefault="qualified" elementFormDefault="qualified" targetNamespace="http://entity.internal.core.rssmanager.carbon.wso2.org/xsd">
+        <xs:schema attributeFormDefault="qualified" elementFormDefault="qualified" targetNamespace="http://entity.dao.internal.core.rssmanager.carbon.wso2.org/xsd">
             <xs:complexType name="RSSInstanceMetaData">
                 <xs:sequence>
                     <xs:element minOccurs="0" name="instanceType" nillable="true" type="xs:string"/>
@@ -69,15 +69,23 @@
                     <xs:element minOccurs="0" name="url" nillable="true" type="xs:string"/>
                 </xs:sequence>
             </xs:complexType>
+            <xs:complexType name="UserDatabaseEntry">
+                <xs:sequence>
+                    <xs:element minOccurs="0" name="databaseName" nillable="true" type="xs:string"/>
+                    <xs:element maxOccurs="unbounded" minOccurs="0" name="permissions" nillable="true" type="xs:string"/>
+                    <xs:element minOccurs="0" name="rssInstanceName" nillable="true" type="xs:string"/>
+                    <xs:element minOccurs="0" name="username" nillable="true" type="xs:string"/>
+                </xs:sequence>
+            </xs:complexType>
         </xs:schema>
         <xs:schema attributeFormDefault="qualified" elementFormDefault="qualified" targetNamespace="http://core.rssmanager.carbon.wso2.org/xsd">
             <xs:complexType name="RSSManagerException">
                 <xs:sequence/>
             </xs:complexType>
         </xs:schema>
-        <xs:schema xmlns:ax24="http://entity.internal.core.rssmanager.carbon.wso2.org/xsd" xmlns:ax22="http://core.rssmanager.carbon.wso2.org/xsd" attributeFormDefault="qualified" elementFormDefault="qualified" targetNamespace="http://service.core.rssmanager.carbon.wso2.org">
+        <xs:schema xmlns:ax24="http://entity.dao.internal.core.rssmanager.carbon.wso2.org/xsd" xmlns:ax22="http://core.rssmanager.carbon.wso2.org/xsd" attributeFormDefault="qualified" elementFormDefault="qualified" targetNamespace="http://service.core.rssmanager.carbon.wso2.org">
             <xs:import namespace="http://core.rssmanager.carbon.wso2.org/xsd"/>
-            <xs:import namespace="http://entity.internal.core.rssmanager.carbon.wso2.org/xsd"/>
+            <xs:import namespace="http://entity.dao.internal.core.rssmanager.carbon.wso2.org/xsd"/>
             <xs:element name="RSSAdminRSSManagerException">
                 <xs:complexType>
                     <xs:sequence>
@@ -351,8 +359,7 @@
             <xs:element name="createCarbonDataSource">
                 <xs:complexType>
                     <xs:sequence>
-                        <xs:element minOccurs="0" name="databaseName" nillable="true" type="xs:string"/>
-                        <xs:element minOccurs="0" name="username" nillable="true" type="xs:string"/>
+                        <xs:element minOccurs="0" name="entry" nillable="true" type="ax23:UserDatabaseEntry"/>
                     </xs:sequence>
                 </xs:complexType>
             </xs:element>

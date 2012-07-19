@@ -22,6 +22,7 @@ import org.apache.axiom.om.OMElement;
 import org.apache.axiom.om.util.Base64;
 import org.wso2.carbon.base.MultitenantConstants;
 import org.wso2.carbon.ndatasource.common.DataSourceException;
+import org.wso2.carbon.ndatasource.core.DataSourceMetaInfo;
 import org.wso2.carbon.ndatasource.core.services.WSDataSourceMetaInfo;
 import org.wso2.carbon.ndatasource.rdbms.RDBMSConfiguration;
 import org.wso2.carbon.ndatasource.rdbms.RDBMSDataSource;
@@ -30,6 +31,8 @@ import org.wso2.carbon.rssmanager.common.RSSManagerConstants;
 import org.wso2.carbon.rssmanager.core.RSSManagerException;
 import org.wso2.carbon.rssmanager.core.internal.RSSManagerServiceComponent;
 import org.wso2.carbon.rssmanager.core.internal.dao.entity.*;
+import org.wso2.carbon.rssmanager.core.internal.util.datasource.DSXMLConfiguration;
+import org.wso2.carbon.rssmanager.core.internal.util.datasource.RDBMSDSXMLConfiguration;
 import org.wso2.carbon.user.api.Tenant;
 import org.wso2.carbon.user.api.UserStoreException;
 import org.wso2.carbon.user.core.tenant.TenantManager;
@@ -37,9 +40,13 @@ import org.wso2.carbon.utils.multitenancy.CarbonContextHolder;
 
 import javax.naming.InitialContext;
 import javax.sql.DataSource;
+import javax.xml.bind.JAXBException;
+import java.io.ByteArrayOutputStream;
 import java.util.*;
 
 public class RSSManagerUtil {
+    
+    public static final String RDBMS_DTAASOURCE_TYPE = "RDBMS";
 
     //private static SecretResolver secretResolver;
 
@@ -342,6 +349,40 @@ public class RSSManagerUtil {
 
     public static String composeDatabaseUrl(RSSInstance rssIns, String databaseName) {
         return rssIns.getServerURL() + "/" + databaseName;
+    }
+
+    private static DataSourceMetaInfo.DataSourceDefinition createDSXMLDefinition(
+            DSXMLConfiguration rdbmsConfig) throws RSSManagerException {
+        ByteArrayOutputStream out = new ByteArrayOutputStream();
+        try {
+            rdbmsConfig.getDSMarshaller().marshal(rdbmsConfig, out);
+        } catch (JAXBException e) {
+            String msg = "Error occurred while marshalling datasource configuration";
+            throw new RSSManagerException(msg, e);
+        }
+        DataSourceMetaInfo.DataSourceDefinition defn =
+                new DataSourceMetaInfo.DataSourceDefinition();
+        defn.setType(RSSManagerUtil.RDBMS_DTAASOURCE_TYPE);
+        defn.setDsXMLConfiguration(out.toString());
+        
+        return defn;
+    }
+    
+    public static DataSourceMetaInfo createDSMetaInfo(Database database,
+                                                      String username) throws RSSManagerException {
+        DataSourceMetaInfo metaInfo = new DataSourceMetaInfo();
+
+        RDBMSDSXMLConfiguration config = new RDBMSDSXMLConfiguration();
+        String url = database.getUrl();
+        String driverClassName = RSSManagerCommonUtil.getDatabaseDriver(url);
+        config.setUrl(url);
+        config.setDriverClassName(driverClassName);
+        config.setUsername(username);
+
+        metaInfo.setDefinition(createDSXMLDefinition(config));
+        metaInfo.setName(database.getName());
+        
+        return metaInfo;
     }
 
 }

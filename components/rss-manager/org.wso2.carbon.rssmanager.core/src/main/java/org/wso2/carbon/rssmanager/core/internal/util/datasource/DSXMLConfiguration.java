@@ -1,4 +1,6 @@
-package org.wso2.carbon.rssmanager.ui;/*
+package org.wso2.carbon.rssmanager.core.internal.util.datasource;
+
+import javax.xml.bind.Marshaller;/*
  *  Copyright (c) 2005-2011, WSO2 Inc. (http://www.wso2.org) All Rights Reserved.
  *
  *  WSO2 Inc. licenses this file to you under the Apache License,
@@ -17,11 +19,8 @@ package org.wso2.carbon.rssmanager.ui;/*
  *
  */
 
-public class DatabasePermissions {
+public interface DSXMLConfiguration {
 
-
-    public void setPermission(String privilege, Object value) {
-
-    }
+    public Marshaller getDSMarshaller();
 
 }

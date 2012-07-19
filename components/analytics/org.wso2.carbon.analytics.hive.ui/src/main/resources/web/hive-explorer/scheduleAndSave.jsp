@@ -112,6 +112,8 @@
                             }
                         });
             }
+        } else if (document.getElementById('noSchedule').checked) {
+             sendRequestToSaveScript(cronExpSelected);
         } else {
             //when interval -count option is selected..
         }
@@ -477,10 +479,42 @@
 
                 </td>
             </tr>
+
+
+            </tbody>
+
+        </table>
+    </td>
+</tr>
+</tbody>
+
+
+<thead>
+<tr>
+    <th>
+        <input TYPE=RADIO NAME="cronExpSelect" id="noSchedule" VALUE="noSchedule"><label>Unschedule</label>
+    </th>
+</tr>
+</thead>
+
+<tbody>
+
+<tr>
+
+    <td>
+        <table class="normal-nopadding">
+            <tbody>
+            <tr>
+                <td width="250px"></td>
+                <td>
+
+                </td>
+            </tr>
             </tbody>
         </table>
     </td>
 </tr>
+
 
 <tr>
     <td>

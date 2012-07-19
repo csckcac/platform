@@ -30,8 +30,8 @@
 
 <fmt:bundle basename="org.wso2.carbon.analytics.hive.ui.i18n.Resources">
 <carbon:breadcrumb label="hive.explorer"
-                       resourceBundle="org.wso2.carbon.analytics.hive.ui.i18n.Resources"
-                       topPage="false" request="<%=request%>"/>
+                   resourceBundle="org.wso2.carbon.analytics.hive.ui.i18n.Resources"
+                   topPage="false" request="<%=request%>"/>
 <script src="../editarea/edit_area_full.js" type="text/javascript"></script>
 <script type="text/javascript" src="../ajax/js/prototype.js"></script>
 <link rel="stylesheet" type="text/css" href="css/hive-explorer-styles.css">
@@ -50,7 +50,7 @@
     String scriptContent = "";
     String cron = "";
     String mode = request.getParameter("mode");
-    if (null != request.getParameter("cron")) {
+    if (null != request.getParameter("cron") && !cron.equals("")) {
         cron = request.getParameter("cron").toString();
     }
     int max = 40;
@@ -172,25 +172,25 @@
                     aquery = wrapTextInVisibleWidth(aquery);
                     String[] temp = aquery.split(",");
 
-                     if (null != temp) {
-                            aquery = "";
-                            int count = 0;
-                            for (String aSubQuery : temp) {
-                                aSubQuery = aSubQuery.trim();
-                                if (!aSubQuery.equals("")) {
-                                    count += aSubQuery.length() + 1;
-                                    if (count > max) {
-                                        aquery += aSubQuery + "," + "\n\t";
-                                        count = 0;
-                                    } else {
-                                        aquery += aSubQuery + ",";
-                                    }
+                    if (null != temp) {
+                        aquery = "";
+                        int count = 0;
+                        for (String aSubQuery : temp) {
+                            aSubQuery = aSubQuery.trim();
+                            if (!aSubQuery.equals("")) {
+                                count += aSubQuery.length() + 1;
+                                if (count > max) {
+                                    aquery += aSubQuery + "," + "\n\t";
+                                    count = 0;
+                                } else {
+                                    aquery += aSubQuery + ",";
                                 }
                             }
-                            aquery = aquery.trim();
-                            if (aquery.endsWith(",")) aquery = aquery.substring(0, aquery.length() - 1);
-                            scriptContent = scriptContent + aquery + ";" + "\n";
                         }
+                        aquery = aquery.trim();
+                        if (aquery.endsWith(",")) aquery = aquery.substring(0, aquery.length() - 1);
+                        scriptContent = scriptContent + aquery + ";" + "\n";
+                    }
                 }
             }
         }
@@ -357,11 +357,11 @@
     }
 
     function openProgressBar() {
-        var content = '<div id="overlay"><div id="box"><div class="ui-dialog-title-bar">'+
-                  'Executing Hive Queries<a href="#" title="Close" class="ui-dialog-titlebar-close" onclick="closeProgrsssBar();">'+
-                    '<span style="display: none">x</span></a>'+
-                  '</div><div class="dialog-content"><img src="../resources/images/ajax-loader.gif" />'+
-                  ' Executing Hive Queries...</div></div></div>';
+        var content = '<div id="overlay"><div id="box"><div class="ui-dialog-title-bar">' +
+                'Executing Hive Queries<a href="#" title="Close" class="ui-dialog-titlebar-close" onclick="closeProgrsssBar();">' +
+                '<span style="display: none">x</span></a>' +
+                '</div><div class="dialog-content"><img src="../resources/images/ajax-loader.gif" />' +
+                ' Executing Hive Queries...</div></div></div>';
         document.getElementById('dynamic').innerHTML = content;
     }
 
@@ -370,7 +370,6 @@
     }
 
 </script>
-
 
 
 <script type="text/javascript">
@@ -409,9 +408,9 @@
                 <tbody>
                 <tr>
                     <td style="padding: 10px 0 0 20px;">
-                        <a class="icon-link"  style="background: url('images/tasks-icon.gif') no-repeat;float:right;"
+                        <a class="icon-link" style="background: url('images/tasks-icon.gif') no-repeat;float:right;"
                            href="javascript: scheduleTask();"><label>Schedule
-                                                    Script</label></a>
+                            Script</label></a>
                     </td>
                 </tr>
                 <%

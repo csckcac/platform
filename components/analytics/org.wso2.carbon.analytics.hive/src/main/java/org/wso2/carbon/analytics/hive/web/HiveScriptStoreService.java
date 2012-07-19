@@ -92,6 +92,8 @@ public class HiveScriptStoreService {
                 log.debug("Registered script execution task : " + info.getName() +
                           " for tenant : " + tenantId);
             }
+        }else {
+           deleteTask(scriptName);
         }
 
     }

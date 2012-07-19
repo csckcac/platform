@@ -28,7 +28,7 @@ import org.wso2.carbon.rssmanager.core.RSSManagerException;
 import org.wso2.carbon.rssmanager.core.internal.RSSManagerServiceComponent;
 import org.wso2.carbon.rssmanager.core.internal.dao.RSSDAO;
 import org.wso2.carbon.rssmanager.core.internal.dao.RSSDAOFactory;
-import org.wso2.carbon.rssmanager.core.internal.entity.*;
+import org.wso2.carbon.rssmanager.core.internal.dao.entity.*;
 import org.wso2.carbon.rssmanager.core.internal.manager.RSSManager;
 import org.wso2.carbon.rssmanager.core.internal.util.RSSConfig;
 import org.wso2.carbon.rssmanager.core.internal.util.RSSManagerUtil;
@@ -442,6 +442,26 @@ public class RSSAdmin extends AbstractAdmin {
             throw new RSSManagerException("RSSConfig is not properly initialized and is null");
         }
         return config.getRssManager();
+    }
+
+
+    public void createCarbonDataSource(String databaseName) throws RSSManagerException {
+        DataSourceMetaInfo metaInfo = new DataSourceMetaInfo();
+        metaInfo.setName(databaseName);
+
+        DataSourceMetaInfo.DataSourceDefinition defn =
+                new DataSourceMetaInfo.DataSourceDefinition();
+        defn.setType(null);
+        defn.setDsXMLConfiguration(null);
+        metaInfo.setDefinition(defn);
+
+        try {
+            RSSManagerServiceComponent.getDataSourceService().addDataSource(metaInfo);
+        } catch (DataSourceException e) {
+            String msg = "Error occurred while creating carbon datasource for the database '" +
+                    databaseName + "'";
+            handleException(msg, e);
+        }
     }
     
 }

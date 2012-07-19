@@ -25,9 +25,7 @@ import org.apache.commons.logging.LogFactory;
 import org.wso2.carbon.rssmanager.common.RSSManagerCommonUtil;
 import org.wso2.carbon.rssmanager.common.RSSManagerConstants;
 import org.wso2.carbon.rssmanager.core.RSSManagerException;
-import org.wso2.carbon.rssmanager.core.internal.dao.RSSDAO;
-import org.wso2.carbon.rssmanager.core.internal.dao.RSSDAOFactory;
-import org.wso2.carbon.rssmanager.core.internal.entity.RSSInstance;
+import org.wso2.carbon.rssmanager.core.internal.dao.entity.RSSInstance;
 import org.wso2.carbon.rssmanager.core.internal.manager.RSSManager;
 import org.wso2.carbon.rssmanager.core.internal.manager.RSSManagerFactory;
 import org.wso2.carbon.utils.CarbonUtils;
@@ -35,7 +33,6 @@ import org.wso2.carbon.utils.multitenancy.MultitenantConstants;
 
 import javax.sql.DataSource;
 import java.io.File;
-import java.net.URISyntaxException;
 import java.sql.Connection;
 import java.sql.SQLException;
 import java.util.*;

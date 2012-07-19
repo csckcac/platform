@@ -22,20 +22,18 @@ import org.apache.axiom.om.OMElement;
 import org.apache.axiom.om.util.Base64;
 import org.wso2.carbon.base.MultitenantConstants;
 import org.wso2.carbon.ndatasource.common.DataSourceException;
-import org.wso2.carbon.ndatasource.core.internal.DataSourceServiceComponent;
+import org.wso2.carbon.ndatasource.core.services.WSDataSourceMetaInfo;
 import org.wso2.carbon.ndatasource.rdbms.RDBMSConfiguration;
 import org.wso2.carbon.ndatasource.rdbms.RDBMSDataSource;
 import org.wso2.carbon.rssmanager.common.RSSManagerCommonUtil;
 import org.wso2.carbon.rssmanager.common.RSSManagerConstants;
 import org.wso2.carbon.rssmanager.core.RSSManagerException;
 import org.wso2.carbon.rssmanager.core.internal.RSSManagerServiceComponent;
-import org.wso2.carbon.rssmanager.core.internal.entity.*;
+import org.wso2.carbon.rssmanager.core.internal.dao.entity.*;
 import org.wso2.carbon.user.api.Tenant;
 import org.wso2.carbon.user.api.UserStoreException;
 import org.wso2.carbon.user.core.tenant.TenantManager;
 import org.wso2.carbon.utils.multitenancy.CarbonContextHolder;
-import org.wso2.securevault.SecretResolver;
-import org.wso2.securevault.SecretResolverFactory;
 
 import javax.naming.InitialContext;
 import javax.sql.DataSource;
@@ -85,7 +83,7 @@ public class RSSManagerUtil {
                     "the given tenant ID");
         }
     }
-    
+
     /**
      * Returns the fully qualified name of the database to be created. This will append an
      * underscore and the tenant's domain name to the database to make it unique for that particular
@@ -299,7 +297,7 @@ public class RSSManagerUtil {
         Iterator<OMElement> propItr = dsEl.getChildElements();
         if (!propItr.hasNext()) {
             throw new RSSManagerException("RSS management repository database configuration " +
-                        "is missing");
+                    "is missing");
         }
         while (propItr.hasNext()) {
             OMElement propEl = propItr.next();
@@ -342,17 +340,8 @@ public class RSSManagerUtil {
         return metadata;
     }
 
-    public static String composeDatabaseUrl (RSSInstance rssIns, String databaseName) {
+    public static String composeDatabaseUrl(RSSInstance rssIns, String databaseName) {
         return rssIns.getServerURL() + "/" + databaseName;
     }
-
-//    private static synchronized String loadFromSecureVault(String alias) {
-//		if (secretResolver == null) {
-//		    secretResolver = SecretResolverFactory.create((OMElement) null, false);
-//		    secretResolver.init(DataSourceServiceComponent.
-//		    		getSecretCallbackHandlerService().getSecretCallbackHandler());
-//		}
-//		return secretResolver.resolve(alias);
-//	}
 
 }

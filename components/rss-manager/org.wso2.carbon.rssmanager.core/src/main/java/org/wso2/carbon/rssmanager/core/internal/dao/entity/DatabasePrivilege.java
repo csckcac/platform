@@ -16,28 +16,37 @@
  *  under the License.
  *
  */
-package org.wso2.carbon.rssmanager.core.internal.entity;
+package org.wso2.carbon.rssmanager.core.internal.dao.entity;
 
-import java.util.HashMap;
-import java.util.Map;
+public class DatabasePrivilege {
 
-/**
- * This class represents the database privileges assigned to a particular user.
- */
-public class DatabasePermissions {
+    private String name;
 
-    private Map<String, Object> privilegeMap = new HashMap<String, Object>();
+    private String value;
 
-    public Object getPermission(String permissionName) {
-         return this.privilegeMap.get(permissionName);
+    public DatabasePrivilege(String name, String value) {
+        this.name = name;
+        this.value = value;
     }
 
-    public void setPermission(String permissionName, Object value) {
-         this.privilegeMap.put(permissionName, value);
+    public DatabasePrivilege() {
+
     }
 
-    public Map<String, Object> getPrivilegeMap() {
-        return privilegeMap;
+    public String getName() {
+        return name;
+    }
+
+    public void setName(String name) {
+        this.name = name;
+    }
+
+    public String getValue() {
+        return value;
+    }
+
+    public void setValue(String value) {
+        this.value = value;
     }
 
 }

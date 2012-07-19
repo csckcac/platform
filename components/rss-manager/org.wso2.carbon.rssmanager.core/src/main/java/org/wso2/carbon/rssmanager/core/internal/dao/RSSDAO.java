@@ -19,7 +19,7 @@
 package org.wso2.carbon.rssmanager.core.internal.dao;
 
 import org.wso2.carbon.rssmanager.core.RSSManagerException;
-import org.wso2.carbon.rssmanager.core.internal.entity.*;
+import org.wso2.carbon.rssmanager.core.internal.dao.entity.*;
 
 import java.util.List;
 import java.util.Map;

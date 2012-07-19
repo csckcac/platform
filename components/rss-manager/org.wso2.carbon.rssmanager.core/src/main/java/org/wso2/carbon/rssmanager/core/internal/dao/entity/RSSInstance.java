@@ -16,7 +16,7 @@
  *  under the License.
  *
  */
-package org.wso2.carbon.rssmanager.core.internal.entity;
+package org.wso2.carbon.rssmanager.core.internal.dao.entity;
 
 import org.wso2.carbon.ndatasource.rdbms.RDBMSConfiguration;
 import org.wso2.carbon.rssmanager.common.RSSManagerCommonUtil;

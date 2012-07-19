@@ -16,42 +16,30 @@
  *  under the License.
  *
  */
-package org.wso2.carbon.rssmanager.core.internal.entity;
+package org.wso2.carbon.rssmanager.core.internal.dao.entity;
 
-public class DatabaseMetaData {
+public class DatabaseUserMetaData {
 
-    private String name;
+    private String username;
 
-    private String url;
+    private String tenantDomain;
 
     private String rssInstanceName;
 
-    private String rssTenantDomain;
-
-    public DatabaseMetaData(String name, String url, String rssInstanceName,
-                            String rssTenantDomain) {
-        this.name = name;
-        this.url = url;
+    public DatabaseUserMetaData(String username, String rssInstanceName, String tenantDomain) {
+        this.username = username;
         this.rssInstanceName = rssInstanceName;
-        this.rssTenantDomain = rssTenantDomain;
+        this.tenantDomain = tenantDomain;
     }
 
-    public DatabaseMetaData() {}
+    public DatabaseUserMetaData() {}
 
-    public String getName() {
-        return name;
+    public String getUsername() {
+        return username;
     }
 
-    public void setName(String name) {
-        this.name = name;
-    }
-
-    public String getUrl() {
-        return url;
-    }
-
-    public void setUrl(String url) {
-        this.url = url;
+    public void setUsername(String username) {
+        this.username = username;
     }
 
     public String getRssInstanceName() {
@@ -62,12 +50,11 @@ public class DatabaseMetaData {
         this.rssInstanceName = rssInstanceName;
     }
 
-    public String getRssTenantDomain() {
-        return rssTenantDomain;
+    public String getTenantDomain() {
+        return tenantDomain;
     }
 
-    public void setRssTenantDomain(String rssTenantDomain) {
-        this.rssTenantDomain = rssTenantDomain;
+    public void setTenantDomain(String tenantDomain) {
+        this.tenantDomain = tenantDomain;
     }
-
 }

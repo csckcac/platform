@@ -22,10 +22,10 @@ import org.apache.commons.collections.keyvalue.MultiKey;
 import org.wso2.carbon.rssmanager.core.RSSManagerException;
 import org.wso2.carbon.rssmanager.core.internal.dao.RSSDAO;
 import org.wso2.carbon.rssmanager.core.internal.dao.RSSDAOFactory;
-import org.wso2.carbon.rssmanager.core.internal.entity.Database;
-import org.wso2.carbon.rssmanager.core.internal.entity.DatabasePrivilegeTemplate;
-import org.wso2.carbon.rssmanager.core.internal.entity.DatabaseUser;
-import org.wso2.carbon.rssmanager.core.internal.entity.RSSInstance;
+import org.wso2.carbon.rssmanager.core.internal.dao.entity.Database;
+import org.wso2.carbon.rssmanager.core.internal.dao.entity.DatabasePrivilegeTemplate;
+import org.wso2.carbon.rssmanager.core.internal.dao.entity.DatabaseUser;
+import org.wso2.carbon.rssmanager.core.internal.dao.entity.RSSInstance;
 
 import java.util.HashMap;
 import java.util.Map;

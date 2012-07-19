@@ -16,7 +16,7 @@
  *  under the License.
  *
  */
-package org.wso2.carbon.rssmanager.core.internal.entity;
+package org.wso2.carbon.rssmanager.core.internal.dao.entity;
 
 import java.util.HashMap;
 import java.util.Map;

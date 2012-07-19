@@ -1,11 +1,10 @@
 package org.wso2.carbon.rssmanager.core.internal.manager;
 
 import org.apache.tomcat.jdbc.pool.DataSource;
-import org.wso2.carbon.rssmanager.common.RSSManagerConstants;
 import org.wso2.carbon.rssmanager.core.RSSManagerException;
 import org.wso2.carbon.rssmanager.core.internal.dao.RSSDAO;
 import org.wso2.carbon.rssmanager.core.internal.dao.RSSDAOFactory;
-import org.wso2.carbon.rssmanager.core.internal.entity.*;
+import org.wso2.carbon.rssmanager.core.internal.dao.entity.*;
 import org.wso2.carbon.rssmanager.core.internal.util.RSSManagerUtil;
 import org.wso2.carbon.utils.multitenancy.CarbonContextHolder;
 
@@ -227,5 +226,6 @@ public abstract class RSSManager {
         }
         return availableUsers;
     }
+    
     
 }

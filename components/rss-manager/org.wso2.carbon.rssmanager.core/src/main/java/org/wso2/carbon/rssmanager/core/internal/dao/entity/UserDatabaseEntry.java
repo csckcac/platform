@@ -16,29 +16,30 @@
  *  under the License.
  *
  */
-package org.wso2.carbon.rssmanager.core.internal.entity;
+package org.wso2.carbon.rssmanager.core.internal.dao.entity;
+
+import java.util.HashMap;
+import java.util.Map;
 
 /**
- * Class to represent a database user.
+ * Class to represent a many-to-many mappings of user's permissions to a specific database.
  */
-public class DatabaseUser {
+public class UserDatabaseEntry {
 
 	private String username;
-
-	private String password;
 	
-	private String rssInstanceName;
+	private String databaseName;
 
-    private int tenantId;
+    private String rssInstanceName;
 
-	public DatabaseUser(String username, String password, String rssInstanceName, int tenantId) {
+	private Map<String, Object> permissions;
+	
+	public UserDatabaseEntry(String username, String databaseName, String rssInstanceName) {
 		this.username = username;
-		this.password = password;
-		this.rssInstanceName = rssInstanceName;
-        this.tenantId = tenantId;
+		this.databaseName = databaseName;
+        this.rssInstanceName = rssInstanceName;
+		this.permissions = new HashMap<String, Object>();
 	}
-
-    public DatabaseUser() {}
 
     public String getUsername() {
         return username;
@@ -48,13 +49,21 @@ public class DatabaseUser {
         this.username = username;
     }
 
-    public String getPassword() {
-        return password;
+    public String getDatabaseName() {
+        return databaseName;
     }
 
-    public void setPassword(String password) {
-        this.password = password;
+    public void setDatabaseName(String databaseName) {
+        this.databaseName = databaseName;
     }
+
+    public Map<String, Object> getPermissions() {
+		return permissions;
+	}
+
+	public void setPermissions(Map<String, Object> permissions) {
+		this.permissions = permissions;
+	}
 
     public String getRssInstanceName() {
         return rssInstanceName;
@@ -64,11 +73,4 @@ public class DatabaseUser {
         this.rssInstanceName = rssInstanceName;
     }
 
-    public int getTenantId() {
-        return tenantId;
-    }
-
-    public void setTenantId(int tenantId) {
-        this.tenantId = tenantId;
-    }
 }

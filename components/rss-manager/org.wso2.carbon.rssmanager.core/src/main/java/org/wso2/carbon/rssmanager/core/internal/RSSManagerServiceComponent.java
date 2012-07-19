@@ -28,7 +28,7 @@ import org.wso2.carbon.ndatasource.core.DataSourceService;
 import org.wso2.carbon.rssmanager.core.RSSManagerException;
 import org.wso2.carbon.rssmanager.core.internal.dao.RSSDAO;
 import org.wso2.carbon.rssmanager.core.internal.dao.RSSDAOFactory;
-import org.wso2.carbon.rssmanager.core.internal.entity.RSSInstance;
+import org.wso2.carbon.rssmanager.core.internal.dao.entity.RSSInstance;
 import org.wso2.carbon.rssmanager.core.internal.manager.RSSMetaDataRepository;
 import org.wso2.carbon.rssmanager.core.internal.util.RSSConfig;
 import org.wso2.carbon.user.core.service.RealmService;

@@ -78,6 +78,10 @@
 
     boolean fromApiDataSourceView = session.getAttribute("fromApiDataSourceView") != null;
     session.removeAttribute("fromApiDataSourceView");
+
+    //clear resource, which added from sequence editor
+    session.removeAttribute("resource");
+
     String apiName = "";
     String apiContext = "";
     String filename = "";

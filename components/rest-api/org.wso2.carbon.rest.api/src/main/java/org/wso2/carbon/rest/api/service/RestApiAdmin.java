@@ -306,7 +306,7 @@ public class RestApiAdmin extends AbstractServiceBusAdmin{
             OMAttribute attrb = attributes.next();
             seq.addAttribute(attrb.getLocalName(), attrb.getAttributeValue(), nullNS);
         }
-        Iterator<OMElement> children = sequenceElem.getChildren();
+        Iterator<OMElement> children = sequenceElem.getChildElements();
         for (; children.hasNext(); ) {
             OMElement child = children.next();
             seq.addChild(child);

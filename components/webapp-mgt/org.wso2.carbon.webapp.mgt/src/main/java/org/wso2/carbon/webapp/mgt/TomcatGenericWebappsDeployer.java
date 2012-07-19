@@ -24,7 +24,9 @@ import org.apache.commons.logging.Log;
 import org.apache.commons.logging.LogFactory;
 import org.wso2.carbon.CarbonConstants;
 import org.wso2.carbon.CarbonException;
+import org.wso2.carbon.context.ApplicationContext;
 import org.wso2.carbon.core.session.CarbonTomcatClusterableSessionManager;
+import org.wso2.carbon.tomcat.api.CarbonTomcatService;
 import org.wso2.carbon.utils.multitenancy.CarbonApplicationContextHolder;
 import org.wso2.carbon.utils.multitenancy.CarbonContextHolder;
 
@@ -56,8 +58,8 @@ public class TomcatGenericWebappsDeployer {
      * Constructor
      *
      * @param webContextPrefix The Web context prefix
-     * @param tenantId The tenant ID of the tenant to whom this deployer belongs to
-     * @param tenantDomain  The tenant domain of the tenant to whom this deployer belongs to
+     * @param tenantId         The tenant ID of the tenant to whom this deployer belongs to
+     * @param tenantDomain     The tenant domain of the tenant to whom this deployer belongs to
      * @param webappsHolder    WebApplicationsHolder
      */
     public TomcatGenericWebappsDeployer(String webContextPrefix,
@@ -79,8 +81,8 @@ public class TomcatGenericWebappsDeployer {
     /**
      * Deploy webapps
      *
-     * @param webappFile The webapp file to be deployed
-     * @param webContextParams  context-params for this webapp
+     * @param webappFile                The webapp file to be deployed
+     * @param webContextParams          context-params for this webapp
      * @param applicationEventListeners Application event listeners
      * @throws CarbonException If a deployment error occurs
      */
@@ -98,9 +100,9 @@ public class TomcatGenericWebappsDeployer {
         try {
             currentCarbonContextHolder.setTenantId(tenantId);
             currentCarbonContextHolder.setTenantDomain(tenantDomain);
-            if(webappFile.isDirectory()) {
+            if (webappFile.isDirectory()) {
                 currentCarbonAppContextHolder.setApplicationName(webappName);
-            } else if(webappName.contains(".war") || webappName.contains(".zip")) {
+            } else if (webappName.contains(".war") || webappName.contains(".zip")) {
                 //removing extension to get app name for .war and .zip
                 currentCarbonAppContextHolder.setApplicationName(webappName.substring(0, webappName.indexOf(".war")));
             }
@@ -129,27 +131,27 @@ public class TomcatGenericWebappsDeployer {
     /**
      * Hot deploy a webapp. i.e., deploy a webapp that has newly become available.
      *
-     * @param webapp The webapp WAR or directory that needs to be deployed
-     * @param webContextParams ServletContext params for this webapp
+     * @param webapp                    The webapp WAR or directory that needs to be deployed
+     * @param webContextParams          ServletContext params for this webapp
      * @param applicationEventListeners Application event listeners
      * @throws CarbonException If an error occurs during deployment
      */
     protected void handleHotDeployment(File webapp, List<WebContextParameter> webContextParams,
-                                     List<Object> applicationEventListeners)
+                                       List<Object> applicationEventListeners)
             throws CarbonException {
         String filename = webapp.getName();
         if (webapp.isDirectory()) {
-            if(webapp.list().length == 0){
-                if(log.isDebugEnabled()) {
-                    log.debug("Omitting to deploy empty directory " +  webapp.getName() + " as a " +
-                              "webapp");
+            if (webapp.list().length == 0) {
+                if (log.isDebugEnabled()) {
+                    log.debug("Omitting to deploy empty directory " + webapp.getName() + " as a " +
+                            "webapp");
                 }
                 return;
             }
             handleExplodedWebappDeployment(webapp, webContextParams, applicationEventListeners);
         } else if (filename.endsWith(".war")) {
             handleWarWebappDeployment(webapp, webContextParams, applicationEventListeners);
-        } else if(filename.endsWith(".zip")) {
+        } else if (filename.endsWith(".zip")) {
             handleZipWebappDeployment(webapp, webContextParams, applicationEventListeners);
         }
     }
@@ -157,14 +159,14 @@ public class TomcatGenericWebappsDeployer {
     /**
      * Handle the deployment of a an archive webapp. i.e., a WAR
      *
-     * @param webappWAR The WAR webapp file
-     * @param webContextParams ServletContext params for this webapp
+     * @param webappWAR                 The WAR webapp file
+     * @param webContextParams          ServletContext params for this webapp
      * @param applicationEventListeners Application event listeners
      * @throws CarbonException If a deployment error occurs
      */
     protected void handleWarWebappDeployment(File webappWAR,
-                                           List<WebContextParameter> webContextParams,
-                                           List<Object> applicationEventListeners)
+                                             List<WebContextParameter> webContextParams,
+                                             List<Object> applicationEventListeners)
             throws CarbonException {
         String filename = webappWAR.getName();
         String warContext = "";
@@ -183,8 +185,8 @@ public class TomcatGenericWebappsDeployer {
     }
 
     protected void handleZipWebappDeployment(File webapp,
-                                               List<WebContextParameter> webContextParams,
-                                               List<Object> applicationEventListeners)
+                                             List<WebContextParameter> webContextParams,
+                                             List<Object> applicationEventListeners)
             throws CarbonException {
 
     }
@@ -193,14 +195,14 @@ public class TomcatGenericWebappsDeployer {
      * Handle the deployment of a an exploded webapp. i.e., a webapp deployed as a directory
      * & not an archive
      *
-     * @param webappDir The exploded webapp directory
-     * @param webContextParams ServletContext params for this webapp
+     * @param webappDir                 The exploded webapp directory
+     * @param webContextParams          ServletContext params for this webapp
      * @param applicationEventListeners Application event listeners
      * @throws CarbonException If a deployment error occurs
      */
     protected void handleExplodedWebappDeployment(File webappDir,
-                                                List<WebContextParameter> webContextParams,
-                                                List<Object> applicationEventListeners)
+                                                  List<WebContextParameter> webContextParams,
+                                                  List<Object> applicationEventListeners)
             throws CarbonException {
         String filename = webappDir.getName();
         String warContext = "";
@@ -215,12 +217,12 @@ public class TomcatGenericWebappsDeployer {
             webContextPrefix = "/";
         }
         handleWebappDeployment(webappDir, webContextPrefix + warContext,
-                                webContextParams, applicationEventListeners);
+                webContextParams, applicationEventListeners);
     }
 
     protected void handleWebappDeployment(File webappFile, String contextStr,
-                                        List<WebContextParameter> webContextParams,
-                                        List<Object> applicationEventListeners) throws CarbonException {
+                                          List<WebContextParameter> webContextParams,
+                                          List<Object> applicationEventListeners) throws CarbonException {
         String filename = webappFile.getName();
         try {
             Context context =
@@ -229,22 +231,24 @@ public class TomcatGenericWebappsDeployer {
             if (DataHolder.getHotUpdateService() != null) {
                 List<String> hostNames = DataHolder.getHotUpdateService().getMappigsPerWebapp(contextStr);
                 for (String hostName : hostNames) {
-                    Host host = (Host) DataHolder.getCarbonTomcatService().
-                            getTomcat().getEngine().findChild(hostName);
+                    CarbonTomcatService carbonTomcatService = DataHolder.getCarbonTomcatService();
+                    Host host = DataHolder.getHotUpdateService().addHost(hostName);
+                    ApplicationContext.getCurrentApplicationContext().putUrlMappingForApplication(hostName, contextStr);
                     Context contextForHost =
                             DataHolder.getCarbonTomcatService().addWebApp(host, "/", webappFile.getAbsolutePath());
+                    log.info("Deployed webapp on host: " + contextForHost);
                 }
             }
             if (context.getDistributable() &&
-                (DataHolder.getCarbonTomcatService().getTomcat().
-                        getService().getContainer().getCluster()) != null) {
+                    (DataHolder.getCarbonTomcatService().getTomcat().
+                            getService().getContainer().getCluster()) != null) {
                 // Using clusterable manager
                 CarbonTomcatClusterableSessionManager sessionManager =
                         new CarbonTomcatClusterableSessionManager(tenantId);
                 context.setManager(sessionManager);
                 sessionManagerMap.put(context.getName(), sessionManager);
                 configurationContext.setProperty(CarbonConstants.TOMCAT_SESSION_MANAGER_MAP,
-                                                 sessionManagerMap);
+                        sessionManagerMap);
             } else {
                 context.setManager(new CarbonTomcatSessionManager(tenantId));
             }
@@ -296,14 +300,14 @@ public class TomcatGenericWebappsDeployer {
      * Hot update an existing webapp. i.e., reload or redeploy a webapp archive which has been
      * updated
      *
-     * @param webApplication The webapp which needs to be hot updated
-     * @param webContextParams ServletContext params for this webapp
+     * @param webApplication            The webapp which needs to be hot updated
+     * @param webContextParams          ServletContext params for this webapp
      * @param applicationEventListeners Application event listeners
      * @throws CarbonException If a deployment error occurs
      */
     protected void handleHotUpdate(WebApplication webApplication,
-                                 List<WebContextParameter> webContextParams,
-                                 List<Object> applicationEventListeners) throws CarbonException {
+                                   List<WebContextParameter> webContextParams,
+                                   List<Object> applicationEventListeners) throws CarbonException {
         File webappFile = webApplication.getWebappFile();
         if (webappFile.isDirectory()) {  // webapp deployed as an exploded directory
             webApplication.reload();

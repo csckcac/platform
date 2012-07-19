@@ -18,6 +18,7 @@ package org.wso2.carbon.webapp.mgt;
 import org.apache.axis2.context.ConfigurationContext;
 import org.apache.commons.logging.Log;
 import org.apache.commons.logging.LogFactory;
+import org.wso2.carbon.context.ApplicationContext;
 import org.wso2.carbon.core.multitenancy.utils.TenantAxisUtils;
 import org.wso2.carbon.tomcat.ext.valves.CarbonTomcatValve;
 import org.wso2.carbon.user.core.tenant.TenantManager;
@@ -36,6 +37,16 @@ public class TenantLazyLoaderValve implements CarbonTomcatValve {
 
     public void invoke(HttpServletRequest request, HttpServletResponse response) {
         String requestURI = request.getRequestURI();
+        //getting actual uri when accessing a virtual host through url mapping
+        String uriOfVirtualHost = ApplicationContext.getCurrentApplicationContext().
+                getApplicationFromUrlMapping(request.getServerName());
+        if (uriOfVirtualHost == null) {
+            uriOfVirtualHost = DataHolder.getHotUpdateService().getWebappForHost(request.getServerName());
+        }
+        if (uriOfVirtualHost != null && !uriOfVirtualHost.contains("services")) {
+            requestURI = uriOfVirtualHost;
+        }
+
         String domain = MultitenantUtils.getTenantDomainFromRequestURL(requestURI);
         if (domain == null || domain.trim().length() == 0) {
             return;
@@ -43,7 +54,6 @@ public class TenantLazyLoaderValve implements CarbonTomcatValve {
         if (requestURI.indexOf("/" + WebappsConstants.WEBAPP_PREFIX + "/") == -1) {
             return;
         }
-
         //check whether the tenant exists. If not, return. This will end up
         //by showing a 404 in the browser
         try {
@@ -72,7 +82,7 @@ public class TenantLazyLoaderValve implements CarbonTomcatValve {
                 }
             } catch (Exception e) {
                 String msg = "Cannot redirect tenant request to " + requestURI +
-                             " for tenant " + domain;
+                        " for tenant " + domain;
                 log.error(msg, e);
                 throw new RuntimeException(msg, e);
             }
@@ -85,7 +95,7 @@ public class TenantLazyLoaderValve implements CarbonTomcatValve {
         ClassLoader tccl = Thread.currentThread().getContextClassLoader();
         try {
             Thread.currentThread().setContextClassLoader(TenantLazyLoaderValve.
-                                                                 class.getClassLoader());
+                    class.getClassLoader());
             TenantAxisUtils.setTenantAccessed(domain, serverConfigCtx);
         } finally {
             Thread.currentThread().setContextClassLoader(tccl);

@@ -19,6 +19,7 @@ import org.apache.catalina.*;
 import org.apache.commons.logging.Log;
 import org.apache.commons.logging.LogFactory;
 import org.wso2.carbon.CarbonException;
+import org.wso2.carbon.context.ApplicationContext;
 import org.wso2.carbon.utils.FileManipulator;
 import org.wso2.carbon.webapp.mgt.utils.GhostWebappDeployerUtils;
 
@@ -210,6 +211,8 @@ public class WebApplication {
      * @throws CarbonException If an error occurs while lazy unloading
      */
     public void lazyUnload() throws CarbonException {
+        //lozyunload the context of Host
+        handleHotUpdateToHost("lazyUnload");
         //lazyunload the context of WebApplication
         lazyUnload(this.context);
     }
@@ -244,9 +247,7 @@ public class WebApplication {
      */
     public void undeploy() throws CarbonException {
         //lazyunload the context of WebApplication
-        lazyUnload(this.context);
-        //lozyunload the context of Host
-        handleHotUpdateToHost("lazyUnload");
+        lazyUnload();
         File webappDir;
         if (webappFile.getAbsolutePath().endsWith(".war")) {
             String filePath = webappFile.getAbsolutePath();
@@ -257,7 +258,7 @@ public class WebApplication {
         // Delete the exploded dir of war based webapps upon undeploy. But omit deleting
         // directory based webapps.
         if (TomcatUtil.checkUnpackWars() && webappDir.exists() && !webappFile.isDirectory() &&
-            !FileManipulator.deleteDir(webappDir)) {
+                !FileManipulator.deleteDir(webappDir)) {
             throw new CarbonException("exploded Webapp directory " + webappDir + " deletion failed");
         }
 
@@ -267,31 +268,32 @@ public class WebApplication {
      * Doing the start, stop, reload and lazy unload of webapps inside all hosts
      * respectively when getting request.
      *
-     * @param nameOfOperation  the operation to be performed in oder to hot update the host
+     * @param nameOfOperation the operation to be performed in oder to hot update the host
      * @throws CarbonException if errors occurs when hot update the host
      */
     private void handleHotUpdateToHost(String nameOfOperation) throws CarbonException {
         if (DataHolder.getHotUpdateService() != null) {
-            Container[] containers = DataHolder.getCarbonTomcatService().getTomcat().getEngine().findChildren();
+            List<String> mappings = ApplicationContext.getCurrentApplicationContext().
+                    getUrlMappingsPerApplication(this.context.getName());
+            Engine engine = DataHolder.getCarbonTomcatService().getTomcat().getEngine();
             Context hostContext;
-            for (Container container : containers) {
-                if(!(container.getName().equalsIgnoreCase("localhost"))) {
-                    hostContext = (Context) container.findChild("/");
-                    if (nameOfOperation.equalsIgnoreCase("start")) {
-                        start(hostContext);
-                    } else if (nameOfOperation.equalsIgnoreCase("stop")) {
-                        stop(hostContext);
-                    } else if (nameOfOperation.equalsIgnoreCase("reload")) {
-                        reload(hostContext);
-                    } else if (nameOfOperation.equalsIgnoreCase("lazyunload")) {
-                        lazyUnload(hostContext);
-                        //TODO delete the directory
-                    }
+            for (String hostName : mappings) {
+                hostContext = (Context) engine.findChild(hostName).findChild("/");
+                if (nameOfOperation.equalsIgnoreCase("start")) {
+                    start(hostContext);
+                } else if (nameOfOperation.equalsIgnoreCase("stop")) {
+                    stop(hostContext);
+                } else if (nameOfOperation.equalsIgnoreCase("reload")) {
+                    reload(hostContext);
+                } else if (nameOfOperation.equalsIgnoreCase("lazyunload")) {
+                    lazyUnload(hostContext);
+                    DataHolder.getHotUpdateService().removeHost(hostName);
+                } else if (nameOfOperation.equalsIgnoreCase("delete")) {
+                    DataHolder.getHotUpdateService().deleteHost(hostName);
                 }
-
             }
-        }
 
+        }
     }
 
     /**
@@ -301,9 +303,10 @@ public class WebApplication {
      */
     public void delete() throws CarbonException {
         undeploy();
+        handleHotUpdateToHost("delete");
         if (webappFile.isFile() && !webappFile.delete()) {
             throw new CarbonException("Webapp file " + webappFile + " deletion failed");
-        } else if(webappFile.isDirectory() && !FileManipulator.deleteDir(webappFile)) {
+        } else if (webappFile.isDirectory() && !FileManipulator.deleteDir(webappFile)) {
             throw new CarbonException("Webapp Directory " + webappFile + " deletion failed");
         }
     }
@@ -371,6 +374,7 @@ public class WebApplication {
 
     /**
      * Given a context path, get the config file name.
+     *
      * @param path
      */
     private String getDocBase(String path) {

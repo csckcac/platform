@@ -15,6 +15,7 @@
  */
 package org.wso2.carbon.url.mapper.internal;
 
+import org.apache.catalina.Host;
 import org.apache.commons.logging.Log;
 import org.apache.commons.logging.LogFactory;
 import org.wso2.carbon.url.mapper.HotUpdateService;
@@ -40,14 +41,32 @@ public class HotUpdateManager implements HotUpdateService {
         return null;
     }
 
-    public void deleteHost(String webappName) {
+    public void deleteHost(String hostName) {
         try {
-            List<String> hostNames = HostUtil.getMappingsPerWebApp(webappName);
-            for (String hostName : hostNames) {
-                HostUtil.removeHost(hostName);
-            }
+            HostUtil.deleteResourceToRegistry(hostName);
         } catch (UrlMapperException e) {
-            log.error("error while removing host for " + webappName, e);
+            log.error("error while deleting host for " + hostName, e);
+        }
+    }
+
+    public Host addHost(String hostName) {
+        return HostUtil.addHostToEngine(hostName);
+    }
+
+    public String getWebappForHost(String hostName) {
+        try {
+            return HostUtil.getWebappForHost(hostName);
+        } catch (UrlMapperException e) {
+            log.error("error while getting webapp for host", e);
+        }
+        return null;
+    }
+
+    public void removeHost(String hostName) {
+        try {
+            HostUtil.removeHost(hostName);
+        } catch (UrlMapperException e) {
+            log.error("error while removing host for " + hostName, e);
         }
     }
 }

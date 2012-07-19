@@ -67,7 +67,7 @@ public class HostUtil {
                 }
             }
             return hostNames;
-            
+
         } catch (Exception e) {
             log.error("Failed to get url mappings for the webapp ", e);
             throw new UrlMapperException("Failed to get url mappings for the webapp " + webAppName,
@@ -183,6 +183,23 @@ public class HostUtil {
         }
     }
 
+    /**
+     * retrieving host for a specific service
+     *
+     * @param hostName name of the host
+     * @return
+     * @throws UrlMapperException
+     */
+    public static String getWebappForHost(String hostName) throws UrlMapperException {
+        try {
+            return registryManager.getWebAppNameForHost(hostName);
+        } catch (Exception e) {
+            log.error("Failed to retrieve the servicename from the host " + hostName, e);
+            throw new UrlMapperException("Failed to retrieve the servicename from the host "
+                    + hostName, e);
+        }
+    }
+
     public static int getTenantIdForHost(String hostName) throws UrlMapperException {
         int tenantId;
         try {
@@ -190,13 +207,13 @@ public class HostUtil {
             String tenantDomain = registryManager.getTenantDomainForHost(hostName);
             TenantManager tenantManager = DataHolder.getInstance().getRealmService()
                     .getTenantManager();
-                try {
-                    tenantId = tenantManager.getTenantId(tenantDomain);
-                } catch (UserStoreException e) {
-                    log.error("error in getting tenant id when adding host to tomcat engine", e);
-                    throw new UrlMapperException(
-                            "error in getting tenant id when adding host to tomcat engine");
-                }
+            try {
+                tenantId = tenantManager.getTenantId(tenantDomain);
+            } catch (UserStoreException e) {
+                log.error("error in getting tenant id when adding host to tomcat engine", e);
+                throw new UrlMapperException(
+                        "error in getting tenant id when adding host to tomcat engine");
+            }
         } catch (Exception e) {
             log.error("Failed to retrieve the tenant domain from the host " + hostName, e);
             throw new UrlMapperException("Failed to retrieve the tenant domain from the host "
@@ -204,6 +221,7 @@ public class HostUtil {
         }
         return tenantId;
     }
+
     /**
      * It is taken the webApp which is already deployed in
      * /repository/../webapps and redeploy it within added virtual host.
@@ -232,7 +250,7 @@ public class HostUtil {
                             "error in getting tenant id when adding host to tomcat engine");
                 }
                 // getting the web app .war file name from the uri
-                
+
                 // path of web app for the tenant in the server
                 webAppsDir = CarbonUtils.getCarbonTenantsDirPath() + "/" + tenantId + "/"
                         + UrlMapperConstants.HostProperties.WEB_APPS + "/";
@@ -246,7 +264,7 @@ public class HostUtil {
 
             }
         }
-        Host host = addHostToEngine(hostName, webAppsDir);
+        Host host = addHostToEngine(hostName);
         try {
 
             // deploying the copied webapp as the root in our own host directory
@@ -255,20 +273,20 @@ public class HostUtil {
             log.info("Deployed webapp on host: " + contextForHost);
             // add entry to registry with the tenant domain if exist in the uri if adding virtual host is successful.
             registryManager.addHostToRegistry(hostName, uri, tenantDomain);
-            ApplicationContext.getCurrentApplicationContext().putUrlMappingForApplication(hostName,uri);
+            ApplicationContext.getCurrentApplicationContext().putUrlMappingForApplication(hostName, uri);
         } catch (Exception e) {
             log.error("error in adding the virtual host to tomcat engine", e);
             throw new UrlMapperException("error in adding the virtual host to tomcat engine");
         }
     }
-    
+
     public static String getWebappPath(String webappsDir, String uri) {
         String webAppFile;
         String webAppPath;
         webAppFile = getContextFromUri(uri) + UrlMapperConstants.HostProperties.WAR;
         webAppPath = webappsDir + webAppFile;
         File warFile = new File(webAppPath);
-        if(warFile.exists()) {
+        if (warFile.exists()) {
             //it is war
             return webAppPath;
         } else {
@@ -283,8 +301,8 @@ public class HostUtil {
      * @param hostName name of the host
      * @return will return the added host of Engine
      */
-    public static Host addHostToEngine(String hostName, String appBase) {
-        String hostBaseDir = appBase;
+    public static Host addHostToEngine(String hostName) {
+        String hostBaseDir = CarbonUtils.getCarbonRepository() + "/" + UrlMapperConstants.HostProperties.WEB_APPS + "/";
         CarbonTomcatService carbonTomcatService = DataHolder.getInstance().getCarbonTomcatService();
         // adding virtual host to tomcat engine
         Engine engine = carbonTomcatService.getTomcat().getEngine();
@@ -327,6 +345,7 @@ public class HostUtil {
     public static void editHostInEngine(String webAppName, String newHost, String oldHost)
             throws UrlMapperException {
         removeHost(oldHost);
+        deleteResourceToRegistry(oldHost);
         addWebAppToHost(newHost, webAppName);
     }
 
@@ -359,8 +378,7 @@ public class HostUtil {
                         host.stop();
                         host.destroy();
                         engine.removeChild(host);
-                        deleteResourceToRegistry(host.getName());
-                        ApplicationContext.getCurrentApplicationContext().removeUrlMappingMap(host.getName()) ;
+                        ApplicationContext.getCurrentApplicationContext().removeUrlMappingMap(host.getName());
                         log.info("Unloaded host from the engine: " + host);
                         break;
                     }
@@ -374,12 +392,6 @@ public class HostUtil {
         // from tomcat engine the folder with the host name will not get
         // removed.
         deleteHostDirectory(hostName);
-        try {
-            registryManager.removeFromRegistry(hostName);
-        } catch (Exception e) {
-            log.error("error in adding the domain to the resitry", e);
-            throw new UrlMapperException("error in adding the domain to the resitry", e);
-        }
     }
 
     /**
@@ -403,12 +415,13 @@ public class HostUtil {
         try {
             // add entry to registry with the tenant domain if exist in the uri
             registryManager.addEprToRegistry(hostName, url, tenantDomain);
-            ApplicationContext.getCurrentApplicationContext().putUrlMappingForApplication(hostName,url);
+            ApplicationContext.getCurrentApplicationContext().putUrlMappingForApplication(hostName, url);
         } catch (Exception e) {
             log.error("error in adding the domain to the resitry", e);
             throw new UrlMapperException("error in adding the domain to the resitry");
         }
     }
+
     /**
      * update endpoint in the registry for host
      *
@@ -427,8 +440,8 @@ public class HostUtil {
             throw new UrlMapperException("error in updating the domain to the resitry");
         }
     }
-    
-   
+
+
     /**
      * deleting resource in registry when deleting host
      *
@@ -438,7 +451,6 @@ public class HostUtil {
     public static void deleteResourceToRegistry(String host) throws UrlMapperException {
         try {
             registryManager.removeFromRegistry(host);
-            ApplicationContext.getCurrentApplicationContext().removeUrlMappingMap(host) ;
         } catch (Exception e) {
             log.error("error in removing the domain to the resitry", e);
             throw new UrlMapperException("error in updating the domain to the resitry");

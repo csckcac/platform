@@ -28,32 +28,32 @@ import java.util.List;
 /**
  * Backend service to handle virtual host addition to registry and to tomcat.
  */
-public class UrlMapperAdminService extends AbstractAdmin{
+public class UrlMapperAdminService extends AbstractAdmin {
     private static final Log log = LogFactory.getLog(UrlMapperAdminService.class);
 
     public void addWebAppToHost(String hostName, String uri) throws UrlMapperException {
         //TODO have to figure out exception handling
         try {
- 			hostName = hostName + UrlMapperConstants.HostProperties.DOMAIN_NAME_PREFIX;
-			HostUtil.addWebAppToHost(hostName, uri);
+            hostName = hostName + UrlMapperConstants.HostProperties.DOMAIN_NAME_PREFIX;
+            HostUtil.addWebAppToHost(hostName, uri);
         } catch (Exception e) {
             log.error(e);  //To change body of catch statement use File | Settings | File Templates.
             throw new UrlMapperException("Failed to add webapp to host ", e);
         }
     }
 
-    public static  MappingData[]  getAllMappings() throws UrlMapperException{
-    	return HostUtil.getAllMappingsFromRegistry();
+    public static MappingData[] getAllMappings() throws UrlMapperException {
+        return HostUtil.getAllMappingsFromRegistry();
     }
-    
+
     public void addServiceDomain(String hostName, String url) throws UrlMapperException {
-		hostName = hostName + UrlMapperConstants.HostProperties.DOMAIN_NAME_PREFIX;
-		HostUtil.addDomainToServiceEpr(hostName, url);
-	}
+        hostName = hostName + UrlMapperConstants.HostProperties.DOMAIN_NAME_PREFIX;
+        HostUtil.addDomainToServiceEpr(hostName, url);
+    }
 
     public void editServiceDomain(String newHost, String oldhost) throws UrlMapperException {
-		newHost = newHost + UrlMapperConstants.HostProperties.DOMAIN_NAME_PREFIX;
-		HostUtil.updateEprToRegistry(newHost, oldhost);
+        newHost = newHost + UrlMapperConstants.HostProperties.DOMAIN_NAME_PREFIX;
+        HostUtil.updateEprToRegistry(newHost, oldhost);
     }
 
     public void deleteServiceDomain(String hostName) throws UrlMapperException {
@@ -70,14 +70,15 @@ public class UrlMapperAdminService extends AbstractAdmin{
         return domains.toArray(new String[domains.size()]);
     }
 
-    public boolean editHost(String webappName, String newHost, String oldhost ) throws UrlMapperException {
-    	newHost = newHost  + UrlMapperConstants.HostProperties.DOMAIN_NAME_PREFIX;
+    public boolean editHost(String webappName, String newHost, String oldhost) throws UrlMapperException {
+        newHost = newHost + UrlMapperConstants.HostProperties.DOMAIN_NAME_PREFIX;
         HostUtil.editHostInEngine(webappName, newHost, oldhost);
         return true;
     }
 
     public void deleteHost(String hostName) throws UrlMapperException {
         HostUtil.removeHost(hostName);
+        HostUtil.deleteResourceToRegistry(hostName);
     }
 
     public boolean isMappingExist(String mappingName) throws UrlMapperException {

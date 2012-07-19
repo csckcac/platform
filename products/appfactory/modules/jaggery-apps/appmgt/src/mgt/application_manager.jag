@@ -211,7 +211,10 @@
     }
     
     function getAppShortInfo(applicationKey,userName){
-      	var application=getAppInfo(applicationKey);
+      	//var application=getAppInfo(applicationKey);
+      	var application=new Array();
+      	var url = getProperty(SCM_SERVER_URL)+'/svn/'+applicationKey
+      	application.repoLink=url;
         var url = application.repoLink;
         var repository = require("svnClient");
         var svnClient = new repository.SVNClient(url,getProperty(SCM_ADMIN_USER_NAME),getProperty(SCM_ADMIN_PASSWORD));

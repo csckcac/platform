@@ -54,11 +54,11 @@ public class OAuthServerConfiguration {
 
     private static OAuthServerConfiguration instance;
 
-    private long defaultAuthorizationCodeValidityPeriod = 300;
+    private long defaultAuthorizationCodeValidityPeriodInSeconds = 300;
 
-    private long defaultAccessTokenValidityPeriod = 3600;
+    private long defaultAccessTokenValidityPeriodInSeconds = 3600;
 
-    private long defaultTimeStampSkew = 300;
+    private long defaultTimeStampSkewInSeconds = 300;
 
     private Set<OAuthCallbackHandlerMetaData> callbackHandlerMetaData =
             new HashSet<OAuthCallbackHandlerMetaData>();
@@ -84,16 +84,16 @@ public class OAuthServerConfiguration {
         return callbackHandlerMetaData;
     }
 
-    public long getDefaultAuthorizationCodeValidityPeriod() {
-        return defaultAuthorizationCodeValidityPeriod;
+    public long getDefaultAuthorizationCodeValidityPeriodInSeconds() {
+        return defaultAuthorizationCodeValidityPeriodInSeconds;
     }
 
-    public long getDefaultAccessTokenValidityPeriod() {
-        return defaultAccessTokenValidityPeriod;
+    public long getDefaultAccessTokenValidityPeriodInSeconds() {
+        return defaultAccessTokenValidityPeriodInSeconds;
     }
 
-    public long getDefaultTimeStampSkew() {
-        return defaultTimeStampSkew;
+    public long getDefaultTimeStampSkewInSeconds() {
+        return defaultTimeStampSkewInSeconds;
     }
 
     private void buildOAuthServerConfiguration() {
@@ -208,7 +208,7 @@ public class OAuthServerConfiguration {
                 new QName(IdentityConfigParser.IDENTITY_DEFAULT_NAMESPACE,
                         CONFIG_ELEM_AUTHZ_CODE_DEFAULT_TIMEOUT));
         if (authzCodeTimeoutElem != null) {
-            defaultAuthorizationCodeValidityPeriod = Long.parseLong(authzCodeTimeoutElem.getText());
+            defaultAuthorizationCodeValidityPeriodInSeconds = Long.parseLong(authzCodeTimeoutElem.getText());
         }
 
         // set the access token default timeout
@@ -216,14 +216,14 @@ public class OAuthServerConfiguration {
                 new QName(IdentityConfigParser.IDENTITY_DEFAULT_NAMESPACE,
                         CONFIG_ELEM_ACCESS_TOK_DEFAULT_TIMEOUT));
         if (accessTokTimeoutElem != null) {
-            defaultAccessTokenValidityPeriod = Long.parseLong(accessTokTimeoutElem.getText());
+            defaultAccessTokenValidityPeriodInSeconds = Long.parseLong(accessTokTimeoutElem.getText());
         }
 
         OMElement timeStampSkewElem = oauthConfigElem.getFirstChildWithName(
                 new QName(IdentityConfigParser.IDENTITY_DEFAULT_NAMESPACE,
                         CONFIG_ELEM_DEF_TIMESTAMP_SKEW));
         if (timeStampSkewElem != null) {
-            defaultTimeStampSkew = Long.parseLong(timeStampSkewElem.getText());
+            defaultTimeStampSkewInSeconds = Long.parseLong(timeStampSkewElem.getText());
         }
 
         if (log.isDebugEnabled()) {
@@ -240,11 +240,11 @@ public class OAuthServerConfiguration {
                         "in from identity.xml. Continuing with the default value.");
             }
             log.debug("Authorization Code Default Timeout is set to : " +
-                    defaultAuthorizationCodeValidityPeriod + "ms.");
+                    defaultAuthorizationCodeValidityPeriodInSeconds + "ms.");
             log.debug("Access Token Default Timeout is set to " +
-                    defaultAccessTokenValidityPeriod + "ms.");
+                    defaultAccessTokenValidityPeriodInSeconds + "ms.");
             log.debug("Default TimestampSkew is set to " +
-                    defaultTimeStampSkew + "ms.");
+                    defaultTimeStampSkewInSeconds + "ms.");
         }
     }
 }

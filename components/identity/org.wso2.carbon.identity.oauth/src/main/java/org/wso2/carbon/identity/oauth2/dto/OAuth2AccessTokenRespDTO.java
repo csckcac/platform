@@ -26,6 +26,7 @@ public class OAuth2AccessTokenRespDTO {
     boolean error;
     String errorCode;
     String errorMsg;
+    long expiresIn;
 
     public String getTokenType() {
         return tokenType;
@@ -81,5 +82,13 @@ public class OAuth2AccessTokenRespDTO {
 
     public void setErrorMsg(String errorMsg) {
         this.errorMsg = errorMsg;
+    }
+
+    public long getExpiresIn() {
+        return expiresIn;
+    }
+
+    public void setExpiresIn(long expiresIn) {
+        this.expiresIn = expiresIn;
     }
 }

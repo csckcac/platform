@@ -58,7 +58,7 @@ public class CodeResponseTypeHandler extends AbstractAuthorizationHandler {
         Timestamp timestamp = new Timestamp(new Date().getTime());
 
         long validityPeriod = OAuthServerConfiguration.getInstance()
-                .getDefaultAuthorizationCodeValidityPeriod();
+                .getDefaultAuthorizationCodeValidityPeriodInSeconds();
 
         // if a VALID callback is set through the callback handler, use
         // it instead of the default one
@@ -68,6 +68,8 @@ public class CodeResponseTypeHandler extends AbstractAuthorizationHandler {
                 && callbackValidityPeriod > 0) {
             validityPeriod = callbackValidityPeriod;
         }
+
+        validityPeriod = validityPeriod * 1000;
 
         tokenMgtDAO.storeAuthorizationCode(authorizationCode,
                 authorizationReqDTO.getConsumerKey(),

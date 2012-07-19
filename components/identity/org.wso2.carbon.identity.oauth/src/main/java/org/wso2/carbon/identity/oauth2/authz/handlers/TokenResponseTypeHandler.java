@@ -57,7 +57,7 @@ public class TokenResponseTypeHandler extends AbstractAuthorizationHandler {
 
         // Default Validity Period
         long validityPeriod = OAuthServerConfiguration.getInstance()
-                .getDefaultAccessTokenValidityPeriod();
+                .getDefaultAccessTokenValidityPeriodInSeconds();
 
         // if a VALID validity period is set through the callback, then use it
         long callbackValidityPeriod = oauthAuthzMsgCtx.getValidityPeriod();
@@ -83,7 +83,7 @@ public class TokenResponseTypeHandler extends AbstractAuthorizationHandler {
 
         respDTO.setAuthorized(true);
         respDTO.setAccessToken(accessToken);
-        respDTO.setValidityPeriod(validityPeriod);
+        respDTO.setValidityPeriod(validityPeriod/1000);
         return respDTO;
     }
 }

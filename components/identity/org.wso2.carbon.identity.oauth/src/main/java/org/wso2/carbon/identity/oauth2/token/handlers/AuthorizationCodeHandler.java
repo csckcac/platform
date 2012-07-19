@@ -20,9 +20,11 @@ package org.wso2.carbon.identity.oauth2.token.handlers;
 
 import org.apache.commons.logging.Log;
 import org.apache.commons.logging.LogFactory;
+import org.wso2.carbon.identity.oauth.config.OAuthServerConfiguration;
 import org.wso2.carbon.identity.oauth2.IdentityOAuth2Exception;
 import org.wso2.carbon.identity.oauth2.dto.OAuth2AccessTokenReqDTO;
 import org.wso2.carbon.identity.oauth2.dto.OAuth2AccessTokenRespDTO;
+import org.wso2.carbon.identity.oauth2.model.AuthzCodeValidationDataDO;
 import org.wso2.carbon.identity.oauth2.token.OAuthTokenReqMessageContext;
 import org.wso2.carbon.identity.oauth2.util.OAuth2Util;
 
@@ -41,11 +43,11 @@ public class AuthorizationCodeHandler extends AbstractAuthorizationGrantHandler 
     public boolean validateGrant(OAuthTokenReqMessageContext tokReqMsgCtx) throws IdentityOAuth2Exception {
         OAuth2AccessTokenReqDTO oAuth2AccessTokenReqDTO = tokReqMsgCtx.getOauth2AccessTokenReqDTO();
         String authorizationCode = oAuth2AccessTokenReqDTO.getAuthorizationCode();
-        String[] authzData = tokenMgtDAO.validateAuthorizationCode(
-                                                            oAuth2AccessTokenReqDTO.getClientId(),
-                                                            authorizationCode);
-
-        if (authzData[0] == null) {
+        AuthzCodeValidationDataDO validationDataDO = tokenMgtDAO.validateAuthorizationCode(
+                oAuth2AccessTokenReqDTO.getClientId(),
+                authorizationCode);
+        //Check whether it is a valid grant
+        if (validationDataDO.getAuthorizedUser() == null) {
             if (log.isDebugEnabled()) {
                 log.debug("Invalid access token request with " +
                         "Client Id : " + oAuth2AccessTokenReqDTO.getClientId() +
@@ -54,16 +56,34 @@ public class AuthorizationCodeHandler extends AbstractAuthorizationGrantHandler 
             return false;
         }
 
+        // Check whether the grant is expired
+        long issuedTimeInMillis = validationDataDO.getIssuedTime().getTime();
+        long validityPeriodInMillis = validationDataDO.getValidityPeriod();
+        long timestampSkew = OAuthServerConfiguration.getInstance()
+                .getDefaultTimeStampSkewInSeconds() * 1000;
+        long currentTimeInMillis = System.currentTimeMillis();
+
+        if ((currentTimeInMillis + timestampSkew) > (issuedTimeInMillis + validityPeriodInMillis)) {
+            if (log.isDebugEnabled()) {
+                log.debug("Authorization Code : " + authorizationCode + " is expired." +
+                        " Issued Time(ms) : " + issuedTimeInMillis +
+                        ", Validity Period : " + validityPeriodInMillis +
+                        ", Timestamp Skew : " + timestampSkew +
+                        ", Current Time : " + currentTimeInMillis);
+            }
+            return false;
+        }
+
         if (log.isDebugEnabled()) {
             log.debug("Found an Authorization Code, " +
                     "Client : " + oAuth2AccessTokenReqDTO.getClientId() +
                     " , Authorization Code : " + oAuth2AccessTokenReqDTO.getAuthorizationCode() +
-                    ", authorized user : " + authzData[0] +
-                    ", scope : " + authzData[1]);
+                    ", authorized user : " + validationDataDO.getAuthorizedUser() +
+                    ", scope : " + OAuth2Util.buildScopeString(validationDataDO.getScope()));
         }
 
-        tokReqMsgCtx.setAuthorizedUser(authzData[0]);
-        tokReqMsgCtx.setScope(OAuth2Util.buildScopeArray(authzData[1]));
+        tokReqMsgCtx.setAuthorizedUser(validationDataDO.getAuthorizedUser());
+        tokReqMsgCtx.setScope(validationDataDO.getScope());
         return true;
     }
 

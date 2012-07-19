@@ -84,9 +84,9 @@ public abstract class AbstractAuthorizationGrantHandler implements Authorization
 
         Timestamp timestamp = new Timestamp(new Date().getTime());
 
-        // Default Validity Period
+        // Default Validity Period (in seconds)
         long validityPeriod = OAuthServerConfiguration.getInstance()
-                .getDefaultAccessTokenValidityPeriod();
+                .getDefaultAccessTokenValidityPeriodInSeconds();
 
         // if a VALID validity period is set through the callback, then use it
         long callbackValidityPeriod = tokReqMsgCtx.getValidityPeriod();
@@ -94,6 +94,8 @@ public abstract class AbstractAuthorizationGrantHandler implements Authorization
                 && callbackValidityPeriod > 0) {
             validityPeriod = callbackValidityPeriod;
         }
+
+        validityPeriod = validityPeriod * 1000;
 
         String scopeString = OAuth2Util.buildScopeString(tokReqMsgCtx.getScope());
         // store the new token
@@ -113,6 +115,7 @@ public abstract class AbstractAuthorizationGrantHandler implements Authorization
 
         tokenRespDTO.setAccessToken(accessToken);
         tokenRespDTO.setRefreshToken(refreshToken);
+        tokenRespDTO.setExpiresIn(validityPeriod/1000);
         return tokenRespDTO;
     }
 
@@ -124,7 +127,7 @@ public abstract class AbstractAuthorizationGrantHandler implements Authorization
                 OAuthCallback.OAuthCallbackType.ACCESS_DELEGATION_TOKEN);
         authzCallback.setRequestedScope(tokReqMsgCtx.getScope());
         authzCallback.setGrantType(GrantType.valueOf(
-                tokReqMsgCtx.getOauth2AccessTokenReqDTO().getGrantType()));
+                tokReqMsgCtx.getOauth2AccessTokenReqDTO().getGrantType().toUpperCase()));
 
         callbackManager.handleCallback(authzCallback);
         tokReqMsgCtx.setValidityPeriod(authzCallback.getValidityPeriod());
@@ -139,7 +142,7 @@ public abstract class AbstractAuthorizationGrantHandler implements Authorization
                 OAuthCallback.OAuthCallbackType.SCOPE_VALIDATION_TOKEN);
         scopeValidationCallback.setRequestedScope(tokReqMsgCtx.getScope());
         scopeValidationCallback.setGrantType(GrantType.valueOf(
-                tokReqMsgCtx.getOauth2AccessTokenReqDTO().getGrantType()));
+                tokReqMsgCtx.getOauth2AccessTokenReqDTO().getGrantType().toUpperCase()));
 
         callbackManager.handleCallback(scopeValidationCallback);
         tokReqMsgCtx.setValidityPeriod(scopeValidationCallback.getValidityPeriod());

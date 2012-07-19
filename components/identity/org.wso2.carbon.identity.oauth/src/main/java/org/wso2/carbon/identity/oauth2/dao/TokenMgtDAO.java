@@ -24,6 +24,8 @@ import org.wso2.carbon.identity.base.IdentityException;
 import org.wso2.carbon.identity.core.persistence.JDBCPersistenceManager;
 import org.wso2.carbon.identity.core.util.IdentityDatabaseUtil;
 import org.wso2.carbon.identity.oauth2.IdentityOAuth2Exception;
+import org.wso2.carbon.identity.oauth2.model.AuthzCodeValidationDataDO;
+import org.wso2.carbon.identity.oauth2.util.OAuth2Util;
 
 import java.sql.*;
 import java.util.Calendar;
@@ -96,9 +98,8 @@ public class TokenMgtDAO {
         }
     }
 
-    public String[] validateAuthorizationCode(String consumerKey, String authorizationKey) throws IdentityOAuth2Exception {
-        String authorizedUser = null;
-        String scope =  null;
+    public AuthzCodeValidationDataDO validateAuthorizationCode(String consumerKey, String authorizationKey) throws IdentityOAuth2Exception {
+        AuthzCodeValidationDataDO validationDataDO = new AuthzCodeValidationDataDO();
         Connection connection = null;
         PreparedStatement prepStmt = null;
         ResultSet resultSet;
@@ -111,8 +112,11 @@ public class TokenMgtDAO {
             resultSet = prepStmt.executeQuery();
 
             if (resultSet.next()) {
-                authorizedUser = resultSet.getString(1);
-                scope = resultSet.getString(2);
+                validationDataDO.setAuthorizedUser(resultSet.getString(1));
+                validationDataDO.setScope(OAuth2Util.buildScopeArray(resultSet.getString(2)));
+                validationDataDO.setIssuedTime(resultSet.getTimestamp(3,
+                        Calendar.getInstance(TimeZone.getTimeZone("UTC"))));
+                validationDataDO.setValidityPeriod(resultSet.getLong(4));
             }
 
         } catch (IdentityException e) {
@@ -127,7 +131,7 @@ public class TokenMgtDAO {
             IdentityDatabaseUtil.closeAllConnections(connection, null, prepStmt);
         }
 
-        return new String[]{authorizedUser, scope};
+        return validationDataDO;
     }
 
     public void cleanUpAuthzCode(String authzCode) throws IdentityOAuth2Exception {

@@ -26,7 +26,6 @@ import org.wso2.carbon.identity.oauth.internal.OAuthComponentServiceHolder;
 import org.wso2.carbon.identity.oauth2.IdentityOAuth2Exception;
 import org.wso2.carbon.identity.oauth2.dto.OAuth2AccessTokenReqDTO;
 import org.wso2.carbon.identity.oauth2.token.OAuthTokenReqMessageContext;
-import org.wso2.carbon.identity.oauth2.token.handlers.AbstractAuthorizationGrantHandler;
 import org.wso2.carbon.identity.oauth2.util.OAuth2Util;
 import org.wso2.carbon.user.api.UserStoreException;
 import org.wso2.carbon.user.api.UserStoreManager;
@@ -57,8 +56,8 @@ public class PasswordGrantHandler extends AbstractAuthorizationGrantHandler {
             throw new IdentityOAuth2Exception(e.getMessage(), e);
         }
 
-        // tenantId < 0, means an invalid tenant.
-        if(tenantId < 0){
+        // tenantId == -1, means an invalid tenant.
+        if(tenantId == -1){
             if (log.isDebugEnabled()) {
                 log.debug("Token request with Password Grant Type for an invalid tenant : " +
                         MultitenantUtils.getTenantDomain(username));

@@ -119,7 +119,7 @@ public class OAuth2TokenEndpoint {
                         .tokenResponse(HttpServletResponse.SC_OK)
                         .setAccessToken(oauth2AccessTokenResp.getAccessToken())
                         .setRefreshToken(oauth2AccessTokenResp.getRefreshToken())
-                        .setExpiresIn("3600")
+                        .setExpiresIn(Long.toString(oauth2AccessTokenResp.getExpiresIn()))
                         .setTokenType("bearer")
                         .buildJSONMessage();
                 return Response.status(response.getResponseStatus())

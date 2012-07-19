@@ -23,17 +23,17 @@ public class SQLQueries {
             "IDENTITY_OAUTH2_AUTHORIZATION_CODE " +
             "(AUTHORIZATION_CODE, CONSUMER_KEY, SCOPE, AUTHZ_USER, TIME_CREATED, VALIDITY_PERIOD) " +
             "VALUES (?,?,?,?,?,?)";
-    
+
+    public static final String VALIDATE_AUTHZ_CODE = "SELECT AUTHZ_USER, SCOPE, TIME_CREATED, VALIDITY_PERIOD " +
+            "FROM IDENTITY_OAUTH2_AUTHORIZATION_CODE " +
+            "where CONSUMER_KEY = ? " +
+            "AND AUTHORIZATION_CODE = ?";
+
     public static final String STORE_ACCESS_TOKEN = "INSERT INTO " +
             "IDENTITY_OAUTH2_ACCESS_TOKEN " +
             "(ACCESS_TOKEN, REFRESH_TOKEN, CONSUMER_KEY, AUTHZ_USER, TIME_CREATED, " +
             "VALIDITY_PERIOD, TOKEN_SCOPE, TOKEN_STATE) " +
             "VALUES (?,?,?,?,?,?,?,?)";
-
-    public static final String VALIDATE_AUTHZ_CODE = "SELECT AUTHZ_USER, SCOPE " +
-            "FROM IDENTITY_OAUTH2_AUTHORIZATION_CODE " +
-            "where CONSUMER_KEY = ? " +
-            "AND AUTHORIZATION_CODE = ?";
 
     public static final String REMOVE_AUTHZ_CODE = "DELETE " +
             "FROM IDENTITY_OAUTH2_AUTHORIZATION_CODE " +

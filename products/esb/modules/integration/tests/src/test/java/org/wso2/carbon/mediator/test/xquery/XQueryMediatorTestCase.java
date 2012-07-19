@@ -19,12 +19,19 @@ package org.wso2.carbon.mediator.test.xquery;
 
 import org.apache.axiom.om.OMElement;
 import org.apache.axis2.AxisFault;
+import org.testng.annotations.AfterClass;
+import org.testng.annotations.BeforeClass;
 import org.testng.annotations.Test;
 import org.wso2.carbon.mediator.test.ESBMediatorTest;
 
 import static org.testng.Assert.assertTrue;
 
 public class XQueryMediatorTestCase extends ESBMediatorTest {
+    @BeforeClass(alwaysRun = true)
+    public void uploadSynapseConfig() throws Exception {
+        super.init();
+        loadSampleESBConfiguration(390);
+    }
 
 
     @Test(groups = {"wso2.esb"}, description = "Sample 390:  Introduction to the XQuery mediator")
@@ -41,8 +48,8 @@ public class XQueryMediatorTestCase extends ESBMediatorTest {
     }
 
 
-    @Override
-    protected void uploadSynapseConfig() throws Exception {
-        loadSampleESBConfiguration(390);
+    @AfterClass
+    private void destroy() {
+        super.cleanup();
     }
 }

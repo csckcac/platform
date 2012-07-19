@@ -19,6 +19,8 @@ package org.wso2.carbon.mediator.test.xquery;
 
 import org.apache.axiom.om.OMElement;
 import org.apache.axis2.AxisFault;
+import org.testng.annotations.AfterClass;
+import org.testng.annotations.BeforeClass;
 import org.testng.annotations.Test;
 import org.wso2.carbon.mediator.test.ESBMediatorTest;
 import org.wso2.carbon.mediator.test.xquery.util.RequestUtil;
@@ -29,6 +31,11 @@ import static org.testng.Assert.assertEquals;
 import static org.testng.Assert.assertNotNull;
 
 public class XQueryCustomVariableAsLong extends ESBMediatorTest {
+    @BeforeClass(alwaysRun = true)
+    public void uploadSynapseConfig() throws Exception {
+        super.init();
+        loadESBConfigurationFromClasspath("/artifacts/ESB/mediatorconfig/xquery/xquery_variable_type_long_synapse101.xml");
+    }
 
 
     @Test(groups = {"wso2.esb"},
@@ -44,10 +51,9 @@ public class XQueryCustomVariableAsLong extends ESBMediatorTest {
                 new QName("http://services.samples/xsd", "symbol", "ax21")).getText(), "9223322036854775801", "Symbol name mismatched");
     }
 
-
-    @Override
-    protected void uploadSynapseConfig() throws Exception {
-        loadESBConfigurationFromClasspath("/artifacts/ESB/mediatorconfig/xquery/xquery_variable_type_long_synapse101.xml");
+    @AfterClass
+    private void destroy() {
+        super.cleanup();
     }
 
 }

@@ -19,6 +19,8 @@ package org.wso2.carbon.mediator.test.xslt;
 
 import org.apache.axiom.om.OMElement;
 import org.apache.axis2.AxisFault;
+import org.testng.annotations.AfterClass;
+import org.testng.annotations.BeforeClass;
 import org.testng.annotations.Test;
 import org.wso2.carbon.automation.api.clients.registry.PropertiesAdminServiceClient;
 import org.wso2.carbon.automation.api.clients.registry.ResourceAdminServiceClient;
@@ -30,6 +32,11 @@ import static org.testng.Assert.assertNotNull;
 import static org.testng.Assert.assertTrue;
 
 public class DynamicKeyXsltTransformationTestCase extends ESBMediatorTest {
+    @BeforeClass(alwaysRun = true)
+    public void uploadSynapseConfig() throws Exception {
+        super.init();
+        loadESBConfigurationFromClasspath("/artifacts/ESB/mediatorconfig/xslt/xslt_dynamic_key_synapse.xml");
+    }
 
     @Test(groups = {"wso2.esb"},
           description = "Do XSLT transformation by Select the key type as dynamic key and retrieve" +
@@ -47,32 +54,31 @@ public class DynamicKeyXsltTransformationTestCase extends ESBMediatorTest {
 
     }
 
-
-    @Override
-    protected void uploadSynapseConfig() throws Exception {
-        loadESBConfigurationFromClasspath("/artifacts/ESB/mediatorconfig/xslt/xslt_dynamic_key_synapse.xml");
+    @AfterClass
+    private void destroy() {
+        super.cleanup();
     }
 
     private void uploadResourcesToRegistry() throws Exception {
-        ResourceAdminServiceClient  resourceAdminServiceClient=
+        ResourceAdminServiceClient resourceAdminServiceClient =
                 new ResourceAdminServiceClient(esbServer.getBackEndUrl(), userInfo.getUserName(), userInfo.getPassword());
         PropertiesAdminServiceClient propertiesAdminServiceClient =
-                new PropertiesAdminServiceClient(esbServer.getBackEndUrl(),userInfo.getUserName(), userInfo.getPassword());
+                new PropertiesAdminServiceClient(esbServer.getBackEndUrl(), userInfo.getUserName(), userInfo.getPassword());
 
         resourceAdminServiceClient.deleteResource("/_system/config/localEntries");
         resourceAdminServiceClient.addCollection("/_system/config/", "localEntries", "",
-                                               "Contains dynamic sequence request entry");
+                                                 "Contains dynamic sequence request entry");
 
         resourceAdminServiceClient.addResource(
                 "/_system/config/localEntries/request_transformation.txt", "text/plain", "text files",
                 new DataHandler("Dynamic Sequence request transformation".getBytes(), "application/text"));
         propertiesAdminServiceClient.setProperty("/_system/config/localEntries/request_transformation.txt",
-                                               "resourceName", "request_transform.xslt");
+                                                 "resourceName", "request_transform.xslt");
         Thread.sleep(1000);
 
         resourceAdminServiceClient.deleteResource("/_system/governance/localEntries");
         resourceAdminServiceClient.addCollection("/_system/governance/", "localEntries", "",
-                                               "Contains dynamic sequence response entry");
+                                                 "Contains dynamic sequence response entry");
         resourceAdminServiceClient.addResource(
                 "/_system/governance/localEntries/response_transformation_back.txt", "text/plain", "text files",
                 new DataHandler("Dynamic Sequence response transformation".getBytes(), "application/text"));

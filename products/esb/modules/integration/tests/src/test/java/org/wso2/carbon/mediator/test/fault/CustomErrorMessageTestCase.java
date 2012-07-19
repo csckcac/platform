@@ -45,6 +45,12 @@ import static org.testng.Assert.fail;
 /*This Class tests ESB Sample4*/
 public class CustomErrorMessageTestCase extends ESBMediatorTest {
 
+    @BeforeClass(alwaysRun = true)
+    public void uploadSynapseConfig() throws Exception {
+        super.init();
+        loadSampleESBConfiguration(4);
+    }
+
     @Test(groups = {"wso2.esb"}, description = "Sample 4: Introduction to error handling.")
     public void testErrorHandling() throws AxisFault {
         OMElement response;
@@ -77,10 +83,9 @@ public class CustomErrorMessageTestCase extends ESBMediatorTest {
         assertTrue(response.toString().contains("IBM"));
     }
 
-
-    @Override
-    protected void uploadSynapseConfig() throws Exception {
-        loadSampleESBConfiguration(4);
+    @AfterClass
+    private void destroy() {
+        super.cleanup();
     }
 
 }

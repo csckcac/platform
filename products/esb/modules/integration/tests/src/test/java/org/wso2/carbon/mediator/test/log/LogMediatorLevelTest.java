@@ -40,18 +40,18 @@ import java.io.IOException;
 
 public class LogMediatorLevelTest {
 
-    StockQuoteClient axis2Client;
-    LogViewerClient logViewer;
-    LoggingAdminClient logAdmin;
+    private StockQuoteClient axis2Client;
+    private LogViewerClient logViewer;
+    private LoggingAdminClient logAdmin;
 
-    String sessionCookie = null;
+    private String sessionCookie = null;
     private static final Log log = LogFactory.getLog(LogMediatorLevelTest.class);
-    String backEndUrl = null;
-    String serviceUrl = null;
-    String nhttpPort = null;
-    String hostName=null;
-    SampleAxis2Server axis2Server;
-    AuthenticatorClient adminServiceAuthentication;
+    private String backEndUrl = null;
+    private String serviceUrl = null;
+    private String nhttpPort = null;
+    private String hostName=null;
+    private SampleAxis2Server axis2Server;
+    private AuthenticatorClient adminServiceAuthentication;
 
 
     @BeforeTest(alwaysRun = true)

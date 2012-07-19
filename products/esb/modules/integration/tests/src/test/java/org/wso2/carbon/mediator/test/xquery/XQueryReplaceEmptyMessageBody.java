@@ -22,6 +22,8 @@ import org.apache.axis2.AxisFault;
 import org.apache.axis2.addressing.EndpointReference;
 import org.apache.axis2.client.Options;
 import org.apache.axis2.client.ServiceClient;
+import org.testng.annotations.AfterClass;
+import org.testng.annotations.BeforeClass;
 import org.testng.annotations.Test;
 import org.wso2.carbon.mediator.test.ESBMediatorTest;
 
@@ -31,6 +33,16 @@ import static org.testng.Assert.assertEquals;
 import static org.testng.Assert.assertNotNull;
 
 public class XQueryReplaceEmptyMessageBody extends ESBMediatorTest {
+    @BeforeClass(alwaysRun = true)
+    public void uploadSynapseConfig() throws Exception {
+        super.init();
+        loadESBConfigurationFromClasspath("/artifacts/ESB/mediatorconfig/xquery/xquery_replace_body_synapse101.xml");
+    }
+
+    @AfterClass
+    private void destroy() {
+        super.cleanup();
+    }
 
     @Test(groups = {"wso2.esb"},
           description = "Do XQuery transformation for empty message body")
@@ -43,11 +55,6 @@ public class XQueryReplaceEmptyMessageBody extends ESBMediatorTest {
         assertEquals(response.getFirstElement().getFirstChildWithName(
                 new QName("http://services.samples/xsd", "symbol", "ax21")).getText(), "WSO2", "Symbol name mismatched");
 
-    }
-
-    @Override
-    protected void uploadSynapseConfig() throws Exception {
-        loadESBConfigurationFromClasspath("/artifacts/ESB/mediatorconfig/xquery/xquery_replace_body_synapse101.xml");
     }
 
     private OMElement sendReceive(String endPointReference)

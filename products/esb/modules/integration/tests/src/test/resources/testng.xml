@@ -92,4 +92,40 @@
         </classes>
     </test>
 
+    <test name="Test - Mediator - rewrite" preserve-order="true" verbose="2">
+        <classes>
+            <class name="org.wso2.carbon.mediator.test.rewrite.Sample450"/>
+            <class name="org.wso2.carbon.mediator.test.rewrite.Sample451"/>
+            <class name="org.wso2.carbon.mediator.test.rewrite.Sample452"/>
+            <class name="org.wso2.carbon.mediator.test.rewrite.ProtocolReWriteTest"/>
+            <class name="org.wso2.carbon.mediator.test.rewrite.ProtocolReWriteFromProperty"/>
+            <class name="org.wso2.carbon.mediator.test.rewrite.UrlReWriteByPort"/>
+            <class name="org.wso2.carbon.mediator.test.rewrite.UrlReWriteByHost"/>
+            <class name="org.wso2.carbon.mediator.test.rewrite.UrlReWriteByContext"/>
+            <class name="org.wso2.carbon.mediator.test.rewrite.ReWriteFullUrlTestCase"/>
+            <class name="org.wso2.carbon.mediator.test.rewrite.RemoveReWriteHostNameTestCase"/>
+            <class name="org.wso2.carbon.mediator.test.rewrite.RemoveReWriteProtocolTestCase"/>
+            <class name="org.wso2.carbon.mediator.test.rewrite.RemoveReWritePortTestCase"/>
+            <class name="org.wso2.carbon.mediator.test.rewrite.RemoveReWritePathTestCase"/>
+            <class name="org.wso2.carbon.mediator.test.rewrite.RemoveReWriteFullUrlTestCase"/>
+            <class name="org.wso2.carbon.mediator.test.rewrite.AppendProtocolTestCase"/>
+            <class name="org.wso2.carbon.mediator.test.rewrite.AppendHostNameTestCase"/>
+            <class name="org.wso2.carbon.mediator.test.rewrite.AppendPortTestCase"/>
+            <class name="org.wso2.carbon.mediator.test.rewrite.AppendPathTestCase"/>
+            <class name="org.wso2.carbon.mediator.test.rewrite.AppendFullUrlTestCase"/>
+            <class name="org.wso2.carbon.mediator.test.rewrite.PrependProtocolTestCase"/>
+            <class name="org.wso2.carbon.mediator.test.rewrite.PrependHostNameTestCase"/>
+            <class name="org.wso2.carbon.mediator.test.rewrite.PrependPortTestCase"/>
+            <class name="org.wso2.carbon.mediator.test.rewrite.PrependPathTestCase"/>
+            <class name="org.wso2.carbon.mediator.test.rewrite.PrependFullUrlTestCase"/>
+            <class name="org.wso2.carbon.mediator.test.rewrite.SetProtocolTestCase"/>
+            <class name="org.wso2.carbon.mediator.test.rewrite.SetPortTestCase"/>
+            <class name="org.wso2.carbon.mediator.test.rewrite.SetHostNameTestCase"/>
+            <class name="org.wso2.carbon.mediator.test.rewrite.SetPathTestCase"/>
+            <class name="org.wso2.carbon.mediator.test.rewrite.SetFullUrlTestCase"/>
+            <class name="org.wso2.carbon.mediator.test.rewrite.SetFullUrlWhenNoAddressingUrlTestCase"/>
+        </classes>
+    </test>
+
+
 </suite>

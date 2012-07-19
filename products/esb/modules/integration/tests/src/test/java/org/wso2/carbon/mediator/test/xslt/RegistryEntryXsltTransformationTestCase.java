@@ -18,6 +18,8 @@
 package org.wso2.carbon.mediator.test.xslt;
 
 import org.apache.axiom.om.OMElement;
+import org.testng.annotations.AfterClass;
+import org.testng.annotations.BeforeClass;
 import org.testng.annotations.Test;
 import org.wso2.carbon.automation.api.clients.registry.ResourceAdminServiceClient;
 import org.wso2.carbon.mediator.test.ESBMediatorTest;
@@ -29,6 +31,11 @@ import static org.testng.Assert.assertNotNull;
 import static org.testng.Assert.assertTrue;
 
 public class RegistryEntryXsltTransformationTestCase extends ESBMediatorTest {
+    @BeforeClass(alwaysRun = true)
+    public void uploadSynapseConfig() throws Exception {
+        super.init();
+
+    }
 
 
     @Test(groups = {"wso2.esb"},
@@ -66,6 +73,10 @@ public class RegistryEntryXsltTransformationTestCase extends ESBMediatorTest {
 
     }
 
+    @AfterClass
+    private void destroy() {
+        super.cleanup();
+    }
 
     private void uploadResourcesToConfigRegistry() throws Exception {
         ResourceAdminServiceClient resourceAdminServiceStub =
@@ -105,10 +116,5 @@ public class RegistryEntryXsltTransformationTestCase extends ESBMediatorTest {
                 "/_system/governance/xslt/transform.xslt", "application/xml", "xslt files",
                 new DataHandler(new URL("file:///" + getClass().getResource(
                         "/artifacts/ESB/mediatorconfig/xslt/transform.xslt").getPath())));
-    }
-
-    @Override
-    protected void uploadSynapseConfig() throws Exception {
-        //To change body of implemented methods use File | Settings | File Templates.
     }
 }

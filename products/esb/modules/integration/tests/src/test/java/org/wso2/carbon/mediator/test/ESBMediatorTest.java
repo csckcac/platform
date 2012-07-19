@@ -19,8 +19,6 @@ package org.wso2.carbon.mediator.test;
 
 import org.apache.commons.logging.Log;
 import org.apache.commons.logging.LogFactory;
-import org.testng.annotations.AfterClass;
-import org.testng.annotations.BeforeClass;
 import org.wso2.carbon.automation.core.utils.UserInfo;
 import org.wso2.carbon.automation.core.utils.UserListCsvReader;
 import org.wso2.carbon.automation.core.utils.environmentutils.EnvironmentBuilder;
@@ -34,22 +32,19 @@ public abstract class ESBMediatorTest {
     protected EnvironmentVariables esbServer;
     protected UserInfo userInfo;
 
-    @BeforeClass(alwaysRun = true)
     public void init() throws Exception {
         axis2Client = new StockQuoteClient();
         userInfo = UserListCsvReader.getUserInfo(1);
         EnvironmentBuilder builder = new EnvironmentBuilder().esb(1);
 
         esbServer = builder.build().getEsb();
-        uploadSynapseConfig();
     }
 
-    @AfterClass(alwaysRun = true)
     public void cleanup() {
         axis2Client.destroy();
+        userInfo = null;
+        esbServer = null;
     }
-
-    protected abstract void uploadSynapseConfig() throws Exception;
 
     protected String getMainSequenceURL() {
         return "http://" + esbServer.getProductVariables().getHostName() + ":" +
@@ -64,10 +59,12 @@ public abstract class ESBMediatorTest {
     protected void loadSampleESBConfiguration(int sampleNo) throws Exception {
         ESBTestCaseUtils esbUtils = new ESBTestCaseUtils();
         esbUtils.loadSampleESBConfiguration(sampleNo, esbServer.getBackEndUrl(), esbServer.getSessionCookie());
+        Thread.sleep(10000);
     }
 
     protected void loadESBConfigurationFromClasspath(String filePath) throws Exception {
         ESBTestCaseUtils esbUtils = new ESBTestCaseUtils();
         esbUtils.loadESBConfigurationFromClasspath(filePath, esbServer.getBackEndUrl(), esbServer.getSessionCookie());
+        Thread.sleep(10000);
     }
 }

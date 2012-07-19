@@ -25,10 +25,18 @@ import org.apache.axis2.AxisFault;
 import org.apache.axis2.Constants;
 import org.apache.axis2.client.Options;
 import org.apache.axis2.client.ServiceClient;
+import org.testng.annotations.AfterClass;
+import org.testng.annotations.BeforeClass;
 import org.testng.annotations.Test;
 import org.wso2.carbon.mediator.test.ESBMediatorTest;
 
 public class TransformPayloadWhenArgsValueAndExpressionTestCase extends ESBMediatorTest {
+    @BeforeClass(alwaysRun = true)
+    public void uploadSynapseConfig() throws Exception {
+        super.init();
+        loadESBConfigurationFromClasspath("/artifacts/ESB/mediatorconfig/payload/factory/value_expression_arg_payload_factory_synapse.xml");
+    }
+
 
     @Test(groups = {"wso2.esb"}, description = "Do transformation with a Payload Format that has arguments - Argument Types : Value and Expression both")
     public void transformPayloadByArgsBothValueAndExpression() throws AxisFault {
@@ -37,9 +45,9 @@ public class TransformPayloadWhenArgsValueAndExpressionTestCase extends ESBMedia
                    "WSO2");
     }
 
-    @Override
-    protected void uploadSynapseConfig() throws Exception {
-        loadESBConfigurationFromClasspath("/artifacts/ESB/mediatorconfig/payload/factory/value_expression_arg_payload_factory_synapse.xml");
+    @AfterClass
+    private void destroy() {
+        super.cleanup();
     }
 
     private void sendRobust(String trpUrl, String symbol)

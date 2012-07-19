@@ -19,6 +19,8 @@ package org.wso2.carbon.mediator.test.xslt;
 
 import org.apache.axiom.om.OMElement;
 import org.apache.axis2.AxisFault;
+import org.testng.annotations.AfterClass;
+import org.testng.annotations.BeforeClass;
 import org.testng.annotations.Test;
 import org.wso2.carbon.mediator.test.ESBMediatorTest;
 
@@ -26,6 +28,12 @@ import static org.testng.Assert.assertNotNull;
 import static org.testng.Assert.assertTrue;
 
 public class InLineLocalEntryXsltTransformationTestCase extends ESBMediatorTest {
+    @BeforeClass(alwaysRun = true)
+    public void uploadSynapseConfig() throws Exception {
+        super.init();
+        loadESBConfigurationFromClasspath("/artifacts/ESB/mediatorconfig/xslt/xslt_in_line_local_entry_synapse.xml");
+    }
+
 
     @Test(groups = {"wso2.esb"},
           description = "Do XSLT transformation by selecting the xslt inline local entry")
@@ -42,9 +50,8 @@ public class InLineLocalEntryXsltTransformationTestCase extends ESBMediatorTest 
 
     }
 
-    @Override
-        protected void uploadSynapseConfig() throws Exception {
-            loadESBConfigurationFromClasspath("/artifacts/ESB/mediatorconfig/xslt/xslt_in_line_local_entry_synapse.xml");
-        }
-
+    @AfterClass
+    private void destroy() {
+        super.cleanup();
+    }
 }

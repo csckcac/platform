@@ -19,12 +19,20 @@ package org.wso2.carbon.mediator.test.fault;
 
 import org.apache.axiom.om.OMElement;
 import org.apache.axis2.AxisFault;
+import org.testng.annotations.AfterClass;
+import org.testng.annotations.BeforeClass;
 import org.testng.annotations.Test;
 import org.wso2.carbon.mediator.test.ESBMediatorTest;
 
 import static org.testng.Assert.fail;
 
 public class MakeFaultMediatorTest extends ESBMediatorTest {
+
+    @BeforeClass(alwaysRun = true)
+    public void uploadSynapseConfig() throws Exception {
+        super.init();
+        loadSampleESBConfiguration(5);
+    }
 
     @Test(groups = {"wso2.esb"}, description = "Sample 5: Creating SOAP fault messages and changing the direction of a message")
     public void testSOAPFaultCreation() throws AxisFault {
@@ -51,8 +59,8 @@ public class MakeFaultMediatorTest extends ESBMediatorTest {
 
     }
 
-    @Override
-    protected void uploadSynapseConfig() throws Exception {
-       loadSampleESBConfiguration(5);
+    @AfterClass
+    private void destroy() {
+        super.cleanup();
     }
 }

@@ -20,6 +20,8 @@ package org.wso2.carbon.mediator.test.fault;
 import org.apache.axiom.om.OMElement;
 import org.apache.axiom.soap.SOAPFaultDetail;
 import org.apache.axis2.AxisFault;
+import org.testng.annotations.AfterClass;
+import org.testng.annotations.BeforeClass;
 import org.testng.annotations.Test;
 import org.wso2.carbon.mediator.test.ESBMediatorTest;
 
@@ -31,6 +33,11 @@ import static org.testng.Assert.assertTrue;
 import static org.testng.Assert.fail;
 
 public class Soap11FaultDetailAsElementTestCase extends ESBMediatorTest {
+    @BeforeClass(alwaysRun = true)
+    public void uploadSynapseConfig() throws Exception {
+        super.init();
+        loadESBConfigurationFromClasspath("/artifacts/ESB/mediatorconfig/fault/soap11_fault_detail_as_element_synapse.xml");
+    }
 
 
     @Test(groups = {"wso2.esb"}, description = "Creating SOAP1.1 fault details as Element")
@@ -61,9 +68,8 @@ public class Soap11FaultDetailAsElementTestCase extends ESBMediatorTest {
 
     }
 
-
-    @Override
-    protected void uploadSynapseConfig() throws Exception {
-        loadESBConfigurationFromClasspath("/artifacts/ESB/mediatorconfig/fault/soap11_fault_detail_as_element_synapse.xml");
+    @AfterClass
+    private void destroy() {
+        super.cleanup();
     }
 }

@@ -19,6 +19,8 @@ package org.wso2.carbon.mediator.test.xquery;
 
 import org.apache.axiom.om.OMElement;
 import org.apache.axis2.AxisFault;
+import org.testng.annotations.AfterClass;
+import org.testng.annotations.BeforeClass;
 import org.testng.annotations.Test;
 import org.wso2.carbon.mediator.test.ESBMediatorTest;
 import org.wso2.carbon.mediator.test.xquery.util.RequestUtil;
@@ -28,7 +30,12 @@ import javax.xml.namespace.QName;
 import static org.testng.Assert.assertEquals;
 import static org.testng.Assert.assertNotNull;
 
-public class XQueryCustomVariableAsInteger extends ESBMediatorTest{
+public class XQueryCustomVariableAsInteger extends ESBMediatorTest {
+    @BeforeClass(alwaysRun = true)
+    public void uploadSynapseConfig() throws Exception {
+        super.init();
+        loadESBConfigurationFromClasspath("/artifacts/ESB/mediatorconfig/xquery/xquery_variable_type_integer_synapse101.xml");
+    }
 
 
     @Test(groups = {"wso2.esb"},
@@ -45,11 +52,8 @@ public class XQueryCustomVariableAsInteger extends ESBMediatorTest{
 
     }
 
-
-    @Override
-    protected void uploadSynapseConfig() throws Exception {
-        loadESBConfigurationFromClasspath("/artifacts/ESB/mediatorconfig/xquery/xquery_variable_type_integer_synapse101.xml");
+    @AfterClass
+    private void destroy() {
+        super.cleanup();
     }
-
-
 }

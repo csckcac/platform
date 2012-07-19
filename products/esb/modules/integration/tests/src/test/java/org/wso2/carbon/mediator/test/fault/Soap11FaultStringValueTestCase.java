@@ -19,6 +19,8 @@ package org.wso2.carbon.mediator.test.fault;
 
 import org.apache.axiom.om.OMElement;
 import org.apache.axis2.AxisFault;
+import org.testng.annotations.AfterClass;
+import org.testng.annotations.BeforeClass;
 import org.testng.annotations.Test;
 import org.wso2.carbon.mediator.test.ESBMediatorTest;
 
@@ -26,6 +28,12 @@ import static org.testng.Assert.assertEquals;
 import static org.testng.Assert.fail;
 
 public class Soap11FaultStringValueTestCase extends ESBMediatorTest {
+    @BeforeClass(alwaysRun = true)
+    public void uploadSynapseConfig() throws Exception {
+        super.init();
+        loadESBConfigurationFromClasspath("/artifacts/ESB/mediatorconfig/fault/soap11_fault_string_value_synapse.xml");
+    }
+
 
     @Test(groups = {"wso2.esb"}, description = "Creating SOAP1.1 fault messages with custom fault String")
     public void testSOAP11FaultStringValue() throws AxisFault {
@@ -46,10 +54,9 @@ public class Soap11FaultStringValueTestCase extends ESBMediatorTest {
 
     }
 
-    @Override
-    protected void uploadSynapseConfig() throws Exception {
-        loadESBConfigurationFromClasspath("/artifacts/ESB/mediatorconfig/fault/soap11_fault_string_value_synapse.xml");
+    @AfterClass
+    private void destroy() {
+        super.cleanup();
     }
-
 
 }

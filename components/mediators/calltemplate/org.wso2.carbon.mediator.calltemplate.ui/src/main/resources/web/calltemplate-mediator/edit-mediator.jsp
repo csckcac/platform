@@ -1,4 +1,4 @@
-<!--
+<%--
  ~ Copyright (c) 2005-2010, WSO2 Inc. (http://www.wso2.org) All Rights Reserved.
  ~
  ~ WSO2 Inc. licenses this file to you under the Apache License,
@@ -14,7 +14,7 @@
  ~ KIND, either express or implied.  See the License for the
  ~ specific language governing permissions and limitations
  ~ under the License.
- -->
+ --%>
 <%@ page language="java" contentType="text/html; charset=ISO-8859-1" pageEncoding="ISO-8859-1" %>
 <%@ page import="org.apache.synapse.util.xpath.SynapseXPath" %>
 <%@ page import="org.wso2.carbon.mediator.service.ui.Mediator" %>
@@ -213,7 +213,7 @@
         </div>
     </td>
 </tr>
-<tr>
+<%--<tr>
     <td>
         <div style="margin-top:0px;">
             <a name="addNameLink"></a>
@@ -223,7 +223,7 @@
                     key="add.property"/></a>
         </div>
     </td>
-</tr>
+</tr> --%>
 
 </table>
 <a name="nsEditorLink"></a>

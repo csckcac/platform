@@ -72,6 +72,12 @@ public class AppFactoryLCExecutor implements Execution {
             return false;
         }
 
+        final String applicationId = currentParameterMap.get("applicationId");
+        final String revision = currentParameterMap.get("revision");
+        final String version = currentParameterMap.get("version");
+        final String stage = currentParameterMap.get("stage");
+        final String build = currentParameterMap.get("build");
+
 //        This section is there to add a version to the path if needed.
 //        This is all based on the lifecycle configuration and the configuration should be as follows.
 //        path = /_system/governance/environment/{@version}
@@ -85,19 +91,18 @@ public class AppFactoryLCExecutor implements Execution {
 
             newPath = resourcePath.substring(currentEnvironment.length());
 
-            // 1st element is "", 2st element is app name , 3rd element is $Stage , 4th element $Version
+            // 1st element is "", 2st element is app name , 3rd element is $Stage , 4th element $Version, 5th element is appinfo
             String newPathArray[] = newPath.split("/");
             String appName = newPathArray[1];
             //String appVersion = currentParameterMap.get("version");
-            String appVersion = "1.0.0";
-
+            //String version = "1.0.0";
 
             // if the app is trunk then we need version.
             if ("trunk".equals(newPathArray[3])) {
 
                 // Append version from here
-                if (appVersion != null) {
-                    newPath = "/" + appName + "/" + targetState + "/" + appVersion;
+                if (version != null) {
+                    newPath = "/" + appName + "/" + targetState + "/" + version + "/" + newPathArray[4] ;
                 } else {
                     log.error("Can not find application version. " +
                             "Application version is required to perform lifecycle operation");
@@ -105,11 +110,11 @@ public class AppFactoryLCExecutor implements Execution {
                 }
             } else {
                 // Application is not a trunk version. So it can have version with it or user can define version
-                if (appVersion != null) {
-                    newPath = "/" + appName + "/" + targetState + "/" + appVersion;
+                if (version != null) {
+                    newPath = "/" + appName + "/" + targetState + "/" + version + "/" + newPathArray[4] ;
 
                 } else {
-                    newPath = "/" + appName + "/" + targetState + "/" + newPathArray[3];
+                    newPath = "/" + appName + "/" + targetState + "/" + newPathArray[3] + "/" + newPathArray[4] ;
                 }
 
             }
@@ -166,7 +171,7 @@ public class AppFactoryLCExecutor implements Execution {
 
 
             // Executing the bpel
-            executeBPEL();
+           // executeBPEL(applicationId, revision, version, stage, build);
 
 
 
@@ -211,7 +216,8 @@ public class AppFactoryLCExecutor implements Execution {
 
 
     //private void executeBPEL(final String applicationId, final String version, final String revision) {
-    private void executeBPEL() {
+    private void executeBPEL(final String applicationId, final String revision,
+                                        final String version, final String stage, final String build) {
 
 
         AppFactoryConfiguration configuration= Util.getConfiguration();
@@ -232,8 +238,10 @@ public class AppFactoryLCExecutor implements Execution {
                     client.getOptions().setTo(new EndpointReference(EPR));
                     client.getOptions().setAction("echoInt");
 
+
+
                     //Make the request and get the response
-                    client.sendReceive(getPayload());
+                    client.sendReceive(getPayload(applicationId, revision, version, stage, build));
                 } catch (AxisFault e) {
                     log.error(e);
                     e.printStackTrace();
@@ -244,15 +252,28 @@ public class AppFactoryLCExecutor implements Execution {
         }).start();
     }
 
-    private static OMElement getPayload() throws XMLStreamException, javax.xml.stream.XMLStreamException {
+    private static OMElement getPayload(final String applicationId, final String revision,
+                                        final String version, final String stage, final String build) throws XMLStreamException, javax.xml.stream.XMLStreamException {
     //private static OMElement getPayload(String applicationId, String version, String revision) throws XMLStreamException, javax.xml.stream.XMLStreamException {
         /*String payload = "<p:callbackMessgae xmlns:p=\"http://localhost:9763/services/ArtifactCreateCallbackService\"><applicationId>" + applicationId +
                 "</applicationId><revision>" + revision + "</revision><version>" + version + "</version></p:callbackMessgae>";*/
 
-        String payload = "   <p:echoInt xmlns:p=\"http://echo.services.core.carbon.wso2.org\">\n" +
+/*        String payload = "   <p:echoInt xmlns:p=\"http://echo.services.core.carbon.wso2.org\">\n" +
                 "      <!--0 to 1 occurrence-->\n" +
                 "      <in>2</in>\n" +
-                "   </p:echoInt>";
+                "   </p:echoInt>";*/
+
+
+
+        String payload = "   <p:DeployToStageRequest xmlns:p=\"http://wso2.org\">\n" +
+                "      <applicationId xmlns=\"http://wso2.org\">" + applicationId + "</applicationId>\n" +
+                "      <revision xmlns=\"http://wso2.org\">" + revision + "</revision>\n" +
+                "      <version xmlns=\"http://wso2.org\">" + version + "</version>\n" +
+                "      <stage xmlns=\"http://wso2.org\">" + stage + "</stage>\n" +
+                "      <build xmlns=\"http://wso2.org\">" + build + "</build>\n" +
+                "   </p:DeployToStageRequest>";
+
+
         return new StAXOMBuilder(new ByteArrayInputStream(payload.getBytes())).getDocumentElement();
     }
 

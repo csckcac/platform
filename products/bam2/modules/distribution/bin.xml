@@ -207,6 +207,16 @@
             <fileMode>755</fileMode>
         </fileSet>
 
+	<!--bam toolbox -->
+	<fileSet>
+ 	    <directory>bam-resources/bam-toolbox</directory>
+            <outputDirectory>${pom.artifactId}-${pom.version}/repository/deployment/server/bam-toolbox</outputDirectory>
+            <includes>
+                <include>**/**</include>
+            </includes>
+            <fileMode>755</fileMode>
+        </fileSet>
+
     </fileSets>
 
     <dependencySets>
@@ -228,14 +238,7 @@
             <source>../p2-profile-gen/target/wso2carbon-core-${carbon.version}/repository/conf/etc/cassandra-auth.xml</source>
             <outputDirectory>${pom.artifactId}-${pom.version}/repository/conf/etc</outputDirectory>
         </file>
-         <!-- Including log4j.properties file -->
-        <file>
-            <source>
-                ../p2-profile-gen/target/wso2carbon-core-${carbon.version}/repository/conf/log4j.properties
-            </source>
-            <outputDirectory>${pom.artifactId}-${pom.version}/repository/conf/
-            </outputDirectory>
-        </file>    
+        
         <file>
             <source>../../README.txt</source>
             <outputDirectory>${pom.artifactId}-${pom.version}/</outputDirectory>
@@ -306,6 +309,15 @@
             <filtered>true</filtered>
             <fileMode>644</fileMode>
         </file>
+	
+	<!-- log4j properties -->
+	 <file>
+            <source>conf/log4j.properties</source>
+            <outputDirectory>${pom.artifactId}-${pom.version}/repository/conf</outputDirectory>
+            <filtered>true</filtered>
+            <fileMode>644</fileMode>
+        </file>
+
 
         <!-- Copy BAM JAXRS RESt API war -->
 

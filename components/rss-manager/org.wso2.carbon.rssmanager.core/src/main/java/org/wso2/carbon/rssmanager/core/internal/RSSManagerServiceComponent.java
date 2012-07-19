@@ -31,10 +31,6 @@ import org.wso2.carbon.rssmanager.core.internal.dao.RSSDAOFactory;
 import org.wso2.carbon.rssmanager.core.internal.entity.RSSInstance;
 import org.wso2.carbon.rssmanager.core.internal.manager.RSSMetaDataRepository;
 import org.wso2.carbon.rssmanager.core.internal.util.RSSConfig;
-import org.wso2.carbon.rssmanager.core.service.RSSManagerService;
-import org.wso2.carbon.rssmanager.core.service.RSSManagerService;
-import org.wso2.carbon.securevault.SecretCallbackHandlerService;
-import org.wso2.carbon.user.api.RealmConfiguration;
 import org.wso2.carbon.user.core.service.RealmService;
 import org.wso2.carbon.user.core.tenant.TenantManager;
 import org.wso2.carbon.utils.AbstractAxis2ConfigurationContextObserver;
@@ -92,11 +88,9 @@ public class RSSManagerServiceComponent {
             /* Loading tenant specific data */
             bundleContext.registerService(AbstractAxis2ConfigurationContextObserver.class.getName(),
                     new RSSManagerAxis2ConfigContextObserver(), null);
-            bundleContext.registerService(RSSManagerService.class.getName(),
-                    new RSSManagerService(), null);
             /* Registers RSSManager service */
-            bundleContext.registerService(RSSManagerService.class.getName(),
-                    new RSSManagerService(), null);
+//            bundleContext.registerService(RSSManagerService.class.getName(),
+//                    new RSSManagerService(), null);
 
         } catch (Throwable e) {
             String msg = "Error occurred while initializing RSS Manager core bundle";

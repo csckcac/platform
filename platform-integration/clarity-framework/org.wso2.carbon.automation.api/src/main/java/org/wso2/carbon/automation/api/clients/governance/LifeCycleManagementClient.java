@@ -36,6 +36,7 @@ public class LifeCycleManagementClient {
         String endPoint = backEndUrl + serviceName;
         lifeCycleManagementServiceStub = new LifeCycleManagementServiceStub(endPoint);
         AuthenticateStub.authenticateStub(sessionCookie, lifeCycleManagementServiceStub);
+
     }
 
     public LifeCycleManagementClient(String backEndUrl, String userName, String password)

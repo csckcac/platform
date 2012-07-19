@@ -46,6 +46,7 @@ public class GovernanceServiceClient {
         this.endPoint = backEndUrl + serviceName;
         addServicesServiceStub = new AddServicesServiceStub(endPoint);
         AuthenticateStub.authenticateStub(userName, password, addServicesServiceStub);
+
     }
 
 

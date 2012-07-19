@@ -12,8 +12,8 @@
     <groupId>org.wso2.carbon</groupId>
     <artifactId>org.wso2.carbon.rssmanager.common</artifactId>
     <packaging>bundle</packaging>
-    <name>WSO2 Carbon - RSS Manager Common Bundle</name>
-    <description>WSO2 Carbon - RSS Manager Common Bundle</description>
+    <name>WSO2 Carbon - RSS Manager Commons</name>
+    <description>WSO2 Carbon - RSS Manager Commons</description>
     <url>http://wso2.org</url>
     
     <build>

@@ -457,6 +457,8 @@ function saveApi(apiNameValue, apiContextValue) {
                             CARBON.showErrorDialog("<fmt:message key="api.update.error.452"/> : " + apiNameValue);
                         } else if (status.status == '453') {
                             CARBON.showErrorDialog("<fmt:message key="api.update.error.453"/> : " + apiContextValue);
+                        } else if(status.status == '454'){
+                        	CARBON.showErrorDialog("<fmt:message key="api.update.error.454"/>");
                         }
                     }
                 });
@@ -471,8 +473,12 @@ function saveApi(apiNameValue, apiContextValue) {
                             document.location.href = "index.jsp";
                         });
                     },
-                    error:function() {
-                        CARBON.showErrorDialog("<fmt:message key="api.update.error.453"/> : " + apiContextValue);
+                    error:function(status) {
+                    	if (status.status == '453'){
+                    		CARBON.showErrorDialog("<fmt:message key="api.update.error.453"/> : " + apiContextValue);
+                    	} else if(status.status == '454'){
+                        	CARBON.showErrorDialog("<fmt:message key="api.update.error.454"/>");
+                        }
                     }
                 });
 <%}%>

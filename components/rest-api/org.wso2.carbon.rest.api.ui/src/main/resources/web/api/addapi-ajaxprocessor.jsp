@@ -13,6 +13,8 @@
   ~  See the License for the specific language governing permissions and
   ~  limitations under the License.
   --%>
+<%@page import="java.util.Set"%>
+<%@page import="java.util.HashSet"%>
 <%@page import="org.wso2.carbon.rest.api.stub.types.carbon.APIData"%>
 <%@page import="java.util.ArrayList"%>
 <%@page import="org.wso2.carbon.rest.api.stub.types.carbon.ResourceData"%>
@@ -46,6 +48,23 @@
 	
 	List<ResourceData> resourceList = 
 			(ArrayList<ResourceData>)session.getAttribute("apiResources");
+	
+	if(resourceList != null){
+		//Using a set so duplicates are ignored.
+		Set<String> urlPatterns = new HashSet<String>();
+		
+		for(ResourceData resource : resourceList){
+			//Assign whichever (uri-template or url-mapping) is not null nor empty.
+			String urlPattern = resource.getUriTemplate() == null || "".equals(resource.getUriTemplate()) ? 
+								resource.getUrlMapping() : resource.getUriTemplate();
+			
+			//If any other resource has the same url pattern.
+			if(!urlPatterns.add(urlPattern)){
+				response.setStatus(454);
+				return;
+			}
+		}	
+	}
 	
 	APIData apiData = new APIData();
 	apiData.setName(apiName);

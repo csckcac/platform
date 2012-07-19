@@ -56,8 +56,8 @@
                     <li>Same BPEL process is deployed under several different package names</li>
                     <li>When a deployed BPEL process has an existing service name</li>
                 </ol>
-                <p>Those deployment issues are displayed under the relevant package in "Deployed
-                    Packages" page.
+                <p>Those deployment issues are displayed under the relevant package in "Package
+                    Dashboard" page.
                 </p>
                 <br/>
                 <img src="../images/bpel-user-guide/erroneous_package_deployed.png" alt="Deployed Package error"/>

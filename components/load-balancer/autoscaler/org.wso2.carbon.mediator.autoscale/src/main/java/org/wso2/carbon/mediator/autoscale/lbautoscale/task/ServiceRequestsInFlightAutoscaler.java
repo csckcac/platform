@@ -232,20 +232,21 @@ public class ServiceRequestsInFlightAutoscaler implements Task, ManagedLifecycle
             
             int previousPendingCount = appDomainContexts.get(serviceDomain).getPendingInstanceCount();
             int previousRunningCount = appDomainContexts.get(serviceDomain).getRunningInstanceCount();
+            int newRunningInstanceCount = runningInstances;
 
             if (appDomainContexts.get(serviceDomain) != null) {
                 
                 // if we need to wait for sometime to cover the server startup delay
                 if(previousPendingCount >0 && pendingInstanceCount==0 && 
                         runningInstances < (previousPendingCount + previousRunningCount)){
-                    
+                    //TODO check once in every 20 seconds, rather than sleeping all the time.
                     // we give some time for the server to be started
                     try {
                         Thread.sleep(serverStartupDelay);
                     } catch (InterruptedException ignore) {}
                     
                     // we recalculate number of agents, to check whether an instance spawned up
-                    int newRunningInstanceCount = agent.getMembers().size();
+                    newRunningInstanceCount = agent.getMembers().size();
                     
                     // if server hasn't yet started up, we gonna kill it.
                     if(newRunningInstanceCount == runningInstances){
@@ -259,7 +260,7 @@ public class ServiceRequestsInFlightAutoscaler implements Task, ManagedLifecycle
                     }
                 }
                 
-                appDomainContexts.get(serviceDomain).setRunningInstanceCount(runningInstances);
+                appDomainContexts.get(serviceDomain).setRunningInstanceCount(newRunningInstanceCount);
                 
                 appDomainContexts.get(serviceDomain).setPendingInstanceCount(pendingInstanceCount);
                 
@@ -301,7 +302,7 @@ public class ServiceRequestsInFlightAutoscaler implements Task, ManagedLifecycle
         
         runningInstances += ConfigHolder.getAgent().getAliveMemberCount();
         
-        log.info("************ AliveMemberCount: "+ConfigHolder.getAgent().getAliveMemberCount());
+        log.info("************ Alive Load Balancer members (including this): "+runningInstances);
 
         lbContext.setRunningInstanceCount(runningInstances);
         

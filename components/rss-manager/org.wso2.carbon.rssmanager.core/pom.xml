@@ -12,13 +12,13 @@
     <groupId>org.wso2.carbon</groupId>
     <artifactId>org.wso2.carbon.rssmanager.core</artifactId>
     <packaging>bundle</packaging>
-    <name>WSO2 Carbon - RSS Manager Core Bundle</name>
-    <description>WSO2 Carbon - RSS Manager Core Bundle</description>
+    <name>WSO2 Carbon - RSS Manager Core</name>
+    <description>WSO2 Carbon - RSS Manager Core</description>
     <url>http://wso2.org</url>
 
     <build>
         <plugins>
-            <!--plugin>
+            <plugin>
                 <groupId>org.apache.axis2</groupId>
                 <artifactId>axis2-java2wsdl-maven-plugin</artifactId>
                 <executions>
@@ -30,10 +30,10 @@
                 </executions>
                 <configuration>
                     <className>
-                        org.wso2.carbon.rssmanager.core.servicece.RSSAdmin
+                        org.wso2.carbon.rssmanager.core.service.RSSAdmin
                     </className>
                 </configuration>
-            </plugin-->
+            </plugin>
             <plugin>
                 <groupId>org.apache.felix</groupId>
                 <artifactId>maven-scr-plugin</artifactId>
@@ -51,24 +51,19 @@
                         <Bundle-Description>RSS Manager Core Bundle</Bundle-Description>
                         <Private-Package>org.wso2.carbon.rssmanager.core.internal</Private-Package>
                         <Import-Package>
-			    org.apache.axis2.*; version="${axis2.osgi.version.range}",
-			    javax.xml.*,
-			    org.osgi.framework, org.osgi.service.component,
-			    org.wso2.carbon.datasource.*,
-			    org.apache.axiom.om.*,
-			    org.apache.commons.logging,
-			    org.wso2.carbon.core.*,
+                            org.apache.axis2.*; version="${axis2.osgi.version.range}",
+                            javax.xml.*,
+                            org.osgi.framework, org.osgi.service.component,
+                            org.apache.commons.logging,
+                            org.wso2.carbon.core.*,
                             org.wso2.carbon.utils.*,
-			    org.apache.synapse.commons.datasource.*,
-			    org.wso2.carbon.rssmanager.common,
-			    org.wso2.carbon.user.*,
-			    org.wso2.securevault.secret
+                            org.wso2.carbon.rssmanager.common,
                         </Import-Package>
                         <Export-Package>
                             !org.wso2.carbon.rssmanager.core.internal,
                             org.wso2.carbon.rssmanager.core.*
-						</Export-Package>
-						<DynamicImport-Package>*</DynamicImport-Package>
+                        </Export-Package>
+                        <DynamicImport-Package>*</DynamicImport-Package>
                     </instructions>
                 </configuration>
             </plugin>
@@ -92,15 +87,40 @@
             <version>${carbon.platform.version}</version>
         </dependency>
         <dependency>
-            <groupId>org.wso2.carbon</groupId>
-            <artifactId>org.wso2.carbon.datasource</artifactId>
-            <version>${carbon.platform.version}</version>
-        </dependency>
-        <dependency>
             <groupId>org.apache.axis2.wso2</groupId>
             <artifactId>axis2</artifactId>
             <version>${axis2.osgi.version}</version>
         </dependency>
+        <dependency>
+            <groupId>org.wso2.carbon</groupId>
+            <artifactId>org.wso2.carbon.ndatasource.core</artifactId>
+            <version>${carbon.platform.version}</version>
+        </dependency>
+        <dependency>
+            <groupId>org.wso2.carbon</groupId>
+            <artifactId>org.wso2.carbon.ndatasource.rdbms</artifactId>
+            <version>${carbon.platform.version}</version>
+        </dependency>
+        <dependency>
+            <groupId>org.apache.tomcat.wso2</groupId>
+            <artifactId>jdbc-pool</artifactId>
+            <version>7.0.28.wso2v1</version>
+        </dependency>
+        <dependency>
+            <groupId>org.wso2.carbon</groupId>
+            <artifactId>org.wso2.carbon.transaction.manager</artifactId>
+            <version>${carbon.platform.version}</version>
+        </dependency>
+        <!--<dependency>-->
+            <!--<groupId>com.google.guava.wso2</groupId>-->
+            <!--<artifactId>guava</artifactId>-->
+            <!--<version>${google.guava.wso2.version}</version>-->
+        <!--</dependency>-->
+        <!--<dependency>-->
+            <!--<groupId>org.wso2.carbon</groupId>-->
+            <!--<artifactId>org.wso2.carbon.securevault</artifactId>-->
+            <!--<version>${project.version}</version>-->
+        <!--</dependency>-->
     </dependencies>
 
 </project>

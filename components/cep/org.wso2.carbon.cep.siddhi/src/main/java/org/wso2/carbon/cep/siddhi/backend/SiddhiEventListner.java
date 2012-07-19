@@ -56,8 +56,7 @@ public class SiddhiEventListner extends Callback {
     }
 
     @Override
-    public void receive(long timestamp, Event[] inEvents, Event[] removeEvents,
-                        Event[] faultEvents) {
+    public void receive(long timestamp, Event[] inEvents, Event[] removeEvents) {
         if (inEvents != null) {
             cepEventListener.onComplexEvent(toMap(inEvents));
         }

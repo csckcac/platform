@@ -123,6 +123,14 @@
                 If this time is large it will improve the performance but reduce consistency -->
                 <messageBatchSizeForSubscribers>10</messageBatchSizeForSubscribers>
 
+		<!--Maximum number of message taken it to memory when transering from interal queues to subscriber queues. We need to increase   the             memory allocation from the broker if we are to increase this.Increasing this will increase the consumer throughout-->                
+                <globalQueueWorkerMessageBatchSize>700</globalQueueWorkerMessageBatchSize>
+		
+                <!--Max number of Messages chunks to buffer before message contents are written to the cassandra -->
+		<contentPublisherMessageBatchSize>200</contentPublisherMessageBatchSize>
+
+                <!--Max number of Messages meta data to buffer before message Meta data are written to the cassandra -->      
+                <medataDatePublisherMessageBatchSize>200</medataDatePublisherMessageBatchSize>
 
             </messageBatchSizes>
             <threading>
@@ -135,9 +143,6 @@
                 Make this to a higher number if there are not of subscriptions to the system at a given time
                 -->
                 <subscriptionPoolSize>20</subscriptionPoolSize>
-
-
-
             </threading>
             <waitTimes>
 

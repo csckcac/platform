@@ -225,7 +225,33 @@
         <path id="javac.classpath">
             <pathelement path="${class.dir}"/>
              <fileset dir="${registry.home}/repository/components/plugins">
-                <include name="**/*.jar"/>
+                <include name="axis2_*.jar"/>
+		<include name="axiom_*.jar"/>
+ 		<include name="org.wso2.carbon.core_*.jar"/>
+ 		<include name="org.wso2.carbon.registry.api_*.jar"/>
+                <include name="org.wso2.carbon.registry.core_*.jar"/>
+  		<include name="org.wso2.carbon.registry.extensions.ui_*.jar"/>
+		<include name="org.wso2.carbon.registry.extensions.stub_*.jar"/>
+ 		<include name="org.wso2.carbon.registry.resource_*.jar"/>
+		<include name="org.wso2.carbon.registry.handler.stub_*.jar"/>
+		<include name="org.wso2.carbon.authenticator.stub_*.jar"/>
+		<include name="org.wso2.carbon.registry.reporting.stub_*.jar"/>
+		<include name="org.wso2.carbon.core.common_*.jar"/>
+		<include name="org.wso2.carbon.registry.ws.client_*.jar"/>
+		<include name="org.wso2.carbon.registry.ws.stub_*.jar"/>
+		<include name="org.wso2.carbon.registry.resource.ui_*.jar"/>
+		<include name="org.wso2.carbon.registry.resource.stub_*.jar"/>
+		<include name="XmlSchema_*.jar"/>
+		<include name="javax.servlet_*.jar"/>
+		<include name="org.wso2.carbon.logging_*.jar"/>
+		<include name="org.wso2.carbon.utils_*.jar"/>
+		<include name="org.wso2.carbon.base_*.jar"/>
+		<include name="wsdl4j*.jar"/>
+		<include name="neethi*.jar"/>
+		<include name="org.wso2.securevault*.jar"/>
+		<include name="commons-httpclient*.jar"/>
+		<include name="httpcore_*.jar"/>
+		<include name="commons-codec*.jar"/>
             </fileset>
         </path>
     </target>
@@ -253,7 +279,17 @@
     <target name="init-ext">        
         <path id="javac.classpath">
              <fileset dir="${registry.home}/repository/components/plugins">
-                <include name="**/*.jar"/>
+                <include name="axis2_*.jar"/>
+		<include name="axiom_*.jar"/>
+		<include name="org.wso2.carbon.logging_*.jar"/>
+		<include name="org.wso2.carbon.governance.api_*.jar"/>
+ 		<include name="org.wso2.carbon.registry.api_*.jar"/>
+                <include name="org.wso2.carbon.registry.core_*.jar"/>
+                <include name="org.wso2.carbon.registry.reporting_*.jar"/>
+                <include name="org.wso2.carbon.reporting.util_*.jar"/>
+                <include name="org.wso2.carbon.reporting.api_*.jar"/>
+                <include name="org.wso2.carbon.registry.core_*.jar"/>
+                <include name="jasperreports_*.jar"/>
             </fileset>
         </path>
     </target>

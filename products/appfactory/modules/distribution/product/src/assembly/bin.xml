@@ -335,6 +335,11 @@
             <outputDirectory>wso2appfactory-${pom.version}/repository/conf</outputDirectory>
             <fileMode>644</fileMode>
         </file>
+        <file>
+			<source>resources/bpel/conf/attach-mgt-conf.properties</source>
+            <outputDirectory>wso2appfactory-${pom.version}/repository/conf</outputDirectory>
+            <fileMode>644</fileMode>
+        </file>
 		<file>
 			<source>resources/appfactory.xml</source>
 			<outputDirectory>wso2appfactory-${pom.version}/repository/conf/appfactory</outputDirectory>

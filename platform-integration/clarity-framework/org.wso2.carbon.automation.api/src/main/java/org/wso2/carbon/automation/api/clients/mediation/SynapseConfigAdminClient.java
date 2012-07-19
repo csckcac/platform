@@ -25,17 +25,29 @@ import org.apache.axiom.om.impl.builder.StAXOMBuilder;
 import org.apache.axis2.AxisFault;
 import org.apache.commons.logging.Log;
 import org.apache.commons.logging.LogFactory;
+import org.w3c.dom.Document;
 import org.wso2.carbon.automation.api.clients.utils.AuthenticateStub;
 import org.wso2.carbon.mediation.configadmin.stub.ConfigServiceAdminStub;
 import org.wso2.carbon.mediation.configadmin.stub.types.carbon.ConfigurationInformation;
 import org.wso2.carbon.mediation.configadmin.stub.types.carbon.ValidationError;
+import org.xml.sax.SAXException;
 
 import javax.servlet.ServletException;
+import javax.xml.parsers.DocumentBuilder;
+import javax.xml.parsers.DocumentBuilderFactory;
+import javax.xml.parsers.ParserConfigurationException;
 import javax.xml.stream.XMLInputFactory;
 import javax.xml.stream.XMLStreamException;
 import javax.xml.stream.XMLStreamReader;
+import javax.xml.transform.Transformer;
+import javax.xml.transform.TransformerException;
+import javax.xml.transform.TransformerFactory;
+import javax.xml.transform.dom.DOMSource;
+import javax.xml.transform.stream.StreamResult;
+import java.io.File;
+import java.io.IOException;
 import java.io.StringReader;
-import java.lang.String;
+import java.io.StringWriter;
 import java.rmi.RemoteException;
 
 /**
@@ -145,6 +157,26 @@ public class SynapseConfigAdminClient {
     }
 
     /**
+     * Uploads synapse config bu using a file
+     *
+     * @param file
+     * @return
+     */
+    public boolean updateConfiguration(File file)
+            throws IOException, SAXException, ParserConfigurationException, TransformerException,
+                   XMLStreamException, ServletException {
+        boolean success = false;
+        DocumentBuilderFactory factory = DocumentBuilderFactory.newInstance();
+        DocumentBuilder docBuilder = factory.newDocumentBuilder();
+        if (file.exists()) {
+            Document doc = docBuilder.parse(file);
+            String fileContent = getStringFromDocument(doc);
+            success = configServiceAdminStub.updateConfiguration(createOMElement(fileContent));
+        }
+        return success;
+    }
+
+    /**
      * update synapse configuration
      *
      * @param configuration synapse configuration
@@ -176,6 +208,17 @@ public class SynapseConfigAdminClient {
         StAXOMBuilder builder = new StAXOMBuilder(reader);
         return builder.getDocumentElement();
 
+    }
+
+
+    private String getStringFromDocument(Document doc) throws TransformerException {
+        DOMSource domSource = new DOMSource(doc);
+        StringWriter writer = new StringWriter();
+        StreamResult result = new StreamResult(writer);
+        TransformerFactory tf = TransformerFactory.newInstance();
+        Transformer transformer = tf.newTransformer();
+        transformer.transform(domSource, result);
+        return writer.toString();
     }
 
 

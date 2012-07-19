@@ -47,6 +47,7 @@ import org.apache.synapse.mediators.base.SequenceMediator;
 import org.apache.synapse.mediators.template.TemplateMediator;
 import org.apache.synapse.message.processors.MessageProcessor;
 import org.apache.synapse.message.store.MessageStore;
+import org.apache.synapse.rest.API;
 import org.apache.synapse.task.TaskDescriptionRepository;
 import org.apache.synapse.task.TaskScheduler;
 import org.osgi.framework.ServiceRegistration;
@@ -448,6 +449,14 @@ public class ConfigurationUpdater {
             if (oldEndpointTempl != null) {
                 endpointTemplates.get(name).setFileName(oldEndpointTempl.getFileName());
                 addToDeploymentStore(MultiXMLConfigurationBuilder.TEMPLATES_DIR, oldEndpointTempl.getFileName(), name, newConfig);
+            }
+        }
+
+        Collection<API> apiCollection = newConfig.getAPIs();
+        for (API api : apiCollection) {
+            API oldAPI = currentConfig.getAPI(api.getName());
+            if (oldAPI != null) {
+                api.setFileName(oldAPI.getFileName());
             }
         }
 

@@ -123,7 +123,7 @@ public class AppFactoryGovernanceServiceComponent {
             String resourcePath = GovernanceConstants.RXT_CONFIGS_PATH +
                     RegistryConstants.PATH_SEPARATOR + rxtPath;
             try {
-                if (registry.resourceExists(resourcePath)) {
+                if (systemRegistry.resourceExists(resourcePath)) {
                     continue;
                 }
                 String rxt = FileUtil.readFileToString(rxtDir + File.separator + rxtPath);

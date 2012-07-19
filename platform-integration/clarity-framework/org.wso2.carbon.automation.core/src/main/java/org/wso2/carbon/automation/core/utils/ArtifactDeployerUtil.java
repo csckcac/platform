@@ -45,13 +45,11 @@ import org.wso2.carbon.automation.api.clients.webapp.mgt.JAXWSWebappAdminClient;
 import org.wso2.carbon.automation.api.clients.webapp.mgt.WebAppAdminClient;
 import org.wso2.carbon.automation.core.ProductConstant;
 import org.wso2.carbon.authenticator.stub.LoginAuthenticationExceptionException;
-import org.wso2.carbon.automation.core.utils.coreutils.PlatformUtil;
 import org.wso2.carbon.bpel.stub.mgt.PackageManagementException;
 import org.wso2.carbon.endpoint.stub.types.EndpointAdminEndpointAdminException;
 import org.wso2.carbon.localentry.stub.types.LocalEntryAdminException;
 import org.wso2.carbon.proxyadmin.stub.ProxyServiceAdminProxyAdminException;
 import org.wso2.carbon.registry.resource.stub.ResourceAdminServiceExceptionException;
-import org.wso2.carbon.rssmanager.ui.stub.RSSAdminRSSDAOExceptionException;
 import org.wso2.carbon.rule.service.stub.fileupload.ExceptionException;
 import org.wso2.carbon.sequences.stub.types.SequenceEditorException;
 import org.wso2.carbon.task.stub.TaskManagementException;
@@ -237,7 +235,7 @@ public class ArtifactDeployerUtil {
 
     public void dbsFileUploader(String sessionCookie, String backEndUrl, Artifact artifact,
                                 String artifactLocation, FrameworkProperties frameworkProperties)
-            throws IOException, RSSAdminRSSDAOExceptionException,
+            throws IOException,
                    org.wso2.carbon.dataservices.ui.fileupload.stub.ExceptionException,
                    ClassNotFoundException, SQLException, XMLStreamException,
                    ResourceAdminServiceExceptionException {
@@ -250,7 +248,7 @@ public class ArtifactDeployerUtil {
 
         dbsFilePath = artifactLocation + File.separator + "dbs" + File.separator +
                       getPath(artifact.getArtifactLocation()) + File.separator + artifact.getArtifactName();
-        if (artifactDependencyList != null || artifactDependencyList.size() > 0) {
+        if (artifactDependencyList != null && artifactDependencyList.size() > 0) {
             Iterator iterator = artifactDependencyList.iterator();
             sqlFileLis = new ArrayList<File>();
             while (iterator.hasNext()) {

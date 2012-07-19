@@ -40,7 +40,7 @@ public class DummyCEPListener extends CEPEventListener {
             switch (testNumber) {
                 case 0:
                     mapEvent = (HashMap) event;
-                    Assert.assertTrue(((Integer) mapEvent.get("totalRequestCount") == 21));
+                    Assert.assertTrue(((Long) mapEvent.get("totalRequestCount") == 21));
                     break;
                 case 1:
                     mapEvent = (HashMap) event;

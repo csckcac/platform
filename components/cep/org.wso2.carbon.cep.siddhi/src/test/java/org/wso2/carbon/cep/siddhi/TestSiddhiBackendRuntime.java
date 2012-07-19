@@ -62,7 +62,9 @@ public class TestSiddhiBackendRuntime extends TestCase {
 
         //Query
         Expression expression = new Expression();
-        expression.setText("OutputStream:= select requestCount,hostName,totalRequestCount=sum(requestCount) from Event[win.length=5] where requestCount >=requestCount+0 having totalRequestCount>1");
+        expression.setText("from Event[win.length(5) ][requestCount >=requestCount] " +
+                           " insert into OutputStream  requestCount,hostName, sum(requestCount) as totalRequestCount" +
+                           " having totalRequestCount>1");
         expression.setType("inline");
 
         siddhiBackendRuntime.addQuery("bamquery", expression, new DummyCEPListener(null, 0, null, 0));
@@ -105,7 +107,9 @@ public class TestSiddhiBackendRuntime extends TestCase {
         CEPBackEndRuntime esperBackendRuntime = factory.createCEPBackEndRuntime("Processor2", inputMapping2s, 0);
 
         Expression expression2 = new Expression();
-        expression2.setText("ResponseStream:=select minimumResponseTime, maximumResponseTime, avgMaximumResponseTime=avg(maximumResponseTime) from testEvent[win.length=5] where maximumResponseTime > -1 having  avgMaximumResponseTime > 100");
+        expression2.setText("from testEvent[win.length(5)][maximumResponseTime > -1]" +
+                            " insert into ResponseStream  minimumResponseTime, maximumResponseTime, avg(maximumResponseTime) as avgMaximumResponseTime" +
+                            " having  avgMaximumResponseTime > 100");
         expression2.setType("inline");
         esperBackendRuntime.addQuery("bamquery", expression2, new DummyCEPListener(null, 0, null, 1));
 
@@ -159,9 +163,19 @@ public class TestSiddhiBackendRuntime extends TestCase {
 //        Query query = new Query();
 //        query.setName("StocksPredictor");
 
-        String fastStocksStream = "fastMovingStockQuotes:= select symbol, price, averagePrice=avg(price) from  allStockQuotes [win.time=600000] where symbol contains '' group by symbol having ((price > (averagePrice*1.02)) or (averagePrice*0.98)> price ))";
-        String workCountStream = "wordCounts:= select company, words=sum(wordCount) from  twitterFeed[win.time=600000] where company contains '' group by company having (words > 10)";
-        String selectFastMovingHighWordCount = "fastMovingHighWordCount:=select company=fastMovingStockQuotes.symbol,averagePrice=fastMovingStockQuotes.averagePrice, words=wordCounts.words from fastMovingStockQuotes[win.time=600000] , wordCounts[win.time=600000]  where fastMovingStockQuotes.symbol==wordCounts.company";
+        String fastStocksStream = "from  allStockQuotes [win.time(600000)]" +
+                                  " insert into fastMovingStockQuotes symbol, price, avg(price) as averagePrice" +
+                                  " group by symbol " +
+                                  " having ( price > averagePrice*1.02) or ( averagePrice*0.98 > price ) ";
+//        String fastStocksStream = "fastMovingStockQuotes:= select symbol, price, averagePrice=avg(price) from  allStockQuotes [win.time=600000] where symbol contains '' group by symbol having ((price > (averagePrice*1.02)) or (averagePrice*0.98)> price ))";
+        String workCountStream = "from  twitterFeed[win.time(600000)]" +
+                                 " insert into wordCounts company, sum(wordCount) as words" +
+                                 " group by company " +
+                                 " having (words > 10)";
+//        String workCountStream = "wordCounts:= select company, words=sum(wordCount) from  twitterFeed[win.time=600000] where company contains '' group by company having (words > 10)";
+        String selectFastMovingHighWordCount = "from fastMovingStockQuotes[win.time(600000)] join wordCounts[win.time(600000)]  on fastMovingStockQuotes.symbol== wordCounts.company" +
+                                               " insert into fastMovingHighWordCount fastMovingStockQuotes.symbol as company, fastMovingStockQuotes.averagePrice as averagePrice, wordCounts.words as words ";
+//        String selectFastMovingHighWordCount = "fastMovingHighWordCount:=select company=fastMovingStockQuotes.symbol,averagePrice=fastMovingStockQuotes.averagePrice, words=wordCounts.words from fastMovingStockQuotes[win.time=600000] , wordCounts[win.time=600000]  where fastMovingStockQuotes.symbol==wordCounts.company";
 
 
         Expression fastStockStreamExpression = new Expression();

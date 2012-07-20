@@ -168,6 +168,43 @@
 				<AttributeID>cn</AttributeID>
 				<Description>Full Name</Description>
 		    </Claim>
+
+<!-- Identity management claims.  Not used in default WSO2 Identity Server installation -->
+
+		    <Claim>
+				<ClaimURI>http://wso2.org/claims/primaryChallengeQuestion</ClaimURI>
+				<DisplayName>Primary Challenge Question</DisplayName>
+				<AttributeID>title</AttributeID>
+				<Description>Primary Challenge Question</Description>
+		    </Claim>
+		    <Claim>
+				<ClaimURI>http://wso2.org/claims/challengeQuestionUris</ClaimURI>
+				<DisplayName>Challenge Question</DisplayName>
+				<AttributeID>stateOrProvinceName</AttributeID>
+				<Description>Challenge Question</Description>
+		    </Claim>
+
+
+		    <Claim>
+				<ClaimURI>http://wso2.org/claims/oneTimePassword</ClaimURI>
+				<DisplayName>One Time Password</DisplayName>
+				<AttributeID>postalcode</AttributeID>
+				<Description>One Time Password</Description>
+		    </Claim>
+		    <Claim>
+				<ClaimURI>http://wso2.org/claims/passwordTimestamp</ClaimURI>
+				<DisplayName>Password Time Stamp</DisplayName>
+				<AttributeID>nickName</AttributeID>
+				<Description>Password Time Stamp</Description>
+		    </Claim>
+		    <Claim>
+				<ClaimURI>http://wso2.org/claims/accountStatus</ClaimURI>
+				<DisplayName>Account Locked</DisplayName>
+				<AttributeID>otherPhone</AttributeID>
+				<Description>Account Locked</Description>
+		    </Claim>
+
+
 		</Dialect>
 
 		<Dialect dialectURI="http://schemas.xmlsoap.org/ws/2005/05/identity">

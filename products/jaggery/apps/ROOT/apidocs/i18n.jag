@@ -62,7 +62,7 @@ include('/includes/topnavi.jag');
 
     <pre class="prettyprint linenums">
 &lt%
-var i18n = require("i18n").i18n;
+var i18n = require("i18n");
 i18n.init(request);
 %&gt
 </pre>
@@ -88,6 +88,16 @@ print(i18n.localize("greetings.local", "Greetings from Jaggery"));
 
                     <h4>Overview</h4>
                     <p class="description"><code>i18n</code> provides the ability to internationalize text in webapps </p>
+
+                    <p class="description">The content related to localization, need to be placed as json files with the name
+                     <code>locale_{language_code}.json</code>, i.e french locale file will be <code>locale_fr.json</code>
+                        The content is in JSON which will have simple key-vale pairs like follows.
+                        <pre class="prettyprint">
+{
+   "greetings.local": "Français - Démo de l10n.js",
+   "info.local": "Vous lisez une localisation en français de cette page."  }
+                        </pre>
+                    </p>
 
 
                 </section>
@@ -138,45 +148,26 @@ print(i18n.localize("greetings.local", "Greetings from Jaggery"));
                         <tr>
                             <td><code>init(request)</code></td>
                             <td>none</td>
-                            <td>initialize i18n object with the request locale<br><br>
+                            <td>initialize i18n object with the request<br><br>
                                 <pre class="prettyprint">
-var i18n = require("i18n").i18n;
+var i18n = require("i18n");
 i18n.init(request);
 </pre>
                             </td>
                         </tr>
                         <tr>
 
-                            <td><code>getAuthorizationUrl()</code></td>
+                            <td><code>localize(key, fallback)</code></td>
                             <td>String</td>
-                            <td>Returns the authorization url to obtain the authentication code<br><br>
+                            <td>Returns the localized string, if not provided the fallback text<br><br>
+                            <pre class="prettyprint">
+print(i18n.localize("greetings.local", "Greetings from Jaggery"));
+</pre>
+
                             </td>
 
                         </tr>
-                        <tr>
-                            <td><code>getAccessToken(authCode)</code></td>
-                            <td>Object</td>
-                            <td>returns a token object
-                                <br><br>
-                                <pre class="prettyprint">var accessToken = linkedin.getAccessToken("3741501");</pre>
-                            </td>
-                        </tr>
-                        <tr>
-                            <td><code>sendOAuthRequest(accessToken, verb, url[,parameters])</code></td>
-                            <td>Object</td>
-                            <td>returns a oauth response object.
-                                <br><br>
-                                <pre class="prettyprint">var response = linkedin.sendOAuthRequest(accessToken, "GET", "http://api.linkedin.com/v1/groups/59053/posts?count=20&start=1&format=json");</pre>
-                            </td>
-                        </tr>
-                        <tr>
-                            <td><code>response.getBody()</code></td>
-                            <td>String</td>
-                            <td>returns the response body.
-                                <br><br>
-                                <pre class="prettyprint">print(response.getBody());</pre>
-                            </td>
-                        </tr>
+
                         </tbody>
                     </table>
                 </section>

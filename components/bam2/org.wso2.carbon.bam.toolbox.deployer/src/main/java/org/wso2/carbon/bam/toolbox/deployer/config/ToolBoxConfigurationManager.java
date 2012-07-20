@@ -33,7 +33,6 @@ import org.wso2.carbon.registry.core.ResourceImpl;
 import org.wso2.carbon.registry.core.exceptions.RegistryException;
 
 import javax.xml.stream.XMLStreamException;
-import java.io.File;
 import java.io.InputStream;
 import java.util.ArrayList;
 
@@ -150,7 +149,7 @@ public class ToolBoxConfigurationManager {
            try {
             Registry registry = ServiceHolder.getRegistry(tenantId);
             String path = BAMToolBoxDeployerConstants.BAM_BASE_PATH + BAMToolBoxDeployerConstants.TOOL_BOX_CONF
-                    + File.separator + toolBoxName;
+                    + BAMToolBoxDeployerConstants.FILE_SEPERATOR + toolBoxName;
             if(registry.resourceExists(path)){
                Resource resource = registry.get(path);
                 InputStream content = resource.getContentStream();

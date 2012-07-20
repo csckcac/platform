@@ -10,6 +10,7 @@ import org.wso2.carbon.cep.core.internal.config.input.mapping.InputMappingHelper
 import org.wso2.carbon.cep.core.internal.config.input.mapping.XMLInputMappingHelper;
 import org.wso2.carbon.cep.core.mapping.input.mapping.XMLInputMapping;
 import org.wso2.carbon.cep.core.internal.config.input.mapping.TupleInputMappingHelper;
+import org.wso2.carbon.cep.core.internal.config.input.mapping.MapInputMappingHelper;
 
 import org.wso2.carbon.cep.core.internal.util.CEPConstants;
 import org.wso2.carbon.registry.core.Collection;
@@ -66,7 +67,15 @@ public class InputHelper {
                 input.getInputMapping().setStream( tupleMappingElement.getAttributeValue(new QName(CEPConstants.CEP_REGISTRY_STREAM)));
 
             } else {
-                log.warn("No input mapping found for topic "+topic);
+
+                OMElement mapMappingElement =
+                        inputElement.getFirstChildWithName(new QName(CEPConstants.CEP_CONF_NAMESPACE,
+                                                                     CEPConstants.CEP_CONF_ELE_MAP_MAPPING));
+                if (mapMappingElement != null){
+                    input.setInputMapping(MapInputMappingHelper.fromOM(mapMappingElement));
+                    input.getInputMapping().setStream(mapMappingElement.getAttributeValue(new QName(CEPConstants.CEP_REGISTRY_STREAM)));
+                }
+                log.warn("No input mapping found for topic " + topic);
             }
         }
         return input;

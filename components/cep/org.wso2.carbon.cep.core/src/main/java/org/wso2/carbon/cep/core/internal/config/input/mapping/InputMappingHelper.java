@@ -8,6 +8,7 @@ import org.wso2.carbon.cep.core.mapping.input.Input;
 import org.wso2.carbon.cep.core.mapping.input.mapping.InputMapping;
 import org.wso2.carbon.cep.core.mapping.input.mapping.TupleInputMapping;
 import org.wso2.carbon.cep.core.mapping.input.mapping.XMLInputMapping;
+import org.wso2.carbon.cep.core.mapping.input.mapping.MapInputMapping;
 import org.wso2.carbon.registry.core.Collection;
 import org.wso2.carbon.registry.core.Registry;
 import org.wso2.carbon.registry.core.exceptions.RegistryException;
@@ -45,7 +46,9 @@ public class InputMappingHelper {
             Collection mappingCollection = registry.newCollection();
             mappingCollection.addProperty(CEPConstants.CEP_REGISTRY_STREAM, inputMapping.getStream());
             Class mappingClass = inputMapping.getMappingClass();
-            mappingCollection.addProperty(CEPConstants.CEP_REGISTRY_EVENT_CLASS, mappingClass.getName());
+            if (mappingClass != null){
+                 mappingCollection.addProperty(CEPConstants.CEP_REGISTRY_EVENT_CLASS, mappingClass.getName());
+            }
 
             String mappingPath = inputResourcePath + CEPConstants.CEP_REGISTRY_BS + CEPConstants.CEP_REGISTRY_MAPPING + CEPConstants.CEP_REGISTRY_BS;
 
@@ -58,6 +61,10 @@ public class InputMappingHelper {
                 mappingCollection.addProperty(CEPConstants.CEP_REGISTRY_MAPPING, CEPConstants.CEP_REGISTRY_MAPPING_TUPLE);
                 registry.put(inputResourcePath + CEPConstants.CEP_REGISTRY_BS + CEPConstants.CEP_REGISTRY_MAPPING, mappingCollection);
                 TupleInputMappingHelper.addMappingToRegistry(registry, (TupleInputMapping) inputMapping, mappingPath);
+            } else if (input.getInputMapping() instanceof MapInputMapping) {
+                mappingCollection.addProperty(CEPConstants.CEP_REGISTRY_MAPPING, CEPConstants.CEP_REGISTRY_MAPPING_MAP);
+                registry.put(inputResourcePath + CEPConstants.CEP_REGISTRY_BS + CEPConstants.CEP_REGISTRY_MAPPING_MAP, mappingCollection);
+                MapInputMappingHelper.addMappingToRegistry(registry, (MapInputMapping) inputMapping, mappingPath);
             } else {
                 throw new CEPConfigurationException(inputMapping.getStream() + " has not valid input mapping");
             }
@@ -110,9 +117,11 @@ public class InputMappingHelper {
             String streamName = mappingCollection.getProperty(CEPConstants.CEP_REGISTRY_STREAM);
 
             String eventClass = mappingCollection.getProperty(CEPConstants.CEP_REGISTRY_EVENT_CLASS);
-            Class mappingClass;
+            Class mappingClass = null;
             try {
-                mappingClass = Class.forName(eventClass);
+                if (eventClass != null) {
+                    mappingClass = Class.forName(eventClass);
+                }
             } catch (ClassNotFoundException e) {
                 throw new CEPConfigurationException("No class found matching " + mappingCollection.getProperty(CEPConstants.CEP_REGISTRY_EVENT_CLASS), e);
             }
@@ -123,11 +132,16 @@ public class InputMappingHelper {
                 inputMapping.setStream(streamName);
                 inputMapping.setMappingClass(mappingClass);
                 XMLInputMappingHelper.loadMappingsFromRegistry(registry, (XMLInputMapping) inputMapping, mappingCollection);
-            } else { //Tuple
+            } else if (mappingCollection.getProperty(CEPConstants.CEP_REGISTRY_MAPPING).equals(CEPConstants.CEP_REGISTRY_MAPPING_TUPLE)) { //Tuple
                 inputMapping = new TupleInputMapping();
                 inputMapping.setStream(streamName);
                 inputMapping.setMappingClass(mappingClass);
                 TupleInputMappingHelper.loadMappingsFromRegistry(registry, (TupleInputMapping) inputMapping, mappingCollection);
+            } else if (mappingCollection.getProperty(CEPConstants.CEP_REGISTRY_MAPPING).equals(CEPConstants.CEP_REGISTRY_MAPPING_MAP)){
+                inputMapping = new MapInputMapping();
+                inputMapping.setStream(streamName);
+                inputMapping.setMappingClass(mappingClass);
+                MapInputMappingHelper.loadMappingsFromRegistry(registry, (MapInputMapping) inputMapping, mappingCollection);
             }
 
 

@@ -44,7 +44,7 @@ public interface CEPConstants {
     String CEP_CONF_ELE_EMAPPING = "elementMapping";
     String CEP_CONF_ELE_XML_MAPPING = "xmlMapping";
     String CEP_CONF_ELE_TUPLE_MAPPING = "tupleMapping";
-    String CEP_CONF_ELE_HASH_MAP_MAPPING = "hashMapMapping";
+    String CEP_CONF_ELE_MAP_MAPPING = "mapMapping";
     String CE_CONF_ELE_XML_FIELD_NAME = "xmlFieldName";
     String CE_CONF_ELE_XML_FIELD_TYPE = "xmlFieldType";
     String CEP_CONF_ELE_CEP_BUCKETS = "CEPBuckets";
@@ -92,6 +92,7 @@ public interface CEPConstants {
     String CEP_REGISTRY_MAPPING = "mapping";
     String CEP_REGISTRY_MAPPING_XML = "xml";
     String CEP_REGISTRY_MAPPING_TUPLE = "tuple";
+    String CEP_REGISTRY_MAPPING_MAP = "map";
     String CEP_REGISTRY_STREAM = "stream";
     String CEP_REGISTRY_NAME = "name";
     String CEP_REGISTRY_TYPE = "type";

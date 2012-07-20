@@ -9,6 +9,7 @@ import org.wso2.carbon.cep.core.mapping.output.Output;
 import org.wso2.carbon.cep.core.mapping.output.mapping.ElementOutputMapping;
 import org.wso2.carbon.cep.core.mapping.output.mapping.TupleOutputMapping;
 import org.wso2.carbon.cep.core.mapping.output.mapping.XMLOutputMapping;
+import org.wso2.carbon.cep.core.mapping.output.mapping.MapOutputMapping;
 import org.wso2.carbon.registry.core.Collection;
 import org.wso2.carbon.registry.core.Registry;
 import org.wso2.carbon.registry.core.Resource;
@@ -64,6 +65,14 @@ public class OutputHelper {
             }
         }
 
+        if (output.getOutputMapping() == null) {
+            OMElement mapMappingElement = outputElement.getFirstChildWithName(new QName(CEPConstants.CEP_CONF_NAMESPACE,
+                                                                                            CEPConstants.CEP_CONF_ELE_MAP_MAPPING));
+            if (mapMappingElement != null) {
+                output.setOutputMapping(MapOutputMappingHelper.fromOM(mapMappingElement));
+            }
+        }
+
 
         return output;
     }
@@ -76,20 +85,23 @@ public class OutputHelper {
             outputCollection.addProperty(CEPConstants.CEP_CONF_ELE_BROKER_NAME, output.getBrokerName());
 
             String registryOutputPath = queryPath + CEPConstants.CEP_REGISTRY_BS + CEPConstants.CEP_REGISTRY_OUTPUT;
+            
             if (output.getOutputMapping() instanceof ElementOutputMapping) {
                 outputCollection.addProperty(CEPConstants.CEP_REGISTRY_TYPE, CEPConstants.CEP_REGISTRY_ELEMENT_MAPPING);
                 registry.put(registryOutputPath, outputCollection);
-
                 ElementOutputMappingHelper.addElementMappingToRegistry(registry, (ElementOutputMapping) output.getOutputMapping(), queryPath);
+
             } else if (output.getOutputMapping() instanceof TupleOutputMapping) {
                 outputCollection.addProperty(CEPConstants.CEP_REGISTRY_TYPE, CEPConstants.CEP_REGISTRY_TUPLE_MAPPING);
                 registry.put(registryOutputPath, outputCollection);
-
                 TupleOutputMappingHelper.addTupleMappingToRegistry(registry, (TupleOutputMapping) output.getOutputMapping(), queryPath);
+            } else if (output.getOutputMapping() instanceof MapOutputMapping){
+                outputCollection.addProperty(CEPConstants.CEP_REGISTRY_TYPE, CEPConstants.CEP_REGISTRY_MAPPING_MAP);
+                registry.put(registryOutputPath, outputCollection);
+                MapOutputMappingHelper.addMapMappingToRegistry(registry, (MapOutputMapping) output.getOutputMapping(), queryPath);
             } else {
                 outputCollection.addProperty(CEPConstants.CEP_REGISTRY_TYPE, CEPConstants.CEP_REGISTRY_XML_MAPPING);
                 registry.put(registryOutputPath, outputCollection);
-
                 XMLOutputMappingHelper.addXMLMappingToRegistry(registry, queryPath, (XMLOutputMapping) output.getOutputMapping());
             }
         } catch (RegistryException e) {
@@ -119,6 +131,11 @@ public class OutputHelper {
                 registry.put(registryOutputPath, outputCollection);
 
                 TupleOutputMappingHelper.modifyTupleMappingInRegistry(registry, (TupleOutputMapping) output.getOutputMapping(), queryPath);
+            } else if (output.getOutputMapping() instanceof MapOutputMapping) {
+                outputCollection.addProperty(CEPConstants.CEP_REGISTRY_TYPE, CEPConstants.CEP_REGISTRY_MAPPING_MAP);
+                registry.put(registryOutputPath, outputCollection);
+
+                MapOutputMappingHelper.modifyMapMappingInRegistry(registry, (MapOutputMapping) output.getOutputMapping(), queryPath);
             } else {
                 outputCollection.addProperty(CEPConstants.CEP_REGISTRY_TYPE, CEPConstants.CEP_REGISTRY_XML_MAPPING);
                 registry.put(registryOutputPath, outputCollection);
@@ -152,6 +169,11 @@ public class OutputHelper {
                             .equals(mapping)) {
                         ElementOutputMapping elementOutputMapping = ElementOutputMappingHelper.loadElementMappingFromRegistry(registry, outputS);
                         output.setOutputMapping(elementOutputMapping);
+
+                    } else if ((CEPConstants.CEP_REGISTRY_BS + CEPConstants.CEP_REGISTRY_MAPPING_MAP).equals(mapping)) {
+                        MapOutputMapping mapOutputMapping = MapOutputMappingHelper.loadMapMappingFromRegistry(registry, outputS);
+                        output.setOutputMapping(mapOutputMapping);
+
                     } else {
                         XMLOutputMapping xmlOutputMapping = XMLOutputMappingHelper.loadXMLMappingFromRegistry(registry, outputS);
                         output.setOutputMapping(xmlOutputMapping);

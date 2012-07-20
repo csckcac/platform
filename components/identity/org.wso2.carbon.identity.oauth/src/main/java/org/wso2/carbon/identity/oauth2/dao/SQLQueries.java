@@ -20,33 +20,34 @@ package org.wso2.carbon.identity.oauth2.dao;
 
 public class SQLQueries {
     public static final String STORE_AUTHORIZATION_CODE = "INSERT INTO " +
-            "IDENTITY_OAUTH2_AUTHORIZATION_CODE " +
+            "IDN_OAUTH2_AUTHORIZATION_CODE " +
             "(AUTHORIZATION_CODE, CONSUMER_KEY, SCOPE, AUTHZ_USER, TIME_CREATED, VALIDITY_PERIOD) " +
             "VALUES (?,?,?,?,?,?)";
 
-    public static final String VALIDATE_AUTHZ_CODE = "SELECT AUTHZ_USER, SCOPE, TIME_CREATED, VALIDITY_PERIOD " +
-            "FROM IDENTITY_OAUTH2_AUTHORIZATION_CODE " +
+    public static final String VALIDATE_AUTHZ_CODE = "SELECT AUTHZ_USER, SCOPE, " +
+            "TIME_CREATED, VALIDITY_PERIOD " +
+            "FROM IDN_OAUTH2_AUTHORIZATION_CODE " +
             "where CONSUMER_KEY = ? " +
             "AND AUTHORIZATION_CODE = ?";
 
     public static final String STORE_ACCESS_TOKEN = "INSERT INTO " +
-            "IDENTITY_OAUTH2_ACCESS_TOKEN " +
+            "IDN_OAUTH2_ACCESS_TOKEN " +
             "(ACCESS_TOKEN, REFRESH_TOKEN, CONSUMER_KEY, AUTHZ_USER, TIME_CREATED, " +
             "VALIDITY_PERIOD, TOKEN_SCOPE, TOKEN_STATE) " +
             "VALUES (?,?,?,?,?,?,?,?)";
 
     public static final String REMOVE_AUTHZ_CODE = "DELETE " +
-            "FROM IDENTITY_OAUTH2_AUTHORIZATION_CODE " +
+            "FROM IDN_OAUTH2_AUTHORIZATION_CODE " +
             "WHERE AUTHORIZATION_CODE = ?";
 
     public static final String VALIDATE_BEARER_TOKEN = "SELECT AUTHZ_USER, " +
-            "TOKEN_SCOPE, TIME_CREATED,  VALIDITY_PERIOD FROM IDENTITY_OAUTH2_ACCESS_TOKEN " +
+            "TOKEN_SCOPE, TIME_CREATED,  VALIDITY_PERIOD FROM IDN_OAUTH2_ACCESS_TOKEN " +
             "WHERE CONSUMER_KEY = ? AND ACCESS_TOKEN = ?";
 
     public static final String VALIDATE_REFRESH_TOKEN = "SELECT ACCESS_TOKEN, AUTHZ_USER, " +
-            "TOKEN_SCOPE FROM IDENTITY_OAUTH2_ACCESS_TOKEN " +
+            "TOKEN_SCOPE FROM IDN_OAUTH2_ACCESS_TOKEN " +
             "WHERE CONSUMER_KEY = ? AND REFRESH_TOKEN = ?";
 
     public static final String REMOVE_ACCESS_TOKEN = "DELETE FROM " +
-            "IDENTITY_OAUTH2_ACCESS_TOKEN WHERE ACCESS_TOKEN = ? ";
+            "IDN_OAUTH2_ACCESS_TOKEN WHERE ACCESS_TOKEN = ? ";
 }

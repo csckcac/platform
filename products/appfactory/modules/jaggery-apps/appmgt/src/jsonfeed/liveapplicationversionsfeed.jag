@@ -12,7 +12,7 @@
  
 	try{
 		
-		var applicationList = getAllAppVersionsInStage(userName, getProperties('ApplicationDeployment.DeploymentStage')[0]);
+		var applicationList = getAllAppVersionsInStage(getProperties('ApplicationDeployment.DeploymentStage')[0], userName);
 		
 	    if(applicationList == undefined || applicationList.length == 0){
 			log.info("No Applications are created.");

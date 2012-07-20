@@ -1,10 +1,12 @@
     <%
     
     include('../mgt/registry_access_manager.jag');
-    
+    include('../mgt/application_manager.jag');
+	
     var log = new Log();
 
-    var versionArray = getAppCountInStage(session.get("applicationKey"));
+	var userName = session.get("LOGGED_IN_USER");
+    var versionArray = getAppCountInStage(session.get("applicationKey"), userName);
 	var dataArray = new Array();
 	
 	for(var i = 0; i < versionArray.length; i++) {				

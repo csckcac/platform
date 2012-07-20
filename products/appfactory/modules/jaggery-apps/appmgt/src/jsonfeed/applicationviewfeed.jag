@@ -11,9 +11,8 @@
  	var contentArray = new Array();
  
 	try{
-		
-		var applicationList = getAppVersionsInStages(session.get("applicationKey"));
-		
+		var applicationList = getAppVersionsInStages(session.get("applicationKey"), userName);
+
 	    if(applicationList == undefined || applicationList.length == 0){
 			log.info("No Applications are created.");
 	    }

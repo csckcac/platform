@@ -210,15 +210,15 @@
        return null;
 	}
 
-	function getAllAppVersionsInStage(userName, stageName) {
+	function getAllAppVersionsInStage(stageName, username) {
 		
 		var allAppVersionArray = new Array();
-		var applicationList = getAllAppsOfUser(userName);
+		var applicationList = getAllAppsOfUser(username);
 		
 		for (var applicationName in applicationList) {
 	    	var applicationKey = applicationList[applicationName];
 	 
-	    	var appVersions = getAppVersionsInStage(stageName, applicationKey);
+	    	var appVersions = getAppVersionsInStage(stageName, applicationKey, userName);
 		    if(appVersions != null) {
 		    	allAppVersionArray = allAppVersionArray.concat(appVersions);
 		    } 
@@ -276,9 +276,9 @@
 		return stageArray;
 	}
 	
-	function getAllAppVersionsInStages(userName) {
+	function getAllAppVersionsInStages(username) {
 		var allAppVersionArray = new Array();
-		var applicationList = getAllAppsOfUser(userName);
+		var applicationList = getAllAppsOfUser(username);
 		
 		for (var applicationName in applicationList) {
 	    	var applicationKey = applicationList[applicationName];
@@ -287,7 +287,7 @@
 		
 			for(var i = 0; i < allStages.length; i++) {				
 				var stage = allStages[i];
-				var appVersions = getAppVersionsInStage(stage, applicationKey);
+				var appVersions = getAppVersionsInStage(stage, applicationKey, userName);
 			    if(appVersions != null) {
 			    	allAppVersionArray = allAppVersionArray.concat(appVersions);
 			    } 
@@ -303,7 +303,7 @@
 		
 		for(var i = 0; i < allStages.length; i++) {				
 			var stage = allStages[i];
-			var appVersions = getAppVersionsInStage(stage, applicationKey);
+			var appVersions = getAppVersionsInStage(stage, applicationKey, userName);
 		    if(appVersions != null) {
 		    	allAppVersionArray = allAppVersionArray.concat(appVersions);
 		    } 
@@ -312,7 +312,7 @@
 		return allAppVersionArray;
 	}
 	
-	function getAppCountInStage(applicationKey) {
+	function getAppCountInStage(applicationKey, username) {
 		var versionArray = new Array();
 		var allStages = getAllStages();
 		
@@ -320,7 +320,7 @@
 			var stageName = allStages[i];
 			var versionEntry = {};
 			versionEntry.stage = stageName;
-			var applicationList = getAppVersionsInStage(stageName, applicationKey);
+			var applicationList = getAllAppVersionsInStage(stageName, username);
 		
 			if(applicationList == null) {
 				continue;

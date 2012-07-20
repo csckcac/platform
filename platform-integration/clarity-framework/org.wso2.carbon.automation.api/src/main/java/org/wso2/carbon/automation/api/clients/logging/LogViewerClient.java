@@ -20,7 +20,6 @@ import org.apache.axis2.AxisFault;
 import org.apache.commons.logging.Log;
 import org.apache.commons.logging.LogFactory;
 import org.wso2.carbon.automation.api.clients.utils.AuthenticateStub;
-import org.wso2.carbon.automation.api.utils.SetAxis2ConfigurationContext;
 import org.wso2.carbon.logging.view.stub.LogViewerStub;
 import org.wso2.carbon.logging.view.stub.types.carbon.LogEvent;
 
@@ -35,7 +34,6 @@ public class LogViewerClient {
     private static final Log log = LogFactory.getLog(LogViewerClient.class);
     private LogViewerStub logViewerStub;
     String serviceName = "LogViewer";
-    SetAxis2ConfigurationContext setContext;
 
     public LogViewerClient(String sessionCookie, String backEndUrl)
             throws AxisFault {
@@ -47,9 +45,8 @@ public class LogViewerClient {
 
     public LogViewerClient(String backEndURL, String userName, String password)
             throws AxisFault {
-        setContext = new SetAxis2ConfigurationContext();
          String endpoint = backEndURL + serviceName;
-        logViewerStub = new LogViewerStub(setContext.setConfigurationContext(),endpoint);
+        logViewerStub = new LogViewerStub(endpoint);
         AuthenticateStub.authenticateStub(userName, password, logViewerStub);
     }
 

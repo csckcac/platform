@@ -19,14 +19,15 @@
 package org.wso2.carbon.identity.entitlement.policy;
 
 import org.wso2.balana.*;
+import org.wso2.balana.ctx.AbstractRequestCtx;
 import org.wso2.balana.ctx.EvaluationCtx;
 import org.wso2.balana.ctx.EvaluationCtxFactory;
-import org.wso2.balana.xacml2.ctx.RequestCtx;
 import org.apache.axiom.om.OMElement;
 import org.apache.axiom.om.util.AXIOMUtil;
 import org.apache.commons.logging.Log;
 import org.apache.commons.logging.LogFactory;
 import org.w3c.dom.Document;
+import org.wso2.balana.ctx.RequestCtxFactory;
 import org.wso2.carbon.context.CarbonContext;
 import org.wso2.carbon.identity.base.IdentityException;
 import org.wso2.carbon.identity.entitlement.EntitlementConstants;
@@ -370,7 +371,8 @@ public class PolicySearch {
             Document doc = EntitlementUtil.createRequestElement(requestAttributes);
             if(doc != null){
                 try {
-                    RequestCtx requestCtx = RequestCtx.getInstance(doc.getDocumentElement());
+                    AbstractRequestCtx requestCtx = RequestCtxFactory.getFactory().
+                                                            getRequestCtx((doc.getDocumentElement()));
                     EvaluationCtx ctx = EvaluationCtxFactory.getFactory().
                             getEvaluationCtx(requestCtx, entitlementEngine.getPdpConfig());
                     result = policyFinder.getMatchingPolicies(ctx);

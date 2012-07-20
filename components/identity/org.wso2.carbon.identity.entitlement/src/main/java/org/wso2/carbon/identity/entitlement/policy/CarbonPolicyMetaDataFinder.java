@@ -126,6 +126,9 @@ public class CarbonPolicyMetaDataFinder extends AbstractPolicyMetaDataFinder {
         Set<String> values = new HashSet<String>();        
         if(EntitlementConstants.SUBJECT_CATEGORY_ID.equals(category)){
             values.add("http://wso2.org/claims/role");
+            values.add("http://wso2.org/claims/streetaddress");
+            values.add("http://wso2.org/claims/emailaddress");
+            values.add("http://wso2.org/claims/mobile");
         }
         return values;
     }
@@ -133,18 +136,27 @@ public class CarbonPolicyMetaDataFinder extends AbstractPolicyMetaDataFinder {
     @Override
     public Map<String, String> getSupportedRuleFunctions() {
         Map<String, String> newMap = new HashMap<String, String>();
-        newMap.put("=" , "EQUAL");
-        newMap.put("regex" , "Regex-match");
-        newMap.put("<" , "greater-than");
-        newMap.put(">" , "less-than");
+        newMap.put(">= X >=" , "greater-than-or-equal-and-less-than-or-equal");
+        newMap.put("> X >=" , "greater-than-and-less-than-or-equal");
+        newMap.put(">= X >" , "greater-than-or-equal-and-less-than");
+        newMap.put("> X >" , "greater-than-and-less-than");
+        newMap.put("> X" , "greater-than");
+        newMap.put(">= X" , "greater-than-or-equal");
+        newMap.put("< X" , "less-than");
+        newMap.put("=< X" , "less-than-or-equal");
+        newMap.put("=" , "equal");
+        newMap.put("regexp" , "regexp-match");
+        newMap.put("equal with at least one of", "at-least-one-member-of");
+        newMap.put("in", "is-in");
+        newMap.put("equal with all one of", "set-equals");
         return newMap;
     }
 
     @Override
     public Map<String, String> getSupportedTargetFunctions() {
         Map<String, String> newMap = new HashMap<String, String>();
-        newMap.put("=" , "EQUAL");
-        newMap.put("regex" , "Regex-match");
+        newMap.put("=" , "equal");
+        newMap.put("regexp" , "regexp-match");
         return newMap;
     }
 
@@ -157,5 +169,20 @@ public class CarbonPolicyMetaDataFinder extends AbstractPolicyMetaDataFinder {
         values.add("are not");
         return values;
 
+    }
+
+    @Override
+    public Set<String> getAttributeDataTypes(String attributeType) throws Exception {
+        
+        Set<String> values = new HashSet<String>();
+        values.add("http://www.w3.org/2001/XMLSchema#string");
+        values.add("http://www.w3.org/2001/XMLSchema#boolean");
+        values.add("http://www.w3.org/2001/XMLSchema#integer");
+        values.add("http://www.w3.org/2001/XMLSchema#double");
+        values.add("http://www.w3.org/2001/XMLSchema#time");
+        values.add("http://www.w3.org/2001/XMLSchema#date");
+        values.add("urn:oasis:names:tc:xacml:1.0:data-type:x500Name");
+        values.add("urn:oasis:names:tc:xacml:2.0:data-type:ipAddress");
+        return values;
     }
 }

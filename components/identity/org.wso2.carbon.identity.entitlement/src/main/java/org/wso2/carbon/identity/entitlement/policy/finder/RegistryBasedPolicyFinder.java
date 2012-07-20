@@ -26,6 +26,7 @@ import net.sf.jsr107cache.Cache;
 import org.apache.commons.logging.Log;
 import org.apache.commons.logging.LogFactory;
 
+import org.wso2.balana.combine.xacml2.*;
 import org.wso2.balana.ctx.EvaluationCtx;
 import org.wso2.carbon.caching.core.identity.IdentityCacheEntry;
 import org.wso2.carbon.caching.core.identity.IdentityCacheKey;
@@ -37,13 +38,6 @@ import org.wso2.carbon.identity.entitlement.internal.EntitlementServiceComponent
 import org.wso2.carbon.identity.entitlement.pdp.EntitlementEngine;
 import org.wso2.carbon.identity.entitlement.policy.PolicyCollection;
 import org.wso2.carbon.identity.entitlement.policy.PolicyStoreReader;
-
-import org.wso2.balana.combine.DenyOverridesPolicyAlg;
-import org.wso2.balana.combine.FirstApplicablePolicyAlg;
-import org.wso2.balana.combine.OnlyOneApplicablePolicyAlg;
-import org.wso2.balana.combine.OrderedDenyOverridesPolicyAlg;
-import org.wso2.balana.combine.OrderedPermitOverridesPolicyAlg;
-import org.wso2.balana.combine.PermitOverridesPolicyAlg;
 import org.wso2.balana.combine.PolicyCombiningAlgorithm;
 import org.wso2.balana.finder.PolicyFinder;
 import org.wso2.balana.finder.PolicyFinderModule;

@@ -32,12 +32,12 @@ import java.util.Map;
 import java.util.Properties;
 import java.util.Set;
 
+import org.wso2.balana.attr.AttributeDesignator;
 import org.wso2.balana.ctx.Status;
 import net.sf.jsr107cache.Cache;
 import org.apache.commons.logging.Log;
 import org.apache.commons.logging.LogFactory;
 import org.w3c.dom.Node;
-import org.wso2.balana.xacml2.attr.AttributeDesignator;
 import org.wso2.carbon.caching.core.identity.IdentityCacheEntry;
 import org.wso2.carbon.caching.core.identity.IdentityCacheKey;
 import org.wso2.carbon.identity.entitlement.EntitlementConstants;

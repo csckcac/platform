@@ -71,8 +71,9 @@ public class EntitlementPolicyAdminService extends AbstractAdmin {
 	public void addPolicy(PolicyDTO policy) throws IdentityException {
 		PolicyAdmin policyAdmin;
 		AbstractPolicy policyObj;
-	EntitlementEngine entitlementEngine = EntitlementEngine.getInstance(
+	    EntitlementEngine entitlementEngine = EntitlementEngine.getInstance(
 				getGovernanceUserRegistry(), CarbonContext.getCurrentContext().getTenantId());
+        EntitlementUtil.validatePolicy(policy);
 		policyObj = PolicyReader.getInstance(null, null).getPolicy(policy.getPolicy());
 		if (policyObj != null) {
 			policyAdmin = new PolicyAdmin(new PolicyStore(getGovernanceUserRegistry()));
@@ -83,7 +84,6 @@ public class EntitlementPolicyAdminService extends AbstractAdmin {
 				throw new IdentityException(
 						"An Entitlement Policy with the given ID already exists");
 			}
-            EntitlementUtil.validatePolicy(policy);
 			policyAdmin.addOrUpdatePolicy(policy);
 			entitlementEngine.getRegistryModule().init(null);
 			// Whenever we add a policy - we need to clear decision cache.
@@ -110,6 +110,7 @@ public class EntitlementPolicyAdminService extends AbstractAdmin {
 			for (int i = 0; i < policies.length; i++) {
 				AbstractPolicy policyObj;
 				PolicyDTO policy = policies[i];
+                EntitlementUtil.validatePolicy(policy);
 				policyObj = PolicyReader.getInstance(null, null).getPolicy(policy.getPolicy());
 				if (policyObj != null) {
 					policy.setPolicyId(policyObj.getId().toASCIIString());
@@ -118,7 +119,6 @@ public class EntitlementPolicyAdminService extends AbstractAdmin {
 						throw new IdentityException(
 								"An Entitlement Policy with the given ID already exists");
 					}
-                    EntitlementUtil.validatePolicy(policy);
 					policyAdmin.addOrUpdatePolicy(policy);
 					entitlementEngine.getRegistryModule().init(null);
 					// Whenever we add a policy - we need to clear decision cache.
@@ -327,6 +327,7 @@ public class EntitlementPolicyAdminService extends AbstractAdmin {
 		AbstractPolicy policyObj;
 		EntitlementEngine entitlementEngine = EntitlementEngine.getInstance(
 				getGovernanceUserRegistry(), CarbonContext.getCurrentContext().getTenantId());
+        EntitlementUtil.validatePolicy(policy);
         policyAdmin = new PolicyAdmin(new PolicyStore(getGovernanceUserRegistry()));
         if(policy.getPolicyId() != null && policy.getPolicy() == null){
             policyAdmin.addOrUpdatePolicy(policy);
@@ -337,7 +338,6 @@ public class EntitlementPolicyAdminService extends AbstractAdmin {
             } else {
                 throw new IdentityException("Invalid Entitlement Policy");
             }
-            EntitlementUtil.validatePolicy(policy);
             policyAdmin.addOrUpdatePolicy(policy);
         }
         // Reload the policies to the memory.

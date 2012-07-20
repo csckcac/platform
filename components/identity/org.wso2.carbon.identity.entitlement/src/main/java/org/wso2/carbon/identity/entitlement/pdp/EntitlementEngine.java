@@ -31,6 +31,7 @@ import java.util.concurrent.ConcurrentHashMap;
 
 import org.wso2.balana.ctx.RequestCtxFactory;
 import org.wso2.balana.ctx.AbstractRequestCtx;
+import org.wso2.balana.ctx.xacml2.RequestCtx;
 import org.wso2.balana.finder.ResourceFinder;
 import org.wso2.balana.finder.ResourceFinderModule;
 import net.sf.jsr107cache.Cache;
@@ -56,7 +57,6 @@ import org.wso2.carbon.identity.entitlement.policy.finder.RegistryBasedPolicyFin
 import org.wso2.balana.PDP;
 import org.wso2.balana.PDPConfig;
 import org.wso2.balana.ParsingException;
-import org.wso2.balana.xacml2.ctx.RequestCtx;
 import org.wso2.balana.ctx.ResponseCtx;
 import org.wso2.balana.finder.AttributeFinder;
 import org.wso2.balana.finder.PolicyFinder;

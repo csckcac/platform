@@ -48,8 +48,8 @@ import org.wso2.balana.attr.AttributeValue;
 import org.w3c.dom.Document;
 import org.w3c.dom.Element;
 import org.wso2.balana.Attribute;
-import org.wso2.balana.ctx.Subject;
-import org.wso2.balana.xacml2.ctx.RequestCtx;
+import org.wso2.balana.ctx.xacml2.RequestCtx;
+import org.wso2.balana.ctx.xacml2.Subject;
 import org.wso2.carbon.identity.base.IdentityException;
 import org.wso2.carbon.identity.entitlement.dto.AttributeValueDTO;
 import org.wso2.carbon.identity.entitlement.dto.PolicyDTO;
@@ -131,7 +131,7 @@ public class EntitlementUtil {
                                             EntitlementConstants.STRING_DATA_TYPE, environment));
 			}
 
-			return new org.wso2.balana.xacml2.ctx.RequestCtx(subjects, resources, actions, environments);
+			return new org.wso2.balana.ctx.xacml2.RequestCtx(subjects, resources, actions, environments);
 
 		} catch (Exception e) {
 			log.error("Error occurred while building XACML request", e);
@@ -402,7 +402,7 @@ public class EntitlementUtil {
      * @param policy Policy to validate
      * @throws IdentityException If validation failed or XML parsing failed or any IOException occurs
      */
-    public static void validatePolicy(PolicyDTO policy) throws IdentityException{
+    public static void validatePolicy(PolicyDTO policy) throws IdentityException {
         try {
             //build XML document
             DocumentBuilderFactory documentBuilderFactory = DocumentBuilderFactory.newInstance();
@@ -417,14 +417,16 @@ public class EntitlementUtil {
             String policyXMLNS = policyElement.getAttribute("xmlns");
 
             //load correct schema by version
-            InputStream schemaFileStream = null;
+            InputStream schemaFileStream;
             if(EntitlementConstants.XACML_3_POLICY_XMLNS.equals(policyXMLNS)){
-                schemaFileStream = EntitlementUtil.class.getResourceAsStream("/"+EntitlementConstants.XACML_3_POLICY_SCHEMA);
-            }
-            if(EntitlementConstants.XACML_2_POLICY_XMLNS.equals(policyXMLNS)){
-                schemaFileStream = EntitlementUtil.class.getResourceAsStream("/"+EntitlementConstants.XACML_2_POLICY_SCHEMA);
-            }else{
-                schemaFileStream = EntitlementUtil.class.getResourceAsStream("/"+EntitlementConstants.XACML_1_POLICY_SCHEMA);
+                schemaFileStream = EntitlementUtil.class.
+                                getResourceAsStream("/"+EntitlementConstants.XACML_3_POLICY_SCHEMA);
+            } else if(EntitlementConstants.XACML_2_POLICY_XMLNS.equals(policyXMLNS)){
+                schemaFileStream = EntitlementUtil.class.
+                                getResourceAsStream("/"+EntitlementConstants.XACML_2_POLICY_SCHEMA);
+            } else {
+                schemaFileStream = EntitlementUtil.class.
+                                getResourceAsStream("/"+EntitlementConstants.XACML_1_POLICY_SCHEMA);
             }
 
             //Do the DOM validation
@@ -434,11 +436,12 @@ public class EntitlementUtil {
             Schema schema = schemaFactory.newSchema(new StreamSource(schemaFileStream));
             Validator validator = schema.newValidator();
             validator.validate(domSource,domResult);
-            log.info("XML validation succeeded");
-
+            if(log.isDebugEnabled()){
+                log.debug("XACML Policy validation succeeded with the Schema");
+            }
         } catch (SAXException e) {
-            log.info("XML validation failed :" +e.getMessage());
-            throw new IdentityException("XML Validation failed : "+e.getMessage());
+            log.error("XACML Policy validation failed :" + e.getMessage());
+            throw new IdentityException("Invalid policy : "+ e.getMessage());
         } catch (IOException e) {
             throw new IdentityException(e.getMessage());
         } catch (ParserConfigurationException e) {

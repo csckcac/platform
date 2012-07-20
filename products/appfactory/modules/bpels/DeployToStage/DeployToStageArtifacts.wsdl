@@ -49,13 +49,6 @@
 				</complexType>
 			</element>
 
-			<element name="DeployToStageResponse">
-				<complexType>
-					<sequence>
-						<element name="result" type="string" />
-					</sequence>
-				</complexType>
-			</element>
 		</schema>
 	</types>
 
@@ -78,7 +71,6 @@
 	<portType name="DeployToStage">
 		<operation name="process">
 			<input message="tns:DeployToStageRequestMessage" />
-			<output message="tns:DeployToStageResponseMessage" />
 		</operation>
 	</portType>
 	<!-- ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~ 

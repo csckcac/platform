@@ -50,9 +50,6 @@
     String scriptContent = "";
     String cron = "";
     String mode = request.getParameter("mode");
-    if (null != request.getParameter("cron") && !cron.equals("")) {
-        cron = request.getParameter("cron").toString();
-    }
     int max = 40;
     boolean scriptNameExists = false;
     if (request.getParameter("scriptName") != null && !request.getParameter("scriptName").equals("")) {
@@ -79,55 +76,57 @@
             scriptContent = client.getScript(scriptName);
             cron = client.getCronExpression(scriptName);
             if (scriptContent != null && !scriptContent.equals("")) {
-                Pattern regex = Pattern.compile("[^\\s\"']+|\"([^\"]*)\"|'([^']*)'");
-                Matcher regexMatcher = regex.matcher(scriptContent);
-                String formattedScript = "";
-                while (regexMatcher.find()) {
-                    String temp = "";
-                    if (regexMatcher.group(1) != null) {
-                        // Add double-quoted string without the quotes
-                        temp = regexMatcher.group(1).replaceAll(";", "%%");
-                        temp = "\"" + temp + "\"";
-                    } else if (regexMatcher.group(2) != null) {
-                        // Add single-quoted string without the quotes
-                        temp = regexMatcher.group(2).replaceAll(";", "%%");
-                        temp = "\'" + temp + "\'";
-                    } else {
-                        temp = regexMatcher.group();
-                    }
-                    formattedScript += temp + " ";
-                }
-                String[] queries = formattedScript.split(";");
-                scriptContent = "";
-                for (String aquery : queries) {
-                    aquery = aquery.trim();
-                    if (!aquery.equals("")) {
-                        aquery = aquery.replaceAll("%%\n", ";");
-                        aquery = aquery.replaceAll("%%", ";");
-                        aquery = wrapTextInVisibleWidth(aquery);
-                        String[] temp = aquery.split(",");
+                scriptContent = scriptContent.replace("'", "\'");
+//                Pattern regex = Pattern.compile("[^\"']+|\"([^\"]*)\"|'([^']*)'");
+//                Matcher regexMatcher = regex.matcher(scriptContent);
+//                String formattedScript = "";
+//                while (regexMatcher.find()) {
+//                    String temp = "";
+//                    if (regexMatcher.group(1) != null) {
+//                        // Add double-quoted string without the quotes
+//                        temp = regexMatcher.group(1);
+//                        temp = "\"" + temp + "\"";
+//                    } else if (regexMatcher.group(2) != null) {
+//                        // Add single-quoted string without the quotes
+//                        temp = regexMatcher.group(2);
+//                        temp = "\'" + temp + "\'";
+//                    } else {
+//                        temp = regexMatcher.group();
+//                    }
+//                    formattedScript += temp + " ";
+//                }
 
-                        if (null != temp) {
-                            aquery = "";
-                            int count = 0;
-                            for (String aSubQuery : temp) {
-                                aSubQuery = aSubQuery.trim();
-                                if (!aSubQuery.equals("")) {
-                                    count += aSubQuery.length() + 1;
-                                    if (count > max) {
-                                        aquery += aSubQuery + "," + "\n\t";
-                                        count = 0;
-                                    } else {
-                                        aquery += aSubQuery + ",";
-                                    }
-                                }
-                            }
-                            aquery = aquery.trim();
-                            if (aquery.endsWith(",")) aquery = aquery.substring(0, aquery.length() - 1);
-                            scriptContent = scriptContent + aquery + ";" + "\n";
-                        }
-                    }
-                }
+//                String[] queries = formattedScript.split(";");
+//                scriptContent = "";
+//                for (String aquery : queries) {
+//                    aquery = aquery.trim();
+//                    if (!aquery.equals("")) {
+//                        aquery = aquery.replaceAll("%%\n", ";");
+//                        aquery = aquery.replaceAll("%%", ";");
+//                        aquery = wrapTextInVisibleWidth(aquery);
+//                        String[] temp = aquery.split(",");
+//
+//                        if (null != temp) {
+//                            aquery = "";
+//                            int count = 0;
+//                            for (String aSubQuery : temp) {
+//                                aSubQuery = aSubQuery.trim();
+//                                if (!aSubQuery.equals("")) {
+//                                    count += aSubQuery.length() + 1;
+//                                    if (count > max) {
+//                                        aquery += aSubQuery + "," + "\n\t";
+//                                        count = 0;
+//                                    } else {
+//                                        aquery += aSubQuery + ",";
+//                                    }
+//                                }
+//                            }
+//                            aquery = aquery.trim();
+//                            if (aquery.endsWith(",")) aquery = aquery.substring(0, aquery.length() - 1);
+//                            scriptContent = scriptContent + aquery + ";" + "\n";
+//                        }
+//                    }
+//                }
             }
         } catch (Exception e) {
             String errorString = e.getMessage();
@@ -142,57 +141,70 @@
         }
     }
     if (isFromScheduling) {
-        scriptContent = request.getParameter("scriptContent");
-        if (scriptContent != null && !scriptContent.equals("")) {
-            Pattern regex = Pattern.compile("[^\\s\"']+|\"([^\"]*)\"|'([^']*)'");
-            Matcher regexMatcher = regex.matcher(scriptContent);
-            String formattedScript = "";
-            while (regexMatcher.find()) {
-                String temp = "";
-                if (regexMatcher.group(1) != null) {
-                    // Add double-quoted string without the quotes
-                    temp = regexMatcher.group(1).replaceAll(";", "%%");
-                    temp = "\"" + temp + "\"";
-                } else if (regexMatcher.group(2) != null) {
-                    // Add single-quoted string without the quotes
-                    temp = regexMatcher.group(2).replaceAll(";", "%%");
-                    temp = "\'" + temp + "\'";
-                } else {
-                    temp = regexMatcher.group();
-                }
-                formattedScript += temp + " ";
-            }
-            String[] queries = formattedScript.split(";");
+        Object content = session.getAttribute("scriptContent" + scriptName);
+        if (null != content) {
+            scriptContent = content.toString();
+        }else {
             scriptContent = "";
-            for (String aquery : queries) {
-                aquery = aquery.trim();
-                if (!aquery.equals("")) {
-                    aquery = aquery.replaceAll("%%\n", ";");
-                    aquery = aquery.replaceAll("%%", ";");
-                    aquery = wrapTextInVisibleWidth(aquery);
-                    String[] temp = aquery.split(",");
+        }
+        if (null != request.getParameter("cron")) {
+            cron = request.getParameter("cron").toString();
+        }
+        if (scriptContent != null && !scriptContent.equals("")) {
+            scriptContent = scriptContent.replace("'", "\'");
 
-                    if (null != temp) {
-                        aquery = "";
-                        int count = 0;
-                        for (String aSubQuery : temp) {
-                            aSubQuery = aSubQuery.trim();
-                            if (!aSubQuery.equals("")) {
-                                count += aSubQuery.length() + 1;
-                                if (count > max) {
-                                    aquery += aSubQuery + "," + "\n\t";
-                                    count = 0;
-                                } else {
-                                    aquery += aSubQuery + ",";
-                                }
-                            }
-                        }
-                        aquery = aquery.trim();
-                        if (aquery.endsWith(",")) aquery = aquery.substring(0, aquery.length() - 1);
-                        scriptContent = scriptContent + aquery + ";" + "\n";
-                    }
-                }
-            }
+//            Pattern regex = Pattern.compile("[^\"']+|\"([^\"]*)\"|'([^']*)'");
+//            Matcher regexMatcher = regex.matcher(scriptContent);
+//            String formattedScript = "";
+//            while (regexMatcher.find()) {
+//                String temp = "";
+//                if (regexMatcher.group(1) != null) {
+//                    // Add double-quoted string without the quotes
+//                    temp = regexMatcher.group(1);
+//                    temp = "\"" + temp + "\"";
+//                } else if (regexMatcher.group(2) != null) {
+//                    // Add single-quoted string without the quotes
+//                    temp = regexMatcher.group(2);
+//                    temp = "\'" + temp + "\'";
+//                } else {
+//                    temp = regexMatcher.group();
+//                }
+//                formattedScript += temp + " ";
+//            }
+//            scriptContent = formattedScript;
+//            System.out.println("After formatting Script content: ");
+//            System.out.println(scriptContent);
+//            String[] queries = formattedScript.split(";");
+//            scriptContent = "";
+//            for (String aquery : queries) {
+//                aquery = aquery.trim();
+//                if (!aquery.equals("")) {
+//                    aquery = aquery.replaceAll("%%\n", ";");
+//                    aquery = aquery.replaceAll("%%", ";");
+//                    aquery = wrapTextInVisibleWidth(aquery);
+//                    String[] temp = aquery.split(",");
+//
+//                    if (null != temp) {
+//                        aquery = "";
+//                        int count = 0;
+//                        for (String aSubQuery : temp) {
+//                            aSubQuery = aSubQuery.trim();
+//                            if (!aSubQuery.equals("")) {
+//                                count += aSubQuery.length() + 1;
+//                                if (count > max) {
+//                                    aquery += aSubQuery + "," + "\n\t";
+//                                    count = 0;
+//                                } else {
+//                                    aquery += aSubQuery + ",";
+//                                }
+//                            }
+//                        }
+//                        aquery = aquery.trim();
+//                        if (aquery.endsWith(",")) aquery = aquery.substring(0, aquery.length() - 1);
+//                        scriptContent = scriptContent + aquery + ";" + "\n";
+//                    }
+//                }
+//            }
         }
     }
 
@@ -531,6 +543,13 @@
 
     </div>
 </div>
+
+<script type="text/javascript">
+    <%--var commands = '<%=scriptContent%>';--%>
+    //  editAreaLoader.setValue('allcommands', commands.replace(/#*#/g, '\'').replace(/$*$/g, '\"'));
+    <%--editAreaLoader.setValue('allcommands', '<%=scriptContent%>');--%>
+</script>
+
 <%
     String saveWithCron = request.getParameter("saveWithCron");
     if (null != saveWithCron && !saveWithCron.equals("")) {

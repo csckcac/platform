@@ -37,13 +37,7 @@
     }
     String scriptContent = request.getParameter("scriptContent");
     if (null != scriptContent && !"".equals(scriptContent)) {
-        scriptContent = scriptContent.replaceAll("\"", "\\\\\"");
-        scriptContent = scriptContent.replaceAll("'", "\\\\\'");
-        String[] allQueries = scriptContent.split("\n");
-        scriptContent = "";
-        for (String aQuery : allQueries) {
-            scriptContent += aQuery.trim() + " ";
-        }
+        session.setAttribute("scriptContent"+scriptName, scriptContent);
     }
     String mode = request.getParameter("mode");
     String cron = request.getParameter("cron");
@@ -82,10 +76,10 @@
                             if (message.indexOf("Success") != -1) {
                                 cronExpSelected = array[2];
                                 CARBON.showInfoDialog(array[0], function() {
-                                    location.href = '../hive-explorer/hiveexplorer.jsp?cron=' + cronExpSelected + '&scriptName=' + '<%=scriptName%>' + '&mode=' + '<%=mode%>' + '&scriptContent=' + '<%=scriptContent%>'
+                                    location.href = '../hive-explorer/hiveexplorer.jsp?cron=' + cronExpSelected + '&scriptName=' + '<%=scriptName%>' + '&mode=' + '<%=mode%>'
                                             + '&saveWithCron=' + '<%=saveWithCron%>';
                                 }, function() {
-                                    location.href = '../hive-explorer/hiveexplorer.jsp?cron=' + cronExpSelected + '&scriptName=' + '<%=scriptName%>' + '&mode=' + '<%=mode%>' + '&scriptContent=' + '<%=scriptContent%>'
+                                    location.href = '../hive-explorer/hiveexplorer.jsp?cron=' + cronExpSelected + '&scriptName=' + '<%=scriptName%>' + '&mode=' + '<%=mode%>'
                                             + '&saveWithCron=' + '<%=saveWithCron%>';
                                 });
 
@@ -112,10 +106,10 @@
                                 var array = message.split('#');
                                 cronExpSelected = array[2];
                                 CARBON.showInfoDialog(array[0], function() {
-                                    location.href = '../hive-explorer/hiveexplorer.jsp?cron=' + cronExpSelected + '&scriptName=' + '<%=scriptName%>' + '&mode=' + '<%=mode%>' + '&scriptContent=' + '<%=scriptContent%>'
+                                    location.href = '../hive-explorer/hiveexplorer.jsp?cron=' + cronExpSelected + '&scriptName=' + '<%=scriptName%>' + '&mode=' + '<%=mode%>'
                                             + '&saveWithCron=' + '<%=saveWithCron%>';
                                 }, function() {
-                                    location.href = '../hive-explorer/hiveexplorer.jsp?cron=' + cronExpSelected + '&scriptName=' + '<%=scriptName%>' + '&mode=' + '<%=mode%>' + '&scriptContent=' + '<%=scriptContent%>'
+                                    location.href = '../hive-explorer/hiveexplorer.jsp?cron=' + cronExpSelected + '&scriptName=' + '<%=scriptName%>' + '&mode=' + '<%=mode%>'
                                             + '&saveWithCron=' + '<%=saveWithCron%>';
                                 });
 
@@ -132,7 +126,7 @@
                         });
             }
         } else if (document.getElementById('noSchedule').checked) {
-            location.href = '../hive-explorer/hiveexplorer.jsp?cron=' + '&scriptName=' + '<%=scriptName%>' + '&mode=' + '<%=mode%>' + '&scriptContent=' + '<%=scriptContent%>'
+            location.href = '../hive-explorer/hiveexplorer.jsp?cron=' + '&scriptName=' + '<%=scriptName%>' + '&mode=' + '<%=mode%>'
         } else {
             //when interval -count option is selected..
         }

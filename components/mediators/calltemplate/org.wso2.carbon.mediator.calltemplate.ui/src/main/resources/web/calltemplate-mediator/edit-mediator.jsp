@@ -80,7 +80,7 @@
                 </td>
                 <td>
  		    <input type="hidden" id="mediator.call.target" name="mediator.call.target"
-                           value="<%=target%>" disabled="true"/>
+                           value="<%=target%>"/>
                     <input class="longInput" type="text" id="mediator.call.target.visible" name="mediator.call.target.visble"
                            value="<%=target%>" disabled="true"/>
                 </td>

@@ -188,16 +188,18 @@
     }
     
    	function getAppInfo(applicationKey){
-       path = APPLICATIONS + applicationKey;
+       var path = APPLICATIONS + applicationKey + APP_INFO;
        if(resourceExists(path)) {
-           var resource= getResource(path);
-           if(resource.getProperty(APPLICATION_KEY) != undefined) {
+
+           var resource = getResource(path);
+		   var resourceContent = resource.content;
+
+           if(resourceContent.*::application.*::key.text() != undefined) {
            	   var application={};
-	           application.key= resource.getProperty(APPLICATION_KEY);
-	           application.name= resource.getProperty(APPLICATION_NAME);
-	           application.description= resource.getProperty(APPLICATION_DESC);
-	           application.repoLink= resource.getProperty(APPLICATION_REPO_LINK);
-	           
+	           application.key = resourceContent.*::application.*::key.text()
+	           application.name = resourceContent.*::application.*::name.text();
+	           application.description = resourceContent.*::application.*::description.text();
+ 	           
 	           return application;
            }
        }
@@ -226,9 +228,8 @@
 	    var appVersions = new Array();
 
 	    if(resourceExists(path)) {
-	    	
 	    	var resource = getResource(path);
-	    	var applicationInfo = getAppInfo(applicationKey);
+	    	var applicationInfo = getAppShortInfo(applicationKey, 'dilshan');
 	    	var arrVersions = new Array();	
 	    	
 	    	for(var i = 0; i < resource.childCount; i++) {				
@@ -240,7 +241,6 @@
 			applicationInfo.versions = arrVersions;
 			appVersions[0] = applicationInfo;
 		}
-		
 		
 		return appVersions;
 	}

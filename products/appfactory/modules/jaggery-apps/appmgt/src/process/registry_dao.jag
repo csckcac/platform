@@ -8,13 +8,13 @@
     function resourceExists(path) {
         try {
             if (registry.resourceExists(path)) {
-                return "true";
+                return true;
             } else {
-                return "false";
+                return false;
             }
         } catch (e) {
             log.error("Error while accessing registry resource \n"+e.message);
-            throw "Error while accessing registry resource";
+            return false;
         }
     }
 

@@ -12,6 +12,7 @@
 
     // property keys of registry 'userApplicationMapping' resource
     var APPLICATION_LIST = "applications";
+    var APP_INFO = "/Development/trunk/appinfo";
     
     //appfactory.xml keys
     var SSO_NAME = "SSORelyingParty.Name";

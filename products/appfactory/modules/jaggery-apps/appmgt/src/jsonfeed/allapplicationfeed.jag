@@ -25,7 +25,7 @@
 
 			var applicationRow = new Array(); 
 			
-			applicationRow[0] = '<a href="application.jag?applicationKey=' +  applicationKey + '">' +  applicationKey + '</a>';
+			applicationRow[0] = '<a href="application.jag?applicationName=' + appInfo.name + '&applicationKey=' + appInfo.key + '">' + appInfo.name + '</a>'; 
 				
 			var roles = '';
 	

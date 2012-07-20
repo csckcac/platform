@@ -122,7 +122,7 @@ public class EntitlementPolicyBean {
 
     private String ruleDescription;
 
-	private List<String> preFunctions = new ArrayList<String>();
+	private Set<String> preFunctions = new HashSet<String>();
 
     private Map<String, Set<String>> defaultAttributeIdMap =
                                             new HashMap<String, Set<String>>();
@@ -196,6 +196,7 @@ public class EntitlementPolicyBean {
         targetDTO = null;
 
         ruleDTOs.clear();
+        
 	}
 
 	public String[] getRuleCombiningAlgorithms() {
@@ -1197,7 +1198,7 @@ public class EntitlementPolicyBean {
         this.targetFunctionMap = targetFunctionMap;
     }
 
-    public List<String> getPreFunctions() {
+    public Set<String> getPreFunctions() {
         return preFunctions;
     }
 

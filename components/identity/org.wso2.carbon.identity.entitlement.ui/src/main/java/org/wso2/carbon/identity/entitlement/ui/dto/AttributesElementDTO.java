@@ -15,30 +15,37 @@
 * specific language governing permissions and limitations
 * under the License.
 */
-
 package org.wso2.carbon.identity.entitlement.ui.dto;
 
 import java.util.ArrayList;
 import java.util.List;
 
 /**
- *
+ * 
  */
-public class BasicTargetDTO {
+public class AttributesElementDTO {
 
-    private List<RowDTO> rowDTOList = new ArrayList<RowDTO>();
+    private String category;
 
-    public List<RowDTO> getRowDTOList() {
-        return rowDTOList;
+    private List<AttributeElementDTO> attributeElementDTOs = new ArrayList<AttributeElementDTO>();
+
+    public String getCategory() {
+        return category;
     }
 
-    public void setRowDTOList(List<RowDTO> rowDTOList) {
-        this.rowDTOList = rowDTOList;
+    public void setCategory(String category) {
+        this.category = category;
     }
 
-    public void addRowDTO(RowDTO rowDTO) {
-        this.rowDTOList.add(rowDTO);
+    public List<AttributeElementDTO> getAttributeElementDTOs() {
+        return attributeElementDTOs;
     }
 
+    public void setAttributeElementDTOs(List<AttributeElementDTO> attributeElementDTOs) {
+        this.attributeElementDTOs = attributeElementDTOs;
+    }
 
+    public void addAttributeElementDTO(AttributeElementDTO attributeElementDTO) {
+        this.attributeElementDTOs.add(attributeElementDTO);
+    }
 }

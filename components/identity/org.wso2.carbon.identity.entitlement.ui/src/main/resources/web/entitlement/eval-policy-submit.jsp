@@ -23,45 +23,8 @@
 
 <%
 
-    BasicRequestDTO basicRequestDTO = new BasicRequestDTO();
-    String resourceNames = CharacterEncoder.getSafeText(request.getParameter("resourceNames"));
-    String subjectNames = CharacterEncoder.getSafeText(request.getParameter("subjectNames"));
-    String attributeId = CharacterEncoder.getSafeText(request.getParameter("attributeId"));
-    String userAttributeValue = CharacterEncoder.getSafeText(request.getParameter("userAttributeValue"));
-    String actionNames = CharacterEncoder.getSafeText(request.getParameter("actionNames"));
-    String environmentNames = CharacterEncoder.getSafeText(request.getParameter("environmentNames"));
-    String policy = CharacterEncoder.getSafeText(request.getParameter("txtPolicy"));
+    String policyRequest = CharacterEncoder.getSafeText(request.getParameter("txtRequest"));
     String forwardTo = request.getParameter("forwardTo");
-
-    if (resourceNames != null  && resourceNames.trim().length() > 0){
-        basicRequestDTO.setResources(resourceNames);
-        session.setAttribute("resourceNames",resourceNames);
-    }
-    if (subjectNames != null  && subjectNames.trim().length() > 0){
-        basicRequestDTO.setSubjects(subjectNames);
-        session.setAttribute("subjectNames",subjectNames);
-    }
-    if (attributeId != null  && attributeId.trim().length() > 0){
-        basicRequestDTO.setUserAttributeId(attributeId);
-        session.setAttribute("attributeId",attributeId);
-    }
-    if (userAttributeValue != null  && userAttributeValue.trim().length() > 0){
-        basicRequestDTO.setUserAttributeValue(userAttributeValue);
-        session.setAttribute("userAttributeValue",userAttributeValue);
-    }
-    if (actionNames != null  && actionNames.trim().length() > 0){
-        basicRequestDTO.setActions(actionNames);
-        session.setAttribute("actionNames",actionNames);
-    }
-    
-    if (environmentNames != null  && environmentNames.trim().length() > 0){
-        basicRequestDTO.setEnviornement(environmentNames);
-        session.setAttribute("environmentNames",environmentNames);
-    }
-
-
-    EntitlementPolicyCreator entitlementPolicyCreator = new EntitlementPolicyCreator();
-
     String serverURL = CarbonUIUtil.getServerURL(config.getServletContext(), session);
     ConfigurationContext configContext =
             (ConfigurationContext) config.getServletContext().
@@ -71,19 +34,65 @@
 	String BUNDLE = "org.wso2.carbon.identity.entitlement.ui.i18n.Resources";
 	ResourceBundle resourceBundle = ResourceBundle.getBundle(BUNDLE, request.getLocale());
 
+    List<RowDTO> rowDTOs = new ArrayList<RowDTO>();
+    String resourceNames = CharacterEncoder.getSafeText(request.getParameter("resourceNames"));
+    String subjectNames = CharacterEncoder.getSafeText(request.getParameter("subjectNames"));
+    String actionNames = CharacterEncoder.getSafeText(request.getParameter("actionNames"));
+    String environmentNames = CharacterEncoder.getSafeText(request.getParameter("environmentNames"));
+
+    if (resourceNames != null  && !resourceNames.trim().equals("")){
+        RowDTO rowDTO = new RowDTO();
+        rowDTO.setAttributeValue(resourceNames);
+        rowDTO.setAttributeDataType(EntitlementPolicyConstants.STRING_DATA_TYPE);
+        rowDTO.setAttributeId("urn:oasis:names:tc:xacml:1.0:resource:resource-id");
+        rowDTO.setCategory("urn:oasis:names:tc:xacml:3.0:attribute-category:resource");
+        rowDTOs.add(rowDTO);
+        session.setAttribute("resourceNames",resourceNames);
+    }
+    if (subjectNames != null  && !subjectNames.trim().equals("")){
+        RowDTO rowDTO = new RowDTO();
+        rowDTO.setAttributeValue(subjectNames);
+        rowDTO.setAttributeDataType(EntitlementPolicyConstants.STRING_DATA_TYPE);
+        rowDTO.setAttributeId("urn:oasis:names:tc:xacml:1.0:subject:subject-id");
+        rowDTO.setCategory("urn:oasis:names:tc:xacml:1.0:subject-category:access-subject");
+        rowDTOs.add(rowDTO);
+        session.setAttribute("subjectNames",subjectNames);
+    }
+    if (actionNames != null  && !actionNames.trim().equals("")){
+        RowDTO rowDTO = new RowDTO();
+        rowDTO.setAttributeValue(actionNames);
+        rowDTO.setAttributeDataType(EntitlementPolicyConstants.STRING_DATA_TYPE);
+        rowDTO.setAttributeId("urn:oasis:names:tc:xacml:1.0:action:action-id");
+        rowDTO.setCategory("urn:oasis:names:tc:xacml:3.0:attribute-category:action");
+        rowDTOs.add(rowDTO);
+        session.setAttribute("actionNames",actionNames);
+    }
+    if (environmentNames != null  && !environmentNames.trim().equals("")){
+        RowDTO rowDTO = new RowDTO();
+        rowDTO.setAttributeValue(environmentNames);
+        rowDTO.setAttributeDataType(EntitlementPolicyConstants.STRING_DATA_TYPE);
+        rowDTO.setAttributeId("urn:oasis:names:tc:xacml:1.0:environment:environment-id");
+        rowDTO.setCategory("urn:oasis:names:tc:xacml:3.0:attribute-category:environment");
+        rowDTOs.add(rowDTO);
+        session.setAttribute("environmentNames",environmentNames);
+    }
+
+    RequestElementDTO requestElementDTO = new RequestElementDTO();
+    requestElementDTO.setRowDTOs(rowDTOs);
+
+    EntitlementPolicyCreator entitlementPolicyCreator = new EntitlementPolicyCreator();
+
     try {
-        String createdRequest = entitlementPolicyCreator.createBasicRequest(basicRequestDTO);
 
     	EntitlementServiceClient client = new EntitlementServiceClient(cookie, serverURL, configContext);
-        if(policy != null && !policy.equals("")){
-            resp = client.getDecision(policy);
-        } else {
-            if(createdRequest != null && !createdRequest.equals("")){
-                resp = client.getDecision(createdRequest);
-                policy = createdRequest;
+        if(policyRequest == null || policyRequest.trim().length() < 1){
+            String createdRequest = entitlementPolicyCreator.createBasicRequest(requestElementDTO);
+            if(createdRequest != null && createdRequest.trim().length() > 0){
+                policyRequest = createdRequest.trim().replaceAll("><", ">\n<");
             }
         }
-        session.setAttribute("policyreq", policy);
+        resp = client.getDecision(policyRequest);
+        session.setAttribute("txtRequest", policyRequest);
     	CarbonUIMessage.sendCarbonUIMessage(resp, CarbonUIMessage.INFO, request);
     	if (forwardTo == null) {
             forwardTo = "create-evaluation-request.jsp";
@@ -102,6 +111,11 @@
 <%@page import="org.wso2.carbon.identity.entitlement.ui.dto.BasicRequestDTO" %>
 <%@page import="org.wso2.carbon.ui.util.CharacterEncoder" %>
 <%@page import="org.wso2.carbon.identity.entitlement.ui.EntitlementPolicyCreator" %>
+<%@ page import="org.wso2.carbon.identity.entitlement.ui.dto.RowDTO" %>
+<%@ page import="org.wso2.carbon.identity.entitlement.ui.EntitlementPolicyConstants" %>
+<%@ page import="java.util.ArrayList" %>
+<%@ page import="java.util.List" %>
+<%@ page import="org.wso2.carbon.identity.entitlement.ui.dto.RequestElementDTO" %>
 <script
 	type="text/javascript">
     function forward() {

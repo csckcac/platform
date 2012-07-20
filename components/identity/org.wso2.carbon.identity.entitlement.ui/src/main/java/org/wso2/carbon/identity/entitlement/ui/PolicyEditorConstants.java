@@ -111,10 +111,10 @@ public class PolicyEditorConstants {
 
     public static final String RULE_COMBINING_PERMIT_UNLESS_DENY = "permit-unless-deny";
 
-    public static final String RULE_ALGORITHM_IDENTIFIER_10 = "urn:oasis:names:tc:xacml:1.0:" +
+    public static final String RULE_ALGORITHM_IDENTIFIER_1 = "urn:oasis:names:tc:xacml:1.0:" +
                                                                         "rule-combining-algorithm:";
 
-    public static final String RULE_ALGORITHM_IDENTIFIER_30 = "urn:oasis:names:tc:xacml:1.0:" +
+    public static final String RULE_ALGORITHM_IDENTIFIER_3 = "urn:oasis:names:tc:xacml:3.0:" +
                                                                         "rule-combining-algorithm:";
 
 

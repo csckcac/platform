@@ -109,8 +109,8 @@
 
 
     Set<String> categories = entitlementPolicyBean.getCategorySet();
-    List<String> rulePreFunctions = entitlementPolicyBean.getPreFunctions();
-    List<String> targetPreFunctions = entitlementPolicyBean.getPreFunctions();
+    Set<String> rulePreFunctions = entitlementPolicyBean.getPreFunctions();
+    String[] targetPreFunctions = new String[]{"is"};
     Set<String>  targetFunctions = entitlementPolicyBean.getTargetFunctionMap().keySet();
     Set<String>  ruleFunctions = entitlementPolicyBean.getRuleFunctionMap().keySet();
 
@@ -175,7 +175,7 @@
 
 <%
     if(targetDTO != null){
-        ArrayList<RowDTO> rowDTOs = targetDTO.getRowDTOList();
+        List<RowDTO> rowDTOs = targetDTO.getRowDTOList();
         if(rowDTOs != null  && rowDTOs.size() > 0){
             RowDTO rowDTO = rowDTOs.get(0);
             currentCategory = rowDTO.getCategory();
@@ -201,7 +201,7 @@
     if(ruleDTO != null){
         ruleId = ruleDTO.getRuleId();
         ruleEffect = ruleDTO.getRuleEffect();
-        ArrayList<RowDTO> rowDTOs = ruleDTO.getRowDTOList();
+        List<RowDTO> rowDTOs = ruleDTO.getRowDTOList();
         if(rowDTOs != null  && rowDTOs.size() > 0){
             RowDTO rowDTO = rowDTOs.get(0);
             currentRuleCategory = rowDTO.getCategory();
@@ -592,8 +592,7 @@ function updownthis(thislink, updown) {
                                     } else {
                                     %>
                                     <input type="text" size="60" name="targetAttributeValue_0"
-                                           id="targetAttributeValue_0"
-                                           class="text-box-big"  onBlur="handleBlur(this,'Pick resource name');" class="defaultText text-box-big" --%>/>
+                                           id="targetAttributeValue_0" class="defaultText text-box-big" />
 
                                     <%
                                         }
@@ -647,7 +646,7 @@ function updownthis(thislink, updown) {
 <%
 
     if(targetDTO != null){
-        ArrayList<RowDTO> rowDTOs = targetDTO.getRowDTOList();
+        List<RowDTO> rowDTOs = targetDTO.getRowDTOList();
         if(rowDTOs != null && rowDTOs.size() > 0){
             rowDTOs.remove(0);
             for(RowDTO rowDTO : rowDTOs){
@@ -757,9 +756,7 @@ function updownthis(thislink, updown) {
                         </td>
                     </tr>
                     <tr>
-                        <td>
-                            Rule's Condition element would be evaluated if this target is match....
-                        </td>
+                        <td colspan="5"><fmt:message key="rule.target"/></td>
                     </tr>
                     <tr>
                         <td  colspan="5">
@@ -943,9 +940,7 @@ function updownthis(thislink, updown) {
                         </td>
                     </tr>
                     <tr>
-                        <td>
-                            Define your condition element logic......
-                        </td>
+                        <td colspan="5"><fmt:message key="rule.condition"/></td>
                     </tr>
                     <tr>
                         <td  colspan="5">
@@ -1085,7 +1080,7 @@ function updownthis(thislink, updown) {
 <%
 
     if(ruleDTO != null){
-        ArrayList<RowDTO> rowDTOs = ruleDTO.getRowDTOList();
+        List<RowDTO> rowDTOs = ruleDTO.getRowDTOList();
         if(rowDTOs != null && rowDTOs.size() > 0){
             rowDTOs.remove(0);
             for(RowDTO rowDTO : rowDTOs){

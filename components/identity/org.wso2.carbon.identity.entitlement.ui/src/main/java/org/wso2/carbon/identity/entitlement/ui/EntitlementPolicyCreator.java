@@ -121,9 +121,10 @@ public class EntitlementPolicyCreator {
 
                 if(policyElement != null) {
 
-                    if(targetDTO != null){
+                    if(targetDTO != null && targetDTO.getRowDTOList() != null &&
+                                                            targetDTO.getRowDTOList().size() > 0){
                         policyElement.appendChild(PolicyEditorUtil.createTarget(targetDTO, doc));
-                    } else if(ruleDTOs != null && ruleDTOs.size() > 0){
+                    } else {
                         policyElement.appendChild(doc.createElement(EntitlementPolicyConstants.
                                 TARGET_ELEMENT));
                     }
@@ -146,7 +147,6 @@ public class EntitlementPolicyCreator {
                         }
                     }
                 }
-                
                 return PolicyCreatorUtil.getStringFromDocument(doc);
             }
         } catch (EntitlementPolicyCreationException e) {
@@ -186,16 +186,16 @@ public class EntitlementPolicyCreator {
 
     /**
      * Create basic XACML request
-     * @param basicRequestDTO  request element
+     * @param requestElementDTO  request element
      * @return String object of the XACML request
      * @throws EntitlementPolicyCreationException  throws
      */
-    public String createBasicRequest(BasicRequestDTO basicRequestDTO)
+    public String createBasicRequest(RequestElementDTO requestElementDTO)
             throws EntitlementPolicyCreationException {
         try {
             Document doc = createNewDocument();
             if(doc != null) {
-                doc.appendChild(PolicyCreatorUtil.createBasicRequestElement(basicRequestDTO, doc));
+                doc.appendChild(PolicyCreatorUtil.createBasicRequestElement(requestElementDTO, doc));
                 return PolicyCreatorUtil.getStringFromDocument(doc);
             }
         } catch (EntitlementPolicyCreationException e) {

@@ -47,15 +47,20 @@ public class PolicyEditorUtil {
 
         ruleElementDTO.setRuleId(ruleDTO.getRuleId());
         ruleElementDTO.setRuleEffect(ruleDTO.getRuleEffect());
-        ConditionElementDT0 conditionElementDT0 = createConditionDTO(ruleDTO.getRowDTOList());
-        NewTargetElementDTO targetElementDTO = createTargetDTO(ruleDTO.getTargetDTO());
+        BasicTargetDTO targetDTO = ruleDTO.getTargetDTO();
+        
+        if(targetDTO != null && targetDTO.getRowDTOList() != null && targetDTO.getRowDTOList().size() > 0){
+            NewTargetElementDTO targetElementDTO = createTargetDTO(ruleDTO.getTargetDTO());
+            if(targetElementDTO != null){
+                ruleElementDTO.setNewTargetElementDTO(targetElementDTO);
+            }
+        }
 
-        if(targetElementDTO != null){
-            ruleElementDTO.setNewTargetElementDTO(targetElementDTO);
-        }        
-
-        if(conditionElementDT0 != null){
-            ruleElementDTO.setConditionElementDT0(conditionElementDT0);            
+        if(ruleDTO.getRowDTOList() != null && ruleDTO.getRowDTOList().size() > 0){
+            ConditionElementDT0 conditionElementDT0 = createConditionDTO(ruleDTO.getRowDTOList());
+            if(conditionElementDT0 != null){
+                ruleElementDTO.setConditionElementDT0(conditionElementDT0);
+            }
         }
 
         return PolicyCreatorUtil.createRuleElement(ruleElementDTO, doc);
@@ -212,7 +217,7 @@ public class PolicyEditorUtil {
         AnyOfElementDTO anyOfElementDTO = new AnyOfElementDTO();
         NewTargetElementDTO targetElementDTO = new NewTargetElementDTO();
 
-        ArrayList<RowDTO> rowDTOs = targetDTO.getRowDTOList();
+        List<RowDTO> rowDTOs = targetDTO.getRowDTOList();
         ArrayList<RowDTO> tempRowDTOs = new ArrayList<RowDTO>();
 
         // pre function processing
@@ -340,7 +345,7 @@ public class PolicyEditorUtil {
             String[] values = attributeValue.split(PolicyEditorConstants.ATTRIBUTE_SEPARATOR);
 
             ApplyElementDTO applyBagElementDTO = new ApplyElementDTO();
-            applyElementDTO.setFunctionId(processFunction("bag", dataType));            
+            applyBagElementDTO.setFunctionId(processFunction("bag", dataType));
             for(String value : values){
                 AttributeValueElementDTO valueElementDTO = new AttributeValueElementDTO();
                 valueElementDTO.setAttributeDataType(dataType);
@@ -785,12 +790,19 @@ public class PolicyEditorUtil {
 	    Map<String, String> ruleFunctionMap = policyBean.getRuleFunctionMap();
 	    Map<String, String> categoryMap = policyBean.getCategoryMap();
 
+
         if(targetDTO != null && targetDTO.getRowDTOList() != null){
+            List<RowDTO> newRowDTOs = new ArrayList<RowDTO>();
             for (RowDTO rowDTO : targetDTO.getRowDTOList()){
 
                 String category = rowDTO.getCategory();
 
                 if(category == null){
+                    continue;
+                }
+
+                String attributeValue = rowDTO.getAttributeValue();
+                if(attributeValue == null || attributeValue.trim().length() < 1){
                     continue;
                 }
 
@@ -826,17 +838,29 @@ public class PolicyEditorUtil {
                         rowDTO.setFunction(targetFunctionMap.get(function));
                     }
                 }
+                newRowDTOs.add(rowDTO);
             }
+            targetDTO.setRowDTOList(newRowDTOs);
         }
 
         if(ruleDTOs != null){
             for(RuleDTO ruleDTO : ruleDTOs){
+                List<RowDTO> newRowDTOs = new ArrayList<RowDTO>();
                 for(RowDTO rowDTO : ruleDTO.getRowDTOList()){
 
                     String category = rowDTO.getCategory();
 
                     if(category == null){
                         continue;
+                    }
+
+                    String attributeValue = rowDTO.getAttributeValue();
+                    if(attributeValue == null || attributeValue.trim().length() < 1){
+                        continue;
+                    }
+
+                    if(categoryMap.get(category) != null){
+                        rowDTO.setCategory(categoryMap.get(category));
                     }
 
                     if(rowDTO.getAttributeDataType() == null ||
@@ -866,13 +890,18 @@ public class PolicyEditorUtil {
                             rowDTO.setFunction(ruleFunctionMap.get(function));
                         }
                     }
+                    newRowDTOs.add(rowDTO);
                 }
+
+                ruleDTO.setRowDTOList(newRowDTOs);
 
                 BasicTargetDTO ruleTargetDTO = ruleDTO.getTargetDTO();
 
                 if(ruleTargetDTO == null){
                     continue;
                 }
+
+                List<RowDTO> newTargetRowDTOs = new ArrayList<RowDTO>();
 
                 for(RowDTO rowDTO : ruleTargetDTO.getRowDTOList()){
                     String category = rowDTO.getCategory();
@@ -881,6 +910,11 @@ public class PolicyEditorUtil {
                         continue;
                     }
 
+                    String attributeValue = rowDTO.getAttributeValue();
+                    if(attributeValue == null || attributeValue.trim().length() < 1){
+                        continue;
+                    }
+                    
                     if(categoryMap.get(category) != null){
                         rowDTO.setCategory(categoryMap.get(category));
                     }
@@ -913,8 +947,10 @@ public class PolicyEditorUtil {
                             rowDTO.setFunction(targetFunctionMap.get(function));
                         }
                     }
+                    newTargetRowDTOs.add(rowDTO);
                 }
-                
+                ruleTargetDTO.setRowDTOList(newTargetRowDTOs);
+                ruleDTO.setTargetDTO(ruleTargetDTO);
             }
         }
     }

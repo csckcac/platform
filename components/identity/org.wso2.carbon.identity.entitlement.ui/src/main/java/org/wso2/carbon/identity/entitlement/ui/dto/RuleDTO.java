@@ -19,6 +19,7 @@
 package org.wso2.carbon.identity.entitlement.ui.dto;
 
 import java.util.ArrayList;
+import java.util.List;
 
 /**
  *
@@ -34,7 +35,7 @@ public class RuleDTO {
 
     private BasicTargetDTO targetDTO;
 
-    private ArrayList<RowDTO> rowDTOList = new ArrayList<RowDTO>();
+    private List<RowDTO> rowDTOList = new ArrayList<RowDTO>();
 
     private boolean completedRule;
 
@@ -62,11 +63,11 @@ public class RuleDTO {
         this.ruleDescription = ruleDescription;
     }
 
-    public ArrayList<RowDTO> getRowDTOList() {
+    public List<RowDTO> getRowDTOList() {
         return rowDTOList;
     }
 
-    public void setRowDTOList(ArrayList<RowDTO> rowDTOList) {
+    public void setRowDTOList(List<RowDTO> rowDTOList) {
         this.rowDTOList = rowDTOList;
     }
 

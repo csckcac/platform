@@ -15,23 +15,28 @@
 * specific language governing permissions and limitations
 * under the License.
 */
+
 package org.wso2.carbon.identity.entitlement.ui.dto;
 
+import java.io.OutputStream;
+import java.io.PrintStream;
 import java.util.ArrayList;
 import java.util.List;
 
 /**
- * 
+ *
  */
 public class AttributeElementDTO {
 
     private String attributeId;
 
+    private boolean includeInResult;
+
     private String dataType;
 
     private String issuer;
 
-    private List<String> attributeValue = new ArrayList<String>();
+    private List<String> attributeValues = new ArrayList<String>();
 
     public String getAttributeId() {
         return attributeId;
@@ -41,12 +46,12 @@ public class AttributeElementDTO {
         this.attributeId = attributeId;
     }
 
-    public String getDataType() {
-        return dataType;
+    public boolean isIncludeInResult() {
+        return includeInResult;
     }
 
-    public void setDataType(String dataType) {
-        this.dataType = dataType;
+    public void setIncludeInResult(boolean includeInResult) {
+        this.includeInResult = includeInResult;
     }
 
     public String getIssuer() {
@@ -57,11 +62,23 @@ public class AttributeElementDTO {
         this.issuer = issuer;
     }
 
-    public List<String> getAttributeValue() {
-        return attributeValue;
+    public List<String> getAttributeValues() {
+        return attributeValues;
     }
 
-    public void setAttributeValue(List<String> attributeValue) {
-        this.attributeValue = attributeValue;
+    public void setAttributeValues(List<String> attributeValues) {
+        this.attributeValues = attributeValues;
+    }
+
+    public void addAttributeValue(String attributeValue) {
+        this.attributeValues.add(attributeValue);
+    }
+
+    public String getDataType() {
+        return dataType;
+    }
+
+    public void setDataType(String dataType) {
+        this.dataType = dataType;
     }
 }

@@ -17,10 +17,15 @@
 */
 package org.wso2.carbon.identity.entitlement.ui.dto;
 
+import java.util.List;
+
 /**
  *
  */
 public class BasicRequestDTO {
+
+
+    private List<RowDTO> rowDTOs;
 
     private String resources;
 
@@ -80,5 +85,17 @@ public class BasicRequestDTO {
 
     public void setEnviornement(String enviornement) {
         this.enviornement = enviornement;
+    }
+
+    public List<RowDTO> getRowDTOs() {
+        return rowDTOs;
+    }
+
+    public void setRowDTOs(List<RowDTO> rowDTOs) {
+        this.rowDTOs = rowDTOs;
+    }
+
+    public void addRowDTOs(RowDTO rowDTO) {
+        this.rowDTOs.add(rowDTO);
     }
 }

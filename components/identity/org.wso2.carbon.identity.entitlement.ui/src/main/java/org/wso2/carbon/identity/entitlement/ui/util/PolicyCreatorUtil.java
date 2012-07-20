@@ -22,8 +22,6 @@ import org.apache.axiom.om.OMElement;
 import org.apache.axiom.om.util.AXIOMUtil;
 import org.w3c.dom.Document;
 import org.w3c.dom.Element;
-import org.w3c.dom.NodeList;
-import org.wso2.carbon.identity.entitlement.ui.EntitlementPolicyBean;
 import org.wso2.carbon.identity.entitlement.ui.EntitlementPolicyConstants;
 import org.wso2.carbon.identity.entitlement.ui.EntitlementPolicyCreationException;
 import org.wso2.carbon.identity.entitlement.ui.PolicyEditorConstants;
@@ -69,11 +67,11 @@ public class PolicyCreatorUtil {
             if(PolicyEditorConstants.RULE_COMBINING_FIRST_APPLICABLE.equals(policyElementDTO.
                     getRuleCombiningAlgorithms().trim())){
                 policyElement.setAttribute(EntitlementPolicyConstants.RULE_ALGORITHM,
-                        PolicyEditorConstants.RULE_ALGORITHM_IDENTIFIER_10 + policyElementDTO.
+                        PolicyEditorConstants.RULE_ALGORITHM_IDENTIFIER_1 + policyElementDTO.
                                 getRuleCombiningAlgorithms());
             } else {
                 policyElement.setAttribute(EntitlementPolicyConstants.RULE_ALGORITHM,
-                        PolicyEditorConstants.RULE_ALGORITHM_IDENTIFIER_30 + policyElementDTO.
+                        PolicyEditorConstants.RULE_ALGORITHM_IDENTIFIER_3 + policyElementDTO.
                                 getRuleCombiningAlgorithms());
             }
         } else {
@@ -171,84 +169,47 @@ public class PolicyCreatorUtil {
 
     }
 
-    public static Element createAttributeElement(AttributeElementDTO attributeElementDTO, Document doc){
+    /**
+     * This creates XML representation of Attributes Element using AttributesElementDTO object
+     *
+     * @param elementDTO  AttributesElementDTO
+     * @param doc Document
+     * @return DOM element
+     */
+    public static Element createAttributesElement(AttributesElementDTO elementDTO, Document doc){
 
-        Element attributeElement = doc.createElement(EntitlementPolicyConstants.ATTRIBUTE);
+        Element attributesElement = doc.createElement(EntitlementPolicyConstants.ATTRIBUTES);
 
-        if(attributeElementDTO.getAttributeId() != null && attributeElementDTO.getAttributeId().
-                trim().length() > 0 && attributeElementDTO.getDataType() != null && attributeElementDTO.
-                getDataType().trim().length() > 0 && attributeElementDTO.getAttributeValue() != null){
+        attributesElement.setAttribute(EntitlementPolicyConstants.CATEGORY, elementDTO.getCategory());
 
-
+        List<AttributeElementDTO> attributeElementDTOs = elementDTO.getAttributeElementDTOs();
+        if(attributeElementDTOs != null && attributeElementDTOs.size() > 0){
+            for(AttributeElementDTO attributeElementDTO : attributeElementDTOs){
+                Element attributeElement = doc.createElement(EntitlementPolicyConstants.ATTRIBUTE);
                 attributeElement.setAttribute(EntitlementPolicyConstants.ATTRIBUTE_ID,
-                        attributeElementDTO.getAttributeId());
-                attributeElement.setAttribute(EntitlementPolicyConstants.DATA_TYPE,
-                        attributeElementDTO.getDataType());
-    
-                if(attributeElementDTO.getIssuer() != null && attributeElementDTO.getIssuer().
-                        trim().length() > 0){
+                                              attributeElementDTO.getAttributeId());
+                attributeElement.setAttribute(EntitlementPolicyConstants.INCLUDE_RESULT,
+                                  Boolean.toString(attributeElementDTO.isIncludeInResult()));
+
+                if(attributeElementDTO.getIssuer() != null &&
+                                        attributeElementDTO.getIssuer().trim().length() > 0){
                     attributeElement.setAttribute(EntitlementPolicyConstants.ISSUER,
-                            attributeElementDTO.getIssuer());
+                                                            attributeElementDTO.getIssuer());
                 }
 
-            for(String attributeValue : attributeElementDTO.getAttributeValue()){
-                Element attributeValueElement = doc.createElement(EntitlementPolicyConstants.
-                        ATTRIBUTE_VALUE);
-                attributeValueElement.setTextContent(attributeValue);
-                attributeElement.appendChild(attributeValueElement);
+                List<String> values = attributeElementDTO.getAttributeValues();
+                for(String value : values){
+                    Element attributeValueElement = doc.createElement(EntitlementPolicyConstants.
+                            ATTRIBUTE_VALUE);
+                    attributeValueElement.setAttribute(EntitlementPolicyConstants.DATA_TYPE,
+                                                            attributeElementDTO.getDataType());
+                    attributeValueElement.setTextContent(value.trim());
+                    attributeElement.appendChild(attributeValueElement);
+                }
+                attributesElement.appendChild(attributeElement);
             }
-
         }
-        return attributeElement;
-    }
-
-    public static Element createRequestSubElement(AttributeElementDTO attributeElementDTO,
-                                                  String subElementName, Document doc){
-
-        boolean useDefaultResourceAttributeId = false;   // TODO Fix for issue in sunxacml that more than one resource-id can not be in the request
-        Element subElement = doc.createElement(subElementName);
-
-        for(String attributeValue : attributeElementDTO.getAttributeValue()){
-            Element attributeElement = doc.createElement(EntitlementPolicyConstants.ATTRIBUTE);
-
-            if(attributeElementDTO.getAttributeId() != null && attributeElementDTO.getAttributeId().
-                trim().length() > 0 && attributeElementDTO.getDataType() != null && attributeElementDTO.
-                getDataType().trim().length() > 0 && attributeElementDTO.getAttributeValue() != null){
-
-                if(EntitlementPolicyConstants.RESOURCE_ELEMENT.equals(subElementName)){
-
-                    if(useDefaultResourceAttributeId){
-                        attributeElement.setAttribute(EntitlementPolicyConstants.ATTRIBUTE_ID,
-                                                      attributeElementDTO.getAttributeId());
-                    } else {
-                        useDefaultResourceAttributeId = true;
-                        attributeElement.setAttribute(EntitlementPolicyConstants.ATTRIBUTE_ID,
-                                                      EntitlementPolicyConstants.RESOURCE_ID);
-                    }
-                } else {
-                    attributeElement.setAttribute(EntitlementPolicyConstants.ATTRIBUTE_ID,
-                                                  attributeElementDTO.getAttributeId());
-                }
-
-                attributeElement.setAttribute(EntitlementPolicyConstants.DATA_TYPE,
-                     attributeElementDTO.getDataType());
-
-                if(attributeElementDTO.getIssuer() != null && attributeElementDTO.getIssuer().
-                        trim().length() > 0){
-                 attributeElement.setAttribute(EntitlementPolicyConstants.ISSUER,
-                         attributeElementDTO.getIssuer());
-                }
-
-                Element attributeValueElement = doc.createElement(EntitlementPolicyConstants.
-                        ATTRIBUTE_VALUE);
-                attributeValueElement.setTextContent(attributeValue.trim());
-                attributeElement.appendChild(attributeValueElement);
-            }
-
-            subElement.appendChild(attributeElement);
-        }
-
-        return subElement;
+        return attributesElement;
     }
 
 
@@ -1312,114 +1273,86 @@ public class PolicyCreatorUtil {
         return targetElement;
     }
 
-    public static Element createBasicRequestElement(BasicRequestDTO basicRequestDTO, Document doc){
+    /**
+     * Creates XML request from  RequestElementDTO object
+     *
+     * @param requestElementDTO
+     * @param doc
+     * @return
+     */
+    public static Element createBasicRequestElement(RequestElementDTO requestElementDTO, Document doc){
 
-        AttributeElementDTO attributeElementDTO = new AttributeElementDTO();
+        List<RowDTO> rowDTOs  = requestElementDTO.getRowDTOs();
+        if(rowDTOs == null || rowDTOs.size() < 1){
+            return null;
+        }
+
+        Map<String, AttributesElementDTO> dtoMap = new HashMap<String, AttributesElementDTO>();
+        List<AttributesElementDTO> dtoList = new ArrayList<AttributesElementDTO>();
         Element requestElement = doc.createElement(EntitlementPolicyConstants.REQUEST_ELEMENT);
-        requestElement.setAttribute("xmlns", EntitlementPolicyConstants.REQ_RES_CONTEXT);
-        requestElement.setAttribute("xmlns:xsi", EntitlementPolicyConstants.REQ_SCHEME);
-        Element resourceElement = null;
-        Element subjectElement = null;
-        Element actionElement = null;
-        Element enviornementElement = null;
-        Element userAttributeElement =  null;
-        
-        if(basicRequestDTO.getResources() !=null && basicRequestDTO.getResources().trim().length() > 0){
-            String[] resources = basicRequestDTO.getResources().split(",");
-            attributeElementDTO.setAttributeValue(Arrays.asList(resources));
-            attributeElementDTO.setDataType(EntitlementPolicyConstants.STRING_DATA_TYPE);
-            attributeElementDTO.setAttributeId(EntitlementPolicyConstants.RESOURCE_ID_DEFAULT);                
-            resourceElement = createRequestSubElement(attributeElementDTO,
-                    EntitlementPolicyConstants.RESOURCE_ELEMENT, doc);
+        requestElement.setAttribute("xmlns", EntitlementPolicyConstants.REQ_RES_CONTEXT_XACML3);
+        requestElement.setAttribute(EntitlementPolicyConstants.RETURN_POLICY_LIST ,
+                                        Boolean.toString(requestElementDTO.isReturnPolicyIdList()));
+        requestElement.setAttribute(EntitlementPolicyConstants.COMBINED_DECISION ,
+                                        Boolean.toString(requestElementDTO.isCombinedDecision()));
 
-        }
+        for(RowDTO rowDTO : rowDTOs){
+            String category = rowDTO.getCategory();
+            String value = rowDTO.getAttributeValue();
+            String attributeId = rowDTO.getAttributeId();
+            if(category != null && category.trim().length() > 0 && value != null &&
+                value.trim().length() > 0 && attributeId != null && attributeId.trim().length() > 0){
 
-        if(basicRequestDTO.getSubjects() !=null && basicRequestDTO.getSubjects().trim().length() > 0){
-            String[] subjects = basicRequestDTO.getSubjects().split(",");
-            attributeElementDTO.setAttributeValue(Arrays.asList(subjects));
-            attributeElementDTO.setDataType(EntitlementPolicyConstants.STRING_DATA_TYPE);
-            attributeElementDTO.setAttributeId(EntitlementPolicyConstants.SUBJECT_ID_DEFAULT);
-            subjectElement = createRequestSubElement(attributeElementDTO,
-                    EntitlementPolicyConstants.SUBJECT_ELEMENT, doc);
-
-
-
-            if(basicRequestDTO.getUserAttributeId() !=null && basicRequestDTO.getUserAttributeId().
-                trim().length() > 0 && basicRequestDTO.getUserAttributeValue() != null && basicRequestDTO.
-                getUserAttributeValue().trim().length() > 0){
-                String[] userAttributeValue = basicRequestDTO.getUserAttributeValue().split(",");
-                attributeElementDTO.setAttributeValue(Arrays.asList(userAttributeValue[0]));
-                attributeElementDTO.setDataType(EntitlementPolicyConstants.STRING_DATA_TYPE);
-                attributeElementDTO.setAttributeId(basicRequestDTO.getUserAttributeId());
-                Element userAttributeElementLocal = createRequestSubElement(attributeElementDTO,
-                        EntitlementPolicyConstants.SUBJECT_ELEMENT, doc);
-                if(userAttributeElementLocal != null){
-                    NodeList list = userAttributeElementLocal.getChildNodes();
-                    for(int i = 0; i < list.getLength(); i ++) {
-                        subjectElement.appendChild(list.item(i));
+                if(requestElementDTO.isMultipleRequest()){
+                    AttributesElementDTO attributesElementDTO = new AttributesElementDTO();
+                    attributesElementDTO.setCategory(category);
+                    String[] values = value.split(EntitlementPolicyConstants.ATTRIBUTE_SEPARATOR);
+                    AttributeElementDTO attributeElementDTO = new AttributeElementDTO();
+                    attributeElementDTO.setAttributeValues(Arrays.asList(values));
+                    attributeElementDTO.setAttributeId(attributeId);
+                    attributesElementDTO.addAttributeElementDTO(attributeElementDTO);
+                    if(rowDTO.getAttributeDataType() != null && rowDTO.
+                                                        getAttributeDataType().trim().length() > 0){
+                        attributeElementDTO.setDataType(rowDTO.getAttributeDataType());
+                    } else {
+                        attributeElementDTO.setDataType(EntitlementPolicyConstants.STRING_DATA_TYPE);    
                     }
-                }                  
+                    dtoList.add(attributesElementDTO);
+
+                } else {
+                    AttributesElementDTO attributesElementDTO = dtoMap.get(category);
+                    if(attributesElementDTO == null){
+                        attributesElementDTO = new AttributesElementDTO();
+                        attributesElementDTO.setCategory(category);
+                    }
+
+                    String[] values = value.split(EntitlementPolicyConstants.ATTRIBUTE_SEPARATOR);
+                    AttributeElementDTO attributeElementDTO = new AttributeElementDTO();
+                    attributeElementDTO.setAttributeValues(Arrays.asList(values));
+                    attributeElementDTO.setAttributeId(attributeId);
+                    attributesElementDTO.addAttributeElementDTO(attributeElementDTO);
+                    if(rowDTO.getAttributeDataType() != null && rowDTO.
+                                                        getAttributeDataType().trim().length() > 0){
+                        attributeElementDTO.setDataType(rowDTO.getAttributeDataType());
+                    } else {
+                        attributeElementDTO.setDataType(EntitlementPolicyConstants.STRING_DATA_TYPE);
+                    }                    
+                    dtoMap.put(category, attributesElementDTO);
+                }
             }
-
-        } else if(basicRequestDTO.getUserAttributeId() !=null && basicRequestDTO.getUserAttributeId().
-                trim().length() > 0 && basicRequestDTO.getUserAttributeValue() != null && basicRequestDTO.
-                getUserAttributeValue().trim().length() > 0){
-            String[] subjects = basicRequestDTO.getUserAttributeValue().split(",");
-            attributeElementDTO.setAttributeValue(Arrays.asList(subjects[0]));
-            attributeElementDTO.setDataType(EntitlementPolicyConstants.STRING_DATA_TYPE);
-            attributeElementDTO.setAttributeId(basicRequestDTO.getUserAttributeId());
-            userAttributeElement = createRequestSubElement(attributeElementDTO,
-                    EntitlementPolicyConstants.SUBJECT_ELEMENT, doc);            
         }
 
-        if(basicRequestDTO.getActions() != null && basicRequestDTO.getActions().trim().length() > 0){
-            String[] actions = basicRequestDTO.getActions().split(",");
-            attributeElementDTO.setAttributeValue(Arrays.asList(actions));
-            attributeElementDTO.setDataType(EntitlementPolicyConstants.STRING_DATA_TYPE);
-            attributeElementDTO.setAttributeId(EntitlementPolicyConstants.ACTION_ID);
-            actionElement = createRequestSubElement(attributeElementDTO,
-                    EntitlementPolicyConstants.ACTION_ELEMENT, doc);
-        }
-
-        if(basicRequestDTO.getEnviornement() != null && basicRequestDTO.getEnviornement().trim().length() > 0){
-            String[] enviornement = basicRequestDTO.getEnviornement().split(",");
-            attributeElementDTO.setAttributeValue(Arrays.asList(enviornement));
-            attributeElementDTO.setDataType(EntitlementPolicyConstants.STRING_DATA_TYPE);
-            attributeElementDTO.setAttributeId(EntitlementPolicyConstants.ENVIRONMENT_ID);
-            enviornementElement = createRequestSubElement(attributeElementDTO,
-                    EntitlementPolicyConstants.ENVIRONMENT_ELEMENT, doc);
-        }
-
-        if(resourceElement != null){
-            requestElement.appendChild(resourceElement);
+        if(requestElementDTO.isMultipleRequest()){
+            for(AttributesElementDTO dto : dtoList){
+                requestElement.appendChild(createAttributesElement(dto, doc));
+            }
         } else {
-            requestElement.appendChild(doc.createElement(EntitlementPolicyConstants.RESOURCE_ELEMENT));
-        }
-
-        if(subjectElement != null){
-            requestElement.appendChild(subjectElement);
-        } else {
-            requestElement.appendChild(doc.createElement(EntitlementPolicyConstants.SUBJECT_ELEMENT));
-        }
-
-        if(actionElement != null){
-            requestElement.appendChild(actionElement);
-        } else {
-            requestElement.appendChild(doc.createElement(EntitlementPolicyConstants.ACTION_ELEMENT));
-        }
-
-        if(enviornementElement != null){
-            requestElement.appendChild(enviornementElement);
-        } else {
-            requestElement.appendChild(doc.createElement(EntitlementPolicyConstants.ENVIRONMENT_ELEMENT));             
-        }
-
-        if(userAttributeElement != null){
-            requestElement.appendChild(userAttributeElement);
+            for(Map.Entry<String, AttributesElementDTO> entry :dtoMap.entrySet()){
+                requestElement.appendChild(createAttributesElement(entry.getValue(), doc));
+            }
         }
         
         return requestElement;
-
     }
 
     public static PolicyElementDTO createPolicyElementDTO(String policy)

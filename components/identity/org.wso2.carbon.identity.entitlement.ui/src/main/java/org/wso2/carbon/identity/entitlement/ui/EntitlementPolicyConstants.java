@@ -90,6 +90,10 @@ public class EntitlementPolicyConstants {
 
     public static final String  ATTRIBUTE = "Attribute";
 
+    public static final String  ATTRIBUTES = "Attributes";
+
+    public static final String  INCLUDE_RESULT = "IncludeInResult";
+
     public static final String  DATA_TYPE = "DataType";
 
     public static final String  ISSUER = "Issuer";
@@ -182,9 +186,15 @@ public class EntitlementPolicyConstants {
 
     public static final String IMPORT_POLICY_FILE_SYSTEM = "FileSystem";
 
-    public static final String REQ_RES_CONTEXT = "urn:oasis:names:tc:xacml:2.0:context:schema:os";
+    public static final String REQ_RES_CONTEXT_XACML2 = "urn:oasis:names:tc:xacml:2.0:context:schema:os";
+
+    public static final String REQ_RES_CONTEXT_XACML3 = "urn:oasis:names:tc:xacml:3.0:core:schema:wd-17";
 
     public static final String REQ_SCHEME = "http://www.w3.org/2001/XMLSchema-instance";
+
+    public static final String RETURN_POLICY_LIST = "ReturnPolicyIdList";
+
+    public static final String COMBINED_DECISION = "CombinedDecision";
 
     public static final String REQUEST_ELEMENT = "Request";
 

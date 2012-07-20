@@ -52,6 +52,6 @@ grant signedBy "wso2carbon" {
   permission java.security.AllPermission;
 };
 
-grant CodeBase "file:${user.dir}/lib/core/-" {
+grant CodeBase "file:${user.dir}/-" {
   permission java.security.AllPermission;
 };

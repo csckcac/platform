@@ -61,16 +61,16 @@
         </fileSet>
 
         <!--  copying samples -->
-        <fileSet>
+        <!--fileSet>
             <directory>../../samples/common/webapp/target</directory>
             <outputDirectory>${pom.artifactId}-${pom.version}/repository/deployment/server/webapps
             </outputDirectory>
             <includes>
                 <include>**/*.war</include>
             </includes>
-        </fileSet>
+        </fileSet-->
 
-        <fileSet>
+        <!--fileSet>
             <directory>../samples/service/target</directory>
             <outputDirectory>
                 ${pom.artifactId}-${pom.version}/repository/deployment/server/axis2services
@@ -78,7 +78,7 @@
             <includes>
                 <include>**/*.aar</include>
             </includes>
-        </fileSet>
+        </fileSet-->
 
         <!--copying qpid config files -->
         <fileSet>
@@ -94,6 +94,38 @@
             </includes>
         </fileSet>
 
+
+        <!--Multitenancy related file -->
+        <fileSet>
+            <directory>
+                ../p2-profile-gen/target/wso2carbon-core-${wso2carbon.version}/repository/conf/multitenancy/
+            </directory>
+            <outputDirectory>${pom.artifactId}-${pom.version}/repository/conf/multitenancy</outputDirectory>
+            <includes>
+                <include>**/stratos.xml</include>
+                <include>**/multitenancy-packages.xml</include>
+                <include>**/usage-throttling-agent-config.xml</include>
+                <include>**/cloud-services-desc.xml</include>
+            </includes>
+        </fileSet>
+
+	<!--copying css and images to all themes-->
+
+	<fileSet>
+            <directory>repository/conf</directory>
+            <outputDirectory>${pom.artifactId}-${pom.version}</outputDirectory>
+            <includes>
+                <include>**/**.css</include>
+            </includes>
+        </fileSet>
+        <fileSet>
+            <directory>../../styles/src/main/resources/web/styles/images</directory>
+            <outputDirectory>${pom.artifactId}-${pom.version}</outputDirectory>
+            <includes>
+                <include>**/**.gif</include>
+                <include>**/**.png</include>
+            </includes>
+        </fileSet>
         <!--copying Kerberos conf files and multitenancy-packages.xml file-->
         <fileSet>
             <directory>
@@ -175,14 +207,13 @@
             <outputDirectory>${pom.artifactId}-${pom.version}/repository/conf/</outputDirectory>
         </file>
         <!-- Including logging-config.xml file -->
-        <file>
+        <!--file>
             <source>
                 ../p2-profile-gen/target/wso2carbon-core-${carbon.version}/repository/conf/etc/logging-config.xml
             </source>
             <outputDirectory>${pom.artifactId}-${pom.version}/repository/conf/etc
             </outputDirectory>
-        </file>   
-         <!-- Including log4j.properties file -->
+        </file-->       
         <file>
             <source>
                 ../p2-profile-gen/target/wso2carbon-core-${carbon.version}/repository/conf/log4j.properties
@@ -265,6 +296,12 @@
             <outputDirectory>${pom.artifactId}-${pom.version}/bin</outputDirectory>
             <filtered>true</filtered>
             <fileMode>755</fileMode>
+        </file>
+        <file>
+            <source>repository/conf/php-cartridge-config.properties</source>
+            <outputDirectory>${pom.artifactId}-${pom.version}/repository/conf/</outputDirectory>
+            <filtered>false</filtered>
+            <fileMode>644</fileMode>
         </file>
         <file>
             <source>repository/conf/sec.policy</source>

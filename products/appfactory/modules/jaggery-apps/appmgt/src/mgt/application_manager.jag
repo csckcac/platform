@@ -211,15 +211,15 @@
     }
     
     function getAppShortInfo(applicationKey,userName){
-      	var application=getAppInfo(applicationKey);
+      	var applicationInfo = getAppInfo(applicationKey);
       	var url = getProperty(SCM_SERVER_URL)+'/svn/'+applicationKey
-      	application.repoLink=url;
-        var url = application.repoLink;
+      	applicationInfo.repoLink = url;
+        var url = applicationInfo.repoLink;
         var repository = require("svnClient");
-        var svnClient = new repository.SVNClient(url,getProperty(SCM_ADMIN_USER_NAME),getProperty(SCM_ADMIN_PASSWORD));
-        application.lastRevisionNo=svnClient.getRepositoryInfo()[2];
-        application.roles = getUserRolesForApplication(applicationKey, userName);
+        var svnClient = new repository.SVNClient(url, getProperty(SCM_ADMIN_USER_NAME),getProperty(SCM_ADMIN_PASSWORD));
+        applicationInfo.lastRevisionNo=svnClient.getRepositoryInfo()[2];
+        applicationInfo.roles = getUserRolesForApplication(applicationKey, userName);
 
-        return application;
+        return applicationInfo;
     }
 %>

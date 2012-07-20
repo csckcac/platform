@@ -194,17 +194,22 @@
                             var stages = getProperties('ApplicationDeployment.DeploymentStage');
                             for(var i=0; i<stages.length;i++){
                                 var stage = stages[i];
-                            	%>
-                          <tr><td><h3><%=stage%></h3></td></tr>
-                          <tr><td>
-                            	<%
+                            %>
+                          		<tr><td><h3><%=stage%></h3></td></tr>
+                          		<tr><td>
+                            <%
                             	var appInfos = getAppVersionsInStage(stage, applicationKey);
+                            	
+                            	if(appInfos == null) {
+                            		continue;
+                            	}
+  
                             	var versions = appInfos[0].versions;
                             	for(var j = 0; j < versions.length; j++){
                             	    var version = versions[j];
-                            		%>
-                            		    <input type="radio" name="<%=stage%>" value="<%=version%>"><%=version%></input><br/>    
-                            		<%
+                            %>
+                            	    <input type="radio" name="<%=stage%>" value="<%=version%>"><%=version%></input><br/>    
+                         	<%
                             	}
                             %>
                             </td></tr>

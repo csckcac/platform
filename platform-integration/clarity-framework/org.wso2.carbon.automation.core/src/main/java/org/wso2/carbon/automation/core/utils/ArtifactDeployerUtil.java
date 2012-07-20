@@ -498,7 +498,7 @@ public class ArtifactDeployerUtil {
                    ServletException, TransformerException {
 
         SynapseConfigAdminClient synapseConfigAdmin =
-                new SynapseConfigAdminClient(sessionCookie, backendURL);
+                new SynapseConfigAdminClient(backendURL,sessionCookie);
         String synapseXmlPath = scenarioConfigDir + File.separator + "synapse.xml";
         File synapseXmlFile = new File(synapseXmlPath);
         DocumentBuilderFactory factory = DocumentBuilderFactory.newInstance();

@@ -250,7 +250,7 @@ public class ArtifactCleanerUtil {
         serializer.transform(new DOMSource(doc), new StreamResult(StringContainer));
 
 
-        SynapseConfigAdminClient synapseConfigAdmin = new SynapseConfigAdminClient(sessionCookie, backendURL);
+        SynapseConfigAdminClient synapseConfigAdmin = new SynapseConfigAdminClient(backendURL,sessionCookie);
         synapseConfigAdmin.updateConfiguration(StringContainer.toString());
 
     }

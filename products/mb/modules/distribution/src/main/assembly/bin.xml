@@ -240,11 +240,6 @@
              <source>../p2-profile/target/wso2carbon-core-${carbon.version}/repository/conf/identity.xml</source>
 	     <outputDirectory>wso2mb-${pom.version}/repository/conf/</outputDirectory>
         </file>
-        <file>
-            <source>../p2-profile/target/wso2carbon-core-${carbon.version}/repository/resources/security/userRP.jks</source>
-            <outputDirectory>wso2mb-${pom.version}/repository/resources/security/</outputDirectory>
-            <fileMode>644</fileMode>
-        </file>
 
 	 <file>
              <source>../../modules/samples/product/services/EventSinkService/EventSinkService.aar</source>

@@ -433,14 +433,13 @@
                                                     '<ser:path>'+path+'</ser:path>' +
                                                     '<ser:aspect>'+aspect+'</ser:aspect>' +
                                                     '<ser:action>'+action+'</ser:action>' +
-                                                    '<ser:items></ser:items>' +
-                                                    '<ser:parameters>';
+                                                    '<ser:items></ser:items>';
                                                     if(parameters.length>=2){
                                                     for(var i=0;i<parameters.length;){
-                                                       payload=payload+'<ser:array>'+parameters[i]+'</ser:array>'+ '<ser:array>'+parameters[i++]+'</ser:array>';
+                                                       payload=payload+'<ser:parameters><ser:array>'+parameters[i]+'</ser:array>'+ '<ser:array>'+parameters[i++]+'</ser:array></ser:parameters>';
                                                     }
                                                     }
-                                                    payload=payload+'</ser:parameters>'+'</ser:invokeAspectWithParams>';
+                                                    payload=payload+'</ser:invokeAspectWithParams>';
                  var result;
 
                  try {

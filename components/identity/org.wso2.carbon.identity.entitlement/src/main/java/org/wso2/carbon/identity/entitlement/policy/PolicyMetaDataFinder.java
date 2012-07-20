@@ -20,14 +20,12 @@ package org.wso2.carbon.identity.entitlement.policy;
 
 import org.apache.commons.logging.Log;
 import org.apache.commons.logging.LogFactory;
-import org.wso2.carbon.identity.entitlement.EntitlementConstants;
 import org.wso2.carbon.identity.entitlement.dto.AttributeValueTreeNodeDTO;
 import org.wso2.carbon.identity.entitlement.dto.PolicyAttributeDTO;
 import org.wso2.carbon.identity.entitlement.internal.EntitlementServiceComponent;
 
 import java.util.ArrayList;
 import java.util.HashSet;
-import java.util.List;
 import java.util.Map;
 import java.util.Properties;
 import java.util.Set;

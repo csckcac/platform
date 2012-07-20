@@ -23,6 +23,7 @@ import org.wso2.carbon.identity.entitlement.pip.PIPExtension;
 import org.wso2.carbon.identity.entitlement.pip.PIPResourceFinder;
 import org.wso2.carbon.identity.entitlement.policy.PolicyMetaDataFinderModule;
 
+import javax.xml.validation.Schema;
 import java.util.HashMap;
 import java.util.Map;
 import java.util.Properties;
@@ -39,27 +40,34 @@ public class EntitlementConfigHolder {
     private Map<PIPExtension, Properties> extensions = new HashMap<PIPExtension, Properties>();
 
     /**
-     * Will be fired by CarbonAttributeFinder whenever it finds an attribute supported by this
+     * This will be fired by CarbonAttributeFinder whenever it finds an attribute supported by this
      * module and missing in the XACML request.
      */
     private Map<PIPAttributeFinder, Properties> designators = new HashMap<PIPAttributeFinder, Properties>();
 
     /**
-     * Will be fired by CarbonResourceFinder whenever it wants to find a descendant or child resource
+     * This will be fired by CarbonResourceFinder whenever it wants to find a descendant or child resource
      * of a given resource
      */
     private Map<PIPResourceFinder, Properties> resourceFinders  = new HashMap<PIPResourceFinder, Properties>();
 
     /**
-     * Will be fired by PolicyMetaDataFinder, whenever it wants to retrieve an attribute values to build the
+     * This will be fired by PolicyMetaDataFinder, whenever it wants to retrieve an attribute values to build the
      * XACML policy
      */
     private Map<PolicyMetaDataFinderModule, Properties> policyMetaDataFinderModules  =
                                                         new HashMap<PolicyMetaDataFinderModule, Properties>();
+
+    /**
+     * This holds the policy schema against its version
+     */
+    private Map<String, Schema> policySchemaMap = new HashMap<String, Schema>();
+
     /**
      * Holds all caching related configurations
      */
     private Properties cachingProperties;
+
 
     
     public Map<PIPExtension, Properties> getExtensions() {
@@ -101,5 +109,13 @@ public class EntitlementConfigHolder {
 
     public void setCachingProperties(Properties cachingProperties) {
         this.cachingProperties = cachingProperties;
+    }
+
+    public Map<String, Schema> getPolicySchemaMap() {
+        return policySchemaMap;
+    }
+
+    public void setPolicySchema(String schemaNS, Schema schema) {
+        this.policySchemaMap.put(schemaNS, schema);
     }
 }

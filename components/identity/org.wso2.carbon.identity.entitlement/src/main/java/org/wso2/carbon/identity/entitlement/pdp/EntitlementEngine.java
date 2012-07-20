@@ -243,26 +243,25 @@ public class EntitlementEngine {
             return xacmlResponse;
 		}
 
-        Element xacmlRequestElement;
-        ResponseCtx responseCtx;
-        //RequestCtx requestCtx;
-        AbstractRequestCtx requestCtx;
-        PolicyRequestBuilder policyRequestBuilder = new PolicyRequestBuilder();
-        PolicyResponseBuilder policyResponseBuilder = new PolicyResponseBuilder();
-        xacmlRequestElement = policyRequestBuilder.getXacmlRequest(xacmlRequest);
-        //requestCtx = RequestCtx.getInstance(xacmlRequestElement);
-        requestCtx = RequestCtxFactory.getFactory().getRequestCtx(xacmlRequestElement);
-
         Map<PIPExtension, Properties> extensions = EntitlementServiceComponent.getEntitlementConfig()
                 .getExtensions();
+
         if(extensions != null && !extensions.isEmpty()){
+            PolicyRequestBuilder policyRequestBuilder = new PolicyRequestBuilder();
+            PolicyResponseBuilder policyResponseBuilder = new PolicyResponseBuilder();
+            Element xacmlRequestElement = policyRequestBuilder.getXacmlRequest(xacmlRequest);
+            AbstractRequestCtx requestCtx = RequestCtxFactory.getFactory().
+                                                            getRequestCtx(xacmlRequestElement);
             Set<PIPExtension> pipExtensions = extensions.keySet();
             for (PIPExtension pipExtension : pipExtensions) {
                 pipExtension.update(requestCtx);
             }
+            ResponseCtx responseCtx; responseCtx = pdp.evaluate(requestCtx);
+            xacmlResponse = policyResponseBuilder.getXacmlResponse(responseCtx);
+        } else {
+            xacmlResponse = pdp.evaluate(xacmlRequest);
         }
- 		responseCtx = pdp.evaluate(requestCtx);
-        xacmlResponse = policyResponseBuilder.getXacmlResponse(responseCtx);
+
         addToCache(xacmlRequest, xacmlResponse, false);
         return xacmlResponse;
 

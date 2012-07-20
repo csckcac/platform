@@ -257,13 +257,6 @@ public class EntitlementPolicyAdminService extends AbstractAdmin {
 		PolicyStoreReader policyReader = null;
 		EntitlementEngine.getInstance(getGovernanceUserRegistry(), CarbonContext
 				.getCurrentContext().getTenantId());
-		if (EntitlementConstants.TEMPLATE_POLICY.equals(policyId)) {
-			PolicyDTO policy = new PolicyDTO();
-			policy.setPolicy(EntitlementServiceComponent.getTemplatePolicy());
-			policy.setPolicyId(policyId);
-			return policy;
-		}
-
 		policyReader = new PolicyStoreReader(new PolicyStore(getGovernanceUserRegistry()));
 		return policyReader.readPolicyDTO(policyId);
 	}

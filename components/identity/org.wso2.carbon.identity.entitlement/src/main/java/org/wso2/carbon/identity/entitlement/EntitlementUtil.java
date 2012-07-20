@@ -19,7 +19,6 @@ package org.wso2.carbon.identity.entitlement;
 
 import java.io.ByteArrayOutputStream;
 import java.io.IOException;
-import java.io.InputStream;
 import java.io.StringReader;
 import java.io.StringWriter;
 import java.net.URI;
@@ -28,6 +27,7 @@ import java.text.DateFormat;
 import java.text.ParseException;
 import java.util.HashSet;
 import java.util.List;
+import java.util.Map;
 import java.util.Set;
 
 import org.wso2.balana.ParsingException;
@@ -47,18 +47,18 @@ import org.apache.commons.logging.LogFactory;
 import org.wso2.balana.attr.AttributeValue;
 import org.w3c.dom.Document;
 import org.w3c.dom.Element;
-import org.wso2.balana.Attribute;
+import org.wso2.balana.ctx.Attribute;
 import org.wso2.balana.ctx.xacml2.RequestCtx;
 import org.wso2.balana.ctx.xacml2.Subject;
 import org.wso2.carbon.identity.base.IdentityException;
 import org.wso2.carbon.identity.entitlement.dto.AttributeValueDTO;
 import org.wso2.carbon.identity.entitlement.dto.PolicyDTO;
+import org.wso2.carbon.identity.entitlement.internal.EntitlementServiceComponent;
 import org.wso2.carbon.utils.multitenancy.CarbonContextHolder;
 import org.wso2.carbon.utils.multitenancy.MultitenantConstants;
 import org.xml.sax.InputSource;
 import org.xml.sax.SAXException;
 
-import javax.xml.XMLConstants;
 import javax.xml.parsers.DocumentBuilder;
 import javax.xml.parsers.DocumentBuilderFactory;
 import javax.xml.parsers.ParserConfigurationException;
@@ -68,9 +68,7 @@ import javax.xml.transform.TransformerFactory;
 import javax.xml.transform.dom.DOMResult;
 import javax.xml.transform.dom.DOMSource;
 import javax.xml.transform.stream.StreamResult;
-import javax.xml.transform.stream.StreamSource;
 import javax.xml.validation.Schema;
-import javax.xml.validation.SchemaFactory;
 import javax.xml.validation.Validator;
 
 /**
@@ -184,7 +182,7 @@ public class EntitlementUtil {
 				return value;
 			}
 		};
-		Attribute attribute = new Attribute(new URI(uri), null, null, attrValues);
+		Attribute attribute = new Attribute(new URI(uri), null, null, attrValues, 1);
 		attrs.add(attribute);
 		return attrs;
 	}
@@ -204,7 +202,7 @@ public class EntitlementUtil {
 				return value;
 			}
 		};
-		return new Attribute(new URI(uri), null, null, attrValues);
+		return new Attribute(new URI(uri), null, null, attrValues, 1);
 	}
 
 	/**
@@ -404,6 +402,12 @@ public class EntitlementUtil {
      */
     public static void validatePolicy(PolicyDTO policy) throws IdentityException {
         try {
+
+            // there may be cases where you only updated the policy meta data in PolicyDTO not the
+            // actual XACML policy String
+            if(policy.getPolicy() == null || policy.getPolicy().trim().length() < 1){
+                return;
+            }
             //build XML document
             DocumentBuilderFactory documentBuilderFactory = DocumentBuilderFactory.newInstance();
             documentBuilderFactory.setNamespaceAware(true);
@@ -414,30 +418,25 @@ public class EntitlementUtil {
 
             //get policy version
             Element policyElement = doc.getDocumentElement();
-            String policyXMLNS = policyElement.getAttribute("xmlns");
+            String policyXMLNS = policyElement.getNamespaceURI();
 
+            Map<String, Schema> schemaMap = EntitlementServiceComponent.
+                                                    getEntitlementConfig().getPolicySchemaMap();
             //load correct schema by version
-            InputStream schemaFileStream;
-            if(EntitlementConstants.XACML_3_POLICY_XMLNS.equals(policyXMLNS)){
-                schemaFileStream = EntitlementUtil.class.
-                                getResourceAsStream("/"+EntitlementConstants.XACML_3_POLICY_SCHEMA);
-            } else if(EntitlementConstants.XACML_2_POLICY_XMLNS.equals(policyXMLNS)){
-                schemaFileStream = EntitlementUtil.class.
-                                getResourceAsStream("/"+EntitlementConstants.XACML_2_POLICY_SCHEMA);
-            } else {
-                schemaFileStream = EntitlementUtil.class.
-                                getResourceAsStream("/"+EntitlementConstants.XACML_1_POLICY_SCHEMA);
-            }
+            Schema schema = schemaMap.get(policyXMLNS);
 
-            //Do the DOM validation
-            DOMSource domSource = new DOMSource(doc);
-            DOMResult domResult = new DOMResult();
-            SchemaFactory schemaFactory = SchemaFactory.newInstance(XMLConstants.W3C_XML_SCHEMA_NS_URI);
-            Schema schema = schemaFactory.newSchema(new StreamSource(schemaFileStream));
-            Validator validator = schema.newValidator();
-            validator.validate(domSource,domResult);
-            if(log.isDebugEnabled()){
-                log.debug("XACML Policy validation succeeded with the Schema");
+            if(schema != null){
+                //Do the DOM validation
+                DOMSource domSource = new DOMSource(doc);
+                DOMResult domResult = new DOMResult();
+                Validator validator = schema.newValidator();
+                validator.validate(domSource,domResult);
+                if(log.isDebugEnabled()){
+                    log.debug("XACML Policy validation succeeded with the Schema");
+                }
+            } else {
+                log.error("Invalid Namespace in policy");
+                throw new IdentityException("Invalid Namespace in policy");                
             }
         } catch (SAXException e) {
             log.error("XACML Policy validation failed :" + e.getMessage());

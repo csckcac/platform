@@ -23,14 +23,20 @@ import org.apache.axiom.om.impl.builder.StAXOMBuilder;
 import org.apache.commons.logging.Log;
 import org.apache.commons.logging.LogFactory;
 import org.osgi.framework.BundleContext;
+import org.wso2.carbon.identity.entitlement.EntitlementConstants;
 import org.wso2.carbon.identity.entitlement.pip.PIPAttributeFinder;
 import org.wso2.carbon.identity.entitlement.pip.PIPExtension;
 import org.wso2.carbon.identity.entitlement.pip.PIPResourceFinder;
 import org.wso2.carbon.identity.entitlement.policy.PolicyMetaDataFinderModule;
 import org.wso2.carbon.utils.CarbonUtils;
+import org.xml.sax.SAXException;
 
+import javax.xml.XMLConstants;
 import javax.xml.namespace.QName;
 import javax.xml.stream.XMLStreamException;
+import javax.xml.transform.stream.StreamSource;
+import javax.xml.validation.Schema;
+import javax.xml.validation.SchemaFactory;
 import java.io.File;
 import java.io.FileInputStream;
 import java.io.FileNotFoundException;
@@ -434,9 +440,40 @@ public class EntitlementExtensionBuilder {
             rootElement = getRootElement();
         }
         if(rootElement != null){
-            return rootElement.getFirstChildWithName(new QName(LOCAL_NAME_CACHING_CONFIG));            
+            return rootElement.getFirstChildWithName(new QName(LOCAL_NAME_CACHING_CONFIG));
         }
         return null;
+    }
+
+    /**
+     * Builds the policy schema map. There are three schema s
+     *
+     * @param configHolder  holder EntitlementConfigHolder
+     * @throws SAXException if fails
+     */
+    public void buildPolicySchema(EntitlementConfigHolder configHolder) throws SAXException {
+
+        String[] schemaNSs = new String[]{EntitlementConstants.XACML_1_POLICY_XMLNS,
+            EntitlementConstants.XACML_2_POLICY_XMLNS, EntitlementConstants.XACML_3_POLICY_XMLNS};
+
+        for(String schemaNS : schemaNSs){
+
+            String schemaFile;
+
+            if(EntitlementConstants.XACML_1_POLICY_XMLNS.equals(schemaNS)){
+                schemaFile = EntitlementConstants.XACML_1_POLICY_SCHEMA_FILE;
+            } else if(EntitlementConstants.XACML_2_POLICY_XMLNS.equals(schemaNS)){
+                schemaFile = EntitlementConstants.XACML_2_POLICY_SCHEMA_FILE;
+            } else {
+                schemaFile = EntitlementConstants.XACML_3_POLICY_SCHEMA_FILE;
+            }
+
+            InputStream schemaFileStream = EntitlementExtensionBuilder.class.
+                                                getResourceAsStream(File.separator + schemaFile);
+            SchemaFactory schemaFactory = SchemaFactory.newInstance(XMLConstants.W3C_XML_SCHEMA_NS_URI);
+            Schema schema = schemaFactory.newSchema(new StreamSource(schemaFileStream));
+            configHolder.getPolicySchemaMap().put(schemaNS, schema);
+        }
     }
 
 

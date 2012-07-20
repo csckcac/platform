@@ -57,9 +57,8 @@ import java.util.concurrent.Executors;
  * cardinality="1..1" policy="dynamic" bind="setThriftAuthenticationService"  unbind="unsetThriftAuthenticationService"
  */
 public class EntitlementServiceComponent {
+
     private static Log log = LogFactory.getLog(EntitlementServiceComponent.class);
-    private static final String POLICY_TEMPLATE = "template.xml";
-    private static String templatePolicy = null;
     private static RegistryService registryService = null;
     private static EntitlementConfigHolder entitlementConfig = null;
     private static RealmService realmservice;
@@ -78,22 +77,12 @@ public class EntitlementServiceComponent {
      * @param ctxt
      */
     protected void activate(ComponentContext ctxt) {
+
         if (log.isDebugEnabled()) {
             log.info("Identity Entitlement bundle is activated");
         }
-        InputStream inStream = null;
-        BufferedReader reader = null;
+
         try {
-            inStream = ctxt.getBundleContext().getBundle().getResource(POLICY_TEMPLATE)
-                    .openStream();
-            reader = new BufferedReader(new InputStreamReader(inStream));
-            StringBuilder sb = new StringBuilder();
-            String line = null;
-            while ((line = reader.readLine()) != null) {
-                sb.append(line.trim() + " " + "\n");
-            }
-            templatePolicy = sb.toString();
-            inStream.close();
             EntitlementServiceInitializer entitlementServiceInitializer = new EntitlementServiceInitializer(
                     registryService);
             entitlementServiceInitializer.putEntitlementPolicyResourcesToRegistry();
@@ -103,7 +92,7 @@ public class EntitlementServiceComponent {
             builder.buildPIPConfig(entitlementConfig);
             builder.buildCachingConfig(entitlementConfig);
             builder.buildPAPConfig(entitlementConfig);
-
+            builder.buildPolicySchema(entitlementConfig);
             //TODO: Read from identit.xml, the configurations to be used in thrift based entitlement service.
             //initialize thrift authenticator
             ThriftEntitlementServiceImpl.init(thriftAuthenticationService);
@@ -112,14 +101,6 @@ public class EntitlementServiceComponent {
 
         } catch (Exception e) {
             log.error("Failed to initialize Entitlement Service", e);
-        } finally {
-            if (reader != null) {
-                try {
-                    reader.close();
-                } catch (IOException e) {
-                    log.warn("Unable to close the InputStream " + e.getMessage(), e);
-                }
-            }
         }
     }
 
@@ -212,13 +193,6 @@ public class EntitlementServiceComponent {
             log.debug("ThriftAuthenticatorService unset in Entitlement bundle");
         }
         this.thriftAuthenticationService = null;
-    }
-
-    /**
-     * @return
-     */
-    public static String getTemplatePolicy() {
-        return templatePolicy;
     }
 
     /**

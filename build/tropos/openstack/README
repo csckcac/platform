@@ -87,6 +87,11 @@ You can add additional compute nodes to a new machines
 - Modify oscomputeinstall.sh as per your requirements and execute
 
 
+Troubleshooting
+-------------------------
+When you install the controller or compute node, if any error is indicated, please retry running
+osreinstall.sh script. Note that before running, open it and see if it need any changes to adapt to your environment.
+
 IMPORTANT:
 When installing the compute node OSinstall.sh script should be changed as following
 

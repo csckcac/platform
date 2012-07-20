@@ -39,9 +39,9 @@ function image_validate {
         exit 1
     fi
 
-    if [[ (-n $action) && ($action == "create") && (-z $image_id || -z $image_user || -z $image_password || -z $image_root || -z $image_template ) ]]; then
-        echo "usage: image_action.sh action=create image-id=<image id> image-user=<image_user> image-password=<password> ip1=<ip1> ip2=<ip2> image-mask=<mask> image-root=<image_root> image-keys-file=<image keys file> template=<template> "
-        echo "usage example: image_action.sh action=create image-id=12345678 image-user=yang image-password=yang ip1=10.100.1.20 ip2=192.168.254.2 image-root=/opt/lxc template=lamp "
+    if [[ (-n $action) && ($action == "create") && (-z $image_id || -z $image_root || -z $image_template ) ]]; then
+        echo "usage: image_action.sh action=create image-id=<image id> image-root=<image_root> template=<template> "
+        echo "usage example: image_action.sh action=create image-id=12345678 image-root=/opt/lxc template=lamp "
         exit 1
     fi
 
@@ -133,7 +133,7 @@ if [[ (-n $action) && ($action == "unmount") ]]; then
         if [ -d $work_dir/$image_id/dev ]; then
             umount -l $work_dir/$image_id
         fi
-        losetup -d /dev/loop2
+        losetup -d /dev/loop3
         #rm -rf $work_dir/$image_id
     fi
     #if [ -d "./$image_id" ]; then
@@ -148,8 +148,8 @@ if [[ (-n $action) && ($action == "mount") ]]; then
         mkdir -p $work_dir/$image_id
     fi
     #cp -f $image_image $work_dir/
-    losetup /dev/loop2 $image_image
-    mount /dev/loop2 $work_dir/$image_id 
+    losetup /dev/loop3 $image_image
+    mount /dev/loop3 $work_dir/$image_id 
     mount -o bind /dev $work_dir/$image_id/dev
     mount -o bind /proc $work_dir/$image_id/proc
     mount -o bind /sys $work_dir/$image_id/sys

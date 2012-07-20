@@ -15,10 +15,10 @@ software=""
 
 function image_validate {
 
-    if [[ ( -z $image_id || -z $image_user || -z $image_password || -z $image_root || -z $image_template || -z $original_image ) ]]; then
+    if [[ ( -z $image_id || -z $image_root || -z $image_template || -z $original_image ) ]]; then
         echo "usage: customize_image.sh image-id=<image id> image-user=<image_user> image-password=<password> ip1=<load balancer ip (optional)> ip2=<host ip (optional)> image-root=<image_root> template=<template> image-size=<image_size in G (optional)> original-image=<original_image> image-keys-file=<image keys file (optional)> software=<software (optional)>"
         
-        echo "usage example: customize_image.sh image-id=12345678 image-user=yang image-password=yang ip1=10.100.1.20 ip2=192.168.254.2 image-root=/opt/lxc template=lamp image-size=3G original-image=ubuntu-12.04-server-cloudimg-amd64.tar.gz"
+        echo "usage example: customize_image.sh image-id=12345678 image-root=/opt/lxc template=lamp image-size=3G original-image=ubuntu-12.04-server-cloudimg-amd64.tar.gz"
         exit 1
     fi
 }

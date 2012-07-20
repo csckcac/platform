@@ -46,7 +46,7 @@
         <ul>
             <li>Log in into BPS server admin console.</li>
             <li>Under Business Processes -&gt; Add BPEL.</li>
-            <li>Upload the FlightReservationProcess.zip, (located at <a href="https://svn.wso2.org/repos/wso2/carbon/platform/trunk/products/bps/modules/samples/product/src/main/resources/bpel/2.0/SampleCompensationHandlers/">sample repository</a>.)</li>
+            <li>Upload the FlightReservationProcess.zip, located at &lt;BPS_HOME&gt;/repository/samples/bpel directory</li>
             <li>Under the Business Processes -&gt; Processes.</li>
             <li>Under the WSDL details widget -&gt; Create instance</li>
         </ul>

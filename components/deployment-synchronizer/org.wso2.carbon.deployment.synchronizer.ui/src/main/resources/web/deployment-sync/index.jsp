@@ -403,7 +403,7 @@
                         <tr>
                             <td><fmt:message key="deployment.sync.period"/></td>
                             <td><input type="text" value="<%=synchronizerConfiguration.getPeriod()%>" name="syncPeriod" id="syncPeriod"
-                            	<%if(disableFields){%>disabled="disabled"<%}%>/>
+                            	<%if(disableFields){%>disabled="disabled"<%}%>/>s
                             </td>
                         </tr>
                     </tbody>

@@ -76,45 +76,45 @@ public class DdlAjaxProcessorHelper {
     }
 
     public String getServerProfileNames(String serverProfilePath){
-        String serverProfileNamesString = "";
+        StringBuilder serverProfileNamesStringBuilder = new StringBuilder("");
         try {
             String[] serverProfileNames = client.getServerProfilePathList(serverProfilePath);
             for (String serverProfileName : serverProfileNames) {
-                serverProfileNamesString = serverProfileNamesString + "<option>" +
-                                           serverProfileName.split("/")[serverProfileName.split("/").length-1] +
-                                           "</option>";
+                serverProfileNamesStringBuilder.append("<option>" +
+                                                       serverProfileName.split("/")[serverProfileName.split("/").length-1] +
+                                                       "</option>");
             }
         } catch (RemoteException e) {
             String errorMsg = "Error while getting Server Profile Names. " + e.getMessage();
             log.error(errorMsg, e);
         }
-        return serverProfileNamesString;
+        return serverProfileNamesStringBuilder.toString();
     }
 
     public String getStreamConfigurationNames(String serverProfilesLocation){
-        String streamNames = "";
+        StringBuilder streamNamesBuilder = new StringBuilder("");
         BamServerConfig bamServerConfig = this.getResource(serverProfilesLocation);
         List<StreamConfiguration> streamConfigurations = bamServerConfig.getStreamConfigurations();
         List<String> foundStreamNames = new ArrayList<String>();
         for (StreamConfiguration configuration : streamConfigurations) {
             if(!foundStreamNames.contains(configuration.getName())){ // Add only unique stream names
-                streamNames = streamNames + "<option>" + configuration.getName() + "</option>";
+                streamNamesBuilder.append("<option>" + configuration.getName() + "</option>");
             }
             foundStreamNames.add(configuration.getName());
         }
-        return streamNames;
+        return streamNamesBuilder.toString();
     }
     
     public String getVersionListForStreamName(String serverProfilePath, String streamName){
-        String streamVersions = "";
+        StringBuilder streamVersionsBuilder = new StringBuilder("");
         BamServerConfig bamServerConfig = this.getResource(serverProfilePath);
         List<StreamConfiguration> streamConfigurations = bamServerConfig.getStreamConfigurations();
         for (StreamConfiguration configuration : streamConfigurations) {
             if(configuration.getName().equals(streamName)){
-                streamVersions = streamVersions + "<option>" + configuration.getVersion() + "</option>";
+                streamVersionsBuilder.append("<option>" + configuration.getVersion() + "</option>");
             }
         }
-        return streamVersions;
+        return streamVersionsBuilder.toString();
     }
 
 }

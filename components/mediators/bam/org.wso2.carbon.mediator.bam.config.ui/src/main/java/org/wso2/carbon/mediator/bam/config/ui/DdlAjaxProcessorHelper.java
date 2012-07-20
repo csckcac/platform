@@ -49,19 +49,19 @@ public class DdlAjaxProcessorHelper {
     }
 
     public String getServerProfileNames(String serverProfilePath){
-        String serverProfileNamesString = "";
+        StringBuilder serverProfileNamesString = new StringBuilder("");
         try {
             String[] serverProfileNames = client.getServerProfilePathList(serverProfilePath);
             for (String serverProfileName : serverProfileNames) {
-                serverProfileNamesString = serverProfileNamesString + "<option>" +
-                                           serverProfileName.split("/")[serverProfileName.split("/").length-1] +
-                                           "</option>";
+                serverProfileNamesString.append("<option>" +
+                                                serverProfileName.split("/")[serverProfileName.split("/").length-1] +
+                                                "</option>");
             }
         } catch (RemoteException e) {
             String errorMsg = "Error while getting Server Profile Name List. " + e.getMessage();
             log.error(errorMsg, e);
         }
-        return serverProfileNamesString;
+        return serverProfileNamesString.toString();
     }
 
 }

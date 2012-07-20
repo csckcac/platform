@@ -72,38 +72,35 @@ public class StreamIDBuilder {
         nameStrings[i++] = BamMediatorConstants.REMOTE_HOST;
         nameStrings[i] = BamMediatorConstants.SERVICE_PREFIX;
 
-        String outputString = "{'" + BamMediatorConstants.NAME + "':'" +
-                              BamMediatorConstants.MSG_DIRECTION + "','" +
-                              BamMediatorConstants.TYPE + "':'" +
-                              BamMediatorConstants.STRING + "'}";
+        StringBuilder outputStringBuilder = new StringBuilder("{'" + BamMediatorConstants.NAME + "':'" +
+                                                              BamMediatorConstants.MSG_DIRECTION + "','" +
+                                                              BamMediatorConstants.TYPE + "':'" +
+                                                              BamMediatorConstants.STRING + "'}");
 
         for (String nameString : nameStrings) {
-            outputString = outputString + ","
-                           + this.getStreamDefinitionEntryString(nameString,
-                                                                 BamMediatorConstants.STRING);
+            outputStringBuilder.append(",").append(
+                    this.getStreamDefinitionEntryString(nameString, BamMediatorConstants.STRING));
         }
 
-        return outputString;
+        return outputStringBuilder.toString();
     }
 
     private String getPropertyStreamDefinitionString(){
-        String propertyString = "";
+        StringBuilder propertyStringBuilder = new StringBuilder("");
         for (Property property : properties) {
-            propertyString = propertyString + "," +
-                             this.getStreamDefinitionEntryString(property.getKey(),
-                                                                 BamMediatorConstants.STRING);
+            propertyStringBuilder.append(",")
+                    .append(this.getStreamDefinitionEntryString(property.getKey(), BamMediatorConstants.STRING));
         }
-        return propertyString;
+        return propertyStringBuilder.toString();
     }
 
     private String getEntityStreamDefinitionString(){
-        String entityString = "";
+        StringBuilder entityStringBuilder = new StringBuilder("");
         for (StreamEntry streamEntry : streamEntries) {
-            entityString = entityString + "," +
-                           this.getStreamDefinitionEntryString(streamEntry.getName(),
-                                                               streamEntry.getType());
+            entityStringBuilder.append(",").append(
+                    this.getStreamDefinitionEntryString(streamEntry.getName(), streamEntry.getType()));
         }
-        return entityString;
+        return entityStringBuilder.toString();
     }
 
     private String getStreamDefinitionEntryString(String name, String type){

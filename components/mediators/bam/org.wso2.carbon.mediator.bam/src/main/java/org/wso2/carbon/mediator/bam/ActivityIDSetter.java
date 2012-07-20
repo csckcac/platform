@@ -78,15 +78,13 @@ public class ActivityIDSetter {
 
     private void setActivityIDInSOAPHeaderWithConditioning(SOAPFactory soapFactory){
         try {
-            SOAPHeaderBlock soapHeaderBlock = null;
-
             // If header is not null check for  BAM headers
             if (this.soapEnvelope.getHeader() != null) {
                 Iterator itr = this.soapEnvelope.getHeader().getChildrenWithName(
                         new QName(BamMediatorConstants.BAM_HEADER_NAMESPACE_URI,
                                   BamMediatorConstants.BAM_EVENT));
                 if (!itr.hasNext()) {
-                    this.processActivityIDWhenSOAPHeaderIsNull(soapHeaderBlock);
+                    this.processActivityIDWhenSOAPHeaderIsNull();
                 } else {// If header is not null check for  BAM headers
 
                     // If the BAM header already present
@@ -109,7 +107,7 @@ public class ActivityIDSetter {
                     (soapFactory).createSOAPHeader(this.soapEnvelope); // TO DO
                 }
                 if (this.soapEnvelope.getHeader() != null) {
-                    this.processActivityIDWhenSOAPHeaderIsNull(soapHeaderBlock);
+                    this.processActivityIDWhenSOAPHeaderIsNull();
                 }
             }
 
@@ -118,8 +116,8 @@ public class ActivityIDSetter {
         }
     }
 
-    private void processActivityIDWhenSOAPHeaderIsNull(SOAPHeaderBlock soapHeaderBlock){
-        soapHeaderBlock = this.soapEnvelope.getHeader().addHeaderBlock(BamMediatorConstants.BAM_EVENT, this.omNs);
+    private void processActivityIDWhenSOAPHeaderIsNull(){
+        SOAPHeaderBlock soapHeaderBlock = this.soapEnvelope.getHeader().addHeaderBlock(BamMediatorConstants.BAM_EVENT, this.omNs);
         if (this.synapseContext.getProperty(BamMediatorConstants.MSG_ACTIVITY_ID) == null) { // this if
             // condition we add
             // to track failure messages coming from

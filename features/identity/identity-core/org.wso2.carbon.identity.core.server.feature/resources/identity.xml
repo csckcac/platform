@@ -75,7 +75,7 @@
 		<!-- Default validity period for Access Token in seconds -->
 		<AccessTokenDefaultValidityPeriod>3600</AccessTokenDefaultValidityPeriod>
 		<!-- Timestamp skew in seconds -->
-		<TimestampSkew>120</TimestampSkew>
+		<TimestampSkew>300</TimestampSkew>
 		<AuthorizationCallbackHandlers>		
 				<AuthorizationCallbackHandler Class="org.wso2.identity.oauth.DefaultOAuthCallbackHandler"/>
 		</AuthorizationCallbackHandlers>

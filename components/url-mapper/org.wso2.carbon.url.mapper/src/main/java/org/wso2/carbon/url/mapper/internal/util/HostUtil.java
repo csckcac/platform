@@ -404,8 +404,8 @@ public class HostUtil {
     public static void addDomainToServiceEpr(String hostName, String url) throws UrlMapperException {
 
         // if the request if from tenant
-        String tenantDomain = "";
-        if (MultitenantConstants.TENANT_AWARE_URL_PREFIX.contains(url)) {
+        String tenantDomain = MultitenantConstants.SUPER_TENANT_DOMAIN_NAME;
+        if (url.contains("/" + MultitenantConstants.TENANT_AWARE_URL_PREFIX + "/")) {
             tenantDomain = MultitenantUtils.getTenantDomainFromRequestURL(url);
         }
 

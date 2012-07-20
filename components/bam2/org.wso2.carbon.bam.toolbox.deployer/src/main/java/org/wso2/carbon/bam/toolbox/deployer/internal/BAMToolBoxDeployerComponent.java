@@ -110,6 +110,7 @@ public class BAMToolBoxDeployerComponent {
                             if (location.indexOf(BAMToolBoxDeployerConstants.CARBON_HOME) == 0) {
                                 location = location.substring(BAMToolBoxDeployerConstants.CARBON_HOME.length());
                                 location = CarbonUtils.getCarbonHome() + location;
+                                location=location.replace("/", File.separator);
                             }
                             BasicToolBox toolBox = new BasicToolBox(toolBoxId, location, displayName, desc);
                             BasicToolBox.addToAvailableToolBox(toolBox);

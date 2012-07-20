@@ -291,7 +291,7 @@ public class BAMToolBoxUploaderService extends AbstractAdmin {
     }
 
     public BasicToolBox[] getBasicToolBoxes() {
-      return BasicToolBox.getAvailableToolBoxes();
+        return BasicToolBox.getAvailableToolBoxes();
     }
 
     public void deployToolBoxFromURL(String url) throws BAMToolboxDeploymentException {

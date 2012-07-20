@@ -158,7 +158,7 @@
                                 <featureArtifactDef>org.wso2.carbon:org.wso2.carbon.reporting.ui.feature:${carbon.version}</featureArtifactDef>
                                 <featureArtifactDef>org.wso2.carbon:org.wso2.carbon.transaction.manager.feature:${carbon.version}</featureArtifactDef>
 								<!--<featureArtifactDef>org.wso2.carbon:org.wso2.carbon.cloud.csg.agent.feature:${carbon.version}</featureArtifactDef>-->
-                                <featureArtifactDef>org.wso2.carbon:org.wso2.carbon.datasource.feature:${carbon.version}</featureArtifactDef>
+                                <featureArtifactDef>org.wso2.carbon:org.wso2.carbon.datasource.server.feature:${carbon.version}</featureArtifactDef>
                             </featureArtifacts>
                         </configuration>
                     </execution>
@@ -178,7 +178,7 @@
                             <features>
 
 				<feature>
-                                    <id>org.wso2.carbon.datasource.feature.group</id>
+                                    <id>org.wso2.carbon.datasource.server.feature.group</id>
                                     <version>${carbon.version}</version>
                                 </feature>
 

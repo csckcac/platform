@@ -76,11 +76,11 @@ public class HiveScriptPersistenceManager {
             String line;
             while ((line = br.readLine()) != null) {
                 sb.append(line);
+                sb.append("\n");
             }
 
             br.close();
             script = sb.toString();
-            script = script.replaceAll(";", ";\n");
             return script;
         } catch (RegistryException e) {
             log.error("Error while retrieving the script - " + scriptName + " from registry", e);

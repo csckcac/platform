@@ -436,10 +436,13 @@ public class BAMArtifactDeployerManager {
                 DataInputStream in = new DataInputStream(fstream);
                 BufferedReader br = new BufferedReader(new InputStreamReader(in));
                 String content = "";
+                StringBuilder sb = new StringBuilder();
                 String strLine;
                 while ((strLine = br.readLine()) != null) {
-                    content += strLine;
+                    sb.append(strLine);
+                    sb.append("\n");
                 }
+                content = sb.toString();
                 in.close();
                 return content;
             } catch (FileNotFoundException e) {

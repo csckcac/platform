@@ -68,7 +68,7 @@
             <fileMode>755</fileMode>
         </fileSet>
         <fileSet>
-            <directory>../../../conf</directory>
+            <directory>../../conf</directory>
             <outputDirectory>${pom.artifactId}-${pom.version}/repository/conf</outputDirectory>
             <includes>
                 <include>**/*</include>
@@ -94,7 +94,7 @@
             </excludes>
         </fileSet>
         <fileSet>
-            <directory>../../../conf</directory>
+            <directory>../../conf</directory>
             <outputDirectory>${pom.artifactId}-${pom.version}/repository/conf/email</outputDirectory>
             <includes>
                 <include>email-bill-generated.xml</include>
@@ -111,14 +111,14 @@
             </includes>
         </fileSet>
 	<fileSet>
-            <directory>../../../conf</directory>
+            <directory>../../conf</directory>
             <outputDirectory>${pom.artifactId}-${pom.version}/repository/conf/multitenancy</outputDirectory>
             <includes>
                 <include>tenant-reg-agent.xml</include>
             </includes>
         </fileSet>
 		<fileSet>
-            <directory>../../../conf</directory>
+            <directory>../../conf</directory>
             <outputDirectory>${pom.artifactId}-${pom.version}/repository/conf/datasources</outputDirectory>
             <includes>
                 <include>stratos-datasources.xml</include>
@@ -145,7 +145,7 @@
 
         <!-- Copying themes, cloud icons-->
          <fileSet>
-            <directory>../../../resources</directory>
+            <directory>../../resources</directory>
             <outputDirectory>${pom.artifactId}-${pom.version}/resources</outputDirectory>
             <fileMode>755</fileMode>
             <includes>
@@ -190,7 +190,7 @@
 
 	<!--qpid related files -->
 	<fileSet>
-           <directory>../../p2-profile-gen/service/target/wso2carbon-core-${carbon.version}/repository/conf/advanced/</directory>
+           <directory>../p2-profile-gen/target/wso2carbon-core-${carbon.version}/repository/conf/advanced/</directory>
            <outputDirectory>${pom.artifactId}-${pom.version}/repository/conf/advanced</outputDirectory>
 	   <includes>
                <include>**/*</include>
@@ -206,7 +206,7 @@
 
 
 	<fileSet>
-           <directory>../../p2-profile-gen/service/target/wso2carbon-core-${carbon.version}/repository/conf/</directory>
+           <directory>../p2-profile-gen/target/wso2carbon-core-${carbon.version}/repository/conf/</directory>
            <outputDirectory>${pom.artifactId}-${pom.version}/repository/conf/</outputDirectory>
 	   <includes>
        		<include>**/identity.xml</include>
@@ -215,7 +215,7 @@
         </fileSet>
 
 	<fileSet>
-           <directory>../../p2-profile-gen/service/target/wso2carbon-core-${carbon.version}/repository/conf/multitenancy/</directory>
+           <directory>../p2-profile-gen/target/wso2carbon-core-${carbon.version}/repository/conf/multitenancy/</directory>
            <outputDirectory>${pom.artifactId}-${pom.version}/repository/conf/multitenancy/</outputDirectory>
            <includes>
                 <include>**/multitenancy-packages.xml</include>
@@ -234,21 +234,21 @@
 		</fileSet>
 
 		<fileSet>
-			<directory>../../../modules/features-dashboard/target/</directory>
+			<directory>../../modules/features-dashboard/target/</directory>
 			<outputDirectory>${pom.artifactId}-${pom.version}/repository/deployment/server/webapps</outputDirectory>
 			<includes>
 				<include>**/*.war</include>
 			</includes>
 		</fileSet>
         <fileSet>
-			<directory>../../../resources/cloud-services-icons/target/</directory>
+			<directory>../../resources/cloud-services-icons/target/</directory>
 			<outputDirectory>${pom.artifactId}-${pom.version}/repository/deployment/server/webapps</outputDirectory>
 			<includes>
 				<include>**/*.war</include>
 			</includes>
 		</fileSet>
 		<fileSet>
-            <directory>../../p2-profile-gen/service/target/wso2carbon-core-${wso2carbon.version}/dbscripts/identity/</directory>
+            <directory>../p2-profile-gen/target/wso2carbon-core-${wso2carbon.version}/dbscripts/identity/</directory>
             <outputDirectory>${pom.artifactId}-${pom.version}/dbscripts/identity</outputDirectory>
             <includes>
                 <include>**/**.sql</include>
@@ -285,7 +285,7 @@
 
     <files>
         <file>
-            <source>../../../billing-script/billing-mysql.sql</source>
+            <source>../../billing-script/billing-mysql.sql</source>
             <outputDirectory>${pom.artifactId}-${pom.version}/dbscripts</outputDirectory>
             <filtered>true</filtered>
             <fileMode>755</fileMode>
@@ -297,13 +297,13 @@
             <fileMode>644</fileMode>
         </file>
         <file>
-            <source>../../../conf/samples-desc.xml</source>
+            <source>../../conf/samples-desc.xml</source>
             <outputDirectory>${pom.artifactId}-${pom.version}/repository/conf</outputDirectory>
             <filtered>true</filtered>
             <fileMode>644</fileMode>
         </file>
         <file>
-            <source>../../../conf/datasources.properties</source>
+            <source>../../conf/datasources.properties</source>
             <outputDirectory>${pom.artifactId}-${pom.version}/repository/conf</outputDirectory>
             <filtered>true</filtered>
             <fileMode>644</fileMode>
@@ -357,12 +357,12 @@
             <fileMode>644</fileMode>
         </file-->
         <file>
-            <source>../../p2-profile-gen/service/target/wso2carbon-core-${carbon.version}/repository/resources/security/userRP.jks</source>
+            <source>../p2-profile-gen/target/wso2carbon-core-${carbon.version}/repository/resources/security/userRP.jks</source>
             <outputDirectory>${pom.artifactId}-${pom.version}/repository/resources/security/</outputDirectory>
             <fileMode>644</fileMode>
         </file>
 	<file>
-            <source>../../p2-profile-gen/service/target/wso2carbon-core-${carbon.version}/repository/conf/event-broker.xml</source>
+            <source>../p2-profile-gen/target/wso2carbon-core-${carbon.version}/repository/conf/event-broker.xml</source>
             <outputDirectory>${pom.artifactId}-${pom.version}/repository/conf</outputDirectory>
 	    <filtered>true</filtered>
 	    <fileMode>644</fileMode>	
@@ -370,26 +370,26 @@
 	
          <!-- Including logging-config.xml file -->
  	<file>
-            <source>../../p2-profile-gen/service/target/wso2carbon-core-${carbon.version}/repository/conf/etc/logging-config.xml</source>
+            <source>../p2-profile-gen/target/wso2carbon-core-${carbon.version}/repository/conf/etc/logging-config.xml</source>
             <outputDirectory>${pom.artifactId}-${pom.version}/repository/conf/etc/</outputDirectory>
         </file>
          <!-- Including log4j.properties file -->
         <file>
             <source>
-                ../../p2-profile-gen/service/target/wso2carbon-core-${carbon.version}/repository/conf/log4j.properties
+                ../p2-profile-gen/target/wso2carbon-core-${carbon.version}/repository/conf/log4j.properties
 
             </source>
             <outputDirectory>${pom.artifactId}-${pom.version}/repository/conf</outputDirectory>
         </file>      
 	<file>
-            <source>../../p2-profile-gen/service/target/wso2carbon-core-${carbon.version}/repository/conf/claim-config.xml</source>
+            <source>../p2-profile-gen/target/wso2carbon-core-${carbon.version}/repository/conf/claim-config.xml</source>
             <outputDirectory>${pom.artifactId}-${pom.version}/repository/conf</outputDirectory>
 	    <filtered>true</filtered>
 	    <fileMode>644</fileMode>	
         </file>
 
         <file>
-            <source>../../p2-profile-gen/service/target/wso2carbon-core-${carbon.version}/repository/conf/sso-idp-config.xml</source>
+            <source>../p2-profile-gen/target/wso2carbon-core-${carbon.version}/repository/conf/sso-idp-config.xml</source>
             <outputDirectory>${pom.artifactId}-${pom.version}/repository/conf/</outputDirectory>
         </file>
     </files>

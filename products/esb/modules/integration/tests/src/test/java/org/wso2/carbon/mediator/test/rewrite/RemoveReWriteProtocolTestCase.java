@@ -56,7 +56,7 @@ public class RemoveReWriteProtocolTestCase extends ESBMediatorTest {
     public Object[][] addressingUrl() {
         return new Object[][]{
                 {"https://localhost:9000/services/SimpleStockQuoteService"},
-//               todo {"jms://localhost:9000/services/SimpleStockQuoteService"},
+               {"jms://localhost:9000/services/SimpleStockQuoteService"},
         };
 
     }

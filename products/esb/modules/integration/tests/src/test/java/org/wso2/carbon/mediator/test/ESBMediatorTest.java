@@ -59,12 +59,14 @@ public abstract class ESBMediatorTest {
     protected void loadSampleESBConfiguration(int sampleNo) throws Exception {
         ESBTestCaseUtils esbUtils = new ESBTestCaseUtils();
         esbUtils.loadSampleESBConfiguration(sampleNo, esbServer.getBackEndUrl(), esbServer.getSessionCookie());
+        //todo - synapse issue
         Thread.sleep(10000);
     }
 
     protected void loadESBConfigurationFromClasspath(String filePath) throws Exception {
         ESBTestCaseUtils esbUtils = new ESBTestCaseUtils();
         esbUtils.loadESBConfigurationFromClasspath(filePath, esbServer.getBackEndUrl(), esbServer.getSessionCookie());
+         //todo - synapse issue
         Thread.sleep(10000);
     }
 }

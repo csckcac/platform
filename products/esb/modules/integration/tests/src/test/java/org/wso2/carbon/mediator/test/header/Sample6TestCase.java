@@ -15,34 +15,32 @@
 *specific language governing permissions and limitations
 *under the License.
 */
-package org.wso2.carbon.mediator.test.rewrite;
+package org.wso2.carbon.mediator.test.header;
 
 import org.apache.axiom.om.OMElement;
 import org.apache.axis2.AxisFault;
 import org.testng.annotations.AfterClass;
 import org.testng.annotations.BeforeClass;
-import org.testng.annotations.DataProvider;
 import org.testng.annotations.Test;
 import org.wso2.carbon.mediator.test.ESBMediatorTest;
 
 import static org.testng.Assert.assertTrue;
 
-public class ProtocolReWriteFromProperty extends ESBMediatorTest {
+public class Sample6TestCase extends ESBMediatorTest {
     @BeforeClass(alwaysRun = true)
     public void uploadSynapseConfig() throws Exception {
         super.init();
-        loadESBConfigurationFromClasspath("/artifacts/ESB/mediatorconfig/rewrite/protocol_rewrite_from_property_synapse.xml");
+        loadSampleESBConfiguration(6);
     }
 
 
-    @Test(groups = {"wso2.esb"}, description = "Conditional URL Rewriting",
-          dataProvider = "addressingUrl")
-    public void reWriteProtocol(String addUrl) throws AxisFault {
+    @Test(groups = {"wso2.esb"}, description = "Sample 6: Manipulate soap headers of incoming messages")
+    public void ManipulatingSoupHeader() throws AxisFault {
         OMElement response;
 
         response = axis2Client.sendSimpleStockQuoteRequest(
-                getProxyServiceURL("urlRewriteProxy"),
-                addUrl,
+                getMainSequenceURL(),
+                "http://localhost:9000/services/NonExistingService",
                 "IBM");
         assertTrue(response.toString().contains("IBM"));
 
@@ -52,15 +50,4 @@ public class ProtocolReWriteFromProperty extends ESBMediatorTest {
     private void destroy() {
         super.cleanup();
     }
-
-    @DataProvider(name = "addressingUrl")
-    public Object[][] addressingUrl() {
-        return new Object[][]{
-                {"abc://localhost:9000/services/SimpleStockQuoteService"},
-                {"https://localhost:9000/services/SimpleStockQuoteService"},
-               {"jms://localhost:9000/services/SimpleStockQuoteService"},
-        };
-
-    }
-
 }

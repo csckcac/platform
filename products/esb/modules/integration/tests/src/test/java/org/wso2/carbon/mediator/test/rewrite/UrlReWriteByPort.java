@@ -73,7 +73,7 @@ public class UrlReWriteByPort extends ESBMediatorTest {
         return new Object[][]{
                 {"abc://localhost:9000/services/SimpleStockQuoteService"},
                 {"https://localhost:9000/services/SimpleStockQuoteService"},
-//             todo   {"jms://localhost:9000/services/SimpleStockQuoteService"},
+                {"jms://localhost:9000/services/SimpleStockQuoteService"},
         };
 
     }

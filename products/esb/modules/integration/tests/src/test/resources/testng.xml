@@ -127,5 +127,15 @@
         </classes>
     </test>
 
+    <test name="Test - Mediator Header" preserve-order="true" verbose="2">
+        <classes>
+            <class name="org.wso2.carbon.mediator.test.header.Sample6TestCase"/>
+            <class name="org.wso2.carbon.mediator.test.header.Sample100TestCase"/>
+            <class name="org.wso2.carbon.mediator.test.header.SetHeaderToTestCase"/>
+            <!--<class name="org.wso2.carbon.mediator.test.header.RemoveSecurityFromHeaderTestCase"/>-->
+            <class name="org.wso2.carbon.mediator.test.header.SetHeaderActionTestCase"/>
+
+        </classes>
+    </test>
 
 </suite>

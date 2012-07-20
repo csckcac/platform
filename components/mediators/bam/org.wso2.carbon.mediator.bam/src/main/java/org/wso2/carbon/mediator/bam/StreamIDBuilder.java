@@ -20,6 +20,7 @@ import org.wso2.carbon.mediator.bam.config.stream.Property;
 import org.wso2.carbon.mediator.bam.config.stream.StreamEntry;
 import org.wso2.carbon.mediator.bam.util.BamMediatorConstants;
 
+import java.util.ArrayList;
 import java.util.List;
 
 /**
@@ -27,8 +28,17 @@ import java.util.List;
  */
 public class StreamIDBuilder {
 
+    private static final String SINGLE_QUOTED_COLON = "':'";
+    private static final String SINGLE_QUOTED_COMMA = "','";
+
+
     private List<Property> properties;
     private List<StreamEntry> streamEntries;
+
+    public StreamIDBuilder() {
+        properties = new ArrayList<Property>();
+        streamEntries = new ArrayList<StreamEntry>();
+    }
 
     public String createStreamID(String streamName, String streamVersion, String streamNickName,
                                  String streamDescription, List<Property> properties,
@@ -37,17 +47,17 @@ public class StreamIDBuilder {
         this.streamEntries = streamEntries;
 
         return "{" +
-               "'" + BamMediatorConstants.NAME + "':'" + streamName + "'," +
-               "'" + BamMediatorConstants.VERSION + "':'" + streamVersion + "'," +
-               "'" + BamMediatorConstants.NICK_NAME + "':'" + streamNickName + "'," +
-               "'" + BamMediatorConstants.DESCRIPTION + "':'" + streamDescription + "'," +
+               "'" + BamMediatorConstants.NAME + SINGLE_QUOTED_COLON + streamName + "'," +
+               "'" + BamMediatorConstants.VERSION + SINGLE_QUOTED_COLON + streamVersion + "'," +
+               "'" + BamMediatorConstants.NICK_NAME + SINGLE_QUOTED_COLON + streamNickName + "'," +
+               "'" + BamMediatorConstants.DESCRIPTION + SINGLE_QUOTED_COLON + streamDescription + "'," +
                "'" + BamMediatorConstants.CORRELATION_DATA + "':[" +
-               "{'" + BamMediatorConstants.NAME + "':'" + BamMediatorConstants.ACTIVITY_ID + "','" +
-               BamMediatorConstants.TYPE + "':'" + BamMediatorConstants.STRING + "'}" +
+               "{'" + BamMediatorConstants.NAME + SINGLE_QUOTED_COLON + BamMediatorConstants.ACTIVITY_ID + SINGLE_QUOTED_COMMA +
+               BamMediatorConstants.TYPE + SINGLE_QUOTED_COLON + BamMediatorConstants.STRING + "'}" +
                "]," +
                "'" + BamMediatorConstants.META_DATA + "':[" +
-               "{'" + BamMediatorConstants.NAME +"':'" + BamMediatorConstants.TENANT_ID + "','" +
-               BamMediatorConstants.TYPE + "':'" + BamMediatorConstants.INT + "'}" +
+               "{'" + BamMediatorConstants.NAME + SINGLE_QUOTED_COLON + BamMediatorConstants.TENANT_ID + SINGLE_QUOTED_COMMA +
+               BamMediatorConstants.TYPE + SINGLE_QUOTED_COLON + BamMediatorConstants.INT + "'}" +
                "]," +
                "'" + BamMediatorConstants.PAYLOAD_DATA + "':[" +
                this.getConstantStreamDefinitionString() +
@@ -72,9 +82,9 @@ public class StreamIDBuilder {
         nameStrings[i++] = BamMediatorConstants.REMOTE_HOST;
         nameStrings[i] = BamMediatorConstants.SERVICE_PREFIX;
 
-        StringBuilder outputStringBuilder = new StringBuilder("{'" + BamMediatorConstants.NAME + "':'" +
-                                                              BamMediatorConstants.MSG_DIRECTION + "','" +
-                                                              BamMediatorConstants.TYPE + "':'" +
+        StringBuilder outputStringBuilder = new StringBuilder("{'" + BamMediatorConstants.NAME + SINGLE_QUOTED_COLON +
+                                                              BamMediatorConstants.MSG_DIRECTION + SINGLE_QUOTED_COMMA +
+                                                              BamMediatorConstants.TYPE + SINGLE_QUOTED_COLON +
                                                               BamMediatorConstants.STRING + "'}");
 
         for (String nameString : nameStrings) {
@@ -104,8 +114,8 @@ public class StreamIDBuilder {
     }
 
     private String getStreamDefinitionEntryString(String name, String type){
-        return  "{'" + BamMediatorConstants.NAME + "':'" + name + "','" +
-                BamMediatorConstants.TYPE + "':'" + type +"'}";
+        return  "{'" + BamMediatorConstants.NAME + SINGLE_QUOTED_COLON + name + SINGLE_QUOTED_COMMA +
+                BamMediatorConstants.TYPE + SINGLE_QUOTED_COLON + type +"'}";
     }
 
 }

@@ -23,6 +23,8 @@ import org.wso2.carbon.registry.core.Registry;
 import org.wso2.carbon.registry.core.Resource;
 import org.wso2.carbon.registry.core.exceptions.RegistryException;
 
+import java.nio.charset.Charset;
+
 /**
  * Does Configuration Registry operations required to store/fetch BAM server configurations
  */
@@ -72,7 +74,7 @@ public class RegistryManager extends RegistryAbstractAdmin {
     public String getResourceString(String bamServerProfileLocation){
         try {
             resource = registry.get(bamServerProfileLocation);
-            return new String((byte[])resource.getContent());
+            return new String((byte[])resource.getContent(), Charset.forName("UTF-8"));
         } catch (RegistryException e) {
             String errorMsg = "Error while getting the resource from Registry. " + e.getMessage();
             log.error(errorMsg, e);

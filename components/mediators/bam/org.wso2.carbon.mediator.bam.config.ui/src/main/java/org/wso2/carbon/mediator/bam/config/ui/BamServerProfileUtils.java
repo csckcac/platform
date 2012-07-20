@@ -35,6 +35,7 @@ import org.wso2.carbon.utils.CarbonUtils;
 import javax.xml.stream.XMLStreamException;
 import java.io.ByteArrayInputStream;
 import java.io.File;
+import java.nio.charset.Charset;
 import java.rmi.RemoteException;
 import java.util.List;
 import java.util.Locale;
@@ -86,7 +87,7 @@ public class BamServerProfileUtils {
     public BamServerConfig getResource(String bamServerProfileLocation){
         try {
             String resourceString =  client.getResourceString(this.getRealBamServerProfilePath(bamServerProfileLocation));
-            OMElement resourceElement = new StAXOMBuilder(new ByteArrayInputStream(resourceString.getBytes())).getDocumentElement();
+            OMElement resourceElement = new StAXOMBuilder(new ByteArrayInputStream(resourceString.getBytes(Charset.forName("UTF-8")))).getDocumentElement();
 
             BamServerConfigBuilder bamServerConfigBuilder = new BamServerConfigBuilder();
             bamServerConfigBuilder.createBamServerConfig(resourceElement);

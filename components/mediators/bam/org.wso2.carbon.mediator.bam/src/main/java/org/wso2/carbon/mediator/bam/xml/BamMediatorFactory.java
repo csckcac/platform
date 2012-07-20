@@ -34,6 +34,7 @@ import org.wso2.carbon.mediator.bam.config.RegistryManager;
 import javax.xml.namespace.QName;
 import javax.xml.stream.XMLStreamException;
 import java.io.ByteArrayInputStream;
+import java.nio.charset.Charset;
 import java.util.Properties;
 
 /**
@@ -64,7 +65,7 @@ public class BamMediatorFactory extends AbstractMediatorFactory {
         if(registryManager.resourceAlreadyExists(serverProfilePath)){
             resourceString = registryManager.getResourceString(serverProfilePath);
             try {
-                OMElement resourceElement = new StAXOMBuilder(new ByteArrayInputStream(resourceString.getBytes())).getDocumentElement();
+                OMElement resourceElement = new StAXOMBuilder(new ByteArrayInputStream(resourceString.getBytes(Charset.forName("UTF-8")))).getDocumentElement();
                 boolean bamServerConfigCreated = bamServerConfigBuilder.createBamServerConfig(resourceElement);
                 if(bamServerConfigCreated){
                     this.updateBamMediator(bamServerConfigBuilder, bam, streamName, streamVersion);

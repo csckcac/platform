@@ -29,6 +29,7 @@ import org.wso2.carbon.mediator.bam.config.RegistryManager;
 
 import javax.xml.stream.XMLStreamException;
 import java.io.ByteArrayInputStream;
+import java.nio.charset.Charset;
 
 /**
  * Admin service class to expose all web services
@@ -64,7 +65,7 @@ public class BamServerProfileConfigAdmin extends AbstractAdmin {
         String resourceString = registryManager.getResourceString(bamServerConfigLocation);
         BamServerConfigBuilder bamServerConfigBuilder = new BamServerConfigBuilder();
         try {
-            OMElement resourceElement = new StAXOMBuilder(new ByteArrayInputStream(resourceString.getBytes())).getDocumentElement();
+            OMElement resourceElement = new StAXOMBuilder(new ByteArrayInputStream(resourceString.getBytes(Charset.forName("UTF-8")))).getDocumentElement();
             bamServerConfigBuilder.createBamServerConfig(resourceElement);
             return bamServerConfigBuilder.getBamServerConfig();
         } catch (XMLStreamException e) {

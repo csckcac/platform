@@ -73,6 +73,31 @@ public class URLRewriteActions {
 	}
 
 	public SynapseXPath getXpath() {
+		// There is a duplicate namespace comes, remove that.(That namespace is
+		// added at two seperate places(ie: when we serialize @ mediator ui+
+		// backend serialization)
+		List<String> nsUriList = new ArrayList<String>();
+	
+		for (Object o : xpath.getNamespaces().keySet()) {
+			int i = 0;
+			String prefix = (String) o;
+			String uri = xpath.getNamespaceContext().translateNamespacePrefixToUri(prefix);
+			for (int j = 0; j <= i; j++) {
+				if (nsUriList.size() > 0) {
+					if (uri.equals(nsUriList.get(j).toString())) {						
+						xpath.getNamespaces().remove(prefix);
+					}
+					else{
+						nsUriList.add(uri);
+					}
+				}
+				else{
+					nsUriList.add(uri);
+				}
+			}
+		
+			i++;
+		}
 		return xpath;
 	}
 

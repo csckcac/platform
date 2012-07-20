@@ -4,9 +4,10 @@
 <html>
 <head>
 <meta http-equiv="Content-Type" content="text/html; charset=UTF-8">
-<title>Car Factory</title>
+<title>App Factory says Hello</title>
 </head>
 <body>
-<h2>Created a beautiful blue car!</h2>
+<h2>App Factory Hello World</h2>
+<p>We are going make many new apps!</p>
 </body>
 </html>

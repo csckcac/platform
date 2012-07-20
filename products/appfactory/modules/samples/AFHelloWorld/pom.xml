@@ -2,12 +2,12 @@
 <project xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/xsd/maven-4.0.0.xsd" xmlns="http://maven.apache.org/POM/4.0.0"
     xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance">
   <modelVersion>4.0.0</modelVersion>
-  <groupId>org.wso2.carbon.A.AppFacotryHelloWorld</groupId>
-  <artifactId>AppFacotryHelloWorld</artifactId>
+  <groupId>org.wso2.carbon.AFHelloWorld</groupId>
+  <artifactId>AFHelloWorld</artifactId>
   <version>1.0.0</version>
   <packaging>carbon/application</packaging>
-  <name>AppFacotryHelloWorld</name>
-  <description>AppFacotryHelloWorld</description>
+  <name>AFHelloWorld</name>
+  <description>AFHelloWorld</description>
   <properties>
     <artifact.types>bpel/workflow=zip,lib/registry/filter=jar,lib/library/bundle=jar,service/dataservice=dbs,synapse/local-entry=xml,synapse/proxy-service=xml,carbon/application=car,registry/resource=zip,lib/dataservice/validator=jar,synapse/endpoint=xml,web/application=war,service/axis2=aar,lib/carbon/ui=jar,synapse/sequence=xml,synapse/configuration=xml,lib/registry/handlers=jar,wso2/gadget=dar,lib/synapse/mediator=jar,webapp/jaxws=war</artifact.types>
   </properties>

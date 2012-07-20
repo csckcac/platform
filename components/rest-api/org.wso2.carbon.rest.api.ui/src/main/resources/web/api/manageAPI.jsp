@@ -545,7 +545,7 @@ function resourceSourceView() {
     var apiContextValue = "/" + document.getElementById('api.context').value;
     var result = updateResource("true");
     if (result != false)  {
-        document.location.href = "sourceView_resource.jsp?mode=" + "<%=mode%>" +
+        document.location.href = "sourceView_resource.jsp?ordinal=1&mode=" + "<%=mode%>" +
                              "&apiName=" + apiNameValue +
                              "&apiContext=" + apiContextValue +
                              "&index=" + index;
@@ -559,7 +559,7 @@ function sourceView() {
     var apiContextValue = "/" + document.getElementById('api.context').value;
     //var sourceMode = ;
 
-    document.location.href = "sourceview_api.jsp?mode=" + "<%=mode%>" +
+    document.location.href = "sourceview_api.jsp?ordinal=1&mode=" + "<%=mode%>" +
                              "&apiName=" + apiNameValue +
                              "&apiContext=" + apiContextValue;
 

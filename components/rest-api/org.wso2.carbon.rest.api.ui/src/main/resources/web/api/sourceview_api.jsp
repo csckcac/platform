@@ -123,7 +123,7 @@
                             url: "switchtodesign-ajaxprocessor.jsp",
                             data: { apiSource:source },
                             success: function(data) {
-                                document.location.href = "manageAPI.jsp?mode=" + "<%=mode%>" + "&apiName=" + "<%=apiName%>";
+                                document.location.href = "manageAPI.jsp?ordinal=1&mode=" + "<%=mode%>" + "&apiName=" + "<%=apiName%>";
                             }
                         });
         }

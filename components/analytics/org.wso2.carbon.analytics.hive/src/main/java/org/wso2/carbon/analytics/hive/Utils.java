@@ -23,7 +23,7 @@ public class Utils {
 
     public static final int CARBON_DEFAULT_PORT_OFFSET = 0;
 
-    public static final int HIVE_SERVER_DEFAULT_PORT = 10000;
+    public static final int HIVE_SERVER_DEFAULT_PORT = 21000;
 
     public static int getPortOffset() {
         String portOffset = ServerConfiguration.getInstance().getFirstProperty(

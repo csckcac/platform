@@ -54,6 +54,10 @@ public class SendMediatorSerializer extends AbstractMediatorSerializer {
             serializer.serializeValue(receive, XMLConfigConstants.RECEIVE, send);
         }
 
+        if (mediator.isBuildMessage()) {
+            send.addAttribute(fac.createOMAttribute("buildmessage", nullNS,"true"));
+        }
+
         return send;
     }
 

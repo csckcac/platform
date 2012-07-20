@@ -40,6 +40,9 @@ public class SendMediator extends AbstractMediator implements ManagedLifecycle {
 
     private Value receivingSequence = null;
 
+    // build the message before sending
+    private boolean buildMessage = false;
+
     /**
      * This will call the send method on the messages with implicit message parameters
      * or else if there is an endpoint, with that endpoint parameters
@@ -54,6 +57,10 @@ public class SendMediator extends AbstractMediator implements ManagedLifecycle {
         synLog.traceOrDebug("Start : Send mediator");
         if (synLog.isTraceTraceEnabled()) {
             synLog.traceTrace("Message : " + synCtx.getEnvelope());
+        }
+
+        if (buildMessage) {
+              synCtx.getEnvelope().buildWithAttachments();
         }
 
         if (receivingSequence != null) {
@@ -106,6 +113,14 @@ public class SendMediator extends AbstractMediator implements ManagedLifecycle {
 
     public void setReceivingSequence(Value receivingSequence) {
         this.receivingSequence = receivingSequence;
+    }
+
+    public void setBuildMessage(boolean buildMessage) {
+        this.buildMessage = buildMessage;
+    }
+
+    public boolean isBuildMessage() {
+        return buildMessage;
     }
 
     public void init(SynapseEnvironment synapseEnvironment) {

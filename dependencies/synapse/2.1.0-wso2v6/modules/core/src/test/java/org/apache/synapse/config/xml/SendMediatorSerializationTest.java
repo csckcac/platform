@@ -274,6 +274,22 @@ public class SendMediatorSerializationTest extends AbstractTestCase {
                 children2.get(1) instanceof AddressEndpoint);
     }
 
+    public void testBuildMessageBeforeSentSerialization() {
+
+        String sendConfig = "<send buildmessage=\"true\" xmlns=\"http://ws.apache.org/ns/synapse\" />";
+
+        OMElement config1 = createOMElement(sendConfig);
+        SendMediator send1 = (SendMediator) factory.createMediator(config1, new Properties());
+
+        OMElement config2 = serializer.serializeMediator(null, send1);
+        SendMediator send2 = (SendMediator) factory.createMediator(config2, new Properties());
+
+        assertEquals(
+                "buildmessage attribute is not serialized properly",
+                send1.isBuildMessage(),
+                send2.isBuildMessage());
+    }
+
     protected OMElement createOMElement(String xml) {
         try {
 

@@ -44,17 +44,18 @@
 
     <modules>
         <module>core</module>
-         <module>mediator-tests</module>
-        <module>endpoints</module>
-        <module>esb-samples</module>
-        <module>localentry</module>
+        <module>tests</module>
+         <!--<module>mediator-tests</module>-->
+        <!--<module>endpoints</module>-->
+        <!--<module>esb-samples</module>-->
+        <!--<module>localentry</module>-->
         <!--<module>mediators</module>-->
-        <module>nhttp-transport</module>
-        <module>priority-executors</module>
-        <module>proxyservices</module>
-        <module>sequences</module>
-        <module>servlet-transport</module>
-        <module>ws-discovery</module>
+        <!--<module>nhttp-transport</module>-->
+        <!--<module>priority-executors</module>-->
+        <!--<module>proxyservices</module>-->
+        <!--<module>sequences</module>-->
+        <!--<module>servlet-transport</module>-->
+        <!--<module>ws-discovery</module>-->
     </modules>
 
     <build>

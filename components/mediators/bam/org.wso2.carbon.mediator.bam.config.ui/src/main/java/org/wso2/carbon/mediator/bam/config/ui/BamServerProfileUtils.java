@@ -36,7 +36,6 @@ import javax.xml.stream.XMLStreamException;
 import java.io.ByteArrayInputStream;
 import java.io.File;
 import java.rmi.RemoteException;
-import java.util.ArrayList;
 import java.util.List;
 import java.util.Locale;
 
@@ -70,7 +69,8 @@ public class BamServerProfileUtils {
             isSecureString = "false";
         }
 
-        List<StreamConfiguration> streamConfigurations = this.getStreamConfigurationListFromString(streamConfigurationListString);
+        StreamConfigListBuilder streamConfigListBuilder = new StreamConfigListBuilder();
+        List<StreamConfiguration> streamConfigurations = streamConfigListBuilder.getStreamConfigurationListFromString(streamConfigurationListString);
         BamServerConfigXml mediatorConfigurationXml = new BamServerConfigXml();
         OMElement storeXml = mediatorConfigurationXml.buildServerProfile(ip, authenticationPort, receiverPort, userName, encryptedPassword, isSecureString, ksLocation, encryptedKSPassword, streamConfigurations);
         String stringStoreXml = storeXml.toString();
@@ -81,67 +81,6 @@ public class BamServerProfileUtils {
             String errorMsg = "Error while adding resource. " + e.getMessage();
             log.error(errorMsg, e);
         }
-    }
-
-    private List<StreamConfiguration> getStreamConfigurationListFromString(String streamConfigurationListString){
-        List<StreamConfiguration> streamConfigurations = new ArrayList<StreamConfiguration>();
-        StreamConfiguration currentStreamConfiguration;
-        Property currentProperty;
-        String propertiesString;
-        String[] properties;
-        String dump;
-        boolean dumpHeader;
-        boolean dumpBody;
-        StreamEntry headerEntry, bodyEntry;
-
-        String [] streams = streamConfigurationListString.split("~");
-        for (String stream : streams) {
-            if(this.isNotNullOrEmpty(stream)){
-                currentStreamConfiguration = new StreamConfiguration();
-                currentStreamConfiguration.setName(stream.split("\\^")[0]);
-                currentStreamConfiguration.setVersion(stream.split("\\^")[1]);
-                currentStreamConfiguration.setNickname(stream.split("\\^")[2]);
-                currentStreamConfiguration.setDescription(stream.split("\\^")[3]);
-                if(stream.split("\\^").length > 4 && (stream.split("\\^")[4].contains("::") || stream.split("\\^")[5].contains("::"))){ // Only when properties exist
-                    propertiesString = stream.split("\\^")[4];
-                    properties = propertiesString.split(";");
-                    for (String property : properties) {
-                        if(this.isNotNullOrEmpty(property)){
-                            currentProperty = new Property();
-                            currentProperty.setKey(property.split("::")[0]);
-                            currentProperty.setValue(property.split("::")[1]);
-                            if("value".equals(property.split("::")[2])){
-                                currentProperty.setExpression(false);
-                            } else if("expression".equals(property.split("::")[2])){
-                                currentProperty.setExpression(true);
-                            }
-                            currentStreamConfiguration.getProperties().add(currentProperty);
-                        }
-                    }
-                }
-                if(stream.split("\\^")[stream.split("\\^").length-1].contains(";") && !stream.split("\\^")[stream.split("\\^").length-1].contains("::")){
-                    dump = stream.split("\\^")[stream.split("\\^").length-1];
-                    dumpHeader = dump.split(";")[0].equals("dump");
-                    dumpBody = dump.split(";")[1].equals("dump");
-                    if(dumpHeader){
-                        headerEntry = new StreamEntry();
-                        headerEntry.setName("SOAPHeader");
-                        headerEntry.setValue("$SOAPHeader");
-                        headerEntry.setType("STRING");
-                        currentStreamConfiguration.getEntries().add(headerEntry);
-                    }
-                    if(dumpBody){
-                        bodyEntry = new StreamEntry();
-                        bodyEntry.setName("SOAPBody");
-                        bodyEntry.setValue("$SOAPBody");
-                        bodyEntry.setType("STRING");
-                        currentStreamConfiguration.getEntries().add(bodyEntry);
-                    }
-                }
-                streamConfigurations.add(currentStreamConfiguration);
-            }
-        }
-        return streamConfigurations;
     }
 
     public BamServerConfig getResource(String bamServerProfileLocation){

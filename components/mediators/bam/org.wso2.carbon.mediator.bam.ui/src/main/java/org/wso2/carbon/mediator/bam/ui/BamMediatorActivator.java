@@ -32,7 +32,7 @@ public class BamMediatorActivator implements BundleActivator {
 
     private static final Log log = LogFactory.getLog(BamMediatorActivator.class);
 
-    public void start(BundleContext bundleContext) throws Exception {
+    public void start(BundleContext bundleContext) {
 
         if (log.isDebugEnabled()) {
             log.debug("Starting the bam mediator component ...");
@@ -47,7 +47,7 @@ public class BamMediatorActivator implements BundleActivator {
         }
     }
 
-    public void stop(BundleContext bundleContext) throws Exception {
+    public void stop(BundleContext bundleContext) {
         if (log.isDebugEnabled()) {
             log.debug("Stopped the bam mediator component ...");
         }

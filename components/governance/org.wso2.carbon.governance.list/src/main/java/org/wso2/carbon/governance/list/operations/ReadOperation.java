@@ -25,6 +25,7 @@ import org.apache.commons.logging.Log;
 import org.apache.commons.logging.LogFactory;
 import org.jaxen.JaxenException;
 import org.wso2.carbon.governance.api.generic.GenericArtifactManager;
+import org.wso2.carbon.governance.api.generic.dataobjects.GenericArtifact;
 import org.wso2.carbon.governance.list.operations.util.OperationUtil;
 import org.wso2.carbon.registry.core.Registry;
 import org.wso2.carbon.registry.core.Resource;
@@ -95,16 +96,18 @@ public class ReadOperation extends AbstractOperation{
 
         try {
             GenericArtifactManager artifactManager = new GenericArtifactManager(governanceSystemRegistry, rxtKey);
-            String path = artifactManager.getGenericArtifact(artifactId).getPath();
-            Resource resource =  governanceSystemRegistry.get(path);
-            if (resource == null ) {
+            GenericArtifact artifact;
+            if((artifact = artifactManager.getGenericArtifact(artifactId)) != null){
+                Resource resource =  governanceSystemRegistry.get(artifact.getPath());
+                content = RegistryUtils.decodeBytes((byte [])resource.getContent());
+            } else {
                 String msg = "Artifact not found for the artifact id " + artifactId;
                 log.error(msg);
                 OperationUtil.handleException(msg);
             }
-            content = RegistryUtils.decodeBytes((byte [])resource.getContent());
+
         } catch (RegistryException e) {
-            String msg = "Error occured while deleting the resource at " + artifactId;
+            String msg = e.getMessage();
             log.error(msg);
             OperationUtil.handleException(msg, e);
         }

@@ -56,7 +56,7 @@ public class GetAllArtifactIDsOperation extends AbstractOperation{
             GenericArtifactManager artifactManager = new GenericArtifactManager(governanceSystemRegistry, rxtKey);
             artifactIDs = artifactManager.getAllGenericArtifactIds();
         } catch (RegistryException e) {
-            String msg = "Error occured while retrieving artifacts";
+            String msg = e.getMessage();
             log.error(msg);
             throw new AxisFault(msg, e);
         }

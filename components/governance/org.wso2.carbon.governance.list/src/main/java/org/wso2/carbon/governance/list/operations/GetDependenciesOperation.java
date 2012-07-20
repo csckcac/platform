@@ -87,7 +87,7 @@ public class GetDependenciesOperation extends AbstractOperation{
             }
 
         } catch (RegistryException e) {
-            String msg = "Error occured while retrieving dependencies from the artifact " + artifactId;
+            String msg = e.getMessage();
             log.error(msg);
             throw new AxisFault(msg, e);
         }

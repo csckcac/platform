@@ -97,7 +97,7 @@ public class UpdateOperation extends AbstractOperation{
             GenericArtifact artifact = artifactManager.newGovernanceArtifact(content);
             artifactManager.updateGenericArtifact(artifact);
         } catch (RegistryException e) {
-            String msg = "Error occured while updating the resource " + content;
+            String msg = e.getMessage();
             log.error(msg);
             OperationUtil.handleException(msg, e);
         }

@@ -100,7 +100,7 @@ public class DeleteOperation extends AbstractOperation{
             }
             artifactManager.removeGenericArtifact(artifactId);
         } catch (RegistryException e) {
-            String msg = "Error occured while deleting the resource " + artifactId;
+            String msg = e.getMessage();
             log.error(msg);
             OperationUtil.handleException(msg, e);
         }

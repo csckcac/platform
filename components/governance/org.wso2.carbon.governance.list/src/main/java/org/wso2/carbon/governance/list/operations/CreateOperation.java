@@ -94,7 +94,7 @@ public class CreateOperation extends AbstractOperation {
             artifactManager.addGenericArtifact(artifact);
             artifactId = artifact.getId();
         } catch (RegistryException e) {
-            String msg = "Error occured while adding the content " + content;
+            String msg = e.getMessage();
             log.error(msg);
             OperationUtil.handleException(msg, e);
         }

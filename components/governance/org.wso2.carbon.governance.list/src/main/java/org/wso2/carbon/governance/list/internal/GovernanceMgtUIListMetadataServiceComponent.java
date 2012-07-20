@@ -264,7 +264,7 @@ public class GovernanceMgtUIListMetadataServiceComponent {
                 try {
 
                     String singularLabel = configuration.getSingularLabel().replaceAll("\\s", "");
-                    String pluralLabel = configuration.getPluralLabel().replaceAll("\\s", "");
+                    String pluralLabel = configuration.getPluralLabel().replaceAll("\\s", "").toLowerCase();
                     String key = configuration.getKey();
                     String mediaType = configuration.getMediaType();
 

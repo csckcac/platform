@@ -1,10 +1,11 @@
-var i18n = new function () {
-    this.localeResourcesBasePath = '';
-
-    this.init() = function (req) {
+(function () {
+    var localeResourcesBasePath = '',
+        localizations = {};
+    //initialization with the request and loads the correct localization resources
+    this.init = function (req) {
         var locale = req.getLocale();
         try {
-            var localizations = require(localeResourcesBasePath + 'locale_' + locale + '.json');
+            localizations = require(localeResourcesBasePath + 'locale_' + locale + '.json');
         } catch (e) {
             localizations = {};
         }
@@ -27,4 +28,4 @@ var i18n = new function () {
             return fallback;
         }
     };
-};
+})();

@@ -27,7 +27,6 @@
             <class name="org.wso2.bps.integration.tests.BPSSecurityServerManager"/>
             <class name="org.wso2.bps.integration.tests.security.PartnerServiceSecurityTestCase"/>
             <class name="org.wso2.bps.integration.tests.security.SecurityTestCase"/>
-            <!--<class name="org.wso2.bps.integration.tests.security.SecurityWithServiceDescriptorTestCase"/>-->
         </classes>
     </test>
 </suite>

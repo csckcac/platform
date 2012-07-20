@@ -26,6 +26,27 @@
                     xmlns:wsp="http://schemas.xmlsoap.org/ws/2004/09/policy">
             <wsp:ExactlyOne>
                 <wsp:All>
+                    <sp:TransportBinding
+                            xmlns:sp="http://schemas.xmlsoap.org/ws/2005/07/securitypolicy">
+                        <wsp:Policy>
+                            <sp:TransportToken>
+                                <wsp:Policy>
+                                    <sp:HttpsToken RequireClientCertificate="false"/>
+                                </wsp:Policy>
+                            </sp:TransportToken>
+                            <sp:AlgorithmSuite>
+                                <wsp:Policy>
+                                    <sp:Basic256/>
+                                </wsp:Policy>
+                            </sp:AlgorithmSuite>
+                            <sp:Layout>
+                                <wsp:Policy>
+                                    <sp:Lax/>
+                                </wsp:Policy>
+                            </sp:Layout>
+                            <sp:IncludeTimestamp/>
+                        </wsp:Policy>
+                    </sp:TransportBinding>
                     <sp:SupportingTokens
                             xmlns:sp="http://schemas.xmlsoap.org/ws/2005/07/securitypolicy">
                         <wsp:Policy>
@@ -36,7 +57,8 @@
 
                     <ramp:RampartConfig xmlns:ramp="http://ws.apache.org/rampart/policy">
                         <ramp:user>alice</ramp:user>
-                        <ramp:passwordCallbackClass>org.wso2.bps.samples.util.PWCBHandler</ramp:passwordCallbackClass>
+                        <ramp:passwordCallbackClass>org.wso2.bps.samples.util.PWCBHandler
+                        </ramp:passwordCallbackClass>
                     </ramp:RampartConfig>
                 </wsp:All>
             </wsp:ExactlyOne>

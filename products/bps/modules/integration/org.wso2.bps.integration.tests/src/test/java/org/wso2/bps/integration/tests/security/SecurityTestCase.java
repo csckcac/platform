@@ -220,4 +220,15 @@ public class SecurityTestCase {
                 loggedInSessionCookie);
 
     }
+
+    public static void main(String[] args) {
+        SecurityTestCase stc = new SecurityTestCase();
+        try {
+            System.setProperty("bps.sample.location", "/home/waruna/WSO2/projects/src/trunk/platform/products/bps/modules/integration/org.wso2.bps.integration.tests/target/samples");
+            stc.init();
+            stc.securityScenario01Test();
+        } catch (Exception e) {
+            e.printStackTrace();  //To change body of catch statement use File | Settings | File Templates.
+        }
+    }
 }

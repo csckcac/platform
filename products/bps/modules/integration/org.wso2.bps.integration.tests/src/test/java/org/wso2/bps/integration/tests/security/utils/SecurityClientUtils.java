@@ -121,16 +121,16 @@ public class SecurityClientUtils implements CallbackHandler {
 //        carbonHome = "/home/waruna/WSO2/projects/src/trunk/platform/products/bps/modules/integration/org.wso2.bps.integration.tests/target/carbontmp1342634770097/wso2bps-3.0.0-SNAPSHOT";
         securityPolicy = BPSTestUtils.BPEL_TEST_RESOURCE_LOCATION + "policyFiles/";
 
-//        trustStore = carbonHome + File.separator + "repository" + File.separator + "resources" +
-// File.separator + "security" + File.separator + "wso2carbon.jks";
+        trustStore = carbonHome + File.separator + "repository" + File.separator + "resources" +
+File.separator + "security" + File.separator + "wso2carbon.jks";
         clientKey = carbonHome + File.separator + "repository" + File.separator + "resources" +
                 File.separator + "security" + File.separator + "wso2carbon.jks";
-//        endpointHttpS = "https://" + Framewsrc/test/resources/orkSettings.HOST_NAME + ":" +
-// FrameworkSettings.HTTPS_PORT + "/services/" + serviceName;
+        endpointHttpS = "https://" + FrameworkSettings.HOST_NAME + ":" +
+FrameworkSettings.HTTPS_PORT + "/services/" + serviceName;
         endpointHttp = "http://" + FrameworkSettings.HOST_NAME + ":" +
-                (FrameworkSettings.HTTP_PORT + 1) + "/services/" + serviceName;
-//        System.setProperty("javax.net.ssl.trustStore", trustStore);
-//        System.setProperty("javax.net.ssl.trustStorePassword", "wso2carbon");
+                FrameworkSettings.HTTP_PORT + "/services/" + serviceName;
+        System.setProperty("javax.net.ssl.trustStore", trustStore);
+        System.setProperty("javax.net.ssl.trustStorePassword", "wso2carbon");
 
         ConfigurationContext ctx =
                 ConfigurationContextFactory.createConfigurationContextFromFileSystem(carbonHome +
@@ -142,8 +142,8 @@ public class SecurityClientUtils implements CallbackHandler {
 
         Options opts = new Options();
 
-        opts.setTo(new EndpointReference(endpointHttp));
-        log.info(endpointHttp);
+        opts.setTo(new EndpointReference(endpointHttpS));
+        log.info(endpointHttpS);
 
         opts.setAction(soapAction);
 

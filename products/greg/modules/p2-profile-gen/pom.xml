@@ -133,13 +133,7 @@
                                 <!--<featureArtifactDef>org.wso2.governance:org.wso2.stratos.governance.ui.feature:${stratos.version}</featureArtifactDef>-->
                                 <featureArtifactDef>org.wso2.carbon:org.wso2.carbon.stratos.usage.agent.feature:${stratos.version}</featureArtifactDef>
                                 <featureArtifactDef>org.wso2.carbon:org.wso2.carbon.stratos.throttling.agent.feature:${stratos.version}</featureArtifactDef>
-                                <!-- GApp SSO features -->
-                                <featureArtifactDef>org.wso2.carbon:org.wso2.carbon.stratos.gapp.feature:${stratos.version}</featureArtifactDef>
-                                <featureArtifactDef>org.wso2.carbon:org.wso2.carbon.identity.relying.party.feature:${carbon.version}
-                                </featureArtifactDef>
-                                <featureArtifactDef>org.wso2.carbon:org.wso2.carbon.identity.core.feature:${carbon.version}
-                                </featureArtifactDef>
-                                <!-- End GApp SSO features -->
+   
                                 <featureArtifactDef>org.wso2.carbon:org.wso2.carbon.load.balance.agent.server.feature:${stratos.version}</featureArtifactDef>
                                 <featureArtifactDef>org.wso2.carbon:org.wso2.carbon.captcha.mgt.server.feature:${carbon.version}</featureArtifactDef>
 
@@ -381,21 +375,6 @@
                                     <id>org.wso2.carbon.stratos.throttling.agent.feature.group</id>
                                     <version>${stratos.version}</version>
                                 </feature>
-
-                                <!-- GApp SSO features -->
-                                <feature>
-                                    <id>org.wso2.carbon.stratos.gapp.feature.group</id>
-                                    <version>${stratos.version}</version>
-                                </feature>
-                                <feature>
-                                    <id>org.wso2.carbon.identity.core.feature.group</id>
-                                    <version>${carbon.version}</version>
-                                </feature>
-                                <feature>
-                                    <id>org.wso2.carbon.identity.relying.party.feature.group</id>
-                                    <version>${carbon.version}</version>
-                                </feature>
-                                <!--End GApp SSO features -->
 
                                 <feature>
                                     <id>org.wso2.carbon.load.balance.agent.server.feature.group</id>

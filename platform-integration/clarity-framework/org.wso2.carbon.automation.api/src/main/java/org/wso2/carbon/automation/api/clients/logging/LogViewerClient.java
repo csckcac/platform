@@ -20,6 +20,7 @@ import org.apache.axis2.AxisFault;
 import org.apache.commons.logging.Log;
 import org.apache.commons.logging.LogFactory;
 import org.wso2.carbon.automation.api.clients.utils.AuthenticateStub;
+import org.wso2.carbon.automation.api.utils.SetAxis2ConfigurationContext;
 import org.wso2.carbon.logging.view.stub.LogViewerStub;
 import org.wso2.carbon.logging.view.stub.types.carbon.LogEvent;
 
@@ -33,14 +34,25 @@ public class LogViewerClient {
 
     private static final Log log = LogFactory.getLog(LogViewerClient.class);
     private LogViewerStub logViewerStub;
+    String serviceName = "LogViewer";
+    SetAxis2ConfigurationContext setContext;
 
     public LogViewerClient(String sessionCookie, String backEndUrl)
             throws AxisFault {
-        String serviceName = "LogViewer";
-        String endPoint = backEndUrl + serviceName;
-        logViewerStub = new LogViewerStub(endPoint);
+        String endpoint = backEndUrl + serviceName;
+        logViewerStub = new LogViewerStub(endpoint);
         AuthenticateStub.authenticateStub(sessionCookie, logViewerStub);
     }
+
+
+    public LogViewerClient(String backEndURL, String userName, String password)
+            throws AxisFault {
+        setContext = new SetAxis2ConfigurationContext();
+         String endpoint = backEndURL + serviceName;
+        logViewerStub = new LogViewerStub(setContext.setConfigurationContext(),endpoint);
+        AuthenticateStub.authenticateStub(userName, password, logViewerStub);
+    }
+
 
     /**
      * Getting system logs
@@ -52,5 +64,10 @@ public class LogViewerClient {
      */
     public LogEvent[] getLogs(String logType, String searchKey) throws RemoteException {
         return logViewerStub.getLogs(logType, searchKey);
+    }
+
+
+    public boolean clearLogs() throws RemoteException {
+        return logViewerStub.clearLogs();
     }
 }

@@ -16,19 +16,22 @@
 *under the License.
 */
 
-package org.wso2.carbon.identity.oauth2.model;
+package org.wso2.carbon.identity.oauth2.dto;
 
-import java.sql.Timestamp;
+/**
+ * Results holder for bearer token validation query
+ */
+public class OAuth2TokenValidationResponseDTO {
 
-public class AuthzCodeValidationDataDO {
-    
     private String authorizedUser;
-    
-    private String[] scope;
-    
-    private Timestamp issuedTime;
 
-    private long validityPeriod;
+    private long expiryTime;
+
+    private String[] scope;
+
+    private boolean valid;
+
+    private String errorMsg;
 
     public String getAuthorizedUser() {
         return authorizedUser;
@@ -36,6 +39,14 @@ public class AuthzCodeValidationDataDO {
 
     public void setAuthorizedUser(String authorizedUser) {
         this.authorizedUser = authorizedUser;
+    }
+
+    public long getExpiryTime() {
+        return expiryTime;
+    }
+
+    public void setExpiryTime(long expiryTime) {
+        this.expiryTime = expiryTime;
     }
 
     public String[] getScope() {
@@ -46,19 +57,19 @@ public class AuthzCodeValidationDataDO {
         this.scope = scope;
     }
 
-    public Timestamp getIssuedTime() {
-        return issuedTime;
+    public boolean isValid() {
+        return valid;
     }
 
-    public void setIssuedTime(Timestamp issuedTime) {
-        this.issuedTime = issuedTime;
+    public void setValid(boolean valid) {
+        this.valid = valid;
     }
 
-    public long getValidityPeriod() {
-        return validityPeriod;
+    public String getErrorMsg() {
+        return errorMsg;
     }
 
-    public void setValidityPeriod(long validityPeriod) {
-        this.validityPeriod = validityPeriod;
+    public void setErrorMsg(String errorMsg) {
+        this.errorMsg = errorMsg;
     }
 }

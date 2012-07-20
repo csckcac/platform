@@ -24,7 +24,7 @@ import org.wso2.carbon.identity.oauth.config.OAuthServerConfiguration;
 import org.wso2.carbon.identity.oauth2.IdentityOAuth2Exception;
 import org.wso2.carbon.identity.oauth2.dto.OAuth2AccessTokenReqDTO;
 import org.wso2.carbon.identity.oauth2.dto.OAuth2AccessTokenRespDTO;
-import org.wso2.carbon.identity.oauth2.model.AuthzCodeValidationDataDO;
+import org.wso2.carbon.identity.oauth2.model.AuthzCodeValidationDO;
 import org.wso2.carbon.identity.oauth2.token.OAuthTokenReqMessageContext;
 import org.wso2.carbon.identity.oauth2.util.OAuth2Util;
 
@@ -43,7 +43,7 @@ public class AuthorizationCodeHandler extends AbstractAuthorizationGrantHandler 
     public boolean validateGrant(OAuthTokenReqMessageContext tokReqMsgCtx) throws IdentityOAuth2Exception {
         OAuth2AccessTokenReqDTO oAuth2AccessTokenReqDTO = tokReqMsgCtx.getOauth2AccessTokenReqDTO();
         String authorizationCode = oAuth2AccessTokenReqDTO.getAuthorizationCode();
-        AuthzCodeValidationDataDO validationDataDO = tokenMgtDAO.validateAuthorizationCode(
+        AuthzCodeValidationDO validationDataDO = tokenMgtDAO.validateAuthorizationCode(
                 oAuth2AccessTokenReqDTO.getClientId(),
                 authorizationCode);
         //Check whether it is a valid grant
@@ -63,7 +63,7 @@ public class AuthorizationCodeHandler extends AbstractAuthorizationGrantHandler 
                 .getDefaultTimeStampSkewInSeconds() * 1000;
         long currentTimeInMillis = System.currentTimeMillis();
 
-        if ((currentTimeInMillis + timestampSkew) > (issuedTimeInMillis + validityPeriodInMillis)) {
+        if ((currentTimeInMillis - timestampSkew) > (issuedTimeInMillis + validityPeriodInMillis)) {
             if (log.isDebugEnabled()) {
                 log.debug("Authorization Code : " + authorizationCode + " is expired." +
                         " Issued Time(ms) : " + issuedTimeInMillis +

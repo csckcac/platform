@@ -24,7 +24,8 @@ import org.wso2.carbon.identity.base.IdentityException;
 import org.wso2.carbon.identity.core.persistence.JDBCPersistenceManager;
 import org.wso2.carbon.identity.core.util.IdentityDatabaseUtil;
 import org.wso2.carbon.identity.oauth2.IdentityOAuth2Exception;
-import org.wso2.carbon.identity.oauth2.model.AuthzCodeValidationDataDO;
+import org.wso2.carbon.identity.oauth2.model.AuthzCodeValidationDO;
+import org.wso2.carbon.identity.oauth2.model.BearerTokenValidationDO;
 import org.wso2.carbon.identity.oauth2.model.RefreshTokenValidationDataDO;
 import org.wso2.carbon.identity.oauth2.util.OAuth2Util;
 
@@ -99,8 +100,8 @@ public class TokenMgtDAO {
         }
     }
 
-    public AuthzCodeValidationDataDO validateAuthorizationCode(String consumerKey, String authorizationKey) throws IdentityOAuth2Exception {
-        AuthzCodeValidationDataDO validationDataDO = new AuthzCodeValidationDataDO();
+    public AuthzCodeValidationDO validateAuthorizationCode(String consumerKey, String authorizationKey) throws IdentityOAuth2Exception {
+        AuthzCodeValidationDO validationDataDO = new AuthzCodeValidationDO();
         Connection connection = null;
         PreparedStatement prepStmt = null;
         ResultSet resultSet;
@@ -219,6 +220,45 @@ public class TokenMgtDAO {
         } finally {
             IdentityDatabaseUtil.closeAllConnections(connection, null, prepStmt);
         }
+    }
+
+    public BearerTokenValidationDO validateBearerToken(String consumerKey,
+                                                             String accessToken)
+            throws IdentityOAuth2Exception {
+        BearerTokenValidationDO validationDataDO = null;
+        Connection connection = null;
+        PreparedStatement prepStmt = null;
+        ResultSet resultSet;
+
+        try {
+            connection = JDBCPersistenceManager.getInstance().getDBConnection();
+            prepStmt = connection.prepareStatement(SQLQueries.VALIDATE_BEARER_TOKEN);
+            prepStmt.setString(1, consumerKey);
+            prepStmt.setString(2, accessToken);
+            resultSet = prepStmt.executeQuery();
+
+            if (resultSet.next()) {
+                validationDataDO = new BearerTokenValidationDO();
+                validationDataDO.setAuthzUser(resultSet.getString(1));
+                validationDataDO.setScope(OAuth2Util.buildScopeArray(resultSet.getString(2)));
+                validationDataDO.setIssuedTime(resultSet.getTimestamp(3,
+                        Calendar.getInstance(TimeZone.getTimeZone("UTC"))));
+                validationDataDO.setValidityPeriod(resultSet.getLong(4));
+            }
+
+        } catch (IdentityException e) {
+            String errorMsg = "Error when getting an Identity Persistence Store instance.";
+            log.error(errorMsg, e);
+            throw new IdentityOAuth2Exception(errorMsg, e);
+        } catch (SQLException e) {
+            log.error("Error when executing the SQL : " + SQLQueries.VALIDATE_BEARER_TOKEN);
+            log.error(e.getMessage(), e);
+            throw new IdentityOAuth2Exception("Error when validating a bearer token", e);
+        } finally {
+            IdentityDatabaseUtil.closeAllConnections(connection, null, prepStmt);
+        }
+
+        return validationDataDO;
     }
 
 }

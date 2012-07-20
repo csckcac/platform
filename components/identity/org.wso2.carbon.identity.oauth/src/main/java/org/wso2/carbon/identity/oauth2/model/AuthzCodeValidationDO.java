@@ -18,24 +18,20 @@
 
 package org.wso2.carbon.identity.oauth2.model;
 
+import java.sql.Timestamp;
+
 /**
- * Results holder for refresh token validation query.
+ * Results holder for Authz Code validation query
  */
-public class RefreshTokenValidationDataDO {
+public class AuthzCodeValidationDO {
     
-    private String accessToken;
-
     private String authorizedUser;
-
+    
     private String[] scope;
+    
+    private Timestamp issuedTime;
 
-    public String getAccessToken() {
-        return accessToken;
-    }
-
-    public void setAccessToken(String accessToken) {
-        this.accessToken = accessToken;
-    }
+    private long validityPeriod;
 
     public String getAuthorizedUser() {
         return authorizedUser;
@@ -51,5 +47,21 @@ public class RefreshTokenValidationDataDO {
 
     public void setScope(String[] scope) {
         this.scope = scope;
+    }
+
+    public Timestamp getIssuedTime() {
+        return issuedTime;
+    }
+
+    public void setIssuedTime(Timestamp issuedTime) {
+        this.issuedTime = issuedTime;
+    }
+
+    public long getValidityPeriod() {
+        return validityPeriod;
+    }
+
+    public void setValidityPeriod(long validityPeriod) {
+        this.validityPeriod = validityPeriod;
     }
 }

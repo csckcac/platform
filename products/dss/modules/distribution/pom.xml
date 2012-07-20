@@ -86,7 +86,7 @@
                 <version>2.0-alpha-4</version>
                 <inherited>false</inherited>
                 <executions>
-			<execution>
+				<!--execution>
                         <id>copy-tomcat-patch-jar</id>
                         <phase>package</phase>
                         <goals>
@@ -104,7 +104,7 @@
                                 </artifactItem>
                             </artifactItems>
                         </configuration>
-                    </execution>
+                    </execution-->
                     <execution>
                         <id>unpack-wso2carbon</id>
                         <phase>package</phase>

@@ -305,11 +305,11 @@
             </outputDirectory>
         </file>      
 
-        <file>
+        <!--file>
             <source>../p2-profile-gen/target/wso2carbon-core-${carbon.version}/repository/resources/security/userRP.jks</source>
             <outputDirectory>${pom.artifactId}-${pom.version}/repository/resources/security/</outputDirectory>
             <fileMode>644</fileMode>
-        </file>
+        </file-->
         <!-- including cassandra-component.xml -->
         <!--file>
             <source>../../p2-profile-gen/target/wso2carbon-core-${carbon.version}/repository/conf/advanced/cassandra-component.xml</source>

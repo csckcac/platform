@@ -212,6 +212,9 @@ public class IterateMediator extends AbstractMediator implements ManagedLifecycl
 
         } else if (newEnvelope.getBody() != null) {
             // if not preserve payload then attach the iteration element to the body
+        	if(newEnvelope.getBody().getFirstElement() !=null){
+        		newEnvelope.getBody().getFirstElement().detach();
+        	}
             newEnvelope.getBody().addChild(o);
         }
 

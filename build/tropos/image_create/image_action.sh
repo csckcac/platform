@@ -130,6 +130,9 @@ if [[ (-n $action) && ($action == "unmount") ]]; then
         umount $work_dir/$image_id/proc
         umount $work_dir/$image_id/sys
         umount $work_dir/$image_id
+        if [ -d $work_dir/$image_id/dev ]; then
+            umount -l $work_dir/$image_id
+        fi
         losetup -d /dev/loop2
         #rm -rf $work_dir/$image_id
     fi

@@ -72,9 +72,9 @@ if [ ! -d $work ]; then
 fi
 
 pushd $work
-ssh -i ${instance_path}/wso2-key root@$CONTROLLER_IP "cd $APP_PATH/$TENANT; ls ./" | grep "zip" > ./app_list
+ssh -i ${instance_path}/payload/wso2-key root@$CONTROLLER_IP "cd $APP_PATH; ls ./" | grep "zip" > ./app_list
 if [ ! -e ./app_list.prev ]; then
-    scp -i ${instance_path}/wso2-key root@$CONTROLLER_IP:$APP_PATH/$TENANT/*.zip ./
+    scp -i ${instance_path}/payload/wso2-key root@$CONTROLLER_IP:$APP_PATH/*.zip ./
     for a in *.zip;
     do
         if [ -e $a ]; then
@@ -113,11 +113,11 @@ fi
 
 cp -f ./app_list ./app_list.prev
 
-ssh -i ${instance_path}/payload/wso2-key root@$CONTROLLER_IP "cd $APP_PATH/$TENANT;find ./ -mmin $CRON_DURATION" | grep "zip" > ./updated_app_list
+ssh -i ${instance_path}/payload/wso2-key root@$CONTROLLER_IP "cd $APP_PATH;find ./ -mmin $CRON_DURATION" | grep "zip" > ./updated_app_list
 w=`cat ./updated_app_list`
 for i in $w; 
 do 
-    scp -i ${instance_path}/payload/wso2-key root@$CONTROLLER_IP:$APP_PATH/$TENANT/$i ./
+    scp -i ${instance_path}/payload/wso2-key root@$CONTROLLER_IP:$APP_PATH/$i ./
     unzip -q $i;rm -f $i;
     j=${i%".zip"}
     if [ -d $docroot/$j ]; then

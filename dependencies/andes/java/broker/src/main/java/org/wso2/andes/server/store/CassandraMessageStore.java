@@ -915,12 +915,16 @@ public void addMessageBatchToUserQueues(CassandraQueueMessage[] messages) throws
                 HColumn<Long, Long> column = result.get();
                 //Checking whether the message is ready to remove
 
-                ClusterConfiguration clusterConfiguration = ClusterResourceHolder.getInstance().
-                        getClusterConfiguration();
-                if ((currentSystemTime - column.getValue()) >= clusterConfiguration.getContentRemovalTimeDifference()) {
-                    removeMetaData(messageId);
-                    removeAckedMessage(messageId);
-                    return true;
+                if (column != null  &&  column.getValue() != null ) {
+                    ClusterConfiguration clusterConfiguration = ClusterResourceHolder.getInstance().
+                            getClusterConfiguration();
+                    if ((currentSystemTime - column.getValue()) >= clusterConfiguration.getContentRemovalTimeDifference()) {
+                        removeMetaData(messageId);
+                        removeAckedMessage(messageId);
+                        return true;
+                    }else{
+                        return false;
+                    }
                 }else{
                     return false;
                 }

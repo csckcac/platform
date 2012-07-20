@@ -71,7 +71,7 @@ public class CustomToolBoxTestCase {
 
         toolboxStub.uploadBAMToolBox(toolData, deployedToolBox);
         log.info("Installing toolbox...");
-        Thread.sleep(15000);
+        Thread.sleep(20000);
 
         //get List of deployed toolboxes
         BAMToolboxDepolyerServiceStub.ToolBoxStatusDTO statusDTO = toolboxStub.getDeployedToolBoxes("1", "");
@@ -100,7 +100,7 @@ public class CustomToolBoxTestCase {
         toolboxStub.undeployToolBox(new String[]{toolBoxname});
 
         log.info("Un installing toolbox...");
-        Thread.sleep(15000);
+        Thread.sleep(20000);
 
         BAMToolboxDepolyerServiceStub.ToolBoxStatusDTO statusDTO = toolboxStub.getDeployedToolBoxes("1", "");
         String[] deployedTools = statusDTO.getDeployedTools();

@@ -95,56 +95,56 @@
          <module>identity</module>
          <module>humantask</module>
          <module>bpel</module>
-        <module>authenticators</module>
-        <module>gadgets</module>
-        <module>tryit</module>
-        <module>xfer</module>
-        <module>mex</module>
-        <module>webapp-mgt</module>
-        <module>jaxws-webapp-mgt</module>
-        <module>application-mgt</module>
-        <module>application-deployers</module>
-        <module>remote-usermgt</module>
-        <module>wsdl-tools</module>
-        <module>transports</module>
-        <module>messagebox</module>
-        <module>qpid</module>
-		<module>agent</module>
-        <module>data-services</module>
-        <module>ldap-server-manager</module>
-        <module>ldap-server</module>
-        <module>broker</module>
-        <module>broker-manager</module>
-        <module>cep</module>
-        <module>cassandra</module>
-        <module>stratos</module>
-        <module>unified-endpoint</module>
-        <module>csg</module>
-        <module>dbconsole</module>
-        <module>deployment-synchronizer</module>
-        <module>ec2-client</module>
-        <module>esb-mediation</module>
-        <module>rss-manager</module>
-        <module>coordination</module>
-        <module>ntask</module>
-        <module>transaction-manager</module>
-        <module>rest-api</module>
-        <module>apimgt</module>
-	<module>andes</module>
-        <module>url-mapper</module>
-	<module>data-agents</module>
-	<module>bam2</module>
-	<module>analytics</module>
-	<module>gadget-ide</module>
-	<module>attachment-mgt</module>
-<module>autoscaler</module>
-<module>autoscaler-service</module>
-<module>tenantaware-load-balancer</module>
-<module>gadgetgen-wizard</module>
-<module>cassandra-explorer</module>
-<module>event-bridge</module>
-<module>data-bridge</module>
-	<module>ndatasource</module>
+         <module>authenticators</module>
+         <module>gadgets</module>
+         <module>tryit</module>
+         <module>xfer</module>
+         <module>mex</module>
+         <module>webapp-mgt</module>
+         <module>jaxws-webapp-mgt</module>
+         <module>application-mgt</module>
+         <module>application-deployers</module>
+         <module>remote-usermgt</module>
+         <module>wsdl-tools</module>
+         <module>transports</module>
+         <module>messagebox</module>
+         <module>qpid</module>
+		     <module>agent</module>
+         <module>data-services</module>
+         <module>ldap-server-manager</module>
+         <module>ldap-server</module>
+         <module>broker</module>
+         <module>broker-manager</module>
+         <module>cep</module>
+         <module>cassandra</module>
+         <module>stratos</module>
+         <module>unified-endpoint</module>
+         <module>csg</module>
+         <module>dbconsole</module>
+         <module>deployment-synchronizer</module>
+         <module>ec2-client</module>
+         <module>esb-mediation</module>
+         <module>rss-manager</module>
+         <module>coordination</module>
+         <module>ntask</module>
+         <module>transaction-manager</module>
+         <module>rest-api</module>
+         <module>apimgt</module>
+	       <module>andes</module>
+         <module>url-mapper</module>
+	       <module>data-agents</module>
+	       <module>bam2</module>
+	       <module>analytics</module>
+	       <module>gadget-ide</module>
+	       <module>attachment-mgt</module>
+         <module>autoscaler</module>
+         <module>autoscaler-service</module>
+         <module>tenantaware-load-balancer</module>
+         <module>gadgetgen-wizard</module>
+         <module>cassandra-explorer</module>
+         <module>event-bridge</module>
+         <module>data-bridge</module>
+	       <module>ndatasource</module>
 	<module>jaggery</module>
 	<module>bam</module>
 	<module>appfactory</module>

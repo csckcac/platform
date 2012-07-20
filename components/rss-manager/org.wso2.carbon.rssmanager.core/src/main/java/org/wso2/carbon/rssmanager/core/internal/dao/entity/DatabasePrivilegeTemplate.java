@@ -32,15 +32,13 @@ public class DatabasePrivilegeTemplate {
     }
 
     public DatabasePrivilegeTemplate(String name, DatabasePrivilege[] privileges,
-                                      int tenantId) {
+                                     int tenantId) {
         this.name = name;
         this.privileges = privileges;
         this.tenantId = tenantId;
     }
 
-    public DatabasePrivilegeTemplate() {
-
-    }
+    public DatabasePrivilegeTemplate() {}
 
     public String getName() {
         return name;

@@ -386,11 +386,11 @@ public class MySQLRSSManager extends RSSManager {
 
         DatabasePrivilege[] privileges = template.getPrivileges();
         List<String> databasePrivileges = RSSManagerCommonUtil.getDatabasePrivilegeList();
-        Map<String, Object> privMap = RSSManagerUtil.convertToDatabasePrivilegeMap(privileges);
+        Map<String, String> privilegeMap = RSSManagerUtil.convertToDatabasePrivilegeMap(privileges);
 
         for (int i = 4; i < databasePrivileges.size() + 4; i++) {
-            if (privMap.containsKey(databasePrivileges.get(i - 4))) {
-                stmt.setString(i, privMap.get(databasePrivileges.get(i - 4)).toString());
+            if (privilegeMap.containsKey(databasePrivileges.get(i - 4))) {
+                stmt.setString(i, privilegeMap.get(databasePrivileges.get(i - 4)));
             }
         }
         return stmt;

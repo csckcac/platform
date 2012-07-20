@@ -27,7 +27,6 @@ import org.apache.axis2.context.ConfigurationContext;
 import org.apache.axis2.transport.http.HTTPConstants;
 import org.apache.commons.logging.Log;
 import org.apache.commons.logging.LogFactory;
-import org.wso2.carbon.rssmanager.common.RSSManagerConstants;
 import org.wso2.carbon.rssmanager.ui.stub.RSSAdminRSSManagerExceptionException;
 import org.wso2.carbon.rssmanager.ui.stub.RSSAdminStub;
 import org.wso2.carbon.rssmanager.ui.stub.types.*;
@@ -116,7 +115,7 @@ public class RSSManagerClient {
 //                                     DatabaseUser user, String databaseName) throws AxisFault {
 //        try {
 //            stub.editDatabaseUserPrivileges(
-//                    RSSManagerClientUtil.serializePermissionObject(
+//                    RSSManagerHelper.serializePermissionObject(
 //                            RSS_MANAGER_OM_NAMESPACE, permissions).toString(), user, databaseName);
 //        } catch (Exception e) {
 //            handleException(bundle.getString("rss.manager.failed.to.edit.user") + " : " +
@@ -133,7 +132,7 @@ public class RSSManagerClient {
 //        } catch (Exception e) {
 //            handleException("Unable to retrieve user database permissions", e);
 //        }
-//        return RSSManagerClientUtil.getPermissionObject(permissionEl);
+//        return RSSManagerHelper.getPermissionObject(permissionEl);
 //    }
 
     public void createDatabase(Database database) throws AxisFault {
@@ -353,9 +352,15 @@ public class RSSManagerClient {
         try {
             users = stub.getUsersAttachedToDatabase(rssInstanceName, databaseName);
         } catch (RemoteException e) {
-            handleException("", e);
+            String msg =
+                    bundle.getString("rss.manager.failed.to.retrieve.users.attached.to.the.database")
+                            + " '" + databaseName + "'";
+            handleException(msg, e);
         } catch (RSSAdminRSSManagerExceptionException e) {
-            handleException("", e);
+            String msg =
+                    bundle.getString("rss.manager.failed.to.retrieve.users.attached.to.the.database")
+                            + " '" + databaseName + "'";
+            handleException(msg, e);
         }
         return users;
     }
@@ -366,12 +371,32 @@ public class RSSManagerClient {
         try {
             users = stub.getAvailableUsersToAttachToDatabase(rssInstanceName, databaseName);
         } catch (RemoteException e) {
-            handleException("", e);
+            String msg =
+                    bundle.getString("rss.manager.failed.to.retrieve.available.database.users") +
+                            " '" + databaseName + "'";
+            handleException(msg, e);
         } catch (RSSAdminRSSManagerExceptionException e) {
-            handleException("", e);
+            String msg =
+                    bundle.getString("rss.manager.failed.to.retrieve.available.database.users") +
+                            " '" + databaseName + "'";
+            handleException(msg, e);
         }
         return users;
     }
 
-    
+
+    public DatabasePrivilege[] getUserDatabasePermissions(
+            String rssInstanceName, String databaseName, String username) throws AxisFault {
+        DatabasePrivilege[] privileges = new DatabasePrivilege[0];
+        try {
+            privileges = stub.getUserDatabasePermissions(rssInstanceName, username, databaseName);
+        } catch (RemoteException e) {
+            String msg =
+                    bundle.getString("rss.manager.failed.to.retrieve.database.permissions.granted.to.the.user") +
+                            " '" + username + "' on the database '" + databaseName + "'";
+            handleException(msg, e);
+        }
+        return privileges;
+    }
+
 }

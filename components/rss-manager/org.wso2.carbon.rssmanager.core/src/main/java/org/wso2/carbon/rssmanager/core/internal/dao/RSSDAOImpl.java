@@ -856,12 +856,12 @@ public class RSSDAOImpl implements RSSDAO {
     private void setUserDatabasePermissions(Connection conn,
                                             UserDatabaseEntry userDBEntry) throws
             RSSManagerException, SQLException {
-        Map<String, Object> existingPerms =
+        Map<String, String> existingPerms =
                 this.getUserDatabasePermissions(userDBEntry.getUsername(),
                         userDBEntry.getDatabaseName());
-        Map<String, Object> newPermissions = userDBEntry.getPermissions();
-        Map<String, Object> toBeRemovedPerms = new HashMap<String, Object>(existingPerms);
-        Map<String, Object> toBeAddedPerms = new HashMap<String, Object>(newPermissions);
+        Map<String, String> newPermissions = userDBEntry.getPermissions();
+        Map<String, String> toBeRemovedPerms = new HashMap<String, String>(existingPerms);
+        Map<String, String> toBeAddedPerms = new HashMap<String, String>(newPermissions);
         String lhs, rhs;
         for (String key : newPermissions.keySet()) {
             if (existingPerms.containsKey(key)) {
@@ -882,7 +882,7 @@ public class RSSDAOImpl implements RSSDAO {
             this.deleteUserDatabasePermission(conn, userDBEntry.getUsername(),
                     userDBEntry.getDatabaseName(), permName, userDBEntry.getRssInstanceName());
         }
-        for (Map.Entry<String, Object> entry : toBeAddedPerms.entrySet()) {
+        for (Map.Entry<String, String> entry : toBeAddedPerms.entrySet()) {
             this.addUserDatabasePermission(conn, userDBEntry.getUsername(),
                     userDBEntry.getDatabaseName(), entry.getKey(),
                     entry.getValue().toString(), userDBEntry.getRssInstanceName());
@@ -920,10 +920,10 @@ public class RSSDAOImpl implements RSSDAO {
     }
 
     @Override
-    public Map<String, Object> getUserDatabasePermissions(String username, String databaseName)
+    public Map<String, String> getUserDatabasePermissions(String username, String databaseName)
             throws RSSManagerException {
         Connection conn = RSSConfig.getInstance().getRSSDBConnection();
-        Map<String, Object> permissions = new HashMap<String, Object>();
+        Map<String, String> permissions = new HashMap<String, String>();
         PreparedStatement stmt;
         try {
             String sql = "SELECT perm_name, perm_value FROM RSS_USER_DATABASE_PERMISSION WHERE username = ? AND database_name = ?";
@@ -1093,12 +1093,13 @@ public class RSSDAOImpl implements RSSDAO {
 
     private void addDatabasePrivilegeTemplateProperty(Connection conn,
                                                       String templateName,
-                                                      DatabasePrivilege priv) throws SQLException {
+                                                      DatabasePrivilege privilege) throws
+            SQLException {
         String sql = "INSERT INTO RSS_DATABASE_PRIVILEGE_TEMPLATE_ENTRY(template_name, perm_name, perm_value) VALUES(?,?,?)";
         PreparedStatement ps = conn.prepareStatement(sql);
         ps.setString(1, templateName);
-        ps.setString(2, priv.getName());
-        ps.setString(3, priv.getValue());
+        ps.setString(2, privilege.getName());
+        ps.setString(3, privilege.getValue());
         ps.executeUpdate();
     }
 
@@ -1242,7 +1243,8 @@ public class RSSDAOImpl implements RSSDAO {
         ResultSet rs = stmt.executeQuery();
         List<DatabasePrivilege> result = new ArrayList<DatabasePrivilege>();
         while (rs.next()) {
-            DatabasePrivilege privilege = new DatabasePrivilege(rs.getString("perm_name"),
+            DatabasePrivilege privilege =
+                    new DatabasePrivilege(rs.getString("perm_name"),
                     rs.getString("perm_value"));
             result.add(privilege);
         }

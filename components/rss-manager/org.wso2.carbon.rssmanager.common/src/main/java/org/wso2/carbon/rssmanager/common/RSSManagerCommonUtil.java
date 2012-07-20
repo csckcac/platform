@@ -21,7 +21,9 @@ package org.wso2.carbon.rssmanager.common;
 import java.net.URI;
 import java.net.URISyntaxException;
 import java.util.ArrayList;
+import java.util.HashMap;
 import java.util.List;
+import java.util.Map;
 
 /**
  * Contains util methods common to both FE and the BE.
@@ -219,7 +221,7 @@ public class RSSManagerCommonUtil {
         return "";
     }
 
-    public static String validateRSSInstanceHostname(String url) throws Exception {
+    private static String validateRSSInstanceHostname(String url) throws Exception {
         if (url != null && !"".equals(url)) {
             URI uri;
             try {
@@ -233,20 +235,4 @@ public class RSSManagerCommonUtil {
         return "";
     }
 
-    public static String validateRSSInstanceUrl(String url) throws Exception {
-        if (url != null && !"".equals(url)) {
-            URI uri;
-            try {
-                uri = new URI(url.split("jdbc:")[1]);
-                return RSSManagerConstants.JDBC_PREFIX + ":" + uri.getScheme() + "://" +
-                        uri.getHost() + ":" + ((uri.getPort() != -1) ? uri.getPort() : "");
-            } catch (URISyntaxException e) {
-                throw new Exception("JDBC URL '" + url + "' is invalid. Please enter a " +
-                        "valid JDBC URL.");
-            }
-        }
-        return "";
-    }
-
-    
 }

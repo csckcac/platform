@@ -1,4 +1,4 @@
-package org.wso2.carbon.rssmanager.core.internal.util.datasource;
+package org.wso2.carbon.rssmanager.core.internal.dao.entity.datasource;
 
 import org.wso2.carbon.rssmanager.core.RSSManagerException;
 

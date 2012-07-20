@@ -147,11 +147,6 @@ public class RSSConfig {
                     "instance is missing");
         }
         OMElement adminDSConfigEl = tmpItr.next();
-        DataSource ds = null;
-        if (!tmpItr.hasNext()) {
-            ds = RSSManagerUtil.createDataSource(adminDSConfigEl);
-        }
-
         tmpItr = adminDSConfigEl.getChildrenWithLocalName("url");
         if (!tmpItr.hasNext()) {
             throw new RSSManagerException("Server instance URL is missing in RSS database " +
@@ -160,7 +155,7 @@ public class RSSConfig {
         tmpEl = tmpItr.next();
         String serverURL;
         try {
-            serverURL = RSSManagerCommonUtil.validateRSSInstanceUrl(tmpEl.getText().trim());
+            serverURL = RSSManagerUtil.validateRSSInstanceUrl(tmpEl.getText().trim());
         } catch (Exception e) {
             throw new RSSManagerException("Malformed RSS instance URL");
         }

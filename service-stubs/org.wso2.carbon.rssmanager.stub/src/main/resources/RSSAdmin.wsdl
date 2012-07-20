@@ -2,6 +2,12 @@
 <wsdl:definitions xmlns:wsdl="http://schemas.xmlsoap.org/wsdl/" xmlns:ns1="http://org.apache.axis2/xsd" xmlns:ns="http://service.core.rssmanager.carbon.wso2.org" xmlns:wsaw="http://www.w3.org/2006/05/addressing/wsdl" xmlns:http="http://schemas.xmlsoap.org/wsdl/http/" xmlns:ax23="http://entity.dao.internal.core.rssmanager.carbon.wso2.org/xsd" xmlns:ax21="http://core.rssmanager.carbon.wso2.org/xsd" xmlns:xs="http://www.w3.org/2001/XMLSchema" xmlns:mime="http://schemas.xmlsoap.org/wsdl/mime/" xmlns:soap="http://schemas.xmlsoap.org/wsdl/soap/" xmlns:soap12="http://schemas.xmlsoap.org/wsdl/soap12/" targetNamespace="http://service.core.rssmanager.carbon.wso2.org">
     <wsdl:types>
         <xs:schema attributeFormDefault="qualified" elementFormDefault="qualified" targetNamespace="http://entity.dao.internal.core.rssmanager.carbon.wso2.org/xsd">
+            <xs:complexType name="DatabasePrivilege">
+                <xs:sequence>
+                    <xs:element minOccurs="0" name="name" nillable="true" type="xs:string"/>
+                    <xs:element minOccurs="0" name="value" nillable="true" type="xs:string"/>
+                </xs:sequence>
+            </xs:complexType>
             <xs:complexType name="RSSInstanceMetaData">
                 <xs:sequence>
                     <xs:element minOccurs="0" name="instanceType" nillable="true" type="xs:string"/>
@@ -31,12 +37,6 @@
                     <xs:element minOccurs="0" name="name" nillable="true" type="xs:string"/>
                     <xs:element maxOccurs="unbounded" minOccurs="0" name="privileges" nillable="true" type="ax23:DatabasePrivilege"/>
                     <xs:element minOccurs="0" name="tenantId" type="xs:int"/>
-                </xs:sequence>
-            </xs:complexType>
-            <xs:complexType name="DatabasePrivilege">
-                <xs:sequence>
-                    <xs:element minOccurs="0" name="name" nillable="true" type="xs:string"/>
-                    <xs:element minOccurs="0" name="value" nillable="true" type="xs:string"/>
                 </xs:sequence>
             </xs:complexType>
             <xs:complexType name="RSSInstance">
@@ -121,15 +121,16 @@
             <xs:element name="getUserDatabasePermissions">
                 <xs:complexType>
                     <xs:sequence>
-                        <xs:element minOccurs="0" name="username" nillable="true" type="xs:string"/>
+                        <xs:element minOccurs="0" name="rssInstanceName" nillable="true" type="xs:string"/>
                         <xs:element minOccurs="0" name="databaseName" nillable="true" type="xs:string"/>
+                        <xs:element minOccurs="0" name="username" nillable="true" type="xs:string"/>
                     </xs:sequence>
                 </xs:complexType>
             </xs:element>
             <xs:element name="getUserDatabasePermissionsResponse">
                 <xs:complexType>
                     <xs:sequence>
-                        <xs:element minOccurs="0" name="return" nillable="true" type="xs:string"/>
+                        <xs:element maxOccurs="unbounded" minOccurs="0" name="return" nillable="true" type="ax23:DatabasePrivilege"/>
                     </xs:sequence>
                 </xs:complexType>
             </xs:element>
@@ -540,7 +541,6 @@
         <wsdl:operation name="getUserDatabasePermissions">
             <wsdl:input message="ns:getUserDatabasePermissionsRequest" wsaw:Action="urn:getUserDatabasePermissions"/>
             <wsdl:output message="ns:getUserDatabasePermissionsResponse" wsaw:Action="urn:getUserDatabasePermissionsResponse"/>
-            <wsdl:fault message="ns:RSSAdminRSSManagerException" name="RSSAdminRSSManagerException" wsaw:Action="urn:getUserDatabasePermissionsRSSAdminRSSManagerException"/>
         </wsdl:operation>
         <wsdl:operation name="createDatabasePrivilegesTemplate">
             <wsdl:input message="ns:createDatabasePrivilegesTemplateRequest" wsaw:Action="urn:createDatabasePrivilegesTemplate"/>
@@ -714,9 +714,6 @@
             <wsdl:output>
                 <soap:body use="literal"/>
             </wsdl:output>
-            <wsdl:fault name="RSSAdminRSSManagerException">
-                <soap:fault use="literal" name="RSSAdminRSSManagerException"/>
-            </wsdl:fault>
         </wsdl:operation>
         <wsdl:operation name="editDatabaseUserPrivileges">
             <soap:operation soapAction="urn:editDatabaseUserPrivileges" style="document"/>
@@ -996,9 +993,6 @@
             <wsdl:output>
                 <soap12:body use="literal"/>
             </wsdl:output>
-            <wsdl:fault name="RSSAdminRSSManagerException">
-                <soap12:fault use="literal" name="RSSAdminRSSManagerException"/>
-            </wsdl:fault>
         </wsdl:operation>
         <wsdl:operation name="editDatabaseUserPrivileges">
             <soap12:operation soapAction="urn:editDatabaseUserPrivileges" style="document"/>

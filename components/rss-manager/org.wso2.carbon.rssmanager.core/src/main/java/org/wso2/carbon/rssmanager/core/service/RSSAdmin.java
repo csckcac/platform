@@ -457,5 +457,10 @@ public class RSSAdmin extends AbstractAdmin {
             handleException(msg, e);
         }
     }
+
+    public DatabasePrivilege[] getUserDatabasePermissions(
+            String rssInstanceName, String databaseName, String username) {
+        return new DatabasePrivilege[0];
+    }
     
 }

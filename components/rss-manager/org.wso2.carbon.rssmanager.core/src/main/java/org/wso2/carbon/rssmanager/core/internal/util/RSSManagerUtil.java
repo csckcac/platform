@@ -23,7 +23,6 @@ import org.apache.axiom.om.util.Base64;
 import org.wso2.carbon.base.MultitenantConstants;
 import org.wso2.carbon.ndatasource.common.DataSourceException;
 import org.wso2.carbon.ndatasource.core.DataSourceMetaInfo;
-import org.wso2.carbon.ndatasource.core.services.WSDataSourceMetaInfo;
 import org.wso2.carbon.ndatasource.rdbms.RDBMSConfiguration;
 import org.wso2.carbon.ndatasource.rdbms.RDBMSDataSource;
 import org.wso2.carbon.rssmanager.common.RSSManagerCommonUtil;
@@ -31,8 +30,8 @@ import org.wso2.carbon.rssmanager.common.RSSManagerConstants;
 import org.wso2.carbon.rssmanager.core.RSSManagerException;
 import org.wso2.carbon.rssmanager.core.internal.RSSManagerServiceComponent;
 import org.wso2.carbon.rssmanager.core.internal.dao.entity.*;
-import org.wso2.carbon.rssmanager.core.internal.util.datasource.DSXMLConfiguration;
-import org.wso2.carbon.rssmanager.core.internal.util.datasource.RDBMSDSXMLConfiguration;
+import org.wso2.carbon.rssmanager.core.internal.dao.entity.datasource.DSXMLConfiguration;
+import org.wso2.carbon.rssmanager.core.internal.dao.entity.datasource.RDBMSDSXMLConfiguration;
 import org.wso2.carbon.user.api.Tenant;
 import org.wso2.carbon.user.api.UserStoreException;
 import org.wso2.carbon.user.core.tenant.TenantManager;
@@ -42,6 +41,8 @@ import javax.naming.InitialContext;
 import javax.sql.DataSource;
 import javax.xml.bind.JAXBException;
 import java.io.ByteArrayOutputStream;
+import java.net.URI;
+import java.net.URISyntaxException;
 import java.util.*;
 
 public class RSSManagerUtil {
@@ -108,12 +109,13 @@ public class RSSManagerUtil {
         return databaseName;
     }
 
-    public static Map<String, Object> convertToDatabasePrivilegeMap(DatabasePrivilege[] privileges) {
-        Map<String, Object> privMap = new HashMap<String, Object>();
+    public static Map<String, String> convertToDatabasePrivilegeMap(
+            DatabasePrivilege[] privileges) {
+        Map<String, String> privilegeMap = new HashMap<String, String>();
         for (DatabasePrivilege privilege : privileges) {
-            privMap.put(privilege.getName(), privilege.getValue());
+            privilegeMap.put(privilege.getName(), privilege.getValue());
         }
-        return privMap;
+        return privilegeMap;
     }
 
     /**
@@ -383,6 +385,21 @@ public class RSSManagerUtil {
         metaInfo.setName(database.getName());
         
         return metaInfo;
+    }
+
+    public static String validateRSSInstanceUrl(String url) throws Exception {
+        if (url != null && !"".equals(url)) {
+            URI uri;
+            try {
+                uri = new URI(url.split("jdbc:")[1]);
+                return RSSManagerConstants.JDBC_PREFIX + ":" + uri.getScheme() + "://" +
+                        uri.getHost() + ":" + ((uri.getPort() != -1) ? uri.getPort() : "");
+            } catch (URISyntaxException e) {
+                throw new Exception("JDBC URL '" + url + "' is invalid. Please enter a " +
+                        "valid JDBC URL.");
+            }
+        }
+        return "";
     }
 
 }

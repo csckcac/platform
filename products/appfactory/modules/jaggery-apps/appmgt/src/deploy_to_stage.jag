@@ -11,7 +11,7 @@
         var version = request.getParameter("version");
         var revision = '0';
         var build = 'true';
-        var path='/_system/governance'+'/repository/applications/'+applicationKey+'/'+stageName+'/'+'trunk';
+        var path='/_system/governance'+'/repository/applications/'+applicationKey+'/'+stageName+'/'+'trunk/appinfo';
         aspect=LIFE_CYCLE_NAME;
         var  action='Promote';
         var parameters=new Array();

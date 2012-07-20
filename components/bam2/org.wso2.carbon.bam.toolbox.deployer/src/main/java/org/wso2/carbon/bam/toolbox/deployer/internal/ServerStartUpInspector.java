@@ -58,9 +58,12 @@ public class ServerStartUpInspector extends Thread {
                 if (isPortOpen) {
                     if (verbose) {
                         SuperTenantCarbonContext.getCurrentContext().setTenantId(MultitenantConstants.SUPER_TENANT_ID);
-//                        log.info("Successfully connected to the server on port " + port);
+                        try {
+                            Thread.sleep(10000);
+                        } catch (InterruptedException e) {
+                        }
                         serverStarted = true;
-                         doPausedDeployments();
+                        doPausedDeployments();
 //                        try {
 //                            saveInFileSystem(ServiceHolder.getRegistry(MultitenantConstants.SUPER_TENANT_ID),"repository/components/org.wso2.carbon.bam.gadgetgen/gadgetgen", "/home/sinthuja/test/registry_content");
 //                        } catch (RegistryException e) {
@@ -97,20 +100,20 @@ public class ServerStartUpInspector extends Thread {
 
 
     private static void doPausedDeployments() throws DeploymentException {
-            BAMToolBoxDeployer deployer = BAMToolBoxDeployer.getPausedDeployments();
-            deployer.doInitialUnDeployments();
-            for (DeploymentFileData fileData : deployer.getPausedDeploymentFileDatas()) {
-                fileData.deploy();
-            }
+        BAMToolBoxDeployer deployer = BAMToolBoxDeployer.getPausedDeployments();
+        deployer.doInitialUnDeployments();
+        for (DeploymentFileData fileData : deployer.getPausedDeploymentFileDatas()) {
+            fileData.deploy();
+        }
 
 
     }
 
-      private static void saveInFileSystem(Registry registry, String registryPath, String fileSystemPath) {
+    private static void saveInFileSystem(Registry registry, String registryPath, String fileSystemPath) {
         try {
             Resource resource = registry.get(registryPath);
             if (resource instanceof Collection) {
-                File curPath = new File(fileSystemPath+"/"+getFileName(registryPath));
+                File curPath = new File(fileSystemPath + "/" + getFileName(registryPath));
                 curPath.mkdirs();
                 String[] allData = (String[]) resource.getContent();
                 if (null != allData) {
@@ -120,7 +123,7 @@ public class ServerStartUpInspector extends Thread {
                 }
             } else {
                 InputStream stream = resource.getContentStream();
-                String newFile = fileSystemPath+"/"+getFileName(registryPath);
+                String newFile = fileSystemPath + "/" + getFileName(registryPath);
                 DataOutputStream out = new DataOutputStream(new BufferedOutputStream(new FileOutputStream(newFile)));
                 int c;
                 while ((c = stream.read()) != -1) {
@@ -136,8 +139,8 @@ public class ServerStartUpInspector extends Thread {
         }
     }
 
-    private static String getFileName(String path){
+    private static String getFileName(String path) {
         String[] all = path.split("/");
-        return all[all.length-1];
+        return all[all.length - 1];
     }
 }

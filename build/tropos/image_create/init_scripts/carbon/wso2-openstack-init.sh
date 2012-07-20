@@ -51,17 +51,27 @@ fi
 chmod -R 0600 ${instance_path}/payload/wso2-key
 cat ${instance_path}/payload/known_hosts >> ~/.ssh/known_hosts
 
-#get the public and private ips
-wget http://169.254.169.254/latest/meta-data/public-ipv4
 
-files="`cat public-ipv4`"
+echo "getting public ip"
+while [ 1 > 0 ]
+do
+  rm -f ./public-ipv4
+  wget http://169.254.169.254/latest/meta-data/public-ipv4
+  files="`cat public-ipv4`"
+  if [ -z $files ]; then
+      sleep 1
+      continue
+  else
+      break
+  fi
+done
 
 echo wget the ipv4 >> $LOG
 echo "$files" >> $LOG
 
 for x in $files
 do
-    PUBLIC_IP="$x"
+ PUBLIC_IP="$x"
 done
 
 echo done_ public ip >> $LOG

@@ -12,7 +12,6 @@ import java.io.ObjectInputStream;
 import java.io.ObjectOutputStream;
 
 import java.util.HashMap;
-import java.util.Iterator;
 import java.util.Map;
 import java.util.Properties;
 import java.util.Set;
@@ -29,7 +28,6 @@ import org.apache.commons.logging.Log;
 import org.apache.commons.logging.LogFactory;
 import org.apache.hadoop.conf.Configuration;
 import org.apache.hadoop.fs.Path;
-import org.apache.hadoop.mapred.Counters;
 import org.json.JSONException;
 import org.json.JSONObject;
 
@@ -37,18 +35,12 @@ import org.wso2.carbon.core.AbstractAdmin;
 import org.wso2.carbon.context.*;
 import org.wso2.carbon.mapred.reporting.CarbonJobReporter.CarbonJobReporterMap;
 import org.wso2.carbon.mapred.reporting.CarbonJobReporter;
-import org.wso2.carbon.mapred.reporting.CarbonJobCoreReporter;
 import org.wso2.carbon.registry.api.Registry;
-import org.wso2.carbon.registry.api.RegistryService;
 import org.wso2.carbon.registry.api.Resource;
 import org.wso2.carbon.registry.api.RegistryException;
 import org.wso2.carbon.registry.core.RegistryConstants;
-import org.wso2.carbon.registry.core.jdbc.EmbeddedRegistry;
-import org.wso2.carbon.registry.core.session.UserRegistry;
-import org.wso2.carbon.user.api.Tenant;
 import org.wso2.carbon.utils.ServerConstants;
 import org.wso2.carbon.hadoop.security.HadoopCarbonMessageContext;
-import org.wso2.carbon.identity.authenticator.krb5.Krb5Authenticator;
 import org.wso2.carbon.identity.authenticator.krb5.Krb5AuthenticatorConstants;
 
 public class HadoopJobRunner extends AbstractAdmin {

@@ -23,6 +23,7 @@ import org.apache.commons.logging.Log;
 import org.apache.commons.logging.LogFactory;
 import org.testng.Assert;
 import org.testng.annotations.AfterTest;
+import org.testng.annotations.BeforeClass;
 import org.testng.annotations.BeforeTest;
 import org.testng.annotations.Test;
 import org.wso2.carbon.authenticator.stub.LoginAuthenticationExceptionException;
@@ -32,11 +33,14 @@ import org.wso2.carbon.automation.api.clients.logging.LoggingAdminClient;
 import org.wso2.carbon.automation.core.utils.axis2serverutils.SampleAxis2Server;
 import org.wso2.carbon.automation.core.utils.environmentutils.EnvironmentBuilder;
 import org.wso2.carbon.automation.core.utils.environmentutils.ManageEnvironment;
+import org.wso2.carbon.automation.utils.esb.ESBTestCaseUtils;
 import org.wso2.carbon.automation.utils.esb.StockQuoteClient;
-import org.wso2.carbon.logging.view.stub.types.axis2.GetLogs;
 import org.wso2.carbon.logging.view.stub.types.carbon.LogEvent;
 
+import javax.servlet.ServletException;
+import javax.xml.stream.XMLStreamException;
 import java.io.IOException;
+import java.rmi.RemoteException;
 
 public class LogMediatorLevelTest {
 
@@ -52,11 +56,13 @@ public class LogMediatorLevelTest {
     private String hostName=null;
     private SampleAxis2Server axis2Server;
     private AuthenticatorClient adminServiceAuthentication;
-
+    ESBTestCaseUtils utils;
+    //UserInfo userInfo;
 
     @BeforeTest(alwaysRun = true)
     public void setEnvironment() throws LoginAuthenticationExceptionException, IOException {
-        EnvironmentBuilder builder = new EnvironmentBuilder().esb(3);
+        EnvironmentBuilder builder = new EnvironmentBuilder().esb(0);
+     //   userInfo =  UserListCsvReader.getUserInfo(3);
         ManageEnvironment environment = builder.build();
         backEndUrl = environment.getEsb().getBackEndUrl();
         serviceUrl = environment.getEsb().getServiceUrl();
@@ -64,35 +70,32 @@ public class LogMediatorLevelTest {
         nhttpPort = environment.getEsb().getProductVariables().getNhttpPort();
         hostName=environment.getEsb().getProductVariables().getHostName();
         adminServiceAuthentication = environment.getEsb().getAdminServiceAuthentication();
-        axis2Server = new SampleAxis2Server();
-        axis2Server.start();
-
+        utils = new ESBTestCaseUtils();
         axis2Client = new StockQuoteClient();
         logAdmin = new LoggingAdminClient(backEndUrl,sessionCookie);
-        logViewer=new LogViewerClient(backEndUrl,sessionCookie);
+        logViewer=new LogViewerClient(sessionCookie,backEndUrl);
 
     }
 
-
+    @BeforeClass(alwaysRun = true)
+    public void deployArtifacts() throws XMLStreamException, ServletException, RemoteException {
+             utils.loadESBConfigurationFromClasspath("/artifacts/ESB/synapseconfig/log_mediator/synapse.xml",backEndUrl,sessionCookie);
+    }
 
     @Test(groups = "wso2.esb", description = "Tests level log")
     public void testSendingToDefinedEndpoint() throws Exception, InterruptedException {
 
         logAdmin.updateLoggerData("org.apache.synapse", LoggingAdminClient.logLevel.DEBUG.name(),true,false);
+        logViewer.clearLogs();
         OMElement response = axis2Client.sendSimpleStockQuoteRequest("http://" +hostName+":"+nhttpPort,
                                                                      null, "WSO2");
         Assert.assertTrue(response.toString().contains("WSO2"));
         log.info(response);
         Thread.sleep(2000);
-        System.out.println(response);
-        GetLogs getLogs = new GetLogs();
-        getLogs.setKeyword("mediator");
+
         LogEvent[] getLogsDebug = logViewer.getLogs("DEBUG", "LogMediator");
         LogEvent[] getLogsTrace = logViewer.getLogs("TRACE", "LogMediator");
         LogEvent[] getLogsInfo = logViewer.getLogs("INFO", "LogMediator");
-
-
-
 
     }
 

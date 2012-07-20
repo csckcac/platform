@@ -22,6 +22,8 @@
 <%@ page import="org.wso2.carbon.ui.CarbonUIMessage" %>
 <%@ page import="org.wso2.carbon.ui.CarbonUIUtil" %>
 <%@ page import="org.wso2.carbon.utils.ServerConstants" %>
+<%@ page import="org.wso2.carbon.rssmanager.ui.stub.types.DatabaseMetaData" %>
+<%@ page import="org.wso2.carbon.rssmanager.common.RSSManagerCommonUtil" %>
 
 <%@ taglib prefix="fmt" uri="http://java.sun.com/jsp/jstl/fmt" %>
 <%@ taglib uri="http://wso2.org/projects/carbon/taglibs/carbontags.jar" prefix="carbon" %>
@@ -38,6 +40,8 @@
 
         <%
             RSSManagerClient client = null;
+            DatabaseMetaData database = null;
+
             String backendServerURL = CarbonUIUtil.getServerURL(config.getServletContext(), session);
             ConfigurationContext configContext = (ConfigurationContext) config.getServletContext().
                     getAttribute(CarbonConstants.CONFIGURATION_CONTEXT);
@@ -48,11 +52,9 @@
             rssInstanceName = (rssInstanceName != null) ? rssInstanceName : (String) session.getAttribute("rssInstanceName");
             databaseName = (databaseName != null) ? databaseName : (String) session.getAttribute("databaseName");
 
-            System.out.println("RSSSS : " +(String) session.getAttribute("rssInstanceName"));
-            System.out.println("DDDBBB" + (String) session.getAttribute("databaseName"));
             try {
                 client = new RSSManagerClient(cookie, backendServerURL, configContext, request.getLocale());
-
+                database = client.getDatabase(rssInstanceName, databaseName);
             } catch (Exception e) {
                 CarbonUIMessage.sendCarbonUIMessage(e.getMessage(),
                         CarbonUIMessage.ERROR, request, e);
@@ -77,25 +79,25 @@
                     </thead>
                     <tbody>
                     <%
-                        for (String user : users) {
-                            if (user != null) {
+                        for (String username : users) {
+                            if (username != null) {
                     %>
                     <tr>
-                        <td id="<%=user%>"><%=user%>
+                        <td id="<%=username%>"><%=username%>
                         </td>
                         <td>
                                 <a class="icon-link"
                                 style="background-image: url(../rssmanager/images/db-exp.png);"
-                                onclick="submitExploreForm('<%=user%>', '<%=""%>','<%=""%>')"
+                                onclick="submitExploreForm('<%=username%>', '<%=(database != null) ? database.getUrl() : ""%>','<%=(database != null) ? RSSManagerCommonUtil.getDatabaseDriver(database.getUrl()) : ""%>')"
                                 href="#"><fmt:message key="rss.manager.explore.database"/>
                                 </a>
                                 <a class="icon-link"
                                 style="background-image:url(../rssmanager/images/data-sources-icon.gif);"
-                                onclick="createDataSource('<%=databaseName%>', '<%=user%>')"
+                                onclick="createDataSource('<%=databaseName%>', '<%=username%>')"
                                 href="#"><fmt:message key="rss.manager.create.datasource"/></a>
                             <a class="icon-link"
                                style="background-image:url(../admin/images/delete.gif);"
-                               onclick="submitDetachForm('<%=rssInstanceName%>', '<%=databaseName%>', '<%=user%>')"
+                               onclick="submitDetachForm('<%=rssInstanceName%>', '<%=databaseName%>', '<%=username%>')"
                                href="#"><fmt:message
                                     key="rss.manager.detach.database.user"/></a>
                         </td>

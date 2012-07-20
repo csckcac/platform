@@ -1194,7 +1194,7 @@ mediation functionality</strong> </p>
 
 <p><strong>Prerequisites:</strong> </p>
 
-<p>Make sure the synapse-samples-1.0.jar is in your class path (by default this
+<p>Make sure the synapse-samples-2.1.0.wso2v2 is in your class path (by default this
 jar is placed in the lib directory when installing ESB). </p>
 
 <p>Start ESB with the sample configuration 380 (i.e. wso2esb-samples -sn 380)
@@ -1373,7 +1373,7 @@ Discounted price: 138.77458254967408</pre>
 
 <p><strong>Prerequisites:</strong> </p>
 
-<p>Make sure the synapse-samples-1.0.jar is in your class path (by default this jar is placed in the lib directory when installing Synapse)</p>
+<p>Make sure the synapse-samples-2.1.0.wso2v2 is in your class path (by default this jar is placed in the lib directory when installing Synapse)</p>
 
 <p>
 Configure JMS transport using ActiveMQ (refer <a href="../samples_setup_guide.html#Setting">Sample Configuration Guide</a>) 

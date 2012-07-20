@@ -199,13 +199,17 @@ public class MapRedTask extends ExecDriver implements Serializable {
                                  "components" + File.separator + "plugins";
         String dropinsLocation = carbonHome + File.separator + "repository" + File.separator +
                                  "components" + File.separator + "dropins";
+        String thirdPartyLibsLocation = carbonHome + File.separator + "repository" + File.separator +
+                                        "components" + File.separator + "lib";
         String libLocation = carbonHome + File.separator + "lib" + File.separator + "endorsed";
         String pluginsClasspath = pluginsLocation + "/*";
         String dropinsClasspath = dropinsLocation + "/*";
+        String thirdPartyLibsClasspath = thirdPartyLibsLocation + "/*";
         String libClasspath= libLocation + "/*";
 
-        String classpath = pluginsClasspath + File.pathSeparator + dropinsClasspath +
-                           File.pathSeparator + libClasspath;
+        String classpath = pluginsClasspath + File.pathSeparator + thirdPartyLibsClasspath + 
+                           File.pathSeparator + dropinsClasspath + File.pathSeparator +
+                           libClasspath;
 
         boolean isDebugOn = HiveConf.getBoolVar(job, HiveConf.ConfVars.HADOOPEMBEDDEDLOCALMODEDEBUG);
 

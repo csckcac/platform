@@ -1,4 +1,4 @@
-This scripts contained in this folder structure can be used to create openstack nova cloud Iaas environment.
+Scripts contained in this folder structure can be used to create openstack nova cloud Iaas environment.
 
 Installing a Controller
 -----------------------
@@ -7,6 +7,34 @@ Installing a Controller
 
 - Log in as root user
   sudo -i
+
+- Change the /etc/network/interfaces look like following
+
+--------------------------------------------------------
+auto lo
+iface lo inet loopback
+
+auto eth0
+iface eth0 inet dhcp
+
+auto eth1
+iface eth1 inet static
+address 172.15.0.1
+netmask 255.255.0.0
+network 172.15.0.0
+broadcast 172.15.255.255
+
+auto eth2
+iface eth2 inet manual
+up ifconfig eth2 up
+
+--------------------------------------------------------
+
+You can change the ip address etc according to your network requirements
+
+- apt-get update
+
+- Install git
 
 - Copy the openStack-lxc-ubuntu-precise, client and upload folder into /root
 

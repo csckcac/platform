@@ -25,8 +25,6 @@ import org.wso2.carbon.identity.mgt.internal.IdentityMgtServiceComponent;
 import org.wso2.carbon.identity.mgt.util.ClaimsMgtUtil;
 import org.wso2.carbon.identity.mgt.util.PasswordUtil;
 import org.wso2.carbon.identity.mgt.util.Utils;
-import org.wso2.carbon.registry.core.Collection;
-import org.wso2.carbon.registry.core.Registry;
 import org.wso2.carbon.registry.core.RegistryConstants;
 import org.wso2.carbon.registry.core.Resource;
 import org.wso2.carbon.registry.core.exceptions.RegistryException;

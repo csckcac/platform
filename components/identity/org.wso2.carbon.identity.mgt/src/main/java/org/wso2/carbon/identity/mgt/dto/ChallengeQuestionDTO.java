@@ -23,14 +23,27 @@ package org.wso2.carbon.identity.mgt.dto;
  */
 public class ChallengeQuestionDTO {
 
+    /**
+     * question
+     */
     private String question;
 
+    /**
+     * whether question has promoted  //TODO use governance feature?
+     */
     private boolean promoteQuestion;
 
+    /**
+     * question order
+     */
     private int order;
 
+    /**
+     * Id of the question set that question is belonged 
+     */
     private String questionSetId;
 
+    
     public String getQuestion() {
         return question;
     }

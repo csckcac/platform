@@ -26,20 +26,44 @@ import org.wso2.carbon.identity.mgt.mail.EmailConfig;
  */
 public class RecoveryDataDTO {
 
+    /**
+     * email address of user
+     */
     private String email;
 
+    /**
+     * user id
+     */
     private String userId;
 
+    /**
+     * first name of user
+     */
     private String firstName;
 
+    /**
+     * confirmation key which is sent to user
+     */
     private String confirmation;
 
+    /**
+     *  temporary password which is sent to user
+     */
     private String temporaryPassword;
 
+    /**
+     * tenant domain name of the user
+     */
     private String domainName;
 
+    /**
+     * whether email has sent or not
+     */
     private boolean emailSent;
 
+    /**
+     * email configuration wso2 identity server
+     */
     private EmailConfig emailConfig;
 
     public String getUserId() {

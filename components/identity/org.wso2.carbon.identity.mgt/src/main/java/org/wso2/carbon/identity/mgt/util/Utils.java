@@ -22,6 +22,7 @@ import org.wso2.carbon.user.core.UserCoreConstants;
 import org.wso2.carbon.user.core.tenant.TenantManager;
 import org.wso2.carbon.user.core.util.UserCoreUtil;
 import org.wso2.carbon.utils.multitenancy.MultitenantConstants;
+import org.wso2.carbon.utils.multitenancy.MultitenantUtils;
 
 import java.util.Properties;
 
@@ -48,17 +49,12 @@ public class Utils {
         }
         
         if(userMgtBean.getTenantDomain() == null || userMgtBean.getTenantDomain().trim().length() < 1){
-            try{
-                domainName = UserCoreUtil.
-                        getTenantDomain(IdentityMgtServiceComponent.getRealmService(), userId);
-            } catch (UserStoreException ignore) {
-                // there is another option.  therefore just ignore
-            }
+            domainName = MultitenantUtils.getTenantDomain(userId);
         } else {
             domainName = userMgtBean.getTenantDomain();
         }
 
-        userId = UserCoreUtil.getTenantLessUsername(userId);
+        userId = MultitenantUtils.getTenantAwareUsername(userId);
 
         userMgtBean.setTenantDomain(domainName);
         userMgtBean.setUserId(userId);
@@ -281,18 +277,10 @@ public class Utils {
      */
     public static void persistAccountStatus(String userId, String status) throws IdentityMgtException {
 
-        int tenantId = 0;
         String accountStatus;
-
-        try {
-            String domainName = UserCoreUtil.
-                            getTenantDomain(IdentityMgtServiceComponent.getRealmService(), userId);
-            tenantId = getTenantId(domainName);
-        } catch (org.wso2.carbon.user.core.UserStoreException ignore) {
-            log.warn("Tenant Domain can not be retrieved. Assume as super tenant domain");
-        }
-
-        userId = UserCoreUtil.getTenantLessUsername(userId);
+        String domainName = MultitenantUtils.getTenantDomain(userId);
+        int tenantId = getTenantId(domainName);;
+        userId = MultitenantUtils.getTenantAwareUsername(userId);
         if(UserCoreConstants.USER_LOCKED.equals(status)){
             accountStatus = UserCoreConstants.USER_LOCKED;
         } else {

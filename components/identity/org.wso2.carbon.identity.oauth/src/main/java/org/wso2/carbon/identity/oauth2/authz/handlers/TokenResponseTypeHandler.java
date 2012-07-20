@@ -66,6 +66,9 @@ public class TokenResponseTypeHandler extends AbstractAuthorizationHandler {
             validityPeriod = callbackValidityPeriod;
         }
 
+        // convert back to milliseconds
+        validityPeriod = validityPeriod * 1000;
+
         tokenMgtDAO.storeAccessToken(accessToken,
                 null,
                 authorizationReqDTO.getConsumerKey(),

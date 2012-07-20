@@ -68,7 +68,7 @@ public class CodeResponseTypeHandler extends AbstractAuthorizationHandler {
                 && callbackValidityPeriod > 0) {
             validityPeriod = callbackValidityPeriod;
         }
-
+        // convert to milliseconds
         validityPeriod = validityPeriod * 1000;
 
         tokenMgtDAO.storeAuthorizationCode(authorizationCode,

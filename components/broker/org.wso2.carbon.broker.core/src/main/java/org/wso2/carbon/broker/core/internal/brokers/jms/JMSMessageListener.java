@@ -23,13 +23,13 @@ import org.apache.commons.logging.LogFactory;
 import org.wso2.carbon.broker.core.BrokerListener;
 import org.wso2.carbon.broker.core.exception.BrokerEventProcessingException;
 
-import javax.jms.JMSException;
-import javax.jms.Message;
-import javax.jms.MessageListener;
-import javax.jms.TextMessage;
+import javax.jms.*;
 import javax.xml.stream.XMLStreamException;
 import javax.xml.stream.XMLStreamReader;
 import java.io.ByteArrayInputStream;
+import java.util.Enumeration;
+import java.util.Map;
+import java.util.HashMap;
 
 public class JMSMessageListener implements MessageListener {
     private static final Log log = LogFactory.getLog(JMSMessageListener.class);
@@ -61,6 +61,23 @@ public class JMSMessageListener implements MessageListener {
                 if (log.isErrorEnabled()) {
                     log.error(e);
                 }
+            }
+        } else if (message instanceof MapMessage){
+            MapMessage mapMessage = (MapMessage) message;
+            Map event = new HashMap();
+            try {
+                Enumeration names = mapMessage.getMapNames();
+                Object name;
+                while (names.hasMoreElements()){
+                    name = names.nextElement();
+                    event.put(name, mapMessage.getObject((String) name));
+                }
+                brokerListener.onEvent(event);
+
+            } catch (JMSException e) {
+                log.error("Can not read the map message ", e);
+            } catch (BrokerEventProcessingException e) {
+                log.error("Can not send the message to broker ", e);
             }
         }
     }

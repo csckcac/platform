@@ -18,6 +18,7 @@ package org.wso2.carbon.broker.core.internal.brokers.jms;
 import org.apache.axis2.engine.AxisConfiguration;
 import org.apache.commons.logging.Log;
 import org.apache.commons.logging.LogFactory;
+import org.apache.axiom.om.OMElement;
 import org.wso2.carbon.broker.core.BrokerConfiguration;
 import org.wso2.carbon.broker.core.BrokerListener;
 import org.wso2.carbon.broker.core.BrokerTypeDto;
@@ -116,7 +117,17 @@ public abstract class JMSBrokerType implements BrokerType {
 
             Topic topic = session.createTopic(topicName);
             MessageProducer producer = session.createProducer(topic);
-            TextMessage jmsMessage = session.createTextMessage(message.toString());
+            Message jmsMessage = null;
+            if (message instanceof OMElement){
+                jmsMessage = session.createTextMessage(message.toString());
+            } else if (message instanceof Map){
+                MapMessage mapMessage = session.createMapMessage();
+                Map sourceMessage = (Map) message;
+                for (Object key : sourceMessage.keySet()){
+                    mapMessage.setObject((String)key, sourceMessage.get(key));
+                }
+                jmsMessage = mapMessage;
+            }
             producer.send(jmsMessage);
         } catch (JMSException e) {
             String error = "Failed to publish to topic:" + topicName;

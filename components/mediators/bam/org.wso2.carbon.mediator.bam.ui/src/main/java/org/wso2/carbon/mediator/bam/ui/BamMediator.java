@@ -66,8 +66,9 @@ public class BamMediator extends AbstractMediator {
         OMElement bamElement = fac.createOMElement("bam", synNS);
         saveTracingState(bamElement, this);
 
-        bamElement.addChild(serializeServerProfile());
-        bamElement.addChild(serializeStreamConfiguration());
+        OMElement serverProfileElement = serializeServerProfile();
+        serverProfileElement.addChild(serializeStreamConfiguration());
+        bamElement.addChild(serverProfileElement);
 
         if (parent != null) {
             parent.addChild(bamElement);
@@ -90,15 +91,6 @@ public class BamMediator extends AbstractMediator {
             throw new MediatorException(msg);
         }
 
-        OMElement streamElement = omElement.getFirstChildWithName(
-                new QName(SynapseConstants.SYNAPSE_NAMESPACE, "streamConfig"));
-        if(streamElement != null){
-            processStreamConfiguration(streamElement);
-        } else {
-            String msg = "The 'streamConfig' element is not specified";
-            throw new MediatorException(msg);
-        }
-
         processAuditStatus(this, omElement);
     }
 
@@ -107,6 +99,15 @@ public class BamMediator extends AbstractMediator {
         if(pathAttr != null){
             String pathValue = pathAttr.getAttributeValue();
             this.setServerProfile(pathValue);
+
+            OMElement streamElement = profile.getFirstChildWithName(
+                    new QName(SynapseConstants.SYNAPSE_NAMESPACE, "streamConfig"));
+            if(streamElement != null){
+                processStreamConfiguration(streamElement);
+            } else {
+                String msg = "The 'streamConfig' element is not specified";
+                throw new MediatorException(msg);
+            }
         } else {
             String msg = "The 'name' attribute of Profile is not specified";
             throw new MediatorException(msg);

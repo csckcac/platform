@@ -1,8 +1,8 @@
 ================================================================================
-                        WSO2 Load Balancer 1.0.0-SNAPSHOT
+                        WSO2 Load Balancer 2.0.0-SNAPSHOT
 ================================================================================
 
-Welcome to the WSO2 Load Balancer 1.0.0-SNAPSHOT release
+Welcome to the WSO2 Load Balancer 2.0.0-SNAPSHOT release
 
 WSO2 LB is a lightweight and easy-to-use Open Source Load Balancer
 (LB) available under the Apache Software License v2.0. WSO2 LB allows
@@ -29,7 +29,10 @@ Key Features of WSO2 LB
    the service nodes that are in the cluster.
 5. Service aware dynamic load balancing - A single load balancer
    can centrally manage the load across the nodes of different service clusters.
-6. Lightweight, XML and Web services centric messaging model
+6. Tenant aware load balancing - Tenants can be loaded and unloaded dynamically.
+   Tenants can be partitioned to different service clusters.
+7. Lightweight, XML and Web services centric messaging model
+8. Administrator friendly - Configurations are simple and easy.
 
 System Requirements
 ==================================
@@ -37,19 +40,6 @@ System Requirements
 1. Minimum memory - 1GB
 2. Processor      - Pentium 800MHz or equivalent at minimum
 3. Java SE Development Kit 1.6.21 or higher
-4. The Management Console requires you to enable Javascript of the Web browser,
-   with MS IE 7. In addition to JavaScript, ActiveX should also be enabled
-   with IE. This can be achieved by setting your security level to
-   medium or lower.
-   NOTE:
-     On Windows Server 2003, it is not allowed to go below the medium security
-     level in Internet Explorer 6.x and the default medium security setting with
-     IE does not allow sufficient level of JS or ActiveX enablement for the
-     management console to run.
-5. To compile and run the sample clients, an Ant version is required. Ant 1.7.0
-   version is recommended
-6. To build WSO2 LB from the Source distribution, it is necessary that you have
-   JDK 1.6.x version and Maven 2.1.0 or later
 
 For more details see
     http://wso2.org/wiki/display/carbon/System+Requirements
@@ -57,19 +47,19 @@ For more details see
 Installation & Running
 ==================================
 
-1. Extract the wso2lb-1.0.0-SNAPSHOT.zip and go to the extracted directory
+1. Extract the wso2lb-2.0.0-SNAPSHOT.zip and go to the extracted directory
 2. Run the wso2server.sh or wso2server.bat as appropriate
 3. Configure the load balancer to manage the load across the instants to be balanced.
 
-WSO2 LB 1.0.0-SNAPSHOT distribution directory structure
+WSO2 LB 2.0.0-SNAPSHOT distribution directory structure
 ===============================================
 
     CARBON_HOME
 	|- bin <folder>
-	|- dbscripts <folder>
+  |- dbscripts <folder>
 	|- lib <folder>
 	|- repository <folder>
-	|- samples <folder>
+  |- samples <folder>
 	|- tmp <folder>
 	|- LICENSE.txt <file>
 	|- README.txt <file>
@@ -113,7 +103,7 @@ WSO2 LB 1.0.0-SNAPSHOT distribution directory structure
       This document will contain information on installing WSO2 LB
 
     - release-notes.html
-	  Release information for WSO2 LB 1.0.0-SNAPSHOT
+	  Release information for WSO2 LB 2.0.0-SNAPSHOT
 
 Support
 ==================================

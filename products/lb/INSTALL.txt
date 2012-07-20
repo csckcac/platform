@@ -1,7 +1,7 @@
-Installing  WSO2 Load Balancer (LB) 1.0.0-SNAPSHOT
+Installing  WSO2 Load Balancer (LB) 2.0.0-SNAPSHOT
 ===================================================
 
-WSO2 LB 1.0.0-SNAPSHOT can be run as a light-weight software load balancer in 
+WSO2 LB 2.0.0-SNAPSHOT can be run as a light-weight software load balancer in 
 stand-alone mode, that can be configured to balance the load across the services nodes.
 
 Standalone Mode

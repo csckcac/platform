@@ -123,7 +123,7 @@
         </file>
         <file>
             <source>
-                ../../p2-profile/product/target/wso2carbon-core-${carbon.version}/repository/conf/event-broker.xml
+                ../p2-profile/target/wso2carbon-core-${carbon.version}/repository/conf/event-broker.xml
             </source>
             <outputDirectory>wso2lb-${pom.version}/repository/conf</outputDirectory>
         </file>
@@ -142,7 +142,7 @@
             <outputDirectory>wso2lb-${pom.version}/repository/conf/axis2</outputDirectory>
             <destName>axis2.xml</destName>
         </file>
-	<file>
+	      <file>
             <source>src/main/conf/loadbalancer.conf</source>
             <outputDirectory>wso2lb-${pom.version}/repository/conf</outputDirectory>
             <destName>loadbalancer.conf</destName>
@@ -172,19 +172,19 @@
             <filtered>true</filtered>
         </file>
         <file>
-            <source>../../../LICENSE.txt</source>
+            <source>../../LICENSE.txt</source>
             <outputDirectory>wso2lb-${pom.version}</outputDirectory>
             <filtered>true</filtered>
             <fileMode>644</fileMode>
         </file>
         <file>
-            <source>../../../README.txt</source>
+            <source>../../README.txt</source>
             <outputDirectory>wso2lb-${pom.version}</outputDirectory>
             <filtered>true</filtered>
             <fileMode>644</fileMode>
         </file>
         <file>
-            <source>../../../INSTALL.txt</source>
+            <source>../../INSTALL.txt</source>
             <outputDirectory>wso2lb-${pom.version}</outputDirectory>
             <filtered>true</filtered>
             <fileMode>644</fileMode>

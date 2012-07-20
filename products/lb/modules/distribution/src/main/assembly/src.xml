@@ -31,7 +31,7 @@
             </includes>
         </fileSet>
         <fileSet>
-            <directory>../../..</directory>
+            <directory>../..</directory>
             <outputDirectory>wso2lb-${pom.version}-src</outputDirectory>
             <includes>
                 <include>modules/**/*</include>
@@ -54,17 +54,17 @@
     </fileSets>
     <files>
         <file>
-            <source>../../../LICENSE.txt</source>
+            <source>../../LICENSE.txt</source>
             <outputDirectory>wso2lb-${pom.version}-src</outputDirectory>
             <filtered>true</filtered>
         </file>
         <file>
-            <source>../../../README.txt</source>
+            <source>../../README.txt</source>
             <outputDirectory>wso2lb-${pom.version}-src</outputDirectory>
             <filtered>true</filtered>
         </file>
         <file>
-            <source>../../../INSTALL.txt</source>
+            <source>../../INSTALL.txt</source>
             <outputDirectory>wso2lb-${pom.version}-src</outputDirectory>
             <filtered>true</filtered>
         </file>

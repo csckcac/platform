@@ -151,6 +151,9 @@
                                 <featureArtifactDef>
                                     org.wso2.carbon:org.wso2.carbon.broker.feature:${carbon.version}
                                 </featureArtifactDef>
+                                <featureArtifactDef>
+                                    org.wso2.carbon:org.wso2.carbon.service.mgt.feature:${carbon.platform.version}
+                                </featureArtifactDef>
                                 <!-- cloud cep features -->
                                 <featureArtifactDef>
                                     org.wso2.cep:org.wso2.stratos.cep.styles.feature:${project.version}
@@ -188,6 +191,17 @@
                                 </featureArtifactDef>
                                 <featureArtifactDef>
                                     org.wso2.carbon:org.wso2.carbon.databridge.datareceiver.feature:${carbon.version}
+                                </featureArtifactDef>
+
+                                <!--casandra for siddhi, data-bridge-->
+                                <featureArtifactDef>
+                                    org.wso2.carbon:org.wso2.carbon.cassandra.feature:${carbon.version}
+                                </featureArtifactDef>
+                                <featureArtifactDef>org.wso2.carbon:org.wso2.carbon.databridge.streamdefn.cassandra.feature:4.0.0-SNAPSHOT</featureArtifactDef>
+
+                                <!-- Cassandra explorer -->
+                                <featureArtifactDef>
+                                    org.wso2.carbon:org.wso2.carbon.cassandra.explorer.feature:${carbon.version}
                                 </featureArtifactDef>
 
                             </featureArtifacts>
@@ -315,6 +329,11 @@
                                     <id>org.wso2.stratos.cep.dashboard.ui.feature.group</id>
                                     <version>${project.version}</version>
                                 </feature>
+                                <feature>
+                                    <id>org.wso2.carbon.service.mgt.feature.group</id>
+                                    <version>${carbon.platform.version}</version>
+                                </feature>
+
                                 <!--Cloud service deployment feature -->
                                 <feature>
                                     <id>org.wso2.carbon.stratos.deployment.feature.group</id>
@@ -352,6 +371,20 @@
                                 </feature>
                                 <feature>
                                     <id>org.wso2.carbon.databridge.datareceiver.feature.group</id>
+                                    <version>${carbon.version}</version>
+                                </feature>
+
+                                <feature>
+                                    <id>org.wso2.carbon.databridge.streamdefn.cassandra.feature.group</id>
+                                    <version>${carbon.version}</version>
+                                </feature>
+                                <feature>
+                                    <id>org.wso2.carbon.cassandra.feature.group</id>
+                                    <version>${carbon.version}</version>
+                                </feature>
+                                <!-- Cassandra Explorer -->
+                                <feature>
+                                    <id>org.wso2.carbon.cassandra.explorer.feature.group</id>
                                     <version>${carbon.version}</version>
                                 </feature>
                             </features>

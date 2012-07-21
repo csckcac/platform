@@ -19,6 +19,8 @@ public class InputDTO {
      * */
     private InputTupleMappingDTO inputTupleMappingDTO;
 
+    private InputMapMappingDTO inputMapMappingDTO;
+
     /**
      * Name of the broker to be used
      * */
@@ -54,6 +56,14 @@ public class InputDTO {
 
     public void setInputTupleMappingDTO(InputTupleMappingDTO inputTupleMappingDTO) {
         this.inputTupleMappingDTO = inputTupleMappingDTO;
+    }
+
+    public InputMapMappingDTO getInputMapMappingDTO() {
+        return inputMapMappingDTO;
+    }
+
+    public void setInputMapMappingDTO(InputMapMappingDTO inputMapMappingDTO) {
+        this.inputMapMappingDTO = inputMapMappingDTO;
     }
 }
 

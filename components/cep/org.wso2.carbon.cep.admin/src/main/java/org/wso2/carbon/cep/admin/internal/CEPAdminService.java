@@ -18,10 +18,12 @@ import org.wso2.carbon.cep.core.mapping.input.Input;
 import org.wso2.carbon.cep.core.mapping.input.mapping.InputMapping;
 import org.wso2.carbon.cep.core.mapping.input.mapping.TupleInputMapping;
 import org.wso2.carbon.cep.core.mapping.input.mapping.XMLInputMapping;
+import org.wso2.carbon.cep.core.mapping.input.mapping.MapInputMapping;
 import org.wso2.carbon.cep.core.mapping.output.Output;
 import org.wso2.carbon.cep.core.mapping.output.mapping.ElementOutputMapping;
 import org.wso2.carbon.cep.core.mapping.output.mapping.TupleOutputMapping;
 import org.wso2.carbon.cep.core.mapping.output.mapping.XMLOutputMapping;
+import org.wso2.carbon.cep.core.mapping.output.mapping.MapOutputMapping;
 import org.wso2.carbon.cep.core.mapping.property.TupleProperty;
 import org.wso2.carbon.cep.core.mapping.property.XMLProperty;
 import org.wso2.carbon.core.AbstractAdmin;
@@ -455,6 +457,8 @@ public class CEPAdminService extends AbstractAdmin {
             inputDTO.setBrokerName(backEndInput.getBrokerName());
             if (backEndInput.getInputMapping() instanceof XMLInputMapping) {
                 inputDTO.setInputXMLMappingDTO(adaptMapping((XMLInputMapping) backEndInput.getInputMapping()));
+            } else if (backEndInput.getInputMapping() instanceof MapInputMapping) {
+                inputDTO.setInputMapMappingDTO(adaptMapping((MapInputMapping)backEndInput.getInputMapping()));
             } else {
                 inputDTO.setInputTupleMappingDTO(adaptMapping((TupleInputMapping) backEndInput.getInputMapping()));
             }
@@ -487,6 +491,12 @@ public class CEPAdminService extends AbstractAdmin {
         inputTupleMappingDTO.setStream(backEndTupleInputMapping.getStream());
         inputTupleMappingDTO.setProperties(adaptProperties(backEndTupleInputMapping.getProperties()));
         return inputTupleMappingDTO;
+    }
+
+    private InputMapMappingDTO adaptMapping(MapInputMapping backEndMapInputMapping){
+        InputMapMappingDTO inputMapMappingDTO = new InputMapMappingDTO();
+        inputMapMappingDTO.setStream(backEndMapInputMapping.getStream());
+        return inputMapMappingDTO;
     }
 
     /**
@@ -585,6 +595,8 @@ public class CEPAdminService extends AbstractAdmin {
             outputDTO.setOutputElementMapping(adaptOutputElementMapping((ElementOutputMapping) backEndOutput.getOutputMapping()));
         } else if (backEndOutput.getOutputMapping() instanceof TupleOutputMapping) {
             outputDTO.setOutputTupleMappingDTO(adaptOutputTupleMapping((TupleOutputMapping) backEndOutput.getOutputMapping()));
+        } else if (backEndOutput.getOutputMapping() instanceof MapOutputMapping) {
+            outputDTO.setOutputMapMappingDTO(adaptOutputMapMapping((MapOutputMapping)backEndOutput.getOutputMapping()));
         } else {
             outputDTO.setOutputXmlMapping(adaptOutputXMLMapping((XMLOutputMapping) backEndOutput.getOutputMapping()));
         }
@@ -606,6 +618,12 @@ public class CEPAdminService extends AbstractAdmin {
             outputElementMappingDTO.setProperties(adaptOutputProperties(backEndElementOutputMapping.getProperties()));
         }
         return outputElementMappingDTO;
+    }
+
+
+    private OutputMapMappingDTO adaptOutputMapMapping(MapOutputMapping mapOutputMapping){
+        OutputMapMappingDTO outputMapMappingDTO = new OutputMapMappingDTO();
+        return outputMapMappingDTO;
     }
 
     /**

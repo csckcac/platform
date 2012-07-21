@@ -24,6 +24,8 @@ public class OutputDTO {
      * */
     private OutputTupleMappingDTO outputTupleMappingDTO;
 
+    private OutputMapMappingDTO outputMapMappingDTO;
+
     /**
      * Name of the broker to be used
      * */
@@ -67,5 +69,21 @@ public class OutputDTO {
 
     public void setBrokerName(String brokerName) {
         this.brokerName = brokerName;
+    }
+
+    public OutputElementMappingDTO getOutputElementMappingDTO() {
+        return outputElementMappingDTO;
+    }
+
+    public void setOutputElementMappingDTO(OutputElementMappingDTO outputElementMappingDTO) {
+        this.outputElementMappingDTO = outputElementMappingDTO;
+    }
+
+    public OutputMapMappingDTO getOutputMapMappingDTO() {
+        return outputMapMappingDTO;
+    }
+
+    public void setOutputMapMappingDTO(OutputMapMappingDTO outputMapMappingDTO) {
+        this.outputMapMappingDTO = outputMapMappingDTO;
     }
 }

@@ -41,15 +41,18 @@
     XpathDefinitionDTO[] xpathDefinitions = null;
     List<InputDTO> inputs = (List<InputDTO>) session.getAttribute("inputs");
     input = inputs.get(index);
-    boolean XMLMapping = false;
-    boolean TupleMapping = false;
+    boolean xmlMapping = false;
+    boolean tupleMapping = false;
+    boolean mapMapping = false;
     if (input.getInputXMLMappingDTO() != null) {
-        XMLMapping = true;
+        xmlMapping = true;
         xmlProperties = input.getInputXMLMappingDTO().getProperties();
         xpathDefinitions = input.getInputXMLMappingDTO().getXpathDefinition();
     } else if (input.getInputTupleMappingDTO() != null) {
-        TupleMapping = true;
+        tupleMapping = true;
         tupleProperties = input.getInputTupleMappingDTO().getProperties();
+    } else if (input.getInputMapMappingDTO() != null){
+        mapMapping = true;
     }
 
 %>
@@ -98,17 +101,23 @@
         <fmt:message key="input.mapping.stream"/>
     </td>
 </tr>
-<% if (XMLMapping) { %>
+<% if (xmlMapping) { %>
 <tr>
     <td class="leftCol-small"><fmt:message key="stream"/><span class="required">*</span></td>
     <td><input type="text" id="mappingStream"
                value="<%=input.getInputXMLMappingDTO().getStream()%>"></td>
 </tr>
-<% } else if (TupleMapping) { %>
+<% } else if (tupleMapping) { %>
 <tr>
     <td class="leftCol-small"><fmt:message key="stream"/><span class="required">*</span></td>
     <td><input type="text" id="mappingStream"
                value="<%=input.getInputTupleMappingDTO().getStream()%>"></td>
+</tr>
+<% } else if (mapMapping) { %>
+<tr>
+    <td class="leftCol-small"><fmt:message key="stream"/><span class="required">*</span></td>
+    <td><input type="text" id="mappingStream"
+               value="<%=input.getInputMapMappingDTO().getStream()%>"></td>
 </tr>
 <% } %>
 
@@ -119,33 +128,35 @@
 <tr>
     <td class="leftCol-small"><fmt:message key="input.mapping.type"/></td>
     <td><select name="inputMappingType" id="inputMappingType" onchange="setInputMapping()">
-        <option value="xml" <%=XMLMapping ? " selected=\"selected\"" : "" %>><fmt:message
+        <option value="xml" <%=xmlMapping ? " selected=\"selected\"" : "" %>><fmt:message
                 key="input.mapping.type.xml"/></option>
-        <option value="tuple" <%=(TupleMapping) ? " selected=\"selected\"" : "" %>><fmt:message
+        <option value="tuple" <%=(tupleMapping) ? " selected=\"selected\"" : "" %>><fmt:message
                 key="input.mapping.type.tuple"/></option>
+        <option value="tuple" <%=(mapMapping) ? " selected=\"selected\"" : "" %>><fmt:message
+                key="input.mapping.type.map"/></option>
     </select>
     </td>
 </tr>
-<tr name="inputXMLMapping" style="width:100%;<%=XMLMapping?"":"display:none;" %>">
+<tr name="inputXMLMapping" style="width:100%;<%=xmlMapping?"":"display:none;" %>">
     <td colspan="2" class="middle-header">
         <fmt:message key="xpath_definition"/>
     </td>
 </tr>
-<tr name="inputXMLMapping" style="width:100%;<%=XMLMapping?"":"display:none;" %>">
+<tr name="inputXMLMapping" style="width:100%;<%=xmlMapping?"":"display:none;" %>">
     <td colspan="2">
 
         <div id="noXpathDiv" class="noDataDiv-plain"
-             style="width:100%;display:<%=XMLMapping&&xpathDefinitions != null?"none":"" %>;">
+             style="width:100%;display:<%=xmlMapping&&xpathDefinitions != null?"none":"" %>;">
             No XPath prefixes Defined
         </div>
         <table class="styledLeft" id="xpathNamespacesTable"
-               style="width:100%;display:<%=XMLMapping&&xpathDefinitions != null?"":"none" %>;">
+               style="width:100%;display:<%=xmlMapping&&xpathDefinitions != null?"":"none" %>;">
             <thead>
             <th class="leftCol-med"><fmt:message key="prefix"/></th>
             <th class="leftCol-med"><fmt:message key="namespace"/></th>
             <th><fmt:message key="actions"/></th>
             </thead>
-            <% if (XMLMapping) {
+            <% if (xmlMapping) {
                 if (xpathDefinitions != null) {
                     for (XpathDefinitionDTO xpathDefinition : xpathDefinitions) {
             %>
@@ -183,27 +194,27 @@
 
     </td>
 </tr>
-<tr name="inputXMLMapping" style="width:100%;<%=XMLMapping?"":"display:none;" %>">
+<tr name="inputXMLMapping" style="width:100%;<%=xmlMapping?"":"display:none;" %>">
     <td colspan="2" class="middle-header">
         <fmt:message key="property"/>
     </td>
 </tr>
-<tr name="inputXMLMapping" style="width:100%;<%=XMLMapping?"":"display:none;" %>">
+<tr name="inputXMLMapping" style="width:100%;<%=xmlMapping?"":"display:none;" %>">
     <td colspan="2">
         <div id="noInputXMLPropertyDiv" class="noDataDiv-plain"
-             style="width:100%;display:<%=XMLMapping&xmlProperties != null?"none":"" %>;">
+             style="width:100%;display:<%=xmlMapping&xmlProperties != null?"none":"" %>;">
             No Properties Defined
         </div>
 
         <table class="styledLeft" id="inputXMLPropertyTable"
-               style="width:100%;display:<%=XMLMapping&&xpathDefinitions != null?"":"none" %>;">
+               style="width:100%;display:<%=xmlMapping&&xpathDefinitions != null?"":"none" %>;">
             <thead>
             <th class="leftCol-med"><fmt:message key="property.name"/></th>
             <th class="leftCol-med"><fmt:message key="property.xpath"/></th>
             <th class="leftCol-med"><fmt:message key="property.type"/></th>
             <th><fmt:message key="actions"/></th>
             </thead>
-            <% if (XMLMapping) {
+            <% if (xmlMapping) {
                 if (xmlProperties != null) {
                     for (XMLPropertyDTO xmlPropertyDTO : xmlProperties) {
             %>
@@ -252,20 +263,20 @@
 
     </td>
 </tr>
-<tr name="inputTupleMapping" style="display:<%=(TupleMapping)?"":"none" %>;">
+<tr name="inputTupleMapping" style="display:<%=(tupleMapping)?"":"none" %>;">
     <td colspan="2" class="middle-header">
         <fmt:message key="property"/>
     </td>
 </tr>
-<tr name="inputTupleMapping" style="display:<%=(TupleMapping)?"":"none" %>;">
+<tr name="inputTupleMapping" style="display:<%=(tupleMapping)?"":"none" %>;">
     <td colspan="2">
         <div id="noInputTuplePropertyDiv" class="noDataDiv-plain"
-             style="width:100%;display:<%=(TupleMapping)&&tupleProperties!=null?"none":"" %>;">
+             style="width:100%;display:<%=(tupleMapping)&&tupleProperties!=null?"none":"" %>;">
             No Properties Defined
         </div>
 
         <table class="styledLeft" id="inputTuplePropertyTable"
-               style="width:100%;display:<%=(TupleMapping)&&tupleProperties!=null?"":"none" %>;">
+               style="width:100%;display:<%=(tupleMapping)&&tupleProperties!=null?"":"none" %>;">
             <thead>
             <th class="leftCol-med"><fmt:message key="property.name"/></th>
             <th class="leftCol-med"><fmt:message key="property.data.type"/></th>
@@ -273,7 +284,7 @@
             <th><fmt:message key="actions"/></th>
             </thead>
             <%
-                if (TupleMapping) {
+                if (tupleMapping) {
                     if (tupleProperties != null) {
                         for (TuplePropertyDTO tuplePropertyDTO : tupleProperties) {
             %>

@@ -4,15 +4,9 @@
 <%@ page import="org.apache.axis2.context.ConfigurationContext" %>
 <%@ page import="org.wso2.carbon.CarbonConstants" %>
 <%@ page import="org.wso2.carbon.cep.stub.admin.CEPAdminServiceStub" %>
-<%@ page import="org.wso2.carbon.cep.stub.admin.internal.xsd.ExpressionDTO" %>
-<%@ page import="org.wso2.carbon.cep.stub.admin.internal.xsd.OutputDTO" %>
-<%@ page import="org.wso2.carbon.cep.stub.admin.internal.xsd.OutputElementMappingDTO" %>
-<%@ page import="org.wso2.carbon.cep.stub.admin.internal.xsd.OutputTupleMappingDTO" %>
-<%@ page import="org.wso2.carbon.cep.stub.admin.internal.xsd.OutputXMLMappingDTO" %>
-<%@ page import="org.wso2.carbon.cep.stub.admin.internal.xsd.QueryDTO" %>
-<%@ page import="org.wso2.carbon.cep.stub.admin.internal.xsd.XMLPropertyDTO" %>
 <%@ page import="org.wso2.carbon.ui.CarbonUIUtil" %>
 <%@ page import="java.util.LinkedList" %>
+<%@ page import="org.wso2.carbon.cep.stub.admin.internal.xsd.*" %>
 <fmt:bundle basename="org.wso2.carbon.cep.ui.i18n.Resources">
 
 <link type="text/css" href="../CEP/css/buckets.css" rel="stylesheet"/>
@@ -52,6 +46,7 @@
     OutputElementMappingDTO elementMapping = null;
     OutputXMLMappingDTO xmlMapping = null;
     OutputTupleMappingDTO tupleMapping = null;
+    OutputMapMappingDTO mapMapping = null;
 
     LinkedList<QueryDTO> queries = (LinkedList<QueryDTO>) session.getAttribute("queries");
     query = queries.get(index);
@@ -62,6 +57,7 @@
         elementMapping = output.getOutputElementMapping();
         xmlMapping = output.getOutputXmlMapping();
         tupleMapping = output.getOutputTupleMappingDTO();
+        mapMapping = output.getOutputMapMappingDTO();
     }
 
     boolean inline;
@@ -195,6 +191,8 @@
             <fmt:message key="element.mapping"/></option>
         <option value="tuple" <%=tupleMapping != null ? "selected=\"selected\"" : "" %>><fmt:message
                 key="tuple.mapping"/></option>
+        <option value="tuple" <%=mapMapping != null ? "selected=\"selected\"" : "" %>><fmt:message
+                key="map.mapping"/></option>
     </select>
     </td>
 </tr>

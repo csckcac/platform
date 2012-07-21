@@ -1,16 +1,6 @@
-<%@ page import="org.wso2.carbon.cep.stub.admin.internal.xsd.BucketDTO" %>
-<%@ page import="org.wso2.carbon.cep.stub.admin.internal.xsd.ExpressionDTO" %>
-<%@ page import="org.wso2.carbon.cep.stub.admin.internal.xsd.InputDTO" %>
-<%@ page import="org.wso2.carbon.cep.stub.admin.internal.xsd.OutputDTO" %>
-<%@ page import="org.wso2.carbon.cep.stub.admin.internal.xsd.OutputElementMappingDTO" %>
-<%@ page import="org.wso2.carbon.cep.stub.admin.internal.xsd.OutputTupleMappingDTO" %>
-<%@ page import="org.wso2.carbon.cep.stub.admin.internal.xsd.OutputXMLMappingDTO" %>
-<%@ page import="org.wso2.carbon.cep.stub.admin.internal.xsd.QueryDTO" %>
-<%@ page import="org.wso2.carbon.cep.stub.admin.internal.xsd.TuplePropertyDTO" %>
-<%@ page import="org.wso2.carbon.cep.stub.admin.internal.xsd.XMLPropertyDTO" %>
-<%@ page import="org.wso2.carbon.cep.stub.admin.internal.xsd.XpathDefinitionDTO" %>
 <%@ page import="org.wso2.carbon.ui.CarbonUIUtil" %>
 <%@ page import="java.util.HashMap" %>
+<%@ page import="org.wso2.carbon.cep.stub.admin.internal.xsd.*" %>
 <%@ taglib prefix="fmt" uri="http://java.sun.com/jstl/fmt" %>
 <fmt:bundle basename="org.wso2.carbon.cep.ui.i18n.Resources">
 <link type="text/css" href="../dialog/js/jqueryui/tabs/ui.all.css" rel="stylesheet"/>
@@ -146,6 +136,7 @@
     final int NONE = -1;
     final int XML = 0;
     final int TUPLE = 1;
+    final int MAP = 2;
     int inputMapping = NONE;
 
 
@@ -218,6 +209,11 @@
                         stream = input.getInputTupleMappingDTO().getStream();
                     }
 
+                    if (input.getInputMapMappingDTO() != null){
+                        inputMapping = MAP;
+                        stream = input.getInputMapMappingDTO().getStream();
+                    }
+
         %>
         <tr>
             <td>
@@ -237,8 +233,8 @@
 
                         <tr>
                             <td colspan="2">
-                                <div class="heading_A"><fmt:message
-                                        key="input.mapping.stream"/></div>
+                                <div class="heading_A">
+                                    <fmt:message key="input.mapping.stream"/></div>
                             </td>
                         <tr>
                             <td class="leftCol-med labelField"><fmt:message key="stream"/></td>
@@ -319,8 +315,7 @@
                         </tr>
 
                         <%
-                            }
-                            if (inputMapping == TUPLE) {
+                            } else if (inputMapping == TUPLE) {
                         %>
 
                         <tr>
@@ -363,6 +358,16 @@
                                 </table>
                             </td>
                         </tr>
+                        <%
+                            } else if (inputMapping == MAP) {
+                        %>
+
+                        <tr>
+                            <td colspan="2">
+                                <div class="heading_B"><fmt:message key="map.mapping"/></div>
+                            </td>
+                        </tr>
+
                         <%}%>
                     </table>
                 </div>
@@ -387,6 +392,7 @@
             OutputElementMappingDTO elementMapping = null;
             OutputXMLMappingDTO xmlMapping = null;
             OutputTupleMappingDTO tupleMapping = null;
+            OutputMapMappingDTO mapMapping = null;
             boolean inline;
             expression = query.getExpression();
             output = query.getOutput();
@@ -394,6 +400,7 @@
                 elementMapping = output.getOutputElementMapping();
                 xmlMapping = output.getOutputXmlMapping();
                 tupleMapping = output.getOutputTupleMappingDTO();
+                mapMapping = output.getOutputMapMappingDTO();
             }
             if (expression.getType().equals("registry")) {
                 inline = false;
@@ -559,8 +566,7 @@
 </tr>
 
 <%
-    }
-    if (xmlMapping != null) {
+    } else if (xmlMapping != null) {
 %>
 
 <tr>
@@ -578,8 +584,17 @@
     </td>
 </tr>
 <%
-    }
-    if (tupleMapping != null) {
+    } else if (mapMapping != null) {
+%>
+
+<tr>
+    <td colspan="2">
+        <div class="heading_B"><fmt:message key="map.mapping"/></div>
+    </td>
+</tr>
+
+<%
+    } else if (tupleMapping != null) {
 %>
 
 <tr>

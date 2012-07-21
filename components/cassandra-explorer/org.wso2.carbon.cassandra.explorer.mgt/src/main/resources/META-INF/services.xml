@@ -36,6 +36,6 @@
                              class="org.apache.axis2.rpc.receivers.RPCMessageReceiver"/>
         </messageReceivers>
     </service>
-    <parameter name="adminService" locked="ture">true</parameter>
+    <parameter name="adminService" locked="ture">false</parameter>
     <parameter name="hiddenService" locked="true">true</parameter>
 </serviceGroup>

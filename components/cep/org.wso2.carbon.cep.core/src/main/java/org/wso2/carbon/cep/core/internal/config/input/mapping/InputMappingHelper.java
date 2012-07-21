@@ -63,7 +63,7 @@ public class InputMappingHelper {
                 TupleInputMappingHelper.addMappingToRegistry(registry, (TupleInputMapping) inputMapping, mappingPath);
             } else if (input.getInputMapping() instanceof MapInputMapping) {
                 mappingCollection.addProperty(CEPConstants.CEP_REGISTRY_MAPPING, CEPConstants.CEP_REGISTRY_MAPPING_MAP);
-                registry.put(inputResourcePath + CEPConstants.CEP_REGISTRY_BS + CEPConstants.CEP_REGISTRY_MAPPING_MAP, mappingCollection);
+                registry.put(inputResourcePath + CEPConstants.CEP_REGISTRY_BS + CEPConstants.CEP_REGISTRY_MAPPING, mappingCollection);
                 MapInputMappingHelper.addMappingToRegistry(registry, (MapInputMapping) inputMapping, mappingPath);
             } else {
                 throw new CEPConfigurationException(inputMapping.getStream() + " has not valid input mapping");
@@ -97,6 +97,10 @@ public class InputMappingHelper {
                 mappingCollection.addProperty(CEPConstants.CEP_REGISTRY_MAPPING, CEPConstants.CEP_REGISTRY_MAPPING_TUPLE);
                 registry.put(inputResourcePath + CEPConstants.CEP_REGISTRY_BS + CEPConstants.CEP_REGISTRY_MAPPING, mappingCollection);
                 TupleInputMappingHelper.addMappingToRegistry(registry, (TupleInputMapping) inputMapping, mappingPath);
+            } else if (input.getInputMapping() instanceof MapInputMapping) {
+                mappingCollection.addProperty(CEPConstants.CEP_REGISTRY_MAPPING, CEPConstants.CEP_REGISTRY_MAPPING_MAP);
+                registry.put(inputResourcePath + CEPConstants.CEP_REGISTRY_BS + CEPConstants.CEP_REGISTRY_MAPPING, mappingCollection);
+                MapInputMappingHelper.addMappingToRegistry(registry, (MapInputMapping) inputMapping, mappingPath);
             } else {
                 throw new CEPConfigurationException(inputMapping.getStream() + " has not valid input mapping");
             }

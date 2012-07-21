@@ -1,22 +1,14 @@
 package org.wso2.carbon.cep.core.internal.config.input.mapping;
 
-import org.apache.axiom.om.OMElement;
-import org.wso2.carbon.cep.core.mapping.property.TupleProperty;
-import org.wso2.carbon.cep.core.mapping.property.XMLProperty;
-import org.wso2.carbon.cep.core.internal.util.CEPConstants;
-
-import javax.xml.namespace.QName;
-
-import javax.xml.stream.XMLInputFactory;
-import javax.xml.stream.XMLOutputFactory;
-import javax.xml.stream.XMLStreamException;
-import javax.xml.stream.XMLStreamReader;
-import javax.xml.stream.XMLStreamWriter;
-
 import org.apache.axiom.om.OMAbstractFactory;
 import org.apache.axiom.om.OMElement;
 import org.apache.axiom.om.OMFactory;
-import org.apache.axiom.om.OMNamespace;
+import org.wso2.carbon.cep.core.internal.util.CEPConstants;
+import org.wso2.carbon.cep.core.mapping.property.MapProperty;
+import org.wso2.carbon.cep.core.mapping.property.TupleProperty;
+import org.wso2.carbon.cep.core.mapping.property.XMLProperty;
+
+import javax.xml.namespace.QName;
 
 /**
  * This class will help to build Property object from a given OMElement
@@ -46,6 +38,17 @@ public class PropertyHelper {
 
         property.setName(name);
         property.setDataType(dataType);
+        property.setType(type);
+
+        return property;
+    }
+
+    public static MapProperty mapPropertyFromOM(OMElement propertyElement) {
+        MapProperty property = new MapProperty();
+        String name = propertyElement.getAttributeValue(new QName(CEPConstants.CEP_CONF_ELE_NAME));
+        String type = propertyElement.getAttributeValue(new QName(CEPConstants.CEP_CONF_ELE_TYPE));
+
+        property.setName(name);
         property.setType(type);
 
         return property;

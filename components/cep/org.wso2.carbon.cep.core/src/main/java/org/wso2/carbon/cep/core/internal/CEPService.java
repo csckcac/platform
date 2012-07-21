@@ -119,7 +119,7 @@ public class CEPService implements CEPServiceInterface {
 
             CEPBucket cepBucket = new CEPBucket(cepBackEndRuntime, bucket, axisConfiguration);
             cepBucket.init();
-            CEPRegistryInvoker.addBucketsToRegistry(bucket, tenantId);            
+            CEPRegistryInvoker.addBucketsToRegistry(bucket, tenantId);
 
             Map<String, CEPBucket> buckets = this.tenantSpecificCEPBuckets.get(tenantId);
             if (buckets == null) {

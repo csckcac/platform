@@ -1,35 +1,25 @@
 package org.wso2.carbon.cep.core.internal.config.input;
 
+import org.apache.axiom.om.OMAbstractFactory;
 import org.apache.axiom.om.OMElement;
+import org.apache.axiom.om.OMFactory;
 import org.apache.commons.logging.Log;
 import org.apache.commons.logging.LogFactory;
 import org.wso2.carbon.cep.core.Bucket;
-import org.wso2.carbon.cep.core.mapping.input.Input;
 import org.wso2.carbon.cep.core.exception.CEPConfigurationException;
 import org.wso2.carbon.cep.core.internal.config.input.mapping.InputMappingHelper;
-import org.wso2.carbon.cep.core.internal.config.input.mapping.XMLInputMappingHelper;
-import org.wso2.carbon.cep.core.mapping.input.mapping.XMLInputMapping;
-import org.wso2.carbon.cep.core.internal.config.input.mapping.TupleInputMappingHelper;
 import org.wso2.carbon.cep.core.internal.config.input.mapping.MapInputMappingHelper;
-
+import org.wso2.carbon.cep.core.internal.config.input.mapping.TupleInputMappingHelper;
+import org.wso2.carbon.cep.core.internal.config.input.mapping.XMLInputMappingHelper;
 import org.wso2.carbon.cep.core.internal.util.CEPConstants;
+import org.wso2.carbon.cep.core.mapping.input.Input;
+import org.wso2.carbon.cep.core.mapping.input.mapping.XMLInputMapping;
 import org.wso2.carbon.registry.core.Collection;
 import org.wso2.carbon.registry.core.Registry;
 import org.wso2.carbon.registry.core.exceptions.RegistryException;
 
 import javax.xml.namespace.QName;
 import java.util.List;
-
-import javax.xml.stream.XMLInputFactory;
-import javax.xml.stream.XMLOutputFactory;
-import javax.xml.stream.XMLStreamException;
-import javax.xml.stream.XMLStreamReader;
-import javax.xml.stream.XMLStreamWriter;
-
-import org.apache.axiom.om.OMAbstractFactory;
-import org.apache.axiom.om.OMElement;
-import org.apache.axiom.om.OMFactory;
-import org.apache.axiom.om.OMNamespace;
 
 /**
  * This class helps to build an Input Object from a given OMElement
@@ -75,7 +65,6 @@ public class InputHelper {
                     input.setInputMapping(MapInputMappingHelper.fromOM(mapMappingElement));
                     input.getInputMapping().setStream(mapMappingElement.getAttributeValue(new QName(CEPConstants.CEP_REGISTRY_STREAM)));
                 }
-                log.warn("No input mapping found for topic " + topic);
             }
         }
         return input;

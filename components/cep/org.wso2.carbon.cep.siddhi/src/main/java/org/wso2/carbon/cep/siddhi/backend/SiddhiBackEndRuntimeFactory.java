@@ -20,6 +20,7 @@ import org.wso2.carbon.cep.core.backend.CEPBackEndRuntime;
 import org.wso2.carbon.cep.core.backend.CEPBackEndRuntimeFactory;
 import org.wso2.carbon.cep.core.exception.CEPConfigurationException;
 import org.wso2.carbon.cep.core.mapping.input.mapping.InputMapping;
+import org.wso2.carbon.cep.core.mapping.input.mapping.MapInputMapping;
 import org.wso2.carbon.cep.core.mapping.input.mapping.TupleInputMapping;
 import org.wso2.carbon.cep.core.mapping.input.mapping.XMLInputMapping;
 import org.wso2.carbon.cep.core.mapping.property.Property;
@@ -58,6 +59,9 @@ public class SiddhiBackEndRuntimeFactory implements CEPBackEndRuntimeFactory {
             if (mapping instanceof TupleInputMapping) {
                 TupleInputMapping tupleInputMapping = (TupleInputMapping) mapping;
                 properties = tupleInputMapping.getProperties();
+            } if (mapping instanceof MapInputMapping) {
+                MapInputMapping mapInputMapping = (MapInputMapping) mapping;
+                properties = mapInputMapping.getProperties();
             } else { //Xml mapping
                 XMLInputMapping xmlInputMapping = (XMLInputMapping) mapping;
                 properties = xmlInputMapping.getProperties();

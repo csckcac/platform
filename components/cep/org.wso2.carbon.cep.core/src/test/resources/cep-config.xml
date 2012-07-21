@@ -17,6 +17,14 @@
                               dataType="payload"
                               type="java.lang.Integer"/>
                 </tupleMapping>
+                <mapMapping stream="ServiceStatisticsDataEvent" eventClass="Tuple">
+                    <property name="symbol"
+                              type="java.lang.String"/>
+                    <property name="price"
+                              type="java.lang.Double"/>
+                    <property name="volume"
+                              type="java.lang.Integer"/>
+                </mapMapping>
                 <xmlMapping stream="ServiceStatisticsDataEvent">
                     <xpathDefinition prefix="statdata"
                                      namespace="http://wso2.org/ns/2009/09/bam/service/statistics/data"/>

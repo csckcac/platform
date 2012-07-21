@@ -469,7 +469,7 @@ public class EntitlementExtensionBuilder {
             }
 
             InputStream schemaFileStream = EntitlementExtensionBuilder.class.
-                                                getResourceAsStream(File.separator + schemaFile);
+                                                getResourceAsStream("/"+ schemaFile);
             SchemaFactory schemaFactory = SchemaFactory.newInstance(XMLConstants.W3C_XML_SCHEMA_NS_URI);
             Schema schema = schemaFactory.newSchema(new StreamSource(schemaFileStream));
             configHolder.getPolicySchemaMap().put(schemaNS, schema);

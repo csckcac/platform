@@ -5,7 +5,7 @@
         <bucket name="addStatisticsFusion" engineProvider="DroolsFusionCEPRuntime">
 
             <description>BAMServiceStatisticsDataCEPServiceBucket</description>
-            <input topic="inputTopic" brokerName="wsEventServer" >
+            <input topic="inputTopic" brokerName="wsEventServer">
                 <tupleMapping stream="ServiceStatisticsDataEvent" eventClass="Tuple">
                     <property name="symbol"
                               dataType="payload"
@@ -58,7 +58,7 @@
                           fusionListener.onEvent(serviceStatisticsData);
                 end]]></expression>
                 <output topic="statisticsPublishTopic" brokerName="wsEventServer">
-                    <xmlMapping >
+                    <xmlMapping>
                         <x:ServiceStatisticsData
                                 xmlns:x="http://wso2.org/ns/2009/09/bam/service/statistics/data"
                                 responseCount="{responseCount}">
@@ -78,6 +78,11 @@
                             <property name="volume"/>
                         </payloadData>
                     </tupleMapping>
+                    <mapMapping>
+                        <property name="symbol"/>
+                        <property name="price"/>
+                        <property name="volume"/>
+                    </mapMapping>
                 </output>
             </query>
         </bucket>

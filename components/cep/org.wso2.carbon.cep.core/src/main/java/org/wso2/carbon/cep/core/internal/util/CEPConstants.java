@@ -117,6 +117,7 @@ public interface CEPConstants {
     String CEP_REGISTRY_QUERY_INDEX = "queryIndex";
     String CEP_REGISTRY_EVENT_CLASS = "eventClass";
     String CEP_REGISTRY_DATA_TYPE = "dataType";
+    String CEP_REGISTRY_MAP_MAPPING = "mapMapping";
     String CEP_REGISTRY_TUPLE_MAPPING = "tupleMapping";
     String CEP_REGISTRY_TUPLE_MAPPING_META = "metaData";
     String CEP_REGISTRY_TUPLE_MAPPING_CORRELATION = "correlationData";

@@ -1,32 +1,23 @@
 package org.wso2.carbon.cep.core.internal.config.output;
 
+import org.apache.axiom.om.OMAbstractFactory;
 import org.apache.axiom.om.OMElement;
+import org.apache.axiom.om.OMFactory;
 import org.apache.commons.logging.Log;
 import org.apache.commons.logging.LogFactory;
 import org.wso2.carbon.cep.core.exception.CEPConfigurationException;
 import org.wso2.carbon.cep.core.internal.util.CEPConstants;
 import org.wso2.carbon.cep.core.mapping.output.Output;
 import org.wso2.carbon.cep.core.mapping.output.mapping.ElementOutputMapping;
+import org.wso2.carbon.cep.core.mapping.output.mapping.MapOutputMapping;
 import org.wso2.carbon.cep.core.mapping.output.mapping.TupleOutputMapping;
 import org.wso2.carbon.cep.core.mapping.output.mapping.XMLOutputMapping;
-import org.wso2.carbon.cep.core.mapping.output.mapping.MapOutputMapping;
 import org.wso2.carbon.registry.core.Collection;
 import org.wso2.carbon.registry.core.Registry;
 import org.wso2.carbon.registry.core.Resource;
 import org.wso2.carbon.registry.core.exceptions.RegistryException;
 
 import javax.xml.namespace.QName;
-
-import javax.xml.stream.XMLInputFactory;
-import javax.xml.stream.XMLOutputFactory;
-import javax.xml.stream.XMLStreamException;
-import javax.xml.stream.XMLStreamReader;
-import javax.xml.stream.XMLStreamWriter;
-
-import org.apache.axiom.om.OMAbstractFactory;
-import org.apache.axiom.om.OMElement;
-import org.apache.axiom.om.OMFactory;
-import org.apache.axiom.om.OMNamespace;
 
 /**
  * This class will help to build Output Object from a given OMELement
@@ -170,7 +161,7 @@ public class OutputHelper {
                         ElementOutputMapping elementOutputMapping = ElementOutputMappingHelper.loadElementMappingFromRegistry(registry, outputS);
                         output.setOutputMapping(elementOutputMapping);
 
-                    } else if ((CEPConstants.CEP_REGISTRY_BS + CEPConstants.CEP_REGISTRY_MAPPING_MAP).equals(mapping)) {
+                    } else if ((CEPConstants.CEP_REGISTRY_BS + CEPConstants.CEP_REGISTRY_MAP_MAPPING).equals(mapping)) {
                         MapOutputMapping mapOutputMapping = MapOutputMappingHelper.loadMapMappingFromRegistry(registry, outputS);
                         output.setOutputMapping(mapOutputMapping);
 

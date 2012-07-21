@@ -218,7 +218,7 @@ public class RSSDAOImpl implements RSSDAO {
         Connection conn = RSSConfig.getInstance().getRSSDBConnection();
         DatabaseUser user = new DatabaseUser();
         try {
-            String sql = "SELECT username, RM_SERVER_INSTANCE_name FROM RM_DATABASE_USER WHERE username = ? AND tenant_id=?";
+            String sql = "SELECT username, rss_instance_name FROM RM_DATABASE_USER WHERE username = ? AND tenant_id=?";
             PreparedStatement stmt = conn.prepareStatement(sql);
             stmt.setString(1, username);
             stmt.setInt(2, CarbonContextHolder.getCurrentCarbonContextHolder().getTenantId());
@@ -246,7 +246,7 @@ public class RSSDAOImpl implements RSSDAO {
         Connection conn = RSSConfig.getInstance().getRSSDBConnection();
         try {
             conn.setAutoCommit(false);
-            String sql = "INSERT INTO RM_DATABASE (name, RM_SERVER_INSTANCE_name, tenant_id) VALUES (?, ?, ?)";
+            String sql = "INSERT INTO RM_DATABASE (name, rss_instance_name, tenant_id) VALUES (?, ?, ?)";
             PreparedStatement stmt = conn.prepareStatement(sql);
             stmt.setString(1, database.getName());
             stmt.setString(2, database.getRssInstanceName());
@@ -407,7 +407,7 @@ public class RSSDAOImpl implements RSSDAO {
 
     private List<DatabaseUser> getDatabaseUsersByRSSInstance(
             Connection conn, String rssInstanceName) throws SQLException {
-        String sql = "SELECT username, RM_SERVER_INSTANCE_name, tenant_id FROM RM_DATABASE_USER WHERE RM_SERVER_INSTANCE_name=? AND tenant_id = ?";
+        String sql = "SELECT username, rss_instance_name, tenant_id FROM RM_DATABASE_USER WHERE rss_instance_name=? AND tenant_id = ?";
         PreparedStatement stmt = conn.prepareStatement(sql);
         stmt.setString(1, rssInstanceName);
         stmt.setInt(2, CarbonContextHolder.getCurrentCarbonContextHolder().getTenantId());
@@ -423,7 +423,7 @@ public class RSSDAOImpl implements RSSDAO {
     public List<Database> getAllDatabases(int tid) throws RSSManagerException {
         Connection conn = RSSConfig.getInstance().getRSSDBConnection();
         try {
-            String sql = "SELECT d.name, d.tenant_id, r.name, r.server_url, r.tenant_id FROM RM_SERVER_INSTANCE r, RM_DATABASE d WHERE r.name IN (SELECT RM_SERVER_INSTANCE_name FROM RM_DATABASE) AND r.name=d.RM_SERVER_INSTANCE_name AND d.tenant_id=?";
+            String sql = "SELECT d.name, d.tenant_id, r.name, r.server_url, r.tenant_id FROM RM_SERVER_INSTANCE r, RM_DATABASE d WHERE r.name IN (SELECT rss_instance_name FROM RM_DATABASE) AND r.name=d.rss_instance_name AND d.tenant_id=?";
             PreparedStatement stmt = conn.prepareStatement(sql);
             stmt.setInt(1, tid);
             ResultSet rs = stmt.executeQuery();
@@ -454,7 +454,7 @@ public class RSSDAOImpl implements RSSDAO {
         Connection conn = RSSConfig.getInstance().getRSSDBConnection();
         List<Database> dbs = new ArrayList<Database>();
         try {
-            String sql = "SELECT RM_SERVER_INSTANCE_name, name, tenant_id FROM RM_DATABASE WHERE RM_SERVER_INSTANCE_name = ? AND tenant_id = ?";
+            String sql = "SELECT rss_instance_name, name, tenant_id FROM RM_DATABASE WHERE rss_instance_name = ? AND tenant_id = ?";
             PreparedStatement stmt = conn.prepareStatement(sql);
             stmt.setString(1, rssInstanceName);
             stmt.setInt(2, CarbonContextHolder.getCurrentCarbonContextHolder().getTenantId());
@@ -485,7 +485,7 @@ public class RSSDAOImpl implements RSSDAO {
             throws RSSManagerException {
         Connection conn = RSSConfig.getInstance().getRSSDBConnection();
         try {
-            String sql = "DELETE FROM RM_DATABASE WHERE name = ? AND tenant_id = ? AND RM_SERVER_INSTANCE_name = ?";
+            String sql = "DELETE FROM RM_DATABASE WHERE name = ? AND tenant_id = ? AND rss_instance_name = ?";
             PreparedStatement stmt = conn.prepareStatement(sql);
             stmt.setString(1, databaseName);
             stmt.setInt(2, CarbonContextHolder.getCurrentCarbonContextHolder().getTenantId());
@@ -508,7 +508,7 @@ public class RSSDAOImpl implements RSSDAO {
     @Override
     public void createDatabaseUser(DatabaseUser user) throws RSSManagerException {
         Connection conn = RSSConfig.getInstance().getRSSDBConnection();
-        String sql = "INSERT INTO RM_DATABASE_USER (username, RM_SERVER_INSTANCE_name, tenant_id) VALUES (?, ?, ?)";
+        String sql = "INSERT INTO RM_DATABASE_USER (username, rss_instance_name, tenant_id) VALUES (?, ?, ?)";
         try {
             PreparedStatement stmt = conn.prepareStatement(sql);
             stmt.setString(1, user.getUsername());
@@ -534,7 +534,7 @@ public class RSSDAOImpl implements RSSDAO {
             RSSManagerException {
         Connection conn = RSSConfig.getInstance().getRSSDBConnection();
         try {
-            String sql = "DELETE FROM RM_DATABASE_USER WHERE username = ? AND RM_SERVER_INSTANCE_name = ? AND tenant_id = ?";
+            String sql = "DELETE FROM RM_DATABASE_USER WHERE username = ? AND rss_instance_name = ? AND tenant_id = ?";
             PreparedStatement stmt = conn.prepareStatement(sql);
             stmt.setString(1, username);
             stmt.setString(2, rssInstanceName);
@@ -558,7 +558,7 @@ public class RSSDAOImpl implements RSSDAO {
     public void updateDatabaseUser(DatabaseUser user) throws RSSManagerException {
         Connection conn = RSSConfig.getInstance().getRSSDBConnection();
         try {
-            String sql = "UPDATE RM_DATABASE_USER SET RM_SERVER_INSTANCE_name = ? WHERE username = ?";
+            String sql = "UPDATE RM_DATABASE_USER SET rss_instance_name = ? WHERE username = ?";
             PreparedStatement stmt = conn.prepareStatement(sql);
             stmt.setString(1, user.getRssInstanceName());
             stmt.setString(2, user.getUsername());
@@ -582,7 +582,7 @@ public class RSSDAOImpl implements RSSDAO {
         Connection conn = RSSConfig.getInstance().getRSSDBConnection();
         List<DatabaseUser> users = new ArrayList<DatabaseUser>();
         try {
-            String sql = "SELECT username, RM_SERVER_INSTANCE_name, tenant_id FROM RM_DATABASE_USER WHERE tenant_id = ?";
+            String sql = "SELECT username, rss_instance_name, tenant_id FROM RM_DATABASE_USER WHERE tenant_id = ?";
             PreparedStatement stmt = conn.prepareStatement(sql);
             stmt.setInt(1, tid);
             ResultSet rs = stmt.executeQuery();
@@ -609,7 +609,7 @@ public class RSSDAOImpl implements RSSDAO {
         Connection conn = RSSConfig.getInstance().getRSSDBConnection();
         List<DatabaseUser> users = new ArrayList<DatabaseUser>();
         try {
-            String sql = "SELECT username, RM_SERVER_INSTANCE_name, tenant_id FROM RM_DATABASE_USER WHERE tenant_id = ? AND RM_SERVER_INSTANCE_name = ?";
+            String sql = "SELECT username, rss_instance_name, tenant_id FROM RM_DATABASE_USER WHERE tenant_id = ? AND rss_instance_name = ?";
             PreparedStatement stmt = conn.prepareStatement(sql);
             stmt.setInt(1, CarbonContextHolder.getCurrentCarbonContextHolder().getTenantId());
             stmt.setString(2, rssInstanceName);
@@ -636,7 +636,7 @@ public class RSSDAOImpl implements RSSDAO {
             String rssInstanceName, String databaseName) throws RSSManagerException {
         List<String> availableUsers = new ArrayList<String>();
         Connection conn = RSSConfig.getInstance().getRSSDBConnection();
-        String sql = "(SELECT username FROM RM_DATABASE_USER WHERE RM_SERVER_INSTANCE_name = ? AND tenant_id = ?) INTERSECT (SELECT username, RM_SERVER_INSTANCE_name FROM RM_USER_DATABASE_ENTRY WHERE RM_SERVER_INSTANCE_name = ? AND database_name = ?)";
+        String sql = "(SELECT username FROM RM_DATABASE_USER WHERE rss_instance_name = ? AND tenant_id = ?) INTERSECT (SELECT username, rss_instance_name FROM RM_USER_DATABASE_ENTRY WHERE rss_instance_name = ? AND database_name = ?)";
         try {
             PreparedStatement stmt = conn.prepareStatement(sql);
             stmt.setString(1, rssInstanceName);
@@ -659,7 +659,7 @@ public class RSSDAOImpl implements RSSDAO {
             String rssInstanceName, String databaseName) throws RSSManagerException {
         List<String> attachedUsers = new ArrayList<String>();
         Connection conn = RSSConfig.getInstance().getRSSDBConnection();
-        String sql = "SELECT username FROM RM_USER_DATABASE_ENTRY WHERE RM_SERVER_INSTANCE_name = ? AND database_name = ?";
+        String sql = "SELECT username FROM RM_USER_DATABASE_ENTRY WHERE rss_instance_name = ? AND database_name = ?";
         try {
             PreparedStatement stmt = conn.prepareStatement(sql);
             stmt.setString(1, rssInstanceName);
@@ -738,14 +738,14 @@ public class RSSDAOImpl implements RSSDAO {
         try {
             conn.setAutoCommit(false);
             /* delete permissions first */
-            String sql = "DELETE FROM RM_USER_DATABASE_PERMISSION WHERE username = ? AND RM_SERVER_INSTANCE_name = ?";
+            String sql = "DELETE FROM RM_USER_DATABASE_PERMISSION WHERE username = ? AND rss_instance_name = ?";
             PreparedStatement stmt = conn.prepareStatement(sql);
             stmt.setString(1, username);
             stmt.setString(2, rssInstanceName);
             stmt.executeUpdate();
 
             /* now delete the user-database-entry */
-            sql = "DELETE FROM RM_USER_DATABASE_ENTRY WHERE username = ? AND RM_SERVER_INSTANCE_name = ?";
+            sql = "DELETE FROM RM_USER_DATABASE_ENTRY WHERE username = ? AND rss_instance_name = ?";
             stmt = conn.prepareStatement(sql);
             stmt.setString(1, username);
             stmt.setString(1, rssInstanceName);
@@ -869,7 +869,7 @@ public class RSSDAOImpl implements RSSDAO {
 //                                           String permName,
 //                                           String permValue,
 //                                           String rssInstanceName) throws SQLException {
-//        String sql = "INSERT INTO RM_USER_DATABASE_PERMISSION (perm_name, perm_value, username, database_name, RM_SERVER_INSTANCE_name) VALUES (?, ?, ?, ?, ?)";
+//        String sql = "INSERT INTO RM_USER_DATABASE_PERMISSION (perm_name, perm_value, username, database_name, rss_instance_name) VALUES (?, ?, ?, ?, ?)";
 //        PreparedStatement stmt = conn.prepareStatement(sql);
 //        stmt.setString(1, permName);
 //        stmt.setString(2, permValue);
@@ -884,7 +884,7 @@ public class RSSDAOImpl implements RSSDAO {
 //                                              String databaseName,
 //                                              String permName,
 //                                              String rssInstanceName) throws SQLException {
-//        String sql = "DELETE FROM RM_USER_DATABASE_PERMISSION WHERE perm_name = ? AND username = ? AND database_name = ? AND RM_SERVER_INSTANCE_name = ?";
+//        String sql = "DELETE FROM RM_USER_DATABASE_PERMISSION WHERE perm_name = ? AND username = ? AND database_name = ? AND rss_instance_name = ?";
 //        PreparedStatement stmt = conn.prepareStatement(sql);
 //        stmt.setString(1, permName);
 //        stmt.setString(2, username);
@@ -901,7 +901,7 @@ public class RSSDAOImpl implements RSSDAO {
         DatabasePrivilegeSet privileges = new DatabasePrivilegeSet();
         PreparedStatement stmt;
         try {
-            String sql = "SELECT select_priv, insert_priv, update_priv, delete_priv, create_priv, drop_priv, grant_priv, references_priv, index_priv, alter_priv, create_tmp_table_priv, lock_tables_priv, create_view_priv, show_view_priv, create_routine_priv, alter_routine_priv, execute_priv, event_priv, trigger_priv FROM RM_USER_DATABASE_PRIVILEGE WHERE username = ? AND database_name = ? AND RM_SERVER_INSTANCE_name = ?";
+            String sql = "SELECT select_priv, insert_priv, update_priv, delete_priv, create_priv, drop_priv, grant_priv, references_priv, index_priv, alter_priv, create_tmp_table_priv, lock_tables_priv, create_view_priv, show_view_priv, create_routine_priv, alter_routine_priv, execute_priv, event_priv, trigger_priv FROM RM_USER_DATABASE_PRIVILEGE WHERE username = ? AND database_name = ? AND rss_instance_name = ?";
             stmt = conn.prepareStatement(sql);
             stmt.setString(1, username);
             stmt.setString(2, databaseName);
@@ -960,7 +960,7 @@ public class RSSDAOImpl implements RSSDAO {
             String rssInstanceName, String databaseName) throws RSSManagerException {
         Connection conn = RSSConfig.getInstance().getRSSDBConnection();
         try {
-            String sql = "SELECT username, database_name, RM_SERVER_INSTANCE_name FROM RM_USER_DATABASE_ENTRY where database_name = ? AND RM_SERVER_INSTANCE_name = ? ";
+            String sql = "SELECT username, database_name, rss_instance_name FROM RM_USER_DATABASE_ENTRY where database_name = ? AND rss_instance_name = ? ";
             PreparedStatement stmt = conn.prepareStatement(sql);
             stmt.setString(1, databaseName);
             stmt.setString(2, rssInstanceName);

@@ -43,10 +43,12 @@ public class SAMLSSOUIBundleActivator implements BundleActivator {
         } catch (Exception e) {
             SAMLSSOUIUtil.setSingleLogoutRetryCount(defaultSingleLogoutRetryCount);
             SAMLSSOUIUtil.setSingleLogoutRetryInterval(defaultSingleLogoutRetryInterval);
-            log.warn("Failed to activate SAMLSSOUIBundle Activator," +
-                     " which load the single logout retry count and interval values." +
-                     " And default values for retry count: " + defaultSingleLogoutRetryCount +
-                     " and interval: " + defaultSingleLogoutRetryInterval + " will be used.");
+            if (log.isDebugEnabled()) {
+                log.debug("Failed to activate SAMLSSOUIBundle Activator," +
+                        " which load the single logout retry count and interval values." +
+                        " And default values for retry count: " + defaultSingleLogoutRetryCount +
+                        " and interval: " + defaultSingleLogoutRetryInterval + " will be used.");
+            }
         }
     }
 

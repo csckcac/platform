@@ -45,6 +45,9 @@ import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 import java.util.concurrent.ConcurrentHashMap;
+import java.util.concurrent.Executors;
+import java.util.concurrent.ScheduledExecutorService;
+import java.util.concurrent.TimeUnit;
 
 /**
  * Siddhi based CEP back end runtime.
@@ -57,6 +60,8 @@ public class SiddhiBackEndRuntime implements CEPBackEndRuntime {
     private SiddhiManager siddhiManager;
     private Map<String, InputHandler> siddhiInputHandlerMap;
     private Map<String, String> queryReferenceMap;
+    private ScheduledExecutorService persistenceScheduler = Executors.newScheduledThreadPool(1);
+
     //    private Map<String, StreamReference> queryReferenceMap;
     private int tenantId;
 
@@ -240,12 +245,34 @@ public class SiddhiBackEndRuntime implements CEPBackEndRuntime {
 //        }
     }
 
+    @Override
+    public void init() {
+        //todo make it configurable
+        siddhiManager.restoreLastRevision();
+        persistenceScheduler.scheduleWithFixedDelay(new PersistenceWorker(siddhiManager),1,1, TimeUnit.MINUTES);
+
+    }
+
     private String readSourceTextFromRegistry(String key) throws RegistryException {
         Registry registry = CEPServiceValueHolder.getInstance().getRegistry(tenantId);
         Resource resource = registry.get(key);
         String content = new String((byte[]) resource.getContent());
         return content;
 
+    }
+
+    class PersistenceWorker implements Runnable {
+        private SiddhiManager siddhiManager;
+
+        PersistenceWorker(SiddhiManager siddhiManager) {
+            this.siddhiManager = siddhiManager;
+        }
+
+        @Override
+        public void run() {
+            log.info("Siddhi persisting sates of bucket "+bucketName);
+            siddhiManager.persist();
+        }
     }
 
 

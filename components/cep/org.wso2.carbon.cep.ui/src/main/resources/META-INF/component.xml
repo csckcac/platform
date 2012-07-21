@@ -24,7 +24,7 @@
             <parent-menu>manage_menu</parent-menu>
             <link>#</link>
             <region>region1</region>
-            <order>30</order>
+            <order>23</order>
             <style-class>home</style-class>
             <icon>../CEP/images/cep-buckets.gif</icon>
             <require-permission>/permission/admin/login</require-permission>
@@ -36,7 +36,7 @@
             <parent-menu>cep_service_menu</parent-menu>
             <link>../CEP/cep_deployed_buckets.jsp</link>
             <region>region1</region>
-            <order>30</order>
+            <order>23</order>
             <style-class>home</style-class>
             <icon>../CEP/images/list.gif</icon>
             <require-permission>/permission/admin/login</require-permission>
@@ -48,7 +48,7 @@
             <parent-menu>cep_service_menu</parent-menu>
             <link>../CEP/cep_buckets.jsp</link>
             <region>region1</region>
-            <order>35</order>
+            <order>27</order>
             <style-class>home</style-class>
             <icon>../CEP/images/add.gif</icon>
             <require-permission>/permission/admin/manage/cep/addBucket</require-permission>

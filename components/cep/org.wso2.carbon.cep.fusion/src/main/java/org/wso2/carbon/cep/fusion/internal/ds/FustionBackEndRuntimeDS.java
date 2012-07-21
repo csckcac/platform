@@ -40,18 +40,23 @@ public class FustionBackEndRuntimeDS {
     private CEPEngineProvider droolsFusionCEPEngineProvider = null;
 
     protected void activate(ComponentContext context) {
-        if (droolsFusionCEPEngineProvider == null) {
-            // registers with the cep service
-            droolsFusionCEPEngineProvider = new CEPEngineProvider();
-            droolsFusionCEPEngineProvider.setName("DroolsFusionCEPRuntime");
-            droolsFusionCEPEngineProvider.setProviderClass(FusionBackEndRuntimeFactory.class);
+        try {
+            if (droolsFusionCEPEngineProvider == null) {
+                // registers with the cep service
+                droolsFusionCEPEngineProvider = new CEPEngineProvider();
+                droolsFusionCEPEngineProvider.setName("DroolsFusionCEPRuntime");
+                droolsFusionCEPEngineProvider.setProviderClass(FusionBackEndRuntimeFactory.class);
 
-            try {
-                FusionBackEndRuntimeValueHolder.getInstance().getCEPService()
-                        .registerCEPEngineProvider(droolsFusionCEPEngineProvider);
-            } catch (CEPConfigurationException e) {
-                log.error("Can not register Fusion back end runtime with the cep service ", e);
+                try {
+                    FusionBackEndRuntimeValueHolder.getInstance().getCEPService()
+                            .registerCEPEngineProvider(droolsFusionCEPEngineProvider);
+                } catch (CEPConfigurationException e) {
+                    log.error("Can not register Fusion back end runtime with the cep service ", e);
+                }
             }
+        } catch (Throwable e) {
+            log.error("Can not register Fusion back end runtime with the cep service ", e);
+
         }
 
     }

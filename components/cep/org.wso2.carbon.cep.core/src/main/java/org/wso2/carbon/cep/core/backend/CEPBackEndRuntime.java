@@ -84,5 +84,10 @@ public interface CEPBackEndRuntime {
      * @param input
      */
     void removeInput(Input input) throws CEPConfigurationException;
+
+    /**
+     * Called after adding all inputs and queries
+     */
+    void init();
 }
 

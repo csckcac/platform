@@ -108,8 +108,8 @@ public class XMLInputMapping extends InputMapping {
         Event tupleEvent = new Event();
         tupleEvent.setStreamId(this.getStream());
         tupleEvent.setTimeStamp(System.currentTimeMillis());
-        ((Event) event).setPayloadData(eventData);
-        return (Event) event;
+        ((Event) tupleEvent).setPayloadData(eventData);
+        return (Event) tupleEvent;
     }
 
     public static Object getValue(OMElement eventOMElement,

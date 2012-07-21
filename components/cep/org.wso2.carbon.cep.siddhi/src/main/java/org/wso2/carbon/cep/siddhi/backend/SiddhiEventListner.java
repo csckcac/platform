@@ -60,5 +60,8 @@ public class SiddhiEventListner extends Callback {
         if (inEvents != null) {
             cepEventListener.onComplexEvent(toMap(inEvents));
         }
+        if (removeEvents != null) {
+            cepEventListener.onComplexEvent(toMap(removeEvents));
+        }
     }
 }

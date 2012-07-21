@@ -27,16 +27,15 @@ import org.wso2.carbon.cep.core.Query;
 import org.wso2.carbon.cep.core.backend.CEPBackEndRuntime;
 import org.wso2.carbon.cep.core.exception.CEPConfigurationException;
 import org.wso2.carbon.cep.core.exception.CEPEventProcessingException;
-import org.wso2.carbon.cep.core.mapping.input.Input;
-import org.wso2.carbon.cep.core.mapping.input.mapping.InputMapping;
 import org.wso2.carbon.cep.core.internal.config.BrokerConfigurationHelper;
 import org.wso2.carbon.cep.core.internal.ds.CEPServiceValueHolder;
 import org.wso2.carbon.cep.core.listener.BrokerEventListener;
 import org.wso2.carbon.cep.core.listener.CEPEventListener;
 import org.wso2.carbon.cep.core.listener.TopicEventListener;
+import org.wso2.carbon.cep.core.mapping.input.Input;
+import org.wso2.carbon.cep.core.mapping.input.mapping.InputMapping;
 import org.wso2.carbon.core.multitenancy.SuperTenantCarbonContext;
 
-import java.util.HashMap;
 import java.util.Map;
 
 /**
@@ -90,6 +89,7 @@ public class CEPBucket {
                 processQuery(queries.get(i));
             }
         }
+        this.cepBackEndRuntime.init();
     }
 
     public void processQuery(Query query) throws CEPConfigurationException {

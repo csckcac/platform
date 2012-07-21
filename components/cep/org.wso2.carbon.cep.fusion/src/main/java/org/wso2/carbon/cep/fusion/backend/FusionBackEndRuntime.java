@@ -189,6 +189,11 @@ public class FusionBackEndRuntime implements CEPBackEndRuntime {
         //Todo Implement
     }
 
+    @Override
+    public void init() {
+        //todo Implement
+    }
+
     private String readSourceTextFromRegistry(String key) throws RegistryException {
         Registry registry = CEPServiceValueHolder.getInstance().getRegistry(tenantId);
         Resource resource = registry.get(key);

@@ -16,42 +16,79 @@
 
 package org.wso2.carbon.cep.siddhi.internal.ds;
 
+import me.prettyprint.hector.api.Cluster;
 import org.apache.commons.logging.Log;
 import org.apache.commons.logging.LogFactory;
 import org.osgi.service.component.ComponentContext;
+import org.wso2.carbon.cassandra.dataaccess.ClusterInformation;
+import org.wso2.carbon.cassandra.dataaccess.DataAccessService;
 import org.wso2.carbon.cep.core.CEPServiceInterface;
 import org.wso2.carbon.cep.core.backend.CEPEngineProvider;
 import org.wso2.carbon.cep.core.exception.CEPConfigurationException;
 import org.wso2.carbon.cep.siddhi.backend.SiddhiBackEndRuntimeFactory;
+import org.wso2.carbon.cep.siddhi.persistence.CasandraPersistenceStore;
+import org.wso2.carbon.user.core.UserRealm;
+import org.wso2.carbon.user.core.UserStoreException;
+import org.wso2.siddhi.core.persistence.PersistenceStore;
 
 /**
  * @scr.component name="siddhibackend.component" immediate="true"
  * @scr.reference name="cep.service"
  * interface="org.wso2.carbon.cep.core.CEPServiceInterface" cardinality="1..1"
  * policy="dynamic" bind="setCEPService" unbind="unSetCEPService"
+ * @scr.reference name="user.realm.delegating" interface="org.wso2.carbon.user.core.UserRealm"
+ * cardinality="1..1" policy="dynamic" bind="setUserRealm" unbind="unsetUserRealm"
+ * @scr.reference name="dataaccess.service" interface="org.wso2.carbon.cassandra.dataaccess.DataAccessService"
+ * cardinality="1..1" policy="dynamic" bind="setDataAccessService" unbind="unsetDataAccessService"
  */
 
 public class SiddhiBackendRuntimeDS {
 
     private static final Log log = LogFactory.getLog(SiddhiBackendRuntimeDS.class);
 
-    private CEPEngineProvider cepEngineProvider=null;
+    private PersistenceStore casandraPersistenceStore = null;
+    private UserRealm userRealm;
+    private DataAccessService dataAccessService;
+    private String clusterName = null;
 
     protected void activate(ComponentContext context) {
-        if (cepEngineProvider == null) {
+        if (SiddhiBackendRuntimeValueHolder.getInstance().getCEPEngineProvider() == null) {
             // registers with the cep service
-            cepEngineProvider = new CEPEngineProvider();
-            cepEngineProvider.setName("SiddhiCEPRuntime");
-            cepEngineProvider.setProviderClass(SiddhiBackEndRuntimeFactory.class);
-
             try {
+                CEPEngineProvider cepEngineProvider = new CEPEngineProvider();
+                cepEngineProvider.setName("SiddhiCEPRuntime");
+                cepEngineProvider.setProviderClass(SiddhiBackEndRuntimeFactory.class);
+                SiddhiBackendRuntimeValueHolder.getInstance().setCEPEngineProvider(cepEngineProvider);
+                String adminPassword = userRealm.getRealmConfiguration().getAdminPassword();
+                String adminUserName = userRealm.getRealmConfiguration().getAdminUserName();
+//           int tenantId =userRealm.getRealmConfiguration().getTenantId();
+
+                ClusterInformation clusterInformation = new ClusterInformation(adminUserName,
+                                                                               adminPassword);
+                clusterInformation.setClusterName("SiddhiPersistenceCluster");
+                Cluster cluster = dataAccessService.getCluster(clusterInformation);
+                clusterName = cluster.getName();
+                casandraPersistenceStore = new CasandraPersistenceStore(cluster);
+                SiddhiBackendRuntimeValueHolder.getInstance().setPersistenceStore(casandraPersistenceStore);
+
                 SiddhiBackendRuntimeValueHolder.getInstance().getCEPService()
                         .registerCEPEngineProvider(cepEngineProvider);
             } catch (CEPConfigurationException e) {
-                log.error("Can not register Fusion back end runtime with the cep service ");
+                log.error("Can not register Siddhi back end runtime with the cep service ");
+            } catch (UserStoreException e) {
+                log.error("Error in accessing user store ", e);
+            } catch (Throwable e){
+                log.error("Error in registering Siddhi back end runtime with the cep service ",e);
             }
         }
 
+    }
+
+    protected void deactivate(ComponentContext context) {
+        if (dataAccessService != null && clusterName != null) {
+            dataAccessService.destroyCluster(clusterName);
+            clusterName = null;
+        }
     }
 
     protected void setCEPService(CEPServiceInterface cepService) {
@@ -61,5 +98,23 @@ public class SiddhiBackendRuntimeDS {
     protected void unSetCEPService(CEPServiceInterface cepService) {
 
     }
+
+    protected void setUserRealm(UserRealm userRealm) {
+        this.userRealm = userRealm;
+    }
+
+    protected void unsetUserRealm(UserRealm userRealm) {
+        this.userRealm = null;
+
+    }
+
+    protected void setDataAccessService(DataAccessService dataAccessService) {
+        this.dataAccessService = dataAccessService;
+    }
+
+    protected void unsetDataAccessService(DataAccessService dataAccessService) {
+        this.dataAccessService = null;
+    }
+
 
 }

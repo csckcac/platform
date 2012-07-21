@@ -23,6 +23,7 @@ import org.wso2.carbon.cep.core.mapping.input.mapping.InputMapping;
 import org.wso2.carbon.cep.core.mapping.input.mapping.TupleInputMapping;
 import org.wso2.carbon.cep.core.mapping.input.mapping.XMLInputMapping;
 import org.wso2.carbon.cep.core.mapping.property.Property;
+import org.wso2.carbon.cep.siddhi.internal.ds.SiddhiBackendRuntimeValueHolder;
 import org.wso2.siddhi.core.SiddhiManager;
 import org.wso2.siddhi.core.config.SiddhiConfiguration;
 import org.wso2.siddhi.core.stream.input.InputHandler;
@@ -41,8 +42,10 @@ public class SiddhiBackEndRuntimeFactory implements CEPBackEndRuntimeFactory {
             throws CEPConfigurationException {
 
         SiddhiConfiguration siddhiConfig=new SiddhiConfiguration();
-        siddhiConfig.setSingleThreading(false);
+        siddhiConfig.setSingleThreading(true); //todo check which is good?
+        siddhiConfig.setExecutionPlanIdentifier(bucketName );
         SiddhiManager siddhiManager = new SiddhiManager(siddhiConfig);
+        siddhiManager.setPersistStore(SiddhiBackendRuntimeValueHolder.getInstance().getPersistenceStore());
 
         Map<String, InputHandler> siddhiInputHandlerMap = new HashMap<String, InputHandler>();
 

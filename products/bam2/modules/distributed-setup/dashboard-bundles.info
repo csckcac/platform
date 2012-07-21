@@ -192,7 +192,6 @@ org.wso2.carbon.cassandra.explorer.ui,4.0.0.SNAPSHOT,plugins/org.wso2.carbon.cas
 org.wso2.carbon.cassandra.mgt,4.0.0.SNAPSHOT,plugins/org.wso2.carbon.cassandra.mgt_4.0.0.SNAPSHOT.jar,4,true
 org.wso2.carbon.cassandra.mgt.stub,4.0.0.SNAPSHOT,plugins/org.wso2.carbon.cassandra.mgt.stub_4.0.0.SNAPSHOT.jar,4,true
 org.wso2.carbon.cassandra.mgt.ui,4.0.0.SNAPSHOT,plugins/org.wso2.carbon.cassandra.mgt.ui_4.0.0.SNAPSHOT.jar,4,true
-org.wso2.carbon.cassandra.server,4.0.0.SNAPSHOT,plugins/org.wso2.carbon.cassandra.server_4.0.0.SNAPSHOT.jar,4,true
 org.wso2.carbon.cassandra.sharedkey,4.0.0.SNAPSHOT,plugins/org.wso2.carbon.cassandra.sharedkey_4.0.0.SNAPSHOT.jar,4,true
 org.wso2.carbon.cluster.mgt.core,4.0.0.SNAPSHOT,plugins/org.wso2.carbon.cluster.mgt.core_4.0.0.SNAPSHOT.jar,4,true
 org.wso2.carbon.context,4.0.0.SNAPSHOT,plugins/org.wso2.carbon.context_4.0.0.SNAPSHOT.jar,4,true

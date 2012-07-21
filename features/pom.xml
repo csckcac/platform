@@ -142,7 +142,6 @@
          <module>tenantaware-load-balancer</module>
          <module>gadgetgen-wizard</module>
          <module>cassandra-explorer</module>
-         <module>event-bridge</module>
          <module>data-bridge</module>
 	     <module>ndatasource</module>
 	     <module>jaggery</module>

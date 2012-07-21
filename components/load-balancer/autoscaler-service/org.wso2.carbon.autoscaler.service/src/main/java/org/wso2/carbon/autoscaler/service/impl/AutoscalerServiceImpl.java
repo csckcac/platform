@@ -29,8 +29,6 @@ import java.io.FileWriter;
 import java.io.IOException;
 import java.io.InputStream;
 import java.io.InputStreamReader;
-import java.io.OutputStream;
-import java.io.Reader;
 import java.util.ArrayList;
 import java.util.Collections;
 import java.util.Comparator;
@@ -78,7 +76,20 @@ import org.wso2.carbon.utils.CarbonUtils;
  */
 public class AutoscalerServiceImpl implements IAutoscalerService {
 
-    private static final Log log = LogFactory.getLog(AutoscalerServiceImpl.class);
+	private static final String VALUE_SEPARATOR = "=";
+
+	private static final String ENTRY_SEPARATOR = ",";
+
+	private static final String APP_PATH_KEY = "APP_PATH";
+
+	private static final String TENANT_KEY = "TENANT";
+
+	/**
+	 * Super tenant id
+	 */
+    private static final String SUPER_TENANT_ID = "-1234";
+
+	private static final Log log = LogFactory.getLog(AutoscalerServiceImpl.class);
 
     /**
      * pointer to Carbon Home directory.
@@ -629,7 +640,7 @@ public class AutoscalerServiceImpl implements IAutoscalerService {
             }
             if(tenantId != null) {
             	// Tenant Id is available. This is an spi scenario. Edit the payload content
-            	editPayloadContent(tenantId,file);
+            	editPayload(tenantId,file);
             }
             bytes = getBytesFromFile(file);
 
@@ -640,7 +651,7 @@ public class AutoscalerServiceImpl implements IAutoscalerService {
     }
 
     
-    private void editPayloadContent(String tenantName, File file) {
+    private void editPayload(String tenantName, File file) {
 		
     	unzipFile(file);
     	editContent(tenantName, file);
@@ -716,7 +727,7 @@ public class AutoscalerServiceImpl implements IAutoscalerService {
 
 		File f = new File(CARBON_HOME + File.separator + "tmpPayload"
 				+ File.separator + "payload" + File.separator
-				+ "debian_cron_script.sh");
+				+ "launch-params");
 
 		FileInputStream fs = null;
 		InputStreamReader in = null;
@@ -732,19 +743,11 @@ public class AutoscalerServiceImpl implements IAutoscalerService {
 			br = new BufferedReader(in);
 
 			while (true) {
-				textinLine = br.readLine();
 				
-				if (textinLine == null)
-					break;				
-				if(textinLine.contains("tenant=")){
-					sb.append("tenant=" + tenantName + "\n");
-					continue;
-				}
-				if(textinLine.contains("app_path=")){
-					sb.append(textinLine + File.separator + tenantName);
-					continue;
-				}
-				sb.append(textinLine + "\n");
+				textinLine=br.readLine();
+	            if(textinLine==null)
+	                break;
+	            sb.append(editLine(textinLine, tenantName));
 			}
 		} catch (Exception e) {
 			log.error("Exception is occurred in editing payload content. Reason: "+e.getMessage());
@@ -756,6 +759,71 @@ public class AutoscalerServiceImpl implements IAutoscalerService {
 		}
 
 		writeChangesBackToFile(f, sb);
+	}
+
+
+	private String editLine(String textinLine, String tenantName) {
+		
+		// Format of the line will be <IP>=<IPvalue>,<Path>=<PathValue>..
+		
+		StringBuffer outputBuffer = new StringBuffer();
+		Map<String, String> paramMap = new HashMap<String, String>();
+		String[] params = textinLine.split(ENTRY_SEPARATOR);
+
+		for (int i = 0; i < params.length; i++) {
+
+			// split the params one by one
+			String param = params[i];
+			String[] values = param.split(VALUE_SEPARATOR);
+			
+			if(values.length != 2) {
+				throw new AutoscalerServiceException("Incorrect format in parameters file");
+			}
+			
+			String key = values[0];
+			String value = values[1];
+
+			String updatedValue = value;
+
+			if (TENANT_KEY.equals(key)) {
+				updatedValue = tenantName;
+			} else if (APP_PATH_KEY.equals(key)) {
+				updatedValue = getAppPathForTenant(tenantName,value);
+			} 
+			paramMap.put(key, updatedValue);
+		}
+
+		// Loop through the map and put values into a string
+		reOrganizeContent(outputBuffer, paramMap);
+
+		// cleanup output buffer
+		if (outputBuffer.substring(0, 1).equals(ENTRY_SEPARATOR)) {
+			outputBuffer.delete(0, 1);
+		}
+
+		return outputBuffer.toString();
+	}
+
+
+	private void reOrganizeContent(StringBuffer outputBuffer, Map<String, String> paramMap) {
+		
+		for (Map.Entry<String, String> entry : paramMap.entrySet()) {
+			outputBuffer.append(ENTRY_SEPARATOR).append(entry.getKey()).append(VALUE_SEPARATOR)
+																		.append(entry.getValue());
+		}
+	}
+
+
+	private String getAppPathForTenant(String tenantName, String appPath) {
+		// Assumes app path is /opt/wso2-app/repository/
+		StringBuffer updatedAppPath = new StringBuffer();
+		if(tenantName.equals(SUPER_TENANT_ID)){ 
+			updatedAppPath.append(appPath).append("deployment").append(File.separator).append("server")
+															   .append(File.separator).append("phpapps");
+		}else{
+			updatedAppPath.append(appPath).append(tenantName).append(File.separator).append("phpapps");
+		}
+		return updatedAppPath.toString();
 	}
 
 
@@ -1010,7 +1078,7 @@ public class AutoscalerServiceImpl implements IAutoscalerService {
 
             template.getOptions()
                     .as(NovaTemplateOptions.class)
-                    .securityGroupNames(temp.getProperty("securityGroups").split(","));
+                    .securityGroupNames(temp.getProperty("securityGroups").split(ENTRY_SEPARATOR));
 
             if (temp.getProperty("payload") != null) {
                 template.getOptions()
@@ -1075,7 +1143,7 @@ public class AutoscalerServiceImpl implements IAutoscalerService {
 
             template.getOptions()
                     .as(AWSEC2TemplateOptions.class)
-                    .securityGroups(temp.getProperty("securityGroups").split(","));
+                    .securityGroups(temp.getProperty("securityGroups").split(ENTRY_SEPARATOR));
 
             if (temp.getProperty("payload") != null) {
                 template.getOptions()
@@ -1116,7 +1184,7 @@ public class AutoscalerServiceImpl implements IAutoscalerService {
             str = iaases.name() + ", ";
         }
         str = str.trim();
-        return str.endsWith(",") ? str.substring(0, str.length() - 1) : str;
+        return str.endsWith(ENTRY_SEPARATOR) ? str.substring(0, str.length() - 1) : str;
     }
 
     @SuppressWarnings("unchecked")

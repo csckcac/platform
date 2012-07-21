@@ -682,15 +682,21 @@ public class RSSDAOImpl implements RSSDAO {
         Connection conn = RSSConfig.getInstance().getRSSDBConnection();
         try {
             conn.setAutoCommit(false);
-            String sql = "INSERT INTO RM_USER_DATABASE_ENTRY (username, database_name, rss_instance_name) VALUES (?, ?, ?)";
+            String sql = "INSERT INTO RM_USER_DATABASE_ENTRY (username, database_name, rss_instance_name, tenant_id) VALUES (?, ?, ?, ?)";
             PreparedStatement stmt = conn.prepareStatement(sql);
             stmt.setString(1, userDBEntry.getUsername());
             stmt.setString(2, userDBEntry.getDatabaseName());
             stmt.setString(3, userDBEntry.getRssInstanceName());
+            stmt.setInt(4, CarbonContextHolder.getCurrentCarbonContextHolder().getTenantId());
             stmt.executeUpdate();
             this.setUserDatabasePrivileges(conn, userDBEntry);
             conn.commit();
         } catch (SQLException e) {
+            try {
+                conn.rollback();
+            } catch (SQLException e1) {
+                log.error(e1);
+            }
             throw new RSSManagerException("Error occurred while adding new user-database-entry", e);
         } finally {
             try {
@@ -719,6 +725,11 @@ public class RSSDAOImpl implements RSSDAO {
             this.updateUserDatabasePrivileges(conn, userDBEntry);
             conn.commit();
         } catch (SQLException e) {
+            try {
+                conn.rollback();
+            } catch (SQLException e1) {
+                log.error(e1);
+            }
             throw new RSSManagerException("Error occurred while updating user-database-entry", e);
         } finally {
             try {
@@ -788,6 +799,11 @@ public class RSSDAOImpl implements RSSDAO {
             stmt.executeUpdate();
             conn.commit();
         } catch (SQLException e) {
+            try {
+                conn.rollback();
+            } catch (SQLException e1) {
+                log.error(e1);
+            }
             throw new RSSManagerException("Error occurred while incrementing system RSS " +
                     "database count", e);
         } finally {
@@ -1090,7 +1106,7 @@ public class RSSDAOImpl implements RSSDAO {
     private void setUserDatabasePrivileges(
             Connection conn, UserDatabaseEntry entry) throws SQLException {
         DatabasePrivilegeSet privileges = entry.getPrivileges();
-        String sql = "INSERT INTO RM_USER_DATABASE_PRIVILEGE(username, database_name, rss_instance_name, tenant_id, select_priv, insert_priv, update_priv, delete_priv, create_priv, drop_priv, grant_priv, references_priv, index_priv, alter_priv, create_tmp_table_priv, lock_tables_priv, create_view_priv, show_view_priv, create_routine_priv, alter_routine_priv, execute_priv, event_priv, trigger_priv) VALUES(?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?)";
+        String sql = "INSERT INTO RM_USER_DATABASE_PRIVILEGE(username, database_name, rss_instance_name, tenant_id, select_priv, insert_priv, update_priv, delete_priv, create_priv, drop_priv, grant_priv, references_priv, index_priv, alter_priv, create_tmp_table_priv, lock_tables_priv, create_view_priv, show_view_priv, create_routine_priv, alter_routine_priv, execute_priv, event_priv, trigger_priv) VALUES(?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?)";
         PreparedStatement ps = conn.prepareStatement(sql);
         ps.setString(1, entry.getUsername());
         ps.setString(2, entry.getDatabaseName());

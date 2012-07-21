@@ -20,12 +20,12 @@
 <%@ page import="org.wso2.carbon.CarbonConstants" %>
 <%@ page import="org.wso2.carbon.rssmanager.common.RSSManagerCommonUtil" %>
 <%@ page import="org.wso2.carbon.rssmanager.ui.RSSManagerClient" %>
-<%@ page import="org.wso2.carbon.rssmanager.ui.DatabasePermissions" %>
 <%@ page import="org.wso2.carbon.rssmanager.ui.stub.types.DatabaseUser" %>
 <%@ page import="org.wso2.carbon.ui.CarbonUIUtil" %>
 <%@ page import="org.wso2.carbon.utils.ServerConstants" %>
 <%@ page import="java.io.PrintWriter" %>
 <%@ page import="org.wso2.carbon.rssmanager.ui.stub.types.UserDatabaseEntry" %>
+<%@ page import="org.wso2.carbon.rssmanager.ui.stub.types.DatabasePrivilegeSet" %>
 
 <%@ taglib prefix="fmt" uri="http://java.sun.com/jsp/jstl/fmt" %>
 <%@ taglib uri="http://wso2.org/projects/carbon/taglibs/carbontags.jar" prefix="carbon" %>
@@ -36,6 +36,46 @@
     String templateName = request.getParameter("privilegeTemplateName");
     String rssInstanceName = request.getParameter("rssInstanceName");
     String databaseName = request.getParameter("databaseName");
+
+    //Database privileges
+    String selectPriv = request.getParameter("select_priv");
+    String insertPriv = request.getParameter("insert_priv");
+    String updatePriv = request.getParameter("update_priv");
+    String deletePriv = request.getParameter("delete_priv");
+    String createPriv = request.getParameter("create_priv");
+    String dropPriv = request.getParameter("drop_priv");
+    String grantPriv = request.getParameter("grant_priv");
+    String referencesPriv = request.getParameter("references_priv");
+    String indexPriv = request.getParameter("index_priv");
+    String alterPriv = request.getParameter("alter_priv");
+    String createTmpTablePriv = request.getParameter("create_tmp_table_priv");
+    String lockTablesPriv = request.getParameter("lock_tables_priv");
+    String createViewPriv = request.getParameter("create_view_priv");
+    String showViewPriv = request.getParameter("show_view_priv");
+    String createRoutinePriv = request.getParameter("create_routine_priv");
+    String alterRoutinePriv = request.getParameter("alter_routine_priv");
+    String executePriv = request.getParameter("execute_priv");
+    String eventPriv = request.getParameter("event_priv");
+    String triggerPriv = request.getParameter("trigger_priv");
+    selectPriv = (selectPriv != null && !"".equals(selectPriv)) ? selectPriv : "N";
+    insertPriv = (insertPriv != null && !"".equals(insertPriv)) ? insertPriv : "N";
+    updatePriv = (updatePriv != null && !"".equals(updatePriv)) ? updatePriv : "N";
+    deletePriv = (deletePriv != null && !"".equals(deletePriv)) ? deletePriv : "N";
+    createPriv = (createPriv != null && !"".equals(createPriv)) ? createPriv : "N";
+    dropPriv = (dropPriv != null && !"".equals(dropPriv)) ? dropPriv : "N";
+    grantPriv = (grantPriv != null && !"".equals(grantPriv)) ? grantPriv : "N";
+    referencesPriv = (referencesPriv != null && !"".equals(referencesPriv)) ? referencesPriv : "N";
+    indexPriv = (indexPriv != null && !"".equals(indexPriv)) ? indexPriv : "N";
+    alterPriv = (alterPriv != null && !"".equals(alterPriv)) ? alterPriv : "N";
+    createTmpTablePriv = (createTmpTablePriv != null && !"".equals(createTmpTablePriv)) ? createTmpTablePriv : "N";
+    lockTablesPriv = (lockTablesPriv != null && !"".equals(lockTablesPriv)) ? lockTablesPriv : "N";
+    createViewPriv = (createViewPriv != null && !"".equals(createViewPriv)) ? createViewPriv : "N";
+    showViewPriv = (showViewPriv != null && !"".equals(showViewPriv)) ? showViewPriv : "N";
+    createRoutinePriv = (createRoutinePriv != null && !"".equals(createRoutinePriv)) ? createRoutinePriv : "N";
+    alterRoutinePriv = (alterRoutinePriv != null && !"".equals(alterRoutinePriv)) ? alterRoutinePriv : "N";
+    executePriv = (executePriv != null && !"".equals(executePriv)) ? executePriv : "N";
+    eventPriv = (eventPriv != null && !"".equals(eventPriv)) ? eventPriv : "N";
+    triggerPriv = (triggerPriv != null && !"".equals(triggerPriv)) ? triggerPriv : "N";
 
     flag = (flag != null) ? flag : "";
     templateName = (templateName != null) ? templateName : "";
@@ -52,19 +92,7 @@
 
     if ("create".equals(flag)) {
         try {
-            DatabasePermissions permissions = new DatabasePermissions();
-            for (String priv : RSSManagerCommonUtil.getDatabasePrivilegeList()) {
-                String value = request.getParameter(priv.toLowerCase());
-                if (value != null) {
-                    if (RSSManagerCommonUtil.getBooleanResponsePrivilegeList().contains(priv)) {
-                        permissions.setPermission(priv, "Y");
-                    }
-                } else {
-                    if (RSSManagerCommonUtil.getBooleanResponsePrivilegeList().contains(priv)) {
-                        permissions.setPermission(priv, "N");
-                    }
-                }
-            }
+
             String username = request.getParameter("username");
             String password = request.getParameter("password");
             username = (username != null) ? username : "";
@@ -120,32 +148,6 @@
             pw.flush();
         }
     } else if ("edit".equals(flag)) {
-        DatabasePermissions permissions = new DatabasePermissions();
-        for (String priv : RSSManagerCommonUtil.getDatabasePrivilegeList()) {
-            String value = request.getParameter(priv.toLowerCase());
-            if (value != null && "on".equals(value)) {
-                if (RSSManagerCommonUtil.getBooleanResponsePrivilegeList().contains(priv)) {
-                    permissions.setPermission(priv, "Y");
-                } else if (RSSManagerCommonUtil.getBlobResponsePrivilegeList().contains(priv)) {
-                    permissions.setPermission(priv, value);
-                } else if (RSSManagerCommonUtil.getIntegerResponsePrivilegeList().contains(priv)) {
-                    permissions.setPermission(priv, Integer.parseInt(value));
-                } else if (RSSManagerCommonUtil.getStringResponsePrivilegeList().contains(priv)) {
-                    permissions.setPermission(priv, value);
-                }
-            } else {
-                if (RSSManagerCommonUtil.getBooleanResponsePrivilegeList().contains(priv)) {
-                    permissions.setPermission(priv, "N");
-                } else if (RSSManagerCommonUtil.getBlobResponsePrivilegeList().contains(priv)) {
-                    permissions.setPermission(priv, "");
-                } else if (RSSManagerCommonUtil.getIntegerResponsePrivilegeList().contains(priv)) {
-                    permissions.setPermission(priv, 0);
-                } else if (RSSManagerCommonUtil.getStringResponsePrivilegeList().contains(priv)) {
-                    permissions.setPermission(priv, "");
-                }
-            }
-        }
-
         String username = request.getParameter("username");
         String password = request.getParameter("password");
         username = (username != null) ? username : "";
@@ -156,8 +158,29 @@
         user.setPassword(password);
         user.setRssInstanceName(rssInstanceName);
 
+        DatabasePrivilegeSet privileges = new DatabasePrivilegeSet();
+        privileges.setSelectPriv(selectPriv);
+        privileges.setInsertPriv(insertPriv);
+        privileges.setUpdatePriv(updatePriv);
+        privileges.setDeletePriv(deletePriv);
+        privileges.setCreatePriv(createPriv);
+        privileges.setDropPriv(dropPriv);
+        privileges.setGrantPriv(grantPriv);
+        privileges.setReferencesPriv(referencesPriv);
+        privileges.setIndexPriv(indexPriv);
+        privileges.setAlterPriv(alterPriv);
+        privileges.setCreateTmpTablePriv(createTmpTablePriv);
+        privileges.setLockTablesPriv(lockTablesPriv);
+        privileges.setCreateViewPriv(createViewPriv);
+        privileges.setShowViewPriv(showViewPriv);
+        privileges.setCreateRoutinePriv(createRoutinePriv);
+        privileges.setAlterRoutinePriv(alterRoutinePriv);
+        privileges.setExecutePriv(executePriv);
+        privileges.setEventPriv(eventPriv);
+        privileges.setTriggerPriv(triggerPriv);
+
         try {
-            //client.editUserPrivileges(permissions, user);
+            client.editUserPrivileges(privileges, user, databaseName);
             response.setContentType("text/xml; charset=UTF-8");
             // Set standard HTTP/1.1 no-cache headers.
             response.setHeader("Cache-Control",

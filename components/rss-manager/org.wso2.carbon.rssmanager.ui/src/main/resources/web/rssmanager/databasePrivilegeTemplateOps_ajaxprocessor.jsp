@@ -75,8 +75,6 @@
     eventPriv = (eventPriv != null && !"".equals(eventPriv)) ? eventPriv : "N";
     triggerPriv = (triggerPriv != null && !"".equals(triggerPriv)) ? triggerPriv : "N";
 
-
-
     String backendServerUrl = CarbonUIUtil.getServerURL(
             getServletConfig().getServletContext(), session);
     ConfigurationContext configContext = (ConfigurationContext) config.

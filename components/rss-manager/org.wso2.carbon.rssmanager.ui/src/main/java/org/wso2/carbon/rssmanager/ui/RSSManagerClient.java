@@ -111,29 +111,15 @@ public class RSSManagerClient {
         return templates;
     }
 
-//    public void editUserPrivileges(DatabasePermissions permissions,
-//                                     DatabaseUser user, String databaseName) throws AxisFault {
-//        try {
-//            stub.editDatabaseUserPrivileges(
-//                    RSSManagerHelper.serializePermissionObject(
-//                            RSS_MANAGER_OM_NAMESPACE, permissions).toString(), user, databaseName);
-//        } catch (Exception e) {
-//            handleException(bundle.getString("rss.manager.failed.to.edit.user") + " : " +
-//                    user.getUsername(), e);
-//        }
-//    }
-//
-//    public DatabasePermissions getUserDatabasePermissions(String username,
-//                                                          String databaseName) throws AxisFault {
-//        OMElement permissionEl = null;
-//        try {
-//            permissionEl = AXIOMUtil.stringToOM(
-//                    stub.getUserDatabasePermissions(username, databaseName));
-//        } catch (Exception e) {
-//            handleException("Unable to retrieve user database permissions", e);
-//        }
-//        return RSSManagerHelper.getPermissionObject(permissionEl);
-//    }
+    public void editUserPrivileges(DatabasePrivilegeSet privileges,
+                                   DatabaseUser user, String databaseName) throws AxisFault {
+        try {
+            stub.editDatabaseUserPrivileges(privileges, user, databaseName);
+        } catch (Exception e) {
+            handleException(bundle.getString("rss.manager.failed.to.edit.user") + " : " +
+                    user.getUsername(), e);
+        }
+    }
 
     public void createDatabase(Database database) throws AxisFault {
         try {

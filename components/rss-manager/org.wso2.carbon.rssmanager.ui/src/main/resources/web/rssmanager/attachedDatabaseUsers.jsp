@@ -162,15 +162,15 @@
                 <input type="hidden" name="rssInstanceName" id="rssInstanceName2"/>
             </form>
             <script type="text/javascript">
-                function submitExploreForm(userName, url, driver) {
-                    document.getElementById('dbConsoleUseruame').value = userName;
+                function submitExploreForm(username, url, driver) {
+                    document.getElementById('dbConsoleUsername').value = username;
                     document.getElementById('url').value = encodeURIComponent(url);
                     document.getElementById('driver').value = encodeURIComponent(driver);
                     document.getElementById('exploreForm').submit();
                 }
             </script>
             <form action="../dbconsole/login.jsp" method="post" id="exploreForm">
-                <input type="hidden" id="dbConsoleUsername" name="userName"/>
+                <input type="hidden" id="dbConsoleUsername" name="username"/>
                 <input type="hidden" id="url" name="url"/>
                 <input type="hidden" id="driver" name="driver"/>
             </form>

@@ -378,8 +378,8 @@ public class MySQLRSSManager extends RSSManager {
                                                        DatabasePrivilegeTemplate template) throws
             SQLException, RSSManagerException {
         DatabasePrivilegeSet privileges = template.getPrivileges();
-        String sql = "INSERT INTO mysql.db VALUES(?,?,?,?,?,?,?,?,?,?,?," +
-                "?,?,?,?,?,?,?,?,?,?,?)";
+        String sql = "INSERT INTO mysql.db VALUES(?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?," +
+                "?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?)";
         PreparedStatement stmt = con.prepareStatement(sql);
         stmt.setString(1, "%");
         stmt.setString(2, databaseName);

@@ -76,9 +76,9 @@
 		<AccessTokenDefaultValidityPeriod>3600</AccessTokenDefaultValidityPeriod>
 		<!-- Timestamp skew in seconds -->
 		<TimestampSkew>300</TimestampSkew>
-		<AuthorizationCallbackHandlers>		
-				<AuthorizationCallbackHandler Class="org.wso2.carbon.identity.oauth.callback.DefaultCallbackHandler"/>
-		</AuthorizationCallbackHandlers>
+		<OAuthCallbackHandlers>		
+				<OAuthCallbackHandler Class="org.wso2.carbon.identity.oauth.callback.DefaultCallbackHandler"/>
+		</OAuthCallbackHandlers>
 	</OAuth>
 
 	<MultifactorAuthentication>

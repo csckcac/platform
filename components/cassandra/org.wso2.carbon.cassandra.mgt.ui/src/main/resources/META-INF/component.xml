@@ -26,7 +26,7 @@
             <parent-menu>manage_menu</parent-menu>
             <link>#</link>
             <region>region1</region>
-            <order>30</order>
+            <order>31</order>
             <style-class>manage</style-class>
             <icon>../cassandramgt/images/cassandra-keyspace.png</icon>
             <require-permission>/permission/admin/manage/add/keyspace</require-permission>

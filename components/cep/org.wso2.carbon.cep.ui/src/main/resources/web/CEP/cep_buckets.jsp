@@ -409,6 +409,7 @@
                 </a>
             </td>
             <td><%=input.getInputTupleMappingDTO() != null ? input.getInputTupleMappingDTO().getStream() :
+                   input.getInputMapMappingDTO() != null ? input.getInputMapMappingDTO().getStream() :
                    input.getInputXMLMappingDTO() != null ? input.getInputXMLMappingDTO().getStream() : ""%>
             </td>
             <td><%=input.getBrokerName()%></td>
@@ -508,6 +509,7 @@
         <td><select name="inputMappingType" id="inputMappingType" onchange="setInputMapping()">
             <option value="xml"><fmt:message key="input.mapping.type.xml"/></option>
             <option value="tuple"><fmt:message key="input.mapping.type.tuple"/></option>
+            <option value="map"><fmt:message key="input.mapping.type.map"/></option>
         </select>
         </td>
     </tr>
@@ -637,6 +639,48 @@
                     </td>
                     <td><input type="button" class="button" value="<fmt:message key="add"/>"
                                onclick="addTupleInputProperty()"/>
+                    </td>
+                </tr>
+                </tbody>
+            </table>
+
+        </td>
+    </tr>
+    <tr name="inputMapMapping" style="display: none">
+        <td colspan="2" class="middle-header">
+            <fmt:message key="property"/>
+        </td>
+    </tr>
+    <tr name="inputMapMapping" style="display: none">
+        <td colspan="2">
+            <div id="noInputMapPropertyDiv" class="noDataDiv-plain">
+                No Properties Defined
+            </div>
+
+            <table class="styledLeft" id="inputMapPropertyTable" style="width:100%;display:none">
+                <thead>
+                <th class="leftCol-med"><fmt:message key="property.name"/></th>
+                <th class="leftCol-med"><fmt:message key="property.type"/></th>
+                <th><fmt:message key="actions"/></th>
+                </thead>
+            </table>
+
+            <table id="addMapInputPropertyTable" class="normal">
+                <tbody>
+                <tr>
+                    <td class="leftCol-small"><fmt:message key="property.name"/>:</td>
+                    <td><input type="text" id="inputMapPropName"/></td>
+                    <td><fmt:message key="property.type"/>:
+                        <select id="inputMapPropertyTypes">
+                            <option value="java.lang.Integer">Integer</option>
+                            <option value="java.lang.Long">Long</option>
+                            <option value="java.lang.Double">Double</option>
+                            <option value="java.lang.Float">Float</option>
+                            <option value="java.lang.String">String</option>
+                        </select>
+                    </td>
+                    <td><input type="button" class="button" value="<fmt:message key="add"/>"
+                               onclick="addMapInputProperty()"/>
                     </td>
                 </tr>
                 </tbody>
@@ -879,6 +923,7 @@
         <option value="xml"><fmt:message key="xml.mapping"/></option>
         <option value="element"><fmt:message key="element.mapping"/></option>
         <option value="tuple"><fmt:message key="tuple.mapping"/></option>
+        <option value="map"><fmt:message key="map.mapping"/></option>
     </select>
     </td>
 </tr>
@@ -1040,6 +1085,39 @@
         </table>
     </td>
 </tr>
+<tr name="outputMapMapping" style="display: none">
+    <td colspan="2" class="middle-header">
+        <fmt:message key="map.mapping"/>
+    </td>
+</tr>
+<tr name="outputMapMapping" style="display: none">
+    <td colspan="2">
+
+        <table class="styledLeft" id="outputMapPropertiesTable" style="display:none">
+            <thead>
+            <th class="leftCol-med"><fmt:message key="property.name"/></th>
+            <th><fmt:message key="actions"/></th>
+            </thead>
+        </table>
+        <div class="noDataDiv-plain" id="noOutputMapProperties">
+            No Map properties Defined
+        </div>
+        <table id="addOutputMapProperties" class="normal">
+            <tbody>
+            <tr>
+                <td class="leftCol-small"><fmt:message key="property.name"/> :</td>
+                <td>
+                    <input type="text" id="OutputMapPropName"/>
+                </td>
+                <td><input type="button" class="button" value="<fmt:message key="add"/>"
+                           onclick="addOutputMapProperty()"/>
+                </td>
+            </tr>
+            </tbody>
+        </table>
+    </td>
+</tr>
+
 <tr>
     <td class="buttonRow" style="margin-bottom:20px;" colspan="2">
         <input type="button" onclick="addNewQueriesToList()" value="<fmt:message key="add.query"/>"

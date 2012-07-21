@@ -4,9 +4,16 @@
 <%@ page import="org.apache.axis2.context.ConfigurationContext" %>
 <%@ page import="org.wso2.carbon.CarbonConstants" %>
 <%@ page import="org.wso2.carbon.cep.stub.admin.CEPAdminServiceStub" %>
+<%@ page import="org.wso2.carbon.cep.stub.admin.internal.xsd.ExpressionDTO" %>
+<%@ page import="org.wso2.carbon.cep.stub.admin.internal.xsd.OutputDTO" %>
+<%@ page import="org.wso2.carbon.cep.stub.admin.internal.xsd.OutputElementMappingDTO" %>
+<%@ page import="org.wso2.carbon.cep.stub.admin.internal.xsd.OutputMapMappingDTO" %>
+<%@ page import="org.wso2.carbon.cep.stub.admin.internal.xsd.OutputTupleMappingDTO" %>
+<%@ page import="org.wso2.carbon.cep.stub.admin.internal.xsd.OutputXMLMappingDTO" %>
+<%@ page import="org.wso2.carbon.cep.stub.admin.internal.xsd.QueryDTO" %>
+<%@ page import="org.wso2.carbon.cep.stub.admin.internal.xsd.XMLPropertyDTO" %>
 <%@ page import="org.wso2.carbon.ui.CarbonUIUtil" %>
 <%@ page import="java.util.LinkedList" %>
-<%@ page import="org.wso2.carbon.cep.stub.admin.internal.xsd.*" %>
 <fmt:bundle basename="org.wso2.carbon.cep.ui.i18n.Resources">
 
 <link type="text/css" href="../CEP/css/buckets.css" rel="stylesheet"/>
@@ -56,8 +63,8 @@
     if (output != null) {
         elementMapping = output.getOutputElementMapping();
         xmlMapping = output.getOutputXmlMapping();
-        tupleMapping = output.getOutputTupleMappingDTO();
-        mapMapping = output.getOutputMapMappingDTO();
+        tupleMapping = output.getOutputTupleMapping();
+        mapMapping = output.getOutputMapMapping();
     }
 
     boolean inline;
@@ -191,19 +198,19 @@
             <fmt:message key="element.mapping"/></option>
         <option value="tuple" <%=tupleMapping != null ? "selected=\"selected\"" : "" %>><fmt:message
                 key="tuple.mapping"/></option>
-        <option value="tuple" <%=mapMapping != null ? "selected=\"selected\"" : "" %>><fmt:message
+        <option value="map" <%=mapMapping != null ? "selected=\"selected\"" : "" %>><fmt:message
                 key="map.mapping"/></option>
     </select>
     </td>
 </tr>
 <tr name="outputXMLMapping"
-    style="display:<%=xmlMapping!=null||(xmlMapping==null&&elementMapping==null&&tupleMapping==null)?"":"none" %>">
+    style="display:<%=xmlMapping!=null||(xmlMapping==null&&elementMapping==null&&tupleMapping==null&&mapMapping==null)?"":"none" %>">
     <td colspan="2" class="middle-header">
         <fmt:message key="xml.mapping"/>
     </td>
 </tr>
 <tr name="outputXMLMapping"
-    style="display:<%=xmlMapping!=null||(xmlMapping==null&&elementMapping==null&&tupleMapping==null)?"":"none" %>">
+    style="display:<%=xmlMapping!=null||(xmlMapping==null&&elementMapping==null&&tupleMapping==null&&mapMapping==null)?"":"none" %>">
     <td colspan="2">
         <p><fmt:message key="xml.mapping.text"/></P>
 
@@ -475,6 +482,69 @@
                 </td>
                 <td><input type="button" class="button" value="<fmt:message key="add"/>"
                            onclick="addOutputTupleProperty('Payload')"/>
+                </td>
+            </tr>
+            </tbody>
+        </table>
+    </td>
+</tr>
+<tr name="outputMapMapping" style="display:<%=mapMapping!=null?"":"none" %>">
+    <td colspan="2" class="middle-header">
+        <fmt:message key="map.mapping"/>
+    </td>
+</tr>
+<tr name="outputMapMapping" style="display:<%=mapMapping!=null?"":"none" %>">
+    <td colspan="2">
+
+
+        <table class="styledLeft" id="outputMapPropertiesTable"
+               style="display:<%=mapMapping!=null&&mapMapping.getProperties() != null?"":"none" %>">
+            <thead>
+            <th class="leftCol-med"><fmt:message key="property.name"/></th>
+            <th><fmt:message key="actions"/></th>
+            </thead>
+            <%
+                if (mapMapping != null && mapMapping.getProperties() != null) {
+            %>
+            <tbody>
+            <%
+                String[] properties = mapMapping.getProperties();
+                for (String property : properties) {
+            %>
+            <tr>
+                <td><%=property%>
+                </td>
+                <td><a class="icon-link"
+                       style="background-image:url(../admin/images/delete.gif)"
+                       onclick="removeOutputMapProperty(this)">Delete</a>
+                    <script type="text/javascript">
+                        addOutputMapDataPropertyToSession('<%=property%>');
+                    </script>
+                </td>
+
+            </tr>
+
+            <%
+                }
+            %>
+            </tbody>
+            <%
+                }
+            %>
+        </table>
+        <div class="noDataDiv-plain" id="noOutputMapProperties"
+             style="display:<%=mapMapping!=null&&mapMapping.getProperties() != null?"none":"" %>">
+            No Map properties Defined
+        </div>
+        <table id="addOutputMapProperties" class="normal">
+            <tbody>
+            <tr>
+                <td class="leftCol-small"><fmt:message key="property.name"/> :</td>
+                <td>
+                    <input type="text" id="OutputMapPropName"/>
+                </td>
+                <td><input type="button" class="button" value="<fmt:message key="add"/>"
+                           onclick="addOutputMapProperty()"/>
                 </td>
             </tr>
             </tbody>

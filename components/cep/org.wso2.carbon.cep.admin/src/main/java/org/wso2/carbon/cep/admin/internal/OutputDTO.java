@@ -23,7 +23,9 @@ public class OutputDTO {
      * Tuple OutputTupleMappingDTO document
      * */
     private OutputTupleMappingDTO outputTupleMappingDTO;
-
+ /**
+     * Map OutputMapMappingDTO document
+     * */
     private OutputMapMappingDTO outputMapMappingDTO;
 
     /**
@@ -55,12 +57,20 @@ public class OutputDTO {
         this.outputXmlMappingDTO = outputXmlMappingDTO;
     }
 
-    public OutputTupleMappingDTO getOutputTupleMappingDTO() {
+    public OutputTupleMappingDTO getOutputTupleMapping() {
         return outputTupleMappingDTO;
     }
 
-    public void setOutputTupleMappingDTO(OutputTupleMappingDTO outputTupleMappingDTO) {
+    public void setOutputTupleMapping(OutputTupleMappingDTO outputTupleMappingDTO) {
         this.outputTupleMappingDTO = outputTupleMappingDTO;
+    }
+
+    public OutputMapMappingDTO getOutputMapMapping() {
+        return outputMapMappingDTO;
+    }
+
+    public void setOutputMapMapping(OutputMapMappingDTO outputMapMappingDTO) {
+        this.outputMapMappingDTO = outputMapMappingDTO;
     }
 
     public String getBrokerName() {
@@ -71,19 +81,4 @@ public class OutputDTO {
         this.brokerName = brokerName;
     }
 
-    public OutputElementMappingDTO getOutputElementMappingDTO() {
-        return outputElementMappingDTO;
-    }
-
-    public void setOutputElementMappingDTO(OutputElementMappingDTO outputElementMappingDTO) {
-        this.outputElementMappingDTO = outputElementMappingDTO;
-    }
-
-    public OutputMapMappingDTO getOutputMapMappingDTO() {
-        return outputMapMappingDTO;
-    }
-
-    public void setOutputMapMappingDTO(OutputMapMappingDTO outputMapMappingDTO) {
-        this.outputMapMappingDTO = outputMapMappingDTO;
-    }
 }

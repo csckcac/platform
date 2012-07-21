@@ -1,6 +1,18 @@
+<%@ page import="org.wso2.carbon.cep.stub.admin.internal.xsd.BucketDTO" %>
+<%@ page import="org.wso2.carbon.cep.stub.admin.internal.xsd.ExpressionDTO" %>
+<%@ page import="org.wso2.carbon.cep.stub.admin.internal.xsd.InputDTO" %>
+<%@ page import="org.wso2.carbon.cep.stub.admin.internal.xsd.MapPropertyDTO" %>
+<%@ page import="org.wso2.carbon.cep.stub.admin.internal.xsd.OutputDTO" %>
+<%@ page import="org.wso2.carbon.cep.stub.admin.internal.xsd.OutputElementMappingDTO" %>
+<%@ page import="org.wso2.carbon.cep.stub.admin.internal.xsd.OutputMapMappingDTO" %>
+<%@ page import="org.wso2.carbon.cep.stub.admin.internal.xsd.OutputTupleMappingDTO" %>
+<%@ page import="org.wso2.carbon.cep.stub.admin.internal.xsd.OutputXMLMappingDTO" %>
+<%@ page import="org.wso2.carbon.cep.stub.admin.internal.xsd.QueryDTO" %>
+<%@ page import="org.wso2.carbon.cep.stub.admin.internal.xsd.TuplePropertyDTO" %>
+<%@ page import="org.wso2.carbon.cep.stub.admin.internal.xsd.XMLPropertyDTO" %>
+<%@ page import="org.wso2.carbon.cep.stub.admin.internal.xsd.XpathDefinitionDTO" %>
 <%@ page import="org.wso2.carbon.ui.CarbonUIUtil" %>
 <%@ page import="java.util.HashMap" %>
-<%@ page import="org.wso2.carbon.cep.stub.admin.internal.xsd.*" %>
 <%@ taglib prefix="fmt" uri="http://java.sun.com/jstl/fmt" %>
 <fmt:bundle basename="org.wso2.carbon.cep.ui.i18n.Resources">
 <link type="text/css" href="../dialog/js/jqueryui/tabs/ui.all.css" rel="stylesheet"/>
@@ -196,6 +208,7 @@
                     XpathDefinitionDTO[] xpathDefinitions = null;
                     XMLPropertyDTO[] xmlProperties = null;
                     TuplePropertyDTO[] tupleProperties = null;
+                    MapPropertyDTO[] mapProperties = null;
                     String stream = "";
                     if (input.getInputXMLMappingDTO() != null) {
                         inputMapping = XML;
@@ -208,9 +221,9 @@
                         tupleProperties = input.getInputTupleMappingDTO().getProperties();
                         stream = input.getInputTupleMappingDTO().getStream();
                     }
-
-                    if (input.getInputMapMappingDTO() != null){
+                    if (input.getInputMapMappingDTO() != null) {
                         inputMapping = MAP;
+                        mapProperties = input.getInputMapMappingDTO().getProperties();
                         stream = input.getInputMapMappingDTO().getStream();
                     }
 
@@ -233,8 +246,8 @@
 
                         <tr>
                             <td colspan="2">
-                                <div class="heading_A">
-                                    <fmt:message key="input.mapping.stream"/></div>
+                                <div class="heading_A"><fmt:message
+                                        key="input.mapping.stream"/></div>
                             </td>
                         <tr>
                             <td class="leftCol-med labelField"><fmt:message key="stream"/></td>
@@ -315,7 +328,8 @@
                         </tr>
 
                         <%
-                            } else if (inputMapping == TUPLE) {
+                            }
+                            if (inputMapping == TUPLE) {
                         %>
 
                         <tr>
@@ -359,7 +373,8 @@
                             </td>
                         </tr>
                         <%
-                            } else if (inputMapping == MAP) {
+                            }
+                            if (inputMapping == MAP) {
                         %>
 
                         <tr>
@@ -367,7 +382,37 @@
                                 <div class="heading_B"><fmt:message key="map.mapping"/></div>
                             </td>
                         </tr>
+                        <tr>
+                            <td colspan="2"><fmt:message key="property"/></td>
+                        </tr>
+                        <tr>
+                            <td colspan="2">
+                                <table class="styledLeft" style="width:100%">
+                                    <thead>
+                                    <th class="leftCol-med"><fmt:message
+                                            key="property.name"/></th>
+                                    <th class="leftCol-med"><fmt:message
+                                            key="property.type"/></th>
+                                    </thead>
+                                    <tbody>
+                                    <% if (mapProperties != null) {
+                                        for (MapPropertyDTO property : mapProperties) {
+                                    %>
+                                    <tr>
+                                        <td><%=property.getName()%>
+                                        </td>
+                                        <td><%=property.getType()%>
+                                        </td>
+                                    </tr>
+                                    <%
+                                            }
+                                        }
+                                    %>
+                                    </tbody>
 
+                                </table>
+                            </td>
+                        </tr>
                         <%}%>
                     </table>
                 </div>
@@ -399,8 +444,8 @@
             if (output != null) {
                 elementMapping = output.getOutputElementMapping();
                 xmlMapping = output.getOutputXmlMapping();
-                tupleMapping = output.getOutputTupleMappingDTO();
-                mapMapping = output.getOutputMapMappingDTO();
+                tupleMapping = output.getOutputTupleMapping();
+                mapMapping = output.getOutputMapMapping();
             }
             if (expression.getType().equals("registry")) {
                 inline = false;
@@ -566,7 +611,8 @@
 </tr>
 
 <%
-    } else if (xmlMapping != null) {
+    }
+    if (xmlMapping != null) {
 %>
 
 <tr>
@@ -584,17 +630,8 @@
     </td>
 </tr>
 <%
-    } else if (mapMapping != null) {
-%>
-
-<tr>
-    <td colspan="2">
-        <div class="heading_B"><fmt:message key="map.mapping"/></div>
-    </td>
-</tr>
-
-<%
-    } else if (tupleMapping != null) {
+    }
+    if (tupleMapping != null) {
 %>
 
 <tr>
@@ -700,8 +737,44 @@
             %>
         </table>
     </td>
-</tr>
+</tr><%
+    }
+    if (mapMapping != null) {
+%>
 
+<tr>
+    <td colspan="2">
+        <div class="heading_B"><fmt:message key="map.mapping"/></div>
+    </td>
+</tr>
+<tr>
+    <td colspan="2">
+        <table class="styledLeft" style="width:100%">
+            <thead>
+            <th class="leftCol-med"><fmt:message key="property.name"/></th>
+            </thead>
+            <%
+                if (mapMapping != null && mapMapping.getProperties() != null) {
+            %>
+            <tbody>
+            <%
+                for (String property : mapMapping.getProperties()) {
+            %>
+            <tr>
+                <td><%=property%>
+                </td>
+
+            </tr>
+            <%
+                }
+            %>
+            </tbody>
+            <%
+                }
+            %>
+        </table>
+    </td>
+</tr>
 <%
         }
     }

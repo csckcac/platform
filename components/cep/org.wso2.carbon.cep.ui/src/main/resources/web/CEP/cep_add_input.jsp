@@ -1,6 +1,8 @@
 <%@ page import="org.wso2.carbon.cep.stub.admin.internal.xsd.InputDTO" %>
+<%@ page import="org.wso2.carbon.cep.stub.admin.internal.xsd.InputMapMappingDTO" %>
 <%@ page import="org.wso2.carbon.cep.stub.admin.internal.xsd.InputTupleMappingDTO" %>
 <%@ page import="org.wso2.carbon.cep.stub.admin.internal.xsd.InputXMLMappingDTO" %>
+<%@ page import="org.wso2.carbon.cep.stub.admin.internal.xsd.MapPropertyDTO" %>
 <%@ page import="org.wso2.carbon.cep.stub.admin.internal.xsd.TuplePropertyDTO" %>
 <%@ page import="org.wso2.carbon.cep.stub.admin.internal.xsd.XMLPropertyDTO" %>
 <%@ page import="org.wso2.carbon.cep.stub.admin.internal.xsd.XpathDefinitionDTO" %>
@@ -31,6 +33,7 @@
     HashSet XMLPropertySet = (HashSet) session.getAttribute("inputXMLPropertyHashSet");
     HashSet nsPrefixesSet = (HashSet) session.getAttribute("nsPrefixHashSet");
     List tuplePropertyList = (List) session.getAttribute("inputTuplePropertyList");
+    List mapPropertyList = (List) session.getAttribute("inputMapPropertyList");
 
     int index = -1;
     try {
@@ -72,8 +75,22 @@
             mapping.setProperties(properties);
         }
         input.setInputTupleMappingDTO(null);
+        input.setInputMapMappingDTO(null);
         input.setInputXMLMappingDTO(mapping);
-    } else {
+    } else if(mappingType.equals("map")){
+
+        InputMapMappingDTO mapping = new InputMapMappingDTO();
+        mapping.setStream(mappingStream);
+        mapping.setMappingClass(eventClassName);
+        if (mapPropertyList != null && mapPropertyList.size() > 0) {
+            MapPropertyDTO[] properties = new MapPropertyDTO[mapPropertyList.size()];
+            mapPropertyList.toArray(properties);
+            mapping.setProperties(properties);
+        }
+        input.setInputMapMappingDTO(mapping);
+        input.setInputTupleMappingDTO(null);
+        input.setInputXMLMappingDTO(null);
+    }else {
 
         InputTupleMappingDTO mapping = new InputTupleMappingDTO();
         mapping.setStream(mappingStream);
@@ -83,6 +100,7 @@
             tuplePropertyList.toArray(properties);
             mapping.setProperties(properties);
         }
+        input.setInputMapMappingDTO(null);
         input.setInputTupleMappingDTO(mapping);
         input.setInputXMLMappingDTO(null);
     }
@@ -91,6 +109,7 @@
         session.removeAttribute("inputXMLPropertyHashSet");
         session.removeAttribute("nsPrefixHashSet");
         session.removeAttribute("inputTuplePropertyList");
+        session.removeAttribute("inputMapPropertyList");
     } catch (Exception e) {
         CarbonUIMessage.sendCarbonUIMessage(e.getMessage(), CarbonUIMessage.ERROR, request);
     }

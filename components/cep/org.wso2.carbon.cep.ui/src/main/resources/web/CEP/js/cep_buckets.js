@@ -195,6 +195,55 @@ function addTupleInputProperty() {
     noPropertyDiv.style.display = "none";
     //    showAddProperty();
 }
+function addMapInputProperty() {
+    var propName = document.getElementById("inputMapPropName");
+    var propType = document.getElementById("inputMapPropertyTypes")[document.getElementById("inputMapPropertyTypes").selectedIndex];
+    var propertyTable = document.getElementById("inputMapPropertyTable");
+    var noPropertyDiv = document.getElementById("noInputMapPropertyDiv");
+
+    var error = "";
+
+    if (propName.value == "") {
+        error = "Name field is empty.\n";
+    }
+    if (propType.value == "") {
+        error = "Type field is empty.\n";
+    }
+
+    if (error != "") {
+        CARBON.showErrorDialog(error);
+        return;
+    }
+    propertyTable.style.display = "";
+
+    //Check for duplications
+    var topicNamesArr = YAHOO.util.Dom.getElementsByClassName("property-names");
+    var foundDuplication = false;
+    for (var i = 0; i < topicNamesArr.length; i++) {
+        if (topicNamesArr[i].innerHTML == propName.value) {
+            foundDuplication = true;
+            CARBON.showErrorDialog("Duplicated Entry");
+            return;
+        }
+    }
+
+    addInputPropertyToSession(propName.value, '', propType.value, 'map');
+    //add new row
+    var newTableRow = propertyTable.insertRow(propertyTable.rows.length);
+    var newCell = newTableRow.insertCell(0);
+    newCell.innerHTML = propName.value;
+    YAHOO.util.Dom.addClass(newCell, "property-names");
+
+    var newCel3 = newTableRow.insertCell(1);
+    newCel3.innerHTML = propType.value;
+
+    var newCel4 = newTableRow.insertCell(2);
+    newCel4.innerHTML = ' <a class="icon-link" style="background-image:url(../admin/images/delete.gif)" onclick="removeInputProperty(this,\'tuple\')">Delete</a>';
+
+    propName.value = "";
+    noPropertyDiv.style.display = "none";
+    //    showAddProperty();
+}
 
 function removeInputProperty(link, type) {
     var rowToRemove = link.parentNode.parentNode;
@@ -336,6 +385,50 @@ function addOutputTupleProperty(dataType) {
     //    propType.value = "";
     //    showAddProperty();
 }
+function addOutputMapProperty() {
+    var propName = document.getElementById("outputMapPropName");
+    var propertyTable = document.getElementById("outputMapPropertiesTable");
+    var noPropertyDiv = document.getElementById("noOutputMapProperties");
+
+    var error = "";
+
+    if (propName.value == "") {
+        error = "Name field is empty.\n";
+    }
+
+    if (error != "") {
+        CARBON.showErrorDialog(error);
+        return;
+    }
+    propertyTable.style.display = "";
+
+    //Check for duplications
+//    var topicNamesArr = YAHOO.util.Dom.getElementsByClassName("property-names");
+//    var foundDuplication = false;
+//    for (var i = 0; i < topicNamesArr.length; i++) {
+//        if (topicNamesArr[i].innerHTML == propName.value) {
+//            foundDuplication = true;
+//            CARBON.showErrorDialog("Duplicated Entry");
+//            return;
+//        }
+//    }
+
+
+    addOutputMapDataPropertyToSession(propName.value);
+    //add new row
+    var newTableRow = propertyTable.insertRow(propertyTable.rows.length);
+    var newCell = newTableRow.insertCell(0);
+    newCell.innerHTML = propName.value;
+    YAHOO.util.Dom.addClass(newCell, "property-names");
+
+    var newCel2 = newTableRow.insertCell(1);
+    newCel2.innerHTML = ' <a class="icon-link" style="background-image:url(../admin/images/delete.gif)" onclick="removeOutputProperty(this,\'' + dataType + '\')">Delete</a>';
+
+    propName.value = "";
+    noPropertyDiv.style.display = "none";
+    //    propType.value = "";
+    //    showAddProperty();
+}
 
 function removeOutputProperty(link, format) {
     var rowToRemove = link.parentNode.parentNode;
@@ -434,11 +527,21 @@ function addInputToList(index,edit) {
     if (document.getElementsByName("inputXMLMapping")[0].style.display != 'none') {
         xmlMapping = true;
     }
+    var mapMapping = false;
+    if (document.getElementsByName("inputMapMapping")[0].style.display != 'none') {
+        mapMapping = true;
+    }
 
     if (xmlMapping) {
         var inputXMLPropertiesTable = document.getElementById("inputXMLPropertyTable");
         if (xmlMapping && inputXMLPropertiesTable.rows.length == 0) {
             CARBON.showErrorDialog("Input properties can not be empty in xml mapping");
+            return false;
+        }
+    } else if (mapMapping) {
+        var inputMapPropertiesTable = document.getElementById("inputMapPropertyTable");
+        if (mapMapping && inputMapPropertiesTable.rows.length == 0) {
+            CARBON.showErrorDialog("Input properties can not be empty in map mapping");
             return false;
         }
     } else {
@@ -472,12 +575,15 @@ function clearInputFields() {
     document.getElementById("inputXMLPropName").value = "";
     document.getElementById("inputXMLPropValue").value = "";
     document.getElementById("inputTuplePropName").value = "";
+    document.getElementById("inputMapPropName").value = "";
 
     clearDataInTable("xpathNamespacesTable");
     clearDataInTable("inputTuplePropertyTable");
+    clearDataInTable("inputMapPropertyTable");
     clearDataInTable("inputXMLPropertyTable");
 
     document.getElementById("noInputTuplePropertyDiv").style.display = "";
+    document.getElementById("noInputMapPropertyDiv").style.display = "";
     document.getElementById("noInputXMLPropertyDiv").style.display = "";
     document.getElementById("noXpathDiv").style.display = "";
 }
@@ -727,6 +833,24 @@ function addOutputTupleDataPropertyToSession(propName, dataType) {
 
 }
 
+function addOutputMapDataPropertyToSession(propName) {
+    var callback =
+    {
+        success:function (o) {
+            if (o.responseText !== undefined) {
+
+            }
+        },
+        failure:function (o) {
+            if (o.responseText !== undefined) {
+                alert("Error " + o.status + "\n Following is the message from the server.\n" + o.responseText);
+            }
+        }
+    };
+    var request = YAHOO.util.Connect.asyncRequest('POST', "cep_add_output_mapping_property.jsp", callback, "propName=" + propName + "&format=map");
+
+}
+
 function addNSprefixesToSession(prefix, nameSpace) {
     var callback =
     {
@@ -870,10 +994,13 @@ function setInputMapping() {
     var selectedType = inputMappingElement[inputMappingElement.selectedIndex].value;
     populateElementDisplay(document.getElementsByName("inputXMLMapping"), "none");
     populateElementDisplay(document.getElementsByName("inputTupleMapping"), "none");
+    populateElementDisplay(document.getElementsByName("inputMapMapping"), "none");
     if (selectedType == "xml") {
         populateElementDisplay(document.getElementsByName("inputXMLMapping"), "");
     } else if (selectedType == "tuple") {
         populateElementDisplay(document.getElementsByName("inputTupleMapping"), "");
+    } else if (selectedType == "map") {
+        populateElementDisplay(document.getElementsByName("inputMapMapping"), "");
     }
 }
 
@@ -883,12 +1010,15 @@ function setOutputMapping() {
     populateElementDisplay(document.getElementsByName("outputXMLMapping"), "none");
     populateElementDisplay(document.getElementsByName("outputElementMapping"), "none");
     populateElementDisplay(document.getElementsByName("outputTupleMapping"), "none");
+    populateElementDisplay(document.getElementsByName("outputMapMapping"), "none");
     if (selectedType == "xml") {
         populateElementDisplay(document.getElementsByName("outputXMLMapping"), "");
     } else if (selectedType == "element") {
         populateElementDisplay(document.getElementsByName("outputElementMapping"), "");
     } else if (selectedType == "tuple") {
         populateElementDisplay(document.getElementsByName("outputTupleMapping"), "");
+    } else if (selectedType == "map") {
+        populateElementDisplay(document.getElementsByName("outputMapMapping"), "");
     }
 }
 

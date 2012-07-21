@@ -16,14 +16,15 @@ import org.wso2.carbon.cep.core.XpathDefinition;
 import org.wso2.carbon.cep.core.exception.CEPConfigurationException;
 import org.wso2.carbon.cep.core.mapping.input.Input;
 import org.wso2.carbon.cep.core.mapping.input.mapping.InputMapping;
+import org.wso2.carbon.cep.core.mapping.input.mapping.MapInputMapping;
 import org.wso2.carbon.cep.core.mapping.input.mapping.TupleInputMapping;
 import org.wso2.carbon.cep.core.mapping.input.mapping.XMLInputMapping;
-import org.wso2.carbon.cep.core.mapping.input.mapping.MapInputMapping;
 import org.wso2.carbon.cep.core.mapping.output.Output;
 import org.wso2.carbon.cep.core.mapping.output.mapping.ElementOutputMapping;
+import org.wso2.carbon.cep.core.mapping.output.mapping.MapOutputMapping;
 import org.wso2.carbon.cep.core.mapping.output.mapping.TupleOutputMapping;
 import org.wso2.carbon.cep.core.mapping.output.mapping.XMLOutputMapping;
-import org.wso2.carbon.cep.core.mapping.output.mapping.MapOutputMapping;
+import org.wso2.carbon.cep.core.mapping.property.MapProperty;
 import org.wso2.carbon.cep.core.mapping.property.TupleProperty;
 import org.wso2.carbon.cep.core.mapping.property.XMLProperty;
 import org.wso2.carbon.core.AbstractAdmin;
@@ -160,6 +161,9 @@ public class CEPAdminService extends AbstractAdmin {
         } else if (inputDTO.getInputTupleMappingDTO() != null) {
             InputTupleMappingDTO inputTupleMappingDTO = inputDTO.getInputTupleMappingDTO();
             backendInput.setInputMapping(adaptInputMapping(inputTupleMappingDTO));
+        }   else if (inputDTO.getInputMapMappingDTO() != null) {
+            InputMapMappingDTO inputMapMappingDTO = inputDTO.getInputMapMappingDTO();
+            backendInput.setInputMapping(adaptInputMapping(inputMapMappingDTO));
         }
 
 
@@ -270,6 +274,49 @@ public class CEPAdminService extends AbstractAdmin {
 
         return backendInputMapping;
 
+    } /**
+     * This method will adapt CEP Admin module InputMapMappingDTO to CEP Core module InputTupleMappingDTO
+     *
+     * @param inputMapMappingDTO - CEP Admin module inputMapMappingDTO
+     * @return Mapping - CEP Core module InputTupleMappingDTO
+     * @throws org.wso2.carbon.cep.admin.internal.exception.CEPAdminException
+     *
+     */
+    private InputMapping adaptInputMapping(InputMapMappingDTO inputMapMappingDTO)
+            throws CEPAdminException {
+        MapInputMapping backendInputMapping = new MapInputMapping();
+        MapPropertyDTO[] mapPropertyDTOs = inputMapMappingDTO.getProperties();
+        List<MapProperty> backendInputPropertyList = new ArrayList<MapProperty>();
+
+        if (mapPropertyDTOs != null) {
+            for (MapPropertyDTO mapPropertyDTO : mapPropertyDTOs) {
+                MapProperty backendInputProperty = new MapProperty();
+                backendInputProperty.setName(mapPropertyDTO.getName());
+                backendInputProperty.setType(mapPropertyDTO.getType());
+                backendInputProperty.setInputProperty(true);
+                backendInputPropertyList.add(backendInputProperty);
+            }
+        }
+
+        backendInputMapping.setStream(inputMapMappingDTO.getStream());
+        try {
+            Class mappingClass;
+            String mappingClassName = inputMapMappingDTO.getMappingClass();
+            if (mappingClassName == null || mappingClassName.equals("") || mappingClassName.toLowerCase().equals("tuple")) {
+                mappingClass = Map.class;
+            } else {
+                mappingClass = Class.forName(inputMapMappingDTO.getMappingClass());
+            }
+            backendInputMapping.setMappingClass(mappingClass);
+        } catch (ClassNotFoundException e) {
+            String errorMessage = "No class found matching " + inputMapMappingDTO.getMappingClass();
+            log.error(errorMessage, e);
+            throw new CEPAdminException(errorMessage, e);
+        }
+        backendInputMapping.setProperties(backendInputPropertyList);
+
+        return backendInputMapping;
+
     }
 
     /**
@@ -330,7 +377,7 @@ public class CEPAdminService extends AbstractAdmin {
                 backEndOutput.setOutputMapping(backEndXMLOutputMapping);
             }
 
-            OutputTupleMappingDTO outputTupleMappingDTO = outputDTO.getOutputTupleMappingDTO();
+            OutputTupleMappingDTO outputTupleMappingDTO = outputDTO.getOutputTupleMapping();
             if (outputTupleMappingDTO != null) {
                 TupleOutputMapping backEndTupleOutputMapping = null;
                 if (outputTupleMappingDTO.getStreamId() != null) {
@@ -350,6 +397,15 @@ public class CEPAdminService extends AbstractAdmin {
                     backEndTupleOutputMapping.setPayloadDataProperties(Arrays.asList(outputTupleMappingDTO.getPayloadDataProperties()));
                 }
                 backEndOutput.setOutputMapping(backEndTupleOutputMapping);
+            }
+
+            OutputMapMappingDTO outputMapMappingDTO = outputDTO.getOutputMapMapping();
+            if (outputMapMappingDTO != null) {
+                MapOutputMapping backEndMapOutputMapping = null;
+                if (outputMapMappingDTO.getProperties() != null && outputMapMappingDTO.getProperties().length != 0) {
+                    backEndMapOutputMapping.setPropertyList(Arrays.asList(outputMapMappingDTO.getProperties()));
+                }
+                backEndOutput.setOutputMapping(backEndMapOutputMapping);
             }
             backEndQuery.setOutput(backEndOutput);
         }
@@ -496,6 +552,7 @@ public class CEPAdminService extends AbstractAdmin {
     private InputMapMappingDTO adaptMapping(MapInputMapping backEndMapInputMapping){
         InputMapMappingDTO inputMapMappingDTO = new InputMapMappingDTO();
         inputMapMappingDTO.setStream(backEndMapInputMapping.getStream());
+        inputMapMappingDTO.setProperties(adaptProperties(backEndMapInputMapping.getProperties()));
         return inputMapMappingDTO;
     }
 
@@ -538,6 +595,25 @@ public class CEPAdminService extends AbstractAdmin {
             i++;
         }
         return inputTuplePropertyDTOs;
+    }
+
+    /**
+     * This method maps CEP core module InputDTO property list to CEP Admin module input property array
+     *
+     * @param backEndMapPropertyList - CEP Core module input property list
+     */
+    private MapPropertyDTO[] adaptProperties(List<MapProperty> backEndMapPropertyList) {
+        MapPropertyDTO[] inputMapPropertyDTOs = new MapPropertyDTO[backEndMapPropertyList.size()];
+        int i = 0;
+        for (MapProperty backEndInputProperty : backEndMapPropertyList) {
+            MapPropertyDTO MapPropertyDTO = new MapPropertyDTO();
+            MapPropertyDTO.setName(backEndInputProperty.getName());
+            MapPropertyDTO.setType(backEndInputProperty.getType());
+            MapPropertyDTO.setInputProperty(backEndInputProperty.isInputProperty());
+            inputMapPropertyDTOs[i] = MapPropertyDTO;
+            i++;
+        }
+        return inputMapPropertyDTOs;
     }
 
     /**
@@ -594,14 +670,16 @@ public class CEPAdminService extends AbstractAdmin {
         if (backEndOutput.getOutputMapping() instanceof ElementOutputMapping) {
             outputDTO.setOutputElementMapping(adaptOutputElementMapping((ElementOutputMapping) backEndOutput.getOutputMapping()));
         } else if (backEndOutput.getOutputMapping() instanceof TupleOutputMapping) {
-            outputDTO.setOutputTupleMappingDTO(adaptOutputTupleMapping((TupleOutputMapping) backEndOutput.getOutputMapping()));
+            outputDTO.setOutputTupleMapping(adaptOutputTupleMapping((TupleOutputMapping) backEndOutput.getOutputMapping()));
         } else if (backEndOutput.getOutputMapping() instanceof MapOutputMapping) {
-            outputDTO.setOutputMapMappingDTO(adaptOutputMapMapping((MapOutputMapping)backEndOutput.getOutputMapping()));
+            outputDTO.setOutputMapMapping(adaptOutputMapMapping((MapOutputMapping)backEndOutput.getOutputMapping()));
         } else {
             outputDTO.setOutputXmlMapping(adaptOutputXMLMapping((XMLOutputMapping) backEndOutput.getOutputMapping()));
         }
         return outputDTO;
     }
+
+
 
     /**
      * This method will map CEP Core module OutputElementMappingDTO  in to CEP Admin module ElementMappings
@@ -618,12 +696,6 @@ public class CEPAdminService extends AbstractAdmin {
             outputElementMappingDTO.setProperties(adaptOutputProperties(backEndElementOutputMapping.getProperties()));
         }
         return outputElementMappingDTO;
-    }
-
-
-    private OutputMapMappingDTO adaptOutputMapMapping(MapOutputMapping mapOutputMapping){
-        OutputMapMappingDTO outputMapMappingDTO = new OutputMapMappingDTO();
-        return outputMapMappingDTO;
     }
 
     /**
@@ -656,6 +728,24 @@ public class CEPAdminService extends AbstractAdmin {
         return outputTupleMappingDTO;
     }
 
+    /**
+     * This method will map CEP Core module OutputMapMappingDTO  in to CEP Admin module ElementMappings
+     *
+     * @param backEndMapOutputMapping
+     */
+    private OutputMapMappingDTO adaptOutputMapMapping(
+            MapOutputMapping backEndMapOutputMapping) {
+        OutputMapMappingDTO outputMapMappingDTO = null;
+        if (backEndMapOutputMapping != null) {
+            outputMapMappingDTO = new OutputMapMappingDTO();
+            if (backEndMapOutputMapping.getPropertyList() != null) {
+                outputMapMappingDTO.setProperties(backEndMapOutputMapping.getPropertyList().toArray(new String[backEndMapOutputMapping.getPropertyList().size()]));
+            } else {
+                outputMapMappingDTO.setProperties(new String[0]);
+            }
+        }
+        return outputMapMappingDTO;
+    }
     /**
      * This method will map CEP Core module OutputXMLMappingDTO in to CEP Admin module OutputXMLMappingDTO
      *

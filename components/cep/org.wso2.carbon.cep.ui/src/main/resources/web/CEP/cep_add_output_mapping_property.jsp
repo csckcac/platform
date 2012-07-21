@@ -35,7 +35,17 @@
         } else {
             propertyHashSet.add(property);
         }
-    } else {//tuple
+    } else if (type.equals("map")){
+
+        List list = (List) session.getAttribute("outputMapPropertyList");
+        if (list == null) {
+            list = new ArrayList();
+            list.add(propName);
+            session.setAttribute("outputMapPropertyList", list);
+        } else {
+            list.add(propName);
+        }
+    }else {//tuple
         String dataType = request.getParameter("dataType");
 
         if (dataType != null) {

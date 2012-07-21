@@ -1,3 +1,4 @@
+<%@ page import="org.wso2.carbon.cep.stub.admin.internal.xsd.MapPropertyDTO" %>
 <%@ page import="org.wso2.carbon.cep.stub.admin.internal.xsd.TuplePropertyDTO" %>
 <%@ page import="org.wso2.carbon.cep.stub.admin.internal.xsd.XMLPropertyDTO" %>
 <%@ page import="java.util.ArrayList" %>
@@ -36,6 +37,22 @@
             session.setAttribute("inputXMLPropertyHashSet", propertyHashSet);
         } else {
             propertyHashSet.add(property);
+        }
+
+    } else  if (format.equals("map")) {
+
+        MapPropertyDTO property = new MapPropertyDTO();
+        property.setName(propName);
+        property.setType(propType);
+        property.setInputProperty(true);
+
+        List propertyList = (List) session.getAttribute("inputMapPropertyList");
+        if (propertyList == null) {
+            propertyList = new ArrayList();
+            propertyList.add(property);
+            session.setAttribute("inputMapPropertyList", propertyList);
+        } else {
+            propertyList.add(property);
         }
 
     } else { //tuple

@@ -2,6 +2,7 @@
 <%@ page import="org.wso2.carbon.cep.stub.admin.internal.xsd.OutputDTO" %>
 <%@ page import="org.wso2.carbon.cep.stub.admin.internal.xsd.OutputElementMappingDTO" %>
 <%@ page import="org.wso2.carbon.cep.stub.admin.internal.xsd.OutputTupleMappingDTO" %>
+<%@ page import="org.wso2.carbon.cep.stub.admin.internal.xsd.OutputMapMappingDTO" %>
 <%@ page import="org.wso2.carbon.cep.stub.admin.internal.xsd.OutputXMLMappingDTO" %>
 <%@ page import="org.wso2.carbon.cep.stub.admin.internal.xsd.QueryDTO" %>
 <%@ page import="org.wso2.carbon.cep.stub.admin.internal.xsd.XMLPropertyDTO" %>
@@ -69,6 +70,18 @@
     }
 
 
+    List mapPropertyList = (List) session.getAttribute("outputMapPropertyList");
+
+    OutputMapMappingDTO mapMapping = null;
+    if (mapPropertyList != null) {
+        if (mapMapping == null) {
+            mapMapping = new OutputMapMappingDTO();
+        }
+        String[] properties = new String[mapPropertyList.size()];
+        mapPropertyList.toArray(properties);
+        mapMapping.setProperties(properties);
+    }
+
     String outputTopicName = request.getParameter("outputTopic");
     String brokerName = request.getParameter("brokerName");
 
@@ -95,16 +108,24 @@
         output.setBrokerName(brokerName);
         if (outputMapping.equals("xml")) {
             output.setOutputElementMapping(null);
-            output.setOutputTupleMappingDTO(null);
+            output.setOutputTupleMapping(null);
+            output.setOutputMapMapping(null);
             output.setOutputXmlMapping(xmlMapping);
         } else if (outputMapping.equals("element")) {
             output.setOutputElementMapping(elementMapping);
-            output.setOutputTupleMappingDTO(null);
+            output.setOutputTupleMapping(null);
+            output.setOutputMapMapping(null);
+            output.setOutputXmlMapping(null);
+        } else if (outputMapping.equals("map")) {
+            output.setOutputElementMapping(null);
+            output.setOutputTupleMapping(null);
+            output.setOutputMapMapping(mapMapping);
             output.setOutputXmlMapping(null);
         } else {  //tuple
             tupleMapping.setStreamId(outputTopicName);
             output.setOutputElementMapping(null);
-            output.setOutputTupleMappingDTO(tupleMapping);
+            output.setOutputTupleMapping(tupleMapping);
+            output.setOutputMapMapping(null);
             output.setOutputXmlMapping(null);
         }
     }
@@ -152,6 +173,7 @@
     query.setOutput(output);
 
     session.removeAttribute("outputXMLPropertyHashSet");
+    session.removeAttribute("outputMapPropertyList");
     session.removeAttribute("outputTuplePayloadDataPropertyList");
     session.removeAttribute("outputTupleCorrelationDataPropertyList");
     session.removeAttribute("outputTupleMetaDataPropertyList");

@@ -2,28 +2,31 @@ package org.wso2.carbon.cep.admin.internal;
 
 /**
  * this class is used to define input to CEP Engine
- * */
+ */
 public class InputDTO {
     /**
      * Topic which we need to subscribe
-     * */
+     */
     private String topic;
 
     /**
      * CEP input XML Mapping DTO for incoming XML
-     * */
+     */
     private InputXMLMappingDTO inputXMLMappingDTO;
 
-   /**
+    /**
      * CEP input Tuple Mapping DTO for incoming XML
-     * */
+     */
     private InputTupleMappingDTO inputTupleMappingDTO;
 
+    /**
+     * CEP input Map Mapping DTO for incoming XML
+     */
     private InputMapMappingDTO inputMapMappingDTO;
 
     /**
      * Name of the broker to be used
-     * */
+     */
     private String brokerName;
 
     public String getTopic() {

@@ -1,14 +1,14 @@
-<wsdl:definitions xmlns:wsdl="http://schemas.xmlsoap.org/wsdl/" xmlns:ns="http://wso2.org/carbon/cep/admin/xsd" xmlns:xs="http://www.w3.org/2001/XMLSchema" xmlns:ax215="http://exception.core.cep.carbon.wso2.org/xsd" xmlns:ns1="http://org.apache.axis2/xsd" xmlns:ax213="http://internal.admin.cep.carbon.wso2.org/xsd" xmlns:wsaw="http://www.w3.org/2006/05/addressing/wsdl" xmlns:ax211="http://exception.internal.admin.cep.carbon.wso2.org/xsd" xmlns:http="http://schemas.xmlsoap.org/wsdl/http/" xmlns:tns="http://wso2.org/carbon/cep/admin" xmlns:soap="http://schemas.xmlsoap.org/wsdl/soap/" xmlns:mime="http://schemas.xmlsoap.org/wsdl/mime/" xmlns:soap12="http://schemas.xmlsoap.org/wsdl/soap12/" targetNamespace="http://wso2.org/carbon/cep/admin">
+<wsdl:definitions xmlns:wsdl="http://schemas.xmlsoap.org/wsdl/" xmlns:ns="http://wso2.org/carbon/cep/admin/xsd" xmlns:xs="http://www.w3.org/2001/XMLSchema" xmlns:ax219="http://exception.internal.admin.cep.carbon.wso2.org/xsd" xmlns:ns1="http://org.apache.axis2/xsd" xmlns:ax221="http://internal.admin.cep.carbon.wso2.org/xsd" xmlns:ax223="http://exception.core.cep.carbon.wso2.org/xsd" xmlns:wsaw="http://www.w3.org/2006/05/addressing/wsdl" xmlns:http="http://schemas.xmlsoap.org/wsdl/http/" xmlns:tns="http://wso2.org/carbon/cep/admin" xmlns:soap="http://schemas.xmlsoap.org/wsdl/soap/" xmlns:mime="http://schemas.xmlsoap.org/wsdl/mime/" xmlns:soap12="http://schemas.xmlsoap.org/wsdl/soap12/" targetNamespace="http://wso2.org/carbon/cep/admin">
     <wsdl:documentation>CEPAdminService</wsdl:documentation>
     <wsdl:types>
-        <xs:schema xmlns:ax214="http://internal.admin.cep.carbon.wso2.org/xsd" xmlns:ax216="http://exception.core.cep.carbon.wso2.org/xsd" xmlns:ax212="http://exception.internal.admin.cep.carbon.wso2.org/xsd" attributeFormDefault="qualified" elementFormDefault="qualified" targetNamespace="http://wso2.org/carbon/cep/admin/xsd">
+        <xs:schema xmlns:ax220="http://exception.internal.admin.cep.carbon.wso2.org/xsd" xmlns:ax222="http://internal.admin.cep.carbon.wso2.org/xsd" xmlns:ax224="http://exception.core.cep.carbon.wso2.org/xsd" attributeFormDefault="qualified" elementFormDefault="qualified" targetNamespace="http://wso2.org/carbon/cep/admin/xsd">
             <xs:import namespace="http://exception.internal.admin.cep.carbon.wso2.org/xsd"/>
             <xs:import namespace="http://internal.admin.cep.carbon.wso2.org/xsd"/>
             <xs:import namespace="http://exception.core.cep.carbon.wso2.org/xsd"/>
             <xs:element name="CEPAdminServiceCEPAdminException">
                 <xs:complexType>
                     <xs:sequence>
-                        <xs:element minOccurs="0" name="CEPAdminException" nillable="true" type="ax212:CEPAdminException"/>
+                        <xs:element minOccurs="0" name="CEPAdminException" nillable="true" type="ax220:CEPAdminException"/>
                     </xs:sequence>
                 </xs:complexType>
             </xs:element>
@@ -118,7 +118,7 @@
             <xs:element name="getBucketResponse">
                 <xs:complexType>
                     <xs:sequence>
-                        <xs:element minOccurs="0" name="return" nillable="true" type="ax214:BucketDTO"/>
+                        <xs:element minOccurs="0" name="return" nillable="true" type="ax221:BucketDTO"/>
                     </xs:sequence>
                 </xs:complexType>
             </xs:element>
@@ -160,7 +160,7 @@
             <xs:element name="getAllQueriesResponse">
                 <xs:complexType>
                     <xs:sequence>
-                        <xs:element maxOccurs="unbounded" minOccurs="0" name="return" nillable="true" type="ax214:QueryDTO"/>
+                        <xs:element maxOccurs="unbounded" minOccurs="0" name="return" nillable="true" type="ax221:QueryDTO"/>
                     </xs:sequence>
                 </xs:complexType>
             </xs:element>
@@ -176,7 +176,7 @@
             <xs:element name="getAllInputsResponse">
                 <xs:complexType>
                     <xs:sequence>
-                        <xs:element maxOccurs="unbounded" minOccurs="0" name="return" nillable="true" type="ax214:InputDTO"/>
+                        <xs:element maxOccurs="unbounded" minOccurs="0" name="return" nillable="true" type="ax221:InputDTO"/>
                     </xs:sequence>
                 </xs:complexType>
             </xs:element>
@@ -197,7 +197,7 @@
             <xs:element name="CEPAdminServiceCEPConfigurationException">
                 <xs:complexType>
                     <xs:sequence>
-                        <xs:element minOccurs="0" name="CEPConfigurationException" nillable="true" type="ax215:CEPConfigurationException"/>
+                        <xs:element minOccurs="0" name="CEPConfigurationException" nillable="true" type="ax223:CEPConfigurationException"/>
                     </xs:sequence>
                 </xs:complexType>
             </xs:element>
@@ -212,7 +212,7 @@
             <xs:element name="getAllBucketNamesResponse">
                 <xs:complexType>
                     <xs:sequence>
-                        <xs:element maxOccurs="unbounded" minOccurs="0" name="return" nillable="true" type="ax214:BucketBasicInfoDTO"/>
+                        <xs:element maxOccurs="unbounded" minOccurs="0" name="return" nillable="true" type="ax221:BucketBasicInfoDTO"/>
                     </xs:sequence>
                 </xs:complexType>
             </xs:element>
@@ -232,7 +232,7 @@
                 <xs:complexType>
                     <xs:sequence>
                         <xs:element minOccurs="0" name="bucketName" nillable="true" type="xs:string"/>
-                        <xs:element minOccurs="0" name="queryDTO" nillable="true" type="ax214:QueryDTO"/>
+                        <xs:element minOccurs="0" name="queryDTO" nillable="true" type="ax221:QueryDTO"/>
                     </xs:sequence>
                 </xs:complexType>
             </xs:element>
@@ -246,7 +246,7 @@
             <xs:element name="editBucket">
                 <xs:complexType>
                     <xs:sequence>
-                        <xs:element minOccurs="0" name="bucketDTO" nillable="true" type="ax214:BucketDTO"/>
+                        <xs:element minOccurs="0" name="bucketDTO" nillable="true" type="ax221:BucketDTO"/>
                     </xs:sequence>
                 </xs:complexType>
             </xs:element>
@@ -260,7 +260,7 @@
             <xs:element name="addBucket">
                 <xs:complexType>
                     <xs:sequence>
-                        <xs:element minOccurs="0" name="bucketDTO" nillable="true" type="ax214:BucketDTO"/>
+                        <xs:element minOccurs="0" name="bucketDTO" nillable="true" type="ax221:BucketDTO"/>
                     </xs:sequence>
                 </xs:complexType>
             </xs:element>
@@ -277,30 +277,38 @@
                 <xs:sequence>
                     <xs:element minOccurs="0" name="description" nillable="true" type="xs:string"/>
                     <xs:element minOccurs="0" name="engineProvider" nillable="true" type="xs:string"/>
-                    <xs:element maxOccurs="unbounded" minOccurs="0" name="inputs" nillable="true" type="ax213:InputDTO"/>
+                    <xs:element maxOccurs="unbounded" minOccurs="0" name="inputs" nillable="true" type="ax221:InputDTO"/>
                     <xs:element minOccurs="0" name="name" nillable="true" type="xs:string"/>
-                    <xs:element maxOccurs="unbounded" minOccurs="0" name="queries" nillable="true" type="ax213:QueryDTO"/>
+                    <xs:element maxOccurs="unbounded" minOccurs="0" name="queries" nillable="true" type="ax221:QueryDTO"/>
                 </xs:sequence>
             </xs:complexType>
             <xs:complexType name="InputDTO">
                 <xs:sequence>
                     <xs:element minOccurs="0" name="brokerName" nillable="true" type="xs:string"/>
-                    <xs:element minOccurs="0" name="inputMapMappingDTO" nillable="true" type="ax213:InputMapMappingDTO"/>
-                    <xs:element minOccurs="0" name="inputTupleMappingDTO" nillable="true" type="ax213:InputTupleMappingDTO"/>
-                    <xs:element minOccurs="0" name="inputXMLMappingDTO" nillable="true" type="ax213:InputXMLMappingDTO"/>
+                    <xs:element minOccurs="0" name="inputMapMappingDTO" nillable="true" type="ax221:InputMapMappingDTO"/>
+                    <xs:element minOccurs="0" name="inputTupleMappingDTO" nillable="true" type="ax221:InputTupleMappingDTO"/>
+                    <xs:element minOccurs="0" name="inputXMLMappingDTO" nillable="true" type="ax221:InputXMLMappingDTO"/>
                     <xs:element minOccurs="0" name="topic" nillable="true" type="xs:string"/>
                 </xs:sequence>
             </xs:complexType>
             <xs:complexType name="InputMapMappingDTO">
                 <xs:sequence>
                     <xs:element minOccurs="0" name="mappingClass" nillable="true" type="xs:string"/>
+                    <xs:element maxOccurs="unbounded" minOccurs="0" name="properties" nillable="true" type="ax221:MapPropertyDTO"/>
                     <xs:element minOccurs="0" name="stream" nillable="true" type="xs:string"/>
+                </xs:sequence>
+            </xs:complexType>
+            <xs:complexType name="MapPropertyDTO">
+                <xs:sequence>
+                    <xs:element minOccurs="0" name="inputProperty" type="xs:boolean"/>
+                    <xs:element minOccurs="0" name="name" nillable="true" type="xs:string"/>
+                    <xs:element minOccurs="0" name="type" nillable="true" type="xs:string"/>
                 </xs:sequence>
             </xs:complexType>
             <xs:complexType name="InputTupleMappingDTO">
                 <xs:sequence>
                     <xs:element minOccurs="0" name="mappingClass" nillable="true" type="xs:string"/>
-                    <xs:element maxOccurs="unbounded" minOccurs="0" name="properties" nillable="true" type="ax213:TuplePropertyDTO"/>
+                    <xs:element maxOccurs="unbounded" minOccurs="0" name="properties" nillable="true" type="ax221:TuplePropertyDTO"/>
                     <xs:element minOccurs="0" name="stream" nillable="true" type="xs:string"/>
                 </xs:sequence>
             </xs:complexType>
@@ -315,9 +323,9 @@
             <xs:complexType name="InputXMLMappingDTO">
                 <xs:sequence>
                     <xs:element minOccurs="0" name="mappingClass" nillable="true" type="xs:string"/>
-                    <xs:element maxOccurs="unbounded" minOccurs="0" name="properties" nillable="true" type="ax213:XMLPropertyDTO"/>
+                    <xs:element maxOccurs="unbounded" minOccurs="0" name="properties" nillable="true" type="ax221:XMLPropertyDTO"/>
                     <xs:element minOccurs="0" name="stream" nillable="true" type="xs:string"/>
-                    <xs:element maxOccurs="unbounded" minOccurs="0" name="xpathDefinition" nillable="true" type="ax213:XpathDefinitionDTO"/>
+                    <xs:element maxOccurs="unbounded" minOccurs="0" name="xpathDefinition" nillable="true" type="ax221:XpathDefinitionDTO"/>
                 </xs:sequence>
             </xs:complexType>
             <xs:complexType name="XMLPropertyDTO">
@@ -338,9 +346,9 @@
             </xs:complexType>
             <xs:complexType name="QueryDTO">
                 <xs:sequence>
-                    <xs:element minOccurs="0" name="expression" nillable="true" type="ax213:ExpressionDTO"/>
+                    <xs:element minOccurs="0" name="expression" nillable="true" type="ax221:ExpressionDTO"/>
                     <xs:element minOccurs="0" name="name" nillable="true" type="xs:string"/>
-                    <xs:element minOccurs="0" name="output" nillable="true" type="ax213:OutputDTO"/>
+                    <xs:element minOccurs="0" name="output" nillable="true" type="ax221:OutputDTO"/>
                     <xs:element minOccurs="0" name="queryIndex" type="xs:int"/>
                 </xs:sequence>
             </xs:complexType>
@@ -353,11 +361,10 @@
             <xs:complexType name="OutputDTO">
                 <xs:sequence>
                     <xs:element minOccurs="0" name="brokerName" nillable="true" type="xs:string"/>
-                    <xs:element minOccurs="0" name="outputElementMapping" nillable="true" type="ax213:OutputElementMappingDTO"/>
-                    <xs:element minOccurs="0" name="outputElementMappingDTO" nillable="true" type="ax213:OutputElementMappingDTO"/>
-                    <xs:element minOccurs="0" name="outputMapMappingDTO" nillable="true" type="ax213:OutputMapMappingDTO"/>
-                    <xs:element minOccurs="0" name="outputTupleMappingDTO" nillable="true" type="ax213:OutputTupleMappingDTO"/>
-                    <xs:element minOccurs="0" name="outputXmlMapping" nillable="true" type="ax213:OutputXMLMappingDTO"/>
+                    <xs:element minOccurs="0" name="outputElementMapping" nillable="true" type="ax221:OutputElementMappingDTO"/>
+                    <xs:element minOccurs="0" name="outputMapMapping" nillable="true" type="ax221:OutputMapMappingDTO"/>
+                    <xs:element minOccurs="0" name="outputTupleMapping" nillable="true" type="ax221:OutputTupleMappingDTO"/>
+                    <xs:element minOccurs="0" name="outputXmlMapping" nillable="true" type="ax221:OutputXMLMappingDTO"/>
                     <xs:element minOccurs="0" name="topic" nillable="true" type="xs:string"/>
                 </xs:sequence>
             </xs:complexType>
@@ -365,12 +372,12 @@
                 <xs:sequence>
                     <xs:element minOccurs="0" name="documentElement" nillable="true" type="xs:string"/>
                     <xs:element minOccurs="0" name="namespace" nillable="true" type="xs:string"/>
-                    <xs:element maxOccurs="unbounded" minOccurs="0" name="properties" nillable="true" type="ax213:XMLPropertyDTO"/>
+                    <xs:element maxOccurs="unbounded" minOccurs="0" name="properties" nillable="true" type="ax221:XMLPropertyDTO"/>
                 </xs:sequence>
             </xs:complexType>
             <xs:complexType name="OutputMapMappingDTO">
                 <xs:sequence>
-                    <xs:element minOccurs="0" name="streamID" nillable="true" type="xs:string"/>
+                    <xs:element maxOccurs="unbounded" minOccurs="0" name="properties" nillable="true" type="xs:string"/>
                 </xs:sequence>
             </xs:complexType>
             <xs:complexType name="OutputTupleMappingDTO">
@@ -1217,13 +1224,13 @@
     </wsdl:binding>
     <wsdl:service name="CEPAdminService">
         <wsdl:port name="CEPAdminServiceHttpsSoap11Endpoint" binding="tns:CEPAdminServiceSoap11Binding">
-            <soap:address location="https://175.157.95.157:9443/services/CEPAdminService.CEPAdminServiceHttpsSoap11Endpoint/"/>
+            <soap:address location="https://192.168.1.3:9443/services/CEPAdminService.CEPAdminServiceHttpsSoap11Endpoint/"/>
         </wsdl:port>
         <wsdl:port name="CEPAdminServiceHttpsSoap12Endpoint" binding="tns:CEPAdminServiceSoap12Binding">
-            <soap12:address location="https://175.157.95.157:9443/services/CEPAdminService.CEPAdminServiceHttpsSoap12Endpoint/"/>
+            <soap12:address location="https://192.168.1.3:9443/services/CEPAdminService.CEPAdminServiceHttpsSoap12Endpoint/"/>
         </wsdl:port>
         <wsdl:port name="CEPAdminServiceHttpsEndpoint" binding="tns:CEPAdminServiceHttpBinding">
-            <http:address location="https://175.157.95.157:9443/services/CEPAdminService.CEPAdminServiceHttpsEndpoint/"/>
+            <http:address location="https://192.168.1.3:9443/services/CEPAdminService.CEPAdminServiceHttpsEndpoint/"/>
         </wsdl:port>
     </wsdl:service>
 </wsdl:definitions>

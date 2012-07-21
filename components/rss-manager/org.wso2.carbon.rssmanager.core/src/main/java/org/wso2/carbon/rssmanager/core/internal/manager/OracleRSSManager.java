@@ -20,7 +20,7 @@ package org.wso2.carbon.rssmanager.core.internal.manager;
 
 import org.wso2.carbon.rssmanager.core.RSSManagerException;
 import org.wso2.carbon.rssmanager.core.internal.dao.entity.Database;
-import org.wso2.carbon.rssmanager.core.internal.dao.entity.DatabasePermissions;
+import org.wso2.carbon.rssmanager.core.internal.dao.entity.DatabasePrivilegeSet;
 import org.wso2.carbon.rssmanager.core.internal.dao.entity.DatabaseUser;
 
 public class OracleRSSManager extends RSSManager {
@@ -54,7 +54,7 @@ public class OracleRSSManager extends RSSManager {
     }
 
     @Override
-    public void editDatabaseUserPrivileges(DatabasePermissions permissions, DatabaseUser user,
+    public void editDatabaseUserPrivileges(DatabasePrivilegeSet privileges, DatabaseUser user,
                                    String databaseName) throws RSSManagerException {
         
     }

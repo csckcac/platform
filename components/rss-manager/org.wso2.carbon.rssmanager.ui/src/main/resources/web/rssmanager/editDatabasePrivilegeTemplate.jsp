@@ -27,6 +27,7 @@
 <%@ page import="org.wso2.carbon.rssmanager.ui.stub.types.DatabasePrivilegeTemplate" %>
 <%@ page import="org.wso2.carbon.rssmanager.common.RSSManagerCommonUtil" %>
 <%@ page import="org.wso2.carbon.rssmanager.ui.RSSManagerHelper" %>
+<%@ page import="org.wso2.carbon.rssmanager.ui.stub.types.DatabasePrivilegeSet" %>
 <%@ taglib prefix="fmt" uri="http://java.sun.com/jsp/jstl/fmt" %>
 <%@ taglib uri="http://wso2.org/projects/carbon/taglibs/carbontags.jar" prefix="carbon" %>
 
@@ -40,7 +41,7 @@
     String templateName = request.getParameter("privilegeTemplateName");
     RSSManagerClient client;
     DatabasePrivilegeTemplate template = null;
-    Map<String, String> privileges = null;
+    DatabasePrivilegeSet privileges = null;
 
     String backendServerURL = CarbonUIUtil.getServerURL(config.getServletContext(), session);
     ConfigurationContext configContext = (ConfigurationContext) config.getServletContext().
@@ -50,7 +51,7 @@
         client = new RSSManagerClient(cookie, backendServerURL, configContext, request.getLocale());
         template = client.getDatabasePrivilegesTemplate(templateName);
         if (template != null) {
-            privileges = RSSManagerHelper.getDatabasePrivilegeSet(template.getPrivileges());
+            privileges = template.getPrivileges();
         }
     } catch (Exception e) {
         CarbonUIMessage.sendCarbonUIMessage(e.getMessage(), CarbonUIMessage.ERROR, request, e);
@@ -98,7 +99,7 @@
         <tbody>
         <tr>
             <td><fmt:message key="rss.manager.permissions.select"/></td>
-            <%if (privileges != null && "Y".equals(privileges.get(RSSManagerConstants.SELECT_PRIV))) {%>
+            <%if (privileges != null && "Y".equals(privileges.getSelectPriv())) {%>
             <td><input type="checkbox" name="select_priv" checked="checked"/></td>
             <%} else {%>
             <td><input type="checkbox" name="select_priv"/></td>
@@ -106,7 +107,7 @@
         </tr>
         <tr>
             <td><fmt:message key="rss.manager.permissions.insert"/></td>
-            <%if (privileges != null && "Y".equals(privileges.get(RSSManagerConstants.INSERT_PRIV))) {%>
+            <%if (privileges != null && "Y".equals(privileges.getInsertPriv())) {%>
             <td><input type="checkbox" name="insert_priv" checked="checked"/></td>
             <%} else {%>
             <td><input type="checkbox" name="insert_priv"/></td>
@@ -114,7 +115,7 @@
         </tr>
         <tr>
             <td><fmt:message key="rss.manager.permissions.update"/></td>
-            <%if (privileges != null && "Y".equals(privileges.get(RSSManagerConstants.UPDATE_PRIV))) {%>
+            <%if (privileges != null && "Y".equals(privileges.getUpdatePriv())) {%>
             <td><input type="checkbox" name="update_priv" checked="checked"/></td>
             <%} else {%>
             <td><input type="checkbox" name="update_priv"/></td>
@@ -122,7 +123,7 @@
         </tr>
         <tr>
             <td><fmt:message key="rss.manager.permissions.delete"/></td>
-            <%if (privileges != null && "Y".equals(privileges.get(RSSManagerConstants.DELETE_PRIV))) {%>
+            <%if (privileges != null && "Y".equals(privileges.getDeletePriv())) {%>
             <td><input type="checkbox" name="delete_priv" checked="checked"/></td>
             <%} else {%>
             <td><input type="checkbox" name="delete_priv"/></td>
@@ -130,7 +131,7 @@
         </tr>
         <tr>
             <td><fmt:message key="rss.manager.permissions.create"/></td>
-            <%if (privileges != null && "Y".equals(privileges.get(RSSManagerConstants.CREATE_PRIV))) {%>
+            <%if (privileges != null && "Y".equals(privileges.getCreatePriv())) {%>
             <td><input type="checkbox" name="create_priv" checked="checked"/></td>
             <%} else {%>
             <td><input type="checkbox" name="create_priv"/></td>
@@ -138,7 +139,7 @@
         </tr>
         <tr>
             <td><fmt:message key="rss.manager.permissions.drop"/></td>
-            <%if (privileges != null && "Y".equals(privileges.get(RSSManagerConstants.DROP_PRIV))) {%>
+            <%if (privileges != null && "Y".equals(privileges.getDropPriv())) {%>
             <td><input type="checkbox" name="drop_priv" checked="checked"/></td>
             <%} else {%>
             <td><input type="checkbox" name="drop_priv"/></td>
@@ -146,7 +147,7 @@
         </tr>
         <tr>
             <td><fmt:message key="rss.manager.permissions.grant"/></td>
-            <%if (privileges != null && "Y".equals(privileges.get(RSSManagerConstants.GRANT_PRIV))) {%>
+            <%if (privileges != null && "Y".equals(privileges.getGrantPriv())) {%>
             <td><input type="checkbox" name="grant_priv" checked="checked"/></td>
             <%} else {%>
             <td><input type="checkbox" name="grant_priv"/></td>
@@ -154,7 +155,7 @@
         </tr>
         <tr>
             <td><fmt:message key="rss.manager.permissions.references"/></td>
-            <%if (privileges != null && "Y".equals(privileges.get(RSSManagerConstants.REFERENCES_PRIV))) {%>
+            <%if (privileges != null && "Y".equals(privileges.getReferencesPriv())) {%>
             <td><input type="checkbox" name="references_priv" checked="checked"/></td>
             <%} else {%>
             <td><input type="checkbox" name="references_priv"/></td>
@@ -162,7 +163,7 @@
         </tr>
         <tr>
             <td><fmt:message key="rss.manager.permissions.index"/></td>
-            <%if (privileges != null && "Y".equals(privileges.get(RSSManagerConstants.INDEX_PRIV))) {%>
+            <%if (privileges != null && "Y".equals(privileges.getIndexPriv())) {%>
             <td><input type="checkbox" name="index_priv" checked="checked"/></td>
             <%} else {%>
             <td><input type="checkbox" name="index_priv"/></td>
@@ -170,7 +171,7 @@
         </tr>
         <tr>
             <td><fmt:message key="rss.manager.permissions.alter"/></td>
-            <%if (privileges != null && "Y".equals(privileges.get(RSSManagerConstants.ALTER_PRIV))) {%>
+            <%if (privileges != null && "Y".equals(privileges.getAlterPriv())) {%>
             <td><input type="checkbox" name="alter_priv" checked="checked"/></td>
             <%} else {%>
             <td><input type="checkbox" name="alter_priv"/></td>
@@ -178,7 +179,7 @@
         </tr>
         <tr>
             <td><fmt:message key="rss.manager.permissions.create.temp.table"/></td>
-            <%if (privileges != null && "Y".equals(privileges.get(RSSManagerConstants.CREATE_TMP_TABLE_PRIV))) {%>
+            <%if (privileges != null && "Y".equals(privileges.getCreateTmpTablePriv())) {%>
             <td><input type="checkbox" name="create_tmp_table_priv" checked="checked"/>
             </td>
             <%} else {%>
@@ -187,7 +188,7 @@
         </tr>
         <tr>
             <td><fmt:message key="rss.manager.permissions.lock.tables"/></td>
-            <%if (privileges != null && "Y".equals(privileges.get(RSSManagerConstants.LOCK_TABLES_PRIV))) {%>
+            <%if (privileges != null && "Y".equals(privileges.getLockTablesPriv())) {%>
             <td><input type="checkbox" name="lock_tables_priv" checked="checked"/></td>
             <%} else {%>
             <td><input type="checkbox" name="lock_tables_priv"/></td>
@@ -195,7 +196,7 @@
         </tr>
         <tr>
             <td><fmt:message key="rss.manager.permissions.create.view"/></td>
-            <%if (privileges != null && "Y".equals(privileges.get(RSSManagerConstants.CREATE_VIEW_PRIV))) {%>
+            <%if (privileges != null && "Y".equals(privileges.getCreateViewPriv())) {%>
             <td><input type="checkbox" name="create_view_priv" checked="checked"/></td>
             <%} else {%>
             <td><input type="checkbox" name="create_view_priv"/></td>
@@ -203,7 +204,7 @@
         </tr>
         <tr>
             <td><fmt:message key="rss.manager.permissions.show.view"/></td>
-            <%if (privileges != null && "Y".equals(privileges.get(RSSManagerConstants.SHOW_VIEW_PRIV))) {%>
+            <%if (privileges != null && "Y".equals(privileges.getShowViewPriv())) {%>
             <td><input type="checkbox" name="show_view_priv" checked="checked"/></td>
             <%} else {%>
             <td><input type="checkbox" name="show_view_priv"/></td>
@@ -211,7 +212,7 @@
         </tr>
         <tr>
             <td><fmt:message key="rss.manager.permissions.create.routine"/></td>
-            <%if (privileges != null && "Y".equals(privileges.get(RSSManagerConstants.CREATE_ROUTINE_PRIV))) {%>
+            <%if (privileges != null && "Y".equals(privileges.getCreateRoutinePriv())) {%>
             <td><input type="checkbox" name="create_routine_priv" checked="checked"/></td>
             <%} else {%>
             <td><input type="checkbox" name="create_routine_priv"/></td>
@@ -219,7 +220,7 @@
         </tr>
         <tr>
             <td><fmt:message key="rss.manager.permissions.alter.routine"/></td>
-            <%if (privileges != null && "Y".equals(privileges.get(RSSManagerConstants.ALTER_ROUTINE_PRIV))) {%>
+            <%if (privileges != null && "Y".equals(privileges.getAlterRoutinePriv())) {%>
             <td><input type="checkbox" name="alter_routine_priv" checked="checked"/></td>
             <%} else {%>
             <td><input type="checkbox" name="alter_routine_priv"/></td>
@@ -227,7 +228,7 @@
         </tr>
         <tr>
             <td><fmt:message key="rss.manager.permissions.execute"/></td>
-            <%if (privileges != null && "Y".equals(privileges.get(RSSManagerConstants.EXECUTE_PRIV))) {%>
+            <%if (privileges != null && "Y".equals(privileges.getExecutePriv())) {%>
             <td><input type="checkbox" name="execute_priv" checked="checked"/></td>
             <%} else {%>
             <td><input type="checkbox" name="execute_priv"/></td>
@@ -235,7 +236,7 @@
         </tr>
         <tr>
             <td><fmt:message key="rss.manager.permissions.event"/></td>
-            <%if (privileges != null && "Y".equals(privileges.get(RSSManagerConstants.EVENT_PRIV))) {%>
+            <%if (privileges != null && "Y".equals(privileges.getEventPriv())) {%>
             <td><input type="checkbox" name="event_priv" checked="checked"/></td>
             <%} else {%>
             <td><input type="checkbox" name="event_priv"/></td>
@@ -243,7 +244,7 @@
         </tr>
         <tr>
             <td><fmt:message key="rss.manager.permissions.trigger"/></td>
-            <%if (privileges != null && "Y".equals(privileges.get(RSSManagerConstants.TRIGGER_PRIV))) {%>
+            <%if (privileges != null && "Y".equals(privileges.getTriggerPriv())) {%>
             <td><input type="checkbox" name="trigger_priv" checked="checked"/></td>
             <%} else {%>
             <td><input type="checkbox" name="trigger_priv"/></td>

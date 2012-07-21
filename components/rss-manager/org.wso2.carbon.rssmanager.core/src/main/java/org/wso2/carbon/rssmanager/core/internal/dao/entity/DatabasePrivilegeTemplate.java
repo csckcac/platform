@@ -22,16 +22,16 @@ public class DatabasePrivilegeTemplate {
 
     private String name;
 
-    private DatabasePrivilege[] privileges;
+    private DatabasePrivilegeSet privileges;
 
     private int tenantId;
 
-    public DatabasePrivilegeTemplate(String name, DatabasePrivilege[] privileges) {
+    public DatabasePrivilegeTemplate(String name, DatabasePrivilegeSet privileges) {
         this.name = name;
         this.privileges = privileges;
     }
 
-    public DatabasePrivilegeTemplate(String name, DatabasePrivilege[] privileges,
+    public DatabasePrivilegeTemplate(String name, DatabasePrivilegeSet privileges,
                                      int tenantId) {
         this.name = name;
         this.privileges = privileges;
@@ -48,11 +48,11 @@ public class DatabasePrivilegeTemplate {
         this.name = name;
     }
 
-    public DatabasePrivilege[] getPrivileges() {
+    public DatabasePrivilegeSet getPrivileges() {
         return privileges;
     }
 
-    public void setPrivileges(DatabasePrivilege[] privileges) {
+    public void setPrivileges(DatabasePrivilegeSet privileges) {
         this.privileges = privileges;
     }
 

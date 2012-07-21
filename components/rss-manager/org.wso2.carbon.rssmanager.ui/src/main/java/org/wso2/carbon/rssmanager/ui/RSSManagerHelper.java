@@ -18,20 +18,7 @@
  */
 package org.wso2.carbon.rssmanager.ui;
 
-import org.wso2.carbon.rssmanager.ui.stub.types.DatabasePrivilege;
-import org.wso2.carbon.rssmanager.ui.stub.types.DatabasePrivilegeTemplate;
-
-import java.util.HashMap;
-import java.util.Map;
-
 public class RSSManagerHelper {
 
-     public static Map<String, String> getDatabasePrivilegeSet(DatabasePrivilege[] privileges) {
-         Map<String, String> privilegeMap = new HashMap<String, String>();
-         for (DatabasePrivilege privilege : privileges) {
-             privilegeMap.put(privilege.getName(), privilege.getValue());
-         }
-         return privilegeMap;
-     }
 
 }

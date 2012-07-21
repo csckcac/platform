@@ -263,10 +263,10 @@ public class MySQLRSSManager extends RSSManager {
     }
 
     @Override
-    public void editDatabaseUserPrivileges(DatabasePermissions permissions,
+    public void editDatabaseUserPrivileges(DatabasePrivilegeSet privileges,
                                            DatabaseUser user,
                                            String databaseName) throws RSSManagerException {
-
+         //this.getDAO().updateDatabaseUser();
     }
 
     @Override
@@ -377,22 +377,33 @@ public class MySQLRSSManager extends RSSManager {
                                                        String username,
                                                        DatabasePrivilegeTemplate template) throws
             SQLException, RSSManagerException {
+        DatabasePrivilegeSet privileges = template.getPrivileges();
         String sql = "INSERT INTO mysql.db VALUES(?,?,?,?,?,?,?,?,?,?,?," +
                 "?,?,?,?,?,?,?,?,?,?,?)";
         PreparedStatement stmt = con.prepareStatement(sql);
         stmt.setString(1, "%");
         stmt.setString(2, databaseName);
         stmt.setString(3, username);
+        stmt.setString(4, privileges.getSelectPriv());
+        stmt.setString(5, privileges.getInsertPriv());
+        stmt.setString(6, privileges.getUpdatePriv());
+        stmt.setString(7, privileges.getDeletePriv());
+        stmt.setString(8, privileges.getCreatePriv());
+        stmt.setString(9, privileges.getDropPriv());
+        stmt.setString(10, privileges.getGrantPriv());
+        stmt.setString(11, privileges.getReferencesPriv());
+        stmt.setString(12, privileges.getIndexPriv());
+        stmt.setString(13, privileges.getAlterPriv());
+        stmt.setString(14, privileges.getCreateTmpTablePriv());
+        stmt.setString(15, privileges.getLockTablesPriv());
+        stmt.setString(16, privileges.getCreateViewPriv());
+        stmt.setString(17, privileges.getShowViewPriv());
+        stmt.setString(18, privileges.getCreateRoutinePriv());
+        stmt.setString(19, privileges.getAlterRoutinePriv());
+        stmt.setString(20, privileges.getExecutePriv());
+        stmt.setString(21, privileges.getEventPriv());
+        stmt.setString(22, privileges.getTriggerPriv());
 
-        DatabasePrivilege[] privileges = template.getPrivileges();
-        List<String> databasePrivileges = RSSManagerCommonUtil.getDatabasePrivilegeList();
-        Map<String, String> privilegeMap = RSSManagerUtil.convertToDatabasePrivilegeMap(privileges);
-
-        for (int i = 4; i < databasePrivileges.size() + 4; i++) {
-            if (privilegeMap.containsKey(databasePrivileges.get(i - 4))) {
-                stmt.setString(i, privilegeMap.get(databasePrivileges.get(i - 4)));
-            }
-        }
         return stmt;
     }
 
@@ -413,7 +424,7 @@ public class MySQLRSSManager extends RSSManager {
                                          DatabasePrivilegeTemplate template) throws
             RSSManagerException {
         UserDatabaseEntry ude = new UserDatabaseEntry(username, databaseName, rssInstanceName);
-        ude.setPermissions(RSSManagerUtil.convertToDatabasePrivilegeMap(template.getPrivileges()));
+        ude.setPrivileges(template.getPrivileges());
         this.getDAO().addUserDatabaseEntry(ude);
     }
 

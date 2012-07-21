@@ -32,13 +32,12 @@ public class UserDatabaseEntry {
 
     private String rssInstanceName;
 
-	private Map<String, String> permissions;
+	private DatabasePrivilegeSet privileges;
 	
 	public UserDatabaseEntry(String username, String databaseName, String rssInstanceName) {
 		this.username = username;
 		this.databaseName = databaseName;
         this.rssInstanceName = rssInstanceName;
-		this.permissions = new HashMap<String, String>();
 	}
 
     public String getUsername() {
@@ -57,12 +56,12 @@ public class UserDatabaseEntry {
         this.databaseName = databaseName;
     }
 
-    public Map<String, String> getPermissions() {
-		return permissions;
+    public DatabasePrivilegeSet getPrivileges() {
+		return privileges;
 	}
 
-	public void setPermissions(Map<String, String> permissions) {
-		this.permissions = permissions;
+	public void setPrivileges(DatabasePrivilegeSet privileges) {
+		this.privileges = privileges;
 	}
 
     public String getRssInstanceName() {

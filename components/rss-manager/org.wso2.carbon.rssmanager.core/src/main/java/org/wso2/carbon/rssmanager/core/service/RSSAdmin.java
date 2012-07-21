@@ -185,9 +185,10 @@ public class RSSAdmin extends AbstractAdmin {
         }
     }
 
-    public void editDatabaseUserPrivileges(String privileges,
+    public void editDatabaseUserPrivileges(DatabasePrivilegeSet privileges,
                                            DatabaseUser user,
                                            String databaseName) throws RSSManagerException {
+        this.getRSSManager().editDatabaseUserPrivileges(privileges, user, databaseName);
     }
 
 
@@ -445,8 +446,8 @@ public class RSSAdmin extends AbstractAdmin {
     }
 
     public void createCarbonDataSource(UserDatabaseEntry entry) throws RSSManagerException {
-        Database database = RSSConfig.getInstance().getRssManager().getDatabase(
-                entry.getRssInstanceName(), entry.getDatabaseName());
+        Database database = this.getRSSManager().getDatabase(entry.getRssInstanceName(),
+                entry.getDatabaseName());
         DataSourceMetaInfo metaInfo =
                 RSSManagerUtil.createDSMetaInfo(database, entry.getUsername());
         try {
@@ -458,9 +459,18 @@ public class RSSAdmin extends AbstractAdmin {
         }
     }
 
-    public DatabasePrivilege[] getUserDatabasePermissions(
-            String rssInstanceName, String databaseName, String username) {
-        return new DatabasePrivilege[0];
+    public DatabasePrivilegeSet getUserDatabasePermissions(
+            String rssInstanceName, String databaseName, String username) throws RSSManagerException {
+        DatabasePrivilegeSet privileges = null;
+        try {
+            privileges = this.getRSSManager().getUserDatabasePrivileges(
+                    rssInstanceName, databaseName, username);
+        } catch (RSSManagerException e) {
+            String msg = "Error occurred while retrieving the permissions granted to the user '" +
+                    username + "' on database '" + databaseName + "'";
+            handleException(msg, e);
+        }
+        return privileges;
     }
     
 }

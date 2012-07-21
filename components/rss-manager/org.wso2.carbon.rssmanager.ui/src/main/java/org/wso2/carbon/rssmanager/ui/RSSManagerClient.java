@@ -385,12 +385,17 @@ public class RSSManagerClient {
     }
 
 
-    public DatabasePrivilege[] getUserDatabasePermissions(
+    public DatabasePrivilegeSet getUserDatabasePermissions(
             String rssInstanceName, String databaseName, String username) throws AxisFault {
-        DatabasePrivilege[] privileges = new DatabasePrivilege[0];
+        DatabasePrivilegeSet privileges = null;
         try {
             privileges = stub.getUserDatabasePermissions(rssInstanceName, username, databaseName);
         } catch (RemoteException e) {
+            String msg =
+                    bundle.getString("rss.manager.failed.to.retrieve.database.permissions.granted.to.the.user") +
+                            " '" + username + "' on the database '" + databaseName + "'";
+            handleException(msg, e);
+        } catch (RSSAdminRSSManagerExceptionException e) {
             String msg =
                     bundle.getString("rss.manager.failed.to.retrieve.database.permissions.granted.to.the.user") +
                             " '" + username + "' on the database '" + databaseName + "'";

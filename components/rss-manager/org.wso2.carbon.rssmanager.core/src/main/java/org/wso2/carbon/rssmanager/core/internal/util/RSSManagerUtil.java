@@ -108,16 +108,7 @@ public class RSSManagerUtil {
         }
         return databaseName;
     }
-
-    public static Map<String, String> convertToDatabasePrivilegeMap(
-            DatabasePrivilege[] privileges) {
-        Map<String, String> privilegeMap = new HashMap<String, String>();
-        for (DatabasePrivilege privilege : privileges) {
-            privilegeMap.put(privilege.getName(), privilege.getValue());
-        }
-        return privilegeMap;
-    }
-
+    
     /**
      * Returns the fully qualified username of a particular database user. For an ordinary tenant,
      * the tenant domain will be appended to the username together with an underscore and the given

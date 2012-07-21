@@ -79,8 +79,8 @@ public interface RSSDAO {
     public List<UserDatabaseEntry> getUserDatabaseEntriesByDatabase(String rssInstanceName,
             String databaseName) throws RSSManagerException;
 
-    public Map<String, String> getUserDatabasePermissions(
-            String username, String databaseName) throws RSSManagerException;
+    public DatabasePrivilegeSet getUserDatabasePrivileges(
+            String rssInstanceName, String databaseName, String username) throws RSSManagerException;
 
     public void updateDatabaseUser(DatabasePermissions modifiedPermissions, String username,
                                               String databaseName) throws RSSManagerException;

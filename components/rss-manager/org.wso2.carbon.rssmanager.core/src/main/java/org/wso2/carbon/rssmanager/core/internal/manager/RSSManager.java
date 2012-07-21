@@ -31,7 +31,7 @@ public abstract class RSSManager {
     public abstract void dropDatabaseUser(String rssInstanceName, String username) throws
             RSSManagerException;
 
-    public abstract void editDatabaseUserPrivileges(DatabasePermissions permissions,
+    public abstract void editDatabaseUserPrivileges(DatabasePrivilegeSet privileges,
                                                     DatabaseUser databaseUser,
                                                     String databaseName) throws RSSManagerException;
 
@@ -225,6 +225,12 @@ public abstract class RSSManager {
             }
         }
         return availableUsers;
+    }
+
+    public DatabasePrivilegeSet getUserDatabasePrivileges(String rssInstanceName,
+                                                          String databaseName,
+                                                          String username) throws RSSManagerException {
+        return this.getDAO().getUserDatabasePrivileges(rssInstanceName, databaseName, username);
     }
     
     

@@ -213,7 +213,8 @@ public class ResourceAdminServiceClient {
         String[] resourceArray = {resourcePath};
 
         return resourceAdminServiceStub.getResourceData(resourceArray);
-           }
+
+    }
 
     public String getHumanReadableMediaTypes(String resourcePath)
             throws RemoteException, ResourceAdminServiceExceptionException {

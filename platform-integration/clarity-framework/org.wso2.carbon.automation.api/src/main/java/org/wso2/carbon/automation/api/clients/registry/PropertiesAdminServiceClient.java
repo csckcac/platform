@@ -42,7 +42,8 @@ public class PropertiesAdminServiceClient {
         AuthenticateStub.authenticateStub(sessionCookie, propertiesAdminServiceStub);
     }
 
-    public PropertiesAdminServiceClient(String backendURL, String userName, String password) throws AxisFault {
+    public PropertiesAdminServiceClient(String backendURL, String userName, String password)
+            throws AxisFault {
 
         String endPoint = backendURL + serviceName;
         propertiesAdminServiceStub = new PropertiesAdminServiceStub(endPoint);
@@ -82,10 +83,21 @@ public class PropertiesAdminServiceClient {
         }
         return retentionBean;
     }
-    
+
     public void setProperty(String path, String propertyName, String propertyValue)
-            throws PropertiesAdminServiceRegistryExceptionException, RemoteException {
-        propertiesAdminServiceStub.setProperty(path, propertyName, propertyValue);
+            throws RemoteException, PropertiesAdminServiceRegistryExceptionException {
+
+        try {
+            propertiesAdminServiceStub.setProperty(path, propertyName, propertyValue);
+        } catch (RemoteException e) {
+            String errMsg = "Adding property fails";
+            log.error(errMsg);
+            throw new RemoteException(errMsg, e);
+        } catch (PropertiesAdminServiceRegistryExceptionException e) {
+            String errMsg = "Adding property fails";
+            log.error(errMsg);
+            throw new PropertiesAdminServiceRegistryExceptionException(errMsg, e);
+        }
     }
 
 }

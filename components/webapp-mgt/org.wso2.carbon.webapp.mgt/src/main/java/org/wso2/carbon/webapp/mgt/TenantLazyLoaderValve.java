@@ -41,7 +41,9 @@ public class TenantLazyLoaderValve implements CarbonTomcatValve {
         String uriOfVirtualHost = ApplicationContext.getCurrentApplicationContext().
                 getApplicationFromUrlMapping(request.getServerName());
         if (uriOfVirtualHost == null) {
-            uriOfVirtualHost = DataHolder.getHotUpdateService().getWebappForHost(request.getServerName());
+            if(DataHolder.getHotUpdateService() != null) {
+                uriOfVirtualHost = DataHolder.getHotUpdateService().getWebappForHost(request.getServerName());
+            }
         }
         if (uriOfVirtualHost != null && !uriOfVirtualHost.contains("services")) {
             requestURI = uriOfVirtualHost;

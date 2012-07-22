@@ -38,9 +38,8 @@ public class BamServerConfigBuilder {
     public boolean createBamServerConfig(OMElement bamServerConfigElement){
         boolean credentialsOk = this.processCredentialElement(bamServerConfigElement);
         boolean connectionOk = this.processConnectionElement(bamServerConfigElement);
-        boolean keyStoreOk = this.processKeyStoreElement(bamServerConfigElement);
         boolean streamsOk = this.processStreamsElement(bamServerConfigElement);
-        return credentialsOk && connectionOk && keyStoreOk && streamsOk;
+        return credentialsOk && connectionOk && streamsOk;
     }
 
     private boolean processCredentialElement(OMElement bamServerConfig){
@@ -84,23 +83,6 @@ public class BamServerConfigBuilder {
                     this.bamServerConfig.setReceiverPort("");
                 }
 
-            }
-            else {
-                return false;
-            }
-        }
-        return true;
-    }
-
-    private boolean processKeyStoreElement(OMElement bamServerConfig){
-        OMElement keyStoreElement = bamServerConfig.getFirstChildWithName(
-                new QName(SynapseConstants.SYNAPSE_NAMESPACE, "keyStore"));
-        if(keyStoreElement != null){
-            OMAttribute locationAttr = keyStoreElement.getAttribute(new QName("location"));
-            OMAttribute passwordAttr = keyStoreElement.getAttribute(new QName("password"));
-            if(this.isNotNullOrEmpty(locationAttr) && this.isNotNullOrEmpty(passwordAttr)){
-                this.bamServerConfig.setKeyStoreLocation(locationAttr.getAttributeValue());
-                this.bamServerConfig.setKeyStorePassword(passwordAttr.getAttributeValue());
             }
             else {
                 return false;

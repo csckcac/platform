@@ -33,8 +33,6 @@ public class BamServerConfig {
     private String ip;
     private String authenticationPort;
     private String receiverPort;
-    private String keyStoreLocation;
-    private String keyStorePassword;
     private boolean security = true;
     private List<StreamConfiguration> streamConfigurations = new ArrayList<StreamConfiguration>();
 
@@ -84,22 +82,6 @@ public class BamServerConfig {
 
     public void setSecurity(boolean security) {
         this.security = security;
-    }
-
-    public String getKeyStoreLocation() {
-        return keyStoreLocation;
-    }
-
-    public void setKeyStoreLocation(String keyStoreLocation) {
-        this.keyStoreLocation = keyStoreLocation;
-    }
-
-    public String getKeyStorePassword() {
-        return keyStorePassword;
-    }
-
-    public void setKeyStorePassword(String keyStorePassword) {
-        this.keyStorePassword = keyStorePassword;
     }
 
     public List<StreamConfiguration> getStreamConfigurations(){

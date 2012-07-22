@@ -68,9 +68,6 @@
     String action = "";
     String force = "false";
     String streamTable = "";
-    String ksLocation = "";
-    String ksPassword = "";
-
 
     BamServerConfig bamServerConfig = new BamServerConfig();
     List<StreamConfiguration> streamConfigurations;
@@ -112,20 +109,6 @@
     String tmpSecurity = request.getParameter("security");
     if(tmpSecurity !=null && !tmpSecurity.equals("")){
         security = tmpSecurity;
-    }
-
-    String tmpKsLocation = request.getParameter("ksLocation");
-    if(tmpKsLocation !=null && !tmpKsLocation.equals("")){
-        ksLocation = tmpKsLocation;
-    } else {
-        ksLocation = bamServerProfileUtils.getDefaultKeyStoreLocation();
-    }
-
-    String tmpKsPassword = request.getParameter("ksPassword");
-    if(tmpKsPassword !=null && !tmpKsPassword.equals("")){
-        ksPassword = tmpKsPassword;
-    } else {
-        ksPassword = bamServerProfileUtils.getDefaultKeyStorePassword();
     }
 
     String tmpStreamTable = request.getParameter("hfStreamTableData");
@@ -214,8 +197,6 @@
                                                 + "authPort=" + "<%=request.getParameter("authPort")%>" + "&"
                                                 + "receiverPort=" + "<%=request.getParameter("receiverPort")%>" + "&"
                                                 + "security=" + "<%=request.getParameter("security")%>" + "&"
-                                                + "ksLocation=" + "<%=request.getParameter("ksLocation")%>" + "&"
-                                                + "ksPassword=" + "<%=request.getParameter("ksPassword")%>" + "&"
                                                 + "hfStreamTableData=" + "<%=request.getParameter("hfStreamTableData")%>" + "&"
                                                 + "txtServerProfileLocation=" + "<%=request.getParameter("txtServerProfileLocation")%>";
 
@@ -581,8 +562,6 @@
                 } else {
                     security = "false";
                 }
-                ksLocation = bamServerProfileUtils.getKeyStoreLocation(bamServerConfig);
-                ksPassword = bamServerProfileUtils.getKeyStorePassword(bamServerConfig);
             }
             else {
                 %>
@@ -616,12 +595,12 @@
     else if("save".equals(action) && !"".equals(serverProfileLocation)){ // Saving a configuration
         if("true".equals(force)){
             bamServerProfileUtils.addResource(ip, authenticationPort, receiverPort, userName, password, "true".equals(security),
-                                              ksLocation, ksPassword, streamTable, serverProfileLocation);
+                                              streamTable, serverProfileLocation);
         }
         else if (!"true".equals(force)){
             if(!bamServerProfileUtils.resourceAlreadyExists(serverProfileLocation)){
                 bamServerProfileUtils.addResource(ip, authenticationPort, receiverPort, userName, password, "true".equals(security),
-                                                  ksLocation, ksPassword, streamTable, serverProfileLocation);
+                                                  streamTable, serverProfileLocation);
             }
             else {
                 %>
@@ -1008,36 +987,6 @@
                     </table>
                 </td>
             </tr>
-            <tr style="display: none;">
-                <td colspan="2">
-                    <h3>
-                        <fmt:message key="advanced"/>
-                    </h3>
-                </td>
-            </tr>
-            <tr style="display: none;">
-                <td colspan="2">
-                    <table>
-                        <tr>
-                            <td>
-                                <fmt:message key="key.store.location"/><span class="required">*</span>
-                            </td>
-                            <td>
-                                <input type="text" name="ksLocation" id="ksLocation" value="<%=ksLocation%>"/>
-                            </td>
-                        </tr>
-                        <tr>
-                            <td>
-                                <fmt:message key="key.store.password"/><span class="required">*</span>
-                            </td>
-                            <td>
-                                <input type="password" name="ksPassword" id="ksPassword" value="<%=ksPassword%>"/>
-                            </td>
-                        </tr>
-                    </table>
-                </td>
-            </tr>
-
             <tr>
                 <td>
                     <input type="submit" value="Save" onclick="submitPage()"/>

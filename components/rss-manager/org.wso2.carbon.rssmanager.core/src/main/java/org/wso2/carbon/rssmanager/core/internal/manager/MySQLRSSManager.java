@@ -21,7 +21,6 @@ package org.wso2.carbon.rssmanager.core.internal.manager;
 import org.apache.commons.collections.keyvalue.MultiKey;
 import org.apache.commons.logging.Log;
 import org.apache.commons.logging.LogFactory;
-import org.wso2.carbon.rssmanager.common.RSSManagerCommonUtil;
 import org.wso2.carbon.rssmanager.common.RSSManagerConstants;
 import org.wso2.carbon.rssmanager.core.RSSManagerException;
 import org.wso2.carbon.rssmanager.core.internal.dao.entity.*;
@@ -31,7 +30,6 @@ import java.sql.Connection;
 import java.sql.PreparedStatement;
 import java.sql.SQLException;
 import java.util.List;
-import java.util.Map;
 
 public class MySQLRSSManager extends RSSManager {
 

@@ -25,7 +25,7 @@ import org.wso2.carbon.ndatasource.common.DataSourceException;
 import org.wso2.carbon.ndatasource.core.DataSourceMetaInfo;
 import org.wso2.carbon.ndatasource.rdbms.RDBMSConfiguration;
 import org.wso2.carbon.ndatasource.rdbms.RDBMSDataSource;
-import org.wso2.carbon.rssmanager.common.RSSManagerCommonUtil;
+import org.wso2.carbon.rssmanager.common.RSSManagerHelper;
 import org.wso2.carbon.rssmanager.common.RSSManagerConstants;
 import org.wso2.carbon.rssmanager.core.RSSManagerException;
 import org.wso2.carbon.rssmanager.core.internal.RSSManagerServiceComponent;
@@ -37,7 +37,6 @@ import org.wso2.carbon.user.api.UserStoreException;
 import org.wso2.carbon.user.core.tenant.TenantManager;
 import org.wso2.carbon.utils.multitenancy.CarbonContextHolder;
 
-import javax.naming.InitialContext;
 import javax.sql.DataSource;
 import javax.transaction.TransactionManager;
 import javax.xml.bind.JAXBException;
@@ -47,8 +46,6 @@ import java.net.URISyntaxException;
 import java.util.*;
 
 public class RSSManagerUtil {
-    
-    public static final String RDBMS_DTAASOURCE_TYPE = "RDBMS";
 
     public static TransactionManager transactionManager;
 
@@ -59,8 +56,6 @@ public class RSSManagerUtil {
     public static void setTransactionManager(TransactionManager transactionManager) {
         RSSManagerUtil.transactionManager = transactionManager;
     }
-
-    //private static SecretResolver secretResolver;
 
     /**
      * Retrieves the list of tenantIDs of the currently loaded tenants
@@ -115,7 +110,7 @@ public class RSSManagerUtil {
         String tenantDomain =
                 CarbonContextHolder.getCurrentCarbonContextHolder().getTenantDomain();
         if (!MultitenantConstants.SUPER_TENANT_DOMAIN_NAME.equals(tenantDomain)) {
-            return databaseName + "_" + RSSManagerCommonUtil.processDomainName(tenantDomain);
+            return databaseName + "_" + RSSManagerHelper.processDomainName(tenantDomain);
         }
         return databaseName;
     }
@@ -136,7 +131,7 @@ public class RSSManagerUtil {
              * 16. Thus, to adhere the aforementioned constraint as well as to give the username
              * an unique identification based on the tenant domain, we append a hash value that is
              * created based on the tenant domain */
-            byte[] bytes = RSSManagerCommonUtil.intToByteArray(tenantDomain.hashCode());
+            byte[] bytes = RSSManagerHelper.intToByteArray(tenantDomain.hashCode());
             return username + "_" + Base64.encode(bytes);
         }
         return username;
@@ -157,42 +152,6 @@ public class RSSManagerUtil {
         return "";
     }
 
-    /**
-     * Util method to prepareUpdateSqlQueries corresponding to data manipulations done against
-     * the system databases.
-     *
-     * @param queryPrefix queryPrefix.
-     * @param querySuffix querySuffix.
-     * @param privileges  list of privileges.
-     * @return sqlQuery for updating system database entities.
-     */
-    public static String prepareUpdateSQLString(String queryPrefix, String querySuffix,
-                                                List<String> privileges) {
-        StringBuilder sql = new StringBuilder(queryPrefix);
-        for (int i = 0; i < privileges.size(); i++) {
-            if (i != privileges.size() - 1) {
-                sql.append(privileges.get(i)).append("=?,");
-            } else {
-                sql.append(privileges.get(i)).append("=?");
-            }
-        }
-        sql.append(querySuffix);
-        return sql.toString();
-    }
-
-    public static RSSInstanceMetaData convertToRSSInstanceMetaData(RSSInstance rssIns) throws
-            RSSManagerException {
-        RSSInstanceMetaData metadata = new RSSInstanceMetaData();
-        metadata.setName(rssIns.getName());
-        metadata.setServerUrl(rssIns.getServerURL());
-        metadata.setInstanceType(rssIns.getInstanceType());
-        metadata.setServerCategory(rssIns.getServerCategory());
-        String tenantDomain = RSSManagerUtil.getTenantDomainFromTenantId(rssIns.getTenantId());
-        metadata.setTenantDomainName(tenantDomain);
-
-        return metadata;
-    }
-
     public static DatabaseMetaData convertToDatabaseMetaData(Database database) throws
             RSSManagerException {
         DatabaseMetaData metadata = new DatabaseMetaData();
@@ -200,7 +159,7 @@ public class RSSManagerUtil {
                 RSSManagerUtil.getFullyQualifiedDatabaseName(database.getName());
         metadata.setName(fullyQualifiedDatabaseName);
         metadata.setRssInstanceName(metadata.getRssInstanceName());
-        //metadata.setDatabaseURL(database.);
+        metadata.setUrl(database.getUrl());
         String tenantDomain = RSSManagerUtil.getTenantDomainFromTenantId(database.getTenantId());
         metadata.setRssTenantDomain(tenantDomain);
 
@@ -294,14 +253,6 @@ public class RSSManagerUtil {
         }
     }
 
-    public static DataSource lookupDataSource(String dataSourceName) {
-        try {
-            return (DataSource) InitialContext.doLookup(dataSourceName);
-        } catch (Exception e) {
-            throw new RuntimeException("Error in looking up data source: " + e.getMessage(), e);
-        }
-    }
-
     @SuppressWarnings("unchecked")
     public static Properties populateDataSourceProperties(OMElement dsEl) throws RSSManagerException {
         Properties props = new Properties();
@@ -366,7 +317,7 @@ public class RSSManagerUtil {
         }
         DataSourceMetaInfo.DataSourceDefinition defn =
                 new DataSourceMetaInfo.DataSourceDefinition();
-        defn.setType(RSSManagerUtil.RDBMS_DTAASOURCE_TYPE);
+        defn.setType(RSSManagerConstants.RDBMS_DATA_SOURCE_TYPE);
         defn.setDsXMLConfiguration(out.toString());
         
         return defn;
@@ -378,7 +329,7 @@ public class RSSManagerUtil {
 
         RDBMSDSXMLConfiguration config = new RDBMSDSXMLConfiguration();
         String url = database.getUrl();
-        String driverClassName = RSSManagerCommonUtil.getDatabaseDriver(url);
+        String driverClassName = RSSManagerHelper.getDatabaseDriver(url);
         config.setUrl(url);
         config.setDriverClassName(driverClassName);
         config.setUsername(username);

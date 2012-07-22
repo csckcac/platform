@@ -27,7 +27,7 @@
 <%@ page import="java.util.ArrayList" %>
 <%@ page import="org.wso2.carbon.rssmanager.common.RSSManagerConstants" %>
 <%@ page import="org.wso2.carbon.utils.multitenancy.MultitenantConstants" %>
-<%@ page import="org.wso2.carbon.rssmanager.common.RSSManagerCommonUtil" %>
+<%@ page import="org.wso2.carbon.rssmanager.common.RSSManagerHelper" %>
 <%@ page import="org.apache.axiom.om.util.Base64" %>
 
 <%@ taglib prefix="fmt" uri="http://java.sun.com/jsp/jstl/fmt" %>
@@ -108,7 +108,7 @@
                     </tr>
                     <tr>
                         <td><fmt:message key="rss.manager.permissions.username"/></td>
-                        <td><input type="text" id="username" name="username" value="<%=username%>"/><font color='black'><%=(MultitenantConstants.SUPER_TENANT_DOMAIN_NAME.equals(tenantDomain)) ? "" : "_" + Base64.encode(RSSManagerCommonUtil.intToByteArray(tenantDomain.hashCode()))%></font>
+                        <td><input type="text" id="username" name="username" value="<%=username%>"/><font color='black'><%=(MultitenantConstants.SUPER_TENANT_DOMAIN_NAME.equals(tenantDomain)) ? "" : "_" + Base64.encode(RSSManagerHelper.intToByteArray(tenantDomain.hashCode()))%></font>
                         </td>
                     </tr>
                     <tr>

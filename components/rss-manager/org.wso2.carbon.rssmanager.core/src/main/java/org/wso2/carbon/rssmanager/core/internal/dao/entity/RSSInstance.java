@@ -19,7 +19,7 @@
 package org.wso2.carbon.rssmanager.core.internal.dao.entity;
 
 import org.wso2.carbon.ndatasource.rdbms.RDBMSConfiguration;
-import org.wso2.carbon.rssmanager.common.RSSManagerCommonUtil;
+import org.wso2.carbon.rssmanager.common.RSSManagerHelper;
 import org.wso2.carbon.rssmanager.core.internal.util.RSSManagerUtil;
 
 import javax.sql.DataSource;
@@ -84,7 +84,7 @@ public class RSSInstance {
         config.setUrl(this.getServerURL());
         config.setUsername(this.getAdminUsername());
         config.setPassword(this.getAdminPassword());
-        config.setDriverClassName(RSSManagerCommonUtil.getDatabaseDriver(this.getServerURL()));
+        config.setDriverClassName(RSSManagerHelper.getDatabaseDriver(this.getServerURL()));
         config.setTestOnBorrow(true);
 
         return RSSManagerUtil.createDataSource(config);

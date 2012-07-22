@@ -21,14 +21,12 @@ package org.wso2.carbon.rssmanager.common;
 import java.net.URI;
 import java.net.URISyntaxException;
 import java.util.ArrayList;
-import java.util.HashMap;
 import java.util.List;
-import java.util.Map;
 
 /**
  * Contains util methods common to both FE and the BE.
  */
-public class RSSManagerCommonUtil {
+public class RSSManagerHelper {
 
     private static List<String> userPrivilegeList = new ArrayList<String>();
 
@@ -210,8 +208,8 @@ public class RSSManagerCommonUtil {
     }
 
     public static String constructConnectionUrl(String url) throws Exception {
-        return RSSManagerConstants.JDBC_PREFIX + ":" + RSSManagerCommonUtil.getDatabasePrefix(url) +
-                "://" + RSSManagerCommonUtil.validateRSSInstanceHostname(url);
+        return RSSManagerConstants.JDBC_PREFIX + ":" + RSSManagerHelper.getDatabasePrefix(url) +
+                "://" + RSSManagerHelper.validateRSSInstanceHostname(url);
     }
 
     public static String getDatabasePrefix(String url) {

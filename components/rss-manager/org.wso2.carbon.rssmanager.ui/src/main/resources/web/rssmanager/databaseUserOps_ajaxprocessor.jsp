@@ -18,7 +18,6 @@
 
 <%@ page import="org.apache.axis2.context.ConfigurationContext" %>
 <%@ page import="org.wso2.carbon.CarbonConstants" %>
-<%@ page import="org.wso2.carbon.rssmanager.common.RSSManagerCommonUtil" %>
 <%@ page import="org.wso2.carbon.rssmanager.ui.RSSManagerClient" %>
 <%@ page import="org.wso2.carbon.rssmanager.ui.stub.types.DatabaseUser" %>
 <%@ page import="org.wso2.carbon.ui.CarbonUIUtil" %>

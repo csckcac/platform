@@ -202,7 +202,7 @@ public class RSSMetaDataRepository implements GroupEventListener {
 
     @Override
     public byte[] onPeerMessage(byte[] bytes) throws CoordinationException {
-        throw new CoordinationException("Data sources does not handle group RPC",
+        throw new CoordinationException("RSS Manager does not handle group RPC",
                 CoordinationException.ExceptionCode.GENERIC_ERROR);
     }
 }

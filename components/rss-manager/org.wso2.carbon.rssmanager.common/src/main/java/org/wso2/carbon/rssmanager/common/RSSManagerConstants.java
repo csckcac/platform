@@ -105,4 +105,5 @@ public final class RSSManagerConstants {
     public static final String STANDARD_TRANSACTION_MANAGER_JNDI_NAME = "java:comp/TransactionManager";
     public static final String STANDARD_USER_TRANSACTION_JNDI_NAME = "java:comp/UserTransaction";
     public static final String RSS_MANAGER_SYNC_GROUP_NAME = "_RSS_MANAGER_GROUP";
+    public static final String RDBMS_DATA_SOURCE_TYPE = "RDBMS";
 }

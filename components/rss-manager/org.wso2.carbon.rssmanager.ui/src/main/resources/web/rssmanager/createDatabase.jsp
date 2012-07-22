@@ -28,7 +28,7 @@
 <%@ page import="org.wso2.carbon.rssmanager.common.RSSManagerConstants" %>
 <%@ page import="java.util.ArrayList" %>
 <%@ page import="org.wso2.carbon.utils.multitenancy.MultitenantConstants" %>
-<%@ page import="org.wso2.carbon.rssmanager.common.RSSManagerCommonUtil" %>
+<%@ page import="org.wso2.carbon.rssmanager.common.RSSManagerHelper" %>
 
 <script type=text/javascript src="js/uiValidator.js"></script>
 
@@ -119,7 +119,7 @@
                                     <td><input value="" id="databaseName"
                                                name="databaseName"
                                                size="30" type="text"><font
-                                            color='black'><%=(MultitenantConstants.SUPER_TENANT_DOMAIN_NAME.equals(tenantDomain)) ? "" : "_" + RSSManagerCommonUtil.processDomainName(tenantDomain)%></font></td>
+                                            color='black'><%=(MultitenantConstants.SUPER_TENANT_DOMAIN_NAME.equals(tenantDomain)) ? "" : "_" + RSSManagerHelper.processDomainName(tenantDomain)%></font></td>
                                 </tr>
 
                             </table>

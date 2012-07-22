@@ -24,9 +24,8 @@
 <%@ page import="org.wso2.carbon.ui.CarbonUIUtil" %>
 <%@ page import="org.wso2.carbon.utils.ServerConstants" %>
 <%@ page import="java.io.PrintWriter" %>
-<%@ page import="org.wso2.carbon.rssmanager.common.RSSManagerCommonUtil" %>
+<%@ page import="org.wso2.carbon.rssmanager.common.RSSManagerHelper" %>
 <%@ page import="org.wso2.carbon.utils.multitenancy.MultitenantConstants" %>
-<%@ page import="java.net.URISyntaxException" %>
 
 <%@ taglib prefix="fmt" uri="http://java.sun.com/jsp/jstl/fmt" %>
 <%@ taglib uri="http://wso2.org/projects/carbon/taglibs/carbontags.jar" prefix="carbon" %>
@@ -54,13 +53,13 @@
 
     if ("create".equals(flag)) {
         try {
-            serverUrl = (serverUrl != null) ? RSSManagerCommonUtil.constructConnectionUrl(serverUrl) : "";
+            serverUrl = (serverUrl != null) ? RSSManagerHelper.constructConnectionUrl(serverUrl) : "";
             RSSInstance rssIns = new RSSInstance();
             rssIns.setName(rssInstanceName);
             rssIns.setServerURL(serverUrl);
             rssIns.setAdminUsername(username);
             rssIns.setAdminPassword(password);
-            dbmsType = RSSManagerCommonUtil.getDatabasePrefix(serverUrl);
+            dbmsType = RSSManagerHelper.getDatabasePrefix(serverUrl);
             rssIns.setDbmsType(dbmsType.toUpperCase());
             if (tenantDomain == null) {
                 if (RSSManagerConstants.WSO2_LOCAL_RDS_INSTANCE_TYPE.equals(
@@ -115,13 +114,13 @@
         }
     } else if ("edit".equals(flag)) {
         try {
-            serverUrl = (serverUrl != null) ? RSSManagerCommonUtil.constructConnectionUrl(serverUrl) : "";
+            serverUrl = (serverUrl != null) ? RSSManagerHelper.constructConnectionUrl(serverUrl) : "";
             RSSInstance rssIns = new RSSInstance();
             rssIns.setName(rssInstanceName);
             rssIns.setServerURL(serverUrl);
             rssIns.setAdminUsername(username);
             rssIns.setAdminPassword(password);
-            dbmsType = RSSManagerCommonUtil.getDatabasePrefix(serverUrl);
+            dbmsType = RSSManagerHelper.getDatabasePrefix(serverUrl);
             rssIns.setDbmsType(dbmsType.toUpperCase());
             rssIns.setServerCategory(serverCategory.toUpperCase());
             if (tenantDomain == null) {
@@ -156,8 +155,8 @@
         }
     } else if ("testCon".equals(flag)) {
         try {
-            serverUrl = (serverUrl != null) ? RSSManagerCommonUtil.constructConnectionUrl(serverUrl) : "";
-            String driverClassName = RSSManagerCommonUtil.getDatabaseDriver(serverUrl);
+            serverUrl = (serverUrl != null) ? RSSManagerHelper.constructConnectionUrl(serverUrl) : "";
+            String driverClassName = RSSManagerHelper.getDatabaseDriver(serverUrl);
             client.testConnection(driverClassName, serverUrl, username, password);
             response.setContentType("text/xml; charset=UTF-8");
             // Set standard HTTP/1.1 no-cache headers.

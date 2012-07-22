@@ -18,13 +18,12 @@
 
 <%@ page import="org.apache.axis2.context.ConfigurationContext" %>
 <%@ page import="org.wso2.carbon.CarbonConstants" %>
-<%@ page import="org.wso2.carbon.rssmanager.common.RSSManagerCommonUtil" %>
+<%@ page import="org.wso2.carbon.rssmanager.common.RSSManagerHelper" %>
 <%@ page import="org.wso2.carbon.rssmanager.ui.RSSManagerClient" %>
 <%@ page import="org.wso2.carbon.ui.CarbonUIMessage" %>
 <%@ page import="org.wso2.carbon.ui.CarbonUIUtil" %>
 <%@ page import="org.wso2.carbon.utils.ServerConstants" %>
 <%@ page import="org.wso2.carbon.rssmanager.ui.stub.types.RSSInstanceMetaData" %>
-<%@ page import="org.wso2.carbon.utils.multitenancy.MultitenantConstants" %>
 <%@ taglib prefix="fmt" uri="http://java.sun.com/jsp/jstl/fmt" %>
 <%@ taglib uri="http://wso2.org/projects/carbon/taglibs/carbontags.jar" prefix="carbon" %>
 
@@ -87,7 +86,7 @@
                                         <select name="databaseEngine" id="databaseEngine"
                                                 onchange="setJDBCValues(this,document)">
                                             <%
-                                                instanceType = RSSManagerCommonUtil.getDatabasePrefix(rssIns.getServerUrl().toLowerCase());
+                                                instanceType = RSSManagerHelper.getDatabasePrefix(rssIns.getServerUrl().toLowerCase());
                                                 if ("".equals(instanceType)) { %>
                                             <option value="#" selected="selected">----SELECT----
                                             </option>

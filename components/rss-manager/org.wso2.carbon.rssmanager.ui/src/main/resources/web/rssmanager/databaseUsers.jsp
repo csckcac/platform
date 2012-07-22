@@ -78,7 +78,7 @@
                         <td>
                                 <%--<a class="icon-link"--%>
                                 <%--style="background-image: url(../rssmanager/images/db-exp.png);"--%>
-                                <%--onclick="submitExploreForm('<%=user.getUsername()%>', '<%=db.getDbUrl()%>','<%=RSSManagerCommonUtil.getJdbcDriverName(db.getDbUrl())%>')"--%>
+                                <%--onclick="submitExploreForm('<%=user.getUsername()%>', '<%=db.getDbUrl()%>','<%=RSSManagerHelper.getJdbcDriverName(db.getDbUrl())%>')"--%>
                                 <%--href="#"><fmt:message key="rss.manager.explore.database"/>--%>
                                 <%--</a>--%>
                                 <%--<a class="icon-link"--%>

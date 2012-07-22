@@ -23,7 +23,7 @@
 <%@ page import="org.wso2.carbon.ui.CarbonUIUtil" %>
 <%@ page import="org.wso2.carbon.utils.ServerConstants" %>
 <%@ page import="org.wso2.carbon.rssmanager.ui.stub.types.DatabaseMetaData" %>
-<%@ page import="org.wso2.carbon.rssmanager.common.RSSManagerCommonUtil" %>
+<%@ page import="org.wso2.carbon.rssmanager.common.RSSManagerHelper" %>
 
 <%@ taglib prefix="fmt" uri="http://java.sun.com/jsp/jstl/fmt" %>
 <%@ taglib uri="http://wso2.org/projects/carbon/taglibs/carbontags.jar" prefix="carbon" %>
@@ -88,7 +88,7 @@
                         <td>
                                 <a class="icon-link"
                                 style="background-image: url(../rssmanager/images/db-exp.png);"
-                                onclick="submitExploreForm('<%=username%>', '<%=(database != null) ? database.getUrl() : ""%>','<%=(database != null) ? RSSManagerCommonUtil.getDatabaseDriver(database.getUrl()) : ""%>')"
+                                onclick="submitExploreForm('<%=username%>', '<%=(database != null) ? database.getUrl() : ""%>','<%=(database != null) ? RSSManagerHelper.getDatabaseDriver(database.getUrl()) : ""%>')"
                                 href="#"><fmt:message key="rss.manager.explore.database"/>
                                 </a>
                                 <a class="icon-link"

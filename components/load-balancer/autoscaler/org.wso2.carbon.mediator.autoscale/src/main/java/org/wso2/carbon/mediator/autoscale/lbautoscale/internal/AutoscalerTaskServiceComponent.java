@@ -76,6 +76,12 @@ public class AutoscalerTaskServiceComponent {
         String configURL = System.getProperty(AutoscaleConstants.LOAD_BALANCER_CONFIG);
         LoadBalancerConfiguration lbConfig = new LoadBalancerConfiguration();
         lbConfig.init(configURL);
+        
+        if(configurationContext == null){
+            String msg = "Configuration context is null. Autoscaler task activation failed.";
+            log.fatal(msg);
+            throw new RuntimeException(msg);
+        }
 
         // load synapse environment
         Parameter synEnv =

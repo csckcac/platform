@@ -145,7 +145,7 @@ public class AppDomainContext extends LoadBalancerContext{
      *
      * @return number of average requests in flight. -1 if there no requests were received
      */
-    public int getAverageRequestsInFlight() {
+    public long getAverageRequestsInFlight() {
         long total = 0;
         for (Integer messageQueueLength : requestTokenListLengths) {
             total += messageQueueLength;
@@ -158,7 +158,7 @@ public class AppDomainContext extends LoadBalancerContext{
         if (log.isDebugEnabled()) {
             log.debug("Total Tokens : "+total+ " : Size: "+size);
         }
-        return (int) total / size;
+        return (long) total / size;
     }
 
 

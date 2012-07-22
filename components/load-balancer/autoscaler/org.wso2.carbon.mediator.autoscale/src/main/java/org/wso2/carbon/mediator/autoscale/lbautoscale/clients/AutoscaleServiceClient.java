@@ -18,8 +18,6 @@
 */
 package org.wso2.carbon.mediator.autoscale.lbautoscale.clients;
 
-import java.rmi.RemoteException;
-
 import org.apache.axis2.AxisFault;
 import org.apache.commons.logging.Log;
 import org.apache.commons.logging.LogFactory;

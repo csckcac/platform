@@ -221,6 +221,7 @@ public final class AutoscaleUtil {
     /**
      * TODO These methods should use to common place since these are using endpoints and mediators
      */
+    @SuppressWarnings("unchecked")
     public static String getTargetHost(MessageContext synCtx) {
         org.apache.axis2.context.MessageContext axis2MessageContext =
                 ((Axis2MessageContext) synCtx).getAxis2MessageContext();
@@ -233,6 +234,7 @@ public final class AutoscaleUtil {
         return address;
     }
 
+    @SuppressWarnings("unchecked")
     public static Map<String, AppDomainContext> getAppDomainContexts(ConfigurationContext configCtx,
                                                                      LoadBalancerConfiguration lbConfig) {
         Map<String, AppDomainContext> appDomainContexts =

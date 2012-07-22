@@ -51,18 +51,12 @@ public class AutoscalerTaskMgmtAdminService extends AbstractAdmin implements Tas
     private static final OMNamespace TASK_OM_NAMESPACE = FACTORY.createOMNamespace(
             TASK_EXTENSION_NS, "task");
 
-    private static ConfigurationContext configurationContext = null;
-
-    public AutoscalerTaskMgmtAdminService(){
-        
-    }
+    public AutoscalerTaskMgmtAdminService(){}
     
     public AutoscalerTaskMgmtAdminService(ConfigurationContext configurationContext) {
         this.schedulingManager = TaskSchedulingManager.getInstance();
         this.configurationContext = configurationContext;
     }
-
-    private static AutoscalerTaskMgmtAdminService instance = null;
 
     public void shutdown() {
         schedulingManager.shutDown(getConfigContext());
@@ -88,7 +82,6 @@ public class AutoscalerTaskMgmtAdminService extends AbstractAdmin implements Tas
      *
      * @param taskDescription TaskDescription
      */
-    @SuppressWarnings("unchecked")
     public void addTaskDescription(TaskDescription taskDescription) {
         if (log.isDebugEnabled()) {
             log.debug("Adding the Task " + taskDescription.getName());

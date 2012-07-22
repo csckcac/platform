@@ -62,6 +62,8 @@ public class RequestTokenReplicationCommand extends ClusteringMessage {
     public ClusteringCommand getResponse() {
         return new ClusteringCommand() {
             
+            private static final long serialVersionUID = -8271265673996681347L;
+
             @Override
             public void execute(ConfigurationContext arg0) throws ClusteringFault {
                 // do nothing

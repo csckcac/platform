@@ -46,6 +46,7 @@ public class AutoscalingJob implements Job {
                 log.debug("Executing Autoscaler task : " + jobDetail.getKey().getName());
             }
 
+            @SuppressWarnings("rawtypes")
             Map mjdm = jobExecutionContext.getMergedJobDataMap();
 
             task = (Task) mjdm.get(AUTOSCALER_TASK);

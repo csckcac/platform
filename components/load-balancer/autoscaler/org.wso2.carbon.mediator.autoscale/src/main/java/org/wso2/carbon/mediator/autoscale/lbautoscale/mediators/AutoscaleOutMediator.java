@@ -44,6 +44,7 @@ public class AutoscaleOutMediator extends AbstractMediator implements ManagedLif
 
         String domain = (String) synCtx.getProperty(AutoscaleConstants.TARGET_DOMAIN);
         String tokenId = (String) synCtx.getProperty(AutoscaleConstants.REQUEST_ID);
+        @SuppressWarnings("unchecked")
         Map<String, AppDomainContext> appDomainContexts =
             (Map<String, AppDomainContext>) configCtx.getPropertyNonReplicable(AutoscaleConstants.APP_DOMAIN_CONTEXTS);
         AppDomainContext appDomainContext = appDomainContexts.get(domain);

@@ -17,16 +17,13 @@
 */
 package org.wso2.carbon.mediator.autoscale.lbautoscale;
 
-
-import junit.framework.TestCase;
-
 /**
  * Test for ServiceRequestsInFlightAutoscaler
  */
-public class ServiceRequestsInFlightAutoscalerTest extends TestCase {
-
-    public void testInit() {
-
-        //new ServiceRequestsInFlightAutoscaler().init(new Axis2SynapseEnvironment());
-    }
-}
+//public class ServiceRequestsInFlightAutoscalerTest extends TestCase {
+//
+//    public void testInit() {
+//
+//        //new ServiceRequestsInFlightAutoscaler().init(new Axis2SynapseEnvironment());
+//    }
+//}

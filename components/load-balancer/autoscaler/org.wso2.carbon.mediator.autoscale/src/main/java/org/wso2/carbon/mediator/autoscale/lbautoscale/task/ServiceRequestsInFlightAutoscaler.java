@@ -49,24 +49,28 @@ import java.util.Map;
 @SuppressWarnings("unused")
 public class ServiceRequestsInFlightAutoscaler implements Task, ManagedLifecycle {
 
-    private AutoscaleServiceClient autoscalerService;
-
     private static final Log log = LogFactory.getLog(ServiceRequestsInFlightAutoscaler.class);
 
+    /**
+     * This instance holds the loadbalancer configuration
+     */
     private LoadBalancerConfiguration loadBalancerConfig;
     
+    /**
+     * Autoscaler service client instance
+     */
+    private AutoscaleServiceClient autoscalerService;
+    
+    /**
+     * Autoscaler service EPR
+     */
     private String autoscalerServiceEPR ;
     
     /**
      * Server start up delay in milliseconds. 
      */
     private int serverStartupDelay;
-            
-    /**
-     * We gonna check this value in order to wait for {@link #serverStartupDelay}.
-     */
-    private int oldPendingInstanceCount;
-
+           
     /**
      * AppDomainContexts for each domain
      * Key - domain
@@ -111,7 +115,9 @@ public class ServiceRequestsInFlightAutoscaler implements Task, ManagedLifecycle
             
             autoscalerService =
                 new AutoscaleServiceClient(autoscalerServiceEPR);
+            //let's initialize the autoscaler service
             autoscalerService.init(false);
+            
         } catch (AxisFault e) {
             log.error(msg, e);
             throw new RuntimeException(msg, e);
@@ -122,7 +128,7 @@ public class ServiceRequestsInFlightAutoscaler implements Task, ManagedLifecycle
         
         if (log.isDebugEnabled()) {
 
-            log.debug("Initialized autoscaler task");
+            log.debug("Autoscaler task is initialized.");
 
         }
     }
@@ -154,6 +160,10 @@ public class ServiceRequestsInFlightAutoscaler implements Task, ManagedLifecycle
         }
     }
 
+    /**
+     * Replicate information needed to take autoscaling decision for other ELBs
+     * in the cluster.
+     */
     private void sendReplicationMessage() {
 
         ClusteringAgent clusteringAgent = ConfigHolder.getAgent();
@@ -190,8 +200,7 @@ public class ServiceRequestsInFlightAutoscaler implements Task, ManagedLifecycle
     /**
      * We compute the number of running instances of a particular domain using clustering agent.
      */
-    private void computeRunningAndPendingInstances() {
-        
+    private void computeRunningAndPendingInstances() { 
         
         // get the list of service domains specified in loadbalancer config
         String[] serviceDomains = loadBalancerConfig.getServiceDomains();
@@ -228,8 +237,6 @@ public class ServiceRequestsInFlightAutoscaler implements Task, ManagedLifecycle
                 
             }
             
-            // int diff;
-            
             int previousPendingCount = appDomainContexts.get(serviceDomain).getPendingInstanceCount();
             int previousRunningCount = appDomainContexts.get(serviceDomain).getRunningInstanceCount();
             int newRunningInstanceCount = runningInstances;
@@ -264,45 +271,17 @@ public class ServiceRequestsInFlightAutoscaler implements Task, ManagedLifecycle
                 
                 appDomainContexts.get(serviceDomain).setPendingInstanceCount(pendingInstanceCount);
                 
-//                if ((diff =
-//                    appDomainContexts.get(serviceDomain).setRunningInstanceCount(runningInstances)) > 0) {
-//                    // diff number of instances has been created after last execution, thus
-//                    // decrement
-//                    // that from pending instances count
-//                    appDomainContexts.get(serviceDomain).decrementPendingInstancesIfNotZero(diff);
-//                }
             }
         }
 
         /** Calculate running load balancer instances **/
+        
         // count this LB instance in.
         runningInstances = 1;
-
-        // //gets the domain of the LB
-        // String lbDomain = ConfigHolder.getAgent().getParameter("domain").getValue().toString();
-        //
-        // //gets LB group manager
-        // GroupManagementAgent lbGroupMgtAgent =
-        // ConfigHolder.getAgent().getGroupManagementAgent(lbDomain);
-
-        // //check if there's any other LB instances than this
-        // if (lbGroupMgtAgent != null) {
-        // // find the running LB instances, FIXME: debug and see when there's another LB whether
-        // this returns 2
-        // runningInstances = lbGroupMgtAgent.getMembers().size();
-        // }
-
-        // TODO: debug and see whether this is the way, use a LB cluster
-
-        //List<Member> members = ConfigHolder.getAgent().getMembers();
-
-//        if (!members.isEmpty()) {
-//            runningInstances += members.size();
-//        }
         
         runningInstances += ConfigHolder.getAgent().getAliveMemberCount();
         
-        log.info("************ Alive Load Balancer members (including this): "+runningInstances);
+        log.debug("************ Alive Load Balancer members (including this): "+runningInstances);
 
         lbContext.setRunningInstanceCount(runningInstances);
         
@@ -312,23 +291,13 @@ public class ServiceRequestsInFlightAutoscaler implements Task, ManagedLifecycle
         
         try {
             pendingInstanceCount = autoscalerService.getPendingInstanceCount(lbDomain);
+            
         } catch (Exception e) {
             log.error("Failed to set pending instance count for domain "+lbDomain, e);
         }
         
         lbContext.setPendingInstanceCount(pendingInstanceCount);
         
-//        int diff;
-//
-//        // set it in the LBContext
-//        if ((diff = lbContext.setRunningInstanceCount(runningInstances)) > 0) {
-//            // diff number of instances has been created after last execution, thus decrement
-//            // that from pending instances count
-//            lbContext.decrementPendingInstancesIfNotZero(diff);
-//        }
-
-        /** Calculate pending instance count **/
-        //TODO: call autoscaler service and retrieve for each service domain and lb domain
     }
 
     /**
@@ -375,12 +344,10 @@ public class ServiceRequestsInFlightAutoscaler implements Task, ManagedLifecycle
                 } else {
                     if (context != null) {
                         context.incrementPendingInstances(1);
-                        //autoscalerService.addPendingInstanceCount(domain, 1);
                     }
                 }
             } catch (Exception e) {
-                // TODO Auto-generated catch block
-                log.error(e);
+                log.error("Failed to start an instance of domain : "+domain+".\n", e);
                 successfullyStartedInstanceCount--;
             }
 
@@ -400,41 +367,12 @@ public class ServiceRequestsInFlightAutoscaler implements Task, ManagedLifecycle
         if(clusteringAgent != null){
            
              isPrimaryLoadBalancer = clusteringAgent.isCoordinator();
-             log.info("*********** isPrimaryLoadBalancer: "+isPrimaryLoadBalancer);
+             log.debug("*********** isPrimaryLoadBalancer: "+isPrimaryLoadBalancer);
              
         }
         
-        
-        
-//        if (!isPrimaryLoadBalancer) {
-//            //String elasticIP = loadBalancerConfig.getLoadBalancerConfig().getElasticIP();
-//            // Address address = ec2.describeAddress(elasticIP);
-//            // if (address == null) {
-//            // AutoscaleUtil.handleException("Elastic IP address " + elasticIP +
-//            // " has  not been reserved");
-//            // return;
-//            // }
-//            //String localInstanceId = System.getenv("instance_id");
-//            // String elasticIPInstanceId = address.getInstanceId();
-//            // if (elasticIPInstanceId == null || elasticIPInstanceId.isEmpty()) {
-//            // ec2.associateAddress(localInstanceId, elasticIP);
-//            isPrimaryLoadBalancer = true;
-////            log.info("Associated Elastic IP " + elasticIP + " with local instance " +
-////                localInstanceId);
-//            // } else if (elasticIPInstanceId.equals(localInstanceId)) {
-//            // isPrimaryLoadBalancer = true; // If the Elastic IP is assigned to this instance, it
-//            // is the primary LB
-//            // }
-//        }
     }
 
-    /*
-     * private boolean isInstanceRunningOrPending(Instance instance) {
-     * return
-     * instance.getState().getName().equals(AutoscaleConstants.InstanceState.RUNNING.getState()) ||
-     * instance.getState().getName().equals(AutoscaleConstants.InstanceState.PENDING.getState());
-     * }
-     */
 
     /**
      * Check that all app nodes in all clusters meet the minimum configuration
@@ -458,6 +396,8 @@ public class ServiceRequestsInFlightAutoscaler implements Task, ManagedLifecycle
         LoadBalancerConfiguration.ServiceConfiguration serviceConfig =
             loadBalancerConfig.getServiceConfig(serviceDomain);
         int requiredInstances = serviceConfig.getMinAppInstances();
+        
+        // we try to maintain the minimum number of instances required
         if (currentInstances < requiredInstances) {
             log.warn("App domain Sanity check failed for [" + serviceDomain +
                 "] . Current instances: " + currentInstances + ". Required instances: " +
@@ -469,7 +409,6 @@ public class ServiceRequestsInFlightAutoscaler implements Task, ManagedLifecycle
 
             // FIXME: should we need to consider serviceConfig.getInstancesPerScaleUp()?
             runInstances(appDomainContext, serviceDomain, diff);
-            // appDomainContext.resetRunningPendingInstances();
         }
     }
 
@@ -505,7 +444,7 @@ public class ServiceRequestsInFlightAutoscaler implements Task, ManagedLifecycle
 
         int queueLengthPerNode = serviceConfig.getQueueLengthPerNode();
         if (log.isDebugEnabled()) {
-            log.debug("******** Average load: " + average + " **** Handlable load: " +
+            log.debug("******** Average load: " + average + " **** Handleable load: " +
                 (runningAppInstances * queueLengthPerNode));
         }
         if (average > (runningAppInstances * queueLengthPerNode)) {
@@ -515,7 +454,6 @@ public class ServiceRequestsInFlightAutoscaler implements Task, ManagedLifecycle
             // current average is less than that can be handled by (current nodes - 1).
             scaleDown(serviceDomain);
         }
-        // appDomainContext.resetRunningPendingInstances();
     }
 
     /**

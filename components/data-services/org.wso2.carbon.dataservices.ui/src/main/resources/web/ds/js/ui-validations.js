@@ -1439,6 +1439,101 @@ function addXAPropertyFields(obj,propertyCount) {
     return true;
 }
 
+function addStaticUserAuthFields(obj,userCount) {
+    var propVal = parseInt(userCount);
+    document.getElementById('staticUserMappingsCount').value=  propVal+1;
+    var table = document.getElementById('staticUserMapping');
+
+    var carbonUsernameRaw = document.createElement("tr");
+    carbonUsernameRaw.setAttribute("id", "carbonUsernameRaw" + userCount);
+
+    var td1 = document.createElement("TD");
+    var label = document.createElement('label');
+    var labelText = document.createTextNode('Carbon Username');
+    label.appendChild(labelText);
+
+
+    var td2 = document.createElement("TD");
+    var el = document.createElement('input');
+    el.type = 'text';
+    el.name = 'carbonUsernameRaw'+userCount;
+    el.id = 'carbonUsernameRaw'+userCount;
+    el.size = 15;
+
+    td1.appendChild(label);
+    td2.appendChild(el);
+
+    carbonUsernameRaw.appendChild(td1);
+    carbonUsernameRaw.appendChild(td2);
+
+    var td3 = document.createElement("TD");
+    var valueLabel = document.createElement('label');
+    var valueLabelText = document.createTextNode('DB Username');
+    valueLabel.appendChild(valueLabelText);
+
+
+    var td4 = document.createElement("TD");
+    var valueEl = document.createElement('input');
+    valueEl.type = 'text';
+    valueEl.name = 'dbUsernameRaw'+userCount;
+    valueEl.id = 'dbUsernameRaw'+userCount;
+    valueEl.size = 15;
+
+    td3.appendChild(valueLabel);
+    td4.appendChild(valueEl);
+
+    var td5 = document.createElement("TD");
+    var dbpwdLabel = document.createElement('label');
+    var dbpwdLabelText = document.createTextNode('DB User Password');
+    dbpwdLabel.appendChild(dbpwdLabelText);
+
+
+    var td6 = document.createElement("TD");
+    var dbpwdEl = document.createElement('input');
+    dbpwdEl.type = 'password';
+    dbpwdEl.name = 'dbPwdRaw'+userCount;
+    dbpwdEl.id = 'dbPwdRaw'+userCount;
+    dbpwdEl.size = 15;
+
+    var deleteTD = document.createElement("td");
+    deleteTD.innerHTML = "<a href='#' class='delete-icon-link' onclick='deleteUserField(" +
+            userCount + ");return false;'>Delete</a>";
+
+    td5.appendChild(dbpwdLabel);
+    td6.appendChild(dbpwdEl);
+
+    carbonUsernameRaw.appendChild(td3);
+    carbonUsernameRaw.appendChild(td4);
+    carbonUsernameRaw.appendChild(td5);
+    carbonUsernameRaw.appendChild(td6);
+    carbonUsernameRaw.appendChild(deleteTD);
+
+    document.getElementById("staticUserMapping").getElementsByTagName('tbody')[0].appendChild(carbonUsernameRaw);
+    return true;
+}
+
+function deleteUserField(i) {
+    var deleteUserField = document.getElementById("carbonUsernameRaw" + i);
+    if (deleteUserField != undefined && deleteUserField != null) {
+        var parentTBody = deleteUserField.parentNode;
+        if (parentTBody != undefined && parentTBody != null) {
+            parentTBody.removeChild(deleteUserField);
+        }
+    }
+}
+
+function showDynamicUserAuthenticationConfigurations() {
+  var symbolMax =  document.getElementById('symbolMax');
+  var dynamicUserAuthenticationFields = document.getElementById('dynamicUserAuthenticationFields');
+  if(dynamicUserAuthenticationFields.style.display == 'none') {
+    symbolMax.setAttribute('style','background-image:url(images/minus.gif);');
+    dynamicUserAuthenticationFields.style.display = '';
+  } else {
+      symbolMax.setAttribute('style','background-image:url(images/plus.gif);');
+      dynamicUserAuthenticationFields.style.display = 'none';
+  }
+}
+
 function showAdvancedRDBMSConfigurations() {
   var pwdMngrSymbolMax =  document.getElementById('pwdMngrSymbolMax');
   var advancedConfigFields = document.getElementById('advancedConfigFields');

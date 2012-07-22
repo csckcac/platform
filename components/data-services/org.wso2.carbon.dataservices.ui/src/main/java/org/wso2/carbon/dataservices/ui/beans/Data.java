@@ -19,7 +19,9 @@ import org.apache.axiom.om.OMAbstractFactory;
 import org.apache.axiom.om.OMAttribute;
 import org.apache.axiom.om.OMElement;
 import org.apache.axiom.om.OMFactory;
+import org.wso2.carbon.dataservices.common.DBConstants;
 import org.wso2.carbon.dataservices.common.DBConstants.DBSFields;
+import org.wso2.carbon.dataservices.common.conf.DynamicAuthConfiguration;
 
 import javax.xml.namespace.QName;
 import java.util.*;
@@ -351,6 +353,30 @@ public boolean isDTP() {
                          nestedProperty.add(new Property(propertyName.getAttributeValue(), nestedPropertyEle.getText()));
                      }
                     property.setValue(nestedProperty);
+                } else if (name.getAttributeValue().equals(DBConstants.RDBMS.DYNAMIC_USER_AUTH_MAPPING)) {
+                    property.setName(name.getAttributeValue());
+                    ArrayList<DynamicAuthConfiguration.Entry> dynamicUserList = new ArrayList<DynamicAuthConfiguration.Entry>();
+                    DynamicAuthConfiguration dynamicAuthConfiguration = new DynamicAuthConfiguration();
+                    Iterator<OMElement> dynamicUserAuthConfigs = propertyEle.getChildrenWithName(new QName("configuration"));
+                    Iterator<OMElement> userEntries;
+                    while (dynamicUserAuthConfigs.hasNext()) {
+                        OMElement dynamicUserConfig = dynamicUserAuthConfigs.next();
+                        userEntries = dynamicUserConfig.getChildrenWithName(new QName("entry"));
+                        while (userEntries.hasNext()) {
+                            OMElement userEntry = userEntries.next();
+                            DynamicAuthConfiguration.Entry dynamicUserEntry = new DynamicAuthConfiguration.Entry();
+                            String carbonUsername = userEntry.getAttributeValue(new QName("request"));
+                            String dbUsername = userEntry.getFirstChildWithName(new QName("username")).getText();
+                            String dbUserPwd = userEntry.getFirstChildWithName(new QName("password")).getText();
+
+                            dynamicUserEntry.setRequest(carbonUsername);
+                            dynamicUserEntry.setUsername(dbUsername);
+                            dynamicUserEntry.setPassword(dbUserPwd);
+                            dynamicUserList.add(dynamicUserEntry);
+                        }
+                    }
+                    dynamicAuthConfiguration.setEntries(dynamicUserList);
+                    property.setValue(dynamicAuthConfiguration);
                 } else {
                     property.setName(name.getAttributeValue());
                     property.setValue(propertyEle.getText());

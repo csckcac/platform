@@ -16,8 +16,8 @@
 ~ under the License.
 -->
 <%@page import="org.wso2.carbon.dataservices.common.DBConstants" %>
+<%@ page import="org.wso2.carbon.dataservices.common.conf.DynamicAuthConfiguration" %>
 <%@ page import="org.wso2.carbon.dataservices.ui.beans.Config" %>
-<%@ page import="org.wso2.carbon.dataservices.ui.beans.Data" %>
 <%@ page import="org.wso2.carbon.dataservices.ui.beans.Property" %>
 <%@ page import="org.wso2.carbon.dataservices.ui.beans.Query" %>
 <%@ page import="org.wso2.carbon.ui.CarbonUIMessage" %>
@@ -34,6 +34,8 @@
             } else {
                 config.removeProperty(propertyName);
             }
+        } else if (value instanceof DynamicAuthConfiguration) {
+            config.updateProperty(propertyName, value);
         }
     }
 %>
@@ -54,6 +56,10 @@
     int propertyCount = 0;
     if (request.getParameter("propertyCount")!=null && !request.getParameter("propertyCount").equals("")){
        propertyCount = Integer.parseInt(request.getParameter("propertyCount")); 
+    }
+    int staticUserMappingsCount = 0;
+    if (request.getParameter("staticUserMappingsCount") != null && !request.getParameter("staticUserMappingsCount").equals("")) {
+        staticUserMappingsCount = Integer.parseInt(request.getParameter("staticUserMappingsCount"));
     }
     String xaType = request.getParameter("isXAType");
     String transactionIsolation = request.getParameter(DBConstants.RDBMS.DEFAULT_TX_ISOLATION);
@@ -86,6 +92,7 @@
     String useEquals = request.getParameter(DBConstants.RDBMS.USE_EQUALS);
     String suspectTimeout = request.getParameter(DBConstants.RDBMS.SUSPECT_TIMEOUT);
     String alternateUserNameAllowed = request.getParameter(DBConstants.RDBMS.ALTERNATE_USERNAME_ALLOWED);
+    String dynamicUserAuthClass = request.getParameter(DBConstants.RDBMS.DYNAMIC_USER_AUTH_CLASS);
 
     String excelDatasource = request.getParameter(DBConstants.Excel.DATASOURCE);
 
@@ -229,7 +236,7 @@
                     updateConfiguration(dsConfig, DBConstants.RDBMS.INITIAL_SIZE, initialSize);
                     updateConfiguration(dsConfig, DBConstants.RDBMS.MAX_ACTIVE, maxPool);
                     updateConfiguration(dsConfig, DBConstants.RDBMS.MAX_IDLE, maxIdle);
-                    updateConfiguration(dsConfig, DBConstants.RDBMS.MIN_IDLE, minPool);
+                    updateConfiguration(dsConfig, DBConstants.RDBMS.MIN_IDLE, minPool);                                          
                     updateConfiguration(dsConfig, DBConstants.RDBMS.MAX_WAIT, maxWait);
                     updateConfiguration(dsConfig, DBConstants.RDBMS.VALIDATION_QUERY, validationQuery);
                     if (!"true".equals(testOnBorrow)) {
@@ -298,6 +305,39 @@
                         updateConfiguration(dsConfig, DBConstants.RDBMS.USE_EQUALS, useEquals);
                     } else {
                         dsConfig.removeProperty(DBConstants.RDBMS.USE_EQUALS);
+                    }
+                    updateConfiguration(dsConfig, DBConstants.RDBMS.DYNAMIC_USER_AUTH_CLASS, dynamicUserAuthClass);
+                    Iterator<Property> iterator = dsConfig.getProperties().iterator();
+                    ArrayList<DynamicAuthConfiguration.Entry> dynamicUserList = new ArrayList<DynamicAuthConfiguration.Entry>();
+                    DynamicAuthConfiguration dynamicAuthConfiguration = new DynamicAuthConfiguration();
+                    while (iterator.hasNext()) {
+                        Property availableProperty = iterator.next();
+                        if (availableProperty.getName().equals(DBConstants.RDBMS.DYNAMIC_USER_AUTH_MAPPING)) {
+                            if (availableProperty.getValue() instanceof DynamicAuthConfiguration) {
+                                for (int j = 0; j < staticUserMappingsCount; j++) {
+                                    DynamicAuthConfiguration.Entry dynamicUserEntry = new DynamicAuthConfiguration.Entry();
+
+                                    String carbonUsername = request.getParameter("carbonUsernameRaw" + j);
+                                    String dbUsername = request.getParameter("dbUsernameRaw" + j);
+                                    String dbUserPwd = request.getParameter("dbPwdRaw" + j);
+                                    
+                                    if (carbonUsername != null) {
+                                        dynamicUserEntry.setRequest(carbonUsername);
+                                        dynamicUserEntry.setUsername(dbUsername);
+                                        dynamicUserEntry.setPassword(dbUserPwd);
+
+                                        dynamicUserList.add(dynamicUserEntry);
+                                    }
+                                }
+                                dynamicAuthConfiguration.setEntries(dynamicUserList);
+                                break;
+                            }
+                        }
+                    }
+                    if (dynamicUserList.size() > 0) {
+                        updateConfiguration(dsConfig, DBConstants.RDBMS.DYNAMIC_USER_AUTH_MAPPING, dynamicAuthConfiguration);
+                    } else {
+                        dsConfig.removeProperty(DBConstants.RDBMS.DYNAMIC_USER_AUTH_MAPPING);
                     }
                 } else if (DBConstants.DataSourceTypes.EXCEL.equals(datasourceType)) {
                     updateConfiguration(dsConfig, DBConstants.Excel.DATASOURCE, excelDatasource);

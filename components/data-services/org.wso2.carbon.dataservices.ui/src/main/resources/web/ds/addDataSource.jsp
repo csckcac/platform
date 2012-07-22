@@ -16,20 +16,25 @@
  ~ under the License.
  -->
 
-<%@page import="org.wso2.carbon.dataservices.common.DBConstants.RDBMS"%>
+<%@page import="org.apache.axis2.context.ConfigurationContext"%>
 <%@ taglib prefix="fmt" uri="http://java.sun.com/jsp/jstl/fmt" %>
 <%@ taglib uri="http://wso2.org/projects/carbon/taglibs/carbontags.jar" prefix="carbon" %>
-<%@ page import="org.wso2.carbon.utils.ServerConstants" %>
-<%@ page import="org.apache.axis2.context.ConfigurationContext" %>
-<%@ page import="org.wso2.carbon.ui.CarbonUIUtil" %>
 <%@ page import="org.wso2.carbon.CarbonConstants" %>
+<%@ page import="org.wso2.carbon.dataservices.common.DBConstants" %>
+<%@ page import="org.wso2.carbon.dataservices.common.DBConstants.RDBMS" %>
+<%@ page import="org.wso2.carbon.dataservices.common.RDBMSUtils" %>
+<%@ page import="org.wso2.carbon.dataservices.common.conf.DynamicAuthConfiguration" %>
 <%@ page import="org.wso2.carbon.dataservices.ui.DataServiceAdminClient" %>
 <%@ page import="org.wso2.carbon.dataservices.ui.beans.Config" %>
+<%@ page import="org.wso2.carbon.dataservices.ui.beans.Property" %>
+<%@ page import="org.wso2.carbon.ui.CarbonUIUtil" %>
+<%@ page import="org.wso2.carbon.utils.ServerConstants" %>
+<%@ page import="javax.xml.bind.JAXBContext" %>
+<%@ page import="javax.xml.bind.Marshaller" %>
 <%@ page import="java.util.ArrayList" %>
 <%@ page import="java.util.Iterator" %>
-<%@ page import="org.wso2.carbon.dataservices.ui.beans.Property" %>
-<%@ page import="org.wso2.carbon.dataservices.common.DBConstants" %>
-<%@ page import="org.wso2.carbon.dataservices.common.RDBMSUtils" %>
+<%@ page import="javax.xml.bind.JAXBException" %>
+<%@ page import="java.util.List" %>
 
 
 <fmt:bundle basename="org.wso2.carbon.dataservices.ui.i18n.Resources">
@@ -52,6 +57,7 @@
 <script type="text/javascript">
 
 var propertyCount_ = 0;
+var staticUserMappingsCount = 0;
 function setValueConf() {
 	if (document.getElementById('datasourceType').value == 'EXCEL') {
        var elementId ='excel_datasource';
@@ -254,6 +260,13 @@ private Config addNotAvailableFunctions(Config config,String selectedType, HttpS
          if (config.getPropertyValue(DBConstants.RDBMS.ALTERNATE_USERNAME_ALLOWED) == null) {
 			 config.addProperty(DBConstants.RDBMS.ALTERNATE_USERNAME_ALLOWED, "");
 		 }
+         if (config.getPropertyValue(DBConstants.RDBMS.DYNAMIC_USER_AUTH_CLASS) == null) {
+			 config.addProperty(DBConstants.RDBMS.DYNAMIC_USER_AUTH_CLASS, "");
+		 }
+        DynamicAuthConfiguration dynamicUserConfig = new DynamicAuthConfiguration();
+        if (config.getPropertyValue(DBConstants.RDBMS.DYNAMIC_USER_AUTH_MAPPING) == null) {
+            config.addProperty(DBConstants.RDBMS.DYNAMIC_USER_AUTH_MAPPING, dynamicUserConfig);
+        }
     } else if (DBConstants.DataSourceTypes.EXCEL.equals(selectedType)) {
     	 if (config.getPropertyValue(DBConstants.Excel.DATASOURCE) == null) {
 			 config.addProperty(DBConstants.Excel.DATASOURCE, "");
@@ -352,6 +365,8 @@ private Config addNotAvailableFunctions(Config config,String selectedType, HttpS
     String visibility = request.getParameter("visibility");
     // Service name with the path
     String detailedServiceName = request.getParameter("detailedServiceName");
+    String dynamicUserAuthClass = request.getParameter("dynamicUserAuthClass");
+    dynamicUserAuthClass = (dynamicUserAuthClass == null) ? "" : dynamicUserAuthClass;
     if (configId == null
         || (selectedType != null && newConfig.getDataSourceType() != null) && !newConfig.getDataSourceType().equals(selectedType)) {
         /* if a new data source or,
@@ -415,7 +430,11 @@ private Config addNotAvailableFunctions(Config config,String selectedType, HttpS
                     newConfig.addProperty(DBConstants.RDBMS.USE_EQUALS,"");
                     newConfig.addProperty(DBConstants.RDBMS.SUSPECT_TIMEOUT,"");
                     newConfig.addProperty(DBConstants.RDBMS.ALTERNATE_USERNAME_ALLOWED,"");
-                    
+                    newConfig.addProperty(DBConstants.RDBMS.DYNAMIC_USER_AUTH_CLASS,"");
+
+                    DynamicAuthConfiguration dynamicUserConfig = new DynamicAuthConfiguration();
+                    newConfig.addProperty(DBConstants.RDBMS.DYNAMIC_USER_AUTH_MAPPING, dynamicUserConfig);
+
                 } else if (DBConstants.DataSourceTypes.EXCEL.equals(selectedType)) {
                     newConfig.addProperty(DBConstants.Excel.DATASOURCE, "");
 
@@ -498,7 +517,6 @@ private Config addNotAvailableFunctions(Config config,String selectedType, HttpS
             		conf.addProperty(DBConstants.RDBMS.REMOVE_ABANDONED,"");
             		conf.addProperty(DBConstants.RDBMS.REMOVE_ABANDONED_TIMEOUT,"");
             		conf.addProperty(DBConstants.RDBMS.LOG_ABANDONED,"");
-
                     conf.addProperty(DBConstants.RDBMS.DEFAULT_AUTOCOMMIT,"");
                     conf.addProperty(DBConstants.RDBMS.DEFAULT_READONLY,"");
                     conf.addProperty(DBConstants.RDBMS.DEFAULT_CATALOG,"");
@@ -514,6 +532,10 @@ private Config addNotAvailableFunctions(Config config,String selectedType, HttpS
                     conf.addProperty(DBConstants.RDBMS.USE_EQUALS,"");
                     conf.addProperty(DBConstants.RDBMS.SUSPECT_TIMEOUT,"");
                     conf.addProperty(DBConstants.RDBMS.ALTERNATE_USERNAME_ALLOWED,"");
+                    conf.addProperty(DBConstants.RDBMS.DYNAMIC_USER_AUTH_CLASS,"");
+
+                    DynamicAuthConfiguration dynamicUserConfig = new DynamicAuthConfiguration();
+                    conf.addProperty(DBConstants.RDBMS.DYNAMIC_USER_AUTH_MAPPING, dynamicUserConfig);
 
                 } else if (DBConstants.DataSourceTypes.EXCEL.equals(selectedType)) {
                     conf.addProperty(DBConstants.Excel.DATASOURCE, "");
@@ -1111,7 +1133,9 @@ private Config addNotAvailableFunctions(Config config,String selectedType, HttpS
             ||propertyName.equals(DBConstants.RDBMS.MAX_AGE)
             ||propertyName.equals(DBConstants.RDBMS.USE_EQUALS)
             ||propertyName.equals(DBConstants.RDBMS.SUSPECT_TIMEOUT)
-            ||propertyName.equals(DBConstants.RDBMS.ALTERNATE_USERNAME_ALLOWED))) {%>
+            ||propertyName.equals(DBConstants.RDBMS.ALTERNATE_USERNAME_ALLOWED)
+            ||propertyName.equals(DBConstants.RDBMS.DYNAMIC_USER_AUTH_CLASS)
+            ||propertyName.equals(DBConstants.RDBMS.DYNAMIC_USER_AUTH_MAPPING))) {%>
     <td class="leftCol-small" style="white-space: nowrap;">
         <fmt:message key="<%=propertyName%>"/><%=(isFieldMandatory(propertyName)?"<font color=\"red\">*</font>":"")%>
     </td>
@@ -1283,7 +1307,9 @@ private Config addNotAvailableFunctions(Config config,String selectedType, HttpS
             ||propertyName.equals(DBConstants.RDBMS.MAX_AGE)
             ||propertyName.equals(DBConstants.RDBMS.USE_EQUALS)
             ||propertyName.equals(DBConstants.RDBMS.SUSPECT_TIMEOUT)
-            ||propertyName.equals(DBConstants.RDBMS.ALTERNATE_USERNAME_ALLOWED))){ %>
+            ||propertyName.equals(DBConstants.RDBMS.ALTERNATE_USERNAME_ALLOWED)
+            ||propertyName.equals(DBConstants.RDBMS.DYNAMIC_USER_AUTH_CLASS)
+            ||propertyName.equals(DBConstants.RDBMS.DYNAMIC_USER_AUTH_MAPPING))){ %>
             <input type="text" size="50" id="<%=propertyName%>" name="<%=propertyName%>"
                                value="<%=propertyValue%>"/>
        <%}%>
@@ -1456,8 +1482,113 @@ private Config addNotAvailableFunctions(Config config,String selectedType, HttpS
             </td>
         </tr>
 </table>
+
+<table id="dynamicUserAuthenticationTable" class="styledLeft noBorders" cellspacing="0" width="100%">
+    <tr>
+        <td colspan="2" class="middle-header">
+            <a onclick="showDynamicUserAuthenticationConfigurations()" class="icon-link" style="background-image:url(images/plus.gif);"
+               href="#symbolMax" id="symbolMax"></a>
+            <fmt:message key="dynamic.user.authentication.configuration.parameters"/>
+        </td>
+    </tr>
+    <tr id="dynamicUserAuthenticationFields" style="display:none">
+        <td>
+            <table id="dynamicUserAuthenticationFieldsTable" cellspacing="0" width="100%">
+                <%
+                    if (configId != null && configId.trim().length() > 0) {
+                        Config dsConfig = dataService.getConfig(configId);
+
+                        if (dsConfig == null || (dsConfig != null && !flag.equals("edit"))) {
+                            dsConfig = newConfig;
+                        }
+                        if (dsConfig != null) {
+                            dataSourceType = dsConfig.getDataSourceType();
+                            if (dataSourceType == null) {
+                                dataSourceType = "";
+                            }
+                            if (selectedType == null) {
+                                selectedType = dsConfig.getDataSourceType();
+                            }
+                            dsConfig = addNotAvailableFunctions(dsConfig, selectedType, request);
+                            ArrayList configProperties = dsConfig.getProperties();
+                            propertyIterator = configProperties.iterator();
+
+                        }
+                    }
+                    if (propertyIterator != null) {
+                        DynamicAuthConfiguration dynamicAuthConfiguration;
+                        List<DynamicAuthConfiguration.Entry> dynamicUserEntries = new ArrayList<DynamicAuthConfiguration.Entry>();
+                        while (propertyIterator.hasNext()) {
+                            Property property = (Property) propertyIterator.next();
+                            String propertyName = property.getName();
+                            Object propertyValue = property.getValue();
+                            if (property.getValue() instanceof String) {
+                                if (propertyName.equals(DBConstants.RDBMS.DYNAMIC_USER_AUTH_CLASS)) {
+                                    dynamicUserAuthClass = (String)propertyValue;
+                                }
+                            } else if (property.getValue() instanceof DynamicAuthConfiguration) {
+                                if (propertyName.equals(DBConstants.RDBMS.DYNAMIC_USER_AUTH_MAPPING)) {
+                                    dynamicAuthConfiguration = (DynamicAuthConfiguration)propertyValue;
+                                    dynamicUserEntries = dynamicAuthConfiguration.getEntries();
+                                }
+                            }
+                        }
+                %>
+                <table id="runtimeUserMapping"  >
+                    <tr>
+                        <td><label><fmt:message key="dynamic.user.authentication.class"/></label></td>
+                        <td><input type="text" name="dynamicUserAuthClass" id="dynamicUserAuthClass" size="50" value="<%=dynamicUserAuthClass%>"/></td>
+                    </tr>
+                </table>
+
+                <table id="staticUserMapping" border="0" style="border-width: 1px; border-color:#000000; border-style: solid;">
+                    <tr>
+                        <% if (dynamicUserEntries != null) {  //edit %>
+                        <td colspan="2"><a class="icon-link"
+                                           style="background-image:url(../admin/images/add.gif);"
+                                           onclick=" addStaticUserAuthFields(document,(document.getElementById('staticUserMappingsCount').value == 0 && <%=dynamicUserEntries.size() != 0 %>) ? <%=dynamicUserEntries.size()%> : document.getElementById('staticUserMappingsCount').value);">
+                            <fmt:message key="add.new.dynamic.user.authentication"/></a></td>
+
+                        <%} else {%>
+                        <td colspan="2"><a class="icon-link"
+                                           style="background-image:url(../admin/images/add.gif);"
+                                           onclick=" addStaticUserAuthFields(document,document.getElementById('staticUserMappingsCount').value);">
+                            <fmt:message key="add.new.dynamic.user.authentication"/></a></td>
+                        <% } %>
+                    </tr>
+                    <%  DynamicAuthConfiguration.Entry userEntry;
+                        if (dynamicUserEntries != null) {
+                        for (int i = 0; i < dynamicUserEntries.size(); i++) {
+                            userEntry = dynamicUserEntries.get(i);
+                            String carbonUsername = userEntry.getRequest();
+                            String dbUsername = userEntry.getUsername();
+                            String dbPwd = userEntry.getPassword();  %>
+
+                    <tr id="carbonUsernameRaw<%=i%>">
+                        <td><label>Carbon Username</label></td>
+                        <td><input type="text" name="carbonUsernameRaw<%=i%>" id="carbonUsernameRaw<%=i%>" size="15" value="<%=carbonUsername%>"/></td>
+
+                        <td><label>DB Username</label></td>
+                        <td><input type="text" name="dbUsernameRaw<%=i%>" id="dbUsernameRaw<%=i%>" size="15" value="<%=dbUsername%>"/></td>
+
+                        <td><label>DB User Password</label></td>
+                        <td>
+                            <input type="password" name="dbPwdRaw<%=i%>" id="dbPwdRaw<%=i%>" size="15" value="<%=dbPwd%>"/>
+                        </td>
+                        <td><a class="icon-link" style="background-image:url(../admin/images/delete.gif);"
+                               href="javascript:deleteUserField('<%=i%>')"> <fmt:message key="delete"/></a></td>
+                    </tr>
+
+                    <%  }
+                    }%>
+                </table>
+            </table>
+        </td>
+    </tr>
+    <input type="hidden" id="staticUserMappingsCount" name="staticUserMappingsCount" value="<%=(dynamicUserEntries != null) ? dynamicUserEntries.size() : 0%>"/>
+</table>
 <%
-    }
+    }   }
 %>
 
 <table id="buttonTable" class="styledLeft noBorders" cellspacing="0" width="100%">

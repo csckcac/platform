@@ -47,11 +47,60 @@
             <groupId>com.google.guava.wso2</groupId>
             <artifactId>guava</artifactId>
         </dependency>
-        <!--dependency>
+         <!--Cassandra -->
+
+        <dependency>
+            <groupId>org.apache.cassandra.wso2</groupId>
+            <artifactId>apache-cassandra</artifactId>
+            <version>${cassandra.version}</version>
+        </dependency>
+
+        <!--Hector-->
+        <dependency>
+            <groupId>org.hectorclient</groupId>
+            <artifactId>hector-core</artifactId>
+            <version>${hector-core.version}</version>
+        </dependency>
+        <dependency>
+            <groupId>libthrift.wso2</groupId>
+            <artifactId>libthrift</artifactId>
+            <version>${libthrift.version}</version>
+        </dependency>
+        <dependency>
+            <groupId>org.perf4j.wso2</groupId>
+            <artifactId>perf4j</artifactId>
+            <version>${perf4j.version}</version>
+        </dependency>
+        <dependency>
+            <groupId>org.cliffc.high_scale_lib.wso2</groupId>
+            <artifactId>high-scale-lib</artifactId>
+            <version>${highscale.version}</version>
+        </dependency>
+        <dependency>
+            <groupId>org.slf4j</groupId>
+            <artifactId>slf4j-api</artifactId>
+            <version>${slf4j.version}</version>
+        </dependency>
+        <dependency>
+            <groupId>org.slf4j</groupId>
+            <artifactId>slf4j-log4j12</artifactId>
+            <version>${slf4j.version}</version>
+        </dependency>
+        <dependency>
+            <groupId>antlr.wso2</groupId>
+            <artifactId>antlr</artifactId>
+            <version>${antlr.version}</version>
+        </dependency>
+        <dependency>
+            <groupId>org.antlr.wso2</groupId>
+            <artifactId>antlr-runtime</artifactId>
+            <version>${antlr.version}</version>
+        </dependency>
+        <dependency>
             <groupId>org.wso2.carbon</groupId>
-            <artifactId>org.wso2.carbon.agent.server.feature</artifactId>
+            <artifactId>org.wso2.carbon.databridge.datapublisher.feature</artifactId>
               <type>zip</type>
-        </dependency-->
+        </dependency>
     </dependencies>
     
     <build>
@@ -105,13 +154,20 @@
                             <bundles>
                                 <bundleDef>org.wso2.carbon:org.wso2.carbon.logging.service</bundleDef>
                                 <bundleDef>org.springframework.ws.wso2:spring.framework</bundleDef>
-                              
-                              
+                                <bundleDef>org.apache.cassandra.wso2:apache-cassandra</bundleDef>
+                                <bundleDef>libthrift.wso2:libthrift</bundleDef>
+                                <bundleDef>org.perf4j.wso2:perf4j</bundleDef>
+                                <bundleDef>org.cliffc.high_scale_lib.wso2:high-scale-lib</bundleDef>
+                                <bundleDef>org.slf4j:slf4j-api</bundleDef>
+                                <bundleDef>org.slf4j:slf4j-log4j12</bundleDef>
+                                <bundleDef>org.hectorclient:hector-core</bundleDef>
+                                <bundleDef>antlr.wso2:antlr</bundleDef>
+                                <bundleDef>org.antlr.wso2:antlr-runtime</bundleDef>
                                 <bundleDef>com.google.guava.wso2:guava</bundleDef>
                                 
                             </bundles>
                             <importFeatures>
-				<!--importFeatureDef>org.wso2.carbon.agent.server:${wso2carbon.version}</importFeatureDef-->
+				<importFeatureDef>org.wso2.carbon.databridge.datapublisher:${wso2carbon.version}</importFeatureDef>
                                 <importFeatureDef>org.wso2.carbon.core.server:${wso2carbon.version}</importFeatureDef>
                             </importFeatures>
                         </configuration>

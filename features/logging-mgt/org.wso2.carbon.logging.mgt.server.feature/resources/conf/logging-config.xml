@@ -17,18 +17,24 @@
  -->
 
 <!--
-    This is the configuration file for Syslog specific properties.
+    This is the configuration file for logging specific properties.
 -->
 
-<syslogConfig xmlns="http://wso2.org/projects/carbon/carbon.xml">
-    <isSyslogOn>false</isSyslogOn>
-    <!--Set the syslog-ng host url which specifies the log location where the logs are hosted-->
-    <syslogHost>http://node0.log.cloud.private.wso2.com/logs/stratos</syslogHost>
-    <port>80</port>
-    <realm>Stratos</realm>
-    <userName>carbon</userName>
-    <password>carbon</password>
-     <!--Set the syslog-ng log pattern set the tenant specific log pattern-->
-     <logPattern>TID: [%T] </logPattern>
-
-</syslogConfig>
+<loggingConfig xmlns="http://wso2.org/projects/carbon/carbon.xml">
+    <isDataFromCassandra>false</isDataFromCassandra>
+    <!--Set the BAM Event publisher host url which specifies the log location where the logs are hosted-->
+    <cassandraHost>localhost:9160</cassandraHost>
+    <keyspace>EVENT_KS</keyspace>
+    <columnFamily>log</columnFamily>
+    <userName>admin</userName>
+    <password>admin</password>
+    <cluster>admin</cluster>
+   <publisherURL>tcp://localhost:7611</publisherURL>
+   <publisherUser>admin</publisherUser>
+   <publisherPassword>admin</publisherPassword>
+   <archivedHost>http://127.0.0.1/logs/stratos/0/WSO2%20Stratos%20Manager/</archivedHost>
+   <archivedUser>admin</archivedUser>
+   <archivedPassword>admin</archivedPassword>
+  <archivedPort>80</archivedPort>
+  <archivedRealm>Stratos</archivedRealm>
+</loggingConfig>

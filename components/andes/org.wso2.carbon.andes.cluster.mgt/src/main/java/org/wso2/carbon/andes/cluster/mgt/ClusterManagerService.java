@@ -169,10 +169,10 @@ public class ClusterManagerService {
                 if (startingIndex == index || startingIndex < index) {
                     nodeDetailArray[nodeDetailsIndex] = new NodeDetail();
 
-                    nodeDetailArray[nodeDetailsIndex].setHostName(nodeDetail.getHostName());
-                    nodeDetailArray[nodeDetailsIndex].setIpAddress(nodeDetail.getIpAddress());
                     nodeDetailArray[nodeDetailsIndex].setNodeId(nodeDetail.getNodeId());
                     nodeDetailArray[nodeDetailsIndex].setZookeeperID(nodeDetail.getZookeeperID());
+                    nodeDetailArray[nodeDetailsIndex].setHostName(nodeDetail.getHostName());
+                    nodeDetailArray[nodeDetailsIndex].setIpAddress(nodeDetail.getIpAddress());
 
                     //to remove
                     nodeDetailArray[nodeDetailsIndex].setMessagesReceivedLastFiveMin(nodeDetail.getMessagesReceivedLastFiveMin());

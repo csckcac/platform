@@ -39,6 +39,7 @@
                 <module>sso-saml</module>
                 <module>openid-admin</module>
                 <module>passive-sts</module>
+		<module>scim</module>
             </modules>
     <dependencyManagement>
         <dependencies>

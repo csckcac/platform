@@ -230,7 +230,7 @@
                             <tbody>
                             <tr>
                                 <td colspan="2" class="sub-header"><fmt:message
-                                        key="lb.endpoint.property.header"/></td>
+                                        key="fo.endpoint.property.header"/></td>
                             </tr>
                             <tr>
                                 <td colspan="2">

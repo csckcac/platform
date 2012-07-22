@@ -42,7 +42,7 @@ function submitDynamicEndpointData(type, isFromTemplateEditor) {
 
     var key = document.getElementById('synRegKey').value;
     if (key == '') {
-        CARBON.showWarningDialog('<fmt:message key="empty.key.field"/>');
+        CARBON.showWarningDialog(jsi18n['empty.key.field']);
         return false;
     }
 

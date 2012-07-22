@@ -324,7 +324,9 @@
                                 </td>
                                 </tr>
                                 <tr>
-                                    <td><fmt:message key="registry.key"/></td>
+                                    <td><fmt:message key="registry.key"/>
+                                        <span class="required">*</span>
+                                    </td>
                                     <td><span id="reg">conf:</span><input type="text" size="75"
                                                                          id="synRegKey"/>
                                     </td>

@@ -60,45 +60,6 @@
 <script type="text/javascript" src="js/templateEndpoint-validate.js"></script>
 <script type="text/javascript" src="js/common-tasks.js"></script>
 
-<script type="text/javascript">
-	function validateAndSubmitEndpointData(type, isAnonymous, isFromTemplateEditor){
-		if(requiredFieldsFilled()){
-			submitEndpointData(type, isAnonymous, isFromTemplateEditor);
-		}
-		else{
-			return false;
-		}
-	}
-	
-	function validateAndSubmitDynamicEndpointData(type, isFromTemplateEditor){
-		if(requiredFieldsFilled()){
-			if(isEmptyField('synRegKey')){
-				CARBON.showErrorDialog(jsi18n["empty.key.field"]);
-				return false;
-			}
-			submitDynamicEndpointData(type, isFromTemplateEditor);
-		}
-		else{
-			return false;
-		}
-	}
-	
-	function requiredFieldsFilled(){
-		if(isEmptyField('endpointName')){
-			CARBON.showErrorDialog(jsi18n["name.field.cannot.be.empty"]);
-			return false;
-		}
-		if(isEmptyField('address')){
-			CARBON.showErrorDialog(jsi18n["address.field.cannot.be.empty"]);
-			return false;
-		}
-		if(isEmptyField('target.template')){
-			CARBON.showErrorDialog(jsi18n["target.template.empty.error"]);
-			return false;
-		}
-		return true;
-	}
-</script>
 
 <link rel="stylesheet" type="text/css" href="../resources/css/registry.css"/>
 
@@ -355,7 +316,7 @@
                 <td class="buttonRow" colspan="2">
                     <input type="button" value="<fmt:message key="save"/>"
                            class="button" name="save"
-                           onclick="javascript:validateAndSubmitEndpointData('Template','<%=isAnonymous%>','false');"/>
+                           onclick="javascript:submitEndpointData('Template','<%=isAnonymous%>','false');"/>
                     <%
                         if (!isAnonymous) {
                     %>
@@ -417,7 +378,7 @@
                     <td class="buttonRow">
                         <input type="button" class="button"
                                value="<fmt:message key="save"/>" id="saveSynRegButton"
-                               onclick="javascript:validateAndSubmitDynamicEndpointData('Template','false'); return false;"/>
+                               onclick="javascript:submitDynamicEndpointData('Template','false'); return false;"/>
                         <input type="button" class="button"
                                value="<fmt:message key="cancel"/>"
                                id="cancelSynRegButton"

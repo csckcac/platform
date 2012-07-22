@@ -14,9 +14,17 @@
  ~  limitations under the License.
  */
 
-function validateTemplateEndpoint(isAnonymous) {
+function validateTemplateEndpoint(isAnonymous,isFromTemplateEditor) {
     if (isAnonymous == 'false' && isEmptyField('endpointName')) {
         CARBON.showWarningDialog(jsi18n['name.field.cannot.be.empty']);
+        return false;
+    }
+    if (isEmptyField('address')) {
+        CARBON.showWarningDialog(jsi18n['address.field.cannot.be.empty']);
+        return false;
+    }
+    if (isEmptyField('target.template')) {
+        CARBON.showWarningDialog(jsi18n['target.template.empty.error']);
         return false;
     }
     return true;

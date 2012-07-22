@@ -972,11 +972,59 @@ public class ClusterManager {
     }
 
     public List<Integer> getZkNodes(){
-        return new ArrayList(queueNodeMap.keySet());
+        List<String> storedNodes = ClusterResourceHolder.getInstance().getCassandraMessageStore().storedNodeDetails();
+        ArrayList<Integer> zkNodeIdList = new ArrayList<Integer>();
+        for(String storedNode : storedNodes)
+        {
+            Integer ZKId = Integer.parseInt(storedNode);
+            zkNodeIdList.add(ZKId);
+        }
+
+        return zkNodeIdList;
     }
 
     public String[] getQueues(int nodeId) {
-        return queueNodeMap.get(nodeId);
+        String[] queuesListofNode = null;
+        try {
+            List<String> nodeList = zkAgent.getZooKeeper().
+                    getChildren(CoordinationConstants.QUEUE_WORKER_COORDINATION_PARENT, false);
+
+            for (String node : nodeList) {
+
+                // Splitting out the id assigned to the node by zookeeper
+                int currentId = getNoideIdFromZkNode(node);
+                if (currentId == nodeId) {
+
+                    String path = CoordinationConstants.QUEUE_WORKER_COORDINATION_PARENT +
+                            CoordinationConstants.NODE_SEPARATOR + node;
+                    byte[] data = zkAgent.getZooKeeper().getData(path, false, null);
+
+                    String dataStr = new String(data);
+
+                    // Data formats
+                    //1)id:q1,q2,q3,:node=q,node=q2
+                    //2)id:
+                    //3)id:q1,q2,
+                    //4)id::node=q,node=q2
+                    String[] parts = dataStr.split(":");
+
+                    if (parts.length >= 1) {
+
+                        if (parts.length != 1 && parts[1].length() > 0) {
+                            queuesListofNode = parts[1].split(",");
+                        }
+                    }
+
+                    break;
+                }
+
+            }
+
+        } catch (Exception e) {
+            log.error("Error processing node data", e);
+        }
+        return queuesListofNode;
+
     }
 
     public int numberOfMessagesInQueue(String queue) {

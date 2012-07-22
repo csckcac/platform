@@ -39,8 +39,8 @@
         <table class="bodyTable">
             <thead>
                <tr>
-                   <td>Property Name</td>
-                   <td>Description</td>
+                   <td width="15%">Property Name</td>
+                   <td width="85%">Description</td>
                </tr>
             </thead>
             <tbody>
@@ -115,7 +115,7 @@
                     <td>(boolean) Flag to log stack traces for application code which abandoned a Connection. Logging of abandoned Connections adds overhead for every Connection borrow because a stack trace has to be generated. The default value is false.</td>
                 </tr>
 		<tr>
-                    <td>Default Auto Commit</td>
+                    <td>Auto Commit</td>
                     <td>(boolean) The default auto-commit state of connections created by this pool. If not set, default is JDBC driver default (If not set then the setAutoCommit method will not be called.)</td>
                 </tr>
 		<tr>

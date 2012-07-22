@@ -52,8 +52,14 @@ public class TaskQuartzJobAdapter implements Job {
 				Map<String, String> properties = (Map<String, String>) dataMap.get(
 						TaskConstants.TASK_PROPERTIES);
 				this.task.setProperties(properties);
-				this.task.init();
 				this.tenantId = Integer.parseInt(properties.get(TaskInfo.TENANT_ID_PROP));
+				try {
+					SuperTenantCarbonContext.startTenantFlow();
+					SuperTenantCarbonContext.getCurrentContext().setTenantId(this.getTenantId());
+				    this.task.init();
+				} finally {
+					SuperTenantCarbonContext.endTenantFlow();
+				}				
 			} catch (Exception e) {
 				throw new JobExecutionException("Error in creating an object of task class: "
 						+ taskClassName, e);

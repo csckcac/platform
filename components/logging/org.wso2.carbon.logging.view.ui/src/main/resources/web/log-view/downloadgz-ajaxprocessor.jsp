@@ -40,7 +40,8 @@
 	String tenantDomain ="";
 	String serviceName = "WSO2 Stratos Manager";
 	String downloadFile = request.getParameter("logFile");
-	String fileName = downloadFile.replace(".gz","");
+	String fileName = downloadFile;
+	//String fileName = downloadFile.replace(".gz","");
 	try {
 		out.clear();
 		out = pageContext.pushBody();
@@ -50,9 +51,9 @@
 		tenantDomain = (tenantDomain == null) ? "" : tenantDomain;
 		serviceName = (serviceName == null) ? "WSO2 Stratos Manager" : serviceName;
 		logViewerClient = new LogViewerClient(cookie, backendServerURL, configContext);
-	    logViewerClient.downloadLogFiles(downloadFile,tenantDomain,serviceName,response); 
+	    logViewerClient.downloadArchivedLogFiles(fileName,response); 
 	   
-//		out.flush();
+		out.flush();
          out.close();
 	} catch (Exception e) {
 		CarbonUIMessage.sendCarbonUIMessage(e.getMessage(), CarbonUIMessage.ERROR, request,

@@ -25,8 +25,8 @@ public final class LoggingConstants {
     public static final String SYSLOG = RegistryResources.LOGGERS + "syslog/SYSLOG_PROPERTIES";
     public static final String CASSANDRA = RegistryResources.LOGGERS + "cassandra/CASSANDRA_PROPERTIES";
     public static final String URL_SEPARATOR ="/";
-    public static final String SYSLOG_CONF_FILE ="logging-config.xml";
-    public static final String CASSANDRA_CONF_FILE ="cassandra-config.xml";
+    public static final String LOGGING_CONF_FILE ="logging-config.xml";
+    public static final String SYSLOG_CONF_FILE ="syslog-config.xml";
     public static final String ETC_DIR = "etc";
     public static final String USERNAME_KEY = "username";
 	public static final String PASSWORD_KEY = "password";
@@ -48,11 +48,16 @@ public final class LoggingConstants {
     public static final String MULTITENANCY_CONFIG_FOLDER = "multitenancy";
     public static final String WSO2CARBON_CONSOLE_APPENDER = "CARBON_CONSOLE";
     public static final String WSO2CARBON_FILE_APPENDER = "CARBON_LOGFILE";
+    public static final String WSO2CARBON_EVENT_APPENDER = "LOGEVENT";
     public static final String WSO2CARBON_MEMORY_APPENDER = "CARBON_MEMORY";
     public static final String WSO2CARBON_SYS_LOG_APPENDER = "CARBON_SYS_LOG";
 
 	public static final int MEMORY_APPENDER_BUFFER_SZ = 200;
 	
+	public static final String DATE_FORMATTER = "yyyy-MM-dd";
+	public static final String DATE_TIME_FORMATTER = "yyyy-MM-dd HH:mm:ss,SSS";
+	public static final String GMT = "GMT";
+
 
     public static final class SyslogProperties {
     	public static final String LOG_INDEX_URL = "log.index.url";
@@ -63,16 +68,16 @@ public final class LoggingConstants {
     }
     
     public static final class HColumn {
-    	public static final String TENANT_ID ="tenantID";
-    	public static final String SERVER_NAME = "serverName";
-    	public static final String APP_NAME = "appName";
-    	public static final String LOG_TIME ="logTime";
-    	public static final String LOGGER = "logger";
-    	public static final String PRIORITY = "priority";
-    	public static final String MESSAGE = "message";
-    	public static final String IP = "ip";
-    	public static final String STACKTRACE = "stacktrace";
-    	public static final String INSTANCE ="instance";
+    	public static final String TENANT_ID ="payload_tenantID";
+    	public static final String SERVER_NAME = "payload_serverName";
+    	public static final String APP_NAME = "payload_appName";
+    	public static final String LOG_TIME ="payload_logTime";
+    	public static final String LOGGER = "payload_logger";
+    	public static final String PRIORITY = "payload_priority";
+    	public static final String MESSAGE = "payload_message";
+    	public static final String IP = "payload_ip";
+    	public static final String STACKTRACE = "payload_stacktrace";
+    	public static final String INSTANCE ="payload_instance";
     }
     
     public static final class CassandraProperties {
@@ -103,10 +108,19 @@ public final class LoggingConstants {
     public static final class CassandraConfigProperties {
     	public static final String URL = "cassandraHost";
     	public static final String KEYSPACE = "keyspace";
-    	public static final String COLUMN_FAMILY ="columnfamily";
-    	public static final String USER_NAME ="user";
+    	public static final String COLUMN_FAMILY ="columnFamily";
+    	public static final String USER_NAME ="userName";
     	public static final String PASSWORD ="password";
-    	public static final String IS_CASSANDRA_AVAILABLE ="isCassandraAvailable";
+    	public static final String IS_CASSANDRA_AVAILABLE ="isDataFromCassandra";
+    	public static final String PUBLISHER_URL = "publisherURL";
+    	public static final String PUBLISHER_USER = "publisherUser";
+    	public static final String CLUSTER ="cluster";
+    	public static final String PUBLISHER_PASSWORD = "publisherPassword";
+    	public static final String ARCHIVED_HOST = "archivedHost";
+    	public static final String ARCHIVED_USER = "archivedUser";
+    	public static final String ARCHIVED_PASSWORD = "archivedPassword";
+    	public static final String ARCHIVED_PORT = "archivedPort";
+    	public static final String ARCHIVED_REALM = "archivedRealm";
     }
     public static final class AppenderProperties {
         public static final String NAME = "name";
@@ -138,7 +152,7 @@ public final class LoggingConstants {
     	public static final String LOG_FILE_DATE_SEPARATOR ="log.";
     	public static final String CURRENT_LOG = "0_Current Log";
     	public static final String SYSLOG_DOMAIN_PATTERN = ".*?([^.]+\\.[$.]+)";
-    	public static final String SYS_LOG_FILE_NAME_PATTERN ="[a-zA-Z]*\\.log[\\s\\S.*]*";
+    	public static final String SYS_LOG_FILE_NAME_PATTERN ="[a-zA-Z]*\\.log[\\s\\S.*]*\\.gz";
     	public static final String LOG_ERROR_HEADER_PATTERN = "\\[\\d{4}-\\d{2}-\\d{2}\\s\\d{2}:\\d{2}:\\d{2},\\d{2,6}][\\s\\S.*]*\\s{0,2}ERROR";
     	public static final String LOG_WARN_HEADER_PATTERN = "\\[\\d{4}-\\d{2}-\\d{2}\\s\\d{2}:\\d{2}:\\d{2},\\d{2,6}][\\s\\S.*]*\\s{0,2}WARN";
     	public static final String LOG_FATAL_HEADER_PATTERN = "\\[\\d{4}-\\d{2}-\\d{2}\\s\\d{2}:\\d{2}:\\d{2},\\d{2,6}][\\s\\S.*]*\\s{0,2}FATAL";

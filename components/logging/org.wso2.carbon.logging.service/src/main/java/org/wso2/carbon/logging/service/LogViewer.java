@@ -15,11 +15,18 @@
  */
 package org.wso2.carbon.logging.service;
 
+import java.text.DateFormat;
+import java.text.SimpleDateFormat;
 import java.util.Arrays;
+import java.util.Calendar;
+import java.util.Date;
 import java.util.List;
+import java.util.TimeZone;
 
 import javax.activation.DataHandler;
 
+import org.apache.commons.logging.Log;
+import org.apache.commons.logging.LogFactory;
 import org.apache.log4j.Appender;
 import org.apache.log4j.DailyRollingFileAppender;
 import org.apache.log4j.Logger;
@@ -30,7 +37,6 @@ import org.wso2.carbon.logging.appender.LogEventAppender;
 import org.wso2.carbon.logging.config.ServiceConfigManager;
 import org.wso2.carbon.logging.service.data.LogEvent;
 import org.wso2.carbon.logging.service.data.LogInfo;
-import org.wso2.carbon.logging.service.data.LogMessage;
 import org.wso2.carbon.logging.service.data.PaginatedLogEvent;
 import org.wso2.carbon.logging.service.data.PaginatedLogInfo;
 import org.wso2.carbon.logging.util.LoggingConstants;
@@ -43,8 +49,7 @@ import org.wso2.carbon.utils.DataPaginator;
  */
 public class LogViewer {
 
-	private static final LogMessage[] NO_LOGS_MESSAGE = new LogMessage[] { new LogMessage(
-			"NO_LOGS", "INFO") };
+	private static final Log log = LogFactory.getLog(LogViewer.class);
 
 	public PaginatedLogInfo getPaginatedLogInfo(int pageNumber, String tenantDomain,
 			String serviceName) throws Exception {
@@ -60,8 +65,14 @@ public class LogViewer {
 		}
 	}
 
-	public PaginatedLogInfo getLocalLogFiles(int pageNumber) {
-		LogInfo[] logs = LoggingUtil.getLocalLogInfo();
+	public PaginatedLogInfo getLocalLogFiles(int pageNumber) throws LogViewerException {
+		LogInfo[] logs = null;
+		if (LoggingUtil.isLogEventAppenderConfigured()) {
+			logs = LoggingUtil.getRemoteLogFiles();
+		} else if (isFileAppenderConfiguredForST()) {
+			logs = LoggingUtil.getLocalLogInfo();
+
+		}
 		if (logs != null) {
 			List<LogInfo> logInfoList = Arrays.asList(logs);
 			PaginatedLogInfo paginatedLogInfo = new PaginatedLogInfo();
@@ -72,36 +83,38 @@ public class LogViewer {
 		}
 	}
 
-	public DataHandler downloadLogFiles(String logFile, String tenantDomain, String serviceName)
-			throws Exception {
-		return LoggingUtil.downloadLogFiles(logFile, tenantDomain, serviceName);
+	public DataHandler downloadArchivedLogFiles(String logFile) throws Exception {
+		return LoggingUtil.downloadArchivedLogFiles(logFile);
 	}
 
-	public boolean isValidTenantDomain(String tenantDomain) {
-		return LoggingUtil.isValidTenantDomain(tenantDomain);
-	}
-
+	// public boolean isValidTenantDomain(String tenantDomain) {
+	// return LoggingUtil.isValidTenantDomain(tenantDomain);
+	// }
+	//
 	public String[] getServiceNames() throws LogViewerException {
 		return ServiceConfigManager.getServiceNames();
 	}
 
-	public boolean isManager() {
-		return LoggingUtil.isManager();
+	//
+	// public boolean isManager() {
+	// return LoggingUtil.isManager();
+	// }
+
+	public int getLineNumbers(String logFile) throws Exception {
+		return LoggingUtil.getLineNumbers(logFile);
 	}
 
-	public int getLineNumbers(String logFile, String tenantDomain, String serviceName)
-			throws Exception {
-		return LoggingUtil.getLineNumbers(logFile, tenantDomain, serviceName);
+	public String[] getLogLinesFromFile(String logFile, int maxLogs, int start, int end)
+			throws LogViewerException {
+		return LoggingUtil.getLogLinesFromFile(logFile, maxLogs, start, end);
 	}
 
-	public String[] getLogLinesFromFile(String logFile, int maxLogs, int start, int end,
-			String tenantDomain, String serviceName) throws LogViewerException {
-		return LoggingUtil.getLogLinesFromFile(logFile, maxLogs, start, end, tenantDomain,
-				serviceName);
-	}
-
-	public String[] getApplicationNames() {
-		return LoggingUtil.getApplicationNames();
+	public String[] getApplicationNames() throws LogViewerException {
+		if (LoggingUtil.isLogEventAppenderConfigured()) {
+			return LoggingUtil.getApplicationNamesFromCassandra();
+		} else {
+			return LoggingUtil.getApplicationNames();
+		}
 	}
 
 	public boolean isLogEventReciverConfigured() {
@@ -126,8 +139,15 @@ public class LogViewer {
 		}
 	}
 
-	public PaginatedLogEvent getPaginatedLogEvents(int pageNumber, String type, String keyword) {
-		LogEvent list[] = getLogs(type, keyword);
+	public PaginatedLogEvent getPaginatedLogEvents(int pageNumber, String type, String keyword)
+			throws LogViewerException {
+
+		LogEvent list[];
+		if (!LoggingUtil.isLogEventAppenderConfigured()) {
+			list = getLogs(type, keyword);
+		} else {
+			list = LoggingUtil.getSortedLogsFromCassandra(type, keyword);
+		}
 		if (list != null) {
 			List<LogEvent> logMsgList = Arrays.asList(list);
 			PaginatedLogEvent paginatedLogEvent = new PaginatedLogEvent();
@@ -136,11 +156,25 @@ public class LogViewer {
 		} else {
 			return null;
 		}
+
+	}
+
+	public int getNoOfLogEvents() throws LogViewerException {
+		if (LoggingUtil.isLogEventAppenderConfigured()) {
+			return LoggingUtil.getNoOfRows();
+		} else {
+			return -1;
+		}
 	}
 
 	public PaginatedLogEvent getPaginatedApplicationLogEvents(int pageNumber, String type,
 			String keyword, String applicationName) throws Exception {
-		LogEvent list[] = getApplicationLogs(type, keyword, applicationName);
+		LogEvent list[];
+		if (LoggingUtil.isLogEventAppenderConfigured()) {
+			list = LoggingUtil.getSortedAppLogsFromCassandra(type, keyword, applicationName);
+		} else {
+			list = getApplicationLogs(type, keyword, applicationName);
+		}
 		if (list != null) {
 			List<LogEvent> logMsgList = Arrays.asList(list);
 			PaginatedLogEvent paginatedLogEvent = new PaginatedLogEvent();

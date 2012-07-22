@@ -15,6 +15,14 @@
  */
 package org.wso2.carbon.logging.appender;
 
+import java.text.DateFormat;
+import java.text.ParseException;
+import java.text.SimpleDateFormat;
+import java.util.Arrays;
+import java.util.Date;
+import java.util.Iterator;
+import java.util.List;
+import java.util.TimeZone;
 import java.util.concurrent.BlockingQueue;
 import java.util.concurrent.LinkedBlockingDeque;
 import java.util.concurrent.TimeUnit;
@@ -26,21 +34,28 @@ import org.apache.log4j.AppenderSkeleton;
 import org.apache.log4j.Logger;
 import org.apache.log4j.helpers.LogLog;
 import org.apache.log4j.spi.LoggingEvent;
+import org.wso2.carbon.base.MultitenantConstants;
 import org.wso2.carbon.base.ServerConfiguration;
-import org.wso2.carbon.context.ApplicationContext;
+import org.wso2.carbon.databridge.agent.thrift.Agent;
+import org.wso2.carbon.databridge.agent.thrift.DataPublisher;
+import org.wso2.carbon.databridge.agent.thrift.conf.AgentConfiguration;
+import org.wso2.carbon.databridge.commons.Event;
+import org.wso2.carbon.logging.service.LoggingAdminException;
+import org.wso2.carbon.logging.util.LoggingConstants;
 import org.wso2.carbon.utils.CarbonUtils;
 import org.wso2.carbon.utils.logging.TenantAwareLoggingEvent;
+import org.wso2.carbon.utils.logging.TenantAwarePatternLayout;
+import org.wso2.carbon.utils.multitenancy.CarbonApplicationContextHolder;
 import org.wso2.carbon.utils.multitenancy.CarbonContextHolder;
 
 public class LogEventAppender extends AppenderSkeleton implements Appender {
-
 	private String url;
 	private String password;
 	private String userName;
 	private String columnList;
-//	private DataPublisher dataPublisher;
-//
-//	private Agent agent;
+	private DataPublisher dataPublisher;
+
+	private Agent agent;
 	private static final Log log = LogFactory.getLog(LogEventAppender.class);
 
 	public LogEventAppender() {
@@ -49,147 +64,159 @@ public class LogEventAppender extends AppenderSkeleton implements Appender {
 
 	private static final BlockingQueue<TenantAwareLoggingEvent> loggingEventQueue = new LinkedBlockingDeque<TenantAwareLoggingEvent>();
 
-//	public void init() {
-//		if (agent == null) {
-//			// creating the agent
-//			AgentConfiguration agentConfiguration = new AgentConfiguration();
-//			String truststorePath = CarbonUtils.getCarbonHome()
-//					+ "/repository/resources/security/client-truststore.jks";
-//			System.setProperty("javax.net.ssl.trustStore", truststorePath);
-//			System.setProperty("javax.net.ssl.trustStorePassword", "wso2carbon");
-//			agent = new Agent(agentConfiguration);
-//
-//		}
-//	}
+	public void init() {
+		if (agent == null) {
+			// creating the agent
+			// TODO authentication is not finalized need to provide a mechanism
+			// to server to server authentication
+			AgentConfiguration agentConfiguration = new AgentConfiguration();
+			String truststorePath = CarbonUtils.getCarbonHome()
+					+ "/repository/resources/security/client-truststore.jks";
+			System.setProperty("javax.net.ssl.trustStore", truststorePath);
+			System.setProperty("javax.net.ssl.trustStorePassword", "wso2carbon");
+			agent = new Agent(agentConfiguration);
+
+		}
+	}
+
 	private String getCurrentServerName() {
 		String serverName = ServerConfiguration.getInstance().getFirstProperty("Name");
+		serverName = serverName.replace("WSO2", "");
 		return serverName.replace(" ", ".");
 	}
 
-//	private void insertLogEvent(TenantAwareLoggingEvent event) throws LoggingAdminException {
-//		// TODO this method yet to be finalized after the implementation of BAM
-//		// event reciver
-//		String streamId = "";
-//		init();
-//		try {
-//			String tenantId = event.getTenantId();
-//			if (tenantId == null || tenantId.equals("") || tenantId.equals("-1234")
-//					|| tenantId.equals("-1")) {
-//				tenantId = "carbon.super";
-//			}
-//
-//			// create data publisher
-//			dataPublisher = new DataPublisher(url, userName, password, agent);
-//			streamId = dataPublisher.defineEventStream("{" + "'name':'org.wso2.carbon.logging"
-//					+"'," + "  'version':'1.0.0'," + "  'nickName': 'Logs',"
-//					+ "  'description': 'Logging Event'," + "  'metaData':["
-//					+ "          {'name':'clientType','type':'STRING'}" + "  ],"
-//					+ "  'payloadData':[" + "          {'name':'tenantID','type':'STRING'},"
-//					+ "          {'name':'serverName','type':'STRING'},"
-//					+ "          {'name':'appName','type':'STRING'},"
-//					+ "          {'name':'logTime','type':'LONG'},"
-//					+ "          {'name':'priority','type':'STRING'},"
-//					+ "          {'name':'message','type':'STRING'},"
-//					+ "          {'name':'logger','type':'STRING'},"
-//					+ "          {'name':'ip','type':'STRING'},"
-//					+ "          {'name':'instance','type':'STRING'},"
-//					+ "          {'name':'stacktrace','type':'STRING'}" + "  ]" + "}");
-//
-//		} catch (Exception e) {
-//			log.error("Error connecting to bam event data publisher", e);
-//
-//		}
-//		List<String> patterns = Arrays.asList(columnList.split(","));
-//		String tenantID = "";
-//		String serverName = "";
-//		String appName = "";
-//		String logTime = "";
-//		String logger = "";
-//		String priority = "";
-//		String message = "";
-//		String stacktrace = "";
-//		String ip = "";
-//		String instance = "";
-//		for (Iterator<String> i = patterns.iterator(); i.hasNext();) {
-//			String currEle = ((String) i.next()).replace("%", "");
-//			TenantAwarePatternLayout patternLayout = new TenantAwarePatternLayout("%" + currEle);
-//			if (currEle.equals("T")) {
-//				tenantID = patternLayout.format(event);
-//				continue;
-//			}
-//			if (currEle.equals("S")) {
-//				serverName = patternLayout.format(event);
-//				continue;
-//			}
-//			if (currEle.equals("A")) {
-//				appName = patternLayout.format(event);
-//				if (appName == null || appName.equals("")) {
-//					appName = "NA";
-//				}
-//				continue;
-//			}
-//			if (currEle.equals("d")) {
-//
-//				logTime = patternLayout.format(event);
-//				continue;
-//			}
-//			if (currEle.equals("c")) {
-//				logger = patternLayout.format(event);
-//				continue;
-//			}
-//			if (currEle.equals("p")) {
-//				priority = patternLayout.format(event);
-//				continue;
-//			}
-//			if (currEle.equals("m")) {
-//				message = patternLayout.format(event);
-//				continue;
-//			}
-//			if (currEle.equals("I")) {
-//				instance = patternLayout.format(event);
-//				continue;
-//			}
-//			if (currEle.equals("Stacktrace")) {
-//				if (event.getThrowableInformation() != null) {
-//					stacktrace = getStacktrace(event.getThrowableInformation().getThrowable());
-//				} else {
-//					stacktrace = "NA";
-//				}
-//				continue;
-//			}
-//			if (currEle.equals("H")) {
-//				ip = patternLayout.format(event);
-//				continue;
-//			}
-//		}
-//		Date date = null;
-//		DateFormat formatter;
-//		formatter = new SimpleDateFormat("yyyy-MM-dd hh:mm:ss,SSS");
-//		formatter.setTimeZone(TimeZone.getTimeZone("GMT"));
-//		try {
-//			date = (Date) formatter.parse(logTime);
-//		} catch (ParseException e) {
-//			log.error("parsing error in date from String");
-//		}
-//
-//		if (tenantID != null && serverName != null && logTime != null) {
-//			// String key = tenantID + "_" + serverName + "_" + logTime + "_"
-//			// + UUID.randomUUID().toString();
-//			if (!streamId.isEmpty()) {
-//				Event logEvent = new Event(streamId, System.currentTimeMillis(),
-//						new Object[] { "external" }, null,
-//						new Object[] { tenantID, serverName, appName, date.getTime(), priority,
-//								message, logger, ip,instance,stacktrace });
-//				try {
-//					dataPublisher.publish(logEvent);
-//				} catch (AgentException e) {
-//					log.error("Error publishing the logging event", e);
-//					throw new LoggingAdminException("Error publishing the logging event ", e);
-//				}
-//
-//			}
-//		}
-//	}
+	private String getCurrentDate() {
+		Date cirrDate = new Date();
+		DateFormat formatter = new SimpleDateFormat(LoggingConstants.DATE_FORMATTER);
+		formatter.setTimeZone(TimeZone.getTimeZone(LoggingConstants.GMT));
+		String formattedDate = formatter.format(cirrDate);
+		return formattedDate.replace("-", ".");
+	}
+
+	private void insertLogEvent(TenantAwareLoggingEvent event) throws LoggingAdminException {
+
+		String streamId = "";
+		String tenantId = event.getTenantId();
+
+		if (tenantId.equals(String.valueOf(MultitenantConstants.INVALID_TENANT_ID))
+				|| tenantId.equals(String.valueOf(MultitenantConstants.SUPER_TENANT_ID))) {
+			tenantId = "0";
+		}
+		String applicationName = getCurrentServerName();
+		String currDateStr = getCurrentDate();
+		init();
+		try {
+			dataPublisher = new DataPublisher(url, userName, password, agent);
+			streamId = dataPublisher.defineStream("{" + "'name':'log" + "." + tenantId + "."
+					+ applicationName + "." + currDateStr + "'," + "  'version':'1.0.0',"
+					+ "  'nickName': 'Logs'," + "  'description': 'Logging Event',"
+					+ "  'metaData':[" + "          {'name':'clientType','type':'STRING'}" + "  ],"
+					+ "  'payloadData':[" + "          {'name':'tenantID','type':'STRING'},"
+					+ "          {'name':'serverName','type':'STRING'},"
+					+ "          {'name':'appName','type':'STRING'},"
+					+ "          {'name':'logTime','type':'LONG'},"
+					+ "          {'name':'priority','type':'STRING'},"
+					+ "          {'name':'message','type':'STRING'},"
+					+ "          {'name':'logger','type':'STRING'},"
+					+ "          {'name':'ip','type':'STRING'},"
+					+ "          {'name':'instance','type':'STRING'},"
+					+ "          {'name':'stacktrace','type':'STRING'}" + "  ]" + "}");
+
+		} catch (Exception e) {
+			log.error("Error connecting to bam event data publisher", e);
+
+		}
+		List<String> patterns = Arrays.asList(columnList.split(","));
+		String tenantID = "";
+		String serverName = "";
+		String appName = "";
+		String logTime = "";
+		String logger = "";
+		String priority = "";
+		String message = "";
+		String stacktrace = "";
+		String ip = "";
+		String instance = "";
+		for (Iterator<String> i = patterns.iterator(); i.hasNext();) {
+			String currEle = ((String) i.next()).replace("%", "");
+			TenantAwarePatternLayout patternLayout = new TenantAwarePatternLayout("%" + currEle);
+			if (currEle.equals("T")) {
+				tenantID = patternLayout.format(event);
+				continue;
+			}
+			if (currEle.equals("S")) {
+				serverName = patternLayout.format(event);
+				continue;
+			}
+			if (currEle.equals("A")) {
+				appName = patternLayout.format(event);
+				if (appName == null || appName.equals("")) {
+					appName = "NA";
+				}
+				continue;
+			}
+			if (currEle.equals("d")) {
+
+				logTime = patternLayout.format(event);
+				continue;
+			}
+			if (currEle.equals("c")) {
+				logger = patternLayout.format(event);
+				continue;
+			}
+			if (currEle.equals("p")) {
+				priority = patternLayout.format(event);
+				continue;
+			}
+			if (currEle.equals("m")) {
+				message = patternLayout.format(event);
+				continue;
+			}
+			if (currEle.equals("I")) {
+				instance = patternLayout.format(event);
+				continue;
+			}
+			if (currEle.equals("Stacktrace")) {
+				if (event.getThrowableInformation() != null) {
+					stacktrace = getStacktrace(event.getThrowableInformation().getThrowable());
+				} else {
+					stacktrace = "NA";
+				}
+				continue;
+			}
+			if (currEle.equals("H")) {
+				ip = patternLayout.format(event);
+				continue;
+			}
+		}
+		Date date = null;
+		DateFormat formatter;
+		formatter = new SimpleDateFormat(LoggingConstants.DATE_TIME_FORMATTER);
+		formatter.setTimeZone(TimeZone.getTimeZone(LoggingConstants.GMT));
+		try {
+			date = (Date) formatter.parse(logTime);
+		} catch (ParseException e) {
+			log.error("parsing error in date from String");
+		}
+
+		if (tenantID != null && serverName != null && logTime != null) {
+			// String key = tenantID + "_" + serverName + "_" + logTime + "_"
+			// + UUID.randomUUID().toString();
+			if (!streamId.isEmpty()) {
+				Event logEvent = new Event(streamId, System.currentTimeMillis(),
+						new Object[] { "external" }, null, new Object[] { tenantID, serverName,
+								appName, date.getTime(), priority, message, logger, ip, instance,
+								stacktrace });
+				try {
+					dataPublisher.publish(logEvent);
+				} catch (Exception e) {
+					log.error("Error publishing the logging event", e);
+					throw new LoggingAdminException("Error publishing the logging event ", e);
+				}
+
+			}
+		}
+	}
 
 	private String getStacktrace(Throwable e) {
 		StringBuilder stackTrace = new StringBuilder();
@@ -199,14 +226,17 @@ public class LogEventAppender extends AppenderSkeleton implements Appender {
 		}
 		return stackTrace.toString();
 	}
+
 	private void processLoggingEventQueue() {
 		while (true) {
 			try {
 				TenantAwareLoggingEvent event = loggingEventQueue.poll(1L, TimeUnit.SECONDS);
 				if (event != null) {
-				//	insertLogEvent(event);
+					insertLogEvent(event);
 				}
 			} catch (InterruptedException e) {
+				LogLog.error(e.toString());
+			} catch (LoggingAdminException e) {
 				LogLog.error(e.toString());
 			}
 		}
@@ -242,8 +272,14 @@ public class LogEventAppender extends AppenderSkeleton implements Appender {
 
 		tenantEvent.setTenantId(Integer.toString(CarbonContextHolder
 				.getCurrentCarbonContextHolder().getTenantId()));
-		tenantEvent.setServiceName(ApplicationContext.getCurrentApplicationContext()
-				.getApplicationName());
+		if (CarbonApplicationContextHolder.getThreadLocalCarbonApplicationContextHolder()
+				.getApplicationName() != null) {
+			tenantEvent.setServiceName(CarbonApplicationContextHolder
+					.getThreadLocalCarbonApplicationContextHolder().getApplicationName());
+		} else {
+			tenantEvent.setServiceName("");
+			;
+		}
 		loggingEventQueue.add(tenantEvent);
 	}
 

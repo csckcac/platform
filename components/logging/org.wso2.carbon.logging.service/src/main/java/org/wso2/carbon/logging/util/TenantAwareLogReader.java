@@ -87,6 +87,8 @@ public class TenantAwareLogReader {
 					"NA") };
 		}
 	}
+	
+	
 
 	public LogEvent[] searchLog(String type, String keyword, String appName) {
 		if ("ALL".equalsIgnoreCase(type)) {
@@ -115,6 +117,7 @@ public class TenantAwareLogReader {
 		}
 	}
 
+	
 	private ArrayList <LogEvent> reverseLogList(List<LogEvent> resultList) {
 		ArrayList<LogEvent> reverseList = new ArrayList<LogEvent>(resultList.size());
 		for(int i=resultList.size()-1;i>=0;i--) {
@@ -158,7 +161,7 @@ public class TenantAwareLogReader {
 					String result = messagePattern.format(logEvt);
 					String logger = loggerPattern.format(logEvt);
 					boolean isInLogMessage = result != null && (result.toLowerCase().indexOf(keyword.toLowerCase()) > -1 );
-					boolean isInLogger = logger != null && (result.toLowerCase().indexOf(keyword.toLowerCase()) > -1);
+					boolean isInLogger = logger != null && (logger.toLowerCase().indexOf(keyword.toLowerCase()) > -1);
 					if (isCurrentTenantId(tenantId) && isCurrentProduct(productName) && (isInLogMessage || isInLogger)) {
 						if (appName == null || appName.equals("")) {
 							resultList.add(createLogEvent(logEvt));
@@ -189,7 +192,7 @@ public class TenantAwareLogReader {
 		List<String> appList = new ArrayList<String>();
 		LogEvent allLogs[] = getLogs("");
 		for (LogEvent event: allLogs ) {
-			if (event.getAppName() !=null && !event.getAppName().equals("") && !appList.contains(event.getAppName())) {
+			if (event.getAppName() !=null && !event.getAppName().equals("") && !event.getAppName().equals("NA") && !appList.contains(event.getAppName())) {
 				appList.add(event.getAppName());
 			}
 		}

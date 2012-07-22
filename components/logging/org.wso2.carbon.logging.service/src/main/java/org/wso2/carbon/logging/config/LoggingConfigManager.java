@@ -15,34 +15,34 @@ import org.apache.axiom.om.impl.builder.StAXOMBuilder;
 import org.apache.commons.logging.Log;
 import org.apache.commons.logging.LogFactory;
 import org.osgi.framework.BundleContext;
-import org.wso2.carbon.logging.service.data.CassandraConfig;
+import org.wso2.carbon.logging.service.data.LoggingConfig;
 import org.wso2.carbon.logging.util.LoggingConstants;
 import org.wso2.carbon.registry.core.RegistryConstants;
 import org.wso2.carbon.utils.CarbonUtils;
 
-public class CassandraConfigManager {
-	
-	private static final Log log = LogFactory.getLog(CassandraConfigManager.class);
-	private static CassandraConfigManager cassandraConfig;
+public class LoggingConfigManager {
+
+	private static final Log log = LogFactory.getLog(LoggingConfigManager.class);
+	private static LoggingConfigManager cassandraConfig;
 	private static BundleContext bundleContext;
 
-	public static CassandraConfigManager getCassandraConfig() {
+	public static LoggingConfigManager getCassandraConfig() {
 		return cassandraConfig;
 	}
 
 	public static void setBundleContext(BundleContext bundleContext) {
-		CassandraConfigManager.bundleContext = bundleContext;
+		LoggingConfigManager.bundleContext = bundleContext;
 	}
 
-	public static void setCassandraConfig(CassandraConfigManager syslogConfig) {
-		CassandraConfigManager.cassandraConfig = syslogConfig;
+	public static void setCassandraConfig(LoggingConfigManager syslogConfig) {
+		LoggingConfigManager.cassandraConfig = syslogConfig;
 	}
 
 	public static Log getLog() {
 		return log;
 	}
 
-	public CassandraConfig getSyslogData() {
+	public LoggingConfig getSyslogData() {
 		return null;
 	}
 
@@ -51,13 +51,13 @@ public class CassandraConfigManager {
 	 * 
 	 * @return cassandra configurations
 	 */
-	public static CassandraConfig loadCassandraConfiguration() {
+	public static LoggingConfig loadCassandraConfiguration() {
 		// gets the configuration file name from the cassandra-config.xml.
 		String cassandraConfigFileName = CarbonUtils.getCarbonConfigDirPath()
 				+ RegistryConstants.PATH_SEPARATOR
 				+ LoggingConstants.ETC_DIR
 				+ RegistryConstants.PATH_SEPARATOR
-				+ LoggingConstants.CASSANDRA_CONF_FILE;
+				+ LoggingConstants.LOGGING_CONF_FILE;
 		return loadCassandraConfiguration(cassandraConfigFileName);
 	}
 
@@ -73,22 +73,22 @@ public class CassandraConfigManager {
 			URL url;
 			if (bundleContext != null) {
 				if ((url = bundleContext.getBundle().getResource(
-						LoggingConstants.CASSANDRA_CONF_FILE)) != null) {
+						LoggingConstants.LOGGING_CONF_FILE)) != null) {
 					inStream = url.openStream();
 				} else {
 					warningMessage = "Bundle context could not find resource "
-							+ LoggingConstants.CASSANDRA_CONF_FILE
+							+ LoggingConstants.LOGGING_CONF_FILE
 							+ " or user does not have sufficient permission to access the resource.";
 					log.warn(warningMessage);
 				}
 
 			} else {
 				if ((url = this.getClass().getClassLoader()
-						.getResource(LoggingConstants.CASSANDRA_CONF_FILE)) != null) {
+						.getResource(LoggingConstants.LOGGING_CONF_FILE)) != null) {
 					inStream = url.openStream();
 				} else {
 					warningMessage = "Could not find resource "
-							+ LoggingConstants.CASSANDRA_CONF_FILE
+							+ LoggingConstants.LOGGING_CONF_FILE
 							+ " or user does not have sufficient permission to access the resource.";
 					log.warn(warningMessage);
 				}
@@ -98,8 +98,8 @@ public class CassandraConfigManager {
 	}
 
 
-	private static CassandraConfig loadDefaultConfiguration() {
-		CassandraConfig config = new CassandraConfig();
+	private static LoggingConfig loadDefaultConfiguration() {
+		LoggingConfig config = new LoggingConfig();
 		config.setCassandraServerAvailable(false);
 		return config;
 	}
@@ -111,12 +111,12 @@ public class CassandraConfigManager {
 	 *            Name of the configuration file
 	 * @return the syslog configuration data.
 	 */
-	private static CassandraConfig loadCassandraConfiguration(
+	private static LoggingConfig loadCassandraConfiguration(
 			String configFilename) {
-		CassandraConfig config = new CassandraConfig();
+		LoggingConfig config = new LoggingConfig();
 		InputStream inputStream = null;
 		try {
-			inputStream = new CassandraConfigManager()
+			inputStream = new LoggingConfigManager()
 					.getInputStream(configFilename);
 		} catch (IOException e1) {
 			log.error("Could not close the Configuration File "
@@ -157,6 +157,33 @@ public class CassandraConfigManager {
 					} else if (LoggingConstants.CassandraConfigProperties.PASSWORD
 							.equals(element.getLocalName())) {
 						config.setPassword(element.getText());
+					} else if (LoggingConstants.CassandraConfigProperties.CLUSTER
+							.equals(element.getLocalName())) {
+						config.setCluster(element.getText());
+					} else if (LoggingConstants.CassandraConfigProperties.PUBLISHER_URL
+							.equals(element.getLocalName())) {
+						config.setPublisherURL(element.getText());
+					}  else if (LoggingConstants.CassandraConfigProperties.PUBLISHER_USER
+							.equals(element.getLocalName())) {
+						config.setPublisherUser(element.getText());
+					} else if (LoggingConstants.CassandraConfigProperties.PUBLISHER_PASSWORD
+							.equals(element.getLocalName())) {
+						config.setPublisherPassword(element.getText());
+					} else if (LoggingConstants.CassandraConfigProperties.ARCHIVED_HOST
+							.equals(element.getLocalName())) {
+						config.setArchivedHost(element.getText());
+					} else if (LoggingConstants.CassandraConfigProperties.ARCHIVED_USER
+							.equals(element.getLocalName())) {
+						config.setArchivedUser(element.getText());
+					} else if (LoggingConstants.CassandraConfigProperties.ARCHIVED_PASSWORD
+							.equals(element.getLocalName())) {
+						config.setArchivedPassword(element.getText());
+					} else if (LoggingConstants.CassandraConfigProperties.ARCHIVED_PORT
+							.equals(element.getLocalName())) {
+						config.setArchivedPort(element.getText());
+					} else if (LoggingConstants.CassandraConfigProperties.ARCHIVED_REALM
+							.equals(element.getLocalName())) {
+						config.setArchivedRealm(element.getText());
 					}
 				}
 				return config;

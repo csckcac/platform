@@ -30,9 +30,12 @@
 <%@ page import="org.wso2.carbon.ui.CarbonUIMessage"%>
 <%@ page import="org.wso2.carbon.logging.view.stub.types.carbon.PaginatedLogInfo"%>
 <%@ page import="org.wso2.carbon.logging.view.stub.types.carbon.PaginatedLogEvent"%>
+
 <%@ page import="org.wso2.carbon.ui.CarbonUIUtil"%>
 <%@ page import="org.wso2.carbon.ui.util.CharacterEncoder" %>
 <%@ page import="org.wso2.carbon.logging.view.stub.types.carbon.LogEvent"%>
+<%@ page import="java.util.regex.Matcher"%>
+<%@ page import="java.util.regex.Pattern"%>
 <script type="text/javascript" src="js/logviewer.js"></script>
 <script type="text/javascript" src="../admin/dialog/js/dialog.js"></script>
 
@@ -44,6 +47,13 @@
 <title>View System Logs</title>
 </head>
 <body>
+<%!private boolean isArchiveFile(String fileName) {
+		String archivePattern = "[a-zA-Z]*\\.gz";
+		CharSequence inputStr = fileName;
+		Pattern pattern = Pattern.compile(archivePattern);
+		Matcher matcher = pattern.matcher(inputStr);
+		return matcher.find();
+	}%>
 	<%
 		String backendServerURL = CarbonUIUtil
 				.getServerURL(config.getServletContext(), session);
@@ -59,8 +69,8 @@
 		String pageNumberStr = request.getParameter("pageNumber");
 		int pageNumber = 0;
 		int numberOfPages = 0;
-		
-		LogInfo[] logInfo;
+		int noOfRows;
+		LogInfo[] logInfo = null;
 		PaginatedLogInfo paginatedLogInfo;
 		PaginatedLogEvent paginatedLogEvents;
 		String parameter = "";
@@ -71,19 +81,25 @@
 		}
 		try {
 			type = CharacterEncoder.getSafeText(request.getParameter("type"));
- 			type = (type == null) ? "":type;
+			type = (type == null) ? "" : type;
 			keyword = CharacterEncoder.getSafeText(request.getParameter("keyword"));
- 			keyword = (keyword == null )? "":keyword;
+			keyword = (keyword == null) ? "" : keyword;
 			action = CharacterEncoder.getSafeText(request.getParameter("action"));
 			logViewerClient = new LogViewerClient(cookie, backendServerURL, configContext);
-			paginatedLogEvents = logViewerClient.getPaginatedLogEvents(pageNumber,type,keyword);
+			paginatedLogEvents = logViewerClient.getPaginatedLogEvents(pageNumber, type,
+					keyword);
+
+			noOfRows = paginatedLogEvents.getNumberOfPages() * 15;
 			if (paginatedLogEvents != null) {
 				events = paginatedLogEvents.getLogInfo();
 				numberOfPages = paginatedLogEvents.getNumberOfPages();
 			}
-			showLogFiles = (logViewerClient.isFileAppenderConfiguredForST() && !logViewerClient.isLogEventReciverConfigured());
 			paginatedLogInfo = logViewerClient.getLocalLogFiles(pageNumber);
-			logInfo = paginatedLogInfo.getLogInfo();
+			if (paginatedLogInfo != null) {
+				logInfo = paginatedLogInfo.getLogInfo();
+			}
+
+			showLogFiles = (logInfo != null);
 			parameter = "type=" + type + "&keyword=" + keyword;
 		} catch (Exception e) {
 			CarbonUIMessage.sendCarbonUIMessage(e.getMessage(), CarbonUIMessage.ERROR, request,
@@ -107,8 +123,18 @@
 			</h2>
 			<div id="workArea">
 			
+			<%
+				if (noOfRows > 40000) {
+			%>
+			<br/>
+			<font color="red">Maximum log limit exceeded!!!. <br/>
 			
-			
+			We only list 40 000 logs through the log viewer(your latest logs will be omitted in the log display), Please download the daily archived logs, for the full log report.
+			</font>	<br/>
+			<%
+				}
+			%>
+	     	<br/>
 		      <table border="0" class="styledLeft">
                         <tbody>
                         <tr>
@@ -167,7 +193,7 @@
 
 
                    <br/>
-                   
+                  
 			<table border="1" class="styledLeft">
 		
 				<tbody>
@@ -257,9 +283,9 @@
 					</tr>
 					
 				
-				<% 
-				if (showLogFiles) {
-					%>
+				<%
+														if (showLogFiles) {
+													%>
 					<tr>
 										<td class="middle-header" colspan="2"><a
 											class="icon-link"
@@ -290,9 +316,9 @@
 								</thead>
 								<%
 									int index = -1;
-										for (LogInfo logMessage : logInfo) {
-											++index;
-											if (index % 2 != 0) {
+											for (LogInfo logMessage : logInfo) {
+												++index;
+												if (index % 2 != 0) {
 								%>
 								<tr>
 									<%
@@ -302,28 +328,40 @@
 								<tr bgcolor="#eeeffb">
 									<%
 										}
-												if (logMessage.getLogName().trim().equalsIgnoreCase("NO_LOG_FILES")) {
+													if (logMessage.getLogName().trim().equalsIgnoreCase("NO_LOG_FILES")) {
 									%>
 
 									<td colspan="4"><fmt:message key="no.logs" /></td>
 									<%
 										} else {
-													String logFile = logMessage.getLogName().replace("0_","");
-													String logDate = logMessage.getLogDate().replace("0_","");
-													String logSize = logMessage.getFileSize();
+														String logFile = logMessage.getLogName().replace("0_", "");
+														String logDate = logMessage.getLogDate().replace("0_", "");
+														String logSize = logMessage.getFileSize();
 									%>
 
 									<td><%=logFile%></td>
 									<td><%=logDate%></td>
 									<td><%=logSize%></td>
 									<td>
-									 
+									      <%
+									      	if (isArchiveFile(logFile)) {
+									      %>
+									    <a class="icon-link"
+										style="background-image: url(images/download.gif);"
+										onclick="startDownload()"
+										href="downloadgz-ajaxprocessor.jsp?logFile=<%=logFile%>&tenantDomain=<%=""%>&serviceName=<%=""%>"><fmt:message
+												key="download" /> </a>
+									       <%
+									       	} else {
+									       %>
 										<a class="icon-link"
 										style="background-image: url(images/download.gif);"
 										onclick="startDownload()"
 										href="download-ajaxprocessor.jsp?logFile=<%=logFile%>&tenantDomain=<%=""%>&serviceName=<%=""%>"><fmt:message
 												key="download" /> </a>
-									
+										   <%
+										   	}
+										   %>
 									</td>
 
 									<%
@@ -338,12 +376,12 @@
 							</table>
 						</td>
 					</tr>
-					</tbody></table></td></tr>
+										
+									</tbody></table></td></tr>
 										
 					<%
-					
-				}
-			%>
+																}
+															%>
 			</tbody></table>
 			</div>
 		</div>

@@ -53,7 +53,8 @@
 		serviceName = request.getParameter("serviceName");
 		tenantDomain = (tenantDomain == null) ? "" : tenantDomain;
 		serviceName = (serviceName == null) ? "WSO2 Stratos Manager" : serviceName;
-		int fileSize = logViewerClient.getLineNumbers(downloadFile,tenantDomain,serviceName) + 1;
+		int fileSize = logViewerClient.getLineNumbers(downloadFile) + 1;
+	    System.out.println("fileSize "+fileSize);
 		int pages = (int) Math.ceil((double) fileSize / 2000);
 	
 		for (int i = 0; i < pages; i++) {
@@ -61,7 +62,7 @@
 			int end = start + 2000;
 			String logIndex = Integer.toString(fileSize);
 			String logs[] = logViewerClient.getLogLinesFromFile(downloadFile, fileSize,
-					start, end,tenantDomain,serviceName);
+					start, end);
 			for (String logMessage : logs) {
 				outputStreamWriter.write(logMessage + "\n");
 			}
@@ -69,7 +70,7 @@
 		}
 		outputStreamWriter.flush();
 		outputStream.flush();
-//		out.flush();
+		out.flush();
         outputStreamWriter.close();
         outputStream.close();
         out.close();

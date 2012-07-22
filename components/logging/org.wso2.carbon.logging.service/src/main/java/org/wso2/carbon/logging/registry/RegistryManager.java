@@ -464,7 +464,7 @@ public class RegistryManager {
 		}
 		return null;
 	}
-
+	
 	public void updateAppender(Appender appender, String appenderName,
 			String appenderPattern, String threshold, String logFileName,
 			String sysLogHost, String facility, boolean isFileAppender,

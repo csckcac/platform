@@ -50,8 +50,10 @@ public class LoggingUtil {
 
 	private static RegistryManager registryManager = new RegistryManager();
 	private static LoggingReader loggingReader = new LoggingReader();
+	private static FileHandler fileReader = new FileHandler();
 	private static TenantAwareLogReader tenantAwareLogReader = new TenantAwareLogReader();
-
+	private static CassandraLogReader cassandraLogReader = new CassandraLogReader();
+	
 	public static final String SYSTEM_LOG_PATTERN = "[%d] %5p - %x %m {%c}%n";
 	private static final int MAX_LOG_MESSAGES = 200;
 	
@@ -79,6 +81,9 @@ public class LoggingUtil {
 	public static String[] getApplicationNames() {
 		return tenantAwareLogReader.getApplicationNames();
 	}
+	public static String[] getApplicationNamesFromCassandra() throws LogViewerException {
+		return cassandraLogReader.getApplicationNamesFromCassandra();
+	}
 	
 	public static void setSystemLoggingParameters(String logLevel, String logPattern)
 			throws Exception {
@@ -91,8 +96,22 @@ public class LoggingUtil {
 		return registryManager.getSyslogData();
 	}
 
+	public static boolean isLogEventAppenderConfigured () {
+		return cassandraLogReader.isLogEventAppenderConfigured();
+	}
+	
+	public static  LogEvent[] getSortedLogsFromCassandra( String priority, String keyword) throws LogViewerException {
+		return cassandraLogReader.getLogs(priority, keyword);
+	}
 
-
+	public static  LogEvent[] getSortedAppLogsFromCassandra( String priority, String keyword, String appName) throws LogViewerException {
+		return cassandraLogReader.getApplicationLogs(priority, keyword, appName);
+	}
+	
+	public static int getNoOfRows() throws LogViewerException {
+		return cassandraLogReader.getNoOfRows();
+	}
+	
 	public static LogInfo[] getLogsIndex(String tenantDomain, String serviceName) throws Exception {
 		return loggingReader.getLogsIndex(tenantDomain, serviceName);
 	}
@@ -101,6 +120,9 @@ public class LoggingUtil {
 		return loggingReader.getLocalLogInfo();
 	}
 
+	public static  LogInfo[] getRemoteLogFiles() throws LogViewerException  {
+		return fileReader.getRemoteLogFiles();
+	}
 	public static String getSystemLogLevel() throws Exception {
 		String systemLogLevel = registryManager
 				.getConfigurationProperty(LoggingConstants.SYSTEM_LOG_LEVEL);
@@ -136,9 +158,8 @@ public class LoggingUtil {
 		}
 	}
 
-	public static DataHandler downloadLogFiles(String logFile, String tenantDomain,
-			String serviceName) throws LogViewerException {
-		return loggingReader.downloadLogFiles(logFile, tenantDomain, serviceName);
+	public static DataHandler downloadArchivedLogFiles(String logFile) throws LogViewerException {
+		return fileReader.downloadArchivedLogFiles(logFile);
 	}
 
 	public static boolean isManager() {
@@ -299,17 +320,15 @@ public class LoggingUtil {
 		}
 	}
 
-	public static int getLineNumbers(String logFile, String tenantDomain, String serviceName)
+	public static int getLineNumbers(String logFile)
 			throws Exception {
-		return loggingReader.getLineNumbers(logFile, tenantDomain, serviceName);
+		return fileReader.getLineNumbers(logFile);
 	}
 
-	public static String[] getLogLinesFromFile(String logFile, int maxLogs, int start, int end,
-			String tenantId, String serviceName) throws LogViewerException {
-		return loggingReader.getLogLinesFromFile(logFile, maxLogs, start, end, tenantId,
-				serviceName);
+	public static String[] getLogLinesFromFile(String logFile, int maxLogs, int start, int end) throws LogViewerException {
+		return fileReader.getLogLinesFromFile(logFile, maxLogs, start, end);
 	}
-
+	
 	/**
 	 * This method stream log messages and retrieve 100 log messages per page
 	 * 

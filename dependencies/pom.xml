@@ -68,6 +68,7 @@
 		<module>hadoop</module>
 		<module>datanucleus</module>
 		<module>amber</module>
+		<module>charon</module>
 		<!-- orbit/modules -->
                 <module>orbit/cassandra</module>
                 <module>orbit/cassandra-jdbc</module>
@@ -96,7 +97,7 @@
 		<module>orbit/hive</module>
 		<module>orbit/datanucleus-core</module>
 		<module>orbit/amber</module>
-
+		<module>orbit/charon</module>
 		<module>orbit/hadoop-core</module>
 	     </modules>
    <dependencyManagement>

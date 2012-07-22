@@ -17,8 +17,7 @@
   ~  under the License.
   -->
 
-<!-- The default synapse configuration shipped with the WSO2 Load Balancer
-     This handles the load balancing and the autoscaling of the stratos services
+<!-- The default synapse configuration shipped with the WSO2 Elastic  Load Balancer
  -->
 
 <definitions xmlns="http://ws.apache.org/ns/synapse">

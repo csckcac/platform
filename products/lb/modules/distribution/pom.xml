@@ -22,18 +22,18 @@
          xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/maven-v4_0_0.xsd">
 
     <parent>
-        <groupId>org.wso2.lb</groupId>
-    	  <artifactId>lb-parent</artifactId>
+        <groupId>org.wso2.elb</groupId>
+    	  <artifactId>elb-parent</artifactId>
         <version>2.0.0-SNAPSHOT</version>
         <relativePath>../../pom.xml</relativePath>
     </parent>
 
     <modelVersion>4.0.0</modelVersion>
-    <artifactId>wso2lb</artifactId>
+    <artifactId>wso2elb</artifactId>
     <packaging>pom</packaging>
-    <name>WSO2 LB - Distribution</name>
+    <name>WSO2 ELB - Distribution</name>
     <url>http://wso2.org/projects/load-balancer</url>
-    <description>WSO2 Load Balancer Distribution</description>
+    <description>WSO2 Elastic Load Balancer Distribution</description>
 
     <dependencies>
 
@@ -498,14 +498,14 @@
                                 <mkdir dir="${tempdir}"/>
                                 <unzip dest="${tempdir}">
                                     <fileset dir="target">
-                                        <include name="wso2lb-${project.version}.zip"/>
+                                        <include name="wso2elb-${project.version}.zip"/>
                                     </fileset>
                                 </unzip>
                                 <copy todir="target/wso2carbon-core-${carbon.version}/repository/components/" overwrite="false">
-                                    <fileset dir="${tempdir}/wso2lb-${project.version}/repository/components/">
+                                    <fileset dir="${tempdir}/wso2elb-${project.version}/repository/components/">
                                     </fileset>
                                 </copy>
-                                <delete file="target/wso2lb-${project.version}.zip"/>
+                                <delete file="target/wso2elb-${project.version}.zip"/>
                                 <delete dir="${tempdir}"/>
                                 <mkdir dir="${tempdir}"/>
                                 <unzip dest="${tempdir}">

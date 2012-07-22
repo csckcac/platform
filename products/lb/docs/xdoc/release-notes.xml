@@ -23,38 +23,38 @@
 <html xmlns="http://www.w3.org/1999/xhtml" xml:lang="en" lang="en">
   <head>
       <meta content="text/html; charset=iso-8859-1" http-equiv="content-type"/>
-      <title>WSO2 LB v1.0.0 Released - 28th Oct. 2011</title>
+      <title>WSO2 ELB v2.0.0 Released - 28th July 2012</title>
   </head>
   <body>
   <div id="header">
 </div>
 
 <div id="main-content">
-<h1>The WSO2 Load Balancer (LB) 1.0.0 Released!</h1>
+<h1>The WSO2 Elastic Load Balancer (ELB) 2.0.0 Released!</h1>
 
 <p>
-    The WSO2 LB team is pleased to announce the release of version 1.0.0 of
-    the Open Source Load Balancer (LB).
+    The WSO2 ELB team is pleased to announce the release of version 2.0.0 of
+    the Open Source Elastic Load Balancer (ELB).
 </p>
 
 <p>
-    WSO2 LB is a fast, lightweight and user friendly open source Load Balancer (LB)
+    WSO2 ELB is a fast, lightweight and user friendly open source Elastic Load Balancer (ELB)
     distributed under the <a href="http://www.apache.org/licenses/LICENSE-2.0.html">Apache
     Software License v2.0</a>. WSO2 LB allows system administrators and developers to
     easily configure fail over routing, load balancing, service aware load balancing, 
-    and dynamic load balancing with auto scaling.The LB runtime is designed to be 
-    completely asynchronous, non-blocking and streaming based on the 
+    tenant aware load balancing and dynamic load balancing with auto scaling.The ELB runtime 
+    is designed to be completely asynchronous, non-blocking and streaming based on the 
     <a href="http://synapse.apache.org">Apache Synapse</a> mediation engine.
 </p>
 
 <p>
-    WSO2 LB 1.0.0 is developed on top of the revolutionary
+    WSO2 ELB 2.0.0 is developed on top of the revolutionary
     <a href="http://wso2.org/projects/carbon">WSO2 Carbon platform</a> (Middleware a' la carte),
     an OSGi based framework that provides seamless modularity to your SOA via
     componentization. This release also contains many new features and a range of optional
-    components (add-ons) that can be installed to customize the behavior of the LB. Further, any
-    existing features of the LB which are not required to your environment can be easily
-    removed using the underlying provisioning framework of Carbon. In brief, WSO2 LB can
+    components (add-ons) that can be installed to customize the behavior of the ELB. Further, any
+    existing features of the ELB which are not required to your environment can be easily
+    removed using the underlying provisioning framework of Carbon. In brief, WSO2 ELB can
     be fully customized and tailored to meet your exact SOA needs.
 </p>
 
@@ -74,7 +74,7 @@
     properties that can be passed into the startup script</li>
 </ol>
 
-<h2>Key Features of WSO2 LB</h2>
+<h2>Key Features of WSO2 ELB</h2>
 <ul>
   <li>Non-blocking HTTP/S transports based on Apache HttpCore-NIO for ultra-fast
    execution and support for thousands of connections at high concurrency with
@@ -89,6 +89,8 @@
   <li>Service aware dynamic load balancing - A single load balancer
    can centrally manage the load across the nodes of different service clusters.
   </li>
+  <li>Tenant aware load balancing - Tenants can be loaded and unloaded dynamically.
+   Tenants can be partitioned to different service clusters.
 </ul>
 
 <h2>How You Can Contribute</h2>
@@ -100,8 +102,8 @@
     </p>
     <ul>
       <li>
-        Developer List : <a href="mailto:carbon-dev@wso2.org">carbon-dev@wso2.org</a>
-        | <a href="mailto:carbon-dev-request@wso2.org?subject=subscribe">Subscribe</a>
+        Developer List : <a href="mailto:dev@wso2.org">dev@wso2.org</a>
+        | <a href="mailto:dev-request@wso2.org?subject=subscribe">Subscribe</a>
         | <a href="http://wso2.org/mailarchive/carbon-dev/">Mail Archive</a>
       </li>
       <li>
@@ -115,7 +117,7 @@
     </h3>
     <p>
       We encourage you to report issues, documentation faults and feature requests regarding
-      WSO2 LB through the public <a href="http://www.wso2.org/jira/browse/lb">LB JIRA</a>. You
+      WSO2 ELB through the public <a href="http://www.wso2.org/jira/browse/lb">LB JIRA</a>. You
       can use the <a href="http://www.wso2.org/jira/browse/CARBON">Carbon JIRA</a> to report any
       issues related to the Carbon base framework or associated Carbon components.
     </p>
@@ -127,8 +129,8 @@
       Alternatively, questions could be raised using the forums available.
     </p>
     <p>
-      <a href="http://wso2.org/forum/1261">WSO2 LB Forum</a> :
-      Discussion forum for WSO2 LB developers/users
+      <a href="http://wso2.org/forum/1261">WSO2 ELB Forum</a> :
+      Discussion forum for WSO2 ELB developers/users
     </p>
 
 <h2>Support</h2>
@@ -144,7 +146,7 @@
 </p>
 
 
-<p><i>-- The WSO2 LB Team --</i> </p>
+<p><i>-- The WSO2 ELB Team --</i> </p>
 </div>
   </body>
 </html>

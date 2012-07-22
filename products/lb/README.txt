@@ -1,22 +1,22 @@
 ================================================================================
-                        WSO2 Load Balancer 2.0.0-SNAPSHOT
+                        WSO2 Elastic Load Balancer 2.0.0-SNAPSHOT
 ================================================================================
 
-Welcome to the WSO2 Load Balancer 2.0.0-SNAPSHOT release
+Welcome to the WSO2 Elastic Load Balancer 2.0.0-SNAPSHOT release
 
-WSO2 LB is a lightweight and easy-to-use Open Source Load Balancer
-(LB) available under the Apache Software License v2.0. WSO2 LB allows
+WSO2 ELB is a lightweight and easy-to-use Open Source Elastic Load Balancer
+(ELB) available under the Apache Software License v2.0. WSO2 ELB allows
 administrators to simply configure message load balancing, failover routing,
 and auto scaling. The runtime has been designed to be completely
 asynchronous, non-blocking and streaming based on the Apache Synapse core.
 
 This is based on the revolutionary WSO2 Carbon [Middleware a' la carte]
 framework. All the major features have been developed as pluggable Carbon
-components. WSO2 Load Balancer is a compact version doing the load balancing
+components. WSO2 Elastic Load Balancer is a compact version doing the load balancing
 features of WSO2 Enterprise Service Bus.
 
 
-Key Features of WSO2 LB
+Key Features of WSO2 ELB
 ========================
 
 1. Non-blocking HTTP/S transports based on Apache HttpCore for ultrafast
@@ -47,11 +47,11 @@ For more details see
 Installation & Running
 ==================================
 
-1. Extract the wso2lb-2.0.0-SNAPSHOT.zip and go to the extracted directory
+1. Extract the wso2elb-2.0.0-SNAPSHOT.zip and go to the extracted directory
 2. Run the wso2server.sh or wso2server.bat as appropriate
 3. Configure the load balancer to manage the load across the instants to be balanced.
 
-WSO2 LB 2.0.0-SNAPSHOT distribution directory structure
+WSO2 ELB 2.0.0-SNAPSHOT distribution directory structure
 ===============================================
 
     CARBON_HOME
@@ -70,14 +70,14 @@ WSO2 LB 2.0.0-SNAPSHOT distribution directory structure
 	  Contains various scripts, .sh & .bat files
 
     - dbscripts
-      Contains all the database scripts
+    Contains all the database scripts
 
     - lib
-	  Contains the basic set of libraries required to startup LB
+	  Contains the basic set of libraries required to startup ELB
 	  in standalone mode
 
     - repository
-	  The repository where services and modules deployed in WSO2 LB
+	  The repository where services and modules deployed in WSO2 ELB
 	  are stored. In addition to this, the components directory inside the
 	  repository directory contains the carbon runtime and the user added
 	  jar files including mediators, third party libraries etc. All
@@ -86,7 +86,7 @@ WSO2 LB 2.0.0-SNAPSHOT distribution directory structure
 
     - samples
 	  Contains some sample services and client applications that demonstrate
-	  the functionality and capabilities of WSO2 LB
+	  the functionality and capabilities of WSO2 ELB
 
     - tmp
 	  Used for storing temporary files, and is pointed to by the
@@ -94,16 +94,16 @@ WSO2 LB 2.0.0-SNAPSHOT distribution directory structure
 
     - LICENSE.txt
 	  Apache License 2.0 and the relevant other licenses under which
-	  WSO2 LB is distributed.
+	  WSO2 ELB is distributed.
 
     - README.txt
 	  This document.
 
     - INSTALL.txt
-      This document will contain information on installing WSO2 LB
+    This document will contain information on installing WSO2 ELB
 
     - release-notes.html
-	  Release information for WSO2 LB 2.0.0-SNAPSHOT
+	  Release information for WSO2 ELB 2.0.0-SNAPSHOT
 
 Support
 ==================================
@@ -114,7 +114,7 @@ hours, to premium 24x7 phone support.
 
 For additional support information please refer to http://wso2.com/support/
 
-For more information on WSO2 LB, visit the WSO2 Oxygen Tank (http://wso2.org)
+For more information on WSO2 ELB, visit the WSO2 Oxygen Tank (http://wso2.org)
 
 Issue Tracker
 ==================================

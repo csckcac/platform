@@ -1,7 +1,7 @@
-Installing  WSO2 Load Balancer (LB) 2.0.0-SNAPSHOT
-===================================================
+Installing  WSO2 Elastic Load Balancer (ELB) 2.0.0-SNAPSHOT
+===========================================================
 
-WSO2 LB 2.0.0-SNAPSHOT can be run as a light-weight software load balancer in 
+WSO2 ELB 2.0.0-SNAPSHOT can be run as a light-weight software load balancer in 
 stand-alone mode, that can be configured to balance the load across the services nodes.
 
 Standalone Mode
@@ -11,10 +11,10 @@ Standalone Mode
 
 2. All the shell scripts and .bat files are available in CARBON_HOME/bin folder.
 
-3. To start LB one can use either wso2server.sh or daemon.sh in all Unix
+3. To start ELB one can use either wso2server.sh or daemon.sh in all Unix
    systems & wso2server.bat file on Windows operating systems.
 
-4. Either of the following commands can be used to start LB
+4. Either of the following commands can be used to start ELB
       i)  ./wso2server.sh {console|start|stop|restart|status|dump|version}
      ii)  ./daemon.sh {console|start|stop|restart|status|dump}
     iii)  wso2server.bat {start|stop|version}
@@ -22,17 +22,17 @@ Standalone Mode
         Usage: wso2server.sh [command] [options] [system-properties]
 
             command:
-                --run		    Run the LB server
-                --start		    Start LB as a Unix daemon in the background
-                --console	    Start LB as a Unix daemon in the foreground
-                --stop		    Stop the LB Unix daemon
-                --status	    Get the status of the LB Unix daemon
-                --dump		    Print a thread dump of the LB Unix daemon
-                --restart	    Restart the LB Unix daemon
-                --version	    What version of the LB server are you running
-		--n 		    Start Multiple Instances of the same server after you 
-				    have successfully installed the Multiple-instances features
-				    from a feature repo.
+                --run		      Run the ELB server
+                --start		    Start ELB as a Unix daemon in the background
+                --console	    Start ELB as a Unix daemon in the foreground
+                --stop		    Stop the ELB Unix daemon
+                --status	    Get the status of the ELB Unix daemon
+                --dump		    Print a thread dump of the ELB Unix daemon
+                --restart	    Restart the ELB Unix daemon
+                --version	    What version of the ELB server are you running
+		            --n 		      Start Multiple Instances of the same server after you 
+				                      have successfully installed the Multiple-instances features
+				                      from a feature repo.
             options:
                 --debug <port> 	Start the server in remote debugging mode.
                                 port: The remote debugging port.
@@ -74,19 +74,6 @@ System Requirements
 1. Minimum memory - 1GB
 2. Processor      - Pentium 800MHz or equivalent at minimum
 3. Java SE Development Kit 1.6.24 or higher
-4. The Management Console requires you to enable Javascript of the Web browser,
-   with MS IE 7. In addition to JavaScript, ActiveX should also be enabled
-   with IE. This can be achieved by setting your security level to
-   medium or lower.
-   NOTE:
-     On Windows Server 2003, it is not allowed to go below the medium security
-     level in Internet Explorer 6.x and the default medium security setting with
-     IE does not allow sufficient level of JS or ActiveX enablement for the
-     management console to run.
-5. To compile and run the sample clients, an Ant version is required. Ant 1.7.0
-   version is recommended
-6. To build WSO2 LB from the Source distribution, it is necessary that you have
-   JDK 1.6.x version and Maven 2.1.0 or later
 
 For more details see
     http://wso2.org/wiki/display/carbon/System+Requirements

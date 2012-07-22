@@ -29,13 +29,13 @@
     </parent>
 
     <modelVersion>4.0.0</modelVersion>
-    <groupId>org.wso2.lb</groupId>
-    <artifactId>lb-parent</artifactId>
+    <groupId>org.wso2.elb</groupId>
+    <artifactId>elb-parent</artifactId>
     <packaging>pom</packaging>
     <version>2.0.0-SNAPSHOT</version>
-    <name>WSO2 LB - Aggregator Module</name>
+    <name>WSO2 ELB - Aggregator Module</name>
     <url>http://wso2.com/products/load-balancer</url>
-    <description>WSO2 Load Balancer (LB)</description>
+    <description>WSO2 Elastic Load Balancer (ELB)</description>
 
     <licenses>
         <license>
@@ -199,7 +199,7 @@
         <carbon.version>4.0.0-SNAPSHOT</carbon.version>
         <synapse.version>2.1.0-wso2v6</synapse.version>
         <axis2.transport.version>1.1.0-wso2v6</axis2.transport.version>
-        <lb.version>1.0.0-SNAPSHOT</lb.version>
+        <elb.version>2.0.0-SNAPSHOT</elb.version>
         <passthru.transport.version>1.0.0-SNAPSHOT</passthru.transport.version>
         <axis2.wso2.version>1.6.1.wso2v1</axis2.wso2.version>
         <axiom.wso2.version>1.2.11.wso2v2</axiom.wso2.version>

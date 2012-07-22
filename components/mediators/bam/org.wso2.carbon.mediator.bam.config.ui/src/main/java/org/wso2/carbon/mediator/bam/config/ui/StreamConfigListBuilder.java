@@ -63,13 +63,15 @@ public class StreamConfigListBuilder {
     }
 
     private void extractStream(String stream) {
+        int i = 0, j;
         currentStreamConfiguration = new StreamConfiguration();
-        currentStreamConfiguration.setName(stream.split(STREAM_DATA_SEPARATOR)[0]);
-        currentStreamConfiguration.setVersion(stream.split(STREAM_DATA_SEPARATOR)[1]);
-        currentStreamConfiguration.setNickname(stream.split(STREAM_DATA_SEPARATOR)[2]);
-        currentStreamConfiguration.setDescription(stream.split(STREAM_DATA_SEPARATOR)[3]);
-        if(stream.split(STREAM_DATA_SEPARATOR).length > 4 && (stream.split(STREAM_DATA_SEPARATOR)[4].contains(PROPERTY_VALUE_SEPARATOR) || stream.split(STREAM_DATA_SEPARATOR)[5].contains(PROPERTY_VALUE_SEPARATOR))){ // Only when properties exist
-            propertiesString = stream.split(STREAM_DATA_SEPARATOR)[4];
+        currentStreamConfiguration.setName(stream.split(STREAM_DATA_SEPARATOR)[i++]);
+        currentStreamConfiguration.setVersion(stream.split(STREAM_DATA_SEPARATOR)[i++]);
+        currentStreamConfiguration.setNickname(stream.split(STREAM_DATA_SEPARATOR)[i++]);
+        currentStreamConfiguration.setDescription(stream.split(STREAM_DATA_SEPARATOR)[i++]);
+        j = i + 1;
+        if(stream.split(STREAM_DATA_SEPARATOR).length > i && (stream.split(STREAM_DATA_SEPARATOR)[i].contains(PROPERTY_VALUE_SEPARATOR) || stream.split(STREAM_DATA_SEPARATOR)[j].contains(PROPERTY_VALUE_SEPARATOR))){ // Only when properties exist
+            propertiesString = stream.split(STREAM_DATA_SEPARATOR)[i];
             this.extractProperties();
         }
         if(stream.split(STREAM_DATA_SEPARATOR)[stream.split(STREAM_DATA_SEPARATOR).length-1].contains(PROPERTY_SEPARATOR) && !stream.split(STREAM_DATA_SEPARATOR)[stream.split(STREAM_DATA_SEPARATOR).length-1].contains(PROPERTY_VALUE_SEPARATOR)){
@@ -80,15 +82,17 @@ public class StreamConfigListBuilder {
 
     private void extractProperties() {
         Property currentProperty;
+        int i;
         String[] properties = propertiesString.split(PROPERTY_SEPARATOR);
         for (String property : properties) {
             if(this.isNotNullOrEmpty(property)){
+                i = 0;
                 currentProperty = new Property();
-                currentProperty.setKey(property.split(PROPERTY_VALUE_SEPARATOR)[0]);
-                currentProperty.setValue(property.split(PROPERTY_VALUE_SEPARATOR)[1]);
-                if(PROPERTY_TYPE_VALUE.equals(property.split(PROPERTY_VALUE_SEPARATOR)[2])){
+                currentProperty.setKey(property.split(PROPERTY_VALUE_SEPARATOR)[i++]);
+                currentProperty.setValue(property.split(PROPERTY_VALUE_SEPARATOR)[i++]);
+                if(PROPERTY_TYPE_VALUE.equals(property.split(PROPERTY_VALUE_SEPARATOR)[i])){
                     currentProperty.setExpression(false);
-                } else if(PROPERTY_TYPE_EXPRESSION.equals(property.split(PROPERTY_VALUE_SEPARATOR)[2])){
+                } else if(PROPERTY_TYPE_EXPRESSION.equals(property.split(PROPERTY_VALUE_SEPARATOR)[i])){
                     currentProperty.setExpression(true);
                 }
                 currentStreamConfiguration.getProperties().add(currentProperty);

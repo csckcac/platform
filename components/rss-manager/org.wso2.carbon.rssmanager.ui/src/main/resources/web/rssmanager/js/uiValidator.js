@@ -534,15 +534,15 @@ function composeCreateDatabasePrivilegeTemplateActionUrl(flag, templateName) {
     var trigger_priv = document.getElementById("trigger_priv").value;
 
     return 'databasePrivilegeTemplateOps_ajaxprocessor.jsp?flag=' + flag + '&privilegeTemplateName=' + templateName +
-            '&Select_priv=' + select_priv + '&Insert_priv=' + insert_priv + '&Update_priv=' +
-            update_priv + '&Delete_priv=' + delete_priv + '&Create_priv=' + create_priv +
-            '&Drop_priv=' + drop_priv + '&Grant_priv=' + grant_priv + '&References_priv=' +
-            references_priv + '&Index_priv=' + index_priv + '&Alter_priv=' + alter_priv +
-            '&Create_tmp_table_priv=' + create_tmp_table_priv + '&Lock_tables_priv=' +
-            lock_tables_priv + '&Create_view_priv=' + create_view_priv + '&Show_view_priv=' +
-            show_view_priv + '&Create_routine_priv=' + create_routine_priv + '&Alter_routine_priv='
-            + alter_routine_priv + '&Execute_priv=' + execute_priv + '&Event_priv=' + event_priv +
-            '&Trigger_priv=' + trigger_priv;
+            '&select_priv=' + select_priv + '&insert_priv=' + insert_priv + '&update_priv=' +
+            update_priv + '&delete_priv=' + delete_priv + '&create_priv=' + create_priv +
+            '&drop_priv=' + drop_priv + '&grant_priv=' + grant_priv + '&references_priv=' +
+            references_priv + '&index_priv=' + index_priv + '&alter_priv=' + alter_priv +
+            '&create_tmp_table_priv=' + create_tmp_table_priv + '&lock_tables_priv=' +
+            lock_tables_priv + '&create_view_priv=' + create_view_priv + '&show_view_priv=' +
+            show_view_priv + '&create_routine_priv=' + create_routine_priv + '&alter_routine_priv='
+            + alter_routine_priv + '&execute_priv=' + execute_priv + '&event_priv=' + event_priv +
+            '&trigger_priv=' + trigger_priv;
 }
 
 function composeEditDatabasePrivilegeTemplateActionUrl(flag, templateName) {
@@ -567,15 +567,15 @@ function composeEditDatabasePrivilegeTemplateActionUrl(flag, templateName) {
     var trigger_priv = document.getElementById("trigger_priv").value;
 
     return 'databasePrivilegeTemplateOps_ajaxprocessor.jsp?flag=' + flag + '&privilegeTemplateName=' + templateName +
-            '&Select_priv=' + select_priv + '&Insert_priv=' + insert_priv + '&Update_priv=' +
-            update_priv + '&Delete_priv=' + delete_priv + '&Create_priv=' + create_priv +
-            '&Drop_priv=' + drop_priv + '&Grant_priv=' + grant_priv + '&References_priv=' +
-            references_priv + '&Index_priv=' + index_priv + '&Alter_priv=' + alter_priv +
-            '&Create_tmp_table_priv=' + create_tmp_table_priv + '&Lock_tables_priv=' +
-            lock_tables_priv + '&Create_view_priv=' + create_view_priv + '&Show_view_priv=' +
-            show_view_priv + '&Create_routine_priv=' + create_routine_priv + '&Alter_routine_priv='
-            + alter_routine_priv + '&Event_priv=' + event_priv + '&Trigger_priv=' + trigger_priv +
-            '&Execute_priv=' + execute_priv;
+            '&select_priv=' + select_priv + '&insert_priv=' + insert_priv + '&update_priv=' +
+            update_priv + '&delete_priv=' + delete_priv + '&create_priv=' + create_priv +
+            '&drop_priv=' + drop_priv + '&grant_priv=' + grant_priv + '&references_priv=' +
+            references_priv + '&index_priv=' + index_priv + '&alter_priv=' + alter_priv +
+            '&create_tmp_table_priv=' + create_tmp_table_priv + '&lock_tables_priv=' +
+            lock_tables_priv + '&create_view_priv=' + create_view_priv + '&show_view_priv=' +
+            show_view_priv + '&create_routine_priv=' + create_routine_priv + '&alter_routine_priv='
+            + alter_routine_priv + '&event_priv=' + event_priv + '&trigger_priv=' + trigger_priv +
+            '&execute_priv=' + execute_priv;
 }
 
 function editDatabasePrivilegeTemplate(templateName) {

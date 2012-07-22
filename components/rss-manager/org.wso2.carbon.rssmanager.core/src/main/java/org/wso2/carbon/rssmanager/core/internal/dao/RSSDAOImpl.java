@@ -1048,12 +1048,15 @@ public class RSSDAOImpl implements RSSDAO {
         Connection conn = RSSConfig.getInstance().getRSSDBConnection();
         try {
             conn.setAutoCommit(false);
+
+            this.setDatabasePrivilegeTemplateProperties(conn, template);
+
             String sql = "INSERT INTO RM_DB_PRIVILEGE_TEMPLATE(name, tenant_id) VALUES(?, ?)";
             PreparedStatement stmt = conn.prepareStatement(sql);
             stmt.setString(1, template.getName());
             stmt.setInt(2, SuperTenantCarbonContext.getCurrentContext().getTenantId());
-            stmt.executeUpdate();
-            this.setDatabasePrivilegeTemplateProperties(conn, template);
+            stmt.execute();
+            
             conn.commit();
         } catch (SQLException e) {
             try {

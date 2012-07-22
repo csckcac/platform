@@ -171,7 +171,6 @@
                	<include>**/qpid-config.xml</include>
                 <include>**/qpid-jmxremote.access</include>
                 <include>**/qpid-virtualhosts.xml</include>
-                <include>**/wso2-rss-config.xml</include>
                 <include>**/coordination-client-config.xml</include>
                 <include>**/zoo.cfg</include>
            </includes>
@@ -294,6 +293,11 @@
          <!-- Including logging-config.xml file -->
         <file>
             <source>../p2-profile-gen/target/wso2carbon-core-${carbon.version}/repository/conf/etc/logging-config.xml</source>
+            <outputDirectory>${pom.artifactId}-${pom.version}/repository/conf/etc</outputDirectory>
+        </file>
+        <!-- Including rss-config.xml -->
+        <file>
+            <source>../p2-profile-gen/target/wso2carbon-core-${carbon.version}/repository/conf/etc/rss-config.xml</source>
             <outputDirectory>${pom.artifactId}-${pom.version}/repository/conf/etc</outputDirectory>
         </file>
         <!-- Including log4j.properties file -->

@@ -509,7 +509,7 @@
                 <td><input type="text" id="suspendErrorCode" name="suspendErrorCode"
                            class="longInput"
                            value="<%="".equals(errorCode.trim())?EndpointConfigurationHelper.getMappingFrom(templateMappings, TemplateParameterContainer.EndpointDefKey.suspendErrorCodes):errorCode%>"
-                           size="75" readonly="true"/>
+                           size="75" />
                 </td>
                 <td>
                     <a href="#"
@@ -551,7 +551,7 @@
     <td>
         <table class="normal">
             <tr>
-                <td><input type="text" id="retryErroCode" name="retryErroCode" class="longInput" readonly="true"
+                <td><input type="text" id="retryErroCode" name="retryErroCode" class="longInput"
                            value="<%="".equals(timeOutErrorCode.trim())?EndpointConfigurationHelper.getMappingFrom(templateMappings, TemplateParameterContainer.EndpointDefKey.timeoutErrorCodes):timeOutErrorCode%>"
                            size="75"/>
                 </td>
@@ -585,7 +585,7 @@
     <td>
         <table class="normal">
             <tr>
-                <td><input type="text" id="disabledErrorCodes" name="disabledErrorCodes" class="longInput" readonly="true"
+                <td><input type="text" id="disabledErrorCodes" name="disabledErrorCodes" class="longInput"
                            value="<%=retryDisabledErrorCodes%>" size="75"></td>
                 <td>
                     <a href="#"

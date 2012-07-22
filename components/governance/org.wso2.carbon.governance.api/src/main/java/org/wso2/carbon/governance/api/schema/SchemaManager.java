@@ -139,7 +139,7 @@ public class SchemaManager {
             }
 //            schema.setId(schemaResource.getUUID());
             schema.updatePath();
-            schema.loadSchemaDetails();
+            //schema.loadSchemaDetails();
             succeeded = true;
         } catch (RegistryException e) {
             String msg = "Error in adding the Schema. schema id: " + schema.getId() + ".";
@@ -209,7 +209,7 @@ public class SchemaManager {
             registry.put(oldSchema.getPath(), schemaResource);
             schema.setId(schemaResource.getUUID());
             schema.updatePath();
-            schema.loadSchemaDetails();
+            //schema.loadSchemaDetails();
 
             succeeded = true;
         } catch (RegistryException e) {

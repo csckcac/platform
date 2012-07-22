@@ -134,7 +134,7 @@ public class PolicyManager {
             }
 //            policy.setId(policyResource.getUUID());
             policy.updatePath();
-            policy.loadPolicyDetails();
+           // policy.loadPolicyDetails();
             succeeded = true;
         } catch (RegistryException e) {
             String msg = "Error in adding the Policy. policy id: " + policy.getId() + ".";

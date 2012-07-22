@@ -139,7 +139,7 @@ public class WsdlManager {
             }
 //            wsdl.setId(resource.getUUID());
             wsdl.updatePath();
-            wsdl.loadWsdlDetails();
+        //    wsdl.loadWsdlDetails();
             succeeded = true;
         } catch (RegistryException e) {
             String msg = "Error in adding the wsdl. wsdl id: " + wsdl.getId() + ".";
@@ -212,7 +212,7 @@ public class WsdlManager {
             registry.put(tmpPath, wsdlResource);
 //            wsdl.setId(wsdlResource.getUUID());
             wsdl.updatePath();
-            wsdl.loadWsdlDetails();
+//            wsdl.loadWsdlDetails();
             
             succeeded = true;
         } catch (RegistryException e) {

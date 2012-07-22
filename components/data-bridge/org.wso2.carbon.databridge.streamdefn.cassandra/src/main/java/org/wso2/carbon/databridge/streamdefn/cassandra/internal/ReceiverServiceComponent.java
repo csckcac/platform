@@ -23,12 +23,13 @@ import org.osgi.service.component.ComponentContext;
 import org.wso2.carbon.cassandra.dataaccess.DataAccessService;
 import org.wso2.carbon.databridge.core.DataBridgeSubscriberService;
 import org.wso2.carbon.databridge.streamdefn.cassandra.datastore.CassandraConnector;
-import org.wso2.carbon.databridge.streamdefn.cassandra.internal.util.Utils;
+import org.wso2.carbon.databridge.streamdefn.cassandra.internal.util.ServiceHolder;
 import org.wso2.carbon.databridge.streamdefn.cassandra.subscriber.BAMEventSubscriber;
 import org.wso2.carbon.identity.authentication.AuthenticationService;
 import org.wso2.carbon.registry.core.exceptions.RegistryException;
 import org.wso2.carbon.registry.core.service.RegistryService;
 import org.wso2.carbon.user.core.service.RealmService;
+import org.wso2.carbon.utils.ConfigurationContextService;
 
 /**
  * @scr.component name="cassandra.streamdefn.comp" immediate="true"
@@ -44,13 +45,16 @@ import org.wso2.carbon.user.core.service.RealmService;
  * @scr.reference name="databridge.core"
  * interface="org.wso2.carbon.databridge.core.DataBridgeSubscriberService"
  * cardinality="1..1" policy="dynamic" bind="setDatabridgeSubscriberService"  unbind="unsetDatabridgeSubscriberService"
+ * @scr.reference name="config.context.service"
+ * interface="org.wso2.carbon.utils.ConfigurationContextService"
+ * cardinality="1..1" policy="dynamic" bind="setConfigurationContextService" unbind="unsetConfigurationContextService"
  *
  */
 public class ReceiverServiceComponent {
     private static Log log = LogFactory.getLog(ReceiverServiceComponent.class);
 
     protected void activate(ComponentContext componentContext) {
-        Utils.setCassandraConnector(new CassandraConnector());
+        ServiceHolder.setCassandraConnector(new CassandraConnector());
     }
 
     protected void deactivate(ComponentContext componentContext) {
@@ -60,36 +64,36 @@ public class ReceiverServiceComponent {
     }
 
     protected void setRealmService(RealmService realmService) {
-        Utils.setRealmService(realmService);
+        ServiceHolder.setRealmService(realmService);
     }
 
     protected void unsetRealmService(RealmService realmService) {
-        Utils.setRealmService(null);
+        ServiceHolder.setRealmService(null);
     }
 
     protected void setAuthenticationService(AuthenticationService authenticationService) {
-        Utils.setAuthenticationService(authenticationService);
+        ServiceHolder.setAuthenticationService(authenticationService);
     }
 
     protected void unsetAuthenticationService(AuthenticationService authenticationService) {
-        Utils.setAuthenticationService(null);
+        ServiceHolder.setAuthenticationService(null);
     }
 
     protected void setRegistryService(RegistryService registryService) throws
             RegistryException {
-        Utils.setRegistryService(registryService);
+        ServiceHolder.setRegistryService(registryService);
     }
 
     protected void unsetRegistryService(RegistryService registryService) {
-        Utils.setRegistryService(null);
+        ServiceHolder.setRegistryService(null);
     }
 
     protected void setDataAccessService(DataAccessService dataAccessService) {
-        Utils.setDataAccessService(dataAccessService);
+        ServiceHolder.setDataAccessService(dataAccessService);
     }
 
     protected void unsetDataAccessService(DataAccessService dataAccessService) {
-        Utils.setDataAccessService(null);
+        ServiceHolder.setDataAccessService(null);
     }
 
     protected void setDatabridgeSubscriberService(DataBridgeSubscriberService dataBridgeSubscriberService) {
@@ -98,8 +102,16 @@ public class ReceiverServiceComponent {
 
     protected void unsetDatabridgeSubscriberService(DataBridgeSubscriberService dataBridgeSubscriberService) {
 
-
     }
+
+    protected void setConfigurationContextService(ConfigurationContextService contextService) {
+        ServiceHolder.setConfigurationContextService(contextService);
+    }
+
+    protected void unsetConfigurationContextService(ConfigurationContextService contextService) {
+        ServiceHolder.setConfigurationContextService(null);
+    }
+
 
 
 

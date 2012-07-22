@@ -8,7 +8,6 @@ import org.wso2.carbon.databridge.streamdefn.cassandra.datastore.DataType;
 
 import java.io.IOException;
 import java.nio.ByteBuffer;
-import java.util.UUID;
 
 /**
  * Copyright (c) WSO2 Inc. (http://www.wso2.org) All Rights Reserved.
@@ -86,7 +85,7 @@ public class CassandraSDSUtils {
         return dataType.name() + "_" + attribute.getName();
     }
 
-    public static String createRowKey(long timestamp, UUID uuid) {
-        return timestamp + "::" + uuid.toString();
+    public static String createRowKey(long timestamp, String ip, int port, int count) {
+        return timestamp + "::" + ip + "::" + port + "::" + count;
     }
 }

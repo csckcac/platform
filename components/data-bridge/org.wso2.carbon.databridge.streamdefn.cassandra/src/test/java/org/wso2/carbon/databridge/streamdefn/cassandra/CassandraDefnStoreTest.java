@@ -178,6 +178,7 @@ public class CassandraDefnStoreTest extends BaseCassandraSDSTest {
                 // inserts row key only if event is valid, i.e. only proper events will add a row key
                 insertedEvents.put(rowKey, event);
             } catch (Exception e) {
+                e.printStackTrace();
                 // ignore
             }
         }

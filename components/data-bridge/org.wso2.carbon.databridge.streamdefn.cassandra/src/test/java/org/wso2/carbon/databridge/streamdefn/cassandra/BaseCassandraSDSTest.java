@@ -11,7 +11,7 @@ import org.wso2.carbon.databridge.commons.exception.MalformedStreamDefinitionExc
 import org.wso2.carbon.databridge.commons.utils.EventDefinitionConverterUtils;
 import org.wso2.carbon.databridge.streamdefn.cassandra.datastore.CassandraConnector;
 import org.wso2.carbon.databridge.streamdefn.cassandra.datastore.ClusterFactory;
-import org.wso2.carbon.databridge.streamdefn.cassandra.internal.util.Utils;
+import org.wso2.carbon.databridge.streamdefn.cassandra.internal.util.ServiceHolder;
 
 import static junit.framework.Assert.fail;
 
@@ -45,8 +45,8 @@ public class BaseCassandraSDSTest extends AbstractCassandraUnit4TestCase {
     public static void beforeClass() throws Exception {
         EmbeddedCassandraServerHelper.startEmbeddedCassandra("cassandra.yaml");
         cluster = HFactory.getOrCreateCluster("TestCluster", "localhost:9171");
-        Utils.setCassandraConnector(new CassandraConnector());
-        cassandraConnector = Utils.getCassandraConnector();
+        ServiceHolder.setCassandraConnector(new CassandraConnector());
+        cassandraConnector = ServiceHolder.getCassandraConnector();
 
         ClusterFactory.initCassandraKeySpaces(cluster);
 

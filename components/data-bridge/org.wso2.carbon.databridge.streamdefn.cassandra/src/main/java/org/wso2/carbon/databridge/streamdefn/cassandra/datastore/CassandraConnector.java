@@ -36,6 +36,7 @@ import me.prettyprint.hector.api.query.ColumnQuery;
 import me.prettyprint.hector.api.query.QueryResult;
 import me.prettyprint.hector.api.query.RangeSlicesQuery;
 import me.prettyprint.hector.api.query.SliceQuery;
+import org.apache.axis2.engine.AxisConfiguration;
 import org.apache.commons.logging.Log;
 import org.apache.commons.logging.LogFactory;
 import org.wso2.carbon.databridge.commons.Attribute;
@@ -43,22 +44,22 @@ import org.wso2.carbon.databridge.commons.AttributeType;
 import org.wso2.carbon.databridge.commons.Event;
 import org.wso2.carbon.databridge.commons.StreamDefinition;
 import org.wso2.carbon.databridge.commons.exception.MalformedStreamDefinitionException;
-import org.wso2.carbon.databridge.commons.exception.StreamDefinitionException;
 import org.wso2.carbon.databridge.commons.utils.EventDefinitionConverterUtils;
 import org.wso2.carbon.databridge.core.Utils.DataBridgeUtils;
 import org.wso2.carbon.databridge.core.exception.EventProcessingException;
 import org.wso2.carbon.databridge.core.exception.StreamDefinitionStoreException;
 import org.wso2.carbon.databridge.streamdefn.cassandra.Utils.CassandraSDSUtils;
 import org.wso2.carbon.databridge.streamdefn.cassandra.exception.NullValueException;
+import org.wso2.carbon.databridge.streamdefn.cassandra.inserter.*;
+import org.wso2.carbon.databridge.streamdefn.cassandra.internal.util.ServiceHolder;
+import org.wso2.carbon.databridge.streamdefn.cassandra.internal.util.Utils;
+import org.wso2.carbon.utils.CarbonUtils;
 
 import java.io.IOException;
 import java.nio.ByteBuffer;
-import java.util.ArrayList;
-import java.util.Collection;
-import java.util.List;
-import java.util.UUID;
-import java.util.concurrent.ExecutionException;
-import java.util.concurrent.TimeUnit;
+import java.util.*;
+import java.util.concurrent.*;
+import java.util.concurrent.atomic.AtomicInteger;
 //import org.wso2.carbon.agent.server.StreamDefnConverterUtils;
 
 /**
@@ -80,20 +81,23 @@ public class CassandraConnector {
     private static final String STREAM_NAME_KEY = "Name";
     private static final String STREAM_VERSION_KEY = "Version";
     private static final String STREAM_NICK_NAME_KEY = "Nick_Name";
+    private static final String STREAM_TIMESTAMP_KEY = "Timestamp";
     private static final String STREAM_DESCRIPTION_KEY = "Description";
 
-    public static final String BAM_META_KEYSPACE = "BAM_AGENT_API_META_DATA";
-    public static final String BAM_META_STREAM_ID_CF = "AGENT_STREAM_ID";
-    public static final String BAM_META_STREAM_DEF_CF = "AGENT_STREAM_DEF";
-    public static final String BAM_META_STREAM_ID_KEY_CF = "STREAM_DEF_ID_KEY";
-    public static final String BAM_META_STREAMID_TO_STREAM_ID_KEY = "STREAM_ID_TO_STREAM_ID_KEY";
+    private static final String STREAM_ID_KEY = "StreamId";
+    public static final String BAM_META_STREAM_ID_CF = "STREAM_ID";
+    public static final String BAM_META_STREAM_DEF_CF = "STREAM_DEFINITION";
+    public static final String BAM_META_STREAM_ID_KEY_CF = "STREAM_DEFINITION_ID_TO_KEY";
+
+    //    public static final String BAM_META_STREAMID_TO_STREAM_ID_KEY = "STREAM_ID_TO_STREAM_ID_KEY";
+    public static final String BAM_META_KEYSPACE = "META_KS";
 
     public static final String BAM_EVENT_DATA_KEYSPACE = "EVENT_KS";
-    public static final String BAM_EVENT_DATA_STREAM_DEF_CF = "EVENT_STREAM_DEF";
 
-    private static final String STREAM_ID_KEY = "STREAM_DEF_ID_KEY";
-    private static final String STREAM_ID = "STREAM_DEF_ID";
-    private static final String STREAM_DEF = "STREAM_DEF";
+//    public static final String BAM_EVENT_DATA_STREAM_DEFN_CF = "EVENT_STREAM_DEFINITION";
+
+    private static final String STREAM_ID = "STREAM_DEFINITION_ID";
+    private static final String STREAM_DEF = "STREAM_DEFINITION";
 
     private final static StringSerializer stringSerializer = StringSerializer.get();
     // private final static BytesArraySerializer bytesArraySerializer = BytesArraySerializer.get();
@@ -103,61 +107,204 @@ public class CassandraConnector {
     private final static BooleanSerializer booleanSerializer = BooleanSerializer.get();
     private final static FloatSerializer floatSerializer = FloatSerializer.get();
     private final static DoubleSerializer doubleSerializer = DoubleSerializer.get();
+
+
     private final static ByteBufferSerializer byteBufferSerializer = ByteBufferSerializer.get();
+    private static final int ALLOWED_BATCH_MUTATOR_SIZE = 200;
+
+    private AtomicInteger eventCounter = new AtomicInteger();
+
+    private AtomicInteger rowkeyCounter = new AtomicInteger();
 
 
-    Log log = LogFactory.getLog(CassandraConnector.class);
-    private static final String STREAM_TIMESTAMP_KEY = "Timestamp";
+    static Log log = LogFactory.getLog(CassandraConnector.class);
+
+    private Map<AttributeType, TypeInserter> inserterMap = new ConcurrentHashMap<AttributeType, TypeInserter>();
+    private static final int EVENT_RATE_CALC_TIMEOUT = 2;
+    protected static final int EVENT_RATE_CALC_DELAY = 10;
+
+    private float eventRate;
+    private static final float EVENT_RATE_THRESHOLD = 10; // 10 events a second and we process it batch wise
+
+//    private Map<Cluster, Mutator> activeMutators = new ConcurrentHashMap<Cluster, Mutator>();
+
+    private List<Mutator> activeMutators = Collections.synchronizedList(new ArrayList<Mutator>());
+
+    private volatile CountDownLatch waitSignal = new CountDownLatch(0);
+    private volatile boolean batchMutationStarted = false;
+    private int port = 0;
+    private String localAddress = null;
+    private volatile boolean processing = false;
 
 
     public CassandraConnector() {
-        // to test agent API without username and passwd in stream definition
+
+        try {
+            AxisConfiguration axisConfiguration =
+                    ServiceHolder.getConfigurationContextService().getServerConfigContext().getAxisConfiguration();
+
+            String portOffset = CarbonUtils.getServerConfiguration().
+                    getFirstProperty("Ports.Offset");
+            port = CarbonUtils.getTransportPort(axisConfiguration, "https") +
+                    Integer.parseInt(portOffset);
+
+            localAddress = Utils.getLocalAddress().getHostAddress();
+        } catch (Exception e) {
+            if (log.isDebugEnabled()) {
+                log.warn("Error when detecting Host/Port, using defaults");
+            }
+            localAddress = (localAddress == null) ? "127.0.0.1" : localAddress;
+            port = (port == 0) ? 9443 : port;
+        }
+
+        createInserterMap();
+//        ScheduledExecutorService scheduledExecutorService = Executors.newSingleThreadScheduledExecutor();
+//
+//        scheduledExecutorService.scheduleWithFixedDelay(new Runnable() {
+//            @Override
+//            public void run() {
+//                try {
+//                    eventRate = (eventCounter.get() / EVENT_RATE_CALC_TIMEOUT);
+//
+//                    eventCounter.set(0);
+//
+//                    String debugMsg = "";
+//                    if (log.isTraceEnabled()) {
+//                        debugMsg += "Scheduled high event rate commitor thread is running";
+//                        debugMsg += "\n Event Rate is : " + eventRate;
+//                        debugMsg += "\n Size of active mutator map is : " + activeMutators.size();
+//                        log.trace(debugMsg);
+//                        debugMsg = "";
+//                    }
+//
+//
+//                    // make mutators wait
+//
+//                    waitSignal = new CountDownLatch(1);
+//
+//                    if (log.isDebugEnabled() && nonBatchedCounter.get() > 0) {
+//                        debugMsg += "\n Holding all insert threads until active mutators are cleared";
+//                        debugMsg += "\n No. of non batched mutators executed after previous execution: " +
+//                                nonBatchedCounter.getAndSet(0);
+//                        log.debug(debugMsg);
+//                    }
+//
+//                    for (Mutator mutator : activeMutators) {
+//
+//                        if (log.isDebugEnabled()) {
+//                            debugMsg += "\n Executing mutator with no. of pending mutations " +
+//                                    mutator.getPendingMutationCount();
+//                            log.debug(debugMsg);
+//                            debugMsg = "";
+//                        }
+//                        mutator.execute();
+//                        mutator.discardPendingMutations();
+//                    }
+//
+//                    activeMutators.clear();
+//                    batchedCounter.set(0);
+//
+//                    processing = false;
+//
+//                    if (log.isDebugEnabled()) {
+//                        debugMsg += "\n Scheduled high event rate commitor thread has finished \n";
+//                        log.trace(debugMsg);
+//                    }
+//                    waitSignal.countDown();
+//
+//                } catch (Throwable t) {
+//                    log.error("Error occurred during running of scheduled mutator", t);
+//                }
+//
+//            }
+//
+//        }, EVENT_RATE_CALC_DELAY, EVENT_RATE_CALC_TIMEOUT, TimeUnit.SECONDS);
 
     }
 
 
-//
-//    public Cluster getCassandraConnector(String userName, String userPassword) {
-//        //check for existing cluster and create new cluster conneciton if it is not in the cache
-//        Map<String, String> credentials =
-//                new HashMap<String, String>();
-//        credentials.put(USERNAME_KEY, userName);
-//        credentials.put(PASSWORD_KEY, userPassword);
-//
-//        String hostList = getCassandraClusterHostPool();
-//        return HFactory.createCluster(CLUSTER_NAME,
-//                                      new CassandraHostConfigurator(hostList), credentials);
-//    }
-//
-//    private String getCassandraClusterHostPool() {
-//
-//        //        String hostList = CSS_NODE0 + ":" + RPC_PORT + "," + CSS_NODE1 + ":" + RPC_PORT + ","
-////                + CSS_NODE2 + ":" + RPC_PORT;
-//        //String hostList = LOCAL_NODE + ":" + RPC_PORT;
-//        return LOCAL_NODE + ":" + RPC_PORT;
-//    }
 
-//    public void createStreamColumnFamily(Cluster cluster,
-//                                              String streamName) {
-//
-//        String streamCfName = CassandraSDSUtils.convertStreamNameToCFName(streamName);
-//        Keyspace keyspace = HFactory.createKeyspace(BAM_EVENT_DATA_KEYSPACE, cluster);
-//        KeyspaceDefinition keyspaceDef =
-//                cluster.describeKeyspace(keyspace.getKeyspaceName());
-//        List<ColumnFamilyDefinition> cfDef = keyspaceDef.getCfDefs();
-//        for (ColumnFamilyDefinition cfdef : cfDef) {
-//            if (cfdef.getName().equals(streamCfName)) {
-//                if (logger.isDebugEnabled()) {
-//                    logger.debug("Column Family" + streamCfName + " is already Exist");
+    private Mutator<String> getMutator(Cluster cluster) throws StreamDefinitionStoreException {
+//        try {
+//            if (!processing) {
+//                if (eventRate > EVENT_RATE_THRESHOLD && batchedCounter.get() < ALLOWED_BATCH_MUTATOR_SIZE) {
+//                    batchMutationStarted = true;
+//                    processing = true;
+//                } else {
+//                    batchMutationStarted = false;
 //                }
-//                return;
+//            }
+//            if (batchMutationStarted) {
+//                return TenantAwareMutatorCache.getMutator(cluster);
+//            } else {
+        Keyspace keyspace = HFactory.createKeyspace(BAM_EVENT_DATA_KEYSPACE, cluster);
+        return HFactory.createMutator(keyspace, stringSerializer);
+//            }
+//        } catch (ExecutionException e) {
+//            String errorMsg = "Unable to get mutator for cluster " + cluster.getName();
+//            log.error(errorMsg, e);
+//            throw new StreamDefinitionStoreException(errorMsg, e);
+//        }
+    }
+
+    private AtomicInteger nonBatchedCounter = new AtomicInteger(0);
+    private AtomicInteger batchedCounter = new AtomicInteger(0);
+
+
+    private void commit(Mutator mutator) throws StreamDefinitionStoreException {
+
+//        if (!batchMutationStarted) {
+
+            mutator.execute();
+//            mutator.discardPendingMutations();
+//            if (log.isDebugEnabled()) {
+//                nonBatchedCounter.incrementAndGet();
+//                log.trace("No of non batched mutators executed : " + nonBatchedCounter.get());
+//                log.trace("Event rate is : " + eventRate + " is less than High event rate threshold : " +
+//                        EVENT_RATE_THRESHOLD +
+//                        "\n Therefore, Executing mutator...");
+//            }
+//        } else {
+//            try {
+//                if (log.isDebugEnabled()) {
+//                    log.trace("High event rate reached Waiting for latch to release");
+//                }
+//
+//                batchedCounter.incrementAndGet();
+//
+//
+//                // wait if mutators have to be committed
+//                waitSignal.await();
+//
+//                if (!activeMutators.contains(mutator)) {
+//                    activeMutators.add(mutator);
+//                }
+//
+//                if (log.isDebugEnabled()) {
+//                    String debugMsg = "High event rate is reached, adding mutator to active mutator list \n";
+//                    debugMsg += "Pending mutations in mutator : " + mutator.getPendingMutationCount() + " \n";
+//                    debugMsg += "Active mutator map : \n " + activeMutators;
+//                    debugMsg += "Active mutator map size : \n " + activeMutators.size();
+//                    log.trace(debugMsg);
+//                }
+//            } catch (InterruptedException e) {
+//                // if interrupted, store the accumulated data in cassandra
+//                mutator.execute();
 //            }
 //        }
-//        ColumnFamilyDefinition columnFamilyDefinition = HFactory.
-//                createColumnFamilyDefinition(BAM_EVENT_DATA_KEYSPACE,
-//                        CassandraSDSUtils.convertStreamNameToCFName(streamName));
-//        cluster.addColumnFamily(columnFamilyDefinition);
-//    }
+
+    }
+
+
+
+    private void createInserterMap() {
+        inserterMap.put(AttributeType.INT, new IntInserter());
+        inserterMap.put(AttributeType.BOOL, new BoolInserter());
+        inserterMap.put(AttributeType.LONG, new LongInserter());
+        inserterMap.put(AttributeType.FLOAT, new FloatInserter());
+        inserterMap.put(AttributeType.STRING, new StringInserter());
+        inserterMap.put(AttributeType.DOUBLE, new DoubleInserter());
+    }
 
     public void createColumnFamily(Cluster cluster, String keyspaceName, String columnFamilyName) {
         synchronized (CassandraConnector.class) {
@@ -241,7 +388,9 @@ public class CassandraConnector {
 
     private Mutator<String> prepareBatchMutate(Attribute attribute, Object[] data, DataType dataType, int eventDataIndex
             , String rowKey, String streamColumnFamily, Mutator<String> mutator) {
+
         String columnName = CassandraSDSUtils.getColumnName(dataType, attribute);
+
         if (attribute.getType().equals(AttributeType.STRING)) {
             String metaVal = (String) data[eventDataIndex];
             if (metaVal != null && !metaVal.isEmpty()) {
@@ -285,6 +434,173 @@ public class CassandraConnector {
     }
 
 
+//    private synchronized void startBatchCommit() {
+//      mutator = HFactory.createMutator();
+//    }
+//
+//    private synchronized void endBatchCommit() {
+//
+//    }
+
+
+    private static class TenantAwareMutatorCache {
+
+        private static LoadingCache<Cluster, Mutator<String>> mutatorCache = null;
+
+        private TenantAwareMutatorCache() {
+        }
+
+        private static void init() {
+            synchronized (TenantAwareMutatorCache.class) {
+                if (mutatorCache != null) {
+                    return;
+                }
+                mutatorCache = CacheBuilder.newBuilder()
+                        .build(new CacheLoader<Cluster, Mutator<String>>() {
+                            @Override
+                            public Mutator<String> load(Cluster cluster) throws Exception {
+                                Keyspace keyspace = HFactory.createKeyspace(BAM_EVENT_DATA_KEYSPACE, cluster);
+                                if (log.isDebugEnabled()) {
+                                    log.debug("Mutator cache hit for cluster for username : " + cluster.getCredentials());
+                                }
+                                return HFactory.createMutator(keyspace, stringSerializer);
+                            }
+                        }
+                        );
+            }
+
+        }
+
+        public static Mutator<String> getMutator(Cluster cluster) throws ExecutionException {
+            init();
+            return mutatorCache.get(cluster);
+        }
+    }
+
+    public List<String> insertEventList(Cluster cluster, List<Event> eventList) throws StreamDefinitionStoreException {
+                StreamDefinition streamDef;
+
+        Mutator<String> mutator = getMutator(cluster);
+
+        List<String> rowKeyList = new ArrayList<String>();
+
+        for (Event event : eventList) {
+            String rowKey = null;
+            streamDef = getStreamDefinitionFromStore(cluster, event.getStreamId());
+            String streamColumnFamily = getCFNameFromStreamId(cluster, event.getStreamId());
+            if ((streamDef == null) || (streamColumnFamily == null)) {
+                String errorMsg = "Event stream definition or column family cannot be null";
+                log.error(errorMsg);
+                throw new StreamDefinitionStoreException(errorMsg);
+            }
+
+
+            if (log.isTraceEnabled()) {
+                KeyspaceDefinition keyspaceDefinition = cluster.describeKeyspace(BAM_EVENT_DATA_KEYSPACE);
+                log.trace("Keyspace desc. : " + keyspaceDefinition);
+
+                String CFInfo = "CFs present \n";
+                for (ColumnFamilyDefinition columnFamilyDefinition : keyspaceDefinition.getCfDefs()) {
+                    CFInfo += "cf name : " + columnFamilyDefinition.getName() + "\n";
+                }
+                log.trace(CFInfo);
+            }
+
+
+            eventCounter.incrementAndGet();
+
+
+            // / add  current server time as time stamp if time stamp is not set
+            long timestamp;
+            if (event.getTimeStamp() != 0L) {
+                timestamp = event.getTimeStamp();
+            } else {
+                timestamp = System.currentTimeMillis();
+            }
+
+
+            rowKey = CassandraSDSUtils.createRowKey(timestamp, localAddress, port, rowkeyCounter.incrementAndGet());
+
+            String streamDefDescription = streamDef.getDescription();
+            String streamDefNickName = streamDef.getNickName();
+
+            mutator.addInsertion(rowKey, streamColumnFamily,
+                    HFactory.createStringColumn(STREAM_ID_KEY, streamDef.getStreamId()));
+            mutator.addInsertion(rowKey, streamColumnFamily,
+                    HFactory.createStringColumn(STREAM_NAME_KEY, streamDef.getName()));
+            mutator.addInsertion(rowKey, streamColumnFamily,
+                    HFactory.createStringColumn(STREAM_VERSION_KEY, streamDef.getVersion()));
+
+            if (streamDefDescription != null) {
+                mutator.addInsertion(rowKey, streamColumnFamily,
+                        HFactory.createStringColumn(STREAM_DESCRIPTION_KEY, streamDefDescription));
+            }
+            if (streamDefNickName != null) {
+                mutator.addInsertion(rowKey, streamColumnFamily,
+                        HFactory.createStringColumn(STREAM_NICK_NAME_KEY, streamDefNickName));
+            }
+
+            mutator.addInsertion(rowKey, streamColumnFamily,
+                    HFactory.createColumn(STREAM_TIMESTAMP_KEY, timestamp, stringSerializer,
+                            longSerializer));
+
+
+//        int eventDataIndex = 0;
+//        if (streamDef.getMetaData() != null) {
+//            for (Attribute attribute : streamDef.getMetaData()) {
+//                prepareBatchMutate(attribute, eventData.getMetaData(), DataType.meta, eventDataIndex,
+//                        rowKey, streamColumnFamily, mutator);
+//                eventDataIndex++;
+//            }
+//        }
+//        //Iterate for correlation  data
+//        if (eventData.getCorrelationData() != null) {
+//            eventDataIndex = 0;
+//            for (Attribute attribute : streamDef.getCorrelationData()) {
+//                prepareBatchMutate(attribute, eventData.getCorrelationData(), DataType.correlation, eventDataIndex,
+//                        rowKey, streamColumnFamily, mutator);
+//                eventDataIndex++;
+//            }
+//        }
+//        //Iterate for payload data
+//        if (eventData.getPayloadData() != null) {
+//            eventDataIndex = 0;
+//            for (Attribute attribute : streamDef.getPayloadData()) {
+//                prepareBatchMutate(attribute, eventData.getPayloadData(), DataType.payload, eventDataIndex,
+//                        rowKey, streamColumnFamily, mutator);
+//                eventDataIndex++;
+//            }
+//        }
+
+
+            if (streamDef.getMetaData() != null) {
+                prepareDataForInsertion(event.getMetaData(), streamDef.getMetaData(), DataType.meta, rowKey,
+                        streamColumnFamily, mutator);
+
+            }
+            //Iterate for correlation  data
+            if (event.getCorrelationData() != null) {
+                prepareDataForInsertion(event.getCorrelationData(), streamDef.getCorrelationData(),
+                        DataType.correlation,
+                        rowKey, streamColumnFamily, mutator);
+            }
+
+            //Iterate for payload data
+            if (event.getPayloadData() != null) {
+                prepareDataForInsertion(event.getPayloadData(), streamDef.getPayloadData(), DataType.payload,
+                        rowKey, streamColumnFamily, mutator);
+            }
+
+            rowKeyList.add(rowKey);
+
+        }
+
+        commit(mutator);
+
+        return rowKeyList;
+
+    }
+
     public String insertEvent(Cluster cluster, Event eventData)
             throws MalformedStreamDefinitionException, StreamDefinitionStoreException {
         StreamDefinition streamDef;
@@ -299,19 +615,22 @@ public class CassandraConnector {
 
         KeyspaceDefinition keyspaceDefinition = cluster.describeKeyspace(BAM_EVENT_DATA_KEYSPACE);
 
-        if (log.isDebugEnabled()) {
-            log.debug("Keyspace desc. : " + keyspaceDefinition);
-
+        if (log.isTraceEnabled()) {
+            log.trace("Keyspace desc. : " + keyspaceDefinition);
+        }
+        if (log.isTraceEnabled()) {
             String CFInfo = "CFs present \n";
             for (ColumnFamilyDefinition columnFamilyDefinition : keyspaceDefinition.getCfDefs()) {
                 CFInfo += "cf name : " + columnFamilyDefinition.getName() + "\n";
             }
-            log.debug(CFInfo);
+            log.trace(CFInfo);
         }
 
 
-        Keyspace keyspace = HFactory.createKeyspace(BAM_EVENT_DATA_KEYSPACE, cluster);
-        Mutator<String> mutator = HFactory.createMutator(keyspace, stringSerializer);
+        eventCounter.incrementAndGet();
+
+
+        Mutator<String> mutator = getMutator(cluster);
 
         // / add  current server time as time stamp if time stamp is not set
         long timestamp;
@@ -321,8 +640,8 @@ public class CassandraConnector {
             timestamp = System.currentTimeMillis();
         }
 
-        UUID uuid = UUID.randomUUID();
-        String rowKey = CassandraSDSUtils.createRowKey(timestamp, uuid);
+
+        String rowKey = CassandraSDSUtils.createRowKey(timestamp, localAddress, port, rowkeyCounter.incrementAndGet());
 
         String streamDefDescription = streamDef.getDescription();
         String streamDefNickName = streamDef.getNickName();
@@ -336,11 +655,11 @@ public class CassandraConnector {
 
         if (streamDefDescription != null) {
             mutator.addInsertion(rowKey, streamColumnFamily,
-                                 HFactory.createStringColumn(STREAM_DESCRIPTION_KEY, streamDefDescription));
+                    HFactory.createStringColumn(STREAM_DESCRIPTION_KEY, streamDefDescription));
         }
         if (streamDefNickName != null) {
             mutator.addInsertion(rowKey, streamColumnFamily,
-                                 HFactory.createStringColumn(STREAM_NICK_NAME_KEY, streamDefNickName));
+                    HFactory.createStringColumn(STREAM_NICK_NAME_KEY, streamDefNickName));
         }
 
         mutator.addInsertion(rowKey, streamColumnFamily,
@@ -348,37 +667,71 @@ public class CassandraConnector {
                         longSerializer));
 
 
-        int eventDataIndex = 0;
+//        int eventDataIndex = 0;
+//        if (streamDef.getMetaData() != null) {
+//            for (Attribute attribute : streamDef.getMetaData()) {
+//                prepareBatchMutate(attribute, eventData.getMetaData(), DataType.meta, eventDataIndex,
+//                        rowKey, streamColumnFamily, mutator);
+//                eventDataIndex++;
+//            }
+//        }
+//        //Iterate for correlation  data
+//        if (eventData.getCorrelationData() != null) {
+//            eventDataIndex = 0;
+//            for (Attribute attribute : streamDef.getCorrelationData()) {
+//                prepareBatchMutate(attribute, eventData.getCorrelationData(), DataType.correlation, eventDataIndex,
+//                        rowKey, streamColumnFamily, mutator);
+//                eventDataIndex++;
+//            }
+//        }
+//        //Iterate for payload data
+//        if (eventData.getPayloadData() != null) {
+//            eventDataIndex = 0;
+//            for (Attribute attribute : streamDef.getPayloadData()) {
+//                prepareBatchMutate(attribute, eventData.getPayloadData(), DataType.payload, eventDataIndex,
+//                        rowKey, streamColumnFamily, mutator);
+//                eventDataIndex++;
+//            }
+//        }
+
+
         if (streamDef.getMetaData() != null) {
-            for (Attribute attribute : streamDef.getMetaData()) {
-                prepareBatchMutate(attribute, eventData.getMetaData(), DataType.meta, eventDataIndex,
-                        rowKey, streamColumnFamily, mutator);
-                eventDataIndex++;
-            }
+            prepareDataForInsertion(eventData.getMetaData(), streamDef.getMetaData(), DataType.meta, rowKey,
+                    streamColumnFamily, mutator);
+
         }
         //Iterate for correlation  data
         if (eventData.getCorrelationData() != null) {
-            eventDataIndex = 0;
-            for (Attribute attribute : streamDef.getCorrelationData()) {
-                prepareBatchMutate(attribute, eventData.getCorrelationData(), DataType.correlation, eventDataIndex,
-                        rowKey, streamColumnFamily, mutator);
-                eventDataIndex++;
-            }
-        }
-        //Iterate for payload data
-        if (eventData.getPayloadData() != null) {
-            eventDataIndex = 0;
-            for (Attribute attribute : streamDef.getPayloadData()) {
-                prepareBatchMutate(attribute, eventData.getPayloadData(), DataType.payload, eventDataIndex,
-                        rowKey, streamColumnFamily, mutator);
-                eventDataIndex++;
-            }
+            prepareDataForInsertion(eventData.getCorrelationData(), streamDef.getCorrelationData(),
+                    DataType.correlation,
+                    rowKey, streamColumnFamily, mutator);
         }
 
-        mutator.execute();
+        //Iterate for payload data
+        if (eventData.getPayloadData() != null) {
+            prepareDataForInsertion(eventData.getPayloadData(), streamDef.getPayloadData(), DataType.payload,
+                    rowKey, streamColumnFamily, mutator);
+        }
+
+        commit(mutator);
 
         return rowKey;
     }
+
+
+
+    private Mutator prepareDataForInsertion(Object[] data, List<Attribute> streamDefnAttrList, DataType dataType,
+                                            String rowKey, String streamColumnFamily, Mutator<String> mutator) {
+        for (int i = 0; i < streamDefnAttrList.size(); i++) {
+            Attribute attribute = streamDefnAttrList.get(i);
+            TypeInserter typeInserter = inserterMap.get(attribute.getType());
+            String columnName = CassandraSDSUtils.getColumnName(dataType, attribute);
+
+            typeInserter.addDataToBatchInsertion(data[i], streamColumnFamily, columnName, rowKey, mutator);
+        }
+        return mutator;
+    }
+
 
     public Event getEvent(Cluster cluster, String streamId, String rowKey) throws EventProcessingException {
 
@@ -463,60 +816,6 @@ public class CassandraConnector {
                 .getOriginalValueFromColumnValue(eventCol.getValue(), payloadDefinition.getType());
     }
 
-//    public void insertEventDataColumnKeyLess(Event eventData, String userName,
-// String userPassword) throws MalformedStreamDefinitionException {
-//        Cluster tenantCluster = getCassandraConnector(userName, userPassword);
-//        StreamDefinition streamDef = getStreamDefinition(tenantCluster, eventData.getStreamId());
-//        String streamColumnFamily = eventData.getStreamId();
-//        //To change body of created methods use File | Settings | File Templates.
-//        Keyspace keyspace = HFactory.createKeyspace(BAM_EVENT_DATA_KEYSPACE, tenantCluster);
-//        Mutator<String> mutator = HFactory.createMutator(keyspace, new StringSerializer());
-//        // CF key  - to be changed based on analyser
-//        UUID uuid = UUID.randomUUID();
-//        String randomUUIDString = uuid.toString();
-//        //mutator.insert(randomUUIDString, streamColumnFamily, HFactory.createStringColumn(EVENT_DATA, eventData));
-//        //add / dupicate CF meta data in the columns
-//        mutator.addInsertion(randomUUIDString, streamColumnFamily, HFactory.createStringColumn(STREAM_NAME_KEY,
-// streamDef.getName()));
-//        mutator.addInsertion(randomUUIDString, streamColumnFamily, HFactory.createStringColumn(STREAM_VERSION_KEY,
-// streamDef.getVersion()));
-//        if (streamDef.getDescription() != null && !streamDef.getDescription().isEmpty()) {
-//            mutator.addInsertion(randomUUIDString, streamColumnFamily,
-// HFactory.createStringColumn(STREAM_DESCRIPTION_KEY, streamDef.getDescription()));
-//        }
-//        if (streamDef.getNickName() != null && !streamDef.getNickName().isEmpty()) {
-//            mutator.addInsertion(randomUUIDString, streamColumnFamily,
-// HFactory.createStringColumn(STREAM_NICK_NAME_KEY, streamDef.getNickName()));
-//        }
-//
-//        if (eventData.getMetaData() != null) {
-//            for (Object eventMetaData : eventData.getMetaData()) {
-//                String columnKeyUUID = UUID.randomUUID().toString();
-//                //test the object.tostring result
-//                mutator.addInsertion(randomUUIDString, streamColumnFamily, HFactory.createColumn(columnKeyUUID,
-// eventMetaData.toString(), stringSerializer, stringSerializer));
-//            }
-//        }
-//        if (eventData.getCorrelationData() != null) {
-//            for (Object eventCorrelationData : eventData.getCorrelationData()) {
-//                String columnKeyUUID = UUID.randomUUID().toString();
-//                //test the object.tostring result
-//                mutator.addInsertion(randomUUIDString, streamColumnFamily, HFactory.createColumn(columnKeyUUID,
-// eventCorrelationData.toString(), stringSerializer, stringSerializer));
-//            }
-//        }
-//        if (eventData.getPayloadData() != null) {
-//            for (Object eventPayloadData : eventData.getPayloadData()) {
-//                String columnKeyUUID = UUID.randomUUID().toString();
-//                //test the object.tostring result
-//                mutator.addInsertion(randomUUIDString, streamColumnFamily, HFactory.createColumn(columnKeyUUID,
-// eventPayloadData.toString(), stringSerializer, stringSerializer));
-//            }
-//        }
-//        mutator.execute();
-//    }
-
-
     public String getStreamKeyFromStreamId(Cluster cluster, StreamDefinition streamDefinition) {
         return getStreamKeyFromStreamId(cluster, streamDefinition.getStreamId());
     }
@@ -594,10 +893,8 @@ public class CassandraConnector {
 
                 StreamIdClusterBean that = (StreamIdClusterBean) o;
 
-                if (!cluster.equals(that.cluster)) return false;
-                if (!streamId.equals(that.streamId)) return false;
+                return cluster.equals(that.cluster) && streamId.equals(that.streamId);
 
-                return true;
             }
 
             @Override
@@ -607,26 +904,6 @@ public class CassandraConnector {
                 return result;
             }
 
-            //            @Override
-//            public boolean equals(Object o) {
-//                if (this == o) return true;
-//                if (o == null || getClass() != o.getClass()) return false;
-//
-//                StreamIdClusterBean that = (StreamIdClusterBean) o;
-//
-//                //cluster is equal if credentials are equal
-//                return cluster.getCredentials().equals(that.cluster.getCredentials()) && streamId.equals(that
-//                        .streamId);
-//
-//            }
-//
-//            @Override
-//            public int hashCode() {
-//                // get credentials hashcode
-//                int result = cluster.getCredentials().hashCode();
-//                result = 31 * result + streamId.hashCode();
-//                return result;
-//            }
         }
     }
 
@@ -655,9 +932,9 @@ public class CassandraConnector {
         Keyspace keyspace = HFactory.createKeyspace(BAM_META_KEYSPACE, cluster);
         createColumnFamily(cluster, BAM_EVENT_DATA_KEYSPACE, DataBridgeUtils
                 .getStreamNameFromStreamKey(CassandraSDSUtils
-                                                    .convertStreamNameToCFName(DataBridgeUtils.getStreamNameFromStreamKey
-                                                            (getStreamKeyFromStreamId
-                                                                     (cluster, streamId)))));
+                        .convertStreamNameToCFName(DataBridgeUtils.getStreamNameFromStreamKey
+                                (getStreamKeyFromStreamId
+                                        (cluster, streamId)))));
         Mutator<String> mutator = HFactory.createMutator(keyspace, stringSerializer);
         mutator.addInsertion(streamId, BAM_META_STREAM_DEF_CF,
                 HFactory.createStringColumn(STREAM_DEF, EventDefinitionConverterUtils
@@ -692,7 +969,7 @@ public class CassandraConnector {
     public void saveStreamIdToStore(Cluster cluster, StreamDefinition streamDefinition) {
 
         saveStreamIdToStore(cluster, DataBridgeUtils.constructStreamKey(streamDefinition.getName(),
-                                                                        streamDefinition.getVersion()), streamDefinition.getStreamId());
+                streamDefinition.getVersion()), streamDefinition.getStreamId());
     }
 
     /**
@@ -812,10 +1089,8 @@ public class CassandraConnector {
 
                 StreamKeyClusterBean that = (StreamKeyClusterBean) o;
 
-                if (!cluster.equals(that.cluster)) return false;
-                if (!streamKey.equals(that.streamKey)) return false;
+                return cluster.equals(that.cluster) && streamKey.equals(that.streamKey);
 
-                return true;
             }
 
             @Override
@@ -918,10 +1193,8 @@ public class CassandraConnector {
 
                 StreamIdClusterBean that = (StreamIdClusterBean) o;
 
-                if (!cluster.equals(that.cluster)) return false;
-                if (!streamId.equals(that.streamId)) return false;
+                return cluster.equals(that.cluster) && streamId.equals(that.streamId);
 
-                return true;
             }
 
             @Override
@@ -940,7 +1213,7 @@ public class CassandraConnector {
      *
      * @param cluster Tenant cluster
      * @return All stream definitions related to given tenant domain
-     * @throws StreamDefinitionException If the stream definitions are malformed
+     * @throws StreamDefinitionStoreException If the stream definitions are malformed
      */
     public Collection<StreamDefinition> getAllStreamDefinitionFromStore(Cluster cluster)
             throws StreamDefinitionStoreException {
@@ -948,8 +1221,6 @@ public class CassandraConnector {
         List<StreamDefinition> streamDefinitions = new ArrayList<StreamDefinition>();
 
         Keyspace keyspace = HFactory.createKeyspace(BAM_META_KEYSPACE, cluster);
-        ColumnQuery<String, String, String> columnQuery =
-                HFactory.createStringColumnQuery(keyspace);
 
         // get all stream ids
         RangeSlicesQuery<String, String, String> query =
@@ -988,20 +1259,5 @@ public class CassandraConnector {
         return streamDefinitions;
     }
 
-        /**
-         * Insert event definition to tenant event definition column family
-         *
-         * @param cluster               Tenant cluster
-         * @param streamDefinition Event stream definition
-         */
 
-    public void insertEventDefinition(Cluster cluster,
-                                      StreamDefinition streamDefinition) {
-        Keyspace keyspace = HFactory.createKeyspace(BAM_EVENT_DATA_KEYSPACE, cluster);
-        Mutator<String> mutator = HFactory.createMutator(keyspace, new StringSerializer());
-        mutator.addInsertion(streamDefinition.getStreamId(), BAM_EVENT_DATA_STREAM_DEF_CF,
-                HFactory.createStringColumn(STREAM_DEF, EventDefinitionConverterUtils
-                        .convertToJson(streamDefinition)));
-        mutator.execute();
-    }
 }

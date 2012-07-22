@@ -8,7 +8,7 @@ import org.apache.commons.logging.Log;
 import org.apache.commons.logging.LogFactory;
 import org.wso2.carbon.cassandra.dataaccess.ClusterInformation;
 import org.wso2.carbon.databridge.commons.Credentials;
-import org.wso2.carbon.databridge.streamdefn.cassandra.internal.util.Utils;
+import org.wso2.carbon.databridge.streamdefn.cassandra.internal.util.ServiceHolder;
 
 import java.util.concurrent.TimeUnit;
 
@@ -33,10 +33,7 @@ public class ClusterFactory {
 
     private static Log log = LogFactory.getLog(ClusterFactory.class);
 
-    private static final String USERNAME_KEY = "username";
-    private static final String PASSWORD_KEY = "password";
-    private static final String DEFAULT_HOST = "localhost:9160";
-    private static final String LOCAL_HOST_NAME = "localhost";
+
 
     private ClusterFactory() {
 
@@ -68,7 +65,7 @@ public class ClusterFactory {
 //                                            creds);
                             ClusterInformation clusterInformation = new ClusterInformation(credentials.getUsername(),
                                     credentials.getPassword());
-                            Cluster cluster = Utils.getDataAccessService().getCluster(clusterInformation);
+                            Cluster cluster = ServiceHolder.getDataAccessService().getCluster(clusterInformation);
                             initCassandraKeySpaces(cluster);
                             return cluster;
                         }
@@ -78,7 +75,7 @@ public class ClusterFactory {
 
     public static void initCassandraKeySpaces(Cluster cluster) {
         log.info("Initializing cluster");
-        CassandraConnector connector = Utils.getCassandraConnector();
+        CassandraConnector connector = ServiceHolder.getCassandraConnector();
         connector.createKeySpaceIfNotExisting(cluster, CassandraConnector.BAM_META_KEYSPACE);
 
         connector.createKeySpaceIfNotExisting(cluster, CassandraConnector.BAM_EVENT_DATA_KEYSPACE);
@@ -89,8 +86,8 @@ public class ClusterFactory {
                 CassandraConnector.BAM_META_STREAM_ID_CF);
         connector.createColumnFamily(cluster, CassandraConnector.BAM_META_KEYSPACE,
                 CassandraConnector.BAM_META_STREAM_ID_KEY_CF);
-        connector.createColumnFamily(cluster, CassandraConnector.BAM_META_KEYSPACE,
-                CassandraConnector.BAM_META_STREAMID_TO_STREAM_ID_KEY);
+//        connector.createColumnFamily(cluster, CassandraConnector.BAM_META_KEYSPACE,
+//                CassandraConnector.BAM_META_STREAMID_TO_STREAM_ID_KEY);
         connector.createColumnFamily(cluster, CassandraConnector.BAM_META_KEYSPACE,
                 CassandraConnector.BAM_META_STREAM_DEF_CF);
     }

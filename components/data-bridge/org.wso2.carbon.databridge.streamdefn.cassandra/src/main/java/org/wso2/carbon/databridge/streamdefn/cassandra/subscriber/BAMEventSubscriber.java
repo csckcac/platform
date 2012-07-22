@@ -7,7 +7,7 @@ import org.wso2.carbon.databridge.commons.Event;
 import org.wso2.carbon.databridge.commons.StreamDefinition;
 import org.wso2.carbon.databridge.core.AgentCallback;
 import org.wso2.carbon.databridge.streamdefn.cassandra.datastore.ClusterFactory;
-import org.wso2.carbon.databridge.streamdefn.cassandra.internal.util.Utils;
+import org.wso2.carbon.databridge.streamdefn.cassandra.internal.util.ServiceHolder;
 
 import java.util.List;
 
@@ -37,14 +37,21 @@ public class BAMEventSubscriber implements AgentCallback {
 
     @Override
     public void receive(List<Event> eventList, Credentials credentials) {
-        for (Event event : eventList) {
-            try {
-                Utils.getCassandraConnector().insertEvent(ClusterFactory.getCluster(credentials), event);
-            } catch (Exception e) {
-                String errorMsg = "Error processing event. " + event.toString();
-                log.error(errorMsg, e);
-            }
-
+        try {
+            ServiceHolder.getCassandraConnector().insertEventList(ClusterFactory.getCluster(credentials), eventList);
+        } catch (Exception e) {
+            String errorMsg = "Error processing event. ";
+            log.error(errorMsg, e);
         }
     }
+//        for (Event event : eventList) {
+//            try {
+//                ServiceHolder.getCassandraConnector().insertEvent(ClusterFactory.getCluster(credentials), event);
+//            } catch (Exception e) {
+//                String errorMsg = "Error processing event. " + event.toString();
+//                log.error(errorMsg, e);
+//            }
+//
+//        }
+
 }

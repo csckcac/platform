@@ -21,6 +21,7 @@ import org.wso2.carbon.databridge.commons.Credentials;
 import org.wso2.carbon.databridge.commons.StreamDefinition;
 import org.wso2.carbon.databridge.core.definitionstore.AbstractStreamDefinitionStore;
 import org.wso2.carbon.databridge.core.exception.StreamDefinitionStoreException;
+import org.wso2.carbon.databridge.streamdefn.cassandra.internal.util.ServiceHolder;
 
 import java.util.Collection;
 
@@ -31,10 +32,8 @@ public class CassandraStreamDefinitionStore extends AbstractStreamDefinitionStor
 
     Logger log = Logger.getLogger(CassandraStreamDefinitionStore.class);
 
-    CassandraConnector cassandraConnector;
 
     public CassandraStreamDefinitionStore(){
-        cassandraConnector = new CassandraConnector();
     }
 
     @Override
@@ -42,31 +41,31 @@ public class CassandraStreamDefinitionStore extends AbstractStreamDefinitionStor
             throws StreamDefinitionStoreException {
 
 
-        cassandraConnector.saveStreamIdToStore(ClusterFactory.getCluster(credentials), streamIdKey, streamId);
+        ServiceHolder.getCassandraConnector().saveStreamIdToStore(ClusterFactory.getCluster(credentials), streamIdKey, streamId);
     }
 
     @Override
     protected void saveStreamDefinitionToStore(Credentials credentials, String streamId, StreamDefinition streamDefinition) throws StreamDefinitionStoreException {
-        cassandraConnector.saveStreamDefinitionToStore(ClusterFactory.getCluster(credentials), streamId, streamDefinition);
+        ServiceHolder.getCassandraConnector().saveStreamDefinitionToStore(ClusterFactory.getCluster(credentials), streamId, streamDefinition);
     }
 
     @Override
     protected String getStreamIdFromStore(Credentials credentials, String streamIdKey)
             throws StreamDefinitionStoreException {
-        return cassandraConnector.getStreamIdFromStore(ClusterFactory.getCluster(credentials), streamIdKey);
+        return ServiceHolder.getCassandraConnector().getStreamIdFromStore(ClusterFactory.getCluster(credentials), streamIdKey);
     }
 
 
     @Override
     public StreamDefinition getStreamDefinitionFromStore(Credentials credentials, String streamId)
             throws StreamDefinitionStoreException {
-        return cassandraConnector.getStreamDefinitionFromStore(ClusterFactory.getCluster(credentials), streamId);
+        return ServiceHolder.getCassandraConnector().getStreamDefinitionFromStore(ClusterFactory.getCluster(credentials), streamId);
     }
 
     @Override
     protected Collection<StreamDefinition> getAllStreamDefinitionsFromStore(Credentials credentials) throws
             StreamDefinitionStoreException {
-        return cassandraConnector.getAllStreamDefinitionFromStore(ClusterFactory.getCluster(credentials));
+        return ServiceHolder.getCassandraConnector().getAllStreamDefinitionFromStore(ClusterFactory.getCluster(credentials));
     }
 
 

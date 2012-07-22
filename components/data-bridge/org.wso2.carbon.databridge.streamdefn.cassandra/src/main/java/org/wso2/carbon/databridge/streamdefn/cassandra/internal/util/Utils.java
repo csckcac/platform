@@ -1,11 +1,7 @@
 package org.wso2.carbon.databridge.streamdefn.cassandra.internal.util;
 
-import org.wso2.carbon.cassandra.dataaccess.DataAccessService;
-import org.wso2.carbon.databridge.streamdefn.cassandra.datastore.CassandraConnector;
-import org.wso2.carbon.databridge.streamdefn.cassandra.subscriber.BAMEventSubscriber;
-import org.wso2.carbon.identity.authentication.AuthenticationService;
-import org.wso2.carbon.registry.core.service.RegistryService;
-import org.wso2.carbon.user.core.service.RealmService;
+import java.net.*;
+import java.util.Enumeration;
 
 /**
  * Copyright (c) WSO2 Inc. (http://www.wso2.org) All Rights Reserved.
@@ -23,62 +19,19 @@ import org.wso2.carbon.user.core.service.RealmService;
  * limitations under the License.
  */
 public class Utils {
-    private static RealmService realmService;
-    private static AuthenticationService authenticationService;
-    private static RegistryService registryService;
-    private static DataAccessService dataAccessService;
+    public static InetAddress getLocalAddress() throws SocketException, UnknownHostException {
+        Enumeration<NetworkInterface> ifaces = NetworkInterface.getNetworkInterfaces();
+        while (ifaces.hasMoreElements()) {
+            NetworkInterface iface = ifaces.nextElement();
+            Enumeration<InetAddress> addresses = iface.getInetAddresses();
 
-    private static CassandraConnector cassandraConnector;
-
-    private static BAMEventSubscriber bamEventSubscriber;
-
-
-    public static CassandraConnector getCassandraConnector() {
-        return cassandraConnector;
+            while (addresses.hasMoreElements()) {
+                InetAddress addr = addresses.nextElement();
+                if (addr instanceof Inet4Address && !addr.isLoopbackAddress()) {
+                    return addr;
+                }
+            }
+        }
+        return InetAddress.getLocalHost();
     }
-
-    public static void setCassandraConnector(CassandraConnector cassandraConnector) {
-        Utils.cassandraConnector = cassandraConnector;
-    }
-
-    public static DataAccessService getDataAccessService() {
-        return dataAccessService;
-    }
-
-    public static void setDataAccessService(DataAccessService dataAccessService) {
-        Utils.dataAccessService = dataAccessService;
-    }
-
-    public static RealmService getRealmService() {
-        return realmService;
-    }
-
-    public static void setRealmService(RealmService realmService) {
-        Utils.realmService = realmService;
-    }
-
-    public static AuthenticationService getAuthenticationService() {
-        return authenticationService;
-    }
-
-    public static void setAuthenticationService(AuthenticationService authenticationService) {
-        Utils.authenticationService = authenticationService;
-    }
-
-    public static RegistryService getRegistryService() {
-        return registryService;
-    }
-
-    public static void setRegistryService(RegistryService registryService) {
-        Utils.registryService = registryService;
-    }
-
-    public static BAMEventSubscriber getBamEventSubscriber() {
-        return bamEventSubscriber;
-    }
-
-    public static void setBamEventSubscriber(BAMEventSubscriber bamEventSubscriber) {
-        Utils.bamEventSubscriber = bamEventSubscriber;
-    }
-
 }

@@ -23,6 +23,7 @@ import org.apache.commons.logging.LogFactory;
 import org.apache.tomcat.jdbc.pool.DataSource;
 import org.osgi.framework.BundleContext;
 import org.osgi.service.component.ComponentContext;
+import org.wso2.carbon.coordination.core.services.CoordinationService;
 import org.wso2.carbon.core.multitenancy.SuperTenantCarbonContext;
 import org.wso2.carbon.ndatasource.core.DataSourceService;
 import org.wso2.carbon.rssmanager.common.RSSManagerConstants;
@@ -61,6 +62,12 @@ import java.util.Map;
  * policy="dynamic"
  * bind="setDataSourceService"
  * unbind="unsetDataSourceService"
+ * @scr.reference name="coordination.service"
+ * interface="org.wso2.carbon.coordination.core.services.CoordinationService"
+ * cardinality="1..1"
+ * policy="dynamic"
+ * bind="setCoordinationService"
+ * unbind="unsetCoordinationService"
  */
 public class RSSManagerServiceComponent {
 
@@ -69,6 +76,8 @@ public class RSSManagerServiceComponent {
     private static DataSourceService dataSourceService;
 
     private static RealmService realmService;
+
+    private static CoordinationService coordinationService;
 
     /**
      * Activates the RSS Manager Core bundle.
@@ -120,23 +129,6 @@ public class RSSManagerServiceComponent {
                     "RSSConfig", e);
         }
     }
-
-//    public static SecretCallbackHandlerService getSecretCallbackHandlerService() {
-//        return RSSManagerServiceComponent.secretCallbackHandlerService;
-//    }
-//
-//    protected void setSecretCallbackHandlerService(
-//            SecretCallbackHandlerService secretCallbackHandlerService) {
-//        if (log.isDebugEnabled()) {
-//            log.debug("SecretCallbackHandlerService acquired");
-//        }
-//        RSSManagerServiceComponent.secretCallbackHandlerService = secretCallbackHandlerService;
-//    }
-//
-//    protected void unsetSecretCallbackHandlerService(
-//            SecretCallbackHandlerService secretCallbackHandlerService) {
-//        RSSManagerServiceComponent.secretCallbackHandlerService = null;
-//    }
 
     protected void setDataSourceService(DataSourceService dataSourceService) {
         if (log.isDebugEnabled()) {
@@ -195,6 +187,28 @@ public class RSSManagerServiceComponent {
      */
     public static TenantManager getTenantManager() {
         return getRealmService().getTenantManager();
+    }
+
+    /**
+     * Sets Coordination service
+     *
+     * @param coordinationService associated coordination service
+     */
+    protected void setCoordinationService(CoordinationService coordinationService) {
+        RSSManagerServiceComponent.coordinationService = coordinationService;
+    }
+
+    /**
+     * Unsets Coordination service
+     *
+     * @param coordinationService associated coordination service
+     */
+    protected void unsetCoordinationService(CoordinationService coordinationService) {
+        RSSManagerServiceComponent.coordinationService = null;
+    }
+
+    public static CoordinationService getCoodrinationService() {
+        return coordinationService;
     }
 
     /**

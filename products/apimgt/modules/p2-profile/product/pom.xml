@@ -158,7 +158,6 @@
                                 <featureArtifactDef>org.wso2.carbon:org.wso2.carbon.registry.community.features.server.feature:${carbon.platform.version}</featureArtifactDef>
                                 <featureArtifactDef>org.wso2.carbon:org.wso2.carbon.ec2.client.feature:${carbon.version}</featureArtifactDef>
                                 <featureArtifactDef>org.wso2.carbon:org.wso2.carbon.throttle.server.feature:${carbon.version}</featureArtifactDef>
-				                <featureArtifactDef>org.wso2.carbon:org.wso2.carbon.databridge.datapublisher.feature:${carbon.version}</featureArtifactDef>
 				
 
                                 <!-- reporting features -->
@@ -440,11 +439,6 @@
                                     <id>org.wso2.carbon.registry.ws.feature.group</id>
                                     <version>${carbon.version}</version>
                                 </feature>
-                                <feature>
-                                    <id>org.wso2.carbon.databridge.datapublisher.feature.group</id>
-                                    <version>${carbon.version}</version>
-                                </feature>
-
                                 <!--API Management related feature-->
                                 <feature>
                                     <id>org.jaggeryjs.feature.group</id>

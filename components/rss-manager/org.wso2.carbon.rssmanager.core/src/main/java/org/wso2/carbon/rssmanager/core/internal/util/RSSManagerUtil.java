@@ -39,6 +39,7 @@ import org.wso2.carbon.utils.multitenancy.CarbonContextHolder;
 
 import javax.naming.InitialContext;
 import javax.sql.DataSource;
+import javax.transaction.TransactionManager;
 import javax.xml.bind.JAXBException;
 import java.io.ByteArrayOutputStream;
 import java.net.URI;
@@ -48,6 +49,16 @@ import java.util.*;
 public class RSSManagerUtil {
     
     public static final String RDBMS_DTAASOURCE_TYPE = "RDBMS";
+
+    public static TransactionManager transactionManager;
+
+    public static TransactionManager getTransactionManager() {
+        return transactionManager;
+    }
+
+    public static void setTransactionManager(TransactionManager transactionManager) {
+        RSSManagerUtil.transactionManager = transactionManager;
+    }
 
     //private static SecretResolver secretResolver;
 

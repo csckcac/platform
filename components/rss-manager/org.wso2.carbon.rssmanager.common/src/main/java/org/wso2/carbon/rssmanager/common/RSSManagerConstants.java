@@ -18,6 +18,8 @@
  */
 package org.wso2.carbon.rssmanager.common;
 
+import javax.naming.Name;
+
 /**
  * Contains the constants associated with the component.
  */
@@ -26,7 +28,7 @@ public final class RSSManagerConstants {
     public static final String WSO2_RSS_INSTANCE_TYPE = "WSO2_RSS";
     public static final String WSO2_LOCAL_RDS_INSTANCE_TYPE = "WSO2_LOCAL_RDS";
     public static final String WSO2_USER_DEFINED_INSTANCE_TYPE = "USER_DEFINED";
-    public static final String WSO2_RSS_CONFIG_XML_NAME = "wso2-rss-config.xml";
+    public static final String WSO2_RSS_CONFIG_XML_NAME = "rss-config.xml";
     public static final String STRATOS_RSS = "STRATOS_RSS";
     public static final String MYSQL_SYSTEM_DB = "mysql";
     public static final String LOCAL = "LOCAL";
@@ -80,27 +82,26 @@ public final class RSSManagerConstants {
     public static final String MAX_USER_CONNECTIONS = "max_user_connections";
     public static final String MAX_UPDATES = "max_updates";
 
-    public static final String RSS_INSTANCE_ID = "rssInsId";
-    public static final String DATABASE_INSTANCE_ID = "dbInsId";
-
-    public static final java.lang.String DATA_SOURCE = "dataSource";
-    public static final java.lang.String URL = "url";
-    public static final java.lang.String USER_NAME = "username";
-    public static final java.lang.String PASSWORD = "password";
-    public static final java.lang.String DRIVER_NAME = "driverClassName";
-    public static final java.lang.String MAX_ACTIVE = "maxActive";
-    public static final java.lang.String MAX_WAIT = "maxWait";
-    public static final java.lang.String MIN_IDLE = "minIdle";
-    public static final java.lang.String MAX_IDLE = "maxIdle";
-    public static final java.lang.String VALIDATION_QUERY = "validationQuery";
-    public static final java.lang.String DIALECT_FLAG = "dialectFlag";
-    public static final java.lang.String TEST_WHILE_IDLE = "testWhileIdle";
-    public static final java.lang.String TIME_BETWEEN_EVICTION_RUNS_MILLIS = "timeBetweenEvictionRunsMillis";
-    public static final java.lang.String MIN_EVIC_TABLE_IDLE_TIME_MILLIS = "minEvictableIdleTimeMillis";
-    public static final java.lang.String NUM_TESTS_PEREVICTION_RUN = "numTestsPerEvictionRun";
+    public static final String DATA_SOURCE = "dataSource";
+    public static final String URL = "url";
+    public static final String USER_NAME = "username";
+    public static final String PASSWORD = "password";
+    public static final String DRIVER_NAME = "driverClassName";
+    public static final String MAX_ACTIVE = "maxActive";
+    public static final String MAX_WAIT = "maxWait";
+    public static final String MIN_IDLE = "minIdle";
+    public static final String MAX_IDLE = "maxIdle";
+    public static final String VALIDATION_QUERY = "validationQuery";
+    public static final String DIALECT_FLAG = "dialectFlag";
+    public static final String TEST_WHILE_IDLE = "testWhileIdle";
+    public static final String TIME_BETWEEN_EVICTION_RUNS_MILLIS = "timeBetweenEvictionRunsMillis";
+    public static final String MIN_EVIC_TABLE_IDLE_TIME_MILLIS = "minEvictableIdleTimeMillis";
+    public static final String NUM_TESTS_PEREVICTION_RUN = "numTestsPerEvictionRun";
     public static final int DEFAULT_MAX_ACTIVE = 40;
     public static final int DEFAULT_MAX_WAIT = 1000 * 60;
     public static final int DEFAULT_MIN_IDLE = 5;
     public static final int DEFAULT_MAX_IDLE = 6;
 
+    public static final String STANDARD_TRANSACTION_MANAGER_JNDI_NAME = "java:comp/TransactionManager";
+    public static final String STANDARD_USER_TRANSACTION_JNDI_NAME = "java:comp/UserTransaction";
 }

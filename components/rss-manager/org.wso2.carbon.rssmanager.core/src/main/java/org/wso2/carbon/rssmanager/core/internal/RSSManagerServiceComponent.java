@@ -25,18 +25,23 @@ import org.osgi.framework.BundleContext;
 import org.osgi.service.component.ComponentContext;
 import org.wso2.carbon.core.multitenancy.SuperTenantCarbonContext;
 import org.wso2.carbon.ndatasource.core.DataSourceService;
+import org.wso2.carbon.rssmanager.common.RSSManagerConstants;
 import org.wso2.carbon.rssmanager.core.RSSManagerException;
 import org.wso2.carbon.rssmanager.core.internal.dao.RSSDAO;
 import org.wso2.carbon.rssmanager.core.internal.dao.RSSDAOFactory;
 import org.wso2.carbon.rssmanager.core.internal.dao.entity.RSSInstance;
 import org.wso2.carbon.rssmanager.core.internal.manager.RSSMetaDataRepository;
 import org.wso2.carbon.rssmanager.core.internal.util.RSSConfig;
+import org.wso2.carbon.rssmanager.core.internal.util.RSSManagerUtil;
+import org.wso2.carbon.rssmanager.core.service.RSSManagerService;
 import org.wso2.carbon.user.core.service.RealmService;
 import org.wso2.carbon.user.core.tenant.TenantManager;
 import org.wso2.carbon.utils.AbstractAxis2ConfigurationContextObserver;
 import org.wso2.carbon.utils.multitenancy.CarbonContextHolder;
 import org.wso2.carbon.utils.multitenancy.MultitenantConstants;
 
+import javax.naming.InitialContext;
+import javax.transaction.TransactionManager;
 import java.util.HashMap;
 import java.util.Map;
 
@@ -65,7 +70,6 @@ public class RSSManagerServiceComponent {
 
     private static RealmService realmService;
 
-
     /**
      * Activates the RSS Manager Core bundle.
      *
@@ -84,13 +88,15 @@ public class RSSManagerServiceComponent {
             this.initSystemRSSInstances();
             /* Initializes the RSS Manager repositories of all existing tenants */
             RSSConfig.getInstance().getRssManager().initAllTenants();
+            /* Looks up for the JNDI registered transaction manager */
+            RSSManagerUtil.setTransactionManager(this.lookupTransactionManager());
 
             /* Loading tenant specific data */
             bundleContext.registerService(AbstractAxis2ConfigurationContextObserver.class.getName(),
                     new RSSManagerAxis2ConfigContextObserver(), null);
             /* Registers RSSManager service */
-//            bundleContext.registerService(RSSManagerService.class.getName(),
-//                    new RSSManagerService(), null);
+            bundleContext.registerService(RSSManagerService.class.getName(),
+                    new RSSManagerService(), null);
 
         } catch (Throwable e) {
             String msg = "Error occurred while initializing RSS Manager core bundle";
@@ -192,7 +198,7 @@ public class RSSManagerServiceComponent {
     }
 
     /**
-     * Initialises the RSS DAO database by reading from the "wso2-rss-config.xml".
+     * Initialises the RSS DAO database by reading from the "rss-config.xml".
      *
      * @throws org.wso2.carbon.rssmanager.core.RSSManagerException
      *          rssDaoException
@@ -226,6 +232,36 @@ public class RSSManagerServiceComponent {
             log.error("Error occurred while initializing system RSS instances", e);
             throw e;
         }
+    }
+
+    private TransactionManager lookupTransactionManager() {
+        TransactionManager transactionManager = null;
+        try {
+			Object txObj = InitialContext.doLookup(
+					RSSManagerConstants.STANDARD_USER_TRANSACTION_JNDI_NAME);
+			if (txObj instanceof TransactionManager) {
+				transactionManager = (TransactionManager) txObj;
+			}
+		} catch (Exception e) {
+			if (log.isDebugEnabled()) {
+				log.debug("Cannot find transaction manager at: "
+						+ RSSManagerConstants.STANDARD_USER_TRANSACTION_JNDI_NAME, e);
+			}
+			/* ignore, move onto next step */
+		}
+		if (transactionManager == null) {
+			try {
+				transactionManager = InitialContext.doLookup(
+						RSSManagerConstants.STANDARD_TRANSACTION_MANAGER_JNDI_NAME);
+			} catch (Exception e) {
+				if (log.isDebugEnabled()) {
+					log.debug("Cannot find transaction manager at: " +
+				         RSSManagerConstants.STANDARD_TRANSACTION_MANAGER_JNDI_NAME, e);
+				}
+				/* we'll do the lookup later, maybe user provided a custom JNDI name */
+			}
+		}
+        return transactionManager;
     }
 
 }

@@ -37,7 +37,6 @@
 
     //Database privileges
     String selectPriv = request.getParameter("select_priv");
-    System.out.println("SELECT : " + selectPriv);
     String insertPriv = request.getParameter("insert_priv");
     String updatePriv = request.getParameter("update_priv");
     String deletePriv = request.getParameter("delete_priv");

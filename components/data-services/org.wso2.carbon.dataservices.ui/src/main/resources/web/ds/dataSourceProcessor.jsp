@@ -23,6 +23,7 @@
 <%@ page import="org.wso2.carbon.ui.CarbonUIMessage" %>
 <%@ page import="java.util.ArrayList" %>
 <%@ page import="java.util.Iterator" %>
+<%@ page import="java.util.List" %>
 <jsp:useBean id="dataService" class="org.wso2.carbon.dataservices.ui.beans.Data" scope="session"/>
 <jsp:useBean id="newConfig" class="org.wso2.carbon.dataservices.ui.beans.Config" scope="session"/>
 <%!
@@ -35,7 +36,12 @@
                 config.removeProperty(propertyName);
             }
         } else if (value instanceof DynamicAuthConfiguration) {
-            config.updateProperty(propertyName, value);
+            List<DynamicAuthConfiguration.Entry> userEntries = ((DynamicAuthConfiguration) value).getEntries();
+            if (userEntries != null && userEntries.size() > 0) {
+                config.updateProperty(propertyName, value);
+            } else {
+                config.removeProperty(propertyName);
+            }
         }
     }
 %>

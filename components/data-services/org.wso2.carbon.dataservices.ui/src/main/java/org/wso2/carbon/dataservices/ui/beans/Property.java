@@ -78,22 +78,24 @@ public class Property extends DataServiceConfigurationElement{
                 OMElement dynamicUserAuthConfigEle = fac.createOMElement("configuration", null);
                 DynamicAuthConfiguration dynamicAuthConfiguration = (DynamicAuthConfiguration) this.getValue();
                 List<DynamicAuthConfiguration.Entry> dynamicUserEntries = dynamicAuthConfiguration.getEntries();
-                for (DynamicAuthConfiguration.Entry userEntry : dynamicUserEntries) {
-                    OMElement dynamicUserEntryEle = fac.createOMElement("entry", null);
-                    dynamicUserEntryEle.addAttribute("request", userEntry.getRequest(), null);
+                if (dynamicUserEntries != null) {
+                    for (DynamicAuthConfiguration.Entry userEntry : dynamicUserEntries) {
+                        OMElement dynamicUserEntryEle = fac.createOMElement("entry", null);
+                        dynamicUserEntryEle.addAttribute("request", userEntry.getRequest(), null);
 
-                    OMElement userEle = fac.createOMElement("username", null);
-                    userEle.setText(userEntry.getUsername());
+                        OMElement userEle = fac.createOMElement("username", null);
+                        userEle.setText(userEntry.getUsername());
 
-                    OMElement pwdEle = fac.createOMElement("password", null);
-                    pwdEle.setText(userEntry.getPassword());
+                        OMElement pwdEle = fac.createOMElement("password", null);
+                        pwdEle.setText(userEntry.getPassword());
 
-                    dynamicUserEntryEle.addChild(userEle);
-                    dynamicUserEntryEle.addChild(pwdEle);
+                        dynamicUserEntryEle.addChild(userEle);
+                        dynamicUserEntryEle.addChild(pwdEle);
 
-                    dynamicUserAuthConfigEle.addChild(dynamicUserEntryEle);
+                        dynamicUserAuthConfigEle.addChild(dynamicUserEntryEle);
+                    }
+                    propEl.addChild(dynamicUserAuthConfigEle);
                 }
-                propEl.addChild(dynamicUserAuthConfigEle);
             }
         }
         return propEl;

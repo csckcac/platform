@@ -84,7 +84,10 @@
                                 <featureArtifactDef>
                                     org.wso2.carbon:org.wso2.carbon.logging.mgt.feature:${carbon.platform.version}
                                 </featureArtifactDef>
-                                  <featureArtifactDef>
+                                <featureArtifactDef>
+                                    org.wso2.carbon:org.wso2.carbon.databridge.datapublisher.feature:${carbon.version}
+                                </featureArtifactDef>
+                                <featureArtifactDef>
                                     org.wso2.carbon:org.wso2.carbon.url.mapper.feature:${carbon.platform.version}
                                 </featureArtifactDef>
                                 <featureArtifactDef>
@@ -141,6 +144,7 @@
                                 <featureArtifactDef>
                                     org.wso2.carbon:org.wso2.carbon.mex.feature:${carbon.platform.version}
                                 </featureArtifactDef>
+
                                 <!--<featureArtifactDef>org.wso2.carbon:org.wso2.carbon.eventing.feature:${carbon.platform.version}</featureArtifactDef>-->
                                 <!-- eventing -->
                                 <featureArtifactDef>
@@ -229,7 +233,7 @@
                                 <featureArtifactDef>
                                     org.wso2.appserver:org.wso2.stratos.appserver.sample.installer.ui.feature:${stratos.version}
                                 </featureArtifactDef>
-
+				
                                 <featureArtifactDef>
                                     org.wso2.carbon:org.wso2.carbon.bam.lwevent.feature:${carbon.version}
                                 </featureArtifactDef>
@@ -323,6 +327,10 @@
                                     <id>org.wso2.carbon.logging.mgt.feature.group</id>
                                     <version>${carbon.platform.version}</version>
                                 </feature>
+                                <feature>
+                                    <id>org.wso2.carbon.databridge.datapublisher.feature.group</id>
+                                    <version>${carbon.version}</version>
+                                </feature>
 
  				<feature>
                                     <id>org.wso2.carbon.url.mapper.feature.group</id>
@@ -348,6 +356,7 @@
                                     <id>org.wso2.carbon.repomanager.axis2.feature.group</id>
                                     <version>${carbon.platform.version}</version>
                                 </feature>
+                              
 
                                 <feature>
                                     <id>org.wso2.carbon.security.mgt.feature.group</id>

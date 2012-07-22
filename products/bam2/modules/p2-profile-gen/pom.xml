@@ -118,9 +118,9 @@
                                 <featureArtifactDef>
                                     org.wso2.carbon:org.wso2.carbon.cassandra.feature:${carbon.version}
                                 </featureArtifactDef>
-                                <featureArtifactDef>
+                                <!--featureArtifactDef>
                                     org.wso2.carbon:org.wso2.carbon.logging.mgt.feature:${carbon.version}
-                                </featureArtifactDef>
+                                </featureArtifactDef-->
                                 <featureArtifactDef>org.wso2.carbon:org.wso2.carbon.wsdl.tools.feature:${carbon.version}
                                 </featureArtifactDef>
                                 <featureArtifactDef>
@@ -370,10 +370,10 @@
 -                                    <version>${carbon.version}</version>
 -                                </feature-->
                                 <!--END Identity Features-->
-                                <feature>
+                                <!--feature>
                                     <id>org.wso2.carbon.logging.mgt.feature.group</id>
                                     <version>${carbon.version}</version>
-                                </feature>
+                                </feature-->
 
                                 <feature>
                                     <id>org.wso2.carbon.security.mgt.feature.group</id>

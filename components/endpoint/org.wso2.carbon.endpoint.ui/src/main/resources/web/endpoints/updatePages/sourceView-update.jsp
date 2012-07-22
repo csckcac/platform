@@ -22,7 +22,9 @@
 
 <%
     String configuration = request.getParameter("endpointString");
+
     configuration = configuration.replaceAll("\\s\\s+|\\n|\\r", ""); // remove the pretty printing from the string
+    configuration = configuration.replace("&amp;","&");
     configuration = configuration.replace("&", "&amp;"); // this is to ensure that url is properly encoded
 
     session.setAttribute("endpointConfiguration", configuration);

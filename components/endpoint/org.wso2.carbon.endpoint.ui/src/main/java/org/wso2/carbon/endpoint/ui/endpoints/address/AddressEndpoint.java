@@ -216,7 +216,7 @@ public class AddressEndpoint extends Endpoint {
     }
 
     public void setAddress(String address) {
-        this.address = address;
+        this.address = address.replaceAll("&amp;","&");
     }
 
     public String getMaxSusDuration() {

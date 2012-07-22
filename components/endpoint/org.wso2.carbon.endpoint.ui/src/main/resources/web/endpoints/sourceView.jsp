@@ -102,7 +102,7 @@
         if (!isValidXML) {
             return false;
         }
-        var epString = trim(document.getElementById('xmlPay').value);
+        var epString = encodeCharacters(trim(document.getElementById('xmlPay').value));
 
         jQuery.ajax({
                         type: 'POST',
@@ -125,7 +125,7 @@
         if (!isValidXML) {
             return false;
         }
-        var epString = trim(document.getElementById('xmlPay').value);
+        var epString = encodeCharacters(trim(document.getElementById('xmlPay').value));
 
         jQuery.ajax({
                         type: 'POST',
@@ -188,7 +188,7 @@
         if (!isValidXML) {
             return false;
         }
-        var epString = trim(document.getElementById('xmlPay').value);
+        var epString = encodeCharacters(trim(document.getElementById('xmlPay').value));
 
         jQuery.ajax({
                         type: 'POST',

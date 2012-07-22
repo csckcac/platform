@@ -142,26 +142,12 @@ function getStrings(n, strings) {
     }
 }
 
-function convertToValidXMlString(originalStr) {
-    //Replace all the correct code with invalid code
-    var convertedStr = relpaceString(originalStr, "&amp;", "&");
-    convertedStr = relpaceString(convertedStr, "&lt;", "<");
-    convertedStr = relpaceString(convertedStr, "&gt;", ">");
-    convertedStr = relpaceString(convertedStr, "&quot;", '"');
-
-    //Replace all the invalid code with correct code
-    convertedStr = relpaceString(convertedStr, "&", "&amp;");
-    convertedStr = relpaceString(convertedStr, "<", "&lt;");
-    convertedStr = relpaceString(convertedStr, ">", "&gt;");
-    convertedStr = relpaceString(convertedStr, '"', "&quot;");
-    return convertedStr;
-}
-
-function relpaceString(originalStr, originalword, relaceword) {
+function replaceString(originalStr, originalword, relaceword) {
     if (originalStr == undefined || originalStr == null) {
         return null;
     }
-    return originalStr.replace(originalword, relaceword);
+
+    return originalStr.replace(new RegExp(originalword, 'g'), relaceword);
 }
 
 function testURL(url) {
@@ -202,7 +188,19 @@ function showAdvancedOptions(id) {
     }
 }
 
-function isValidXml(docStr) {
+
+function convertToValidXML(inputXml) {
+    var convertedXML = replaceString(inputXml, "&amp;", "&");
+    return replaceString(convertedXML, "&", "&amp;");
+}
+
+function encodeCharacters(inputString) {
+    return replaceString(inputString,"&","%26");
+}
+
+function isValidXml(inputXml) {
+    var docStr = convertToValidXML(inputXml);
+
     if (window.ActiveXObject) {
         try {
             var doc = new ActiveXObject("Microsoft.XMLDOM");

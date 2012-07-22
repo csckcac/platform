@@ -111,6 +111,7 @@
 %>
 <div>Error:</div><%=errMsg%>
 <%
+            return;
         }
     }
 %>

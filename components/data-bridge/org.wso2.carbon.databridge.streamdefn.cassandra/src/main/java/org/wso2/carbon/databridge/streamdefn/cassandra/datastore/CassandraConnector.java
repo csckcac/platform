@@ -102,15 +102,14 @@ public class CassandraConnector {
     private final static StringSerializer stringSerializer = StringSerializer.get();
     // private final static BytesArraySerializer bytesArraySerializer = BytesArraySerializer.get();
     // private final static UUIDSerializer uuidSerializer = UUIDSerializer.get();
-    private final static IntegerSerializer integerSerializer = IntegerSerializer.get();
+//    private final static IntegerSerializer integerSerializer = IntegerSerializer.get();
     private final static LongSerializer longSerializer = LongSerializer.get();
-    private final static BooleanSerializer booleanSerializer = BooleanSerializer.get();
-    private final static FloatSerializer floatSerializer = FloatSerializer.get();
-    private final static DoubleSerializer doubleSerializer = DoubleSerializer.get();
+//    private final static BooleanSerializer booleanSerializer = BooleanSerializer.get();
+//    private final static FloatSerializer floatSerializer = FloatSerializer.get();
+//    private final static DoubleSerializer doubleSerializer = DoubleSerializer.get();
 
 
     private final static ByteBufferSerializer byteBufferSerializer = ByteBufferSerializer.get();
-    private static final int ALLOWED_BATCH_MUTATOR_SIZE = 200;
 
     private AtomicInteger eventCounter = new AtomicInteger();
 
@@ -120,21 +119,23 @@ public class CassandraConnector {
     static Log log = LogFactory.getLog(CassandraConnector.class);
 
     private Map<AttributeType, TypeInserter> inserterMap = new ConcurrentHashMap<AttributeType, TypeInserter>();
-    private static final int EVENT_RATE_CALC_TIMEOUT = 2;
-    protected static final int EVENT_RATE_CALC_DELAY = 10;
 
-    private float eventRate;
-    private static final float EVENT_RATE_THRESHOLD = 10; // 10 events a second and we process it batch wise
+    //    private static final int ALLOWED_BATCH_MUTATOR_SIZE = 200;
+//    private static final int EVENT_RATE_CALC_TIMEOUT = 2;
+//    protected static final int EVENT_RATE_CALC_DELAY = 10;
+//
+//    private float eventRate;
+//    private static final float EVENT_RATE_THRESHOLD = 10; // 10 events a second and we process it batch wise
 
 //    private Map<Cluster, Mutator> activeMutators = new ConcurrentHashMap<Cluster, Mutator>();
 
-    private List<Mutator> activeMutators = Collections.synchronizedList(new ArrayList<Mutator>());
-
-    private volatile CountDownLatch waitSignal = new CountDownLatch(0);
-    private volatile boolean batchMutationStarted = false;
+//    private List<Mutator> activeMutators = Collections.synchronizedList(new ArrayList<Mutator>());
+//
+//    private volatile CountDownLatch waitSignal = new CountDownLatch(0);
+//    private volatile boolean batchMutationStarted = false;
+//    private volatile boolean processing = false;
     private int port = 0;
     private String localAddress = null;
-    private volatile boolean processing = false;
 
 
     public CassandraConnector() {
@@ -247,8 +248,8 @@ public class CassandraConnector {
 //        }
     }
 
-    private AtomicInteger nonBatchedCounter = new AtomicInteger(0);
-    private AtomicInteger batchedCounter = new AtomicInteger(0);
+//    private AtomicInteger nonBatchedCounter = new AtomicInteger(0);
+//    private AtomicInteger batchedCounter = new AtomicInteger(0);
 
 
     private void commit(Mutator mutator) throws StreamDefinitionStoreException {
@@ -386,52 +387,6 @@ public class CassandraConnector {
 
     }
 
-    private Mutator<String> prepareBatchMutate(Attribute attribute, Object[] data, DataType dataType, int eventDataIndex
-            , String rowKey, String streamColumnFamily, Mutator<String> mutator) {
-
-        String columnName = CassandraSDSUtils.getColumnName(dataType, attribute);
-
-        if (attribute.getType().equals(AttributeType.STRING)) {
-            String metaVal = (String) data[eventDataIndex];
-            if (metaVal != null && !metaVal.isEmpty()) {
-                mutator.addInsertion(rowKey, streamColumnFamily,
-                        HFactory.createColumn(columnName, metaVal, stringSerializer, stringSerializer));
-            }
-        } else if (attribute.getType().equals(AttributeType.INT)) {
-            Integer metaVal = ((data[eventDataIndex]) instanceof Double) ? ((Double) data[eventDataIndex]).intValue()
-                    : (Integer) data[eventDataIndex];
-//            Integer metaVal = (Integer) data[eventDataIndex];
-            if (metaVal != null) {
-                mutator.addInsertion(rowKey, streamColumnFamily,
-                        HFactory.createColumn(columnName, metaVal, stringSerializer, integerSerializer));
-            }
-        } else if (attribute.getType().equals(AttributeType.FLOAT)) {
-            Float metaVal = (Float) data[eventDataIndex];
-            if (metaVal != null) {
-                mutator.addInsertion(rowKey, streamColumnFamily,
-                        HFactory.createColumn(columnName, metaVal, stringSerializer, floatSerializer));
-            }
-        } else if (attribute.getType().equals(AttributeType.BOOL)) {
-            Boolean metaVal = (Boolean) data[eventDataIndex];
-            if (metaVal != null) {
-                mutator.addInsertion(rowKey, streamColumnFamily,
-                        HFactory.createColumn(columnName, metaVal, stringSerializer, booleanSerializer));
-            }
-        } else if (attribute.getType().equals(AttributeType.DOUBLE)) {
-            Double metaVal = (Double) data[eventDataIndex];
-            if (metaVal != null) {
-                mutator.addInsertion(rowKey, streamColumnFamily,
-                        HFactory.createColumn(columnName, metaVal, stringSerializer, doubleSerializer));
-            }
-        } else if (attribute.getType().equals(AttributeType.LONG)) {
-            Long metaVal = (Long) data[eventDataIndex];
-            if (metaVal != null) {
-                mutator.addInsertion(rowKey, streamColumnFamily,
-                        HFactory.createColumn(columnName, metaVal, stringSerializer, longSerializer));
-            }
-        }
-        return mutator;
-    }
 
 
 //    private synchronized void startBatchCommit() {
@@ -443,39 +398,39 @@ public class CassandraConnector {
 //    }
 
 
-    private static class TenantAwareMutatorCache {
-
-        private static LoadingCache<Cluster, Mutator<String>> mutatorCache = null;
-
-        private TenantAwareMutatorCache() {
-        }
-
-        private static void init() {
-            synchronized (TenantAwareMutatorCache.class) {
-                if (mutatorCache != null) {
-                    return;
-                }
-                mutatorCache = CacheBuilder.newBuilder()
-                        .build(new CacheLoader<Cluster, Mutator<String>>() {
-                            @Override
-                            public Mutator<String> load(Cluster cluster) throws Exception {
-                                Keyspace keyspace = HFactory.createKeyspace(BAM_EVENT_DATA_KEYSPACE, cluster);
-                                if (log.isDebugEnabled()) {
-                                    log.debug("Mutator cache hit for cluster for username : " + cluster.getCredentials());
-                                }
-                                return HFactory.createMutator(keyspace, stringSerializer);
-                            }
-                        }
-                        );
-            }
-
-        }
-
-        public static Mutator<String> getMutator(Cluster cluster) throws ExecutionException {
-            init();
-            return mutatorCache.get(cluster);
-        }
-    }
+//    private static class TenantAwareMutatorCache {
+//
+//        private static LoadingCache<Cluster, Mutator<String>> mutatorCache = null;
+//
+//        private TenantAwareMutatorCache() {
+//        }
+//
+//        private static void init() {
+//            synchronized (TenantAwareMutatorCache.class) {
+//                if (mutatorCache != null) {
+//                    return;
+//                }
+//                mutatorCache = CacheBuilder.newBuilder()
+//                        .build(new CacheLoader<Cluster, Mutator<String>>() {
+//                            @Override
+//                            public Mutator<String> load(Cluster cluster) throws Exception {
+//                                Keyspace keyspace = HFactory.createKeyspace(BAM_EVENT_DATA_KEYSPACE, cluster);
+//                                if (log.isDebugEnabled()) {
+//                                    log.debug("Mutator cache hit for cluster for username : " + cluster.getCredentials());
+//                                }
+//                                return HFactory.createMutator(keyspace, stringSerializer);
+//                            }
+//                        }
+//                        );
+//            }
+//
+//        }
+//
+//        public static Mutator<String> getMutator(Cluster cluster) throws ExecutionException {
+//            init();
+//            return mutatorCache.get(cluster);
+//        }
+//    }
 
     public List<String> insertEventList(Cluster cluster, List<Event> eventList) throws StreamDefinitionStoreException {
                 StreamDefinition streamDef;
@@ -485,7 +440,7 @@ public class CassandraConnector {
         List<String> rowKeyList = new ArrayList<String>();
 
         for (Event event : eventList) {
-            String rowKey = null;
+            String rowKey;
             streamDef = getStreamDefinitionFromStore(cluster, event.getStreamId());
             String streamColumnFamily = getCFNameFromStreamId(cluster, event.getStreamId());
             if ((streamDef == null) || (streamColumnFamily == null)) {

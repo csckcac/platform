@@ -83,7 +83,7 @@
     String removeAbandoned = request.getParameter(DBConstants.RDBMS.REMOVE_ABANDONED);
     String removeAbandonedTimeout = request.getParameter(DBConstants.RDBMS.REMOVE_ABANDONED_TIMEOUT);
     String logAbandoned = request.getParameter(DBConstants.RDBMS.LOG_ABANDONED);
-    String defaultAutoCommit = request.getParameter(DBConstants.RDBMS.DEFAULT_AUTOCOMMIT);
+    String defaultAutoCommit = request.getParameter(DBConstants.RDBMS.AUTO_COMMIT);
     String defaultReadOnly = request.getParameter(DBConstants.RDBMS.DEFAULT_READONLY);
     String defaultCatalog = request.getParameter(DBConstants.RDBMS.DEFAULT_CATALOG);
     String validatorClassName = request.getParameter(DBConstants.RDBMS.VALIDATOR_CLASSNAME);
@@ -283,9 +283,9 @@
                     updateConfiguration(dsConfig,DBConstants.RDBMS.MAX_AGE, maxAge);
                     updateConfiguration(dsConfig,DBConstants.RDBMS.SUSPECT_TIMEOUT, suspectTimeout);
                     if (!"false".equals(defaultAutoCommit)) {
-                        updateConfiguration(dsConfig, DBConstants.RDBMS.DEFAULT_AUTOCOMMIT, defaultAutoCommit);
+                        updateConfiguration(dsConfig, DBConstants.RDBMS.AUTO_COMMIT, defaultAutoCommit);
                     } else {
-                        dsConfig.removeProperty(DBConstants.RDBMS.DEFAULT_AUTOCOMMIT);
+                        dsConfig.removeProperty(DBConstants.RDBMS.AUTO_COMMIT);
                     }
                     if (!"false".equals(defaultReadOnly)) {
                         updateConfiguration(dsConfig, DBConstants.RDBMS.DEFAULT_READONLY, defaultReadOnly);

@@ -306,7 +306,6 @@ public final class DBConstants {
             throw new AssertionError();
         }
         
-        public static final String DEFAULT_AUTOCOMMIT = "defaultAutoCommit";
         public static final String DEFAULT_READONLY = "defaultReadOnly";
         public static final String DEFAULT_TX_ISOLATION = "defaultTransactionIsolation";
         public static final String DEFAULT_CATALOG = "defaultCatalog";

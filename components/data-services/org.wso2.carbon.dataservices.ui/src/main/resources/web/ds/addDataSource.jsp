@@ -215,8 +215,8 @@ private Config addNotAvailableFunctions(Config config,String selectedType, HttpS
 		 if (config.getPropertyValue(DBConstants.RDBMS.LOG_ABANDONED) == null) {
 			 config.addProperty(DBConstants.RDBMS.LOG_ABANDONED, "");
 		 }
-         if (config.getPropertyValue(DBConstants.RDBMS.DEFAULT_AUTOCOMMIT) == null) {
-			 config.addProperty(DBConstants.RDBMS.DEFAULT_AUTOCOMMIT, "");
+         if (config.getPropertyValue(DBConstants.RDBMS.AUTO_COMMIT) == null) {
+			 config.addProperty(DBConstants.RDBMS.AUTO_COMMIT, "");
 		 }
          if (config.getPropertyValue(DBConstants.RDBMS.DEFAULT_READONLY) == null) {
 			 config.addProperty(DBConstants.RDBMS.DEFAULT_READONLY, "");
@@ -415,7 +415,7 @@ private Config addNotAvailableFunctions(Config config,String selectedType, HttpS
             		newConfig.addProperty(DBConstants.RDBMS.REMOVE_ABANDONED,"");
             		newConfig.addProperty(DBConstants.RDBMS.REMOVE_ABANDONED_TIMEOUT,"");
             		newConfig.addProperty(DBConstants.RDBMS.LOG_ABANDONED,"");
-                    newConfig.addProperty(DBConstants.RDBMS.DEFAULT_AUTOCOMMIT,"");
+                    newConfig.addProperty(DBConstants.RDBMS.AUTO_COMMIT,"");
                     newConfig.addProperty(DBConstants.RDBMS.DEFAULT_READONLY,"");
                     newConfig.addProperty(DBConstants.RDBMS.DEFAULT_CATALOG,"");
                     newConfig.addProperty(DBConstants.RDBMS.VALIDATOR_CLASSNAME,"");
@@ -517,7 +517,7 @@ private Config addNotAvailableFunctions(Config config,String selectedType, HttpS
             		conf.addProperty(DBConstants.RDBMS.REMOVE_ABANDONED,"");
             		conf.addProperty(DBConstants.RDBMS.REMOVE_ABANDONED_TIMEOUT,"");
             		conf.addProperty(DBConstants.RDBMS.LOG_ABANDONED,"");
-                    conf.addProperty(DBConstants.RDBMS.DEFAULT_AUTOCOMMIT,"");
+                    conf.addProperty(DBConstants.RDBMS.AUTO_COMMIT,"");
                     conf.addProperty(DBConstants.RDBMS.DEFAULT_READONLY,"");
                     conf.addProperty(DBConstants.RDBMS.DEFAULT_CATALOG,"");
                     conf.addProperty(DBConstants.RDBMS.VALIDATOR_CLASSNAME,"");
@@ -1119,7 +1119,7 @@ private Config addNotAvailableFunctions(Config config,String selectedType, HttpS
     		||propertyName.equals(DBConstants.RDBMS.TIME_BETWEEN_EVICTION_RUNS_MILLIS)
     		||propertyName.equals(DBConstants.RDBMS.MIN_EVICTABLE_IDLE_TIME_MILLIS)
     		||propertyName.equals(DBConstants.RDBMS.REMOVE_ABANDONED_TIMEOUT)
-    		||propertyName.equals(DBConstants.RDBMS.DEFAULT_AUTOCOMMIT)
+    		||propertyName.equals(DBConstants.RDBMS.AUTO_COMMIT)
             ||propertyName.equals(DBConstants.RDBMS.DEFAULT_READONLY)
             ||propertyName.equals(DBConstants.RDBMS.DEFAULT_CATALOG)
             ||propertyName.equals(DBConstants.RDBMS.VALIDATOR_CLASSNAME)
@@ -1293,7 +1293,7 @@ private Config addNotAvailableFunctions(Config config,String selectedType, HttpS
     		||propertyName.equals(DBConstants.RDBMS.TIME_BETWEEN_EVICTION_RUNS_MILLIS)
     		||propertyName.equals(DBConstants.RDBMS.MIN_EVICTABLE_IDLE_TIME_MILLIS)
     		||propertyName.equals(DBConstants.RDBMS.REMOVE_ABANDONED_TIMEOUT)
-            ||propertyName.equals(DBConstants.RDBMS.DEFAULT_AUTOCOMMIT)
+            ||propertyName.equals(DBConstants.RDBMS.AUTO_COMMIT)
             ||propertyName.equals(DBConstants.RDBMS.DEFAULT_READONLY)
             ||propertyName.equals(DBConstants.RDBMS.DEFAULT_CATALOG)
             ||propertyName.equals(DBConstants.RDBMS.VALIDATOR_CLASSNAME)
@@ -1411,7 +1411,7 @@ private Config addNotAvailableFunctions(Config config,String selectedType, HttpS
                            || propertyName.equals(DBConstants.RDBMS.LOG_ABANDONED)
                            || propertyName.equals(DBConstants.RDBMS.TEST_WHILE_IDLE)
                            || propertyName.equals(DBConstants.RDBMS.REMOVE_ABANDONED)
-                           ||propertyName.equals(DBConstants.RDBMS.DEFAULT_AUTOCOMMIT)
+                           ||propertyName.equals(DBConstants.RDBMS.AUTO_COMMIT)
                            ||propertyName.equals(DBConstants.RDBMS.DEFAULT_READONLY)
                            ||propertyName.equals(DBConstants.RDBMS.JMX_ENABLED)
                            ||propertyName.equals(DBConstants.RDBMS.FAIR_QUEUE)

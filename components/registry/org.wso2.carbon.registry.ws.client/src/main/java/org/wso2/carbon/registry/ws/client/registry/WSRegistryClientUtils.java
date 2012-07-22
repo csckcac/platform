@@ -82,14 +82,25 @@ public class WSRegistryClientUtils {
 
 	public static Collection transformWSCollectiontoCollection(WSRegistryServiceClient client, WSCollection wsCollection, Object content) throws RegistryException, IOException, ClassNotFoundException {
 		Collection collection = (Collection) transformWSResourcetoResource(client, wsCollection, content);
-//        if (wsCollection.getChildCount() > 0) {
-            String[] children = wsCollection.getChildren();
-            if (children != null) {
-                collection.setChildren(children);
-//            }
+        String[] children = wsCollection.getChildren();
+        if(children==null){
+            return collection;
         }
-		return collection;
-
+        //some time NULL values contains in children therefore have to filter
+        //And also fixed the RXT deploy issue on mounting.(ws & atom)
+        if (children.length > 0) {
+            List<String> childList = new ArrayList<String>();
+            for (String child : children) {
+                if (child != null) {
+                    childList.add(child);
+                }
+            }
+            if (childList.size() > 0) {
+                children = childList.toArray(new String[childList.size()]);
+                collection.setChildren(children);
+            }
+        }
+        return collection;
 	}
 
 	public static WSCollection transformCollectiontoWSCollection(Collection collection, DataHandler dataHandler) {

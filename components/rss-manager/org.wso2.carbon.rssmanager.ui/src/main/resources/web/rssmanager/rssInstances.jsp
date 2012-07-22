@@ -89,7 +89,7 @@
                         </td>
                         <%
                             if ("carbon.super".equals(tenantDomain)) {
-                                if (!RSSManagerConstants.WSO2_USER_DEFINED_INSTANCE_TYPE.equals(
+                                if (!RSSManagerConstants.USER_DEFINED_INSTANCE_TYPE.equals(
                                         rssInstance.getInstanceType()) ||
                                         RSSManagerConstants.WSO2_LOCAL_RDS_INSTANCE_TYPE.equals(
                                                 rssInstance.getInstanceType())) {

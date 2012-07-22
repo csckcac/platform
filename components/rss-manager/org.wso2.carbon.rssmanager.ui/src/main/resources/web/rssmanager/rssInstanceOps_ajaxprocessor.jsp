@@ -69,7 +69,7 @@
                     rssIns.setInstanceType(RSSManagerConstants.WSO2_RSS_INSTANCE_TYPE);
                 }
             } else {
-                rssIns.setInstanceType(RSSManagerConstants.WSO2_USER_DEFINED_INSTANCE_TYPE);
+                rssIns.setInstanceType(RSSManagerConstants.USER_DEFINED_INSTANCE_TYPE);
             }
             rssIns.setServerCategory(serverCategory.toUpperCase());
             client.createRSSInstance(rssIns);
@@ -131,7 +131,7 @@
                     rssIns.setInstanceType(RSSManagerConstants.WSO2_RSS_INSTANCE_TYPE);
                 }
             } else {
-                rssIns.setInstanceType(RSSManagerConstants.WSO2_USER_DEFINED_INSTANCE_TYPE);
+                rssIns.setInstanceType(RSSManagerConstants.USER_DEFINED_INSTANCE_TYPE);
             }
             client.editRSSInstance(rssIns);
             response.setContentType("text/xml; charset=UTF-8");

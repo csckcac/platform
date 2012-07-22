@@ -67,8 +67,8 @@ public class RSSConfig {
 
     public static void init() throws RSSManagerException {
         String rssConfigXMLPath = CarbonUtils.getCarbonConfigDirPath()
-                + File.separator + "advanced" + File.separator
-                + RSSManagerConstants.WSO2_RSS_CONFIG_XML_NAME;
+                + File.separator + "etc" + File.separator
+                + RSSManagerConstants.RSS_CONFIG_XML_NAME;
         try {
             currentRSSConfig = new RSSConfig(AXIOMUtil.stringToOM(
                     new String(CarbonUtils.getBytesFromFile(new File(rssConfigXMLPath)))));

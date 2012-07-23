@@ -376,87 +376,30 @@ public class RSSAdminConsoleService {
         return dbEl;
     }
 
-    private DatabasePrivilege[] getAllDatabasePermission() {
+    private static DatabasePrivilegeSet getAllDatabasePermission() {
 
-        DatabasePrivilege[] databasePrivilegeList = new DatabasePrivilege[19];
+        DatabasePrivilegeSet privileges = new DatabasePrivilegeSet();
+        privileges.setSelectPriv("Y");
+        privileges.setInsertPriv("Y");
+        privileges.setUpdatePriv("Y");
+        privileges.setDeletePriv("Y");
+        privileges.setCreatePriv("Y");
+        privileges.setAlterPriv("Y");
+        privileges.setCreateTmpTablePriv("Y");
+        privileges.setLockTablesPriv("Y");
+        privileges.setCreateRoutinePriv("Y");
+        privileges.setAlterRoutinePriv("Y");
+        privileges.setCreateViewPriv("Y");
+        privileges.setShowViewPriv("Y");
+        privileges.setExecutePriv("Y");
+        privileges.setEventPriv("Y");
+        privileges.setTriggerPriv("Y");
+        privileges.setDropPriv("Y");
+        privileges.setReferencesPriv("Y");
+        privileges.setGrantPriv("Y");
+        privileges.setIndexPriv("Y");
 
-        databasePrivilegeList[0] = new DatabasePrivilege();
-        databasePrivilegeList[0].setName("Alter_priv");
-        databasePrivilegeList[0].setValue("Y");
-
-        databasePrivilegeList[1] = new DatabasePrivilege();
-        databasePrivilegeList[1].setName("Alter_routine_priv");
-        databasePrivilegeList[1].setValue("Y");
-
-        databasePrivilegeList[2] = new DatabasePrivilege();
-        databasePrivilegeList[2].setName("Create_priv");
-        databasePrivilegeList[2].setValue("Y");
-
-        databasePrivilegeList[3] = new DatabasePrivilege();
-        databasePrivilegeList[3].setName("Create_routine_priv");
-        databasePrivilegeList[3].setValue("Y");
-
-        databasePrivilegeList[4] = new DatabasePrivilege();
-        databasePrivilegeList[4].setName("Create_tmp_table_priv");
-        databasePrivilegeList[4].setValue("Y");
-
-        databasePrivilegeList[5] = new DatabasePrivilege();
-        databasePrivilegeList[5].setName("Create_view_priv");
-        databasePrivilegeList[5].setValue("Y");
-
-        databasePrivilegeList[6] = new DatabasePrivilege();
-        databasePrivilegeList[6].setName("Delete_priv");
-        databasePrivilegeList[6].setValue("Y");
-
-        databasePrivilegeList[7] = new DatabasePrivilege();
-        databasePrivilegeList[7].setName("Drop_priv");
-        databasePrivilegeList[7].setValue("Y");
-
-        databasePrivilegeList[8] = new DatabasePrivilege();
-        databasePrivilegeList[8].setName("Event_priv");
-        databasePrivilegeList[8].setValue("Y");
-
-        databasePrivilegeList[9] = new DatabasePrivilege();
-        databasePrivilegeList[9].setName("Execute_priv");
-        databasePrivilegeList[9].setValue("Y");
-
-        databasePrivilegeList[10] = new DatabasePrivilege();
-        databasePrivilegeList[10].setName("Grant_priv");
-        databasePrivilegeList[10].setValue("Y");
-
-        databasePrivilegeList[11] = new DatabasePrivilege();
-        databasePrivilegeList[11].setName("Index_priv");
-        databasePrivilegeList[11].setValue("Y");
-
-        databasePrivilegeList[12] = new DatabasePrivilege();
-        databasePrivilegeList[12].setName("Insert_priv");
-        databasePrivilegeList[12].setValue("Y");
-
-        databasePrivilegeList[13] = new DatabasePrivilege();
-        databasePrivilegeList[13].setName("Lock_tables_priv");
-        databasePrivilegeList[13].setValue("Y");
-
-        databasePrivilegeList[14] = new DatabasePrivilege();
-        databasePrivilegeList[14].setName("References_priv");
-        databasePrivilegeList[14].setValue("Y");
-
-        databasePrivilegeList[15] = new DatabasePrivilege();
-        databasePrivilegeList[15].setName("Select_priv");
-        databasePrivilegeList[15].setValue("Y");
-
-        databasePrivilegeList[16] = new DatabasePrivilege();
-        databasePrivilegeList[16].setName("Show_view_priv");
-        databasePrivilegeList[16].setValue("Y");
-
-        databasePrivilegeList[17] = new DatabasePrivilege();
-        databasePrivilegeList[17].setName("Trigger_priv");
-        databasePrivilegeList[17].setValue("Y");
-
-        databasePrivilegeList[18] = new DatabasePrivilege();
-        databasePrivilegeList[18].setName("Update_priv");
-        databasePrivilegeList[18].setValue("Y");
-
-        return databasePrivilegeList;
+        return privileges;
 
     }
 

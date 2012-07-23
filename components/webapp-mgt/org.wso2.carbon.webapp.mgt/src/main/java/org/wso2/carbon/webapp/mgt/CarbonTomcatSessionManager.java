@@ -109,8 +109,20 @@ public class CarbonTomcatSessionManager extends StandardManager {
         if (allowedClasses.contains(callingClass)) {
             return;
         }
+        // When using IBM JDK, the MangerBase and Request is at 5th place in the stack trace,
+        // so we have to check that as well
+        callingClass = trace[4].getClassName();
+
+        // A security issue may arise with SUN JDK , when sometime the allowed class is found at the
+        // 5th place in the stack. The following check will ensure that this will not arise and
+        // we allow only IBM JDK to proceed in this if statement
+        if (System.getProperty("java.vm.name").contains("IBM") &&
+            allowedClasses.contains(callingClass)) {
+            return;
+        }
+
         int tenantId = CarbonContext.getCurrentContext().getTenantId();
-        if(tenantId != MultitenantConstants.SUPER_TENANT_ID && tenantId != ownerTenantId) {
+        if (tenantId != MultitenantConstants.SUPER_TENANT_ID && tenantId != ownerTenantId) {
             throw new SecurityException("Illegal access attempt by  tenant[" + tenantId +
                                         "] to sessions owned by tenant[" + ownerTenantId + "]");
         }

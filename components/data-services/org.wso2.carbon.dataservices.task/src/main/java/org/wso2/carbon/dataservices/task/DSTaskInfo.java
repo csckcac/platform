@@ -41,6 +41,8 @@ public class DSTaskInfo {
 	
 	private String operationName;
 	
+	private String dataTaskClassName;
+	
 	public DSTaskInfo() {
 	}
 
@@ -106,6 +108,14 @@ public class DSTaskInfo {
 
 	public void setCronExpression(String cronExpression) {
 		this.cronExpression = cronExpression;
+	}
+
+	public String getDataTaskClassName() {
+		return dataTaskClassName;
+	}
+
+	public void setDataTaskClassName(String dataTaskClassName) {
+		this.dataTaskClassName = dataTaskClassName;
 	}
 	
 }

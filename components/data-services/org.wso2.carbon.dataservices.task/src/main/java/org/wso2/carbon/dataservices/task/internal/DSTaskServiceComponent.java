@@ -20,7 +20,6 @@ package org.wso2.carbon.dataservices.task.internal;
 
 import org.apache.commons.logging.Log;
 import org.apache.commons.logging.LogFactory;
-import org.osgi.framework.BundleContext;
 import org.osgi.service.component.ComponentContext;
 import org.wso2.carbon.dataservices.task.DSTaskConstants;
 import org.wso2.carbon.ntask.core.service.TaskService;
@@ -37,7 +36,6 @@ public class DSTaskServiceComponent {
     private static TaskService taskService;
 
     protected void activate(ComponentContext ctxt) {
-        BundleContext bundleContext = ctxt.getBundleContext();
         try {
             /* register the data service task type */
             getTaskService().registerTaskType(DSTaskConstants.DATA_SERVICE_TASK_TYPE);

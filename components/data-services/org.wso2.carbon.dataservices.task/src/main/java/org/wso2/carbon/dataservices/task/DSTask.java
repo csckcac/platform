@@ -18,17 +18,11 @@
  */
 package org.wso2.carbon.dataservices.task;
 
-import org.apache.axis2.AxisFault;
-import org.apache.axis2.context.ConfigurationContext;
 import org.apache.axis2.description.AxisService;
-import org.apache.axis2.engine.AxisConfiguration;
 import org.apache.commons.logging.Log;
 import org.apache.commons.logging.LogFactory;
-import org.wso2.carbon.core.multitenancy.utils.TenantAxisUtils;
 import org.wso2.carbon.ntask.core.TaskInfo;
-import org.wso2.carbon.ntask.core.internal.TasksDSComponent;
 import org.wso2.carbon.ntask.solutions.webservice.WebServiceCallTask;
-import org.wso2.carbon.utils.multitenancy.MultitenantConstants;
 
 /**
  * This class represents the data services scheduled tasks functionality.
@@ -46,28 +40,6 @@ public class DSTask extends WebServiceCallTask {
 		return serviceInit;
 	}
 	
-	private AxisService lookupAxisService(int tid, String serviceName) {
-		ConfigurationContext mainConfigCtx = TasksDSComponent.getConfigurationContextService().
-				getServerConfigContext();
-		AxisConfiguration tenantAxisConf;
-		if (tid == MultitenantConstants.SUPER_TENANT_ID) {
-			tenantAxisConf = mainConfigCtx.getAxisConfiguration();
-		} else {
-		    String tenantDomain = DSTaskUtils.getTenantDomainFromId(tid);
-		    tenantAxisConf = TenantAxisUtils.getTenantAxisConfiguration(tenantDomain, 
-		    		mainConfigCtx);
-		}		
-		try {
-			if (tenantAxisConf != null) {
-			    return tenantAxisConf.getService(serviceName);
-			} else {
-				return null;
-			}
-		} catch (AxisFault e) {
-			return null;
-		}
-	}
-	
 	private boolean checkServiceInit() {
 		if (this.isServiceInit()) {
 			return true;
@@ -80,7 +52,7 @@ public class DSTask extends WebServiceCallTask {
 		            serviceName);
 		}
 		int tid = Integer.parseInt(tidProp);
-		AxisService axisService = this.lookupAxisService(tid, serviceName);
+		AxisService axisService = DSTaskUtils.lookupAxisService(tid, serviceName);
     	if (axisService == null) {
     		return false;
     	}

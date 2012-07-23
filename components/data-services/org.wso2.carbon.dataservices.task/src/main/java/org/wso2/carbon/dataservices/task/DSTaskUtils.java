@@ -18,15 +18,21 @@
  */
 package org.wso2.carbon.dataservices.task;
 
+import org.apache.axis2.AxisFault;
+import org.apache.axis2.context.ConfigurationContext;
 import org.apache.axis2.description.AxisOperation;
 import org.apache.axis2.description.AxisService;
 import org.apache.axis2.description.Parameter;
 import org.apache.axis2.description.WSDL2Constants;
+import org.apache.axis2.engine.AxisConfiguration;
 import org.w3c.dom.*;
 import org.wso2.carbon.core.multitenancy.SuperTenantCarbonContext;
+import org.wso2.carbon.core.multitenancy.utils.TenantAxisUtils;
 import org.wso2.carbon.ntask.core.TaskInfo;
 import org.wso2.carbon.ntask.core.TaskInfo.TriggerInfo;
+import org.wso2.carbon.ntask.core.internal.TasksDSComponent;
 import org.wso2.carbon.ntask.solutions.webservice.WebServiceCallTask;
+import org.wso2.carbon.utils.multitenancy.MultitenantConstants;
 import org.xml.sax.InputSource;
 import org.xml.sax.SAXException;
 
@@ -47,6 +53,7 @@ public class DSTaskUtils {
 		DSTaskInfo dsTaskInfo = new DSTaskInfo();
 		dsTaskInfo.setName(taskInfo.getName());
 		Map<String, String> taskProps = taskInfo.getProperties();
+		dsTaskInfo.setDataTaskClassName(taskProps.get(DSTaskConstants.DATA_TASK_CLASS_NAME));
 		dsTaskInfo.setServiceName(taskProps.get(DSTaskConstants.DATA_SERVICE_NAME));
 		dsTaskInfo.setOperationName(taskProps.get(DSTaskConstants.DATA_SERVICE_OPERATION_NAME));
 		TriggerInfo triggerInfo = taskInfo.getTriggerInfo();
@@ -70,10 +77,16 @@ public class DSTaskUtils {
 		triggerInfo.setIntervalMillis(dsTaskInfo.getTaskInterval());
 		triggerInfo.setRepeatCount(dsTaskInfo.getTaskCount());
 		Map<String, String> props = new HashMap<String, String>();
-		props.put(DSTaskConstants.DATA_SERVICE_NAME, dsTaskInfo.getServiceName());
-		props.put(DSTaskConstants.DATA_SERVICE_OPERATION_NAME, dsTaskInfo.getOperationName());
-		props.put(WebServiceCallTask.SERVICE_ACTION, "urn:" + dsTaskInfo.getOperationName());
-		return new TaskInfo(dsTaskInfo.getName(), DSTask.class.getName(), props, triggerInfo);
+		if (dsTaskInfo.getDataTaskClassName() != null) {
+		    props.put(DSTaskConstants.DATA_TASK_CLASS_NAME, dsTaskInfo.getDataTaskClassName());
+		    return new TaskInfo(
+					dsTaskInfo.getName(), DSTaskExt.class.getName(), props, triggerInfo);
+		} else {
+		    props.put(DSTaskConstants.DATA_SERVICE_NAME, dsTaskInfo.getServiceName());
+		    props.put(DSTaskConstants.DATA_SERVICE_OPERATION_NAME, dsTaskInfo.getOperationName());
+		    props.put(WebServiceCallTask.SERVICE_ACTION, "urn:" + dsTaskInfo.getOperationName());
+	        return new TaskInfo(dsTaskInfo.getName(), DSTask.class.getName(), props, triggerInfo);
+		}
 	}
 	
 	private static Calendar dateToCal(Date date) {
@@ -113,5 +126,36 @@ public class DSTaskUtils {
         }
         return false;
     }
+
+    public static AxisConfiguration lookupAxisConfig(int tid) {
+    	ConfigurationContext mainConfigCtx = TasksDSComponent.getConfigurationContextService().
+				getServerConfigContext();
+		AxisConfiguration tenantAxisConf;
+		if (tid == MultitenantConstants.SUPER_TENANT_ID) {
+			tenantAxisConf = mainConfigCtx.getAxisConfiguration();
+		} else {
+		    String tenantDomain = DSTaskUtils.getTenantDomainFromId(tid);
+		    tenantAxisConf = TenantAxisUtils.getTenantAxisConfiguration(tenantDomain, 
+		    		mainConfigCtx);
+		}
+		return tenantAxisConf;
+    }
+    
+	public static AxisService lookupAxisService(int tid, String serviceName) {
+		return lookupAxisService(lookupAxisConfig(tid), serviceName);
+	}
+	
+	public static AxisService lookupAxisService(AxisConfiguration tenantAxisConf, 
+			String serviceName) {
+		try {
+			if (tenantAxisConf != null) {
+			    return tenantAxisConf.getService(serviceName);
+			} else {
+				return null;
+			}
+		} catch (AxisFault e) {
+			return null;
+		}
+	}
 	
 }

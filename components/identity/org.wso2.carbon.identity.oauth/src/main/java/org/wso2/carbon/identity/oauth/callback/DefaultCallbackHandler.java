@@ -48,9 +48,10 @@ public class DefaultCallbackHandler extends AbstractOAuthCallbackHandler {
                     oauthCallback.getCallbackType())){
                 oauthCallback.setValidScope(true);
             }
-            if(OAuthCallback.OAuthCallbackType.ACCESS_DELEGATION_TOKEN.equals(
+            if(OAuthCallback.OAuthCallbackType.SCOPE_VALIDATION_TOKEN.equals(
                     oauthCallback.getCallbackType())){
-                oauthCallback.setAuthorized(true);
+                oauthCallback.setApprovedScope(new String[]{});
+                oauthCallback.setValidScope(true);
             }
         }
     }

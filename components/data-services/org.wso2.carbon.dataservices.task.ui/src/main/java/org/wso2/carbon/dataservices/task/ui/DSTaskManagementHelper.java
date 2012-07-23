@@ -81,25 +81,35 @@ public class DSTaskManagementHelper {
 			}
 		}
 
-		String cron = request.getParameter("triggerCron");
-		if (cron != null && !"".equals(cron)) {
-			dsTaskInfo.setCronExpression(cron.trim());
-		}
-		
-		String dataServiceName = request.getParameter("dataServiceName");
-        if (dataServiceName == null || "".equals(dataServiceName)) {
-            handleException("Service Name cannot be null");
+        String scheduleType = request.getParameter("scheduleType");
+        scheduleType = (scheduleType == null) ? "" : scheduleType;
+
+        if (scheduleType.equals("DataService Operation")) {
+            String cron = request.getParameter("triggerCron");
+            if (cron != null && !"".equals(cron)) {
+                dsTaskInfo.setCronExpression(cron.trim());
+            }
+
+            String dataServiceName = request.getParameter("dataServiceName");
+            if (dataServiceName == null || "".equals(dataServiceName)) {
+                handleException("Service Name cannot be null");
+            }
+
+            dsTaskInfo.setServiceName(dataServiceName);
+
+            String operationName = request.getParameter("operationName");
+            if (operationName == null || "".equals(operationName)) {
+                handleException("Operation name cannot be null");
+            }
+
+            dsTaskInfo.setOperationName(operationName);
+        } else if (scheduleType.equals("DataService Task Class")) {
+            String taskClass = request.getParameter("dssTaskClass");
+            if (taskClass != null && !"".equals(taskClass)) {
+                dsTaskInfo.setDataTaskClassName(taskClass.trim());
+            }
         }
         
-        dsTaskInfo.setServiceName(dataServiceName);
-
-        String operationName = request.getParameter("operationName");
-        if (operationName == null || "".equals(operationName)) {
-            handleException("Operation name cannot be null");
-        }
-        
-        dsTaskInfo.setOperationName(operationName);
-
         return dsTaskInfo;
     }
 

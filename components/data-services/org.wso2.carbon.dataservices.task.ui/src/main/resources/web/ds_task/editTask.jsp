@@ -48,15 +48,17 @@
             client = new DSTaskClient(cookie, backendServerUrl,
                     configurationContext);
             taskInfo = client.getTaskInfo(taskName);
+            String taskClass = taskInfo.getDataTaskClassName();
     %>
     <form method="post" name="taskcreationform" id="taskcreationform" action="saveTask.jsp"
           onsubmit="return validateTaskInputs();">
-
+        
         <input id="operationName" name="operationName" value="<%=taskInfo.getOperationName()%>"
                type="hidden"/>
         <input id="dataServiceName" name="dataServiceName" value="<%=taskInfo.getServiceName()%>"
                type="hidden"/>
-
+        <input id="scheduleType" name="scheduleType" value="<%=(taskClass != null && !"".equals(taskClass)) ?  "DataService Task Class" : "DataService Operation"%>"
+               type="hidden"/>
         <div id="middle">
             <h2><fmt:message key="dataservices.task.header.edit"/></h2>
 
@@ -116,7 +118,27 @@
                         <td colspan="2" class="middle-header"><fmt:message
                                 key="dataservices.task.miscellaneous.information"/></td>
                     </tr>
+
                     <tr>
+                        <td>Scheduling Type</td>
+                        <td>
+                            <select id="scheduleType" name="scheduleType" disabled="disabled"
+                                    onchange="getScheduleType(this.value)">
+                                <option value="">---SELECT---</option>
+                                <option value="DataService Operation" <%=(taskClass == null) ? "selected=\"selected\"" : ""%>>DataService Operation</option>
+                                <option value="DataService Task Class" <%=(taskClass != null && !"".equals(taskClass) ? "selected=\"selected\"" : "")%>>DataService Task Class</option>
+                            </select>
+                        </td>
+                    </tr>
+
+                    <% if (taskClass != null && !"".equals(taskClass)) { %>
+                    <tr id="dssTaskClassRow" name="dssTaskClassRow" >
+                        <td>DataService Task Class</td>
+                        <td><input id="dssTaskClass" name="dssTaskClass" class="longInput"
+                                   type="text" value="<%=taskClass%>"/></td>
+                    </tr>
+                    <%} else {%>
+                    <tr id="dsTaskService">
                         <td style="width:150px"><fmt:message
                                 key="dataservices.task.service.name"/><span
                                 class="required">*</span></td>
@@ -136,7 +158,7 @@
                             </select>
                         </td>
                     </tr>
-                    <tr>
+                    <tr id="dsTaskOperation">
                         <td style="width:150px"><fmt:message
                                 key="dataservices.operation.name"/><span
                                 class="required">*</span></td>
@@ -157,6 +179,7 @@
                             </select>
                         </td>
                     </tr>
+                    <% } %>
                         <%--<input id="saveMode" name="saveMode" value="edit" type="hidden"/>--%>
 
                     <tr>

@@ -51,6 +51,8 @@ function validateTaskInputs() {
     var serviceList = document.getElementById('serviceList');
     var serviceName = serviceList[serviceList.selectedIndex].value;
     var operationName = document.getElementById('operationName').value;
+    var scheduleType = document.getElementById('scheduleType').value;
+    var taskClass = document.getElementById('dssTaskClass').value;
     if (taskName == "" || taskName == null) {
         CARBON.showWarningDialog("Task name cannot be empty");
         return false;
@@ -73,13 +75,23 @@ function validateTaskInputs() {
     	CARBON.showWarningDialog("Task interval must be > 0");
         return false;
     }
-    if (serviceName == "" || serviceName == null) {
-        CARBON.showWarningDialog("Select a valid data service name");
+    if (scheduleType == "" || scheduleType == null) {
+        CARBON.showWarningDialog("Select a schedule type");
         return false;
-    }
-    if (operationName == "" || operationName == null) {
-        CARBON.showWarningDialog("Select a valid data service operation");
-        return false;
+    } else if (scheduleType == "DSS Operation") {
+        if (serviceName == "" || serviceName == null) {
+            CARBON.showWarningDialog("Select a valid data service name");
+            return false;
+        }
+        if (operationName == "" || operationName == null) {
+            CARBON.showWarningDialog("Select a valid data service operation");
+            return false;
+        }
+    } else if (scheduleType == "DSS Task Class") {
+        if (taskClass == "" || taskClass == null) {
+            CARBON.showWarningDialog("Task Class cannot be empty");
+            return false;
+        }
     }
     if (!isNameValid(taskName)) {
         CARBON.showWarningDialog(namemsg);
@@ -244,6 +256,14 @@ function setOperationName() {
     document.getElementById('operationName').value = value;
 }
 
-
-
-
+function getScheduleType(val) {
+    if (val == "DataService Operation") {
+        document.getElementById('dsTaskService').style.display = "";
+        document.getElementById('dsTaskOperation').style.display = "";
+        document.getElementById('dssTaskClassRow').style.display = "none";
+    } else if (val == "DataService Task Class") {
+        document.getElementById('dsTaskService').style.display = "none";
+        document.getElementById('dsTaskOperation').style.display = "none";
+        document.getElementById('dssTaskClassRow').style.display = "";
+    }
+}

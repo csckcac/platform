@@ -108,6 +108,16 @@
                                 key="dataservices.task.miscellaneous.information"/></td>
                     </tr>
                     <tr>
+                        <td>Scheduling Type</td>
+                        <td>
+                            <select id="scheduleType" name="scheduleType" onchange="getScheduleType(this.value)">
+                                <option value="">---SELECT---</option>
+                                <option value="DataService Operation">DataService Operation</option>
+                                <option value="DataService Task Class">DataService Task Class</option>
+                            </select>
+                        </td>
+                    </tr>
+                    <tr id="dsTaskService" style="display:none;">
                         <td style="width:150px"><fmt:message
                                 key="dataservices.task.service.name"/><span
                                 class="required">*</span></td>
@@ -128,7 +138,7 @@
                             </select>
                         </td>
                     </tr>
-                    <tr>
+                    <tr id="dsTaskOperation" style="display:none;">
                         <td style="width:150px"><fmt:message
                                 key="dataservices.operation.name"/><span
                                 class="required">*</span></td>
@@ -138,6 +148,10 @@
                                     onchange="setOperationName()">
                             </select>
                         </td>
+                    </tr>
+                    <tr id="dssTaskClassRow" name="dssTaskClassRow" style="display:none;">
+                        <td>DataService Task Class</td>
+                        <td><input id="dssTaskClass" name="dssTaskClass" class="longInput" type="text" value=""/></td>
                     </tr>
 
                     <tr>

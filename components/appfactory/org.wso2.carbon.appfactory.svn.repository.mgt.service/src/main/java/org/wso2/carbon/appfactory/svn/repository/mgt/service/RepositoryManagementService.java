@@ -16,14 +16,12 @@
 
 package org.wso2.carbon.appfactory.svn.repository.mgt.service;
 
-import org.tigris.subversion.svnclientadapter.SVNRevision;
+import java.io.File;
+
 import org.wso2.carbon.appfactory.svn.repository.mgt.RepositoryManager;
 import org.wso2.carbon.appfactory.svn.repository.mgt.RepositoryMgtException;
-import org.wso2.carbon.appfactory.svn.repository.mgt.builder.RepositoryManagerHolder;
 import org.wso2.carbon.appfactory.svn.repository.mgt.impl.SCMManagerExceptions;
 import org.wso2.carbon.core.AbstractAdmin;
-
-import java.io.File;
 
 /**
  *
@@ -38,11 +36,6 @@ public class RepositoryManagementService extends AbstractAdmin {
 
     public void setRepositoryManager(RepositoryManager repositoryManager) {
         this.repositoryManager = repositoryManager;
-    }
-
-    public RepositoryManagementService() {
-        RepositoryManagerHolder holder = RepositoryManagerHolder.getInstance();
-        this.repositoryManager = holder.getRepositoryManager();
     }
 
     public String createRepository(String applicationKey) throws RepositoryMgtException {

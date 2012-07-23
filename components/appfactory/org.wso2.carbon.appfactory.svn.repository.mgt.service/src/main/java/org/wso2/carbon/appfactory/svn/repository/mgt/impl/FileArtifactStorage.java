@@ -37,7 +37,7 @@ public class FileArtifactStorage implements ArtifactStorage {
         List<File> artifactFiles = null;
         try {
             File workDir = AppFactoryUtil.getApplicationWorkDirectory(applicationId, version, revision);
-            File targetDirPath = new File(workDir.getAbsolutePath() + File.separator + "target");
+            File targetDirPath = new File(workDir.getAbsolutePath() + File.separator + applicationId + "." + "CApp" + File.separator + "target");
             String[] fileExtension = {"car"};
             artifactFiles = (List<File>) FileUtils.listFiles(targetDirPath, fileExtension, false);
 

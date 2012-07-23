@@ -33,7 +33,7 @@ public class Maven2BuildDriver implements BuildDriver {
             handleException("pom.xml file not found at " + pomFilePath);
         }
         executeMavenGoal(workDir.getAbsolutePath(), applicationId);
-        String targetDirPath = workDir.getAbsolutePath() + File.separator + "target";
+        String targetDirPath = workDir.getAbsolutePath() + File.separator + applicationId + "." + "CApp" + File.separator + "target";
         File targetDir = new File(targetDirPath);
         if (!targetDir.exists()) {
             handleException("Application build failure.");

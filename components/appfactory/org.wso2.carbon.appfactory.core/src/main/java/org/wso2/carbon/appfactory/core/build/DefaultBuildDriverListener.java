@@ -26,7 +26,6 @@ public class DefaultBuildDriverListener implements BuildDriverListener {
     public void onBuildSuccessful(String applicationId, String version, String revision, File file) {
         ArtifactStorage storage = ServiceHolder.getArtifactStorage();
         //storage.storeArtifact(applicationId, version, revision, file);
-
         // call the bpel back
         sendMessageToCreateArtifactCallback(applicationId, version, revision);
 
@@ -35,7 +34,6 @@ public class DefaultBuildDriverListener implements BuildDriverListener {
     @Override
     public void onBuildFailure(String applicationId, String version, String revision, File file)
             throws AppFactoryException {
-
 
     }
 

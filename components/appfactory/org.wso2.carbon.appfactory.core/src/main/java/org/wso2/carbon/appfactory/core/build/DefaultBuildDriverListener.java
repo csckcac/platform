@@ -21,7 +21,7 @@ public class DefaultBuildDriverListener implements BuildDriverListener {
 
     private static final Log log = LogFactory.getLog(DefaultBuildDriverListener.class);
     private static final String ARTIFACT_CREATE_EPR = "http://localhost:9763/services/ArtifactCreateCallbackService";
-    private static final String NOTIFICATION_EPR = "http://localhost:9763/services/EventNotificationService";
+    private static final String NOTIFICATION_EPR = "https://localhost:9443/services/EventNotificationService";
     private static final String EVENT = "build";
     private static final String SUCCESS = "successful";
     private static final String FAILED = "failed";

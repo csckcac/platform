@@ -117,6 +117,17 @@
                 ${pom.artifactId}-${pom.version}/repository/deployment/server/webapps/STRATOS_ROOT
             </outputDirectory>
         </fileSet>
+	
+	<!--copy jaxrs web app for SCIM feature-->
+	<fileSet>
+            <directory>
+                ../p2-profile-gen/target/wso2carbon-core-${wso2carbon.version}/repository/deployment/server/jaxwebapps
+            </directory>
+            <outputDirectory>${pom.artifactId}-${pom.version}/repository/deployment/server/jaxwebapps</outputDirectory>
+            <includes>
+                <include>wso2.war</include>
+            </includes>
+        </fileSet>
 
 	 <!--Multitenancy related file -->
         <fileSet>

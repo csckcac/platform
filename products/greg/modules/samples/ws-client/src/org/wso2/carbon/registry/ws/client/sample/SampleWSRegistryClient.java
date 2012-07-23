@@ -46,7 +46,7 @@ public class SampleWSRegistryClient {
                 "wso2carbon.jks");
         System.setProperty("javax.net.ssl.trustStorePassword", "wso2carbon");
         System.setProperty("javax.net.ssl.trustStoreType", "JKS");
-
+        System.setProperty("carbon.repo.write.mode", "true");
         configContext = ConfigurationContextFactory.createConfigurationContextFromFileSystem(
                 axis2Repo, axis2Conf);
         return new WSRegistryServiceClient(serverURL, username, password, configContext);

@@ -95,8 +95,9 @@ public class NodeBuilder {
                 else {
                     if (!line.isEmpty() && !"}".equals(line)) {
                         String[] prop = line.split("[\\s]+");
+                        String value = line.substring(prop[0].length(), line.indexOf(";")).trim();
                         try {
-                            aNode.addProperty(prop[0], prop[1].substring(0, prop[1].indexOf(";")));
+                            aNode.addProperty(prop[0], value);
                         } catch (Exception e) {
                             throw new RuntimeException(
                                                        "Malformatted property is defined in the configuration file. [" +
@@ -105,54 +106,6 @@ public class NodeBuilder {
                     }
                 }
             
-                // another node is detected and it is not a variable starting from $
-                if (line.contains("{") && !line.contains("${")) {
-                    try {
-                        Node childNode = new Node();
-                        childNode.setName(line.substring(0, line.indexOf("{")).trim());
-
-                        StringBuilder sb = new StringBuilder();
-
-                        int matchingBraceTracker = 1;
-
-                        while (!line.contains("}") || matchingBraceTracker != 0) {
-                            i++;
-                            if (i == lines.length) {
-                                break;
-                            }
-                            line = lines[i];
-                            if (line.contains("{")) {
-                                matchingBraceTracker++;
-                            }
-                            if (line.contains("}")) {
-                                matchingBraceTracker--;
-                            }
-                            sb.append(line + "\n");
-                        }
-
-                        childNode = buildNode(childNode, sb.toString());
-                        aNode.appendChild(childNode);
-
-                    } catch (Exception e) {
-                        throw new RuntimeException(
-                                                   "Malformatted element is defined in the configuration file. [" +
-                                                       i + "] \n" + line);
-                    }
-
-                }
-                // this is a property
-                else {
-                    if (!line.isEmpty() && !"}".equals(line)) {
-                        String[] prop = line.split("[\\s]+");
-                        try {
-                            aNode.addProperty(prop[0], prop[1].substring(0, prop[1].indexOf(";")));
-                        } catch (Exception e) {
-                            throw new RuntimeException(
-                                                       "Malformatted property is defined in the configuration file. [" +
-                                                           i + "] \n" + line);
-                        }
-                    }
-                }
             }
         }
 

@@ -342,7 +342,7 @@ public class LoadBalancerConfiguration implements Serializable{
                     }
 
                     // adds the domains node to map
-                    hostDomainNodeMap.put(aHost, domainsNode);
+                    hostDomainNodeMap.put(aHost.trim(), domainsNode);
                     
                 }
                 

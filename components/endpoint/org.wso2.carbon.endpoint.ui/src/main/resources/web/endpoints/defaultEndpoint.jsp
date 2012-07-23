@@ -230,6 +230,7 @@
         </table>
     </form>
 </div>
+</div>
 
 </fmt:bundle>
 

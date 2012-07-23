@@ -427,6 +427,7 @@
                 <th width="75%"><fmt:message key="template.parameter.name"/></th>
                 <th><fmt:message key="template.parameter.action"/></th>
             </tr>
+            </thead>
             <tbody id="propertytbody">
             <%
                 int i = 0;
@@ -446,7 +447,6 @@
                 }%>
             <input type="hidden" name="propertyCount" id="propertyCount" value="<%=i%>"/>
             </tbody>
-            </thead>
         </table>
     </div>
     </tr>
@@ -762,19 +762,21 @@
         </td>
     </tr>
     <tr>
-        <table cellpadding="0" cellspacing="0" border="0" class="styledLeft"
-               id="headerTable"
-               style="display:none;">
-            <thead>
-            <tr>
-                <th style="width:25%"><fmt:message key="param.name"/></th>
-                <th style="width:25%"><fmt:message key="param.value"/></th>
-                <th style="width:25%"><fmt:message key="param.scope"/></th>
-                <th style="width:25%"><fmt:message key="param.action"/></th>
-            </tr>
-            </thead>
-            <tbody></tbody>
-        </table>
+        <td>
+            <table cellpadding="0" cellspacing="0" border="0" class="styledLeft"
+                   id="headerTable"
+                   style="display:none;">
+                <thead>
+                <tr>
+                    <th style="width:25%"><fmt:message key="param.name"/></th>
+                    <th style="width:25%"><fmt:message key="param.value"/></th>
+                    <th style="width:25%"><fmt:message key="param.scope"/></th>
+                    <th style="width:25%"><fmt:message key="param.action"/></th>
+                </tr>
+                </thead>
+                <tbody></tbody>
+            </table>
+        </td>
     </tr>
     </tbody>
 </table>

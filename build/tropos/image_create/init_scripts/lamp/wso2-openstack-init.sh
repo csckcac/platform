@@ -127,7 +127,7 @@ fi
 
 mv ./app_list ./app_list.prev
 
-ssh -i ${instance_path}/payload/wso2-key root@$CONTROLLER_IP "cd $APP_PATH;find ./ -mmin $CRON_DURATION" | grep "zip" > ./updated_app_list
+ssh -i ${instance_path}/payload/wso2-key root@$CONTROLLER_IP "cd $APP_PATH;find ./ -mmin -$CRON_DURATION" | grep "zip" > ./updated_app_list
 w=`cat ./updated_app_list`
 for i in $w; 
 do 

@@ -27,55 +27,62 @@ export TENANT=""
 export APP_PATH=""
 export CRON_DURATION=""
 export CONTROLLER_IP=""
-
 echo ---------------------------- >> $LOG
 
 # payload will be copied into ${instance_path}/user-data.txt file
 # that file will be renamed as zip file and extract, 
 
-#  copy user-data.txt and rename as payload.zip file
-cp ${instance_path}/user-data.txt ${instance_path}/payload.zip
 
-# if error code is 0, there was no error
-if [ "$?" = "0" ]; then
-	echo retrieved data >> $LOG
-	rm -Rf ${instance_path}/payload
-	unzip ${instance_path}/payload.zip -d ${instance_path}/
-	# if unzip error code is 0, there was no error
+
+#  copy user-data.txt and rename as payload.zip file
+if [ ! -d $work ]; then
+    mkdir $work
+    cp ${instance_path}/user-data.txt ${instance_path}/payload.zip
+
+	# if error code is 0, there was no error
 	if [ "$?" = "0" ]; then
+		echo retrieved data >> $LOG
+		rm -Rf ${instance_path}/payload
+		unzip ${instance_path}/payload.zip -d ${instance_path}/
+		# if unzip error code is 0, there was no error
 		echo Extracted payload >> $LOG
+
 	else
-		echo rc.local : payload.zip is corrupted >> $LOG
+		echo rc.local : error retrieving user data >> $LOG
 	fi
 
+	chmod -R 0600 ${instance_path}/payload/wso2-key
+	cat ${instance_path}/payload/known_hosts >> ~/.ssh/known_hosts
+	# Export the variables passed from the payload
+	for i in `/usr/bin/ruby /opt/get-launch-params.rb`
+	do
+            export ${i}
+	    echo "export" ${i} >> /home/ubuntu/.bashrc
+	done
+
+
+        # Write a cronjob to execute wso2-openstack-init.sh periodically
+    	crontab -l > ./mycron
+    	echo "*/${CRON_DURATION} * * * * /opt/wso2-openstack-init.sh > /var/log/wso2-openstack-init.log" >> ./mycron
+    	crontab ./mycron
+    	rm ./mycron
 else
-	echo rc.local : error retrieving user data >> $LOG
-fi
-
-chmod -R 0600 ${instance_path}/payload/wso2-key
-cat ${instance_path}/payload/known_hosts >> ~/.ssh/known_hosts
-
-# Export the variables passed from the payload
-for i in `/usr/bin/ruby /opt/get-launch-params.rb`
-do
-  export ${i}
-  echo "export" ${i} >> /home/ubuntu/.bashrc
-done
-
-# Write a cronjob to execute wso2-openstack-init.sh periodically
-if [ ! -d $work ]; then
-    crontab -l > ./mycron
-    echo "*/${CRON_DURATION} * * * * /opt/wso2-openstack-init.sh > /var/log/wso2-openstack-init.log" >> ./mycron
-    crontab ./mycron
-    rm ./mycron
-	mkdir $work
+	# Export the variables passed from the payload
+	for i in `/usr/bin/ruby /opt/get-launch-params.rb`
+	do
+	    export ${i}
+	done
 fi
 
 pushd $work
+
+
 ssh -i ${instance_path}/payload/wso2-key root@$CONTROLLER_IP "cd $APP_PATH; ls ./" | grep "zip" > ./app_list
+m=`cat ./app_list`
+
 if [ ! -e ./app_list.prev ]; then
     scp -i ${instance_path}/payload/wso2-key root@$CONTROLLER_IP:$APP_PATH/*.zip ./
-    for a in *.zip;
+    for a in $m;
     do
         if [ -e $a ]; then
             unzip -q $a;rm -f $a;
@@ -84,9 +91,16 @@ if [ ! -e ./app_list.prev ]; then
         if [ -d $docroot/$b ]; then
     	    rm -rf $docroot/$b
         fi
+        echo "copying file********************:$b" >> $LOG
     	mv $b $docroot/
         echo "added $docroot/$b"
     done
+    if [ -z "$m" ]; then
+    	echo "app list is empty******************" >> $LOG
+    else
+    	mv ./app_list ./app_list.prev
+    fi
+    exit 0
 else
     x=`cat ./app_list.prev`
     y=`cat ./app_list`
@@ -111,7 +125,7 @@ else
     done
 fi
 
-cp -f ./app_list ./app_list.prev
+mv ./app_list ./app_list.prev
 
 ssh -i ${instance_path}/payload/wso2-key root@$CONTROLLER_IP "cd $APP_PATH;find ./ -mmin $CRON_DURATION" | grep "zip" > ./updated_app_list
 w=`cat ./updated_app_list`
@@ -123,6 +137,7 @@ do
     if [ -d $docroot/$j ]; then
     	rm -rf $docroot/$j
     fi
+    echo "copying updated file********************:$b" >> $LOG
     mv $j $docroot/
     echo "added $docroot/$j"
 done

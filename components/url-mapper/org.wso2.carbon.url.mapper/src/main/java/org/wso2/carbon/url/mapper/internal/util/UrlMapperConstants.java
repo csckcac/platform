@@ -26,15 +26,22 @@ public final class UrlMapperConstants {
         public static final String HOSTINFO = "hostinfo/";
         public static final String DEFAULT_REGISTRY_HOSTINFO_PATH="/_system/config/hostinfo/";
         public static final String HOSTINFO_DIR = "/hostinfo/";
+       
         public static final String WAR = ".war";
         public static final String FILE_SERPERATOR = "/";
         public static final String WEB_APP = "web.app";
         public static final String TENANT_DOMAIN = "tenant.domain";
         public static final String SERVICE_EPR="service.epr";
-        public final static String DOMAIN_NAME_PREFIX = ".wso2.com";
         public static final String WEB_APPS = "webapps";
         public static final String HOST_DIR = "lib/tomcat/work/Catalina";
         public static final String SERVICE_IDENTIFIER="/services";
         public static final String CATALINA_HOME = CarbonUtils.getCarbonHome() + "/lib/tomcat/work/Catalina/";
+    }
+    
+    public static final class MappingConfigs {
+    	public static final String PREFIX= "prefix";
+    	public static final String MAPPINGS = "mappings";
+    	 public static final String ETC ="etc";
+    	public static final String MAPPING_CONF_FILE = "url-mapping-config.xml";
     }
 }

@@ -74,6 +74,35 @@ public class HostUtil {
                     e);
         }
     }
+    
+    /**
+     * This method is used to retrieve list of host names for a given
+     * webapplication.
+     *
+     * @param webAppName the webapp name
+     * @return list of mapped hosts.
+     * @throws UrlMapperException throws it when failing to get resource from registry
+     */
+    public static boolean isMappingLimitExceeded(String webAppName) throws UrlMapperException {
+		int index = 0;
+        try {
+            MappingData mappings[] = getAllMappingsFromRegistry();
+            if (mappings != null) {
+                for (MappingData mapping : mappings) {
+                    String hostName = mapping.getMappingName();
+                    if (webAppName.equals(mapping.getUrl())) {
+                      index++;
+                    }
+                }
+            }
+            return (index < MappingConfigManager.loadMappingConfiguration().getNoOfMappings());
+
+        } catch (Exception e) {
+            log.error("Failed to get url mappings for the webapp ", e);
+            throw new UrlMapperException("Failed to get url mappings for the webapp " + webAppName,
+                    e);
+        }
+    }
 
     /**
      * Find out whether the hostname exists already
@@ -83,7 +112,7 @@ public class HostUtil {
      * @throws UrlMapperException throws when error while retrieve from registry
      */
     public static boolean isMappingExist(String mappingName) throws UrlMapperException {
-        mappingName = mappingName + UrlMapperConstants.HostProperties.DOMAIN_NAME_PREFIX;
+        mappingName = mappingName + MappingConfigManager.loadMappingConfiguration().getPrefix();
         MappingData mappings[] = getAllMappingsFromRegistry();
         boolean isExist = false;
         if (mappings != null) {
@@ -96,6 +125,8 @@ public class HostUtil {
         return isExist;
     }
 
+    
+    
 
     /**
      * retrieving all hosts from registry.

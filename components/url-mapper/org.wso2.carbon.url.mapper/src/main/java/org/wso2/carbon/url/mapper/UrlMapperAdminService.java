@@ -15,73 +15,104 @@
  */
 package org.wso2.carbon.url.mapper;
 
+import java.util.Arrays;
+import java.util.List;
+
 import org.apache.commons.logging.Log;
 import org.apache.commons.logging.LogFactory;
 import org.wso2.carbon.core.AbstractAdmin;
+import org.wso2.carbon.url.mapper.data.MappingConfig;
 import org.wso2.carbon.url.mapper.data.MappingData;
+import org.wso2.carbon.url.mapper.data.PaginatedMappingData;
 import org.wso2.carbon.url.mapper.internal.exception.UrlMapperException;
 import org.wso2.carbon.url.mapper.internal.util.HostUtil;
-import org.wso2.carbon.url.mapper.internal.util.UrlMapperConstants;
-
-import java.util.List;
+import org.wso2.carbon.url.mapper.internal.util.MappingConfigManager;
+import org.wso2.carbon.utils.DataPaginator;
 
 /**
  * Backend service to handle virtual host addition to registry and to tomcat.
  */
 public class UrlMapperAdminService extends AbstractAdmin {
-    private static final Log log = LogFactory.getLog(UrlMapperAdminService.class);
+	private static final Log log = LogFactory.getLog(UrlMapperAdminService.class);
 
-    public void addWebAppToHost(String hostName, String uri) throws UrlMapperException {
-        //TODO have to figure out exception handling
-        try {
-            hostName = hostName + UrlMapperConstants.HostProperties.DOMAIN_NAME_PREFIX;
-            HostUtil.addWebAppToHost(hostName, uri);
-        } catch (Exception e) {
-            log.error(e);  //To change body of catch statement use File | Settings | File Templates.
-            throw new UrlMapperException("Failed to add webapp to host ", e);
-        }
-    }
+	public void addWebAppToHost(String hostName, String uri) throws UrlMapperException {
+		// TODO have to figure out exception handling
+		try {
+			hostName = hostName + getDomainNamePrefix();
+			HostUtil.addWebAppToHost(hostName, uri);
+		} catch (Exception e) {
+			log.error(e); // To change body of catch statement use File |
+							// Settings | File Templates.
+			throw new UrlMapperException("Failed to add webapp to host ", e);
+		}
+	}
 
-    public static MappingData[] getAllMappings() throws UrlMapperException {
-        return HostUtil.getAllMappingsFromRegistry();
-    }
+//	public static PaginatedMappingData getAllMappings(int pageNumber, String tenantDomain)
+//			throws UrlMapperException {
+//		MappingData[] mappings = HostUtil.getAllMappingsFromRegistry();
+//		if (mappings != null) {
+//			List<MappingData> mappingsList = Arrays.asList(mappings);
+//			// Pagination
+//			PaginatedMappingData paginatedMappings = new PaginatedMappingData();
+//			DataPaginator.doPaging(pageNumber, mappingsList, paginatedMappings);
+//			return paginatedMappings;
+//		} else {
+//			return null;
+//		}
+//
+//	}
+	
+	public MappingData[] getAllMappings() throws UrlMapperException {
+		return HostUtil.getAllMappingsFromRegistry();
+	}
 
-    public void addServiceDomain(String hostName, String url) throws UrlMapperException {
-        hostName = hostName + UrlMapperConstants.HostProperties.DOMAIN_NAME_PREFIX;
-        HostUtil.addDomainToServiceEpr(hostName, url);
-    }
+	public void addServiceDomain(String hostName, String url) throws UrlMapperException {
+		hostName = hostName + getDomainNamePrefix();
+		HostUtil.addDomainToServiceEpr(hostName, url);
+	}
 
-    public void editServiceDomain(String newHost, String oldhost) throws UrlMapperException {
-        newHost = newHost + UrlMapperConstants.HostProperties.DOMAIN_NAME_PREFIX;
-        HostUtil.updateEprToRegistry(newHost, oldhost);
-    }
+	public void editServiceDomain(String newHost, String oldhost) throws UrlMapperException {
+		newHost = newHost + getDomainNamePrefix();
+		HostUtil.updateEprToRegistry(newHost, oldhost);
+	}
 
-    public void deleteServiceDomain(String hostName) throws UrlMapperException {
-        HostUtil.deleteResourceToRegistry(hostName);
-    }
+	public void deleteServiceDomain(String hostName) throws UrlMapperException {
+		HostUtil.deleteResourceToRegistry(hostName);
+	}
 
-    public String[] getHostForEpr(String url) throws UrlMapperException {
-        List<String> domains = HostUtil.getMappingsPerEppr(url);
-        return domains.toArray(new String[domains.size()]);
-    }
+	public String[] getHostForEpr(String url) throws UrlMapperException {
+		List<String> domains = HostUtil.getMappingsPerEppr(url);
+		return domains.toArray(new String[domains.size()]);
+	}
 
-    public String[] getHostForWebApp(String url) throws UrlMapperException {
-        List<String> domains = HostUtil.getMappingsPerWebApp(url);
-        return domains.toArray(new String[domains.size()]);
-    }
+	public String[] getHostForWebApp(String url) throws UrlMapperException {
+		List<String> domains = HostUtil.getMappingsPerWebApp(url);
+		return domains.toArray(new String[domains.size()]);
+	}
 
-    public boolean editHost(String webappName, String newHost, String oldhost) throws UrlMapperException {
-        newHost = newHost + UrlMapperConstants.HostProperties.DOMAIN_NAME_PREFIX;
-        HostUtil.editHostInEngine(webappName, newHost, oldhost);
-        return true;
-    }
+	private String getDomainNamePrefix() {
+		MappingConfig config = MappingConfigManager.loadMappingConfiguration();
+		return config.getPrefix();
 
-    public void deleteHost(String hostName) throws UrlMapperException {
-        HostUtil.removeHost(hostName);
-        HostUtil.deleteResourceToRegistry(hostName);
-    }
+	}
 
-    public boolean isMappingExist(String mappingName) throws UrlMapperException {
-        return HostUtil.isMappingExist(mappingName);
-    }
+	public boolean isMappingLimitExceeded(String webAppName) throws UrlMapperException {
+		return HostUtil.isMappingLimitExceeded(webAppName);
+	}
+
+	public boolean editHost(String webappName, String newHost, String oldhost)
+			throws UrlMapperException {
+		newHost = newHost + getDomainNamePrefix();
+		HostUtil.editHostInEngine(webappName, newHost, oldhost);
+		return true;
+	}
+
+	public void deleteHost(String hostName) throws UrlMapperException {
+		HostUtil.removeHost(hostName);
+		HostUtil.deleteResourceToRegistry(hostName);
+	}
+
+	public boolean isMappingExist(String mappingName) throws UrlMapperException {
+		return HostUtil.isMappingExist(mappingName);
+	}
 }

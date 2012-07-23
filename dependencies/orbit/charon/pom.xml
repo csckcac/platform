@@ -61,6 +61,7 @@
                         <Import-Package>
                             !org.wso2.charon.core.*;
 			    org.json.*;
+			    org.apache.commons.logging.*;
 			    resolution:=optional
                         </Import-Package>
                     </instructions>

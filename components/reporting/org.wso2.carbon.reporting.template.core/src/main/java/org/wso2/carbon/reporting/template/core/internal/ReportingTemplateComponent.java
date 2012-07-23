@@ -21,14 +21,14 @@ import org.apache.commons.logging.LogFactory;
 import org.osgi.framework.Bundle;
 import org.osgi.framework.BundleContext;
 import org.osgi.service.component.ComponentContext;
-import org.wso2.carbon.datasource.DataSourceInformationRepositoryService;
+import org.wso2.carbon.ndatasource.core.DataSourceService;
 import org.wso2.carbon.registry.core.Registry;
 import org.wso2.carbon.registry.core.Resource;
 import org.wso2.carbon.registry.core.exceptions.RegistryException;
 import org.wso2.carbon.registry.core.service.RegistryService;
 import org.wso2.carbon.reporting.api.ReportingException;
-import org.wso2.carbon.reporting.template.core.util.common.ReportConstants;
 import org.wso2.carbon.reporting.template.core.util.Template;
+import org.wso2.carbon.reporting.template.core.util.common.ReportConstants;
 import org.wso2.carbon.utils.CarbonUtils;
 import org.wso2.carbon.utils.ConfigurationContextService;
 
@@ -38,19 +38,19 @@ import java.net.URL;
 
 
 /**
- * @scr.component name="bam.reporting" immediate="true"
+ * @scr.component name="reporting.template" immediate="true"
  * @scr.reference name="registry.service" interface="org.wso2.carbon.registry.core.service.RegistryService"
  * cardinality="1..1" policy="dynamic" bind="setRegistryService" unbind="unsetRegistryService"
  * @scr.reference name="config.context.service" interface="org.wso2.carbon.utils.ConfigurationContextService"
  * cardinality="1..1" policy="dynamic" bind="setConfigurationContextService"
  * unbind="unsetConfigurationContextService"
- * @scr.reference name="org.wso2.carbon.datasource.DataSourceInformationRepositoryService" interface="org.wso2.carbon.datasource.DataSourceInformationRepositoryService"
+ * @scr.reference name="org.wso2.carbon.ndatasource.core.DataSourceService" interface="org.wso2.carbon.ndatasource.core.DataSourceService"
  * cardinality="0..1" policy="dynamic" bind="setCarbonDataSourceService" unbind="unsetCarbonDataSourceService"
  */
 public class ReportingTemplateComponent {
  private static  RegistryService registryService;
  private static ConfigurationContextService configurationContextService;
- private static DataSourceInformationRepositoryService dataSourceService1;
+ private static DataSourceService dataSourceService1;
  private static boolean BAMServer;
 
  private static URL bundleMetadataURL = null;
@@ -60,10 +60,7 @@ public class ReportingTemplateComponent {
      protected void activate(ComponentContext componentContext) {
         try {
             String servername = CarbonUtils.getServerConfiguration().getProperties("Name")[0];
-
-            if(servername.equalsIgnoreCase("WSO2 Business Activity Monitor")){
-                BAMServer = true;
-            }
+            BAMServer = false;
 
             Bundle[] bundles = componentContext.getBundleContext().getBundles();
             for (Bundle bundle : bundles) {
@@ -150,7 +147,7 @@ public class ReportingTemplateComponent {
     }
 
     protected void setCarbonDataSourceService(
-            DataSourceInformationRepositoryService dataSourceService) {
+            DataSourceService dataSourceService) {
         if (log.isDebugEnabled()) {
             log.debug("Setting the Carbon Data Sources Service");
         }
@@ -158,11 +155,11 @@ public class ReportingTemplateComponent {
     }
 
     protected void unsetCarbonDataSourceService(
-            DataSourceInformationRepositoryService dataSourceService) {
+            DataSourceService dataSourceService) {
         dataSourceService1 = dataSourceService;
     }
 
-    public static DataSourceInformationRepositoryService getCarbonDataSourceService() {
+    public static DataSourceService getCarbonDataSourceService() {
         return dataSourceService1;
     }
 

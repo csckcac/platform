@@ -21,10 +21,9 @@ package org.wso2.carbon.reporting.template.core.service;
 import org.jaxen.JaxenException;
 import org.wso2.carbon.core.AbstractAdmin;
 import org.wso2.carbon.reporting.api.ReportingException;
-import org.wso2.carbon.reporting.template.core.client.BAMDBClient;
 import org.wso2.carbon.reporting.template.core.client.DatasourceClient;
-import org.wso2.carbon.reporting.template.core.factory.ClientFactory;
 import org.wso2.carbon.reporting.template.core.client.ReportingClient;
+import org.wso2.carbon.reporting.template.core.factory.ClientFactory;
 import org.wso2.carbon.reporting.template.core.handler.metadata.ChartMetaDataHandler;
 import org.wso2.carbon.reporting.template.core.handler.metadata.CompositeReportMetaDataHandler;
 import org.wso2.carbon.reporting.template.core.handler.metadata.MetadataFinder;
@@ -32,7 +31,6 @@ import org.wso2.carbon.reporting.template.core.handler.metadata.TableReportMetaD
 import org.wso2.carbon.reporting.template.core.handler.report.chart.*;
 import org.wso2.carbon.reporting.template.core.handler.report.common.CompositeReportJrxmlHandler;
 import org.wso2.carbon.reporting.template.core.handler.report.table.TableTemplateJrxmlHandler;
-import org.wso2.carbon.reporting.template.core.internal.ReportingTemplateComponent;
 import org.wso2.carbon.reporting.template.core.util.chart.ChartReportDTO;
 import org.wso2.carbon.reporting.template.core.util.common.ReportConstants;
 import org.wso2.carbon.reporting.template.core.util.table.TableReportDTO;
@@ -119,75 +117,29 @@ public class ReportTemplateAdmin extends AbstractAdmin {
         return client.generateReport(reportName, type);
     }
 
-    public String[] getAllColumnFamilies() throws ReportingException {
-        BAMDBClient BAMDBClient = ClientFactory.getBAMDBClient();
-        return BAMDBClient.getAllColumnFamilies();
-    }
-
-    public String[] getIndexes(String columnFamily) throws ReportingException {
-        BAMDBClient BAMDBClient = ClientFactory.getBAMDBClient();
-        return BAMDBClient.getIndexes(columnFamily);
-    }
-
-    public void queryColumnFamily(String columnFamilyname, String indexName, String[] compositeIndexName) throws ReportingException {
-        BAMDBClient BAMDBClient = ClientFactory.getBAMDBClient();
-        BAMDBClient.queryColumnFamily(columnFamilyname, indexName, compositeIndexName);
-    }
 
 
     public String[] getAllDatasourceNames() throws ReportingException {
-        BAMDBClient bamdbClient = null;
-        if (ReportingTemplateComponent.isBAMServer()) {
-            try {
-                bamdbClient = ClientFactory.getBAMDBClient();
-            } catch (ReportingException e) {
-                bamdbClient = null;
-            }
-        }
-        if (bamdbClient != null && bamdbClient.isBAMDBFound()) {
-            DatasourceClient dsClient = ClientFactory.getDSClient();
-            String[] otherDatasource = dsClient.getDataSourceNames();
-            String[] alldatasource = new String[otherDatasource.length + 1];
-            alldatasource[0] = ReportConstants.BAMDATASOURCE;
-            int id = 1;
-            for (String dsName : otherDatasource) {
-                alldatasource[id] = dsName;
-                id++;
-            }
-            return alldatasource;
-        } else {
             DatasourceClient dsClient = ClientFactory.getDSClient();
             return dsClient.getDataSourceNames();
-        }
     }
 
     public String[] getTableNames(String dsName) throws ReportingException {
-        if (dsName.equalsIgnoreCase(ReportConstants.BAMDATASOURCE)) {
-            BAMDBClient client = ClientFactory.getBAMDBClient();
-            return client.getAllColumnFamilies();
-        } else {
             DatasourceClient dsClient = ClientFactory.getDSClient();
             try {
                 return dsClient.getTableNames(dsName);
             } catch (SQLException e) {
                 throw new ReportingException("SQL syntax is not coorect for datasource " + dsName, e);
             }
-
-        }
     }
 
     public String[] getColumnNames(String dsName, String tableName) throws ReportingException {
-        if (dsName.equalsIgnoreCase(ReportConstants.BAMDATASOURCE)) {
-            BAMDBClient bamdbClient = ClientFactory.getBAMDBClient();
-            return bamdbClient.getColumnNames(tableName);
-        } else {
             DatasourceClient dsClient = ClientFactory.getDSClient();
             try {
                 return dsClient.getColumnNames(dsName, tableName);
             } catch (SQLException e) {
                 throw new ReportingException("SQL syntax error while retrieving the columnames of table " + tableName + " from data source name " + dsName, e);
             }
-        }
     }
 
     public boolean isReportExists(String reportName) throws ReportingException {

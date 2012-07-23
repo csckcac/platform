@@ -16,15 +16,12 @@
 
 package org.wso2.carbon.reporting.template.core.factory;
 
-import org.wso2.carbon.reporting.api.ReportingException;
-import org.wso2.carbon.reporting.template.core.client.BAMDBClient;
 import org.wso2.carbon.reporting.template.core.client.DatasourceClient;
 import org.wso2.carbon.reporting.template.core.client.ReportingClient;
 
 
 public class ClientFactory {
     private static ReportingClient reportingClient;
-    private static BAMDBClient BAMDBClient;
     private static DatasourceClient DSClient;
 
     public static ReportingClient getReportingClient() {
@@ -34,12 +31,6 @@ public class ClientFactory {
         return reportingClient;
     }
 
-    public static BAMDBClient getBAMDBClient() throws ReportingException {
-        if (BAMDBClient == null) {
-            BAMDBClient = new BAMDBClient();
-        }
-        return BAMDBClient;
-    }
 
 
     public static DatasourceClient getDSClient() {

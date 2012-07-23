@@ -47,11 +47,11 @@ public class JrxmlFileUploader extends AbstractAdmin {
             try {
                 try {
                     // Here validate template.
-                   byte[] templateContent = fileContent.getBytes();
+                    byte[] templateContent = fileContent.getBytes();
                     InputStream inputStream = new ByteArrayInputStream(templateContent);
                     JRXmlLoader.load(inputStream);
                 } catch (JRException e) {
-                    throw new JRException(fileName +" is not a valide template" ,e);
+                    throw new JRException(fileName + " is not a valide template", e);
                 }
                 Registry registry = getConfigSystemRegistry();
                 Resource reportFilesResource = registry.newResource();
@@ -68,10 +68,10 @@ public class JrxmlFileUploader extends AbstractAdmin {
         return status;
     }
 
-   public String uploadLogo(String imageName, String reportName, DataHandler imageContent) throws ReportingException {
-            if (!"".equals(imageContent)) {
-                ImageLoader loader = new ImageLoader();
-                loader.saveImage(imageName, reportName, imageContent);
+    public String uploadLogo(String imageName, String reportName, DataHandler imageContent) throws ReportingException {
+        if (!"".equals(imageContent)) {
+            ImageLoader loader = new ImageLoader();
+            loader.saveImage(imageName, reportName, imageContent);
         } else {
             throw new ReportingException("File content empty or in-complete template");
         }

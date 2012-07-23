@@ -17,14 +17,7 @@
 package org.wso2.carbon.reporting.template.core.util.common;
 
 public class ReportConstants {
-    public static final String MONTHLY_SEPERATION= "monthly_seperation";
-    public  static final String NO_MONTHLY_SEPERATION = "no_monthly_seperation";
     public static final String TABLE_TYPE = "table_type_report";
-    public static final String TEXT_ALIGNMENT_CENTER = "Center";
-    public static final String TEXT_ALIGNMENT_JUSTIFIED = "Justified";
-    public static final String TEXT_ALIGNMENT_LEFT = "Left";
-    public static final String TEXT_ALIGNMENT_RIGHT = "Right";
-    public static final int MAX_COLUMNS_TABLE_TYPE_REPORT = 5;
     public static final String REPORT_BASE_PATH= "/repository/reports/org.wso2.carbon.reporting.template/";
     public static final String REPORT_META_DATA_PATH = "/repository/reports/org.wso2.carbon.reporting.template/meta-data/";
     public static final String METADATA_FILE_NAME= "report_meta_data.xml";

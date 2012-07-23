@@ -98,7 +98,7 @@ public class TableTemplateJrxmlHandler extends AbstractJrxmlHandler {
     but the methods are based for the default template only not for the processed template.
 
     */
-    public void updateTableReport() {
+    public void updateTableReport() throws ReportingException {
         try {
             this.handleHeaderInformation();
             this.handleBackgroundColor();

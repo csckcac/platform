@@ -16,27 +16,29 @@
 
 package org.wso2.carbon.reporting.template.core.client;
 
-import org.apache.axis2.AxisFault;
+import net.sf.jasperreports.engine.JRException;
 import org.apache.commons.logging.Log;
 import org.apache.commons.logging.LogFactory;
 import org.wso2.carbon.reporting.api.ReportingException;
-import org.wso2.carbon.reporting.stub.*;
-import org.wso2.carbon.reporting.stub.core.services.*;
-import org.wso2.carbon.reporting.template.core.handler.database.BAMDBHandler;
+import org.wso2.carbon.reporting.core.services.DBReportingService;
+import org.wso2.carbon.reporting.core.services.JrxmlFileUploader;
+import org.wso2.carbon.reporting.core.services.ReportingResourcesSupplier;
 import org.wso2.carbon.reporting.template.core.handler.database.DataSourceHandler;
 import org.wso2.carbon.reporting.template.core.handler.metadata.ChartMetaDataHandler;
 import org.wso2.carbon.reporting.template.core.handler.metadata.CompositeReportMetaDataHandler;
 import org.wso2.carbon.reporting.template.core.handler.metadata.MetadataFinder;
 import org.wso2.carbon.reporting.template.core.handler.metadata.TableReportMetaDataHandler;
-import org.wso2.carbon.reporting.template.core.internal.ReportingTemplateComponent;
 import org.wso2.carbon.reporting.template.core.util.chart.ChartReportDTO;
 import org.wso2.carbon.reporting.template.core.util.common.ReportConstants;
 import org.wso2.carbon.reporting.template.core.util.table.TableReportDTO;
+import org.wso2.carbon.reporting.util.Column;
+import org.wso2.carbon.reporting.util.ReportDataSource;
+import org.wso2.carbon.reporting.util.ReportParamMap;
+import org.wso2.carbon.reporting.util.Row;
 
 import javax.activation.DataHandler;
-import java.io.*;
-import java.net.SocketException;
-import java.rmi.RemoteException;
+import java.io.ByteArrayInputStream;
+import java.io.InputStream;
 import java.util.ArrayList;
 import java.util.Iterator;
 import java.util.LinkedHashMap;
@@ -45,52 +47,37 @@ import java.util.Map;
 /*
   This class communicates with reporting core back-end
 */
-public class ReportingClient extends AbstractClient {
-    private JrxmlFileUploaderStub fileUploaderStub;
-    private DBReportingServiceStub dbReportingServiceStub;
-    private ReportingResourcesSupplierStub resourceSupplierStub;
+public class ReportingClient {
+    private JrxmlFileUploader fileUploaderService;
+    private DBReportingService dbReportingService;
+    private ReportingResourcesSupplier resourceSupplierService;
 
     private static Log log = LogFactory.getLog(ReportingClient.class);
 
     public ReportingClient() {
-        try {
-            String serverFileUploaderURL = getBackendServerURLHTTPS() + "services/JrxmlFileUploader";
-            fileUploaderStub = new JrxmlFileUploaderStub(ReportingTemplateComponent.getConfigurationContextService().getServerConfigContext(), serverFileUploaderURL);
-
-            String serverDBReportingURL = getBackendServerURLHTTPS() + "services/DBReportingService";
-            dbReportingServiceStub = new DBReportingServiceStub(ReportingTemplateComponent.getConfigurationContextService().getServerConfigContext(), serverDBReportingURL);
-
-            String serverReportingResourceURL = getBackendServerURLHTTPS() + "services/ReportingResourcesSupplier";
-            resourceSupplierStub = new ReportingResourcesSupplierStub(ReportingTemplateComponent.getConfigurationContextService().getServerConfigContext(), serverReportingResourceURL);
-        } catch (AxisFault axisFault) {
-            log.error(axisFault);
-        } catch (SocketException e) {
-            log.error(e);
-        }
+        fileUploaderService = new JrxmlFileUploader();
+        dbReportingService = new DBReportingService();
+        resourceSupplierService = new ReportingResourcesSupplier();
     }
 
 
-    public void uploadJrxmlFile(String filename, String fileContent) {
+    public void uploadJrxmlFile(String filename, String fileContent) throws ReportingException {
         try {
-            fileUploaderStub.uploadJrxmlFile(filename, fileContent);
-            fileUploaderStub.cleanup();
-        } catch (RemoteException e) {
-            log.error(e);
-        } catch (JrxmlFileUploaderJRExceptionException e) {
-            log.error(e);
-        } catch (JrxmlFileUploaderReportingExceptionException e) {
-            log.error(e);
+            fileUploaderService.uploadJrxmlFile(filename, fileContent);
+        } catch (JRException e) {
+            log.error(e.getMessage(), e);
+            throw new ReportingException(e.getMessage(), e);
+        } catch (ReportingException e) {
+            log.error(e.getMessage(), e);
+            throw e;
         }
+
     }
 
     private DataHandler generateTableReport(String reportName, String type) throws ReportingException {
         TableReportDTO tableReport = new TableReportMetaDataHandler().getTableReportMetaData(reportName);
         Map[] data = null;
-        if (tableReport.getDsName().equalsIgnoreCase(ReportConstants.BAMDATASOURCE)) {
-            data = new BAMDBHandler().createMapDataSource(tableReport);
-        } else {
-            data = new DataSourceHandler().createMapDataSource(tableReport);
-        }
+        data = new DataSourceHandler().createMapDataSource(tableReport);
         ReportDataSource dataSource = getReportDataSource(data);
         ReportParamMap[] maps = new ReportParamMap[1];
         ReportParamMap map = new ReportParamMap();
@@ -99,17 +86,11 @@ public class ReportingClient extends AbstractClient {
         maps[0] = map;
         DataHandler dataHandler = null;
         try {
-            dataHandler = dbReportingServiceStub.getJRDataSourceReport(dataSource, reportName, maps, type);
-            dbReportingServiceStub.cleanup();
+            byte[] reportResource = dbReportingService.getJRDataSourceReport(dataSource, reportName, maps, type);
+            dataHandler = new DataHandler(reportResource, "application/octet-stream");
             return dataHandler;
-        } catch (RemoteException e) {
-            log.error("Error while generating the report", e);
-            throw new ReportingException(e.getMessage(), e);
-        } catch (DBReportingServiceJRExceptionException e) {
-            log.error("Error while generating the report", e);
-            throw new ReportingException(e.getMessage(), e);
-        } catch (DBReportingServiceReportingExceptionException e) {
-            log.error("Error while generating the report", e);
+        } catch (JRException e) {
+            log.error(e.getMessage(), e);
             throw new ReportingException(e.getMessage(), e);
         }
     }
@@ -143,19 +124,10 @@ public class ReportingClient extends AbstractClient {
             Map[] data = null;
             if (aReportType.equalsIgnoreCase(ReportConstants.TABLE_TYPE)) {
                 TableReportDTO tableReport = new TableReportMetaDataHandler().getTableReportMetaData(aReportName);
-                if (tableReport.getDsName().equalsIgnoreCase(ReportConstants.BAMDATASOURCE)) {
-                    data = new BAMDBHandler().createMapDataSource(tableReport);
-                } else {
-                    data = new DataSourceHandler().createMapDataSource(tableReport);
-                }
-
+                data = new DataSourceHandler().createMapDataSource(tableReport);
             } else {
                 ChartReportDTO chartReport = new ChartMetaDataHandler().getChartReportMetaData(aReportName);
-                if (chartReport.getDsName().equalsIgnoreCase(ReportConstants.BAMDATASOURCE)) {
-                    data = new BAMDBHandler().createMapDataSource(chartReport);
-                } else {
-                    data = new DataSourceHandler().createMapDataSource(chartReport);
-                }
+                data = new DataSourceHandler().createMapDataSource(chartReport);
             }
 
             ReportDataSource dataSource = getReportDataSource(data);
@@ -172,17 +144,11 @@ public class ReportingClient extends AbstractClient {
         maps = mapList.toArray(maps);
         DataHandler dataHandler = null;
         try {
-            dataHandler = dbReportingServiceStub.getJRDataSourceReport(null, reportName, maps, reportType);
-            dbReportingServiceStub.cleanup();
+            byte[] data = dbReportingService.getJRDataSourceReport(null, reportName, maps, reportType);
+            dataHandler = new DataHandler(data, "application/octet-stream");
             return dataHandler;
-        } catch (RemoteException e) {
-            log.error("Exception occurred while generating the composite report -" + reportName, e);
-            throw new ReportingException(e.getMessage(), e);
-        } catch (DBReportingServiceJRExceptionException e) {
-            log.error("Exception occurred while generating the composite report -" + reportName, e);
-            throw new ReportingException(e.getMessage(), e);
-        } catch (DBReportingServiceReportingExceptionException e) {
-            log.error("Exception occurred while generating the composite report -" + reportName, e);
+        } catch (JRException e) {
+            log.error(e.getMessage(), e);
             throw new ReportingException(e.getMessage(), e);
         }
 
@@ -191,11 +157,7 @@ public class ReportingClient extends AbstractClient {
     private DataHandler generateChartReport(String reportName, String type) throws ReportingException {
         ChartReportDTO chartReport = new ChartMetaDataHandler().getChartReportMetaData(reportName);
         Map[] data = null;
-        if (chartReport.getDsName().equalsIgnoreCase(ReportConstants.BAMDATASOURCE)) {
-            data = new BAMDBHandler().createMapDataSource(chartReport);
-        } else {
-            data = new DataSourceHandler().createMapDataSource(chartReport);
-        }
+        data = new DataSourceHandler().createMapDataSource(chartReport);
         ReportDataSource dataSource = getReportDataSource(data);
         ReportParamMap[] maps = new ReportParamMap[1];
         ReportParamMap map = new ReportParamMap();
@@ -204,25 +166,20 @@ public class ReportingClient extends AbstractClient {
         maps[0] = map;
         DataHandler dataHandler = null;
         try {
-            dataHandler = dbReportingServiceStub.getJRDataSourceReport(dataSource, reportName, maps, type);
-            dbReportingServiceStub.cleanup();
+            byte[] reportData = dbReportingService.getJRDataSourceReport(dataSource, reportName, maps, type);
+            dataHandler = new DataHandler(reportData, "application/octet-stream");
             return dataHandler;
-        } catch (RemoteException e) {
-            log.error("Exception occurred when generating chart report -"+reportName);
-            throw new ReportingException(e.getMessage(), e);
-        } catch (DBReportingServiceJRExceptionException e) {
-             log.error("Exception occurred when generating chart report -"+reportName);
-            throw new ReportingException(e.getMessage(), e);
-        } catch (DBReportingServiceReportingExceptionException e) {
-             log.error("Exception occurred when generating chart report -"+reportName);
+        } catch (JRException e) {
+            log.error(e.getMessage(), e);
             throw new ReportingException(e.getMessage(), e);
         }
     }
 
 
-
     private ReportDataSource getReportDataSource(Map[] mapDataSource) {
         ReportDataSource dataSource = new ReportDataSource();
+        ArrayList<Column> columnArrayList = new ArrayList<Column>();
+        ArrayList<Row> rowArrayList = new ArrayList<Row>();
         for (Map aMapData : mapDataSource) {
             Row row = new Row();
 
@@ -244,37 +201,23 @@ public class ReportingClient extends AbstractClient {
                     column.setValue(pairs.getValue().toString());
                     column.setType("java.lang.String");
                 }
-                row.addColumns(column);
+                columnArrayList.add(column);
             }
-            dataSource.addRows(row);
+            row.setColumns(new Column[columnArrayList.size()]);
+            rowArrayList.add(row);
         }
+        dataSource.setRows(new Row[rowArrayList.size()]);
         return dataSource;
     }
 
     public InputStream getJrxmlResource(String filename) throws ReportingException {
-        try {
-            String content = resourceSupplierStub.getJRXMLFileContent(null, filename);
-            InputStream is = new ByteArrayInputStream(content.getBytes());
-            return is;
-        } catch (RemoteException e) {
-            log.error("Cannot access the service ReportingResourcesSupplier", e);
-            throw new ReportingException("Cannot access the service ReportingResourcesSupplier");
-        } catch (ReportingResourcesSupplierReportingExceptionException e) {
-            log.error("Exception while retrieving the jrxml file", e);
-            throw new ReportingException(e.getMessage(), e);
-        }
+        String content = resourceSupplierService.getJRXMLFileContent(null, filename);
+        InputStream is = new ByteArrayInputStream(content.getBytes());
+        return is;
     }
 
     public void uploadImage(String fileName, String reportName, DataHandler imageContent) throws ReportingException {
-        try {
-            fileUploaderStub.uploadLogo(fileName, reportName, imageContent);
-        } catch (RemoteException e) {
-            log.error("Cannot access file uploaded service for upload image", e);
-            throw new ReportingException(e.getMessage(), e);
-        } catch (JrxmlFileUploaderReportingExceptionException e) {
-            log.error("Exception occurred while uploading the image", e);
-            throw new ReportingException(e.getMessage(), e);
-        }
+        fileUploaderService.uploadLogo(fileName, reportName, imageContent);
     }
 
 

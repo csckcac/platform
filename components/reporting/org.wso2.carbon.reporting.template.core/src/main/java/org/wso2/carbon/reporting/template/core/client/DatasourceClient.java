@@ -17,11 +17,9 @@ package org.wso2.carbon.reporting.template.core.client;
 
 import org.apache.commons.logging.Log;
 import org.apache.commons.logging.LogFactory;
-import org.apache.synapse.commons.datasource.DataSourceInformation;
-import org.apache.synapse.commons.datasource.DataSourceInformationRepository;
-import org.apache.synapse.commons.datasource.DataSourceRepositoryHolder;
-import org.apache.synapse.commons.datasource.DataSourceRepositoryManager;
-import org.wso2.carbon.datasource.DataSourceInformationRepositoryService;
+import org.wso2.carbon.ndatasource.common.DataSourceException;
+import org.wso2.carbon.ndatasource.core.CarbonDataSource;
+import org.wso2.carbon.ndatasource.core.DataSourceService;
 import org.wso2.carbon.reporting.api.ReportingException;
 import org.wso2.carbon.reporting.template.core.factory.ClientFactory;
 import org.wso2.carbon.reporting.template.core.internal.ReportingTemplateComponent;
@@ -30,9 +28,9 @@ import javax.sql.DataSource;
 import java.sql.*;
 import java.util.ArrayList;
 import java.util.HashMap;
-import java.util.Iterator;
+import java.util.List;
 
-public class DatasourceClient extends AbstractClient {
+public class DatasourceClient {
 
     private static final String DATASOURCE_EXTENSION_NS =
             "http://www.wso2.org/products/wso2commons/datasource";
@@ -47,20 +45,18 @@ public class DatasourceClient extends AbstractClient {
      * @throws ReportingException will occurred if no datasources found.
      */
     public String[] getDataSourceNames() throws ReportingException {
-        DataSourceInformationRepositoryService repositoryService =
+        DataSourceService dataSourceService =
                 ReportingTemplateComponent.getCarbonDataSourceService();
         ArrayList<String> dsnames = new ArrayList<String>();
-        if (repositoryService != null) {
-            DataSourceInformationRepository datasourceRepo =
-                    repositoryService.getDataSourceInformationRepository();
-            DataSourceRepositoryHolder dataSourceHelper = DataSourceRepositoryHolder.getInstance();
-            dataSourceHelper.init(datasourceRepo, null);
-            Iterator<DataSourceInformation> iterator = dataSourceHelper.getDataSourceInformationRepository().getAllDataSourceInformation();
-            while (iterator.hasNext()) {
-                DataSourceInformation information = iterator.next();
-                if (information != null) {
-                    dsnames.add(information.getAlias());
+        if (dataSourceService != null) {
+            try {
+                List<CarbonDataSource> dataSources = dataSourceService.getAllDataSources();
+                for (CarbonDataSource aDataSource : dataSources) {
+                    dsnames.add(aDataSource.getDSMInfo().getName());
                 }
+            } catch (DataSourceException e) {
+                log.error(e.getMessage(), e);
+                throw new ReportingException(e.getMessage(), e);
             }
             return dsnames.toArray(new String[dsnames.size()]);
         } else {
@@ -103,27 +99,20 @@ public class DatasourceClient extends AbstractClient {
      */
     public Connection getConnection(String dsName) throws ReportingException {
         Connection connection = null;
-        DataSourceRepositoryManager repositoryManager;
-        DataSource dataSource;
-
-        DataSourceInformationRepositoryService repositoryService =
+        DataSourceService dataSourceService =
                 ReportingTemplateComponent.getCarbonDataSourceService();
-        if (repositoryService != null) {
-            DataSourceInformationRepository datasourceRepo =
-                    repositoryService.getDataSourceInformationRepository();
-            DataSourceRepositoryHolder dataSourceHelper = DataSourceRepositoryHolder.getInstance();
-            dataSourceHelper.init(datasourceRepo, null);
-            repositoryManager = dataSourceHelper.getDataSourceRepositoryManager();
-            if (repositoryManager != null) {
-                dataSource = repositoryManager.getDataSource(dsName);
-                if (dataSource != null) {
-                    try {
-                        connection = dataSource.getConnection();
-                    } catch (SQLException e) {
-                        throw new ReportingException("Failed to get data source connection for "
-                                + "\"" + dsName + "\"", e);
-                    }
-                }
+        if (dataSourceService != null) {
+
+            try {
+                CarbonDataSource carbonDataSource = dataSourceService.getDataSource(dsName);
+                connection = ((DataSource) carbonDataSource.getDSObject()).getConnection();
+            } catch (DataSourceException e) {
+                log.error(e.getMessage(), e);
+                throw new ReportingException(e.getMessage(), e);
+            } catch (SQLException e) {
+                log.error(e.getMessage(), e);
+                throw new ReportingException("Failed to get data source connection for "
+                        + "\"" + dsName + "\"", e);
             }
         }
         return connection;

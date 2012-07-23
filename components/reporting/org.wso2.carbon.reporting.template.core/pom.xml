@@ -13,16 +13,18 @@
     <packaging>bundle</packaging>
     <version>4.0.0-SNAPSHOT</version>
     <name>WSO2 Carbon Component - Reporting Template - BE</name>
-    <description>org.wso2.carbon.reporting.template.core provides the back-end functionalities of creating the templates</description>
+    <description>org.wso2.carbon.reporting.template.core provides the back-end functionalities of creating the
+        templates
+    </description>
     <url>http://wso2.org</url>
 
 
     <dependencies>
 
-		<dependency>
-		   <groupId>org.eclipse.osgi</groupId>
-		   <artifactId>org.eclipse.osgi</artifactId>
-	   </dependency>
+        <dependency>
+            <groupId>org.eclipse.osgi</groupId>
+            <artifactId>org.eclipse.osgi</artifactId>
+        </dependency>
 
         <dependency>
             <groupId>junit</groupId>
@@ -31,20 +33,20 @@
         </dependency>
 
 
-            <dependency>
-              <groupId>org.apache.ws.commons.axiom.wso2</groupId>
-              <artifactId>axiom</artifactId>
-              <version>${axiom.wso2.version}</version>
-            </dependency>
+        <dependency>
+            <groupId>org.apache.ws.commons.axiom.wso2</groupId>
+            <artifactId>axiom</artifactId>
+            <version>${axiom.wso2.version}</version>
+        </dependency>
 
 
-             <dependency>
-                  <groupId>commons-logging</groupId>
-                  <artifactId>commons-logging</artifactId>
-                  <version>1.1.1</version>
-              </dependency>
+        <dependency>
+            <groupId>commons-logging</groupId>
+            <artifactId>commons-logging</artifactId>
+            <version>1.1.1</version>
+        </dependency>
 
-         <dependency>
+        <dependency>
             <groupId>org.wso2.carbon</groupId>
             <artifactId>org.wso2.carbon.core</artifactId>
         </dependency>
@@ -53,15 +55,9 @@
             <artifactId>org.wso2.carbon.utils</artifactId>
         </dependency>
 
-         <dependency>
-            <groupId>org.wso2.carbon</groupId>
-            <artifactId>org.wso2.carbon.reporting.stub</artifactId>
-        </dependency>
-
         <dependency>
             <groupId>org.wso2.carbon</groupId>
-            <artifactId>org.wso2.carbon.bam.presentation.stub</artifactId>
-            <version>${wso2carbon.version}</version>
+            <artifactId>org.wso2.carbon.reporting.core</artifactId>
         </dependency>
 
         <dependency>
@@ -69,17 +65,15 @@
             <groupId>org.wso2.carbon</groupId>
         </dependency>
 
-
-         <dependency>
+        <dependency>
             <groupId>org.wso2.carbon</groupId>
-            <artifactId>org.wso2.carbon.bam.analyzer.stub</artifactId>
+            <artifactId>org.wso2.carbon.ndatasource.core</artifactId>
             <version>${wso2carbon.version}</version>
         </dependency>
-
         <dependency>
-        <groupId>org.wso2.carbon</groupId>
-        <artifactId>org.wso2.carbon.datasource</artifactId>
-         <version>${wso2carbon.version}</version>
+            <groupId>org.wso2.carbon</groupId>
+            <artifactId>org.wso2.carbon.ndatasource.rdbms</artifactId>
+            <version>${wso2carbon.version}</version>
         </dependency>
     </dependencies>
 
@@ -102,7 +96,9 @@
                         <Bundle-Name>${project.artifactId}</Bundle-Name>
 
                         <Private-Package>org.wso2.carbon.reporting.template.core.internal.*</Private-Package>
-                        <Export-Package>!org.wso2.carbon.reporting.template.core.internal, org.wso2.carbon.reporting.template.core.* </Export-Package>
+                        <Export-Package>!org.wso2.carbon.reporting.template.core.internal,
+                            org.wso2.carbon.reporting.template.core.*
+                        </Export-Package>
 
                         <Import-Package>org.osgi.framework, *;resolution:=optional</Import-Package>
                         <DynamicImport-Package>*</DynamicImport-Package>

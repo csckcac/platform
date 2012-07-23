@@ -1,6 +1,6 @@
 #!/usr/bin/env bash
 export LOG=/var/log/wso2-openstack.log
-export JAVA_HOME=/opt/jdk1.6.0_24/
+export JAVA_HOME=/opt/java/
 instance_path=/var/lib/cloud/instance
 
 # Variables taken from the payload passed to the instance

@@ -116,7 +116,7 @@
                                 <featureArtifactDef>org.wso2.carbon:org.wso2.carbon.identity.oauth.feature:${wso2carbon.version}</featureArtifactDef>
                                 <featureArtifactDef>org.wso2.carbon:org.wso2.carbon.identity.sts.passive.feature:${wso2carbon.version}</featureArtifactDef>
                                 <featureArtifactDef>org.wso2.carbon:org.wso2.carbon.ldap.server.feature:${wso2carbon.version}</featureArtifactDef>
-
+				<featureArtifactDef>org.wso2.carbon:org.wso2.carbon.identity.scim.feature:${wso2carbon.version}</featureArtifactDef>
                                 <!-- Features related to Cloud Identity -->
                                 <featureArtifactDef>org.wso2.carbon:org.wso2.carbon.stratos.common.feature:${stratos.version}</featureArtifactDef>
                                 <featureArtifactDef>org.wso2.identity:org.wso2.identity.ui.feature:${identity.version}</featureArtifactDef>
@@ -289,6 +289,10 @@
                                 </feature>
                                 <feature>
                                     <id>org.wso2.carbon.identity.oauth.feature.group</id>
+                                    <version>${wso2carbon.version}</version>
+                                </feature>
+				<feature>
+                                    <id>org.wso2.carbon.identity.scim.feature.group</id>
                                     <version>${wso2carbon.version}</version>
                                 </feature>
                                 <!-- Features required for Cloud Identity -->

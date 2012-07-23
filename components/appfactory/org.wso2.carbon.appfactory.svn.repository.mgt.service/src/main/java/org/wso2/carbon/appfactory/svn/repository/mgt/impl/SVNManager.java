@@ -37,23 +37,50 @@ public class SVNManager implements RevisionControlDriver {
     public void getSource(String applicationId, String version, String revision, RevisionControlDriverListener listener) throws AppFactoryException {
 
         SCMManagerBasedRepositoryManager scm = new SCMManagerBasedRepositoryManager();
-
+        String checkoutUrl=getApplicationUrl()+"/"+"svn"+ "/"+ applicationId;
+        //TODO:if it tag how to detect?
         try {
-            //TODO:remove this temp logic after changing BPEL API
-            String baseURL = getApplicationUrl()+File.separator+"svn"+ File.separator+ applicationId;
-            String sourceURL=baseURL+"/trunk/";
-            String destinationURL =baseURL+"/branch/"+version;
-                try {
-                scm.svnCopy(sourceURL, destinationURL,
-                            "branching trunk to " + version, SVNRevision.getRevision(revision));
-            } catch (ParseException e) {
-                log.error("Error in branching" +e);
+            if("trunk".equals(version)) {
+            checkoutUrl =checkoutUrl+"/"+"trunk";
+            }else{
+            checkoutUrl=checkoutUrl+"/"+"branch"+"/"+version;
             }
-            scm.checkoutApplication(destinationURL, applicationId, revision);
-            listener.onGetSourceCompleted(applicationId, version, revision);
+            scm.checkoutApplication(checkoutUrl, applicationId, revision);
+
         } catch (SCMManagerExceptions scmManagerExceptions) {
             log.error("Error in checkout" + scmManagerExceptions);
         }
+          listener.onGetSourceCompleted(applicationId,version,revision);
+    }
+
+    @Override
+    public void branch(String appId, String currentVersion, String targetVersion,
+                       String currentRevision) throws AppFactoryException {
+        String baseURL=appFactoryConfiguration.getFirstProperty(AppFactoryConstants.SCM_SERVER_URL)+"/svn/"+appId;
+        String sourceURL;
+        String destinationURL=baseURL+"/branch/"+targetVersion;
+        if("trunk".equals(currentVersion)){
+            sourceURL=baseURL+"/"+currentVersion;
+        }else {
+            sourceURL=baseURL+"/branch/"+currentVersion;
+        }
+        SCMManagerBasedRepositoryManager scm = new SCMManagerBasedRepositoryManager();
+        scm.svnCopy(sourceURL,destinationURL,"branching "+currentVersion+" to "+targetVersion,currentRevision);
+
+    }
+    @Override
+    public void tag(String appId, String currentVersion, String targetVersion,
+                       String currentRevision) throws AppFactoryException {
+        String baseURL=appFactoryConfiguration.getFirstProperty(AppFactoryConstants.SCM_SERVER_URL)+"/svn/"+appId;
+        String sourceURL;
+        String destinationURL=baseURL+"/tag/"+targetVersion;
+        if("trunk".equals(currentVersion)){
+            sourceURL=baseURL+"/"+currentVersion;
+        }else {
+            sourceURL=baseURL+"/branch/"+currentVersion;
+        }
+        SCMManagerBasedRepositoryManager scm = new SCMManagerBasedRepositoryManager();
+        scm.svnCopy(sourceURL,destinationURL,"branching "+currentVersion+" to "+targetVersion,currentRevision);
 
     }
 

@@ -59,13 +59,13 @@ public class RepositoryManagementService extends AbstractAdmin {
     }
 
 
-    public void svnCopy(String sourceUrl, String destinationUrl, String commitMessage, SVNRevision rev) {
-        repositoryManager.svnCopy(sourceUrl, destinationUrl, commitMessage, rev);
+    public void svnCopy(String sourceUrl, String destinationUrl, String commitMessage, String svnRevision) {
+        repositoryManager.svnCopy(sourceUrl, destinationUrl, commitMessage, svnRevision);
     }
 
 
-    public void svnMove(String sourceUrl, String destinationUrl, String commitMessage, SVNRevision rev) {
-        repositoryManager.svnMove(sourceUrl, destinationUrl, commitMessage, rev);
+    public void svnMove(String sourceUrl, String destinationUrl, String commitMessage, String svnRevision) {
+        repositoryManager.svnMove(sourceUrl, destinationUrl, commitMessage, svnRevision);
     }
 
     public void initSVNClient() throws SCMManagerExceptions {

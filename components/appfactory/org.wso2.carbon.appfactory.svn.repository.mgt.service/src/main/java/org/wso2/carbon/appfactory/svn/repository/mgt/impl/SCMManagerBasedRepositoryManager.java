@@ -30,8 +30,13 @@ import org.apache.commons.httpclient.methods.PostMethod;
 import org.apache.commons.io.FileUtils;
 import org.apache.commons.logging.Log;
 import org.apache.commons.logging.LogFactory;
-import org.apache.maven.shared.invoker.*;
-import org.tigris.subversion.svnclientadapter.*;
+import org.tigris.subversion.svnclientadapter.ISVNClientAdapter;
+import org.tigris.subversion.svnclientadapter.ISVNNotifyListener;
+import org.tigris.subversion.svnclientadapter.SVNClientAdapterFactory;
+import org.tigris.subversion.svnclientadapter.SVNClientException;
+import org.tigris.subversion.svnclientadapter.SVNNodeKind;
+import org.tigris.subversion.svnclientadapter.SVNRevision;
+import org.tigris.subversion.svnclientadapter.SVNUrl;
 import org.tigris.subversion.svnclientadapter.commandline.CmdLineClientAdapter;
 import org.tigris.subversion.svnclientadapter.commandline.CmdLineClientAdapterFactory;
 import org.tigris.subversion.svnclientadapter.javahl.JhlClientAdapterFactory;
@@ -54,15 +59,13 @@ import java.io.IOException;
 import java.io.InputStream;
 import java.io.StringWriter;
 import java.net.MalformedURLException;
-import java.text.ParseException;
 import java.util.ArrayList;
 import java.util.Iterator;
-import java.util.List;
 
 /**
  * SCM-manager specific repository manager implementation
  */
-public class SCMManagerBasedRepositoryManager extends AbstractRepositoryManager{
+public class SCMManagerBasedRepositoryManager extends AbstractRepositoryManager {
     private static final Log log = LogFactory.getLog(SCMManagerBasedRepositoryManager.class);
     //rest URIs
     private static final String REST_BASE_URI = "/api/rest";
@@ -90,7 +93,7 @@ public class SCMManagerBasedRepositoryManager extends AbstractRepositoryManager{
 
         HttpClient client = getClient(configuration);
         PostMethod post = new PostMethod(getServerURL(configuration) + REST_BASE_URI +
-                REST_CREATE_REPOSITORY_URI);
+                                         REST_CREATE_REPOSITORY_URI);
         Repository repository = new Repository();
         repository.setName(applicationKey);
         repository.setType("svn");
@@ -126,15 +129,16 @@ public class SCMManagerBasedRepositoryManager extends AbstractRepositoryManager{
             url = getURL(applicationKey);
         } else {
             String msg = "Repository creation is failed for " + applicationKey + " server returned status " +
-                    post.getStatusText();
+                         post.getStatusText();
             log.error(msg);
             throw new RepositoryMgtException(msg);
         }
         //creating best practice svn structure
         //--trunk
         //--branch
-        createDirectory(url+"/trunk","creating trunk directory");
-        createDirectory(url+"/branch","creating branch directory");
+        createDirectory(url + "/trunk", "creating trunk directory");
+        createDirectory(url + "/branch", "creating branch directory");
+        createDirectory(url + "/tag", "creating tag directory");
         return url;
     }
 
@@ -194,7 +198,7 @@ public class SCMManagerBasedRepositoryManager extends AbstractRepositoryManager{
 
         HttpClient client = getClient(configuration);
         GetMethod get = new GetMethod(getServerURL(configuration) + REST_BASE_URI + REST_GET_REPOSITORY_URI
-                + applicationKey);
+                                      + applicationKey);
         get.setDoAuthentication(true);
         get.addRequestHeader("Content-Type", "application/xml;charset=UTF-8");
         String repository = null;
@@ -296,7 +300,9 @@ public class SCMManagerBasedRepositoryManager extends AbstractRepositoryManager{
     /*
       svn copy operation
     */
-    public void svnCopy(String sourceUrl, String destinationUrl, String commitMessage, SVNRevision rev) {
+    public void svnCopy(String sourceUrl, String destinationUrl, String commitMessage,
+                        String revision) {
+        SVNRevision rev = null;
         rev = SVNRevision.HEAD; //last revision is used
         try {
             initSVNClient();
@@ -321,8 +327,10 @@ public class SCMManagerBasedRepositoryManager extends AbstractRepositoryManager{
     /*
       svn move operation
     */
-    public void svnMove(String sourceUrl, String destinationUrl, String commitMessage, SVNRevision rev) {
+    public void svnMove(String sourceUrl, String destinationUrl, String commitMessage,
+                        String revision) {
         // Get the current revision
+        SVNRevision rev = null;
         rev = SVNRevision.HEAD; //last revision is used
         try {
             initSVNClient();
@@ -350,7 +358,7 @@ public class SCMManagerBasedRepositoryManager extends AbstractRepositoryManager{
             log.debug("SVN Kit client adapter initialized");
         } catch (Throwable t) {
             log.debug("Unable to initialize the SVN Kit client adapter - Required jars " +
-                    "may be missing", t);
+                      "may be missing", t);
         }
 
         try {
@@ -358,7 +366,7 @@ public class SCMManagerBasedRepositoryManager extends AbstractRepositoryManager{
             log.debug("Java HL client adapter initialized");
         } catch (Throwable t) {
             log.debug("Unable to initialize the Java HL client adapter - Required jars " +
-                    " or the native libraries may be missing", t);
+                      " or the native libraries may be missing", t);
         }
 
         try {
@@ -366,7 +374,7 @@ public class SCMManagerBasedRepositoryManager extends AbstractRepositoryManager{
             log.debug("Command line client adapter initialized");
         } catch (Throwable t) {
             log.debug("Unable to initialize the command line client adapter - SVN command " +
-                    "line tools may be missing", t);
+                      "line tools may be missing", t);
         }
 
 
@@ -378,6 +386,7 @@ public class SCMManagerBasedRepositoryManager extends AbstractRepositoryManager{
                     AppFactoryConstants.SCM_ADMIN_NAME));
             svnClient.setPassword(appFactoryConfiguration.getFirstProperty(
                     AppFactoryConstants.SCM_ADMIN_PASSWORD));
+
         } catch (SVNClientException e) {
             throw new SCMManagerExceptions("Client type can not be defined.");
         }
@@ -394,12 +403,12 @@ public class SCMManagerBasedRepositoryManager extends AbstractRepositoryManager{
      * @param applicationId     - application id
      * @return application check out path.
      * @throws SCMManagerExceptions
-     *
      */
-    public String checkoutApplication(String applicationSvnUrl, String applicationId, String svnRevision)
+    public String checkoutApplication(String applicationSvnUrl, String applicationId,
+                                      String svnRevision)
             throws SCMManagerExceptions {
         File checkoutDirectory = createApplicationCheckoutDirectory(applicationId);
-        initSVNClient();
+
 
         SVNUrl svnUrl = null;
         try {
@@ -407,47 +416,46 @@ public class SCMManagerBasedRepositoryManager extends AbstractRepositoryManager{
         } catch (MalformedURLException e) {
             handleException("SVN URL of application is malformed.", e);
         }
+        boolean retry = true;
+        int i = 1;
+        while (retry) {
+            initSVNClient();
+            addAppAwareLogging(applicationId);
+            try {
+                if (svnRevision != null && !"".equals(svnRevision)) {
+                    //SVNRevision revision = SVNRevision.getRevision(svnRevision);
+                    SVNRevision revision = SVNRevision.HEAD;
+                    if (svnClient instanceof CmdLineClientAdapter) {
+                        // CmdLineClientAdapter does not support all the options
+                        svnClient.checkout(svnUrl, checkoutDirectory, revision, true);
 
-        try {
-            if (svnRevision != null && !"".equals(svnRevision)) {
-                //SVNRevision revision = SVNRevision.getRevision(svnRevision);
-                SVNRevision revision = SVNRevision.HEAD;
-                if (svnClient instanceof CmdLineClientAdapter) {
-                    // CmdLineClientAdapter does not support all the options
-                    svnClient.checkout(svnUrl, checkoutDirectory, revision, true);
+                    } else {
+                        svnClient.checkout(svnUrl, checkoutDirectory, revision,
+                                           Depth.infinity, true, true);
+                    }
                 } else {
-                    svnClient.checkout(svnUrl, checkoutDirectory, revision,
-                            Depth.infinity, true, true);
+                    throw new SCMManagerExceptions("SVN revision number is null or empty");
                 }
-            } else {
-                throw new SCMManagerExceptions("SVN revision number is null or empty");
+            } catch (SVNClientException e) {
+                if (i == 0) {
+                    handleException("Failed to checkout code from SVN URL:" + svnUrl, e);
+                }
+                //
+                i++;
+                log.error("Failed to checkout code from SVN URL:" + svnUrl + " trying again " + i);
+                svnClient = null;
+                try {
+                    Thread.sleep(500);
+                } catch (InterruptedException ignore) {
+
+                }
+
             }
-        } catch (SVNClientException e) {
-            handleException("Failed to checkout code from SVN URL:" + svnUrl, e);
+            retry = false;
         }
         return checkoutDirectory.getAbsolutePath();
     }
 
-    /**
-     * Build the application from given location
-     *
-     * @param sourcePath - source location
-     * @throws SCMManagerExceptions
-     *
-     */
-    public void buildApplication(String sourcePath) throws SCMManagerExceptions {
-        String pomFilePath = sourcePath + File.separator + "pom.xml";
-        File pomFile = new File(pomFilePath);
-        if (!pomFile.exists()) {
-            handleException("pom.xml file not found at " + pomFilePath);
-        }
-        executeMavenGoal(sourcePath);
-        String targetDirPath = sourcePath + File.separator + "target";
-        File targetDir = new File(targetDirPath);
-        if (!targetDir.exists()) {
-            handleException("Application build failure.");
-        }
-    }
 
     public File createApplicationCheckoutDirectory(String applicationName)
             throws SCMManagerExceptions {
@@ -472,44 +480,6 @@ public class SCMManagerBasedRepositoryManager extends AbstractRepositoryManager{
         throw new SCMManagerExceptions(msg, e);
     }
 
-    public boolean executeMavenGoal(String applicationPath)
-            throws SCMManagerExceptions {
-        InvocationRequest request = new DefaultInvocationRequest();
-        request.setShowErrors(true);
-
-        request.setPomFile(new File(applicationPath + File.separator + "pom.xml"));
-
-        List<String> goals = new ArrayList<String>();
-        goals.add("clean");
-        goals.add("install");
-
-        request.setGoals(goals);
-        Invoker invoker = new DefaultInvoker();
-        InvocationOutputHandler outputHandler = new SystemOutHandler();
-        invoker.setErrorHandler(outputHandler);
-
-        try {
-            InvocationResult result = invoker.execute(request);
-            //Todo: need to get the build error, exception back to the user.
-            if (result.getExecutionException() == null) {
-                if (result.getExitCode() != 0) {
-                    request.setOffline(true);
-                    result = invoker.execute(request);
-                    if (result.getExitCode() == 0) {
-                        return true;
-                    } else {
-                        final String errorMessage = "No maven Application found at "
-                                + applicationPath;
-                        handleException(errorMessage);
-                    }
-                }
-                return true;
-            }
-        } catch (MavenInvocationException e) {
-            handleException("Maven invocation failed with error:" + e.getLocalizedMessage(), e);
-        }
-        return false;
-    }
 
     public void cleanApplicationDir(String applicationPath) {
         File application = new File(applicationPath);
@@ -525,7 +495,44 @@ public class SCMManagerBasedRepositoryManager extends AbstractRepositoryManager{
                 AppFactoryConstants.SERVER_ADMIN_NAME) + "@" + applicationId;
     }
 
+    private void addAppAwareLogging(final String appId) {
+        svnClient.addNotifyListener(new ISVNNotifyListener() {
 
+            @Override
+            public void setCommand(int i) {
 
+            }
+
+            @Override
+            public void logCommandLine(String s) {
+                log.debug("CommandLine: " + s);
+            }
+
+            @Override
+            public void logMessage(String s) {
+                log.info(appId + ":" + s);
+            }
+
+            @Override
+            public void logError(String s) {
+                log.error(appId + ":" + s);
+            }
+
+            @Override
+            public void logRevision(long l, String s) {
+                System.out.println("Revision :" + l);
+            }
+
+            @Override
+            public void logCompleted(String s) {
+
+            }
+
+            @Override
+            public void onNotify(File file, SVNNodeKind svnNodeKind) {
+
+            }
+        });
+    }
 
 }

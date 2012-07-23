@@ -32,6 +32,8 @@ import org.wso2.carbon.appfactory.svn.repository.mgt.impl.SVNManager;
 import org.wso2.carbon.appfactory.svn.repository.mgt.util.Util;
 import org.wso2.carbon.user.core.service.RealmService;
 
+import java.util.Hashtable;
+
 /**
  * @scr.component name="org.wso2.carbon.appfactory.svn.repository.mgt" immediate="true"
  * @scr.reference name="appfactory.configuration" interface=
@@ -70,9 +72,10 @@ public class SVNRepositoryMgtServiceComponent {
         }
         try {
             BundleContext bundleContext = context.getBundleContext();
-
+            Hashtable<String, String> ht = new Hashtable<String, String>();
+            ht.put("type", "svn");
             SVNManager repositoryManager = new SVNManager();
-            bundleContext.registerService(RevisionControlDriver.class.getName(), repositoryManager, null);
+            bundleContext.registerService(RevisionControlDriver.class.getName(), repositoryManager,ht);
 
             //SVNArtifactStorage svnArtifactStorage = new SVNArtifactStorage();
             //bundleContext.registerService(ArtifactStorage.class.getName(), svnArtifactStorage, null);

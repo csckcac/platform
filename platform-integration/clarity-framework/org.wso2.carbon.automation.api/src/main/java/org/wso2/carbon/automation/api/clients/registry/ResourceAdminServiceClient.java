@@ -277,4 +277,52 @@ public class ResourceAdminServiceClient {
             throw new ResourceAdminServiceExceptionException("Create version error : ", e);
         }
     }
+
+
+    public void deleteVersionHistory(String path, String snapshotID)
+            throws RemoteException, ResourceAdminServiceExceptionException {
+        try {
+            resourceAdminServiceStub.deleteVersionHistory(path, snapshotID);
+
+        } catch (RemoteException e) {
+            log.error("No versions to delete : " + e.getMessage());
+            throw new RemoteException("Delete version error : ", e);
+        } catch (ResourceAdminServiceExceptionException e) {
+            log.error("Delete version error : " + e.getMessage());
+            throw new ResourceAdminServiceExceptionException("Delete version error : ", e);
+
+        }
+    }
+
+
+    public boolean restoreVersion(String path)
+            throws RemoteException, ResourceAdminServiceExceptionException {
+        boolean status = false;
+        try {
+            status = resourceAdminServiceStub.restoreVersion(path);
+
+        } catch (RemoteException e) {
+            log.error("No versions to restore : " + e.getMessage());
+            throw new RemoteException("Restore version error : ", e);
+        } catch (ResourceAdminServiceExceptionException e) {
+            log.error("Restore version error : " + e.getMessage());
+            throw new ResourceAdminServiceExceptionException("Restore version error : ", e);
+        }
+        return status;
+    }
+
+    public String getTextContent(String path)
+            throws RemoteException, ResourceAdminServiceExceptionException {
+        String content = null;
+        try {
+            content = resourceAdminServiceStub.getTextContent(path);
+        } catch (RemoteException e) {
+            log.error("Unable get content : " + e.getMessage());
+            throw new RemoteException("Restore version error : ", e);
+        } catch (ResourceAdminServiceExceptionException e) {
+            log.error("GetTextContent Error : " + e.getMessage());
+            throw new ResourceAdminServiceExceptionException("GetTextContent Error :  ", e);
+        }
+        return content;
+    }
 }

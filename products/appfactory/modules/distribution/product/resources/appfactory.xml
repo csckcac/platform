@@ -40,7 +40,7 @@
         <GetAuthCookie>https://localhost:9443/services/AuthenticationAdmin</GetAuthCookie>
         <AddGenericArtifact>https://localhost:9443/services/ManageGenericArtifactService</AddGenericArtifact>
         <InvokeAspect>https://localhost:9443/services/CustomLifecyclesChecklistAdminService</InvokeAspect>
-        <RevisionControllerServic>https://localhost:9443/services/RevisionControllerService</RevisionControllerServic>
+        <RevisionControllerService>https://localhost:9443/services/RevisionControllerService</RevisionControllerService>
     </WebServiceEndPoints>
 
     <!--Application repository related configurations-->

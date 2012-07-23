@@ -56,8 +56,8 @@ public class MySQLRSSManager extends RSSManager {
                     RSSManagerUtil.getFullyQualifiedDatabaseName(database.getName());
             String sql = "CREATE DATABASE " + qualifiedDatabaseName;
 
-            PreparedStatement ps = conn.prepareStatement(sql);
-            ps.execute();
+            PreparedStatement stmt = conn.prepareStatement(sql);
+            stmt.execute();
 
             database.setName(qualifiedDatabaseName);
             database.setRssInstanceName(rssIns.getName());
@@ -71,7 +71,7 @@ public class MySQLRSSManager extends RSSManager {
             this.getDAO().incrementSystemRSSDatabaseCount();
             /* committing the changes to RSS instance */
             conn.commit();
-
+            stmt.close();
             this.getTenantMetadataRepository(this.getCurrentTenantId()).addDatabase(database);
         } catch (SQLException e) {
             if (conn != null) {
@@ -110,8 +110,8 @@ public class MySQLRSSManager extends RSSManager {
             conn = rssIns.getDataSource().getConnection();
             conn.setAutoCommit(false);
             String sql = "DROP DATABASE " + databaseName;
-            PreparedStatement ps = conn.prepareStatement(sql);
-            ps.execute();
+            PreparedStatement stmt = conn.prepareStatement(sql);
+            stmt.execute();
 
             List<UserDatabaseEntry> userDatabaseEntries =
                     this.getDAO().getUserDatabaseEntriesByDatabase(rssInstanceName, databaseName);
@@ -128,7 +128,7 @@ public class MySQLRSSManager extends RSSManager {
             this.getDAO().dropDatabase(rssInstanceName, databaseName);
 
             conn.commit();
-
+            stmt.close();
             this.getTenantMetadataRepository(this.getCurrentTenantId()).getDatabases().
                     remove(new MultiKey(rssInstanceName, databaseName));
         } catch (SQLException e) {
@@ -173,8 +173,8 @@ public class MySQLRSSManager extends RSSManager {
                     "CREATE USER '" + qualifiedUsername + "'@'%' IDENTIFIED BY '" +
                             user.getPassword() + "'";
 
-            PreparedStatement ps = conn.prepareStatement(sql);
-            ps.execute();
+            PreparedStatement stmt = conn.prepareStatement(sql);
+            stmt.execute();
 
             /* Sets the fully qualified username */
             user.setUsername(qualifiedUsername);
@@ -182,8 +182,9 @@ public class MySQLRSSManager extends RSSManager {
             user.setTenantId(this.getCurrentTenantId());
             user.setRssInstanceName(rssIns.getName());
             this.getDAO().createDatabaseUser(user);
-            conn.commit();
 
+            conn.commit();
+            stmt.close();
             this.getTenantMetadataRepository(this.getCurrentTenantId()).addDatabaseUser(user);
         } catch (SQLException e) {
             if (conn != null) {
@@ -222,14 +223,14 @@ public class MySQLRSSManager extends RSSManager {
             conn = rssIns.getDataSource().getConnection();
             conn.setAutoCommit(false);
             String sql = "DROP USER '" + username + "'@'%'";
-            PreparedStatement ps = conn.prepareStatement(sql);
-            ps.execute();
+            PreparedStatement stmt = conn.prepareStatement(sql);
+            stmt.execute();
 
             this.getDAO().deleteUserDatabaseEntry(rssInstanceName, username);
             this.getDAO().dropDatabaseUser(rssInstanceName, username);
 
             conn.commit();
-
+            stmt.close();
             this.getTenantMetadataRepository(this.getCurrentTenantId()).getDatabaseUsers().
                     remove(new MultiKey(rssInstanceName, username));
         } catch (SQLException e) {
@@ -294,7 +295,9 @@ public class MySQLRSSManager extends RSSManager {
             this.flushPrivileges(con);
 
             this.createUserDatabaseEntry(username, databaseName, rssInstanceName, template);
+
             con.commit();
+            stmt.close();
         } catch (SQLException e) {
             if (con != null) {
                 try {
@@ -349,6 +352,7 @@ public class MySQLRSSManager extends RSSManager {
             this.getDAO().deleteUserDatabaseEntry(rssInstanceName, username);
 
             con.commit();
+            stmt.close();
         } catch (SQLException e) {
             if (con != null) {
                 try {
@@ -376,6 +380,7 @@ public class MySQLRSSManager extends RSSManager {
                                                        DatabasePrivilegeTemplate template) throws
             SQLException, RSSManagerException {
         DatabasePrivilegeSet privileges = template.getPrivileges();
+
         String sql = "INSERT INTO mysql.db VALUES(?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?," +
                 "?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?)";
         PreparedStatement stmt = con.prepareStatement(sql);
@@ -409,6 +414,7 @@ public class MySQLRSSManager extends RSSManager {
         String sql = "FLUSH PRIVILEGES";
         PreparedStatement stmt = con.prepareStatement(sql);
         stmt.execute();
+        stmt.close();
     }
 
     private RSSInstance lookupRSSInstance(String rssInstanceName) throws RSSManagerException {

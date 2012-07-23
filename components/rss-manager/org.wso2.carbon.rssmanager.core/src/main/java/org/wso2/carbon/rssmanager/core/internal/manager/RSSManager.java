@@ -1,6 +1,7 @@
 package org.wso2.carbon.rssmanager.core.internal.manager;
 
 import org.apache.tomcat.jdbc.pool.DataSource;
+import org.wso2.carbon.context.CarbonContext;
 import org.wso2.carbon.rssmanager.core.RSSManagerException;
 import org.wso2.carbon.rssmanager.core.internal.dao.RSSDAO;
 import org.wso2.carbon.rssmanager.core.internal.dao.RSSDAOFactory;
@@ -60,7 +61,7 @@ public abstract class RSSManager {
     }
 
     public void createRSSInstance(RSSInstance rssInstance) throws RSSManagerException {
-        int tid = CarbonContextHolder.getCurrentCarbonContextHolder().getTenantId();
+        int tid = CarbonContext.getCurrentContext().getTenantId();
         rssInstance.setTenantId(tid);
         this.getDAO().createRSSInstance(rssInstance);
         this.getTenantMetadataRepository(tid).addRSSInstance(rssInstance);
@@ -79,7 +80,7 @@ public abstract class RSSManager {
     }
 
     public void editRSSInstanceConfiguration(RSSInstance rssInstance) throws RSSManagerException {
-        int tid = CarbonContextHolder.getCurrentCarbonContextHolder().getTenantId();
+        int tid = CarbonContext.getCurrentContext().getTenantId();
         rssInstance.setTenantId(tid);
         this.getDAO().updateRSSInstance(rssInstance);
         this.getTenantMetadataRepository(tid).addRSSInstance(rssInstance);
@@ -136,14 +137,14 @@ public abstract class RSSManager {
 
     public void createDatabasePrivilegesTemplate(
             DatabasePrivilegeTemplate template) throws RSSManagerException {
-        int tid = CarbonContextHolder.getCurrentCarbonContextHolder().getTenantId();
+        int tid = CarbonContext.getCurrentContext().getTenantId();
         this.getDAO().createDatabasePrivilegesTemplate(template);
         this.getTenantMetadataRepository(tid).addPrivilegeTemplate(template);
     }
 
     public void editDatabasePrivilegesTemplate(DatabasePrivilegeTemplate template) throws
             RSSManagerException {
-        int tid = CarbonContextHolder.getCurrentCarbonContextHolder().getTenantId();
+        int tid = CarbonContext.getCurrentContext().getTenantId();
         template.setTenantId(tid);
         this.getDAO().editDatabasePrivilegesTemplate(template);
         this.getTenantMetadataRepository(tid).addPrivilegeTemplate(template);
@@ -198,7 +199,7 @@ public abstract class RSSManager {
     }
 
     protected int getCurrentTenantId() {
-        return CarbonContextHolder.getCurrentCarbonContextHolder().getTenantId();
+        return CarbonContext.getCurrentContext().getTenantId();
     }
 
     protected RSSDAO getDAO() {

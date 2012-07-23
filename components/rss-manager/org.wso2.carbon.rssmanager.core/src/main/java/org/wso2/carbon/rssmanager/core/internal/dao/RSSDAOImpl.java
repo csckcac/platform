@@ -21,12 +21,10 @@ package org.wso2.carbon.rssmanager.core.internal.dao;
 import org.apache.commons.logging.Log;
 import org.apache.commons.logging.LogFactory;
 import org.wso2.carbon.context.CarbonContext;
-import org.wso2.carbon.core.multitenancy.SuperTenantCarbonContext;
 import org.wso2.carbon.rssmanager.common.RSSManagerConstants;
 import org.wso2.carbon.rssmanager.core.RSSManagerException;
 import org.wso2.carbon.rssmanager.core.internal.dao.entity.*;
 import org.wso2.carbon.rssmanager.core.internal.util.RSSConfig;
-import org.wso2.carbon.utils.multitenancy.CarbonContextHolder;
 import org.wso2.carbon.utils.multitenancy.MultitenantConstants;
 
 import java.sql.Connection;
@@ -58,8 +56,9 @@ public class RSSDAOImpl implements RSSDAO {
             stmt.setString(5, rssInstance.getServerCategory());
             stmt.setString(6, rssInstance.getAdminUsername());
             stmt.setString(7, rssInstance.getAdminPassword());
-            stmt.setInt(8, CarbonContextHolder.getCurrentCarbonContextHolder().getTenantId());
+            stmt.setInt(8, CarbonContext.getCurrentContext().getTenantId());
             stmt.executeUpdate();
+            stmt.close();
         } catch (SQLException e) {
             throw new RSSManagerException("Error occurred while creating the RSS instance '" +
                     rssInstance.getName() + "'", e);
@@ -80,12 +79,14 @@ public class RSSDAOImpl implements RSSDAO {
         try {
             String sql = "SELECT name, server_url, dbms_type, instance_type, server_category, admin_username, admin_password, tenant_id FROM RM_SERVER_INSTANCE WHERE tenant_id = ?";
             PreparedStatement stmt = conn.prepareStatement(sql);
-            stmt.setInt(1, CarbonContextHolder.getCurrentCarbonContextHolder().getTenantId());
+            stmt.setInt(1, CarbonContext.getCurrentContext().getTenantId());
             ResultSet rs = stmt.executeQuery();
             List<RSSInstance> result = new ArrayList<RSSInstance>();
             while (rs.next()) {
                 result.add(this.createRSSInstanceFromRS(rs));
             }
+            rs.close();
+            stmt.close();
             return result;
         } catch (SQLException e) {
             throw new RSSManagerException("Error occurred while retrieving all RSS instances", e);
@@ -113,8 +114,9 @@ public class RSSDAOImpl implements RSSDAO {
             stmt.setString(5, rssInstance.getAdminUsername());
             stmt.setString(6, rssInstance.getAdminPassword());
             stmt.setString(7, rssInstance.getName());
-            stmt.setInt(8, CarbonContextHolder.getCurrentCarbonContextHolder().getTenantId());
+            stmt.setInt(8, CarbonContext.getCurrentContext().getTenantId());
             stmt.executeUpdate();
+            stmt.close();
         } catch (SQLException e) {
             throw new RSSManagerException("Error occurred while editing the RSS instance '" +
                     rssInstance.getName() + "'", e);
@@ -132,16 +134,18 @@ public class RSSDAOImpl implements RSSDAO {
     @Override
     public RSSInstance getRSSInstance(String rssInstanceName) throws RSSManagerException {
         Connection conn = RSSConfig.getInstance().getRSSDBConnection();
+        RSSInstance rssInstance = null;
         try {
             String sql = "SELECT name, server_url, dbms_type, instance_type, server_category, tenant_id FROM RM_SERVER_INSTANCE WHERE name = ?";
             PreparedStatement stmt = conn.prepareStatement(sql);
             stmt.setString(1, rssInstanceName);
             ResultSet rs = stmt.executeQuery();
             if (rs.next()) {
-                return this.createRSSInstanceFromRS(rs);
-            } else {
-                return null;
+                rssInstance = this.createRSSInstanceFromRS(rs);
             }
+            rs.close();
+            stmt.close();
+            return rssInstance;
         } catch (SQLException e) {
             throw new RSSManagerException("Error occurred while retrieving the configuration of " +
                     "RSS instance '" + rssInstanceName + "'", e);
@@ -164,11 +168,13 @@ public class RSSDAOImpl implements RSSDAO {
             String sql = "SELECT d.username, d.db_username, d.rss_instance_name FROM RM_DATABASE_USER d, RM_USER_DATABASE_ENTRY u WHERE u.database_name=? AND d.username=u.username AND d.tenant_id=?";
             PreparedStatement stmt = conn.prepareStatement(sql);
             stmt.setString(1, databaseName);
-            stmt.setInt(2, CarbonContextHolder.getCurrentCarbonContextHolder().getTenantId());
+            stmt.setInt(2, CarbonContext.getCurrentContext().getTenantId());
             ResultSet rs = stmt.executeQuery();
             while (rs.next()) {
                 users.add(this.createDatabaseUserFromRS(rs));
             }
+            rs.close();
+            stmt.close();
             return users;
         } catch (SQLException e) {
             throw new RSSManagerException("Error occurred while retrieving the users attached to " +
@@ -187,8 +193,9 @@ public class RSSDAOImpl implements RSSDAO {
     @Override
     public Database getDatabase(String databaseName) throws RSSManagerException {
         Connection conn = RSSConfig.getInstance().getRSSDBConnection();
+        Database database = null;
         try {
-            int tenantID = CarbonContextHolder.getCurrentCarbonContextHolder().getTenantId();
+            int tenantID = CarbonContext.getCurrentContext().getTenantId();
             String sql = "SELECT d.name, d.tenant_id, r.name, r.server_url, r.tenant_id FROM RM_SERVER_INSTANCE r, RM_DATABASE d WHERE r.name=(SELECT rss_instance_name FROM RM_DATABASE WHERE tenant_id=? AND name=?) AND d.tenant_id=? AND d.name=? AND d.rss_instance_name=r.name";
             PreparedStatement stmt = conn.prepareStatement(sql);
             stmt.setInt(1, tenantID);
@@ -197,9 +204,11 @@ public class RSSDAOImpl implements RSSDAO {
             stmt.setString(4, databaseName);
             ResultSet rs = stmt.executeQuery();
             if (rs.next()) {
-                return this.createDatabaseFromRS(rs);
+                database = this.createDatabaseFromRS(rs);
             }
-            return null;
+            rs.close();
+            stmt.close();
+            return database;
         } catch (SQLException e) {
             throw new RSSManagerException("Error occurred while retrieving the configuration of " +
                     "database '" + databaseName + "'", e);
@@ -222,11 +231,13 @@ public class RSSDAOImpl implements RSSDAO {
             String sql = "SELECT username, rss_instance_name FROM RM_DATABASE_USER WHERE username = ? AND tenant_id=?";
             PreparedStatement stmt = conn.prepareStatement(sql);
             stmt.setString(1, username);
-            stmt.setInt(2, CarbonContextHolder.getCurrentCarbonContextHolder().getTenantId());
+            stmt.setInt(2, CarbonContext.getCurrentContext().getTenantId());
             ResultSet rs = stmt.executeQuery();
             if (rs.next()) {
                 user = this.createDatabaseUserFromRS(rs);
             }
+            rs.close();
+            stmt.close();
             return user;
         } catch (SQLException e) {
             throw new RSSManagerException("Error while occurred while retrieving information of " +
@@ -251,10 +262,12 @@ public class RSSDAOImpl implements RSSDAO {
             PreparedStatement stmt = conn.prepareStatement(sql);
             stmt.setString(1, database.getName());
             stmt.setString(2, database.getRssInstanceName());
-            stmt.setInt(3, CarbonContextHolder.getCurrentCarbonContextHolder().getTenantId());
+            stmt.setInt(3, CarbonContext.getCurrentContext().getTenantId());
             stmt.executeUpdate();
             this.setDatabaseInstanceProperties(conn, database);
+
             conn.commit();
+            stmt.close();
         } catch (SQLException e) {
             throw new RSSManagerException("Error occurred while creating the database " +
                     database.getName() + "'", e);
@@ -310,6 +323,7 @@ public class RSSDAOImpl implements RSSDAO {
         stmt.setString(2, value);
         stmt.setString(3, databaseName);
         stmt.executeUpdate();
+        stmt.close();
     }
 
     private void deleteDatabaseProperty(
@@ -319,6 +333,7 @@ public class RSSDAOImpl implements RSSDAO {
         stmt.setString(1, key);
         stmt.setString(2, databaseName);
         stmt.executeUpdate();
+        stmt.close();
     }
 
     private Map<String, String> getDatabaseProperties(
@@ -331,6 +346,8 @@ public class RSSDAOImpl implements RSSDAO {
         while (rs.next()) {
             props.put(rs.getString("name"), rs.getString("value"));
         }
+        rs.close();
+        stmt.close();
         return props;
     }
 
@@ -361,6 +378,8 @@ public class RSSDAOImpl implements RSSDAO {
             while (rs.next()) {
                 result.add(this.createRSSInstanceFromRS(rs));
             }
+            rs.close();
+            stmt.close();
             return result;
         } catch (SQLException e) {
             throw new RSSManagerException("Error occurred while retrieving system RSS " +
@@ -390,8 +409,9 @@ public class RSSDAOImpl implements RSSDAO {
             String sql = "DELETE FROM RM_SERVER_INSTANCE WHERE name = ? AND tenant_id = ?";
             PreparedStatement stmt = conn.prepareStatement(sql);
             stmt.setString(1, rssInstanceName);
-            stmt.setInt(2, CarbonContextHolder.getCurrentCarbonContextHolder().getTenantId());
+            stmt.setInt(2, CarbonContext.getCurrentContext().getTenantId());
             stmt.executeUpdate();
+            stmt.close();
         } catch (SQLException e) {
             throw new RSSManagerException("Error occurred while dropping the RSS instance '" +
                     rssInstanceName + "'", e);
@@ -411,12 +431,14 @@ public class RSSDAOImpl implements RSSDAO {
         String sql = "SELECT username, rss_instance_name, tenant_id FROM RM_DATABASE_USER WHERE rss_instance_name=? AND tenant_id = ?";
         PreparedStatement stmt = conn.prepareStatement(sql);
         stmt.setString(1, rssInstanceName);
-        stmt.setInt(2, CarbonContextHolder.getCurrentCarbonContextHolder().getTenantId());
+        stmt.setInt(2, CarbonContext.getCurrentContext().getTenantId());
         ResultSet rs = stmt.executeQuery();
         List<DatabaseUser> users = new ArrayList<DatabaseUser>();
         while (rs.next()) {
             users.add(this.createDatabaseUserFromRS(rs));
         }
+        rs.close();
+        stmt.close();
         return users;
     }
 
@@ -435,6 +457,8 @@ public class RSSDAOImpl implements RSSDAO {
                     result.add(entry);
                 }
             }
+            rs.close();
+            stmt.close();
             return result;
         } catch (SQLException e) {
             throw new RSSManagerException("Error occurred while retrieving all databases", e);
@@ -458,7 +482,7 @@ public class RSSDAOImpl implements RSSDAO {
             String sql = "SELECT rss_instance_name, name, tenant_id FROM RM_DATABASE WHERE rss_instance_name = ? AND tenant_id = ?";
             PreparedStatement stmt = conn.prepareStatement(sql);
             stmt.setString(1, rssInstanceName);
-            stmt.setInt(2, CarbonContextHolder.getCurrentCarbonContextHolder().getTenantId());
+            stmt.setInt(2, CarbonContext.getCurrentContext().getTenantId());
             ResultSet rs = stmt.executeQuery();
             while (rs.next()) {
                 Database db = this.createDatabaseFromRS(rs);
@@ -466,6 +490,8 @@ public class RSSDAOImpl implements RSSDAO {
                     dbs.add(db);
                 }
             }
+            rs.close();
+            stmt.close();
             return dbs;
         } catch (SQLException e) {
             throw new RSSManagerException("Error occurred while retrieving database list " +
@@ -489,9 +515,10 @@ public class RSSDAOImpl implements RSSDAO {
             String sql = "DELETE FROM RM_DATABASE WHERE name = ? AND tenant_id = ? AND rss_instance_name = ?";
             PreparedStatement stmt = conn.prepareStatement(sql);
             stmt.setString(1, databaseName);
-            stmt.setInt(2, CarbonContextHolder.getCurrentCarbonContextHolder().getTenantId());
+            stmt.setInt(2, CarbonContext.getCurrentContext().getTenantId());
             stmt.setString(3, rssInstanceName);
             stmt.executeUpdate();
+            stmt.close();
         } catch (SQLException e) {
             throw new RSSManagerException("Error occurred while dropping the database '" +
                     databaseName + "'", e);
@@ -514,8 +541,9 @@ public class RSSDAOImpl implements RSSDAO {
             PreparedStatement stmt = conn.prepareStatement(sql);
             stmt.setString(1, user.getUsername());
             stmt.setString(2, user.getRssInstanceName());
-            stmt.setInt(3, CarbonContextHolder.getCurrentCarbonContextHolder().getTenantId());
+            stmt.setInt(3, CarbonContext.getCurrentContext().getTenantId());
             stmt.execute();
+            stmt.close();
         } catch (SQLException e) {
             throw new RSSManagerException("Error occurred while creating the database user '" +
                     user.getUsername() + "'", e);
@@ -539,8 +567,9 @@ public class RSSDAOImpl implements RSSDAO {
             PreparedStatement stmt = conn.prepareStatement(sql);
             stmt.setString(1, username);
             stmt.setString(2, rssInstanceName);
-            stmt.setInt(3, CarbonContextHolder.getCurrentCarbonContextHolder().getTenantId());
+            stmt.setInt(3, CarbonContext.getCurrentContext().getTenantId());
             stmt.executeUpdate();
+            stmt.close();
         } catch (SQLException e) {
             throw new RSSManagerException("Error occurred while dropping the database user '" +
                     username + "'", e);
@@ -564,6 +593,7 @@ public class RSSDAOImpl implements RSSDAO {
             stmt.setString(1, user.getRssInstanceName());
             stmt.setString(2, user.getUsername());
             stmt.executeUpdate();
+            stmt.close();
         } catch (SQLException e) {
             throw new RSSManagerException("Error occurred while updating the database user '" +
                     user.getUsername() + "'", e);
@@ -590,6 +620,8 @@ public class RSSDAOImpl implements RSSDAO {
             while (rs.next()) {
                 users.add(this.createDatabaseUserFromRS(rs));
             }
+            rs.close();
+            stmt.close();
             return users;
         } catch (SQLException e) {
             throw new RSSManagerException("Error occurred while retrieving the database users ", e);
@@ -612,12 +644,14 @@ public class RSSDAOImpl implements RSSDAO {
         try {
             String sql = "SELECT username, rss_instance_name, tenant_id FROM RM_DATABASE_USER WHERE tenant_id = ? AND rss_instance_name = ?";
             PreparedStatement stmt = conn.prepareStatement(sql);
-            stmt.setInt(1, CarbonContextHolder.getCurrentCarbonContextHolder().getTenantId());
+            stmt.setInt(1, CarbonContext.getCurrentContext().getTenantId());
             stmt.setString(2, rssInstanceName);
             ResultSet rs = stmt.executeQuery();
             while (rs.next()) {
                 users.add(this.createDatabaseUserFromRS(rs));
             }
+            rs.close();
+            stmt.close();
             return users;
         } catch (SQLException e) {
             throw new RSSManagerException("Error occurred while retrieving the database users ", e);
@@ -641,13 +675,15 @@ public class RSSDAOImpl implements RSSDAO {
         try {
             PreparedStatement stmt = conn.prepareStatement(sql);
             stmt.setString(1, rssInstanceName);
-            stmt.setInt(2, CarbonContextHolder.getCurrentCarbonContextHolder().getTenantId());
+            stmt.setInt(2, CarbonContext.getCurrentContext().getTenantId());
             stmt.setString(3, rssInstanceName);
             stmt.setString(4, databaseName);
             ResultSet rs = stmt.executeQuery();
             while (rs.next()) {
                 availableUsers.add(rs.getString("username"));
             }
+            rs.close();
+            stmt.close();
         } catch (SQLException e) {
             throw new RSSManagerException("Error occurred while retrieving the users assigned " +
                     "to the database '" + databaseName + "'", e);
@@ -670,6 +706,8 @@ public class RSSDAOImpl implements RSSDAO {
             while (rs.next()) {
                 attachedUsers.add(rs.getString("username"));
             }
+            rs.close();
+            stmt.close();
         } catch (SQLException e) {
             throw new RSSManagerException("Error occurred while retrieving the users assigned " +
                     "to the database '" + databaseName + "'", e);
@@ -689,10 +727,12 @@ public class RSSDAOImpl implements RSSDAO {
             stmt.setString(1, userDBEntry.getUsername());
             stmt.setString(2, userDBEntry.getDatabaseName());
             stmt.setString(3, userDBEntry.getRssInstanceName());
-            stmt.setInt(4, CarbonContextHolder.getCurrentCarbonContextHolder().getTenantId());
+            stmt.setInt(4, CarbonContext.getCurrentContext().getTenantId());
             stmt.executeUpdate();
             this.setUserDatabasePrivileges(conn, userDBEntry);
+
             conn.commit();
+            stmt.close();
         } catch (SQLException e) {
             try {
                 conn.rollback();
@@ -802,6 +842,9 @@ public class RSSDAOImpl implements RSSDAO {
             stmt = conn.prepareStatement(sql);
             stmt.executeUpdate();
             conn.commit();
+
+            rs.close();
+            stmt.close();
         } catch (SQLException e) {
             try {
                 conn.rollback();
@@ -824,15 +867,17 @@ public class RSSDAOImpl implements RSSDAO {
     @Override
     public int getSystemRSSDatabaseCount() throws RSSManagerException {
         Connection conn = RSSConfig.getInstance().getRSSDBConnection();
+        int count = 0;
         try {
             String sql = "SELECT count FROM RM_SYSTEM_DATABASE_COUNT";
             PreparedStatement stmt = conn.prepareStatement(sql);
             ResultSet rs = stmt.executeQuery();
             if (rs.next()) {
-                return rs.getInt(1);
-            } else {
-                return 0;
+                count = rs.getInt(1);
             }
+            rs.close();
+            stmt.close();
+            return count;
         } catch (SQLException e) {
             throw new RSSManagerException("Error occurred while retrieving system RSS database " +
                     "count", e);
@@ -846,72 +891,6 @@ public class RSSDAOImpl implements RSSDAO {
             }
         }
     }
-
-//    private void setUserDatabasePermissions(Connection conn,
-//                                            UserDatabaseEntry userDBEntry) throws
-//            RSSManagerException, SQLException {
-//        DatabasePrivilegeSet existingPerms =
-//                this.getUserDatabasePrivileges(userDBEntry.getRssInstanceName(),
-//                        userDBEntry.getDatabaseName(), userDBEntry.getUsername());
-//        DatabasePrivilegeSet newPermissions = userDBEntry.getPrivileges();
-//        Map<String, String> toBeRemovedPerms = new HashMap<String, String>(existingPerms);
-//        Map<String, String> toBeAddedPerms = new HashMap<String, String>(newPermissions);
-//        String lhs, rhs;
-//        for (String key : newPermissions.keySet()) {
-//            if (existingPerms.containsKey(key)) {
-//                lhs = existingPerms.get(key).toString();
-//                rhs = newPermissions.get(key).toString();
-//                if (lhs == null) {
-//                    if (rhs == null) {
-//                        toBeAddedPerms.remove(key);
-//                        toBeRemovedPerms.remove(key);
-//                    }
-//                } else if (lhs.equals(rhs)) {
-//                    toBeAddedPerms.remove(key);
-//                    toBeRemovedPerms.remove(key);
-//                }
-//            }
-//        }
-//        for (String permName : toBeRemovedPerms.keySet()) {
-//            this.deleteUserDatabasePermission(conn, userDBEntry.getUsername(),
-//                    userDBEntry.getDatabaseName(), permName, userDBEntry.getRssInstanceName());
-//        }
-//        for (Map.Entry<String, String> entry : toBeAddedPerms.entrySet()) {
-//            this.addUserDatabasePermission(conn, userDBEntry.getUsername(),
-//                    userDBEntry.getDatabaseName(), entry.getKey(),
-//                    entry.getValue().toString(), userDBEntry.getRssInstanceName());
-//        }
-//    }
-//
-//    private void addUserDatabasePermission(Connection conn,
-//                                           String username,
-//                                           String databaseName,
-//                                           String permName,
-//                                           String permValue,
-//                                           String rssInstanceName) throws SQLException {
-//        String sql = "INSERT INTO RM_USER_DATABASE_PRIVILEGE (perm_name, perm_value, username, database_name, rss_instance_name) VALUES (?, ?, ?, ?, ?)";
-//        PreparedStatement stmt = conn.prepareStatement(sql);
-//        stmt.setString(1, permName);
-//        stmt.setString(2, permValue);
-//        stmt.setString(3, username);
-//        stmt.setString(4, databaseName);
-//        stmt.setString(5, rssInstanceName);
-//        stmt.executeUpdate();
-//    }
-//
-//    private void deleteUserDatabasePermission(Connection conn,
-//                                              String username,
-//                                              String databaseName,
-//                                              String permName,
-//                                              String rssInstanceName) throws SQLException {
-//        String sql = "DELETE FROM RM_USER_DATABASE_PRIVILEGE WHERE perm_name = ? AND username = ? AND database_name = ? AND rss_instance_name = ?";
-//        PreparedStatement stmt = conn.prepareStatement(sql);
-//        stmt.setString(1, permName);
-//        stmt.setString(2, username);
-//        stmt.setString(3, databaseName);
-//        stmt.setString(4, rssInstanceName);
-//        stmt.executeUpdate();
-//    }
 
     @Override
     public DatabasePrivilegeSet getUserDatabasePrivileges(String rssInstanceName,
@@ -930,6 +909,8 @@ public class RSSDAOImpl implements RSSDAO {
             while (rs.next()) {
                 privileges = this.createUserDatabasePrivilegeSetFromRS(rs);
             }
+            rs.close();
+            stmt.close();
             return privileges;
         } catch (SQLException e) {
             log.error(e);
@@ -961,6 +942,8 @@ public class RSSDAOImpl implements RSSDAO {
             while (rs.next()) {
                 result.add(this.createRSSInstanceFromRS(rs));
             }
+            rs.close();
+            stmt.close();
             return result;
         } catch (SQLException e) {
             throw new RSSManagerException("Error occurred while retrieving all RSS instances", e);
@@ -989,6 +972,8 @@ public class RSSDAOImpl implements RSSDAO {
             while (rs.next()) {
                 result.add(this.createUserDatabaseEntry(rs));
             }
+            rs.close();
+            stmt.close();
             return result;
         } catch (SQLException e) {
             throw new RSSManagerException("Error occurred while retrieving User database " +
@@ -1024,6 +1009,7 @@ public class RSSDAOImpl implements RSSDAO {
             stmt.setString(3, databaseName);
             stmt.setString(4, permName);
             stmt.executeUpdate();
+            stmt.close();
         } catch (SQLException e) {
             throw new RSSManagerException("Error occurred while updating user database " +
                     "permission", e);
@@ -1056,11 +1042,13 @@ public class RSSDAOImpl implements RSSDAO {
             String sql = "INSERT INTO RM_DB_PRIVILEGE_TEMPLATE(name, tenant_id) VALUES(?, ?)";
             PreparedStatement stmt = conn.prepareStatement(sql);
             stmt.setString(1, template.getName());
-            stmt.setInt(2, SuperTenantCarbonContext.getCurrentContext().getTenantId());
+            stmt.setInt(2, CarbonContext.getCurrentContext().getTenantId());
             stmt.execute();
 
             this.setDatabasePrivilegeTemplateProperties(conn, template);
+
             conn.commit();
+            stmt.close();
         } catch (SQLException e) {
             try {
                 conn.rollback();
@@ -1083,66 +1071,71 @@ public class RSSDAOImpl implements RSSDAO {
     private void setDatabasePrivilegeTemplateProperties(
             Connection conn, DatabasePrivilegeTemplate template) throws SQLException {
         DatabasePrivilegeSet privileges = template.getPrivileges();
+
         String sql = "INSERT INTO RM_DB_PRIVILEGE_TEMPLATE_ENTRY(template_name, tenant_id, select_priv, insert_priv, update_priv, delete_priv, create_priv, drop_priv, grant_priv, references_priv, index_priv, alter_priv, create_tmp_table_priv, lock_tables_priv, create_view_priv, show_view_priv, create_routine_priv, alter_routine_priv, execute_priv, event_priv, trigger_priv) VALUES(?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?)";
-        PreparedStatement ps = conn.prepareStatement(sql);
-        ps.setString(1, template.getName());
-        ps.setInt(2, CarbonContextHolder.getCurrentCarbonContextHolder().getTenantId());
-        ps.setString(3, privileges.getSelectPriv());
-        ps.setString(4, privileges.getInsertPriv());
-        ps.setString(5, privileges.getUpdatePriv());
-        ps.setString(6, privileges.getDeletePriv());
-        ps.setString(7, privileges.getCreatePriv());
-        ps.setString(8, privileges.getDropPriv());
-        ps.setString(9, privileges.getGrantPriv());
-        ps.setString(10, privileges.getReferencesPriv());
-        ps.setString(11, privileges.getIndexPriv());
-        ps.setString(12, privileges.getAlterPriv());
-        ps.setString(13, privileges.getCreateTmpTablePriv());
-        ps.setString(14, privileges.getLockTablesPriv());
-        ps.setString(15, privileges.getCreateViewPriv());
-        ps.setString(16, privileges.getShowViewPriv());
-        ps.setString(17, privileges.getCreateRoutinePriv());
-        ps.setString(18, privileges.getAlterRoutinePriv());
-        ps.setString(19, privileges.getExecutePriv());
-        ps.setString(20, privileges.getEventPriv());
-        ps.setString(21, privileges.getTriggerPriv());
-        ps.executeUpdate();
+        PreparedStatement stmt = conn.prepareStatement(sql);
+        stmt.setString(1, template.getName());
+        stmt.setInt(2, CarbonContext.getCurrentContext().getTenantId());
+        stmt.setString(3, privileges.getSelectPriv());
+        stmt.setString(4, privileges.getInsertPriv());
+        stmt.setString(5, privileges.getUpdatePriv());
+        stmt.setString(6, privileges.getDeletePriv());
+        stmt.setString(7, privileges.getCreatePriv());
+        stmt.setString(8, privileges.getDropPriv());
+        stmt.setString(9, privileges.getGrantPriv());
+        stmt.setString(10, privileges.getReferencesPriv());
+        stmt.setString(11, privileges.getIndexPriv());
+        stmt.setString(12, privileges.getAlterPriv());
+        stmt.setString(13, privileges.getCreateTmpTablePriv());
+        stmt.setString(14, privileges.getLockTablesPriv());
+        stmt.setString(15, privileges.getCreateViewPriv());
+        stmt.setString(16, privileges.getShowViewPriv());
+        stmt.setString(17, privileges.getCreateRoutinePriv());
+        stmt.setString(18, privileges.getAlterRoutinePriv());
+        stmt.setString(19, privileges.getExecutePriv());
+        stmt.setString(20, privileges.getEventPriv());
+        stmt.setString(21, privileges.getTriggerPriv());
+        stmt.executeUpdate();
+        stmt.close();
     }
 
     private void setUserDatabasePrivileges(
             Connection conn, UserDatabaseEntry entry) throws SQLException {
         DatabasePrivilegeSet privileges = entry.getPrivileges();
+
         String sql = "INSERT INTO RM_USER_DATABASE_PRIVILEGE(username, database_name, rss_instance_name, tenant_id, select_priv, insert_priv, update_priv, delete_priv, create_priv, drop_priv, grant_priv, references_priv, index_priv, alter_priv, create_tmp_table_priv, lock_tables_priv, create_view_priv, show_view_priv, create_routine_priv, alter_routine_priv, execute_priv, event_priv, trigger_priv) VALUES(?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?)";
-        PreparedStatement ps = conn.prepareStatement(sql);
-        ps.setString(1, entry.getUsername());
-        ps.setString(2, entry.getDatabaseName());
-        ps.setString(3, entry.getRssInstanceName());
-        ps.setInt(4, CarbonContextHolder.getCurrentCarbonContextHolder().getTenantId());
-        ps.setString(5, privileges.getSelectPriv());
-        ps.setString(6, privileges.getInsertPriv());
-        ps.setString(7, privileges.getUpdatePriv());
-        ps.setString(8, privileges.getDeletePriv());
-        ps.setString(9, privileges.getCreatePriv());
-        ps.setString(10, privileges.getDropPriv());
-        ps.setString(11, privileges.getGrantPriv());
-        ps.setString(12, privileges.getReferencesPriv());
-        ps.setString(13, privileges.getIndexPriv());
-        ps.setString(14, privileges.getAlterPriv());
-        ps.setString(15, privileges.getCreateTmpTablePriv());
-        ps.setString(16, privileges.getLockTablesPriv());
-        ps.setString(17, privileges.getCreateViewPriv());
-        ps.setString(18, privileges.getShowViewPriv());
-        ps.setString(19, privileges.getCreateRoutinePriv());
-        ps.setString(20, privileges.getAlterRoutinePriv());
-        ps.setString(21, privileges.getExecutePriv());
-        ps.setString(22, privileges.getEventPriv());
-        ps.setString(23, privileges.getTriggerPriv());
-        ps.executeUpdate();
+        PreparedStatement stmt = conn.prepareStatement(sql);
+        stmt.setString(1, entry.getUsername());
+        stmt.setString(2, entry.getDatabaseName());
+        stmt.setString(3, entry.getRssInstanceName());
+        stmt.setInt(4, CarbonContext.getCurrentContext().getTenantId());
+        stmt.setString(5, privileges.getSelectPriv());
+        stmt.setString(6, privileges.getInsertPriv());
+        stmt.setString(7, privileges.getUpdatePriv());
+        stmt.setString(8, privileges.getDeletePriv());
+        stmt.setString(9, privileges.getCreatePriv());
+        stmt.setString(10, privileges.getDropPriv());
+        stmt.setString(11, privileges.getGrantPriv());
+        stmt.setString(12, privileges.getReferencesPriv());
+        stmt.setString(13, privileges.getIndexPriv());
+        stmt.setString(14, privileges.getAlterPriv());
+        stmt.setString(15, privileges.getCreateTmpTablePriv());
+        stmt.setString(16, privileges.getLockTablesPriv());
+        stmt.setString(17, privileges.getCreateViewPriv());
+        stmt.setString(18, privileges.getShowViewPriv());
+        stmt.setString(19, privileges.getCreateRoutinePriv());
+        stmt.setString(20, privileges.getAlterRoutinePriv());
+        stmt.setString(21, privileges.getExecutePriv());
+        stmt.setString(22, privileges.getEventPriv());
+        stmt.setString(23, privileges.getTriggerPriv());
+        stmt.executeUpdate();
+        stmt.close();
     }
 
     private void updateUserDatabasePrivileges(Connection conn,
                                              UserDatabaseEntry userDBEntry) throws SQLException {
         DatabasePrivilegeSet privileges = userDBEntry.getPrivileges();
+
         String sql = "UPDATE RM_DB_PRIVILEGE_TEMPLATE_ENTRY SET select_priv = ?, insert_priv = ?, update_priv = ?, delete_priv = ?, create_priv = ?, drop_priv = ?, grant_priv = ?, references_priv = ?, index_priv = ?, alter_priv = ?, create_tmp_table_priv = ?, lock_tables_priv = ?, create_view_priv = ?, show_view_priv = ?, create_routine_priv = ?, alter_routine_priv = ?, execute_priv = ?, event_priv = ?, trigger_priv = ? WHERE username = ? AND database_name = ? AND rss_instance_name = ? AND tenant_id = ?";
         PreparedStatement stmt = conn.prepareStatement(sql);
         stmt.setString(1, privileges.getSelectPriv());
@@ -1167,8 +1160,10 @@ public class RSSDAOImpl implements RSSDAO {
         stmt.setString(20, userDBEntry.getUsername());
         stmt.setString(21, userDBEntry.getDatabaseName());
         stmt.setString(22, userDBEntry.getRssInstanceName());
-        stmt.setInt(23, CarbonContextHolder.getCurrentCarbonContextHolder().getTenantId());
+        stmt.setInt(23, CarbonContext.getCurrentContext().getTenantId());
+
         stmt.executeUpdate();
+        stmt.close();
     }
 
     @Override
@@ -1181,9 +1176,11 @@ public class RSSDAOImpl implements RSSDAO {
             String sql = "DELETE FROM RM_DB_PRIVILEGE_TEMPLATE WHERE name = ? AND tenant_id = ?";
             PreparedStatement stmt = conn.prepareStatement(sql);
             stmt.setString(1, templateName);
-            stmt.setInt(2, CarbonContextHolder.getCurrentCarbonContextHolder().getTenantId());
+            stmt.setInt(2, CarbonContext.getCurrentContext().getTenantId());
             stmt.executeUpdate();
             conn.commit();
+
+            stmt.close();
         } catch (SQLException e) {
             try {
                 conn.rollback();
@@ -1209,6 +1206,8 @@ public class RSSDAOImpl implements RSSDAO {
         PreparedStatement stmt = conn.prepareStatement(sql);
         stmt.setString(1, templateName);
         stmt.executeUpdate();
+
+        stmt.close();
     }
 
     @Override
@@ -1239,8 +1238,10 @@ public class RSSDAOImpl implements RSSDAO {
             stmt.setString(18, privileges.getEventPriv());
             stmt.setString(19, privileges.getTriggerPriv());
             stmt.setString(20, template.getName());
-            stmt.setInt(21, CarbonContextHolder.getCurrentCarbonContextHolder().getTenantId());
+            stmt.setInt(21, CarbonContext.getCurrentContext().getTenantId());
             stmt.executeUpdate();
+
+            stmt.close();
         } catch (SQLException e) {
             throw new RSSManagerException("Error occurred while editing the database privilege " +
                     "template '" + template.getName() + "'", e);
@@ -1269,6 +1270,8 @@ public class RSSDAOImpl implements RSSDAO {
             while (rs.next()) {
                 result.add(this.createDatabasePrivilegeTemplateFromRS(rs));
             }
+            rs.close();
+            stmt.close();
             return result;
         } catch (SQLException e) {
             throw new RSSManagerException("Error occurred while retrieving database privilege " +
@@ -1289,16 +1292,19 @@ public class RSSDAOImpl implements RSSDAO {
             String templateName) throws RSSManagerException {
         Connection conn = RSSConfig.getInstance().getRSSDBConnection();
         PreparedStatement stmt;
+        DatabasePrivilegeTemplate template = null;
         try {
             String sql = "SELECT name, tenant_id FROM RM_DB_PRIVILEGE_TEMPLATE WHERE name = ? AND tenant_id=?";
             stmt = conn.prepareStatement(sql);
             stmt.setString(1, templateName);
-            stmt.setInt(2, CarbonContextHolder.getCurrentCarbonContextHolder().getTenantId());
+            stmt.setInt(2, CarbonContext.getCurrentContext().getTenantId());
             ResultSet rs = stmt.executeQuery();
             if (rs.next()) {
-                return this.createDatabasePrivilegeTemplateFromRS(rs);
+                template = this.createDatabasePrivilegeTemplateFromRS(rs);
             }
-            return null;
+            rs.close();
+            stmt.close();
+            return template;
         } catch (SQLException e) {
             throw new RSSManagerException("Error occurred while retrieving database privilege " +
                     "template information", e);
@@ -1325,6 +1331,8 @@ public class RSSDAOImpl implements RSSDAO {
         if (rs.next()) {
             privileges = this.createUserDatabasePrivilegeSetFromRS(rs);
         }
+        rs.close();
+        stmt.close();
         return privileges;
     }
 
@@ -1375,6 +1383,8 @@ public class RSSDAOImpl implements RSSDAO {
             while (rs.next()) {
                 permNames.add(rs.getString("perm_name"));
             }
+            rs.close();
+            stmt.close();
             return permNames;
         } catch (SQLException e) {
             throw new RSSManagerException("Error occurred while retrieving existing database " +

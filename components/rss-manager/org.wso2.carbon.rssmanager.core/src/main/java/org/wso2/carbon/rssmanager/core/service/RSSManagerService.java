@@ -20,6 +20,7 @@ package org.wso2.carbon.rssmanager.core.service;
 
 import org.apache.commons.logging.Log;
 import org.apache.commons.logging.LogFactory;
+import org.wso2.carbon.context.CarbonContext;
 import org.wso2.carbon.core.multitenancy.SuperTenantCarbonContext;
 import org.wso2.carbon.ndatasource.common.DataSourceException;
 import org.wso2.carbon.ndatasource.core.DataSourceMetaInfo;
@@ -85,7 +86,7 @@ public class RSSManagerService {
     }
 
     public RSSInstanceMetaData[] getRSSInstances() throws RSSManagerException {
-        int tid = CarbonContextHolder.getCurrentCarbonContextHolder().getTenantId();
+        int tid = CarbonContext.getCurrentContext().getTenantId();
         RSSInstanceMetaData[] rssInstances = new RSSInstanceMetaData[0];
         try {
             List<RSSInstanceMetaData> tmpList =
@@ -125,7 +126,7 @@ public class RSSManagerService {
     }
 
     public DatabaseMetaData[] getDatabases() throws RSSManagerException {
-        int tid = CarbonContextHolder.getCurrentCarbonContextHolder().getTenantId();
+        int tid = CarbonContext.getCurrentContext().getTenantId();
         DatabaseMetaData[] databases = new DatabaseMetaData[0];
         try {
             List<DatabaseMetaData> tmpList =
@@ -208,7 +209,7 @@ public class RSSManagerService {
 
     public DatabaseUserMetaData[] getDatabaseUsers() throws RSSManagerException {
         DatabaseUserMetaData[] users = new DatabaseUserMetaData[0];
-        int tid = CarbonContextHolder.getCurrentCarbonContextHolder().getTenantId();
+        int tid = CarbonContext.getCurrentContext().getTenantId();
         try {
             List<DatabaseUserMetaData> tmpList =
                     this.getRSSManager().getDatabaseUsers(tid);
@@ -273,7 +274,7 @@ public class RSSManagerService {
             RSSManagerException {
         RSSDAO dao = RSSDAOFactory.getRSSDAO();
 
-        int tenantId = CarbonContextHolder.getCurrentCarbonContextHolder().getTenantId();
+        int tenantId = CarbonContext.getCurrentContext().getTenantId();
         SuperTenantCarbonContext.startTenantFlow();
         SuperTenantCarbonContext.getCurrentContext().setTenantId(tenantId);
 

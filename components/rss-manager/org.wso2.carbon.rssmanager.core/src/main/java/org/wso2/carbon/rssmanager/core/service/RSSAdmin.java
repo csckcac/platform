@@ -20,6 +20,7 @@ package org.wso2.carbon.rssmanager.core.service;
 
 import org.apache.commons.logging.Log;
 import org.apache.commons.logging.LogFactory;
+import org.wso2.carbon.context.CarbonContext;
 import org.wso2.carbon.core.AbstractAdmin;
 import org.wso2.carbon.core.multitenancy.SuperTenantCarbonContext;
 import org.wso2.carbon.ndatasource.common.DataSourceException;
@@ -77,8 +78,11 @@ public class RSSAdmin extends AbstractAdmin {
         try {
             RSSInstance rssInstance =
                 this.getRSSManager().getRSSInstance(rssInstanceName);
+            if (rssInstance == null) {
+                throw new RSSManagerException("Given name '" + rssInstance + "' does not " +
+                        "correspond to a valid RSS instance");
+            }
             metadata = RSSManagerUtil.convertRSSInstanceToMetadata(rssInstance);
-            return metadata;
         } catch (RSSManagerException e) {
             String msg = "Error occurred while retrieving the configuration of RSS instance '" +
                     rssInstanceName + "'";
@@ -88,7 +92,7 @@ public class RSSAdmin extends AbstractAdmin {
     }
 
     public RSSInstanceMetaData[] getRSSInstances() throws RSSManagerException {
-        int tid = CarbonContextHolder.getCurrentCarbonContextHolder().getTenantId();
+        int tid = CarbonContext.getCurrentContext().getTenantId();
         RSSInstanceMetaData[] rssInstances = new RSSInstanceMetaData[0];
         try {
             List<RSSInstanceMetaData> tmpList =
@@ -128,7 +132,7 @@ public class RSSAdmin extends AbstractAdmin {
     }
 
     public DatabaseMetaData[] getDatabases() throws RSSManagerException {
-        int tid = CarbonContextHolder.getCurrentCarbonContextHolder().getTenantId();
+        int tid = CarbonContext.getCurrentContext().getTenantId();
         DatabaseMetaData[] databases = new DatabaseMetaData[0];
         try {
             List<DatabaseMetaData> tmpList =
@@ -150,7 +154,7 @@ public class RSSAdmin extends AbstractAdmin {
 
     public DatabaseMetaData getDatabase(String rssInstanceName, String databaseName) throws
             RSSManagerException {
-        DatabaseMetaData medata = null;
+        DatabaseMetaData metadata = null;
         try {
             Database database = 
                     this.getRSSManager().getDatabase(
@@ -158,13 +162,13 @@ public class RSSAdmin extends AbstractAdmin {
             if (database == null) {
                 throw new RSSManagerException("Database '" + databaseName + "' does not exist");
             }
-            return medata;
+            metadata = RSSManagerUtil.convertDatabaseToMetadata(database);
         } catch (RSSManagerException e) {
             String msg = "Error occurred while retrieving the configuration of the database '" +
                     databaseName + "'";
             handleException(msg, e);
         }
-        return medata;
+        return metadata;
     }
 
     public void createDatabaseUser(DatabaseUser user) throws
@@ -201,8 +205,11 @@ public class RSSAdmin extends AbstractAdmin {
             DatabaseUser user = 
                     this.getRSSManager().getDatabaseUser(rssInstanceName, 
                             username);
+            if (user == null) {
+                throw new RSSManagerException("Given username '" + username + "' does not " +
+                        "correspond to a valid database user");
+            }
             metadata = RSSManagerUtil.convertToDatabaseUserMetadata(user);
-            return metadata;
         } catch (RSSManagerException e) {
             String msg = "Error occurred while editing the database privileges of the user '" +
                     username + "'";
@@ -213,7 +220,7 @@ public class RSSAdmin extends AbstractAdmin {
 
     public DatabaseUserMetaData[] getDatabaseUsers() throws RSSManagerException {
         DatabaseUserMetaData[] users = new DatabaseUserMetaData[0];
-        int tid = CarbonContextHolder.getCurrentCarbonContextHolder().getTenantId();
+        int tid = CarbonContext.getCurrentContext().getTenantId();
         try {
             List<DatabaseUserMetaData> tmpList =
                     this.getRSSManager().getDatabaseUsers(tid);
@@ -278,7 +285,7 @@ public class RSSAdmin extends AbstractAdmin {
             RSSManagerException {
         RSSDAO dao = RSSDAOFactory.getRSSDAO();
 
-        int tenantId = CarbonContextHolder.getCurrentCarbonContextHolder().getTenantId();
+        int tenantId = CarbonContext.getCurrentContext().getTenantId();
         SuperTenantCarbonContext.startTenantFlow();
         SuperTenantCarbonContext.getCurrentContext().setTenantId(tenantId);
 

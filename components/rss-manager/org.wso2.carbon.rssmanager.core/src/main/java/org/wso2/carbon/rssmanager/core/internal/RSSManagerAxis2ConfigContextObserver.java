@@ -21,6 +21,7 @@ package org.wso2.carbon.rssmanager.core.internal;
 import org.apache.axis2.context.ConfigurationContext;
 import org.apache.commons.logging.Log;
 import org.apache.commons.logging.LogFactory;
+import org.wso2.carbon.context.CarbonContext;
 import org.wso2.carbon.core.multitenancy.SuperTenantCarbonContext;
 import org.wso2.carbon.rssmanager.core.RSSManagerException;
 import org.wso2.carbon.rssmanager.core.internal.manager.RSSManager;
@@ -52,7 +53,7 @@ public class RSSManagerAxis2ConfigContextObserver extends AbstractAxis2Configura
     }
 
     public void terminatingConfigurationContext(ConfigurationContext configurationContext) {
-        int tid = CarbonContextHolder.getCurrentCarbonContextHolder().getTenantId();
+        int tid = CarbonContext.getCurrentContext().getTenantId();
         try {
             this.getRSSManager().setMetaDataRepository(tid, null);
         } catch (RSSManagerException e) {

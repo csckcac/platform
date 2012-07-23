@@ -751,17 +751,19 @@ public class RSSDAOImpl implements RSSDAO {
         try {
             conn.setAutoCommit(false);
             /* delete permissions first */
-            String sql = "DELETE FROM RM_USER_DATABASE_PRIVILEGE WHERE username = ? AND rss_instance_name = ?";
+            String sql = "DELETE FROM RM_USER_DATABASE_PRIVILEGE WHERE username = ? AND rss_instance_name = ? AND tenant_id = ?";
             PreparedStatement stmt = conn.prepareStatement(sql);
             stmt.setString(1, username);
             stmt.setString(2, rssInstanceName);
+            stmt.setInt(3, CarbonContext.getCurrentContext().getTenantId());
             stmt.executeUpdate();
 
             /* now delete the user-database-entry */
-            sql = "DELETE FROM RM_USER_DATABASE_ENTRY WHERE username = ? AND rss_instance_name = ?";
+            sql = "DELETE FROM RM_USER_DATABASE_ENTRY WHERE username = ? AND rss_instance_name = ? AND tenant_id = ?";
             stmt = conn.prepareStatement(sql);
             stmt.setString(1, username);
-            stmt.setString(1, rssInstanceName);
+            stmt.setString(2, rssInstanceName);
+            stmt.setInt(3, CarbonContext.getCurrentContext().getTenantId());
             stmt.executeUpdate();
             conn.commit();
         } catch (SQLException e) {

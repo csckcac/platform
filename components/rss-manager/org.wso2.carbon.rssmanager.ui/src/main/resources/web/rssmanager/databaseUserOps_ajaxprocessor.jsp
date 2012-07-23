@@ -36,6 +36,9 @@
     String rssInstanceName = request.getParameter("rssInstanceName");
     String databaseName = request.getParameter("databaseName");
 
+    session.setAttribute("rssInstanceName", rssInstanceName);
+    session.setAttribute("databaseName", databaseName);
+
     //Database privileges
     String selectPriv = request.getParameter("select_priv");
     String insertPriv = request.getParameter("insert_priv");

@@ -18,7 +18,7 @@
 
     <build>
         <plugins>
-            <plugin>
+            <!--plugin>
                 <groupId>org.apache.axis2</groupId>
                 <artifactId>axis2-java2wsdl-maven-plugin</artifactId>
                 <executions>
@@ -33,7 +33,7 @@
                         org.wso2.carbon.rssmanager.core.service.RSSAdmin
                     </className>
                 </configuration>
-            </plugin>
+            </plugin-->
             <plugin>
                 <groupId>org.apache.felix</groupId>
                 <artifactId>maven-scr-plugin</artifactId>

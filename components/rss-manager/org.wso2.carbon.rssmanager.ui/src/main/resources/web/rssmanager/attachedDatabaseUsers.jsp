@@ -51,7 +51,7 @@
             String databaseName = request.getParameter("databaseName");
             rssInstanceName = (rssInstanceName != null) ? rssInstanceName : (String) session.getAttribute("rssInstanceName");
             databaseName = (databaseName != null) ? databaseName : (String) session.getAttribute("databaseName");
-
+            
             try {
                 client = new RSSManagerClient(cookie, backendServerURL, configContext, request.getLocale());
                 database = client.getDatabase(rssInstanceName, databaseName);

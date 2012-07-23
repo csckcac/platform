@@ -155,7 +155,9 @@ public class RSSAdmin extends AbstractAdmin {
             Database database = 
                     this.getRSSManager().getDatabase(
                             rssInstanceName, databaseName);
-            medata = RSSManagerUtil.convertDatabaseToMetadata(database);
+            if (database == null) {
+                throw new RSSManagerException("Database '" + databaseName + "' does not exist");
+            }
             return medata;
         } catch (RSSManagerException e) {
             String msg = "Error occurred while retrieving the configuration of the database '" +

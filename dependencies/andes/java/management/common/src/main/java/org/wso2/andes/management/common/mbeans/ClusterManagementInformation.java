@@ -33,8 +33,18 @@ public interface ClusterManagementInformation {
     @MBeanAttribute(name = "Address", description = "zookeeper Server")
     String getZkServer();
 
+    @MBeanAttribute(name = "isClusteringEnabled", description = "is in clustering mode")
+    boolean isClusteringEnabled();
+
+    @MBeanAttribute(name = "getMyNodeID", description = "Zookeeper Node Id assigned for the node")
+    String getMyNodeID();
+
     @MBeanAttribute(name = "Queues", description = "Existing queues in the node")
     String[] getQueues(int nodeId);
+
+    @MBeanAttribute(name = "updateWorkerForQueue", description = "Move the given global queue Worker Handler to a new node")
+    boolean updateWorkerForQueue(@MBeanOperationParameter(name="queueToMove",description = "name of queue whose queue worker to move") String queueToBeMoved,
+                                 @MBeanOperationParameter(name="newNode",description = "name of new node to assign queue worker") String newNodeToAssign);
 
     @MBeanAttribute(name = "zooKeeperNodes" , description = "Existing zookeeper nodes")
     List<Integer> getZkNodes();

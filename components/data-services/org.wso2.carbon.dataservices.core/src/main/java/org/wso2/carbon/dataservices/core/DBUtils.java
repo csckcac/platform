@@ -266,6 +266,17 @@ public class DBUtils {
     }
 
     /**
+     * Retrieves the current user's roles given the message context.
+     * @param msgContext The message context to be used to retrieve the username
+     * @return The user roles
+     * @throws DataServiceFault
+     */
+    public static String[] getUserRoles(MessageContext msgContext)
+            throws DataServiceFault {
+        return getUserRoles(DBUtils.getUsername(msgContext));
+    }
+    
+    /**
      * Retrieves the current user's roles given the username.
      *
      * @param username The username
@@ -273,7 +284,7 @@ public class DBUtils {
      * @throws DataServiceFault
      */
     public static String[] getUserRoles(String username) throws DataServiceFault {
-        RealmService realmService = DataServicesDSComponent.getRealmService();
+    	RealmService realmService = DataServicesDSComponent.getRealmService();
         RegistryService registryService = DataServicesDSComponent.getRegistryService();
         username = MultitenantUtils.getTenantAwareUsername(username);
         String tenantDomain = SuperTenantCarbonContext.getCurrentContext().getTenantDomain();
@@ -282,6 +293,17 @@ public class DBUtils {
         try {
             if (tenantId < MultitenantConstants.SUPER_TENANT_ID) {
                 tenantId = realmService.getTenantManager().getTenantId(tenantDomain);
+            }
+            if (tenantId < MultitenantConstants.SUPER_TENANT_ID) {
+                /* the tenant doesn't exist. */
+                log.error("The tenant doesn't exist. Tenant domain:" + tenantDomain);
+                throw new DataServiceFault("Access Denied. You are not authorized.");
+            }
+            if (!realmService.getTenantManager().isTenantActive(tenantId)) {
+                /* the tenant is not active. */
+                log.error("The tenant is not active. Tenant domain:" + tenantDomain);
+                throw new DataServiceFault("The tenant is not active. Tenant domain:"
+                        + tenantDomain);
             }
             UserRealm realm = registryService.getUserRealm(tenantId);
             String roles[] = realm.getUserStoreManager().getRoleListOfUser(username);
@@ -293,29 +315,17 @@ public class DBUtils {
             throw new DataServiceFault(msg);
         }
     }
-
-    /**
-     * Retrieves the current user's roles given the message context.
-     *
-     * @param msgContext The message context to be used to retrieve the username
-     * @return The user roles
-     * @throws DataServiceFault
-     */
-    public static String[] getUserRoles(MessageContext msgContext)
-            throws DataServiceFault {
-        return getUserRoles(DBUtils.getUsername(msgContext));
-    }
-
+    
     public static boolean authenticate(String username, String password) throws DataServiceFault {
-        try {
+    	try {
             RegistryService registryService = DataServicesDSComponent.getRegistryService();
             UserRealm realm = registryService.getUserRealm(
-                    SuperTenantCarbonContext.getCurrentContext().getTenantId());
-            username = MultitenantUtils.getTenantAwareUsername(username);
-            return realm.getUserStoreManager().authenticate(username, password);
-        } catch (Exception e) {
-            throw new DataServiceFault(e, "Error in authenticating user '" + username + "'");
-        }
+            		SuperTenantCarbonContext.getCurrentContext().getTenantId());
+    		username = MultitenantUtils.getTenantAwareUsername(username);
+    		return realm.getUserStoreManager().authenticate(username, password);
+    	} catch (Exception e) {
+			throw new DataServiceFault(e, "Error in authenticating user '" + username + "'");
+		}
     }
 
     public static boolean isRegistryPath(String path) {

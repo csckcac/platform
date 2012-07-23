@@ -325,4 +325,13 @@ public class ResourceAdminServiceClient {
         }
         return content;
     }
+
+    public PermissionBean getPermission(String path) throws Exception {
+        try {
+            return resourceAdminServiceStub.getPermissions(path);
+        } catch (Exception e) {
+            log.error("Unable to get permission : " + e.getMessage());
+            throw new Exception("Unable to get permission : " , e);
+        }
+    }
 }

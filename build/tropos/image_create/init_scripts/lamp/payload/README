@@ -6,7 +6,7 @@ shh-keygen
 name it as wso2-key
 
 Copy the wso2-key and wso2-key.pub to this folder.
-Put the  wso2-key.pub into /root/.ssh folder of the openstack controller.
+Add the  wso2-key.pub into /root/.ssh/authorized_keys file of the openstack controller.
 Now ssh to that machine using the wso2-key private key. Copy the entry added to 
 the ~/.ssh/known_hosts in the machine from which you accessed the openstack controller.
 Create a file called known_hosts here and copy that entry.

@@ -163,7 +163,8 @@ public class PermissionInheritanceTestCase {
                                                        WRITE_ACTION, PERMISSION_ENABLED);
     }
 
-    @Test(groups = "wso2.greg", description = "Test delete access inheritance", expectedExceptions = AxisFault.class, dependsOnMethods = "testDenyReadPermission")
+    @Test(groups = "wso2.greg", description = "Test delete access inheritance",
+          expectedExceptions = AxisFault.class, dependsOnMethods = "testDenyReadPermission")
     public void testDenyDeletePermission()
             throws ResourceAdminServiceExceptionException, RemoteException,
                    ResourceAdminServiceResourceServiceExceptionException {
@@ -178,12 +179,11 @@ public class PermissionInheritanceTestCase {
             adminResourceAdminClient.addResourcePermission(TEST_DIR_PATH + DENIED_DIR,
                                                            NON_ADMIN_ROLE, DELETE_ACTION, PERMISSION_ENABLED);
         }
-
-
     }
 
     //This test Fails for now. Reported: REGISTRY-1173
-    @Test(groups = "wso2.greg", description = "Test authorization access inheritance", dependsOnMethods = "testDenyReadPermission")
+    @Test(groups = "wso2.greg", description = "Test authorization access inheritance",
+          dependsOnMethods = "testDenyReadPermission")
     public void testDenyAuthPermission()
             throws Exception, RemoteException,
                    ResourceAdminServiceResourceServiceExceptionException {
@@ -200,7 +200,6 @@ public class PermissionInheritanceTestCase {
         PermissionBean permissionBean = nonAdminResourceAdminClient.getPermission(TEST_DIR_PATH +
                                                                                   DENIED_DIR + "/test.txt");
         Assert.assertFalse(permissionBean.getAuthorizeAllowed());
-
     }
 
     //Fails due to REGISTRY-1174
@@ -234,8 +233,10 @@ public class PermissionInheritanceTestCase {
         String resourcePath = ProductConstant.SYSTEM_TEST_RESOURCE_LOCATION + "artifacts" + File.separator
                               + "GREG" + File.separator + "resource.txt";
         DataHandler dataHandler = new DataHandler(new URL("file:///" + resourcePath));
-        nonAdminResourceAdminClient.addResource(TEST_DIR_PATH + ALLOWED_DIR + "/testdir/test2.txt", "text/plain", "Denied", dataHandler);
-        Assert.assertTrue(adminResourceAdminClient.getResource(TEST_DIR_PATH + ALLOWED_DIR + "test2.txt").length > 0);
+        nonAdminResourceAdminClient.addResource(TEST_DIR_PATH + ALLOWED_DIR + "/testdir/test2.txt",
+                                                "text/plain", "Denied", dataHandler);
+        Assert.assertTrue(adminResourceAdminClient.getResource(TEST_DIR_PATH + ALLOWED_DIR +
+                                                               "test2.txt").length > 0);
     }
 
     //Fails due to REGISTRY-1174
@@ -260,14 +261,11 @@ public class PermissionInheritanceTestCase {
 
     //Fails due to REGISTRY-1174
     @Test(groups = "wso2.greg", description = "Test authorization access inheritance")
-    public void testAllowAuthPermission()
-            throws Exception, RemoteException,
-                   ResourceAdminServiceResourceServiceExceptionException {
+    public void testAllowAuthPermission() throws Exception {
 
         //Allow denied permission
         adminResourceAdminClient.addResourcePermission(TEST_DIR_PATH + ALLOWED_DIR, NON_ADMIN_ROLE,
                                                        AUTHORIZE_ACTION, PERMISSION_ENABLED);
-
         //check permission
         PermissionBean permissionBean = nonAdminResourceAdminClient.getPermission(TEST_DIR_PATH +
                                                                                   ALLOWED_DIR + "/test.txt");

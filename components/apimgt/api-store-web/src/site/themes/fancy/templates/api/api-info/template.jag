@@ -27,7 +27,7 @@
                         colspan=1;
                     %>
                     <td>
-                        <div class="average-rating"><%=String(api.rating)%></div>
+                        <div class="average-rating"><%=api.rating%></div>
                     </td>
                     <% } %>
                     <td colspan="<%=colspan%>">

@@ -28,6 +28,10 @@ import static org.wso2.carbon.governance.registry.extensions.executors.utils.Uti
 import static org.wso2.carbon.governance.registry.extensions.executors.utils.Utils.populateParameterMap;
 
 
+/**
+ * Lifecycle executor to handle application lifecycles.
+ * This executor will invoke when lifecycle state change from one state to another
+ */
 public class AppFactoryLCExecutor implements Execution {
 
     private static final Log log = LogFactory.getLog(ServiceVersionExecutor.class);
@@ -35,81 +39,81 @@ public class AppFactoryLCExecutor implements Execution {
     private Map parameterMap;
 
     public void init(Map map) {
+
+        // This parameterMap stores parameters which is set on lifecycle config
+        // for the moment we don't store any parameters in lifecycle config
         parameterMap = map;
+
     }
 
     public boolean execute(RequestContext requestContext, String currentState, String targetState) {
 
+        // Absolute path for the current application
+        // (i.e. /_system/governance/repository/applications/$Application/$Stage/$Version/appinfo )
         String resourcePath = requestContext.getResource().getPath();
+
+        // Variable to store new path of the application
         String newPath;
 
-        //        Now we are going to get the list of parameters from the context and add it to a map
+        // Now we are going to get the list of parameters from the context and add it to a map
         Map<String, String> currentParameterMap = new HashMap<String, String>();
 
-        //        Here we are populating the parameter map that was given from the UI
+        // Here we are populating the parameter map that was given from the UI
         if (!populateParameterMap(requestContext, currentParameterMap)) {
             log.error("Failed to populate the parameter map");
             return false;
         }
 
-        final String applicationId = currentParameterMap.get("applicationId");
-        final String revision = currentParameterMap.get("revision");
-        final String targetVersion = currentParameterMap.get("version");
-        final String stage = currentParameterMap.get("stage");
-        final String build = currentParameterMap.get("build");
+        // Getting values from map
+        final String applicationId = currentParameterMap.get(AppFactoryConstants.APPLICATION_ID);
 
-//        This section is there to add a targetVersion to the path if needed.
-//        This is all based on the lifecycle configuration and the configuration should be as follows.
-//        path = /_system/governance/environment/{@targetVersion}
-//        Also for this the user has to have a transition UI where he can give the targetVersion
-        String currentEnvironment = getReformattedPath((String) parameterMap.get(ExecutorConstants.CURRENT_ENVIRONMENT),
-                                                       KEY, currentParameterMap.get(resourcePath));
-        String targetEnvironment = getReformattedPath((String) parameterMap.get(ExecutorConstants.TARGET_ENVIRONMENT),
-                                                      KEY, currentParameterMap.get(resourcePath));
+        final String revision = currentParameterMap.get(AppFactoryConstants.APPLICATION_REVISION);
 
-        if (resourcePath.startsWith(currentEnvironment)) {
+        final String version = currentParameterMap.get(AppFactoryConstants.APPLICATION_VERSION);
 
-            newPath = resourcePath.substring(currentEnvironment.length());
+        final String stage = currentParameterMap.get(AppFactoryConstants.APPLICATION_STAGE);
 
-            // 1st element is "", 2st element is app name , 3rd element is $Stage , 4th element $Version, 5th element is appinfo
-            String newPathArray[] = newPath.split("/");
-            String appName = newPathArray[1];
-            String currentVersion = newPathArray[3];
-            //String targetVersion = "1.0.0";
+        final String build = currentParameterMap.get(AppFactoryConstants.APPLICATION_BUILD);
 
-            // if the app is trunk then we need targetVersion.
-            if ("trunk".equals(newPathArray[3])) {
 
-                // Append targetVersion from here
-                if (targetVersion != null) {
-                    newPath = "/" + appName + "/" + targetState + "/" + targetVersion + "/" + newPathArray[4];
-                } else {
-                    log.error("Can not find application targetVersion. " +
-                              "Application targetVersion is required to perform lifecycle operation");
-                    return false;
-                }
+        // new path will holds "/$Application/$Stage/$Version/appinfo"
+        newPath = resourcePath.substring((AppFactoryConstants.REGISTRY_GOVERNANCE_PATH +
+                AppFactoryConstants.REGISTRY_APPLICATION_PATH).length());
+
+        // 1st element is "", 2st element is app name , 3rd element is $Stage ,
+        // 4th element $Version, 5th element is appinfo
+        String newPathArray[] = newPath.split("/");
+
+        String currentAppName = newPathArray[1];
+        String currentAppStage = newPathArray[3];
+        String currentAppInfo = newPathArray[4];
+
+        // if the app is trunk then we need version.
+
+        if ((AppFactoryConstants.TRUNK).equals(currentAppStage)) {
+
+            // Append version from here
+            if (version != null) {
+                newPath = "/" + currentAppName + "/" + targetState + "/" + version + "/" + currentAppInfo;
             } else {
-                // Application is not a trunk targetVersion. So it can have targetVersion with it or user can define targetVersion
-                if (targetVersion != null) {
-                    newPath = "/" + appName + "/" + targetState + "/" + targetVersion + "/" + newPathArray[4];
-
-                } else {
-                    newPath = "/" + appName + "/" + targetState + "/" + newPathArray[3] + "/" + newPathArray[4];
-                }
-
-            }
-
-
-            newPath = targetEnvironment + newPath;
-            if ("Development".equals(currentState)) {
-                branchRepositoryOnNewAppVersion(applicationId, revision, currentVersion, targetVersion);
-            } else if ("Production".equals(targetState)) {
-                tagRepositoryOnNewAppVersion(applicationId, revision, currentVersion, targetVersion);
+                log.error("Can not find application version. " +
+                        "Application version is required to perform lifecycle operation");
+                return false;
             }
         } else {
-            log.warn("Resource is not in the given environment");
-            return true;
+            // Application is not a trunk version. So it can have version with it or user can define version
+            if (version != null) {
+                newPath = "/" + currentAppName + "/" + targetState + "/" + version + "/" + currentAppInfo;
+
+            } else {
+                newPath = "/" + currentAppName + "/" + targetState + "/" + currentAppStage + "/" + currentAppInfo;
+            }
+
         }
+
+        // make newPath a absolute path
+        newPath = AppFactoryConstants.REGISTRY_GOVERNANCE_PATH +
+                AppFactoryConstants.REGISTRY_APPLICATION_PATH + newPath;
 
         try {
             requestContext.getRegistry().copy(resourcePath, newPath);
@@ -123,8 +127,8 @@ public class AppFactoryLCExecutor implements Execution {
             requestContext.setResourcePath(new ResourcePath(newPath));
 
 
-            // Executing the bpel
-            executeBPEL(applicationId, revision, targetVersion, stage, build);
+            // Executing the BPEL
+            executeBPEL(applicationId, revision, version, stage, build);
 
             return true;
         } catch (RegistryException e) {
@@ -134,22 +138,22 @@ public class AppFactoryLCExecutor implements Execution {
 
     }
 
-    public String getReformattedPath(String originalPath, String key, String value) {
-        if (key == null || value == null) {
-            return originalPath;
-        }
-        return originalPath.replace(key, value);
-    }
-
-
-    //private void executeBPEL(final String applicationId, final String version, final String revision) {
+    /**
+     * This method will execute the BPEL as a web service in asynchronous way
+     * @param applicationId  : application key
+     * @param revision : svn revision
+     * @param version : version of the application
+     * @param stage : stage (i.e. Development, QA, Production)
+     * @param build : build status (this will hold true/false)
+     */
     private void executeBPEL(final String applicationId, final String revision,
                              final String version, final String stage, final String build) {
 
 
         AppFactoryConfiguration configuration = Util.getConfiguration();
+
+        // get the deployToStage EPR from "appfactory.xml"
         final String EPR = configuration.getFirstProperty(AppFactoryConstants.ENDPOINT_DEPLOY_TO_STAGE);
-        //final String EPR = "https://10.100.2.101:9443/services/echo";
 
         new Thread(new Runnable() {
             public void run() {
@@ -163,12 +167,9 @@ public class AppFactoryLCExecutor implements Execution {
 
                     //Set the endpoint address
                     client.getOptions().setTo(new EndpointReference(EPR));
-                    client.getOptions().setAction("echoInt");
-
 
                     //Make the request and get the response
-                    //client.sendRobust(getPayload(applicationId, revision, version, stage, build));
-                    client.fireAndForget(getPayload(applicationId, revision, version, stage, build));
+                    client.sendRobust(getPayload(applicationId, revision, version, stage, build));
                 } catch (AxisFault e) {
                     log.error(e);
                     e.printStackTrace();

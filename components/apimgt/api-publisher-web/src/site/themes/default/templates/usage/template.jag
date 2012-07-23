@@ -1,14 +1,14 @@
 <% jagg.template("usage", function(inputs, outputs, jagg) { %>
 
-<script type="text/javascript" src="<%=jagg.getAbsoluteUrl("/site/themes/default/templates/utils/jqplot/jquery.jqplot.min.js")%>"></script>
-<script type="text/javascript" src="<%=jagg.getAbsoluteUrl("/site/themes/default/templates/utils/jqplot/plugins/jqplot.pieRenderer.min.js")%>"></script>
-<script type="text/javascript" src="<%=jagg.getAbsoluteUrl("/site/themes/default/templates/utils/jqplot/plugins/jqplot.donutRenderer.min.js")%>"></script>
-<script type="text/javascript" src="<%=jagg.getAbsoluteUrl("/site/themes/default/templates/utils/jqplot/plugins/jqplot.pointLabels.min.js")%>"></script>
-<script type="text/javascript" src="<%=jagg.getAbsoluteUrl("/site/themes/default/templates/utils/jqplot/plugins/jqplot.highlighter.min.js")%>"></script>
-<script type="text/javascript" src="<%=jagg.getAbsoluteUrl("/site/themes/default/templates/utils/jqplot/plugins/jqplot.cursor.min.js")%>"></script>
-<script type="text/javascript" src="<%=jagg.getAbsoluteUrl("/site/themes/default/templates/utils/jqplot/plugins/jqplot.categoryAxisRenderer.min.js")%>"></script>
-<script type="text/javascript" src="<%=jagg.getAbsoluteUrl("/site/themes/default/templates/utils/jqplot/plugins/jqplot.barRenderer.min.js")%>"></script>
-<link type="text/css" rel="stylesheet" href="<%=jagg.getAbsoluteUrl("/site/themes/default//templates/utils/jqplot/jquery.jqplot.min.css")%>"/>
+<script type="text/javascript" src="<%=jagg.getAbsoluteUrl(jagg.getThemeFile("templates/utils/jqplot/jquery.jqplot.min.js"))%>"></script>
+<script type="text/javascript" src="<%=jagg.getAbsoluteUrl(jagg.getThemeFile("templates/utils/jqplot/plugins/jqplot.pieRenderer.min.js"))%>"></script>
+<script type="text/javascript" src="<%=jagg.getAbsoluteUrl(jagg.getThemeFile("templates/utils/jqplot/plugins/jqplot.donutRenderer.min.js"))%>"></script>
+<script type="text/javascript" src="<%=jagg.getAbsoluteUrl(jagg.getThemeFile("templates/utils/jqplot/plugins/jqplot.pointLabels.min.js"))%>"></script>
+<script type="text/javascript" src="<%=jagg.getAbsoluteUrl(jagg.getThemeFile("templates/utils/jqplot/plugins/jqplot.highlighter.min.js"))%>"></script>
+<script type="text/javascript" src="<%=jagg.getAbsoluteUrl(jagg.getThemeFile("templates/utils/jqplot/plugins/jqplot.cursor.min.js"))%>"></script>
+<script type="text/javascript" src="<%=jagg.getAbsoluteUrl(jagg.getThemeFile("templates/utils/jqplot/plugins/jqplot.categoryAxisRenderer.min.js"))%>"></script>
+<script type="text/javascript" src="<%=jagg.getAbsoluteUrl(jagg.getThemeFile("templates/utils/jqplot/plugins/jqplot.barRenderer.min.js"))%>"></script>
+<link type="text/css" rel="stylesheet" href="<%=jagg.getAbsoluteUrl(jagg.getThemeFile("templates/utils/jqplot/jquery.jqplot.min.css"))%>"/>
 <h3>API Usage by Versions</h3>
 <div class="well">
     <div class="row-fluid">

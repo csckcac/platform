@@ -6,24 +6,24 @@
     <meta charset="UTF-8">
     <meta name="description" content=""/>
 
-    <link href="<%=jagg.getAbsoluteUrl("/site/themes/default/lib/bootstrap/css/bootstrap.css")%>" rel="stylesheet">
-    <link href="<%=jagg.getAbsoluteUrl("/site/themes/default/lib/bootstrap/css/bootstrap-responsive.css")%>" rel="stylesheet">
+    <link href="<%=jagg.getAbsoluteUrl(jagg.getThemeFile("lib/bootstrap/css/bootstrap.css"))%>" rel="stylesheet">
+    <link href="<%=jagg.getAbsoluteUrl(jagg.getThemeFile("lib/bootstrap/css/bootstrap-responsive.css"))%>" rel="stylesheet">
 
     <!-- Le fav and touch icons -->
-    <link rel="shortcut icon" href="<%=jagg.getAbsoluteUrl("/site/themes/default/images/favicon.png")%>">
-    <link rel="apple-touch-icon" href="<%=jagg.getAbsoluteUrl("/site/themes/default/images/apple-touch-icon.png")%>">
-    <link rel="apple-touch-icon" sizes="72x72" href="<%=jagg.getAbsoluteUrl("/site/themes/default/images/apple-touch-icon-72x72.png")%>">
-    <link rel="apple-touch-icon" sizes="114x114" href="<%=jagg.getAbsoluteUrl("/site/themes/default/images/apple-touch-icon-114x114.png")%>">
+    <link rel="shortcut icon" href="<%=jagg.getAbsoluteUrl(jagg.getThemeFile("images/favicon.png"))%>">
+    <link rel="apple-touch-icon" href="<%=jagg.getAbsoluteUrl(jagg.getThemeFile("images/apple-touch-icon.png"))%>">
+    <link rel="apple-touch-icon" sizes="72x72" href="<%=jagg.getAbsoluteUrl(jagg.getThemeFile("images/apple-touch-icon-72x72.png"))%>">
+    <link rel="apple-touch-icon" sizes="114x114" href="<%=jagg.getAbsoluteUrl(jagg.getThemeFile("images/apple-touch-icon-114x114.png"))%>">
 
     <!--Loca styles-->
-    <link href="<%=jagg.getAbsoluteUrl("/site/themes/default/css/localstyles.css")%>" rel="stylesheet">
+    <link href="<%=jagg.getAbsoluteUrl(jagg.getThemeFile("css/localstyles.css"))%>" rel="stylesheet">
     <!--[if IE 7]><link rel="stylesheet" type="text/css" href="<%=jagg.getAbsoluteUrl("/site/themes/default/css/style-ie7.css")%>" media="all"/><![endif]-->
     <!--[if lt IE 9]><link rel="stylesheet" type="text/css" href="<%=jagg.getAbsoluteUrl("/site/themes/default/css/style-ie7-8.css")%>" media="all"/><![endif]-->
 
     <!-- Le HTML5 shim, for IE6-8 support of HTML5 elements -->
     <!--[if lt IE 9]><script src="<%=jagg.getAbsoluteUrl("/site/themes/default/lib/html5/html5.js")%>"></script><![endif]-->
 
-    <script type="text/javascript" src="<%=jagg.getAbsoluteUrl("/site/themes/default/lib/jquery-1.7.1.min.js")%>"></script>
+    <script type="text/javascript" src="<%=jagg.getAbsoluteUrl(jagg.getThemeFile("lib/jquery-1.7.1.min.js"))%>"></script>
 
     <%
     var data = jagg.data();
@@ -58,27 +58,27 @@ var editUrl="info";
     }
     %>
     <script>
-        var siteRoot = '<%=jagg.getAbsoluteUrl("/site/themes/default")%>';
+        var siteRoot = '<%=jagg.getAbsoluteUrl("/site/themes/"+jagg.getUserTheme().base)%>';
     </script>
 
 
-    <script type="text/javascript" src="<%=jagg.getAbsoluteUrl("/site/themes/default/lib/jquery.cookie.js")%>"></script>
-    <script type="text/javascript" src="<%=jagg.getAbsoluteUrl("/site/themes/default/lib/jquery.validate.min.js")%>"></script>
-    <script type="text/javascript" src="<%=jagg.getAbsoluteUrl("/site/themes/default/lib/jquery.form.js")%>"></script>
+    <script type="text/javascript" src="<%=jagg.getAbsoluteUrl(jagg.getThemeFile("lib/jquery.cookie.js"))%>"></script>
+    <script type="text/javascript" src="<%=jagg.getAbsoluteUrl(jagg.getThemeFile("lib/jquery.validate.min.js"))%>"></script>
+    <script type="text/javascript" src="<%=jagg.getAbsoluteUrl(jagg.getThemeFile("lib/jquery.form.js"))%>"></script>
 
-    <script type="text/javascript" src="<%=jagg.getAbsoluteUrl("/site/themes/default/lib/bootstrap/js/bootstrap-transition.js")%>"></script>
-    <script type="text/javascript" src="<%=jagg.getAbsoluteUrl("/site/themes/default/lib/bootstrap/js/bootstrap-transition.js")%>"></script>
-    <script type="text/javascript" src="<%=jagg.getAbsoluteUrl("/site/themes/default/lib/bootstrap/js/bootstrap-alert.js")%>"></script>
-    <script type="text/javascript" src="<%=jagg.getAbsoluteUrl("/site/themes/default/lib/bootstrap/js/bootstrap-modal.js")%>"></script>
-    <script type="text/javascript" src="<%=jagg.getAbsoluteUrl("/site/themes/default/lib/bootstrap/js/bootstrap-dropdown.js")%>"></script>
-    <script type="text/javascript" src="<%=jagg.getAbsoluteUrl("/site/themes/default/lib/bootstrap/js/bootstrap-scrollspy.js")%>"></script>
-    <script type="text/javascript" src="<%=jagg.getAbsoluteUrl("/site/themes/default/lib/bootstrap/js/bootstrap-tab.js")%>"></script>
-    <script type="text/javascript" src="<%=jagg.getAbsoluteUrl("/site/themes/default/lib/bootstrap/js/bootstrap-tooltip.js")%>"></script>
-    <script type="text/javascript" src="<%=jagg.getAbsoluteUrl("/site/themes/default/lib/bootstrap/js/bootstrap-popover.js")%>"></script>
-    <script type="text/javascript" src="<%=jagg.getAbsoluteUrl("/site/themes/default/lib/bootstrap/js/bootstrap-button.js")%>"></script>
-    <script type="text/javascript" src="<%=jagg.getAbsoluteUrl("/site/themes/default/lib/bootstrap/js/bootstrap-collapse.js")%>"></script>
-    <script type="text/javascript" src="<%=jagg.getAbsoluteUrl("/site/themes/default/lib/bootstrap/js/bootstrap-carousel.js")%>"></script>
-    <script type="text/javascript" src="<%=jagg.getAbsoluteUrl("/site/themes/default/lib/bootstrap/js/bootstrap-typeahead.js")%>"></script>
+    <script type="text/javascript" src="<%=jagg.getAbsoluteUrl(jagg.getThemeFile("lib/bootstrap/js/bootstrap-transition.js"))%>"></script>
+    <script type="text/javascript" src="<%=jagg.getAbsoluteUrl(jagg.getThemeFile("lib/bootstrap/js/bootstrap-transition.js"))%>"></script>
+    <script type="text/javascript" src="<%=jagg.getAbsoluteUrl(jagg.getThemeFile("lib/bootstrap/js/bootstrap-alert.js"))%>"></script>
+    <script type="text/javascript" src="<%=jagg.getAbsoluteUrl(jagg.getThemeFile("lib/bootstrap/js/bootstrap-modal.js"))%>"></script>
+    <script type="text/javascript" src="<%=jagg.getAbsoluteUrl(jagg.getThemeFile("lib/bootstrap/js/bootstrap-dropdown.js"))%>"></script>
+    <script type="text/javascript" src="<%=jagg.getAbsoluteUrl(jagg.getThemeFile("lib/bootstrap/js/bootstrap-scrollspy.js"))%>"></script>
+    <script type="text/javascript" src="<%=jagg.getAbsoluteUrl(jagg.getThemeFile("lib/bootstrap/js/bootstrap-tab.js"))%>"></script>
+    <script type="text/javascript" src="<%=jagg.getAbsoluteUrl(jagg.getThemeFile("lib/bootstrap/js/bootstrap-tooltip.js"))%>"></script>
+    <script type="text/javascript" src="<%=jagg.getAbsoluteUrl(jagg.getThemeFile("lib/bootstrap/js/bootstrap-popover.js"))%>"></script>
+    <script type="text/javascript" src="<%=jagg.getAbsoluteUrl(jagg.getThemeFile("lib/bootstrap/js/bootstrap-button.js"))%>"></script>
+    <script type="text/javascript" src="<%=jagg.getAbsoluteUrl(jagg.getThemeFile("lib/bootstrap/js/bootstrap-collapse.js"))%>"></script>
+    <script type="text/javascript" src="<%=jagg.getAbsoluteUrl(jagg.getThemeFile("lib/bootstrap/js/bootstrap-carousel.js"))%>"></script>
+    <script type="text/javascript" src="<%=jagg.getAbsoluteUrl(jagg.getThemeFile("lib/bootstrap/js/bootstrap-typeahead.js"))%>"></script>
 </body>
 </html>
 <% }); %>

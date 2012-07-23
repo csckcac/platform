@@ -7,7 +7,7 @@
 <ul class="nav nav-list">
   <% var api = outputs.api; %>
   <% if(api.thumb==null){%>
-  <li><a href="#" class="noHover"><img id="apiThumb" src="<%=site.context%>/site/themes/default/images/api-default.png" alt="" /></a></li>
+  <li><a href="#" class="noHover"><img id="apiThumb" src="<%=jagg.getAbsoluteUrl(jagg.getThemeFile("images/api-default.png"))%>" alt="" /></a></li>
   <%}else{%> <li><a href="#" class="noHover"><img id="apiThumb" src="<%=api.thumb%>" alt="" /></a></li>
   <%}%>
   <li><a href="#" onclick="showTab('usersLink')"><i class="icon-user"></i>

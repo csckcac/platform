@@ -39,7 +39,7 @@
             <div class="thumbnail">
                 <a href="<%=path%>">
                     <% if(api.thumb == null) { %>
-                    <img class="thumb" src="<%=site.context%>/site/themes/default/images/api-default.png" alt=""/>
+                    <img class="thumb" src="<%=jagg.getAbsoluteUrl(jagg.getThemeFile("images/api-default.png"))%>" alt=""/>
                     <% } else{ %>
                     <img class="thumb" src="<%=api.thumb%>" alt=""/>
                     <% } %>

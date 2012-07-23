@@ -58,7 +58,7 @@ $(document).ready(function() {
             <div class="control-group">
                 <label class="control-label" for="imageUrl">Icon</label>
                 <div class="controls">
-                     <% if(api.thumb==null){%> <div><img id="apiEditThumb" alt="" src="<%=site.context%>/site/themes/default/images/api-default.png%>"/></div><%}else{%>
+                     <% if(api.thumb==null){%> <div><img id="apiEditThumb" alt="" src="<%=jagg.getAbsoluteUrl(jagg.getThemeFile("images/api-default.png"))%>"/></div><%}else{%>
                     <div><img id="apiEditThumb" alt="" src="<%=api.thumb%>"/></div> <%}%>
                     <a onclick="javascript:$('#imageUrl').toggle('slow')">
                         <i class="icon-picture"></i> Change Icon

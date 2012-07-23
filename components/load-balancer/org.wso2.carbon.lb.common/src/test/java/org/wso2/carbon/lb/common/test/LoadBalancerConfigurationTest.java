@@ -54,6 +54,12 @@ public class LoadBalancerConfigurationTest extends TestCase {
         assertEquals(60000, asServiceConfig.getMessageExpiryTime());
         assertEquals(400, asServiceConfig.getQueueLengthPerNode());
         assertEquals(10, asServiceConfig.getRoundsToAverage());
+        assertEquals("worker", asServiceConfig.getSubDomain());
+        
+        asServiceConfig =
+                lbConfig.getServiceConfig("wso2.as2.domain");
+        assertEquals("worker1", asServiceConfig.getSubDomain());
+        
 
     }
 

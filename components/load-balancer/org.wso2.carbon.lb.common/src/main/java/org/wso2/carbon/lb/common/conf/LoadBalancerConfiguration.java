@@ -351,7 +351,7 @@ public class LoadBalancerConfiguration implements Serializable{
                 for (Node domain : domainsNode.getChildNodes()) {
                     ServiceConfiguration serviceConfig = new ServiceConfiguration(domain.getName());
                     
-                    //serviceNode is fully constructed hence we're sending null as the first argument
+                    createConfiguration(serviceConfig, serviceNode);
                     createConfiguration(serviceConfig, domain);
                     serviceConfigMap.put(domain.getName(), serviceConfig);
                 }
@@ -650,6 +650,8 @@ public class LoadBalancerConfiguration implements Serializable{
         
         private String domain;
         private String tenantRange;
+        private String subDomain;
+        private boolean subDomainSet;
 
         public ServiceConfiguration(String domain) {
             this.domain = domain;
@@ -716,6 +718,15 @@ public class LoadBalancerConfiguration implements Serializable{
             }
             return messageExpiryTime;
         }
+        
+        public String getSubDomain() {
+            if (subDomainSet) {
+                return subDomain;
+            } else if (defaultServiceConfig != null && defaultServiceConfig.subDomainSet) {
+                return defaultServiceConfig.subDomain;
+            }
+            return subDomain;
+        }
 
         public void setMin_app_instances(int minAppInstances) {
             if (minAppInstances < 1) {
@@ -769,6 +780,11 @@ public class LoadBalancerConfiguration implements Serializable{
         
         public void setTenant_range(String range) {
             this.tenantRange = range;
+        }
+        
+        public void setSub_domain(String subDomain) {
+            this.subDomain = subDomain;
+            this.subDomainSet = true;
         }
     }
 }

@@ -40,4 +40,16 @@ public class AppFactoryConstants {
     public static final String DEFAULT_APPLICATION_USER_ROLE = "ApplicationMgt.DefaultApplicationUserRole";
     public static final String PERMISSION = "Permission";
     public static final String REVISION_CONTROLLER_SERVICE_EPR = "WebServiceEndPoints.RevisionControllerService";
+
+    public static final String REGISTRY_GOVERNANCE_PATH = "/_system/governance";
+    public static final String REGISTRY_APPLICATION_PATH = "/repository/applications";
+
+    public static final String APPLICATION_ID = "applicationId";
+    public static final String APPLICATION_REVISION = "revision";
+    public static final String APPLICATION_VERSION = "version";
+    public static final String APPLICATION_STAGE = "stage";
+    public static final String APPLICATION_BUILD = "build";
+
+    public static final String TRUNK = "trunk";
+    public static final String BRANCH = "branch";
 }

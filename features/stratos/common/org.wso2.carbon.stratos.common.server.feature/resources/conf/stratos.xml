@@ -63,6 +63,7 @@
     <PaypalAPIUsername>username</PaypalAPIUsername>
     <PaypalAPIPassword>password</PaypalAPIPassword>
     <PaypalAPISignature>signature</PaypalAPISignature>
+    <PaypalEnvironment>live</PaypalEnvironment>
 
      <!--Manager Configurations-->
      <managerServiceUrl>https://cloud-test.wso2.com/services/</managerServiceUrl>

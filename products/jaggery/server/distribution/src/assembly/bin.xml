@@ -56,21 +56,11 @@
             </excludes>
             <fileMode>755</fileMode>
         </fileSet>
-	 <!--  copying samples -->
-        <!--fileSet>
-            <directory>../apps</directory>
-            <outputDirectory>jaggery-${pom.version}/samples</outputDirectory>
-            <excludes>
-                <exclude>**/**.sh</exclude>
-                <exclude>**/pom.xml</exclude>
-                <exclude>**/target/**</exclude>
-            </excludes>
-        </fileSet-->
- 		<!--  copying modules xml -->
         <fileSet>
-            <directory>../p2-profile-gen/target/wso2carbon-core-${carbon.kernal.version}/modules</directory>
-            <outputDirectory>jaggery-${pom.version}/modules/</outputDirectory>
-	    	<includes>
+            <directory>../../modules/</directory>
+            <outputDirectory>jaggery-${pom.version}/modules/
+            </outputDirectory>
+            <includes>
                 <include>*/**</include>
             </includes>
         </fileSet>

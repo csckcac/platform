@@ -54,7 +54,6 @@ public class CollectionTestCase {
                 new ResourceAdminServiceClient(environment.getGreg().getBackEndUrl(),
                                                userInfo.getUserName(), userInfo.getPassword());
 
-
     }
 
     @Test(groups = {"wso2.greg"}, description = "create a checkpoint for a collection at root level")
@@ -76,12 +75,11 @@ public class CollectionTestCase {
         resourceAdminClient.createVersion(COLLECTION_PATH_LEAF + "dir1");
         VersionPath[] vp1 = resourceAdminClient.getVersion(COLLECTION_PATH_LEAF + "dir1");
         assertEquals(1, vp1.length);
-
-
     }
 
 
-    @Test(groups = {"wso2.greg"}, description = "create a checkpoint for a collection. Edit it and create another checkpoint")
+    @Test(groups = {"wso2.greg"}, description = "create a checkpoint for a collection. Edit it and " +
+                                                "create another checkpoint")
     public void testEditCollectionVer()
             throws ResourceAdminServiceExceptionException, RemoteException, MalformedURLException {
 

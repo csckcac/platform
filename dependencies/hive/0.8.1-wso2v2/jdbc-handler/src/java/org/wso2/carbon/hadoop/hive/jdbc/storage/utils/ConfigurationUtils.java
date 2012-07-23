@@ -207,7 +207,7 @@ public class ConfigurationUtils {
         String[] order = null;
         if (valuesOrder != null) {
             valuesOrder = valuesOrder.trim();
-            order = valuesOrder.split(",");
+            order = trim(valuesOrder.split(","));
         }
         return order;
     }

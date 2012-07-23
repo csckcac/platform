@@ -37,6 +37,7 @@ import org.apache.synapse.config.SynapseConfigUtils;
 import org.apache.synapse.config.SynapseConfiguration;
 import org.apache.synapse.mediators.AbstractMediator;
 import org.milyn.Smooks;
+import org.milyn.SmooksException;
 import org.milyn.container.ExecutionContext;
 import org.milyn.payload.JavaResult;
 import org.milyn.persistence.util.PersistenceUtil;
@@ -127,11 +128,11 @@ public class SmooksMediator extends AbstractMediator {
 			}
 		} catch (AxisFault e) {
 			handleException("Error occured while processing smooks output", e, synCtx);
-		} catch (Exception e) {
-			handleException("Error occured while processing transaction", e, synCtx);
+		} catch (SmooksException e) {
 			if (transactionStarted) {
 				this.transaction.rollback();
 			}
+			throw new SmooksException(e.getMessage(), e);
 		}
 
 		if (synLog.isTraceOrDebugEnabled()) {

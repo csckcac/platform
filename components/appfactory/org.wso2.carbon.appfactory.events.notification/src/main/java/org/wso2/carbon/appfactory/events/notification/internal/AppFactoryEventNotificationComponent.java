@@ -19,17 +19,24 @@ package org.wso2.carbon.appfactory.events.notification.internal;
 import org.apache.commons.logging.Log;
 import org.apache.commons.logging.LogFactory;
 import org.osgi.service.component.ComponentContext;
+import org.wso2.carbon.appfactory.application.mgt.service.ApplicationManagementService;
 
 /**
- * @scr.component name=
- *                "org.wso2.carbon.appfactory.core.internal.AppFactoryCoreServiceComponent"
+ * @scr.component name="org.wso2.carbon.appfactory.core.internal.AppFactoryCoreServiceComponent"
  *                immediate="true"
+ *               @scr.reference name="appfactory.mgt"
+ *               interface="org.wso2.carbon.appfactory.application.mgt.service.ApplicationManagementService"
+ *               cardinality="1..1" policy="dynamic"
+ *               bind="setApplicationManagementService"
+ *               unbind="unsetApplicationManagementService"
+ *
  */
 
 public class AppFactoryEventNotificationComponent {
 
     private static final Log log = LogFactory
             .getLog(AppFactoryEventNotificationComponent.class);
+    private static ApplicationManagementService applicationManagementService;
 
     protected void activate(ComponentContext context) {
         // BundleContext bundleContext = context.getBundleContext();
@@ -47,5 +54,17 @@ public class AppFactoryEventNotificationComponent {
         if (log.isDebugEnabled()) {
             log.debug("Appfactory common bundle is deactivated");
         }
+    }
+
+    protected void setApplicationManagementService(ApplicationManagementService service){
+        applicationManagementService = service;
+    }
+
+    protected void unsetApplicationManagementService(ApplicationManagementService service){
+        applicationManagementService = null;
+    }
+    
+    public static ApplicationManagementService getApplicationManagementService(){
+        return applicationManagementService;
     }
 }

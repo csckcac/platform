@@ -311,7 +311,7 @@ public class ApiMgtDAO {
         Connection conn = null;
         PreparedStatement ps = null;
         String sqlQuery = "UPDATE" +
-                " IDENTITY_OAUTH2_ACCESS_TOKEN IAT , AM_SUBSCRIBER SB," +
+                " IDN_OAUTH2_ACCESS_TOKEN IAT , AM_SUBSCRIBER SB," +
                 " AM_SUBSCRIPTION SP , AM_APPLICATION APP, AM_API API" +
                 " SET IAT.TOKEN_STATE=?" +
                 " WHERE SB.USER_ID=?" +
@@ -392,7 +392,7 @@ public class ApiMgtDAO {
                 "   APP.APPLICATION_ID," +
                 "   AKM.KEY_TYPE" +
                 " FROM " +
-                "   IDENTITY_OAUTH2_ACCESS_TOKEN IAT," +
+                "   IDN_OAUTH2_ACCESS_TOKEN IAT," +
                 "   AM_SUBSCRIPTION SUB," +
                 "   AM_SUBSCRIBER SUBS," +
                 "   AM_APPLICATION APP," +
@@ -418,7 +418,7 @@ public class ApiMgtDAO {
                 "   APP.APPLICATION_ID," +
                 "   SKM.KEY_TYPE" +
                 " FROM " +
-                "   IDENTITY_OAUTH2_ACCESS_TOKEN IAT," +
+                "   IDN_OAUTH2_ACCESS_TOKEN IAT," +
                 "   AM_SUBSCRIPTION SUB," +
                 "   AM_SUBSCRIBER SUBS," +
                 "   AM_APPLICATION APP," +
@@ -507,7 +507,10 @@ public class ApiMgtDAO {
         	String query = "INSERT" +
                     " INTO AM_SUBSCRIBER (USER_ID, TENANT_ID, EMAIL_ADDRESS, DATE_SUBSCRIBED)" +
                     " VALUES (?,?,?,?)";
-            ps = conn.prepareStatement(query, Statement.RETURN_GENERATED_KEYS);
+
+            ps = conn.prepareStatement(query, new String[] {"SUBSCRIBER_ID"});
+
+            //ps = conn.prepareStatement(query, Statement.RETURN_GENERATED_KEYS);
             ps.setString(1, subscriber.getName());
             ps.setInt(2, subscriber.getTenantId());
             ps.setString(3, subscriber.getEmail());
@@ -517,18 +520,27 @@ public class ApiMgtDAO {
             int subscriberId = 0;
             rs = ps.getGeneratedKeys();
             if (rs.next()) {
-                subscriberId = rs.getInt(1);
+                //subscriberId = rs.getInt(1);
+                subscriberId = Integer.valueOf(rs.getString(1)).intValue();
             }
             subscriber.setId(subscriberId);
 
             // Add default application
             Application defaultApp = new Application(APIConstants.DEFAULT_APPLICATION_NAME, subscriber);
-            addApplication(defaultApp, subscriber.getName());
+            addApplication(defaultApp, subscriber.getName(),conn);
 
+            conn.commit();
         } catch (SQLException e) {
 			String msg = "Error in adding new subscriber: " + e.getMessage();
 			log.error(msg, e);
-			throw new APIManagementException(msg, e);
+            if (conn != null) {
+                try {
+                    conn.rollback();
+                } catch (SQLException e1) {
+                    log.error(msg, e);
+                }
+            }
+            throw new APIManagementException(msg, e);
 		} finally {
 			APIMgtDBUtil.closeAllConnections(ps, conn, rs);
 		}
@@ -627,7 +639,9 @@ public class ApiMgtDAO {
                     " VALUES (?,?,?)";
 
             //Adding data to the AM_SUBSCRIPTION table
-            ps = conn.prepareStatement(sqlQuery, Statement.RETURN_GENERATED_KEYS);
+            //ps = conn.prepareStatement(sqlQuery, Statement.RETURN_GENERATED_KEYS);
+            ps = conn.prepareStatement(sqlQuery, new String[] {"SUBSCRIPTION_ID"});
+
             ps.setString(1, identifier.getTier());
             ps.setInt(2, apiId);
             ps.setInt(3, applicationId);
@@ -635,7 +649,8 @@ public class ApiMgtDAO {
             ps.executeUpdate();            
             ResultSet rs = ps.getGeneratedKeys();
             while (rs.next()) {
-                subscriptionId = rs.getInt(1);
+                //subscriptionId = rs.getInt(1);
+                subscriptionId = Integer.valueOf(rs.getString(1)).intValue();
             }
             ps.close();
 
@@ -1169,7 +1184,7 @@ public class ApiMgtDAO {
                                       int tenantId, APIInfoDTO apiInfoDTO, String keyType) throws IdentityException {
         // Add Access Token
         String sqlAddAccessToken = "INSERT" +
-                " INTO IDENTITY_OAUTH2_ACCESS_TOKEN (ACCESS_TOKEN, CONSUMER_KEY, TOKEN_STATE, TOKEN_SCOPE) " +
+                " INTO IDN_OAUTH2_ACCESS_TOKEN (ACCESS_TOKEN, CONSUMER_KEY, TOKEN_STATE, TOKEN_SCOPE) " +
                 " VALUES (?,?,?,?)";
         
         String getSubscriptionId = "SELECT SUBS.SUBSCRIPTION_ID " +
@@ -1252,7 +1267,7 @@ public class ApiMgtDAO {
                                       int tenantId, String keyType) throws IdentityException {
         // Add Access Token
         String sqlAddAccessToken = "INSERT" +
-                " INTO IDENTITY_OAUTH2_ACCESS_TOKEN (ACCESS_TOKEN, CONSUMER_KEY, TOKEN_STATE, TOKEN_SCOPE) " +
+                " INTO IDN_OAUTH2_ACCESS_TOKEN (ACCESS_TOKEN, CONSUMER_KEY, TOKEN_STATE, TOKEN_SCOPE) " +
                 " VALUES (?,?,?,?)";
 
         String getApplicationId = "SELECT APP.APPLICATION_ID " +
@@ -1498,7 +1513,7 @@ public class ApiMgtDAO {
     public String[] addOAuthConsumer(String username, int tenantId) throws IdentityOAuthAdminException, APIManagementException {
         Connection connection = null;
         PreparedStatement prepStmt = null;
-        String sqlStmt = "INSERT INTO IDENTITY_OAUTH_CONSUMER_APPLICATIONS " +
+        String sqlStmt = "INSERT INTO IDN_OAUTH_CONSUMER_APPS " +
                 "(CONSUMER_KEY, CONSUMER_SECRET, USERNAME, TENANT_ID, OAUTH_VERSION) VALUES (?,?,?,?,?) ";
         String consumerKey;
         String consumerSecret = OAuthUtil.getRandomNumber();
@@ -1534,7 +1549,7 @@ public class ApiMgtDAO {
         Connection connection = null;
         PreparedStatement prepStmt = null;
         ResultSet rSet = null;
-        String sqlQuery = "SELECT * FROM IDENTITY_OAUTH_CONSUMER_APPLICATIONS " +
+        String sqlQuery = "SELECT * FROM IDN_OAUTH_CONSUMER_APPS " +
                 "WHERE CONSUMER_KEY=?";
 
         boolean isDuplicateConsumer = false;
@@ -1559,20 +1574,40 @@ public class ApiMgtDAO {
     }
 
 
+    public void addApplication (Application application, String userId) throws APIManagementException{
+        Connection conn = null;
+        try {
+            conn = APIMgtDBUtil.getConnection();
+            addApplication(application,userId,conn);
+            conn.commit();
+        } catch (SQLException e) {
+            String msg = "Failed to add Application";
+            log.error(msg, e);
+                if (conn != null) {
+                    try {
+                        conn.rollback();
+                    } catch (SQLException e1) {
+                        log.error("Failed to rollback the add Application ", e);
+                    }
+                }
+                throw new APIManagementException(msg, e);
+        } finally {
+                APIMgtDBUtil.closeAllConnections(null, conn, null);
+        }
+    }
     /**
+     *
+     *
      *
      * @param application Application
      * @param userId  User Id
      * @throws APIManagementException  if failed to add Application
      */
-    public void addApplication(Application application,String userId) throws APIManagementException {
-        Connection conn = null;
-        ResultSet resultSet = null;
+    public void addApplication(Application application, String userId, Connection conn)
+            throws APIManagementException, SQLException {
         PreparedStatement ps = null;
 
         try {
-
-            conn = APIMgtDBUtil.getConnection();
             int tenantId;
             try {
                 tenantId = IdentityUtil.getTenantIdOFUser(userId);
@@ -1582,7 +1617,7 @@ public class ApiMgtDAO {
                 throw new APIManagementException(msg, e);
             }
             //Get subscriber Id
-            Subscriber subscriber = getSubscriber(userId,tenantId);
+            Subscriber subscriber = getSubscriber(userId,tenantId, conn);
             if (subscriber == null) {
                 String msg = "Could not load Subscriber records for: " + userId;
                 log.error(msg);
@@ -1599,24 +1634,14 @@ public class ApiMgtDAO {
 
             ps.executeUpdate();
             ps.close();
-            // finally commit transaction
-            conn.commit();
 
         } catch (SQLException e) {
             String msg = "Failed to add Application";
             log.error(msg, e);
-            if (conn != null) {
-                try {
-                    conn.rollback();
-                } catch (SQLException e1) {
-                    log.error("Failed to rollback the add Application ", e);
-                }
-            }
-            throw new APIManagementException(msg, e);
+            throw e;
         } finally {
-            APIMgtDBUtil.closeAllConnections(ps, conn, resultSet);
-        }
-
+            APIMgtDBUtil.closeAllConnections(ps, null, null);
+       }
     }
 
     public void updateApplication(Application application) throws APIManagementException {
@@ -1674,6 +1699,7 @@ public class ApiMgtDAO {
         ResultSet rs = null;
         Application[] applications;
 
+
         String sqlQuery = "SELECT " +
                 "   APPLICATION_ID " +
                 "   ,NAME" +
@@ -1685,6 +1711,7 @@ public class ApiMgtDAO {
 
         try {
             int tenantId;
+            connection = APIMgtDBUtil.getConnection();
             try {
                 tenantId = IdentityUtil.getTenantIdOFUser(subscriber.getName());
             } catch (IdentityException e) {
@@ -1696,7 +1723,7 @@ public class ApiMgtDAO {
             //getSubscriberId
             if(subscriber.getId() == 0){
                 Subscriber subs;
-                subs = getSubscriber(subscriber.getName(), tenantId);
+                subs = getSubscriber(subscriber.getName(), tenantId, connection);
                 if (subs == null) {
                     return null;
                 }else{
@@ -1704,7 +1731,6 @@ public class ApiMgtDAO {
                 }
             }
 
-            connection = APIMgtDBUtil.getConnection();
             prepStmt = connection.prepareStatement(sqlQuery);
             prepStmt.setInt(1,subscriber.getId());
             rs = prepStmt.executeQuery();
@@ -1797,13 +1823,14 @@ public class ApiMgtDAO {
 
     /**
      * returns a subscriber record for given username,tenant Id
+     *
      * @param username UserName
      * @param tenantId Tenant Id
+     * @param connection
      * @return  Subscriber
      * @throws APIManagementException if failed to get subscriber
      */
-    private Subscriber getSubscriber(String username, int tenantId) throws APIManagementException {
-        Connection connection = null;
+    private Subscriber getSubscriber(String username, int tenantId, Connection connection) throws APIManagementException {
         PreparedStatement prepStmt = null;
         ResultSet rs = null;
         Subscriber subscriber = null;
@@ -1821,7 +1848,6 @@ public class ApiMgtDAO {
 
 
         try {
-            connection = APIMgtDBUtil.getConnection();
             prepStmt = connection.prepareStatement(sqlQuery);
             prepStmt.setString(1, username);
             prepStmt.setInt(2,tenantId);
@@ -1840,7 +1866,7 @@ public class ApiMgtDAO {
             throw new APIManagementException("Error when reading the application information from" +
                     " the persistence store.", e);
         } finally {
-            APIMgtDBUtil.closeAllConnections(prepStmt, connection, rs);
+            APIMgtDBUtil.closeAllConnections(prepStmt, null, rs);
         }
         return subscriber;
     }

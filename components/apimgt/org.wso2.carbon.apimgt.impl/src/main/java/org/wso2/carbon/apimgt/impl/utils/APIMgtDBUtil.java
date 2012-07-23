@@ -40,7 +40,7 @@ public final class APIMgtDBUtil {
     private static final Log log = LogFactory.getLog(APIMgtDBUtil.class);
 
     private static volatile DataSource dataSource = null;
-
+    
     private static final String DB_CONFIG = "Database.";
     private static final String DB_DRIVER = DB_CONFIG + "Driver";
     private static final String DB_URL = DB_CONFIG + "URL";

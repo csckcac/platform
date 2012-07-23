@@ -32,7 +32,7 @@ public class JDBCAPIKeyDataStore implements APIKeyDataStore {
     private ApiMgtDAO dao;
 
     public JDBCAPIKeyDataStore() throws APISecurityException {
-        dao = new ApiMgtDAO();
+            dao = new ApiMgtDAO();
     }
 
     public APIKeyValidationInfoDTO getAPIKeyData(String context, String apiVersion,

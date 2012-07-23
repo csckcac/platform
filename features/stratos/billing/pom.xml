@@ -31,6 +31,7 @@
     <modules>
         <module>org.wso2.carbon.billing.server.feature</module>
         <module>org.wso2.carbon.billing.ui.feature</module>
+	<module>org.wso2.carbon.billing.feature</module>
     </modules>
 </project>
 

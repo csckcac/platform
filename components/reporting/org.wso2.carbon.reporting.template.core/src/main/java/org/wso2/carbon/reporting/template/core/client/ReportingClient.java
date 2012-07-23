@@ -203,10 +203,10 @@ public class ReportingClient {
                 }
                 columnArrayList.add(column);
             }
-            row.setColumns(new Column[columnArrayList.size()]);
+            row.setColumns(columnArrayList.toArray(new Column[columnArrayList.size()]));
             rowArrayList.add(row);
         }
-        dataSource.setRows(new Row[rowArrayList.size()]);
+        dataSource.setRows(rowArrayList.toArray(new Row[rowArrayList.size()]));
         return dataSource;
     }
 

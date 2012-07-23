@@ -406,6 +406,14 @@
             </source>
             <outputDirectory>${pom.artifactId}-${pom.version}/repository/conf/</outputDirectory>
         </file>
+          <!-- Including url-mapping-config.xml file -->
+        <file>
+            <source>
+                ../p2-profile-gen/target/wso2carbon-core-${carbon.version}/repository/conf/etc/url-mapping-config.xml
+            </source>
+            <outputDirectory>${pom.artifactId}-${pom.version}/repository/conf/etc/
+            </outputDirectory>
+        </file>  
         <!-- Including logging-config.xml file -->
         <file>
             <source>

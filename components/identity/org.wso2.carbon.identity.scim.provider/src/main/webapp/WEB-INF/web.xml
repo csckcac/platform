@@ -39,19 +39,23 @@
         <session-timeout>60</session-timeout>
     </session-config>
 
-    <!--<security-constraint>
+    <security-constraint>
  	<web-resource-collection>
     		<web-resource-name>secured services</web-resource-name>
-    		<url-pattern>*/services/customers/*</url-pattern>
+    		<url-pattern>/scim/*</url-pattern>
  	</web-resource-collection>
  	<auth-constraint>
-    		<role-name>doctor</role-name>
+    		<role-name>admin</role-name>
  	</auth-constraint>
+        <user-data-constraint>
+            <!-- transport-guarantee can be CONFIDENTIAL, INTEGRAL, or NONE -->
+            <transport-guarantee>CONFIDENTIAL</transport-guarantee>
+        </user-data-constraint>
     </security-constraint>
 
 	<login-config>
 	 	<auth-method>BASIC</auth-method>
-	</login-config>-->
+	</login-config>
 
 </web-app>
 

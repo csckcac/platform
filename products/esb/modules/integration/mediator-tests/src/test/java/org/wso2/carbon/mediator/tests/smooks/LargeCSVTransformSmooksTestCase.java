@@ -49,7 +49,7 @@ public class LargeCSVTransformSmooksTestCase extends ESBIntegrationTestCase {
 //        launchBackendAxis2Service(SampleAxis2Server.SIMPLE_STOCK_QUOTE_SERVICE);
     }
 
-    @Test(groups = {"wso2.esb"}, description = "Sample 17:  Introduction to payload Mediator")
+    @Test(groups = {"wso2.esb"}, description = "Patch Fix:  smooks Mediator")
     public void transformUsingPayloadFactory() throws AxisFault {
         OMElement response;
         RequestUtil testCSVInputRequest = new RequestUtil();

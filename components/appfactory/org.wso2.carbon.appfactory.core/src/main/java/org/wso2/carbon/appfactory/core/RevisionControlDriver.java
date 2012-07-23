@@ -14,7 +14,11 @@ public interface RevisionControlDriver {
 	 * @param version
 	 * @param revision
 	 */
-	public void getSource(String applicationId, String version, String revision,
+	public void getSource(String applicationId,String version, String revision,
 	                      RevisionControlDriverListener listener) throws AppFactoryException;
+
+    public void branch(String appId, String currentVersion, String targetVersion, String currentRevision) throws AppFactoryException;
+    public void tag(String appId, String currentVersion, String targetVersion,
+                    String currentRevision) throws AppFactoryException;
 
 }

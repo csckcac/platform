@@ -196,7 +196,7 @@
                                 var stage = stages[i];
                             %>
                           		<tr><td><h3><%=stage%></h3></td></tr>
-                          		<tr><td>
+                          		<tr>
                             <%
                             	var appInfos = getAppVersionsInStage(stage, applicationKey);
                             	
@@ -208,11 +208,12 @@
                             	for(var j = 0; j < versions.length; j++){
                             	    var version = versions[j];
                             %>
-                            	    <input type="radio" name="<%=stage%>" value="<%=version%>"><%=version%></input><br/>    
+                            	  <td>  <input type="radio" name="<%=stage%>" value="<%=version%>"><%=version%></input></td>
+                            	  <td> <input type="text" name="targetVersion">Target Version</input><td/>
                          	<%
                             	}
                             %>
-                            </td></tr>
+                            </tr>
                             <tr>
                                 <td class="buttonRow">
                                     <input type="button" onclick=doSubmit('<%=stage%>') value='Promote' class='btn btn-primary'/>

@@ -8,15 +8,24 @@
 
         var applicationKey = request.getParameter("applicationKey");
         var stageName = request.getParameter("stageName");
-        var version = request.getParameter("version");
+        var version = request.getParameter(stageName);
+        var targetVersion=request.getParameter("targetVersion");
         var revision = '0';
         var build = 'true';
-        var path='/_system/governance'+'/repository/applications/'+applicationKey+'/'+stageName+'/'+'trunk/appinfo';
+        var path='/_system/governance'+'/repository/applications/'+applicationKey+'/'+stageName+'/'+version+'/appinfo';
         aspect=LIFE_CYCLE_NAME;
         var  action='Promote';
         var parameters=new Array();
         parameters[0]='version';
-        parameters[1]=version;
+        parameters[1]=targetVersion;
+        parameters[2]='applicationId';
+        parameters[3]=applicationKey;
+        parameters[4]='revision';
+        parameters[5]=1;
+        parameters[6]='stage';
+        parameters[7]=stageName;
+        parameters[8]='build';
+        parameters[9]='true';
         try{
             var deployedArtifact = invokeAspectWithParameter(path,aspect,action,parameters);
             print(deployedArtifact +" was successfully deployed");

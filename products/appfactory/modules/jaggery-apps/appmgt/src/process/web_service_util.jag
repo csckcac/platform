@@ -436,7 +436,8 @@
                                                     '<ser:items></ser:items>';
                                                     if(parameters.length>=2){
                                                     for(var i=0;i<parameters.length;){
-                                                       payload=payload+'<ser:parameters><ser:array>'+parameters[i]+'</ser:array>'+ '<ser:array>'+parameters[i++]+'</ser:array></ser:parameters>';
+                                                       payload=payload+'<ser:parameters><ser:array>'+parameters[i]+'</ser:array>'+ '<ser:array>'+parameters[++i]+'</ser:array></ser:parameters>';
+                                                       i++;
                                                     }
                                                     }
                                                     payload=payload+'</ser:invokeAspectWithParams>';
@@ -444,13 +445,14 @@
 
                  try {
                      var endPoint =getProperty(WS_INVOKE_ASPECT);
-                     customCheckListAdminService.open(options,endPoint, false,getProperty(ADMIN_USERNAME),getProperty(ADMIN_PASSWORD));
+                     customCheckListAdminService.open(options,endPoint, true,getProperty(ADMIN_USERNAME),getProperty(ADMIN_PASSWORD));
                      customCheckListAdminService.send(payload);
                      result = customCheckListAdminService.responseE4X;
 
-                     if(log.isDebugEnabled()){
+
+
                          log.debug("Invoking service endpoint:"+endPoint+" returned result:"+result);
-                     }
+
                      return result;
                  } catch (e) {
                      log.error("Error in calling CustomLifecyclesChecklistAdminService "+e.toString());

@@ -72,8 +72,8 @@ public class CommodityQuoteTestCase {
         assert result != null : "Result cannot be null";
         OMElement name = result.getFirstElement().getFirstChildWithName(new QName("name"));
         OMElement symbol = result.getFirstElement().getFirstChildWithName(new QName("symbol"));
-        assertEquals("<name>mn</name>", name.toString().trim());
-        assertEquals("<symbol>Manganese</symbol>", symbol.toString().trim());
+        assertEquals("<name>Manganese</name>", name.toString().trim());
+        assertEquals("<symbol>mn</symbol>", symbol.toString().trim());
     }
 
     private OMElement createPayload() throws XMLStreamException {

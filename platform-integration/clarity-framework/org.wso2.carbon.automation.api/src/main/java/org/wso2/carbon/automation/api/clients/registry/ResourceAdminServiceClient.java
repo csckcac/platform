@@ -24,9 +24,7 @@ import org.wso2.carbon.automation.api.clients.utils.AuthenticateStub;
 import org.wso2.carbon.registry.resource.stub.ResourceAdminServiceExceptionException;
 import org.wso2.carbon.registry.resource.stub.ResourceAdminServiceResourceServiceExceptionException;
 import org.wso2.carbon.registry.resource.stub.ResourceAdminServiceStub;
-import org.wso2.carbon.registry.resource.stub.beans.xsd.CollectionContentBean;
-import org.wso2.carbon.registry.resource.stub.beans.xsd.ContentBean;
-import org.wso2.carbon.registry.resource.stub.beans.xsd.MetadataBean;
+import org.wso2.carbon.registry.resource.stub.beans.xsd.*;
 import org.wso2.carbon.registry.resource.stub.common.xsd.ResourceData;
 
 import javax.activation.DataHandler;
@@ -150,7 +148,6 @@ public class ResourceAdminServiceClient {
             throws ResourceAdminServiceExceptionException, RemoteException {
 
         resourceAdminServiceStub.importResource("/", resourceName, MEDIA_TYPE_POLICY, description, fetchURL, null);
-
     }
 
     public void uploadArtifact(String description, DataHandler dh)
@@ -172,7 +169,6 @@ public class ResourceAdminServiceClient {
             throws ResourceAdminServiceExceptionException, RemoteException {
 
         resourceAdminServiceStub.addSymbolicLink(parentPath, name, targetPath);
-
     }
 
     public void addTextResource(String parentPath, String fileName,
@@ -235,6 +231,50 @@ public class ResourceAdminServiceClient {
             String msg = "get human readable media type error ";
             throw new Exception(msg, e);
 
+        }
+    }
+
+    public void updateTextContent(String path, String content)
+            throws RemoteException, ResourceAdminServiceExceptionException {
+        try {
+            resourceAdminServiceStub.updateTextContent(path, content);
+        } catch (RemoteException e) {
+            log.error("Cannot edit the content of the resource : " + e.getMessage());
+            throw new RemoteException("Edit content error : ", e);
+
+        } catch (ResourceAdminServiceExceptionException e) {
+            log.error("Cannot edit the content of the resource : " + e.getMessage());
+            throw new ResourceAdminServiceExceptionException("Get version error : ", e);
+
+        }
+    }
+
+    public VersionPath[] getVersion(String path)
+            throws RemoteException, ResourceAdminServiceExceptionException {
+        VersionPath[] versionPaths = null;
+        try {
+            VersionsBean vb = resourceAdminServiceStub.getVersionsBean(path);
+            versionPaths = vb.getVersionPaths();
+        } catch (RemoteException e) {
+            log.error("No versions for created path : " + e.getMessage());
+            throw new RemoteException("Get version error : ", e);
+        } catch (ResourceAdminServiceExceptionException e) {
+            log.error("Get version error : " + e.getMessage());
+            throw new ResourceAdminServiceExceptionException("Get version error : ", e);
+        }
+        return versionPaths;
+    }
+
+    public void createVersion(String resourcePath)
+            throws RemoteException, ResourceAdminServiceExceptionException {
+        try {
+            resourceAdminServiceStub.createVersion(resourcePath);
+        } catch (RemoteException e) {
+            log.error("Create version error : " + e.getMessage());
+            throw new RemoteException("Create version error : ", e);
+        } catch (ResourceAdminServiceExceptionException e) {
+            log.error("Create version error : " + e.getMessage());
+            throw new ResourceAdminServiceExceptionException("Create version error : ", e);
         }
     }
 }

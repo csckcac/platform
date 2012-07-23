@@ -71,11 +71,6 @@
         </dependency>
         <dependency>
             <groupId>org.wso2.carbon</groupId>
-            <artifactId>org.wso2.carbon.appfactory.application.deployment.service</artifactId>
-            <version>${appfactory.version}</version>
-        </dependency>
-        <dependency>
-            <groupId>org.wso2.carbon</groupId>
             <artifactId>org.wso2.carbon.appfactory.common</artifactId>
             <version>${appfactory.version}</version>
         </dependency>
@@ -203,9 +198,6 @@
                                 <bundleDef>org.tigris:svn-client-adapter</bundleDef>
                                 <bundleDef>
                                     org.wso2.carbon:org.wso2.carbon.appfactory.svn.repository.mgt.service
-                                </bundleDef>
-                                <bundleDef>
-                                    org.wso2.carbon:org.wso2.carbon.appfactory.application.deployment.service
                                 </bundleDef>
                                 <bundleDef>maven-invoker.wso2:maven-invoker</bundleDef>
                                 <bundleDef>plexus-utils.wso2:plexus-utils</bundleDef>

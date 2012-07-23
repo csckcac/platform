@@ -50,7 +50,6 @@ public class DefaultCallbackHandler extends AbstractOAuthCallbackHandler {
             }
             if(OAuthCallback.OAuthCallbackType.SCOPE_VALIDATION_TOKEN.equals(
                     oauthCallback.getCallbackType())){
-                oauthCallback.setApprovedScope(new String[]{});
                 oauthCallback.setValidScope(true);
             }
         }

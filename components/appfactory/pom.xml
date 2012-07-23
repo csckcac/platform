@@ -36,7 +36,6 @@
         <module>org.wso2.carbon.appfactory.userstore</module>
         <module>org.wso2.carbon.appfactory.application.mgt</module>
         <module>org.wso2.carbon.appfactory.common</module>
-        <module>org.wso2.carbon.appfactory.application.deployment.service</module>
         <module>org.wso2.carbon.appfactory.svn.repository.mgt.service</module>
         <module>org.wso2.carbon.appfactory.hostobjects.configuration</module>
         <module>org.wso2.carbon.appfactory.login.ui</module>
@@ -45,5 +44,6 @@
         <module>org.wso2.carbon.appfactory.maven.build</module>
         <module>org.wso2.carbon.hostobjects.svnclient</module>
 	<module>org.wso2.carbon.appfactory.governance</module>
+        <module>org.wso2.carbon.appfactory.events.notification</module>
     </modules>
 </project>

@@ -59,7 +59,7 @@ public class SiddhiBackEndRuntimeFactory implements CEPBackEndRuntimeFactory {
             if (mapping instanceof TupleInputMapping) {
                 TupleInputMapping tupleInputMapping = (TupleInputMapping) mapping;
                 properties = tupleInputMapping.getProperties();
-            } if (mapping instanceof MapInputMapping) {
+            } else if (mapping instanceof MapInputMapping) {
                 MapInputMapping mapInputMapping = (MapInputMapping) mapping;
                 properties = mapInputMapping.getProperties();
             } else { //Xml mapping

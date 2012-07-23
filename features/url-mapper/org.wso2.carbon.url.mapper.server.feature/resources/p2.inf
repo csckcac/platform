@@ -1,0 +1,3 @@
+instructions.configure = \
+org.eclipse.equinox.p2.touchpoint.natives.copy(source:${installFolder}/features/org.wso2.carbon.url.mapper.server_${feature.version}/conf/url-mapping-config.xml,target:${installFolder}/../conf/etc/url-mapping-config.xml,overwrite:true);
+

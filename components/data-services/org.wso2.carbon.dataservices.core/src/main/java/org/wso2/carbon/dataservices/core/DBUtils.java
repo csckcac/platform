@@ -27,6 +27,7 @@ import org.apache.axis2.AxisFault;
 import org.apache.axis2.context.MessageContext;
 import org.apache.axis2.databinding.utils.ConverterUtil;
 import org.apache.axis2.description.java2wsdl.TypeTable;
+import org.apache.axis2.transport.http.HTTPConstants;
 import org.apache.commons.codec.binary.Base64;
 import org.apache.commons.io.FileUtils;
 import org.apache.commons.logging.Log;
@@ -49,6 +50,7 @@ import org.wso2.carbon.registry.core.exceptions.RegistryException;
 import org.wso2.carbon.registry.core.service.RegistryService;
 import org.wso2.carbon.user.core.UserRealm;
 import org.wso2.carbon.user.core.service.RealmService;
+import org.wso2.carbon.utils.multitenancy.CarbonContextHolder;
 import org.wso2.carbon.utils.multitenancy.MultitenantConstants;
 import org.wso2.carbon.utils.multitenancy.MultitenantUtils;
 import org.wso2.carbon.utils.xml.XMLPrettyPrinter;
@@ -264,28 +266,18 @@ public class DBUtils {
     }
 
     /**
-     * Retrieves the current user's roles given the message context.
-     * @param msgContext The message context to be used to retrieve the username
-     * @return The user roles
-     * @throws DataServiceFault
+     * Retrieves the current user's roles.
      */
     public static String[] getUserRoles(MessageContext msgContext)
             throws DataServiceFault {
-        return getUserRoles(DBUtils.getUsername(msgContext));
-    }
-    
-    /**
-     * Retrieves the current user's roles given the username.
-     * @param username The username
-     * @return The user roles
-     * @throws DataServiceFault
-     */
-    public static String[] getUserRoles(String username) throws DataServiceFault {
-    	RealmService realmService = DataServicesDSComponent.getRealmService();
+        String userName = DBUtils.getUsername(msgContext);
+        RealmService realmService = DataServicesDSComponent.getRealmService();
         RegistryService registryService = DataServicesDSComponent.getRegistryService();
-        String tenantDomain = SuperTenantCarbonContext.getCurrentContext().getTenantDomain();
-        int tenantId = SuperTenantCarbonContext.getCurrentContext().getTenantId();
-        username = MultitenantUtils.getTenantAwareUsername(username);
+        /* first return the tenant id from the tenant domain */
+        CarbonContextHolder carbonContext = CarbonContextHolder.getCurrentCarbonContextHolder(msgContext);
+        String tenantDomain = carbonContext.getTenantDomain();
+        int tenantId = carbonContext.getTenantId();
+        userName = MultitenantUtils.getTenantAwareUsername(userName);
         try {
             if (tenantId < MultitenantConstants.SUPER_TENANT_ID) {
                 tenantId = realmService.getTenantManager().getTenantId(tenantDomain);
@@ -302,11 +294,11 @@ public class DBUtils {
                         + tenantDomain);
             }
             UserRealm realm = registryService.getUserRealm(tenantId);
-            String roles[] = realm.getUserStoreManager().getRoleListOfUser(username);
+            String roles[] = realm.getUserStoreManager().getRoleListOfUser(userName);
             return roles;
         } catch (Exception e) {
             String msg = "Error in retrieving the realm for the tenant id: " + tenantId
-                    + ", username: " + username + ". " + e.getMessage();
+                    + ", username: " + userName + ". " + e.getMessage();
             log.error(msg);
             throw new DataServiceFault(msg);
         }

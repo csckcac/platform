@@ -36,96 +36,97 @@ import java.util.ArrayList;
 import java.util.List;
 import java.util.Map;
 
-public class DSTaskAdmin extends AbstractAdmin{
+public class DSTaskAdmin extends AbstractAdmin {
 
     private static final Log log = LogFactory.getLog(DSTaskAdmin.class);
 
     public String[] getAllTaskNames() throws AxisFault {
-    	try {
-    	    TaskManager taskManager = DSTaskServiceComponent.getTaskService().getTaskManager(
-    	    		DSTaskConstants.DATA_SERVICE_TASK_TYPE);
-    	    List<TaskInfo> taskInfoList = taskManager.getAllTasks();
-    	    List<String> result = new ArrayList<String>();
-    	    for (TaskInfo taskInfo : taskInfoList) {
-    	    	result.add(taskInfo.getName());
-    	    }
-    	    return result.toArray(new String[result.size()]);
-    	} catch (Exception e) {
-    		log.error(e);
-			throw new AxisFault("Error in getting task names: " + e.getMessage(), e);
-		}
+        try {
+            TaskManager taskManager = DSTaskServiceComponent.getTaskService().getTaskManager(
+                    DSTaskConstants.DATA_SERVICE_TASK_TYPE);
+            List<TaskInfo> taskInfoList = taskManager.getAllTasks();
+            List<String> result = new ArrayList<String>();
+            for (TaskInfo taskInfo : taskInfoList) {
+                result.add(taskInfo.getName());
+            }
+            return result.toArray(new String[result.size()]);
+        } catch (Exception e) {
+            log.error(e);
+            throw new AxisFault("Error in getting task names: " + e.getMessage(), e);
+        }
     }
 
     public DSTaskInfo getTaskInfo(String taskName) throws AxisFault {
-    	try {
-    	    TaskManager tm = DSTaskServiceComponent.getTaskService().getTaskManager(
-    			    DSTaskConstants.DATA_SERVICE_TASK_TYPE);
-    	    return DSTaskUtils.convert(tm.getTask(taskName));
-    	} catch (Exception e) {
-    		log.error(e);
-			throw new AxisFault("Error getting task info for task: " + taskName, e);
-		}
+        try {
+            TaskManager tm = DSTaskServiceComponent.getTaskService().getTaskManager(
+                    DSTaskConstants.DATA_SERVICE_TASK_TYPE);
+            return DSTaskUtils.convert(tm.getTask(taskName));
+        } catch (Exception e) {
+            log.error(e);
+            throw new AxisFault("Error getting task info for task: " + taskName, e);
+        }
     }
 
     public void scheduleTask(DSTaskInfo dsTaskInfo) throws AxisFault {
-    	TaskManager tm = null;
-    	try {
-    	    tm = DSTaskServiceComponent.getTaskService().getTaskManager(
-    			    DSTaskConstants.DATA_SERVICE_TASK_TYPE);
-    	    TaskInfo taskInfo = DSTaskUtils.convert(dsTaskInfo);
-    	    tm.registerTask(taskInfo);
-    	    tm.scheduleTask(taskInfo.getName());
-    	} catch (Exception e) {
-    		log.error(e);
-    		if (tm != null) {
-    			try {
-					tm.deleteTask(dsTaskInfo.getName());
-				} catch (TaskException e1) {
-					log.error(e1);
-				}
-    		}
-			throw new AxisFault("Error scheduling task: " + dsTaskInfo.getName(), e);
-		}
+        TaskManager tm = null;
+        try {
+            tm = DSTaskServiceComponent.getTaskService().getTaskManager(
+                    DSTaskConstants.DATA_SERVICE_TASK_TYPE);
+            TaskInfo taskInfo = DSTaskUtils.convert(dsTaskInfo);
+            tm.registerTask(taskInfo);
+            tm.scheduleTask(taskInfo.getName());
+        } catch (Exception e) {
+            log.error(e);
+            if (tm != null) {
+                try {
+                    tm.deleteTask(dsTaskInfo.getName());
+                } catch (TaskException e1) {
+                    log.error(e1);
+                }
+            }
+            throw new AxisFault("Error scheduling task: " + dsTaskInfo.getName(), e);
+        }
     }
 
     public boolean rescheduleTask(DSTaskInfo dsTaskInfo) throws AxisFault {
-    	try {
-    	    TaskManager tm = DSTaskServiceComponent.getTaskService().getTaskManager(
-    			    DSTaskConstants.DATA_SERVICE_TASK_TYPE);
-    	    TaskInfo taskInfo = DSTaskUtils.convert(dsTaskInfo);
-    	    tm.registerTask(taskInfo);
+        try {
+            TaskManager tm = DSTaskServiceComponent.getTaskService().getTaskManager(
+                    DSTaskConstants.DATA_SERVICE_TASK_TYPE);
+            TaskInfo taskInfo = DSTaskUtils.convert(dsTaskInfo);
+            tm.registerTask(taskInfo);
             tm.rescheduleTask(taskInfo.getName());
-    	} catch (Exception e) {
-    		log.error(e);
-			throw new AxisFault("Error rescheduling task: " + dsTaskInfo.getName(), e);
-		}
+        } catch (Exception e) {
+            log.error(e);
+            throw new AxisFault("Error rescheduling task: " + dsTaskInfo.getName(), e);
+        }
         return true;
     }
 
     public void deleteTask(String taskName) throws AxisFault {
-    	try {
-    	    TaskManager tm = DSTaskServiceComponent.getTaskService().getTaskManager(
-    			    DSTaskConstants.DATA_SERVICE_TASK_TYPE);
-    	    tm.deleteTask(taskName);
-    	} catch (Exception e) {
-    		log.error(e);
-			throw new AxisFault("Error deleting task: " + taskName, e);
-		}
+        try {
+            TaskManager tm = DSTaskServiceComponent.getTaskService().getTaskManager(
+                    DSTaskConstants.DATA_SERVICE_TASK_TYPE);
+            tm.deleteTask(taskName);
+        } catch (Exception e) {
+            log.error(e);
+            throw new AxisFault("Error deleting task: " + taskName, e);
+        }
     }
 
     public boolean isTaskScheduled(String taskName) throws AxisFault {
-    	try {
-    		TaskManager tm = DSTaskServiceComponent.getTaskService().getTaskManager(
-    			    DSTaskConstants.DATA_SERVICE_TASK_TYPE);
-    	    return tm.isTaskScheduled(taskName);
-    	} catch (Exception e) {
-    		log.error(e);
-    		throw new AxisFault("Error checking task scheduled status: " + taskName, e);
-		}
+        try {
+            TaskManager tm = DSTaskServiceComponent.getTaskService().getTaskManager(
+                    DSTaskConstants.DATA_SERVICE_TASK_TYPE);
+            return tm.isTaskScheduled(taskName);
+        } catch (Exception e) {
+            log.error(e);
+            throw new AxisFault("Error checking task scheduled status: " + taskName, e);
+        }
     }
 
-     /**
+    /**
      * Retrieves the list of Data Services deployed.
+     *
      * @return a String array containing the list of data services
      * @throws AxisFault AxisFault
      */
@@ -150,6 +151,7 @@ public class DSTaskAdmin extends AbstractAdmin{
 
     /**
      * Returns the data service operations which contains no input parameters.
+     *
      * @param dsName The data service name
      * @return The no parameter operation names
      * @throws AxisFault

@@ -30,13 +30,14 @@ public class AppFactoryConstants {
     public static final String DEPLOYMENT_URL = "DeploymentServerURL";
 
     public static final String ENDPOINT_DEPLOY_TO_STAGE = "WebServiceEndPoints.DeployToStage";
-    
+
     public static final String SCM_ADMIN_NAME = "RepositoryMGTConfig.SCMServerAdminUserName";
     public static final String SCM_ADMIN_PASSWORD = "RepositoryMGTConfig.SCMServerAdminPassword";
     public static final String SCM_SERVER_URL = "RepositoryMGTConfig.SCMServerURL";
-    public static final String SCM_READ_WRITE_ROLE="RepositoryMGTConfig.ReadWriteRole";
+    public static final String SCM_READ_WRITE_ROLE = "RepositoryMGTConfig.ReadWriteRole";
 
 
     public static final String DEFAULT_APPLICATION_USER_ROLE = "ApplicationMgt.DefaultApplicationUserRole";
     public static final String PERMISSION = "Permission";
+    public static final String REVISION_CONTROLLER_SERVICE_EPR = "WebServiceEndPoints.RevisionControllerService";
 }

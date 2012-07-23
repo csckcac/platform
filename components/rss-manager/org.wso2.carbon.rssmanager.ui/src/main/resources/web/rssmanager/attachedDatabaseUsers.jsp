@@ -86,18 +86,22 @@
                         <td id="<%=username%>"><%=username%>
                         </td>
                         <td>
-                                <a class="icon-link"
-                                style="background-image: url(../rssmanager/images/db-exp.png);"
-                                onclick="submitExploreForm('<%=username%>', '<%=(database != null) ? database.getUrl() : ""%>','<%=(database != null) ? RSSManagerHelper.getDatabaseDriver(database.getUrl()) : ""%>')"
-                                href="#"><fmt:message key="rss.manager.explore.database"/>
-                                </a>
-                                <a class="icon-link"
-                                style="background-image:url(../rssmanager/images/data-sources-icon.gif);"
-                                onclick="createDataSource('<%=databaseName%>', '<%=username%>')"
-                                href="#"><fmt:message key="rss.manager.create.datasource"/></a>
+                            <a class="icon-link"
+                               style="background-image: url(../rssmanager/images/db-exp.png);"
+                               onclick="submitExploreForm('<%=username%>', '<%=(database != null) ? database.getUrl() : ""%>','<%=(database != null) ? RSSManagerHelper.getDatabaseDriver(database.getUrl()) : ""%>')"
+                               href="#"><fmt:message key="rss.manager.explore.database"/>
+                            </a>
+                            <a class="icon-link"
+                               style="background-image:url(../rssmanager/images/data-sources-icon.gif);"
+                               onclick="createDataSource('<%=databaseName%>', '<%=username%>')"
+                               href="#"><fmt:message key="rss.manager.create.datasource"/></a>
+                            <a class="icon-link"
+                               style="background-image:url(../admin/images/edit.gif);"
+                               href="javascript:submitEditForm('<%=database.getRssInstanceName()%>','<%=username%>')">
+                                <fmt:message key="rss.manager.edit.user"/></a>
                             <a class="icon-link"
                                style="background-image:url(../admin/images/delete.gif);"
-                               onclick="submitDetachForm('<%=rssInstanceName%>', '<%=databaseName%>', '<%=username%>')"
+                               onclick="detachDatabaseUser('<%=database.getRssInstanceName()%>', '<%=databaseName%>', '<%=username%>')"
                                href="#"><fmt:message
                                     key="rss.manager.detach.database.user"/></a>
                         </td>
@@ -124,7 +128,7 @@
                 <div id="connectionStatusDiv" style="display: none;"></div>
                 <a class="icon-link"
                    style="background-image:url(../admin/images/add.gif);"
-                    href="javascript:submitAttachForm('<%=rssInstanceName%>','<%=databaseName%>')">
+                   href="javascript:submitAttachForm('<%=rssInstanceName%>','<%=databaseName%>')">
                     <fmt:message key="rss.manager.attach.database.user"/></a>
 
                 <div style="clear:both;"></div>
@@ -141,17 +145,17 @@
                 <input type="hidden" id="databaseName" name="databaseName"/>
             </form>
             <script type="text/javascript">
-                function submitDetachForm(rssInstanceName, databaseName, username) {
-                    document.getElementById('rssInstanceName3').value = rssInstanceName;
-                    document.getElementById('databaseName3').value = databaseName;
-                    document.getElementById('username3').value = databaseName;
-                    document.getElementById('addForm').submit();
+                function submitEditForm(rssInstanceName, username) {
+                    document.getElementById('rssInstanceName').value = rssInstanceName;
+                    document.getElementById('username').value = username;
+                    document.getElementById('flag').value = 'edit';
+                    document.getElementById('editForm').submit();
                 }
             </script>
-            <form action="databaseUserOps_ajaxprocessor.jsp" method="post" id="detachForm">
-                <input type="hidden" id="rssInstanceName3" name="rssInstanceName"/>
-                <input type="hidden" id="datatabaseName3" name="databaseName"/>
-                <input type="hidden" id="username3" name="databaseName"/>
+            <form action="editDatabaseUser.jsp" method="post" id="editForm">
+                <input id="rssInstanceName" name="rssInstanceName" type="hidden"/>
+                <input id="username" name="username" type="hidden"/>
+                <input id="flag" name="flag" type="hidden"/>
             </form>
             <script type="text/javascript">
                 function submitCancelForm() {

@@ -20,6 +20,7 @@ package org.wso2.carbon.rssmanager.core.internal.dao;
 
 import org.apache.commons.logging.Log;
 import org.apache.commons.logging.LogFactory;
+import org.wso2.carbon.context.CarbonContext;
 import org.wso2.carbon.core.multitenancy.SuperTenantCarbonContext;
 import org.wso2.carbon.rssmanager.common.RSSManagerConstants;
 import org.wso2.carbon.rssmanager.core.RSSManagerException;
@@ -659,11 +660,12 @@ public class RSSDAOImpl implements RSSDAO {
             String rssInstanceName, String databaseName) throws RSSManagerException {
         List<String> attachedUsers = new ArrayList<String>();
         Connection conn = RSSConfig.getInstance().getRSSDBConnection();
-        String sql = "SELECT username FROM RM_USER_DATABASE_ENTRY WHERE rss_instance_name = ? AND database_name = ?";
+        String sql = "SELECT username FROM RM_USER_DATABASE_ENTRY WHERE rss_instance_name = ? AND database_name = ? AND tenant_id = ?";
         try {
             PreparedStatement stmt = conn.prepareStatement(sql);
             stmt.setString(1, rssInstanceName);
             stmt.setString(2, databaseName);
+            stmt.setInt(3, CarbonContext.getCurrentContext().getTenantId());
             ResultSet rs = stmt.executeQuery();
             while (rs.next()) {
                 attachedUsers.add(rs.getString("username"));
@@ -749,7 +751,7 @@ public class RSSDAOImpl implements RSSDAO {
         try {
             conn.setAutoCommit(false);
             /* delete permissions first */
-            String sql = "DELETE FROM RM_USER_DATABASE_PERMISSION WHERE username = ? AND rss_instance_name = ?";
+            String sql = "DELETE FROM RM_USER_DATABASE_PRIVILEGE WHERE username = ? AND rss_instance_name = ?";
             PreparedStatement stmt = conn.prepareStatement(sql);
             stmt.setString(1, username);
             stmt.setString(2, rssInstanceName);
@@ -885,7 +887,7 @@ public class RSSDAOImpl implements RSSDAO {
 //                                           String permName,
 //                                           String permValue,
 //                                           String rssInstanceName) throws SQLException {
-//        String sql = "INSERT INTO RM_USER_DATABASE_PERMISSION (perm_name, perm_value, username, database_name, rss_instance_name) VALUES (?, ?, ?, ?, ?)";
+//        String sql = "INSERT INTO RM_USER_DATABASE_PRIVILEGE (perm_name, perm_value, username, database_name, rss_instance_name) VALUES (?, ?, ?, ?, ?)";
 //        PreparedStatement stmt = conn.prepareStatement(sql);
 //        stmt.setString(1, permName);
 //        stmt.setString(2, permValue);
@@ -900,7 +902,7 @@ public class RSSDAOImpl implements RSSDAO {
 //                                              String databaseName,
 //                                              String permName,
 //                                              String rssInstanceName) throws SQLException {
-//        String sql = "DELETE FROM RM_USER_DATABASE_PERMISSION WHERE perm_name = ? AND username = ? AND database_name = ? AND rss_instance_name = ?";
+//        String sql = "DELETE FROM RM_USER_DATABASE_PRIVILEGE WHERE perm_name = ? AND username = ? AND database_name = ? AND rss_instance_name = ?";
 //        PreparedStatement stmt = conn.prepareStatement(sql);
 //        stmt.setString(1, permName);
 //        stmt.setString(2, username);
@@ -1013,7 +1015,7 @@ public class RSSDAOImpl implements RSSDAO {
                                              String username,
                                              String databaseName) throws RSSManagerException {
         try {
-            PreparedStatement stmt = conn.prepareStatement("UPDATE RM_USER_DATABASE_PERMISSION " +
+            PreparedStatement stmt = conn.prepareStatement("UPDATE RM_USER_DATABASE_PRIVILEGE " +
                     "SET perm_value=? WHERE username=? AND database_name=? AND perm_name=?");
             stmt.setString(1, permValue);
             stmt.setString(2, username);
@@ -1049,14 +1051,13 @@ public class RSSDAOImpl implements RSSDAO {
         try {
             conn.setAutoCommit(false);
 
-            this.setDatabasePrivilegeTemplateProperties(conn, template);
-
             String sql = "INSERT INTO RM_DB_PRIVILEGE_TEMPLATE(name, tenant_id) VALUES(?, ?)";
             PreparedStatement stmt = conn.prepareStatement(sql);
             stmt.setString(1, template.getName());
             stmt.setInt(2, SuperTenantCarbonContext.getCurrentContext().getTenantId());
             stmt.execute();
-            
+
+            this.setDatabasePrivilegeTemplateProperties(conn, template);
             conn.commit();
         } catch (SQLException e) {
             try {
@@ -1363,7 +1364,7 @@ public class RSSDAOImpl implements RSSDAO {
             Connection conn, String username, String databaseName) throws RSSManagerException {
         try {
             String sql = "SELECT perm_name " +
-                    "FROM RM_USER_DATABASE_PERMISSION WHERE username=? AND database_name=?";
+                    "FROM RM_USER_DATABASE_PRIVILEGE WHERE username=? AND database_name=?";
             PreparedStatement stmt = conn.prepareStatement(sql);
             stmt.setString(1, username);
             stmt.setString(2, databaseName);

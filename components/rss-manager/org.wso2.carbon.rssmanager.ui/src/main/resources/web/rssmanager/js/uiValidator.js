@@ -456,8 +456,17 @@ function createDatabasePrivilegeTemplate(flag) {
         CARBON.showWarningDialog("'Database privilege template name' field cannot be left blank");
         return false;
     }
-    var url = composeCreateDatabasePrivilegeTemplateActionUrl(flag, templateName);
+    var url = composeDatabasePrivilegeTemplateActionUrl(flag, templateName);
     jQuery('#connectionStatusDiv').load(url, displayPrivilegeTemplateActionStatus);
+}
+
+function validateDatabasePrivilegeTemplateName() {
+    var templateName = trim(document.getElementById('privilegeTemplateName').value);
+    if (templateName == '' || templateName == null) {
+        CARBON.showWarningDialog("'Database privilege template name' field cannot be left blank");
+        return false;
+    }
+    return true;
 }
 
 function displayPrivilegeTemplateActionStatus(msg) {
@@ -512,26 +521,26 @@ function displayPrivilegeTemplateActionStatus(msg) {
     }
 }
 
-function composeCreateDatabasePrivilegeTemplateActionUrl(flag, templateName) {
-    var select_priv = document.getElementById("select_priv").value;
-    var insert_priv = document.getElementById("insert_priv").value;
-    var update_priv = document.getElementById("update_priv").value;
-    var delete_priv = document.getElementById("delete_priv").value;
-    var create_priv = document.getElementById("create_priv").value;
-    var drop_priv = document.getElementById("drop_priv").value;
-    var grant_priv = document.getElementById("grant_priv").value;
-    var references_priv = document.getElementById("references_priv").value;
-    var index_priv = document.getElementById("index_priv").value;
-    var alter_priv = document.getElementById("alter_priv").value;
-    var create_tmp_table_priv = document.getElementById("create_tmp_table_priv").value;
-    var lock_tables_priv = document.getElementById("lock_tables_priv").value;
-    var create_view_priv = document.getElementById("create_view_priv").value;
-    var show_view_priv = document.getElementById("show_view_priv").value;
-    var create_routine_priv = document.getElementById("create_routine_priv").value;
-    var alter_routine_priv = document.getElementById("alter_routine_priv").value;
-    var execute_priv = document.getElementById("execute_priv").value;
-    var event_priv = document.getElementById("event_priv").value;
-    var trigger_priv = document.getElementById("trigger_priv").value;
+function composeDatabasePrivilegeTemplateActionUrl(flag, templateName) {
+    var select_priv = document.getElementById("select_priv").checked;
+    var insert_priv = document.getElementById("insert_priv").checked;
+    var update_priv = document.getElementById("update_priv").checked;
+    var delete_priv = document.getElementById("delete_priv").checked;
+    var create_priv = document.getElementById("create_priv").checked;
+    var drop_priv = document.getElementById("drop_priv").checked;
+    var grant_priv = document.getElementById("grant_priv").checked;
+    var references_priv = document.getElementById("references_priv").checked;
+    var index_priv = document.getElementById("index_priv").checked;
+    var alter_priv = document.getElementById("alter_priv").checked;
+    var create_tmp_table_priv = document.getElementById("create_tmp_table_priv").checked;
+    var lock_tables_priv = document.getElementById("lock_tables_priv").checked;
+    var create_view_priv = document.getElementById("create_view_priv").checked;
+    var show_view_priv = document.getElementById("show_view_priv").checked;
+    var create_routine_priv = document.getElementById("create_routine_priv").checked;
+    var alter_routine_priv = document.getElementById("alter_routine_priv").checked;
+    var execute_priv = document.getElementById("execute_priv").checked;
+    var event_priv = document.getElementById("event_priv").checked;
+    var trigger_priv = document.getElementById("trigger_priv").checked;
 
     return 'databasePrivilegeTemplateOps_ajaxprocessor.jsp?flag=' + flag + '&privilegeTemplateName=' + templateName +
             '&select_priv=' + select_priv + '&insert_priv=' + insert_priv + '&update_priv=' +
@@ -543,44 +552,6 @@ function composeCreateDatabasePrivilegeTemplateActionUrl(flag, templateName) {
             show_view_priv + '&create_routine_priv=' + create_routine_priv + '&alter_routine_priv='
             + alter_routine_priv + '&execute_priv=' + execute_priv + '&event_priv=' + event_priv +
             '&trigger_priv=' + trigger_priv;
-}
-
-function composeEditDatabasePrivilegeTemplateActionUrl(flag, templateName) {
-    var select_priv = document.getElementById("select_priv").value;
-    var insert_priv = document.getElementById("insert_priv").value;
-    var update_priv = document.getElementById("update_priv").value;
-    var delete_priv = document.getElementById("delete_priv").value;
-    var create_priv = document.getElementById("create_priv").value;
-    var drop_priv = document.getElementById("drop_priv").value;
-    var grant_priv = document.getElementById("grant_priv").value;
-    var references_priv = document.getElementById("references_priv").value;
-    var index_priv = document.getElementById("index_priv").value;
-    var alter_priv = document.getElementById("alter_priv").value;
-    var create_tmp_table_priv = document.getElementById("create_tmp_table_priv").value;
-    var lock_tables_priv = document.getElementById("lock_tables_priv").value;
-    var execute_priv = document.getElementById("execute_priv").value;
-    var create_view_priv = document.getElementById("create_view_priv").value;
-    var show_view_priv = document.getElementById("show_view_priv").value;
-    var create_routine_priv = document.getElementById("create_routine_priv").value;
-    var alter_routine_priv = document.getElementById("alter_routine_priv").value;
-    var event_priv = document.getElementById("event_priv").value;
-    var trigger_priv = document.getElementById("trigger_priv").value;
-
-    return 'databasePrivilegeTemplateOps_ajaxprocessor.jsp?flag=' + flag + '&privilegeTemplateName=' + templateName +
-            '&select_priv=' + select_priv + '&insert_priv=' + insert_priv + '&update_priv=' +
-            update_priv + '&delete_priv=' + delete_priv + '&create_priv=' + create_priv +
-            '&drop_priv=' + drop_priv + '&grant_priv=' + grant_priv + '&references_priv=' +
-            references_priv + '&index_priv=' + index_priv + '&alter_priv=' + alter_priv +
-            '&create_tmp_table_priv=' + create_tmp_table_priv + '&lock_tables_priv=' +
-            lock_tables_priv + '&create_view_priv=' + create_view_priv + '&show_view_priv=' +
-            show_view_priv + '&create_routine_priv=' + create_routine_priv + '&alter_routine_priv='
-            + alter_routine_priv + '&event_priv=' + event_priv + '&trigger_priv=' + trigger_priv +
-            '&execute_priv=' + execute_priv;
-}
-
-function editDatabasePrivilegeTemplate(templateName) {
-    document.location.href = 'editDatabasePrivilegeTemplate.jsp?privGroupId=' + templateName;
-
 }
 
 function dispatchDropDatabasePrivilegeTemplateRequest(privilegeTemplateName) {
@@ -794,6 +765,57 @@ function createDataSource(databaseName, username) {
     var url = 'databaseUserOps_ajaxprocessor.jsp?databaseName=' + databaseName + '&username=' +
             username + '&flag=createDS';
     jQuery('#connectionStatusDiv').load(url, displayMessagesForCarbonDS);
+}
+
+function detachDatabaseUser(rssInstanceName, databaseName, username) {
+    var url = 'databaseUserOps_ajaxprocessor.jsp?databaseName=' + databaseName + '&username=' +
+            username + '&rssInstanceName=' + rssInstanceName + '&flag=detach';
+    jQuery('#connectionStatusDiv').load(url, displayMessagesForDatabaseUserActions);
+}
+
+function displayMessagesForDatabaseUserActions(msg) {
+    if (msg.search(/has been successfully attached/) != -1) {
+        jQuery(document).ready(function() {
+            function handleOK() {
+                window.location = 'attachedDatabaseUsers.jsp';
+            }
+
+            CARBON.showInfoDialog(msg, handleOK);
+        });
+
+    } else if (msg.search(/has been successfully detached/) != -1) {
+        jQuery(document).ready(function() {
+            function handleOK() {
+                window.location = 'attachedDatabaseUsers.jsp';
+            }
+
+            CARBON.showInfoDialog(msg, handleOK);
+        });
+    } else if (msg.search(/Failed to attach database user/) != -1) {
+        jQuery(document).ready(function() {
+            function handleOK() {
+                window.location = 'attachedDatabaseUsers.jsp';
+            }
+
+            CARBON.showErrorDialog(msg, handleOK);
+        });
+    } else if (msg.search(/Failed to detach database user/) != -1) {
+        jQuery(document).ready(function() {
+            function handleOK() {
+                window.location = 'attachedDatabaseUsers.jsp';
+            }
+
+            CARBON.showErrorDialog(msg, handleOK);
+        });
+    } else {
+        jQuery(document).ready(function() {
+            function handleOK() {
+                window.location = 'attachedDatabaseUsers.jsp';
+            }
+
+            CARBON.showErrorDialog(msg, handleOK());
+        });
+    }
 }
 
 function displayMessagesForCarbonDS(msg) {

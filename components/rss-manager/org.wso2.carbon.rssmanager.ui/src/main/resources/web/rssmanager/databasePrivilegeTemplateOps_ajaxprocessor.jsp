@@ -53,25 +53,25 @@
     String executePriv = request.getParameter("execute_priv");
     String eventPriv = request.getParameter("event_priv");
     String triggerPriv = request.getParameter("trigger_priv");
-    selectPriv = (selectPriv != null && !"".equals(selectPriv) && "on".equals(selectPriv)) ? "Y" : "N";
-    insertPriv = (insertPriv != null && !"".equals(insertPriv) && "on".equals(insertPriv)) ? "Y" : "N";
-    updatePriv = (updatePriv != null && !"".equals(updatePriv) && "on".equals(updatePriv)) ? "Y" : "N";
-    deletePriv = (deletePriv != null && !"".equals(deletePriv) && "on".equals(deletePriv)) ? "Y" : "N";
-    createPriv = (createPriv != null && !"".equals(createPriv) && "on".equals(createPriv)) ? "Y" : "N";
-    dropPriv = (dropPriv != null && !"".equals(dropPriv) && "on".equals(dropPriv)) ? "Y" : "N";
-    grantPriv = (grantPriv != null && !"".equals(grantPriv) && "on".equals(grantPriv)) ? "Y" : "N";
-    referencesPriv = (referencesPriv != null && !"".equals(referencesPriv) && "on".equals(referencesPriv)) ? "Y" : "N";
-    indexPriv = (indexPriv != null && !"".equals(indexPriv) && "on".equals(indexPriv)) ? "Y" : "N";
-    alterPriv = (alterPriv != null && !"".equals(alterPriv) && "on".equals(alterPriv)) ? "Y" : "N";
-    createTmpTablePriv = (createTmpTablePriv != null && !"".equals(createTmpTablePriv) && "on".equals(createTmpTablePriv)) ? "Y" : "N";
-    lockTablesPriv = (lockTablesPriv != null && !"".equals(lockTablesPriv) && "on".equals(lockTablesPriv)) ? "Y" : "N";
-    createViewPriv = (createViewPriv != null && !"".equals(createViewPriv) && "on".equals(createViewPriv)) ? "Y" : "N";
-    showViewPriv = (showViewPriv != null && !"".equals(showViewPriv) && "on".equals(showViewPriv)) ? "Y" : "N";
-    createRoutinePriv = (createRoutinePriv != null && !"".equals(createRoutinePriv) && "on".equals(createRoutinePriv)) ? "Y" : "N";
-    alterRoutinePriv = (alterRoutinePriv != null && !"".equals(alterRoutinePriv) && "on".equals(alterRoutinePriv)) ? "Y" : "N";
-    executePriv = (executePriv != null && !"".equals(executePriv) && "on".equals(executePriv)) ? "Y" : "N";
-    eventPriv = (eventPriv != null && !"".equals(eventPriv) && "on".equals(eventPriv)) ? "Y" : "N";
-    triggerPriv = (triggerPriv != null && !"".equals(triggerPriv) && "on".equals(triggerPriv)) ? "Y" : "N";
+    selectPriv = ("true".equals(selectPriv)) ? "Y" : "N";
+    insertPriv = ("true".equals(insertPriv)) ? "Y" : "N";
+    updatePriv = ("true".equals(updatePriv)) ? "Y" : "N";
+    deletePriv = ("true".equals(deletePriv)) ? "Y" : "N";
+    createPriv = ("true".equals(createPriv)) ? "Y" : "N";
+    dropPriv = ("true".equals(dropPriv)) ? "Y" : "N";
+    grantPriv = ("true".equals(grantPriv)) ? "Y" : "N";
+    referencesPriv = ("true".equals(referencesPriv)) ? "Y" : "N";
+    indexPriv = ("true".equals(indexPriv)) ? "Y" : "N";
+    alterPriv = ("true".equals(alterPriv)) ? "Y" : "N";
+    createTmpTablePriv = ("true".equals(createTmpTablePriv)) ? "Y" : "N";
+    lockTablesPriv = ("true".equals(lockTablesPriv)) ? "Y" : "N";
+    createViewPriv = ("true".equals(createViewPriv)) ? "Y" : "N";
+    showViewPriv = ("true".equals(showViewPriv)) ? "Y" : "N";
+    createRoutinePriv = ("true".equals(createRoutinePriv)) ? "Y" : "N";
+    alterRoutinePriv = ("true".equals(alterRoutinePriv)) ? "Y" : "N";
+    executePriv = ("true".equals(executePriv)) ? "Y" : "N";
+    eventPriv = ("true".equals(eventPriv)) ? "Y" : "N";
+    triggerPriv = ("true".equals(triggerPriv)) ? "Y" : "N";
 
     String backendServerUrl = CarbonUIUtil.getServerURL(
             getServletConfig().getServletContext(), session);
@@ -178,14 +178,14 @@
             template.setPrivileges(privileges);
             client.editDatabasePrivilegesTemplate(template);
 
-//            response.setContentType("text/xml; charset=UTF-8");
-//            // Set standard HTTP/1.1 no-cache headers.
-//            response.setHeader("Cache-Control",
-//                    "no-store, max-age=0, no-cache, must-revalidate");
-//            // Set IE extended HTTP/1.1 no-cache headers.
-//            response.addHeader("Cache-Control", "post-check=0, pre-check=0");
-//            // Set standard HTTP/1.0 no-cache header.
-//            response.setHeader("Pragma", "no-cache");
+            response.setContentType("text/xml; charset=UTF-8");
+            // Set standard HTTP/1.1 no-cache headers.
+            response.setHeader("Cache-Control",
+                    "no-store, max-age=0, no-cache, must-revalidate");
+            // Set IE extended HTTP/1.1 no-cache headers.
+            response.addHeader("Cache-Control", "post-check=0, pre-check=0");
+            // Set standard HTTP/1.0 no-cache header.
+            response.setHeader("Pragma", "no-cache");
 
             PrintWriter pw = response.getWriter();
             msg = "Database privilege template '" + privilegeTemplateName +

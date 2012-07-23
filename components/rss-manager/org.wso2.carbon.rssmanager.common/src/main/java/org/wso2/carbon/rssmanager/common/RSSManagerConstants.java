@@ -27,10 +27,9 @@ public final class RSSManagerConstants {
 
     public static final String WSO2_RSS_INSTANCE_TYPE = "WSO2_RSS";
     public static final String WSO2_LOCAL_RDS_INSTANCE_TYPE = "WSO2_LOCAL_RDS";
-    public static final String WSO2_USER_DEFINED_INSTANCE_TYPE = "USER_DEFINED";
-    public static final String WSO2_RSS_CONFIG_XML_NAME = "rss-config.xml";
+    public static final String USER_DEFINED_INSTANCE_TYPE = "USER_DEFINED";
+    public static final String RSS_CONFIG_XML_NAME = "rss-config.xml";
     public static final String STRATOS_RSS = "STRATOS_RSS";
-    public static final String MYSQL_SYSTEM_DB = "mysql";
     public static final String LOCAL = "LOCAL";
     public static final String RDS = "RDS";
 

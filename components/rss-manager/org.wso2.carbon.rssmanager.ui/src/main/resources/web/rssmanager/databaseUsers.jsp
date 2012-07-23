@@ -86,10 +86,6 @@
                                 <%--onclick="createDataSource('<%=db.getDbInstanceId()%>','<%=user.getUserId()%>')"--%>
                                 <%--href="#"><fmt:message key="rss.manager.create.datasource"/></a>--%>
                             <a class="icon-link"
-                               style="background-image:url(../admin/images/edit.gif);"
-                               href="javascript:submitEditForm('<%=user.getRssInstanceName()%>','<%=user.getUsername()%>')">
-                                <fmt:message key="rss.manager.edit.user"/></a>
-                            <a class="icon-link"
                                style="background-image:url(../admin/images/delete.gif);"
                                onclick="dropDatabaseUser('<%=user.getRssInstanceName()%>', '<%=user.getUsername()%>')"
                                href="#"><fmt:message
@@ -121,19 +117,6 @@
                    href="javascript:submitAddForm()"><fmt:message key="rss.manager.add.new.user"/></a>
                 
                 <div style="clear:both;"></div>
-            </form>
-            <script type="text/javascript">
-                function submitEditForm(rssInstanceName, username) {
-                    document.getElementById('rssInstanceName').value = rssInstanceName;
-                    document.getElementById('username').value = username;
-                    document.getElementById('flag').value = 'edit';
-                    document.getElementById('editForm').submit();
-                }
-            </script>
-            <form action="editDatabaseUser.jsp" method="post" id="editForm">
-                <input id="rssInstanceName" name="rssInstanceName" type="hidden"/>
-                <input id="username" name="username" type="hidden"/>
-                <input id="flag" name="flag" type="hidden"/>
             </form>
             <script type="text/javascript">
                 function submitAddForm() {

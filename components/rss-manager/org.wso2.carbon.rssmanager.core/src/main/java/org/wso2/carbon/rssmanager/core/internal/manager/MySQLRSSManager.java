@@ -82,7 +82,7 @@ public class MySQLRSSManager extends RSSManager {
                 }
             }
             throw new RSSManagerException("Error while creating the database '" +
-                    database.getName() + " on RSS instance '" + rssIns.getName() + "'", e);
+                    database.getName() + "' on RSS instance '" + rssIns.getName() + "'", e);
         } catch (RSSManagerException e) {
             try {
                 conn.rollback();
@@ -140,7 +140,7 @@ public class MySQLRSSManager extends RSSManager {
                 }
             }
             throw new RSSManagerException("Error while dropping the database '" + databaseName +
-                    " on RSS instance '" + rssIns.getName() + "'", e);
+                    "' on RSS instance '" + rssIns.getName() + "'", e);
         } catch (RSSManagerException e) {
             try {
                 conn.rollback();
@@ -194,7 +194,7 @@ public class MySQLRSSManager extends RSSManager {
                 }
             }
             throw new RSSManagerException("Error while creating the database user '" +
-                    user.getUsername() + " on RSS instance '" + user.getRssInstanceName() + "'", e);
+                    user.getUsername() + "' on RSS instance '" + user.getRssInstanceName() + "'", e);
         } catch (RSSManagerException e) {
             try {
                 conn.rollback();
@@ -241,7 +241,7 @@ public class MySQLRSSManager extends RSSManager {
                 }
             }
             throw new RSSManagerException("Error while dropping the database user '" + username +
-                    " on RSS instance '" + rssIns.getName() + "'", e);
+                    "' on RSS instance '" + rssIns.getName() + "'", e);
         } catch (RSSManagerException e) {
             try {
                 conn.rollback();

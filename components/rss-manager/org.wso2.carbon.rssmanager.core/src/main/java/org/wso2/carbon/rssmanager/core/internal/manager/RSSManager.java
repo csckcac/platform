@@ -146,6 +146,7 @@ public abstract class RSSManager {
         int tid = CarbonContextHolder.getCurrentCarbonContextHolder().getTenantId();
         template.setTenantId(tid);
         this.getDAO().editDatabasePrivilegesTemplate(template);
+        this.getTenantMetadataRepository(tid).addPrivilegeTemplate(template);
     }
 
     public RSSMetaDataRepository getTenantMetadataRepository(int tenantId) {

@@ -40,12 +40,6 @@ public class RSSManagerClient {
 
     private ResourceBundle bundle;
 
-    private static final String RSS_MANAGER_EXTENSION_NS =
-            "http://www.wso2.org/products/wso2commons/rssmanager";
-
-    private static final OMNamespace RSS_MANAGER_OM_NAMESPACE = OMAbstractFactory.getOMFactory().
-            createOMNamespace(RSS_MANAGER_EXTENSION_NS, "instance");
-
     private static final String BUNDLE = "org.wso2.carbon.rssmanager.ui.i18n.Resources";
 
     private static final Log log = LogFactory.getLog(RSSManagerClient.class);

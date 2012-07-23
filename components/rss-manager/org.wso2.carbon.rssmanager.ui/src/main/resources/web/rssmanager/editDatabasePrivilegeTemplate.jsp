@@ -63,7 +63,7 @@
     if (template != null) {
         try {
 %>
-<form method="post" action="#" name="dataForm"
+<form method="post" action="databasePrivilegeTemplateOps_ajaxprocessor.jsp" name="dataForm"
       id="dataForm">
     <table class="styledLeft" id="databasePrivilegeTemplateData">
         <thead>
@@ -79,12 +79,10 @@
             <td><input type="text" id="privilegeTemplateName" name="privilegeTemplateName"
                        value="<%=template.getName()%>" readonly="readonly"/>
             </td>
-            <input id="privGroupId" name="privGroupId" value="<%=template.getName()%>"
-                   type="hidden"/>
         </tr>
         </tbody>
     </table>
-    <table class="styledLeft" id="dbUserTable">
+    <table class="styledLeft" id="databaseUserInfo">
         <thead>
         <tr>
             <th width="20%"><fmt:message key="rss.manager.permission.name"/></th>
@@ -96,154 +94,154 @@
         <tr>
             <td><fmt:message key="rss.manager.permissions.select"/></td>
             <%if (privileges != null && "Y".equals(privileges.getSelectPriv())) {%>
-            <td><input type="checkbox" name="select_priv" checked="checked"/></td>
+            <td><input type="checkbox" name="select_priv" id="select_priv" checked="checked"/></td>
             <%} else {%>
-            <td><input type="checkbox" name="select_priv"/></td>
+            <td><input type="checkbox" name="select_priv" id="select_priv"/></td>
             <%}%>
         </tr>
         <tr>
             <td><fmt:message key="rss.manager.permissions.insert"/></td>
             <%if (privileges != null && "Y".equals(privileges.getInsertPriv())) {%>
-            <td><input type="checkbox" name="insert_priv" checked="checked"/></td>
+            <td><input type="checkbox" name="insert_priv" id="insert_priv" checked="checked"/></td>
             <%} else {%>
-            <td><input type="checkbox" name="insert_priv"/></td>
+            <td><input type="checkbox" name="insert_priv" id="insert_priv" /></td>
             <%}%>
         </tr>
         <tr>
             <td><fmt:message key="rss.manager.permissions.update"/></td>
             <%if (privileges != null && "Y".equals(privileges.getUpdatePriv())) {%>
-            <td><input type="checkbox" name="update_priv" checked="checked"/></td>
+            <td><input type="checkbox" name="update_priv" id="update_priv" checked="checked"/></td>
             <%} else {%>
-            <td><input type="checkbox" name="update_priv"/></td>
+            <td><input type="checkbox" name="update_priv" id="update_priv"/></td>
             <%}%>
         </tr>
         <tr>
             <td><fmt:message key="rss.manager.permissions.delete"/></td>
             <%if (privileges != null && "Y".equals(privileges.getDeletePriv())) {%>
-            <td><input type="checkbox" name="delete_priv" checked="checked"/></td>
+            <td><input type="checkbox" name="delete_priv" id="delete_priv" checked="checked"/></td>
             <%} else {%>
-            <td><input type="checkbox" name="delete_priv"/></td>
+            <td><input type="checkbox" name="delete_priv" id="delete_priv"/></td>
             <%}%>
         </tr>
         <tr>
             <td><fmt:message key="rss.manager.permissions.create"/></td>
             <%if (privileges != null && "Y".equals(privileges.getCreatePriv())) {%>
-            <td><input type="checkbox" name="create_priv" checked="checked"/></td>
+            <td><input type="checkbox" name="create_priv" id="create_priv" checked="checked"/></td>
             <%} else {%>
-            <td><input type="checkbox" name="create_priv"/></td>
+            <td><input type="checkbox" name="create_priv" id="create_priv"/></td>
             <%}%>
         </tr>
         <tr>
             <td><fmt:message key="rss.manager.permissions.drop"/></td>
             <%if (privileges != null && "Y".equals(privileges.getDropPriv())) {%>
-            <td><input type="checkbox" name="drop_priv" checked="checked"/></td>
+            <td><input type="checkbox" name="drop_priv" id="drop_priv" checked="checked"/></td>
             <%} else {%>
-            <td><input type="checkbox" name="drop_priv"/></td>
+            <td><input type="checkbox" name="drop_priv" id="drop_priv"/></td>
             <%}%>
         </tr>
         <tr>
             <td><fmt:message key="rss.manager.permissions.grant"/></td>
             <%if (privileges != null && "Y".equals(privileges.getGrantPriv())) {%>
-            <td><input type="checkbox" name="grant_priv" checked="checked"/></td>
+            <td><input type="checkbox" name="grant_priv" id="grant_priv" checked="checked"/></td>
             <%} else {%>
-            <td><input type="checkbox" name="grant_priv"/></td>
+            <td><input type="checkbox" name="grant_priv" id="grant_priv"/></td>
             <%}%>
         </tr>
         <tr>
             <td><fmt:message key="rss.manager.permissions.references"/></td>
             <%if (privileges != null && "Y".equals(privileges.getReferencesPriv())) {%>
-            <td><input type="checkbox" name="references_priv" checked="checked"/></td>
+            <td><input type="checkbox" name="references_priv" id="references_priv" checked="checked"/></td>
             <%} else {%>
-            <td><input type="checkbox" name="references_priv"/></td>
+            <td><input type="checkbox" name="references_priv" id="references_priv"/></td>
             <%}%>
         </tr>
         <tr>
             <td><fmt:message key="rss.manager.permissions.index"/></td>
             <%if (privileges != null && "Y".equals(privileges.getIndexPriv())) {%>
-            <td><input type="checkbox" name="index_priv" checked="checked"/></td>
+            <td><input type="checkbox" name="index_priv" id="index_priv" checked="checked"/></td>
             <%} else {%>
-            <td><input type="checkbox" name="index_priv"/></td>
+            <td><input type="checkbox" name="index_priv" id="index_priv"/></td>
             <%}%>
         </tr>
         <tr>
             <td><fmt:message key="rss.manager.permissions.alter"/></td>
             <%if (privileges != null && "Y".equals(privileges.getAlterPriv())) {%>
-            <td><input type="checkbox" name="alter_priv" checked="checked"/></td>
+            <td><input type="checkbox" name="alter_priv" id="alter_priv" checked="checked"/></td>
             <%} else {%>
-            <td><input type="checkbox" name="alter_priv"/></td>
+            <td><input type="checkbox" name="alter_priv" id="alter_priv"/></td>
             <%}%>
         </tr>
         <tr>
             <td><fmt:message key="rss.manager.permissions.create.temp.table"/></td>
             <%if (privileges != null && "Y".equals(privileges.getCreateTmpTablePriv())) {%>
-            <td><input type="checkbox" name="create_tmp_table_priv" checked="checked"/>
+            <td><input type="checkbox" name="create_tmp_table_priv" id="create_tmp_table_priv" checked="checked"/>
             </td>
             <%} else {%>
-            <td><input type="checkbox" name="create_tmp_table_priv"/></td>
+            <td><input type="checkbox" name="create_tmp_table_priv" id="create_tmp_table_priv"/></td>
             <%}%>
         </tr>
         <tr>
             <td><fmt:message key="rss.manager.permissions.lock.tables"/></td>
             <%if (privileges != null && "Y".equals(privileges.getLockTablesPriv())) {%>
-            <td><input type="checkbox" name="lock_tables_priv" checked="checked"/></td>
+            <td><input type="checkbox" name="lock_tables_priv" id="lock_tables_priv" checked="checked"/></td>
             <%} else {%>
-            <td><input type="checkbox" name="lock_tables_priv"/></td>
+            <td><input type="checkbox" name="lock_tables_priv" id="lock_tables_priv"/></td>
             <%}%>
         </tr>
         <tr>
             <td><fmt:message key="rss.manager.permissions.create.view"/></td>
             <%if (privileges != null && "Y".equals(privileges.getCreateViewPriv())) {%>
-            <td><input type="checkbox" name="create_view_priv" checked="checked"/></td>
+            <td><input type="checkbox" name="create_view_priv" id="create_view_priv" checked="checked"/></td>
             <%} else {%>
-            <td><input type="checkbox" name="create_view_priv"/></td>
+            <td><input type="checkbox" name="create_view_priv" id="create_view_priv"/></td>
             <%}%>
         </tr>
         <tr>
             <td><fmt:message key="rss.manager.permissions.show.view"/></td>
             <%if (privileges != null && "Y".equals(privileges.getShowViewPriv())) {%>
-            <td><input type="checkbox" name="show_view_priv" checked="checked"/></td>
+            <td><input type="checkbox" name="show_view_priv" id="show_view_priv" checked="checked"/></td>
             <%} else {%>
-            <td><input type="checkbox" name="show_view_priv"/></td>
+            <td><input type="checkbox" name="show_view_priv" id="show_view_priv"/></td>
             <%}%>
         </tr>
         <tr>
             <td><fmt:message key="rss.manager.permissions.create.routine"/></td>
             <%if (privileges != null && "Y".equals(privileges.getCreateRoutinePriv())) {%>
-            <td><input type="checkbox" name="create_routine_priv" checked="checked"/></td>
+            <td><input type="checkbox" name="create_routine_priv" id="create_routine_priv" checked="checked"/></td>
             <%} else {%>
-            <td><input type="checkbox" name="create_routine_priv"/></td>
+            <td><input type="checkbox" name="create_routine_priv" id="create_routine_priv"/></td>
             <%}%>
         </tr>
         <tr>
             <td><fmt:message key="rss.manager.permissions.alter.routine"/></td>
             <%if (privileges != null && "Y".equals(privileges.getAlterRoutinePriv())) {%>
-            <td><input type="checkbox" name="alter_routine_priv" checked="checked"/></td>
+            <td><input type="checkbox" name="alter_routine_priv" id="alter_routine_priv" checked="checked"/></td>
             <%} else {%>
-            <td><input type="checkbox" name="alter_routine_priv"/></td>
+            <td><input type="checkbox" name="alter_routine_priv" id="alter_routine_priv"/></td>
             <%}%>
         </tr>
         <tr>
             <td><fmt:message key="rss.manager.permissions.execute"/></td>
             <%if (privileges != null && "Y".equals(privileges.getExecutePriv())) {%>
-            <td><input type="checkbox" name="execute_priv" checked="checked"/></td>
+            <td><input type="checkbox" name="execute_priv" id="execute_priv" checked="checked"/></td>
             <%} else {%>
-            <td><input type="checkbox" name="execute_priv"/></td>
+            <td><input type="checkbox" name="execute_priv" id="execute_priv"/></td>
             <%}%>
         </tr>
         <tr>
             <td><fmt:message key="rss.manager.permissions.event"/></td>
             <%if (privileges != null && "Y".equals(privileges.getEventPriv())) {%>
-            <td><input type="checkbox" name="event_priv" checked="checked"/></td>
+            <td><input type="checkbox" name="event_priv" id="event_priv" checked="checked"/></td>
             <%} else {%>
-            <td><input type="checkbox" name="event_priv"/></td>
+            <td><input type="checkbox" name="event_priv" id="event_priv"/></td>
             <%}%>
         </tr>
         <tr>
             <td><fmt:message key="rss.manager.permissions.trigger"/></td>
             <%if (privileges != null && "Y".equals(privileges.getTriggerPriv())) {%>
-            <td><input type="checkbox" name="trigger_priv" checked="checked"/></td>
+            <td><input type="checkbox" name="trigger_priv" id="trigger_priv" checked="checked"/></td>
             <%} else {%>
-            <td><input type="checkbox" name="trigger_priv"/></td>
+            <td><input type="checkbox" name="trigger_priv" id="trigger_priv"/></td>
             <%}%>
         </tr>
         </tbody>
@@ -255,6 +253,9 @@
             <input class="button" type="button"
                    value="<fmt:message key="rss.manager.save"/>"
                     onclick="return createDatabasePrivilegeTemplate('edit')"/>
+            <%--<input class="button" type="button"--%>
+                   <%--value="<fmt:message key="rss.manager.save"/>"--%>
+                    <%--onclick="return editDatabasePrivilegeTemplate('<%=templateName%>', 'edit')"/>--%>
             <input class="button" type="button"
                    value="<fmt:message key="rss.manager.cancel"/>"
                    onclick="document.location.href='databasePrivilegeTemplates.jsp'"/>

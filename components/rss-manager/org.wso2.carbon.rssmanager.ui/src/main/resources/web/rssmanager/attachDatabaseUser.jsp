@@ -109,6 +109,9 @@
                                             color='red'>*</font></td>
                                     <td><select id="databaseUsers"
                                                 name="databaseUsers">
+                                        <option id="SELECT"
+                                                value="SELECT">-------SELECT-------
+                                        </option>
                                         <%
                                             if (availableUsers != null &&
                                                     availableUsers.length > 0) {
@@ -119,14 +122,8 @@
                                                 value="<%=user%>"><%=user%>
                                         </option>
                                         <%
-                                                }
-                                            }
-                                        } else {
-                                        %>
-                                        <option id="SELECT"
-                                                value="SELECT">-------SELECT-------
-                                        </option>
-                                        <%
+                                                        }
+                                                    }
                                                 }
                                             }
                                         %>

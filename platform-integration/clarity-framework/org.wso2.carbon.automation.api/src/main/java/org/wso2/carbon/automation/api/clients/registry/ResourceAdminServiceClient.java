@@ -218,10 +218,23 @@ public class ResourceAdminServiceClient {
 
     }
 
-    public String getHumanReadableMediaTypes(String resourcePath)
-            throws RemoteException, ResourceAdminServiceExceptionException {
+    public String getHumanReadableMediaTypes() throws Exception {
+        try {
+            return resourceAdminServiceStub.getHumanReadableMediaTypes();
+        } catch (Exception e) {
+            String msg = "get human readable media type error ";
+            throw new Exception(msg, e);
+        }
+    }
 
-        return resourceAdminServiceStub.getHumanReadableMediaTypes();
+    public String getMimeTypeFromHuman(String mediaType) throws Exception {
 
+        try {
+            return resourceAdminServiceStub.getMimeTypeFromHuman(mediaType);
+        } catch (Exception e) {
+            String msg = "get human readable media type error ";
+            throw new Exception(msg, e);
+
+        }
     }
 }

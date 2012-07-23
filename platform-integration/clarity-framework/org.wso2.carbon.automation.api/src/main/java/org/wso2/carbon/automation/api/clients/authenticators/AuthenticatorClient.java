@@ -19,6 +19,7 @@
 package org.wso2.carbon.automation.api.clients.authenticators;
 
 import org.apache.axis2.AxisFault;
+import org.apache.axis2.client.Stub;
 import org.apache.axis2.context.ServiceContext;
 import org.apache.axis2.transport.http.HTTPConstants;
 import org.apache.commons.logging.Log;
@@ -77,5 +78,9 @@ public class AuthenticatorClient {
         authenticationAdminStub.logout();
         log.info("log out");
 
+    }
+
+    public Stub getAuthenticationAdminStub(){
+        return authenticationAdminStub;
     }
 }

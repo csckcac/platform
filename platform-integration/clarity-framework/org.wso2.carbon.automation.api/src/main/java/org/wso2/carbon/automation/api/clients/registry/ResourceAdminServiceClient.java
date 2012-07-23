@@ -150,6 +150,7 @@ public class ResourceAdminServiceClient {
             throws ResourceAdminServiceExceptionException, RemoteException {
 
         resourceAdminServiceStub.importResource("/", resourceName, MEDIA_TYPE_POLICY, description, fetchURL, null);
+
     }
 
     public void uploadArtifact(String description, DataHandler dh)
@@ -171,6 +172,7 @@ public class ResourceAdminServiceClient {
             throws ResourceAdminServiceExceptionException, RemoteException {
 
         resourceAdminServiceStub.addSymbolicLink(parentPath, name, targetPath);
+
     }
 
     public void addTextResource(String parentPath, String fileName,

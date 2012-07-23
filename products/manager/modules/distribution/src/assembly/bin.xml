@@ -47,7 +47,7 @@
             </excludes>
         </fileSet>
         <fileSet>
-            <directory>target/shopping-cart-${pom.version}</directory>
+            <directory>target/shopping-cart-global-${shoppingcart.global.version}</directory>
             <outputDirectory>${pom.artifactId}-${pom.version}/samples/bin</outputDirectory>
             <includes>
                 <include>**/*.car</include>
@@ -90,7 +90,8 @@
                 <exclude>email-registration-moderation.xml</exclude>
                 <exclude>email-registration.xml</exclude>
                 <exclude>email-update.xml</exclude>
-		<exclude>tenant-reg-agent.xml</exclude>
+				<exclude>tenant-reg-agent.xml</exclude>
+				<exclude>stratos-datasources.xml</exclude>
             </excludes>
         </fileSet>
         <fileSet>

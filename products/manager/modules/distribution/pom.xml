@@ -99,9 +99,9 @@
                                     <outputDirectory>target</outputDirectory>
                                 </artifactItem>
                                 <artifactItem>
-                                    <groupId>com.acme.shoppingcart</groupId>
-                                    <artifactId>shopping-cart</artifactId>
-                                    <version>${shoppingcart.version}</version>
+                                    <groupId>com.acme.shoppingcart.global</groupId>
+                                    <artifactId>shopping-cart-global</artifactId>
+                                    <version>${shoppingcart.global.version}</version>
                                     <type>zip</type>
                                     <overWrite>true</overWrite>
                                     <outputDirectory>target</outputDirectory>
@@ -220,7 +220,7 @@
                                 <delete dir="target/dependency-maven-plugin-markers"/>
                                 <delete dir="target/maven-archiver"/>
                                 <delete dir="target/wso2carbon-core-${carbon.version}"/>
-                                <delete dir="target/shopping-cart-${project.version}"/>
+                                <delete dir="target/shopping-cart-global-${shoppingcart.global.version}"/>
                                 <delete file="target/${project.artifactId}-${project.version}.jar"/>
                                 <delete dir="target/sources"/>
                                 <delete dir="target/site"/>

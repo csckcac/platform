@@ -27,6 +27,6 @@
             <cloudService name="WSO2 Stratos Data Services Server"/>
             <cloudService name="WSO2 Stratos Business Process Server"/-->
         </cloudServices>
-        <fileName>ShoppingCartSample-${project.version}</fileName>
+        <fileName>GlobalShoppingCartSample-${shoppingcart.global.version}</fileName>
     </sample>
 </samples>

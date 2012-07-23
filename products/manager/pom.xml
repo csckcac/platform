@@ -395,6 +395,7 @@
         <eclipse.version>3.2.0</eclipse.version>
         <servlet-api.version>2.4</servlet-api.version>
         <shoppingcart.version>2.0.0-SNAPSHOT</shoppingcart.version>
+		<shoppingcart.global.version>2.0.0-SNAPSHOT</shoppingcart.global.version>
     </properties>
 
 </project>

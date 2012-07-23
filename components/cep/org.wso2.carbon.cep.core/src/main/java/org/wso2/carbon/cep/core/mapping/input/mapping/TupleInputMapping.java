@@ -87,6 +87,9 @@ public class TupleInputMapping extends InputMapping {
         for (int i = 0; i < propertySize; i++) {
             eventData[i] = getValue((Event) event, i);
         }
+        if(((Event)event).getTimeStamp()==0){
+            ((Event)event).setTimeStamp(System.currentTimeMillis());
+        }
         ((Event) event).setMetaData(null);
         ((Event) event).setCorrelationData(null);
         ((Event) event).setPayloadData(eventData);

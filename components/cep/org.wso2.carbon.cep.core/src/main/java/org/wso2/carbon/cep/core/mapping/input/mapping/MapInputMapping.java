@@ -81,6 +81,7 @@ public class MapInputMapping extends InputMapping {
         }
 
         Event tupleEvent =new Event();
+        tupleEvent.setTimeStamp(System.currentTimeMillis());
         tupleEvent.setMetaData(null);
         tupleEvent.setCorrelationData(null);
         tupleEvent.setPayloadData(eventData);

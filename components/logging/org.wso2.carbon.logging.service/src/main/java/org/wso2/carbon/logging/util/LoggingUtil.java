@@ -108,6 +108,9 @@ public class LoggingUtil {
 		return cassandraLogReader.getApplicationLogs(priority, keyword, appName);
 	}
 	
+	public static LogEvent[] getAllSystemLogs () {
+		return tenantAwareLogReader.getAllSystemLogs();
+	}
 	public static int getNoOfRows() throws LogViewerException {
 		return cassandraLogReader.getNoOfRows();
 	}

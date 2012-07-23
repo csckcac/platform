@@ -138,6 +138,10 @@ public class LogViewer {
 			return false;
 		}
 	}
+	
+	public LogEvent[] getAllSystemLogs() {
+		return LoggingUtil.getAllSystemLogs();
+	}
 
 	public PaginatedLogEvent getPaginatedLogEvents(int pageNumber, String type, String keyword)
 			throws LogViewerException {

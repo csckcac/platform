@@ -352,7 +352,7 @@ public class LoadBalancerConfiguration implements Serializable{
                     ServiceConfiguration serviceConfig = new ServiceConfiguration(domain.getName());
                     
                     //serviceNode is fully constructed hence we're sending null as the first argument
-                    createConfiguration(serviceConfig, serviceNode);
+                    createConfiguration(serviceConfig, domain);
                     serviceConfigMap.put(domain.getName(), serviceConfig);
                 }
             }
@@ -649,6 +649,7 @@ public class LoadBalancerConfiguration implements Serializable{
         private String hosts;
         
         private String domain;
+        private String tenantRange;
 
         public ServiceConfiguration(String domain) {
             this.domain = domain;
@@ -764,6 +765,10 @@ public class LoadBalancerConfiguration implements Serializable{
         
         public void setHosts(String hosts) {
             this.hosts = hosts;
+        }
+        
+        public void setTenant_range(String range) {
+            this.tenantRange = range;
         }
     }
 }

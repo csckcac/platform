@@ -50,7 +50,7 @@ public class LoadBalancerConfigurationTest extends TestCase {
         
         assertEquals(1, asServiceConfig.getInstancesPerScaleUp());
         assertEquals(5, asServiceConfig.getMaxAppInstances());
-        assertEquals(1, asServiceConfig.getMinAppInstances());
+        assertEquals(3, asServiceConfig.getMinAppInstances());
         assertEquals(60000, asServiceConfig.getMessageExpiryTime());
         assertEquals(400, asServiceConfig.getQueueLengthPerNode());
         assertEquals(10, asServiceConfig.getRoundsToAverage());

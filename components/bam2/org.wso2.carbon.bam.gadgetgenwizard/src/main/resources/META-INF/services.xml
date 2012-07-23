@@ -28,9 +28,9 @@
         <parameter name="ServiceClass">
             org.wso2.carbon.bam.gadgetgenwizard.service.GadgetGenService
         </parameter>
-
-        <parameter name="adminService" locked="true">true</parameter>
-        <parameter name="AuthorizationAction" locked="true">/permission/admin/manage</parameter>
-        <parameter name="hiddenService" locked="true">true</parameter>-->
     </service>
+
+    <parameter name="adminService" locked="true">true</parameter>
+    <parameter name="AuthorizationAction" locked="true">/permission/admin/manage</parameter>
+    <parameter name="hiddenService" locked="true">true</parameter>
 </serviceGroup>

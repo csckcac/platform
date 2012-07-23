@@ -20,7 +20,11 @@ import java.io.File;
 public class DefaultBuildDriverListener implements BuildDriverListener {
 
     private static final Log log = LogFactory.getLog(DefaultBuildDriverListener.class);
-    private static final String EPR = "http://localhost:9763/services/ArtifactCreateCallbackService";
+    private static final String ARTIFACT_CREATE_EPR = "http://localhost:9763/services/ArtifactCreateCallbackService";
+    private static final String NOTIFICATION_EPR = "http://localhost:9763/services/EventNotificationService";
+    private static final String EVENT = "build";
+    private static final String SUCCESS = "successful";
+    private static final String FAILED = "failed";
 
     @Override
     public void onBuildSuccessful(String applicationId, String version, String revision, File file) {
@@ -28,6 +32,7 @@ public class DefaultBuildDriverListener implements BuildDriverListener {
         //storage.storeArtifact(applicationId, version, revision, file);
         // call the bpel back
         sendMessageToCreateArtifactCallback(applicationId, version, revision);
+        sendEventNotification(applicationId,EVENT,SUCCESS);
 
     }
 
@@ -49,7 +54,7 @@ public class DefaultBuildDriverListener implements BuildDriverListener {
                     ServiceClient client = new ServiceClient();
 
                     //Set the endpoint address
-                    client.getOptions().setTo(new EndpointReference(EPR));
+                    client.getOptions().setTo(new EndpointReference(ARTIFACT_CREATE_EPR));
 
                     //Make the request and get the response
                     client.sendRobust(getPayload(applicationId, version, revision));
@@ -70,5 +75,42 @@ public class DefaultBuildDriverListener implements BuildDriverListener {
         return new StAXOMBuilder(new ByteArrayInputStream(payload.getBytes())).getDocumentElement();
     }
 
+    public void sendEventNotification(final String applicationId, final String event, final String result) {
+        new Thread(new Runnable() {
+            public void run() {
+                try {
+                    Thread.sleep(5000);
+                } catch (InterruptedException ignored) {
+                }
+                try {
+                    //Create a service client
+                    ServiceClient client = new ServiceClient();
 
+                    //Set the endpoint address
+                    client.getOptions().setTo(new EndpointReference(NOTIFICATION_EPR));
+
+                    //Make the request and get the response
+                    client.sendRobust(getNotificationPayload(applicationId, event, result));
+                } catch (AxisFault e) {
+                    log.error(e);
+                    e.printStackTrace();
+                } catch (XMLStreamException e) {
+                    log.error(e);
+                }
+            }
+        }).start();
+    }
+
+    private static OMElement getNotificationPayload(String applicationId, String event,
+                                                    String result)
+            throws XMLStreamException, javax.xml.stream.XMLStreamException {
+
+        String payload = "<ser:publishEvent xmlns:ser=\"http://service.notification.events.appfactory.carbon.wso2.org\">" +
+                          "<ser:event xmlns:ser=\"http://service.notification.events.appfactory.carbon.wso2.org\">" +
+                          "<xsd:applicationId xmlns:xsd=\"http://service.notification.events.appfactory.carbon.wso2.org/xsd\">" + applicationId + "</xsd:applicationId>" +
+                          "<xsd:event xmlns:xsd=\"http://service.notification.events.appfactory.carbon.wso2.org/xsd\">" + event + "</xsd:event>" +
+                          "<xsd:result xmlns:xsd=\"http://service.notification.events.appfactory.carbon.wso2.org/xsd\">" + result + "</xsd:result>" +
+                          "</ser:event></ser:publishEvent>";
+        return new StAXOMBuilder(new ByteArrayInputStream(payload.getBytes())).getDocumentElement();
+    }
 }

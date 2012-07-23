@@ -556,7 +556,7 @@ public class ClusterManager {
                                            List<String> zkNodeIds = new ArrayList<String>();
 
                                            for(String zNode : zkNodes) {
-                                               zkNodeIds.add(""+getNoideIdFromZkNode(zNode));
+                                               zkNodeIds.add(""+ getNodeIdFromZkNode(zNode));
                                            }
 
                                            List<String> storedNodes = messageStore.storedNodeDetails();
@@ -825,7 +825,7 @@ public class ClusterManager {
                 String deletedNode = parts[parts.length - 1];
 
                 try {
-                    int deletedNodeId = getNoideIdFromZkNode(deletedNode);
+                    int deletedNodeId = getNodeIdFromZkNode(deletedNode);
                     ClusterResourceHolder.getInstance().getCassandraMessageStore().
                             deleteNodeData("" + deletedNodeId);
                 } catch (Exception e) {
@@ -992,7 +992,7 @@ public class ClusterManager {
             for (String node : nodeList) {
 
                 // Splitting out the id assigned to the node by zookeeper
-                int currentId = getNoideIdFromZkNode(node);
+                int currentId = getNodeIdFromZkNode(node);
                 if (currentId == nodeId) {
 
                     String path = CoordinationConstants.QUEUE_WORKER_COORDINATION_PARENT +
@@ -1043,8 +1043,136 @@ public class ClusterManager {
         return globalQueueManager.getSubscribers(topic).size();
     }
 
+    public boolean updateWorkerForQueue(String queueToBeMoved, String newNodeToAssign) {
+        boolean successful = false;
+        try {
+            //find the leader of the queue
+            String oldLeader = "";
+            String newLeader = "";
+            
+            
+            List<String> nodeList = zkAgent.getZooKeeper().
+                    getChildren(CoordinationConstants.QUEUE_WORKER_COORDINATION_PARENT, false);
+            for(String node : nodeList) {
+                String path = CoordinationConstants.QUEUE_WORKER_COORDINATION_PARENT +
+                        CoordinationConstants.NODE_SEPARATOR + node;
+                byte[] data = zkAgent.getZooKeeper().getData(path, false, null);
 
-    private static int getNoideIdFromZkNode(String node) {
+                String dataStr = new String(data);
+                //Data formats
+                //1)id:q1,q2,q3,:node=q,node=q2
+                //2)id:q1,q2,
+                //3)id::node=q,node=q2
+                //4)id:
+                String[] parts = dataStr.split(":");
+                if(parts.length >1 && parts[1].contains(queueToBeMoved)) {
+                   oldLeader = node; 
+                }
+                if(getNodeIdFromZkNode(node) == Integer.parseInt(newNodeToAssign)) {
+                    newLeader = node;
+                }
+                
+            }
+
+            for(String node : nodeList) {
+                String path = CoordinationConstants.QUEUE_WORKER_COORDINATION_PARENT +
+                        CoordinationConstants.NODE_SEPARATOR + node;
+                byte[] data = zkAgent.getZooKeeper().getData(path, false, null);
+
+                String dataStr = new String(data);
+                //Data formats
+                //1)id:q1,q2,q3,:node=q,node=q2
+                //2)id:q1,q2,
+                //3)id::node=q,node=q2
+                //4)id:
+                String[] parts = dataStr.split(":");
+
+                //remove queue from oldLeader. It's PMC data does not have that queue
+                if(node.equals(oldLeader)) {
+                    if(dataStr.contains(queueToBeMoved)) {
+                        dataStr = dataStr.replace(queueToBeMoved+",","");
+                    }
+                }
+                //add queue to the new leader
+                if(node.equals(newLeader)) {
+
+                    String newData;
+
+                    // Possible Data formats formats for currentCandidateNodeData
+                    //1) id:q1,q2,q3,:node=q,node=q2 (candidateNodeDataParts.length = 3)
+                    //2)id:
+                    //3)id:q1,q2, (candidateNodeDataParts.length =2)
+                    //4)id::node=q,node=q2  (candidateNodeDataParts.length = 3)
+                    if (parts.length > 1) {
+
+                        String replacePart = parts[1];
+                        if(replacePart.contains(queueToBeMoved)) {
+                           return successful;
+                        }
+                        //Handle id::node=q,node=q2
+                        if (replacePart.length() == 0) {
+                            newData = dataStr.replace(":" + replacePart + ":",
+                                    ":" + replacePart + queueToBeMoved + "," + ":");
+                        } else {
+
+                            newData = dataStr.replace(replacePart,
+                                    replacePart + queueToBeMoved + ",");
+                        }
+                    } else {
+                        newData = parts[0] + ":" + queueToBeMoved + ",";
+                    }
+
+                    dataStr = newData;
+                }
+
+                //update each PMC node which handled old leader node.
+                if (parts.length == 3) {
+                    String[] leaderNodes = parts[2].split(",");
+
+                    if (leaderNodes.length > 0) {
+                        if(dataStr.contains(oldLeader+"="+queueToBeMoved)) {
+                            //Avoid setting PMC for leader node
+                            if(node.equals(newLeader)) {
+                                dataStr = dataStr.replace(oldLeader+"="+queueToBeMoved,"");
+                            } else {
+                                dataStr = dataStr.replace(oldLeader+"="+queueToBeMoved,newLeader+"="+queueToBeMoved);
+                            }
+                            //update with all queue changes andPMC changes together
+                            zkAgent.getZooKeeper().setData(path, dataStr.getBytes(),-1);
+                        } else if(node.equals(oldLeader) ||(node.equals(newLeader))){
+                            zkAgent.getZooKeeper().setData(path, dataStr.getBytes(),-1);
+                        }
+                    } else if(node.equals(oldLeader) ||(node.equals(newLeader))) {
+                        zkAgent.getZooKeeper().setData(path, dataStr.getBytes(),-1);
+                    }
+                }else if(node.equals(oldLeader) ||(node.equals(newLeader))) {
+                    zkAgent.getZooKeeper().setData(path, dataStr.getBytes(),-1);
+                }
+                //zkAgent.getZooKeeper().setData(path,newDataString.getBytes(),-1);
+                log.debug("Successfully moved queue worker for "+queueToBeMoved+" from node: "+oldLeader+" to node: "+ newLeader);
+                successful=true;
+            }
+
+        }  catch (Exception e) {
+            log.fatal("Error processing the Node data change : This might cause serious " +
+                    "issues in distributed queue management", e);
+        }
+
+        return successful;
+    }
+
+    public boolean isClusteringEnabled() {
+        ClusterConfiguration config = ClusterResourceHolder.getInstance().getClusterConfiguration();
+        return config.isClusteringEnabled();
+    }
+
+    public String getMyNodeID()
+    {
+        String nodeID = Integer.toString(nodeId);
+        return nodeID;
+    }
+
+    private static int getNodeIdFromZkNode(String node) {
         return Integer.parseInt(node.substring(node.length() - 5));
     }
 

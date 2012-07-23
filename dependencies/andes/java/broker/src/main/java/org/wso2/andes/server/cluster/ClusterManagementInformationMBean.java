@@ -51,6 +51,18 @@ public class ClusterManagementInformationMBean extends AMQManagedObject implemen
     public String[] getQueues(int nodeId) {
         return clusterManager.getQueues(nodeId);
     }
+    
+    public boolean updateWorkerForQueue(String queueToBeMoved,String newNodeToAssign) {
+        return clusterManager.updateWorkerForQueue(queueToBeMoved,newNodeToAssign);
+    }
+
+    public boolean isClusteringEnabled() {
+        return clusterManager.isClusteringEnabled();
+    }
+
+    public String getMyNodeID() {
+        return clusterManager.getMyNodeID();
+    }
 
     public List<Integer> getZkNodes() {
         return clusterManager.getZkNodes();

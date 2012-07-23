@@ -30,13 +30,9 @@
 
             <modules>
                 <module>org.wso2.carbon.identity.scim.provider.feature</module>
+		<module>org.wso2.carbon.identity.scim.feature</module>
                 <!--module>org.wso2.carbon.identity.scim.consumer.feature</module-->
             </modules>
-
-    <properties>
-        <wso2carbon.version.identity.oauth>${wso2carbon.version.identity}
-        </wso2carbon.version.identity.oauth>
-    </properties>
 
 </project>
 

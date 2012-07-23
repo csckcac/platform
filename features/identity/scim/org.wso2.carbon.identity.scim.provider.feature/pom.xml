@@ -125,6 +125,7 @@
                             <includedFeatures>
                                 <includedFeatureDef>org.wso2.carbon:org.wso2.carbon.jaxws.webapp.mgt.server.feature:${wso2carbon.version}</includedFeatureDef>
                                 <includedFeatureDef>org.wso2.carbon:org.wso2.carbon.webapp.mgt.server.feature:${wso2carbon.version}</includedFeatureDef>
+				<includedFeatureDef>org.wso2.carbon:org.wso2.carbon.url.mapper.server.feature:${wso2carbon.version}</includedFeatureDef>
                             </includedFeatures>
                         </configuration>
                     </execution>

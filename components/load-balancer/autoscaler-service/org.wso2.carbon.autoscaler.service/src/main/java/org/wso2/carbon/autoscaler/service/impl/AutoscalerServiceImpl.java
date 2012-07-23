@@ -965,7 +965,7 @@ public class AutoscalerServiceImpl implements IAutoscalerService {
      * @param msg
      *            exception message
      */
-    public void handleException(String msg) {
+    private void handleException(String msg) {
         log.error(msg);
         throw new SynapseException(msg);
     }
@@ -978,7 +978,7 @@ public class AutoscalerServiceImpl implements IAutoscalerService {
      * @param e
      *            exception
      */
-    public static void handleException(String msg, Exception e) {
+    private static void handleException(String msg, Exception e) {
         log.error(msg, e);
         throw new SynapseException(msg, e);
     }

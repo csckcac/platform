@@ -54,7 +54,7 @@ public class IaasContext implements Serializable{
     public IaasContext(Enum<Iaases> name, ComputeService computeService) {
         this.name = name;
         this.computeService = computeService;
-        domainToTemplateMap = new HashMap<String, Template>();
+        this.domainToTemplateMap = new HashMap<String, Template>();
     }
 
     public Enum<Iaases> getName() {

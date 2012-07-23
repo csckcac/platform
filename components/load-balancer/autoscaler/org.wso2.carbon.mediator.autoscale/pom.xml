@@ -72,6 +72,7 @@ We need to modify this file since this copied from branch
                             org.apache.axiom.om; version="${axiom.osgi.version.range}",
                             *; resolution:=optional
                         </Import-Package>
+                        <DynamicImport-Package>*</DynamicImport-Package>
                     </instructions>
                 </configuration>
             </plugin>

@@ -51,7 +51,8 @@ public interface IAutoscalerService {
      * to the provided service domain. This method will return the public IP address of
      * the instance that is started. Thus, this method is blocking, since we need to 
      * return the IP Address and for that we have to wait till the instance started up.
-     * @param domainName service domain of the instance.
+     * @param domainName should be in following format.
+     * <code>${service-domain}\t\${tenant-id}</code>.
      * @param imageId starting instance will be an instance of this image. Image id should
      * be a valid one.
      * @return public IP address of the instance in String format. If instance failed to 

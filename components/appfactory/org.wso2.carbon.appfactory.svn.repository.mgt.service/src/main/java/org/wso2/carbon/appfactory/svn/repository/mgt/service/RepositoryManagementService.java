@@ -77,9 +77,7 @@ public class RepositoryManagementService extends AbstractAdmin {
         return repositoryManager.checkoutApplication(applicationSvnUrl, applicationId, svnRevision);
     }
 
-    public void buildApplication(String sourcePath) throws SCMManagerExceptions {
-        repositoryManager.buildApplication(sourcePath);
-    }
+
 
     public File createApplicationCheckoutDirectory(String applicationName)
             throws SCMManagerExceptions {
@@ -87,10 +85,7 @@ public class RepositoryManagementService extends AbstractAdmin {
 
     }
 
-    public boolean executeMavenGoal(String applicationPath)
-            throws SCMManagerExceptions {
-        return repositoryManager.executeMavenGoal(applicationPath);
-    }
+
 
     public void cleanApplicationDir(String applicationPath) {
         repositoryManager.cleanApplicationDir(applicationPath);

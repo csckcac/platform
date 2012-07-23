@@ -16,6 +16,7 @@
             <class name="org.wso2.carbon.registry.version.test.MetaDataTestCase"/>
             <class name="org.wso2.carbon.registry.version.test.CollectionTestCase"/>
             <class name="org.wso2.carbon.registry.version.test.ResourceTestCase"/>
+            <class name="org.wso2.carbon.registry.permission.test.PermissionInheritanceTestCase"/>
         </classes>
     </test>
 </suite>

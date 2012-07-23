@@ -24,6 +24,7 @@ import org.apache.axiom.om.util.AXIOMUtil;
 import org.apache.axiom.soap.SOAPBody;
 import org.apache.commons.lang.StringEscapeUtils;
 import org.apache.synapse.MessageContext;
+import org.apache.synapse.SynapseLog;
 import org.apache.synapse.mediators.AbstractMediator;
 
 import javax.xml.stream.XMLStreamException;
@@ -42,6 +43,16 @@ public class PayloadFactoryMediator extends AbstractMediator {
 
     public boolean mediate(MessageContext synCtx) {
 
+    	SynapseLog synLog = getLog(synCtx);
+    	
+    	if (synLog.isTraceOrDebugEnabled()) {
+            synLog.traceOrDebug("Invoking : PayloadFactoryMediator ");
+            if (synLog.isTraceTraceEnabled()) {
+                synLog.traceTrace("Incomming Message : " + synCtx.getEnvelope());
+            }
+        }
+    	
+    	
         SOAPBody soapBody = synCtx.getEnvelope().getBody();
 
         StringBuffer result = new StringBuffer();
@@ -63,6 +74,13 @@ public class PayloadFactoryMediator extends AbstractMediator {
         for (Iterator itr = resultElement.getChildElements(); itr.hasNext();) {
             OMElement child = (OMElement) itr.next();
             soapBody.addChild(child);
+        }
+        
+        if (synLog.isTraceOrDebugEnabled()) {
+            synLog.traceOrDebug("After include argumetns  : PayloadFactoryMediator ");
+            if (synLog.isTraceTraceEnabled()) {
+                synLog.traceTrace("Modified Payload Message : " + synCtx.getEnvelope());
+            }
         }
 
         return true;

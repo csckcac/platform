@@ -31,7 +31,6 @@ import org.wso2.carbon.appfactory.application.mgt.service.ApplicationManagementS
  *               unbind="unsetApplicationManagementService"
  *
  */
-
 public class AppFactoryEventNotificationComponent {
 
     private static final Log log = LogFactory

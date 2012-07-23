@@ -37,10 +37,10 @@
             <groupId>org.wso2.carbon</groupId>
             <artifactId>org.wso2.carbon.reporting.ui</artifactId>
         </dependency>
-        <!--<dependency>-->
-            <!--<groupId>org.wso2.carbon</groupId>-->
-            <!--<artifactId>org.wso2.carbon.reporting.custom.ui</artifactId>-->
-        <!--</dependency>-->
+        <dependency>
+            <groupId>org.wso2.carbon</groupId>
+            <artifactId>org.wso2.carbon.reporting.custom.ui</artifactId>
+        </dependency>
         <dependency>
             <groupId>org.wso2.carbon</groupId>
             <artifactId>org.wso2.carbon.reporting.stub</artifactId>
@@ -86,10 +86,6 @@
             <groupId>jfree.wso2</groupId>
             <artifactId>jfreechart</artifactId>
         </dependency>
-        <!--dependency>
-                <groupId>org.wso2.carbon</groupId>
-                <artifactId>org.wso2.carbon.datasource.ui</artifactId>
-        </dependency-->
     </dependencies>
 
     <build>
@@ -125,8 +121,6 @@
                                 </bundleDef>
                                 <bundleDef>org.wso2.carbon:org.wso2.carbon.reporting.stub:${wso2carbon.version}
                                 </bundleDef>
-                                <bundleDef>org.wso2.carbon:org.wso2.carbon.reporting.template.stub:${wso2carbon.version}
-                                </bundleDef>
                                 <bundleDef>org.wso2.carbon:org.wso2.carbon.ui.menu.tools:${wso2carbon.version}
                                 </bundleDef>
                             </bundles>
@@ -142,7 +136,6 @@
                             </importBundles>
                             <importFeatures>
                                 <importFeatureDef>org.wso2.carbon.core.ui:${wso2carbon.version}</importFeatureDef>
-                                <!--importFeatureDef>org.wso2.carbon.datasource.ui:${wso2carbon.version}</importFeatureDef-->
                             </importFeatures>
                         </configuration>
                     </execution>

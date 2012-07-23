@@ -45,22 +45,7 @@
             <groupId>org.wso2.carbon</groupId>
             <artifactId>org.wso2.carbon.reporting.api</artifactId>
         </dependency>
-        <dependency>
-            <groupId>org.wso2.carbon</groupId>
-            <artifactId>org.wso2.carbon.reporting.stub</artifactId>
-        </dependency>
-        <dependency>
-            <groupId>org.wso2.carbon</groupId>
-            <artifactId>org.wso2.carbon.bam.presentation.stub</artifactId>
-        </dependency>
-        <dependency>
-            <groupId>org.wso2.carbon</groupId>
-            <artifactId>org.wso2.carbon.bam.analyzer.stub</artifactId>
-        </dependency>
-        <dependency>
-            <groupId>org.wso2.carbon</groupId>
-            <artifactId>org.wso2.carbon.datasource</artifactId>
-        </dependency>
+
     </dependencies>
 
     <build>
@@ -90,14 +75,9 @@
                                 <bundleDef>org.wso2.carbon:org.wso2.carbon.reporting.util</bundleDef>
                                 <bundleDef>org.wso2.carbon:org.wso2.carbon.reporting.api</bundleDef>
                                 <bundleDef>org.wso2.carbon:org.wso2.carbon.reporting.api</bundleDef>
-                                <bundleDef>org.wso2.carbon:org.wso2.carbon.reporting.stub</bundleDef>
-                                <bundleDef>org.wso2.carbon:org.wso2.carbon.bam.presentation.stub</bundleDef>
-                                <bundleDef>org.wso2.carbon:org.wso2.carbon.bam.analyzer.stub</bundleDef>
                             </bundles>
                             <importFeatures>
                                 <importFeatureDef>org.wso2.carbon.core.server:${wso2carbon.version}</importFeatureDef>
-                                <importFeatureDef>org.wso2.carbon.datasource.server:${wso2carbon.version}
-                                </importFeatureDef>
                             </importFeatures>
                         </configuration>
                     </execution>

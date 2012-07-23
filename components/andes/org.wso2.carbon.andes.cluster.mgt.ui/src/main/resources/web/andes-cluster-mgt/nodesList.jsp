@@ -32,7 +32,7 @@
     String cassandraConnection = "";
     String zookeeperConnection = "";
     String nodeID = "";
-    boolean isClusteringEnabled =false;
+    boolean isClusteringEnabled = false;
 
     try {
         client = new ClusterManagerClient(configContext, serverURL, cookie);
@@ -60,7 +60,7 @@
     function updateThroughput(hostName, index) {
         jQuery.ajax({
             url:'nodeUpdateQueries.jsp?hostName=' + hostName,
-            success:function(data) {
+            success:function (data) {
                 jQuery('#throughPutCell' + index).html($('#nodeThroughput', data));
             }
         });
@@ -69,7 +69,7 @@
     function updateNumOfTopicsAndQueues(hostName, index) {
         jQuery.ajax({
             url:'nodeUpdateQueries.jsp?hostName=' + hostName,
-            success:function(data) {
+            success:function (data) {
                 jQuery('#queueLinkCell' + index).html($('#nodeQueues', data));
                 jQuery('#topicLinkCell' + index).html($('#nodeTopics', data));
             }
@@ -79,7 +79,7 @@
     function updateMemoryUsage(hostName, index) {
         jQuery.ajax({
             url:'nodeUpdateQueries.jsp?hostName=' + hostName,
-            success:function(data) {
+            success:function (data) {
                 jQuery('#memoryUsageCell' + index).html($('#memoryUsage', data));
             }
         });
@@ -89,13 +89,14 @@
 </script>
 
 <carbon:breadcrumb
-            label="nodes.list"
+        label="nodes.list"
         resourceBundle="org.wso2.carbon.andes.cluster.mgt.ui.i18n.Resources"
         topPage="false"
         request="<%=request%>"/>
 
 <div id="middle">
     <h2>Cluster Management- WSO2 Message Broker</h2>
+
     <div id="workArea">
         <table width="100%">
             <tr>
@@ -125,15 +126,19 @@
                     <div style="background-color:rgba(10,46,38,0.15);width:100%;height:100px;border:1px solid #000">
                         <br/>
                         <br/>
-                        <p style="font-size:30px;margin-left:15px">Node:<%=nodeID%></p>
+
+                        <p style="font-size:30px;margin-left:15px">Node:<%=nodeID%>
+                        </p>
                         <br/>
                         <br/>
-                        <%if(isClusteringEnabled) {
-                        %>  <p style="margin-left:15px">Running in Cluster Mode...</p>
-                        <%} else {
-                        %>  <p style="margin-left:15px">Running in Standalone Mode...</p>
+                        <%
+                            if (isClusteringEnabled) {
+                        %> <p style="margin-left:15px">Running in Cluster Mode...</p>
+                        <%
+                        } else {
+                        %> <p style="margin-left:15px">Running in Standalone Mode...</p>
                         <%}%>
-                        </div>
+                    </div>
                 </td>
             </tr>
         </table>
@@ -143,19 +148,19 @@
         <br>
 
         <%
-
-            NodeDetail[] nodeDetailArray;
-            int totalNodeCount = client.getNumOfNodes();
-            int nodeCountPerPage = 20;
-            int pageNumber = 0;
-            String pageNumberAsStr = request.getParameter("pageNumber");
-            if (pageNumberAsStr != null) {
-                pageNumber = Integer.parseInt(pageNumberAsStr);
-            }
-            int numberOfPages = (int) Math.ceil(((float) totalNodeCount) / nodeCountPerPage);
-            try {
-                nodeDetailArray = client.getAllNodeDetail(pageNumber * nodeCountPerPage, nodeCountPerPage);
-                if (nodeDetailArray == null || nodeDetailArray.length == 0) {
+            if (isClusteringEnabled) {
+                NodeDetail[] nodeDetailArray;
+                int totalNodeCount = client.getNumOfNodes();
+                int nodeCountPerPage = 20;
+                int pageNumber = 0;
+                String pageNumberAsStr = request.getParameter("pageNumber");
+                if (pageNumberAsStr != null) {
+                    pageNumber = Integer.parseInt(pageNumberAsStr);
+                }
+                int numberOfPages = (int) Math.ceil(((float) totalNodeCount) / nodeCountPerPage);
+                try {
+                    nodeDetailArray = client.getAllNodeDetail(pageNumber * nodeCountPerPage, nodeCountPerPage);
+                    if (nodeDetailArray == null || nodeDetailArray.length == 0) {
         %>
         <fmt:message key='no.nodes.available'/>
         <%
@@ -210,8 +215,9 @@
         %>
         <script type="text/javascript">CARBON.showErrorDialog('Failed with BE.<%=e%>');</script>
         <%
-                return;
-            } %>
+                    return;
+                }
+            }%>
 
     </div>
 </div>

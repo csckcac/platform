@@ -18,9 +18,11 @@ package org.wso2.carbon.appfactory.application.mgt.internal;
 
 import org.apache.commons.logging.Log;
 import org.apache.commons.logging.LogFactory;
+import org.osgi.framework.BundleContext;
 import org.osgi.service.component.ComponentContext;
-import org.wso2.carbon.appfactory.common.AppFactoryConfiguration;
+import org.wso2.carbon.appfactory.application.mgt.service.ApplicationManagementService;
 import org.wso2.carbon.appfactory.application.mgt.util.Util;
+import org.wso2.carbon.appfactory.common.AppFactoryConfiguration;
 import org.wso2.carbon.registry.core.service.RegistryService;
 import org.wso2.carbon.user.core.service.RealmService;
 import org.wso2.carbon.utils.ConfigurationContextService;
@@ -52,6 +54,9 @@ public class ApplicationManagementServiceComponent {
 
     protected void activate(ComponentContext context) {
 
+        BundleContext bundleContext = context.getBundleContext();
+        ApplicationManagementService mgtService = new ApplicationManagementService();
+        bundleContext.registerService(ApplicationManagementService.class.getName(), mgtService, null);
 
             log.debug("*******Application Management Service  bundle is activated ******* ");
 

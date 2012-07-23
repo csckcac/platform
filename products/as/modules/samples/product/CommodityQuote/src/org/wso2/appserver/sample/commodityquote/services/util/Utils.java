@@ -35,18 +35,18 @@ public class Utils {
         Random random = new Random();
 
         for (Iterator iterator = symbolTable.keySet().iterator(); iterator.hasNext();) {
-            String symbolName = (String) iterator.next();
+            String symbol = (String) iterator.next();
 
             StockQuote stockQuote = new StockQuote();
-            stockQuote.setName(symbolName);
-            stockQuote.setSymbol((String) symbolTable.get(symbolName));
+            stockQuote.setName((String) symbolTable.get(symbol));
+            stockQuote.setSymbol(symbol);
             stockQuote.setPrice(Math.round((random.nextFloat() * 100)));
-            symbolTable.put(symbolName, stockQuote);
+            symbolTable.put(symbol, stockQuote);
         }
 
         StockQuote stockQuote = new StockQuote();
-        stockQuote.setSymbol("Tungsten");
-        stockQuote.setName("w");
+        stockQuote.setSymbol("w");
+        stockQuote.setName("Tungsten");
         stockQuote.setPrice((float) 101.22);
         symbolTable.put("w", stockQuote);
         System.out.println("Done.");

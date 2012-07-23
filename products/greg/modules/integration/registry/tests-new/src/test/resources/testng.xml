@@ -14,6 +14,7 @@
             <class name="org.wso2.carbon.registry.app.test.AtomFeedTestCase"/>
             <class name="org.wso2.carbon.registry.governance.api.test.MetaDataServicesTestCase"/>
             <class name="org.wso2.carbon.registry.version.test.MetaDataTestCase"/>
+            <class name="org.wso2.carbon.registry.version.test.CollectionTestCase"/>
         </classes>
     </test>
 </suite>

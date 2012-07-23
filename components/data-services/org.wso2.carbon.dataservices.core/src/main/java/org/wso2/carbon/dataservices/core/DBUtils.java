@@ -249,14 +249,14 @@ public class DBUtils {
     public static void setBatchRequestNumber(int val) {
         batchRequestNumber.set(val);
     }
-    
+
     public static String getCurrentContextUsername() {
-    	MessageContext ctx = MessageContext.getCurrentMessageContext();
-    	if (ctx != null) {
-    		return getUsername(ctx);
-    	} else {
-    		return null;
-    	}
+        MessageContext ctx = MessageContext.getCurrentMessageContext();
+        if (ctx != null) {
+            return getUsername(ctx);
+        } else {
+            return null;
+        }
     }
 
     public static String getUsername(MessageContext msgContext) {
@@ -266,54 +266,56 @@ public class DBUtils {
     }
 
     /**
-     * Retrieves the current user's roles.
+     * Retrieves the current user's roles given the username.
+     *
+     * @param username The username
+     * @return The user roles
+     * @throws DataServiceFault
      */
-    public static String[] getUserRoles(MessageContext msgContext)
-            throws DataServiceFault {
-        String userName = DBUtils.getUsername(msgContext);
+    public static String[] getUserRoles(String username) throws DataServiceFault {
         RealmService realmService = DataServicesDSComponent.getRealmService();
         RegistryService registryService = DataServicesDSComponent.getRegistryService();
-        /* first return the tenant id from the tenant domain */
-        CarbonContextHolder carbonContext = CarbonContextHolder.getCurrentCarbonContextHolder(msgContext);
-        String tenantDomain = carbonContext.getTenantDomain();
-        int tenantId = carbonContext.getTenantId();
-        userName = MultitenantUtils.getTenantAwareUsername(userName);
+        username = MultitenantUtils.getTenantAwareUsername(username);
+        String tenantDomain = SuperTenantCarbonContext.getCurrentContext().getTenantDomain();
+        int tenantId = SuperTenantCarbonContext.getCurrentContext().getTenantId();
+        username = MultitenantUtils.getTenantAwareUsername(username);
         try {
             if (tenantId < MultitenantConstants.SUPER_TENANT_ID) {
                 tenantId = realmService.getTenantManager().getTenantId(tenantDomain);
             }
-            if (tenantId < MultitenantConstants.SUPER_TENANT_ID) {
-                /* the tenant doesn't exist. */
-                log.error("The tenant doesn't exist. Tenant domain:" + tenantDomain);
-                throw new DataServiceFault("Access Denied. You are not authorized.");
-            }
-            if (!realmService.getTenantManager().isTenantActive(tenantId)) {
-                /* the tenant is not active. */
-                log.error("The tenant is not active. Tenant domain:" + tenantDomain);
-                throw new DataServiceFault("The tenant is not active. Tenant domain:"
-                        + tenantDomain);
-            }
             UserRealm realm = registryService.getUserRealm(tenantId);
-            String roles[] = realm.getUserStoreManager().getRoleListOfUser(userName);
+            String roles[] = realm.getUserStoreManager().getRoleListOfUser(username);
             return roles;
         } catch (Exception e) {
             String msg = "Error in retrieving the realm for the tenant id: " + tenantId
-                    + ", username: " + userName + ". " + e.getMessage();
+                    + ", username: " + username + ". " + e.getMessage();
             log.error(msg);
             throw new DataServiceFault(msg);
         }
     }
-    
+
+    /**
+     * Retrieves the current user's roles given the message context.
+     *
+     * @param msgContext The message context to be used to retrieve the username
+     * @return The user roles
+     * @throws DataServiceFault
+     */
+    public static String[] getUserRoles(MessageContext msgContext)
+            throws DataServiceFault {
+        return getUserRoles(DBUtils.getUsername(msgContext));
+    }
+
     public static boolean authenticate(String username, String password) throws DataServiceFault {
-    	try {
+        try {
             RegistryService registryService = DataServicesDSComponent.getRegistryService();
             UserRealm realm = registryService.getUserRealm(
-            		SuperTenantCarbonContext.getCurrentContext().getTenantId());
-    		username = MultitenantUtils.getTenantAwareUsername(username);
-    		return realm.getUserStoreManager().authenticate(username, password);
-    	} catch (Exception e) {
-			throw new DataServiceFault(e, "Error in authenticating user '" + username + "'");
-		}
+                    SuperTenantCarbonContext.getCurrentContext().getTenantId());
+            username = MultitenantUtils.getTenantAwareUsername(username);
+            return realm.getUserStoreManager().authenticate(username, password);
+        } catch (Exception e) {
+            throw new DataServiceFault(e, "Error in authenticating user '" + username + "'");
+        }
     }
 
     public static boolean isRegistryPath(String path) {
@@ -853,7 +855,7 @@ public class DBUtils {
      * Extracts the UDT column name from a given parameter name
      *
      * @param param User specified parameter name
-     * @return      UDT column name
+     * @return UDT column name
      */
     public static String extractUDTObjectName(String param) {
         Matcher m = udtPattern.matcher(param);

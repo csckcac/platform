@@ -31,6 +31,7 @@
         Queue[] queueList;
         String requestedHostName = request.getParameter("hostName");
         String IPAddressOfHost = request.getParameter("IPAddress");
+        boolean isClusteringEnabled = Boolean.parseBoolean(request.getParameter("isClusteringEnabled"));
 
         long totalQueueCount;
         int queueCountPerPage = 20;
@@ -66,7 +67,20 @@
 
         function updateWorkerLocationForQueue(queueName, index, successMessage)
         {
+            var originalQueueNode = getUrlVars()["hostName"];
             var selectedNode = $('#combo'+index+' option:selected').val();
+            if(originalQueueNode == selectedNode)
+            {
+                CARBON.showErrorDialog("You cannot move queue worker for " + queueName + " from current node to itself");
+                return;
+            }
+            var isClusteringEnabled = getUrlVars()["isClusteringEnabled"];
+            if(!isClusteringEnabled)
+            {
+                CARBON.showErrorDialog("This operation is not allowed when not in clustered mode");
+                return;
+            }
+
             $.ajax({
             url:'updateWorkers.jsp?queueName='+queueName+'&selectedNode='+selectedNode,
             async: false,
@@ -76,7 +90,7 @@
                  var isSuccess = $(data).find('#workerReassignState').text();
                  if(isSuccess == successMessage)
                  {
-                     var result = CARBON.showInfoDialog("Worker thread of"+queueName+"queue successfully moved to"+selectedNode,
+                     var result = CARBON.showInfoDialog("Worker thread of "+queueName+" queue successfully moved to " + selectedNode,
                      function()
                      {
                          location.href = 'nodesList.jsp';
@@ -93,6 +107,19 @@
             }
         }
         });
+        }
+
+        function getUrlVars()
+        {
+            var vars = [], hash;
+            var hashes = window.location.href.slice(window.location.href.indexOf('?') + 1).split('&');
+            for(var i = 0; i < hashes.length; i++)
+            {
+                hash = hashes[i].split('=');
+                vars.push(hash[0]);
+                vars[hash[0]] = hash[1];
+            }
+            return vars;
         }
 
     </script>
@@ -165,12 +192,26 @@
                              for (int count =0; count<nodeDetailArray.length;count++)
                              {
                                   String nodeName =  nodeDetailArray[count].getHostName();
-                                  %>
-                                    <option value="<%=nodeName%>"><%=nodeName%></option>
-                                 <%
+                                  if(nodeName.equals(requestedHostName)) {
+                                     %>
+                                     <option value="<%=nodeName%>" selected><%=nodeName%></option>
+                                     <%
+                                  }
+                                  else
+                                  {
+                                     %>
+                                     <option value="<%=nodeName%>"><%=nodeName%></option>
+                                     <%
+                                  }
+
+
                              }
                              %>
                          </select>
+                    </td>
+                    <td>
+                        <a style="background-image: url(images/move.gif);"
+                           class="icon-link" onclick="updateWorkerLocationForQueue('<%=queueName%>','<%=index%>','<%=Constants.SUCCESS%>')"></a>
                     </td>
                 </tr>
                 <%

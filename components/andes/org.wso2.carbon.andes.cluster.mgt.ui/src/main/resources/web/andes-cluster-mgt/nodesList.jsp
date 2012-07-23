@@ -31,11 +31,15 @@
     ClusterManagerClient client;
     String cassandraConnection = "";
     String zookeeperConnection = "";
+    String nodeID = "";
+    boolean isClusteringEnabled =false;
 
     try {
         client = new ClusterManagerClient(configContext, serverURL, cookie);
         cassandraConnection = client.getCassandraConnection();
         zookeeperConnection = client.getZookeeperConnection();
+        nodeID = client.getMyNodeID();
+        isClusteringEnabled = client.isClusteringEnabled();
     } catch (Exception e) {
         CarbonUIMessage.sendCarbonUIMessage(e.getMessage(), CarbonUIMessage.ERROR, request, e);
 %>
@@ -93,26 +97,47 @@
 <div id="middle">
     <h2>Cluster Management- WSO2 Message Broker</h2>
     <div id="workArea">
-        <table style="width:60%" class="styledLeft">
-            <thead>
+        <table width="100%">
             <tr>
-                <th width=60%><I><fmt:message key='cassandra.connection'/></I></th>
-                <th><I><%=cassandraConnection%>
-                </I></th>
+                <td width="75%">
+                    <table style="width:80%" class="styledLeft">
+                        <thead>
+                        <tr>
+                            <th width=60%><I><fmt:message key='cassandra.connection'/></I></th>
+                            <th><I><%=cassandraConnection%>
+                            </I></th>
+                        </tr>
+                        </thead>
+                    </table>
+                    <br>
+                    <br>
+                    <table style="width:80%" class="styledLeft">
+                        <thead>
+                        <tr>
+                            <th width=60%><I><fmt:message key='zookeeper.connection'/></I></th>
+                            <th><I><%=zookeeperConnection%>
+                            </I></th>
+                        </tr>
+                        </thead>
+                    </table>
+                </td>
+                <td width="25%">
+                    <div style="background-color:rgba(10,46,38,0.15);width:100%;height:100px;border:1px solid #000">
+                        <br/>
+                        <br/>
+                        <p style="font-size:30px;margin-left:15px">Node:<%=nodeID%></p>
+                        <br/>
+                        <br/>
+                        <%if(isClusteringEnabled) {
+                        %>  <p style="margin-left:15px">Running in Cluster Mode...</p>
+                        <%} else {
+                        %>  <p style="margin-left:15px">Running in Standalone Mode...</p>
+                        <%}%>
+                        </div>
+                </td>
             </tr>
-            </thead>
         </table>
-        <br>
-        <br>
-        <table style="width:60%" class="styledLeft">
-            <thead>
-            <tr>
-                <th width=60%><I><fmt:message key='zookeeper.connection'/></I></th>
-                <th><I><%=zookeeperConnection%>
-                </I></th>
-            </tr>
-            </thead>
-        </table>
+
         <br>
         <br>
         <br>
@@ -167,7 +192,7 @@
                     <%=zookeeperID%>
                 </td>
                 <td align="right">
-                    <a href="queue_List.jsp?hostName=<%=hostName%>&IPAddress=<%=ipAddress%>"><abbr
+                    <a href="queue_List.jsp?hostName=<%=hostName%>&IPAddress=<%=ipAddress%>&isClusteringEnabled=<%=client.isClusteringEnabled()%>"><abbr
                             id="queueLinkCell<%=index%>"><%=aNodeDetail.getNumOfQueues() %>
                     </abbr>
                     </a>

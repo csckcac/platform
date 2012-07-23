@@ -67,6 +67,60 @@ public class ClusterManagementBeans {
         return "";
     }
 
+    public boolean isClusteringEnabled() throws ClusterMgtException {
+        boolean isClustered = false;
+        MBeanServer mBeanServer = ManagementFactory.getPlatformMBeanServer();
+        try {
+            ObjectName objectName =
+                    new ObjectName("org.wso2.andes:type=ClusterManagementInformation,name=ClusterManagementInformation");
+            Object result = mBeanServer.getAttribute(objectName, ClusterMgtConstants.IS_CLUSTERING_ENABLED);
+
+            if(result!=null)
+            {
+                isClustered = (Boolean)result;
+            }
+
+            return isClustered;
+        } catch (MalformedObjectNameException e) {
+            throw new ClusterMgtException("Cannot access topic information");
+        } catch (InstanceNotFoundException e) {
+            throw new ClusterMgtException("Cannot access topic information");
+        } catch (ReflectionException e) {
+            throw new ClusterMgtException("Cannot access topic information");
+        } catch (AttributeNotFoundException e) {
+            throw new ClusterMgtException("Cannot access topic information");
+        } catch (MBeanException e) {
+            throw new ClusterMgtException("Cannot access topic information");
+        }
+    }
+    
+    public String getMyNodeID() throws ClusterMgtException {
+        String myNodeID = "";
+        MBeanServer mBeanServer = ManagementFactory.getPlatformMBeanServer();
+        try {
+            ObjectName objectName =
+                    new ObjectName("org.wso2.andes:type=ClusterManagementInformation,name=ClusterManagementInformation");
+            Object result = mBeanServer.getAttribute(objectName, ClusterMgtConstants.MY_NODE_ID);
+
+            if(result!=null)
+            {
+                myNodeID = (String)result;
+            }
+            return myNodeID;
+
+        } catch (MalformedObjectNameException e) {
+            throw new ClusterMgtException("Cannot access topic information");
+        } catch (InstanceNotFoundException e) {
+            throw new ClusterMgtException("Cannot access topic information");
+        } catch (ReflectionException e) {
+            throw new ClusterMgtException("Cannot access topic information");
+        } catch (AttributeNotFoundException e) {
+            throw new ClusterMgtException("Cannot access topic information");
+        } catch (MBeanException e) {
+            throw new ClusterMgtException("Cannot access topic information");
+        }
+    }
+
     public ArrayList<NodeDetail> getNodesWithZookeeperID() throws ClusterMgtException
     {
         ArrayList<NodeDetail> nodeDetailsList = new ArrayList<NodeDetail>();
@@ -242,4 +296,37 @@ public class ClusterManagementBeans {
         }
     }
 
+    public boolean updateWorkerForQueue(String queueToUpdate, String newNodeToAssign) throws ClusterMgtException {
+
+        boolean operationResult = false;
+        MBeanServer mBeanServer = ManagementFactory.getPlatformMBeanServer();
+        try
+        {
+            ObjectName objectName =
+                    new ObjectName("org.wso2.andes:type=ClusterManagementInformation,name=ClusterManagementInformation");
+            String operationName = "updateWorkerForQueue";
+            Object [] parameters = new Object[]{queueToUpdate,newNodeToAssign};
+            String [] signature = new String[]{String.class.getName(),String.class.getName()};
+            Object result = mBeanServer.invoke(
+                    objectName,
+                    operationName,
+                    parameters,
+                    signature);
+            if(result!=null)
+            {
+               operationResult = (Boolean)result;
+            }
+
+        } catch (MalformedObjectNameException e){
+            throw new ClusterMgtException("Cannot access topic subscriber information");
+        } catch (ReflectionException e) {
+            throw new ClusterMgtException("Cannot access topic subscriber information");
+        } catch (MBeanException e) {
+            throw new ClusterMgtException("Cannot access topic subscriber information");
+        } catch (InstanceNotFoundException e) {
+            throw new ClusterMgtException("Cannot access topic subscriber information for node");
+        }
+
+        return operationResult;
+    }
 }

@@ -22,6 +22,7 @@ package org.wso2.carbon.andes.cluster.mgt;
 import org.apache.commons.logging.Log;
 import org.apache.commons.logging.LogFactory;
 import org.wso2.carbon.andes.cluster.mgt.internal.ClusterManagementDataHolder;
+import org.wso2.carbon.andes.cluster.mgt.internal.ClusterMgtException;
 import org.wso2.carbon.andes.cluster.mgt.internal.registry.ClusterManagementBeans;
 
 import java.util.ArrayList;
@@ -320,8 +321,32 @@ public class ClusterManagerService {
      * @param newNodeToAssign
      * @return success if assign was successful
      */
-    public boolean updateWorkerForQueue(String queueToUpdate, String newNodeToAssign) {
-        return true;
+    public boolean updateWorkerForQueue(String queueToUpdate, String newNodeToAssign) throws ClusterMgtException {
+        boolean result = false;
+        ClusterManagementBeans clusterManagementBeans = new ClusterManagementBeans();
+        result =  clusterManagementBeans.updateWorkerForQueue(queueToUpdate,newNodeToAssign);
+        return result;
     }
+
+    /**
+     * check if broker is in clustering mode
+     * @return  boolean if clustering enabled
+     * @throws ClusterMgtException
+     */
+    public boolean isClusteringEnabled() throws ClusterMgtException {
+        ClusterManagementBeans clusterManagementBeans = new ClusterManagementBeans();
+        return clusterManagementBeans.isClusteringEnabled();
+    }
+
+    /**
+     * get the ID assigned by zookeeper to this node
+     * @return  String node ID
+     * @throws ClusterMgtException
+     */
+    public String getMyNodeID() throws ClusterMgtException {
+        ClusterManagementBeans clusterManagementBeans = new ClusterManagementBeans();
+        return clusterManagementBeans.getMyNodeID();
+    }
+
 
 }

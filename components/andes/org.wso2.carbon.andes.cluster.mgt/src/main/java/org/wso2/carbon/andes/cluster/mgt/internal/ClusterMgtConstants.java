@@ -22,4 +22,6 @@ public class ClusterMgtConstants {
     public static final String ZOOKEEPER_PORT_MBEAN_ATTRIB = "ZkServerPort";
     public static final String ZOOKEEPER_NODES_MBEAN_ATTRIB = "ZkNodes";
     public static final String TOPICS_MBEAN_ATTRIB = "Topics";
+    public static final String IS_CLUSTERING_ENABLED = "ClusteringEnabled";
+    public static final String MY_NODE_ID = "MyNodeID";
 }

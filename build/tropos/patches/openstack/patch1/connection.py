@@ -489,9 +489,8 @@ class LibvirtConnection(driver.ComputeDriver):
                  instance=instance)
         #if FLAGS.libvirt_type == 'lxc':
         #    disk.destroy_container(self.container)
-        if os.path.exists(target):
-            shutil.rmtree(target, ignore_errors=True)
-        LOG.debug(_('Removed the container***************************************************'))
+        #if os.path.exists(target):
+        #    shutil.rmtree(target, ignore_errors=True)
 
 	
 

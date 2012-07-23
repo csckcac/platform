@@ -31,6 +31,7 @@ import org.apache.commons.logging.LogFactory;
 import org.apache.axis2.transport.http.HTTPConstants;
 import org.apache.synapse.config.xml.XMLConfigConstants;
 import org.apache.synapse.core.axis2.ProxyService;
+import org.wso2.carbon.proxyadmin.stub.ProxyServiceAdminProxyAdminException;
 import org.wso2.carbon.proxyadmin.stub.ProxyServiceAdminStub;
 import org.wso2.carbon.proxyadmin.stub.types.carbon.Entry;
 import org.wso2.carbon.proxyadmin.stub.types.carbon.MetaData;
@@ -98,7 +99,9 @@ public class ProxyServiceAdminClient {
         try {
             stub.addProxy(pd67);
         } catch (Exception e) {
-            handleException(MessageFormat.format(bundle.getString("unable.to.add.proxy.service"), pd67.getName()), e);
+        	String message = MessageFormat.format(bundle.getString("unable.to.add.proxy.service"), pd67.getName());
+        	ProxyServiceAdminProxyAdminException proxyAdminException = new ProxyServiceAdminProxyAdminException(message);
+            handleException(message, proxyAdminException);
         }
     }
 

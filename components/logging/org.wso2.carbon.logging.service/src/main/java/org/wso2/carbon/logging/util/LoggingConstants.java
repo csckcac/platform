@@ -152,7 +152,7 @@ public final class LoggingConstants {
     	public static final String LOG_FILE_DATE_SEPARATOR ="log.";
     	public static final String CURRENT_LOG = "0_Current Log";
     	public static final String SYSLOG_DOMAIN_PATTERN = ".*?([^.]+\\.[$.]+)";
-    	public static final String SYS_LOG_FILE_NAME_PATTERN ="[a-zA-Z]*\\.log[\\s\\S.*]*\\.gz";
+    	public static final String SYS_LOG_FILE_NAME_PATTERN =".gz";
     	public static final String LOG_ERROR_HEADER_PATTERN = "\\[\\d{4}-\\d{2}-\\d{2}\\s\\d{2}:\\d{2}:\\d{2},\\d{2,6}][\\s\\S.*]*\\s{0,2}ERROR";
     	public static final String LOG_WARN_HEADER_PATTERN = "\\[\\d{4}-\\d{2}-\\d{2}\\s\\d{2}:\\d{2}:\\d{2},\\d{2,6}][\\s\\S.*]*\\s{0,2}WARN";
     	public static final String LOG_FATAL_HEADER_PATTERN = "\\[\\d{4}-\\d{2}-\\d{2}\\s\\d{2}:\\d{2}:\\d{2},\\d{2,6}][\\s\\S.*]*\\s{0,2}FATAL";

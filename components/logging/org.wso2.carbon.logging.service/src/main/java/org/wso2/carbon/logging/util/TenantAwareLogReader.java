@@ -257,6 +257,49 @@ public class TenantAwareLogReader {
 		}
 	}
 
+	public LogEvent[] getAllSystemLogs() {
+		int DEFAULT_NO_OF_LOGS = 100;
+		int definedAmount;
+		Appender appender = Logger.getRootLogger().getAppender(
+				LoggingConstants.WSO2CARBON_MEMORY_APPENDER);
+		if (appender instanceof CarbonMemoryAppender) {
+			CarbonMemoryAppender memoryAppender = (CarbonMemoryAppender) appender;
+			if ((memoryAppender.getCircularQueue() != null)) {
+				definedAmount = memoryAppender.getBufferSize();
+			} else {
+				return null;
+			}
+
+			Object[] objects;
+			if (definedAmount < 1) {
+				objects = memoryAppender.getCircularQueue().getObjects(DEFAULT_NO_OF_LOGS);
+			} else {
+				objects = memoryAppender.getCircularQueue().getObjects(definedAmount);
+			}
+			if ((memoryAppender.getCircularQueue().getObjects(definedAmount) == null)
+					|| (memoryAppender.getCircularQueue().getObjects(definedAmount).length == 0)) {
+				return null;
+			}
+			List<LogEvent> resultList = new ArrayList<LogEvent>();
+			for (int i = 0; i < objects.length; i++) {
+				TenantAwareLoggingEvent logEvt = (TenantAwareLoggingEvent) objects[i];
+				if (logEvt != null) {
+					resultList.add(createLogEvent(logEvt));
+				}
+			}
+			if (resultList.isEmpty()) {
+				return null;
+			}
+			List<LogEvent> reverseList = reverseLogList(resultList);
+			return reverseList.toArray(new LogEvent[reverseList.size()]);
+		} else {
+			return new LogEvent[] { new LogEvent(
+					"The log must be configured to use the "
+							+ "org.wso2.carbon.logging.core.util.MemoryAppender to view entries through the admin console",
+					"") };
+		}
+	}
+	
 	private LogEvent createLogEvent(TenantAwareLoggingEvent logEvt) {
 		Appender appender = Logger.getRootLogger().getAppender(
 				LoggingConstants.WSO2CARBON_MEMORY_APPENDER);

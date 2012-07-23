@@ -24,15 +24,18 @@ import org.apache.commons.httpclient.HttpException;
 import org.apache.commons.httpclient.UsernamePasswordCredentials;
 import org.apache.commons.httpclient.auth.AuthScope;
 import org.apache.commons.httpclient.methods.GetMethod;
+import org.wso2.carbon.base.MultitenantConstants;
+import org.wso2.carbon.base.ServerConfiguration;
 import org.wso2.carbon.logging.config.LoggingConfigManager;
 import org.wso2.carbon.logging.service.LogViewerException;
 import org.wso2.carbon.logging.service.data.LogInfo;
 import org.wso2.carbon.logging.service.data.LoggingConfig;
 import org.wso2.carbon.utils.CarbonUtils;
+import org.wso2.carbon.utils.multitenancy.CarbonContextHolder;
 
 public class FileHandler {
-	
-	private String getFileLocation (String serverURL,String logFile) {
+
+	private String getFileLocation(String serverURL, String logFile) {
 		String fileLocation = "";
 		String lastChar = String.valueOf(serverURL.charAt(serverURL.length() - 1));
 		if (lastChar.equals(LoggingConstants.URL_SEPARATOR)) { // http://my.log.server/logs/stratos/
@@ -40,18 +43,37 @@ public class FileHandler {
 		}
 		fileLocation = serverURL.replaceAll("\\s", "%20");
 		logFile = logFile.replaceAll("\\s", "%20");
-		return fileLocation + LoggingConstants.URL_SEPARATOR+ logFile;
+		String tenantId = String.valueOf(CarbonContextHolder.getCurrentCarbonContextHolder()
+				.getTenantId());
+	
+		if (tenantId.equals(String.valueOf(MultitenantConstants.INVALID_TENANT_ID))
+				|| tenantId.equals(String.valueOf(MultitenantConstants.SUPER_TENANT_ID))) {
+			tenantId = "0";
+		}
+		String ServiceName = getCurrentServerName();
+		if (logFile != null && !logFile.equals("")) {
+			return fileLocation + LoggingConstants.URL_SEPARATOR + tenantId
+					+ LoggingConstants.URL_SEPARATOR + ServiceName + LoggingConstants.URL_SEPARATOR
+					+ logFile;
+		} else {
+			return fileLocation + LoggingConstants.URL_SEPARATOR + tenantId
+			+ LoggingConstants.URL_SEPARATOR + ServiceName;
+		}
+
+	}
+	
+	private String getCurrentServerName() {
+		String serverName = ServerConfiguration.getInstance().getFirstProperty("Name");
+		serverName = serverName.replace("WSO2", "");
+		return serverName.replace(" ", "_");
 	}
 
-	
 	private InputStream getLogDataStream(String fileName) throws Exception {
 		LoggingConfig config = LoggingConfigManager.loadCassandraConfiguration();
 		String url = "";
 		// TODO this will change depending on the hive impl
-		url = config.getArchivedHost();
-		if (fileName != null && !fileName.equals("")) {
-			url = getFileLocation(url,fileName);
-		}
+		String hostUrl = config.getArchivedHost();
+		url = getFileLocation(hostUrl, fileName);
 		String password = config.getArchivedUser();
 		String userName = config.getArchivedPassword();
 		int port = Integer.parseInt(config.getArchivedPort());
@@ -139,10 +161,9 @@ public class FileHandler {
 		}
 	}
 
-	public int getLineNumbers(String logFile)
-			throws Exception {
+	public int getLineNumbers(String logFile) throws Exception {
 		InputStream logStream;
-		
+
 		try {
 			logStream = getLocalInputStream(logFile);
 		} catch (IOException e) {

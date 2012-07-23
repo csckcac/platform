@@ -87,18 +87,18 @@ public class LogViewer {
 		return LoggingUtil.downloadArchivedLogFiles(logFile);
 	}
 
-	// public boolean isValidTenantDomain(String tenantDomain) {
-	// return LoggingUtil.isValidTenantDomain(tenantDomain);
-	// }
-	//
+	 public boolean isValidTenantDomain(String tenantDomain) {
+	 return LoggingUtil.isValidTenantDomain(tenantDomain);
+	 }
+	
 	public String[] getServiceNames() throws LogViewerException {
 		return ServiceConfigManager.getServiceNames();
 	}
 
-	//
-	// public boolean isManager() {
-	// return LoggingUtil.isManager();
-	// }
+	
+	 public boolean isManager() {
+	 return LoggingUtil.isManager();
+	 }
 
 	public int getLineNumbers(String logFile) throws Exception {
 		return LoggingUtil.getLineNumbers(logFile);

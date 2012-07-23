@@ -34,12 +34,13 @@
         <CreateApplication>http://localhost:9763/services/CreateApplication</CreateApplication>
         <CreateUser>http://localhost:9763/services/UserCreationProcess</CreateUser>
         <ActivateUser>http://localhost:9763/services/UserActivationProcess/process</ActivateUser>
-	<DeployToStage>http://localhost:9763/services/DeployToStage</DeployToStage>
-	<ArtifactCreateCallback>http://localhost:9763/services/ArtifactCreateCallbackService</ArtifactCreateCallback>
+	    <DeployToStage>http://localhost:9763/services/DeployToStage</DeployToStage>
+	    <ArtifactCreateCallback>http://localhost:9763/services/ArtifactCreateCallbackService</ArtifactCreateCallback>
         <GetAllApps>https://localhost:9443/services/ApplicationManagementService</GetAllApps>
         <GetAuthCookie>https://localhost:9443/services/AuthenticationAdmin</GetAuthCookie>
         <AddGenericArtifact>https://localhost:9443/services/ManageGenericArtifactService</AddGenericArtifact>
         <InvokeAspect>https://localhost:9443/services/CustomLifecyclesChecklistAdminService</InvokeAspect>
+        <RevisionControllerServic>https://localhost:9443/services/RevisionControllerService</RevisionControllerServic>
     </WebServiceEndPoints>
 
     <!--Application repository related configurations-->
@@ -54,12 +55,12 @@
     <ApplicationDeployment>
         <DeploymentStage name="Development" build="true">
             <ProcessEndPoint>https://localhost:9443/services/DeployToStage</ProcessEndPoint>
-            <DeploymentServerURL>https://localhost:9443/services/</DeploymentServerURL>
+            <DeploymentServerURL>https://localhost:9445/services/</DeploymentServerURL>
 
         </DeploymentStage>
         <DeploymentStage name="QA" build="true">
             <ProcessEndPoint>https://localhost:9443/services/DeployToStage</ProcessEndPoint>
-            <DeploymentServerURL>https://localhost:9445/services/</DeploymentServerURL>
+            <DeploymentServerURL>https://localhost:9446/services/</DeploymentServerURL>
             <DeploymentServerURL>https://localhost:9447/services/</DeploymentServerURL>
 
         </DeploymentStage>

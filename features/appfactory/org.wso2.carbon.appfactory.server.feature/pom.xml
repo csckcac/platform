@@ -116,6 +116,11 @@
         </dependency>
         <dependency>
             <groupId>org.wso2.carbon</groupId>
+            <artifactId>org.wso2.carbon.appfactory.events.notification</artifactId>
+            <version>1.0.0-SNAPSHOT</version>
+        </dependency>
+        <dependency>
+            <groupId>org.wso2.carbon</groupId>
             <artifactId>org.wso2.carbon.appfactory.maven.build</artifactId>
             <version>1.0.0-SNAPSHOT</version>
         </dependency>
@@ -180,6 +185,8 @@
                                 <bundleDef>org.wso2.carbon:org.wso2.carbon.appfactory.common
                                 </bundleDef>
                                 <bundleDef> org.wso2.carbon:org.wso2.carbon.appfactory.core
+                                </bundleDef>
+                                <bundleDef> org.wso2.carbon:org.wso2.carbon.appfactory.events.notification
                                 </bundleDef>
                                 <bundleDef>org.wso2.carbon:org.wso2.carbon.hostobjects.sysprop
                                 </bundleDef>

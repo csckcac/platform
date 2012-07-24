@@ -1,0 +1,318 @@
+<%
+
+//select year,month,day,hour,minute,avg(avg_response_time) from AS_STATS_SUMMARY_PER_MINUTUE group by minute,hour,year,month,day order by year DESC ,month DESC,day DESC,hour DESC,minute DESC limit 60
+
+	var server = request.getParameter('server');
+	var service = request.getParameter('service');
+	var operation = request.getParameter('opr');
+	var time = request.getParameter('t');
+	var result;
+	var _reqCount = null;
+	var _respCount = null;
+	var _faultCount = null;
+	var __time = null;
+    	var __reqCount = "SUM(TOTAL_REQUEST_COUNT)";
+	var __respCount = "SUM(TOTAL_RESPONSE_COUNT)";
+	var __faultCount = "SUM(TOTAL_FAULT_COUNT)";
+	var timeGroup = null;
+	
+	
+	var dataTable = null;
+	var limit = null;
+	var orderByQuery = null;
+	var selectQuery = null;
+	if(time){
+		if(time.toLowerCase() == "now"){
+			dataTable = "AS_STATS_SUMMARY_PER_MINUTUE";
+			timeGroup = "minute";
+			__time = "MINUTE";
+			limit = "60";
+			orderByQuery = "group by minute,hour,year,month,day order by year DESC ,month DESC,day DESC,hour DESC,minute DESC";
+			selectQuery = "year,month,day,hour,minute, sum(total_request_count),sum(total_response_count),sum(total_fault_count)";
+			
+		}
+		else if(time.toLowerCase() == "day"){
+			dataTable = "AS_STATS_SUMMARY_PER_HOUR";
+			timeGroup = "hour";
+			__time = "HOUR";
+			limit = "24";
+			orderByQuery = "group by hour,year,month,day order by year DESC ,month DESC,day DESC,hour DESC";
+			selectQuery = "year,month,day,hour, sum(total_request_count),sum(total_response_count),sum(total_fault_count)";
+		}
+		else if(time.toLowerCase() == "month"){
+			dataTable = "AS_STATS_SUMMARY_PER_DAY";
+			timeGroup = "day";
+			__time = "DAY";
+			limit = "30";
+			orderByQuery = "group by year,month,day order by year DESC ,month DESC,day DESC";
+			selectQuery = "year,month,day, sum(total_request_count),sum(total_response_count),sum(total_fault_count)";
+		}
+		else if(time.toLowerCase() == "all"){
+			dataTable = "AS_STATS_SUMMARY_PER_MONTH";
+			timeGroup = "month";
+			__time = "MONTH";
+			limit = "1000";
+			orderByQuery = "group by year,month order by year DESC ,month DESC";
+			selectQuery = "year,month, sum(total_request_count),sum(total_response_count),sum(total_fault_count)";
+		}
+		else{
+			new Log().info("cannot select table");
+		}
+	}
+	if(dataTable){
+		if(operation!=undefined && operation!="" && operation!=null){			
+			queryDataOperationLvl();
+		}
+		else if(service!=undefined && service!="" && service!=null){
+			queryDataServiceLvl();	
+		}
+		else if(server!=undefined && server!="" && server!=null){
+			queryDataServerLvl();	
+		}
+		else{
+			queryDataAllServers();	
+		}
+	}
+	function formatDateString(param){
+		var params = param || {};
+    		var year = param.year || "";
+    		var month = param.month || "";
+    		var day = param.day || "01";
+    		var hour = param.hour || "00";
+		var min = param.min || "00";
+		var formatedAxisData = year+"-"+month+"-"+day+" "+hour+":"+min+":00";
+		return formatedAxisData;
+	}
+
+	function convertDBResult(result, colx, coly) {
+				var array = [];
+				for (var i = 0; i < result.length; i++) {
+					array.push([parseFloat(result[i][colx]),parseFloat(result[i][coly])]);
+				}
+
+				return array;
+       	};
+
+	function queryDataAllServers(){
+
+		var db = new Database("jdbc:h2:repository/database/samples/BAM_STATS_DB;AUTO_SERVER=TRUE", "wso2carbon", "wso2carbon");
+		try{
+			_reqCount = null;
+			_respCount = null;
+			_faultCount = null;
+			//print("select "+selectQuery+" from "+dataTable+" "+orderByQuery+" limit "+limit+"");
+			var _result = db.query("select "+selectQuery+" from "+dataTable+" "+orderByQuery+" limit "+limit+"");
+			
+			_reqCount = convertDBResult(_result,__time,__reqCount);
+			_respCount = convertDBResult(_result,__time,__respCount);
+			_faultCount = convertDBResult(_result,__time,__faultCount);		
+		}
+		catch(e){
+		}
+		finally{
+			db.close();
+		}
+	};
+	
+	function queryDataServerLvl(){
+		config = {};
+		var db = new Database("jdbc:h2:repository/database/samples/BAM_STATS_DB;AUTO_SERVER=TRUE", "wso2carbon", "wso2carbon");
+		
+		try{
+			_reqCount = null;
+			_respCount = null;
+			_faultCount = null;
+			var _result = db.query("select "+selectQuery+" from "+dataTable+" "+orderByQuery+" limit "+limit+"");
+
+			_reqCount = convertDBResult(_result,__time,__reqCount);
+			_respCount = convertDBResult(_result,__time,__respCount);
+			_faultCount = convertDBResult(_result,__time,__faultCount);
+		}
+		catch(e){
+		}
+		finally{
+			db.close();
+		}
+	};
+	function queryDataServiceLvl(){
+		config = {};
+		var db = new Database("jdbc:h2:repository/database/samples/BAM_STATS_DB;AUTO_SERVER=TRUE", "wso2carbon", "wso2carbon");
+		
+		try{			
+			_reqCount = null;
+			_respCount = null;
+			_faultCount = null;
+
+			var _result = db.query("select "+selectQuery+" from "+dataTable+" "+orderByQuery+" limit "+limit+"");
+
+			_reqCount = convertDBResult(_result,__time,__reqCount);
+			_respCount = convertDBResult(_result,__time,__respCount);
+			_faultCount = convertDBResult(_result,__time,__faultCount);
+		}
+		catch(e){
+		}
+		finally{
+			db.close();
+		}
+	};
+	function queryDataOperationLvl(){
+		config = {};
+		var db = new Database("jdbc:h2:repository/database/samples/BAM_STATS_DB;AUTO_SERVER=TRUE", "wso2carbon", "wso2carbon");
+		
+		try{
+			_reqCount = null;
+			_respCount = null;
+			_faultCount = null;
+			
+			var _result = db.query("select "+selectQuery+" from "+dataTable+" "+orderByQuery+" limit "+limit+"");
+			_reqCount = convertDBResult(_result,__time,__reqCount);
+			_respCount = convertDBResult(_result,__time,__respCount);
+			_faultCount = convertDBResult(_result,__time,__faultCount);
+		}
+		catch(e){
+		}
+		finally{
+			db.close();
+		}
+	};
+%>
+<html>
+<head>
+<link rel="stylesheet" type="text/css" href="../jqPlot/jquery.jqplot.min.css" />
+    <style type="text/css">
+        .jqplot-target {
+                    margin: 20px;
+                    height: 340px;
+                    width: 80%;
+                    color:#C1C1C1;
+                }
+
+                .ui-widget-content {
+                    background: rgb(57,57,57);
+                }
+
+                table.jqplot-table-legend {
+                    border: 0px;
+                    background-color: rgba(100,100,100, 0.0);
+                    width:20%;
+                    color: #fff;
+                }
+
+                .jqplot-highlighter-tooltip {
+                    background-color: rgba(57,57,57, 0.9);
+                    padding: 7px;
+                    color: #dddddd;
+                }
+
+    </style>
+</head>
+<body>
+<div class="ui-widget ui-corner-all">
+        <div class="ui-widget-content ui-corner-bottom" >
+            <div id="dashboard-multiline-gadget"></div>
+        </div>
+    </div>
+
+
+
+<script type="text/javascript" src="../scripts/jquery-1.7.2.min.js"></script>
+<script type="text/javascript" src="../jqPlot/jquery.jqplot.min.js"></script>
+<script class="include" type="text/javascript" src="../jqPlot/plugins/jqplot.dateAxisRenderer.min.js"></script>
+<script class="include" type="text/javascript" src="../jqPlot/plugins/jqplot.logAxisRenderer.min.js"></script>
+<script class="include" type="text/javascript" src="../jqPlot/plugins/jqplot.canvasTextRenderer.min.js"></script>
+<script class="include" type="text/javascript" src="../jqPlot/plugins/jqplot.canvasAxisTickRenderer.min.js"></script>
+<script class="include" type="text/javascript" src="../jqPlot/plugins/jqplot.highlighter.min.js"></script>
+<link rel="stylesheet" type="text/css" href="../css/bam-dashboard-common-styles.css" />
+
+<script type="text/javascript">
+    $(document).ready(function () {
+            $.jqplot._noToImageButton = true;
+            var reqCount = <%=_reqCount%>;
+		console.info(reqCount.length);
+
+            var respCount = <%=_respCount%>;
+		console.info(respCount.length)
+	
+	    var faultCount = <%=_faultCount%>;
+		console.info(faultCount.length);
+
+            var plot1 = $.jqplot("dashboard-multiline-gadget", [reqCount, respCount,faultCount], {
+                seriesColors: ["#81B2FF", "#D2FF95","#FB8383"],
+                title: 'Req. Count / Resp. Count / Fault Count',
+                highlighter: {
+                    show: true,
+                    sizeAdjust: 1,
+                    tooltipOffset: 9
+                },
+                grid: {
+                    background: 'rgba(57,57,57,0.0)',
+                    drawBorder: false,
+                    shadow: false,
+                    gridLineColor: '#666666',
+                    gridLineWidth: 2
+                },
+                legend: {
+                    show: true,
+                    placement: 'outside'
+                },
+                seriesDefaults: {
+                    rendererOptions: {
+                        smooth: true,
+                        animation: {
+                            show: true
+                        }
+                    },
+                    showMarker: false
+                },
+                series: [
+                    {
+                        label: 'Total Request Count',
+			fill:true,
+			highlighter: {formatString: "%d , %d"}
+
+			
+                    },
+			{
+                        label: 'Total Response Count',
+			highlighter: {formatString: "%d , %d"}
+			
+                    },
+                    
+                    {
+                        label: 'Total Fault Count',
+			highlighter: {formatString: "%d , %d"}
+                    }
+                ],
+                axesDefaults: {
+                    rendererOptions: {
+                        baselineWidth: 1.5,
+                        baselineColor: '#444444',
+                        drawBaseline: false
+                    }
+                },
+                axes: {
+                    xaxis: {
+                        tickRenderer: $.jqplot.CanvasAxisTickRenderer,
+                        tickOptions: {
+                            angle: 0,
+                            textColor: '#dddddd',
+				formatString:'%d'
+                        },
+                        min:0,
+			max:60,
+                        drawMajorGridlines: false
+                    },
+                    yaxis: {
+                        min:0,
+                        tickOptions: {
+                            showMark: false,formatString:'%d'
+                        }
+                    }
+                }
+            });
+
+              $('.jqplot-highlighter-tooltip').addClass('ui-corner-all')
+        });
+    </script>
+</body>
+</html>

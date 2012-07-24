@@ -1,0 +1,239 @@
+<!-- -->
+<!-- gadgets/mult-line-dashboard-chart.jsp?server=AS2&service=Service%206&operation=Operation%203&t=Month  -->
+<%
+	var server = request.getParameter('server');
+	var service = request.getParameter('service');
+	var operation = request.getParameter('opr');
+	var time = request.getParameter('t');
+	//var results;
+	var axisX = null;
+	var axisY = "AVG(AVG_RESPONSE_TIME)";
+	var axisXData = null;
+	var axisYData = null;
+	var dataTable = null;
+	var timeGroup = null;
+	var limit = null;
+	var orderByQuery = null;
+	var selectQuery = null;
+	var jqPlotXaxisLbl = null;
+	if(time){
+		if(time.toLowerCase() == "now"){
+			dataTable = "AS_STATS_SUMMARY_PER_MINUTUE";
+			timeGroup = "minute";
+			axisX = "MINUTE";
+			limit = "60";
+			orderByQuery = "group by minute,hour,year,month,day order by year DESC ,month DESC,day DESC,hour DESC,minute DESC";
+			selectQuery = "year,month,day,hour,minute, avg(avg_response_time)";
+			jqPlotXaxisLbl = "Minute";
+		}
+		else if(time.toLowerCase() == "day"){
+			dataTable = "AS_STATS_SUMMARY_PER_HOUR";
+			timeGroup = "hour";
+			axisX = "HOUR";
+			limit = "24";
+			orderByQuery = "group by hour,year,month,day order by year DESC ,month DESC,day DESC,hour DESC";
+			selectQuery = "year,month,day,hour, avg(avg_response_time)";
+			jqPlotXaxisLbl = "Hour";
+		}
+		else if(time.toLowerCase() == "month"){
+			dataTable = "AS_STATS_SUMMARY_PER_DAY";
+			timeGroup = "day";
+			axisX = "DAY";
+			limit = "30";
+			orderByQuery = "group by year,month,day order by year DESC ,month DESC,day DESC";
+			selectQuery = "year,month,day, avg(avg_response_time)";
+			jqPlotXaxisLbl = "Day";
+		}
+		else if(time.toLowerCase() == "all"){
+			dataTable = "AS_STATS_SUMMARY_PER_MONTH";
+			timeGroup = "month";
+			axisX = "MONTH";
+			limit = "1000";
+			orderByQuery = "group by year,month order by year DESC ,month DESC";
+			selectQuery = "year,month, avg(avg_response_time)";
+			jqPlotXaxisLbl = "Month";
+		}
+		else{
+			new Log().info("cannot select table");
+		}
+	}
+	if(dataTable){
+		if(operation!=undefined && operation!="" && operation!=null){
+			result = queryDataOperationLvl();	
+		}
+		else if(service!=undefined && service!="" && service!=null){
+			result = queryDataServiceLvl();	
+		}
+		else if(server!=undefined && server!="" && server!=null){
+			result = queryDataServerLvl();	
+		}
+		else{
+			result = queryDataAllServers();
+				
+		}
+	}
+	
+	
+	function convertDBResult(result, axis) {
+				var array = [];
+				for (var i = 0; i < result.length; i++) {
+					array.push(parseFloat(result[i][axis]));
+				}
+
+				return array;
+       	};
+	function queryDataAllServers(){
+
+		config = {};
+		var db = new Database("jdbc:h2:repository/database/samples/BAM_STATS_DB;AUTO_SERVER=TRUE", "wso2carbon", "wso2carbon");
+		
+		try{
+			axisXData = null;
+			axisYData = null;
+	    		var _result = db.query("select "+selectQuery+" from "+dataTable+" "+orderByQuery+" limit "+limit+"");
+			axisXData = convertDBResult(_result,axisX);
+			axisYData = convertDBResult(_result,axisY);
+		}
+		catch(e){
+		}
+		finally{
+			db.close();
+		}
+	};
+	function queryDataServerLvl(){
+		config = {};
+		var db = new Database("jdbc:h2:repository/database/samples/BAM_STATS_DB;AUTO_SERVER=TRUE", "wso2carbon", "wso2carbon");
+		
+		try{
+			axisXData = null;
+			axisYData = null;
+	    		var _result = db.query("select "+selectQuery+" from "+dataTable+" "+orderByQuery+" limit "+limit+"");
+			axisXData = convertDBResult(_result,axisX);
+			axisYData = convertDBResult(_result,axisY);
+		}
+		catch(e){
+		}
+		finally{
+			db.close();
+		}
+	};
+	function queryDataServiceLvl(){
+		config = {};
+		var db = new Database("jdbc:h2:repository/database/samples/BAM_STATS_DB;AUTO_SERVER=TRUE", "wso2carbon", "wso2carbon");
+		
+		try{
+			axisXData = null;
+			axisYData = null;
+	    		var _result = db.query("select "+selectQuery+" from "+dataTable+" "+orderByQuery+" limit "+limit+"");
+			axisXData = convertDBResult(_result,axisX);
+			axisYData = convertDBResult(_result,axisY);
+		}
+		catch(e){
+		}
+		finally{
+			db.close();
+		}
+	};
+	function queryDataOperationLvl(){
+		config = {};
+		var db = new Database("jdbc:h2:repository/database/samples/BAM_STATS_DB;AUTO_SERVER=TRUE", "wso2carbon", "wso2carbon");
+		
+		try{
+			axisXData = null;
+			axisYData = null;
+	    		var _result = db.query("select "+selectQuery+" from "+dataTable+" "+orderByQuery+" limit "+limit+"");
+			axisXData = convertDBResult(_result,axisX);
+			axisYData = convertDBResult(_result,axisY);
+		}
+		catch(e){
+		}
+		finally{
+			db.close();
+		} 
+	};
+%>
+<html>
+<head>
+<link rel="stylesheet" type="text/css" href="../jqPlot/jquery.jqplot.min.css" />
+</head>
+<body>
+<div id="bar-chart-simple" style="margin-top:20px; margin-left:20px; width:96%; height:380px;"></div>
+<script type="text/javascript" src="../scripts/jquery-1.7.2.min.js"></script>
+<script type="text/javascript" src="../jqPlot/jquery.jqplot.min.js"></script>
+<script type="text/javascript" src="../jqPlot/plugins/jqplot.barRenderer.min.js"></script>
+<script type="text/javascript" src="../jqPlot/plugins/jqplot.categoryAxisRenderer.min.js"></script>
+<script type="text/javascript" src="../jqPlot/plugins/jqplot.pointLabels.min.js"></script>
+<script type="text/javascript" src="../jqPlot/plugins/jqplot.canvasTextRenderer.min.js"></script>
+<script type="text/javascript" src="../jqPlot/plugins/jqplot.canvasAxisTickRenderer.min.js"></script>
+<script type="text/javascript" src="../jqPlot/plugins/jqplot.canvasAxisLabelRenderer.js"></script>
+<script class="include" type="text/javascript" src="../jqPlot/plugins/jqplot.highlighter.min.js"></script>
+<style type="text/css">
+.jqplot-highlighter-tooltip {
+                    background-color: rgba(57,57,57, 0.9);
+                    padding: 7px;
+                    color: #dddddd;
+                }
+.jqplot-target {
+                    margin: 20px;
+                    height: 340px;
+                    width: 80%;
+                    color: #C1C1C1;
+                }
+</style>
+<script type="text/javascript">
+    $(document).ready(function(){
+        $.jqplot.config.enablePlugins = true;
+        //var s1 = $.parseJSON(chamath);
+	var seriesData = <%=axisYData%>
+        var ticks = <%=axisXData%>;
+
+        plot1 = $.jqplot('bar-chart-simple', [seriesData], {
+            // Only animate if we're not using excanvas (not in IE 7 or IE 8)..
+            animate: !$.jqplot.use_excanvas,
+		title: 'Average Response Time',
+            seriesDefaults:{
+                //renderer:$.jqplot.BarRenderer,
+		rendererOptions:{
+			highlightMouseOver: true,
+			highlightColors: '#FFFEA3'		
+		},
+                pointLabels: { show: false }
+            },
+		grid: {
+                    background: 'rgba(57,57,57,0.0)',
+                    drawBorder: false,
+                    shadow: false,
+                    gridLineColor: '#666666',
+                    gridLineWidth: 2
+                },
+		
+		
+            axes: {
+		yaxis:{
+			label:'Average Response Time',
+          		labelRenderer: $.jqplot.CanvasAxisLabelRenderer,
+			labelOptions: {
+				textColor: '#E7E7E7'
+			}		
+		},
+                xaxis: {
+			label:'<%=jqPlotXaxisLbl%>',
+                    renderer: $.jqplot.CategoryAxisRenderer,
+                    
+                    ticks: ticks,
+			textColor: '#ffffff',
+                    tickOptions:{
+                    angle: 0
+                    }
+                }
+            },
+            highlighter: { show: true,
+                    sizeAdjust: 1,
+                    tooltipOffset: 9,formatString: "%d , %d" }
+        });
+    });
+  
+
+</script>
+</body>
+</html>

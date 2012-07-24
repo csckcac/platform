@@ -49,7 +49,11 @@
             <groupId>javax.ws.rs</groupId>
             <artifactId>jsr311-api</artifactId>
         </dependency>
-    </dependencies>
+        <dependency>
+            <groupId>org.springframework.ws.wso2</groupId>
+            <artifactId>spring.framework</artifactId>
+        </dependency>
+   </dependencies>
 
     <build>
         <plugins>
@@ -78,6 +82,7 @@
                                 <bundleDef>org.wso2.carbon:org.wso2.carbon.jaxws.webapp.deployer</bundleDef>
                                 <bundleDef>org.apache.cxf.wso2:cxf-bundle</bundleDef>
                                 <bundleDef>javax.ws.rs:jsr311-api</bundleDef>
+                                <bundleDef>org.springframework.ws.wso2:spring.framework</bundleDef>
                             </bundles>
                             <importFeatures>
                                 <importFeatureDef>org.wso2.carbon.core.server:${wso2carbon.version}</importFeatureDef>

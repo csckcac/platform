@@ -14,7 +14,7 @@
  ~ See the License for the specific language governing permissions and
  ~ limitations under the License.
 -->
-        
+
 <project xmlns="http://maven.apache.org/POM/4.0.0"
          xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
          xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/maven-v4_0_0.xsd">
@@ -53,7 +53,7 @@
                 <groupId>org.wso2.carbon</groupId>
                 <artifactId>org.wso2.carbon.webapp.mgt.stub</artifactId>
                 <version>${wso2carbon.version.jaxws.webapp.mgt}</version>
-            </dependency>	
+            </dependency>
             <dependency>
                 <groupId>org.wso2.carbon</groupId>
                 <artifactId>org.wso2.carbon.jaxws.webapp.mgt.ui</artifactId>
@@ -68,6 +68,11 @@
                 <groupId>javax.ws.rs</groupId>
                 <artifactId>jsr311-api</artifactId>
                 <version>1.1.1</version>
+            </dependency>
+            <dependency>
+                <groupId>org.springframework.ws.wso2</groupId>
+                <artifactId>spring.framework</artifactId>
+                <version>3.1.0.wso2v1</version>
             </dependency>
         </dependencies>
     </dependencyManagement>

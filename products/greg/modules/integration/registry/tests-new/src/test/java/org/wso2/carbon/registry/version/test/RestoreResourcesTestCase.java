@@ -40,19 +40,18 @@ import static junit.framework.Assert.assertTrue;
 
 public class RestoreResourcesTestCase {
 
-    private int userId = 1;
     private UserInfo userInfo;
-    private ManageEnvironment environment;
     private ResourceAdminServiceClient resourceAdminClient;
-    private static final String PATH = "/testVersion";
+    private static final String PATH = "/testVersionTest";
 
 
     @BeforeClass(alwaysRun = true)
     public void initializeTests() throws LoginAuthenticationExceptionException, RemoteException {
 
+        int userId = 1;
         userInfo = UserListCsvReader.getUserInfo(userId);
         EnvironmentBuilder builder = new EnvironmentBuilder().greg(userId);
-        environment = builder.build();
+        ManageEnvironment environment = builder.build();
         resourceAdminClient =
                 new ResourceAdminServiceClient(environment.getGreg().getBackEndUrl(),
                                                userInfo.getUserName(), userInfo.getPassword());

@@ -63,16 +63,18 @@ public class ZipFileUploadExecutor extends AbstractFileUploadExecutor {
         String publicIp = null;
 
         if(!client.isInstanceUp()){
-            List<String> images = getFormFieldValue("images");
-            if(images.isEmpty() || images == null){
-                log.error("Image is empty, Can not start instance" );
-            } else{
-                if(images.size() == 1){
-                    selectedImage = images.get(0);
-                    log.info(selectedImage);
+            //List<String> images = getFormFieldValue("images");
+//            if(images.isEmpty() || images == null){
+//                log.error("Image is empty, Can not start instance" );
+//            } else{
+//                if(images.size() == 1){
+//                    selectedImage = images.get(0);
+                    selectedImage = "dummy"; // For this release we ony give this
+                    // option and will not let user to select image
+                    //log.info(selectedImage);
                     publicIp = client.startInstance(selectedImage);
-                }
-            }
+//                }
+//            }
         }
         try {
             for (FileItemData filedata : tempDataList) {

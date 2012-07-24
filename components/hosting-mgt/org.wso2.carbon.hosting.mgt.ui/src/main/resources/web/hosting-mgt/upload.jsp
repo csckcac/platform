@@ -32,9 +32,10 @@
 
     String cookie = (String) session.getAttribute(ServerConstants.ADMIN_SERVICE_COOKIE);
 
-    HostingAdminClient client;
+    //HostingAdminClient client;  //Not used for this release
     try {
-             client = new HostingAdminClient(request.getLocale(),cookie, configContext, serverURL);
+             //client = new HostingAdminClient(request.getLocale(),cookie, configContext, serverURL);
+        //Not used for this release
     }catch (Exception e) {
              response.setStatus(500);
              CarbonUIMessage uiMsg = new CarbonUIMessage(CarbonUIMessage.ERROR, e.getMessage(), e);
@@ -145,11 +146,11 @@
                         </td>
                     </tr>
                 </table>
-                <%
+                <%--        Not used for this release
                     String images[] = client.getBaseImages();
                      instancesUpForTenant = client.isInstanceUp();
                     if(!instancesUpForTenant){ //when three are no PHP apps for this tenant, we should create instance
-                        %>
+
                         <table class="styledLeft">
                             <tr>
                                 <td class="imageRow">
@@ -164,22 +165,21 @@
                                             <option value="selectAImage" selected="selected">
                                                 <fmt:message key="select.image"/>
                                             </option>
-                                            <%
+
                                                 for (String image : images) {
-                                                    %>
+
                                                     <option value="<%= image%>"> <%= image%>  </option>
-                                                    <%
+
                                                 }
-                                            %>
+
                                         </select>
                                     </nobr>
                                 </td>
                             </tr>
                         </table>
 
-                <%
                     }
-                %>
+                --%>
                 <table class="styledLeft">
                     <tr>
                         <td class="buttonRow">

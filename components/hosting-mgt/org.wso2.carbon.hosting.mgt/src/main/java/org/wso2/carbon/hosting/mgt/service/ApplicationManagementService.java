@@ -15,7 +15,9 @@ import java.io.File;
 import java.io.FileOutputStream;
 import java.io.FilenameFilter;
 import java.io.IOException;
+import java.util.Collection;
 import java.util.HashMap;
+import java.util.Set;
 
 import org.wso2.carbon.core.AbstractAdmin;
 import org.wso2.carbon.hosting.mgt.clients.AutoscaleServiceClient;
@@ -33,11 +35,11 @@ public class ApplicationManagementService extends AbstractAdmin{
     private static final Log log = LogFactory.getLog(ApplicationManagementService.class);
     public static final String FILE_DEPLOYMENT_FOLDER = "phpapps";
     AutoscaleServiceClient client;
-    HashMap<String, String> imageIdtoNameMap;
+//    HashMap<String, String> imageIdtoNameMap;
     OpenstackDAO openstackDAO;
 
     public ApplicationManagementService() throws AxisFault{
-        imageIdtoNameMap = new HashMap<String, String>();
+//        imageIdtoNameMap = new HashMap<String, String>();
         initAutoscaler();
     }
 
@@ -102,8 +104,6 @@ public class ApplicationManagementService extends AbstractAdmin{
      * Retrieve and display the applications
      */
     public String[] listPhpApplications() {
-
-        log.info("Listing php apps");
         String phpAppPath = getWebappDeploymentDirPath();
         File phpAppDirectory = new File(phpAppPath);
         String[] children;
@@ -115,6 +115,9 @@ public class ApplicationManagementService extends AbstractAdmin{
                 }
             };
             children = phpAppDirectory.list(filter);
+            if(children.length == 0){
+                children = null;
+            }
         }else {
             children = null;
         }
@@ -124,7 +127,7 @@ public class ApplicationManagementService extends AbstractAdmin{
 
     public PHPAppsWrapper getPagedPhpAppsSummary(String phpAppSearchString, int pageNumber){
          PHPAppsWrapper phpAppsWrapper = new PHPAppsWrapper();
-        phpAppsWrapper.setPhpapps(listPhpApplications());
+        phpAppsWrapper.setPhpapps(listPhpApplications());//TODO remove this
         String[] phpApps= listPhpApplications();
         phpAppsWrapper.setPhpapps(phpApps);
         phpAppsWrapper.setEndPoints(getEndPoints(phpApps));
@@ -136,8 +139,18 @@ public class ApplicationManagementService extends AbstractAdmin{
         String[] endPoints;
         if(phpApps != null){
             endPoints = new String[phpApps.length];
+            int tenantId = MultitenantUtils.getTenantId(getConfigContext());
+            String tenantIdentityForUrl = "";
+            if(tenantId != -1234) {
+               tenantIdentityForUrl = "/t/" + tenantId ;
+            }
             for(int i = 0; i < endPoints.length; i++){
-                endPoints[i] = "https://" + "<tenant_ip>" + "/t/" + "tenant_id/" + phpApps[i];
+                if(isInstanceForTenantUp()){
+                    String publicIp = Store.tenantToPublicIpMap.get(tenantId);
+                    endPoints[i] = "https://" + publicIp + tenantIdentityForUrl+ "/" + phpApps[i];
+                }    else{
+                    endPoints[i] = "Endpoint could not be allocated. Please contact your administrator";
+                }
             }
         }   else {
             endPoints = null;
@@ -160,11 +173,28 @@ public class ApplicationManagementService extends AbstractAdmin{
             phpAppFile = new File(getWebappDeploymentDirPath() +  File.separator + phpApp);
             phpAppFile.delete();
         }
+//        if(listPhpApplications() == null){
+//            Integer tenantId = MultitenantUtils.getTenantId(getConfigContext());
+//            try {
+//                client.terminateSpiInstance(Store.tenantToPublicIpMap.get(tenantId));
+//            } catch (Exception e) {
+//                log.error("Error while terminating instance");
+//            }
+//        }
     }
 
     public String startInstance(String image){
+        //passed value will be ignored for this release
+        String imageId = "";
+        String imageIdsString = System.getProperty(PHPCartridgeConstants.OPENSTACK_INSTANCE_IMAGE_IDS);
+        String[] imagesToNameArray = imageIdsString.split(",");
+        if (imagesToNameArray != null) {
+            String imageArray[] = imageIdsString.split(":");
+            imageId = imageArray[1];
+        }
+        //Above code will get first one from images of configuration
         Integer tenantId = MultitenantUtils.getTenantId(getConfigContext());
-        log.info("tenant id : " + tenantId);
+        log.info("An instance is spawning for tenant " + tenantId);
         try {
 			if (client == null) {
 				initAutoscaler();
@@ -176,10 +206,12 @@ public class ApplicationManagementService extends AbstractAdmin{
         String publicIp = "";
         openstackDAO = new OpenstackDAO();
         try{
-            String privateIp = client.startInstance(System.getProperty("php.domain"), imageIdtoNameMap.get(image));
-            log.info("Started Instance private ip is " + privateIp);
+            String modifiedDomainWithTenantId = System.getProperty("php.domain") + "/t/" + tenantId;
+            String privateIp = client.startInstance( modifiedDomainWithTenantId , imageId);
             publicIp = openstackDAO.getPublicIp(privateIp);
             Store.publicIpToTenantMap.put(publicIp, tenantId);
+            Store.tenantToPublicIpMap.put(tenantId, publicIp);
+            log.info("Started Instance public ip is " + publicIp);
         }catch (Exception e){
             String msg = "Error while calling auto scaler to start instance";
             log.error(msg);
@@ -196,21 +228,25 @@ public class ApplicationManagementService extends AbstractAdmin{
         return false;
     }
 
-    public String[] getImages(){
-        String imageNames[];
-        String[] apps = listPhpApplications();
-        if(!isInstanceForTenantUp()){
-            String imageIdsString = System.getProperty(PHPCartridgeConstants.OPENSTACK_INSTANCE_IMAGE_IDS);
-            String[] imagesToNameArray = imageIdsString.split(",");
-            for (String image : imagesToNameArray) {
-                String imageArray[] = image.split(":");
-                imageIdtoNameMap.put(imageArray[0], imageArray[1]);
-            }
-            imageNames = imageIdtoNameMap.keySet().toArray(new String[imageIdtoNameMap.size()]);
-        } else {
-            imageNames = null;
-        }
-        return imageNames;
-    }
+    /**
+     * Not used for this release
+     * @return
+     */
+//    public String[] getImages(){
+//        String imageNames[];
+//        String[] apps = listPhpApplications();
+//        if(!isInstanceForTenantUp()){
+//            String imageIdsString = System.getProperty(PHPCartridgeConstants.OPENSTACK_INSTANCE_IMAGE_IDS);
+//            String[] imagesToNameArray = imageIdsString.split(",");
+//            for (String image : imagesToNameArray) {
+//                String imageArray[] = image.split(":");
+//                imageIdtoNameMap.put(imageArray[0], imageArray[1]);
+//            }
+//            imageNames = imageIdtoNameMap.keySet().toArray(new String[imageIdtoNameMap.size()]);
+//        } else {
+//            imageNames = null;
+//        }
+//        return imageNames;
+//    }
 
 }

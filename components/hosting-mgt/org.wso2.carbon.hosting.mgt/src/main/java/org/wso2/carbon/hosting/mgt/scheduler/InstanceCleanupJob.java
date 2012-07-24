@@ -41,6 +41,7 @@ public class InstanceCleanupJob implements Runnable{
 					}
 					autoscaleServiceClient.terminateSpiInstance(instanceIp);
                     if(Store.publicIpToTenantMap.containsKey(instanceIp)){
+                        Store.tenantToPublicIpMap.remove(Store.publicIpToTenantMap.get(instanceIp));
                         Store.publicIpToTenantMap.remove(instanceIp);
                     }
 				}

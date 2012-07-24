@@ -20,6 +20,7 @@ import org.apache.axis2.Constants;
 import org.apache.axis2.client.Options;
 import org.apache.axis2.client.ServiceClient;
 import org.apache.axis2.context.ConfigurationContext;
+import org.apache.axis2.transport.http.HTTPConstants;
 import org.apache.commons.logging.Log;
 import org.apache.commons.logging.LogFactory;
 import org.wso2.carbon.hosting.mgt.stub.ApplicationManagementServiceStub;
@@ -44,17 +45,27 @@ public class HostingAdminClient {
 
     public HostingAdminClient( Locale locale, String cookie, ConfigurationContext configCtx,
                                String backendServerURL) throws AxisFault {
-        bundle = ResourceBundle.getBundle(BUNDLE, locale);
         String serviceURL = backendServerURL + "ApplicationManagementService";
-        stub = new ApplicationManagementServiceStub(/*configCtx,*/serviceURL);
+        bundle = ResourceBundle.getBundle(BUNDLE, locale);
+
+        stub = new ApplicationManagementServiceStub(configCtx, serviceURL);
         stub._getServiceClient().getOptions().setTimeOutInMilliSeconds(270000);
+        stub._getServiceClient().getOptions().setProperty(HTTPConstants.SO_TIMEOUT, 270000);
+        stub._getServiceClient().getOptions().setProperty(HTTPConstants.CONNECTION_TIMEOUT, 270000);
+        ServiceClient client = stub._getServiceClient();
+        client.getOptions().setTimeOutInMilliSeconds(270000);
+        Options option = client.getOptions();
+        option.setManageSession(true);
+        option.setProperty(org.apache.axis2.transport.http.HTTPConstants.COOKIE_STRING, cookie);
+        option.setProperty(Constants.Configuration.ENABLE_MTOM, Constants.VALUE_TRUE);
+
     }
 
     public void uploadWebapp(FileUploadData[] fileUploadDataList) throws AxisFault {
         try {
             stub.uploadWebapp(fileUploadDataList);
         } catch (RemoteException e) {
-            handleException("cannot.upload.webapps", e);
+            handleException("Cannot upload Web application.", e);
         }
     }
 
@@ -65,12 +76,18 @@ public class HostingAdminClient {
 
     public PHPAppsWrapper getPagedPhpAppsSummary(String phpappSearchString, int pageNumber)
             throws AxisFault {
+        PHPAppsWrapper phpAppsWrapper = null;
         try {
-            return stub.getPagedPhpAppsSummary(phpappSearchString , pageNumber);
+            phpAppsWrapper = stub.getPagedPhpAppsSummary(phpappSearchString , pageNumber);
+            String[] phpApps = phpAppsWrapper.getPhpapps(); //For testing whether the PHP apps are null
+            if(phpApps != null && phpApps[0] == null){
+                phpAppsWrapper.setPhpapps(null);
+                phpAppsWrapper.setEndPoints(null);
+            }
         } catch (RemoteException e) {
-            handleException("cannot.get.phpapp.data", e);
+            handleException("Cannot retrieve PHP app data. Backend service may be unavailable.", e);
         }
-        return null;
+        return phpAppsWrapper;
     }
 
 
@@ -78,7 +95,7 @@ public class HostingAdminClient {
         try {
             stub.deleteAllPhpApps();
         } catch (RemoteException e) {
-            handleException("cannot.delete.webapps", e);
+            handleException("Cannot delete PHP applications. Backend service may be unavailable", e);
         }
     }
 
@@ -86,7 +103,7 @@ public class HostingAdminClient {
         try {
             stub.deletePhpApps(phpAppFileNames) ;
         } catch (RemoteException e) {
-            handleException("cannot.delete.webapps", e);
+            handleException("Cannot delete PHP applications. Backend service may be unavailable", e);
         }
     }
 
@@ -100,23 +117,30 @@ public class HostingAdminClient {
         return isInstanceUp;
     }
 
+    /**
+     * Not used for this release
+     * @return
+     * @throws AxisFault
+     */
     public String[] getBaseImages() throws AxisFault {
         try {
             String images[] =  stub.getImages();
             return images;
         } catch (RemoteException e) {
-            handleException("cannot.get.images", e);
+            handleException("Error while retrieving images.", e);
         }
         return null;
     }
 
     public String startInstance(String image) throws AxisFault {
-        String ip = null;
-        try {
-            ip =  stub.startInstance(image);
-        } catch (RemoteException e) {
-            handleException("cannot.start.instance" , e);
-        }
+        String ip = "122.22.22.22";
+//          try {
+//            ip =  stub.startInstance(image);
+//        } catch (RemoteException e) {
+//            handleException("Error while starting instance" , e);
+//        }
+//
+
         return ip;
     }
 

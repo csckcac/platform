@@ -50,6 +50,7 @@
     PHPAppsWrapper phpAppsWrapper;
     String[] phpApps;
     String[] endPoints;
+    String publicIp = "";
 
     String phpappSearchString = request.getParameter("phpappSearchString");
     if (phpappSearchString == null) {
@@ -59,6 +60,7 @@
          client = new HostingAdminClient(request.getLocale(),cookie, configContext, serverURL );
          phpAppsWrapper = client.getPagedPhpAppsSummary(phpappSearchString,
                                                         Integer.parseInt(pageNumber));
+
          numberOfPages = phpAppsWrapper.getNumberOfPages();
         //get the php app list and endpoints list
          phpApps = phpAppsWrapper.getPhpapps();
@@ -73,7 +75,7 @@
         return;
     }
 
-        int numOfPhpapps = phpAppsWrapper.getNumberOfPhpapps();
+        int numOfPhpapps = phpApps.length;
 
             ResourceBundle bundle = ResourceBundle.getBundle(HostingAdminClient.BUNDLE, request.getLocale());
     %>
@@ -222,6 +224,9 @@
 <p>&nbsp;</p>
    <%
        if (phpApps != null) {
+           if(!client.isInstanceUp()){
+               publicIp = client.startInstance("dummy"); //real image will selected from backend for this release
+           }
            String parameters = "phpappSearchString=" + phpappSearchString;
 
 

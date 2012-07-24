@@ -34,8 +34,8 @@
         <CreateApplication>http://localhost:9763/services/CreateApplication</CreateApplication>
         <CreateUser>http://localhost:9763/services/UserCreationProcess</CreateUser>
         <ActivateUser>http://localhost:9763/services/UserActivationProcess/process</ActivateUser>
-	    <DeployToStage>http://localhost:9763/services/DeployToStage</DeployToStage>
-	    <ArtifactCreateCallback>http://localhost:9763/services/ArtifactCreateCallbackService</ArtifactCreateCallback>
+	<DeployToStage>http://localhost:9763/services/DeployToStage</DeployToStage>
+	<ArtifactCreateCallback>http://localhost:9763/services/ArtifactCreateCallbackService</ArtifactCreateCallback>
         <GetAllApps>https://localhost:9443/services/ApplicationManagementService</GetAllApps>
         <GetAuthCookie>https://localhost:9443/services/AuthenticationAdmin</GetAuthCookie>
         <AddGenericArtifact>https://localhost:9443/services/ManageGenericArtifactService</AddGenericArtifact>
@@ -53,16 +53,22 @@
 
     <!--This element defines the set of staging servers, where the application applications are deployed. -->
     <ApplicationDeployment>
+
         <DeploymentStage name="Development" build="true">
             <ProcessEndPoint>https://localhost:9443/services/DeployToStage</ProcessEndPoint>
             <DeploymentServerURL>https://localhost:9445/services/</DeploymentServerURL>
-
         </DeploymentStage>
-        <DeploymentStage name="QA" build="true">
+
+        <DeploymentStage name="Testing" build="true">
             <ProcessEndPoint>https://localhost:9443/services/DeployToStage</ProcessEndPoint>
             <DeploymentServerURL>https://localhost:9446/services/</DeploymentServerURL>
             <DeploymentServerURL>https://localhost:9447/services/</DeploymentServerURL>
-
         </DeploymentStage>
+
+        <DeploymentStage name="Production" build="true">
+            <ProcessEndPoint>https://localhost:9443/services/DeployToStage</ProcessEndPoint>
+            <DeploymentServerURL>https://localhost:9448/services/</DeploymentServerURL>
+        </DeploymentStage>
+
     </ApplicationDeployment>
 </AppFactory>

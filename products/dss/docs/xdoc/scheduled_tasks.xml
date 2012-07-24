@@ -71,6 +71,7 @@
            <p>Figure 1: Adding a New Task</p>
 
             <p><h3>Configuring Tasks</h3></p>
+	     <p>Task can be configured to invoke a data-service operation or it can be configured to use custom java class which has implemented org.wso2.carbon.dataservices.task.DataTask interface. </p>
              <p>The following set of properties should be defined in order to successfully create a task</p>
 
            <ul>
@@ -78,9 +79,16 @@
             <li>Task Repeat Count : Number of cycles to be executed. If you provide repeat count as &quot;0&quot; then task will execute once and if you provide repeat count as &quot;1&quot; then task will execute twice and so on.</li>
             <li>Task Interval : Time gap between to consecutive task executions</li>
             <li>Start Time : Starting time of the scheduled task. If this is not given, then the task will start at the moment the task is scheduled.</li>
+	   </ul>
+           <p>Parameters required to define a task that use data-service operation</p>
+	   <ul>
             <li>Data Service Name : Name of the relevant data service</li>
             <li>Operation Name  : Data service operation to be execute from the task.</li>
            </ul> 
+           <p>Parameters required to define a task that use custom java class</p>
+	   <ul>
+            <li>DataService Task Class : Name of the java class which has implemented org.wso2.carbon.dataservices.task.DataTask interface.</li>
+           </ul>    
 
 	    <p>After configuring the task with appropriate values, Hit the &quot;Schedule&quot; button to schedule it.</p>
 

@@ -21,22 +21,26 @@
                 <tbody>
                 <tr>
                     <th>Rating:</th>
+
                     <%
-                    var colspan=2;
-                    if(user && api.rating!=0) {
-                        colspan=1;
-                    %>
+                        colspan=1;  %>
+
                     <td>
+                        <% if(api.rating!=0) {%>
                         <div class="average-rating"><%=api.rating%></div>
+                        <%}else{%>
+                        <div class="average-rating">N/A</div>
+                        <%}%>
                     </td>
-                    <% } %>
+
+                    <%if(user) { %>
                     <td colspan="<%=colspan%>">
                         <div class="star-ratings">
                              <% if(user) { %><%=stars.getDynamicStars(api.userRate)%>
                             <% } else { %><%=stars.getStaticStars(site.context, api.userRate,jagg.getUserTheme().base)%><% } %>
                         </div>
                     </td>
-
+                    <%}%>
                 </tr>
                 <tr>
                     <th>Version:</th>

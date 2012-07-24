@@ -84,19 +84,18 @@ public class PropertiesAdminServiceClient {
         return retentionBean;
     }
 
-    public void setProperty(String path, String propertyName, String propertyValue)
+    public void setProperty(String path, String name, String value)
             throws RemoteException, PropertiesAdminServiceRegistryExceptionException {
-
         try {
-            propertiesAdminServiceStub.setProperty(path, propertyName, propertyValue);
+            propertiesAdminServiceStub.setProperty(path, name, value);
         } catch (RemoteException e) {
-            String errMsg = "Adding property fails";
+            String errMsg="Adding property fails";
             log.error(errMsg);
-            throw new RemoteException(errMsg, e);
+            throw new RemoteException(errMsg,e);
         } catch (PropertiesAdminServiceRegistryExceptionException e) {
-            String errMsg = "Adding property fails";
+            String errMsg="Adding property fails";
             log.error(errMsg);
-            throw new PropertiesAdminServiceRegistryExceptionException(errMsg, e);
+            throw new PropertiesAdminServiceRegistryExceptionException(errMsg,e);
         }
     }
 

@@ -103,6 +103,7 @@ public class ResourceAdminServiceClient {
             throws ResourceAdminServiceExceptionException, RemoteException {
 
         return resourceAdminServiceStub.delete(destinationPath);
+
     }
 
     public void addWSDL(String description, DataHandler dh)
@@ -212,6 +213,7 @@ public class ResourceAdminServiceClient {
 
         return resourceAdminServiceStub.getResourceData(resourceArray);
 
+
     }
 
     public String getHumanReadableMediaTypes() throws Exception {
@@ -248,6 +250,36 @@ public class ResourceAdminServiceClient {
 
         }
     }
+
+    public void copyResource(String parentPath,String oldResourcePath,String destinationPath, String targetName)
+            throws RemoteException, ResourceAdminServiceExceptionException {
+        try {
+            resourceAdminServiceStub.copyResource(parentPath, oldResourcePath, destinationPath, targetName);
+        } catch (RemoteException e) {
+            log.error("Copy resource error ");
+            throw new RemoteException("Copy resource error ", e);
+        } catch (ResourceAdminServiceExceptionException e) {
+            log.error("Copy resource error");
+            throw new ResourceAdminServiceExceptionException("Copy resource error",e);
+        }
+    }
+
+    public void moveResource(String parentPath,String oldResourcePath,String destinationPath, String targetName)
+            throws RemoteException, ResourceAdminServiceExceptionException {
+        try {
+            resourceAdminServiceStub.moveResource(parentPath, oldResourcePath, destinationPath, targetName);
+        } catch (RemoteException e) {
+            log.error("Move resource error ");
+            throw new RemoteException("Copy resource error ", e);
+        } catch (ResourceAdminServiceExceptionException e) {
+            log.error("Move resource error");
+            throw new ResourceAdminServiceExceptionException("Copy resource error",e);
+        }
+    }
+
+
+
+
 
     public VersionPath[] getVersion(String path)
             throws RemoteException, ResourceAdminServiceExceptionException {
@@ -332,6 +364,20 @@ public class ResourceAdminServiceClient {
         } catch (Exception e) {
             log.error("Unable to get permission : " + e.getMessage());
             throw new Exception("Unable to get permission : " , e);
+        }
+    }
+
+
+    public void renameResource(String parentPath,String oldResourcePath,String newResourceName)
+            throws RemoteException, ResourceAdminServiceExceptionException {
+        try {
+            resourceAdminServiceStub.renameResource(parentPath, oldResourcePath, newResourceName);
+        } catch (RemoteException e) {
+            log.error("Rename resource error ");
+            throw new RemoteException("Rename resource error ", e);
+        } catch (ResourceAdminServiceExceptionException e) {
+            log.error("Rename resource error");
+            throw new ResourceAdminServiceExceptionException("Rename resource error",e);
         }
     }
 }

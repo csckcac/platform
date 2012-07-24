@@ -18,8 +18,6 @@
 
 package org.wso2.carbon.automation.api.clients.registry;
 
-import java.rmi.RemoteException;
-
 import org.apache.axis2.AxisFault;
 import org.apache.commons.logging.Log;
 import org.apache.commons.logging.LogFactory;
@@ -27,11 +25,9 @@ import org.wso2.carbon.automation.api.clients.utils.AuthenticateStub;
 import org.wso2.carbon.registry.core.exceptions.RegistryException;
 import org.wso2.carbon.registry.info.stub.InfoAdminServiceStub;
 import org.wso2.carbon.registry.info.stub.RegistryExceptionException;
-import org.wso2.carbon.registry.info.stub.beans.xsd.CommentBean;
-import org.wso2.carbon.registry.info.stub.beans.xsd.EventTypeBean;
-import org.wso2.carbon.registry.info.stub.beans.xsd.RatingBean;
-import org.wso2.carbon.registry.info.stub.beans.xsd.SubscriptionBean;
-import org.wso2.carbon.registry.info.stub.beans.xsd.TagBean;
+import org.wso2.carbon.registry.info.stub.beans.xsd.*;
+
+import java.rmi.RemoteException;
 
 public class InfoServiceAdminClient {
 
@@ -290,6 +286,36 @@ public class InfoServiceAdminClient {
             throw new RegistryException(msg, e);
         } catch (RegistryExceptionException e) {
             String msg = "Unable to check validity of user - " + userName;
+            log.error(msg, e);
+            throw new RegistryExceptionException(msg, e);
+        }
+    }
+
+    public void removeComment(String commentPath, String sessionId)
+            throws RegistryException, RegistryExceptionException {
+        try {
+            infoAdminServiceStub.removeComment(commentPath, sessionId);
+        } catch (RemoteException e) {
+            String msg = "Unable to remove comment";
+            log.error(msg, e);
+            throw new RegistryException(msg, e);
+        } catch (RegistryExceptionException e) {
+            String msg = "Unable to remove comment  ";
+            log.error(msg, e);
+            throw new RegistryExceptionException(msg, e);
+        }
+    }
+
+    public void removeTag(String tag,String path,String sessionId)
+            throws RegistryException, RegistryExceptionException {
+        try {
+            infoAdminServiceStub.removeTag(tag, path, sessionId);
+        } catch (RemoteException e) {
+            String msg = "Unable to remove tag";
+            log.error(msg, e);
+            throw new RegistryException(msg, e);
+        } catch (RegistryExceptionException e) {
+            String msg = "Unable to remove tag  ";
             log.error(msg, e);
             throw new RegistryExceptionException(msg, e);
         }

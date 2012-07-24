@@ -29,7 +29,6 @@
 
         <!--Error message viewer-->
         <div class="alert alert-error" id="loginErrorMsg" style="display:none">
-            <button data-dismiss="alert" class="close" type="button">x</button>
             <div class="theMsg"></div>
         </div>
 

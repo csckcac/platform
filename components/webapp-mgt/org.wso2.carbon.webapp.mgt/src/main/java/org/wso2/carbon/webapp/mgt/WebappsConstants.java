@@ -26,6 +26,7 @@ public final class WebappsConstants {
     public static final int MAX_DEPTH = 10;
     public static final String JAX_WEBAPP_FILTER_PROP = "jaxWebapp";
     public static final String JAX_WEBAPP_REPO = "jaxwebapps";
+    public static final int VALVE_INDEX = 0;
 
     /**
      * This is to filter out custom webapp types. If a custom webapp deployer is added, it should

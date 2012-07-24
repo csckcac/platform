@@ -25,15 +25,11 @@ import org.wso2.carbon.core.ArtifactUnloader;
 import org.wso2.carbon.registry.core.service.RegistryService;
 import org.wso2.carbon.tomcat.ext.valves.CarbonTomcatValve;
 import org.wso2.carbon.tomcat.ext.valves.TomcatValveContainer;
+import org.wso2.carbon.url.mapper.UrlMapperValve;
 import org.wso2.carbon.user.core.service.RealmService;
 import org.wso2.carbon.utils.CarbonUtils;
 import org.wso2.carbon.utils.ConfigurationContextService;
-import org.wso2.carbon.webapp.mgt.DataHolder;
-import org.wso2.carbon.webapp.mgt.GhostWebappDeployerValve;
-import org.wso2.carbon.webapp.mgt.TenantLazyLoaderValve;
-import org.wso2.carbon.webapp.mgt.WebApplication;
-import org.wso2.carbon.webapp.mgt.WebApplicationsHolder;
-import org.wso2.carbon.webapp.mgt.WebContextParameter;
+import org.wso2.carbon.webapp.mgt.*;
 import org.wso2.carbon.webapp.mgt.multitenancy.WebappUnloader;
 import org.wso2.carbon.webapp.mgt.utils.GhostWebappDeployerUtils;
 
@@ -62,8 +58,13 @@ public class WebappManagementServiceComponent {
             ArrayList<CarbonTomcatValve> valves = new ArrayList<CarbonTomcatValve>();
             valves.add(new TenantLazyLoaderValve());
             valves.add(new GhostWebappDeployerValve());
-            TomcatValveContainer.addValves(valves);
-
+            //adding TenantLazyLoaderValve first in the TomcatContainer if Url mapping available
+            if(DataHolder.getHotUpdateService() != null &&
+                    TomcatValveContainer.isValveExits(new UrlMapperValve())) {
+                TomcatValveContainer.addValves(WebappsConstants.VALVE_INDEX, valves);
+            } else {
+                TomcatValveContainer.addValves(valves);
+            }
             // registering WebappUnloader as an OSGi service
             WebappUnloader webappUnloader = new WebappUnloader();
             ctx.getBundleContext().registerService(ArtifactUnloader.class.getName(),

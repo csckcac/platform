@@ -22,6 +22,7 @@ import org.wso2.carbon.apimgt.api.APIManagementException;
 import org.wso2.carbon.apimgt.impl.dao.ApiMgtDAO;
 import org.wso2.carbon.apimgt.impl.dto.APIInfoDTO;
 import org.wso2.carbon.apimgt.keymgt.APIKeyMgtException;
+import org.wso2.carbon.apimgt.keymgt.ApplicationKeysDTO;
 import org.wso2.carbon.core.AbstractAdmin;
 import org.wso2.carbon.identity.base.IdentityException;
 import org.wso2.carbon.identity.core.util.IdentityUtil;
@@ -72,20 +73,32 @@ public class APIKeyMgtSubscriberService extends AbstractAdmin {
      * @return Access token
      * @throws APIKeyMgtException on error
      */
-    public String getApplicationAccessToken(String userId, String applicationName, String tokenType)
+    public ApplicationKeysDTO getApplicationAccessToken(String userId, String applicationName, String tokenType)
             throws APIKeyMgtException, APIManagementException, IdentityException {
 
         ApiMgtDAO apiMgtDAO = new ApiMgtDAO();
+        String[] credentials = null;
         String accessToken = apiMgtDAO.getAccessKeyForApplication(userId, applicationName, tokenType);
-        if (accessToken == null){
+        if (accessToken == null) {
             //get the tenant id for the corresponding domain
             String tenantAwareUserId = MultitenantUtils.getTenantAwareUsername(userId);
             int tenantId = IdentityUtil.getTenantIdOFUser(userId);
-            String[] credentials = apiMgtDAO.addOAuthConsumer(tenantAwareUserId, tenantId);
-            accessToken = apiMgtDAO.registerApplicationAccessToken(credentials[0],applicationName,
+            credentials = apiMgtDAO.addOAuthConsumer(tenantAwareUserId, tenantId);
+            accessToken = apiMgtDAO.registerApplicationAccessToken(credentials[0], applicationName,
                     tenantAwareUserId, tenantId, tokenType);
+
+        } else if (credentials == null) {
+            credentials = apiMgtDAO.getOAuthCredentials(accessToken, tokenType);
+            if (credentials == null || credentials[0] == null || credentials[1] == null) {
+                throw new APIKeyMgtException("Unable to locate OAuth credentials");
+            }
         }
-        return accessToken;
+
+        ApplicationKeysDTO keys = new ApplicationKeysDTO();
+        keys.setApplicationAccessToken(accessToken);
+        keys.setConsumerKey(credentials[0]);
+        keys.setConsumerSecret(credentials[1]);
+        return keys;
     }
 
     /**

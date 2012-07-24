@@ -60,7 +60,6 @@
          client = new HostingAdminClient(request.getLocale(),cookie, configContext, serverURL );
          phpAppsWrapper = client.getPagedPhpAppsSummary(phpappSearchString,
                                                         Integer.parseInt(pageNumber));
-
          numberOfPages = phpAppsWrapper.getNumberOfPages();
         //get the php app list and endpoints list
          phpApps = phpAppsWrapper.getPhpapps();
@@ -73,10 +72,10 @@
 <jsp:include page="../admin/error.jsp"/>
     <%
         return;
-    }
-
-        int numOfPhpapps = phpApps.length;
-
+    }   int numOfPhpapps = 0;
+        if(phpApps != null){
+            numOfPhpapps = phpApps.length;
+        }
             ResourceBundle bundle = ResourceBundle.getBundle(HostingAdminClient.BUNDLE, request.getLocale());
     %>
 

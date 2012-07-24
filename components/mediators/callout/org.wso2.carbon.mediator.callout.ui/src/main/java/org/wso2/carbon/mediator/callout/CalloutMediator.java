@@ -35,6 +35,7 @@ public class CalloutMediator extends AbstractMediator {
     private static final QName ATT_ACTION = new QName("action");
     private static final QName ATT_AXIS2XML = new QName("axis2xml");
     private static final QName ATT_REPOSITORY = new QName("repository");
+    private static final QName ATT_USESERVERCONFIG = new QName("useServerConfig");
     private static final QName  ATT_INIT_AXIS2_CLIENT_OPTIONS = new QName("initAxis2ClientOptions");
     private static final QName Q_CONFIG
             = new QName(XMLConfigConstants.SYNAPSE_NAMESPACE, "configuration");
@@ -51,6 +52,7 @@ public class CalloutMediator extends AbstractMediator {
     private String targetKey = null;
     private String clientRepository = null;
     private String axis2xml = null;
+    private String useServerConfig = null;
     private String initAxis2ClientOptions = null;
 
     public final static String DEFAULT_CLIENT_REPO = "./samples/axis2Client/client_repo";
@@ -131,6 +133,14 @@ public class CalloutMediator extends AbstractMediator {
     public String getTagLocalName() {
         return "callout";
     }
+    
+    public String getUseServerConfig() {
+    	return useServerConfig;
+    }
+    
+    public void setUseServerConfig(String useServerConfig) {
+    	
+    }
 
     public OMElement serialize(OMElement parent) {
         OMElement callout = fac.createOMElement("callout", synNS);
@@ -152,6 +162,10 @@ public class CalloutMediator extends AbstractMediator {
                         "axis2xml", nullNS, axis2xml));
             }
             callout.addChild(config);
+        }
+        
+        if (useServerConfig !=null) {
+        	callout.addAttribute(fac.createOMAttribute("useServerConfig", nullNS, useServerConfig));
         }
 
         if(initAxis2ClientOptions != null) {
@@ -183,6 +197,7 @@ public class CalloutMediator extends AbstractMediator {
     public void build(OMElement elem) {
         OMAttribute attServiceURL = elem.getAttribute(ATT_URL);
         OMAttribute attAction     = elem.getAttribute(ATT_ACTION);
+        OMAttribute attUseServerConfig = elem.getAttribute(ATT_USESERVERCONFIG);
         OMAttribute attInitAxis2ClientOptions = elem.getAttribute(ATT_INIT_AXIS2_CLIENT_OPTIONS);
         OMElement   configElt     = elem.getFirstChildWithName(Q_CONFIG);
         OMElement   sourceElt     = elem.getFirstChildWithName(Q_SOURCE);
@@ -196,6 +211,10 @@ public class CalloutMediator extends AbstractMediator {
 
         if (attAction != null) {
             action = attAction.getAttributeValue();
+        }
+        
+        if (attUseServerConfig != null) {
+        	useServerConfig = attUseServerConfig.getAttributeValue();
         }
 
         if (attInitAxis2ClientOptions != null) {

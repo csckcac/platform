@@ -3,7 +3,7 @@ JAX-WS Asynchronous Demo using Document/Literal Style
 
 This demo illustrates the use of the JAX-WS asynchronous 
 invocation model. Please refer to the JAX-WS 2.0 specification
-(http://jcp.org/aboutJava/communityProcess/pfd/jsr224/index.html)
+(http://jcp.org/aboutJava/communityprocess/pfd/jsr224/index.html)
 for background.
 
 The asynchronous model allows the client thread to continue after 

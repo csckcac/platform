@@ -167,6 +167,7 @@ width: 32.9%;
     background:#efefef;
     border-bottom:solid 1px #ccc;
     padding-top:3px;
+    height:130px;
 }
 .super-rows{
     padding:0 8px;
@@ -334,6 +335,15 @@ ul.more-from-provider li.list-header{
     width:15px;
     height:15px;
     cursor:pointer;
+}
+.key-table{
+    margin-top:5px;
+}
+.key-table td{
+    font-size:11px;
+}
+.key-table td, .key-table th{
+    padding:2px 2px 2px 4px;
 }
 @media all and (max-width: 800px) {
     .section-shifter-left div.tab-content{

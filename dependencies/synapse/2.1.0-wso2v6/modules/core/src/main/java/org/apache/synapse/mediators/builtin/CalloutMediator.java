@@ -34,6 +34,7 @@ import org.apache.axis2.context.ConfigurationContextFactory;
 import org.apache.synapse.*;
 import org.apache.synapse.core.SynapseEnvironment;
 import org.apache.synapse.core.axis2.Axis2MessageContext;
+import org.apache.synapse.core.axis2.Axis2SynapseEnvironment;
 import org.apache.synapse.mediators.AbstractMediator;
 import org.apache.synapse.util.MessageHelper;
 import org.apache.synapse.util.xpath.SynapseXPath;
@@ -59,6 +60,7 @@ public class CalloutMediator extends AbstractMediator implements ManagedLifecycl
     private String targetKey = null;
     private String clientRepository = null;
     private String axis2xml = null;
+    private String useServerConfig = null;
     private boolean initClientOptions = true;
     public final static String DEFAULT_CLIENT_REPO = "./samples/axis2Client/client_repo";
     public final static String DEFAULT_AXIS2_XML = "./samples/axis2Client/client_repo/conf/axis2.xml";
@@ -230,10 +232,14 @@ public class CalloutMediator extends AbstractMediator implements ManagedLifecycl
 
     public void init(SynapseEnvironment synEnv) {
         try {
-            configCtx = ConfigurationContextFactory.createConfigurationContextFromFileSystem(
-                    clientRepository != null ? clientRepository : DEFAULT_CLIENT_REPO,
-            axis2xml != null ? axis2xml : DEFAULT_AXIS2_XML);
-        } catch (AxisFault e) {
+        	if (Boolean.parseBoolean(useServerConfig)) {
+        		configCtx = ((Axis2SynapseEnvironment) synEnv).getAxis2ConfigurationContext();
+        	} else {
+        		configCtx = ConfigurationContextFactory.createConfigurationContextFromFileSystem(
+                        clientRepository != null ? clientRepository : DEFAULT_CLIENT_REPO,
+                axis2xml != null ? axis2xml : DEFAULT_AXIS2_XML);
+        	}
+         } catch (AxisFault e) {
             String msg = "Error initializing callout mediator : " + e.getMessage();
             log.error(msg, e);
             throw new SynapseException(msg, e);
@@ -260,6 +266,14 @@ public class CalloutMediator extends AbstractMediator implements ManagedLifecycl
 
     public void setAction(String action) {
         this.action = action;
+    }
+    
+    public String getUseServerConfig() {
+    	return useServerConfig;
+    }
+    
+    public void setUseServerConfig(String useServerConfig) {
+    	this.useServerConfig = useServerConfig;
     }
 
     public String getRequestKey() {

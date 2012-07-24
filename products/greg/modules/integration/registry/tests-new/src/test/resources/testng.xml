@@ -11,6 +11,7 @@
     <test name="Test - GREG">
         <classes>
             <class name="org.wso2.carbon.registry.resource.test.ResourceTestCase"/>
+            <class name="org.wso2.carbon.registry.resource.test.PropertyTestCase"/>
             <class name="org.wso2.carbon.registry.app.test.AtomFeedTestCase"/>
             <class name="org.wso2.carbon.registry.governance.api.test.MetaDataServicesTestCase"/>
             <class name="org.wso2.carbon.registry.version.test.MetaDataTestCase"/>

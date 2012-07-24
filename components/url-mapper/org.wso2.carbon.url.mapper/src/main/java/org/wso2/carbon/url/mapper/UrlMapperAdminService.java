@@ -47,21 +47,21 @@ public class UrlMapperAdminService extends AbstractAdmin {
 		}
 	}
 
-//	public static PaginatedMappingData getAllMappings(int pageNumber, String tenantDomain)
-//			throws UrlMapperException {
-//		MappingData[] mappings = HostUtil.getAllMappingsFromRegistry();
-//		if (mappings != null) {
-//			List<MappingData> mappingsList = Arrays.asList(mappings);
-//			// Pagination
-//			PaginatedMappingData paginatedMappings = new PaginatedMappingData();
-//			DataPaginator.doPaging(pageNumber, mappingsList, paginatedMappings);
-//			return paginatedMappings;
-//		} else {
-//			return null;
-//		}
-//
-//	}
-	
+	public static PaginatedMappingData getPaginatedMappings(int pageNumber, String tenantDomain)
+			throws UrlMapperException {
+		MappingData[] mappings = HostUtil.getTenantSpecificMappingsFromRegistry(tenantDomain);
+		if (mappings != null) {
+			List<MappingData> mappingsList = Arrays.asList(mappings);
+			// Pagination
+			PaginatedMappingData paginatedMappings = new PaginatedMappingData();
+			DataPaginator.doPaging(pageNumber, mappingsList, paginatedMappings);
+			return paginatedMappings;
+		} else {
+			return null;
+		}
+
+	}
+
 	public MappingData[] getAllMappings() throws UrlMapperException {
 		return HostUtil.getAllMappingsFromRegistry();
 	}

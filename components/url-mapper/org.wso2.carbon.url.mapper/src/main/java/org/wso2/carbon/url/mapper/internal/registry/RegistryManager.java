@@ -15,6 +15,11 @@
  */
 package org.wso2.carbon.url.mapper.internal.registry;
 
+import java.util.ArrayList;
+import java.util.List;
+
+import org.apache.axis2.description.AxisEndpoint;
+import org.apache.axis2.engine.AxisConfiguration;
 import org.apache.catalina.Host;
 import org.apache.commons.logging.Log;
 import org.apache.commons.logging.LogFactory;
@@ -24,9 +29,7 @@ import org.wso2.carbon.registry.core.Resource;
 import org.wso2.carbon.url.mapper.data.MappingData;
 import org.wso2.carbon.url.mapper.internal.util.DataHolder;
 import org.wso2.carbon.url.mapper.internal.util.UrlMapperConstants;
-
-import java.util.ArrayList;
-import java.util.List;
+import org.wso2.carbon.utils.Axis2ConfigurationContextObserver;
 
 /**
  * Registry manager to store and retrieve properties to registry.
@@ -48,7 +51,6 @@ public class RegistryManager {
 	 */
 	public void addHostToRegistry(String hostName, String webApp, String tenantDomain)
 			throws Exception {
-
 		try {
 			registryService.beginTransaction();
 			Resource hostResource = registryService.newResource();
@@ -64,6 +66,47 @@ public class RegistryManager {
 			throw e;
 		}
 	}
+
+	 
+
+    public MappingData[] getTenantSpecificMappingsFromRegistry(String tenantDomain) throws Exception {
+    	
+    	Collection mappings = getHostsFromRegistry();
+		List<MappingData> mappingList = new ArrayList<MappingData>();
+		if (mappings != null) {
+			String[] mappingNames = mappings.getChildren();
+			for (String mappingName : mappingNames) {
+				mappingName = mappingName.replace(UrlMapperConstants.HostProperties.FILE_SERPERATOR
+            	        + UrlMapperConstants.HostProperties.HOSTINFO , "");
+				Resource resource = getMappingFromRegistry(mappingName);
+				if (resource != null) {
+					MappingData mappingData = new MappingData();
+					mappingData.setMappingName(resource
+							.getProperty(UrlMapperConstants.HostProperties.HOST_NAME));
+					mappingData.setTenantDomain(resource
+							.getProperty(UrlMapperConstants.HostProperties.TENANT_DOMAIN));
+					if (resource.getProperty(UrlMapperConstants.HostProperties.SERVICE_EPR) != null) {
+						mappingData.setServiceMapping(true);
+						mappingData.setUrl(resource
+								.getProperty(UrlMapperConstants.HostProperties.SERVICE_EPR));
+					} else {
+						mappingData.setUrl(resource
+								.getProperty(UrlMapperConstants.HostProperties.WEB_APP));
+					}
+					if (tenantDomain == null || tenantDomain.equals("")) {
+						mappingList.add(mappingData);
+					} else if (tenantDomain.equals(mappingData.getTenantDomain())) {
+						mappingList.add(mappingData);
+					}
+					
+				}
+
+			}
+			return mappingList.toArray(new MappingData[mappingList.size()]);
+		}
+		return null;
+    }
+  
 
 	/**
 	 * when getting hosts from registry getHostsFromRegistry method will return

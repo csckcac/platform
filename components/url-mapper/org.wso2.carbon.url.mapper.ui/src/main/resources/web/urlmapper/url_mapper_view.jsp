@@ -23,6 +23,7 @@
 <%@ page import="org.wso2.carbon.ui.CarbonUIMessage"%>
 <%@ page
 	import="org.wso2.carbon.url.mapper.stub.types.carbon.MappingData"%>
+<%@ page import="org.wso2.carbon.url.mapper.stub.types.carbon.PaginatedMappingData"%>
 <%@ page import="org.wso2.carbon.ui.CarbonUIUtil"%>
 <%@ page import="org.wso2.carbon.utils.ServerConstants"%>
 <%@ page import="org.wso2.carbon.ui.CarbonUIMessage"%>
@@ -35,6 +36,13 @@
 <!--         <script type="text/javascript" src="../admin/dialog/js/dialog.js"></script> -->
 <%@ page import="org.wso2.carbon.utils.CarbonUtils"%>
 <%@ page import="org.wso2.carbon.url.mapper.ui.UrlMapperServiceClient"%>
+<script type="text/javascript" src="js/mapping_validator.js"></script>
+<!--  <script type="text/javascript"> -->
+<!--  function getTenantSpecificIndex (tenantDomain,pageNumber) { -->
+<!-- 		alert(tenantDomain); -->
+<!-- 		location.href = "url_mapper_view.jsp?tenantDomain="+tenantDomain+"&pageNumber="+pageNumber; -->
+<!-- 	} -->
+<!-- </script>  -->
 <%
 	String backendServerURL = CarbonUIUtil
 			.getServerURL(config.getServletContext(), session);
@@ -45,11 +53,27 @@
 	UrlMapperServiceClient hostAdmin = new UrlMapperServiceClient(cookie, backendServerURL,
 			configContext);
 	MappingData hosts[] = null;
+	String tenantDomain = request.getParameter("tenantDomain");
+	String pageNumberStr = request.getParameter("pageNumber");
+	tenantDomain = (tenantDomain==null)? "":tenantDomain;
 	String referance = "";
+	String parameter = "";
+	PaginatedMappingData paginatedMappingData;
+	int pageNumber =0;
+	int numberOfPages = 0;
 	try {
-
-		hosts = hostAdmin.getAllMappings();
-
+		pageNumber = Integer.parseInt(pageNumberStr);
+	} catch (NumberFormatException ignored) {
+		// page number format exception
+	}
+	try {
+		paginatedMappingData = hostAdmin.getPaginatedMappings(pageNumber,tenantDomain);
+		if (paginatedMappingData != null) {
+			hosts = paginatedMappingData.getMappingData();
+			numberOfPages = paginatedMappingData.getNumberOfPages();
+		}
+		
+		parameter = "tenantDomain=" + tenantDomain;
 	} catch (Exception e) {
 		CarbonUIMessage.sendCarbonUIMessage(e.getLocalizedMessage(), CarbonUIMessage.ERROR,
 				request, e);
@@ -83,6 +107,30 @@
 			<%
 				} else {
 			%>
+			<table border="0" class="styledLeft">
+				<tbody>
+					<tr>
+						<td>
+
+							<table class="normal">
+							<tr>
+							<td style="padding-right: 2px !important;"><nobr>
+											<fmt:message key="tenant.domain" />
+										</nobr>
+							</td>
+							<td style="padding-right: 2px !important;"><input
+										value="<%=tenantDomain%>" id="tenantDomain"
+										name="tenantDomain" size="20" type="text"></td>
+
+									<td style="padding-left: 0px !important;"><input
+										type="button" value="Search Mappings"
+										onclick="javascript:getTenantSpecificIndex();return false;"
+										class="button"></td>
+							</tr>
+							</table>
+			
+			
+			</td></tr></tbody></table>
 			<table class="styledLeft">
 				<thead>
 					<tr>
@@ -123,11 +171,16 @@
 					}
 						}
 				%>
-
-
+				<tr><td>
+				<input type="hidden" id="pageNumber"
+										name="pageNumber" value="<%=pageNumber%>" />
+					</td></tr>				
 
 			</table>
-
+			   <carbon:paginator pageNumber="<%=pageNumber%>" numberOfPages="<%=numberOfPages%>"
+                      page="url_mapper_view.jsp" pageNumberParameterName="pageNumber"
+                      prevKey="prev" nextKey="next"
+                      parameters="<%= parameter%>"/>
 		</div>
 	</div>
 </fmt:bundle>

@@ -25,6 +25,7 @@ import org.apache.commons.logging.Log;
 import org.apache.commons.logging.LogFactory;
 import org.wso2.carbon.url.mapper.stub.UrlMapperAdminServiceStub;
 import org.wso2.carbon.url.mapper.stub.types.carbon.MappingData;
+import org.wso2.carbon.url.mapper.stub.types.carbon.PaginatedMappingData;
 
 
 /**
@@ -55,6 +56,27 @@ public class UrlMapperServiceClient {
             throw e;
         }
     }
+    
+    public  PaginatedMappingData getPaginatedMappings(int pageNumber, String tenantDomain) throws Exception {
+    	  try {
+              return stub.getPaginatedMappings(pageNumber,tenantDomain);
+          } catch (Exception e) {
+              String msg = "Error occurred while editing  host. Backend service may be unavailable";
+              log.error(msg, e);
+              throw e;
+          }
+    }
+    
+    public boolean isMappingLimitExceeded(String webAppName) throws Exception  {
+    	  try {
+              return stub.isMappingLimitExceeded(webAppName);
+          } catch (Exception e) {
+              String msg = "Error occurred while editing  host. Backend service may be unavailable";
+              log.error(msg, e);
+              throw e;
+          }
+    }
+    
 
     public boolean editHost(String webappName, String oldhost, String newHost) throws Exception {
         try {

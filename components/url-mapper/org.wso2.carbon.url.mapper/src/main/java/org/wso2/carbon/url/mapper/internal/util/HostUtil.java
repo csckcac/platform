@@ -75,8 +75,9 @@ public class HostUtil {
         }
     }
     
+    
     /**
-     * This method is used to retrieve list of host names for a given
+     * This method is used to check if the maximum no of mappings are exceeded
      * webapplication.
      *
      * @param webAppName the webapp name
@@ -85,17 +86,20 @@ public class HostUtil {
      */
     public static boolean isMappingLimitExceeded(String webAppName) throws UrlMapperException {
 		int index = 0;
+		if (webAppName.contains(UrlMapperConstants.SERVICE_URL_PATTERN)) {
+			webAppName = getServiceEndpoint(webAppName);
+		}
+		
         try {
             MappingData mappings[] = getAllMappingsFromRegistry();
             if (mappings != null) {
                 for (MappingData mapping : mappings) {
-                    String hostName = mapping.getMappingName();
                     if (webAppName.equals(mapping.getUrl())) {
                       index++;
                     }
                 }
             }
-            return (index < MappingConfigManager.loadMappingConfiguration().getNoOfMappings());
+            return (index >= MappingConfigManager.loadMappingConfiguration().getNoOfMappings());
 
         } catch (Exception e) {
             log.error("Failed to get url mappings for the webapp ", e);
@@ -166,6 +170,16 @@ public class HostUtil {
         }
     }
 
+    
+    public static MappingData[] getTenantSpecificMappingsFromRegistry(String tenantName) throws UrlMapperException {
+        try {
+            // get all URL mapping information.
+            return registryManager.getTenantSpecificMappingsFromRegistry(tenantName);
+        } catch (Exception e) {
+            log.error("Failed to get all hosts ", e);
+            throw new UrlMapperException("Failed to get all url mappings from the registry ", e);
+        }
+    }
 
     /**
      * This method is used to retrieve list of host names for a given

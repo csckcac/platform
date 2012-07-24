@@ -1,7 +1,11 @@
 /*
  log.js contains scripts need to handle log information.
  */
-
+function getTenantSpecificIndex () {
+	var tenantDomain = document.getElementById("tenantDomain").value;
+	var pageNumber = document.getElementById("pageNumber").value;
+	location.href = "url_mapper_view.jsp?tenantDomain="+tenantDomain+"&pageNumber="+pageNumber;
+}
 function checkMappingAvailability(urlmapping) {
     var reason = validateEmpty(urlmapping);
     if (reason == "") {
@@ -52,6 +56,13 @@ function checkMapping(urlmapping)
         error = "The domain only allows letters, numbers, '.', '-' and '_'. <br />";
     }
     return error;
+}
+
+
+function getTenantSpecificIndex () {
+	var tenantDomain = document.getElementById("tenantDomain").value;
+	var pageNumber = document.getElementById("pageNumber").value;
+	location.href = "url_mapper_view.jsp?tenantDomain="+tenantDomain+"&pageNumber="+pageNumber;
 }
 
 

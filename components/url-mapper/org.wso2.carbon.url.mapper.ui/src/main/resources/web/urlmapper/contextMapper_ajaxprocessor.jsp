@@ -87,6 +87,8 @@
 				try {
 					if (hostAdmin.isMappingExist(usergivenEndpoint)) {
 					 %>Failed to add URL Mapping. Mapping already exist.<%
+					} else if (hostAdmin.isMappingLimitExceeded(carbonEndpoint))  {
+						 %>Failed to add URL Mapping. URL Mapping limit exceeded.<%
 					} else {
 							hostAdmin.addServiceDomain(usergivenEndpoint, carbonEndpoint);
 							%>URL Mapping successfully inserted<%
@@ -105,6 +107,8 @@
 				try {
 					if (hostAdmin.isMappingExist(usergivenEndpoint)) {
 						%>Failed to add URL Mapping. Mapping already exist.<%
+						} else if (hostAdmin.isMappingLimitExceeded(carbonEndpoint))  {
+							 %>Failed to add URL Mapping. URL Mapping limit exceeded.<%
 						} else {
 							hostAdmin.addWebAppToHost(usergivenEndpoint, carbonEndpoint);
 							%>URL Mapping successfully inserted<%

@@ -72,7 +72,7 @@
         <dependency>
             <groupId>com.h2database.wso2</groupId>
             <artifactId>h2-database-engine</artifactId>
-            <version>1.2.140.wso2v3</version>
+            <version>${orbit.version.h2.engine}</version>
             <scope>test</scope>
         </dependency>
 

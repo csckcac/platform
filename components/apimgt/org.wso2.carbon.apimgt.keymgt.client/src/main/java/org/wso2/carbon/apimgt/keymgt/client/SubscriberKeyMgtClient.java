@@ -26,6 +26,7 @@ import org.apache.commons.logging.Log;
 import org.apache.commons.logging.LogFactory;
 import org.wso2.carbon.apimgt.impl.dto.xsd.APIInfoDTO;
 import org.wso2.carbon.apimgt.keymgt.stub.subscriber.APIKeyMgtSubscriberServiceStub;
+import org.wso2.carbon.apimgt.keymgt.stub.types.carbon.ApplicationKeysDTO;
 import org.wso2.carbon.authenticator.stub.AuthenticationAdminStub;
 
 import java.net.URL;
@@ -70,7 +71,7 @@ public class SubscriberKeyMgtClient {
         return subscriberServiceStub.getAccessToken(userId, apiInfoDTO, applicationName, keyType);
     }
 
-    public String getApplicationAccessKey(String userId, String applicationName, String keyType) throws Exception {
+    public ApplicationKeysDTO getApplicationAccessKey(String userId, String applicationName, String keyType) throws Exception {
         return subscriberServiceStub.getApplicationAccessToken(userId, applicationName, keyType);
     }
 }

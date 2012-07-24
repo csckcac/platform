@@ -77,7 +77,8 @@ public class HumanTaskClient {
         ServiceClient client;Options options;
         client = stub._getServiceClient();
         options = client.getOptions();
-        if (workListConfig.getUsername() != null && workListConfig.getPassword() != null) {
+        if (workListConfig.getUsername() != null
+                && workListConfig.getPassword() != null && workListConfig.isRemote()) {
             CarbonUtils.setBasicAccessSecurityHeaders(workListConfig.getUsername(),
                     workListConfig.getPassword(), client);
         } else {

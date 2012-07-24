@@ -14,7 +14,10 @@ import org.apache.neethi.Policy;
 import org.apache.neethi.PolicyEngine;
 import org.apache.synapse.FaultHandler;
 import org.apache.synapse.MessageContext;
+import org.apache.synapse.SynapseConstants;
 import org.apache.synapse.SynapseException;
+import org.apache.synapse.aspects.statistics.StatisticsRecord;
+import org.apache.synapse.aspects.statistics.StatisticsRecordFactory;
 import org.apache.synapse.core.axis2.Axis2MessageContext;
 import org.apache.synapse.mediators.eip.EIPConstants;
 
@@ -70,7 +73,13 @@ public class MessageHelper {
         for (Object o : synCtx.getPropertyKeySet()) {
             // If there are non String keyed properties neglect them rather than trow exception
             if (o instanceof String) {
-                newCtx.setProperty((String) o, synCtx.getProperty((String) o));
+            	if(synCtx.getProperty((String) o)  != null && synCtx.getProperty((String) o) instanceof StatisticsRecord){
+            		 StatisticsRecord record = StatisticsRecordFactory.getStatisticsRecord(synCtx);
+            		 newCtx.setProperty(SynapseConstants.STATISTICS_STACK, record);
+            		 
+            	}else{
+            		newCtx.setProperty((String) o, synCtx.getProperty((String) o));
+            	}
             }
         }
         

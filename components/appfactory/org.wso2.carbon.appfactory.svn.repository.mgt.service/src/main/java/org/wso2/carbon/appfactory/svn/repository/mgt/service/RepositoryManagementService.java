@@ -16,12 +16,13 @@
 
 package org.wso2.carbon.appfactory.svn.repository.mgt.service;
 
-import java.io.File;
-
 import org.wso2.carbon.appfactory.svn.repository.mgt.RepositoryManager;
 import org.wso2.carbon.appfactory.svn.repository.mgt.RepositoryMgtException;
+import org.wso2.carbon.appfactory.svn.repository.mgt.builder.RepositoryManagerHolder;
 import org.wso2.carbon.appfactory.svn.repository.mgt.impl.SCMManagerExceptions;
 import org.wso2.carbon.core.AbstractAdmin;
+
+import java.io.File;
 
 /**
  *
@@ -29,6 +30,11 @@ import org.wso2.carbon.core.AbstractAdmin;
  */
 public class RepositoryManagementService extends AbstractAdmin {
     private RepositoryManager repositoryManager;
+
+    public RepositoryManagementService() {
+        RepositoryManagerHolder holder = RepositoryManagerHolder.getInstance();
+        this.repositoryManager = holder.getRepositoryManager();
+    }
 
     public RepositoryManager getRepositoryManager() {
         return repositoryManager;
@@ -52,12 +58,14 @@ public class RepositoryManagementService extends AbstractAdmin {
     }
 
 
-    public void svnCopy(String sourceUrl, String destinationUrl, String commitMessage, String svnRevision) {
+    public void svnCopy(String sourceUrl, String destinationUrl, String commitMessage,
+                        String svnRevision) {
         repositoryManager.svnCopy(sourceUrl, destinationUrl, commitMessage, svnRevision);
     }
 
 
-    public void svnMove(String sourceUrl, String destinationUrl, String commitMessage, String svnRevision) {
+    public void svnMove(String sourceUrl, String destinationUrl, String commitMessage,
+                        String svnRevision) {
         repositoryManager.svnMove(sourceUrl, destinationUrl, commitMessage, svnRevision);
     }
 
@@ -65,11 +73,11 @@ public class RepositoryManagementService extends AbstractAdmin {
         repositoryManager.initSVNClient();
     }
 
-    public String checkoutApplication(String applicationSvnUrl, String applicationId, String svnRevision)
+    public String checkoutApplication(String applicationSvnUrl, String applicationId,
+                                      String svnRevision)
             throws SCMManagerExceptions {
         return repositoryManager.checkoutApplication(applicationSvnUrl, applicationId, svnRevision);
     }
-
 
 
     public File createApplicationCheckoutDirectory(String applicationName)
@@ -79,7 +87,6 @@ public class RepositoryManagementService extends AbstractAdmin {
     }
 
 
-
     public void cleanApplicationDir(String applicationPath) {
         repositoryManager.cleanApplicationDir(applicationPath);
     }
@@ -87,9 +94,10 @@ public class RepositoryManagementService extends AbstractAdmin {
     public String getAdminUsername(String applicationId) {
         return repositoryManager.getAdminUsername(applicationId);
     }
-    public boolean hasAccess(String username,String password,String applicationId)
+
+    public boolean hasAccess(String username, String password, String applicationId)
             throws RepositoryMgtException {
-        return repositoryManager.hasAccess(username,password,applicationId);
+        return repositoryManager.hasAccess(username, password, applicationId);
     }
 
 }

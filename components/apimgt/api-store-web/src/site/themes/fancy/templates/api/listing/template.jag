@@ -67,7 +67,7 @@
                             redirectPage = jagg.getMappedUrl("/site/pages/item-info.jag");
                         %>
                                 <li>
-                                    <form id="viewAPIForm" action="<%=redirectPage%>" method="post">
+                                    <form id="viewAPIForm" action="<%=redirectPage%>" method="get">
                                         <div class="thumbnail">
                                             <a href="#" onclick="submitForm();">
                                                 <img src="<%=thumbURL%>" width="100" height="100"/>

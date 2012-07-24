@@ -19,19 +19,19 @@
 package org.wso2.carbon.identity.core.persistence;
 
 import org.apache.axiom.om.OMElement;
-import org.apache.commons.dbcp.BasicDataSource;
 import org.apache.commons.logging.Log;
 import org.apache.commons.logging.LogFactory;
 import org.wso2.carbon.base.ServerConfigurationException;
 import org.wso2.carbon.identity.base.IdentityException;
 import org.wso2.carbon.identity.core.util.IdentityConfigParser;
 
+import javax.naming.Context;
+import javax.naming.InitialContext;
+import javax.naming.NamingException;
+import javax.sql.DataSource;
 import javax.xml.namespace.QName;
 import java.sql.Connection;
 import java.sql.SQLException;
-import java.util.HashMap;
-import java.util.Iterator;
-import java.util.Map;
 
 /**
  * This class is used for handling identity meta data persistence in the Identity JDBC Store. During
@@ -41,41 +41,64 @@ import java.util.Map;
  * JDBCPersistenceManager.getInstance() method.
  */
 public class JDBCPersistenceManager {
-    
-    private BasicDataSource dataSource; 
+
+    private DataSource dataSource;
 
     private static Log log = LogFactory.getLog(JDBCPersistenceManager.class);
     private static JDBCPersistenceManager instance;
 
-    private static final int DEFAULT_MAX_ACTIVE = 40;
-    private static final int DEFAULT_MAX_WAIT = 1000 * 60;
-    private static final int DEFAULT_MIN_IDLE = 5;
-    private static final int DEFAULT_MAX_IDLE = 6;
-
     private JDBCPersistenceManager() throws IdentityException {
-        try {
-            OMElement persistenceManagerConfigElem = IdentityConfigParser.getInstance().getConfigElement("JDBCPersistenceManager");
+        initDataSource();
+    }
 
-            if(persistenceManagerConfigElem == null){
-                String errorMsg = "Identity Persistence Manager configuration is not available in identity.xml file. " +
-                        "Terminating the JDBC Persistence Manager initialization. This may affect certain functionality.";
+    private void initDataSource() throws IdentityException {
+        try {
+            OMElement persistenceManagerConfigElem = IdentityConfigParser.getInstance()
+                    .getConfigElement("JDBCPersistenceManager");
+
+            if (persistenceManagerConfigElem == null) {
+                String errorMsg = "Identity Persistence Manager configuration is not available in " +
+                        "identity.xml file. Terminating the JDBC Persistence Manager " +
+                        "initialization. This may affect certain functionality.";
                 log.error(errorMsg);
                 throw new IdentityException(errorMsg);
             }
 
-            Map<String, String> propertyMap = getJDBCConnectionProperties(persistenceManagerConfigElem);
-            dataSource = new BasicDataSource();
-            populateDataSource(propertyMap, dataSource);
+            OMElement dataSourceElem = persistenceManagerConfigElem.getFirstChildWithName(
+                    new QName(IdentityConfigParser.IDENTITY_DEFAULT_NAMESPACE, "DataSource"));
+
+            if (dataSourceElem == null) {
+                String errorMsg = "DataSource Element is not available for JDBC Persistence " +
+                        "Manager in identity.xml file. Terminating the JDBC Persistence Manager " +
+                        "initialization. This might affect certain features.";
+                log.error(errorMsg);
+                throw new IdentityException(errorMsg);
+            }
+
+            OMElement dataSourceNameElem = dataSourceElem.getFirstChildWithName(
+                    new QName(IdentityConfigParser.IDENTITY_DEFAULT_NAMESPACE, "Name"));
+
+            if (dataSourceNameElem != null) {
+                String dataSourceName = dataSourceNameElem.getText();
+                Context ctx = new InitialContext();
+                dataSource = (DataSource) ctx.lookup(dataSourceName);
+            }
         } catch (ServerConfigurationException e) {
-            log.error("Error when reading the JDBC Configuration from the file.", e);
-            throw new IdentityException("Error when reading the JDBC Configuration from the file.", e);
+            String errorMsg = "Error when reading the JDBC Configuration from the file.";
+            log.error(errorMsg, e);
+            throw new IdentityException(errorMsg, e);
+        } catch (NamingException e) {
+            String errorMsg = "Error when looking up the Identity Data Source.";
+            log.error(errorMsg, e);
+            throw new IdentityException(errorMsg, e);
         }
     }
 
     /**
      * Get an instance of the JDBCPersistenceManager. It implements a lazy initialization with double
      * checked locking, because it is initialized first by identity.core module during the start up.
-     * @return  JDBCPersistenceManager instance
+     *
+     * @return JDBCPersistenceManager instance
      * @throws IdentityException Error when reading the data source configurations
      */
     public static JDBCPersistenceManager getInstance() throws IdentityException {
@@ -90,83 +113,18 @@ public class JDBCPersistenceManager {
     }
 
     public void initializeDatabase() throws Exception {
-            IdentityDBInitializer dbUtil = new IdentityDBInitializer(dataSource);
-            try {
-                    dbUtil.createRegistryDatabase();
-            } catch (Exception e) {
-                String msg = "Error when creating the Identity database";
-                throw new Exception(msg, e);
-            }
-    }
-
-    private void populateDataSource(Map<String, String> propertyMap, BasicDataSource dataSource) {
-        dataSource.setDriverClassName(propertyMap.get(IdentityPersistenceConstants.JDBCPersistenceManagerConstants.JDBC_CONFIG_PROPS_DRIVER_NAME));
-        dataSource.setUrl(propertyMap.get(IdentityPersistenceConstants.JDBCPersistenceManagerConstants.JDBC_CONFIG_PROPS_URL));
-        dataSource.setUsername(propertyMap.get(IdentityPersistenceConstants.JDBCPersistenceManagerConstants.JDBC_CONFIG_PROPS_USERNAME));
-        dataSource.setPassword(propertyMap.get(IdentityPersistenceConstants.JDBCPersistenceManagerConstants.JDBC_CONFIG_PROPS_PASSWORD));
-
-        if (propertyMap.containsKey(IdentityPersistenceConstants.JDBCPersistenceManagerConstants.JDBC_CONFIG_PROPS_MAX_ACTIVE)) {
-            dataSource.setMaxActive(Integer.parseInt(propertyMap.get(
-                    IdentityPersistenceConstants.JDBCPersistenceManagerConstants.JDBC_CONFIG_PROPS_MAX_ACTIVE)));
-        } else {
-            dataSource.setMaxActive(DEFAULT_MAX_ACTIVE);
+        IdentityDBInitializer dbInitializer = new IdentityDBInitializer(dataSource);
+        try {
+            dbInitializer.createIdentityDatabase();
+        } catch (Exception e) {
+            String msg = "Error when creating the Identity database";
+            throw new Exception(msg, e);
         }
-
-        if (propertyMap.containsKey(IdentityPersistenceConstants.JDBCPersistenceManagerConstants.JDBC_CONFIG_PROPS_MAX_WAIT)) {
-            dataSource.setMaxWait(Long.parseLong(propertyMap.get(
-                    IdentityPersistenceConstants.JDBCPersistenceManagerConstants.JDBC_CONFIG_PROPS_MAX_WAIT)));
-        } else {
-            dataSource.setMaxActive(DEFAULT_MAX_WAIT);
-        }
-
-        if (propertyMap.containsKey(IdentityPersistenceConstants.JDBCPersistenceManagerConstants.JDBC_CONFIG_PROPS_MIN_IDLE)) {
-            dataSource.setMinIdle(Integer.parseInt(propertyMap.get(
-                    IdentityPersistenceConstants.JDBCPersistenceManagerConstants.JDBC_CONFIG_PROPS_MIN_IDLE)));
-        } else {
-            dataSource.setMinIdle(DEFAULT_MIN_IDLE);
-        }
-
-        if (propertyMap.containsKey(IdentityPersistenceConstants.JDBCPersistenceManagerConstants.JDBC_CONFIG_PROPS_MAX_IDLE)) {
-            dataSource.setMaxIdle(Integer.parseInt(propertyMap.get(
-                    IdentityPersistenceConstants.JDBCPersistenceManagerConstants.JDBC_CONFIG_PROPS_MAX_IDLE)));
-        } else {
-            dataSource.setMaxIdle(DEFAULT_MAX_IDLE);
-        }
-
-        if (propertyMap.containsKey(IdentityPersistenceConstants.JDBCPersistenceManagerConstants.JDBC_CONFIG_PROPS_VALIDATION_QUERY)) {
-            dataSource.setValidationQuery(propertyMap.get(
-                    IdentityPersistenceConstants.JDBCPersistenceManagerConstants.JDBC_CONFIG_PROPS_VALIDATION_QUERY));
-        }
-    }
-
-
-    private Map<String, String> getJDBCConnectionProperties(OMElement configElement) throws IdentityException {
-        Map<String, String> propertyMap = new HashMap<String, String>();
-        OMElement configElem = configElement.getFirstChildWithName(new QName(
-                IdentityConfigParser.IDENTITY_DEFAULT_NAMESPACE,"Configuration"));
-        
-        if(configElem == null){
-            String errorMsg = "Configuration Element is not available for JDBC Persistence Manager in identity.xml file. " +
-                    "Terminating the JDBC Persistence Manager initialization. This might affect certain features.";
-            log.error(errorMsg);
-            throw new IdentityException(errorMsg);
-        }
-
-        if (configElem.getChildrenWithLocalName("Property") != null) {
-            for (Iterator propElements = configElem.getChildrenWithLocalName("Property");
-                 propElements.hasNext(); ) {
-                OMElement element = (OMElement) propElements.next();
-                String propName = element.getAttributeValue(new QName("name"));
-                if (propName != null) {
-                    propertyMap.put(propName, element.getText());
-                }
-            }
-        }
-        return propertyMap;
     }
 
     /**
      * Returns an database connection for Identity data source.
+     *
      * @return Database connection
      * @throws IdentityException Exception occurred when getting the data source.
      */

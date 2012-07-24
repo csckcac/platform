@@ -42,7 +42,7 @@ public class IdentityDBInitializer {
         this.dataSource = dataSource;
     }
 
-    void createRegistryDatabase() throws Exception {
+    void createIdentityDatabase() throws Exception {
         if (!isDatabaseStructureCreated()) {
             Connection conn = null;
             try {

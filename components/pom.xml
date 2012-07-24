@@ -48,7 +48,7 @@
                  <module>application-deployers</module>
                  <module>bam</module>
                  <module>bam-data-publishers</module>
-                 <module>business-processes</module>
+                 <!--<module>business-processes</module>-->
                  <module>business-messaging</module>
                  <module>caching</module>
                  <module>captcha-mgt</module>
@@ -1559,7 +1559,7 @@
         <wso2throttle.version>3.3.0</wso2throttle.version>
         <wso2xfer.version>SNAPSHOT</wso2xfer.version>
         <jxl.wso2.version>2.6.8.wso2v1</jxl.wso2.version>
-	<wso2.h2.orbit.version>1.2.140.wso2v2</wso2.h2.orbit.version>
+	<wso2.h2.orbit.version>1.2.140.wso2v3</wso2.h2.orbit.version>
 	<commons-io.wso2.version>2.0.0.wso2v1</commons-io.wso2.version>
 	<juddi.wso2.version>3.0.3.wso2v2</juddi.wso2.version>
 	<smack.wso2.version>3.0.4.wso2v1</smack.wso2.version>

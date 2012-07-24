@@ -300,7 +300,7 @@
         <!-- Component versions == Carbon version, if not, please change the properties below. -->
 	<registry-component.version>${carbon.version}</registry-component.version>
 	<governance-component.version>${carbon.version}</governance-component.version>
-	<wso2.h2.orbit.version>1.2.140.wso2v2</wso2.h2.orbit.version>
+	<wso2.h2.orbit.version>1.2.140.wso2v3</wso2.h2.orbit.version>
         <axis2.wso2.version>1.6.1.wso2v1</axis2.wso2.version>
 	<axiom.wso2.version>1.2.11.wso2v2</axiom.wso2.version>
 	<servlet-api.version>2.4</servlet-api.version>

@@ -37,4 +37,5 @@
    <archivedPassword>admin</archivedPassword>
   <archivedPort>80</archivedPort>
   <archivedRealm>Stratos</archivedRealm>
+   <hiveQuery>Stratos</hiveQuery>
 </loggingConfig>

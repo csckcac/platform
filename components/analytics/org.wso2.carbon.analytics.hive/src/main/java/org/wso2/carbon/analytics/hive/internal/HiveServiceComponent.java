@@ -30,6 +30,7 @@ import org.osgi.framework.ServiceRegistration;
 import org.osgi.service.component.ComponentContext;
 import org.wso2.carbon.analytics.hive.ServiceHolder;
 import org.wso2.carbon.analytics.hive.Utils;
+import org.wso2.carbon.analytics.hive.exception.HiveExecutionException;
 import org.wso2.carbon.analytics.hive.impl.HiveExecutorServiceImpl;
 import org.wso2.carbon.analytics.hive.service.HiveExecutorService;
 import org.wso2.carbon.base.ServerConfiguration;
@@ -109,6 +110,9 @@ public class HiveServiceComponent {
                 HiveExecutorService.class.getName(),
                 ServiceHolder.getHiveExecutorService(),
                 null);
+
+        initializeMetaStore();
+
 /*        HiveConnectionManager connectionManager = HiveConnectionManager.getInstance();
         connectionManager.loadHiveConnectionConfiguration(ctx.getBundleContext());*/
 
@@ -219,6 +223,18 @@ public class HiveServiceComponent {
 
     protected void unsetServerConfiguration(ServerConfiguration serverConfiguration) {
         ServiceHolder.setCarbonConfiguration(null);
+    }
+
+    private void initializeMetaStore() {
+        log.info("Running Hive meta store validation query..");
+
+        String validationQuery = "CREATE TABLE IF NOT EXISTS tmp (key INT);\n" +
+                                 "DROP TABLE tmp;";
+        try {
+            ServiceHolder.getHiveExecutorService().execute(validationQuery);
+        } catch (HiveExecutionException e) {
+            log.error("Error executing validation query for meta store initialization..", e);
+        }
     }
 
     public class HiveRunnable implements Runnable {

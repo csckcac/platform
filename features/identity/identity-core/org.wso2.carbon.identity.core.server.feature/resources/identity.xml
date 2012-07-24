@@ -23,16 +23,11 @@
 
 	<OpenIDUserPattern>https://localhost:9443/openid/</OpenIDUserPattern>
 
-    <JDBCPersistenceManager>
-        <Configuration>
-            <Property name="url">jdbc:h2:repository/database/WSO2CARBON_DB;DB_CLOSE_ON_EXIT=FALSE</Property>
-            <Property name="username">wso2carbon</Property>
-            <Property name="password">wso2carbon</Property>
-            <Property name="driverName">org.h2.Driver</Property>
-            <Property name="maxActive">50</Property>
-            <Property name="maxWait">60000</Property>
-            <Property name="minIdle">5</Property>
-        </Configuration>
+     <JDBCPersistenceManager>
+        <DataSource>
+        	<!-- Include a data source name (jndiConfigName) from the set of data sources defined in master-datasources.xml -->
+        	<Name>jdbc/WSO2CarbonDB</Name>
+    	</DataSource>
     </JDBCPersistenceManager>
 
 	<!--

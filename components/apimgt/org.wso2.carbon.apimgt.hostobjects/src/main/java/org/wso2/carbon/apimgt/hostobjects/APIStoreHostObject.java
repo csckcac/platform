@@ -36,6 +36,7 @@ import org.wso2.carbon.apimgt.impl.UserAwareAPIConsumer;
 import org.wso2.carbon.apimgt.impl.dto.xsd.APIInfoDTO;
 import org.wso2.carbon.apimgt.impl.utils.APIUtil;
 import org.wso2.carbon.apimgt.keymgt.client.SubscriberKeyMgtClient;
+import org.wso2.carbon.apimgt.keymgt.stub.types.carbon.ApplicationKeysDTO;
 import org.wso2.carbon.authenticator.stub.AuthenticationAdminStub;
 import org.wso2.carbon.base.MultitenantConstants;
 import org.jaggeryjs.scriptengine.exceptions.ScriptException;
@@ -199,7 +200,7 @@ public class APIStoreHostObject extends ScriptableObject {
 	 * getting key for a subscribed Application - args[] list String subscriberID, String
 	 * application name, String keyType
 	 */
-	public static String jsFunction_getApplicationKey(Context cx, Scriptable thisObj,
+	public static NativeObject jsFunction_getApplicationKey(Context cx, Scriptable thisObj,
 			Object[] args, Function funObj) throws ScriptException {
 		int argsCount = args.length;
         String methodName = "getApplicationKey";
@@ -217,7 +218,13 @@ public class APIStoreHostObject extends ScriptableObject {
         }
         try {
             SubscriberKeyMgtClient keyMgtClient = getKeyManagementClient();
-            return keyMgtClient.getApplicationAccessKey((String) args[0], (String) args[1], (String) args[2]);
+            ApplicationKeysDTO dto = keyMgtClient.getApplicationAccessKey((String) args[0],
+                    (String) args[1], (String) args[2]);
+            NativeObject row = new NativeObject();
+            row.put("accessToken", row, dto.getApplicationAccessToken());
+            row.put("consumerKey", row, dto.getConsumerKey());
+            row.put("consumerSecret", row, dto.getConsumerSecret());
+            return row;
         } catch (Exception e) {
             log.error(e.getMessage(), e);
             throw new ScriptException(e);
@@ -1249,7 +1256,7 @@ public class APIStoreHostObject extends ScriptableObject {
             APIConsumer apiConsumer = getAPIConsumer(thisObj);
             Set<SubscribedAPI> apis = apiConsumer.getSubscribedIdentifiers(subscriber, apiIdentifier);
             int i = 0;
-            for(SubscribedAPI api : apis) {
+            for (SubscribedAPI api : apis) {
                 NativeObject row = new NativeObject();
                 row.put("application", row, api.getApplication().getName());
                 row.put("applicationId", row, api.getApplication().getId());
@@ -1261,20 +1268,20 @@ public class APIStoreHostObject extends ScriptableObject {
         return myn;
     }
 
-    private static String getKey(SubscribedAPI api, String keyType) {
+    private static APIKey getKey(SubscribedAPI api, String keyType) {
         List<APIKey> apiKeys = api.getKeys();
-        for (APIKey key : apiKeys) {
-            if (keyType.equals(key.getType())) {
-                return key.getKey();
-            }
-        }
-        return null;
+        return getKeyOfType(apiKeys, keyType);
     }
-    private static String getAppKey(Application app, String keyType) {
+
+    private static APIKey getAppKey(Application app, String keyType) {
         List<APIKey> apiKeys = app.getKeys();
+        return getKeyOfType(apiKeys, keyType);
+    }
+
+    private static APIKey getKeyOfType(List<APIKey> apiKeys, String keyType) {
         for (APIKey key : apiKeys) {
             if (keyType.equals(key.getType())) {
-                return key.getKey();
+                return key;
             }
         }
         return null;
@@ -1301,8 +1308,29 @@ public class APIStoreHostObject extends ScriptableObject {
                 NativeObject appObj = new NativeObject();
                 appObj.put("id", appObj, subscribedAPI.getApplication().getId());
                 appObj.put("name", appObj, subscribedAPI.getApplication().getName());
-                appObj.put("prodKey", appObj, getAppKey(subscribedAPI.getApplication(), APIConstants.API_KEY_TYPE_PRODUCTION));
-                appObj.put("sandboxKey", appObj, getAppKey(subscribedAPI.getApplication(), APIConstants.API_KEY_TYPE_SANDBOX));
+
+                APIKey prodKey = getAppKey(subscribedAPI.getApplication(), APIConstants.API_KEY_TYPE_PRODUCTION);
+                if (prodKey != null)  {
+                    appObj.put("prodKey", appObj, prodKey.getAccessToken());
+                    appObj.put("prodConsumerKey", appObj, prodKey.getConsumerKey());
+                    appObj.put("prodConsumerSecret", appObj, prodKey.getConsumerSecret());
+                } else {
+                    appObj.put("prodKey", appObj, null);
+                    appObj.put("prodConsumerKey", appObj, null);
+                    appObj.put("prodConsumerSecret", appObj, null);
+                }
+
+                APIKey sandboxKey = getAppKey(subscribedAPI.getApplication(), APIConstants.API_KEY_TYPE_SANDBOX);
+                if (sandboxKey != null) {
+                    appObj.put("sandboxKey", appObj, sandboxKey.getAccessToken());
+                    appObj.put("sandboxConsumerKey", appObj, sandboxKey.getConsumerKey());
+                    appObj.put("sandboxConsumerSecret", appObj, sandboxKey.getConsumerSecret());
+                } else {
+                    appObj.put("sandboxKey", appObj, null);
+                    appObj.put("sandboxConsumerKey", appObj, null);
+                    appObj.put("sandboxConsumerSecret", appObj, null);
+                }
+
                 addAPIObj(subscribedAPI, apisArray, thisObj);
                 appObj.put("subscriptions", appObj, apisArray);
                 appsObj.put(i++, appsObj, appObj);
@@ -1328,8 +1356,27 @@ public class APIStoreHostObject extends ScriptableObject {
             apiObj.put("tier", apiObj, subscribedAPI.getTier().getName());
             apiObj.put("thumburl", apiObj, api.getThumbnailUrl());
             apiObj.put("context", apiObj, api.getContext());
-            apiObj.put("prodKey", apiObj, getKey(subscribedAPI, APIConstants.API_KEY_TYPE_PRODUCTION));
-            apiObj.put("sandboxKey", apiObj, getKey(subscribedAPI, APIConstants.API_KEY_TYPE_SANDBOX));
+            APIKey prodKey = getAppKey(subscribedAPI.getApplication(), APIConstants.API_KEY_TYPE_PRODUCTION);
+            if (prodKey != null)  {
+                apiObj.put("prodKey", apiObj, prodKey.getAccessToken());
+                apiObj.put("prodConsumerKey", apiObj, prodKey.getConsumerKey());
+                apiObj.put("prodConsumerSecret", apiObj, prodKey.getConsumerSecret());
+            } else {
+                apiObj.put("prodKey", apiObj, null);
+                apiObj.put("prodConsumerKey", apiObj, null);
+                apiObj.put("prodConsumerSecret", apiObj, null);
+            }
+
+            APIKey sandboxKey = getAppKey(subscribedAPI.getApplication(), APIConstants.API_KEY_TYPE_SANDBOX);
+            if (sandboxKey != null) {
+                apiObj.put("sandboxKey", apiObj, sandboxKey.getAccessToken());
+                apiObj.put("sandboxConsumerKey", apiObj, sandboxKey.getConsumerKey());
+                apiObj.put("sandboxConsumerSecret", apiObj, sandboxKey.getConsumerSecret());
+            } else {
+                apiObj.put("sandboxKey", apiObj, null);
+                apiObj.put("sandboxConsumerKey", apiObj, null);
+                apiObj.put("sandboxConsumerSecret", apiObj, null);
+            }
             apiObj.put("hasMultipleEndpoints", apiObj, String.valueOf(api.getSandboxUrl() != null));
             apisArray.put(apisArray.getIds().length, apisArray, apiObj);
         } catch (APIManagementException e) {

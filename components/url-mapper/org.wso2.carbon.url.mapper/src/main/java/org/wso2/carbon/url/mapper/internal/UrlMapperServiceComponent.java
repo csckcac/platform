@@ -20,13 +20,16 @@ import org.apache.commons.logging.LogFactory;
 import org.osgi.framework.BundleContext;
 import org.osgi.framework.ServiceRegistration;
 import org.osgi.service.component.ComponentContext;
+import org.wso2.carbon.context.ApplicationContext;
 import org.wso2.carbon.registry.core.service.RegistryService;
 import org.wso2.carbon.tomcat.api.CarbonTomcatService;
 import org.wso2.carbon.tomcat.ext.valves.CarbonTomcatValve;
 import org.wso2.carbon.tomcat.ext.valves.TomcatValveContainer;
 import org.wso2.carbon.url.mapper.HotUpdateService;
 import org.wso2.carbon.url.mapper.UrlMapperValve;
+import org.wso2.carbon.url.mapper.internal.exception.UrlMapperException;
 import org.wso2.carbon.url.mapper.internal.util.DataHolder;
+import org.wso2.carbon.url.mapper.internal.util.HostUtil;
 import org.wso2.carbon.user.core.service.RealmService;
 import org.wso2.carbon.utils.CarbonUtils;
 
@@ -78,10 +81,26 @@ public class UrlMapperServiceComponent {
         }
         serviceRegistration = bundleContext.
                 registerService(HotUpdateService.class.getName(), new HotUpdateManager(), null);
+        addMappingToInMemory();
         //register the UrlMapperValve to the TomcatValveContainer to add to the tomcat engine
         List<CarbonTomcatValve> carbonTomcatValves = new ArrayList<CarbonTomcatValve>();
         carbonTomcatValves.add(new UrlMapperValve());
         TomcatValveContainer.addValves(carbonTomcatValves);
+    }
+    
+    protected void addMappingToInMemory() {
+        List<String> hostNames = null;
+        String appName;
+        try {
+            hostNames = HostUtil.getAllHostsFromRegistry();
+            for(String hostName : hostNames) {
+                appName = HostUtil.getApplicationContextForHost(hostName);
+                ApplicationContext.getCurrentApplicationContext().
+                        putUrlMappingForApplication(hostName, appName);
+            }
+        } catch (UrlMapperException e) {
+            log.error("error while all mappings from registry", e);
+        }
     }
 
     protected void deactivate(ComponentContext componentContext) {

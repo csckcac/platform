@@ -166,12 +166,18 @@ public class RegistryManager {
 		return null;
 	}
 
-	public String getWebAppNameForHost(String hostName) throws Exception {
+	public String getApplicationContextForHost(String hostName) throws Exception {
 		Resource resource = getMappingFromRegistry(hostName);
+        String appName = null;
 		if (resource != null) {
-			return resource.getProperty(UrlMapperConstants.HostProperties.WEB_APP);
+            appName = resource.getProperty(UrlMapperConstants.HostProperties.WEB_APP);
+			if(appName != null) {
+                return appName;
+            } else {
+                appName = resource.getProperty(UrlMapperConstants.HostProperties.SERVICE_EPR);
+            }
 		}
-		return null;
+		return appName;
 
 	}
 

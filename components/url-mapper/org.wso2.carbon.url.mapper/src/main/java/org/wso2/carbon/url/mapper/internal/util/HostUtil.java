@@ -184,7 +184,7 @@ public class HostUtil {
                 if (mappings != null) {
                     for (MappingData mapping : mappings) {
                         String hostName = mapping.getMappingName();
-                        if (mapping.isServiceMapping() && url.equals(mapping.getUrl())) {
+                        if (mapping.isServiceMapping() && url.equalsIgnoreCase(mapping.getUrl())) {
                             hostNames.add(hostName);
                         }
                     }
@@ -221,9 +221,12 @@ public class HostUtil {
      * @return
      * @throws UrlMapperException
      */
-    public static String getWebappForHost(String hostName) throws UrlMapperException {
+    public static String getApplicationContextForHost(String hostName) throws UrlMapperException {
         try {
-            return registryManager.getWebAppNameForHost(hostName);
+            String appContext = registryManager.getApplicationContextForHost(hostName);
+            ApplicationContext.getCurrentApplicationContext().
+                    putUrlMappingForApplication(hostName, appContext);
+            return appContext;
         } catch (Exception e) {
             log.error("Failed to retrieve the servicename from the host " + hostName, e);
             throw new UrlMapperException("Failed to retrieve the servicename from the host "
@@ -423,6 +426,59 @@ public class HostUtil {
         // from tomcat engine the folder with the host name will not get
         // removed.
         deleteHostDirectory(hostName);
+    }
+
+    /**
+     *  delete the service mapping when an actual service got deleted.
+     *
+     * @param epr service endpoint of a service
+     */
+    public static void deleteServiceMapping(String epr) {
+        List<String> urlMappins;
+        try {
+            urlMappins = getMappingsPerEppr(epr);
+            for(String urlmapping : urlMappins) {
+                ApplicationContext.getCurrentApplicationContext().removeUrlMappingMap(urlmapping);
+                HostUtil.deleteResourceToRegistry(urlmapping);
+            }
+        } catch (UrlMapperException e) {
+            log.error("error while getting url mapping for service", e);
+        }
+    }
+
+    /**
+     *  remove the service mapping when an actual service got deleted.
+     *
+     * @param epr service endpoint of a service
+     */
+    public static void removeServiceMapping(String epr) {
+        List<String> urlMappins;
+        try {
+            urlMappins = getMappingsPerEppr(epr);
+            for(String urlmapping : urlMappins) {
+                ApplicationContext.getCurrentApplicationContext().removeUrlMappingMap(urlmapping);
+            }
+        } catch (UrlMapperException e) {
+            log.error("error while getting url mapping for service", e);
+        }
+    }
+
+    /**
+     *  add the service mapping when an actual service got deleted.
+     *
+     * @param epr service endpoint of a service
+     */
+    public static void addServiceMapping(String epr) {
+        List<String> urlMappins;
+        try {
+            urlMappins = getMappingsPerEppr(epr);
+            for(String urlmapping : urlMappins) {
+                ApplicationContext.getCurrentApplicationContext().
+                        putUrlMappingForApplication(urlmapping, getServiceEndpoint(epr));
+            }
+        } catch (UrlMapperException e) {
+            log.error("error while getting url mapping for service", e);
+        }
     }
 
     /**

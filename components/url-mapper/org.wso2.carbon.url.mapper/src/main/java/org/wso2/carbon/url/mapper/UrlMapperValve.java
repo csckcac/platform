@@ -15,14 +15,15 @@
  */
 package org.wso2.carbon.url.mapper;
 
+import org.apache.catalina.connector.Request;
 import org.apache.commons.logging.Log;
 import org.apache.commons.logging.LogFactory;
+import org.apache.tomcat.util.buf.MessageBytes;
+import org.apache.tomcat.util.http.mapper.MappingData;
+import org.wso2.carbon.context.ApplicationContext;
 import org.wso2.carbon.tomcat.ext.valves.CarbonTomcatValve;
 import org.wso2.carbon.url.mapper.internal.exception.UrlMapperException;
-import org.wso2.carbon.url.mapper.internal.util.HostUtil;
-import org.wso2.carbon.url.mapper.internal.util.UrlMapperConstants;
 
-import javax.servlet.RequestDispatcher;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 
@@ -54,45 +55,45 @@ public class UrlMapperValve implements CarbonTomcatValve {
      * @throws UrlMapperException
      */
     private void process(HttpServletRequest request, HttpServletResponse response) throws Exception {
-        //  URLMapperService urlMapperService = new URLMapperService();
         String serverName = request.getServerName();
-        String queryString = request.getQueryString();
-        String uri;
-        try {
-            uri = HostUtil.getServiceNameForHost(serverName);
+        String uri = ApplicationContext.getCurrentApplicationContext().
+                getApplicationFromUrlMapping(serverName);
 
-        } catch (UrlMapperException e1) {
-            log.error("error in retriving  the service url", e1);
-            throw e1;
-        }
-        if (uri != null) {
-            if (queryString != null) {
-                try {
-                    String filterUri;
-                    // get the actual service url which is mapping with this
-                    filterUri = uri.substring(0, uri.length() - 1);
-                    String endUrl = UrlMapperConstants.HostProperties.SERVICE_IDENTIFIER + filterUri + "?" + queryString;
-                    RequestDispatcher requestDispatcher = request.getRequestDispatcher(endUrl);
-                    requestDispatcher.forward(request, response);
+        if ((uri != null) && (uri.contains("services"))) {
+            //rewriting the request with actual service url in order to retrieve the resource
+            String filterUri = uri.substring(0, uri.length() - 1);
+            Request connectorReq = (Request) request;
+            MappingData mappingData = connectorReq.getMappingData();
+            org.apache.coyote.Request coyoteRequest = connectorReq.getCoyoteRequest();
 
-                } catch (Exception e) {
-                    log.error("error in forwarding the url", e);
-                    throw e;
-                }
+            MessageBytes requestPath = MessageBytes.newInstance();
+            requestPath.setString(filterUri);
+            mappingData.requestPath = requestPath;
+            MessageBytes pathInfo = MessageBytes.newInstance();
+            pathInfo.setString(filterUri);
+            mappingData.pathInfo = pathInfo;
+
+            coyoteRequest.requestURI().setString(filterUri);
+            coyoteRequest.decodedURI().setString(filterUri);
+            if (request.getQueryString() != null) {
+                coyoteRequest.unparsedURI().setString(filterUri + "?" + request.getQueryString());
             } else {
-                //have to implement
-                RequestDispatcher patcher = request
-                        .getRequestDispatcher("");
-                try {
-
-                    patcher.forward(request, response);
-
-                } catch (Exception e) {
-                    log.error("error in forwarding the url", e);
-                    throw e;
-                }
-
+                coyoteRequest.unparsedURI().setString(filterUri);
             }
+            connectorReq.getConnector().
+                    getMapper().map(connectorReq.getCoyoteRequest().serverName(),
+                    connectorReq.getCoyoteRequest().decodedURI(), null,
+                    mappingData);
+            //connectorReq.setHost((Host)DataHolder.getInstance().getCarbonTomcatService().getTomcat().getEngine().findChild("testapp.wso2.com"));
+            connectorReq.setCoyoteRequest(coyoteRequest);
         }
+    }
+    
+    public boolean equals(Object valve){
+        return this.toString() == valve.toString();
+    }
+    
+    public String toString() {
+        return "valve for url-mapping";
     }
 }

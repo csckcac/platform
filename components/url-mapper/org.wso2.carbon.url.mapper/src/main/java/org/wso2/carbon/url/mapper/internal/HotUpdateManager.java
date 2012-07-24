@@ -53,9 +53,9 @@ public class HotUpdateManager implements HotUpdateService {
         return HostUtil.addHostToEngine(hostName);
     }
 
-    public String getWebappForHost(String hostName) {
+    public String getApplicationContextForHost(String hostName) {
         try {
-            return HostUtil.getWebappForHost(hostName);
+            return HostUtil.getApplicationContextForHost(hostName);
         } catch (UrlMapperException e) {
             log.error("error while getting webapp for host", e);
         }
@@ -68,5 +68,17 @@ public class HotUpdateManager implements HotUpdateService {
         } catch (UrlMapperException e) {
             log.error("error while removing host for " + hostName, e);
         }
+    }
+
+    public void deleteServiceMapping(String epr) {
+        HostUtil.deleteServiceMapping(epr);
+    }
+
+    public void removeServiceMapping(String epr) {
+        HostUtil.removeServiceMapping(epr);
+    }
+
+    public void addServiceMapping(String epr) {
+        HostUtil.addServiceMapping(epr);
     }
 }

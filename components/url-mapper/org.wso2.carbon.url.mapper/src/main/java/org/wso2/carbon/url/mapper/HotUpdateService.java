@@ -27,8 +27,14 @@ public interface HotUpdateService {
 
     public Host addHost(String hostName);
 
-    public String getWebappForHost(String hostName);
+    public String getApplicationContextForHost(String hostName);
 
     public void removeHost(String hostName);
+
+    public void deleteServiceMapping(String epr);
+
+    public void removeServiceMapping(String epr);
+
+    public void addServiceMapping(String epr);
 
 }

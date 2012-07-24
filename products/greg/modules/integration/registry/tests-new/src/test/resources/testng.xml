@@ -17,6 +17,7 @@
             <class name="org.wso2.carbon.registry.version.test.CollectionTestCase"/>
             <class name="org.wso2.carbon.registry.version.test.ResourceTestCase"/>
             <class name="org.wso2.carbon.registry.version.test.EndpointTestCase"/>
+            <class name="org.wso2.carbon.registry.version.test.RestoreResourcesTestCase"/>
             <class name="org.wso2.carbon.registry.permission.test.PermissionInheritanceTestCase"/>
             <class name="org.wso2.carbon.registry.permission.test.AnonymousAccessTestCase"/>
         </classes>

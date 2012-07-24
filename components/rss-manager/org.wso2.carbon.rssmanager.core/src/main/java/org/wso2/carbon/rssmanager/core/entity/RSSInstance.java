@@ -16,7 +16,7 @@
  *  under the License.
  *
  */
-package org.wso2.carbon.rssmanager.core.internal.dao.entity;
+package org.wso2.carbon.rssmanager.core.entity;
 
 import org.wso2.carbon.ndatasource.rdbms.RDBMSConfiguration;
 import org.wso2.carbon.rssmanager.common.RSSManagerHelper;
@@ -86,7 +86,7 @@ public class RSSInstance {
         config.setPassword(this.getAdminPassword());
         config.setDriverClassName(RSSManagerHelper.getDatabaseDriver(this.getServerURL()));
         config.setTestOnBorrow(true);
-
+        config.setJdbcInterceptors("org.apache.tomcat.jdbc.pool.interceptor.ConnectionState;org.apache.tomcat.jdbc.pool.interceptor.StatementFinalizer");
         return RSSManagerUtil.createDataSource(config);
     }
 

@@ -1,4 +1,4 @@
-package org.wso2.carbon.rssmanager.core.internal.dao.entity.datasource;
+package org.wso2.carbon.rssmanager.core.entity.datasource;
 
 import javax.xml.bind.Marshaller;/*
  *  Copyright (c) 2005-2011, WSO2 Inc. (http://www.wso2.org) All Rights Reserved.

@@ -23,7 +23,7 @@ import org.apache.commons.logging.LogFactory;
 import org.wso2.carbon.context.CarbonContext;
 import org.wso2.carbon.rssmanager.common.RSSManagerConstants;
 import org.wso2.carbon.rssmanager.core.RSSManagerException;
-import org.wso2.carbon.rssmanager.core.internal.dao.entity.*;
+import org.wso2.carbon.rssmanager.core.entity.*;
 import org.wso2.carbon.rssmanager.core.internal.util.RSSConfig;
 import org.wso2.carbon.utils.multitenancy.MultitenantConstants;
 
@@ -136,9 +136,10 @@ public class RSSDAOImpl implements RSSDAO {
         Connection conn = RSSConfig.getInstance().getRSSDBConnection();
         RSSInstance rssInstance = null;
         try {
-            String sql = "SELECT name, server_url, dbms_type, instance_type, server_category, tenant_id FROM RM_SERVER_INSTANCE WHERE name = ?";
+            String sql = "SELECT name, server_url, dbms_type, instance_type, server_category, tenant_id FROM RM_SERVER_INSTANCE WHERE name = ? AND tenant_id = ?";
             PreparedStatement stmt = conn.prepareStatement(sql);
             stmt.setString(1, rssInstanceName);
+            stmt.setInt(2, CarbonContext.getCurrentContext().getTenantId());
             ResultSet rs = stmt.executeQuery();
             if (rs.next()) {
                 rssInstance = this.createRSSInstanceFromRS(rs);
@@ -228,7 +229,7 @@ public class RSSDAOImpl implements RSSDAO {
         Connection conn = RSSConfig.getInstance().getRSSDBConnection();
         DatabaseUser user = new DatabaseUser();
         try {
-            String sql = "SELECT username, rss_instance_name FROM RM_DATABASE_USER WHERE username = ? AND tenant_id=?";
+            String sql = "SELECT username, rss_instance_name FROM RM_DATABASE_USER WHERE username = ? AND tenant_id = ?";
             PreparedStatement stmt = conn.prepareStatement(sql);
             stmt.setString(1, username);
             stmt.setInt(2, CarbonContext.getCurrentContext().getTenantId());
@@ -542,11 +543,13 @@ public class RSSDAOImpl implements RSSDAO {
             stmt.setString(1, user.getUsername());
             stmt.setString(2, user.getRssInstanceName());
             stmt.setInt(3, CarbonContext.getCurrentContext().getTenantId());
+            
             stmt.execute();
             stmt.close();
-        } catch (SQLException e) {
+        } catch (Throwable e) {
+            log.error(e.getMessage(), e);
             throw new RSSManagerException("Error occurred while creating the database user '" +
-                    user.getUsername() + "'", e);
+                    user.getUsername() + "'");
         } finally {
             if (conn != null) {
                 try {
@@ -588,10 +591,11 @@ public class RSSDAOImpl implements RSSDAO {
     public void updateDatabaseUser(DatabaseUser user) throws RSSManagerException {
         Connection conn = RSSConfig.getInstance().getRSSDBConnection();
         try {
-            String sql = "UPDATE RM_DATABASE_USER SET rss_instance_name = ? WHERE username = ?";
+            String sql = "UPDATE RM_DATABASE_USER SET rss_instance_name = ? WHERE username = ? and tenant_id = ?";
             PreparedStatement stmt = conn.prepareStatement(sql);
             stmt.setString(1, user.getRssInstanceName());
             stmt.setString(2, user.getUsername());
+            stmt.setInt(3, CarbonContext.getCurrentContext().getTenantId());
             stmt.executeUpdate();
             stmt.close();
         } catch (SQLException e) {
@@ -1096,6 +1100,7 @@ public class RSSDAOImpl implements RSSDAO {
         stmt.setString(20, privileges.getEventPriv());
         stmt.setString(21, privileges.getTriggerPriv());
         stmt.executeUpdate();
+        
         stmt.close();
     }
 

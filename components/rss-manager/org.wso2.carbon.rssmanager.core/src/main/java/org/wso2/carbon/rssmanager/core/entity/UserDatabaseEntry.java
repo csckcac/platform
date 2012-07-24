@@ -16,10 +16,7 @@
  *  under the License.
  *
  */
-package org.wso2.carbon.rssmanager.core.internal.dao.entity;
-
-import java.util.HashMap;
-import java.util.Map;
+package org.wso2.carbon.rssmanager.core.entity;
 
 /**
  * Class to represent a many-to-many mappings of user's permissions to a specific database.

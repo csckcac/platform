@@ -29,9 +29,9 @@ import org.wso2.carbon.rssmanager.common.RSSManagerHelper;
 import org.wso2.carbon.rssmanager.common.RSSManagerConstants;
 import org.wso2.carbon.rssmanager.core.RSSManagerException;
 import org.wso2.carbon.rssmanager.core.internal.RSSManagerServiceComponent;
-import org.wso2.carbon.rssmanager.core.internal.dao.entity.*;
-import org.wso2.carbon.rssmanager.core.internal.dao.entity.datasource.DSXMLConfiguration;
-import org.wso2.carbon.rssmanager.core.internal.dao.entity.datasource.RDBMSDSXMLConfiguration;
+import org.wso2.carbon.rssmanager.core.entity.*;
+import org.wso2.carbon.rssmanager.core.entity.datasource.DSXMLConfiguration;
+import org.wso2.carbon.rssmanager.core.entity.datasource.RDBMSDSXMLConfiguration;
 import org.wso2.carbon.user.api.Tenant;
 import org.wso2.carbon.user.api.UserStoreException;
 import org.wso2.carbon.user.core.tenant.TenantManager;
@@ -238,7 +238,10 @@ public class RSSManagerUtil {
                     RSSManagerConstants.VALIDATION_QUERY));
         }
         try {
-            return (new RDBMSDataSource(dsConfig)).getDataSource();
+            dsConfig.setJdbcInterceptors("org.apache.tomcat.jdbc.pool.interceptor.ConnectionState;org.apache.tomcat.jdbc.pool.interceptor.StatementFinalizer");
+            DataSource dataSource = (new RDBMSDataSource(dsConfig)).getDataSource();
+            ((org.apache.tomcat.jdbc.pool.DataSource)dataSource).setRollbackOnReturn(true);
+            return dataSource;
         } catch (DataSourceException e) {
             throw new RuntimeException("Error in creating data source: " + e.getMessage(), e);
         }

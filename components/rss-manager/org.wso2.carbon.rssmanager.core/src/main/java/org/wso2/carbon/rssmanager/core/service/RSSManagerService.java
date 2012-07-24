@@ -28,11 +28,10 @@ import org.wso2.carbon.rssmanager.core.RSSManagerException;
 import org.wso2.carbon.rssmanager.core.internal.RSSManagerServiceComponent;
 import org.wso2.carbon.rssmanager.core.internal.dao.RSSDAO;
 import org.wso2.carbon.rssmanager.core.internal.dao.RSSDAOFactory;
-import org.wso2.carbon.rssmanager.core.internal.dao.entity.*;
+import org.wso2.carbon.rssmanager.core.entity.*;
 import org.wso2.carbon.rssmanager.core.internal.manager.RSSManager;
 import org.wso2.carbon.rssmanager.core.internal.util.RSSConfig;
 import org.wso2.carbon.rssmanager.core.internal.util.RSSManagerUtil;
-import org.wso2.carbon.utils.multitenancy.CarbonContextHolder;
 
 import java.util.List;
 

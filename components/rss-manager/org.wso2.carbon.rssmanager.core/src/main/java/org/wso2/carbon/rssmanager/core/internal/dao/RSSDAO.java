@@ -19,10 +19,9 @@
 package org.wso2.carbon.rssmanager.core.internal.dao;
 
 import org.wso2.carbon.rssmanager.core.RSSManagerException;
-import org.wso2.carbon.rssmanager.core.internal.dao.entity.*;
+import org.wso2.carbon.rssmanager.core.entity.*;
 
 import java.util.List;
-import java.util.Map;
 
 /**
  * Data Access Object interface for WSO2 RSS based database operations.

@@ -19,9 +19,9 @@
 package org.wso2.carbon.rssmanager.core.internal.manager;
 
 import org.wso2.carbon.rssmanager.core.RSSManagerException;
-import org.wso2.carbon.rssmanager.core.internal.dao.entity.Database;
-import org.wso2.carbon.rssmanager.core.internal.dao.entity.DatabasePrivilegeSet;
-import org.wso2.carbon.rssmanager.core.internal.dao.entity.DatabaseUser;
+import org.wso2.carbon.rssmanager.core.entity.Database;
+import org.wso2.carbon.rssmanager.core.entity.DatabasePrivilegeSet;
+import org.wso2.carbon.rssmanager.core.entity.DatabaseUser;
 
 public class OracleRSSManager extends RSSManager {
 

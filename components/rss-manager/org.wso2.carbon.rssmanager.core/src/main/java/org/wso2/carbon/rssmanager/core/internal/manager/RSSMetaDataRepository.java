@@ -28,10 +28,10 @@ import org.wso2.carbon.rssmanager.core.RSSManagerException;
 import org.wso2.carbon.rssmanager.core.internal.RSSManagerServiceComponent;
 import org.wso2.carbon.rssmanager.core.internal.dao.RSSDAO;
 import org.wso2.carbon.rssmanager.core.internal.dao.RSSDAOFactory;
-import org.wso2.carbon.rssmanager.core.internal.dao.entity.Database;
-import org.wso2.carbon.rssmanager.core.internal.dao.entity.DatabasePrivilegeTemplate;
-import org.wso2.carbon.rssmanager.core.internal.dao.entity.DatabaseUser;
-import org.wso2.carbon.rssmanager.core.internal.dao.entity.RSSInstance;
+import org.wso2.carbon.rssmanager.core.entity.Database;
+import org.wso2.carbon.rssmanager.core.entity.DatabasePrivilegeTemplate;
+import org.wso2.carbon.rssmanager.core.entity.DatabaseUser;
+import org.wso2.carbon.rssmanager.core.entity.RSSInstance;
 
 import java.util.HashMap;
 import java.util.Map;

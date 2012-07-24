@@ -16,7 +16,7 @@
  *  under the License.
  *
  */
-package org.wso2.carbon.rssmanager.core.internal.dao.entity;
+package org.wso2.carbon.rssmanager.core.entity;
 
 /**
  * Class to represent the information required to create a data source.

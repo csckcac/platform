@@ -24,7 +24,7 @@ import org.apache.commons.logging.Log;
 import org.apache.commons.logging.LogFactory;
 import org.wso2.carbon.rssmanager.common.RSSManagerConstants;
 import org.wso2.carbon.rssmanager.core.RSSManagerException;
-import org.wso2.carbon.rssmanager.core.internal.dao.entity.RSSInstance;
+import org.wso2.carbon.rssmanager.core.entity.RSSInstance;
 import org.wso2.carbon.rssmanager.core.internal.manager.RSSManager;
 import org.wso2.carbon.rssmanager.core.internal.manager.RSSManagerFactory;
 import org.wso2.carbon.utils.CarbonUtils;

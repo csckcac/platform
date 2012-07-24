@@ -16,44 +16,67 @@
  *  under the License.
  *
  */
-package org.wso2.carbon.rssmanager.core.internal.dao.entity;
+package org.wso2.carbon.rssmanager.core.entity;
+
+import java.util.HashMap;
+import java.util.Map;
 
 /**
- * Class to represent a database user.
+ * Class to represent a Database Instance created by an RSS Server.
  */
-public class DatabaseUser {
+public class Database {
 
-	private String username;
+	private String name;
 
-	private String password;
+    private String url;
 	
 	private String rssInstanceName;
 
-    private int tenantId;
+    private int tenantId = -1;
+	
+	private Map<String, String> properties;
 
-	public DatabaseUser(String username, String password, String rssInstanceName, int tenantId) {
-		this.username = username;
-		this.password = password;
+	public Database(String name, String rssInstanceName) {
+		this.name = name;
 		this.rssInstanceName = rssInstanceName;
+		this.properties = new HashMap<String, String>();
         this.tenantId = tenantId;
 	}
 
-    public DatabaseUser() {}
+    public Database(String name, String rssInstanceName, String url, int tenantId) {
+		this.name = name;
+		this.rssInstanceName = rssInstanceName;
+        this.url = url;
+        this.tenantId = tenantId;
+		this.properties = new HashMap<String, String>();
+	}
 
-    public String getUsername() {
-        return username;
+    public Database() {
+
+    }
+	
+	public Map<String, String> getProperties() {
+		return properties;
+	}
+
+	public void setProperties(Map<String, String> properties) {
+		this.properties = properties;
+	}
+
+    public String getName() {
+        return name;
     }
 
-    public void setUsername(String username) {
-        this.username = username;
+    public void setName(String name) {
+        this.name = name;
     }
 
-    public String getPassword() {
-        return password;
+    public String getUrl() {
+        return url;
     }
 
-    public void setPassword(String password) {
-        this.password = password;
+    public void setUrl(String url) {
+        this.url = url;
     }
 
     public String getRssInstanceName() {
@@ -71,4 +94,5 @@ public class DatabaseUser {
     public void setTenantId(int tenantId) {
         this.tenantId = tenantId;
     }
+
 }

@@ -52,7 +52,6 @@
         ConfigurationContext configContext = (ConfigurationContext) config.getServletContext().
                 getAttribute(CarbonConstants.CONFIGURATION_CONTEXT);
         String cookie = (String) session.getAttribute(ServerConstants.ADMIN_SERVICE_COOKIE);
-        String tenantDomain = (String) session.getAttribute(MultitenantConstants.TENANT_DOMAIN);
         try {
             client = new RSSManagerClient(cookie, backendServerURL, configContext,
                     request.getLocale());

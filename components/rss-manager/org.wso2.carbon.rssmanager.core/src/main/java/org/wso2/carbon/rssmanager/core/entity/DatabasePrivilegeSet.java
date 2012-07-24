@@ -17,7 +17,7 @@
  *
  */
 
-package org.wso2.carbon.rssmanager.core.internal.dao.entity;
+package org.wso2.carbon.rssmanager.core.entity;
 
 public class DatabasePrivilegeSet {
 

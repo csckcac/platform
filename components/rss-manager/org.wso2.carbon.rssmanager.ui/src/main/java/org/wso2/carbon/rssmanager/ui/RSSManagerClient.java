@@ -18,8 +18,6 @@
  */
 package org.wso2.carbon.rssmanager.ui;
 
-import org.apache.axiom.om.OMAbstractFactory;
-import org.apache.axiom.om.OMNamespace;
 import org.apache.axis2.AxisFault;
 import org.apache.axis2.client.Options;
 import org.apache.axis2.client.ServiceClient;

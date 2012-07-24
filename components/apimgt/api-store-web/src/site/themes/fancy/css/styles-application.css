@@ -6,12 +6,12 @@ div.star-ratings img{
 }
 .average-rating {
     background: url("../images/bigstar.png") no-repeat scroll 0 0 transparent;
-    font-size: 20px;
+    font-size: 18px;
     font-weight: bold;
     height: 64px;
     width:48px;
     line-height: 70px;
-    padding-left: 28px;''
+    padding-left: 20px;''
 }
 
 .star-0 {

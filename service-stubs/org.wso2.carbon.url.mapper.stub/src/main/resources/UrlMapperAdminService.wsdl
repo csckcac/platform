@@ -1,7 +1,13 @@
-<wsdl:definitions xmlns:wsdl="http://schemas.xmlsoap.org/wsdl/" xmlns:ax2461="http://data.mapper.url.carbon.wso2.org/xsd" xmlns:ns1="http://org.apache.axis2/xsd" xmlns:ns="http://mapper.url.carbon.wso2.org" xmlns:wsaw="http://www.w3.org/2006/05/addressing/wsdl" xmlns:http="http://schemas.xmlsoap.org/wsdl/http/" xmlns:xs="http://www.w3.org/2001/XMLSchema" xmlns:ax2459="http://exception.internal.mapper.url.carbon.wso2.org/xsd" xmlns:soap="http://schemas.xmlsoap.org/wsdl/soap/" xmlns:mime="http://schemas.xmlsoap.org/wsdl/mime/" xmlns:soap12="http://schemas.xmlsoap.org/wsdl/soap12/" targetNamespace="http://mapper.url.carbon.wso2.org">
+<wsdl:definitions xmlns:wsdl="http://schemas.xmlsoap.org/wsdl/" xmlns:ax2471="http://data.mapper.url.carbon.wso2.org/xsd" xmlns:ns1="http://org.apache.axis2/xsd" xmlns:ns="http://mapper.url.carbon.wso2.org" xmlns:wsaw="http://www.w3.org/2006/05/addressing/wsdl" xmlns:http="http://schemas.xmlsoap.org/wsdl/http/" xmlns:xs="http://www.w3.org/2001/XMLSchema" xmlns:ax2469="http://exception.internal.mapper.url.carbon.wso2.org/xsd" xmlns:soap="http://schemas.xmlsoap.org/wsdl/soap/" xmlns:mime="http://schemas.xmlsoap.org/wsdl/mime/" xmlns:soap12="http://schemas.xmlsoap.org/wsdl/soap12/" targetNamespace="http://mapper.url.carbon.wso2.org">
     <wsdl:documentation>UrlMapperAdminService</wsdl:documentation>
     <wsdl:types>
         <xs:schema attributeFormDefault="qualified" elementFormDefault="qualified" targetNamespace="http://data.mapper.url.carbon.wso2.org/xsd">
+            <xs:complexType name="PaginatedMappingData">
+                <xs:sequence>
+                    <xs:element maxOccurs="unbounded" minOccurs="0" name="mappingData" nillable="true" type="ax2471:MappingData" />
+                    <xs:element minOccurs="0" name="numberOfPages" type="xs:int" />
+                </xs:sequence>
+            </xs:complexType>
             <xs:complexType name="MappingData">
                 <xs:sequence>
                     <xs:element minOccurs="0" name="mappingName" nillable="true" type="xs:string" />
@@ -16,13 +22,27 @@
                 <xs:sequence />
             </xs:complexType>
         </xs:schema>
-        <xs:schema xmlns:ax2462="http://data.mapper.url.carbon.wso2.org/xsd" xmlns:ax2460="http://exception.internal.mapper.url.carbon.wso2.org/xsd" attributeFormDefault="qualified" elementFormDefault="qualified" targetNamespace="http://mapper.url.carbon.wso2.org">
+        <xs:schema xmlns:ax2470="http://exception.internal.mapper.url.carbon.wso2.org/xsd" xmlns:ax2472="http://data.mapper.url.carbon.wso2.org/xsd" attributeFormDefault="qualified" elementFormDefault="qualified" targetNamespace="http://mapper.url.carbon.wso2.org">
             <xs:import namespace="http://exception.internal.mapper.url.carbon.wso2.org/xsd" />
             <xs:import namespace="http://data.mapper.url.carbon.wso2.org/xsd" />
             <xs:element name="UrlMapperAdminServiceUrlMapperException">
                 <xs:complexType>
                     <xs:sequence>
-                        <xs:element minOccurs="0" name="UrlMapperException" nillable="true" type="ax2460:UrlMapperException" />
+                        <xs:element minOccurs="0" name="UrlMapperException" nillable="true" type="ax2470:UrlMapperException" />
+                    </xs:sequence>
+                </xs:complexType>
+            </xs:element>
+            <xs:element name="isMappingLimitExceeded">
+                <xs:complexType>
+                    <xs:sequence>
+                        <xs:element minOccurs="0" name="webAppName" nillable="true" type="xs:string" />
+                    </xs:sequence>
+                </xs:complexType>
+            </xs:element>
+            <xs:element name="isMappingLimitExceededResponse">
+                <xs:complexType>
+                    <xs:sequence>
+                        <xs:element minOccurs="0" name="return" type="xs:boolean" />
                     </xs:sequence>
                 </xs:complexType>
             </xs:element>
@@ -37,6 +57,21 @@
                 <xs:complexType>
                     <xs:sequence>
                         <xs:element minOccurs="0" name="return" type="xs:boolean" />
+                    </xs:sequence>
+                </xs:complexType>
+            </xs:element>
+            <xs:element name="getPaginatedMappings">
+                <xs:complexType>
+                    <xs:sequence>
+                        <xs:element minOccurs="0" name="pageNumber" type="xs:int" />
+                        <xs:element minOccurs="0" name="tenantDomain" nillable="true" type="xs:string" />
+                    </xs:sequence>
+                </xs:complexType>
+            </xs:element>
+            <xs:element name="getPaginatedMappingsResponse">
+                <xs:complexType>
+                    <xs:sequence>
+                        <xs:element minOccurs="0" name="return" nillable="true" type="ax2471:PaginatedMappingData" />
                     </xs:sequence>
                 </xs:complexType>
             </xs:element>
@@ -76,7 +111,7 @@
             <xs:element name="getAllMappingsResponse">
                 <xs:complexType>
                     <xs:sequence>
-                        <xs:element maxOccurs="unbounded" minOccurs="0" name="return" nillable="true" type="ax2462:MappingData" />
+                        <xs:element maxOccurs="unbounded" minOccurs="0" name="return" nillable="true" type="ax2471:MappingData" />
                     </xs:sequence>
                 </xs:complexType>
             </xs:element>
@@ -145,6 +180,12 @@
     <wsdl:message name="addServiceDomainRequest">
         <wsdl:part name="parameters" element="ns:addServiceDomain" />
     </wsdl:message>
+    <wsdl:message name="getPaginatedMappingsRequest">
+        <wsdl:part name="parameters" element="ns:getPaginatedMappings" />
+    </wsdl:message>
+    <wsdl:message name="getPaginatedMappingsResponse">
+        <wsdl:part name="parameters" element="ns:getPaginatedMappingsResponse" />
+    </wsdl:message>
     <wsdl:message name="addWebAppToHostRequest">
         <wsdl:part name="parameters" element="ns:addWebAppToHost" />
     </wsdl:message>
@@ -184,6 +225,12 @@
     <wsdl:message name="editHostResponse">
         <wsdl:part name="parameters" element="ns:editHostResponse" />
     </wsdl:message>
+    <wsdl:message name="isMappingLimitExceededRequest">
+        <wsdl:part name="parameters" element="ns:isMappingLimitExceeded" />
+    </wsdl:message>
+    <wsdl:message name="isMappingLimitExceededResponse">
+        <wsdl:part name="parameters" element="ns:isMappingLimitExceededResponse" />
+    </wsdl:message>
     <wsdl:portType name="UrlMapperAdminServicePortType">
         <wsdl:operation name="deleteServiceDomain">
             <wsdl:input message="ns:deleteServiceDomainRequest" wsaw:Action="urn:deleteServiceDomain" />
@@ -192,6 +239,11 @@
         <wsdl:operation name="addServiceDomain">
             <wsdl:input message="ns:addServiceDomainRequest" wsaw:Action="urn:addServiceDomain" />
             <wsdl:fault message="ns:UrlMapperAdminServiceUrlMapperException" name="UrlMapperAdminServiceUrlMapperException" wsaw:Action="urn:addServiceDomainUrlMapperAdminServiceUrlMapperException" />
+        </wsdl:operation>
+        <wsdl:operation name="getPaginatedMappings">
+            <wsdl:input message="ns:getPaginatedMappingsRequest" wsaw:Action="urn:getPaginatedMappings" />
+            <wsdl:output message="ns:getPaginatedMappingsResponse" wsaw:Action="urn:getPaginatedMappingsResponse" />
+            <wsdl:fault message="ns:UrlMapperAdminServiceUrlMapperException" name="UrlMapperAdminServiceUrlMapperException" wsaw:Action="urn:getPaginatedMappingsUrlMapperAdminServiceUrlMapperException" />
         </wsdl:operation>
         <wsdl:operation name="addWebAppToHost">
             <wsdl:input message="ns:addWebAppToHostRequest" wsaw:Action="urn:addWebAppToHost" />
@@ -230,6 +282,11 @@
             <wsdl:output message="ns:editHostResponse" wsaw:Action="urn:editHostResponse" />
             <wsdl:fault message="ns:UrlMapperAdminServiceUrlMapperException" name="UrlMapperAdminServiceUrlMapperException" wsaw:Action="urn:editHostUrlMapperAdminServiceUrlMapperException" />
         </wsdl:operation>
+        <wsdl:operation name="isMappingLimitExceeded">
+            <wsdl:input message="ns:isMappingLimitExceededRequest" wsaw:Action="urn:isMappingLimitExceeded" />
+            <wsdl:output message="ns:isMappingLimitExceededResponse" wsaw:Action="urn:isMappingLimitExceededResponse" />
+            <wsdl:fault message="ns:UrlMapperAdminServiceUrlMapperException" name="UrlMapperAdminServiceUrlMapperException" wsaw:Action="urn:isMappingLimitExceededUrlMapperAdminServiceUrlMapperException" />
+        </wsdl:operation>
     </wsdl:portType>
     <wsdl:binding name="UrlMapperAdminServiceSoap11Binding" type="ns:UrlMapperAdminServicePortType">
         <soap:binding transport="http://schemas.xmlsoap.org/soap/http" style="document" />
@@ -247,6 +304,18 @@
             <wsdl:input>
                 <soap:body use="literal" />
             </wsdl:input>
+            <wsdl:fault name="UrlMapperAdminServiceUrlMapperException">
+                <soap:fault use="literal" name="UrlMapperAdminServiceUrlMapperException" />
+            </wsdl:fault>
+        </wsdl:operation>
+        <wsdl:operation name="getPaginatedMappings">
+            <soap:operation soapAction="urn:getPaginatedMappings" style="document" />
+            <wsdl:input>
+                <soap:body use="literal" />
+            </wsdl:input>
+            <wsdl:output>
+                <soap:body use="literal" />
+            </wsdl:output>
             <wsdl:fault name="UrlMapperAdminServiceUrlMapperException">
                 <soap:fault use="literal" name="UrlMapperAdminServiceUrlMapperException" />
             </wsdl:fault>
@@ -338,6 +407,18 @@
                 <soap:fault use="literal" name="UrlMapperAdminServiceUrlMapperException" />
             </wsdl:fault>
         </wsdl:operation>
+        <wsdl:operation name="isMappingLimitExceeded">
+            <soap:operation soapAction="urn:isMappingLimitExceeded" style="document" />
+            <wsdl:input>
+                <soap:body use="literal" />
+            </wsdl:input>
+            <wsdl:output>
+                <soap:body use="literal" />
+            </wsdl:output>
+            <wsdl:fault name="UrlMapperAdminServiceUrlMapperException">
+                <soap:fault use="literal" name="UrlMapperAdminServiceUrlMapperException" />
+            </wsdl:fault>
+        </wsdl:operation>
     </wsdl:binding>
     <wsdl:binding name="UrlMapperAdminServiceSoap12Binding" type="ns:UrlMapperAdminServicePortType">
         <soap12:binding transport="http://schemas.xmlsoap.org/soap/http" style="document" />
@@ -355,6 +436,18 @@
             <wsdl:input>
                 <soap12:body use="literal" />
             </wsdl:input>
+            <wsdl:fault name="UrlMapperAdminServiceUrlMapperException">
+                <soap12:fault use="literal" name="UrlMapperAdminServiceUrlMapperException" />
+            </wsdl:fault>
+        </wsdl:operation>
+        <wsdl:operation name="getPaginatedMappings">
+            <soap12:operation soapAction="urn:getPaginatedMappings" style="document" />
+            <wsdl:input>
+                <soap12:body use="literal" />
+            </wsdl:input>
+            <wsdl:output>
+                <soap12:body use="literal" />
+            </wsdl:output>
             <wsdl:fault name="UrlMapperAdminServiceUrlMapperException">
                 <soap12:fault use="literal" name="UrlMapperAdminServiceUrlMapperException" />
             </wsdl:fault>
@@ -446,6 +539,18 @@
                 <soap12:fault use="literal" name="UrlMapperAdminServiceUrlMapperException" />
             </wsdl:fault>
         </wsdl:operation>
+        <wsdl:operation name="isMappingLimitExceeded">
+            <soap12:operation soapAction="urn:isMappingLimitExceeded" style="document" />
+            <wsdl:input>
+                <soap12:body use="literal" />
+            </wsdl:input>
+            <wsdl:output>
+                <soap12:body use="literal" />
+            </wsdl:output>
+            <wsdl:fault name="UrlMapperAdminServiceUrlMapperException">
+                <soap12:fault use="literal" name="UrlMapperAdminServiceUrlMapperException" />
+            </wsdl:fault>
+        </wsdl:operation>
     </wsdl:binding>
     <wsdl:binding name="UrlMapperAdminServiceHttpBinding" type="ns:UrlMapperAdminServicePortType">
         <http:binding verb="POST" />
@@ -460,6 +565,15 @@
             <wsdl:input>
                 <mime:content type="text/xml" part="parameters" />
             </wsdl:input>
+        </wsdl:operation>
+        <wsdl:operation name="getPaginatedMappings">
+            <http:operation location="getPaginatedMappings" />
+            <wsdl:input>
+                <mime:content type="text/xml" part="parameters" />
+            </wsdl:input>
+            <wsdl:output>
+                <mime:content type="text/xml" part="parameters" />
+            </wsdl:output>
         </wsdl:operation>
         <wsdl:operation name="isMappingExist">
             <http:operation location="isMappingExist" />
@@ -524,25 +638,25 @@
                 <mime:content type="text/xml" part="parameters" />
             </wsdl:output>
         </wsdl:operation>
+        <wsdl:operation name="isMappingLimitExceeded">
+            <http:operation location="isMappingLimitExceeded" />
+            <wsdl:input>
+                <mime:content type="text/xml" part="parameters" />
+            </wsdl:input>
+            <wsdl:output>
+                <mime:content type="text/xml" part="parameters" />
+            </wsdl:output>
+        </wsdl:operation>
     </wsdl:binding>
     <wsdl:service name="UrlMapperAdminService">
         <wsdl:port name="UrlMapperAdminServiceHttpsSoap11Endpoint" binding="ns:UrlMapperAdminServiceSoap11Binding">
-            <soap:address location="https://appserver.cloud-test.wso2.com:9446/services/UrlMapperAdminService.UrlMapperAdminServiceHttpsSoap11Endpoint/" />
-        </wsdl:port>
-        <wsdl:port name="UrlMapperAdminServiceHttpSoap11Endpoint" binding="ns:UrlMapperAdminServiceSoap11Binding">
-            <soap:address location="http://appserver.cloud-test.wso2.com:9766/services/UrlMapperAdminService.UrlMapperAdminServiceHttpSoap11Endpoint/" />
-        </wsdl:port>
-        <wsdl:port name="UrlMapperAdminServiceHttpSoap12Endpoint" binding="ns:UrlMapperAdminServiceSoap12Binding">
-            <soap12:address location="http://appserver.cloud-test.wso2.com:9766/services/UrlMapperAdminService.UrlMapperAdminServiceHttpSoap12Endpoint/" />
+            <soap:address location="https://10.100.3.114:9443/services/UrlMapperAdminService.UrlMapperAdminServiceHttpsSoap11Endpoint/" />
         </wsdl:port>
         <wsdl:port name="UrlMapperAdminServiceHttpsSoap12Endpoint" binding="ns:UrlMapperAdminServiceSoap12Binding">
-            <soap12:address location="https://appserver.cloud-test.wso2.com:9446/services/UrlMapperAdminService.UrlMapperAdminServiceHttpsSoap12Endpoint/" />
-        </wsdl:port>
-        <wsdl:port name="UrlMapperAdminServiceHttpEndpoint" binding="ns:UrlMapperAdminServiceHttpBinding">
-            <http:address location="http://appserver.cloud-test.wso2.com:9766/services/UrlMapperAdminService.UrlMapperAdminServiceHttpEndpoint/" />
+            <soap12:address location="https://10.100.3.114:9443/services/UrlMapperAdminService.UrlMapperAdminServiceHttpsSoap12Endpoint/" />
         </wsdl:port>
         <wsdl:port name="UrlMapperAdminServiceHttpsEndpoint" binding="ns:UrlMapperAdminServiceHttpBinding">
-            <http:address location="https://appserver.cloud-test.wso2.com:9446/services/UrlMapperAdminService.UrlMapperAdminServiceHttpsEndpoint/" />
+            <http:address location="https://10.100.3.114:9443/services/UrlMapperAdminService.UrlMapperAdminServiceHttpsEndpoint/" />
         </wsdl:port>
     </wsdl:service>
 </wsdl:definitions>

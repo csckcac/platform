@@ -16,13 +16,11 @@
 
 package org.wso2.carbon.appfactory.core.deploy;
 
-import java.io.File;
-import java.net.MalformedURLException;
-import java.net.URL;
-
-import javax.activation.DataHandler;
-import javax.activation.FileDataSource;
-
+import org.apache.axiom.om.OMElement;
+import org.apache.axiom.om.impl.builder.StAXOMBuilder;
+import org.apache.axis2.AxisFault;
+import org.apache.axis2.addressing.EndpointReference;
+import org.apache.axis2.client.ServiceClient;
 import org.apache.commons.logging.Log;
 import org.apache.commons.logging.LogFactory;
 import org.wso2.carbon.appfactory.common.AppFactoryConstants;
@@ -30,6 +28,15 @@ import org.wso2.carbon.appfactory.common.AppFactoryException;
 import org.wso2.carbon.appfactory.core.ArtifactStorage;
 import org.wso2.carbon.appfactory.core.internal.ServiceHolder;
 import org.wso2.carbon.application.mgt.stub.upload.types.carbon.UploadedFileItem;
+import org.wso2.carbon.utils.CarbonUtils;
+
+import javax.activation.DataHandler;
+import javax.activation.FileDataSource;
+import javax.xml.stream.XMLStreamException;
+import java.io.ByteArrayInputStream;
+import java.io.File;
+import java.net.MalformedURLException;
+import java.net.URL;
 
 /**
  * This service will deploy an artifact (specified as a combination of
@@ -40,6 +47,8 @@ import org.wso2.carbon.application.mgt.stub.upload.types.carbon.UploadedFileItem
 public class ApplicationDeployer {
 
     private static final Log log = LogFactory.getLog(ApplicationDeployer.class);
+    private static final String NOTIFICATION_EPR = "https://localhost:9443/services/EventNotificationService";
+    private static final String EVENT = "deployment";
 
     /**
      * Deploys the Artifact to specified stage.
@@ -136,8 +145,23 @@ public class ApplicationDeployer {
             }
 
         }
+        sendDeploymentNotification(applicationId,String.valueOf(isDeploymentSuccessful(artifactDeploymentStatuses)));
 
         return artifactDeploymentStatuses;
+    }
+    
+    private Boolean isDeploymentSuccessful(ArtifactDeploymentStatusBean[] deploymentStatusBeans) {
+        for(ArtifactDeploymentStatusBean deploymentStatus : deploymentStatusBeans) {
+            if(false == Boolean.valueOf(deploymentStatus.getStatus())) {
+                return false;
+            }
+        }
+        return true;
+    }
+
+    private String getAdminUsername() {
+        return ServiceHolder.getAppFactoryConfiguration()
+                       .getFirstProperty(AppFactoryConstants.SERVER_ADMIN_NAME);
     }
 
     private String getAdminUsername(String applicationId) {
@@ -172,6 +196,46 @@ public class ApplicationDeployer {
         }
 
         return hostName;
+    }
+
+    private void sendDeploymentNotification(final String applicationId, final String result) {
+        new Thread(new Runnable() {
+            public void run() {
+                try {
+                    Thread.sleep(5000);
+                } catch (InterruptedException ignored) {
+                }
+                try {
+                    //Create a service client
+                    ServiceClient client = new ServiceClient();
+
+                    //Set the endpoint address
+                    client.getOptions().setTo(new EndpointReference(NOTIFICATION_EPR));
+                    CarbonUtils.setBasicAccessSecurityHeaders(getAdminUsername(), getServerAdminPassword(), false, client);
+
+                    //Make the request and get the response
+                    client.sendRobust(getNotificationPayload(applicationId, EVENT, result));
+                } catch (AxisFault e) {
+                    log.error(e);
+                    e.printStackTrace();
+                } catch (XMLStreamException e) {
+                    log.error(e);
+                }
+            }
+        }).start();
+    }
+
+    private static OMElement getNotificationPayload(String applicationId, String event,
+                                                    String result)
+            throws XMLStreamException, javax.xml.stream.XMLStreamException {
+
+        String payload = "<ser:publishEvent xmlns:ser=\"http://service.notification.events.appfactory.carbon.wso2.org\">" +
+                         "<ser:event xmlns:ser=\"http://service.notification.events.appfactory.carbon.wso2.org\">" +
+                         "<xsd:applicationId xmlns:xsd=\"http://service.notification.events.appfactory.carbon.wso2.org/xsd\">" + applicationId + "</xsd:applicationId>" +
+                         "<xsd:event xmlns:xsd=\"http://service.notification.events.appfactory.carbon.wso2.org/xsd\">" + event + "</xsd:event>" +
+                         "<xsd:result xmlns:xsd=\"http://service.notification.events.appfactory.carbon.wso2.org/xsd\">" + result + "</xsd:result>" +
+                         "</ser:event></ser:publishEvent>";
+        return new StAXOMBuilder(new ByteArrayInputStream(payload.getBytes())).getDocumentElement();
     }
 
 }

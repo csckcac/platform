@@ -7,10 +7,12 @@ import org.apache.axis2.addressing.EndpointReference;
 import org.apache.axis2.client.ServiceClient;
 import org.apache.commons.logging.Log;
 import org.apache.commons.logging.LogFactory;
+import org.wso2.carbon.appfactory.common.AppFactoryConstants;
 import org.wso2.carbon.appfactory.common.AppFactoryException;
 import org.wso2.carbon.appfactory.core.ArtifactStorage;
 import org.wso2.carbon.appfactory.core.BuildDriverListener;
 import org.wso2.carbon.appfactory.core.internal.ServiceHolder;
+import org.wso2.carbon.utils.CarbonUtils;
 
 import javax.xml.stream.XMLStreamException;
 import java.io.ByteArrayInputStream;
@@ -39,7 +41,7 @@ public class DefaultBuildDriverListener implements BuildDriverListener {
     @Override
     public void onBuildFailure(String applicationId, String version, String revision, File file)
             throws AppFactoryException {
-
+        sendEventNotification(applicationId,EVENT,FAILED);
     }
 
     public void sendMessageToCreateArtifactCallback(final String applicationId, final String version, final String revision) {
@@ -88,6 +90,7 @@ public class DefaultBuildDriverListener implements BuildDriverListener {
 
                     //Set the endpoint address
                     client.getOptions().setTo(new EndpointReference(NOTIFICATION_EPR));
+                    CarbonUtils.setBasicAccessSecurityHeaders(getAdminUsername(), getServerAdminPassword(), false, client);
 
                     //Make the request and get the response
                     client.sendRobust(getNotificationPayload(applicationId, event, result));
@@ -112,5 +115,15 @@ public class DefaultBuildDriverListener implements BuildDriverListener {
                           "<xsd:result xmlns:xsd=\"http://service.notification.events.appfactory.carbon.wso2.org/xsd\">" + result + "</xsd:result>" +
                           "</ser:event></ser:publishEvent>";
         return new StAXOMBuilder(new ByteArrayInputStream(payload.getBytes())).getDocumentElement();
+    }
+
+    private String getAdminUsername() {
+        return ServiceHolder.getAppFactoryConfiguration()
+                       .getFirstProperty(AppFactoryConstants.SERVER_ADMIN_NAME);
+    }
+
+    private String getServerAdminPassword() {
+        return ServiceHolder.getAppFactoryConfiguration()
+                .getFirstProperty(AppFactoryConstants.SERVER_ADMIN_PASSWORD);
     }
 }

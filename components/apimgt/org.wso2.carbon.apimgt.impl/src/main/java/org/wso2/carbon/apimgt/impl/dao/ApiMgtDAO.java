@@ -141,18 +141,22 @@ public class ApiMgtDAO {
         ResultSet rs = null;
         String sqlQuery =
                 "SELECT " +
-                        "   AKM.ACCESS_TOKEN AS ACCESS_TOKEN " +
+                        "   IAT.ACCESS_TOKEN AS ACCESS_TOKEN " +
                         "FROM " +
                         "   AM_SUBSCRIBER SB," +
                         "   AM_APPLICATION APP, " +
-                        "   AM_APPLICATION_KEY_MAPPING AKM " +
+                        "   AM_APPLICATION_KEY_MAPPING AKM," +
+                        "   IDN_OAUTH2_ACCESS_TOKEN IAT," +
+                        "   IDN_OAUTH_CONSUMER_APPS ICA " +
                         "WHERE " +
                         "   SB.USER_ID=? " +
                         "   AND SB.TENANT_ID=? " +
                         "   AND APP.NAME=? " +
                         "   AND AKM.KEY_TYPE=? " +
                         "   AND SB.SUBSCRIBER_ID = APP.SUBSCRIBER_ID " +
-                        "   AND APP.APPLICATION_ID = AKM.APPLICATION_ID";
+                        "   AND APP.APPLICATION_ID = AKM.APPLICATION_ID" +
+                        "   AND ICA.CONSUMER_KEY = AKM.CONSUMER_KEY" +
+                        "   AND ICA.USERNAME = IAT.AUTHZ_USER";
 
         try {
             conn = APIMgtDBUtil.getConnection();
@@ -399,10 +403,10 @@ public class ApiMgtDAO {
                 "   AM_APPLICATION_KEY_MAPPING AKM," +
                 "   AM_API API" +
                 " WHERE " +
-                "   AKM.ACCESS_TOKEN = ? " +
+                "   IAT.ACCESS_TOKEN = ? " +
                 "   AND API.CONTEXT = ? " +
                 "   AND API.API_VERSION = ? " +
-                "   AND IAT.ACCESS_TOKEN=AKM.ACCESS_TOKEN " +
+                "   AND IAT.CONSUMER_KEY=AKM.CONSUMER_KEY " +
                 "   AND APP.APPLICATION_ID = APP.APPLICATION_ID" +
                 "   AND SUB.APPLICATION_ID = APP.APPLICATION_ID" +
                 "   AND APP.SUBSCRIBER_ID = SUBS.SUBSCRIBER_ID" +
@@ -894,7 +898,8 @@ public class ApiMgtDAO {
                 if (application == null) {
                     application = new Application(result.getString("APP_NAME"), subscriber);
                     application.setId(result.getInt("APP_ID"));
-                    Set<APIKey> keys = getApplicationKeys(applicationId);
+                    String tenantAwareUserId = MultitenantUtils.getTenantAwareUsername(subscriber.getName());
+                    Set<APIKey> keys = getApplicationKeys(tenantAwareUserId, applicationId);
                     for (APIKey key : keys) {
                         application.addKey(key);
                     }
@@ -963,7 +968,7 @@ public class ApiMgtDAO {
             ResultSet nestedRS = nestedPS.executeQuery();
             while (nestedRS.next()) {
                 APIKey apiKey = new APIKey();
-                apiKey.setKey(nestedRS.getString("ACCESS_TOKEN"));
+                apiKey.setAccessToken(nestedRS.getString("ACCESS_TOKEN"));
                 apiKey.setType(nestedRS.getString("TOKEN_TYPE"));
                 apiKeys.add(apiKey);
             }
@@ -975,29 +980,74 @@ public class ApiMgtDAO {
         }
         return apiKeys;
     }
+    
+    public String getTokenScope(String consumerKey) throws APIManagementException {
+        Connection connection = null;
+        PreparedStatement ps = null;
+        ResultSet result = null;
 
-    private Set<APIKey> getApplicationKeys(int applicationId) throws APIManagementException {
+        String getScopeSql = "SELECT" +
+                " IAT.TOKEN_SCOPE AS TOKEN_SCOPE " +
+                "FROM" +
+                " IDN_OAUTH2_ACCESS_TOKEN IAT," +
+                " IDN_OAUTH_CONSUMER_APPS ICA " +
+                "WHERE" +
+                " IAT.CONSUMER_KEY = ?" +
+                " AND IAT.CONSUMER_KEY = ICA.CONSUMER_KEY" +
+                " AND IAT.AUTHZ_USER = ICA.USERNAME";
+
+        String tokenScope = null;
+        try {
+            connection = APIMgtDBUtil.getConnection();
+            PreparedStatement nestedPS = connection.prepareStatement(getScopeSql);
+            nestedPS.setString(1, consumerKey);
+            ResultSet nestedRS = nestedPS.executeQuery();
+            if (nestedRS.next()) {
+                tokenScope = nestedRS.getString("TOKEN_SCOPE");
+            }
+        } catch (SQLException e) {
+            String msg = "Failed to get token scope from consumer key: " + consumerKey;
+            log.error(msg, e);
+            throw new APIManagementException(msg, e);
+        } finally {
+            APIMgtDBUtil.closeAllConnections(ps, connection, result);
+        }
+        return tokenScope;
+    }
+
+    private Set<APIKey> getApplicationKeys(String username, int applicationId) throws APIManagementException {
         Connection connection = null;
         PreparedStatement ps = null;
         ResultSet result = null;
 
         String getKeysSql = "SELECT " +
-                " AKM.ACCESS_TOKEN AS ACCESS_TOKEN," +
+                " ICA.CONSUMER_KEY AS CONSUMER_KEY," +
+                " ICA.CONSUMER_SECRET AS CONSUMER_SECRET," +
+                " IAT.ACCESS_TOKEN AS ACCESS_TOKEN," +
                 " AKM.KEY_TYPE AS TOKEN_TYPE " +
                 "FROM" +
-                " AM_APPLICATION_KEY_MAPPING AKM " +
+                " AM_APPLICATION_KEY_MAPPING AKM," +
+                " IDN_OAUTH2_ACCESS_TOKEN IAT," +
+                " IDN_OAUTH_CONSUMER_APPS ICA " +
                 "WHERE" +
-                " AKM.APPLICATION_ID = ?";
+                " AKM.APPLICATION_ID = ? AND" +
+                " ICA.USERNAME = ? AND" +
+                " ICA.CONSUMER_KEY = AKM.CONSUMER_KEY AND" +
+                " ICA.CONSUMER_KEY = IAT.CONSUMER_KEY AND" +
+                " ICA.USERNAME = IAT.AUTHZ_USER";
 
         Set<APIKey> apiKeys = new HashSet<APIKey>();
         try {
             connection = APIMgtDBUtil.getConnection();
             PreparedStatement nestedPS = connection.prepareStatement(getKeysSql);
             nestedPS.setInt(1, applicationId);
+            nestedPS.setString(2, username);
             ResultSet nestedRS = nestedPS.executeQuery();
             while (nestedRS.next()) {
                 APIKey apiKey = new APIKey();
-                apiKey.setKey(nestedRS.getString("ACCESS_TOKEN"));
+                apiKey.setConsumerKey(nestedRS.getString("CONSUMER_KEY"));
+                apiKey.setConsumerSecret(nestedRS.getString("CONSUMER_SECRET"));
+                apiKey.setAccessToken(nestedRS.getString("ACCESS_TOKEN"));
                 apiKey.setType(nestedRS.getString("TOKEN_TYPE"));
                 apiKeys.add(apiKey);
             }
@@ -1267,8 +1317,8 @@ public class ApiMgtDAO {
                                       int tenantId, String keyType) throws IdentityException {
         // Add Access Token
         String sqlAddAccessToken = "INSERT" +
-                " INTO IDN_OAUTH2_ACCESS_TOKEN (ACCESS_TOKEN, CONSUMER_KEY, TOKEN_STATE, TOKEN_SCOPE) " +
-                " VALUES (?,?,?,?)";
+                " INTO IDN_OAUTH2_ACCESS_TOKEN (ACCESS_TOKEN, CONSUMER_KEY, TOKEN_STATE, TOKEN_SCOPE, AUTHZ_USER) " +
+                " VALUES (?,?,?,?,?)";
 
         String getApplicationId = "SELECT APP.APPLICATION_ID " +
                 "FROM " +
@@ -1281,7 +1331,7 @@ public class ApiMgtDAO {
                 "  AND APP.SUBSCRIBER_ID = SUB.SUBSCRIBER_ID";
 
         String addApplicationKeyMapping = "INSERT " +
-                "INTO AM_APPLICATION_KEY_MAPPING (APPLICATION_ID, ACCESS_TOKEN, KEY_TYPE) " +
+                "INTO AM_APPLICATION_KEY_MAPPING (APPLICATION_ID, CONSUMER_KEY, KEY_TYPE) " +
                 "VALUES (?,?,?)";
 
         String accessToken = OAuthUtil.getRandomNumber();
@@ -1296,6 +1346,7 @@ public class ApiMgtDAO {
             prepStmt.setString(2, consumerKey);
             prepStmt.setString(3, APIConstants.TokenStatus.ACTIVE);
             prepStmt.setString(4, keyType);
+            prepStmt.setString(5, userId);
             prepStmt.execute();
             prepStmt.close();
 
@@ -1312,7 +1363,7 @@ public class ApiMgtDAO {
 
             prepStmt = connection.prepareStatement(addApplicationKeyMapping);
             prepStmt.setInt(1, applicationId);
-            prepStmt.setString(2, accessToken);
+            prepStmt.setString(2, consumerKey);
             prepStmt.setString(3, keyType);
             prepStmt.execute();
             prepStmt.close();
@@ -1508,6 +1559,44 @@ public class ApiMgtDAO {
             APIMgtDBUtil.closeAllConnections(ps, connection, result);
         }
         return subscriber;
+    }
+
+    public String[] getOAuthCredentials(String accessToken, String tokenType) throws APIManagementException {
+        Connection connection = null;
+        PreparedStatement prepStmt = null;
+        ResultSet rs = null;
+        String consumerKey = null;
+        String consumerSecret = null;
+        String sqlStmt = "SELECT " +
+                " ICA.CONSUMER_KEY AS CONSUMER_KEY," +
+                " ICA.CONSUMER_SECRET AS CONSUMER_SECRET " +
+                "FROM " +
+                " IDN_OAUTH_CONSUMER_APPS ICA," +
+                " IDN_OAUTH2_ACCESS_TOKEN IAT " +
+                "WHERE " +
+                " IAT.ACCESS_TOKEN = ? AND" +
+                " IAT.TOKEN_SCOPE = ? AND" +
+                " IAT.CONSUMER_KEY = ICA.CONSUMER_KEY";
+        
+        try {
+            connection = APIMgtDBUtil.getConnection();
+            prepStmt = connection.prepareStatement(sqlStmt);
+            prepStmt.setString(1, accessToken);
+            prepStmt.setString(2, tokenType);
+            rs = prepStmt.executeQuery();
+
+            if (rs.next()) {
+                consumerKey = rs.getString("CONSUMER_KEY");
+                consumerSecret = rs.getString("CONSUMER_SECRET");
+            }
+
+        } catch (SQLException e) {
+            log.error("Error when executing the SQL : " + sqlStmt);
+            throw new APIManagementException("Error when adding a new OAuth consumer.", e);
+        } finally {
+            IdentityDatabaseUtil.closeAllConnections(connection, rs, prepStmt);
+        }
+        return new String[] { consumerKey, consumerSecret };
     }
 
     public String[] addOAuthConsumer(String username, int tenantId) throws IdentityOAuthAdminException, APIManagementException {

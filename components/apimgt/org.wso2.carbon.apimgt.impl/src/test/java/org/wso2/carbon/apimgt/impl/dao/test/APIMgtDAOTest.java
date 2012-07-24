@@ -175,12 +175,12 @@ public class APIMgtDAOTest extends TestCase {
     }
 
     public void testRegisterApplicationAccessToken()throws  Exception{
-        apiMgtDAO.registerApplicationAccessToken("CON1","APPLICATION3","PRABATH",MultitenantConstants.SUPER_TENANT_ID,"SANDBOX");
-        String key1 = apiMgtDAO.getAccessKeyForApplication("PRABATH", "APPLICATION3", "SANDBOX");
+        apiMgtDAO.registerApplicationAccessToken("CON1","APPLICATION3","PRABATH",MultitenantConstants.SUPER_TENANT_ID,"PRODUCTION");
+        String key1 = apiMgtDAO.getAccessKeyForApplication("PRABATH", "APPLICATION3", "PRODUCTION");
         assertNotNull(key1);
 
-        apiMgtDAO.registerApplicationAccessToken("CON1","APPLICATION4","PRABATH",MultitenantConstants.SUPER_TENANT_ID,"PRODUCTION");
-        String key2 = apiMgtDAO.getAccessKeyForApplication("PRABATH", "APPLICATION4", "PRODUCTION");
+        apiMgtDAO.registerApplicationAccessToken("CON2","APPLICATION4","PRABATH",MultitenantConstants.SUPER_TENANT_ID,"SANDBOX");
+        String key2 = apiMgtDAO.getAccessKeyForApplication("PRABATH", "APPLICATION4", "SANDBOX");
         assertNotNull(key2);
 
         assertTrue(!key1.equals(key2));

@@ -486,7 +486,7 @@ class APIConsumerImpl extends AbstractAPIManager implements APIConsumer {
                         API apiDefinition = getAPI(api.getApiId());
                         mapping.setApiVersion(api.getApiId().getVersion());
                         mapping.setContext(apiDefinition.getContext());
-                        mapping.setKey(key.getKey());
+                        mapping.setKey(key.getAccessToken());
                         mappings.add(mapping);
                     }
                 }

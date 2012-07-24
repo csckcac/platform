@@ -30,6 +30,12 @@
     <li><a href="#createdb">Creating a sample database and populate data</a></li>
     <li><a href="#createds">Creating your first data service</a></li>
     <li><a href="#invokeservice">Invoking Data Service</a></li>
+    <li><a href="#automatedDS">Automated Data Service Generator</a></li>
+    <li><a href="#editDS">Edit Data Service</a></li>
+    <ul>
+    <li><a href="#editDSWizard">Edit Data Service through Wizard</a></li>
+    <li><a href="#editDSXMLEditor">Edit Data Service through XML Editor</a></li>
+    </ul>
 </ul>
 </div><h2 id="Introducti">Introduction</h2>
 <p>WSO2 Data Services Server is a convenient mechanism to provide a web service interface for data stored in some data
@@ -378,6 +384,132 @@
 <br/>
 <img alt="DS" src="images/step10.png"/>
 <p>Figure 19: Try-it - Multiple Service Mode</p>
+
+<h2 id="editDS">Edit Data Service</h2>
+	<p>You can edit the deployed service by click on the service name under deployed services
+	 list. It provides two options to edit the service, which are Edit Service through 
+	wizard and XML Edit.</p>
+
+	
+        <p>
+            <img src="images/edit_service.png" alt="Figure: Edit Service"/>
+            <br/>
+            <br/>
+            <p>Figure 20 : Edit Service</p>
+            <br/>
+            <br/>
+        </p>
+	<p id="editDSWizard">
+	    <b>Option 1 - Edit Data Service through wizard</b>
+	</p>
+	<hr/>
+	<p>
+	If you click on the 'Edit Data Service (wizard)' option, you will be redirected to data service wizard. There you can edit the 
+	required information and go forward by clicking 'Next'. Finally by clicking 'Finish' , changes can be saved. This will be the similar 
+	wizard used when creating the service. 
+	</p>
+
+	<br/>
+
+	<p>
+            <img src="images/edit_dataservice.png" alt="Figure: Edit Data Service"/>
+            <br/>
+            <br/>
+            <p>Figure 21 : Edit Data Service</p>
+            <br/>
+            <br/>
+        </p>
+
+	<p>
+	After clicking 'Next' on above you can edit the data source by clicking 'Edit Data Source' link.  
+	</p>
+
+	<br/>
+
+	<p>
+            <img src="images/edit_datasource.png" alt="Figure: Edit Data Source"/>
+            <br/>
+            <br/>
+            <p>Figure 22 : Edit Data Source</p>
+            <br/>
+            <br/>
+        </p>
+
+	<p>
+	Change the required values on "Edit Data Source' wizard page and click 'Save'  
+	</p>
+
+	<br/>
+
+	<p>
+            <img src="images/edit_datasource_values.png" alt="Figure: Edit Data Source Information"/>
+            <br/>
+            <br/>
+            <p>Figure 23 : Edit Data Source Information</p>
+            <br/>
+            <br/>
+        </p>
+
+	<p>
+	Now you will be in 'Data Sources' page. Click 'Next' to edit queries. Click 'Edit Query' link and change required information and click 'Save'.    
+	</p>
+
+	<br/>
+
+	<p>
+            <img src="images/edit_query.png" alt="Figure: Edit Query"/>
+            <br/>
+            <br/>
+            <p>Figure 24 : Edit Query</p>
+            <br/>
+            <br/>
+        </p>
+
+	<p>
+	Clicking 'Next' on Queries page will redirect to 'Operations' page. Click 'Edit Operation' link and change required information and click 'Save'.    
+	</p>
+
+	<br/>
+
+	<p>
+            <img src="images/edit_operation.png" alt="Figure: Edit Operation"/>
+            <br/>
+            <br/>
+            <p>Figure 25 : Edit Operation</p>
+            <br/>
+            <br/>
+        </p>
+	
+	<p id="editDSXMLEditor">
+	    <b>Option 2 - Edit Data Service through XML Editor</b>
+	</p>
+	<hr/>
+	
+	<p>
+	If you click on the 'Edit Data Service (XML Edit)' option, you will be redirected to the Data Service XML Editor. 
+	If you are familiar with data service configuration language, you can directly edit the required configurations 
+	through this editor. The 'config' element defines the data source configuration. The data element describes 
+	the data service or the resource. The 'query' element defines the query and 'operation' element defines the 
+	operation. We can have any number of config, query, and operatiion elements. 
+	Further we can define 'resource' element to expose data as RESTful resources. 
+	</p>
+
+	<p>You can refer, <a href="http://docs.wso2.org/wiki/display/DSS263/Data+Services+and+Resources">
+	Data Services and Resource Language document </a>
+	for further information</p>
+
+	<br/>
+
+	<p>
+            <img src="images/edit_xml_editor.png" alt="Figure: Edit Data Service through XML Editor"/>
+            <br/>
+            <br/>
+            <p>Figure 26 : Edit Data Service through XML Editor</p>
+            <br/>
+            <br/>
+        </p>
+
+
 
 <p>For more details on the Data services see
     <a href="http://wso2.org/project/solutions/data-services/java/2.6.0/docs/user_guide.html">User Guide</a></p>

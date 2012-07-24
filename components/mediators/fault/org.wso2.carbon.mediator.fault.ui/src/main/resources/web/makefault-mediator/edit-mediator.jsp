@@ -140,10 +140,10 @@
     </td>
 </tr>
 <tr>
-    <td id="fault_string_row">
+    <td id="fault_string_row" <% if (faultMediator.getSoapVersion() !=1 && faultMediator.getSoapVersion() !=3) { %> style="display:none;" <% } %> >
         <fmt:message key="mediator.fault.string"/><span class="required">*</span>
     </td>
-    <td id="reason" style="display:none;">
+    <td id="reason" <% if (faultMediator.getSoapVersion() != 2) { %> style="display:none;" <% } %> >
         <fmt:message key="mediator.fault.reason"/><span class="required">*</span>
     </td>
     <td>
@@ -211,9 +211,8 @@
     </td>
 </tr>
 <tr id ="fault_actor_table_row" <% if (faultMediator.getSoapVersion() == 3) { %> style="display:none;" <% } %> >
-    <td id="fault_actor_row"><fmt:message key="mediator.fault.actor"/></td>
-    <td id="role_row" style="display:none;"><fmt:message
-            key="mediator.fault.role"/></td>
+    <td id="fault_actor_row"<% if (faultMediator.getSoapVersion() != 1) { %> style="display:none;" <% } %> > <fmt:message key="mediator.fault.actor"/></td>
+    <td id="role_row" <% if (faultMediator.getSoapVersion() != 2) { %> style="display:none;" <% } %> ><fmt:message    key="mediator.fault.role"/></td>
     <td>
         <%
             if (faultMediator.getFaultRole() == null) {

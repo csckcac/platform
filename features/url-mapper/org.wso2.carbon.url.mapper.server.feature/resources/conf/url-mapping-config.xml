@@ -17,7 +17,7 @@
  -->
 
 <!--
-    This is the configuration file for logging specific properties.
+    This is the configuration file for url mapping specific properties.
 -->
 
 <URLMappingConfig xmlns="http://wso2.org/projects/carbon/carbon.xml">

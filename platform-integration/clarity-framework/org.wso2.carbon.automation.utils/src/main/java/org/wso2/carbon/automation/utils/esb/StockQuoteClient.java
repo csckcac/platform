@@ -81,6 +81,26 @@ public class StockQuoteClient {
         return serviceClient.sendReceive(createStandardRequest(symbol));
     }
 
+
+    public OMElement sendSimpleStockQuoteSoap11(String trpUrl, String addUrl,
+                                                 String symbol) throws AxisFault {
+
+        Options options = getOptions(trpUrl, addUrl);
+        serviceClient.setOptions(options);
+        serviceClient.getOptions().setSoapVersionURI(org.apache.axiom.soap.SOAP11Constants.SOAP_ENVELOPE_NAMESPACE_URI);
+        return serviceClient.sendReceive(createStandardRequest(symbol));
+    }
+
+
+    public OMElement sendSimpleStockQuoteSoap12(String trpUrl, String addUrl,
+                                                 String symbol) throws AxisFault {
+
+        Options options = getOptions(trpUrl, addUrl);
+        serviceClient.setOptions(options);
+        serviceClient.getOptions().setSoapVersionURI(org.apache.axiom.soap.SOAP12Constants.SOAP_ENVELOPE_NAMESPACE_URI);
+        return serviceClient.sendReceive(createStandardRequest(symbol));
+    }
+
     public OMElement sendSimpleStockQuoteRequest(String trpUrl, String addUrl, OMElement payload) throws AxisFault {
 
             Options options = getOptions(trpUrl, addUrl);

@@ -43,7 +43,7 @@ public class BAMEventSubscriber implements AgentCallback {
             String errorMsg = "Error processing event. ";
             log.error(errorMsg, e);
         }
-    }
+
 //        for (Event event : eventList) {
 //            try {
 //                ServiceHolder.getCassandraConnector().insertEvent(ClusterFactory.getCluster(credentials), event);
@@ -53,5 +53,5 @@ public class BAMEventSubscriber implements AgentCallback {
 //            }
 //
 //        }
-
+    }
 }

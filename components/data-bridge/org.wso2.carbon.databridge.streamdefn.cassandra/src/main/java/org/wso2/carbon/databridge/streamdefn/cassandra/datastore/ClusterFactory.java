@@ -8,6 +8,7 @@ import org.apache.commons.logging.Log;
 import org.apache.commons.logging.LogFactory;
 import org.wso2.carbon.cassandra.dataaccess.ClusterInformation;
 import org.wso2.carbon.databridge.commons.Credentials;
+import org.wso2.carbon.databridge.core.exception.StreamDefinitionStoreException;
 import org.wso2.carbon.databridge.streamdefn.cassandra.internal.util.ServiceHolder;
 
 import java.util.concurrent.TimeUnit;
@@ -29,7 +30,7 @@ import java.util.concurrent.TimeUnit;
  */
 public class ClusterFactory {
 
-    private static LoadingCache<Credentials, Cluster> clusterLoadingCache;
+    private static volatile LoadingCache<Credentials, Cluster> clusterLoadingCache;
 
     private static Log log = LogFactory.getLog(ClusterFactory.class);
 
@@ -40,6 +41,9 @@ public class ClusterFactory {
     }
 
     private static void init() {
+        if (clusterLoadingCache != null) {
+                return;
+        }
         synchronized (ClusterFactory.class) {
             if (clusterLoadingCache != null) {
                 return;
@@ -73,7 +77,7 @@ public class ClusterFactory {
         }
     }
 
-    public static void initCassandraKeySpaces(Cluster cluster) {
+    public static void initCassandraKeySpaces(Cluster cluster) throws StreamDefinitionStoreException {
         log.info("Initializing cluster");
         CassandraConnector connector = ServiceHolder.getCassandraConnector();
         connector.createKeySpaceIfNotExisting(cluster, CassandraConnector.BAM_META_KEYSPACE);

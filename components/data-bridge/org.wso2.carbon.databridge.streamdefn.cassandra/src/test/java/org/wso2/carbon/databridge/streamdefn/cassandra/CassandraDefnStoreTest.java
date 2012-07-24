@@ -38,7 +38,12 @@ public class CassandraDefnStoreTest extends BaseCassandraSDSTest {
     @Test(expected = Exception.class)
     public void createCFDuringStreamDefn() {
         cassandraConnector.saveStreamIdToStore(getCluster(), streamDefinition1);
-        cassandraConnector.saveStreamDefinitionToStore(getCluster(), streamDefinition1);
+        try {
+            cassandraConnector.saveStreamDefinitionToStore(getCluster(), streamDefinition1);
+        } catch (StreamDefinitionStoreException e) {
+            e.printStackTrace();
+            fail();
+        }
         ColumnFamilyDefinition columnFamilyDefinition =
                 HFactory.createColumnFamilyDefinition(CassandraConnector.BAM_EVENT_DATA_KEYSPACE,
                         CassandraSDSUtils.convertStreamNameToCFName(streamDefinition1.getName()));
@@ -48,14 +53,24 @@ public class CassandraDefnStoreTest extends BaseCassandraSDSTest {
     @Test(expected = Exception.class)
     public void tooLongStreamName() {
         cassandraConnector.saveStreamIdToStore(getCluster(), tooLongStreamDefinition);
-        cassandraConnector.saveStreamDefinitionToStore(getCluster(), tooLongStreamDefinition);
+        try {
+            cassandraConnector.saveStreamDefinitionToStore(getCluster(), tooLongStreamDefinition);
+        } catch (StreamDefinitionStoreException e) {
+            e.printStackTrace();
+            fail();
+        }
     }
 
     @Test
     public void checkEqualityofEventIdAndStreamDefnId() {
 
         cassandraConnector.saveStreamIdToStore(getCluster(), streamDefinition1);
-        cassandraConnector.saveStreamDefinitionToStore(getCluster(), streamDefinition1);
+        try {
+            cassandraConnector.saveStreamDefinitionToStore(getCluster(), streamDefinition1);
+        } catch (StreamDefinitionStoreException e) {
+            e.printStackTrace();
+            fail();
+        }
 
         String retrievedStreamId = cassandraConnector.getStreamIdFromStore(getCluster(), streamDefinition1);
 
@@ -69,13 +84,19 @@ public class CassandraDefnStoreTest extends BaseCassandraSDSTest {
 
     @Test
     public void saveSameStreamMultipleTimes() {
-        cassandraConnector.saveStreamIdToStore(getCluster(), streamDefinition1);
-        cassandraConnector.saveStreamDefinitionToStore(getCluster(), streamDefinition1);
+        String firstTimeStreamId1 = null;
+        try {
+            cassandraConnector.saveStreamIdToStore(getCluster(), streamDefinition1);
+            cassandraConnector.saveStreamDefinitionToStore(getCluster(), streamDefinition1);
 
-        String firstTimeStreamId1 = cassandraConnector.getStreamIdFromStore(getCluster(), streamDefinition1);
+            firstTimeStreamId1 = cassandraConnector.getStreamIdFromStore(getCluster(), streamDefinition1);
 
-        cassandraConnector.saveStreamIdToStore(getCluster(), streamDefinition1);
-        cassandraConnector.saveStreamDefinitionToStore(getCluster(), streamDefinition1);
+            cassandraConnector.saveStreamIdToStore(getCluster(), streamDefinition1);
+            cassandraConnector.saveStreamDefinitionToStore(getCluster(), streamDefinition1);
+        } catch (StreamDefinitionStoreException e) {
+            e.printStackTrace();
+            fail();
+        }
 
         String secondTimeStreamId1 = cassandraConnector.getStreamIdFromStore(getCluster(), streamDefinition1);
 
@@ -96,7 +117,12 @@ public class CassandraDefnStoreTest extends BaseCassandraSDSTest {
         String streamIdKey = DataBridgeUtils
                 .constructStreamKey(streamDefinition1.getName(), streamDefinition1.getVersion());
         cassandraConnector.saveStreamIdToStore(getCluster(), streamDefinition1);
-        cassandraConnector.saveStreamDefinitionToStore(getCluster(), streamDefinition1);
+        try {
+            cassandraConnector.saveStreamDefinitionToStore(getCluster(), streamDefinition1);
+        } catch (StreamDefinitionStoreException e) {
+            e.printStackTrace();
+            fail();
+        }
 
         String retrievedStreamId = cassandraConnector.getStreamIdFromStore(getCluster(), streamDefinition1);
         assertEquals(streamDefinition1.getStreamId(), retrievedStreamId);
@@ -128,7 +154,12 @@ public class CassandraDefnStoreTest extends BaseCassandraSDSTest {
         String streamIdKey = DataBridgeUtils
                 .constructStreamKey(streamDefinition1.getName(), streamDefinition1.getVersion());
         cassandraConnector.saveStreamIdToStore(getCluster(), streamDefinition1);
-        cassandraConnector.saveStreamDefinitionToStore(getCluster(), streamDefinition1);
+        try {
+            cassandraConnector.saveStreamDefinitionToStore(getCluster(), streamDefinition1);
+        } catch (StreamDefinitionStoreException e) {
+            e.printStackTrace();
+            fail();
+        }
 
         String retrievedStreamId = cassandraConnector.getStreamIdFromStore(getCluster(), streamIdKey);
         List<Event> eventList = EventConverterUtils.convertFromJson(CassandraTestConstants.properandImproperEvent, retrievedStreamId);
@@ -148,17 +179,24 @@ public class CassandraDefnStoreTest extends BaseCassandraSDSTest {
 
     @Test
     public void insertEventsFromTwoVersions() {
-        // save stream defn 1
-        String streamIdKey1 = DataBridgeUtils
-                .constructStreamKey(streamDefinition1.getName(), streamDefinition1.getVersion());
-        cassandraConnector.saveStreamIdToStore(getCluster(), streamDefinition1);
-        cassandraConnector.saveStreamDefinitionToStore(getCluster(), streamDefinition1);
+        String streamIdKey1 = null;
+        String streamIdKey2 = null;
+        try {
+// save stream defn 1
+            streamIdKey1 = DataBridgeUtils
+                    .constructStreamKey(streamDefinition1.getName(), streamDefinition1.getVersion());
+            cassandraConnector.saveStreamIdToStore(getCluster(), streamDefinition1);
+            cassandraConnector.saveStreamDefinitionToStore(getCluster(), streamDefinition1);
 
-        // save stream defn 2
-        String streamIdKey2 = DataBridgeUtils
-                .constructStreamKey(streamDefinition2.getName(), streamDefinition2.getVersion());
-        cassandraConnector.saveStreamIdToStore(getCluster(), streamDefinition2);
-        cassandraConnector.saveStreamDefinitionToStore(getCluster(), streamDefinition2);
+            // save stream defn 2
+            streamIdKey2 = DataBridgeUtils
+                    .constructStreamKey(streamDefinition2.getName(), streamDefinition2.getVersion());
+            cassandraConnector.saveStreamIdToStore(getCluster(), streamDefinition2);
+            cassandraConnector.saveStreamDefinitionToStore(getCluster(), streamDefinition2);
+        } catch (StreamDefinitionStoreException e) {
+            e.printStackTrace();
+            fail();
+        }
 
 
         List<Event> eventList = new ArrayList<Event>();
@@ -215,16 +253,23 @@ public class CassandraDefnStoreTest extends BaseCassandraSDSTest {
     @Test
     public void insertEventsFromMultipleStreams() {
         // save stream defn 1
-        String streamIdKey1 = DataBridgeUtils
-                .constructStreamKey(streamDefinition1.getName(), streamDefinition1.getVersion());
-        cassandraConnector.saveStreamIdToStore(getCluster(), streamDefinition1);
-        cassandraConnector.saveStreamDefinitionToStore(getCluster(), streamDefinition1);
+        String streamIdKey1 = null;
+        String streamIdKey2 = null;
+        try {
+            streamIdKey1 = DataBridgeUtils
+                    .constructStreamKey(streamDefinition1.getName(), streamDefinition1.getVersion());
+            cassandraConnector.saveStreamIdToStore(getCluster(), streamDefinition1);
+            cassandraConnector.saveStreamDefinitionToStore(getCluster(), streamDefinition1);
 
-        // save stream defn 3
-        String streamIdKey2 = DataBridgeUtils
-                .constructStreamKey(streamDefinition3.getName(), streamDefinition3.getVersion());
-        cassandraConnector.saveStreamIdToStore(getCluster(), streamDefinition3);
-        cassandraConnector.saveStreamDefinitionToStore(getCluster(), streamDefinition3);
+            // save stream defn 3
+            streamIdKey2 = DataBridgeUtils
+                    .constructStreamKey(streamDefinition3.getName(), streamDefinition3.getVersion());
+            cassandraConnector.saveStreamIdToStore(getCluster(), streamDefinition3);
+            cassandraConnector.saveStreamDefinitionToStore(getCluster(), streamDefinition3);
+        } catch (StreamDefinitionStoreException e) {
+            e.printStackTrace();
+            fail();
+        }
 
 
         List<Event> eventList = new ArrayList<Event>();

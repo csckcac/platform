@@ -3,8 +3,10 @@ include("/jagg/jagg.jag");
 var site = require("/site/conf/site.json");
 
 (function () {
-    var  mod,result,isPermitted,user = jagg.getUser();
-    isPermitted= jagg.getCreatePermitted().permitted;
+    var  mod,result,isPermitted,user = jagg.getUser(),permit=jagg.getCreatePermitted();
+    if(permit){
+    isPermitted= permit.permitted;
+    }
     if (!user) {
         response.sendRedirect(jagg.getAbsoluteUrl("/site/pages/login.jag"));
         return;

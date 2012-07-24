@@ -45,7 +45,7 @@
                     <systemProperties>
                         <maven.test.haltafterfailure>false</maven.test.haltafterfailure>
                         <carbon.zip>
-                            ${basedir}/../distribution/service/target/wso2stratos-manager-${project.version}.zip
+                            ${basedir}/../distribution/target/wso2stratos-manager-${project.version}.zip
                         </carbon.zip>
                         <sec.verifier.dir>${basedir}/target/security-verifier/</sec.verifier.dir>
                         <extracted.dir>wso2stratos-manager-${project.version}</extracted.dir>

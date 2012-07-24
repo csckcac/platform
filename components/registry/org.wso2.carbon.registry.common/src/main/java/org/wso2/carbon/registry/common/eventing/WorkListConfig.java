@@ -40,6 +40,7 @@ public final class WorkListConfig {
     private String username;
     private String password;
     private String serverURL;
+    private String remote ;
 
     public WorkListConfig() {
         String configPath = CarbonUtils.getRegistryXMLPath();
@@ -56,6 +57,7 @@ public final class WorkListConfig {
                         username = workList.getAttributeValue(new QName("username"));
                         password = workList.getAttributeValue(new QName("password"));
                         serverURL = workList.getAttributeValue(new QName("serverURL"));
+                        remote = workList.getAttributeValue(new QName("remote"));
                     }
                 } catch (XMLStreamException e) {
                     log.error("Unable to parse registry.xml", e);
@@ -76,5 +78,9 @@ public final class WorkListConfig {
 
     public String getServerURL() {
         return serverURL;
+    }
+
+    public boolean isRemote() {
+        return Boolean.valueOf(remote);
     }
 }

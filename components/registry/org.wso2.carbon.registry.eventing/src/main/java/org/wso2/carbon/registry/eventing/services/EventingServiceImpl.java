@@ -29,6 +29,7 @@ import org.wso2.carbon.event.core.subscription.EventDispatcher;
 import org.wso2.carbon.event.core.subscription.Subscription;
 import org.wso2.carbon.registry.common.eventing.RegistryEvent;
 import org.wso2.carbon.registry.common.utils.CommonUtil;
+import org.wso2.carbon.registry.common.utils.RegistryUtil;
 import org.wso2.carbon.registry.core.Resource;
 import org.wso2.carbon.registry.core.exceptions.RegistryException;
 import org.wso2.carbon.registry.core.internal.RegistryCoreServiceComponent;
@@ -190,7 +191,12 @@ public class EventingServiceImpl implements EventingService, SubscriptionEmailVe
 
     public Subscription getSubscription(String id) {
         try {
-            return Utils.getRegistryEventBrokerService().getSubscription(id);
+            if(id != null && id.contains(";version:")) {
+               log.warn("Versioned resources cannot have subscriptions, instead returns the subscription from the actual resource");
+               return Utils.getRegistryEventBrokerService().getSubscription(RegistryUtil.getResourcePathFromVersionPath(id));
+            } else {
+                return Utils.getRegistryEventBrokerService().getSubscription(id);
+            }
         } catch (EventBrokerException e) {
             log.error("Unable to get subscription for given id: " + id, e);
             return null;

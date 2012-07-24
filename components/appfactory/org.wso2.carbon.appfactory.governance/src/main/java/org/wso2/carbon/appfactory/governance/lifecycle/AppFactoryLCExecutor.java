@@ -71,7 +71,7 @@ public class AppFactoryLCExecutor implements Execution {
 
         final String version = currentParameterMap.get(AppFactoryConstants.APPLICATION_VERSION);
 
-        final String stage = currentParameterMap.get(AppFactoryConstants.APPLICATION_STAGE);
+        //final String stage = currentParameterMap.get(AppFactoryConstants.APPLICATION_STAGE);
 
         final String build = currentParameterMap.get(AppFactoryConstants.APPLICATION_BUILD);
 
@@ -80,17 +80,17 @@ public class AppFactoryLCExecutor implements Execution {
         newPath = resourcePath.substring((AppFactoryConstants.REGISTRY_GOVERNANCE_PATH +
                 AppFactoryConstants.REGISTRY_APPLICATION_PATH).length());
 
-        // 1st element is "", 2st element is app name , 3rd element is $Stage ,
-        // 4th element $Version, 5th element is appinfo
+        // 0th element is "", 1st element is app name , 2nd element is $Stage ,
+        // 3rd element $Version, 4th element is appinfo
         String newPathArray[] = newPath.split("/");
 
         String currentAppName = newPathArray[1];
-        String currentAppStage = newPathArray[3];
+        String currentAppVersion = newPathArray[3];
         String currentAppInfo = newPathArray[4];
 
         // if the app is trunk then we need version.
 
-        if ((AppFactoryConstants.TRUNK).equals(currentAppStage)) {
+        if ((AppFactoryConstants.TRUNK).equals(currentAppVersion)) {
 
             // Append version from here
             if (version != null) {
@@ -106,7 +106,7 @@ public class AppFactoryLCExecutor implements Execution {
                 newPath = "/" + currentAppName + "/" + targetState + "/" + version + "/" + currentAppInfo;
 
             } else {
-                newPath = "/" + currentAppName + "/" + targetState + "/" + currentAppStage + "/" + currentAppInfo;
+                newPath = "/" + currentAppName + "/" + targetState + "/" + currentAppVersion + "/" + currentAppInfo;
             }
 
         }
@@ -114,6 +114,13 @@ public class AppFactoryLCExecutor implements Execution {
         // make newPath a absolute path
         newPath = AppFactoryConstants.REGISTRY_GOVERNANCE_PATH +
                 AppFactoryConstants.REGISTRY_APPLICATION_PATH + newPath;
+
+        if ("Development".equals(currentState)) {
+            branchRepositoryOnNewAppVersion(applicationId, revision, currentAppVersion, version);
+        } else if ("Production".equals(targetState)) {
+            tagRepositoryOnNewAppVersion(applicationId, revision, currentAppVersion, version);
+        }
+
 
         try {
             requestContext.getRegistry().copy(resourcePath, newPath);
@@ -128,7 +135,7 @@ public class AppFactoryLCExecutor implements Execution {
 
 
             // Executing the BPEL
-            executeBPEL(applicationId, revision, version, stage, build);
+            executeBPEL(applicationId, revision, version, targetState, build);
 
             return true;
         } catch (RegistryException e) {

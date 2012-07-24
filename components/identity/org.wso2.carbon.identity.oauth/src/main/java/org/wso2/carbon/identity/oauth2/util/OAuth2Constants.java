@@ -20,7 +20,7 @@ package org.wso2.carbon.identity.oauth2.util;
 
 public class OAuth2Constants {
     public static class TokenStates {
-        public final static String TOKEN_STATE_ACTIVE = "Active";
+        public final static String TOKEN_STATE_ACTIVE = "ACTIVE";
     }
     public static long UNASSIGNED_VALIDITY_PERIOD = -1l;
 }

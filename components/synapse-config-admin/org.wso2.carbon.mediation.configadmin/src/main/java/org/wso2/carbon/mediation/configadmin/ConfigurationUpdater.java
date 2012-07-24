@@ -504,9 +504,11 @@ public class ConfigurationUpdater {
             API oldAPI = currentConfig.getAPI(api.getName());
             if (oldAPI != null) {
                 api.setFileName(oldAPI.getFileName());
+	        addToDeploymentStore(MultiXMLConfigurationBuilder.REST_API_DIR, api.getFileName(), api.getName(), newConfig);
             }
             else{
                 api.setFileName(api.getName() + XML);
+	        addToDeploymentStore(MultiXMLConfigurationBuilder.REST_API_DIR, api.getFileName(), api.getName(), newConfig);
             }
         }
 

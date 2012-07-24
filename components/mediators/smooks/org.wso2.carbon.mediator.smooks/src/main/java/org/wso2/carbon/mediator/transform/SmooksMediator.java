@@ -44,6 +44,8 @@ import org.milyn.persistence.util.PersistenceUtil;
 import org.milyn.scribe.adapter.jpa.EntityManagerRegister;
 import org.xml.sax.SAXException;
 
+import org.wso2.carbon.mediator.service.MediatorException;
+
 /**
  * Transforms the current message payload using the given Smooks configuration.
  * The current message context is replaced with the result as XML.
@@ -127,12 +129,12 @@ public class SmooksMediator extends AbstractMediator {
 				transactionStarted = false;
 			}
 		} catch (AxisFault e) {
-			handleException("Error occured while processing smooks output", e, synCtx);
+			handleException("Error occured while processing smooks output", e);
 		} catch (SmooksException e) {
 			if (transactionStarted) {
 				this.transaction.rollback();
 			}
-			throw new SmooksException(e.getMessage(), e);
+			handleException(e.getMessage(), e);
 		}
 
 		if (synLog.isTraceOrDebugEnabled()) {
@@ -183,12 +185,12 @@ public class SmooksMediator extends AbstractMediator {
 		SynapseLog log = getLog(synCtx);
 		Object o = synCtx.getEntry(configKey);
 		if (o == null) {
-			handleException("Cannot find the object for smooks config key: " + configKey, synCtx);
+			handleException("Cannot find the object for smooks config key: " + configKey);
 		}
 
 		InputStream in = SynapseConfigUtils.getInputStream(o);
 		if (in == null) {
-			handleException("Cannot get the input stream from the config key: " + configKey, synCtx);
+			handleException("Cannot get the input stream from the config key: " + configKey);
 		}
 
 		try {
@@ -200,10 +202,10 @@ public class SmooksMediator extends AbstractMediator {
 			return smooks;
 		} catch (IOException e) {
 			handleException("I/O error occurred while creating the Smooks "
-					+ "configuration from the config key: " + configKey, e, synCtx);
+					+ "configuration from the config key: " + configKey, e);
 		} catch (SAXException e) {
 			handleException("XML error occurred while creating the Smooks "
-					+ "configuration from the config key: " + configKey, e, synCtx);
+					+ "configuration from the config key: " + configKey, e);
 		}
 
 		return null;
@@ -229,6 +231,16 @@ public class SmooksMediator extends AbstractMediator {
 			return shouldRecreate;
 		}
 	}
+	
+	private void handleException(String msg) {
+        log.error(msg);
+        throw new MediatorException(msg);
+    }
+
+    private void handleException(String msg, Exception ex) {
+        log.error(msg, ex);
+        throw new MediatorException(msg + " Caused by " + ex.getMessage());
+    }
 
 	public String getConfigKey() {
 		return configKey;

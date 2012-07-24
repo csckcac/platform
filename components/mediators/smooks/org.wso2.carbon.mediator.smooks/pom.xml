@@ -51,6 +51,7 @@
                             !javax.xml.namespace,
                             javax.xml.namespace; version=0.0.0,
                             org.apache.commons.logging.*;version="1.0.4",
+                            org.wso2.carbon.mediator.service.*,
                             org.osgi.framework,                                                        
                             *;resolution:=optional,
                         </Import-Package>
@@ -76,5 +77,9 @@
 			<artifactId>persistence-api</artifactId>
 			<version>1.0</version>
 		</dependency>
+		<dependency>
+            <groupId>org.wso2.carbon</groupId>
+            <artifactId>org.wso2.carbon.mediator.service</artifactId>
+        </dependency>
 	</dependencies> 
 </project>

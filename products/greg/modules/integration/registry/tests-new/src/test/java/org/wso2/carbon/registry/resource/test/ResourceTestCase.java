@@ -22,12 +22,15 @@ import org.apache.axis2.AxisFault;
 import org.testng.annotations.BeforeClass;
 import org.testng.annotations.Test;
 import org.wso2.carbon.authenticator.stub.LoginAuthenticationExceptionException;
+import org.wso2.carbon.automation.api.clients.registry.RelationAdminServiceClient;
 import org.wso2.carbon.automation.api.clients.registry.ResourceAdminServiceClient;
 import org.wso2.carbon.automation.core.ProductConstant;
 import org.wso2.carbon.automation.core.utils.UserInfo;
 import org.wso2.carbon.automation.core.utils.UserListCsvReader;
 import org.wso2.carbon.automation.core.utils.environmentutils.EnvironmentBuilder;
 import org.wso2.carbon.automation.core.utils.environmentutils.ManageEnvironment;
+import org.wso2.carbon.registry.relations.stub.AddAssociationRegistryExceptionException;
+import org.wso2.carbon.registry.relations.stub.RelationAdminService;
 import org.wso2.carbon.registry.resource.stub.ResourceAdminServiceExceptionException;
 
 import javax.activation.DataHandler;
@@ -44,6 +47,7 @@ public class ResourceTestCase {
     private ManageEnvironment environment;
     private UserInfo userInfo;
     private ResourceAdminServiceClient resourceAdminClient;
+    private RelationAdminServiceClient relationAdminServiceClient;
 
     @BeforeClass(alwaysRun = true)
     public void initializeTests() throws LoginAuthenticationExceptionException, RemoteException {
@@ -51,20 +55,46 @@ public class ResourceTestCase {
         userInfo = UserListCsvReader.getUserInfo(userId);
         EnvironmentBuilder builder = new EnvironmentBuilder().greg(userId);
         environment = builder.build();
+        resourceAdminClient =
+                new ResourceAdminServiceClient(environment.getGreg().getBackEndUrl(),
+                                               environment.getGreg().getSessionCookie());
+        relationAdminServiceClient =
+                new RelationAdminServiceClient(environment.getGreg().getBackEndUrl(),
+                                               environment.getGreg().getSessionCookie());
 
     }
 
     @Test(groups = "wso2.greg", description = "Add resource to greg")
     public void testAddResource()
             throws RemoteException, MalformedURLException, ResourceAdminServiceExceptionException {
-        resourceAdminClient =
-                new ResourceAdminServiceClient(environment.getGreg().getBackEndUrl(), environment.getGreg().getSessionCookie());
+
         String path = ProductConstant.SYSTEM_TEST_RESOURCE_LOCATION + "artifacts" + File.separator
                       + "GREG" + File.separator + "testresource.txt";
         DataHandler dataHandler = new DataHandler(new URL("file:///" + path));
         resourceAdminClient.addResource(PATH, "test/plain", "desc", dataHandler);
         assertTrue(resourceAdminClient.getResource(PATH)[0].getAuthorUserName().contains(userInfo.getUserName()));
+    }
 
+    @Test(groups = "wso2.greg", description = "Add resource to greg", dependsOnMethods = "testAddResource")
+    public void testAddAssociation()
+            throws RemoteException, MalformedURLException, ResourceAdminServiceExceptionException,
+                   AddAssociationRegistryExceptionException {
+        relationAdminServiceClient.addAssociation(PATH, "depends", "/_system", "add");
+        assertTrue(relationAdminServiceClient.getDependencies(PATH).
+                getAssociationBeans()[0].getAssociationType().equals("depends"));
+        assertTrue(relationAdminServiceClient.getDependencies(PATH).
+                getAssociationBeans()[0].getDestinationPath().equals("/_system"));
+        assertTrue(relationAdminServiceClient.getDependencies(PATH).
+                getAssociationBeans()[0].getSourcePath().equals(PATH));
+        relationAdminServiceClient.addAssociation(PATH, "depends", "/_system", "remove");
+    }
+
+    @Test(groups = "wso2.greg", description = "Remove association", dependsOnMethods = "testAddAssociation")
+    public void testRemoveAssociation()
+            throws RemoteException, MalformedURLException, ResourceAdminServiceExceptionException,
+                   AddAssociationRegistryExceptionException {
+        relationAdminServiceClient.addAssociation(PATH, "depends", "/_system", "remove");
+        assertTrue(relationAdminServiceClient.getDependencies(PATH).getAssociationBeans().length <= 1);
     }
 
     @Test(alwaysRun = true, expectedExceptions = AxisFault.class,

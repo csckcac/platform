@@ -94,6 +94,7 @@ public class ConfigurationUpdater {
 
     private TaskDescriptionRepository taskRepository;
     private TaskScheduler taskScheduler;
+    private static final String XML = ".xml";
 
     public ConfigurationUpdater(ServerContextInformation serverContextInformation,
                                 ConfigurationContext configurationContext,
@@ -356,6 +357,10 @@ public class ConfigurationUpdater {
                 newEndpoint.setFileName(oldEndpoint.getFileName());
                 addToDeploymentStore(MultiXMLConfigurationBuilder.ENDPOINTS_DIR, oldEndpoint.getFileName(), name, newConfig);
             }
+            else{
+                newEndpoint.setFileName(name + XML);
+                addToDeploymentStore(MultiXMLConfigurationBuilder.ENDPOINTS_DIR, newEndpoint.getFileName(), name, newConfig);
+            }
         }
 
         Map<String, SequenceMediator> sequences = newConfig.getDefinedSequences();
@@ -364,6 +369,10 @@ public class ConfigurationUpdater {
             if (oldSequence != null) {
                 sequences.get(name).setFileName(oldSequence.getFileName());
                 addToDeploymentStore(MultiXMLConfigurationBuilder.SEQUENCES_DIR, oldSequence.getFileName(), name, newConfig);
+            } else {
+                SequenceMediator newSequence = sequences.get(name);
+                newSequence.setFileName(name + XML);
+                addToDeploymentStore(MultiXMLConfigurationBuilder.SEQUENCES_DIR, newSequence.getFileName(), name, newConfig);
             }
         }
 
@@ -374,15 +383,23 @@ public class ConfigurationUpdater {
                 proxy.setFileName(oldProxy.getFileName());
                 addToDeploymentStore(MultiXMLConfigurationBuilder.PROXY_SERVICES_DIR, oldProxy.getFileName(), proxy.getName(), newConfig);
             }
+            else{
+                proxy.setFileName(proxy.getName() + XML);
+                addToDeploymentStore(MultiXMLConfigurationBuilder.SEQUENCES_DIR, proxy.getFileName(), proxy.getName(), newConfig);
+            }
         }
 
         Map<String,Entry> localEntries = newConfig.getDefinedEntries();
-        for (String key : localEntries.keySet()) {
-            Entry newEntry = localEntries.get(key);
-            Entry oldEntry = currentConfig.getDefinedEntries().get(key);
+        for (String name : localEntries.keySet()) {
+            Entry newEntry = localEntries.get(name);
+            Entry oldEntry = currentConfig.getDefinedEntries().get(name);
             if (oldEntry != null) {
                 newEntry.setFileName(oldEntry.getFileName());
-                addToDeploymentStore(MultiXMLConfigurationBuilder.LOCAL_ENTRY_DIR, oldEntry.getFileName(), key, newConfig);
+                addToDeploymentStore(MultiXMLConfigurationBuilder.LOCAL_ENTRY_DIR, oldEntry.getFileName(), name, newConfig);
+            }
+            else{
+                newEntry.setFileName(name + XML);
+                addToDeploymentStore(MultiXMLConfigurationBuilder.LOCAL_ENTRY_DIR, newEntry.getFileName(), name, newConfig);
             }
         }
 
@@ -393,6 +410,10 @@ public class ConfigurationUpdater {
                 task.setFileName(oldTask.getFileName());
                 addToDeploymentStore(MultiXMLConfigurationBuilder.TASKS_DIR, oldTask.getFileName(), task.getName(), newConfig);
             }
+            else{
+                task.setFileName(task.getName() + XML);
+                addToDeploymentStore(MultiXMLConfigurationBuilder.TASKS_DIR, task.getFileName(), task.getName(), newConfig);
+            }
         }
 
         Collection<SynapseEventSource> eventSources = newConfig.getEventSources();
@@ -401,6 +422,10 @@ public class ConfigurationUpdater {
             if (oldEventSource != null) {
                 eventSource.setFileName(oldEventSource.getFileName());
                 addToDeploymentStore(MultiXMLConfigurationBuilder.EVENTS_DIR, oldEventSource.getFileName(), eventSource.getName(), newConfig);
+            }
+            else{
+                eventSource.setFileName(eventSource.getName() + XML);
+                addToDeploymentStore(MultiXMLConfigurationBuilder.EVENTS_DIR, eventSource.getFileName(), eventSource.getName(), newConfig);
             }
         }
 
@@ -411,6 +436,10 @@ public class ConfigurationUpdater {
                 exec.setFileName(oldExec.getFileName());
                 addToDeploymentStore(MultiXMLConfigurationBuilder.EXECUTORS_DIR, oldExec.getFileName(), exec.getName(), newConfig);
             }
+            else{
+                exec.setFileName(exec.getName() + XML);
+                addToDeploymentStore(MultiXMLConfigurationBuilder.EXECUTORS_DIR, exec.getFileName(), exec.getName(), newConfig);
+            }
         }
 
         Collection<MessageStore> messageStores = newConfig.getMessageStores().values();
@@ -420,6 +449,10 @@ public class ConfigurationUpdater {
             if (oldStore != null) {
                 store.setFileName(oldStore.getFileName());
                 addToDeploymentStore(MultiXMLConfigurationBuilder.MESSAGE_STORE_DIR, oldStore.getFileName(), store.getName(), newConfig);
+            }
+            else{
+                store.setFileName(store.getName() + XML);
+                addToDeploymentStore(MultiXMLConfigurationBuilder.MESSAGE_STORE_DIR, store.getFileName(), store.getName(), newConfig);
             }
         }
 
@@ -432,6 +465,10 @@ public class ConfigurationUpdater {
                 processor.setFileName(oldProcessor.getFileName());
                 addToDeploymentStore(MultiXMLConfigurationBuilder.MESSAGE_PROCESSOR_DIR, oldProcessor.getFileName(), processor.getName(), newConfig);
             }
+            else{
+                processor.setFileName(processor.getName() + XML);
+                addToDeploymentStore(MultiXMLConfigurationBuilder.MESSAGE_PROCESSOR_DIR, processor.getFileName(), processor.getName(), newConfig);
+            }
         }
 
         Map<String, TemplateMediator> sequenceTemplates = newConfig.getSequenceTemplates();
@@ -440,6 +477,11 @@ public class ConfigurationUpdater {
             if (oldSequenceTempl != null) {
                 sequenceTemplates.get(name).setFileName(oldSequenceTempl.getFileName());
                 addToDeploymentStore(MultiXMLConfigurationBuilder.TEMPLATES_DIR, oldSequenceTempl.getFileName(), name, newConfig);
+            }
+            else{
+                TemplateMediator newSeqTemplate =  sequenceTemplates.get(name);
+                newSeqTemplate.setFileName(name + XML);
+                addToDeploymentStore(MultiXMLConfigurationBuilder.TEMPLATES_DIR, newSeqTemplate.getFileName(), name, newConfig);
             }
         }
 
@@ -450,6 +492,11 @@ public class ConfigurationUpdater {
                 endpointTemplates.get(name).setFileName(oldEndpointTempl.getFileName());
                 addToDeploymentStore(MultiXMLConfigurationBuilder.TEMPLATES_DIR, oldEndpointTempl.getFileName(), name, newConfig);
             }
+            else{
+                Template newTemplate =  endpointTemplates.get(name);
+                newTemplate.setFileName(name + XML);
+                addToDeploymentStore(MultiXMLConfigurationBuilder.TEMPLATES_DIR, newTemplate.getFileName(), name, newConfig);
+            }
         }
 
         Collection<API> apiCollection = newConfig.getAPIs();
@@ -457,6 +504,9 @@ public class ConfigurationUpdater {
             API oldAPI = currentConfig.getAPI(api.getName());
             if (oldAPI != null) {
                 api.setFileName(oldAPI.getFileName());
+            }
+            else{
+                api.setFileName(api.getName() + XML);
             }
         }
 

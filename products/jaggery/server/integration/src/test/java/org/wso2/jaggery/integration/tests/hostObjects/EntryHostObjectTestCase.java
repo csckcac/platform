@@ -71,7 +71,7 @@ public class EntryHostObjectTestCase {
     
   
     @Test(groups = {"jaggery"},
-            description = "Test feed hostobject toString")
+            description = "Test Entry hostobject toString")
       public void testFeedString() {
           ClientConnectionUtil.waitForPort(9763);
           
@@ -103,7 +103,7 @@ public class EntryHostObjectTestCase {
     
     
     @Test(groups = {"jaggery"},
-            description = "Test feed hostobject toXML")
+            description = "Test Entry hostobject toXML")
       public void testFeedXML() {
           ClientConnectionUtil.waitForPort(9763);
           

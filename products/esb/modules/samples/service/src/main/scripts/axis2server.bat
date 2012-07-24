@@ -82,7 +82,7 @@ goto setupArgs
 
 rem is there is a -xdebug in the options
 :xdebug
-set _XDEBUG="wrapper.java.additional.7=-Xrunjdwp:transport=dt_socket,server=y,suspend=y,address=8000"
+set _XDEBUG="-Xdebug -Xnoagent -Xrunjdwp:transport=dt_socket,server=y,suspend=y,address=8000"
 shift
 goto setupArgs
 
@@ -121,7 +121,7 @@ FOR %%C in ("%CARBON_HOME%\repository\components\plugins\synapse-samples*.jar") 
 rem We use <code> samples.util.Bootstrap</code> to avoid long classpath windows OS issue to start the server. We pass the the jar files location as 
 rem -Djar.class.paths=%CARBON_CLASSPATH% as a system property.(It is a MUST) Additionally we pass -Dsystem.home="."  property which is set to current directory.
 
-"%JAVA_HOME%\bin\java"  -Xms256m -Xmx512m -XX:MaxPermSize=256m  -classpath "%SAMPLE_SERVERPATH%" -Djava.io.tmpdir="%AXIS2_HOME%..\..\tmp\sampleServer"  -Djava.endorsed.dirs="%AXIS2_ENDORSED%"  -Djar.class.paths=%CARBON_CLASSPATH% -Dsystem.home="."  samples.util.Bootstrap  -conf  "%AXIS2_HOME%repository\conf\axis2.xml" %CMD%
+"%JAVA_HOME%\bin\java"  -Xms256m -Xmx512m -XX:MaxPermSize=256m  -classpath "%SAMPLE_SERVERPATH%" -Djava.io.tmpdir="%AXIS2_HOME%..\..\tmp\sampleServer" %_SERVERNAME% %_HTTPPORT% %_HTTPSPORT% %_XDEBUG%  -Djava.endorsed.dirs="%AXIS2_ENDORSED%"  -Djar.class.paths=%CARBON_CLASSPATH% -Dsystem.home="."  samples.util.Bootstrap  -conf  "%AXIS2_HOME%repository\conf\axis2.xml" %CMD%
 
 :end
 set _JAVACMD=

@@ -26,10 +26,13 @@
 <%@ page import="org.apache.axis2.client.Options" %>
 <%@ page import="org.apache.axis2.AxisFault" %>
 <%@ page import="org.wso2.carbon.registry.core.exceptions.RegistryException" %>
+<%@ page import="org.wso2.carbon.stratos.common.util.CommonUtil" %>
 
 <%
     String usagePlan = request.getParameter("selectedUsagePlan");
     String regTenantDomain = request.getParameter("regTenantDomain");
+    String adminUserName = CommonUtil.getAdminUserName();
+    string adminPassword = CommonUtil.getAdminPassword();
 
     BillingDataAccessServiceStub stub;
     String cookie = (String) session.getAttribute(ServerConstants.ADMIN_SERVICE_COOKIE);
@@ -44,7 +47,7 @@
         Options option = client.getOptions();
         option.setManageSession(true);
         option.setProperty(org.apache.axis2.transport.http.HTTPConstants.COOKIE_STRING, cookie);
-        CarbonUtils.setBasicAccessSecurityHeaders("admin", "admin", client);
+        CarbonUtils.setBasicAccessSecurityHeaders(adminUserName, adminPassword, client);
         stub.changeSubscriptionForTenant(usagePlan, regTenantDomain);
 
     } catch (AxisFault axisFault) {

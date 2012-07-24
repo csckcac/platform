@@ -26,7 +26,7 @@
     </parent>
 
     <modelVersion>4.0.0</modelVersion>
-    <artifactId>org.wso2.carbon.hadoop.mgt.ui.feature</artifactId>
+    <artifactId>org.wso2.carbon.mapred.mgt.ui.feature</artifactId>
     <packaging>pom</packaging>
     <name>WSO2 Carbon - Hadoop Server Management UI Feature</name>
     <url>http://wso2.org</url>
@@ -35,11 +35,12 @@
     <dependencies>
         <dependency>
             <groupId>org.wso2.carbon</groupId>
-            <artifactId>org.wso2.carbon.hadoop.mgt.ui</artifactId>
+            <artifactId>org.wso2.carbon.mapred.mgt.ui</artifactId>
+	    <version>${wso2carbon.version}</version>
         </dependency>
         <dependency>
             <groupId>org.wso2.carbon</groupId>
-            <artifactId>org.wso2.carbon.hadoop.mgt.stub</artifactId>
+            <artifactId>org.wso2.carbon.mapred.mgt.stub</artifactId>
             <version>${wso2carbon.version}</version>
         </dependency>
         <dependency>
@@ -63,7 +64,7 @@
                             <goal>p2-feature-gen</goal>
                         </goals>
                         <configuration>
-                            <id>org.wso2.carbon.hadoop.mgt.ui</id>
+                            <id>org.wso2.carbon.mapred.mgt.ui</id>
                             <propertiesFile>../../../etc/feature.properties</propertiesFile>
                             <adviceFile>
                                 <properties>
@@ -72,8 +73,8 @@
                                 </properties>
                             </adviceFile>
                             <bundles>
-                                <bundleDef>org.wso2.carbon:org.wso2.carbon.hadoop.mgt.ui</bundleDef>
-                                <bundleDef>org.wso2.carbon:org.wso2.carbon.hadoop.mgt.stub</bundleDef>
+                                <bundleDef>org.wso2.carbon:org.wso2.carbon.mapred.mgt.ui</bundleDef>
+                                <bundleDef>org.wso2.carbon:org.wso2.carbon.mapred.mgt.stub</bundleDef>
                             </bundles>
                             <importFeatures>
                                 <importFeatureDef>org.wso2.carbon.core.ui:${wso2carbon.version}</importFeatureDef>

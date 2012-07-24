@@ -26,16 +26,22 @@
     </parent>
 
     <modelVersion>4.0.0</modelVersion>
-    <artifactId>org.wso2.carbon.hadoop.jobtracker.feature</artifactId>
+    <artifactId>org.wso2.carbon.mapred.mgt.feature</artifactId>
     <packaging>pom</packaging>
-    <name>WSO2 Carbon - Hadoop JobTracker Feature</name>
+    <name>WSO2 Carbon - MapReude Server Management Feature</name>
     <url>http://wso2.org</url>
-    <description>This feature contains Hadoop Jobtracker bundles</description>
+    <description>This feature contains the bundles required for managing the Hadoop Jobtracker</description>
 
     <dependencies>
         <dependency>
             <groupId>org.wso2.carbon</groupId>
-            <artifactId>org.wso2.carbon.hadoop.jobtracker</artifactId>
+            <artifactId>org.wso2.carbon.mapred.mgt</artifactId>
+	    <version>${wso2carbon.version}</version>
+        </dependency>
+        <dependency>
+            <groupId>org.wso2.carbon</groupId>
+            <artifactId>org.wso2.carbon.hadoop.security</artifactId>
+	    <version>${wso2carbon.version}</version>
         </dependency>
         <dependency>
             <groupId>org.wso2.carbon</groupId>
@@ -58,7 +64,7 @@
                             <goal>p2-feature-gen</goal>
                         </goals>
                         <configuration>
-                            <id>org.wso2.carbon.hadoop.jobtracker</id>
+                            <id>org.wso2.carbon.mapred.mgt</id>
                             <propertiesFile>../../../etc/feature.properties</propertiesFile>
                             <adviceFile>
                                 <properties>
@@ -67,7 +73,7 @@
                                 </properties>
                             </adviceFile>
                             <bundles>
-                                <bundleDef>org.wso2.carbon:org.wso2.carbon.hadoop.jobtracker</bundleDef>
+                                <bundleDef>org.wso2.carbon:org.wso2.carbon.mapred.mgt</bundleDef>
                             </bundles>
                             <importFeatures>
                                 <importFeatureDef>org.wso2.carbon.core.server:${wso2carbon.version}</importFeatureDef>

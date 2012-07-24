@@ -33,6 +33,13 @@ $(document).ready(function () {
     };
 
 
+    $("#application-name").charCount({
+			allowed: 70,
+			warning: 50,
+			counterText: 'Characters left: '
+		});
+    $("#application-name").val('');
+
     /*$('#application-name').keydown(function(event) {
          if (event.which == 13) {
                applicationAdd();

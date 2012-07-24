@@ -16,18 +16,23 @@
  </script>
 <h3>Add New Application</h3>
 <form id="appAddForm">
-
 <div class="application-add well form-horizontal">
 
     <div class="control-group">
         <label class="control-label" for="application-name">Name</label>
-
         <div class="controls">
-            <div class="span6"><input type="text" class="span12 required" id="application-name" autofocus="autofocus" /></div>
-            <div class="span6"><input type="submit" id="application-add-button" class="btn btn-primary" value="Add" /></div>
-            <input type="hidden" id="apiPath" value="<%=apiPath%>" />
-            <input type="hidden" id="goBack" value="<%=goBack%>" />
-            <div class="help-block span12">Applications are required to make API subscriptions and consume them. You will be able to subscribe to these applications from the API details page.</div>
+
+            <div class="span6">
+                <input type="text" class="span12 required" maxlength="70" id="application-name" autofocus="autofocus"/></div>
+            <div class="span6 app-add-btn-block">
+                <input type="submit" id="application-add-button" class="btn btn-primary" value="Add"/>
+            </div>
+            <input type="hidden" id="apiPath" value="<%=apiPath%>"/>
+            <input type="hidden" id="goBack" value="<%=goBack%>"/>
+
+            <div class="help-block span12">Applications are required to make API subscriptions and consume them. You
+                will be able to subscribe to these applications from the API details page.
+            </div>
         </div>
     </div>
 </div>

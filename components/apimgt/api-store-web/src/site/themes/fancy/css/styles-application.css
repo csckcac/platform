@@ -305,12 +305,12 @@ input.error{
     padding:10px;
     width:100px;
 }
-#comment-add .counter{
+#comment-add .counter,.application-add .counter{
     color: #666666;
     font-size:11px;
 }
-#comment-add .warning{color:#600;}
-#comment-add .exceeded{color:#e00;}
+#comment-add .warning, .application-add .warning{color:#600;}
+#comment-add .exceeded, .application-add .exceeded{color:#e00;}
 .application-add div.help-block{
     padding-left: 0px; margin-left: 0px;
 }
@@ -344,6 +344,9 @@ ul.more-from-provider li.list-header{
 }
 .key-table td, .key-table th{
     padding:2px 2px 2px 4px;
+}
+.app-add-btn-block{
+    padding-top:20px;
 }
 @media all and (max-width: 800px) {
     .section-shifter-left div.tab-content{

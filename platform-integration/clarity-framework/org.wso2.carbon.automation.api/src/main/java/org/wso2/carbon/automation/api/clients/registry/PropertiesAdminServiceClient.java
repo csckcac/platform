@@ -24,6 +24,7 @@ import org.apache.commons.logging.LogFactory;
 import org.wso2.carbon.automation.api.clients.utils.AuthenticateStub;
 import org.wso2.carbon.registry.properties.stub.PropertiesAdminServiceRegistryExceptionException;
 import org.wso2.carbon.registry.properties.stub.PropertiesAdminServiceStub;
+import org.wso2.carbon.registry.properties.stub.beans.xsd.PropertiesBean;
 import org.wso2.carbon.registry.properties.stub.beans.xsd.RetentionBean;
 
 import java.rmi.RemoteException;
@@ -94,6 +95,21 @@ public class PropertiesAdminServiceClient {
             throw new RemoteException(errMsg,e);
         } catch (PropertiesAdminServiceRegistryExceptionException e) {
             String errMsg="Adding property fails";
+            log.error(errMsg);
+            throw new PropertiesAdminServiceRegistryExceptionException(errMsg,e);
+        }
+    }
+
+    public PropertiesBean getProperty(String path, String viewProps)
+            throws RemoteException, PropertiesAdminServiceRegistryExceptionException {
+        try {
+            return propertiesAdminServiceStub.getProperties(path, viewProps);
+        } catch (RemoteException e) {
+            String errMsg="Getting property fails";
+            log.error(errMsg);
+            throw new RemoteException(errMsg,e);
+        } catch (PropertiesAdminServiceRegistryExceptionException e) {
+            String errMsg="Getting property fails";
             log.error(errMsg);
             throw new PropertiesAdminServiceRegistryExceptionException(errMsg,e);
         }

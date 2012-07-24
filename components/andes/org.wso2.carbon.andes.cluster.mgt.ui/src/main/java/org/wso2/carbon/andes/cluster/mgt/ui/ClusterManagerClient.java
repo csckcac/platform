@@ -4,6 +4,7 @@ import org.apache.axis2.client.Options;
 import org.apache.axis2.client.ServiceClient;
 import org.apache.axis2.context.ConfigurationContext;
 import org.wso2.carbon.andes.mgt.stub.AndesManagerServiceClusterMgtAdminExceptionException;
+import org.wso2.carbon.andes.mgt.stub.AndesManagerServiceClusterMgtExceptionException;
 import org.wso2.carbon.andes.mgt.stub.AndesManagerServiceStub;
 import org.wso2.carbon.andes.mgt.stub.types.carbon.NodeDetail;
 import org.wso2.carbon.andes.mgt.stub.types.carbon.Queue;
@@ -169,9 +170,29 @@ public class ClusterManagerClient {
      * @param newNodeToAssign
      * @return
      */
-    public boolean updateWorkerForQueue(String queueToUpdate, String newNodeToAssign) throws RemoteException {
+    public boolean updateWorkerForQueue(String queueToUpdate, String newNodeToAssign) throws RemoteException, AndesManagerServiceClusterMgtExceptionException {
         boolean  result =stub.updateWorkerForQueue(queueToUpdate, newNodeToAssign);
         return result;
     }
 
+    /**
+     * check if broker is running in clustered mode
+     * @return
+     * @throws AndesManagerServiceClusterMgtExceptionException
+     * @throws RemoteException
+     */
+    public boolean isClusteringEnabled() throws AndesManagerServiceClusterMgtExceptionException, RemoteException {
+        boolean result = stub.isClusteringEnabled();
+        return result;
+    }
+
+    /**
+     * get node ID assigned to this node by Zookeeper
+     * @return
+     * @throws AndesManagerServiceClusterMgtExceptionException
+     * @throws RemoteException
+     */
+    public String getMyNodeID() throws AndesManagerServiceClusterMgtExceptionException, RemoteException{
+        return stub.getMyNodeID();
+    }
 }

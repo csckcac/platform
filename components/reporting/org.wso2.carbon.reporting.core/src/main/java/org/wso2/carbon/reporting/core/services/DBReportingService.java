@@ -16,25 +16,27 @@
 
 package org.wso2.carbon.reporting.core.services;
 
-import net.sf.jasperreports.engine.*;
+import net.sf.jasperreports.engine.JRException;
+import net.sf.jasperreports.engine.JasperPrint;
 import org.apache.axiom.om.OMDocument;
 import org.apache.axiom.om.OMElement;
 import org.apache.axiom.om.impl.builder.StAXOMBuilder;
 import org.apache.axiom.om.xpath.AXIOMXPath;
 import org.apache.commons.logging.Log;
 import org.apache.commons.logging.LogFactory;
-import org.apache.synapse.commons.datasource.DataSourceInformation;
 import org.jaxen.JaxenException;
-import org.wso2.carbon.datasource.DataSourceInformationRepositoryService;
+import org.wso2.carbon.ndatasource.common.DataSourceException;
+import org.wso2.carbon.ndatasource.core.CarbonDataSource;
+import org.wso2.carbon.ndatasource.core.DataSourceService;
 import org.wso2.carbon.reporting.api.ReportingException;
 import org.wso2.carbon.reporting.core.ReportBean;
-import org.wso2.carbon.reporting.core.utils.ImageLoader;
-import org.wso2.carbon.reporting.util.ReportDataSource;
-import org.wso2.carbon.reporting.util.ReportParamMap;
 import org.wso2.carbon.reporting.core.ReportingService;
 import org.wso2.carbon.reporting.core.datasource.ReportDataSourceManager;
 import org.wso2.carbon.reporting.core.internal.ReportingComponent;
+import org.wso2.carbon.reporting.core.utils.ImageLoader;
 import org.wso2.carbon.reporting.util.JasperPrintProvider;
+import org.wso2.carbon.reporting.util.ReportDataSource;
+import org.wso2.carbon.reporting.util.ReportParamMap;
 import org.wso2.carbon.reporting.util.ReportStream;
 
 import javax.xml.stream.XMLInputFactory;
@@ -46,7 +48,9 @@ import java.io.IOException;
 import java.io.InputStream;
 import java.sql.Connection;
 import java.sql.SQLException;
-import java.util.*;
+import java.util.ArrayList;
+import java.util.Iterator;
+import java.util.List;
 
 /**
  * This service used to get report pointing a data source.
@@ -238,20 +242,22 @@ public class DBReportingService implements ReportingService {
 
 
     public List<String> getCarbonDataSourceNames() {
-        DataSourceInformationRepositoryService dataSourceService = ReportingComponent.
+        DataSourceService dataSourceService = ReportingComponent.
                 getCarbonDataSourceService();
         if (dataSourceService == null) {
             log.error("Carbon data source service is not available, returning empty list");
             return new ArrayList<String>();
         }
-        List<String> namesList = new ArrayList<String>();
-        Iterator<DataSourceInformation> dataItr = dataSourceService.
-                getDataSourceInformationRepository().getAllDataSourceInformation();
-        DataSourceInformation dataInfo;
-        while (dataItr.hasNext()) {
-            dataInfo = dataItr.next();
-            namesList.add(dataInfo.getDatasourceName());
+        try {
+            ArrayList<String> dsNames = new ArrayList<String>();
+            List<CarbonDataSource> dataSourceList = dataSourceService.getAllDataSources();
+            for (CarbonDataSource dataSource : dataSourceList){
+                dsNames.add(dataSource.getDSMInfo().getName());
+            }
+            return dsNames;
+        } catch (DataSourceException e) {
+           log.error(e.getMessage());
+            return new ArrayList<String>();
         }
-        return namesList;
     }
 }

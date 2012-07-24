@@ -18,10 +18,9 @@ package org.wso2.carbon.reporting.core.datasource;
 
 import org.apache.commons.logging.Log;
 import org.apache.commons.logging.LogFactory;
-import org.apache.synapse.commons.datasource.DataSourceInformationRepository;
-import org.apache.synapse.commons.datasource.DataSourceRepositoryHolder;
-import org.apache.synapse.commons.datasource.DataSourceRepositoryManager;
-import org.wso2.carbon.datasource.DataSourceInformationRepositoryService;
+import org.wso2.carbon.ndatasource.common.DataSourceException;
+import org.wso2.carbon.ndatasource.core.CarbonDataSource;
+import org.wso2.carbon.ndatasource.core.DataSourceService;
 import org.wso2.carbon.reporting.api.ReportingException;
 import org.wso2.carbon.reporting.core.internal.ReportingComponent;
 
@@ -41,29 +40,22 @@ public class ReportDataSourceManager {
      * @return Connection
      * @throws org.wso2.carbon.reporting.api.ReportingException if failed to get connection for data source
      */
-    public Connection getJDBCConnection(String dataSourceName) throws ReportingException {
+     public Connection getJDBCConnection(String dataSourceName) throws ReportingException {
         Connection connection = null;
-        DataSourceRepositoryManager repositoryManager;
-        DataSource dataSource;
-
-        DataSourceInformationRepositoryService repositoryService =
+        DataSourceService dataSourceService =
                 ReportingComponent.getCarbonDataSourceService();
-        if (repositoryService != null) {
-            DataSourceInformationRepository datasourceRepo =
-                    repositoryService.getDataSourceInformationRepository();
-            DataSourceRepositoryHolder dataSourceHelper = DataSourceRepositoryHolder.getInstance();
-            dataSourceHelper.init(datasourceRepo, null);
-            repositoryManager = dataSourceHelper.getDataSourceRepositoryManager();
-            if (repositoryManager != null) {
-                dataSource = repositoryManager.getDataSource(dataSourceName);
-                if (dataSource != null) {
-                    try {
-                        connection = dataSource.getConnection();
-                    } catch (SQLException e) {
-                        throw new ReportingException("Failed to get data source connection for "
-                                                     + "\"" + dataSourceName + "\"", e);
-                    }
-                }
+        if (dataSourceService != null) {
+
+            try {
+                CarbonDataSource carbonDataSource = dataSourceService.getDataSource(dataSourceName);
+                connection = ((DataSource) carbonDataSource.getDSObject()).getConnection();
+            } catch (DataSourceException e) {
+                log.error(e.getMessage(), e);
+                throw new ReportingException(e.getMessage(), e);
+            } catch (SQLException e) {
+                log.error(e.getMessage(), e);
+                throw new ReportingException("Failed to get data source connection for "
+                        + "\"" + dataSourceName + "\"", e);
             }
         }
         return connection;

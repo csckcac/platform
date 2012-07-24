@@ -20,7 +20,7 @@ import org.apache.commons.logging.Log;
 import org.apache.commons.logging.LogFactory;
 import org.osgi.framework.Bundle;
 import org.osgi.service.component.ComponentContext;
-import org.wso2.carbon.datasource.DataSourceInformationRepositoryService;
+import org.wso2.carbon.ndatasource.core.DataSourceService;
 import org.wso2.carbon.registry.core.exceptions.RegistryException;
 import org.wso2.carbon.registry.core.service.RegistryService;
 
@@ -29,14 +29,14 @@ import org.wso2.carbon.registry.core.service.RegistryService;
  * @scr.component name="reporting.services" immediate="true"
  * @scr.reference name="registry.service" interface="org.wso2.carbon.registry.core.service.RegistryService"
  * cardinality="1..1" policy="dynamic"  bind="setRegistryService" unbind="unsetRegistryService"
- *  @scr.reference name="org.wso2.carbon.datasource.DataSourceInformationRepositoryService" interface="org.wso2.carbon.datasource.DataSourceInformationRepositoryService"
+ * @scr.reference name="org.wso2.carbon.ndatasource.core.DataSourceService" interface="org.wso2.carbon.ndatasource.core.DataSourceService"
  * cardinality="0..1" policy="dynamic" bind="setCarbonDataSourceService" unbind="unsetCarbonDataSourceService"
  */
 
 public class ReportingComponent {
     private static Log log = LogFactory.getLog(ReportingComponent.class);
     private static RegistryService registryServiceInstance;
-    private static DataSourceInformationRepositoryService dataSourceService1;
+    private static DataSourceService dataSourceService1;
 
 
     protected void activate(ComponentContext componentContext) {
@@ -76,7 +76,7 @@ public class ReportingComponent {
     }
 
     protected void setCarbonDataSourceService(
-            DataSourceInformationRepositoryService dataSourceService) {
+            DataSourceService dataSourceService) {
         if (log.isDebugEnabled()) {
             log.debug("Setting the Carbon Data Sources Service");
         }
@@ -84,11 +84,11 @@ public class ReportingComponent {
     }
 
     protected void unsetCarbonDataSourceService(
-            DataSourceInformationRepositoryService dataSourceService) {
+            DataSourceService dataSourceService) {
         dataSourceService1 = dataSourceService;
     }
 
-    public static DataSourceInformationRepositoryService getCarbonDataSourceService() {
+    public static DataSourceService getCarbonDataSourceService() {
         return dataSourceService1;
     }
 

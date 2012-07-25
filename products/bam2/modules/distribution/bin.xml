@@ -216,7 +216,17 @@
             </includes>
             <fileMode>755</fileMode>
         </fileSet>
-
+	
+	<!-- jaggery dashboards -->
+	
+	<fileSet>
+ 	    <directory>../dashboard</directory>
+            <outputDirectory>${pom.artifactId}-${pom.version}/repository/deployment/server/jaggeryapps</outputDirectory>
+            <includes>
+                <include>**/**</include>
+            </includes>
+            <fileMode>755</fileMode>
+        </fileSet>
     </fileSets>
 
     <dependencySets>

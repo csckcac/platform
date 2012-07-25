@@ -26,6 +26,7 @@
             <class name="org.wso2.carbon.registry.version.test.RestoreResourcesTestCase"/>
             <class name="org.wso2.carbon.registry.permission.test.PermissionInheritanceTestCase"/>
             <class name="org.wso2.carbon.registry.permission.test.AnonymousAccessTestCase"/>
+            <class name="org.wso2.carbon.registry.permission.test.RolePermissionAsAdminTestCase"/>
         </classes>
     </test>
 </suite>

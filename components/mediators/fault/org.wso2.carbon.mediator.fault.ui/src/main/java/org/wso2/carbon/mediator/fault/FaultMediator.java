@@ -271,7 +271,7 @@ public class FaultMediator extends AbstractMediator {
             node.setText(faultNode.toString());
         }
 
-        if (faultRole != null && soapVersion != POX && soapVersion !=SOAP11) {
+        if (faultRole != null && soapVersion != POX) {
             OMElement role = fac.createOMElement("role", synNS, fault);
             role.setText(faultRole.toString());
         }

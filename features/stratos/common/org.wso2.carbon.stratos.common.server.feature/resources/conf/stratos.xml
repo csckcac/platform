@@ -54,6 +54,9 @@
 	such as when payments received -->
     <FinanceNotificationEmail>finance-notification-email</FinanceNotificationEmail>	
 
+     <!--this parameter is used to disable charging at the registration time-->
+    <ChargeOnRegistration>false</ChargeOnRegistration>
+
     <!--A few Stratos Public Cloud Specific customizations are handled by this parameter-->
     <StratosPublicCloudSetup>true</StratosPublicCloudSetup>
 

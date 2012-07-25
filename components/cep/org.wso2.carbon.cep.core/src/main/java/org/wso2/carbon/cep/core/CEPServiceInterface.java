@@ -17,8 +17,8 @@
 package org.wso2.carbon.cep.core;
 
 import org.apache.axis2.engine.AxisConfiguration;
-import org.wso2.carbon.cep.core.exception.CEPConfigurationException;
 import org.wso2.carbon.cep.core.backend.CEPEngineProvider;
+import org.wso2.carbon.cep.core.exception.CEPConfigurationException;
 
 import java.util.List;
 
@@ -67,6 +67,12 @@ public interface CEPServiceInterface {
      * @return Array of Names of available engine providers
      * */
     public String[]  getCEPEngineProviders() throws CEPConfigurationException;
+
+    /**
+     * This method is used to get names of the all Engine providers
+     * @return Array of Names of available engine providers
+     * */
+    String[] getCEPEngineProviderConfigNames(String providerName) throws CEPConfigurationException;
 
     /**
      * This method is used to get names if the all brokers registered in the back end

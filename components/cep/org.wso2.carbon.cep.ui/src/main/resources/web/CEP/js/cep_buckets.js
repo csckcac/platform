@@ -705,7 +705,15 @@ function finishAddBucketWizard() {
     var bucketName = document.getElementById("bucketName");
     var bucketDescription = document.getElementById("bucketDescription");
     var engineProvider = document.getElementById("engineProviders")[document.getElementById("engineProviders").selectedIndex];
-
+    var providerConfigNames = document.getElementById("providerConfig::" + engineProvider.value + '::Names');
+    var providerConfigValues = "";
+    if (providerConfigNames.value != "") {
+        var providerConfigNamesArray = providerConfigNames.value.substr(2).split('::');
+        for (var i = 0; i < providerConfigNamesArray.length; i++) {
+            providerConfigValues = providerConfigValues + "-__-"+providerConfigNamesArray[i]+ "-_-"+ document.getElementById("providerConfig::" + engineProvider.value + '::'+providerConfigNamesArray[i]).value;
+        }
+        providerConfigValues=providerConfigValues.substr(4);
+    }
     if (bucketName.value == "") {
         CARBON.showErrorDialog("Bucket name is mandatory");
         return;
@@ -754,7 +762,7 @@ function finishAddBucketWizard() {
             }
         }
     };
-    var request = YAHOO.util.Connect.asyncRequest('POST', sUrl, callback, "bucketName=" + bucketName.value + "&bucketDescription=" + bucketDescription.value + "&engineProvider=" + engineProvider.value + "&data="); //This is where actually do the call
+    var request = YAHOO.util.Connect.asyncRequest('POST', sUrl, callback, "bucketName=" + bucketName.value + "&bucketDescription=" + bucketDescription.value + "&engineProvider=" + engineProvider.value +"&engineProviderConfig=" + providerConfigValues + "&data="); //This is where actually do the call
 
 }
 

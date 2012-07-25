@@ -4,12 +4,13 @@
 <%@ page import="org.wso2.carbon.CarbonConstants" %>
 <%@ page import="org.wso2.carbon.cep.stub.admin.CEPAdminServiceStub" %>
 <%@ page import="org.wso2.carbon.cep.stub.admin.internal.xsd.BucketDTO" %>
+<%@ page import="org.wso2.carbon.cep.stub.admin.internal.xsd.CEPEngineProviderConfigPropertyDTO" %>
+<%@ page import="org.wso2.carbon.cep.stub.admin.internal.xsd.CEPEngineProviderInfoDTO" %>
 <%@ page import="org.wso2.carbon.cep.stub.admin.internal.xsd.InputDTO" %>
 <%@ page import="org.wso2.carbon.cep.stub.admin.internal.xsd.QueryDTO" %>
 <%@ page import="org.wso2.carbon.ui.CarbonUIUtil" %>
 <%@ page import="java.util.Arrays" %>
 <%@ page import="java.util.LinkedList" %>
-<%@ page import="org.wso2.carbon.cep.core.Bucket" %>
 <%@ taglib prefix="fmt" uri="http://java.sun.com/jstl/fmt" %>
 <%@ taglib prefix="carbon" uri="http://wso2.org/projects/carbon/taglibs/carbontags.jar" %>
 <fmt:bundle basename="org.wso2.carbon.cep.ui.i18n.Resources">
@@ -214,6 +215,7 @@
     String bucketName = "";
     String description = "";
     String engineProvider = "";
+    CEPEngineProviderConfigPropertyDTO[] engineProviderConfig = null;
     LinkedList<InputDTO> inputs = null;
     LinkedList<QueryDTO> queries = null;
     int currentInputPageNo = 0;
@@ -231,6 +233,7 @@
                 bucketName = editingBucket.getName();
                 description = editingBucket.getDescription();
                 engineProvider = editingBucket.getEngineProvider();
+                engineProviderConfig = editingBucket.getEngineProviderConfigProperty();
                 if (editingBucket.getInputs() != null) {
                     inputs = new LinkedList<InputDTO>(Arrays.asList(editingBucket.getInputs()));
                     inputCounts = inputs.size();
@@ -252,6 +255,7 @@
             bucketName = editingBucket.getName();
             description = editingBucket.getDescription();
             engineProvider = editingBucket.getEngineProvider();
+            engineProviderConfig = editingBucket.getEngineProviderConfigProperty();
             inputs = (LinkedList<InputDTO>) session.getAttribute("inputs");
             queries = (LinkedList<QueryDTO>) session.getAttribute("queries");
         }
@@ -336,12 +340,12 @@
                     <td><select name="engineProviders"
                                 id="engineProviders" <%=!isEditing ? "" : "disabled=\"true\""%> >
                         <%
-                            String[] engineProviders = stub.getEngineProviders();
+                            CEPEngineProviderInfoDTO[] engineProviders = stub.getEngineProvidersInfo();
                             if (engineProviders != null && engineProviders.length > 0) {
-                                for (String engineProviderS : engineProviders) {
+                                for (CEPEngineProviderInfoDTO engineProviderS : engineProviders) {
                         %>
-                        <option <%=engineProvider.equalsIgnoreCase(engineProviderS) ? "selected=\"true\"" : ""%>
-                                value="<%=engineProviderS%>"><%=engineProviderS%>
+                        <option <%=engineProvider.equalsIgnoreCase(engineProviderS.getProviderName()) ? "selected=\"true\"" : ""%>
+                                value="<%=engineProviderS.getProviderName()%>"><%=engineProviderS.getProviderName()%>
                         </option>
                         <%
                                 }
@@ -350,6 +354,70 @@
                     </select>
                     </td>
                 </tr>
+                <%
+                    if (engineProviders != null && engineProviders.length > 0) {
+                %>
+                <tr >
+                    <td class="heading_A" colspan="2"><fmt:message
+                            key="engine.provider.configuration"/></td>
+                </tr>
+                <%
+                    for (int i = 0; i < engineProviders.length; i++) {
+                        CEPEngineProviderInfoDTO engineProviderInfo = engineProviders[i];
+                        String totalConfName = "";
+                        if (engineProviderInfo.getConfigNames() != null) {
+                            for (int k = 0; k < engineProviderInfo.getConfigNames().length; k++) {
+                                String configName = engineProviderInfo.getConfigNames()[k];
+                                totalConfName = totalConfName + "::" + configName;
+                %>
+                <tr name="providerConfig<%= "::"+engineProviderInfo.getProviderName()%>">
+                    <td class="leftCol-small labelField"
+                        for="providerConfig<%="::"+engineProviderInfo.getProviderName()+"::"+configName%>">
+                        <%
+                            if (configName != null && "siddhi.persistence.snapshot.time.interval.minutes".equals(configName)) {
+                        %>
+                        <fmt:message
+                                key="siddhi.persistence.snapshot.time.interval.minutes"/>
+                        <%
+                        } else {
+                        %>
+                        <%=configName%>
+                        <%
+                            }
+                        %>
+                    </td>
+                    <td>
+                        <input id="providerConfig<%="::"+engineProviderInfo.getProviderName()+"::"+configName%>"
+                               type="text" <%=!isEditing ? "" : " readonly=\"true\""%>
+                                <%
+                                    if (engineProviderConfig != null && engineProviderConfig.length > k) {
+                                %>
+                               value="<%=engineProviderConfig[k].getValues()%>"/>
+                        <%
+                        } else {
+                        %>
+                        value=""/>
+                        <%
+                            }
+                        %>
+                    </td>
+                </tr>
+                <%
+                        }
+                    }
+                %>
+                <tr name="providerConfig<%= "::"+engineProviderInfo.getProviderName()%>">
+                    <td></td>
+                    <td>
+                        <input type="hidden"
+                               id="providerConfig<%= "::"+engineProviderInfo.getProviderName()%>::Names"
+                               value="<%= totalConfName%>"/>
+                    </td>
+                </tr>
+                <%
+                        }
+                    }
+                %>
                 </tbody>
             </table>
         </td>
@@ -1107,7 +1175,7 @@
             <tr>
                 <td class="leftCol-small"><fmt:message key="property.name"/> :</td>
                 <td>
-                    <input type="text" id="OutputMapPropName"/>
+                    <input type="text" id="outputMapPropName"/>
                 </td>
                 <td><input type="button" class="button" value="<fmt:message key="add"/>"
                            onclick="addOutputMapProperty()"/>

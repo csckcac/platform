@@ -13,6 +13,7 @@
 <%@ page import="org.wso2.carbon.cep.stub.admin.internal.xsd.XpathDefinitionDTO" %>
 <%@ page import="org.wso2.carbon.ui.CarbonUIUtil" %>
 <%@ page import="java.util.HashMap" %>
+<%@ page import="org.wso2.carbon.cep.stub.admin.internal.xsd.CEPEngineProviderConfigPropertyDTO" %>
 <%@ taglib prefix="fmt" uri="http://java.sun.com/jstl/fmt" %>
 <fmt:bundle basename="org.wso2.carbon.cep.ui.i18n.Resources">
 <link type="text/css" href="../dialog/js/jqueryui/tabs/ui.all.css" rel="stylesheet"/>
@@ -64,6 +65,7 @@
     String bucketName = "";
     String description = "";
     String engineProvider = "";
+    CEPEngineProviderConfigPropertyDTO[] engineProviderConfigProperties = null;
     try {
         if (session.getAttribute("editingBucket") != null) {
             isEditing = true;
@@ -71,6 +73,7 @@
             bucketName = editingBucket.getName();
             description = editingBucket.getDescription();
             engineProvider = editingBucket.getEngineProvider();
+            engineProviderConfigProperties = editingBucket.getEngineProviderConfigProperty();
         }
     } catch (Exception e) {
         e.printStackTrace();
@@ -196,6 +199,42 @@
             <td><input id="engineProvider" type="text" readonly="true"
                        value="<%=engineProvider%>"/></td>
         </tr>
+        <%
+            if (engineProviderConfigProperties != null && engineProviderConfigProperties.length > 0) {
+        %>
+        <tr>
+            <td class="heading_A"><fmt:message key="engine.provider.configuration"/></td>
+        </tr>
+        <%
+            for (int k = 0; k < engineProviderConfigProperties.length; k++) {
+        %>
+        <tr name="providerConfig<%= "::"+engineProvider%>">
+            <td class="leftCol-small labelField" for="providerConfig<%="::"+engineProvider+"::"+engineProviderConfigProperties[k].getNames()%>">
+
+                <%
+                    if (engineProviderConfigProperties[k].getNames() != null && "siddhi.persistence.snapshot.time.interval.minutes".equals(engineProviderConfigProperties[k].getNames())) {
+                %>
+                <fmt:message
+                        key="siddhi.persistence.snapshot.time.interval.minutes"/>
+                <%
+                } else {
+                %>
+                <%=engineProviderConfigProperties[k].getNames()%>
+                <%
+                    }
+                %>
+            </td>
+            <td>
+                <input id="providerConfig<%="::"+engineProvider+"::"+engineProviderConfigProperties[k].getNames()%>"
+                       type="text" readonly="true"
+                       value="<%=engineProviderConfigProperties[k].getValues().equals("")?"":engineProviderConfigProperties[k].getValues().substring(1,engineProviderConfigProperties[k].getValues().length()-1)%>"/>
+            </td>
+        </tr>
+        <%
+                }
+
+            }
+        %>
     </table>
 </div>
 <div class="sectionSeperator togglebleTitle"><fmt:message key="inputs"/></div>

@@ -37,7 +37,7 @@
         <operation name="removeAllBuckets">
             <parameter name="AuthorizationAction" locked="true">/permission/admin/manage/cep</parameter>
         </operation>
-        <operation name="getEngineProviders">
+        <operation name="getEngineProvidersInfo">
             <parameter name="AuthorizationAction" locked="true">/permission/admin/manage/cep</parameter>
         </operation>
         <operation name="getBrokerNames">
@@ -72,8 +72,8 @@
         </operation>
     </service>
 
-    <parameter name="adminService" locked="true">true</parameter>
-    <parameter name="hiddenService" locked="true">true</parameter>
-    <!--<parameter name="adminService" locked="true">false</parameter>-->
-    <!--<parameter name="hiddenService" locked="true">false</parameter>-->
+    <!--<parameter name="adminService" locked="true">true</parameter>-->
+    <!--<parameter name="hiddenService" locked="true">true</parameter>-->
+    <parameter name="adminService" locked="true">false</parameter>
+    <parameter name="hiddenService" locked="true">false</parameter>
 </serviceGroup>

@@ -27,10 +27,10 @@ import org.wso2.carbon.cep.core.backend.CEPBackEndRuntime;
 import org.wso2.carbon.cep.core.backend.CEPBackEndRuntimeFactory;
 import org.wso2.carbon.cep.core.backend.CEPEngineProvider;
 import org.wso2.carbon.cep.core.exception.CEPConfigurationException;
-import org.wso2.carbon.cep.core.mapping.input.Input;
-import org.wso2.carbon.cep.core.mapping.input.mapping.InputMapping;
 import org.wso2.carbon.cep.core.internal.ds.CEPServiceValueHolder;
 import org.wso2.carbon.cep.core.internal.registry.CEPRegistryInvoker;
+import org.wso2.carbon.cep.core.mapping.input.Input;
+import org.wso2.carbon.cep.core.mapping.input.mapping.InputMapping;
 import org.wso2.carbon.context.CarbonContext;
 
 import java.util.ArrayList;
@@ -250,6 +250,12 @@ public class CEPService implements CEPServiceInterface {
         String[] providers = new String[engineProviders.size()];
         engineProviders.toArray(providers);
         return providers;
+    }
+
+    @Override
+    public String[] getCEPEngineProviderConfigNames(String providerName)
+            throws CEPConfigurationException {
+       return cepEngineProviderMap.get(providerName).getConfigurationPropertyNames().toArray(new String[cepEngineProviderMap.get(providerName).getConfigurationPropertyNames().size()]);
     }
 
     public String[] getCEPBrokerNames() throws CEPConfigurationException {

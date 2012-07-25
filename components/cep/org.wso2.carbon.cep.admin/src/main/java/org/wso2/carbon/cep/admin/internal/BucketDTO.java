@@ -25,6 +25,11 @@ public class BucketDTO {
     private String engineProvider;
 
     /**
+     * engine provider to use with this bucket
+     */
+    private CEPEngineProviderConfigPropertyDTO[] engineProviderConfigProperty;
+
+    /**
      * query list of this bucket.
      */
     private QueryDTO[] queryDTOs;
@@ -75,5 +80,13 @@ public class BucketDTO {
 
     public void setInputs(InputDTO[] inputDTOs) {
         this.inputDTOs = inputDTOs;
+    }
+
+    public CEPEngineProviderConfigPropertyDTO[] getEngineProviderConfigProperty() {
+        return engineProviderConfigProperty;
+    }
+
+    public void setEngineProviderConfigProperty(CEPEngineProviderConfigPropertyDTO[] engineProviderConfigProperty) {
+        this.engineProviderConfigProperty = engineProviderConfigProperty;
     }
 }

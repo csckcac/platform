@@ -4,6 +4,7 @@
 <%@ page import="org.wso2.carbon.CarbonConstants" %>
 <%@ page import="org.wso2.carbon.cep.stub.admin.CEPAdminServiceStub" %>
 <%@ page import="org.wso2.carbon.cep.stub.admin.internal.xsd.BucketDTO" %>
+<%@ page import="org.wso2.carbon.cep.stub.admin.internal.xsd.CEPEngineProviderConfigPropertyDTO" %>
 <%@ page import="org.wso2.carbon.cep.stub.admin.internal.xsd.InputDTO" %>
 <%@ page import="org.wso2.carbon.cep.stub.admin.internal.xsd.QueryDTO" %>
 <%@ page import="org.wso2.carbon.ui.CarbonUIUtil" %>
@@ -31,7 +32,20 @@
     String bucketName = request.getParameter("bucketName");
     String bucketDescription = request.getParameter("bucketDescription");
     String engineProvider = request.getParameter("engineProvider");
+    String engineProviderConfig = request.getParameter("engineProviderConfig");
 
+    if(engineProviderConfig!=null&& !engineProviderConfig.equals("")){
+        String[] properties=engineProviderConfig.split("-__-");
+        CEPEngineProviderConfigPropertyDTO[] configProperties=new  CEPEngineProviderConfigPropertyDTO[properties.length];
+        for (int i = 0, propertiesLength = properties.length; i < propertiesLength; i++) {
+            String property = properties[i];
+            String[] vals = property.split("-_-");
+            configProperties[i]=new CEPEngineProviderConfigPropertyDTO();
+            configProperties[i].setNames(vals[0]);
+            configProperties[i].setValues(vals[1]);
+        }
+        bucket.setEngineProviderConfigProperty(configProperties);
+    }
     if(bucketName != null){
         bucketName = bucketName.trim();
     }

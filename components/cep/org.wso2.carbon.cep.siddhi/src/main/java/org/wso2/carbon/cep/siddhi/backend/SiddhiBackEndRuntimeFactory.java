@@ -54,7 +54,7 @@ public class SiddhiBackEndRuntimeFactory implements CEPBackEndRuntimeFactory {
             try {
                 persistenceTimeInterval = Long.parseLong(timeString);
             } catch (NumberFormatException e) {
-                log.error("Error reading siddhi persistence snapshot time interval, hence using " + persistenceTimeInterval + " min");
+                log.warn("Error reading siddhi persistence snapshot time interval, hence using " + persistenceTimeInterval + " min");
             }
         }
         SiddhiConfiguration siddhiConfig = new SiddhiConfiguration();

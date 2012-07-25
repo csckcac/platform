@@ -34,6 +34,7 @@ import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.List;
 import java.util.Map;
+import java.util.Properties;
 
 /**
  * this class is published as a web service. so that front end can invoke the
@@ -71,10 +72,19 @@ public class CEPAdminService extends AbstractAdmin {
             }
         }
 
+        Properties providerConfig = new Properties();
+        if (bucketDTO.getEngineProviderConfigProperty() != null) {
+            CEPEngineProviderConfigPropertyDTO[] engineProviderConfigProperty = bucketDTO.getEngineProviderConfigProperty();
+            for (int i = 0, cepProviderConfigNamesLength = engineProviderConfigProperty.length; i < cepProviderConfigNamesLength; i++) {
+                CEPEngineProviderConfigPropertyDTO providerConfigPropertyDTO = engineProviderConfigProperty[i];
+                providerConfig.setProperty(providerConfigPropertyDTO.getNames(), providerConfigPropertyDTO.getValues());
+            }
+        }
 
         backEndBucket.setName(bucketDTO.getName());
         backEndBucket.setDescription(bucketDTO.getDescription());
         backEndBucket.setEngineProvider(bucketDTO.getEngineProvider());
+        backEndBucket.setProviderConfiguration(providerConfig);
         backEndBucket.setInputs(backendInputList);
         backEndBucket.setQueries(backEndQueryList);
 
@@ -115,11 +125,21 @@ public class CEPAdminService extends AbstractAdmin {
                 }
             }
 
+            Properties providerConfig = new Properties();
+            if (bucketDTO.getEngineProviderConfigProperty() != null) {
+                CEPEngineProviderConfigPropertyDTO[] engineProviderConfigProperty = bucketDTO.getEngineProviderConfigProperty();
+                for (int i = 0, cepProviderConfigNamesLength = engineProviderConfigProperty.length; i < cepProviderConfigNamesLength; i++) {
+                    CEPEngineProviderConfigPropertyDTO providerConfigPropertyDTO = engineProviderConfigProperty[i];
+                    providerConfig.setProperty(providerConfigPropertyDTO.getNames(), providerConfigPropertyDTO.getValues());
+                }
+            }
+
 
             if (!(inputDTOs == null && queryDTOs == null)) {
                 backEndBucket.setName(bucketDTO.getName());
                 backEndBucket.setDescription(bucketDTO.getDescription());
                 backEndBucket.setEngineProvider(bucketDTO.getEngineProvider());
+                backEndBucket.setProviderConfiguration(providerConfig);
                 backEndBucket.setInputs(backendInputList);
                 backEndBucket.setQueries(backEndQueryList);
 
@@ -161,7 +181,7 @@ public class CEPAdminService extends AbstractAdmin {
         } else if (inputDTO.getInputTupleMappingDTO() != null) {
             InputTupleMappingDTO inputTupleMappingDTO = inputDTO.getInputTupleMappingDTO();
             backendInput.setInputMapping(adaptInputMapping(inputTupleMappingDTO));
-        }   else if (inputDTO.getInputMapMappingDTO() != null) {
+        } else if (inputDTO.getInputMapMappingDTO() != null) {
             InputMapMappingDTO inputMapMappingDTO = inputDTO.getInputMapMappingDTO();
             backendInput.setInputMapping(adaptInputMapping(inputMapMappingDTO));
         }
@@ -274,7 +294,9 @@ public class CEPAdminService extends AbstractAdmin {
 
         return backendInputMapping;
 
-    } /**
+    }
+
+    /**
      * This method will adapt CEP Admin module InputMapMappingDTO to CEP Core module InputTupleMappingDTO
      *
      * @param inputMapMappingDTO - CEP Admin module inputMapMappingDTO
@@ -403,6 +425,7 @@ public class CEPAdminService extends AbstractAdmin {
             if (outputMapMappingDTO != null) {
                 MapOutputMapping backEndMapOutputMapping = null;
                 if (outputMapMappingDTO.getProperties() != null && outputMapMappingDTO.getProperties().length != 0) {
+                    backEndMapOutputMapping = new MapOutputMapping();
                     backEndMapOutputMapping.setPropertyList(Arrays.asList(outputMapMappingDTO.getProperties()));
                 }
                 backEndOutput.setOutputMapping(backEndMapOutputMapping);
@@ -492,10 +515,36 @@ public class CEPAdminService extends AbstractAdmin {
         bucketDTO.setName(backEndBucket.getName());
         bucketDTO.setDescription(backEndBucket.getDescription());
         bucketDTO.setEngineProvider(backEndBucket.getEngineProvider());
+        bucketDTO.setEngineProviderConfigProperty(adaptEngineProviderConfigs(backEndBucket.getProviderConfiguration()));
         bucketDTO.setInputs(adaptInput(backEndBucket.getInputs()));
         bucketDTO.setQueries(adaptQueries(backEndBucket.getQueries()));
 
         return bucketDTO;
+    }
+
+    /**
+     * This method maps CEP Core module input topic list to CEP Admin module InputDTO array
+     *
+     * @param providerConfiguration
+     */
+    private CEPEngineProviderConfigPropertyDTO[] adaptEngineProviderConfigs(
+            Properties providerConfiguration) {
+        CEPEngineProviderConfigPropertyDTO[] cepEngineProviderPropertyDTO = null;
+        if (providerConfiguration != null) {
+            cepEngineProviderPropertyDTO = new CEPEngineProviderConfigPropertyDTO[providerConfiguration.size()];
+            int i = 0;
+            for (Map.Entry<Object, Object> entry : providerConfiguration.entrySet()) {
+                cepEngineProviderPropertyDTO[i] = new CEPEngineProviderConfigPropertyDTO();
+                cepEngineProviderPropertyDTO[i].setNames(entry.getKey().toString());
+                if (entry.getValue() instanceof String) {
+                    cepEngineProviderPropertyDTO[i].setValues((String) entry.getValue());
+                } else {
+                    cepEngineProviderPropertyDTO[i].setValues((String) ((List) entry.getValue()).get(0));
+                }
+                i++;
+            }
+        }
+        return cepEngineProviderPropertyDTO;
     }
 
     /**
@@ -514,7 +563,7 @@ public class CEPAdminService extends AbstractAdmin {
             if (backEndInput.getInputMapping() instanceof XMLInputMapping) {
                 inputDTO.setInputXMLMappingDTO(adaptMapping((XMLInputMapping) backEndInput.getInputMapping()));
             } else if (backEndInput.getInputMapping() instanceof MapInputMapping) {
-                inputDTO.setInputMapMappingDTO(adaptMapping((MapInputMapping)backEndInput.getInputMapping()));
+                inputDTO.setInputMapMappingDTO(adaptMapping((MapInputMapping) backEndInput.getInputMapping()));
             } else {
                 inputDTO.setInputTupleMappingDTO(adaptMapping((TupleInputMapping) backEndInput.getInputMapping()));
             }
@@ -549,7 +598,7 @@ public class CEPAdminService extends AbstractAdmin {
         return inputTupleMappingDTO;
     }
 
-    private InputMapMappingDTO adaptMapping(MapInputMapping backEndMapInputMapping){
+    private InputMapMappingDTO adaptMapping(MapInputMapping backEndMapInputMapping) {
         InputMapMappingDTO inputMapMappingDTO = new InputMapMappingDTO();
         inputMapMappingDTO.setStream(backEndMapInputMapping.getStream());
         inputMapMappingDTO.setProperties(adaptProperties(backEndMapInputMapping.getProperties()));
@@ -672,13 +721,12 @@ public class CEPAdminService extends AbstractAdmin {
         } else if (backEndOutput.getOutputMapping() instanceof TupleOutputMapping) {
             outputDTO.setOutputTupleMapping(adaptOutputTupleMapping((TupleOutputMapping) backEndOutput.getOutputMapping()));
         } else if (backEndOutput.getOutputMapping() instanceof MapOutputMapping) {
-            outputDTO.setOutputMapMapping(adaptOutputMapMapping((MapOutputMapping)backEndOutput.getOutputMapping()));
+            outputDTO.setOutputMapMapping(adaptOutputMapMapping((MapOutputMapping) backEndOutput.getOutputMapping()));
         } else {
             outputDTO.setOutputXmlMapping(adaptOutputXMLMapping((XMLOutputMapping) backEndOutput.getOutputMapping()));
         }
         return outputDTO;
     }
-
 
 
     /**
@@ -746,6 +794,7 @@ public class CEPAdminService extends AbstractAdmin {
         }
         return outputMapMappingDTO;
     }
+
     /**
      * This method will map CEP Core module OutputXMLMappingDTO in to CEP Admin module OutputXMLMappingDTO
      *
@@ -822,10 +871,18 @@ public class CEPAdminService extends AbstractAdmin {
         }
     }
 
-    public String[] getEngineProviders() throws CEPAdminException {
+    public CEPEngineProviderInfoDTO[] getEngineProvidersInfo() throws CEPAdminException {
         CEPServiceInterface cepServiceInterface = CEPAdminDSHolder.getInstance().getCEPService();
         try {
-            return cepServiceInterface.getCEPEngineProviders();
+            CEPEngineProviderInfoDTO[] info = new CEPEngineProviderInfoDTO[cepServiceInterface.getCEPEngineProviders().length];
+            String[] cepEngineProviders = cepServiceInterface.getCEPEngineProviders();
+            for (int i = 0, cepEngineProvidersLength = cepEngineProviders.length; i < cepEngineProvidersLength; i++) {
+                String providerName = cepEngineProviders[i];
+                info[i] = new CEPEngineProviderInfoDTO();
+                info[i].setProviderName(providerName);
+                info[i].setConfigNames(cepServiceInterface.getCEPEngineProviderConfigNames(providerName));
+            }
+            return info;
         } catch (CEPConfigurationException e) {
             String errorMessage = "Error in getting engine providers from back end ";
             log.error(errorMessage, e);

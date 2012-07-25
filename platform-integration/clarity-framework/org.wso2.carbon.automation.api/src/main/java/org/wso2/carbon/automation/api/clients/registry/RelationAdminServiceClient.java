@@ -13,21 +13,21 @@ import org.wso2.carbon.registry.relations.stub.beans.xsd.DependenciesBean;
 
 import java.rmi.RemoteException;
 
-public class RelationServiceClient {
+public class RelationAdminServiceClient {
 
-    private static final Log log = LogFactory.getLog(RelationServiceClient.class);
+    private static final Log log = LogFactory.getLog(RelationAdminServiceClient.class);
 
     private RelationAdminServiceStub relationAdminServiceStub;
     private final String serviceName = "RelationAdminService";
 
-    public RelationServiceClient(String backendURL, String sessionCookie)
+    public RelationAdminServiceClient(String backendURL, String sessionCookie)
             throws AxisFault {
         String endPoint = backendURL + serviceName;
         relationAdminServiceStub = new RelationAdminServiceStub(endPoint);
         AuthenticateStub.authenticateStub(sessionCookie, relationAdminServiceStub);
     }
 
-    public RelationServiceClient(String backendURL, String userName, String password)
+    public RelationAdminServiceClient(String backendURL, String userName, String password)
             throws AxisFault {
         String endPoint = backendURL + serviceName;
         relationAdminServiceStub = new RelationAdminServiceStub(endPoint);

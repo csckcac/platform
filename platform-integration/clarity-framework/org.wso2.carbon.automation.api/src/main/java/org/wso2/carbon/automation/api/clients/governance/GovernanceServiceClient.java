@@ -27,6 +27,7 @@ import org.wso2.carbon.governance.services.stub.AddServicesServiceStub;
 
 import javax.xml.stream.XMLStreamException;
 import java.io.IOException;
+import java.rmi.RemoteException;
 
 public class GovernanceServiceClient {
     private static final Log log = LogFactory.getLog(GovernanceServiceClient.class);
@@ -49,14 +50,19 @@ public class GovernanceServiceClient {
 
     }
 
-
-    public void addService(OMElement service)
+    public String addService(OMElement service)
             throws IOException, XMLStreamException, AddServicesServiceRegistryExceptionException {
-
-        addServicesServiceStub.addService(service.toString());
-        log.info("Service Added");
-
+        return addServicesServiceStub.addService(service.toString());
     }
 
+    public String getServicePath() throws Exception{
+        String servicePath = null;
+        try {
+            return addServicesServiceStub.getServicePath();
+        } catch (Exception e) {
+           log.info("Error on getting service paths");
+        }
+        return servicePath;
+    }
 
 }

@@ -52,16 +52,18 @@ chmod -R 0600 ${instance_path}/payload/wso2-key
 cat ${instance_path}/payload/known_hosts >> ~/.ssh/known_hosts
 
 
-echo "getting public ip"
+echo "getting public ip" >> $LOG
 while [ 1 > 0 ]
 do
   rm -f ./public-ipv4
   wget http://169.254.169.254/latest/meta-data/public-ipv4
   files="`cat public-ipv4`"
   if [ -z $files ]; then
+      echo "Public ip is not yet assigned. Wait and continue ..." >> $LOG
       sleep 1
       continue
   else
+      echo "Public ip assigned" >> $LOG
       break
   fi
 done

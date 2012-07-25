@@ -30,7 +30,7 @@
     <packaging>pom</packaging>
     <name>WSO2 Carbon - CEP Feature</name>
     <url>http://wso2.org</url>
-    <description> CEP feature</description>
+    <description>CEP feature</description>
 
     <dependencies>
         <dependency>
@@ -39,10 +39,10 @@
             <version>${wso2carbon.version.cep}</version>
             <type>zip</type>
         </dependency>
-	 <dependency>
+        <dependency>
             <groupId>org.wso2.carbon</groupId>
             <artifactId>org.wso2.carbon.cep.ui.feature</artifactId>
-             <version>${wso2carbon.version.cep}</version>
+            <version>${wso2carbon.version.cep}</version>
             <type>zip</type>
         </dependency>
     </dependencies>
@@ -64,12 +64,17 @@
                             <id>org.wso2.carbon.cep</id>
                             <propertiesFile>../../etc/feature.properties</propertiesFile>
                             <importFeatures>
-                                <importFeatureDef>org.wso2.carbon.core:${wso2carbon.version}</importFeatureDef>
+                                <importFeatureDef>org.wso2.carbon.core:${wso2carbon.version}
+                                </importFeatureDef>
                             </importFeatures>
                             <includedFeatures>
-                                <includedFeatureDef>org.wso2.carbon:org.wso2.carbon.cep.server.feature</includedFeatureDef>
-				<includedFeatureDef>org.wso2.carbon:org.wso2.carbon.cep.ui.feature</includedFeatureDef>
-			   </includedFeatures>
+                                <includedFeatureDef>
+                                    org.wso2.carbon:org.wso2.carbon.cep.server.feature
+                                </includedFeatureDef>
+                                <includedFeatureDef>
+                                    org.wso2.carbon:org.wso2.carbon.cep.ui.feature
+                                </includedFeatureDef>
+                            </includedFeatures>
                         </configuration>
                     </execution>
                 </executions>

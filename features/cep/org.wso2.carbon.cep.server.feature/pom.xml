@@ -45,28 +45,13 @@
         </dependency>
         <dependency>
             <groupId>org.wso2.carbon</groupId>
-            <artifactId>org.wso2.carbon.cep.fusion</artifactId>
-            <version>${wso2carbon.version.cep}</version>
-        </dependency>
-        <dependency>
-            <groupId>org.wso2.carbon</groupId>
             <artifactId>org.wso2.carbon.cep.siddhi</artifactId>
             <version>${wso2carbon.version.cep}</version>
-        </dependency>
-        <dependency>
-            <groupId>org.drools.wso2</groupId>
-            <artifactId>drools</artifactId>
-            <version>5.1.1.wso2v1</version>
         </dependency>
         <dependency>
             <groupId>org.wso2.siddhi</groupId>
             <artifactId>siddhi</artifactId>
             <version>1.0.0-SNAPSHOT.wso2v1</version>
-        </dependency>
-        <dependency>
-            <groupId>org.mvel.wso2</groupId>
-            <artifactId>mvel2</artifactId>
-            <version>2.0.19.wso2v1</version>
         </dependency>
         <dependency>
             <groupId>joda-time.wso2</groupId>
@@ -82,16 +67,6 @@
             <groupId>org.antlr.wso2</groupId>
             <artifactId>antlr-runtime</artifactId>
             <version>3.1.1.wso2v1</version>
-        </dependency>
-        <dependency>
-            <groupId>janino.wso2</groupId>
-            <artifactId>janino</artifactId>
-            <version>2.5.15.wso2v1</version>
-        </dependency>
-        <dependency>
-            <groupId>jxl.wso2</groupId>
-            <artifactId>jxl</artifactId>
-            <version>2.6.8.wso2v1</version>
         </dependency>
         <dependency>
             <groupId>org.wso2.carbon</groupId>
@@ -157,16 +132,11 @@
                             <bundles>
                                 <bundleDef>org.wso2.carbon:org.wso2.carbon.cep.core</bundleDef>
                                 <bundleDef>org.wso2.carbon:org.wso2.carbon.cep.admin</bundleDef>
-                                <bundleDef>org.wso2.carbon:org.wso2.carbon.cep.fusion</bundleDef>
                                 <bundleDef>org.wso2.carbon:org.wso2.carbon.cep.siddhi</bundleDef>
-                                <bundleDef>org.drools.wso2:drools</bundleDef>
                                 <bundleDef>org.wso2.siddhi:siddhi</bundleDef>
-                                <bundleDef>org.mvel.wso2:mvel2</bundleDef>
                                 <bundleDef>joda-time.wso2:joda-time</bundleDef>
                                 <bundleDef>antlr.wso2:antlr</bundleDef>
                                 <bundleDef>org.antlr.wso2:antlr-runtime</bundleDef>
-                                <bundleDef>janino.wso2:janino</bundleDef>
-                                <bundleDef>jxl.wso2:jxl</bundleDef>
                             </bundles>
                             <importFeatures>
                                 <importFeatureDef>

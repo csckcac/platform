@@ -163,10 +163,6 @@ public class StatAgent {
 
                 Iterator<String> serviceIterator = services.keySet().iterator();
 
-                System.out.println("############ Services size: " + services.keySet().size());
-
-                System.out.println("########  Service Index : " + serviceIndex);
-
                 int k = 0;
                 String service = null;
                 while (serviceIterator.hasNext() && k < serviceIndex) {

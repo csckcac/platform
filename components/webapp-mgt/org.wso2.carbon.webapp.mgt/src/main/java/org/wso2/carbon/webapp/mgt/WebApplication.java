@@ -302,8 +302,8 @@ public class WebApplication {
      * @throws CarbonException If an error occurs while undeploying this webapp
      */
     public void delete() throws CarbonException {
-        undeploy();
         handleHotUpdateToHost("delete");
+        undeploy();
         if (webappFile.isFile() && !webappFile.delete()) {
             throw new CarbonException("Webapp file " + webappFile + " deletion failed");
         } else if (webappFile.isDirectory() && !FileManipulator.deleteDir(webappFile)) {

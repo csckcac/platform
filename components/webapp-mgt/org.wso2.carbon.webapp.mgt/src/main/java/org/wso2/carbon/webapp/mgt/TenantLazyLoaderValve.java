@@ -22,6 +22,7 @@ import org.wso2.carbon.context.ApplicationContext;
 import org.wso2.carbon.core.multitenancy.utils.TenantAxisUtils;
 import org.wso2.carbon.tomcat.ext.valves.CarbonTomcatValve;
 import org.wso2.carbon.user.core.tenant.TenantManager;
+import org.wso2.carbon.utils.CarbonUtils;
 import org.wso2.carbon.utils.multitenancy.MultitenantConstants;
 import org.wso2.carbon.utils.multitenancy.MultitenantUtils;
 
@@ -37,11 +38,17 @@ public class TenantLazyLoaderValve implements CarbonTomcatValve {
 
     public void invoke(HttpServletRequest request, HttpServletResponse response) {
         String requestURI = request.getRequestURI();
+        String serverName = request.getServerName();
+
         //getting actual uri when accessing a virtual host through url mapping
         String uriOfVirtualHost = ApplicationContext.getCurrentApplicationContext().
-                getApplicationFromUrlMapping(request.getServerName());
-
-        if (uriOfVirtualHost != null) {
+                getApplicationFromUrlMapping(serverName);
+        String serverUrl = CarbonUtils.getServerURL(
+                CarbonUtils.getServerConfiguration(), DataHolder.getServerConfigContext());
+        if (!serverUrl.contains(serverName) &&
+                DataHolder.getHotUpdateService() != null && uriOfVirtualHost == null ) {
+            uriOfVirtualHost = DataHolder.getHotUpdateService().
+                    getApplicationContextForHost(serverName);
             requestURI = uriOfVirtualHost;
         }
 

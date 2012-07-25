@@ -1,22 +1,23 @@
 <%
     include('includes/template_header.jag');
     include('constants.jag');
-    
+
     var log = new Log();
     var applicationName = request.getParameter("applicationName");
     var applicationKey = request.getParameter("applicationKey");
-    
+
     session.put("applicationKey", applicationKey);
 %>
 
     <script type="text/javascript">
-    
-    
+
+
     function doSubmit(stage) {
-    	document.deployDataForm.elements["stageName"].value = stage; 
+    	//document.deployDataForm.elements["stageName"].value = stage;
         document.deployDataForm.submit();
     }
-    
+
+
       // This is the code for definining the dashboard
       $(document).ready(function() {
 
@@ -196,7 +197,7 @@
                                 var stage = stages[i];
                             %>
                           		<tr><td colspan="2"><h3><%=stage%></h3></td></tr>
-                          		<tr>
+
                             <%
                             	var appInfos = getAppVersionsInStage(stage, applicationKey);
 
@@ -215,15 +216,27 @@
                             	var versions = appInfos[0].versions;
                             	for(var j = 0; j < versions.length; j++){
                             	    var version = versions[j];
+
+                                    var stageVersion = stage + "/" + version;
+                                    print(stageVersion);
                             %>
-                            	  <td colspan="2">  <input type="radio" name="<%=stage%>" value="<%=version%>"><%=version%></input></td>
+
+                            <tr>
+                                <td colspan="2"><input type="radio" name="stageVersion"  value="<%=stageVersion%>"><%=version%>
+                                </input></td>
+                            </tr>
 
                          	<%
                             	}
                             %>
-                            </tr>
 
-                                <tr>
+
+
+                            <%
+                            }
+                            %>
+
+                             <tr>
                                     <td>Target Version</td>
                                     <td><input type="text" name="targetVersion"  size='50' /></td>
                                 </tr>
@@ -234,9 +247,7 @@
                                     <input type="button" onclick=doSubmit('<%=stage%>') value='Promote' class='btn btn-primary'/>
                                 </td>
                             <tr>
-                            <%
-                            }
-                            %>
+
                         </table>
                         </form>
                     </div>

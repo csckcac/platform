@@ -26,17 +26,20 @@ import org.wso2.carbon.broker.core.internal.BrokerTypeFactory;
 import org.wso2.carbon.broker.core.internal.CarbonBrokerService;
 import org.wso2.carbon.broker.core.internal.brokers.agent.AgentBrokerTypeFactory;
 import org.wso2.carbon.broker.core.internal.brokers.jms.generic.GenericJMSBrokerTypeFactory;
-import org.wso2.carbon.broker.core.internal.brokers.jms.qpid.QpidBrokerTypeFactory;
 import org.wso2.carbon.broker.core.internal.brokers.local.LocalBrokerTypeFactory;
-import org.wso2.carbon.broker.core.internal.util.BrokerConstants;
 import org.wso2.carbon.broker.core.internal.brokers.ws.WSBrokerTypeFactory;
+import org.wso2.carbon.broker.core.internal.util.BrokerConstants;
 import org.wso2.carbon.utils.ServerConstants;
 
 import javax.xml.namespace.QName;
 import javax.xml.stream.XMLInputFactory;
 import javax.xml.stream.XMLStreamException;
 import javax.xml.stream.XMLStreamReader;
-import java.io.*;
+import java.io.BufferedInputStream;
+import java.io.File;
+import java.io.FileInputStream;
+import java.io.FileNotFoundException;
+import java.io.IOException;
 import java.util.Iterator;
 import java.util.List;
 
@@ -47,12 +50,13 @@ public final class BrokerServiceBuilder {
 
     private static final Log log = LogFactory.getLog(BrokerService.class);
 
-    private BrokerServiceBuilder(){
+    private BrokerServiceBuilder() {
     }
 
     /**
      * builds the broker service objects with the configurations defined in the
      * carbon.xml
+     *
      * @return
      * @throws BrokerConfigException
      */
@@ -67,8 +71,8 @@ public final class BrokerServiceBuilder {
             }
             Iterator brokerTypesIter = brokerConfig.getChildrenWithName(
                     new QName(BrokerConstants.BROKER_CONF_NS,
-                            BrokerConstants.BROKER_CONF_ELE_BROKER_TYPE));
-            for (; brokerTypesIter.hasNext();) {
+                              BrokerConstants.BROKER_CONF_ELE_BROKER_TYPE));
+            for (; brokerTypesIter.hasNext(); ) {
                 OMElement brokerTypeOMElement = (OMElement) brokerTypesIter.next();
                 String className = brokerTypeOMElement.getAttributeValue(
                         new QName("", BrokerConstants.BROKER_CONF_ATTR_CLASS));
@@ -81,44 +85,45 @@ public final class BrokerServiceBuilder {
         //by default we add the already existing broker types if they are not added
         List<String> existingBrokerNames = brokerService.getBrokerTypeNames();
 
-        if (!existingBrokerNames.contains(BrokerConstants.BROKER_TYPE_LOCAL)){
+        if (!existingBrokerNames.contains(BrokerConstants.BROKER_TYPE_LOCAL)) {
             registerBrokerType(brokerService, LocalBrokerTypeFactory.class.getName());
         }
 
-        if (!existingBrokerNames.contains(BrokerConstants.BROKER_TYPE_WS_EVENT)){
+        if (!existingBrokerNames.contains(BrokerConstants.BROKER_TYPE_WS_EVENT)) {
             registerBrokerType(brokerService, WSBrokerTypeFactory.class.getName());
         }
-        
-        if (!existingBrokerNames.contains(BrokerConstants.BROKER_TYPE_JMS_QPID)){
-            registerBrokerType(brokerService, QpidBrokerTypeFactory.class.getName());
-        }
- 
-        if (!existingBrokerNames.contains(BrokerConstants.BROKER_TYPE_JMS_GENERIC)){
+
+        //Qpid no more supported
+//        if (!existingBrokerNames.contains(BrokerConstants.BROKER_TYPE_JMS_QPID)){
+//            registerBrokerType(brokerService, QpidBrokerTypeFactory.class.getName());
+//        }
+
+        if (!existingBrokerNames.contains(BrokerConstants.BROKER_TYPE_JMS_GENERIC)) {
             registerBrokerType(brokerService, GenericJMSBrokerTypeFactory.class.getName());
         }
 
-        if (!existingBrokerNames.contains(BrokerConstants.BROKER_TYPE_AGENT)){
+        if (!existingBrokerNames.contains(BrokerConstants.BROKER_TYPE_AGENT)) {
             registerBrokerType(brokerService, AgentBrokerTypeFactory.class.getName());
         }
-
 
 
         return brokerService;
 
     }
 
-    private static void registerBrokerType(CarbonBrokerService brokerService, String className) throws BrokerConfigException {
+    private static void registerBrokerType(CarbonBrokerService brokerService, String className)
+            throws BrokerConfigException {
         try {
             Class brokerTypeFactoryClass = Class.forName(className);
             BrokerTypeFactory factory =
                     (BrokerTypeFactory) brokerTypeFactoryClass.newInstance();
             brokerService.registerBrokerType(factory.getBrokerType());
         } catch (ClassNotFoundException e) {
-            throw new BrokerConfigException("Broker class " + className + " can not be found",e);
+            throw new BrokerConfigException("Broker class " + className + " can not be found", e);
         } catch (IllegalAccessException e) {
-            throw new BrokerConfigException("Can not access the class " + className,e);
+            throw new BrokerConfigException("Can not access the class " + className, e);
         } catch (InstantiationException e) {
-            throw new BrokerConfigException("Can not instantiate the class " + className,e);
+            throw new BrokerConfigException("Can not instantiate the class " + className, e);
         }
     }
 
@@ -135,9 +140,9 @@ public final class BrokerServiceBuilder {
         BufferedInputStream inputStream = null;
         File inputFile = new File(path);
 
-        if (!inputFile.exists()){
-           log.info(" The " + BrokerConstants.BROKER_CONF + " can not found "); 
-           return null;
+        if (!inputFile.exists()) {
+            log.info(" The " + BrokerConstants.BROKER_CONF + " can not found ");
+            return null;
         }
         try {
             inputStream = new BufferedInputStream(new FileInputStream(new File(path)));
@@ -149,17 +154,17 @@ public final class BrokerServiceBuilder {
             return omElement;
         } catch (FileNotFoundException e) {
             throw new BrokerConfigException(BrokerConstants.BROKER_CONF
-                    + "cannot be found in the path : " + path, e);
+                                            + "cannot be found in the path : " + path, e);
         } catch (XMLStreamException e) {
             throw new BrokerConfigException("Invalid XML for " + BrokerConstants.BROKER_CONF
-                    + " located in the path : " + path, e);
+                                            + " located in the path : " + path, e);
         } finally {
             try {
                 if (inputStream != null) {
                     inputStream.close();
                 }
             } catch (IOException ingored) {
-                log.error("Can not close the input stream after reading "+inputFile.getAbsolutePath());
+                log.error("Can not close the input stream after reading " + inputFile.getAbsolutePath());
             }
         }
     }

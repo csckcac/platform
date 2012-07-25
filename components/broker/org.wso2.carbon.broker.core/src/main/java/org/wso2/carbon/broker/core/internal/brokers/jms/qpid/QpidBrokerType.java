@@ -38,6 +38,10 @@ import java.util.Properties;
 import java.util.ResourceBundle;
 import java.util.concurrent.ConcurrentHashMap;
 
+@Deprecated
+/**
+ *   Because Qpid is not shipped with CEP by default
+ */
 public class QpidBrokerType extends JMSBrokerType {
 
     private static QpidBrokerType instance = new QpidBrokerType();

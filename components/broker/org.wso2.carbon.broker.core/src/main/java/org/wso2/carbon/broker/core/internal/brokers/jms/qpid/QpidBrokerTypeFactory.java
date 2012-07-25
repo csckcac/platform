@@ -19,7 +19,10 @@ package org.wso2.carbon.broker.core.internal.brokers.jms.qpid;
 import org.wso2.carbon.broker.core.internal.BrokerType;
 import org.wso2.carbon.broker.core.internal.brokers.jms.JMSBrokerTypeFactory;
 
-
+@Deprecated
+/**
+ * Because Qpid is not shipped with CEP by default
+ */
 public class QpidBrokerTypeFactory implements JMSBrokerTypeFactory {
 
     public BrokerType getBrokerType() {

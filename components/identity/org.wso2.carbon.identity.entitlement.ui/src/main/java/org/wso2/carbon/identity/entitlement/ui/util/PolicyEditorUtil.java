@@ -196,7 +196,7 @@ public class PolicyEditorUtil {
         if(rowDTO.getFunction().contains("less" ) || rowDTO.getFunction().contains("greater" )){
             applyElementDTO = processGreaterLessThanFunctions(function, dataType, attributeValue,
                                                                                 designatorDTO);
-        } else if(rowDTO.getFunction().contains("equal")){
+        } else if(PolicyEditorConstants.FUNCTION_EQUAL.equals(rowDTO.getFunction())){
             applyElementDTO = processEqualFunctions(function, dataType, attributeValue, designatorDTO);
         } else {
             applyElementDTO = processBagFunction(function, dataType, attributeValue, designatorDTO);

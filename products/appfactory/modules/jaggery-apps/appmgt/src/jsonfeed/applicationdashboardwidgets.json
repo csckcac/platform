@@ -16,6 +16,12 @@
       "id" : "applicationversions",
       "url" : "widgets/applicationview.jag",
       "open" : true
+    },{
+      "title" : "Application Events,
+      "column" : "first",
+      "id" : "allversionevents",
+      "url" : "widgets/allversionevents.jag",
+      "open" : true
     }
   ]
   }

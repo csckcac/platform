@@ -36,6 +36,7 @@
     var WS_ADD_USER_WS = "WebServiceEndPoints.AddUsertoApp";
     var WS_ADD_GENERIC_ARTIFACT="WebServiceEndPoints.AddGenericArtifact";
     var WS_INVOKE_ASPECT="WebServiceEndPoints.InvokeAspect";
+    var WS_EVENTS_OF_APP = "WebServiceEndPoints.EventNotificationService";
     
     var ADMIN_USERNAME = "AdminUserName";
     var ADMIN_PASSWORD = "AdminPassword";

@@ -20,6 +20,12 @@
       "id" : "applicationversionsinlive",
       "url" : "widgets/liveapplicationversions.jag",
       "open" : true
+    },{
+      "title" : "Application Events",
+      "column" : "first",
+      "id" : "allapplicationevents",
+      "url" : "widgets/allversionevents.jag",
+      "open" : true
     }
   ]
   }

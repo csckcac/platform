@@ -622,4 +622,17 @@ public class HostUtil {
 
         return false;
     }
+    
+    public static String getServiceName(String serviceContext) {
+        String serviceName = null;
+        if(serviceContext.contains("/t/")) {
+            String temp;
+            temp = serviceContext.substring(
+                    serviceContext.indexOf("/t/") + 3, serviceContext.length());
+            serviceName = temp.substring(temp.indexOf("/") + 1, temp.length());
+        } else {
+            serviceName = serviceContext.substring(serviceContext.indexOf("/services") + 10, serviceContext.length());
+        }
+        return serviceName;
+    }
 }

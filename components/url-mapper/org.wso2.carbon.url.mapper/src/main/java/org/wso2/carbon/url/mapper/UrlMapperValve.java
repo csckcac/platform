@@ -15,17 +15,25 @@
  */
 package org.wso2.carbon.url.mapper;
 
+import org.apache.axis2.context.ConfigurationContext;
+import org.apache.axis2.description.AxisOperation;
+import org.apache.axis2.description.AxisService;
 import org.apache.catalina.connector.Request;
 import org.apache.commons.logging.Log;
 import org.apache.commons.logging.LogFactory;
 import org.apache.tomcat.util.buf.MessageBytes;
 import org.apache.tomcat.util.http.mapper.MappingData;
 import org.wso2.carbon.context.ApplicationContext;
+import org.wso2.carbon.core.multitenancy.utils.TenantAxisUtils;
 import org.wso2.carbon.tomcat.ext.valves.CarbonTomcatValve;
 import org.wso2.carbon.url.mapper.internal.exception.UrlMapperException;
+import org.wso2.carbon.url.mapper.internal.util.DataHolder;
+import org.wso2.carbon.url.mapper.internal.util.HostUtil;
+import org.wso2.carbon.utils.multitenancy.MultitenantUtils;
 
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
+import javax.xml.namespace.QName;
 
 /**
  * This is a CarbonTomcatValve which hadles the request for services when a tenant specifies service
@@ -56,37 +64,78 @@ public class UrlMapperValve implements CarbonTomcatValve {
      */
     private void process(HttpServletRequest request, HttpServletResponse response) throws Exception {
         String serverName = request.getServerName();
+        String requestedUri = request.getRequestURI();
         String uri = ApplicationContext.getCurrentApplicationContext().
                 getApplicationFromUrlMapping(serverName);
 
         if ((uri != null) && (uri.contains("services"))) {
-            //rewriting the request with actual service url in order to retrieve the resource
             String filterUri = uri.substring(0, uri.length() - 1);
-            Request connectorReq = (Request) request;
-            MappingData mappingData = connectorReq.getMappingData();
-            org.apache.coyote.Request coyoteRequest = connectorReq.getCoyoteRequest();
+            String serviceName = HostUtil.getServiceName(filterUri);
+            //if itz a rest call, getting the operation name from the request and
+            // checking whether exists or not from AxisConfiguration
+            if(!requestedUri.equalsIgnoreCase("/")) {
+                String temp = requestedUri.substring(1, requestedUri.length());
+                String operation;
+                AxisService axisService;
+                if(temp.contains("/")) {
+                    operation = temp.substring(0, temp.indexOf("/"));
+                } else {
+                    operation = temp;
+                }
+                if(uri.contains("/t/")) {
+                    ConfigurationContext configurationContext = TenantAxisUtils.
+                            getTenantConfigurationContext(MultitenantUtils.getTenantDomainFromUrl(uri),
+                            DataHolder.getInstance().getServerConfigContext());
+                    axisService = configurationContext.getAxisConfiguration().getService(serviceName);
+                    QName qname = new QName(operation);
+                    AxisOperation axisOperation = axisService.getOperation(qname);
+                    if(axisOperation != null) {
+                        filterUri = filterUri + "/" + operation;
+                        requestRewriteForService((Request)request, filterUri);
+                    }
+                } else {
+                    axisService = DataHolder.getInstance().getServerConfigContext().
+                            getAxisConfiguration().getService(serviceName);
+                    QName qname = new QName(operation);
+                    AxisOperation axisOperation = axisService.getOperation(qname);
+                    if(axisOperation != null) {
+                        filterUri = filterUri + "/" + operation;
+                        requestRewriteForService((Request)request, filterUri);
+                    }
+                }
 
-            MessageBytes requestPath = MessageBytes.newInstance();
-            requestPath.setString(filterUri);
-            mappingData.requestPath = requestPath;
-            MessageBytes pathInfo = MessageBytes.newInstance();
-            pathInfo.setString(filterUri);
-            mappingData.pathInfo = pathInfo;
-
-            coyoteRequest.requestURI().setString(filterUri);
-            coyoteRequest.decodedURI().setString(filterUri);
-            if (request.getQueryString() != null) {
-                coyoteRequest.unparsedURI().setString(filterUri + "?" + request.getQueryString());
-            } else {
-                coyoteRequest.unparsedURI().setString(filterUri);
+            } else if(requestedUri.equalsIgnoreCase("/")) {
+                requestRewriteForService((Request)request, filterUri);
             }
-            connectorReq.getConnector().
-                    getMapper().map(connectorReq.getCoyoteRequest().serverName(),
-                    connectorReq.getCoyoteRequest().decodedURI(), null,
-                    mappingData);
-            //connectorReq.setHost((Host)DataHolder.getInstance().getCarbonTomcatService().getTomcat().getEngine().findChild("testapp.wso2.com"));
-            connectorReq.setCoyoteRequest(coyoteRequest);
         }
+    }
+
+    public void requestRewriteForService(Request request, String filterUri) throws Exception {
+        //rewriting the request with actual service url in order to retrieve the resource
+        Request connectorReq = (Request) request;
+        MappingData mappingData = connectorReq.getMappingData();
+        org.apache.coyote.Request coyoteRequest = connectorReq.getCoyoteRequest();
+
+        MessageBytes requestPath = MessageBytes.newInstance();
+        requestPath.setString(filterUri);
+        mappingData.requestPath = requestPath;
+        MessageBytes pathInfo = MessageBytes.newInstance();
+        pathInfo.setString(filterUri);
+        mappingData.pathInfo = pathInfo;
+
+        coyoteRequest.requestURI().setString(filterUri);
+        coyoteRequest.decodedURI().setString(filterUri);
+        if (request.getQueryString() != null) {
+            coyoteRequest.unparsedURI().setString(filterUri + "?" + request.getQueryString());
+        } else {
+            coyoteRequest.unparsedURI().setString(filterUri);
+        }
+        connectorReq.getConnector().
+                getMapper().map(connectorReq.getCoyoteRequest().serverName(),
+                connectorReq.getCoyoteRequest().decodedURI(), null,
+                mappingData);
+        //connectorReq.setHost((Host)DataHolder.getInstance().getCarbonTomcatService().getTomcat().getEngine().findChild("testapp.wso2.com"));
+        connectorReq.setCoyoteRequest(coyoteRequest);
     }
     
     public boolean equals(Object valve){

@@ -27,11 +27,14 @@ import org.wso2.carbon.tomcat.ext.valves.CarbonTomcatValve;
 import org.wso2.carbon.tomcat.ext.valves.TomcatValveContainer;
 import org.wso2.carbon.url.mapper.HotUpdateService;
 import org.wso2.carbon.url.mapper.UrlMapperValve;
+import org.wso2.carbon.url.mapper.data.MappingData;
 import org.wso2.carbon.url.mapper.internal.exception.UrlMapperException;
 import org.wso2.carbon.url.mapper.internal.util.DataHolder;
 import org.wso2.carbon.url.mapper.internal.util.HostUtil;
 import org.wso2.carbon.user.core.service.RealmService;
 import org.wso2.carbon.utils.CarbonUtils;
+import org.wso2.carbon.utils.ConfigurationContextService;
+import org.wso2.carbon.utils.multitenancy.MultitenantConstants;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -42,6 +45,10 @@ import java.util.List;
  * adds the CarbonTomcatValve to TomcatContainer.
  *
  * @scr.component name="org.wso2.carbon.url.mapper" immediate="true"
+ * @scr.reference name="config.context.service"
+ * interface="org.wso2.carbon.utils.ConfigurationContextService"
+ * cardinality="1..1" policy="dynamic"  bind="setConfigurationContextService"
+ * unbind="unsetConfigurationContextService"
  * @scr.reference name="tomcat.service.provider"
  * interface="org.wso2.carbon.tomcat.api.CarbonTomcatService"
  * cardinality="1..1" policy="dynamic" bind="setCarbonTomcatService"
@@ -89,22 +96,34 @@ public class UrlMapperServiceComponent {
     }
     
     protected void addMappingToInMemory() {
-        List<String> hostNames = null;
-        String appName;
+        MappingData[] urlMappings = new MappingData[0];
         try {
-            hostNames = HostUtil.getAllHostsFromRegistry();
-            for(String hostName : hostNames) {
-                appName = HostUtil.getApplicationContextForHost(hostName);
-                ApplicationContext.getCurrentApplicationContext().
-                        putUrlMappingForApplication(hostName, appName);
-            }
+            urlMappings = HostUtil.getAllMappingsFromRegistry();
         } catch (UrlMapperException e) {
-            log.error("error while all mappings from registry", e);
+            log.error("error while getting all mappings from registry", e);
+        }
+        if(urlMappings != null) {
+            for(MappingData mapping: urlMappings) {
+                if(mapping.isServiceMapping() && mapping.getTenantDomain().
+                        equalsIgnoreCase(MultitenantConstants.SUPER_TENANT_DOMAIN_NAME)) {
+                    ApplicationContext.getCurrentApplicationContext().
+                            putUrlMappingForApplication(mapping.getMappingName(), mapping.getUrl());
+                }
+
+            }
         }
     }
 
     protected void deactivate(ComponentContext componentContext) {
         serviceRegistration.unregister();
+    }
+
+    protected void setConfigurationContextService(ConfigurationContextService contextService) {
+        DataHolder.getInstance().setServerConfigContext(contextService.getServerConfigContext());
+    }
+
+    protected void unsetConfigurationContextService(ConfigurationContextService contextService) {
+        DataHolder.getInstance().setServerConfigContext(null);
     }
 
     protected void setCarbonTomcatService(CarbonTomcatService carbonTomcatService) {

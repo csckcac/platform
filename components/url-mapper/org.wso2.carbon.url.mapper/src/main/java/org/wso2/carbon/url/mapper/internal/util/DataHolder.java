@@ -15,6 +15,7 @@
  */
 package org.wso2.carbon.url.mapper.internal.util;
 
+import org.apache.axis2.context.ConfigurationContext;
 import org.wso2.carbon.registry.core.Registry;
 import org.wso2.carbon.tomcat.api.CarbonTomcatService;
 import org.wso2.carbon.user.core.service.RealmService;
@@ -27,6 +28,7 @@ public class DataHolder {
     private RealmService realmService;
     private CarbonTomcatService carbonTomcatService;
     private Registry registry;
+    private ConfigurationContext contextService;
 
     public static DataHolder getInstance() {
         return dataHolder;
@@ -41,6 +43,14 @@ public class DataHolder {
 
     public RealmService getRealmService() {
         return realmService;
+    }
+    
+    public void setServerConfigContext(ConfigurationContext configContext) {
+         this.contextService = configContext;
+    }
+
+    public ConfigurationContext getServerConfigContext() {
+        return this.contextService;
     }
 
     public void setCarbonTomcatService(CarbonTomcatService carbonTomcatService) {

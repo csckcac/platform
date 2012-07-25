@@ -270,7 +270,7 @@
                                onclick="resetVars()" class="chkBox"/>
         </td>
         <td>
-            <%=phpApps[i].substring(0, phpApps[i].indexOf(".zip"))%>
+            <%=phpApps[i]%>
         </td>
         <td>
             <%=endPoints[i]%>
@@ -290,7 +290,7 @@
                           selectAllInPageKey="selectAllInPage"
                           selectAllKey="selectAll"
                           selectNoneKey="selectNone"
-                          addRemoveFunction="deleteWebapps()"
+                          addRemoveFunction="deletePHPapps()"
                           addRemoveButtonId="delete2"
                           addRemoveKey="delete"
                           numberOfPages="<%=numberOfPages%>"/>

@@ -80,7 +80,7 @@ public class HostingAdminClient {
         try {
             phpAppsWrapper = stub.getPagedPhpAppsSummary(phpappSearchString , pageNumber);
             String[] phpApps = phpAppsWrapper.getPhpapps(); //For testing whether the PHP apps are null
-            if(phpApps != null && phpApps[0] == null){
+            if((phpApps != null && phpApps[0] == null) || phpApps == null){
                 phpAppsWrapper.setPhpapps(null);
                 phpAppsWrapper.setEndPoints(null);
             }
@@ -132,15 +132,19 @@ public class HostingAdminClient {
         return null;
     }
 
+    /**
+     *
+     * @param image
+     * @return
+     * @throws AxisFault
+     */
     public String startInstance(String image) throws AxisFault {
-        String ip = "122.22.22.22";
-//          try {
-//            ip =  stub.startInstance(image);
-//        } catch (RemoteException e) {
-//            handleException("Error while starting instance" , e);
-//        }
-//
-
+        String ip = "";
+          try {
+            ip =  stub.startInstance(image);
+        } catch (RemoteException e) {
+            handleException("Error while starting instance" , e);
+        }
         return ip;
     }
 

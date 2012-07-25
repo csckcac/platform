@@ -35,11 +35,11 @@ public class ApplicationManagementService extends AbstractAdmin{
     private static final Log log = LogFactory.getLog(ApplicationManagementService.class);
     public static final String FILE_DEPLOYMENT_FOLDER = "phpapps";
     AutoscaleServiceClient client;
-//    HashMap<String, String> imageIdtoNameMap;
+//    HashMap<String, String> imageIdtoNameMap;  to active for next release
     OpenstackDAO openstackDAO;
 
     public ApplicationManagementService() throws AxisFault{
-//        imageIdtoNameMap = new HashMap<String, String>();
+//        imageIdtoNameMap = new HashMap<String, String>(); to active for next release
         initAutoscaler();
     }
 
@@ -117,17 +117,20 @@ public class ApplicationManagementService extends AbstractAdmin{
             children = phpAppDirectory.list(filter);
             if(children.length == 0){
                 children = null;
+            }else {
+                for(int i = 0; i < children.length; i++){
+                    children[i] = children[i].substring(0, children[i].indexOf(".zip"));
+                }
             }
         }else {
             children = null;
-        }
+        }   
         return children;
 
     }
 
     public PHPAppsWrapper getPagedPhpAppsSummary(String phpAppSearchString, int pageNumber){
          PHPAppsWrapper phpAppsWrapper = new PHPAppsWrapper();
-        phpAppsWrapper.setPhpapps(listPhpApplications());//TODO remove this
         String[] phpApps= listPhpApplications();
         phpAppsWrapper.setPhpapps(phpApps);
         phpAppsWrapper.setEndPoints(getEndPoints(phpApps));
@@ -147,7 +150,8 @@ public class ApplicationManagementService extends AbstractAdmin{
             for(int i = 0; i < endPoints.length; i++){
                 if(isInstanceForTenantUp()){
                     String publicIp = Store.tenantToPublicIpMap.get(tenantId);
-                    endPoints[i] = "https://" + publicIp + tenantIdentityForUrl+ "/" + phpApps[i];
+                    endPoints[i] = "https://" + publicIp + tenantIdentityForUrl + "/" + phpApps[i]
+                                   + "/" + phpApps[i] + ".php";
                 }    else{
                     endPoints[i] = "Endpoint could not be allocated. Please contact your administrator";
                 }
@@ -173,14 +177,14 @@ public class ApplicationManagementService extends AbstractAdmin{
             phpAppFile = new File(getWebappDeploymentDirPath() +  File.separator + phpApp);
             phpAppFile.delete();
         }
-//        if(listPhpApplications() == null){
-//            Integer tenantId = MultitenantUtils.getTenantId(getConfigContext());
-//            try {
-//                client.terminateSpiInstance(Store.tenantToPublicIpMap.get(tenantId));
-//            } catch (Exception e) {
-//                log.error("Error while terminating instance");
-//            }
-//        }
+        if(listPhpApplications() == null){
+            Integer tenantId = MultitenantUtils.getTenantId(getConfigContext());
+            try {
+                client.terminateSpiInstance(Store.tenantToPublicIpMap.get(tenantId));
+            } catch (Exception e) {
+                log.error("Error while terminating instance");
+            }
+        }
     }
 
     public String startInstance(String image){
@@ -192,7 +196,7 @@ public class ApplicationManagementService extends AbstractAdmin{
             String imageArray[] = imageIdsString.split(":");
             imageId = imageArray[1];
         }
-        //Above code will get first one from images of configuration
+        //Above code will get first one from images of configuration for this release
         Integer tenantId = MultitenantUtils.getTenantId(getConfigContext());
         log.info("An instance is spawning for tenant " + tenantId);
         try {

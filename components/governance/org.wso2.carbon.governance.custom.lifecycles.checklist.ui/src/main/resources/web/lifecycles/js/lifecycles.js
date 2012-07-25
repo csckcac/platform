@@ -156,23 +156,23 @@ function invokeAspect(path, aspect, action, callBack, parameterString,customUIAc
                  lifecyleOperationStarted = false;
                 if (action != "itemClick") {
                     document.getElementById(action).disabled = false;
-                }
-                var message = org_wso2_carbon_governance_custom_lifecycles_checklist_ui_jsi18n["lifecycle.operation.successful"]
-                     + " : " + action;
-                if (callBack && typeof callBack == "function") {
-                    CARBON.showInfoDialog(message, function () {
-                        callBack();
-                        refreshLifecyclesSection(path, action);
-                    }, function () {
-                        callBack();
-                        refreshLifecyclesSection(path, action);
-                    });
-                } else {
-                    CARBON.showInfoDialog(message, function () {
-                        refreshLifecyclesSection(path, action);
-                    }, function () {
-                        refreshLifecyclesSection(path, action);
-                    });
+                    var message = org_wso2_carbon_governance_custom_lifecycles_checklist_ui_jsi18n["lifecycle.operation.successful"]
+                        + " : " + action;
+                    if (callBack && typeof callBack == "function") {
+                        CARBON.showInfoDialog(message, function () {
+                            callBack();
+                            refreshLifecyclesSection(path, action);
+                        }, function () {
+                            callBack();
+                            refreshLifecyclesSection(path, action);
+                        });
+                    } else {
+                        CARBON.showInfoDialog(message, function () {
+                            refreshLifecyclesSection(path, action);
+                        }, function () {
+                            refreshLifecyclesSection(path, action);
+                        });
+                    }
                 }
             },
             onFailure : function(transport) {

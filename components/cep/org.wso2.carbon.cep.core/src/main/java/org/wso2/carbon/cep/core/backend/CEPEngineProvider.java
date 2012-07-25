@@ -16,6 +16,8 @@
 
 package org.wso2.carbon.cep.core.backend;
 
+import java.util.List;
+
 /**
  * holds the details about the cep engine provider
  */
@@ -31,6 +33,7 @@ public class CEPEngineProvider {
      * org.wso2.carbon.event.cep.core.backend.CEPBackEndRuntimeFactory
      */
     private Class providerClass;
+    private List<String> configurationPropertyNames;
 
     public String getName() {
         return name;
@@ -46,5 +49,13 @@ public class CEPEngineProvider {
 
     public void setProviderClass(Class providerClass) {
         this.providerClass = providerClass;
+    }
+
+    public void setConfigurationPropertyNames(List<String> configurationPropertyNames) {
+        this.configurationPropertyNames = configurationPropertyNames;
+    }
+
+    public List<String> getConfigurationPropertyNames() {
+        return configurationPropertyNames;
     }
 }

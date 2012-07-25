@@ -20,6 +20,7 @@ import org.wso2.carbon.cep.core.exception.CEPConfigurationException;
 import org.wso2.carbon.cep.core.mapping.input.mapping.InputMapping;
 
 import java.util.List;
+import java.util.Properties;
 
 /**
  * this class is used to create real cep runtime objects. One bucket use one cep back end
@@ -30,11 +31,13 @@ public interface CEPBackEndRuntimeFactory {
     /**
      * Wso2 CEP Engine invokes this method to create back end runtime objects
      *
+     *
      * @param bucketName - String value
-     * @param mappings   - list of input mappings objects to generate the cep configuration.
-     * @return - back end runtime
+     * @param providerConfiguration
+     *@param mappings   - list of input mappings objects to generate the cep configuration.  @return - back end runtime
      */
     public CEPBackEndRuntime createCEPBackEndRuntime(String bucketName,
+                                                     Properties providerConfiguration,
                                                      List<InputMapping> mappings,
                                                      int tenantId) throws
                                                                    CEPConfigurationException;

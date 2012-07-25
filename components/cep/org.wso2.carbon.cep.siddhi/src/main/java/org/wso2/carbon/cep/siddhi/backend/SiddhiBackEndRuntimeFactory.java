@@ -16,6 +16,8 @@
 
 package org.wso2.carbon.cep.siddhi.backend;
 
+import org.apache.commons.logging.Log;
+import org.apache.commons.logging.LogFactory;
 import org.wso2.carbon.cep.core.backend.CEPBackEndRuntime;
 import org.wso2.carbon.cep.core.backend.CEPBackEndRuntimeFactory;
 import org.wso2.carbon.cep.core.exception.CEPConfigurationException;
@@ -33,18 +35,31 @@ import org.wso2.siddhi.query.api.definition.StreamDefinition;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
+import java.util.Properties;
 
 public class SiddhiBackEndRuntimeFactory implements CEPBackEndRuntimeFactory {
 
+    private static final Log log = LogFactory.getLog(SiddhiBackEndRuntimeFactory.class);
+    public static final String PERSISTENCE_SNAPSHOT_TIME_INTERVAL_MINUTES = "siddhi.persistence.snapshot.time.interval.minutes";
 
     public CEPBackEndRuntime createCEPBackEndRuntime(String bucketName,
+                                                     Properties providerConfiguration,
                                                      List<InputMapping> mappings,
                                                      int tenantId)
             throws CEPConfigurationException {
 
-        SiddhiConfiguration siddhiConfig=new SiddhiConfiguration();
+        long persistenceTimeInterval = 1;
+        if (providerConfiguration != null && providerConfiguration.size() > 0) {
+            String timeString = providerConfiguration.getProperty(PERSISTENCE_SNAPSHOT_TIME_INTERVAL_MINUTES);
+            try {
+                persistenceTimeInterval = Long.parseLong(timeString);
+            } catch (NumberFormatException e) {
+                log.error("Error reading siddhi persistence snapshot time interval, hence using " + persistenceTimeInterval + " min");
+            }
+        }
+        SiddhiConfiguration siddhiConfig = new SiddhiConfiguration();
         siddhiConfig.setSingleThreading(true); //todo check which is good?
-        siddhiConfig.setExecutionPlanIdentifier(bucketName );
+        siddhiConfig.setExecutionPlanIdentifier(bucketName);
         SiddhiManager siddhiManager = new SiddhiManager(siddhiConfig);
         siddhiManager.setPersistStore(SiddhiBackendRuntimeValueHolder.getInstance().getPersistenceStore());
 
@@ -88,6 +103,6 @@ public class SiddhiBackEndRuntimeFactory implements CEPBackEndRuntimeFactory {
 //        } catch (SiddhiException e) {
 //            throw new CEPConfigurationException("Cannot init Siddhi Backend", e);
 //        }
-        return new SiddhiBackEndRuntime(bucketName, siddhiManager, siddhiInputHandlerMap, tenantId);
+        return new SiddhiBackEndRuntime(bucketName, siddhiManager, siddhiInputHandlerMap, tenantId,persistenceTimeInterval);
     }
 }

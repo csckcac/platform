@@ -1,0 +1,78 @@
+<cepConfiguration xmlns="http://wso2.org/carbon/cep">
+    <!-- details of the Back end runtime provider can be esper or fusion -->
+    <cepEngineProviders>
+        <cepEngineProvider name="siddhiEngineProvider" default="true"
+                           class="org.wso2.carbon.cep.siddhi.SiddhiBackendRuntimeFactory"/>
+    </cepEngineProviders>
+    <buckets>
+
+        <bucket name="TwitterAndStockQuoteAnalyzer" engineProvider="EsperCEPRuntime"
+                overWriteRegistryStoredBucket="true">
+            <description>
+This bucket analyzes stock quotes and Twitter feeds on the word count and
+trigger an event if the last traded amount vary by 2 percent with regards
+to the average traded price within past 2 minutes and the word count with
+related to that symbol is greater than 10.
+            </description>
+            <input topic="AllStockQuotes" brokerName="activeMQBroker">
+                <mapMapping stream="allStockQuotes"  eventClass="Tuple">
+                    <property name="symbol"
+                              type="java.lang.String"/>
+                    <property name="price"
+                              type="java.lang.Double"/>
+                </mapMapping>
+            </input>
+            <input topic="TwitterFeed" brokerName="activeMQBroker" >
+                <mapMapping stream="twitterFeed"  eventClass="Tuple">
+                    <property name="company"
+                              type="java.lang.String"/>
+                    <property name="wordCount"
+                              type="java.lang.Integer"/>
+                </mapMapping>
+            </input>
+            <query name="FastStockQuery">
+                <expression type="inline">
+                    from allStockQuotes[win.time(600000)]
+                    insert into fastMovingStockQuotes
+                    symbol as symbol, avg(price) as averagePrice
+                    group by symbol
+                    having ((price > (averagePrice*1.02)) or ((averagePrice*0.98)> price ))
+                </expression>
+            </query>
+            <query name="HighFrequentTweetQuery">
+                <expression type="inline">
+                    from twitterFeed[win.time(600000)]
+                    insert into highFrequentTweets
+                    company as company, sum(wordCount) as words
+                    group by company
+                    having (words > 10)
+                </expression>
+            </query>
+            <query name="StocksPredictor">
+                <expression type="inline">
+                    from fastMovingStockQuotes[win.time(600000)] as fastMovingStockQuotes join
+                    highFrequentTweets[win.time(600000)] as highFrequentTweets
+                    insert into predictedStockQuotes
+                    fastMovingStockQuotes.symbol as company, fastMovingStockQuotes.averagePrice as amount, highFrequentTweets.words as words
+                </expression>
+                <output topic="PredictedStockQuotes" brokerName="localBroker">
+                    <!--<mapMapping>-->
+                        <!--<property name="symbol"/>-->
+                        <!--<property name="price"/>-->
+                        <!--<property name="volume"/>-->
+                    <!--</mapMapping>-->
+                    <xmlMapping>
+                        <quotedata:StockQuoteDataEvent
+                                xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+                                xmlns:xsd="http://www.w3.org/2001/XMLSchema"
+                                xmlns:quotedata="http://ws.cdyne.com/">
+                            <quotedata:StockSymbol>{company}</quotedata:StockSymbol>
+                            <quotedata:LastTradeAmount>{amount}</quotedata:LastTradeAmount>
+                            <quotedata:WordCount>{words}</quotedata:WordCount>
+                        </quotedata:StockQuoteDataEvent>
+                    </xmlMapping>
+                </output>
+            </query>
+        </bucket>
+    </buckets>
+</cepConfiguration>

@@ -27,6 +27,7 @@ public interface CEPConstants {
     String CEP_CONF_ELE_CEP_BUCKET_OWNER = "owner";
     String CEP_CONF_ELE_CEP_ENGINE_PROVIDERS = "cepEngineProviders";
     String CEP_CONF_ELE_DESCRIPTION = "description";
+    String CEP_CONF_ELE_PROVIDER_CONFIG = "engineProviderConfiguration";
     String CEP_CONF_ELE_BUCKET = "bucket";
     String CEP_CONF_ELE_BUCKETS = "buckets";
     String CEP_CONF_ELE_QUERY = "query";
@@ -61,6 +62,7 @@ public interface CEPConstants {
     String CEP_CONF_ATTR_DEFAULT = "default";
     String CEP_CONF_ATTR_STREAM = "stream";
     String CEP_CONT_ATTR_DOC_ELEMENT = "documentElement";
+    String CEP_CONT_ATTR_NAME = "name";
     String CEP_CONT_ATTR_TYPE = "type";
     String CEP_CONT_ATTR_LISTENER_NAME = "listenerName";
     String CEP_CONF_ATTR_OVER_WRITE_REGISTRY = "overWriteRegistryStoredBucket";
@@ -96,6 +98,7 @@ public interface CEPConstants {
     String CEP_REGISTRY_STREAM = "stream";
     String CEP_REGISTRY_NAME = "name";
     String CEP_REGISTRY_TYPE = "type";
+    String CEP_REGISTRY_PROVIDER_CONFIG = "engineProviderConfiguration";
     String CEP_REGISTRY_POSITION = "position";
     String CEP_REGISTRY_LISTENER_NAME = "listenerName";
     String CEP_REGISTRY_XPATH = "xpath";

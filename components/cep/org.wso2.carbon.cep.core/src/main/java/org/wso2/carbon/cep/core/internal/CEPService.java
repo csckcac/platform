@@ -115,7 +115,7 @@ public class CEPService implements CEPServiceInterface {
             }
 
             CEPBackEndRuntime cepBackEndRuntime =
-                    cepBackEndRuntimeFactory.createCEPBackEndRuntime(bucket.getName(), inputMappings, tenantId);
+                    cepBackEndRuntimeFactory.createCEPBackEndRuntime(bucket.getName(),bucket.getProviderConfiguration(), inputMappings, tenantId);
 
             CEPBucket cepBucket = new CEPBucket(cepBackEndRuntime, bucket, axisConfiguration);
             cepBucket.init();

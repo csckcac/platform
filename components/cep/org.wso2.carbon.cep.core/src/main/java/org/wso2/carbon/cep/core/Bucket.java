@@ -17,10 +17,11 @@
 package org.wso2.carbon.cep.core;
 
 import org.wso2.carbon.cep.core.mapping.input.Input;
+
 import java.util.ArrayList;
-import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
+import java.util.Properties;
 import java.util.concurrent.ConcurrentHashMap;
 
 /**
@@ -63,6 +64,10 @@ public class Bucket {
      * */
     private boolean overWriteRegistry = false;
 
+    /**
+     * Configuration related to engine providers
+     */
+    private Properties providerConfiguration=null;
 
 
     public Bucket() {
@@ -178,6 +183,14 @@ public class Bucket {
 
     public void setOverWriteRegistry(boolean overWriteRegistry) {
         this.overWriteRegistry = overWriteRegistry;
+    }
+
+    public void setProviderConfiguration(Properties providerConfiguration) {
+        this.providerConfiguration = providerConfiguration;
+    }
+
+    public Properties getProviderConfiguration() {
+        return providerConfiguration;
     }
 }
 

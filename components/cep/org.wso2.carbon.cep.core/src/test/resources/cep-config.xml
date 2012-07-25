@@ -4,7 +4,12 @@
 
         <bucket name="addStatisticsFusion" engineProvider="DroolsFusionCEPRuntime">
 
+
             <description>BAMServiceStatisticsDataCEPServiceBucket</description>
+            <engineProviderConfiguration>
+                <property name="someConf">Value</property>
+                <property name="someConf1">Value1</property>
+            </engineProviderConfiguration>
             <input topic="inputTopic" brokerName="wsEventServer">
                 <tupleMapping stream="ServiceStatisticsDataEvent" eventClass="Tuple">
                     <property name="symbol"

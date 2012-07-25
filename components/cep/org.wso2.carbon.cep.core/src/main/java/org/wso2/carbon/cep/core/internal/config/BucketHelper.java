@@ -16,57 +16,24 @@
 
 package org.wso2.carbon.cep.core.internal.config;
 
+import org.apache.axiom.om.OMAbstractFactory;
 import org.apache.axiom.om.OMElement;
+import org.apache.axiom.om.OMFactory;
 import org.apache.commons.logging.Log;
 import org.apache.commons.logging.LogFactory;
 import org.wso2.carbon.cep.core.Bucket;
-import org.wso2.carbon.cep.core.mapping.input.Input;
 import org.wso2.carbon.cep.core.Query;
 import org.wso2.carbon.cep.core.exception.CEPConfigurationException;
 import org.wso2.carbon.cep.core.internal.config.input.InputHelper;
 import org.wso2.carbon.cep.core.internal.util.CEPConstants;
+import org.wso2.carbon.cep.core.mapping.input.Input;
 import org.wso2.carbon.registry.core.Collection;
 import org.wso2.carbon.registry.core.Registry;
 import org.wso2.carbon.registry.core.exceptions.RegistryException;
 
 import javax.xml.namespace.QName;
 import java.util.Iterator;
-import java.io.BufferedInputStream;
-import java.io.BufferedWriter;
-import java.io.File;
-import java.io.FileInputStream;
-import java.io.FileNotFoundException;
-import java.io.FileWriter;
-import java.io.IOException;
-import java.util.ArrayList;
-import java.util.Iterator;
 import java.util.List;
-import javax.xml.namespace.QName;
-import javax.xml.stream.XMLInputFactory;
-import javax.xml.stream.XMLOutputFactory;
-import javax.xml.stream.XMLStreamException;
-import javax.xml.stream.XMLStreamReader;
-import javax.xml.stream.XMLStreamWriter;
-
-import org.apache.axiom.om.OMAbstractFactory;
-
-import org.apache.axiom.om.OMFactory;
-import org.apache.axiom.om.OMNamespace;
-
-import org.apache.axis2.deployment.DeploymentException;
-import org.apache.axis2.deployment.repository.util.DeploymentFileData;
-
-import org.wso2.carbon.cep.core.Expression;
-
-import org.wso2.carbon.cep.core.XpathDefinition;
-import org.wso2.carbon.cep.core.internal.config.BucketHelper;
-import org.wso2.carbon.cep.core.internal.util.CEPConstants;
-
-import org.wso2.carbon.cep.core.mapping.input.mapping.XMLInputMapping;
-import org.wso2.carbon.cep.core.mapping.output.Output;
-import org.wso2.carbon.cep.core.mapping.output.mapping.ElementOutputMapping;
-import org.wso2.carbon.cep.core.mapping.output.mapping.XMLOutputMapping;
-import org.wso2.carbon.cep.core.mapping.property.XMLProperty;
 
 /**
  * this class is used to parse the top level bucket attributes
@@ -86,9 +53,16 @@ public class BucketHelper {
 
         OMElement descriptionElement =
                 bucketElement.getFirstChildWithName(new QName(CEPConstants.CEP_CONF_NAMESPACE,
-                        CEPConstants.CEP_CONF_ELE_DESCRIPTION));
+                                                              CEPConstants.CEP_CONF_ELE_DESCRIPTION));
         if (descriptionElement != null) {
             bucket.setDescription(descriptionElement.getText());
+        }
+
+        OMElement providerConfiguration =
+                bucketElement.getFirstChildWithName(new QName(CEPConstants.CEP_CONF_NAMESPACE,
+                                                              CEPConstants.CEP_CONF_ELE_PROVIDER_CONFIG));
+        if (providerConfiguration != null) {
+            bucket.setProviderConfiguration(ProviderConfigurationHelper.fromOM(providerConfiguration));
         }
 
         String engineProvider =
@@ -115,7 +89,7 @@ public class BucketHelper {
 
         OMElement inputOmElement = null;
         for (Iterator iter = bucketElement.getChildrenWithName(new QName(CEPConstants.CEP_CONF_NAMESPACE,
-                CEPConstants.CEP_CONF_ELE_INPUT)); iter.hasNext();) {
+                                                                         CEPConstants.CEP_CONF_ELE_INPUT)); iter.hasNext(); ) {
             inputOmElement = (OMElement) iter.next();
             bucket.addInput(InputHelper.fromOM(inputOmElement));
         }
@@ -124,9 +98,9 @@ public class BucketHelper {
         OMElement queryOmElement = null;
         int queryIndex = 0;
         for (Iterator iterator = bucketElement.getChildrenWithName(new QName(CEPConstants.CEP_CONF_NAMESPACE,
-                CEPConstants.CEP_CONF_ELE_QUERY)); iterator.hasNext();) {
+                                                                             CEPConstants.CEP_CONF_ELE_QUERY)); iterator.hasNext(); ) {
             queryOmElement = (OMElement) iterator.next();
-            Query query =  QueryHelper.fromOM(queryOmElement);
+            Query query = QueryHelper.fromOM(queryOmElement);
             query.setQueryIndex(queryIndex);
             bucket.addQuery(query);
             queryIndex++;
@@ -139,10 +113,11 @@ public class BucketHelper {
 
     /**
      * This method adds  bucket information to registry
-     * */
+     */
     public static void addBucketToRegistry(Bucket bucket,
                                            Registry registry,
-                                           String parentCollectionPath) throws CEPConfigurationException {
+                                           String parentCollectionPath)
+            throws CEPConfigurationException {
         try {
             Collection bucketCollection = registry.newCollection();
             bucketCollection.addProperty(CEPConstants.CEP_CONF_ELE_NAME, bucket.getName());
@@ -152,6 +127,7 @@ public class BucketHelper {
 
             registry.put(parentCollectionPath, bucketCollection);
 
+            ProviderConfigurationHelper.addProviderConfigurationToRegistry(bucket.getProviderConfiguration(), registry, parentCollectionPath);
             InputHelper.addInputsToRegistry(bucket.getInputs(), registry, parentCollectionPath);
 
             QueryHelper.addQueriesToRegistry(bucket.getQueries(), registry, parentCollectionPath);
@@ -166,7 +142,8 @@ public class BucketHelper {
 
     }
 
-    public static Bucket[] loadBucketsFromRegistry(Registry registry) throws CEPConfigurationException {
+    public static Bucket[] loadBucketsFromRegistry(Registry registry)
+            throws CEPConfigurationException {
         Bucket[] buckets = null;
         try {
             String parentCollectionPath = CEPConstants.CEP_CONF_ELE_CEP_BUCKETS + CEPConstants.CEP_REGISTRY_BS;
@@ -211,12 +188,15 @@ public class BucketHelper {
         }
         return null;
     }
+
     private static Bucket formatBucket(Registry registry, Collection bucketDetailsCollection)
             throws RegistryException, CEPConfigurationException {
         Bucket bucket = new Bucket();
         bucket.setName(bucketDetailsCollection.getProperty(CEPConstants.CEP_CONF_ELE_NAME));
         bucket.setOwner(bucketDetailsCollection.getProperty(CEPConstants.CEP_CONF_ELE_CEP_BUCKET_OWNER));
         bucket.setDescription(bucketDetailsCollection.getProperty(CEPConstants.CEP_CONF_ELE_DESCRIPTION));
+
+
         bucket.setEngineProvider(bucketDetailsCollection.getProperty(CEPConstants.CEP_CONF_ELE_CEP_ENGINE_PROVIDER));
 
         for (String attirbute : bucketDetailsCollection.getChildren()) {
@@ -224,14 +204,21 @@ public class BucketHelper {
                 Input input;
                 Query query;
                 Collection attributeCollection = (Collection) registry.get(attirbute);
-                for (String names : attributeCollection.getChildren()) {
-                    if (registry.get(names) instanceof Collection) {
-                        if ((CEPConstants.CEP_REGISTRY_BS + CEPConstants.CEP_REGISTRY_INPUTS)
-                                .equals(attirbute.substring(attirbute.lastIndexOf(CEPConstants.CEP_REGISTRY_BS)))) {
-                            InputHelper.loadInputsFromRegistry(registry, bucket, names);
-                        } else if ((CEPConstants.CEP_REGISTRY_BS + CEPConstants.CEP_REGISTRY_QUERIES)
-                                .equals(attirbute.substring(attirbute.lastIndexOf(CEPConstants.CEP_REGISTRY_BS)))) {
-                            QueryHelper.loadQueriesFromRegistry(registry, bucket, names);
+                if (attributeCollection.getChildCount() == 0) {
+                    if ((CEPConstants.CEP_REGISTRY_BS + CEPConstants.CEP_REGISTRY_PROVIDER_CONFIG)
+                            .equals(attirbute.substring(attirbute.lastIndexOf(CEPConstants.CEP_REGISTRY_BS)))) {
+                        ProviderConfigurationHelper.loadProviderConfigurationFromRegistry(registry, bucket, attirbute);
+                    }
+                } else {
+                    for (String names : attributeCollection.getChildren()) {
+                        if (registry.get(names) instanceof Collection) {
+                            if ((CEPConstants.CEP_REGISTRY_BS + CEPConstants.CEP_REGISTRY_INPUTS)
+                                    .equals(attirbute.substring(attirbute.lastIndexOf(CEPConstants.CEP_REGISTRY_BS)))) {
+                                InputHelper.loadInputsFromRegistry(registry, bucket, names);
+                            } else if ((CEPConstants.CEP_REGISTRY_BS + CEPConstants.CEP_REGISTRY_QUERIES)
+                                    .equals(attirbute.substring(attirbute.lastIndexOf(CEPConstants.CEP_REGISTRY_BS)))) {
+                                QueryHelper.loadQueriesFromRegistry(registry, bucket, names);
+                            }
                         }
                     }
                 }
@@ -248,6 +235,7 @@ public class BucketHelper {
                 InputHelper.modifyInputsInRegistry(registry, bucket, parentCollectionPath);
 
                 QueryHelper.modifyQueriesInRegistry(registry, bucket, parentCollectionPath);
+                ProviderConfigurationHelper.modifyProviderConfigurationToRegistry(bucket, registry, parentCollectionPath);
 
             }
         } catch (RegistryException e) {
@@ -258,50 +246,50 @@ public class BucketHelper {
 
     }
 
-   
+
     public static OMElement bucketToOM(Bucket bucket) {
-    	String bucketName = bucket.getName();
-    	String bucketDescription = bucket.getDescription();
-    	String bucketEngineProvider = bucket.getEngineProvider();
-    	List<Input> inputList = bucket.getInputs();
-    	List<Query> queryList = bucket.getQueries();
-    	boolean overWriteRegistry = bucket.isOverWriteRegistry();
-    	String overWrite = "true";
-    	if (!overWriteRegistry) {
-    		overWrite = "false";
-    	}
-    	OMFactory factory = OMAbstractFactory.getOMFactory();
-    	OMElement bucketItem = factory.createOMElement(new QName(
-    			CEPConstants.CEP_CONF_NAMESPACE,
-    			CEPConstants.CEP_CONF_ELE_BUCKET,
-    			CEPConstants.CEP_CONF_CEP_NAME_SPACE_PREFIX));
-    	bucketItem.addAttribute(CEPConstants.CEP_CONF_ATTR_OVER_WRITE_REGISTRY,
-    			overWrite, null);
-    	bucketItem.addAttribute(CEPConstants.CEP_CONF_ELE_NAME, bucketName,
-    			null);
-    	bucketItem.addAttribute(CEPConstants.CEP_CONF_ATTR_ENGINE_PROVIDER,
-    			bucketEngineProvider, null);
-    	OMElement description = factory.createOMElement(new QName(
-    			CEPConstants.CEP_CONF_NAMESPACE,
-    			CEPConstants.CEP_CONF_ELE_DESCRIPTION,
-    			CEPConstants.CEP_CONF_CEP_NAME_SPACE_PREFIX));
+        String bucketName = bucket.getName();
+        String bucketDescription = bucket.getDescription();
+        String bucketEngineProvider = bucket.getEngineProvider();
+        List<Input> inputList = bucket.getInputs();
+        List<Query> queryList = bucket.getQueries();
+        boolean overWriteRegistry = bucket.isOverWriteRegistry();
+        String overWrite = "true";
+        if (!overWriteRegistry) {
+            overWrite = "false";
+        }
+        OMFactory factory = OMAbstractFactory.getOMFactory();
+        OMElement bucketItem = factory.createOMElement(new QName(
+                CEPConstants.CEP_CONF_NAMESPACE,
+                CEPConstants.CEP_CONF_ELE_BUCKET,
+                CEPConstants.CEP_CONF_CEP_NAME_SPACE_PREFIX));
+        bucketItem.addAttribute(CEPConstants.CEP_CONF_ATTR_OVER_WRITE_REGISTRY,
+                                overWrite, null);
+        bucketItem.addAttribute(CEPConstants.CEP_CONF_ELE_NAME, bucketName,
+                                null);
+        bucketItem.addAttribute(CEPConstants.CEP_CONF_ATTR_ENGINE_PROVIDER,
+                                bucketEngineProvider, null);
+        OMElement description = factory.createOMElement(new QName(
+                CEPConstants.CEP_CONF_NAMESPACE,
+                CEPConstants.CEP_CONF_ELE_DESCRIPTION,
+                CEPConstants.CEP_CONF_CEP_NAME_SPACE_PREFIX));
 
-    	description.setText(bucketDescription);
+        description.setText(bucketDescription);
 
-    	bucketItem.addChild(description);
-
-    	for (Input input : inputList) {
-    		OMElement inputChild = InputHelper.inputToOM(input);
-    		bucketItem.addChild(inputChild);
-    	}
-    	for (Query query : queryList) {
-    		OMElement queryChild = QueryHelper.queryToOM(query);
-    		bucketItem.addChild(queryChild);
-    	}
-    	return bucketItem;
+        bucketItem.addChild(description);
+        if (bucket.getProviderConfiguration() != null) {
+            bucketItem.addChild(ProviderConfigurationHelper.providerConfigurationToOM(bucket.getProviderConfiguration()));
+        }
+        for (Input input : inputList) {
+            OMElement inputChild = InputHelper.inputToOM(input);
+            bucketItem.addChild(inputChild);
+        }
+        for (Query query : queryList) {
+            OMElement queryChild = QueryHelper.queryToOM(query);
+            bucketItem.addChild(queryChild);
+        }
+        return bucketItem;
     }
 
-    
-    
-    
+
 }

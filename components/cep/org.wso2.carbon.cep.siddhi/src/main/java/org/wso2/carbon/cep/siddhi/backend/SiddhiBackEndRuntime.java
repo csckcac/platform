@@ -67,6 +67,7 @@ public class SiddhiBackEndRuntime implements CEPBackEndRuntime {
     private int tenantId;
 
     static ConcurrentHashMap<String, Attribute.Type> javaToSiddhiType;
+    private long persistenceTimeInterval;
 
     static {
         javaToSiddhiType = new ConcurrentHashMap<String, Attribute.Type>();
@@ -79,12 +80,14 @@ public class SiddhiBackEndRuntime implements CEPBackEndRuntime {
     }
 
     public SiddhiBackEndRuntime(String bucketName, SiddhiManager siddhiManager,
-                                Map<String, InputHandler> siddhiInputHandlerMap, int tenantId) {
+                                Map<String, InputHandler> siddhiInputHandlerMap, int tenantId,
+                                long persistenceTimeInterval) {
         this.bucketName = bucketName;
         this.siddhiManager = siddhiManager;
         this.siddhiInputHandlerMap = siddhiInputHandlerMap;
         this.tenantId = tenantId;
         this.queryReferenceMap = new HashMap<String, String>();
+        this.persistenceTimeInterval = persistenceTimeInterval;
 
     }
 
@@ -251,18 +254,15 @@ public class SiddhiBackEndRuntime implements CEPBackEndRuntime {
 
     @Override
     public void init() {
-        //todo make it configurable
         siddhiManager.restoreLastRevision();
-        persistenceScheduler.scheduleWithFixedDelay(new PersistenceWorker(siddhiManager),1,1, TimeUnit.MINUTES);
+        persistenceScheduler.scheduleWithFixedDelay(new PersistenceWorker(siddhiManager), persistenceTimeInterval, persistenceTimeInterval, TimeUnit.MINUTES);
 
     }
 
     private String readSourceTextFromRegistry(String key) throws RegistryException {
         Registry registry = CEPServiceValueHolder.getInstance().getRegistry(tenantId);
         Resource resource = registry.get(key);
-        String content = new String((byte[]) resource.getContent());
-        return content;
-
+        return new String((byte[]) resource.getContent());
     }
 
     class PersistenceWorker implements Runnable {
@@ -274,7 +274,7 @@ public class SiddhiBackEndRuntime implements CEPBackEndRuntime {
 
         @Override
         public void run() {
-            log.info("Siddhi persisting sates of bucket "+bucketName);
+            log.info("Siddhi persisting sates of bucket " + bucketName);
             siddhiManager.persist();
         }
     }

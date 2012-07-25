@@ -1,0 +1,53 @@
+<cepConfiguration xmlns="http://wso2.org/carbon/cep">
+    <!-- set of buckets to process the cep events -->
+    <buckets>
+
+        <bucket name="addStatisticsFusion" engineProvider="SiddhiCEPRuntime">
+
+
+            <description>BAMServiceStatisticsDataCEPServiceBucket</description>
+            <engineProviderConfiguration>
+                <property name="someConf">Value</property>
+                <property name="someConf1">Value1</property>
+            </engineProviderConfiguration>
+            <input topic="inputTopic" brokerName="localBroker">
+                <xmlMapping stream="ServiceStatisticsDataEvent">
+                    <xpathDefinition prefix="statdata"
+                                     namespace="http://wso2.org/ns/2009/09/bam/service/statistics/data"/>
+                    <property name="requestCount"
+                              xpath="//statdata:ServiceStatisticsData/statdata:RequestCount"
+                              type="java.lang.Integer"/>
+                    <property name="responseCount"
+                              xpath="//statdata:ServiceStatisticsData/statdata:ResponseCount"
+                              type="java.lang.Integer"/>
+                    <property name="serviceName"
+                              xpath="//statdata:ServiceStatisticsData/statdata:ServiceName"
+                              type="java.lang.String"/>
+                    <property name="faultCount"
+                              xpath="//statdata:ServiceStatisticsData/statdata:FaultCount"
+                              type="java.lang.Integer"/>
+                </xmlMapping>
+            </input>
+
+            <query name="testesperquery">
+                <expression type="inline" ><![CDATA[
+                            from ServiceStatisticsDataEvent[requestCount>responseCount]
+                            insert into OutStream;
+
+                        ]]></expression>
+                <output topic="statisticsPublishTopic" brokerName="localBroker">
+                    <xmlMapping>
+                        <x:ServiceStatisticsData
+                                xmlns:x="http://wso2.org/ns/2009/09/bam/service/statistics/data"
+                                responseCount="{responseCount}">
+                            <x:RequestCount>{requestCount}</x:RequestCount>
+                            <x:MaximumResponseTime serviceName="{serviceName}">
+                                <x:FaultCount>{faultCount}</x:FaultCount>
+                            </x:MaximumResponseTime>
+                        </x:ServiceStatisticsData>
+                    </xmlMapping>
+                </output>
+            </query>
+        </bucket>
+    </buckets>
+</cepConfiguration>

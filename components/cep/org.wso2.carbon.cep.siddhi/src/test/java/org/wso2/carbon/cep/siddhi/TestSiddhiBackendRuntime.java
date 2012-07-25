@@ -58,7 +58,7 @@ public class TestSiddhiBackendRuntime extends TestCase {
         inputMappings.add(mapping);
 
         //add inputMappings to Siddhi backend
-        CEPBackEndRuntime siddhiBackendRuntime = factory.createCEPBackEndRuntime("Processor1", inputMappings, 0);
+        CEPBackEndRuntime siddhiBackendRuntime = factory.createCEPBackEndRuntime("Processor1", null, inputMappings, 0);
 
         //Query
         Expression expression = new Expression();
@@ -104,7 +104,7 @@ public class TestSiddhiBackendRuntime extends TestCase {
         inputMapping2s.add(mapping2);
 
 
-        CEPBackEndRuntime esperBackendRuntime = factory.createCEPBackEndRuntime("Processor2", inputMapping2s, 0);
+        CEPBackEndRuntime esperBackendRuntime = factory.createCEPBackEndRuntime("Processor2", null, inputMapping2s, 0);
 
         Expression expression2 = new Expression();
         expression2.setText("from testEvent[maximumResponseTime > -1]#window.length(5)" +
@@ -158,7 +158,7 @@ public class TestSiddhiBackendRuntime extends TestCase {
         mappings.add(twitterFeed);
 
         CEPBackEndRuntime cepBackEndRuntime =
-                esperBackendRuntimeFactory.createCEPBackEndRuntime("Provider1", mappings, 0);
+                esperBackendRuntimeFactory.createCEPBackEndRuntime("Provider1", null, mappings, 0);
 
 //        Query query = new Query();
 //        query.setName("StocksPredictor");

@@ -37,7 +37,7 @@ public class TestFusionBackEndRuntimeFactory extends TestCase {
     public void testFusionBackEndRuntimeFacotry() throws CEPConfigurationException {
 
         CEPBackEndRuntimeFactory factory = new FusionBackEndRuntimeFactory();
-        CEPBackEndRuntime cepBackEndRuntime = factory.createCEPBackEndRuntime(null, null,0);
+        CEPBackEndRuntime cepBackEndRuntime = factory.createCEPBackEndRuntime(null, null, null,0);
 
         Expression expression = new Expression();
         expression.setText("package org.wso2.carbon.cep.fusion;\n" +
@@ -128,7 +128,7 @@ public class TestFusionBackEndRuntimeFactory extends TestCase {
     public void testFusionBackEndRuntimeFacotry1() throws CEPConfigurationException {
 
         CEPBackEndRuntimeFactory factory = new FusionBackEndRuntimeFactory();
-        CEPBackEndRuntime cepBackEndRuntime = factory.createCEPBackEndRuntime(null, null,0);
+        CEPBackEndRuntime cepBackEndRuntime = factory.createCEPBackEndRuntime(null, null, null,0);
 
         Expression expression = new Expression();
 

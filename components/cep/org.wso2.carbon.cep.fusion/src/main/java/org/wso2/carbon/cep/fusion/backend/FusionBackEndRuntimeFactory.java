@@ -28,11 +28,14 @@ import org.wso2.carbon.cep.core.backend.CEPBackEndRuntimeFactory;
 import org.wso2.carbon.cep.core.mapping.input.mapping.InputMapping;
 
 import java.util.List;
+import java.util.Properties;
 
 public class FusionBackEndRuntimeFactory implements CEPBackEndRuntimeFactory {
 
 
-    public CEPBackEndRuntime createCEPBackEndRuntime(String bucketName, List<InputMapping> mappings, int tenantId) {
+    public CEPBackEndRuntime createCEPBackEndRuntime(String bucketName,
+                                                     Properties providerConfiguration,
+                                                     List<InputMapping> mappings, int tenantId) {
         
         KnowledgeBaseConfiguration knowledgeBaseConfiguration
                 = KnowledgeBaseFactory.newKnowledgeBaseConfiguration();

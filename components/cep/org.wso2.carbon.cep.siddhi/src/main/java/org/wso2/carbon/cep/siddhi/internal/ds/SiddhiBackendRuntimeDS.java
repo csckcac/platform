@@ -31,6 +31,9 @@ import org.wso2.carbon.user.core.UserRealm;
 import org.wso2.carbon.user.core.UserStoreException;
 import org.wso2.siddhi.core.persistence.PersistenceStore;
 
+import java.util.ArrayList;
+import java.util.List;
+
 /**
  * @scr.component name="siddhibackend.component" immediate="true"
  * @scr.reference name="cep.service"
@@ -62,6 +65,9 @@ public class SiddhiBackendRuntimeDS {
                 String adminPassword = userRealm.getRealmConfiguration().getAdminPassword();
                 String adminUserName = userRealm.getRealmConfiguration().getAdminUserName();
 //           int tenantId =userRealm.getRealmConfiguration().getTenantId();
+                List<String> configPropertyNames=new ArrayList<String>();
+                configPropertyNames.add(SiddhiBackEndRuntimeFactory.PERSISTENCE_SNAPSHOT_TIME_INTERVAL_MINUTES);
+                cepEngineProvider.setConfigurationPropertyNames(configPropertyNames);
 
                 ClusterInformation clusterInformation = new ClusterInformation(adminUserName,
                                                                                adminPassword);

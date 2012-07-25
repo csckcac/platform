@@ -43,6 +43,9 @@
 <script type="text/javascript" src="js/register_config.js"></script>
 <script type="text/javascript">
 
+<%
+    boolean chargeOnRegistration = CommonUtil.isChargedOnRegistration();
+%>
     var packageInfo;
     function showRentalMessage() {
 
@@ -83,9 +86,9 @@
 
         var freePlan = false;
         for (var i = 0; i < packageInfo.length; i++) {
-            if (packageInfo[i].name == selectedUsagePlan && packageInfo[i].subscriptionCharge != "0") {
+            if (chargeOnRegistration && packageInfo[i].name == selectedUsagePlan && packageInfo[i].subscriptionCharge != "0") {
                 document.forms["selectUsagePlan"].submit();    
-            } else if (packageInfo[i].name == selectedUsagePlan && packageInfo[i].subscriptionCharge == "0") {
+            } else if (!chargeOnRegistration || packageInfo[i].name == selectedUsagePlan && packageInfo[i].subscriptionCharge == "0") {
                 location.href = "../tenant-register/success_register.jsp";
             }
         }

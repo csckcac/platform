@@ -104,13 +104,15 @@ public class PayloadFactoryMediator extends AbstractMediator {
         for (int i = 0; i < argumentList.size(); ++i) {       /*ToDo use foreach*/
             Argument arg = argumentList.get(i);
             if (arg.getValue() != null) {
-                argValues[i] = arg.getValue();
+                String value = StringEscapeUtils.escapeXml(arg.getValue());
+                value = Matcher.quoteReplacement(value);
             } else if (arg.getExpression() != null) {
                 String value = arg.getExpression().stringValueOf(synCtx);   /*ToDo We can change this to string array*/
                 if (value != null) {
                     //escaping string unless there might be exceptions when tries to insert values
                     // such as string with &
                     value = StringEscapeUtils.escapeXml(value);
+                    value = Matcher.quoteReplacement(value);
                     argValues[i] = value;
                 } else {
                     argValues[i] = "";

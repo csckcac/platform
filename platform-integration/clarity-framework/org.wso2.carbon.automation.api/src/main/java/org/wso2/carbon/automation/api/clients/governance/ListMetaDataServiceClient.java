@@ -127,7 +127,5 @@ public class ListMetaDataServiceClient {
 
         }
         return schemaBean;
-
     }
-
 }

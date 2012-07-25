@@ -357,6 +357,15 @@
                             res.setDisplayColumnNames(dsOMElementColumnName);
                             res.setResultSetColumnNames(dsOMElementColumnName);
                         }
+                    } else if (edit.equals("delete")){ //delete nested element of complex element when dataservice hasn't saved yet.
+                    	if (!dataServiceOMElementName.equals("")) {
+                            if (complexPath != null && !complexPath.equals("")) {
+                                res.getChild(complexPath).removeElement(
+                                            dataServiceOMElementName);
+                        } else {
+                                res.removeElement(dataServiceOMElementName);
+                            }
+                        }
                     } else {
                         List<Element> elementsList = new ArrayList<Element>();
                         dsOMElementName[0] = dataServiceOMElementName;
@@ -370,10 +379,10 @@
                                 element.setRequiredRoles(requiredRoles);
                             //}
                             element.setxsdType(xsdType);
-                            if (!exportName.equals("")) {
+                            if (exportName != null && !exportName.equals("")) {
                                 element.setExport(exportName);
                             }
-                            if (!exportType.equals("")) {
+                            if (exportType != null && !exportType.equals("")) {
                                 element.setExportType(exportType);
                             }
                             if (!"".equals(arrayName)) {

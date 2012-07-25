@@ -194,10 +194,12 @@ public class NDataSourceHelper {
 
 	public static Map<String, String> getAllDataSources(WSDataSourceInfo[] allDataSourcesInfo) {
 		Map<String, String> allDataSources = new HashMap<String, String>();
-		for (WSDataSourceInfo dataSourceInfo : allDataSourcesInfo) {
-			WSDataSourceMetaInfo dataSourceMetaInfo = dataSourceInfo.getDsMetaInfo();
-			allDataSources
-					.put(dataSourceMetaInfo.getName(), dataSourceInfo.getDsStatus().getMode());
+		if (allDataSourcesInfo != null) {
+			for (WSDataSourceInfo dataSourceInfo : allDataSourcesInfo) {
+				WSDataSourceMetaInfo dataSourceMetaInfo = dataSourceInfo.getDsMetaInfo();
+				allDataSources
+						.put(dataSourceMetaInfo.getName(), dataSourceInfo.getDsStatus().getMode());
+			}
 		}
 		return allDataSources;
 	}

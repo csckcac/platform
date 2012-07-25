@@ -1,6 +1,7 @@
-If using wso2as as the webcontainer dependency jars should be avoided from being packed into the webapp,
+If using wso2as as the web container dependency jars should be avoided from being packed into the webapp,
 otherwise there might be conflict of jars.
-If using maven as the build tool add the following block to the pom.xml of your webapp.
+If using maven as the build tool add the following block to the pom.xml of your webapp to prevent
+jars from being packed to the webapp.
 
   <build>
     <plugins>

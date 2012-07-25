@@ -26,19 +26,21 @@ import org.apache.thrift.server.TThreadPoolServer;
 import org.apache.thrift.transport.TServerSocket;
 import org.apache.thrift.transport.TServerTransport;
 import org.apache.thrift.transport.TTransportFactory;
+import org.osgi.framework.BundleContext;
 import org.osgi.framework.ServiceRegistration;
 import org.osgi.service.component.ComponentContext;
 import org.wso2.carbon.analytics.hive.ServiceHolder;
 import org.wso2.carbon.analytics.hive.Utils;
 import org.wso2.carbon.analytics.hive.exception.HiveExecutionException;
 import org.wso2.carbon.analytics.hive.impl.HiveExecutorServiceImpl;
+import org.wso2.carbon.analytics.hive.multitenancy.HiveAxis2ConfigObserver;
 import org.wso2.carbon.analytics.hive.service.HiveExecutorService;
 import org.wso2.carbon.base.ServerConfiguration;
-import org.wso2.carbon.datasource.DataSourceInformationRepositoryService;
-import org.wso2.carbon.ndatasource.core.DataSourceService;
 import org.wso2.carbon.ntask.core.service.TaskService;
 import org.wso2.carbon.registry.core.exceptions.RegistryException;
 import org.wso2.carbon.registry.core.service.RegistryService;
+import org.wso2.carbon.rssmanager.core.service.RSSManagerService;
+import org.wso2.carbon.utils.Axis2ConfigurationContextObserver;
 import org.wso2.carbon.utils.CarbonUtils;
 import org.wso2.carbon.utils.ConfigurationContextService;
 
@@ -57,10 +59,8 @@ import java.util.concurrent.Executors;
  * bind="setConfigurationContextService" unbind="unsetConfigurationContextService"
  * @scr.reference name="ntask.component" interface="org.wso2.carbon.ntask.core.service.TaskService"
  * cardinality="1..1" policy="dynamic" bind="setTaskService" unbind="unsetTaskService"
- * @scr.reference name="datasource.component" interface="org.wso2.carbon.datasource.DataSourceInformationRepositoryService"
- * cardinality="1..1" policy="dynamic" bind="setDataSourceInformationRepositoryService" unbind="unsetDataSourceInformationRepositoryService"
- * @scr.reference name="datasources.service" interface="org.wso2.carbon.ndatasource.core.DataSourceService"
- * cardinality="1..1" policy="dynamic" bind="setDataSourceService" unbind="unsetDataSourceService"
+ * @scr.reference name="rss.service" interface="org.wso2.carbon.rssmanager.core.service.RSSManagerService"
+ * cardinality="1..1" policy="dynamic" bind="setRSSManagerService" unbind="unsetRSSManagerService"
  */
 
 public class HiveServiceComponent {
@@ -68,10 +68,6 @@ public class HiveServiceComponent {
     private static final Log log = LogFactory.getLog(HiveServiceComponent.class);
 
     private static final String CARBON_HOME_ENV = "CARBON_HOME";
-
-    public static final String CARBON_CONFIG_PORT_OFFSET_NODE = "Ports.Offset";
-
-    public static final int CARBON_DEFAULT_PORT_OFFSET = 0;
 
     private static final String LOG4J_LOCATION = "repository" + File.separator + "conf" +
                                                  File.separator + "log4j.properties";
@@ -83,6 +79,10 @@ public class HiveServiceComponent {
     private ExecutorService hiveServerPool = Executors.newSingleThreadExecutor();
 
     protected void activate(ComponentContext ctx) {
+
+        BundleContext bundleContext = ctx.getBundleContext();
+        bundleContext.registerService(Axis2ConfigurationContextObserver.class.getName(),
+                                      new HiveAxis2ConfigObserver(), null);
 
         if (log.isDebugEnabled()) {
             log.debug("Starting 'HiveServiceComponent'");
@@ -116,10 +116,10 @@ public class HiveServiceComponent {
 /*        HiveConnectionManager connectionManager = HiveConnectionManager.getInstance();
         connectionManager.loadHiveConnectionConfiguration(ctx.getBundleContext());*/
 
-       /*        DataSourceInformationRepositoryService dataSourceInfoService = ServiceHolder.
-                getDataSourceInformationRepositoryService();
-        DataSourceInformationRepository repository = dataSourceInfoService.
-                getDataSourceInformationRepository();*/
+        /*        DataSourceInformationRepositoryService dataSourceInfoService = ServiceHolder.
+        getDataSourceInformationRepositoryService();
+DataSourceInformationRepository repository = dataSourceInfoService.
+        getDataSourceInformationRepository();*/
 
         // Registers HIVE DataSource used to connect to Hive service at component startup if not
         // already existing
@@ -191,38 +191,28 @@ public class HiveServiceComponent {
         ServiceHolder.setConfigurationContextService(null);
     }
 
-    protected void setDataSourceService(DataSourceService dataSourceService) {
-        if (log.isDebugEnabled()) {
-            log.debug("Setting the Carbon Data Sources Service");
-        }
-        ServiceHolder.setCarbonDataSourceService(dataSourceService);
-    }
-
-    protected void unsetDataSourceService(
-            DataSourceService dataSourceService) {
-        if (log.isDebugEnabled()) {
-            log.debug("Unsetting the Carbon Data Sources Service");
-        }
-        ServiceHolder.setCarbonDataSourceService(null);
-    }
-
-    protected void setDataSourceInformationRepositoryService(
-            DataSourceInformationRepositoryService dataSourceInfoService) {
-        ServiceHolder.setDataSourceInformationRepositoryService(dataSourceInfoService);
-
-    }
-
-    protected void unsetDataSourceInformationRepositoryService(
-            DataSourceInformationRepositoryService dataSourceInfoService) {
-        ServiceHolder.setDataSourceInformationRepositoryService(null);
-    }
-
     protected void setServerConfiguration(ServerConfiguration serverConfiguration) {
         ServiceHolder.setCarbonConfiguration(serverConfiguration);
     }
 
     protected void unsetServerConfiguration(ServerConfiguration serverConfiguration) {
         ServiceHolder.setCarbonConfiguration(null);
+    }
+
+    protected void setRSSManagerService(RSSManagerService rssManagerService) {
+        if (log.isDebugEnabled()) {
+            log.debug("Setting the RSS Manager Service");
+        }
+
+        ServiceHolder.setRSSManagerService(rssManagerService);
+    }
+
+    protected void unsetRSSManagerService(RSSManagerService rssManagerService) {
+        if (log.isDebugEnabled()) {
+            log.debug("Unetting the RSS Manager Service");
+        }
+
+        ServiceHolder.setRSSManagerService(null);
     }
 
     private void initializeMetaStore() {

@@ -6,12 +6,15 @@ import org.apache.commons.logging.LogFactory;
 import org.osgi.service.component.ComponentContext;
 import org.wso2.carbon.hive.data.source.access.util.DataSourceAccessUtil;
 import org.wso2.carbon.ndatasource.core.DataSourceService;
+import org.wso2.carbon.rssmanager.core.service.RSSManagerService;
 
 /**
  * @scr.component name="data.source.access.component" immediate="true"
  * @scr.reference name="datasources.service" interface="org.wso2.carbon.ndatasource.core.DataSourceService"
  * cardinality="1..1" policy="dynamic" bind="setDataSourceService" unbind="unsetDataSourceService"
- * */
+ * @scr.reference name="rss.service" interface="org.wso2.carbon.rssmanager.core.service.RSSManagerService"
+ * cardinality="1..1" policy="dynamic" bind="setRSSManagerService" unbind="unsetRSSManagerService"
+ */
 
 public class DataSourceAccessComponent {
 
@@ -45,4 +48,22 @@ public class DataSourceAccessComponent {
         }
         DataSourceAccessUtil.setCarbonDataSourceService(null);
     }
+
+    protected void setRSSManagerService(RSSManagerService rssManagerService) {
+        if (log.isDebugEnabled()) {
+            log.debug("Setting the RSS Manager Service");
+        }
+
+        DataSourceAccessUtil.setRSSManagerService(rssManagerService);
+    }
+
+    protected void unsetRSSManagerService(RSSManagerService rssManagerService) {
+        if (log.isDebugEnabled()) {
+            log.debug("Unetting the RSS Manager Service");
+        }
+
+        DataSourceAccessUtil.setRSSManagerService(null);
+    }
+
+    
 }

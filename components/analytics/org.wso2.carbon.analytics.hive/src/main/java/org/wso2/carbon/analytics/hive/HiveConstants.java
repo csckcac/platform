@@ -16,11 +16,9 @@
 package org.wso2.carbon.analytics.hive;
 
 public class HiveConstants {
-
-    public static final String HIVE_DRIVER = "org.apache.hadoop.hive.jdbc.HiveDriver";
-    public static final String HIVE_DEFAULT_URL = "jdbc:hive://localhost:10000/default";
-    public static final String HIVE_DEFAULT_USER = "admin";
-    public static final String HIVE_DEFAULT_PASSWORD = "admin";
+    
+    public static final String HIVE_METASTORE_RSS_INSTANCE = "HIVE_RSS";
+    public static final String HIVE_METASTORE_DB = "metastore_db";
     public static final String HIVE_SCRIPT_BASE_PATH= "/repository/hive/scripts/";
     public static final String HIVE_SCRIPT_EXT = ".hiveql";
     public static final String HIVE_CONNECTION_CONF_PATH="/repository/hive/conf/";
@@ -40,22 +38,6 @@ public class HiveConstants {
     public static final String HIVE_DEFAULT_TASK_CLASS = "org.wso2.carbon.analytics.hive.task.HiveScriptExecutorTask";
     public static final String HIVE_TASK = "HIVE_TASK";
 
-    public static final String DEFAULT_HIVE_DATASOURCE = "HIVE_DATASOURCE";
-
     public static final String TASK_TENANT_ID_KEY = "__TENANT_ID_PROP__";
-
-    public static final String DEFAULT_HIVE_DATASOURCE_CONFIGURATION =
-            "<configuration>\n" +
-            "   <url>" + "jdbc:hive://" + "localhost:" + (Utils.HIVE_SERVER_DEFAULT_PORT +
-                                                          Utils.getPortOffset()) +"/default</url>\n" +
-            "   <username>" + HIVE_DEFAULT_USER + "</username>\n" +
-            "   <password>" + HIVE_DEFAULT_PASSWORD + "</password>\n" +
-            "   <driverClassName>" + HIVE_DRIVER + "</driverClassName>\n" +
-            "   <maxActive>50</maxActive>\n" +
-            "   <maxWait>60000</maxWait>\n" +
-            "   <testOnBorrow>true</testOnBorrow>\n" +
-            "   <validationQuery>SHOW TABLES</validationQuery>\n" +
-            "   <validationInterval>30000</validationInterval>\n" +
-            "</configuration>";
 
 }

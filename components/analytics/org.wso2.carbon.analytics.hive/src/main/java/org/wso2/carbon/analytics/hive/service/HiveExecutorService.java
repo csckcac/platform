@@ -22,6 +22,6 @@ public interface HiveExecutorService {
 
     public QueryResult[] execute(String script) throws HiveExecutionException;
 
-    public boolean setConnectionParameters(String driverName, String url, String username, String password);
+    public QueryResult[] execute(int tenantId, String script) throws HiveExecutionException;
 
 }

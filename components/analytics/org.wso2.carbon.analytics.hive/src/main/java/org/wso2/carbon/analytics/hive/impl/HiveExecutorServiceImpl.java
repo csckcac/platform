@@ -17,14 +17,13 @@ package org.wso2.carbon.analytics.hive.impl;
 
 import org.apache.commons.logging.Log;
 import org.apache.commons.logging.LogFactory;
-import org.apache.hadoop.hive.service.Utils;
+import org.apache.hadoop.hive.metastore.HiveContext;
 import org.wso2.carbon.analytics.hive.dto.QueryResult;
 import org.wso2.carbon.analytics.hive.dto.QueryResultRow;
 import org.wso2.carbon.analytics.hive.dto.ScriptResult;
 import org.wso2.carbon.analytics.hive.exception.HiveExecutionException;
 import org.wso2.carbon.analytics.hive.service.HiveExecutorService;
-import org.wso2.carbon.ndatasource.core.CarbonDataSource;
-import org.wso2.carbon.utils.multitenancy.CarbonContextHolder;
+import org.wso2.carbon.context.CarbonContext;
 
 import java.sql.Connection;
 import java.sql.DriverManager;
@@ -105,11 +104,13 @@ public class HiveExecutorServiceImpl implements HiveExecutorService {
      * @throws HiveExecutionException
      */
     public QueryResult[] execute(String script) throws HiveExecutionException {
+
+        int tenantId = CarbonContext.getCurrentContext().getTenantId();
         if (script != null) {
 
             ExecutorService singleThreadExecutor = Executors.newSingleThreadExecutor();
 
-            ScriptCallable callable = new ScriptCallable(script);
+            ScriptCallable callable = new ScriptCallable(tenantId, script);
 
             Future<ScriptResult> future = singleThreadExecutor.submit(callable);
 
@@ -170,30 +171,74 @@ public class HiveExecutorServiceImpl implements HiveExecutorService {
 
     }
 
-    @Override
-    public boolean setConnectionParameters(String driverName, String url, String username,
-                                           String password) {
-        Connection con = null;
-        try {
-            Class.forName(driverName);
-            con = DriverManager.getConnection(url, username, password);
-/*            HiveConnectionManager connectionManager = HiveConnectionManager.getInstance();
-            connectionManager.saveConfiguration(driverName, url, username, password);*/
-        } catch (ClassNotFoundException e) {
-            log.error("Error during initialization of Hive driver", e);
-        } catch (SQLException e) {
-            log.error("URL | Username | password in incorrect. Unable to connect to hive");
-        } finally {
-            if (null != con) {
-                try {
-                    con.close();
-                } catch (SQLException e) {
-                }
-                return true;
-            } else {
-                return false;
+    /**
+     * @param script
+     * @return The Resultset of all executed queries in the script
+     * @throws HiveExecutionException
+     */
+    public QueryResult[] execute(int tenantId, String script) throws HiveExecutionException {
+        if (script != null) {
+
+            ExecutorService singleThreadExecutor = Executors.newSingleThreadExecutor();
+
+            ScriptCallable callable = new ScriptCallable(tenantId, script);
+
+            Future<ScriptResult> future = singleThreadExecutor.submit(callable);
+
+            ScriptResult result;
+            try {
+                result = future.get();
+            } catch (InterruptedException e) {
+                log.error("Query execution interrupted..", e);
+                throw new HiveExecutionException("Query execution interrupted..", e);
+            } catch (ExecutionException e) {
+                log.error("Error during query execution..", e);
+                throw new HiveExecutionException("Error during query execution..", e);
             }
+
+            if (result != null) {
+                if (result.getErrorMessage() != null) {
+                    throw new HiveExecutionException(result.getErrorMessage());
+                }
+
+                return result.getQueryResults();
+
+            } else {
+                throw new HiveExecutionException("Query returned a NULL result..");
+            }
+
+/*            int threadCount = 0;
+            try {
+                threadCount = Integer.parseInt(script);
+            } catch (Exception e) {
+                ScriptCallable callable = new ScriptCallable(script);
+                ExecutorService singleThreadExecutor = Executors.newSingleThreadExecutor();
+
+                Future<ScriptResult> future = singleThreadExecutor.submit(callable);
+
+                ScriptResult result;
+                try {
+                    result = future.get();
+                } catch (InterruptedException x) {
+                    log.error("Query execution interrupted..", x);
+                    throw new HiveExecutionException("Query execution interrupted..", x);
+                } catch (ExecutionException z) {
+                    log.error("Error during query execution..", z);
+                    throw new HiveExecutionException("Error during query execution..", z);
+                }
+            }
+
+            for (int i = 0; i < threadCount; i++) {
+                ScriptCallable callable = new ScriptCallable(asScript);
+                ExecutorService singleThreadExecutor = Executors.newSingleThreadExecutor();
+
+                singleThreadExecutor.submit(callable);
+
+            }*/
+
         }
+
+        return null;
 
     }
 
@@ -201,8 +246,11 @@ public class HiveExecutorServiceImpl implements HiveExecutorService {
 
         private String script;
 
-        public ScriptCallable(String script) {
+        private int tenantId;
+
+        public ScriptCallable(int tenantId, String script) {
             this.script = script;
+            this.tenantId = tenantId;
         }
 
         public ScriptResult call() {
@@ -260,11 +308,7 @@ public class HiveExecutorServiceImpl implements HiveExecutorService {
 
                 String[] cmdLines = formattedScript.split(";\\r?\\n|;"); // Tokenize with ;[new-line]
 
-                /* When we call executeQuery, execution start in separate thread (started by thrift thread pool),
-                   therefore we can't get tenant ID from that thread. So we are appending the tenant ID to each query
-                   in order to get it from hive side.
-                 */
-                int tenantId = CarbonContextHolder.getCurrentCarbonContextHolder().getTenantId();
+                HiveContext.startTenantFlow(tenantId);
 
                 ScriptResult result = new ScriptResult();
                 for (String cmdLine : cmdLines) {
@@ -282,7 +326,7 @@ public class HiveExecutorServiceImpl implements HiveExecutorService {
                         queryResult.setQuery(trimmedCmdLine);
 
                         //Append the tenant ID to query
-                        trimmedCmdLine += Utils.TENANT_ID_SEPARATOR_CHAR_SEQ + tenantId;
+                        //trimmedCmdLine += Utils.TENANT_ID_SEPARATOR_CHAR_SEQ + tenantId;
 
                         ResultSet rs = stmt.executeQuery(trimmedCmdLine);
                         ResultSetMetaData metaData = rs.getMetaData();
@@ -319,6 +363,8 @@ public class HiveExecutorServiceImpl implements HiveExecutorService {
                     }
 
                 }
+
+                HiveContext.endTenantFlow();
 
                 return result;
 

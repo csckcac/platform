@@ -20,12 +20,11 @@ import org.apache.commons.logging.LogFactory;
 import org.wso2.carbon.analytics.hive.conf.HiveConnectionManager;
 import org.wso2.carbon.analytics.hive.service.HiveExecutorService;
 import org.wso2.carbon.base.ServerConfiguration;
-import org.wso2.carbon.datasource.DataSourceInformationRepositoryService;
-import org.wso2.carbon.ndatasource.core.DataSourceService;
 import org.wso2.carbon.ntask.common.TaskException;
 import org.wso2.carbon.ntask.core.TaskManager;
 import org.wso2.carbon.ntask.core.service.TaskService;
 import org.wso2.carbon.registry.core.service.RegistryService;
+import org.wso2.carbon.rssmanager.core.service.RSSManagerService;
 import org.wso2.carbon.utils.ConfigurationContextService;
 
 public class ServiceHolder {
@@ -37,9 +36,8 @@ public class ServiceHolder {
     private static ConfigurationContextService configurationContextService;
     private static ServerConfiguration serverConfiguration;
     private static TaskService taskService;
-    private static DataSourceInformationRepositoryService dataSourceInfoService;
     private static HiveConnectionManager connectionManager;
-    private static DataSourceService dataSourceService;
+    private static RSSManagerService rssManagerService;
 
     public static void setHiveExecutorService(HiveExecutorService service) {
         hiveExecutorService = service;
@@ -74,15 +72,6 @@ public class ServiceHolder {
         ServiceHolder.taskService = taskService;
     }
 
-    public static void setDataSourceInformationRepositoryService(
-            DataSourceInformationRepositoryService dataSourceInfoService) {
-        ServiceHolder.dataSourceInfoService = dataSourceInfoService;
-    }
-
-    public static DataSourceInformationRepositoryService getDataSourceInformationRepositoryService() {
-        return ServiceHolder.dataSourceInfoService;
-    }
-
     public static TaskManager getTaskManager() {
         TaskService taskService = ServiceHolder.getTaskService();
         try {
@@ -90,7 +79,7 @@ public class ServiceHolder {
             return taskService.getTaskManager(HiveConstants.HIVE_TASK);
         } catch (TaskException e) {
             log.error("Error while initializing TaskManager. Script scheduling may not" +
-                    " work properly..", e);
+                      " work properly..", e);
             return null;
         }
 
@@ -112,12 +101,12 @@ public class ServiceHolder {
         return serverConfiguration;
     }
 
-    public static void setCarbonDataSourceService(DataSourceService dataSourceService) {
-        ServiceHolder.dataSourceService = dataSourceService;
+    public static void setRSSManagerService(RSSManagerService rssMgrService) {
+        rssManagerService = rssMgrService;
     }
 
-    public static DataSourceService getCarbonDataSourceService() {
-        return dataSourceService;
+    public static RSSManagerService getRSSManagerService() {
+        return rssManagerService;
     }
 
 }

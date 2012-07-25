@@ -86,11 +86,16 @@
 
         var freePlan = false;
         for (var i = 0; i < packageInfo.length; i++) {
-            if (chargeOnRegistration && packageInfo[i].name == selectedUsagePlan && packageInfo[i].subscriptionCharge != "0") {
+        <% if (chargeOnRegistration) { %>
+            if (packageInfo[i].name == selectedUsagePlan && packageInfo[i].subscriptionCharge != "0") {
                 document.forms["selectUsagePlan"].submit();    
-            } else if (!chargeOnRegistration || packageInfo[i].name == selectedUsagePlan && packageInfo[i].subscriptionCharge == "0") {
+            } else if (packageInfo[i].name == selectedUsagePlan && packageInfo[i].subscriptionCharge == "0") {
                 location.href = "../tenant-register/success_register.jsp";
             }
+            <% } else { %>
+                location.href = "../tenant-register/success_register.jsp";
+            <% } %>
+
         }
     }
 

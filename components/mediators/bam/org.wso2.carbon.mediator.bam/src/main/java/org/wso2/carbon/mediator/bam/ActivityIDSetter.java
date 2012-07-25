@@ -25,11 +25,13 @@ import org.apache.axiom.soap.SOAP11Constants;
 import org.apache.axiom.soap.SOAP12Constants;
 import org.apache.axiom.soap.SOAPEnvelope;
 import org.apache.axiom.soap.SOAPFactory;
+import org.apache.axiom.soap.SOAPHeader;
 import org.apache.axiom.soap.SOAPHeaderBlock;
 import org.apache.commons.logging.Log;
 import org.apache.commons.logging.LogFactory;
 import org.apache.synapse.MessageContext;
 import org.apache.synapse.core.axis2.Axis2MessageContext;
+import org.wso2.carbon.mediator.bam.config.BamMediatorException;
 import org.wso2.carbon.mediator.bam.util.BamMediatorConstants;
 
 import javax.xml.namespace.QName;
@@ -49,34 +51,39 @@ public class ActivityIDSetter {
 
     public void setActivityIdInSOAPHeader(MessageContext synapseContext) {
 
-        // Property name would be "Parent_uuid"
-        // Property Value would be "Parent_uuid_messageid"
-        UUID uuid = UUID.randomUUID();
-        this.uuidString = uuid.toString();
-        this.synapseContext = synapseContext;
+        try {
+            // Property name would be "Parent_uuid"
+            // Property Value would be "Parent_uuid_messageid"
+            UUID uuid = UUID.randomUUID();
+            this.uuidString = uuid.toString();
+            this.synapseContext = synapseContext;
 
-        Axis2MessageContext axis2smc = (Axis2MessageContext) synapseContext;
-        org.apache.axis2.context.MessageContext axis2MessageContext = axis2smc.getAxis2MessageContext();
+            Axis2MessageContext axis2smc = (Axis2MessageContext) synapseContext;
+            org.apache.axis2.context.MessageContext axis2MessageContext = axis2smc.getAxis2MessageContext();
 
-        OMFactory fac = OMAbstractFactory.getOMFactory();
-        this.omNs = fac.createOMNamespace(BamMediatorConstants.BAM_HEADER_NAMESPACE_URI, "ns");
-        this.soapEnvelope = axis2MessageContext.getEnvelope();
-        String soapNamespaceURI = this.soapEnvelope.getNamespace().getNamespaceURI();
-        SOAPFactory soapFactory = null;
+            OMFactory fac = OMAbstractFactory.getOMFactory();
+            this.omNs = fac.createOMNamespace(BamMediatorConstants.BAM_HEADER_NAMESPACE_URI, "ns");
+            this.soapEnvelope = axis2MessageContext.getEnvelope();
+            String soapNamespaceURI = this.soapEnvelope.getNamespace().getNamespaceURI();
+            SOAPFactory soapFactory = null;
 
-        if (soapNamespaceURI.equals(SOAP11Constants.SOAP_ENVELOPE_NAMESPACE_URI)) {
-            soapFactory = OMAbstractFactory.getSOAP11Factory();
-        } else if (soapNamespaceURI.equals(SOAP12Constants.SOAP_ENVELOPE_NAMESPACE_URI)) {
-            soapFactory = OMAbstractFactory.getSOAP12Factory();
-        } else {
-            log.error("Not a standard soap message");
+            if (soapNamespaceURI.equals(SOAP11Constants.SOAP_ENVELOPE_NAMESPACE_URI)) {
+                soapFactory = OMAbstractFactory.getSOAP11Factory();
+            } else if (soapNamespaceURI.equals(SOAP12Constants.SOAP_ENVELOPE_NAMESPACE_URI)) {
+                soapFactory = OMAbstractFactory.getSOAP12Factory();
+            } else {
+                log.error("Not a standard soap message");
+            }
+
+            this.setActivityIDInSOAPHeaderWithConditioning(soapFactory);
+        } catch (Exception e) {
+            String errorMsg = "Error while setting Activity ID in SOAP Header. " + e.getMessage();
+            log.error(errorMsg, e);
         }
-
-        this.setActivityIDInSOAPHeaderWithConditioning(soapFactory);
 
     }
 
-    private void setActivityIDInSOAPHeaderWithConditioning(SOAPFactory soapFactory){
+    private void setActivityIDInSOAPHeaderWithConditioning(SOAPFactory soapFactory) throws BamMediatorException {
         try {
             // If header is not null check for  BAM headers
             if (this.soapEnvelope.getHeader() != null) {
@@ -110,24 +117,32 @@ public class ActivityIDSetter {
                     this.processActivityIDWhenSOAPHeaderIsNull();
                 }
             }
-
         } catch (Exception e) {
-            log.error("Error while setting Activity ID in SOAP Header", e);
+            String errorMsg = "Error while setting Activity ID in SOAP Header with conditioning. " + e.getMessage();
+            log.error(errorMsg, e);
+            throw new BamMediatorException(errorMsg, e);
         }
     }
 
-    private void processActivityIDWhenSOAPHeaderIsNull(){
-        SOAPHeaderBlock soapHeaderBlock = this.soapEnvelope.getHeader().addHeaderBlock(BamMediatorConstants.BAM_EVENT, this.omNs);
-        if (this.synapseContext.getProperty(BamMediatorConstants.MSG_ACTIVITY_ID) == null) { // this if
-            // condition we add
-            // to track failure messages coming from
-            // DS.That is a new message. So, doesn't have activityID.Getting activityID
-            // from the synapseContext.property
-            soapHeaderBlock.addAttribute(BamMediatorConstants.ACTIVITY_ID, this.uuidString, null);
-            this.synapseContext.setProperty(BamMediatorConstants.MSG_ACTIVITY_ID, this.uuidString);
-        } else {
-            soapHeaderBlock.addAttribute(BamMediatorConstants.ACTIVITY_ID, (String) this.synapseContext
-                    .getProperty(BamMediatorConstants.MSG_ACTIVITY_ID), null);
+    private void processActivityIDWhenSOAPHeaderIsNull() throws BamMediatorException {
+        try {
+            SOAPHeader soapHeader = this.soapEnvelope.getHeader();
+            SOAPHeaderBlock soapHeaderBlock = this.soapEnvelope.getHeader().addHeaderBlock(BamMediatorConstants.BAM_EVENT, this.omNs);
+            if (this.synapseContext.getProperty(BamMediatorConstants.MSG_ACTIVITY_ID) == null) { // this if
+                // condition we add
+                // to track failure messages coming from
+                // DS.That is a new message. So, doesn't have activityID.Getting activityID
+                // from the synapseContext.property
+                soapHeaderBlock.addAttribute(BamMediatorConstants.ACTIVITY_ID, this.uuidString, null);
+                this.synapseContext.setProperty(BamMediatorConstants.MSG_ACTIVITY_ID, this.uuidString);
+            } else {
+                soapHeaderBlock.addAttribute(BamMediatorConstants.ACTIVITY_ID, (String) this.synapseContext
+                        .getProperty(BamMediatorConstants.MSG_ACTIVITY_ID), null);
+            }
+        } catch (Exception e) {
+            String errorMsg = "Error while processing Activity ID when SOAP Header is Null. " + e.getMessage();
+            log.error(errorMsg, e);
+            throw new BamMediatorException(errorMsg, e);
         }
     }
 }

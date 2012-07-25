@@ -214,20 +214,23 @@
  					   appIds + 
 					   '<ser:userName>' + userName + '</ser:userName>' +
 					   '</ser:getEventsForApplications>';
+  log.info("*************************************************************"+payload);
         var result;
         try {
 		    var endPoint = getProperty(WS_EVENTS_OF_APP);
 		    request.open(options, endPoint, false);
 		    request.send(payload);
 		    result = request.responseE4X;
-            if(log.isDebugEnabled()){
-                log.debug("Invoking service endpoint:"+endPoint+" returned result:"+result);
-            }
+                log.info("Invoking service endpoint:"+endPoint+" returned result:"+result);
         } catch (e) {
             log.error("Error while retrieving event notifications \n"+e.message);
             throw "Error while retrieving event notifications";
         }
-        return result;
+ var resultXml = new XML(result);
+
+  return  (resultXml.*::["return"]);
+
+    
     }
 
     // creating a user

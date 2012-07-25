@@ -19,7 +19,7 @@
 	    }
 	
 		var counter = 0;
-		var appIds;
+		var appIds="";
 	    for (var applicationName in applicationList) {
 	    	var applicationKey = applicationList[applicationName];
 	    	appIds = appIds + '<ser:appIDs>' + applicationKey + '</ser:appIDs>';
@@ -31,19 +31,20 @@
 			log.info("No Applications are created.");
 	    }
 	
-		var counter = 0;
-	    for (var eventItem in eventList) {
-	    	var eventInfo = eventList[eventItem];
-	    	var appInfo = getAppShortInfo(eventInfo.applicationId, userName);
-	    	
-			var applicationRow = new Array(); 
-			
-			applicationRow[0] = appInfo.name; 
-			applicationRow[1] = eventInfo.event;
-			applicationRow[2] = eventInfo.result;
-			
-			contentArray[counter++] = applicationRow;
-    	}
+		eventList = eventList.children();
+
+var counter = 0;
+for (var eventItem in eventList) {
+       var eventInfo =parse(eventList[counter].toXMLString());
+       var appInfo = getAppShortInfo(eventInfo.applicationId, userName);
+       var applicationRow = new Array(); 
+       
+       applicationRow[0] = appInfo.name; 
+       applicationRow[1] = eventInfo.event;
+       applicationRow[2] = eventInfo.result;
+       
+       contentArray[counter++] = applicationRow;
+}
     	
     	outerArray.aaData = contentArray;
 
@@ -53,5 +54,4 @@
  		print(stringify(outerArray));
     }
 %>
-
 

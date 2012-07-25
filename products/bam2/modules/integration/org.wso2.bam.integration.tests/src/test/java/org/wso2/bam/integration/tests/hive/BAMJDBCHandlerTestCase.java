@@ -132,6 +132,24 @@ public class BAMJDBCHandlerTestCase {
             assertTrue(resultsAreCorrect,"Results are different from expected one: " + vals[2]+ ":" + vals[3]+ ":"
             +vals[4]+ ":" + vals[5] + ":" + vals[6]);
 
+            hiveStub.executeHiveScript(queries[5].trim());
+            hiveStub.executeHiveScript(queries[6].trim());
+            hiveStub.executeHiveScript(queries[7].trim());
+
+            HiveExecutionServiceStub.QueryResult[] newResults = hiveStub.executeHiveScript(queries[8].trim());
+            assertTrue(null != newResults && newResults.length != 0, "No results are returned from jdbc handler test");
+            HiveExecutionServiceStub.QueryResultRow[] newRow = newResults[0].getResultRows();
+            assertTrue(null != newRow && newRow.length != 0, "No results are returned from jdbc handler test");
+            String[] newValue = newRow[0].getColumnValues();
+            assertTrue(null != newValue && newValue.length != 0, "No results are returned from jdbc handler test");
+
+            boolean newResultsAreCorrect = false;
+            if(newValue[2].equals("2000") && newValue[3].equals("0") && newValue[4].equals("4.5") && newValue[5].equals("3.5") && newValue[6].equals("0.7")){
+                newResultsAreCorrect = true;
+            }
+            assertTrue(newResultsAreCorrect,"Results are different from expected one: " + newValue[2]+ ":" + newValue[3]+ ":"
+                                         +newValue[4]+ ":" + newValue[5] + ":" + newValue[6]);
+
         } catch (RemoteException e) {
             fail("Failed while executing hive script HiveJDBCHandlerPrimaryKeyTest " + e.getMessage());
         } catch (HiveExecutionServiceHiveExecutionException e) {

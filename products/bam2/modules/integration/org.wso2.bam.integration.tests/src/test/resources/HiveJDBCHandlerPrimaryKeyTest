@@ -29,3 +29,25 @@ CREATE EXTERNAL TABLE IF NOT EXISTS APIRequestSummaryDataFetcher (api_name STRIN
 	'hive.jdbc.input.columns.mapping' = 'api,version,userid,consumerkey,request_count,fault_count,avg_response_time,max_response_time,min_response_time',
 	'mapred.jdbc.input.table.name' = 'APIUsageSummary');
 select api_name,api_version,sum(total_request_count) as total_request_count,sum(total_fault_count) as total_fault_count,avg(avg_response_time) as avg_response_time,max(max_response_time) as max_response_time,min(min_response_time) as min_response_time from  APIRequestSummaryDataFetcher where api_name='facebook' group by api_name,api_version;
+CREATE EXTERNAL TABLE IF NOT EXISTS APIRequestSummaryDataUpdateUsingUpsert (api STRING, version STRING,
+	total_request_count INT,total_fault_count INT, avg_response_time DOUBLE, max_response_time FLOAT,
+	min_response_time FLOAT) STORED BY
+	'org.wso2.carbon.hadoop.hive.jdbc.storage.JDBCStorageHandler' TBLPROPERTIES (
+	'mapred.jdbc.driver.class' = 'org.h2.Driver',
+	'mapred.jdbc.url' = 'jdbc:h2:repository/database/APIMGTSTATS_DB',
+	'mapred.jdbc.username' = 'wso2carbon','mapred.jdbc.password' = 'wso2carbon',
+	'hive.jdbc.update.on.duplicate' = 'true',
+	'hive.jdbc.output.upsert.query' = 'MERGE INTO  APIUsageSummaryPerAPI (api, version,total_request_count, total_fault_count,avg_response_time,max_response_time,min_response_time)  key (api, version)  values (?,?,?,?,?,?,?)',
+	'hive.jdbc.upsert.query.values.order'='api, version,total_request_count, total_fault_count,avg_response_time,max_response_time,min_response_time',
+	'hive.jdbc.primary.key.fields'='api,version',
+	'hive.jdbc.table.create.query' = 'CREATE TABLE APIUsageSummaryPerAPI ( api VARCHAR(40) NOT NULL, version VARCHAR(10) NOT NULL,total_request_count BIGINT,total_fault_count INT,avg_response_time DOUBLE, max_response_time FLOAT, min_response_time FLOAT,  PRIMARY KEY(api, version))' );
+insert overwrite table APIRequestSummaryDataUpdateUsingUpsert select api_name,api_version,total_request_count,total_fault_count,avg_response_time,max_response_time,min_response_time from APIRequestSummaryDataFetcher where api_name='facebook';
+CREATE EXTERNAL TABLE IF NOT EXISTS APIRequestFinalSummary (api STRING, version STRING,
+	total_request_count INT,total_fault_count INT, avg_response_time DOUBLE, max_response_time FLOAT,
+	min_response_time FLOAT) STORED BY
+	'org.wso2.carbon.hadoop.hive.jdbc.storage.JDBCStorageHandler' TBLPROPERTIES (
+	'mapred.jdbc.driver.class' = 'org.h2.Driver',
+	'mapred.jdbc.url' = 'jdbc:h2:repository/database/APIMGTSTATS_DB',
+	'mapred.jdbc.username' = 'wso2carbon','mapred.jdbc.password' = 'wso2carbon',
+	'mapred.jdbc.input.table.name' = 'APIUsageSummaryPerAPI');
+select api,version,total_request_count,total_fault_count,avg_response_time,max_response_time,min_response_time from APIRequestFinalSummary;

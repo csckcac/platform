@@ -24,9 +24,11 @@ import org.apache.commons.logging.LogFactory;
 import org.wso2.carbon.core.AbstractAdmin;
 import org.wso2.carbon.identity.core.model.OAuthAppDO;
 import org.wso2.carbon.identity.core.util.IdentityUtil;
+import org.wso2.carbon.identity.oauth.cache.OAuthCache;
+import org.wso2.carbon.identity.oauth.cache.OAuthCacheKey;
+import org.wso2.carbon.identity.oauth.config.OAuthServerConfiguration;
 import org.wso2.carbon.identity.oauth.dao.OAuthAppDAO;
 import org.wso2.carbon.identity.oauth.dto.OAuthConsumerAppDTO;
-import org.wso2.carbon.user.core.util.UserCoreUtil;
 import org.wso2.carbon.utils.ServerConstants;
 import org.wso2.carbon.utils.multitenancy.MultitenantUtils;
 
@@ -186,6 +188,13 @@ public class OAuthAdminService extends AbstractAdmin {
     public void removeOAuthApplicationData(String consumerKey) throws Exception {
         OAuthAppDAO dao = new OAuthAppDAO();
         dao.removeConsumerApplication(consumerKey);
+        // remove client credentials from cache
+        if(OAuthServerConfiguration.getInstance().isCacheEnabled()){
+            OAuthCache.getInstance().clearCacheEntry(new OAuthCacheKey(consumerKey));
+            if (log.isDebugEnabled()) {
+                log.debug("Client credentials are removed from the cache.");
+            }
+        }
     }
 
     private String getLoggedInUser() {

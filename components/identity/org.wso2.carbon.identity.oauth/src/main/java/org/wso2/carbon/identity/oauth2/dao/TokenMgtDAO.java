@@ -24,8 +24,8 @@ import org.wso2.carbon.identity.base.IdentityException;
 import org.wso2.carbon.identity.core.persistence.JDBCPersistenceManager;
 import org.wso2.carbon.identity.core.util.IdentityDatabaseUtil;
 import org.wso2.carbon.identity.oauth2.IdentityOAuth2Exception;
-import org.wso2.carbon.identity.oauth2.model.AuthzCodeValidationDO;
-import org.wso2.carbon.identity.oauth2.model.BearerTokenValidationDO;
+import org.wso2.carbon.identity.oauth2.model.AuthzCodeDO;
+import org.wso2.carbon.identity.oauth2.model.AccessTokenDO;
 import org.wso2.carbon.identity.oauth2.model.RefreshTokenValidationDataDO;
 import org.wso2.carbon.identity.oauth2.util.OAuth2Util;
 
@@ -40,10 +40,9 @@ import java.util.TimeZone;
 public class TokenMgtDAO {
 
     private static final Log log = LogFactory.getLog(TokenMgtDAO.class);
-    
-    public void storeAuthorizationCode(String authzCode, String consumerKey, String scopeString,
-                                       String authorizedUser, Timestamp timeStamp,
-                                       long validityPeriod) throws IdentityOAuth2Exception {
+
+    public void storeAuthorizationCode(String authzCode, String consumerKey,
+                                       AuthzCodeDO authzCodeDO) throws IdentityOAuth2Exception {
         Connection connection = null;
         PreparedStatement prepStmt = null;
         try {
@@ -51,10 +50,11 @@ public class TokenMgtDAO {
             prepStmt = connection.prepareStatement(SQLQueries.STORE_AUTHORIZATION_CODE);
             prepStmt.setString(1, authzCode);
             prepStmt.setString(2, consumerKey);
-            prepStmt.setString(3, scopeString);
-            prepStmt.setString(4, authorizedUser);
-            prepStmt.setTimestamp(5, timeStamp, Calendar.getInstance(TimeZone.getTimeZone("UTC")));
-            prepStmt.setLong(6, validityPeriod);
+            prepStmt.setString(3, OAuth2Util.buildScopeString(authzCodeDO.getScope()));
+            prepStmt.setString(4, authzCodeDO.getAuthorizedUser());
+            prepStmt.setTimestamp(5, authzCodeDO.getIssuedTime(),
+                    Calendar.getInstance(TimeZone.getTimeZone("UTC")));
+            prepStmt.setLong(6, authzCodeDO.getValidityPeriod());
             prepStmt.execute();
             connection.commit();
         } catch (IdentityException e) {
@@ -70,21 +70,22 @@ public class TokenMgtDAO {
         }
     }
 
-    public void storeAccessToken(String accessToken, String refreshToken, String consumerKey, String authzUser,
-                                        Timestamp timeStamp, long validityPeriod, String scopeString, String tokenState) throws IdentityOAuth2Exception {
+    public void storeAccessToken(String accessToken, String consumerKey,
+                                 AccessTokenDO accessTokenDO) throws IdentityOAuth2Exception {
+
         Connection connection = null;
         PreparedStatement prepStmt = null;
         try {
             connection = JDBCPersistenceManager.getInstance().getDBConnection();
             prepStmt = connection.prepareStatement(SQLQueries.STORE_ACCESS_TOKEN);
             prepStmt.setString(1, accessToken);
-            prepStmt.setString(2, refreshToken);
+            prepStmt.setString(2, accessTokenDO.getRefreshToken());
             prepStmt.setString(3, consumerKey);
-            prepStmt.setString(4, authzUser);
-            prepStmt.setTimestamp(5, timeStamp, Calendar.getInstance(TimeZone.getTimeZone("UTC")));
-            prepStmt.setLong(6, validityPeriod);
-            prepStmt.setString(7, scopeString);
-            prepStmt.setString(8, tokenState);
+            prepStmt.setString(4, accessTokenDO.getAuthzUser());
+            prepStmt.setTimestamp(5, accessTokenDO.getIssuedTime(), Calendar.getInstance(TimeZone.getTimeZone("UTC")));
+            prepStmt.setLong(6, accessTokenDO.getValidityPeriod());
+            prepStmt.setString(7, OAuth2Util.buildScopeString(accessTokenDO.getScope()));
+            prepStmt.setString(8, accessTokenDO.getTokenState());
             prepStmt.execute();
             connection.commit();
         } catch (IdentityException e) {
@@ -100,8 +101,7 @@ public class TokenMgtDAO {
         }
     }
 
-    public AuthzCodeValidationDO validateAuthorizationCode(String consumerKey, String authorizationKey) throws IdentityOAuth2Exception {
-        AuthzCodeValidationDO validationDataDO = new AuthzCodeValidationDO();
+    public AuthzCodeDO validateAuthorizationCode(String consumerKey, String authorizationKey) throws IdentityOAuth2Exception {
         Connection connection = null;
         PreparedStatement prepStmt = null;
         ResultSet resultSet;
@@ -114,11 +114,15 @@ public class TokenMgtDAO {
             resultSet = prepStmt.executeQuery();
 
             if (resultSet.next()) {
-                validationDataDO.setAuthorizedUser(resultSet.getString(1));
-                validationDataDO.setScope(OAuth2Util.buildScopeArray(resultSet.getString(2)));
-                validationDataDO.setIssuedTime(resultSet.getTimestamp(3,
-                        Calendar.getInstance(TimeZone.getTimeZone("UTC"))));
-                validationDataDO.setValidityPeriod(resultSet.getLong(4));
+                String authorizedUser = resultSet.getString(1);
+                String scopeString = resultSet.getString(2);
+                Timestamp issuedTime = resultSet.getTimestamp(3,
+                        Calendar.getInstance(TimeZone.getTimeZone("UTC")));
+                long validityPeriod = resultSet.getLong(4);
+
+                return new AuthzCodeDO(authorizedUser,
+                        OAuth2Util.buildScopeArray(scopeString),
+                        issuedTime, validityPeriod);
             }
 
         } catch (IdentityException e) {
@@ -133,7 +137,7 @@ public class TokenMgtDAO {
             IdentityDatabaseUtil.closeAllConnections(connection, null, prepStmt);
         }
 
-        return validationDataDO;
+        return null;
     }
 
     public void cleanUpAuthzCode(String authzCode) throws IdentityOAuth2Exception {
@@ -148,7 +152,7 @@ public class TokenMgtDAO {
             prepStmt.execute();
             connection.commit();
 
-        }  catch (IdentityException e) {
+        } catch (IdentityException e) {
             String errorMsg = "Error when getting an Identity Persistence Store instance.";
             log.error(errorMsg, e);
             throw new IdentityOAuth2Exception(errorMsg, e);
@@ -209,7 +213,7 @@ public class TokenMgtDAO {
             prepStmt.execute();
             connection.commit();
 
-        }  catch (IdentityException e) {
+        } catch (IdentityException e) {
             String errorMsg = "Error when getting an Identity Persistence Store instance.";
             log.error(errorMsg, e);
             throw new IdentityOAuth2Exception(errorMsg, e);
@@ -222,10 +226,9 @@ public class TokenMgtDAO {
         }
     }
 
-    public BearerTokenValidationDO validateBearerToken(String consumerKey,
-                                                             String accessToken)
+    public AccessTokenDO validateBearerToken(String accessToken)
             throws IdentityOAuth2Exception {
-        BearerTokenValidationDO validationDataDO = null;
+        AccessTokenDO dataDO = null;
         Connection connection = null;
         PreparedStatement prepStmt = null;
         ResultSet resultSet;
@@ -233,17 +236,16 @@ public class TokenMgtDAO {
         try {
             connection = JDBCPersistenceManager.getInstance().getDBConnection();
             prepStmt = connection.prepareStatement(SQLQueries.VALIDATE_BEARER_TOKEN);
-            prepStmt.setString(1, consumerKey);
-            prepStmt.setString(2, accessToken);
+            prepStmt.setString(1, accessToken);
             resultSet = prepStmt.executeQuery();
 
             if (resultSet.next()) {
-                validationDataDO = new BearerTokenValidationDO();
-                validationDataDO.setAuthzUser(resultSet.getString(1));
-                validationDataDO.setScope(OAuth2Util.buildScopeArray(resultSet.getString(2)));
-                validationDataDO.setIssuedTime(resultSet.getTimestamp(3,
-                        Calendar.getInstance(TimeZone.getTimeZone("UTC"))));
-                validationDataDO.setValidityPeriod(resultSet.getLong(4));
+                String authorizedUser = resultSet.getString(1);
+                String[] scope = OAuth2Util.buildScopeArray(resultSet.getString(2));
+                Timestamp timestamp = resultSet.getTimestamp(3,
+                        Calendar.getInstance(TimeZone.getTimeZone("UTC")));
+                long validityPeriod = resultSet.getLong(4);
+                dataDO = new AccessTokenDO(authorizedUser, scope, timestamp, validityPeriod);
             }
 
         } catch (IdentityException e) {
@@ -258,7 +260,7 @@ public class TokenMgtDAO {
             IdentityDatabaseUtil.closeAllConnections(connection, null, prepStmt);
         }
 
-        return validationDataDO;
+        return dataDO;
     }
 
 }

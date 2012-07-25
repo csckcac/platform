@@ -42,7 +42,7 @@ public class SQLQueries {
 
     public static final String VALIDATE_BEARER_TOKEN = "SELECT AUTHZ_USER, " +
             "TOKEN_SCOPE, TIME_CREATED,  VALIDITY_PERIOD FROM IDN_OAUTH2_ACCESS_TOKEN " +
-            "WHERE CONSUMER_KEY = ? AND ACCESS_TOKEN = ?";
+            "WHERE ACCESS_TOKEN = ?";
 
     public static final String VALIDATE_REFRESH_TOKEN = "SELECT ACCESS_TOKEN, AUTHZ_USER, " +
             "TOKEN_SCOPE FROM IDN_OAUTH2_ACCESS_TOKEN " +

@@ -21,10 +21,13 @@ package org.wso2.carbon.identity.oauth2.token.handlers;
 import org.apache.amber.oauth2.common.exception.OAuthSystemException;
 import org.apache.commons.logging.Log;
 import org.apache.commons.logging.LogFactory;
+import org.wso2.carbon.caching.core.CacheKey;
+import org.wso2.carbon.identity.oauth.cache.OAuthCacheKey;
 import org.wso2.carbon.identity.oauth.config.OAuthServerConfiguration;
 import org.wso2.carbon.identity.oauth2.IdentityOAuth2Exception;
 import org.wso2.carbon.identity.oauth2.dto.OAuth2AccessTokenReqDTO;
 import org.wso2.carbon.identity.oauth2.dto.OAuth2AccessTokenRespDTO;
+import org.wso2.carbon.identity.oauth2.model.AccessTokenDO;
 import org.wso2.carbon.identity.oauth2.model.RefreshTokenValidationDataDO;
 import org.wso2.carbon.identity.oauth2.token.OAuthTokenReqMessageContext;
 import org.wso2.carbon.identity.oauth2.util.OAuth2Constants;
@@ -46,7 +49,8 @@ public class RefreshGrantTypeHandler extends AbstractAuthorizationGrantHandler {
     }
 
     @Override
-    public boolean validateGrant(OAuthTokenReqMessageContext tokReqMsgCtx) throws IdentityOAuth2Exception {
+    public boolean validateGrant(OAuthTokenReqMessageContext tokReqMsgCtx)
+            throws IdentityOAuth2Exception {
         OAuth2AccessTokenReqDTO tokenReqDTO = tokReqMsgCtx.getOauth2AccessTokenReqDTO();
 
         RefreshTokenValidationDataDO validationDataDO = tokenMgtDAO.validateRefreshToken(
@@ -74,7 +78,8 @@ public class RefreshGrantTypeHandler extends AbstractAuthorizationGrantHandler {
     }
 
     @Override
-    public OAuth2AccessTokenRespDTO issue(OAuthTokenReqMessageContext tokReqMsgCtx) throws IdentityOAuth2Exception {
+    public OAuth2AccessTokenRespDTO issue(OAuthTokenReqMessageContext tokReqMsgCtx)
+            throws IdentityOAuth2Exception {
         OAuth2AccessTokenRespDTO tokenRespDTO = new OAuth2AccessTokenRespDTO();
         OAuth2AccessTokenReqDTO oauth2AccessTokenReqDTO = tokReqMsgCtx.getOauth2AccessTokenReqDTO();
 
@@ -101,21 +106,42 @@ public class RefreshGrantTypeHandler extends AbstractAuthorizationGrantHandler {
 
         validityPeriod = validityPeriod * 1000;
 
-        String scopeString = OAuth2Util.buildScopeString(tokReqMsgCtx.getScope());
         String refreshToken = oauth2AccessTokenReqDTO.getRefreshToken();
 
+        AccessTokenDO accessTokenDO = new AccessTokenDO(tokReqMsgCtx.getAuthorizedUser(),
+                tokReqMsgCtx.getScope(), timestamp, validityPeriod);
+        accessTokenDO.setTokenState(OAuth2Constants.TokenStates.TOKEN_STATE_ACTIVE);
+        accessTokenDO.setRefreshToken(refreshToken);
+
+        String clientId = oauth2AccessTokenReqDTO.getClientId();
+        String oldAccessToken = tokReqMsgCtx.getProperty(PREV_ACCESS_TOKEN);
+
+        // add the access token info to the cache and remove the previous access token from cache,
+        // if it's enabled.
+        if(cacheEnabled){
+            CacheKey newCacheKey = new OAuthCacheKey(accessToken);
+            oauthCache.addToCache(newCacheKey, accessTokenDO);
+
+            // Remove the old access token from the cache
+            CacheKey oldCacheKey = new OAuthCacheKey(oldAccessToken);
+            oauthCache.clearCacheEntry(oldCacheKey);
+
+            if(log.isDebugEnabled()){
+                log.debug("Access Token info for the refresh token was added to the cache for " +
+                        "the client id : " + clientId + ". Old access token entry was " +
+                        "also removed from the cache.");
+            }
+        }
+
         // store the new access token
-        tokenMgtDAO.storeAccessToken(accessToken, refreshToken,
-                oauth2AccessTokenReqDTO.getClientId(), tokReqMsgCtx.getAuthorizedUser(),
-                timestamp, validityPeriod, scopeString,
-                OAuth2Constants.TokenStates.TOKEN_STATE_ACTIVE);
+        tokenMgtDAO.storeAccessToken(accessToken, clientId, accessTokenDO);
 
         // Remove the previous access token
-        tokenMgtDAO.cleanUpAccessToken(tokReqMsgCtx.getProperty(PREV_ACCESS_TOKEN));
+        tokenMgtDAO.cleanUpAccessToken(oldAccessToken);
 
         if (log.isDebugEnabled()) {
             log.debug("Persisted an access token for the refresh token, " +
-                    "Client ID : " + oauth2AccessTokenReqDTO.getClientId() +
+                    "Client ID : " + clientId +
                     "authorized user : " + tokReqMsgCtx.getAuthorizedUser() +
                     "timestamp : " + timestamp +
                     "validity period : " + validityPeriod +

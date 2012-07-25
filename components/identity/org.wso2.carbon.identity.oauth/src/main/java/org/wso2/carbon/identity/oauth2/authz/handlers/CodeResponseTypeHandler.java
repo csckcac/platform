@@ -21,11 +21,13 @@ package org.wso2.carbon.identity.oauth2.authz.handlers;
 import org.apache.amber.oauth2.common.exception.OAuthSystemException;
 import org.apache.commons.logging.Log;
 import org.apache.commons.logging.LogFactory;
+import org.wso2.carbon.identity.oauth.cache.OAuthCacheKey;
 import org.wso2.carbon.identity.oauth.config.OAuthServerConfiguration;
 import org.wso2.carbon.identity.oauth2.IdentityOAuth2Exception;
 import org.wso2.carbon.identity.oauth2.authz.OAuthAuthzReqMessageContext;
 import org.wso2.carbon.identity.oauth2.dto.OAuth2AuthorizeReqDTO;
 import org.wso2.carbon.identity.oauth2.dto.OAuth2AuthorizeRespDTO;
+import org.wso2.carbon.identity.oauth2.model.AuthzCodeDO;
 import org.wso2.carbon.identity.oauth2.util.OAuth2Constants;
 import org.wso2.carbon.identity.oauth2.util.OAuth2Util;
 
@@ -71,10 +73,22 @@ public class CodeResponseTypeHandler extends AbstractAuthorizationHandler {
         // convert to milliseconds
         validityPeriod = validityPeriod * 1000;
 
+        AuthzCodeDO authzCodeDO = new AuthzCodeDO(authorizationReqDTO.getUsername(),
+                oauthAuthzMsgCtx.getApprovedScope(), timestamp, validityPeriod );
+
         tokenMgtDAO.storeAuthorizationCode(authorizationCode,
-                authorizationReqDTO.getConsumerKey(),
-                OAuth2Util.buildScopeString(oauthAuthzMsgCtx.getApprovedScope()),
-                authorizationReqDTO.getUsername(), timestamp, validityPeriod);
+                authorizationReqDTO.getConsumerKey(), authzCodeDO);
+
+        if (cacheEnabled) {
+            // Cache the authz Code
+            String cacheKeyString = OAuth2Util.buildCacheKeyStringForAuthzCode(
+                    authorizationReqDTO.getConsumerKey(), authorizationCode);
+            oauthCache.addToCache(new OAuthCacheKey(cacheKeyString), authzCodeDO);
+            if (log.isDebugEnabled()) {
+                log.debug("Authorization Code info was added to the cache for client id : " +
+                        authorizationReqDTO.getConsumerKey());
+            }
+        }
 
         if (log.isDebugEnabled()) {
             log.debug("Issued Authorization Code to user : " + authorizationReqDTO.getUsername() +

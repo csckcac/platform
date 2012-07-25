@@ -20,10 +20,15 @@ package org.wso2.carbon.identity.oauth2.util;
 
 import org.apache.commons.logging.Log;
 import org.apache.commons.logging.LogFactory;
+import org.wso2.carbon.caching.core.CacheEntry;
 import org.wso2.carbon.identity.core.util.IdentityTenantUtil;
 import org.wso2.carbon.identity.oauth.IdentityOAuthAdminException;
+import org.wso2.carbon.identity.oauth.cache.OAuthCache;
+import org.wso2.carbon.identity.oauth.cache.OAuthCacheKey;
+import org.wso2.carbon.identity.oauth.config.OAuthServerConfiguration;
 import org.wso2.carbon.identity.oauth.dao.OAuthConsumerDAO;
 import org.wso2.carbon.identity.oauth2.IdentityOAuth2Exception;
+import org.wso2.carbon.identity.oauth2.model.ClientCredentialDO;
 import org.wso2.carbon.utils.multitenancy.MultitenantUtils;
 
 /**
@@ -32,6 +37,8 @@ import org.wso2.carbon.utils.multitenancy.MultitenantUtils;
 public class OAuth2Util {
 
     private static Log log = LogFactory.getLog(OAuth2Util.class);
+    private static boolean cacheEnabled = OAuthServerConfiguration.getInstance().isCacheEnabled();
+    private static OAuthCache cache = OAuthCache.getInstance();
 
     /**
      * Build a comma separated list of scopes passed as a String set by Amber.
@@ -40,7 +47,7 @@ public class OAuth2Util {
      * @return Comma separated list of scopes
      */
     public static String buildScopeString(String[] scopes) {
-        StringBuffer scopeString = new StringBuffer("");
+        StringBuilder scopeString = new StringBuilder("");
         if (scopes != null) {
             for (String scope : scopes) {
                 scopeString.append(scope.trim());
@@ -79,8 +86,31 @@ public class OAuth2Util {
      */
     public static boolean authenticateClient(String clientId, String clientSecretProvided)
             throws IdentityOAuthAdminException {
-        OAuthConsumerDAO oAuthConsumerDAO = new OAuthConsumerDAO();
-        String clientSecret = oAuthConsumerDAO.getOAuthConsumerSecret(clientId);
+
+        boolean cacheHit = false;
+        String clientSecret = null;
+
+        // Check the cache first.
+        if(cacheEnabled){
+            CacheEntry cacheResult = cache.getValueFromCache(new OAuthCacheKey(clientId));
+            if(cacheResult != null && cacheResult instanceof ClientCredentialDO){
+                // cache hit
+                clientSecret = ((ClientCredentialDO)cacheResult).getClientSecret();
+                cacheHit = true;
+                if(log.isDebugEnabled()){
+                    log.debug("Client credentials were available in the cache for client id : " +
+                            clientId);
+                }
+            }
+        }
+        // Cache miss
+        if(clientSecret == null){
+            OAuthConsumerDAO oAuthConsumerDAO = new OAuthConsumerDAO();
+            clientSecret = oAuthConsumerDAO.getOAuthConsumerSecret(clientId);
+            if(log.isDebugEnabled()){
+                log.debug("Client credentials were fetched from the database.");
+            }
+        }
 
         if (clientSecret == null) {
             if (log.isDebugEnabled()) {
@@ -91,7 +121,8 @@ public class OAuth2Util {
 
         if (!clientSecret.equals(clientSecretProvided)) {
             if (log.isDebugEnabled()) {
-                log.debug("Provided the Client ID : " + clientId + " and Client Secret do not match with the issued credentials.");
+                log.debug("Provided the Client ID : " + clientId +
+                        " and Client Secret do not match with the issued credentials.");
             }
             return false;
         }
@@ -100,6 +131,23 @@ public class OAuth2Util {
             log.debug("Successfully authenticated the client with client id : " + clientId);
         }
 
+        if(cacheEnabled && !cacheHit){
+            cache.addToCache(new OAuthCacheKey(clientId), new ClientCredentialDO(clientSecret));
+            if (log.isDebugEnabled()) {
+                log.debug("Client credentials were added to the cache for client id : " + clientId);
+            }
+        }
+
         return true;
+    }
+
+    /**
+     * Build the cache key string when storing Authz Code info in cache
+     * @param clientId Client Id representing the client
+     * @param authzCode Authorization Code issued to the client
+     * @return concatenated <code>String</code> of clientId:authzCode
+     */
+    public static String buildCacheKeyStringForAuthzCode(String clientId, String authzCode){
+        return clientId + ":" + authzCode;
     }
 }

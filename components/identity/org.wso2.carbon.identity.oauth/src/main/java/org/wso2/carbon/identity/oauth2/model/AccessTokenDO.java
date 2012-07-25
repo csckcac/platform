@@ -18,27 +18,35 @@
 
 package org.wso2.carbon.identity.oauth2.model;
 
+import org.wso2.carbon.caching.core.CacheEntry;
+
 import java.sql.Timestamp;
 
-/**
- * Results holder for Authz Code validation query
- */
-public class AuthzCodeValidationDO {
-    
-    private String authorizedUser;
-    
+public class AccessTokenDO extends CacheEntry {
+
+    private static final long serialVersionUID = -8123522530178387354L;
+
+    private String authzUser;
+
     private String[] scope;
-    
+
+    private String tokenState;
+
+    private String refreshToken;
+
     private Timestamp issuedTime;
 
     private long validityPeriod;
 
-    public String getAuthorizedUser() {
-        return authorizedUser;
+    public AccessTokenDO(String authzUser, String[] scope, Timestamp issuedTime, long validityPeriod) {
+        this.authzUser = authzUser;
+        this.scope = scope;
+        this.issuedTime = issuedTime;
+        this.validityPeriod = validityPeriod;
     }
 
-    public void setAuthorizedUser(String authorizedUser) {
-        this.authorizedUser = authorizedUser;
+    public String getAuthzUser() {
+        return authzUser;
     }
 
     public String[] getScope() {
@@ -53,15 +61,23 @@ public class AuthzCodeValidationDO {
         return issuedTime;
     }
 
-    public void setIssuedTime(Timestamp issuedTime) {
-        this.issuedTime = issuedTime;
-    }
-
     public long getValidityPeriod() {
         return validityPeriod;
     }
 
-    public void setValidityPeriod(long validityPeriod) {
-        this.validityPeriod = validityPeriod;
+    public String getTokenState() {
+        return tokenState;
+    }
+
+    public void setTokenState(String tokenState) {
+        this.tokenState = tokenState;
+    }
+
+    public String getRefreshToken() {
+        return refreshToken;
+    }
+
+    public void setRefreshToken(String refreshToken) {
+        this.refreshToken = refreshToken;
     }
 }

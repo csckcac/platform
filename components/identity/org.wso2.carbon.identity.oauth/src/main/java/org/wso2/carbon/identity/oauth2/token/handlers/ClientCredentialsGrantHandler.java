@@ -21,10 +21,13 @@ package org.wso2.carbon.identity.oauth2.token.handlers;
 import org.apache.amber.oauth2.common.exception.OAuthSystemException;
 import org.apache.commons.logging.Log;
 import org.apache.commons.logging.LogFactory;
+import org.wso2.carbon.caching.core.CacheKey;
+import org.wso2.carbon.identity.oauth.cache.OAuthCacheKey;
 import org.wso2.carbon.identity.oauth.config.OAuthServerConfiguration;
 import org.wso2.carbon.identity.oauth2.IdentityOAuth2Exception;
 import org.wso2.carbon.identity.oauth2.dto.OAuth2AccessTokenReqDTO;
 import org.wso2.carbon.identity.oauth2.dto.OAuth2AccessTokenRespDTO;
+import org.wso2.carbon.identity.oauth2.model.AccessTokenDO;
 import org.wso2.carbon.identity.oauth2.token.OAuthTokenReqMessageContext;
 import org.wso2.carbon.identity.oauth2.util.OAuth2Constants;
 import org.wso2.carbon.identity.oauth2.util.OAuth2Util;
@@ -72,11 +75,24 @@ public class ClientCredentialsGrantHandler extends AbstractAuthorizationGrantHan
 
         validityPeriod = validityPeriod * 1000;
 
-        String scopeString = OAuth2Util.buildScopeString(tokReqMsgCtx.getScope());
+        AccessTokenDO accessTokenDO = new AccessTokenDO(tokReqMsgCtx.getAuthorizedUser(),
+                tokReqMsgCtx.getScope(), timestamp, validityPeriod);
+        accessTokenDO.setTokenState(OAuth2Constants.TokenStates.TOKEN_STATE_ACTIVE);
+
+        // add the access token info to the cache, if it's enabled.
+        if(cacheEnabled){
+            CacheKey cacheKey = new OAuthCacheKey(accessToken);
+            oauthCache.addToCache(cacheKey, accessTokenDO);
+
+            if(log.isDebugEnabled()){
+                log.debug("Access Token info was added to the cache for the client id : " +
+                        oAuth2AccessTokenReqDTO.getClientId());
+            }
+        }
+
         // store the new token
-        tokenMgtDAO.storeAccessToken(accessToken, null, oAuth2AccessTokenReqDTO.getClientId(),
-                tokReqMsgCtx.getAuthorizedUser(), timestamp, validityPeriod, scopeString,
-                OAuth2Constants.TokenStates.TOKEN_STATE_ACTIVE);
+        tokenMgtDAO.storeAccessToken(accessToken, oAuth2AccessTokenReqDTO.getClientId(),
+                accessTokenDO);
 
         if (log.isDebugEnabled()) {
             log.debug("Persisted an access token with " +

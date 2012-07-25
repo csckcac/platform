@@ -18,11 +18,18 @@
 
 package org.wso2.carbon.identity.oauth2.model;
 
+import org.wso2.carbon.caching.core.CacheEntry;
+
 import java.sql.Timestamp;
 
-public class BearerTokenValidationDO {
+/**
+ * Results holder for Authz Code validation query
+ */
+public class AuthzCodeDO extends CacheEntry {
 
-    private String authzUser;
+    private static final long serialVersionUID = 3308401412530535040L;
+
+    private String authorizedUser;
 
     private String[] scope;
 
@@ -30,35 +37,27 @@ public class BearerTokenValidationDO {
 
     private long validityPeriod;
 
-    public String getAuthzUser() {
-        return authzUser;
+    public AuthzCodeDO(String authorizedUser, String[] scope,
+                       Timestamp issuedTime, long validityPeriod) {
+        this.authorizedUser = authorizedUser;
+        this.scope = scope;
+        this.issuedTime = issuedTime;
+        this.validityPeriod = validityPeriod;
     }
 
-    public void setAuthzUser(String authzUser) {
-        this.authzUser = authzUser;
+    public String getAuthorizedUser() {
+        return authorizedUser;
     }
 
     public String[] getScope() {
         return scope;
     }
 
-    public void setScope(String[] scope) {
-        this.scope = scope;
-    }
-
     public Timestamp getIssuedTime() {
         return issuedTime;
     }
 
-    public void setIssuedTime(Timestamp issuedTime) {
-        this.issuedTime = issuedTime;
-    }
-
     public long getValidityPeriod() {
         return validityPeriod;
-    }
-
-    public void setValidityPeriod(long validityPeriod) {
-        this.validityPeriod = validityPeriod;
     }
 }

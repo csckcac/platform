@@ -25,7 +25,10 @@ import org.apache.amber.oauth2.common.exception.OAuthSystemException;
 import org.apache.amber.oauth2.common.message.types.GrantType;
 import org.apache.commons.logging.Log;
 import org.apache.commons.logging.LogFactory;
+import org.wso2.carbon.caching.core.CacheKey;
 import org.wso2.carbon.identity.oauth.IdentityOAuthAdminException;
+import org.wso2.carbon.identity.oauth.cache.OAuthCache;
+import org.wso2.carbon.identity.oauth.cache.OAuthCacheKey;
 import org.wso2.carbon.identity.oauth.callback.OAuthCallback;
 import org.wso2.carbon.identity.oauth.callback.OAuthCallbackManager;
 import org.wso2.carbon.identity.oauth.config.OAuthServerConfiguration;
@@ -33,6 +36,7 @@ import org.wso2.carbon.identity.oauth2.IdentityOAuth2Exception;
 import org.wso2.carbon.identity.oauth2.dao.TokenMgtDAO;
 import org.wso2.carbon.identity.oauth2.dto.OAuth2AccessTokenReqDTO;
 import org.wso2.carbon.identity.oauth2.dto.OAuth2AccessTokenRespDTO;
+import org.wso2.carbon.identity.oauth2.model.AccessTokenDO;
 import org.wso2.carbon.identity.oauth2.token.OAuthTokenReqMessageContext;
 import org.wso2.carbon.identity.oauth2.util.OAuth2Constants;
 import org.wso2.carbon.identity.oauth2.util.OAuth2Util;
@@ -47,9 +51,16 @@ public abstract class AbstractAuthorizationGrantHandler implements Authorization
     protected TokenMgtDAO tokenMgtDAO = new TokenMgtDAO();
     protected final OAuthIssuer oauthIssuerImpl = new OAuthIssuerImpl(new MD5Generator());
     protected OAuthCallbackManager callbackManager;
+    protected boolean cacheEnabled;
+    protected OAuthCache oauthCache;
 
     protected AbstractAuthorizationGrantHandler() throws IdentityOAuth2Exception {
         callbackManager = new OAuthCallbackManager();
+        // Set the cache instance if caching is enabled.
+        if(OAuthServerConfiguration.getInstance().isCacheEnabled()){
+            cacheEnabled = true;
+            oauthCache = OAuthCache.getInstance();
+        }
     }
 
     public boolean authenticateClient(OAuthTokenReqMessageContext tokReqMsgCtx)
@@ -97,11 +108,25 @@ public abstract class AbstractAuthorizationGrantHandler implements Authorization
 
         validityPeriod = validityPeriod * 1000;
 
-        String scopeString = OAuth2Util.buildScopeString(tokReqMsgCtx.getScope());
+        AccessTokenDO accessTokenDO = new AccessTokenDO(tokReqMsgCtx.getAuthorizedUser(),
+                tokReqMsgCtx.getScope(), timestamp, validityPeriod);
+        accessTokenDO.setRefreshToken(refreshToken);
+        accessTokenDO.setTokenState(OAuth2Constants.TokenStates.TOKEN_STATE_ACTIVE);
+
+        // add the access token info to the cache, if it's enabled.
+        if(cacheEnabled){
+            CacheKey cacheKey = new OAuthCacheKey(accessToken);
+            oauthCache.addToCache(cacheKey, accessTokenDO);
+
+            if(log.isDebugEnabled()){
+                log.debug("Access Token info was added to the cache for the client id : " +
+                        oAuth2AccessTokenReqDTO.getClientId());
+            }
+        }
+
         // store the new token
-        tokenMgtDAO.storeAccessToken(accessToken, refreshToken, oAuth2AccessTokenReqDTO.getClientId(),
-                tokReqMsgCtx.getAuthorizedUser(), timestamp, validityPeriod, scopeString,
-                OAuth2Constants.TokenStates.TOKEN_STATE_ACTIVE);
+        tokenMgtDAO.storeAccessToken(accessToken, oAuth2AccessTokenReqDTO.getClientId(),
+                accessTokenDO);
 
         if (log.isDebugEnabled()) {
             log.debug("Persisted an access token with " +

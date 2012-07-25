@@ -37,20 +37,25 @@ public class OAuthServerConfiguration {
     private static Log log = LogFactory.getLog(OAuthServerConfiguration.class);
 
     private static final String CONFIG_ELEM_OAUTH = "OAuth";
+
+    // Callback handler related configuration elements
     private static final String CONFIG_ELEM_OAUTH_CALLBACK_HANDLERS =
             "OAuthCallbackHandlers";
     private static final String CONFIG_ELEM_OAUTH_CALLBACK_HANDLER =
             "OAuthCallbackHandler";
-    private static final String CONFIG_ELEM_AUTHZ_CODE_DEFAULT_TIMEOUT =
-            "AuthorizationCodeDefaultValidityPeriod";
-    private static final String CONFIG_ELEM_ACCESS_TOK_DEFAULT_TIMEOUT =
-            "AccessTokenDefaultValidityPeriod";
     public static final String CONFIG_ELEM_DEF_TIMESTAMP_SKEW = "TimestampSkew";
     private static final String CONFIG_ATTR_CLASS = "Class";
     private static final String CONFIG_ELEM_PRIORITY = "Priority";
     private static final String CONFIG_ELEM_PROPERTIES = "Properties";
     private static final String CONFIG_ELEM_PROPERTY = "Property";
     private static final String CONFIG_ATTR_NAME = "Name";
+
+
+    private static final String CONFIG_ELEM_AUTHZ_CODE_DEFAULT_TIMEOUT =
+            "AuthorizationCodeDefaultValidityPeriod";
+    private static final String CONFIG_ELEM_ACCESS_TOK_DEFAULT_TIMEOUT =
+            "AccessTokenDefaultValidityPeriod";
+    public static final String CONFIG_ELEM_ENABLE_CACHE = "EnableCache";
 
     private static OAuthServerConfiguration instance;
 
@@ -59,6 +64,8 @@ public class OAuthServerConfiguration {
     private long defaultAccessTokenValidityPeriodInSeconds = 3600;
 
     private long defaultTimeStampSkewInSeconds = 300;
+
+    private boolean cacheEnabled = true;
 
     private Set<OAuthCallbackHandlerMetaData> callbackHandlerMetaData =
             new HashSet<OAuthCallbackHandlerMetaData>();
@@ -96,6 +103,10 @@ public class OAuthServerConfiguration {
         return defaultTimeStampSkewInSeconds;
     }
 
+    public boolean isCacheEnabled() {
+        return cacheEnabled;
+    }
+
     private void buildOAuthServerConfiguration() {
         try {
             IdentityConfigParser configParser = IdentityConfigParser.getInstance();
@@ -113,6 +124,9 @@ public class OAuthServerConfiguration {
 
             // read default timeout periods
             parseDefaultValidityPeriods(oauthElem);
+
+            // read caching configurations
+            parseCachingConfiguration(oauthElem);
 
         } catch (ServerConfigurationException e) {
             log.error("Error when reading the OAuth Configurations. " +
@@ -245,6 +259,19 @@ public class OAuthServerConfiguration {
                     defaultAccessTokenValidityPeriodInSeconds + "ms.");
             log.debug("Default TimestampSkew is set to " +
                     defaultTimeStampSkewInSeconds + "ms.");
+        }
+    }
+
+    private void parseCachingConfiguration(OMElement oauthConfigElem){
+        OMElement enableCacheElem = oauthConfigElem.getFirstChildWithName(
+                new QName(IdentityConfigParser.IDENTITY_DEFAULT_NAMESPACE,
+                        CONFIG_ELEM_ENABLE_CACHE));
+        if (enableCacheElem != null) {
+            cacheEnabled = Boolean.parseBoolean(enableCacheElem.getText());
+        }
+
+        if(log.isDebugEnabled()){
+            log.debug("Enable OAuth Cache was set to : " + cacheEnabled);
         }
     }
 }

@@ -10,12 +10,14 @@
 	var _reqCount = null;
 	var _respCount = null;
 	var _faultCount = null;
-	var __time = null;
+	var __time = "TIME";
     	var __reqCount = "SUM(TOTAL_REQUEST_COUNT)";
 	var __respCount = "SUM(TOTAL_RESPONSE_COUNT)";
 	var __faultCount = "SUM(TOTAL_FAULT_COUNT)";
 	var timeGroup = null;
-	
+	var len;
+	var jqPlotXaxisLbl = null;
+	var jqPlotAxisFormatString = null;
 	
 	var dataTable = null;
 	var limit = null;
@@ -25,35 +27,45 @@
 		if(time.toLowerCase() == "now"){
 			dataTable = "AS_STATS_SUMMARY_PER_MINUTUE";
 			timeGroup = "minute";
-			__time = "MINUTE";
+			
 			limit = "60";
 			orderByQuery = "group by minute,hour,year,month,day order by year DESC ,month DESC,day DESC,hour DESC,minute DESC";
-			selectQuery = "year,month,day,hour,minute, sum(total_request_count),sum(total_response_count),sum(total_fault_count)";
+			selectQuery = "time, sum(total_request_count),sum(total_response_count),sum(total_fault_count)";
+			jqPlotXaxisLbl = "Minute";
+			jqPlotAxisFormatString = "%b-%d %H:%M";
 			
 		}
 		else if(time.toLowerCase() == "day"){
 			dataTable = "AS_STATS_SUMMARY_PER_HOUR";
 			timeGroup = "hour";
-			__time = "HOUR";
+			
 			limit = "24";
 			orderByQuery = "group by hour,year,month,day order by year DESC ,month DESC,day DESC,hour DESC";
-			selectQuery = "year,month,day,hour, sum(total_request_count),sum(total_response_count),sum(total_fault_count)";
+			selectQuery = "time, sum(total_request_count),sum(total_response_count),sum(total_fault_count)";
+			jqPlotXaxisLbl = "Hour";
+			jqPlotAxisFormatString = "%b-%d hh:%H";
 		}
 		else if(time.toLowerCase() == "month"){
 			dataTable = "AS_STATS_SUMMARY_PER_DAY";
 			timeGroup = "day";
-			__time = "DAY";
+			
 			limit = "30";
 			orderByQuery = "group by year,month,day order by year DESC ,month DESC,day DESC";
-			selectQuery = "year,month,day, sum(total_request_count),sum(total_response_count),sum(total_fault_count)";
+			selectQuery = "time, sum(total_request_count),sum(total_response_count),sum(total_fault_count)";
+
+			jqPlotXaxisLbl = "Day";
+			jqPlotAxisFormatString = "%b-%d";
 		}
 		else if(time.toLowerCase() == "all"){
 			dataTable = "AS_STATS_SUMMARY_PER_MONTH";
 			timeGroup = "month";
-			__time = "MONTH";
+			
 			limit = "1000";
 			orderByQuery = "group by year,month order by year DESC ,month DESC";
-			selectQuery = "year,month, sum(total_request_count),sum(total_response_count),sum(total_fault_count)";
+			selectQuery = "time, sum(total_request_count),sum(total_response_count),sum(total_fault_count)";
+
+			jqPlotXaxisLbl = "Month";
+			jqPlotAxisFormatString = "%Y-%b";
 		}
 		else{
 			new Log().info("cannot select table");
@@ -87,7 +99,7 @@
 	function convertDBResult(result, colx, coly) {
 				var array = [];
 				for (var i = 0; i < result.length; i++) {
-					array.push([parseFloat(result[i][colx]),parseFloat(result[i][coly])]);
+					array.push([result[i][colx],parseFloat(result[i][coly])]);
 				}
 
 				return array;
@@ -105,7 +117,8 @@
 			
 			_reqCount = convertDBResult(_result,__time,__reqCount);
 			_respCount = convertDBResult(_result,__time,__respCount);
-			_faultCount = convertDBResult(_result,__time,__faultCount);		
+			_faultCount = convertDBResult(_result,__time,__faultCount);
+			len = _reqCount.length-1;		
 		}
 		catch(e){
 		}
@@ -122,11 +135,12 @@
 			_reqCount = null;
 			_respCount = null;
 			_faultCount = null;
-			var _result = db.query("select "+selectQuery+" from "+dataTable+" "+orderByQuery+" limit "+limit+"");
+			var _result = db.query("select "+selectQuery+" from "+dataTable+"  where host='"+server+"' "+orderByQuery+" limit "+limit+"");
 
 			_reqCount = convertDBResult(_result,__time,__reqCount);
 			_respCount = convertDBResult(_result,__time,__respCount);
 			_faultCount = convertDBResult(_result,__time,__faultCount);
+			len = _reqCount.length-1;
 		}
 		catch(e){
 		}
@@ -143,7 +157,7 @@
 			_respCount = null;
 			_faultCount = null;
 
-			var _result = db.query("select "+selectQuery+" from "+dataTable+" "+orderByQuery+" limit "+limit+"");
+			var _result = db.query("select "+selectQuery+" from "+dataTable+" where host='"+server+"' and service_name='"+service+"' "+orderByQuery+" limit "+limit+"");
 
 			_reqCount = convertDBResult(_result,__time,__reqCount);
 			_respCount = convertDBResult(_result,__time,__respCount);
@@ -164,7 +178,7 @@
 			_respCount = null;
 			_faultCount = null;
 			
-			var _result = db.query("select "+selectQuery+" from "+dataTable+" "+orderByQuery+" limit "+limit+"");
+			var _result = db.query("select "+selectQuery+" from "+dataTable+" where host='"+server+"' and service_name='"+service+"' and operation_name='"+operation+"' "+orderByQuery+" limit "+limit+"");
 			_reqCount = convertDBResult(_result,__time,__reqCount);
 			_respCount = convertDBResult(_result,__time,__respCount);
 			_faultCount = convertDBResult(_result,__time,__faultCount);
@@ -182,7 +196,7 @@
     <style type="text/css">
         .jqplot-target {
                     margin: 20px;
-                    height: 340px;
+                    height: 380px;
                     width: 80%;
                     color:#C1C1C1;
                 }
@@ -235,6 +249,7 @@
 	
 	    var faultCount = <%=_faultCount%>;
 		console.info(faultCount.length);
+		
 
             var plot1 = $.jqplot("dashboard-multiline-gadget", [reqCount, respCount,faultCount], {
                 seriesColors: ["#81B2FF", "#D2FF95","#FB8383"],
@@ -267,20 +282,17 @@
                 series: [
                     {
                         label: 'Total Request Count',
-			fill:true,
-			highlighter: {formatString: "%d , %d"}
+			fill:true
 
 			
                     },
 			{
-                        label: 'Total Response Count',
-			highlighter: {formatString: "%d , %d"}
+                        label: 'Total Response Count'
 			
                     },
                     
                     {
-                        label: 'Total Fault Count',
-			highlighter: {formatString: "%d , %d"}
+                        label: 'Total Fault Count'
                     }
                 ],
                 axesDefaults: {
@@ -292,15 +304,12 @@
                 },
                 axes: {
                     xaxis: {
-                        tickRenderer: $.jqplot.CanvasAxisTickRenderer,
-                        tickOptions: {
-                            angle: 0,
-                            textColor: '#dddddd',
-				formatString:'%d'
-                        },
-                        min:0,
-			max:60,
-                        drawMajorGridlines: false
+			label:'<%=jqPlotXaxisLbl%>',
+                        renderer:jQuery.jqplot.DateAxisRenderer,
+			tickRenderer: $.jqplot.CanvasAxisTickRenderer,
+			min:'<%=_reqCount[0][0]%>',
+			max:'<%=_reqCount[_reqCount.length-1][0]%>',
+                        tickOptions:{formatString:'<%=jqPlotAxisFormatString%>',angle: -45}
                     },
                     yaxis: {
                         min:0,

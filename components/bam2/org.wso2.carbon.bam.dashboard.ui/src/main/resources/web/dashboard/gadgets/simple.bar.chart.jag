@@ -107,7 +107,7 @@
 		try{
 			axisXData = null;
 			axisYData = null;
-	    		var _result = db.query("select "+selectQuery+" from "+dataTable+" "+orderByQuery+" limit "+limit+"");
+	    		var _result = db.query("select "+selectQuery+" from "+dataTable+" where host='"+server+"' "+orderByQuery+" limit "+limit+"");
 			axisXData = convertDBResult(_result,axisX);
 			axisYData = convertDBResult(_result,axisY);
 		}
@@ -124,7 +124,7 @@
 		try{
 			axisXData = null;
 			axisYData = null;
-	    		var _result = db.query("select "+selectQuery+" from "+dataTable+" "+orderByQuery+" limit "+limit+"");
+	    		var _result = db.query("select "+selectQuery+" from "+dataTable+" where host='"+server+"' and service_name='"+service+"' "+orderByQuery+" limit "+limit+"");
 			axisXData = convertDBResult(_result,axisX);
 			axisYData = convertDBResult(_result,axisY);
 		}
@@ -141,7 +141,7 @@
 		try{
 			axisXData = null;
 			axisYData = null;
-	    		var _result = db.query("select "+selectQuery+" from "+dataTable+" "+orderByQuery+" limit "+limit+"");
+	    		var _result = db.query("select "+selectQuery+" from "+dataTable+" where host='"+server+"' and service_name='"+service+"' and operation_name='"+operation+"' "+orderByQuery+" limit "+limit+"");
 			axisXData = convertDBResult(_result,axisX);
 			axisYData = convertDBResult(_result,axisY);
 		}

@@ -55,7 +55,7 @@
 	    		var _result = db.query("select sum(total_fault_count),sum(total_request_count),sum(total_response_count) from "+dataTable+"");
 			_reqCount = _result[0][__reqCount];
 			_respCount = _result[0][__respCount];
-			_faultCount = _result[0][__respCount];
+			_faultCount = _result[0][__faultCount];
 		}
 		catch(e){
 		}
@@ -74,7 +74,7 @@
 	    		var _result = db.query("select sum(total_fault_count),sum(total_request_count),sum(total_response_count) from "+dataTable+" where host='"+server+"'");
 			_reqCount = _result[0][__reqCount];
 			_respCount = _result[0][__respCount];
-			_faultCount = _result[0][__respCount];
+			_faultCount = _result[0][__faultCount];
 		}
 		catch(e){
 		}
@@ -93,7 +93,7 @@
 	    		var _result = db.query("select sum(total_fault_count),sum(total_request_count),sum(total_response_count) from "+dataTable+" where host='"+server+"' and service_name='"+service+"'");
 			_reqCount = _result[0][__reqCount];
 			_respCount = _result[0][__respCount];
-			_faultCount = _result[0][__respCount];
+			_faultCount = _result[0][__faultCount];
 		}
 		catch(e){
 		}
@@ -112,7 +112,7 @@
 	    		var _result = db.query("select sum(total_fault_count),sum(total_request_count),sum(total_response_count) from "+dataTable+" where host='"+server+"' and service_name='"+service+"' and operation_name='"+operation+"'");
 			_reqCount = _result[0][__reqCount];
 			_respCount = _result[0][__respCount];
-			_faultCount = _result[0][__respCount];
+			_faultCount = _result[0][__faultCount];
 		}
 		catch(e){
 		}

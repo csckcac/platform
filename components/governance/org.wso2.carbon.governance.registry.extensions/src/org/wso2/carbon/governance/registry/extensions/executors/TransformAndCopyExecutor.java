@@ -62,13 +62,12 @@ public class TransformAndCopyExecutor extends CopyExecutor {
         }
     }
 
-    private String getContentString(Object content) {
-        // TODO: There is a utility to do this in 4.5.0, please use that in the future.
+    private String getContentString(Object content) throws RegistryException {
         String contentString;
         if (content instanceof String) {
             contentString = (String) content;
         } else {
-            contentString = new String((byte[])content);
+            contentString = RegistryUtils.decodeBytes((byte[])content);
         }
         return contentString;
     }

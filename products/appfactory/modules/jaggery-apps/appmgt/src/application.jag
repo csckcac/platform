@@ -218,7 +218,6 @@
                             	    var version = versions[j];
 
                                     var stageVersion = stage + "/" + version;
-                                    print(stageVersion);
                             %>
 
                             <tr>

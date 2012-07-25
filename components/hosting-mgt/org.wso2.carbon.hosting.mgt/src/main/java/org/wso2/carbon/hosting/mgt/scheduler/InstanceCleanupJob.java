@@ -21,11 +21,11 @@ public class InstanceCleanupJob implements Runnable{
 		}
 		
 		OpenstackDAO openstackDAO = new OpenstackDAO();
-		List<String> instanceIps = openstackDAO.readInstancesToDelete();
+		List<String> privateIps = openstackDAO.readInstancesToDelete();
 		
-		if (instanceIps != null && !instanceIps.isEmpty()) {
+		if (privateIps != null && !privateIps.isEmpty()) {
 			if (log.isDebugEnabled()) {
-				log.debug(" Terminating instances, having IP s " + instanceIps);
+				log.debug(" Terminating instances, having IP s " + privateIps);
 				log.debug(" AutoscalerService url :" + System.getProperty(PHPCartridgeConstants.AUTOSCALER_SERVICE_URL));
 			}				
 				
@@ -34,15 +34,18 @@ public class InstanceCleanupJob implements Runnable{
 						System.getProperty(PHPCartridgeConstants.AUTOSCALER_SERVICE_URL));
 				autoscaleServiceClient.init(true);
 
-				for (String instanceIp : instanceIps) {
+				for (String privateIp : privateIps) {
 
 					if (log.isDebugEnabled()) {
-						log.debug(" Terminating instance. IP :" + instanceIp);
+						log.debug(" Terminating instance. IP :" + privateIp);
 					}
-					autoscaleServiceClient.terminateSpiInstance(instanceIp);
-                    if(Store.publicIpToTenantMap.containsKey(instanceIp)){
-                        Store.tenantToPublicIpMap.remove(Store.publicIpToTenantMap.get(instanceIp));
-                        Store.publicIpToTenantMap.remove(instanceIp);
+					autoscaleServiceClient.terminateSpiInstance(privateIp);
+                    if(Store.tenantToPrivateIpMap.containsValue(privateIp)
+                       && Store.privateIpToTenantMap.containsKey(privateIp)){
+
+                        Store.tenantToPublicIpMap.remove(Store.tenantToPrivateIpMap.get(privateIp));
+                        Store.tenantToPrivateIpMap.remove(Store.privateIpToTenantMap.get(privateIp));
+                        Store.privateIpToTenantMap.remove(privateIp);
                     }
 				}
 

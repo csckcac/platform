@@ -15,9 +15,6 @@ import java.io.File;
 import java.io.FileOutputStream;
 import java.io.FilenameFilter;
 import java.io.IOException;
-import java.util.Collection;
-import java.util.HashMap;
-import java.util.Set;
 
 import org.wso2.carbon.core.AbstractAdmin;
 import org.wso2.carbon.hosting.mgt.clients.AutoscaleServiceClient;
@@ -179,10 +176,14 @@ public class ApplicationManagementService extends AbstractAdmin{
         }
         if(listPhpApplications() == null && isInstanceForTenantUp()){
             Integer tenantId = MultitenantUtils.getTenantId(getConfigContext());
-            String instanceIp = Store.tenantToPublicIpMap.get(tenantId);
+            String privateIp = Store.tenantToPrivateIpMap.get(tenantId);
+            String publicIp = Store.tenantToPublicIpMap.get(tenantId);
             try {
-                log.info(" Terminating instance. IP :" + instanceIp);
-                client.terminateSpiInstance(instanceIp);
+                log.info(" Terminating instance. IP :" + publicIp);
+                client.terminateSpiInstance(privateIp);
+                Store.tenantToPublicIpMap.remove(tenantId);
+                Store.tenantToPrivateIpMap.remove(tenantId);
+                Store.privateIpToTenantMap.remove(privateIp);
             } catch (Exception e) {
                 log.error("Error while terminating instance");
             }
@@ -214,8 +215,9 @@ public class ApplicationManagementService extends AbstractAdmin{
         try{
             String modifiedDomainWithTenantId = System.getProperty("php.domain") + "/t/" + tenantId;
             String privateIp = client.startInstance( modifiedDomainWithTenantId , imageId);
+            Store.tenantToPrivateIpMap.put(tenantId, privateIp);
             publicIp = openstackDAO.getPublicIp(privateIp);
-            Store.publicIpToTenantMap.put(publicIp, tenantId);
+            Store.privateIpToTenantMap.put(privateIp, tenantId);
             Store.tenantToPublicIpMap.put(tenantId, publicIp);
             log.info("Started Instance public ip is " + publicIp);
         }catch (Exception e){
@@ -228,7 +230,7 @@ public class ApplicationManagementService extends AbstractAdmin{
 
     public boolean isInstanceForTenantUp(){
         Integer tenantId = MultitenantUtils.getTenantId(getConfigContext());
-        if(Store.publicIpToTenantMap.containsValue(tenantId)){
+        if(Store.privateIpToTenantMap.containsValue(tenantId)){
             return true;
         }
         return false;

@@ -139,8 +139,12 @@ public class LoadBalanceEndpoint extends ListEndpoint {
 
         if (loadbalanceEndpoint != null && loadbalanceEndpoint instanceof SALoadbalanceEndpoint) {
             SALoadbalanceEndpoint saLoadBalanceDataElement = (SALoadbalanceEndpoint) loadbalanceEndpoint;
-            name = saLoadBalanceDataElement.getName().equals("anonymous") ? "" : saLoadBalanceDataElement.getName();
-            algorithmClassName = saLoadBalanceDataElement.getAlgorithm().getClass().getName();
+            if (saLoadBalanceDataElement.getName() != null) {
+                name = saLoadBalanceDataElement.getName().equals("anonymous") ? "" : saLoadBalanceDataElement.getName();
+            }
+            if (saLoadBalanceDataElement.getAlgorithm() != null) {
+                algorithmClassName = saLoadBalanceDataElement.getAlgorithm().getClass().getName();
+            }
             sessionTimeout = saLoadBalanceDataElement.getSessionTimeout();
             OMElement sessionElement = elem.getFirstChildWithName(new QName(SynapseConstants.SYNAPSE_NAMESPACE, "session"));
             String session = sessionElement.getAttributeValue(new QName(null, "type"));
@@ -151,8 +155,12 @@ public class LoadBalanceEndpoint extends ListEndpoint {
             loadbalanceEndpoint = EndpointFactory.getEndpointFromElement(elem, isAnonymous, new Properties());
             if (loadbalanceEndpoint != null) {
                 LoadbalanceEndpoint loadBalanceEndpoint = (LoadbalanceEndpoint) loadbalanceEndpoint;
-                name = loadBalanceEndpoint.getName().equals("anonymous") ? "" : loadBalanceEndpoint.getName();
-                algorithmClassName = loadBalanceEndpoint.getAlgorithm().getClass().getName();
+                if (loadBalanceEndpoint.getName() != null) {
+                    name = loadBalanceEndpoint.getName().equals("anonymous")  ? "" : loadBalanceEndpoint.getName();
+                }
+                if (loadBalanceEndpoint.getAlgorithm() != null) {
+                    algorithmClassName = loadBalanceEndpoint.getAlgorithm().getClass().getName();
+                }
             }
         }
 

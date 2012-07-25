@@ -33,6 +33,7 @@ public class StratosConfiguration {
     private boolean emailValidationRequired = false;
     private boolean isPublicCloudSetup = true;
     private boolean isTenantActivationModerated = false;
+    private boolean chargeOnRegistration = false;
     private String SuperAdminEmail = "";
     private String paypalUrl = "";
     private String paypalAPIUsername = "";
@@ -297,5 +298,12 @@ public class StratosConfiguration {
         this.emailsDisabled = emailsDisabled;
     }
 
+    public boolean isChargeOnRegistration() {
+        return chargeOnRegistration;
+    }
+
+    public void setChargeOnRegistration(boolean chargeOnRegistration) {
+        this.chargeOnRegistration = chargeOnRegistration;
+    }
 }
 

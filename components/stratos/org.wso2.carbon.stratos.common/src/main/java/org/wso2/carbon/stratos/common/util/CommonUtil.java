@@ -129,6 +129,10 @@ public class CommonUtil {
         return stratosConfig.isTenantActivationModerated();
     }
 
+    public static boolean isChargedOnRegistration() {
+        return stratosConfig.isChargeOnRegistration();
+    }
+
     /**
      * Checks whether it is for the public cloud setup or Mars.
      *
@@ -396,6 +400,13 @@ public class CommonUtil {
                             isEmailValidationRequired = true;
                         }
                         config.setEmailValidationRequired(isEmailValidationRequired);
+                    } else if ("ChargeOnRegistration".equals(element.getLocalName())) {
+                        String chargeOnRegistration = element.getText();
+                        boolean isChargedOnRegistration = false;
+                        if (chargeOnRegistration.trim().equalsIgnoreCase("true")) {
+                            isChargedOnRegistration = true;
+                        }
+                        config.setChargeOnRegistration(isChargedOnRegistration);
                     } else if ("NotificationEmail".equals(element.getLocalName())) {
                         config.setNotificationEmail(element.getText());
                     } else if ("SuperAdminEmail".equals(element.getLocalName())) {

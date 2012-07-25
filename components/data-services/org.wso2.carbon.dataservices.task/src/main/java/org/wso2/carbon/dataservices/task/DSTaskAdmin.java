@@ -19,22 +19,21 @@
 package org.wso2.carbon.dataservices.task;
 
 import org.apache.axis2.AxisFault;
-import org.apache.axis2.description.AxisOperation;
 import org.apache.axis2.description.AxisService;
 import org.apache.axis2.description.Parameter;
 import org.apache.commons.logging.Log;
 import org.apache.commons.logging.LogFactory;
 import org.wso2.carbon.core.AbstractAdmin;
+import org.wso2.carbon.dataservices.common.DBConstants;
+import org.wso2.carbon.dataservices.core.description.operation.Operation;
+import org.wso2.carbon.dataservices.core.engine.DataService;
 import org.wso2.carbon.dataservices.task.internal.DSTaskServiceComponent;
 import org.wso2.carbon.ntask.common.TaskException;
 import org.wso2.carbon.ntask.core.TaskInfo;
 import org.wso2.carbon.ntask.core.TaskManager;
 import org.wso2.carbon.utils.deployment.GhostDeployerUtils;
 
-import javax.xml.namespace.QName;
-import java.util.ArrayList;
-import java.util.List;
-import java.util.Map;
+import java.util.*;
 
 public class DSTaskAdmin extends AbstractAdmin {
 
@@ -166,14 +165,21 @@ public class DSTaskAdmin extends AbstractAdmin {
     		GhostDeployerUtils.deployActualService(this.getAxisConfig(), axisService);
     	}
 
-        List<String> opNames = axisService.getOperationsNameList();
-    	List<String> result = new ArrayList<String>();
-    	for (String opName : opNames) {
-            AxisOperation op = axisService.getOperation(new QName(opName));
-    		if (op.getOutputAction() != null && !isBoxcarringOp(opName)) {
-    			result.add(opName);
-    		}
-    	}
+        Parameter tmpParam = axisService.getParameter(DBConstants.DATA_SERVICE_OBJECT);
+        DataService ds;
+        List<String> result = new ArrayList<String>();
+        if (tmpParam != null) {
+            ds = (DataService) tmpParam.getValue();
+            Iterator<String> opNames = ds.getOperationNames().iterator();
+            Operation op;
+            while (opNames.hasNext()) {
+                String opName = opNames.next();
+                op = ds.getOperation(opName);
+                if ((op.getCallQueryGroup().getDefaultCallQuery().getWithParams().size() == 0) && !isBoxcarringOp(opName)) {
+                    result.add(opName);
+                }
+            }
+        }
     	return result.toArray(new String[result.size()]);
     }
 

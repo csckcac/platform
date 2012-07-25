@@ -26,8 +26,10 @@
             String[] triggerList = client.getNoParamDSOperations(serviceId);
             StringBuffer triggerListAsString = new StringBuffer();
 
-            for (String trigger : triggerList) {
-                triggerListAsString.append(trigger).append(",");
+            if (triggerList != null) {
+                for (String trigger : triggerList) {
+                    triggerListAsString.append(trigger).append(",");
+                }
             }
             
             response.setContentType("application/xml");

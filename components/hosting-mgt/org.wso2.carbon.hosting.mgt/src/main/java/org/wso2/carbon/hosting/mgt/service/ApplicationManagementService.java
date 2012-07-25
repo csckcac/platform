@@ -174,13 +174,15 @@ public class ApplicationManagementService extends AbstractAdmin{
     private void deleteApps(String phpApps[]){
         File phpAppFile;
         for (String phpApp : phpApps) {
-            phpAppFile = new File(getWebappDeploymentDirPath() +  File.separator + phpApp);
+            phpAppFile = new File(getWebappDeploymentDirPath() +  File.separator + phpApp + ".zip");
             phpAppFile.delete();
         }
-        if(listPhpApplications() == null){
+        if(listPhpApplications() == null && isInstanceForTenantUp()){
             Integer tenantId = MultitenantUtils.getTenantId(getConfigContext());
+            String instanceIp = Store.tenantToPublicIpMap.get(tenantId);
             try {
-                client.terminateSpiInstance(Store.tenantToPublicIpMap.get(tenantId));
+                log.info(" Terminating instance. IP :" + instanceIp);
+                client.terminateSpiInstance(instanceIp);
             } catch (Exception e) {
                 log.error("Error while terminating instance");
             }

@@ -26,6 +26,8 @@ import org.wso2.carbon.base.ServerConfigurationException;
 import org.wso2.carbon.identity.core.internal.IdentityCoreServiceComponent;
 import org.wso2.carbon.utils.CarbonUtils;
 import org.wso2.carbon.utils.ServerConstants;
+import org.wso2.securevault.SecretResolver;
+import org.wso2.securevault.SecretResolverFactory;
 
 import javax.xml.namespace.QName;
 import javax.xml.stream.XMLStreamException;
@@ -41,6 +43,7 @@ public class IdentityConfigParser {
     public static final String IDENTITY_DEFAULT_NAMESPACE = "http://wso2.org/projects/carbon/carbon.xml";
     private static Map<String, Object> configuration = new HashMap<String, Object>();
     private static IdentityConfigParser parser;
+    private static SecretResolver secretResolver;
     // To enable attempted thread-safety using double-check locking
     private static Object lock = new Object();
     private static Log log = LogFactory.getLog(IdentityConfigParser.class);
@@ -135,6 +138,7 @@ public class IdentityConfigParser {
             builder = new StAXOMBuilder(inStream);
             rootElement = builder.getDocumentElement();
             Stack<String> nameStack = new Stack<String>();
+            secretResolver = SecretResolverFactory.create(rootElement, true);
             readChildElements(rootElement, nameStack);
 
         } finally {
@@ -156,6 +160,10 @@ public class IdentityConfigParser {
                 String key = getKey(nameStack);
                 Object currentObject = configuration.get(key);
                 String value = replaceSystemProperty(element.getText());
+                if(secretResolver != null && secretResolver.isInitialized() &&
+                                                    secretResolver.isTokenProtected(key)){
+                    value = secretResolver.resolve(key);
+                }
                 if (currentObject == null) {
                     configuration.put(key, value);
                 } else if (currentObject instanceof ArrayList) {

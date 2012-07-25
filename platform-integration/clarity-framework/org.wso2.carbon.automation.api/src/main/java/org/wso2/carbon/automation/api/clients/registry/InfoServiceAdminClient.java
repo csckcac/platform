@@ -306,7 +306,7 @@ public class InfoServiceAdminClient {
         }
     }
 
-    public void removeTag(String tag,String path,String sessionId)
+    public void removeTag(String tag, String path, String sessionId)
             throws RegistryException, RegistryExceptionException {
         try {
             infoAdminServiceStub.removeTag(tag, path, sessionId);
@@ -316,6 +316,21 @@ public class InfoServiceAdminClient {
             throw new RegistryException(msg, e);
         } catch (RegistryExceptionException e) {
             String msg = "Unable to remove tag  ";
+            log.error(msg, e);
+            throw new RegistryExceptionException(msg, e);
+        }
+    }
+
+    public void unsubscribe(String path, String subscriptionId, String sessionID)
+            throws RemoteException, RegistryExceptionException {
+        try {
+            infoAdminServiceStub.unsubscribe(path, subscriptionId, sessionID);
+        } catch (RemoteException e) {
+            String msg = "Unable to unsubscribe";
+            log.error(msg, e);
+            throw new RemoteException(msg, e);
+        } catch (RegistryExceptionException e) {
+            String msg = "Unable to unsubscribe";
             log.error(msg, e);
             throw new RegistryExceptionException(msg, e);
         }

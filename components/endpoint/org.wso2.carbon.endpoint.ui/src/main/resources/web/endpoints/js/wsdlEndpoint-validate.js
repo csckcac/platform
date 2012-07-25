@@ -76,14 +76,6 @@ function validateWSDLEndpoint(isAnonymous, isFromTemplateEditor) {
             }
         }
 
-        var retryTimeoutVal = getElementValue('retryTimeOut');
-        if (retryTimeoutVal != null) {
-            if (isNaN(retryTimeoutVal)) {
-                CARBON.showWarningDialog(jsi18n['please.enter.a.valid.number.to.the.retry.field']);
-                return false;
-            }
-        }
-
         var retryDelay = getElementValue('retryDelay');
         if (retryDelay != null) {
             if (isNaN(retryDelay)) {
@@ -91,8 +83,19 @@ function validateWSDLEndpoint(isAnonymous, isFromTemplateEditor) {
                 return false;
             }
         }
-        return true;
+
+        var retryTimeoutVal = getElementValue('retryTimeOut');
+        if (retryTimeoutVal != null) {
+            if (isNaN(retryTimeoutVal)) {
+                CARBON.showWarningDialog(jsi18n['please.enter.a.valid.number.to.the.retry.field']);
+                return false;
+            } else if (retryDelay != null && retryTimeoutVal > 0 && retryDelay == 0 ) {
+                CARBON.showWarningDialog(jsi18n['please.enter.a.positive.number.to.the.retrydelay.field']);
+                return false;
+            }
+        }
     }
+    return true;
 }
 
 // check if a valid WSDL

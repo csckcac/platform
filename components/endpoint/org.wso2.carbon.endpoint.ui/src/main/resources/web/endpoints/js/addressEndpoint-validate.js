@@ -61,18 +61,21 @@ function validateAddressEndpoint(isAnonymous,isFromTemplateEditor) {
             }
         }
 
+        var retryDelay = getElementValue('retryDelay');
+        if (retryDelay != null) {
+            if (isNaN(retryDelay)) {
+                CARBON.showWarningDialog(jsi18n['please.enter.a.valid.number.to.the.retrydelay.field']);
+                return false;
+            }
+        }
+
         var retryTimeoutVal = getElementValue('retryTimeOut');
         if (retryTimeoutVal != null) {
             if (isNaN(retryTimeoutVal)) {
                 CARBON.showWarningDialog(jsi18n['please.enter.a.valid.number.to.the.retry.field']);
                 return false;
-            }
-        }
-
-        var retryDelay = getElementValue('retryDelay');
-        if (retryDelay != null) {
-            if (isNaN(retryDelay)) {
-                CARBON.showWarningDialog(jsi18n['please.enter.a.valid.number.to.the.retrydelay.field']);
+            } else if (retryDelay != null && retryTimeoutVal > 0 && retryDelay == 0 ) {
+                CARBON.showWarningDialog(jsi18n['please.enter.a.positive.number.to.the.retrydelay.field']);
                 return false;
             }
         }

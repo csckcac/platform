@@ -19,7 +19,6 @@
 <%@ page import="org.wso2.carbon.tenant.activity.ui.clients.TenantActivityServiceClient" %>
 <%@ page import="org.wso2.carbon.tenant.activity.ui.utils.TenantMonitorUtil" %>
 <%@ page import="java.util.Map" %>
-<%@ page import="org.wso2.carbon.tenant.reg.agent.client.util.Util" %>
 <%@ page import="org.wso2.carbon.stratos.common.config.CloudServiceConfig" %>
 <%@ taglib prefix="fmt" uri="http://java.sun.com/jsp/jstl/fmt" %>
 <%@ taglib uri="http://wso2.org/projects/carbon/taglibs/carbontags.jar" prefix="carbon" %>

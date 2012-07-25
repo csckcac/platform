@@ -71,6 +71,8 @@
 		<AccessTokenDefaultValidityPeriod>3600</AccessTokenDefaultValidityPeriod>
 		<!-- Timestamp skew in seconds -->
 		<TimestampSkew>300</TimestampSkew>
+		<!-- Enable OAuth caching. This cache has the replication support. -->
+		<EnableOAuthCache>true</EnableOAuthCache>
 		<OAuthCallbackHandlers>		
 				<OAuthCallbackHandler Class="org.wso2.carbon.identity.oauth.callback.DefaultCallbackHandler"/>
 		</OAuthCallbackHandlers>

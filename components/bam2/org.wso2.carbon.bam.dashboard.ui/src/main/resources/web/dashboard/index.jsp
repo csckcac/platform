@@ -92,10 +92,10 @@
           </ul>-->
       <div class="navbar timelySwitch" style="overflow: hidden;">
           <div id="timely-dd" class="btn-group timely-dd-btns">
-            <button class="btn"><i class="icon-list-alt"></i>All</button>
-            <button class="btn"><i class="icon-list-alt"></i>Month</button>
-            <button class="btn"><i class="icon-list-alt"></i>Day</button>
-		<button class="btn btn-primary"><i class="icon-list-alt"></i>Now</button>
+            <button class="btn">All</button>
+            <button class="btn">Month</button>
+            <button class="btn">Day</button>
+		<button class="btn btn-primary">Now</button>
           </div>
       </div>
       <div class="clearfix"></div>

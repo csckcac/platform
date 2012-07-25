@@ -36,6 +36,8 @@
     <li><a href="#editDSWizard">Edit Data Service through Wizard</a></li>
     <li><a href="#editDSXMLEditor">Edit Data Service through XML Editor</a></li>
     </ul>
+    <li><a href="#uploadDS">Upload Data Service</a></li>
+    <li><a href="#deleteDS">Delete Data Service</a></li>
 </ul>
 </div><h2 id="Introducti">Introduction</h2>
 <p>WSO2 Data Services Server is a convenient mechanism to provide a web service interface for data stored in some data
@@ -509,8 +511,80 @@
             <br/>
         </p>
 
+		<h2 id="uploadDS">Upload Data Service</h2>
+		
+		<h3>Step 1</h3>
+		<hr/>
+        
+        <p>You can easily upload a created data service by clicking on "Upload" link under
+            Manage/Services/Add/Data Service left menu.
+            Once you click on the link the following page will appear.
+        </p>
+        <br/>
+        <p>
+            <img src="images/ds_upload_step1.png" alt="Figure: Upload Services - Step 1"/>
+            <br/>
+            <br/>
+            Figure 27: Upload Data Service wizard
+        </p>
+        <br/>
+                
+        <h3>Step 2</h3>
+        <hr/>
+        
+        <p>Select the data service file(.dbs) which you prefer to uplaod.</p>
+        <br/>
+        <p>
+            <img src="images/ds_upload_step2.png" alt="Figure: Upload Services - Step 2"/>
+            <br/>
+            <br/>
+            Figure 28: Select the file.
+        </p>
+        <br/>
+        
+        <h3>Step 3</h3>
+        <hr/>
+        <p>Once you select the data service file it will display as follows.
+            <br/>
+            <img src="images/ds_upload_step3.png" alt="Figure: Upload Services - Step 3"/>
+            <br/>
+            <p>Figure 29: Selected file path</p>
+        </p>
+        <br/>
+        
+         <h3>Step 4</h3>
+        <hr/>
+        <p>Selected data source will deploy and list under the deployed service list as below.
+            <br/>
+            <br/>
+            <img src="images/ds_upload_step4.png" alt="Figure: Upload Services - Step 4"/>
+            <br/>
+            <p>Figure 30: Deployed Service</p>
+        </p>
+		<br/>
+		
+		<h2 id="deleteDS">Delete Data Service</h2>
+		
+		<p>Select the services you want to delete from the services list and click on the delete
+            link placed above
+            the Services Groups table to delete the services. If the service has deployed as a
+            faulty service, it will be displayed
+            on the Deployed Services page as a<span style="font-style: italic; font-weight: bold;">
+                [n] faulty
+                service(s)</span>:. Same as for the deployed services, you can select the
+            appropriate faulty services by ticking them and click
+            on delete.
+        </p>
+        <br/>
 
-
+        <p>
+            <img src="images/delete_service.png" alt="Figure: Delete Service"/>
+            <br/>
+            <br/>
+            <p>Figure 31: Delete Service</p>
+        </p>
+        <br/>
+		
 <p>For more details on the Data services see
     <a href="http://wso2.org/project/solutions/data-services/java/2.6.0/docs/user_guide.html">User Guide</a></p>
 

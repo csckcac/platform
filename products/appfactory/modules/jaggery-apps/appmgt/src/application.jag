@@ -1,6 +1,7 @@
 <%
     include('includes/template_header.jag');
     include('constants.jag');
+    include('mgt/application_manager.jag');
 
     var log = new Log();
     var applicationName = request.getParameter("applicationName");
@@ -16,6 +17,15 @@
     	//document.deployDataForm.elements["stageName"].value = stage;
         document.deployDataForm.submit();
     }
+
+    function deployToDev() {
+        var version = 'trunk';
+        var revision = '0';
+        var stageName = 'Development';
+        var build = 'true';
+        deployToStage(applicationKey,revision,version,stageName,build);
+    }
+
 
 
       // This is the code for definining the dashboard
@@ -69,7 +79,6 @@
 
 <%
 
-    include('mgt/application_manager.jag');
     var userHasAccess = false;
     var roleArray = null;
     try {
@@ -247,6 +256,11 @@
                                 </td>
                             <tr>
 
+                            <tr>
+                                <td class="buttonRow" colspan="2">
+                                    <input type="button" onclick=deployToDev() value='Deploy to Dev' class='btn btn-primary'/>
+                                </td>
+                            <tr>
                         </table>
                         </form>
                     </div>

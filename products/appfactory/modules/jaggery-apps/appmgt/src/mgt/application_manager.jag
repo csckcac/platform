@@ -204,8 +204,8 @@
 
     }
 
-    function deployToStage(applicationSvnLocation,applicationKey,stageName) {
-        var result =  invokeDeployToStage(applicationSvnLocation,applicationKey,stageName);
+    function deployToStage(applicationKey,revision,version,stageName,build) {
+        var result =  invokeDeployToStage(applicationKey,revision,version,stageName,build);
         var resultNS=new Namespace("http://wso2.org/carbon/appfactory/applicaiton/deployment");
         return deployedArtifact=result.resultNS::["result"].text();
     }

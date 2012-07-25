@@ -20,20 +20,18 @@ import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
-import org.mozilla.javascript.NativeArray;
-
 /**
  * Model to represent the appfactory.xml
  */
 public class AppFactoryConfiguration {
-    
+
     private Map<String, List<String>> configuration;
-    
+
     public AppFactoryConfiguration(Map<String, List<String>> config) {
         configuration = new HashMap<String, List<String>>();
         configuration.putAll(config);
     }
-    
+
     public String[] getProperties(String key) {
         List<String> values = configuration.get(key);
         if (values == null) {
@@ -41,22 +39,15 @@ public class AppFactoryConfiguration {
         }
         return values.toArray(new String[values.size()]);
     }
-    
-    public NativeArray getPropertiesAsNativeArray(String key) {
-        List<String> values = configuration.get(key);
-        NativeArray nativeArray = new NativeArray(0);
-        if (values == null) {
-            return nativeArray;
-        }
 
-		for (int i = 0; i < values.size(); i++) {
-			String element = (String) values.get(i);
-			nativeArray.put(i, nativeArray, element);
-		}
-        
-        return nativeArray;
+    public String[] getPropertiesAsNativeArray(String key) {
+        List<String> values = configuration.get(key);
+        if (values == null) {
+            return new String[0];
+        }
+        return values.toArray(new String[values.size()]);
     }
-    
+
     public String getFirstProperty(String key) {
         List<String> value = configuration.get(key);
         if (value == null) {

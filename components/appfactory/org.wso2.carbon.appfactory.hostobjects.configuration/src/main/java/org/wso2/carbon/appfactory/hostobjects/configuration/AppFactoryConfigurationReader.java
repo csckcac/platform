@@ -21,15 +21,22 @@ public class AppFactoryConfigurationReader extends ScriptableObject {
         return hostObjectName;
     }
 
-    public static Scriptable jsConstructor(Context cx, Object[] args, Function ctorObj, 
-                                        boolean inNewExpr) throws Exception {
+    public static Scriptable jsConstructor(Context cx, Object[] args, Function ctorObj,
+                                           boolean inNewExpr) throws Exception {
         return new AppFactoryConfigurationReader();
     }
 
     public String jsFunction_getFirstProperty(String key) throws Exception {
         return appFactoryConfiguration.getFirstProperty(key);
     }
+
     public NativeArray jsFunction_getProperties(String key) throws Exception {
-        return appFactoryConfiguration.getPropertiesAsNativeArray(key);
+        String[] values = appFactoryConfiguration.getPropertiesAsNativeArray(key);
+        NativeArray array = new NativeArray(values.length);
+        for (int i = 0; i < values.length; i++) {
+            String element = values[i];
+            array.put(i, array, element);
+        }
+        return array;
     }
 }

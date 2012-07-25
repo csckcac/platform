@@ -443,6 +443,11 @@
             <artifactId>org.wso2.carbon.registry.profiles.stub</artifactId>
             <version>${stub.version}</version>
         </dependency>
+        <dependency>
+            <groupId>org.wso2.carbon</groupId>
+            <artifactId>org.wso2.carbon.reporting.stub</artifactId>
+            <version>${stub.version}</version>
+        </dependency>
     </dependencies>
 
     <properties>

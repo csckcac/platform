@@ -222,4 +222,8 @@
 
         return applicationInfo;
     }
+
+    function getTrunkURL(applicationKey) {
+        return getProperty(SCM_SERVER_URL)+'/svn/'+applicationKey+'/trunk';
+    }
 %>

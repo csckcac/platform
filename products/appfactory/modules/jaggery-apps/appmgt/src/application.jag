@@ -113,8 +113,9 @@
                     <h2><%= applicationName%>
                 </h2>
                 <%
-                        include('mgt/registry_access_manager.jag');
-                        var appInfo = getAppInfo(applicationKey);
+                    include('mgt/registry_access_manager.jag');
+                    var appInfo = getAppInfo(applicationKey);
+                    var url = getTrunkURL(applicationKey);
                 %>
                     <!-- Including the tabbed navigation -->
                      <div class="tabbable"> <!-- Only required for left/right tabs -->
@@ -149,6 +150,10 @@
                                 <tr>
                                     <td style="width:30%;">Description:</td>
                                     <td><%=appInfo.description%></td>
+                                </tr>
+                                <tr>
+                                    <td style="width:30%;">SVN URL:</td>
+                                    <td><%=url%></td>
                                 </tr>
                             </table>
                         </div>

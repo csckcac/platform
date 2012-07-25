@@ -1,0 +1,193 @@
+<%
+	var server = request.getParameter('server');
+	var service = request.getParameter('service');
+	var operation = request.getParameter('opr');
+	var time = request.getParameter('t');
+	//var results;
+	var _minRT = null;
+	var _maxRT = null;
+	var _avgRT = null;
+	var __minRT = "MIN(MIN_RESPONSE_TIME)";
+	var __maxRT = "MAX(MAX_RESPONSE_TIME)";
+	var __avgRT = "AVG(AVG_RESPONSE_TIME)";
+
+	var dataTable = null;
+	if(time){
+		if(time.toLowerCase() == "now"){
+			dataTable = "AS_STATS_SUMMARY_PER_MINUTUE";
+		}
+		else if(time.toLowerCase() == "day"){
+			dataTable = "AS_STATS_SUMMARY_PER_HOUR";
+		}
+		else if(time.toLowerCase() == "month"){
+			dataTable = "AS_STATS_SUMMARY_PER_DAY";
+		}
+		else if(time.toLowerCase() == "all"){
+			dataTable = "AS_STATS_SUMMARY_PER_MONTH";
+		}
+		else{
+			new Log().info("cannot select table");
+		}
+	}
+	if(dataTable){
+		if(operation!=undefined && operation!="" && operation!=null){
+			queryDataOperationLvl();
+		}
+		else if(service!=undefined && service!="" && service!=null){
+			queryDataServiceLvl();
+		}
+		else if(server!=undefined && server!="" && server!=null){
+			queryDataServerLvl();
+		}
+		else{
+			queryDataAllServers();
+		}
+	}
+
+
+	function queryDataAllServers(){
+
+		config = {};
+		var db = new Database("jdbc:h2:repository/database/samples/BAM_STATS_DB;AUTO_SERVER=TRUE", "wso2carbon", "wso2carbon");
+
+		try{
+			_minRT = null;
+	        _maxRT = null;
+	        _avgRT = null;
+	    		var _result = db.query("select min(min_response_time),max(max_response_time),avg(avg_response_time) from "+dataTable+"");
+
+			_minRT = _result[0][__minRT];
+			_maxRT = _result[0][__maxRT];
+			_avgRT = _result[0][__avgRT];
+		}
+		catch(e){
+		}
+		finally{
+			db.close();
+		}
+	};
+	function queryDataServerLvl(){
+		config = {};
+		var db = new Database("jdbc:h2:repository/database/samples/BAM_STATS_DB;AUTO_SERVER=TRUE", "wso2carbon", "wso2carbon");
+
+		try{
+			_minRT = null;
+	        _maxRT = null;
+	        _avgRT = null;
+	    		var _result = db.query("select min(min_response_time),max(max_response_time),avg(avg_response_time) from "+dataTable+" where host='"+server+"'");
+			_minRT = _result[0][__minRT];
+			_maxRT = _result[0][__maxRT];
+			_avgRT = _result[0][__avgRT];
+		}
+		catch(e){
+		}
+		finally{
+			db.close();
+		}
+	};
+	function queryDataServiceLvl(){
+		config = {};
+		var db = new Database("jdbc:h2:repository/database/samples/BAM_STATS_DB;AUTO_SERVER=TRUE", "wso2carbon", "wso2carbon");
+
+		try{
+			_minRT = null;
+	        _maxRT = null;
+	        _avgRT = null;
+	    		var _result = db.query("select min(min_response_time),max(max_response_time),avg(avg_response_time) from "+dataTable+" where host='"+server+"' and service_name='"+service+"'");
+			_minRT = _result[0][__minRT];
+			_maxRT = _result[0][__maxRT];
+			_avgRT = _result[0][__avgRT];
+		}
+		catch(e){
+		}
+		finally{
+			db.close();
+		}
+	};
+	function queryDataOperationLvl(){
+		config = {};
+		var db = new Database("jdbc:h2:repository/database/samples/BAM_STATS_DB;AUTO_SERVER=TRUE", "wso2carbon", "wso2carbon");
+
+		try{
+			_minRT = null;
+	        _maxRT = null;
+	        _avgRT = null;
+	    		var _result = db.query("select min(min_response_time),max(max_response_time),avg(avg_response_time) from "+dataTable+" where host='"+server+"' and service_name='"+service+"' and operation_name='"+operation+"'");
+			_minRT = _result[0][__minRT];
+			_maxRT = _result[0][__maxRT];
+			_avgRT = _result[0][__avgRT];
+		}
+		catch(e){
+		}
+		finally{
+			db.close();
+		}
+	};
+%>
+<html>
+<head>
+<link rel="stylesheet" type="text/css" href="../jqPlot/jquery.jqplot.min.css" />
+<link rel="stylesheet" type="text/css" href="../bootstrap/css/bootstrap.min.css" />
+<link rel="stylesheet" type="text/css" href="../bootstrap/css/bootstrap-responsive.min.css" />
+<style>
+.gauge-dd-btns{
+float: right;
+}
+#gauge-dd-wrapper{
+	padding:6px;
+}
+</style>
+</head>
+<body>
+<div id="gauge-dd-wrapper"><span id="gaugeValInfo" class="label label-info">Current value in gauge is <%=_avgRT%></span><div id="gauge-dd" class="btn-group gauge-dd-btns">
+            <button value="<%=_minRT%>" class="btn btn-small">min</button>
+            <button value="<%=_avgRT%>" class="btn btn-small btn-primary">avg</button>
+            <button value="<%=_maxRT%>" class="btn btn-small">max</button>
+</div></div>
+<div id="jqPlot-gauge" style="margin-top: 20px; margin-left: 20px; width: 460px; height: 300px; position: relative;"></div>
+
+
+<script type="text/javascript" src="../scripts/jquery-1.7.2.min.js"></script>
+<script type="text/javascript" src="../jqPlot/jquery.jqplot.min.js"></script>
+<script type="text/javascript" src="../jqPlot/plugins/jqplot.meterGaugeRenderer.min.js"></script>
+<script type="text/javascript">
+$(document).ready(function(){
+   var minRT = <%=_minRT%>;
+   var maxRT = <%=_maxRT%>;
+   var avgRT = <%=_avgRT%>;
+   var meterGauge = $.jqplot('jqPlot-gauge',[[avgRT]],{
+       seriesDefaults: {
+           renderer: $.jqplot.MeterGaugeRenderer,
+           rendererOptions: {
+               label: 'Response Time',
+		min: getMin(minRT),
+               max: getMax(maxRT)
+           }
+       }
+   });
+   $("#gauge-dd button").click(function(){
+        $("#gauge-dd button").removeClass('btn-primary');
+        $(this).addClass('btn-primary');
+        var btnValue = $(this).attr("value");
+        setPlot(btnValue);
+    });
+   function setPlot(v){
+	meterGauge.series[0].data = [[1,v]];
+	meterGauge.replot();
+	$("#gaugeValInfo").text("Current value in gauge is "+v);
+   };
+	function getMin(num){
+		return Math.round(num/2);	
+	};
+	function getMax(num){
+		return Math.round((num*10)/9);
+	};
+
+});
+</script>
+
+
+
+<!-- End additional plugins -->
+</body>
+</html>

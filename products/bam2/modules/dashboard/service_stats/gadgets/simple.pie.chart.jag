@@ -1,0 +1,159 @@
+<%
+	var server = request.getParameter('server');
+	var service = request.getParameter('service');
+	var operation = request.getParameter('opr');
+	var time = request.getParameter('t');
+	//var results;
+	var _reqCount = null;
+	var _respCount = null;
+	var _faultCount = null;
+	var __reqCount = "SUM(TOTAL_REQUEST_COUNT)";
+	var __respCount = "SUM(TOTAL_RESPONSE_COUNT)";
+	var __faultCount = "SUM(TOTAL_FAULT_COUNT)";
+	var dataTable = null;
+	if(time){
+		if(time.toLowerCase() == "now"){
+			dataTable = "AS_STATS_SUMMARY_PER_MINUTUE";
+		}
+		else if(time.toLowerCase() == "day"){
+			dataTable = "AS_STATS_SUMMARY_PER_HOUR";
+		}
+		else if(time.toLowerCase() == "month"){
+			dataTable = "AS_STATS_SUMMARY_PER_DAY";
+		}
+		else if(time.toLowerCase() == "all"){
+			dataTable = "AS_STATS_SUMMARY_PER_MONTH";
+		}
+		else{
+			new Log().info("cannot select table");
+		}
+	}
+	if(dataTable){
+		if(operation!=undefined && operation!="" && operation!=null){
+			queryDataOperationLvl();	
+		}
+		else if(service!=undefined && service!="" && service!=null){
+			queryDataServiceLvl();	
+		}
+		else if(server!=undefined && server!="" && server!=null){
+			queryDataServerLvl();	
+		}
+		else{
+			queryDataAllServers();	
+		}
+	
+	}
+	function queryDataAllServers(){
+	
+		config = {};
+		var db = new Database("jdbc:h2:repository/database/samples/BAM_STATS_DB;AUTO_SERVER=TRUE", "wso2carbon", "wso2carbon");
+		
+		try{
+			_reqCount = null;
+			_respCount = null;
+			_faultCount = null;
+	    		var _result = db.query("select sum(total_fault_count),sum(total_request_count),sum(total_response_count) from "+dataTable+"");
+			_reqCount = _result[0][__reqCount];
+			_respCount = _result[0][__respCount];
+			_faultCount = _result[0][__faultCount];
+		}
+		catch(e){
+		}
+		finally{
+			db.close();
+		}
+	};
+	function queryDataServerLvl(){
+		config = {};
+		var db = new Database("jdbc:h2:repository/database/samples/BAM_STATS_DB;AUTO_SERVER=TRUE", "wso2carbon", "wso2carbon");
+		
+		try{
+			_reqCount = null;
+			_respCount = null;
+			_faultCount = null;
+	    		var _result = db.query("select sum(total_fault_count),sum(total_request_count),sum(total_response_count) from "+dataTable+" where host='"+server+"'");
+			_reqCount = _result[0][__reqCount];
+			_respCount = _result[0][__respCount];
+			_faultCount = _result[0][__faultCount];
+		}
+		catch(e){
+		}
+		finally{
+			db.close();
+		}
+	};
+	function queryDataServiceLvl(){
+		config = {};
+		var db = new Database("jdbc:h2:repository/database/samples/BAM_STATS_DB;AUTO_SERVER=TRUE", "wso2carbon", "wso2carbon");
+		
+		try{
+			_reqCount = null;
+			_respCount = null;
+			_faultCount = null;
+	    		var _result = db.query("select sum(total_fault_count),sum(total_request_count),sum(total_response_count) from "+dataTable+" where host='"+server+"' and service_name='"+service+"'");
+			_reqCount = _result[0][__reqCount];
+			_respCount = _result[0][__respCount];
+			_faultCount = _result[0][__faultCount];
+		}
+		catch(e){
+		}
+		finally{
+			db.close();
+		}
+	};
+	function queryDataOperationLvl(){
+		config = {};
+		var db = new Database("jdbc:h2:repository/database/samples/BAM_STATS_DB;AUTO_SERVER=TRUE", "wso2carbon", "wso2carbon");
+		
+		try{
+			_reqCount = null;
+			_respCount = null;
+			_faultCount = null;
+	    		var _result = db.query("select sum(total_fault_count),sum(total_request_count),sum(total_response_count) from "+dataTable+" where host='"+server+"' and service_name='"+service+"' and operation_name='"+operation+"'");
+			_reqCount = _result[0][__reqCount];
+			_respCount = _result[0][__respCount];
+			_faultCount = _result[0][__faultCount];
+		}
+		catch(e){
+		}
+		finally{
+			db.close();
+		} 
+	};
+%>
+<html>
+<head>
+<link rel="stylesheet" type="text/css" href="../jqPlot/jquery.jqplot.min.css" />
+</head>
+<body>
+<div id="pie-chart-simple" style="margin-top: 20px; margin-left: 20px; width: 460px; height: 300px; position: relative;"></div>
+<script type="text/javascript" src="../scripts/jquery-1.7.2.min.js"></script>
+<script type="text/javascript" src="../jqPlot/jquery.jqplot.min.js"></script>
+<script type="text/javascript" src="../jqPlot/plugins/jqplot.pieRenderer.min.js"></script>
+<script type="text/javascript" src="../jqPlot/plugins/jqplot.categoryAxisRenderer.min.js"></script>
+<script type="text/javascript" src="../jqPlot/plugins/jqplot.pointLabels.min.js"></script>
+<script type="text/javascript">
+    $(document).ready(function(){
+	var reqCount = <%=_reqCount%>;
+	var respCount = <%=_respCount%>;
+	var faultCount = <%=_faultCount%>
+          jQuery.jqplot.config.enablePlugins = true;
+          plot7 = jQuery.jqplot('pie-chart-simple',
+            [[['Total Request Count', reqCount],['Total Response Count', respCount], ['Total Fault Count', faultCount]]],
+            {
+              grid: {
+                drawBorder: false,
+                drawGridlines: false,
+                background: '#ffffff',
+                shadow:false
+                },
+              title: ' ',
+              seriesDefaults: {shadow: true, renderer: jQuery.jqplot.PieRenderer, rendererOptions: { showDataLabels: true} },
+		seriesColors: ['#0088CC', '#38CC00','#A20000'],
+              legend: { show:true }
+            }
+          );
+    });
+</script>
+</body>
+</html>

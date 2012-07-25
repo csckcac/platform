@@ -142,7 +142,7 @@ public class SiddhiBackEndRuntime implements CEPBackEndRuntime {
 //            queryReferenceMap.put(queryName, streamReference);
 
             if (cepEventListener != null) {
-                String outputStreamId = siddhiManager.getQuery(queryReference).getOutputStreamId();
+                String outputStreamId = siddhiManager.getQuery(queryReference).getOutputStream().getStreamId();
                 StreamDefinition streamDefinition = siddhiManager.getStreamDefinition(outputStreamId);
                 cepEventListener.defineStream(createStreamTypeDef(streamDefinition));
                 siddhiManager.addCallback(outputStreamId, new SiddhiEventListner(streamDefinition,

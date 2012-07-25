@@ -33,18 +33,18 @@
 	
 		eventList = eventList.children();
 
-var counter = 0;
-for (var eventItem in eventList) {
-       var eventInfo =parse(eventList[counter].toXMLString());
-       var appInfo = getAppShortInfo(eventInfo.applicationId, userName);
-       var applicationRow = new Array(); 
-       
-       applicationRow[0] = appInfo.name; 
-       applicationRow[1] = eventInfo.event;
-       applicationRow[2] = eventInfo.result;
-       
-       contentArray[counter++] = applicationRow;
-}
+		var counter = 0;
+		for (var eventItem in eventList) {
+		       var eventInfo =parse(eventList[counter].toXMLString());
+		       var appInfo = getAppShortInfo(eventInfo.applicationId, userName);
+		       var applicationRow = new Array(); 
+		       
+		       applicationRow[0] = appInfo.name; 
+		       applicationRow[1] = eventInfo.event;
+		       applicationRow[2] = eventInfo.result;
+		       
+		       contentArray[counter++] = applicationRow;
+		}
     	
     	outerArray.aaData = contentArray;
 

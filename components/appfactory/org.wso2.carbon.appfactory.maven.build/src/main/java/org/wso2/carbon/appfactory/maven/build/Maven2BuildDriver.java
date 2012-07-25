@@ -26,20 +26,32 @@ public class Maven2BuildDriver implements BuildDriver {
     public void buildArtifact(String applicationId, String version, String revision,
                               BuildDriverListener listener) throws AppFactoryException {
 
+
         File workDir = AppFactoryUtil.getApplicationWorkDirectory(applicationId, version, revision);
         String pomFilePath = workDir.getAbsolutePath() + File.separator + "pom.xml";
         File pomFile = new File(pomFilePath);
         if (!pomFile.exists()) {
-            handleException("pom.xml file not found at " + pomFilePath);
+            handleBuildFailure(applicationId, version, revision, workDir, "pom.xml file not found at " +
+                                                                          pomFilePath, listener);
         }
-        executeMavenGoal(workDir.getAbsolutePath(), applicationId);
+        try {
+            executeMavenGoal(workDir.getAbsolutePath(), applicationId);
+        } catch (AppFactoryException e) {
+            handleBuildFailure(applicationId, version, revision, workDir, e.getLocalizedMessage(), listener);
+        }
         String targetDirPath = workDir.getAbsolutePath() + File.separator + applicationId + "." + "CApp" + File.separator + "target";
         File targetDir = new File(targetDirPath);
         if (!targetDir.exists()) {
-            handleException("Application build failure.");
-            listener.onBuildFailure(applicationId, version, revision, targetDir);
+            handleBuildFailure(applicationId, version, revision, workDir, "Application build failure", listener);
         }
         listener.onBuildSuccessful(applicationId, version, revision, targetDir);
+    }
+
+    private void handleBuildFailure(String applicationId, String version, String revision,
+                                    File targetDir, String msg, BuildDriverListener listener)
+            throws AppFactoryException {
+        listener.onBuildFailure(applicationId, version, revision, targetDir);
+        handleException(msg);
     }
 
     // TODO : Run in a thread pool

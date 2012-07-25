@@ -1,0 +1,30 @@
+In the Controller
+-----------------
+Install java into
+/opt/jdk-x.x.x
+
+apt-get install subversion
+
+Unarchive tropos agent into /opt
+/opt/wso2tropos-agent-1.0.0-SNAPSHOT
+
+PHP cartridge
+-------------
+
+Add image id to repository/conf/php-cartridge-config.properties
+
+In autoscaler
+-------------
+cd into binary root
+
+rm -rf tmp
+rm -rf tmpPayload
+Make sure
+resources/Payload file is uptodate
+
+In axis2.xml
+
+
+
+
+

@@ -19,7 +19,7 @@ import java.util.Random;
 import java.util.UUID;
 
 public class StatAgent {
-    public static final String STREAM_NAME1 = "org.wso2.bam.stats.dsf";
+    public static final String STREAM_NAME1 = "bam_service_data_publisher";
     public static final String VERSION1 = "1.0.0";
 
     public static String[] hosts = {"esb.foo.org", "dss.foo.org", "as.it.foo.org", "as.mkt.foo.com",

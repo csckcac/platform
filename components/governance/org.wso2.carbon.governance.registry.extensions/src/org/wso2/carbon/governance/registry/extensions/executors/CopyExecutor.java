@@ -22,7 +22,7 @@ import static org.wso2.carbon.governance.registry.extensions.executors.utils.Uti
 public class CopyExecutor implements Execution {
     private static final Log log = LogFactory.getLog(ServiceVersionExecutor.class);
     private static final String KEY = ExecutorConstants.RESOURCE_VERSION;
-    private Map parameterMap;
+    protected Map parameterMap;
 
     //    To track whether we need to move comments,tags,ratings and all the associations.
     private boolean copyComments = false;
@@ -79,7 +79,7 @@ public class CopyExecutor implements Execution {
         }
 
         try {
-            requestContext.getRegistry().copy(resourcePath,newPath);
+            doCopy(requestContext, resourcePath, newPath);
             Resource newResource = requestContext.getRegistry().get(newPath);
 
             if(newResource.getUUID() != null){
@@ -140,5 +140,9 @@ public class CopyExecutor implements Execution {
         }
     }
 
+    protected void doCopy(RequestContext requestContext, String resourcePath, String newPath)
+            throws RegistryException {
+        requestContext.getRegistry().copy(resourcePath, newPath);
+    }
 }
 

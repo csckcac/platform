@@ -5,6 +5,7 @@ import org.apache.axis2.client.ServiceClient;
 import org.testng.Assert;
 import org.testng.annotations.AfterClass;
 import org.testng.annotations.BeforeClass;
+import org.testng.annotations.Test;
 import org.wso2.carbon.cep.stub.admin.CEPAdminServiceCEPAdminException;
 import org.wso2.carbon.cep.stub.admin.CEPAdminServiceCEPConfigurationException;
 import org.wso2.carbon.cep.stub.admin.CEPAdminServiceStub;
@@ -23,12 +24,10 @@ import org.wso2.carbon.integration.framework.LoginLogoutUtil;
 
 import java.rmi.RemoteException;
 
-@Deprecated
 /**
- * Since Fusion not shipped with CEP by default
- * Check whether CEPAdminService properly creates FusionBucket to be used with localBroker
+ * Check whether CEPAdminService properly creates SiddhiBucket to be used with wsEventBroker
  */
-public class LocalFusionBucketCreatingTestCase {
+public class WSEventSiddhiBucketCreationTestCase {
     private LoginLogoutUtil util = new LoginLogoutUtil();
     private CEPAdminServiceStub cepAdminServiceStub;
 
@@ -51,11 +50,10 @@ public class LocalFusionBucketCreatingTestCase {
         util.logout();
     }
 
-    //    @Test(groups = {"wso2.cep"})
-    public void fusionBucketCreationTest()
+    @Test(groups = {"wso2.cep"})
+    public void siddhiBucketCreationTest()
             throws CEPAdminServiceCEPConfigurationException, RemoteException,
                    CEPAdminServiceCEPAdminException, InterruptedException {
-
         int numberOfBuckets = cepAdminServiceStub.getAllBucketCount();
 
 
@@ -73,24 +71,23 @@ public class LocalFusionBucketCreatingTestCase {
         /* extra time for all the services to be properly deployed */
         Thread.sleep(5000);
         Assert.assertEquals(++numberOfBuckets, cepAdminServiceStub.getAllBucketCount());
-
-
     }
 
     private BucketDTO createBucket() {
         BucketDTO bucket = new BucketDTO();
 
-        bucket.setName("StockQuoteAnalyzer");
-        bucket.setDescription("This bucket analyzes stock quotes and trigger an event" +
-                              " if the last traded amount is greater than 100.");
-        bucket.setEngineProvider("DroolsFusionCEPRuntime");
+        bucket.setName("StockQuoteAnalyzerWSEvent");
+        bucket.setDescription("his bucket analyzes stock quotes and trigger an event if the last\n" +
+                              "\t\t\t\t\t\t  traded amount vary by 2 percent with regards to the average traded\n" +
+                              "\t\t\t\t\t\t  price within past 2 minutes.");
+        bucket.setEngineProvider("SiddhiCEPRuntime");
         return bucket;
     }
 
     private InputDTO createInput() {
         InputDTO input = new InputDTO();
         input.setTopic("AllStockQuotes");
-        input.setBrokerName("localBroker");
+        input.setBrokerName("wsEventBroker");
 
         InputXMLMappingDTO mapping = new InputXMLMappingDTO();
         mapping.setStream("allStockQuotes");
@@ -123,25 +120,8 @@ public class LocalFusionBucketCreatingTestCase {
 
         ExpressionDTO expression = new ExpressionDTO();
         expression.setType("inline");
-        expression.setText("package org.wso2.carbon.cep.fusion;\n" +
-                           "\t\t\t\t\t\t\timport java.util.HashMap;\n" +
-                           "\t\t\t\t\t\t\tglobal org.wso2.carbon.cep.fusion.listener.FusionEventListener fusionListener;\n" +
-                           "\t\t\t\t\t\t\tdeclare HashMap\n" +
-                           "\t\t\t\t\t\t\t@role( event )\n" +
-                           "\t\t\t\t\t\t\tend\n" +
-                           "\t\t\t\t\t\t\trule Invoke_Stock_Quotes\n" +
-                           "\t\t\t\t\t\t\twhen\n" +
-                           "\t\t\t\t\t\t\t    $stockQuote : HashMap($symbol : this[\"symbol\"], $stockPrice : this[\"price\"], this[\"picked\"] != \"true\") over\n" +
-                           "\t\t\t\t\t\t\t\twindow:time(2m) from entry-point \"allStockQuotes\";\n" +
-                           "\t\t\t\t\t\t\t    eval((Double)$stockPrice > 100);\n" +
-                           "\t\t\t\t\t\t\tthen\n" +
-                           "\t\t\t\t\t\t\t    $stockQuote.put(\"picked\",\"true\");\n" +
-                           "\t\t\t\t\t\t\t    update($stockQuote);\n" +
-                           "\t\t\t\t\t\t\t    HashMap $fastMovingStock = new HashMap();\n" +
-                           "\t\t\t\t\t\t\t    $fastMovingStock.put(\"price\",$stockPrice);\n" +
-                           "\t\t\t\t\t\t\t    $fastMovingStock.put(\"symbol\",$symbol);\n" +
-                           "\t\t\t\t\t\t\t    fusionListener.onEvent($fastMovingStock);\n" +
-                           "\t\t\t\t\t\t\tend");
+        expression.setText("from allStockQuotes[price>100]" +
+                           "insert into outStream symbol, price, avg(price) as avgPrice;");
 
         query.setExpression(expression);
         return query;
@@ -149,14 +129,15 @@ public class LocalFusionBucketCreatingTestCase {
 
     private OutputDTO createOutput() {
         OutputDTO output = new OutputDTO();
-        output.setTopic("ConditionSatisfyingStockQuotes");
-        output.setBrokerName("localBroker");
+        output.setTopic("FastMovingStockQuotes");
+        output.setBrokerName("wsEventBroker");
 
         OutputXMLMappingDTO xmlMapping = new OutputXMLMappingDTO();
         xmlMapping.setMappingXMLText("<quotedata:StockQuoteDataEvent xmlns:xsi=\"http://www.w3.org/2001/XMLSchema-instance\"\n" +
                                      "\t\t\t\t\t\t\t\txmlns:xsd=\"http://www.w3.org/2001/XMLSchema\"\n" +
                                      "\t\t\t\t\t\t\t\txmlns:quotedata=\"http://ws.cdyne.com/\">\n" +
                                      "\t\t\t\t\t\t\t\t\t<quotedata:StockSymbol>{symbol}</quotedata:StockSymbol>\n" +
+                                     "\t\t\t\t\t\t\t\t\t<quotedata:AvgLastTradeAmount>{average}</quotedata:AvgLastTradeAmount>\n" +
                                      "\t\t\t\t\t\t\t\t\t<quotedata:LastTradeAmount>{price}</quotedata:LastTradeAmount>\n" +
                                      "\t\t\t\t\t\t\t\t</quotedata:StockQuoteDataEvent>");
 
@@ -168,4 +149,5 @@ public class LocalFusionBucketCreatingTestCase {
         output.setOutputElementMapping(elementMapping);
         return output;
     }
+
 }

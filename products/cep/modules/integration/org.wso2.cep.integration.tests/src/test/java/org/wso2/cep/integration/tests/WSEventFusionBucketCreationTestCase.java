@@ -5,7 +5,6 @@ import org.apache.axis2.client.ServiceClient;
 import org.testng.Assert;
 import org.testng.annotations.AfterClass;
 import org.testng.annotations.BeforeClass;
-import org.testng.annotations.Test;
 import org.wso2.carbon.cep.stub.admin.CEPAdminServiceCEPAdminException;
 import org.wso2.carbon.cep.stub.admin.CEPAdminServiceCEPConfigurationException;
 import org.wso2.carbon.cep.stub.admin.CEPAdminServiceStub;
@@ -24,7 +23,9 @@ import org.wso2.carbon.integration.framework.LoginLogoutUtil;
 
 import java.rmi.RemoteException;
 
+@Deprecated
 /**
+ * Since Fusion not shipped with CEP by default
  * Check whether CEPAdminService properly creates FusionBucket to be used with wsEventBroker
  */
 public class WSEventFusionBucketCreationTestCase {
@@ -50,7 +51,7 @@ public class WSEventFusionBucketCreationTestCase {
         util.logout();
     }
 
-    @Test(groups = {"wso2.cep"})
+//    @Test(groups = {"wso2.cep"})
     public void fusionBucketCreationTest()
             throws CEPAdminServiceCEPConfigurationException, RemoteException,
                    CEPAdminServiceCEPAdminException, InterruptedException {

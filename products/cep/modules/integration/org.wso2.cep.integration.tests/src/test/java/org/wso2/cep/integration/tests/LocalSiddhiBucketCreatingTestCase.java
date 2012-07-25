@@ -5,6 +5,7 @@ import org.apache.axis2.client.ServiceClient;
 import org.testng.Assert;
 import org.testng.annotations.AfterClass;
 import org.testng.annotations.BeforeClass;
+import org.testng.annotations.Test;
 import org.wso2.carbon.cep.stub.admin.CEPAdminServiceCEPAdminException;
 import org.wso2.carbon.cep.stub.admin.CEPAdminServiceCEPConfigurationException;
 import org.wso2.carbon.cep.stub.admin.CEPAdminServiceStub;
@@ -23,12 +24,10 @@ import org.wso2.carbon.integration.framework.LoginLogoutUtil;
 
 import java.rmi.RemoteException;
 
-@Deprecated
 /**
- * Since Fusion not shipped with CEP by default
- * Check whether CEPAdminService properly creates FusionBucket to be used with localBroker
+ * Check whether CEPAdminService properly creates SiddhiBucket to be used with localBroker
  */
-public class LocalFusionBucketCreatingTestCase {
+public class LocalSiddhiBucketCreatingTestCase {
     private LoginLogoutUtil util = new LoginLogoutUtil();
     private CEPAdminServiceStub cepAdminServiceStub;
 
@@ -51,8 +50,8 @@ public class LocalFusionBucketCreatingTestCase {
         util.logout();
     }
 
-    //    @Test(groups = {"wso2.cep"})
-    public void fusionBucketCreationTest()
+    @Test(groups = {"wso2.cep"})
+    public void siddhiBucketCreationTest()
             throws CEPAdminServiceCEPConfigurationException, RemoteException,
                    CEPAdminServiceCEPAdminException, InterruptedException {
 
@@ -83,7 +82,7 @@ public class LocalFusionBucketCreatingTestCase {
         bucket.setName("StockQuoteAnalyzer");
         bucket.setDescription("This bucket analyzes stock quotes and trigger an event" +
                               " if the last traded amount is greater than 100.");
-        bucket.setEngineProvider("DroolsFusionCEPRuntime");
+        bucket.setEngineProvider("SiddhiCEPRuntime");
         return bucket;
     }
 
@@ -123,25 +122,8 @@ public class LocalFusionBucketCreatingTestCase {
 
         ExpressionDTO expression = new ExpressionDTO();
         expression.setType("inline");
-        expression.setText("package org.wso2.carbon.cep.fusion;\n" +
-                           "\t\t\t\t\t\t\timport java.util.HashMap;\n" +
-                           "\t\t\t\t\t\t\tglobal org.wso2.carbon.cep.fusion.listener.FusionEventListener fusionListener;\n" +
-                           "\t\t\t\t\t\t\tdeclare HashMap\n" +
-                           "\t\t\t\t\t\t\t@role( event )\n" +
-                           "\t\t\t\t\t\t\tend\n" +
-                           "\t\t\t\t\t\t\trule Invoke_Stock_Quotes\n" +
-                           "\t\t\t\t\t\t\twhen\n" +
-                           "\t\t\t\t\t\t\t    $stockQuote : HashMap($symbol : this[\"symbol\"], $stockPrice : this[\"price\"], this[\"picked\"] != \"true\") over\n" +
-                           "\t\t\t\t\t\t\t\twindow:time(2m) from entry-point \"allStockQuotes\";\n" +
-                           "\t\t\t\t\t\t\t    eval((Double)$stockPrice > 100);\n" +
-                           "\t\t\t\t\t\t\tthen\n" +
-                           "\t\t\t\t\t\t\t    $stockQuote.put(\"picked\",\"true\");\n" +
-                           "\t\t\t\t\t\t\t    update($stockQuote);\n" +
-                           "\t\t\t\t\t\t\t    HashMap $fastMovingStock = new HashMap();\n" +
-                           "\t\t\t\t\t\t\t    $fastMovingStock.put(\"price\",$stockPrice);\n" +
-                           "\t\t\t\t\t\t\t    $fastMovingStock.put(\"symbol\",$symbol);\n" +
-                           "\t\t\t\t\t\t\t    fusionListener.onEvent($fastMovingStock);\n" +
-                           "\t\t\t\t\t\t\tend");
+        expression.setText("from allStockQuotes[price>100] " +
+                           "insert into OutStream symbol, price;");
 
         query.setExpression(expression);
         return query;

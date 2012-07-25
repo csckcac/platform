@@ -25,7 +25,6 @@ import org.apache.axiom.soap.SOAP11Constants;
 import org.apache.axiom.soap.SOAP12Constants;
 import org.apache.axiom.soap.SOAPEnvelope;
 import org.apache.axiom.soap.SOAPFactory;
-import org.apache.axiom.soap.SOAPHeader;
 import org.apache.axiom.soap.SOAPHeaderBlock;
 import org.apache.commons.logging.Log;
 import org.apache.commons.logging.LogFactory;
@@ -126,7 +125,6 @@ public class ActivityIDSetter {
 
     private void processActivityIDWhenSOAPHeaderIsNull() throws BamMediatorException {
         try {
-            SOAPHeader soapHeader = this.soapEnvelope.getHeader();
             SOAPHeaderBlock soapHeaderBlock = this.soapEnvelope.getHeader().addHeaderBlock(BamMediatorConstants.BAM_EVENT, this.omNs);
             if (this.synapseContext.getProperty(BamMediatorConstants.MSG_ACTIVITY_ID) == null) { // this if
                 // condition we add

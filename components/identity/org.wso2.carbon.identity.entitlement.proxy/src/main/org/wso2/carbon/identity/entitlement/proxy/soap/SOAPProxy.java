@@ -1,3 +1,21 @@
+/*
+ *  Licensed to the Apache Software Foundation (ASF) under one
+ *  or more contributor license agreements.  See the NOTICE file
+ *  distributed with this work for additional information
+ *  regarding copyright ownership.  The ASF licenses this file
+ *  to you under the Apache License, Version 2.0 (the
+ *  "License"); you may not use this file except in compliance
+ *  with the License.  You may obtain a copy of the License at
+ *
+ *   http://www.apache.org/licenses/LICENSE-2.0
+ *
+ *  Unless required by applicable law or agreed to in writing,
+ *  software distributed under the License is distributed on an
+ *   * "AS IS" BASIS, WITHOUT WARRANTIES OR CONDITIONS OF ANY
+ *  KIND, either express or implied.  See the License for the
+ *  specific language governing permissions and limitations
+ *  under the License.
+ */
 package org.wso2.carbon.identity.entitlement.proxy.soap;
 
 import java.util.ArrayList;
@@ -28,373 +46,478 @@ import org.wso2.carbon.identity.entitlement.proxy.ProxyConstants;
 
 public class SOAPProxy extends AbstractPDPProxy {
 
-	private final static String SESSION_TIME_OUT = "50977";
-	private Map<String, EntitlementServiceStub> stubs = new ConcurrentHashMap<String, EntitlementServiceStub>();
-	private Map<String, EntitlementPolicyAdminServiceStub> adminStubs = new ConcurrentHashMap<String, EntitlementPolicyAdminServiceStub>();
-	private Map<String, Authenticator> authenticators = new ConcurrentHashMap<String, Authenticator>();
-	private PDPConfig config;
+    private final static String SESSION_TIME_OUT = "50977";
+    private Map<String, EntitlementServiceStub> stubs = new ConcurrentHashMap<String, EntitlementServiceStub>();
+    private Map<String, EntitlementPolicyAdminServiceStub> adminStubs = new ConcurrentHashMap<String, EntitlementPolicyAdminServiceStub>();
+    private Map<String, Authenticator> authenticators = new ConcurrentHashMap<String, Authenticator>();
+    private PDPConfig config;
 
-	public SOAPProxy() throws Exception {
+    public SOAPProxy() throws Exception {
 
-	}
+    }
 
-	@Override
-	public boolean subjectCanActOnResource(String subjectType, String alias, String actionId,
-			String resourceId, String domainId, String appId) throws Exception {
-		String xacmlRequest;
+    @Override
+    public boolean subjectCanActOnResource(String subjectType, String alias, String actionId,
+                                           String resourceId, String domainId, String appId) throws Exception {
+        String xacmlRequest;
 
-		RequestAttribute[] subjectAttrs = new RequestAttribute[] { new RequestAttribute(
-				"http://www.w3.org/2001/XMLSchema#string", subjectType, alias) };
-		RequestAttribute[] resourceAttrs = new RequestAttribute[] { new RequestAttribute(
-				"http://www.w3.org/2001/XMLSchema#string", ProxyConstants.RESOURCE_ID, resourceId), };
-		RequestAttribute[] actionAttrs = new RequestAttribute[] { new RequestAttribute(
-				"http://www.w3.org/2001/XMLSchema#string", ProxyConstants.ACTION_ID, actionId) };
-		RequestAttribute[] envAttrs = new RequestAttribute[] { new RequestAttribute(
-				"http://www.w3.org/2001/XMLSchema#string", ProxyConstants.ENV_ID, domainId) };
+        RequestAttribute[] subjectAttrs = new RequestAttribute[] { new RequestAttribute(
+                "http://www.w3.org/2001/XMLSchema#string", subjectType, alias) };
+        RequestAttribute[] resourceAttrs = new RequestAttribute[] { new RequestAttribute(
+                "http://www.w3.org/2001/XMLSchema#string", ProxyConstants.RESOURCE_ID, resourceId), };
+        RequestAttribute[] actionAttrs = new RequestAttribute[] { new RequestAttribute(
+                "http://www.w3.org/2001/XMLSchema#string", ProxyConstants.ACTION_ID, actionId) };
+        RequestAttribute[] envAttrs = new RequestAttribute[] { new RequestAttribute(
+                "http://www.w3.org/2001/XMLSchema#string", ProxyConstants.ENV_ID, domainId) };
 
-		xacmlRequest = XACMLRequetBuilder.buildXACMLRequest(subjectAttrs, resourceAttrs,
-				actionAttrs, envAttrs);
+        xacmlRequest = XACMLRequetBuilder.buildXACMLRequest(subjectAttrs, resourceAttrs,
+                                                            actionAttrs, envAttrs);
 
-		String serverUrl = getServerUrl(appId);
-		Credentials credentials = getCrdentials(appId);
-		EntitlementServiceStub stub = getEntitlementStub(serverUrl);
-		Authenticator autheticator = getAuthenticator(serverUrl, credentials.userName,
-				credentials.password);
-		String result = getDecision(xacmlRequest, stub, autheticator);
-		stub._getServiceClient().cleanupTransport();
+        String serverUrl = getServerUrl(appId);
+        Credentials credentials = getCrdentials(appId);
+        EntitlementServiceStub stub = getEntitlementStub(serverUrl);
+        Authenticator autheticator = getAuthenticator(serverUrl, credentials.userName,
+                                                      credentials.password);
+        String result = getDecision(xacmlRequest, stub, autheticator);
+        stub._getServiceClient().cleanupTransport();
 
-		return ("permit".equalsIgnoreCase(result));
-	}
+        return ("permit".equalsIgnoreCase(result));
+    }
 
-	@Override
-	public boolean subjectCanActOnResource(String subjectType, String alias, String actionId,
-			String resourceId, Attribute[] attributes, String domainId, String appId)
-			throws Exception {
-		String xacmlRequest;
+    @Override
+    public boolean subjectCanActOnResource(String subjectType, String alias, String actionId,
+                                           String resourceId, Attribute[] attributes, String domainId, String appId)
+            throws Exception {
+        String xacmlRequest;
 
-		RequestAttribute[] subjectAttrs = new RequestAttribute[attributes.length + 1];
-		subjectAttrs[0] = new RequestAttribute("http://www.w3.org/2001/XMLSchema#string",
-				subjectType, alias);
+        RequestAttribute[] subjectAttrs = new RequestAttribute[attributes.length + 1];
+        subjectAttrs[0] = new RequestAttribute("http://www.w3.org/2001/XMLSchema#string",
+                                               subjectType, alias);
 
-		for (int i = 0; i < attributes.length; i++) {
-			subjectAttrs[i + 1] = new RequestAttribute(attributes[i].getType(),
-					attributes[i].getId(), attributes[i].getValue());
-		}
+        for (int i = 0; i < attributes.length; i++) {
+            subjectAttrs[i + 1] = new RequestAttribute(attributes[i].getType(),
+                                                       attributes[i].getId(), attributes[i].getValue());
+        }
 
-		RequestAttribute[] resourceAttrs = new RequestAttribute[] { new RequestAttribute(
-				"http://www.w3.org/2001/XMLSchema#string", ProxyConstants.RESOURCE_ID, resourceId), };
-		RequestAttribute[] actionAttrs = new RequestAttribute[] { new RequestAttribute(
-				"http://www.w3.org/2001/XMLSchema#string", ProxyConstants.ACTION_ID, actionId) };
-		RequestAttribute[] envAttrs = new RequestAttribute[] { new RequestAttribute(
-				"http://www.w3.org/2001/XMLSchema#string", ProxyConstants.ENV_ID, domainId) };
+        RequestAttribute[] resourceAttrs = new RequestAttribute[] { new RequestAttribute(
+                "http://www.w3.org/2001/XMLSchema#string", ProxyConstants.RESOURCE_ID, resourceId), };
+        RequestAttribute[] actionAttrs = new RequestAttribute[] { new RequestAttribute(
+                "http://www.w3.org/2001/XMLSchema#string", ProxyConstants.ACTION_ID, actionId) };
+        RequestAttribute[] envAttrs = new RequestAttribute[] { new RequestAttribute(
+                "http://www.w3.org/2001/XMLSchema#string", ProxyConstants.ENV_ID, domainId) };
 
-		xacmlRequest = XACMLRequetBuilder.buildXACMLRequest(subjectAttrs, resourceAttrs,
-				actionAttrs, envAttrs);
+        xacmlRequest = XACMLRequetBuilder.buildXACMLRequest(subjectAttrs, resourceAttrs,
+                                                            actionAttrs, envAttrs);
 
-		String serverUrl = getServerUrl(appId);
-		Credentials credentials = getCrdentials(appId);
-		EntitlementServiceStub stub = getEntitlementStub(serverUrl);
-		Authenticator autheticator = getAuthenticator(serverUrl, credentials.userName,
-				credentials.password);
-		String result = getDecision(xacmlRequest, stub, autheticator);
-		stub._getServiceClient().cleanupTransport();
+        String serverUrl = getServerUrl(appId);
+        Credentials credentials = getCrdentials(appId);
+        EntitlementServiceStub stub = getEntitlementStub(serverUrl);
+        Authenticator autheticator = getAuthenticator(serverUrl, credentials.userName,
+                                                      credentials.password);
+        String result = getDecision(xacmlRequest, stub, autheticator);
+        stub._getServiceClient().cleanupTransport();
 
-		return ("permit".equalsIgnoreCase(result));
-	}
+        return ("permit".equalsIgnoreCase(result));
+    }
 
-	@Override
-	public List<String> getResourcesForAlias(String alias, String appId) throws Exception {
-		String serverUrl = getServerUrl(appId);
-		Credentials credentials = getCrdentials(appId);
-		EntitlementPolicyAdminServiceStub stub = getEntitlementAdminStub(serverUrl);
-		Authenticator autheticator = getAuthenticator(serverUrl, credentials.userName,
-				credentials.password);
-		List<String> results = getResources(getEntitledAttributes(alias, null,
-				ProxyConstants.SUBJECT_ID, null, false, stub, autheticator));
-		stub._getServiceClient().cleanupTransport();
+    @Override
+    public List<String> getResourcesForAlias(String alias, String appId) throws Exception {
+        String serverUrl = getServerUrl(appId);
+        Credentials credentials = getCrdentials(appId);
+        EntitlementPolicyAdminServiceStub stub = getEntitlementAdminStub(serverUrl);
+        Authenticator autheticator = getAuthenticator(serverUrl, credentials.userName,
+                                                      credentials.password);
+        List<String> results = getResources(getEntitledAttributes(alias, null,
+                                                                  ProxyConstants.SUBJECT_ID, null, false, stub, autheticator));
+        stub._getServiceClient().cleanupTransport();
 
-		return results;
-	}
+        return results;
+    }
 
-	@Override
-	public List<String> getActionableResourcesForAlias(String alias, String appId) throws Exception {
-		String serverUrl = getServerUrl(appId);
-		Credentials credentials = getCrdentials(appId);
-		EntitlementPolicyAdminServiceStub stub = getEntitlementAdminStub(serverUrl);
-		Authenticator autheticator = getAuthenticator(serverUrl, credentials.userName,
-				credentials.password);
-		List<String> results = getResources(getEntitledAttributes(alias, null,
-				ProxyConstants.SUBJECT_ID, null, true, stub, autheticator));
-		stub._getServiceClient().cleanupTransport();
+    @Override
+    public List<String> getActionableResourcesForAlias(String alias, String appId) throws Exception {
+        String serverUrl = getServerUrl(appId);
+        Credentials credentials = getCrdentials(appId);
+        EntitlementPolicyAdminServiceStub stub = getEntitlementAdminStub(serverUrl);
+        Authenticator autheticator = getAuthenticator(serverUrl, credentials.userName,
+                                                      credentials.password);
+        List<String> results = getResources(getEntitledAttributes(alias, null,
+                                                                  ProxyConstants.SUBJECT_ID, null, true, stub, autheticator));
+        stub._getServiceClient().cleanupTransport();
 
-		return results;
-	}
+        return results;
+    }
 
-	@Override
-	public List<String> getActionsForResource(String alias, String resource, String appId)
-			throws Exception {
-		String serverUrl = getServerUrl(appId);
-		Credentials credentials = getCrdentials(appId);
-		EntitlementPolicyAdminServiceStub stub = getEntitlementAdminStub(serverUrl);
-		Authenticator autheticator = getAuthenticator(serverUrl, credentials.userName,
-				credentials.password);
-		List<String> results = getActions(getEntitledAttributes(alias, resource,
-				ProxyConstants.SUBJECT_ID, null, false, stub, autheticator));
-		stub._getServiceClient().cleanupTransport();
+    @Override
+    public List<String> getActionsForResource(String alias, String resource, String appId)
+            throws Exception {
+        String serverUrl = getServerUrl(appId);
+        Credentials credentials = getCrdentials(appId);
+        EntitlementPolicyAdminServiceStub stub = getEntitlementAdminStub(serverUrl);
+        Authenticator autheticator = getAuthenticator(serverUrl, credentials.userName,
+                                                      credentials.password);
+        List<String> results = getActions(getEntitledAttributes(alias, resource,
+                                                                ProxyConstants.SUBJECT_ID, null, false, stub, autheticator));
+        stub._getServiceClient().cleanupTransport();
 
-		return results;
-	}
+        return results;
+    }
 
-	@Override
-	public List<String> getActionableChidResourcesForAlias(String alias, String parentResource,
-			String action, String appId) throws Exception {
-		String serverUrl = getServerUrl(appId);
-		Credentials credentials = getCrdentials(appId);
-		EntitlementPolicyAdminServiceStub stub = getEntitlementAdminStub(serverUrl);
-		Authenticator autheticator = getAuthenticator(serverUrl, credentials.userName,
-				credentials.password);
-		List<String> results = getResources(getEntitledAttributes(alias, parentResource,
-				ProxyConstants.SUBJECT_ID, action, true, stub, autheticator));
-		stub._getServiceClient().cleanupTransport();
+    @Override
+    public List<String> getActionableChidResourcesForAlias(String alias, String parentResource,
+                                                           String action, String appId) throws Exception {
+        String serverUrl = getServerUrl(appId);
+        Credentials credentials = getCrdentials(appId);
+        EntitlementPolicyAdminServiceStub stub = getEntitlementAdminStub(serverUrl);
+        Authenticator autheticator = getAuthenticator(serverUrl, credentials.userName,
+                                                      credentials.password);
+        List<String> results = getResources(getEntitledAttributes(alias, parentResource,
+                                                                  ProxyConstants.SUBJECT_ID, action, true, stub, autheticator));
+        stub._getServiceClient().cleanupTransport();
 
-		return results;
-	}
+        return results;
+    }
 
-	@Override
-	public void setPDPConfig(PDPConfig config) {
-		this.config = config;
+    @Override
+    public void setPDPConfig(PDPConfig config) {
+        this.config = config;
 
-	}
+    }
 
-	@Override
-	public boolean getDecision(Attribute[] subjectAttrs, Attribute[] rescAttrs,
-			Attribute[] actionAttrs, Attribute[] envAttrs, String domainId, String appId)
-			throws Exception {
-		String xacmlRequest;
+    @Override
+    public boolean getDecision(Attribute[] subjectAttrs, Attribute[] rescAttrs,
+                               Attribute[] actionAttrs, Attribute[] envAttrs, String appId)
+            throws Exception {
 
-		RequestAttribute[] subjects = null;
-		RequestAttribute[] resources = null;
-		RequestAttribute[] actions = null;
-		RequestAttribute[] envs = null;
+        String xacmlRequest;
 
-		if (subjectAttrs != null) {
-			subjects = new RequestAttribute[subjectAttrs.length];
-			for (int i = 0; i < subjectAttrs.length; i++) {
-				subjects[i] = new RequestAttribute(subjectAttrs[i].getType(),
-						subjectAttrs[i].getId(), subjectAttrs[i].getValue());
-			}
-		}
+        RequestAttribute[] subjects = null;
+        RequestAttribute[] resources = null;
+        RequestAttribute[] actions = null;
+        RequestAttribute[] envs = null;
 
-		if (rescAttrs != null) {
-			resources = new RequestAttribute[rescAttrs.length];
-			for (int i = 0; i < rescAttrs.length; i++) {
-				resources[i] = new RequestAttribute(rescAttrs[i].getType(), rescAttrs[i].getId(),
-						rescAttrs[i].getValue());
-			}
-		}
+        if (subjectAttrs != null) {
+            subjects = new RequestAttribute[subjectAttrs.length];
+            for (int i = 0; i < subjectAttrs.length; i++) {
+                subjects[i] = new RequestAttribute(subjectAttrs[i].getType(),
+                                                   subjectAttrs[i].getId(), subjectAttrs[i].getValue());
+            }
+        }
 
-		if (actionAttrs != null) {
-			actions = new RequestAttribute[actionAttrs.length];
-			for (int i = 0; i < actionAttrs.length; i++) {
-				actions[i] = new RequestAttribute(actionAttrs[i].getType(), actionAttrs[i].getId(),
-						actionAttrs[i].getValue());
-			}
-		}
+        if (rescAttrs != null) {
+            resources = new RequestAttribute[rescAttrs.length];
+            for (int i = 0; i < rescAttrs.length; i++) {
+                resources[i] = new RequestAttribute(rescAttrs[i].getType(), rescAttrs[i].getId(),
+                                                    rescAttrs[i].getValue());
+            }
+        }
 
-		if (envAttrs != null) {
-			envs = new RequestAttribute[envAttrs.length];
-			for (int i = 0; i < envAttrs.length; i++) {
-				envs[i] = new RequestAttribute(envAttrs[i].getType(), envAttrs[i].getId(),
-						envAttrs[i].getValue());
-			}
-		}
+        if (actionAttrs != null) {
+            actions = new RequestAttribute[actionAttrs.length];
+            for (int i = 0; i < actionAttrs.length; i++) {
+                actions[i] = new RequestAttribute(actionAttrs[i].getType(), actionAttrs[i].getId(),
+                                                  actionAttrs[i].getValue());
+            }
+        }
 
-		xacmlRequest = XACMLRequetBuilder.buildXACMLRequest(subjects, resources, actions, envs);
+        if (envAttrs != null) {
+            envs = new RequestAttribute[envAttrs.length];
+            for (int i = 0; i < envAttrs.length; i++) {
+                envs[i] = new RequestAttribute(envAttrs[i].getType(), envAttrs[i].getId(),
+                                               envAttrs[i].getValue());
+            }
+        }
 
-		String serverUrl = getServerUrl(appId);
-		Credentials credentials = getCrdentials(appId);
-		EntitlementServiceStub stub = getEntitlementStub(serverUrl);
-		Authenticator autheticator = getAuthenticator(serverUrl, credentials.userName,
-				credentials.password);
-		String result = getDecision(xacmlRequest, stub, autheticator);
-		stub._getServiceClient().cleanupTransport();
+        xacmlRequest = XACMLRequetBuilder.buildXACMLRequest(subjects, resources, actions, envs);
 
-		return ("permit".equalsIgnoreCase(result));
-	}
+        String serverUrl = getServerUrl(appId);
+        Credentials credentials = getCrdentials(appId);
+        EntitlementServiceStub stub = getEntitlementStub(serverUrl);
+        Authenticator autheticator = getAuthenticator(serverUrl, credentials.userName,
+                                                      credentials.password);
+        String result = getDecision(xacmlRequest, stub, autheticator);
+        stub._getServiceClient().cleanupTransport();
 
-	protected Authenticator getAuthenticator(String serverUrl, String userName, String password)
-			throws Exception {
+        return ("permit".equalsIgnoreCase(result));
+    }
 
-		if (authenticators.containsKey(serverUrl)) {
-			return authenticators.get(serverUrl);
-		}
+    @Override
+    public String getActualDecision(Attribute[] subjectAttrs, Attribute[] rescAttrs,
+                                    Attribute[] actionAttrs, Attribute[] envAttrs, String appId)
+            throws Exception {
 
-		Authenticator authenticator;
-		authenticator = new Authenticator(userName, password, serverUrl + "AuthenticationAdmin");
-		setAuthCookie(false, getEntitlementStub(serverUrl), authenticator);
-		setAuthCookie(false, getEntitlementAdminStub(serverUrl), authenticator);
+        String xacmlRequest;
 
-		authenticators.put(serverUrl, authenticator);
-		return authenticator;
-	}
+        RequestAttribute[] subjects = null;
+        RequestAttribute[] resources = null;
+        RequestAttribute[] actions = null;
+        RequestAttribute[] envs = null;
 
-	protected EntitlementServiceStub getEntitlementStub(String serverUrl) throws Exception {
+        if (subjectAttrs != null) {
+            subjects = new RequestAttribute[subjectAttrs.length];
+            for (int i = 0; i < subjectAttrs.length; i++) {
+                subjects[i] = new RequestAttribute(subjectAttrs[i].getType(),
+                                                   subjectAttrs[i].getId(), subjectAttrs[i].getValue());
+            }
+        }
 
-		if (stubs.containsKey(serverUrl)) {
-			return stubs.get(serverUrl);
-		}
+        if (rescAttrs != null) {
+            resources = new RequestAttribute[rescAttrs.length];
+            for (int i = 0; i < rescAttrs.length; i++) {
+                resources[i] = new RequestAttribute(rescAttrs[i].getType(), rescAttrs[i].getId(),
+                                                    rescAttrs[i].getValue());
+            }
+        }
 
-		EntitlementServiceStub stub;
-		ConfigurationContext configurationContext;
-		configurationContext = ConfigurationContextFactory.createDefaultConfigurationContext();
-		HashMap<String, TransportOutDescription> transportsOut = configurationContext
-				.getAxisConfiguration().getTransportsOut();
-		for (TransportOutDescription transportOutDescription : transportsOut.values()) {
-			transportOutDescription.getSender().init(configurationContext, transportOutDescription);
-		}
+        if (actionAttrs != null) {
+            actions = new RequestAttribute[actionAttrs.length];
+            for (int i = 0; i < actionAttrs.length; i++) {
+                actions[i] = new RequestAttribute(actionAttrs[i].getType(), actionAttrs[i].getId(),
+                                                  actionAttrs[i].getValue());
+            }
+        }
 
-		stub = new EntitlementServiceStub(configurationContext, serverUrl + "EntitlementService");
+        if (envAttrs != null) {
+            envs = new RequestAttribute[envAttrs.length];
+            for (int i = 0; i < envAttrs.length; i++) {
+                envs[i] = new RequestAttribute(envAttrs[i].getType(), envAttrs[i].getId(),
+                                               envAttrs[i].getValue());
+            }
+        }
 
-		stubs.put(serverUrl, stub);
-		return stub;
-	}
+        xacmlRequest = XACMLRequetBuilder.buildXACMLRequest(subjects, resources, actions, envs);
 
-	protected EntitlementPolicyAdminServiceStub getEntitlementAdminStub(String serverUrl)
-			throws Exception {
+        String serverUrl = getServerUrl(appId);
+        Credentials credentials = getCrdentials(appId);
+        EntitlementServiceStub stub = getEntitlementStub(serverUrl);
+        Authenticator autheticator = getAuthenticator(serverUrl, credentials.userName,
+                                                      credentials.password);
+        String result = getDecision(xacmlRequest, stub, autheticator);
+        stub._getServiceClient().cleanupTransport();
 
-		if (adminStubs.containsKey(serverUrl)) {
-			return adminStubs.get(serverUrl);
-		}
+        return result;
+    }
 
-		EntitlementPolicyAdminServiceStub stub;
-		ConfigurationContext configurationContext;
-		configurationContext = ConfigurationContextFactory.createDefaultConfigurationContext();
-		HashMap<String, TransportOutDescription> transportsOut = configurationContext
-				.getAxisConfiguration().getTransportsOut();
-		for (TransportOutDescription transportOutDescription : transportsOut.values()) {
-			transportOutDescription.getSender().init(configurationContext, transportOutDescription);
-		}
+    @Override
+    public boolean  getDecisionByAttributes(String subjectAttr, String rescAttr,
+                                            String actionAttr, String[] envAttrs, String appId)
+            throws Exception {
 
-		stub = new EntitlementPolicyAdminServiceStub(configurationContext, serverUrl
-				+ "EntitlementPolicyAdminService");
+        String serverUrl = getServerUrl(appId);
+        Credentials credentials = getCrdentials(appId);
+        EntitlementServiceStub stub = getEntitlementStub(serverUrl);
+        Authenticator autheticator = getAuthenticator(serverUrl, credentials.userName,
+                                                      credentials.password);
+        String result = getDecisionByAttributes(subjectAttr, rescAttr, actionAttr, envAttrs, stub, autheticator);
+        stub._getServiceClient().cleanupTransport();
 
-		adminStubs.put(serverUrl, stub);
-		return stub;
-	}
+        return ("permit".equalsIgnoreCase(result));
+    }
 
-	private String getDecision(String request, EntitlementServiceStub stub,
-			Authenticator autheticator) throws Exception {
-		try {
-			return getStatus(stub.getDecision(request));
-		} catch (AxisFault e) {
-			if (SESSION_TIME_OUT.equals(e.getFaultCode().getLocalPart())) {
-				setAuthCookie(true, stub, autheticator);
-				return getStatus(stub.getDecision(request));
-			} else {
-				throw e;
-			}
-		}
-	}
+    @Override
+    public String getActualDecisionByAttributes(String subjectAttr, String rescAttr,
+                                                String actionAttr, String[] envAttrs, String appId)
+            throws Exception {
 
-	private EntitledAttributesDTO[] getEntitledAttributes(String subjectName, String resourceName,
-			String subjectId, String action, boolean enableChildSearch,
-			EntitlementPolicyAdminServiceStub stub, Authenticator autheticator) throws Exception {
-		EntitledResultSetDTO results = null;
-		try {
-			results = stub.getEntitledAttributes(subjectName, resourceName, subjectId, action,
-					enableChildSearch);
-		} catch (AxisFault e) {
-			if (SESSION_TIME_OUT.equals(e.getFaultCode().getLocalPart())) {
-				setAuthCookie(true, stub, autheticator);
-				results = stub.getEntitledAttributes(subjectName, resourceName, subjectId, action,
-						enableChildSearch);
-			} else {
-				throw e;
-			}
-		}
+        String serverUrl = getServerUrl(appId);
+        Credentials credentials = getCrdentials(appId);
+        EntitlementServiceStub stub = getEntitlementStub(serverUrl);
+        Authenticator autheticator = getAuthenticator(serverUrl, credentials.userName,
+                                                      credentials.password);
+        String result = getDecisionByAttributes(subjectAttr, rescAttr, actionAttr, envAttrs, stub, autheticator);
+        stub._getServiceClient().cleanupTransport();
 
-		return results.getEntitledAttributesDTOs();
-	}
+        return result;
+    }
 
-	private List<String> getResources(EntitledAttributesDTO[] entitledAttrs) {
-		List<String> list = new ArrayList<String>();
+    protected Authenticator getAuthenticator(String serverUrl, String userName, String password)
+            throws Exception {
 
-		if (entitledAttrs != null) {
-			for (EntitledAttributesDTO dto : entitledAttrs) {
-				list.add(dto.getResourceName());
-			}
-		}
+        if (authenticators.containsKey(serverUrl)) {
+            return authenticators.get(serverUrl);
+        }
 
-		return list;
-	}
+        Authenticator authenticator;
+        authenticator = new Authenticator(userName, password, serverUrl + "AuthenticationAdmin");
+        setAuthCookie(false, getEntitlementStub(serverUrl), authenticator);
+        setAuthCookie(false, getEntitlementAdminStub(serverUrl), authenticator);
 
-	private List<String> getActions(EntitledAttributesDTO[] entitledAttrs) {
-		List<String> list = new ArrayList<String>();
+        authenticators.put(serverUrl, authenticator);
+        return authenticator;
+    }
 
-		if (entitledAttrs != null) {
-			for (EntitledAttributesDTO dto : entitledAttrs) {
-				list.add(dto.getAction());
-			}
-		}
+    protected EntitlementServiceStub getEntitlementStub(String serverUrl) throws Exception {
 
-		return list;
-	}
+        if (stubs.containsKey(serverUrl)) {
+            return stubs.get(serverUrl);
+        }
 
-	private String getStatus(String xmlstring) throws Exception {
-		OMElement response = null;
-		OMElement result = null;
-		OMElement decision = null;
+        EntitlementServiceStub stub;
+        ConfigurationContext configurationContext;
+        configurationContext = ConfigurationContextFactory.createDefaultConfigurationContext();
+        HashMap<String, TransportOutDescription> transportsOut = configurationContext
+                .getAxisConfiguration().getTransportsOut();
+        for (TransportOutDescription transportOutDescription : transportsOut.values()) {
+            transportOutDescription.getSender().init(configurationContext, transportOutDescription);
+        }
 
-		response = AXIOMUtil.stringToOM(xmlstring);
-		result = response.getFirstChildWithName(new QName("Result"));
-		if (result != null) {
-			decision = result.getFirstChildWithName(new QName("Decision"));
-			if (decision != null) {
-				return decision.getText();
-			}
-		}
+        stub = new EntitlementServiceStub(configurationContext, serverUrl + "EntitlementService");
 
-		return "Invalid Status";
-	}
+        stubs.put(serverUrl, stub);
+        return stub;
+    }
 
-	private void setAuthCookie(boolean isExpired, Stub stub, Authenticator authenticator)
-			throws Exception {
-		ServiceClient client = stub._getServiceClient();
-		Options option = client.getOptions();
-		option.setManageSession(true);
-		option.setProperty(org.apache.axis2.transport.http.HTTPConstants.COOKIE_STRING,
-				authenticator.getCookie(isExpired));
-	}
+    protected EntitlementPolicyAdminServiceStub getEntitlementAdminStub(String serverUrl)
+            throws Exception {
 
-	private String getServerUrl(String appId) {
-		if (config.getAppToPDPMap().containsKey(appId)) {
-			String[] attributes = config.getAppToPDPMap().get(appId);
-			if (attributes != null && attributes.length > 0) {
-				return attributes[0];
-			}
-		}
-		return null;
-	}
+        if (adminStubs.containsKey(serverUrl)) {
+            return adminStubs.get(serverUrl);
+        }
 
-	private Credentials getCrdentials(String appId) {
-		if (config.getAppToPDPMap().containsKey(appId)) {
-			Credentials credentials = new Credentials();
-			String[] attributes = config.getAppToPDPMap().get(appId);
-			if (attributes != null && attributes.length > 2) {
-				credentials.userName = attributes[1];
-				credentials.password = attributes[2];
-			} else {
-				credentials.userName = config.getUserName();
-				credentials.password = config.getPassword();
-			}
-			return credentials;
-		}
-		return null;
-	}
+        EntitlementPolicyAdminServiceStub stub;
+        ConfigurationContext configurationContext;
+        configurationContext = ConfigurationContextFactory.createDefaultConfigurationContext();
+        HashMap<String, TransportOutDescription> transportsOut = configurationContext
+                .getAxisConfiguration().getTransportsOut();
+        for (TransportOutDescription transportOutDescription : transportsOut.values()) {
+            transportOutDescription.getSender().init(configurationContext, transportOutDescription);
+        }
 
-	class Credentials {
-		String userName;
-		String password;
-	}
+        stub = new EntitlementPolicyAdminServiceStub(configurationContext, serverUrl
+                                                                           + "EntitlementPolicyAdminService");
+
+        adminStubs.put(serverUrl, stub);
+        return stub;
+    }
+
+    private String getDecisionByAttributes(String subjectAttr, String rescAttrs,
+                                           String actionAttrs, String [] envAttrs, EntitlementServiceStub stub,
+                                           Authenticator autheticator) throws Exception {
+        try {
+            return getStatus(stub.getDecisionByAttributes(subjectAttr,rescAttrs,actionAttrs,envAttrs));
+        } catch (AxisFault e) {
+            if (SESSION_TIME_OUT.equals(e.getFaultCode().getLocalPart())) {
+                setAuthCookie(true, stub, autheticator);
+                return getStatus(stub.getDecisionByAttributes(subjectAttr,rescAttrs,actionAttrs,envAttrs));
+            } else {
+                throw e;
+            }
+        }
+    }
+
+    private String getDecision(String request, EntitlementServiceStub stub,
+                               Authenticator autheticator) throws Exception {
+        try {
+            return getStatus(stub.getDecision(request));
+        } catch (AxisFault e) {
+            if (SESSION_TIME_OUT.equals(e.getFaultCode().getLocalPart())) {
+                setAuthCookie(true, stub, autheticator);
+                return getStatus(stub.getDecision(request));
+            } else {
+                throw e;
+            }
+        }
+    }
+
+    private EntitledAttributesDTO[] getEntitledAttributes(String subjectName, String resourceName,
+                                                          String subjectId, String action, boolean enableChildSearch,
+                                                          EntitlementPolicyAdminServiceStub stub, Authenticator autheticator) throws Exception {
+        EntitledResultSetDTO results = null;
+        try {
+            results = stub.getEntitledAttributes(subjectName, resourceName, subjectId, action,
+                                                 enableChildSearch,false);
+        } catch (AxisFault e) {
+            if (SESSION_TIME_OUT.equals(e.getFaultCode().getLocalPart())) {
+                setAuthCookie(true, stub, autheticator);
+                results = stub.getEntitledAttributes(subjectName, resourceName, subjectId, action,
+                                                     enableChildSearch,false);
+            } else {
+                throw e;
+            }
+        }
+
+        return results.getEntitledAttributesDTOs();
+    }
+
+    private List<String> getResources(EntitledAttributesDTO[] entitledAttrs) {
+        List<String> list = new ArrayList<String>();
+
+        if (entitledAttrs != null) {
+            for (EntitledAttributesDTO dto : entitledAttrs) {
+                list.add(dto.getResourceName());
+            }
+        }
+
+        return list;
+    }
+
+    private List<String> getActions(EntitledAttributesDTO[] entitledAttrs) {
+        List<String> list = new ArrayList<String>();
+
+        if (entitledAttrs != null) {
+            for (EntitledAttributesDTO dto : entitledAttrs) {
+                list.add(dto.getAction());
+            }
+        }
+
+        return list;
+    }
+
+    private String getStatus(String xmlstring) throws Exception {
+        OMElement response = null;
+        OMElement result = null;
+        OMElement decision = null;
+
+        response = AXIOMUtil.stringToOM(xmlstring);
+        result = response.getFirstChildWithName(new QName("Result"));
+        if (result != null) {
+            decision = result.getFirstChildWithName(new QName("Decision"));
+            if (decision != null) {
+                return decision.getText();
+            }
+        }
+
+        return "Invalid Status";
+    }
+
+    private void setAuthCookie(boolean isExpired, Stub stub, Authenticator authenticator)
+            throws Exception {
+        ServiceClient client = stub._getServiceClient();
+        Options option = client.getOptions();
+        option.setManageSession(true);
+        option.setProperty(org.apache.axis2.transport.http.HTTPConstants.COOKIE_STRING,
+                           authenticator.getCookie(isExpired));
+    }
+
+    private String getServerUrl(String appId) {
+        if (config.getAppToPDPMap().containsKey(appId)) {
+            String[] attributes = config.getAppToPDPMap().get(appId);
+            if (attributes != null && attributes.length > 0) {
+                return attributes[0];
+            }
+        }
+        return null;
+    }
+
+    private Credentials getCrdentials(String appId) {
+        if (config.getAppToPDPMap().containsKey(appId)) {
+            Credentials credentials = new Credentials();
+            String[] attributes = config.getAppToPDPMap().get(appId);
+            if (attributes != null && attributes.length > 2) {
+                credentials.userName = attributes[1];
+                credentials.password = attributes[2];
+            } else {
+                credentials.userName = config.getUserName();
+                credentials.password = config.getPassword();
+            }
+            return credentials;
+        }
+        return null;
+    }
+
+    static class Credentials {
+        String userName;
+        String password;
+    }
 
 }

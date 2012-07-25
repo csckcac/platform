@@ -1,3 +1,19 @@
+<?xml version="1.0" encoding="utf-8"?>
+        <!--
+         ~ Copyright (c) 2009-2011, WSO2 Inc. (http://www.wso2.org) All Rights Reserved.
+         ~
+         ~ Licensed under the Apache License, Version 2.0 (the "License");
+         ~ you may not use this file except in compliance with the License.
+         ~ You may obtain a copy of the License at
+         ~
+         ~      http://www.apache.org/licenses/LICENSE-2.0
+         ~
+         ~ Unless required by applicable law or agreed to in writing, software
+         ~ distributed under the License is distributed on an "AS IS" BASIS,
+         ~ WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+         ~ See the License for the specific language governing permissions and
+         ~ limitations under the License.
+        -->
 <project xmlns="http://maven.apache.org/POM/4.0.0"
          xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
          xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/maven-v4_0_0.xsd">
@@ -12,74 +28,113 @@
     <groupId>org.wso2.carbon</groupId>
     <artifactId>org.wso2.carbon.identity.entitlement.proxy</artifactId>
     <packaging>bundle</packaging>
-    <name>org.wso2.carbon.identity.entitlement.proxy</name>
-    <url>http://maven.apache.org</url>
+    <name>WSO2 Carbon - Identity Entitlement PDP Proxy</name>
+    <description>A custom wso2 products or solution</description>
+    <url>http://wso2.org</url>
+
     <dependencies>
         <dependency>
             <groupId>org.wso2.carbon</groupId>
             <artifactId>org.wso2.carbon.user.mgt.stub</artifactId>
+            <version>4.0.0-SNAPSHOT</version>
         </dependency>
         <dependency>
             <groupId>org.wso2.carbon</groupId>
             <artifactId>org.wso2.carbon.identity.entitlement.stub</artifactId>
+            <version>4.0.0-SNAPSHOT</version>
         </dependency>
         <dependency>
             <groupId>org.wso2.carbon</groupId>
             <artifactId>org.wso2.carbon.authenticator.stub</artifactId>
+            <version>4.0.0-SNAPSHOT</version>
         </dependency>
         <dependency>
             <groupId>org.apache.axis2.wso2</groupId>
             <artifactId>axis2</artifactId>
+            <version>1.6.1.wso2v5</version>
         </dependency>
         <dependency>
-            <groupId>org.apache.ws.commons.axiom.wso2</groupId>
-            <artifactId>axiom</artifactId>
+            <groupId>org.apache.ws.commons.axiom</groupId>
+            <artifactId>axiom-api</artifactId>
+            <version>1.2.11-wso2v2</version>
         </dependency>
         <dependency>
-            <groupId>org.apache.commons.logging</groupId>
+            <groupId>org.apache.ws.commons.axiom</groupId>
+            <artifactId>axiom-impl</artifactId>
+            <version>1.2.11-wso2v2</version>
+        </dependency>
+        <dependency>
+            <groupId>org.apache.ws.commons.axiom</groupId>
+            <artifactId>axiom-dom</artifactId>
+            <version>1.2.11-wso2v2</version>
+        </dependency>
+        <dependency>
+            <groupId>commons-logging</groupId>
             <artifactId>commons-logging</artifactId>
+            <version>1.0.4</version>
         </dependency>
-         <dependency>
+        <dependency>
             <groupId>org.apache.neethi.wso2</groupId>
             <artifactId>neethi</artifactId>
+            <version>2.0.4.wso2v3</version>
         </dependency>
-          <dependency>
-            <groupId>org.apache.wsdl4j</groupId>
+        <dependency>
+            <groupId>wsdl4j</groupId>
             <artifactId>wsdl4j</artifactId>
+            <version>1.6.2-wso2v3</version>
         </dependency>
         <dependency>
             <groupId>org.apache.ws.commons.schema</groupId>
             <artifactId>XmlSchema</artifactId>
+            <version>1.4.7-wso2v1</version>
         </dependency>
         <dependency>
-            <groupId>org.apache.http</groupId>
+            <groupId>commons-httpclient.wso2</groupId>
             <artifactId>commons-httpclient</artifactId>
+            <version>3.1.0.wso2v2</version>
         </dependency>
-              <dependency>
-            <groupId>org.apache.http</groupId>
+        <dependency>
+            <groupId>commons-io.wso2</groupId>
             <artifactId>commons-io</artifactId>
+            <version>2.0.0.wso2v2</version>
         </dependency>
         <dependency>
-            <groupId>org.apache.http</groupId>
+            <groupId>commons-lang.wso2</groupId>
             <artifactId>commons-lang</artifactId>
+            <version>2.6.0.wso2v1</version>
         </dependency>
         <dependency>
-            <groupId>org.apache.http</groupId>
+            <groupId>commons-codec.wso2</groupId>
             <artifactId>commons-codec</artifactId>
-        </dependency>
-          <dependency>
-            <groupId>org.apache.http</groupId>
-            <artifactId>commons-collections</artifactId>
-        </dependency>
-           <dependency>
-            <groupId>org.apache.http</groupId>
-            <artifactId>httpcore</artifactId>
+            <version>1.4.0.wso2v1</version>
         </dependency>
         <dependency>
-            <groupId>sun-xacml</groupId>
-            <artifactId>sun-xacml</artifactId>
+            <groupId>commons-collections.wso2</groupId>
+            <artifactId>commons-collections</artifactId>
+            <version>3.2.0.wso2v1</version>
+        </dependency>
+        <dependency>
+            <groupId>org.apache.httpcomponents.wso2</groupId>
+            <artifactId>httpcore</artifactId>
+            <version>4.1.0-wso2v1</version>
+        </dependency>
+        <dependency>
+            <groupId>org.wso2.balana</groupId>
+            <artifactId>org.wso2.balana</artifactId>
+            <version>1.0.0-SNAPSHOT</version>
+        </dependency>
+        <dependency>
+            <groupId>org.wso2.securevault</groupId>
+            <artifactId>org.wso2.securevault</artifactId>
+            <version>1.0.0</version>
+        </dependency>
+        <dependency>
+            <groupId>org.testng</groupId>
+            <artifactId>testng</artifactId>
+            <version>6.3.1</version>
         </dependency>
     </dependencies>
+
     <build>
         <sourceDirectory>src/main</sourceDirectory>
         <plugins>

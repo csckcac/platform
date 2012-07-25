@@ -132,7 +132,7 @@
 					                                                    : ""%>>
 								<fmt:message key="mediator.urlrewrite.set" /></option>
 
-								<option value="remove"
+								<option value="remove" id="actionRemove<%=i%>" name="actionRemove<%=i%>"
 									<%=urlRewriteAction.getAction() != null &&
 					          urlRewriteAction.getAction().equals("remove")
 					                                                       ? "selected=\"selected\""

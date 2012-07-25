@@ -169,6 +169,8 @@ function createActionOption(id, i) {
 
 	choice = document.createElement('option');
 	choice.value = 'remove';
+	choice.setAttribute("id","actionRemove"+i);
+    choice.setAttribute("name","actionRemove"+i);
 	choice.appendChild(document.createTextNode(urlrewritejsi18n['mediator.urlrewrite.Remove']));
 	combo_box.appendChild(choice);
 
@@ -553,16 +555,18 @@ function isRemainPropertyExpressions() {
 function onFragmentTypeSelectionChange(id, i) {
     var fragmentType = getSelectedValue(id);
     if (fragmentType != null) {
-        if (fragmentType == 'full') {
+        if (fragmentType == 'full' || fragmentType == 'port' ) {
             var actionItem = document.getElementById('actionAppend' + i);
             actionItem.style.display = "none";
             actionItem = document.getElementById('actionPrepend' + i);
             actionItem.style.display = "none";
             actionItem = document.getElementById('actionReplace' + i);
             actionItem.style.display = "none";
-
+            actionItem = document.getElementById('actionRemove' + i);
+            actionItem.style.display = "none";
+            
             var selectedAction = getSelectedValue('action_select' + i);
-            if (selectedAction != null && (selectedAction != 'remove' | selectedAction != 'set')) {
+            if (selectedAction != null && selectedAction != 'set') {
                 document.getElementById('action_select' + i).value = 'set';
             }
 
@@ -572,6 +576,8 @@ function onFragmentTypeSelectionChange(id, i) {
             actionItem = document.getElementById('actionPrepend' + i);
             actionItem.style.display = "";
             actionItem = document.getElementById('actionReplace' + i);
+            actionItem.style.display = "";
+            actionItem = document.getElementById('actionRemove' + i);
             actionItem.style.display = "";
         }
     }

@@ -3613,6 +3613,14 @@ public class HiveMetaStore extends ThriftHiveMetastore {
   }
 
 
+    public static HadoopThriftAuthBridge.Server getSASLServer() {
+        return saslServer;
+    }
+
+    public static boolean isUseSASL() {
+        return useSasl;
+    }
+    
   /**
    * Discard a current delegation token.
    * @param tokenStrForm the token in string form

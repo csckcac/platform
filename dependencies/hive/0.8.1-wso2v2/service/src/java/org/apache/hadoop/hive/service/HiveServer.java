@@ -22,11 +22,13 @@ import com.facebook.fb303.fb_status;
 import org.apache.commons.cli.OptionBuilder;
 import org.apache.commons.logging.Log;
 import org.apache.commons.logging.LogFactory;
+import org.apache.hadoop.hive.common.CarbonContextThreadLocal;
 import org.apache.hadoop.hive.common.LogUtils;
 import org.apache.hadoop.hive.common.LogUtils.LogInitializationException;
 import org.apache.hadoop.hive.common.ServerUtils;
 import org.apache.hadoop.hive.common.cli.CommonCliOptions;
 import org.apache.hadoop.hive.conf.HiveConf;
+import org.apache.hadoop.hive.metastore.HiveContext;
 import org.apache.hadoop.hive.metastore.HiveMetaStore;
 import org.apache.hadoop.hive.metastore.api.MetaException;
 import org.apache.hadoop.hive.metastore.api.Schema;
@@ -167,10 +169,14 @@ public class HiveServer extends ThriftHive {
     public void execute(String cmd) throws HiveServerException, TException {
 
       //Get tenant id from query and set it to thread local variable
-      String[] command = cmd.split(Utils.TENANT_ID_SEPARATOR_CHAR_SEQ);
-      cmd = setTenantIdToThreadLocal(cmd, command);
+/*      String[] command = cmd.split(Utils.TENANT_ID_SEPARATOR_CHAR_SEQ);
 
-
+      if (command.length > 1) {
+          cmd = command[0];
+          int tenantId = Integer.parseInt(command[1]);
+          HiveContext.startTenantFlow(tenantId);
+      }*/
+        
       HiveServerHandler.LOG.info("Running the query: " + cmd);
       SessionState session = SessionState.get();
 
@@ -210,9 +216,9 @@ public class HiveServer extends ThriftHive {
         ex.setMessage("Error running query: " + e.toString());
         ex.setErrorCode(ret == 0? -10000: ret);
         throw ex;
-      }finally {
-           threadLocalCleanUp(command);
-      }
+      }/*finally {
+           HiveContext.endTenantFlow();
+      }*/
 
       if (ret != 0) {
         throw new HiveServerException("Query returned non-zero code: " + ret

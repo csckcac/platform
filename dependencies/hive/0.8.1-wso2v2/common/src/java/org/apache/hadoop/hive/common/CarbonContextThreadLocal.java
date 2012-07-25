@@ -1,4 +1,4 @@
-package org.apache.hadoop.hive.service;
+package org.apache.hadoop.hive.common;
 
 public class CarbonContextThreadLocal {
 

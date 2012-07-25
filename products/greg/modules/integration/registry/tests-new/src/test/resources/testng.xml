@@ -15,6 +15,9 @@
             <class name="org.wso2.carbon.registry.resource.test.RootCollectionCommunityFeaturesTestCase"/>
             <class name="org.wso2.carbon.registry.app.test.AtomFeedTestCase"/>
             <class name="org.wso2.carbon.registry.governance.api.test.MetaDataServicesTestCase"/>
+            <class name="org.wso2.carbon.registry.governance.api.test.FilterServicesTestCase"/>
+            <class name="org.wso2.carbon.registry.governance.api.test.FilterServicesWithAdminTestCase"/>
+            <class name="org.wso2.carbon.registry.governance.api.test.MetaDataServicesTestCase"/>
             <class name="org.wso2.carbon.registry.version.test.MetaDataTestCase"/>
             <class name="org.wso2.carbon.registry.version.test.CollectionTestCase"/>
             <class name="org.wso2.carbon.registry.version.test.ResourceTestCase"/>

@@ -76,6 +76,10 @@
             BamServerProfilesHelper bamServerProfilesHelper =
                     new BamServerProfilesHelper(cookie, backendServerURL, configContext, request.getLocale());
 
+            if(!bamServerProfilesHelper.resourceAlreadyExists(SERVER_PROFILE_LOCATION)){
+                bamServerProfilesHelper.addCollection(SERVER_PROFILE_LOCATION);
+            }
+
             String[] serverNameList = bamServerProfilesHelper.getServerProfileList(SERVER_PROFILE_LOCATION);
             String action = request.getParameter("action");
             String profileName = request.getParameter("serverProfileName");

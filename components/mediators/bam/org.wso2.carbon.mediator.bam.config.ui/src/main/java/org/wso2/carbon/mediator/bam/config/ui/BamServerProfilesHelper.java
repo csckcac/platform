@@ -44,15 +44,47 @@ public class BamServerProfilesHelper {
     public String[] getServerProfileList(String serverProfilePath){
         try {
             String[] profiles = client.getServerProfilePathList(serverProfilePath);
-            for (int i=0; i<profiles.length; i++) {
-                profiles[i] = profiles[i].split("/")[profiles[i].split("/").length-1];
+            if(profiles != null) {
+                for (int i=0; i<profiles.length; i++) {
+                    profiles[i] = profiles[i].split("/")[profiles[i].split("/").length-1];
+                }
+                return profiles;
             }
-            return profiles;
         } catch (RemoteException e) {
             String errorMsg = "Error while getting Server Profile Name List. " + e.getMessage();
             log.error(errorMsg, e);
         }
         return new String[0];
+    }
+
+    public boolean resourceAlreadyExists(String bamServerProfileLocation){
+        try {
+            return client.resourceAlreadyExists(this.getRealBamServerProfilePath(bamServerProfileLocation));
+        } catch (RemoteException e) {
+            String errorMsg = "Error while checking the resource. " + e.getMessage();
+            log.error(errorMsg, e);
+        }
+        return true;
+    }
+
+    public void addCollection(String path){
+        try {
+            client.addCollection(path);
+        } catch (RemoteException e) {
+            String errorMsg = "Error while adding the collection. " + e.getMessage();
+            log.error(errorMsg, e);
+        }
+    }
+
+    private String getRealBamServerProfilePath(String shortServerProfilePath){
+        if(shortServerProfilePath != null){
+            String registryType = shortServerProfilePath.split("::")[0];
+            if (isNotNullOrEmpty(registryType) && registryType.equals("conf")){
+                return shortServerProfilePath.split("::")[1];
+            }
+            return shortServerProfilePath;
+        }
+        return shortServerProfilePath;
     }
 
     public boolean removeResource(String path){

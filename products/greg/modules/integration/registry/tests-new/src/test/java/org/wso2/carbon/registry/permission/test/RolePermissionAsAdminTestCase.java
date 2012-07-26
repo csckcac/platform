@@ -18,8 +18,7 @@
 
 package org.wso2.carbon.registry.permission.test;
 
-import static org.testng.Assert.assertNotNull;
-import static org.testng.Assert.assertNull;
+import static org.testng.Assert.*;
 
 import org.testng.annotations.BeforeClass;
 import org.testng.annotations.Test;
@@ -30,6 +29,7 @@ import org.wso2.carbon.automation.core.utils.environmentutils.EnvironmentBuilder
 import org.wso2.carbon.automation.core.utils.environmentutils.ManageEnvironment;
 import org.wso2.carbon.registry.resource.stub.ResourceAdminServiceExceptionException;
 import org.wso2.carbon.registry.resource.stub.ResourceAdminServiceResourceServiceExceptionException;
+import org.wso2.carbon.registry.resource.stub.beans.xsd.VersionPath;
 
 import javax.activation.DataHandler;
 import java.io.File;
@@ -170,4 +170,37 @@ public class RolePermissionAsAdminTestCase {
         InputStream resourceStream = resourceURL.openStream();
     }
 
+    @Test(groups = "wso2.greg", description = "Test access to versions of resources using non-admin role")
+    public void testVersionAccess()
+            throws ResourceAdminServiceExceptionException, RemoteException,
+                   ResourceAdminServiceResourceServiceExceptionException {
+        adminResourceAdminClient.addResourcePermission(NEW_RESOURCE_PATH, NON_ADMIN_ROLE, READ_ACTION,
+                                                       PERMISSION_ENABLED);
+        adminResourceAdminClient.createVersion(NEW_RESOURCE_PATH);
+        VersionPath[] versionPaths = nonAdminResourceAdminClient.getVersion(NEW_RESOURCE_PATH);
+        for (VersionPath versionPath : nonAdminResourceAdminClient.getVersion(NEW_RESOURCE_PATH)) {
+            String resourceVersionPath = versionPath.getCompleteVersionPath();
+            assertNotNull(nonAdminResourceAdminClient.getResource(resourceVersionPath));
+        }
+    }
+
+    @Test(groups = "wso2.greg", description = "Test whether permissions are reassigned " +
+                                              "when resource deleted and recreated with same name")
+    public void testPermissionReassignWhenDeletedAndReCreated()
+            throws ResourceAdminServiceExceptionException, RemoteException, MalformedURLException,
+                   ResourceAdminServiceResourceServiceExceptionException {
+        //deny non-admin read permission and delete resource
+        adminResourceAdminClient.addResourcePermission(NEW_RESOURCE_PATH, NON_ADMIN_ROLE, READ_ACTION,
+                                                       PERMISSION_DISABLED);
+        adminResourceAdminClient.deleteResource(NEW_RESOURCE_PATH);
+
+        //add the same resource with same name
+        String resourcePath = ProductConstant.SYSTEM_TEST_RESOURCE_LOCATION + "artifacts" + File.separator
+                              + "GREG" + File.separator + "resource.txt";
+        DataHandler dataHandler = new DataHandler(new URL("file:///" + resourcePath));
+        adminResourceAdminClient.addResource(NEW_RESOURCE_PATH, "text/plain", "", dataHandler);
+
+        //old permission should be reset
+        assertNotNull(nonAdminResourceAdminClient.getResource(NEW_RESOURCE_PATH));
+    }
 }

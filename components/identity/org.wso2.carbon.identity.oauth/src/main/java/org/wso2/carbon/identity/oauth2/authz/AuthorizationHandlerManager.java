@@ -65,7 +65,7 @@ public class AuthorizationHandlerManager {
         boolean authStatus = authzHandler.authenticateResourceOwner(authzReqMsgCtx);
         if (!authStatus) {
             log.warn("User Authentication failed for user : " + authzReqDTO.getUsername());
-            handleErrorRequest(authorizeRespDTO, OAuth2ErrorCodes.ACCESS_DENIED,
+            handleErrorRequest(authorizeRespDTO, OAuth2ErrorCodes.UNAUTHORIZED_CLIENT,
                     "Authentication Failure, Invalid Credentials!");
             authorizeRespDTO.setCallbackURI(authzReqDTO.getCallbackUrl());
             return authorizeRespDTO;
@@ -79,6 +79,7 @@ public class AuthorizationHandlerManager {
             handleErrorRequest(authorizeRespDTO, OAuth2ErrorCodes.UNAUTHORIZED_CLIENT,
                     "Authorization Failure!");
             authorizeRespDTO.setCallbackURI(authzReqDTO.getCallbackUrl());
+            authorizeRespDTO.setAuthenticated(true);
             return authorizeRespDTO;
         }
 
@@ -90,6 +91,7 @@ public class AuthorizationHandlerManager {
             handleErrorRequest(authorizeRespDTO, OAuth2ErrorCodes.INVALID_SCOPE,
                     "Invalid Scope!");
             authorizeRespDTO.setCallbackURI(authzReqDTO.getCallbackUrl());
+            authorizeRespDTO.setAuthenticated(true);
             return authorizeRespDTO;
         }
 

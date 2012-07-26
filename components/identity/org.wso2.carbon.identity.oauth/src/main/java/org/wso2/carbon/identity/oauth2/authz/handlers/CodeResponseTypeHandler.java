@@ -98,6 +98,7 @@ public class CodeResponseTypeHandler extends AbstractAuthorizationHandler {
         }
 
         respDTO.setCallbackURI(authorizationReqDTO.getCallbackUrl());
+        respDTO.setAuthenticated(true);
         respDTO.setAuthorized(true);
         respDTO.setAuthorizationCode(authorizationCode);
         return respDTO;

@@ -19,14 +19,19 @@
 package org.wso2.carbon.identity.oauth2.dto;
 
 public class OAuth2AuthorizeRespDTO {
+
     private String authorizationCode;
     private String accessToken;
     private String callbackURI;
-    private boolean isAuthorized;
     private String errorCode;
     private String errorMsg;
-    private long validityPeriod;
+
     private String[] scope;
+
+    private boolean authenticated;
+    private boolean authorized;
+
+    private long validityPeriod;
 
     public String getAuthorizationCode() {
         return authorizationCode;
@@ -53,11 +58,11 @@ public class OAuth2AuthorizeRespDTO {
     }
 
     public boolean isAuthorized() {
-        return isAuthorized;
+        return authorized;
     }
 
     public void setAuthorized(boolean authorized) {
-        isAuthorized = authorized;
+        this.authorized = authorized;
     }
 
     public String getErrorCode() {
@@ -90,5 +95,13 @@ public class OAuth2AuthorizeRespDTO {
 
     public void setScope(String[] scope) {
         this.scope = scope;
+    }
+
+    public boolean isAuthenticated() {
+        return authenticated;
+    }
+
+    public void setAuthenticated(boolean authenticated) {
+        this.authenticated = authenticated;
     }
 }

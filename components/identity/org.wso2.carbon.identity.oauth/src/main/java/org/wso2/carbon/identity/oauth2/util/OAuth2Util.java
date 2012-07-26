@@ -71,8 +71,12 @@ public class OAuth2Util {
                     .authenticate(tenantUser, password);
         } catch (Exception e) {
             log.error("Error when authenticating the user for OAuth Authorization.", e);
-            throw new IdentityOAuth2Exception("Error when authenticating the user " +
-                    "for OAuth Authorization.", e);
+            // This is until the ReadOnlyLDAPUserStoreManager properly handles authentication
+            // failures and return false instead of an exception. Otherwise authentication failures
+            // will be sent back to client as server errors. So this is a temporary fix.
+            return false;
+//            throw new IdentityOAuth2Exception("Error when authenticating the user " +
+//                    "for OAuth Authorization.", e);
         }
     }
 

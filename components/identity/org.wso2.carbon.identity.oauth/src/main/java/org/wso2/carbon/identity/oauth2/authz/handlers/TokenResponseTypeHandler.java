@@ -96,6 +96,7 @@ public class TokenResponseTypeHandler extends AbstractAuthorizationHandler {
         }
 
         respDTO.setAuthorized(true);
+        respDTO.setAuthenticated(true);
         respDTO.setAccessToken(accessToken);
         respDTO.setValidityPeriod(validityPeriod/1000);
         return respDTO;

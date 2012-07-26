@@ -1,6 +1,3 @@
-<%@ page import="org.apache.amber.oauth2.common.exception.OAuthSystemException" %>
-<%@ page import="org.wso2.carbon.identity.oauth.ui.OAuthConstants" %>
-<%@ page import="org.wso2.carbon.identity.oauth.ui.client.OAuth2AuthzClient" %>
 <!--
 ~ Copyright (c) 2005-2010, WSO2 Inc. (http://www.wso2.org) All Rights Reserved.
 ~
@@ -18,7 +15,9 @@
 ~ specific language governing permissions and limitations
 ~ under the License.
 -->
-
+<%@ page import="org.apache.amber.oauth2.common.exception.OAuthSystemException" %>
+<%@ page import="org.wso2.carbon.identity.oauth.ui.OAuthConstants" %>
+<%@ page import="org.wso2.carbon.identity.oauth.ui.client.OAuth2AuthzClient" %>
 <%
     OAuth2AuthzClient authzClient = new OAuth2AuthzClient();
     String redirectUrl;
@@ -29,7 +28,16 @@
         session.setAttribute(OAuthConstants.OAUTH_ERROR_CODE, "server_error");
         session.setAttribute(OAuthConstants.OAUTH_ERROR_MESSAGE,
                 "Error when completing the user authorization.");
-        redirectUrl = "../../carbon/oauth2/oauth-error.jsp";
+        redirectUrl = "../../carbon/oauth/oauth-error.jsp";
     }
-    response.sendRedirect(redirectUrl);
 %>
+
+<script type="text/javascript">
+    function redirect() {
+        location.href = "<%=redirectUrl%>";
+    }
+</script>
+<script type="text/javascript">
+    redirect();
+</script>
+

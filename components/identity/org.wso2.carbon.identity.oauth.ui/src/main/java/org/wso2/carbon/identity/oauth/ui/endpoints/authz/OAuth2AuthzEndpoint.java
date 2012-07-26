@@ -153,7 +153,7 @@ public class OAuth2AuthzEndpoint extends HttpServlet {
 
             HttpSession session = req.getSession();
             session.setAttribute(OAuthConstants.OAUTH2_PARAMS, params);
-            String loginPage = CarbonUIUtil.getAdminConsoleURL(req) + "oauth/oauth2-login.jsp";
+            String loginPage = CarbonUIUtil.getAdminConsoleURL(req) + "oauth/oauth2_login_ajaxprocessor.jsp";
             loginPage = loginPage.replace("/oauth2/authorize", "");
             return loginPage;
 
@@ -170,7 +170,7 @@ public class OAuth2AuthzEndpoint extends HttpServlet {
                 OAuthConstants.OAUTH2_PARAMS);
 
         if(log.isDebugEnabled()){
-            log.debug("Request from the oauth2-login.jsp for the user : " + req.getParameter(
+            log.debug("Request from the oauth2_login_ajaxprocessor.jsp for the user : " + req.getParameter(
                     "oauth_user_name"));
         }
 

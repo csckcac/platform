@@ -17,8 +17,6 @@
 -->
 <%@ page import="org.wso2.carbon.identity.oauth.ui.OAuth2Parameters" %>
 <%@ page import="org.wso2.carbon.identity.oauth.ui.OAuthConstants" %>
-<%@ page import="java.net.URLDecoder" %>
-<%@ page import="java.net.URLEncoder" %>
 <%@ page import="java.util.Set" %>
 <%@ taglib prefix="fmt" uri="http://java.sun.com/jsp/jstl/fmt" %>
 <%@ taglib uri="http://wso2.org/projects/carbon/taglibs/carbontags.jar" prefix="carbon" %>
@@ -51,7 +49,7 @@
 <html lang="en">
 <head>
     <meta charset="utf-8">
-    <title>Login</title>
+    <title>OAuth2 Login</title>
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <meta name="description" content="">
     <meta name="author" content="">

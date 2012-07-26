@@ -132,6 +132,7 @@ public class WSDLManagerAPITestCase {
         String lcName = "ServiceLifeCycle";
         boolean isLCFound = false;
         try {
+            Wsdl wsdlObj = wsdlManager.getWsdl(this.wsdlObj.getId());
             wsdlObj.attachLifecycle(lcName);
             wsdlManager.updateWsdl(wsdlObj);
             wsdlArray = wsdlManager.getAllWsdls();
@@ -255,19 +256,30 @@ public class WSDLManagerAPITestCase {
 
     @Test(groups = {"wso2.greg.api"}, description = "Testing attachEndpoint method in WSDL object",
           enabled = true)
-    public void testAttachEndpoint() throws GovernanceException {
+    public void testAttachEndpoint() throws RegistryException, IOException {
+        cleanWSDL();
+        String wsdlFileLocation = resourcePath + File.separator + "wsdl" + File.separator + "Automated.wsdl";
+//        wsdlObj = wsdlManager.newWsdl(sampleWsdlURL);
+        try {
+        wsdlObj = wsdlManager.newWsdl(FileManagerUtil.readFile(wsdlFileLocation).getBytes(), "AutomatedSample.wsdl");
+        wsdlManager.addWsdl(wsdlObj);
         Endpoint endpoint = endpointManager.newEndpoint("http://localhost:9763/services/TestEndPointManager");
         endpointManager.addEndpoint(endpoint);
-        try {
             wsdlObj.attachEndpoint(endpoint);
+            wsdlManager.updateWsdl(wsdlObj);
         } catch (GovernanceException e) {
             throw new GovernanceException("WSDL:attachEndpoint method throwing an error : " + e.getMessage());
+        } catch (RegistryException e) {
+            throw new RegistryException(e.getMessage());
+        } catch (IOException e) {
+            throw new IOException(e.getMessage());
         }
     }
 
-    @Test(groups = {"wso2.greg.api"}, description = "Testing getAttachEndpoint method in WSDL object",
+    @Test(groups = {"wso2.greg.api"},dependsOnMethods = "testAttachEndpoint", description = "Testing getAttachEndpoint method in WSDL object",
           priority = 13, enabled = true)
     public void testGetAttachEndpoint() throws GovernanceException {
+        wsdlObj = wsdlManager.getWsdl(wsdlObj.getId());
         boolean isEndpointFound = false;
         try {
             Endpoint[] endpoints = wsdlObj.getAttachedEndpoints();
@@ -284,21 +296,31 @@ public class WSDLManagerAPITestCase {
 
     @Test(groups = {"wso2.greg.api"}, description = "Testing attachSchema method in WSDL object",
           priority = 13, enabled = true)
-    public void testAttachSchema() throws GovernanceException {
+    public void testAttachSchema() throws RegistryException, IOException {
+        cleanWSDL();
+        String wsdlFileLocation = resourcePath + File.separator + "wsdl" + File.separator + "Automated.wsdl";
+        try {
+        wsdlObj = wsdlManager.newWsdl(FileManagerUtil.readFile(wsdlFileLocation).getBytes(), "AutomatedSample.wsdl");
+        wsdlManager.addWsdl(wsdlObj);
         Schema schema = schemaManager.newSchema("http://svn.wso2.org/repos/wso2/carbon/platform/trunk" +
                                                 "/products/greg/modules/integration/registry/tests/src/" +
                                                 "test/java/resources/schema/calculator.xsd");
-        schemaManager.addSchema(schema);
-        try {
+           schemaManager.addSchema(schema);
             wsdlObj.attachSchema(schema);
+            wsdlManager.updateWsdl(wsdlObj);
         } catch (GovernanceException e) {
             throw new GovernanceException("WSDL:attachSchema method throwing an error : " + e.getMessage());
+        } catch (RegistryException e) {
+            throw new RegistryException(e.getMessage());
+        } catch (IOException e) {
+            throw new IOException(e.getMessage());
         }
     }
 
-    @Test(groups = {"wso2.greg.api"}, description = "Testing GetAttachSchema method in WSDL object",
+    @Test(groups = {"wso2.greg.api"}, dependsOnMethods = "testAttachSchema",description = "Testing GetAttachSchema method in WSDL object",
           priority = 14, enabled = true)
     public void testGetAttachSchema() throws GovernanceException {
+        wsdlObj = wsdlManager.getWsdl(wsdlObj.getId());
         boolean isSchemaFound = false;
         try {
             Schema[] schema = wsdlObj.getAttachedSchemas();
@@ -314,9 +336,10 @@ public class WSDLManagerAPITestCase {
         }
     }
 
-    @Test(groups = {"wso2.greg.api"}, description = "Testing GetAttachSchema method in WSDL object",
+    @Test(groups = {"wso2.greg.api"}, dependsOnMethods = "testGetAttachSchema",description = "Testing GetAttachSchema method in WSDL object",
           priority = 15, enabled = true)
     public void testDetachSchema() throws GovernanceException {
+        wsdlObj = wsdlManager.getWsdl(wsdlObj.getId());
         try {
             Schema[] schema = wsdlObj.getAttachedSchemas();
             for (Schema s : schema) {

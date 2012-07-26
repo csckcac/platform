@@ -69,7 +69,7 @@ public class WSEventDispatcher implements EventDispatcher {
         }
     }
 
-    protected void sendNotification(OMElement topicHeader,
+    protected synchronized void sendNotification(OMElement topicHeader,
                                     OMElement tenantDomainHeader,
                                     OMElement payload,
                                     String endpoint)

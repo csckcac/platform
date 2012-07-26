@@ -69,7 +69,7 @@ public class FileHandler {
 	}
 
 	private InputStream getLogDataStream(String fileName) throws Exception {
-		LoggingConfig config = LoggingConfigManager.loadCassandraConfiguration();
+		LoggingConfig config = LoggingConfigManager.loadLoggingConfiguration();
 		String url = "";
 		// TODO this will change depending on the hive impl
 		String hostUrl = config.getArchivedHost();

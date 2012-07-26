@@ -87,7 +87,7 @@ public class CassandraLogReader {
 	}
 
 	public boolean isLogEventAppenderConfigured() {
-		LoggingConfig config = LoggingConfigManager.loadCassandraConfiguration();
+		LoggingConfig config = LoggingConfigManager.loadLoggingConfiguration();
 		return config.isCassandraServerAvailable();
 	}
 
@@ -123,7 +123,7 @@ public class CassandraLogReader {
 	private Keyspace getCurrentCassandraKeyspace() throws LogViewerException {
 		LoggingConfig config;
 		try {
-			config = LoggingConfigManager.loadCassandraConfiguration();
+			config = LoggingConfigManager.loadLoggingConfiguration();
 		} catch (Exception e) {
 			throw new LogViewerException("Cannot read the log config file", e);
 		}
@@ -350,7 +350,7 @@ public class CassandraLogReader {
 		Keyspace currKeyspace = getCurrentCassandraKeyspace();
 		LoggingConfig config;
 		try {
-			config = LoggingConfigManager.loadCassandraConfiguration();
+			config = LoggingConfigManager.loadLoggingConfiguration();
 		} catch (Exception e) {
 			throw new LogViewerException("Cannot load cassandra configuration", e);
 		}
@@ -456,7 +456,7 @@ public class CassandraLogReader {
 		Keyspace currKeyspace = getCurrentCassandraKeyspace();
 		LoggingConfig config;
 		try {
-			config = LoggingConfigManager.loadCassandraConfiguration();
+			config = LoggingConfigManager.loadLoggingConfiguration();
 		} catch (Exception e) {
 			throw new LogViewerException("Cannot load cassandra configuration", e);
 		}
@@ -490,7 +490,7 @@ public class CassandraLogReader {
 		}
 		for (LogEvent event : allLogs) {
 			if (event.getAppName() != null && !event.getAppName().equals("")  && !event.getAppName().equals("NA")
-					&& LoggingUtil.isAdmingService(event.getAppName()) && !appList.contains(event.getAppName())) {
+					&& !LoggingUtil.isAdmingService(event.getAppName()) && !appList.contains(event.getAppName())) {
 				appList.add(event.getAppName());
 			}
 		}

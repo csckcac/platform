@@ -31,13 +31,13 @@ public class LoggingConfig {
 	private String archivedPassword;
 	private String archivedPort;
 	private String archivedRealm;
-	
+	private String hiveQuery;
+
 	public LoggingConfig() {
 
 	}
 
-	public LoggingConfig(String keyspace, String user, String password, String colFamily,
-			String url) {
+	public LoggingConfig(String keyspace, String user, String password, String colFamily, String url) {
 		super();
 		this.keyspace = keyspace;
 		this.user = user;
@@ -166,5 +166,11 @@ public class LoggingConfig {
 		this.archivedRealm = archivedRealm;
 	}
 
-	
+	public String getHiveQuery() {
+		return hiveQuery;
+	}
+
+	public void setHiveQuery(String hiveQuery) {
+		this.hiveQuery = hiveQuery;
+	}
 }

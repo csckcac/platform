@@ -51,14 +51,14 @@ public class LoggingConfigManager {
 	 * 
 	 * @return cassandra configurations
 	 */
-	public static LoggingConfig loadCassandraConfiguration() {
+	public static LoggingConfig loadLoggingConfiguration() {
 		// gets the configuration file name from the cassandra-config.xml.
 		String cassandraConfigFileName = CarbonUtils.getCarbonConfigDirPath()
 				+ RegistryConstants.PATH_SEPARATOR
 				+ LoggingConstants.ETC_DIR
 				+ RegistryConstants.PATH_SEPARATOR
 				+ LoggingConstants.LOGGING_CONF_FILE;
-		return loadCassandraConfiguration(cassandraConfigFileName);
+		return loadLoggingConfiguration(cassandraConfigFileName);
 	}
 
 	private InputStream getInputStream(String configFilename)
@@ -111,7 +111,7 @@ public class LoggingConfigManager {
 	 *            Name of the configuration file
 	 * @return the syslog configuration data.
 	 */
-	private static LoggingConfig loadCassandraConfiguration(
+	private static LoggingConfig loadLoggingConfiguration(
 			String configFilename) {
 		LoggingConfig config = new LoggingConfig();
 		InputStream inputStream = null;
@@ -184,6 +184,9 @@ public class LoggingConfigManager {
 					} else if (LoggingConstants.CassandraConfigProperties.ARCHIVED_REALM
 							.equals(element.getLocalName())) {
 						config.setArchivedRealm(element.getText());
+					} else if (LoggingConstants.CassandraConfigProperties.HIVE_QUERY
+							.equals(element.getLocalName())) {
+						config.setHiveQuery(element.getText());
 					}
 				}
 				return config;

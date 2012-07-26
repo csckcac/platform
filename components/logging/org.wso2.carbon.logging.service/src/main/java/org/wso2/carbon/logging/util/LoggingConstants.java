@@ -121,6 +121,7 @@ public final class LoggingConstants {
     	public static final String ARCHIVED_PASSWORD = "archivedPassword";
     	public static final String ARCHIVED_PORT = "archivedPort";
     	public static final String ARCHIVED_REALM = "archivedRealm";
+    	public static final String HIVE_QUERY = "hiveQuery";
     }
     public static final class AppenderProperties {
         public static final String NAME = "name";

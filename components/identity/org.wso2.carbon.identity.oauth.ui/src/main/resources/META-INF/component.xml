@@ -28,6 +28,12 @@
             <style-class>manage</style-class>
             <icon>../oauth/images/oauth.gif</icon>
             <require-permission>/permission/admin/manage</require-permission>
+            <skip-authentication>
+                <skip-link>../oauth/oauth-error.jsp</skip-link>
+                <skip-link>../oauth/oauth-login.jsp</skip-link>
+                <skip-link>../oauth/oauth-login-finish.jsp</skip-link>
+                <skip-link>../oauth/oauth2-authn-finish.jsp</skip-link>
+            </skip-authentication>
         </menu>
 	</menus>
 </component>

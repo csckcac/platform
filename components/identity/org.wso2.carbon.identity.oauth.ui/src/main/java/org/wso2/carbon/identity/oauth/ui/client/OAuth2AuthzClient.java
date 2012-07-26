@@ -60,7 +60,7 @@ public class OAuth2AuthzClient {
             OAuth2AuthorizeRespDTO authzRespDTO = authorize(request, oauth2Params);
             // Authentication Failure, send back to the login page
             if (!authzRespDTO.getAuthenticated()) {
-                return "../../carbon/oauth/oauth2_login_ajaxprocessor.jsp?auth_status=failed";
+                return "../../carbon/oauth/oauth2_authn_ajaxprocessor.jsp?auth_status=failed";
             }
 
             OAuthASResponse.OAuthAuthorizationResponseBuilder builder = OAuthASResponse

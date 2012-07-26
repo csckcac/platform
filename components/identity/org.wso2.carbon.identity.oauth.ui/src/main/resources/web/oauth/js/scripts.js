@@ -19,6 +19,6 @@ $(document).ready(function(){
 			}
 	});
 	$('#denyLink').click(function(){
-			window.location.href= "oauth2-login-finish.jsp?deny=true";
+			window.location.href= "oauth2-authn-finish.jsp?deny=true";
 	});
 });

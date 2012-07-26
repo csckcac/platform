@@ -22,7 +22,6 @@ import org.apache.commons.logging.LogFactory;
 import org.eclipse.equinox.http.helper.ContextPathServletAdaptor;
 import org.osgi.service.component.ComponentContext;
 import org.osgi.service.http.HttpService;
-import org.osgi.service.http.NamespaceException;
 import org.wso2.carbon.base.api.ServerConfigurationService;
 import org.wso2.carbon.identity.oauth.ui.OAuthServlet;
 import org.wso2.carbon.identity.oauth.ui.endpoints.authz.OAuth2AuthzEndpoint;
@@ -31,8 +30,6 @@ import org.wso2.carbon.identity.oauth.ui.endpoints.token.OAuth2TokenEndpointServ
 import org.wso2.carbon.utils.ConfigurationContextService;
 
 import javax.servlet.Servlet;
-import javax.servlet.ServletException;
-import javax.servlet.http.HttpServlet;
 import java.util.Dictionary;
 import java.util.Hashtable;
 
@@ -50,38 +47,41 @@ import java.util.Hashtable;
 public class OAuthUIServiceComponent {
 
     private static final Log log = LogFactory.getLog(OAuthUIServiceComponent.class);
-    private static final String PATH = "/oauth2/token";
-    private HttpService httpService;
+    private static final String OAUTH2_TOKEN_URL = "/oauth2/token";
+    public static final String OAUTH2_AUTHORIZE_URL = "/oauth2/authorize";
+    public static final String OAUTH_URL = "/oauth";
 
-
+    @SuppressWarnings("unchecked")
     protected void activate(ComponentContext context) {
         log.debug("Activating Identity OAuth UI bundle.");
 
-        //Register the OAuth 1.0a Servlet to handle OAuth Endpoints, request-token, authorize-token and access-token
-        HttpServlet oauthServlet = new OAuthServlet();
-        Dictionary oauthServletParams = new Hashtable(2);
-        oauthServletParams.put("url-pattern", "/oauth");
-        oauthServletParams.put("display-name", "OAuth 1.0a Endpoint Handler.");
-        context.getBundleContext().registerService(Servlet.class.getName(), oauthServlet, oauthServletParams);
-        log.debug("Successfully registered an instance of OAuthServlet");
+        HttpService httpService = OAuthUIServiceComponentHolder.getInstance().getHttpService();
 
-//        //Register a servlet to to act as the OAuth 2.0 Authorize Endpoint
-//        HttpServlet oauth2AuthzEndpointServlet = new OAuth2AuthzEndpoint();
-//        Dictionary oauth2AuthzEndpointParams = new Hashtable(2);
-//        oauth2AuthzEndpointParams.put("url-pattern", "/oauth2/authorize");
-//        oauth2AuthzEndpointParams.put("display-name", "OAuth 2.0 Authorize Endpoint.");
-//        context.getBundleContext().registerService(Servlet.class.getName(),
-//                oauth2AuthzEndpointServlet,
-//                oauth2AuthzEndpointParams);
-        Servlet oauth2Servlet = new ContextPathServletAdaptor(new OAuth2AuthzEndpoint(), "/oauth2/authorize");
         try {
-            httpService.registerServlet("/oauth2/authorize", oauth2Servlet, null, null);
-        } catch (ServletException e) {
-            e.printStackTrace();
-        } catch (NamespaceException e) {
-            e.printStackTrace();
+            // Register OAuth 1.a servlet
+            Servlet oauth1aServlet = new ContextPathServletAdaptor(new OAuthServlet(), OAUTH_URL);
+            httpService.registerServlet(OAUTH_URL, oauth1aServlet, null, null);
+            log.debug("Successfully registered an instance of OAuthServlet");
+
+            // Register OAuth 2.0 Authorization Endpoint
+            Servlet oauth2Servlet = new ContextPathServletAdaptor(new OAuth2AuthzEndpoint(),
+                    OAUTH2_AUTHORIZE_URL);
+            httpService.registerServlet(OAUTH2_AUTHORIZE_URL, oauth2Servlet, null, null);
+            log.debug("Successfully registered an instance of OAuth2 Authz Endpoint.");
+
+            // Register OAuth 2.O token endpoint.
+            Dictionary oauth2TokEndpointParams = new Hashtable();
+            oauth2TokEndpointParams.put("javax.ws.rs.Application",
+                    OAuth2EndpointApp.class.getName());
+            httpService.registerServlet(OAUTH2_TOKEN_URL, new OAuth2TokenEndpointServlet(),
+                    oauth2TokEndpointParams, null);
+            log.debug("Successfully registered an instance of OAuth2 Token Endpoint");
+
+        } catch (Exception e) {
+            String errMsg = "Error when registering an OAuth endpoint via the HttpService.";
+            log.error(errMsg, e);
+            throw new RuntimeException(errMsg, e);
         }
-        log.debug("Successfully registered an instance of OAuth2 Authorization Endpoint");
 
         log.debug("Successfully activated Identity OAuth UI bundle.");
 
@@ -92,20 +92,14 @@ public class OAuthUIServiceComponent {
     }
 
     protected void setHttpService(HttpService httpService){
-        this.httpService = httpService;
-            Dictionary oauth2TokEndpointParams = new Hashtable();
-            oauth2TokEndpointParams.put("javax.ws.rs.Application", OAuth2EndpointApp.class.getName());
-            try {
-                httpService.registerServlet(PATH, new OAuth2TokenEndpointServlet(), oauth2TokEndpointParams, null);
-            } catch (Exception e) {
-                log.error("Error when registering the OAuth2TokenEndpointServlet via the HttpService.", e);
-                throw new RuntimeException("Error when registering the OAuth2TokenEndpointServlet via the HttpService.", e);
-            }
-            log.debug("Successfully registered an instance of OAuth2 Token Endpoint");
+        OAuthUIServiceComponentHolder.getInstance().setHttpService(httpService);
     }
 
     protected void unsetHttpService(HttpService httpService){
-        httpService.unregister("/oauth2/token");
+        httpService.unregister(OAUTH_URL);
+        httpService.unregister(OAUTH2_AUTHORIZE_URL);
+        httpService.unregister(OAUTH2_TOKEN_URL);
+        OAuthUIServiceComponentHolder.getInstance().setHttpService(null);
     }
 
     protected void setConfigurationContextService(ConfigurationContextService configurationContextService){

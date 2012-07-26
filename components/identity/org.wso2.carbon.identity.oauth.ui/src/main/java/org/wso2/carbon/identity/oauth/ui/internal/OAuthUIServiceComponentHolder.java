@@ -18,6 +18,7 @@
 
 package org.wso2.carbon.identity.oauth.ui.internal;
 
+import org.osgi.service.http.HttpService;
 import org.wso2.carbon.base.api.ServerConfigurationService;
 import org.wso2.carbon.utils.ConfigurationContextService;
 
@@ -30,6 +31,7 @@ public class OAuthUIServiceComponentHolder {
 
     private ConfigurationContextService configurationContextService;
     private ServerConfigurationService serverConfigurationService;
+    private HttpService httpService;
 
     private OAuthUIServiceComponentHolder(){
     }
@@ -52,5 +54,13 @@ public class OAuthUIServiceComponentHolder {
 
     public void setServerConfigurationService(ServerConfigurationService serverConfigurationService) {
         this.serverConfigurationService = serverConfigurationService;
+    }
+
+    public HttpService getHttpService() {
+        return httpService;
+    }
+
+    public void setHttpService(HttpService httpService) {
+        this.httpService = httpService;
     }
 }

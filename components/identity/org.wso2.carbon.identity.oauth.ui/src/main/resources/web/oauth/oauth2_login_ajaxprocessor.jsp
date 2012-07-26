@@ -23,22 +23,8 @@
 <%@ taglib prefix="fmt" uri="http://java.sun.com/jsp/jstl/fmt" %>
 <%@ taglib uri="http://wso2.org/projects/carbon/taglibs/carbontags.jar" prefix="carbon" %>
 <%
-    String cssLocation = request.getParameter("css");
-    if ("null".equals(cssLocation)) {
-        cssLocation = null;
-    }
 
-    if (cssLocation != null) {
-        cssLocation = URLDecoder.decode(cssLocation, "UTF-8");
-    }
-
-    String forwardPage = request.getParameter("forwardPage");
-    if (forwardPage != null) {
-        forwardPage = URLDecoder.decode(forwardPage, "UTF-8");
-        session.setAttribute("forwardPage", forwardPage);
-    }
-
-    OAuth2Parameters oauth2Params = null;
+    OAuth2Parameters oauth2Params;
     String scopeString = "";
     if (session.getAttribute(OAuthConstants.OAUTH2_PARAMS) != null) {
         oauth2Params = (OAuth2Parameters) session.getAttribute(OAuthConstants.OAUTH2_PARAMS);
@@ -52,63 +38,11 @@
         }
 
     } else {
-        response.sendRedirect("../../carbon/admin/error.jsp?" +
-                URLEncoder.encode("Required OAuth Parameters are not present in the request."));
+        request.getSession().setAttribute(OAuthConstants.OAUTH_ERROR_CODE, "invalid_request");
+        request.getSession().setAttribute(OAuthConstants.OAUTH_ERROR_MESSAGE,
+                "OAuth Authorization Request is invalid!.");
+        response.sendRedirect("../../carbon/oauth/oauth-error.jsp");
         return;
-    }
-%>
-
-<%
-    if (cssLocation != null) {
-        // This request is coming from a non-admin console
-%>
-<html xmlns="http://www.w3.org/1999/xhtml">
-
-<head>
-    <meta http-equiv="content-type" content="text/html;charset=utf-8"/>
-    <title>OAuth 2.0 Login</title>
-
-    <link href="../admin/css/global.css" rel="stylesheet" type="text/css" media="all"/>
-    <link href="../dialog/css/jqueryui/jqueryui-themeroller.css" rel="stylesheet" type="text/css"
-          media="all"/>
-    <link href="../dialog/css/dialog.css" rel="stylesheet" type="text/css" media="all"/>
-
-    <link href="<%=cssLocation%>" rel="stylesheet" type="text/css"
-          media="all"/>
-
-    <link rel="icon" href="../admin/images/favicon.ico" type="image/x-icon"/>
-    <link rel="shortcut icon" href="../admin/images/favicon.ico" type="image/x-icon"/>
-
-    <script type="text/javascript" src="../admin/js/jquery.js"></script>
-
-    <script type="text/javascript" src="../admin/js/jquery.form.js"></script>
-    <script type="text/javascript" src="../dialog/js/jqueryui/jquery-ui.min.js"></script>
-    <script type="text/javascript" src="../admin/js/main.js"></script>
-
-    <script type="text/javascript" src="../admin/js/WSRequest.js"></script>
-    <script type="text/javascript" src="../admin/js/cookies.js"></script>
-</head>
-
-<body>
-<div id="dcontainer"></div>
-<script type="text/javascript" src="../dialog/js/dialog.js"></script>
-
-<!--This is the link panel of the portal page-->
-<div id="link-panel">
-    <div class="left-logo">
-        <a class="header-home" href="../../portal">
-            <img width="179" height="28" src="images/1px.gif"/>
-        </a>
-    </div>
-</div>
-<div id="dcontainer"></div>
-<script type="text/javascript" src="../dialog/js/dialog.js"></script>
-<%
-
-} else {
-%>
-<jsp:include page="../dialog/display_messages.jsp"/>
-<%
     }
 %>
 
@@ -163,7 +97,7 @@
 
                             </table>
 
-                            <form method="post" name="oauthsign" action="../../oauth2/authorize">
+                            <form method="post" name="oauthsign" action="oauth2-login-finish.jsp">
                                 <%
                                     if (cssLocation != null) {
                                 %>

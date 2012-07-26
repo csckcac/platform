@@ -21,6 +21,8 @@
 <%
     String errorCode = (String) session.getAttribute(OAuthConstants.OAUTH_ERROR_CODE);
     String errorMsg = (String) session.getAttribute(OAuthConstants.OAUTH_ERROR_MESSAGE);
+    // Server Error, invalidate the session.
+    session.invalidate();
 %>
 <fmt:bundle
         basename="org.wso2.carbon.identity.oauth.ui.i18n.Resources">

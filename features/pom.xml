@@ -92,7 +92,6 @@
          <module>mediators</module>
          <module>profile-management</module>
          <module>claim-management</module>
-         <module>identity</module>
          <module>humantask</module>
          <module>bpel</module>
          <module>authenticators</module>
@@ -102,6 +101,8 @@
          <module>mex</module>
          <module>webapp-mgt</module>
          <module>jaxws-webapp-mgt</module>
+	 <module>url-mapper</module>
+	 <module>identity</module>
          <module>application-mgt</module>
          <module>application-deployers</module>
          <module>remote-usermgt</module>
@@ -131,7 +132,6 @@
          <module>rest-api</module>
          <module>apimgt</module>
 	     <module>andes</module>
-         <module>url-mapper</module>
 	     <module>data-agents</module>
 	     <module>bam2</module>
 	     <module>analytics</module>

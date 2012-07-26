@@ -1,4 +1,4 @@
-   Entitlement Servlet Filter Sample
+   EntitlementFilter Sample
 ##########################################
 
 Pre Requests
@@ -16,11 +16,11 @@ located), the pom.xml file is used to build and run the demo.
 
 Using either UNIX or Windows:
 
-  * mvn clean install you can build the Entitlement Servlet Filter Web App and the Client
+  * mvn clean install you can build the EntitlementFilter Web App and the Client
   * Start the server (run bin/wso2server.sh/.bat)
   * mvn -Pdeploy (deploys the generated WAR file on WSO2 AS with related logs on the console)
   * mvn -Pclient (runs the client)
-  * See both consoles of your and WSO2 AS, It will show you how the Entitlement Servlet Filter is Working
+  * See both consoles of your and WSO2 AS, It will show you how the EntitlementFilter is Working
 
 To remove the code generated from the WSDL file and the .class
 files, run "mvn clean".

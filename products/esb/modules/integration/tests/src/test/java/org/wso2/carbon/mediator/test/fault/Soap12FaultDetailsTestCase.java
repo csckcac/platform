@@ -59,5 +59,4 @@ public class Soap12FaultDetailsTestCase extends ESBMediatorTest {
     private void destroy() {
         super.cleanup();
     }
-
 }

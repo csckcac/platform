@@ -61,5 +61,4 @@ public class Soap11FaultWithAttributeResponseTrueTestCase extends ESBMediatorTes
         super.cleanup();
     }
 
-
 }

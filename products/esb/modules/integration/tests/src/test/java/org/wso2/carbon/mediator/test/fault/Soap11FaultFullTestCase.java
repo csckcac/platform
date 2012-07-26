@@ -34,10 +34,7 @@ public class Soap11FaultFullTestCase extends ESBMediatorTest {
         loadESBConfigurationFromClasspath("/artifacts/ESB/mediatorconfig/fault/soap11_fault_full_synapse.xml");
     }
 
-    @AfterClass
-    private void destroy() {
-        super.cleanup();
-    }
+    
 
     @Test(groups = {"wso2.esb"}, description = "Creating SOAP1.1 fault messages all fault values")
     public void testSOAP11FullFaultMessage() throws AxisFault {
@@ -60,4 +57,8 @@ public class Soap11FaultFullTestCase extends ESBMediatorTest {
 
     }
 
+    @AfterClass
+    private void destroy() {
+        super.cleanup();
+    }
 }

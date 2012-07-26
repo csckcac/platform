@@ -1,6 +1,6 @@
 <!DOCTYPE suite SYSTEM "http://testng.org/testng-1.0.dtd" >
 
-<suite name="EndpointsSuite">
+<suite name="ESBTestSuite">
     <parameter name="useDefaultListeners" value="false"/>
     <listeners>
         <listener class-name="org.wso2.carbon.automation.core.PlatformTestManager"/>
@@ -135,6 +135,33 @@
             <!--<class name="org.wso2.carbon.mediator.test.header.RemoveSecurityFromHeaderTestCase"/>-->
             <class name="org.wso2.carbon.mediator.test.header.SetHeaderActionTestCase"/>
 
+        </classes>
+    </test>
+    <test name="Test - Mediator Switch" preserve-order="true" verbose="2">
+        <classes>
+            <class name="org.wso2.carbon.mediator.test.switchMediator.SwitchingBasedOnAddress"/>
+            <class name="org.wso2.carbon.mediator.test.switchMediator.InvalidXPathSynapseConfig"/>
+        </classes>
+    </test>
+
+    <test name="Test - ESB - RuleMediator - Scenario to verify advance rule based routing "
+          preserve-order="true" verbose="2">
+        <classes>
+            <class name="org.wso2.carbon.mediator.test.rule.RuleMediatorTestSample603"/>
+
+        </classes>
+    </test>
+
+    <test name="Test - ESB Call Template Mediator-Call Template With Values And Expression Test Case"
+          preserve-order="true" verbose="2">
+        <classes>
+            <class name="org.wso2.carbon.mediator.test.call.CallTemplateWithValuesAndExpressionTestCase"/>
+        </classes>
+    </test>
+
+    <test name="Test - Enrich-Mediator">
+        <classes>
+            <class name="org.wso2.carbon.mediator.test.enrich.EnrichMediatorReplaceBodyWithInline"/>
         </classes>
     </test>
 

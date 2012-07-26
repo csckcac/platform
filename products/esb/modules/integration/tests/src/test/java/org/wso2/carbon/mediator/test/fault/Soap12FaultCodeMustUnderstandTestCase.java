@@ -60,5 +60,4 @@ public class Soap12FaultCodeMustUnderstandTestCase extends ESBMediatorTest {
         super.cleanup();
     }
 
-
 }

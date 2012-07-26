@@ -20,6 +20,7 @@ import org.apache.commons.logging.Log;
 import org.apache.commons.logging.LogFactory;
 import org.osgi.framework.BundleContext;
 import org.osgi.service.component.ComponentContext;
+import org.wso2.carbon.identity.base.IdentityConstants;
 import org.wso2.carbon.identity.core.persistence.JDBCPersistenceManager;
 import org.wso2.carbon.identity.core.um.listener.IdentityUserMgtListener;
 import org.wso2.carbon.identity.core.util.IdentityTenantUtil;
@@ -32,28 +33,27 @@ import org.wso2.carbon.user.core.service.RealmService;
 /**
  * @scr.component name="identity.core.component" immediate="true"
  * @scr.reference name="security.config.service"
- *                interface="org.wso2.carbon.security.config.SecurityConfigAdmin" cardinality="1..1"
- *                policy="dynamic" bind="setSecurityConfigAdminService"
- *                unbind="unsetSecurityConfigAdminService"
+ * interface="org.wso2.carbon.security.config.SecurityConfigAdmin" cardinality="1..1"
+ * policy="dynamic" bind="setSecurityConfigAdminService"
+ * unbind="unsetSecurityConfigAdminService"
  * @scr.reference name="registry.service"
- *                interface="org.wso2.carbon.registry.core.service.RegistryService"
- *                cardinality="1..1" policy="dynamic" bind="setRegistryService"
- *                unbind="unsetRegistryService"
+ * interface="org.wso2.carbon.registry.core.service.RegistryService"
+ * cardinality="1..1" policy="dynamic" bind="setRegistryService"
+ * unbind="unsetRegistryService"
  * @scr.reference name="user.realmservice.default"
- *                interface="org.wso2.carbon.user.core.service.RealmService" cardinality="1..1"
- *                policy="dynamic" bind="setRealmService" unbind="unsetRealmService"
+ * interface="org.wso2.carbon.user.core.service.RealmService" cardinality="1..1"
+ * policy="dynamic" bind="setRealmService" unbind="unsetRealmService"
  */
 
 public class IdentityCoreServiceComponent {
     private static Log log = LogFactory.getLog(IdentityCoreServiceComponent.class);
-    
+
     private static BundleContext bundleContext = null;
 
     public IdentityCoreServiceComponent() {
     }
 
     /**
-     * 
      * @param ctxt
      */
     protected void activate(ComponentContext ctxt) {
@@ -68,19 +68,30 @@ public class IdentityCoreServiceComponent {
                     new IdentityUtil(), null);
             bundleContext = ctxt.getBundleContext();
 
-            // initialize the identity database, if it is not already initialized.
+            // initialize the identity persistence manager, if it is not already initialized.
             JDBCPersistenceManager jdbcPersistenceManager = JDBCPersistenceManager.getInstance();
-            jdbcPersistenceManager.initializeDatabase();
-			if(log.isDebugEnabled()){
-				log.info("Initialized Identity Persistence Store.");
-			}
+
+            // Identity database schema creation can be avoided by setting
+            // JDBCPersistenceManager.SkipDBSchemaCreation property to "true".
+            String skipSchemaCreation = IdentityUtil.getProperty(
+                    IdentityConstants.ServerConfig.SKIP_DB_SCHEMA_CREATION);
+
+            if (!("true".equals(skipSchemaCreation))) {
+                jdbcPersistenceManager.initializeDatabase();
+            }
+
+            if(log.isDebugEnabled()){
+                if("true".equals(skipSchemaCreation)){
+                    log.debug("Identity Database schema initialization check was skipped.");
+                }
+            }
+
         } catch (Throwable e) {
-            log.error("Error occured while populating identity configuration properties", e);
+            log.error("Error occurred while populating identity configuration properties", e);
         }
     }
 
     /**
-     * 
      * @param ctxt
      */
     protected void deactivate(ComponentContext ctxt) {
@@ -96,25 +107,23 @@ public class IdentityCoreServiceComponent {
     protected void unsetRegistryService(RegistryService registryService) {
         IdentityTenantUtil.setRegistryService(null);
     }
-    
+
     /**
-    *
-    * @param realmService
-    */
-   protected void setRealmService(RealmService realmService){
-       IdentityTenantUtil.setRealmService(realmService);
-   }
+     * @param realmService
+     */
+    protected void setRealmService(RealmService realmService) {
+        IdentityTenantUtil.setRealmService(realmService);
+    }
 
-   /**
-    * 
-    * @param realmService
-    */
-   protected void unsetRealmService(RealmService realmService){
-       IdentityTenantUtil.setRealmService(null);
-   }
+    /**
+     * @param realmService
+     */
+    protected void unsetRealmService(RealmService realmService) {
+        IdentityTenantUtil.setRealmService(null);
+    }
 
 
-   /** 
+    /**
      * @param securityConfig
      */
     protected void setSecurityConfigAdminService(SecurityConfigAdmin securityConfig) {
@@ -124,7 +133,6 @@ public class IdentityCoreServiceComponent {
     }
 
     /**
-     * 
      * @param securityConfig
      */
     protected void unsetSecurityConfigAdminService(SecurityConfigAdmin securityConfig) {
@@ -136,5 +144,5 @@ public class IdentityCoreServiceComponent {
     public static BundleContext getBundleContext() {
         return bundleContext;
     }
-        
+
 }

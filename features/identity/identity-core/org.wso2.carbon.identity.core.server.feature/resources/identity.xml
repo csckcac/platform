@@ -28,6 +28,9 @@
         	<!-- Include a data source name (jndiConfigName) from the set of data sources defined in master-datasources.xml -->
         	<Name>jdbc/WSO2CarbonDB</Name>
     	</DataSource>
+		<!-- If the identity database is created from another place and if it is required to skip schema initialization during the server start up, set the following
+		 property to "true". -->
+		<!-- <SkipDBSchemaCreation>false</SkipDBSchemaCreation> -->
     </JDBCPersistenceManager>
 
 	<!--

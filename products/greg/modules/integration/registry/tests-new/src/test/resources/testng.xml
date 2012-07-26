@@ -27,6 +27,11 @@
             <class name="org.wso2.carbon.registry.permission.test.PermissionInheritanceTestCase"/>
             <class name="org.wso2.carbon.registry.permission.test.AnonymousAccessTestCase"/>
             <class name="org.wso2.carbon.registry.permission.test.RolePermissionAsAdminTestCase"/>
+            <class name="org.wso2.carbon.registry.metadata.test.api.CRUDOperationsAPI"/>
+            <class name="org.wso2.carbon.registry.metadata.test.custom.AddRxtTest"/>
+            <class name="org.wso2.carbon.registry.metadata.test.custom.CRUDOperationsRxt"/>
+            <class name="org.wso2.carbon.registry.metadata.test.uri.AddUriTest"/>
+            <class name="org.wso2.carbon.registry.metadata.test.uri.CRUDOperationsURI"/>
         </classes>
     </test>
 </suite>

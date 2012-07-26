@@ -196,8 +196,8 @@
 									<%
 										} else { 
 										if(isService) {
-											host=host+":"+port;
-											String url = "http://"+host+"/";
+										//	host=host+":"+port;
+											String url = "http://"+host+":"+port+"/";
 											%>
 											<td><a href="<%=url%>"> <%=host%></a></td><%
 										} else {

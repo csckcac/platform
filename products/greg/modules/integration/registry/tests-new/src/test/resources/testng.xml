@@ -32,6 +32,11 @@
             <class name="org.wso2.carbon.registry.metadata.test.custom.CRUDOperationsRxt"/>
             <class name="org.wso2.carbon.registry.metadata.test.uri.AddUriTest"/>
             <class name="org.wso2.carbon.registry.metadata.test.uri.CRUDOperationsURI"/>
+            <class name="org.wso2.carbon.registry.search.metadata.test.RegistryFilterSearchTestCase"/>
+            <class name="org.wso2.carbon.registry.search.metadata.test.RegistrySearchByPropertyValueTestCase"/>
+            <class name="org.wso2.carbon.registry.search.metadata.test.RegistrySearchByPropertyValueWithEmptyValueTest"/>
+            <class name="org.wso2.carbon.registry.search.metadata.test.RegistrySearchPropertyValueByText"/>
+            <class name="org.wso2.carbon.registry.search.metadata.test.RegistrySpecialSearchTestCase"/>
         </classes>
     </test>
 </suite>

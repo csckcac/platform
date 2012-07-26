@@ -20,7 +20,7 @@ package org.wso2.carbon.registry.search.metadata.test.bean;
 import org.wso2.carbon.registry.search.stub.beans.xsd.ArrayOfString;
 
 public class SearchParameterBean {
-    private ArrayOfString[] paramList = new ArrayOfString[16];
+    private ArrayOfString[] paramList = new ArrayOfString[18];
 
     public SearchParameterBean() {
         paramList[0] = new ArrayOfString();
@@ -70,6 +70,13 @@ public class SearchParameterBean {
 
         paramList[15] = new ArrayOfString();
         paramList[15].setArray(new String[]{"mediaType", ""});
+
+        paramList[16] = new ArrayOfString();
+        paramList[16].setArray(new String[]{"leftOp", ""});
+
+        paramList[17] = new ArrayOfString();
+        paramList[17].setArray(new String[]{"rightOp", ""});
+
 
     }
 
@@ -140,6 +147,14 @@ public class SearchParameterBean {
 
     public void setMediaType(String mediaType) {
         paramList[15].setArray(new String[]{"mediaType", mediaType});
+    }
+
+    public void setLeftOperator(String op) {
+        paramList[16].setArray(new String[]{"leftOp", op});
+    }
+
+    public void setRightOperator(String op) {
+        paramList[17].setArray(new String[]{"rightOp", op});
     }
 
 }

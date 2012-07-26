@@ -34,13 +34,14 @@
         <CreateApplication>http://localhost:9763/services/CreateApplication</CreateApplication>
         <CreateUser>http://localhost:9763/services/UserCreationProcess</CreateUser>
         <ActivateUser>http://localhost:9763/services/UserActivationProcess/process</ActivateUser>
-	<DeployToStage>http://localhost:9763/services/DeployToStage</DeployToStage>
-	<ArtifactCreateCallback>http://localhost:9763/services/ArtifactCreateCallbackService</ArtifactCreateCallback>
+		<DeployToStage>http://localhost:9763/services/DeployToStage</DeployToStage>
+		<ArtifactCreateCallback>http://localhost:9763/services/ArtifactCreateCallbackService</ArtifactCreateCallback>
         <GetAllApps>https://localhost:9443/services/ApplicationManagementService</GetAllApps>
         <GetAuthCookie>https://localhost:9443/services/AuthenticationAdmin</GetAuthCookie>
         <AddGenericArtifact>https://localhost:9443/services/ManageGenericArtifactService</AddGenericArtifact>
         <InvokeAspect>https://localhost:9443/services/CustomLifecyclesChecklistAdminService</InvokeAspect>
         <RevisionControllerService>https://localhost:9443/services/RevisionControllerService</RevisionControllerService>
+		<EventNotificationService>https://localhost:9443/services/EventNotificationService</EventNotificationService>
     </WebServiceEndPoints>
 
     <!--Application repository related configurations-->

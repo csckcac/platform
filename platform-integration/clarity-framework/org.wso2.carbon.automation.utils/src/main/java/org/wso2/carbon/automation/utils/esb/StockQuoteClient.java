@@ -152,7 +152,12 @@ public class StockQuoteClient {
     }
 
     private Options getOptions(String trpUrl, String addUrl) throws AxisFault {
+        Options originalOptions = serviceClient.getOptions();
+
         Options options = new Options();
+
+        options.setSoapVersionURI(originalOptions.getSoapVersionURI());
+
 
         if (trpUrl != null && !"null".equals(trpUrl)) {
             options.setProperty(Constants.Configuration.TRANSPORT_URL, trpUrl);
@@ -259,6 +264,10 @@ public class StockQuoteClient {
 
         StAXOMBuilder builder = new StAXOMBuilder(xmlPath);
         return PolicyEngine.getPolicy(builder.getDocumentElement());
+    }
+
+    public ServiceClient getServiceClient(){
+        return this.serviceClient;
     }
 
 }

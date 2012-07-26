@@ -56,6 +56,8 @@ public class DatabaseHostObject extends ScriptableObject {
     private Context context = null;
 
     private Connection conn = null;
+    
+    static RDBMSDataSource rdbmsDataSource = null;
 
     private Map<String, Savepoint> savePoints = new HashMap<String, Savepoint>();
 
@@ -113,7 +115,7 @@ public class DatabaseHostObject extends ScriptableObject {
             rdbmsConfig.setPassword((String) args[2]);
             rdbmsConfig.setUrl(dbUrl);
 
-            RDBMSDataSource rdbmsDataSource;
+            
             try {
                 rdbmsDataSource = new RDBMSDataSource(rdbmsConfig);
 
@@ -356,6 +358,7 @@ public class DatabaseHostObject extends ScriptableObject {
 		DatabaseHostObject db = (DatabaseHostObject) thisObj;
 		try {
 			db.conn.close();
+			rdbmsDataSource.getDataSource().close();
 		} catch (SQLException e) {
 			String msg = "Error while closing the Database Connection";
 			log.warn(msg, e);

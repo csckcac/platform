@@ -96,6 +96,7 @@
             <xs:complexType name="OAuth2AuthorizeRespDTO">
                 <xs:sequence>
                     <xs:element minOccurs="0" name="accessToken" nillable="true" type="xs:string" />
+                    <xs:element minOccurs="0" name="authenticated" type="xs:boolean" />
                     <xs:element minOccurs="0" name="authorizationCode" nillable="true" type="xs:string" />
                     <xs:element minOccurs="0" name="authorized" type="xs:boolean" />
                     <xs:element minOccurs="0" name="callbackURI" nillable="true" type="xs:string" />

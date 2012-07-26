@@ -35,17 +35,20 @@ public class AuthenticatorClient {
     private static final Log log = LogFactory.getLog(AuthenticatorClient.class);
 
     private AuthenticationAdminStub authenticationAdminStub;
-    private String endPoint;
 
     public AuthenticatorClient(String backendUrl) throws AxisFault {
 
         String serviceName = "AuthenticationAdmin";
-        this.endPoint = backendUrl + serviceName;
+        String endPoint = backendUrl + serviceName;
         if (log.isDebugEnabled()) {
             log.debug("EndPoint" + endPoint);
         }
-        authenticationAdminStub = new AuthenticationAdminStub(endPoint);
-
+        try {
+            authenticationAdminStub = new AuthenticationAdminStub(endPoint);
+        } catch (AxisFault axisFault) {
+            log.info("authenticationAdminStub initialization fails");
+            throw new AxisFault("authenticationAdminStub initialization fails");
+        }
     }
 
     public String login(String userName, String password, String host)
@@ -56,7 +59,7 @@ public class AuthenticatorClient {
 
         loginStatus = authenticationAdminStub.login(userName, password, host);
 
-        if (loginStatus == false) {
+        if (!loginStatus) {
             throw new LoginAuthenticationExceptionException("Login Unsuccessful. Return false as a login status by Server");
         }
         log.info("Login Successful");
@@ -67,6 +70,7 @@ public class AuthenticatorClient {
         }
         return sessionCookie;
     }
+
 
     public Boolean unsuccessfulLogin(String userName, String password, String backEndURL)
             throws LoginAuthenticationExceptionException, RemoteException {
@@ -80,7 +84,7 @@ public class AuthenticatorClient {
 
     }
 
-    public Stub getAuthenticationAdminStub(){
+    public Stub getAuthenticationAdminStub() {
         return authenticationAdminStub;
     }
 }

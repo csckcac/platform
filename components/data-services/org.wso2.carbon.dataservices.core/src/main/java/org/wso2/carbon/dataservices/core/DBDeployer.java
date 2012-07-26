@@ -54,6 +54,9 @@ import org.wso2.carbon.dataservices.core.jmx.DataServiceInstanceMBean;
 import org.wso2.carbon.user.core.UserStoreException;
 import org.wso2.carbon.user.core.service.RealmService;
 import org.wso2.carbon.utils.CarbonUtils;
+import org.wso2.securevault.SecretResolver;
+import org.wso2.securevault.SecretResolverFactory;
+import org.wso2.securevault.SecurityConstants;
 
 import javax.management.MBeanServer;
 import javax.management.ObjectName;
@@ -601,7 +604,7 @@ public class DBDeployer extends AbstractDeployer {
 			faultMessage.setElementQName(new QName(DBConstants.WSO2_DS_NAMESPACE,
 	                DBConstants.DS_FAULT_ELEMENT));
 			axisOperation.setFaultMessages(faultMessage);
-	
+
 			createAxisBindingMessage(soap11BindingOperation, faultMessage,
 	                WSDLConstants.MESSAGE_LABEL_FAULT_VALUE, true);
 			createAxisBindingMessage(soap12BindingOperation, faultMessage,
@@ -731,6 +734,10 @@ public class DBDeployer extends AbstractDeployer {
 			fis = new FileInputStream(configFilePath);
 			OMElement dbsElement = (new StAXOMBuilder(fis)).getDocumentElement();
 			dbsElement.build();
+
+            /*load password from secure valut
+             */
+            this.secureLoadPassword(dbsElement);
 
 			/* create the data service object from dbs */
 			DataService dataService = DataServiceFactory.createDataService(
@@ -1092,4 +1099,35 @@ public class DBDeployer extends AbstractDeployer {
 		this.handleServicesXML(currentFile.getAbsolutePath(), axisServiceGroup, axisService);
 		return axisService;
 	}
+
+    private void secureLoadPassword(OMElement dbsElement) {
+        Iterator itr2 = dbsElement.getChildrenWithName(new QName("config"));
+        //Iterate over <config> elements
+        while (itr2.hasNext()) {
+            OMElement element = (OMElement) itr2.next();
+            Iterator itrElement = element.getChildElements();
+            while (itrElement.hasNext()) {
+                OMElement tmpElement = (OMElement) itrElement.next();
+                String secureAtrributeValue = tmpElement.getAttributeValue(
+                        new QName(SecurityConstants.SECURE_VAULT_NS,
+                                  SecurityConstants.SECURE_VAULT_ALIAS));
+                if (secureAtrributeValue != null) {
+                    String password = loadFromSecureVault(element, secureAtrributeValue);
+                    if (password != null) {
+                        tmpElement.setText(password);
+                    }
+                }
+            }
+
+        }
+    }
+
+    private static synchronized String loadFromSecureVault(OMElement dbsElement, String alias) {
+        SecretResolver secretResolver = SecretResolverFactory.create(dbsElement,false);
+        secretResolver.init(DataServicesDSComponent.getSecretCallbackHandlerService().getSecretCallbackHandler());
+        if (secretResolver != null && secretResolver.isInitialized() && secretResolver.isTokenProtected(alias)) {
+            return secretResolver.resolve(alias);
+        }
+        return null;
+    }
 }

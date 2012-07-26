@@ -28,6 +28,7 @@ import org.wso2.carbon.dataservices.core.listeners.EventBrokerServiceListener;
 import org.wso2.carbon.event.core.EventBroker;
 import org.wso2.carbon.ndatasource.core.DataSourceService;
 import org.wso2.carbon.registry.core.service.RegistryService;
+import org.wso2.carbon.securevault.SecretCallbackHandlerService;
 import org.wso2.carbon.transaction.manager.TransactionManagerDummyService;
 import org.wso2.carbon.user.core.service.RealmService;
 import org.wso2.carbon.utils.Axis2ConfigurationContextObserver;
@@ -45,7 +46,11 @@ import java.util.List;
  * @scr.reference name="eventbrokerbuilder.component" interface="org.wso2.carbon.event.core.EventBroker"
  * cardinality="0..1" policy="dynamic" bind="setEventBroker" unbind="unsetEventBroker"
  * @scr.reference name="datasources.service" interface="org.wso2.carbon.ndatasource.core.DataSourceService"
- * cardinality="1..1" policy="dynamic" bind="setDataSourceService" unbind="unsetDataSourceService" 
+ * cardinality="1..1" policy="dynamic" bind="setDataSourceService" unbind="unsetDataSourceService"
+ * @scr.reference name="secret.callback.handler.service"
+ * interface="org.wso2.carbon.securevault.SecretCallbackHandlerService"
+ * cardinality="1..1" policy="dynamic"
+ * bind="setSecretCallbackHandlerService" unbind="unsetSecretCallbackHandlerService"
  */
 public class DataServicesDSComponent {
 
@@ -58,6 +63,8 @@ public class DataServicesDSComponent {
     private static EventBroker eventBroker;
     
     private static DataSourceService dataSourceService;
+
+    private static SecretCallbackHandlerService secretCallbackHandlerService;
     
     private static List<EventBrokerServiceListener> eventBrokerServiceListeners =
             new ArrayList<EventBrokerServiceListener>();
@@ -204,6 +211,24 @@ public class DataServicesDSComponent {
 
     public static String getUsername() {
         return CarbonContextHolder.getCurrentCarbonContextHolder().getUsername();
+    }
+
+    public static SecretCallbackHandlerService getSecretCallbackHandlerService() {
+        return DataServicesDSComponent.secretCallbackHandlerService;
+    }
+
+    protected void setSecretCallbackHandlerService(
+            SecretCallbackHandlerService secretCallbackHandlerService) {
+        if (log.isDebugEnabled()) {
+            log.debug("SecretCallbackHandlerService acquired");
+        }
+        DataServicesDSComponent.secretCallbackHandlerService = secretCallbackHandlerService;
+
+    }
+
+    protected void unsetSecretCallbackHandlerService(
+            SecretCallbackHandlerService secretCallbackHandlerService) {
+        DataServicesDSComponent.secretCallbackHandlerService = null;
     }
 
 }

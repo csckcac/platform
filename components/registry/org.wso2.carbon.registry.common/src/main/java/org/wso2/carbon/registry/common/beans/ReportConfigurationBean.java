@@ -123,4 +123,20 @@ public class ReportConfigurationBean {
     public void setScheduled(boolean scheduled) {
         isScheduled = scheduled;
     }
+
+	@Override
+	public boolean equals(Object obj) {
+		ReportConfigurationBean configuration = (ReportConfigurationBean) obj;
+		
+		if (configuration.getName().equals(this.getName())
+				&& configuration.getTemplate().equals(this.getTemplate())
+				&& configuration.getType().equals(this.getType())
+				&& configuration.getReportClass().equals(this.getReportClass())) {
+			return true;
+		} else {
+			return  false;
+		}
+	}
+    
+    
 }

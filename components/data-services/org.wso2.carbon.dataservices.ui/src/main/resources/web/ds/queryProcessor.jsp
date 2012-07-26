@@ -391,35 +391,38 @@
                         } else {
                             Query autoResponseQuery = dataService.getQuery(queryId);
                             Result res = autoResponseQuery.getResult();
-                            isAutoResponse = true;
                             if (res == null){
                                 res = new Result();
                                     res.setResultWrapper("Entries");
                                     res.setRowName("Entry");
                                     autoResponseQuery.setResult(res);
                             }
-                            List<Element> ele = res.getElements();
-                            for (Element e : ele) {
-                                for (String name : columnNames) {
-                                    if (e.getName().equals(name)) {
-                                        isColumnAvailable = true;
+                            Query q = dataService.getQuery(queryId);
+                            List<String> outputMappingList = Arrays.asList(columnNames);
+                            List<Element> currentOutputMappingList = res.getElements();
+                            List<String> currentOutputMappingNameList = new ArrayList<String>();
+                            if (currentOutputMappingList != null) {
+                                for (Element ele : currentOutputMappingList) {
+                                    currentOutputMappingNameList.add(ele.getName());
+                                }
+                            }
+                            for (String name : columnNames) {
+                                if (!currentOutputMappingNameList.contains(name)) {
+                                    Element el = new Element();
+                                    el.setDataSourceType("column");
+                                    el.setDataSourceValue(name);
+                                    el.setName(name);
+                                    el.setxsdType("xs:string");
+                                    res.addElement(el);
+                                }
+                            }
+                            if (outputMappingList != null && outputMappingList.size() > 0) {
+                                for (String name : currentOutputMappingNameList) {
+                                    if (!outputMappingList.contains(name)) {
+                                        res.removeElement(name);
                                     }
                                 }
                             }
-                            if (!isColumnAvailable) {
-                               for (String name : columnNames) {
-                                  Element el = new Element();
-                                  el.setDataSourceType("column");
-                                   el.setDataSourceValue(name);
-                                   el.setName(name);
-                                   el.setxsdType("xs:string");
-                                   res.addElement(el);
-                                }
-                            } else {
-                                 String message = "Result is already added";
-                                 CarbonUIMessage.sendCarbonUIMessage(message, CarbonUIMessage.ERROR, request);
-                            }
-
                         }
                      } else {
                          String message = "SQL query is not applicable to automate the response";

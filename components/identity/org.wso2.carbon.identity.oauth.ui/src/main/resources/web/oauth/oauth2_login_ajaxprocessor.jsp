@@ -44,10 +44,12 @@
         response.sendRedirect("../../carbon/oauth/oauth-error.jsp");
         return;
     }
+
+    String authStatus = request.getParameter("auth_status");
 %>
 <!DOCTYPE html>
 <html lang="en">
-  <head>
+<head>
     <meta charset="utf-8">
     <title>Login</title>
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
@@ -57,75 +59,86 @@
     <!-- Le styles -->
     <link href="assets/css/bootstrap.min.css" rel="stylesheet">
     <link href="css/localstyles.css" rel="stylesheet">
-	<!--[if lt IE 8]>
-      <link href="css/localstyles-ie7.css" rel="stylesheet">
+    <!--[if lt IE 8]>
+    <link href="css/localstyles-ie7.css" rel="stylesheet">
     <![endif]-->
 
     <!-- Le HTML5 shim, for IE6-8 support of HTML5 elements -->
     <!--[if lt IE 9]>
-      <script src="assets/js/html5.js"></script>
+    <script src="assets/js/html5.js"></script>
     <![endif]-->
-      <script src="assets/js/jquery-1.7.1.min.js"></script>
-      <script src="js/scripts.js"></script>
+    <script src="assets/js/jquery-1.7.1.min.js"></script>
+    <script src="js/scripts.js"></script>
 
 
-  </head>
+</head>
 
-  <body>
+<body>
 
-   <div class="header-strip">&nbsp;</div>
-   <div class="header-back">
-       <div class="container">
-           <div class="row">
-               <div class="span4 offset3">
-                   <a class="logo">&nbsp</a>
-               </div>
-           </div>
-       </div>
-   </div>
-   <div class="header-text">
-<%=(String) oauth2Params.getApplicationName() + " "%><fmt:message
-                                                key='oauth.signin.message'/><%=scopeString%>   
-	</div>
-
+<div class="header-strip">&nbsp;</div>
+<div class="header-back">
     <div class="container">
-           <div class="row">
-               <div class="span5 offset3 content-section">
-                    <p class="download-info">
-                          <a class="btn btn-primary btn-large" id="authorizeLink"><i class="icon-ok icon-white"></i> Authorize</a>
-                          <a class="btn btn-large" id="denyLink"><i class=" icon-exclamation-sign"></i> Deny</a>
-                    </p>
+        <div class="row">
+            <div class="span4 offset3">
+                <a class="logo">&nbsp</a>
+            </div>
+        </div>
+    </div>
+</div>
+<div class="header-text">
+    <%=(String) oauth2Params.getApplicationName() + " requests access to " + scopeString%>
+</div>
 
-                   <form class="well form-horizontal" id="loginForm" style="display:none" action="oauth2-login-finish.jsp">
-				   
-						<div class="alert alert-error" id="errorMsg" style="display:none"></div>
-                       <!--Username-->
-                       <div class="control-group">
-                           <label class="control-label" for="oauth_user_name">Username:</label>
-                           <div class="controls">
-                               <input type="text" class="input-large" id='oauth_user_name'
-                                                   name="oauth_user_name" >
-                           </div>
-                       </div>
+<div class="container">
+    <div class="row">
+        <div class="span5 offset3 content-section">
+            <p class="download-info">
+                <a class="btn btn-primary btn-large" id="authorizeLink"><i
+                        class="icon-ok icon-white"></i> Authorize</a>
+                <a class="btn btn-large" id="denyLink"><i class=" icon-exclamation-sign"></i>
+                    Deny</a>
+            </p>
 
-                       <!--Password-->
-                       <div class="control-group">
-                           <label class="control-label" for="oauth_user_password">Password:</label>
-                           <div class="controls">
-                               <input type="password" class="input-large" id='oauth_user_password'
-                                                   name="oauth_user_password">
-                           </div>
-                       </div>
+            <form class="well form-horizontal" id="loginForm"
+                  <% if(!("failed".equals(authStatus))) { %>style="display:none"<% } %>
+                  action="oauth2-login-finish.jsp">
 
-                       <div class="form-actions">
-                           <button type="button" class="btn btn-primary" id="loginBtn">Login</button>
-                           <button class="btn">Cancel</button>
-                       </div>
-                   </form>
-               </div>
-           </div>
-       </div> <!-- /container -->
+                <div class="alert alert-error"
+                     id="errorMsg" <% if (!("failed".equals(authStatus))) { %>
+                     style="display:none" <% } %>>
+                    <% if ("failed".equals(authStatus)) { %>Authentication Failure! Please check the
+                    username and password.<% } %>
+                </div>
+                <!--Username-->
+                <div class="control-group">
+                    <label class="control-label" for="oauth_user_name">Username:</label>
+
+                    <div class="controls">
+                        <input type="text" class="input-large" id='oauth_user_name'
+                               name="oauth_user_name">
+                    </div>
+                </div>
+
+                <!--Password-->
+                <div class="control-group">
+                    <label class="control-label" for="oauth_user_password">Password:</label>
+
+                    <div class="controls">
+                        <input type="password" class="input-large" id='oauth_user_password'
+                               name="oauth_user_password">
+                    </div>
+                </div>
+
+                <div class="form-actions">
+                    <button type="button" class="btn btn-primary" id="loginBtn">Login</button>
+                    <button class="btn">Cancel</button>
+                </div>
+            </form>
+        </div>
+    </div>
+</div>
+<!-- /container -->
 
 
-  </body>
+</body>
 </html>

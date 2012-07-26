@@ -37,15 +37,8 @@
     <!-- The URL to perform EntitlementService query-->
     <!-- This param is Mandatory. Should be provided -->
     <context-param>
-        <param-name>remoteServiceHost</param-name>
-        <param-value>localhost</param-value>
-    </context-param>
-
-    <!-- The URL to perform EntitlementService query-->
-    <!-- This param is Mandatory. Should be provided -->
-    <context-param>
-        <param-name>remoteServicePort</param-name>
-        <param-value>9443</param-value>
+        <param-name>remoteServiceURL</param-name>
+        <param-value>http://localhost:9443/services/</param-value>
     </context-param>
 
     <!-- The transport you use for query Entitlement Service. Legal values are json,soap,thrift -->

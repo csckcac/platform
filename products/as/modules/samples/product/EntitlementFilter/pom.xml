@@ -45,7 +45,6 @@
                             <directory>./src/main/jsp/</directory>
                         </resource>
                     </webResources>
-		    <packagingIncludes>WEB-INF/lib/org.wso2.carbon.identity.entitlement.filter-1.0.0.jar,**/*.xml,**/*.properties,**/*.class,**/*.png,**/*.css,**/*.js,**/*.jsp</packagingIncludes>
                 </configuration>
             </plugin>
         </plugins>

@@ -162,7 +162,7 @@ public class SAMLSSOProvider extends HttpServlet {
             // forward the request to redirect_ajaxprocessor.jsp
             RequestDispatcher reqDispatcher = getServletContext().getRequestDispatcher(
                     "/carbon/sso-saml/redirect_ajaxprocessor.jsp");
-            reqDispatcher.include(req, resp);
+//            reqDispatcher.include(req, resp);
             reqDispatcher.forward(req, resp);
         } else {    // authentication FAILURE
             req.setAttribute(SAMLSSOProviderConstants.AUTH_FAILURE, Boolean.parseBoolean("true"));
@@ -236,7 +236,7 @@ public class SAMLSSOProvider extends HttpServlet {
                 // forward to the redirect_ajaxprocessor.jsp
                 RequestDispatcher reqDispatcher = getServletContext().getRequestDispatcher(
                         "/carbon/sso-saml/redirect_ajaxprocessor.jsp");
-                reqDispatcher.include(req, resp);
+//                reqDispatcher.include(req, resp);
                 reqDispatcher.forward(req, resp);
             }
         } else {     // in case of a logout request

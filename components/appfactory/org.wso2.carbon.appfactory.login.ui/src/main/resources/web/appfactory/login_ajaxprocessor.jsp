@@ -30,7 +30,7 @@
 <html lang="en">
 <head>
     <meta charset="utf-8">
-    <title>WSO2 - Application Factory</title>
+    <title>WSO2 App Factory</title>
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <meta name="description" content="">
     <meta name="author" content="">
@@ -130,7 +130,7 @@
         </div>
     </div>
     <div class="row">
-        <div class="span12 title-back"><h1>WSO2 - Application Factory</h1></div>
+        <div class="span12 title-back"><h1>WSO2 App Factory</h1></div>
     </div>
     <div class="row">
         <div class="span12 page-content">

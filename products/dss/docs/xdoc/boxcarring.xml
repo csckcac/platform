@@ -38,7 +38,8 @@
             In order for boxcarring to function, a transport that supports session management must
             be used, i.e. HTTP. And the service client should also support handling session
             management, which is, returning back session cookies when sent by the server. Axis2
-            Service Clients has full support for session management.
+            Service Clients has full support for session management. Please note that for using MySQL 
+	    as the RDBMS, InnoDB Storage Engine must be used. 
         </p>
         <h2>Enabling Boxcarring in a Data Service</h2>
         <p>

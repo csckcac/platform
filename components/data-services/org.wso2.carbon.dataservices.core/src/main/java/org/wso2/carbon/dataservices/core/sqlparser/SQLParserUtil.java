@@ -182,7 +182,9 @@ public class SQLParserUtil {
                 if (token.length() > 0) {
                     tokenQueue.add(token.toString());
                 }
-                if (!Character.valueOf(c).toString().equals(" ")) {
+                if (!(Character.valueOf(c).toString().equals(" ") ||
+                        Character.valueOf(c).toString().equals("\n") ||
+                        Character.valueOf(c).toString().equals("\r"))) {
                     tokenQueue.add(new StringBuilder().append(c).toString());
                 }
                 token = new StringBuilder();

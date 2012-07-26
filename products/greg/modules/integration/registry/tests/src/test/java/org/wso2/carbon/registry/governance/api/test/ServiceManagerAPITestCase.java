@@ -118,7 +118,6 @@ public class ServiceManagerAPITestCase {
     }
 
 
-    //https://wso2.org/jira/browse/CARBON-13194
     @Test(groups = {"wso2.greg.api"}, description = "Testing updateService",
           dependsOnMethods = "testGetAllServicePaths")
     public void testUpdateService() throws GovernanceException {

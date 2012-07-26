@@ -253,9 +253,8 @@ public class WSDLManagerAPITestCase {
         }
     }
 
-    //    https://wso2.org/jira/browse/CARBON-13305
     @Test(groups = {"wso2.greg.api"}, description = "Testing attachEndpoint method in WSDL object",
-          enabled = false)
+          enabled = true)
     public void testAttachEndpoint() throws GovernanceException {
         Endpoint endpoint = endpointManager.newEndpoint("http://localhost:9763/services/TestEndPointManager");
         endpointManager.addEndpoint(endpoint);
@@ -266,9 +265,8 @@ public class WSDLManagerAPITestCase {
         }
     }
 
-    // https://wso2.org/jira/browse/CARBON-13305
     @Test(groups = {"wso2.greg.api"}, description = "Testing getAttachEndpoint method in WSDL object",
-          priority = 13, enabled = false)
+          priority = 13, enabled = true)
     public void testGetAttachEndpoint() throws GovernanceException {
         boolean isEndpointFound = false;
         try {
@@ -284,9 +282,8 @@ public class WSDLManagerAPITestCase {
         }
     }
 
-    //https://wso2.org/jira/browse/CARBON-13308
     @Test(groups = {"wso2.greg.api"}, description = "Testing attachSchema method in WSDL object",
-          priority = 13, enabled = false)
+          priority = 13, enabled = true)
     public void testAttachSchema() throws GovernanceException {
         Schema schema = schemaManager.newSchema("http://svn.wso2.org/repos/wso2/carbon/platform/trunk" +
                                                 "/products/greg/modules/integration/registry/tests/src/" +
@@ -299,9 +296,8 @@ public class WSDLManagerAPITestCase {
         }
     }
 
-    //https://wso2.org/jira/browse/CARBON-13308
     @Test(groups = {"wso2.greg.api"}, description = "Testing GetAttachSchema method in WSDL object",
-          priority = 14, enabled = false)
+          priority = 14, enabled = true)
     public void testGetAttachSchema() throws GovernanceException {
         boolean isSchemaFound = false;
         try {
@@ -318,9 +314,8 @@ public class WSDLManagerAPITestCase {
         }
     }
 
-    //https://wso2.org/jira/browse/CARBON-13308
     @Test(groups = {"wso2.greg.api"}, description = "Testing GetAttachSchema method in WSDL object",
-          priority = 15, enabled = false)
+          priority = 15, enabled = true)
     public void testDetachSchema() throws GovernanceException {
         try {
             Schema[] schema = wsdlObj.getAttachedSchemas();

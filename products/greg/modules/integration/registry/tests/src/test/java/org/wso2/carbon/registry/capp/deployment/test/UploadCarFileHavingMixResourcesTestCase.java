@@ -80,12 +80,12 @@ public class UploadCarFileHavingMixResourcesTestCase {
     @Test(description = "Verify Uploaded Resources", dependsOnMethods = {"uploadCApplicationWIthMultipleResourceType"})
     public void isResourcesExist() throws RegistryException {
 
-        registry.get(warPath);
-        registry.get(xmlPath);
-        registry.get(imagePath);
-        registry.get(jsPath);
-        registry.get(txtPath);
-        registry.get(pdfPath);
+        Assert.assertTrue(registry.resourceExists(warPath), warPath + " resource does not exist");
+        Assert.assertTrue(registry.resourceExists(xmlPath), xmlPath + " resource does not exist");
+        Assert.assertTrue(registry.resourceExists(imagePath), imagePath + " resource does not exist");
+        Assert.assertTrue(registry.resourceExists(jsPath), jsPath + " resource does not exist");
+        Assert.assertTrue(registry.resourceExists(txtPath), txtPath + " resource does not exist");
+        Assert.assertTrue(registry.resourceExists(pdfPath), pdfPath + " resource does not exist");
 
     }
 

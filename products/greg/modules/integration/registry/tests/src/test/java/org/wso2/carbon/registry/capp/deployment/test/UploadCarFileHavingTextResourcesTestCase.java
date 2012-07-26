@@ -81,8 +81,8 @@ public class UploadCarFileHavingTextResourcesTestCase {
     @Test(description = "Verify Uploaded Resources", dependsOnMethods = {"uploadCApplicationWithTextResource"})
     public void isResourcesExist() throws RegistryException {
 
-        registry.get(xmlPath);
-        registry.get(txtPath);
+        Assert.assertTrue(registry.resourceExists(xmlPath), xmlPath + " resource does not exist");
+        Assert.assertTrue(registry.resourceExists(txtPath), txtPath + " resource does not exist");
 
     }
 

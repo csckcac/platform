@@ -1,10 +1,10 @@
-<aspect name="ESBLifeCycle" class="org.wso2.carbon.governance.registry.extensions.aspects.DefaultLifeCycle">
+<aspect name="IntergalacticServiceLC2" class="org.wso2.carbon.governance.registry.extensions.aspects.DefaultLifeCycle">
     <configuration type="literal">
         <lifecycle>
             <scxml xmlns="http://www.w3.org/2005/07/scxml"
                    version="1.0"
-                   initialstate="Development">
-                <state id="Development">
+                   initialstate="Created">
+                <state id="Created">
                     <datamodel>
                         <data name="checkItems">
                             <item name="Configurations Completed" forEvent="">
@@ -16,19 +16,19 @@
                         </data>
                         <data name="transitionExecution">
                             <execution forEvent="Promote" class="org.wso2.carbon.governance.registry.extensions.executors.CopyExecutor">
-                                <parameter name="currentEnvironment" value="/_system/dev"/>
-                                <parameter name="targetEnvironment" value="/_system/qa"/>
+                                <parameter name="currentEnvironment" value="/_system/governance/trunk"/>
+                                <parameter name="targetEnvironment" value="/_system/governance/branches/testing"/>
                             </execution>
                         </data>
                         <data name="transitionUI">
-                            <ui forEvent="Promote" href="../lifecycles/pre_invoke_aspect_ajaxprocessor.jsp?currentEnvironment=/_system/dev/"/>
+                            <ui forEvent="Promote" href="../lifecycles/pre_invoke_aspect_ajaxprocessor.jsp?currentEnvironment=/_system/governance/trunk/"/>
                         </data>
                     </datamodel>
                     <transition event="Promote" target="Testing"/>
                 </state>
                 <state id="Testing">
 
-                    <transition event="Demote" target="Development"/>
+                    <transition event="Demote" target="Created"/>
                 </state>
             </scxml>
         </lifecycle>

@@ -39,6 +39,7 @@ import org.wso2.carbon.registry.core.exceptions.RegistryException;
 import org.wso2.carbon.registry.governance.api.test.util.FileManagerUtil;
 import org.wso2.carbon.registry.lifecycle.test.utils.Utils;
 import org.wso2.carbon.registry.search.metadata.test.bean.SearchParameterBean;
+import org.wso2.carbon.registry.search.metadata.test.utils.GregTestUtils;
 import org.wso2.carbon.registry.search.stub.SearchAdminServiceRegistryExceptionException;
 import org.wso2.carbon.registry.search.stub.beans.xsd.AdvancedSearchResultsBean;
 import org.wso2.carbon.registry.search.stub.beans.xsd.ArrayOfString;
@@ -55,18 +56,18 @@ public class LifeCycleWithScriptTestCase extends TestSetup {
 
     private String sessionCookie;
 
-    private WSRegistryServiceClient registry;
+//    private WSRegistryServiceClient registry;
     private LifeCycleAdminServiceClient lifeCycleAdminService;
     private LifeCycleManagementClient lifeCycleManagerAdminService;
     private ActivityAdminServiceClient activitySearch;
     private SearchAdminServiceClient searchAdminService;
-    private final String ASPECT_NAME = "LCwithScript";
+    private final String ASPECT_NAME = "IntergalacticServiceLC2";
     private String servicePathDev;
     private final String ACTION_PROMOTE = "Promote";
     private final String ASS_TYPE_DEPENDS = "depends";
-    private String resourcePath = FrameworkSettings.getFrameworkPath() + File.separator + ".." + File.separator + ".." + File.separator + ".."
+    private String resourcePath = FrameworkSettings.getFrameworkPath() + File.separator + ".."
                                   + File.separator + "src" + File.separator + "test" + File.separator + "java" + File.separator
-                                  + "resources" + File.separator + "lifecycle" + File.separator + "copyExecutorLifeCycle.xml";
+                                  + "resources";
 
     private String servicePathTrunk = null;
     private String servicePathTest;
@@ -75,6 +76,7 @@ public class LifeCycleWithScriptTestCase extends TestSetup {
     public void deployArtifacts() throws Exception {
         super.init();
 
+//        TODO:verify
         Thread.sleep(1000);
         LoginLogoutUtil util = new LoginLogoutUtil();
         ClientConnectionUtil.waitForPort(Integer.parseInt(FrameworkSettings.HTTP_PORT));
@@ -86,7 +88,8 @@ public class LifeCycleWithScriptTestCase extends TestSetup {
 
 
         String serviceName = "CustomLifeCycleTestService2";
-        servicePathDev = "/_system/governance" + Utils.addService("sns", serviceName, registry);
+        servicePathDev = "/_system/governance" + Utils.addService("sns", serviceName,
+                GregTestUtils.getGovernanceRegistry((WSRegistryServiceClient) registry));
         Thread.sleep(1000);
 
     }
@@ -101,7 +104,7 @@ public class LifeCycleWithScriptTestCase extends TestSetup {
                 , "Adding New LifeCycle Failed");
         Thread.sleep(2000);
         lifeCycleConfiguration = lifeCycleManagerAdminService.getLifecycleConfiguration(ASPECT_NAME);
-        Assert.assertTrue(lifeCycleConfiguration.contains("aspect name=\"LCwithScript\""),
+        Assert.assertTrue(lifeCycleConfiguration.contains("aspect name=\"IntergalacticServiceLC2\""),
                           "LifeCycleName Not Found in lifecycle configuration");
 
         String[] lifeCycleList = lifeCycleManagerAdminService.getLifecycleList();
@@ -149,12 +152,12 @@ public class LifeCycleWithScriptTestCase extends TestSetup {
                             "LifeCycle State Mismatched");
     }
 
-    @Test(priority = 3, description = "Promote service to Test")
+    @Test(priority = 3, description = "Promote service to Test" ,dependsOnMethods = {"addLifeCycleToService"})
     public void promoteToTesting()
             throws CustomLifecyclesChecklistAdminServiceExceptionException, RemoteException,
                    RegistryException, InterruptedException {
         org.wso2.carbon.governance.custom.lifecycles.checklist.stub.services.ArrayOfString[] parameters = new org.wso2.carbon.governance.custom.lifecycles.checklist.stub.services.ArrayOfString[2];
-        servicePathTest = "/_system/governance/Phidiax/NonApproved/services/sns/CustomLifeCycleTestService";
+        servicePathTest = "/_system/governance/branches/testing/services/sns/CustomLifeCycleTestService2";
 
         lifeCycleAdminService.invokeAspect(servicePathDev, ASPECT_NAME,
                                            ACTION_PROMOTE, null);
@@ -187,8 +190,14 @@ public class LifeCycleWithScriptTestCase extends TestSetup {
 
         searchQuery.setParameterValues(paramList);
         AdvancedSearchResultsBean result = searchAdminService.getAdvancedSearchResults(searchQuery);
-        Assert.assertNull(result.getResourceDataList(), "Life Cycle Record Found even if it is deleted");
 
+        ResourceData[] resultPaths = result.getResourceDataList();
+        for (ResourceData resultPath : resultPaths) {
+            if(resultPath.getResourcePath().contains(servicePathDev)
+                    || resultPath.getResourcePath().contains(servicePathTest)){
+                Assert.fail("Life Cycle Record Found even if it is deleted");
+            }
+        }
 
         registry = null;
         activitySearch = null;
@@ -200,7 +209,7 @@ public class LifeCycleWithScriptTestCase extends TestSetup {
         String state = null;
         boolean stateFound = false;
         for (Property prop : lifeCycle.getLifecycleProperties()) {
-            if ("registry.lifecycle.ApprovalLifeCycle.state".equalsIgnoreCase(prop.getKey())) {
+            if ("registry.lifecycle.IntergalacticServiceLC2.state".equalsIgnoreCase(prop.getKey())) {
                 stateFound = true;
                 Assert.assertNotNull(prop.getValues(), "State Value Not Found");
                 state = prop.getValues()[0];

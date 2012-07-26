@@ -57,8 +57,25 @@ public class CAppTestUtils {
             throws ApplicationAdminExceptionException, RemoteException, InterruptedException {
         String[] appList;
         boolean isDeleted = true;
-        Calendar startTime = Calendar.getInstance();
-        long time;
+//        Calendar startTime = Calendar.getInstance();
+//        long time;
+
+        for (int i = 0; i < 5; i++) {
+            isDeleted = true;
+            appList = adminServiceApplicationAdmin.listAllApplications(sessionCookie);
+            if (appList != null) {
+                for (String cApp : appList) {
+                    if (cAppName.equalsIgnoreCase(cApp)) {
+                        isDeleted = false;
+                    }
+                }
+            }
+            if (isDeleted) {
+                break;
+            }
+            Thread.sleep(5000);
+        }
+/*
         while ((time = (Calendar.getInstance().getTimeInMillis() - startTime.getTimeInMillis())) < 20000) {
             isDeleted = true;
             appList = adminServiceApplicationAdmin.listAllApplications(sessionCookie);
@@ -75,6 +92,7 @@ public class CAppTestUtils {
             }
             Thread.sleep(5000);
         }
+*/
 
         return isDeleted;
     }

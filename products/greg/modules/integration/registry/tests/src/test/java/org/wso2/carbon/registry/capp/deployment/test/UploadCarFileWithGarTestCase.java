@@ -85,9 +85,9 @@ public class UploadCarFileWithGarTestCase {
     @Test(description = "Verify Uploaded Resources", dependsOnMethods = {"uploadCApplicationWithGar"})
     public void isResourcesExist() throws RegistryException {
 
-        registry.get(wsdlPath);
-        registry.get(servicePath);
-        registry.get(wsdlUploadedPath);
+        Assert.assertTrue(registry.resourceExists(wsdlPath), wsdlPath + " resource does not exist");
+        Assert.assertTrue(registry.resourceExists(servicePath), servicePath + " resource does not exist");
+        Assert.assertTrue(registry.resourceExists(wsdlUploadedPath), wsdlUploadedPath + " resource does not exist");
 
     }
 
@@ -101,6 +101,8 @@ public class UploadCarFileWithGarTestCase {
                 , "Deployed CApplication still in CApp List");
     }
 
+    /*
+     * This is an invalid use-case. We do not delete the files that was added from the gar.
     @Test(description = "Verify Resource Deletion", dependsOnMethods = {"deleteCApplication"})
     public void isResourcesDeleted() throws RegistryException {
 
@@ -116,7 +118,7 @@ public class UploadCarFileWithGarTestCase {
         Assert.assertFalse(registry.resourceExists("/_system/config/repository/applications/" + cAppName),
                 "CApp Resource not deleted");
 
-    }
+    }*/
 
     @AfterClass
     public void destroy() {

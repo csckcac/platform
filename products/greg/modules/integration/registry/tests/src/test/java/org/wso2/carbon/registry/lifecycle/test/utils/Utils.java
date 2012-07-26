@@ -71,6 +71,16 @@ public class Utils {
         return policy.getPath();
 
     }
+    public static String updatePolicy(String policyName, Registry governance)
+            throws RegistryException, IOException {
+        PolicyManager policyManager = new PolicyManager(governance);
+        String policyFilePath = GregTestUtils.getResourcePath() + File.separator + "policy" + File.separator;
+        Policy policy = policyManager.newPolicy(GregTestUtils.readFile(policyFilePath + "UTPolicy.xml").getBytes(), policyName);
+        policyManager.updatePolicy(policy);
+        policy = policyManager.getPolicy(policy.getId());
+        return policy.getPath();
+
+    }
 
     public static String addWSDL(String name, Registry governance)
             throws IOException, RegistryException {

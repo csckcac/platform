@@ -82,10 +82,7 @@ public class PolicyTestCase {
 
         Policy[] policies = policyManager.findPolicies(new PolicyFilter() {
             public boolean matches(Policy policy) throws GovernanceException {
-                if (policy.getAttribute("version").equals("0.01")) {
-                    return true;
-                }
-                return false;
+                return policy.getAttribute("version") != null && policy.getAttribute("version").equals("0.01");
             }
         });
         Assert.assertEquals(policies.length, 1);

@@ -46,7 +46,7 @@ public class GRegPromoteLifeCycleWithResourceTestCase {
     private WSRegistryServiceClient registry;
     private LifeCycleAdminServiceClient lifeCycleAdminService;
 
-    private final String serviceName = "serviceForLifeCycleWithDependency";
+    private final String serviceName = "serviceForLifeCycleWithResource";
     private final String serviceDependencyName = "UTPolicyDependency.xml";
     private final String aspectName = "ServiceLifeCycle";
     private final String ACTION_PROMOTE = "Promote";

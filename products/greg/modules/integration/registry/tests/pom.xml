@@ -24,7 +24,8 @@
                     <excludes>
                         <exclude>**/*MetaDataVolumeTestClient.java</exclude>
                         <exclude>**/*MetaDataConcurrentTestClient.java</exclude>
-                        <!--<exclude>**/*BackwardAssociationHandlerTestCase.java</exclude>-->
+                        <!-- Test needs to be re-written to check for script elements -->
+                        <exclude>**/*LifeCycleWithScriptTestCase.java</exclude>
                         <!--<exclude>**/*ServiceEditTestCase.java</exclude>-->
                         <!--<exclude>**/*SchemaTestCase.java</exclude>-->
                     </excludes>

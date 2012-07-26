@@ -86,6 +86,28 @@ public class PolicyDefaultLifeCycleTestCase {
 
         //Activity search
         Thread.sleep(1000 * 10);
+//        Commenting them out since they have been added as a new test
+//        ActivityBean activityObj = activitySearch.getActivities(sessionCookie, userName
+//                , policyPathDev, Utils.formatDate(Calendar.getInstance().getTime())
+//                , "", ActivityAdminServiceClient.FILTER_ASSOCIATE_ASPECT, 1);
+//        Assert.assertNotNull(activityObj, "Activity object null for Associate Aspect");
+//        Assert.assertNotNull(activityObj.getActivity(), "Activity list object null for Associate Aspect");
+//        Assert.assertTrue((activityObj.getActivity().length > 0), "Activity list object null");
+//        String activity = activityObj.getActivity()[0];
+//        Assert.assertTrue(activity.contains(userName), "User name not found on activity last activity. " + activity);
+//        Assert.assertTrue(activity.contains("associated the aspect ServiceLifeCycle"),
+//                          "associated the aspect ServiceLifeCycle not contain in last activity. " + activity);
+//        Assert.assertTrue(activity.contains("0m ago"), "current time not found on activity. " + activity);
+
+
+    }
+
+//    Extracting out the activity search related testing
+//    TODO: https://wso2.org/jira/browse/REGISTRY-1178
+    @Test(priority = 2, description = "Get the activity list" ,dependsOnMethods = {"addLifecycle"})
+    public void testLifecycleAddActivities()
+            throws RegistryException, CustomLifecyclesChecklistAdminServiceExceptionException,
+            RemoteException, InterruptedException, RegistryExceptionException {
         ActivityBean activityObj = activitySearch.getActivities(sessionCookie, userName
                 , policyPathDev, Utils.formatDate(Calendar.getInstance().getTime())
                 , "", ActivityAdminServiceClient.FILTER_ASSOCIATE_ASPECT, 1);
@@ -95,7 +117,7 @@ public class PolicyDefaultLifeCycleTestCase {
         String activity = activityObj.getActivity()[0];
         Assert.assertTrue(activity.contains(userName), "User name not found on activity last activity. " + activity);
         Assert.assertTrue(activity.contains("associated the aspect ServiceLifeCycle"),
-                          "associated the aspect ServiceLifeCycle not contain in last activity. " + activity);
+                "associated the aspect ServiceLifeCycle not contain in last activity. " + activity);
         Assert.assertTrue(activity.contains("0m ago"), "current time not found on activity. " + activity);
 
 

@@ -90,8 +90,9 @@ public class PolicyDeleteTestCase {
         if (collectionContentBean.getChildCount() > 0) {
             String[] childPath = collectionContentBean.getChildPaths();
             for (int i = 0; i <= childPath.length - 1; i++) {
-                if (childPath[i].equalsIgnoreCase(resourcePath + resourceName)) ;
-                isResourceExist = true;
+                if (childPath[i].equalsIgnoreCase(resourcePath + resourceName)){
+                    isResourceExist = true;
+                }
             }
         }
         return isResourceExist;

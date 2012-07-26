@@ -65,7 +65,7 @@ public class GovernanceApiWsdlTestCase {
     @BeforeClass(alwaysRun = true, groups = {"wso2.greg", "wso2.greg.GovernanceApiWsdl"})
     public void deployArtifact() throws InterruptedException, RemoteException,
                                         MalformedURLException, GovernanceException {
-        wsdl = wsdlMgr.newWsdl("http://ws.strikeiron.com/donotcall2_5?WSDL");
+        wsdl = wsdlMgr.newWsdl("http://svn.wso2.org/repos/wso2/trunk/commons/qa/qa-artifacts/greg/wsdl/WSAddressing10.svc_wsdl");
         wsdlMgr.addWsdl(wsdl);
        // service = serviceManager.newService(new QName("http://my.service.ns1", "MyService"));
     }

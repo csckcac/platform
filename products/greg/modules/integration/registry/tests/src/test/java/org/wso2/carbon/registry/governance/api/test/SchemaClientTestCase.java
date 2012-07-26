@@ -46,8 +46,7 @@ public class SchemaClientTestCase{
         governance = TestUtils.getRegistry();
     }
 
-    //https://wso2.org/jira/browse/REGISTRY-935
-    @Test(groups = {"wso2.greg"}, priority = 1, enabled = false)
+    @Test(groups = {"wso2.greg"}, priority = 1, enabled = true)
     public void testAddSchema() throws Exception {
 
         log.info("############## testAddSchema started ...###################");
@@ -90,7 +89,7 @@ public class SchemaClientTestCase{
 
         Schema[] schemas = schemaManager.findSchemas(new SchemaFilter() {
             public boolean matches(Schema schema) throws GovernanceException {
-                if (schema.getAttribute("version").equals("0.01")) {
+                if (schema.getAttribute("version") != null && schema.getAttribute("version").equals("0.01")) {
                     log.info("########Schema name" + schema.getQName().toString()+ "  schemaID : "+ schema.getId());
                     return true;
                 }

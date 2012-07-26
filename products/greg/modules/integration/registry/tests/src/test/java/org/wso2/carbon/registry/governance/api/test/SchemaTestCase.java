@@ -93,7 +93,7 @@ public class SchemaTestCase {
 
         Schema[] schemas = schemaManager.findSchemas(new SchemaFilter() {
             public boolean matches(Schema schema) throws GovernanceException {
-                if (schema.getAttribute("version").equals("0.01")) {
+                if (schema.getAttribute("version") != null && schema.getAttribute("version").equals("0.01")) {
                     log.info("########Schema name" + schema.getQName().toString()+ "  schemaID : "+ schema.getId());
                     return true;
                 }

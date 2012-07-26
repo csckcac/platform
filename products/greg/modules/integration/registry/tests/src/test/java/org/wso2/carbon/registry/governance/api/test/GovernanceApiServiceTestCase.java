@@ -66,15 +66,7 @@ public class GovernanceApiServiceTestCase {
     }
 
     @Test(groups = {"wso2.greg", "wso2.greg.GovernanceServiceCreate"})
-    public void testUpdateService() throws Exception {
-
-        wsdl = wsdlMgr.newWsdl("http://ws.strikeiron.com/donotcall2_5?WSDL");
-        wsdlMgr.addWsdl(wsdl);
-        service = serviceManager.newService(new QName("http://my.service.ns1", "MyService"));
-
-        service.setAttribute("Owner", "Financial Department");
-        serviceManager.updateService(service);
-
+    public void testAddService() throws Exception {
 
         String service_namespace = "http://example.com/demo/services";
         String service_name = "ExampleService";
@@ -86,12 +78,36 @@ public class GovernanceApiServiceTestCase {
         assertTrue(registryWS.resourceExists(service_path), "Service Exists");
     }
 
+    @Test(groups = {"wso2.greg", "wso2.greg.GovernanceServiceCreate"}, dependsOnMethods = "testAddService")
+    public void testUpdateService() throws Exception {
+
+//        Seems to be invalid. Hence commenting out
+//        wsdl = wsdlMgr.newWsdl("http://ws.strikeiron.com/donotcall2_5?WSDL");
+//        wsdlMgr.addWsdl(wsdl);
+
+//        service = serviceManager.newService(new QName("http://my.service.ns1", "MyService"));
+
+//        service.setAttribute("Owner", "Financial Department");
+//        serviceManager.updateService(service);
+
+        String service_namespace = "http://example.com/demo/services";
+        String service_name = "ExampleService";
+        String service_path = "/_system/governance/trunk/services/com/example/demo/services/ExampleService";
+
+        service = serviceManager.newService(new QName(service_namespace, service_name));
+        serviceManager.updateService(service);
+
+        assertTrue(registryWS.resourceExists(service_path), "Service Exists");
+    }
+
     @Test(groups = {"wso2.greg", "wso2.greg.GovernanceServiceCreation"}, dependsOnMethods = "testUpdateService")
     public void testAddWsdlToService() throws Exception {
 
         service.attachWSDL(wsdl);
         serviceManager.updateService(service);
-        serviceManager.addService(service);
+
+//        Redundant call.
+//        serviceManager.addService(service);
         service.getId();
         boolean wsdlfound = false;
         for (Service gregService : serviceManager.getAllServices()) {

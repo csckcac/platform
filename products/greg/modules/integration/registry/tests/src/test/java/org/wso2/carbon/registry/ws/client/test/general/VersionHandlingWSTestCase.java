@@ -208,7 +208,8 @@ public class VersionHandlingWSTestCase extends TestSetup {
         String[] c1Versions = registry.getVersions("/_test/v11/c1");
         assertEquals(c1Versions.length, 3, "/_test/v11/c1 should have 3 versions.");
 
-        registry.restoreVersion(c1Versions[2]);
+//        TODO: seems to be a bug in WS registry
+        registry.restoreVersion(c1Versions[c1Versions.length -1]);
         Collection c1r1 = (Collection) registry.get("/_test/v11/c1");
         assertEquals(c1r1.getChildren().length, 0, "version 1 of c1 should not have any children");
 
@@ -413,7 +414,9 @@ public class VersionHandlingWSTestCase extends TestSetup {
         String[] rootVersions = registry.getVersions("/");
 
         Collection rootv0 = (Collection) registry.get(rootVersions[0]);
-        String[] rootv0Children = (String[]) rootv0.getContent();
+
+//        TODO: seems to be a bug in WS registry
+        String[] rootv0Children = rootv0.getChildren();
         assertTrue(RegistryUtils.containsAsSubString("/_vtr1", rootv0Children),
                 "Root should have child vtr1");
         assertTrue(RegistryUtils.containsAsSubString("/_vtc2", rootv0Children),

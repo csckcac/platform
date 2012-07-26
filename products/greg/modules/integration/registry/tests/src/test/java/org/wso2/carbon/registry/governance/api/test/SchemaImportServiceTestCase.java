@@ -59,18 +59,17 @@ public class SchemaImportServiceTestCase {
         deleteSchema();   //  Delete Schemas already existing
     }
 
-    //https://wso2.org/jira/browse/REGISTRY-693
-    @Test(groups = {"wso2.greg"}, enabled = false, description = "upload Patient Schema sample", priority = 1)
+    @Test(groups = {"wso2.greg"}, enabled = true, description = "upload Patient Schema sample", priority = 1)
     public void testAddGeoIPServiceSchema() throws RegistryException {
         String schema_url = "http://www.restfulwebservices.net/wcf/GeoIPService.svc?xsd=xsd0";
         String schema_path1 = "/_system/governance/trunk/schemas/net/restfulwebservices/www/" +
-                              "datacontracts/_2008/_01/GeoIPService.svc.xsd";
+                              "servicecontracts/_2008/_01/GeoIPService.svc.xsd";
         String schema_path2 = "/_system/governance/trunk/schemas/net/restfulwebservices/www/" +
-                              "servicecontracts/_2008/_01/GeoIPService1.xsd";
-        String schema1_property1 = "http://www.restfulwebservices.net/DataContracts/2008/01";
+                              "datacontracts/_2008/_01/GeoIPService1.xsd";
+        String schema1_property1 = "http://www.restfulwebservices.net/ServiceContracts/2008/01";
         String property3 = "Aaaa";
         String schema2_property1 = "Valid";
-        String schema2_property2 = "http://www.restfulwebservices.net/ServiceContracts/2008/01";
+        String schema2_property2 = "http://www.restfulwebservices.net/DataContracts/2008/01";
         String keyword1 = "Registry";
         String keyword2 = "CountryCode";
 
@@ -78,8 +77,8 @@ public class SchemaImportServiceTestCase {
             createSchema(governance, schema_url);                                                 //Add Schema
             assertTrue(registry.resourceExists(schema_path1), "GeoIPService.svc.xsd Not Present "); //Assert Schema exist
             assertTrue(registry.resourceExists(schema_path2), "GeoIPService1c.xsd Not Present ");
-            propertyAssertion(schema_path1, "", schema1_property1, property3);                    //Assert Properties
-            propertyAssertion(schema_path2, schema2_property1, schema2_property2, property3);
+            propertyAssertion(schema_path1, schema2_property1, schema1_property1, property3);                    //Assert Properties
+            propertyAssertion(schema_path2, null, schema2_property2, property3);
             schemaContentAssertion(schema_path1, keyword1, keyword2);                              //Assert Schema content
             registry.delete(schema_path1);                                                         //Remove Schema
             registry.delete(schema_path2);

@@ -73,7 +73,7 @@ public class UploadWsdlByCarFileTestCase {
                 , "Deployed CApplication not in CApp List");
     }
 
-    @Test(description = "Search whether CApp is in /_system/config/repository/applications", dependsOnMethods = {"uploadCApplicationWithTextResource"})
+    @Test(description = "Search whether CApp is in /_system/config/repository/applications", dependsOnMethods = {"uploadCApplicationWithWsdl"})
     public void isCApplicationInRegistry() throws RegistryException {
         registry.get("/_system/config/repository/applications/" + cAppName);
     }
@@ -81,9 +81,9 @@ public class UploadWsdlByCarFileTestCase {
     @Test(description = "Verify Uploaded Resources", dependsOnMethods = {"uploadCApplicationWithWsdl"})
     public void isResourcesExist() throws RegistryException {
 
-        registry.get(wsdlPath);
-        registry.get(servicePath);
-        registry.get(wsdlUploadedPath);
+        Assert.assertTrue(registry.resourceExists(wsdlPath), wsdlPath + " resource does not exist");
+        Assert.assertTrue(registry.resourceExists(servicePath), servicePath + " resource does not exist");
+        Assert.assertTrue(registry.resourceExists(wsdlUploadedPath), wsdlUploadedPath + " resource does not exist");
 
     }
 
@@ -97,6 +97,8 @@ public class UploadWsdlByCarFileTestCase {
                 , "Deployed CApplication still in CApp List");
     }
 
+    /*
+     * We don't do this. Hence commenting this out
     @Test(description = "Verify Resource Deletion", dependsOnMethods = {"deleteCApplication"})
     public void isResourcesDeleted() throws RegistryException {
 
@@ -105,7 +107,7 @@ public class UploadWsdlByCarFileTestCase {
         Assert.assertFalse(registry.resourceExists(servicePath), "Resource not deleted");
         Assert.assertFalse(registry.resourceExists("/_system/config/repository/applications/" + cAppName), "CApp Resource not deleted");
 
-    }
+    }*/
 
     @AfterClass
     public void destroy() {

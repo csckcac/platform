@@ -101,12 +101,12 @@ public class LifeCycleStateWhenUpdatingResourceTestCase {
         Thread.sleep(500);
         LifecycleBean lifeCycle = lifeCycleAdminService.getLifecycleBean(policyPathDev);
         Resource service = registry.get(policyPathDev);
-        Assert.assertNotNull(service, "Service Not found on registry path " + policyPathDev);
-        Assert.assertEquals(service.getPath(), policyPathDev, "Service path changed after adding life cycle. " + policyPathDev);
+        Assert.assertNotNull(service, "Policy Not found on registry path " + policyPathDev);
+        Assert.assertEquals(service.getPath(), policyPathDev, "Policy path changed after adding life cycle. " + policyPathDev);
 
         Assert.assertEquals(Utils.getLifeCycleState(lifeCycle), "Development", "LifeCycle State Mismatched");
 
-        policyPathDev = "/_system/governance" + Utils.addPolicy("PolicyLifeCycleState.xml", governance);
+        policyPathDev = "/_system/governance" + Utils.updatePolicy("PolicyLifeCycleState.xml", governance);
         Thread.sleep(500);
 
         lifeCycle = lifeCycleAdminService.getLifecycleBean(policyPathDev);

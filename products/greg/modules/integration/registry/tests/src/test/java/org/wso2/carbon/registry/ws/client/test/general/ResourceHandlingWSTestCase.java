@@ -44,6 +44,7 @@ public class ResourceHandlingWSTestCase extends TestSetup {
         assertEquals(collection.getChildren().length, 0, "Invalid Child Count for new collection");
         registry.put("/f1012/col", collection);
         Collection collection_new = (Collection) registry.get("/f1012/col");
+//        TODO:ws registry client seems to be broken
         assertEquals(collection_new.getChildCount(), 0, "Invalid Child Count for new collection");
         assertNotNull(collection_new.getChildren(), "The children for a new collection cannot be null");
         assertEquals(collection_new.getChildren().length, 0, "Invalid Child Count for new collection");

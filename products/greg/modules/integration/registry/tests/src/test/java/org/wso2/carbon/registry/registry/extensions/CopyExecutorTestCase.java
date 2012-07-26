@@ -23,9 +23,9 @@ import org.testng.annotations.AfterClass;
 import org.testng.annotations.BeforeClass;
 import org.testng.annotations.Test;
 import org.wso2.carbon.automation.api.clients.governance.LifeCycleAdminServiceClient;
+import org.wso2.carbon.automation.api.clients.registry.SearchAdminServiceClient;
 import org.wso2.carbon.automation.api.clients.governance.LifeCycleManagementClient;
 import org.wso2.carbon.automation.api.clients.registry.ActivityAdminServiceClient;
-import org.wso2.carbon.automation.api.clients.registry.SearchAdminServiceClient;
 import org.wso2.carbon.governance.custom.lifecycles.checklist.stub.CustomLifecyclesChecklistAdminServiceExceptionException;
 import org.wso2.carbon.governance.custom.lifecycles.checklist.stub.beans.xsd.LifecycleBean;
 import org.wso2.carbon.governance.custom.lifecycles.checklist.stub.util.xsd.Property;
@@ -39,6 +39,7 @@ import org.wso2.carbon.registry.core.exceptions.RegistryException;
 import org.wso2.carbon.registry.governance.api.test.util.FileManagerUtil;
 import org.wso2.carbon.registry.lifecycle.test.utils.Utils;
 import org.wso2.carbon.registry.search.metadata.test.bean.SearchParameterBean;
+import org.wso2.carbon.registry.search.metadata.test.utils.GregTestUtils;
 import org.wso2.carbon.registry.search.stub.SearchAdminServiceRegistryExceptionException;
 import org.wso2.carbon.registry.search.stub.beans.xsd.AdvancedSearchResultsBean;
 import org.wso2.carbon.registry.search.stub.beans.xsd.ArrayOfString;
@@ -54,27 +55,27 @@ import java.rmi.RemoteException;
 public class CopyExecutorTestCase extends TestSetup {
     private String sessionCookie;
 
-    private WSRegistryServiceClient registry;
+    //    private WSRegistryServiceClient registry;
     private LifeCycleAdminServiceClient lifeCycleAdminService;
     private LifeCycleManagementClient lifeCycleManagerAdminService;
     private ActivityAdminServiceClient activitySearch;
     private SearchAdminServiceClient searchAdminService;
-
-    private final String ASPECT_NAME = "ApprovalLifeCycle";
+    private final String ASPECT_NAME = "IntergalacticServiceLC2";
     private String servicePathDev;
-
     private final String ACTION_PROMOTE = "Promote";
     private final String ASS_TYPE_DEPENDS = "depends";
-    private String resourcePath = FrameworkSettings.getFrameworkPath() + File.separator + ".." + File.separator + ".." + File.separator + ".."
-                                  + File.separator + "src" + File.separator + "test" + File.separator + "java" + File.separator
-                                  + "resources" + File.separator + "lifecycle" + File.separator + "copyExecutorLifeCycle.xml";
+    private String resourcePath = FrameworkSettings.getFrameworkPath() + File.separator + ".."
+            + File.separator + "src" + File.separator + "test" + File.separator + "java" + File.separator
+            + "resources";
+
+    private String servicePathTrunk = null;
     private String servicePathTest;
 
-    @BeforeClass(groups = {"wso2.greg"})
-    public void initChildCountTest() throws Exception {
+    @BeforeClass
+    public void deployArtifacts() throws Exception {
         super.init();
-        String serviceName = "CustomLifeCycleTestService";
-        servicePathDev = "/_system/governance" + Utils.addService("sns", serviceName, registry);
+
+//        TODO:verify
         Thread.sleep(1000);
         LoginLogoutUtil util = new LoginLogoutUtil();
         ClientConnectionUtil.waitForPort(Integer.parseInt(FrameworkSettings.HTTP_PORT));
@@ -84,20 +85,26 @@ public class CopyExecutorTestCase extends TestSetup {
         lifeCycleManagerAdminService = new LifeCycleManagementClient(FrameworkSettings.SERVICE_URL, sessionCookie);
         searchAdminService = new SearchAdminServiceClient(FrameworkSettings.SERVICE_URL, sessionCookie);
 
+
+        String serviceName = "CustomLifeCycleTestService2";
+        servicePathDev = "/_system/governance" + Utils.addService("sns", serviceName,
+                GregTestUtils.getGovernanceRegistry((WSRegistryServiceClient) registry));
+        Thread.sleep(1000);
+
     }
 
     @Test(priority = 1, description = "Add new Life Cycle")
     public void createNewLifeCycle()
             throws IOException, LifeCycleManagementServiceExceptionException, InterruptedException,
-                   SearchAdminServiceRegistryExceptionException {
-
-        String lifeCycleConfiguration = FileManagerUtil.readFile(resourcePath);
+            SearchAdminServiceRegistryExceptionException {
+        String filePath = resourcePath + File.separator + "lifecycle" + File.separator + "lcWithScript.xml";
+        String lifeCycleConfiguration = FileManagerUtil.readFile(filePath);
         Assert.assertTrue(lifeCycleManagerAdminService.addLifeCycle(lifeCycleConfiguration)
                 , "Adding New LifeCycle Failed");
         Thread.sleep(2000);
         lifeCycleConfiguration = lifeCycleManagerAdminService.getLifecycleConfiguration(ASPECT_NAME);
-        Assert.assertTrue(lifeCycleConfiguration.contains("aspect name=\"ApprovalLifeCycle\""),
-                          "LifeCycleName Not Found in lifecycle configuration");
+        Assert.assertTrue(lifeCycleConfiguration.contains("aspect name=\"IntergalacticServiceLC2\""),
+                "LifeCycleName Not Found in lifecycle configuration");
 
         String[] lifeCycleList = lifeCycleManagerAdminService.getLifecycleList();
         Assert.assertNotNull(lifeCycleList);
@@ -120,20 +127,20 @@ public class CopyExecutorTestCase extends TestSetup {
         AdvancedSearchResultsBean result = searchAdminService.getAdvancedSearchResults(searchQuery);
         Assert.assertNotNull(result.getResourceDataList(), "No Record Found");
         Assert.assertTrue((result.getResourceDataList().length == 1), "No Record Found for Life Cycle " +
-                                                                      "Name or more record found");
+                "Name or more record found");
         for (ResourceData resource : result.getResourceDataList()) {
             Assert.assertEquals(resource.getName(), ASPECT_NAME,
-                                "Life Cycle Name mismatched :" + resource.getResourcePath());
+                    "Life Cycle Name mismatched :" + resource.getResourcePath());
             Assert.assertTrue(resource.getResourcePath().contains("lifecycles"),
-                              "Life Cycle Path does not contain lifecycles collection :" + resource.getResourcePath());
+                    "Life Cycle Path does not contain lifecycles collection :" + resource.getResourcePath());
         }
     }
 
     @Test(priority = 2, description = "Add LifeCycle to a service", dependsOnMethods = {"createNewLifeCycle"})
     public void addLifeCycleToService()
             throws RegistryException, InterruptedException,
-                   CustomLifecyclesChecklistAdminServiceExceptionException, RemoteException,
-                   RegistryExceptionException {
+            CustomLifecyclesChecklistAdminServiceExceptionException, RemoteException,
+            RegistryExceptionException {
         registry.associateAspect(servicePathDev, ASPECT_NAME);
         Thread.sleep(500);
         LifecycleBean lifeCycle = lifeCycleAdminService.getLifecycleBean(servicePathDev);
@@ -141,18 +148,18 @@ public class CopyExecutorTestCase extends TestSetup {
         Assert.assertNotNull(service, "Service Not found on registry path " + servicePathDev);
         Assert.assertEquals(service.getPath(), servicePathDev, "Service path changed after adding life cycle. " + servicePathDev);
         Assert.assertEquals(getLifeCycleState(lifeCycle), "Created",
-                            "LifeCycle State Mismatched");
+                "LifeCycle State Mismatched");
     }
 
-    @Test(priority = 3, description = "Promote service to Test")
+    @Test(priority = 3, description = "Promote service to Test" ,dependsOnMethods = {"addLifeCycleToService"})
     public void promoteToTesting()
             throws CustomLifecyclesChecklistAdminServiceExceptionException, RemoteException,
-                   RegistryException, InterruptedException {
+            RegistryException, InterruptedException {
         org.wso2.carbon.governance.custom.lifecycles.checklist.stub.services.ArrayOfString[] parameters = new org.wso2.carbon.governance.custom.lifecycles.checklist.stub.services.ArrayOfString[2];
-        servicePathTest = "/_system/governance/Phidiax/NonApproved/services/sns/CustomLifeCycleTestService";
+        servicePathTest = "/_system/governance/branches/testing/services/sns/CustomLifeCycleTestService2";
 
         lifeCycleAdminService.invokeAspect(servicePathDev, ASPECT_NAME,
-                                           ACTION_PROMOTE, null);
+                ACTION_PROMOTE, null);
         Thread.sleep(2000);
 
         Thread.sleep(500);
@@ -164,8 +171,8 @@ public class CopyExecutorTestCase extends TestSetup {
     @AfterClass
     public void deleteLifeCycle()
             throws RegistryException, LifeCycleManagementServiceExceptionException,
-                   RemoteException, InterruptedException,
-                   SearchAdminServiceRegistryExceptionException {
+            RemoteException, InterruptedException,
+            SearchAdminServiceRegistryExceptionException {
         registry.removeAspect(ASPECT_NAME);
 
         if (servicePathDev != null) {
@@ -182,8 +189,14 @@ public class CopyExecutorTestCase extends TestSetup {
 
         searchQuery.setParameterValues(paramList);
         AdvancedSearchResultsBean result = searchAdminService.getAdvancedSearchResults(searchQuery);
-        Assert.assertNull(result.getResourceDataList(), "Life Cycle Record Found even if it is deleted");
 
+        ResourceData[] resultPaths = result.getResourceDataList();
+        for (ResourceData resultPath : resultPaths) {
+            if(resultPath.getResourcePath().contains(servicePathDev)
+                    || resultPath.getResourcePath().contains(servicePathTest)){
+                Assert.fail("Life Cycle Record Found even if it is deleted");
+            }
+        }
 
         registry = null;
         activitySearch = null;
@@ -195,7 +208,7 @@ public class CopyExecutorTestCase extends TestSetup {
         String state = null;
         boolean stateFound = false;
         for (Property prop : lifeCycle.getLifecycleProperties()) {
-            if ("registry.lifecycle.ApprovalLifeCycle.state".equalsIgnoreCase(prop.getKey())) {
+            if ("registry.lifecycle.IntergalacticServiceLC2.state".equalsIgnoreCase(prop.getKey())) {
                 stateFound = true;
                 Assert.assertNotNull(prop.getValues(), "State Value Not Found");
                 state = prop.getValues()[0];

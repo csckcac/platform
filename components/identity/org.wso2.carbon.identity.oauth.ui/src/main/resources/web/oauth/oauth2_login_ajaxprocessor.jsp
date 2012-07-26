@@ -86,7 +86,7 @@
     </div>
 </div>
 <div class="header-text">
-    <%=(String) oauth2Params.getApplicationName() + " requests access to " + scopeString%>
+    <strong><%=(String) oauth2Params.getApplicationName()%></strong> requests access to <strong><%=scopeString%></strong>
 </div>
 
 <div class="container">

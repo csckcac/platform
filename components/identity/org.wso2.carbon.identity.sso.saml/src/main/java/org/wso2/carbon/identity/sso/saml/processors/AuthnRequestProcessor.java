@@ -39,7 +39,6 @@ import org.wso2.carbon.user.api.TenantManager;
 import org.wso2.carbon.user.core.UserRealm;
 import org.wso2.carbon.user.core.UserStoreManager;
 import org.wso2.carbon.user.core.service.RealmService;
-import org.wso2.carbon.user.core.util.UserCoreUtil;
 import org.wso2.carbon.utils.multitenancy.MultitenantUtils;
 
 public class AuthnRequestProcessor {
@@ -155,6 +154,7 @@ public class AuthnRequestProcessor {
             samlssoRespDTO.setSessionEstablished(true);
             samlssoRespDTO.setAssertionConsumerURL(authnReqDTO.getAssertionConsumerURL());
             samlssoRespDTO.setLoginPageURL(authnReqDTO.getLoginPageURL());
+            samlssoRespDTO.setSubject(authnReqDTO.getUsername());
             return samlssoRespDTO;
 
         } catch (Exception e) {
@@ -195,6 +195,7 @@ public class AuthnRequestProcessor {
         responseDTO.setResponse(respDTO.getRespString());
         responseDTO.setAssertionConsumerURL(respDTO.getAssertionConsumerURL());
         responseDTO.setLoginPageURL(respDTO.getLoginPageURL());
+        responseDTO.setSubject(respDTO.getSubject());
         return responseDTO;
     }
 

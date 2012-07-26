@@ -24,6 +24,7 @@ public class SAMLSSORespDTO {
     private String assertionConsumerURL;
     private String loginPageURL;
     private String errorMsg;
+    private String subject;
 
     public String getRespString() {
         return respString;
@@ -64,4 +65,12 @@ public class SAMLSSORespDTO {
     public void setErrorMsg(String errorMsg) {
         this.errorMsg = errorMsg;
     }
+
+	public String getSubject() {
+		return subject;
+	}
+
+	public void setSubject(String subject) {
+		this.subject = subject;
+	}
 }

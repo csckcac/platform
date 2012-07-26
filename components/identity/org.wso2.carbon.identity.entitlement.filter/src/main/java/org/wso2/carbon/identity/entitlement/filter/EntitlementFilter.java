@@ -130,7 +130,7 @@ public class EntitlementFilter implements Filter {
         if(((HttpServletRequest) servletRequest).getRequestURI().contains("/updateCacheAuth.do")) {
 
             try {
-                decision=pClient.getActualDecisionByAttributes(userName, resource, action, env,domainID);
+                pClient.cleanCache();
             } catch (Exception e) {
                 log.error("Error while Making the Decision " , e);
             }

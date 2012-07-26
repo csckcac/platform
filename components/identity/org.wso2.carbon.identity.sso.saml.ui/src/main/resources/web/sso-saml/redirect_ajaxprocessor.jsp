@@ -15,6 +15,8 @@
  ~ specific language governing permissions and limitations
  ~ under the License.
  -->
+<%@page import="org.wso2.carbon.utils.multitenancy.MultitenantUtils"%>
+<%@page import="org.wso2.carbon.base.MultitenantConstants"%>
 <%@page import="java.net.URLDecoder" %>
 <%@page import="java.net.URLEncoder" %>
 <%@ page import="org.wso2.carbon.identity.sso.saml.ui.SAMLSSOProviderConstants" %>
@@ -32,7 +34,10 @@
     String assertionConsumerURL = (String) request.getAttribute(SAMLSSOProviderConstants.ASSRTN_CONSUMER_URL);
     String assertion = (String) request.getAttribute(SAMLSSOProviderConstants.ASSERTION_STR);
     String relayState = (String) request.getAttribute(SAMLSSOProviderConstants.RELAY_STATE);
-
+    String subject = (String) request.getAttribute(SAMLSSOProviderConstants.SUBJECT);
+	//if(MultitenantUtils.getTenantDomain(subject) != null){
+    	   response.setHeader(MultitenantConstants.TENANT_DOMAIN, MultitenantUtils.getTenantDomain(subject));
+	//}
     relayState = URLDecoder.decode(relayState, "UTF-8");
     relayState = relayState.replaceAll("&", "&amp;").replaceAll("\"", "&quot;").replaceAll("'", "&apos;").
             replaceAll("<", "&lt;").replaceAll(">", "&gt;").replace("\n", "");

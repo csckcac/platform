@@ -17,6 +17,16 @@
 */
 package org.wso2.carbon.identity.sso.saml.ui;
 
+import java.io.IOException;
+
+import javax.servlet.RequestDispatcher;
+import javax.servlet.ServletException;
+import javax.servlet.http.Cookie;
+import javax.servlet.http.HttpServlet;
+import javax.servlet.http.HttpServletRequest;
+import javax.servlet.http.HttpServletResponse;
+import javax.servlet.http.HttpSession;
+
 import org.apache.axis2.context.ConfigurationContext;
 import org.apache.commons.logging.Log;
 import org.apache.commons.logging.LogFactory;
@@ -29,15 +39,7 @@ import org.wso2.carbon.identity.sso.saml.ui.client.SAMLSSOServiceClient;
 import org.wso2.carbon.identity.sso.saml.ui.logout.LogoutRequestSender;
 import org.wso2.carbon.ui.CarbonUIUtil;
 import org.wso2.carbon.utils.multitenancy.MultitenantConstants;
-
-import javax.servlet.RequestDispatcher;
-import javax.servlet.ServletException;
-import javax.servlet.http.Cookie;
-import javax.servlet.http.HttpServlet;
-import javax.servlet.http.HttpServletRequest;
-import javax.servlet.http.HttpServletResponse;
-import javax.servlet.http.HttpSession;
-import java.io.IOException;
+import org.wso2.carbon.utils.multitenancy.MultitenantUtils;
 
 /**
  * This is the entry point for authentication process in an SSO scenario. This servlet is registered
@@ -156,10 +158,11 @@ public class SAMLSSOProvider extends HttpServlet {
             req.setAttribute(SAMLSSOProviderConstants.RELAY_STATE, relayState);
             req.setAttribute(SAMLSSOProviderConstants.ASSERTION_STR, authRespDTO.getRespString());
             req.setAttribute(SAMLSSOProviderConstants.ASSRTN_CONSUMER_URL, authRespDTO.getAssertionConsumerURL());
-
+            resp.setHeader(MultitenantConstants.TENANT_DOMAIN, MultitenantUtils.getTenantDomain(authRespDTO.getSubject()));
             // forward the request to redirect_ajaxprocessor.jsp
             RequestDispatcher reqDispatcher = getServletContext().getRequestDispatcher(
                     "/carbon/sso-saml/redirect_ajaxprocessor.jsp");
+            reqDispatcher.include(req, resp);
             reqDispatcher.forward(req, resp);
         } else {    // authentication FAILURE
             req.setAttribute(SAMLSSOProviderConstants.AUTH_FAILURE, Boolean.parseBoolean("true"));
@@ -226,12 +229,14 @@ public class SAMLSSOProvider extends HttpServlet {
                 req.setAttribute(SAMLSSOProviderConstants.RELAY_STATE, relayState);
                 req.setAttribute(SAMLSSOProviderConstants.ASSERTION_STR, signInRespDTO.getResponse());
                 req.setAttribute(SAMLSSOProviderConstants.ASSRTN_CONSUMER_URL, signInRespDTO.getAssertionConsumerURL());
+                resp.setHeader(MultitenantConstants.TENANT_DOMAIN, MultitenantUtils.getTenantDomain(signInRespDTO.getSubject()));
                 if (SAMLSSOProviderConstants.AuthnModes.OPENID.equals(authMode)) {
                     storeSSOTokenCookie(ssoTokenID, req, resp);
                 }
                 // forward to the redirect_ajaxprocessor.jsp
                 RequestDispatcher reqDispatcher = getServletContext().getRequestDispatcher(
                         "/carbon/sso-saml/redirect_ajaxprocessor.jsp");
+                reqDispatcher.include(req, resp);
                 reqDispatcher.forward(req, resp);
             }
         } else {     // in case of a logout request

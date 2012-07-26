@@ -32,7 +32,7 @@
     String usagePlan = request.getParameter("selectedUsagePlan");
     String regTenantDomain = request.getParameter("regTenantDomain");
     String adminUserName = CommonUtil.getAdminUserName();
-    string adminPassword = CommonUtil.getAdminPassword();
+    String adminPassword = CommonUtil.getAdminPassword();
 
     BillingDataAccessServiceStub stub;
     String cookie = (String) session.getAttribute(ServerConstants.ADMIN_SERVICE_COOKIE);

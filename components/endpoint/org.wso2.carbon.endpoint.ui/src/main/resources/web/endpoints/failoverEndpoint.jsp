@@ -100,31 +100,31 @@
     location.href = "../admin/error.jsp";
 </script>
 <%
-            return;
+                return;
+            }
+        } catch (Exception e) {
+            String msg = "Unable to get Address Endpoint data: " + e.getMessage();
+            CarbonUIMessage.sendCarbonUIMessage(msg, CarbonUIMessage.ERROR, request);
         }
-    } catch (Exception e) {
-        String msg = "Unable to get Address Endpoint data: " + e.getMessage();
-        CarbonUIMessage.sendCarbonUIMessage(msg, CarbonUIMessage.ERROR, request);
-    }
-} else if (origin != null && !"".equals(origin)) {
-    String epString = (String) session.getAttribute("endpointConfiguration");
-    epString = epString.replaceAll("\\s\\s+|\\n|\\r", ""); // remove the pretty printing from the string
-    OMElement endpointElement = AXIOMUtil.stringToOM(epString);
-    endpoint = new FailoverEndpoint();
-    endpoint.build(endpointElement, isAnonymous);
-} else if (isAnonymous) {
-    // coming through using either send mediator or proxy services by adding an anonymous endpoint
-    // we are in anonymous mode
-    anonymousEndpointXML = (String) session.getAttribute("anonEpXML");
-    anonymousOriginator = (String) session.getAttribute("anonOriginator");
-    if (anonymousEndpointXML != null && !"".equals(anonymousEndpointXML)) {
-        // if a user is here that mean user is trying to edit an existing anonymous endpoint
-        try {
-            OMElement endpointElement = AXIOMUtil.stringToOM(anonymousEndpointXML);
-            endpoint = new FailoverEndpoint();
-            endpoint.build(endpointElement, true);
-        } catch (XMLStreamException e) {
-            session.removeAttribute("anonEpXML");
+    } else if (origin != null && !"".equals(origin)) {
+        String epString = (String) session.getAttribute("endpointConfiguration");
+        epString = epString.replaceAll("\\s\\s+|\\n|\\r", ""); // remove the pretty printing from the string
+        OMElement endpointElement = AXIOMUtil.stringToOM(epString);
+        endpoint = new FailoverEndpoint();
+        endpoint.build(endpointElement, isAnonymous);
+    } else if (isAnonymous) {
+        // coming through using either send mediator or proxy services by adding an anonymous endpoint
+        // we are in anonymous mode
+        anonymousEndpointXML = (String) session.getAttribute("anonEpXML");
+        anonymousOriginator = (String) session.getAttribute("anonOriginator");
+        if (anonymousEndpointXML != null && !"".equals(anonymousEndpointXML)) {
+            // if a user is here that mean user is trying to edit an existing anonymous endpoint
+            try {
+                OMElement endpointElement = AXIOMUtil.stringToOM(anonymousEndpointXML);
+                endpoint = new FailoverEndpoint();
+                endpoint.build(endpointElement, true);
+            } catch (XMLStreamException e) {
+                session.removeAttribute("anonEpXML");
 %>
 <script type="text/javascript">
     CARBON.showErrorDialog("Unable to create endpoint with given data");
@@ -132,8 +132,9 @@
 </script>
 <%
             }
+        } else {
+            endpoint = new FailoverEndpoint();
         }
-        endpoint = new FailoverEndpoint();
     } else {
         endpoint = new FailoverEndpoint();
         session.setAttribute("action", "add");

@@ -67,14 +67,9 @@
         removeCommonSessionAttributes(session);
     } else {
         if (anonEpAction != null && !"".equals(anonEpAction) && "edit".equals(anonEpAction)) {
-            // send path
-            // sets the anonOriginator as anonEpHandler.jsp. This will be the page to which result should be returned
             session.setAttribute("anonOriginator", "dynamicEndpoint.jsp");
             session.setAttribute("header", request.getParameter("header"));
             session.setAttribute("epMode", "anon");
-//            ProxyData pd = (ProxyData) session.getAttribute("proxy");
-//            session.setAttribute("proxy", pd);
-            // going to modify the existing EP
             String key = request.getParameter("key");
             String anonEpXML = client.getDynamicEndpoint(key);
             session.setAttribute("dynamicEprKey", key);
@@ -82,7 +77,6 @@
                 try {
                     StAXOMBuilder builder = new StAXOMBuilder(new ByteArrayInputStream(anonEpXML.getBytes()));
                     OMElement confElem = builder.getDocumentElement();
-                    OMElement elem = null;
                     EndpointService epService = EndpointStore.getInstance().getEndpointService(confElem);
                     forwardTo = epService.getUIPageName()+"Endpoint.jsp";
                 } catch (XMLStreamException e) {

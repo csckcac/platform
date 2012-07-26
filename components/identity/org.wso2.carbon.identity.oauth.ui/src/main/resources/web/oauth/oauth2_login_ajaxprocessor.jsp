@@ -45,118 +45,85 @@
         return;
     }
 %>
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="utf-8">
+    <title>Login</title>
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta name="description" content="">
+    <meta name="author" content="">
 
-<link media="all" type="text/css" rel="stylesheet" href="css/registration.css"/>
-<fmt:bundle basename="org.wso2.carbon.identity.oauth.ui.i18n.Resources">
-
-    <script type="text/javascript" src="../carbon/admin/js/breadcrumbs.js"></script>
-    <script type="text/javascript" src="../carbon/admin/js/cookies.js"></script>
-    <script type="text/javascript" src="../carbon/admin/js/main.js"></script>
+    <!-- Le styles -->
+    <link href="assets/css/bootstrap.min.css" rel="stylesheet">
+    <link href="css/localstyles.css" rel="stylesheet">
 
 
-    <div id="middle">
+    <!-- Le HTML5 shim, for IE6-8 support of HTML5 elements -->
+    <!--[if lt IE 9]>
+      <script src="assets/js/html5.js"></script>
+    <![endif]-->
+      <script src="assets/js/jquery-1.7.1.min.js"></script>
+      <script src="js/scripts.js"></script>
 
-        <h2><fmt:message key="oauth.login"/></h2>
 
-        <div id="workArea">
-            <table style="width:100%">
-                <tr>
+  </head>
 
-                    <td style="width:50%">
-                        <div id="loginbox" class="identity-box" style="height:160px;">
-                            <script type="text/javascript">
-                                function validate() {
-                                    var username = document.getElementsByName("oauth_user_name")[0].value;
-                                    if (username == '') {
-                                        CARBON.showWarningDialog('<fmt:message key="username.required"/>');
-                                        return false;
-                                    }
-                                    var password = document.getElementsByName("oauth_user_password")[0].value;
-                                    if (password == '') {
-                                        CARBON.showWarningDialog('<fmt:message key="password.required"/>');
-                                        return false;
-                                    }
+  <body>
 
-                                    document.oauthsign.submit();
-                                }
+   <div class="header-strip">&nbsp;</div>
+   <div class="header-back">
+       <div class="container">
+           <div class="row">
+               <div class="span4 offset3">
+                   <a class="logo">&nbsp</a>
+               </div>
+           </div>
+       </div>
+   </div>
+   <div class="header-text">
+<%=(String) oauth2Params.getApplicationName() + " "%><fmt:message
+                                                key='oauth.signin.message'/><%=scopeString%>   
+	</div>
 
-                                function deny(){
-                                    document.getElementsByName("denied")[0].value = 'true';
-                                    document.oauthsign.submit();
-                                }
-                            </script>
+    <div class="container">
+           <div class="row">
+               <div class="span5 offset3 content-section">
+                    <p class="download-info">
+                          <a class="btn btn-primary btn-large" id="authorizeLink"><i class="icon-ok icon-white"></i> Authorize</a>
+                          <a class="btn btn-large" id="denyLink"><i class=" icon-exclamation-sign"></i> Deny</a>
+                    </p>
 
-                            <table style="border:none !important;width: 100%" class="styledLeft">
+                   <form class="well form-horizontal" id="loginForm" style="display:none" action="oauth2-login-finish.jsp">
+				   
+						<div class="alert alert-error" id="errorMsg" style="display:none"></div>
+                       <!--Username-->
+                       <div class="control-group">
+                           <label class="control-label" for="oauth_user_name">Username:</label>
+                           <div class="controls">
+                               <input type="text" class="input-large" id='oauth_user_name'
+                                                   name="oauth_user_name" >
+                           </div>
+                       </div>
 
-                                <tr>
-                                    <td>
-                                        <b><%=(String) oauth2Params.getApplicationName() + " "%><fmt:message
-                                                key='oauth.signin.message'/><%=scopeString%>
-                                        </b></td>
-                                </tr>
+                       <!--Password-->
+                       <div class="control-group">
+                           <label class="control-label" for="oauth_user_password">Password:</label>
+                           <div class="controls">
+                               <input type="password" class="input-large" id='oauth_user_password'
+                                                   name="oauth_user_password">
+                           </div>
+                       </div>
 
-                            </table>
+                       <div class="form-actions">
+                           <button type="button" class="btn btn-primary" id="loginBtn">Login</button>
+                           <button class="btn">Cancel</button>
+                       </div>
+                   </form>
+               </div>
+           </div>
+       </div> <!-- /container -->
 
-                            <form method="post" name="oauthsign" action="oauth2-login-finish.jsp">
-                                <%
-                                    if (cssLocation != null) {
-                                %>
-                                <input type="hidden" name="forwardPage"
-                                       value="<%=URLEncoder.encode(forwardPage,"UTF-8")%>"/>
-                                <input type="hidden" name="css"
-                                       value="<%=URLEncoder.encode(cssLocation,"UTF-8")%>"/>
-                                <input type="hidden" name="denied" id="denied" value="false"/>
-                                <%
-                                    }
-                                %>
-                                <table class="styledLeft noBorders" style="border:none !important;">
-                                    <tr>
-                                        <td class="leftCol-small"><fmt:message
-                                                key='user.name'/></td>
-                                        <td>
-                                            <input class='text-box-big' id='oauth_user_name'
-                                                   name="oauth_user_name" size='30'/>
-                                        </td>
-                                    </tr>
-                                    <tr>
-                                        <td class="leftCol-small"><fmt:message key='password'/></td>
-                                        <td>
-                                            <input class='text-box-big' id='oauth_user_password'
-                                                   name="oauth_user_password" size='30'
-                                                   type="password"/>
-                                        </td>
-                                    </tr>
-                                    <tr>
 
-                                        <td class="buttonRow" colspan="2">
-                                            <input name="adduser" type="button" class="button"
-                                                   value="<fmt:message key='allow'/>"
-                                                   onclick="validate();"/>
-                                            <input type="button" class="button"
-                                                   onclick="deny();"
-                                                   value="<fmt:message key='deny'/>"/>
-                                        </td>
-                                    </tr>
-
-                                </table>
-                            </form>
-                    </td>
-                </tr>
-            </table>
-
-        </div>
-
-    </div>
-</fmt:bundle>
-<%
-    if (cssLocation != null) {
-        // Closing HTML page tags.
-%>
-<div class="footer-content">
-    <div class="copyright">&copy; 2008 - 2011 WSO2 Inc. All Rights Reserved.</div>
-</div>
-</body>
+  </body>
 </html>
-<%
-    }
-%>

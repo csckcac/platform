@@ -82,6 +82,7 @@ public class LogEventAppender extends AppenderSkeleton implements Appender {
 	private String getCurrentServerName() {
 		String serverName = ServerConfiguration.getInstance().getFirstProperty("Name");
 		serverName = serverName.replace("WSO2", "");
+		serverName = serverName.trim();
 		return serverName.replace(" ", ".");
 	}
 

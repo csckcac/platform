@@ -1,18 +1,18 @@
 /*
- * Copyright 2004,2005 The Apache Software Foundation.
- *
- * Licensed under the Apache License, Version 2.0 (the "License");
- * you may not use this file except in compliance with the License.
- * You may obtain a copy of the License at
- *
- *      http://www.apache.org/licenses/LICENSE-2.0
- *
- * Unless required by applicable law or agreed to in writing, software
- * distributed under the License is distributed on an "AS IS" BASIS,
- * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
- * See the License for the specific language governing permissions and
- * limitations under the License.
- */
+* Copyright 2004,2005 The Apache Software Foundation.
+*
+* Licensed under the Apache License, Version 2.0 (the "License");
+* you may not use this file except in compliance with the License.
+* You may obtain a copy of the License at
+*
+*      http://www.apache.org/licenses/LICENSE-2.0
+*
+* Unless required by applicable law or agreed to in writing, software
+* distributed under the License is distributed on an "AS IS" BASIS,
+* WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+* See the License for the specific language governing permissions and
+* limitations under the License.
+*/
 
 package org.wso2.carbon.registry.app.test;
 
@@ -32,9 +32,7 @@ import org.wso2.carbon.automation.core.utils.environmentutils.ProductUrlGenerato
 import org.wso2.carbon.automation.core.utils.frameworkutils.FrameworkFactory;
 import org.wso2.carbon.automation.core.utils.frameworkutils.FrameworkProperties;
 import org.wso2.carbon.automation.utils.registry.RegistryProviderUtil;
-import org.wso2.carbon.integration.framework.utils.FrameworkSettings;
 import org.wso2.carbon.registry.app.RemoteRegistry;
-import org.wso2.carbon.registry.core.Collection;
 import org.wso2.carbon.registry.core.Resource;
 import org.wso2.carbon.registry.core.exceptions.RegistryException;
 
@@ -50,7 +48,6 @@ import java.net.URL;
 import java.rmi.RemoteException;
 import java.util.Date;
 
-import static org.testng.Assert.assertEquals;
 import static org.testng.Assert.fail;
 
 /**
@@ -62,7 +59,7 @@ public class AtomFeedTestCase {
     public static final String PASSWORD = "admin";
     public static final String REGISTRY_NAMESPACE = "http://wso2.org/registry";
 
-    public static final String resourcePath = "/c1/c2/r1";
+    public static final String resourcePath = "/rrr1";
     public RemoteRegistry registry;
     private ManageEnvironment environment;
     private EnvironmentBuilder builder;
@@ -86,8 +83,8 @@ public class AtomFeedTestCase {
     private void populateData() {
         try {
             Resource resource = registry.newResource();
-            resource.setContent("This is a test resource".getBytes());
-            resource.setDescription("This is a test description");
+            //resource.setContent("This is a test resource".getBytes());
+            //resource.setDescription("This is a test description");
 
             registry.put(resourcePath, resource);
         } catch (RegistryException e) {
@@ -99,7 +96,7 @@ public class AtomFeedTestCase {
     public void atomFeedTest() throws RegistryException {
 
         Resource resource = registry.get(resourcePath);
-        OMElement atomFeedOMElement = getAtomFeedContent(constructAtomUrl(resourcePath));
+         OMElement atomFeedOMElement = getAtomFeedContent(constructAtomUrl(resourcePath));
 
         if (atomFeedOMElement == null) {
             fail("No feed data available");

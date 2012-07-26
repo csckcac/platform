@@ -29,7 +29,7 @@ public class EntitlementDecision {
 
   /**
      * time stamp
-     */
+   */
     private long cachedTime;
 
     public String getResponse() {

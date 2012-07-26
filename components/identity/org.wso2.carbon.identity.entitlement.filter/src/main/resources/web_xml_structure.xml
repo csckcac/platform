@@ -6,40 +6,53 @@
 
     <!-- Sample deployment descriptor configuration for EntitlementFilter -->
 
-    <!-- The scope in which the subject would be available.  Legal values are request-param, request-attribute, session -->
+    <!-- The scope in which the subject would be available.  Legal values are request-param, request-attribute, session, basic-auth -->
+    <!-- This param is optional. If not provided would be set to default value -->
     <context-param>
         <param-name>subjectScope</param-name>
-        <param-value>request-param</param-value>
+        <param-value>basic-auth</param-value>
     </context-param>
 
     <!-- The name of the identifier by which to identify the subject -->
+    <!-- This param is Mandatory. Should be provided -->
     <context-param>
         <param-name>subjectAttributeName</param-name>
         <param-value>username</param-value>
     </context-param>
 
     <!-- The username to perform EntitlementService query-->
+    <!-- This param is Mandatory. Should be provided -->
     <context-param>
         <param-name>remoteServiceUserName</param-name>
         <param-value>admin</param-value>
     </context-param>
 
     <!-- The password to perform EntitlementService query -->
+    <!-- This param is Mandatory. Should be provided -->
     <context-param>
         <param-name>remoteServicePassword</param-name>
         <param-value>admin</param-value>
     </context-param>
 
     <!-- The URL to perform EntitlementService query-->
+    <!-- This param is Mandatory. Should be provided -->
     <context-param>
         <param-name>remoteServiceHost</param-name>
         <param-value>localhost</param-value>
     </context-param>
 
     <!-- The URL to perform EntitlementService query-->
+    <!-- This param is Mandatory. Should be provided -->
     <context-param>
         <param-name>remoteServicePort</param-name>
         <param-value>9443</param-value>
+    </context-param>
+
+    <!-- The transport you use for query Entitlement Service. Legal values is soap -->
+    <!-- This param is optional. If not provided would be set to default value -->
+    <context-param>
+        <param-name>transportType</param-name>
+        <param-value>soap</param-value>
     </context-param>
 
     <!-- EntitlementFilter Settings -->
@@ -47,53 +60,28 @@
         <filter-name>EntitlementFilter</filter-name>
         <filter-class>org.wso2.carbon.identity.entitlement.filter.EntitlementFilter</filter-class>
 
-        <!--
-                        Client Class that extends AbstractEntitlementServiceClient. Legal values by default are
-                        org.wso2.carbon.identity.entitlement.filter.client.BasicAuthEntitlementServiceClient and
-                        org.wso2.carbon.identity.entitlement.filter.client.ThriftEntitlementServiceClient
-               -->
-        <init-param>
-            <param-name>clientClass</param-name>
-            <param-value>
-                org.wso2.carbon.identity.entitlement.filter.client.BasicAuthEntitlementServiceClient
-            </param-value>
-        </init-param>
-
-        <!-- Decision caching at PEP. Legal values are enable (or default), disable and wso2as -->
+        <!-- Decision caching at PDP Proxy. Legal values are enable ,disable  -->
+        <!-- This param is optional. If not provided would be set to default value -->
         <init-param>
             <param-name>decisionCaching</param-name>
             <param-value>disable</param-value>
         </init-param>
 
         <!-- Maximum number of cached entries. Legal values are between 0 and 10000 -->
+        <!-- This param is optional. If not provided would be set to default value -->
         <init-param>
             <param-name>maxCacheEntries</param-name>
-            <param-value>1000</param-value>
-        </init-param>
-
-        <!-- Time interval for which cached entry is valid. Only works with enable (or default) for decisionCaching -->
-        <init-param>
-            <param-name>cacheInvalidationInterval</param-name>
-            <param-value>100000</param-value>
+            <param-value>100</param-value>
         </init-param>
 
         <!-- URL ro redirect to if authorization fails -->
+        <!-- This param is Mandatory. Should be provided -->
         <init-param>
             <param-name>authRedirectUrl</param-name>
             <param-value>/index.jsp</param-value>
         </init-param>
 
-        <!-- Thrift host to be used if using org.wso2.carbon.identity.entitlement.filter.client.ThriftEntitlementServiceClient as clientClass -->
-        <init-param>
-            <param-name>thriftHost</param-name>
-            <param-value>localhost</param-value>
-        </init-param>
 
-        <!-- Thrift port to be used if using org.wso2.carbon.identity.entitlement.filter.client.ThriftEntitlementServiceClient as clientClass -->
-        <init-param>
-            <param-name>thriftPort</param-name>
-            <param-value>10500</param-value>
-        </init-param>
     </filter>
 
     <!-- Filter mappings used to configure URLs that need to be authorized  -->

@@ -26,7 +26,6 @@ public class EntitlementFilterUtils {
 
     /**
      * Return an instance of a named cache that is common to all tenants.
-     *
      * @param name the name of the cache.
      * @return the named cache instance.
      */
@@ -46,7 +45,6 @@ public class EntitlementFilterUtils {
 
     /**
      * This creates the XACML 2.0 Request element from available attribute values
-     *
      * @param userName userName
      * @param resource resourceName
      * @param action   Action

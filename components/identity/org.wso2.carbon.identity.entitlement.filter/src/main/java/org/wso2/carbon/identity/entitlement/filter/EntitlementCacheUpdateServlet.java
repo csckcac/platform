@@ -216,7 +216,7 @@ public class EntitlementCacheUpdateServlet extends HttpServlet {
                 }catch (IOException e){
                     log.error("Error occurred while writing /updateCache.html page to OutputStream");
                     throw new EntitlementCacheUpdateServletException("Error occurred while writing"
-                                                       + " /updateCache.html page to OutputStream");
+                                                       + " /updateCache.html page to OutputStream"+e);
                 }
             } else if (authenticationPage.equals("custom")) {
 

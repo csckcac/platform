@@ -27,9 +27,7 @@ public class EntitlementConstants {
 
     public static final String PORT = "remoteServicePort";
 
-    public static final String CONTEXT = "context";
-
-    public static final String CLIENT_CLASS = "clientClass";
+    public static final String TRANSPORT = "transportType";
 
     public static final String SUBJECT_SCOPE = "subjectScope";
 
@@ -39,56 +37,50 @@ public class EntitlementConstants {
 
     public static final String MAX_CACHE_ENTRIES = "maxCacheEntries";
 
-    public static final String CACHE_INVALIDATION_INTERVAL = "cacheInvalidationInterval";
-
     public static final String AUTH_REDIRECT_URL = "authRedirectUrl";
 
-    public final static String DECISION_CACHE = "DECISION_CACHE";
+    public static final String WSO2_IS = "wso2is";
 
-    public static final String THRIFT_HOST = "thriftHost";
+    public static final String WEB_APP = "webapp";
 
-    public static final String THRIFT_PORT = "thriftPort";
+    public static final String PERMIT = "Permit";
 
-    public final static int SIMPLE_CACHE_MAX_ENTRIES = 10000;
+    public static final String DENY = "Deny";
 
-    public static final int DEFAULT_THRIFT_PORT = 10500;
+    public static final String NOT_APPLICABLE = "NotApplicable";
 
-    public static final int THRIFT_TIME_OUT = 30000;
+    public static final String REQUEST_PARAM = "request-param";
 
-    public final static String DEFAULT = "default";
+    public static final String REQUEST_ATTIBUTE = "request-attribute";
 
-    public final static String ENABLE = "enable";
+    public static final String Basic_Auth = "basic-auth";
 
-    public final static String DISABLE = "disable";
+    public static final String SESSION = "session";
 
-    public final static String WSO2_IS = "wso2is";
+    public static final String HTTPS_PORT = "httpsPort";
 
-    public final static String WSO2_AS = "wso2as";
+    public static final String AUTHENTICATION = "authentication";
 
-    public final static String WEB_APP = "webapp";
+    public static final String AUTHENTICATION_PAGE = "authenticationPage";
 
-    public final static String PERMIT = "PERMIT";
+    public static final String AUTHENTICATION_PAGE_URL = "authenticationPageUrl";
 
-    public final static String DENY = "DENY";
+    public static final String defaultRemoteServiceUserName = "admin";
 
-    public final static String NOT_APPLICABLE = "NotApplicable";
+    public static final String defaultRemoteServicePassword = "admin";
 
-    public final static String REQUEST_PARAM = "request-param";
+    public static final String defaultRemoteServiceHost = "localhost";
 
-    public final static String REQUEST_ATTIBUTE = "request-attribute";
+    public static final String defaultRemoteServicePort = "9443";
 
-    public final static String SESSION = "session";
+    public static final String defaultTransportType = "soap";
 
-    public final static String HTTPS_PORT = "httpsPort";
+    public static final String defaultSubjectScope = "basic-auth";
 
-    public final static String AUTHENTICATION = "authentication";
+    public static final String defaultSubjectAttributeName = "username";
 
-    public final static String AUTHENTICATION_PAGE = "authenticationPage";
+    public static final String defaultDecisionCaching = "disable";
 
-    public final static String AUTHENTICATION_PAGE_URL = "authenticationPageUrl";
-
-    public final static String TRUST_STORE = "javax.net.ssl.trustStore";
-
-    public final static String TRUST_STORE_PASSWORD = "javax.net.ssl.trustStorePassword";
+    public static final String defaultMaxCacheEntries = "100";
 
 }

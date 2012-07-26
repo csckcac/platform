@@ -33,6 +33,7 @@ public class SQLParserUtil {
     public static List<String> specialFunctions = new ArrayList<String>();
     public static List<String> stringFunctions = new ArrayList<String>();
     public static List<String> aggregateFunctions = new ArrayList<String>();
+    public static List<Character> controlCharacters = new ArrayList<Character>();
 
     static {
         keyWords.add(LexicalConstants.COUNT);
@@ -131,6 +132,8 @@ public class SQLParserUtil {
         specialFunctions.add(LexicalConstants.NULL);
         specialFunctions.add(LexicalConstants.IN);
 
+        controlCharacters.add('\n');
+        controlCharacters.add('\r');
     }
 
     public static List<String> getKeyWords() {
@@ -176,15 +179,14 @@ public class SQLParserUtil {
         for (char c : inputCharacters) {
 
             if (!delimiters.contains(Character.valueOf(c).toString()) &&
-                    !operators.contains(Character.valueOf(c).toString())) {
+                    !operators.contains(Character.valueOf(c).toString()) &&
+                    !controlCharacters.contains(c)) {
                 token.append(c);
             } else {
                 if (token.length() > 0) {
                     tokenQueue.add(token.toString());
                 }
-                if (!(Character.valueOf(c).toString().equals(" ") ||
-                        Character.valueOf(c).toString().equals("\n") ||
-                        Character.valueOf(c).toString().equals("\r"))) {
+                if (!(Character.valueOf(c).toString().equals(" "))) {
                     tokenQueue.add(new StringBuilder().append(c).toString());
                 }
                 token = new StringBuilder();

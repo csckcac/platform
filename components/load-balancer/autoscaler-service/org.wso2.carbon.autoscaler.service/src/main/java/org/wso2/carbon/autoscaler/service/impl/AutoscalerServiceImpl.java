@@ -37,6 +37,7 @@ import java.util.Iterator;
 import java.util.List;
 import java.util.Map;
 import java.util.Set;
+import java.util.UUID;
 import java.util.zip.ZipEntry;
 import java.util.zip.ZipInputStream;
 import java.util.zip.ZipOutputStream;
@@ -76,19 +77,7 @@ import org.wso2.carbon.utils.CarbonUtils;
  */
 public class AutoscalerServiceImpl implements IAutoscalerService {
 
-	private static final String VALUE_SEPARATOR = "=";
-
-	private static final String ENTRY_SEPARATOR = ",";
-
-	private static final String APP_PATH_KEY = "APP_PATH";
-
-	private static final String TENANT_KEY = "TENANT";
-
-	/**
-	 * Super tenant id
-	 */
-    private static final String SUPER_TENANT_ID = "-1234";
-
+	
 	private static final Log log = LogFactory.getLog(AutoscalerServiceImpl.class);
 
     /**
@@ -630,6 +619,8 @@ public class AutoscalerServiceImpl implements IAutoscalerService {
     private byte[] getUserData(String payloadFileName, String tenantId) {
  
     	byte[] bytes = null;
+    	File outputFile = null;
+    	String tempfilename = UUID.randomUUID().toString();
         try {
             File file = new File(payloadFileName);
             if (!file.exists()) {
@@ -640,22 +631,29 @@ public class AutoscalerServiceImpl implements IAutoscalerService {
             }
             if(tenantId != null) {
             	// Tenant Id is available. This is an spi scenario. Edit the payload content
-            	editPayload(tenantId,file);
+            	editPayload(tenantId,file,tempfilename);
+            	outputFile = new File(CARBON_HOME + File.separator + AutoscalerConstant.RESOURCES_DIR + File.separator + tempfilename+".zip");
+            } else {
+            	outputFile = file;
             }
-            bytes = getBytesFromFile(file);
+            bytes = getBytesFromFile(outputFile);
 
         } catch (IOException e) {
             handleException("Cannot read data from payload file " + payloadFileName, e);
         }
+        
+        // Remove temporary payload file
+        outputFile.delete();
+        
         return bytes;
     }
 
     
-    private void editPayload(String tenantName, File file) {
+    private void editPayload(String tenantName, File file, String tempfileName) {
 		
-    	unzipFile(file);
-    	editContent(tenantName, file);
-    	zipPayloadFile();    	
+    	unzipFile(file, tempfileName);
+    	editContent(tenantName, file, tempfileName);
+    	zipPayloadFile(tempfileName);    	
 	}
 
     
@@ -663,8 +661,9 @@ public class AutoscalerServiceImpl implements IAutoscalerService {
 	 * unzips the payload file
 	 * 
 	 * @param file
+     * @param tempfileName 
 	 */
-	private void unzipFile(File file) {
+	private void unzipFile(File file, String tempfileName) {
 		
 		int buffer = 2048;
 		BufferedOutputStream dest = null;
@@ -681,8 +680,8 @@ public class AutoscalerServiceImpl implements IAutoscalerService {
 				
 				int count;
 				byte data[] = new byte[buffer];
-				String outputFilename = "tmpPayload" + File.separator + entry.getName();
-				createDirIfNeeded("tmpPayload", entry);
+				String outputFilename = tempfileName + File.separator + entry.getName();
+				createDirIfNeeded(tempfileName, entry);
 
 				// write the files to the disk
 				if (!entry.isDirectory()) {
@@ -723,11 +722,11 @@ public class AutoscalerServiceImpl implements IAutoscalerService {
 	 * @param tenantName
 	 * @param file
 	 */
-	private void editContent(String tenantName, File file) {
+	private void editContent(String tenantName, File file, String tempfileName) {
 
-		File f = new File(CARBON_HOME + File.separator + "tmpPayload"
-				+ File.separator + "payload" + File.separator
-				+ "launch-params");
+		File f = new File(CARBON_HOME + File.separator + tempfileName
+				+ File.separator + AutoscalerConstant.PAYLOAD_DIR + File.separator
+				+ AutoscalerConstant.PARAMS_FILE_NAME);
 
 		FileInputStream fs = null;
 		InputStreamReader in = null;
@@ -768,13 +767,13 @@ public class AutoscalerServiceImpl implements IAutoscalerService {
 		
 		StringBuffer outputBuffer = new StringBuffer();
 		Map<String, String> paramMap = new HashMap<String, String>();
-		String[] params = textinLine.split(ENTRY_SEPARATOR);
+		String[] params = textinLine.split(AutoscalerConstant.ENTRY_SEPARATOR);
 
 		for (int i = 0; i < params.length; i++) {
 
 			// split the params one by one
 			String param = params[i];
-			String[] values = param.split(VALUE_SEPARATOR);
+			String[] values = param.split(AutoscalerConstant.VALUE_SEPARATOR);
 			
 			if(values.length != 2) {
 				throw new AutoscalerServiceException("Incorrect format in parameters file");
@@ -785,9 +784,9 @@ public class AutoscalerServiceImpl implements IAutoscalerService {
 
 			String updatedValue = value;
 
-			if (TENANT_KEY.equals(key)) {
+			if (AutoscalerConstant.TENANT_KEY.equals(key)) {
 				updatedValue = tenantName;
-			} else if (APP_PATH_KEY.equals(key)) {
+			} else if (AutoscalerConstant.APP_PATH_KEY.equals(key)) {
 				updatedValue = getAppPathForTenant(tenantName,value);
 			} 
 			paramMap.put(key, updatedValue);
@@ -797,7 +796,7 @@ public class AutoscalerServiceImpl implements IAutoscalerService {
 		reOrganizeContent(outputBuffer, paramMap);
 
 		// cleanup output buffer
-		if (outputBuffer.substring(0, 1).equals(ENTRY_SEPARATOR)) {
+		if (outputBuffer.substring(0, 1).equals(AutoscalerConstant.ENTRY_SEPARATOR)) {
 			outputBuffer.delete(0, 1);
 		}
 
@@ -808,7 +807,7 @@ public class AutoscalerServiceImpl implements IAutoscalerService {
 	private void reOrganizeContent(StringBuffer outputBuffer, Map<String, String> paramMap) {
 		
 		for (Map.Entry<String, String> entry : paramMap.entrySet()) {
-			outputBuffer.append(ENTRY_SEPARATOR).append(entry.getKey()).append(VALUE_SEPARATOR)
+			outputBuffer.append(AutoscalerConstant.ENTRY_SEPARATOR).append(entry.getKey()).append(AutoscalerConstant.VALUE_SEPARATOR)
 																		.append(entry.getValue());
 		}
 	}
@@ -817,7 +816,7 @@ public class AutoscalerServiceImpl implements IAutoscalerService {
 	private String getAppPathForTenant(String tenantName, String appPath) {
 		// Assumes app path is /opt/wso2-app/repository/
 		StringBuffer updatedAppPath = new StringBuffer();
-		if(tenantName.equals(SUPER_TENANT_ID)){ 
+		if(tenantName.equals(AutoscalerConstant.SUPER_TENANT_ID)){ 
 			updatedAppPath.append(appPath).append("deployment").append(File.separator).append("server")
 															   .append(File.separator).append("phpapps");
 		}else{
@@ -845,9 +844,10 @@ public class AutoscalerServiceImpl implements IAutoscalerService {
 	/**
 	 * 
 	 * Compress the modified files back into payload.zip
+	 * @param tempfileName 
 	 * 
 	 */
-	private void zipPayloadFile() {
+	private void zipPayloadFile(String tempfileName) {
 		
 		int buffer = 2048;
 		BufferedInputStream origin = null;
@@ -856,18 +856,18 @@ public class AutoscalerServiceImpl implements IAutoscalerService {
 		try {
 	         
 	         FileOutputStream dest = new 
-	           FileOutputStream(CARBON_HOME + File.separator + "resources" + File.separator + "payload.zip");
+	           FileOutputStream(CARBON_HOME + File.separator + AutoscalerConstant.RESOURCES_DIR + File.separator + tempfileName+".zip");
 	         out = new ZipOutputStream(new BufferedOutputStream(dest));
 	         byte data[] = new byte[buffer];
 	         
-	         File f = new File(CARBON_HOME + File.separator + "tmpPayload" + File.separator + "payload");
+	         File f = new File(CARBON_HOME + File.separator + tempfileName + File.separator + AutoscalerConstant.PAYLOAD_DIR);
 	         String files[] = f.list();
 
 	         for (int i=0; i<files.length; i++) {
-	            FileInputStream fi = new FileInputStream(CARBON_HOME + File.separator + "tmpPayload"
-		 				+ File.separator + "payload" + File.separator + files[i]);
+	            FileInputStream fi = new FileInputStream(CARBON_HOME + File.separator + tempfileName
+		 				+ File.separator + AutoscalerConstant.PAYLOAD_DIR + File.separator + files[i]);
 	            origin = new BufferedInputStream(fi, buffer);
-	            ZipEntry entry = new ZipEntry("payload" + File.separator + files[i]);
+	            ZipEntry entry = new ZipEntry(AutoscalerConstant.PAYLOAD_DIR + File.separator + files[i]);
 	            out.putNextEntry(entry);
 	            
 	            int count;
@@ -876,6 +876,12 @@ public class AutoscalerServiceImpl implements IAutoscalerService {
 	            }
 	            origin.close();
 	         }
+	         
+	         // delete temp files
+	         deleteDir(f);
+	         File fl = new File(CARBON_HOME + File.separator + tempfileName);
+	         fl.delete();
+	         
 	      } catch(Exception e) {
 	    	  log.error("Exception is occurred in zipping payload file after modification. Reason:" + e.getMessage());
 	    	  throw new AutoscalerServiceException(e.getMessage(),e);
@@ -885,6 +891,20 @@ public class AutoscalerServiceImpl implements IAutoscalerService {
 	      }
 	}	
 
+	private static boolean deleteDir(File dir) {
+	    if (dir.isDirectory()) {
+	        String[] children = dir.list();
+	        for (int i=0; i<children.length; i++) {
+	            boolean success = deleteDir(new File(dir, children[i]));
+	            if (!success) {
+	                return false;
+	            }
+	        }
+	    }
+
+	    // The directory is now empty so delete it
+	    return dir.delete();
+	}
 
 	private void createDirIfNeeded(String destDirectory, ZipEntry entry) {
 		
@@ -1078,13 +1098,13 @@ public class AutoscalerServiceImpl implements IAutoscalerService {
 
             template.getOptions()
                     .as(NovaTemplateOptions.class)
-                    .securityGroupNames(temp.getProperty("securityGroups").split(ENTRY_SEPARATOR));
+                    .securityGroupNames(temp.getProperty("securityGroups").split(AutoscalerConstant.ENTRY_SEPARATOR));
 
-            if (temp.getProperty("payload") != null) {
+            if (temp.getProperty(AutoscalerConstant.PAYLOAD_DIR) != null) {
                 template.getOptions()
                         .as(NovaTemplateOptions.class)
                         .userData(getUserData(CARBON_HOME + File.separator +
-                                              temp.getProperty("payload"), tenantId));
+                                              temp.getProperty(AutoscalerConstant.PAYLOAD_DIR), tenantId));
             }
 
             template.getOptions()
@@ -1143,13 +1163,13 @@ public class AutoscalerServiceImpl implements IAutoscalerService {
 
             template.getOptions()
                     .as(AWSEC2TemplateOptions.class)
-                    .securityGroups(temp.getProperty("securityGroups").split(ENTRY_SEPARATOR));
+                    .securityGroups(temp.getProperty("securityGroups").split(AutoscalerConstant.ENTRY_SEPARATOR));
 
-            if (temp.getProperty("payload") != null) {
+            if (temp.getProperty(AutoscalerConstant.PAYLOAD_DIR) != null) {
                 template.getOptions()
                         .as(AWSEC2TemplateOptions.class)
                         .userData(getUserData(CARBON_HOME + File.separator +
-                                              temp.getProperty("payload"), null));
+                                              temp.getProperty(AutoscalerConstant.PAYLOAD_DIR), null));
             }
 
             template.getOptions()
@@ -1184,7 +1204,7 @@ public class AutoscalerServiceImpl implements IAutoscalerService {
             str = iaases.name() + ", ";
         }
         str = str.trim();
-        return str.endsWith(ENTRY_SEPARATOR) ? str.substring(0, str.length() - 1) : str;
+        return str.endsWith(AutoscalerConstant.ENTRY_SEPARATOR) ? str.substring(0, str.length() - 1) : str;
     }
 
     @SuppressWarnings("unchecked")

@@ -52,4 +52,20 @@ public final class AutoscalerConstant {
      */
     public static final String IAAS_CONTEXT_LIST_SERIALIZING_FILE = "iaas-context-list.txt";
     public static final String DOMAIN_TO_LASTLY_USED_IAAS_MAP_SERIALIZING_FILE = "domain-to-lastly-used-iaas.txt";
+    
+    /**
+     * Payload related constants
+     */
+    public static final String PAYLOAD_DIR = "payload";
+    public static final String PARAMS_FILE_NAME = "launch-params";
+    public static final String RESOURCES_DIR = "resources";
+    public static final String VALUE_SEPARATOR = "=";
+    public static final String ENTRY_SEPARATOR = ",";
+    public static final String APP_PATH_KEY = "APP_PATH";
+    public static final String TENANT_KEY = "TENANT";
+    
+    /**
+	 * Super tenant id
+	 */
+    public static final String SUPER_TENANT_ID = "-1234";
 }

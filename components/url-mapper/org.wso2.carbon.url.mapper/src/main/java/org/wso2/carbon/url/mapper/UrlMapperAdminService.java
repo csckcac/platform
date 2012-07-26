@@ -47,6 +47,10 @@ public class UrlMapperAdminService extends AbstractAdmin {
 		}
 	}
 
+	public String getHttpPort () throws UrlMapperException {
+		return HostUtil.getHttpPort();
+	}
+	
 	public static PaginatedMappingData getPaginatedMappings(int pageNumber, String tenantDomain)
 			throws UrlMapperException {
 		MappingData[] mappings = HostUtil.getTenantSpecificMappingsFromRegistry(tenantDomain);
@@ -90,10 +94,9 @@ public class UrlMapperAdminService extends AbstractAdmin {
 		return domains.toArray(new String[domains.size()]);
 	}
 
-	private String getDomainNamePrefix() {
+	public String getDomainNamePrefix() {
 		MappingConfig config = MappingConfigManager.loadMappingConfiguration();
 		return config.getPrefix();
-
 	}
 
 	public boolean isMappingLimitExceeded(String webAppName) throws UrlMapperException {

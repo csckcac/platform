@@ -490,7 +490,7 @@ public class CassandraLogReader {
 		}
 		for (LogEvent event : allLogs) {
 			if (event.getAppName() != null && !event.getAppName().equals("")  && !event.getAppName().equals("NA")
-					&& !appList.contains(event.getAppName())) {
+					&& LoggingUtil.isAdmingService(event.getAppName()) && !appList.contains(event.getAppName())) {
 				appList.add(event.getAppName());
 			}
 		}

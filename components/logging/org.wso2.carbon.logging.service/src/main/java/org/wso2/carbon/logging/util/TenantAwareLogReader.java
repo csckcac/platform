@@ -24,7 +24,6 @@ public class TenantAwareLogReader {
 		String currTenantId = String.valueOf(CarbonContext.getCurrentContext().getTenantId());
 		return currTenantId.equals(tenantId);
 	}
-	
 
 	private boolean isCurrentProduct(String productName) {
 		String currProductName = ServerConfiguration.getInstance().getFirstProperty("Name");
@@ -32,7 +31,7 @@ public class TenantAwareLogReader {
 	}
 
 	public LogEvent[] getLogs(String appName) {
-		if(log.isTraceEnabled()) {
+		if (log.isTraceEnabled()) {
 			log.trace("Just to see wether tracing works");
 		}
 		int DEFAULT_NO_OF_LOGS = 100;
@@ -87,23 +86,21 @@ public class TenantAwareLogReader {
 					"NA") };
 		}
 	}
-	
-	
 
 	public LogEvent[] searchLog(String type, String keyword, String appName) {
 		if ("ALL".equalsIgnoreCase(type)) {
-			return getLogsForKey(keyword,appName);
+			return getLogsForKey(keyword, appName);
 		} else {
-			LogEvent[] filerByType = getLogsForType(type,appName);
+			LogEvent[] filerByType = getLogsForType(type, appName);
 			List<LogEvent> resultList = new ArrayList<LogEvent>();
 			if (filerByType != null) {
 				for (int i = 0; i < filerByType.length; i++) {
 					String logMessage = filerByType[i].getMessage();
-					String logger  =  filerByType[i].getLogger();
+					String logger = filerByType[i].getLogger();
 					if (logMessage != null
 							&& logMessage.toLowerCase().indexOf(keyword.toLowerCase()) > -1) {
 						resultList.add(filerByType[i]);
-					} else if(logger != null
+					} else if (logger != null
 							&& logger.toLowerCase().indexOf(keyword.toLowerCase()) > -1) {
 						resultList.add(filerByType[i]);
 					}
@@ -117,15 +114,14 @@ public class TenantAwareLogReader {
 		}
 	}
 
-	
-	private ArrayList <LogEvent> reverseLogList(List<LogEvent> resultList) {
+	private ArrayList<LogEvent> reverseLogList(List<LogEvent> resultList) {
 		ArrayList<LogEvent> reverseList = new ArrayList<LogEvent>(resultList.size());
-		for(int i=resultList.size()-1;i>=0;i--) {
+		for (int i = resultList.size() - 1; i >= 0; i--) {
 			reverseList.add(resultList.get(i));
 		}
 		return reverseList;
 	}
-	
+
 	public LogEvent[] getLogsForKey(String keyword, String appName) {
 		int DEFAULT_NO_OF_LOGS = 100;
 		int definedAmount;
@@ -160,9 +156,12 @@ public class TenantAwareLogReader {
 					String tenantId = tenantIdPattern.format(logEvt);
 					String result = messagePattern.format(logEvt);
 					String logger = loggerPattern.format(logEvt);
-					boolean isInLogMessage = result != null && (result.toLowerCase().indexOf(keyword.toLowerCase()) > -1 );
-					boolean isInLogger = logger != null && (logger.toLowerCase().indexOf(keyword.toLowerCase()) > -1);
-					if (isCurrentTenantId(tenantId) && isCurrentProduct(productName) && (isInLogMessage || isInLogger)) {
+					boolean isInLogMessage = result != null
+							&& (result.toLowerCase().indexOf(keyword.toLowerCase()) > -1);
+					boolean isInLogger = logger != null
+							&& (logger.toLowerCase().indexOf(keyword.toLowerCase()) > -1);
+					if (isCurrentTenantId(tenantId) && isCurrentProduct(productName)
+							&& (isInLogMessage || isInLogger)) {
 						if (appName == null || appName.equals("")) {
 							resultList.add(createLogEvent(logEvt));
 						} else {
@@ -188,17 +187,20 @@ public class TenantAwareLogReader {
 		}
 	}
 
-	public String [] getApplicationNames () {
+	public String[] getApplicationNames() {
 		List<String> appList = new ArrayList<String>();
 		LogEvent allLogs[] = getLogs("");
-		for (LogEvent event: allLogs ) {
-			if (event.getAppName() !=null && !event.getAppName().equals("") && !event.getAppName().equals("NA") && !appList.contains(event.getAppName())) {
+		for (LogEvent event : allLogs) {
+			if (event.getAppName() != null && !event.getAppName().equals("")
+					&& !event.getAppName().equals("NA")
+					&& !LoggingUtil.isAdmingService(event.getAppName())
+					&& !appList.contains(event.getAppName())) {
 				appList.add(event.getAppName());
 			}
 		}
 		return appList.toArray(new String[appList.size()]);
 	}
-	
+
 	public LogEvent[] getLogsForType(String type, String appName) {
 		int DEFAULT_NO_OF_LOGS = 100;
 		int definedAmount;
@@ -299,7 +301,7 @@ public class TenantAwareLogReader {
 					"") };
 		}
 	}
-	
+
 	private LogEvent createLogEvent(TenantAwareLoggingEvent logEvt) {
 		Appender appender = Logger.getRootLogger().getAppender(
 				LoggingConstants.WSO2CARBON_MEMORY_APPENDER);

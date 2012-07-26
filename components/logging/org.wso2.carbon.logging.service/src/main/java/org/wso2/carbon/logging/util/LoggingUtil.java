@@ -21,10 +21,13 @@ import java.util.ArrayList;
 import java.util.Enumeration;
 import java.util.HashSet;
 import java.util.List;
+import java.util.Map;
 import java.util.Set;
 
 import javax.activation.DataHandler;
 
+import org.apache.axis2.context.ConfigurationContext;
+import org.apache.axis2.description.AxisService;
 import org.apache.log4j.Appender;
 import org.apache.log4j.AppenderSkeleton;
 import org.apache.log4j.FileAppender;
@@ -34,8 +37,10 @@ import org.apache.log4j.Logger;
 import org.apache.log4j.PatternLayout;
 import org.apache.log4j.net.SyslogAppender;
 import org.springframework.util.Log4jConfigurer;
+import org.wso2.carbon.core.util.SystemFilter;
 import org.wso2.carbon.logging.appender.CarbonMemoryAppender;
 import org.wso2.carbon.logging.appenders.CircularBuffer;
+import org.wso2.carbon.logging.internal.DataHolder;
 import org.wso2.carbon.logging.registry.RegistryManager;
 import org.wso2.carbon.logging.service.LogViewerException;
 import org.wso2.carbon.logging.service.data.LogEvent;
@@ -53,10 +58,10 @@ public class LoggingUtil {
 	private static FileHandler fileReader = new FileHandler();
 	private static TenantAwareLogReader tenantAwareLogReader = new TenantAwareLogReader();
 	private static CassandraLogReader cassandraLogReader = new CassandraLogReader();
-	
+
 	public static final String SYSTEM_LOG_PATTERN = "[%d] %5p - %x %m {%c}%n";
 	private static final int MAX_LOG_MESSAGES = 200;
-	
+
 	public static LogEvent[] getLogs(String appName) {
 		return tenantAwareLogReader.getLogs(appName);
 	}
@@ -67,7 +72,7 @@ public class LoggingUtil {
 	}
 
 	public static LogEvent[] getLogsForKey(String keyword, String appName) {
-		return tenantAwareLogReader.getLogsForKey(keyword,appName);
+		return tenantAwareLogReader.getLogsForKey(keyword, appName);
 	}
 
 	public static LogEvent[] getLogsForType(String type, String appName) {
@@ -77,55 +82,85 @@ public class LoggingUtil {
 	public static boolean isStratosService() throws Exception {
 		return loggingReader.isStratosService();
 	}
-	
+
 	public static String[] getApplicationNames() {
 		return tenantAwareLogReader.getApplicationNames();
 	}
+
 	public static String[] getApplicationNamesFromCassandra() throws LogViewerException {
 		return cassandraLogReader.getApplicationNamesFromCassandra();
 	}
-	
+
 	public static void setSystemLoggingParameters(String logLevel, String logPattern)
 			throws Exception {
 		registryManager.updateConfigurationProperty(LoggingConstants.SYSTEM_LOG_LEVEL, logLevel);
 		registryManager
 				.updateConfigurationProperty(LoggingConstants.SYSTEM_LOG_PATTERN, logPattern);
 	}
-	
+
 	public static SyslogData getSyslogData() throws Exception {
 		return registryManager.getSyslogData();
 	}
 
-	public static boolean isLogEventAppenderConfigured () {
+	private static String[] getAdminServiceNames() {
+		ConfigurationContext configurationContext = DataHolder.getInstance()
+				.getServerConfigContext();
+		Map<String, AxisService> services = configurationContext.getAxisConfiguration()
+				.getServices();
+		List<String> adminServices = new ArrayList<String>();
+		for (Map.Entry<String, AxisService> entry : services.entrySet()) {
+			AxisService axisService = entry.getValue();
+			if (SystemFilter.isAdminService(axisService)
+					|| SystemFilter.isHiddenService(axisService)) {
+				adminServices.add(axisService.getName());
+			}
+		}
+		return adminServices.toArray(new String[adminServices.size()]);
+	}
+
+	public static boolean isAdmingService (String serviceName) {
+		String [] adminServices = getAdminServiceNames();
+		for (String adminService : adminServices) {
+			if (adminService.equals(serviceName)) {
+				return true;
+			}
+		}
+		return false;
+	}
+	public static boolean isLogEventAppenderConfigured() {
 		return cassandraLogReader.isLogEventAppenderConfigured();
 	}
-	
-	public static  LogEvent[] getSortedLogsFromCassandra( String priority, String keyword) throws LogViewerException {
+
+	public static LogEvent[] getSortedLogsFromCassandra(String priority, String keyword)
+			throws LogViewerException {
 		return cassandraLogReader.getLogs(priority, keyword);
 	}
 
-	public static  LogEvent[] getSortedAppLogsFromCassandra( String priority, String keyword, String appName) throws LogViewerException {
+	public static LogEvent[] getSortedAppLogsFromCassandra(String priority, String keyword,
+			String appName) throws LogViewerException {
 		return cassandraLogReader.getApplicationLogs(priority, keyword, appName);
 	}
-	
-	public static LogEvent[] getAllSystemLogs () {
+
+	public static LogEvent[] getAllSystemLogs() {
 		return tenantAwareLogReader.getAllSystemLogs();
 	}
+
 	public static int getNoOfRows() throws LogViewerException {
 		return cassandraLogReader.getNoOfRows();
 	}
-	
+
 	public static LogInfo[] getLogsIndex(String tenantDomain, String serviceName) throws Exception {
 		return loggingReader.getLogsIndex(tenantDomain, serviceName);
 	}
-	
+
 	public static LogInfo[] getLocalLogInfo() {
 		return loggingReader.getLocalLogInfo();
 	}
 
-	public static  LogInfo[] getRemoteLogFiles() throws LogViewerException  {
+	public static LogInfo[] getRemoteLogFiles() throws LogViewerException {
 		return fileReader.getRemoteLogFiles();
 	}
+
 	public static String getSystemLogLevel() throws Exception {
 		String systemLogLevel = registryManager
 				.getConfigurationProperty(LoggingConstants.SYSTEM_LOG_LEVEL);
@@ -323,15 +358,15 @@ public class LoggingUtil {
 		}
 	}
 
-	public static int getLineNumbers(String logFile)
-			throws Exception {
+	public static int getLineNumbers(String logFile) throws Exception {
 		return fileReader.getLineNumbers(logFile);
 	}
 
-	public static String[] getLogLinesFromFile(String logFile, int maxLogs, int start, int end) throws LogViewerException {
+	public static String[] getLogLinesFromFile(String logFile, int maxLogs, int start, int end)
+			throws LogViewerException {
 		return fileReader.getLogLinesFromFile(logFile, maxLogs, start, end);
 	}
-	
+
 	/**
 	 * This method stream log messages and retrieve 100 log messages per page
 	 * 

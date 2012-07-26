@@ -16,21 +16,21 @@
 
 package org.wso2.carbon.logging.internal;
 
+import java.io.File;
+
 import org.apache.commons.logging.Log;
 import org.apache.commons.logging.LogFactory;
 import org.osgi.framework.BundleContext;
 import org.osgi.service.component.ComponentContext;
+import org.wso2.carbon.logging.registry.RegistryManager;
+import org.wso2.carbon.logging.util.LoggingConstants;
+import org.wso2.carbon.logging.util.LoggingUtil;
 import org.wso2.carbon.registry.core.service.RegistryService;
 import org.wso2.carbon.user.api.RealmConfiguration;
 import org.wso2.carbon.user.core.service.RealmService;
 import org.wso2.carbon.user.core.tenant.TenantManager;
 import org.wso2.carbon.utils.CarbonUtils;
-import org.wso2.carbon.logging.registry.RegistryManager;
-import org.wso2.carbon.logging.util.LoggingConstants;
-import org.wso2.carbon.logging.util.LoggingUtil;
-
-import java.net.URL;
-import java.io.File;
+import org.wso2.carbon.utils.ConfigurationContextService;
 
 /**
  * @scr.component name="org.wso2.carbon.logging.services" immediate="true"
@@ -42,6 +42,10 @@ import java.io.File;
  *                interface="org.wso2.carbon.user.core.service.RealmService"
  *                cardinality="1..1" policy="dynamic" bind="setRealmService"
  *                unbind="unsetRealmService"
+ * @scr.reference name="config.context.service"
+ * 				  interface="org.wso2.carbon.utils.ConfigurationContextService"
+ *                cardinality="1..1" policy="dynamic"  bind="setConfigurationContextService"
+ * 				  unbind="unsetConfigurationContextService"
  */
 public class LoggingServiceComponent {
     private static Log log = LogFactory.getLog(LoggingServiceComponent.class);
@@ -77,6 +81,14 @@ public class LoggingServiceComponent {
     
     public static RealmConfiguration getBootstrapRealmConfiguration() {
         return realmService.getBootstrapRealmConfiguration();
+    }
+    
+    protected void setConfigurationContextService(ConfigurationContextService contextService) {
+        DataHolder.getInstance().setServerConfigContext(contextService.getServerConfigContext());
+    }
+
+    protected void unsetConfigurationContextService(ConfigurationContextService contextService) {
+        DataHolder.getInstance().setServerConfigContext(null);
     }
     
     protected void deactivate(ComponentContext ctxt){

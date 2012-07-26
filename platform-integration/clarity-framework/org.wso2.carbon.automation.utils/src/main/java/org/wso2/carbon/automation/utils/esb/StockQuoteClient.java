@@ -1,20 +1,20 @@
 /*
-*Copyright (c) 2005-2010, WSO2 Inc. (http://www.wso2.org) All Rights Reserved.
-*
-*WSO2 Inc. licenses this file to you under the Apache License,
-*Version 2.0 (the "License"); you may not use this file except
-*in compliance with the License.
-*You may obtain a copy of the License at
-*
-*http://www.apache.org/licenses/LICENSE-2.0
-*
-*Unless required by applicable law or agreed to in writing,
-*software distributed under the License is distributed on an
-*"AS IS" BASIS, WITHOUT WARRANTIES OR CONDITIONS OF ANY
-*KIND, either express or implied.  See the License for the
-*specific language governing permissions and limitations
-*under the License.
-*/
+ * Copyright (c) 2005-2010, WSO2 Inc. (http://www.wso2.org) All Rights Reserved.
+ * 
+ * WSO2 Inc. licenses this file to you under the Apache License,
+ * Version 2.0 (the "License"); you may not use this file except
+ * in compliance with the License.
+ * You may obtain a copy of the License at
+ * 
+ * http://www.apache.org/licenses/LICENSE-2.0
+ * 
+ * Unless required by applicable law or agreed to in writing,
+ * software distributed under the License is distributed on an
+ * "AS IS" BASIS, WITHOUT WARRANTIES OR CONDITIONS OF ANY
+ * KIND, either express or implied. See the License for the
+ * specific language governing permissions and limitations
+ * under the License.
+ */
 
 package org.wso2.carbon.automation.utils.esb;
 
@@ -53,15 +53,17 @@ public class StockQuoteClient {
     private List<Header> httpHeaders = new ArrayList<Header>();
 
     public StockQuoteClient() {
-        String repositoryPath = "samples" + File.separator + "axis2Client" +
-                                File.separator + "client_repo";
+        String repositoryPath =
+                "samples" + File.separator + "axis2Client" + File.separator +
+                "client_repo";
 
         File repository = new File(repositoryPath);
         log.info("Using the Axis2 repository path: " + repository.getAbsolutePath());
 
         try {
-            cfgCtx = ConfigurationContextFactory.createConfigurationContextFromFileSystem(
-                    repository.getCanonicalPath(), null);
+            cfgCtx =
+                    ConfigurationContextFactory.createConfigurationContextFromFileSystem(repository.getCanonicalPath(),
+                                                                                         null);
             serviceClient = new ServiceClient(cfgCtx, null);
             log.info("Sample client initialized successfully...");
         } catch (Exception e) {
@@ -73,40 +75,49 @@ public class StockQuoteClient {
         serviceClient.addStringHeader(new QName(ns, localName), value);
     }
 
-    public OMElement sendSimpleStockQuoteRequest(String trpUrl, String addUrl,
-                                                 String symbol) throws AxisFault {
+    public OMElement sendSimpleStockQuoteRequest(String trpUrl, String addUrl, String symbol)
+            throws AxisFault {
 
         Options options = getOptions(trpUrl, addUrl);
         serviceClient.setOptions(options);
         return serviceClient.sendReceive(createStandardRequest(symbol));
     }
 
+    public OMElement sendSimpleQuoteRequest(String trpUrl, String addUrl, String symbol)
+            throws AxisFault {
 
-    public OMElement sendSimpleStockQuoteSoap11(String trpUrl, String addUrl,
-                                                 String symbol) throws AxisFault {
+        Options options = getOptions(trpUrl, addUrl, "getSimpleQuote");
+        serviceClient.setOptions(options);
+        return serviceClient.sendReceive(createStandardSimpleRequest(symbol));
+    }
+
+    public OMElement sendSimpleStockQuoteSoap11(String trpUrl, String addUrl, String symbol)
+            throws AxisFault {
 
         Options options = getOptions(trpUrl, addUrl);
         serviceClient.setOptions(options);
-        serviceClient.getOptions().setSoapVersionURI(org.apache.axiom.soap.SOAP11Constants.SOAP_ENVELOPE_NAMESPACE_URI);
+        serviceClient.getOptions()
+                .setSoapVersionURI(org.apache.axiom.soap.SOAP11Constants.SOAP_ENVELOPE_NAMESPACE_URI);
         return serviceClient.sendReceive(createStandardRequest(symbol));
     }
 
-
-    public OMElement sendSimpleStockQuoteSoap12(String trpUrl, String addUrl,
-                                                 String symbol) throws AxisFault {
+    public OMElement sendSimpleStockQuoteSoap12(String trpUrl, String addUrl, String symbol)
+            throws AxisFault {
 
         Options options = getOptions(trpUrl, addUrl);
         serviceClient.setOptions(options);
-        serviceClient.getOptions().setSoapVersionURI(org.apache.axiom.soap.SOAP12Constants.SOAP_ENVELOPE_NAMESPACE_URI);
+        serviceClient.getOptions()
+                .setSoapVersionURI(org.apache.axiom.soap.SOAP12Constants.SOAP_ENVELOPE_NAMESPACE_URI);
         return serviceClient.sendReceive(createStandardRequest(symbol));
     }
 
-    public OMElement sendSimpleStockQuoteRequest(String trpUrl, String addUrl, OMElement payload) throws AxisFault {
+    public OMElement sendSimpleStockQuoteRequest(String trpUrl, String addUrl, OMElement payload)
+            throws AxisFault {
 
-            Options options = getOptions(trpUrl, addUrl);
-            serviceClient.setOptions(options);
-            return serviceClient.sendReceive(payload);
-        }
+        Options options = getOptions(trpUrl, addUrl);
+        serviceClient.setOptions(options);
+        return serviceClient.sendReceive(payload);
+    }
 
     public OMElement sendSecuredSimpleStockQuoteRequest(String trpUrl, String addUrl,
                                                         String symbol, String policyPath)
@@ -124,16 +135,16 @@ public class StockQuoteClient {
         return serviceClient.sendReceive(createStandardRequest(symbol));
     }
 
-    public OMElement sendCustomQuoteRequest(String trpUrl, String addUrl,
-                                            String symbol) throws AxisFault {
+    public OMElement sendCustomQuoteRequest(String trpUrl, String addUrl, String symbol)
+            throws AxisFault {
 
         Options options = getOptions(trpUrl, addUrl);
         serviceClient.setOptions(options);
         return serviceClient.sendReceive(createCustomQuoteRequest(symbol));
     }
 
-    public OMElement sendMultipleQuoteRequest(String trpUrl, String addUrl,
-                                              String symbol, int n) throws AxisFault {
+    public OMElement sendMultipleQuoteRequest(String trpUrl, String addUrl, String symbol, int n)
+            throws AxisFault {
 
         Options options = getOptions(trpUrl, addUrl);
         serviceClient.setOptions(options);
@@ -153,6 +164,25 @@ public class StockQuoteClient {
         }
 
         options.setAction("urn:getQuote");
+        if (httpHeaders.size() > 0) {
+            options.setProperty(HTTPConstants.HTTP_HEADERS, httpHeaders);
+        }
+        return options;
+    }
+
+    private Options getOptions(String trpUrl, String addUrl, String operation) throws AxisFault {
+        Options options = new Options();
+
+        if (trpUrl != null && !"null".equals(trpUrl)) {
+            options.setProperty(Constants.Configuration.TRANSPORT_URL, trpUrl);
+        }
+
+        if (addUrl != null && !"null".equals(addUrl)) {
+            serviceClient.engageModule("addressing");
+            options.setTo(new EndpointReference(addUrl));
+        }
+
+        options.setAction("urn:" + operation);
         if (httpHeaders.size() > 0) {
             options.setProperty(HTTPConstants.HTTP_HEADERS, httpHeaders);
         }
@@ -188,6 +218,18 @@ public class StockQuoteClient {
         return method;
     }
 
+    private OMElement createStandardSimpleRequest(String symbol) {
+        OMFactory fac = OMAbstractFactory.getOMFactory();
+        OMNamespace omNs = fac.createOMNamespace("http://services.samples", "ns");
+        OMElement method = fac.createOMElement("getSimpleQuote", omNs);
+        OMElement value1 = fac.createOMElement("symbol", omNs);
+
+        value1.addChild(fac.createOMText(method, symbol));
+        method.addChild(value1);
+
+        return method;
+    }
+
     private OMElement createMultipleQuoteRequest(String symbol, int iterations) {
         OMFactory fac = OMAbstractFactory.getOMFactory();
         OMNamespace omNs = fac.createOMNamespace("http://services.samples", "ns");
@@ -205,8 +247,7 @@ public class StockQuoteClient {
 
     private OMElement createCustomQuoteRequest(String symbol) {
         OMFactory factory = OMAbstractFactory.getOMFactory();
-        OMNamespace ns = factory.createOMNamespace(
-                "http://services.samples", "ns");
+        OMNamespace ns = factory.createOMNamespace("http://services.samples", "ns");
         OMElement chkPrice = factory.createOMElement("CheckPriceRequest", ns);
         OMElement code = factory.createOMElement("Code", ns);
         chkPrice.addChild(code);
@@ -221,4 +262,3 @@ public class StockQuoteClient {
     }
 
 }
-

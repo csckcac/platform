@@ -18,7 +18,6 @@
 package org.wso2.carbon.automation.api.clients.rssmanager;
 
 import org.apache.axiom.om.OMAbstractFactory;
-import org.apache.axiom.om.OMElement;
 import org.apache.axiom.om.OMFactory;
 import org.apache.axiom.om.OMNamespace;
 import org.apache.axiom.om.util.Base64;

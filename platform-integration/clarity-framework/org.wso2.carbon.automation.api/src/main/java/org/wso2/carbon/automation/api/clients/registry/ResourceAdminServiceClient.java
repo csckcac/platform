@@ -103,7 +103,6 @@ public class ResourceAdminServiceClient {
             throws ResourceAdminServiceExceptionException, RemoteException {
 
         return resourceAdminServiceStub.delete(destinationPath);
-
     }
 
     public void addWSDL(String description, DataHandler dh)

@@ -43,7 +43,6 @@ public class ArtifactServiceClient {
         AuthenticatorClient authenticatorClient = new AuthenticatorClient(backEndURL);
         Stub stub = authenticatorClient.getAuthenticationAdminStub();
 
-
         ServiceClient client = stub._getServiceClient();
         Options options = client.getOptions();
         options.setManageSession(true);

@@ -52,7 +52,6 @@ public class LifeCycleAdminServiceClient {
             throws CustomLifecyclesChecklistAdminServiceExceptionException, RemoteException {
 
         customLifecyclesChecklistAdminServiceStub.addAspect(resourcePath, aspectName);
-
     }
 
     public void invokeAspect(String resourcePath, String aspectName,

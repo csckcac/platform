@@ -67,6 +67,17 @@
                 <checksumPolicy>ignore</checksumPolicy>
             </releases>
         </repository>
+        <repository>      
+		<snapshots>
+			<enabled>true</enabled>
+			<updatePolicy>daily</updatePolicy>
+			<checksumPolicy>ignore</checksumPolicy>
+		</snapshots>
+		<id>wso2-maven2-snapshot-repository</id>
+		<name>WSO2 Maven2 Snapshot Repository</name>
+		<url>http://dist.wso2.org/snapshots/maven2/</url>
+		<layout>default</layout>
+	</repository>
         <!--moved to nexus
 
         <repository>

@@ -115,4 +115,19 @@ public class PropertiesAdminServiceClient {
         }
     }
 
+    public void removeProperty(String path, String viewProps)
+            throws RemoteException, PropertiesAdminServiceRegistryExceptionException {
+        try {
+            propertiesAdminServiceStub.removeProperty(path, viewProps);
+        } catch (RemoteException e) {
+            String errMsg="Removing property fails";
+            log.error(errMsg);
+            throw new RemoteException(errMsg,e);
+        } catch (PropertiesAdminServiceRegistryExceptionException e) {
+            String errMsg="Removing property fails";
+            log.error(errMsg);
+            throw new PropertiesAdminServiceRegistryExceptionException(errMsg,e);
+        }
+    }
+
 }

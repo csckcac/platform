@@ -250,7 +250,8 @@ public class ResourceAdminServiceClient {
         }
     }
 
-    public void copyResource(String parentPath,String oldResourcePath,String destinationPath, String targetName)
+    public void copyResource(String parentPath, String oldResourcePath, String destinationPath,
+                             String targetName)
             throws RemoteException, ResourceAdminServiceExceptionException {
         try {
             resourceAdminServiceStub.copyResource(parentPath, oldResourcePath, destinationPath, targetName);
@@ -259,11 +260,12 @@ public class ResourceAdminServiceClient {
             throw new RemoteException("Copy resource error ", e);
         } catch (ResourceAdminServiceExceptionException e) {
             log.error("Copy resource error");
-            throw new ResourceAdminServiceExceptionException("Copy resource error",e);
+            throw new ResourceAdminServiceExceptionException("Copy resource error", e);
         }
     }
 
-    public void moveResource(String parentPath,String oldResourcePath,String destinationPath, String targetName)
+    public void moveResource(String parentPath, String oldResourcePath, String destinationPath,
+                             String targetName)
             throws RemoteException, ResourceAdminServiceExceptionException {
         try {
             resourceAdminServiceStub.moveResource(parentPath, oldResourcePath, destinationPath, targetName);
@@ -272,12 +274,9 @@ public class ResourceAdminServiceClient {
             throw new RemoteException("Copy resource error ", e);
         } catch (ResourceAdminServiceExceptionException e) {
             log.error("Move resource error");
-            throw new ResourceAdminServiceExceptionException("Copy resource error",e);
+            throw new ResourceAdminServiceExceptionException("Copy resource error", e);
         }
     }
-
-
-
 
 
     public VersionPath[] getVersion(String path)
@@ -362,12 +361,12 @@ public class ResourceAdminServiceClient {
             return resourceAdminServiceStub.getPermissions(path);
         } catch (Exception e) {
             log.error("Unable to get permission : " + e.getMessage());
-            throw new Exception("Unable to get permission : " , e);
+            throw new Exception("Unable to get permission : ", e);
         }
     }
 
 
-    public void renameResource(String parentPath,String oldResourcePath,String newResourceName)
+    public void renameResource(String parentPath, String oldResourcePath, String newResourceName)
             throws RemoteException, ResourceAdminServiceExceptionException {
         try {
             resourceAdminServiceStub.renameResource(parentPath, oldResourcePath, newResourceName);
@@ -376,7 +375,33 @@ public class ResourceAdminServiceClient {
             throw new RemoteException("Rename resource error ", e);
         } catch (ResourceAdminServiceExceptionException e) {
             log.error("Rename resource error");
-            throw new ResourceAdminServiceExceptionException("Rename resource error",e);
+            throw new ResourceAdminServiceExceptionException("Rename resource error", e);
+        }
+    }
+
+    public boolean addExtension(String name, DataHandler content)
+            throws RemoteException, ResourceAdminServiceExceptionException {
+        try {
+            return resourceAdminServiceStub.addExtension(name, content);
+        } catch (RemoteException e) {
+            log.error("Add extension error ");
+            throw new RemoteException("Rename resource error ", e);
+        } catch (ResourceAdminServiceExceptionException e) {
+            log.error("Add Extension error");
+            throw new ResourceAdminServiceExceptionException("Rename resource error", e);
+        }
+    }
+
+    public String[] listExtensions()
+            throws RemoteException, ResourceAdminServiceExceptionException {
+        try {
+            return resourceAdminServiceStub.listExtensions();
+        } catch (RemoteException e) {
+            log.error("List extensions error ");
+            throw new RemoteException("List extensions error ", e);
+        } catch (ResourceAdminServiceExceptionException e) {
+            log.error("List extensions error ");
+            throw new ResourceAdminServiceExceptionException("List extensions error ", e);
         }
     }
 }

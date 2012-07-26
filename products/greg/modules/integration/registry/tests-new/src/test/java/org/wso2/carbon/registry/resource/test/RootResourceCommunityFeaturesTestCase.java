@@ -61,7 +61,7 @@ import java.rmi.RemoteException;
 
 import static org.testng.Assert.*;
 
-public class RootCollectionCommunityFeaturesTestCase {
+public class RootResourceCommunityFeaturesTestCase {
 
     private UserInfo userInfo;
     private ResourceAdminServiceClient resourceAdminClient;
@@ -73,10 +73,11 @@ public class RootCollectionCommunityFeaturesTestCase {
     UserManagementClient userManagementClient;
 
     private static final String ROOT = "/";
-    private static final String COLL_NAME = "rootTestFolder";
+    private static final String RES_NAME = "rootTestResource";
     private static final String DEPENDENCY_PATH = "/_system/config/dependencyTest";
     private static final String TAG = "TestTag";
     private static final String ASSOCIATION_PATH = "/_system/config/associationTest";
+    private static final String RES_DESC = "A test resource";
 
     private final String ASPECT_NAME = "IntergalacticServiceLC";
     private static final String  ROLE_NAME="RoleSubscriptionTest";
@@ -95,46 +96,50 @@ public class RootCollectionCommunityFeaturesTestCase {
 
         resourceAdminClient =
                 new ResourceAdminServiceClient(environment.getGreg().getBackEndUrl(),
-                                               userInfo.getUserName(), userInfo.getPassword());
+                        userInfo.getUserName(), userInfo.getPassword());
         relationServiceClient =
                 new RelationAdminServiceClient(environment.getGreg().getBackEndUrl(),
-                                               userInfo.getUserName(), userInfo.getPassword());
+                        userInfo.getUserName(), userInfo.getPassword());
         lifeCycleManagementClient =
                 new LifeCycleManagementClient(environment.getGreg().getBackEndUrl(),
-                                              userInfo.getUserName(), userInfo.getPassword());
+                        userInfo.getUserName(), userInfo.getPassword());
         infoServiceAdminClient =
                 new InfoServiceAdminClient(environment.getGreg().getBackEndUrl(),
-                                           userInfo.getUserName(), userInfo.getPassword());
+                        userInfo.getUserName(), userInfo.getPassword());
         userManagementClient =
                 new UserManagementClient(environment.getGreg().getProductVariables().getBackendUrl(),
-                                         userInfo.getUserName(), userInfo.getPassword());
+                        userInfo.getUserName(), userInfo.getPassword());
         RegistryProviderUtil registryProviderUtil = new RegistryProviderUtil();
         wsRegistryServiceClient = registryProviderUtil.getWSRegistry(userId, ProductConstant.GREG_SERVER_NAME);
         searchAdminServiceClient = new SearchAdminServiceClient(environment.getGreg().getBackEndUrl(),
-                                                                userInfo.getUserName(), userInfo.getPassword());
+                userInfo.getUserName(), userInfo.getPassword());
 
     }
-
 
     @Test
-    public void testAddCollectionToRoot()
-            throws ResourceAdminServiceExceptionException, RemoteException {
+    public void testAddResourceToRoot()
+            throws ResourceAdminServiceExceptionException, RemoteException, MalformedURLException {
 
-        String fileType = "other";
-        String description = "A test collection";
-        resourceAdminClient.addCollection(ROOT, COLL_NAME, fileType, description);
-        String authorUserName = resourceAdminClient.getResource(ROOT + COLL_NAME)[0].getAuthorUserName();
-        assertTrue(userInfo.getUserName().equalsIgnoreCase(authorUserName), "Root collection creation failure");
+        String path = ProductConstant.SYSTEM_TEST_RESOURCE_LOCATION + "artifacts" + File.separator
+                + "GREG" + File.separator + "testresource.txt";
+        DataHandler dataHandler = new DataHandler(new URL("file:///" + path));
+
+        String fileType = "plain/text";
+        resourceAdminClient.addResource(ROOT+RES_NAME,fileType,RES_DESC,dataHandler);
+
+        String authorUserName = resourceAdminClient.getResource(ROOT + RES_NAME)[0].getAuthorUserName();
+        assertTrue(userInfo.getUserName().equalsIgnoreCase(authorUserName), "Root resource creation failure");
+
     }
 
-    @Test(dependsOnMethods = "testAddCollectionToRoot")
-    public void testAddDependencyToCollection()
+    @Test(dependsOnMethods = "testAddResourceToRoot")
+    public void testAddDependencyToRootResource()
             throws MalformedURLException, ResourceAdminServiceExceptionException, RemoteException,
-                   AddAssociationRegistryExceptionException {
+            AddAssociationRegistryExceptionException {
 
         //create the dependency
         String path = ProductConstant.SYSTEM_TEST_RESOURCE_LOCATION + "artifacts" + File.separator
-                      + "GREG" + File.separator + "testresource.txt";
+                + "GREG" + File.separator + "testresource.txt";
         DataHandler dataHandler = new DataHandler(new URL("file:///" + path));
 
         resourceAdminClient.addResource(DEPENDENCY_PATH, "text/plain", "desc", dataHandler);
@@ -143,30 +148,30 @@ public class RootCollectionCommunityFeaturesTestCase {
         String dependencyType = "depends";
         String todo = "add";
 
-        relationServiceClient.addAssociation(ROOT + COLL_NAME, dependencyType, DEPENDENCY_PATH, todo);
+        relationServiceClient.addAssociation(ROOT + RES_NAME, dependencyType, DEPENDENCY_PATH, todo);
 
-        DependenciesBean bean = relationServiceClient.getDependencies(ROOT + COLL_NAME);
+        DependenciesBean bean = relationServiceClient.getDependencies(ROOT + RES_NAME);
         assertTrue(dependencyType.equalsIgnoreCase(bean.getAssociationBeans()[0].getAssociationType()),
-                   "Association type is not correct");
+                "Association type is not correct");
 
         assertTrue(DEPENDENCY_PATH.equalsIgnoreCase(bean.getAssociationBeans()[0].getDestinationPath()),
-                   "Target association is not correct");
+                "Target association is not correct");
 
-        assertTrue((ROOT + COLL_NAME).equalsIgnoreCase(bean.getAssociationBeans()[0].getSourcePath()),
-                   "Source association is not correct");
+        assertTrue((ROOT + RES_NAME).equalsIgnoreCase(bean.getAssociationBeans()[0].getSourcePath()),
+                "Source association is not correct");
 
     }
 
-    @Test(dependsOnMethods = "testAddDependencyToCollection")
+    @Test(dependsOnMethods = "testAddDependencyToRootResource")
     public void testDeleteDependency()
             throws AddAssociationRegistryExceptionException, RemoteException {
 
         String dependencyType = "depends";
         String todo = "remove";
 
-        relationServiceClient.addAssociation(ROOT + COLL_NAME, dependencyType, DEPENDENCY_PATH, todo);
+        relationServiceClient.addAssociation(ROOT + RES_NAME, dependencyType, DEPENDENCY_PATH, todo);
 
-        DependenciesBean bean = relationServiceClient.getDependencies(ROOT + COLL_NAME);
+        DependenciesBean bean = relationServiceClient.getDependencies(ROOT + RES_NAME);
         AssociationBean[] aBeans = bean.getAssociationBeans();
 
         assertNull(aBeans, "Deleting dependency error");
@@ -176,9 +181,9 @@ public class RootCollectionCommunityFeaturesTestCase {
 
     @Test(dependsOnMethods = "testDeleteDependency")
     public void testAddRating() throws RegistryException, RegistryExceptionException {
-        infoServiceAdminClient.rateResource("1", ROOT + COLL_NAME, sessionId);
+        infoServiceAdminClient.rateResource("1", ROOT + RES_NAME, sessionId);
 
-        int userRating = infoServiceAdminClient.getRatings(ROOT + COLL_NAME, sessionId).getUserRating();
+        int userRating = infoServiceAdminClient.getRatings(ROOT + RES_NAME, sessionId).getUserRating();
 
         assertTrue(userRating == 1, "Resource rating error");
     }
@@ -186,8 +191,8 @@ public class RootCollectionCommunityFeaturesTestCase {
     @Test(dependsOnMethods = "testAddRating")
     public void testEditRating() throws RegistryException, RegistryExceptionException {
 
-        infoServiceAdminClient.rateResource("3", ROOT + COLL_NAME, sessionId);
-        int userRating = infoServiceAdminClient.getRatings(ROOT + COLL_NAME, sessionId).getUserRating();
+        infoServiceAdminClient.rateResource("3", ROOT + RES_NAME, sessionId);
+        int userRating = infoServiceAdminClient.getRatings(ROOT + RES_NAME, sessionId).getUserRating();
         assertTrue(userRating == 3, "Resource rating error");
 
     }
@@ -195,9 +200,9 @@ public class RootCollectionCommunityFeaturesTestCase {
     @Test(dependsOnMethods = "testEditRating")
     public void testAddTag() throws RegistryException, AxisFault, RegistryExceptionException {
 
-        infoServiceAdminClient.addTag(TAG, ROOT + COLL_NAME, sessionId);
+        infoServiceAdminClient.addTag(TAG, ROOT + RES_NAME, sessionId);
 
-        String tag = infoServiceAdminClient.getTags(ROOT + COLL_NAME, sessionId).getTags()[0].getTagName();
+        String tag = infoServiceAdminClient.getTags(ROOT + RES_NAME, sessionId).getTags()[0].getTagName();
 
         assertTrue(TAG.equalsIgnoreCase(tag), "Tags does not match");
     }
@@ -205,21 +210,21 @@ public class RootCollectionCommunityFeaturesTestCase {
     @Test(dependsOnMethods = "testAddTag", expectedExceptions = NullPointerException.class)
     public void testRemoveTag() throws RegistryException, RegistryExceptionException {
 
-        infoServiceAdminClient.removeTag(TAG, ROOT + COLL_NAME, sessionId);
+        infoServiceAdminClient.removeTag(TAG, ROOT + RES_NAME, sessionId);
 
-        infoServiceAdminClient.getTags(ROOT + COLL_NAME, sessionId).getTags()[0].getTagName();
+        infoServiceAdminClient.getTags(ROOT + RES_NAME, sessionId).getTags()[0].getTagName();
 
     }
 
     @Test(dependsOnMethods = "testRemoveTag", enabled = true)
     public void testAddAssociation()
             throws AddAssociationRegistryExceptionException, RemoteException,
-                   ResourceAdminServiceExceptionException,
-                   MalformedURLException {
+            ResourceAdminServiceExceptionException,
+            MalformedURLException {
 
         //create the resource file for association
         String path = ProductConstant.SYSTEM_TEST_RESOURCE_LOCATION + "artifacts" + File.separator
-                      + "GREG" + File.separator + "testresource.txt";
+                + "GREG" + File.separator + "testresource.txt";
         DataHandler dataHandler = new DataHandler(new URL("file:///" + path));
 
 
@@ -228,12 +233,12 @@ public class RootCollectionCommunityFeaturesTestCase {
         String associationType = "association";
         String todo = "add";
 
-        relationServiceClient.addAssociation(ROOT + COLL_NAME, associationType, ASSOCIATION_PATH, todo);
-        AssociationTreeBean aTreeBean = relationServiceClient.getAssociationTree(ROOT + COLL_NAME);
+        relationServiceClient.addAssociation(ROOT + RES_NAME, associationType, ASSOCIATION_PATH, todo);
+        AssociationTreeBean aTreeBean = relationServiceClient.getAssociationTree(ROOT + RES_NAME);
 
 
         assertTrue(aTreeBean.getAssociationTree().contains(ASSOCIATION_PATH),
-                   "Association is not correct");
+                "Association is not correct");
 
     }
 
@@ -244,9 +249,9 @@ public class RootCollectionCommunityFeaturesTestCase {
         String associationType = "association";
         String todo = "remove";
 
-        relationServiceClient.addAssociation(ROOT + COLL_NAME, associationType, ASSOCIATION_PATH, todo);
+        relationServiceClient.addAssociation(ROOT + RES_NAME, associationType, ASSOCIATION_PATH, todo);
 
-        DependenciesBean bean = relationServiceClient.getDependencies(ROOT + COLL_NAME);
+        DependenciesBean bean = relationServiceClient.getDependencies(ROOT + RES_NAME);
         AssociationBean[] aBeans = bean.getAssociationBeans();
 
         assertNull(aBeans, "Deleting association error");
@@ -254,13 +259,13 @@ public class RootCollectionCommunityFeaturesTestCase {
     }
 
     @Test(dependsOnMethods = "testRemoveAssociation")
-    public void testAddCommentToCollection()
+    public void testAddCommentToResource()
             throws AddAssociationRegistryExceptionException, RemoteException, RegistryException,
-                   RegistryExceptionException {
+            RegistryExceptionException {
 
-        infoServiceAdminClient.addComment("This is a comment", ROOT + COLL_NAME, sessionId);
+        infoServiceAdminClient.addComment("This is a comment", ROOT + RES_NAME, sessionId);
 
-        CommentBean cBean = infoServiceAdminClient.getComments(ROOT + COLL_NAME, sessionId);
+        CommentBean cBean = infoServiceAdminClient.getComments(ROOT + RES_NAME, sessionId);
         Comment[] comments = cBean.getComments();
         boolean found = false;
         for (Comment comment : comments) {
@@ -271,15 +276,15 @@ public class RootCollectionCommunityFeaturesTestCase {
         assertTrue(found, "Comment was not found");
     }
 
-    @Test(dependsOnMethods = "testAddCommentToCollection", enabled = true)
+    @Test(dependsOnMethods = "testAddCommentToResource", enabled = true)
     public void testDeleteComment() throws RegistryException, RegistryExceptionException {
 
-        CommentBean cBean = infoServiceAdminClient.getComments(ROOT + COLL_NAME, sessionId);
+        CommentBean cBean = infoServiceAdminClient.getComments(ROOT + RES_NAME, sessionId);
         Comment[] comments = cBean.getComments();
 
         infoServiceAdminClient.removeComment(comments[0].getCommentPath(), sessionId);
 
-        cBean = infoServiceAdminClient.getComments(ROOT + COLL_NAME, sessionId);
+        cBean = infoServiceAdminClient.getComments(ROOT + RES_NAME, sessionId);
         comments = cBean.getComments();
 
         boolean found = false;
@@ -296,21 +301,21 @@ public class RootCollectionCommunityFeaturesTestCase {
     }
 
     @Test(dependsOnMethods = "testDeleteComment")
-    public void testAddLifeCycleToCollection()
+    public void testAddLifeCycleToResource()
             throws IOException, LifeCycleManagementServiceExceptionException, InterruptedException,
-                   RegistryException,
-                   CustomLifecyclesChecklistAdminServiceExceptionException {
+            RegistryException,
+            CustomLifecyclesChecklistAdminServiceExceptionException {
 
         //create the life cycle
         String filePath = ProductConstant.SYSTEM_TEST_RESOURCE_LOCATION + "artifacts" + File.separator
-                          + "GREG" + File.separator + "lifecycle" + File.separator + "customLifeCycle.xml";
+                + "GREG" + File.separator + "lifecycle" + File.separator + "customLifeCycle.xml";
         String lifeCycleConfiguration = FileReader.readFile(filePath);
         assertTrue(lifeCycleManagementClient.addLifeCycle(lifeCycleConfiguration)
                 , "Adding New LifeCycle Failed");
         Thread.sleep(2000);
         lifeCycleConfiguration = lifeCycleManagementClient.getLifecycleConfiguration(ASPECT_NAME);
         assertTrue(lifeCycleConfiguration.contains("aspect name=\"IntergalacticServiceLC\""),
-                   "LifeCycleName Not Found in lifecycle configuration");
+                "LifeCycleName Not Found in lifecycle configuration");
 
         String[] lifeCycleList = lifeCycleManagementClient.getLifecycleList();
         assertNotNull(lifeCycleList);
@@ -324,7 +329,7 @@ public class RootCollectionCommunityFeaturesTestCase {
         assertTrue(found, "Life Cycle list not contain newly added life cycle");
 
         //associate the life cycle with the collection
-        wsRegistryServiceClient.associateAspect(ROOT + COLL_NAME, ASPECT_NAME);
+        wsRegistryServiceClient.associateAspect(ROOT + RES_NAME, ASPECT_NAME);
 
         String[] aspects = wsRegistryServiceClient.getAvailableAspects();
         found = false;
@@ -337,11 +342,11 @@ public class RootCollectionCommunityFeaturesTestCase {
         assertTrue(found, "Life cycle is not attached with the collection");
     }
 
-    @Test(dependsOnMethods = "testAddLifeCycleToCollection")
+    @Test(dependsOnMethods = "testAddLifeCycleToResource")
     public void testAddRole() throws Exception {
 
         userManagementClient.addRole(ROLE_NAME, new String[]{userInfo.getUserName()},
-                                     new String[]{""});
+                new String[]{""});
         assertTrue(userManagementClient.roleNameExists(ROLE_NAME));
     }
 
@@ -349,9 +354,9 @@ public class RootCollectionCommunityFeaturesTestCase {
     public void testAddSubscription() throws RemoteException {
 
         SubscriptionBean bean =
-                infoServiceAdminClient.subscribe(ROOT + COLL_NAME, "work://RoleSubscriptionTest",
-                                                 "ResourceUpdated",
-                                                 sessionId);
+                infoServiceAdminClient.subscribe(ROOT + RES_NAME, "work://RoleSubscriptionTest",
+                        "ResourceUpdated",
+                        sessionId);
         assertNotNull(bean.getSubscriptionInstances(), "Error adding subscriptions");
     }
 
@@ -359,11 +364,11 @@ public class RootCollectionCommunityFeaturesTestCase {
     public void testRemoveSubscription()
             throws RegistryException, RegistryExceptionException, RemoteException {
 
-        SubscriptionBean sBean = infoServiceAdminClient.getSubscriptions(ROOT + COLL_NAME, sessionId);
+        SubscriptionBean sBean = infoServiceAdminClient.getSubscriptions(ROOT + RES_NAME, sessionId);
 
-        infoServiceAdminClient.unsubscribe(ROOT + COLL_NAME, sBean.getSubscriptionInstances()[0].getId(), sessionId);
+        infoServiceAdminClient.unsubscribe(ROOT + RES_NAME, sBean.getSubscriptionInstances()[0].getId(), sessionId);
 
-        sBean = infoServiceAdminClient.getSubscriptions(ROOT + COLL_NAME, sessionId);
+        sBean = infoServiceAdminClient.getSubscriptions(ROOT + RES_NAME, sessionId);
 
         assertNull(sBean.getSubscriptionInstances(), "Error removing subscriptions");
     }
@@ -372,11 +377,11 @@ public class RootCollectionCommunityFeaturesTestCase {
     public void testDeleteLifeCycle()
             throws Exception {
 
-        resourceAdminClient.deleteResource(ROOT + COLL_NAME);
+        resourceAdminClient.deleteResource(ROOT + RES_NAME);
 
         wsRegistryServiceClient.removeAspect(ASPECT_NAME);
         assertTrue(lifeCycleManagementClient.deleteLifeCycle(ASPECT_NAME),
-                   "Life Cycle Deleted failed");
+                "Life Cycle Deleted failed");
 
         Thread.sleep(2000);
         CustomSearchParameterBean searchQuery = new CustomSearchParameterBean();
@@ -388,14 +393,13 @@ public class RootCollectionCommunityFeaturesTestCase {
         AdvancedSearchResultsBean result = searchAdminServiceClient.getAdvancedSearchResults(searchQuery);
         assertNull(result.getResourceDataList(), "Life Cycle Record Found even if it is deleted");
 
-        //cleanup code
 
+        //cleanup code
         resourceAdminClient.deleteResource(DEPENDENCY_PATH);
         resourceAdminClient.deleteResource(ASSOCIATION_PATH);
         userManagementClient.deleteRole(ROLE_NAME);
         wsRegistryServiceClient.removeAspect(ASPECT_NAME);
         lifeCycleManagementClient.deleteLifeCycle("IntergalacticServiceLC");
-
 
     }
 

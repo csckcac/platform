@@ -44,14 +44,12 @@ import java.io.IOException;
 import java.io.InputStream;
 import java.io.InputStreamReader;
 import java.net.HttpURLConnection;
-import java.net.MalformedURLException;
 import java.net.URL;
 import java.rmi.RemoteException;
 import java.util.Date;
 
 import static org.testng.Assert.assertNotNull;
 import static org.testng.Assert.assertTrue;
-import static org.testng.Assert.fail;
 
 public class RootCollectionManagementTestCase {
 
@@ -225,5 +223,6 @@ public class RootCollectionManagementTestCase {
         return AXIOMUtil.stringToOM(sb.toString());
 
     }
+
 
 }

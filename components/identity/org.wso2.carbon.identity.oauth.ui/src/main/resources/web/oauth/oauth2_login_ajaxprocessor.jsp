@@ -57,7 +57,9 @@
     <!-- Le styles -->
     <link href="assets/css/bootstrap.min.css" rel="stylesheet">
     <link href="css/localstyles.css" rel="stylesheet">
-
+	<!--[if lt IE 8]>
+      <link href="css/localstyles-ie7.css" rel="stylesheet">
+    <![endif]-->
 
     <!-- Le HTML5 shim, for IE6-8 support of HTML5 elements -->
     <!--[if lt IE 9]>

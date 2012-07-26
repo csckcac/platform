@@ -362,7 +362,9 @@
         }
     }
 
+ 
     function getAdminCookie(){
+        //TODO - get the cookie once and reuse
         var xhr = new XMLHttpRequest();
         var endPoint = getProperty(WS_GET_AUTH_COOKIE);
         xhr.open("POST", endPoint);
@@ -371,6 +373,7 @@
         var cookie=(xhr.getAllResponseHeaders());
         return cookie.split(";")[0].split(":")[1];
     }
+    
     function createDataSource(applicationId,stageName,name,url,driverClass,username,password,description){
      var ws = require('ws');
              var  createDataSourcesService = new ws.WSRequest();

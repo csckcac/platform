@@ -261,11 +261,6 @@
                                 </td>
                             <tr>
 
-                            <tr>
-                                <td class="buttonRow" colspan="2">
-                                    <input type="button" onclick=deployToDev() value='Deploy to Dev' class='btn btn-primary'/>
-                                </td>
-                            <tr>
                         </table>
                         </form>
                     </div>

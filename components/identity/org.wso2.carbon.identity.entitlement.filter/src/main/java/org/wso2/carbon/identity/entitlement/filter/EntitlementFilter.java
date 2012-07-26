@@ -44,8 +44,7 @@ public class EntitlementFilter implements Filter {
     private String domainID ="EntitlementFilter";
     private String remoteServiceUserName;
     private String remoteServicePassword;
-    private String remoteServiceHost;
-    private String remoteServicePort;
+    private String remoteServiceURL;
     private String transportType;
     private String subjectScope;
     private String subjectAttributeName;
@@ -67,8 +66,7 @@ public class EntitlementFilter implements Filter {
 
         remoteServiceUserName = filterConfig.getServletContext().getInitParameter(EntitlementConstants.USER);
         remoteServicePassword = filterConfig.getServletContext().getInitParameter(EntitlementConstants.PASSWORD);
-        remoteServiceHost = filterConfig.getServletContext().getInitParameter(EntitlementConstants.HOST);
-        remoteServicePort = filterConfig.getServletContext().getInitParameter(EntitlementConstants.PORT);
+        remoteServiceURL = filterConfig.getServletContext().getInitParameter(EntitlementConstants.REMOTE_SERVICE_URL);
         transportType = filterConfig.getServletContext().getInitParameter(EntitlementConstants.TRANSPORT);
         if(transportType==null){
             transportType=EntitlementConstants.defaultTransportType;
@@ -97,7 +95,7 @@ public class EntitlementFilter implements Filter {
 
         pClient= PDPProxy.getInstance();
         Map<String, String[]> config=new HashMap<String, String[]>();
-        String tempArr[]={"https://"+remoteServiceHost+":"+remoteServicePort+"/services/"};
+        String tempArr[]={remoteServiceURL};
         config.put("EntitlementFilter",tempArr) ;
         PDPConfig pConfig=new PDPConfig(remoteServiceUserName,remoteServicePassword,config,"EntitlementFilter",transportType,"enable".equals(decisionCaching),maxCacheEntries);
         pConfig.setAppToPDPMap(config);

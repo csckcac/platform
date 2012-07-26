@@ -23,9 +23,7 @@ public class EntitlementConstants {
 
     public static final String PASSWORD = "remoteServicePassword";
 
-    public static final String HOST = "remoteServiceHost";
-
-    public static final String PORT = "remoteServicePort";
+    public static final String REMOTE_SERVICE_URL = "remoteServiceURL";
 
     public static final String TRANSPORT = "transportType";
 

@@ -47,8 +47,7 @@ public class EntitlementCacheUpdateServlet extends HttpServlet {
     private ConfigurationContext configCtx;
     private String remoteServiceUserName;
     private String remoteServicePassword;
-    private String remoteServiceHost;
-    private String remoteServicePort;
+    private String remoteServiceURL;
     private String authCookie;
     private ServletConfig servletConfig;
     private String authentication;
@@ -67,8 +66,7 @@ public class EntitlementCacheUpdateServlet extends HttpServlet {
         }
         httpsPort = config.getInitParameter(EntitlementConstants.HTTPS_PORT);
         authentication = config.getInitParameter(EntitlementConstants.AUTHENTICATION);
-        remoteServiceHost = config.getServletContext().getInitParameter(EntitlementConstants.HOST);
-        remoteServicePort = config.getServletContext().getInitParameter(EntitlementConstants.PORT);
+        remoteServiceURL = config.getServletContext().getInitParameter(EntitlementConstants.REMOTE_SERVICE_URL);
         remoteServiceUserName = config.getServletContext().getInitParameter(EntitlementConstants.USER);
         remoteServicePassword = config.getServletContext().getInitParameter(EntitlementConstants.PASSWORD);
         authenticationPage = config.getInitParameter(EntitlementConstants.AUTHENTICATION_PAGE);
@@ -113,8 +111,7 @@ public class EntitlementCacheUpdateServlet extends HttpServlet {
         if (authentication.equals(EntitlementConstants.WSO2_IS)) {
 
             AuthenticationAdminStub authStub;
-            String authenticationAdminServiceURL = "https://" + remoteServiceHost + ":"
-                                                   + remoteServicePort + "/services/AuthenticationAdmin";
+            String authenticationAdminServiceURL = remoteServiceURL+"AuthenticationAdmin";
             try {
                 authStub = new AuthenticationAdminStub(configCtx, authenticationAdminServiceURL);
                 ServiceClient client = authStub._getServiceClient();

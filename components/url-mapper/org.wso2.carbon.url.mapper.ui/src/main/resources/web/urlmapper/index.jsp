@@ -44,7 +44,10 @@
 	UrlMapperServiceClient hostAdmin = new UrlMapperServiceClient(cookie, backendServerURL,
 			configContext);
 	String hosts[];
+	String port= hostAdmin.getHttpPort();
+	String prefix = hostAdmin.getPrefix();
 	String referance ="";
+	boolean isService=false;
 	try {
 		if (carbonEndpoint.contains("services")) {
 			String urlParts[] = carbonEndpoint.split(":\\d{4}");
@@ -52,9 +55,11 @@
 				referance = urlParts[1];
 			}
 			hosts = hostAdmin.getHostForEpr(carbonEndpoint);
+			
 		} else {
 			hosts = hostAdmin.getHostForWebApp(carbonEndpoint);
-			referance = carbonEndpoint;
+			referance = carbonEndpoint;port  = hostAdmin.getHttpPort();
+			isService=true;
 		}
 	} catch (Exception e) {
 		CarbonUIMessage.sendCarbonUIMessage(e.getLocalizedMessage(), CarbonUIMessage.ERROR,
@@ -80,11 +85,11 @@
                 msg += ": " + inputVal;
             	if (msg.match(failMsg)) //if match sucess 
 				{
-                    msg += ".wso2.com"; // + "\n" + "Please try below:"
+                    msg += ""; // + "\n" + "Please try below:"
                                 //+ inputVal + "app" + ".wso2.com" + inputVal + "123" + ".wso2.com";
                     CARBON.showErrorDialog(msg);
 				} else if (!msg.match(hostPrefix)) {
-                    msg += ".wso2.com";
+                    msg += "";
                     CARBON.showInfoDialog(msg, function(){
                                             document.location.href = "index.jsp?&carbonEndpoint=" + myepr;
                     });
@@ -189,9 +194,18 @@
 									%>
 									<td colspan="2"><fmt:message key="no.mappings.found" /></td>
 									<%
+										} else { 
+										if(isService) {
+											host=host+":"+port;
+											String url = "http://"+host+"/";
+											%>
+											<td><a href="<%=url%>"> <%=host%></a></td><%
 										} else {
+											%>
+											<td><%=host%></td><%
+										}
 									%>
-									<td><%=host%></td>
+								
 									<td>
 										<a class="icon-link"
 										style="background-image: url(images/edit.gif);"

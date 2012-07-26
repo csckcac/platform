@@ -57,6 +57,25 @@ public class UrlMapperServiceClient {
         }
     }
     
+    public  String getHttpPort () throws Exception {
+    	try {
+            return stub.getHttpPort();
+        } catch (Exception e) {
+            String msg = "Error getting URL Mappings. Backend service may be unavailable";
+            log.error(msg, e);
+            throw e;
+        }
+    }
+    
+    public String getPrefix () throws Exception {
+    	try {
+            return stub.getDomainNamePrefix();
+        } catch (Exception e) {
+            String msg = "Error getting URL Mappings. Backend service may be unavailable";
+            log.error(msg, e);
+            throw e;
+        }
+    }
     public  PaginatedMappingData getPaginatedMappings(int pageNumber, String tenantDomain) throws Exception {
     	  try {
               return stub.getPaginatedMappings(pageNumber,tenantDomain);

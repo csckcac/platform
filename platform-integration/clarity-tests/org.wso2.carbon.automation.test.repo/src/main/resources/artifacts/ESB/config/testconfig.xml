@@ -859,4 +859,49 @@
         </products>
     </scenario>
 
+
+<!--    <scenario testName="org.wso2.carbon.mediator.test.log.LogMediatorLevelTest">
+        <products>
+            <product name="AXIS2">
+                <artifacts userId="2">
+                    <artifact name="SimpleStockQuoteService.aar" type="aar"/>
+                </artifacts>
+            </product>
+            <product name="ESB">
+                <artifacts userId="2">
+                    <artifact name="log_mediator" type="synapseconfig"/>
+                </artifacts>
+            </product>
+        </products>
+    </scenario>-->
+
+
+    <scenario testName="org.wso2.carbon.mediator.test.fault.DemoTest">
+        <products>
+            <product name="AXIS2">
+                <artifacts userId="3">
+                    <artifact name="SimpleStockQuoteService.aar" type="aar"/>
+                </artifacts>
+
+            </product>
+            <product name="ESB">
+                <artifacts userId="3">
+                    <artifact name="log_mediator" type="synapseconfig"/>
+                </artifacts>
+            </product>
+        </products>
+    </scenario>
+
+
+
+    <scenario testName="org.wso2.carbon.mediator.test.send.SendMediatorTest">
+        <products>
+            <product name="ESB">
+                <artifacts userId="1">
+                    <artifact name="send_mediator" type="synapseconfig"/>
+                </artifacts>
+            </product>
+        </products>
+    </scenario>
+
 </scenarios>

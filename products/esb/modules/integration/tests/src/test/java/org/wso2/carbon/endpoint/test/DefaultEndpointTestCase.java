@@ -18,21 +18,21 @@
 
 package org.wso2.carbon.endpoint.test;
 
+import org.apache.axiom.om.util.AXIOMUtil;
+import org.testng.annotations.Test;
+import org.wso2.carbon.authenticator.stub.LoginAuthenticationExceptionException;
+import org.wso2.carbon.automation.api.clients.endpoint.EndPointAdminClient;
+import org.wso2.carbon.automation.core.utils.UserInfo;
+import org.wso2.carbon.automation.core.utils.UserListCsvReader;
+import org.wso2.carbon.automation.core.utils.environmentutils.EnvironmentBuilder;
+import org.wso2.carbon.automation.core.utils.environmentutils.ManageEnvironment;
+import org.wso2.carbon.endpoint.stub.types.EndpointAdminEndpointAdminException;
+
 import javax.xml.stream.XMLStreamException;
 import java.io.IOException;
 import java.rmi.RemoteException;
 import java.util.Arrays;
 import java.util.List;
-
-import org.apache.axiom.om.util.AXIOMUtil;
-import org.testng.annotations.Test;
-import org.wso2.carbon.automation.api.clients.endpoint.EndPointAdminClient;
-import org.wso2.carbon.authenticator.stub.LoginAuthenticationExceptionException;
-import org.wso2.carbon.endpoint.stub.types.EndpointAdminEndpointAdminException;
-import org.wso2.carbon.automation.core.utils.UserInfo;
-import org.wso2.carbon.automation.core.utils.UserListCsvReader;
-import org.wso2.carbon.automation.core.utils.environmentutils.EnvironmentBuilder;
-import org.wso2.carbon.automation.core.utils.environmentutils.ManageEnvironment;
 
 import static org.testng.Assert.assertEquals;
 import static org.testng.Assert.assertTrue;

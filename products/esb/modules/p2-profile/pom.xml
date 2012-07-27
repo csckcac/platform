@@ -105,7 +105,9 @@
 
                                 <featureArtifactDef>org.wso2.carbon:org.wso2.carbon.xfer.feature:${carbon.version}</featureArtifactDef>
                                 <featureArtifactDef>org.wso2.carbon:org.wso2.carbon.mex.feature:${carbon.version}</featureArtifactDef>
-                                <featureArtifactDef>org.wso2.carbon:org.wso2.carbon.datasource.feature:${carbon.version}</featureArtifactDef>
+                                
+				<featureArtifactDef>org.wso2.carbon:org.wso2.carbon.ndatasource.feature:${carbon.version}</featureArtifactDef>
+                                <featureArtifactDef>org.wso2.carbon:org.wso2.carbon.ndatasource.ui.feature:${carbon.version}</featureArtifactDef>
 
                                 <featureArtifactDef>org.wso2.carbon:org.wso2.carbon.tryit.feature:${carbon.version}</featureArtifactDef>
 
@@ -198,7 +200,7 @@
                                 <featureArtifactDef>org.wso2.carbon:org.wso2.carbon.load.balance.agent.server.feature:${stratos.version}</featureArtifactDef>
                                 <featureArtifactDef>org.wso2.carbon:org.wso2.carbon.transaction.manager.feature:${carbon.version}</featureArtifactDef>
 
-
+				<featureArtifactDef>org.wso2.carbon:org.wso2.carbon.datasource.server.feature:${carbon.version}</featureArtifactDef>
                             </featureArtifacts>
                         </configuration>
                     </execution>
@@ -244,8 +246,16 @@
                                     <id>org.apache.synapse.transport.fix.feature.group</id>
                                     <version>${synapse.version}</version>
                                 </feature>
+				<feature>
+                                    <id>org.wso2.carbon.datasource.server.feature.group</id>
+                                    <version>${carbon.version}</version>
+                                </feature>
                                 <feature>
-                                    <id>org.wso2.carbon.datasource.feature.group</id>
+                                    <id>org.wso2.carbon.ndatasource.feature.group</id>
+                                    <version>${carbon.version}</version>
+                                </feature>
+				<feature>
+                                    <id>org.wso2.carbon.ndatasource.ui.feature.group</id>
                                     <version>${carbon.version}</version>
                                 </feature>
                                 <feature>

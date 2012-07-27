@@ -430,7 +430,7 @@
                         </select>
                         <a href="<%=CommonUtil.getStratosConfig().getUsagePlanURL()%>"
                            target="_blank">
-                            <b>Pricing info</b></a>
+                            <b>Pricing Info</b></a>
                     </td>
 
 

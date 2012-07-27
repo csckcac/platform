@@ -209,7 +209,7 @@ public class PollTableEntry extends AbstractPollTableEntry {
         
         fileURI = ParamUtils.getOptionalParam(params, VFSConstants.TRANSPORT_FILE_FILE_URI);
         if (fileURI == null) {
-        	log.error("transport.vfs.FileURI parameter is missing in the proxy service configuration");
+        	log.warn("transport.vfs.FileURI parameter is missing in the proxy service configuration");
             return false;
         } else {
             

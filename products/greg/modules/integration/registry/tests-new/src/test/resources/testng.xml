@@ -39,6 +39,8 @@
             <class name="org.wso2.carbon.registry.reporting.test.ReportingTestCase"/>
             <class name="org.wso2.carbon.registry.activity.search.ActivitySearchByFilterTestCase"/>
             <class name="org.wso2.carbon.registry.activity.search.ActivitySearchByUserNameTestCase"/>
+            <class name="org.wso2.carbon.registry.activity.search.ActivitySearchSearchResultsTestCase"/>
+            <class name="org.wso2.carbon.registry.activity.search.ActivitySearchByPathTestCase"/>
         </classes>
     </test>
 </suite>

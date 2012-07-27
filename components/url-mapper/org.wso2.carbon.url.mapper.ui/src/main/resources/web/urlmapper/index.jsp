@@ -199,7 +199,7 @@
 										//	host=host+":"+port;
 											String url = "http://"+host+":"+port+"/";
 											%>
-											<td><a href="<%=url%>"> <%=host%></a></td><%
+											<td><a href="<%=url%>" target="_blank"> <%=host%></a></td><%
 										} else {
 											%>
 											<td><%=host%></td><%
@@ -223,16 +223,22 @@
 									} 
 										}
 								%>
-							
-						
-                <tr>             
-                    <td td colspan="2">
-                        <a class="icon-link"
-                           style="background-image:url(images/add.gif);" onclick="add('<%=carbonEndpoint%>');" title="Add Service Specific Url">
-                           Add New Mapping
-                        </a>
-                    </td>
-                </tr>    
+
+        <%
+            if(!hostAdmin.isMappingLimitExceeded(carbonEndpoint)) {
+        %>
+            <tr>
+                <td td colspan="2">
+                    <a class="icon-link"
+                    style="background-image:url(images/add.gif);" onclick="add('<%=carbonEndpoint%>');" title="Add Service Specific Url">
+                    Add New Mapping
+                    </a>
+                </td>
+            </tr>
+        <%
+            }
+        %>
+
              </table>
 		
 		 </div></div>

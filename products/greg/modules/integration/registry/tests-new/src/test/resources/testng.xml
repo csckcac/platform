@@ -41,6 +41,7 @@
             <class name="org.wso2.carbon.registry.activity.search.ActivitySearchByUserNameTestCase"/>
             <class name="org.wso2.carbon.registry.activity.search.ActivitySearchSearchResultsTestCase"/>
             <class name="org.wso2.carbon.registry.activity.search.ActivitySearchByPathTestCase"/>
+            <class name="org.wso2.carbon.registry.activity.search.ActivitySearchByDateTestCase"/>
         </classes>
     </test>
 </suite>

@@ -28,7 +28,7 @@
 </property>
 <property>
   <name>mapreduce.jobtracker.keytab.file</name>
-  <value>repository/conf/etc/hadoop/carbon.keytab</value> <!--path to the MapReduce keytab -->
+  <value>keytabs/carbon.keytab</value> <!--path to the MapReduce keytab -->
 </property>
 <property>
   <name>mapred.job.tracker.http.address</name>
@@ -46,7 +46,7 @@
 </property>
 <property>
   <name>mapreduce.tasktracker.keytab.file</name>
-  <value>repository/conf/etc/hadoop/carbon.keytab</value> <!--path to the MapReduce keytab -->
+  <value>keytabs/carbon.keytab</value> <!--path to the MapReduce keytab -->
 </property>
 <property>
   <name>mapred.task.tracker.http.address</name>

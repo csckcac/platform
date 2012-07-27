@@ -231,13 +231,13 @@ public class HostObjectUtil {
     }
 
     private static String serializeString(String obj) {
-        return "\"" + obj.replaceAll("\\n", "\\\\n").replaceAll("\"", "\\\\\"") + "\"";
+        return "\"" + obj.replace("\\", "\\\\").replace("\"", "\\\"").replace("\r", "\\r").replace("\n", "\\n")
+                .replace("\u2028", "\\u2028").replace("\u2029", "\\u2029") + "\"";
     }
 
     private static String serializeXML(ScriptableObject obj) {
         String xml = (String) ScriptableObject.callMethod(obj, "toXMLString", new Object[0]);
-        xml = xml.replaceAll("\\n", "\\\\n").replaceAll("\"", "\\\\\"");
-        return "\"" + xml + "\"";
+        return serializeString(xml);
     }
 
     private static void serializeNativeArray(NativeArray obj, StringWriter json) {

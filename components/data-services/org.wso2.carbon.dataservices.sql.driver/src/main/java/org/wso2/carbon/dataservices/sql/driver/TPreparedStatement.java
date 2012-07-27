@@ -20,11 +20,12 @@ package org.wso2.carbon.dataservices.sql.driver;
 
 import org.apache.commons.logging.Log;
 import org.apache.commons.logging.LogFactory;
-import org.wso2.carbon.dataservices.sql.driver.parser.AnalyzerException;
+import org.wso2.carbon.dataservices.sql.driver.parser.Parser;
 import org.wso2.carbon.dataservices.sql.driver.parser.SQLParserUtil;
-import org.wso2.carbon.dataservices.sql.driver.processor.DataProcessor;
-import org.wso2.carbon.dataservices.sql.driver.processor.DataProcessorFactory;
-import org.wso2.carbon.dataservices.sql.driver.query.TQuery;
+import org.wso2.carbon.dataservices.sql.driver.query.AbstractQueryFactory;
+import org.wso2.carbon.dataservices.sql.driver.query.ParamInfo;
+import org.wso2.carbon.dataservices.sql.driver.query.Query;
+import org.wso2.carbon.dataservices.sql.driver.query.QueryFactory;
 
 import java.io.InputStream;
 import java.io.Reader;
@@ -32,137 +33,139 @@ import java.math.BigDecimal;
 import java.net.URL;
 import java.sql.*;
 import java.util.Calendar;
-import java.util.HashMap;
-import java.util.Map;
+import java.util.Queue;
 
 public class TPreparedStatement extends TStatement implements PreparedStatement {
 
-    private TQuery query;
+    private ParamInfo[] parameters;
 
-    private Connection connection;
+    private boolean isClosed = false;
 
-    private Map<Integer, String> inputParamMap = new HashMap<Integer, String>();
+    private String sql;
 
-    private static final Log log = LogFactory.getLog(TPreparedStatement.class);
+    private String queryType;
 
-    public TPreparedStatement(Connection connection, TQuery query) {
-        this.query = query;
-        this.connection = connection;
+    private static Log log = LogFactory.getLog(TPreparedStatement.class);
+
+    private Queue<String> processedTokens;
+
+    QueryFactory factory;
+
+    public TPreparedStatement(Connection connection, String sql) {
+        super(connection);
+        this.sql = sql;
+        this.parameters = SQLParserUtil.extractParameters(this.getSql());
+        this.queryType = SQLParserUtil.extractFirstKeyword(this.getSql());
+        try {
+            this.processedTokens = Parser.parse(sql, queryType);
+        } catch (SQLException e) {
+            e.printStackTrace();
+        }
+        factory = AbstractQueryFactory.createQueryFactory(this.getQueryType());
     }
 
-    public TPreparedStatement(Connection connection) {
-        this.connection = connection;
-    }
+    public TPreparedStatement() {}
 
     public ResultSet executeQuery() throws SQLException {
-        TResultSet rs;
-        String conType = ((TConnection)this.getConnection()).getType();
-        try {
-            DataProcessor processor =
-                    DataProcessorFactory.createDataProcessor(conType, this.getQuery());
-            rs = processor.process();
-        } catch (AnalyzerException e) {
-            String msg = "Unable to create config processor";
-            log.error(msg, e);
-            throw new SQLException(msg, e);
-        }
-        return rs;
-    }
-
-    public TQuery getQuery() {
-        return query;
-    }
-
-    public Map<Integer, String> getInputParamMap() {
-        return inputParamMap;
+        Query query = this.getQueryFactory().createQuery(this.getConnection(),
+                this.getProcessedTokens(), this.getParameters());
+        return query.executeQuery();
     }
 
     public int executeUpdate() throws SQLException {
-        String queryType = this.getQuery().getType();
-        String conType = ((TConnection)this.getConnection()).getType();
-        if (!SQLParserUtil.isDMLStatement(queryType)) {
-            throw new SQLException("This operation is allowed only for DML Statements");
+        Query query = this.getQueryFactory().createQuery(this.getConnection(),
+                this.getProcessedTokens(), this.getParameters());
+        if (!SQLParserUtil.isDMLStatement(this.getQueryType())) {
+            throw new SQLException("'executeUpdate' is only allowed to be used with DML statements");
         }
-        try {
-            DataProcessor processor =
-                    DataProcessorFactory.createDataProcessor(conType, this.getQuery());
-            processor.process();
-        } catch (AnalyzerException e) {
-            String msg = "Unable to create config processor";
-            log.error(msg, e);
-            throw new SQLException(msg, e);
+        return query.executeUpdate();
+    }
+
+    private ParamInfo getParameter(int parameterIndex) throws SQLException {
+        if (parameterIndex > this.getParameters().length || parameterIndex < 0) {
+            throw new SQLException("Invalid parameter index '" + parameterIndex + "'");
         }
-        return 0;
+        return parameters[parameterIndex - 1];
+    }
+
+    private void setParameter(int parameterIndex, Object value,
+                              int targetSQLType) throws SQLException {
+        ParamInfo param = this.getParameter(parameterIndex);
+        if (param != null) {
+            param.setOrdinal(parameterIndex - 1);
+            param.setSqlType(targetSQLType);
+            param.setValue(value);
+        }
     }
 
     public void setNull(int parameterIndex, int sqlType) throws SQLException {
-
+        this.setParameter(parameterIndex, null, sqlType);
     }
 
     public void setBoolean(int parameterIndex, boolean x) throws SQLException {
-
+        this.setParameter(parameterIndex, x, Types.BOOLEAN);
     }
 
     public void setByte(int parameterIndex, byte x) throws SQLException {
-
+        throw new SQLFeatureNotSupportedException("Data type 'byte' is not supported");
     }
 
     public void setShort(int parameterIndex, short x) throws SQLException {
-
+        this.setParameter(parameterIndex, x, Types.INTEGER);
     }
 
     public void setInt(int parameterIndex, int x) throws SQLException {
-        this.getInputParamMap().put(parameterIndex, String.valueOf(x));
+        this.setParameter(parameterIndex, x, Types.INTEGER);
     }
 
     public void setLong(int parameterIndex, long x) throws SQLException {
-
+        this.setParameter(parameterIndex, x, Types.LONGNVARCHAR);
     }
 
     public void setFloat(int parameterIndex, float x) throws SQLException {
-
+        this.setParameter(parameterIndex, x, Types.FLOAT);
     }
 
     public void setDouble(int parameterIndex, double x) throws SQLException {
-
+        this.setParameter(parameterIndex, x, Types.DOUBLE);
     }
 
     public void setBigDecimal(int parameterIndex, BigDecimal x) throws SQLException {
-
+        this.setParameter(parameterIndex, x, Types.BIGINT);
     }
 
     public void setString(int parameterIndex, String x) throws SQLException {
-        this.getInputParamMap().put(parameterIndex, x);
+        this.setParameter(parameterIndex, x, Types.VARCHAR);
     }
 
     public void setBytes(int parameterIndex, byte[] x) throws SQLException {
-
+        throw new SQLFeatureNotSupportedException("Data type 'byte[]' is not supported");
     }
 
     public void setDate(int parameterIndex, Date x) throws SQLException {
-
+        throw new SQLFeatureNotSupportedException("Data type 'Date' is not supported");
     }
 
     public void setTime(int parameterIndex, Time x) throws SQLException {
-
+        throw new SQLFeatureNotSupportedException("Data type 'Time' is not supported");
     }
 
     public void setTimestamp(int parameterIndex, Timestamp x) throws SQLException {
-
+        throw new SQLFeatureNotSupportedException("Data type 'TimeStamp' is not supported");
     }
 
     public void setAsciiStream(int parameterIndex, InputStream x, int length) throws SQLException {
-
+        throw new SQLFeatureNotSupportedException("Data type is not supported");
     }
 
     public void setUnicodeStream(int parameterIndex, InputStream x,
                                  int length) throws SQLException {
-
+        throw new SQLFeatureNotSupportedException("Data type is not supported");
     }
 
     public void setBinaryStream(int parameterIndex, InputStream x,
                                 int length) throws SQLException {
-
+        throw new SQLFeatureNotSupportedException("Data type is not supported");
     }
 
     public void clearParameters() throws SQLException {
@@ -170,40 +173,42 @@ public class TPreparedStatement extends TStatement implements PreparedStatement 
     }
 
     public void setObject(int parameterIndex, Object x, int targetSqlType) throws SQLException {
-
+        this.setParameter(parameterIndex, x, targetSqlType);
     }
 
     public void setObject(int parameterIndex, Object x) throws SQLException {
-
+        this.setParameter(parameterIndex, x, -1);
     }
 
     public boolean execute() throws SQLException {
-        return false;
+        Query query = this.getQueryFactory().createQuery(this.getConnection(),
+                this.getProcessedTokens(), this.getParameters());
+        return query.execute();
     }
 
     public void addBatch() throws SQLException {
-
+        throw new SQLFeatureNotSupportedException("Batch addition is not supported");
     }
 
     public void setCharacterStream(int parameterIndex, Reader reader,
                                    int length) throws SQLException {
-
+        throw new SQLFeatureNotSupportedException("Data type is not supported");
     }
 
     public void setRef(int parameterIndex, Ref x) throws SQLException {
-
+        throw new SQLFeatureNotSupportedException("Data type 'Ref' is not supported");
     }
 
     public void setBlob(int parameterIndex, Blob x) throws SQLException {
-
+        throw new SQLFeatureNotSupportedException("Data type 'Blob' is not supported");
     }
 
     public void setClob(int parameterIndex, Clob x) throws SQLException {
-
+        throw new SQLFeatureNotSupportedException("Data type 'Clob' is not supported");
     }
 
     public void setArray(int parameterIndex, Array x) throws SQLException {
-
+        throw new SQLFeatureNotSupportedException("Data type 'Array' is not supported");
     }
 
     public ResultSetMetaData getMetaData() throws SQLException {
@@ -211,23 +216,23 @@ public class TPreparedStatement extends TStatement implements PreparedStatement 
     }
 
     public void setDate(int parameterIndex, Date x, Calendar cal) throws SQLException {
-
+        throw new SQLFeatureNotSupportedException("Data type 'Date' is not supported");
     }
 
     public void setTime(int parameterIndex, Time x, Calendar cal) throws SQLException {
-
+        throw new SQLFeatureNotSupportedException("Data type 'Time' is not supported");
     }
 
     public void setTimestamp(int parameterIndex, Timestamp x, Calendar cal) throws SQLException {
-
+        throw new SQLFeatureNotSupportedException("Data type 'TimeStamp' is not supported");
     }
 
     public void setNull(int parameterIndex, int sqlType, String typeName) throws SQLException {
-
+        throw new SQLFeatureNotSupportedException("Data type 'Null' is not supported");
     }
 
     public void setURL(int parameterIndex, URL x) throws SQLException {
-
+        throw new SQLFeatureNotSupportedException("Data type 'URL' is not supported");
     }
 
     public ParameterMetaData getParameterMetaData() throws SQLException {
@@ -239,248 +244,113 @@ public class TPreparedStatement extends TStatement implements PreparedStatement 
     }
 
     public void setNString(int parameterIndex, String value) throws SQLException {
-
+        throw new SQLFeatureNotSupportedException("Data type 'NString' is not supported");
     }
 
     public void setNCharacterStream(int parameterIndex, Reader value,
                                     long length) throws SQLException {
 
+        throw new SQLFeatureNotSupportedException("Data type 'NCharacterStream' is not supported");
     }
 
     public void setNClob(int parameterIndex, NClob value) throws SQLException {
-
+        throw new SQLFeatureNotSupportedException("Data type 'NClob' is not supported");
     }
 
     public void setClob(int parameterIndex, Reader reader, long length) throws SQLException {
-
+        throw new SQLFeatureNotSupportedException("Data type 'Clob' is not supported");
     }
 
     public void setBlob(int parameterIndex, InputStream inputStream,
                         long length) throws SQLException {
-
+        throw new SQLFeatureNotSupportedException("Data type 'Blob' is not supported");
     }
 
     public void setNClob(int parameterIndex, Reader reader, long length) throws SQLException {
-
+        throw new SQLFeatureNotSupportedException("Data type 'NClob' is not supported");
     }
 
     public void setSQLXML(int parameterIndex, SQLXML xmlObject) throws SQLException {
-
+        throw new SQLFeatureNotSupportedException("Data type 'SQLXML' is not supported");
     }
 
     public void setObject(int parameterIndex, Object x, int targetSqlType,
                           int scaleOrLength) throws SQLException {
-
+        this.setParameter(parameterIndex, x, targetSqlType);
     }
 
     public void setAsciiStream(int parameterIndex, InputStream x,
                                long length) throws SQLException {
-
+        throw new SQLFeatureNotSupportedException("Data type is not supported");
     }
 
     public void setBinaryStream(int parameterIndex, InputStream x,
                                 long length) throws SQLException {
-
+        throw new SQLFeatureNotSupportedException("Data type is not supported");
     }
 
     public void setCharacterStream(int parameterIndex, Reader reader,
                                    long length) throws SQLException {
-
+        throw new SQLFeatureNotSupportedException("Data type is not supported");
     }
 
     public void setAsciiStream(int parameterIndex, InputStream x) throws SQLException {
-
+        throw new SQLFeatureNotSupportedException("Data type is not supported");
     }
 
     public void setBinaryStream(int parameterIndex, InputStream x) throws SQLException {
-
+        throw new SQLFeatureNotSupportedException("Data type is not supported");
     }
 
     public void setCharacterStream(int parameterIndex, Reader reader) throws SQLException {
-
+        throw new SQLFeatureNotSupportedException("Data type is not supported");
     }
 
     public void setNCharacterStream(int parameterIndex, Reader value) throws SQLException {
-
+        throw new SQLFeatureNotSupportedException("Data type is not supported");
     }
 
     public void setClob(int parameterIndex, Reader reader) throws SQLException {
-
+        throw new SQLFeatureNotSupportedException("Data type 'Clob' is not supported");
     }
 
     public void setBlob(int parameterIndex, InputStream inputStream) throws SQLException {
-
+        throw new SQLFeatureNotSupportedException("Data type 'Blob' is not supported");
     }
 
     public void setNClob(int parameterIndex, Reader reader) throws SQLException {
-
+        throw new SQLFeatureNotSupportedException("Data type 'NClob' is not supported");
     }
 
-    public ResultSet executeQuery(String sql) throws SQLException {
-        return null;
+    public synchronized void close() throws SQLException {
+        if (this.isClosed()) {
+            throw new SQLException("Statement has already been closed");
+        }
+        isClosed = true;
     }
 
-    public int executeUpdate(String sql) throws SQLException {
-        return 0;
+    public ParamInfo[] getParameters() {
+        return parameters;
     }
 
-    public void close() throws SQLException {
-
+    private Queue<String> getProcessedTokens() {
+        return processedTokens;
     }
 
-    public int getMaxFieldSize() throws SQLException {
-        return 0;
+    public String getQueryType() {
+        return queryType;
     }
 
-    public void setMaxFieldSize(int max) throws SQLException {
-
-    }
-
-    public int getMaxRows() throws SQLException {
-        return 0;
-    }
-
-    public void setMaxRows(int max) throws SQLException {
-
-    }
-
-    public void setEscapeProcessing(boolean enable) throws SQLException {
-
-    }
-
-    public int getQueryTimeout() throws SQLException {
-        return 0;
-    }
-
-    public void setQueryTimeout(int seconds) throws SQLException {
-
-    }
-
-    public void cancel() throws SQLException {
-
-    }
-
-    public SQLWarning getWarnings() throws SQLException {
-        return null;
-    }
-
-    public void clearWarnings() throws SQLException {
-
-    }
-
-    public void setCursorName(String name) throws SQLException {
-
-    }
-
-    public boolean execute(String sql) throws SQLException {
-        return false;
-    }
-
-    public ResultSet getResultSet() throws SQLException {
-        return null;
-    }
-
-    public int getUpdateCount() throws SQLException {
-        return 0;
-    }
-
-    public boolean getMoreResults() throws SQLException {
-        return false;
-    }
-
-    public void setFetchDirection(int direction) throws SQLException {
-
-    }
-
-    public int getFetchDirection() throws SQLException {
-        return 0;
-    }
-
-    public void setFetchSize(int rows) throws SQLException {
-
-    }
-
-    public int getFetchSize() throws SQLException {
-        return 0;
-    }
-
-    public int getResultSetConcurrency() throws SQLException {
-        return 0;
-    }
-
-    public int getResultSetType() throws SQLException {
-        return 0;
-    }
-
-    public void addBatch(String sql) throws SQLException {
-
-    }
-
-    public void clearBatch() throws SQLException {
-
-    }
-
-    public int[] executeBatch() throws SQLException {
-        return new int[0];
-    }
-
-    public Connection getConnection() throws SQLException {
-        return connection;
-    }
-
-    public boolean getMoreResults(int current) throws SQLException {
-        return false;
-    }
-
-    public ResultSet getGeneratedKeys() throws SQLException {
-        return null;
-    }
-
-    public int executeUpdate(String sql, int autoGeneratedKeys) throws SQLException {
-        return 0;
-    }
-
-    public int executeUpdate(String sql, int[] columnIndexes) throws SQLException {
-        return 0;
-    }
-
-    public int executeUpdate(String sql, String[] columnNames) throws SQLException {
-        return 0;
-    }
-
-    public boolean execute(String sql, int autoGeneratedKeys) throws SQLException {
-        return false;
-    }
-
-    public boolean execute(String sql, int[] columnIndexes) throws SQLException {
-        return false;
-    }
-
-    public boolean execute(String sql, String[] columnNames) throws SQLException {
-        return false;
-    }
-
-    public int getResultSetHoldability() throws SQLException {
-        return 0;
+    public String getSql() {
+        return sql;
     }
 
     public boolean isClosed() throws SQLException {
-        return false;
+        return isClosed;
     }
 
-    public void setPoolable(boolean poolable) throws SQLException {
-
+    private QueryFactory getQueryFactory() {
+        return factory;
     }
 
-    public boolean isPoolable() throws SQLException {
-        return false;
-    }
-
-    public <T> T unwrap(Class<T> iface) throws SQLException {
-        return null;
-    }
-
-    public boolean isWrapperFor(Class<?> iface) throws SQLException {
-        return false;
-    }
 }

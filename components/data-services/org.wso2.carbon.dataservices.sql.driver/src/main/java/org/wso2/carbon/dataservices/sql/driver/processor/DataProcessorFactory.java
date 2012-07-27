@@ -20,15 +20,13 @@ package org.wso2.carbon.dataservices.sql.driver.processor;
 
 import org.wso2.carbon.dataservices.sql.driver.parser.AnalyzerException;
 import org.wso2.carbon.dataservices.sql.driver.parser.Constants;
-import org.wso2.carbon.dataservices.sql.driver.query.TQuery;
 
 public class DataProcessorFactory {
 
-    public static DataProcessor createDataProcessor(String type,
-                                                    TQuery query) throws AnalyzerException {
+    public static DataProcessor createDataProcessor(String type) throws AnalyzerException {
          type = type.toUpperCase();
         if (Constants.EXCEL.equals(type))  {
-            return new ExcelDataProcessor(query);
+            return new ExcelDataProcessor();
         } else {
             throw new AnalyzerException("Unsupported config type");
         }

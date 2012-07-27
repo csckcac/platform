@@ -1,5 +1,4 @@
-/*
- *  Copyright (c) 2005-2010, WSO2 Inc. (http://www.wso2.org) All Rights Reserved.
+/*  Copyright (c) 2005-2011, WSO2 Inc. (http://www.wso2.org) All Rights Reserved.
  *
  *  WSO2 Inc. licenses this file to you under the Apache License,
  *  Version 2.0 (the "License"); you may not use this file except
@@ -18,18 +17,13 @@
  */
 package org.wso2.carbon.dataservices.sql.driver.query;
 
+import java.sql.Connection;
 import java.sql.SQLException;
 import java.util.Queue;
 
-public class TSelectQuery extends TQuery {
+public interface QueryFactory {
 
-    public TSelectQuery(String type, Queue<String> tokens) {
-        super(type, tokens);
-    }
-
-    @Override
-    public void process() throws SQLException {
-        
-    }
+    public Query createQuery(Connection connection, Queue<String> tokens,
+                             ParamInfo[] parameters) throws SQLException;
 
 }

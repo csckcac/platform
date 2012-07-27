@@ -19,25 +19,14 @@
 package org.wso2.carbon.dataservices.sql.driver.processor;
 
 import org.wso2.carbon.dataservices.sql.driver.TResultSet;
-import org.wso2.carbon.dataservices.sql.driver.query.TQuery;
 
 import java.sql.SQLException;
 
 public class ExcelDataProcessor implements DataProcessor {
 
-    private TQuery query;
 
-    public ExcelDataProcessor(TQuery query) {
-        this.query = query;
-    }
-
+    @Override
     public TResultSet process() throws SQLException {
-        this.getQuery().process();
         return null;
     }
-
-    public TQuery getQuery() {
-        return query;
-    }
-
 }

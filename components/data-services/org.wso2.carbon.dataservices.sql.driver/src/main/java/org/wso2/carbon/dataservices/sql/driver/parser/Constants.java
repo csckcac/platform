@@ -18,6 +18,8 @@
  */
 package org.wso2.carbon.dataservices.sql.driver.parser;
 
+import java.sql.RowId;
+
 public class Constants {
 
     public static final String SEMI_COLON = ";";
@@ -118,4 +120,7 @@ public class Constants {
     public static final String GSPREAD = "GSPREAD";
     public static final String CSV = "CSV";
 
+    public static final String VALUE = "VALUE";
+    public static final String PARAM_VALUE = "PARAM_VALUE";
+    
 }

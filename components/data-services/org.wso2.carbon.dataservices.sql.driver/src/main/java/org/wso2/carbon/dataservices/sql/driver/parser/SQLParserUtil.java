@@ -18,6 +18,8 @@
  */
 package org.wso2.carbon.dataservices.sql.driver.parser;
 
+import org.wso2.carbon.dataservices.sql.driver.query.ParamInfo;
+
 import java.util.ArrayList;
 import java.util.LinkedList;
 import java.util.List;
@@ -89,6 +91,7 @@ public class SQLParserUtil {
         keyWords.add(Constants.JOIN);
         keyWords.add(Constants.INNER);
         keyWords.add(Constants.SUM);
+        keyWords.add(Constants.VALUE);
 
         operators.add(Constants.EQUAL);
         operators.add(Constants.MINUS);
@@ -221,7 +224,7 @@ public class SQLParserUtil {
                 token = new StringBuilder();
             }
         }
-        if (token.length()>0) {
+        if (token.length() > 0) {
             tokenQueue.add(token.toString());
         }
         return tokenQueue;
@@ -235,30 +238,40 @@ public class SQLParserUtil {
         return SQLParserUtil.getDMLTypeList().contains(type.toUpperCase());
     }
 
-    public static List<String> getSelectedColumns(Queue<String> tokens) {
-        List<String> columns = new ArrayList<String>();
-        while (!tokens.isEmpty() && tokens.contains(Constants.COLUMN)) {
-            if (Constants.COLUMNS.equals(tokens.peek())) {
-                tokens.poll();
+    public static ParamInfo[] extractParameters(String sql) {
+        List<ParamInfo> tmp = new ArrayList<ParamInfo>();
+        int i = 0;
+        int idx = 0;
+        char[] s = sql.toCharArray();
+        while (i < s.length - 1) {
+            final char c = s[i];
+            if (c == '?') {
+                ParamInfo param = new ParamInfo(idx, null);
+                tmp.add(param);
+                idx++;
             }
-            if (Constants.COLUMN.equals(tokens.peek())) {
-                tokens.poll();
-                columns.add(tokens.poll());
-            }
-            tokens.poll();
+            i++;
         }
-        return columns;
+        return tmp.toArray(new ParamInfo[tmp.size()]);
     }
 
-    public static List<String> getSelectedTables(Queue<String> tokens) {
-        List<String> tables = new ArrayList<String>();
-        while (!tokens.isEmpty() && tokens.contains(Constants.TABLE)) {
-            if (Constants.TABLE.equals(tokens.peek())) {
-                tokens.poll();
-                tables.add(tokens.poll());
+    public static String extractFirstKeyword(String sql) {
+        int i = 0;
+        char[] s = sql.toCharArray();
+        StringBuffer b = new StringBuffer();
+        while (i < s.length - 1) {
+            char c = s[i];
+            if (c != ' ') {
+                b.append(c);
+            } else {
+                break;
             }
+            i++;
         }
-        return tables;
+        String token = b.toString();
+        return (SQLParserUtil.isKeyword(token)) ? token : null;
     }
+
+
 
 }

@@ -21,6 +21,16 @@ package org.wso2.carbon.dataservices.sql.driver;
 import java.sql.*;
 
 public class TStatement implements Statement {
+
+    private Connection connection;
+
+    public TStatement(Connection connection) {
+        this.connection = connection;
+    }
+
+    public TStatement() {
+    }
+
     public ResultSet executeQuery(String sql) throws SQLException {
         return null;  
     }
@@ -130,7 +140,7 @@ public class TStatement implements Statement {
     }
 
     public Connection getConnection() throws SQLException {
-        return null;  
+        return connection;
     }
 
     public boolean getMoreResults(int current) throws SQLException {

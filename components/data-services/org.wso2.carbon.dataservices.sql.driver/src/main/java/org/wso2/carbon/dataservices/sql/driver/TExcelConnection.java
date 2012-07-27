@@ -18,11 +18,10 @@
  */
 package org.wso2.carbon.dataservices.sql.driver;
 
+import org.apache.commons.logging.Log;
+import org.apache.commons.logging.LogFactory;
 import org.apache.poi.hssf.usermodel.HSSFWorkbook;
 import org.apache.poi.ss.usermodel.Workbook;
-import org.wso2.carbon.dataservices.sql.driver.parser.AnalyzerException;
-import org.wso2.carbon.dataservices.sql.driver.parser.SQLParser;
-import org.wso2.carbon.dataservices.sql.driver.query.TQuery;
 
 import java.io.*;
 import java.sql.CallableStatement;
@@ -35,7 +34,7 @@ public class TExcelConnection extends TConnection {
 
     private Workbook workbook;
 
-    //private static final Log log = LogFactory.getLog(TExcelConnection.class);
+    private static final Log log = LogFactory.getLog(TExcelConnection.class);
 
     public TExcelConnection(Properties props) throws SQLException {
         super(props);
@@ -68,18 +67,17 @@ public class TExcelConnection extends TConnection {
         return workbook;
     }
     
+    public Statement createStatement(String sql) throws SQLException {
+        return new TPreparedStatement(this, sql);
+    }
+
+    @Override
     public Statement createStatement() throws SQLException {
-        return new TPreparedStatement(this);
+        return new TPreparedStatement();
     }
 
     public PreparedStatement prepareStatement(String sql) throws SQLException {
-        TQuery query;
-        try {
-            query = SQLParser.parse(sql);
-        } catch (AnalyzerException e) {
-            throw new SQLException("Unable to parse SQL string", e);
-        }
-        return new TPreparedStatement(this, query);
+        return new TPreparedStatement(this, sql);
     }
 
     @Override

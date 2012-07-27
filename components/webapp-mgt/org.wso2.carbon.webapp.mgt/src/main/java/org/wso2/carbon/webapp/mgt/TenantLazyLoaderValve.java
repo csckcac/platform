@@ -16,13 +16,14 @@
 package org.wso2.carbon.webapp.mgt;
 
 import org.apache.axis2.context.ConfigurationContext;
+import org.apache.catalina.connector.Request;
+import org.apache.catalina.startup.Tomcat;
 import org.apache.commons.logging.Log;
 import org.apache.commons.logging.LogFactory;
 import org.wso2.carbon.context.ApplicationContext;
 import org.wso2.carbon.core.multitenancy.utils.TenantAxisUtils;
 import org.wso2.carbon.tomcat.ext.valves.CarbonTomcatValve;
 import org.wso2.carbon.user.core.tenant.TenantManager;
-import org.wso2.carbon.utils.CarbonUtils;
 import org.wso2.carbon.utils.multitenancy.MultitenantConstants;
 import org.wso2.carbon.utils.multitenancy.MultitenantUtils;
 
@@ -38,18 +39,19 @@ public class TenantLazyLoaderValve implements CarbonTomcatValve {
 
     public void invoke(HttpServletRequest request, HttpServletResponse response) {
         String requestURI = request.getRequestURI();
-        String serverName = request.getServerName();
+        String requestedHostName = ((Request)request).getHost().getName();
 
-        //getting actual uri when accessing a virtual host through url mapping
-        String uriOfVirtualHost = ApplicationContext.getCurrentApplicationContext().
-                getApplicationFromUrlMapping(serverName);
-        String serverUrl = CarbonUtils.getServerURL(
-                CarbonUtils.getServerConfiguration(), DataHolder.getServerConfigContext());
-        if (!serverUrl.contains(serverName) &&
-                DataHolder.getHotUpdateService() != null && uriOfVirtualHost == null ) {
-            uriOfVirtualHost = DataHolder.getHotUpdateService().
-                    getApplicationContextForHost(serverName);
-            requestURI = uriOfVirtualHost;
+        //getting actual uri when accessing a virtual host through url mapping from the Map
+        ApplicationContext appContext = ApplicationContext.getCurrentApplicationContext();
+        String uriOfVirtualHost = appContext.getApplicationFromUrlMapping(requestedHostName);
+        Tomcat tomcat = DataHolder.getCarbonTomcatService().getTomcat();
+
+        if(!requestedHostName.equalsIgnoreCase(tomcat.getEngine().getDefaultHost())) {
+            if (DataHolder.getHotUpdateService() != null && uriOfVirtualHost == null ) {
+                uriOfVirtualHost = DataHolder.getHotUpdateService().
+                        getApplicationContextForHost(requestedHostName);
+                requestURI = uriOfVirtualHost;
+            }
         }
 
         String domain = MultitenantUtils.getTenantDomainFromRequestURL(requestURI);

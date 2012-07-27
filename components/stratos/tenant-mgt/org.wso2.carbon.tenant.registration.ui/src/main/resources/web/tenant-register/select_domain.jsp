@@ -49,13 +49,13 @@
         var foundFreePlan = false;
         for (var i = 0; i < packageInfo.length; i++) {
             if (packageInfo[i].subscriptionCharge == "0") {
-                document.getElementById("usage-plan-name").value = packageInfo[i].name;
+                document.getElementById("selectedUsagePlan").value = packageInfo[i].name;
                 foundFreePlan = true;
                 return;
             }
         }
         if(!foundFreePlan) {
-            document.getElementById("usage-plan-name").value = packageInfo[0].name;
+            document.getElementById("selectedUsagePlan").value = packageInfo[0].name;
         }
     }
 
@@ -354,7 +354,7 @@
                 </tr>
                 <tr id="buttonRow">
                     <td class="buttonRow">
-                        <input type="hidden" name="usage-plan-name" id="usage-plan-name"/>
+                        <input type="hidden" name="selectedUsagePlan" id="selectedUsagePlan"/>
                         <input type="hidden" name="captcha-secret-key" value="<%=captchaSecretKey%>"/>
                         <%
                             if (isPublicCloud) {

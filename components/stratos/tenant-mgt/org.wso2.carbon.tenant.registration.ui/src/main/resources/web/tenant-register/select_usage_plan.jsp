@@ -45,6 +45,7 @@
 
 <%
     boolean chargeOnRegistration = CommonUtil.isChargedOnRegistration();
+    String regDomain = (String)session.getAttribute("regTenantDomain");
 %>
     var packageInfo;
     function showRentalMessage() {
@@ -65,8 +66,8 @@
             });
         }
 
-        var plan = document.getElementById('usage-plan-name').
-                options[document.getElementById('usage-plan-name').selectedIndex].value;
+        var plan = document.getElementById('selectedUsagePlan').
+                options[document.getElementById('selectedUsagePlan').selectedIndex].value;
         var charge;
         for (var i = 0; i < packageInfo.length; i++) {
             if (packageInfo[i].name == plan) {
@@ -81,10 +82,11 @@
     }
 
     function makePayment() {
-        var selectEl = document.getElementById("usage-plan-name");
+        var selectEl = document.getElementById("selectedUsagePlan");
         var selectedUsagePlan = selectEl.options[selectEl.selectedIndex].value;
+        var regTenantDomain = '<%= regDomain%>';
 
-        var freePlan = false;
+
         for (var i = 0; i < packageInfo.length; i++) {
         <% if (chargeOnRegistration) { %>
             if (packageInfo[i].name == selectedUsagePlan && packageInfo[i].subscriptionCharge != "0") {
@@ -93,6 +95,13 @@
                 location.href = "../tenant-register/success_register.jsp";
             }
             <% } else { %>
+                                jQuery.ajax({
+                                    type: 'POST',
+                                    url: '../payment/upgrade_registration_usage_plan_ajaxprocessor.jsp',
+                                    data: {selectedUsagePlan: selectedUsagePlan, regTenantDomain: regTenantDomain},
+                                    async: false,
+                                    success: function(msg) {
+                                    }});
                 location.href = "../tenant-register/success_register.jsp";
             <% } %>
 
@@ -127,7 +136,7 @@
                                   option = document.createElement("option");
                                   option.value = name;
                                   option.innerHTML = name;
-                                  document.getElementById('usage-plan-name').appendChild(option);
+                                  document.getElementById('selectedUsagePlan').appendChild(option);
 
                               }
                           }
@@ -208,7 +217,7 @@
                                         <fmt:message key="select.usage.plan.for.tenant"/><span class="required">*</span>
                                     </td>
                                     <td colspan="2">
-                                        <select name="usage-plan-name" id="usage-plan-name"
+                                        <select name="selectedUsagePlan" id="selectedUsagePlan"
                                                 onchange="showRentalMessage();">
                                         </select>
                                         <a href="<%=CommonUtil.getStratosConfig().getUsagePlanURL()%>" target="_blank">

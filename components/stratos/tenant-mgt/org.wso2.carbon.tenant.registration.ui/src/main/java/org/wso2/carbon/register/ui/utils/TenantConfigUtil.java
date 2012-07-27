@@ -68,7 +68,7 @@ public class TenantConfigUtil {
             tenantInfoBean.setTenantDomain(resolveDomainName(request.getParameter("domain")));
             tenantInfoBean.setEmail(request.getParameter("admin-email"));
             tenantInfoBean.setSuccessKey((String) session.getAttribute("validate-domain-success-key"));
-            tenantInfoBean.setUsagePlan(request.getParameter("usage-plan-name"));
+            tenantInfoBean.setUsagePlan(request.getParameter("selectedUsagePlan"));
             tenantInfoBean.setOriginatedService(TenantConfigUtil.base64Decode((String) session.getAttribute(
                     StratosConstants.ORIGINATED_SERVICE)));
             tenantInfoBean.setCreatedDate(Calendar.getInstance());

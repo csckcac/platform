@@ -69,7 +69,7 @@
 		String pageNumberStr = request.getParameter("pageNumber");
 		int pageNumber = 0;
 		int numberOfPages = 0;
-		int noOfRows;
+		int noOfRows=0;
 		LogInfo[] logInfo = null;
 		PaginatedLogInfo paginatedLogInfo;
 		PaginatedLogEvent paginatedLogEvents;
@@ -89,8 +89,9 @@
 			paginatedLogEvents = logViewerClient.getPaginatedLogEvents(pageNumber, type,
 					keyword);
 
-			noOfRows = paginatedLogEvents.getNumberOfPages() * 15;
+			
 			if (paginatedLogEvents != null) {
+				noOfRows = paginatedLogEvents.getNumberOfPages() * 15;
 				events = paginatedLogEvents.getLogInfo();
 				numberOfPages = paginatedLogEvents.getNumberOfPages();
 			}

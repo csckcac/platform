@@ -112,6 +112,10 @@ done
 
 
 if [[ ! -d /opt/${PRODUCT_NAME} ]]; then
+    if [[ "$(pidof scp)" || "$(pidof unzip)" ]]; then
+        echo "Copying and unarchiving the products already begun. So exiting ..." >> $LOG
+        exit 0
+    fi
     # Copying the product from the controller
     echo "scp -i ${instance_path}/payload/wso2-key root@${CONTROLLER_IP}:/opt/${PRODUCT_NAME}.zip /opt/" >> $LOG
     scp -i ${instance_path}/payload/wso2-key root@${CONTROLLER_IP}:/opt/${PRODUCT_NAME}.zip /opt/

@@ -1,4 +1,4 @@
-package org.wso2.carbon.mediator.test.script;/*
+/*
 *Copyright (c) 2005-2010, WSO2 Inc. (http://www.wso2.org) All Rights Reserved.
 *
 *WSO2 Inc. licenses this file to you under the Apache License,
@@ -15,6 +15,8 @@ package org.wso2.carbon.mediator.test.script;/*
 *specific language governing permissions and limitations
 *under the License.
 */
+
+package org.wso2.carbon.mediator.test.script;
 
 import org.apache.axiom.om.OMElement;
 import org.testng.annotations.AfterTest;

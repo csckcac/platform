@@ -894,7 +894,7 @@
 
 
 
-    <scenario testName="org.wso2.carbon.mediator.test.send.SendMediatorTest">
+    <scenario testName="org.wso2.carbon.mediator.test.send.SendMediatorTestCase">
         <products>
             <product name="ESB">
                 <artifacts userId="1">

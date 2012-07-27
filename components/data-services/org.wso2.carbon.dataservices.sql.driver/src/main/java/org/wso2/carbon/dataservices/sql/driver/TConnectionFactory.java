@@ -30,6 +30,8 @@ public class TConnectionFactory {
         type = type.toUpperCase();
         if (Constants.EXCEL.equals(type)) {
             return new TExcelConnection(props);
+        } else if (Constants.GSPREAD.equals(type)) {
+            return new TGSpreadConnection(props);
         } else {
             throw new SQLException("Unsupported datasource type");
         }

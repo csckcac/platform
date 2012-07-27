@@ -22,12 +22,10 @@ import org.apache.commons.logging.Log;
 import org.apache.commons.logging.LogFactory;
 import org.apache.poi.hssf.usermodel.HSSFWorkbook;
 import org.apache.poi.ss.usermodel.Workbook;
+import org.wso2.carbon.dataservices.sql.driver.parser.Constants;
 
 import java.io.*;
-import java.sql.CallableStatement;
-import java.sql.PreparedStatement;
-import java.sql.SQLException;
-import java.sql.Statement;
+import java.sql.*;
 import java.util.Properties;
 
 public class TExcelConnection extends TConnection {
@@ -38,7 +36,7 @@ public class TExcelConnection extends TConnection {
 
     public TExcelConnection(Properties props) throws SQLException {
         super(props);
-        String filePath = (String) props.get(TDriver.FILE_PATH);
+        String filePath = (String) props.get(Constants.FILE_PATH);
         this.workbook = createConnectionToExcelDocument(filePath);
     }
 
@@ -82,7 +80,7 @@ public class TExcelConnection extends TConnection {
 
     @Override
     public CallableStatement prepareCall(String sql) throws SQLException {
-        return null;  
+        throw new SQLFeatureNotSupportedException("CallableStatements are not supported");
     }
 
     @Override
@@ -94,7 +92,7 @@ public class TExcelConnection extends TConnection {
     @Override
     public CallableStatement prepareCall(String sql, int resultSetType,
                                          int resultSetConcurrency) throws SQLException {
-        return null;  
+        throw new SQLFeatureNotSupportedException("CallableStatements are not supported");
     }
 
     @Override
@@ -107,7 +105,7 @@ public class TExcelConnection extends TConnection {
     @Override
     public CallableStatement prepareCall(String sql, int resultSetType, int resultSetConcurrency,
                                          int resultSetHoldability) throws SQLException {
-        return null;  
+        throw new SQLFeatureNotSupportedException("CallableStatements are not supported");  
     }
 
     @Override

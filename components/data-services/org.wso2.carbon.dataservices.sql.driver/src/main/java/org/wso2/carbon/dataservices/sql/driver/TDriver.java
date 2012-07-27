@@ -20,20 +20,13 @@ package org.wso2.carbon.dataservices.sql.driver;
 
 import org.apache.commons.logging.Log;
 import org.apache.commons.logging.LogFactory;
+import org.wso2.carbon.dataservices.sql.driver.parser.Constants;
 
 import java.sql.*;
 import java.util.Enumeration;
 import java.util.Properties;
 
 public class TDriver implements Driver {
-
-    public static final String JDBC_PREFIX = "jdbc";
-    public static final String EXCEL_PREFIX = "excel";
-    public static final String GSPRED_PREFIX = "gspread";
-    public static final String PROVIDER_PREFIX = "wso2";
-
-    public static final String FILE_PATH = "filePath";
-    public static final String DATA_SOURCE_TYPE = "dsType";
 
     private boolean isFilePath;
 
@@ -53,7 +46,7 @@ public class TDriver implements Driver {
 
     public Connection connect(String url, Properties info) throws SQLException {
         Properties props = getProperties(url, info);
-        String conType = props.getProperty(TDriver.DATA_SOURCE_TYPE);
+        String conType = props.getProperty(Constants.DATA_SOURCE_TYPE);
         return TConnectionFactory.createConnection(conType, props);
     }
 
@@ -92,28 +85,28 @@ public class TDriver implements Driver {
         int pos = 0;
         StringBuffer token = new StringBuffer();
         pos = getNextTokenPos(url, pos, token);
-        if (!JDBC_PREFIX.equalsIgnoreCase(token.toString())) {
+        if (!Constants.JDBC_PREFIX.equalsIgnoreCase(token.toString())) {
             throw new SQLException("Malformed URL");
         }
         pos = getNextTokenPos(url, pos, token);
-        if (!PROVIDER_PREFIX.equalsIgnoreCase(token.toString())) {
+        if (!Constants.PROVIDER_PREFIX.equalsIgnoreCase(token.toString())) {
             throw new SQLException("Malformed URL");
         }
         pos = getNextTokenPos(url, pos, token);
-        if (!EXCEL_PREFIX.equalsIgnoreCase(token.toString()) &&
-                !GSPRED_PREFIX.equalsIgnoreCase(token.toString())) {
+        if (!Constants.EXCEL_PREFIX.equalsIgnoreCase(token.toString()) &&
+                !Constants.GSPRED_PREFIX.equalsIgnoreCase(token.toString())) {
             throw new SQLException("Malformed URL");
         }
-        props.setProperty(DATA_SOURCE_TYPE, token.toString());
+        props.setProperty(Constants.DATA_SOURCE_TYPE, token.toString());
         pos = getNextTokenPos(url, pos, token);
-        if (FILE_PATH.equals(token.toString())) {
+        if (Constants.FILE_PATH.equals(token.toString())) {
             isFilePath = true;
             getNextTokenPos(url, pos, token);
             String propValue = token.toString();
             if (propValue == null || "".equals(propValue)) {
                 throw new SQLException("File path attribute is missing");
             }
-            props.setProperty(FILE_PATH, propValue);
+            props.setProperty(Constants.FILE_PATH, propValue);
         }
         return props;
     }

@@ -18,8 +18,6 @@
  */
 package org.wso2.carbon.dataservices.sql.driver.parser;
 
-import java.sql.RowId;
-
 public class Constants {
 
     public static final String SEMI_COLON = ";";
@@ -122,5 +120,20 @@ public class Constants {
 
     public static final String VALUE = "VALUE";
     public static final String PARAM_VALUE = "PARAM_VALUE";
-    
+
+    public static final String BASE_WORKSHEET_URL = "http://spreadsheets.google.com/feeds/worksheets/";
+    public static final String SPREADSHEET_FEED = "https://spreadsheets.google.com/feeds/spreadsheets/private/full";
+    public static final String SPREADSHEET_SERVICE_NAME = "WSO2SQLDriver";
+
+    public static final String JDBC_PREFIX = "jdbc";
+    public static final String EXCEL_PREFIX = "excel";
+    public static final String GSPRED_PREFIX = "gspread";
+    public static final String PROVIDER_PREFIX = "wso2";
+
+    public static final String FILE_PATH = "filePath";
+    public static final String DATA_SOURCE_TYPE = "dsType";
+    public static final String USER = "USERNAME";
+    public static final String PASSWORD = "PASSWORD";
+    public static final String VISIBILITY = "visibility";
+
 }

@@ -20,10 +20,7 @@ package org.wso2.carbon.dataservices.sql.driver.parser;
 
 import org.wso2.carbon.dataservices.sql.driver.query.ParamInfo;
 
-import java.util.ArrayList;
-import java.util.LinkedList;
-import java.util.List;
-import java.util.Queue;
+import java.util.*;
 
 public class SQLParserUtil {
 

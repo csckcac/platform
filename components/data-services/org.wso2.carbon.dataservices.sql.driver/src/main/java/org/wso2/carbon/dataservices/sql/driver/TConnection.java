@@ -18,6 +18,8 @@
  */
 package org.wso2.carbon.dataservices.sql.driver;
 
+import org.wso2.carbon.dataservices.sql.driver.parser.Constants;
+
 import java.sql.*;
 import java.util.Map;
 import java.util.Properties;
@@ -28,9 +30,15 @@ public abstract class TConnection implements Connection {
 
     private String path;
 
+    private String username;
+
+    private String password;
+
     public TConnection(Properties props) {
-        this.conType = props.getProperty(TDriver.DATA_SOURCE_TYPE);
-        this.path = props.getProperty(TDriver.FILE_PATH);
+        this.conType = props.getProperty(Constants.DATA_SOURCE_TYPE);
+        this.path = props.getProperty(Constants.FILE_PATH);
+        this.username = props.getProperty(Constants.USER);
+        this.password = props.getProperty(Constants.PASSWORD);
     }
 
     public String getType() {
@@ -39,6 +47,14 @@ public abstract class TConnection implements Connection {
 
     public String getPath() {
         return path;
+    }
+    
+    public String getUsername() {
+        return username;
+    }
+
+    public String getPassword() {
+        return password;
     }
 
     public String nativeSQL(String sql) throws SQLException {

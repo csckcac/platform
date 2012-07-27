@@ -18,17 +18,12 @@
 
 package org.wso2.carbon.mediator.test.enrich;
 
-import org.apache.axiom.om.OMAbstractFactory;
 import org.apache.axiom.om.OMElement;
-import org.apache.axiom.om.OMFactory;
-import org.apache.axiom.om.OMNamespace;
-import org.apache.axiom.om.util.AXIOMUtil;
 import org.apache.axis2.AxisFault;
 import org.testng.annotations.AfterTest;
 import org.testng.annotations.BeforeClass;
 import org.testng.annotations.BeforeTest;
 import org.testng.annotations.Test;
-import org.wso2.carbon.automation.utils.axis2client.AxisServiceClient;
 import org.wso2.carbon.mediator.test.ESBMediatorTest;
 
 import javax.servlet.ServletException;
@@ -39,7 +34,6 @@ import java.rmi.RemoteException;
 
 import static org.testng.Assert.assertEquals;
 import static org.testng.Assert.assertNotNull;
-import static org.testng.Assert.assertNull;
 
 public class EnrichMediatorSiblingsTest extends ESBMediatorTest{
 

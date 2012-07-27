@@ -28,7 +28,7 @@ import javax.xml.namespace.QName;
 import static org.testng.Assert.assertEquals;
 import static org.testng.Assert.assertNotNull;
 
-public class ClassMediatorTestSample380 extends ESBMediatorTest{
+public class ClassMediatorLoadPropertiesAndMediate extends ESBMediatorTest{
 
 
     @BeforeClass(alwaysRun = true)
@@ -44,10 +44,10 @@ public class ClassMediatorTestSample380 extends ESBMediatorTest{
         OMElement response = axis2Client.sendSimpleStockQuoteRequest(getMainSequenceURL(), null, "WSO2");
 
         String lastPrice=response.getFirstElement().getFirstChildWithName(new QName("http://services.samples/xsd","last")).getText();
-        assertNotNull(lastPrice, "Fault response message 'last' price null");
+        assertNotNull(lastPrice, "Fault: response message 'last' price null");
 
         String symbol=response.getFirstElement().getFirstChildWithName(new QName("http://services.samples/xsd","symbol")).getText();
-        assertEquals(symbol,"WSO2","Fault value 'symbol' mismatched");
+        assertEquals(symbol,"WSO2","Fault: value 'symbol' mismatched");
     }
 
 

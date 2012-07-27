@@ -32,8 +32,6 @@ public class SQLKeyWordAnalyzerFactory {
             return new SelectAnalyser(tokens);
         } else if (Constants.INSERT.equals(type)) {
             return new InsertAnalyser(tokens);
-        } else if (Constants.UPDATE.equals(type)) {
-            return new UpdateAnalyser(tokens);
         } else {
             throw new AnalyzerException("Unsupported SQL key word");
         }

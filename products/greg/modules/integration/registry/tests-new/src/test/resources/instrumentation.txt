@@ -25,6 +25,7 @@ org.wso2.carbon.registry.extensions_
 org.wso2.carbon.registry.handler_
 org.wso2.carbon.registry.indexing_
 org.wso2.carbon.registry.info_
+org.wso2.carbon.registry.notification_
 org.wso2.carbon.registry.profiles_
 org.wso2.carbon.registry.properties_
 org.wso2.carbon.registry.relations_

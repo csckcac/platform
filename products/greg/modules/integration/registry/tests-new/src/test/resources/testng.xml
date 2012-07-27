@@ -11,6 +11,8 @@
     <test name="Test - GREG">
         <packages>
             <package name="org.wso2.carbon.registry.resource.test" />
+            <!--<package name="org.wso2.carbon.registry.subscription.test" />-->
+            <package name="org.wso2.carbon.registry.permission.test" />
         </packages>
         <classes>
             <class name="org.wso2.carbon.registry.app.test.AtomFeedTestCase"/>
@@ -23,9 +25,6 @@
             <class name="org.wso2.carbon.registry.version.test.ResourceTestCase"/>
             <class name="org.wso2.carbon.registry.version.test.EndpointTestCase"/>
             <class name="org.wso2.carbon.registry.version.test.RestoreResourcesTestCase"/>
-            <class name="org.wso2.carbon.registry.permission.test.PermissionInheritanceTestCase"/>
-            <class name="org.wso2.carbon.registry.permission.test.AnonymousAccessTestCase"/>
-            <class name="org.wso2.carbon.registry.permission.test.RolePermissionAsAdminTestCase"/>
             <class name="org.wso2.carbon.registry.metadata.test.api.CRUDOperationsAPI"/>
             <class name="org.wso2.carbon.registry.metadata.test.custom.AddRxtTest"/>
             <class name="org.wso2.carbon.registry.metadata.test.custom.CRUDOperationsRxt"/>

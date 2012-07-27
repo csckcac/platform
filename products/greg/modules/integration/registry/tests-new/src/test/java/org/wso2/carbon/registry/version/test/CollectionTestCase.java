@@ -62,7 +62,7 @@ public class CollectionTestCase {
 
         resourceAdminClient.addCollection(COLLECTION_PATH_ROOT, "dir1", "text/plain", "Desc1");
         resourceAdminClient.createVersion(COLLECTION_PATH_ROOT + "dir1");
-        VersionPath[] vp1 = resourceAdminClient.getVersion(COLLECTION_PATH_ROOT + "dir1");
+        VersionPath[] vp1 = resourceAdminClient.getVersionPaths(COLLECTION_PATH_ROOT + "dir1");
         assertEquals(1, vp1.length);
 
     }
@@ -73,7 +73,7 @@ public class CollectionTestCase {
 
         resourceAdminClient.addCollection(COLLECTION_PATH_LEAF, "dir1", "text/plain", "Desc1");
         resourceAdminClient.createVersion(COLLECTION_PATH_LEAF + "dir1");
-        VersionPath[] vp1 = resourceAdminClient.getVersion(COLLECTION_PATH_LEAF + "dir1");
+        VersionPath[] vp1 = resourceAdminClient.getVersionPaths(COLLECTION_PATH_LEAF + "dir1");
         assertEquals(1, vp1.length);
     }
 
@@ -85,7 +85,7 @@ public class CollectionTestCase {
 
         resourceAdminClient.addCollection(COLLECTION_PATH_ROOT, "dir2", "text/plain", "Desc1");
         resourceAdminClient.createVersion(COLLECTION_PATH_ROOT + "dir2");
-        VersionPath[] vp1 = resourceAdminClient.getVersion(COLLECTION_PATH_ROOT + "dir2");
+        VersionPath[] vp1 = resourceAdminClient.getVersionPaths(COLLECTION_PATH_ROOT + "dir2");
         assertEquals(1, vp1.length);
 
         String path = ProductConstant.SYSTEM_TEST_RESOURCE_LOCATION + "artifacts" + File.separator
@@ -94,7 +94,7 @@ public class CollectionTestCase {
         resourceAdminClient.addResource(COLLECTION_PATH_ROOT + "dir2/testDir", "text/plain", "desc", dataHandler);
 
         resourceAdminClient.createVersion(COLLECTION_PATH_ROOT + "dir2");
-        VersionPath[] vp2 = resourceAdminClient.getVersion(COLLECTION_PATH_ROOT + "dir2");
+        VersionPath[] vp2 = resourceAdminClient.getVersionPaths(COLLECTION_PATH_ROOT + "dir2");
         assertEquals(2, vp2.length);
     }
 }

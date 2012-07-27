@@ -79,7 +79,7 @@ public class EndpointTestCase {
         Endpoint endpoint = createEndpoint(endpoint_url);
         assertTrue(registry.resourceExists(endpoint.getPath()), "Endpoint Resource Does not exists :");
         endpoint.createVersion();
-        VersionPath[] vp = resourceAdminClient.getVersion(endpoint.getPath());
+        VersionPath[] vp = resourceAdminClient.getVersionPaths(endpoint.getPath());
         assertEquals(1, vp.length);
     }
 

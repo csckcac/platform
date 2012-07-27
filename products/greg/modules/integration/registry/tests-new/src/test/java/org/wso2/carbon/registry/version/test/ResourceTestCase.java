@@ -1,3 +1,21 @@
+/*
+Copyright (c) 2005-2010, WSO2 Inc. (http://www.wso2.org) All Rights Reserved.
+
+WSO2 Inc. licenses this file to you under the Apache License,
+Version 2.0 (the "License"); you may not use this file except
+in compliance with the License.
+You may obtain a copy of the License at
+
+http://www.apache.org/licenses/LICENSE-2.0
+
+Unless required by applicable law or agreed to in writing,
+software distributed under the License is distributed on an
+"AS IS" BASIS, WITHOUT WARRANTIES OR CONDITIONS OF ANY
+KIND, either express or implied.  See the License for the
+specific language governing permissions and limitations
+under the License.
+*/
+
 package org.wso2.carbon.registry.version.test;
 
 import org.testng.annotations.BeforeClass;
@@ -59,7 +77,7 @@ public class ResourceTestCase {
 
         resourceAdminClient.createVersion(PATH);
 
-        VersionPath[] vp = resourceAdminClient.getVersion(PATH);
+        VersionPath[] vp = resourceAdminClient.getVersionPaths(PATH);
         assertEquals(1, vp.length);
     }
 
@@ -74,7 +92,7 @@ public class ResourceTestCase {
 
         resourceAdminClient.createVersion(LEAF_PATH);
 
-        VersionPath[] vp = resourceAdminClient.getVersion(LEAF_PATH);
+        VersionPath[] vp = resourceAdminClient.getVersionPaths(LEAF_PATH);
         assertEquals(1, vp.length);
     }
 
@@ -88,13 +106,13 @@ public class ResourceTestCase {
         resourceAdminClient.addResource(PATH2, "text/plain", "desc", dataHandler);
         assertTrue(resourceAdminClient.getResource(PATH2)[0].getAuthorUserName().contains(userInfo.getUserName()));
         resourceAdminClient.createVersion(PATH2);
-        VersionPath[] vp1 = resourceAdminClient.getVersion(PATH2);
+        VersionPath[] vp1 = resourceAdminClient.getVersionPaths(PATH2);
         assertEquals(1, vp1.length);
 
         String editedContent = "This is edited content";
         resourceAdminClient.updateTextContent(PATH2, editedContent);
         resourceAdminClient.createVersion(PATH2);
-        VersionPath[] vp2 = resourceAdminClient.getVersion(PATH2);
+        VersionPath[] vp2 = resourceAdminClient.getVersionPaths(PATH2);
         assertEquals(2, vp2.length);
 
     }
@@ -109,13 +127,13 @@ public class ResourceTestCase {
         assertTrue(resourceAdminClient.getResource(PATH3)[0].getAuthorUserName().contains(userInfo.getUserName()));
 
         resourceAdminClient.createVersion(PATH3);
-        VersionPath[] vp1 = resourceAdminClient.getVersion(PATH3);
+        VersionPath[] vp1 = resourceAdminClient.getVersionPaths(PATH3);
         assertEquals(1, vp1.length);
-        long versionNo = resourceAdminClient.getVersion(PATH3)[0].getVersionNumber();
+        long versionNo = resourceAdminClient.getVersionPaths(PATH3)[0].getVersionNumber();
         String snapshotId = String.valueOf(versionNo);
         resourceAdminClient.deleteVersionHistory(PATH3, snapshotId);
         VersionPath[] vp2 = null;
-        vp2 = resourceAdminClient.getVersion(PATH3);
+        vp2 = resourceAdminClient.getVersionPaths(PATH3);
         assertEquals(null, vp2);
     }
 
@@ -130,7 +148,7 @@ public class ResourceTestCase {
 
         resourceAdminClient.createVersion(CSS_PATH);
 
-        VersionPath[] vp = resourceAdminClient.getVersion(CSS_PATH);
+        VersionPath[] vp = resourceAdminClient.getVersionPaths(CSS_PATH);
         assertEquals(1, vp.length);
     }
 }

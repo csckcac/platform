@@ -177,8 +177,8 @@ public class RolePermissionAsAdminTestCase {
         adminResourceAdminClient.addResourcePermission(NEW_RESOURCE_PATH, NON_ADMIN_ROLE, READ_ACTION,
                                                        PERMISSION_ENABLED);
         adminResourceAdminClient.createVersion(NEW_RESOURCE_PATH);
-        VersionPath[] versionPaths = nonAdminResourceAdminClient.getVersion(NEW_RESOURCE_PATH);
-        for (VersionPath versionPath : nonAdminResourceAdminClient.getVersion(NEW_RESOURCE_PATH)) {
+        VersionPath[] versionPaths = nonAdminResourceAdminClient.getVersionPaths(NEW_RESOURCE_PATH);
+        for (VersionPath versionPath : nonAdminResourceAdminClient.getVersionPaths(NEW_RESOURCE_PATH)) {
             String resourceVersionPath = versionPath.getCompleteVersionPath();
             assertNotNull(nonAdminResourceAdminClient.getResource(resourceVersionPath));
         }

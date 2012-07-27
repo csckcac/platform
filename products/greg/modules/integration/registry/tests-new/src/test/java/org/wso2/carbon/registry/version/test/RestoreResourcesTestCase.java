@@ -69,14 +69,14 @@ public class RestoreResourcesTestCase {
         assertTrue(resourceAdminClient.getResource(PATH)[0].getAuthorUserName().contains(userInfo.getUserName()));
         assertEquals("This is Test Data", resourceAdminClient.getTextContent(PATH));
         resourceAdminClient.createVersion(PATH);
-        VersionPath[] vp1 = resourceAdminClient.getVersion(PATH);
+        VersionPath[] vp1 = resourceAdminClient.getVersionPaths(PATH);
         String verPath = vp1[0].getCompleteVersionPath();
         assertEquals(1, vp1.length);
         String editedContent = "This is edited content";
         resourceAdminClient.updateTextContent(PATH, editedContent);
         assertEquals("This is edited content", resourceAdminClient.getTextContent(PATH));
         resourceAdminClient.createVersion(PATH);
-        VersionPath[] vp2 = resourceAdminClient.getVersion(PATH);
+        VersionPath[] vp2 = resourceAdminClient.getVersionPaths(PATH);
         assertEquals(2, vp2.length);
         status = resourceAdminClient.restoreVersion(verPath);
         assertTrue(status);

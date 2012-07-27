@@ -94,7 +94,7 @@ public class MetaDataTestCase {
 
         assertTrue(nameExists);
         resourceAdminClient.createVersion("/_system/governance/trunk/policies/policy.xml");
-        VersionPath[] vp1 = resourceAdminClient.getVersion("/_system/governance/trunk/policies/policy.xml");
+        VersionPath[] vp1 = resourceAdminClient.getVersionPaths("/_system/governance/trunk/policies/policy.xml");
         assertEquals(1, vp1.length);
 
     }
@@ -120,7 +120,7 @@ public class MetaDataTestCase {
         assertTrue(nameExists);
         resourceAdminClient.createVersion("/_system/governance/trunk/wsdls/org/wso2/carbon/core/services" +
                                           "/echo/echo.wsdl");
-        VersionPath[] vp1 = resourceAdminClient.getVersion("/_system/governance/trunk/wsdls/org/wso2/carbon" +
+        VersionPath[] vp1 = resourceAdminClient.getVersionPaths("/_system/governance/trunk/wsdls/org/wso2/carbon" +
                                                            "/core/services/echo/echo.wsdl");
         assertEquals(1, vp1.length);
     }
@@ -147,7 +147,7 @@ public class MetaDataTestCase {
 
         resourceAdminClient.createVersion("/_system/governance/trunk/schemas/org/charitha/calculator.xsd");
         VersionPath[] vp1 =
-                resourceAdminClient.getVersion("/_system/governance/trunk/schemas/org/charitha/calculator.xsd");
+                resourceAdminClient.getVersionPaths("/_system/governance/trunk/schemas/org/charitha/calculator.xsd");
         assertEquals(1, vp1.length);
     }
 
@@ -176,7 +176,7 @@ public class MetaDataTestCase {
         }
         assertTrue(nameExists);
         resourceAdminClient.createVersion("/_system/governance/trunk/wsdls/com/foo/abc.wsdl");
-        VersionPath[] vp1 = resourceAdminClient.getVersion("/_system/governance/trunk/wsdls/com/foo/abc.wsdl");
+        VersionPath[] vp1 = resourceAdminClient.getVersionPaths("/_system/governance/trunk/wsdls/com/foo/abc.wsdl");
         assertEquals(1, vp1.length);
     }
 

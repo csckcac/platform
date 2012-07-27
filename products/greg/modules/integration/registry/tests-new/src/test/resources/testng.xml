@@ -13,6 +13,7 @@
             <package name="org.wso2.carbon.registry.resource.test" />
             <!--<package name="org.wso2.carbon.registry.subscription.test" />-->
             <package name="org.wso2.carbon.registry.permission.test" />
+            <!--<package name="org.wso2.carbon.registry.mediatype.test" />-->
         </packages>
         <classes>
             <class name="org.wso2.carbon.registry.app.test.AtomFeedTestCase"/>
@@ -36,6 +37,8 @@
             <class name="org.wso2.carbon.registry.search.metadata.test.RegistrySearchPropertyValueByText"/>
             <class name="org.wso2.carbon.registry.search.metadata.test.RegistrySpecialSearchTestCase"/>
             <class name="org.wso2.carbon.registry.reporting.test.ReportingTestCase"/>
+            <class name="org.wso2.carbon.registry.activity.search.ActivitySearchByFilterTestCase"/>
+            <class name="org.wso2.carbon.registry.activity.search.ActivitySearchByUserNameTestCase"/>
         </classes>
     </test>
 </suite>

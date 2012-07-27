@@ -103,7 +103,6 @@
                             </bundles>
                             <includedFeatures>
                                 <includedFeatureDef>org.wso2.carbon:org.wso2.carbon.service.mgt.server.feature</includedFeatureDef>
-                                <includedFeatureDef>org.wso2.carbon:org.wso2.carbon.datasource.server.feature</includedFeatureDef>
                             </includedFeatures>
                         </configuration>
                     </execution>

@@ -32,7 +32,7 @@ public class CAppTestUtils {
         boolean isFound = false;
         Calendar startTime = Calendar.getInstance();
         long time;
-        while ((time = (Calendar.getInstance().getTimeInMillis() - startTime.getTimeInMillis())) < 40000) {
+        while ((time = (Calendar.getInstance().getTimeInMillis() - startTime.getTimeInMillis())) < 90000) {
             appList = adminServiceApplicationAdmin.listAllApplications(sessionCookie);
             if (appList != null) {
 
@@ -59,7 +59,7 @@ public class CAppTestUtils {
         boolean isDeleted = true;
         Calendar startTime = Calendar.getInstance();
         long time;
-        while ((time = (Calendar.getInstance().getTimeInMillis() - startTime.getTimeInMillis())) < 20000) {
+        while ((time = (Calendar.getInstance().getTimeInMillis() - startTime.getTimeInMillis())) < 60000) {
             isDeleted = true;
             appList = adminServiceApplicationAdmin.listAllApplications(sessionCookie);
             if (appList != null) {

@@ -210,7 +210,7 @@ public class FileHandler {
 					e);
 		}
 		try {
-			ByteArrayDataSource bytArrayDS = new ByteArrayDataSource(logStream, "application/zip");
+			ByteArrayDataSource bytArrayDS = new ByteArrayDataSource(logStream, "application/gzip");
 			DataHandler dataHandler = new DataHandler(bytArrayDS);
 			return dataHandler;
 		} catch (IOException e) {

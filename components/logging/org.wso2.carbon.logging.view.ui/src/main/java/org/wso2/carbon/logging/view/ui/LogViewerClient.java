@@ -68,7 +68,7 @@ public class LogViewerClient {
 			throws Exception {
 		try {
 			ServletOutputStream outputStream = response.getOutputStream();
-			response.setContentType("application/zip");
+			response.setContentType("application/gzip");
 			response.setHeader("Content-Disposition",
 					"attachment;filename=" + logFile.replaceAll("\\s", "_"));
 

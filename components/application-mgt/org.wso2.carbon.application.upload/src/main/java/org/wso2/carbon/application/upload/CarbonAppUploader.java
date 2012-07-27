@@ -37,15 +37,12 @@ public class CarbonAppUploader extends AbstractAdmin {
 
     public void uploadApp(UploadedFileItem[] fileItems) throws AxisFault {
         try {
-            // get carbon home
-            String carbonHome = CarbonUtils.getCarbonHome();
-
             // create carbonapps dir if it doesn't already exists
-            String carbonAppDir = carbonHome + File.separator + "repository" +
+            String carbonAppDir = CarbonUtils.getTenantTmpDirPath(getAxisConfig()) +
                     File.separator  + "carbonapps";
             createDir(carbonAppDir);
 
-            String carbonHomeTmp = carbonHome + File.separator + "tmp";
+            String carbonHomeTmp = CarbonUtils.getCarbonHome() + File.separator + "tmp";
             createDir(carbonHomeTmp);
             String carbonAppDirTemp = carbonHomeTmp + File.separator + "carbonappsuploads";
             createDir(carbonAppDirTemp);

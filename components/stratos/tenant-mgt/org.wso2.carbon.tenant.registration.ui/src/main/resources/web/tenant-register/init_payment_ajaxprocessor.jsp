@@ -41,6 +41,7 @@
 <script type="text/javascript" src="../admin/js/jquery.form.js"></script>
 <script type="text/javascript" src="../dialog/js/jqueryui/jquery-ui.min.js"></script>
 <%
+    String tenantDomain = request.getParameter("domain");
     // The actual usage plan the tenant selects in select_usage_plan.jsp
     String selectedUsagePlan = request.getParameter("selectedUsagePlan");
     session.setAttribute("selectedUsagePlan", selectedUsagePlan);

@@ -26,7 +26,7 @@ import org.wso2.carbon.mediator.test.ESBMediatorTest;
 import static org.testng.AssertJUnit.assertTrue;
 import static org.testng.AssertJUnit.fail;
 
-public class InvalidXPathSynapseConfig extends ESBMediatorTest {
+public class InvalidXPathSynapseConfigTestCase extends ESBMediatorTest {
 
     @BeforeClass
     public void beforeClass() throws Exception {

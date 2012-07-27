@@ -43,14 +43,14 @@ import javax.xml.transform.TransformerException;
 import java.io.File;
 import java.io.IOException;
 
-public class SendMediatorTest {
+public class SendMediatorTestCase {
 
     StockQuoteClient axis2Client;
     LogViewerClient logViewer;
     LoggingAdminClient logAdmin;
 
     String sessionCookie = null;
-    private static final Log log = LogFactory.getLog(SendMediatorTest.class);
+    private static final Log log = LogFactory.getLog(SendMediatorTestCase.class);
     String backEndUrl = null;
     String serviceUrl = null;
     String nhttpPort = null;

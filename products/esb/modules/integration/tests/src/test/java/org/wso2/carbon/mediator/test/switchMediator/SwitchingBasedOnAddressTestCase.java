@@ -28,7 +28,7 @@ import java.rmi.RemoteException;
 import static org.testng.AssertJUnit.assertEquals;
 import static org.testng.AssertJUnit.assertTrue;
 
-public class SwitchingBasedOnAddress extends ESBMediatorTest {
+public class SwitchingBasedOnAddressTestCase extends ESBMediatorTest {
 
     @BeforeClass
     public void init() throws Exception {
@@ -47,7 +47,7 @@ public class SwitchingBasedOnAddress extends ESBMediatorTest {
         assertEquals("getQuote Response root element name mismatched", "getQuoteResponse", response.getLocalName());
         assertTrue("Symbol name mismatched", response.toString().contains("IBM"));
 
-        response = axis2Client.sendSimpleStockQuoteRequest(getProxyServiceURL("switchByAddress"),
+        response = axis2Client.sendSimpleQuoteRequest(getProxyServiceURL("switchByAddress"),
                                                       "http://localhost:9000/services/SimpleStockQuoteService",
                                                       "MSTF");
         assertEquals("getSimpleQuote Response root element name mismatched", "getSimpleQuoteResponse", response.getLocalName());

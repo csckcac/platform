@@ -49,6 +49,7 @@
   <property name="anttasks.dir" value="${basedir}/src/ant"/>
   <property name="lib.dir" value="${basedir}/lib"/>
   <property name="conf.dir" value="${basedir}/conf"/>
+  <property name="keytabs.dir" value="${basedir}/keytabs"/>
   <property name="contrib.dir" value="${basedir}/src/contrib"/>
   <property name="docs.src" value="${basedir}/src/docs"/>
   <property name="src.docs.cn" value="${basedir}/src/docs/cn"/>
@@ -348,7 +349,7 @@
         <exclude name="**/*.jsp" />
       </fileset>
     </copy>
-
+ 
     <copy todir="${conf.dir}" verbose="true">
       <fileset dir="${conf.dir}" includes="**/*.template"/>
       <mapper type="glob" from="*.template" to="*"/>
@@ -1491,6 +1492,7 @@
     <mkdir dir="${dist.dir}/lib"/>
     <mkdir dir="${dist.dir}/contrib"/>
     <mkdir dir="${dist.dir}/bin"/>
+    <mkdir dir="${dist.dir}/keytabs"/>
 
     <copy todir="${dist.dir}/lib" includeEmptyDirs="false" flatten="true">
       <fileset dir="${common.ivy.lib.dir}"/>
@@ -1520,7 +1522,7 @@
     <copy todir="${dist.dir}/webapps">
       <fileset dir="${build.webapps}"/>
     </copy>
-
+    
     <copy todir="${dist.dir}"> 
       <fileset file="${build.dir}/${name}-*-${version}.jar"/>
     </copy>
@@ -1531,6 +1533,11 @@
 
     <copy todir="${dist.dir}/conf">
       <fileset dir="${conf.dir}" excludes="**/*.template"/>
+    </copy>
+    
+    <copy todir="${dist.dir}/keytabs">
+      <fileset dir="${keytabs.dir}">
+      </fileset>
     </copy>
 
     <copy file="ivy.xml" tofile="${dist.dir}/ivy.xml"/>

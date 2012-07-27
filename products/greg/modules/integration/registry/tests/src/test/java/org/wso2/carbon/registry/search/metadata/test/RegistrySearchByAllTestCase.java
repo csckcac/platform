@@ -35,6 +35,8 @@ import org.wso2.carbon.integration.framework.LoginLogoutUtil;
 import org.wso2.carbon.integration.framework.utils.FrameworkSettings;
 import org.wso2.carbon.registry.core.Comment;
 import org.wso2.carbon.registry.core.Registry;
+import org.wso2.carbon.registry.core.RegistryConstants;
+import org.wso2.carbon.registry.core.Tag;
 import org.wso2.carbon.registry.core.exceptions.RegistryException;
 import org.wso2.carbon.registry.search.metadata.test.bean.SearchParameterBean;
 import org.wso2.carbon.registry.search.metadata.test.utils.GregTestUtils;
@@ -81,7 +83,7 @@ public class RegistrySearchByAllTestCase {
 
         addResources();
 //        //wait to cache  resources in order to search
-        Thread.sleep(1000 * 60 * 1);
+//        Thread.sleep(1000 * 60 * 1);
 
     }
 
@@ -180,7 +182,7 @@ public class RegistrySearchByAllTestCase {
         paramBean.setTags("autoTag1234");
         paramBean.setCommentWords("TestAutomation");
         paramBean.setAssociationType("associationType1");
-        paramBean.setAssociationDest(destinationPath);
+        paramBean.setAssociationDest(RegistryConstants.GOVERNANCE_REGISTRY_BASE_PATH + destinationPath);
         paramBean.setMediaType("application/x-xsd+xml");
         ArrayOfString[] paramList = paramBean.getParameterList();
 
@@ -246,7 +248,18 @@ public class RegistrySearchByAllTestCase {
         Comment comment = new Comment();
         comment.setText("TestAutomation Comment");
         governance.addComment(schema.getPath(), comment);
-        governance.applyTag(schema.getPath(), "autoTag");
+
+        Tag[] allTags = governance.getTags(schema.getPath());
+        StringBuffer tagString = new StringBuffer();
+
+        if(allTags != null){
+            for (Tag allTag : allTags) {
+                tagString.append(allTag.getTagName());
+                tagString.append(",");
+            }
+        }
+        tagString.append("autoTag");
+        governance.applyTag(schema.getPath(),tagString.toString());
 
     }
 
@@ -262,7 +275,18 @@ public class RegistrySearchByAllTestCase {
         Comment comment = new Comment();
         comment.setText("TestAutomation Comment");
         governance.addComment(policy.getPath(), comment);
-        governance.applyTag(policy.getPath(), "autoTag");
+
+        Tag[] allTags = governance.getTags(policy.getPath());
+        StringBuffer tagString = new StringBuffer();
+
+        if(allTags != null){
+            for (Tag allTag : allTags) {
+                tagString.append(allTag.getTagName());
+                tagString.append(",");
+            }
+        }
+        tagString.append("autoTag");
+        governance.applyTag(policy.getPath(),tagString.toString());
     }
 
     private String formatDate(Date date) {
@@ -295,7 +319,7 @@ public class RegistrySearchByAllTestCase {
         paramBean.setTags("autoTag");
         paramBean.setCommentWords("TestAutomation");
         paramBean.setAssociationType("associationType1");
-        paramBean.setAssociationDest(destinationPath);
+        paramBean.setAssociationDest(RegistryConstants.GOVERNANCE_REGISTRY_BASE_PATH + destinationPath);
         paramBean.setMediaType("application/policy+xml");
         ArrayOfString[] paramList = paramBean.getParameterList();
 
@@ -333,7 +357,7 @@ public class RegistrySearchByAllTestCase {
         paramBean.setTags("autoTag");
         paramBean.setCommentWords("TestAutomation");
         paramBean.setAssociationType("associationType1");
-        paramBean.setAssociationDest(destinationPath);
+        paramBean.setAssociationDest(RegistryConstants.GOVERNANCE_REGISTRY_BASE_PATH + destinationPath);
         paramBean.setMediaType("application/x-xsd+xml");
         ArrayOfString[] paramList = paramBean.getParameterList();
 
@@ -370,7 +394,7 @@ public class RegistrySearchByAllTestCase {
         paramBean.setTags("autoTag");
         paramBean.setCommentWords("TestAutomation");
         paramBean.setAssociationType("associationType1");
-        paramBean.setAssociationDest(destinationPath);
+        paramBean.setAssociationDest(RegistryConstants.GOVERNANCE_REGISTRY_BASE_PATH + destinationPath);
         paramBean.setMediaType("application/wsdl+xml");
         ArrayOfString[] paramList = paramBean.getParameterList();
 

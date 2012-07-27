@@ -154,8 +154,20 @@ public class RegistrySearchByCratedDataTestCase {
         ArrayOfString[] paramList = paramBean.getParameterList();
 
         searchQuery.setParameterValues(paramList);
-        AdvancedSearchResultsBean result = searchAdminService.getAdvancedSearchResults(searchQuery);
-        Assert.assertNull(result.getResourceDataList(), "Record Found for invalid data format");
+        AdvancedSearchResultsBean result = null;
+        try {
+            result = searchAdminService.getAdvancedSearchResults(searchQuery);
+        } finally {
+            if (result != null) {
+                if (result.getResourceDataList() != null) {
+                    Assert.assertNull(result.getResourceDataList()[0],"Result Object Found");
+                } else {
+                    Assert.assertNull(result.getResourceDataList(), "Result Object found.");
+                }
+            }else{
+                Assert.assertNull(result, "No results returned");
+            }
+        }
     }
 
     @Test(priority = 5, groups = {"wso2.greg"}, description = "Metadata search records not in valid date range ")
@@ -232,8 +244,16 @@ public class RegistrySearchByCratedDataTestCase {
         ArrayOfString[] paramList = paramBean.getParameterList();
 
         searchQuery.setParameterValues(paramList);
-        AdvancedSearchResultsBean result = searchAdminService.getAdvancedSearchResults(searchQuery);
-        Assert.assertNull(result.getResourceDataList(), "Record Found");
+        AdvancedSearchResultsBean result = null;
+        try {
+            result = searchAdminService.getAdvancedSearchResults(searchQuery);
+        } finally {
+            if (result != null) {
+                Assert.assertNull(result.getResourceDataList(), "Result Object found.");
+            }else{
+                Assert.assertNull(result, "No results returned");
+            }
+        }
     }
 
     @Test(priority = 8, groups = {"wso2.greg"}, dataProvider = "invalidCharacter",
@@ -246,8 +266,20 @@ public class RegistrySearchByCratedDataTestCase {
         ArrayOfString[] paramList = paramBean.getParameterList();
 
         searchQuery.setParameterValues(paramList);
-        AdvancedSearchResultsBean result = searchAdminService.getAdvancedSearchResults(searchQuery);
-        Assert.assertNull(result.getResourceDataList(), "Result Object found.");
+        AdvancedSearchResultsBean result = null;
+        try {
+            result = searchAdminService.getAdvancedSearchResults(searchQuery);
+        } finally {
+            if (result != null) {
+                if (result.getResourceDataList() != null) {
+                    Assert.assertNull(result.getResourceDataList()[0],"Result Object Found");
+                } else {
+                    Assert.assertNull(result.getResourceDataList(), "Result Object found.");
+                }
+            }else{
+                Assert.assertNull(result, "No results returned");
+            }
+        }
 
     }
 
@@ -258,7 +290,6 @@ public class RegistrySearchByCratedDataTestCase {
                 {"<a>"},
                 {"#"},
                 {"a|b"},
-                {"   "},
                 {"@"},
                 {"|"},
                 {"^"},

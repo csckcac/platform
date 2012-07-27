@@ -33,6 +33,7 @@ import org.wso2.carbon.integration.framework.LoginLogoutUtil;
 import org.wso2.carbon.integration.framework.utils.FrameworkSettings;
 import org.wso2.carbon.registry.core.Association;
 import org.wso2.carbon.registry.core.Registry;
+import org.wso2.carbon.registry.core.RegistryConstants;
 import org.wso2.carbon.registry.core.exceptions.RegistryException;
 import org.wso2.carbon.registry.search.metadata.test.bean.SearchParameterBean;
 import org.wso2.carbon.registry.search.metadata.test.utils.GregTestUtils;
@@ -85,7 +86,7 @@ public class RegistrySearchByAssociationDestinationTestCase {
         Assert.assertNotNull(destinationPath1, "Destination path not found for search Query. Clarity Error");
         CustomSearchParameterBean searchQuery = new CustomSearchParameterBean();
         SearchParameterBean paramBean = new SearchParameterBean();
-        paramBean.setAssociationDest(destinationPath1);
+        paramBean.setAssociationDest(RegistryConstants.GOVERNANCE_REGISTRY_BASE_PATH + destinationPath1);
         ArrayOfString[] paramList = paramBean.getParameterList();
 
         searchQuery.setParameterValues(paramList);
@@ -99,7 +100,8 @@ public class RegistrySearchByAssociationDestinationTestCase {
             Assert.assertTrue(array.length > 0);
             boolean associationDestination = false;
             for (Association association : array) {
-                if (association.getDestinationPath().contains(destinationPath1)) {
+                if (association.getDestinationPath().contains(RegistryConstants.GOVERNANCE_REGISTRY_BASE_PATH
+                        + destinationPath1)) {
                     associationDestination = true;
                     break;
                 }
@@ -235,8 +237,16 @@ public class RegistrySearchByAssociationDestinationTestCase {
         paramBean.setAssociationDest(invalidInput);
         ArrayOfString[] paramList = paramBean.getParameterList();
         searchQuery.setParameterValues(paramList);
-        AdvancedSearchResultsBean result = searchAdminService.getAdvancedSearchResults(searchQuery);
-        Assert.assertNull(result.getResourceDataList(), "Result Object found.");
+        AdvancedSearchResultsBean result = null;
+        try {
+            result = searchAdminService.getAdvancedSearchResults(searchQuery);
+        } finally {
+            if (result != null) {
+                Assert.assertNull(result.getResourceDataList(), "Result Object found.");
+            }else{
+                Assert.assertNull(result, "No results returned");
+            }
+        }
 
     }
 
@@ -290,8 +300,6 @@ public class RegistrySearchByAssociationDestinationTestCase {
                 {"<"},
                 {">"},
                 {"#"},
-                {"   "},
-                {""},
                 {"@"},
                 {"|"},
                 {"^"},

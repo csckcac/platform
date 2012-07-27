@@ -187,8 +187,16 @@ public class RegistrySearchByCommentsTestCase {
         paramBean.setCommentWords(invalidInput);
         ArrayOfString[] paramList = paramBean.getParameterList();
         searchQuery.setParameterValues(paramList);
-        AdvancedSearchResultsBean result = searchAdminService.getAdvancedSearchResults(searchQuery);
-        Assert.assertNull(result.getResourceDataList(), "Result Object found.");
+        AdvancedSearchResultsBean result = null;
+        try {
+            result = searchAdminService.getAdvancedSearchResults(searchQuery);
+        } finally {
+            if (result != null) {
+                Assert.assertNull(result.getResourceDataList(), "Result Object found.");
+            }else{
+                Assert.assertNull(result, "No results returned");
+            }
+        }
 
 
     }
@@ -265,8 +273,6 @@ public class RegistrySearchByCommentsTestCase {
                 {"<"},
                 {">"},
                 {"#"},
-                {"   "},
-                {""},
                 {"@"},
                 {"|"},
                 {"^"},

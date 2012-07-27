@@ -9,7 +9,7 @@
         <listener class-name="org.wso2.carbon.automation.core.PlatformSuiteManager"/>
     </listeners>
 
-    <test name="Test - SourceXpathTargetXpath">
+ <!--   <test name="Test - SourceXpathTargetXpath">
         <classes>
             <class name="org.wso2.carbon.mediator.test.callOut.SourceXpathTargetXpath"/>
         </classes>
@@ -20,8 +20,14 @@
         <classes>
             <class name="org.wso2.carbon.endpoint.test.DefaultEndpointTestCase"/>
         </classes>
-    </test>
+    </test>-->
 
+  <test name="Test - ESB clone">
+        <classes>
+           <class name="org.wso2.carbon.mediator.test.clone.CloneMediatorEndpointsTestCase"/>
+        </classes>
+    </test>
+    <!--
     <test name="Test - Mediator fault" preserve-order="true" verbose="2">
         <classes>
             <class name="org.wso2.carbon.mediator.test.fault.CustomErrorMessageTestCase"/>
@@ -140,7 +146,7 @@
             <class name="org.wso2.carbon.mediator.test.header.Sample6TestCase"/>
             <class name="org.wso2.carbon.mediator.test.header.Sample100TestCase"/>
             <class name="org.wso2.carbon.mediator.test.header.SetHeaderToTestCase"/>
-            <!--<class name="org.wso2.carbon.mediator.test.header.RemoveSecurityFromHeaderTestCase"/>-->
+            &lt;!&ndash;<class name="org.wso2.carbon.mediator.test.header.RemoveSecurityFromHeaderTestCase"/>&ndash;&gt;
             <class name="org.wso2.carbon.mediator.test.header.SetHeaderActionTestCase"/>
 
         </classes>
@@ -172,5 +178,61 @@
             <class name="org.wso2.carbon.mediator.test.enrich.EnrichMediatorReplaceBodyWithInline"/>
         </classes>
     </test>
+
+    <test name="Test - ESB - ClassMediator - sample 380" preserve-order="true" verbose="2">
+        <classes>
+            <class name="org.wso2.carbon.mediator.test.classMediator.ClassMediatorTestSample380"/>
+
+        </classes>
+    </test>
+
+    <test name="Test - ESB - ScriptMediator - sce. 01" preserve-order="true" verbose="2">
+        <classes>
+            <class name="org.wso2.carbon.mediator.test.script.ScriptMediatorTest46"/>
+
+        </classes>
+    </test>
+
+    <test name="Test - ESB - ScriptMediator - Negative Tests sce. 01 (negation test's evaluation is valid if 'ScriptMediator - sce 01' evaluated to true)" preserve-order="true" verbose="2">
+        &lt;!&ndash;negation test's assertion is valid if 'ScriptMediator - sce 01' evaluated to true &ndash;&gt;
+        <classes>
+            <class name="org.wso2.carbon.mediator.test.script.ScriptMediatorTest65"/>
+
+        </classes>
+    </test>
+
+    <test name="Test - ESB - ScriptMediator - Negative Tests sce. 02 (negation test's evaluation is valid if 'ScriptMediator - sce 01' evaluated to true)" preserve-order="true" verbose="2">
+        &lt;!&ndash;negation test's assertion is valid if 'ScriptMediator - sce 01' evaluated to true &ndash;&gt;
+        <classes>
+            <class name="org.wso2.carbon.mediator.test.script.ScriptMediatorTest66"/>
+
+        </classes>
+    </test>
+
+    <test name="Test - ESB - ScriptMediator - sce. 05_b" preserve-order="true" verbose="2">
+        <classes>
+            <class name="org.wso2.carbon.mediator.test.script.ScriptMediatorTest06"/>
+
+        </classes>
+    </test>
+
+
+    <test name="Test - ESB - ScriptMediator - sce. 07" preserve-order="true" verbose="2">
+        <classes>
+            <class name="org.wso2.carbon.mediator.test.script.ScriptMediatorTest54"/>
+
+        </classes>
+    </test>
+
+
+    <test name="Test - ESB - ScriptMediator -  sce. 08" preserve-order="true" verbose="2">
+        <classes>
+            <class name="org.wso2.carbon.mediator.test.script.ScriptMediatorTest08"/>
+
+        </classes>
+    </test>
+
+-->
+
 
 </suite>

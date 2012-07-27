@@ -47,8 +47,10 @@ import org.wso2.carbon.logging.service.data.LogEvent;
 import org.wso2.carbon.logging.service.data.LogInfo;
 import org.wso2.carbon.logging.service.data.SyslogData;
 import org.wso2.carbon.registry.core.Collection;
+import org.wso2.carbon.registry.core.RegistryConstants;
 import org.wso2.carbon.registry.core.Resource;
 import org.wso2.carbon.registry.core.exceptions.RegistryException;
+import org.wso2.carbon.utils.CarbonUtils;
 import org.wso2.carbon.utils.Pageable;
 
 public class LoggingUtil {
@@ -188,7 +190,10 @@ public class LoggingUtil {
 		LogManager.resetConfiguration();
 
 		try {
-			Log4jConfigurer.initLogging("classpath:log4j.properties");
+			//Log4jConfigurer.initLogging("classpath:log4j.properties");
+			String logFile =  CarbonUtils.getCarbonConfigDirPath()
+			+ RegistryConstants.PATH_SEPARATOR+"log4j.properties";
+			Log4jConfigurer.initLogging(logFile);
 		} catch (FileNotFoundException e) {
 			String msg = "Cannot restore default logging configuration."
 					+ " log4j.properties file not found in the classpath";

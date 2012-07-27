@@ -37,6 +37,7 @@
     <modules>
         <module>org.wso2.carbon.url.mapper</module>
         <module>org.wso2.carbon.url.mapper.ui</module>
+	<module>org.wso2.carbon.url.mapper.clustermessage</module>
     </modules>
 
 </project>

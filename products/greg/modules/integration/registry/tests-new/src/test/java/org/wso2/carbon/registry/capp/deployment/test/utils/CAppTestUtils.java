@@ -15,7 +15,7 @@
 *specific language governing permissions and limitations
 *under the License.
 */
-package org.wso2.carbon.registry.search.metadata.test.utils;
+package org.wso2.carbon.registry.capp.deployment.test.utils;
 
 import org.wso2.carbon.application.mgt.stub.ApplicationAdminExceptionException;
 import org.wso2.carbon.automation.api.clients.application.mgt.ApplicationAdminClient;

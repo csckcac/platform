@@ -460,7 +460,8 @@ public class ReportingTestCase {
      * @throws ReportingAdminServiceTaskExceptionException
      *
      */
-    @Test(groups = "wso2.greg", description = "Add Report without a name", expectedExceptions = java.lang.Exception.class, dependsOnMethods = "testDeleteANDAddReport")
+    @Test(groups = "wso2.greg", description = "Add Report without a name",
+          expectedExceptions = java.lang.Exception.class, dependsOnMethods = "testDeleteANDAddReport")
     public void testSaveReportWithoutName()
             throws Exception {
         ReportAdminServiceClient reportAdminServiceClient = new ReportAdminServiceClient(

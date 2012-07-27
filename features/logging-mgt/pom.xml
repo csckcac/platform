@@ -46,6 +46,11 @@
                 <artifactId>org.wso2.carbon.logging.service</artifactId>
                 <version>${wso2carbon.version.logging.mgt}</version>
             </dependency>
+           <dependency>
+                <groupId>org.wso2.carbon</groupId>
+                <artifactId>org.wso2.carbon.logging.summarizer</artifactId>
+                <version>${wso2carbon.version.logging.mgt}</version>
+            </dependency>
             <dependency>
                 <groupId>org.wso2.carbon</groupId>
                 <artifactId>org.wso2.carbon.logging.admin.ui</artifactId>

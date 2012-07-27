@@ -8,6 +8,14 @@
         <listener class-name="org.wso2.carbon.automation.core.PlatformExecutionManager"/>
         <listener class-name="org.wso2.carbon.automation.core.PlatformSuiteManager"/>
     </listeners>
+
+    <test name="Test - SourceXpathTargetXpath">
+        <classes>
+            <class name="org.wso2.carbon.mediator.test.callOut.SourceXpathTargetXpath"/>
+        </classes>
+    </test>
+
+
     <test name="Test - ESB">
         <classes>
             <class name="org.wso2.carbon.endpoint.test.DefaultEndpointTestCase"/>

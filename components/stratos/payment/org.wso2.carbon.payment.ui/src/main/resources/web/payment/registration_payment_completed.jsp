@@ -43,7 +43,11 @@
         resourceBundle="org.wso2.carbon.payment.ui.i18n.Resources"
         topPage="true"
         request="<%=request%>"/>
-
+<script type="text/javascript">
+    function proceedRegistration(){
+        location.href = "../tenant-register/success_register.jsp";
+    }
+</script>
 <div id="middle">
     <h2><fmt:message key="payment.process.continued"/></h2>
     <br/>
@@ -145,17 +149,6 @@
                     </tr>
                 </table>
             </div>
-        
-
-
-
-
-
-
-
-
-
     </div>
-
 </div>
 </fmt:bundle>

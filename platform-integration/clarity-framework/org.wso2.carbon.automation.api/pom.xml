@@ -453,6 +453,16 @@
             <artifactId>org.wso2.carbon.identity.user.profile.stub</artifactId>
             <version>${stub.version}</version>
         </dependency>
+        <dependency>
+            <groupId>org.wso2.carbon</groupId>
+            <artifactId>org.wso2.carbon.reporting.ui</artifactId>
+            <version>${carbon.version}</version>
+        </dependency>
+        <dependency>
+            <groupId>org.wso2.carbon</groupId>
+            <artifactId>org.wso2.carbon.registry.activities</artifactId>
+            <version>${carbon.version}</version>
+        </dependency>
     </dependencies>
 
     <properties>

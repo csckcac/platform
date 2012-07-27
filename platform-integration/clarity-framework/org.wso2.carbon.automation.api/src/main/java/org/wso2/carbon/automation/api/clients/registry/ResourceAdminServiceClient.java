@@ -279,7 +279,7 @@ public class ResourceAdminServiceClient {
     }
 
 
-    public VersionPath[] getVersion(String path)
+    public VersionPath[] getVersionPaths(String path)
             throws RemoteException, ResourceAdminServiceExceptionException {
         VersionPath[] versionPaths = null;
         try {
@@ -293,6 +293,20 @@ public class ResourceAdminServiceClient {
             throw new ResourceAdminServiceExceptionException("Get version error : ", e);
         }
         return versionPaths;
+    }
+
+    public VersionsBean getVersionsBean(String path)
+            throws RemoteException, ResourceAdminServiceExceptionException {
+
+        try {
+            return resourceAdminServiceStub.getVersionsBean(path);
+        } catch (RemoteException e) {
+            log.error("Get version bean fails: " + e.getMessage());
+            throw new RemoteException("Get version bean fails:  ", e);
+        } catch (ResourceAdminServiceExceptionException e) {
+            log.error("Get version bean fails:  " + e.getMessage());
+            throw new ResourceAdminServiceExceptionException("Get version bean fails:  : ", e);
+        }
     }
 
     public void createVersion(String resourcePath)

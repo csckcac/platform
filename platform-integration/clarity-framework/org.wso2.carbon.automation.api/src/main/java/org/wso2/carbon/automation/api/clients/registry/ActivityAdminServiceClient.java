@@ -18,6 +18,7 @@
 package org.wso2.carbon.automation.api.clients.registry;
 
 import org.apache.axis2.AxisFault;
+import org.apache.axis2.context.ConfigurationContext;
 import org.apache.commons.logging.Log;
 import org.apache.commons.logging.LogFactory;
 import org.wso2.carbon.automation.api.clients.utils.AuthenticateStub;
@@ -39,16 +40,47 @@ public class ActivityAdminServiceClient {
     public final static String FILTER_RESOURCE_ADDED = "resourceAdd";
     public final static String FILTER_RESOURCE_UPDATE = "resourceUpdate";
 
-    public ActivityAdminServiceClient(String backEndUrl) throws AxisFault {
+    public ActivityAdminServiceClient(String backEndUrl, String sessionCookie) throws AxisFault {
         this.endPoint = backEndUrl + serviceName;
-        activityAdminServiceStub = new ActivityAdminServiceStub(endPoint);
+        try {
+            activityAdminServiceStub = new ActivityAdminServiceStub(endPoint);
+        } catch (AxisFault axisFault) {
+            log.error("activityAdminServiceStub Initialization fail " + axisFault.getMessage());
+            throw new AxisFault("activityAdminServiceStub Initialization fail ", axisFault);
+        }
+        AuthenticateStub.authenticateStub(sessionCookie, activityAdminServiceStub);
+    }
+
+    public ActivityAdminServiceClient(String backEndUrl, String userName, String password)
+            throws AxisFault {
+        this.endPoint = backEndUrl + serviceName;
+        try {
+            activityAdminServiceStub = new ActivityAdminServiceStub(endPoint);
+        } catch (AxisFault axisFault) {
+            log.error("activityAdminServiceStub Initialization fail " + axisFault.getMessage());
+            throw new AxisFault("activityAdminServiceStub Initialization fail ", axisFault);
+        }
+        AuthenticateStub.authenticateStub(userName, password, activityAdminServiceStub);
     }
 
     public ActivityBean getActivities(String sessionCookie, String userName, String resourcePath
             , String fromDate, String toDate, String filter, int page)
-            throws RegistryExceptionException, RemoteException {
-        AuthenticateStub.authenticateStub(sessionCookie, activityAdminServiceStub);
-        return activityAdminServiceStub.getActivities(userName, resourcePath, fromDate, toDate
-                , filter, page + "", sessionCookie);
+            throws RemoteException, RegistryExceptionException {
+        try {
+            return activityAdminServiceStub.getActivities(userName, resourcePath, fromDate, toDate
+                    , filter, page + "", sessionCookie);
+        } catch (RemoteException e) {
+            String msg = "Fails to get activities";
+            log.error(msg + " " + e.getMessage());
+            throw new RemoteException(msg, e);
+        } catch (RegistryExceptionException e) {
+            String msg = "Fails to get activities";
+            log.error(msg + " " + e.getMessage());
+            throw new RegistryExceptionException(msg, e);
+        }
+    }
+
+    public ConfigurationContext getConfigurationContext() {
+        return activityAdminServiceStub._getServiceClient().getServiceContext().getConfigurationContext();
     }
 }

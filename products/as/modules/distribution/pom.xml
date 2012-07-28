@@ -202,9 +202,9 @@
                                     <fileset
                                             dir="target/wso2carbon-core-${carbon.platform.version}/bin"
                                             includes="**/*.jar"/>
-                                    <fileset
+                                    <!--fileset
                                             dir="target/wso2carbon-core-${carbon.platform.version}/lib/xboot"
-                                            includes="**/*.jar"/>
+                                            includes="**/*.jar"/-->
                                     <fileset
                                             dir="target/wso2carbon-core-${carbon.platform.version}/lib/endorsed"
                                             includes="**/*.jar"/>

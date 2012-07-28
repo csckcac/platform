@@ -190,24 +190,4 @@ public class ActivitySearchSearchResultsTestCase {
         ReportStream reportStream = new ReportStream();
         return reportStream.getReportStream(jasperPrint, type);
     }
-
-    public void queryResourceInRootTestCase() throws RegistryException {
-        Collection collection = registry.newCollection();
-        collection.setDescription("Testing Collection");
-        collection.setMediaType("application/vnd.wso2.xpath.query");
-        collection.setChildren(new String[]{"test"});
-
-        registry.put("/", collection);
-        String[] paths =XpathQueryUtil.searchFromXpathQuery(registry,"/", "/");
-        boolean pass =false;
-        for(String path:paths){
-            System.out.println(path);
-            if(path.equals("test")||path.equals("/_system")){
-                pass = true;
-            }
-        }
-        if(!pass){
-            fail("");
-        }
-
 }

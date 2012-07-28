@@ -118,21 +118,24 @@ public class ResourceAdminServiceClient {
                         String fetchURL)
             throws ResourceAdminServiceExceptionException, RemoteException {
 
-        resourceAdminServiceStub.importResource("/", resourceName, MEDIA_TYPE_WSDL, description, fetchURL, null);
+        resourceAdminServiceStub.importResource("/", resourceName, MEDIA_TYPE_WSDL,
+                                                description, fetchURL, null);
     }
 
     public void addSchema(String description, DataHandler dh)
             throws ResourceAdminServiceExceptionException, RemoteException {
         String fileName;
         fileName = dh.getName().substring(dh.getName().lastIndexOf('/') + 1);
-        resourceAdminServiceStub.addResource("/" + fileName, MEDIA_TYPE_SCHEMA, description, dh, null);
+        resourceAdminServiceStub.addResource("/" + fileName, MEDIA_TYPE_SCHEMA,
+                                             description, dh, null);
     }
 
     public void addSchema(String resourceName, String description,
                           String fetchURL) throws ResourceAdminServiceExceptionException,
                                                   RemoteException {
 
-        resourceAdminServiceStub.importResource("/", resourceName, MEDIA_TYPE_SCHEMA, description, fetchURL, null);
+        resourceAdminServiceStub.importResource("/", resourceName, MEDIA_TYPE_SCHEMA,
+                                                description, fetchURL, null);
 
     }
 
@@ -140,21 +143,24 @@ public class ResourceAdminServiceClient {
             throws ResourceAdminServiceExceptionException, RemoteException {
         String fileName;
         fileName = dh.getName().substring(dh.getName().lastIndexOf('/') + 1);
-        resourceAdminServiceStub.addResource("/" + fileName, MEDIA_TYPE_POLICY, description, dh, null);
+        resourceAdminServiceStub.addResource("/" + fileName, MEDIA_TYPE_POLICY,
+                                             description, dh, null);
     }
 
     public void addPolicy(String resourceName, String description,
                           String fetchURL)
             throws ResourceAdminServiceExceptionException, RemoteException {
 
-        resourceAdminServiceStub.importResource("/", resourceName, MEDIA_TYPE_POLICY, description, fetchURL, null);
+        resourceAdminServiceStub.importResource("/", resourceName, MEDIA_TYPE_POLICY,
+                                                description, fetchURL, null);
     }
 
     public void uploadArtifact(String description, DataHandler dh)
             throws ResourceAdminServiceExceptionException, RemoteException {
         String fileName;
         fileName = dh.getName().substring(dh.getName().lastIndexOf('/') + 1);
-        resourceAdminServiceStub.addResource("/" + fileName, MEDIA_TYPE_GOVERNANCE_ARCHIVE, description, dh, null);
+        resourceAdminServiceStub.addResource("/" + fileName, MEDIA_TYPE_GOVERNANCE_ARCHIVE,
+                                             description, dh, null);
     }
 
     public void addCollection(String parentPath, String collectionName,
@@ -175,7 +181,8 @@ public class ResourceAdminServiceClient {
                                 String mediaType, String description, String content)
             throws RemoteException, ResourceAdminServiceExceptionException {
 
-        resourceAdminServiceStub.addTextResource(parentPath, fileName, mediaType, description, content);
+        resourceAdminServiceStub.addTextResource(parentPath, fileName, mediaType,
+                                                 description, content);
     }
 
     public void addResourcePermission(String pathToAuthorize,
@@ -183,7 +190,8 @@ public class ResourceAdminServiceClient {
                                       String actionToAuthorize, String permissionType)
             throws RemoteException, ResourceAdminServiceResourceServiceExceptionException {
 
-        resourceAdminServiceStub.addRolePermission(pathToAuthorize, roleToAuthorize, actionToAuthorize, permissionType);
+        resourceAdminServiceStub.addRolePermission(pathToAuthorize, roleToAuthorize,
+                                                   actionToAuthorize, permissionType);
 
     }
 
@@ -403,6 +411,19 @@ public class ResourceAdminServiceClient {
         } catch (ResourceAdminServiceExceptionException e) {
             log.error("Add Extension error");
             throw new ResourceAdminServiceExceptionException("Rename resource error", e);
+        }
+    }
+
+    public boolean removeExtension(String name)
+            throws RemoteException, ResourceAdminServiceExceptionException {
+        try {
+            return resourceAdminServiceStub.removeExtension(name);
+        } catch (RemoteException e) {
+            log.error("Remove extension error ");
+            throw new RemoteException("Remove resource error ", e);
+        } catch (ResourceAdminServiceExceptionException e) {
+            log.error("Remove Extension error");
+            throw new ResourceAdminServiceExceptionException("Remove resource error", e);
         }
     }
 

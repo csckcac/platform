@@ -118,10 +118,17 @@
                                 <featureArtifactDef>org.wso2.carbon:org.wso2.carbon.hdfs.datanode.feature:${carbon.version}</featureArtifactDef>
 				<!--End HDFS features-->
 				<!--Start Secure Hadoop features-->
-                                <featureArtifactDef>org.wso2.carbon:org.wso2.carbon.hadoop.security.feature:${carbon.version}</featureArtifactDef>
+                                <!--featureArtifactDef>org.wso2.carbon:org.wso2.carbon.hadoop.security.feature:${carbon.version}</featureArtifactDef-->
                                 <featureArtifactDef>org.wso2.carbon:org.wso2.carbon.identity.authenticator.krb5.feature:${carbon.version}</featureArtifactDef>
                                 <featureArtifactDef>org.wso2.carbon:org.wso2.carbon.identity.authenticator.krb5.ui.feature:${carbon.version}</featureArtifactDef>
 				<!--End Secure Hadoop features-->
+				<!--Start LDAP features-->
+                                <featureArtifactDef>org.wso2.carbon:org.wso2.carbon.ldap.server.feature:${carbon.version}</featureArtifactDef>
+                                <featureArtifactDef>org.wso2.carbon:org.wso2.carbon.ldap.server.server.feature:${carbon.version}</featureArtifactDef>
+                                <featureArtifactDef>org.wso2.carbon:org.wso2.carbon.directory.service.mgr.feature:${carbon.version}</featureArtifactDef>
+                                <featureArtifactDef>org.wso2.carbon:org.wso2.carbon.directory.service.mgr.server.feature:${carbon.version}</featureArtifactDef>
+                                <featureArtifactDef>org.wso2.carbon:org.wso2.carbon.directory.service.mgr.ui.feature:${carbon.version}</featureArtifactDef>
+				<!--End LDAP features-->
                                 <featureArtifactDef>org.wso2.carbon:org.wso2.carbon.logging.mgt.feature:${carbon.version}</featureArtifactDef>
                                 <featureArtifactDef>org.wso2.carbon:org.wso2.carbon.registry.core.feature:${carbon.version}</featureArtifactDef>
                                 <featureArtifactDef>org.wso2.carbon:org.wso2.carbon.registry.ui.menu.feature:${carbon.version}</featureArtifactDef>
@@ -227,10 +234,10 @@
                                 </feature>
 				<!--End HDFS featrues-->	
 				<!--Start Secure Hadoop featrues-->	
-				<feature>
+				<!--feature>
                                     <id>org.wso2.carbon.hadoop.security.feature.group</id>
                                     <version>${carbon.version}</version>
-                                </feature>
+                                </feature-->
 				<feature>
                                     <id>org.wso2.carbon.identity.authenticator.krb5.feature.group</id>
                                     <version>${carbon.version}</version>
@@ -240,6 +247,28 @@
                                     <version>${carbon.version}</version>
                                 </feature>
 				<!--End Secure Hadoop featrues-->	
+				<!--Start LDAP features-->
+				<feature>
+                                    <id>org.wso2.carbon.ldap.server.feature.group</id>
+                                    <version>${carbon.version}</version>
+                                </feature>
+				<feature>
+                                    <id>org.wso2.carbon.ldap.server.server.feature.group</id>
+                                    <version>${carbon.version}</version>
+                                </feature>
+				<feature>
+                                    <id>org.wso2.carbon.directory.service.mgr.feature.group</id>
+                                    <version>${carbon.version}</version>
+                                </feature>
+				<feature>
+                                    <id>org.wso2.carbon.directory.service.mgr.server.feature.group</id>
+                                    <version>${carbon.version}</version>
+                                </feature>
+				<feature>
+                                    <id>org.wso2.carbon.directory.service.mgr.ui.feature.group</id>
+                                    <version>${carbon.version}</version>
+                                </feature>
+				<!--End LDAP features-->
                                 <feature>
                                     <id>org.wso2.carbon.logging.mgt.feature.group</id>
                                     <version>${carbon.version}</version>

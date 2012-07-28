@@ -42,6 +42,7 @@
             <class name="org.wso2.carbon.registry.activity.search.ActivitySearchSearchResultsTestCase"/>
             <class name="org.wso2.carbon.registry.activity.search.ActivitySearchByPathTestCase"/>
             <class name="org.wso2.carbon.registry.activity.search.ActivitySearchByDateTestCase"/>
+            <class name="org.wso2.carbon.registry.lifecycle.test.PromoteDemoteByAdminNonAdminTestCase"/>
         </classes>
     </test>
 </suite>

@@ -40,6 +40,7 @@ import java.rmi.RemoteException;
 import java.util.ArrayList;
 import java.util.List;
 
+import static org.testng.Assert.assertNotNull;
 import static org.testng.FileAssert.fail;
 
 /**
@@ -87,17 +88,20 @@ public class ActivitySearchSearchResultsTestCase {
 
     public void addResource() throws InterruptedException, MalformedURLException,
                                      ResourceAdminServiceExceptionException, RemoteException {
-        String resource = ProductConstant.SYSTEM_TEST_RESOURCE_LOCATION + "artifacts" + File.separator + "GREG" + File.separator +
+        String resource = ProductConstant.SYSTEM_TEST_RESOURCE_LOCATION + "artifacts" +
+                          File.separator + "GREG" + File.separator +
                           "wsdl" + File.separator + "sample.wsdl";
 
         resourceAdminServiceClient.addResource(wsdlPath + resourceName,
-                                               "application/wsdl+xml", "test resource", new DataHandler(new URL("file:///" + resource)));
+                                               "application/wsdl+xml", "test resource",
+                                               new DataHandler(new URL("file:///" + resource)));
 
 
         // wait for sometime until the resource has been added. The activity logs are written
         // every 10 seconds, so you'll need to wait until that's done.
         // Thread.sleep(20000);
-        // assertTrue(resourceAdminServiceClient.getResource("/_system/governance/trunk/wsdls/eu/dataaccess/footballpool/"+resourceName )[0].getAuthorUserName().contains(userInfo.getUserName()));
+        // assertTrue(resourceAdminServiceClient.getResource("/_system/governance/trunk/wsdls/eu/dataaccess/footballpool/"+
+        // resourceName )[0].getAuthorUserName().contains(userInfo.getUserName()));
 
     }
 
@@ -123,18 +127,10 @@ public class ActivitySearchSearchResultsTestCase {
             addResource();
             resourceAdminServiceClient.deleteResource(wsdlPath + resourceName);
         }
-        if (null == activityAdminServiceClient.getActivities(environment.getGreg().getSessionCookie(), "", "", "", "",
-                                                             "", 0).getActivity()) {
-            FileAssert.fail();
-
-        }
-        if (null == activityAdminServiceClient.getActivities(environment.getGreg().getSessionCookie(), "", "", "", "",
-                                                             "", 1).getActivity()) {
-            FileAssert.fail();
-
-        }
-
-
+        assertNotNull(activityAdminServiceClient.getActivities(environment.getGreg().getSessionCookie(), "", "", "", "",
+                                                               "", 0).getActivity());
+        assertNotNull(activityAdminServiceClient.getActivities(environment.getGreg().getSessionCookie(), "", "", "", "",
+                                                               "", 1).getActivity());
     }
 
     @Test(groups = {"wso2.greg"})
@@ -142,70 +138,76 @@ public class ActivitySearchSearchResultsTestCase {
             throws Exception, MalformedURLException, ResourceAdminServiceExceptionException,
                    RemoteException, ReportingResourcesSupplierReportingExceptionException,
                    ReportingException, JRException, RegistryExceptionException {
-        if (getOutputStream("pdf") == null) {
-            fail();
-        }
-
-
+        assertNotNull(getReportOutputStream("pdf") == null);
     }
 
     @Test(groups = {"wso2.greg"})
     public void htmlReportTest()
             throws Exception, MalformedURLException, ResourceAdminServiceExceptionException,
                    RemoteException {
-        if (getOutputStream("html") == null) {
-            fail();
-        }
+        assertNotNull(getReportOutputStream("html"));
     }
 
     @Test(groups = {"wso2.greg"})
     public void excelReportTest()
             throws Exception, MalformedURLException, ResourceAdminServiceExceptionException,
                    RemoteException {
-        if (getOutputStream("excel") == null) {
-            fail();
-        }
+        assertNotNull(getReportOutputStream("excel"));
     }
 
     @Test(groups = {"wso2.greg"})
     public void searchAgainLink() throws InterruptedException, MalformedURLException,
                                          ResourceAdminServiceExceptionException, RemoteException,
                                          RegistryExceptionException {
-        if (null == activityAdminServiceClient.getActivities(environment.getGreg().getSessionCookie(), "", "", "", "",
-                                                             "", 0).getActivity()) {
-            FileAssert.fail();
+        assertNotNull(activityAdminServiceClient.getActivities(environment.getGreg().getSessionCookie(), "", "", "", "",
+                                                               "", 0).getActivity());
 
-        }
-
-        if (null == activityAdminServiceClient.getActivities(environment.getGreg().getSessionCookie(), "", "", "", "",
-                                                             "", 0).getActivity()) {
-            FileAssert.fail();
-
-        }
-
+        assertNotNull(activityAdminServiceClient.getActivities(environment.getGreg().getSessionCookie(), "", "", "", "",
+                                                               "", 0).getActivity());
     }
 
-    private ByteArrayOutputStream getOutputStream(String type) throws Exception, RemoteException,
-                                                                      ReportingResourcesSupplierReportingExceptionException,
-                                                                      ReportingException,
-                                                                      JRException,
-                                                                      RegistryException {
+    private ByteArrayOutputStream getReportOutputStream(String type)
+            throws Exception, RemoteException,
+                   ReportingResourcesSupplierReportingExceptionException,
+                   ReportingException,
+                   JRException,
+                   RegistryException {
         ActivityService service = new ActivityService();
 
         activityAdminServiceClient.getActivities(environment.getGreg().getSessionCookie(), "", "", "", "", "", 0);
 
-        ActivityBean
-                beanOne = service.getActivities(userInfo.getUserName(), "", "", "", "", "", environment.getGreg().getSessionCookie());
+        ActivityBean beanOne = service.getActivities(userInfo.getUserName(), "", "", "", "", "",
+                                                     environment.getGreg().getSessionCookie());
 
         List<ActivityBean> beanList = new ArrayList<ActivityBean>();
         beanList.add(beanOne);
-        String reportResource = reportResourceSupplierClient.getReportResource(ActivitySearchUtil.COMPONENT, ActivitySearchUtil.TEMPLATE);
+        String reportResource = reportResourceSupplierClient.getReportResource(ActivitySearchUtil.COMPONENT,
+                                                                               ActivitySearchUtil.TEMPLATE);
         JRDataSource jrDataSource = new BeanCollectionReportData().getReportDataSource(beanList);
         JasperPrintProvider jasperPrintProvider = new JasperPrintProvider();
         JasperPrint jasperPrint = jasperPrintProvider.createJasperPrint(jrDataSource, reportResource, new ReportParamMap[0]);
 
-        ReportStream
-                reportStream = new ReportStream();
+        ReportStream reportStream = new ReportStream();
         return reportStream.getReportStream(jasperPrint, type);
     }
+
+    public void queryResourceInRootTestCase() throws RegistryException {
+        Collection collection = registry.newCollection();
+        collection.setDescription("Testing Collection");
+        collection.setMediaType("application/vnd.wso2.xpath.query");
+        collection.setChildren(new String[]{"test"});
+
+        registry.put("/", collection);
+        String[] paths =XpathQueryUtil.searchFromXpathQuery(registry,"/", "/");
+        boolean pass =false;
+        for(String path:paths){
+            System.out.println(path);
+            if(path.equals("test")||path.equals("/_system")){
+                pass = true;
+            }
+        }
+        if(!pass){
+            fail("");
+        }
+
 }

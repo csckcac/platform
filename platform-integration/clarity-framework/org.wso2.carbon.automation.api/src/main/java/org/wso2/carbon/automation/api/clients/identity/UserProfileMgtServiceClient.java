@@ -22,7 +22,9 @@ import org.apache.axis2.AxisFault;
 import org.apache.commons.logging.Log;
 import org.apache.commons.logging.LogFactory;
 import org.wso2.carbon.automation.api.clients.utils.AuthenticateStub;
+import org.wso2.carbon.identity.user.profile.stub.UserProfileExceptionException;
 import org.wso2.carbon.identity.user.profile.stub.UserProfileMgtServiceStub;
+import org.wso2.carbon.identity.user.profile.stub.types.UserProfileDTO;
 
 import java.rmi.RemoteException;
 
@@ -56,5 +58,65 @@ public class UserProfileMgtServiceClient {
             throw new RemoteException("Error on initializing userProfileMgtServiceStub : ", axisFault);
         }
         AuthenticateStub.authenticateStub(userName, password, userProfileMgtServiceStub);
+    }
+
+    public void deleteUserProfile(String userName, String profileName)
+            throws RemoteException, UserProfileExceptionException {
+        try {
+            userProfileMgtServiceStub.deleteUserProfile(userName, profileName);
+        } catch (RemoteException e) {
+            String msg = "Delete user profile fails";
+            log.info(msg);
+            throw new RemoteException(msg, e);
+        } catch (UserProfileExceptionException e) {
+            String msg = "Delete user profile fails";
+            log.info(msg);
+            throw new UserProfileExceptionException(msg, e);
+        }
+    }
+
+    public void setUserProfile(String userName, UserProfileDTO profile)
+            throws RemoteException, UserProfileExceptionException {
+        try {
+            userProfileMgtServiceStub.setUserProfile(userName, profile);
+        } catch (RemoteException e) {
+            String msg = "Set user profile fails";
+            log.info(msg);
+            throw new RemoteException(msg, e);
+        } catch (UserProfileExceptionException e) {
+            String msg = "Set user profile fails";
+            log.info(msg);
+            throw new UserProfileExceptionException(msg, e);
+        }
+    }
+
+    public UserProfileDTO[] getUserProfiles(String userName)
+            throws RemoteException, UserProfileExceptionException {
+        try {
+            return userProfileMgtServiceStub.getUserProfiles(userName);
+        } catch (RemoteException e) {
+            String msg = "Unable to get user profiles of " + userName;
+            log.info(msg);
+            throw new RemoteException(msg, e);
+        } catch (UserProfileExceptionException e) {
+            String msg = "Unable to get user profiles of " + userName;
+            log.info(msg);
+            throw new UserProfileExceptionException(msg, e);
+        }
+    }
+
+    public UserProfileDTO getUserProfile(String userName, String profileName)
+            throws RemoteException, UserProfileExceptionException {
+        try {
+            return userProfileMgtServiceStub.getUserProfile(userName, profileName);
+        } catch (RemoteException e) {
+            String msg = "Unable to get user profile of " + userName;
+            log.info(msg);
+            throw new RemoteException(msg, e);
+        } catch (UserProfileExceptionException e) {
+            String msg = "Unable to get user profile of " + userName;
+            log.info(msg);
+            throw new UserProfileExceptionException(msg, e);
+        }
     }
 }

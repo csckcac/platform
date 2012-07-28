@@ -67,15 +67,27 @@
 		String action;
 		boolean showLogFiles;
 		String pageNumberStr = request.getParameter("pageNumber");
+		String pageIndexNumberStr = request.getParameter("pageIndexNumber");
+		String showMaxStr = request.getParameter("showMax");
 		int pageNumber = 0;
+		int pageIndexNumber = 0;
+		int numberOfIndexPages = 0;
 		int numberOfPages = 0;
 		int noOfRows=0;
+		boolean showMax= false;
 		LogInfo[] logInfo = null;
 		PaginatedLogInfo paginatedLogInfo;
 		PaginatedLogEvent paginatedLogEvents;
 		String parameter = "";
+		String indexParameter = "";
+		showMax = Boolean.parseBoolean(showMaxStr);
 		try {
 			pageNumber = Integer.parseInt(pageNumberStr);
+		} catch (NumberFormatException ignored) {
+			// page number format exception
+		}
+		try {
+			pageIndexNumber = Integer.parseInt(pageIndexNumberStr);
 		} catch (NumberFormatException ignored) {
 			// page number format exception
 		}
@@ -88,20 +100,20 @@
 			logViewerClient = new LogViewerClient(cookie, backendServerURL, configContext);
 			paginatedLogEvents = logViewerClient.getPaginatedLogEvents(pageNumber, type,
 					keyword);
-
-			
 			if (paginatedLogEvents != null) {
 				noOfRows = paginatedLogEvents.getNumberOfPages() * 15;
 				events = paginatedLogEvents.getLogInfo();
 				numberOfPages = paginatedLogEvents.getNumberOfPages();
 			}
-			paginatedLogInfo = logViewerClient.getLocalLogFiles(pageNumber);
+			paginatedLogInfo = logViewerClient.getLocalLogFiles(pageIndexNumber);
 			if (paginatedLogInfo != null) {
 				logInfo = paginatedLogInfo.getLogInfo();
+				numberOfIndexPages = paginatedLogInfo.getNumberOfPages();
 			}
 
 			showLogFiles = (logInfo != null);
 			parameter = "type=" + type + "&keyword=" + keyword;
+			indexParameter = "type=" + type + "&keyword=" + keyword+"&showMax=" + true;
 		} catch (Exception e) {
 			CarbonUIMessage.sendCarbonUIMessage(e.getMessage(), CarbonUIMessage.ERROR, request,
 					e);
@@ -295,7 +307,9 @@
 											id="propertySymbolMax"></a> <fmt:message
 												key="archived.logs" /></td>
 									</tr>
-									<tr id="propertyTable" style="display: none">
+									    <tr id="propertyTable" style="<%=(showMax) ? "" : "display:none"%>">
+								
+								
 										<td>
 							
 					
@@ -375,6 +389,10 @@
 									}
 								%>
 							</table>
+							  <carbon:paginator pageNumber="<%=pageIndexNumber%>" numberOfPages="<%=numberOfIndexPages%>"
+                      page="index.jsp" pageNumberParameterName="pageIndexNumber"
+                      prevKey="prev" nextKey="next"
+                      parameters="<%=indexParameter%>"/>
 						</td>
 					</tr>
 										

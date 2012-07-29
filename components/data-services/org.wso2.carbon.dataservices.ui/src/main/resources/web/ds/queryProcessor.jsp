@@ -261,10 +261,15 @@
                          query.setResult(result);
                     }
                 }
+                if (flag.equals("save")) {
+                	query.setStatus("add");
+                }
             }
         } else {
             query = new Query();
             query.setId(queryId);
+            //query hasn't saved yet. Set status to remove until it is saved.
+            query.setStatus("remove");
             query.setReturnGeneratedKeys(Boolean.parseBoolean(returnGeneratedKeys));
             query.setKeyColumns(keyColumns);
             if (outputEvent != null) {
@@ -343,8 +348,11 @@
                  query.setResult(result);
             }
             dataService.addQuery(query);
+            if (flag.equals("save")) {
+            	query.setStatus("add");
+            }
         }
-    }
+    } 
     /* check return row id change */
     if (setReturnGeneratedKeys != null) {
     	boolean hasReturnRowProperty = false;

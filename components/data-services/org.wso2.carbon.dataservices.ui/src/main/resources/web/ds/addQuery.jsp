@@ -206,7 +206,7 @@
 
 <div id="workArea">
 <form method="post" action="" name="dataForm"
-      onsubmit="return validateAddQueryForm();" id="dataForm">
+      id="dataForm">
 
 <input type="hidden" id="buttonAction"/>
 
@@ -1347,8 +1347,8 @@
                                  type="submit" value="<fmt:message key="save"/>"
                                  onclick="document.dataForm.action='queryProcessor.jsp?flag=save&edit=<%=readOnly%>';return validateAddQueryFormSave('<%=datasourceType%>');"/>
         <input
-                class="button" type="button" value="<fmt:message key="cancel"/>"
-                onclick="location.href = 'queries.jsp?ordinal=2'"/></td>
+                class="button" type="submit" value="<fmt:message key="cancel"/>"
+                onclick="document.dataForm.action='removeQuery.jsp'"/></td>
 </tr>
 </table>
 </form>

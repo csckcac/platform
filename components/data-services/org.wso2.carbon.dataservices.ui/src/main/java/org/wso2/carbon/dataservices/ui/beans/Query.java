@@ -57,6 +57,8 @@ public class Query extends DataServiceConfigurationElement {
 	private ArrayList<Property> properties = new ArrayList<Property>();
 	
 	private List<SQLDialect> sqlDialects = new ArrayList<SQLDialect>();
+	
+	private String status = "add";
 
 	public ArrayList<Property> getProperties() {
 		return this.properties;
@@ -466,5 +468,15 @@ public class Query extends DataServiceConfigurationElement {
 	public void setGSpread(GSpreadQuery gSpread) {
 		this.gSpread = gSpread;
 	}
+
+	public String getStatus() {
+		return status;
+	}
+
+	public void setStatus(String status) {
+		this.status = status;
+	}
+	
+	
 
 }

@@ -8,26 +8,28 @@
         <listener class-name="org.wso2.carbon.automation.core.PlatformExecutionManager"/>
         <listener class-name="org.wso2.carbon.automation.core.PlatformSuiteManager"/>
     </listeners>
-
- <!--   <test name="Test - SourceXpathTargetXpath">
-        <classes>
-            <class name="org.wso2.carbon.mediator.test.callOut.SourceXpathTargetXpath"/>
-        </classes>
-    </test>
-
-
     <test name="Test - ESB">
         <classes>
-            <class name="org.wso2.carbon.endpoint.test.DefaultEndpointTestCase"/>
-        </classes>
-    </test>-->
-
-  <test name="Test - ESB clone">
-        <classes>
-           <class name="org.wso2.carbon.mediator.test.clone.CloneMediatorEndpointsTestCase"/>
+            <class name="org.wso2.carbon.mediator.test.send.SendMediatorTest"/>
         </classes>
     </test>
 
+ <!--   <test name="Test-EnrichMediator">
+        <classes>
+            <class name="org.wso2.carbon.mediator.test.property.PropertyMediatorTest"/>
+        </classes>
+    </test>-->
+<!--    <test name="Test - ESB enrich me">
+        <classes>
+            <class name="org.wso2.carbon.mediator.test.enrich.EnrichMediatorAddPropertyAsSiblingTest"/>
+        </classes>
+    </test>-->
+    <!--<test name="Test-Script Mediator -Uploading js script">
+        <classes>
+            <class name="org.wso2.carbon.mediator.test.script.UploadJsScriptTest"/>
+        </classes>
+    </test>-->
+      <!--
     <test name="Test - Mediator fault" preserve-order="true" verbose="2">
         <classes>
             <class name="org.wso2.carbon.mediator.test.fault.CustomErrorMessageTestCase"/>
@@ -141,119 +143,6 @@
             <class name="org.wso2.carbon.mediator.test.rewrite.SetFullUrlWhenNoAddressingUrlTestCase"/>
         </classes>
     </test>
-
-    <test name="Test - Mediator Header" preserve-order="true" verbose="2">
-        <classes>
-            <class name="org.wso2.carbon.mediator.test.header.Sample6TestCase"/>
-            <class name="org.wso2.carbon.mediator.test.header.Sample100TestCase"/>
-            <class name="org.wso2.carbon.mediator.test.header.SetHeaderToTestCase"/>
-            <!--<class name="org.wso2.carbon.mediator.test.header.RemoveSecurityFromHeaderTestCase"/>-->
-            <class name="org.wso2.carbon.mediator.test.header.SetHeaderActionTestCase"/>
-
-        </classes>
-    </test>
-    <test name="Test - Mediator Switch" preserve-order="true" verbose="2">
-        <classes>
-            <class name="org.wso2.carbon.mediator.test.switchMediator.SwitchingBasedOnAddressTestCase"/>
-            <class name="org.wso2.carbon.mediator.test.switchMediator.InvalidXPathSynapseConfigTestCase"/>
-            <class name="org.wso2.carbon.mediator.test.switchMediator.Sample2TestCase"/>
-            <class name="org.wso2.carbon.mediator.test.switchMediator.InvalidPrefixTestCase"/>
-        </classes>
-    </test>
-
-    <test name="Test - ESB - RuleMediator - Scenario to verify advance rule based routing "
-          preserve-order="true" verbose="2">
-        <classes>
-            <class name="org.wso2.carbon.mediator.test.rule.RuleMediatorTestSample603"/>
-
-        </classes>
-    </test>
-
-    <test name="Test - ESB Call Template Mediator-Call Template With Values And Expression Test Case"
-          preserve-order="true" verbose="2">
-        <classes>
-            <class name="org.wso2.carbon.mediator.test.call.CallTemplateWithValuesAndExpressionTestCase"/>
-        </classes>
-    </test>
-
-    <test name="Test - Enrich-Mediator" preserve-order="true" verbose="2">
-        <classes>
-            <class name="org.wso2.carbon.mediator.test.enrich.EnrichMediatorReplaceBodyWithInlineTestCase"/>
-            <class name="org.wso2.carbon.mediator.test.enrich.EnrichMediatorReplaceEnvelopeTestCase"/>
-            <class name="org.wso2.carbon.mediator.test.enrich.EnrichByGetPropertyCase"/>
-            <class name="org.wso2.carbon.mediator.test.enrich.EnrichMediatorReplaceInlineContentFromConfigRegistryTestCase"/>
-            <class name="org.wso2.carbon.mediator.test.enrich.EnrichMediatorSample15TestCase"/>
-            <class name="org.wso2.carbon.mediator.test.enrich.EnrichMediatorFollowedByEnrichMediatorTestCase"/>
-            <class name="org.wso2.carbon.mediator.test.enrich.EnrichByOMTextTestCase"/>
-        </classes>
-    </test>
-    <test name="Test-DropMediator" preserve-order="true" verbose="2">
-        <classes>
-            <class name="org.wso2.carbon.mediator.test.core.DropMediatorTest"/>
-        </classes>
-    </test>
-
-    <test name="Test - Clone Mediator" preserve-order="true" verbose="2">
-        <classes>
-            <class name="org.wso2.carbon.mediator.test.clone.CloneMediatorNamedEndpointsTestCase"/>
-            <class name="org.wso2.carbon.mediator.test.clone.CloneMediatorSequenceTestCase"/>
-            <class name="org.wso2.carbon.mediator.test.clone.CloneBurstTestCase"/>
-            <class name="org.wso2.carbon.mediator.test.clone.CloneLargeMessageTestCase"/>
-        </classes>
-    </test>
-
-    <test name="Test - ESB Iterator Mediator" preserve-order="true" verbose="2">
-        <classes>
-            <class name="org.wso2.carbon.mediator.test.iterate.IterateLargeMessageTestCase"/>
-            <class name="org.wso2.carbon.mediator.test.iterate.IterateSmallMessageTestCase"/>
-        </classes>
-    </test>
-    <test name="Test - Local Entries" preserve-order="true" verbose="2">
-        <classes>
-            <class name="org.wso2.carbon.localentry.test.general.WsdlAsALocalEntryUseInAProxyTestCase"/>
-            <class name="org.wso2.carbon.localentry.test.general.SchemaValidationTestCase"/>
-        </classes>
-    </test>
-
-    <test name="Test - ESB Script Mediator" preserve-order="true" verbose="2">
-        <classes>
-            <class name="org.wso2.carbon.mediator.test.script.CustomMediatorWithJSStoredInRegistryTestCase"/>
-            <class name="org.wso2.carbon.mediator.test.script.InvalidFunctionTestCase"/>
-            <class name="org.wso2.carbon.mediator.test.script.InvalidScriptLanguageTestCase"/>
-            <class name="org.wso2.carbon.mediator.test.script.InvokeScriptWithDynamicKeyTestCase"/>
-            <class name="org.wso2.carbon.mediator.test.script.ScriptWithIncludeOptionTestCase"/>
-            <class name="org.wso2.carbon.mediator.test.script.SequenceWhichHasJsFunctionsForBothInOutTestCase"/>
-        </classes>
-    </test>
-
-    <test name="Test - Conditional Routing" preserve-order="true" verbose="2">
-        <classes>
-            <class name="org.wso2.carbon.mediator.test.conditionalRouter.ConditionalRouterMediatorTest"/>
-        </classes>
-    </test>
-
-  <!--  <test name="Test - ESB - ScriptMediator - sce. 05_b" preserve-order="true" verbose="2">
-        <classes>
-            <class name="org.wso2.carbon.mediator.test.script.ScriptMediatorTest06"/>
-
-        </classes>
-    </test>
-
-
-    <test name="Test - ESB - ScriptMediator - sce. 07" preserve-order="true" verbose="2">
-        <classes>
-            <class name="org.wso2.carbon.mediator.test.script.ScriptMediatorTest54"/>
-
-        </classes>
-    </test>
-
-
-    <test name="Test - ESB - ScriptMediator -  sce. 08" preserve-order="true" verbose="2">
-        <classes>
-            <class name="org.wso2.carbon.mediator.test.script.ScriptMediatorTest08"/>
-
-        </classes>
-    </test>-->
-
+    -->
 
 </suite>

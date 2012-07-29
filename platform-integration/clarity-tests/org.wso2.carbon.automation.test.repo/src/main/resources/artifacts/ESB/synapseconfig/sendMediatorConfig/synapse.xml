@@ -1,0 +1,125 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<definitions xmlns="http://ws.apache.org/ns/synapse">
+    <proxy name="addressEndPoint" transports="http,https">
+        <target>
+            <inSequence>
+                <send>
+                    <endpoint>
+                        <address uri="http://localhost:9000/services/SimpleStockQuoteService" />
+                    </endpoint>
+                </send>
+            </inSequence>
+            <outSequence>
+                <send/>
+            </outSequence>
+        </target>
+    </proxy>
+    <proxy name="defaultEndPoint" transports="http,https">
+        <target>
+            <inSequence>
+                <send/>
+            </inSequence>
+            <outSequence>
+                <send/>
+            </outSequence>
+        </target>
+    </proxy>
+    <proxy name="wsdlEndPoint" transports="http,https">
+        <target>
+            <inSequence>
+                <send>
+                    <endpoint>
+                        <wsdl uri="http://localhost:9000/services/SimpleStockQuoteService?wsdl" service="SimpleStockQuoteService" port="SimpleStockQuoteServiceHttpSoap11Endpoint"/>
+                    </endpoint>
+                </send>
+            </inSequence>
+            <outSequence>
+                <send/>
+            </outSequence>
+        </target>
+    </proxy>
+    <proxy name="failoverEndPoint" transports="http,https">
+        <target>
+            <inSequence>
+                <send>
+                    <endpoint>
+                        <failover>
+                            <endpoint>
+                                <address uri="http://localhost:9001/services/SimpleStockQuoteService">
+                                    <enableAddressing/>
+                                    <suspendDurationOnFailure>2</suspendDurationOnFailure>
+                                </address>
+                            </endpoint>
+                            <endpoint>
+                                <address uri="http://localhost:9002/services/SimpleStockQuoteService">
+                                    <enableAddressing/>
+                                    <suspendDurationOnFailure>2</suspendDurationOnFailure>
+                                </address>
+                            </endpoint>
+                        </failover>
+                    </endpoint>
+                </send>
+            </inSequence>
+            <outSequence>
+                <send/>
+            </outSequence>
+        </target>
+    </proxy>
+    <proxy name="loadbalanceEndPoint" transports="http,https">
+        <target>
+            <inSequence>
+                <send>
+                    <endpoint>
+                        <loadbalance>
+                            <endpoint>
+                                <address uri="http://localhost:9001/services/LBService1"/>
+                            </endpoint>
+                            <endpoint>
+                                <address uri="http://localhost:9002/services/LBService1"/>
+                            </endpoint>
+                        </loadbalance>
+                    </endpoint>
+                </send>
+            </inSequence>
+            <outSequence>
+                <send/>
+            </outSequence>
+        </target>
+    </proxy>
+    <!--<proxy name="templateEndPoint" transports="http,https">
+        <target>
+            <inSequence>
+                <send>
+                    <endpoint name="ep1" template="test_template">
+                        <parameter name="codes" value="8" />
+                    </endpoint>
+                </send>
+            </inSequence>
+            <outSequence>
+                <send/>
+            </outSequence>
+        </target>
+    </proxy>
+
+
+    <template name="test_template">
+        <parameter name="codes"/>
+        <endpoint name="$name">
+            <address uri="http://localhost:9000/services/SimpleStockQuoteService" />
+        </endpoint>
+    </template>
+   <proxy name="recipientEndPoint" transports="http,https">
+       <target>
+           <inSequence>
+               <send>
+                   <endpoint>
+                       <address uri="http://localhost:9000/services/SimpleStockQuoteService" />
+                   </endpoint>
+               </send>
+           </inSequence>
+           <outSequence>
+               <send/>
+           </outSequence>
+       </target>
+   </proxy> -->
+</definitions>

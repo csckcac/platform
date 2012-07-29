@@ -21,6 +21,7 @@ import java.rmi.RemoteException;
 import javax.xml.namespace.QName;
 
 import org.testng.Assert;
+import org.testng.annotations.AfterClass;
 import org.testng.annotations.BeforeClass;
 import org.testng.annotations.Test;
 import org.wso2.carbon.authenticator.stub.LoginAuthenticationExceptionException;
@@ -51,7 +52,6 @@ public class MetaDataServicesTestCase {
 
     private Registry governance;
     int userId = 1;
-    Service newService;
     private final static String WSDL_URL =
             "https://svn.wso2.org/repos/wso2/carbon/platform/trunk/"
             + "platform-integration/clarity-tests/org.wso2.carbon.automation.test.repo/"
@@ -60,10 +60,18 @@ public class MetaDataServicesTestCase {
     private LifeCycleManagementClient lifeCycleManagerAdminService;
     private LifeCycleAdminServiceClient lifeCycleAdminService;
     private final String ACTION_PROMOTE = "Promote";
-    private final String ACTION_ITEM_CLICK = "itemClick";
+    private Wsdl wsdl;
+    private Service serviceForDependencyVerification;
     private Service infoService;
     private Service infoServiceTesting;
-    private Wsdl wsdl;
+    private Service serviceForTrunkDeleteTestPromoted;
+    private Service serviceForBranchDeleteTest;
+    private Service serviceForTickedListItemsTest;
+    private Service serviceForTickedListItemsTestPromoted;
+    private Service serviceForDetailVerificationTestCase;
+    private Service serviceForLCPromoteTests;
+    private Service serviceForLCPromoteTestsPromoted, serviceForLCPromoteTestsPromoted2,
+            newService;
 
     @BeforeClass()
     public void initialize() throws RemoteException, LoginAuthenticationExceptionException,
@@ -101,9 +109,7 @@ public class MetaDataServicesTestCase {
     @Test(groups = {"wso2.greg"}, description = "service without the defaultServiceVersion property", priority = 1)
     public void addServiceWithoutVersion() throws Exception {
 
-        Service service =
-                serviceManager.newService(new QName("http://bang.boom.com/mnm/beep",
-                                                    "MyService"));
+        Service service = serviceManager.newService(new QName("http://bang.boom.com/mnm/beep", "MyService"));
         serviceManager.addService(service);
         String serviceId = service.getId();
         newService = serviceManager.getService(serviceId);
@@ -227,7 +233,7 @@ public class MetaDataServicesTestCase {
      */
     @Test(groups = {"wso2.greg"}, description = "Create a service without a WSDL and verify dependencies", dependsOnMethods = "changesAtTrunkTest")
     public void verifyDependenciesTest() throws GovernanceException {
-        Service serviceForDependencyVerification =
+        serviceForDependencyVerification =
                 serviceManager.newService(new QName(
                         "http://service.dependency.varification/mnm/beep",
                         "serviceForDependencyVarification"));
@@ -253,10 +259,9 @@ public class MetaDataServicesTestCase {
     public void deleteServiceAtTrunkTest() throws GovernanceException, RemoteException,
                                                   CustomLifecyclesChecklistAdminServiceExceptionException,
                                                   LifeCycleManagementServiceExceptionException {
-        Service serviceForTrunkDeleteTest =
-                serviceManager.newService(new QName(
-                        "http://service.delete.trunk/mnm/beep",
-                        "serviceForTrunkDeleteTest"));
+        Service serviceForTrunkDeleteTest = serviceManager.newService(new QName(
+                "http://service.delete.trunk/mnm/beep",
+                "serviceForTrunkDeleteTest"));
         serviceManager.addService(serviceForTrunkDeleteTest);
         String servicePathDev = "/_system/governance" + serviceForTrunkDeleteTest.getPath();
         ArrayOfString[] parameters = new ArrayOfString[2];
@@ -265,22 +270,17 @@ public class MetaDataServicesTestCase {
         serviceForTrunkDeleteTest.attachLifecycle(lifeCycleManagerAdminService.getLifecycleList()[0]);
         lifeCycleAdminService.invokeAspectWithParams(servicePathDev, "ServiceLifeCycle",
                                                      ACTION_PROMOTE, null, parameters);
-        Service serviceForTrunkDeleteTestPromoted =
-                serviceManager.findServices(new ServiceFilter() {
-                    public boolean matches(Service service)
-                            throws GovernanceException {
-                        String attributeVal =
-                                service.getAttribute("overview_name");
-                        String attributeVal2 =
-                                service.getAttribute("overview_version");
-                        if (attributeVal != null &&
-                            attributeVal.startsWith("serviceForTrunkDeleteTest") &&
-                            attributeVal2.startsWith("2.0.0")) {
-                            return true;
-                        }
-                        return false;
-                    }
-                })[0];
+        serviceForTrunkDeleteTestPromoted = serviceManager.findServices(new ServiceFilter() {
+            public boolean matches(Service service) throws GovernanceException {
+                String attributeVal = service.getAttribute("overview_name");
+                String attributeVal2 = service.getAttribute("overview_version");
+                if (attributeVal != null && attributeVal.startsWith("serviceForTrunkDeleteTest") &&
+                    attributeVal2.startsWith("2.0.0")) {
+                    return true;
+                }
+                return false;
+            }
+        })[0];
         serviceManager.removeService(serviceForTrunkDeleteTest.getId());
         Assert.assertEquals(serviceForTrunkDeleteTestPromoted.getPath(),
                             "/branches/testing/services/trunk/delete/service/mnm/beep/2.0.0/serviceForTrunkDeleteTest");
@@ -301,7 +301,7 @@ public class MetaDataServicesTestCase {
     public void deleteServiceAtBranchTest() throws GovernanceException, RemoteException,
                                                    CustomLifecyclesChecklistAdminServiceExceptionException,
                                                    LifeCycleManagementServiceExceptionException {
-        Service serviceForBranchDeleteTest =
+        serviceForBranchDeleteTest =
                 serviceManager.newService(new QName(
                         "http://service.delete.branch/mnm/beep",
                         "serviceForBranchDeleteTest"));
@@ -313,19 +313,15 @@ public class MetaDataServicesTestCase {
         serviceForBranchDeleteTest.attachLifecycle(lifeCycleManagerAdminService.getLifecycleList()[0]);
         lifeCycleAdminService.invokeAspectWithParams(servicePathDev, "ServiceLifeCycle",
                                                      ACTION_PROMOTE, null, parameters);
-        Service serviceForBranchDeleteTestPromoted =
-                serviceManager.findServices(new ServiceFilter() {
-                    public boolean matches(Service service)
-                            throws GovernanceException {
-                        String attributeVal =
-                                service.getAttribute("overview_name");
-                        String attributeVal2 =
-                                service.getAttribute("overview_version");
-                        return attributeVal != null &&
-                               attributeVal.startsWith("serviceForBranchDeleteTest") &&
-                               attributeVal2.startsWith("2.0.0");
-                    }
-                })[0];
+        Service serviceForBranchDeleteTestPromoted = serviceManager.findServices(new ServiceFilter() {
+            public boolean matches(Service service) throws GovernanceException {
+                String attributeVal = service.getAttribute("overview_name");
+                String attributeVal2 = service.getAttribute("overview_version");
+                return attributeVal != null &&
+                       attributeVal.startsWith("serviceForBranchDeleteTest") &&
+                       attributeVal2.startsWith("2.0.0");
+            }
+        })[0];
         serviceManager.removeService(serviceForBranchDeleteTestPromoted.getId());
         Assert.assertEquals(serviceForBranchDeleteTest.getPath(),
                             "/trunk/services/branch/delete/service/mnm/beep/serviceForBranchDeleteTest");
@@ -344,18 +340,18 @@ public class MetaDataServicesTestCase {
      * @throws CustomLifecyclesChecklistAdminServiceExceptionException
      *
      */
-    @Test(groups = {"wso2.greg"}, description = "Checking the persistance with ticked check list items",
-          dependsOnMethods = "changesAtTrunkTest")
+    @Test(groups = {"wso2.greg"}, description = "Checking the persistance with ticked check list items", dependsOnMethods = "changesAtTrunkTest")
     public void tickedListItemsTest() throws GovernanceException, RemoteException,
                                              LifeCycleManagementServiceExceptionException,
                                              CustomLifecyclesChecklistAdminServiceExceptionException {
-        Service serviceForTickedListItemsTest =
+        serviceForTickedListItemsTest =
                 serviceManager.newService(new QName(
                         "http://service.ticked.items/mnm/beep",
                         "serviceForTickedListItemsTest"));
         serviceManager.addService(serviceForTickedListItemsTest);
         serviceForTickedListItemsTest.attachLifecycle(lifeCycleManagerAdminService.getLifecycleList()[0]);
         String servicePathDev = "/_system/governance" + serviceForTickedListItemsTest.getPath();
+        String ACTION_ITEM_CLICK = "itemClick";
         lifeCycleAdminService.invokeAspect(servicePathDev, "ServiceLifeCycle", ACTION_ITEM_CLICK,
                                            new String[]{"false", "true", "true"});
 
@@ -387,22 +383,18 @@ public class MetaDataServicesTestCase {
         lifeCycleAdminService.invokeAspectWithParams(servicePathDev, "ServiceLifeCycle",
                                                      ACTION_PROMOTE, null, parameters);
 
-        Service serviceForTickedListItemsTestPromoted =
-                serviceManager.findServices(new ServiceFilter() {
-                    public boolean matches(Service service)
-                            throws GovernanceException {
-                        String attributeVal =
-                                service.getAttribute("overview_name");
-                        String attributeVal2 =
-                                service.getAttribute("overview_version");
-                        if (attributeVal != null &&
-                            attributeVal.startsWith("serviceForTickedListItemsTest") &&
-                            attributeVal2.startsWith("2.0.0")) {
-                            return true;
-                        }
-                        return false;
-                    }
-                })[0];
+        serviceForTickedListItemsTestPromoted = serviceManager.findServices(new ServiceFilter() {
+            public boolean matches(Service service) throws GovernanceException {
+                String attributeVal = service.getAttribute("overview_name");
+                String attributeVal2 = service.getAttribute("overview_version");
+                if (attributeVal != null &&
+                    attributeVal.startsWith("serviceForTickedListItemsTest") &&
+                    attributeVal2.startsWith("2.0.0")) {
+                    return true;
+                }
+                return false;
+            }
+        })[0];
         String promotedServicePathDev =
                 "/_system/governance" +
                 serviceForTickedListItemsTestPromoted.getPath();
@@ -455,7 +447,7 @@ public class MetaDataServicesTestCase {
     @Test(groups = {"wso2.greg"}, description = "Verify Service Information", dependsOnMethods = "tickedListItemsTest")
     public void serviceDetailVerificationTestCase() throws GovernanceException, RemoteException,
                                                            LifeCycleManagementServiceExceptionException {
-        Service serviceForDetailVerificationTestCase =
+        serviceForDetailVerificationTestCase =
                 serviceManager.newService(new QName(
                         "http://service.detail.verification/mnm/beep",
                         "serviceForDetailVerificationTestCase"));
@@ -471,4 +463,111 @@ public class MetaDataServicesTestCase {
         Assert.assertEquals(serviceForDetailVerificationTestCase.getLifecycleState(), "Development");
 
     }
+
+    /**
+     * When a service is deleted, the service should be removed from the list
+     *
+     * @throws GovernanceException
+     */
+    @Test(groups = {"wso2.greg"}, description = "Deleting a service", dependsOnMethods = "serviceDetailVerificationTestCase")
+    public void deleteService() throws GovernanceException {
+        Service serviceForDeleteServiceTestCase = serviceManager.newService(new QName(
+                "http://service.delete.verification/mnm/beep",
+                "serviceForDeleteServiceTestCase"));
+        serviceManager.addService(serviceForDeleteServiceTestCase);
+        serviceManager.removeService(serviceForDeleteServiceTestCase.getId());
+
+        Service[] searchResult = serviceManager.findServices(new ServiceFilter() {
+
+            public boolean matches(Service service) throws GovernanceException {
+                String attributeVal = service.getAttribute("overview_name");
+                if (attributeVal != null &&
+                    attributeVal.startsWith("serviceForDeleteServiceTestCase")) {
+                    return true;
+                }
+                return false;
+            }
+        });
+
+        Assert.assertEquals(searchResult.length, 0);
+    }
+
+    /**
+     * When services are promoted, the correct LC state should be updated for
+     * each service
+     *
+     * @throws GovernanceException
+     * @throws LifeCycleManagementServiceExceptionException
+     *
+     * @throws RemoteException
+     * @throws CustomLifecyclesChecklistAdminServiceExceptionException
+     *
+     */
+    @Test(groups = {"wso2.greg"}, description = "LC promote tests", dependsOnMethods = "deleteService")
+    public void lcPromotingTestCase() throws GovernanceException, RemoteException,
+                                             LifeCycleManagementServiceExceptionException,
+                                             CustomLifecyclesChecklistAdminServiceExceptionException {
+        serviceForLCPromoteTests =
+                serviceManager.newService(new QName(
+                        "http://service.for.lc/promote/test",
+                        "serviceForLCPromoteTests"));
+        serviceManager.addService(serviceForLCPromoteTests);
+        serviceForLCPromoteTests.attachLifecycle(lifeCycleManagerAdminService.getLifecycleList()[0]);
+        String servicePathDev = "/_system/governance" + serviceForLCPromoteTests.getPath();
+        ArrayOfString[] parameters = new ArrayOfString[2];
+        parameters[0] = new ArrayOfString();
+        parameters[0].setArray(new String[]{servicePathDev, "2.0.0"});
+        serviceForLCPromoteTests.attachLifecycle(lifeCycleManagerAdminService.getLifecycleList()[0]);
+        Assert.assertEquals(serviceForLCPromoteTests.getLifecycleState(), "Development");
+        lifeCycleAdminService.invokeAspectWithParams(servicePathDev, "ServiceLifeCycle",
+                                                     ACTION_PROMOTE, null, parameters);
+        serviceForLCPromoteTestsPromoted = serviceManager.findServices(new ServiceFilter() {
+            public boolean matches(Service service) throws GovernanceException {
+                String attributeVal = service.getAttribute("overview_name");
+                String attributeVal2 = service.getAttribute("overview_version");
+                if (attributeVal != null && attributeVal.startsWith("serviceForLCPromoteTests") &&
+                    attributeVal2.startsWith("2.0.0")) {
+                    return true;
+                }
+                return false;
+            }
+        })[0];
+        Assert.assertEquals(serviceForLCPromoteTestsPromoted.getLifecycleState(), "Testing");
+        servicePathDev = "/_system/governance" + serviceForLCPromoteTestsPromoted.getPath();
+        parameters[0].setArray(new String[]{servicePathDev, "3.0.0"});
+        lifeCycleAdminService.invokeAspectWithParams(servicePathDev, "ServiceLifeCycle",
+                                                     ACTION_PROMOTE, null, parameters);
+        serviceForLCPromoteTestsPromoted2 = serviceManager.findServices(new ServiceFilter() {
+            public boolean matches(Service service) throws GovernanceException {
+                String attributeVal = service.getAttribute("overview_name");
+                String attributeVal2 = service.getAttribute("overview_version");
+                if (attributeVal != null && attributeVal.startsWith("serviceForLCPromoteTests") &&
+                    attributeVal2.startsWith("3.0.0")) {
+                    return true;
+                }
+                return false;
+            }
+        })[0];
+
+        Assert.assertEquals(serviceForLCPromoteTestsPromoted2.getLifecycleState(), "Production");
+
+    }
+
+    @AfterClass()
+    public void cleanup() throws GovernanceException {
+
+        serviceManager.removeService(serviceForDependencyVerification.getId());
+        serviceManager.removeService(infoService.getId());
+        serviceManager.removeService(infoServiceTesting.getId());
+        serviceManager.removeService(serviceForTrunkDeleteTestPromoted.getId());
+        serviceManager.removeService(serviceForBranchDeleteTest.getId());
+        serviceManager.removeService(serviceForTickedListItemsTest.getId());
+        serviceManager.removeService(serviceForTickedListItemsTestPromoted.getId());
+        serviceManager.removeService(serviceForDetailVerificationTestCase.getId());
+        serviceManager.removeService(serviceForLCPromoteTests.getId());
+        serviceManager.removeService(serviceForLCPromoteTestsPromoted.getId());
+        serviceManager.removeService(serviceForLCPromoteTestsPromoted2.getId());
+        serviceManager.removeService(newService.getId());
+    }
+
 }

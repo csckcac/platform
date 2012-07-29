@@ -20,14 +20,15 @@ package org.wso2.carbon.registry.permission.test;
 
 import static org.testng.Assert.assertNotNull;
 import static org.testng.Assert.assertNull;
-
+import org.testng.annotations.AfterClass;
 import org.testng.annotations.BeforeClass;
 import org.testng.annotations.Test;
 import org.wso2.carbon.automation.api.clients.registry.ResourceAdminServiceClient;
-import org.wso2.carbon.automation.api.clients.user.mgt.UserManagementClient;
 import org.wso2.carbon.automation.core.ProductConstant;
 import org.wso2.carbon.automation.core.utils.environmentutils.EnvironmentBuilder;
 import org.wso2.carbon.automation.core.utils.environmentutils.ManageEnvironment;
+import org.wso2.carbon.registry.permission.test.utils.PermissionTestConstants;
+import org.wso2.carbon.registry.permission.test.utils.PermissionTestUtil;
 import org.wso2.carbon.registry.resource.stub.ResourceAdminServiceExceptionException;
 import org.wso2.carbon.registry.resource.stub.ResourceAdminServiceResourceServiceExceptionException;
 
@@ -47,47 +48,13 @@ public class RolePermissionAsNonAdminTestCase {
     private ResourceAdminServiceClient nonAdminResourceAdminClient2;
     private String serverUrl;
 
-    private static final String WEB_APP_RESOURCE_URL = "/registry/resource";
-
-    private static final String NON_ADMIN_ROLE = "testRole";
-    private static final String NON_ADMIN_ROLE_2 = "testRole2";
-    private static final String EVERYONE_ROLE = "everyone";
-
-    private static final String READ_ACTION = "2";
-    private static final String PERMISSION_ENABLED = "1";
-    private static final String PERMISSION_DISABLED = "0";
-
-    private static final String[] NON_ADMIN_PERMISSION = {"/permission/admin/login",
-                                                          "/permission/admin/manage/resources",
-                                                          "/permission/admin/manage/resources/associations",
-                                                          "/permission/admin/manage/resources/browse",
-                                                          "/permission/admin/manage/resources/community-features",
-                                                          "/permission/admin/manage/resources/govern",
-                                                          "/permission/admin/manage/resources/govern/api",
-                                                          "/permission/admin/manage/resources/govern/api/add",
-                                                          "/permission/admin/manage/resources/govern/api/list",
-                                                          "/permission/admin/manage/resources/govern/generic",
-                                                          "/permission/admin/manage/resources/govern/generic/add",
-                                                          "/permission/admin/manage/resources/govern/generic/list",
-                                                          "/permission/admin/manage/resources/govern/impactanalysis",
-                                                          "/permission/admin/manage/resources/govern/lifecycles",
-                                                          "/permission/admin/manage/resources/govern/lifecyclestagemonitor",
-                                                          "/permission/admin/manage/resources/govern/metadata",
-                                                          "/permission/admin/manage/resources/govern/metadata/add",
-                                                          "/permission/admin/manage/resources/govern/metadata/list",
-                                                          "/permission/admin/manage/resources/govern/resourceimpact",
-                                                          "/permission/admin/manage/resources/govern/uri",
-                                                          "/permission/admin/manage/resources/govern/uri/add",
-                                                          "/permission/admin/manage/resources/govern/uri/list",
-                                                          "/permission/admin/manage/resources/notifications",
-                                                          "/permission/admin/manage/resources/ws-api"};
-
     @BeforeClass(alwaysRun = true)
     public void initialize()
             throws Exception, RemoteException, MalformedURLException,
                    ResourceAdminServiceExceptionException,
                    ResourceAdminServiceResourceServiceExceptionException {
 
+        PermissionTestUtil.setUpTestRoles();
         //Setup environments
         EnvironmentBuilder builderAdmin = new EnvironmentBuilder().greg(0);
         ManageEnvironment adminEnvironment = builderAdmin.build();
@@ -113,32 +80,29 @@ public class RolePermissionAsNonAdminTestCase {
         backEndUrl = backEndUrl.substring(0, backEndUrl.lastIndexOf("/"));
         serverUrl = backEndUrl.substring(0, backEndUrl.lastIndexOf("/"));
 
-        UserManagementClient userManagementClient = new UserManagementClient(adminEnvironment.getGreg().getBackEndUrl(),
-                                                                             adminEnvironment.getGreg().getSessionCookie());
-        userManagementClient.updateUserListOfRole(NON_ADMIN_ROLE, new String[]{}, new String[]{"testuser2"});
-        userManagementClient.addRole(NON_ADMIN_ROLE_2, new String[]{"testuser2"}, NON_ADMIN_PERMISSION);
-
         //Add a new resource
         String resourcePath = ProductConstant.SYSTEM_TEST_RESOURCE_LOCATION + "artifacts" + File.separator
                               + "GREG" + File.separator + "resource.txt";
         DataHandler dataHandler = new DataHandler(new URL("file:///" + resourcePath));
         adminResourceAdminClient.addResource(NEW_RESOURCE_PATH, "text/plain", "", dataHandler);
-        adminResourceAdminClient.addResourcePermission(NEW_RESOURCE_PATH, EVERYONE_ROLE, READ_ACTION, PERMISSION_DISABLED);
+        adminResourceAdminClient.addResourcePermission(NEW_RESOURCE_PATH, PermissionTestConstants.EVERYONE_ROLE,
+                PermissionTestConstants.READ_ACTION, PermissionTestConstants.PERMISSION_DISABLED);
     }
 
     @Test(expectedExceptions = IOException.class, description = "Test deny access to new resources")
     public void testUserDenyAccessToNewResource()
             throws ResourceAdminServiceResourceServiceExceptionException, IOException,
                    ResourceAdminServiceExceptionException {
-        adminResourceAdminClient.addResourcePermission(NEW_RESOURCE_PATH, NON_ADMIN_ROLE_2, READ_ACTION,
-                                                       PERMISSION_ENABLED);
+        adminResourceAdminClient.addResourcePermission(NEW_RESOURCE_PATH, PermissionTestConstants.NON_ADMIN_ROLE_2,
+                PermissionTestConstants.READ_ACTION, PermissionTestConstants.PERMISSION_ENABLED);
         assertNotNull(nonAdminResourceAdminClient2.getResource(NEW_RESOURCE_PATH));
-        nonAdminResourceAdminClient.addResourcePermission(NEW_RESOURCE_PATH, NON_ADMIN_ROLE_2, READ_ACTION, PERMISSION_DISABLED);
+        nonAdminResourceAdminClient.addResourcePermission(NEW_RESOURCE_PATH, PermissionTestConstants.NON_ADMIN_ROLE_2,
+                PermissionTestConstants.READ_ACTION, PermissionTestConstants.PERMISSION_DISABLED);
         nonAdminResourceAdminClient2.getResource(NEW_RESOURCE_PATH);
         assertNull(nonAdminResourceAdminClient2.getResource(NEW_RESOURCE_PATH));
 
         //test anonymous access. should give an exception
-        URL resourceURL = new URL(serverUrl + WEB_APP_RESOURCE_URL + NEW_RESOURCE_PATH);
+        URL resourceURL = new URL(serverUrl + PermissionTestConstants.WEB_APP_RESOURCE_URL + NEW_RESOURCE_PATH);
         InputStream resourceStream = resourceURL.openStream();
     }
 
@@ -146,14 +110,21 @@ public class RolePermissionAsNonAdminTestCase {
     public void testUserAllowAccessToNewResource()
             throws ResourceAdminServiceResourceServiceExceptionException, IOException,
                    ResourceAdminServiceExceptionException {
-        adminResourceAdminClient.addResourcePermission(NEW_RESOURCE_PATH, NON_ADMIN_ROLE_2, READ_ACTION, PERMISSION_DISABLED);
+        adminResourceAdminClient.addResourcePermission(NEW_RESOURCE_PATH, PermissionTestConstants.NON_ADMIN_ROLE_2,
+                PermissionTestConstants.READ_ACTION, PermissionTestConstants.PERMISSION_DISABLED);
         assertNull(nonAdminResourceAdminClient2.getResource(NEW_RESOURCE_PATH));
-        nonAdminResourceAdminClient.addResourcePermission(NEW_RESOURCE_PATH, NON_ADMIN_ROLE_2, READ_ACTION,
-                                                          PERMISSION_ENABLED);
+        nonAdminResourceAdminClient.addResourcePermission(NEW_RESOURCE_PATH, PermissionTestConstants.NON_ADMIN_ROLE_2,
+                PermissionTestConstants.READ_ACTION, PermissionTestConstants.PERMISSION_ENABLED);
         assertNotNull(nonAdminResourceAdminClient2.getResource(NEW_RESOURCE_PATH));
 
         //test anonymous access. should give an exception
-        URL resourceURL = new URL(serverUrl + WEB_APP_RESOURCE_URL + NEW_RESOURCE_PATH);
+        URL resourceURL = new URL(serverUrl + PermissionTestConstants.WEB_APP_RESOURCE_URL + NEW_RESOURCE_PATH);
         InputStream resourceStream = resourceURL.openStream();
+    }
+
+    @AfterClass(alwaysRun = true)
+    public void cleanUp() throws Exception {
+        PermissionTestUtil.resetTestRoles();
+        adminResourceAdminClient.deleteResource(NEW_RESOURCE_PATH);
     }
 }

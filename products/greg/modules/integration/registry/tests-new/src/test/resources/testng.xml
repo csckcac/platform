@@ -13,7 +13,7 @@
             <package name="org.wso2.carbon.registry.resource.test" />
             <package name="org.wso2.carbon.registry.permission.test" />
             <package name="org.wso2.carbon.registry.lifecycle.test" />
-            <!--<package name="org.wso2.carbon.registry.version.test" />-->
+            <package name="org.wso2.carbon.registry.version.test" />
             <!--<package name="org.wso2.carbon.registry.subscription.test" />-->
             <!--<package name="org.wso2.carbon.registry.mediatype.test" />-->
         </packages>
@@ -22,11 +22,7 @@
             <class name="org.wso2.carbon.registry.governance.api.test.MetaDataServicesTestCase"/>
             <class name="org.wso2.carbon.registry.governance.api.test.FilterServicesTestCase"/>
             <class name="org.wso2.carbon.registry.governance.api.test.FilterServicesWithAdminTestCase"/>
-            <class name="org.wso2.carbon.registry.version.test.MetaDataTestCase"/>
-            <class name="org.wso2.carbon.registry.version.test.CollectionTestCase"/>
-            <class name="org.wso2.carbon.registry.version.test.ResourceTestCase"/>
-            <class name="org.wso2.carbon.registry.version.test.EndpointTestCase"/>
-            <class name="org.wso2.carbon.registry.version.test.RestoreResourcesTestCase"/>
+            <class name="org.wso2.carbon.registry.governance.api.test.ServicesResourceInformationManagementTestCase"/>
             <class name="org.wso2.carbon.registry.metadata.test.api.CRUDOperationsAPI"/>
             <class name="org.wso2.carbon.registry.metadata.test.custom.AddRxtTest"/>
             <class name="org.wso2.carbon.registry.metadata.test.custom.CRUDOperationsRxt"/>
@@ -43,18 +39,8 @@
             <class name="org.wso2.carbon.registry.activity.search.ActivitySearchSearchResultsTestCase"/>
             <class name="org.wso2.carbon.registry.activity.search.ActivitySearchByPathTestCase"/>
             <class name="org.wso2.carbon.registry.activity.search.ActivitySearchByDateTestCase"/>
-            <class name="org.wso2.carbon.registry.version.test.PropertyEndpointTestCase"/>
-            <class name="org.wso2.carbon.registry.version.test.PropertyPolicyTestCase"/>
-            <class name="org.wso2.carbon.registry.version.test.PropertyResourceTestCase"/>
-            <class name="org.wso2.carbon.registry.version.test.PropertyWSDLTestCase"/>
-            <class name="org.wso2.carbon.registry.version.test.PropertySchemaTestCase"/>
-            <class name="org.wso2.carbon.registry.version.test.PropertyServiceTestCase"/>
-            <class name="org.wso2.carbon.registry.version.test.EndpointTestCase"/>
-            <class name="org.wso2.carbon.registry.version.test.CollectionTestCase"/>
-            <class name="org.wso2.carbon.registry.version.test.ResourceTestCase"/>
-            <class name="org.wso2.carbon.registry.version.test.RestorePrevVerTestCase"/>
-            <class name="org.wso2.carbon.registry.version.test.RestoreResourcesTestCase"/>
-            <!--<class name="org.wso2.carbon.registry.version.test.MetaDataTestCase"/>-->
+            <class name="org.wso2.carbon.registry.permission.test.LoginAndManageTestCase"/>
+            <class name="org.wso2.carbon.registry.permission.test.RolePermissionAsNonAdminTestCase"/>
         </classes>
     </test>
 </suite>

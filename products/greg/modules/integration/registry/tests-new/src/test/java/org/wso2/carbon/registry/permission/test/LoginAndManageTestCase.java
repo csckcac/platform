@@ -18,8 +18,6 @@
 
 package org.wso2.carbon.registry.permission.test;
 
-import org.apache.axis2.AxisFault;
-
 import static org.testng.Assert.assertNotNull;
 
 import org.testng.annotations.AfterClass;
@@ -74,7 +72,7 @@ public class LoginAndManageTestCase {
         assertNotNull(nonAdminReportAdminServiceClient.getSavedReport("dummyReport"));
     }
 
-    @Test(expectedExceptions = AxisFault.class)
+    @Test(expectedExceptions = RemoteException.class)
     public void testProfile() throws UserProfileExceptionException, RemoteException {
         UserProfileDTO userProfileDTO = new UserProfileDTO();
         userProfileDTO.setProfileName("testuser1_profile1");

@@ -18,6 +18,9 @@ PUBLIC_IP=""
 if [[ "$(pidof java)" ]]; then
    # process was found
    echo "An already running java process is found. Exiting..." >> $LOG
+    if [[ "$(pidof cron)" ]]; then
+        crontab -r
+    fi
    exit 0;
 else
    # process not found
@@ -148,9 +151,9 @@ fi
 
 echo "Starting carbon server ..." >> $LOG
 nohup /opt/${PRODUCT_NAME}/bin/wso2server.sh & >> $LOG
-echo "Carbon server started" >> $LOG
 sleep 1
 if [[ "$(pidof java)" ]]; then
+    echo "Carbon server started" >> $LOG
     crontab -r
 fi
 

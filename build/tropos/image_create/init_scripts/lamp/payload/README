@@ -6,37 +6,30 @@ shh-keygen
 name it as wso2-key
 
 Copy the wso2-key and wso2-key.pub to this folder.
-Add the  wso2-key.pub into /root/.ssh/authorized_keys file of the openstack controller.
+Add the  wso2-key.pub into /root/.ssh/authorized_keys file of the PHP Cartridge server machine.
 Now ssh to that machine using the wso2-key private key. Copy the entry added to 
-the ~/.ssh/known_hosts in the machine from which you accessed the openstack controller.
+the ~/.ssh/known_hosts in the machine from which you accessed the PHP Cartridge server.
 Create a file called known_hosts here and copy that entry.
 
 Now pack this payload as payload.zip and pass this when creating PHP instances.
-Note that in debian_cron_script.sh following entries are replaced by information available
+Note that in launch-params file following entries are replaced by information available
 at the time of creating the instance.
 
-tenant="TENANT"
-controller_ip="CONTROLLERIP"
-app_path="APPPATH"
-docroot="DOCUMENTROOT"
+TENANT
+CONTROLLER_IP
+APPPATH
 
 
 Following is the /etc/rc.local file of the php instance
 
 #!/bin/sh -e
-cp -f /var/lib/cloud/instance/user-data.txt /opt/payload.zip
-pushd /opt
-unzip -q ./payload.zip
-chmod -R 755 ./payload
-chmod -R 0600 ./payload/wso2-key
-rm -f ./payload.zip
-cat ./payload/known_hosts >> ~/.ssh/known_hosts
-/opt/payload/debian_cron_script.sh
-popd
-crontab /opt/payload/debian_cron.sh > /dev/null &2>1
+/opt/wso2-openstack-init.sh > /var/log/wso2-openstack-init.log
 exit 0
 
-You can see that how the scripts contained in this folder are used to run a cron job
-there, to periodically update the php source code of the tenant.
+By the time rc.local file is invokded in the newly created php instance, the payload is already
+passed to the instance and reside in /var/lib/cloud/instance/payload
+
+You can see that rc.local invoke the wso2-openstack-init.sh script in the payload.
+
 
 

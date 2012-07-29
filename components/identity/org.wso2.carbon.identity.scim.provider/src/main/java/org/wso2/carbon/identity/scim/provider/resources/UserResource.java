@@ -102,7 +102,7 @@ public class UserResource {
         }
     }
 
-    /*@POST
+    @POST
     public Response createUser(@HeaderParam(SCIMConstants.CONTENT_TYPE_HEADER) String inputFormat,
                                @HeaderParam(SCIMConstants.ACCEPT_HEADER) String outputFormat,
                                @HeaderParam(SCIMConstants.AUTHORIZATION_HEADER) String authorization,

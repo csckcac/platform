@@ -1,4 +1,4 @@
-package org.wso2.carbon.mediator.test.core;/*
+package org.wso2.carbon.mediator.test.drop;/*
 *Copyright (c) 2005-2010, WSO2 Inc. (http://www.wso2.org) All Rights Reserved.
 *
 *WSO2 Inc. licenses this file to you under the Apache License,

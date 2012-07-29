@@ -19,6 +19,7 @@ package org.wso2.carbon.identity.scim.consumer.internal;
 
 import org.apache.commons.logging.LogFactory;
 import org.osgi.service.component.ComponentContext;
+import org.wso2.carbon.identity.scim.consumer.extensions.AddGroupExtension;
 import org.wso2.carbon.identity.scim.consumer.extensions.AddUserExtension;
 import org.wso2.carbon.server.admin.privilegedaction.PrivilegedAction;
 
@@ -35,6 +36,16 @@ public class SCIMConsumerComponent {
         AddUserExtension addUserExtension = new AddUserExtension();
         //register add user extension
         cxt.getBundleContext().registerService(PrivilegedAction.class.getName(), addUserExtension, null);
+        if(logger.isDebugEnabled()){
+            logger.debug("SCIM AddUser Extension was registered successfully.");
+        }
+
+        AddGroupExtension addGroupExtension = new AddGroupExtension();
+        //register add group extension
+        cxt.getBundleContext().registerService(PrivilegedAction.class.getName(), addGroupExtension, null);
+        if(logger.isDebugEnabled()){
+            logger.debug("SCIM AddGroup Extension was registered successfully.");
+        }
         
         if(logger.isDebugEnabled()){
             logger.debug("SCIMConsumerComponent activated successfully.");

@@ -6,9 +6,10 @@
     <parent>
         <groupId>org.wso2.carbon</groupId>
         <artifactId>identity</artifactId>
-        <version>4.0.0-SNAPSHOT</version>
+        <version>4.0.0</version>
+        <relativePath>../../pom.xml</relativePath>
     </parent>
-    
+
     <modelVersion>4.0.0</modelVersion>
 
     <groupId>org.wso2.carbon</groupId>
@@ -19,6 +20,10 @@
         <dependency>
             <groupId>org.wso2.carbon</groupId>
             <artifactId>org.wso2.carbon.server.admin</artifactId>
+        </dependency>
+        <dependency>
+            <groupId>org.wso2.charon</groupId>
+            <artifactId>org.wso2.charon.core</artifactId>
         </dependency>
     </dependencies>
 
@@ -33,19 +38,19 @@
                     <target>1.5</target>
                 </configuration>
             </plugin>
-	    <plugin>
-                   <groupId>org.apache.felix</groupId>
-                   <artifactId>maven-scr-plugin</artifactId>
-                   <version>1.0.10</version>
-                   <executions>
-                       <execution>
-                           <id>generate-scr-scrdescriptor</id>
-                           <goals>
-                               <goal>scr</goal>
-                           </goals>
-                       </execution>
-                   </executions>
-               </plugin>
+            <plugin>
+                <groupId>org.apache.felix</groupId>
+                <artifactId>maven-scr-plugin</artifactId>
+                <version>1.0.10</version>
+                <executions>
+                    <execution>
+                        <id>generate-scr-scrdescriptor</id>
+                        <goals>
+                            <goal>scr</goal>
+                        </goals>
+                    </execution>
+                </executions>
+            </plugin>
             <plugin>
                 <groupId>org.apache.felix</groupId>
                 <artifactId>maven-bundle-plugin</artifactId>
@@ -60,14 +65,15 @@
                         </Private-Package>
                         <Export-Package>
                             !org.wso2.carbon.identity.scim.consumer.internal,
-                            org.wso2.carbon.identity.scim.consumer.extensions,
+                            org.wso2.carbon.identity.scim.consumer.*,
                         </Export-Package>
                         <Import-Package>
                             javax.servlet; version=2.4.0,
                             javax.servlet.http; version=2.4.0,
                             org.wso2.carbon.server.admin.privilegedaction.*,
+                            org.wso2.charon.core.*,
                             org.apache.commons.logging.*,
-<!--                            org.apache.lucene.*,-->
+                            <!--                            org.apache.lucene.*,-->
                             *;resolution:=optional
                         </Import-Package>
                         <DynamicImport-Package>*</DynamicImport-Package>
@@ -76,5 +82,5 @@
             </plugin>
         </plugins>
     </build>
-    
+
 </project>

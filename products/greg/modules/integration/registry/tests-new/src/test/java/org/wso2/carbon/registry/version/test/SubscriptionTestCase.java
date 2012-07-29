@@ -73,7 +73,6 @@ public class SubscriptionTestCase {
     @Test(groups = {"wso2.greg"}, description = "Subscribe for a resource and version it")
     public void testSubscriptionVersioning() throws Exception {
         SubscriptionBean sb1 = null;
-        SubscriptionBean sb2 = null;
 
         String path = ProductConstant.SYSTEM_TEST_RESOURCE_LOCATION + "artifacts" + File.separator
                       + "GREG" + File.separator + "testresource.txt";
@@ -94,7 +93,6 @@ public class SubscriptionTestCase {
         assertEquals("admin", sb1.getUserName());
         VersionPath[] vp1 = resourceAdminClient.getVersionPaths(PATH1);
         String verPath = vp1[0].getCompleteVersionPath();
-        sb2 = infoServiceAdminClient.getSubscriptions(verPath, environment.getGreg().getSessionCookie());
         assertEquals(null, deleteVersion(PATH1));
 
         // logViewerClient.getLogs("warn", "Versioned resources cannot have subscriptions, instead returns the subscription from the actual resource");
@@ -103,9 +101,7 @@ public class SubscriptionTestCase {
 
 
     @Test(groups = {"wso2.greg"}, description = "Create a collection with subscriptions, version and restore to the previous version ")
-    public void testSubscriptionRestore()
-            throws Exception, RemoteException, MalformedURLException, RegistryException,
-                   RegistryExceptionException {
+    public void testSubscriptionRestore() throws Exception {
         String PATH = COLLECTION_PATH_ROOT + "dir1";
         SubscriptionBean sb1 = null;
         SubscriptionBean sb2 = null;
@@ -131,11 +127,14 @@ public class SubscriptionTestCase {
 
     public SubscriptionBean testMgtConsoleResourceSubscription()
             throws RegistryException, RemoteException {
-        return infoServiceAdminClient.subscribe(PATH1, "work://SubscriptionTestRole", "ResourceUpdated", environment.getGreg().getSessionCookie());
+        return infoServiceAdminClient.subscribe(PATH1, "work://SubscriptionTestRole",
+                                                "ResourceUpdated", environment.getGreg().getSessionCookie());
     }
 
     public void testAddRole() throws Exception {
-        UserManagementClient userManagementClient = new UserManagementClient(environment.getGreg().getProductVariables().getBackendUrl(), userInfo.getUserName(), userInfo.getPassword());
+        UserManagementClient userManagementClient =
+                new UserManagementClient(environment.getGreg().getProductVariables().getBackendUrl(),
+                                         userInfo.getUserName(), userInfo.getPassword());
         userManagementClient.addRole("SubscriptionTestRole", new String[]{userInfo.getUserName()}, new String[]{""});
         assertTrue(userManagementClient.roleNameExists("SubscriptionTestRole"));
     }
@@ -156,12 +155,8 @@ public class SubscriptionTestCase {
 
     @AfterClass
     public void clear() throws ResourceAdminServiceExceptionException, RemoteException {
-
-
         resourceAdminClient.deleteResource(COLLECTION_PATH_ROOT + "dir1");
         resourceAdminClient.deleteResource(PATH1);
-
-
     }
 
 }

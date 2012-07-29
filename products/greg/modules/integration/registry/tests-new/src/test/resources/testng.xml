@@ -41,6 +41,7 @@
             <class name="org.wso2.carbon.registry.activity.search.ActivitySearchByDateTestCase"/>
             <class name="org.wso2.carbon.registry.permission.test.LoginAndManageTestCase"/>
             <class name="org.wso2.carbon.registry.permission.test.RolePermissionAsNonAdminTestCase"/>
+            <class name="org.wso2.carbon.registry.capp.deployment.test.DeployCAppWithWsdl"/>
         </classes>
     </test>
 </suite>

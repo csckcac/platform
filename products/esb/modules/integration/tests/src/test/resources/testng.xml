@@ -10,11 +10,11 @@
     </listeners>
     <test name="Test - ESB">
         <classes>
-            <class name="org.wso2.carbon.mediator.test.send.SendMediatorTest"/>
+            <class name="org.wso2.carbon.mediator.test.call.CallTemplateMediatorSample751TestCase"/>
         </classes>
     </test>
 
- <!--   <test name="Test-EnrichMediator">
+  <!--  <test name="Test-EnrichMediator">
         <classes>
             <class name="org.wso2.carbon.mediator.test.property.PropertyMediatorTest"/>
         </classes>

@@ -158,7 +158,7 @@ public class UserResource {
                     AbstractResourceEndpoint.encodeSCIMException(encoder, e));
         }
     }
-
+/*
     @DELETE
     @Path("{id}")
     public Response deleteUser(@PathParam(SCIMConstants.CommonSchemaConstants.ID) String id,

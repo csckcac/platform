@@ -3,13 +3,8 @@ package org.wso2.carbon.registry.metadata.test.wsdl;
 import static org.testng.Assert.assertTrue;
 
 import java.io.File;
-import java.net.MalformedURLException;
-import java.net.URL;
+import java.io.IOException;
 import java.rmi.RemoteException;
-
-import javax.activation.DataHandler;
-
-import static org.testng.Assert.assertTrue;
 
 import org.testng.annotations.BeforeClass;
 import org.testng.annotations.Test;
@@ -20,11 +15,13 @@ import org.wso2.carbon.automation.core.utils.UserInfo;
 import org.wso2.carbon.automation.core.utils.UserListCsvReader;
 import org.wso2.carbon.automation.core.utils.environmentutils.EnvironmentBuilder;
 import org.wso2.carbon.automation.core.utils.environmentutils.ManageEnvironment;
+import org.wso2.carbon.automation.utils.governance.utils.FileReader;
 import org.wso2.carbon.automation.utils.registry.RegistryProviderUtil;
 import org.wso2.carbon.governance.api.exception.GovernanceException;
 import org.wso2.carbon.governance.api.wsdls.WsdlManager;
 import org.wso2.carbon.governance.api.wsdls.dataobjects.Wsdl;
 import org.wso2.carbon.registry.core.Registry;
+import org.wso2.carbon.registry.core.exceptions.RegistryException;
 import org.wso2.carbon.registry.resource.stub.ResourceAdminServiceExceptionException;
 import org.wso2.carbon.registry.ws.client.registry.WSRegistryServiceClient;
 
@@ -52,14 +49,15 @@ public class FileSystemWsdlAddTestCaseNew {
 
 
     @Test(groups = "wso2.greg", description = "Add WSDL from file system")
-    public void testAddWSDLFromFileSystem() throws RemoteException,
+    public void testAddWSDLFromFileSystem() throws IOException,
                                                    ResourceAdminServiceExceptionException,
-                                                   GovernanceException,
-                                                   MalformedURLException {
+                                                   RegistryException {
+        String wsdlPath = ProductConstant.SYSTEM_TEST_RESOURCE_LOCATION + "artifacts" + File.separator + "GREG" +
+                          File.separator + "wsdl" + File.separator + "info.wsdl";
 
         WsdlManager wsdlManager = new WsdlManager(governanceRegistry);
-        Wsdl wsdl = wsdlManager.getWsdl("http://people.wso2.com/~evanthika/wsdls/StockQuote.wsdl");
-        assertTrue(resourceAdminServiceClient.getMetadata(wsdl.getPath()).equals(wsdl));
+        Wsdl wsdl = wsdlManager.newWsdl(FileReader.readFile(wsdlPath).getBytes());
+        wsdlManager.addWsdl(wsdl);
+        assertTrue(wsdl.getQName().toString().contains("http://footballpool.dataaccess.eu"));
     }
-
 }

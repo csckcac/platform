@@ -13,35 +13,18 @@
             <package name="org.wso2.carbon.registry.resource.test" />
             <package name="org.wso2.carbon.registry.permission.test" />
             <package name="org.wso2.carbon.registry.lifecycle.test" />
+            <package name="org.wso2.carbon.registry.metadata.test" />
+            <package name="org.wso2.carbon.registry.governance.api.test" />
+            <package name="org.wso2.carbon.registry.activity.search" />
+            <package name="org.wso2.carbon.registry.capp.deployment.test" />
+            <package name="org.wso2.carbon.registry.app.test" />
+            <package name="org.wso2.carbon.registry.search.metadata.test" />
             <package name="org.wso2.carbon.registry.version.test" />
-            <!--<package name="org.wso2.carbon.registry.subscription.test" />-->
-            <!--<package name="org.wso2.carbon.registry.mediatype.test" />-->
+            <package name="org.wso2.carbon.registry.subscription.test" />
+            <package name="org.wso2.carbon.registry.mediatype.test" />
         </packages>
         <classes>
-            <class name="org.wso2.carbon.registry.app.test.AtomFeedTestCase"/>
-            <class name="org.wso2.carbon.registry.governance.api.test.MetaDataServicesTestCase"/>
-            <class name="org.wso2.carbon.registry.governance.api.test.FilterServicesTestCase"/>
-            <class name="org.wso2.carbon.registry.governance.api.test.FilterServicesWithAdminTestCase"/>
-            <class name="org.wso2.carbon.registry.governance.api.test.ServicesResourceInformationManagementTestCase"/>
-            <class name="org.wso2.carbon.registry.metadata.test.api.CRUDOperationsAPI"/>
-            <class name="org.wso2.carbon.registry.metadata.test.custom.AddRxtTest"/>
-            <class name="org.wso2.carbon.registry.metadata.test.custom.CRUDOperationsRxt"/>
-            <class name="org.wso2.carbon.registry.metadata.test.uri.AddUriTest"/>
-            <class name="org.wso2.carbon.registry.metadata.test.uri.CRUDOperationsURI"/>
-            <class name="org.wso2.carbon.registry.search.metadata.test.RegistryFilterSearchTestCase"/>
-            <class name="org.wso2.carbon.registry.search.metadata.test.RegistrySearchByPropertyValueTestCase"/>
-            <class name="org.wso2.carbon.registry.search.metadata.test.RegistrySearchByPropertyValueWithEmptyValueTest"/>
-            <class name="org.wso2.carbon.registry.search.metadata.test.RegistrySearchPropertyValueByText"/>
-            <class name="org.wso2.carbon.registry.search.metadata.test.RegistrySpecialSearchTestCase"/>
             <class name="org.wso2.carbon.registry.reporting.test.ReportingTestCase"/>
-            <class name="org.wso2.carbon.registry.activity.search.ActivitySearchByFilterTestCase"/>
-            <class name="org.wso2.carbon.registry.activity.search.ActivitySearchByUserNameTestCase"/>
-            <class name="org.wso2.carbon.registry.activity.search.ActivitySearchSearchResultsTestCase"/>
-            <class name="org.wso2.carbon.registry.activity.search.ActivitySearchByPathTestCase"/>
-            <class name="org.wso2.carbon.registry.activity.search.ActivitySearchByDateTestCase"/>
-            <class name="org.wso2.carbon.registry.permission.test.LoginAndManageTestCase"/>
-            <class name="org.wso2.carbon.registry.permission.test.RolePermissionAsNonAdminTestCase"/>
-            <class name="org.wso2.carbon.registry.capp.deployment.test.DeployCAppWithWsdl"/>
         </classes>
     </test>
 </suite>

@@ -51,7 +51,7 @@ public class Soap11FaultOutSequenceTestCase extends ESBMediatorTest {
             assertEquals(expected.getFaultCode().getPrefix(), "soap11Env", "Fault code prefix mismatched");
             assertEquals(expected.getFaultRoleElement().getRoleValue(), "automation", "Role mismatched");
             assertEquals(expected.getFaultDetailElement().getText(), "fault details by automation", "Fault detail mismatched");
-            ;
+
         }
 
     }

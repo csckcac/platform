@@ -52,7 +52,7 @@ public class Soap12FaultNodeTestCase extends ESBMediatorTest {
             assertEquals(expected.getFaultCode().getLocalPart(), "VersionMismatch", "Fault code value mismatched");
             assertEquals(expected.getFaultCode().getPrefix(), "soap12Env", "Fault code prefix mismatched");
             assertEquals(expected.getFaultNodeElement().getNodeValue(), "automation-node", "Fault node mismatched");
-            ;
+
         }
 
     }

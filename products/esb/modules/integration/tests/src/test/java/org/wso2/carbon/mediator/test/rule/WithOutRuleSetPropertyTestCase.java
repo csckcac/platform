@@ -15,9 +15,8 @@
 *specific language governing permissions and limitations
 *under the License.
 */
-package org.wso2.carbon.mediator.test.fault;
+package org.wso2.carbon.mediator.test.rule;
 
-import org.apache.axiom.om.OMElement;
 import org.apache.axis2.AxisFault;
 import org.testng.annotations.AfterClass;
 import org.testng.annotations.BeforeClass;
@@ -27,34 +26,32 @@ import org.wso2.carbon.mediator.test.ESBMediatorTest;
 import static org.testng.Assert.assertEquals;
 import static org.testng.Assert.fail;
 
-public class Soap12FaultWithAttributeResponseFalseTestCase extends ESBMediatorTest {
+public class WithOutRuleSetPropertyTestCase extends ESBMediatorTest {
+
+
     @BeforeClass(alwaysRun = true)
-    public void uploadSynapseConfig() throws Exception {
+    public void setEnvironment() throws Exception {
         super.init();
-        loadESBConfigurationFromClasspath("/artifacts/ESB/mediatorconfig/fault/soap12_fault_set_response_false_synapse.xml");
+        loadESBConfigurationFromClasspath("/artifacts/ESB/synapseconfig/config_without_rule/synapse.xml");
+
     }
 
-
-    @Test(groups = {"wso2.esb"}, description = "Creating SOAP1.2 fault messages as Response false")
-    public void testSOAP12FaultAttributeResponseFalse() throws AxisFault {
-        OMElement response;
+    @Test(groups = "wso2.esb",
+          description = "scenario without rules")
+    public void testInvokeInvalidRule() throws Exception {
         try {
-            response = axis2Client.sendSimpleStockQuoteRequest(
-                    getMainSequenceURL(),
-                    null,
-                    "WSO2");
-            fail("This query must throw an exception.");
-        } catch (AxisFault expected) {
-            log.info("Test passed with Fault Message : " + expected.getMessage());
-            assertEquals(expected.getMessage(), "Read timed out", "Message mismatched");
-
+            axis2Client.sendSimpleStockQuoteRequest(getMainSequenceURL(), null, "IBM");
+            fail("Request should throws AxisFault");
+        } catch (AxisFault axisFault) {
+            assertEquals(axisFault.getMessage(), "The input stream for an incoming message is null.",
+                         "Fault: value mismatched, should be 'The input stream for an incoming message is null.'");
         }
 
     }
 
-    @AfterClass
-    private void destroy() {
+
+    @AfterClass(alwaysRun = true)
+    public void destroy() {
         super.cleanup();
     }
-
 }

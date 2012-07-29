@@ -1,4 +1,4 @@
-package org.wso2.carbon.mediator.test.call;/*
+/*
 import org.wso2.carbon.automation.utils.esb.ESBTestCaseUtils;
 /*
 *Copyright (c) 2005-2010, WSO2 Inc. (http://www.wso2.org) All Rights Reserved.
@@ -17,6 +17,7 @@ import org.wso2.carbon.automation.utils.esb.ESBTestCaseUtils;
 *specific language governing permissions and limitations
 *under the License.
 */
+package org.wso2.carbon.mediator.test.call;
 
 import org.apache.axiom.om.OMAbstractFactory;
 import org.apache.axiom.om.OMElement;

@@ -44,6 +44,7 @@
             <class name="org.wso2.carbon.mediator.test.clone.CloneMediatorEndpointsTestCase"/>
             <class name="org.wso2.carbon.mediator.test.clone.CloneMediatorNamedEndpointsTestCase"/>
             <class name="org.wso2.carbon.mediator.test.clone.CloneMediatorSequenceTestCase"/>
+            <class name="org.wso2.carbon.mediator.test.clone.CloneNegativeTestCase"/>
         </classes>
     </test>
 
@@ -66,6 +67,12 @@
             <class name="org.wso2.carbon.mediator.test.enrich.EnrichMediatorReplaceInlineContentFromConfigRegistryTestCase"/>
             <class name="org.wso2.carbon.mediator.test.enrich.EnrichMediatorSample15TestCase"/>
             <class name="org.wso2.carbon.mediator.test.enrich.EnrichMediatorSiblingsTest"/>
+            <class name="org.wso2.carbon.mediator.test.enrich.EnrichMediatorAddContentAsChildTestCase"/>
+            <class name="org.wso2.carbon.mediator.test.enrich.EnrichReplaceBodyBySpecifiedPropertyTestCase"/>
+            <class name="org.wso2.carbon.mediator.test.enrich.EnrichMediatorReplaceByPropertyTestCase"/>
+            <class name="org.wso2.carbon.mediator.test.enrich.ReplacePropertyByEnrichTestCase"/>
+            <class name="org.wso2.carbon.mediator.test.enrich.EnrichAndDoubleDropMediatorTestCase"/>
+            <class name="org.wso2.carbon.mediator.test.enrich.EnrichMediatorAddChildXpathTestCase"/>
         </classes>
     </test>
 
@@ -128,6 +135,10 @@
     <test name="Test - rule mediator Test" preserve-order="true" verbose="2">
         <classes>
             <class name="org.wso2.carbon.mediator.test.rule.RuleMediatorTestSample603"/>
+            <class name="org.wso2.carbon.mediator.test.rule.MultipleRuleSetPropertyTestCase"/>
+            <class name="org.wso2.carbon.mediator.test.rule.SingleRuleSetPropertyTestCase"/>
+            <class name="org.wso2.carbon.mediator.test.rule.WithOutRuleSetPropertyTestCase"/>
+            <class name="org.wso2.carbon.mediator.test.rule.RuleSourceGivenWrappedInCDATA"/>
         </classes>
     </test>
 
@@ -284,6 +295,19 @@
             <class name="org.wso2.carbon.mediator.test.rewrite.SetPathTestCase"/>
             <class name="org.wso2.carbon.mediator.test.rewrite.SetFullUrlTestCase"/>
             <class name="org.wso2.carbon.mediator.test.rewrite.SetFullUrlWhenNoAddressingUrlTestCase"/>
+        </classes>
+    </test>
+
+    <test name="Test - ESB - Out Mediator" preserve-order="true" verbose="2">
+        <classes>
+            <class name="org.wso2.carbon.mediator.test.out.OutMediatorWithoutChildElementTestCase"/>
+
+        </classes>
+    </test>
+    <test name="Test - ESB - Cache Mediator" preserve-order="true" verbose="2">
+        <classes>
+            <class name="org.wso2.carbon.mediator.test.cache.CollectorTypeTestCase"/>
+
         </classes>
     </test>
 </suite>

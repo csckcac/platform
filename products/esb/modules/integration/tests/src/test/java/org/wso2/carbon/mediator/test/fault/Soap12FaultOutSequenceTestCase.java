@@ -52,7 +52,7 @@ public class Soap12FaultOutSequenceTestCase extends ESBMediatorTest {
             assertEquals(expected.getFaultRoleElement().getRoleValue(), "automation", "Role mismatched");
             assertEquals(expected.getFaultNodeElement().getNodeValue(), "automation-node", "Fault node mismatched");
             assertEquals(expected.getFaultDetailElement().getText(), "fault details by automation", "Fault detail mismatched");
-            ;
+
         }
 
     }

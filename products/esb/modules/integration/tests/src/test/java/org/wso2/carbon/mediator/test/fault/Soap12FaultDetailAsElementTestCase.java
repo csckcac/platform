@@ -63,7 +63,7 @@ public class Soap12FaultDetailAsElementTestCase extends ESBMediatorTest {
             OMElement messageOME = detailElm.getFirstChildWithName(new QName("http://ws.apache.org/ns/synapse", "message", "axis2ns1"));
             assertNotNull(messageOME, "Fault detail element message null");
             assertEquals(messageOME.getText(), "fault details by automation", "Fault detail message mismatched");
-            ;
+
         }
 
     }

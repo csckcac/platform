@@ -904,4 +904,49 @@
         </products>
     </scenario>
 
-</scenarios>
+    <scenario testName="org.wso2.carbon.mediator.test.fault.DemoTest">
+        <products>
+            <product name="AXIS2">
+                <artifacts userId="3">
+                    <artifact name="SimpleStockQuoteService.aar" type="aar">
+                    </artifact>
+                </artifacts>
+            </product>
+
+
+            <product name="ESB">
+                <artifacts userId="3">
+                    <artifact name="log_mediator" type="synapseconfig">
+                    </artifact>
+                </artifacts>
+            </product>
+
+        </products>
+    </scenario>
+
+
+
+
+
+<scenario testName="org.wso2.carbon.mediator.test.CoreTests.FuncCallWithoutParams2">
+<products>
+    <product name="AXIS2">
+        <artifacts userId="3">
+            <artifact name="SimpleStockQuoteService.aar" type="aar">
+            </artifact>
+        </artifacts>
+    </product>
+
+
+    <product name="ESB">
+        <artifacts userId="3">
+            <artifact name="coretest" type="synapseconfig">
+            </artifact>
+        </artifacts>
+    </product>
+
+</products>
+</scenario>
+
+        </scenarios>
+        </scenarios>

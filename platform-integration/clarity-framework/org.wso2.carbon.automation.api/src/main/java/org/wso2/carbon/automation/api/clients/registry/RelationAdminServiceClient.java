@@ -63,10 +63,10 @@ public class RelationAdminServiceClient {
         return dependenciesBean;
     }
 
-    public AssociationTreeBean getAssociationTree(String path)
+    public AssociationTreeBean getAssociationTree(String path, String type)
             throws RemoteException, AddAssociationRegistryExceptionException {
         try {
-            return relationAdminServiceStub.getAssociationTree(path,"association");
+            return relationAdminServiceStub.getAssociationTree(path,type);
         } catch (RemoteException e) {
             log.error("Get association tree error ");
             throw new RemoteException("Get association tree error ", e);

@@ -16,7 +16,7 @@
  ~ under the License.
  -->
 <serviceMetaData xmlns="http://www.wso2.org/governance/metadata">
-    <overview><name>abc</name><namespace>http://abb.com</namespace><states>0</states></overview>
+    <overview><name>abc</name><description>this is description 1</description><namespace>http://abb.com</namespace><states>0</states></overview>
     <contacts><contact>0</contact></contacts>
     <interface>
         <wsdlURL>http://svn.wso2.org/repos/wso2/carbon/platform/trunk/platform-integration/clarity-tests/org.wso2.carbon.automation.test.repo/src/main/resources/artifacts/GREG/wsdl/BizService.wsdl</wsdlURL>

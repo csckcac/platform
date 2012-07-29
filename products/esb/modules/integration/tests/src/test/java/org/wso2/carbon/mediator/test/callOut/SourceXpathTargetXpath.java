@@ -37,6 +37,7 @@ import org.wso2.carbon.mediator.test.log.LogMediatorLevelTest;
 import java.io.IOException;
 
 import static org.testng.Assert.assertTrue;
+
 public class SourceXpathTargetXpath {
 
 
@@ -55,8 +56,10 @@ public class SourceXpathTargetXpath {
     UserInfo userInfo;
 
 
+
     @BeforeTest(alwaysRun = true)
     public void setEnvironment() throws Exception, IOException {
+
         axis2Client = new StockQuoteClient();
         userInfo = UserListCsvReader.getUserInfo(1);
         EnvironmentBuilder builder = new EnvironmentBuilder().esb(1);
@@ -72,7 +75,6 @@ public class SourceXpathTargetXpath {
 
         public void test_sourceXpathTargetXpath() throws AxisFault {
 
-
       response = axis2Client.sendSimpleStockQuoteRequest("http://localhost:8280/","","IBM");    // send the simplestockquote request. service url is set at the synapse
 
 
@@ -82,6 +84,14 @@ public class SourceXpathTargetXpath {
 
 
        }
+
+
+
+
+
+
+
+
 
     @AfterClass
     public void cleanup() {

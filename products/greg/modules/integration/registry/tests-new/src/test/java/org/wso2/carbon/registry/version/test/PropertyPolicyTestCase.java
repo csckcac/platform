@@ -362,7 +362,6 @@ public class PropertyPolicyTestCase {
         String resourcePath = ProductConstant.SYSTEM_TEST_RESOURCE_LOCATION + "artifacts" + File.separator +
                               "GREG" + File.separator + "lifecycle" + File.separator + "MultiplePromoteDemoteLC.xml";
         String lifeCycleContent = FileReader.readFile(resourcePath);
-        Thread.sleep(20000);
         lifeCycleManagementClient.addLifeCycle(lifeCycleContent);
 
         String[] lifeCycles = lifeCycleManagementClient.getLifecycleList();

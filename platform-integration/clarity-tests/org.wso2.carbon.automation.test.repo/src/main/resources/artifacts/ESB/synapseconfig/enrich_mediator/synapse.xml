@@ -18,8 +18,7 @@
         <target>
             <inSequence>
                 <log level="full"/>
-                <property xmlns:ax21="http://www.bea.com/2003/05/xmlbean/ltgfmt" xmlns:xs="http://ws.apache.org/axis2" xmlns:p="http://ws.apache.org/axis2"
-                          name="test" expression="//p:getQuote" scope="default"/>
+                <property xmlns:ax21="http://www.bea.com/2003/05/xmlbean/ltgfmt" xmlns:xs="http://ws.apache.org/axis2" xmlns:p="http://ws.apache.org/axis2" name="test" expression="//p:getQuote" scope="default"/>
                 <log level="full"/>
                 <send>
                     <endpoint>
@@ -29,22 +28,14 @@
             </inSequence>
             <outSequence>
                 <log level="custom">
-                    <property xmlns:ax21="http://services.samples/xsd" xmlns:ns="http://services.samples"
-                              name="TEST" expression="//ns:getQuoteResponse/ns:return/ax21:change"/>
+                    <property xmlns:ax21="http://services.samples/xsd" xmlns:ns="http://services.samples" name="TEST" expression="//ns:getQuoteResponse/ns:return/ax21:change"/>
                 </log>
-
                 <enrich>
                     <source type="inline" clone="true">
                         <ax21:test xmlns:ax21="http://services.samples/xsd">test</ax21:test>
                     </source>
-                    <target type="property" property="test"/>
+                    <target xmlns:ax21="http://services.samples/xsd" xmlns:ns="http://services.samples" action="sibling" xpath="//ns:getQuoteResponse/ns:return/ax21:change"/>
                 </enrich>
-                <enrich>
-                    <source type="property" property="test"/>
-                    <target xmlns:ax21="http://services.samples/xsd" xmlns:ns="http://services.samples"
-                            action="sibling" xpath="//ns:getQuoteResponse/ns:return/ax21:change"/>
-                </enrich>
-
                 <log level="full"/>
                 <send/>
             </outSequence>

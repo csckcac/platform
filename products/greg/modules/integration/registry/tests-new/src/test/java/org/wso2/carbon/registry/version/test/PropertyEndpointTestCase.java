@@ -205,7 +205,7 @@ public class PropertyEndpointTestCase {
     }
 
 
-    @Test(groups = {"wso2.greg"}, description = "Add a association to an endpoint,version it and check that WSDL")
+    @Test(groups = {"wso2.greg"}, description = "Add a association to an endpoint,version it and check that association")
     public void TestVersionAssociation()
             throws ResourceAdminServiceExceptionException, RemoteException, GovernanceException,
                    AddAssociationRegistryExceptionException {
@@ -393,7 +393,9 @@ public class PropertyEndpointTestCase {
                    LifeCycleManagementServiceExceptionException {
         System.out.println("XXXXXXXX inside clear");
         resourceAdminClient.deleteResource(PATHROOT);
-        resourceAdminClient.deleteResource(endpoint.getPath());
+        //resourceAdminClient.deleteResource(endpoint.getPath());
+         EndpointManager endpointManager = new EndpointManager(governance);
+        endpointManager.removeEndpoint(endpoint.getId());
         lifeCycleManagementClient.deleteLifeCycle(LC_NAME);
     }
 }

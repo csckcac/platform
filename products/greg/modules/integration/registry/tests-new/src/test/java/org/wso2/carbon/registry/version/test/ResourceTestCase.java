@@ -18,6 +18,7 @@ under the License.
 
 package org.wso2.carbon.registry.version.test;
 
+import org.testng.annotations.AfterClass;
 import org.testng.annotations.BeforeClass;
 import org.testng.annotations.Test;
 import org.wso2.carbon.authenticator.stub.LoginAuthenticationExceptionException;
@@ -45,7 +46,7 @@ public class ResourceTestCase {
 
     private UserInfo userInfo;
     private ResourceAdminServiceClient resourceAdminClient;
-    private static final String PATH = "/testVersion";
+    private static final String PATH = "/testVersion1";
     private static final String PATH2 = "/testVersion2";
     private static final String PATH3 = "/testVersion3";
     private static final String CSS_PATH = "/testCSS";
@@ -150,5 +151,14 @@ public class ResourceTestCase {
 
         VersionPath[] vp = resourceAdminClient.getVersionPaths(CSS_PATH);
         assertEquals(1, vp.length);
+    }
+
+    @AfterClass
+    public void cleanResources() throws ResourceAdminServiceExceptionException, RemoteException {
+        resourceAdminClient.deleteResource(PATH);
+        resourceAdminClient.deleteResource(PATH2);
+        resourceAdminClient.deleteResource(PATH3);
+        resourceAdminClient.deleteResource(CSS_PATH);
+        resourceAdminClient.deleteResource(LEAF_PATH);
     }
 }

@@ -17,6 +17,7 @@
 
 package org.wso2.carbon.registry.version.test;
 
+import org.testng.annotations.AfterClass;
 import org.testng.annotations.BeforeClass;
 import org.testng.annotations.Test;
 import org.wso2.carbon.authenticator.stub.LoginAuthenticationExceptionException;
@@ -54,7 +55,7 @@ public class RestoreResourcesTestCase {
         ManageEnvironment environment = builder.build();
         resourceAdminClient =
                 new ResourceAdminServiceClient(environment.getGreg().getBackEndUrl(),
-                                               userInfo.getUserName(), userInfo.getPassword());
+                        userInfo.getUserName(), userInfo.getPassword());
 
     }
 
@@ -63,7 +64,7 @@ public class RestoreResourcesTestCase {
             throws ResourceAdminServiceExceptionException, RemoteException, MalformedURLException {
         Boolean status;
         String path = ProductConstant.SYSTEM_TEST_RESOURCE_LOCATION + "artifacts" + File.separator
-                      + "GREG" + File.separator + "testresource.txt";
+                + "GREG" + File.separator + "testresource.txt";
         DataHandler dataHandler = new DataHandler(new URL("file:///" + path));
         resourceAdminClient.addResource(PATH, "text/plain", "desc", dataHandler);
         assertTrue(resourceAdminClient.getResource(PATH)[0].getAuthorUserName().contains(userInfo.getUserName()));
@@ -83,4 +84,11 @@ public class RestoreResourcesTestCase {
         assertEquals("This is Test Data", resourceAdminClient.getTextContent(PATH));
 
     }
+
+
+    @AfterClass
+    public void clear() throws ResourceAdminServiceExceptionException, RemoteException {
+        resourceAdminClient.deleteResource(PATH);
+    }
+
 }

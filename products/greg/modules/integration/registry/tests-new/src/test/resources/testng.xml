@@ -20,8 +20,8 @@
             <package name="org.wso2.carbon.registry.app.test" />
             <package name="org.wso2.carbon.registry.search.metadata.test" />
             <package name="org.wso2.carbon.registry.version.test" />
-            <package name="org.wso2.carbon.registry.subscription.test" />
-            <package name="org.wso2.carbon.registry.mediatype.test" />
+            <!--<package name="org.wso2.carbon.registry.subscription.test" />-->
+            <!--<package name="org.wso2.carbon.registry.mediatype.test" />-->
         </packages>
         <classes>
             <class name="org.wso2.carbon.registry.reporting.test.ReportingTestCase"/>

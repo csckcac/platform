@@ -78,6 +78,8 @@ public class PropertyResourceTestCase {
     private LifeCycleManagementClient lifeCycleManagementClient;
     private WSRegistryServiceClient wsRegistryServiceClient;
     private static String LC_NAME = "MultiplePromoteDemoteLC";
+    private static String LC_NAME_2 = "StateDemoteLC";
+
 
     private org.wso2.carbon.governance.custom.lifecycles.checklist.stub.beans.xsd.LifecycleBean lifeCycle;
 
@@ -534,31 +536,32 @@ public class PropertyResourceTestCase {
     }
 
 
-    @Test(groups = "wso2.greg", description = "Create new life cycle", dependsOnMethods = "testVersionRetentionLeaf")
-    public void testCreateNewLifeCycle()
+    public void testAddNewLifeCycle(String LCName,String fileName)
             throws LifeCycleManagementServiceExceptionException, IOException {
-        String resourcePath = ProductConstant.SYSTEM_TEST_RESOURCE_LOCATION + "artifacts" + File.separator + "GREG" + File.separator + "lifecycle" + File.separator + "MultiplePromoteDemoteLC.xml";
+        String resourcePath = ProductConstant.SYSTEM_TEST_RESOURCE_LOCATION + "artifacts" + File.separator + "GREG" + File.separator + "lifecycle" + File.separator + fileName;
         String lifeCycleContent = FileReader.readFile(resourcePath);
         lifeCycleManagementClient.addLifeCycle(lifeCycleContent);
+
+
+
 
         String[] lifeClycles = lifeCycleManagementClient.getLifecycleList();
         boolean lcStatus = false;
         for (String lc : lifeClycles) {
-            if (lc.equalsIgnoreCase(LC_NAME)) {
+            if (lc.equalsIgnoreCase(LCName)) {
                 lcStatus = true;
             }
         }
         assertTrue(lcStatus);
     }
 
-    @Test(groups = "wso2.greg", description = "Add lifecycle to a resource at root level",
-          dependsOnMethods = "testCreateNewLifeCycle")
+    @Test(groups = "wso2.greg", description = "Add lifecycle to a resource at root level")
     public void testAddLcRoot() throws RegistryException, IOException,
                                        CustomLifecyclesChecklistAdminServiceExceptionException,
                                        ListMetadataServiceRegistryExceptionException,
                                        ResourceAdminServiceExceptionException,
                                        LifeCycleManagementServiceExceptionException {
-
+        testAddNewLifeCycle(LC_NAME,"MultiplePromoteDemoteLC.xml");
         wsRegistryServiceClient.associateAspect(PATHROOT, LC_NAME);
         lifeCycle = lifeCycleAdminServiceClient.getLifecycleBean(PATHROOT);
 
@@ -596,15 +599,16 @@ public class PropertyResourceTestCase {
                                        ListMetadataServiceRegistryExceptionException,
                                        ResourceAdminServiceExceptionException,
                                        LifeCycleManagementServiceExceptionException {
+        testAddNewLifeCycle(LC_NAME_2,"StateDemoteLifeCycle.xml");
 
-        wsRegistryServiceClient.associateAspect(PATHLEAF, LC_NAME);
+        wsRegistryServiceClient.associateAspect(PATHLEAF, LC_NAME_2);
         lifeCycle = lifeCycleAdminServiceClient.getLifecycleBean(PATHLEAF);
 
         org.wso2.carbon.governance.custom.lifecycles.checklist.stub.util.xsd.Property[] properties = lifeCycle.getLifecycleProperties();
         boolean lcStatus = false;
         for (org.wso2.carbon.governance.custom.lifecycles.checklist.stub.util.xsd.Property prop : properties) {
             prop.getKey();
-            if (prop.getKey().contains(LC_NAME)) {
+            if (prop.getKey().contains(LC_NAME_2)) {
                 lcStatus = true;
             }
         }
@@ -619,7 +623,7 @@ public class PropertyResourceTestCase {
 
         for (org.wso2.carbon.governance.custom.lifecycles.checklist.stub.util.xsd.Property prop : properties2) {
             prop.getKey();
-            if (prop.getKey().contains(LC_NAME)) {
+            if (prop.getKey().contains(LC_NAME_2)) {
                 lcStatus = true;
             }
         }
@@ -634,6 +638,8 @@ public class PropertyResourceTestCase {
         resourceAdminClient.deleteResource(PATHROOT);
         resourceAdminClient.deleteResource(PATH);
         lifeCycleManagementClient.deleteLifeCycle(LC_NAME);
+        lifeCycleManagementClient.deleteLifeCycle(LC_NAME_2);
+
     }
 
     public VersionPath[] deleteVersion(String path)

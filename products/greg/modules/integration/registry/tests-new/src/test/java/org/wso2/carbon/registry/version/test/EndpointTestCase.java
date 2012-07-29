@@ -19,6 +19,7 @@ package org.wso2.carbon.registry.version.test;
 
 import org.apache.commons.logging.Log;
 import org.apache.commons.logging.LogFactory;
+import org.testng.annotations.AfterClass;
 import org.testng.annotations.BeforeClass;
 import org.testng.annotations.Test;
 import org.wso2.carbon.authenticator.stub.LoginAuthenticationExceptionException;
@@ -65,7 +66,7 @@ public class EndpointTestCase {
         RegistryProviderUtil registryProviderUtil = new RegistryProviderUtil();
         resourceAdminClient =
                 new ResourceAdminServiceClient(environment.getGreg().getBackEndUrl(),
-                                               userInfo.getUserName(), userInfo.getPassword());
+                        userInfo.getUserName(), userInfo.getPassword());
         registry = registryProviderUtil.getWSRegistry(userId, ProductConstant.GREG_SERVER_NAME);
         governance = registryProviderUtil.getGovernanceRegistry(registry, userId);
     }
@@ -86,6 +87,7 @@ public class EndpointTestCase {
 
     private Endpoint createEndpoint(String endpoint_url) throws GovernanceException {
         EndpointManager endpointManager = new EndpointManager(governance);
+
         Endpoint endpoint1;
         try {
             endpoint1 = endpointManager.newEndpoint(endpoint_url);
@@ -99,6 +101,14 @@ public class EndpointTestCase {
             throw new GovernanceException("Unable to add Endpoint:" + e);
         }
         return endpoint1;
+    }
+
+
+    @AfterClass
+    public void clear() throws GovernanceException {
+       EndpointManager endpointManager = new EndpointManager(governance);
+       Endpoint endpoint= endpointManager.getEndpointByUrl("http://ws.strikeiron.com/StrikeIron/donotcall2_5/DoNotCallRegistryUnique");
+        endpointManager.removeEndpoint(endpoint.getId());
     }
 
 }

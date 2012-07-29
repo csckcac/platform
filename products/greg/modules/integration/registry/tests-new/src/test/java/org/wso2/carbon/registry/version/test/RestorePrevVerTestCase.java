@@ -16,6 +16,7 @@
 
 package org.wso2.carbon.registry.version.test;
 
+import org.testng.annotations.AfterClass;
 import org.testng.annotations.BeforeClass;
 import org.testng.annotations.Test;
 import org.wso2.carbon.authenticator.stub.LoginAuthenticationExceptionException;
@@ -81,5 +82,10 @@ public class RestorePrevVerTestCase {
         status = resourceAdminClient.restoreVersion(verPath);
         assertTrue(status);
         assertEquals("This is Test Data", resourceAdminClient.getTextContent(PATH));
+    }
+
+    @AfterClass
+    public void clear() throws ResourceAdminServiceExceptionException, RemoteException {
+        resourceAdminClient.deleteResource(PATH);
     }
 }

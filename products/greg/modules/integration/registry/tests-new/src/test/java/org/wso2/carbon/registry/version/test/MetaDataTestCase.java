@@ -97,6 +97,8 @@ public class MetaDataTestCase {
         resourceAdminClient.createVersion("/_system/governance/trunk/policies/policy.xml");
         VersionPath[] vp1 = resourceAdminClient.getVersionPaths("/_system/governance/trunk/policies/policy.xml");
         assertEquals(1, vp1.length);
+        assertEquals(null, deleteVersion("/_system/governance/trunk/policies/policy.xml"));
+
 
     }
 
@@ -124,6 +126,9 @@ public class MetaDataTestCase {
         VersionPath[] vp1 = resourceAdminClient.getVersionPaths("/_system/governance/trunk/wsdls/org/wso2/carbon" +
                                                                 "/core/services/echo/echo.wsdl");
         assertEquals(1, vp1.length);
+
+        assertEquals(null, deleteVersion("/_system/governance/trunk/wsdls/org/wso2/carbon/core/services/echo/echo.wsdl"));
+
     }
 
 
@@ -150,6 +155,9 @@ public class MetaDataTestCase {
         VersionPath[] vp1 =
                 resourceAdminClient.getVersionPaths("/_system/governance/trunk/schemas/org/charitha/calculator.xsd");
         assertEquals(1, vp1.length);
+
+        assertEquals(null, deleteVersion("/_system/governance/trunk/schemas/org/charitha/calculator.xsd"));
+
     }
 
 
@@ -178,8 +186,29 @@ public class MetaDataTestCase {
         assertTrue(nameExists);
         resourceAdminClient.createVersion("/_system/governance/trunk/wsdls/com/foo/abc.wsdl");
         VersionPath[] vp1 = resourceAdminClient.getVersionPaths("/_system/governance/trunk/wsdls/com/foo/abc.wsdl");
+
         assertEquals(1, vp1.length);
+
+        assertEquals(null, deleteVersion("/_system/governance/trunk/wsdls/com/foo/abc.wsdl"));
+
     }
+
+
+    public VersionPath[] deleteVersion(String path)
+            throws ResourceAdminServiceExceptionException, RemoteException {
+        int length = resourceAdminClient.getVersionPaths(path).length;
+        for (int i = 0; i < length; i++) {
+            long versionNo = resourceAdminClient.getVersionPaths(path)[0].getVersionNumber();
+            String snapshotId = String.valueOf(versionNo);
+            resourceAdminClient.deleteVersionHistory(path, snapshotId);
+        }
+        VersionPath[] vp2 = null;
+        vp2 = resourceAdminClient.getVersionPaths(path);
+
+        return vp2;
+
+    }
+
 
     @AfterClass
     public void testCleanResources()

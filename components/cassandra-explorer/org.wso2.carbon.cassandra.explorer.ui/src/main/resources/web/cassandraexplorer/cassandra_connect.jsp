@@ -21,39 +21,53 @@
 <script type="text/javascript" src="../admin/js/jquery.js"></script>
 <script type="text/javascript" src="../admin/js/jquery.form.js"></script>
 <script type="text/javascript" src="../dialog/js/jqueryui/jquery-ui.min.js"></script>
-<div id="middle">
-    <h2>Connect</h2>
-    <div id="workArea">
-        <form id="connect_form" method="POST" action="cassandra_connect_ajaxprocessor.jsp">
-            <table  class="carbonFormTable">
-               <%-- <tr>
-                    <td>Cluster Name</td>
-                    <td><input type="text" name="cluster_name" id="cluster_name"/>
-                        <div class="sectionHelp">
-                            Enter the Name of the Cluster eg: ClusterOne.
-                        </div>
-                    </td>
-                </tr>--%>
-                <tr>
-                    <td class="leftCol-med labelField">Connection Url<span class="required">*</span></td>
-                    <td><input type="text" name="connection_url" id="connection_url"/>
-                    </td>
+
+<fmt:bundle basename="org.wso2.carbon.cassandra.explorer.ui.i18n.Resources">
+    <carbon:jsi18n
+            resourceBundle="org.wso2.carbon.cassandra.explorer.ui.i18n.Resources"
+            request="<%=request%>" i18nObjectName="cassandrajsi18n"/>
+    <carbon:breadcrumb
+            label="cassandra.explorer.connect"
+            resourceBundle="org.wso2.carbon.cassandra.explorer.ui.i18n.Resources"
+            topPage="false"
+            request="<%=request%>"/>
+
+    <div id="middle">
+        <h2>Connect</h2>
+
+        <div id="workArea">
+            <form id="connect_form" method="POST" action="cassandra_connect_ajaxprocessor.jsp">
+                <table class="carbonFormTable">
+                        <%-- <tr>
+                            <td>Cluster Name</td>
+                            <td><input type="text" name="cluster_name" id="cluster_name"/>
+                                <div class="sectionHelp">
+                                    Enter the Name of the Cluster eg: ClusterOne.
+                                </div>
+                            </td>
+                        </tr>--%>
+                    <tr>
+                        <td class="leftCol-med labelField">Connection Url<span
+                                class="required">*</span></td>
+                        <td><input type="text" name="connection_url" id="connection_url"/>
+                        </td>
                         <div class="sectionHelp">
                             Connection URL eg: localhost:9160.
                         </div>
-                </tr>
-                <tr>
-                    <td class="labelField">User Name</td>
-                    <td><input type="text" name="user_name" id="username"/></td>
-                </tr>
-                <tr>
-                    <td class="labelField">Password</td>
-                    <td><input type="password" name="password" id="password"/></td>
-                </tr>
-            </table>
-            <div class="buttonRow">
-                <input type="submit" value="Connect">
-            </div>
-        </form>
+                    </tr>
+                    <tr>
+                        <td class="labelField">User Name</td>
+                        <td><input type="text" name="user_name" id="username"/></td>
+                    </tr>
+                    <tr>
+                        <td class="labelField">Password</td>
+                        <td><input type="password" name="password" id="password"/></td>
+                    </tr>
+                </table>
+                <div class="buttonRow">
+                    <input type="submit" value="Connect">
+                </div>
+            </form>
+        </div>
     </div>
-</div>
+</fmt:bundle>

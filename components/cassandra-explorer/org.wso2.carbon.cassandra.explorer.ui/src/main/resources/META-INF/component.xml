@@ -42,7 +42,7 @@
         </menu>
         <menu>
             <id>cassandra_explorer_list_keyspaces_menu</id>
-            <i18n-key>cassandra.explorer.list.keyspaces</i18n-key>
+            <i18n-key>cassandra.explorer.explore</i18n-key>
             <i18n-bundle>org.wso2.carbon.cassandra.explorer.ui.i18n.Resources</i18n-bundle>
             <parent-menu>cassandra_explorer_menu</parent-menu>
             <link>../cassandraexplorer/cassandra_keyspaces.jsp</link>

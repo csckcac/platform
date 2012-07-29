@@ -17,91 +17,103 @@
 -->
 
 <%@ page import="org.wso2.carbon.cassandra.explorer.ui.CassandraExplorerAdminClient" %>
-<%@ page
-        import="org.wso2.carbon.cassandra.explorer.stub.CassandraExplorerAdminCassandraExplorerException" %>
+<%@ page import="org.wso2.carbon.cassandra.explorer.stub.CassandraExplorerAdminCassandraExplorerException" %>
+<%@ taglib prefix="fmt" uri="http://java.sun.com/jsp/jstl/fmt" %>
+<%@ taglib uri="http://wso2.org/projects/carbon/taglibs/carbontags.jar" prefix="carbon" %>
+
 <script type="text/javascript" src="js/cassandra_cf_explorer.js"></script>
 <script language="text/javascript" src="../admin/js/customControls.js"></script>
 
-<%
-    String[] keyspaces = new String[0];
-    CassandraExplorerAdminClient adminClient
-            = new CassandraExplorerAdminClient(config.getServletContext(), session);
-    try {
-        keyspaces = adminClient.getKeyspaces();
-    } catch (CassandraExplorerAdminCassandraExplorerException e) { %>
-<script type="text/javascript">
-    jQuery(document).ready(function () {
-        CARBON.showErrorDialog('Cannot Connect to Cassandra Cluster.<br> Please check connection details', function () {
-            CARBON.closeWindow();
-            location.href = "cassandra_connect.jsp";
-        }, function () {
-            CARBON.closeWindow();
-            location.href = "cassandra_connect.jsp";
+<fmt:bundle basename="org.wso2.carbon.cassandra.explorer.ui.i18n.Resources">
+    <carbon:jsi18n
+            resourceBundle="org.wso2.carbon.cassandra.explorer.ui.i18n.Resources"
+            request="<%=request%>" i18nObjectName="cassandrajsi18n"/>
+    <carbon:breadcrumb
+            label="cassandra.explorer.explore"
+            resourceBundle="org.wso2.carbon.cassandra.explorer.ui.i18n.Resources"
+            topPage="false"
+            request="<%=request%>"/>
+    <%
+        String[] keyspaces = new String[0];
+        CassandraExplorerAdminClient adminClient
+                = new CassandraExplorerAdminClient(config.getServletContext(), session);
+        try {
+            keyspaces = adminClient.getKeyspaces();
+        } catch (CassandraExplorerAdminCassandraExplorerException e) { %>
+    <script type="text/javascript">
+        jQuery(document).ready(function () {
+            CARBON.showErrorDialog('No Exsisting Connection available.<br> Please connect to a Cluster First.', function () {
+                CARBON.closeWindow();
+                location.href = "cassandra_connect.jsp";
+            }, function () {
+                CARBON.closeWindow();
+                location.href = "cassandra_connect.jsp";
+            });
         });
-    });
-</script>
-<% }
-%>
-<script>
-    jQuery(document).ready(function () {
-        initSections("");
-    });
+    </script>
+    <% }
+    %>
+    <script>
+        jQuery(document).ready(function () {
+            initSections("");
+        });
 
-</script>
-<style>
-    .sectionSeperator {
-        margin-bottom: 0;
-    }
+    </script>
+    <style>
+        .sectionSeperator {
+            margin-bottom: 0;
+        }
 
-    .sectionSub {
-        padding: 0;
-        margin: 0 0 10px 0;
-    }
-</style>
+        .sectionSub {
+            padding: 0;
+            margin: 0 0 10px 0;
+        }
+    </style>
 
-<div id="middle">
-    <h2>Keyspaces</h2>
+    <div id="middle">
+        <h2>Keyspaces</h2>
 
-    <div id="workArea">
-        <!-- Section 1 -->
-        <%
-            for (String keyspace : keyspaces) {%>
-        <div class="sectionSeperator togglebleTitle"><%=keyspace%>
-        </div>
-        <div class="sectionSub">
-            <table width="100%" id="internal" class="styledLeft">
-                <tbody>
-                <% String[] columnFamilies = adminClient.getColumnFamilies(keyspace);
-                    if (columnFamilies != null) {
-                        for (int i = 0; i < columnFamilies.length; i++) {
-                            String rowType;
-                            if (i + 1 % 2 == 0) {
-                                rowType = "tableEvenRow";
-                            } else {
-                                rowType = "tableOddRow";
+        <div id="workArea">
+            <!-- Section 1 -->
+            <%
+                for (String keyspace : keyspaces) {%>
+            <div class="sectionSeperator togglebleTitle"><%=keyspace%>
+            </div>
+            <div class="sectionSub">
+                <table width="100%" id="internal" class="styledLeft">
+                    <tbody>
+                    <% String[] columnFamilies = adminClient.getColumnFamilies(keyspace);
+                        if (columnFamilies != null) {
+                            for (int i = 0; i < columnFamilies.length; i++) {
+                                String rowType;
+                                if (i + 1 % 2 == 0) {
+                                    rowType = "tableEvenRow";
+                                } else {
+                                    rowType = "tableOddRow";
+                                }
+                    %>
+                    <tr class=<%=rowType%>>
+                        <td>
+                            <a href="#"
+                               onclick="viewRowExplorer('<%=keyspace%>','<%=columnFamilies[i]%>')"
+                               style="background-image:url(images/column_familiy.png);"
+                               class="icon-link"><%=columnFamilies[i]%>
+                            </a>
+                        </td>
+                        <%--<td width="30%">
+                            <a href="#" onclick="viewExplorer('<%=keyspace%>','<%=columnFamilies[i]%>')"
+                               style="background-image:url(images/column_familiy.png);" class="icon-link">Summary View</a>
+                        </td>--%>
+
+                    </tr>
+                    <%
                             }
-                %>
-                <tr class=<%=rowType%>>
-                    <td>
-                        <a href="#"
-                           onclick="viewRowExplorer('<%=keyspace%>','<%=columnFamilies[i]%>')"
-                           style="background-image:url(images/column_familiy.png);"
-                           class="icon-link"><%=columnFamilies[i]%>
-                        </a>
-                    </td>
-                    <%--<td width="30%">
-                        <a href="#" onclick="viewExplorer('<%=keyspace%>','<%=columnFamilies[i]%>')"
-                           style="background-image:url(images/column_familiy.png);" class="icon-link">Summary View</a>
-                    </td>--%>
-
-                </tr>
-                <%
                         }
-                    }
-                %>
-                </tbody>
-            </table>
+                    %>
+                    </tbody>
+                </table>
+            </div>
+            <%}%>
         </div>
-        <%}%>
     </div>
-</div>
+</fmt:bundle>

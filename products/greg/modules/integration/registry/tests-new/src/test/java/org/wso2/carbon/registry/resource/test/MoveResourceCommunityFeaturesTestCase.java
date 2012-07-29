@@ -193,7 +193,7 @@ public class MoveResourceCommunityFeaturesTestCase {
         String todo = "add";
 
         relationServiceClient.addAssociation(PATH + RES_NAME, associationType, ASSOCIATION_PATH, todo);
-        AssociationTreeBean aTreeBean = relationServiceClient.getAssociationTree(PATH + RES_NAME);
+        AssociationTreeBean aTreeBean = relationServiceClient.getAssociationTree(PATH + RES_NAME, "association");
 
 
         assertTrue(aTreeBean.getAssociationTree().contains(ASSOCIATION_PATH),
@@ -308,7 +308,8 @@ public class MoveResourceCommunityFeaturesTestCase {
             description = "Checks the associations after copying the collection")
     public void testAssociationsAfterMoving() throws AddAssociationRegistryExceptionException, RemoteException {
 
-        AssociationTreeBean aTreeBean = relationServiceClient.getAssociationTree(RES_MOVED_LOCATION + RES_NAME_AFTER_MOVING);
+        AssociationTreeBean aTreeBean =
+                relationServiceClient.getAssociationTree(RES_MOVED_LOCATION + RES_NAME_AFTER_MOVING, "association");
 
         assertTrue(aTreeBean.getAssociationTree().contains(ASSOCIATION_PATH),
                 "Association is not correct after copying.");

@@ -18,6 +18,7 @@
 package org.wso2.carbon.registry.version.test;
 
 import org.apache.axiom.om.util.AXIOMUtil;
+import org.testng.annotations.AfterClass;
 import org.testng.annotations.BeforeClass;
 import org.testng.annotations.Test;
 import org.wso2.carbon.authenticator.stub.LoginAuthenticationExceptionException;
@@ -121,7 +122,7 @@ public class MetaDataTestCase {
         resourceAdminClient.createVersion("/_system/governance/trunk/wsdls/org/wso2/carbon/core/services" +
                                           "/echo/echo.wsdl");
         VersionPath[] vp1 = resourceAdminClient.getVersionPaths("/_system/governance/trunk/wsdls/org/wso2/carbon" +
-                                                           "/core/services/echo/echo.wsdl");
+                                                                "/core/services/echo/echo.wsdl");
         assertEquals(1, vp1.length);
     }
 
@@ -178,6 +179,16 @@ public class MetaDataTestCase {
         resourceAdminClient.createVersion("/_system/governance/trunk/wsdls/com/foo/abc.wsdl");
         VersionPath[] vp1 = resourceAdminClient.getVersionPaths("/_system/governance/trunk/wsdls/com/foo/abc.wsdl");
         assertEquals(1, vp1.length);
+    }
+
+    @AfterClass
+    public void testCleanResources()
+            throws ResourceAdminServiceExceptionException, RemoteException {
+        resourceAdminClient.deleteResource("/_system/governance/trunk/wsdls/com/foo/abc.wsdl");
+        resourceAdminClient.deleteResource("/_system/governance/trunk/schemas/org/charitha/calculator.xsd");
+        resourceAdminClient.deleteResource("/_system/governance/trunk/policies/policy.xml");
+        resourceAdminClient.deleteResource("/_system/governance/trunk/wsdls/org/wso2/carbon/core/services/echo/echo.wsdl");
+        resourceAdminClient.deleteResource("/_system/governance/trunk/services/com/abb/abc");
     }
 
 

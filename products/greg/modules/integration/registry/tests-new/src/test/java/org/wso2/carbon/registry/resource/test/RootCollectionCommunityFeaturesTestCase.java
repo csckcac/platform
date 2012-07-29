@@ -229,7 +229,7 @@ public class RootCollectionCommunityFeaturesTestCase {
         String todo = "add";
 
         relationServiceClient.addAssociation(ROOT + COLL_NAME, associationType, ASSOCIATION_PATH, todo);
-        AssociationTreeBean aTreeBean = relationServiceClient.getAssociationTree(ROOT + COLL_NAME);
+        AssociationTreeBean aTreeBean = relationServiceClient.getAssociationTree(ROOT + COLL_NAME, "association");
 
 
         assertTrue(aTreeBean.getAssociationTree().contains(ASSOCIATION_PATH),

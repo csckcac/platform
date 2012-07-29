@@ -195,7 +195,7 @@ public class CopyResourceCommunityFeaturesTestCase {
         String todo = "add";
 
         relationServiceClient.addAssociation(PATH + RES_NAME, associationType, ASSOCIATION_PATH, todo);
-        AssociationTreeBean aTreeBean = relationServiceClient.getAssociationTree(PATH + RES_NAME);
+        AssociationTreeBean aTreeBean = relationServiceClient.getAssociationTree(PATH + RES_NAME, "association");
 
 
         assertTrue(aTreeBean.getAssociationTree().contains(ASSOCIATION_PATH),
@@ -310,7 +310,8 @@ public class CopyResourceCommunityFeaturesTestCase {
     public void testAssociationsAfterCopying() throws AddAssociationRegistryExceptionException, RemoteException {
 
 
-        AssociationTreeBean aTreeBean = relationServiceClient.getAssociationTree(RES_COPIED_LOCATION + RES_NAME_AFTER_COPYING);
+        AssociationTreeBean aTreeBean = relationServiceClient.getAssociationTree(RES_COPIED_LOCATION +
+                                                                                 RES_NAME_AFTER_COPYING, "association");
 
 
         assertTrue(aTreeBean.getAssociationTree().contains(ASSOCIATION_PATH),

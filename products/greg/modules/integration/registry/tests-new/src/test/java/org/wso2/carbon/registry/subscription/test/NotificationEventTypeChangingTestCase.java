@@ -26,6 +26,7 @@ import java.rmi.RemoteException;
 
 import javax.activation.DataHandler;
 
+import org.apache.axis2.AxisFault;
 import org.testng.annotations.AfterClass;
 import org.testng.annotations.BeforeClass;
 import org.testng.annotations.DataProvider;
@@ -37,22 +38,27 @@ import org.wso2.carbon.automation.core.utils.UserInfo;
 import org.wso2.carbon.automation.core.utils.UserListCsvReader;
 import org.wso2.carbon.automation.core.utils.environmentutils.EnvironmentBuilder;
 import org.wso2.carbon.automation.core.utils.environmentutils.ManageEnvironment;
+import org.wso2.carbon.automation.utils.registry.RegistryProviderUtil;
+import org.wso2.carbon.registry.core.exceptions.RegistryException;
 import org.wso2.carbon.registry.resource.stub.ResourceAdminServiceExceptionException;
-import org.wso2.carbon.registry.subscription.util.JMXSubscription;
-import org.wso2.carbon.registry.subscription.util.ManagementConsoleSubscription;
+import org.wso2.carbon.registry.subscription.util.LifecycleUtil;
+import org.wso2.carbon.registry.ws.client.registry.WSRegistryServiceClient;
 
-
-public class RootLevelResourceSubscriptionTestCase {
+public class NotificationEventTypeChangingTestCase {
 
     private ManageEnvironment environment;
     private int userID = 0;
     private UserInfo userInfo;
-    private ResourceAdminServiceClient resourceAdminServiceClient;
+
     private static final String RESOURCE_PATH_NAME = "/";
+
 
     @DataProvider(name = "ResourceDataProvider")
     public Object[][] dp() {
-        return new Object[][]{new Object[]{"testresource.txt"}, new Object[]{"pom.xml"}, new Object[]{"Person.xsd"}
+        return new Object[][]{new Object[]{"service.metadata.xml", "application/xml", "services"},
+                              new Object[]{"info.wsdl", "application/wsdl+xml", "wsdl"},
+                              new Object[]{"policy.xml", "application/xml", "policy"},
+                              new Object[]{"test.map", "Unknown", "mediatypes"}
         };
     }
 
@@ -62,40 +68,29 @@ public class RootLevelResourceSubscriptionTestCase {
         userInfo = UserListCsvReader.getUserInfo(userID);
         EnvironmentBuilder builder = new EnvironmentBuilder().greg(userID);
         environment = builder.build();
-        resourceAdminServiceClient = new ResourceAdminServiceClient(environment.getGreg().getProductVariables().getBackendUrl(), userInfo.getUserName(), userInfo.getPassword());
-
     }
-
 
     @Test(groups = "wso2.greg", description = "Add resource", dataProvider = "ResourceDataProvider")
-    public void testAddResource(String resourceName)
+    public void testAddResource(String name, String type, String folder)
             throws MalformedURLException, RemoteException, ResourceAdminServiceExceptionException {
-        String resourcePath = ProductConstant.SYSTEM_TEST_RESOURCE_LOCATION + "artifacts" + File.separator + "GREG" + File.separator + resourceName;
+        ResourceAdminServiceClient resourceAdminServiceClient = new ResourceAdminServiceClient(environment.getGreg().getProductVariables().getBackendUrl(), userInfo.getUserName(), userInfo.getPassword());
+        String resourcePath = ProductConstant.SYSTEM_TEST_RESOURCE_LOCATION + "artifacts" + File.separator + "GREG" + File.separator + folder + File.separator + name;
         DataHandler dh = new DataHandler(new URL("file:///" + resourcePath));
-        resourceAdminServiceClient.addResource(RESOURCE_PATH_NAME + resourceName, "test/plain", "testDesc", dh);
-        assertTrue(resourceAdminServiceClient.getResource(RESOURCE_PATH_NAME + resourceName)[0].getAuthorUserName().contains(userInfo.getUserName()));
+        resourceAdminServiceClient.addResource(RESOURCE_PATH_NAME + name, type, "testDesc", dh);
+        assertTrue(resourceAdminServiceClient.getResource(RESOURCE_PATH_NAME + name)[0].getAuthorUserName().contains(userInfo.getUserName()));
     }
 
 
-    @Test(groups = "wso2.greg", description = "Get Management Console Notification", dataProvider = "ResourceDataProvider", dependsOnMethods = "testAddResource")
-    public void testConsoleSubscription(String resourceName) throws Exception {
-        assertTrue(ManagementConsoleSubscription.init(RESOURCE_PATH_NAME + resourceName, "ResourceUpdated", environment, userInfo));
-
+    @Test(groups = "wso2.greg", description = "Get JMX Notification when event type change", dataProvider = "ResourceDataProvider", dependsOnMethods = "testAddResource")
+    public void testSubscriptionEventTypeChange(String name, String type, String folder)
+            throws Exception {
+        assertTrue(LifecycleUtil.init(RESOURCE_PATH_NAME + name, environment, userInfo));
     }
-
-    @Test(groups = "wso2.greg", description = "Get JMX Notification", dataProvider = "ResourceDataProvider", dependsOnMethods = "testAddResource")
-    public void testJMXSubscription(String resourceName) throws Exception {
-        assertTrue(JMXSubscription.init(RESOURCE_PATH_NAME + resourceName, "ResourceUpdated", environment, userInfo));
-    }
-
 
     @AfterClass()
-    public void clean() throws Exception {
-        resourceAdminServiceClient.deleteResource(RESOURCE_PATH_NAME + "testresource.txt");
-        resourceAdminServiceClient.deleteResource(RESOURCE_PATH_NAME + "pom.xml");
-        resourceAdminServiceClient.deleteResource(RESOURCE_PATH_NAME + "Person.xsd");
-
+    public void clean() throws AxisFault, NumberFormatException, RegistryException {
+        WSRegistryServiceClient wsRegistryServiceClient = new RegistryProviderUtil().getWSRegistry(Integer.parseInt(userInfo.getUserId()), ProductConstant.GREG_SERVER_NAME);
+        wsRegistryServiceClient.removeAspect("StateDemoteLC");
     }
-
 
 }

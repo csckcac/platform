@@ -32,16 +32,15 @@ import org.wso2.carbon.registry.subscription.util.JMXSubscription;
 import org.wso2.carbon.registry.subscription.util.ManagementConsoleSubscription;
 
 
-public class LeafLevelCollectionSubscriptionTestCase {
-
+public class RootSubscriptionTestCase {
     private ManageEnvironment environment;
+    private int userID = 0;
     private UserInfo userInfo;
 
-    private static final String COLLECTION_PATH = "/_system/governance/event";
+    private static final String ROOT = "/";
 
     @BeforeClass
     public void initialize() throws RemoteException, LoginAuthenticationExceptionException {
-        int userID = 0;
         userInfo = UserListCsvReader.getUserInfo(userID);
         EnvironmentBuilder builder = new EnvironmentBuilder().greg(userID);
         environment = builder.build();
@@ -49,12 +48,12 @@ public class LeafLevelCollectionSubscriptionTestCase {
 
     @Test(groups = "wso2.greg", description = "Get Management Console Notification")
     public void testConsoleSubscription() throws Exception {
-        assertTrue(ManagementConsoleSubscription.init(COLLECTION_PATH, "CollectionUpdated", environment, userInfo));
+        assertTrue(ManagementConsoleSubscription.init(ROOT, "CollectionUpdated", environment, userInfo));
     }
 
     @Test(groups = "wso2.greg", description = "Get JMX Notification")
     public void testJMXSubscription() throws Exception {
-        assertTrue(JMXSubscription.init(COLLECTION_PATH, "CollectionUpdated", environment, userInfo));
+        assertTrue(JMXSubscription.init(ROOT, "CollectionUpdated", environment, userInfo));
     }
 
 

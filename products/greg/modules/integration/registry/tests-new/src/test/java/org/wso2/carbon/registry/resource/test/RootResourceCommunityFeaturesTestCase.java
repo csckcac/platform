@@ -234,7 +234,7 @@ public class RootResourceCommunityFeaturesTestCase {
         String todo = "add";
 
         relationServiceClient.addAssociation(ROOT + RES_NAME, associationType, ASSOCIATION_PATH, todo);
-        AssociationTreeBean aTreeBean = relationServiceClient.getAssociationTree(ROOT + RES_NAME);
+        AssociationTreeBean aTreeBean = relationServiceClient.getAssociationTree(ROOT + RES_NAME, "association");
 
 
         assertTrue(aTreeBean.getAssociationTree().contains(ASSOCIATION_PATH),

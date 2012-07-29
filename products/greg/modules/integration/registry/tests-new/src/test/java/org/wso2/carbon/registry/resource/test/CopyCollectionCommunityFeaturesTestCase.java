@@ -192,7 +192,7 @@ import static org.testng.Assert.assertTrue;
         String todo = "add";
 
         relationServiceClient.addAssociation(PATH + COLL_NAME, associationType, ASSOCIATION_PATH, todo);
-        AssociationTreeBean aTreeBean = relationServiceClient.getAssociationTree(PATH + COLL_NAME);
+        AssociationTreeBean aTreeBean = relationServiceClient.getAssociationTree(PATH + COLL_NAME, "association");
 
 
         assertTrue(aTreeBean.getAssociationTree().contains(ASSOCIATION_PATH),
@@ -308,7 +308,7 @@ import static org.testng.Assert.assertTrue;
     public void testAssociationsAfterCopying() throws AddAssociationRegistryExceptionException, RemoteException {
 
 
-        AssociationTreeBean aTreeBean = relationServiceClient.getAssociationTree(COLL_COPIED_LOCATION + COLL_NAME);
+        AssociationTreeBean aTreeBean = relationServiceClient.getAssociationTree(COLL_COPIED_LOCATION + COLL_NAME, "association");
 
 
         assertTrue(aTreeBean.getAssociationTree().contains(ASSOCIATION_PATH),

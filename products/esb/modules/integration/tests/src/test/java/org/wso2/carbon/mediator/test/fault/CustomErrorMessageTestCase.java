@@ -19,25 +19,10 @@ package org.wso2.carbon.mediator.test.fault;
 
 import org.apache.axiom.om.OMElement;
 import org.apache.axis2.AxisFault;
-import org.netbeans.lib.cvsclient.commandLine.command.log;
 import org.testng.annotations.AfterClass;
 import org.testng.annotations.BeforeClass;
 import org.testng.annotations.Test;
-import org.wso2.carbon.authenticator.stub.LoginAuthenticationExceptionException;
-import org.wso2.carbon.automation.core.ProductConstant;
-import org.wso2.carbon.automation.core.utils.UserInfo;
-import org.wso2.carbon.automation.core.utils.UserListCsvReader;
-import org.wso2.carbon.automation.core.utils.environmentutils.EnvironmentBuilder;
-import org.wso2.carbon.automation.core.utils.environmentutils.EnvironmentVariables;
-import org.wso2.carbon.automation.core.utils.environmentutils.ManageEnvironment;
-import org.wso2.carbon.automation.core.utils.frameworkutils.FrameworkFactory;
-import org.wso2.carbon.automation.core.utils.frameworkutils.FrameworkProperties;
-import org.wso2.carbon.automation.core.utils.frameworkutils.productvariables.ProductVariables;
-import org.wso2.carbon.automation.utils.esb.ESBTestCaseUtils;
-import org.wso2.carbon.automation.utils.esb.StockQuoteClient;
 import org.wso2.carbon.mediator.test.ESBMediatorTest;
-
-import java.rmi.RemoteException;
 
 import static org.testng.Assert.assertTrue;
 import static org.testng.Assert.fail;
@@ -87,5 +72,5 @@ public class CustomErrorMessageTestCase extends ESBMediatorTest {
     private void destroy() {
         super.cleanup();
     }
-
+;
 }

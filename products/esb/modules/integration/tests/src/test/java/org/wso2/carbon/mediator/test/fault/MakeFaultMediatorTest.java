@@ -58,7 +58,7 @@ public class MakeFaultMediatorTest extends ESBMediatorTest {
         }
 
     }
-
+      ;
     @AfterClass
     private void destroy() {
         super.cleanup();

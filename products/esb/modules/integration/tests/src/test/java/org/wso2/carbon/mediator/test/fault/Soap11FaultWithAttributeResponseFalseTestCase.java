@@ -47,7 +47,7 @@ public class Soap11FaultWithAttributeResponseFalseTestCase extends ESBMediatorTe
         } catch (AxisFault expected) {
             log.info("Test passed with Fault Message : " + expected.getMessage());
             assertEquals(expected.getMessage(), "Read timed out", "Message mismatched");
-
+            ;
         }
 
     }

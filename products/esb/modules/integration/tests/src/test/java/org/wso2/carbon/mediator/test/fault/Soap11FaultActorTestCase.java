@@ -53,7 +53,7 @@ public class Soap11FaultActorTestCase extends ESBMediatorTest {
             assertEquals(expected.getFaultRoleElement().getRoleValue(), "automation", "Role mismatched");
 
         }
-
+        ;
     }
 
     @AfterClass

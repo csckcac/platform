@@ -59,7 +59,7 @@ public class Soap11FaultDetailAsElementTestCase extends ESBMediatorTest {
             System.out.println(statusOME.getText());
             assertNotNull(statusOME, "Fault detail element StatusCode null");
             assertEquals(statusOME.getText(), "1000", "Fault detail StatusCode mismatched");
-
+              ;
             OMElement messageOME = detailElm.getFirstChildWithName(new QName("http://ws.apache.org/ns/synapse", "message", "axis2ns1"));
             assertNotNull(messageOME, "Fault detail element message null");
             assertEquals(messageOME.getText(), "fault details by automation", "Fault detail message mismatched");

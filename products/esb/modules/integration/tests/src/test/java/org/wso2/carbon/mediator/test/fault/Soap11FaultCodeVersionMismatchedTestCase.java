@@ -50,7 +50,7 @@ public class Soap11FaultCodeVersionMismatchedTestCase extends ESBMediatorTest {
             assertTrue(expected.getReason().contains("Connection refused"), "ERROR Message mismatched");
             assertEquals(expected.getFaultCode().getLocalPart(), "VersionMismatch", "Fault code value mismatched");
             assertEquals(expected.getFaultCode().getPrefix(), "soap11Env", "Fault code prefix mismatched");
-
+          ;
         }
 
     }

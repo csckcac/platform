@@ -50,7 +50,7 @@ public class Soap11FaultCodeMustUnderstandTestCase extends ESBMediatorTest {
             assertTrue(expected.getReason().contains("Connection refused"), "ERROR Message mismatched");
             assertEquals(expected.getFaultCode().getLocalPart(), "MustUnderstand", "Fault code value mismatched");
             assertEquals(expected.getFaultCode().getPrefix(), "soap11Env", "Fault code prefix mismatched");
-
+               ;
         }
 
     }

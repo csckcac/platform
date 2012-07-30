@@ -31,6 +31,7 @@ public final class WebappsConstants {
     public static final int VALVE_INDEX = 0;
     public static final String JAGGERY_APPS_PREFIX = "jaggeryapps";
     public static final String JAX_WEBAPPS_PREFIX = "jaxwebapps";
+    public static final String JAGGERY_GENERIC_WEBAPP_DEPLOYER = "jaggeryGenericWebappsDeplyer";
 
     /**
      * This is to filter out custom webapp types. If a custom webapp deployer is added, it should

@@ -68,6 +68,10 @@ public class GhostWebappDeployerUtils {
     // Map of ghost services which are currently being converted into actual services
     private static final String TRANSIT_GHOST_WEBAPP_MAP = "TransitGhostWebappMap";
 
+    private static enum WebApp {
+        DEFAULT, JAXWS, JAGGERY
+    }
+
     private GhostWebappDeployerUtils() {
         //disable external instantiation
     }
@@ -115,6 +119,16 @@ public class GhostWebappDeployerUtils {
                             getWebappFile().getPath());
 
                     if (dfd != null) {
+                        WebApp webApp;
+                        // Check for jaxwebapps or jaggery apps
+                        if (dfd.getAbsolutePath().contains(WebappsConstants.JAX_WEBAPP_REPO)) {
+                            webApp = WebApp.JAXWS;
+                        } else if (dfd.getAbsolutePath().
+                                contains(WebappsConstants.JAGGERY_WEBAPP_REPO)) {
+                            webApp = WebApp.JAGGERY;
+                        } else {
+                            webApp = WebApp.DEFAULT;
+                        }
                         // remove the existing webapp
                         log.info("Removing Ghost webapp and loading actual webapp : " +
                                  deployedWebapp.getWebappFile().getName());
@@ -125,10 +139,15 @@ public class GhostWebappDeployerUtils {
 
                             webappsHolder.undeployWebapp(deployedWebapp);
 
-                            TomcatGenericWebappsDeployer tomcatWebappDeployer =
-                                    (TomcatGenericWebappsDeployer) configurationContext.
-                                            getProperty(CarbonConstants.
-                                                                TOMCAT_GENERIC_WEBAPP_DEPLOYER);
+                            TomcatGenericWebappsDeployer tomcatWebappDeployer;
+
+                            if(webApp == WebApp.JAGGERY) {
+                                tomcatWebappDeployer = (TomcatGenericWebappsDeployer) configurationContext.getProperty(
+                                        WebappsConstants.JAGGERY_GENERIC_WEBAPP_DEPLOYER);
+                            } else {
+                                tomcatWebappDeployer = (TomcatGenericWebappsDeployer) configurationContext.getProperty(
+                                        CarbonConstants.TOMCAT_GENERIC_WEBAPP_DEPLOYER);
+                            }
                             WebContextParameter serverUrlParam =
                                     new WebContextParameter("webServiceServerURL", CarbonUtils.
                                             getServerURL(ServerConfiguration.getInstance(),
@@ -150,11 +169,10 @@ public class GhostWebappDeployerUtils {
                                     getName());
                             newWebApp.setProperty(CarbonConstants.GHOST_WEBAPP_PARAM, "false");
                             // Check for jaxwebapps or jaggery apps
-                            if (dfd.getAbsolutePath().contains(WebappsConstants.JAX_WEBAPP_REPO)) {
+                            if (webApp == WebApp.JAXWS) {
                                 newWebApp.setProperty(WebappsConstants.WEBAPP_FILTER,
                                                       WebappsConstants.JAX_WEBAPP_FILTER_PROP);
-                            } else if (dfd.getAbsolutePath().
-                                    contains(WebappsConstants.JAGGERY_WEBAPP_REPO)) {
+                            } else if (webApp == WebApp.JAGGERY) {
                                 newWebApp.setProperty(WebappsConstants.WEBAPP_FILTER,
                                                       WebappsConstants.JAGGERY_WEBAPP_FILTER_PROP);
                             }
@@ -618,7 +636,7 @@ public class GhostWebappDeployerUtils {
             } else {
                 return null;
             }
-            contextName = contextName.substring(tenantCtx.length());
+            contextName = contextName.substring(tenantCtx.length() + 1);
         }
 
         String tenantTmpDirPath = CarbonUtils.getTenantTmpDirPath(axisConfig);

@@ -141,13 +141,6 @@ public class TomcatGenericWebappsDeployer {
             throws CarbonException {
         String filename = webapp.getName();
         if (webapp.isDirectory()) {
-            if (webapp.list().length == 0) {
-                if (log.isDebugEnabled()) {
-                    log.debug("Omitting to deploy empty directory " + webapp.getName() + " as a " +
-                            "webapp");
-                }
-                return;
-            }
             handleExplodedWebappDeployment(webapp, webContextParams, applicationEventListeners);
         } else if (filename.endsWith(".war")) {
             handleWarWebappDeployment(webapp, webContextParams, applicationEventListeners);

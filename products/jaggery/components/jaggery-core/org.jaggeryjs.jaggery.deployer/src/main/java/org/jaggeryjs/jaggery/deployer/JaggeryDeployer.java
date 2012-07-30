@@ -70,7 +70,7 @@ public class JaggeryDeployer extends WebappDeployer {
                 webappsHolder,
                 configContext);
 
-        configCtx.setProperty(CarbonConstants.TOMCAT_GENERIC_WEBAPP_DEPLOYER, tomcatWebappDeployer);
+        configCtx.setProperty(WebappsConstants.JAGGERY_GENERIC_WEBAPP_DEPLOYER, tomcatWebappDeployer);
     }
 
     public void deploy(DeploymentFileData deploymentFileData) throws DeploymentException {

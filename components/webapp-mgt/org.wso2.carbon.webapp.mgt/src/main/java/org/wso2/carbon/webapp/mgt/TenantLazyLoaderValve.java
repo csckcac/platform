@@ -58,7 +58,9 @@ public class TenantLazyLoaderValve implements CarbonTomcatValve {
         if (domain == null || domain.trim().length() == 0) {
             return;
         }
-        if (requestURI.indexOf("/" + WebappsConstants.WEBAPP_PREFIX + "/") == -1) {
+        if (!(requestURI.contains("/" + WebappsConstants.WEBAPP_PREFIX + "/") ||
+                !requestURI.contains("/" + WebappsConstants.JAGGERY_APPS_PREFIX + "/") ||
+                !requestURI.contains("/" + WebappsConstants.JAX_WEBAPPS_PREFIX + "/"))) {
             return;
         }
         //check whether the tenant exists. If not, return. This will end up
@@ -82,7 +84,9 @@ public class TenantLazyLoaderValve implements CarbonTomcatValve {
         if (TenantAxisUtils.getLastAccessed(domain, serverConfigCtx) == -1) { // First time access
             try {
                 setTenantAccessed(domain, serverConfigCtx);
-                if (requestURI.indexOf("/" + WebappsConstants.WEBAPP_PREFIX + "/") != -1) {
+                if (requestURI.contains("/" + WebappsConstants.WEBAPP_PREFIX + "/") ||
+                        requestURI.contains("/" + WebappsConstants.JAX_WEBAPPS_PREFIX + "/") ||
+                        requestURI.contains("/" + WebappsConstants.JAGGERY_APPS_PREFIX + "/")) {
                     TomcatUtil.remapRequest(request);
                 } else {
                     request.getRequestDispatcher(requestURI).forward(request, response);

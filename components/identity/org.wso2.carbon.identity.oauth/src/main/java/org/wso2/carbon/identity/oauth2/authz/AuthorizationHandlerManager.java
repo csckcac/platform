@@ -21,24 +21,29 @@ package org.wso2.carbon.identity.oauth2.authz;
 import org.apache.amber.oauth2.common.message.types.ResponseType;
 import org.apache.commons.logging.Log;
 import org.apache.commons.logging.LogFactory;
+import org.wso2.carbon.identity.oauth.common.OAuth2ErrorCodes;
+import org.wso2.carbon.identity.oauth.config.OAuthServerConfiguration;
+import org.wso2.carbon.identity.oauth2.IdentityOAuth2Exception;
 import org.wso2.carbon.identity.oauth2.authz.handlers.AuthorizationHandler;
 import org.wso2.carbon.identity.oauth2.authz.handlers.CodeResponseTypeHandler;
 import org.wso2.carbon.identity.oauth2.authz.handlers.TokenResponseTypeHandler;
-import org.wso2.carbon.identity.oauth.common.OAuth2ErrorCodes;
-import org.wso2.carbon.identity.oauth2.IdentityOAuth2Exception;
 import org.wso2.carbon.identity.oauth2.dto.OAuth2AuthorizeReqDTO;
 import org.wso2.carbon.identity.oauth2.dto.OAuth2AuthorizeRespDTO;
 import org.wso2.carbon.identity.oauth2.util.OAuth2Util;
 import org.wso2.carbon.utils.CarbonUtils;
 
 import java.util.Hashtable;
+import java.util.List;
 import java.util.Map;
 
 public class AuthorizationHandlerManager {
 
-    private Map<String, AuthorizationHandler> authzHandlers = new Hashtable<String, AuthorizationHandler>();
     private static Log log = LogFactory.getLog(AuthorizationHandlerManager.class);
+
     private static AuthorizationHandlerManager instance;
+
+    private Map<String, AuthorizationHandler> authzHandlers = new Hashtable<String, AuthorizationHandler>();
+    private List<String> supportedRespTypes;
 
     public static AuthorizationHandlerManager getInstance() throws IdentityOAuth2Exception {
 
@@ -56,15 +61,28 @@ public class AuthorizationHandlerManager {
 
     private AuthorizationHandlerManager()
             throws IdentityOAuth2Exception {
+        supportedRespTypes = OAuthServerConfiguration.getInstance().getSupportedResponseTypes();
         authzHandlers.put(ResponseType.CODE.toString(), new CodeResponseTypeHandler());
         authzHandlers.put(ResponseType.TOKEN.toString(), new TokenResponseTypeHandler());
     }
 
     public OAuth2AuthorizeRespDTO handleAuthorization(OAuth2AuthorizeReqDTO authzReqDTO)
             throws IdentityOAuth2Exception {
-        AuthorizationHandler authzHandler = authzHandlers.get(authzReqDTO.getResponseType());
-        OAuthAuthzReqMessageContext authzReqMsgCtx = new OAuthAuthzReqMessageContext(authzReqDTO);
+
+        String responseType = authzReqDTO.getResponseType();
         OAuth2AuthorizeRespDTO authorizeRespDTO = new OAuth2AuthorizeRespDTO();
+
+        if(!supportedRespTypes.contains(responseType)) {
+            log.warn("Unsupported Response Type : " + responseType  +
+                    " provided  for user : " + authzReqDTO.getUsername());
+            handleErrorRequest(authorizeRespDTO, OAuth2ErrorCodes.UNSUPPORTED_RESP_TYPE,
+                    "Unsupported Response Type!");
+            authorizeRespDTO.setCallbackURI(authzReqDTO.getCallbackUrl());
+            return authorizeRespDTO;
+        }
+
+        AuthorizationHandler authzHandler = authzHandlers.get(responseType);
+        OAuthAuthzReqMessageContext authzReqMsgCtx = new OAuthAuthzReqMessageContext(authzReqDTO);
 
         boolean authStatus = authzHandler.authenticateResourceOwner(authzReqMsgCtx);
         if (!authStatus) {

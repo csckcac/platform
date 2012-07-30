@@ -18,6 +18,8 @@
 
 package org.wso2.carbon.identity.oauth.config;
 
+import org.apache.amber.oauth2.common.message.types.GrantType;
+import org.apache.amber.oauth2.common.message.types.ResponseType;
 import org.apache.axiom.om.OMElement;
 import org.apache.commons.logging.Log;
 import org.apache.commons.logging.LogFactory;
@@ -29,10 +31,7 @@ import org.wso2.carbon.identity.oauth2.IdentityOAuth2Exception;
 import org.wso2.carbon.utils.CarbonUtils;
 
 import javax.xml.namespace.QName;
-import java.util.HashSet;
-import java.util.Iterator;
-import java.util.Properties;
-import java.util.Set;
+import java.util.*;
 
 /**
  * Runtime representation of the OAuth Configuration as configured through identity.xml
@@ -69,6 +68,12 @@ public class OAuthServerConfiguration {
 
         //TokenStoragePreprocessor
         public static final String TOKEN_PERSISTENCE_PREPROCESSOR = "TokenPersistencePreprocessor";
+
+        //Supported Grant Types
+        public static final String SUPPORTED_GRANT_TYPES = "SupportedGrantTypes";
+
+        //Supported Response Types
+        public static final String SUPPORTED_RESP_TYPES = "SupportedResponseTypes";
     }
 
 
@@ -89,6 +94,10 @@ public class OAuthServerConfiguration {
 
     private Set<OAuthCallbackHandlerMetaData> callbackHandlerMetaData =
             new HashSet<OAuthCallbackHandlerMetaData>();
+
+    private List<String> supportedGrantTypes = new ArrayList<String>();
+
+    private List<String> supportedResponseTypes = new ArrayList<String>();
 
 
     private OAuthServerConfiguration() {
@@ -127,8 +136,14 @@ public class OAuthServerConfiguration {
             // read caching configurations
             parseCachingConfiguration(oauthElem);
 
-            // read token
+            // read token preprocessor config
             parseTokenPersistencePreProcessorConfig(oauthElem);
+
+            // read supported grant types
+            parseSupportedGrantTypesConfig(oauthElem);
+
+            // read supported response types
+            parseSupportedResponseTypesConfig(oauthElem);
 
         } catch (ServerConfigurationException e) {
             log.error("Error when reading the OAuth Configurations. " +
@@ -154,6 +169,14 @@ public class OAuthServerConfiguration {
 
     public boolean isCacheEnabled() {
         return cacheEnabled;
+    }
+
+    public List<String> getSupportedGrantTypes() {
+        return supportedGrantTypes;
+    }
+
+    public List<String> getSupportedResponseTypes() {
+        return supportedResponseTypes;
     }
 
     public TokenPersistencePreprocessor getTokenPersistencePreprocessor()
@@ -334,6 +357,86 @@ public class OAuthServerConfiguration {
         if (log.isDebugEnabled()) {
             log.debug("Token Persistence Preprocessor was set to : "
                     + tokenPersistencePreProcessorClassName);
+        }
+    }
+
+    private void parseSupportedGrantTypesConfig(OMElement oauthConfigElem) {
+        OMElement supportedGrantTypesElem = oauthConfigElem.getFirstChildWithName(
+                getQNameWithIdentityNS(ConfigElements.SUPPORTED_GRANT_TYPES));
+
+        // These are the default grant types supported.
+        List<String> validGrantTypes = new ArrayList<String>(4);
+        validGrantTypes.add(GrantType.AUTHORIZATION_CODE.toString());
+        validGrantTypes.add(GrantType.CLIENT_CREDENTIALS.toString());
+        validGrantTypes.add(GrantType.PASSWORD.toString());
+        validGrantTypes.add(GrantType.REFRESH_TOKEN.toString());
+
+        if (supportedGrantTypesElem != null) {
+            String grantTypeStr = supportedGrantTypesElem.getText();
+            if (grantTypeStr != null) {
+                String[] grantTypes = grantTypeStr.split(",");
+                // Check whether user provided grant types are valid
+                if (grantTypes != null) {
+                    for (String providedGrantType : grantTypes) {
+                        providedGrantType = providedGrantType.trim();
+                        if (validGrantTypes.contains(providedGrantType)) {
+                            supportedGrantTypes.add(providedGrantType);
+                        } else {
+                            if (log.isDebugEnabled()) {
+                                log.debug("Invalid Grant Type provided : " + providedGrantType +
+                                        ". This will be ignored.");
+                            }
+                        }
+                    }
+                }
+            }
+        } else {
+            // if this element is not present, assume the default case.
+            supportedGrantTypes.addAll(validGrantTypes);
+        }
+
+
+
+        if (log.isDebugEnabled()) {
+            log.debug("Supported Grant Types : " + supportedGrantTypes);
+        }
+    }
+
+    private void parseSupportedResponseTypesConfig(OMElement oauthConfigElem) {
+        OMElement supportedRespTypesElem = oauthConfigElem.getFirstChildWithName(
+                getQNameWithIdentityNS(ConfigElements.SUPPORTED_RESP_TYPES));
+
+        // These are the default grant types supported.
+        List<String> validRespTypes = new ArrayList<String>(4);
+        validRespTypes.add(ResponseType.CODE.toString());
+        validRespTypes.add(ResponseType.TOKEN.toString());
+
+        if (supportedRespTypesElem != null) {
+            String respTypesStr = supportedRespTypesElem.getText();
+            if (respTypesStr != null) {
+                String[] respTypes = respTypesStr.split(",");
+                // Check whether user provided grant types are valid
+                if (respTypes != null) {
+                    for (String providedRespType : respTypes) {
+                        providedRespType = providedRespType.trim();
+                        if (validRespTypes.contains(providedRespType)) {
+                            supportedResponseTypes.add(providedRespType);
+                        } else {
+                            if (log.isDebugEnabled()) {
+                                log.debug("Invalid Response Type provided : " + providedRespType +
+                                        ". This will be ignored.");
+                            }
+                        }
+                    }
+                }
+            }
+        } else {
+            // if this element is not present, assume the default case.
+            supportedResponseTypes.addAll(validRespTypes);
+        }
+
+        if (log.isDebugEnabled()) {
+            log.debug("Supported Response Types : " + supportedResponseTypes);
         }
     }
 

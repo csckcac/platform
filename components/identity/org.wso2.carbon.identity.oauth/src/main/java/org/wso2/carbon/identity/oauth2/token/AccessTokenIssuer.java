@@ -24,6 +24,7 @@ import org.apache.commons.logging.Log;
 import org.apache.commons.logging.LogFactory;
 import org.wso2.carbon.identity.base.IdentityException;
 import org.wso2.carbon.identity.core.model.OAuthAppDO;
+import org.wso2.carbon.identity.oauth.config.OAuthServerConfiguration;
 import org.wso2.carbon.identity.oauth.dao.OAuthAppDAO;
 import org.wso2.carbon.identity.oauth2.IdentityOAuth2Exception;
 import org.wso2.carbon.identity.oauth2.dto.OAuth2AccessTokenReqDTO;
@@ -33,12 +34,15 @@ import org.wso2.carbon.identity.oauth2.util.OAuth2Util;
 import org.wso2.carbon.utils.CarbonUtils;
 
 import java.util.Hashtable;
+import java.util.List;
 import java.util.Map;
 
 public class AccessTokenIssuer {
 
     private Map<String, AuthorizationGrantHandler> authzGrantHandlers =
             new Hashtable<String, AuthorizationGrantHandler>();
+
+    private List<String> supportedGrantTypes;
 
     private static AccessTokenIssuer instance;
 
@@ -59,6 +63,9 @@ public class AccessTokenIssuer {
     }
 
     private AccessTokenIssuer() throws IdentityOAuth2Exception {
+
+        supportedGrantTypes = OAuthServerConfiguration.getInstance().getSupportedGrantTypes();
+
         authzGrantHandlers.put(GrantType.AUTHORIZATION_CODE.toString(),
                 new AuthorizationCodeHandler());
         authzGrantHandlers.put(GrantType.PASSWORD.toString(),
@@ -71,11 +78,22 @@ public class AccessTokenIssuer {
 
     public OAuth2AccessTokenRespDTO issue(OAuth2AccessTokenReqDTO tokenReqDTO)
             throws IdentityException {
+
+        String grantType = tokenReqDTO.getGrantType();
+        OAuth2AccessTokenRespDTO tokenRespDTO;
+
+        if(!supportedGrantTypes.contains(grantType)){
+            log.warn("Unsupported Grant Type : " + grantType +
+                    " for client id : " + tokenReqDTO.getClientId());
+            tokenRespDTO = handleError(OAuthError.TokenResponse.UNSUPPORTED_GRANT_TYPE,
+                    "Unsupported Grant Type!", tokenReqDTO);
+            return tokenRespDTO;
+        }
+
         AuthorizationGrantHandler authzGrantHandler = authzGrantHandlers.get(
-                tokenReqDTO.getGrantType());
+                grantType);
         OAuthAppDO oAuthAppDO = new OAuthAppDAO().getAppInformation(tokenReqDTO.getClientId());
         OAuthTokenReqMessageContext tokReqMsgCtx = new OAuthTokenReqMessageContext(tokenReqDTO);
-        OAuth2AccessTokenRespDTO tokenRespDTO;
 
         boolean isAuthenticated = authzGrantHandler.authenticateClient(tokReqMsgCtx);
         if (!isAuthenticated) {

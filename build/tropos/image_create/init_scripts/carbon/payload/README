@@ -1,0 +1,30 @@
+This folder is a sample payload sent to a carbon instance when it is created.
+
+
+Generate a key pair
+shh-keygen
+name it as wso2-key
+
+Copy the wso2-key and wso2-key.pub to this folder.
+Add the  wso2-key.pub into /root/.ssh/authorized_keys file of the PHP Cartridge server machine.
+Now ssh to that machine using the wso2-key private key. Copy the entry added to 
+the ~/.ssh/known_hosts in the machine from which you accessed the PHP Cartridge server.
+Create a file called known_hosts here and copy that entry.
+Also replace the values in launch_params file with correct values of your environment.
+
+Now pack this payload as payload.zip and pass this when creating Carbon instances.
+
+
+Following is the /etc/rc.local file of the carbon instance
+
+#!/bin/sh -e
+/opt/wso2-openstack-init.sh > /var/log/wso2-openstack-init.log
+exit 0
+
+By the time rc.local file is invokded in the newly created carbon instance, the payload is already
+passed to the instance and reside in /var/lib/cloud/instance/payload
+
+You can see that rc.local invoke the wso2-openstack-init.sh script in the payload.
+
+
+

@@ -34,7 +34,6 @@
                 <exclude>**/README*</exclude>
                 <exclude>**/carbon.xml</exclude>
                 <exclude>**/axis2/axis2.xml</exclude>
-                <exclude>**/ciphertool.bat</exclude>
                 <exclude>**/INSTALL.txt</exclude>
                 <exclude>**/LICENSE.txt</exclude>
                 <exclude>**/release-notes.html</exclude>
@@ -47,7 +46,6 @@
             <outputDirectory>${pom.artifactId}-${pom.version}</outputDirectory>
             <excludes>
                 <exclude>**/wso2server.bat</exclude>
-                <exclude>**/ciphertool.sh</exclude>
             </excludes>
             <includes>
                 <include>**/*.sh</include>

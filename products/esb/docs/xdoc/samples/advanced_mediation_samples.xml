@@ -346,7 +346,7 @@ through the samples. </p>
                 &lt;statement&gt;
                     &lt;sql&gt;select * from company where name =?&lt;/sql&gt;
                     &lt;parameter expression="//m0:getQuote/m0:request/m0:symbol"
-                               xmlns:m0="http://services.samples/xsd" type="VARCHAR"/&gt;
+                               xmlns:m0="http://services.samples" type="VARCHAR"/&gt;
                     &lt;result name="company_id" column="id"/&gt;
                 &lt;/statement&gt;
             &lt;/dblookup&gt;

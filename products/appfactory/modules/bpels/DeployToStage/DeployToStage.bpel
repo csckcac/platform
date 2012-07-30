@@ -57,7 +57,8 @@
 	<bpel:correlationSets>
 		<bpel:correlationSet name="ApplicationIdCorrelation"
 			properties="tns:appId"></bpel:correlationSet>
-	</bpel:correlationSets>
+        <bpel:correlationSet name="VersionCorrelation" properties="tns:version"></bpel:correlationSet>
+    </bpel:correlationSets>
 	<bpel:sequence name="main">
 
 		<!-- Receive input from requester. Note: This maps to operation defined 
@@ -68,7 +69,8 @@
 			<bpel:correlations>
 				<bpel:correlation set="ApplicationIdCorrelation"
 					initiate="yes"></bpel:correlation>
-			</bpel:correlations>
+                <bpel:correlation set="VersionCorrelation" initiate="yes"></bpel:correlation>
+            </bpel:correlations>
 		</bpel:receive>
 
 		<!-- Generate reply to synchronous request -->
@@ -124,7 +126,8 @@
 						<bpel:correlations>
 							<bpel:correlation set="ApplicationIdCorrelation"
 								initiate="no"></bpel:correlation>
-						</bpel:correlations>
+                            <bpel:correlation set="VersionCorrelation" initiate="no"></bpel:correlation>
+                        </bpel:correlations>
 					</bpel:receive>
 					<bpel:assign validate="no" name="init-deploy-params">
 						<bpel:copy>

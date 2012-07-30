@@ -49,7 +49,7 @@ import java.util.Map;
 import java.util.Set;
 import java.util.UUID;
 
-public class Krb5Authenticator extends AbstractAdmin implements CarbonServerAuthenticator {
+public class Krb5Authenticator /*extends AbstractAdmin*/ implements CarbonServerAuthenticator {
 
     private static final Log log = LogFactory.getLog(Krb5Authenticator.class);
     private static final int DEFAULT_PRIORITY_LEVEL = 10;
@@ -113,7 +113,7 @@ public class Krb5Authenticator extends AbstractAdmin implements CarbonServerAuth
             	return loggedIn;
             }
             else {
-            	log.error("Incorrect kinit command");
+            	log.error("Incorrect kinit command: "+err.readLine());
             	throw new AuthenticationException("Incorrect kinit command");
             }
         } catch (IOException ioe) {
@@ -203,4 +203,16 @@ public class Krb5Authenticator extends AbstractAdmin implements CarbonServerAuth
 		}
 		return false;
 	}
+	
+	protected HttpSession getHttpSession() {
+        MessageContext msgCtx = MessageContext.getCurrentMessageContext();
+        HttpSession httpSession = null;
+        if (msgCtx != null) {
+            HttpServletRequest request =
+                    (HttpServletRequest) msgCtx.getProperty(HTTPConstants.MC_HTTP_SERVLETREQUEST);
+            httpSession = request.getSession();
+        }
+        return httpSession;
+    }
+
 }

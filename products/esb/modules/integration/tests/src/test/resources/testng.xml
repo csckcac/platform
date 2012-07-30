@@ -1,6 +1,7 @@
 <!DOCTYPE suite SYSTEM "http://testng.org/testng-1.0.dtd" >
 
 <suite name="ESBTestSuite">
+
     <parameter name="useDefaultListeners" value="false"/>
     <listeners>
         <listener class-name="org.wso2.carbon.automation.core.PlatformTestManager"/>
@@ -9,6 +10,37 @@
         <listener class-name="org.wso2.carbon.automation.core.PlatformSuiteManager"/>
     </listeners>
 
+    <test name="Test -cache mediator Test" preserve-order="true" verbose="2">
+        <classes>
+            <class name="org.wso2.carbon.mediator.test.cache.CollectorTypeTestCase"/>
+        </classes>
+    </test>
+
+
+    <test name="Test - Mediator Header" preserve-order="true" verbose="2">
+    <classes>
+        <class name="org.wso2.carbon.mediator.test.header.Sample6TestCase"/>
+        <class name="org.wso2.carbon.mediator.test.header.Sample100TestCase"/>
+        <class name="org.wso2.carbon.mediator.test.header.SetHeaderToTestCase"/>
+        <!--<class name="org.wso2.carbon.mediator.test.header.RemoveSecurityFromHeaderTestCase"/>-->
+        <class name="org.wso2.carbon.mediator.test.header.SetHeaderActionTestCase"/>
+
+    </classes>
+    </test>
+
+
+    <test name="Test - ESB Iterator Mediator" preserve-order="true" verbose="2">
+        <classes>
+            <class name="org.wso2.carbon.mediator.test.iterate.IterateLargeMessageTestCase"/>
+            <class name="org.wso2.carbon.mediator.test.iterate.IterateSmallMessageTestCase"/>
+        </classes>
+    </test>
+    <test name="Test - Local Entries" preserve-order="true" verbose="2">
+        <classes>
+            <class name="org.wso2.carbon.localentry.test.general.WsdlAsALocalEntryUseInAProxyTestCase"/>
+            <class name="org.wso2.carbon.localentry.test.general.SchemaValidationTestCase"/>
+        </classes>
+    </test>
 
     <test name="Test -Call mediator Test" preserve-order="true" verbose="2">
         <classes>
@@ -20,13 +52,16 @@
         </classes>
     </test>
 
-
     <test name="Test -Call out mediator Test" preserve-order="true" verbose="2">
         <classes>
             <class name="org.wso2.carbon.mediator.test.callOut.SourceXpathTargetXpath"/>
             <class name="org.wso2.carbon.mediator.test.callOut.XpathCallWithoutNSTest"/>
         </classes>
     </test>
+
+
+
+
 
     <test name="Test - Class mediator Test" preserve-order="true" verbose="2">
         <classes>
@@ -101,6 +136,13 @@
             <class name="org.wso2.carbon.mediator.test.in.InSequenceMediatorTest"/>
         </classes>
     </test>
+
+    <test name="Test - Out mediator Test" preserve-order="true" verbose="2">
+        <classes>
+            <class name="org.wso2.carbon.mediator.test.out.OutMediatorWithoutChildElementTestCase"/>
+        </classes>
+    </test>
+
 
     <test name="Test - iterate mediator Test" preserve-order="true" verbose="2">
         <classes>

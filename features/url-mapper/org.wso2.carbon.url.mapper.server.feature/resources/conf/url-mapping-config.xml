@@ -22,5 +22,5 @@
 
 <URLMappingConfig xmlns="http://wso2.org/projects/carbon/carbon.xml">
   <mappings>1</mappings>
-  <prefix>wso2.com</prefix>
+  <prefix>localhost</prefix>
 </URLMappingConfig>

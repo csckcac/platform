@@ -61,7 +61,8 @@
                                 <resource>
                                     <directory>resources</directory>
                                     <includes>
-                                        <include>conf/etc/hadoop/keytabs</include>
+                                        <include>conf/etc/hadoop/keytabs/carbon.keytab</include>
+                                        <include>conf/krb5.conf</include>
                                         <include>p2.inf</include>
                                         <include>build.properties</include>
                                     </includes>

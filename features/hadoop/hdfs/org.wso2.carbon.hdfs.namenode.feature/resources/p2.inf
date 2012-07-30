@@ -1,0 +1,4 @@
+nstructions.configure = \
+org.eclipse.equinox.p2.touchpoint.natives.copy(source:${installFolder}/features/hadoop/hdfs/org.wso2.carbon.hdfs.namenode.feature_${feature.version}/conf/etc/hadoop/keytabs/carbon.keytab,target:${installFolder}/../conf/etc/hadoop/keytabs/carbon.keytab,overwrite:true);\
+org.eclipse.equinox.p2.touchpoint.natives.copy(source:${installFolder}/features/hadoop/hdfs/org.wso2.carbon.hdfs.namenode.feature_${feature.version}/conf/krb5.conf,target:${installFolder}/../conf/krb.conf,overwrite:true);
+

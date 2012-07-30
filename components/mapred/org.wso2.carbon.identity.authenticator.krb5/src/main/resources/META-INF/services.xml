@@ -21,6 +21,6 @@
 		</parameter>
 		<parameter name="DoAuthentication" locked="true">false</parameter>
 	</service>
-	<parameter name="adminService" locked="true">true</parameter>
+	<!--<parameter name="adminService" locked="true">true</parameter>-->
 	<!--<parameter name="hiddenService" locked="true">true</parameter>-->
 </serviceGroup>

@@ -1,6 +1,6 @@
-(1) Installing  WSO2 AppServer ${appserver.version}
+(1) Installing  WSO2 Application Server ${appserver.version}
 
-WSO2 AppServer ${appserver.version} can be run either in standalone mode or as a webapp within a
+WSO2 Application Server ${appserver.version} can be run either in standalone mode or as a webapp within a
 servlet container.
 
 
@@ -11,7 +11,7 @@ Standalone Mode
 
 2. All the shell scripts and .bat files are available in CARBON_HOME/bin directory.
 
-3. To start AppServer one can use either wso2server.sh or daemon.sh in all *nix
+3. To start Application Server one can use either wso2server.sh or daemon.sh in all *nix
    system & wso2server.bat file on Windows operating systems.
 
 4. Either of the following commands can be used to start Carbon
@@ -69,7 +69,7 @@ http://wso2.org/wiki/display/carbon/System+Requirements
 
 (2) Running Samples
 -------------------
-AppServer samples are available at CARBON_HOME/samples directory.
+Application Server samples are available at CARBON_HOME/samples directory.
 The instructions to run sample are given in README file of the respective
 samples.
 

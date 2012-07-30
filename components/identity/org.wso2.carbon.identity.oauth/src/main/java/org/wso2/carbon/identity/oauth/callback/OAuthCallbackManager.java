@@ -29,14 +29,8 @@ public class OAuthCallbackManager {
     private static Log log = LogFactory.getLog(OAuthCallbackManager.class);
     private OAuthCallbackHandlerRegistry callbackHandlerRegistry;
 
-    public OAuthCallbackManager()
-            throws IdentityOAuth2Exception {
+    public OAuthCallbackManager() throws IdentityOAuth2Exception {
         callbackHandlerRegistry = OAuthCallbackHandlerRegistry.getInstance();
-        init();
-    }
-
-    private void init() throws IdentityOAuth2Exception {
-        callbackHandlerRegistry.initAuthzCallbackHandlers();
     }
 
     public void handleCallback(OAuthCallback authzCallback)

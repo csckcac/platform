@@ -23,6 +23,7 @@ import org.apache.amber.oauth2.as.issuer.OAuthIssuerImpl;
 import org.apache.amber.oauth2.common.message.types.ResponseType;
 import org.wso2.carbon.identity.oauth.cache.OAuthCache;
 import org.wso2.carbon.identity.oauth.config.OAuthServerConfiguration;
+import org.wso2.carbon.identity.oauth.preprocessor.TokenPersistencePreprocessor;
 import org.wso2.carbon.identity.oauth2.authz.OAuthAuthzReqMessageContext;
 import org.wso2.carbon.identity.oauth.callback.OAuthCallback;
 import org.wso2.carbon.identity.oauth.callback.OAuthCallbackManager;
@@ -36,6 +37,7 @@ public abstract class AbstractAuthorizationHandler implements AuthorizationHandl
     private OAuthCallbackManager callbackManager;
     protected OAuthIssuerImpl oauthIssuerImpl;
     protected TokenMgtDAO tokenMgtDAO;
+    protected TokenPersistencePreprocessor tokenPersistencePreprocessor;
     protected boolean cacheEnabled;
     protected OAuthCache oauthCache;
 
@@ -43,6 +45,8 @@ public abstract class AbstractAuthorizationHandler implements AuthorizationHandl
             throws IdentityOAuth2Exception {
         callbackManager = new OAuthCallbackManager();
         oauthIssuerImpl = new OAuthIssuerImpl(new MD5Generator());
+        tokenPersistencePreprocessor = OAuthServerConfiguration
+                .getInstance().getTokenPersistencePreprocessor();
         tokenMgtDAO = new TokenMgtDAO();
         if(OAuthServerConfiguration.getInstance().isCacheEnabled()){
             cacheEnabled = true;

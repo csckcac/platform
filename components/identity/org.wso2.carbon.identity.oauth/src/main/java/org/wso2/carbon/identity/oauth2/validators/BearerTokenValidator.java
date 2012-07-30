@@ -25,6 +25,7 @@ import org.wso2.carbon.caching.core.CacheKey;
 import org.wso2.carbon.identity.oauth.cache.OAuthCache;
 import org.wso2.carbon.identity.oauth.cache.OAuthCacheKey;
 import org.wso2.carbon.identity.oauth.config.OAuthServerConfiguration;
+import org.wso2.carbon.identity.oauth.preprocessor.TokenPersistencePreprocessor;
 import org.wso2.carbon.identity.oauth2.IdentityOAuth2Exception;
 import org.wso2.carbon.identity.oauth2.dao.TokenMgtDAO;
 import org.wso2.carbon.identity.oauth2.dto.OAuth2TokenValidationRequestDTO;
@@ -63,11 +64,15 @@ public class BearerTokenValidator implements OAuth2TokenValidator {
 
         AccessTokenDO accessTokenDO = null;
 
+        TokenPersistencePreprocessor persistencePreprocessor = OAuthServerConfiguration
+                .getInstance().getTokenPersistencePreprocessor();
+        String preprocessedAccessToken = persistencePreprocessor.getPreprocessedToken(accessToken);
+
         boolean cacheHit = false;
         // Check the cache, if caching is enabled.
         if (OAuthServerConfiguration.getInstance().isCacheEnabled()) {
             OAuthCache oauthCache = OAuthCache.getInstance();
-            CacheKey cacheKey = new OAuthCacheKey(accessToken);
+            CacheKey cacheKey = new OAuthCacheKey(preprocessedAccessToken);
             CacheEntry result = oauthCache.getValueFromCache(cacheKey);
             // cache hit, do the type check.
             if (result instanceof AccessTokenDO) {
@@ -77,7 +82,7 @@ public class BearerTokenValidator implements OAuth2TokenValidator {
         }
         // Cache miss, load the access token info from the database.
         if (accessTokenDO == null) {
-            accessTokenDO = tokenMgtDAO.validateBearerToken(accessToken);
+            accessTokenDO = tokenMgtDAO.validateBearerToken(preprocessedAccessToken);
         }
 
         // if the access token or client id is not valid
@@ -118,7 +123,7 @@ public class BearerTokenValidator implements OAuth2TokenValidator {
         // Add the token back to the cache in the case of a cache miss
         if (OAuthServerConfiguration.getInstance().isCacheEnabled() && !cacheHit) {
             OAuthCache oauthCache = OAuthCache.getInstance();
-            CacheKey cacheKey = new OAuthCacheKey(accessToken);
+            CacheKey cacheKey = new OAuthCacheKey(preprocessedAccessToken);
             oauthCache.addToCache(cacheKey, accessTokenDO);
             if(log.isDebugEnabled()){
                 log.debug("Access Token Info object was added back to the cache.");

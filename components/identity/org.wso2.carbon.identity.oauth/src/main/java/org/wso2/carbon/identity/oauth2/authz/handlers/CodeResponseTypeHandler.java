@@ -76,13 +76,19 @@ public class CodeResponseTypeHandler extends AbstractAuthorizationHandler {
         AuthzCodeDO authzCodeDO = new AuthzCodeDO(authorizationReqDTO.getUsername(),
                 oauthAuthzMsgCtx.getApprovedScope(), timestamp, validityPeriod );
 
-        tokenMgtDAO.storeAuthorizationCode(authorizationCode,
+        // now get the secured version which should be persisted as well as cached.
+        String preprocessedAuthzCode = tokenPersistencePreprocessor.
+                getPreprocessedToken(authorizationCode);
+
+        tokenMgtDAO.storeAuthorizationCode(preprocessedAuthzCode,
                 authorizationReqDTO.getConsumerKey(), authzCodeDO);
 
         if (cacheEnabled) {
-            // Cache the authz Code
+            // Cache the authz Code, here we prepend the client_key to avoid collisions with
+            // AccessTokenDO instances. In database level, these are in two databases. But access
+            // tokens and authorization codes are in a single cache.
             String cacheKeyString = OAuth2Util.buildCacheKeyStringForAuthzCode(
-                    authorizationReqDTO.getConsumerKey(), authorizationCode);
+                    authorizationReqDTO.getConsumerKey(), preprocessedAuthzCode);
             oauthCache.addToCache(new OAuthCacheKey(cacheKeyString), authzCodeDO);
             if (log.isDebugEnabled()) {
                 log.debug("Authorization Code info was added to the cache for client id : " +

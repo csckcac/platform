@@ -79,9 +79,16 @@ public class ClientCredentialsGrantHandler extends AbstractAuthorizationGrantHan
                 tokReqMsgCtx.getScope(), timestamp, validityPeriod);
         accessTokenDO.setTokenState(OAuth2Constants.TokenStates.TOKEN_STATE_ACTIVE);
 
+        // get the secured version of the access token
+        String preprocessedAccessToken = tokenPersistencePreprocessor.getPreprocessedToken(accessToken);
+
+        // store the new token
+        tokenMgtDAO.storeAccessToken(preprocessedAccessToken, oAuth2AccessTokenReqDTO.getClientId(),
+                accessTokenDO);
+
         // add the access token info to the cache, if it's enabled.
         if(cacheEnabled){
-            CacheKey cacheKey = new OAuthCacheKey(accessToken);
+            CacheKey cacheKey = new OAuthCacheKey(preprocessedAccessToken);
             oauthCache.addToCache(cacheKey, accessTokenDO);
 
             if(log.isDebugEnabled()){
@@ -89,10 +96,6 @@ public class ClientCredentialsGrantHandler extends AbstractAuthorizationGrantHan
                         oAuth2AccessTokenReqDTO.getClientId());
             }
         }
-
-        // store the new token
-        tokenMgtDAO.storeAccessToken(accessToken, oAuth2AccessTokenReqDTO.getClientId(),
-                accessTokenDO);
 
         if (log.isDebugEnabled()) {
             log.debug("Persisted an access token with " +
@@ -112,7 +115,7 @@ public class ClientCredentialsGrantHandler extends AbstractAuthorizationGrantHan
     @Override
     public boolean validateGrant(OAuthTokenReqMessageContext tokReqMsgCtx)
             throws IdentityOAuth2Exception {
-        // By this time,
+        // By this time, we have already validated client credentials.
         tokReqMsgCtx.setScope(tokReqMsgCtx.getOauth2AccessTokenReqDTO().getScope());
         return true;
     }

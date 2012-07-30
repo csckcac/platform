@@ -53,14 +53,18 @@ public class RefreshGrantTypeHandler extends AbstractAuthorizationGrantHandler {
             throws IdentityOAuth2Exception {
         OAuth2AccessTokenReqDTO tokenReqDTO = tokReqMsgCtx.getOauth2AccessTokenReqDTO();
 
+        String refreshToken = tokenReqDTO.getRefreshToken();
+
+        String preprocessedRefreshToken = tokenPersistencePreprocessor
+                .getPreprocessedToken(refreshToken);
+
         RefreshTokenValidationDataDO validationDataDO = tokenMgtDAO.validateRefreshToken(
                 tokenReqDTO.getClientId(),
-                tokenReqDTO.getRefreshToken());
+                preprocessedRefreshToken);
 
         if (validationDataDO.getAccessToken() == null) {
             log.debug("Invalid Refresh Token provided for Client with " +
-                    "Client Id : " + tokenReqDTO.getClientId() +
-                    ", Refresh Token : " + tokenReqDTO.getRefreshToken());
+                    "Client Id : " + tokenReqDTO.getClientId());
             return false;
         }
 
@@ -73,6 +77,8 @@ public class RefreshGrantTypeHandler extends AbstractAuthorizationGrantHandler {
 
         tokReqMsgCtx.setAuthorizedUser(validationDataDO.getAuthorizedUser());
         tokReqMsgCtx.setScope(validationDataDO.getScope());
+        // Store the old access token as a OAuthTokenReqMessageContext property, this is already
+        // a preprocessed token.
         tokReqMsgCtx.addProperty(PREV_ACCESS_TOKEN, validationDataDO.getAccessToken());
         return true;
     }
@@ -108,13 +114,27 @@ public class RefreshGrantTypeHandler extends AbstractAuthorizationGrantHandler {
 
         String refreshToken = oauth2AccessTokenReqDTO.getRefreshToken();
 
+        String preprocessedAccessToken = tokenPersistencePreprocessor
+                .getPreprocessedToken(accessToken);
+        String preprocessedRefreshToken = tokenPersistencePreprocessor
+                .getPreprocessedToken(refreshToken);
+
         AccessTokenDO accessTokenDO = new AccessTokenDO(tokReqMsgCtx.getAuthorizedUser(),
                 tokReqMsgCtx.getScope(), timestamp, validityPeriod);
         accessTokenDO.setTokenState(OAuth2Constants.TokenStates.TOKEN_STATE_ACTIVE);
-        accessTokenDO.setRefreshToken(refreshToken);
+        accessTokenDO.setRefreshToken(preprocessedRefreshToken);
 
         String clientId = oauth2AccessTokenReqDTO.getClientId();
         String oldAccessToken = tokReqMsgCtx.getProperty(PREV_ACCESS_TOKEN);
+
+        // We can make this an update operation after introducing a token_id column as the
+        // primary key of the access token table.
+
+        // store the new access token
+        tokenMgtDAO.storeAccessToken(preprocessedAccessToken, clientId, accessTokenDO);
+
+        // Remove the previous access token (this is already a preprocessed token)
+        tokenMgtDAO.cleanUpAccessToken(oldAccessToken);
 
         // add the access token info to the cache and remove the previous access token from cache,
         // if it's enabled.
@@ -132,12 +152,6 @@ public class RefreshGrantTypeHandler extends AbstractAuthorizationGrantHandler {
                         "also removed from the cache.");
             }
         }
-
-        // store the new access token
-        tokenMgtDAO.storeAccessToken(accessToken, clientId, accessTokenDO);
-
-        // Remove the previous access token
-        tokenMgtDAO.cleanUpAccessToken(oldAccessToken);
 
         if (log.isDebugEnabled()) {
             log.debug("Persisted an access token for the refresh token, " +

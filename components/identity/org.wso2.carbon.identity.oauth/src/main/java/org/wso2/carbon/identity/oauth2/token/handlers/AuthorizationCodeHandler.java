@@ -35,6 +35,9 @@ import org.wso2.carbon.identity.oauth2.util.OAuth2Util;
  */
 public class AuthorizationCodeHandler extends AbstractAuthorizationGrantHandler {
 
+    // This is used to keep the pre processed authorization code in the OAuthTokenReqMessageContext.
+    private static final String PRE_PROCESSED_AUTHZ_CODE = "preProcessedAuthorizationCode";
+
     private static Log log = LogFactory.getLog(AuthorizationCodeHandler.class);
 
     public AuthorizationCodeHandler() throws IdentityOAuth2Exception {
@@ -45,13 +48,16 @@ public class AuthorizationCodeHandler extends AbstractAuthorizationGrantHandler 
     public boolean validateGrant(OAuthTokenReqMessageContext tokReqMsgCtx) throws IdentityOAuth2Exception {
         OAuth2AccessTokenReqDTO oAuth2AccessTokenReqDTO = tokReqMsgCtx.getOauth2AccessTokenReqDTO();
         String authorizationCode = oAuth2AccessTokenReqDTO.getAuthorizationCode();
+        // Get the secured version of the authorization code which is stored in the cache and in db
+        String preProcessedAuthorizationCode = tokenPersistencePreprocessor
+                .getPreprocessedToken(authorizationCode);
         String clientId = oAuth2AccessTokenReqDTO.getClientId();
 
         AuthzCodeDO authzCodeDO = null;
         // if cache is enabled, check in the cache first.
         if(cacheEnabled){
             CacheKey cacheKey = new OAuthCacheKey(OAuth2Util.buildCacheKeyStringForAuthzCode(
-                    clientId, authorizationCode));
+                    clientId, preProcessedAuthorizationCode));
             authzCodeDO = (AuthzCodeDO) oauthCache.getValueFromCache(cacheKey);
         }
 
@@ -68,7 +74,7 @@ public class AuthorizationCodeHandler extends AbstractAuthorizationGrantHandler 
         // authz Code is not available in cache. check the database
         if (authzCodeDO == null) {
             authzCodeDO = tokenMgtDAO.validateAuthorizationCode(clientId,
-                    authorizationCode);
+                    preProcessedAuthorizationCode);
         }
 
         //Check whether it is a valid grant
@@ -99,7 +105,7 @@ public class AuthorizationCodeHandler extends AbstractAuthorizationGrantHandler 
             }
 
             // remove the authorization code from the database.
-            tokenMgtDAO.cleanUpAuthzCode(authorizationCode);
+            tokenMgtDAO.cleanUpAuthzCode(preProcessedAuthorizationCode);
             if(log.isDebugEnabled()){
                 log.debug("Expired Authorization code : " + authorizationCode +
                         " issued for client " + clientId +
@@ -108,7 +114,9 @@ public class AuthorizationCodeHandler extends AbstractAuthorizationGrantHandler 
 
             // remove the authorization code from the cache
             oauthCache.clearCacheEntry(new OAuthCacheKey(
-                    OAuth2Util.buildCacheKeyStringForAuthzCode(clientId, authorizationCode)));
+                    OAuth2Util.buildCacheKeyStringForAuthzCode(clientId,
+                            preProcessedAuthorizationCode)));
+
             if(log.isDebugEnabled()){
                 log.debug("Expired Authorization code : " + authorizationCode +
                         " issued for client " + clientId +
@@ -128,6 +136,9 @@ public class AuthorizationCodeHandler extends AbstractAuthorizationGrantHandler 
 
         tokReqMsgCtx.setAuthorizedUser(authzCodeDO.getAuthorizedUser());
         tokReqMsgCtx.setScope(authzCodeDO.getScope());
+        // keep the pre processed authz code as a OAuthTokenReqMessageContext property to avoid
+        // calculating it again when issuing the access token.
+        tokReqMsgCtx.addProperty(PRE_PROCESSED_AUTHZ_CODE, preProcessedAuthorizationCode);
         return true;
     }
 
@@ -135,13 +146,21 @@ public class AuthorizationCodeHandler extends AbstractAuthorizationGrantHandler 
     public OAuth2AccessTokenRespDTO issue(OAuthTokenReqMessageContext tokReqMsgCtx)
             throws IdentityOAuth2Exception {
         OAuth2AccessTokenRespDTO tokenRespDTO = super.issue(tokReqMsgCtx);
-        String authorizationCode = tokReqMsgCtx.getOauth2AccessTokenReqDTO().getAuthorizationCode();
+
+        // get the token from the OAuthTokenReqMessageContext which is stored while validating
+        // the authorization code.
+        String preprocessedAuthzCode = tokReqMsgCtx.getProperty(PRE_PROCESSED_AUTHZ_CODE);
+        // if it's not there (which is unlikely), recalculate it.
+        if (preprocessedAuthzCode == null) {
+            String authorizationCode = tokReqMsgCtx.getOauth2AccessTokenReqDTO().getAuthorizationCode();
+            preprocessedAuthzCode = tokenPersistencePreprocessor.getPreprocessedToken(authorizationCode);
+        }
 
         // Clear the cache entry
         if(cacheEnabled){
             String clientId = tokReqMsgCtx.getOauth2AccessTokenReqDTO().getClientId();
             OAuthCacheKey cacheKey = new OAuthCacheKey(OAuth2Util.buildCacheKeyStringForAuthzCode(
-                    clientId, authorizationCode));
+                    clientId, preprocessedAuthzCode));
             oauthCache.clearCacheEntry(cacheKey);
 
             if (log.isDebugEnabled()) {
@@ -149,11 +168,11 @@ public class AuthorizationCodeHandler extends AbstractAuthorizationGrantHandler 
             }
         }
         // remove the authz code from the database
-        tokenMgtDAO.cleanUpAuthzCode(authorizationCode);
+        tokenMgtDAO.cleanUpAuthzCode(preprocessedAuthzCode);
 
         if (log.isDebugEnabled()) {
             log.debug("Authorization Code clean up completed for request from the Client, " +
-                    "Client Id: " + authorizationCode);
+                    "Client Id: " + preprocessedAuthzCode);
         }
 
         return tokenRespDTO;

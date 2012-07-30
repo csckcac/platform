@@ -24,6 +24,7 @@ import org.wso2.carbon.identity.oauth.config.OAuthCallbackHandlerMetaData;
 import org.wso2.carbon.identity.oauth.config.OAuthServerConfiguration;
 import org.wso2.carbon.identity.oauth2.IdentityOAuth2Exception;
 import org.wso2.carbon.identity.oauth2.util.OAuth2Util;
+import org.wso2.carbon.utils.CarbonUtils;
 
 import javax.security.auth.callback.Callback;
 import java.util.*;
@@ -37,7 +38,7 @@ public class OAuthCallbackHandlerRegistry {
 
     private static Log log = LogFactory.getLog(OAuthCallbackHandlerRegistry.class);
 
-    private static OAuthCallbackHandlerRegistry instance = new OAuthCallbackHandlerRegistry();
+    private static OAuthCallbackHandlerRegistry instance;
 
     private transient boolean initAuthzHandlers = false;
 
@@ -55,11 +56,21 @@ public class OAuthCallbackHandlerRegistry {
         }
     }
 
-    private OAuthCallbackHandlerRegistry() {
-
+    private OAuthCallbackHandlerRegistry() throws IdentityOAuth2Exception {
+        initAuthzCallbackHandlers();
     }
 
-    public static OAuthCallbackHandlerRegistry getInstance() {
+    public static OAuthCallbackHandlerRegistry getInstance() throws IdentityOAuth2Exception {
+
+        CarbonUtils.checkSecurity();
+
+        if(instance == null){
+            synchronized (OAuthCallbackHandlerRegistry.class){
+                if (instance == null) {
+                    instance = new OAuthCallbackHandlerRegistry();
+                }
+            }
+        }
         return instance;
     }
 
@@ -70,7 +81,7 @@ public class OAuthCallbackHandlerRegistry {
      * @throws IdentityOAuth2Exception Error when instantiating the
      *                                 OAuthCallbackHandler instances
      */
-    public void initAuthzCallbackHandlers() throws IdentityOAuth2Exception {
+    private void initAuthzCallbackHandlers() throws IdentityOAuth2Exception {
         if (!initAuthzHandlers) {
             synchronized (this) {
                 if (!initAuthzHandlers) {

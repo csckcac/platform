@@ -24,6 +24,8 @@ import org.apache.commons.logging.LogFactory;
 import org.wso2.carbon.base.ServerConfigurationException;
 import org.wso2.carbon.identity.core.util.IdentityConfigParser;
 import org.wso2.carbon.identity.oauth.OAuthConstants;
+import org.wso2.carbon.identity.oauth.preprocessor.TokenPersistencePreprocessor;
+import org.wso2.carbon.identity.oauth2.IdentityOAuth2Exception;
 import org.wso2.carbon.utils.CarbonUtils;
 
 import javax.xml.namespace.QName;
@@ -32,30 +34,43 @@ import java.util.Iterator;
 import java.util.Properties;
 import java.util.Set;
 
+/**
+ * Runtime representation of the OAuth Configuration as configured through identity.xml
+ */
 public class OAuthServerConfiguration {
 
     private static Log log = LogFactory.getLog(OAuthServerConfiguration.class);
 
     private static final String CONFIG_ELEM_OAUTH = "OAuth";
 
-    // Callback handler related configuration elements
-    private static final String CONFIG_ELEM_OAUTH_CALLBACK_HANDLERS =
-            "OAuthCallbackHandlers";
-    private static final String CONFIG_ELEM_OAUTH_CALLBACK_HANDLER =
-            "OAuthCallbackHandler";
-    public static final String CONFIG_ELEM_DEF_TIMESTAMP_SKEW = "TimestampSkew";
-    private static final String CONFIG_ATTR_CLASS = "Class";
-    private static final String CONFIG_ELEM_PRIORITY = "Priority";
-    private static final String CONFIG_ELEM_PROPERTIES = "Properties";
-    private static final String CONFIG_ELEM_PROPERTY = "Property";
-    private static final String CONFIG_ATTR_NAME = "Name";
+    /**
+     * Localpart names for the OAuth configuration in identity.xml.
+     */
+    private class ConfigElements {
+        // Callback handler related configuration elements
+        private static final String OAUTH_CALLBACK_HANDLERS = "OAuthCallbackHandlers";
+        private static final String OAUTH_CALLBACK_HANDLER = "OAuthCallbackHandler";
+        private static final String CALLBACK_CLASS = "Class";
+        private static final String CALLBACK_PRIORITY = "Priority";
+        private static final String CALLBACK_PROPERTIES = "Properties";
+        private static final String CALLBACK_PROPERTY = "Property";
+        private static final String CALLBACK_ATTR_NAME = "Name";
 
+        // Default timestamp skew
+        public static final String TIMESTAMP_SKEW = "TimestampSkew";
 
-    private static final String CONFIG_ELEM_AUTHZ_CODE_DEFAULT_TIMEOUT =
-            "AuthorizationCodeDefaultValidityPeriod";
-    private static final String CONFIG_ELEM_ACCESS_TOK_DEFAULT_TIMEOUT =
-            "AccessTokenDefaultValidityPeriod";
-    public static final String CONFIG_ELEM_ENABLE_CACHE = "EnableCache";
+        // Default validity periods
+        private static final String AUTHORIZATION_CODE_DEFAULT_VALIDITY_PERIOD =
+                "AuthorizationCodeDefaultValidityPeriod";
+        private static final String ACCESS_TOKEN_DEFAULT_VALIDITY_PERIOD =
+                "AccessTokenDefaultValidityPeriod";
+        // Enable/Disable cache
+        public static final String ENABLE_CACHE = "EnableCache";
+
+        //TokenStoragePreprocessor
+        public static final String TOKEN_PERSISTENCE_PREPROCESSOR = "TokenPersistencePreprocessor";
+    }
+
 
     private static OAuthServerConfiguration instance;
 
@@ -66,6 +81,11 @@ public class OAuthServerConfiguration {
     private long defaultTimeStampSkewInSeconds = 300;
 
     private boolean cacheEnabled = true;
+
+    private String tokenPersistencePreProcessorClassName =
+            "org.wso2.carbon.identity.oauth.preprocessor.PlainTokenPersistencePreprocessor";
+
+    private TokenPersistencePreprocessor tokenPersistencePreprocessor;
 
     private Set<OAuthCallbackHandlerMetaData> callbackHandlerMetaData =
             new HashSet<OAuthCallbackHandlerMetaData>();
@@ -85,6 +105,35 @@ public class OAuthServerConfiguration {
             }
         }
         return instance;
+    }
+
+    private void buildOAuthServerConfiguration() {
+        try {
+            IdentityConfigParser configParser = IdentityConfigParser.getInstance();
+            OMElement oauthElem = configParser.getConfigElement(CONFIG_ELEM_OAUTH);
+
+            if (oauthElem == null) {
+                warnOnFaultyConfiguration("OAuth element is not available.");
+                return;
+            }
+
+            // read callback handler configurations
+            parseOAuthCallbackHandlers(oauthElem.getFirstChildWithName(
+                    getQNameWithIdentityNS(ConfigElements.OAUTH_CALLBACK_HANDLERS)));
+
+            // read default timeout periods
+            parseDefaultValidityPeriods(oauthElem);
+
+            // read caching configurations
+            parseCachingConfiguration(oauthElem);
+
+            // read token
+            parseTokenPersistencePreProcessorConfig(oauthElem);
+
+        } catch (ServerConfigurationException e) {
+            log.error("Error when reading the OAuth Configurations. " +
+                    "OAuth related functionality might be affected.", e);
+        }
     }
 
     public Set<OAuthCallbackHandlerMetaData> getCallbackHandlerMetaData() {
@@ -107,31 +156,32 @@ public class OAuthServerConfiguration {
         return cacheEnabled;
     }
 
-    private void buildOAuthServerConfiguration() {
-        try {
-            IdentityConfigParser configParser = IdentityConfigParser.getInstance();
-            OMElement oauthElem = configParser.getConfigElement(CONFIG_ELEM_OAUTH);
+    public TokenPersistencePreprocessor getTokenPersistencePreprocessor()
+            throws IdentityOAuth2Exception {
+        // create an instance of a TokenPersistencePreprocessor. This is a one time operation
+        // because there can be only on OAuthServerConfiguration in a given runtime.
+        if (tokenPersistencePreprocessor == null) {
+            synchronized (this) {
+                try {
+                    // create an instance of the TokenPersistencePreprocessor
+                    Class clazz = Thread.currentThread().getContextClassLoader().loadClass(
+                            tokenPersistencePreProcessorClassName);
+                    tokenPersistencePreprocessor = (TokenPersistencePreprocessor) clazz.newInstance();
 
-            if (oauthElem == null) {
-                warnOnFaultyConfiguration("OAuth element is not available.");
-                return;
+                    if (log.isDebugEnabled()) {
+                        log.debug("An instance of " + tokenPersistencePreProcessorClassName +
+                                " is created for OAuthServerConfiguration.");
+                    }
+
+                } catch (Exception e) {
+                    String errorMsg = "Error when instantiating the TokenPersistencePreprocessor : "
+                            + tokenPersistencePreProcessorClassName;
+                    log.error(errorMsg, e);
+                    throw new IdentityOAuth2Exception(errorMsg, e);
+                }
             }
-
-            // read callback handler configurations
-            parseOAuthCallbackHandlers(oauthElem.getFirstChildWithName(
-                    new QName(IdentityConfigParser.IDENTITY_DEFAULT_NAMESPACE,
-                            CONFIG_ELEM_OAUTH_CALLBACK_HANDLERS)));
-
-            // read default timeout periods
-            parseDefaultValidityPeriods(oauthElem);
-
-            // read caching configurations
-            parseCachingConfiguration(oauthElem);
-
-        } catch (ServerConfigurationException e) {
-            log.error("Error when reading the OAuth Configurations. " +
-                    "OAuth related functionality might be affected.", e);
         }
+        return tokenPersistencePreprocessor;
     }
 
     private void parseOAuthCallbackHandlers(OMElement callbackHandlersElem) {
@@ -141,7 +191,7 @@ public class OAuthServerConfiguration {
         }
 
         Iterator callbackHandlers = callbackHandlersElem.getChildrenWithLocalName(
-                CONFIG_ELEM_OAUTH_CALLBACK_HANDLER);
+                ConfigElements.OAUTH_CALLBACK_HANDLER);
         int callbackHandlerCount = 0;
         if (callbackHandlers != null) {
             for (; callbackHandlers.hasNext(); ) {
@@ -163,14 +213,14 @@ public class OAuthServerConfiguration {
         }
     }
 
-    private static void warnOnFaultyConfiguration(String logMsg) {
+    private void warnOnFaultyConfiguration(String logMsg) {
         log.warn("Error in OAuth Configuration. " + logMsg);
     }
 
-    private static OAuthCallbackHandlerMetaData buildAuthzCallbackHandlerMetadata(
+    private OAuthCallbackHandlerMetaData buildAuthzCallbackHandlerMetadata(
             OMElement omElement) {
         // read the class attribute which is mandatory
-        String className = omElement.getAttributeValue(new QName(CONFIG_ATTR_CLASS));
+        String className = omElement.getAttributeValue(new QName(ConfigElements.CALLBACK_CLASS));
 
         if (className == null) {
             log.error("Mandatory attribute \"Class\" is not present in the " +
@@ -181,8 +231,8 @@ public class OAuthServerConfiguration {
 
         // read the priority element, if it is not there, use the default priority of 1
         int priority = OAuthConstants.OAUTH_AUTHZ_CB_HANDLER_DEFAULT_PRIORITY;
-        OMElement priorityElem = omElement.getFirstChildWithName(new QName(
-                IdentityConfigParser.IDENTITY_DEFAULT_NAMESPACE, CONFIG_ELEM_PRIORITY));
+        OMElement priorityElem = omElement.getFirstChildWithName(
+                getQNameWithIdentityNS(ConfigElements.CALLBACK_PRIORITY));
         if (priorityElem != null) {
             priority = Integer.parseInt(priorityElem.getText());
         }
@@ -193,11 +243,12 @@ public class OAuthServerConfiguration {
         }
 
         // read the additional properties.
-        OMElement paramsElem = omElement.getFirstChildWithName(new QName(
-                IdentityConfigParser.IDENTITY_DEFAULT_NAMESPACE, CONFIG_ELEM_PROPERTIES));
+        OMElement paramsElem = omElement.getFirstChildWithName(
+                getQNameWithIdentityNS(ConfigElements.CALLBACK_PROPERTIES));
         Properties properties = null;
         if (paramsElem != null) {
-            Iterator paramItr = paramsElem.getChildrenWithLocalName(CONFIG_ELEM_PROPERTY);
+            Iterator paramItr = paramsElem.getChildrenWithLocalName(
+                    ConfigElements.CALLBACK_PROPERTY);
             properties = new Properties();
             if (log.isDebugEnabled()) {
                 log.debug("Registering Properties for AuthorizationCallbackHandler class : "
@@ -205,7 +256,8 @@ public class OAuthServerConfiguration {
             }
             for (; paramItr.hasNext(); ) {
                 OMElement paramElem = (OMElement) paramItr.next();
-                String paramName = paramElem.getAttributeValue(new QName(CONFIG_ATTR_NAME));
+                String paramName = paramElem.getAttributeValue(
+                        new QName(ConfigElements.CALLBACK_ATTR_NAME));
                 String paramValue = paramElem.getText();
                 properties.put(paramName, paramValue);
                 if (log.isDebugEnabled()) {
@@ -219,23 +271,21 @@ public class OAuthServerConfiguration {
     private void parseDefaultValidityPeriods(OMElement oauthConfigElem) {
         // set the authorization code default timeout
         OMElement authzCodeTimeoutElem = oauthConfigElem.getFirstChildWithName(
-                new QName(IdentityConfigParser.IDENTITY_DEFAULT_NAMESPACE,
-                        CONFIG_ELEM_AUTHZ_CODE_DEFAULT_TIMEOUT));
+                getQNameWithIdentityNS(ConfigElements.AUTHORIZATION_CODE_DEFAULT_VALIDITY_PERIOD));
+
         if (authzCodeTimeoutElem != null) {
             defaultAuthorizationCodeValidityPeriodInSeconds = Long.parseLong(authzCodeTimeoutElem.getText());
         }
 
         // set the access token default timeout
         OMElement accessTokTimeoutElem = oauthConfigElem.getFirstChildWithName(
-                new QName(IdentityConfigParser.IDENTITY_DEFAULT_NAMESPACE,
-                        CONFIG_ELEM_ACCESS_TOK_DEFAULT_TIMEOUT));
+                getQNameWithIdentityNS(ConfigElements.ACCESS_TOKEN_DEFAULT_VALIDITY_PERIOD));
         if (accessTokTimeoutElem != null) {
             defaultAccessTokenValidityPeriodInSeconds = Long.parseLong(accessTokTimeoutElem.getText());
         }
 
         OMElement timeStampSkewElem = oauthConfigElem.getFirstChildWithName(
-                new QName(IdentityConfigParser.IDENTITY_DEFAULT_NAMESPACE,
-                        CONFIG_ELEM_DEF_TIMESTAMP_SKEW));
+                getQNameWithIdentityNS(ConfigElements.TIMESTAMP_SKEW));
         if (timeStampSkewElem != null) {
             defaultTimeStampSkewInSeconds = Long.parseLong(timeStampSkewElem.getText());
         }
@@ -262,16 +312,32 @@ public class OAuthServerConfiguration {
         }
     }
 
-    private void parseCachingConfiguration(OMElement oauthConfigElem){
+    private void parseCachingConfiguration(OMElement oauthConfigElem) {
         OMElement enableCacheElem = oauthConfigElem.getFirstChildWithName(
-                new QName(IdentityConfigParser.IDENTITY_DEFAULT_NAMESPACE,
-                        CONFIG_ELEM_ENABLE_CACHE));
+                getQNameWithIdentityNS(ConfigElements.ENABLE_CACHE));
         if (enableCacheElem != null) {
             cacheEnabled = Boolean.parseBoolean(enableCacheElem.getText());
         }
 
-        if(log.isDebugEnabled()){
+        if (log.isDebugEnabled()) {
             log.debug("Enable OAuth Cache was set to : " + cacheEnabled);
         }
+    }
+
+    private void parseTokenPersistencePreProcessorConfig(OMElement oauthConfigElem) {
+        OMElement preprocessorConfigElem = oauthConfigElem.getFirstChildWithName(
+                getQNameWithIdentityNS(ConfigElements.TOKEN_PERSISTENCE_PREPROCESSOR));
+        if (preprocessorConfigElem != null) {
+            tokenPersistencePreProcessorClassName = preprocessorConfigElem.getText();
+        }
+
+        if (log.isDebugEnabled()) {
+            log.debug("Token Persistence Preprocessor was set to : "
+                    + tokenPersistencePreProcessorClassName);
+        }
+    }
+
+    private QName getQNameWithIdentityNS(String localPart) {
+        return new QName(IdentityConfigParser.IDENTITY_DEFAULT_NAMESPACE, localPart);
     }
 }

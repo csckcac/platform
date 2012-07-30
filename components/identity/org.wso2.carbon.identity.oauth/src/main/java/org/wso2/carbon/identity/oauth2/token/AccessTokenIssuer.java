@@ -30,6 +30,7 @@ import org.wso2.carbon.identity.oauth2.dto.OAuth2AccessTokenReqDTO;
 import org.wso2.carbon.identity.oauth2.dto.OAuth2AccessTokenRespDTO;
 import org.wso2.carbon.identity.oauth2.token.handlers.*;
 import org.wso2.carbon.identity.oauth2.util.OAuth2Util;
+import org.wso2.carbon.utils.CarbonUtils;
 
 import java.util.Hashtable;
 import java.util.Map;
@@ -44,6 +45,9 @@ public class AccessTokenIssuer {
     private static Log log = LogFactory.getLog(AccessTokenIssuer.class);
 
     public static AccessTokenIssuer getInstance() throws IdentityOAuth2Exception {
+
+        CarbonUtils.checkSecurity();
+
         if(instance == null){
             synchronized (AccessTokenIssuer.class){
                 if(instance == null){

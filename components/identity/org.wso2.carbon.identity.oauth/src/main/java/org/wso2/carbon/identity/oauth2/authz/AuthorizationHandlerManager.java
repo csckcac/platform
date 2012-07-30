@@ -29,6 +29,7 @@ import org.wso2.carbon.identity.oauth2.IdentityOAuth2Exception;
 import org.wso2.carbon.identity.oauth2.dto.OAuth2AuthorizeReqDTO;
 import org.wso2.carbon.identity.oauth2.dto.OAuth2AuthorizeRespDTO;
 import org.wso2.carbon.identity.oauth2.util.OAuth2Util;
+import org.wso2.carbon.utils.CarbonUtils;
 
 import java.util.Hashtable;
 import java.util.Map;
@@ -40,6 +41,9 @@ public class AuthorizationHandlerManager {
     private static AuthorizationHandlerManager instance;
 
     public static AuthorizationHandlerManager getInstance() throws IdentityOAuth2Exception {
+
+        CarbonUtils.checkSecurity();
+
         if(instance == null){
             synchronized (AuthorizationHandlerManager.class){
                 if(instance == null){

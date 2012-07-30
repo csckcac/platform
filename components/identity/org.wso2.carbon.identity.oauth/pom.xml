@@ -82,6 +82,11 @@
             <artifactId>amber</artifactId>
             <version>${orbit.version.amber}</version>
         </dependency>
+        <dependency>
+            <groupId>commons-codec.wso2</groupId>
+            <artifactId>commons-codec</artifactId>
+            <version>1.4.0.wso2v1</version>
+        </dependency>
 	</dependencies>
 
 	<build>

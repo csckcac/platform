@@ -31,14 +31,14 @@
     <parameter name="attachmentDIR"></parameter>
     <parameter name="sizeThreshold">4000</parameter-->
 
-    <!--This will give out the timout of the configuration contexts, in milliseconds-->
+    <!--This will give outMediator the timout of the configuration contexts, in milliseconds-->
     <parameter name="ConfigContextTimeoutInterval">30000</parameter>
 
     <!--During a fault, stacktrace can be sent with the fault message. The following flag will control -->
     <!--that behavior.-->
     <parameter name="sendStacktraceDetailsWithFaults">false</parameter>
 
-    <!--If there aren't any information available to find out the fault reason, we set the message of the exception-->
+    <!--If there aren't any information available to find outMediator the fault reason, we set the message of the exception-->
     <!--as the faultreason/Reason. But when a fault is thrown from a service or some where, it will be -->
     <!--wrapped by different levels. Due to this the initial exception message can be lost. If this flag-->
     <!--is set, then Axis2 tries to get the first exception and set its message as the faultreason/Reason.-->

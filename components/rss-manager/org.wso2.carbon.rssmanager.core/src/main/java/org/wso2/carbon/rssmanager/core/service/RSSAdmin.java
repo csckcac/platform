@@ -203,7 +203,7 @@ public class RSSAdmin extends AbstractAdmin {
         DatabaseUserMetaData metadata = null;
         try {
             DatabaseUser user = 
-                    this.getRSSManager().getDatabaseUser(rssInstanceName, 
+                    this.getRSSManager().getDatabaseUser(rssInstanceName,
                             username);
             if (user == null) {
                 throw new RSSManagerException("Given username '" + username + "' does not " +
@@ -230,11 +230,6 @@ public class RSSAdmin extends AbstractAdmin {
             handleException(msg, e);
         }
         return users;
-    }
-
-    public String getUserDatabasePermissions(String username, String databaseName) throws
-            RSSManagerException {
-        return null;
     }
 
     public void createDatabasePrivilegesTemplate(DatabasePrivilegeTemplate template) throws

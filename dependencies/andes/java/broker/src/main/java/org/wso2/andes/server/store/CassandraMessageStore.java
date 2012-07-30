@@ -41,10 +41,7 @@ import org.wso2.andes.server.ClusterResourceHolder;
 import org.wso2.andes.server.cassandra.*;
 import org.wso2.andes.server.cluster.ClusterManagementInformationMBean;
 import org.wso2.andes.server.cluster.ClusterManager;
-import org.wso2.andes.server.cluster.coordination.MessageIdGenerator;
-import org.wso2.andes.server.cluster.coordination.SubscriptionCoordinationManager;
-import org.wso2.andes.server.cluster.coordination.SubscriptionCoordinationManagerImpl;
-import org.wso2.andes.server.cluster.coordination.TimeStampBasedMessageIdGenerator;
+import org.wso2.andes.server.cluster.coordination.*;
 import org.wso2.andes.server.configuration.ClusterConfiguration;
 import org.wso2.andes.server.exchange.Exchange;
 import org.wso2.andes.server.information.management.QueueManagementInformationMBean;
@@ -131,6 +128,8 @@ public class CassandraMessageStore implements MessageStore {
     private SortedMap<Long,Long> contentDeletionTasks = new ConcurrentSkipListMap<Long,Long>();
 
     private ConcurrentHashMap<Long,Long> pubSubMessageContentDeletionTasks;
+
+    private ConcurrentHashMap<String,ArrayList<String>> topicSubscribersMap = new ConcurrentHashMap<String, ArrayList<String>>();
 
     private ContentRemoverTask messageContentRemovalTask = null;
     private PubSubMessageContentRemoverTask pubSubMessageContentRemoverTask = null;
@@ -1002,9 +1001,11 @@ public void addMessageBatchToUserQueues(CassandraQueueMessage[] messages) throws
             messages = new ArrayList<MessageTransferMessage>();
             for (long messageId : messageIds) {
                 StorableMessageMetaData messageMetaData = getMetaData(messageId);
-                StoredCassandraMessage storedCassandraMessage = new StoredCassandraMessage(messageId, messageMetaData, true);
-                MessageTransferMessage message = new MessageTransferMessage(storedCassandraMessage, null);
-                messages.add(message);
+                if(messageMetaData != null) {
+                    StoredCassandraMessage storedCassandraMessage = new StoredCassandraMessage(messageId, messageMetaData, true);
+                    MessageTransferMessage message = new MessageTransferMessage(storedCassandraMessage, null);
+                    messages.add(message);
+                }
             }
         }
         return messages;
@@ -1017,6 +1018,9 @@ public void addMessageBatchToUserQueues(CassandraQueueMessage[] messages) throws
      * */
     private void registerTopic(String topic) {
         try {
+            if(topic!= null && (topicSubscribersMap.get(topic) == null)) {
+                topicSubscribersMap.put(topic,new ArrayList<String>());
+            }
             CassandraDataAccessHelper.addMappingToRaw(TOPICS_COLUMN_FAMILY, TOPICS_ROW, topic, topic, keyspace);
         } catch (Exception e) {
             log.error("Error in registering queue for the topic", e);
@@ -1100,6 +1104,7 @@ public void addMessageBatchToUserQueues(CassandraQueueMessage[] messages) throws
         try {
             registerTopic(topic);
             CassandraDataAccessHelper.addMappingToRaw(TOPIC_SUBSCRIBERS, topic, queueName, queueName, keyspace);
+            ClusterResourceHolder.getInstance().getTopicSubscriptionCoordinationManager().handleSubscriptionChange(topic);
         } catch (Exception e) {
             log.error("Error in registering queue for the topic",e);
         }
@@ -1114,7 +1119,7 @@ public void addMessageBatchToUserQueues(CassandraQueueMessage[] messages) throws
      * */
     public List<String> getRegisteredSubscribersForTopic(String topic) throws Exception {
         try {
-            List<String> queueList = CassandraDataAccessHelper.getRowList(TOPIC_SUBSCRIBERS, topic, keyspace);
+            List<String> queueList = topicSubscribersMap.get(topic);
             return queueList;
         } catch (Exception e) {
             log.error("Error in getting registered subscribers for the topic", e);
@@ -1133,9 +1138,11 @@ public void addMessageBatchToUserQueues(CassandraQueueMessage[] messages) throws
                 log.debug(" removing queue = " + queueName + " from topic =" + topic);
             }
             CassandraDataAccessHelper.deleteStringColumnFromRaw(TOPIC_SUBSCRIBERS, topic, queueName, keyspace);
-            if (getRegisteredSubscribersForTopic(topic).size() == 0) {
+            if ((getRegisteredSubscribersForTopic(topic) != null) && (getRegisteredSubscribersForTopic(topic).size() == 0)) {
                 unRegisterTopic(topic);
+                topicSubscribersMap.remove(topic);
             }
+            ClusterResourceHolder.getInstance().getTopicSubscriptionCoordinationManager().handleSubscriptionChange(topic);
         } catch (Exception e) {
            log.error("Error in un registering queue from the topic" ,e);
         }
@@ -1557,6 +1564,14 @@ public void addMessageBatchToUserQueues(CassandraQueueMessage[] messages) throws
                 subscriptionCoordinationManager.init();
                 ClusterResourceHolder.getInstance().setSubscriptionCoordinationManager(subscriptionCoordinationManager);
             }
+
+            if(ClusterResourceHolder.getInstance().getTopicSubscriptionCoordinationManager() == null) {
+
+                TopicSubscriptionCoordinationManager topicSubscriptionCoordinationManager =
+                        new TopicSubscriptionCoordinationManager();
+                topicSubscriptionCoordinationManager.init();
+                ClusterResourceHolder.getInstance().setTopicSubscriptionCoordinationManager(topicSubscriptionCoordinationManager);
+            }
          ClusterManager clusterManager = null;
 
             if (clusterConfiguration.isClusteringEnabled()) {
@@ -1594,6 +1609,21 @@ public void addMessageBatchToUserQueues(CassandraQueueMessage[] messages) throws
 
         configured = true;
 
+    }
+
+    public void syncTopicSubscriptionsWithDatabase(String topic) throws Exception{
+        if(topic!=null) {
+            ArrayList<String> subscriberQueues = new ArrayList<String>();
+            List<String> subscribers = CassandraDataAccessHelper.getRowList(TOPIC_SUBSCRIBERS, topic,keyspace);
+            for(String subscriber : subscribers) {
+                subscriberQueues.add(subscriber);
+            }
+            topicSubscribersMap.remove(topic);
+            topicSubscribersMap.put(topic,subscriberQueues);
+        }
+        if(log.isDebugEnabled()) {
+            log.debug("Synchronizing subscribers for topic" +topic);
+        }
     }
 
     @Override
@@ -1767,7 +1797,7 @@ public void addMessageBatchToUserQueues(CassandraQueueMessage[] messages) throws
      */
     public void addNodeDetails(String nodeId, String data) {
         try {
-            CassandraDataAccessHelper.addMappingToRaw(NODE_DETAIL_COLUMN_FAMILY,NODE_DETAIL_ROW,nodeId,data,keyspace);
+            CassandraDataAccessHelper.addMappingToRaw(NODE_DETAIL_COLUMN_FAMILY, NODE_DETAIL_ROW, nodeId, data, keyspace);
         } catch (CassandraDataAccessException e) {
             throw new RuntimeException("Error writing Node details to cassandra database" ,e);
         }

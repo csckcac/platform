@@ -157,8 +157,9 @@ public class JSDeployer extends AbstractDeployer {
         will be deployed by the Mashup Server while others are skipped by the deployer
         */
         String jsRepository = axisConfig.getRepository().getPath();
-        if(!jsRepository.endsWith(File.separator)) {
-            jsRepository += File.separator;
+        String pathSeparator = "/";
+        if(!jsRepository.endsWith(pathSeparator)) {
+            jsRepository += pathSeparator;
         }
         jsRepository += repoDir;
         // path of the *.js file relative to the repository i.e. foo/bar.js

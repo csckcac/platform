@@ -34,6 +34,7 @@ import java.io.File;
 import java.io.FileInputStream;
 import java.io.IOException;
 import java.io.InputStream;
+import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
@@ -173,6 +174,39 @@ public final class LoadBalancerConfigUtil {
 
         return bytes;
     }
+    
+    /**
+     * @deprecated
+     * Extract the domain part given a string which is in 
+     * &lt;sub_domain&gt;#&lt;domain&gt; format. 
+     * @param str in &lt;sub_domain&gt;#&lt;domain&gt; format.
+     * @return the domain part. If # is not present this will return the trimmed 
+     * input string.
+     */
+    public static String getDomain(String str) {
+        str = str.trim();
+        if(!str.contains(Constants.SUB_DOMAIN_DELIMITER)){
+            return str;
+        }
+        return str.substring(str.indexOf(Constants.SUB_DOMAIN_DELIMITER)+1);
+    }
+    
+    /**
+     * @deprecated 
+     * Extract the sub_domain part given a string which is in 
+     * &lt;sub_domain&gt;#&lt;domain&gt; format. 
+     * @param str in &lt;sub_domain&gt;#&lt;domain&gt; format.
+     * @return the sub_domain part. If # is not present this will return 
+     * <code>null</code>.
+     */
+    public static String getSubDomain(String str) {
+        str = str.trim();
+        if(!str.contains(Constants.SUB_DOMAIN_DELIMITER)){
+            return null;
+        }
+        return str.substring(0,str.indexOf(Constants.SUB_DOMAIN_DELIMITER));
+    }
+
 
 //        public static EC2InstanceManager createEC2InstanceManager(String accessKey,
 //                                                              String secretKey,
@@ -182,6 +216,58 @@ public final class LoadBalancerConfigUtil {
 //        ec2Client.setEndpoint(instanceMgtEPR);
 //        return new EC2InstanceManager(ec2Client);
 //    }
+
+  /**
+  * This method will read the tenant range string and return a list of tenant ids
+  * which is derived from tenant range string.
+  *
+  * @param tenantRange
+  * @return list of tenant ids.
+  */
+ public static List<Integer> getTenantIds(String tenantRange) {
+
+     List<Integer> tenantIds = new ArrayList<Integer>();
+
+     String[] parsedLine = tenantRange.trim().split("-");
+
+     if (parsedLine[0].equalsIgnoreCase("*")) {
+         tenantIds.add(0);
+         
+     } else if (parsedLine.length == 1) {
+         try {
+             int tenantId = Integer.parseInt(tenantRange);
+             tenantIds.add(tenantId);
+
+         } catch (NumberFormatException e) {
+             String msg = "Invalid tenant range is specified " + tenantRange;
+             log.error(msg, e);
+             throw new RuntimeException(msg, e);
+         }
+     } else if (parsedLine.length == 2) {
+         try {
+
+             int startIndex = Integer.parseInt(parsedLine[0]);
+             int endIndex = Integer.parseInt(parsedLine[1]);
+
+             for (int tenantId = startIndex; tenantId <= endIndex; tenantId++) {
+
+                 tenantIds.add(tenantId);
+             }
+
+         } catch (NumberFormatException e) {
+             String msg = "Invalid tenant range is specified for domain " + tenantRange;
+             log.error(msg, e);
+             throw new RuntimeException(msg, e);
+         }
+
+     } else {
+         String msg = "Invalid tenant range is specified for domain " + tenantRange;
+         log.error(msg);
+         throw new RuntimeException(msg);
+     }
+
+     return tenantIds;
+ }
 
 
 }

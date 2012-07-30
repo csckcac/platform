@@ -88,9 +88,9 @@ public class NodeBuilderTest extends TestCase {
         Assert.assertEquals("*", c.getProperty("tenant_range"));
         
         String nodeStr = "appserver {\n" +
+                "hosts\tappserver.cloud-test.wso2.com,as.cloud-test.wso2.com;\n" +
+                "payload\tresources/cluster_node.zip;\n" +
         		"availability_zone\tus-east-1c;\n" +
-        		"hosts\tappserver.cloud-test.wso2.com,as.cloud-test.wso2.com;\n" +
-        		"payload\tresources/cluster_node.zip;\n" +
         		"domains {\n" +
         		"wso2.as1.domain {\n" +
         		"tenant_range\t1-100;\n" +
@@ -106,8 +106,6 @@ public class NodeBuilderTest extends TestCase {
         
         assertEquals(nodeStr, a.toString());
 
-        System.out.println(a.propertiesToString());
-        System.err.println(a.getProperties().toString());
     }
 
 }

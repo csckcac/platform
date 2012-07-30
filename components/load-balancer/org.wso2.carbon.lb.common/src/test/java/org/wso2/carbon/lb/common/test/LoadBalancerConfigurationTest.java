@@ -18,21 +18,30 @@
 package org.wso2.carbon.lb.common.test;
 
 import java.io.File;
+import java.util.List;
+
 import org.wso2.carbon.lb.common.conf.LoadBalancerConfiguration;
+import org.wso2.carbon.lb.common.conf.LoadBalancerConfiguration.ServiceConfiguration;
+import org.wso2.carbon.lb.common.conf.util.HostContext;
+
 import junit.framework.TestCase;
 
 public class LoadBalancerConfigurationTest extends TestCase {
     
-    private LoadBalancerConfiguration lbConfig;
+    private LoadBalancerConfiguration lbConfig = new LoadBalancerConfiguration();
+    private LoadBalancerConfiguration lbConfig1 = new LoadBalancerConfiguration();
+    
     
     @Override
     protected void setUp() throws Exception {
-        lbConfig = new LoadBalancerConfiguration();
 
         File f = new File("src/test/resources/loadbalancer.conf");
         lbConfig.init(f.getAbsolutePath());
+        
+        f = new File("src/test/resources/loadbalancer1.conf");
+        lbConfig1.init(f.getAbsolutePath());
     }
-
+    
     public final void testCreateLoadBalancerConfig() {
 
         LoadBalancerConfiguration.LBConfiguration loadBalancerConfig =
@@ -45,9 +54,12 @@ public class LoadBalancerConfigurationTest extends TestCase {
 
     public final void testCreateServicesConfig() {
 
-        LoadBalancerConfiguration.ServiceConfiguration asServiceConfig =
-            lbConfig.getServiceConfig("wso2.as1.domain");
+        /* Tests relavant to loadbalancer.conf file */
         
+        ServiceConfiguration asServiceConfig =
+                                               lbConfig.getServiceConfig("wso2.as1.domain",
+                                                                         "worker");
+
         assertEquals(1, asServiceConfig.getInstancesPerScaleUp());
         assertEquals(5, asServiceConfig.getMaxAppInstances());
         assertEquals(3, asServiceConfig.getMinAppInstances());
@@ -55,33 +67,92 @@ public class LoadBalancerConfigurationTest extends TestCase {
         assertEquals(400, asServiceConfig.getQueueLengthPerNode());
         assertEquals(10, asServiceConfig.getRoundsToAverage());
         assertEquals("worker", asServiceConfig.getSubDomain());
-        
-        asServiceConfig =
-                lbConfig.getServiceConfig("wso2.as2.domain");
+
+        asServiceConfig = lbConfig.getServiceConfig("wso2.as2.domain", "worker1");
         assertEquals("worker1", asServiceConfig.getSubDomain());
+
+        asServiceConfig = lbConfig.getServiceConfig("wso2.esb.domain", "mgt");
+        assertEquals("mgt", asServiceConfig.getSubDomain());
+
+        assertEquals(2, lbConfig.getHostNamesTracker().keySet().size());
+        assertEquals(3, lbConfig.getHostNamesTracker().get("appserver").size());
+        assertEquals(2, lbConfig.getHostNamesTracker().get("esb").size());
+
+        for (HostContext ctx : lbConfig.getHostContextMap().values()) {
+
+            if (ctx.getHostName().equals("appserver.cloud-test.wso2.com")) {
+
+                assertEquals("nirmal", ctx.getSubDomainFromTenantId(30));
+                assertEquals(18, ctx.getTenantDomainContexts().size());
+            } else if (ctx.getHostName().equals("as2.cloud-test.wso2.com")) {
+                assertEquals("worker", ctx.getSubDomainFromTenantId(2));
+            } else if (ctx.getHostName().equals("esb.cloud-test.wso2.com")) {
+                assertEquals("mgt", ctx.getSubDomainFromTenantId(5));
+            }
+        }
         
+        /* tests relevant to loadbalancer1.conf file */
+        
+        for (HostContext ctx : lbConfig1.getHostContextMap().values()) {
+
+            if (ctx.getHostName().equals("appserver.cloud-test.wso2.com")) {
+
+                assertEquals("nirmal", ctx.getSubDomainFromTenantId(30));
+                assertEquals(1, ctx.getTenantDomainContexts().size());
+                
+            } else if (ctx.getHostName().equals("esb.cloud-test.wso2.com")) {
+                
+                assertEquals("mgt", ctx.getSubDomainFromTenantId(5));
+            }
+        }
 
     }
 
     public final void testGetServiceDomains() {
 
         String[] serviceDomains = lbConfig.getServiceDomains();
-        assertEquals(3, serviceDomains.length);
+        assertEquals(4, serviceDomains.length);
         
         assertTrue("wso2.as1.domain".equals(serviceDomains[0]) ||
             "wso2.as1.domain".equals(serviceDomains[1]) ||
-            "wso2.as1.domain".equals(serviceDomains[2]));
+            "wso2.as1.domain".equals(serviceDomains[2]) ||
+            "wso2.as1.domain".equals(serviceDomains[3]));
+        
         assertTrue("wso2.as2.domain".equals(serviceDomains[0]) ||
             "wso2.as2.domain".equals(serviceDomains[1]) ||
-            "wso2.as2.domain".equals(serviceDomains[2]));
+            "wso2.as2.domain".equals(serviceDomains[2]) ||
+            "wso2.as2.domain".equals(serviceDomains[3]));
+        
         assertTrue("wso2.as3.domain".equals(serviceDomains[0]) ||
             "wso2.as3.domain".equals(serviceDomains[1]) ||
-            "wso2.as3.domain".equals(serviceDomains[2]));
+            "wso2.as3.domain".equals(serviceDomains[2]) ||
+            "wso2.as3.domain".equals(serviceDomains[3]));
         
-        assertEquals("wso2.as3.domain", lbConfig.getDomain("appserver.cloud-test.wso2.com", 300));
-        assertEquals("wso2.as3.domain", lbConfig.getDomain("as.cloud-test.wso2.com", 300));
-        assertEquals("wso2.as1.domain", lbConfig.getDomain("as.cloud-test.wso2.com", 1));
-        assertEquals("wso2.as2.domain", lbConfig.getDomain("as.cloud-test.wso2.com", 200));
+        assertTrue("wso2.esb.domain".equals(serviceDomains[0]) ||
+                   "wso2.esb.domain".equals(serviceDomains[1]) ||
+                   "wso2.esb.domain".equals(serviceDomains[2]) ||
+                   "wso2.esb.domain".equals(serviceDomains[3]));
+        
+    }
+    
+    public final void testGetServiceSubDomains() {
+
+        String[] serviceSubDomains = lbConfig.getServiceSubDomains("wso2.as3.domain");
+        assertEquals(2, serviceSubDomains.length);
+        
+        assertTrue("nirmal".equals(serviceSubDomains[0]) ||
+            "nirmal".equals(serviceSubDomains[1]));
+        
+        assertTrue("nirmal2".equals(serviceSubDomains[0]) ||
+            "nirmal2".equals(serviceSubDomains[1]));
+        
+        serviceSubDomains = lbConfig.getServiceSubDomains("wso2.esb.domain");
+        assertEquals(2, serviceSubDomains.length);
+        
+        serviceSubDomains = lbConfig.getServiceSubDomains("wso2.as1.domain");
+        assertEquals(1, serviceSubDomains.length);
+        
+        
     }
 
 }

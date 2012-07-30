@@ -20,6 +20,7 @@ package org.wso2.carbon.lb.common.conf.structure;
 import java.io.Serializable;
 import java.util.ArrayList;
 import java.util.HashMap;
+import java.util.LinkedHashMap;
 import java.util.List;
 import java.util.Map;
 
@@ -44,11 +45,11 @@ public class Node implements Serializable{
 
     /**
      * Every node can have 0..n properties. 
-     * They are kept in a Map.
+     * They are kept in a Map, in the order they appear.
      * Key: property name
      * Value: property value
      */
-    private Map<String, String> properties = new HashMap<String, String>();
+    private Map<String, String> properties = new LinkedHashMap<String, String>();
 
     /**
      * This will convert each child Node of this Node to a String.

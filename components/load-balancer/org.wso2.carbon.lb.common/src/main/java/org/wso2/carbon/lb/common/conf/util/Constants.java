@@ -32,5 +32,17 @@ public class Constants {
     public static final String TENANT_RANGE_DELIMITER = "-";
     public static final String UNLIMITED_TENANT_RANGE = "*";
     public static final String AUTOSCALER_ENABLE_ELEMENT = "enable_autoscaler";
-
+    public static final String SUB_DOMAIN_DELIMITER = "#";
+    public static final String DEFAULT_SUB_DOMAIN = "__$default";
+    
+    /* Nginx format related constants */
+    
+    public static final String NGINX_COMMENT = "#";
+    public static final String NGINX_NODE_START_BRACE = "{";
+    public static final String NGINX_NODE_END_BRACE = "}";
+    public static final String NGINX_VARIABLE = "${";
+    public static final String NGINX_LINE_DELIMITER = ";";
+    public static final String NGINX_SPACE_REGEX = "[\\s]+";
+    
+    
 }

@@ -25,8 +25,12 @@ public final class WebappsConstants {
     public static final String WEBAPP_INFO_JSP_PAGE = "/webapp-mgt/webapp_info.jsp";
     public static final int MAX_DEPTH = 10;
     public static final String JAX_WEBAPP_FILTER_PROP = "jaxWebapp";
+    public static final String JAGGERY_WEBAPP_FILTER_PROP = "jaggeryWebapp";
     public static final String JAX_WEBAPP_REPO = "jaxwebapps";
+    public static final String JAGGERY_WEBAPP_REPO = "jaggeryapps";
     public static final int VALVE_INDEX = 0;
+    public static final String JAGGERY_APPS_PREFIX = "jaggeryapps";
+    public static final String JAX_WEBAPPS_PREFIX = "jaxwebapps";
 
     /**
      * This is to filter out custom webapp types. If a custom webapp deployer is added, it should

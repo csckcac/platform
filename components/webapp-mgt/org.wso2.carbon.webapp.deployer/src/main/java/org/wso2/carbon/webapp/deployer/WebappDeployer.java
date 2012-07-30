@@ -88,7 +88,7 @@ public class WebappDeployer extends AbstractDeployer {
     public void deploy(DeploymentFileData deploymentFileData) throws DeploymentException {
         // We now support for exploded webapp deployment, so we have to check if unpackedWar
         // files are getting deployed again, which will cause conflict at tomcat level.
-        if (!isUnpackedWebapp(deploymentFileData.getFile())) {
+        if (!isSkippedWebapp(deploymentFileData.getFile())) {
 
             if (!GhostWebappDeployerUtils.isGhostOn()) {
                 deployThisWebApp(deploymentFileData);
@@ -163,7 +163,8 @@ public class WebappDeployer extends AbstractDeployer {
     public void undeploy(String fileName) throws DeploymentException {
         try {
             tomcatWebappDeployer.undeploy(new File(fileName));
-            if (GhostWebappDeployerUtils.isGhostOn()) {
+            if (GhostWebappDeployerUtils.isGhostOn() &&
+                !GhostWebappDeployerUtils.skipUndeploy(fileName)) {
                 // Remove the corresponding ghost file and dummy context directory
                 File ghostFile = GhostWebappDeployerUtils.getGhostFile(fileName, axisConfig);
                 File dummyContextDir = GhostWebappDeployerUtils.
@@ -211,12 +212,18 @@ public class WebappDeployer extends AbstractDeployer {
         }
     }
 
-    private boolean isUnpackedWebapp(File webappFile) {
-        boolean isExploded = false;
-        File warFile = new File(webappFile.getPath() + ".war");
-        if (webappFile.isDirectory() && warFile.exists()) {
-            isExploded = true;
+
+    private boolean isSkippedWebapp(File webappFile) {
+        if (webappFile.isDirectory()) {
+            String webapFilePath = webappFile.getPath();
+            // check for .svn and .meta files to be skipped. these are created by depsynch
+            if (webapFilePath.endsWith(".svn") || webapFilePath.endsWith(".meta")) {
+                return true;
+            }
+            File warFile = new File(webapFilePath + ".war");
+            return warFile.exists();
+        } else {
+            return false;
         }
-        return isExploded;
     }
 }

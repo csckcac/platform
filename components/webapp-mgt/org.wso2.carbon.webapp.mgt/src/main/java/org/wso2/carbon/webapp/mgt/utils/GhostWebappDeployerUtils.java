@@ -149,10 +149,14 @@ public class GhostWebappDeployerUtils {
                             newWebApp = webappsHolder.getStartedWebapps().get(dfd.getFile().
                                     getName());
                             newWebApp.setProperty(CarbonConstants.GHOST_WEBAPP_PARAM, "false");
-                            // Check for jaxwebapps
+                            // Check for jaxwebapps or jaggery apps
                             if (dfd.getAbsolutePath().contains(WebappsConstants.JAX_WEBAPP_REPO)) {
                                 newWebApp.setProperty(WebappsConstants.WEBAPP_FILTER,
                                                       WebappsConstants.JAX_WEBAPP_FILTER_PROP);
+                            } else if (dfd.getAbsolutePath().
+                                    contains(WebappsConstants.JAGGERY_WEBAPP_REPO)) {
+                                newWebApp.setProperty(WebappsConstants.WEBAPP_FILTER,
+                                                      WebappsConstants.JAGGERY_WEBAPP_FILTER_PROP);
                             }
 
                             newWebApp.setIsGhostWebapp(false);
@@ -478,6 +482,13 @@ public class GhostWebappDeployerUtils {
                                    WebappsConstants.JAX_WEBAPP_FILTER_PROP, null);
         }
 
+        // If this is a Jaggery webapp, then add the filter property to ghost file..
+        if (webappPath.contains(WebappsConstants.JAGGERY_WEBAPP_REPO)) {
+            webappEle.addAttribute(WebappsConstants.WEBAPP_FILTER,
+                                   WebappsConstants.JAGGERY_WEBAPP_FILTER_PROP, null);
+        }
+
+
         // Now create a ghostFile and serialize the created OMElement
         String tenantTmpDirPath = CarbonUtils.getTenantTmpDirPath(axisConfig);
         if (tenantTmpDirPath == null) {
@@ -542,7 +553,7 @@ public class GhostWebappDeployerUtils {
             // first drop the repo path
             ghostFileName = fileName.substring(repoPath.length());
             // then remove the extension
-            if (ghostFileName.lastIndexOf('.') != -1) {
+            if (!(new File(fileName).isDirectory()) && (ghostFileName.lastIndexOf('.') != -1)) {
                 ghostFileName = ghostFileName.substring(0, ghostFileName.lastIndexOf('.'));
             }
             // adjust the path for windows..
@@ -596,9 +607,17 @@ public class GhostWebappDeployerUtils {
      */
     public static String getDummyContextDirectoryPath(String contextName,
                                                    AxisConfiguration axisConfig) {
-        if (contextName.contains("/t/")) {
-            String tenantCtx = "/t/" + TenantAxisUtils.getTenantDomain(contextName) +
-                               File.separator + WebappsConstants.WEBAPP_PREFIX;
+         if (contextName.contains("/t/")) {
+            String tenantCtx = "/t/" + TenantAxisUtils.getTenantDomain(contextName);
+            if (contextName.contains(WebappsConstants.WEBAPP_PREFIX)) {
+                tenantCtx = tenantCtx + File.separator + WebappsConstants.WEBAPP_PREFIX;
+            } else if (contextName.contains(WebappsConstants.JAGGERY_APPS_PREFIX)) {
+                tenantCtx = tenantCtx + File.separator + WebappsConstants.JAGGERY_APPS_PREFIX;
+            } else if (contextName.contains((WebappsConstants.JAX_WEBAPPS_PREFIX))){
+                tenantCtx = tenantCtx + File.separator + WebappsConstants.JAX_WEBAPPS_PREFIX;
+            } else {
+                return null;
+            }
             contextName = contextName.substring(tenantCtx.length());
         }
 
@@ -641,6 +660,20 @@ public class GhostWebappDeployerUtils {
                                   dummyContextName);
         }
         return dummyContextFile;
+    }
+
+    /**
+     * Method to check if the undeploying of ghost related files needs to be skipped
+     * @param fileName name of the webapp file
+     * @return true or false
+     */
+    public static boolean skipUndeploy(String fileName) {
+        // check for .svn and .meta files to be skipped. these are created by depsynch
+        if (fileName.endsWith(".svn") || fileName.endsWith(".meta")) {
+            return true;
+        }
+        File warFile = new File(fileName + ".war");
+        return warFile.exists();
     }
 
 }

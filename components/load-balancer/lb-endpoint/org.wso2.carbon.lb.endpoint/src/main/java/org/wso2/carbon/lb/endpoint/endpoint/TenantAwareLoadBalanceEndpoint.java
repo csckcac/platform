@@ -7,6 +7,7 @@ import org.apache.axis2.clustering.ClusteringAgent;
 import org.apache.axis2.clustering.Member;
 import org.apache.axis2.clustering.management.DefaultGroupManagementAgent;
 import org.apache.axis2.context.ConfigurationContext;
+import org.apache.commons.collections.map.MultiValueMap;
 import org.apache.commons.logging.Log;
 import org.apache.commons.logging.LogFactory;
 import org.apache.http.protocol.HTTP;
@@ -26,13 +27,19 @@ import org.apache.synapse.endpoints.dispatch.SALSessions;
 import org.apache.synapse.endpoints.dispatch.SessionInformation;
 import org.apache.synapse.transport.nhttp.NhttpConstants;
 import org.wso2.carbon.lb.common.conf.LoadBalancerConfiguration;
-import org.wso2.carbon.lb.common.conf.util.TenantDomainRangeContext;
+import org.wso2.carbon.lb.common.conf.util.HostContext;
+import org.wso2.carbon.lb.common.conf.util.TenantDomainContext;
+import org.wso2.carbon.lb.endpoint.SubDomainAwareGroupManagementAgent;
 import org.wso2.carbon.lb.endpoint.TenantLoadBalanceMembershipHandler;
 import org.wso2.carbon.lb.endpoint.util.ConfigHolder;
 import org.wso2.carbon.utils.CarbonUtils;
 
 import java.io.Serializable;
+import java.util.ArrayList;
 import java.util.Collections;
+import java.util.HashMap;
+import java.util.Iterator;
+import java.util.List;
 import java.util.Map;
 import java.util.Set;
 
@@ -53,9 +60,13 @@ public class TenantAwareLoadBalanceEndpoint extends org.apache.synapse.endpoints
     private TenantLoadBalanceMembershipHandler tlbMembershipHandler;
 
     /**
-     * Key - host, Value - domain
+     * Key - host, Value - list of {@link TenantDomainRangeContext}
      */
-    private Map<String, TenantDomainRangeContext> hostDomainMap;
+//    private Map<String, List<TenantDomainRangeContext>> hostDomainMap;
+    
+    
+    private Map<String, HostContext> hostContexts = new HashMap<String, HostContext>();
+    
     private LoadBalancerConfiguration lbConfig;
 
     @Override
@@ -65,7 +76,8 @@ public class TenantAwareLoadBalanceEndpoint extends org.apache.synapse.endpoints
             String configURL = System.getProperty("loadbalancer.conf");
             lbConfig = new LoadBalancerConfiguration();
             lbConfig.init(configURL);
-            hostDomainMap = lbConfig.getHostDomainMap();
+//            hostDomainMap = lbConfig.getHostDomainMap();
+            hostContexts = lbConfig.getHostContextMap();
 
         } catch (Exception e) {
             log.error("Error While reading Load Balancer configuration file" + e.toString());
@@ -85,30 +97,42 @@ public class TenantAwareLoadBalanceEndpoint extends org.apache.synapse.endpoints
         if (!initialized) {
             super.init(synapseEnvironment);
             ConfigurationContext cfgCtx =
-                    ((Axis2SynapseEnvironment) synapseEnvironment).getAxis2ConfigurationContext();
+                                          ((Axis2SynapseEnvironment) synapseEnvironment).getAxis2ConfigurationContext();
             ClusteringAgent clusteringAgent = cfgCtx.getAxisConfiguration().getClusteringAgent();
             if (clusteringAgent == null) {
                 throw new SynapseException("Axis2 ClusteringAgent not defined in axis2.xml");
             }
+
             // Add the Axis2 GroupManagement agents
-            if (hostDomainMap != null) {
-                for (TenantDomainRangeContext tenantDomainRangeContext : hostDomainMap.values()) {
-                    for (String domain : tenantDomainRangeContext.getTenantDomainRangeContextMap().keySet()) {
-                        if (clusteringAgent.getGroupManagementAgent(domain) == null) {
-                            clusteringAgent.addGroupManagementAgent(new DefaultGroupManagementAgent(), domain);
-                            if(log.isDebugEnabled()){
-                                log.debug("Group management agent added to cluster domain "+domain);
+            if (hostContexts != null) {
+                // iterate through each host context
+                for (HostContext hostCtxt : hostContexts.values()) {
+
+                    // each host can has multiple Tenant Contexts, iterate through them
+                    for (TenantDomainContext tenantCtxt : hostCtxt.getTenantDomainContexts()) {
+
+                        String domain = tenantCtxt.getDomain();
+                        String subDomain = tenantCtxt.getSubDomain();
+
+                        if (clusteringAgent.getGroupManagementAgent(domain, subDomain) == null) {
+                            clusteringAgent.addGroupManagementAgent(new SubDomainAwareGroupManagementAgent(
+                                                                                                           subDomain),
+                                                                    domain, subDomain);
+                            if (log.isDebugEnabled()) {
+                                log.debug("Group management agent added to cluster domain " +
+                                          domain);
                             }
                         }
                     }
                 }
-                tlbMembershipHandler = new TenantLoadBalanceMembershipHandler(hostDomainMap,
-                        algorithm,
-                        cfgCtx,
-                        isClusteringEnabled,
-                        getName());
 
+                tlbMembershipHandler =
+                                       new TenantLoadBalanceMembershipHandler(hostContexts,
+                                                                              algorithm, cfgCtx,
+                                                                              isClusteringEnabled,
+                                                                              getName());
             }
+
             // Initialize the SAL Sessions if already has not been initialized.
             SALSessions salSessions = SALSessions.getInstance();
             if (!salSessions.isInitialized()) {
@@ -119,41 +143,7 @@ public class TenantAwareLoadBalanceEndpoint extends org.apache.synapse.endpoints
             initialized = true;
             log.info("===== Tenant Aware Load Balance Endpoint initialized =====");
         }
-
     }
-
-    /*  private Map<String, TenantDomainRangeContext> loadHostDomainMap() {
-
-       Map<String, TenantDomainRangeContext> map = new HashMap<String, TenantDomainRangeContext>();
-
-       // get domains elements for each service
-       for (Map.Entry<String, Node> entry : lbConfig.getServiceToDomainsMap().entrySet()) {
-           //String serviceName = entry.getKey();
-           Node domains = entry.getValue();
-           TenantDomainRangeContext domainRangeContext = new TenantDomainRangeContext();
-
-           // get domain to tenant range map for each domains element and iterate over it
-           for (Map.Entry<String, String> entry2 : lbConfig.getdomainToTenantRangeMap(domains).entrySet()) {
-
-               String domainName = entry2.getKey();
-               String tenantRange = entry2.getValue();
-               domainRangeContext.addTenantDomain(domainName, tenantRange);
-           }
-
-           // get host to domains node map and iterate over it
-           for (Map.Entry<String, Node> entry3 : lbConfig.getHostDomainMap().entrySet()) {
-               String host = entry3.getKey();
-               Node domainsNode = entry3.getValue();
-
-               if (domainsNode.equals(domains)) {
-                   map.put(host, domainRangeContext);
-               }
-           }
-
-       }
-
-       return map;
-   } */
 
     public void setConfiguration(String paramEle) {
         this.configuration = paramEle;
@@ -250,9 +240,9 @@ public class TenantAwareLoadBalanceEndpoint extends org.apache.synapse.endpoints
     }
 
 
-    public Map<String, TenantDomainRangeContext> getHostDomainMap() {
-        return Collections.unmodifiableMap(hostDomainMap);
-    }
+//    public List<HostContext> getHostContexts() {
+//        return Collections.unmodifiableList(hostContexts);
+//    }
 
     /**
      * This FaultHandler will try to resend the message to another member if an error occurs

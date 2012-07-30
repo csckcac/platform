@@ -22,6 +22,7 @@ public final class AutoscaleConstants {
     public static final String REQUEST_ID = "request.id";
     public static final String APP_DOMAIN_CONTEXTS = "autoscale.app.domain.contexts";
     public static final String TARGET_DOMAIN = "autoscale.target.domain";
+    public static final String TARGET_SUB_DOMAIN = "autoscale.target.sub.domain";
     public static final String LOAD_BALANCER_CONFIG = "loadbalancer.conf";
     
     /**

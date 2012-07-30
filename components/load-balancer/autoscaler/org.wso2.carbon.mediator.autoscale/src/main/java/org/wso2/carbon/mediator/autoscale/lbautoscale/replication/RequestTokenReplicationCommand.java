@@ -36,13 +36,13 @@ public class RequestTokenReplicationCommand extends ClusteringMessage {
 
     private static final long serialVersionUID = -7897961078018830555L;
     private static final Log log = LogFactory.getLog(RequestTokenReplicationCommand.class);
-    private Map<String, AppDomainContext> appDomainContexts;
+    private Map<String, Map<String, AppDomainContext>> appDomainContexts;
 
-    public Map<String, AppDomainContext> getAppDomainContexts() {
+    public Map<String, Map<String, AppDomainContext>> getAppDomainContexts() {
         return appDomainContexts;
     }
 
-    public void setAppDomainContexts(Map<String, AppDomainContext> appDomainContexts) {
+    public void setAppDomainContexts(Map<String, Map<String, AppDomainContext>> appDomainContexts) {
         this.appDomainContexts = appDomainContexts;
     }
 

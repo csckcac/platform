@@ -24,6 +24,8 @@ import org.apache.synapse.core.SynapseEnvironment;
 import org.apache.synapse.core.axis2.Axis2MessageContext;
 import org.apache.synapse.mediators.AbstractMediator;
 import org.wso2.carbon.lb.common.conf.LoadBalancerConfiguration;
+import org.wso2.carbon.lb.common.conf.util.HostContext;
+import org.wso2.carbon.lb.common.conf.util.TenantDomainContext;
 import org.wso2.carbon.mediator.autoscale.lbautoscale.context.AppDomainContext;
 import org.wso2.carbon.mediator.autoscale.lbautoscale.util.AutoscaleConstants;
 import org.wso2.carbon.mediator.autoscale.lbautoscale.util.AutoscaleUtil;
@@ -54,22 +56,72 @@ public class AutoscaleInMediator extends AbstractMediator implements ManagedLife
         }
 
         ConfigurationContext configCtx =
-                ((Axis2MessageContext) synCtx).getAxis2MessageContext().getConfigurationContext();
+                                         ((Axis2MessageContext) synCtx).getAxis2MessageContext()
+                                                                       .getConfigurationContext();
         String uuid = org.apache.axiom.util.UIDGenerator.generateUID();
         synCtx.setProperty(AutoscaleConstants.REQUEST_ID, uuid);
 
-        Map<String, AppDomainContext> appDomainContexts =
-                AutoscaleUtil.getAppDomainContexts(configCtx, lbConfig);
+        Map<String, Map<String, AppDomainContext>> appDomainContexts =
+                                                                       AutoscaleUtil.getAppDomainContexts(configCtx,
+                                                                                                          lbConfig);
         String targetHost = AutoscaleUtil.getTargetHost(synCtx);
         int tenantId = AutoscaleUtil.getTenantId(synCtx.toString());
-        String lbDomain = lbConfig.getHostDomainMap().get(targetHost).getClusterDomainFormTenantId(tenantId);
-        synCtx.setProperty(AutoscaleConstants.TARGET_DOMAIN, lbDomain);
-        AppDomainContext appDomainContext = appDomainContexts.get(lbDomain);
-        if (appDomainContext != null) {
-            appDomainContext.addRequestToken(uuid);
-            System.setProperty(AutoscaleConstants.IS_TOUCHED, "true");
+
+        String domain = null, subDomain = null;
+
+        HostContext ctxt = lbConfig.getHostContextMap().get(targetHost);
+
+        if (ctxt == null) {
+            throwException("Host Context is null for host: " + targetHost);
+        }
+
+        TenantDomainContext tenantCtxt = ctxt.getTenantDomainContext(tenantId);
+
+        if (tenantCtxt == null) {
+
+            throwException("Tenant Domain Context is null for host: " + targetHost +
+                           " - tenant id: " + tenantId);
+
+        }
+
+        // gets the corresponding domain
+        domain = tenantCtxt.getDomain();
+        synCtx.setProperty(AutoscaleConstants.TARGET_DOMAIN, domain);
+
+        // gets the corresponding sub domain
+        subDomain = tenantCtxt.getSubDomain();
+        synCtx.setProperty(AutoscaleConstants.TARGET_SUB_DOMAIN, subDomain);
+
+        // for (TenantDomainRangeContext ctxt : lbConfig.getHostDomainMap().get(targetHost)) {
+        //
+        // if (ctxt.getTenantDomainContextMap().containsKey(tenantId)) {
+        // // gets the corresponding domain
+        // domain = ctxt.getClusterDomainFromTenantId(tenantId);
+        // synCtx.setProperty(AutoscaleConstants.TARGET_DOMAIN, domain);
+        //
+        // // gets the corresponding sub domain
+        // subDomain = ctxt.getClusterSubDomainFromTenantId(tenantId);
+        // synCtx.setProperty(AutoscaleConstants.TARGET_SUB_DOMAIN, subDomain);
+        //
+        // break;
+        // }
+        //
+        // }
+
+        if (appDomainContexts.get(domain) == null) {
+            log.error("AppDomainContext not found for domain " + domain);
+
         } else {
-            log.error("AppDomainContext not found for domain " + lbDomain);
+            AppDomainContext appDomainContext = appDomainContexts.get(domain).get(subDomain);
+
+            if (appDomainContext != null) {
+                appDomainContext.addRequestToken(uuid);
+                System.setProperty(AutoscaleConstants.IS_TOUCHED, "true");
+
+            } else {
+                log.error("AppDomainContext not found for sub domain: " + subDomain +
+                          " of domain: " + domain);
+            }
         }
 
         return true;
@@ -87,5 +139,10 @@ public class AutoscaleInMediator extends AbstractMediator implements ManagedLife
         if (log.isDebugEnabled()) {
             log.debug("Mediator initialized! " + AutoscaleInMediator.class.getName());
         }
+    }
+    
+    private void throwException(String msg){
+        log.error(msg);
+        throw new RuntimeException(msg);
     }
 }

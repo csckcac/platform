@@ -24,6 +24,7 @@ import org.apache.synapse.MessageContext;
 import org.apache.synapse.SynapseException;
 import org.apache.synapse.core.axis2.Axis2MessageContext;
 import org.wso2.carbon.lb.common.conf.LoadBalancerConfiguration;
+import org.wso2.carbon.lb.common.conf.LoadBalancerConfiguration.ServiceConfiguration;
 import org.wso2.carbon.mediator.autoscale.lbautoscale.context.AppDomainContext;
 //import sun.misc.BASE64Encoder;
 import org.apache.axiom.om.util.Base64;
@@ -235,26 +236,54 @@ public final class AutoscaleUtil {
     }
 
     @SuppressWarnings("unchecked")
-    public static Map<String, AppDomainContext> getAppDomainContexts(ConfigurationContext configCtx,
-                                                                     LoadBalancerConfiguration lbConfig) {
-        Map<String, AppDomainContext> appDomainContexts =
-                (Map<String, AppDomainContext>) configCtx.getPropertyNonReplicable(AutoscaleConstants.APP_DOMAIN_CONTEXTS);
+    public static Map<String, Map<String, AppDomainContext>> getAppDomainContexts(ConfigurationContext configCtx,
+ LoadBalancerConfiguration lbConfig) {
+        Map<String, Map<String, AppDomainContext>> appDomainContexts = (Map<String, Map<String, AppDomainContext>>) configCtx.getPropertyNonReplicable(AutoscaleConstants.APP_DOMAIN_CONTEXTS);
         if (appDomainContexts == null) {
-            appDomainContexts = new HashMap<String, AppDomainContext>();
+            appDomainContexts = new HashMap<String, Map<String, AppDomainContext>>();
             ClusteringAgent clusteringAgent = configCtx.getAxisConfiguration().getClusteringAgent();
 
-            for (String domain :lbConfig.getServiceDomains() ) {
-                if (clusteringAgent.getGroupManagementAgent(domain) == null) {
-                    throw new SynapseException("Axis2 clustering GroupManagementAgent for domain " +
-                                               domain + " has not been defined");
+            for (String domain : lbConfig.getServiceDomains()) {
+
+                for (String subDomain : lbConfig.getServiceSubDomains(domain)) {
+                    if (clusteringAgent.getGroupManagementAgent(domain, subDomain) == null) {
+                        throw new SynapseException("Axis2 clustering GroupManagementAgent for domain: " + domain +
+                                                   ", sub-domain: " + subDomain +
+                                                   " has not been defined");
+                    }
+
+                    AppDomainContext appCtxt = new AppDomainContext(lbConfig.getServiceConfig(domain,
+                                                                                              subDomain));
+
+                    addAppDomainContext(appDomainContexts, domain, subDomain, appCtxt);
                 }
-                    appDomainContexts.put(domain, new AppDomainContext(lbConfig.getServiceConfig(domain)));
-                    
-                }
+
             }
-            configCtx.setNonReplicableProperty(AutoscaleConstants.APP_DOMAIN_CONTEXTS,
-                                               appDomainContexts);
-        
+        }
+        configCtx.setNonReplicableProperty(AutoscaleConstants.APP_DOMAIN_CONTEXTS,
+                                           appDomainContexts);
+
         return appDomainContexts;
     }
+    
+    
+    private static void addAppDomainContext(Map<String, Map<String, AppDomainContext>> appDomainContexts, 
+                                     String domain, String subDomain, AppDomainContext appCtxt) {
+
+        Map<String, AppDomainContext> map ;
+        
+        if(appDomainContexts.containsKey(domain)){
+            map = appDomainContexts.get(domain);
+        }
+        else{
+            map = new HashMap<String, AppDomainContext>();
+        }
+        // put this appDomainContext
+        map.put(subDomain, appCtxt);
+        
+        // update the parent map
+        appDomainContexts.put(domain, map);
+        
+    }
+
 }

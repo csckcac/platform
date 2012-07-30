@@ -31,8 +31,8 @@ import org.apache.axis2.client.Options;
 import org.apache.axis2.client.ServiceClient;
 import org.apache.axis2.context.ConfigurationContext;
 import org.wso2.carbon.CarbonConstants;
-import org.wso2.carbon.datasource.ui.stub.DataSourceAdminStub;
-import org.wso2.carbon.datasource.ui.stub.DataSourceManagementException;
+import org.wso2.carbon.ndatasource.ui.stub.*;
+import org.wso2.carbon.ndatasource.ui.stub.core.services.xsd.WSDataSourceInfo;
 import org.wso2.carbon.ui.CarbonUIUtil;
 import org.wso2.carbon.utils.ServerConstants;
 
@@ -42,16 +42,12 @@ import org.wso2.carbon.utils.ServerConstants;
  * 
  */
 public class DBLookupMediatorClient {
-	private DataSourceAdminStub stub;
-	private static final String DATASOURCE_EXTENSION_NS =
-	                                                      "http://www.wso2.org/products/wso2commons/datasource";
-	private static final QName ROOT_QNAME = new QName(DATASOURCE_EXTENSION_NS,
-	                                                  "datasourceExtension", "datasource");
+	private NDataSourceAdminStub stub;
 
 	public DBLookupMediatorClient(String cookie, String backendServerURL,
 	                              ConfigurationContext configCtx) throws AxisFault {
-		String serviceURL = backendServerURL + "DataSourceAdmin";
-		stub = new DataSourceAdminStub(configCtx, serviceURL);
+		String serviceURL = backendServerURL + "NDataSourceAdmin";
+		stub = new NDataSourceAdminStub(configCtx, serviceURL);
 		ServiceClient client = stub._getServiceClient();
 		Options option = client.getOptions();
 		option.setManageSession(true);
@@ -72,28 +68,19 @@ public class DBLookupMediatorClient {
 	}
 
 	public List<String> getAllDataSourceInformations() throws RemoteException,
-	                                                  DataSourceManagementException {
-		OMElement element = stub.getAllDataSourceInformation();
+	                                                  NDataSourceAdminDataSourceException {
+
+        WSDataSourceInfo wsDataSourceInfo[] = stub.getAllDataSources();
 
 		List<String> sourceList = new ArrayList<String>();
-		if (element == null) {
+		if (wsDataSourceInfo == null || wsDataSourceInfo.length == 0) {
 			return sourceList;
 		}
 
-		OMElement datasourceRoot = element.getFirstChildWithName(ROOT_QNAME);
-		if (datasourceRoot == null) {
-			return sourceList;
-		}
-		Iterator iterator = datasourceRoot.getChildElements();
-		while (iterator.hasNext()) {
-			OMElement datasourceElement = (OMElement) iterator.next();
-			if (datasourceElement != null) {
-				String name = datasourceElement.getAttributeValue(new QName("", "name", ""));
-				if (name != null && !"".equals(name)) {
-					sourceList.add(name);
-				}
-			}
-		}
+        for(WSDataSourceInfo info : wsDataSourceInfo){
+            sourceList.add(info.getDsMetaInfo().getName());
+        }
+
 		return sourceList;
 	}
 

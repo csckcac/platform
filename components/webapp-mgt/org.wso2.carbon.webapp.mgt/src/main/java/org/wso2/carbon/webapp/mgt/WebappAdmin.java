@@ -43,6 +43,8 @@ import java.util.Collections;
 import java.util.Comparator;
 import java.util.List;
 import java.util.Map;
+import java.util.regex.Matcher;
+import java.util.regex.Pattern;
 
 /**
  * The Admin service for managing webapps
@@ -261,8 +263,20 @@ public class WebappAdmin extends AbstractAdmin {
 
     protected boolean doesWebappSatisfySearchString(WebApplication webapp,
                                                   String searchString) {
-        return searchString == null || searchString.trim().length() == 0 ||
-            webapp.getContextName().toLowerCase().contains(searchString.toLowerCase());
+
+        if (searchString != null) {
+            String regex = searchString.toLowerCase().
+                    replace("..?", ".?").replace("..*", ".*").
+                    replaceAll("\\?", ".?").replaceAll("\\*", ".*?");
+                    //Replace wild cards ? and * with .? and .*? respectively to make it compatible with regex
+
+            Pattern pattern = Pattern.compile(regex);
+            Matcher matcher = pattern.matcher(webapp.getContextName().toLowerCase());
+
+            return regex.trim().length() == 0 || matcher.find();
+        }
+
+        return false;
     }
 
     private WebApplicationsHolder getWebappsHolder() {

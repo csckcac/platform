@@ -297,6 +297,8 @@
             }
         }
     }
+	
+	givenParams = givenParams.replaceAll("\\\\", "\\\\\\\\");
 
     // sets pinned servers
     String pinnedServers = "";

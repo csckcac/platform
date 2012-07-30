@@ -76,6 +76,9 @@
 		<TimestampSkew>300</TimestampSkew>
 		<!-- Enable OAuth caching. This cache has the replication support. -->
 		<EnableOAuthCache>true</EnableOAuthCache>
+		<!-- Configure the security measures needs to be done prior to store the token in the database,
+		such as hashing, encrypting, etc.-->
+		<TokenPersistencePreprocessor>org.wso2.carbon.identity.oauth.preprocessor.PlainTextTokenPersistencePreprocessor</TokenPersistencePreprocessor>
 		<OAuthCallbackHandlers>		
 				<OAuthCallbackHandler Class="org.wso2.carbon.identity.oauth.callback.DefaultCallbackHandler"/>
 		</OAuthCallbackHandlers>

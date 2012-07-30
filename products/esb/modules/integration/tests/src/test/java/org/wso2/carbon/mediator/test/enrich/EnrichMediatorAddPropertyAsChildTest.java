@@ -65,6 +65,6 @@ public class EnrichMediatorAddPropertyAsChildTest extends ESBMediatorTest{
 
     @AfterTest(alwaysRun = true)
     public void stop(){
-
+                   super.cleanup();
     }
 }

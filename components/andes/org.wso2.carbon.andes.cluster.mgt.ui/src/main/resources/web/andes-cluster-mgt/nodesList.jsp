@@ -171,7 +171,7 @@
                           page="nodesList.jsp" pageNumberParameterName="pageNumber"
                           resourceBundle="org.wso2.carbon.andes.cluster.mgt.ui.i18n.Resources"
                           prevKey="prev" nextKey="next"
-                          parameters="<%="test"%>"/>
+                          parameters=""/>
         <table class="styledLeft">
             <thead>
             <tr>

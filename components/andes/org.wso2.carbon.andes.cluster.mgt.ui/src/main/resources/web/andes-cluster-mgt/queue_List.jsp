@@ -32,6 +32,7 @@
     String requestedHostName = request.getParameter("hostName");
     String IPAddressOfHost = request.getParameter("IPAddress");
     boolean isClusteringEnabled = Boolean.parseBoolean(request.getParameter("isClusteringEnabled"));
+    String concatenatedParams = "hostName="+requestedHostName+"&IPAddress="+IPAddressOfHost+"&isClusteringEnabled="+isClusteringEnabled;
 
     long totalQueueCount;
     int queueCountPerPage = 20;
@@ -143,14 +144,13 @@
                           page="queue_List.jsp" pageNumberParameterName="pageNumber"
                           resourceBundle="org.wso2.carbon.andes.cluster.mgt.ui.i18n.Resources"
                           prevKey="prev" nextKey="next"
-                          parameters="<%="test"%>"/>
+                          parameters="<%=concatenatedParams%>"/>
         <table class="styledLeft" style="width:100%">
             <thead>
             <tr>
                 <th><fmt:message key="queue.name"/></th>
-                <th><fmt:message key="queue.depth"/></th>
                 <th><fmt:message key="queue.messageCount"/></th>
-                <th colspan="2"><fmt:message key="queue.worker"/></th>
+                <th><fmt:message key="queue.worker"/></th>
             </tr>
             </thead>
             <tbody>
@@ -176,8 +176,6 @@
                 <td>
                     <%=queueName%>
                 </td>
-                <td><%=queueSizeWithPostFix%>
-                </td>
                 <td><%=queue.getMessageCount()%>
                 </td>
                 <td>
@@ -202,11 +200,6 @@
                             }
                         %>
                     </select>
-                </td>
-                <td>
-                    <a style="background-image: url(images/move.gif);"
-                       class="icon-link"
-                       onclick="updateWorkerLocationForQueue('<%=queueName%>','<%=index%>','<%=Constants.SUCCESS%>')"></a>
                 </td>
             </tr>
             <%

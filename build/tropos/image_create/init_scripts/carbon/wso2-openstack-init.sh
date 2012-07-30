@@ -10,7 +10,7 @@ export REPO_PATH_EBS=""
 export CONF_PATH_EBS=""
 export PRODUCT_NAME=""
 export CONTROLLER_IP=""
-CRON_DURATION=1
+CRON_DURATION=2
 PUBLIC_IP=""
 
 
@@ -35,7 +35,6 @@ if [ ! -d ${instance_path}/payload ]; then
 
     # copy user-data.txt and rename as payload.zip file
     cp ${instance_path}/user-data.txt ${instance_path}/payload.zip
-    unzip ${instance_path}/payload.zip -d ${instance_path}/
 
     # if error code is 0, there was no error
     if [ "$?" = "0" ]; then
@@ -113,17 +112,24 @@ do
     export ${i}
 done
 
-
 if [[ ! -d /opt/${PRODUCT_NAME} ]]; then
     if [[ "$(pidof scp)" || "$(pidof unzip)" ]]; then
         echo "Copying and unarchiving the products already begun. So exiting ..." >> $LOG
         exit 0
     fi
-    # Copying the product from the controller
-    echo "scp -i ${instance_path}/payload/wso2-key root@${CONTROLLER_IP}:/opt/${PRODUCT_NAME}.zip /opt/" >> $LOG
-    scp -i ${instance_path}/payload/wso2-key root@${CONTROLLER_IP}:/opt/${PRODUCT_NAME}.zip /opt/
-    unzip /opt/${PRODUCT_NAME}.zip -d /opt/
-    rm -f /opt/${PRODUCT_NAME}.zip
+    if [[ ! -f /opt/${PRODUCT_NAME}.zip ]]; then
+    	echo "Copying the product from the controller" >> $LOG
+    	echo "scp -i ${instance_path}/payload/wso2-key root@${CONTROLLER_IP}:/opt/${PRODUCT_NAME}.zip /opt/" >> $LOG
+    	scp -i ${instance_path}/payload/wso2-key root@${CONTROLLER_IP}:/opt/${PRODUCT_NAME}.zip /opt/
+    	echo "Unarchiving the pack ..." >> $LOG
+    	unzip /opt/${PRODUCT_NAME}.zip -d /opt/ 
+        if [ "$?" = "0" ]; then
+            echo Extracted product >> $LOG
+        else
+            echo product zip file is corrupted >> $LOG
+            exit 0
+        fi
+    fi
 fi
 
 if [ "$ADMIN_USERNAME" = "" ]; then
@@ -146,14 +152,21 @@ fi
 	find . -name "axis2.xml" | xargs sed -i "s/<hostName>member_host_name<\/hostName>/<hostName>$MEMBER_HOST<\/hostName>/g"
 	find . -name "axis2.xml" | xargs sed -i "s/<port>member_port<\/port>/<port>$MEMBER_PORT<\/port>/g"
 
-        find . -name "axis2.xml" | xargs sed -i "s/local_member_host<\/parameter>/$PUBLIC_IP<\/parameter>/g"
-        find . -name "axis2.xml" | xargs sed -i "s/local_member_bind_address<\/parameter>/$PRIVATE_IP<\/parameter>/g"
+	find . -name "axis2.xml" | xargs sed -i "s/local_member_host<\/parameter>/$PUBLIC_IP<\/parameter>/g"
+	find . -name "axis2.xml" | xargs sed -i "s/local_member_bind_address<\/parameter>/$PRIVATE_IP<\/parameter>/g"
 
-echo "Starting carbon server ..." >> $LOG
-nohup /opt/${PRODUCT_NAME}/bin/wso2server.sh & >> $LOG
-sleep 1
-if [[ "$(pidof java)" ]]; then
-    echo "Carbon server started" >> $LOG
-    crontab -r
+if [[ -d /opt/${PRODUCT_NAME} ]]; then
+	echo "Starting carbon server ..." >> $LOG
+	nohup /opt/${PRODUCT_NAME}/bin/wso2server.sh & >> $LOG
+	sleep 1
+	if [[ "$(pidof java)" ]]; then
+	    echo "Carbon server started" >> $LOG
+	    crontab -r
+    	    rm -f /opt/${PRODUCT_NAME}.zip
+	fi
+else
+
+    echo "Carbon server is not started yet" >> $LOG
 fi
+
 

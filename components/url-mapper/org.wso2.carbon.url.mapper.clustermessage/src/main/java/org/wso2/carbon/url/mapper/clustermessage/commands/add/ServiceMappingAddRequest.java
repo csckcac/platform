@@ -1,5 +1,5 @@
 /*
-*  Copyright (c) 2005-2010, WSO2 Inc. (http://www.wso2.org) All Rights Reserved.
+*  Copyright (c), WSO2 Inc. (http://www.wso2.org) All Rights Reserved.
 *
 *  WSO2 Inc. licenses this file to you under the Apache License,
 *  Version 2.0 (the "License"); you may not use this file except
@@ -15,7 +15,7 @@
 * specific language governing permissions and limitations
 * under the License.
 */
-package org.wso2.carbon.url.mapper.clustermessage.commands;
+package org.wso2.carbon.url.mapper.clustermessage.commands.add;
 
 import org.apache.axis2.clustering.ClusteringCommand;
 import org.apache.axis2.clustering.ClusteringFault;
@@ -25,11 +25,20 @@ import org.apache.commons.logging.Log;
 import org.apache.commons.logging.LogFactory;
 import org.wso2.carbon.context.ApplicationContext;
 
-import java.util.Map;
+/**
+ *  Cluster command to add service mapping from url-mapper
+ */
+public class ServiceMappingAddRequest extends ClusteringMessage {
+    private static final Log log = LogFactory.getLog(ServiceMappingAddRequest.class);
 
-public class VirtualHostActivityRequest extends ClusteringMessage{
-    private static final Log log = LogFactory.getLog(VirtualHostActivityRequest.class);
-
+    private String mapping;
+    private String epr;
+    
+    public ServiceMappingAddRequest(String mapping, String epr) {
+        this.mapping = mapping;
+        this.epr = epr;
+        
+    }
     @Override
     public ClusteringCommand getResponse() {
         return null;
@@ -37,8 +46,7 @@ public class VirtualHostActivityRequest extends ClusteringMessage{
 
     @Override
     public void execute(ConfigurationContext configurationContext) throws ClusteringFault {
-        Map<String, String> urlMappings = ApplicationContext.getCurrentApplicationContext().
-                getUrlMappingOfApplication();
-
+        ApplicationContext.getCurrentApplicationContext().putUrlMappingForApplication(mapping, epr);
+        log.info("mapping added to service:***********: " + mapping + "******: " + epr);
     }
 }

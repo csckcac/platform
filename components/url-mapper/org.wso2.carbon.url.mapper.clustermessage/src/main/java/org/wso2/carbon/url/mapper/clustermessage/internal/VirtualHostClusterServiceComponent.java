@@ -1,5 +1,5 @@
 /*
-*  Copyright (c) 2005-2010, WSO2 Inc. (http://www.wso2.org) All Rights Reserved.
+*  Copyright (c), WSO2 Inc. (http://www.wso2.org) All Rights Reserved.
 *
 *  WSO2 Inc. licenses this file to you under the Apache License,
 *  Version 2.0 (the "License"); you may not use this file except
@@ -23,25 +23,25 @@ import org.apache.axis2.transport.local.LocalTransportReceiver;
 import org.apache.commons.logging.Log;
 import org.apache.commons.logging.LogFactory;
 import org.osgi.service.component.ComponentContext;
-import org.wso2.carbon.registry.core.service.RegistryService;
-import org.wso2.carbon.user.core.service.RealmService;
-import org.wso2.carbon.utils.ConfigurationContextService;
+import org.wso2.carbon.tomcat.api.CarbonTomcatService;
 import org.wso2.carbon.url.mapper.clustermessage.util.DataHolder;
+import org.wso2.carbon.utils.ConfigurationContextService;
 
 /**
- * @scr.component name="org.wso2.carbon.tenant.activity" immediate="true"
- * @scr.reference name="registry.service"
- * interface="org.wso2.carbon.registry.core.service.RegistryService" cardinality="1..1"
- * policy="dynamic" bind="setRegistryService" unbind="unsetRegistryService"
- * @scr.reference name="user.realmservice.default"
- * interface="org.wso2.carbon.user.core.service.RealmService" cardinality="1..1"
- * policy="dynamic" bind="setRealmService" unbind="unsetRealmService"
+ * Service Component to sending cluster message
+ * @scr.component name="org.wso2.carbon.url.mapper.clustermessage" immediate="true"
  * @scr.reference name="config.context.service"
- * interface="org.wso2.carbon.utils.ConfigurationContextService" cardinality="1..1"
- * policy="dynamic" bind="setConfigurationContextService" unbind="unsetConfigurationContextService"
- */
-public class VirtualHostActivityServiceComponent {
-    private static Log log = LogFactory.getLog(VirtualHostActivityServiceComponent.class);
+ * interface="org.wso2.carbon.utils.ConfigurationContextService"
+ * cardinality="1..1" policy="dynamic"  bind="setConfigurationContextService"
+ * unbind="unsetConfigurationContextService"
+ * @scr.reference name="tomcat.service.provider"
+ * interface="org.wso2.carbon.tomcat.api.CarbonTomcatService"
+ * cardinality="1..1" policy="dynamic" bind="setCarbonTomcatService"
+ * unbind="unsetCarbonTomcatService"
+
+ * */
+public class VirtualHostClusterServiceComponent {
+    private static Log log = LogFactory.getLog(VirtualHostClusterServiceComponent.class);
 
 
     protected void activate(ComponentContext context) {
@@ -61,22 +61,6 @@ public class VirtualHostActivityServiceComponent {
         }
     }
 
-    protected void setRegistryService(RegistryService registryService) {
-        DataHolder.getInstance().setRegistryService(registryService);
-    }
-
-    protected void unsetRegistryService(RegistryService registryService) {
-        DataHolder.getInstance().setRegistryService(null);
-    }
-
-    protected void setRealmService(RealmService realmService) {
-        DataHolder.getInstance().setRealmService(realmService);
-    }
-
-    protected void unsetRealmService(RealmService realmService) {
-        DataHolder.getInstance().setRealmService(null);
-    }
-
     protected void setConfigurationContextService(ConfigurationContextService ccService) {
         ConfigurationContext serverCtx = ccService.getServerConfigContext();
         AxisConfiguration serverConfig = serverCtx.getAxisConfiguration();
@@ -90,4 +74,14 @@ public class VirtualHostActivityServiceComponent {
     protected void unsetConfigurationContextService(ConfigurationContextService ccService) {
         DataHolder.getInstance().setConfigurationContextService(null);
     }
+
+    protected void setCarbonTomcatService(CarbonTomcatService carbonTomcatService) {
+        //keeping the carbonTomcatService in UrlMapperAdminService class
+        DataHolder.getInstance().setCarbonTomcatService(carbonTomcatService);
+    }
+
+    protected void unsetCarbonTomcatService(CarbonTomcatService carbonTomcatService) {
+        DataHolder.getInstance().setCarbonTomcatService(null);
+    }
+
 }

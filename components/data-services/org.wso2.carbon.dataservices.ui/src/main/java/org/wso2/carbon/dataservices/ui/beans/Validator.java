@@ -59,6 +59,10 @@ public class Validator extends DataServiceConfigurationElement {
     public Map<String, String> getValidatorElements() {
         return validatorElements;
     }
+    
+    public void setValidatorElements(Map<String, String> validatorElements) {
+        this.validatorElements = validatorElements;
+    }
 
     public OMElement buildXML(){
         OMFactory fac = OMAbstractFactory.getOMFactory();

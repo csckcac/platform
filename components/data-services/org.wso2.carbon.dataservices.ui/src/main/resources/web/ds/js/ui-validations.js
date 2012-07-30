@@ -1200,6 +1200,81 @@ function changeAddValidatorFields(obj,document) {
     document.getElementById('patternValidatorElementsRow').style.display = visiblePattern;
     document.getElementById('customValidatorElementsRow').style.display = visibleCustom;
     document.getElementById('addValidator').style.display = '';
+    
+    document.getElementById('max').value = "";
+    document.getElementById('min').value = "";
+    document.getElementById('pattern').value = "";
+    document.getElementById('customClass').value = "";
+    document.getElementById('addValidator').value = "Add Validator";
+}
+
+function toggleValidators(validatorName, i, document) {
+	var minValue = 0;
+	var maxValue = 0;
+	var customClass = "";
+	var pattern = "";
+	propertyString = document.getElementById('propString'+i).value;
+	var properties = propertyString.split(" ");
+	
+	if (validatorName == "Length Validator") {
+		validatorName = "validateLength";
+	} else if (validatorName == "Long Range Validator") {
+		validatorName = "validateLongRange";
+	} else if (validatorName == "Double Range Validator") {
+		validatorName = "validateDoubleRange";
+	} else if (validatorName == "Pattern Validator") {
+		validatorName = "validatePattern";
+	} else if (validatorName == "Custom Validator"){
+		validatorName = "validateCustom";
+	}
+	document.getElementById('validatorList').value=validatorName;
+	
+	document.getElementById('validators').style.display = '';
+    if(validatorName == "validateLength" || validatorName == "validateLongRange" 
+    	|| validatorName == "validateDoubleRange") {
+    	var minNameValue = properties[0].split("=");
+        var maxNameValue = properties[1].split("=");
+    	   	
+    	minValue = minNameValue[1];
+    	maxValue = maxNameValue[1];
+    	
+        visibleRangeVal = '';
+        visibleCustom = 'none';
+        visiblePattern = 'none';
+    }
+    if(validatorName == 'validatePattern') {
+    	var patternSplitIndex = properties[0].indexOf("=");
+    	pattern = properties[0].substring(patternSplitIndex + 1);
+    	
+        visibleRangeVal = 'none';
+        visibleCustom = 'none';
+        visiblePattern = '';
+    }
+    if(validatorName == 'validateCustom'){
+    	var classNameValue = properties[0].split("=");
+    	customClass = classNameValue[1];
+    	
+        visibleCustom = '';
+        visiblePattern = 'none';
+        visibleRangeVal = 'none';
+    }
+    if(validatorName == "#") {
+    	visibleRangeVal = 'none';
+        visibleCustom = 'none';
+        visiblePattern = 'none';
+    }
+    
+    document.getElementById('maxRangeValidatorElementsRow').style.display = visibleRangeVal;
+    document.getElementById('minRangeValidatorElementsRow').style.display = visibleRangeVal;
+    document.getElementById('patternValidatorElementsRow').style.display = visiblePattern;
+    document.getElementById('customValidatorElementsRow').style.display = visibleCustom;
+    document.getElementById('addValidator').style.display = '';
+    
+    document.getElementById('max').value = maxValue;
+    document.getElementById('min').value = minValue;
+    document.getElementById('pattern').value = pattern;
+    document.getElementById('customClass').value = customClass;
+    document.getElementById('addValidator').value = "Update Validator";
 }
 
         var rows = 0;

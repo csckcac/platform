@@ -49,7 +49,7 @@
     String ordinalStr = null;
     boolean disable;
     String serviceName = dataService.getName();
-
+    
     if (queryId != null) {
         query = dataService.getQuery(queryId);
         if (query.getParam(paramName) != null) {
@@ -312,14 +312,15 @@ paramType.equals("") ? "" : "display:none"%>"
     <td class="leftCol-small"><fmt:message key="dataservices.validator"/></td>
     <td><select id="validatorList" name="validatorList"
                 onchange="changeAddValidatorFields(this,document);">
-        <option value="#">--Select--</option>
-        <option value="validateLongRange">Long Range Validator</option>
-        <option value="validateDoubleRange">Double Range Validator</option>
-        <option value="validateLength">Length Validator</option>
-        <option value="validatePattern">Pattern Validator</option>
-        <option value="validateCustom">Custom Validator</option>
-    </select></td>
+	        <option value="#">--Select--</option>
+		    <option value="validateLongRange">Long Range Validator</option>
+		    <option value="validateDoubleRange">Double Range Validator</option>
+		    <option value="validateLength">Length Validator</option>
+		    <option value="validatePattern">Pattern Validator</option>
+		    <option value="validateCustom">Custom Validator</option>
+       </select></td>
 </tr>
+
 <div id="validators" style="display:none">
         <%--<table>--%>
     <tr id="maxRangeValidatorElementsRow" style="display:none">
@@ -363,7 +364,9 @@ paramType.equals("") ? "" : "display:none"%>"
             <%--</tr>--%>
             <%--<% }--%>
             <%
-                if (validators.size() > 0) { %>
+                if (validators.size() > 0) { 
+                int i = 0;
+                %>
             <thead>
             <tr>
                 <th><fmt:message key="dataservices.validator"/></th>
@@ -378,14 +381,26 @@ paramType.equals("") ? "" : "display:none"%>"
                 <td><%=valObj.getName()%>
                 </td>
                 <td><%=valObj.getPropertiesString()%>
+                <%if (valObj.getName().equals("Pattern Validator")) { %>
+                	<input type="hidden" id="propString<%=i %>" name="propString<%=i %>" size="30" value=<%=valObj.getPropertiesString()%>>
+                <%} else { %>
+                	<input type="hidden" id="propString<%=i %>" name="propString<%=i %>" size="30" value='<%=valObj.getPropertiesString()%>'>
+                <%} %>
                 </td>
                 <td>
                     <a class="icon-link" style="background-image:url(../admin/images/delete.gif);"
                        href="inputMappingProcessor.jsp?queryId=<%=queryId%>&validatorList=<%=valObj.getElementName()%>&inputMappingId=<%=paramName%>&inputMappingSqlType=<%=sqlType%>&defaultValue=<%=defaultValue%>&structType=<%=(structType == null ? "" : structType)%>&flag=deleteValidator&origin=add">
                         <fmt:message key="delete"/></a>
+                    <a class="icon-link" style="background-image:url(../admin/images/edit.gif);"
+                       href="#"
+                       onclick="toggleValidators('<%=valObj.getName()%>', <%=i%>, document);">
+                        <fmt:message key="edit"/></a>
                 </td>
             </tr>
-            <% }
+            <% 
+            	i++;
+            }
+            
             }
             %>
         </table>

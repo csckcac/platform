@@ -55,36 +55,34 @@
    
     /* add validator button pressed */
     if (flag.equals("validate")) {
-        Map<String, String> fields;
+        Map<String, String> fields = new HashMap<String, String>();
+        
+        
+        if (validateElementName.equals("validateLongRange") ||
+        		validateElementName.equals("validateDoubleRange") ||
+                validateElementName.equals("validateLength")) {
+        	fields.put("minimum", valMin);
+            fields.put("maximum", valMax);
+        } else if (validateElementName.equals("validatePattern")) {
+        	fields.put("pattern", valPattern);
+        } else if (validateElementName.equals("validateCustom")) {
+        	fields.put("class", valCustomClass);
+        }
+        
         Iterator<Validator> itr = (Iterator<Validator>) validators.iterator();
         Validator tmpVal;
         while (itr.hasNext()) {
            tmpVal = itr.next();
            if (tmpVal.getElementName().equals(validateElementName)) {
-               String message = tmpVal.getName() +" is already exist";
-               CarbonUIMessage.sendCarbonUIMessage(message, CarbonUIMessage.ERROR, request);
+        	   /* edit validator */
+               tmpVal.setValidatorElements(fields);
                addValidation = false;
                break;
            }
         }
         if (addValidation) {
-            if (validateElementName.equals("validateLongRange") ||
-                validateElementName.equals("validateDoubleRange") ||
-                validateElementName.equals("validateLength")) {
-                fields = new HashMap<String, String>();
-                fields.put("minimum", valMin);
-                fields.put("maximum", valMax);
-                validators.add(new Validator(validateElementName, fields));
-            } else if (validateElementName.equals("validatePattern")) {
-                fields = new HashMap<String, String>();
-                fields.put("pattern", valPattern);
-                validators.add(new Validator(validateElementName, fields));
-            } else if (validateElementName.equals("validateCustom")) {
-                fields = new HashMap<String, String>();
-                fields.put("class", valCustomClass);
-                validators.add(new Validator(validateElementName, fields));
-            }
-        }
+            validators.add(new Validator(validateElementName, fields));
+         }
     } else if (flag.equals("deleteValidator")) {
             Iterator<Validator> itr = (Iterator<Validator>) validators.iterator();
             Validator tmpVal;

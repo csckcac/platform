@@ -35,11 +35,18 @@
 			<groupId>org.wso2.carbon</groupId>
 			<artifactId>org.wso2.carbon.identity.provider.ui</artifactId>
 		</dependency>
-
-                <dependency>
-                        <groupId>org.wso2.carbon</groupId>
-                        <artifactId>org.wso2.carbon.identity.provider.stub</artifactId>
-                </dependency>
+		<dependency>	 
+			<groupId>org.wso2.carbon</groupId>	 
+			<artifactId>org.wso2.carbon.identity.sts.mgt.stub</artifactId>	 
+		</dependency>
+		<dependency>	 
+			<groupId>org.wso2.carbon</groupId>	 
+			<artifactId>org.wso2.carbon.identity.sts.mgt.ui</artifactId>	 
+		</dependency>
+		<dependency>
+			<groupId>org.wso2.carbon</groupId>
+			<artifactId>org.wso2.carbon.identity.provider.stub</artifactId>
+		</dependency>
 	</dependencies>
 	<build>
 		<plugins>
@@ -64,6 +71,8 @@
                                 </properties>
                             </adviceFile>
 							<bundles>
+								<bundleDef>org.wso2.carbon:org.wso2.carbon.identity.sts.mgt.ui</bundleDef>
+								<bundleDef>org.wso2.carbon:org.wso2.carbon.identity.sts.mgt.stub</bundleDef>
 								<bundleDef>org.wso2.carbon:org.wso2.carbon.identity.provider.ui</bundleDef>
 								<bundleDef>org.wso2.carbon:org.wso2.carbon.identity.provider.stub</bundleDef>
 							</bundles>

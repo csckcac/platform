@@ -97,7 +97,6 @@
 		<module>orbit/hive</module>
 		<module>orbit/datanucleus-core</module>
 		<module>orbit/amber</module>
-		<module>orbit/charon</module>
 		<module>orbit/hadoop-core</module>
 	     </modules>
    <dependencyManagement>

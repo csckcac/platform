@@ -35,21 +35,24 @@ public class ApplicationManagementService extends AbstractAdmin{
 //    HashMap<String, String> imageIdtoNameMap;  to active for next release
     OpenstackDAO openstackDAO;
 
+    /**
+     * Here in the constructor it call init Autoscaler due to requirement of calling init before any
+     * operation
+     * @throws AxisFault
+     */
     public ApplicationManagementService() throws AxisFault{
 //        imageIdtoNameMap = new HashMap<String, String>(); to active for next release
-        initAutoscaler();
-    }
-
-    public void initAutoscaler() throws AxisFault {
         client = new AutoscaleServiceClient(System.getProperty(PHPCartridgeConstants.AUTOSCALER_SERVICE_URL));
         try {
-			client.init(true);
-		} catch (Exception e) {
-			throw new AxisFault(e.getMessage(), e);
-		}
+            client.init(true);
+        } catch (Exception e) {
+            throw new AxisFault(e.getMessage(), e);
+        }
     }
+
+
     /**
-         * Upload a File
+         * Upload PHP apps passed to method. Will be uploaded to the directory relevant to tenant
          *
          * @param fileUploadDataList Array of data representing the PHP apps(.zip) that are to be uploaded
          * @return true - if upload was successful
@@ -61,7 +64,6 @@ public class ApplicationManagementService extends AbstractAdmin{
         if (!phpAppsDir.exists() && !phpAppsDir.mkdirs()) {
             log.warn("Could not create directory " + phpAppsDir.getAbsolutePath());
         }
-
         for (FileUploadData uploadData : fileUploadDataList) {
             String fileName = uploadData.getFileName();
             File destFile = new File(phpAppsDir, fileName);
@@ -81,8 +83,8 @@ public class ApplicationManagementService extends AbstractAdmin{
                     log.warn("Could not close file " + destFile.getAbsolutePath());
                 }
             }
-            log.info("Files are successfully uploaded !" );
         }
+        log.info("Files are successfully uploaded !" );
         return true;
     }
 
@@ -98,7 +100,7 @@ public class ApplicationManagementService extends AbstractAdmin{
     }
 
     /**
-     * Retrieve and display the applications
+     * Retrieve and display the applications from the directory relevant to tenant
      */
     public String[] listPhpApplications() {
         String phpAppPath = getWebappDeploymentDirPath();
@@ -126,6 +128,12 @@ public class ApplicationManagementService extends AbstractAdmin{
 
     }
 
+    /**
+     * returns a summery of the PHP apps deployed in the directory relevant to tenant
+     * @param phpAppSearchString search is not implemented yet
+     * @param pageNumber
+     * @return
+     */
     public PHPAppsWrapper getPagedPhpAppsSummary(String phpAppSearchString, int pageNumber){
          PHPAppsWrapper phpAppsWrapper = new PHPAppsWrapper();
         String[] phpApps= listPhpApplications();
@@ -135,6 +143,12 @@ public class ApplicationManagementService extends AbstractAdmin{
         return phpAppsWrapper;
     }
 
+    /**
+     * End points relevant to different applications according to the instance, or if instance is
+     * not there an error mesage
+     * @param phpApps
+     * @return
+     */
     private String[] getEndPoints(String[] phpApps) {
         String[] endPoints;
         if(phpApps != null){
@@ -147,7 +161,7 @@ public class ApplicationManagementService extends AbstractAdmin{
             for(int i = 0; i < endPoints.length; i++){
                 if(isInstanceForTenantUp()){
                     String publicIp = Store.tenantToPublicIpMap.get(tenantId);
-                    endPoints[i] = "https://" + publicIp + tenantIdentityForUrl + "/" + phpApps[i]
+                    endPoints[i] = "http://" + publicIp + tenantIdentityForUrl + "/" + phpApps[i]
                                    + "/" + phpApps[i] + ".php";
                 }    else{
                     endPoints[i] = "Endpoint could not be allocated. Please contact your administrator";
@@ -201,15 +215,7 @@ public class ApplicationManagementService extends AbstractAdmin{
         }
         //Above code will get first one from images of configuration for this release
         Integer tenantId = MultitenantUtils.getTenantId(getConfigContext());
-        log.info("An instance is spawning for tenant " + tenantId);
-        try {
-			if (client == null) {
-				initAutoscaler();
-			}
-        } catch (Exception e) {
-            String msg = "Error while initializing Autoscaler";
-            log.error(msg, e);
-        }
+        log.info("An instance is spawning using Auto scaler for tenant " + tenantId);
         String publicIp = "";
         openstackDAO = new OpenstackDAO();
         try{

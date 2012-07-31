@@ -8,15 +8,15 @@ import java.util.concurrent.ConcurrentMap;
  */
 public class Store {
     /**
-     * Key is public ip Value is tenant
+     * Key is public ip, Value is tenant
      */
     public static ConcurrentMap<String, Integer> privateIpToTenantMap = new ConcurrentHashMap<String, Integer>();
     /**
-     * Key is tenant Value is public ip
+     * Key is tenant, Value is public ip
      */
     public static ConcurrentMap<Integer, String> tenantToPublicIpMap = new ConcurrentHashMap<Integer, String>();
     /**
-     * Key is tenant Value is private ip
+     * Key is tenant, Value is private ip
      */
     public static ConcurrentMap<Integer, String> tenantToPrivateIpMap = new ConcurrentHashMap<Integer, String>();
 }

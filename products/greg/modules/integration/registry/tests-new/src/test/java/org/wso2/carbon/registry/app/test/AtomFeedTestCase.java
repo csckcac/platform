@@ -70,12 +70,9 @@ public class AtomFeedTestCase {
             throws MalformedURLException, RegistryException, LoginAuthenticationExceptionException,
                    RemoteException {
         int userId = 1;
-        EnvironmentBuilder environmentBuilder = new EnvironmentBuilder();
         userInfo = UserListCsvReader.getUserInfo(userId);
-        builder = new EnvironmentBuilder().greg(1);
+        builder = new EnvironmentBuilder().greg(userId);
         environment = builder.build();
-
-
         registry = new RegistryProviderUtil().getRemoteRegistry(userId, ProductConstant.GREG_SERVER_NAME);
         populateData();
     }

@@ -64,6 +64,17 @@ public class SessionHostObject extends ScriptableObject {
         return sho.session.getLastAccessedTime();
     }
 
+    public static String jsFunction_getId(Context cx, Scriptable thisObj, Object[] args, Function funObj) throws ScriptException {
+        String functionName = "getSessionId";
+        int argsCount = args.length;
+        if (argsCount != 0) {
+            HostObjectUtil.invalidNumberOfArgs(hostObjectName, functionName, argsCount, false);
+        }
+
+        SessionHostObject sho = (SessionHostObject) thisObj;
+        return sho.session.getId();
+    }
+    
     public long jsGet_maxInactive() throws ScriptException {
         return session.getMaxInactiveInterval();
     }

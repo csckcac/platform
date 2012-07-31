@@ -18,6 +18,7 @@ package org.wso2.carbon.identity.sso.saml;
 
 import org.apache.commons.logging.Log;
 import org.apache.commons.logging.LogFactory;
+import org.wso2.carbon.base.MultitenantConstants;
 import org.wso2.carbon.context.CarbonContext;
 import org.wso2.carbon.core.AbstractAdmin;
 import org.wso2.carbon.core.util.KeyStoreUtil;
@@ -49,7 +50,8 @@ public class SAMLSSOConfigService extends AbstractAdmin{
         try {
             KeyStoreAdmin admin = new KeyStoreAdmin(CarbonContext.getCurrentContext().getTenantId(),
                     getGovernanceRegistry());
-            boolean isSuperAdmin = super.getTenantDomain() == null ? true : false ;
+            boolean isSuperAdmin = MultitenantConstants.SUPER_TENANT_DOMAIN_NAME.equals(
+                    getTenantDomain()) ? true : false ;
             return admin.getKeyStores(isSuperAdmin);
         } catch (SecurityConfigException e) {
             log.error("Error when loading the key stores from registry", e);
@@ -61,12 +63,14 @@ public class SAMLSSOConfigService extends AbstractAdmin{
         KeyStoreData[] keyStores = getKeyStores();
         KeyStoreData primaryKeyStore = null;
         for (int i = 0; i < keyStores.length; i++) {
-            if (getTenantDomain() == null && KeyStoreUtil.isPrimaryStore(keyStores[i].getKeyStoreName())) {
+            boolean superTenant = MultitenantConstants.SUPER_TENANT_DOMAIN_NAME.equals(
+                    getTenantDomain());
+            if (superTenant && KeyStoreUtil.isPrimaryStore(keyStores[i].getKeyStoreName())) {
                 primaryKeyStore = keyStores[i];
                 break;
             }
-            else if (getTenantDomain() != null && SAMLSSOUtil.generateKSNameFromDomainName(getTenantDomain()).equals(
-                    keyStores[i].getKeyStoreName())){
+            else if (!superTenant && SAMLSSOUtil.generateKSNameFromDomainName(
+                    getTenantDomain()).equals(keyStores[i].getKeyStoreName())){
                 primaryKeyStore = keyStores[i];
                 break;
             }

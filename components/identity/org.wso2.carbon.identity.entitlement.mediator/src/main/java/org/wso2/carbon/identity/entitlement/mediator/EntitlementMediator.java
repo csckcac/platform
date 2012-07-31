@@ -18,6 +18,10 @@
 package org.wso2.carbon.identity.entitlement.mediator;
 
 import java.lang.Exception;
+import java.net.InetAddress;
+import java.net.MalformedURLException;
+import java.net.URL;
+import java.net.UnknownHostException;
 import java.util.Calendar;
 import java.util.Map;
 import java.util.Properties;
@@ -306,10 +310,17 @@ public class EntitlementMediator extends AbstractMediator implements ManagedLife
                 properties.put(EntitlementConstants.REUSE_SESSION, reuseSession);
             }
 
-            String serverUrl = ServerConfiguration.getInstance().
-                                            getFirstProperty(CarbonConstants.SERVER_URL);
-            if(serverUrl != null){
-                properties.put(EntitlementConstants.SERVER_URL, serverUrl);   
+            String serverIp = "127.0.0.1";
+            try {
+                serverIp = InetAddress.getByName(new URL(ServerConfiguration.getInstance().
+                            getFirstProperty(CarbonConstants.SERVER_URL)).getHost()).getHostAddress();
+            } catch (Exception e) {
+                log.warn("Can not calculate server's ip address. Using default address " + serverIp);
+                //ignore as server ip is not important and and assume 127.0.0.1 by default
+            }
+
+            if(serverIp != null){
+                properties.put(EntitlementConstants.SERVER_URL, serverIp);   
             }
 
             client.init(properties);

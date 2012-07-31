@@ -64,6 +64,8 @@
 	<module>org.wso2.carbon.identity.scim.consumer</module>
         <module>org.wso2.carbon.identity.authentication</module>
         <module>org.wso2.carbon.identity.thrift.authentication</module>
+        <module>org.wso2.carbon.identity.sts.mgt</module>
+        <module>org.wso2.carbon.identity.sts.mgt.ui</module>
     </modules>
 
     <dependencyManagement>
@@ -291,6 +293,11 @@
                 <artifactId>org.wso2.securevault</artifactId>
                 <version>${securevault.version}</version>
             </dependency>
+			<dependency>
+				<groupId>org.wso2.carbon</groupId>
+				<artifactId>org.wso2.carbon.server.admin</artifactId>
+				<version>${wso2carbon.version}</version>			
+			</dependency>
         </dependencies>
     </dependencyManagement>
 

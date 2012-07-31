@@ -55,19 +55,6 @@
             <icon>../js_service/images/mashup-uploading.gif</icon>
             <require-permission>/permission/admin/manage/add/service</require-permission>
         </menu>
-
-		<menu>
-			<id>tasks_menu</id>
-			<i18n-key>task.menu.text</i18n-key>
-			<i18n-bundle>org.wso2.carbon.task.ui.i18n.Resources</i18n-bundle>
-			<parent-menu>configure_menu</parent-menu>
-			<link>../task/index.jsp</link>
-			<region>region1</region>
-			<order>24</order>
-			<style-class>manage</style-class>
-    		<icon>../task/images/tasks-icon.gif</icon>
-    		<require-permission>/permission/admin/configure/tasks</require-permission>
-		</menu>
     </menus>
     <FileUploadConfig>
         <Mapping>

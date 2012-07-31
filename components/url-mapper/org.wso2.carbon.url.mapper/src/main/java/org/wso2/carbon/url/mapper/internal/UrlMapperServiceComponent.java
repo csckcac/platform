@@ -27,10 +27,12 @@ import org.wso2.carbon.tomcat.ext.valves.CarbonTomcatValve;
 import org.wso2.carbon.tomcat.ext.valves.TomcatValveContainer;
 import org.wso2.carbon.url.mapper.HotUpdateService;
 import org.wso2.carbon.url.mapper.UrlMapperValve;
+import org.wso2.carbon.url.mapper.data.MappingConfig;
 import org.wso2.carbon.url.mapper.data.MappingData;
 import org.wso2.carbon.url.mapper.internal.exception.UrlMapperException;
 import org.wso2.carbon.url.mapper.internal.util.DataHolder;
 import org.wso2.carbon.url.mapper.internal.util.HostUtil;
+import org.wso2.carbon.url.mapper.internal.util.MappingConfigManager;
 import org.wso2.carbon.user.core.service.RealmService;
 import org.wso2.carbon.utils.CarbonUtils;
 import org.wso2.carbon.utils.ConfigurationContextService;
@@ -44,11 +46,7 @@ import java.util.List;
  * registry and add to tomcat engine in its initialization.
  * adds the CarbonTomcatValve to TomcatContainer.
  *
- * @scr.component name="org.wso2.carbon.url.mapper" immediate="true"
- * @scr.reference name="config.context.service"
- * interface="org.wso2.carbon.utils.ConfigurationContextService"
- * cardinality="1..1" policy="dynamic"  bind="setConfigurationContextService"
- * unbind="unsetConfigurationContextService"
+ * @scr.component name="org.wso2.carbon.url.mapper.UrlMapperServiceComponent" immediate="true"
  * @scr.reference name="tomcat.service.provider"
  * interface="org.wso2.carbon.tomcat.api.CarbonTomcatService"
  * cardinality="1..1" policy="dynamic" bind="setCarbonTomcatService"
@@ -93,6 +91,10 @@ public class UrlMapperServiceComponent {
         List<CarbonTomcatValve> carbonTomcatValves = new ArrayList<CarbonTomcatValve>();
         carbonTomcatValves.add(new UrlMapperValve());
         TomcatValveContainer.addValves(carbonTomcatValves);
+
+        //load configuration file
+        MappingConfig config = MappingConfigManager.loadMappingConfiguration();
+        HostUtil.setUrlSuffix(config.getPrefix());
     }
     
     protected void addMappingToInMemory() {
@@ -104,10 +106,12 @@ public class UrlMapperServiceComponent {
         }
         if(urlMappings != null) {
             for(MappingData mapping: urlMappings) {
-                if(mapping.isServiceMapping() && mapping.getTenantDomain().
+                if(mapping.getTenantDomain().
                         equalsIgnoreCase(MultitenantConstants.SUPER_TENANT_DOMAIN_NAME)) {
-                    ApplicationContext.getCurrentApplicationContext().
-                            putUrlMappingForApplication(mapping.getMappingName(), mapping.getUrl());
+                    if(mapping.isServiceMapping()) {
+                        ApplicationContext.getCurrentApplicationContext().
+                                putUrlMappingForApplication(mapping.getMappingName(), mapping.getUrl());
+                    }
                 }
 
             }

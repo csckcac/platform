@@ -81,4 +81,8 @@ public class HotUpdateManager implements HotUpdateService {
     public void addServiceMapping(String epr) {
         HostUtil.addServiceMapping(epr);
     }
+    
+    public String getSuffixOfHost() {
+        return HostUtil.getUrlSuffix();
+    }
 }

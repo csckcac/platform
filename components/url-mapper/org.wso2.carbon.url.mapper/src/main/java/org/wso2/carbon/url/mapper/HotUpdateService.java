@@ -37,4 +37,6 @@ public interface HotUpdateService {
 
     public void addServiceMapping(String epr);
 
+    public String getSuffixOfHost();
+
 }

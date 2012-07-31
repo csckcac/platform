@@ -15,12 +15,12 @@
  */
 package org.wso2.carbon.url.mapper;
 
-import java.util.Arrays;
-import java.util.List;
-
+import org.apache.axis2.AxisFault;
 import org.apache.commons.logging.Log;
 import org.apache.commons.logging.LogFactory;
+import org.wso2.carbon.context.ApplicationContext;
 import org.wso2.carbon.core.AbstractAdmin;
+import org.wso2.carbon.url.mapper.clustermessage.util.VirtualHostClusterUtil;
 import org.wso2.carbon.url.mapper.data.MappingConfig;
 import org.wso2.carbon.url.mapper.data.MappingData;
 import org.wso2.carbon.url.mapper.data.PaginatedMappingData;
@@ -29,6 +29,9 @@ import org.wso2.carbon.url.mapper.internal.util.HostUtil;
 import org.wso2.carbon.url.mapper.internal.util.MappingConfigManager;
 import org.wso2.carbon.utils.DataPaginator;
 
+import java.util.Arrays;
+import java.util.List;
+
 /**
  * Backend service to handle virtual host addition to registry and to tomcat.
  */
@@ -36,7 +39,6 @@ public class UrlMapperAdminService extends AbstractAdmin {
 	private static final Log log = LogFactory.getLog(UrlMapperAdminService.class);
 
 	public void addWebAppToHost(String hostName, String uri) throws UrlMapperException {
-		// TODO have to figure out exception handling
 		try {
 			hostName = hostName + getDomainNamePrefix();
 			HostUtil.addWebAppToHost(hostName, uri);
@@ -80,9 +82,11 @@ public class UrlMapperAdminService extends AbstractAdmin {
 		HostUtil.updateEprToRegistry(newHost, oldhost);
 	}
 
-	public void deleteServiceDomain(String hostName) throws UrlMapperException {
-		HostUtil.deleteResourceToRegistry(hostName);
-	}
+	public void deleteServiceDomain(String hostName) throws UrlMapperException, AxisFault {
+        ApplicationContext.getCurrentApplicationContext().removeUrlMappingMap(hostName);
+        VirtualHostClusterUtil.deleteServiceMappingToCluster(hostName);
+        HostUtil.deleteResourceToRegistry(hostName);
+    }
 
 	public String[] getHostForEpr(String url) throws UrlMapperException {
 		List<String> domains = HostUtil.getMappingsPerEppr(url);
@@ -111,7 +115,7 @@ public class UrlMapperAdminService extends AbstractAdmin {
 	}
 
 	public void deleteHost(String hostName) throws UrlMapperException {
-		HostUtil.removeHost(hostName);
+		HostUtil.removeHostForCluster(hostName);
 		HostUtil.deleteResourceToRegistry(hostName);
 	}
 

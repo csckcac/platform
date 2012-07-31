@@ -30,6 +30,7 @@
 <%@ page import="java.util.List" %>
 <jsp:include page="../dialog/display_messages.jsp"/>
 <jsp:useBean id="dataService" class="org.wso2.carbon.dataservices.ui.beans.Data" scope="session"/>
+<jsp:useBean id="validators" class="java.util.ArrayList" scope="session" />
 <%
     //retrieve form values set in addQuery.jsp page
     String serviceName = request.getParameter("serviceName");
@@ -481,6 +482,8 @@
                             param.setParamType("SCALAR");
                             param.setSqlType("STRING");
                             param.setType("IN");
+                            param.setValidarors(validators);
+                            session.setAttribute("validators", new ArrayList());
                             q.addParam(param);
                         }
                     }

@@ -277,20 +277,28 @@ public class WebApplication {
                     getUrlMappingsPerApplication(this.context.getName());
             Engine engine = DataHolder.getCarbonTomcatService().getTomcat().getEngine();
             Context hostContext;
+            Host host;
             for (String hostName : mappings) {
-                hostContext = (Context) engine.findChild(hostName).findChild("/");
-                if (nameOfOperation.equalsIgnoreCase("start")) {
-                    start(hostContext);
-                } else if (nameOfOperation.equalsIgnoreCase("stop")) {
-                    stop(hostContext);
-                } else if (nameOfOperation.equalsIgnoreCase("reload")) {
-                    reload(hostContext);
-                } else if (nameOfOperation.equalsIgnoreCase("lazyunload")) {
-                    lazyUnload(hostContext);
-                    DataHolder.getHotUpdateService().removeHost(hostName);
-                } else if (nameOfOperation.equalsIgnoreCase("delete")) {
-                    DataHolder.getHotUpdateService().deleteHost(hostName);
+                host = (Host) engine.findChild(hostName);
+                if(host != null) {
+                    hostContext = (Context)host.findChild("/");
+                    if(hostContext != null) {
+                        if (nameOfOperation.equalsIgnoreCase("start")) {
+                            start(hostContext);
+                        } else if (nameOfOperation.equalsIgnoreCase("stop")) {
+                            stop(hostContext);
+                        } else if (nameOfOperation.equalsIgnoreCase("reload")) {
+                            reload(hostContext);
+                        } else if (nameOfOperation.equalsIgnoreCase("lazyunload")) {
+                            lazyUnload(hostContext);
+                            DataHolder.getHotUpdateService().removeHost(hostName);
+                        } else if (nameOfOperation.equalsIgnoreCase("delete")) {
+                            DataHolder.getHotUpdateService().deleteHost(hostName);
+                        }
+                    }
+
                 }
+
             }
 
         }

@@ -94,4 +94,15 @@ public class TomcatUtil {
         connectorReq.setContext((Context) connectorReq.getMappingData().context);
         connectorReq.setWrapper((Wrapper) connectorReq.getMappingData().wrapper);
     }
+    
+    public static String getApplicationNameFromContext(String contextName) {
+        String appName;
+        if(contextName.contains("/t/")) {
+            String[] temp = contextName.split("/");
+            appName = temp[temp.length - 1];
+        } else {
+            appName = contextName;
+        }
+        return appName;
+    }
 }

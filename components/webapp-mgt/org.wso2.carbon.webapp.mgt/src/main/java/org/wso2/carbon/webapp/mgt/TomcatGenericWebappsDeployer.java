@@ -369,7 +369,8 @@ public class TomcatGenericWebappsDeployer {
             if (deployedWebapps.containsKey(fileName)) {
                 WebApplication deployWebapp = deployedWebapps.get(fileName);
                 Context context = deployWebapp.getContext();
-                currentCarbonAppContextHolder.setApplicationName(context.getBaseName());
+                currentCarbonAppContextHolder.setApplicationName(
+                        TomcatUtil.getApplicationNameFromContext(context.getBaseName()));
                 deployWebapp.lazyUnload();
             }
 
@@ -388,7 +389,8 @@ public class TomcatGenericWebappsDeployer {
         if (faultyWebapps.containsKey(fileName)) {
             WebApplication faultyWebapp = faultyWebapps.get(fileName);
             Context context = faultyWebapp.getContext();
-            currentCarbonAppContextHolder.setApplicationName(context.getBaseName());
+            currentCarbonAppContextHolder.setApplicationName(
+                    TomcatUtil.getApplicationNameFromContext(context.getBaseName()));
             faultyWebapps.remove(fileName);
             log.info("Removed faulty webapp " + faultyWebapp);
         }
@@ -405,7 +407,8 @@ public class TomcatGenericWebappsDeployer {
                 CarbonApplicationContextHolder.getCurrentCarbonAppContextHolder();
         currentCarbonAppContextHolder.startApplicationFlow();
         Context context = webapp.getContext();
-        currentCarbonAppContextHolder.setApplicationName(context.getBaseName());
+        currentCarbonAppContextHolder.setApplicationName(
+                TomcatUtil.getApplicationNameFromContext(context.getBaseName()));
         webappsHolder.undeployWebapp(webapp);
         log.info("Undeployed webapp: " + webapp);
         currentCarbonAppContextHolder.endApplicationFlow();

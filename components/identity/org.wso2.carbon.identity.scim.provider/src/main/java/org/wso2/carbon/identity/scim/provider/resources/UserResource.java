@@ -47,7 +47,7 @@ import java.util.HashMap;
 import java.util.Map;
 
 @Path("/")
-public class UserResource {
+public class UserResource extends AbstractResource{
 
     @GET
     @Path("{id}")
@@ -62,9 +62,7 @@ public class UserResource {
             IdentitySCIMManager identitySCIMManager = IdentitySCIMManager.getInstance();
 
             // defaults to application/json.
-            if (format == null || ("*/*").equals(format)) {
-                format = SCIMConstants.APPLICATION_JSON;
-            }
+            format = identifyOutputFormat(format);
             //obtain the encoder at this layer in case exceptions needs to be encoded.
             encoder = identitySCIMManager.getEncoder(SCIMConstants.identifyFormat(format));
             //perform authentication
@@ -120,9 +118,7 @@ public class UserResource {
             }
             //set the format in which the response should be encoded, if not specified in the request,
             // defaults to application/json.
-            if (outputFormat == null) {
-                outputFormat = SCIMConstants.APPLICATION_JSON;
-            }
+            outputFormat = identifyOutputFormat(outputFormat);
             //obtain the encoder at this layer in case exceptions needs to be encoded.
             encoder = identitySCIMManager.getEncoder(SCIMConstants.identifyFormat(outputFormat));
             //perform authentication

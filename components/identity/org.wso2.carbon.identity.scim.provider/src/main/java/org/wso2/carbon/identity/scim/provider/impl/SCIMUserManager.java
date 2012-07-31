@@ -64,17 +64,17 @@ public class SCIMUserManager implements UserManager {
          */
 
         Map<String, String> claims = new HashMap<String, String>();
-        String[] roles = (String[]) user.getGroups().toArray();
+        //String[] roles = (String[]) user.getGroups().toArray();
 
         try {
-            carbonUM.addUser(user.getUserName(), user.getPassword(), roles, claims, null);
+            carbonUM.addUser(user.getUserName(), user.getPassword(), null, claims, null);
         } catch (UserStoreException e) {
             e.printStackTrace();  //To change body of catch statement use File | Settings | File Templates.
         }
         //carbonUM.
         // when user claims are returned convert them to SCIM claims and construct SCIM attributes.
 
-        return null;
+        return user;
     }
 
     public User getUser(String userName) throws CharonException {

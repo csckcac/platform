@@ -30,6 +30,7 @@ import org.wso2.carbon.user.api.UserStoreException;
 import org.wso2.carbon.user.core.service.RealmService;
 import org.wso2.carbon.hadoop.security.HadoopCarbonMessageContext;
 import org.wso2.carbon.hadoop.security.HadoopCarbonSecurity;
+import org.wso2.carbon.identity.authenticator.krb5.Krb5AuthenticatorConstants;
 
 /**
  * Todo Doc
@@ -76,8 +77,13 @@ public class HDFSAdminComponentManager {
     	HttpServletRequest request = (HttpServletRequest) msgCtx.getProperty(HTTPConstants.MC_HTTP_SERVLETREQUEST);
 		String cookie = request.getHeader(HTTPConstants.COOKIE_STRING);
     	HadoopCarbonMessageContext hcMsgCtx = new HadoopCarbonMessageContext(msgCtx.getConfigurationContext(), cookie);
+    	hcMsgCtx.setKrb5TicketCache((String)request.getSession().getAttribute(Krb5AuthenticatorConstants.USER_TICKET_CACHE));
     	HadoopCarbonMessageContext.set(hcMsgCtx);
         return dataAccessService;
+    }
+    
+    public DataAccessService getLocalDataAccessService() throws HDFSServerManagementException {
+    	return dataAccessService;
     }
 
     public boolean isInitialized() {

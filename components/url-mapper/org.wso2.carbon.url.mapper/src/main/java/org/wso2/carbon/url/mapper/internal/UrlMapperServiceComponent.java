@@ -35,7 +35,6 @@ import org.wso2.carbon.url.mapper.internal.util.HostUtil;
 import org.wso2.carbon.url.mapper.internal.util.MappingConfigManager;
 import org.wso2.carbon.user.core.service.RealmService;
 import org.wso2.carbon.utils.CarbonUtils;
-import org.wso2.carbon.utils.ConfigurationContextService;
 import org.wso2.carbon.utils.multitenancy.MultitenantConstants;
 
 import java.util.ArrayList;
@@ -120,14 +119,6 @@ public class UrlMapperServiceComponent {
 
     protected void deactivate(ComponentContext componentContext) {
         serviceRegistration.unregister();
-    }
-
-    protected void setConfigurationContextService(ConfigurationContextService contextService) {
-        DataHolder.getInstance().setServerConfigContext(contextService.getServerConfigContext());
-    }
-
-    protected void unsetConfigurationContextService(ConfigurationContextService contextService) {
-        DataHolder.getInstance().setServerConfigContext(null);
     }
 
     protected void setCarbonTomcatService(CarbonTomcatService carbonTomcatService) {

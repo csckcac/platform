@@ -33,10 +33,14 @@
     <description>This feature contains the core bundles required for Back-end URL Mapper functionality</description>
 
     <dependencies>
+	<dependency>
+            <groupId>org.wso2.carbon</groupId>
+            <artifactId>org.wso2.carbon.url.mapper.clustermessage</artifactId>
+        </dependency>
         <dependency>
             <groupId>org.wso2.carbon</groupId>
             <artifactId>org.wso2.carbon.url.mapper</artifactId>
-        </dependency>
+        </dependency>	
     </dependencies>
 
     <build>
@@ -88,10 +92,11 @@
                             </adviceFile>
                             <bundles>
                                 <bundleDef>org.wso2.carbon:org.wso2.carbon.url.mapper</bundleDef>
+				<bundleDef>org.wso2.carbon:org.wso2.carbon.url.mapper.clustermessage</bundleDef>
                             </bundles>
                             <importFeatures>
                                 <importFeatureDef>org.wso2.carbon.core.server:${wso2carbon.version}</importFeatureDef>
-							</importFeatures>
+			    </importFeatures>
                         </configuration>
                     </execution>
                 </executions>

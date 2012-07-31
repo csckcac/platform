@@ -31,7 +31,7 @@ import org.wso2.carbon.identity.base.IdentityConstants;
 import org.wso2.carbon.identity.provider.AttributeCallbackHandler;
 import org.wso2.carbon.identity.provider.IdentityProviderException;
 import org.wso2.carbon.identity.provider.IdentityProviderUtil;
-import org.wso2.carbon.identity.sts.IPPasswordCallbackHandler;
+import org.wso2.carbon.identity.sts.mgt.IPPasswordCallbackHandler;
 import org.wso2.carbon.identity.sts.mgt.internal.IdentitySTSMgtServiceComponent;
 
 import org.wso2.carbon.registry.core.Registry;

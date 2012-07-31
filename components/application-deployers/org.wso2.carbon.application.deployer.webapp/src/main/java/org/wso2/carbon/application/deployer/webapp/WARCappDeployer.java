@@ -103,38 +103,40 @@ public class WARCappDeployer implements AppDeploymentHandler {
         List<Artifact.Dependency> artifacts = carbonApp.getAppConfig().getApplicationArtifact()
                 .getDependencies();
 
+        String repo = axisConfig.getRepository().getPath();
+
+        String artifactPath, destPath;
         for (Artifact.Dependency dep : artifacts) {
             Artifact artifact = dep.getArtifact();
             if (artifact == null) {
                 continue;
             }
-            if (!WARCappDeployer.WAR_TYPE.equals(artifact.getType()) &&
-                    !WARCappDeployer.JAX_WAR_TYPE.equals(artifact.getType())) {
+            if (!WAR_TYPE.equals(artifact.getType()) &&
+                !JAX_WAR_TYPE.equals(artifact.getType())) {
                 continue;
             }
 
             List<CappFile> files = artifact.getFiles();
             if (files.size() != 1) {
                 log.error("Web Applications must have a single WAR file. But " +
-                        files.size() + " files found.");
-                continue;
-            }
-            String fileName = artifact.getFiles().get(0).getName();
-            if (WARCappDeployer.JAX_WAR_TYPE.equals(artifact.getType())) {
-                JaxwsWebappAdmin jaxwsWebappAdmin = new JaxwsWebappAdmin();
-                try {
-                    jaxwsWebappAdmin.deleteWebapp(fileName);
-                } catch (AxisFault axisFault) {
-                    log.error("Error while deleting webapp artifact " + fileName, axisFault);
-                }
+                          files.size() + " files found.");
                 continue;
             }
 
-            WebappAdmin webappAdmin = new WebappAdmin();
-            try {
-                webappAdmin.deleteWebapp(fileName);
-            } catch (AxisFault axisFault) {
-                log.error("Error while deleting webapp artifact " + fileName, axisFault);
+            String fileName = artifact.getFiles().get(0).getName();
+
+            if (WAR_TYPE.equals(artifact.getType())) {
+                destPath = repo + File.separator + WAR_DIR;
+            } else if (JAX_WAR_TYPE.equals(artifact.getType())) {
+                destPath = repo + File.separator + JAX_WAR_DIR;
+            } else {
+                continue;
+            }
+
+            artifactPath = destPath + File.separator + fileName;
+            File artifactFile = new File(artifactPath);
+            if (artifactFile.exists() && !artifactFile.delete()) {
+                log.warn("Couldn't delete webapp artifact file : " + artifactPath);
             }
         }
     }

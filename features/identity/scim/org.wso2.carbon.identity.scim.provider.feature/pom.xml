@@ -26,7 +26,7 @@
 	<dependency>
             <groupId>org.wso2.charon</groupId>
             <artifactId>charon-core</artifactId>
-            <version>${orbit.version.charon}</version>
+            <version>${version.charon}</version>
         </dependency>
     </dependencies>
 

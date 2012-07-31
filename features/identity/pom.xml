@@ -114,11 +114,6 @@
             </dependency>
             <dependency>
                 <groupId>org.wso2.carbon</groupId>
-                <artifactId>org.wso2.carbon.identity.sts</artifactId>
-                <version>${identity.version}</version>
-            </dependency>
-            <dependency>
-                <groupId>org.wso2.carbon</groupId>
                 <artifactId>org.wso2.carbon.identity.sts.mgt</artifactId>
                 <version>${identity.version}</version>
             </dependency>

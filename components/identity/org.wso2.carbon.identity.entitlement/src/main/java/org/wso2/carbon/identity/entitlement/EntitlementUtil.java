@@ -135,7 +135,6 @@ public class EntitlementUtil {
 			log.error("Error occurred while building XACML request", e);
 			throw new Exception("Error occurred while building XACML request");
 		}
-
 	}
 
 	/**
@@ -447,5 +446,34 @@ public class EntitlementUtil {
             throw new IdentityException(e.getMessage());
         }
     }
+
+	/**
+	 * Creates Simple XACML request using given attribute value.Here category, attribute ids and datatypes are
+     * taken as default values.
+	 *
+	 * @param subject user or role
+	 * @param resource resource name
+	 * @param action action name
+	 * @return String
+	 * @throws Exception throws
+	 */
+	public static String createSimpleXACMLRequest(String subject,
+			String resource, String action) throws Exception {
+
+        return "<Request xmlns=\"urn:oasis:names:tc:xacml:3.0:core:schema:wd-17\" " +
+        "ReturnPolicyIdList=\"false\" CombinedDecision=\"false\"><Attributes " +
+        "Category=\"urn:oasis:names:tc:xacml:1.0:subject-category:access-subject\" >" +
+        "<Attribute IncludeInResult=\"false\" AttributeId=\"urn:oasis:names:tc:xacml:1.0:subject:subject-id\">" +
+        "<AttributeValue DataType=\"http://www.w3.org/2001/XMLSchema#string\">"+ subject +
+        "</AttributeValue></Attribute></Attributes><Attributes " +
+        "Category=\"urn:oasis:names:tc:xacml:3.0:attribute-category:resource\">" +
+        "<Attribute IncludeInResult=\"false\" AttributeId=\"urn:oasis:names:tc:xacml:1.0:resource:resource-id\">" +
+        "<AttributeValue DataType=\"http://www.w3.org/2001/XMLSchema#string\">" + resource +
+        "</AttributeValue></Attribute></Attributes><Attributes " +
+        "Category=\"urn:oasis:names:tc:xacml:3.0:attribute-category:action\">" +
+        "<Attribute IncludeInResult=\"false\" AttributeId=\"urn:oasis:names:tc:xacml:1.0:action:action-id\">" +
+        "<AttributeValue DataType=\"http://www.w3.org/2001/XMLSchema#string\">" + action + "</AttributeValue>" +
+        "</Attribute></Attributes></Request>";
+	}
 
 }

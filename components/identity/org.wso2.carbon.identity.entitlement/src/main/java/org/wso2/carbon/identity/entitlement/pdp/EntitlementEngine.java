@@ -290,12 +290,9 @@ public class EntitlementEngine {
             return response;
 		}
 
-        ByteArrayOutputStream requestOut = new ByteArrayOutputStream();
-        RequestCtx requestCtx = EntitlementUtil.createXACMLRequestFromAttributes(subject, null,
-                resource, action, environment);
-        requestCtx.encode(requestOut);
-        
-        response = evaluate(requestOut.toString());
+        String requestAsString = EntitlementUtil.createSimpleXACMLRequest(subject, resource, action);
+
+        response = pdp.evaluate(requestAsString);
         
         addToCache(request, response, true);
         return response;

@@ -22,8 +22,10 @@
 <%@ page import="org.wso2.carbon.ui.CarbonUIUtil" %>
 <%@ page import="org.wso2.carbon.CarbonConstants" %>
 <%@ page import="org.wso2.carbon.dataservices.ui.beans.Operation" %>
+<%@ page import="org.wso2.carbon.dataservices.ui.beans.CallQuery" %>
 <%@ page import="java.util.ArrayList" %>
 <%@ page import="java.util.Iterator" %>
+<%@ page import="java.util.List" %>
 <jsp:include page="../dialog/display_messages.jsp"/>
 <fmt:bundle basename="org.wso2.carbon.dataservices.ui.i18n.Resources">
 <carbon:breadcrumb 
@@ -88,11 +90,28 @@
                     while(iterator.hasNext()){
                         Operation operation = (Operation)iterator.next();
                         if(operation != null){
+                        	String queryList = "";
+                        	if (operation.getCallQuery() == null && operation.getCallQueryGroup() != null) {
+                        		List<CallQuery> callQueries = operation.getCallQueryGroup().getCallQueries();
+                        		if (callQueries != null) {
+                        			for(CallQuery callQuery : callQueries) {
+                        				if (queryList.equals("")) {
+                        					queryList = queryList + callQuery.getHref();
+                        				} else {
+                        					queryList = queryList + "," + callQuery.getHref();
+                        				}
+                        			}
+                        		}
+                        	}
                             %>
             <tr>
                 <input type="hidden" id="<%=operation.getName()%>" name="<%=operation.getName()%>" value="<%=operation.getName()%>" />
                 <td><%=operation.getName()%></td>
-                <td><%=operation.getCallQuery().getHref()%></td>
+                <%if(operation.getCallQuery() == null) { %>
+                	<td><%=queryList%></td>
+                <%} else { %>
+                	<td><%=operation.getCallQuery().getHref()%></td>
+                <%} %>
                 <td>
                    <%
                         String operationsDesc = operation.getDescription();

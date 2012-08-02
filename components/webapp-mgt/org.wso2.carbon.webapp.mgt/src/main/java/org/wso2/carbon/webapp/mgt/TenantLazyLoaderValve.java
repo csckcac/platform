@@ -59,8 +59,8 @@ public class TenantLazyLoaderValve implements CarbonTomcatValve {
             return;
         }
         if (!(requestURI.contains("/" + WebappsConstants.WEBAPP_PREFIX + "/") ||
-                !requestURI.contains("/" + WebappsConstants.JAGGERY_APPS_PREFIX + "/") ||
-                !requestURI.contains("/" + WebappsConstants.JAX_WEBAPPS_PREFIX + "/"))) {
+                requestURI.contains("/" + WebappsConstants.JAGGERY_APPS_PREFIX + "/") ||
+                requestURI.contains("/" + WebappsConstants.JAX_WEBAPPS_PREFIX + "/"))) {
             return;
         }
         //check whether the tenant exists. If not, return. This will end up

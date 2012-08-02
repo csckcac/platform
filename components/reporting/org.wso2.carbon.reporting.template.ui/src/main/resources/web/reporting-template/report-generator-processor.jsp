@@ -31,22 +31,16 @@
             (ConfigurationContext) config.getServletContext().getAttribute(CarbonConstants.CONFIGURATION_CONTEXT);
     String cookie = (String) session.getAttribute(ServerConstants.ADMIN_SERVICE_COOKIE);
 
-    ReportTemplateClient client;
+    ReportTemplateClient client = null;
     String errorString = "";
     try {
         client = new ReportTemplateClient(configContext, serverURL, cookie);
-        System.out.println("succesfuly created the client");
     } catch (Exception e) {
-        System.out.println("Error occured");
-        errorString = e.getMessage();
-        CarbonUIMessage.sendCarbonUIMessage(e.getMessage(), CarbonUIMessage.ERROR, request, e);
 %>
 <script type="text/javascript">
-    location.href = "../admin/error.jsp";
-    alert(<%=errorString%>);
+   CARBON.showErrorDialog(<%=e.getMessage()%>);
 </script>
 <%
-        return;
     }
     String reportName = request.getParameter("reportName");
     String reportType = request.getParameter("reportType");

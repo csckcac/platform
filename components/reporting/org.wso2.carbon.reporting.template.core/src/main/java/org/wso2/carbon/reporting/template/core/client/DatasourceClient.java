@@ -78,8 +78,9 @@ public class DatasourceClient {
         ArrayList<String> tableNames = new ArrayList<String>();
         Connection connection = getConnection(dsName);
         DatabaseMetaData metaData = connection.getMetaData();
+        String[] types = {"TABLE"};
 
-        ResultSet resultSet = metaData.getTables(null, null, "%", null);
+        ResultSet resultSet = metaData.getTables(null, null, "%", types);
         while (resultSet.next()) {
             tableNames.add(resultSet.getString(3));
         }

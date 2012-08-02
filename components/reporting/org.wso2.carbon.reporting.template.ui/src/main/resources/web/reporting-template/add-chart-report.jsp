@@ -23,7 +23,6 @@
 <%@ page import="org.wso2.carbon.ui.CarbonUIMessage" %>
 <%@ page import="org.wso2.carbon.reporting.template.ui.client.ReportTemplateClient" %>
 <%@ page import="org.apache.axis2.AxisFault" %>
-<%@ page import="org.jaxen.util.StackedIterator" %>
 <%@ taglib prefix="fmt" uri="http://java.sun.com/jsp/jstl/fmt" %>
 <%@ taglib uri="http://wso2.org/projects/carbon/taglibs/carbontags.jar" prefix="carbon" %>
 <fmt:bundle basename="org.wso2.carbon.reporting.template.ui.i18n.Resources">
@@ -40,10 +39,13 @@
             (ConfigurationContext) config.getServletContext().getAttribute(CarbonConstants.CONFIGURATION_CONTEXT);
     String cookie = (String) session.getAttribute(ServerConstants.ADMIN_SERVICE_COOKIE);
 
-    ReportTemplateClient client;
+    ReportTemplateClient client = null;
     String message = "";
     String[] datasources = null;
     String errorString = "";
+    if (null != request.getParameter("success") && request.getParameter("success").equalsIgnoreCase("false")) {
+        errorString = request.getParameter("errorString").toString();
+    }
     String dsName = "";
     String tableName = "";
     String repType = request.getParameter("reportType");
@@ -72,16 +74,19 @@
     try {
         client = new ReportTemplateClient(configContext, serverURL, cookie);
         datasources = client.getDatasourceNames();
-    } catch (Exception e) {
-        errorString = e.getMessage();
-        CarbonUIMessage.sendCarbonUIMessage(e.getMessage(), CarbonUIMessage.ERROR, request, e);
+        if (!errorString.trim().equals("")) {
 %>
 <script type="text/javascript">
-    location.href = "../admin/error.jsp";
-    alert(<%=errorString%>);
+    CARBON.showErrorDialog('<%=errorString%>');
+</script>
+<% }
+} catch (Exception e) {
+    errorString = e.getMessage();
+%>
+<script type="text/javascript">
+    CARBON.showErrorDialog(<%=e.getMessage()%>);
 </script>
 <%
-        return;
     }
 %>
 
@@ -92,9 +97,7 @@
         document.chartreport.action = 'ChartDataProcessor';
         var msg = checkValidity();
         if (msg != '') {
-            jQuery(document).init(function () {
-                CARBON.showErrorDialog(msg);
-            });
+            CARBON.showErrorDialog(msg);
             return false;
         }
         document.getElementById('noSeries').value = seriesCount;
@@ -106,7 +109,9 @@
         location.href = "../reporting_custom/select-report.jsp";
     }
 
-    function dsChanged(dsName) {
+    function dsChanged() {
+        var dsName = document.getElementById('datasource').value;
+
         document.chartreport.action = 'add-chart-report.jsp';
         var reportName = document.getElementById("reportName").value;
 
@@ -115,12 +120,43 @@
         location.href = url;
     }
 
-    function tableChanged(dsName, tableName) {
+    function tableChanged() {
+        var dsName = document.getElementById('datasource').value;
+        var tableName = document.getElementById('tableName').value;
+
         document.chartreport.action = 'add-chart-report.jsp';
         var reportName = document.getElementById("reportName").value;
         var reportType = document.getElementById("reportType").value;
         var url = 'add-chart-report.jsp?reportType=' + reportType + '&selectedDsName=' + dsName + '&selectedTableName=' + tableName + '&reportName=' + reportName;
         location.href = url;
+    }
+
+    function nextButtonValidate() {
+        var repName = document.getElementById('reportName').value;
+
+        var tableName = '';
+        if (null != document.getElementById('tableName')) {
+            tableName = document.getElementById('tableName').value;
+        }
+        var dsName = '';
+        if (null != document.getElementById('datasource')) {
+            dsName = document.getElementById('datasource').value;
+        }
+
+        var isAllSeriesName = true;
+        for (var j = 0; j < seriesCount; j++) {
+            var elementid = 'series_' + (j + 1) + '_name';
+            if (null != document.getElementById(elementid) && document.getElementById(elementid).value == '') {
+                isAllSeriesName = false;
+                break;
+            }
+        }
+
+        if (repName == '' || tableName == '' || dsName == '' || !isAllSeriesName) {
+            document.getElementById('save').disabled = 'disabled';
+        } else {
+            document.getElementById('save').disabled = '';
+        }
     }
 
     function addSeries() {
@@ -138,7 +174,7 @@
     <%if(repType != null && !repType.equalsIgnoreCase("pie_chart_type_report")){ %>
         html = html + '<tr>';
         html = html + '<td>' + '<fmt:message key="series.name"/> ' + '<span class = "required" >*</span></td>';
-        html = html + '<td><input id ="series_' + seriesCount + '_name" name="series_' + seriesCount + '_name"></td>';
+        html = html + '<td><input id ="series_' + seriesCount + '_name" name="series_' + seriesCount + '_name"  onkeyup="nextButtonValidate()" onmousemove="nextButtonValidate()" onfocus="nextButtonValidate()" onblur="nextButtonValidate()"></td>';
         html = html + '</tr>';
     <%
     }
@@ -181,6 +217,7 @@
         html = html + '</tr>';
         d.innerHTML = d.innerHTML + html;
 
+        nextButtonValidate();
     }
 
     function getComboBox(seriesId, axisType) {
@@ -268,7 +305,9 @@
                         }
                     %>
                     <td><input name="reportName"
-                               id="reportName" value="<%=tempReportName%>"/>
+                               id="reportName" value="<%=tempReportName%>" onkeyup="nextButtonValidate()"
+                               onmousemove="nextButtonValidate()" onfocus="nextButtonValidate()"
+                               onblur="nextButtonValidate()"/>
                     </td>
                 </tr>
 
@@ -284,14 +323,13 @@
                             }
                         %>
                         </thead>
-                        <select id="datasource" name="datasource">
+                        <select id="datasource" name="datasource" onchange="dsChanged();">
                             <%
                                 for (int i = 0; i < datasources.length; i++) {
                                     String datasource = datasources[i];
 
                             %>
-                            <option value="<%=datasource%>" <%=datasource.equalsIgnoreCase(dsName) ? "selected=\"selected\"" : ""%>
-                                    onclick="dsChanged('<%=datasource%>')">
+                            <option value="<%=datasource%>" <%=datasource.equalsIgnoreCase(dsName) ? "selected=\"selected\"" : ""%>>
                                 <%=datasource%>
                             </option>
                             <% }%>
@@ -301,8 +339,8 @@
                             errorString = "No datasource found";
                         %>
                         <script type="text/javascript">
-                            jQuery(document).init(function () {
-                                CARBON.showErrorDialog('<%=errorString%>');
+                            CARBON.showErrorDialog('<%=errorString%>', function() {
+                                location.href = "../reporting_custom/select-report.jsp";
                             });
                         </script>
                         <% } %>
@@ -322,7 +360,7 @@
                             }
                             if (tableNames != null && tableNames.length > 0) { %>
 
-                        <select id="tableName" name="tableName">
+                        <select id="tableName" name="tableName" onchange="javascript:tableChanged();">
                             <%
                                 tableName = request.getParameter("selectedTableName");
                                 if (tableName == null || tableName.equals("")) {
@@ -332,8 +370,7 @@
                                     String aTableName = tableNames[i];
 
                             %>
-                            <option value="<%=aTableName%>" <%= aTableName.equalsIgnoreCase(tableName) ? "selected=\"selected\"" : ""%>
-                                    onclick="javascript:tableChanged('<%=dsName%>', '<%=aTableName%>')">
+                            <option value="<%=aTableName%>" <%= aTableName.equalsIgnoreCase(tableName) ? "selected=\"selected\"" : ""%>>
                                 <%=aTableName%>
                             </option>
                             <% }%>
@@ -342,15 +379,15 @@
                         <% } else {
                             errorString = "No Tables found in datasource " + dsName;
                         %>
+                        <font color="#8b0000"> <i>No Tables</i></font>
                         <script type="text/javascript">
-                            jQuery(document).init(function () {
-                                CARBON.showErrorDialog('<%=errorString%>');
-                            });
+                            CARBON.showErrorDialog('<%=errorString%>');
                         </script>
                         <% } %>
 
                     </td>
-                    <% if (repType != null && !repType.equalsIgnoreCase("pie_chart_type_report")) { %>
+                    <% if (repType != null && !repType.equalsIgnoreCase("pie_chart_type_report") && (datasources != null && datasources.length > 0)
+                            && (tableNames != null && tableNames.length > 0)) { %>
                     <td><a style="background-image: url(../admin/images/add.gif);"
                            class="icon-link spacer-bot" onclick="addSeries()"><fmt:message
                             key="add.series"/></a></td>
@@ -373,7 +410,12 @@
                 </script>
                 <% } catch (AxisFault e) {
                     errorString = e.getMessage();
-                }
+                %>
+                <script type="text/javascript">
+                    CARBON.showErrorDialog('<%=errorString%>');
+                </script>
+                <%
+                    }
                 %>
 
                     <%--<tr>--%>
@@ -435,7 +477,7 @@
     <tr>
         <td class="buttonRow" colspan="2">
             <input type="button" value="<fmt:message key="next"/>"
-                   class="button" name="save"
+                   class="button" name="save" id="save"
                    onclick="javascript:submitChartReportData();"/>
             <input type="button" value="<fmt:message key="cancel"/>"
                    name="cancel" class="button"
@@ -448,6 +490,8 @@
 </form>
 </div>
 </div>
-
+<script type="text/javascript">
+    nextButtonValidate();
+</script>
 
 </fmt:bundle>

@@ -20,6 +20,9 @@ import org.apache.axis2.context.ConfigurationContext;
 import org.apache.commons.logging.Log;
 import org.apache.commons.logging.LogFactory;
 import org.wso2.carbon.CarbonConstants;
+import org.wso2.carbon.reporting.template.stub.ReportTemplateAdminStub.ChartReportDTO;
+import org.wso2.carbon.reporting.template.stub.ReportTemplateAdminStub.DataDTO;
+import org.wso2.carbon.reporting.template.stub.ReportTemplateAdminStub.SeriesDTO;
 import org.wso2.carbon.reporting.template.ui.client.ReportTemplateClient;
 import org.wso2.carbon.ui.CarbonUIUtil;
 import org.wso2.carbon.utils.ServerConstants;
@@ -32,8 +35,6 @@ import javax.servlet.http.HttpSession;
 import java.io.IOException;
 import java.util.logging.Level;
 import java.util.logging.Logger;
-
-import org.wso2.carbon.reporting.template.stub.ReportTemplateAdminStub.*;
 
 
 public class ChartDataProcessor extends HttpServlet {
@@ -75,7 +76,7 @@ public class ChartDataProcessor extends HttpServlet {
         } else {
             request.setAttribute("errorString", msg);
             response.sendRedirect("../reporting-template/add-chart-report.jsp?reportType=" +
-                    reportType + "&success=false");
+                    reportType + "&success=false&errorString="+msg);
         }
 
     }

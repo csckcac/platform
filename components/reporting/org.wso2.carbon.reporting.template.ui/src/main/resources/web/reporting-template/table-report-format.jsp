@@ -34,10 +34,7 @@
         document.tableReportFormat.action = '../../fileupload/upload';
         var reportTitle = document.getElementById("reportTitle").value;
         if (reportTitle == '') {
-            jQuery(document).init(function () {
                 CARBON.showErrorDialog('Please enter a title for the report.');
-            });
-
             return false;
         }
 
@@ -57,9 +54,7 @@
         }
         var msg = checkFontSize();
         if (msg != '') {
-            jQuery(document).init(function () {
-                CARBON.showErrorDialog(msg);
-            });
+              CARBON.showErrorDialog(msg);
             return false;
         }
         document.getElementById('selectedCheckBox').value = fieldsStr;
@@ -161,11 +156,7 @@ $(window).bind("load", function() {
     if(success != null && success.equalsIgnoreCase("false")){
      %>
       <script type="text/javascript">
-            CARBON.showErrorDialog('Only image files can be selected to logo.', function() {
-            location.href = "../reporting-template/table-report-format.jsp";
-        }, function () {
-            location.href = "../reporting-template/table-report-format.jsp";
-        });
+            CARBON.showErrorDialog('Only image files can be selected to logo.');
       </script>
 <%    }
 %>

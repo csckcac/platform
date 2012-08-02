@@ -26,6 +26,7 @@
 <%@ taglib prefix="fmt" uri="http://java.sun.com/jsp/jstl/fmt" %>
 <%@ taglib uri="http://wso2.org/projects/carbon/taglibs/carbontags.jar" prefix="carbon" %>
 <fmt:bundle basename="org.wso2.carbon.reporting.template.ui.i18n.Resources">
+<script type="text/javascript" src="../ajax/js/prototype.js"></script>
 <script type="text/javascript">
 
 
@@ -37,7 +38,7 @@
         document.tablereport.action = 'table-data-save.jsp';
         var reportName = document.getElementById("reportName").value;
         if (reportName == '') {
-            alert('Please enter report name');
+           CARBON.showErrorDialog('Please enter report name');
             return false;
         }
 
@@ -69,18 +70,113 @@
         location.href = "../reporting_custom/select-report.jsp";
     }
 
-    function dsChanged(dsName) {
-        document.tablereport.action = 'add-table-report.jsp';
-        var reportName = document.getElementById("reportName").value;
-        var url = 'add-table-report.jsp?selectedDsName=' + dsName + '&reportName=' + reportName;
-        location.href = url;
+    function dsChanged() {
+        var dsName = document.getElementById('datasource').value;
+
+        new Ajax.Request('tableInfo-ajaxprocessor.jsp', {
+                    method: 'post',
+                    parameters: {dsName:dsName},
+                    onSuccess: function(transport) {
+                        var allPage = transport.responseText;
+                        var divText = '<div id="returnedResults">';
+                        var closeDivText = '</div>';
+                        var temp = allPage.indexOf(divText, 0);
+                        var startIndex = temp + divText.length;
+                        var endIndex = allPage.indexOf(closeDivText, temp);
+                        var queryResults = allPage.substring(startIndex, endIndex);
+                        document.getElementById('tableResult').innerHTML = queryResults;
+                        var tableName = '';
+                        if (null != document.getElementById('tableName')) {
+                            tableName = document.getElementById('tableName').value;
+                        }
+                        tableChangedWithDSName(dsName, tableName);
+                        nextButtonValidate();
+                    },
+                    onFailure: function(transport) {
+                        document.getElementById('middle').style.cursor = '';
+                        CARBON.showErrorDialog(transport.responseText);
+                    }
+                });
+
     }
 
-    function tableChanged(dsName, tableName) {
-        document.tablereport.action = 'add-table-report.jsp';
-        var reportName = document.getElementById("reportName").value;
-        var url = 'add-table-report.jsp?selectedDsName=' + dsName + '&selectedTableName=' + tableName + '&reportName=' + reportName;
-        location.href = url;
+    function tableChangedWithDSName(dsName, tableName) {
+        new Ajax.Request('tableFieldsInfo-ajaxprocessor.jsp', {
+                    method: 'post',
+                    parameters: {dsName:dsName,
+                        tableName: tableName},
+                    onSuccess: function(transport) {
+                        var allPage = transport.responseText;
+                        var divText = '<div id="returnedResults">';
+                        var closeDivText = '</div>';
+                        var temp = allPage.indexOf(divText, 0);
+                        var startIndex = temp + divText.length;
+                        var endIndex = allPage.indexOf(closeDivText, temp);
+                        document.getElementById('fieldResults').innerHTML = allPage.substring(startIndex, endIndex);
+
+                        var div2Text = '<div id="returnedResultsPrimaryField">';
+                        var temp2 = allPage.indexOf(div2Text, endIndex);
+                        var start2Index = temp2 + div2Text.length;
+                        var end2Index = allPage.indexOf(closeDivText, temp2);
+                        document.getElementById('primaryFieldDiv').innerHTML = allPage.substring(start2Index, end2Index);
+
+                        nextButtonValidate();
+                    },
+                    onFailure: function(transport) {
+                        document.getElementById('middle').style.cursor = '';
+                        CARBON.showErrorDialog(transport.responseText);
+                    }
+                });
+    }
+
+    function nextButtonValidate() {
+        var repName = document.getElementById('reportName').value;
+
+        var tableName = '';
+        if (null != document.getElementById('tableName')) {
+            tableName = document.getElementById('tableName').value;
+        }
+        var fields = '';
+        if(null != document.getElementById('primaryField')){
+            fields = 'yes';
+        }
+        if(tableName == '' || fields == '' || repName == ''){
+            document.getElementById('save').disabled = 'disabled';
+        }else{
+           document.getElementById('save').disabled = '';
+        }
+    }
+
+    function tableChanged() {
+        var dsName = document.getElementById('datasource').value;
+        var tableName = document.getElementById('tableName').value;
+
+        new Ajax.Request('tableFieldsInfo-ajaxprocessor.jsp', {
+                    method: 'post',
+                    parameters: {dsName:dsName,
+                        tableName: tableName},
+                    onSuccess: function(transport) {
+                        var allPage = transport.responseText;
+                        var divText = '<div id="returnedResults">';
+                        var closeDivText = '</div>';
+                        var temp = allPage.indexOf(divText, 0);
+                        var startIndex = temp + divText.length;
+                        var endIndex = allPage.indexOf(closeDivText, temp);
+                        document.getElementById('fieldResults').innerHTML = allPage.substring(startIndex, endIndex);
+
+                        var div2Text = '<div id="returnedResultsPrimaryField">';
+                        var temp2 = allPage.indexOf(div2Text, endIndex);
+                        var start2Index = temp2 + div2Text.length;
+                        var end2Index = allPage.indexOf(closeDivText, temp2);
+                        document.getElementById('primaryFieldDiv').innerHTML = allPage.substring(start2Index, end2Index);
+
+                        nextButtonValidate();
+                    },
+                    onFailure: function(transport) {
+                        document.getElementById('middle').style.cursor = '';
+                        CARBON.showErrorDialog(transport.responseText);
+                    }
+                });
     }
 
 </script>
@@ -92,7 +188,7 @@
             (ConfigurationContext) config.getServletContext().getAttribute(CarbonConstants.CONFIGURATION_CONTEXT);
     String cookie = (String) session.getAttribute(ServerConstants.ADMIN_SERVICE_COOKIE);
 
-    ReportTemplateClient client;
+    ReportTemplateClient client = null;
     String message = "";
     String[] datasources = null;
     String errorString = "";
@@ -105,13 +201,8 @@
             errorString = "No data source found! Please add a data source!";
 %>
 <script type="text/javascript">
-    CARBON.showConfirmationDialog(msg + "' " + name + " ' ?", function() {
-        document.location.href = "delete-template.jsp?" + "reportName=" + name;
-    });
-    jQuery(document).init(function () {
-        CARBON.showErrorDialog('<%=errorString%>', function() {
-            document.location.href = "../datasource/index.jsp?region=region1&item=datasource_menu";
-        });
+    CARBON.showErrorDialog('<%=errorString%>', function() {
+          location.href = "../reporting_custom/select-report.jsp";
     });
     // document.getElementById('save').disabled = true;
 </script>
@@ -119,14 +210,11 @@
 <% }
 } catch (Exception e) {
     errorString = e.getMessage();
-    CarbonUIMessage.sendCarbonUIMessage(e.getMessage(), CarbonUIMessage.ERROR, request, e);
 %>
 <script type="text/javascript">
-    location.href = "../admin/error.jsp";
-    alert(<%=errorString%>);
+    CARBON.showErrorDialog(<%=errorString%>);
 </script>
 <%
-        return;
     }
 %>
 
@@ -162,7 +250,7 @@
                         }
                     %>
                     <td><input name="reportName"
-                               id="reportName" value="<%=tempReportName%>"/>
+                               id="reportName" value="<%=tempReportName%>"  onkeyup="nextButtonValidate()" onmousemove="nextButtonValidate()" onfocus="nextButtonValidate()" onblur="nextButtonValidate()"/>
                     </td>
                 </tr>
 
@@ -178,14 +266,13 @@
                             }
                         %>
                         </thead>
-                        <select id="datasource" name="datasource">
+                        <select id="datasource" name="datasource" onchange="dsChanged()">
                             <%
                                 for (int i = 0; i < datasources.length; i++) {
                                     String datasource = datasources[i];
 
                             %>
-                            <option value="<%=datasource%>" <%=datasource.equalsIgnoreCase(dsName) ? "selected=\"selected\"" : ""%>
-                                    onclick="dsChanged('<%=datasource%>')">
+                            <option value="<%=datasource%>" <%=datasource.equalsIgnoreCase(dsName) ? "selected=\"selected\"" : ""%>>
                                 <%=datasource%>
                             </option>
                             <% }%>
@@ -195,9 +282,7 @@
                             errorString = "No datasource found";
                         %>
                         <script type="text/javascript">
-                            jQuery(document).init(function () {
-                                CARBON.showErrorDialog('<%=errorString%>');
-                            });
+                            CARBON.showErrorDialog('<%=errorString%>');
                         </script>
                         <% } %>
                     </td>
@@ -208,40 +293,42 @@
                             class="required"> *</span>
                     </td>
                     <td>
-                        <% String[] tableNames = null;
-                            try {
-                                tableNames = client.getTableNames(dsName);
-                            } catch (AxisFault e) {
-                                errorString = e.getMessage();
-                            }
-                            if (tableNames != null && tableNames.length > 0) { %>
-
-                        <select id="tableName" name="tableName">
-                            <%
-                                tableName = request.getParameter("selectedTableName");
-                                if (tableName == null || tableName.equals("")) {
-                                    tableName = tableNames[0];
+                        <div id="tableResult">
+                            <% String[] tableNames = null;
+                                try {
+                                    tableNames = client.getTableNames(dsName);
+                                } catch (AxisFault e) {
+                                    errorString = e.getMessage();
                                 }
-                                for (int i = 0; i < tableNames.length; i++) {
-                                    String aTableName = tableNames[i];
+                                if (tableNames != null && tableNames.length > 0) { %>
 
+
+                            <select id="tableName" name="tableName" onchange="tableChanged()">
+                                <%
+                                    tableName = request.getParameter("selectedTableName");
+                                    if (tableName == null || tableName.equals("")) {
+                                        tableName = tableNames[0];
+                                    }
+                                    for (int i = 0; i < tableNames.length; i++) {
+                                        String aTableName = tableNames[i];
+
+                                %>
+                                <option value="<%=aTableName%>" <%= aTableName.equalsIgnoreCase(tableName) ? "selected=\"selected\"" : ""%> >
+
+                                    <%=aTableName%>
+                                </option>
+                                <% }%>
+                            </select>
+
+
+                            <% } else {
+                                errorString = "No Tables found in datasource " + dsName;
                             %>
-                            <option value="<%=aTableName%>" <%= aTableName.equalsIgnoreCase(tableName) ? "selected=\"selected\"" : ""%>
-                                    onclick="tableChanged('<%=dsName%>', '<%=aTableName%>')">
-                                <%=aTableName%>
-                            </option>
-                            <% }%>
-                        </select>
-
-                        <% } else {
-                            errorString = "No Tables found in datasource " + dsName;
-                        %>
-                        <script type="text/javascript">
-                            jQuery(document).init(function () {
+                            <script type="text/javascript">
                                 CARBON.showErrorDialog('<%=errorString%>');
-                            });
-                        </script>
-                        <% } %>
+                            </script>
+                            <% } %>
+                        </div>
                     </td>
                 </tr>
 
@@ -250,30 +337,30 @@
                             class="required"> *</span>
                     </td>
                     <td>
-                        <% String[] fieldNames = null;
-                            try {
-                                fieldNames = client.getFieldNames(dsName, tableName);
-                            } catch (AxisFault e) {
-                                errorString = e.getMessage();
-                            }
-                            if (fieldNames != null && fieldNames.length > 0) {
-                                for (int i = 0; i < fieldNames.length; i++) {
+                        <div id="fieldResults">
+                            <% String[] fieldNames = null;
+                                try {
+                                    fieldNames = client.getFieldNames(dsName, tableName);
+                                } catch (AxisFault e) {
+                                    errorString = e.getMessage();
+                                }
+                                if (fieldNames != null && fieldNames.length > 0) {
+                                    for (int i = 0; i < fieldNames.length; i++) {
 
-                                    String aField = fieldNames[i];
-                        %>
-                        <input type="checkbox" name="<%=aField%>"
-                               value="<%=aField%>" <%=i == 0 ? "checked" : ""%>/><%=aField%><br/>
+                                        String aField = fieldNames[i];
+                            %>
+                            <input type="checkbox" name="<%=aField%>"
+                                   value="<%=aField%>" <%=i == 0 ? "checked" : ""%>/><%=aField%><br/>
 
-                        <% }
-                        } else {
-                            errorString = "No fields found in table " + tableName;
-                        %>
-                        <script type="text/javascript">
-                            jQuery(document).init(function () {
+                            <% }
+                            } else {
+                                errorString = "No fields found in table " + tableName;
+                            %>
+                            <script type="text/javascript">
                                 CARBON.showErrorDialog('<%=errorString%>');
-                            });
-                        </script>
-                        <% } %>
+                            </script>
+                            <% } %>
+                        </div>
                     </td>
 
                 </tr>
@@ -286,30 +373,32 @@
                             class="required"> *</span>
                     </td>
                     <td>
-                        <%
-                            if (fieldNames != null && fieldNames.length > 0) {
-                        %>
-                        <select id="primaryField" name="primaryField">
-                                    <%
-                            for (int i = 0; i < fieldNames.length; i++) {
+                        <div id='primaryFieldDiv'>
+                            <%
+                                if (fieldNames != null && fieldNames.length > 0) {
+                            %>
 
-                                String aField = fieldNames[i];
-                    %>
-                            <option value="<%=aField%>" <%=i == 0 ? "selected=\"selected\"" : ""%>
-                                    onclick="processTableMetaData('<%=aField%>')">
-                                <%=aField%>
-                            </option>
+                            <select id="primaryField" name="primaryField">
+                                <%
+                                    for (int i = 0; i < fieldNames.length; i++) {
 
-                                    <% }
-                    } else {
-                        errorString = "No fields found in table "+ tableName;
-                    %>
+                                        String aField = fieldNames[i];
+                                %>
+                                <option value="<%=aField%>" <%=i == 0 ? "selected=\"selected\"" : ""%>>
+                                    <%=aField%>
+                                </option>
+
+                                <% }
+                                %>
+                            </select>
+                            <% } else {
+                                errorString = "No fields found in table " + tableName;
+                            %>
                             <script type="text/javascript">
-                                jQuery(document).init(function () {
-                                    CARBON.showErrorDialog('<%=errorString%>');
-                                });
+                                CARBON.showErrorDialog('<%=errorString%>');
                             </script>
-                                    <% } %>
+                            <% } %>
+                        </div>
                     </td>
                 </tr>
 
@@ -342,6 +431,8 @@
 </form>
 </div>
 </div>
-
+<script type="text/javascript">
+    nextButtonValidate();
+</script>
 
 </fmt:bundle>

@@ -34,9 +34,7 @@
         document.chartReportFormat.action = '../../fileupload/upload';
         var reportTitle = document.getElementById("reportTitle").value;
         if (reportTitle == '') {
-            jQuery(document).init(function () {
                 CARBON.showErrorDialog('Please enter a title for the report.');
-            });
 
             return false;
         }
@@ -57,9 +55,7 @@
         }
         var msg = checkFontSize();
         if (msg != '') {
-            jQuery(document).init(function () {
                 CARBON.showErrorDialog(msg);
-            });
             return false;
         }
         document.getElementById('selectedCheckBox').value = fieldsStr;
@@ -142,7 +138,7 @@
 
     String message = "";
     ChartReportDTO report;
-    ReportTemplateClient client;
+    ReportTemplateClient client = null;
     String repType = request.getParameter("reportType");
     String heading = "";
     if(repType != null){
@@ -173,11 +169,11 @@
         CarbonUIMessage.sendCarbonUIMessage(e.getMessage(), CarbonUIMessage.ERROR, request, e);
 %>
 <script type="text/javascript">
-    location.href = "../admin/error.jsp";
-    alert("error");
+    CARBON.showErrorDialog('<%=e.getMessage()%>', function () {
+            location.href = "../reporting-template/chart-report-format.jsp";
+        });
 </script>
 <%
-        return;
     }
     String success = request.getParameter("success");
     if(success != null && success.equalsIgnoreCase("false")){
@@ -344,7 +340,13 @@
                                 <input type="hidden" name="selectedCheckBox" id="selectedCheckBox">
                             </tr>
 
+                            <%
+                                if(null != client){
+                            %>
                             <%=includeFontStyle("reportHeader", "Report Header", client)%>
+                            <%
+                                }
+                            %>
                             </tbody>
                           </table>
 

@@ -41,14 +41,10 @@
     TableReportDTO report;
     report = (TableReportDTO) session.getAttribute("table-report");
    // storeReportHeader(report, request);
-    System.out.println("ReportCraeator jsp called.." + report.getReportName());
     Enumeration enumeration = request.getParameterNames();
     while (enumeration.hasMoreElements()){
-        System.out.println(enumeration.nextElement().toString());
     }
-    System.out.println("enumeration over");
-    System.out.println(request.getParameter("reportTitle"));
-    System.out.println(request.getAttribute("reportTitle"));
+
 %>
 
 

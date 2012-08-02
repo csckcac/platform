@@ -26,7 +26,7 @@ import java.util.Properties;
 
 public abstract class TConnection implements Connection {
 
-    private String conType;
+    private String type;
 
     private String path;
 
@@ -35,14 +35,14 @@ public abstract class TConnection implements Connection {
     private String password;
 
     public TConnection(Properties props) {
-        this.conType = props.getProperty(Constants.DATA_SOURCE_TYPE);
+        this.type = props.getProperty(Constants.DATA_SOURCE_TYPE).toUpperCase();
         this.path = props.getProperty(Constants.FILE_PATH);
         this.username = props.getProperty(Constants.USER);
         this.password = props.getProperty(Constants.PASSWORD);
     }
 
     public String getType() {
-        return conType;
+        return type;
     }
 
     public String getPath() {
@@ -86,7 +86,7 @@ public abstract class TConnection implements Connection {
     }
 
     public DatabaseMetaData getMetaData() throws SQLException {
-        return null;  
+        return new TDatabaseMetaData(this);  
     }
 
     public void setReadOnly(boolean readOnly) throws SQLException {

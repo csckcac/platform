@@ -18,23 +18,25 @@
  */
 package org.wso2.carbon.dataservices.sql.driver.processor.reader;
 
-import org.wso2.carbon.dataservices.sql.driver.TExcelConnection;
-import org.wso2.carbon.dataservices.sql.driver.parser.AnalyzerException;
+import org.wso2.carbon.dataservices.sql.driver.TConnection;
 import org.wso2.carbon.dataservices.sql.driver.parser.Constants;
+
+import java.sql.Connection;
+import java.sql.SQLException;
 
 public class DataReaderFactory {
 
-    public static DataReader createDataReader(String type,
-                                              TExcelConnection con) throws AnalyzerException {
-        type = type.toUpperCase();
-        if (Constants.EXCEL.equals(type))  {
-            return new ExcelDataReader(con);
-        } else if (Constants.GSPREAD.equals(type)) {
-            return new GSpreadDataReader(con);
-        } else if (Constants.CSV.equals(type)) {
-            return new CSVDataReader(con);
+    public static DataReader createDataReader(Connection connection) throws SQLException {
+        if (!(connection instanceof TConnection)) {
+            throw new SQLException("Connection cannot be casted to 'TConnection'");
+        }
+        String connectionType = ((TConnection) connection).getType();
+        if (Constants.EXCEL.equals(connectionType)) {
+            return new ExcelDataReader(connection);
+        } else if (Constants.GSPREAD.equals(connectionType)) {
+            return new GSpreadDataReader(connection);
         } else {
-            throw new AnalyzerException("Unsupported config type");
+            throw new SQLException("Unsupported config type");
         }
     }
 

@@ -18,6 +18,35 @@
  */
 package org.wso2.carbon.dataservices.sql.driver.processor.reader;
 
-public interface DataReader {
+import java.sql.Connection;
+import java.sql.SQLException;
+import java.util.HashMap;
+import java.util.Map;
+
+public abstract class DataReader {
+
+    private Connection connection;
+
+    private Map<String, DataTable> data;
+
+    public DataReader(Connection connection) throws SQLException {
+        this.connection = connection;
+        this.data = new HashMap<String, DataTable>();
+        populateData();
+    }
+
+    public abstract void populateData() throws SQLException;
+
+    public Connection getConnection() {
+        return connection;
+    }
+
+    public Map<String, DataTable> getData() {
+        return data;
+    }
+
+    public void addTable(DataTable dataTable) {
+        this.getData().put(dataTable.getTableName(), dataTable);
+    }
 
 }

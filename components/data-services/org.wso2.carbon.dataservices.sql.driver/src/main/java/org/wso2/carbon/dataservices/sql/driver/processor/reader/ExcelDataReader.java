@@ -18,42 +18,32 @@
  */
 package org.wso2.carbon.dataservices.sql.driver.processor.reader;
 
-import org.apache.commons.logging.Log;
-import org.apache.commons.logging.LogFactory;
 import org.apache.poi.ss.usermodel.Cell;
 import org.apache.poi.ss.usermodel.Row;
 import org.apache.poi.ss.usermodel.Sheet;
 import org.apache.poi.ss.usermodel.Workbook;
 import org.wso2.carbon.dataservices.sql.driver.TExcelConnection;
 
+import java.sql.Connection;
+import java.sql.SQLException;
 import java.util.HashMap;
 import java.util.Iterator;
 import java.util.Map;
 
-public class ExcelDataReader implements DataReader {
+public class ExcelDataReader extends DataReader {
 
-    private Map<String, DataTable> data;
-
-    private static final Log log = LogFactory.getLog(ExcelDataReader.class);
-
-    public ExcelDataReader(TExcelConnection con) {
-        this.data = new HashMap<String, DataTable>();
-        this.populateData(con);
+    public ExcelDataReader(Connection connection) throws SQLException {
+        super(connection);
     }
 
-    /**
-     * Populates config resides in the Excel sheet to the config map
-     *
-     * @param con Connection to the Excel document
-     */
-    private void populateData(TExcelConnection con) {
-        Workbook workbook = con.getWorkbook();
+    public void populateData() throws SQLException {
+        Workbook workbook = ((TExcelConnection)getConnection()).getWorkbook();
         int noOfSheets = workbook.getNumberOfSheets();
         for (int i = 0; i < noOfSheets; i++) {
             Sheet sheet = workbook.getSheetAt(i);
 
             String sheetName = sheet.getSheetName();
-            Map<Integer, String> headers = this.getColumnHeaders(sheet);
+            Map<String, Integer> headers = this.extractColumnHeaders(sheet);
             DataTable dataTable = new DataTable(sheetName, headers);
 
             Iterator<Row> rowItr = sheet.rowIterator();
@@ -66,11 +56,11 @@ public class ExcelDataReader implements DataReader {
                     DataCell dataCell =
                             new DataCell(cell.getColumnIndex(), cell.getCellType(),
                                     this.extractCellValue(cell));
-                    dataRow.addCellToRow(dataCell);
+                    dataRow.addCell(dataCell);
                 }
-                dataTable.addRowToTable(dataRow);
+                dataTable.addRow(dataRow);
             }
-            this.addTableToDatabase(dataTable);
+            addTable(dataTable);
         }
     }
 
@@ -96,38 +86,37 @@ public class ExcelDataReader implements DataReader {
     }
 
     /**
-     * Adds a populated config table to the config map
-     *
-     * @param dataTable A populated instance of DataTable
-     */
-    public void addTableToDatabase(DataTable dataTable) {
-        this.getData().put(dataTable.getTableName(), dataTable);
-    }
-
-    /**
      * Extracts out the columns in the given excel sheet
      *
      * @param sheet Sheet instance corresponding to the desired Excel sheet
-     * @return Map containing the column indices and names
+     * @return Map containing the column indexes and names
+     * @throws java.sql.SQLException SQLException
      */
-    private Map<Integer, String> getColumnHeaders(Sheet sheet) {
-        Map<Integer, String> headers = new HashMap<Integer, String>();
+    private Map<String, Integer> extractColumnHeaders(Sheet sheet) throws SQLException {
+        Map<String, Integer> headers = new HashMap<String, Integer>();
         // Retrieving the first row of the sheet as the header row.
         Row row = sheet.getRow(0);
         if (row != null) {
             Iterator<Cell> itr = row.cellIterator();
             while (itr.hasNext()) {
-                Cell c = itr.next();
-                if (c.getStringCellValue() != null) {
-                    headers.put(c.getColumnIndex(), c.getStringCellValue());
+                Cell cell = itr.next();
+                if (cell != null) {
+                    int cellType = cell.getCellType();
+                    switch(cellType) {
+                        case Cell.CELL_TYPE_STRING:
+                            headers.put(cell.getStringCellValue(), cell.getColumnIndex());
+                            break;
+                        case Cell.CELL_TYPE_NUMERIC:
+                            headers.put(String.valueOf(cell.getNumericCellValue()),
+                                    cell.getColumnIndex());
+                            break;
+                        default :
+                            throw new SQLException("Invalid column type");
+                    }
                 }
             }
         }
         return headers;
-    }
-
-    public Map<String, DataTable> getData() {
-        return data;
     }
 
 }

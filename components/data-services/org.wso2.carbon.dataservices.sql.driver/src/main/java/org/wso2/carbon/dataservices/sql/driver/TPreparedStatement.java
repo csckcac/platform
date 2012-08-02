@@ -18,11 +18,8 @@
  */
 package org.wso2.carbon.dataservices.sql.driver;
 
-import org.apache.commons.logging.Log;
-import org.apache.commons.logging.LogFactory;
 import org.wso2.carbon.dataservices.sql.driver.parser.Parser;
-import org.wso2.carbon.dataservices.sql.driver.parser.SQLParserUtil;
-import org.wso2.carbon.dataservices.sql.driver.query.AbstractQueryFactory;
+import org.wso2.carbon.dataservices.sql.driver.parser.ParserUtil;
 import org.wso2.carbon.dataservices.sql.driver.query.ParamInfo;
 import org.wso2.carbon.dataservices.sql.driver.query.Query;
 import org.wso2.carbon.dataservices.sql.driver.query.QueryFactory;
@@ -43,45 +40,54 @@ public class TPreparedStatement extends TStatement implements PreparedStatement 
 
     private String sql;
 
-    private String queryType;
-
-    private static Log log = LogFactory.getLog(TPreparedStatement.class);
-
     private Queue<String> processedTokens;
 
-    QueryFactory factory;
+    private String queryType;
 
-    public TPreparedStatement(Connection connection, String sql) {
+    private ResultSet currentResultSet;
+
+    public TPreparedStatement(Connection connection, String sql) throws SQLException {
         super(connection);
         this.sql = sql;
-        this.parameters = SQLParserUtil.extractParameters(this.getSql());
-        this.queryType = SQLParserUtil.extractFirstKeyword(this.getSql());
-        try {
-            this.processedTokens = Parser.parse(sql, queryType);
-        } catch (SQLException e) {
-            e.printStackTrace();
+        this.parameters = ParserUtil.extractParameters(getSql());
+
+        this.queryType = ParserUtil.extractFirstKeyword(getSql());
+        if (getQueryType() != null) {
+            this.queryType = getQueryType().toUpperCase();
         }
-        factory = AbstractQueryFactory.createQueryFactory(this.getQueryType());
+        this.processedTokens = Parser.parse(sql, getQueryType());
     }
 
-    public TPreparedStatement() {}
+    public TPreparedStatement() {
+    }
 
     public ResultSet executeQuery() throws SQLException {
-        Query query = this.getQueryFactory().createQuery(this.getConnection(),
-                this.getProcessedTokens(), this.getParameters());
-        return query.executeQuery();
+        determineConnectionState();
+        synchronized (getConnection()) {
+            Query query = QueryFactory.createQuery(this);
+            currentResultSet = query.executeQuery();
+            return currentResultSet;
+        }
     }
 
     public int executeUpdate() throws SQLException {
-        Query query = this.getQueryFactory().createQuery(this.getConnection(),
-                this.getProcessedTokens(), this.getParameters());
-        if (!SQLParserUtil.isDMLStatement(this.getQueryType())) {
-            throw new SQLException("'executeUpdate' is only allowed to be used with DML statements");
+        determineConnectionState();
+        synchronized (getConnection()) {
+            Query query = QueryFactory.createQuery(this);
+            return query.executeUpdate();
         }
-        return query.executeUpdate();
+    }
+
+    public boolean execute() throws SQLException {
+        determineConnectionState();
+        synchronized (getConnection()) {
+            Query query = QueryFactory.createQuery(this);
+            return query.execute();
+        }
     }
 
     private ParamInfo getParameter(int parameterIndex) throws SQLException {
+        determineConnectionState();
         if (parameterIndex > this.getParameters().length || parameterIndex < 0) {
             throw new SQLException("Invalid parameter index '" + parameterIndex + "'");
         }
@@ -169,7 +175,6 @@ public class TPreparedStatement extends TStatement implements PreparedStatement 
     }
 
     public void clearParameters() throws SQLException {
-
     }
 
     public void setObject(int parameterIndex, Object x, int targetSqlType) throws SQLException {
@@ -178,12 +183,6 @@ public class TPreparedStatement extends TStatement implements PreparedStatement 
 
     public void setObject(int parameterIndex, Object x) throws SQLException {
         this.setParameter(parameterIndex, x, -1);
-    }
-
-    public boolean execute() throws SQLException {
-        Query query = this.getQueryFactory().createQuery(this.getConnection(),
-                this.getProcessedTokens(), this.getParameters());
-        return query.execute();
     }
 
     public void addBatch() throws SQLException {
@@ -236,6 +235,7 @@ public class TPreparedStatement extends TStatement implements PreparedStatement 
     }
 
     public ParameterMetaData getParameterMetaData() throws SQLException {
+        determineConnectionState();
         return null;
     }
 
@@ -333,12 +333,8 @@ public class TPreparedStatement extends TStatement implements PreparedStatement 
         return parameters;
     }
 
-    private Queue<String> getProcessedTokens() {
+    public Queue<String> getProcessedTokens() {
         return processedTokens;
-    }
-
-    public String getQueryType() {
-        return queryType;
     }
 
     public String getSql() {
@@ -349,8 +345,18 @@ public class TPreparedStatement extends TStatement implements PreparedStatement 
         return isClosed;
     }
 
-    private QueryFactory getQueryFactory() {
-        return factory;
+    public String getQueryType() {
+        return queryType;
+    }
+
+    public ResultSet getCurrentResultSet() {
+        return currentResultSet;
+    }
+
+    private void determineConnectionState() throws SQLException {
+        if (isClosed()) {
+            throw new SQLException("Connection has already been closed");
+        }
     }
 
 }

@@ -16,31 +16,21 @@
  *  under the License.
  *
  */
-package org.wso2.carbon.dataservices.sql.driver.query.insert;
+package org.wso2.carbon.dataservices.sql.driver.parser;
 
-import java.sql.ResultSet;
-import java.sql.SQLException;
-import java.sql.Statement;
+import java.util.ArrayList;
 
-public class GSpreadInsertQuery extends InsertQuery {
-
-    public GSpreadInsertQuery(Statement stmt) throws SQLException {
-        super(stmt);
-    }
+public class EntityList<E> extends ArrayList<String> {
 
     @Override
-    public ResultSet executeQuery() throws SQLException {
-        return null;
-    }
-
-    @Override
-    public int executeUpdate() throws SQLException {
-        return 0;
-    }
-
-    @Override
-    public boolean execute() throws SQLException {
+    public boolean contains(Object o) {
+        String tmp = (String)o;
+        for (String s : this) {
+            if (tmp != null && tmp.equalsIgnoreCase(s)) {
+                return true;
+            }
+        }
         return false;
     }
-
+    
 }

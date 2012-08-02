@@ -1,5 +1,5 @@
 /*
- *  Copyright (c) 2005-2010, WSO2 Inc. (http://www.wso2.org) All Rights Reserved.
+ *  Copyright (c) 2005-2011, WSO2 Inc. (http://www.wso2.org) All Rights Reserved.
  *
  *  WSO2 Inc. licenses this file to you under the Apache License,
  *  Version 2.0 (the "License"); you may not use this file except
@@ -16,17 +16,32 @@
  *  under the License.
  *
  */
-package org.wso2.carbon.dataservices.sql.driver.processor;
+package org.wso2.carbon.dataservices.sql.driver.query.create;
 
-import org.wso2.carbon.dataservices.sql.driver.TResultSet;
 
+import java.sql.ResultSet;
 import java.sql.SQLException;
+import java.sql.Statement;
 
-public class ExcelDataProcessor implements DataProcessor {
+public class GSpreadCreateQuery extends CreateQuery {
 
+    public GSpreadCreateQuery(Statement stmt) throws SQLException {
+        super(stmt);
+    }
 
     @Override
-    public TResultSet process() throws SQLException {
+    public ResultSet executeQuery() throws SQLException {
         return null;
     }
+
+    @Override
+    public int executeUpdate() throws SQLException {
+        return 0;
+    }
+
+    @Override
+    public boolean execute() throws SQLException {
+        return false;
+    }
+
 }

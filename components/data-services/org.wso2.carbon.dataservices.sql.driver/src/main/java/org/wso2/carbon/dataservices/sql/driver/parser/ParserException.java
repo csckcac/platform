@@ -16,20 +16,18 @@
  *  under the License.
  *
  */
-package org.wso2.carbon.dataservices.sql.driver.processor;
+package org.wso2.carbon.dataservices.sql.driver.parser;
 
-import org.wso2.carbon.dataservices.sql.driver.parser.AnalyzerException;
-import org.wso2.carbon.dataservices.sql.driver.parser.Constants;
+public class ParserException extends Exception {
 
-public class DataProcessorFactory {
+    private static final long serialVersionUID = 2021891706072918521L;
 
-    public static DataProcessor createDataProcessor(String type) throws AnalyzerException {
-         type = type.toUpperCase();
-        if (Constants.EXCEL.equals(type))  {
-            return new ExcelDataProcessor();
-        } else {
-            throw new AnalyzerException("Unsupported config type");
-        }
-    }
+	public ParserException(String message) {
+		super(message);
+	}
+
+	public ParserException(String message, Exception nestedEx) {
+		super(message, nestedEx);
+	}
 
 }

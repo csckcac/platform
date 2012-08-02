@@ -29,29 +29,21 @@ public class DataTable {
 
     private String tableName;
 
-    private Map<Integer, String> headers;
+    private Map<String, Integer> headers;
 
-    public DataTable(String tableName, Map<Integer, String> headers) {
+    public DataTable(String tableName, Map<String, Integer> headers) {
         this.tableName = tableName;
         this.headers = headers;
         this.rows = new HashMap<Integer, DataRow>();
-        this.noOfColumns = this.getheaders().size();
+        this.noOfColumns = this.getHeaders().size();
     }
 
     public String getTableName() {
         return tableName;
     }
 
-    public void setTableName(String tableName) {
-        this.tableName = tableName;
-    }
-
-    public Map<Integer, String> getheaders() {
+    public Map<String, Integer> getHeaders() {
         return headers;
-    }
-
-    public void setheaders(Map<Integer, String> headers) {
-        this.headers = headers;
     }
 
     public int getNoOfColumns() {
@@ -70,8 +62,8 @@ public class DataTable {
         this.rows = rows;
     }
 
-    public void addRowToTable(DataRow dataRow) {
-        this.getRows().put(dataRow.getRowID(), dataRow);
+    public void addRow(DataRow dataRow) {
+        getRows().put(dataRow.getRowID(), dataRow);
     }
 
 }

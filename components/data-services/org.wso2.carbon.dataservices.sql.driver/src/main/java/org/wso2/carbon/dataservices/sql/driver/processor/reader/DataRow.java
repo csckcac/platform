@@ -18,6 +18,7 @@
  */
 package org.wso2.carbon.dataservices.sql.driver.processor.reader;
 
+import java.util.ArrayList;
 import java.util.List;
 
 public class DataRow {
@@ -33,6 +34,7 @@ public class DataRow {
 
     public DataRow(int rowID) {
         this.rowID = rowID;
+        this.cells = new ArrayList<DataCell>();
     }
 
     public int getRowID() {
@@ -51,7 +53,7 @@ public class DataRow {
         this.cells = cells;
     }
 
-    public void addCellToRow(DataCell cell) {
+    public void addCell(DataCell cell) {
         this.getCells().add(cell);
     }
 

@@ -1,5 +1,5 @@
 /*
- *  Copyright (c) 2005-2010, WSO2 Inc. (http://www.wso2.org) All Rights Reserved.
+ *  Copyright (c) 2005-2011, WSO2 Inc. (http://www.wso2.org) All Rights Reserved.
  *
  *  WSO2 Inc. licenses this file to you under the Apache License,
  *  Version 2.0 (the "License"); you may not use this file except
@@ -16,18 +16,17 @@
  *  under the License.
  *
  */
-package org.wso2.carbon.dataservices.sql.driver.parser;
+package org.wso2.carbon.dataservices.sql.driver.query.delete;
 
-public class AnalyzerException extends Exception {
+import org.wso2.carbon.dataservices.sql.driver.query.Query;
 
-    private static final long serialVersionUID = 2021891706072918521L;
+import java.sql.SQLException;
+import java.sql.Statement;
 
-	public AnalyzerException(String message) {
-		super(message);
-	}
+public abstract class DeleteQuery extends Query {
 
-	public AnalyzerException(String message, Exception nestedEx) {
-		super(message, nestedEx);
-	}
+    public DeleteQuery(Statement stmt) throws SQLException {
+        super(stmt);
+    }
 
 }

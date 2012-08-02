@@ -132,8 +132,10 @@ public class Constants {
 
     public static final String FILE_PATH = "filePath";
     public static final String DATA_SOURCE_TYPE = "dsType";
-    public static final String USER = "USERNAME";
+    public static final String USER = "USER";
     public static final String PASSWORD = "PASSWORD";
     public static final String VISIBILITY = "visibility";
 
+    public static final String OUTER = "OUTER";
+    
 }

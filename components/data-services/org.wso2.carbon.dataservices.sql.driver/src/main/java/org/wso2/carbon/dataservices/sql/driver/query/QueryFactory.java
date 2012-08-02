@@ -17,13 +17,88 @@
  */
 package org.wso2.carbon.dataservices.sql.driver.query;
 
-import java.sql.Connection;
+import org.wso2.carbon.dataservices.sql.driver.TConnection;
+import org.wso2.carbon.dataservices.sql.driver.TPreparedStatement;
+import org.wso2.carbon.dataservices.sql.driver.query.insert.ExcelInsertQuery;
+import org.wso2.carbon.dataservices.sql.driver.query.insert.GSpreadInsertQuery;
+import org.wso2.carbon.dataservices.sql.driver.query.select.ExcelSelectQuery;
+import org.wso2.carbon.dataservices.sql.driver.query.select.GSpreadSelectQuery;
+import org.wso2.carbon.dataservices.sql.driver.query.update.ExcelUpdateQuery;
+import org.wso2.carbon.dataservices.sql.driver.query.update.GSpreadUpdateQuery;
+
 import java.sql.SQLException;
-import java.util.Queue;
+import java.sql.Statement;
 
-public interface QueryFactory {
+public class QueryFactory {
 
-    public Query createQuery(Connection connection, Queue<String> tokens,
-                             ParamInfo[] parameters) throws SQLException;
+    public enum QueryFactoryTypes {
+        SELECT, INSERT, UPDATE, DELETE, CREATE
+    }
+
+    public enum QueryTypes {
+        EXCEL, GSPREAD
+    }
+
+    public static Query createQuery(Statement stmt) throws SQLException {
+        String queryType = ((TPreparedStatement)stmt).getQueryType();
+        QueryFactoryTypes types = QueryFactoryTypes.valueOf(queryType);
+        switch (types)  {
+            case SELECT:
+                return createSelectQuery(stmt);
+            case INSERT:
+                return createInsertQuery(stmt);
+            case UPDATE:
+                return createUpdateQuery(stmt);
+            case DELETE:
+                break;
+            case CREATE:
+                break;
+            default:
+                break;
+        }
+        return null;
+    }
+
+    public static Query createInsertQuery(Statement stmt) throws SQLException {
+        String connectionType =
+                ((TConnection)(((TPreparedStatement)stmt).getConnection())).getType();
+        QueryTypes types = QueryTypes.valueOf(connectionType);
+        switch (types) {
+            case EXCEL:
+                return new ExcelInsertQuery(stmt);
+            case GSPREAD:
+                return new GSpreadInsertQuery(stmt);
+            default:
+                throw new SQLException("Unsupported type");
+        }
+    }
+
+    private static Query createSelectQuery(Statement stmt) throws SQLException {
+        String connectionType =
+                ((TConnection)(((TPreparedStatement)stmt).getConnection())).getType();
+        QueryTypes types = QueryTypes.valueOf(connectionType);
+        switch (types) {
+            case EXCEL:
+                return new ExcelSelectQuery(stmt);
+            case GSPREAD:
+                return new GSpreadSelectQuery(stmt);
+            default:
+                throw new SQLException("Unsupported type");
+        }
+    }
+
+    private static Query createUpdateQuery(Statement stmt) throws SQLException {
+        String connectionType =
+                ((TConnection)(((TPreparedStatement)stmt).getConnection())).getType();
+        QueryTypes types = QueryTypes.valueOf(connectionType);
+        switch (types) {
+            case EXCEL:
+                return new ExcelUpdateQuery(stmt);
+            case GSPREAD:
+                return new GSpreadUpdateQuery(stmt);
+            default:
+                throw new SQLException("Unsupported type");
+        }
+    }
 
 }

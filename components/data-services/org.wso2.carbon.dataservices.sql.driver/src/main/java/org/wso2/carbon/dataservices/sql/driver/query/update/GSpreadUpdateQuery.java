@@ -16,15 +16,15 @@
  *  under the License.
  *
  */
-package org.wso2.carbon.dataservices.sql.driver.query.insert;
+package org.wso2.carbon.dataservices.sql.driver.query.update;
 
 import java.sql.ResultSet;
 import java.sql.SQLException;
 import java.sql.Statement;
 
-public class GSpreadInsertQuery extends InsertQuery {
-
-    public GSpreadInsertQuery(Statement stmt) throws SQLException {
+public class GSpreadUpdateQuery extends UpdateQuery {
+    
+    public GSpreadUpdateQuery(Statement stmt) throws SQLException {
         super(stmt);
     }
 

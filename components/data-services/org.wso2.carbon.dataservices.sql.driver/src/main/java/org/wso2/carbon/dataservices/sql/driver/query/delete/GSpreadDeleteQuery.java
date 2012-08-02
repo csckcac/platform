@@ -16,15 +16,15 @@
  *  under the License.
  *
  */
-package org.wso2.carbon.dataservices.sql.driver.query.insert;
+package org.wso2.carbon.dataservices.sql.driver.query.delete;
 
 import java.sql.ResultSet;
 import java.sql.SQLException;
 import java.sql.Statement;
 
-public class GSpreadInsertQuery extends InsertQuery {
+public class GSpreadDeleteQuery extends DeleteQuery {
 
-    public GSpreadInsertQuery(Statement stmt) throws SQLException {
+    public GSpreadDeleteQuery(Statement stmt) throws SQLException {
         super(stmt);
     }
 

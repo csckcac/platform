@@ -18,27 +18,37 @@
  */
 package org.wso2.carbon.dataservices.sql.driver.query;
 
+import org.wso2.carbon.dataservices.sql.driver.TConnection;
+import org.wso2.carbon.dataservices.sql.driver.TPreparedStatement;
+
 import java.sql.Connection;
 import java.sql.ResultSet;
 import java.sql.SQLException;
+import java.sql.Statement;
 import java.util.Queue;
+
 
 public abstract class Query {
 
+    private Statement stmt;
+
+    private String queryType;
+
+    private String connectionType;
+
     private Connection connection;
 
-    private String type;
-
-    private Queue<String> processedSQL;
+    private Queue<String> processedTokens;
 
     private ParamInfo[] parameters;
-
-    public Query(Connection connection, Queue<String> processedTokens,
-                        ParamInfo[] parameters) {
-        this.connection = connection;
-        this.type = processedTokens.peek();
-        this.processedSQL = processedTokens;
-        this.parameters = parameters;
+    
+    public Query(Statement stmt) throws SQLException {
+        this.stmt = stmt;
+        this.connection = stmt.getConnection();
+        this.connectionType = ((TConnection)getConnection()).getType();
+        this.processedTokens = ((TPreparedStatement)getStatement()).getProcessedTokens();
+        this.parameters = ((TPreparedStatement)getStatement()).getParameters();
+        this.queryType = ((TPreparedStatement)getStatement()).getQueryType();
     }
 
     public abstract ResultSet executeQuery() throws SQLException;
@@ -47,16 +57,24 @@ public abstract class Query {
 
     public abstract boolean execute() throws SQLException;
 
+    public Statement getStatement() {
+        return stmt;
+    }
+
+    public String getQueryType() {
+        return queryType;
+    }
+
+    public String getConnectionType() {
+        return connectionType;
+    }
+
     public Connection getConnection() {
         return connection;
     }
 
-    public String getType() {
-        return type;
-    }
-
-    public Queue<String> getProcessedSQL() {
-        return processedSQL;
+    public Queue<String> getProcessedTokens() {
+        return processedTokens;
     }
 
     public ParamInfo[] getParameters() {

@@ -22,15 +22,15 @@ import org.wso2.carbon.dataservices.sql.driver.query.ParamInfo;
 
 import java.util.*;
 
-public class SQLParserUtil {
+public class ParserUtil {
 
-    private static List<String> keyWords = new ArrayList<String>();
-    private static List<String> operators = new ArrayList<String>();
-    private static List<String> delimiters = new ArrayList<String>();
-    private static List<String> specialFunctions = new ArrayList<String>();
-    private static List<String> stringFunctions = new ArrayList<String>();
-    private static List<String> aggregateFunctions = new ArrayList<String>();
-    private static List<String> dmlTypes = new ArrayList<String>();
+    private static List<String> keyWords = new EntityList<String>();
+    private static List<String> operators = new EntityList<String>();
+    private static List<String> delimiters = new EntityList<String>();
+    private static List<String> specialFunctions = new EntityList<String>();
+    private static List<String> stringFunctions = new EntityList<String>();
+    private static List<String> aggregateFunctions = new EntityList<String>();
+    private static List<String> dmlTypes = new EntityList<String>();
 
 
     static {
@@ -137,7 +137,7 @@ public class SQLParserUtil {
         dmlTypes.add(Constants.DELETE);
 
     }
-
+    
     public static List<String> getKeyWordList() {
         return keyWords;
     }
@@ -171,32 +171,32 @@ public class SQLParserUtil {
     }
 
     public static boolean isSpecialFunction(String token) {
-        return SQLParserUtil.getSpecialFunctionList().contains(token);
+        return ParserUtil.getSpecialFunctionList().contains(token);
     }
 
     public static boolean isDelimiter(String token) {
-        return SQLParserUtil.getDelimiterList().contains(token);
+        return ParserUtil.getDelimiterList().contains(token);
     }
 
     public static boolean isOperator(String token) {
-        return SQLParserUtil.getOperatorList().contains(token);
+        return ParserUtil.getOperatorList().contains(token);
     }
 
     public static boolean isAggregateFunction(String token) {
-        return SQLParserUtil.getAggregateFunctionList().contains(token);
+        return ParserUtil.getAggregateFunctionList().contains(token);
     }
 
     public static boolean isStringFunction(String token) {
-        return SQLParserUtil.getStringFunctionList().contains(token);
+        return ParserUtil.getStringFunctionList().contains(token);
     }
 
     public static boolean isKeyword(String token) {
-        return SQLParserUtil.getKeyWordList().contains(token);
+        return ParserUtil.getKeyWordList().contains(token);
     }
 
     public static boolean isStringLiteral(String token) {
-        return (!SQLParserUtil.isDelimiter(token) && !SQLParserUtil.isOperator(token) &&
-                !SQLParserUtil.isKeyword(token));
+        return (!ParserUtil.isDelimiter(token) && !ParserUtil.isOperator(token) &&
+                !ParserUtil.isKeyword(token));
     }
 
     public static Queue<String> getTokens(String inputStream) {
@@ -208,8 +208,8 @@ public class SQLParserUtil {
         inputStream.getChars(0, inputStream.length(), inputCharacters, 0);
 
         for (char c : inputCharacters) {
-            if (!SQLParserUtil.isDelimiter(Character.valueOf(c).toString()) &&
-                    !SQLParserUtil.isOperator(Character.valueOf(c).toString())) {
+            if (!ParserUtil.isDelimiter(Character.valueOf(c).toString()) &&
+                    !ParserUtil.isOperator(Character.valueOf(c).toString())) {
                 token.append(c);
             } else {
                 if (token.length() > 0) {
@@ -232,7 +232,7 @@ public class SQLParserUtil {
     }
 
     public static boolean isDMLStatement(String type) {
-        return SQLParserUtil.getDMLTypeList().contains(type.toUpperCase());
+        return ParserUtil.getDMLTypeList().contains(type.toUpperCase());
     }
 
     public static ParamInfo[] extractParameters(String sql) {
@@ -240,7 +240,7 @@ public class SQLParserUtil {
         int i = 0;
         int idx = 0;
         char[] s = sql.toCharArray();
-        while (i < s.length - 1) {
+        while (i < s.length) {
             final char c = s[i];
             if (c == '?') {
                 ParamInfo param = new ParamInfo(idx, null);
@@ -256,7 +256,7 @@ public class SQLParserUtil {
         int i = 0;
         char[] s = sql.toCharArray();
         StringBuffer b = new StringBuffer();
-        while (i < s.length - 1) {
+        while (i < s.length) {
             char c = s[i];
             if (c != ' ') {
                 b.append(c);
@@ -266,7 +266,7 @@ public class SQLParserUtil {
             i++;
         }
         String token = b.toString();
-        return (SQLParserUtil.isKeyword(token)) ? token : null;
+        return (ParserUtil.isKeyword(token)) ? token : null;
     }
 
 

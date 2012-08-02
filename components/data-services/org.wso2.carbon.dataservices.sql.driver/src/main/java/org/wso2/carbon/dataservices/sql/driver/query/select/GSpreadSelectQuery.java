@@ -1,5 +1,5 @@
 /*
- *  Copyright (c) 2005-2010, WSO2 Inc. (http://www.wso2.org) All Rights Reserved.
+ *  Copyright (c) 2005-2011, WSO2 Inc. (http://www.wso2.org) All Rights Reserved.
  *
  *  WSO2 Inc. licenses this file to you under the Apache License,
  *  Version 2.0 (the "License"); you may not use this file except
@@ -16,16 +16,26 @@
  *  under the License.
  *
  */
-package org.wso2.carbon.dataservices.sql.driver.processor.reader;
+package org.wso2.carbon.dataservices.sql.driver.query.select;
 
-import org.wso2.carbon.dataservices.sql.driver.TExcelConnection;
+import java.sql.ResultSet;
+import java.sql.SQLException;
+import java.sql.Statement;
 
-public class CSVDataReader implements DataReader {
+public class GSpreadSelectQuery extends SelectQuery {
 
-    private TExcelConnection con;
+    public GSpreadSelectQuery(Statement stmt) throws SQLException {
+        super(stmt);
+    }
 
-    public CSVDataReader(TExcelConnection con) {
-        this.con = con;
+    @Override
+    public ResultSet executeQuery() throws SQLException {
+        return executeSQL();
+    }
+
+    @Override
+    public boolean execute() throws SQLException {
+        return (executeSQL() != null);
     }
 
 }

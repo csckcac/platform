@@ -101,12 +101,17 @@ public class TDriver implements Driver {
         pos = getNextTokenPos(url, pos, token);
         if (Constants.FILE_PATH.equals(token.toString())) {
             isFilePath = true;
-            getNextTokenPos(url, pos, token);
+            pos = getNextTokenPos(url, pos, token);
             String propValue = token.toString();
             if (propValue == null || "".equals(propValue)) {
                 throw new SQLException("File path attribute is missing");
             }
             props.setProperty(Constants.FILE_PATH, propValue);
+        }
+        pos = getNextTokenPos(url, pos, token);
+        if (Constants.VISIBILITY.equals(token.toString())) {
+            pos = getNextTokenPos(url, pos, token);
+            props.setProperty(Constants.VISIBILITY, token.toString());
         }
         return props;
     }
@@ -116,19 +121,25 @@ public class TDriver implements Driver {
         while (pos < url.length()) {
             char c = url.charAt(pos++);
             if (c == ':') {
-                break;
+                if (!isFilePath()) {
+                    break;
+                }
             }
             if (c == ';') {
-                isFilePath = false;
-                break;
+                if (isFilePath()) {
+                    isFilePath = false;
+                    break;
+                }
             }
             if (c == '/') {
-                if (!this.isFilePath()) {
+                if (!isFilePath()) {
                     break;
                 }
             }
             if (c == '=') {
-                break;
+                if (!isFilePath()) {
+                    break;
+                }
             }
             token.append(c);
         }

@@ -18,33 +18,100 @@
  */
 package org.wso2.carbon.dataservices.sql.driver.query.insert;
 
+import org.apache.poi.ss.usermodel.Cell;
+import org.apache.poi.ss.usermodel.Row;
+import org.apache.poi.ss.usermodel.Sheet;
+import org.apache.poi.ss.usermodel.Workbook;
+import org.wso2.carbon.dataservices.sql.driver.TExcelConnection;
 import org.wso2.carbon.dataservices.sql.driver.query.ParamInfo;
 
-import java.sql.Connection;
+import java.io.FileNotFoundException;
+import java.io.FileOutputStream;
+import java.io.IOException;
 import java.sql.ResultSet;
 import java.sql.SQLException;
-import java.util.Queue;
+import java.sql.Statement;
+import java.sql.Types;
+import java.util.Date;
 
 public class ExcelInsertQuery extends InsertQuery {
 
-    public ExcelInsertQuery(Connection connection, Queue<String> processedTokens,
-                            ParamInfo[] parameters) {
-        super(connection, processedTokens, parameters);
+    public ExcelInsertQuery(Statement stmt) throws SQLException {
+        super(stmt);
     }
 
     @Override
     public ResultSet executeQuery() throws SQLException {
-        return null;
-    }
-
-    @Override
-    public int executeUpdate() throws SQLException {
-        return 0;  
+        executeSQL();
+        return null; //TODO: Need to check how the usual SQLs behave when used with execute() method
     }
 
     @Override
     public boolean execute() throws SQLException {
-        return false;  
+        return (executeSQL() > 0);
     }
+
+    @Override
+    public int executeUpdate() throws SQLException {
+        return executeSQL();
+    }
+
+    private synchronized int executeSQL() throws SQLException {
+        int rowCount = 0;
+        if (!(getConnection() instanceof TExcelConnection)) {
+            throw new SQLException("Connection does not refer to a Excel connection");
+        }
+        Workbook workbook = ((TExcelConnection) getConnection()).getWorkbook();
+        Sheet sheet = workbook.getSheet(getTargetTable());
+        if (sheet == null) {
+            throw new SQLException("Excel sheet named '" + this.getTargetTable() +
+                    "' does not exist");
+        }
+        int lastRowNo = sheet.getLastRowNum();
+
+        if (getParameters() != null) {
+            Row row = sheet.createRow(lastRowNo + 1);
+            for (ParamInfo param : getParameters()) {
+                Cell cell = row.createCell(param.getOrdinal());
+                switch (param.getSqlType()) {
+                    case Types.VARCHAR:
+                        cell.setCellValue((String) param.getValue());
+                        break;
+                    case Types.INTEGER:
+                        cell.setCellValue((Integer) param.getValue());
+                        break;
+                    case Types.DOUBLE:
+                        cell.setCellValue((Double) param.getValue());
+                        break;
+                    case Types.BOOLEAN:
+                        cell.setCellValue((Boolean) param.getValue());
+                        break;
+                    case Types.DATE:
+                        cell.setCellValue((Date) param.getValue());
+                        break;
+                    default:
+                        cell.setCellValue((String) param.getValue());
+                        break;
+                }
+            }
+            rowCount++;
+        }
+        writeRecord(workbook, ((TExcelConnection) getConnection()).getPath());
+        return rowCount;
+    }
+
+    private synchronized void writeRecord(Workbook workbook, String filePath) throws SQLException {
+        try {
+            FileOutputStream out = new FileOutputStream(filePath);
+            workbook.write(out);
+            out.close();
+        } catch (FileNotFoundException e) {
+            throw new SQLException("Error occurred while locating the EXCEL datasource", e);
+        } catch (IOException e) {
+            throw new SQLException("Error occurred while writing the records to the EXCEL " +
+                    "datasource", e);
+        }
+    }
+
 
 }

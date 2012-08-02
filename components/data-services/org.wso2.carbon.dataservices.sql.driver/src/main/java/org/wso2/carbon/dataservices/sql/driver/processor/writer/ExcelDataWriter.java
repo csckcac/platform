@@ -38,10 +38,10 @@ public class ExcelDataWriter implements DataWriter {
 
     private static final Log log = LogFactory.getLog(ExcelDataWriter.class);
 
-    private TExcelConnection con;
+    private TExcelConnection connection;
 
-    public ExcelDataWriter(TExcelConnection con, Map<String, DataTable> data) {
-        this.con = con;
+    public ExcelDataWriter(TExcelConnection connection, Map<String, DataTable> data) {
+        this.connection = connection;
         this.data = data;
     }
 

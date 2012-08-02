@@ -16,15 +16,15 @@
  *  under the License.
  *
  */
-package org.wso2.carbon.dataservices.sql.driver.query.insert;
+package org.wso2.carbon.dataservices.sql.driver.query.create;
 
 import java.sql.ResultSet;
 import java.sql.SQLException;
 import java.sql.Statement;
 
-public class GSpreadInsertQuery extends InsertQuery {
+public class ExcelCreateQuery extends CreateQuery {
 
-    public GSpreadInsertQuery(Statement stmt) throws SQLException {
+    public ExcelCreateQuery(Statement stmt) throws SQLException {
         super(stmt);
     }
 
@@ -42,5 +42,5 @@ public class GSpreadInsertQuery extends InsertQuery {
     public boolean execute() throws SQLException {
         return false;
     }
-
+    
 }

@@ -16,31 +16,26 @@
  *  under the License.
  *
  */
-package org.wso2.carbon.dataservices.sql.driver.query.insert;
+package org.wso2.carbon.dataservices.sql.driver.query.select;
 
 import java.sql.ResultSet;
 import java.sql.SQLException;
 import java.sql.Statement;
 
-public class GSpreadInsertQuery extends InsertQuery {
+public class ExcelSelectQuery extends SelectQuery {
 
-    public GSpreadInsertQuery(Statement stmt) throws SQLException {
+    public ExcelSelectQuery(Statement stmt) throws SQLException {
         super(stmt);
     }
 
     @Override
     public ResultSet executeQuery() throws SQLException {
-        return null;
-    }
-
-    @Override
-    public int executeUpdate() throws SQLException {
-        return 0;
+        return executeSQL();
     }
 
     @Override
     public boolean execute() throws SQLException {
-        return false;
+        return (executeSQL() != null);
     }
-
+    
 }

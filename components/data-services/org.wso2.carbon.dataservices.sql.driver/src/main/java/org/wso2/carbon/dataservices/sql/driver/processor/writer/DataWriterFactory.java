@@ -18,7 +18,7 @@
  */
 package org.wso2.carbon.dataservices.sql.driver.processor.writer;
 
-import org.wso2.carbon.dataservices.sql.driver.parser.AnalyzerException;
+import org.wso2.carbon.dataservices.sql.driver.parser.ParserException;
 import org.wso2.carbon.dataservices.sql.driver.parser.Constants;
 import org.wso2.carbon.dataservices.sql.driver.processor.reader.DataTable;
 
@@ -27,11 +27,11 @@ import java.util.Map;
 public class DataWriterFactory {
 
     public static DataWriter createDataWriter(String type,
-                                              Map<String, DataTable> data) throws AnalyzerException {
+                                              Map<String, DataTable> data) throws ParserException {
         if (Constants.EXCEL.equals(type)) {
             return new ExcelDataWriter(null, data);
         } else {
-            throw new AnalyzerException("Unsupported data type");
+            throw new ParserException("Unsupported data type");
         }
     }
 

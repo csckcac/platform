@@ -24,10 +24,11 @@ import org.wso2.carbon.CarbonConstants;
 import org.wso2.carbon.andes.stub.AndesAdminServiceStub;
 import org.wso2.carbon.ui.CarbonUIUtil;
 import org.wso2.carbon.utils.ServerConstants;
-
+import org.wso2.carbon.andes.stub.admin.types.Queue;
 import javax.servlet.ServletConfig;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpSession;
+import java.util.ArrayList;
 
 public class UIUtils {
 
@@ -52,5 +53,44 @@ public class UIUtils {
         }
 
         return stub;
+    }
+
+    /**
+     * filter the full queue list to suit the range
+     * @param fullList
+     * @param startingIndex
+     * @param maxQueueCount
+     * @return  Queue[]
+     */
+    public static Queue[] getFilteredQueueList(Queue[] fullList ,int startingIndex, int maxQueueCount) {
+        Queue[] queueDetailsArray;
+        int resultSetSize = maxQueueCount;
+
+        ArrayList<Queue> resultList = new ArrayList<Queue>();
+        for(Queue aQueue : fullList) {
+            resultList.add(aQueue);
+        }
+
+        if ((resultList.size() - startingIndex) < maxQueueCount) {
+            resultSetSize = (resultList.size() - startingIndex);
+        }
+        queueDetailsArray = new Queue[resultSetSize];
+        int index = 0;
+        int queueDetailsIndex = 0;
+        for (Queue queueDetail : resultList) {
+            if (startingIndex == index || startingIndex < index) {
+                queueDetailsArray[queueDetailsIndex] = new Queue();
+
+                queueDetailsArray[queueDetailsIndex].setQueueName(queueDetail.getQueueName());
+                queueDetailsArray[queueDetailsIndex].setMessageCount(queueDetail.getMessageCount());
+                queueDetailsIndex++;
+                if (queueDetailsIndex == maxQueueCount) {
+                    break;
+                }
+            }
+            index++;
+        }
+
+        return queueDetailsArray;
     }
 }

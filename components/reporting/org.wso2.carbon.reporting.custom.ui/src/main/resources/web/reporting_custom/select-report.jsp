@@ -39,13 +39,7 @@
                     </tr>
                     </thead>
                     <tbody>
-                    <tr>
-                        <td colspan="2" width="180px"><label><a href="upload-jrxml.jsp"><fmt:message
-                                key="custom.report"/></a></label></td>
-                        <td>You can upload your custom defined .jrxml file here and generate report as defined in your
-                            .jrxml.
-                        </td>
-                    </tr>
+
                     <%
                         boolean isTemplate = true;
                         try {
@@ -76,6 +70,31 @@
                         </td>
                     </tr>
 
+                     <tr>
+                        <td colspan="2"><label><a
+                                href="../reporting-template/add-chart-report.jsp?reportType=xy_bar_chart_type_report"><fmt:message
+                                key="xy.bar.chart.report"/></a></label>
+                        </td>
+                        <td>
+                            You can obtain a XY Bar Chart type of report easily from the default template provided.
+                            This will auto generate the .jrxml file for your report.
+                        </td>
+                    </tr>
+
+                     <tr>
+                        <td colspan="2">
+                            <label><a
+                                    href="../reporting-template/add-chart-report.jsp?reportType=stacked_bar_chart_type_report"><fmt:message
+                                    key="stacked.bar.chart.type"/></a></label>
+                        </td>
+                        <td>
+                            You can obtain a Stacked Bar Chart type of report easily from the default template provided.
+                            This will auto generate the .jrxml file for your report.
+                        </td>
+                    </tr>
+
+
+
                     <tr>
                         <td colspan="2"><label><a
                                 href="../reporting-template/add-chart-report.jsp?reportType=line_chart_type_report"><fmt:message
@@ -83,6 +102,17 @@
                         </td>
                         <td>
                             You can obtain a Line Chart type of report easily from the default template provided.
+                            This will auto generate the .jrxml file for your report.
+                        </td>
+                    </tr>
+
+                     <tr>
+                        <td colspan="2"><label><a
+                                href="../reporting-template/add-chart-report.jsp?reportType=xy_line_chart_type_report"><fmt:message
+                                key="xy.line.chart.report"/></a></label>
+                        </td>
+                        <td>
+                            You can obtain a XY Line Chart type of report easily from the default template provided.
                             This will auto generate the .jrxml file for your report.
                         </td>
                     </tr>
@@ -98,14 +128,15 @@
                         </td>
                     </tr>
 
+
+
                     <tr>
-                        <td colspan="2">
-                            <label><a
-                                    href="../reporting-template/add-chart-report.jsp?reportType=stacked_bar_chart_type_report"><fmt:message
-                                    key="stacked.bar.chart.type"/></a></label>
+                        <td colspan="2"><label><a
+                                href="../reporting-template/add-chart-report.jsp?reportType=xy_area_chart_type_report"><fmt:message
+                                key="xy.area.chart.report"/></a></label>
                         </td>
                         <td>
-                            You can obtain a Stacked Bar Chart type of report easily from the default template provided.
+                            You can obtain a XY Area Chart type of report easily from the default template provided.
                             This will auto generate the .jrxml file for your report.
                         </td>
                     </tr>
@@ -123,38 +154,6 @@
                         </td>
                     </tr>
 
-                    <tr>
-                        <td colspan="2"><label><a
-                                href="../reporting-template/add-chart-report.jsp?reportType=xy_bar_chart_type_report"><fmt:message
-                                key="xy.bar.chart.report"/></a></label>
-                        </td>
-                        <td>
-                            You can obtain a XY Bar Chart type of report easily from the default template provided.
-                            This will auto generate the .jrxml file for your report.
-                        </td>
-                    </tr>
-
-                    <tr>
-                        <td colspan="2"><label><a
-                                href="../reporting-template/add-chart-report.jsp?reportType=xy_line_chart_type_report"><fmt:message
-                                key="xy.line.chart.report"/></a></label>
-                        </td>
-                        <td>
-                            You can obtain a XY Line Chart type of report easily from the default template provided.
-                            This will auto generate the .jrxml file for your report.
-                        </td>
-                    </tr>
-
-                    <tr>
-                        <td colspan="2"><label><a
-                                href="../reporting-template/add-chart-report.jsp?reportType=xy_area_chart_type_report"><fmt:message
-                                key="xy.area.chart.report"/></a></label>
-                        </td>
-                        <td>
-                            You can obtain a XY Area Chart type of report easily from the default template provided.
-                            This will auto generate the .jrxml file for your report.
-                        </td>
-                    </tr>
 
                     <tr>
                         <td colspan="2"><label><a
@@ -180,6 +179,13 @@
                     <%
                         }
                     %>
+                    <tr>
+                        <td colspan="2" width="180px"><label><a href="upload-jrxml.jsp"><fmt:message
+                                key="custom.report"/></a></label></td>
+                        <td>You can upload your custom defined .jrxml file here and generate report as defined in your
+                            .jrxml.
+                        </td>
+                    </tr>
 
                     </tbody>
                 </table>

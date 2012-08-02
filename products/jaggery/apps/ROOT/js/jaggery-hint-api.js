@@ -29,6 +29,7 @@ session.getCreationTime = function(errCode) {};
 session.getLastAccessedTime = function(errCode) {};
 session.put = function(key, value) {};
 session.get = function(key) {};
+session.getId = function() {};
 session.remove = function(key) {};
 session.invalidate = function() {};
 session.isNew  = function() {};

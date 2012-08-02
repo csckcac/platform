@@ -206,6 +206,19 @@ include('/includes/topnavi.jag');
 
                     <tr>
 
+                        <td><code>getId()</code>
+                        </td>
+                        <td>String</td>
+                        <td>
+                            <pre class="prettyprint">session.getId()</pre>
+                            Returns Id of the session
+
+                        </td>
+
+                    </tr>
+					
+                    <tr>
+
                         <td><code>remove(key)</code>
                         </td>
                        <td>None</td>

@@ -1,7 +1,21 @@
+<%
+    boolean isTemplate = true;
+    try {
+        Class.forName("org.wso2.carbon.reporting.template.ui.client.ReportTemplateClient");
+    } catch (ClassNotFoundException e) {
+        isTemplate = false;
+    }
+%>
+
 <%@ page import="org.wso2.carbon.reporting.custom.ui.client.DBReportingServiceClient" %>
 <%@ page import="org.wso2.carbon.reporting.custom.ui.client.ReportResourceSupplierClient" %>
 <%@ page import="org.wso2.carbon.ui.CarbonUIMessage" %>
+<% if (isTemplate) {
+%>
 <%@ page import="org.wso2.carbon.reporting.custom.ui.client.ReportTemplateClient" %>
+<%
+    }
+%>
 <%@ page import="org.wso2.carbon.ui.CarbonUIUtil" %>
 <%@ page import="org.apache.axis2.context.ConfigurationContext" %>
 <%@ page import="org.wso2.carbon.CarbonConstants" %>
@@ -19,20 +33,19 @@
         String error2 = "Failed to get report list";
 
         String serverURL = CarbonUIUtil.getServerURL(config.getServletContext(), session);
-    ConfigurationContext configContext =
-            (ConfigurationContext) config.getServletContext().getAttribute(CarbonConstants.CONFIGURATION_CONTEXT);
-    String cookie = (String) session.getAttribute(ServerConstants.ADMIN_SERVICE_COOKIE);
+        ConfigurationContext configContext =
+                (ConfigurationContext) config.getServletContext().getAttribute(CarbonConstants.CONFIGURATION_CONTEXT);
+        String cookie = (String) session.getAttribute(ServerConstants.ADMIN_SERVICE_COOKIE);
 
-        ReportTemplateClient client = null;
         try {
             reports = resourcesSupplier.getAllReports();
-            client = new ReportTemplateClient(configContext, serverURL, cookie);
         } catch (Exception e) {
             request.setAttribute(CarbonUIMessage.ID, new CarbonUIMessage(error2, e.getMessage(), e));
     %>
     <jsp:forward page="../admin/error.jsp"/>
     <%
         }
+
     %>
 
     <carbon:breadcrumb
@@ -66,13 +79,22 @@
                         <td>
                             <label>
                                 <%
-                                  String directTo= "";
-                                 if(client.isReportTemplate(reports[i])){
-                                      directTo = "../reporting-template/template-report-generator.jsp?reportName="+reports[i];
-                                 }
-                                  else {
-                                    directTo = "report-details.jsp?reportName="+reports[i];
-                                 }
+                                    String directTo = "";
+                                    if (isTemplate) {
+                                        ReportTemplateClient client = null;
+                                        try {
+                                            client = new ReportTemplateClient(configContext, serverURL, cookie);
+                                            if (client.isReportTemplate(reports[i])) {
+                                                directTo = "../reporting-template/template-report-generator.jsp?reportName=" + reports[i];
+                                            } else {
+                                                directTo = "report-details.jsp?reportName=" + reports[i];
+                                            }
+                                        } catch (Exception e) {
+                                            directTo = "report-details.jsp?reportName=" + reports[i];
+                                        }
+                                    } else {
+                                        directTo = "report-details.jsp?reportName=" + reports[i];
+                                    }
 
                                 %>
                                 <a id="reportName<%=i%>" name="reportName"

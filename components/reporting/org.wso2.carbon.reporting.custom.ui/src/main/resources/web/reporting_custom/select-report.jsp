@@ -40,13 +40,24 @@
                     </thead>
                     <tbody>
                     <tr>
-                        <td colspan="2" width="180px"><label><a href="upload-jrxml.jsp"><fmt:message key="custom.report"/></a></label></td>
-                        <td>You can upload your custom defined .jrxml file here and generate report as defined in your .jrxml.
+                        <td colspan="2" width="180px"><label><a href="upload-jrxml.jsp"><fmt:message
+                                key="custom.report"/></a></label></td>
+                        <td>You can upload your custom defined .jrxml file here and generate report as defined in your
+                            .jrxml.
                         </td>
                     </tr>
-
+                    <%
+                        boolean isTemplate = true;
+                        try {
+                            Class.forName("org.wso2.carbon.reporting.template.ui.client.ReportTemplateClient");
+                        } catch (ClassNotFoundException e) {
+                            isTemplate = false;
+                        }
+                        if (isTemplate) {
+                    %>
                     <tr>
-                        <td colspan="2"><label><a href="../reporting-template/add-table-report.jsp"><fmt:message key="table.type.report"/></a></label>
+                        <td colspan="2"><label><a href="../reporting-template/add-table-report.jsp"><fmt:message
+                                key="table.type.report"/></a></label>
                         </td>
                         <td>
                             You can obtain a Table type of report easily from the default template provided.
@@ -55,7 +66,8 @@
                     </tr>
 
                     <tr>
-                        <td colspan="2"><label><a href="../reporting-template/add-chart-report.jsp?reportType=bar_chart_type_report"><fmt:message
+                        <td colspan="2"><label><a
+                                href="../reporting-template/add-chart-report.jsp?reportType=bar_chart_type_report"><fmt:message
                                 key="bar.chart.type"/></a></label>
                         </td>
                         <td>
@@ -65,7 +77,8 @@
                     </tr>
 
                     <tr>
-                        <td colspan="2"><label><a href="../reporting-template/add-chart-report.jsp?reportType=line_chart_type_report"><fmt:message
+                        <td colspan="2"><label><a
+                                href="../reporting-template/add-chart-report.jsp?reportType=line_chart_type_report"><fmt:message
                                 key="line.chart.type"/></a></label>
                         </td>
                         <td>
@@ -75,7 +88,8 @@
                     </tr>
 
                     <tr>
-                        <td colspan="2"><label><a href="../reporting-template/add-chart-report.jsp?reportType=area_chart_type_report"><fmt:message
+                        <td colspan="2"><label><a
+                                href="../reporting-template/add-chart-report.jsp?reportType=area_chart_type_report"><fmt:message
                                 key="area.chart.type"/></a></label>
                         </td>
                         <td>
@@ -86,7 +100,8 @@
 
                     <tr>
                         <td colspan="2">
-                            <label><a href="../reporting-template/add-chart-report.jsp?reportType=stacked_bar_chart_type_report"><fmt:message
+                            <label><a
+                                    href="../reporting-template/add-chart-report.jsp?reportType=stacked_bar_chart_type_report"><fmt:message
                                     key="stacked.bar.chart.type"/></a></label>
                         </td>
                         <td>
@@ -97,17 +112,20 @@
 
                     <tr>
                         <td colspan="2">
-                            <label><a href="../reporting-template/add-chart-report.jsp?reportType=stacked_area_chart_type_report"><fmt:message
+                            <label><a
+                                    href="../reporting-template/add-chart-report.jsp?reportType=stacked_area_chart_type_report"><fmt:message
                                     key="stacked.area.chart.type"/></a></label>
                         </td>
                         <td>
-                            You can obtain a Stacked Area Chart type of report easily from the default template provided.
+                            You can obtain a Stacked Area Chart type of report easily from the default template
+                            provided.
                             This will auto generate the .jrxml file for your report.
                         </td>
                     </tr>
 
                     <tr>
-                        <td colspan="2"><label><a href="../reporting-template/add-chart-report.jsp?reportType=xy_bar_chart_type_report"><fmt:message
+                        <td colspan="2"><label><a
+                                href="../reporting-template/add-chart-report.jsp?reportType=xy_bar_chart_type_report"><fmt:message
                                 key="xy.bar.chart.report"/></a></label>
                         </td>
                         <td>
@@ -117,7 +135,8 @@
                     </tr>
 
                     <tr>
-                        <td colspan="2"><label><a href="../reporting-template/add-chart-report.jsp?reportType=xy_line_chart_type_report"><fmt:message
+                        <td colspan="2"><label><a
+                                href="../reporting-template/add-chart-report.jsp?reportType=xy_line_chart_type_report"><fmt:message
                                 key="xy.line.chart.report"/></a></label>
                         </td>
                         <td>
@@ -127,33 +146,40 @@
                     </tr>
 
                     <tr>
-                        <td colspan="2"><label><a href="../reporting-template/add-chart-report.jsp?reportType=xy_area_chart_type_report"><fmt:message
+                        <td colspan="2"><label><a
+                                href="../reporting-template/add-chart-report.jsp?reportType=xy_area_chart_type_report"><fmt:message
                                 key="xy.area.chart.report"/></a></label>
                         </td>
                         <td>
-                           You can obtain a XY Area Chart type of report easily from the default template provided.
+                            You can obtain a XY Area Chart type of report easily from the default template provided.
                             This will auto generate the .jrxml file for your report.
                         </td>
                     </tr>
 
                     <tr>
-                        <td colspan="2"><label><a href="../reporting-template/add-chart-report.jsp?reportType=pie_chart_type_report"><fmt:message
+                        <td colspan="2"><label><a
+                                href="../reporting-template/add-chart-report.jsp?reportType=pie_chart_type_report"><fmt:message
                                 key="pie.chart.type"/></a></label>
                         </td>
                         <td>
-                           You can obtain a Pie Chart type of report easily from the default template provided.
+                            You can obtain a Pie Chart type of report easily from the default template provided.
                             This will auto generate the .jrxml file for your report.
                         </td>
                     </tr>
 
-                     <tr>
+                    <tr>
                         <td colspan="2"><label><a href="../reporting-template/add-composite-report.jsp"><fmt:message
                                 key="composite.report"/></a></label>
                         </td>
                         <td>
-                           You can obtain form a master report of composing your selected reports you have defined and produce a combination of report formats mentioned above.
+                            You can obtain form a master report of composing your selected reports you have defined and
+                            produce a combination of report formats mentioned above.
                         </td>
                     </tr>
+
+                    <%
+                        }
+                    %>
 
                     </tbody>
                 </table>

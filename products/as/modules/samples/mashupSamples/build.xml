@@ -26,32 +26,40 @@
     <property name="services" value="services"/>
     <property name="setup" value="ROOT"/>
     <property name="repo.services" value="jsservices/admin"/>
+	
+  <target name="build-all">
+        <echo message="Copying the mashup samples repository ${mashupSamples}"/>
 
-
-
-
-    <target name="build-all">
-        <echo message="Copying mashup samples repository."/>
-   
-			<copydir src="${mashupSamples}/digit2image"
-           dest="${repo.location}/${repo.services}"  />
-			<copydir src="${mashupSamples}/exchangeRate"
-           dest="${repo.location}/${repo.services}"  />
-		   <copydir src="${mashupSamples}/gmapsAPIKey"
-           dest="${repo.location}/${repo.services}"  />
-		   <copydir src="${mashupSamples}/storexml"
-           dest="${repo.location}/${repo.services}"  />
-		   <copydir src="${mashupSamples}/sudoku"
-           dest="${repo.location}/${repo.services}"  />
-		   <copydir src="${mashupSamples}/tomatoTube"
-           dest="${repo.location}/${repo.services}"  />
-		   <copydir src="${mashupSamples}/TwitterMap"
-           dest="${repo.location}/${repo.services}"  />
-		   <copydir src="${mashupSamples}/upgradeChecker"
-           dest="${repo.location}/${repo.services}"  />
-		   <copydir src="${mashupSamples}/version"
-           dest="${repo.location}/${repo.services}"  />
-		   <copydir src="${mashupSamples}/yahooGeoCode"
-           dest="${repo.location}/${repo.services}"  />
+		<copy toDir="${repo.location}/${repo.services}">
+			<fileset dir="${mashupSamples}/digit2image"/>
+		</copy>
+		<copy toDir="${repo.location}/${repo.services}">
+			<fileset dir="${mashupSamples}/exchangeRate"/>
+		</copy>
+		<copy toDir="${repo.location}/${repo.services}">
+			<fileset dir="${mashupSamples}/storexml"/>
+		</copy>
+		<copy toDir="${repo.location}/${repo.services}">
+			<fileset dir="${mashupSamples}/gmapsAPIKey"/>
+		</copy>
+		<copy toDir="${repo.location}/${repo.services}">
+			<fileset dir="${mashupSamples}/sudoku"/>
+		</copy>
+		<copy toDir="${repo.location}/${repo.services}">
+			<fileset dir="${mashupSamples}/tomatoTube"/>
+		</copy>
+		<copy toDir="${repo.location}/${repo.services}">
+			<fileset dir="${mashupSamples}/TwitterMap"/>
+		</copy>
+		<copy toDir="${repo.location}/${repo.services}">
+			<fileset dir="${mashupSamples}/upgradeChecker"/>
+		</copy>
+				<copy toDir="${repo.location}/${repo.services}">
+			<fileset dir="${mashupSamples}/version"/>
+		</copy>
+		<copy toDir="${repo.location}/${repo.services}">
+			<fileset dir="${mashupSamples}/yahooGeoCode"/>
+		</copy>
+		
     </target>
 </project>

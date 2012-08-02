@@ -73,11 +73,12 @@
                             <bundles>
                                 <bundleDef>org.wso2.carbon:org.wso2.carbon.reporting.template.core</bundleDef>
                                 <bundleDef>org.wso2.carbon:org.wso2.carbon.reporting.util</bundleDef>
-                                <bundleDef>org.wso2.carbon:org.wso2.carbon.reporting.api</bundleDef>
+                                <bundleDef>org.wso2.carbon:org.wso2.carbon.reporting.core</bundleDef>
                                 <bundleDef>org.wso2.carbon:org.wso2.carbon.reporting.api</bundleDef>
                             </bundles>
                             <importFeatures>
                                 <importFeatureDef>org.wso2.carbon.core.server:${wso2carbon.version}</importFeatureDef>
+                                <importFeatureDef>org.wso2.carbon.ndatasource.server:${wso2carbon.version}</importFeatureDef>
                             </importFeatures>
                         </configuration>
                     </execution>

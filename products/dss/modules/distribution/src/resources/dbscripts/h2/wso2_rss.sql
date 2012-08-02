@@ -70,7 +70,7 @@ CREATE TABLE RM_USER_DATABASE_PRIVILEGE (
   alter_priv enum('N','Y') NOT NULL,
   create_tmp_table_priv enum('N','Y') NOT NULL,
   lock_tables_priv enum('N','Y') NOT NULL,
-  create_view enum('N','Y') NOT NULL,
+  create_view_priv enum('N','Y') NOT NULL,
   show_view_priv enum('N','Y') NOT NULL,
   create_routine_priv enum('N','Y') NOT NULL,
   alter_routine_priv enum('N','Y') NOT NULL,
@@ -81,7 +81,6 @@ CREATE TABLE RM_USER_DATABASE_PRIVILEGE (
   FOREIGN KEY (username) REFERENCES RM_DATABASE_USER (username),
   FOREIGN KEY (database_name) REFERENCES RM_DATABASE (name),
   FOREIGN KEY (rss_instance_name) REFERENCES RM_SERVER_INSTANCE (name)
-  
 );
 
 CREATE TABLE RM_SYSTEM_DATABASE_COUNT (
@@ -109,7 +108,7 @@ CREATE TABLE RM_DB_PRIVILEGE_TEMPLATE_ENTRY (
   alter_priv enum('N','Y') NOT NULL,
   create_tmp_table_priv enum('N','Y') NOT NULL,
   lock_tables_priv enum('N','Y') NOT NULL,
-  create_view enum('N','Y') NOT NULL,
+  create_view_priv enum('N','Y') NOT NULL,
   show_view_priv enum('N','Y') NOT NULL,
   create_routine_priv enum('N','Y') NOT NULL,
   alter_routine_priv enum('N','Y') NOT NULL,

@@ -381,7 +381,7 @@ function dsSave(namemsg, invalidnamemsg, drivermsg, urlmsg, form) {
 }
 </script>
 <form method="post" name="dscreationform" id="dscreationform"
-      action="savedatasource.jsp" >
+      action="savedatasource.jsp">
 
 <div id="middle">
 <h2><fmt:message key="new.data.source"/></h2>
@@ -408,7 +408,7 @@ function dsSave(namemsg, invalidnamemsg, drivermsg, urlmsg, form) {
 <tr>
     <td style="width:170px;"><fmt:message key="description"/></td>
     <td align="left">
-        <input id="description" name="description" class="longInput" value="<%=description %>" />
+    	 <input id="description" name="description" class="longInput" value="<%=description %>" />
     </td>
 </tr>
 <tr>
@@ -1018,7 +1018,7 @@ function dsSave(namemsg, invalidnamemsg, drivermsg, urlmsg, form) {
    		'<fmt:message key="ds.driver.cannotfound.msg"/>','<fmt:message key="ds.url.cannotfound.msg"/>','<fmt:message key="ds.testquery.cannotfound.msg"/>','<fmt:message key="ds.healthy.connection"/>')"/>
         <input class="button" type="button"
                value="<fmt:message key="add"/>"
-               onclick="dsSave('<fmt:message key="ds.name.cannotfound.msg"/>','<fmt:message key="ds.name.invalid.msg"/>','<fmt:message key="ds.driver.cannotfound.msg"/>','<fmt:message key="ds.url.cannotfound.msg"/>',document.dscreationform); return false;"/>
+               onclick="var val = ValidateProperties(); if (val) {dsSave('<fmt:message key="ds.name.cannotfound.msg"/>','<fmt:message key="ds.name.invalid.msg"/>','<fmt:message key="ds.driver.cannotfound.msg"/>','<fmt:message key="ds.url.cannotfound.msg"/>',document.dscreationform)}; return false;"/>
         <input class="button" type="reset" value="<fmt:message key="cancel"/>"
                onclick="document.location.href='index.jsp'"/>
     </td>

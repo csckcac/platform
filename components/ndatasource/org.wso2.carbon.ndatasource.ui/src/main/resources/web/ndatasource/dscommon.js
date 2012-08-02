@@ -167,3 +167,59 @@ function trim(stringValue) {
       return stringValue.replace(/^\s\s*/, '').replace(/\s\s*$/, '');
 }
 
+function ValidateProperties() {
+	if (document.getElementById("maxActive").value < 0) {
+		CARBON.showErrorDialog("Please enter a positive value for maxActive");
+		return false;
+	}
+	if (document.getElementById("maxIdle").value < 0) {
+		CARBON.showErrorDialog("Please enter a positive value for maxIdle");
+		return false;
+	}
+	if (document.getElementById("minIdle").value < 0) {
+		CARBON.showErrorDialog("Please enter a positive value for minIdle");
+		return false;
+	}
+	if (document.getElementById("initialSize").value < 0) {
+		CARBON.showErrorDialog("Please enter a positive value for initialSize");
+		return false;
+	}
+	if (document.getElementById("maxWait").value < 0) {
+		CARBON.showErrorDialog("Please enter a positive value for maxWait");
+		return false;
+	}
+	if (document.getElementById("timeBetweenEvictionRunsMillis").value < 0) {
+		CARBON.showErrorDialog("Please enter a positive value for timeBetweenEvictionRunsMillis");
+		return false;
+	}
+	if (document.getElementById("numTestsPerEvictionRun").value < 0) {
+		CARBON.showErrorDialog("Please enter a positive value for numTestsPerEvictionRun");
+		return false;
+	}
+	if (document.getElementById("minEvictableIdleTimeMillis").value < 0) {
+		CARBON.showErrorDialog("Please enter a positive value for minEvictableIdleTimeMillis");
+		return false;
+	}
+	if (document.getElementById("removeAbandonedTimeout").value < 0) {
+		CARBON.showErrorDialog("Please enter a positive value for removeAbandonedTimeout");
+		return false;
+	}
+	if (document.getElementById("validationInterval").value < 0) {
+		CARBON.showErrorDialog("Please enter a positive value for validationInterval");
+		return false;
+	}
+	if (document.getElementById("abandonWhenPercentageFull").value < 0) {
+		CARBON.showErrorDialog("Please enter a positive value for abandonWhenPercentageFull");
+		return false;
+	}
+	if (document.getElementById("maxAge").value < 0) {
+		CARBON.showErrorDialog("Please enter a positive value for maxAge");
+		return false;
+	}
+	if (document.getElementById("suspectTimeout").value < 0) {
+		CARBON.showErrorDialog("Please enter a positive value for suspectTimeout");
+		return false;
+	}
+	return true;
+}
+

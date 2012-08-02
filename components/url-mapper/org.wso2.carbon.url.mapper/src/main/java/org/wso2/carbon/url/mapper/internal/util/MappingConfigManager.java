@@ -1,15 +1,5 @@
 package org.wso2.carbon.url.mapper.internal.util;
 
-import java.io.File;
-import java.io.FileInputStream;
-import java.io.IOException;
-import java.io.InputStream;
-import java.net.URL;
-import java.util.Iterator;
-
-import javax.xml.stream.XMLInputFactory;
-import javax.xml.stream.XMLStreamReader;
-
 import org.apache.axiom.om.OMElement;
 import org.apache.axiom.om.impl.builder.StAXOMBuilder;
 import org.apache.commons.logging.Log;
@@ -18,6 +8,17 @@ import org.osgi.framework.BundleContext;
 import org.wso2.carbon.registry.core.RegistryConstants;
 import org.wso2.carbon.url.mapper.data.MappingConfig;
 import org.wso2.carbon.utils.CarbonUtils;
+
+import javax.xml.stream.XMLInputFactory;
+import javax.xml.stream.XMLStreamReader;
+import java.io.File;
+import java.io.FileInputStream;
+import java.io.IOException;
+import java.io.InputStream;
+import java.net.URL;
+import java.util.Iterator;
+import java.util.regex.Matcher;
+import java.util.regex.Pattern;
 
 public class MappingConfigManager {
 	
@@ -48,13 +49,32 @@ public class MappingConfigManager {
 					Iterator it = documentElement.getChildElements();
 	                while (it.hasNext()) {
 	                    OMElement element = (OMElement) it.next();
-	                    if (UrlMapperConstants.MappingConfigs.MAPPINGS.equals(element.getLocalName())) {
+	                    if (UrlMapperConstants.MappingConfigs.MAPPINGS.equals(element.
+                                getLocalName())) {
 	                        String mappings = element.getText();
 	                        int noOfMappings = Integer.parseInt(mappings);
 	                        config.setNoOfMappings(noOfMappings);
-	                    } else if (UrlMapperConstants.MappingConfigs.PREFIX.equals(element.getLocalName())) {
-	                        config.setPrefix("."+element.getText());
-	                    }
+	                    } else if (UrlMapperConstants.MappingConfigs.PREFIX.equals(element.
+                                getLocalName())) {
+                            String prefix = element.getText();
+                            String suffixPattern = "[a-zA-z0-9_\\-][a-zA-z0-9\\._\\-]+[a-zA-z0-9_\\-]";
+                            Pattern pattern = Pattern.compile(suffixPattern);
+                            Matcher matcher;
+                            matcher = pattern.matcher(prefix);
+                            if(matcher.matches()) {
+                                prefix = "." + prefix;
+                            } else {
+                                log.error("please specify correct mapping suffix instead of" +
+                                        "********" + prefix + "******** in" +
+                                        "/repository/conf/etc/url-mapping-config.xml where " +
+                                        "alphabets, numbers, - and _ are allowed everywhere but . " +
+                                        "is allowed except in the start and end.");
+                                log.error("For incorrect mappings localhost is taken as default " +
+                                        "mapping suffix");
+                                prefix = ".localhost";
+                            }
+                            config.setPrefix(prefix);
+                        }
 	                }
 	              
 	            } catch (Exception e) {

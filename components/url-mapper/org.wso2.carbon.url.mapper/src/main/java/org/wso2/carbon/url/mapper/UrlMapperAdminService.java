@@ -21,12 +21,10 @@ import org.apache.commons.logging.LogFactory;
 import org.wso2.carbon.context.ApplicationContext;
 import org.wso2.carbon.core.AbstractAdmin;
 import org.wso2.carbon.url.mapper.clustermessage.util.VirtualHostClusterUtil;
-import org.wso2.carbon.url.mapper.data.MappingConfig;
 import org.wso2.carbon.url.mapper.data.MappingData;
 import org.wso2.carbon.url.mapper.data.PaginatedMappingData;
 import org.wso2.carbon.url.mapper.internal.exception.UrlMapperException;
 import org.wso2.carbon.url.mapper.internal.util.HostUtil;
-import org.wso2.carbon.url.mapper.internal.util.MappingConfigManager;
 import org.wso2.carbon.utils.DataPaginator;
 
 import java.util.Arrays;
@@ -99,8 +97,7 @@ public class UrlMapperAdminService extends AbstractAdmin {
 	}
 
 	public String getDomainNamePrefix() {
-		MappingConfig config = MappingConfigManager.loadMappingConfiguration();
-		return config.getPrefix();
+        return HostUtil.getUrlSuffix();
 	}
 
 	public boolean isMappingLimitExceeded(String webAppName) throws UrlMapperException {

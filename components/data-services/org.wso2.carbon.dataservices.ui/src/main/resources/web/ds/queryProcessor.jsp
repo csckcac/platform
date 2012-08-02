@@ -364,22 +364,40 @@
               Result res = returnRowQuery.getResult();
               if (returnGeneratedKeys.equals("true") && (!hasReturnRowProperty)) {
                   returnRowQuery.setReturnGeneratedKeys(true);
-                  if (res == null) {
+                  if (res == null || res.getElements().size() == 0) {
                       res = new Result();
                       res.setResultWrapper("GeneratedKeys");
                       res.setRowName("Entry");
                       res.setUseColumnNumbers("true");
                       returnRowQuery.setResult(res);
-                      Element newElement = new Element();
-                      newElement.setDataSourceType("column");
-                      newElement.setName("ID");
-                      newElement.setDataSourceValue("1");
-                      newElement.setxsdType("xs:integer");
-                      res.addElement(newElement);
                   }
+                  Element newElement = new Element();
+                  newElement.setDataSourceType("column");
+                  newElement.setName("ID");
+                  newElement.setDataSourceValue("1");
+                  newElement.setxsdType("xs:integer");
+                  res.addElement(newElement);
               }
            }   
-    	}
+    	} else if (setReturnGeneratedKeys.equals("false")) {
+            if (dataService.getQuery(queryId) != null) {
+                Query returnRowQuery = dataService.getQuery(queryId);
+                Result res = returnRowQuery.getResult();
+                if (returnGeneratedKeys.equals("false")) {
+                    returnRowQuery.setReturnGeneratedKeys(false);
+                    if (res != null) {
+                        res.removeElement("ID");
+                        //remove result wrapper only if there are no other result elements exist other than generated key
+                        if (res.getElements() != null && res.getElements().size() == 0) {
+                            res.setResultWrapper("");
+                            res.setRowName("");
+                            res.setUseColumnNumbers("false");
+                        }
+                        returnRowQuery.setResult(res);
+                    }
+                }
+            }
+        }
     }
     /* add auto response */
     if (autoResponse != null) {

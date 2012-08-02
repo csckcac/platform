@@ -767,7 +767,7 @@
                         if (returnGeneratedKeys) {
                     %>
                     <input type="checkbox" id="returnGeneratedKeys" name="returnGeneratedKeys"
-                           checked="checked" value="<%=returnGeneratedKeys%>" onclick="var validated=validateClickOnReturnGeneratedKeys();if(validated){document.dataForm.action='queryProcessor.jsp?setReturnGeneratedKeys=true&flag=ReturnRowChanged';document.dataForm.submit();} return validated;"  />
+                           checked="checked" value="<%=returnGeneratedKeys%>" onclick="var validated=validateClickOnReturnGeneratedKeys();if(validated){document.dataForm.action='queryProcessor.jsp?setReturnGeneratedKeys=false&flag=ReturnRowChanged';document.dataForm.submit();} return validated;"  />
                     <% } else {
                     %>
                     <input type="checkbox" id="returnGeneratedKeys" name="returnGeneratedKeys" value="<%=returnGeneratedKeys%>"

@@ -433,11 +433,8 @@
                         <textarea id="mashup_code_text" rows="40" cols="100"
                                   style="width: 100%; height: 94%; *height:628px; display:block;"><%=serviceSource%>
                         </textarea>
-                        <br>
-
-                        <div style="margin-top: 10px;"><label id="source_save_status" style="float: left;">Tip: You can
-                            use the buttons on the right to save or discard changes.</label>
-                <span style="float:right">
+                        <div style="margin-top: 10px;">
+                <br><span style="float:left">
                     <input type="button" class="button" value="Discard changes" onclick="discardChanges();"/>
                     <input type="button" class="button" value="Save changes"
                            onclick="saveSource(editAreaLoader.getValue('mashup_code_text'), 'mashupCodeForm', 'js', 'save');"/>
@@ -445,6 +442,10 @@
                            onclick="saveSource(editAreaLoader.getValue('mashup_code_text'), 'mashupCodeForm', 'js', 'apply');"/>
                     <input type="hidden" name="mashupContents" id="mashupContents"/>
                 </span>
+                <br><br>
+                        
+                        <label id="source_save_status" style="float: left;">Tip: You can
+                            use above buttons to save or discard changes.</label>
                         </div>
                     </form>
                 </div>

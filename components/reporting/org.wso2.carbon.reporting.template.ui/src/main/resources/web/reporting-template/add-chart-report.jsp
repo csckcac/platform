@@ -26,10 +26,10 @@
 <%@ taglib prefix="fmt" uri="http://java.sun.com/jsp/jstl/fmt" %>
 <%@ taglib uri="http://wso2.org/projects/carbon/taglibs/carbontags.jar" prefix="carbon" %>
 <fmt:bundle basename="org.wso2.carbon.reporting.template.ui.i18n.Resources">
-<script type="text/javascript">
 
-
-</script>
+<carbon:breadcrumb label="add.report.step1"
+                   resourceBundle="org.wso2.carbon.reporting.template.ui.i18n.Resources"
+                   topPage="false" request="<%=request%>"/>
 
 
 <%

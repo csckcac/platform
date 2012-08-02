@@ -27,6 +27,9 @@
 <%@ taglib uri="http://wso2.org/projects/carbon/taglibs/carbontags.jar" prefix="carbon" %>
 <fmt:bundle basename="org.wso2.carbon.reporting.template.ui.i18n.Resources">
 
+<carbon:breadcrumb label="add.report.step2"
+                   resourceBundle="org.wso2.carbon.reporting.template.ui.i18n.Resources"
+                   topPage="false" request="<%=request%>"/>
 
 <script type="text/javascript">
 

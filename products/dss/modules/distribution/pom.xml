@@ -273,7 +273,7 @@
                                     <classpath refid="maven.compile.classpath"/>
                                     <classpath refid="maven.runtime.classpath"/>
 
-                                  <fileset file="${basedir}/src/resources/dbscripts/wso2_rss.sql"/>
+                                  <fileset file="${basedir}/src/resources/dbscripts/h2/wso2_rss.sql"/>
                                 </sql>
                             </tasks>
                         </configuration>

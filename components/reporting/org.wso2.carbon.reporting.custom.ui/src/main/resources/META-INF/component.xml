@@ -63,25 +63,25 @@
       <i18n-key>reporting.add</i18n-key>
       <i18n-bundle>org.wso2.carbon.reporting.custom.ui.i18n.Resources</i18n-bundle>
       <parent-menu>reporting_menu</parent-menu>
-      <link>#</link>
+      <link>../reporting_custom/select-report.jsp</link>
       <region>region5</region>
       <order>40</order>
       <style-class>tools</style-class>
       <icon>../reporting_custom/images/add.gif</icon>
       <require-permission>/permission/admin</require-permission>
     </menu>
-    <menu>
-      <id>reporting_add</id>
-      <i18n-key>template.add</i18n-key>
-      <i18n-bundle>org.wso2.carbon.reporting.custom.ui.i18n.Resources</i18n-bundle>
-      <parent-menu>reporting_add_main</parent-menu>
-      <link>../reporting_custom/select-report.jsp</link>
-      <region>region5</region>
-      <order>41</order>
-      <style-class>tools</style-class>
-      <icon>../reporting_custom/images/template.gif</icon>
-      <require-permission>/permission/admin</require-permission>
-    </menu>
+    <!--<menu>-->
+      <!--<id>reporting_add</id>-->
+      <!--<i18n-key>template.add</i18n-key>-->
+      <!--<i18n-bundle>org.wso2.carbon.reporting.custom.ui.i18n.Resources</i18n-bundle>-->
+      <!--<parent-menu>reporting_add_main</parent-menu>-->
+      <!--<link>../reporting_custom/select-report.jsp</link>-->
+      <!--<region>region5</region>-->
+      <!--<order>41</order>-->
+      <!--<style-class>tools</style-class>-->
+      <!--<icon>../reporting_custom/images/template.gif</icon>-->
+      <!--<require-permission>/permission/admin</require-permission>-->
+    <!--</menu>-->
 
   </menus>
   <FileUploadConfig>

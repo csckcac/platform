@@ -185,6 +185,9 @@ private Config addNotAvailableFunctions(Config config,String selectedType, HttpS
 		 if (config.getPropertyValue(DBConstants.RDBMS.MIN_IDLE) == null) {
 			 config.addProperty(DBConstants.RDBMS.MIN_IDLE, "");
 		 }
+		 if (config.getPropertyValue(DBConstants.RDBMS.MAX_IDLE) == null) {
+			 config.addProperty(DBConstants.RDBMS.MAX_IDLE, "");
+		 }
 		 if (config.getPropertyValue(DBConstants.RDBMS.MAX_WAIT) == null) {
 			 config.addProperty(DBConstants.RDBMS.MAX_WAIT, "");
 		 }
@@ -202,6 +205,9 @@ private Config addNotAvailableFunctions(Config config,String selectedType, HttpS
 		 }
 		 if (config.getPropertyValue(DBConstants.RDBMS.TIME_BETWEEN_EVICTION_RUNS_MILLIS) == null) {
 			 config.addProperty(DBConstants.RDBMS.TIME_BETWEEN_EVICTION_RUNS_MILLIS, "");
+		 }
+		 if (config.getPropertyValue(DBConstants.RDBMS.NUM_TESTS_PER_EVICTION_RUN) == null) {
+			 config.addProperty(DBConstants.RDBMS.NUM_TESTS_PER_EVICTION_RUN, "");
 		 }
 		 if (config.getPropertyValue(DBConstants.RDBMS.MIN_EVICTABLE_IDLE_TIME_MILLIS) == null) {
 			 config.addProperty(DBConstants.RDBMS.MIN_EVICTABLE_IDLE_TIME_MILLIS, "");
@@ -411,6 +417,7 @@ private Config addNotAvailableFunctions(Config config,String selectedType, HttpS
             		newConfig.addProperty(DBConstants.RDBMS.TEST_ON_BORROW,"");
             		newConfig.addProperty(DBConstants.RDBMS.TEST_WHILE_IDLE,"");
             		newConfig.addProperty(DBConstants.RDBMS.TIME_BETWEEN_EVICTION_RUNS_MILLIS,"");
+            		newConfig.addProperty(DBConstants.RDBMS.NUM_TESTS_PER_EVICTION_RUN,"");
             		newConfig.addProperty(DBConstants.RDBMS.MIN_EVICTABLE_IDLE_TIME_MILLIS,"");
             		newConfig.addProperty(DBConstants.RDBMS.REMOVE_ABANDONED,"");
             		newConfig.addProperty(DBConstants.RDBMS.REMOVE_ABANDONED_TIMEOUT,"");
@@ -513,6 +520,7 @@ private Config addNotAvailableFunctions(Config config,String selectedType, HttpS
             		conf.addProperty(DBConstants.RDBMS.TEST_ON_BORROW,"");
             		conf.addProperty(DBConstants.RDBMS.TEST_WHILE_IDLE,"");
             		conf.addProperty(DBConstants.RDBMS.TIME_BETWEEN_EVICTION_RUNS_MILLIS,"");
+            		conf.addProperty(DBConstants.RDBMS.NUM_TESTS_PER_EVICTION_RUN,"");
             		conf.addProperty(DBConstants.RDBMS.MIN_EVICTABLE_IDLE_TIME_MILLIS,"");
             		conf.addProperty(DBConstants.RDBMS.REMOVE_ABANDONED,"");
             		conf.addProperty(DBConstants.RDBMS.REMOVE_ABANDONED_TIMEOUT,"");
@@ -1117,6 +1125,7 @@ private Config addNotAvailableFunctions(Config config,String selectedType, HttpS
     		||propertyName.equals(DBConstants.RDBMS.TEST_ON_BORROW)
     		||propertyName.equals(DBConstants.RDBMS.TEST_WHILE_IDLE)
     		||propertyName.equals(DBConstants.RDBMS.TIME_BETWEEN_EVICTION_RUNS_MILLIS)
+    		||propertyName.equals(DBConstants.RDBMS.NUM_TESTS_PER_EVICTION_RUN)
     		||propertyName.equals(DBConstants.RDBMS.MIN_EVICTABLE_IDLE_TIME_MILLIS)
     		||propertyName.equals(DBConstants.RDBMS.REMOVE_ABANDONED_TIMEOUT)
     		||propertyName.equals(DBConstants.RDBMS.AUTO_COMMIT)
@@ -1291,6 +1300,7 @@ private Config addNotAvailableFunctions(Config config,String selectedType, HttpS
     		||propertyName.equals(DBConstants.RDBMS.TEST_ON_BORROW)
     		||propertyName.equals(DBConstants.RDBMS.TEST_WHILE_IDLE)
     		||propertyName.equals(DBConstants.RDBMS.TIME_BETWEEN_EVICTION_RUNS_MILLIS)
+    		||propertyName.equals(DBConstants.RDBMS.NUM_TESTS_PER_EVICTION_RUN)
     		||propertyName.equals(DBConstants.RDBMS.MIN_EVICTABLE_IDLE_TIME_MILLIS)
     		||propertyName.equals(DBConstants.RDBMS.REMOVE_ABANDONED_TIMEOUT)
             ||propertyName.equals(DBConstants.RDBMS.AUTO_COMMIT)
@@ -1373,6 +1383,7 @@ private Config addNotAvailableFunctions(Config config,String selectedType, HttpS
                         ||propertyName.equals(DBConstants.RDBMS.MAX_WAIT)
                         ||propertyName.equals(DBConstants.RDBMS.VALIDATION_QUERY)
                         ||propertyName.equals(DBConstants.RDBMS.TIME_BETWEEN_EVICTION_RUNS_MILLIS)
+                        ||propertyName.equals(DBConstants.RDBMS.NUM_TESTS_PER_EVICTION_RUN)
                         ||propertyName.equals(DBConstants.RDBMS.MIN_EVICTABLE_IDLE_TIME_MILLIS)
                         ||propertyName.equals(DBConstants.RDBMS.REMOVE_ABANDONED_TIMEOUT)
                         ||propertyName.equals(DBConstants.RDBMS.DEFAULT_CATALOG)

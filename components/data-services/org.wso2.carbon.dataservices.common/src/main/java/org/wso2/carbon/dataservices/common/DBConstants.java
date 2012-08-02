@@ -325,6 +325,7 @@ public final class DBConstants {
         public static final String VALIDATION_QUERY = "validationQuery";
         public static final String VALIDATOR_CLASSNAME = "validatorClassName";
         public static final String TIME_BETWEEN_EVICTION_RUNS_MILLIS = "timeBetweenEvictionRunsMillis";
+        public static final String NUM_TESTS_PER_EVICTION_RUN = "numTestsPerEvictionRun";
         public static final String MIN_EVICTABLE_IDLE_TIME_MILLIS = "minEvictableIdleTimeMillis";
         public static final String REMOVE_ABANDONED = "removeAbandoned";
         public static final String REMOVE_ABANDONED_TIMEOUT = "removeAbandonedTimeout";

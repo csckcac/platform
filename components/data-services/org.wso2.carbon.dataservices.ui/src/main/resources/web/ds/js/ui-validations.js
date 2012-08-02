@@ -96,32 +96,18 @@ function validateAddDataSourceForm(){
             CARBON.showWarningDialog('Select the Database engine');
             return false;
         }
-        if(document.getElementById('org.wso2.ws.dataservice.driver').value ==  ''){
+        if(document.getElementById('driverClassName').value ==  ''){
             CARBON.showWarningDialog('Database Driver is mandatory');
             return false;
         }
-        if(document.getElementById('org.wso2.ws.dataservice.protocol').value ==  ''){
+        if(document.getElementById('url').value ==  ''){
             CARBON.showWarningDialog('JDBC URL is mandatory');
             return false;
         }
-        var maxValue = parseInt(document.getElementById('org.wso2.ws.dataservice.maxpoolsize').value);
-        var minValue = parseInt(document.getElementById('org.wso2.ws.dataservice.minpoolsize').value);
-        if(maxValue <= minValue){
-            CARBON.showWarningDialog('Max. Pool Size must be greater than Min. Pool Size');
-            return false;
+        if(!ValidateDataSourceProperties()) {
+        	return false;
         }
-        if(minValue < 0){
-            CARBON.showWarningDialog('Max. Pool Size cannot be minus');
-            return false;
-        }
-        if(document.getElementById('org.wso2.ws.dataservice.minpoolsize').value.match(/^[a-zA-Z]+$/)){
-            CARBON.showWarningDialog('Enter numeric values to Min. Pool Size');
-            return false;
-        }
-        if(document.getElementById('org.wso2.ws.dataservice.maxpoolsize').value.match(/^[a-zA-Z]+$/)){
-            CARBON.showWarningDialog('Enter numeric values to Max. Pool Size');
-            return false;
-        }
+        
     }else if(document.getElementById('datasourceType').value == 'EXCEL'){
         if(document.getElementById('excel_datasource').value == ''){
             CARBON.showWarningDialog('Excel File Location is mandatory');
@@ -189,13 +175,45 @@ function validateAddDataSourceForm(){
     return true;
 }
 
-function validateAddQueryForm(obj){
-    if(document.getElementById('queryId').value == ''){
-        CARBON.showWarningDialog('Query Id is mandatory');
+function validateQueryId(obj){
+	var queryId = document.getElementById('queryId').value;
+       var reWhiteSpace = new RegExp("^[a-zA-Z0-9_]+$");
+    // Validate for alphanumeric characters and underscores
+    if (!reWhiteSpace.test(queryId)) {
+        CARBON.showWarningDialog("Alphanumeric characters and underscores are only allowed in the Query Id");
         return false;
     }
+    return true;
     
-    var queryId = document.getElementById('queryId').value;
+  }
+
+function validateClickOnReturnGeneratedKeys() {
+    var query = document.getElementById('sql').value;
+    if (query != '') {
+        var startingKeyword = query.trim().toUpperCase().toString().split(" ");
+        if (startingKeyword[0] != "INSERT") {
+            CARBON.showWarningDialog("Return Generated Keys cannot be used with the given query");
+            return false;
+        }
+    } else {
+        CARBON.showWarningDialog("Query cannot be empty");
+        return false;
+    }
+    return true;
+}
+
+function validateAddQueryFormSave(obj) {
+	var queryId = document.getElementById('queryId').value;
+	var dataSourceId = document.getElementById('datasource').value;
+    if(queryId == ''){
+        CARBON.showWarningDialog('Query Id is mandatory');
+        return  false;
+    }
+    if(dataSourceId == '#'){
+        CARBON.showWarningDialog('Select the data source');
+        return  false;
+    }
+    
     var reWhiteSpace = new RegExp("^[a-zA-Z0-9_]+$");
     // Validate for alphanumeric characters and underscores
     if (!reWhiteSpace.test(queryId)) {
@@ -203,20 +221,28 @@ function validateAddQueryForm(obj){
         document.getElementById('queryId').readOnly = false;
         return false;
     }
-    if(document.getElementById('datasource').value == '#'){
-        CARBON.showWarningDialog('Select the data source');
-        return false;
+    
+    if(document.getElementById('RDFRow').style.display == '') {
+        if(document.getElementById('sparql').value == '') {
+            CARBON.showWarningDialog('Sparql is mandatory');
+            return false;
+        }
     }
 
-    /*if(obj == 'RDBMS'){
-     if(document.getElementById('txtExcelWorkbookName').value == ''){
-     CARBON.showWarningDialog('Enter value to Workbook Name');
-     return false;
-     }
-     }*/
-    
-    var dataSourceId = document.getElementById('datasource').value;
-    
+    if(document.getElementById('RDBMSnJNDIRow').style.display == ''){
+        if(document.getElementById('sql').value == ''){
+        CARBON.showWarningDialog('SQL is mandatory');
+        return false;
+        }
+    }
+
+    if (document.getElementById('CASSANDRARow').style.display == '') {
+        if (document.getElementById('cql').value == '') {
+            CARBON.showWarningDialog('CQL is mandatory');
+            return false;
+        }
+    }
+
     if (document.getElementById(dataSourceId).value == 'EXCEL') {
         if (document.getElementById('txtExcelWorkbookName').value == '') {
             CARBON.showWarningDialog('Enter value to Workbook Name');
@@ -247,67 +273,6 @@ function validateAddQueryForm(obj){
             return false;
         }
     }
-     
-}
-
-function validateQueryId(obj){
-	var queryId = document.getElementById('queryId').value;
-       var reWhiteSpace = new RegExp("^[a-zA-Z0-9_]+$");
-    // Validate for alphanumeric characters and underscores
-    if (!reWhiteSpace.test(queryId)) {
-        CARBON.showWarningDialog("Alphanumeric characters and underscores are only allowed in the Query Id");
-        return false;
-    }
-    return true;
-    
-  }
-
-function validateClickOnReturnGeneratedKeys() {
-    var query = document.getElementById('sql').value;
-    if (query != '') {
-        var startingKeyword = query.trim().toUpperCase().toString().split(" ");
-        if (startingKeyword[0] != "INSERT") {
-            CARBON.showWarningDialog("Return Generated Keys cannot be used with the given query");
-            return false;
-        }
-    } else {
-        CARBON.showWarningDialog("Query cannot be empty");
-        return false;
-    }
-    return true;
-}
-
-function validateAddQueryFormSave(obj) {
-    if(document.getElementById('queryId').value == ''){
-        CARBON.showWarningDialog('Query Id is mandatory');
-        return  false;
-    }
-    if(document.getElementById('datasource').value == '#'){
-        CARBON.showWarningDialog('Select the data source');
-        return  false;
-    }
-
-    if(document.getElementById('RDFRow').style.display == '') {
-        if(document.getElementById('sparql').value == '') {
-            CARBON.showWarningDialog('Sparql is mandatory');
-            return false;
-        }
-    }
-
-    if(document.getElementById('RDBMSnJNDIRow').style.display == ''){
-        if(document.getElementById('sql').value == ''){
-        CARBON.showWarningDialog('SQL is mandatory');
-        return false;
-        }
-    }
-
-    if (document.getElementById('CASSANDRARow').style.display == '') {
-        if (document.getElementById('cql').value == '') {
-            CARBON.showWarningDialog('CQL is mandatory');
-            return false;
-        }
-    }
-
 
     if (document.getElementById('timeout').value != null) {
         var timeout = document.getElementById('timeout').value;
@@ -352,6 +317,7 @@ function validateAddQueryFormSave(obj) {
         }
         return   true;
     }
+    
     return  true;
 
 }
@@ -1677,6 +1643,62 @@ function changeVisiblityOnTypeSelection(obj, document) {
         document.getElementById('defaultValueRow').style.display = '';
         document.getElementById('structTypeRow').style.display = 'none'
     }
+}
+
+function ValidateDataSourceProperties() {
+	if (isNaN(document.getElementById("maxActive").value) || document.getElementById("maxActive").value < 0) {
+		CARBON.showErrorDialog("Please enter a positive numeric value for Max Active");
+		return false;
+	}
+	if (isNaN(document.getElementById("maxIdle").value) || document.getElementById("maxIdle").value < 0) {
+		CARBON.showErrorDialog("Please enter a positive numeric value for Max Idle");
+		return false;
+	}
+	if (isNaN(document.getElementById("minIdle").value) || document.getElementById("minIdle").value < 0) {
+		CARBON.showErrorDialog("Please enter a positive numeric value for Min Idle");
+		return false;
+	}
+	if (isNaN(document.getElementById("initialSize").value) || document.getElementById("initialSize").value < 0) {
+		CARBON.showErrorDialog("Please enter a positive numeric value for Initial Size");
+		return false;
+	}
+	if (isNaN(document.getElementById("maxWait").value) || document.getElementById("maxWait").value < 0) {
+		CARBON.showErrorDialog("Please enter a positive numeric value for Max Wait");
+		return false;
+	}
+	if (isNaN(document.getElementById("timeBetweenEvictionRunsMillis").value) || document.getElementById("timeBetweenEvictionRunsMillis").value < 0) {
+		CARBON.showErrorDialog("Please enter a positive numeric value for Time Between Eviction Runs Millis");
+		return false;
+	}
+	if (isNaN(document.getElementById("numTestsPerEvictionRun").value) || document.getElementById("numTestsPerEvictionRun").value < 0 ) {
+		CARBON.showErrorDialog("Please enter a positive numeric value for Num Tests Per Eviction Run");
+		return false;
+	}
+	if (isNaN(document.getElementById("minEvictableIdleTimeMillis").value) || document.getElementById("minEvictableIdleTimeMillis").value < 0) {
+		CARBON.showErrorDialog("Please enter a positive numeric value for Min Evictable Idle Time Millis");
+		return false;
+	}
+	if (isNaN(document.getElementById("removeAbandonedTimeout").value) || document.getElementById("removeAbandonedTimeout").value < 0) {
+		CARBON.showErrorDialog("Please enter a positive numeric value for Remove Abandoned Timeout");
+		return false;
+	}
+	if (isNaN(document.getElementById("validationInterval").value) || document.getElementById("validationInterval").value < 0) {
+		CARBON.showErrorDialog("Please enter a positive numeric value for Validation Interval");
+		return false;
+	}
+	if (isNaN(document.getElementById("abandonWhenPercentageFull").value) || document.getElementById("abandonWhenPercentageFull").value < 0) {
+		CARBON.showErrorDialog("Please enter a positive numeric value for Abandon When Percentage Full");
+		return false;
+	}
+	if (isNaN(document.getElementById("maxAge").value) || document.getElementById("maxAge").value < 0) {
+		CARBON.showErrorDialog("Please enter a positive numeric value for Max Age");
+		return false;
+	}
+	if (isNaN(document.getElementById("suspectTimeout").value) || document.getElementById("suspectTimeout").value < 0) {
+		CARBON.showErrorDialog("Please enter a positive numeric value for Suspect Timeout");
+		return false;
+	}
+	return true;
 }
 
 

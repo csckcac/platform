@@ -79,6 +79,7 @@
     String testOnReturn = request.getParameter(DBConstants.RDBMS.TEST_ON_RETURN);
     String testWhileIdle = request.getParameter(DBConstants.RDBMS.TEST_WHILE_IDLE);
     String timeBetweenEvictionRunsMillis = request.getParameter(DBConstants.RDBMS.TIME_BETWEEN_EVICTION_RUNS_MILLIS);
+    String numTestsPerEvictionRun = request.getParameter(DBConstants.RDBMS.NUM_TESTS_PER_EVICTION_RUN);
     String minEvictableIdleTimeMillis = request.getParameter(DBConstants.RDBMS.MIN_EVICTABLE_IDLE_TIME_MILLIS);
     String removeAbandoned = request.getParameter(DBConstants.RDBMS.REMOVE_ABANDONED);
     String removeAbandonedTimeout = request.getParameter(DBConstants.RDBMS.REMOVE_ABANDONED_TIMEOUT);
@@ -261,6 +262,7 @@
                         dsConfig.removeProperty(DBConstants.RDBMS.TEST_WHILE_IDLE);
                     }
                     updateConfiguration(dsConfig, DBConstants.RDBMS.TIME_BETWEEN_EVICTION_RUNS_MILLIS, timeBetweenEvictionRunsMillis);
+                    updateConfiguration(dsConfig, DBConstants.RDBMS.NUM_TESTS_PER_EVICTION_RUN, numTestsPerEvictionRun);
                     updateConfiguration(dsConfig, DBConstants.RDBMS.MIN_EVICTABLE_IDLE_TIME_MILLIS, minEvictableIdleTimeMillis);
                     if (!"false".equals(removeAbandoned)) {
                         updateConfiguration(dsConfig, DBConstants.RDBMS.REMOVE_ABANDONED, removeAbandoned);

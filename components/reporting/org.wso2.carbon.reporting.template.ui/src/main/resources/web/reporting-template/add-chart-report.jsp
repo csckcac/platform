@@ -20,18 +20,18 @@
 <%@ page import="org.wso2.carbon.CarbonConstants" %>
 <%@ page import="org.wso2.carbon.ui.CarbonUIUtil" %>
 <%@ page import="org.wso2.carbon.utils.ServerConstants" %>
-<%@ page import="org.wso2.carbon.ui.CarbonUIMessage" %>
 <%@ page import="org.wso2.carbon.reporting.template.ui.client.ReportTemplateClient" %>
 <%@ page import="org.apache.axis2.AxisFault" %>
 <%@ taglib prefix="fmt" uri="http://java.sun.com/jsp/jstl/fmt" %>
 <%@ taglib uri="http://wso2.org/projects/carbon/taglibs/carbontags.jar" prefix="carbon" %>
+
 <fmt:bundle basename="org.wso2.carbon.reporting.template.ui.i18n.Resources">
 
 <carbon:breadcrumb label="add.report.step1"
                    resourceBundle="org.wso2.carbon.reporting.template.ui.i18n.Resources"
                    topPage="false" request="<%=request%>"/>
 
-
+<script type="text/javascript" src="../ajax/js/prototype.js"></script>
 <%
 
     String serverURL = CarbonUIUtil.getServerURL(config.getServletContext(), session);
@@ -91,167 +91,209 @@
 %>
 
 <script type="text/javascript">
-    var seriesCount = 0;
+var seriesCount = 0;
 
-    function submitChartReportData() {
-        document.chartreport.action = 'ChartDataProcessor';
-        var msg = checkValidity();
-        if (msg != '') {
-            CARBON.showErrorDialog(msg);
-            return false;
-        }
-        document.getElementById('noSeries').value = seriesCount;
-        document.chartreport.submit();
-        return true;
-    }
-
-    function cancelTableData() {
-        location.href = "../reporting_custom/select-report.jsp";
-    }
-
-    function dsChanged() {
-        var dsName = document.getElementById('datasource').value;
-
-        document.chartreport.action = 'add-chart-report.jsp';
-        var reportName = document.getElementById("reportName").value;
-
-        var reportType = document.getElementById("reportType").value;
-        var url = 'add-chart-report.jsp?reportType=' + reportType + '&selectedDsName=' + dsName + '&reportName=' + reportName;
-        location.href = url;
-    }
-
-    function tableChanged() {
+function submitChartReportData() {
+    var msg = checkValidity();
+    if (msg != '') {
+        CARBON.showErrorDialog(msg);
+    } else {
+        var report_type = document.getElementById('reportType').value;
         var dsName = document.getElementById('datasource').value;
         var tableName = document.getElementById('tableName').value;
+        var xAxisFields = getFields('xData');
+        var yAxisFields = getFields('yData');
 
-        document.chartreport.action = 'add-chart-report.jsp';
-        var reportName = document.getElementById("reportName").value;
-        var reportType = document.getElementById("reportType").value;
-        var url = 'add-chart-report.jsp?reportType=' + reportType + '&selectedDsName=' + dsName + '&selectedTableName=' + tableName + '&reportName=' + reportName;
-        location.href = url;
+        new Ajax.Request('ajaxprocessor-chartdata.jsp', {
+                    method: 'post',
+                    parameters: {
+                        reportType: report_type,
+                        datasource: dsName,
+                        tableName: tableName,
+                        xAxisFields: xAxisFields,
+                        yAxisFields:yAxisFields
+                    },
+                    onSuccess: function(transport) {
+                        var allPage = transport.responseText;
+                        var divText = '<div id="msg">';
+                        var closeDivText = '</div>';
+                        var temp = allPage.indexOf(divText, 0);
+                        var startIndex = temp + divText.length;
+                        var endIndex = allPage.indexOf(closeDivText, temp);
+                        var msg = allPage.substring(startIndex, endIndex);
+                        if (msg.indexOf('Error', 0) != -1) {
+                            CARBON.showErrorDialog(msg);
+                            nextButtonValidate();
+                        } else {
+                            document.chartreport.action = 'ChartDataProcessor';
+                            document.getElementById('noSeries').value = seriesCount;
+                            document.chartreport.submit();
+                        }
+                    }
+                    ,
+                    onFailure: function(transport) {
+                        document.getElementById('middle').style.cursor = '';
+                        CARBON.showErrorDialog(transport.responseText);
+                    }
+                });
+    }
+}
+
+function cancelTableData() {
+    location.href = "../reporting_custom/select-report.jsp";
+}
+
+function dsChanged() {
+    var dsName = document.getElementById('datasource').value;
+
+    document.chartreport.action = 'add-chart-report.jsp';
+    var reportName = document.getElementById("reportName").value;
+
+    var reportType = document.getElementById("reportType").value;
+    var url = 'add-chart-report.jsp?reportType=' + reportType + '&selectedDsName=' + dsName + '&reportName=' + reportName;
+    location.href = url;
+}
+
+function tableChanged() {
+    var dsName = document.getElementById('datasource').value;
+    var tableName = document.getElementById('tableName').value;
+
+    document.chartreport.action = 'add-chart-report.jsp';
+    var reportName = document.getElementById("reportName").value;
+    var reportType = document.getElementById("reportType").value;
+    var url = 'add-chart-report.jsp?reportType=' + reportType + '&selectedDsName=' + dsName + '&selectedTableName=' + tableName + '&reportName=' + reportName;
+    location.href = url;
+}
+
+function nextButtonValidate() {
+    var repName = document.getElementById('reportName').value;
+
+    var tableName = '';
+    if (null != document.getElementById('tableName')) {
+        tableName = document.getElementById('tableName').value;
+    }
+    var dsName = '';
+    if (null != document.getElementById('datasource')) {
+        dsName = document.getElementById('datasource').value;
     }
 
-    function nextButtonValidate() {
-        var repName = document.getElementById('reportName').value;
-
-        var tableName = '';
-        if (null != document.getElementById('tableName')) {
-            tableName = document.getElementById('tableName').value;
+    var isAllSeriesName = true;
+    for (var j = 0; j < seriesCount; j++) {
+        var elementid = 'series_' + (j + 1) + '_name';
+        if (null != document.getElementById(elementid) && document.getElementById(elementid).value == '') {
+            isAllSeriesName = false;
+            break;
         }
-        var dsName = '';
-        if (null != document.getElementById('datasource')) {
-            dsName = document.getElementById('datasource').value;
+    }
+
+    if (repName == '' || tableName == '' || dsName == '' || !isAllSeriesName) {
+        document.getElementById('save').disabled = 'disabled';
+    } else {
+        document.getElementById('save').disabled = '';
+    }
+}
+
+function addSeries() {
+    document.chartreport.action = 'add-chart-report.jsp';
+    seriesCount = seriesCount + 1;
+    var d = document.getElementById('contentTableBody');
+    var html = '<tr>';
+<%if(repType != null && !repType.equalsIgnoreCase("pie_chart_type_report")){ %>
+    html = html + '<td colspan="3" class="middle-header">' + '<fmt:message key="series"/>' + ' - ' + seriesCount + '</td>';
+<%
+}
+%>
+    html = html + '</tr>';
+
+<%if(repType != null && !repType.equalsIgnoreCase("pie_chart_type_report")){ %>
+    html = html + '<tr>';
+    html = html + '<td>' + '<fmt:message key="series.name"/> ' + '<span class = "required" >*</span></td>';
+    html = html + '<td><input id ="series_' + seriesCount + '_name" name="series_' + seriesCount + '_name"  onkeyup="nextButtonValidate()" onmousemove="nextButtonValidate()" onfocus="nextButtonValidate()" onblur="nextButtonValidate()"></td>';
+    html = html + '</tr>';
+<%
+}
+%>
+    html = html + '<tr >';
+    html = html + '<td class = "leftCol-small" >';
+<%if(repType != null && repType.equalsIgnoreCase("pie_chart_type_report")){%>
+    html = html + '<fmt:message key="key.field"/>';
+<%
+}
+else {
+%>
+    html = html + '<fmt:message key="x.axis"/>';
+<%
+}
+%>
+    html = html + '<span class = "required" >*</span>';
+    html = html + '</td>';
+    html = html + '<td>';
+    html = html + getComboBox(seriesCount, 'xData');
+    html = html + '</td>';
+    html = html + '</tr>';
+    html = html + '<tr >';
+    html = html + '<td class = "leftCol-small" >';
+<%if(repType != null && repType.equalsIgnoreCase("pie_chart_type_report")){%>
+    html = html + '<fmt:message key="value.field"/>';
+<%
+}
+else {
+%>
+    html = html + '<fmt:message key="y.axis"/>';
+<%
+}
+%>
+    html = html + '<span class = "required" >*</span>';
+    html = html + '</td>';
+    html = html + '<td>';
+    html = html + getComboBox(seriesCount, 'yData');
+    html = html + '</td>';
+    html = html + '</tr>';
+    d.innerHTML = d.innerHTML + html;
+
+    nextButtonValidate();
+}
+
+function getComboBox(seriesId, axisType) {
+    var html = '<select id="series_' + seriesId + '_' + axisType + '" name="series_' + seriesId + '_' + axisType + '">';
+    for (i = 0; i < fields.length; i++) {
+        var opt = '<option value="' + fields[i] + '">' + fields[i] + '</option>';
+        html = html + opt;
+    }
+    html = html + '</select>';
+    return html;
+}
+
+function getFields(xydata) {
+    var fields = '';
+    for (var k = 0; k < seriesCount; k++) {
+        var elementid = 'series_' + (k + 1) + '_' + xydata;
+        if (null != document.getElementById(elementid)) {
+            fields = fields + document.getElementById(elementid).value + '&#&';
         }
+    }
+    fields = fields.substring(0, fields.length - 3);
+    return fields;
+}
 
-        var isAllSeriesName = true;
-        for (var j = 0; j < seriesCount; j++) {
-            var elementid = 'series_' + (j + 1) + '_name';
-            if (null != document.getElementById(elementid) && document.getElementById(elementid).value == '') {
-                isAllSeriesName = false;
-                break;
-            }
+
+function checkValidity() {
+    var msg = '';
+    var reportName = document.getElementById("reportName").value;
+    if (reportName == '') {
+        msg = 'Please enter a report name.\n';
+    }
+<%if(repType != null && !repType.equalsIgnoreCase("pie_chart_type_report")){ %>
+    for (i = 0; i < seriesCount; i++) {
+        if (document.getElementById("series_" + (i + 1) + "_name").value == '') {
+            msg = msg + " Please enter a series name for Series - " + (i + 1) + "\n";
         }
-
-        if (repName == '' || tableName == '' || dsName == '' || !isAllSeriesName) {
-            document.getElementById('save').disabled = 'disabled';
-        } else {
-            document.getElementById('save').disabled = '';
-        }
     }
-
-    function addSeries() {
-        document.chartreport.action = 'add-chart-report.jsp';
-        seriesCount = seriesCount + 1;
-        var d = document.getElementById('contentTableBody');
-        var html = '<tr>';
-    <%if(repType != null && !repType.equalsIgnoreCase("pie_chart_type_report")){ %>
-        html = html + '<td colspan="3" class="middle-header">' + '<fmt:message key="series"/>' + ' - ' + seriesCount + '</td>';
-    <%
-    }
-    %>
-        html = html + '</tr>';
-
-    <%if(repType != null && !repType.equalsIgnoreCase("pie_chart_type_report")){ %>
-        html = html + '<tr>';
-        html = html + '<td>' + '<fmt:message key="series.name"/> ' + '<span class = "required" >*</span></td>';
-        html = html + '<td><input id ="series_' + seriesCount + '_name" name="series_' + seriesCount + '_name"  onkeyup="nextButtonValidate()" onmousemove="nextButtonValidate()" onfocus="nextButtonValidate()" onblur="nextButtonValidate()"></td>';
-        html = html + '</tr>';
-    <%
-    }
-    %>
-        html = html + '<tr >';
-        html = html + '<td class = "leftCol-small" >';
-    <%if(repType != null && repType.equalsIgnoreCase("pie_chart_type_report")){%>
-        html = html + '<fmt:message key="key.field"/>';
-    <%
-    }
-    else {
-    %>
-        html = html + '<fmt:message key="x.axis"/>';
-    <%
-    }
-    %>
-        html = html + '<span class = "required" >*</span>';
-        html = html + '</td>';
-        html = html + '<td>';
-        html = html + getComboBox(seriesCount, 'xData');
-        html = html + '</td>';
-        html = html + '</tr>';
-        html = html + '<tr >';
-        html = html + '<td class = "leftCol-small" >';
-    <%if(repType != null && repType.equalsIgnoreCase("pie_chart_type_report")){%>
-        html = html + '<fmt:message key="value.field"/>';
-    <%
-    }
-    else {
-    %>
-        html = html + '<fmt:message key="y.axis"/>';
-    <%
-    }
-    %>
-        html = html + '<span class = "required" >*</span>';
-        html = html + '</td>';
-        html = html + '<td>';
-        html = html + getComboBox(seriesCount, 'yData');
-        html = html + '</td>';
-        html = html + '</tr>';
-        d.innerHTML = d.innerHTML + html;
-
-        nextButtonValidate();
-    }
-
-    function getComboBox(seriesId, axisType) {
-        var html = '<select id="series_' + seriesId + '_' + axisType + '" name="series_' + seriesId + '_' + axisType + '">';
-        for (i = 0; i < fields.length; i++) {
-            var opt = '<option value="' + fields[i] + '">' + fields[i] + '</option>';
-            html = html + opt;
-        }
-        html = html + '</select>';
-        return html;
-    }
-
-
-    function checkValidity() {
-        var msg = '';
-        var reportName = document.getElementById("reportName").value;
-        if (reportName == '') {
-            msg = 'Please enter a report name.\n';
-        }
-    <%if(repType != null && !repType.equalsIgnoreCase("pie_chart_type_report")){ %>
-        for (i = 0; i < seriesCount; i++) {
-            if (document.getElementById("series_" + (i + 1) + "_name").value == '') {
-                msg = msg + " Please enter a series name for Series - " + (i + 1) + "\n";
-            }
-        }
-    <%
-    }
-    %>
-        return msg;
-    }
-
-    $(window).bind("load", function() {
-        addSeries();
-    });
+<%
+}
+%>
+    return msg;
+}
 </script>
 
 
@@ -491,6 +533,7 @@
 </div>
 </div>
 <script type="text/javascript">
+     addSeries();
     nextButtonValidate();
 </script>
 

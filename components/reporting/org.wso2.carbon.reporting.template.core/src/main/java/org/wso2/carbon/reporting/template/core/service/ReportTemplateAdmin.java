@@ -147,12 +147,8 @@ public class ReportTemplateAdmin extends AbstractAdmin {
     }
 
     public String validateFields(String chartType, String dsName, String tableName, String[] yAxis) throws ReportingException {
-        if (!dsName.equalsIgnoreCase(ReportConstants.BAMDATASOURCE)) {
             DatasourceClient dsClient = ClientFactory.getDSClient();
             return dsClient.isNumberFields(dsName, tableName, yAxis);
-        } else {
-            return "";
-        }
     }
 
     public void addCompositeReport(String[] templateNames, String compositeReportName) throws ReportingException {

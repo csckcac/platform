@@ -63,8 +63,12 @@ public class ChartDataProcessor extends HttpServlet {
         String msg = "";
         if (reportType.contains("xy")) {
             msg = client.isValidNumberAxis(reportType, dsName, tableName, getXAxisFields(series));
+           if(!msg.isEmpty()) msg = "X-Axis Fields are not compatible for the chart type : \n"+msg;
         }
-        if (msg.equals("")) msg = client.isValidNumberAxis(reportType, dsName, tableName, getYAxisFields(series));
+        if (msg.isEmpty()) {
+            msg = client.isValidNumberAxis(reportType, dsName, tableName, getYAxisFields(series));
+            if(!msg.isEmpty())msg = "Y-Axis Fields are not compatible for the chart type : \n"+msg;
+        }
         if (msg.equals("")) {
             ChartReportDTO chartReport = new ChartReportDTO();
             chartReport.setReportType(reportType);
@@ -76,7 +80,7 @@ public class ChartDataProcessor extends HttpServlet {
         } else {
             request.setAttribute("errorString", msg);
             response.sendRedirect("../reporting-template/add-chart-report.jsp?reportType=" +
-                    reportType + "&success=false&errorString="+msg);
+                    reportType + "&success=false&errorString="+msg+"&datasource="+dsName+"&tableName"+tableName+"&reportName");
         }
 
     }

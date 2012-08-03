@@ -21,6 +21,7 @@ import org.apache.catalina.Wrapper;
 import org.apache.catalina.connector.Request;
 import org.apache.tomcat.util.http.mapper.MappingData;
 import org.wso2.carbon.tomcat.api.CarbonTomcatService;
+import org.wso2.carbon.url.mapper.HotUpdateService;
 import org.wso2.carbon.utils.CarbonUtils;
 
 import javax.servlet.http.HttpServletRequest;
@@ -104,5 +105,20 @@ public class TomcatUtil {
             appName = contextName;
         }
         return appName;
+    }
+    
+    public static Boolean isVirtualHostRequest(String requestedHostName) {
+        Boolean isVirtualHostRequest = false;
+        HotUpdateService hotUpdate = DataHolder.getHotUpdateService();
+        //checking for whether the request is for virtual host or not, if the server installed with url-mappings only.
+        if(hotUpdate != null && requestedHostName.endsWith(hotUpdate.getSuffixOfHost())) {
+            String serverUrl = CarbonUtils.getServerURL(
+                    CarbonUtils.getServerConfiguration(), DataHolder.getServerConfigContext());
+            //in case server url from carbon.xml used as a suffix, then localhost request won't get executed here
+            if(!serverUrl.equalsIgnoreCase(requestedHostName)) {
+                isVirtualHostRequest = true;
+            }
+        }
+        return isVirtualHostRequest;
     }
 }

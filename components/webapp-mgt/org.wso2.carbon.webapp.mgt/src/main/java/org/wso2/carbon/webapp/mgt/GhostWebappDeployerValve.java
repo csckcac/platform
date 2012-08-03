@@ -22,8 +22,13 @@ import org.apache.axis2.context.ConfigurationContext;
 import org.apache.commons.logging.Log;
 import org.apache.commons.logging.LogFactory;
 import org.wso2.carbon.CarbonConstants;
+import org.wso2.carbon.base.api.ServerConfigurationService;
+import org.wso2.carbon.context.ApplicationContext;
 import org.wso2.carbon.core.multitenancy.utils.TenantAxisUtils;
 import org.wso2.carbon.tomcat.ext.valves.CarbonTomcatValve;
+import org.wso2.carbon.url.mapper.HotUpdateService;
+import org.wso2.carbon.user.core.tenant.TenantManager;
+import org.wso2.carbon.utils.CarbonUtils;
 import org.wso2.carbon.webapp.mgt.utils.GhostWebappDeployerUtils;
 
 import javax.servlet.http.HttpServletRequest;
@@ -43,8 +48,21 @@ public class GhostWebappDeployerValve implements CarbonTomcatValve {
         if (!GhostWebappDeployerUtils.isGhostOn()) {
             return;
         }
-
         String requestURI = request.getRequestURI();
+
+        //getting actual uri when accessing a virtual host through url mapping from the Map
+        String requestedHostName = request.getServerName();
+        ApplicationContext appContext = ApplicationContext.getCurrentApplicationContext();
+        String uriOfVirtualHost = appContext.getApplicationFromUrlMapping(requestedHostName);
+        //getting the host name of first request from registry if & only if the request contains url-mapper suffix
+        if(TomcatUtil.isVirtualHostRequest(requestedHostName)) {
+            uriOfVirtualHost = DataHolder.getHotUpdateService().
+                    getApplicationContextForHost(requestedHostName);
+        }
+        if(uriOfVirtualHost != null) {
+            requestURI = uriOfVirtualHost;
+        }
+
         ConfigurationContext currentCtx;
         if (requestURI.contains("/t/")) {
             currentCtx = getCurrentConfigurationCtxFromURI(requestURI);

@@ -16,8 +16,6 @@
 package org.wso2.carbon.webapp.mgt;
 
 import org.apache.axis2.context.ConfigurationContext;
-import org.apache.catalina.connector.Request;
-import org.apache.catalina.startup.Tomcat;
 import org.apache.commons.logging.Log;
 import org.apache.commons.logging.LogFactory;
 import org.wso2.carbon.context.ApplicationContext;
@@ -39,19 +37,19 @@ public class TenantLazyLoaderValve implements CarbonTomcatValve {
 
     public void invoke(HttpServletRequest request, HttpServletResponse response) {
         String requestURI = request.getRequestURI();
-        String requestedHostName = ((Request)request).getHost().getName();
+        String requestedHostName = request.getServerName();
 
         //getting actual uri when accessing a virtual host through url mapping from the Map
         ApplicationContext appContext = ApplicationContext.getCurrentApplicationContext();
         String uriOfVirtualHost = appContext.getApplicationFromUrlMapping(requestedHostName);
-        Tomcat tomcat = DataHolder.getCarbonTomcatService().getTomcat();
+        //getting the host name of first request from registry if & only if the request contains url-mapper suffix
+        if(TomcatUtil.isVirtualHostRequest(requestedHostName)) {
+            uriOfVirtualHost = DataHolder.getHotUpdateService().
+                    getApplicationContextForHost(requestedHostName);
+        }
 
-        if(!requestedHostName.equalsIgnoreCase(tomcat.getEngine().getDefaultHost())) {
-            if (DataHolder.getHotUpdateService() != null && uriOfVirtualHost == null ) {
-                uriOfVirtualHost = DataHolder.getHotUpdateService().
-                        getApplicationContextForHost(requestedHostName);
-                requestURI = uriOfVirtualHost;
-            }
+        if(uriOfVirtualHost != null) {
+            requestURI = uriOfVirtualHost;
         }
 
         String domain = MultitenantUtils.getTenantDomainFromRequestURL(requestURI);

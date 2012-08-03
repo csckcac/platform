@@ -56,20 +56,23 @@
     <ApplicationDeployment>
 
         <DeploymentStage name="Development" build="true">
-            <DirectyDeploy>false</DirectyDeploy>
+            <CreateArtifact>UserInput</CreateArtifact>            
+            <DirectlyDeploy>false</DirectlyDeploy>
             <ProcessEndPoint>https://localhost:9443/services/DeployToStage</ProcessEndPoint>
             <DeploymentServerURL>https://localhost:9445/services/</DeploymentServerURL>
         </DeploymentStage>
 
         <DeploymentStage name="Testing" build="true">
-            <DirectyDeploy>false</DirectyDeploy>
+            <CreateArtifact>UserInput</CreateArtifact>
+            <DirectlyDeploy>false</DirectlyDeploy>
             <ProcessEndPoint>https://localhost:9443/services/DeployToStage</ProcessEndPoint>
             <DeploymentServerURL>https://localhost:9446/services/</DeploymentServerURL>
             <DeploymentServerURL>https://localhost:9447/services/</DeploymentServerURL>
         </DeploymentStage>
 
         <DeploymentStage name="Production" build="true">
-            <DirectyDeploy>false</DirectyDeploy>
+            <CreateArtifact>UserInput</CreateArtifact>
+            <DirectlyDeploy>false</DirectlyDeploy>
             <ProcessEndPoint>https://localhost:9443/services/DeployToStage</ProcessEndPoint>
             <DeploymentServerURL>https://localhost:9448/services/</DeploymentServerURL>
         </DeploymentStage>

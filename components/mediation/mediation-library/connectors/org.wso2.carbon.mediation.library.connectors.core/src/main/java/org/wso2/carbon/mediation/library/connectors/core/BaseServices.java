@@ -17,13 +17,20 @@
 */
 package org.wso2.carbon.mediation.library.connectors.core;
 
-import org.apache.synapse.Mediator;
+import org.apache.synapse.core.SynapseEnvironment;
+import org.wso2.carbon.registry.core.session.UserRegistry;
+import org.wso2.carbon.user.api.UserRealm;
 
-public interface Connector extends Mediator, BaseServices {
-    /**
-     * implements the connection logic to external API or custom service pattern
-     * @throws ConnectException when error during conenction to APIs or unexpected errors
-     */
-    public void connect() throws ConnectException;
+/**
+ * This interface implements all base services particular to a generic Connector
+ */
+public interface BaseServices {
 
+    UserRegistry getConfigRegistry() throws ConnectException;
+
+    UserRegistry getGovernanceRegistry() throws ConnectException;
+
+    UserRealm getUserRealm() throws ConnectException;
+
+    SynapseEnvironment getSynapseEnvironment() throws ConnectException;
 }

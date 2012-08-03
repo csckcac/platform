@@ -6,30 +6,19 @@ import org.apache.synapse.ManagedLifecycle;
 import org.apache.synapse.MessageContext;
 import org.apache.synapse.core.SynapseEnvironment;
 import org.apache.synapse.mediators.AbstractMediator;
+import org.wso2.carbon.mediation.library.connectors.core.AbstractConnector;
+import org.wso2.carbon.mediation.library.connectors.core.ConnectException;
 import twitter4j.Status;
 import twitter4j.Twitter;
 import twitter4j.TwitterException;
 
-/**
- * Created by IntelliJ IDEA.
- * User: charitha
- * Date: 2/17/12
- * Time: 5:45 PM
- * To change this template use File | Settings | File Templates.
- */
-public class TwitterRetweetStatusMediator extends AbstractMediator implements ManagedLifecycle {
+public class TwitterRetweetStatusMediator extends AbstractConnector {
 
     public static final String ID = "id";
     private static Log log = LogFactory.getLog(TwitterRetweetStatusMediator.class);
 
-    public void init(SynapseEnvironment synapseEnvironment) {
-
-    }
-
-    public void destroy() {
-    }
-
-    public boolean mediate(MessageContext messageContext) {
+    public void connect() throws ConnectException {
+        MessageContext messageContext = getMessageContext();
         try {
             String id = TwitterMediatorUtils.lookupFunctionParam(messageContext, ID);
             Twitter twitter = new TwitterClientLoader(messageContext).loadApiClient();
@@ -41,12 +30,6 @@ public class TwitterRetweetStatusMediator extends AbstractMediator implements Ma
             TwitterMediatorUtils.storeErrorResponseStatus(messageContext, te);
         }
         log.info("testing synapse twitter.......");
-        return true;
     }
-
-    public static void main(String[] args) {
-        new TwitterRetweetStatusMediator().mediate(null);
-    }
-
 
 }

@@ -5,37 +5,23 @@ import com.google.code.linkedinapi.client.enumeration.ProfileField;
 import com.google.code.linkedinapi.schema.Person;
 import org.apache.commons.logging.Log;
 import org.apache.commons.logging.LogFactory;
+import org.wso2.carbon.mediation.library.connectors.core.AbstractConnector;
+import org.wso2.carbon.mediation.library.connectors.core.ConnectException;
 import org.wso2.carbon.mediation.library.connectors.linkedin.util.LinkedInClientLoader;
 import org.wso2.carbon.mediation.library.connectors.linkedin.util.LinkedinMediatorUtils;
-import org.apache.synapse.ManagedLifecycle;
 import org.apache.synapse.MessageContext;
-import org.apache.synapse.core.SynapseEnvironment;
-import org.apache.synapse.mediators.AbstractMediator;
 
 import java.util.EnumSet;
 
-/**
- * Created by IntelliJ IDEA.
- * User: charitha
- * Date: 2/21/12
- * Time: 2:24 PM
- * To change this template use File | Settings | File Templates.
- */
 
-public class LinkedinPostStatusMediator extends AbstractMediator implements ManagedLifecycle {
+public class LinkedinPostStatusMediator extends AbstractConnector {
     private static Log log = LogFactory.getLog(LinkedinPostStatusMediator.class);
 
     public static final String STATUS = "status";
 
-    public void init(SynapseEnvironment synapseEnvironment) {
 
-    }
-
-    public void destroy() {
-
-    }
-
-    public boolean mediate(MessageContext messageContext) {
+    public void connect() throws ConnectException {
+        MessageContext messageContext = getMessageContext();
         try {
             String statusStr = LinkedinMediatorUtils.lookupFunctionParam(messageContext, STATUS);
             if (statusStr == null || "".equals(statusStr.trim())) {
@@ -55,7 +41,6 @@ public class LinkedinPostStatusMediator extends AbstractMediator implements Mana
             log.info("Failed to post status: " + e.getMessage());
             LinkedinMediatorUtils.storeErrorResponseStatus(messageContext, e);
         }
-        return true;
     }
 }
 

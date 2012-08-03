@@ -6,6 +6,8 @@ import com.google.code.linkedinapi.schema.Connections;
 import com.google.code.linkedinapi.schema.Person;
 import org.apache.commons.logging.Log;
 import org.apache.commons.logging.LogFactory;
+import org.wso2.carbon.mediation.library.connectors.core.AbstractConnector;
+import org.wso2.carbon.mediation.library.connectors.core.ConnectException;
 import org.wso2.carbon.mediation.library.connectors.linkedin.util.LinkedInClientLoader;
 import org.wso2.carbon.mediation.library.connectors.linkedin.util.LinkedinMediatorUtils;
 import org.apache.synapse.ManagedLifecycle;
@@ -15,26 +17,13 @@ import org.apache.synapse.mediators.AbstractMediator;
 
 import java.util.EnumSet;
 
-/**
- * Created by IntelliJ IDEA.
- * User: charitha
- * Date: 2/29/12
- * Time: 2:36 PM
- * To change this template use File | Settings | File Templates.
- */
-public class LinkedinShowHeadlineMediator extends AbstractMediator implements ManagedLifecycle {
+public class LinkedinShowHeadlineMediator extends AbstractConnector {
     private static Log log = LogFactory.getLog(LinkedinShowHeadlineMediator.class);
     public static final String ID = "id";
 
-    public void init(SynapseEnvironment synapseEnvironment) {
 
-    }
-
-    public void destroy() {
-
-    }
-
-    public boolean mediate(MessageContext messageContext) {
+    public void connect() throws ConnectException {
+        MessageContext messageContext = getMessageContext();
         try {
             String id = LinkedinMediatorUtils.lookupFunctionParam(messageContext, ID);
             if (id == null || "".equals(id.trim())) {
@@ -54,7 +43,6 @@ public class LinkedinShowHeadlineMediator extends AbstractMediator implements Ma
             log.error("Failed to get headline: " + e.getMessage());
             LinkedinMediatorUtils.storeErrorResponseStatus(messageContext, e);
         }
-        return true;
     }
 
     private String[] getHeadlineById(LinkedInApiClient client, String id) {

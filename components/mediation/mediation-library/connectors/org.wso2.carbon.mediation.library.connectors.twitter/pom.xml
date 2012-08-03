@@ -28,6 +28,11 @@
                 <groupId>org.twitter.wso2</groupId>
                 <artifactId>twitter4j</artifactId>
             </dependency>
+            <dependency>
+                <groupId>org.wso2.carbon</groupId>
+                <artifactId>org.wso2.carbon.mediation.library.connectors.core</artifactId>
+            </dependency>
+
     </dependencies>
 
    <build>

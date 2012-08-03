@@ -20,6 +20,7 @@ package org.wso2.carbon.mediation.library.connectors.twitter;
 import org.apache.synapse.MessageContext;
 import org.apache.synapse.SynapseConstants;
 import org.apache.synapse.mediators.template.TemplateContext;
+import org.wso2.carbon.mediation.library.connectors.core.util.ConnectorUtils;
 import twitter4j.Status;
 
 import java.util.Stack;
@@ -27,10 +28,7 @@ import java.util.Stack;
 public class TwitterMediatorUtils {
 
     public static String lookupFunctionParam(MessageContext ctxt, String paramName) {
-        Stack<TemplateContext> funcStack = (Stack) ctxt.getProperty(SynapseConstants.SYNAPSE__FUNCTION__STACK);
-        TemplateContext currentFuncHolder = funcStack.peek();
-        String paramValue = (String) currentFuncHolder.getParameterValue(paramName);
-        return paramValue;
+        return ConnectorUtils.lookupFunctionParam(ctxt, paramName);
     }
 
     public static void storeResponseStatus(MessageContext ctxt, Status status) {

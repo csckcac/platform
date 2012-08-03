@@ -3,6 +3,8 @@ package org.wso2.carbon.mediation.library.connectors.linkedin;
 import com.google.code.linkedinapi.client.LinkedInApiClient;
 import org.apache.commons.logging.Log;
 import org.apache.commons.logging.LogFactory;
+import org.wso2.carbon.mediation.library.connectors.core.AbstractConnector;
+import org.wso2.carbon.mediation.library.connectors.core.ConnectException;
 import org.wso2.carbon.mediation.library.connectors.linkedin.util.LinkedInClientLoader;
 import org.wso2.carbon.mediation.library.connectors.linkedin.util.LinkedinMediatorUtils;
 import org.apache.synapse.ManagedLifecycle;
@@ -12,14 +14,7 @@ import org.apache.synapse.mediators.AbstractMediator;
 
 import java.util.Arrays;
 
-/**
- * Created by IntelliJ IDEA.
- * User: charitha
- * Date: 2/29/12
- * Time: 4:43 PM
- * To change this template use File | Settings | File Templates.
- */
-public class LinkedinSendMessageMediator extends AbstractMediator implements ManagedLifecycle {
+public class LinkedinSendMessageMediator extends AbstractConnector {
 
     private static Log log = LogFactory.getLog(LinkedinSendMessageMediator.class);
 
@@ -27,15 +22,8 @@ public class LinkedinSendMessageMediator extends AbstractMediator implements Man
     public static final String SUBJECT = "subject";
     public static final String MESSAGE = "message";
 
-    public void init(SynapseEnvironment synapseEnvironment) {
-
-    }
-
-    public void destroy() {
-
-    }
-
-    public boolean mediate(MessageContext messageContext) {
+    public void connect() throws ConnectException {
+        MessageContext messageContext = getMessageContext();
         try {
             String idList = LinkedinMediatorUtils.lookupFunctionParam(messageContext, IDLIST);
             String subject = LinkedinMediatorUtils.lookupFunctionParam(messageContext, SUBJECT);
@@ -53,10 +41,9 @@ public class LinkedinSendMessageMediator extends AbstractMediator implements Man
 
             log.info("Message Sent to " + idList);
         } catch (Exception e) {
-            log.info("Failed to send message: " + e.getMessage());
+            log.error("Failed to send message: " + e.getMessage());
             LinkedinMediatorUtils.storeErrorResponseStatus(messageContext, e);
         }
-        return true;
     }
 
 }

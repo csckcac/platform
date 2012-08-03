@@ -23,25 +23,21 @@ import org.apache.synapse.ManagedLifecycle;
 import org.apache.synapse.MessageContext;
 import org.apache.synapse.core.SynapseEnvironment;
 import org.apache.synapse.mediators.AbstractMediator;
+import org.wso2.carbon.mediation.library.connectors.core.AbstractConnector;
+import org.wso2.carbon.mediation.library.connectors.core.ConnectException;
 import twitter4j.Status;
 import twitter4j.Twitter;
 import twitter4j.TwitterException;
 
 
-public class TwitterUpdateStatusMediator extends AbstractMediator implements ManagedLifecycle {
+public class TwitterUpdateStatusMediator extends AbstractConnector {
 
 
     public static final String STATUS = "status";
     private static Log log = LogFactory.getLog(TwitterUpdateStatusMediator.class);
 
-    public void init(SynapseEnvironment synapseEnvironment) {
-
-    }
-
-    public void destroy() {
-    }
-
-    public boolean mediate(MessageContext messageContext) {
+    public void connect() throws ConnectException {
+        MessageContext messageContext = getMessageContext();
         try {
             String statusStr = TwitterMediatorUtils.lookupFunctionParam(messageContext, STATUS);
             if(statusStr == null || "".equals(statusStr.trim())){
@@ -55,10 +51,6 @@ public class TwitterUpdateStatusMediator extends AbstractMediator implements Man
             log.error("Failed to show status: " + te.getMessage(), te);
             TwitterMediatorUtils.storeErrorResponseStatus(messageContext, te);
         }
-        return true;
     }
 
-    public static void main(String[] args) {
-        new TwitterUpdateStatusMediator().mediate(null);
-    }
 }

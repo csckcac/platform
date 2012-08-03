@@ -1,6 +1,7 @@
 package org.wso2.carbon.mediation.library.connectors.linkedin.util;
 
 import com.google.code.linkedinapi.schema.Person;
+import org.wso2.carbon.mediation.library.connectors.core.util.ConnectorUtils;
 import org.wso2.carbon.mediation.library.connectors.linkedin.LinkedinConstants;
 import org.apache.synapse.MessageContext;
 import org.apache.synapse.SynapseConstants;
@@ -17,10 +18,7 @@ import java.util.Stack;
  */
 public class LinkedinMediatorUtils {
     public static String lookupFunctionParam(MessageContext ctxt, String paramName) {
-        Stack<TemplateContext> funcStack = (Stack) ctxt.getProperty(SynapseConstants.SYNAPSE__FUNCTION__STACK);
-        TemplateContext currentFuncHolder = funcStack.peek();
-        String paramValue = (String) currentFuncHolder.getParameterValue(paramName);
-        return paramValue;
+        return ConnectorUtils.lookupFunctionParam(ctxt, paramName);
     }
 
     public static void storeResponseStatus(MessageContext ctxt, Person person) {

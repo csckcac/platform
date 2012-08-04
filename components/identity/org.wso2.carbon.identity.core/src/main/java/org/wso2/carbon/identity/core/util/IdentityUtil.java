@@ -198,5 +198,21 @@ public class IdentityUtil {
             throw new IdentityException("Error when generating a random number.", e);
         }
     }
+    
+    public static int getRandomInteger() throws IdentityException{
+    	
+    	try {
+	        SecureRandom prng = SecureRandom.getInstance("SHA1PRNG");
+	        int number = prng.nextInt();
+	        while (number < 0){
+	        	number = prng.nextInt();
+	        }
+	        return number;
+        } catch (NoSuchAlgorithmException e) {
+        	log.error("Error when generating a random number.", e);
+            throw new IdentityException("Error when generating a random number.", e);
+        }
+    	
+    }
 
 }

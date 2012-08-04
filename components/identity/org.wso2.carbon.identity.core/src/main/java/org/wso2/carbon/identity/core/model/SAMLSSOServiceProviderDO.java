@@ -16,6 +16,7 @@
 
 package org.wso2.carbon.identity.core.model;
 
+
 public class SAMLSSOServiceProviderDO {
 
     private String issuer;
@@ -26,7 +27,9 @@ public class SAMLSSOServiceProviderDO {
     private boolean doSingleLogout;
     private String loginPageURL;
     private boolean doSignAssertions;
-
+    private String attributeConsumingServiceIndex;
+    private String attributeProfile;
+    
     public String getIssuer() {
         return issuer;
     }
@@ -90,4 +93,21 @@ public class SAMLSSOServiceProviderDO {
     public void setDoSignAssertions(boolean doSignAssertions) {
         this.doSignAssertions = doSignAssertions;
     }
+
+	public String getAttributeConsumingServiceIndex() {
+	    return attributeConsumingServiceIndex;
+    }
+
+	public void setAttributeConsumingServiceIndex(String attributeConsumingServiceIndex) {
+	    this.attributeConsumingServiceIndex = attributeConsumingServiceIndex;
+    }
+
+	public String getAttributeProfile() {
+	    return attributeProfile;
+    }
+
+	public void setAttributeProfile(String attributeProfile) {
+	    this.attributeProfile = attributeProfile;
+    }
+	
 }

@@ -114,6 +114,9 @@
             <ReferenceTime>2012-02-29 08:08:08</ReferenceTime>
         </coordination>
         <tuning>
+            <!--When messages content is received , it first look in the cache and otherwise seek in the database. This
+            is a FIFO cache of limited size-->
+            <messageReadCacheSize>500</messageReadCacheSize>
             <messageBatchSizes>
                 <!--Message Batch size moved to  Subscriber queues from the Global Queue at once. Increasing this values
                 increase the chance of breaking in order delivery guarantee but performance will be improved-->

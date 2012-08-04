@@ -25,6 +25,7 @@ import org.wso2.andes.server.store.CassandraMessageStore;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Map;
+import java.util.Set;
 import java.util.concurrent.ConcurrentHashMap;
 import java.util.concurrent.ExecutorService;
 import java.util.concurrent.Executors;
@@ -105,6 +106,14 @@ public class GlobalQueueManager {
 
     public int getSubscriberCount(String queueName) throws Exception{
         return cassandraMessageStore.getUserQueues(queueName).size();
+    }
+    
+    public void stopAllQueueWorkersLocally() throws Exception{
+        log.info("Stopping all locally existing global queue workers");
+        Set<String> queueList = queueWorkerMap.keySet();
+        for(String queue :queueList) {
+            removeWorker(queue);
+        }
     }
 
 }

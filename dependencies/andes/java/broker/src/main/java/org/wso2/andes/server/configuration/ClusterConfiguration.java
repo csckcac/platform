@@ -132,4 +132,8 @@ public class ClusterConfiguration {
     public int getMetadataPublisherMessageBatchSize() {
         return serverConfig.getMetadataPublisherMessageBatchSize();
     }
+    
+    public int getMessageReadCacheSize() {
+        return serverConfig.getMessageReadCacheSize();
+    }
 }

@@ -131,6 +131,8 @@ public class CassandraMessageStore implements MessageStore {
 
     private ConcurrentHashMap<String,ArrayList<String>> topicSubscribersMap = new ConcurrentHashMap<String, ArrayList<String>>();
 
+    private MessageCacheForCassandra readMessageCacheForCassandra = null;
+
     private ContentRemoverTask messageContentRemovalTask = null;
     private PubSubMessageContentRemoverTask pubSubMessageContentRemoverTask = null;
     private ClusterManagementInformationMBean clusterManagementMBean;
@@ -348,7 +350,7 @@ public class CassandraMessageStore implements MessageStore {
         try {
             messages = new LinkedList<CassandraQueueMessage>();
             ColumnSlice<Long,byte[]> columnSlice = CassandraDataAccessHelper.getMessagesFromQueue(queueName.trim(),
-                    GLOBAL_QUEUES_COLUMN_FAMILY,keyspace,messageCount);
+                    GLOBAL_QUEUES_COLUMN_FAMILY, keyspace, messageCount);
             for (Object column : columnSlice.getColumns()) {
                 if (column instanceof HColumn) {
                     long messageId = ((HColumn<Long, byte[]>) column).getName();
@@ -751,69 +753,7 @@ public void addMessageBatchToUserQueues(CassandraQueueMessage[] messages) throws
     private int getContent(String messageId, int offsetValue, ByteBuffer dst) {
 
         int written = 0;
-        int chunkSize = 65534;
-        try {
-
-            String rowKey = "mid" + messageId;
-            if (offsetValue == 0) {
-
-                ColumnQuery columnQuery = HFactory.createColumnQuery(keyspace, stringSerializer,
-                        integerSerializer, byteBufferSerializer);
-                columnQuery.setColumnFamily(MESSAGE_CONTENT_COLUMN_FAMILY);
-                columnQuery.setKey(rowKey.trim());
-                columnQuery.setName(offsetValue);
-
-                QueryResult<HColumn<Integer, ByteBuffer>> result = columnQuery.execute();
-                HColumn<Integer, ByteBuffer> column = result.get();
-                if (column != null) {
-                    int offset = column.getName();
-                    byte[] content = bytesArraySerializer.fromByteBuffer(column.getValue());
-
-                    final int size = (int) content.length;
-                    int posInArray = offset + written - offset;
-                    int count = size - posInArray;
-                    if (count > dst.remaining()) {
-                        count = dst.remaining();
-                    }
-                    dst.put(content, 0, count);
-                    return count;
-                } else {
-                    throw new RuntimeException("Unexpected Error , content already deleted");
-                }
-            } else {
-                ByteArrayOutputStream byteOutputStream = new ByteArrayOutputStream();
-                int k = offsetValue / chunkSize;
-                SliceQuery query = HFactory.createSliceQuery(keyspace, stringSerializer,
-                        integerSerializer, byteBufferSerializer);
-                query.setColumnFamily(MESSAGE_CONTENT_COLUMN_FAMILY);
-                query.setKey(rowKey.trim());
-                query.setRange(k * chunkSize, (k + 1) * chunkSize + 1, false, 10);
-
-                QueryResult<ColumnSlice<Integer, ByteBuffer>> result = query.execute();
-                ColumnSlice<Integer, ByteBuffer> columnSlice = result.get();
-                boolean added = false;
-                for (HColumn<Integer, ByteBuffer> column : columnSlice.getColumns()) {
-                    added =  true;
-                    byteOutputStream.write(bytesArraySerializer.fromByteBuffer(column.getValue()));
-                }
-                byte[] content = byteOutputStream.toByteArray();
-                final int size = (int) content.length;
-                int posInArray = offsetValue  - (k * chunkSize);
-                int count = size - posInArray;
-                if (count > dst.remaining()) {
-                    count = dst.remaining();
-                }
-
-                dst.put(content, posInArray, count);
-
-                written += count;
-                return written;
-            }
-
-        } catch (Exception e) {
-            e.printStackTrace();
-            log.error("Error in reading content",e);
-        }
+        written = readMessageCacheForCassandra.getContent(messageId,offsetValue,dst);
         return written;
     }
 
@@ -1156,7 +1096,7 @@ public void addMessageBatchToUserQueues(CassandraQueueMessage[] messages) throws
         try {
             long columnName = messageId;
             long columnValue = messageId;
-            CassandraDataAccessHelper.addLongContentToRow(PUB_SUB_MESSAGE_IDS,queueName,columnName,columnValue,keyspace);
+            CassandraDataAccessHelper.addLongContentToRow(PUB_SUB_MESSAGE_IDS, queueName, columnName,columnValue,keyspace);
 
         } catch (Exception e) {
            throw new AMQStoreException("Error in adding message Id to subscriber queue" ,e);
@@ -1549,6 +1489,7 @@ public void addMessageBatchToUserQueues(CassandraQueueMessage[] messages) throws
         contentWriter.setName(PublishMessageContentWriter.class.getName());
         contentWriter.start();
 
+        readMessageCacheForCassandra = new MessageCacheForCassandra();
 
         AndesConsistantLevelPolicy consistencyLevel = new AndesConsistantLevelPolicy();
 
@@ -1614,12 +1555,12 @@ public void addMessageBatchToUserQueues(CassandraQueueMessage[] messages) throws
     public void syncTopicSubscriptionsWithDatabase(String topic) throws Exception{
         if(topic!=null) {
             ArrayList<String> subscriberQueues = new ArrayList<String>();
-            List<String> subscribers = CassandraDataAccessHelper.getRowList(TOPIC_SUBSCRIBERS, topic,keyspace);
+            List<String> subscribers = CassandraDataAccessHelper.getRowList(TOPIC_SUBSCRIBERS, topic, keyspace);
             for(String subscriber : subscribers) {
                 subscriberQueues.add(subscriber);
             }
             topicSubscribersMap.remove(topic);
-            topicSubscribersMap.put(topic,subscriberQueues);
+            topicSubscribersMap.put(topic, subscriberQueues);
         }
         if(log.isDebugEnabled()) {
             log.debug("Synchronizing subscribers for topic" +topic);
@@ -1628,9 +1569,12 @@ public void addMessageBatchToUserQueues(CassandraQueueMessage[] messages) throws
 
     @Override
     public void close() throws Exception {
-
-        deleteNodeData(""+ClusterResourceHolder.getInstance().getClusterManager().getNodeId());
-
+        if(!ClusterResourceHolder.getInstance().getClusterManager().isClusteringEnabled()) {
+            ClusterResourceHolder.getInstance().getClusterManager().shutDownMyNode();
+        }
+        if(ClusterResourceHolder.getInstance().getClusterManager().isClusteringEnabled()) {
+            deleteNodeData(""+ClusterResourceHolder.getInstance().getClusterManager().getNodeId());
+        }
         if(messageContentRemovalTask != null && messageContentRemovalTask.isRunning()) {
             messageContentRemovalTask.setRunning(false);
         }
@@ -2485,6 +2429,138 @@ public void addMessageBatchToUserQueues(CassandraQueueMessage[] messages) throws
             }
 
         }
+    }
+
+    public class MessageCacheForCassandra {
+
+        private final int cacheSize = ClusterResourceHolder.getInstance().
+                getClusterConfiguration().getMessageReadCacheSize();
+
+        LinkedHashMap<String, byte[]> topicContentCache = new LinkedHashMap<String, byte[]>() {
+            @Override
+            protected boolean removeEldestEntry(Map.Entry<String, byte[]> eldest) {
+                return this.size() > cacheSize;
+            }
+        };
+
+        private String parseKey(String messageId, int offset) {
+
+            return messageId + ":" + offset;
+
+        }
+
+        public int getContent(String messageId, int offsetValue, ByteBuffer dst) {
+            int written = 0;
+            int chunkSize = 65534;
+            byte[] content = null;
+            String keyToGet = parseKey(messageId, offsetValue);
+            if (topicContentCache.containsKey(keyToGet)) {
+
+                content = (topicContentCache.get(keyToGet));
+                if (content != null) {
+                    if (offsetValue == 0) {
+                        final int size = (int) content.length;
+                        int posInArray = offsetValue + written - offsetValue;
+                        int count = size - posInArray;
+                        if (count > dst.remaining()) {
+                            count = dst.remaining();
+                        }
+                        dst.put(content, 0, count);
+                        written = count;
+                    } else {
+                        int k = offsetValue / chunkSize;
+                        final int size = (int) content.length;
+                        int posInArray = offsetValue - (k * chunkSize);
+                        int count = size - posInArray;
+                        if (count > dst.remaining()) {
+                            count = dst.remaining();
+                        }
+
+                        dst.put(content, posInArray, count);
+
+                        written += count;
+                    }
+                } else {
+                    throw new RuntimeException("Unexpected Error , cache content might be corrupted");
+                }
+            } else {
+                //load from DB
+                try {
+
+                    String rowKey = "mid" + messageId;
+                    if (offsetValue == 0) {
+
+                        ColumnQuery columnQuery = HFactory.createColumnQuery(keyspace, stringSerializer,
+                                integerSerializer, byteBufferSerializer);
+                        columnQuery.setColumnFamily(MESSAGE_CONTENT_COLUMN_FAMILY);
+                        columnQuery.setKey(rowKey.trim());
+                        columnQuery.setName(offsetValue);
+
+                        QueryResult<HColumn<Integer, ByteBuffer>> result = columnQuery.execute();
+                        HColumn<Integer, ByteBuffer> column = result.get();
+                        if (column != null) {
+                            int offset = column.getName();
+                            content = bytesArraySerializer.fromByteBuffer(column.getValue());
+
+                            final int size = (int) content.length;
+                            int posInArray = offset + written - offset;
+                            int count = size - posInArray;
+                            if (count > dst.remaining()) {
+                                count = dst.remaining();
+                            }
+                            dst.put(content, 0, count);
+                            written = count;
+                        } else {
+                            throw new RuntimeException("Unexpected Error , content already deleted");
+                        }
+                    } else {
+                        ByteArrayOutputStream byteOutputStream = new ByteArrayOutputStream();
+                        int k = offsetValue / chunkSize;
+                        SliceQuery query = HFactory.createSliceQuery(keyspace, stringSerializer,
+                                integerSerializer, byteBufferSerializer);
+                        query.setColumnFamily(MESSAGE_CONTENT_COLUMN_FAMILY);
+                        query.setKey(rowKey.trim());
+                        query.setRange(k * chunkSize, (k + 1) * chunkSize + 1, false, 10);
+
+                        QueryResult<ColumnSlice<Integer, ByteBuffer>> result = query.execute();
+                        ColumnSlice<Integer, ByteBuffer> columnSlice = result.get();
+                        boolean added = false;
+                        for (HColumn<Integer, ByteBuffer> column : columnSlice.getColumns()) {
+                            added = true;
+                            byteOutputStream.write(bytesArraySerializer.fromByteBuffer(column.getValue()));
+                        }
+                        content = byteOutputStream.toByteArray();
+                        final int size = (int) content.length;
+                        int posInArray = offsetValue - (k * chunkSize);
+                        int count = size - posInArray;
+                        if (count > dst.remaining()) {
+                            count = dst.remaining();
+                        }
+
+                        dst.put(content, posInArray, count);
+
+                        written += count;
+                    }
+
+                    // add a new entry to the cache. If cache is full eldest entry will be removed.
+
+                    byte[] cacheValue = new byte[content.length];
+                    System.arraycopy(content, 0, cacheValue, 0, content.length);
+                    addEntryToCache(keyToGet, cacheValue);
+
+                } catch (Exception e) {
+                    e.printStackTrace();
+                    log.error("Error in reading content", e);
+                }
+            }
+
+            return written;
+        }
+
+        private synchronized void addEntryToCache(String key, byte[] cacheVal) {
+            topicContentCache.put(key, cacheVal);
+        }
+
     }
 
 }

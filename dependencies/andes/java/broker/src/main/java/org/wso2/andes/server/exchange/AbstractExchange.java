@@ -286,18 +286,6 @@ public abstract class AbstractExchange implements Exchange, Managable
         {
             listener.bindingAdded(this, binding);
         }
-
-        if (this instanceof DirectExchange) {
-            CassandraMessageStore cassandraMessageStore = ClusterResourceHolder.getInstance().getCassandraMessageStore();
-            ClusterManager clusterManager = ClusterResourceHolder.getInstance().getClusterManager();
-
-            try {
-                cassandraMessageStore.createGlobalQueue(binding.getQueue().getResourceName());
-                clusterManager.handleQueueAddition(binding.getQueue().getResourceName());
-            } catch (Exception e) {
-                throw new RuntimeException("Error while adding a queue to direct exchange ", e);
-            }
-        }
         onBind(binding);
     }
 

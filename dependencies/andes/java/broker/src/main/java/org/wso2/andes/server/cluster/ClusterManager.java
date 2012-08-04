@@ -1176,4 +1176,14 @@ public class ClusterManager {
         return Integer.parseInt(node.substring(node.length() - 5));
     }
 
+    public void shutDownMyNode() {
+        try {
+            //stop all global queue Workers
+            globalQueueManager.stopAllQueueWorkersLocally();
+        } catch (Exception e) {
+            log.error("Error stopping global queues while shutting down", e);
+        }
+
+    }
+
 }

@@ -23,6 +23,7 @@ import org.wso2.carbon.context.CarbonContext;
 import org.wso2.carbon.core.AbstractAdmin;
 import org.wso2.carbon.core.util.KeyStoreUtil;
 import org.wso2.carbon.identity.base.IdentityException;
+import org.wso2.carbon.identity.core.util.IdentityTenantUtil;
 import org.wso2.carbon.identity.sso.saml.admin.SAMLSSOConfigAdmin;
 import org.wso2.carbon.identity.sso.saml.dto.SAMLSSOServiceProviderDTO;
 import org.wso2.carbon.identity.sso.saml.dto.SAMLSSOServiceProviderInfoDTO;
@@ -30,6 +31,9 @@ import org.wso2.carbon.identity.sso.saml.util.SAMLSSOUtil;
 import org.wso2.carbon.security.SecurityConfigException;
 import org.wso2.carbon.security.keystore.KeyStoreAdmin;
 import org.wso2.carbon.security.keystore.service.KeyStoreData;
+import org.wso2.carbon.user.core.UserRealm;
+import org.wso2.carbon.user.core.UserStoreException;
+import org.wso2.carbon.utils.multitenancy.MultitenantUtils;
 
 public class SAMLSSOConfigService extends AbstractAdmin{
 
@@ -84,6 +88,23 @@ public class SAMLSSOConfigService extends AbstractAdmin{
     public boolean removeServiceProvider(String issuer) throws IdentityException {
         SAMLSSOConfigAdmin ssoConfigAdmin = new SAMLSSOConfigAdmin(getConfigSystemRegistry());
         return ssoConfigAdmin.removeServiceProvider(issuer);
+    }
+    
+    public String[] getUserProfiles(String userName) throws IdentityException{
+    	String tenatUser = MultitenantUtils.getTenantAwareUsername(userName);
+    	String domainName = MultitenantUtils.getTenantDomain(tenatUser);
+    	String[] userProfileNames = null;
+    	try {
+	        UserRealm realm = IdentityTenantUtil.getRealm(domainName, tenatUser);
+	        userProfileNames = realm.getUserStoreManager().getProfileNames(tenatUser);
+        } catch (IdentityException e) {
+        	log.error("Error while getting realm for "+ tenatUser, e );
+            throw new IdentityException("Error while getting realm for "+ tenatUser + e);
+        } catch (UserStoreException e) {
+        	log.error("Error while reading user profiles for user " + tenatUser, e);
+            throw new IdentityException("Error while reading user profiles " + tenatUser + e);
+        }
+    	return userProfileNames;
     }
 
     private String[] getStoreEntries(String keyStoreName) throws IdentityException {

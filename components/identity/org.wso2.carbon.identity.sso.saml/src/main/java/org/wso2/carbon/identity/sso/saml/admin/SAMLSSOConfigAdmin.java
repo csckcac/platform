@@ -16,6 +16,12 @@
 
 package org.wso2.carbon.identity.sso.saml.admin;
 
+import java.io.File;
+import java.io.FileOutputStream;
+import java.io.OutputStream;
+import java.util.Hashtable;
+import java.util.Map;
+
 import org.apache.axis2.context.ConfigurationContext;
 import org.apache.axis2.context.MessageContext;
 import org.apache.commons.logging.Log;
@@ -24,6 +30,7 @@ import org.wso2.carbon.identity.base.IdentityException;
 import org.wso2.carbon.identity.core.IdentityRegistryResources;
 import org.wso2.carbon.identity.core.model.SAMLSSOServiceProviderDO;
 import org.wso2.carbon.identity.core.persistence.IdentityPersistenceManager;
+import org.wso2.carbon.identity.core.util.IdentityUtil;
 import org.wso2.carbon.identity.sso.saml.dto.SAMLSSOServiceProviderDTO;
 import org.wso2.carbon.identity.sso.saml.dto.SAMLSSOServiceProviderInfoDTO;
 import org.wso2.carbon.registry.core.Registry;
@@ -31,12 +38,6 @@ import org.wso2.carbon.registry.core.Resource;
 import org.wso2.carbon.registry.core.session.UserRegistry;
 import org.wso2.carbon.utils.ServerConstants;
 import org.wso2.carbon.utils.WSO2Constants;
-
-import java.io.File;
-import java.io.FileOutputStream;
-import java.io.OutputStream;
-import java.util.Hashtable;
-import java.util.Map;
 
 /**
  * This class is used for managing SAML SSO providers. Adding, retrieving and removing service
@@ -70,7 +71,10 @@ public class SAMLSSOConfigAdmin {
         serviceProviderDO.setDoSingleLogout(serviceProviderDTO.isDoSingleLogout());
         serviceProviderDO.setLogoutURL(serviceProviderDTO.getLogoutURL());
         serviceProviderDO.setDoSignAssertions(serviceProviderDTO.isDoSignAssertions());
-        
+        if(serviceProviderDTO.getAttributeProfile() != null && !serviceProviderDTO.getAttributeProfile().equals("")){
+        	serviceProviderDO.setAttributeConsumingServiceIndex(Integer.toString(IdentityUtil.getRandomInteger()));
+        	serviceProviderDO.setAttributeProfile(serviceProviderDTO.getAttributeProfile());
+        }
         IdentityPersistenceManager persistenceManager = IdentityPersistenceManager
                 .getPersistanceManager();
         try {
@@ -103,7 +107,9 @@ public class SAMLSSOConfigAdmin {
                 providerDTO.setIssuer(providerDO.getIssuer());
                 providerDTO.setAssertionConsumerUrl(providerDO.getAssertionConsumerUrl());
                 providerDTO.setCertAlias(providerDO.getCertAlias());
-
+                providerDTO.setAttributeConsumingServiceIndex(providerDO.getAttributeConsumingServiceIndex());
+                providerDTO.setAttributeProfile(providerDO.getAttributeProfile());
+                
                 serviceProviders[i] = providerDTO;
             }
         } catch (IdentityException e) {

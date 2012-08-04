@@ -39,5 +39,9 @@ public class SAMLSSOConstants {
         public static final String USERNAME_PASSWORD = "usernamePasswordBasedAuthn";
         public static final String OPENID = "openIDBasedAuthn";
     }
+    
+    public class AuthRequestElement{
+    	public static final String ATTR_CONSUMING_SERVICE_INDEX = "AttributeConsumingServiceIndex";
+    }
 }
 

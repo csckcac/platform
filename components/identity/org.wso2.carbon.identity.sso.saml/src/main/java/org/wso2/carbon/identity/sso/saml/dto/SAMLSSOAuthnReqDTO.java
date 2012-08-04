@@ -31,10 +31,12 @@ public class SAMLSSOAuthnReqDTO {
     private String loginPageURL;
     private String rpSessionId;
     private String assertionString;
+    private String attributeProfile;
     
     private boolean doSingleLogout;
     private boolean doSignAssertions;
     private boolean useFullyQualifiedUsernameAsSubject;
+    
 
     public String getCertAlias() {
         return certAlias;
@@ -165,4 +167,13 @@ public class SAMLSSOAuthnReqDTO {
     public void setAssertionString(String assertionString) {
         this.assertionString = assertionString;
     }
-}
+
+	public String getAttributeProfile() {
+	    return attributeProfile;
+    }
+
+	public void setAttributeProfile(String attributeProfile) {
+	    this.attributeProfile = attributeProfile;
+    }
+
+ }

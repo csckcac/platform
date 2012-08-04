@@ -23,6 +23,8 @@ public class SAMLSSOServiceProviderDTO {
     private String assertionConsumerUrl;
     private String certAlias;
     private String logoutURL;
+    private String attributeConsumingServiceIndex;
+    private String attributeProfile;
     private boolean useFullyQualifiedUsername;
     private boolean doSingleLogout;
     private boolean doSignAssertions;
@@ -82,5 +84,22 @@ public class SAMLSSOServiceProviderDTO {
     public void setDoSignAssertions(boolean doSignAssertions) {
         this.doSignAssertions = doSignAssertions;
     }
+
+	public String getAttributeConsumingServiceIndex() {
+	    return attributeConsumingServiceIndex;
+    }
+
+	public void setAttributeConsumingServiceIndex(String attributeConsumingServiceIndex) {
+	    this.attributeConsumingServiceIndex = attributeConsumingServiceIndex;
+    }
+
+	public String getAttributeProfile() {
+	    return attributeProfile;
+    }
+
+	public void setAttributeProfile(String attributeProfile) {
+	    this.attributeProfile = attributeProfile;
+    }
+
 }
 

@@ -155,6 +155,10 @@ public class AuthnRequestProcessor {
             samlssoRespDTO.setAssertionConsumerURL(authnReqDTO.getAssertionConsumerURL());
             samlssoRespDTO.setLoginPageURL(authnReqDTO.getLoginPageURL());
             samlssoRespDTO.setSubject(authnReqDTO.getUsername());
+            
+         // handling attributes
+           // samlssoRespDTO.setAttributes(SAMLSSOUtil.getAttributes(authnReqDTO));
+            
             return samlssoRespDTO;
 
         } catch (Exception e) {
@@ -196,6 +200,7 @@ public class AuthnRequestProcessor {
         responseDTO.setAssertionConsumerURL(respDTO.getAssertionConsumerURL());
         responseDTO.setLoginPageURL(respDTO.getLoginPageURL());
         responseDTO.setSubject(respDTO.getSubject());
+        
         return responseDTO;
     }
 
@@ -291,6 +296,7 @@ public class AuthnRequestProcessor {
             authReqDTO.setDoSingleLogout(spDO.isDoSingleLogout());
             authReqDTO.setLogoutURL(spDO.getLogoutURL());
             authReqDTO.setDoSignAssertions(spDO.isDoSignAssertions());
+            authReqDTO.setAttributeProfile(spDO.getAttributeProfile());
             return true;
 
         } catch (Exception e) {

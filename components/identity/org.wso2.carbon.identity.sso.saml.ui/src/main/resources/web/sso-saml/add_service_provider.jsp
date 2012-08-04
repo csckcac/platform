@@ -60,6 +60,9 @@ try	{
     if("true".equals(request.getParameter("enableSignature"))){
         serviceProviderDTO.setDoSignAssertions(true);
     }
+    if("true".equals(request.getParameter("enableAttributeProfile"))){
+    	serviceProviderDTO.setAttributeProfile(request.getParameter("profile"));
+    }
     serviceProviderDTO.setLogoutURL(request.getParameter("logoutURL"));
 
     boolean status = client.addServiceProvider(serviceProviderDTO);

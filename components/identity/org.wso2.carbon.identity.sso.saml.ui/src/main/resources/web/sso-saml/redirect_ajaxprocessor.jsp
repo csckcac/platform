@@ -15,18 +15,20 @@
  ~ specific language governing permissions and limitations
  ~ under the License.
  -->
+<%@page import="org.wso2.carbon.utils.multitenancy.MultitenantConstants"%>
 <%@page import="org.wso2.carbon.utils.multitenancy.MultitenantUtils"%>
-<%@page import="org.wso2.carbon.base.MultitenantConstants"%>
 <%@page import="java.net.URLDecoder" %>
 <%@page import="java.net.URLEncoder" %>
-<%@ page import="org.wso2.carbon.identity.sso.saml.ui.SAMLSSOProviderConstants" %>
-<%@ page import="java.util.List" %>
-<%@ page import="java.util.Enumeration" %>
-<%@ page import="org.apache.commons.codec.binary.Base64" %>
-<%@ page import="org.wso2.carbon.identity.sso.saml.ui.session.mgt.FESessionManager" %>
-<%@ page import="org.wso2.carbon.identity.sso.saml.ui.session.mgt.FESessionBean" %>
-<%@ page import="org.wso2.carbon.identity.sso.saml.stub.types.SAMLSSOReqValidationResponseDTO" %>
-<%@ page import="org.wso2.carbon.identity.sso.saml.stub.types.SAMLSSORespDTO" %>
+<%@page import="java.net.URL" %>
+<%@page import="java.net.HttpURLConnection" %>
+<%@page import="org.wso2.carbon.identity.sso.saml.ui.SAMLSSOProviderConstants" %>
+<%@page import="java.util.List" %>
+<%@page import="java.util.Enumeration" %>
+<%@page import="org.apache.commons.codec.binary.Base64" %>
+<%@page import="org.wso2.carbon.identity.sso.saml.ui.session.mgt.FESessionManager" %>
+<%@page import="org.wso2.carbon.identity.sso.saml.ui.session.mgt.FESessionBean" %>
+<%@page import="org.wso2.carbon.identity.sso.saml.stub.types.SAMLSSOReqValidationResponseDTO" %>
+<%@page import="org.wso2.carbon.identity.sso.saml.stub.types.SAMLSSORespDTO" %>
 <html>
 <head></head>
 <body>
@@ -35,12 +37,38 @@
     String assertion = (String) request.getAttribute(SAMLSSOProviderConstants.ASSERTION_STR);
     String relayState = (String) request.getAttribute(SAMLSSOProviderConstants.RELAY_STATE);
     String subject = (String) request.getAttribute(SAMLSSOProviderConstants.SUBJECT);
-	//if(MultitenantUtils.getTenantDomain(subject) != null){
-    	   response.setHeader(MultitenantConstants.TENANT_DOMAIN, MultitenantUtils.getTenantDomain(subject));
-	//}
+    String domain = null;
+	if(subject != null && MultitenantUtils.getTenantDomain(subject) != null){
+    	   domain = MultitenantUtils.getTenantDomain(subject);
+	}
     relayState = URLDecoder.decode(relayState, "UTF-8");
     relayState = relayState.replaceAll("&", "&amp;").replaceAll("\"", "&quot;").replaceAll("'", "&apos;").
             replaceAll("<", "&lt;").replaceAll(">", "&gt;").replace("\n", "");
+    
+    
+   /*  try {
+    	URL url = new URL(assertionConsumerURL);
+        HttpURLConnection conn = (HttpURLConnection) url.openConnection();
+        conn.setRequestProperty("tenantDomain", "wso2.lk");
+        conn.setRequestProperty("something", "something");
+		conn.setRequestMethod("POST");
+		conn.setDoOutput(true);
+		conn.setDoInput(true);
+		DataOutputStream out = new DataOutputStream(conn.getOutputStream());
+		String content = "SAMLResponse="+assertion+"&RelayState="+relayState;
+		out.writeBytes(content);
+		out.flush();
+		out.close();
+		conn.disconnect();
+    } catch (MalformedURLException e) {
+        e.printStackTrace();
+    } catch (ProtocolException e) {
+        e.printStackTrace();
+    } catch (IOException e) {
+        e.printStackTrace();
+    } */
+    
+    
 %>
 <p>You are now redirected back to <%=assertionConsumerURL%>. If the
  redirection fails, please click the post button.</p>

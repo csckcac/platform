@@ -23,10 +23,16 @@ import org.apache.axis2.client.ServiceClient;
 import org.apache.axis2.context.ConfigurationContext;
 import org.apache.commons.logging.Log;
 import org.apache.commons.logging.LogFactory;
+import org.wso2.carbon.identity.base.IdentityException;
+import org.wso2.carbon.identity.core.util.IdentityTenantUtil;
 import org.wso2.carbon.identity.sso.saml.stub.IdentitySAMLSSOConfigServiceStub;
 import org.wso2.carbon.identity.sso.saml.stub.types.SAMLSSOServiceProviderDTO;
 import org.wso2.carbon.identity.sso.saml.stub.types.SAMLSSOServiceProviderInfoDTO;
+import org.wso2.carbon.user.core.UserRealm;
+import org.wso2.carbon.user.core.UserStoreException;
+import org.wso2.carbon.utils.multitenancy.MultitenantUtils;
 
+import java.rmi.RemoteException;
 import java.util.ArrayList;
 
 public class SAMLSSOConfigServiceClient {
@@ -92,5 +98,17 @@ public class SAMLSSOConfigServiceClient {
             log.error("Error when removing the service provider", e);
             throw new AxisFault(e.getMessage(), e);
         }
+    }
+    
+    public String[] getUserProfiles(String userName) throws AxisFault {
+    	String[] userProfileNames = null;
+    	try {
+	        userProfileNames = stub.getUserProfiles(userName);
+        } catch (Exception e) {
+        	log.error("Error while getting user profiles", e);
+            throw new AxisFault(e.getMessage(), e);
+        }
+        
+    	return userProfileNames;
     }
 }

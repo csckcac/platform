@@ -99,6 +99,9 @@
     function disableSignature(chkbx) {
         document.addServiceProvider.enableSignature.value = (chkbx.checked) ? false : true;
     }
+    function disableAttributeProfile(chkbx) {
+    	document.addServiceProvider.profile.disabled = (chkbx.checked) ? false : true;
+    }
 </script>
 
 <%
@@ -107,6 +110,7 @@
     ConfigurationContext configContext;
     SAMLSSOConfigServiceClient spConfigClient;
     ArrayList<String> aliasSet = null;
+    String[] profiles = null;
     SAMLSSOServiceProviderInfoDTO serviceProviderInfoDTO = null;
     ArrayList<SAMLSSOServiceProviderDTO> providers = new ArrayList<SAMLSSOServiceProviderDTO>();
 
@@ -123,6 +127,7 @@
             }
         }
         aliasSet = spConfigClient.getCertAlias();
+        profiles = spConfigClient.getUserProfiles((String)session.getAttribute(CarbonConstants.LOGGED_USER));
     } catch (AxisFault e) {
         CarbonError error = new CarbonError();
         error.addError(e.getMessage());
@@ -147,7 +152,8 @@
                 <tr>
                     <th><fmt:message key="sp.issuer"/></th>
                     <th><fmt:message key="sp.assertionConsumerURL"/></th>
-                    <th colspan="2"><fmt:message key="sp.certAlias"/></th>
+                    <th colspan="1"><fmt:message key="sp.certAlias"/></th>
+                    <th colspan="1"><fmt:message key="sp.consumerIndex"/></th>
                 </tr>
                 </thead>
                 <tbody>
@@ -158,11 +164,13 @@
                 <tr>
                     <td width="30%"><%=sp.getIssuer()%>
                     </td>
-                    <td width="40%"><%=sp.getAssertionConsumerUrl()%>
+                    <td width="35%"><%=sp.getAssertionConsumerUrl()%>
                     </td>
-                    <td width="15%"><%=sp.getCertAlias() == null ? "" : sp.getCertAlias()%>
+                    <td width="10%"><%=sp.getCertAlias() == null ? "" : sp.getCertAlias()%>
                     </td>
-                    <td width="15%">
+                    <td width="15%"><%=sp.getAttributeConsumingServiceIndex() == null ? "" : sp.getAttributeConsumingServiceIndex()%>
+                    </td>
+                    <td width="10%">
                         <a title="Remove Service Providers"
                            onclick="remove('<%=sp.getIssuer()%>');return false;"
                            href="#" class="icon-link"
@@ -269,6 +277,33 @@
                                 <td>
                                     <input type="text" id="logoutURL" name="logoutURL"
                                            class="text-box-big" disabled="disabled">
+                                </td>
+                            </tr>
+                             <tr>
+                                <td colspan="2"><input type="checkbox" name="enableAttributeProfile"
+                                                       value="true"
+                                                       onclick="disableAttributeProfile(this);"/>
+                                    <fmt:message key="enable.attribute.profile"/>
+                                </td>
+                            </tr>
+                            <tr>
+                                <td style="padding-left: 40px ! important; color: rgb(119, 119, 119); font-style: italic;">
+                                    <fmt:message key="sp.profile"/></td>
+                                <td>
+                                    <select id="profile" name="profile" disabled="disabled">
+                                        <%
+                                            if (profiles != null) {
+                                                for (String profile : profiles) {
+                                                    if (profile != null) {
+                                        %>
+                                        <option value="<%=profile%>"><%=profile%>
+                                        </option>
+                                        <%
+                                                    }
+                                                }
+                                            }
+                                        %>
+                                    </select>
                                 </td>
                             </tr>
                         </table>

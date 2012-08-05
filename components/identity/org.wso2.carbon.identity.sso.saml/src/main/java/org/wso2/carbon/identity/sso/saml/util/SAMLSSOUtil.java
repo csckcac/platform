@@ -488,6 +488,10 @@ public class SAMLSSOUtil {
 	public static Claim[] getAttributes(SAMLSSOAuthnReqDTO authnReqDTO) throws IdentityException {
 		AuthnRequestImpl request =
 		                           (AuthnRequestImpl) SAMLSSOUtil.unmarshall(SAMLSSOUtil.decode(authnReqDTO.getAssertionString()));
+
+		if (request.getAttributeConsumingServiceIndex() == null) {
+			return null; // not requesting for attributes
+		}
 		int index = request.getAttributeConsumingServiceIndex();
 
 		// trying to get the Service Provider Configurations
@@ -523,7 +527,16 @@ public class SAMLSSOUtil {
 		return setClaimsAndValues(authnReqDTO);
 	}
 
-	private static Claim[] setClaimsAndValues(SAMLSSOAuthnReqDTO authnReqDTO) throws IdentityException {
+	/**
+	 * This private method reads claim URIs from claim manager and sets values
+	 * using user store manager.
+	 * 
+	 * @param authnReqDTO
+	 * @return
+	 * @throws IdentityException
+	 */
+	private static Claim[] setClaimsAndValues(SAMLSSOAuthnReqDTO authnReqDTO)
+	                                                                         throws IdentityException {
 		Claim[] claimAndValue = null;
 		try {
 			UserRealm realm =
@@ -531,9 +544,11 @@ public class SAMLSSOUtil {
 			                                                          SAMLSSOUtil.getRealmService(),
 			                                                          authnReqDTO.getUsername());
 			UserStoreManager userStroreManager = realm.getUserStoreManager();
+			// claim manager returns claims without values
 			claimAndValue =
 			                (Claim[]) realm.getClaimManager()
 			                               .getAllClaims(IdentityUtil.getProperty(IdentityConstants.ServerConfig.SSO_ATTRIB_CLAIM_DIALECT));
+			// getting values from the user store manager
 			for (int i = 0; i < claimAndValue.length; i++) {
 				String value =
 				               userStroreManager.getUserClaimValue(authnReqDTO.getUsername(),
@@ -546,13 +561,19 @@ public class SAMLSSOUtil {
 
 		} catch (CarbonException e) {
 			log.error("Error while setting attributes. Unable to retrieve claims", e);
-			throw new IdentityException("Error while setting attributes. Unable to retrieve claims", e);
+			throw new IdentityException(
+			                            "Error while setting attributes. Unable to retrieve claims",
+			                            e);
 		} catch (UserStoreException e) {
 			log.error("Error while setting attributes. Unable to retrieve claims", e);
-			throw new IdentityException("Error while setting attributes. Unable to retrieve claims", e);
+			throw new IdentityException(
+			                            "Error while setting attributes. Unable to retrieve claims",
+			                            e);
 		} catch (org.wso2.carbon.user.api.UserStoreException e) {
 			log.error("Error while setting attributes. Unable to retrieve claims", e);
-			throw new IdentityException("Error while setting attributes. Unable to retrieve claims", e);
+			throw new IdentityException(
+			                            "Error while setting attributes. Unable to retrieve claims",
+			                            e);
 		}
 	}
 

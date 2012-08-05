@@ -378,7 +378,6 @@ public class SAMLSSOUtil {
 	                                                                                                throws IdentitySAML2SSOException {
 
 		int tenantID = 0;
-		RegistryService registryService = SAMLSSOUtil.getRegistryService();
 		RealmService realmService = SAMLSSOUtil.getRealmService();
 
 		// get the tenantID
@@ -480,7 +479,7 @@ public class SAMLSSOUtil {
 	}
 
 	/**
-	 * Return a Map containing requested attributes and values
+	 * Return a Array of Claims containing requested attributes and values
 	 * 
 	 * @param authnReqDTO
 	 * @return Map with attributes and values
@@ -510,33 +509,51 @@ public class SAMLSSOUtil {
 				return null;
 			}
 		}
-		// IMPORTANT : checking if the consumer index in the request matches the given id
-		// to the SP
+		/*
+		 * IMPORTANT : checking if the consumer index in the request matches the
+		 * given id to the SP
+		 */
 		if (spDO.getAttributeConsumingServiceIndex() == null ||
 		    "".equals(spDO.getAttributeConsumingServiceIndex()) ||
 		    index != Integer.parseInt(spDO.getAttributeConsumingServiceIndex())) {
 			log.debug("Invalid AttributeConsumingServiceIndex in AuthnRequest");
 			return null;
 		}
-		// get the list of required attributes of SP
-		Claim[] claimAndValue = null;
 
+		return setClaimsAndValues(authnReqDTO);
+	}
+
+	private static Claim[] setClaimsAndValues(SAMLSSOAuthnReqDTO authnReqDTO) throws IdentityException {
+		Claim[] claimAndValue = null;
 		try {
 			UserRealm realm =
 			                  AnonymousSessionUtil.getRealmByUserName(SAMLSSOUtil.getRegistryService(),
 			                                                          SAMLSSOUtil.getRealmService(),
 			                                                          authnReqDTO.getUsername());
-			UserStoreManager userStoreManager = realm.getUserStoreManager();
+			UserStoreManager userStroreManager = realm.getUserStoreManager();
 			claimAndValue =
-			                userStoreManager.getUserClaimValues(authnReqDTO.getUsername(),
-			                                                    authnReqDTO.getAttributeProfile());
+			                (Claim[]) realm.getClaimManager()
+			                               .getAllClaims(IdentityUtil.getProperty(IdentityConstants.ServerConfig.SSO_ATTRIB_CLAIM_DIALECT));
+			for (int i = 0; i < claimAndValue.length; i++) {
+				String value =
+				               userStroreManager.getUserClaimValue(authnReqDTO.getUsername(),
+				                                                   claimAndValue[i].getClaimUri(),
+				                                                   authnReqDTO.getAttributeProfile());
+				claimAndValue[i].setValue(value);
+			}
+
+			return (Claim[]) claimAndValue;
 
 		} catch (CarbonException e) {
 			log.error("Error while setting attributes. Unable to retrieve claims", e);
+			throw new IdentityException("Error while setting attributes. Unable to retrieve claims", e);
 		} catch (UserStoreException e) {
 			log.error("Error while setting attributes. Unable to retrieve claims", e);
+			throw new IdentityException("Error while setting attributes. Unable to retrieve claims", e);
+		} catch (org.wso2.carbon.user.api.UserStoreException e) {
+			log.error("Error while setting attributes. Unable to retrieve claims", e);
+			throw new IdentityException("Error while setting attributes. Unable to retrieve claims", e);
 		}
-		return claimAndValue;
 	}
 
 }

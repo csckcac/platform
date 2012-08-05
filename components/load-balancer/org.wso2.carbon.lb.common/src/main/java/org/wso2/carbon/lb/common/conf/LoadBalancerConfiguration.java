@@ -315,7 +315,8 @@ public class LoadBalancerConfiguration implements Serializable {
                             Constants.DOMAIN_ELEMENT)) {
 
                     String msg = "The mandatory domains element, child of the " + serviceName +
-                                 " element is not specified in the configuration file.";
+                                 " element is not specified in the configuration file. \n"+
+                                 serviceNode.toString();
                     log.error(msg);
                     throw new RuntimeException(msg);
                 }
@@ -758,9 +759,9 @@ public class LoadBalancerConfiguration implements Serializable {
         return sb.toString().trim();
     }
 
-    @SuppressWarnings("unused")
     public abstract class Configuration implements Serializable {
 
+        private static final long serialVersionUID = -5433889427746551250L;
         protected String imageId = System.getenv("ami_id");
         protected String payload;
         protected boolean payloadSet;
@@ -858,7 +859,6 @@ public class LoadBalancerConfiguration implements Serializable {
 
     }
 
-    @SuppressWarnings("unused")
     public class LBConfiguration extends Configuration implements Serializable {
 
         private static final long serialVersionUID = 1357143883932816418L;
@@ -918,8 +918,9 @@ public class LoadBalancerConfiguration implements Serializable {
         }
     }
 
-    @SuppressWarnings("unused")
     public class ServiceConfiguration extends Configuration implements Serializable {
+       
+        private static final long serialVersionUID = 8707314702788040116L;
         private int minAppInstances = 1;
         private boolean minAppInstancesSet;
 

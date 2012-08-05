@@ -23,6 +23,7 @@ import java.util.Arrays;
 import org.jclouds.compute.domain.NodeMetadata;
 import org.jclouds.compute.domain.NodeMetadataBuilder;
 import org.wso2.carbon.autoscaler.service.impl.AutoscalerServiceImpl.Iaases;
+import org.wso2.carbon.lb.common.conf.util.Constants;
 
 import junit.framework.TestCase;
 
@@ -30,6 +31,11 @@ public class IaasContextTest extends TestCase {
 
     IaasContext ctx;
     NodeMetadata node1, node2, node3, node4;
+    
+    String[] domains = {"wso2.a", "wso2.b", "wso2.c"};
+    String[] subDomains = {"mgt", "worker"};
+    String[] nodeIds = {"1", "2", "3", "4", "5"};
+    String[] ips = {"192.168.1.2", "192.168.1.3", "192.168.1.4"};
 
     public IaasContextTest(String name) {
         super(name);
@@ -53,39 +59,54 @@ public class IaasContextTest extends TestCase {
                                          .build();
 
         ctx = new IaasContext(Iaases.ec2, null);
-        ctx.addNodeIdToDomainMap(node1.getId(), "wso2.a");
-        ctx.addPublicIpToDomainMap("192.168.1.2", "wso2.a");
-        ctx.addPublicIpToNodeIdMap("192.168.1.2", node1.getId());
-        ctx.addNodeIdToDomainMap(node2.getId(), "wso2.b");
-        ctx.addNodeIdToDomainMap(node3.getId(), "wso2.a");
-        ctx.addPublicIpToDomainMap("192.168.1.3", "wso2.a");
-        ctx.addPublicIpToNodeIdMap("192.168.1.3", node3.getId());
-        ctx.addNodeIdToDomainMap(node4.getId(), "wso2.c");
+        
+        
+        ctx.addInstanceContext(new InstanceContext(domains[0], subDomains[0], null));
+        ctx.addInstanceContext(new InstanceContext(domains[1], subDomains[1], null));
+        ctx.addInstanceContext(new InstanceContext(domains[2], subDomains[0], null));
+        ctx.addInstanceContext(new InstanceContext(domains[2], Constants.DEFAULT_SUB_DOMAIN, null));
+        
+        ctx.addNodeDetails(domains[0], subDomains[0], nodeIds[0], "");
+        ctx.addNodeDetails(domains[0], subDomains[0], nodeIds[1], ips[0]);
+        ctx.addNodeDetails(domains[1], subDomains[1], nodeIds[2], ips[1]);
+        ctx.addNodeDetails(domains[2], subDomains[0], nodeIds[3], ips[2]);
+        ctx.addNodeDetails(domains[2], Constants.DEFAULT_SUB_DOMAIN, nodeIds[4], "");
+        
+        
+//        ctx.addNodeIdToDomainMap(node1.getId(), "wso2.a");
+//        ctx.addPublicIpToDomainMap("192.168.1.2", "wso2.a");
+//        ctx.addPublicIpToNodeIdMap("192.168.1.2", node1.getId());
+//        ctx.addNodeIdToDomainMap(node2.getId(), "wso2.b");
+//        ctx.addNodeIdToDomainMap(node3.getId(), "wso2.a");
+//        ctx.addPublicIpToDomainMap("192.168.1.3", "wso2.a");
+//        ctx.addPublicIpToNodeIdMap("192.168.1.3", node3.getId());
+//        ctx.addNodeIdToDomainMap(node4.getId(), "wso2.c");
     }
 
     public final void testGetLastMatchingNode() {
 
-        assertEquals(node3.getId(), ctx.getLastMatchingNode("wso2.a"));
-        ctx.removeNodeId(node3.getId());
-        assertEquals(node1.getId(), ctx.getLastMatchingNode("wso2.a"));
-        ctx.addNodeIdToDomainMap(node3.getId(), "wso2.a");
+        assertEquals(nodeIds[1], ctx.getLastMatchingNode(domains[0], subDomains[0]));
+        ctx.removeNodeId(nodeIds[1]);
+        assertEquals(nodeIds[0], ctx.getLastMatchingNode(domains[0], subDomains[0]));
+        ctx.addNodeDetails(domains[0], subDomains[0], nodeIds[1], ips[0]);
     }
 
     public final void testGetFirstMatchingNode() {
-        assertEquals(node1.getId(), ctx.getFirstMatchingNode("wso2.a"));
+        assertEquals(nodeIds[0], ctx.getFirstMatchingNode(domains[0], subDomains[0]));
     }
     
-    public final void testGetFirstMatchingPublicIp() {
-        assertEquals("192.168.1.3", ctx.getLastMatchingPublicIp("wso2.a"));
+    public final void testGetLastMatchingPublicIp() {
+        assertEquals(ips[0], ctx.getLastMatchingPublicIp(domains[0], subDomains[0]));
+        assertEquals(null, ctx.getLastMatchingPublicIp(domains[2], Constants.DEFAULT_SUB_DOMAIN));
     }
 
     public final void testGetNodeWithPublicIp() {
-        assertEquals(node1.getId(), ctx.getNodeWithPublicIp("192.168.1.2"));
+        assertEquals(nodeIds[3], ctx.getNodeWithPublicIp(ips[2]));
     }
 
     public final void testGetNodeIds() {
-        assertEquals(new ArrayList<String>(Arrays.asList("1", "3")), ctx.getNodeIds("wso2.a"));
-        assertEquals(new ArrayList<String>(Arrays.asList("2")), ctx.getNodeIds("wso2.b"));
+        assertEquals(new ArrayList<String>(Arrays.asList(nodeIds[0], nodeIds[1])), ctx.getNodeIds(domains[0], subDomains[0]));
+        assertEquals(new ArrayList<String>(Arrays.asList(nodeIds[2])), ctx.getNodeIds(domains[1], subDomains[1]));
     }
 
 }

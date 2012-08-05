@@ -17,6 +17,8 @@
 */
 package org.wso2.carbon.autoscaler.service;
 
+import org.wso2.carbon.lb.common.conf.util.Constants;
+
 /**
  * This Interface provides a way for a component, to communicate with an underline
  * Infrastructure which are supported by <i>JClouds</i>.
@@ -41,10 +43,13 @@ public interface IAutoscalerService {
      * wait till the instance is started up. Also note that the instance that is starting up
      * belongs to the group whose name is derived from its service domain, replacing <i>.</i>
      * by a hyphen (<i>-</i>). 
-     * @param domainName service domain of the instance to be started up.
+     * @param domainName service clustering domain of the instance to be started up.
+     * @param sudDomainName service clustering sub domain of the instance to be started up.
+     * If this is null, the default value will be used. Default value is 
+     * {@link Constants}.DEFAULT_SUB_DOMAIN.
      * @return whether the starting up is successful or not.
      */
-    public boolean startInstance(String domainName);
+    public boolean startInstance(String domainName, String sudDomainName);
     
     /**
      * Calling this method will result in an instance startup, which is belong
@@ -55,27 +60,34 @@ public interface IAutoscalerService {
      * <code>${service-domain}\t\${tenant-id}</code>.
      * @param imageId starting instance will be an instance of this image. Image id should
      * be a valid one.
+     * @param sudDomainName service clustering sub domain of the instance to be started up.
+     * If this is null, the default value will be used. Default value is 
+     * {@link Constants}.DEFAULT_SUB_DOMAIN.
      * @return public IP address of the instance in String format. If instance failed to 
      * start, this will return an empty String.
      */
-    public String startSpiInstance(String domainName, String imageId);
+    public String startSpiInstance(String domainName, String subDomainName, String imageId);
     
    
     /**
      * Calling this method will result in termination of an instance which is belong
      * to the provided service domain.
      * @param domainName service domain of the instance to be terminated.
+     * @param sudDomainName service clustering sub domain of the instance to be started up.
+     * If this is null, the default value will be used. Default value is {@link Constants}.DEFAULT_SUB_DOMAIN.
      * @return whether an instance terminated successfully or not.
      */
-	public boolean terminateInstance(String domainName);
+	public boolean terminateInstance(String domainName, String subDomainName);
 	
 	/**
 	 * Calling this method will result in termination of the lastly spawned instance which is
 	 * belong to the provided service domain.
 	 * @param domainName service domain of the instance to be terminated.
+	 * @param sudDomainName service clustering sub domain of the instance to be started up.
+     * If this is null, the default value will be used. Default value is {@link Constants}.DEFAULT_SUB_DOMAIN.
 	 * @return whether the termination is successful or not.
 	 */
-	public boolean terminateLastlySpawnedInstance(String domainName);
+	public boolean terminateLastlySpawnedInstance(String domainName, String subDomainName);
 	
 	/**
      * Calling this method will result in termination of an instance which has the
@@ -89,9 +101,11 @@ public interface IAutoscalerService {
 	 * Calling this method will result in returning the pending instances
 	 * count of a particular domain.
 	 * @param domainName service domain
+	 * @param sudDomainName service clustering sub domain of the instance to be started up.
+     * If this is null, the default value will be used. Default value is {@link Constants}.DEFAULT_SUB_DOMAIN.
 	 * @return number of pending instances for this domain. If no instances of this 
 	 * domain is present, this will return zero.
 	 */
-	public int getPendingInstanceCount(String domainName);
+	public int getPendingInstanceCount(String domainName, String subDomainName);
 	
 }

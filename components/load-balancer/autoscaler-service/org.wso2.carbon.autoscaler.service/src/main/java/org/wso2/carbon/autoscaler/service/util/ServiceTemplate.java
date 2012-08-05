@@ -20,6 +20,8 @@ package org.wso2.carbon.autoscaler.service.util;
 import java.util.HashMap;
 import java.util.Map;
 
+import org.wso2.carbon.lb.common.conf.util.Constants;
+
 /**
  * We keep details under a service element of jcoluds configuration file,
  * in this object.
@@ -27,14 +29,20 @@ import java.util.Map;
 public class ServiceTemplate implements Cloneable {
 
     private String domainName;
+    private String subDomainName = Constants.DEFAULT_SUB_DOMAIN;
     private Map<String, String> properties = new HashMap<String, String>();
     
     public String getDomainName() {
         return domainName;
     }
     
-    public void setDomainName(String domainName) {
-        this.domainName = domainName;
+    public boolean setDomainName(String domainName) {
+        if (!"".equals(domainName)) {
+            this.domainName = domainName;
+            return true;
+        }
+        
+        return false;
     }
     
     public void setProperty(String key, String value) {
@@ -58,9 +66,18 @@ public class ServiceTemplate implements Cloneable {
         this.properties = properties;
     }
     
+    public String getSubDomainName() {
+        return subDomainName;
+    }
+
+    public void setSubDomainName(String subDomainName) {
+        if(subDomainName == null || "".equals(subDomainName)){
+            return;
+        }
+        this.subDomainName = subDomainName;
+    }
+    
     public Object clone() throws CloneNotSupportedException {
         return super.clone();
     }
-
-    
 }

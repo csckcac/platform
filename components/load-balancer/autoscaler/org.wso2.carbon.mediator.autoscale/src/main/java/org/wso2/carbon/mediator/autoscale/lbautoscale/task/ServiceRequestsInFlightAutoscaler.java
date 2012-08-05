@@ -20,16 +20,13 @@ package org.wso2.carbon.mediator.autoscale.lbautoscale.task;
 import org.apache.axis2.AxisFault;
 import org.apache.axis2.clustering.ClusteringAgent;
 import org.apache.axis2.clustering.ClusteringFault;
-import org.apache.axis2.clustering.Member;
 import org.apache.axis2.clustering.management.GroupManagementAgent;
 import org.apache.axis2.context.ConfigurationContext;
-import org.apache.axis2.engine.AxisConfiguration;
 import org.apache.commons.logging.Log;
 import org.apache.commons.logging.LogFactory;
 import org.apache.synapse.ManagedLifecycle;
 import org.apache.synapse.core.SynapseEnvironment;
 import org.apache.synapse.task.Task;
-import org.apache.synapse.task.TaskDescription;
 import org.wso2.carbon.lb.common.conf.LoadBalancerConfiguration;
 import org.wso2.carbon.mediator.autoscale.lbautoscale.clients.AutoscaleServiceClient;
 import org.wso2.carbon.mediator.autoscale.lbautoscale.context.LoadBalancerContext;
@@ -39,14 +36,12 @@ import org.wso2.carbon.mediator.autoscale.lbautoscale.util.AutoscaleConstants;
 import org.wso2.carbon.mediator.autoscale.lbautoscale.util.AutoscaleUtil;
 import org.wso2.carbon.mediator.autoscale.lbautoscale.util.AutoscalerTaskDSHolder;
 import org.wso2.carbon.mediator.autoscale.lbautoscale.util.ConfigHolder;
-
 import java.util.HashMap;
 import java.util.Map;
 
 /**
- * Load analyzer task for Stratos service level autoscaling
+ * Service request in flight autoscaler task for Stratos service level autoscaling
  */
-@SuppressWarnings("unused")
 public class ServiceRequestsInFlightAutoscaler implements Task, ManagedLifecycle {
 
     private static final Log log = LogFactory.getLog(ServiceRequestsInFlightAutoscaler.class);
@@ -74,9 +69,11 @@ public class ServiceRequestsInFlightAutoscaler implements Task, ManagedLifecycle
     /**
      * AppDomainContexts for each domain
      * Key - domain
+     * Value - Map of key - sub domain
+     *                value - {@link AppDomainContext}
      */
     private Map<String, Map<String, AppDomainContext>> appDomainContexts =
-                                       new HashMap<String, Map<String, AppDomainContext>>();
+                                             new HashMap<String, Map<String, AppDomainContext>>();
 
     /**
      * LB Context for LB cluster
@@ -85,10 +82,6 @@ public class ServiceRequestsInFlightAutoscaler implements Task, ManagedLifecycle
 
     /**
      * Attribute to keep track whether this instance is the primary load balancer.
-     * <p/>
-     * A primary autoscaler does not have to check more than once whether the Elastic IP has been
-     * assigned to itself. However, the secondary autoscalers need to check on this, to make sure
-     * that the primary autoscaler has not crashed.
      */
     private boolean isPrimaryLoadBalancer;
 
@@ -97,8 +90,12 @@ public class ServiceRequestsInFlightAutoscaler implements Task, ManagedLifecycle
      */
     private boolean isTaskRunning;
 
+    /**
+     * holding service domains and sub domains
+     */
     private String[] serviceDomains, serviceSubDomains;
 
+    
     public void init(SynapseEnvironment synEnv) {
 
         String msg = "Autoscaler Service initialization failed and cannot proceed.";
@@ -151,6 +148,7 @@ public class ServiceRequestsInFlightAutoscaler implements Task, ManagedLifecycle
     public void execute() {
 
         if (isTaskRunning) {
+            log.debug("Task is already running!");
             return;
         }
         try {
@@ -167,6 +165,7 @@ public class ServiceRequestsInFlightAutoscaler implements Task, ManagedLifecycle
                 sendReplicationMessage();
             }
             isTaskRunning = false;
+            log.debug("Task finished a cycle.");
         }
     }
 
@@ -183,12 +182,13 @@ public class ServiceRequestsInFlightAutoscaler implements Task, ManagedLifecycle
             try {
                 clusteringAgent.sendMessage(msg, true);
                 System.setProperty(AutoscaleConstants.IS_TOUCHED, "false");
-                log.info("Request token replication messages sent out successfully!!");
+                log.debug("Request token replication messages sent out successfully!!");
 
             } catch (ClusteringFault e) {
                 log.error("Failed to send the request token replication message.", e);
             }
         }
+        log.debug("Clustering Agent is null. Hence, unable to send out the replication message.");
     }
 
     /**
@@ -197,11 +197,16 @@ public class ServiceRequestsInFlightAutoscaler implements Task, ManagedLifecycle
      */
     private void sanityCheck() {
 
-        nonPrimaryLBSanityCheck();
+        setIsPrimaryLB();
 
         if (!isPrimaryLoadBalancer) {
+            log.debug("This is not the primary load balancer, hence will not " +
+            		"perform any sanity check.");
             return;
         }
+        
+        log.debug("This is the primary load balancer, starting to perform sanity checks.");
+        
         computeRunningAndPendingInstances();
         loadBalancerSanityCheck();
         appNodesSanityCheck();
@@ -220,8 +225,11 @@ public class ServiceRequestsInFlightAutoscaler implements Task, ManagedLifecycle
             serviceSubDomains = loadBalancerConfig.getServiceSubDomains(serviceDomain);
 
             for (String serviceSubDomain : serviceSubDomains) {
+                
+                log.debug("Computation of instance counts started for domain: "+serviceDomain+
+                          " and sub domain: "+serviceSubDomain);
 
-                /** Calculate running instances of each service domain, sub domain combination **/
+                /* Calculate running instances of each service domain, sub domain combination */
 
                 AppDomainContext appCtxt;
 
@@ -239,17 +247,23 @@ public class ServiceRequestsInFlightAutoscaler implements Task, ManagedLifecycle
                     // if agent is null, we assume no service instances are running
                     runningInstances = 0;
                 }
+                
+                log.debug("Running instance count : "+runningInstances);
 
-                /** Calculate pending instances of each service domain **/
+                /* Calculate pending instances of each service domain */
 
                 try {
-                    pendingInstanceCount = autoscalerService.getPendingInstanceCount(serviceDomain);
+                    pendingInstanceCount =
+                                           autoscalerService.getPendingInstanceCount(serviceDomain,
+                                                                                     serviceSubDomain);
 
                 } catch (Exception e) {
-                    log.error("Failed to retrieve pending instance count for domain " +
-                              serviceDomain, e);
+                    log.error("Failed to retrieve pending instance count for domain: " +
+                              serviceDomain + " and sub domain: " + serviceSubDomain, e);
 
                 }
+                
+                log.debug("Pending instance count : "+pendingInstanceCount);
 
                 int previousPendingCount = 0;
                 int previousRunningCount = 0;
@@ -268,61 +282,106 @@ public class ServiceRequestsInFlightAutoscaler implements Task, ManagedLifecycle
                     // if we need to wait for sometime to cover the server startup delay
                     if (previousPendingCount > 0 && pendingInstanceCount == 0 &&
                         runningInstances < (previousPendingCount + previousRunningCount)) {
-                        // TODO check once in every 20 seconds, rather than sleeping all the time.
-                        // we give some time for the server to be started
-                        try {
-                            Thread.sleep(serverStartupDelay);
-                        } catch (InterruptedException ignore) {
+                        
+                        log.debug("There's an instance/s whose state changed from pending to " +
+                        		"running (but still not joined ELB), hence we should wait till " +
+                        		"it really started up.");
+                        
+                        int totalWaitedTime = 0;
+                        
+                        log.debug("Task will wait maximum of (milliseconds) : "+serverStartupDelay+
+                                  ", to let server starts up.");
+                        
+                        // we give some time for the server to be started, we'll check time to time
+                        // whether server has actually started up.
+                        while(agent.getMembers().size() == runningInstances && 
+                                totalWaitedTime < serverStartupDelay){
+                            
+                            try {
+                                Thread.sleep(AutoscaleConstants.SERVER_START_UP_CHECK_TIME);
+                            } catch (InterruptedException ignore) {
+                            }
+                            
+                            totalWaitedTime += AutoscaleConstants.SERVER_START_UP_CHECK_TIME;
                         }
+                        
+                        log.debug("Task waited for (milliseconds) : "+totalWaitedTime);
 
                         // we recalculate number of agents, to check whether an instance spawned up
                         newRunningInstanceCount = agent.getMembers().size();
+                        
+                        log.debug("New running instance count: "+newRunningInstanceCount);
 
                         // if server hasn't yet started up, we gonna kill it.
                         if (newRunningInstanceCount == runningInstances) {
+                            
+                            log.debug("Running instance count hasn't been increased, hence we " +
+                            		"gonna terminate it.");
                             // terminate the lastly spawned instance
                             try {
-                                autoscalerService.terminateLastlySpawnedInstance(serviceDomain);
+                                autoscalerService.terminateLastlySpawnedInstance(serviceDomain,
+                                                                                 serviceSubDomain);
                             } catch (Exception e) {
-                                log.error("Failed to terminate lastly spawned instance of domain " +
-                                          serviceDomain + "! ", e);
+                                log.error("Failed to terminate lastly spawned instance of domain: " +
+                                                  serviceDomain +
+                                                  " and sub domain: " +
+                                                  serviceSubDomain + "! ", e);
                             }
                         }
                     }
 
-                    if (appDomainContexts.get(serviceDomain) != null) {
-                        appCtxt = appDomainContexts.get(serviceDomain).get(serviceSubDomain);
-                        appCtxt.setRunningInstanceCount(newRunningInstanceCount);
-                        appCtxt.setPendingInstanceCount(pendingInstanceCount);
-                    }
+                    appCtxt = appDomainContexts.get(serviceDomain).get(serviceSubDomain);
+                    appCtxt.setRunningInstanceCount(newRunningInstanceCount);
+                    appCtxt.setPendingInstanceCount(pendingInstanceCount);
+                    
+                    log.debug("Finished counting for domain: "+serviceDomain+" and sub domain: "+
+                    serviceSubDomain);
 
                 }
             }
         }
 
-        /** Calculate running load balancer instances **/
+        /* Calculate running load balancer instances */
 
         // count this LB instance in.
         runningInstances = 1;
 
         runningInstances += ConfigHolder.getAgent().getAliveMemberCount();
 
-        log.debug("************ Alive Load Balancer members (including this): " + runningInstances);
-
         lbContext.setRunningInstanceCount(runningInstances);
 
+        if(ConfigHolder.getAgent().getParameter("domain") == null){
+            String msg = "Clustering Agent's domain parameter is null. Please specify a domain" +
+            		" name in axis2.xml";
+            log.error(msg);
+            throw new RuntimeException(msg);
+        }
+        
         String lbDomain = ConfigHolder.getAgent().getParameter("domain").getValue().toString();
+        
+        String lbSubDomain = null;
+        
+        if (ConfigHolder.getAgent().getParameter("subDomain") != null) {
+            lbSubDomain =
+                                 ConfigHolder.getAgent().getParameter("subDomain").getValue()
+                                             .toString();
+        }
 
         pendingInstanceCount = 0;
 
         try {
-            pendingInstanceCount = autoscalerService.getPendingInstanceCount(lbDomain);
+            pendingInstanceCount = autoscalerService.getPendingInstanceCount(lbDomain, lbSubDomain);
 
         } catch (Exception e) {
-            log.error("Failed to set pending instance count for domain " + lbDomain, e);
+            log.error("Failed to set pending instance count for domain: " + lbDomain +
+                      " and sub domain: " + lbSubDomain, e);
         }
 
         lbContext.setPendingInstanceCount(pendingInstanceCount);
+        
+        log.debug("Load Balancer members of domain: "+lbDomain+" and sub domain: "+lbSubDomain+
+                  " (including this): " + runningInstances+" - pending instances: "
+                + pendingInstanceCount);
 
     }
 
@@ -330,6 +389,9 @@ public class ServiceRequestsInFlightAutoscaler implements Task, ManagedLifecycle
      * Sanity check to see whether the number of LBs is the number specified in the LB config
      */
     private void loadBalancerSanityCheck() {
+        
+        log.debug("Load balancer sanity check has started.");
+        
         // get current LB instance count
         int currentLBInstances = lbContext.getInstances();
 
@@ -340,23 +402,27 @@ public class ServiceRequestsInFlightAutoscaler implements Task, ManagedLifecycle
         int requiredInstances = lbConfig.getInstances();
 
         if (currentLBInstances < requiredInstances) {
-            log.warn("LB Sanity check failed. Current LB instances: " + currentLBInstances +
+            log.debug("LB Sanity check failed. Current LB instances: " + currentLBInstances +
                      ". Required LB instances: " + requiredInstances);
             int diff = requiredInstances - currentLBInstances;
 
             // gets the domain of the LB
             String lbDomain = ConfigHolder.getAgent().getParameter("domain").getValue().toString();
+            String lbSubDomain =
+                                 ConfigHolder.getAgent().getParameter("subDomain").getValue()
+                                             .toString();
 
             // Launch diff number of LB instances
-            log.info("Launching " + diff + " LB instances");
-            runInstances(lbContext, lbDomain, null, diff);
+            log.debug("Launching " + diff + " LB instances.");
+            
+            runInstances(lbContext, lbDomain, lbSubDomain, diff);
             // lbContext.incrementPendingInstances(diff);
             // lbContext.resetRunningPendingInstances();
         }
     }
 
-    private int
-        runInstances(LoadBalancerContext context, String domain, String subDomain, int diff) {
+    private int runInstances(LoadBalancerContext context, String domain, String subDomain, 
+        int diff) {
 
         int successfullyStartedInstanceCount = diff;
 
@@ -365,11 +431,13 @@ public class ServiceRequestsInFlightAutoscaler implements Task, ManagedLifecycle
             // and increment pending instance count only if autoscaler service returns
             // true.
             try {
-                // FIXME send sub domain too, check for null
-                boolean isSuccessful = autoscalerService.startInstance(domain);
+                boolean isSuccessful = autoscalerService.startInstance(domain, subDomain);
+                
                 if (!isSuccessful) {
+                    log.debug("Instance start up failed. domain: "+domain+", sub domain: "+subDomain);
                     successfullyStartedInstanceCount--;
                 } else {
+                    log.debug("An instance of domain: "+domain+" and sub domain: "+subDomain+" is started up.");
                     if (context != null) {
                         context.incrementPendingInstances(1);
                     }
@@ -390,13 +458,12 @@ public class ServiceRequestsInFlightAutoscaler implements Task, ManagedLifecycle
      * This method will check whether this LB is the primary LB or not and set
      * attribute accordingly.
      */
-    private void nonPrimaryLBSanityCheck() {
+    private void setIsPrimaryLB() {
 
         ClusteringAgent clusteringAgent = ConfigHolder.getAgent();
         if (clusteringAgent != null) {
 
             isPrimaryLoadBalancer = clusteringAgent.isCoordinator();
-            log.debug("*********** isPrimaryLoadBalancer: " + isPrimaryLoadBalancer);
 
         }
 
@@ -411,6 +478,8 @@ public class ServiceRequestsInFlightAutoscaler implements Task, ManagedLifecycle
             serviceSubDomains = loadBalancerConfig.getServiceSubDomains(serviceDomain);
 
             for (String serviceSubDomain : serviceSubDomains) {
+                log.debug("Sanity check has started for domain: "+serviceDomain+
+                          " and sub domain: "+serviceSubDomain);
                 appNodesSanityCheck(serviceDomain, serviceSubDomain);
             }
         }
@@ -445,14 +514,14 @@ public class ServiceRequestsInFlightAutoscaler implements Task, ManagedLifecycle
 
             // we try to maintain the minimum number of instances required
             if (currentInstances < requiredInstances) {
-                log.warn("App domain Sanity check failed for [" + serviceDomain + " : " +
+                log.debug("App domain Sanity check failed for [" + serviceDomain + " : " +
                          serviceSubDomain + "] . Current instances: " + currentInstances +
                          ". Required instances: " + requiredInstances);
 
                 int diff = requiredInstances - currentInstances;
 
                 // Launch diff number of App instances
-                log.info("Launching " + diff + " App instances for sub domain " + serviceSubDomain +
+                log.debug("Launching " + diff + " App instances for sub domain " + serviceSubDomain +
                          " of domain " + serviceDomain);
 
                 // FIXME: should we need to consider serviceConfig.getInstancesPerScaleUp()?
@@ -462,7 +531,7 @@ public class ServiceRequestsInFlightAutoscaler implements Task, ManagedLifecycle
     }
 
     /**
-     * Autoscale the entire system, analyzing the load of each domain
+     * Autoscale the entire system, analyzing the requests in flight of each domain - sub domain
      */
     private void autoscale() {
         for (String serviceDomain : serviceDomains) {
@@ -471,6 +540,9 @@ public class ServiceRequestsInFlightAutoscaler implements Task, ManagedLifecycle
             serviceSubDomains = loadBalancerConfig.getServiceSubDomains(serviceDomain);
 
             for (String serviceSubDomain : serviceSubDomains) {
+                
+                log.debug("Autoscaling analysis is starting to run for domain: "+serviceDomain+
+                          " and sub domain: "+serviceSubDomain);
 
                 expireRequestTokens(serviceDomain, serviceSubDomain);
                 autoscale(serviceDomain, serviceSubDomain);
@@ -512,7 +584,7 @@ public class ServiceRequestsInFlightAutoscaler implements Task, ManagedLifecycle
 
             int queueLengthPerNode = serviceConfig.getQueueLengthPerNode();
             if (log.isDebugEnabled()) {
-                log.debug("******** Average load: " + average + " **** Handleable load: " +
+                log.debug("Average requests in flight: " + average + " **** Handleable requests: " +
                           (runningAppInstances * queueLengthPerNode));
             }
             if (average > (runningAppInstances * queueLengthPerNode)) {
@@ -550,40 +622,45 @@ public class ServiceRequestsInFlightAutoscaler implements Task, ManagedLifecycle
         } else {
 
             AppDomainContext appDomainContext = appDomainContexts.get(domain).get(subDomain);
+            
+            if (appDomainContext != null) {
 
-            int runningInstances = appDomainContext.getRunningInstanceCount();
-            int pendingInstances = appDomainContext.getPendingInstanceCount();
+                int runningInstances = appDomainContext.getRunningInstanceCount();
+                int pendingInstances = appDomainContext.getPendingInstanceCount();
 
-            int failedInstances = 0;
-            if (runningInstances < maxAppInstances && pendingInstances == 0) {
+                int failedInstances = 0;
+                if (runningInstances < maxAppInstances && pendingInstances == 0) {
 
-                int instancesPerScaleUp = serviceConfig.getInstancesPerScaleUp();
-                log.info("Domain: " + domain + " Going to start instance " + instancesPerScaleUp +
-                         ". Running instances:" + runningInstances);
+                    int instancesPerScaleUp = serviceConfig.getInstancesPerScaleUp();
+                    log.debug("Domain: " + domain + " Going to start instance " +
+                             instancesPerScaleUp + ". Running instances:" + runningInstances);
 
-                int successfullyStarted =
-                                          runInstances(appDomainContext, domain, subDomain,
-                                                       instancesPerScaleUp);
+                    int successfullyStarted =
+                                              runInstances(appDomainContext, domain, subDomain,
+                                                           instancesPerScaleUp);
 
-                if (successfullyStarted != instancesPerScaleUp) {
-                    failedInstances = instancesPerScaleUp - successfullyStarted;
-                    if (log.isDebugEnabled()) {
-                        log.debug(successfullyStarted + " instances successfully started and\n" +
-                                  failedInstances + " instances failed to start for domain " +
-                                  domain);
+                    if (successfullyStarted != instancesPerScaleUp) {
+                        failedInstances = instancesPerScaleUp - successfullyStarted;
+                        if (log.isDebugEnabled()) {
+                            log.debug(successfullyStarted +
+                                      " instances successfully started and\n" + failedInstances +
+                                      " instances failed to start for domain " + domain);
+                        }
                     }
-                }
 
-                // we increment the pending instance count
-                // appDomainContext.incrementPendingInstances(instancesPerScaleUp);
-                else {
-                    log.info("Successfully started " + successfullyStarted +
-                             " instances of domain " + domain);
-                }
+                    // we increment the pending instance count
+                    // appDomainContext.incrementPendingInstances(instancesPerScaleUp);
+                    else {
+                        log.debug("Successfully started " + successfullyStarted +
+                                 " instances of domain " + domain+", sub domain: "+subDomain);
+                    }
 
-            } else if (runningInstances > maxAppInstances) {
-                log.warn("Number of running instances has reached the maximum limit of " +
-                         maxAppInstances + " in domain " + domain);
+                } else if (runningInstances > maxAppInstances) {
+                    log.fatal("Number of running instances has over reached the maximum limit of " +
+                             maxAppInstances + " in domain " + domain);
+                }
+            } else {
+                log.error(msg + " and sub domain: " + subDomain + " combination.");
             }
         }
     }
@@ -601,48 +678,53 @@ public class ServiceRequestsInFlightAutoscaler implements Task, ManagedLifecycle
                                                                                                            subDomain);
 
         String msg =
-                     "Failed to scale down. No Appdomain context is generated for the" + " domain " +
-                             domain;
+                     "Failed to scale down. No Appdomain context is generated for the" +
+                             " domain " + domain;
 
         if (appDomainContexts.get(domain) == null) {
             log.error(msg);
 
         } else {
             AppDomainContext appDomainContext = appDomainContexts.get(domain).get(subDomain);
-            
-            int runningInstances = appDomainContext.getRunningInstanceCount();
-            int minAppInstances = serviceConfig.getMinAppInstances();
-            if (runningInstances > minAppInstances) {
 
-                if (log.isDebugEnabled()) {
-                    log.debug("Domain: " + domain + ". Running instances:" + runningInstances +
-                              ". Min instances:" + minAppInstances);
-                }
-                // ask to scale down
-                try {
-                    // FIXME send sub domain too
-                    if (autoscalerService.terminateInstance(domain)) {
-                        appDomainContext.setRunningInstanceCount(runningInstances--);
+            if (appDomainContext != null) {
+                int runningInstances = appDomainContext.getRunningInstanceCount();
+                int minAppInstances = serviceConfig.getMinAppInstances();
+                if (runningInstances > minAppInstances) {
+
+                    if (log.isDebugEnabled()) {
+                        log.debug("Domain: " + domain + ". Running instances:" + runningInstances +
+                                  ". Min instances:" + minAppInstances);
+                    }
+                    // ask to scale down
+                    try {
+                        if (autoscalerService.terminateInstance(domain, subDomain)) {
+
+                            runningInstances--;
+                            appDomainContext.setRunningInstanceCount(runningInstances);
+                        }
+
+                    } catch (Exception e) {
+                        log.error("Instance termination failed for domain " + domain);
                     }
 
-                } catch (Exception e) {
-                    log.error("Instance termination failed for domain " + domain);
                 }
-
+            } else {
+                log.error(msg + " and sub domain: " + subDomain + " combination.");
             }
         }
     }
 
     private void expireRequestTokens(String domain, String subDomain) {
-        if(appDomainContexts.get(domain) != null){
+        if (appDomainContexts.get(domain) != null) {
             appDomainContexts.get(domain).get(subDomain).expireRequestTokens();
             return;
         }
-        log.error("No Appdomain context is generated for the" + " domain " +
-                             domain);
+        log.error("No Appdomain context is generated for the" + " domain " + domain);
     }
 
     public void destroy() {
         appDomainContexts.clear();
+        log.debug("Cleared AppDomainContext Map.");
     }
 }

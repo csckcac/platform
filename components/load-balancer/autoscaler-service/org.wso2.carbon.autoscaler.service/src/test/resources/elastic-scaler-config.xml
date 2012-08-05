@@ -56,7 +56,7 @@
             <property name="messageExpiryTime" value="60000"/>
             <property name="keyPair" value="aa"/>
 		</default>
-		<service domain="wso2.as.domain">
+		<service domain="wso2.as.domain" subDomain="mgt">
 			<property name="securityGroups" value="manager,default"/>
             <property name="availabilityZone" value="us-east-1c"/>
             <property name="payload" value="resources/as.zip"/>

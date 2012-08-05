@@ -28,12 +28,53 @@
     <modelVersion>4.0.0</modelVersion>
     <groupId>org.wso2.carbon</groupId>
     <artifactId>org.wso2.carbon.autoscaler.service</artifactId>
-    <packaging>bundle</packaging>
+    <packaging>aar</packaging>
     <name>WSO2 Carbon - Autoscaler Service</name>
     <url>http://wso2.org</url>
 
     <build>
         <plugins>
+            <plugin>
+                <groupId>org.apache.maven.plugins</groupId>
+                <artifactId>maven-shade-plugin</artifactId>
+                <version>1.7.1</version>
+                <executions>
+                    <execution>
+                        <phase>package</phase>
+                        <goals>
+                            <goal>shade</goal>
+                        </goals>
+                        <configuration>
+                            <artifactSet>
+                                <includes>
+                                    <include>org.jclouds:*</include>
+                                    <include>org.jclouds.*:*</include>
+                                </includes>
+                            </artifactSet>
+                            <filtering>true</filtering>
+                            <filters>
+                                <filter>
+                                    <artifact>org.jclouds*:*</artifact>
+                                    <includes>
+                                        <include>META-INF/services/org.jclouds.apis.ApiMetadata</include>
+                                        <include>META-INF/services/org.jclouds.providers.ProviderMetadata</include>
+                                    </includes>
+                                </filter>
+                            </filters>
+                            <transformers>
+                                <transformer implementation="org.apache.maven.plugins.shade.resource.ServicesResourceTransformer">
+                                </transformer>
+                            </transformers>
+                        </configuration>
+                    </execution>
+                </executions>
+            </plugin>
+            <plugin>
+                <groupId>org.apache.axis2</groupId>
+                <artifactId>axis2-aar-maven-plugin</artifactId>
+                <version>1.4</version>
+                <extensions>true</extensions>
+            </plugin>
             <plugin>
                 <groupId>org.apache.felix</groupId>
                 <artifactId>maven-scr-plugin</artifactId>
@@ -78,17 +119,17 @@
             <groupId>org.wso2.carbon</groupId>
             <artifactId>org.wso2.carbon.utils</artifactId>
         </dependency>
-        <!--dependency>
+        <dependency>
             <groupId>org.wso2.carbon</groupId>
             <artifactId>org.wso2.carbon.lb.common</artifactId>
             <version>${wso2carbon.version}</version>
-        </dependency-->
+        </dependency>
         <dependency>
             <groupId>org.wso2.carbon</groupId>
             <artifactId>org.wso2.carbon.securevault</artifactId>
             <version>${wso2carbon.version}</version>
         </dependency>
-        <dependency>
+        <!--dependency>
             <groupId>org.apache.synapse</groupId>
             <artifactId>synapse-core</artifactId>
             <version>${synapse.version}</version>
@@ -97,12 +138,12 @@
             <groupId>org.apache.synapse</groupId>
             <artifactId>synapse-commons</artifactId>
             <version>${synapse.version}</version>
-        </dependency> 
+        </dependency--> 
 	
         <!--  Jclouds dependencies -->
          <dependency>
            <groupId>org.jclouds</groupId>
-           <artifactId>jclouds-core</artifactId>
+           <artifactId>jclouds-allcompute</artifactId>
            <version>${jclouds.version}</version>
          </dependency>
          <dependency>
@@ -136,7 +177,7 @@
            <artifactId>jclouds-enterprise</artifactId>
            <version>${jclouds.version}</version>
          </dependency>
-         <dependency>
+         <!--dependency>
            <groupId>org.jclouds.api</groupId>
            <artifactId>ec2</artifactId>
            <version>${jclouds.version}</version>
@@ -150,7 +191,7 @@
            <groupId>org.jclouds.api</groupId>
            <artifactId>openstack-nova</artifactId>
            <version>${jclouds.version}</version>
-         </dependency>
+         </dependency-->
        
     </dependencies>
     

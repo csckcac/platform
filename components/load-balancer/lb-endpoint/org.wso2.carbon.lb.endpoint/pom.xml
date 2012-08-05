@@ -29,7 +29,8 @@
     <packaging>bundle</packaging>
     <name>WSO2 Carbon - Tenant Aware LoadBalance Endpoint</name>
     <url>http://wso2.org</url>
-    <version>4.0.0-SNAPSHOT</version>
+    <!--version>4.0.0-SNAPSHOT</version>
+    -->
 
     <dependencies>
         <dependency>
@@ -82,7 +83,7 @@
                         <Import-Package>
                             !org.wso2.carbon.lb.endpoint.endpoint,
                             !org.wso2.carbon.lb.endpoint,
-                            org.wso2.carbon.lb.common; version=0.0.0,
+                            org.wso2.carbon.lb.common.*; version=${wso2carbon.version},
                             org.wso2.carbon.registry.core.service; version=1.0.1,
                             *;resolution:=optional
                         </Import-Package>

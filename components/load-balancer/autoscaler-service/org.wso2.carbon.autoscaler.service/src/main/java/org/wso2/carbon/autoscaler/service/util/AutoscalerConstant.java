@@ -38,6 +38,7 @@ public final class AutoscalerConstant {
     public static final String DEFAULT_SERVICE_ELEMENT = "default";
     public static final String SERVICE_ELEMENT = "service";
     public static final String SERVICE_DOMAIN_ATTR = "domain";
+    public static final String SERVICE_SUB_DOMAIN_ATTR = "subDomain";
     
     /**
      * Secret Manager related aliases.
@@ -51,7 +52,7 @@ public final class AutoscalerConstant {
      * Serializer related constants
      */
     public static final String IAAS_CONTEXT_LIST_SERIALIZING_FILE = "iaas-context-list.txt";
-    public static final String DOMAIN_TO_LASTLY_USED_IAAS_MAP_SERIALIZING_FILE = "domain-to-lastly-used-iaas.txt";
+    public static final String LASTLY_USED_IAAS_MAP_SERIALIZING_FILE = "lastly-used-iaas.txt";
     
     /**
      * Payload related constants

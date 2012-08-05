@@ -278,6 +278,10 @@ public class ElasticScalerConfigFileReader {
                         // set domain name
                         temp.setDomainName(imageElt.getAttribute(AutoscalerConstant.SERVICE_DOMAIN_ATTR));
                         
+                        // set sub domain
+                        temp.setSubDomainName(imageElt.getAttribute(
+                                              AutoscalerConstant.SERVICE_SUB_DOMAIN_ATTR));
+                        
                         // load custom properties
                         Map<String, String> customProperties = loadProperties(imageElt);
                         

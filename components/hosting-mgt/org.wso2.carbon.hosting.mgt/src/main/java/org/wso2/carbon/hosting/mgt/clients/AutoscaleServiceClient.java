@@ -63,28 +63,28 @@ public class AutoscaleServiceClient {
         }
     }
     
-    public String startInstance(String domainName, String imageId) throws Exception{
-        return stub.startSpiInstance(domainName, imageId);
+    public String startInstance(String domainName, String subDomainName, String imageId) throws Exception{
+        return stub.startSpiInstance(domainName, subDomainName, imageId);
     }
+/*
+    public boolean terminateInstance(String domainName, String subDomainName) throws Exception {
 
-    public boolean terminateInstance(String domainName) throws Exception {
-
-        return stub.terminateInstance(domainName);
+        return stub.terminateInstance(domainName, subDomainName);
     }
     
     public boolean terminateLastlySpawnedInstance(String domainName) throws Exception {
         
         return stub.terminateLastlySpawnedInstance(domainName);
     }
-    
+  */  
     public boolean terminateSpiInstance(String ip) throws Exception {
         
         return stub.terminateSpiInstance(ip);
     }
     
-    public int getPendingInstanceCount(String domainName) throws Exception{
+    public int getPendingInstanceCount(String domainName, String subDomainName) throws Exception{
         
-        return stub.getPendingInstanceCount(domainName);
+        return stub.getPendingInstanceCount(domainName, subDomainName);
     }
 
 }

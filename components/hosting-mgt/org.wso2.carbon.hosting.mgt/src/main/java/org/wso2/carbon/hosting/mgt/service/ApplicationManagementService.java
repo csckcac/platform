@@ -220,7 +220,8 @@ public class ApplicationManagementService extends AbstractAdmin{
         openstackDAO = new OpenstackDAO();
         try{
             String modifiedDomainWithTenantId = System.getProperty("php.domain") + "/t/" + tenantId;
-            String privateIp = client.startInstance( modifiedDomainWithTenantId , imageId);
+            // FIXME for now we're passing null as the sub domain, please fix appropriately
+            String privateIp = client.startInstance( modifiedDomainWithTenantId , null, imageId);
             Store.tenantToPrivateIpMap.put(tenantId, privateIp);
             publicIp = openstackDAO.getPublicIp(privateIp);
             Store.privateIpToTenantMap.put(privateIp, tenantId);

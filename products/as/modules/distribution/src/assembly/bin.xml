@@ -209,6 +209,26 @@
 			 </excludes>
         </fileSet>
 
+        <!-- Copying dataservices samples -->
+        <fileSet>
+            <directory>../samples/dataServiceSamples</directory>
+            <outputDirectory>${pom.artifactId}-${pom.version}/samples/dataServiceSamples</outputDirectory>
+            <excludes>
+                <exclude>**/**.sh</exclude>
+                <exclude>**/pom.xml</exclude>
+            </excludes>
+        </fileSet>
+
+        <!-- Copying executables with execute permissions -->
+        <fileSet>
+            <directory>../samples/dataServiceSamples</directory>
+            <outputDirectory>${pom.artifactId}-${pom.version}/samples/dataServiceSamples</outputDirectory>
+            <includes>
+                <include>**/**.sh</include>
+            </includes>
+            <fileMode>755</fileMode>
+        </fileSet>
+
         <!--  copying JAX-WS/JAX-RS samples and Axis2Module with pom.xml files-->
         <fileSet>
             <directory>../samples/product/Jaxws-Jaxrs</directory>

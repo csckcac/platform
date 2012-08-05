@@ -138,7 +138,7 @@
 	     <module>gadget-ide</module>
 	     <module>attachment-mgt</module>
          <module>autoscaler</module>
-         <module>autoscaler-service</module>
+         <!--module>autoscaler-service</module-->
          <module>tenantaware-load-balancer</module>
          <module>gadgetgen-wizard</module>
          <module>cassandra-explorer</module>

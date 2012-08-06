@@ -39,7 +39,7 @@ public class BoxcarringDataServiceRequest extends DataServiceRequest {
 	 */
 	private DataServiceRequest dsRequest;
 	
-	public BoxcarringDataServiceRequest(DataServiceRequest dsRequest) {
+	public BoxcarringDataServiceRequest(DataServiceRequest dsRequest) throws DataServiceFault {
 		super(dsRequest.getDataService(), dsRequest.getRequestName());
 		this.dsRequest = dsRequest;
 	}

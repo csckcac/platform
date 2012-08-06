@@ -49,7 +49,7 @@ public class BatchDataServiceRequest extends DataServiceRequest {
 	};
 	
 	public BatchDataServiceRequest(DataService dataService, String requestName,
-			List<Map<String, ParamValue>> batchParams) {
+			List<Map<String, ParamValue>> batchParams) throws DataServiceFault {
 		super(dataService, requestName);
 		this.dsRequests = new ArrayList<SingleDataServiceRequest>();
 		/* create the requests */

@@ -46,7 +46,7 @@ public class SingleDataServiceRequest extends DataServiceRequest {
 	private Map<String, ParamValue> params;
 	
 	public SingleDataServiceRequest(DataService dataService, String requestName, 
-			Map<String, ParamValue> params) {
+			Map<String, ParamValue> params) throws DataServiceFault {
 		super(dataService, requestName);
 		this.params = params;
 	}

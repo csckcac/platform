@@ -29,6 +29,7 @@ import org.wso2.carbon.dataservices.core.DBUtils;
 import org.wso2.carbon.dataservices.core.DSSessionManager;
 import org.wso2.carbon.dataservices.core.DataServiceFault;
 import org.wso2.carbon.dataservices.core.DataServiceUser;
+import org.wso2.carbon.dataservices.core.engine.CallableRequest;
 import org.wso2.carbon.dataservices.core.engine.DataService;
 import org.wso2.carbon.dataservices.core.engine.ParamValue;
 
@@ -65,9 +66,15 @@ public abstract class DataServiceRequest {
 	 */
 	private boolean disableStreaming;
 	
-	protected DataServiceRequest(DataService dataService, String requestName) {
+	protected DataServiceRequest(DataService dataService, String requestName) 
+	        throws DataServiceFault {
 		this.dataService = dataService;
 		this.requestName = requestName;
+		CallableRequest request = this.dataService.getCallableRequest(this.requestName);
+		if (request == null) {
+			throw new DataServiceFault("A data service request named '" + requestName + 
+					"' does not exist in data service '" + dataService.getName() + "'");
+		}
 		this.disableStreaming = this.dataService.getCallableRequest(
 				this.requestName).isDisableStreamingEffective();
 	}
@@ -160,7 +167,7 @@ public abstract class DataServiceRequest {
      * @param requestName The request name
      * @return True if this is a boxcarring request.
      */
-    private static boolean isBoxcarringRequest(String requestName) {
+    public static boolean isBoxcarringRequest(String requestName) {
     	if (BoxcarringOps.BEGIN_BOXCAR.equals(requestName)) {
     		return true;
     	}

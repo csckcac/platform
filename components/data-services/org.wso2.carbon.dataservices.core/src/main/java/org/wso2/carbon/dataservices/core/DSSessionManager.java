@@ -18,6 +18,9 @@
  */
 package org.wso2.carbon.dataservices.core;
 
+import java.util.HashMap;
+import java.util.Map;
+
 import org.apache.axis2.context.MessageContext;
 import org.apache.axis2.context.ServiceContext;
 import org.wso2.carbon.dataservices.core.boxcarring.RequestBox;
@@ -30,6 +33,12 @@ public class DSSessionManager {
 	private static final String DS_SESSION_REQUEST_BOX_NAME = "DS_SESSION_REQUEST_BOX";
 	
 	private static final String DS_BOX_CARRING_FLAG_NAME = "DS_BOX_CARRING_FLAG";
+	
+	private static ThreadLocal<Map<String, Object>> threadLocalSession = new ThreadLocal<Map<String,Object>>() {
+		protected synchronized Map<String, Object> initialValue() {
+            return new HashMap<String, Object>();
+        }
+	};
 		
 	/**
 	 * Returns an object stored in the session with the given name.
@@ -41,6 +50,8 @@ public class DSSessionManager {
 			if (serviceContext != null) {
 				return serviceContext.getProperty(name);
 			}			
+		} else {
+			return threadLocalSession.get().get(name);
 		}
 		return null;
 	}
@@ -55,6 +66,8 @@ public class DSSessionManager {
 			if (serviceContext != null) {
 				serviceContext.setProperty(name, obj);
 			}			
+		} else {
+			threadLocalSession.get().put(name, obj);
 		}
 	}
 	

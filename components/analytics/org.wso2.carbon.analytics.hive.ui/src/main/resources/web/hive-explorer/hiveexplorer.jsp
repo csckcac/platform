@@ -144,7 +144,7 @@
         Object content = session.getAttribute("scriptContent" + scriptName);
         if (null != content) {
             scriptContent = content.toString();
-        }else {
+        } else {
             scriptContent = "";
         }
         if (null != request.getParameter("cron")) {
@@ -434,7 +434,8 @@
                             <tbody>
                             <tr>
                                 <td class="leftCol-small">
-                                    <fmt:message key="script.name"/>
+                                    <fmt:message key="script.name"/> <span
+                                        class="required">*</span>
                                 </td>
                                 <td>
                                     <input type="text" id="scriptName" name="scriptName" size="60"

@@ -16,20 +16,19 @@
  ~ under the License.
  -->
 <component xmlns="http://products.wso2.org/carbon">
-        <!-- tryit menu configuration -->
-	<menus>
-		<menu>
-			<id>tryit</id>
-			<i18n-key>tryitmenutext</i18n-key>
-			<i18n-bundle>org.wso2.carbon.tryit.ui.i18n.Resources</i18n-bundle>
-			<parent-menu>tools_menu</parent-menu>
-			<link>../tryit/index.jsp</link>
-			<region>region5</region>   
-			<order>20</order>
-			<style-class>tools</style-class>
- 		        <icon>../tryit/images/tryit.gif</icon>
-			<skip-authentication>false</skip-authentication>
-	        </menu>
-	</menus>
+    <!-- tryit menu configuration -->
+    <menus>
+        <menu>
+            <id>tryit</id>
+            <i18n-key>tryitmenutext</i18n-key>
+            <i18n-bundle>org.wso2.carbon.tryit.ui.i18n.Resources</i18n-bundle>
+            <parent-menu>tools_menu</parent-menu>
+            <link>../tryit/index.jsp</link>
+            <region>region5</region>
+            <order>20</order>
+            <style-class>tools</style-class>
+            <icon>../tryit/images/tryit.gif</icon>
+        </menu>
+    </menus>
 </component>
 

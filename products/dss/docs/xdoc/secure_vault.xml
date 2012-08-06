@@ -1,0 +1,59 @@
+<!--
+  ~ Copyright 2005-2007 WSO2, Inc. (http://wso2.com)
+  ~
+  ~ Licensed under the Apache License, Version 2.0 (the "License");
+  ~ you may not use this file except in compliance with the License.
+  ~ You may obtain a copy of the License at
+  ~
+  ~ http://www.apache.org/licenses/LICENSE-2.0
+  ~
+  ~ Unless required by applicable law or agreed to in writing, software
+  ~ distributed under the License is distributed on an "AS IS" BASIS,
+  ~ WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+  ~ See the License for the specific language governing permissions and
+  ~ limitations under the License.
+  -->
+
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.1//EN"
+        "http://www.w3.org/TR/xhtml11/DTD/xhtml11.dtd">
+<html xmlns="http://www.w3.org/1999/xhtml">
+    <body>
+        <p>[<a
+                href="http://wso2.com/products/data-services-server/">Download</a>]
+            | [<a href="index_docs.html">Documentation Home</a>] | [<a
+                    href="release_notes.html">Release Note</a>]
+        </p>
+<h1>Secure Passwords in DataService Configuration</h1>
+<p><b>Introduction</b> 
+</p>
+<p><a href="http://wso2.com/products/data-services-server/">WSO2 Data
+Services Server</a> provides the feature to secure passwords fields
+using the Secure Vault functionality. Users can encript their
+passwords using tokens instead of the actual password inside the data
+service configuration file and decript the actual password using
+password provider class. This example will guide you how to secure
+your password for a relational database. 
+</p>
+<p><b>Step 1 - Run ciphertool script from bin directory</b> 
+   <br/>Linux: sh ciphertool.sh -Dconfigure
+   <br/>Windows: ciphertool.bat -Dconfigure
+</p>
+
+<p><b>Step 2 - Encrypt the plain text using ciphertool</b></p>
+<p>Again run the ciphertool script without -Dconfigure. It will ask for the KeyStore Password of Carbon Server.
+The default value of the KeyStore password is 'wso2carbon'. Then provide the plain text value that need to be encrypt. It will return you the encrypted text value.</p>
+<p><img alt="DS" src="images/user-guide/secure-vault/step1.png" />
+</p>
+<p>Figure 1: Encrypt plain text value using ciphertool</p>
+
+<p><b>Step 3 - Add new alias and encrypted value to cipher-text.properties</b></p>
+<p>cipher-text.properties file is located at {DSS_HOME}/repository/conf/security/ directory. Open this file and add alias name and encripted value.(alias name can be any name as you preferred.)
+<br/>Eg: DSS.Samples.DB.Pwd=d6RmzIGebavMJULd1F2FBjIz0jKw469xwB7LRZF8q50alZ+wr6ueQOGudXz/csK5/srP3us2aI9w\nm/mW+j/P+lWad3g7kgah8koBxSxfM/W911vl9ipcndxfBl4tT0gi/AS1PEqzOhdrI34mrrEiOId7\nov/aWbQ7fm6ChAOz6Ak\=
+</p>
+
+<p><b>Step 4 - Use alias inside .dbs file</b></p>
+<p>The namespace xmlns:svns="http://org.wso2.securevault/configuration" and alias shoud be added to data-service as follows.</p>
+<p><img alt="DS" src="images/user-guide/secure-vault/step2.png" /></p>
+<p>Figure 2: .dbs configuration</p>
+    </body>
+</html>

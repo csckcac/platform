@@ -28,8 +28,6 @@
             <order>10</order>
             <style-class>tools</style-class>
             <icon>../java2wsdl/images/java2wsdl.gif</icon>
-	    <skip-authentication>
-	    </skip-authentication>
         </menu>
     </menus>
 </component>

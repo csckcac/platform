@@ -27,7 +27,6 @@
             <order>25</order>
             <style-class>tools</style-class>
             <icon>../js_scraper/images/scraper.gif</icon>
-	    	<skip-authentication>false</skip-authentication>
         </menu>
     </menus>
 </component>

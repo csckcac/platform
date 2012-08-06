@@ -81,6 +81,7 @@
                             !org.wso2.carbon.dataservices.task.internal,
                             org.wso2.carbon.dataservices.task.*
                         </Export-Package>
+                        <DynamicImport-Package>*</DynamicImport-Package>
                         <Import-Package>
                             !org.wso2.carbon.dataservices.task.*,
                             org.apache.axis2.*; version="${axis2.osgi.version.range.data-services}",

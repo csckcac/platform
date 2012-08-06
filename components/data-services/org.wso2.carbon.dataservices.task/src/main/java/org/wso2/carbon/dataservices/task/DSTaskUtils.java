@@ -25,7 +25,6 @@ import org.apache.axis2.description.AxisService;
 import org.apache.axis2.description.Parameter;
 import org.apache.axis2.description.WSDL2Constants;
 import org.apache.axis2.engine.AxisConfiguration;
-import org.w3c.dom.*;
 import org.wso2.carbon.core.multitenancy.SuperTenantCarbonContext;
 import org.wso2.carbon.core.multitenancy.utils.TenantAxisUtils;
 import org.wso2.carbon.ntask.core.TaskInfo;
@@ -33,15 +32,8 @@ import org.wso2.carbon.ntask.core.TaskInfo.TriggerInfo;
 import org.wso2.carbon.ntask.core.internal.TasksDSComponent;
 import org.wso2.carbon.ntask.solutions.webservice.WebServiceCallTask;
 import org.wso2.carbon.utils.multitenancy.MultitenantConstants;
-import org.xml.sax.InputSource;
-import org.xml.sax.SAXException;
 
 import javax.xml.namespace.QName;
-import javax.xml.parsers.DocumentBuilder;
-import javax.xml.parsers.DocumentBuilderFactory;
-import javax.xml.parsers.ParserConfigurationException;
-import java.io.IOException;
-import java.io.StringReader;
 import java.util.*;
 
 /**

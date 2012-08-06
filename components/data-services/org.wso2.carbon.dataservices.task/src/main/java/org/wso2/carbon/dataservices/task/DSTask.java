@@ -18,17 +18,11 @@
  */
 package org.wso2.carbon.dataservices.task;
 
-import org.apache.axis2.AxisFault;
-import org.apache.axis2.context.ConfigurationContext;
 import org.apache.axis2.description.AxisService;
-import org.apache.axis2.engine.AxisConfiguration;
 import org.apache.commons.logging.Log;
 import org.apache.commons.logging.LogFactory;
-import org.wso2.carbon.core.multitenancy.utils.TenantAxisUtils;
 import org.wso2.carbon.ntask.core.TaskInfo;
-import org.wso2.carbon.ntask.core.internal.TasksDSComponent;
 import org.wso2.carbon.ntask.solutions.webservice.WebServiceCallTask;
-import org.wso2.carbon.utils.multitenancy.MultitenantConstants;
 
 /**
  * This class represents the data services scheduled tasks functionality.
@@ -59,7 +53,7 @@ public class DSTask extends WebServiceCallTask {
 		}
 		int tid = Integer.parseInt(tidProp);
 		AxisService axisService = DSTaskUtils.lookupAxisService(tid, serviceName);
-    	if (axisService == null) {
+    	if (axisService == null || !axisService.isActive()) {
     		return false;
     	}
     	String httpEPR = DSTaskUtils.extractHTTPEPR(axisService);

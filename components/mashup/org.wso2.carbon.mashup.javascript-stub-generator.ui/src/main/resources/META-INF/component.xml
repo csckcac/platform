@@ -28,7 +28,6 @@
             <order>25</order>
             <style-class>tools</style-class>
             <icon>../js_stub_generator/images/stub-generator.gif</icon>
-	        <skip-authentication>false</skip-authentication>
         </menu>
     </menus>
 </component>

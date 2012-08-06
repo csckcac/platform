@@ -25,6 +25,26 @@
         </packages>
         <classes>
             <class name="org.wso2.carbon.registry.reporting.test.ReportingTestCase"/>
+            <!--<class name="org.wso2.carbon.registry.app.test.AtomFeedTestCase"/>-->
+            <!--<class name="org.wso2.carbon.registry.app.test.CommentTestCase"/>-->
+            <!--<class name="org.wso2.carbon.registry.app.test.ContinuousOperationsTestCase"/>-->
+            <!--<class name="org.wso2.carbon.registry.app.test.RatingTestCase"/>-->
+            <!--<class name="org.wso2.carbon.registry.app.test.RenameTestCase"/>-->
+            <!--<class name="org.wso2.carbon.registry.app.test.ResourceHandlingTestCase"/>-->
+            <!--<class name="org.wso2.carbon.registry.app.test.TestAssociationTestCase"/>-->
+            <!--<class name="org.wso2.carbon.registry.app.test.TestCopyTestCase"/>-->
+            <!--<class name="org.wso2.carbon.registry.app.test.TestMoveTestCase"/>-->
+            <!--<class name="org.wso2.carbon.registry.app.test.TestPathsTestCase"/>-->
+            <!--<class name="org.wso2.carbon.registry.app.test.TestResourcesTestCase"/>-->
+            <!--<class name="org.wso2.carbon.registry.app.test.TestTaggingTestCase"/>-->
+            <!--<class name="org.wso2.carbon.registry.app.test.VersionHandlingTestCase"/>-->
+            <!--<class name="org.wso2.carbon.registry.app.test.WsdlImportTestCase"/>-->
+            <!--<class name="org.wso2.carbon.registry.app.test.PropertiesTestCase"/>-->
+            <!--<class name="org.wso2.carbon.registry.app.test.ContentStreamTestCase"/>-->
+
+            <class name="org.wso2.carbon.registry.app.test.FileSystemImportExportTestCase"/>
+            <!--<class name="org.wso2.carbon.registry.app.test.TestQueryTestCase"/>-->
+
         </classes>
     </test>
 </suite>

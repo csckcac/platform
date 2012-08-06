@@ -258,7 +258,7 @@
                             <tr>
                                 <td class="buttonRow" colspan="2">
                                     <input type="button" onclick=doSubmit('<%=stage%>') value='Promote' class='btn btn-primary'/>
-                                    <input type="button" onclick="location.href='deploy_to_stage.jag?applicationKey=<%=applicationKey%>&applicationSvnLocation=<%=appInfo.repoLink%>&stageName=<%=stage%>'" value='Deploy to <%=stage%>' class='btn btn-primary'/>
+                                    <input type="button" onclick="location.href='directly_deploy.jag?applicationKey=<%=applicationKey%>&stageName=<%=stage%>'" value='Deploy to <%=stage%>' class='btn btn-primary'/>
                                 </td>
                             </tr>
                         </table>

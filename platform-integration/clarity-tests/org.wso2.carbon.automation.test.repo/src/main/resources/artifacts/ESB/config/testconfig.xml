@@ -780,19 +780,21 @@
         </products>
     </scenario>
 
-    <scenario testName="org.wso2.automation.common.test.dss.service.OutputMappingAsAttributeDataServiceTest">
-            <products>
-                <product name="DSS">
-                    <artifacts userId="3">
-                        <artifact name="OutputMappingAttributeDataService.dbs" type="dbs" location="rdbms/MySql">
-                            <dependency name="CreateTables.sql" dependencyType="sql"
-                                        location="sql/MySql"/>
-                            <dependency name="Offices.sql" dependencyType="sql" location="sql/MySql"/>
-                        </artifact>
-                    </artifacts>
-                </product>
-            </products>
-        </scenario>
+    <scenario
+            testName="org.wso2.automation.common.test.dss.service.OutputMappingAsAttributeDataServiceTest">
+        <products>
+            <product name="DSS">
+                <artifacts userId="3">
+                    <artifact name="OutputMappingAttributeDataService.dbs" type="dbs"
+                              location="rdbms/MySql">
+                        <dependency name="CreateTables.sql" dependencyType="sql"
+                                    location="sql/MySql"/>
+                        <dependency name="Offices.sql" dependencyType="sql" location="sql/MySql"/>
+                    </artifact>
+                </artifacts>
+            </product>
+        </products>
+    </scenario>
 
     <scenario testName="org.wso2.automation.common.test.esb.mediators.test.MediatorTest">
         <products>
@@ -860,7 +862,7 @@
     </scenario>
 
 
-<!--    <scenario testName="org.wso2.carbon.mediator.test.log.LogMediatorLevelTest">
+    <!--    <scenario testName="org.wso2.carbon.mediator.test.log.LogMediatorLevelTest">
         <products>
             <product name="AXIS2">
                 <artifacts userId="2">
@@ -891,7 +893,6 @@
             </product>
         </products>
     </scenario>
-
 
 
     <scenario testName="org.wso2.carbon.mediator.test.send.SendMediatorTestCase">
@@ -925,28 +926,24 @@
     </scenario>
 
 
+    <scenario testName="org.wso2.carbon.mediator.test.CoreTests.FuncCallWithoutParams2">
+        <products>
+            <product name="AXIS2">
+                <artifacts userId="3">
+                    <artifact name="SimpleStockQuoteService.aar" type="aar">
+                    </artifact>
+                </artifacts>
+            </product>
 
 
+            <product name="ESB">
+                <artifacts userId="3">
+                    <artifact name="coretest" type="synapseconfig">
+                    </artifact>
+                </artifacts>
+            </product>
 
-<scenario testName="org.wso2.carbon.mediator.test.CoreTests.FuncCallWithoutParams2">
-<products>
-    <product name="AXIS2">
-        <artifacts userId="3">
-            <artifact name="SimpleStockQuoteService.aar" type="aar">
-            </artifact>
-        </artifacts>
-    </product>
+        </products>
+    </scenario>
 
-
-    <product name="ESB">
-        <artifacts userId="3">
-            <artifact name="coretest" type="synapseconfig">
-            </artifact>
-        </artifacts>
-    </product>
-
-</products>
-</scenario>
-
-        </scenarios>
-        </scenarios>
+</scenarios>

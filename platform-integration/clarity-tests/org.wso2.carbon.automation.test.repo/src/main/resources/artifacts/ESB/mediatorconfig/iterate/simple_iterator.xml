@@ -17,7 +17,7 @@
 	</sequence>
 	<sequence name="iterateMessages">
 		<iterate id="iterate1" expression="//m0:getQuote/m0:request"
-			preservePayload="true" attachPath="//m0:getQuote" xmlns:m0="http://services.samples">
+			preservePayload="true" attachPath="//m0:getQuote" xmlns:m0="http://services.samples" >
 			<target>
 				<sequence>
 					<send>

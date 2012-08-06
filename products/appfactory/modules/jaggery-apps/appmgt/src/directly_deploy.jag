@@ -9,12 +9,18 @@
         var version = '1.0';
         var revision = '0';
         var build = 'true';
+	var isDirectlyDeploy = getProperty('ApplicationDeployment.DeploymentStage.'+stageName+'.DirectlyDeploy');
 
+    if (isDirectlyDeploy=="true"){
         try{
             var deployedArtifact = invokeDeployToStage(applicationKey,revision,version,stageName,build);
             print(deployedArtifact +" was successfully deployed");
 	    }catch(e){
 	        print(e.message);
 	    }
+    }else {
+		print(deployedArtifact +" is not configured to direct deploy");
+
+    }
         include('includes/template_footer.jag');
-+%>
+%>

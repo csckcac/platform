@@ -53,6 +53,7 @@ import org.wso2.carbon.utils.multitenancy.MultitenantConstants;
 import org.wso2.carbon.utils.multitenancy.MultitenantUtils;
 import org.wso2.carbon.utils.xml.XMLPrettyPrinter;
 import org.wso2.securevault.SecretResolver;
+import org.wso2.securevault.SecretResolverFactory;
 
 import javax.naming.InitialContext;
 import javax.transaction.TransactionManager;
@@ -172,6 +173,8 @@ public class DBUtils {
         xsdSqlTypeMap.put("base64Binary", DBConstants.DataTypes.BINARY);
         xsdSqlTypeMap.put("binary", DBConstants.DataTypes.BINARY);
     }
+    
+    private static SecretResolver secretResolver;
 
     private static XMLOutputFactory xmlOutputFactory;
 
@@ -873,5 +876,14 @@ public class DBUtils {
         }
         return null;
     }
+    
+	public static synchronized String loadFromSecureVault(String alias) {
+		if (secretResolver == null) {
+		    secretResolver = SecretResolverFactory.create((OMElement) null, false);
+		    secretResolver.init(DataServicesDSComponent.
+		    		getSecretCallbackHandlerService().getSecretCallbackHandler());
+		}
+		return secretResolver.resolve(alias);
+	}
 
 }

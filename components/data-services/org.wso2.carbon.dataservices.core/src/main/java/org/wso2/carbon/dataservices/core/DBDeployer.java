@@ -51,12 +51,10 @@ import org.wso2.carbon.dataservices.core.engine.CallQuery.WithParam;
 import org.wso2.carbon.dataservices.core.internal.DataServicesDSComponent;
 import org.wso2.carbon.dataservices.core.jmx.DataServiceInstance;
 import org.wso2.carbon.dataservices.core.jmx.DataServiceInstanceMBean;
+import org.wso2.carbon.ndatasource.common.DataSourceConstants;
 import org.wso2.carbon.user.core.UserStoreException;
 import org.wso2.carbon.user.core.service.RealmService;
 import org.wso2.carbon.utils.CarbonUtils;
-import org.wso2.securevault.SecretResolver;
-import org.wso2.securevault.SecretResolverFactory;
-import org.wso2.securevault.SecurityConstants;
 
 import javax.management.MBeanServer;
 import javax.management.ObjectName;
@@ -735,9 +733,8 @@ public class DBDeployer extends AbstractDeployer {
 			OMElement dbsElement = (new StAXOMBuilder(fis)).getDocumentElement();
 			dbsElement.build();
 
-            /*load password from secure valut
-             */
-            this.secureLoadPassword(dbsElement);
+			/* apply secure vault information in resolving the aliases to decrypted values */
+            this.secureVaultResolve(dbsElement);
 
 			/* create the data service object from dbs */
 			DataService dataService = DataServiceFactory.createDataService(
@@ -1100,34 +1097,17 @@ public class DBDeployer extends AbstractDeployer {
 		return axisService;
 	}
 
-    private void secureLoadPassword(OMElement dbsElement) {
-        Iterator itr2 = dbsElement.getChildrenWithName(new QName("config"));
-        //Iterate over <config> elements
-        while (itr2.hasNext()) {
-            OMElement element = (OMElement) itr2.next();
-            Iterator itrElement = element.getChildElements();
-            while (itrElement.hasNext()) {
-                OMElement tmpElement = (OMElement) itrElement.next();
-                String secureAtrributeValue = tmpElement.getAttributeValue(
-                        new QName(SecurityConstants.SECURE_VAULT_NS,
-                                  SecurityConstants.SECURE_VAULT_ALIAS));
-                if (secureAtrributeValue != null) {
-                    String password = loadFromSecureVault(element, secureAtrributeValue);
-                    if (password != null) {
-                        tmpElement.setText(password);
-                    }
-                }
-            }
-
-        }
+    @SuppressWarnings("unchecked")
+	private void secureVaultResolve(OMElement dbsElement) {
+    	String secretAliasAttr = dbsElement.getAttributeValue(new QName(DataSourceConstants.SECURE_VAULT_NS,
+                        		DataSourceConstants.SECRET_ALIAS_ATTR_NAME));
+    	if (secretAliasAttr != null) {
+    		dbsElement.setText(DBUtils.loadFromSecureVault(secretAliasAttr));
+    	}
+    	Iterator<OMElement> childEls = (Iterator<OMElement>) dbsElement.getChildElements();
+    	while (childEls.hasNext()) {
+    		this.secureVaultResolve(childEls.next());
+    	}
     }
-
-    private static synchronized String loadFromSecureVault(OMElement dbsElement, String alias) {
-        SecretResolver secretResolver = SecretResolverFactory.create(dbsElement,false);
-        secretResolver.init(DataServicesDSComponent.getSecretCallbackHandlerService().getSecretCallbackHandler());
-        if (secretResolver != null && secretResolver.isInitialized() && secretResolver.isTokenProtected(alias)) {
-            return secretResolver.resolve(alias);
-        }
-        return null;
-    }
+    
 }

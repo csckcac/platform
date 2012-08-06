@@ -28,7 +28,6 @@
             <order>30</order>
             <style-class>tools</style-class>
             <icon>../wsdl_validator/images/wsdlValidate.gif</icon>
-            <skip-authentication></skip-authentication>
         </menu>
     </menus>
 </component>

@@ -24,7 +24,7 @@
 <script type="text/javascript" src="global-params.js"></script>
 <script type="text/javascript" src="dscommon.js"></script>
 <%@ taglib prefix="fmt" uri="http://java.sun.com/jsp/jstl/fmt"%>
-<fmt:bundle basename="org.wso2.carbon.datasource.ui.i18n.Resources">
+<fmt:bundle basename="org.wso2.carbon.ndatasource.ui.i18n.Resources">
 	<%
 		NDataSourceAdminServiceClient client;
 		String name = "";

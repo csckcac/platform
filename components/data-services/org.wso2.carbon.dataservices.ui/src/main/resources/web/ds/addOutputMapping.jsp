@@ -535,13 +535,13 @@
                         style="<%=datasourceType.equals("column") ? "" : "display:none"%>">
                         <% if (isUseColomnNumbers) { %>
                         <td class="leftCol-med"><fmt:message key="dataservice.datasource.column.number"/></td>
-                        <td><input value="<%=datasourceValue%>" id="datasourceValue"
-                                   name="datasourceValue"
+                        <td><input value="<%=datasourceValue%>" id="datasourceValue1"
+                                   name="datasourceValue1"
                                    size="30" type="text"></td>
                         <% } else { %>
                         <td class="leftCol-med"><fmt:message key="dataservice.datasource.column.name"/></td>
-                        <td><input value="<%=datasourceValue%>" id="datasourceValue"
-                                   name="datasourceValue"
+                        <td><input value="<%=datasourceValue%>" id="datasourceValue1"
+                                   name="datasourceValue1"
                                    size="30" type="text"></td>
                         <% }%>
                     </tr>
@@ -549,8 +549,8 @@
                         style="<%=datasourceType.equals("query-param") ? "" : "display:none"%>">
                         <td class="leftCol-med"><fmt:message
                                 key="dataservice.datasource.query.param.name"/></td>
-                        <td><input value="<%=datasourceValue%>" id="datasourceValue"
-                                   name="datasourceValue"
+                        <td><input value="<%=datasourceValue%>" id="datasourceValue2"
+                                   name="datasourceValue2"
                                    size="30" type="text"></td>
                     </tr>
                     <tr>

@@ -971,7 +971,7 @@
             String namespace = "";
             String arrayName = "";
 
-            if (element.getRequiredRoles() != null) {
+            if (element.getRequiredRoles() != null && element.getRequiredRoles().trim().length() > 0) {
                 roles = element.getRequiredRoles();
             } else {
                 roles = "N/A";
@@ -1052,7 +1052,8 @@
             String xportName = "";
             String xportType = "";
             String arrayName = "";
-            if (attribute.getRequiredRoles() != null) {
+            if (attribute.getRequiredRoles() != null && 
+            		attribute.getRequiredRoles().trim().length() > 0) {
                 roles = attribute.getRequiredRoles();
             } else {
                 roles = "N/A";
@@ -1111,7 +1112,8 @@
             RDFResource resource = (RDFResource) itrResources.next();
             String roles = "";
             String xType = "";
-            if (resource.getRequiredRoles() != null) {
+            if (resource.getRequiredRoles() != null && 
+            		resource.getRequiredRoles().trim().length() > 0) {
                 roles = resource.getRequiredRoles();
             } else {
                 roles = "N/A";
@@ -1164,7 +1166,7 @@
         ComplexElement complexElement = (ComplexElement) itrComplexElements.next();
         String elementNameSpace = "";
         String arrayName = "";
-        if (complexElement.getNamespace() != null) {
+        if (complexElement.getNamespace() != null && complexElement.getNamespace().trim().length() > 0) {
             elementNameSpace = complexElement.getNamespace();
         } else {
             elementNameSpace = "N/A";
@@ -1212,7 +1214,8 @@
     while (itrCallQueries.hasNext()) {
         CallQuery callQuery = (CallQuery) itrCallQueries.next();
         String roles = "";
-        if (callQuery.getRequiredRoles() != null) {
+        if (callQuery.getRequiredRoles() != null && 
+        		callQuery.getRequiredRoles().trim().length() > 0) {
             roles = callQuery.getRequiredRoles();
         } else {
             roles = "N/A";

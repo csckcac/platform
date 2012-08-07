@@ -188,7 +188,11 @@
             .getParameter("txtDataServiceComplexElementNamespace");
     String dataServiceResourceName = request.getParameter("txtDataServiceResourceName");
     String datasourceType = request.getParameter("datasourceType");
-    String dataSourceValue = request.getParameter("datasourceValue");
+    String dataSourceValue = request.getParameter("datasourceValue1");
+    /* this is to handle both column and query-param values */
+    if (dataSourceValue == null || "".equals(dataSourceValue)) {
+    	dataSourceValue = request.getParameter("datasourceValue2");
+    }
     String elementNamespace = request.getParameter("txtDataServiceElementNamespace");
     String rdfRefURI = request.getParameter("txtrdfRefURI");
     String selectedQuery = request.getParameter("cmbDataServiceQueryId");

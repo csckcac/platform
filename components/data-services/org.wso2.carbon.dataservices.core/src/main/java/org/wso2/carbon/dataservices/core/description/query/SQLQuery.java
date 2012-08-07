@@ -1164,6 +1164,20 @@ public class SQLQuery extends Query implements BatchRequestParticipant {
                     }
                     paramValue = this.processSQLArray(dataArray, paramValue);
                     break;
+                case Types.NUMERIC:
+               	 bigDecimal = rs.getBigDecimal(i);
+                    if (bigDecimal != null) {
+                        value = ConverterUtil.convertToString(bigDecimal);
+                    } else {
+                        value = null;
+                    }
+                    paramValue = new ParamValue(value);
+                    break;
+               case Types.BIGINT:
+               	value = ConverterUtil.convertToString(rs.getLong(i));
+                   paramValue = new ParamValue(value);
+                   break;
+              	
                 /* handle all other types as strings */
                 default:
                     value = rs.getString(i);
@@ -2094,6 +2108,30 @@ public class SQLQuery extends Query implements BatchRequestParticipant {
                     this.processSQLArray(dataArray, paramValue);
                 }
                 return paramValue;
+            } else if(type.equals(DBConstants.DataTypes.NUMERIC)){
+            	elementValue = cs.getBigDecimal(ordinal);
+            	return new ParamValue(elementValue == null ? null : 
+            		ConverterUtil.convertToString((BigDecimal)elementValue));
+            } else if(type.equals(DBConstants.DataTypes.BIT)){
+            	elementValue = cs.getBoolean(ordinal);
+            	return new ParamValue(elementValue == null ? null : 
+            		ConverterUtil.convertToString((Boolean)elementValue));
+            } else if(type.equals(DBConstants.DataTypes.TINYINT)){
+            	elementValue = cs.getByte(ordinal);
+            	return new ParamValue(elementValue == null ? null : 
+            		ConverterUtil.convertToString((Byte)elementValue));
+            } else if(type.equals(DBConstants.DataTypes.SMALLINT)){
+            	elementValue = cs.getShort(ordinal);
+            	return new ParamValue(elementValue == null ? null : 
+            		ConverterUtil.convertToString((Short)elementValue));
+            } else if(type.equals(DBConstants.DataTypes.REAL)){
+            	elementValue = cs.getFloat(ordinal);
+            	return new ParamValue(elementValue == null ? null : 
+            		ConverterUtil.convertToString((Float)elementValue));
+            } else if(type.equals(DBConstants.DataTypes.BINARY)){
+            	elementValue = cs.getBlob(ordinal);
+                return new ParamValue(elementValue == null ? null :
+                	this.getBase64StringFromInputStream(((Blob)elementValue).getBinaryStream()));
             } else {
                 throw new DataServiceFault("Unsupported data type: " + type);
             }

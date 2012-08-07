@@ -15,4 +15,5 @@ euca-authorize default -P tcp -p 9765 -s 0.0.0.0/0
 euca-authorize default -P tcp -p 9443 -s 0.0.0.0/0
 euca-authorize default -P tcp -p 9444 -s 0.0.0.0/0
 euca-authorize default -P tcp -p 9445 -s 0.0.0.0/0
+euca-authorize default -P tcp -p 9330 -s 0.0.0.0/0
 euca-authorize default -P icmp -t -1:-1

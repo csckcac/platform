@@ -1,0 +1,22 @@
+Samples : mashup samples
+===================
+
+Introduction
+============
+
+'YahooGeoCode' mashup service wraps with the "http://developer.yahoo.com/maps/rest/V1/geocode.html" Yahoo! Maps Web Services - Geocoding API. It returns a specific latitude and longitude for given an address 
+
+Building the Service
+====================
+
+1. Use "ant" command in the CARBON_HOME/samples/mashupSamples/ to deploy them.
+2. This will copy directories in to the 
+<CARBON_HOME>/repository/deployment/server/jsservices/admin directory. If you start AppServer, those services will be
+available as a mashup services (jsservices).
+
+Running the client
+==================
+
+Before using the geocode service, register for a Yahoo API Key [1] and use it to provision the service (write-once only).
+[1] http://developer.yahoo.com/wsregapp/index.php.
+For sample purposes (though it kind of defeats the exercise) you can use ours: "rPJmz.HV34Hn654ySbBEOJf2i4nuae6LqGKX5EmrN30Q9aTeabb3vwThv2jRDN.rf3aAIw--".

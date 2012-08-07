@@ -30,35 +30,55 @@
   <target name="build-all">
         <echo message="Copying the mashup samples repository ${mashupSamples}"/>
 
-		<copy toDir="${repo.location}/${repo.services}">
-			<fileset dir="${mashupSamples}/digit2image"/>
+		<copy toDir="${repo.location}/${repo.services}" >
+			<fileset dir="${mashupSamples}/digit2image">
+			<exclude name="README"/>
+			</fileset>
 		</copy>
 		<copy toDir="${repo.location}/${repo.services}">
-			<fileset dir="${mashupSamples}/exchangeRate"/>
+			<fileset dir="${mashupSamples}/exchangeRate">
+			<exclude name="README"/>
+			</fileset>
 		</copy>
 		<copy toDir="${repo.location}/${repo.services}">
-			<fileset dir="${mashupSamples}/storexml"/>
+			<fileset dir="${mashupSamples}/storexml">
+			<exclude name="README"/>
+			</fileset>
 		</copy>
 		<copy toDir="${repo.location}/${repo.services}">
-			<fileset dir="${mashupSamples}/gmapsAPIKey"/>
+			<fileset dir="${mashupSamples}/gmapsAPIKey">
+			<exclude name="README"/>
+			</fileset>
 		</copy>
 		<copy toDir="${repo.location}/${repo.services}">
-			<fileset dir="${mashupSamples}/sudoku"/>
+			<fileset dir="${mashupSamples}/sudoku">
+			<exclude name="README"/>
+			</fileset>
 		</copy>
 		<copy toDir="${repo.location}/${repo.services}">
-			<fileset dir="${mashupSamples}/tomatoTube"/>
+			<fileset dir="${mashupSamples}/tomatoTube">
+			<exclude name="README"/>
+			</fileset>
 		</copy>
 		<copy toDir="${repo.location}/${repo.services}">
-			<fileset dir="${mashupSamples}/TwitterMap"/>
+			<fileset dir="${mashupSamples}/TwitterMap">
+			<exclude name="README"/>
+			</fileset>
 		</copy>
 		<copy toDir="${repo.location}/${repo.services}">
-			<fileset dir="${mashupSamples}/upgradeChecker"/>
+			<fileset dir="${mashupSamples}/upgradeChecker">
+			<exclude name="README"/>
+			</fileset>
 		</copy>
 				<copy toDir="${repo.location}/${repo.services}">
-			<fileset dir="${mashupSamples}/version"/>
+			<fileset dir="${mashupSamples}/version">
+			<exclude name="README"/>
+			</fileset>
 		</copy>
 		<copy toDir="${repo.location}/${repo.services}">
-			<fileset dir="${mashupSamples}/yahooGeoCode"/>
+			<fileset dir="${mashupSamples}/yahooGeoCode">
+			<exclude name="README"/>
+			</fileset>
 		</copy>
 		
     </target>

@@ -1,0 +1,43 @@
+Sample : Jagger Documentation API
+===================
+
+Introduction
+============
+
+This contains all jaggery API/ features. Each feature will have own try it.
+
+jaggery api coverage 
+ application
+ collection
+ entry
+ feed
+ file
+ fileupload
+ i18n
+ include
+ includeonce
+ jagconf
+ jaggeryparser
+ json
+ log
+ metadatastore 
+ oauth
+ parse
+ print
+ require
+ resource
+ response
+ sender
+ session
+ stringify
+ trace
+ urimatcher
+ ws
+ wsstub
+ xhr
+
+
+
+
+
+

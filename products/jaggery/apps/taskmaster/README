@@ -1,0 +1,13 @@
+Sample : TaskMaster
+===================
+
+Introduction
+============
+
+The TaskMaster is a task manager app which makes use of the session in Jaggery. 
+The tasks are saved and can be viewed via the main page.
+
+
+
+
+

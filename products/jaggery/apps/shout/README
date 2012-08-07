@@ -1,0 +1,12 @@
+Sample : Shout
+===================
+
+Introduction
+============
+Shout is using twitter API. Shout! is an app that will enable users to view 3 major social feeds and publish to all three of them using the one client. 
+Shout! requires the user to authenticate and approve the app before being able to read / publish to their feeds.
+
+
+
+
+

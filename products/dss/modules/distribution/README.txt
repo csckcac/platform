@@ -16,48 +16,52 @@ Key Features
 ------------
 
 * Support for large XML outputs
-* Content Filtering based on User's role
-* Support for named parameters
-* Ability to configure schema type for output elements
-* Mixing multiple data sources in nested queries
+* Content Filtering Support
 * Distributed transaction support
 * Oracle Ref Cursor support
 * Support for multiple data source types
 * Clustering support for High Availability and High Scalability
-* Full support for WS-Security, WS-Trust, WS-Policy and WS-Secure Conversation and XKMS
 * JMX and Web interface based monitoring and management
 * WS-* and REST support
 * Data validations
+* UDT (User Defined Type) Support
+* Complex Results
+* Auto Generated Keys Support
+* Boxcarring Support
+* Batch Request Support
+* Scheduled Tasks
+* DB -> DS Generation
+* Database Explorer
+* Data as a Service Features - DSS Stratos Service
+    * Cassandra Integration
+    * RDS Provisioning
 
 New Features In This Release
 ----------------------------
-1.  UDT (User Defined Type) Support
-2.  Complex Results
-3.  Auto Generated Keys Support
-4.  Distributed Transactions
-5.  Improved Boxcarring Support
-6.  Improved Batch Request Support
-7.  Scheduled Tasks
-8.  Registry Integration for Excel,CSV,XSLT
-9.  Web Scraping Support
-10. Multiple SQL Dialect Support
-11. DB -> DS Generation
-12. Data Service Query Improvements
-13. Service Group/Hierarchy Support
-14. Database Explorer
-15. Data as a Service Features - DSS Stratos Service
-        * Cassandra Integration
-        * RDS Provisioning
+
+* Datasource Component Improvements
+  - Use of Tomcat JDBC Pool Connection Pooling
+  - Support for External Data Source Implementations
+  - New Extensible Global Data Source Configurations
+* SQL Parser for Spreadsheets
+  - Supports Excel / Google Spreadsheets
+  - Full Read/Write query support
+* Dynamic Database User Authentication
+* Carbon Secure Vault Integration
+* Scheduled Task Improvements
+  - Supports Java class implementations
+  - API for Calling Data Services Directly
+  - Transaction Support
 
 
 Installation & Running
 ----------------------
-1. extract the downloaded zip file
+1. Extract the downloaded zip file
 2. Run the wso2server.sh or wso2server.bat file in the bin directory
 3. Once the server starts, point your Web browser to
    https://localhost:9443/carbon/
 
-For more details, see the Installation Guide
+For more details, see the Installation Guide.
 
 System Requirements
 -------------------
@@ -70,7 +74,7 @@ System Requirements
      level in Internet Explorer 6.x.
 
 For more details see
-http://wso2.org/wiki/display/carbon/System+Requirements
+http://docs.wso2.org/wiki/display/Carbon400/Installation+Prerequisites
 
 Known Issues
 ------------
@@ -97,11 +101,11 @@ Data Services Server Binary Distribution Directory Structure
         	|   |- data <folder>
         	|   |- database <folder>
         	|   |- deployment <folder>
-        	|   |- lib <folder>
         	|   |- logs <folder>
         	|   |- resources <folder>
         	|       |- security <folder>
         	|   |- tenants <folder>
+		|- resources <folder>
                 |- samples <folder>
 		|- tmp <folder>
 		|- INSTALL.txt <file> 
@@ -223,7 +227,7 @@ Bouncycastle     : http://www.bouncycastle.org/
 
 
 For further details, see the WSO2 Carbon documentation at
-http://wso2.org/wiki/display/carbon/3.0
+http://wso2.org/project/data-services/3.0.0/docs/
 
 ---------------------------------------------------------------------------
- Copyright 2011 WSO2 Inc.
+ Copyright 2012 WSO2 Inc.

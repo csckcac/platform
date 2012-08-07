@@ -108,7 +108,7 @@ System Requirements
 
 
 For more details see
-http://wso2.org/wiki/display/carbon/System+Requirements
+http://docs.wso2.org/wiki/display/Carbon400/Installation+Prerequisites
 
 (2) Running Samples
 -------------------

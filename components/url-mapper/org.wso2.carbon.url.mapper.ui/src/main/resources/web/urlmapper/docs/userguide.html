@@ -25,39 +25,55 @@
 
     <body>
         <h1>URL Mappings for webapps - User Guide</h1>
-        <p>This page contains information on how to shorten your url of your hosted web application in our app server.
-            If you deploy a web
-            application with us, to access your web application, you need to enter:
-            <b>https://ip:port/webappname</b> in your browser. If webapp is deployed in a tenant, then:
-            <b>https://ip:port/webapps/t/tenant_domain/webappname</b></p>
-        <p>But, now we provide a way to access your webapp with a short url like
-            <span style="font-weight: bold;"> https://appid.wso2.com:port/ </span>
-            in any case whether you are having tenant or not. All what you need to do is to create
-            a appid through your webapp information's page.</p>
-        <p>So, simply you are going to own your domain for your hosted web application</p>
+        <p>This page contains the information on how to access your hosted web application
+            through a specific domain.
+            In App server, the web application of admin can be accessible through <b>http://localhost:port/webappname</b>
+             and web application of tenant can be accessible through <b>http://localhost:port/webapps/t/tenant_domain/webappname</b>.</p>
+        <p>Instead of going through this <b>long URL</b> process, we provide a way to access your
+            hosted web application with a short url like
+            <span style="font-weight: bold;"> https://appid.localhost:port/ </span> in standalone products.
+            If your App Server is fronted with load balancher, then <b>https://appid.localhost</b> can be used.
+           </p>
+        <p>Eventually, your shorten URL will be mapped as below.</p>
         <pre>
-        <b>https://ip:port/webapps/t/tenant_domain/webappname ==> https://appid.wso2.com:port</b>
+        <b>http://localhost:port/webapps/t/tenant_domain/webappname ==> https://appid.localhost:port</b>
         </pre>
         <p><img alt="" src="images/web_info.png" /></p>
-            <p>Figure 1: urlmappings in webapp information page.</p>
-        <p>Once the webapp information page appears, when u click on <img alt="" src="images/url.png" />
-            will have the options to control over your url mappings such as add, edit, delete.</p>
+            <p>Figure 1: URLmappings in web application information page.</p>
+        <p>When you click on <img alt="" src="images/url.png" /> in web application dashboard,
+            you can get the URL mappings page. You can add the mappings here.</p>
         <p><img alt="" src="images/add.png" /></p>
-        <p>Figure 2: adding a urlmapping to webapp</p>
-        <p>Once you have created url mapping for your webapp for example :- <b>appid = "exampleapp"</b>,
-            then your domain will be <b>"exampleapp.wso2.com"</b>. So, regardless of whether you are a tenant or not,
-            you can access your web application by entering the url <b>"https://exampleapp.wso2.com:port"</b>.
-            The following image depicts how your web application is accessed through the short url.</p>
-        <p>Also, to access your own domain, you need to have a cname.
-            In case cname is not available with you at the moment,
-            then you can use /etc/hosts to put your domain entries pointing to your local ip. This can be applicable
-            only for testing purposes.</p>
+        <p>Figure 2: adding a URLmapping to webapp</p>
+        <p>URL mappings page has the options to control over your URL mappings such as edit and delete.</p>
+        <p><img alt="" src="images/edit.png" /></p>
+        <p>Figure 3: control the URLmapping to webapp</p>
+        <p>Once you created URL mapping of a web application, let's take the mapping name as <b>"exampleapp"</b>,
+            then your domain will be <b>"exampleapp.localhost"</b> where the suffix "localhost" comes from 
+            CARBON_HOME/repository/conf/etc/url-mapping-config.xml. You can configure your own suffix
+            and URL mappings limit per web application in the configuration file above. By default
+            suffix is "localhost" and URL mappings limit is one.</p>
+            <p>
+            The following image depicts how your web application could accessed through your
+                own domain in a browser.</p>
         <p><img alt="" src="images/context.png"/></p>
-        <p>Figure 3: accessing web application with shorten url.</p>
-        <h1>Url Mappings for Services - User Guide</h1>
-        <p>You can follow the above procedure to access your "wsdl" with the short urls.</p>
+        <p>Figure 4: accessing web application with shorten url.</p>
+        <p>You have to create a cname to access your own domain.
+            In case cname is not available with you at the moment,
+            you can use /etc/hosts to put your domain entries by pointing to your local ip which
+            can only be applicable for testing purposes.</p>
+        <h1>URL Mappings for Services - User Guide</h1>
+        <p>If you create a URL mapping for a service through service dashboard as shown below, you 
+            can follow the same steps like web application to access your wsdls, tryit and rest calls with the 
+            short urls.</p>
+        <p><b>"http://servicetest.localhost:port?wsdl"</b> - to access wsdl of your service</p>
+        <p><b>"http://servicetest.localhost:port?tryit"</b> - to access tryit of your service</p>
+        <p><b>"http://servicetest.localhost:port/getQuote"</b> - to access rest call of your service</p>
         <p><img alt="" src="images/service_dash.png"/></p>
-        <p>Figure 4: URL mappings in services-dashboard</p>
-        <p>Then, you can access your wsdl using <b>https://appid.wso2.com:port/?wsdl</b></p>
+        <p>Figure 5: URL mappings in services-dashboard</p>
+        <h1>URL Mappings list view - User Guide</h1>
+        <p>Admin can view all the URL mappings through monitor --> <img alt="" src="images/url.png" />. Admin can
+            search by tenants to get URL mappings of particular tenant.</p>
+        <p><img alt="" src="images/list.png"/></p>
+        <p>Figure 6: List of All URL mappings (admin view).</p>
     </body>
 </html>

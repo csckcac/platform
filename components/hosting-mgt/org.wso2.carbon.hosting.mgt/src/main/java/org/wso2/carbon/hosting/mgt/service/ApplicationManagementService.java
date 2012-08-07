@@ -228,7 +228,7 @@ public class ApplicationManagementService extends AbstractAdmin{
             Store.tenantToPublicIpMap.put(tenantId, publicIp);
             log.info("Started Instance public ip is " + publicIp);
         }catch (Exception e){
-            String msg = "Error while calling auto scaler to start instance";
+            String msg = "Error while calling auto scaler to start instance. Reason :" + e.getMessage();
             log.error(msg);
         }
 

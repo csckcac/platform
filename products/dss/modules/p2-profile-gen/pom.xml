@@ -144,7 +144,7 @@
                                 <featureArtifactDef>org.wso2.carbon:org.wso2.carbon.cassandra.dataaccess.feature:${carbon.version}</featureArtifactDef> -->
 
                                 <!-- RSS Manager Feature -->
-                                <featureArtifactDef>org.wso2.carbon:org.wso2.carbon.rssmanager.feature:${carbon.version}</featureArtifactDef>
+                                <!--<featureArtifactDef>org.wso2.carbon:org.wso2.carbon.rssmanager.feature:${carbon.version}</featureArtifactDef>-->
 
 				<featureArtifactDef>org.wso2.carbon:org.wso2.carbon.deployment.synchronizer.server.feature:${carbon.version}</featureArtifactDef>
                                 <featureArtifactDef>org.wso2.carbon:org.wso2.carbon.deployment.synchronizer.subversion.feature:${carbon.version}</featureArtifactDef>
@@ -391,10 +391,10 @@
                                     <id>org.wso2.carbon.cassandra.dataaccess.feature.group</id>
                                     <version>${carbon.version}</version>
                                 </feature> -->
-                                <feature>
+                                <!--<feature>
                                     <id>org.wso2.carbon.rssmanager.feature.group</id>
                                     <version>${carbon.version}</version>
-				</feature>
+				</feature>-->
 
 				<feature>
 				    <id>org.wso2.carbon.deployment.synchronizer.server.feature.group</id>

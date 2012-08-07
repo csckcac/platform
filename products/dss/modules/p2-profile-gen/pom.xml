@@ -131,11 +131,6 @@
  
                                 <featureArtifactDef>org.wso2.dss:org.wso2.stratos.dss.dashboard.ui.feature:${stratos.version}</featureArtifactDef>
 
-				<!--adding bam data publisher for service stats-->
-                                <featureArtifactDef>org.wso2.carbon:org.wso2.carbon.bam.data.publisher.servicestats.feature:${carbon.version}</featureArtifactDef>
-
-				<featureArtifactDef>org.wso2.carbon:org.wso2.carbon.bam.lwevent.feature:${carbon.version}</featureArtifactDef> 
-            
                                 <featureArtifactDef>org.wso2.carbon:org.wso2.carbon.event.ui.feature:${carbon.version}</featureArtifactDef>
 
                                 <!-- Qpid features -->
@@ -371,17 +366,7 @@
                                     <id>org.wso2.carbon.jsscraper.feature.group</id>
                                     <version>${carbon.version}</version>
                                 </feature>
-                                <!-- bam data publisher -->
-                                 <feature>
-                                    <id>org.wso2.carbon.bam.data.publisher.servicestats.feature.group</id>
-                                    <version>${carbon.version}</version>
-                                </feature>
 
-				<feature>
-                                  <id>org.wso2.carbon.bam.lwevent.feature.group</id>
-                                  <version>${carbon.version}</version>
-                                </feature>
-                              
                                 <feature>
                                     <id>org.wso2.carbon.qpid.feature.group</id>
                                     <version>${carbon.version}</version>

@@ -871,6 +871,18 @@ public class SQLQuery extends Query implements BatchRequestParticipant {
         }
     }
 
+    private boolean isRSClosed(ResultSet rs) throws SQLException {
+    	try {
+    		return rs.isClosed();
+    	} catch (SQLException e) {
+			throw e;
+		} catch (Throwable e) {
+			/* in case they throw a method not found exception 
+			 * for the JDBC driver not supporting v4.0 features */
+			return false;
+		}
+    }
+    
     private void processStoredProcQuery(XMLStreamWriter xmlWriter,
                                         InternalParamCollection params, int queryLevel)
             throws DataServiceFault {
@@ -920,14 +932,14 @@ public class SQLQuery extends Query implements BatchRequestParticipant {
                     rs = this.getFirstRSOfStoredProc(stmt);
                 }
 
-                if (rs == null || rs.isClosed() || !rs.next()) {
+                if (rs == null || this.isRSClosed(rs) || !rs.next()) {
                     if (this.hasOutParams()) {
                         DataEntry outParamDataEntry = this.getDataEntryFromOutParams(stmt);
                         if (outParamDataEntry != null) {
                             this.writeResultEntry(xmlWriter, outParamDataEntry, params, queryLevel);
                         }
                     }
-                    if (rs != null && !rs.isClosed()) {
+                    if (rs != null && !this.isRSClosed(rs)) {
                         rs.close();
                     }
                 } else {

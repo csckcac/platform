@@ -1,18 +1,18 @@
-WSO2 AppServer ${appserver.version}
+WSO2 Application Server ${appserver.version}
 ---------------
 
 ${buildNumber}
 
-Welcome to the WSO2 AppServer ${appserver.version} release
+Welcome to the WSO2 Application Server ${appserver.version} release
 
-WSO2 AppServer is an Enterprise ready application server based on the award-winning WSO2 Carbon framework. Being the
+WSO2 Application Server is an Enterprise ready application server based on the award-winning WSO2 Carbon framework. Being the
 successor of the WSO2 Web Services Application Server(WSAS), WSO2 Application Server(AS) now supports
 web application deployment and management in addition to its award winning web services management capabilities.
 Coupled with WSO2 Carbon Authentication/Authorization feature, now users can manage their applications that ranges
-from web services, business processes to web applications in a unified manner within the AppServer management console
-itself. WSO2 AppServer uses Apache Tomcat, the widely used servlet container as its underlying web application contaner.
+from web services, business processes to web applications in a unified manner within the Application Server management console
+itself. WSO2 Application Server uses Apache Tomcat, the widely used servlet container as its underlying web application contaner.
 
-AppServer provides a comprehensive Web services server platform, using Axis2 as its Web services framework
+Application Server provides a comprehensive Web services server platform, using Axis2 as its Web services framework
 and provide many value additions on top of Axis2. It can expose services using both SOAP and REST models and supports
 a comprehensive set of WS-* specifications such as WS-Security, WS-Trust, WS-SecureConversation, WS-Reliable Messaging,
 WS-Addressing, WS-Policy, WS-SecurityPolicy, etc.
@@ -35,7 +35,7 @@ New Features In This Release
 Key Features
 ------------
 * Web Application deployment and management within the App Server
-* AppServer tooling - AppServer related artifacts can be easily generated using WSO2 Carbon Studio
+* Application Server tooling - Application Server related artifacts can be easily generated using WSO2 Carbon Studio
 * JAX-WS support - Deploy any JAX-WS annotated service and engage WS-* protocols through the management console.
 * JMX & Web interface based monitoring and management
 * WS-* & REST support
@@ -49,7 +49,7 @@ Key Features
 Issues Fixed in This Release
 ----------------------------
 
-* AppServer related components of the WSO2 Carbon Platform -
+* Application Server related components of the WSO2 Carbon Platform -
        https://wso2.org/jira/secure/IssueNavigator.jspa?mode=hide&requestId=${fixed.isssues.filter.id}
 
 Installation & Running
@@ -77,15 +77,15 @@ http://wso2.org/wiki/display/carbon/System+Requirements
 Known Issues in This Release
 ----------------------------
 
-* AppServer related components of the WSO2 Carbon Platform -
+* Application Server related components of the WSO2 Carbon Platform -
        https://wso2.org/jira/secure/IssueNavigator.jspa?mode=hide&requestId=${known.isssues.filter.id}
 
 Including External Dependencies
 --------------------------------
-For a complete guide on adding external dependencies to WSO2 AppServer & other carbon related products refer to the article:
+For a complete guide on adding external dependencies to WSO2 Application Server & other carbon related products refer to the article:
 http://wso2.org/library/knowledgebase/add-external-jar-libraries-wso2-carbon-based-products
 
-AppServer Binary Distribution Directory Structure
+Application Server Binary Distribution Directory Structure
 --------------------------------------------
 
     CARBON_HOME
@@ -119,7 +119,7 @@ AppServer Binary Distribution Directory Structure
       various supported databases
 
     - lib
-      Contains the basic set of libraries required to startup AppServer
+      Contains the basic set of libraries required to startup Application Server
       in standalone mode
 
     - repository
@@ -151,23 +151,23 @@ AppServer Binary Distribution Directory Structure
 
     - samples
       Contains some sample applications that demonstrate the functionality
-      and capabilities of WSO2 AppServer
+      and capabilities of WSO2 Application Server
 
     - tmp
       Used for storing temporary files, and is pointed to by the
       java.io.tmpdir System property
 
     - LICENSE.txt
-      Apache License 2.0 under which WSO2 AppServer is distributed.
+      Apache License 2.0 under which WSO2 Application Server is distributed.
 
     - README.txt
       This document.
 
     - INSTALL.txt
-      This document will contain information on installing WSO2 AppServer
+      This document will contain information on installing WSO2 Application Server
 
     - release-notes.html
-      Release information for WSO2 AppServer ${appserver.version}
+      Release information for WSO2 Application Server ${appserver.version}
 
 
 Training
@@ -190,7 +190,7 @@ development methodology and is provided by the very same engineers who build the
 
 For additional support information please refer to http://wso2.com/support/
 
-For more information on WSO2 AppServer, visit the WSO2 Oxygen Tank (http://wso2.org)
+For more information on WSO2 Application Server, visit the WSO2 Oxygen Tank (http://wso2.org)
 
 Crypto Notice
 -------------

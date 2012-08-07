@@ -322,7 +322,13 @@
             <outputDirectory>${pom.artifactId}-${pom.version}/repository/conf/</outputDirectory>
             <fileMode>644</fileMode>
         </file>
-
+	<!--copy scim-consumer-config.xml-->
+	<file>
+            <source>
+                ../p2-profile-gen/target/wso2carbon-core-${wso2carbon.version}/repository/conf/scim-consumer-config.xml
+            </source>
+            <outputDirectory>wso2is-${pom.version}/repository/conf</outputDirectory>
+        </file>
 
     </files>
 </assembly>

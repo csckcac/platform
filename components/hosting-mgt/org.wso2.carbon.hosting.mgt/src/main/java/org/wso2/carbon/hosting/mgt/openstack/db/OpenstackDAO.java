@@ -103,7 +103,7 @@ public class OpenstackDAO {
 				publicIp = rs.getString("address");
 			}
 		} catch (Exception e) {
-
+			logDBAccessException(e);
 		} finally {
 			doCleanupResources();
 		}

@@ -50,9 +50,9 @@
         <copy file="${basedir}/src/main/java/demo/jaxrs/client/add_order.xml" todir="${classes}/demo/jaxrs/client"/>
         <copy file="${basedir}/src/main/java/demo/jaxrs/client/update_order.json" todir="${classes}/demo/jaxrs/client"/>
         <copy file="${basedir}/src/main/java/demo/jaxrs/client/payment.json" todir="${classes}/demo/jaxrs/client"/>
-        <war destfile="${webapps}/${warName}" webxml="../web.xml">
+        <war destfile="${webapps}/${warName}" webxml="src/main/webapp/WEB-INF/web.xml">
             <classes dir="${classes}"/>
-            <fileset dir="../css"/>
+            <fileset file="src/main/webapp/servicelist.css"/>
             <lib dir="${lib}"/>
             <webinf dir="src/main/webapp/WEB-INF"
                     includes="cxf-servlet.xml">

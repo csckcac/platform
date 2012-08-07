@@ -73,6 +73,11 @@ public class NDataSourceHelper {
 		
 		if (request.getParameter("jndiname") != null && !request.getParameter("jndiname").equals("")) {
 			dataSourceMetaInfo.setJndiConfig(createJNDIConfig(request));
+		} else {
+			if (request.getParameter("useDataSourceFactory") != null || 
+					(request.getParameter("jndiProperties") != null && !request.getParameter("jndiProperties").equals(""))) {
+				handleException(bundle.getString("jndi.name.cannotfound.msg"));
+			}
 		}
 
 		DSXMLConfiguration dsXMLConfig = createDSXMLConfiguration(datasourceType, request);

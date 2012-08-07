@@ -80,7 +80,7 @@
 		<div id="middle">
 		<script type="text/javascript">
 			function    showSucessMessage(msg,myepr,inputVal) {
-				var failMsg = new RegExp("Failed to add URL Mapping.");
+				var failMsg = new RegExp("Failed to");
                 var hostPrefix = new RegExp("wso2.com");
                 msg += ": " + inputVal;
             	if (msg.match(failMsg)) //if match sucess 

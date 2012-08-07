@@ -170,11 +170,9 @@
 					}
 						}
 				%>
-				<tr><td>
+
 				<input type="hidden" id="pageNumber"
 										name="pageNumber" value="<%=pageNumber%>" />
-					</td></tr>				
-
 			</table>
 			   <carbon:paginator pageNumber="<%=pageNumber%>" numberOfPages="<%=numberOfPages%>"
                       page="url_mapper_view.jsp" pageNumberParameterName="pageNumber"

@@ -150,6 +150,22 @@ public class ZooKeeperAgent implements Watcher{
         }
     }
 
+    public void initTopicSubscriptionCoordination() throws CoordinationException {
+        try {
+            if (zk.exists(CoordinationConstants.TOPIC_SUBSCRIPTION_COORDINATION_PARENT,
+                    false) == null) {
+                zk.create(CoordinationConstants.TOPIC_SUBSCRIPTION_COORDINATION_PARENT,
+                        new byte[0],
+                        ZooDefs.Ids.OPEN_ACL_UNSAFE, CreateMode.PERSISTENT);
+            }
+
+        } catch (Exception e) {
+            String msg = "Error while creating Subscription coordination parent at " +
+                    CoordinationConstants.TOPIC_SUBSCRIPTION_COORDINATION_PARENT;
+            throw new CoordinationException(msg, e);
+        }
+    }
+
 
     public ZooKeeper getZooKeeper() {
         return zk;

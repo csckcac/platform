@@ -1,6 +1,12 @@
 package org.wso2.andes.server.cassandra;
 
-import com.google.common.util.concurrent.ThreadFactoryBuilder;
+import java.util.Iterator;
+import java.util.List;
+import java.util.Map;
+import java.util.concurrent.ExecutorService;
+import java.util.concurrent.Executors;
+import java.util.concurrent.ThreadPoolExecutor;
+
 import org.apache.commons.logging.Log;
 import org.apache.commons.logging.LogFactory;
 import org.wso2.andes.AMQException;
@@ -13,9 +19,6 @@ import org.wso2.andes.server.queue.QueueEntry;
 import org.wso2.andes.server.store.CassandraMessageStore;
 import org.wso2.andes.server.subscription.Subscription;
 import org.wso2.andes.server.subscription.SubscriptionImpl;
-
-import java.util.*;
-import java.util.concurrent.*;
 
 /**
  * <code>CassandraMessageFlusher</code> Handles the task of polling the user queues and flushing
@@ -71,7 +74,20 @@ public class CassandraMessageFlusher extends Thread{
             // 2) Send the batch to subscribers asynchronously.
             // 3) wait will all the acks came for a timeout period
             // 4) dequeue acked messages
-
+            
+            //This is to avoid the worker queue been full with too many pending tasks
+            // those pending tasks are best left in cassandra until we have some breathing room
+            int workqueueSize = ((ThreadPoolExecutor)executor).getQueue().size(); 
+            if(workqueueSize > 1000){
+                try {
+                    log.info("skipping content cassandra reading thread as flusher queue has "+ workqueueSize + " tasks");
+                    Thread.sleep(ClusterResourceHolder.getInstance().getClusterConfiguration().
+                                    getQueueWorkerInterval());
+                    continue; 
+                } catch (InterruptedException e) {
+                    e.printStackTrace();
+                }
+            }
             try {
 
                 if(resetOffset()) {
@@ -134,6 +150,7 @@ public class CassandraMessageFlusher extends Thread{
                             e.printStackTrace();
                         }
                     }
+                    messages.clear();
 
                 } else {
 

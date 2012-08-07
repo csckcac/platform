@@ -20,18 +20,9 @@
  */
 package org.wso2.andes.client.protocol;
 
-import java.io.IOException;
-import java.net.SocketAddress;
-import java.nio.ByteBuffer;
-import java.util.ArrayList;
-import java.util.Iterator;
-import java.util.Set;
-import java.util.concurrent.CopyOnWriteArraySet;
-import java.util.concurrent.CountDownLatch;
-import java.util.concurrent.ThreadFactory;
-import java.util.concurrent.TimeUnit;
-
 import org.apache.mina.filter.codec.ProtocolCodecException;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 import org.wso2.andes.AMQConnectionClosedException;
 import org.wso2.andes.AMQDisconnectedException;
 import org.wso2.andes.AMQException;
@@ -46,17 +37,7 @@ import org.wso2.andes.client.state.AMQStateManager;
 import org.wso2.andes.client.state.StateWaiter;
 import org.wso2.andes.client.state.listener.SpecificMethodFrameListener;
 import org.wso2.andes.codec.AMQCodecFactory;
-import org.wso2.andes.framing.AMQBody;
-import org.wso2.andes.framing.AMQDataBlock;
-import org.wso2.andes.framing.AMQFrame;
-import org.wso2.andes.framing.AMQMethodBody;
-import org.wso2.andes.framing.AMQShortString;
-import org.wso2.andes.framing.ConnectionCloseBody;
-import org.wso2.andes.framing.ConnectionCloseOkBody;
-import org.wso2.andes.framing.HeartbeatBody;
-import org.wso2.andes.framing.MethodRegistry;
-import org.wso2.andes.framing.ProtocolInitiation;
-import org.wso2.andes.framing.ProtocolVersion;
+import org.wso2.andes.framing.*;
 import org.wso2.andes.pool.Job;
 import org.wso2.andes.pool.ReferenceCountingExecutorService;
 import org.wso2.andes.protocol.AMQConstant;
@@ -67,8 +48,19 @@ import org.wso2.andes.thread.Threading;
 import org.wso2.andes.transport.Sender;
 import org.wso2.andes.transport.network.NetworkConnection;
 import org.wso2.andes.transport.network.NetworkTransport;
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
+
+import java.io.IOException;
+import java.net.SocketAddress;
+import java.nio.ByteBuffer;
+import java.util.ArrayList;
+import java.util.Iterator;
+import java.util.Set;
+import java.util.concurrent.CopyOnWriteArraySet;
+import java.util.concurrent.CountDownLatch;
+import java.util.concurrent.ThreadFactory;
+import java.util.concurrent.TimeUnit;
+import java.util.concurrent.locks.Lock;
+import java.util.concurrent.locks.ReentrantLock;
 
 /**
  * AMQProtocolHandler is the client side protocol handler for AMQP, it handles all protocol events received from the

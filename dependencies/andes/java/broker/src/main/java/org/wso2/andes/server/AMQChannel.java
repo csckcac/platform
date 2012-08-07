@@ -20,19 +20,47 @@
  */
 package org.wso2.andes.server;
 
+import java.util.ArrayList;
+import java.util.Collection;
+import java.util.HashMap;
+import java.util.LinkedHashMap;
+import java.util.List;
+import java.util.Map;
+import java.util.SortedSet;
+import java.util.TreeSet;
+import java.util.UUID;
+import java.util.concurrent.ConcurrentHashMap;
+import java.util.concurrent.ConcurrentMap;
+import java.util.concurrent.Semaphore;
+import java.util.concurrent.atomic.AtomicBoolean;
+import java.util.concurrent.atomic.AtomicInteger;
+import java.util.concurrent.atomic.AtomicLong;
+
 import org.apache.log4j.Logger;
+import org.mortbay.log.Log;
 import org.wso2.andes.AMQException;
 import org.wso2.andes.AMQSecurityException;
-import org.wso2.andes.framing.*;
+import org.wso2.andes.framing.AMQMethodBody;
+import org.wso2.andes.framing.AMQShortString;
+import org.wso2.andes.framing.BasicContentHeaderProperties;
+import org.wso2.andes.framing.ContentBody;
+import org.wso2.andes.framing.ContentHeaderBody;
+import org.wso2.andes.framing.FieldTable;
+import org.wso2.andes.framing.MethodRegistry;
 import org.wso2.andes.framing.abstraction.ContentChunk;
 import org.wso2.andes.framing.abstraction.MessagePublishInfo;
+import org.wso2.andes.pool.AndesExecuter;
 import org.wso2.andes.protocol.AMQConstant;
 import org.wso2.andes.server.ack.UnacknowledgedMessageMap;
 import org.wso2.andes.server.ack.UnacknowledgedMessageMapImpl;
 import org.wso2.andes.server.cassandra.CassandraSubscription;
 import org.wso2.andes.server.cassandra.ClusteringEnabledSubscriptionManager;
 import org.wso2.andes.server.cassandra.QueueSubscriptionAcknowledgementHandler;
-import org.wso2.andes.server.configuration.*;
+import org.wso2.andes.server.configuration.ConfigStore;
+import org.wso2.andes.server.configuration.ConfiguredObject;
+import org.wso2.andes.server.configuration.ConnectionConfig;
+import org.wso2.andes.server.configuration.SessionConfig;
+import org.wso2.andes.server.configuration.SessionConfigType;
 import org.wso2.andes.server.exchange.Exchange;
 import org.wso2.andes.server.flow.FlowCreditManager;
 import org.wso2.andes.server.flow.Pre0_10CreditManager;
@@ -68,14 +96,6 @@ import org.wso2.andes.server.txn.AutoCommitTransaction;
 import org.wso2.andes.server.txn.LocalTransaction;
 import org.wso2.andes.server.txn.ServerTransaction;
 import org.wso2.andes.server.virtualhost.VirtualHost;
-
-import java.util.*;
-import java.util.concurrent.ConcurrentHashMap;
-import java.util.concurrent.ConcurrentMap;
-import java.util.concurrent.Semaphore;
-import java.util.concurrent.atomic.AtomicBoolean;
-import java.util.concurrent.atomic.AtomicInteger;
-import java.util.concurrent.atomic.AtomicLong;
 
 public class AMQChannel implements SessionConfig, AMQSessionModel
 {
@@ -311,7 +331,8 @@ public class AMQChannel implements SessionConfig, AMQSessionModel
         {
             try
             {
-                _currentMessage.getStoredMessage().flushToStore();
+                //Srinath - we will do this later
+                //_currentMessage.getStoredMessage().flushToStore();
                 
                 final ArrayList<? extends BaseQueue> destinationQueues = _currentMessage.getDestinationQueues();
 
@@ -335,12 +356,39 @@ public class AMQChannel implements SessionConfig, AMQSessionModel
                     }
                     else
                     {
-                        _transaction.enqueue(destinationQueues, _currentMessage, new MessageDeliveryAction(_currentMessage, destinationQueues, isTransactional()));
-                        incrementOutstandingTxnsIfNecessary();
-			            updateTransactionalActivity();
-                        _messageQueue.enqueueMessage(_currentMessage, destinationQueues);
+                        //srinath: need to make this async
+                        //TODO removing this
+//                        _transaction.enqueue(destinationQueues, _currentMessage, new MessageDeliveryAction(_currentMessage, destinationQueues, isTransactional()));
+//                        incrementOutstandingTxnsIfNecessary();
+//			            updateTransactionalActivity();
+			            //srinath: we will do this async also
+                        //_messageQueue.enqueueMessage(_currentMessage, destinationQueues);
                     }
                 }
+                
+                //need to bind this to the inner class, as _currentMessage
+                final IncomingMessage incomingMessage = _currentMessage;
+                final MessageQueue messageQueue = _messageQueue; 
+                AndesExecuter.submit(new Runnable() {
+                    @Override
+                   public void run() {
+                       try {
+                           /**
+                            * All we have to do is to write content, metadata, and add the message id to the global queue
+                            * Content are already added to the same work queue 
+                            * adding metadata and message to global queue happen here 
+                            */
+                        //Store metadata
+                           incomingMessage.getStoredMessage().flushToStore();
+                           //write messageID to queue 
+                           messageQueue.enqueueMessage(incomingMessage, destinationQueues);
+                           _logger.debug("metadata written and message written to global queue " + incomingMessage.getStoredMessage().getMessageNumber() + ", channel ID "+ getChannelId());
+                    } catch (Throwable e) {
+                        // TODO Auto-generated catch block
+                        e.printStackTrace();
+                    }
+                      }
+                });
             }
             finally
             {
@@ -375,9 +423,11 @@ public class AMQChannel implements SessionConfig, AMQSessionModel
 
             _currentMessage.addContentBodyFrame(contentChunk);
 
+
 //            _messageQueue.addMessageContent(contentChunk.getData().buf());
 
             deliverCurrentMessageIfComplete();
+
         }
         catch (AMQException e)
         {
@@ -833,7 +883,6 @@ public class AMQChannel implements SessionConfig, AMQSessionModel
                     acknowledgementHandler.handleAcknowledgement(deliveryTag);
                 }
             } catch (Exception e) {
-                System.out.println(e.getMessage());
                 throw new AMQException(e.getMessage());
             }
 

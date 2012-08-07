@@ -22,6 +22,7 @@ package org.wso2.andes.server.handler;
 
 import org.wso2.andes.AMQException;
 import org.wso2.andes.framing.*;
+import org.wso2.andes.pool.AndesExecuter;
 import org.wso2.andes.server.state.AMQStateManager;
 
 import java.util.HashMap;
@@ -128,9 +129,20 @@ public class ServerMethodDispatcherImpl implements MethodDispatcher
         return true;
     }
 
-    public boolean dispatchBasicAck(BasicAckBody body, int channelId) throws AMQException
+    public boolean dispatchBasicAck(final BasicAckBody body, final int channelId) throws AMQException
     {
-        _basicAckMethodHandler.methodReceived(_stateManager, body, channelId);
+        //System.out.println("Ack sent on channel "+ channelId );
+        AndesExecuter.submit(new Runnable() {
+            @Override
+            public void run() {
+                try {
+                    _basicAckMethodHandler.methodReceived(_stateManager, body, channelId);
+                } catch (AMQException e) {
+                    // TODO Auto-generated catch block
+                    e.printStackTrace();
+                }
+            }
+        });
         return true;
     }
 

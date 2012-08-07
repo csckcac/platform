@@ -837,4 +837,27 @@ public class CassandraDataAccessHelper {
             throw new CassandraDataAccessException("Error while deleting data",e);
         }
     }
+    
+    
+    public static void deleteIntegerColumnsFromRow(String columnFamily, List<String> rows, Keyspace keyspace) throws CassandraDataAccessException {
+        if (keyspace == null) {
+            throw new CassandraDataAccessException("Can't delete Data , no keyspace provided ");
+        }
+        
+        if (columnFamily == null || rows == null) {
+            throw new CassandraDataAccessException("Can't delete data in columnFamily = " + columnFamily +
+            " and rowName=" + rows );
+        }
+        
+        try {
+            Mutator<String> mutator = HFactory.createMutator(keyspace,
+                    stringSerializer);
+            for(String row: rows){
+                mutator.addDeletion(row, columnFamily, null, integerSerializer);
+            }
+            mutator.execute();
+        } catch (Exception e) {
+            throw new CassandraDataAccessException("Error while deleting data",e);
+        }
+    }
 }

@@ -20,13 +20,14 @@
  */
 package org.wso2.andes.pool;
 
+import org.mortbay.log.Log;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
+
 import java.util.concurrent.ConcurrentLinkedQueue;
 import java.util.concurrent.ExecutorService;
 import java.util.concurrent.RejectedExecutionException;
 import java.util.concurrent.atomic.AtomicBoolean;
-
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
 
 /**
  * A Job is a continuation that batches together other continuations, specifically {@link Event}s, into one continuation.
@@ -94,20 +95,28 @@ public class Job implements ReadWriteRunnable
     /**
      * Sequentially processes, up to the maximum number per job, the aggregated continuations in enqueued in this job.
      */
-    boolean processAll()
-    {
+      long totTime = 0;
+        int count = 0;
+    boolean processAll() {
         // limit the number of events processed in one run
         int i = _maxEvents;
-        while( --i != 0 )
-        {
+        while (--i != 0) {
             Runnable e = _eventQueue.poll();
-            if (e == null)
-            {
+            if (e == null) {
                 return true;
-            }
-            else
-            {
+            } else {
+
+                long start = System.nanoTime();
                 e.run();
+                totTime = totTime + (System.nanoTime() - start) / 1000000;
+                count++;
+                if (count % 100 == 0) {
+                    Log.debug("Runnable took " + totTime / count + " ms " + _eventQueue.size() + " jobs left");
+                   /* count = 0;
+                    totTime = 0;*/
+                }
+
+
             }
         }
         return false;

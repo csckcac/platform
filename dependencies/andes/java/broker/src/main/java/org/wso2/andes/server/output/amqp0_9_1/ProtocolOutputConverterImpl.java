@@ -105,49 +105,49 @@ public class ProtocolOutputConverterImpl implements ProtocolOutputConverter
             throws AMQException
     {
 
-
+        String channelIdString =  String.valueOf(channelId).intern();
         int bodySize = (int) message.getSize();
 
         if(bodySize == 0)
         {
             SmallCompositeAMQBodyBlock compositeBlock = new SmallCompositeAMQBodyBlock(channelId, deliverBody,
                                                                              contentHeaderBody);
-
             writeFrame(compositeBlock);
         }
         else
         {
-            int maxBodySize = (int) getProtocolSession().getMaxFrameSize() - AMQFrame.getFrameOverhead();
+            synchronized (channelIdString) {
+                int maxBodySize = (int) getProtocolSession().getMaxFrameSize() - AMQFrame.getFrameOverhead();
 
 
-            final int capacity = bodySize > maxBodySize ? maxBodySize : bodySize;
-            java.nio.ByteBuffer buf = java.nio.ByteBuffer.allocate(capacity);
+                final int capacity = bodySize > maxBodySize ? maxBodySize : bodySize;
+                java.nio.ByteBuffer buf = java.nio.ByteBuffer.allocate(capacity);
 
-            int writtenSize = 0;
+                int writtenSize = 0;
 
 
-            writtenSize += message.getContent(buf, writtenSize);
-            buf.flip();
-            AMQBody firstContentBody = PROTOCOL_CONVERTER.convertToBody(buf);
-
-            CompositeAMQBodyBlock
-                    compositeBlock = new CompositeAMQBodyBlock(channelId, deliverBody, contentHeaderBody, firstContentBody);
-            writeFrame(compositeBlock);
-
-            while(writtenSize < bodySize)
-            {
-
-                buf = java.nio.ByteBuffer.allocate(capacity);
-                int oldWrittenSize = writtenSize;
                 writtenSize += message.getContent(buf, writtenSize);
-
-                if( writtenSize <= oldWrittenSize && writtenSize < bodySize) {
-                    throw new AMQException("Unexpected Error while getting message content : " +
-                            "This might leads to an infinite loop so exiting the loop forcefully");
-                }
                 buf.flip();
-                writeFrame(new AMQFrame(channelId, PROTOCOL_CONVERTER.convertToBody(buf)));
+                AMQBody firstContentBody = PROTOCOL_CONVERTER.convertToBody(buf);
 
+                CompositeAMQBodyBlock
+                        compositeBlock = new CompositeAMQBodyBlock(channelId, deliverBody, contentHeaderBody, firstContentBody);
+                writeFrame(compositeBlock);
+                while(writtenSize < bodySize)
+                {
+
+                    buf = java.nio.ByteBuffer.allocate(capacity);
+                    int oldWrittenSize = writtenSize;
+                    writtenSize += message.getContent(buf, writtenSize);
+
+                    if( writtenSize <= oldWrittenSize && writtenSize < bodySize) {
+                        throw new AMQException("Unexpected Error while getting message content : " +
+                                "This might leads to an infinite loop so exiting the loop forcefully");
+                    }
+                    buf.flip();
+                    writeFrame(new AMQFrame(channelId, PROTOCOL_CONVERTER.convertToBody(buf)));
+
+                }
             }
         }
     }

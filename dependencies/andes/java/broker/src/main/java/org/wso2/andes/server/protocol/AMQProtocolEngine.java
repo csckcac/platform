@@ -241,6 +241,7 @@ public class AMQProtocolEngine implements ProtocolEngine, Managable, AMQProtocol
                             closeProtocolSession();
                         }
                     }
+                    dataBlocks.clear();
                 }
             });
         }
@@ -263,7 +264,7 @@ public class AMQProtocolEngine implements ProtocolEngine, Managable, AMQProtocol
         {
             AMQFrame frame = (AMQFrame) message;
             frameReceived(frame);
-
+            frame = null;
         }
         else
         {

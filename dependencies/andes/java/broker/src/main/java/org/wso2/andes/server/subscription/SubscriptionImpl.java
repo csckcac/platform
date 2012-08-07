@@ -23,7 +23,6 @@ package org.wso2.andes.server.subscription;
 import org.apache.commons.logging.Log;
 import org.apache.commons.logging.LogFactory;
 import org.apache.log4j.Logger;
-
 import org.wso2.andes.AMQException;
 import org.wso2.andes.common.AMQPFilterTypes;
 import org.wso2.andes.common.ClientProperties;
@@ -32,12 +31,7 @@ import org.wso2.andes.framing.FieldTable;
 import org.wso2.andes.server.AMQChannel;
 import org.wso2.andes.server.ClusterResourceHolder;
 import org.wso2.andes.server.cassandra.QueueSubscriptionAcknowledgementHandler;
-import org.wso2.andes.server.configuration.ConfigStore;
-import org.wso2.andes.server.configuration.ConfiguredObject;
-import org.wso2.andes.server.configuration.SessionConfig;
-import org.wso2.andes.server.configuration.SubscriptionConfig;
-import org.wso2.andes.server.configuration.SubscriptionConfigType;
-import org.wso2.andes.server.connection.ConnectionRegistry;
+import org.wso2.andes.server.configuration.*;
 import org.wso2.andes.server.filter.FilterManager;
 import org.wso2.andes.server.filter.FilterManagerFactory;
 import org.wso2.andes.server.flow.FlowCreditManager;
@@ -56,8 +50,6 @@ import org.wso2.andes.server.queue.QueueEntry;
 import java.util.Map;
 import java.util.UUID;
 import java.util.concurrent.ConcurrentHashMap;
-import java.util.concurrent.Semaphore;
-import java.util.concurrent.TimeUnit;
 import java.util.concurrent.atomic.AtomicBoolean;
 import java.util.concurrent.atomic.AtomicLong;
 import java.util.concurrent.atomic.AtomicReference;
@@ -260,7 +252,7 @@ public abstract class SubscriptionImpl implements Subscription, FlowCreditManage
             // The send may of course still fail, in which case, as
             // the message is unacked, it will be lost.
             long deliveryTag = 0;
-                deliveryTag = getChannel().getNextDeliveryTag();
+            deliveryTag = getChannel().getNextDeliveryTag();
 
             try {
                 recordMessageDelivery(entry, deliveryTag);
@@ -291,6 +283,7 @@ public abstract class SubscriptionImpl implements Subscription, FlowCreditManage
                         }
                     }
                 }
+
 
             } catch (Exception e) {
                 throw new AMQException(e.toString());

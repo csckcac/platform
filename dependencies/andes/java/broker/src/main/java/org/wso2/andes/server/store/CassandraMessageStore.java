@@ -17,7 +17,28 @@
 */
 package org.wso2.andes.server.store;
 
-import me.prettyprint.cassandra.serializers.*;
+import java.io.ByteArrayOutputStream;
+import java.nio.ByteBuffer;
+import java.util.ArrayList;
+import java.util.LinkedList;
+import java.util.List;
+import java.util.Queue;
+import java.util.Set;
+import java.util.SortedMap;
+import java.util.concurrent.BlockingQueue;
+import java.util.concurrent.ConcurrentHashMap;
+import java.util.concurrent.ConcurrentSkipListMap;
+import java.util.concurrent.ExecutorService;
+import java.util.concurrent.Executors;
+import java.util.concurrent.LinkedBlockingQueue;
+import java.util.concurrent.Semaphore;
+import java.util.concurrent.atomic.AtomicLong;
+
+import me.prettyprint.cassandra.serializers.ByteBufferSerializer;
+import me.prettyprint.cassandra.serializers.BytesArraySerializer;
+import me.prettyprint.cassandra.serializers.IntegerSerializer;
+import me.prettyprint.cassandra.serializers.LongSerializer;
+import me.prettyprint.cassandra.serializers.StringSerializer;
 import me.prettyprint.hector.api.Cluster;
 import me.prettyprint.hector.api.Keyspace;
 import me.prettyprint.hector.api.beans.ColumnSlice;
@@ -30,6 +51,7 @@ import me.prettyprint.hector.api.query.ColumnQuery;
 import me.prettyprint.hector.api.query.QueryResult;
 import me.prettyprint.hector.api.query.RangeSlicesQuery;
 import me.prettyprint.hector.api.query.SliceQuery;
+
 import org.apache.commons.configuration.Configuration;
 import org.apache.commons.logging.Log;
 import org.apache.commons.logging.LogFactory;
@@ -37,14 +59,21 @@ import org.wso2.andes.AMQException;
 import org.wso2.andes.AMQStoreException;
 import org.wso2.andes.framing.AMQShortString;
 import org.wso2.andes.framing.FieldTable;
+import org.wso2.andes.pool.AndesExecuter;
 import org.wso2.andes.server.ClusterResourceHolder;
-import org.wso2.andes.server.cassandra.*;
+import org.wso2.andes.server.cassandra.AndesConsistantLevelPolicy;
+import org.wso2.andes.server.cassandra.CassandraQueueMessage;
+import org.wso2.andes.server.cassandra.CassandraTopicPublisherManager;
+import org.wso2.andes.server.cassandra.ClusteringEnabledSubscriptionManager;
+import org.wso2.andes.server.cassandra.DefaultClusteringEnabledSubscriptionManager;
+import org.wso2.andes.server.cassandra.OnceInOrderEnabledSubscriptionManager;
 import org.wso2.andes.server.cluster.ClusterManagementInformationMBean;
 import org.wso2.andes.server.cluster.ClusterManager;
 import org.wso2.andes.server.cluster.coordination.MessageIdGenerator;
 import org.wso2.andes.server.cluster.coordination.SubscriptionCoordinationManager;
 import org.wso2.andes.server.cluster.coordination.SubscriptionCoordinationManagerImpl;
 import org.wso2.andes.server.cluster.coordination.TimeStampBasedMessageIdGenerator;
+import org.wso2.andes.server.cluster.coordination.TopicSubscriptionCoordinationManager;
 import org.wso2.andes.server.configuration.ClusterConfiguration;
 import org.wso2.andes.server.exchange.Exchange;
 import org.wso2.andes.server.information.management.QueueManagementInformationMBean;
@@ -52,18 +81,15 @@ import org.wso2.andes.server.logging.LogSubject;
 import org.wso2.andes.server.message.AMQMessage;
 import org.wso2.andes.server.message.MessageTransferMessage;
 import org.wso2.andes.server.protocol.AMQProtocolSession;
-import org.wso2.andes.server.queue.*;
+import org.wso2.andes.server.queue.AMQQueue;
+import org.wso2.andes.server.queue.BaseQueue;
+import org.wso2.andes.server.queue.IncomingMessage;
+import org.wso2.andes.server.queue.QueueEntry;
+import org.wso2.andes.server.queue.SimpleQueueEntryList;
 import org.wso2.andes.server.store.util.CassandraDataAccessException;
 import org.wso2.andes.server.store.util.CassandraDataAccessHelper;
 import org.wso2.andes.server.virtualhost.VirtualHostConfigSynchronizer;
 import org.wso2.andes.tools.utils.DataCollector;
-
-import java.io.ByteArrayOutputStream;
-import java.lang.ref.SoftReference;
-import java.nio.ByteBuffer;
-import java.util.*;
-import java.util.concurrent.*;
-import java.util.concurrent.atomic.AtomicLong;
 /**
  * Class <code>CassandraMessageStore</code> is the Message Store implemented for cassandra
  * Working with andes as an alternative to Derby Message Store
@@ -132,12 +158,15 @@ public class CassandraMessageStore implements MessageStore {
 
     private ConcurrentHashMap<Long,Long> pubSubMessageContentDeletionTasks;
 
+    private ConcurrentHashMap<String,ArrayList<String>> topicSubscribersMap = new ConcurrentHashMap<String, ArrayList<String>>();
+
     private ContentRemoverTask messageContentRemovalTask = null;
     private PubSubMessageContentRemoverTask pubSubMessageContentRemoverTask = null;
     private ClusterManagementInformationMBean clusterManagementMBean;
     private QueueManagementInformationMBean queueManagementMBean;
 
     private boolean configured = false;
+
 
 
     private static StringSerializer stringSerializer = StringSerializer.get();
@@ -723,29 +752,46 @@ public void addMessageBatchToUserQueues(CassandraQueueMessage[] messages) throws
     }
 
 
-    public void addMessageContent(String messageId, int offset, ByteBuffer src) throws AMQStoreException {
+    public void addMessageContent(String messageId, final int offset, ByteBuffer src) throws AMQStoreException {
 
         try {
-            String rowKey = "mid" + messageId;
+            final String rowKey = "mid" + messageId;
             src = src.slice();
-            byte[] chunkData = new byte[src.limit()];
+            final byte[] chunkData = new byte[src.limit()];
 
             src.duplicate().get(chunkData);
-            publishMessageContentWriter.addMessage(rowKey.trim(), offset, chunkData);
-
+            
+            
+            AndesExecuter.submit(new Runnable() {
+                public void run() {
+                    try {
+                        Mutator<String> messageMutator = HFactory.createMutator(keyspace, stringSerializer);
+                        CassandraDataAccessHelper.addIntegerByteArrayContentToRaw(MESSAGE_CONTENT_COLUMN_FAMILY, rowKey,
+                                offset, chunkData, messageMutator, false);
+                        messageMutator.execute(); 
+                        log.debug("content written for "+rowKey);
+                    } catch (Throwable e) {
+                        // TODO Auto-generated catch block
+                        e.printStackTrace();
+                    }
+                }
+           });
+            
+            //above inner class is instead of following
+            //publishMessageContentWriter.addMessage(rowKey.trim(), offset, chunkData);
         } catch (Exception e) {
             throw new AMQStoreException("Error in adding message content" ,e);
         }
     }
 
-    public void removeMessageContent(String messageId) throws AMQStoreException {
-        try {
-            String rowKey = "mid" + messageId;
-            CassandraDataAccessHelper.deleteIntegerColumnFromRow(MESSAGE_CONTENT_COLUMN_FAMILY,rowKey.trim(),null,keyspace);
-        } catch (Exception e) {
-            throw new AMQStoreException("Error in removing message content", e);
-        }
-    }
+//    public void removeMessageContent(String messageId) throws AMQStoreException {
+//        try {
+//            String rowKey = "mid" + messageId;
+//            CassandraDataAccessHelper.deleteIntegerColumnFromRow(MESSAGE_CONTENT_COLUMN_FAMILY,rowKey.trim(),null,keyspace);
+//        } catch (Exception e) {
+//            throw new AMQStoreException("Error in removing message content", e);
+//        }
+//    }
 
 
 
@@ -1002,9 +1048,11 @@ public void addMessageBatchToUserQueues(CassandraQueueMessage[] messages) throws
             messages = new ArrayList<MessageTransferMessage>();
             for (long messageId : messageIds) {
                 StorableMessageMetaData messageMetaData = getMetaData(messageId);
-                StoredCassandraMessage storedCassandraMessage = new StoredCassandraMessage(messageId, messageMetaData, true);
-                MessageTransferMessage message = new MessageTransferMessage(storedCassandraMessage, null);
-                messages.add(message);
+                if(messageMetaData != null) {
+                    StoredCassandraMessage storedCassandraMessage = new StoredCassandraMessage(messageId, messageMetaData, true);
+                    MessageTransferMessage message = new MessageTransferMessage(storedCassandraMessage, null);
+                    messages.add(message);
+                }
             }
         }
         return messages;
@@ -1017,6 +1065,9 @@ public void addMessageBatchToUserQueues(CassandraQueueMessage[] messages) throws
      * */
     private void registerTopic(String topic) {
         try {
+            if(topic!= null && (topicSubscribersMap.get(topic) == null)) {
+                topicSubscribersMap.put(topic,new ArrayList<String>());
+            }
             CassandraDataAccessHelper.addMappingToRaw(TOPICS_COLUMN_FAMILY, TOPICS_ROW, topic, topic, keyspace);
         } catch (Exception e) {
             log.error("Error in registering queue for the topic", e);
@@ -1100,6 +1151,7 @@ public void addMessageBatchToUserQueues(CassandraQueueMessage[] messages) throws
         try {
             registerTopic(topic);
             CassandraDataAccessHelper.addMappingToRaw(TOPIC_SUBSCRIBERS, topic, queueName, queueName, keyspace);
+            ClusterResourceHolder.getInstance().getTopicSubscriptionCoordinationManager().handleSubscriptionChange(topic);
         } catch (Exception e) {
             log.error("Error in registering queue for the topic",e);
         }
@@ -1114,7 +1166,7 @@ public void addMessageBatchToUserQueues(CassandraQueueMessage[] messages) throws
      * */
     public List<String> getRegisteredSubscribersForTopic(String topic) throws Exception {
         try {
-            List<String> queueList = CassandraDataAccessHelper.getRowList(TOPIC_SUBSCRIBERS, topic, keyspace);
+            List<String> queueList = topicSubscribersMap.get(topic);
             return queueList;
         } catch (Exception e) {
             log.error("Error in getting registered subscribers for the topic", e);
@@ -1133,9 +1185,11 @@ public void addMessageBatchToUserQueues(CassandraQueueMessage[] messages) throws
                 log.debug(" removing queue = " + queueName + " from topic =" + topic);
             }
             CassandraDataAccessHelper.deleteStringColumnFromRaw(TOPIC_SUBSCRIBERS, topic, queueName, keyspace);
-            if (getRegisteredSubscribersForTopic(topic).size() == 0) {
+            if ((getRegisteredSubscribersForTopic(topic) != null) && (getRegisteredSubscribersForTopic(topic).size() == 0)) {
                 unRegisterTopic(topic);
+                topicSubscribersMap.remove(topic);
             }
+            ClusterResourceHolder.getInstance().getTopicSubscriptionCoordinationManager().handleSubscriptionChange(topic);
         } catch (Exception e) {
            log.error("Error in un registering queue from the topic" ,e);
         }
@@ -1536,11 +1590,12 @@ public void addMessageBatchToUserQueues(CassandraQueueMessage[] messages) throws
         messageWriter.setName(PublishMessageWriter.class.getName());
         messageWriter.start();
 
+        //we do not use this anymore
         publishMessageContentWriter = new PublishMessageContentWriter();
-        publishMessageContentWriter.start();
-        Thread contentWriter = new Thread(publishMessageContentWriter);
-        contentWriter.setName(PublishMessageContentWriter.class.getName());
-        contentWriter.start();
+//        publishMessageContentWriter.start();
+//        Thread contentWriter = new Thread(publishMessageContentWriter);
+//        contentWriter.setName(PublishMessageContentWriter.class.getName());
+//        contentWriter.start();
 
 
         AndesConsistantLevelPolicy consistencyLevel = new AndesConsistantLevelPolicy();
@@ -1556,6 +1611,14 @@ public void addMessageBatchToUserQueues(CassandraQueueMessage[] messages) throws
                         new SubscriptionCoordinationManagerImpl();
                 subscriptionCoordinationManager.init();
                 ClusterResourceHolder.getInstance().setSubscriptionCoordinationManager(subscriptionCoordinationManager);
+            }
+
+            if(ClusterResourceHolder.getInstance().getTopicSubscriptionCoordinationManager() == null) {
+
+                TopicSubscriptionCoordinationManager topicSubscriptionCoordinationManager =
+                        new TopicSubscriptionCoordinationManager();
+                topicSubscriptionCoordinationManager.init();
+                ClusterResourceHolder.getInstance().setTopicSubscriptionCoordinationManager(topicSubscriptionCoordinationManager);
             }
          ClusterManager clusterManager = null;
 
@@ -1591,9 +1654,22 @@ public void addMessageBatchToUserQueues(CassandraQueueMessage[] messages) throws
             subscriptionManager.init();
 
         }
-
         configured = true;
+    }
 
+    public void syncTopicSubscriptionsWithDatabase(String topic) throws Exception{
+        if(topic!=null) {
+            ArrayList<String> subscriberQueues = new ArrayList<String>();
+            List<String> subscribers = CassandraDataAccessHelper.getRowList(TOPIC_SUBSCRIBERS, topic,keyspace);
+            for(String subscriber : subscribers) {
+                subscriberQueues.add(subscriber);
+            }
+            topicSubscribersMap.remove(topic);
+            topicSubscribersMap.put(topic,subscriberQueues);
+        }
+        if(log.isDebugEnabled()) {
+            log.debug("Synchronizing subscribers for topic" +topic);
+        }
     }
 
     @Override
@@ -1767,7 +1843,7 @@ public void addMessageBatchToUserQueues(CassandraQueueMessage[] messages) throws
      */
     public void addNodeDetails(String nodeId, String data) {
         try {
-            CassandraDataAccessHelper.addMappingToRaw(NODE_DETAIL_COLUMN_FAMILY,NODE_DETAIL_ROW,nodeId,data,keyspace);
+            CassandraDataAccessHelper.addMappingToRaw(NODE_DETAIL_COLUMN_FAMILY, NODE_DETAIL_ROW, nodeId, data, keyspace);
         } catch (CassandraDataAccessException e) {
             throw new RuntimeException("Error writing Node details to cassandra database" ,e);
         }
@@ -1909,26 +1985,25 @@ public void addMessageBatchToUserQueues(CassandraQueueMessage[] messages) throws
     private class StoredCassandraMessage implements StoredMessage {
 
         private final long _messageId;
-        private volatile SoftReference<StorableMessageMetaData> _metaDataRef;
+        private StorableMessageMetaData metaData; 
+        
 
         private StoredCassandraMessage(long messageId, StorableMessageMetaData metaData) {
             this._messageId = messageId;
-            this._metaDataRef = new SoftReference<StorableMessageMetaData>(metaData);
-            storeMetaData(_messageId, metaData);
+            this.metaData = metaData; 
+            //storeMetaData(_messageId, metaData);
         }
 
         private StoredCassandraMessage(long messageId, StorableMessageMetaData metaData ,boolean isTopics){
             this._messageId = messageId;
-            this._metaDataRef = new SoftReference<StorableMessageMetaData>(metaData);
+            this.metaData = metaData; 
         }
 
 
         @Override
         public StorableMessageMetaData getMetaData() {
-            StorableMessageMetaData metaData = _metaDataRef.get();
             if (metaData == null) {
                 metaData = CassandraMessageStore.this.getMetaData(_messageId);
-                _metaDataRef = new SoftReference<StorableMessageMetaData>(metaData);
             }
             return metaData;
         }
@@ -1956,6 +2031,7 @@ public void addMessageBatchToUserQueues(CassandraQueueMessage[] messages) throws
 
         @Override
         public TransactionLog.StoreFuture flushToStore() {
+            storeMetaData(_messageId, metaData);
             return IMMEDIATE_FUTURE;
         }
 
@@ -1990,33 +2066,51 @@ public void addMessageBatchToUserQueues(CassandraQueueMessage[] messages) throws
 
 
     }
-
     private class CassandraTransaction implements Transaction {
 
-        public void enqueueMessage(TransactionLogResource queue, Long messageId)
+        public void enqueueMessage(final TransactionLogResource queue, final Long messageId)
                 throws AMQStoreException {
-            try {
 
-                Mutator<String> mutator = HFactory.createMutator(keyspace,stringSerializer);
-                String name = queue.getResourceName();
-                LongSerializer ls = LongSerializer.get();
-                mutator.addInsertion(QUEUE_ENTRY_ROW, QUEUE_ENTRY_COLUMN_FAMILY,
-                        HFactory.createColumn(name, messageId, stringSerializer, ls));
-                mutator.execute();
-            } catch (Exception e) {
-                log.error("Error adding Queue Entry ",e);
+            try {
+                AndesExecuter.submit(new Runnable() {
+                    public void run() {
+
+                        try {
+                            Mutator<String> mutator = HFactory.createMutator(keyspace, stringSerializer);
+                            String name = queue.getResourceName();
+                            LongSerializer ls = LongSerializer.get();
+                            mutator.addInsertion(QUEUE_ENTRY_ROW, QUEUE_ENTRY_COLUMN_FAMILY,
+                                    HFactory.createColumn(name, messageId, stringSerializer, ls));
+                            mutator.execute();
+                        } catch (Throwable e) {
+                            log.error("Error adding Queue Entry ", e);
+                        }
+
+                    }
+                });
+            } catch (Throwable e) {
+
+                log.error("Error adding Queue Entry ", e);
                 throw new AMQStoreException("Error adding Queue Entry "
                         + queue.getResourceName(), e);
             }
         }
 
-        public void dequeueMessage(TransactionLogResource queue, Long messageId) throws AMQStoreException {
+        public void dequeueMessage(final TransactionLogResource queue, Long messageId) throws AMQStoreException {
             try {
-                String name = queue.getResourceName();
-                CassandraDataAccessHelper.deleteStringColumnFromRaw(QUEUE_ENTRY_COLUMN_FAMILY,QUEUE_DETAILS_ROW,name,
-                        keyspace);
-            } catch (Exception e) {
-                log.error("Error deleting Queue Entry" ,e);
+                AndesExecuter.submit(new Runnable() {
+                    public void run() {
+                        String name = queue.getResourceName();
+                        try {
+                            CassandraDataAccessHelper.deleteStringColumnFromRaw(QUEUE_ENTRY_COLUMN_FAMILY, QUEUE_DETAILS_ROW, name,
+                                    keyspace);
+                        } catch (Throwable e) {
+                             log.error("Error deleting Queue Entry", e);
+                        }
+                    }
+                });
+            } catch (Throwable e) {
+                log.error("Error deleting Queue Entry", e);
                 throw new AMQStoreException("Error deleting Queue Entry :"
                         + queue.getResourceName(), e);
             }
@@ -2045,10 +2139,7 @@ public void addMessageBatchToUserQueues(CassandraQueueMessage[] messages) throws
     }
 
     private class ContentRemoverTask implements Runnable {
-
-
         private int waitInterval = 5000;
-
         private long timeOutPerMessage = 60000; //10s
         private boolean running = true;
 
@@ -2066,16 +2157,16 @@ public void addMessageBatchToUserQueues(CassandraQueueMessage[] messages) throws
 
                         SortedMap<Long, Long> timedOutList = contentDeletionTasks.headMap(currentTime - timeOutPerMessage);
 
-
+                        List<String> rows2Remove = new ArrayList<String>(); 
                         for (Long key : timedOutList.keySet()) {
-                            CassandraMessageStore.this.removeMessageContent("" + timedOutList.get(key));
+                            rows2Remove.add(new StringBuffer("mid").append(key).toString());
                         }
+                        CassandraDataAccessHelper.deleteIntegerColumnsFromRow(MESSAGE_CONTENT_COLUMN_FAMILY, rows2Remove, keyspace);
 
                         for(Long key : timedOutList.keySet()) {
                             contentDeletionTasks.remove(key);
                         }
                     }
-
                     try {
                         Thread.sleep(waitInterval);
                     } catch (InterruptedException e) {
@@ -2085,8 +2176,6 @@ public void addMessageBatchToUserQueues(CassandraQueueMessage[] messages) throws
                     log.error("Error while Executing content removal Task", e);
                 }
             }
-
-
         }
 
         public boolean isRunning() {
@@ -2268,7 +2357,7 @@ public void addMessageBatchToUserQueues(CassandraQueueMessage[] messages) throws
             try {
                 PublishMessageWriterMessage msg = new PublishMessageWriterMessage(queue, messageId, message);
                 messageQueue.add(msg);
-                msg.waitForToBeWritten();
+//                msg.waitForToBeWritten();
 
             } catch (InterruptedException e) {
                 throw new RuntimeException("Error while adding Incomming message", e);
@@ -2305,7 +2394,7 @@ public void addMessageBatchToUserQueues(CassandraQueueMessage[] messages) throws
             }
 
             public void waitForToBeWritten() throws InterruptedException {
-                messageCallBack.acquire();
+//                messageCallBack.acquire();
             }
 
         }
@@ -2316,7 +2405,7 @@ public void addMessageBatchToUserQueues(CassandraQueueMessage[] messages) throws
 
         private boolean start = false;
 
-        private int writeCount = 200;
+        private int writeCount = 1;
 
         private BlockingQueue<PublishMessageContentWriterMessage> messageQueue =
                 new LinkedBlockingQueue<PublishMessageContentWriterMessage>();
@@ -2409,12 +2498,28 @@ public void addMessageBatchToUserQueues(CassandraQueueMessage[] messages) throws
             }
         }
 
-        public void addMessage(String rowKey, int offset, byte[] message) {
+        public void addMessage(final String rowKey, int offset, byte[] message) {
             try {
-                PublishMessageContentWriterMessage msg =
+                final PublishMessageContentWriterMessage msg =
                         new PublishMessageContentWriterMessage(rowKey, offset, message);
-                messageQueue.add(msg);
-                msg.waitForToBeWritten();
+                //messageQueue.add(msg);
+//                msg.waitForToBeWritten();
+                
+              //submit to to the same work queue, so this will happen before. TODO fix buffering
+                AndesExecuter.submit(new Runnable() {
+                                    public void run() {
+                                        try {
+                                            Mutator<String> messageMutator = HFactory.createMutator(keyspace, stringSerializer);
+                                            CassandraDataAccessHelper.addIntegerByteArrayContentToRaw(MESSAGE_CONTENT_COLUMN_FAMILY, msg.rowKey,
+                                                    msg.offset, msg.message, messageMutator, false);
+                                            messageMutator.execute(); 
+                                            log.debug("content written for "+rowKey);
+                                        } catch (Throwable e) {
+                                            // TODO Auto-generated catch block
+                                            e.printStackTrace();
+                                        }
+                                    }
+                               });
 
             } catch (InterruptedException e) {
                 throw new RuntimeException("Error while adding Incomming message", e);
@@ -2431,7 +2536,7 @@ public void addMessageBatchToUserQueues(CassandraQueueMessage[] messages) throws
 
 
         private class PublishMessageContentWriterMessage {
-            private Semaphore messageCallBack;
+//            private Semaphore messageCallBack;
 
             private String rowKey;
             private int offset;
@@ -2442,16 +2547,16 @@ public void addMessageBatchToUserQueues(CassandraQueueMessage[] messages) throws
                 this.rowKey = rowKey;
                 this.offset = offset;
                 this.message = message;
-                this.messageCallBack = new Semaphore(1);
-                messageCallBack.acquire();
+//                this.messageCallBack = new Semaphore(1);
+//                messageCallBack.acquire();
             }
 
             public void release() {
-                messageCallBack.release();
+//                messageCallBack.release();
             }
 
             public void waitForToBeWritten() throws InterruptedException {
-                messageCallBack.acquire();
+//                messageCallBack.acquire();
             }
 
         }

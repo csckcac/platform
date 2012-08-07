@@ -113,54 +113,16 @@
                 <include>**/*</include>
             </includes>
         </fileSet>
-	<!-- deploying samples -->	
-	<!--
+
+        <!-- deploying samples -->
         <fileSet>
-            <directory>../samples/shopping_cart/dbs</directory>
+            <directory>../samples/dbs/rdbms</directory>
             <outputDirectory>${pom.artifactId}-${pom.version}/repository/deployment/server/dataservices</outputDirectory>
-            <includes>
-                <include>ShoppingCartDS.dbs</include>
-            </includes>
-        </fileSet>
-        <fileSet>
-            <directory>../../samples/dbs/rdbms</directory>
-            <outputDirectory>wso2dataservices-${pom.version}/repository/deployment/server/dataservices</outputDirectory>
             <includes>
                 <include>RDBMSSample.dbs</include>
                 <include>RDBMSSample_services.xml</include>
-                <include>ResourcesSample.dbs</include>
             </includes>
         </fileSet>
-        <fileSet>
-            <directory>../../samples/dbs/excel</directory>
-            <outputDirectory>wso2dataservices-${pom.version}/repository/deployment/server/dataservices</outputDirectory>
-            <includes>
-                <include>ExcelSampleService.dbs</include>
-            </includes>
-        </fileSet>
-        <fileSet>
-            <directory>../../samples/dbs/csv</directory>
-            <outputDirectory>wso2dataservices-${pom.version}/repository/deployment/server/dataservices</outputDirectory>
-            <includes>
-                <include>CSVSampleService.dbs</include>
-            </includes>
-        </fileSet>
-        <fileSet>
-            <directory>../../samples/dbs/gspread</directory>
-            <outputDirectory>wso2dataservices-${pom.version}/repository/deployment/server/dataservices</outputDirectory>
-            <includes>
-                <include>GSpreadSample.dbs</include>
-            </includes>
-        </fileSet> -->
-
-        <!-- dashboard specific files -->
-        <!--fileSet>
-            <directory>src/resources/carbon-home/resources/dashboard</directory>
-            <outputDirectory>wso2dataservices-${pom.version}/resources/dashboard</outputDirectory>
-            <includes>
-                <include>**/*</include>
-            </includes>
-        </fileSet-->
 
         <fileSet>
            <directory>../p2-profile-gen/target/wso2carbon-core-${carbon.version}/repository/conf/advanced/</directory>
@@ -169,8 +131,6 @@
                	<include>**/qpid-config.xml</include>
                 <include>**/qpid-jmxremote.access</include>
                 <include>**/qpid-virtualhosts.xml</include>
-                <include>**/coordination-client-config.xml</include>
-                <include>**/zoo.cfg</include>
            </includes>
         </fileSet>
 	

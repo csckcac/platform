@@ -189,7 +189,7 @@ public class ClusterManager {
                 //4)id::node=q,node=q2
 
                 if(dataStr.contains(queueName)) {
-                    return;
+                   break;
                 }
                 String[] parts = dataStr.split(":");
 

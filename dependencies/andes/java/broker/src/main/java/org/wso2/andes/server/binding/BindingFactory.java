@@ -27,7 +27,6 @@ import org.wso2.andes.framing.AMQShortString;
 import org.wso2.andes.framing.FieldTable;
 import org.wso2.andes.server.ClusterResourceHolder;
 import org.wso2.andes.server.cassandra.CassandraTopicPublisher;
-import org.wso2.andes.server.cluster.ClusterManager;
 import org.wso2.andes.server.configuration.BindingConfig;
 import org.wso2.andes.server.configuration.BindingConfigType;
 import org.wso2.andes.server.configuration.ConfigStore;
@@ -200,17 +199,6 @@ public class BindingFactory
             exchange.addBinding(b);
             getConfigStore().addConfiguredObject(b);
             b.logCreation();
-             if (exchange.getName().equalsIgnoreCase("amq.direct")) {
-                 CassandraMessageStore cassandraMessageStore = ClusterResourceHolder.getInstance().getCassandraMessageStore();
-                 ClusterManager clusterManager = ClusterResourceHolder.getInstance().getClusterManager();
-
-                 try {
-                     cassandraMessageStore.createGlobalQueue(b.getQueue().getResourceName());
-                     clusterManager.handleQueueAddition(b.getQueue().getResourceName());
-                 } catch (Exception e) {
-                     throw new AMQInternalException("Error while adding a queue to direct exchange ", e);
-                 }
-             }
              if (exchange.getName().equalsIgnoreCase("amq.topic")) {
                 CassandraTopicPublisher cassandraTopicPublisher = new CassandraTopicPublisher(b,queue,exchange,getVirtualHost());
                 try {
@@ -218,7 +206,7 @@ public class BindingFactory
                 } catch (AMQException e) {
                    throw new AMQInternalException("Error in creating publisher for queue" + queue.getName() ,e);
                 }
-             }
+            }
             return true;
         }
         else

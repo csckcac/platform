@@ -33,8 +33,6 @@ public final class CoordinationConstants {
     public static String QUEUE_RESOURCE_LOCK_NODE = "/queue_resource_lock_node";
 
     public static final String SUBSCRIPTION_COORDINATION_PARENT = "/subscription_coordination_parent";
-    
-    public static final String TOPIC_SUBSCRIPTION_COORDINATION_PARENT = "/topic_subscription_coordination_parent";
 
 
 

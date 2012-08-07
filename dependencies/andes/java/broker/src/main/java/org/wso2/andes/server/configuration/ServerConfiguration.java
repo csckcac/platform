@@ -363,11 +363,6 @@ public class ServerConfiguration extends ConfigurationPlugin implements SignalHa
         return locale;
     }
 
-    public int getMessageReadCacheSize() {
-        int cacheSize =  getIntValue("clustering.tuning.messageReadCacheSize",500);
-        return cacheSize;
-    }
-
     // Our configuration class needs to make the interpolate method
     // public so it can be called below from the config method.
     public static class MyConfiguration extends CompositeConfiguration

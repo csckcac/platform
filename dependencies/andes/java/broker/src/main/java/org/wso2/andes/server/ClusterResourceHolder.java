@@ -23,7 +23,6 @@ import org.wso2.andes.server.cassandra.ClusteringEnabledSubscriptionManager;
 import org.wso2.andes.server.cluster.ClusterManager;
 import org.wso2.andes.server.cluster.coordination.ReferenceTime;
 import org.wso2.andes.server.cluster.coordination.SubscriptionCoordinationManager;
-import org.wso2.andes.server.cluster.coordination.TopicSubscriptionCoordinationManager;
 import org.wso2.andes.server.configuration.ClusterConfiguration;
 import org.wso2.andes.server.store.CassandraMessageStore;
 import org.wso2.andes.server.virtualhost.VirtualHostConfigSynchronizer;
@@ -81,11 +80,6 @@ public class ClusterResourceHolder {
      * Holds Subscription Coordination manager
      */
     private SubscriptionCoordinationManager subscriptionCoordinationManager;
-
-    /**
-     * Holds Topic Subscription Coordination manager
-     */
-    private TopicSubscriptionCoordinationManager topicSubscriptionCoordinationManager;
     /*
     *  Holds Cluster Manager Instance
      */
@@ -183,13 +177,5 @@ public class ClusterResourceHolder {
 
     public void setSubscriptionCoordinationManager(SubscriptionCoordinationManager subscriptionCoordinationManager) {
         this.subscriptionCoordinationManager = subscriptionCoordinationManager;
-    }
-
-    public TopicSubscriptionCoordinationManager getTopicSubscriptionCoordinationManager() {
-        return topicSubscriptionCoordinationManager;
-    }
-
-    public void setTopicSubscriptionCoordinationManager(TopicSubscriptionCoordinationManager topicSubscriptionCoordinationManager) {
-        this.topicSubscriptionCoordinationManager = topicSubscriptionCoordinationManager;
     }
 }

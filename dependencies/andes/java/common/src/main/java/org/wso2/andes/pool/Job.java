@@ -20,7 +20,6 @@
  */
 package org.wso2.andes.pool;
 
-import org.mortbay.log.Log;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
@@ -111,7 +110,7 @@ public class Job implements ReadWriteRunnable
                 totTime = totTime + (System.nanoTime() - start) / 1000000;
                 count++;
                 if (count % 100 == 0) {
-                    Log.debug("Runnable took " + totTime / count + " ms " + _eventQueue.size() + " jobs left");
+                    _logger.debug("Runnable took " + totTime / count + " ms " + _eventQueue.size() + " jobs left");
                    /* count = 0;
                     totTime = 0;*/
                 }

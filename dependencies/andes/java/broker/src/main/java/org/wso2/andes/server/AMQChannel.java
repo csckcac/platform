@@ -37,7 +37,6 @@ import java.util.concurrent.atomic.AtomicInteger;
 import java.util.concurrent.atomic.AtomicLong;
 
 import org.apache.log4j.Logger;
-import org.mortbay.log.Log;
 import org.wso2.andes.AMQException;
 import org.wso2.andes.AMQSecurityException;
 import org.wso2.andes.framing.AMQMethodBody;

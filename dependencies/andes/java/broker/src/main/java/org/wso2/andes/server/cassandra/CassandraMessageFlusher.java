@@ -125,10 +125,11 @@ public class CassandraMessageFlusher extends Thread{
                                 , messageCountToRead,lastProcessedId);
                 
                 //If we have read all messages we asked for, we increase the reading count. Else we reduce it. 
+                //TODO we might want to take into account the size of the message while we change the batch size
                 if(messages.size() == messageCountToRead) {
                     messageCountToRead += 10;
-                    if(messageCountToRead > (ClusterResourceHolder.getInstance().getClusterConfiguration().getFlusherPoolSize())) {
-                        messageCountToRead =  ClusterResourceHolder.getInstance().getClusterConfiguration().getFlusherPoolSize()-1;
+                    if(messageCountToRead > 300){
+                        messageCountToRead = 300;
                     }
                 } else {
                     messageCountToRead-=10;
@@ -166,16 +167,17 @@ public class CassandraMessageFlusher extends Thread{
 
                             ((AMQMessage) message.getMessage()).setClientIdentifier(session);
                             
-                            ByteBuffer buf = ByteBuffer.allocate(100); 
-                            int readCount = message.getMessage().getContent(buf, 0);
-                            log.debug("readFromCassandra("+ message.getMessage().getMessageNumber() + ")" + new String(buf.array(),0, readCount)); 
+                            if(log.isDebugEnabled()){
+                                ByteBuffer buf = ByteBuffer.allocate(100); 
+                                int readCount = message.getMessage().getContent(buf, 0);
+                                log.debug("readFromCassandra("+ message.getMessage().getMessageNumber() + ")" + new String(buf.array(),0, readCount)); 
+                            }
                             deliverAsynchronously(subscription, message);
                             messageProcessed++;
 
                             if (i == messages.size() -1) {
                                 //long old = lastProcessedId;
                                 lastProcessedId = message.getMessage().getMessageNumber();
-
                             }
                         } catch (Exception e) {
                             log.error("Unexpected Error in Message Flusher Task " +
@@ -183,6 +185,10 @@ public class CassandraMessageFlusher extends Thread{
                             e.printStackTrace();
                         }
                     }
+                    if(messageProcessed > 90){
+                        System.out.println();
+                    }
+                    
                     iterations++;
                     if(messageProcessed > 10 || workqueueSize > 100){
                         log.info("[Flusher]read="+ messages.size() + " tot= "+ messageProcessed + ". queue size = "+ workqueueSize); 
@@ -207,11 +213,6 @@ public class CassandraMessageFlusher extends Thread{
                 e.printStackTrace();
             }
         }
-
-
-
-
-
     }
 
 
@@ -227,7 +228,6 @@ public class CassandraMessageFlusher extends Thread{
             Runnable r = new Runnable() {
                 @Override
                 public void run() {
-                    System.out.println("Send called ");
                     String oldName = Thread.currentThread().getName();
                     Thread.currentThread().setName("MessageFlusher-AsyncDelivery-Thread : " + oldName);
                     try {

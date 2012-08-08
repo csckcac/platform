@@ -41,9 +41,9 @@ public class BandwidthUsageDataRetrievalTask implements Runnable {
     }
 
     public void run() {
-        if (log.isDebugEnabled()) {
+        /*if (log.isDebugEnabled()) {
             log.debug("Retrieving Service and Web App bandwidth usage statistics.");
-        }
+        }*/
 
         if (!transportStats.isEmpty()) {
             for (int i = 0; i < configuration.getUsageTasksNumberOfRecordsPerExecution() && !transportStats.isEmpty(); i++) {

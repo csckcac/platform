@@ -27,7 +27,7 @@
     </parent>
 
     <modelVersion>4.0.0</modelVersion>
-    <artifactId>wso2dataservices</artifactId>
+    <artifactId>wso2dss</artifactId>
     <packaging>jar</packaging>
     <name>WSO2 Data Services Server Distribution</name>
     <url></url>
@@ -400,7 +400,7 @@
                                 <delete dir="target/dependency-maven-plugin-markers"/>
                                 <delete dir="target/maven-archiver"/>
                                 <delete dir="target/wso2carbon-core-${carbon.version}"/>
-                                <delete file="target/wso2dataservices-${project.version}.jar"/>
+                                <delete file="target/wso2dss-${project.version}.jar"/>
                                 <delete dir="target/sources"/>
                                 <delete dir="target/site"/>
                                 <!--<delete dir="target/samples/database"/>-->

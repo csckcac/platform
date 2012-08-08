@@ -25,14 +25,14 @@
     <fileSets>
         <fileSet>
             <directory>target/sources</directory>
-            <outputDirectory>wso2dataservices-${pom.version}-src</outputDirectory>
+            <outputDirectory>wso2dss-${pom.version}-src</outputDirectory>
             <includes>
                 <include>**/*</include>
             </includes>
         </fileSet>
         <fileSet>
             <directory>../../..</directory>
-            <outputDirectory>wso2dataservices-${pom.version}-src</outputDirectory>
+            <outputDirectory>wso2dss-${pom.version}-src</outputDirectory>
             <includes>
                 <include>modules/**/*</include>
             </includes>
@@ -54,31 +54,31 @@
     <files>
         <file>
             <source>../../../pom.xml</source>
-            <outputDirectory>wso2dataservices-${pom.version}-src</outputDirectory>
+            <outputDirectory>wso2dss-${pom.version}-src</outputDirectory>
             <filtered>true</filtered>
             <fileMode>644</fileMode>
         </file>
         <file>
             <source>LICENSE.txt</source>
-            <outputDirectory>wso2dataservices-${pom.version}-src</outputDirectory>
+            <outputDirectory>wso2dss-${pom.version}-src</outputDirectory>
             <filtered>true</filtered>
             <fileMode>644</fileMode>
         </file>
         <file>
             <source>INSTALL.txt</source>
-            <outputDirectory>wso2dataservices-${pom.version}-src</outputDirectory>
+            <outputDirectory>wso2dss-${pom.version}-src</outputDirectory>
             <filtered>true</filtered>
             <fileMode>644</fileMode>
         </file>
         <file>
             <source>README.txt</source>
-            <outputDirectory>wso2dataservices-${pom.version}-src</outputDirectory>
+            <outputDirectory>wso2dss-${pom.version}-src</outputDirectory>
             <filtered>true</filtered>
             <fileMode>644</fileMode>
         </file>
         <file>
             <source>release-notes.html</source>
-            <outputDirectory>wso2dataservices-${pom.version}-src</outputDirectory>
+            <outputDirectory>wso2dss-${pom.version}-src</outputDirectory>
             <filtered>true</filtered>
             <fileMode>644</fileMode>
         </file>

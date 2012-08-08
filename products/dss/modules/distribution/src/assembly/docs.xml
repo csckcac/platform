@@ -25,11 +25,11 @@
     <fileSets>
         <fileSet>
             <directory>target/site</directory>
-            <outputDirectory>wso2dataservices-${pom.version}-docs</outputDirectory>
+            <outputDirectory>wso2dss-${pom.version}-docs</outputDirectory>
         </fileSet>
         <fileSet>
             <directory>../../../docs/xdoc/user-core</directory>
-            <outputDirectory>wso2dataservices-${pom.version}-docs/user-core</outputDirectory>
+            <outputDirectory>wso2dss-${pom.version}-docs/user-core</outputDirectory>
             <fileMode>755</fileMode>
               <includes>
                 <include>user-mgt-actdir.xml</include>

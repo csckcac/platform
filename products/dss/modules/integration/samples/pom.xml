@@ -33,11 +33,11 @@
                         <emma.output>${basedir}/target/emma</emma.output>
                         <property>
                             <name>com.atomikos.icatch.file</name>
-                            <value>${basedir}/target/carbontmp/wso2dataservices-${project.version}/lib/transactions.properties</value>
+                            <value>${basedir}/target/carbontmp/wso2dss-${project.version}/lib/transactions.properties</value>
                         </property>
                         <property>
                             <name>carbon.config.dir.path</name>
-                            <value>${basedir}/target/carbontmp/wso2dataservices-${project.version}/repository/conf</value>
+                            <value>${basedir}/target/carbontmp/wso2dss-${project.version}/repository/conf</value>
                         </property>
                         <property>
                             <name>maven.test.haltafterfailure</name>
@@ -45,7 +45,7 @@
                         </property>
                         <property>
                             <name>carbon.zip</name>
-                            <value>${basedir}/../../distribution/target/wso2dataservices-${project.version}.zip</value>
+                            <value>${basedir}/../../distribution/target/wso2dss-${project.version}.zip</value>
                         </property>
                         <property>
                             <name>samples.dir</name>
@@ -53,7 +53,7 @@
                         </property>
                         <property>
                             <name>extracted.dir</name>
-                            <value>wso2dataservices-${project.version}</value>
+                            <value>wso2dss-${project.version}</value>
                         </property>
                         <property>
                             <name>online.tests</name>

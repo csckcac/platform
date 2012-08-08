@@ -275,7 +275,7 @@
         <!-- including cassandra-component.xml -->
         <!--file>
             <source>../../p2-profile-gen/target/wso2carbon-core-${carbon.version}/repository/conf/advanced/cassandra-component.xml</source>
-            <outputDirectory>wso2dataservices-${pom.version}/repository/conf/advanced</outputDirectory>
+            <outputDirectory>wso2dss-${pom.version}/repository/conf/advanced</outputDirectory>
         </file-->
         <!--<file>
             <source>../p2-profile-gen/target/wso2carbon-core-${carbon.version}/repository/conf/etc/cassandra-auth.xml</source>
@@ -283,25 +283,25 @@
         </file> -->
         <!--<file>
             <source>target/sources/wso2-carbon-components-${carbon.version}-src/org.wso2.carbon.transport.jms-sources-java-source/src/main/resources/jms-transports.xml</source>
-            <outputDirectory>wso2dataservices-${pom.version}/conf/</outputDirectory>
+            <outputDirectory>wso2dss-${pom.version}/conf/</outputDirectory>
             <filtered>true</filtered>
             <fileMode>644</fileMode>
         </file>
         <file>
             <source>target/sources/wso2-carbon-components-${carbon.version}-src/org.wso2.carbon.transport.mail-sources-java-source/src/main/resources/mailto-transports.xml</source>
-            <outputDirectory>wso2dataservices-${pom.version}/conf/</outputDirectory>
+            <outputDirectory>wso2dss-${pom.version}/conf/</outputDirectory>
             <filtered>true</filtered>
             <fileMode>644</fileMode>
         </file>-->
 
         <!--<file>
             <source>src/conf/catalina-server.xml</source>
-            <outputDirectory>wso2dataservices-${pom.version}/repository/tomcat/conf</outputDirectory>
+            <outputDirectory>wso2dss-${pom.version}/repository/tomcat/conf</outputDirectory>
             <destName>catalina-server.xml</destName>
         </file>
         <file>
             <source>src/conf/context.xml</source>
-            <outputDirectory>wso2dataservices-${pom.version}/lib/tomcat/conf</outputDirectory>
+            <outputDirectory>wso2dss-${pom.version}/lib/tomcat/conf</outputDirectory>
             <destName>context.xml</destName> 
         </file>-->
     </files>

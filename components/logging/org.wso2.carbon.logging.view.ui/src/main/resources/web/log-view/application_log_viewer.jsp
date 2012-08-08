@@ -38,7 +38,7 @@
 <html>
 <head>
 <meta http-equiv="Content-Type" content="text/html; charset=UTF-8">
-<title>View System Logs</title>
+<title>View Application Logs</title>
 </head>
 <body>
 	<%
@@ -99,12 +99,12 @@
 	%>
 	<fmt:bundle basename="org.wso2.carbon.logging.view.ui.i18n.Resources">
 
-		<carbon:breadcrumb label="system.logs"
+		<carbon:breadcrumb label="app.logs"
 			resourceBundle="org.wso2.carbon.logging.ui.i18n.Resources"
 			topPage="true" request="<%=request%>" />
 		<div id="middle">
 			<h2>
-				<fmt:message key="system.logs" />
+				<fmt:message key="app.logs" />
 			</h2>
 			<div id="workArea">
 			
@@ -152,7 +152,8 @@
 												for (String name : applicationNames) {
 											%>
 											<%
-												if (name.equals(appName)) {
+											    if(!name.equalsIgnoreCase("STRATOS_ROOT")) {
+											    	if (name.equals(appName)) {
 											%>
 											<option selected="selected" value="<%=name%>">
 												<%=name%>
@@ -167,6 +168,7 @@
 												}
 											%>
 											<%
+											    }
 												}
 											%>
 

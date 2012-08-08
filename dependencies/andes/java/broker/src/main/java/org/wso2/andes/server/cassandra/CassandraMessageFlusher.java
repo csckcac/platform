@@ -1,10 +1,14 @@
 package org.wso2.andes.server.cassandra;
 
+import java.nio.ByteBuffer;
+import java.util.ArrayList;
 import java.util.Iterator;
 import java.util.List;
 import java.util.Map;
+import java.util.concurrent.BlockingQueue;
 import java.util.concurrent.ExecutorService;
 import java.util.concurrent.Executors;
+import java.util.concurrent.LinkedBlockingQueue;
 import java.util.concurrent.ThreadPoolExecutor;
 
 import org.apache.commons.logging.Log;
@@ -40,7 +44,7 @@ public class CassandraMessageFlusher extends Thread{
     private ExecutorService executor =  null;
 
 
-    private int messageCount = 20;
+    private int messageCountToRead = 20;
 
 
     private int ackTime;
@@ -51,6 +55,11 @@ public class CassandraMessageFlusher extends Thread{
     private int resetCounter;
 
     private int resetCount = 50;
+    
+    private long messageProcessed = 0;
+    
+    
+    private List<ExecutorService> senderQueues;
 
     public CassandraMessageFlusher(AMQQueue queue ,Map<String,CassandraSubscription> cassandraSubscriptions) {
 
@@ -58,17 +67,26 @@ public class CassandraMessageFlusher extends Thread{
         this.queue = queue;
 
         ClusterConfiguration clusterConfiguration = ClusterResourceHolder.getInstance().getClusterConfiguration();
-        this.messageCount = clusterConfiguration.
+        this.messageCountToRead = clusterConfiguration.
                 getMessageBatchSizeForSubscribers();
 
         this.executor = Executors.newFixedThreadPool(clusterConfiguration.getFlusherPoolSize());
 
         this.ackTime = ClusterResourceHolder.getInstance().getClusterConfiguration().getMaxAckWaitTime();
+        
+        //Following senders sends messages to end users, we submit all messages to same subscriber to one sender
+        
+        
+        senderQueues = new ArrayList<ExecutorService>();
+        for(int i =0;i< clusterConfiguration.getFlusherPoolSize(); i++ ){
+            senderQueues.add(Executors.newSingleThreadExecutor()); 
+        }
+        System.out.println("Queue worker started");
     }
 
     @Override
     public void run() {
-
+        long iterations = 0; 
         while (running) {
             // 1) Get configured Number of Messages
             // 2) Send the batch to subscribers asynchronously.
@@ -80,6 +98,10 @@ public class CassandraMessageFlusher extends Thread{
             int workqueueSize = ((ThreadPoolExecutor)executor).getQueue().size(); 
             if(workqueueSize > 1000){
                 try {
+                    if(workqueueSize > 5000){
+                        log.error("Flusher queue is growing, and this should not happen. Please check cassandra Flusher"); 
+                    }
+                    
                     log.info("skipping content cassandra reading thread as flusher queue has "+ workqueueSize + " tasks");
                     Thread.sleep(ClusterResourceHolder.getInstance().getClusterConfiguration().
                                     getQueueWorkerInterval());
@@ -95,21 +117,25 @@ public class CassandraMessageFlusher extends Thread{
                 }
                 CassandraMessageStore messageStore = ClusterResourceHolder.getInstance().
                         getCassandraMessageStore();
+                //Here we read messages from the user queue
                 List<QueueEntry> messages = messageStore.
                         getMessagesFromUserQueue(queue
-                                , messageCount,lastProcessedId);
-                if(messages.size() == messageCount) {
-                    messageCount += 10;
-                    if(messageCount > (ClusterResourceHolder.getInstance().getClusterConfiguration().getFlusherPoolSize())) {
-                        messageCount =  ClusterResourceHolder.getInstance().getClusterConfiguration().getFlusherPoolSize()-1;
+                                , messageCountToRead,lastProcessedId);
+                
+                //If we have read all messages we asked for, we increase the reading count. Else we reduce it. 
+                if(messages.size() == messageCountToRead) {
+                    messageCountToRead += 10;
+                    if(messageCountToRead > (ClusterResourceHolder.getInstance().getClusterConfiguration().getFlusherPoolSize())) {
+                        messageCountToRead =  ClusterResourceHolder.getInstance().getClusterConfiguration().getFlusherPoolSize()-1;
                     }
                 } else {
-                    messageCount-=10;
-                    if(messageCount < 20) {
-                        messageCount=20;
+                    messageCountToRead-=10;
+                    if(messageCountToRead < 20) {
+                        messageCountToRead=20;
                     }
                 }
 
+                //Then we schedule them to be sent to subcribers
                 if (messages.size() > 0 && cassandraSubscriptions.size() > 0) {
 
                     Iterator<CassandraSubscription> subs = cassandraSubscriptions.values().iterator();
@@ -137,7 +163,12 @@ public class CassandraMessageFlusher extends Thread{
                             session = cassandraSubscription.getSession();
 
                             ((AMQMessage) message.getMessage()).setClientIdentifier(session);
+                            
+                            ByteBuffer buf = ByteBuffer.allocate(100); 
+                            int readCount = message.getMessage().getContent(buf, 0);
+                            log.debug("readFromCassandra("+ message.getMessage().getMessageNumber() + ")" + new String(buf.array(),0, readCount)); 
                             deliverAsynchronously(subscription, message);
+                            messageProcessed++;
 
                             if (i == messages.size() -1) {
                                 //long old = lastProcessedId;
@@ -150,8 +181,11 @@ public class CassandraMessageFlusher extends Thread{
                             e.printStackTrace();
                         }
                     }
+                    iterations++;
+                    if(iterations%10==0){
+                        log.info("[Flusher]read="+ messages.size() + " tot= "+ messageProcessed + ". queue size = "+ workqueueSize); 
+                    }
                     messages.clear();
-
                 } else {
 
                     if(messages.size() ==0 ) {
@@ -190,6 +224,7 @@ public class CassandraMessageFlusher extends Thread{
         Runnable r = new Runnable() {
             @Override
             public void run() {
+                System.out.println("Send called ");
                 String oldName = Thread.currentThread().getName();
                 Thread.currentThread().setName("MessageFlusher-AsyncDelivery-Thread : " + oldName);
                 try {
@@ -207,7 +242,8 @@ public class CassandraMessageFlusher extends Thread{
                 }
             }
         };
-       executor.execute(r);
+        int senderIndex = subscription.hashCode()%senderQueues.size(); 
+        senderQueues.get(senderIndex).execute(r); 
     }
 
 

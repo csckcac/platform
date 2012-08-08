@@ -77,6 +77,8 @@ public class GlobalQueueWorker implements Runnable{
                 int size = cassandraMessages.size();
                 DataCollector.write(DataCollector.TRANSFER_QUEUE_WORKER_UTILISATION,size);
                 DataCollector.flush();
+                
+                //TODO srinath .. look like this goes to Cassandra all the time
                 List<String> subscriptions =  cassandraMessageStore.getUserQueues(globalQueueName);
 
                 if (subscriptions != null && subscriptions.size() > 0) {
@@ -107,6 +109,8 @@ public class GlobalQueueWorker implements Runnable{
                         } catch (InterruptedException e) {
                             //ignore
                         }
+                    }else{
+                        log.info("[Global, "+ globalQueueName + "] moved "+ cassandraMessages.size() + " to user queues"); 
                     }
                 } else {
                     try {

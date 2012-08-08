@@ -882,7 +882,7 @@ public class AMQChannel implements SessionConfig, AMQSessionModel
                     acknowledgementHandler.handleAcknowledgement(deliveryTag);
                 }
             } catch (Exception e) {
-                throw new AMQException(e.getMessage());
+                throw new AMQException(e.getMessage(), e);
             }
 
         updateTransactionalActivity();

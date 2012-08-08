@@ -47,6 +47,7 @@ import org.wso2.andes.server.protocol.AMQProtocolSession;
 import org.wso2.andes.server.queue.AMQQueue;
 import org.wso2.andes.server.queue.QueueEntry;
 
+import java.nio.ByteBuffer;
 import java.util.Map;
 import java.util.UUID;
 import java.util.concurrent.ConcurrentHashMap;
@@ -261,38 +262,42 @@ public abstract class SubscriptionImpl implements Subscription, FlowCreditManage
                 if (ClusterResourceHolder.getInstance().getClusterConfiguration().isOnceInOrderSupportEnabled()) {
                     sendToClient(entry,deliveryTag);
                 } else {
-                    QueueSubscriptionAcknowledgementHandler ackHandler = ClusterResourceHolder.getInstance().
-                            getSubscriptionManager().getAcknowledgementHandlerMap().get(getChannel());
+                    
+                    QueueSubscriptionAcknowledgementHandler ackHandler; 
+                    
+                    synchronized (ClusterResourceHolder.class) {
+                        ackHandler = ClusterResourceHolder.getInstance().getSubscriptionManager()
+                                .getAcknowledgementHandlerMap().get(getChannel());
 
-                    if (ackHandler == null) {
-                        QueueSubscriptionAcknowledgementHandler handler =
-                                new QueueSubscriptionAcknowledgementHandler(ClusterResourceHolder.getInstance().
-                                        getCassandraMessageStore(), entry.getQueue().getResourceName());
-                        ClusterResourceHolder.getInstance().
-                                getSubscriptionManager().getAcknowledgementHandlerMap().put(getChannel(), handler);
-                        ackHandler = handler;
+                        if (ackHandler == null) {
+                            QueueSubscriptionAcknowledgementHandler handler = new QueueSubscriptionAcknowledgementHandler(
+                                    ClusterResourceHolder.getInstance().getCassandraMessageStore(), entry.getQueue()
+                                            .getResourceName());
+                            ClusterResourceHolder.getInstance().getSubscriptionManager().getAcknowledgementHandlerMap()
+                                    .put(getChannel(), handler);
+                            ackHandler = handler;
+                        }
+
                     }
 
                     if (ackHandler.checkAndRegisterSent(deliveryTag, entry.getMessage().getMessageNumber(),
                             entry.getQueue().getResourceName() + "_" + ClusterResourceHolder.getInstance().
                                     getClusterManager().getNodeId())) {
+                        
+                        ByteBuffer buf = ByteBuffer.allocate(100); 
+                        int readCount = entry.getMessage().getContent(buf, 0);
+                        log.debug("sent1("+ entry.getMessage().getMessageNumber() + ")" + new String(buf.array(),0, readCount)); 
                         sendToClient(entry, deliveryTag);
                     } else {
                         if (log.isDebugEnabled()) {
-                            log.debug("Message Send attempt stopped. This can be an already delivered message");
+                            log.info("Sent stopped for "+ entry.getMessage().getMessageNumber());
                         }
                     }
                 }
-
-
             } catch (Exception e) {
                 throw new AMQException(e.toString());
             }
-
         }
-
-
-
     }
 
 

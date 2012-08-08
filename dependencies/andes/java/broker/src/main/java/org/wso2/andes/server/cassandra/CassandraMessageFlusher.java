@@ -5,10 +5,8 @@ import java.util.ArrayList;
 import java.util.Iterator;
 import java.util.List;
 import java.util.Map;
-import java.util.concurrent.BlockingQueue;
 import java.util.concurrent.ExecutorService;
 import java.util.concurrent.Executors;
-import java.util.concurrent.LinkedBlockingQueue;
 import java.util.concurrent.ThreadPoolExecutor;
 
 import org.apache.commons.logging.Log;
@@ -79,7 +77,7 @@ public class CassandraMessageFlusher extends Thread{
         
         senderQueues = new ArrayList<ExecutorService>();
         for(int i =0;i< clusterConfiguration.getFlusherPoolSize(); i++ ){
-            senderQueues.add(Executors.newSingleThreadExecutor()); 
+            senderQueues.add(Executors.newFixedThreadPool(1)); 
         }
         System.out.println("Queue worker started");
     }
@@ -95,23 +93,27 @@ public class CassandraMessageFlusher extends Thread{
             
             //This is to avoid the worker queue been full with too many pending tasks
             // those pending tasks are best left in cassandra until we have some breathing room
-            int workqueueSize = ((ThreadPoolExecutor)executor).getQueue().size(); 
-            if(workqueueSize > 1000){
-                try {
-                    if(workqueueSize > 5000){
-                        log.error("Flusher queue is growing, and this should not happen. Please check cassandra Flusher"); 
-                    }
-                    
-                    log.info("skipping content cassandra reading thread as flusher queue has "+ workqueueSize + " tasks");
-                    Thread.sleep(ClusterResourceHolder.getInstance().getClusterConfiguration().
-                                    getQueueWorkerInterval());
-                    continue; 
-                } catch (InterruptedException e) {
-                    e.printStackTrace();
-                }
-            }
             try {
+                int workqueueSize = 0; 
+                for(ExecutorService executor: senderQueues){
+                   workqueueSize =workqueueSize + ((ThreadPoolExecutor)executor).getQueue().size();
+                }
 
+                if(workqueueSize > 1000){
+                    try {
+                        if(workqueueSize > 5000){
+                            log.error("Flusher queue is growing, and this should not happen. Please check cassandra Flusher"); 
+                        }
+                        
+                        log.info("skipping content cassandra reading thread as flusher queue has "+ workqueueSize + " tasks");
+                        Thread.sleep(ClusterResourceHolder.getInstance().getClusterConfiguration().
+                                        getQueueWorkerInterval());
+                        continue; 
+                    } catch (InterruptedException e) {
+                        e.printStackTrace();
+                    }
+                }
+                
                 if(resetOffset()) {
                     lastProcessedId = 0;
                 }
@@ -182,7 +184,7 @@ public class CassandraMessageFlusher extends Thread{
                         }
                     }
                     iterations++;
-                    if(iterations%10==0){
+                    if(messageProcessed > 10 || workqueueSize > 100){
                         log.info("[Flusher]read="+ messages.size() + " tot= "+ messageProcessed + ". queue size = "+ workqueueSize); 
                     }
                     messages.clear();
@@ -221,29 +223,31 @@ public class CassandraMessageFlusher extends Thread{
 
 
     private void deliverAsynchronously(final Subscription subscription , final QueueEntry message) {
-        Runnable r = new Runnable() {
-            @Override
-            public void run() {
-                System.out.println("Send called ");
-                String oldName = Thread.currentThread().getName();
-                Thread.currentThread().setName("MessageFlusher-AsyncDelivery-Thread : " + oldName);
-                try {
-                    if (subscription instanceof SubscriptionImpl.AckSubscription) {
-                        subscription.send(message);
+        if(OnflightMessageTracker.getInstance().testMessage(message.getMessage().getMessageNumber())){
+            Runnable r = new Runnable() {
+                @Override
+                public void run() {
+                    System.out.println("Send called ");
+                    String oldName = Thread.currentThread().getName();
+                    Thread.currentThread().setName("MessageFlusher-AsyncDelivery-Thread : " + oldName);
+                    try {
+                        if (subscription instanceof SubscriptionImpl.AckSubscription) {
+                            subscription.send(message);
 
-                    } else {
-                        log.error("Unexpected Subscription Implementation : " +
-                                subscription !=null?subscription.getClass().getName():null);
+                        } else {
+                            log.error("Unexpected Subscription Implementation : " +
+                                    subscription !=null?subscription.getClass().getName():null);
+                        }
+                    } catch (AMQException e) {
+                        log.error("Error while delivering message " ,e);
+                    } catch (Throwable e) {
+                         log.error("Error while delivering message " ,e);
                     }
-                } catch (AMQException e) {
-                    log.error("Error while delivering message " ,e);
-                } catch (Throwable e) {
-                     log.error("Error while delivering message " ,e);
                 }
-            }
-        };
-        int senderIndex = subscription.hashCode()%senderQueues.size(); 
-        senderQueues.get(senderIndex).execute(r); 
+            };
+            int senderIndex = subscription.hashCode()%senderQueues.size(); 
+            senderQueues.get(senderIndex).execute(r); 
+        }
     }
 
 

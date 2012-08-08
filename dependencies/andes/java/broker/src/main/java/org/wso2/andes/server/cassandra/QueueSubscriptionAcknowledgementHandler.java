@@ -54,7 +54,7 @@ public class QueueSubscriptionAcknowledgementHandler {
 
     private static Log log = LogFactory.getLog(QueueSubscriptionAcknowledgementHandler.class);
 
-    private OnflightMessageTracker messageTracker = new OnflightMessageTracker();
+    private OnflightMessageTracker messageTracker = OnflightMessageTracker.getInstance();
 
     //TODO we have two implementations for tracking message Acked and avoid duplicates. Need to get 
     //rid of the old one when we are happy with the new one

@@ -17,20 +17,17 @@
 */
 package org.wso2.andes.server.cluster;
 
+import java.util.ArrayList;
+import java.util.List;
+import java.util.Queue;
+
 import org.apache.commons.logging.Log;
 import org.apache.commons.logging.LogFactory;
-import org.python.antlr.ast.Str;
 import org.wso2.andes.server.ClusterResourceHolder;
 import org.wso2.andes.server.cassandra.CassandraQueueMessage;
 import org.wso2.andes.server.cassandra.DefaultClusteringEnabledSubscriptionManager;
 import org.wso2.andes.server.store.CassandraMessageStore;
 import org.wso2.andes.tools.utils.DataCollector;
-
-import java.util.ArrayList;
-import java.util.List;
-import java.util.Queue;
-import java.util.Random;
-import java.util.concurrent.atomic.AtomicInteger;
 
 /**
  * <code>GlobalQueueWorker</code> is responsible for polling global queues
@@ -63,7 +60,15 @@ public class GlobalQueueWorker implements Runnable{
     public void run() {
         String originalName = Thread.currentThread().getName();
         Thread.currentThread().setName(this.getClass().getSimpleName()+":" + originalName);
-
+        
+        long pollingLoopCount = 0;
+        
+        List<String> subscriptions = null;
+        try {
+            subscriptions =  cassandraMessageStore.getUserQueues(globalQueueName);
+        } catch (Exception e1) {
+            log.error(e1.getMessage(), e1); 
+        }
         while (running) {
             try {
                 /**
@@ -79,7 +84,9 @@ public class GlobalQueueWorker implements Runnable{
                 DataCollector.flush();
                 
                 //TODO srinath .. look like this goes to Cassandra all the time
-                List<String> subscriptions =  cassandraMessageStore.getUserQueues(globalQueueName);
+                if(pollingLoopCount%10 == 0){
+                    subscriptions =  cassandraMessageStore.getUserQueues(globalQueueName);    
+                }
 
                 if (subscriptions != null && subscriptions.size() > 0) {
                      List<Long> addedMsgs = new ArrayList<Long>();
@@ -122,8 +129,7 @@ public class GlobalQueueWorker implements Runnable{
             } catch (Exception e) {
                 e.printStackTrace();
             }
-
-
+            pollingLoopCount++;
         }
 
     }

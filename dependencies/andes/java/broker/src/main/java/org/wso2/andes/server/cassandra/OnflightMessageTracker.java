@@ -42,9 +42,14 @@ public class OnflightMessageTracker {
             this.deliveryTag = deliveryTag;
         }
     }
+    
+    private static OnflightMessageTracker instance = new OnflightMessageTracker();
+    public static OnflightMessageTracker getInstance(){
+        return instance; 
+    }
 
     
-    public OnflightMessageTracker(){
+    private OnflightMessageTracker(){
         new Thread(new Runnable() {
             
             @Override
@@ -65,6 +70,9 @@ public class OnflightMessageTracker {
                                             + timesortedMsgIds.size() + " msgId2MsgData=" + msgId2MsgData.size()
                                             + " deliveryTag2MsgID=" + deliveryTag2MsgID.size());
                                 } else {
+                                    if(!msgData.ackreceived){
+                                        log.warn("No ack received for deliverytag"+ msgData.deliveryTag + " and "+ msgData.msgID); 
+                                    }
                                     if (deliveryTag2MsgID.remove(msgData.deliveryTag) == null) {
                                         log.error("Cannot find delivery tag " + deliveryTag2MsgID);
                                     }
@@ -82,6 +90,17 @@ public class OnflightMessageTracker {
                 }
             }
         }).start();
+    }
+    
+    public synchronized boolean testMessage(long messageId){
+        long currentTime = System.currentTimeMillis();
+        MsgData mdata = msgId2MsgData.get(messageId); 
+                
+        if (mdata == null || (!mdata.ackreceived && (currentTime - mdata.timestamp) > acktimeout)) {
+            return true; 
+        }else{
+            return false;
+        }
     }
     
     

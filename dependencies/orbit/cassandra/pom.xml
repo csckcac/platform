@@ -61,7 +61,9 @@
                     <instructions>
                         <Bundle-SymbolicName>${project.artifactId}</Bundle-SymbolicName>
                         <Bundle-Name>${project.artifactId}</Bundle-Name>
+			<Private-Package>org.apache.cassandra.cql.jdbc.*</Private-Package>
                         <Export-Package>
+			    !org.apache.cassandra.cql.jdbc.*,
                             org.apache.cassandra.*;-split-package:=merge-first
                         </Export-Package>
                         <Import-Package>

@@ -86,6 +86,11 @@ public abstract class AbstractDBMediator extends AbstractMediator implements Man
      * Destroys the mediator. If we are using our custom DataSource, then shut down the connections
      */
     public void destroy() {
+        /* If the DB mediators are used with globally defined data sources, the associated
+           data source is not closed. */
+        if (dataSourceName != null) {
+            return;
+        }
         if (this.dataSource instanceof BasicDataSource) {
             try {
                 ((BasicDataSource) this.dataSource).close();

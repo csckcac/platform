@@ -178,7 +178,7 @@
                                 <nobr><fmt:message key="search.logs"/></nobr>
                             </td>
                                 <td style="padding-right: 2px !important;">
-                                    <input onkeypress="submitenter(event)" value="" class="log-select"
+                                    <input onkeypress="appSubmitenter(event)" value="" class="log-select"
                                         size="40" id="logkeyword" type="text"></td>
                                 <td style="padding-left: 0px !important;"><input type="button"
                                                                                  value="Search"
@@ -267,7 +267,7 @@
 										}
 									%>
 								
-									<td colspan="4" width="100%">TID[<%=logMessage.getTenantId()%>] [<%=logMessage.getServerName()%>] [<%=logMessage.getLogTime()%>] <%=logMessage.getPriority().trim()%> {<%=logMessage.getLogger()%>} - <%=logMessage.getMessage()%> 
+									<td colspan="4" width="100%">TID[<%=logMessage.getTenantId()%>] AppID[<%=logMessage.getAppName()%>] [<%=logMessage.getServerName()%>] [<%=logMessage.getLogTime()%>] <%=logMessage.getPriority().trim()%> {<%=logMessage.getLogger()%>} - <%=logMessage.getMessage()%>
 										<%=logMessage.getStacktrace()%><br/>
 									</td>
 									</tr>

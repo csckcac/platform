@@ -102,6 +102,21 @@ function submitenter(e) {
 	}
 }
 
+function appSubmitenter(e) {
+    var keycode;
+    if (window.event) {
+        keycode = window.event.keyCode;
+    } else if (e) {
+        keycode = e.which;
+    }
+    if (keycode == 13) {
+        searchAppLogs();
+        return true;
+    } else {
+        return true;
+    }
+}
+
 function submitenterbottomUp(e)
 {
     var keycode;

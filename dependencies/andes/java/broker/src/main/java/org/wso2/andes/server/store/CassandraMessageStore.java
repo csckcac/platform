@@ -80,6 +80,7 @@ import org.wso2.andes.server.information.management.QueueManagementInformationMB
 import org.wso2.andes.server.logging.LogSubject;
 import org.wso2.andes.server.message.AMQMessage;
 import org.wso2.andes.server.message.MessageTransferMessage;
+import org.wso2.andes.server.protocol.AMQProtocolEngine;
 import org.wso2.andes.server.protocol.AMQProtocolSession;
 import org.wso2.andes.server.queue.AMQQueue;
 import org.wso2.andes.server.queue.BaseQueue;
@@ -771,8 +772,14 @@ public void addMessageBatchToUserQueues(CassandraQueueMessage[] messages) throws
                         messageMutator.execute(); 
                         log.debug("content written for "+rowKey);
                     } catch (Throwable e) {
-                        // TODO Auto-generated catch block
-                        e.printStackTrace();
+                        log.error("Error processing completed messages", e);
+                        
+                        /**
+                         * TODO close the session, have a find a way to get access to protocol session. 
+                         *  if (_session instanceof AMQProtocolEngine) {
+                            ((AMQProtocolEngine) _session).closeProtocolSession();
+                        }
+                         */
                     }
                 }
            });

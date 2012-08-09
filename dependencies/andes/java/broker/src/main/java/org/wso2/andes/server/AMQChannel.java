@@ -355,38 +355,52 @@ public class AMQChannel implements SessionConfig, AMQSessionModel
                     }
                     else
                     {
-                        //srinath: need to make this async
-                        //TODO removing this
-//                        _transaction.enqueue(destinationQueues, _currentMessage, new MessageDeliveryAction(_currentMessage, destinationQueues, isTransactional()));
-//                        incrementOutstandingTxnsIfNecessary();
-//			            updateTransactionalActivity();
-			            //srinath: we will do this async also
-                        //_messageQueue.enqueueMessage(_currentMessage, destinationQueues);
+                        /**
+                         * 
+                         * Following code keep messages in memory, which is useless to Andes. So we are removing this. Keeping the commented line so we know
+                         * we might need to add these back when we do the transactions properly.
+                         * _transaction.enqueue(destinationQueues, _currentMessage, new MessageDeliveryAction(_currentMessage, destinationQueues, isTransactional()));
+                         * incrementOutstandingTxnsIfNecessary();
+                         * updateTransactionalActivity();
+                         */
                     }
                 }
+                
+                //TODO
+                //check queue size from here and reject the request 
                 
                 //need to bind this to the inner class, as _currentMessage
                 final IncomingMessage incomingMessage = _currentMessage;
                 final MessageQueue messageQueue = _messageQueue; 
+                
                 AndesExecuter.submit(new Runnable() {
                     @Override
-                   public void run() {
-                       try {
-                           /**
-                            * All we have to do is to write content, metadata, and add the message id to the global queue
-                            * Content are already added to the same work queue 
-                            * adding metadata and message to global queue happen here 
-                            */
-                        //Store metadata
-                           incomingMessage.getStoredMessage().flushToStore();
-                           //write messageID to queue 
-                           messageQueue.enqueueMessage(incomingMessage, destinationQueues);
-                           _logger.debug("metadata written and message written to global queue " + incomingMessage.getStoredMessage().getMessageNumber() + ", channel ID "+ getChannelId());
-                    } catch (Throwable e) {
-                        // TODO Auto-generated catch block
-                        e.printStackTrace();
+                    public void run() {
+                        try {
+                            /**
+                             * All we have to do is to write content, metadata,
+                             * and add the message id to the global queue
+                             * Content are already added to the same work queue
+                             * adding metadata and message to global queue
+                             * happen here
+                             */
+                            // Store metadata
+                            incomingMessage.getStoredMessage().flushToStore();
+                            // write messageID to queue
+                            messageQueue.enqueueMessage(incomingMessage, destinationQueues);
+                            if(_logger.isDebugEnabled()){
+                                _logger.debug("metadata written and message written to global queue "
+                                        + incomingMessage.getStoredMessage().getMessageNumber() + ", channel ID "
+                                        + getChannelId());
+                            }
+                        } catch (Throwable e) {
+                            _logger.error("Error processing completed messages, we will close this session", e);
+                            // We mark the session as closed due to error
+                            if (_session instanceof AMQProtocolEngine) {
+                                ((AMQProtocolEngine) _session).closeProtocolSession();
+                            }
+                        }
                     }
-                      }
                 });
             }
             finally

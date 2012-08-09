@@ -27,6 +27,8 @@
     <p><b>Introduction</b></p>
     <p>WSO2 Data Services Server provides the capability of exposing data from a Cassandra data-source as a service. This guide will explain how a Data Service can be created using a Cassandra data-source.
     </p>
+    <p>NOTE: WSO2DSS-3.0.0 has inbuilt support for Cassandra server versions 1.1.0 or later. If you need to use Cassandra server versions older than 1.1.0, then you need to uninstall the cassandra-jdbc-1.1.1 feature using 'Feature Management' and install the cassandra-jdbc-1.0.5 feature. 
+    </p>
 
         <p>Let's begin by creating a simple keyspace add some column family to work with. Here is the Cassandra-cli commands to perform this tasks.</p>
         <p><b>Step 1: Create Keyspace and Column Family</b></p><hr/>

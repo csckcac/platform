@@ -22,8 +22,10 @@ import org.apache.axis2.deployment.repository.util.DeploymentFileData;
 import org.apache.catalina.Context;
 import org.apache.commons.logging.Log;
 import org.apache.commons.logging.LogFactory;
+import org.wso2.carbon.core.multitenancy.SuperTenantCarbonContext;
 import org.wso2.carbon.stratos.landing.page.deployer.internal.DataHolder;
 import org.wso2.carbon.tomcat.CarbonTomcatException;
+import org.wso2.carbon.utils.multitenancy.MultitenantConstants;
 
 import java.io.File;
 
@@ -40,6 +42,11 @@ public class LandingPageWebappDeployer extends AbstractDeployer {
     public static final String WEBAPP_CONTEXT = "home";
 
     public void init(ConfigurationContext configCtx) {
+        // deploy the landing page for super tenant only
+        if (!SuperTenantCarbonContext.getCurrentContext().
+                getTenantDomain(true).equals(MultitenantConstants.SUPER_TENANT_DOMAIN_NAME)) {
+            return;
+        }
         // Super tenant repository path
         String repoPath = configCtx.getAxisConfiguration().getRepository().getPath();
         String landingpageWebappDir = repoPath + WEBAPPS + File.separator + LANDING_PAGE_WEBAPP_ROOT;

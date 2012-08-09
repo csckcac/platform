@@ -247,7 +247,7 @@ public class TomcatGenericWebappsDeployer {
             }
 
             context.setReloadable(false);
-            WebApplication webapp = new WebApplication(context, webappFile);
+            WebApplication webapp = new WebApplication(this, context, webappFile);
             webapp.setServletContextParameters(webContextParams);
             webapp.setState("Started");
             webappsHolder.getStartedWebapps().put(filename, webapp);
@@ -262,7 +262,7 @@ public class TomcatGenericWebappsDeployer {
             //catching a Throwable here to avoid web-apps crashing the server during startup
             StandardContext context = new StandardContext();
             context.setName(webappFile.getName());
-            WebApplication webapp = new WebApplication(context, webappFile);
+            WebApplication webapp = new WebApplication(this, context, webappFile);
             String msg = "Error while deploying webapp: " + webapp;
             log.error(msg, e);
             webapp.setFaultReason(new Exception(msg, e));

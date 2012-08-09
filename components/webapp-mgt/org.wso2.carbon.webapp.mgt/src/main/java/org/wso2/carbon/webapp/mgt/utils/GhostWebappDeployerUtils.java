@@ -68,10 +68,6 @@ public class GhostWebappDeployerUtils {
     // Map of ghost services which are currently being converted into actual services
     private static final String TRANSIT_GHOST_WEBAPP_MAP = "TransitGhostWebappMap";
 
-    private static enum WebApp {
-        DEFAULT, JAXWS, JAGGERY
-    }
-
     private GhostWebappDeployerUtils() {
         //disable external instantiation
     }
@@ -119,16 +115,6 @@ public class GhostWebappDeployerUtils {
                             getWebappFile().getPath());
 
                     if (dfd != null) {
-                        WebApp webApp;
-                        // Check for jaxwebapps or jaggery apps
-                        if (dfd.getAbsolutePath().contains(WebappsConstants.JAX_WEBAPP_REPO)) {
-                            webApp = WebApp.JAXWS;
-                        } else if (dfd.getAbsolutePath().
-                                contains(WebappsConstants.JAGGERY_WEBAPP_REPO)) {
-                            webApp = WebApp.JAGGERY;
-                        } else {
-                            webApp = WebApp.DEFAULT;
-                        }
                         // remove the existing webapp
                         log.info("Removing Ghost webapp and loading actual webapp : " +
                                  deployedWebapp.getWebappFile().getName());
@@ -139,15 +125,9 @@ public class GhostWebappDeployerUtils {
 
                             webappsHolder.undeployWebapp(deployedWebapp);
 
-                            TomcatGenericWebappsDeployer tomcatWebappDeployer;
+                            TomcatGenericWebappsDeployer tomcatWebappDeployer =
+                                    deployedWebapp.getTomcatGenericWebappsDeployer();
 
-                            if(webApp == WebApp.JAGGERY) {
-                                tomcatWebappDeployer = (TomcatGenericWebappsDeployer) configurationContext.getProperty(
-                                        WebappsConstants.JAGGERY_GENERIC_WEBAPP_DEPLOYER);
-                            } else {
-                                tomcatWebappDeployer = (TomcatGenericWebappsDeployer) configurationContext.getProperty(
-                                        CarbonConstants.TOMCAT_GENERIC_WEBAPP_DEPLOYER);
-                            }
                             WebContextParameter serverUrlParam =
                                     new WebContextParameter("webServiceServerURL", CarbonUtils.
                                             getServerURL(ServerConfiguration.getInstance(),
@@ -169,13 +149,8 @@ public class GhostWebappDeployerUtils {
                                     getName());
                             newWebApp.setProperty(CarbonConstants.GHOST_WEBAPP_PARAM, "false");
                             // Check for jaxwebapps or jaggery apps
-                            if (webApp == WebApp.JAXWS) {
-                                newWebApp.setProperty(WebappsConstants.WEBAPP_FILTER,
-                                                      WebappsConstants.JAX_WEBAPP_FILTER_PROP);
-                            } else if (webApp == WebApp.JAGGERY) {
-                                newWebApp.setProperty(WebappsConstants.WEBAPP_FILTER,
-                                                      WebappsConstants.JAGGERY_WEBAPP_FILTER_PROP);
-                            }
+                            newWebApp.setProperty(WebappsConstants.WEBAPP_FILTER, deployedWebapp.getProperty(
+                                    WebappsConstants.WEBAPP_FILTER));
 
                             newWebApp.setIsGhostWebapp(false);
 
@@ -361,6 +336,7 @@ public class GhostWebappDeployerUtils {
      * @return - WebApplication which is created
      */
     public static WebApplication createGhostWebApp(File ghostFile, File originalFile,
+                                                   TomcatGenericWebappsDeployer tomcatGenericWebappsDeployer,
                                                    AxisConfiguration axisConfig) {
         WebApplication ghostWebApp = null;
 
@@ -379,8 +355,7 @@ public class GhostWebappDeployerUtils {
             Context context = new StandardContext();
             context.setName(contextName);
             context.setPath(contextName);
-            ghostWebApp = new WebApplication(context, originalFile);
-
+            ghostWebApp = new WebApplication(tomcatGenericWebappsDeployer, context, originalFile);
             ghostWebApp.setProperty(CarbonConstants.GHOST_WEBAPP_PARAM, "true");
             ghostWebApp.setIsGhostWebapp(true);
             String displayName = webAppElm.
@@ -501,17 +476,8 @@ public class GhostWebappDeployerUtils {
 
 //        String filterProp = (String) webApplication.getProperty(WebappsConstants.WEBAPP_FILTER);
         // If this is a JAX webapp, then add the filter property to ghost file..
-        if (webappPath.contains(WebappsConstants.JAX_WEBAPP_REPO)) {
-            webappEle.addAttribute(WebappsConstants.WEBAPP_FILTER,
-                                   WebappsConstants.JAX_WEBAPP_FILTER_PROP, null);
-        }
-
-        // If this is a Jaggery webapp, then add the filter property to ghost file..
-        if (webappPath.contains(WebappsConstants.JAGGERY_WEBAPP_REPO)) {
-            webappEle.addAttribute(WebappsConstants.WEBAPP_FILTER,
-                                   WebappsConstants.JAGGERY_WEBAPP_FILTER_PROP, null);
-        }
-
+        webappEle.addAttribute(WebappsConstants.WEBAPP_FILTER,
+                (String) webApplication.getProperty(WebappsConstants.WEBAPP_FILTER), null);
 
         // Now create a ghostFile and serialize the created OMElement
         String tenantTmpDirPath = CarbonUtils.getTenantTmpDirPath(axisConfig);
@@ -597,23 +563,18 @@ public class GhostWebappDeployerUtils {
      * file absolute path.
      *
      * @param configurationContext - configurationContext instance that has the webapps holder property
-     * @param webappPath           - absolute path of the webapp to be compared with other webapps in the holder
+     * @param webappName           - absolute path of the webapp to be compared with other webapps in the holder
      * @return webapplicatioon found by the comparison or null
      */
     public static WebApplication findDeployedWebapp(ConfigurationContext configurationContext,
-                                                    String webappPath) {
+                                                    String webappName) {
 
         try {
             WebApplicationsHolder webApplicationsHolder = (WebApplicationsHolder)
                     configurationContext.getProperty(CarbonConstants.WEB_APPLICATIONS_HOLDER);
 
             if (webApplicationsHolder != null) {
-                for (WebApplication webApplication :
-                        webApplicationsHolder.getStartedWebapps().values()) {
-                    if (webApplication.getWebappFile().getAbsolutePath().equals(webappPath)) {
-                        return webApplication;
-                    }
-                }
+                return webApplicationsHolder.getStartedWebapps().get(webappName);
             }
 
         } catch (Exception e) {
@@ -631,13 +592,13 @@ public class GhostWebappDeployerUtils {
      */
     public static String getDummyContextDirectoryPath(String contextName,
                                                    AxisConfiguration axisConfig) {
-         if (contextName.contains("/t/")) {
+        if (contextName.contains("/t/")) {
             String tenantCtx = "/t/" + TenantAxisUtils.getTenantDomain(contextName);
-            if (contextName.contains(WebappsConstants.WEBAPP_PREFIX)) {
+            if (contextName.contains("/" + WebappsConstants.WEBAPP_PREFIX + "/")) {
                 tenantCtx = tenantCtx + File.separator + WebappsConstants.WEBAPP_PREFIX;
-            } else if (contextName.contains(WebappsConstants.JAGGERY_APPS_PREFIX)) {
+            } else if (contextName.contains("/" + WebappsConstants.JAGGERY_APPS_PREFIX + "/")) {
                 tenantCtx = tenantCtx + File.separator + WebappsConstants.JAGGERY_APPS_PREFIX;
-            } else if (contextName.contains((WebappsConstants.JAX_WEBAPPS_PREFIX))){
+            } else if (contextName.contains(("/" + WebappsConstants.JAX_WEBAPPS_PREFIX + "/"))){
                 tenantCtx = tenantCtx + File.separator + WebappsConstants.JAX_WEBAPPS_PREFIX;
             } else {
                 return null;
@@ -699,5 +660,4 @@ public class GhostWebappDeployerUtils {
         File warFile = new File(fileName + ".war");
         return warFile.exists();
     }
-
 }

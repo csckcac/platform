@@ -89,10 +89,8 @@ public class WebappUnloader implements ArtifactUnloader {
                                     GhostWebappDeployerUtils.getTransitGhostWebAppsMap(configCtx);
                             transitGhostList.put(webApplication.getContextName(), webApplication);
                         try {
-                            TomcatGenericWebappsDeployer tomcatWebappDeployer =
-                                    (TomcatGenericWebappsDeployer) configCtx.
-                                            getProperty(CarbonConstants.
-                                                                TOMCAT_GENERIC_WEBAPP_DEPLOYER);
+                            TomcatGenericWebappsDeployer tomcatWebappDeployer = webApplication.
+                                    getTomcatGenericWebappsDeployer();
                             tomcatWebappDeployer.undeploy(webApplication.getWebappFile());
                             File ghostFile = GhostWebappDeployerUtils.
                                     getGhostFile(webappFileData.getAbsolutePath(),
@@ -100,7 +98,8 @@ public class WebappUnloader implements ArtifactUnloader {
                             if (ghostFile.exists()) {
                                 WebApplication ghostWebapp = GhostWebappDeployerUtils.
                                         createGhostWebApp(ghostFile, webappFileData.getFile(),
-                                                          configCtx.getAxisConfiguration());
+                                                webApplication.getTomcatGenericWebappsDeployer(),
+                                                configCtx.getAxisConfiguration());
 
                                 webApplicationsHolder.getStartedWebapps().
                                         put(webappFileData.getName(), ghostWebapp);

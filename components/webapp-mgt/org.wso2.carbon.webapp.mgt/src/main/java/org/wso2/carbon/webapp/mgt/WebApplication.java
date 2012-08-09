@@ -42,26 +42,28 @@ public class WebApplication {
      */
     public static final String ENABLE_SAAS = "carbon.enable.saas";
 
-    protected Context context;
-    protected File webappFile;
+    private Context context;
+    private File webappFile;
     private long lastModifiedTime;
     private Exception faultReason;
     private String state;
     private Map<String, Object> properties = new HashMap<String, Object>();
+    private TomcatGenericWebappsDeployer tomcatGenericWebappsDeployer;
 
     // We need this variable to use in the Statistics inner class which is static
     private static boolean isThisGhost = false;
 
-    public WebApplication(Context context, File webappFile) {
+    public WebApplication(TomcatGenericWebappsDeployer tomcatGenericWebappsDeployer, Context context, File webappFile) {
+        this.tomcatGenericWebappsDeployer = tomcatGenericWebappsDeployer;
         this.context = context;
         setWebappFile(webappFile);
         setLastModifiedTime(webappFile.lastModified());
     }
 
-    public WebApplication(File webappFile) {
+    /*public WebApplication(File webappFile) {
         setWebappFile(webappFile);
         setLastModifiedTime(webappFile.lastModified());
-    }
+    }*/
 
     /**
      * Set ServletContext parameters for this webapp
@@ -127,6 +129,10 @@ public class WebApplication {
 
     public Object getProperty(String key) {
         return properties.get(key);
+    }
+
+    public TomcatGenericWebappsDeployer getTomcatGenericWebappsDeployer() {
+        return tomcatGenericWebappsDeployer;
     }
 
     public boolean reload() {
